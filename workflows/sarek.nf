@@ -308,9 +308,10 @@ workflow SAREK {
 
             ch_reads = RUN_TRIMGALORE.out.reads
 
-            ch_reports  = ch_reports.mix(RUN_TRIMGALORE.out.trim_zip.collect{it[1]}.ifEmpty([]),
-                                        RUN_TRIMGALORE.out.trim_html.collect{it[1]}.ifEmpty([]),
-                                        RUN_TRIMGALORE.out.trim_log.collect{it[1]}.ifEmpty([]))
+            ch_reports  = ch_reports.mix(RUN_TRIMGALORE.out.trim_html.collect{it[1]}.ifEmpty([]))
+            ch_reports  = ch_reports.mix(RUN_TRIMGALORE.out.trim_log.collect{it[1]}.ifEmpty([]))
+            ch_reports  = ch_reports.mix(RUN_TRIMGALORE.out.trim_zip.collect{it[1]}.ifEmpty([]))
+
             ch_versions = ch_versions.mix(RUN_TRIMGALORE.out.versions)
         } else {
             ch_reads = ch_input_fastq
@@ -350,19 +351,33 @@ workflow SAREK {
 
         // STEP 1: MAPPING READS TO REFERENCE GENOME
         // reads will be sorted
+
+        ch_reads_to_map = ch_reads_to_map.map{ meta, reads ->
+            new_meta = meta.clone()
+
+            // update ID when no multiple lanes or splitted fastqs
+            new_meta.id = meta.size * meta.numLanes == 1 ? meta.sample : meta.id
+
+            [new_meta, reads]
+        }
+
         GATK4_MAPPING(ch_reads_to_map, ch_map_index, true)
 
         ch_bam_mapped = GATK4_MAPPING.out.bam.map{ meta, bam ->
             new_meta = meta.clone()
             // remove no longer necessary fields
             new_meta.remove('read_group') // Now in the BAM header
+            new_meta.remove('numLanes')   // Was only needed for mapping
             new_meta.remove('size')       // Was only needed for mapping
 
             // update ID to be based on the sample name
             new_meta.id = meta.sample
 
+            // update data_type
+            new_meta.data_type = 'bam'
+
             [new_meta, bam]
-            }
+        }
 
         // gatk4 markduplicates can handle multiple bams as input, so no need to merge/index here
         // Except if and only if skipping markduplicates or saving mapped bams
@@ -812,6 +827,7 @@ def extract_csv(csv_file) {
             meta.numLanes   = numLanes.toInteger()
             meta.read_group = read_group.toString()
             meta.data_type  = "fastq"
+            meta.size       = 1 // default number of splitted fastq
             return [meta, [fastq_1, fastq_2]]
         // start from BAM
         } else if (row.lane && row.bam) {
@@ -822,6 +838,7 @@ def extract_csv(csv_file) {
             meta.numLanes   = numLanes.toInteger()
             meta.read_group = read_group.toString()
             meta.data_type  = "bam"
+            meta.size       = 1 // default number of splitted fastq
             return [meta, bam]
         // recalibration
         } else if (row.table && row.cram) {

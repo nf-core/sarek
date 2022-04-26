@@ -15,9 +15,10 @@ workflow MERGE_INDEX_BAM {
     ch_versions = Channel.empty()
 
     // Figuring out if there is one or more bam(s) from the same sample
-    bam.branch{
-        single:   it[1].size() == 1
-        multiple: it[1].size() > 1
+    bam.groupTuple().branch{ meta, bam ->
+        single:   bam.size() == 1
+        multiple: bam.size() > 1
+            [meta, bam.transpose()[0]]
     }.set{bam_to_merge}
 
     MERGE_BAM(bam_to_merge.multiple, [])
