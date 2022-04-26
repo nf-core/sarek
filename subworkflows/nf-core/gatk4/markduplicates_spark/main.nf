@@ -40,7 +40,7 @@ workflow MARKDUPLICATES_SPARK {
     // - running Markupduplicates spark with cram output
     cram_markduplicates = Channel.empty().mix(
         BAM_TO_CRAM.out.cram,
-        GATK4_MARKDUPLICATES_SPARK.out.output.join(cram_crai))
+        cram_crai)
 
     // When running Marduplicates spark, and saving reports
     GATK4_ESTIMATELIBRARYCOMPLEXITY(bam, fasta, fasta_fai, dict)
