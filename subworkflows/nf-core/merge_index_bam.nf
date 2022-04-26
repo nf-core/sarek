@@ -17,9 +17,12 @@ workflow MERGE_INDEX_BAM {
     // Figuring out if there is one or more bam(s) from the same sample
     bam.groupTuple().branch{ meta, bam ->
         single:   bam.size() == 1
+            [meta, bam.transpose()[0]]
         multiple: bam.size() > 1
             [meta, bam.transpose()[0]]
     }.set{bam_to_merge}
+
+    bam_to_merge.single.view()
 
     MERGE_BAM(bam_to_merge.multiple, [])
     INDEX_MERGE_BAM(bam_to_merge.single.mix(MERGE_BAM.out.bam))
