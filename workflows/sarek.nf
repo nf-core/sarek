@@ -363,8 +363,13 @@ workflow SAREK {
 
         GATK4_MAPPING(ch_reads_to_map, ch_map_index, true)
 
+        // Grouping the bams from the same samples not to stall the workflow
         ch_bam_mapped = GATK4_MAPPING.out.bam.map{ meta, bam ->
             new_meta = meta.clone()
+
+            numLanes = meta.numLanes ?: 1
+            size     = meta.size     ?: 1
+
             // remove no longer necessary fields
             new_meta.remove('read_group') // Now in the BAM header
             new_meta.remove('numLanes')   // Was only needed for mapping
@@ -376,8 +381,14 @@ workflow SAREK {
             // update data_type
             new_meta.data_type = 'bam'
 
-            [new_meta, bam]
-        }
+            // Use groupKey to make sure that the correct group can advance as soon as it is complete
+            // and not stall the workflow until all reads from all channels are mapped
+            def groupKey = groupKey(new_meta, numLanes * size)
+
+            //Returns the values we need
+            [groupKey, new_meta, bam]
+        }.groupTuple(by:[0,1])
+        .map{ groupKey, new_meta, bam -> [new_meta, bam] }
 
         // gatk4 markduplicates can handle multiple bams as input, so no need to merge/index here
         // Except if and only if skipping markduplicates or saving mapped bams
