@@ -1,10 +1,10 @@
-include { BGZIP as BGZIP_VC_MANTA_DIPLOID         } from '../../../../../modules/local/bgzip'
-include { BGZIP as BGZIP_VC_MANTA_SMALL_INDELS    } from '../../../../../modules/local/bgzip'
-include { BGZIP as BGZIP_VC_MANTA_SV              } from '../../../../../modules/local/bgzip'
-include { CONCAT_VCF as CONCAT_MANTA_DIPLOID      } from '../../../../../modules/local/concat_vcf/main'
-include { CONCAT_VCF as CONCAT_MANTA_SMALL_INDELS } from '../../../../../modules/local/concat_vcf/main'
-include { CONCAT_VCF as CONCAT_MANTA_SV           } from '../../../../../modules/local/concat_vcf/main'
-include { MANTA_GERMLINE                          } from '../../../../../modules/nf-core/modules/manta/germline/main'
+include { TABIX_BGZIP as BGZIP_VC_MANTA_DIPLOID      } from '../../../../../modules/nf-core/modules/tabix/bgzip/main'
+include { TABIX_BGZIP as BGZIP_VC_MANTA_SMALL_INDELS } from '../../../../../modules/nf-core/modules/tabix/bgzip/main'
+include { TABIX_BGZIP as BGZIP_VC_MANTA_SV           } from '../../../../../modules/nf-core/modules/tabix/bgzip/main'
+include { CONCAT_VCF as CONCAT_MANTA_DIPLOID         } from '../../../../../modules/local/concat_vcf/main'
+include { CONCAT_VCF as CONCAT_MANTA_SMALL_INDELS    } from '../../../../../modules/local/concat_vcf/main'
+include { CONCAT_VCF as CONCAT_MANTA_SV              } from '../../../../../modules/local/concat_vcf/main'
+include { MANTA_GERMLINE                             } from '../../../../../modules/nf-core/modules/manta/germline/main'
 
 // TODO: Research if splitting by intervals is ok, we pretend for now it is fine.
 // Seems to be the consensus on upstream modules implementation too
@@ -54,7 +54,7 @@ workflow RUN_MANTA_GERMLINE {
     BGZIP_VC_MANTA_SV(manta_sv_vcf.intervals)
 
     CONCAT_MANTA_SV(
-        BGZIP_VC_MANTA_SV.out.vcf
+        BGZIP_VC_MANTA_SV.out.output
             .map{ meta, vcf ->
                 new_meta = meta.clone()
                 new_meta.id = new_meta.sample
@@ -66,7 +66,7 @@ workflow RUN_MANTA_GERMLINE {
     BGZIP_VC_MANTA_DIPLOID(manta_diploid_sv_vcf.intervals)
 
     CONCAT_MANTA_DIPLOID(
-        BGZIP_VC_MANTA_DIPLOID.out.vcf
+        BGZIP_VC_MANTA_DIPLOID.out.output
             .map{ meta, vcf ->
                 new_meta = meta.clone()
                 new_meta.id = new_meta.sample

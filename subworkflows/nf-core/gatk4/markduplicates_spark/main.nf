@@ -6,7 +6,7 @@
 
 include { GATK4_ESTIMATELIBRARYCOMPLEXITY        } from '../../../../modules/nf-core/modules/gatk4/estimatelibrarycomplexity/main'
 include { GATK4_MARKDUPLICATES_SPARK             } from '../../../../modules/nf-core/modules/gatk4/markduplicatesspark/main'
-include { SAMTOOLS_INDEX as INDEX_MARKDUPLICATES } from '../../../../modules/local/samtools/index/main'
+include { SAMTOOLS_INDEX as INDEX_MARKDUPLICATES } from '../../../../modules/nf-core/modules/samtools/index/main'
 include { BAM_TO_CRAM                            } from '../../bam_to_cram'
 
 workflow MARKDUPLICATES_SPARK {
@@ -26,15 +26,21 @@ workflow MARKDUPLICATES_SPARK {
     GATK4_MARKDUPLICATES_SPARK(bam, fasta, fasta_fai, dict)
     INDEX_MARKDUPLICATES(GATK4_MARKDUPLICATES_SPARK.out.output)
 
+    bam_bai = GATK4_MARKDUPLICATES_SPARK.out.output
+        .join(INDEX_MARKDUPLICATES.out.bai)
+
+    cram_crai = GATK4_MARKDUPLICATES_SPARK.out.output
+        .join(INDEX_MARKDUPLICATES.out.crai)
+
     // Convert Markupduplicates spark bam output to cram when running bamqc and/or deeptools
-    BAM_TO_CRAM(INDEX_MARKDUPLICATES.out.bam_bai, fasta, fasta_fai, intervals_combined_bed_gz_tbi)
+    BAM_TO_CRAM(bam_bai, fasta, fasta_fai, intervals_combined_bed_gz_tbi)
 
     // Only one of these channel is not empty:
     // - running Markupduplicates spark with bam output
     // - running Markupduplicates spark with cram output
     cram_markduplicates = Channel.empty().mix(
         BAM_TO_CRAM.out.cram,
-        GATK4_MARKDUPLICATES_SPARK.out.output.join(INDEX_MARKDUPLICATES.out.cram_crai))
+        cram_crai)
 
     // When running Marduplicates spark, and saving reports
     GATK4_ESTIMATELIBRARYCOMPLEXITY(bam, fasta, fasta_fai, dict)

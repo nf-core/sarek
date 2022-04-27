@@ -1,4 +1,4 @@
-include { BGZIP as BGZIP_VC_HAPLOTYPECALLER        } from '../../../../modules/local/bgzip'
+include { TABIX_BGZIP as BGZIP_VC_HAPLOTYPECALLER  } from '../../../../modules/nf-core/modules/tabix/bgzip/main'
 include { CONCAT_VCF as CONCAT_HAPLOTYPECALLER     } from '../../../../modules/local/concat_vcf/main'
 include { GATK4_GENOTYPEGVCFS as GENOTYPEGVCFS     } from '../../../../modules/nf-core/modules/gatk4/genotypegvcfs/main'
 include { GATK4_HAPLOTYPECALLER as HAPLOTYPECALLER } from '../../../../modules/nf-core/modules/gatk4/haplotypecaller/main'
@@ -43,7 +43,7 @@ workflow RUN_HAPLOTYPECALLER {
     BGZIP_VC_HAPLOTYPECALLER(haplotypecaller_vcf_branch.intervals)
 
     CONCAT_HAPLOTYPECALLER(
-        BGZIP_VC_HAPLOTYPECALLER.out.vcf
+        BGZIP_VC_HAPLOTYPECALLER.out.output
             .map{ meta, vcf ->
                 new_meta = meta.clone()
                 new_meta.id = new_meta.sample
@@ -117,7 +117,7 @@ workflow RUN_HAPLOTYPECALLER {
     //ch_versions = ch_versions.mix(GENOTYPEGVCFS.out.versions)
     //ch_versions = ch_versions.mix(GATK_JOINT_GERMLINE_VARIANT_CALLING.out.versions)
     ch_versions = ch_versions.mix(HAPLOTYPECALLER.out.versions)
-    ch_versions = ch_versions.mix(TABIX_VC_HAPLOTYPECALLER.out.versions)
+    // ch_versions = ch_versions.mix(TABIX_VC_HAPLOTYPECALLER.out.versions)
 
     emit:
     versions = ch_versions

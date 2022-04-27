@@ -1,8 +1,8 @@
-include { BGZIP as BGZIP_VC_STRELKA           } from '../../../../../modules/local/bgzip'
-include { BGZIP as BGZIP_VC_STRELKA_GENOME    } from '../../../../../modules/local/bgzip'
-include { CONCAT_VCF as CONCAT_STRELKA        } from '../../../../../modules/local/concat_vcf/main'
-include { CONCAT_VCF as CONCAT_STRELKA_GENOME } from '../../../../../modules/local/concat_vcf/main'
-include { STRELKA_GERMLINE                    } from '../../../../../modules/nf-core/modules/strelka/germline/main'
+include { TABIX_BGZIP as BGZIP_VC_STRELKA        } from '../../../../../modules/nf-core/modules/tabix/bgzip/main'
+include { TABIX_BGZIP as BGZIP_VC_STRELKA_GENOME } from '../../../../../modules/nf-core/modules/tabix/bgzip/main'
+include { CONCAT_VCF as CONCAT_STRELKA           } from '../../../../../modules/local/concat_vcf/main'
+include { CONCAT_VCF as CONCAT_STRELKA_GENOME    } from '../../../../../modules/local/concat_vcf/main'
+include { STRELKA_GERMLINE                       } from '../../../../../modules/nf-core/modules/strelka/germline/main'
 
 // TODO: Research if splitting by intervals is ok, we pretend for now it is fine.
 // Seems to be the consensus on upstream modules implementation too
@@ -35,7 +35,7 @@ workflow RUN_STRELKA_SINGLE {
     BGZIP_VC_STRELKA(strelka_vcf.intervals)
 
     CONCAT_STRELKA(
-        BGZIP_VC_STRELKA.out.vcf
+        BGZIP_VC_STRELKA.out.output
             .map{ meta, vcf ->
                 new_meta = meta.clone()
                 new_meta.id = new_meta.sample
@@ -47,7 +47,7 @@ workflow RUN_STRELKA_SINGLE {
     BGZIP_VC_STRELKA_GENOME(strelka_genome_vcf.intervals)
 
     CONCAT_STRELKA_GENOME(
-        BGZIP_VC_STRELKA_GENOME.out.vcf
+        BGZIP_VC_STRELKA_GENOME.out.output
             .map{ meta, vcf ->
                 new_meta = meta.clone()
                 new_meta.id = new_meta.sample

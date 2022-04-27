@@ -1,4 +1,4 @@
-include { BGZIP as BGZIP_VC_FREEBAYES       } from '../../../../modules/local/bgzip'
+include { TABIX_BGZIP as BGZIP_VC_FREEBAYES } from '../../../../modules/nf-core/modules/tabix/bgzip/main'
 include { CONCAT_VCF as CONCAT_FREEBAYES    } from '../../../../modules/local/concat_vcf/main'
 include { FREEBAYES                         } from '../../../../modules/nf-core/modules/freebayes/main'
 include { TABIX_TABIX as TABIX_VC_FREEBAYES } from '../../../../modules/nf-core/modules/tabix/tabix/main'
@@ -28,7 +28,7 @@ workflow RUN_FREEBAYES {
     BGZIP_VC_FREEBAYES(FREEBAYES.out.vcf)
 
     CONCAT_FREEBAYES(
-        BGZIP_VC_FREEBAYES.out.vcf
+        BGZIP_VC_FREEBAYES.out.output
             .map{ meta, vcf ->
                 new_meta = meta.clone()
                 new_meta.id = new_meta.sample

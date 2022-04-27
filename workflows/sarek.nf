@@ -128,8 +128,8 @@ include { PREPARE_GENOME                                 } from '../subworkflows
 include { PREPARE_INTERVALS                              } from '../subworkflows/local/prepare_intervals'
 
 // Convert BAM files to FASTQ files
-include { ALIGNMENT_TO_FASTQ as ALIGNMENT_TO_FASTQ_INPUT } from '../subworkflows/local/bam2fastq'
-include { ALIGNMENT_TO_FASTQ as ALIGNMENT_TO_FASTQ_UMI   } from '../subworkflows/local/bam2fastq'
+include { ALIGNMENT_TO_FASTQ as ALIGNMENT_TO_FASTQ_INPUT } from '../subworkflows/nf-core/alignment_to_fastq'
+include { ALIGNMENT_TO_FASTQ as ALIGNMENT_TO_FASTQ_UMI   } from '../subworkflows/nf-core/alignment_to_fastq'
 
 // Split FASTQ files
 include { SPLIT_FASTQ                                    } from '../subworkflows/local/split_fastq'
@@ -308,9 +308,10 @@ workflow SAREK {
 
             ch_reads = RUN_TRIMGALORE.out.reads
 
-            ch_reports  = ch_reports.mix(RUN_TRIMGALORE.out.trim_zip.collect{it[1]}.ifEmpty([]),
-                                        RUN_TRIMGALORE.out.trim_html.collect{it[1]}.ifEmpty([]),
-                                        RUN_TRIMGALORE.out.trim_log.collect{it[1]}.ifEmpty([]))
+            ch_reports  = ch_reports.mix(RUN_TRIMGALORE.out.trim_html.collect{it[1]}.ifEmpty([]))
+            ch_reports  = ch_reports.mix(RUN_TRIMGALORE.out.trim_log.collect{it[1]}.ifEmpty([]))
+            ch_reports  = ch_reports.mix(RUN_TRIMGALORE.out.trim_zip.collect{it[1]}.ifEmpty([]))
+
             ch_versions = ch_versions.mix(RUN_TRIMGALORE.out.versions)
         } else {
             ch_reads = ch_input_fastq
@@ -350,19 +351,44 @@ workflow SAREK {
 
         // STEP 1: MAPPING READS TO REFERENCE GENOME
         // reads will be sorted
+
+        ch_reads_to_map = ch_reads_to_map.map{ meta, reads ->
+            new_meta = meta.clone()
+
+            // update ID when no multiple lanes or splitted fastqs
+            new_meta.id = meta.size * meta.numLanes == 1 ? meta.sample : meta.id
+
+            [new_meta, reads]
+        }
+
         GATK4_MAPPING(ch_reads_to_map, ch_map_index, true)
 
+        // Grouping the bams from the same samples not to stall the workflow
         ch_bam_mapped = GATK4_MAPPING.out.bam.map{ meta, bam ->
             new_meta = meta.clone()
+
+            numLanes = meta.numLanes ?: 1
+            size     = meta.size     ?: 1
+
             // remove no longer necessary fields
             new_meta.remove('read_group') // Now in the BAM header
+            new_meta.remove('numLanes')   // Was only needed for mapping
             new_meta.remove('size')       // Was only needed for mapping
 
             // update ID to be based on the sample name
             new_meta.id = meta.sample
 
-            [new_meta, bam]
-            }
+            // update data_type
+            new_meta.data_type = 'bam'
+
+            // Use groupKey to make sure that the correct group can advance as soon as it is complete
+            // and not stall the workflow until all reads from all channels are mapped
+            def groupKey = groupKey(new_meta, numLanes * size)
+
+            //Returns the values we need
+            [groupKey, new_meta, bam]
+        }.groupTuple(by:[0,1])
+        .map{ groupKey, new_meta, bam -> [new_meta, bam] }
 
         // gatk4 markduplicates can handle multiple bams as input, so no need to merge/index here
         // Except if and only if skipping markduplicates or saving mapped bams
@@ -812,6 +838,7 @@ def extract_csv(csv_file) {
             meta.numLanes   = numLanes.toInteger()
             meta.read_group = read_group.toString()
             meta.data_type  = "fastq"
+            meta.size       = 1 // default number of splitted fastq
             return [meta, [fastq_1, fastq_2]]
         // start from BAM
         } else if (row.lane && row.bam) {
@@ -822,6 +849,7 @@ def extract_csv(csv_file) {
             meta.numLanes   = numLanes.toInteger()
             meta.read_group = read_group.toString()
             meta.data_type  = "bam"
+            meta.size       = 1 // default number of splitted fastq
             return [meta, bam]
         // recalibration
         } else if (row.table && row.cram) {

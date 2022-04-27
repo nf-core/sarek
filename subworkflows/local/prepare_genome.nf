@@ -11,7 +11,6 @@
 include { BWA_INDEX as BWAMEM1_INDEX             } from '../../modules/nf-core/modules/bwa/index/main'
 include { BWAMEM2_INDEX                          } from '../../modules/nf-core/modules/bwamem2/index/main'
 include { DRAGMAP_HASHTABLE                      } from '../../modules/nf-core/modules/dragmap/hashtable/main'
-include { CREATE_INTERVALS_BED                   } from '../../modules/local/create_intervals_bed/main'
 include { GATK4_CREATESEQUENCEDICTIONARY         } from '../../modules/nf-core/modules/gatk4/createsequencedictionary/main'
 include { MSISENSORPRO_SCAN                      } from '../../modules/nf-core/modules/msisensorpro/scan/main'
 include { SAMTOOLS_FAIDX                         } from '../../modules/nf-core/modules/samtools/faidx/main'
@@ -48,7 +47,7 @@ workflow PREPARE_GENOME {
     TABIX_PON(pon.map{ it -> [[id:it[0].baseName], it] })
 
     chr_files = chr_dir
-    //TODO this works, but is not pretty. I will leave this in yuor hands during refactoring @Maxime
+    //TODO this works, but is not pretty. I will leave this in your hands during refactoring @Maxime
     if ( params.chr_dir.endsWith('tar.gz')){
         UNTAR_CHR_DIR(chr_dir.map{ it -> [[id:it[0].baseName], it] })
         chr_files = UNTAR_CHR_DIR.out.untar.map{ it[1] }
