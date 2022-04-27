@@ -17,11 +17,12 @@ workflow MERGE_INDEX_CRAM {
     ch_versions = Channel.empty()
 
     // Figuring out if there is one or more cram(s) from the same sample
-    ch_cram = ch_cram
-        .map{ meta, cram ->
-            meta.id = meta.sample
-            [meta, cram]
-        }.groupTuple(size: num_intervals)
+    ch_cram.map{ meta, cram ->
+        new_meta = meta.clone()
+        new_meta.id = meta.sample
+
+        [new_meta, cram]
+    }.groupTuple(size: num_intervals)
     .branch{
         single:   it[1].size() == 1
         multiple: it[1].size() > 1
