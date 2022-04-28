@@ -39,6 +39,8 @@ workflow GATK4_MAPPING {
         tuple(groupKey, new_meta, bam)
     }.groupTuple(by:[0,1]).map{ groupKey, new_meta, bam -> [new_meta, bam] }
 
+    ch_bam_mapped.view()
+
     // Gather reports of all tools used
     ch_reports = ch_reports.mix(DRAGMAP_ALIGN.out.log)
 

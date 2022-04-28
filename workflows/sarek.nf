@@ -261,10 +261,7 @@ workflow SAREK {
     intervals_bed_combined_gz     = intervals_bed_combined_gz_tbi.map{ bed, tbi -> [bed]}.collect() // one file containing all intervals interval.bed.gz file
 
     intervals                     = PREPARE_INTERVALS.out.intervals_bed            // multiple interval.bed files, divided by useful intervals for scatter/gather
-    intervals_bed_gz_tbi          = PREPARE_INTERVALS.out.intervals_bed_gz_tbi.toList().map{
-                                        it ->
-                                   [it, it.size()]                      // Adding number of intervals as elements
-                                   }.transpose()
+    intervals_bed_gz_tbi          = PREPARE_INTERVALS.out.intervals_bed_gz_tbi
     // multiple interval.bed.gz/.tbi files, divided by useful intervals for scatter/gather
     // num_intervals = PREPARE_INTERVALS.out.intervals_bed.collect().size()
 
