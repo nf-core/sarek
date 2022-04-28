@@ -2,7 +2,7 @@
 // Run GATK mutect2 in tumor normal mode, getepileupsummaries, calculatecontamination, learnreadorientationmodel and filtermutectcalls
 //
 
-include { BGZIP                           as BGZIP_MUTECT2               } from '../../../../modules/local/bgzip'
+include { TABIX_BGZIP                     as BGZIP_MUTECT2               } from '../../../../modules/nf-core/modules/tabix/bgzip/main'
 include { CONCAT_VCF                      as CONCAT_MUTECT2              } from '../../../../modules/local/concat_vcf/main'
 include { GATK4_MUTECT2                   as MUTECT2                     } from '../../../../modules/nf-core/modules/gatk4/mutect2/main'
 include { GATK4_MERGEMUTECTSTATS          as MERGEMUTECTSTATS            } from '../../../../modules/nf-core/modules/gatk4/mergemutectstats/main'
@@ -81,7 +81,7 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
     BGZIP_MUTECT2(MUTECT2.out.vcf)
 
     CONCAT_MUTECT2(
-        BGZIP_MUTECT2.out.vcf.map{ meta, vcf ->
+        BGZIP_MUTECT2.out.output.map{ meta, vcf ->
             [[id: meta.tumor_id + "_vs_" + meta.normal_id, normal_id: meta.normal_id, tumor_id: meta.tumor_id, gender: meta.gender, patient: meta.patient ], vcf]
         }.groupTuple(size: num_intervals),
         fai,

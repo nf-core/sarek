@@ -1,11 +1,11 @@
 //
-// MERGE INDEX BAM
+// MERGE INDEX CRAM
 //
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
-include { SAMTOOLS_INDEX      as INDEX_CRAM } from '../../modules/local/samtools/index/main'
-include { SAMTOOLS_MERGE_CRAM as MERGE_CRAM } from '../../modules/local/samtools/mergecram/main'
+include { SAMTOOLS_INDEX as INDEX_CRAM } from '../../modules/nf-core/modules/samtools/index/main'
+include { SAMTOOLS_MERGE as MERGE_CRAM } from '../../modules/nf-core/modules/samtools/merge/main'
 
 workflow MERGE_INDEX_CRAM {
     take:
@@ -16,12 +16,12 @@ workflow MERGE_INDEX_CRAM {
     ch_versions = Channel.empty()
 
     // Figuring out if there is one or more cram(s) from the same sample
-    cram_to_merge = ch_cram
-        .map{ meta, cram ->
-            meta.id = meta.sample
-            def groupKey = groupKey(meta, meta.num_intervals)
-            [meta, cram]
-        }.groupTuple()
+    ch_cram.map{ meta, cram ->
+        new_meta = meta.clone()
+        new_meta.id = meta.sample
+
+        [new_meta, cram]
+    }.groupTuple(size: num_intervals)
     .branch{
         single:   it[1].size() == 1
         multiple: it[1].size() > 1
@@ -30,11 +30,15 @@ workflow MERGE_INDEX_CRAM {
     MERGE_CRAM(cram_to_merge.multiple, fasta)
     INDEX_CRAM(cram_to_merge.single.mix(MERGE_CRAM.out.cram))
 
+    cram_crai = cram_to_merge.single
+        .mix(MERGE_CRAM.out.cram)
+        .join(INDEX_CRAM.out.crai)
+
     // Gather versions of all tools used
     ch_versions = ch_versions.mix(INDEX_CRAM.out.versions.first())
     ch_versions = ch_versions.mix(MERGE_CRAM.out.versions.first())
 
     emit:
-        cram_crai = INDEX_CRAM.out.cram_crai
+        cram_crai
         versions  = ch_versions
 }

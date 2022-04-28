@@ -1,10 +1,10 @@
-include { BGZIP as BGZIP_VC_MANTA_SMALL_INDELS    } from '../../../../../modules/local/bgzip'
-include { BGZIP as BGZIP_VC_MANTA_SV              } from '../../../../../modules/local/bgzip'
-include { BGZIP as BGZIP_VC_MANTA_TUMOR           } from '../../../../../modules/local/bgzip'
-include { CONCAT_VCF as CONCAT_MANTA_SMALL_INDELS } from '../../../../../modules/local/concat_vcf/main'
-include { CONCAT_VCF as CONCAT_MANTA_SV           } from '../../../../../modules/local/concat_vcf/main'
-include { CONCAT_VCF as CONCAT_MANTA_TUMOR        } from '../../../../../modules/local/concat_vcf/main'
-include { MANTA_TUMORONLY                         } from '../../../../../modules/nf-core/modules/manta/tumoronly/main'
+include { TABIX_BGZIP as BGZIP_VC_MANTA_SMALL_INDELS } from '../../../../../modules/nf-core/modules/tabix/bgzip/main'
+include { TABIX_BGZIP as BGZIP_VC_MANTA_SV           } from '../../../../../modules/nf-core/modules/tabix/bgzip/main'
+include { TABIX_BGZIP as BGZIP_VC_MANTA_TUMOR        } from '../../../../../modules/nf-core/modules/tabix/bgzip/main'
+include { CONCAT_VCF as CONCAT_MANTA_SMALL_INDELS    } from '../../../../../modules/local/concat_vcf/main'
+include { CONCAT_VCF as CONCAT_MANTA_SV              } from '../../../../../modules/local/concat_vcf/main'
+include { CONCAT_VCF as CONCAT_MANTA_TUMOR           } from '../../../../../modules/local/concat_vcf/main'
+include { MANTA_TUMORONLY                            } from '../../../../../modules/nf-core/modules/manta/tumoronly/main'
 
 // TODO: Research if splitting by intervals is ok, we pretend for now it is fine.
 // Seems to be the consensus on upstream modules implementation too
@@ -42,7 +42,7 @@ workflow RUN_MANTA_TUMORONLY {
     BGZIP_VC_MANTA_SMALL_INDELS(manta_small_indels_vcf.intervals)
 
     CONCAT_MANTA_SMALL_INDELS(
-        BGZIP_VC_MANTA_SMALL_INDELS.out.vcf.map{ meta, vcf ->
+        BGZIP_VC_MANTA_SMALL_INDELS.out.output.map{ meta, vcf ->
                 new_meta = meta.clone()
                 new_meta.id = new_meta.sample
                 [new_meta, vcf]
@@ -53,7 +53,7 @@ workflow RUN_MANTA_TUMORONLY {
     BGZIP_VC_MANTA_SV(manta_candidate_sv_vcf.intervals)
 
     CONCAT_MANTA_SV(
-        BGZIP_VC_MANTA_SV.out.vcf.map{ meta, vcf ->
+        BGZIP_VC_MANTA_SV.out.output.map{ meta, vcf ->
                 new_meta = meta.clone()
                 new_meta.id = new_meta.sample
                 [new_meta, vcf]
@@ -64,7 +64,7 @@ workflow RUN_MANTA_TUMORONLY {
     BGZIP_VC_MANTA_TUMOR(manta_tumor_sv_vcf.intervals)
 
     CONCAT_MANTA_TUMOR(
-        BGZIP_VC_MANTA_TUMOR.out.vcf.map{ meta, vcf ->
+        BGZIP_VC_MANTA_TUMOR.out.output.map{ meta, vcf ->
                 new_meta = meta.clone()
                 new_meta.id = new_meta.sample
                 [new_meta, vcf]

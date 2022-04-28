@@ -1,10 +1,9 @@
-include { BCFTOOLS_STATS } from '../../modules/nf-core/modules/bcftools/stats/main'
+include { BCFTOOLS_STATS                  } from '../../modules/nf-core/modules/bcftools/stats/main'
+include { VCFTOOLS as VCFTOOLS_SUMMARY    } from '../../modules/nf-core/modules/vcftools/main'
 include { VCFTOOLS as VCFTOOLS_TSTV_COUNT } from '../../modules/nf-core/modules/vcftools/main'
-include { VCFTOOLS as VCFTOOLS_TSTV_QUAL } from '../../modules/nf-core/modules/vcftools/main'
-include { VCFTOOLS as VCFTOOLS_SUMMARY } from '../../modules/nf-core/modules/vcftools/main'
+include { VCFTOOLS as VCFTOOLS_TSTV_QUAL  } from '../../modules/nf-core/modules/vcftools/main'
 
 workflow VCF_QC {
-
     take:
     vcf
     target_bed
@@ -22,9 +21,10 @@ workflow VCF_QC {
     ch_versions = ch_versions.mix(VCFTOOLS_TSTV_COUNT.out.versions)
 
     emit:
-    versions                = ch_versions
     bcftools_stats          = BCFTOOLS_STATS.out.stats
     vcftools_tstv_counts    = VCFTOOLS_TSTV_COUNT.out.tstv_count
     vcftools_tstv_qual      = VCFTOOLS_TSTV_QUAL.out.tstv_qual
     vcftools_filter_summary = VCFTOOLS_SUMMARY.out.filter_summary
+
+    versions                = ch_versions
 }
