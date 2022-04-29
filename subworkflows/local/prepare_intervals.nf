@@ -20,7 +20,6 @@ workflow PREPARE_INTERVALS {
 
     ch_versions = Channel.empty()
 
-    // TODO maybe instead []
     ch_intervals                     = Channel.empty()
     ch_intervals_bed_gz_tbi          = Channel.empty()
     ch_intervals_combined_bed_gz_tbi = Channel.empty() // Create bed.gz and bed.gz.tbi for input/or created interval file. Contains ALL regions.
@@ -29,11 +28,11 @@ workflow PREPARE_INTERVALS {
     if (params.no_intervals) {
         file("${params.outdir}/no_intervals.bed").text = "no_intervals\n"
         ch_intervals = Channel.fromPath(file("${params.outdir}/no_intervals.bed"))
-        tabix_in_combined = ch_intervals.map{it -> [[id:it.getName()], it] }
+        tabix_in_combined = ch_intervals.map{it -> [[id:it.simpleName], it] }
     } else if (params.step != 'annotate' && params.step != 'controlfreec') {
         if (!params.intervals) {
             BUILD_INTERVALS(fasta_fai)
-            tabix_in_combined = BUILD_INTERVALS.out.bed.map{it -> [[id:it.getName()], it] }
+            tabix_in_combined = BUILD_INTERVALS.out.bed.map{it -> [[id:it.simpleName], it] }
             ch_intervals = CREATE_INTERVALS_BED(BUILD_INTERVALS.out.bed)
         } else {
             tabix_in_combined = Channel.fromPath(file(params.intervals)).map{it -> [[id:it.baseName], it] }
@@ -70,20 +69,25 @@ workflow PREPARE_INTERVALS {
                 .map{duration, intervalFile -> intervalFile}
         }
 
-        // Create bed.gz and bed.gz.tbi for each interval file. They are split by region (see above)
+        //Create bed.gz and bed.gz.tbi for each interval file. They are split by region (see above)
         tabix_in = ch_intervals.map{it -> [[id:it.baseName], it] }
         TABIX_BGZIPTABIX_INTERVAL_SPLIT(tabix_in)
         ch_intervals_bed_gz_tbi = TABIX_BGZIPTABIX_INTERVAL_SPLIT.out.gz_tbi.map{ meta, bed, tbi -> [bed, tbi ]}.toList().map{
                                         it ->
-                                        [it, it.size()]                      // Adding number of intervals as elements
+                                        size = it[0][0].simpleName == "no_intervals" ? 0 : it.size()
+                                        [it, size]                      // Adding number of intervals as elements
                                     }.transpose()
         ch_versions = ch_versions.mix(TABIX_BGZIPTABIX_INTERVAL_SPLIT.out.versions)
     }
 
     ch_intervals_out = ch_intervals.collect().map{ it ->
-                                   [it, it.size()]                      // Adding number of intervals as elements
+                                    size = it[0].baseName == "no_intervals" ? 0 : it.size()
+                                   [it, size ] // Adding number of intervals as elements
                                 }.transpose()
 
+    ch_intervals_out.view()
+    ch_intervals_bed_gz_tbi.view()
+    ch_intervals_combined_bed_gz_tbi.view()
 
     emit:
         intervals_bed                    = ch_intervals_out                 // path: intervals.bed, num_intervals                        [intervals split for parallel execution]

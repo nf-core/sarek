@@ -31,8 +31,6 @@ workflow GATK4_MAPPING {
     ch_bam_mapped = ch_bam_mapped.mix(BWAMEM2_MEM.out.bam)
     ch_bam_mapped = ch_bam_mapped.mix(DRAGMAP_ALIGN.out.bam)
 
-    ch_bam_mapped.view()
-
     // Gather reports of all tools used
     ch_reports = ch_reports.mix(DRAGMAP_ALIGN.out.log)
 

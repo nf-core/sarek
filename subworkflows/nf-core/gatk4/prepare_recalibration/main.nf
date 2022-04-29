@@ -16,7 +16,6 @@ workflow PREPARE_RECALIBRATION {
         intervals       // channel: [mandatory] intervals, num_intervals
         known_sites     // channel: [optional]  known_sites
         known_sites_tbi // channel: [optional]  known_sites_tbi
-        //num_intervals   //   value: [mandatory] number of intervals
 
     main:
     ch_versions = Channel.empty()
@@ -24,9 +23,9 @@ workflow PREPARE_RECALIBRATION {
     cram_intervals = cram.combine(intervals)
         .map{ meta, cram, crai, intervals, num_intervals ->
             new_meta = meta.clone()
-            new_meta.id = num_intervals == 1 ? meta.sample : meta.sample + "_" + intervals.baseName
+            new_meta.id = num_intervals <= 1 ? meta.sample : meta.sample + "_" + intervals.baseName
             new_meta.num_intervals = num_intervals
-            intervals_new = params.no_intervals ? [] : intervals
+            intervals_new = num_intervals <= 1 ? [] : intervals
             [new_meta, cram, crai, intervals_new]
         }
 
