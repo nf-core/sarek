@@ -63,6 +63,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#454](https://github.com/nf-core/sarek/pull/454) - Input is optional (can actually be found automatically by `Sarek` if previously run)
 - [#463](https://github.com/nf-core/sarek/pull/463), [#468](https://github.com/nf-core/sarek/pull/468) - Fix `nf-core lint`
 - [#513](https://github.com/nf-core/sarek/pull/513), [#527](https://github.com/nf-core/sarek/pull/527) - CNV is back
+- [#529](https://github.com/nf-core/sarek/pull/529) - Do not save `versions.yml` files
 
 ### Deprecated
 
