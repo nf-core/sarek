@@ -260,18 +260,15 @@ workflow SAREK {
     intervals_bed_combined_gz_tbi = PREPARE_INTERVALS.out.intervals_combined_bed_gz_tbi.collect()   // one file containing all intervals interval.bed.gz/.tbi file
     intervals_bed_combined_gz     = intervals_bed_combined_gz_tbi.map{ bed, tbi -> [bed]}.collect() // one file containing all intervals interval.bed.gz file
 
-    intervals                     = PREPARE_INTERVALS.out.intervals_bed            // multiple interval.bed files, divided by useful intervals for scatter/gather
-    intervals_bed_gz_tbi          = PREPARE_INTERVALS.out.intervals_bed_gz_tbi
-    // multiple interval.bed.gz/.tbi files, divided by useful intervals for scatter/gather
-    // num_intervals = PREPARE_INTERVALS.out.intervals_bed.collect().size()
+    intervals                     = PREPARE_INTERVALS.out.intervals_bed        // [interval, num_intervals] multiple interval.bed files, divided by useful intervals for scatter/gather
+    intervals_bed_gz_tbi          = PREPARE_INTERVALS.out.intervals_bed_gz_tbi // [interval_bed, tbi, num_intervals] multiple interval.bed.gz/.tbi files, divided by useful intervals for scatter/gather
 
-    // println num_intervals
-    intervals_bed_gz_tbi.view()
     //TODO this also needs fixing
-    intervals_for_preprocessing   = [] // Somehitng is not right: the subworkflow expects a combined intervals file I believe (!params.wes || params.no_intervals) ? [] : PREPARE_INTERVALS.out.intervals_bed //TODO: intervals also with WGS data? Probably need a parameter if WGS for deepvariant tool, that would allow to check here too
-    // TODO: needs to figure something out when intervals are made out of the fasta_fai file
-    //num_intervals                 =  !params.no_intervals ? (params.intervals ? count_intervals(file(params.intervals)) : 1) : 1
-    //intervals_for_preprocessing.view()
+    // Somethng is not right: the subworkflow expects a combined intervals file I believe
+    //TODO: intervals also with WGS data? Probably need a parameter if WGS for deepvariant tool, that would allow to check here too
+    //TODO: Not sure if for BamQC for example it wouldn't make sense to also use normal intervals
+    intervals_for_preprocessing   = [] //(!params.wes || params.no_intervals) ? [] : PREPARE_INTERVALS.out.intervals_bed //TODO: intervals also with WGS data? Probably need a parameter if WGS for deepvariant tool, that would allow to check here too
+
     // Gather used softwares versions
     ch_versions = ch_versions.mix(PREPARE_GENOME.out.versions)
     ch_versions = ch_versions.mix(PREPARE_INTERVALS.out.versions)
@@ -500,18 +497,18 @@ workflow SAREK {
             ch_table_bqsr_spark    = Channel.empty()
 
             if (params.use_gatk_spark && params.use_gatk_spark.contains('baserecalibrator')) {
-            // PREPARE_RECALIBRATION_SPARK(ch_cram_for_prepare_recalibration,
-            //     dict,
-            //     fasta,
-            //     fasta_fai,
-            //     intervals,
-            //     known_sites,
-            //     known_sites_tbi)
+            PREPARE_RECALIBRATION_SPARK(ch_cram_for_prepare_recalibration,
+                dict,
+                fasta,
+                fasta_fai,
+                intervals,
+                known_sites,
+                known_sites_tbi)
 
-            //     ch_table_bqsr_spark = PREPARE_RECALIBRATION_SPARK.out.table_bqsr
+                ch_table_bqsr_spark = PREPARE_RECALIBRATION_SPARK.out.table_bqsr
 
-            //     // Gather used softwares versions
-            //     ch_versions = ch_versions.mix(PREPARE_RECALIBRATION_SPARK.out.versions)
+                // Gather used softwares versions
+                ch_versions = ch_versions.mix(PREPARE_RECALIBRATION_SPARK.out.versions)
             } else {
             PREPARE_RECALIBRATION(ch_cram_for_prepare_recalibration,
                 dict,
@@ -542,61 +539,61 @@ workflow SAREK {
     }
 
     // STEP 4: RECALIBRATING
-    if (params.step in ['mapping', 'prepare_recalibration', 'recalibrate']) {
+    // if (params.step in ['mapping', 'prepare_recalibration', 'recalibrate']) {
 
-        if (!(params.skip_tools && params.skip_tools.contains('baserecalibrator'))) {
-            ch_cram_applybqsr = params.step == 'recalibrate' ? ch_input_sample : ch_cram_for_prepare_recalibration.join(ch_table_bqsr)
-            ch_cram_variant_calling_no_spark = Channel.empty()
-            ch_cram_variant_calling_spark    = Channel.empty()
+    //     if (!(params.skip_tools && params.skip_tools.contains('baserecalibrator'))) {
+    //         ch_cram_applybqsr = params.step == 'recalibrate' ? ch_input_sample : ch_cram_for_prepare_recalibration.join(ch_table_bqsr)
+    //         ch_cram_variant_calling_no_spark = Channel.empty()
+    //         ch_cram_variant_calling_spark    = Channel.empty()
 
-            if (params.use_gatk_spark && params.use_gatk_spark.contains('baserecalibrator')) {
+    //         if (params.use_gatk_spark && params.use_gatk_spark.contains('baserecalibrator')) {
 
-                println "recal spark"
-                // RECALIBRATE_SPARK(ch_cram_applybqsr,
-                //     dict,
-                //     fasta,
-                //     fasta_fai,
-                //     intervals)
+    //             println "recal spark"
+    //             // RECALIBRATE_SPARK(ch_cram_applybqsr,
+    //             //     dict,
+    //             //     fasta,
+    //             //     fasta_fai,
+    //             //     intervals)
 
-                // ch_cram_variant_calling_spark = RECALIBRATE_SPARK.out.cram
+    //             // ch_cram_variant_calling_spark = RECALIBRATE_SPARK.out.cram
 
-                // // Gather used softwares versions
-                // ch_versions = ch_versions.mix(RECALIBRATE_SPARK.out.versions)
+    //             // // Gather used softwares versions
+    //             // ch_versions = ch_versions.mix(RECALIBRATE_SPARK.out.versions)
 
-            } else {
+    //         } else {
 
-                println "recal"
-                RECALIBRATE(ch_cram_applybqsr,
-                    dict,
-                    fasta,
-                    fasta_fai,
-                    intervals)
+    //             println "recal"
+    //             RECALIBRATE(ch_cram_applybqsr,
+    //                 dict,
+    //                 fasta,
+    //                 fasta_fai,
+    //                 intervals)
 
-                ch_cram_variant_calling_no_spark = RECALIBRATE.out.cram
+    //             ch_cram_variant_calling_no_spark = RECALIBRATE.out.cram
 
-                // Gather used softwares versions
-                ch_versions = ch_versions.mix(RECALIBRATE.out.versions)
-            }
-            cram_variant_calling = Channel.empty().mix(
-                ch_cram_variant_calling_no_spark,
-                ch_cram_variant_calling_spark)
+    //             // Gather used softwares versions
+    //             ch_versions = ch_versions.mix(RECALIBRATE.out.versions)
+    //         }
+    //         cram_variant_calling = Channel.empty().mix(
+    //             ch_cram_variant_calling_no_spark,
+    //             ch_cram_variant_calling_spark)
 
-            CRAM_QC(cram_variant_calling,
-                fasta,
-                fasta_fai,
-                intervals_for_preprocessing)
+    //         CRAM_QC(cram_variant_calling,
+    //             fasta,
+    //             fasta_fai,
+    //             intervals_for_preprocessing)
 
-            // Create CSV to restart from this step
-            RECALIBRATE_CSV(cram_variant_calling)
+    //         // Create CSV to restart from this step
+    //         RECALIBRATE_CSV(cram_variant_calling)
 
-            // Gather QC reports
-            ch_reports  = ch_reports.mix(CRAM_QC.out.qc.collect{it[1]}.ifEmpty([]))
+    //         // Gather QC reports
+    //         ch_reports  = ch_reports.mix(CRAM_QC.out.qc.collect{it[1]}.ifEmpty([]))
 
-            // Gather used softwares versions
-            ch_versions = ch_versions.mix(CRAM_QC.out.versions)
-        } else cram_variant_calling = ch_cram_for_prepare_recalibration
+    //         // Gather used softwares versions
+    //         ch_versions = ch_versions.mix(CRAM_QC.out.versions)
+    //     } else cram_variant_calling = ch_cram_for_prepare_recalibration
 
-    }
+    // }
 
     // if (params.step == 'variant_calling') cram_variant_calling = ch_input_sample
 
@@ -896,29 +893,6 @@ def extract_csv(csv_file) {
             log.warn "Missing or unknown field in csv file header"
         }
     }
-}
-
-// Function to count number of intervals
-def count_intervals(intervals_file) {
-    count = 0
-
-    intervals_file.eachLine{ it ->
-        count += it.startsWith("@") ? 0 : 1
-    }
-
-    return count
-}
-
-def count_intervals2(intervals_list) {
-    // count = 0
-    // //println intervals_list.getClass()
-    // intervals_list.each{
-    // //    println "$it"
-    //     count += 1
-    // }
-    // println count
-
-    return intervals_list.size
 }
 
 /*
