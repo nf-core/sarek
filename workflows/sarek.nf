@@ -539,61 +539,59 @@ workflow SAREK {
     }
 
     // STEP 4: RECALIBRATING
-    // if (params.step in ['mapping', 'prepare_recalibration', 'recalibrate']) {
+    if (params.step in ['mapping', 'prepare_recalibration', 'recalibrate']) {
 
-    //     if (!(params.skip_tools && params.skip_tools.contains('baserecalibrator'))) {
-    //         ch_cram_applybqsr = params.step == 'recalibrate' ? ch_input_sample : ch_cram_for_prepare_recalibration.join(ch_table_bqsr)
-    //         ch_cram_variant_calling_no_spark = Channel.empty()
-    //         ch_cram_variant_calling_spark    = Channel.empty()
+        if (!(params.skip_tools && params.skip_tools.contains('baserecalibrator'))) {
+            ch_cram_applybqsr = params.step == 'recalibrate' ? ch_input_sample : ch_cram_for_prepare_recalibration.join(ch_table_bqsr)
+            ch_cram_variant_calling_no_spark = Channel.empty()
+            ch_cram_variant_calling_spark    = Channel.empty()
 
-    //         if (params.use_gatk_spark && params.use_gatk_spark.contains('baserecalibrator')) {
+            if (params.use_gatk_spark && params.use_gatk_spark.contains('baserecalibrator')) {
 
-    //             println "recal spark"
-    //             // RECALIBRATE_SPARK(ch_cram_applybqsr,
-    //             //     dict,
-    //             //     fasta,
-    //             //     fasta_fai,
-    //             //     intervals)
+                RECALIBRATE_SPARK(ch_cram_applybqsr,
+                    dict,
+                    fasta,
+                    fasta_fai,
+                    intervals)
 
-    //             // ch_cram_variant_calling_spark = RECALIBRATE_SPARK.out.cram
+                ch_cram_variant_calling_spark = RECALIBRATE_SPARK.out.cram
 
-    //             // // Gather used softwares versions
-    //             // ch_versions = ch_versions.mix(RECALIBRATE_SPARK.out.versions)
+                // Gather used softwares versions
+                ch_versions = ch_versions.mix(RECALIBRATE_SPARK.out.versions)
 
-    //         } else {
+            } else {
 
-    //             println "recal"
-    //             RECALIBRATE(ch_cram_applybqsr,
-    //                 dict,
-    //                 fasta,
-    //                 fasta_fai,
-    //                 intervals)
+                RECALIBRATE(ch_cram_applybqsr,
+                    dict,
+                    fasta,
+                    fasta_fai,
+                    intervals)
 
-    //             ch_cram_variant_calling_no_spark = RECALIBRATE.out.cram
+                ch_cram_variant_calling_no_spark = RECALIBRATE.out.cram
 
-    //             // Gather used softwares versions
-    //             ch_versions = ch_versions.mix(RECALIBRATE.out.versions)
-    //         }
-    //         cram_variant_calling = Channel.empty().mix(
-    //             ch_cram_variant_calling_no_spark,
-    //             ch_cram_variant_calling_spark)
+                // Gather used softwares versions
+                ch_versions = ch_versions.mix(RECALIBRATE.out.versions)
+            }
+            cram_variant_calling = Channel.empty().mix(
+                ch_cram_variant_calling_no_spark,
+                ch_cram_variant_calling_spark)
 
-    //         CRAM_QC(cram_variant_calling,
-    //             fasta,
-    //             fasta_fai,
-    //             intervals_for_preprocessing)
+            // CRAM_QC(cram_variant_calling,
+            //     fasta,
+            //     fasta_fai,
+            //     intervals_for_preprocessing)
 
-    //         // Create CSV to restart from this step
-    //         RECALIBRATE_CSV(cram_variant_calling)
+            // Create CSV to restart from this step
+            RECALIBRATE_CSV(cram_variant_calling)
 
-    //         // Gather QC reports
-    //         ch_reports  = ch_reports.mix(CRAM_QC.out.qc.collect{it[1]}.ifEmpty([]))
+            // Gather QC reports
+            //ch_reports  = ch_reports.mix(CRAM_QC.out.qc.collect{it[1]}.ifEmpty([]))
 
-    //         // Gather used softwares versions
-    //         ch_versions = ch_versions.mix(CRAM_QC.out.versions)
-    //     } else cram_variant_calling = ch_cram_for_prepare_recalibration
+            // Gather used softwares versions
+            //ch_versions = ch_versions.mix(CRAM_QC.out.versions)
+        } else cram_variant_calling = ch_cram_for_prepare_recalibration
 
-    // }
+    }
 
     // if (params.step == 'variant_calling') cram_variant_calling = ch_input_sample
 

@@ -16,21 +16,22 @@ workflow MERGE_INDEX_CRAM {
     ch_versions = Channel.empty()
 
     // Figuring out if there is one or more cram(s) from the same sample
-    ch_cram.map{ meta, cram ->
+    ch_cram_to_merge = ch_cram.map{ meta, cram ->
         new_meta = meta.clone()
         new_meta.id = meta.sample
 
+        def groupKey = groupKey(meta, meta.num_intervals)
         [new_meta, cram]
-    }.groupTuple(size: num_intervals)
+    }.groupTuple()
     .branch{
         single:   it[1].size() == 1
         multiple: it[1].size() > 1
     }
 
-    MERGE_CRAM(cram_to_merge.multiple, fasta)
-    INDEX_CRAM(cram_to_merge.single.mix(MERGE_CRAM.out.cram))
+    MERGE_CRAM(ch_cram_to_merge.multiple, fasta)
+    INDEX_CRAM(ch_cram_to_merge.single.mix(MERGE_CRAM.out.cram))
 
-    cram_crai = cram_to_merge.single
+    cram_crai = ch_cram_to_merge.single
         .mix(MERGE_CRAM.out.cram)
         .join(INDEX_CRAM.out.crai)
 
