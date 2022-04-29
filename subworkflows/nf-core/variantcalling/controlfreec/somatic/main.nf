@@ -19,7 +19,6 @@ workflow RUN_CONTROLFREEC_SOMATIC {
     chr_files                // channel: [mandatory]
     mappability              // channel: [mandatory]
     intervals_bed            // channel: [optional]  Contains a bed file of all intervals combined provided with the cram input(s). Should be empty for WGS
-    num_intervals            //     val: [optional]  Number of used intervals, mandatory when intervals are provided.
 
     main:
 

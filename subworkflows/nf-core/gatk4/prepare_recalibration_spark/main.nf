@@ -40,10 +40,11 @@ workflow PREPARE_RECALIBRATION_SPARK {
     // Figuring out if there is one or more table(s) from the same sample
     table_to_merge = BASERECALIBRATOR_SPARK.out.table
         .map{ meta, table ->
-                meta.id = meta.sample
+                new_meta = meta.clone()
+                new_meta.id = meta.sample
 
-                def groupKey = groupKey(meta, meta.num_intervals)
-                [meta, table]
+                def groupKey = groupKey(new_meta, meta.num_intervals)
+                [new_meta, table]
         }.groupTuple()
     .branch{
         single:   it[1].size() == 1

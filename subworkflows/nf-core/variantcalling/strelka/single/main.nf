@@ -12,7 +12,6 @@ workflow RUN_STRELKA_SINGLE {
     fasta                    // channel: [mandatory]
     fasta_fai                // channel: [mandatory]
     intervals_bed_gz         // channel: [optional]  Contains a bed.gz file of all intervals combined provided with the cram input(s). Mandatory if interval files are used.
-    num_intervals            //     val: [optional]  Number of used intervals, mandatory when intervals are provided.
 
     main:
 
@@ -22,13 +21,13 @@ workflow RUN_STRELKA_SINGLE {
 
     // Figure out if using intervals or no_intervals
     STRELKA_GERMLINE.out.vcf.branch{
-            intervals:    num_intervals > 1
-            no_intervals: num_intervals == 1
+            intervals:    meta.num_intervals > 1
+            no_intervals: meta.num_intervals <= 1
         }.set{strelka_vcf}
 
     STRELKA_GERMLINE.out.genome_vcf.branch{
-            intervals:    num_intervals > 1
-            no_intervals: num_intervals == 1
+            intervals:    meta.num_intervals > 1
+            no_intervals: meta.num_intervals <= 1
         }.set{strelka_genome_vcf}
 
     // Only when using intervals
@@ -39,8 +38,10 @@ workflow RUN_STRELKA_SINGLE {
             .map{ meta, vcf ->
                 new_meta = meta.clone()
                 new_meta.id = new_meta.sample
+
+                def groupKey = groupKey(meta, meta.num_intervals)
                 [new_meta, vcf]
-            }.groupTuple(size: num_intervals),
+            }.groupTuple(),
         fasta_fai,
         intervals_bed_gz)
 
@@ -51,8 +52,9 @@ workflow RUN_STRELKA_SINGLE {
             .map{ meta, vcf ->
                 new_meta = meta.clone()
                 new_meta.id = new_meta.sample
+                def groupKey = groupKey(meta, meta.num_intervals)
                 [new_meta, vcf]
-            }.groupTuple(size: num_intervals),
+            }.groupTuple(),
         fasta_fai,
         intervals_bed_gz)
 
