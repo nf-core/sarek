@@ -23,12 +23,18 @@ workflow PREPARE_RECALIBRATION {
     cram_intervals = cram.combine(intervals)
         .map{ meta, cram, crai, intervals, num_intervals ->
             new_meta = meta.clone()
+
+            // If either no scatter/gather is done, i.e. no interval (0) or one interval (1), then don't rename samples
             new_meta.id = num_intervals <= 1 ? meta.sample : meta.sample + "_" + intervals.baseName
             new_meta.num_intervals = num_intervals
-            intervals_new = num_intervals <= 1 ? [] : intervals
+
+            //If no interval file provided (0) then add empty list
+            intervals_new = num_intervals == 0 ? [] : intervals
+
             [new_meta, cram, crai, intervals_new]
         }
 
+    cram_intervals.view()
     // Run Baserecalibrator
     BASERECALIBRATOR(cram_intervals, fasta, fasta_fai, dict, known_sites, known_sites_tbi)
 
@@ -52,8 +58,10 @@ workflow PREPARE_RECALIBRATION {
     table_bqsr = table_to_merge.single.mix(GATHERBQSRREPORTS.out.table)
                                         .map{ meta, table ->
                                             new_meta = meta.clone()
-                                                // remove no longer necessary fields to make sure joining can be done correctly
+
+                                            // remove no longer necessary fields to make sure joining can be done correctly
                                             new_meta.remove('num_intervals')
+
                                             [new_meta, table]
                                         }
 

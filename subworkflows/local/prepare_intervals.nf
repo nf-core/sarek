@@ -75,7 +75,7 @@ workflow PREPARE_INTERVALS {
         ch_intervals_bed_gz_tbi = TABIX_BGZIPTABIX_INTERVAL_SPLIT.out.gz_tbi.map{ meta, bed, tbi -> [bed, tbi ]}.toList().map{
                                         it ->
                                         size = it[0][0].simpleName == "no_intervals" ? 0 : it.size()
-                                        [it, size]                      // Adding number of intervals as elements
+                                        [it, size] // Adding number of intervals as elements
                                     }.transpose()
         ch_versions = ch_versions.mix(TABIX_BGZIPTABIX_INTERVAL_SPLIT.out.versions)
     }

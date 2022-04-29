@@ -23,9 +23,14 @@ workflow PREPARE_RECALIBRATION_SPARK {
     cram_intervals = cram.combine(intervals)
         .map{ meta, cram, crai, intervals, num_intervals ->
             new_meta = meta.clone()
-            new_meta.id = num_intervals == 1 ? meta.sample : meta.sample + "_" + intervals.baseName
+
+            // If either no scatter/gather is done, i.e. no interval (0) or one interval (1), then don't rename samples
+            new_meta.id = num_intervals <= 1 ? meta.sample : meta.sample + "_" + intervals.baseName
             new_meta.num_intervals = num_intervals
-            intervals_new = params.no_intervals ? [] : intervals
+
+            //If no interval file provided (0) then add empty list
+            intervals_new = num_intervals == 0 ? [] : intervals
+
             [new_meta, cram, crai, intervals_new]
         }
 
@@ -33,13 +38,14 @@ workflow PREPARE_RECALIBRATION_SPARK {
     BASERECALIBRATOR_SPARK(cram_intervals, fasta, fasta_fai, dict, known_sites, known_sites_tbi)
 
     // Figuring out if there is one or more table(s) from the same sample
-    ch_table = BASERECALIBRATOR_SPARK.out.table
+    table_to_merge = BASERECALIBRATOR_SPARK.out.table
         .map{ meta, table ->
                 meta.id = meta.sample
+
                 def groupKey = groupKey(meta, meta.num_intervals)
                 [meta, table]
         }.groupTuple()
-    .branch{ meta, table ->
+    .branch{
         single:   it[1].size() == 1
         multiple: it[1].size() > 1
     }
@@ -47,8 +53,8 @@ workflow PREPARE_RECALIBRATION_SPARK {
     // STEP 3.5: MERGING RECALIBRATION TABLES
 
     // Merge the tables only when we have intervals
-    GATHERBQSRREPORTS(ch_table.multiple)
-    table_bqsr = ch_table.single.mix(GATHERBQSRREPORTS.out.table)
+    GATHERBQSRREPORTS(table_to_merge.multiple)
+    table_bqsr = table_to_merge.single.mix(GATHERBQSRREPORTS.out.table)
 
     // Gather versions of all tools used
     ch_versions = ch_versions.mix(BASERECALIBRATOR_SPARK.out.versions)
