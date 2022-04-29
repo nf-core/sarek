@@ -1,6 +1,6 @@
-process SAMTOOLS_VIEW {
+process SAMTOOLS_COLLATEFASTQ {
     tag "$meta.id"
-    label 'process_medium'
+    label 'process_low'
 
     conda (params.enable_conda ? "bioconda::samtools=1.15.1" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -9,33 +9,35 @@ process SAMTOOLS_VIEW {
 
     input:
     tuple val(meta), path(input)
-    path fasta
 
     output:
-    tuple val(meta), path("*.bam"), path("*.bai") , emit: bam
-    path  "versions.yml"           , emit: versions
+    //TODO might be good to have ordered output of the fastq files, so we can
+    // make sure the we get the right files
+    tuple val(meta), path("*_{1,2}.fq.gz"), path("*_other.fq.gz"), path("*_singleton.fq.gz"), emit: reads
+    path "versions.yml"                                                                     , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
 
     script:
     def args = task.ext.args ?: ''
-    def args2 = task.ext.args2 ?: ''
+    def args2 = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def reference = fasta ? "--reference ${fasta}" : ""
-    //if ("$input" == "${prefix}.${file_type}") error "Input and output names are the same, use \"task.ext.prefix\" to disambiguate!"
     """
-    samtools \\
-        view \\
-        --threads ${task.cpus-1} \\
-        ${reference} \\
+    samtools collate \\
         $args \\
+        --threads $task.cpus \\
+        -O \\
         $input \\
+        . |
+
+    samtools fastq \\
         $args2 \\
-        > ${prefix}.bam
-
-    samtools index ${prefix}.bam
-
+        --threads $task.cpus \\
+        -1 ${prefix}_1.fq.gz \\
+        -2 ${prefix}_2.fq.gz \\
+        -0 ${prefix}_other.fq.gz \\
+        -s ${prefix}_singleton.fq.gz
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
