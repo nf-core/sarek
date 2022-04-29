@@ -24,7 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- [#383](https://github.com/nf-core/sarek/pull/383) - Update `CHANGELOG`
+- [#383](https://github.com/nf-core/sarek/pull/383), [#528](https://github.com/nf-core/sarek/pull/528) - Update `CHANGELOG`
 - [#390](https://github.com/nf-core/sarek/pull/390) - Update `nextflow_schema.json`
 - [#394](https://github.com/nf-core/sarek/pull/394) - Add `DeepVariant`
 - [#408](https://github.com/nf-core/sarek/pull/408) - Sync `TEMPLATE` with `tools` `2.0.1`
