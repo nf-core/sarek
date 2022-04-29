@@ -17,17 +17,19 @@ workflow RUN_STRELKA_SINGLE {
 
     ch_versions = Channel.empty()
 
+    cram.view()
+
     STRELKA_GERMLINE(cram, fasta, fasta_fai)
 
     // Figure out if using intervals or no_intervals
     STRELKA_GERMLINE.out.vcf.branch{
-            intervals:    meta.num_intervals > 1
-            no_intervals: meta.num_intervals <= 1
+            intervals:    it[1].size() > 1
+            no_intervals: it[1].size() <= 1
         }.set{strelka_vcf}
 
     STRELKA_GERMLINE.out.genome_vcf.branch{
-            intervals:    meta.num_intervals > 1
-            no_intervals: meta.num_intervals <= 1
+            intervals:    it[1].size() > 1
+            no_intervals: it[1].size() <= 1
         }.set{strelka_genome_vcf}
 
     // Only when using intervals

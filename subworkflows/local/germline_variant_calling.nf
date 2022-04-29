@@ -51,8 +51,9 @@ workflow GERMLINE_VARIANT_CALLING {
         }
 
     // Remap channel with gzipped intervals + indexes
+    intervals_bed_gz_tbi.view()
     cram_recalibrated_intervals_gz_tbi = cram_recalibrated.combine(intervals_bed_gz_tbi)
-        .map{ meta, cram, crai, bed, tbi, num_intervals ->
+        .map{ meta, cram, crai, bed_tbi, num_intervals ->
             new_meta = meta.clone()
 
             // If either no scatter/gather is done, i.e. no interval (0) or one interval (1), then don't rename samples
@@ -60,8 +61,8 @@ workflow GERMLINE_VARIANT_CALLING {
             new_meta.num_intervals = num_intervals
 
             //If no interval file provided (0) then add empty list
-            bed_new = num_intervals == 0 ? [] : bed
-            tbi_new = num_intervals == 0 ? [] : tbi
+            bed_new = num_intervals == 0 ? [] : bed_tbi[0]
+            tbi_new = num_intervals == 0 ? [] : tbi_tbi[1]
 
             [new_meta, cram, crai, bed_new, tbi_new]
         }
