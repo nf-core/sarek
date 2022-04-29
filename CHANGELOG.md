@@ -20,7 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#485](https://github.com/nf-core/sarek/pull/485) - `--skip_qc`, `--skip_markduplicates` and `--skip_bqsr` is now `--skip_tools`
 - [#507](https://github.com/nf-core/sarek/pull/507) - Subway map for building indexes
 - [#512](https://github.com/nf-core/sarek/pull/512) - Subway map for pipeline
-- [#522](https://github.com/nf-core/sarek/pull/522) - Add QC for vcf files
+- [#522](https://github.com/nf-core/sarek/pull/522) - Add QC for vcf files & MultiQC
 
 ### Changed
 
