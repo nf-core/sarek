@@ -19,13 +19,13 @@ workflow RUN_STRELKA_SOMATIC {
 
     // Figure out if using intervals or no_intervals
     STRELKA_SOMATIC.out.vcf_snvs.branch{
-            intervals:    it[1].size() > 1
-            no_intervals: it[1].size() <= 1
+            intervals:    it[0].num_intervals > 1
+            no_intervals: it[0].num_intervals <= 1
         }.set{strelka_vcf_snvs}
 
     STRELKA_SOMATIC.out.vcf_indels.branch{
-            intervals:    it[1].size() > 1
-            no_intervals: it[1].size() <= 1
+            intervals:    it[0].num_intervals > 1
+            no_intervals: it[0].num_intervals <= 1
         }.set{strelka_vcf_indels}
 
     // Only when using intervals

@@ -22,13 +22,13 @@ workflow RUN_DEEPVARIANT {
     DEEPVARIANT(cram, fasta, fasta_fai)
 
     DEEPVARIANT.out.vcf.branch{
-        intervals:    it[1].size() > 1
-        no_intervals: it[1].size() <= 1
+        intervals:    it[0].num_intervals > 1
+        no_intervals: it[0].num_intervals <= 1
     }.set{deepvariant_vcf_out}
 
     DEEPVARIANT.out.gvcf.branch{
-        intervals:    it[1].size() > 1
-        no_intervals: it[1].size() <= 1
+        intervals:    it[0].num_intervals > 1
+        no_intervals: it[0].num_intervals <= 1
     }.set{deepvariant_gvcf_out}
 
     // Only when no intervals

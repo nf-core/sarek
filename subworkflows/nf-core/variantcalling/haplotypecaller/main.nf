@@ -29,13 +29,13 @@ workflow RUN_HAPLOTYPECALLER {
 
     // Figure out if using intervals or no_intervals
     HAPLOTYPECALLER.out.vcf.branch{
-            intervals:    num_intervals > 1
-            no_intervals: num_intervals == 1
+            intervals:    it[0].num_intervals > 1
+            no_intervals: it[0].num_intervals <= 1
         }.set{haplotypecaller_vcf_branch}
 
     HAPLOTYPECALLER.out.tbi.branch{
-            intervals:    num_intervals > 1
-            no_intervals: num_intervals == 1
+            intervals:    it[0].num_intervals > 1
+            no_intervals: it[0].num_intervals <= 1
         }.set{haplotypecaller_tbi_branch}
 
     // Only when using intervals

@@ -23,28 +23,28 @@ workflow RUN_MANTA_SOMATIC {
 
     // Figure out if using intervals or no_intervals
     MANTA_SOMATIC.out.candidate_small_indels_vcf.branch{
-            intervals:    it[1].size() > 1
-            no_intervals: it[1].size() <= 1
+            intervals:    it[0].num_intervals > 1
+            no_intervals: it[0].num_intervals <= 1
         }.set{manta_candidate_small_indels_vcf}
 
     MANTA_SOMATIC.out.candidate_small_indels_vcf_tbi.branch{
-            intervals:    it[1].size() > 1
-            no_intervals: it[1].size() <= 1
+            intervals:    it[0].num_intervals > 1
+            no_intervals: it[0].num_intervals <= 1
         }.set{manta_candidate_small_indels_vcf_tbi}
 
     MANTA_SOMATIC.out.candidate_sv_vcf.branch{
-            intervals:    it[1].size() > 1
-            no_intervals: it[1].size() <= 1
+            intervals:    it[0].num_intervals > 1
+            no_intervals: it[0].num_intervals <= 1
         }.set{manta_candidate_sv_vcf}
 
     MANTA_SOMATIC.out.diploid_sv_vcf.branch{
-            intervals:    it[1].size() > 1
-            no_intervals: it[1].size() <= 1
+            intervals:    it[0].num_intervals > 1
+            no_intervals: it[0].num_intervals <= 1
         }.set{manta_diploid_sv_vcf}
 
     MANTA_SOMATIC.out.somatic_sv_vcf.branch{
-            intervals:    it[1].size() > 1
-            no_intervals: it[1].size() <= 1
+            intervals:    it[0].num_intervals > 1
+            no_intervals: it[0].num_intervals <= 1
         }.set{manta_somatic_sv_vcf}
 
     //Only when using intervals

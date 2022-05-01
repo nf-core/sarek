@@ -23,18 +23,18 @@ workflow RUN_MANTA_TUMORONLY {
 
     // Figure out if using intervals or no_intervals
     MANTA_TUMORONLY.out.candidate_small_indels_vcf.branch{
-            intervals:    it[1].size() > 1
-            no_intervals: it[1].size() <= 1
+            intervals:    it[0].num_intervals > 1
+            no_intervals: it[0].num_intervals <= 1
         }.set{manta_small_indels_vcf}
 
     MANTA_TUMORONLY.out.candidate_sv_vcf.branch{
-            intervals:    it[1].size() > 1
-            no_intervals: it[1].size() <= 1
+            intervals:    it[0].num_intervals > 1
+            no_intervals: it[0].num_intervals <= 1
         }.set{manta_candidate_sv_vcf}
 
     MANTA_TUMORONLY.out.tumor_sv_vcf.branch{
-            intervals:    it[1].size() > 1
-            no_intervals: it[1].size() <= 1
+            intervals:    it[0].num_intervals > 1
+            no_intervals: it[0].num_intervals <= 1
         }.set{manta_tumor_sv_vcf}
 
     //Only when using intervals

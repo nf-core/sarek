@@ -19,13 +19,13 @@ workflow RUN_STRELKA_SINGLE {
 
     // Figure out if using intervals or no_intervals
     STRELKA_SINGLE.out.vcf.branch{
-            intervals:    it[1].size() > 1
-            no_intervals: it[1].size() <= 1
+            intervals:    it[0].num_intervals > 1
+            no_intervals: it[0].num_intervals <= 1
         }.set{strelka_vcf}
 
     STRELKA_SINGLE.out.genome_vcf.branch{
-            intervals:    it[1].size() > 1
-            no_intervals: it[1].size() <= 1
+            intervals:    it[0].num_intervals > 1
+            no_intervals: it[0].num_intervals <= 1
         }.set{strelka_genome_vcf}
 
     // Only when using intervals

@@ -24,8 +24,9 @@ workflow MERGE_INDEX_CRAM {
         [new_meta, cram]
     }.groupTuple()
     .branch{
-        single:   it[1].size() == 1
-        multiple: it[1].size() > 1
+        //Warning: size() calculates file size not list length here, so use num_intervals instead
+        single:   it[0].num_intervals == 1
+        multiple: it[0].num_intervals > 1
     }
 
     MERGE_CRAM(ch_cram_to_merge.multiple, fasta)

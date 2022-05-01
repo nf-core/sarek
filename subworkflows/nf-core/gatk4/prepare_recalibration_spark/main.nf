@@ -47,8 +47,9 @@ workflow PREPARE_RECALIBRATION_SPARK {
                 [new_meta, table]
         }.groupTuple()
     .branch{
-        single:   it[1].size() == 1
-        multiple: it[1].size() > 1
+         //Warning: size() calculates file size not list length here, so use num_intervals instead
+        single:   it[0].num_intervals == 1
+        multiple: it[0].num_intervals > 1
     }
 
     // STEP 3.5: MERGING RECALIBRATION TABLES
