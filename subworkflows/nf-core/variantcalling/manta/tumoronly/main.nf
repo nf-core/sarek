@@ -23,18 +23,18 @@ workflow RUN_MANTA_TUMORONLY {
 
     // Figure out if using intervals or no_intervals
     MANTA_TUMORONLY.out.candidate_small_indels_vcf.branch{
-            intervals:    num_intervals > 1
-            no_intervals: num_intervals == 1
+            intervals:    it[1].size() > 1
+            no_intervals: it[1].size() <= 1
         }.set{manta_small_indels_vcf}
 
     MANTA_TUMORONLY.out.candidate_sv_vcf.branch{
-            intervals:    num_intervals > 1
-            no_intervals: num_intervals == 1
+            intervals:    it[1].size() > 1
+            no_intervals: it[1].size() <= 1
         }.set{manta_candidate_sv_vcf}
 
     MANTA_TUMORONLY.out.tumor_sv_vcf.branch{
-            intervals:    num_intervals > 1
-            no_intervals: num_intervals == 1
+            intervals:    it[1].size() > 1
+            no_intervals: it[1].size() <= 1
         }.set{manta_tumor_sv_vcf}
 
     //Only when using intervals
@@ -44,8 +44,10 @@ workflow RUN_MANTA_TUMORONLY {
         BGZIP_VC_MANTA_SMALL_INDELS.out.output.map{ meta, vcf ->
                 new_meta = meta.clone()
                 new_meta.id = new_meta.sample
+
+                def groupKey = groupKey(meta, meta.num_intervals)
                 [new_meta, vcf]
-            }.groupTuple(size: num_intervals),
+            }.groupTuple(),
         fasta_fai,
         intervals_bed_gz)
 
@@ -55,8 +57,10 @@ workflow RUN_MANTA_TUMORONLY {
         BGZIP_VC_MANTA_SV.out.output.map{ meta, vcf ->
                 new_meta = meta.clone()
                 new_meta.id = new_meta.sample
+
+                def groupKey = groupKey(meta, meta.num_intervals)
                 [new_meta, vcf]
-            }.groupTuple(size: num_intervals),
+            }.groupTuple(),
         fasta_fai,
         intervals_bed_gz)
 
@@ -66,8 +70,10 @@ workflow RUN_MANTA_TUMORONLY {
         BGZIP_VC_MANTA_TUMOR.out.output.map{ meta, vcf ->
                 new_meta = meta.clone()
                 new_meta.id = new_meta.sample
+
+                def groupKey = groupKey(meta, meta.num_intervals)
                 [new_meta, vcf]
-            }.groupTuple(size: num_intervals),
+            }.groupTuple(),
         fasta_fai,
         intervals_bed_gz)
 
