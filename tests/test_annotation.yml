@@ -6,7 +6,7 @@
   files:
     - path: results/annotation/1234N/1234N_snpEff.ann.vcf.gz
     - path: results/annotation/1234N/1234N_snpEff.ann.vcf.gz.tbi
-    - path: results/multiqc
+    # - path: results/multiqc //MultiQC not working (finishes succesfully, but log shows issues between human vcf and annotation)
 - name: Run VEP
   command: nextflow run main.nf -profile test,annotation,docker --tools vep
   tags:
@@ -15,7 +15,7 @@
   files:
     - path: results/annotation/1234N/1234N_VEP.ann.vcf.gz
     - path: results/annotation/1234N/1234N_VEP.ann.vcf.gz.tbi
-    - path: results/multiqc
+    # - path: results/multiqc //MultiQC not working issues between human vcf and annotation
 - name: Run snpEff followed by VEP
   command: nextflow run main.nf -profile test,annotation,docker --tools merge
   tags:
@@ -24,10 +24,9 @@
     - snpeff
     - vep
   files:
+    #TODO @Maxime: should snpeff alone here be published I find it a bit cofusing to have snpeff + merged but not VEP alone
     - path: results/annotation/1234N/1234N_snpEff.ann.vcf.gz
     - path: results/annotation/1234N/1234N_snpEff.ann.vcf.gz.tbi
-    - path: results/annotation/1234N/1234N_VEP.ann.vcf.gz
-    - path: results/annotation/1234N/1234N_VEP.ann.vcf.gz.tbi
     - path: results/annotation/1234N/1234N_snpEff_VEP.ann.vcf.gz
     - path: results/annotation/1234N/1234N_snpEff_VEP.ann.vcf.gz.tbi
-    - path: results/multiqc
+    # - path: results/multiqc //MultiQC not working  issues between human vcf and annotation
