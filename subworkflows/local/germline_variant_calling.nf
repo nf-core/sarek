@@ -56,12 +56,12 @@ workflow GERMLINE_VARIANT_CALLING {
             new_meta = meta.clone()
 
             // If either no scatter/gather is done, i.e. no interval (0) or one interval (1), then don't rename samples
-            new_meta.id = num_intervals <= 1 ? meta.sample : meta.sample + "_" + intervals.baseName
+            new_meta.id = num_intervals <= 1 ? meta.sample : meta.sample + "_" + bed_tbi[0].simpleName
             new_meta.num_intervals = num_intervals
 
             //If no interval file provided (0) then add empty list
             bed_new = num_intervals == 0 ? [] : bed_tbi[0]
-            tbi_new = num_intervals == 0 ? [] : tbi_tbi[1]
+            tbi_new = num_intervals == 0 ? [] : bed_tbi[1]
 
             [new_meta, cram, crai, bed_new, tbi_new]
         }

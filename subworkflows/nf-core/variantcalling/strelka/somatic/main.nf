@@ -4,8 +4,6 @@ include { CONCAT_VCF as CONCAT_STRELKA_INDELS    } from '../../../../../modules/
 include { CONCAT_VCF as CONCAT_STRELKA_SNVS      } from '../../../../../modules/local/concat_vcf/main'
 include { STRELKA_SOMATIC                        } from '../../../../../modules/nf-core/modules/strelka/somatic/main'
 
-// TODO: Research if splitting by intervals is ok, we pretend for now it is fine.
-// Seems to be the consensus on upstream modules implementation too
 workflow RUN_STRELKA_SOMATIC {
     take:
     cram                     // channel: [mandatory] [meta, normal_cram, normal_crai, tumor_cram, tumor_crai, manta_vcf, manta_tbi, interval.bed.gz, interval.bed.gz.tbi] manta* are optional

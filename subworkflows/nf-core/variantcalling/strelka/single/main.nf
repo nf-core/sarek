@@ -4,8 +4,6 @@ include { CONCAT_VCF as CONCAT_STRELKA           } from '../../../../../modules/
 include { CONCAT_VCF as CONCAT_STRELKA_GENOME    } from '../../../../../modules/local/concat_vcf/main'
 include { STRELKA_GERMLINE                       } from '../../../../../modules/nf-core/modules/strelka/germline/main'
 
-// TODO: Research if splitting by intervals is ok, we pretend for now it is fine.
-// Seems to be the consensus on upstream modules implementation too
 workflow RUN_STRELKA_SINGLE {
     take:
     cram                     // channel: [mandatory] [meta, cram, crai, interval.bed.gz, interval.bed.gz.tbi]
@@ -52,6 +50,7 @@ workflow RUN_STRELKA_SINGLE {
             .map{ meta, vcf ->
                 new_meta = meta.clone()
                 new_meta.id = new_meta.sample
+
                 def groupKey = groupKey(meta, meta.num_intervals)
                 [new_meta, vcf]
             }.groupTuple(),
