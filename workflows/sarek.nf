@@ -266,8 +266,7 @@ workflow SAREK {
     //TODO this also needs fixing
     // Somethng is not right: the subworkflow expects a combined intervals file I believe
     //TODO: intervals also with WGS data? Probably need a parameter if WGS for deepvariant tool, that would allow to check here too
-    //TODO: Not sure if for BamQC for example it wouldn't make sense to also use normal intervals
-    intervals_for_preprocessing   = [] //(!params.wes || params.no_intervals) ? [] : PREPARE_INTERVALS.out.intervals_bed //TODO: intervals also with WGS data? Probably need a parameter if WGS for deepvariant tool, that would allow to check here too
+    intervals_for_preprocessing   = params.wes ? intervals_bed_combined : [] //(!params.wes || params.no_intervals) ? [] : intervals_bed_combined
 
     // Gather used softwares versions
     ch_versions = ch_versions.mix(PREPARE_GENOME.out.versions)
