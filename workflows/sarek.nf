@@ -755,26 +755,26 @@ workflow SAREK {
         // }
     }
 
-    // ch_version_yaml = Channel.empty()
-    // if (!(params.skip_tools && params.skip_tools.contains('versions'))) {
-    //     CUSTOM_DUMPSOFTWAREVERSIONS(ch_versions.unique().collectFile(name: 'collated_versions.yml'))
-    //     ch_version_yaml = CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect()
-    // }
+    ch_version_yaml = Channel.empty()
+    if (!(params.skip_tools && params.skip_tools.contains('versions'))) {
+        CUSTOM_DUMPSOFTWAREVERSIONS(ch_versions.unique().collectFile(name: 'collated_versions.yml'))
+        ch_version_yaml = CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect()
+    }
 
-    // if (!(params.skip_tools && params.skip_tools.contains('multiqc'))) {
-    //     workflow_summary    = WorkflowSarek.paramsSummaryMultiqc(workflow, summary_params)
-    //     ch_workflow_summary = Channel.value(workflow_summary)
+    if (!(params.skip_tools && params.skip_tools.contains('multiqc'))) {
+        workflow_summary    = WorkflowSarek.paramsSummaryMultiqc(workflow, summary_params)
+        ch_workflow_summary = Channel.value(workflow_summary)
 
-    //     ch_multiqc_files =  Channel.empty().mix(ch_version_yaml,
-    //                                         ch_multiqc_custom_config.collect().ifEmpty([]),
-    //                                         ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'),
-    //                                         ch_reports.collect(),
-    //                                         ch_multiqc_config,
-    //                                         ch_sarek_logo)
+        ch_multiqc_files =  Channel.empty().mix(ch_version_yaml,
+                                            ch_multiqc_custom_config.collect().ifEmpty([]),
+                                            ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'),
+                                            ch_reports.collect(),
+                                            ch_multiqc_config,
+                                            ch_sarek_logo)
 
-    //     MULTIQC(ch_multiqc_files.collect())
-    //     multiqc_report = MULTIQC.out.report.toList()
-    // }
+        MULTIQC(ch_multiqc_files.collect())
+        multiqc_report = MULTIQC.out.report.toList()
+    }
 }
 
 /*
