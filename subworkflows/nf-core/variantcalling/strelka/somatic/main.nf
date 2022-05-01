@@ -19,13 +19,13 @@ workflow RUN_STRELKA_SOMATIC {
 
     // Figure out if using intervals or no_intervals
     STRELKA_SOMATIC.out.vcf_snvs.branch{
-            intervals:    num_intervals > 1
-            no_intervals: num_intervals == 1
+            intervals:    it[1].size() > 1
+            no_intervals: it[1].size() <= 1
         }.set{strelka_vcf_snvs}
 
     STRELKA_SOMATIC.out.vcf_indels.branch{
-            intervals:    num_intervals > 1
-            no_intervals: num_intervals == 1
+            intervals:    it[1].size() > 1
+            no_intervals: it[1].size() <= 1
         }.set{strelka_vcf_indels}
 
     // Only when using intervals
@@ -34,8 +34,10 @@ workflow RUN_STRELKA_SOMATIC {
     CONCAT_STRELKA_SNVS(BGZIP_VC_STRELKA_SNVS.out.output.map{ meta, vcf ->
                 new_meta = meta.clone()
                 new_meta.id = new_meta.tumor_id + "_vs_" + new_meta.normal_id
+
+                def groupKey = groupKey(meta, meta.num_intervals)
                 [new_meta, vcf]
-            }.groupTuple(size: num_intervals),
+            }.groupTuple(),
             fasta_fai,
             intervals_bed_gz)
 
@@ -44,8 +46,10 @@ workflow RUN_STRELKA_SOMATIC {
     CONCAT_STRELKA_INDELS(BGZIP_VC_STRELKA_INDELS.out.output.map{ meta, vcf ->
                 new_meta = meta.clone()
                 new_meta.id = new_meta.tumor_id + "_vs_" + new_meta.normal_id
+
+                def groupKey = groupKey(meta, meta.num_intervals)
                 [new_meta, vcf]
-            }.groupTuple(size: num_intervals),
+            }.groupTuple(),
             fasta_fai,
             intervals_bed_gz)
 

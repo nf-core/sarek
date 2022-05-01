@@ -43,84 +43,97 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
     mutect2_vcf         = Channel.empty()
     strelka_vcf         = Channel.empty()
 
-    cram_recalibrated.combine(intervals).map{ meta, cram, crai, intervals ->
-        sample = meta.sample
-        new_intervals = intervals.baseName != "no_intervals" ? intervals : []
-        id = new_intervals ? sample + "_" + new_intervals.baseName : sample
-        new_new_meta = [ id: id, sample: meta.sample, gender: meta.gender, status: meta.status, patient: meta.patient ]
-        [new_new_meta, cram, crai, new_intervals]
-    }.set{cram_recalibrated_intervals}
+    // Remap channel with intervals
+    cram_recalibrated_intervals = cram_recalibrated.combine(intervals)
+        .map{ meta, cram, crai, intervals, num_intervals ->
+            new_meta = meta.clone()
 
-    cram_recalibrated.combine(intervals_bed_gz_tbi)
-        .map{ meta, cram, crai, bed, tbi ->
-            sample = meta.sample
-            new_bed = bed.simpleName != "no_intervals" ? bed : []
-            new_tbi = tbi.simpleName != "no_intervals" ? tbi : []
-            id = new_bed ? sample + "_" + new_bed.simpleName : sample
-            new_meta = [ id: id, sample: meta.sample, gender: meta.gender, status: meta.status, patient: meta.patient ]
-            [new_meta, cram, crai, new_bed, new_tbi]
-        }.set{cram_recalibrated_intervals_gz_tbi}
+            // If either no scatter/gather is done, i.e. no interval (0) or one interval (1), then don't rename samples
+            new_meta.id = num_intervals <= 1 ? meta.sample : meta.sample + "_" + intervals.baseName
+            new_meta.num_intervals = num_intervals
 
-    if(tools.contains('controlfreec')){
-        cram_recalibrated_intervals.map {meta, cram, crai, intervals -> [meta, cram, intervals]}.set{cram_intervals_no_index}
-        RUN_CONTROLFREEC_TUMORONLY(
-                        cram_intervals_no_index,
-                        fasta,
-                        fasta_fai,
-                        dbsnp,
-                        dbsnp_tbi,
-                        chr_files,
-                        mappability,
-                        intervals_bed_combined,
-                        num_intervals)
-        ch_versions = ch_versions.mix(RUN_CONTROLFREEC_TUMORONLY.out.versions)
-    }
+            //If no interval file provided (0) then add empty list
+            intervals_new = num_intervals == 0 ? [] : intervals
 
-    if (tools.contains('freebayes')){
-        // Remap channel for Freebayes
-        cram_recalibrated_intervals_freebayes = cram_recalibrated_intervals
-            .map{ meta, cram, crai, intervals ->
-                [meta, cram, crai, [], [], intervals]
-            }
+            [new_meta, cram, crai, intervals_new]
+        }
 
-        RUN_FREEBAYES(cram_recalibrated_intervals_freebayes, fasta, fasta_fai, intervals_bed_combine_gz, num_intervals)
+    // Remap channel with gzipped intervals + indexes
+    cram_recalibrated_intervals_gz_tbi = cram_recalibrated.combine(intervals_bed_gz_tbi)
+        .map{ meta, cram, crai, bed_tbi, num_intervals ->
+            new_meta = meta.clone()
 
-        freebayes_vcf = RUN_FREEBAYES.out.freebayes_vcf
-        ch_versions   = ch_versions.mix(RUN_FREEBAYES.out.versions)
-    }
+            // If either no scatter/gather is done, i.e. no interval (0) or one interval (1), then don't rename samples
+            new_meta.id = num_intervals <= 1 ? meta.sample : meta.sample + "_" + bed_tbi[0].simpleName
+            new_meta.num_intervals = num_intervals
 
-    if (tools.contains('mutect2')) {
+            //If no interval file provided (0) then add empty list
+            bed_new = num_intervals == 0 ? [] : bed_tbi[0]
+            tbi_new = num_intervals == 0 ? [] : bed_tbi[1]
 
-        which_norm = []
-        cram_recalibrated_intervals.map{ meta, cram, crai, intervals -> [meta, cram, crai, intervals, which_norm]}.set{cram_recalibrated_mutect2}
-        GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING(cram_recalibrated_mutect2,
-                                                fasta,
-                                                fasta_fai,
-                                                dict,
-                                                germline_resource,
-                                                germline_resource_tbi,
-                                                panel_of_normals,
-                                                panel_of_normals_tbi,
-                                                intervals_bed_combine_gz,
-                                                num_intervals)
+            [new_meta, cram, crai, bed_new, tbi_new]
+        }
 
-        mutect2_vcf = GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING.out.mutect2_vcf
-        ch_versions = ch_versions.mix(GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING.out.versions)
+    // if(tools.contains('controlfreec')){
+    //     cram_recalibrated_intervals.map {meta, cram, crai, intervals -> [meta, cram, intervals]}.set{cram_intervals_no_index}
+    //     RUN_CONTROLFREEC_TUMORONLY(
+    //                     cram_intervals_no_index,
+    //                     fasta,
+    //                     fasta_fai,
+    //                     dbsnp,
+    //                     dbsnp_tbi,
+    //                     chr_files,
+    //                     mappability,
+    //                     intervals_bed_combined,
+    //                     num_intervals)
+    //     ch_versions = ch_versions.mix(RUN_CONTROLFREEC_TUMORONLY.out.versions)
+    // }
 
-    }
+    // if (tools.contains('freebayes')){
+    //     // Remap channel for Freebayes
+    //     cram_recalibrated_intervals_freebayes = cram_recalibrated_intervals
+    //         .map{ meta, cram, crai, intervals ->
+    //             [meta, cram, crai, [], [], intervals]
+    //         }
 
-    if (tools.contains('manta')){
-        //TODO: Research if splitting by intervals is ok, we pretend for now it is fine. Seems to be the consensus on upstream modules implementaiton too
+    //     RUN_FREEBAYES(cram_recalibrated_intervals_freebayes, fasta, fasta_fai, intervals_bed_combine_gz, num_intervals)
 
-        RUN_MANTA_TUMORONLY(cram_recalibrated_intervals_gz_tbi,
-                            fasta,
-                            fasta_fai,
-                            intervals_bed_combine_gz,
-                            num_intervals)
+    //     freebayes_vcf = RUN_FREEBAYES.out.freebayes_vcf
+    //     ch_versions   = ch_versions.mix(RUN_FREEBAYES.out.versions)
+    // }
 
-        manta_vcf   = RUN_MANTA_TUMORONLY.out.manta_vcf
-        ch_versions = ch_versions.mix(RUN_MANTA_TUMORONLY.out.versions)
-    }
+    // if (tools.contains('mutect2')) {
+
+    //     which_norm = []
+    //     cram_recalibrated_intervals.map{ meta, cram, crai, intervals -> [meta, cram, crai, intervals, which_norm]}.set{cram_recalibrated_mutect2}
+    //     GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING(cram_recalibrated_mutect2,
+    //                                             fasta,
+    //                                             fasta_fai,
+    //                                             dict,
+    //                                             germline_resource,
+    //                                             germline_resource_tbi,
+    //                                             panel_of_normals,
+    //                                             panel_of_normals_tbi,
+    //                                             intervals_bed_combine_gz,
+    //                                             num_intervals)
+
+    //     mutect2_vcf = GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING.out.mutect2_vcf
+    //     ch_versions = ch_versions.mix(GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING.out.versions)
+
+    // }
+
+    // if (tools.contains('manta')){
+    //     //TODO: Research if splitting by intervals is ok, we pretend for now it is fine. Seems to be the consensus on upstream modules implementaiton too
+
+    //     RUN_MANTA_TUMORONLY(cram_recalibrated_intervals_gz_tbi,
+    //                         fasta,
+    //                         fasta_fai,
+    //                         intervals_bed_combine_gz,
+    //                         num_intervals)
+
+    //     manta_vcf   = RUN_MANTA_TUMORONLY.out.manta_vcf
+    //     ch_versions = ch_versions.mix(RUN_MANTA_TUMORONLY.out.versions)
+    // }
 
     if (tools.contains('strelka')) {
         RUN_STRELKA_SINGLE( cram_recalibrated_intervals_gz_tbi,
