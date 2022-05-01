@@ -87,18 +87,18 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
     //     ch_versions = ch_versions.mix(RUN_CONTROLFREEC_TUMORONLY.out.versions)
     // }
 
-    // if (tools.contains('freebayes')){
-    //     // Remap channel for Freebayes
-    //     cram_recalibrated_intervals_freebayes = cram_recalibrated_intervals
-    //         .map{ meta, cram, crai, intervals ->
-    //             [meta, cram, crai, [], [], intervals]
-    //         }
+    if (tools.contains('freebayes')){
+        // Remap channel for Freebayes
+        cram_recalibrated_intervals_freebayes = cram_recalibrated_intervals
+            .map{ meta, cram, crai, intervals ->
+                [meta, cram, crai, [], [], intervals]
+            }
 
-    //     RUN_FREEBAYES(cram_recalibrated_intervals_freebayes, fasta, fasta_fai, intervals_bed_combine_gz, num_intervals)
+        RUN_FREEBAYES(cram_recalibrated_intervals_freebayes, fasta, fasta_fai, intervals_bed_combine_gz)
 
-    //     freebayes_vcf = RUN_FREEBAYES.out.freebayes_vcf
-    //     ch_versions   = ch_versions.mix(RUN_FREEBAYES.out.versions)
-    // }
+        freebayes_vcf = RUN_FREEBAYES.out.freebayes_vcf
+        ch_versions   = ch_versions.mix(RUN_FREEBAYES.out.versions)
+    }
 
     // if (tools.contains('mutect2')) {
 
