@@ -17,6 +17,7 @@
     - path: results/preprocessing/csv/recalibrated.csv
     - path: results/preprocessing/csv/recalibrated_test.csv
     - path: results/reports/fastqc/test-test_L1
+    - path: results/reports/markduplicates/test/test.md.metrics
     - path: results/reports/qualimap/test/test.mapped
     - path: results/reports/qualimap/test/test.recal
     - path: results/reports/samtools_stats/test/test.md.cram.stats
