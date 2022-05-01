@@ -24,8 +24,6 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
         intervals_bed_combine_gz_tbi // channel: [mandatory] intervals/target regions index zipped and indexed
         intervals_bed_combine_gz     // channel: [mandatory] intervals/target regions index zipped and indexed in one file
         intervals_bed_combined        // channel: [mandatory] intervals/target regions in one file unzipped
-        num_intervals                // val: number of intervals that are used to parallelize exection, either based on capture kit or GATK recommended for WGS
-        no_intervals
         germline_resource            // channel: [optional]  germline_resource
         germline_resource_tbi        // channel: [optional]  germline_resource_tbi
         panel_of_normals             // channel: [optional]  panel_of_normals
@@ -128,8 +126,7 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
         RUN_MANTA_TUMORONLY(cram_recalibrated_intervals_gz_tbi,
                             fasta,
                             fasta_fai,
-                            intervals_bed_combine_gz,
-                            num_intervals)
+                            intervals_bed_combine_gz)
 
         manta_vcf   = RUN_MANTA_TUMORONLY.out.manta_vcf
         ch_versions = ch_versions.mix(RUN_MANTA_TUMORONLY.out.versions)
@@ -139,8 +136,7 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
         RUN_STRELKA_SINGLE( cram_recalibrated_intervals_gz_tbi,
                             fasta,
                             fasta_fai,
-                            intervals_bed_combine_gz,
-                            num_intervals)
+                            intervals_bed_combine_gz)
 
         strelka_vcf = RUN_STRELKA_SINGLE.out.strelka_vcf
         ch_versions = ch_versions.mix(RUN_STRELKA_SINGLE.out.versions)

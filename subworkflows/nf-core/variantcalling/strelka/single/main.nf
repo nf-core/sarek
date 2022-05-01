@@ -2,7 +2,7 @@ include { TABIX_BGZIP as BGZIP_VC_STRELKA        } from '../../../../../modules/
 include { TABIX_BGZIP as BGZIP_VC_STRELKA_GENOME } from '../../../../../modules/nf-core/modules/tabix/bgzip/main'
 include { CONCAT_VCF as CONCAT_STRELKA           } from '../../../../../modules/local/concat_vcf/main'
 include { CONCAT_VCF as CONCAT_STRELKA_GENOME    } from '../../../../../modules/local/concat_vcf/main'
-include { STRELKA_GERMLINE                       } from '../../../../../modules/nf-core/modules/strelka/germline/main'
+include { STRELKA_GERMLINE as STRELKA_SINGLE     } from '../../../../../modules/nf-core/modules/strelka/germline/main'
 
 workflow RUN_STRELKA_SINGLE {
     take:
@@ -15,15 +15,15 @@ workflow RUN_STRELKA_SINGLE {
 
     ch_versions = Channel.empty()
 
-    STRELKA_GERMLINE(cram, fasta, fasta_fai)
+    STRELKA_SINGLE(cram, fasta, fasta_fai)
 
     // Figure out if using intervals or no_intervals
-    STRELKA_GERMLINE.out.vcf.branch{
+    STRELKA_SINGLE.out.vcf.branch{
             intervals:    it[1].size() > 1
             no_intervals: it[1].size() <= 1
         }.set{strelka_vcf}
 
-    STRELKA_GERMLINE.out.genome_vcf.branch{
+    STRELKA_SINGLE.out.genome_vcf.branch{
             intervals:    it[1].size() > 1
             no_intervals: it[1].size() <= 1
         }.set{strelka_genome_vcf}
@@ -72,7 +72,7 @@ workflow RUN_STRELKA_SINGLE {
     ch_versions = ch_versions.mix(BGZIP_VC_STRELKA_GENOME.out.versions)
     ch_versions = ch_versions.mix(CONCAT_STRELKA.out.versions)
     ch_versions = ch_versions.mix(CONCAT_STRELKA_GENOME.out.versions)
-    ch_versions = ch_versions.mix(STRELKA_GERMLINE.out.versions)
+    ch_versions = ch_versions.mix(STRELKA_SINGLE.out.versions)
 
     emit:
     strelka_vcf

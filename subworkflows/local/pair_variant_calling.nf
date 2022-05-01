@@ -21,7 +21,6 @@ workflow PAIR_VARIANT_CALLING {
         intervals_bed_combined_gz_tbi // channel: [mandatory] intervals/target regions all in one file zipped and indexed
         intervals_bed_combine_gz      // channel: [mandatory] intervals/target regions zipped in one file
         intervals_bed_combined        // channel: [mandatory] intervals/target regions in one file unzipped
-        no_intervals
         msisensorpro_scan             // channel: [optional]  msisensorpro_scan
         germline_resource             // channel: [optional]  germline_resource
         germline_resource_tbi         // channel: [optional]  germline_resource_tbi
@@ -41,7 +40,7 @@ workflow PAIR_VARIANT_CALLING {
     mutect2_vcf          = Channel.empty()
 
     // Remap channel with intervals
-    cram_pair_intervals = cram_recalibrated.combine(intervals)
+    cram_pair_intervals = cram_pair.combine(intervals)
         .map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals, num_intervals ->
             new_meta = meta.clone()
 
@@ -56,7 +55,7 @@ workflow PAIR_VARIANT_CALLING {
         }
 
     // Remap channel with gzipped intervals + indexes
-    cram_recalibrated_intervals_gz_tbi = cram_recalibrated.combine(intervals_bed_gz_tbi)
+    cram_pair_intervals_gz_tbi = cram_pair.combine(intervals_bed_gz_tbi)
         .map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, bed_tbi, num_intervals ->
             new_meta = meta.clone()
 
@@ -99,8 +98,7 @@ workflow PAIR_VARIANT_CALLING {
         RUN_MANTA_SOMATIC(  cram_pair_intervals_gz_tbi,
                             fasta,
                             fasta_fai,
-                            intervals_bed_combine_gz,
-                            num_intervals)
+                            intervals_bed_combine_gz)
 
         manta_vcf                            = RUN_MANTA_SOMATIC.out.manta_vcf
         manta_candidate_small_indels_vcf     = RUN_MANTA_SOMATIC.out.manta_candidate_small_indels_vcf
@@ -136,8 +134,7 @@ workflow PAIR_VARIANT_CALLING {
         RUN_STRELKA_SOMATIC(cram_pair_strelka,
                             fasta,
                             fasta_fai,
-                            intervals_bed_combine_gz,
-                            num_intervals)
+                            intervals_bed_combine_gz)
 
         strelka_vcf = RUN_STRELKA_SOMATIC.out.strelka_vcf
         ch_versions = ch_versions.mix(RUN_STRELKA_SOMATIC.out.versions)
