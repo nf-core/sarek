@@ -40,8 +40,9 @@ workflow RUN_MANTA_GERMLINE {
     // Only when using intervals
     BGZIP_VC_MANTA_SMALL_INDELS(manta_small_indels_vcf.intervals)
 
+    intervals_bed_gz.view()
     CONCAT_MANTA_SMALL_INDELS(
-        BGZIP_VC_MANTA_SMALL_INDELS.out.vcf
+        BGZIP_VC_MANTA_SMALL_INDELS.out.output
             .map{ meta, vcf ->
                 new_meta = meta.clone()
                 new_meta.id = new_meta.sample
@@ -102,6 +103,6 @@ workflow RUN_MANTA_GERMLINE {
     ch_versions = ch_versions.mix(MANTA_GERMLINE.out.versions)
 
     emit:
-    manta_vcf
+    manta_vcf = Channel.empty()
     versions = ch_versions
 }

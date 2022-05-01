@@ -112,7 +112,7 @@ workflow PAIR_VARIANT_CALLING {
             cram_pair_strelka = cram_pair.join(manta_candidate_small_indels_vcf)
                                         .join(manta_candidate_small_indels_vcf_tbi)
                                         .combine(intervals_bed_gz_tbi)
-                                        .map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, vcf, vcf_tbi, bed_tbi, num_intervals ->
+                                        .map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, vcf, bed_tbi, num_intervals ->
 
                                              // If either no scatter/gather is done, i.e. no interval (0) or one interval (1), then don't rename samples
                                             new_meta.id = num_intervals <= 1 ? meta.tumor_id + "_vs_" + meta.normal_id : meta.tumor_id + "_vs_" + meta.normal_id + "_" + bed_tbi[0].simpleName
