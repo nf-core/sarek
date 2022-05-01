@@ -140,13 +140,13 @@ workflow PAIR_VARIANT_CALLING {
         ch_versions = ch_versions.mix(RUN_STRELKA_SOMATIC.out.versions)
     }
 
-    // if (tools.contains('msisensorpro')) {
+    if (tools.contains('msisensorpro')) {
 
-    //     cram_pair_msisensor = cram_pair.combine(intervals_bed_combined)
-    //     MSISENSORPRO_MSI_SOMATIC(cram_pair_msisensor, fasta, msisensorpro_scan)
-    //     ch_versions = ch_versions.mix(MSISENSORPRO_MSI_SOMATIC.out.versions)
-    //     msisensorpro_output = msisensorpro_output.mix(MSISENSORPRO_MSI_SOMATIC.out.output_report)
-    // }
+        cram_pair_msisensor = cram_pair.combine(intervals_bed_combined)
+        MSISENSORPRO_MSI_SOMATIC(cram_pair_msisensor, fasta, msisensorpro_scan)
+        ch_versions = ch_versions.mix(MSISENSORPRO_MSI_SOMATIC.out.versions)
+        msisensorpro_output = msisensorpro_output.mix(MSISENSORPRO_MSI_SOMATIC.out.output_report)
+    }
 
     // if (tools.contains('mutect2')) {
     //     cram_pair_intervals.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals ->
