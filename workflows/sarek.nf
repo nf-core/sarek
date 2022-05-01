@@ -263,10 +263,8 @@ workflow SAREK {
     intervals                     = PREPARE_INTERVALS.out.intervals_bed        // [interval, num_intervals] multiple interval.bed files, divided by useful intervals for scatter/gather
     intervals_bed_gz_tbi          = PREPARE_INTERVALS.out.intervals_bed_gz_tbi // [interval_bed, tbi, num_intervals] multiple interval.bed.gz/.tbi files, divided by useful intervals for scatter/gather
 
-    //TODO this also needs fixing
-    // Somethng is not right: the subworkflow expects a combined intervals file I believe
     //TODO: intervals also with WGS data? Probably need a parameter if WGS for deepvariant tool, that would allow to check here too
-    intervals_for_preprocessing   = params.wes ? intervals_bed_combined : [] //(!params.wes || params.no_intervals) ? [] : intervals_bed_combined
+    intervals_for_preprocessing   = (params.wes && !params.no_intervals) ? intervals_bed_combined : []
 
     // Gather used softwares versions
     ch_versions = ch_versions.mix(PREPARE_GENOME.out.versions)

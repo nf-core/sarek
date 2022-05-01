@@ -51,7 +51,6 @@ workflow GERMLINE_VARIANT_CALLING {
         }
 
     // Remap channel with gzipped intervals + indexes
-    intervals_bed_gz_tbi.view()
     cram_recalibrated_intervals_gz_tbi = cram_recalibrated.combine(intervals_bed_gz_tbi)
         .map{ meta, cram, crai, bed_tbi, num_intervals ->
             new_meta = meta.clone()

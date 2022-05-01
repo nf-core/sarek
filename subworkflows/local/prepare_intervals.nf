@@ -85,10 +85,6 @@ workflow PREPARE_INTERVALS {
                                    [it, size ] // Adding number of intervals as elements
                                 }.transpose()
 
-    ch_intervals_out.view()
-    ch_intervals_bed_gz_tbi.view()
-    ch_intervals_combined_bed_gz_tbi.view()
-
     emit:
         intervals_bed                    = ch_intervals_out                 // path: intervals.bed, num_intervals                        [intervals split for parallel execution]
         intervals_bed_gz_tbi             = ch_intervals_bed_gz_tbi          // path: target.bed.gz, target.bed.gz.tbi, num_intervals     [intervals split for parallel execution]

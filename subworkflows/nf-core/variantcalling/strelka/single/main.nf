@@ -17,8 +17,6 @@ workflow RUN_STRELKA_SINGLE {
 
     ch_versions = Channel.empty()
 
-    cram.view()
-
     STRELKA_GERMLINE(cram, fasta, fasta_fai)
 
     // Figure out if using intervals or no_intervals
