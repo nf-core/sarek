@@ -26,6 +26,8 @@
   files:
     - path: results/annotation/1234N/1234N_snpEff.ann.vcf.gz
     - path: results/annotation/1234N/1234N_snpEff.ann.vcf.gz.tbi
+    - path: results/annotation/1234N/1234N_VEP.ann.vcf.gz
+    - path: results/annotation/1234N/1234N_VEP.ann.vcf.gz.tbi
     - path: results/annotation/1234N/1234N_snpEff_VEP.ann.vcf.gz
     - path: results/annotation/1234N/1234N_snpEff_VEP.ann.vcf.gz.tbi
     - path: results/multiqc
