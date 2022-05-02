@@ -122,8 +122,6 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
     // }
 
     if (tools.contains('manta')){
-        //TODO: Research if splitting by intervals is ok, we pretend for now it is fine. Seems to be the consensus on upstream modules implementaiton too
-
         RUN_MANTA_TUMORONLY(cram_recalibrated_intervals_gz_tbi,
                             fasta,
                             fasta_fai,
