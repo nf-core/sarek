@@ -52,7 +52,6 @@ workflow PREPARE_RECALIBRATION {
         multiple: it[0].num_intervals > 1
     }
 
-    table_to_merge.single.view()
     // STEP 3.5: MERGING RECALIBRATION TABLES
 
     // Merge the tables only when we have intervals

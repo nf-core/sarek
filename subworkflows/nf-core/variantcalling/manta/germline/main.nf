@@ -40,7 +40,6 @@ workflow RUN_MANTA_GERMLINE {
     // Only when using intervals
     BGZIP_VC_MANTA_SMALL_INDELS(manta_small_indels_vcf.intervals)
 
-    intervals_bed_gz.view()
     CONCAT_MANTA_SMALL_INDELS(
         BGZIP_VC_MANTA_SMALL_INDELS.out.output
             .map{ meta, vcf ->

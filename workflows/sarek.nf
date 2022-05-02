@@ -544,10 +544,6 @@ workflow SAREK {
             ch_cram_variant_calling_no_spark = Channel.empty()
             ch_cram_variant_calling_spark    = Channel.empty()
 
-            ch_table_bqsr.view()
-            ch_cram_for_prepare_recalibration.view()
-            ch_cram_applybqsr.view()
-
             if (params.use_gatk_spark && params.use_gatk_spark.contains('baserecalibrator')) {
 
                 RECALIBRATE_SPARK(ch_cram_applybqsr,
