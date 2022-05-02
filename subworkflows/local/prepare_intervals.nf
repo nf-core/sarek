@@ -29,7 +29,8 @@ workflow PREPARE_INTERVALS {
         file("${params.outdir}/no_intervals.bed.gz").text = "no_intervals\n"
         file("${params.outdir}/no_intervals.bed.gz.tbi").text = "no_intervals\n"
 
-        ch_intervals = Channel.fromPath(file("${params.outdir}/no_intervals.bed")).map{ it -> [it, 0]}
+        ch_intervals = Channel.fromPath(file("${params.outdir}/no_intervals.bed"))
+                                            .map{ it -> [it, 0]}
 
         ch_intervals_bed_gz_tbi = Channel.fromPath(file("${params.outdir}/no_intervals.bed.{gz,gz.tbi}"))
                                             .collect().map{ it -> [it, 0]}
@@ -51,19 +52,19 @@ workflow PREPARE_INTERVALS {
 
         } else {
 
+            tabix_in_combined = Channel.fromPath(file(params.intervals)).map{it -> [[id:it.baseName], it] }
+
             //If interval file is not provided as .bed, but e.g. as .interval_list then convert to BED format
             if(!params.intervals.endsWith(".bed")) {
                 GATK4_INTERVALLISTTOBED(tabix_in_combined)
                 tabix_in_combined = GATK4_INTERVALLISTTOBED.out.bed
                 ch_versions = ch_versions.mix(GATK4_INTERVALLISTTOBED.out.versions)
-            }else{
-                tabix_in_combined = Channel.fromPath(file(params.intervals)).map{it -> [[id:it.baseName], it] }
             }
 
             ch_intervals = CREATE_INTERVALS_BED(file(params.intervals))
         }
 
-        //Now the interval.bed is:
+        // Now for the interval.bed the following operations are done:
         // 1. Complete intervals file (with all intervals) is indexed
         // 2. Interval file is split up into multiple bed files for scatter/gather
         // 3. Each bed file from 2. is indexed
@@ -73,7 +74,7 @@ workflow PREPARE_INTERVALS {
         ch_intervals_combined_bed_gz_tbi = TABIX_BGZIPTABIX_INTERVAL_ALL.out.gz_tbi.map{ meta, bed, tbi -> [bed, tbi] }
         ch_versions = ch_versions.mix(TABIX_BGZIPTABIX_INTERVAL_ALL.out.versions)
 
-        // 2.
+        // 2. Interval file is split up into multiple bed files for scatter/gather & grouping together small intervals
         ch_intervals = ch_intervals.flatten()
             .map{ intervalFile ->
                 def duration = 0.0
@@ -94,20 +95,19 @@ workflow PREPARE_INTERVALS {
                    [it, it.size() ] // Adding number of intervals as elements
                 }.transpose()
 
-        // 2. Create bed.gz and bed.gz.tbi for each interval file. They are split by region (see above)
-        tabix_in = ch_intervals.map{it -> [[id:it.baseName], it] }
+        // 3. Create bed.gz and bed.gz.tbi for each interval file. They are split by region (see above)
+        tabix_in = ch_intervals.map{ file, num_intervals -> [[id:file.baseName], file] }
         TABIX_BGZIPTABIX_INTERVAL_SPLIT(tabix_in)
         ch_intervals_bed_gz_tbi = TABIX_BGZIPTABIX_INTERVAL_SPLIT.out.gz_tbi.map{ meta, bed, tbi -> [bed, tbi ]}.toList().map{
                                         it ->
-                                        size = it[0][0].simpleName == "no_intervals" ? 0 : it.size()
-                                        [it, size] // Adding number of intervals as elements
+                                        [it, it.size()] // Adding number of intervals as elements
                                     }.transpose()
         ch_versions = ch_versions.mix(TABIX_BGZIPTABIX_INTERVAL_SPLIT.out.versions)
 
     }
-    ch_intervals.view()
-    ch_intervals_bed_gz_tbi.view()
-    ch_intervals_combined_bed_gz_tbi.view()
+    //ch_intervals.view()
+    //ch_intervals_bed_gz_tbi.view()
+    //ch_intervals_combined_bed_gz_tbi.view()
 
     emit:
         intervals_bed                    = ch_intervals                 // path: intervals.bed, num_intervals                        [intervals split for parallel execution]
