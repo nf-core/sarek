@@ -84,10 +84,10 @@ workflow RUN_MANTA_GERMLINE {
     // Mix output channels for "no intervals" and "with intervals" results
     manta_vcf = Channel.empty().mix(
                     CONCAT_MANTA_DIPLOID.out.vcf,
-                    CONCAT_MANTA_SMALL_INDELS.out.vcf,
+                    //CONCAT_MANTA_SMALL_INDELS.out.vcf,
                     CONCAT_MANTA_SV.out.vcf,
                     manta_diploid_sv_vcf.no_intervals,
-                    manta_small_indels_vcf.no_intervals,
+                    //manta_small_indels_vcf.no_intervals,
                     manta_sv_vcf.no_intervals)
                 .map{ meta, vcf ->
                     meta.variantcaller = "Manta"
