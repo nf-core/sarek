@@ -713,19 +713,19 @@ workflow SAREK {
         vcf_to_annotate = vcf_to_annotate.mix(PAIR_VARIANT_CALLING.out.manta_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(PAIR_VARIANT_CALLING.out.strelka_vcf)
 
-        // // Gather used softwares versions
-        // ch_versions = ch_versions.mix(GERMLINE_VARIANT_CALLING.out.versions)
-        // ch_versions = ch_versions.mix(PAIR_VARIANT_CALLING.out.versions)
-        // ch_versions = ch_versions.mix(TUMOR_ONLY_VARIANT_CALLING.out.versions)
+        // Gather used softwares versions
+        ch_versions = ch_versions.mix(GERMLINE_VARIANT_CALLING.out.versions)
+        ch_versions = ch_versions.mix(PAIR_VARIANT_CALLING.out.versions)
+        ch_versions = ch_versions.mix(TUMOR_ONLY_VARIANT_CALLING.out.versions)
 
-        // //QC
-        // VCF_QC(vcf_to_annotate, intervals_bed_combined)
+        //QC
+        VCF_QC(vcf_to_annotate, intervals_bed_combined)
 
-        // ch_versions = ch_versions.mix(VCF_QC.out.versions)
-        // ch_reports  = ch_reports.mix(VCF_QC.out.bcftools_stats.collect{it[1]}.ifEmpty([]))
-        // ch_reports  = ch_reports.mix(VCF_QC.out.vcftools_tstv_counts.collect{it[1]}.ifEmpty([]))
-        // ch_reports  = ch_reports.mix(VCF_QC.out.vcftools_tstv_qual.collect{it[1]}.ifEmpty([]))
-        // ch_reports  = ch_reports.mix(VCF_QC.out.vcftools_filter_summary.collect{it[1]}.ifEmpty([]))
+        ch_versions = ch_versions.mix(VCF_QC.out.versions)
+        ch_reports  = ch_reports.mix(VCF_QC.out.bcftools_stats.collect{it[1]}.ifEmpty([]))
+        ch_reports  = ch_reports.mix(VCF_QC.out.vcftools_tstv_counts.collect{it[1]}.ifEmpty([]))
+        ch_reports  = ch_reports.mix(VCF_QC.out.vcftools_tstv_qual.collect{it[1]}.ifEmpty([]))
+        ch_reports  = ch_reports.mix(VCF_QC.out.vcftools_filter_summary.collect{it[1]}.ifEmpty([]))
 
         // ANNOTATE
         if (params.step == 'annotate') vcf_to_annotate = ch_input_sample
