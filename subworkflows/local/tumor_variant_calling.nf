@@ -72,20 +72,21 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
             [new_meta, cram, crai, bed_new, tbi_new]
         }
 
-    // if(tools.contains('controlfreec')){
-    //     cram_recalibrated_intervals.map {meta, cram, crai, intervals -> [meta, cram, intervals]}.set{cram_intervals_no_index}
-    //     RUN_CONTROLFREEC_TUMORONLY(
-    //                     cram_intervals_no_index,
-    //                     fasta,
-    //                     fasta_fai,
-    //                     dbsnp,
-    //                     dbsnp_tbi,
-    //                     chr_files,
-    //                     mappability,
-    //                     intervals_bed_combined,
-    //                     num_intervals)
-    //     ch_versions = ch_versions.mix(RUN_CONTROLFREEC_TUMORONLY.out.versions)
-    // }
+    if(tools.contains('controlfreec')){
+        cram_intervals_no_index = cram_recalibrated_intervals.map { meta, cram, crai, intervals ->
+                                                                    [meta, cram, intervals]
+                                                                    }
+        RUN_CONTROLFREEC_TUMORONLY(
+                        cram_intervals_no_index,
+                        fasta,
+                        fasta_fai,
+                        dbsnp,
+                        dbsnp_tbi,
+                        chr_files,
+                        mappability,
+                        intervals_bed_combined)
+        ch_versions = ch_versions.mix(RUN_CONTROLFREEC_TUMORONLY.out.versions)
+    }
 
     if (tools.contains('freebayes')){
         // Remap channel for Freebayes

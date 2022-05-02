@@ -70,29 +70,28 @@ workflow PAIR_VARIANT_CALLING {
             [new_meta, normal_cram, normal_crai, tumor_cram, tumor_crai, bed_new, tbi_new]
         }
 
-    // if (tools.contains('controlfreec')){
-    //     cram_normal_intervals_no_index = cram_pair_intervals
-    //                 .map {meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals ->
-    //                         [meta, normal_cram, intervals]
-    //                     }
+    if (tools.contains('controlfreec')){
+        cram_normal_intervals_no_index = cram_pair_intervals
+                    .map {meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals ->
+                            [meta, normal_cram, intervals]
+                        }
 
-    //     cram_tumor_intervals_no_index = cram_pair_intervals
-    //                 .map {meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals ->
-    //                         [meta, tumor_cram, intervals]
-    //                     }
+        cram_tumor_intervals_no_index = cram_pair_intervals
+                    .map {meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals ->
+                            [meta, tumor_cram, intervals]
+                        }
 
-    //     RUN_CONTROLFREEC_SOMATIC(cram_normal_intervals_no_index,
-    //                     cram_tumor_intervals_no_index,
-    //                     fasta,
-    //                     fasta_fai,
-    //                     dbsnp,
-    //                     dbsnp_tbi,
-    //                     chr_files,
-    //                     mappability,
-    //                     intervals_bed_combined,
-    //                     num_intervals)
-    //     ch_versions = ch_versions.mix(RUN_CONTROLFREEC_SOMATIC.out.versions)
-    // }
+        RUN_CONTROLFREEC_SOMATIC(cram_normal_intervals_no_index,
+                        cram_tumor_intervals_no_index,
+                        fasta,
+                        fasta_fai,
+                        dbsnp,
+                        dbsnp_tbi,
+                        chr_files,
+                        mappability,
+                        intervals_bed_combined)
+        ch_versions = ch_versions.mix(RUN_CONTROLFREEC_SOMATIC.out.versions)
+    }
 
     if (tools.contains('manta')) {
         RUN_MANTA_SOMATIC(  cram_pair_intervals_gz_tbi,
