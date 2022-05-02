@@ -6,6 +6,7 @@
   files:
     - path: results/annotation/1234N/1234N_snpEff.ann.vcf.gz
     - path: results/annotation/1234N/1234N_snpEff.ann.vcf.gz.tbi
+    - path: results/reports/SnpEff/1234N/1234N.csv
     # - path: results/multiqc //MultiQC not working (finishes succesfully, but log shows issues between human vcf and annotation)
 - name: Run VEP
   command: nextflow run main.nf -profile test,annotation,docker --tools vep
@@ -15,6 +16,7 @@
   files:
     - path: results/annotation/1234N/1234N_VEP.ann.vcf.gz
     - path: results/annotation/1234N/1234N_VEP.ann.vcf.gz.tbi
+    - path: results/reports/EnsemblVEP/1234N/1234N.summary.html
     # - path: results/multiqc //MultiQC not working issues between human vcf and annotation
 - name: Run snpEff followed by VEP
   command: nextflow run main.nf -profile test,annotation,docker --tools merge
