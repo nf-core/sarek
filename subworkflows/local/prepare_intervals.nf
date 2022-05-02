@@ -23,12 +23,15 @@ workflow PREPARE_INTERVALS {
     ch_intervals                     = Channel.empty()
     ch_intervals_bed_gz_tbi          = Channel.empty()
     ch_intervals_combined_bed_gz_tbi = Channel.empty() // Create bed.gz and bed.gz.tbi for input/or created interval file. Contains ALL regions.
-    tabix_in_combined = Channel.empty()
+    tabix_in_combined                = Channel.empty()
 
     if (params.no_intervals) {
         file("${params.outdir}/no_intervals.bed").text = "no_intervals\n"
         ch_intervals = Channel.fromPath(file("${params.outdir}/no_intervals.bed"))
         tabix_in_combined = ch_intervals.map{it -> [[id:it.simpleName], it] }
+
+        //ch_intervals_bed_gz_tbi = Channel.fromPath([file("${params.outdir}/no_intervals.bed.gz"), file("${params.outdir}/no_intervals.bed.gz.tbi")])
+
     } else if (params.step != 'annotate' && params.step != 'controlfreec') {
         if (!params.intervals) {
             BUILD_INTERVALS(fasta_fai)
@@ -84,6 +87,10 @@ workflow PREPARE_INTERVALS {
                                     size = it[0].baseName == "no_intervals" ? 0 : it.size()
                                    [it, size ] // Adding number of intervals as elements
                                 }.transpose()
+
+    ch_intervals_out.view()
+    ch_intervals_bed_gz_tbi.view()
+    ch_intervals_combined_bed_gz_tbi.view()
 
     emit:
         intervals_bed                    = ch_intervals_out                 // path: intervals.bed, num_intervals                        [intervals split for parallel execution]

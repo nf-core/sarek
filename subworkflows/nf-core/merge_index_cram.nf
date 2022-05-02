@@ -25,7 +25,7 @@ workflow MERGE_INDEX_CRAM {
     }.groupTuple()
     .branch{
         //Warning: size() calculates file size not list length here, so use num_intervals instead
-        single:   it[0].num_intervals == 1
+        single:   it[0].num_intervals <= 1
         multiple: it[0].num_intervals > 1
     }
 

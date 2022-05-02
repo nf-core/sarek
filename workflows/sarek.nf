@@ -379,6 +379,7 @@ workflow SAREK {
             new_meta.id = meta.sample
 
             // update data_type
+            //TODO: This is never used again as far as I see, could probably be removed
             new_meta.data_type = 'bam'
 
             // Use groupKey to make sure that the correct group can advance as soon as it is complete
@@ -542,6 +543,10 @@ workflow SAREK {
             ch_cram_applybqsr = params.step == 'recalibrate' ? ch_input_sample : ch_cram_for_prepare_recalibration.join(ch_table_bqsr)
             ch_cram_variant_calling_no_spark = Channel.empty()
             ch_cram_variant_calling_spark    = Channel.empty()
+
+            ch_table_bqsr.view()
+            ch_cram_for_prepare_recalibration.view()
+            ch_cram_applybqsr.view()
 
             if (params.use_gatk_spark && params.use_gatk_spark.contains('baserecalibrator')) {
 

@@ -45,13 +45,14 @@ workflow PREPARE_RECALIBRATION {
 
                 def groupKey = groupKey(new_meta, meta.num_intervals)
                 [new_meta, table]
-        }.groupTuple()
+        }
     .branch{
         //Warning: size() calculates file size not list length here, so use num_intervals instead
-        single:   it[0].num_intervals == 1
+        single:   it[0].num_intervals <= 1
         multiple: it[0].num_intervals > 1
     }
 
+    table_to_merge.single.view()
     // STEP 3.5: MERGING RECALIBRATION TABLES
 
     // Merge the tables only when we have intervals
