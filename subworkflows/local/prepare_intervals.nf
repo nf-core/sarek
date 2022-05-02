@@ -37,6 +37,7 @@ workflow PREPARE_INTERVALS {
 
         ch_intervals_combined_bed_gz_tbi = Channel.fromPath(file("${params.outdir}/no_intervals.bed.{gz,gz.tbi}"))
                                             .collect()
+        ch_intervals_combined_bed_gz_tbi.view()
 
     } else if (params.step != 'annotate' && params.step != 'controlfreec') {
 
@@ -75,7 +76,6 @@ workflow PREPARE_INTERVALS {
         ch_versions = ch_versions.mix(TABIX_BGZIPTABIX_INTERVAL_ALL.out.versions)
 
         // 2. Interval file is split up into multiple bed files for scatter/gather & grouping together small intervals
-        ch_intervals.view()
         ch_intervals = ch_intervals.flatten()
             .map{ intervalFile ->
                 def duration = 0.0
