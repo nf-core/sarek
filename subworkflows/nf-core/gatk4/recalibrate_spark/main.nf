@@ -9,11 +9,11 @@ include { MERGE_INDEX_CRAM                         } from '../../merge_index_cra
 
 workflow RECALIBRATE_SPARK {
     take:
-        cram          // channel: [mandatory] cram
+        cram          // channel: [mandatory] meta, cram, crai, recal
         dict          // channel: [mandatory] dict
         fasta         // channel: [mandatory] fasta
         fasta_fai     // channel: [mandatory] fasta_fai
-        intervals     // channel: [mandatory] intervals
+        intervals     // channel: [mandatory] intervals, num_intervals
 
     main:
     ch_versions = Channel.empty()
