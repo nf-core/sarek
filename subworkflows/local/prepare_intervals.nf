@@ -27,11 +27,16 @@ workflow PREPARE_INTERVALS {
 
     if (params.no_intervals) {
         file("${params.outdir}/no_intervals.bed").text = "no_intervals\n"
+        //file("${params.outdir}/no_intervals.bed.gz").text = "no_intervals\n"
+        //file("${params.outdir}/no_intervals.bed.gz.tbi").text = "no_intervals\n"
+
         ch_intervals = Channel.fromPath(file("${params.outdir}/no_intervals.bed"))
+
         tabix_in_combined = ch_intervals.map{it -> [[id:it.simpleName], it] }
 
-        //ch_intervals_bed_gz_tbi = Channel.fromPath([file("${params.outdir}/no_intervals.bed.gz"), file("${params.outdir}/no_intervals.bed.gz.tbi")])
-
+        // test = Channel.fromPath(file("${params.outdir}/no_intervals.bed.gz"),
+        //                         file("${params.outdir}/no_intervals.bed.gz")).collect()
+        //test.view()
     } else if (params.step != 'annotate' && params.step != 'controlfreec') {
         if (!params.intervals) {
             BUILD_INTERVALS(fasta_fai)
