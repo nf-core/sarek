@@ -24,7 +24,7 @@
     - path: results/reports/samtools_stats/test/test.recal.cram.stats
     - path: results/reports/deeptools/test/test.bigWig
 
-- name: Run default pipeline
+- name: Run default pipeline without intervals
   command: nextflow run main.nf -profile test,no_intervals,docker
   tags:
     - default
