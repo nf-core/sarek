@@ -24,8 +24,8 @@ workflow RUN_CONTROLFREEC_TUMORONLY {
     MPILEUP_TUMOR(cram_tumor, fasta)
 
     MPILEUP_TUMOR.out.mpileup.branch{
-            intervals:    num_intervals > 1
-            no_intervals: num_intervals == 1
+            intervals:    it[0].num_intervals > 1
+            no_intervals: it[0].num_intervals <= 1
         }.set{mpileup_tumor}
 
     //Merge mpileup only when intervals and natural order sort them
@@ -33,9 +33,11 @@ workflow RUN_CONTROLFREEC_TUMORONLY {
         .map{ meta, pileup ->
             new_meta = meta.clone()
             new_meta.id = new_meta.sample
+
+            def groupKey = groupKey(meta, meta.num_intervals)
             [new_meta, pileup]
         }
-        .groupTuple(size: num_intervals, sort:true))
+        .groupTuple(sort:true))
 
     controlfreec_input_tumor = Channel.empty().mix(
         CAT_MPILEUP_TUMOR.out.file_out,
