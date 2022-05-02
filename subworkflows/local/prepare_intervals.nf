@@ -75,6 +75,7 @@ workflow PREPARE_INTERVALS {
         ch_versions = ch_versions.mix(TABIX_BGZIPTABIX_INTERVAL_ALL.out.versions)
 
         // 2. Interval file is split up into multiple bed files for scatter/gather & grouping together small intervals
+        ch_intervals.view()
         ch_intervals = ch_intervals.flatten()
             .map{ intervalFile ->
                 def duration = 0.0
@@ -105,12 +106,9 @@ workflow PREPARE_INTERVALS {
         ch_versions = ch_versions.mix(TABIX_BGZIPTABIX_INTERVAL_SPLIT.out.versions)
 
     }
-    //ch_intervals.view()
-    //ch_intervals_bed_gz_tbi.view()
-    //ch_intervals_combined_bed_gz_tbi.view()
 
     emit:
-        intervals_bed                    = ch_intervals                 // path: intervals.bed, num_intervals                        [intervals split for parallel execution]
+        intervals_bed                    = ch_intervals                     // path: intervals.bed, num_intervals                        [intervals split for parallel execution]
         intervals_bed_gz_tbi             = ch_intervals_bed_gz_tbi          // path: target.bed.gz, target.bed.gz.tbi, num_intervals     [intervals split for parallel execution]
         intervals_combined_bed_gz_tbi    = ch_intervals_combined_bed_gz_tbi // path: interval.bed.gz, interval.bed.gz.tbi [all intervals in one file]
         versions                         = ch_versions                      // channel: [ versions.yml ]
