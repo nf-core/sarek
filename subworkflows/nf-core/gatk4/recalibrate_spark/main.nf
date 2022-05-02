@@ -32,7 +32,6 @@ workflow RECALIBRATE_SPARK {
             [new_meta, cram, crai, recal, intervals_new]
         }
 
-
     // Run Applybqsr spark
     APPLYBQSR_SPARK(cram_intervals, fasta, fasta_fai, dict)
 
@@ -54,6 +53,5 @@ workflow RECALIBRATE_SPARK {
 
     emit:
         cram     = ch_cram_recal_out
-
         versions = ch_versions // channel: [ versions.yml ]
 }

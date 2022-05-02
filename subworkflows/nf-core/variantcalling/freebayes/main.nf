@@ -22,7 +22,7 @@ workflow RUN_FREEBAYES {
 
     FREEBAYES.out.vcf.branch{
             intervals:    it[0].num_intervals > 1
-        no_intervals: it[0].num_intervals <= 1
+            no_intervals: it[0].num_intervals <= 1
         }.set{freebayes_vcf_out}
 
     // Only when no intervals

@@ -9,11 +9,11 @@ include { GATK4_GATHERBQSRREPORTS      as GATHERBQSRREPORTS      } from '../../.
 
 workflow PREPARE_RECALIBRATION_SPARK {
     take:
-        cram            // channel: [mandatory] cram_markduplicates
+        cram            // channel: [mandatory] meta, cram_markduplicates, crai
         dict            // channel: [mandatory] dict
         fasta           // channel: [mandatory] fasta
         fasta_fai       // channel: [mandatory] fasta_fai
-        intervals       // channel: [mandatory] intervals
+        intervals       // channel: [mandatory] intervals, num_intervals
         known_sites     // channel: [optional]  known_sites
         known_sites_tbi // channel: [optional]  known_sites_tbi
 
@@ -47,7 +47,7 @@ workflow PREPARE_RECALIBRATION_SPARK {
                 [new_meta, table]
         }.groupTuple()
     .branch{
-         //Warning: size() calculates file size not list length here, so use num_intervals instead
+        //Warning: size() calculates file size not list length here, so use num_intervals instead
         single:   it[0].num_intervals <= 1
         multiple: it[0].num_intervals > 1
     }
@@ -57,6 +57,14 @@ workflow PREPARE_RECALIBRATION_SPARK {
     // Merge the tables only when we have intervals
     GATHERBQSRREPORTS(table_to_merge.multiple)
     table_bqsr = table_to_merge.single.mix(GATHERBQSRREPORTS.out.table)
+                                        .map{ meta, table ->
+                                            new_meta = meta.clone()
+
+                                            // remove no longer necessary fields to make sure joining can be done correctly
+                                            new_meta.remove('num_intervals')
+
+                                            [new_meta, table]
+                                        }
 
     // Gather versions of all tools used
     ch_versions = ch_versions.mix(BASERECALIBRATOR_SPARK.out.versions)

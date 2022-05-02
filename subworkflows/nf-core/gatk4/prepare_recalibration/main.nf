@@ -45,7 +45,7 @@ workflow PREPARE_RECALIBRATION {
 
                 def groupKey = groupKey(new_meta, meta.num_intervals)
                 [new_meta, table]
-        }
+        }.groupTuple()
     .branch{
         //Warning: size() calculates file size not list length here, so use num_intervals instead
         single:   it[0].num_intervals <= 1
