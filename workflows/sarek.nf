@@ -410,7 +410,8 @@ workflow SAREK {
         ch_versions = ch_versions.mix(GATK4_MAPPING.out.versions)
     }
 
-    if (params.step in ['mapping', 'prepare_recalibration']) {
+    //TODO prepare_recal can be removed here I think
+    if (params.step in ['mapping', 'markduplicates']) {
         ch_cram_markduplicates_no_spark = Channel.empty()
         ch_cram_markduplicates_spark    = Channel.empty()
         ch_cram_no_markduplicates       = Channel.empty()
@@ -467,6 +468,9 @@ workflow SAREK {
             // Gather used softwares versions
             ch_versions = ch_versions.mix(MARKDUPLICATES.out.versions)
         }
+    }
+
+    if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration']) {
 
         // ch_cram_for_prepare_recalibration contains either:
         // - crams from markduplicates
@@ -537,7 +541,7 @@ workflow SAREK {
     }
 
     // STEP 4: RECALIBRATING
-    if (params.step in ['mapping', 'prepare_recalibration', 'recalibrate']) {
+    if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration', 'recalibrate']) {
 
         if (!(params.skip_tools && params.skip_tools.contains('baserecalibrator'))) {
             ch_cram_applybqsr = params.step == 'recalibrate' ? ch_input_sample : ch_cram_for_prepare_recalibration.join(ch_table_bqsr)
