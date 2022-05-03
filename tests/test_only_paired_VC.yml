@@ -1,0 +1,22 @@
+- name: Run variant calling on germline sample with strelka
+  command: nextflow run main.nf -profile test,tools_somatic,docker --tools strelka --only_paired_variant_calling
+  tags:
+    - somatic
+    - strelka
+    - variant_calling
+    - single_sample
+  files:
+    - path: results/variant_calling/sample3/strelka/sample3.variants.vcf.gz
+      should_exist: false
+    - path: results/variant_calling/sample3/strelka/sample3.variants.vcf.gz.tbi
+      should_exist: false
+    - path: results/variant_calling/sample3/strelka/sample3.genome.vcf.gz
+      should_exist: false
+    - path: results/variant_calling/sample3/strelka/sample3.genome.vcf.gz.tbi
+      should_exist: false
+    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.somatic_indels.vcf.gz
+    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.somatic_indels.vcf.gz.tbi
+    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.somatic_snvs.vcf.gz
+    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.somatic_snvs.vcf.gz.tbi
+# Add test for mixed  normal-paired, normal-single
+# Add test for tumor-single
