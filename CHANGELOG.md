@@ -21,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#507](https://github.com/nf-core/sarek/pull/507) - Subway map for building indexes
 - [#512](https://github.com/nf-core/sarek/pull/512) - Subway map for pipeline
 - [#522](https://github.com/nf-core/sarek/pull/522) - Add QC for vcf files & MultiQC
-- [#533](https://github.com/nf-core/sarek/pull/533) - Add param `--skip_germline_for_somatic` to allow skipping of germline variantcalling for paired samples
+- [#533](https://github.com/nf-core/sarek/pull/533) - Add param `--only_paired_variant_calling` to allow skipping of germline variantcalling for paired samples
 
 ### Changed
 
