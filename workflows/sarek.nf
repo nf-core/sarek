@@ -657,7 +657,6 @@ workflow SAREK {
                 [meta, normal[2], normal[3], tumor[2], tumor[3]]
             }
 
-        //cram_variant_calling_status.normal.view()
 
         // GERMLINE VARIANT CALLING
         GERMLINE_VARIANT_CALLING(
