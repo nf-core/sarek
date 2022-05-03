@@ -5,7 +5,7 @@
     - preprocessing
     - skip_markduplicates
   files:
-    # - path: results/multiqc
+    - path: results/multiqc
     - path: results/preprocessing/test/mapped/test.bam
     - path: results/preprocessing/test/mapped/test.bam.bai
     - path: results/preprocessing/test/recal_table/test.recal.table
@@ -24,6 +24,8 @@
     - path: results/reports/qualimap/test/test.recal
     - path: results/reports/samtools_stats/test/test.md.cram.stats
     - path: results/reports/samtools_stats/test/test.recal.cram.stats
+    - path: results/reports/deeptools/test/test.bigWig
+
 - name: Run skip markduplicates preparerecal
   command: nextflow run main.nf -profile test,docker,prepare_recalibration,skip_markduplicates
   tags:
@@ -32,7 +34,7 @@
     - preprocessing
     - skip_markduplicates
   files:
-    # - path: results/multiqc
+    - path: results/multiqc
     - path: results/preprocessing/test/recal_table/test.recal.table
     - path: results/preprocessing/test/markduplicates/test.md.cram
     - path: results/preprocessing/test/markduplicates/test.md.cram.crai
@@ -48,3 +50,4 @@
     # - path: results/reports/qualimap/test/test.recal
     - path: results/reports/samtools_stats/test/test.md.cram.stats
     - path: results/reports/samtools_stats/test/test.recal.cram.stats
+    - path: results/reports/deeptools/test/test.bigWig

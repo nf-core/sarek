@@ -24,7 +24,7 @@ process TIDDIT_SV {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def reference = fasta == "dummy_file.txt" ? "--ref $fasta" : ""
+    def reference = fasta ? "--ref $fasta" : ""
     """
     tiddit \\
         --sv \\

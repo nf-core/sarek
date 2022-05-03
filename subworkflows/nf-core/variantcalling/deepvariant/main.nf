@@ -14,7 +14,6 @@ workflow RUN_DEEPVARIANT {
     fasta                    // channel: [mandatory]
     fasta_fai                // channel: [mandatory]
     intervals_bed_gz         // channel: [optional]  Contains a bed.gz file of all intervals combined provided with the cram input(s). Mandatory if interval files are used.
-    num_intervals            //     val: [optional]  Number of used intervals, mandatory when intervals are provided.
 
     main:
 
@@ -22,23 +21,33 @@ workflow RUN_DEEPVARIANT {
 
     DEEPVARIANT(cram, fasta, fasta_fai)
 
-    //TODO Branch annotation?
+    DEEPVARIANT.out.vcf.branch{
+        intervals:    it[0].num_intervals > 1
+        no_intervals: it[0].num_intervals <= 1
+    }.set{deepvariant_vcf_out}
+
+    DEEPVARIANT.out.gvcf.branch{
+        intervals:    it[0].num_intervals > 1
+        no_intervals: it[0].num_intervals <= 1
+    }.set{deepvariant_gvcf_out}
 
     // Only when no intervals
-    TABIX_VC_DEEPVARIANT_VCF(DEEPVARIANT.out.vcf)
-    TABIX_VC_DEEPVARIANT_GVCF(DEEPVARIANT.out.gvcf)
+    TABIX_VC_DEEPVARIANT_VCF(deepvariant_vcf_out.no_intervals)
+    TABIX_VC_DEEPVARIANT_GVCF(deepvariant_gvcf_out.no_intervals)
 
     // Only when using intervals
-    BGZIP_VC_DEEPVARIANT_VCF(DEEPVARIANT.out.vcf)
-    BGZIP_VC_DEEPVARIANT_GVCF(DEEPVARIANT.out.gvcf)
+    BGZIP_VC_DEEPVARIANT_VCF(deepvariant_vcf_out.intervals)
+    BGZIP_VC_DEEPVARIANT_GVCF(deepvariant_gvcf_out.intervals)
 
     CONCAT_DEEPVARIANT_VCF(
         BGZIP_VC_DEEPVARIANT_VCF.out.output
             .map{ meta, vcf ->
                 new_meta = meta.clone()
                 new_meta.id = new_meta.sample
+
+                def groupKey = groupKey(meta, meta.num_intervals)
                 [new_meta, vcf]
-            }.groupTuple(size: num_intervals),
+            }.groupTuple(),
         fasta_fai,
         intervals_bed_gz)
 
@@ -47,8 +56,10 @@ workflow RUN_DEEPVARIANT {
             .map{ meta, vcf ->
                 new_meta = meta.clone()
                 new_meta.id = new_meta.sample
+
+                def groupKey = groupKey(meta, meta.num_intervals)
                 [new_meta, vcf]
-            }.groupTuple(size: num_intervals),
+            }.groupTuple(),
         fasta_fai,
         intervals_bed_gz)
 
@@ -56,8 +67,8 @@ workflow RUN_DEEPVARIANT {
     deepvariant_vcf = Channel.empty().mix(
                         CONCAT_DEEPVARIANT_GVCF.out.vcf,
                         CONCAT_DEEPVARIANT_VCF.out.vcf,
-                        DEEPVARIANT.out.gvcf,
-                        DEEPVARIANT.out.vcf)
+                        deepvariant_gvcf_out.no_intervals,
+                        deepvariant_vcf_out.no_intervals)
                     .map{ meta, vcf ->
                         meta.variantcaller = "Deepvariant"
                         [meta, vcf]

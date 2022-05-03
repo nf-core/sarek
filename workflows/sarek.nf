@@ -257,14 +257,14 @@ workflow SAREK {
 
     // Intervals for speed up preprocessing/variant calling by spread/gather
     intervals_bed_combined        = (params.intervals && params.wes) ? Channel.fromPath(params.intervals).collect() : []
-    intervals                     = PREPARE_INTERVALS.out.intervals_bed                             // multiple interval.bed files, divided by useful intervals for scatter/gather
-    intervals_bed_gz_tbi          = PREPARE_INTERVALS.out.intervals_bed_gz_tbi                      // multiple interval.bed.gz/.tbi files, divided by useful intervals for scatter/gather
     intervals_bed_combined_gz_tbi = PREPARE_INTERVALS.out.intervals_combined_bed_gz_tbi.collect()   // one file containing all intervals interval.bed.gz/.tbi file
     intervals_bed_combined_gz     = intervals_bed_combined_gz_tbi.map{ bed, tbi -> [bed]}.collect() // one file containing all intervals interval.bed.gz file
-    intervals_for_preprocessing   = (!params.wes || params.no_intervals) ? [] : PREPARE_INTERVALS.out.intervals_bed //TODO: intervals also with WGS data? Probably need a parameter if WGS for deepvariant tool, that would allow to check here too
 
-    // TODO: needs to figure something out when intervals are made out of the fasta_fai file
-    num_intervals                 = !params.no_intervals ? (params.intervals ? count_intervals(file(params.intervals)) : 1) : 1
+    intervals                     = PREPARE_INTERVALS.out.intervals_bed        // [interval, num_intervals] multiple interval.bed files, divided by useful intervals for scatter/gather
+    intervals_bed_gz_tbi          = PREPARE_INTERVALS.out.intervals_bed_gz_tbi // [interval_bed, tbi, num_intervals] multiple interval.bed.gz/.tbi files, divided by useful intervals for scatter/gather
+
+    //TODO: intervals also with WGS data? Probably need a parameter if WGS for deepvariant tool, that would allow to check here too
+    intervals_for_preprocessing   = (params.wes && !params.no_intervals) ? intervals_bed_combined : []
 
     // Gather used softwares versions
     ch_versions = ch_versions.mix(PREPARE_GENOME.out.versions)
@@ -379,6 +379,7 @@ workflow SAREK {
             new_meta.id = meta.sample
 
             // update data_type
+            //TODO: This is never used again as far as I see, could probably be removed
             new_meta.data_type = 'bam'
 
             // Use groupKey to make sure that the correct group can advance as soon as it is complete
@@ -500,8 +501,7 @@ workflow SAREK {
                 fasta_fai,
                 intervals,
                 known_sites,
-                known_sites_tbi,
-                num_intervals)
+                known_sites_tbi)
 
                 ch_table_bqsr_spark = PREPARE_RECALIBRATION_SPARK.out.table_bqsr
 
@@ -514,8 +514,7 @@ workflow SAREK {
                 fasta_fai,
                 intervals,
                 known_sites,
-                known_sites_tbi,
-                num_intervals)
+                known_sites_tbi)
 
                 ch_table_bqsr_no_spark = PREPARE_RECALIBRATION.out.table_bqsr
 
@@ -546,12 +545,12 @@ workflow SAREK {
             ch_cram_variant_calling_spark    = Channel.empty()
 
             if (params.use_gatk_spark && params.use_gatk_spark.contains('baserecalibrator')) {
+
                 RECALIBRATE_SPARK(ch_cram_applybqsr,
                     dict,
                     fasta,
                     fasta_fai,
-                    intervals,
-                    num_intervals)
+                    intervals)
 
                 ch_cram_variant_calling_spark = RECALIBRATE_SPARK.out.cram
 
@@ -559,12 +558,12 @@ workflow SAREK {
                 ch_versions = ch_versions.mix(RECALIBRATE_SPARK.out.versions)
 
             } else {
+
                 RECALIBRATE(ch_cram_applybqsr,
                     dict,
                     fasta,
                     fasta_fai,
-                    intervals,
-                    num_intervals)
+                    intervals)
 
                 ch_cram_variant_calling_no_spark = RECALIBRATE.out.cram
 
@@ -653,8 +652,7 @@ workflow SAREK {
             intervals,
             intervals_bed_gz_tbi,
             intervals_bed_combined_gz_tbi,
-            intervals_bed_combined_gz,
-            num_intervals)
+            intervals_bed_combined_gz)
             // params.joint_germline)
 
         // TUMOR ONLY VARIANT CALLING
@@ -671,8 +669,6 @@ workflow SAREK {
             intervals_bed_combined_gz_tbi,
             intervals_bed_combined_gz,
             intervals_bed_combined,
-            num_intervals,
-            params.no_intervals,
             germline_resource,
             germline_resource_tbi,
             pon,
@@ -695,8 +691,6 @@ workflow SAREK {
             intervals_bed_combined_gz_tbi,
             intervals_bed_combined_gz,
             intervals_bed_combined,
-            num_intervals,
-            params.no_intervals,
             msisensorpro_scan,
             germline_resource,
             germline_resource_tbi,
@@ -752,7 +746,6 @@ workflow SAREK {
             ch_versions = ch_versions.mix(ANNOTATE.out.versions)
             ch_reports  = ch_reports.mix(ANNOTATE.out.reports)
 
-            ch_reports.view()
         }
     }
 
@@ -892,17 +885,6 @@ def extract_csv(csv_file) {
             log.warn "Missing or unknown field in csv file header"
         }
     }
-}
-
-// Function to count number of intervals
-def count_intervals(intervals_file) {
-    count = 0
-
-    intervals_file.eachLine{ it ->
-        count += it.startsWith("@") ? 0 : 1
-    }
-
-    return count
 }
 
 /*

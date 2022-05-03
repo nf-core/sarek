@@ -9,23 +9,28 @@ include { GATK4_GATHERBQSRREPORTS as GATHERBQSRREPORTS } from '../../../../modul
 
 workflow PREPARE_RECALIBRATION {
     take:
-        cram            // channel: [mandatory] cram_markduplicates
+        cram            // channel: [mandatory] meta, cram_markduplicates, crai
         dict            // channel: [mandatory] dict
         fasta           // channel: [mandatory] fasta
         fasta_fai       // channel: [mandatory] fasta_fai
-        intervals       // channel: [mandatory] intervals
+        intervals       // channel: [mandatory] intervals, num_intervals
         known_sites     // channel: [optional]  known_sites
         known_sites_tbi // channel: [optional]  known_sites_tbi
-        num_intervals   //   value: [mandatory] number of intervals
 
     main:
     ch_versions = Channel.empty()
 
     cram_intervals = cram.combine(intervals)
-        .map{ meta, cram, crai, intervals ->
+        .map{ meta, cram, crai, intervals, num_intervals ->
             new_meta = meta.clone()
-            new_meta.id = num_intervals == 1 ? meta.sample : meta.sample + "_" + intervals.baseName
-            intervals_new = params.no_intervals ? [] : intervals
+
+            // If either no scatter/gather is done, i.e. no interval (0) or one interval (1), then don't rename samples
+            new_meta.id = num_intervals <= 1 ? meta.sample : meta.sample + "_" + intervals.baseName
+            new_meta.num_intervals = num_intervals
+
+            //If no interval file provided (0) then add empty list
+            intervals_new = num_intervals == 0 ? [] : intervals
+
             [new_meta, cram, crai, intervals_new]
         }
 
@@ -35,12 +40,16 @@ workflow PREPARE_RECALIBRATION {
     // Figuring out if there is one or more table(s) from the same sample
     table_to_merge = BASERECALIBRATOR.out.table
         .map{ meta, table ->
-                meta.id = meta.sample
-                [meta, table]
-        }.groupTuple(size: num_intervals)
+                new_meta = meta.clone()
+                new_meta.id = meta.sample
+
+                def groupKey = groupKey(new_meta, meta.num_intervals)
+                [new_meta, table]
+        }.groupTuple()
     .branch{
-        single:   num_intervals == 1
-        multiple: num_intervals > 1
+        //Warning: size() calculates file size not list length here, so use num_intervals instead
+        single:   it[0].num_intervals <= 1
+        multiple: it[0].num_intervals > 1
     }
 
     // STEP 3.5: MERGING RECALIBRATION TABLES
@@ -48,6 +57,14 @@ workflow PREPARE_RECALIBRATION {
     // Merge the tables only when we have intervals
     GATHERBQSRREPORTS(table_to_merge.multiple)
     table_bqsr = table_to_merge.single.mix(GATHERBQSRREPORTS.out.table)
+                                        .map{ meta, table ->
+                                            new_meta = meta.clone()
+
+                                            // remove no longer necessary fields to make sure joining can be done correctly
+                                            new_meta.remove('num_intervals')
+
+                                            [new_meta, table]
+                                        }
 
     // Gather versions of all tools used
     ch_versions = ch_versions.mix(BASERECALIBRATOR.out.versions)
