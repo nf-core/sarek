@@ -14,7 +14,6 @@ workflow RUN_MANTA_GERMLINE {
     fasta                    // channel: [mandatory]
     fasta_fai                // channel: [mandatory]
     intervals_bed_gz         // channel: [optional]  Contains a bed.gz file of all intervals combined provided with the cram input(s). Mandatory if interval files are used.
-    num_intervals            //     val: [optional]  Number of used intervals, mandatory when intervals are provided.
 
     main:
 
@@ -24,30 +23,32 @@ workflow RUN_MANTA_GERMLINE {
 
     // Figure out if using intervals or no_intervals
     MANTA_GERMLINE.out.candidate_small_indels_vcf.branch{
-            intervals:    num_intervals > 1
-            no_intervals: num_intervals == 1
+            intervals:    it[0].num_intervals > 1
+            no_intervals: it[0].num_intervals <= 1
         }.set{manta_small_indels_vcf}
 
     MANTA_GERMLINE.out.candidate_sv_vcf.branch{
-            intervals:    num_intervals > 1
-            no_intervals: num_intervals == 1
+            intervals:    it[0].num_intervals > 1
+            no_intervals: it[0].num_intervals <= 1
         }.set{manta_sv_vcf}
 
     MANTA_GERMLINE.out.diploid_sv_vcf.branch{
-            intervals:    num_intervals > 1
-            no_intervals: num_intervals == 1
+            intervals:    it[0].num_intervals > 1
+            no_intervals: it[0].num_intervals <= 1
         }.set{manta_diploid_sv_vcf}
 
     // Only when using intervals
     BGZIP_VC_MANTA_SMALL_INDELS(manta_small_indels_vcf.intervals)
 
     CONCAT_MANTA_SMALL_INDELS(
-        BGZIP_VC_MANTA_SMALL_INDELS.out.vcf
+        BGZIP_VC_MANTA_SMALL_INDELS.out.output
             .map{ meta, vcf ->
                 new_meta = meta.clone()
                 new_meta.id = new_meta.sample
+
+                def groupKey = groupKey(meta, meta.num_intervals)
                 [new_meta, vcf]
-            }.groupTuple(size: num_intervals),
+            }.groupTuple(),
         fasta_fai,
         intervals_bed_gz)
 
@@ -58,8 +59,10 @@ workflow RUN_MANTA_GERMLINE {
             .map{ meta, vcf ->
                 new_meta = meta.clone()
                 new_meta.id = new_meta.sample
+
+                def groupKey = groupKey(meta, meta.num_intervals)
                 [new_meta, vcf]
-            }.groupTuple(size: num_intervals),
+            }.groupTuple(),
         fasta_fai,
         intervals_bed_gz)
 
@@ -70,18 +73,20 @@ workflow RUN_MANTA_GERMLINE {
             .map{ meta, vcf ->
                 new_meta = meta.clone()
                 new_meta.id = new_meta.sample
+
+                def groupKey = groupKey(meta, meta.num_intervals)
                 [new_meta, vcf]
-            }.groupTuple(size: num_intervals),
+            }.groupTuple(),
         fasta_fai,
         intervals_bed_gz)
 
     // Mix output channels for "no intervals" and "with intervals" results
     manta_vcf = Channel.empty().mix(
                     CONCAT_MANTA_DIPLOID.out.vcf,
-                    CONCAT_MANTA_SMALL_INDELS.out.vcf,
+                    //CONCAT_MANTA_SMALL_INDELS.out.vcf,
                     CONCAT_MANTA_SV.out.vcf,
                     manta_diploid_sv_vcf.no_intervals,
-                    manta_small_indels_vcf.no_intervals,
+                    //manta_small_indels_vcf.no_intervals,
                     manta_sv_vcf.no_intervals)
                 .map{ meta, vcf ->
                     meta.variantcaller = "Manta"
@@ -97,6 +102,6 @@ workflow RUN_MANTA_GERMLINE {
     ch_versions = ch_versions.mix(MANTA_GERMLINE.out.versions)
 
     emit:
-    manta_vcf
+    manta_vcf = Channel.empty()
     versions = ch_versions
 }

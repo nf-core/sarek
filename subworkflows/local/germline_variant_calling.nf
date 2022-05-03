@@ -21,7 +21,6 @@ workflow GERMLINE_VARIANT_CALLING {
         intervals_bed_gz_tbi         // channel: [mandatory] intervals/target regions index zipped and indexed
         intervals_bed_combine_gz_tbi // channel: [mandatory] intervals/target regions index zipped and indexed in one file
         intervals_bed_combine_gz     // channel: [mandatory] intervals/target regions index zipped in one file
-        num_intervals                // val: number of intervals that are used to parallelize exection, either based on capture kit or GATK recommended for WGS
         // joint_germline               // val: true/false on whether to run joint_germline calling, only works in combination with haplotypecaller at the moment
 
     main:
@@ -38,29 +37,38 @@ workflow GERMLINE_VARIANT_CALLING {
 
     // Remap channel with intervals
     cram_recalibrated_intervals = cram_recalibrated.combine(intervals)
-        .map{ meta, cram, crai, intervals ->
-            sample = meta.sample
-            //new_intervals = num_intervals > 1 ? intervals : []
-            new_intervals = intervals.baseName != "no_intervals" ? intervals : []
-            id = new_intervals ? sample + "_" + new_intervals.baseName : sample
-            [[ id: id, sample: meta.sample, gender: meta.gender, status: meta.status, patient: meta.patient ], cram, crai, new_intervals]
+        .map{ meta, cram, crai, intervals, num_intervals ->
+            new_meta = meta.clone()
+
+            // If either no scatter/gather is done, i.e. no interval (0) or one interval (1), then don't rename samples
+            new_meta.id = num_intervals <= 1 ? meta.sample : meta.sample + "_" + intervals.baseName
+            new_meta.num_intervals = num_intervals
+
+            //If no interval file provided (0) then add empty list
+            intervals_new = num_intervals == 0 ? [] : intervals
+
+            [new_meta, cram, crai, intervals_new]
         }
 
     // Remap channel with gzipped intervals + indexes
     cram_recalibrated_intervals_gz_tbi = cram_recalibrated.combine(intervals_bed_gz_tbi)
-        .map{ meta, cram, crai, bed, tbi ->
-            sample = meta.sample
-            //new_bed = num_intervals > 1 ? bed : [] //TODO can I pass in empty lists? Then I only need to work with the id line
-            new_bed = bed.simpleName != "no_intervals" ? bed : []
-            new_tbi = tbi.simpleName != "no_intervals" ? tbi : []
-            id = new_bed ? sample + "_" + new_bed.simpleName : sample
-            new_meta = [ id: id, sample: meta.sample, gender: meta.gender, status: meta.status, patient: meta.patient ]
-            [new_meta, cram, crai, new_bed, new_tbi]
+        .map{ meta, cram, crai, bed_tbi, num_intervals ->
+            new_meta = meta.clone()
+
+            // If either no scatter/gather is done, i.e. no interval (0) or one interval (1), then don't rename samples
+            new_meta.id = num_intervals <= 1 ? meta.sample : meta.sample + "_" + bed_tbi[0].simpleName
+            new_meta.num_intervals = num_intervals
+
+            //If no interval file provided (0) then add empty list
+            bed_new = num_intervals == 0 ? [] : bed_tbi[0]
+            tbi_new = num_intervals == 0 ? [] : bed_tbi[1]
+
+            [new_meta, cram, crai, bed_new, tbi_new]
         }
 
     // DEEPVARIANT
     if(params.tools.contains('deepvariant')){
-        RUN_DEEPVARIANT(cram_recalibrated_intervals, fasta, fasta_fai, intervals_bed_combine_gz, num_intervals)
+        RUN_DEEPVARIANT(cram_recalibrated_intervals, fasta, fasta_fai, intervals_bed_combine_gz)
 
         deepvariant_vcf = RUN_DEEPVARIANT.out.deepvariant_vcf
         ch_versions     = ch_versions.mix(RUN_DEEPVARIANT.out.versions)
@@ -73,7 +81,7 @@ workflow GERMLINE_VARIANT_CALLING {
             .map{ meta, cram, crai, intervals ->
                 [meta, cram, crai, [], [], intervals]
             }
-        RUN_FREEBAYES(cram_recalibrated_intervals_freebayes, fasta, fasta_fai, intervals_bed_combine_gz, num_intervals)
+        RUN_FREEBAYES(cram_recalibrated_intervals_freebayes, fasta, fasta_fai, intervals_bed_combine_gz)
 
         freebayes_vcf   = RUN_FREEBAYES.out.freebayes_vcf
         ch_versions     = ch_versions.mix(RUN_FREEBAYES.out.versions)
@@ -88,8 +96,7 @@ workflow GERMLINE_VARIANT_CALLING {
                         dbsnp,
                         dbsnp_tbi,
                         intervals_bed_combine_gz,
-                        intervals_bed_combine_gz_tbi,
-                        num_intervals)
+                        intervals_bed_combine_gz_tbi)
 
         haplotypecaller_vcf  = RUN_HAPLOTYPECALLER.out.haplotypecaller_vcf
         //genotype_gvcf        = RUN_HAPLOTYPECALLER.out.genotype_gvcf
@@ -101,8 +108,7 @@ workflow GERMLINE_VARIANT_CALLING {
         RUN_MANTA_GERMLINE (cram_recalibrated_intervals_gz_tbi,
                         fasta,
                         fasta_fai,
-                        intervals_bed_combine_gz,
-                        num_intervals)
+                        intervals_bed_combine_gz)
 
         manta_vcf   = RUN_MANTA_GERMLINE.out.manta_vcf
         ch_versions = ch_versions.mix(RUN_MANTA_GERMLINE.out.versions)
@@ -113,8 +119,7 @@ workflow GERMLINE_VARIANT_CALLING {
         RUN_STRELKA_SINGLE(cram_recalibrated_intervals_gz_tbi,
                 fasta,
                 fasta_fai,
-                intervals_bed_combine_gz,
-                num_intervals)
+                intervals_bed_combine_gz)
 
         strelka_vcf = RUN_STRELKA_SINGLE.out.strelka_vcf
         ch_versions = ch_versions.mix(RUN_STRELKA_SINGLE.out.versions)

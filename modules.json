@@ -25,7 +25,7 @@
                 "git_sha": "eeda4136c096688d04cc40bb3c70d948213ed641"
             },
             "cat/fastq": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                "git_sha": "9aadd9a6d3f5964476582319b3a1c54a3e3fe7c9"
             },
             "cnvkit/batch": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
@@ -121,7 +121,7 @@
                 "git_sha": "409af2f27cbe45109acc7fee70718d2bf20aa449"
             },
             "gatk4/haplotypecaller": {
-                "git_sha": "409af2f27cbe45109acc7fee70718d2bf20aa449"
+                "git_sha": "68f1c27169946f931ea4318911de5681f88b2961"
             },
             "gatk4/intervallisttobed": {
                 "git_sha": "409af2f27cbe45109acc7fee70718d2bf20aa449"
@@ -130,7 +130,7 @@
                 "git_sha": "409af2f27cbe45109acc7fee70718d2bf20aa449"
             },
             "gatk4/markduplicates": {
-                "git_sha": "409af2f27cbe45109acc7fee70718d2bf20aa449"
+                "git_sha": "0511e7fbbfa4ba41940d33b687b1cc90227b4eb8"
             },
             "gatk4/markduplicatesspark": {
                 "git_sha": "e04970b7d249365cafa5a52912f9a28840481c05"
@@ -217,16 +217,16 @@
                 "git_sha": "49b18b1639f4f7104187058866a8fab33332bdfe"
             },
             "tabix/tabix": {
-                "git_sha": "49b18b1639f4f7104187058866a8fab33332bdfe"
+                "git_sha": "b3e9b88e80880f450ad79a95b2b7aa05e1de5484"
             },
             "tiddit/sv": {
-                "git_sha": "fd5f6f5f4ffef4ab5a4e809bd3211bbc71c38d30"
+                "git_sha": "57cb730e78634673fb254a77606e014ce942734c"
             },
             "trimgalore": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                "git_sha": "85ec13ff1fc2196c5a507ea497de468101baabed"
             },
             "untar": {
-                "git_sha": "9ae34a01d1747019fd37753ff4cafb05aec35a2b"
+                "git_sha": "9aadd9a6d3f5964476582319b3a1c54a3e3fe7c9"
             },
             "vcftools": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"

@@ -9,7 +9,6 @@ workflow RUN_FREEBAYES {
     fasta                    // channel: [mandatory]
     fasta_fai                // channel: [mandatory]
     intervals_bed_gz         // channel: [optional]  Contains a bed.gz file of all intervals combined provided with the cram input(s). Mandatory if interval files are used.
-    num_intervals            //     val: [optional]  Number of used intervals, mandatory when intervals are provided.
 
     main:
 
@@ -21,26 +20,33 @@ workflow RUN_FREEBAYES {
         fasta_fai,
         [], [], [])
 
+    FREEBAYES.out.vcf.branch{
+            intervals:    it[0].num_intervals > 1
+            no_intervals: it[0].num_intervals <= 1
+        }.set{freebayes_vcf_out}
+
     // Only when no intervals
-    TABIX_VC_FREEBAYES(FREEBAYES.out.vcf)
+    TABIX_VC_FREEBAYES(freebayes_vcf_out.no_intervals)
 
     // Only when using intervals
-    BGZIP_VC_FREEBAYES(FREEBAYES.out.vcf)
+    BGZIP_VC_FREEBAYES(freebayes_vcf_out.intervals)
 
     CONCAT_FREEBAYES(
         BGZIP_VC_FREEBAYES.out.output
             .map{ meta, vcf ->
                 new_meta = meta.clone()
                 new_meta.id = new_meta.sample
+
+                def groupKey = groupKey(meta, meta.num_intervals)
                 [new_meta, vcf]
-            }.groupTuple(size: num_intervals),
+            }.groupTuple(),
         fasta_fai,
         intervals_bed_gz)
 
     // Mix output channels for "no intervals" and "with intervals" results
     freebayes_vcf = Channel.empty().mix(
                         CONCAT_FREEBAYES.out.vcf,
-                        FREEBAYES.out.vcf)
+                        freebayes_vcf_out.no_intervals)
                     .map{ meta, vcf ->
                         meta.variantcaller = "FreeBayes"
                         [meta, vcf]

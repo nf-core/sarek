@@ -21,8 +21,6 @@ workflow PAIR_VARIANT_CALLING {
         intervals_bed_combined_gz_tbi // channel: [mandatory] intervals/target regions all in one file zipped and indexed
         intervals_bed_combine_gz      // channel: [mandatory] intervals/target regions zipped in one file
         intervals_bed_combined        // channel: [mandatory] intervals/target regions in one file unzipped
-        num_intervals                 // val: number of intervals that are used to parallelize exection, either based on capture kit or GATK recommended for WGS
-        no_intervals
         msisensorpro_scan             // channel: [optional]  msisensorpro_scan
         germline_resource             // channel: [optional]  germline_resource
         germline_resource_tbi         // channel: [optional]  germline_resource_tbi
@@ -41,26 +39,35 @@ workflow PAIR_VARIANT_CALLING {
     msisensorpro_output  = Channel.empty()
     mutect2_vcf          = Channel.empty()
 
-    cram_pair_intervals_gz_tbi = cram_pair.combine(intervals_bed_gz_tbi)
-        .map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, bed, tbi ->
-            normal_id = meta.normal_id
-            tumor_id = meta.tumor_id
+    // Remap channel with intervals
+    cram_pair_intervals = cram_pair.combine(intervals)
+        .map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals, num_intervals ->
+            new_meta = meta.clone()
 
-            new_bed = bed.simpleName != "no_intervals" ? bed : []
-            new_tbi = tbi.simpleName != "no_intervals" ? tbi : []
-            id = bed.simpleName != "no_intervals" ? tumor_id + "_vs_" + normal_id + "_" + bed.simpleName : tumor_id + "_vs_" + normal_id
-            new_meta = [ id: id, normal_id: meta.normal_id, tumor_id: meta.tumor_id, gender: meta.gender, patient: meta.patient]
-            [new_meta, normal_cram, normal_crai, tumor_cram, tumor_crai, new_bed, new_tbi]
+            // If either no scatter/gather is done, i.e. no interval (0) or one interval (1), then don't rename samples
+            new_meta.id = num_intervals <= 1 ? meta.tumor_id + "_vs_" + meta.normal_id : meta.tumor_id + "_vs_" + meta.normal_id + "_" + intervals.baseName
+            new_meta.num_intervals = num_intervals
+
+            //If no interval file provided (0) then add empty list
+            intervals_new = num_intervals == 0 ? [] : intervals
+
+            [new_meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals_new]
         }
 
-    cram_pair_intervals = cram_pair.combine(intervals)
-        .map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals ->
-            normal_id = meta.normal_id
-            tumor_id = meta.tumor_id
-            new_intervals = intervals.baseName != "no_intervals" ? intervals : []
-            id = new_intervals ? tumor_id + "_vs_" + normal_id + "_" + new_intervals.baseName : tumor_id + "_vs_" + normal_id
-            new_meta = [ id: id, normal_id: meta.normal_id, tumor_id: meta.tumor_id, gender: meta.gender, patient: meta.patient ]
-            [new_meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals]
+    // Remap channel with gzipped intervals + indexes
+    cram_pair_intervals_gz_tbi = cram_pair.combine(intervals_bed_gz_tbi)
+        .map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, bed_tbi, num_intervals ->
+            new_meta = meta.clone()
+
+            // If either no scatter/gather is done, i.e. no interval (0) or one interval (1), then don't rename samples
+            new_meta.id = num_intervals <= 1 ? meta.tumor_id + "_vs_" + meta.normal_id : meta.tumor_id + "_vs_" + meta.normal_id + "_" + bed_tbi[0].simpleName
+            new_meta.num_intervals = num_intervals
+
+            //If no interval file provided (0) then add empty list
+            bed_new = num_intervals == 0 ? [] : bed_tbi[0]
+            tbi_new = num_intervals == 0 ? [] : bed_tbi[1]
+
+            [new_meta, normal_cram, normal_crai, tumor_cram, tumor_crai, bed_new, tbi_new]
         }
 
     if (tools.contains('controlfreec')){
@@ -82,8 +89,7 @@ workflow PAIR_VARIANT_CALLING {
                         dbsnp_tbi,
                         chr_files,
                         mappability,
-                        intervals_bed_combined,
-                        num_intervals)
+                        intervals_bed_combined)
         ch_versions = ch_versions.mix(RUN_CONTROLFREEC_SOMATIC.out.versions)
     }
 
@@ -91,8 +97,7 @@ workflow PAIR_VARIANT_CALLING {
         RUN_MANTA_SOMATIC(  cram_pair_intervals_gz_tbi,
                             fasta,
                             fasta_fai,
-                            intervals_bed_combine_gz,
-                            num_intervals)
+                            intervals_bed_combine_gz)
 
         manta_vcf                            = RUN_MANTA_SOMATIC.out.manta_vcf
         manta_candidate_small_indels_vcf     = RUN_MANTA_SOMATIC.out.manta_candidate_small_indels_vcf
@@ -104,18 +109,20 @@ workflow PAIR_VARIANT_CALLING {
 
         if (tools.contains('manta')) {
             cram_pair_strelka = cram_pair.join(manta_candidate_small_indels_vcf)
-                    .join(manta_candidate_small_indels_vcf_tbi)
-                    .combine(intervals_bed_gz_tbi)
-                    .map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, vcf, vcf_tbi, bed, bed_tbi ->
-                        normal_id = meta.normal_id
-                        tumor_id = meta.tumor_id
+                                        .join(manta_candidate_small_indels_vcf_tbi)
+                                        .combine(intervals_bed_gz_tbi)
+                                        .map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, vcf, bed_tbi, num_intervals ->
 
-                        new_bed = bed.simpleName != "no_intervals" ? bed : []
-                        new_tbi = bed_tbi.simpleName != "no_intervals" ? bed_tbi : []
-                        id = bed.simpleName != "no_intervals" ? tumor_id + "_vs_" + normal_id + "_" + bed.simpleName : tumor_id + "_vs_" + normal_id
-                        new_meta = [ id: id, normal_id: meta.normal_id, tumor_id: meta.tumor_id, gender: meta.gender, patient: meta.patient]
-                        [new_meta, normal_cram, normal_crai, tumor_cram, tumor_crai, vcf, vcf_tbi, new_bed, new_tbi]
-                    }
+                                             // If either no scatter/gather is done, i.e. no interval (0) or one interval (1), then don't rename samples
+                                            new_meta.id = num_intervals <= 1 ? meta.tumor_id + "_vs_" + meta.normal_id : meta.tumor_id + "_vs_" + meta.normal_id + "_" + bed_tbi[0].simpleName
+                                            new_meta.num_intervals = num_intervals
+
+                                            //If no interval file provided (0) then add empty list
+                                            bed_new = num_intervals == 0 ? [] : bed_tbi[0]
+                                            tbi_new = num_intervals == 0 ? [] : bed_tbi[1]
+
+                                            [new_meta, normal_cram, normal_crai, tumor_cram, tumor_crai, vcf, vcf_tbi, bed_new, tbi_new]
+                                        }
         } else {
             cram_pair_strelka = cram_pair_intervals_gz_tbi.map{
                     meta, normal_cram, normal_crai, tumor_cram, tumor_crai, bed, tbi ->
@@ -126,8 +133,7 @@ workflow PAIR_VARIANT_CALLING {
         RUN_STRELKA_SOMATIC(cram_pair_strelka,
                             fasta,
                             fasta_fai,
-                            intervals_bed_combine_gz,
-                            num_intervals)
+                            intervals_bed_combine_gz)
 
         strelka_vcf = RUN_STRELKA_SOMATIC.out.strelka_vcf
         ch_versions = ch_versions.mix(RUN_STRELKA_SOMATIC.out.versions)
@@ -141,27 +147,27 @@ workflow PAIR_VARIANT_CALLING {
         msisensorpro_output = msisensorpro_output.mix(MSISENSORPRO_MSI_SOMATIC.out.output_report)
     }
 
-    if (tools.contains('mutect2')) {
-        cram_pair_intervals.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals ->
-                [meta, [normal_cram, tumor_cram], [normal_crai, tumor_crai], intervals, ['normal']]
-                }.set{cram_pair_mutect2}
+    // if (tools.contains('mutect2')) {
+    //     cram_pair_intervals.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals ->
+    //             [meta, [normal_cram, tumor_cram], [normal_crai, tumor_crai], intervals, ['normal']]
+    //             }.set{cram_pair_mutect2}
 
-        GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING(
-            cram_pair_mutect2,
-            fasta,
-            fasta_fai,
-            dict,
-            germline_resource,
-            germline_resource_tbi,
-            panel_of_normals,
-            panel_of_normals_tbi,
-            intervals_bed_combine_gz,
-            num_intervals
-        )
+    //     GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING(
+    //         cram_pair_mutect2,
+    //         fasta,
+    //         fasta_fai,
+    //         dict,
+    //         germline_resource,
+    //         germline_resource_tbi,
+    //         panel_of_normals,
+    //         panel_of_normals_tbi,
+    //         intervals_bed_combine_gz,
+    //         num_intervals
+    //     )
 
-        mutect2_vcf = GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING.out.mutect2_vcf
-        ch_versions = ch_versions.mix(GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING.out.versions)
-    }
+    //     mutect2_vcf = GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING.out.mutect2_vcf
+    //     ch_versions = ch_versions.mix(GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING.out.versions)
+    // }
 
     // if (tools.contains('tiddit')) {
     // }

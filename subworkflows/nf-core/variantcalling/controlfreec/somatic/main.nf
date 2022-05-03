@@ -19,7 +19,6 @@ workflow RUN_CONTROLFREEC_SOMATIC {
     chr_files                // channel: [mandatory]
     mappability              // channel: [mandatory]
     intervals_bed            // channel: [optional]  Contains a bed file of all intervals combined provided with the cram input(s). Should be empty for WGS
-    num_intervals            //     val: [optional]  Number of used intervals, mandatory when intervals are provided.
 
     main:
 
@@ -28,31 +27,35 @@ workflow RUN_CONTROLFREEC_SOMATIC {
     MPILEUP_NORMAL(cram_normal, fasta)
 
     MPILEUP_NORMAL.out.mpileup.branch{
-            intervals:    num_intervals > 1
-            no_intervals: num_intervals == 1
+            intervals:    it[0].num_intervals > 1
+            no_intervals: it[0].num_intervals <= 1
         }.set{mpileup_normal}
 
     MPILEUP_TUMOR(cram_tumor, fasta)
 
     MPILEUP_TUMOR.out.mpileup.branch{
-            intervals:    num_intervals > 1
-            no_intervals: num_intervals == 1
+            intervals:    it[0].num_intervals > 1
+            no_intervals: it[0].num_intervals <= 1
         }.set{mpileup_tumor}
 
     //Merge mpileup only when intervals and natural order sort them
     CAT_MPILEUP_NORMAL( mpileup_normal.intervals.map{ meta, pileup ->
                 new_meta = meta.clone()
                 new_meta.id = new_meta.tumor_id + "_vs_" + new_meta.normal_id
+
+                def groupKey = groupKey(meta, meta.num_intervals)
                 [new_meta, pileup]
-            }.groupTuple(size: num_intervals, sort:true))
+            }.groupTuple(sort:true))
 
     CAT_MPILEUP_TUMOR(mpileup_tumor.intervals
         .map{ meta, pileup ->
             new_meta = meta.clone()
             new_meta.id = new_meta.tumor_id + "_vs_" + new_meta.normal_id
+
+            def groupKey = groupKey(meta, meta.num_intervals)
             [new_meta, pileup]
         }
-        .groupTuple(size: num_intervals, sort:true))
+        .groupTuple(sort:true))
 
     controlfreec_input_normal = Channel.empty().mix(
         CAT_MPILEUP_NORMAL.out.file_out,
@@ -74,7 +77,6 @@ workflow RUN_CONTROLFREEC_SOMATIC {
 
     controlfreec_input_normal.cross(controlfreec_input_tumor)
         .map{ normal, tumor ->
-        // [meta, normal_pileup, tumor_pileup, [] , [], [], []]
             [normal[0], normal[1], tumor[1], [], [], [], []]
         }
         .set{controlfreec_input}
