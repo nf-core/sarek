@@ -1,4 +1,4 @@
-- name: Run variant calling on germline sample with strelka
+- name: Skip variant calling on matched normal
   command: nextflow run main.nf -profile test,tools_somatic,docker --tools strelka --only_paired_variant_calling
   tags:
     - somatic
