@@ -627,6 +627,22 @@ workflow SAREK {
         // and remove patient ID field & null value for further processing [meta1, [cram1,crai1]] [meta2, [cram2,crai2]]
         cram_variant_calling_tumor_only = cram_variant_calling_tumor_filtered.transpose().map{ it -> [it[1], it[2], it[3]] }
 
+        if(params.skip_germline_for_somatic){
+            // Normal only samples
+
+            // 1. Join with tumor samples, in each channel there is one key per patient now. Patients without matched tumor end up with: [patient1, [meta1], [cram1,crai1], null] as there is only one matched normal possible
+            cram_variant_calling_normal_joined = cram_variant_calling_normal_to_cross.join(cram_variant_calling_tumor_grouped, remainder: true)
+
+            // 2. Filter out entries with last entry null
+            cram_variant_calling_normal_filtered = cram_variant_calling_normal_joined.filter{ it ->  !(it.last()) }
+
+            // 3. Remove patient ID field & null value for further processing [meta1, [cram1,crai1]] [meta2, [cram2,crai2]] (no transposing needed since only one normal per patient ID)
+            cram_variant_calling_status_normal = cram_variant_calling_normal_filtered.map{ it -> [it[1], it[2], it[3]] }
+
+        }else{
+            cram_variant_calling_status_normal = cram_variant_calling_status.normal
+        }
+
         // Tumor - normal pairs
         // Use cross to combine normal with all tumor samples, i.e. multi tumor samples from recurrences
         cram_variant_calling_pair = cram_variant_calling_normal_to_cross.cross(cram_variant_calling_pair_to_cross)
@@ -641,9 +657,11 @@ workflow SAREK {
                 [meta, normal[2], normal[3], tumor[2], tumor[3]]
             }
 
+        //cram_variant_calling_status.normal.view()
+
         // GERMLINE VARIANT CALLING
         GERMLINE_VARIANT_CALLING(
-            cram_variant_calling_status.normal,
+            cram_variant_calling_status_normal,
             dbsnp,
             dbsnp_tbi,
             dict,
