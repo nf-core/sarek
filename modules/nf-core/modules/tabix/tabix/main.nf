@@ -11,7 +11,8 @@ process TABIX_TABIX {
     tuple val(meta), path(tab)
 
     output:
-    tuple val(meta), path("*.tbi"), emit: tbi
+    tuple val(meta), path("*.tbi"), optional:true, emit: tbi
+    tuple val(meta), path("*.csi"), optional:true, emit: csi
     path  "versions.yml"          , emit: versions
 
     when:

@@ -12,7 +12,7 @@ process GATK4_MARKDUPLICATES {
 
     output:
     tuple val(meta), path("*.bam")    , emit: bam
-    tuple val(meta), path("*.bai")    , emit: bai
+    tuple val(meta), path("*.bai")    , optional:true, emit: bai
     tuple val(meta), path("*.metrics"), emit: metrics
     path "versions.yml"               , emit: versions
 
