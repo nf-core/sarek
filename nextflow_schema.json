@@ -232,6 +232,11 @@
             "default": "",
             "fa_icon": "fas fa-toolbox",
             "properties": {
+                "only_paired_variant_calling": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-angle-double-right",
+                    "description": "If true, skips germline variant calling for matched normal to tumor sample. Normal samples without matched tumor will still be processed through germline variant calling tools."
+                },
                 "ploidy": {
                     "type": "number",
                     "fa_icon": "fas fa-bacon",

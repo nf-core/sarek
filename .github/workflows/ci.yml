@@ -43,6 +43,7 @@ jobs:
           - "mutect2"
           - "msisensorpro"
           # - 'save_bam_mapped'
+          - "variantcalling_channel"
           - "skip_markduplicates"
           - "strelka"
           - "split_fastq"
