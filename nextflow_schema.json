@@ -607,11 +607,19 @@
                     "hidden": true,
                     "fa_icon": "fas fa-users-cog"
                 },
-                "sequencing_center": {
+                "seq_center": {
                     "type": "string",
                     "fa_icon": "fas fa-university",
-                    "description": "Name of sequencing center to be displayed in BAM file",
-                    "help_text": "It will be in the CN field",
+                    "description": "Sequencing center information to be added to read group (CN field).",
+                    "help_text": "This parameter is required for creating a proper header to use in the downstream analysis of GATK",
+                    "hidden": true
+                },
+                "seq_platform": {
+                    "type": "string",
+                    "fa_icon": "fas fa-university",
+                    "default": "ILLUMINA",
+                    "description": "Sequencing platform information to be added to read group (PL field).",
+                    "help_text": "This parameter is required for creating a proper header to use in the downstream analysis of GATK",
                     "hidden": true
                 }
             }
