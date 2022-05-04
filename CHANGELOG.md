@@ -10,9 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - [#388](https://github.com/nf-core/sarek/pull/388) - Add cram support + read splitting with `SeqKit` for speedup
+- [#394](https://github.com/nf-core/sarek/pull/394) - Add `DeepVariant`
 - [#411](https://github.com/nf-core/sarek/pull/411) - cram in csv samplesheet
 - [#448](https://github.com/nf-core/sarek/pull/448) - Allow to skip base quality recalibration with `--skip_bqsr`
-- [#449](https://github.com/nf-core/sarek/pull/449) - @FriederikeHanssen is now a `CODEOWNERS`
+- [#449](https://github.com/nf-core/sarek/pull/449) - [@FriederikeHanssen](https://github.com/FriederikeHanssen) is now a `CODEOWNERS`
 - [#460](https://github.com/nf-core/sarek/pull/460) - Add posters
 - [#463](https://github.com/nf-core/sarek/pull/463) - Add dark/light logo versions
 - [#464](https://github.com/nf-core/sarek/pull/464), [#514](https://github.com/nf-core/sarek/pull/514) - Add `DRAGMAP` as a possible aligner
@@ -22,12 +23,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#512](https://github.com/nf-core/sarek/pull/512), [#531](https://github.com/nf-core/sarek/pull/531), [#537](https://github.com/nf-core/sarek/pull/537) - Subway map for pipeline
 - [#522](https://github.com/nf-core/sarek/pull/522) - Add QC for vcf files & MultiQC
 - [#533](https://github.com/nf-core/sarek/pull/533) - Add param `--only_paired_variant_calling` to allow skipping of germline variantcalling for paired samples
+- [#538](https://github.com/nf-core/sarek/pull/538) - Add param `--seq_platform`, default: `ILLUMINA`
 
 ### Changed
 
 - [#383](https://github.com/nf-core/sarek/pull/383), [#528](https://github.com/nf-core/sarek/pull/528) - Update `CHANGELOG`
 - [#390](https://github.com/nf-core/sarek/pull/390) - Update `nextflow_schema.json`
-- [#394](https://github.com/nf-core/sarek/pull/394) - Add `DeepVariant`
 - [#408](https://github.com/nf-core/sarek/pull/408) - Sync `TEMPLATE` with `tools` `2.0.1`
 - [#416](https://github.com/nf-core/sarek/pull/416) - Sync `TEMPLATE` with `tools` `2.1`
 - [#417](https://github.com/nf-core/sarek/pull/417) - Merge `dsl2` and `dev` branches
@@ -40,6 +41,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#466](https://github.com/nf-core/sarek/pull/466), [#485](https://github.com/nf-core/sarek/pull/485), [#492](https://github.com/nf-core/sarek/pull/492), [#494](https://github.com/nf-core/sarek/pull/494), [#515](https://github.com/nf-core/sarek/pull/515) - Improve preprocessing subworkflows
 - [#474](https://github.com/nf-core/sarek/pull/474), [#475](https://github.com/nf-core/sarek/pull/475) - Sync `TEMPLATE` with `tools` `2.2`
 - [#487](https://github.com/nf-core/sarek/pull/487), [#489](https://github.com/nf-core/sarek/pull/489), [#492](https://github.com/nf-core/sarek/pull/492), [#497](https://github.com/nf-core/sarek/pull/497), [#522](https://github.com/nf-core/sarek/pull/522) - Improve variant calling subworkflows
+- [#498](https://github.com/nf-core/sarek/pull/498) - Update docs
 - [#501](https://github.com/nf-core/sarek/pull/501) - Sync `TEMPLATE` with `tools` `2.3`
 - [#511](https://github.com/nf-core/sarek/pull/511) - Sync `TEMPLATE` with `tools` `2.3.2`
 - [#520](https://github.com/nf-core/sarek/pull/520) - Improve annotation subworkflows
@@ -73,6 +75,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 - [#485](https://github.com/nf-core/sarek/pull/485) - `--skip_qc`, `--skip_markduplicates` and `--skip_bqsr` is now `--skip_tools`
+- [#538](https://github.com/nf-core/sarek/pull/538) - `--sequencing_center` is now `--seq_center`
 
 ## [2.7.1](https://github.com/nf-core/sarek/releases/tag/2.7.1) - Pårtejekna
 
