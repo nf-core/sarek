@@ -611,7 +611,6 @@
                     "type": "string",
                     "fa_icon": "fas fa-university",
                     "description": "Sequencing center information to be added to read group (CN field).",
-                    "help_text": "This parameter is required for creating a proper header to use in the downstream analysis of GATK",
                     "hidden": true
                 },
                 "seq_platform": {
