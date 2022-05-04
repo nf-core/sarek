@@ -842,10 +842,13 @@ def extract_csv(csv_file) {
             meta.id         = "${row.sample}-${row.lane}".toString()
             def fastq_1     = file(row.fastq_1, checkIfExists: true)
             def fastq_2     = file(row.fastq_2, checkIfExists: true)
-            def CN          = params.sequencing_center ? "CN:${params.sequencing_center}\\t" : ''
-            def read_group  = "\"@RG\\tID:${row.lane}\\t${CN}PU:${row.lane}\\tSM:${row.sample}\\tLB:${row.sample}\\tPL:ILLUMINA\""
+            def CN          = params.seq_center ? "CN:${params.seq_center}\\t" : ''
+            def read_group  = "\"@RG\\tID:${row.lane}\\t${CN}PU:${row.lane}\\tSM:${row.sample}\\tLB:${row.sample}\\tPL:${params.seq_platform}\""
             meta.numLanes   = numLanes.toInteger()
             meta.read_group = read_group.toString()
+
+            println read_group
+
             meta.data_type  = "fastq"
             meta.size       = 1 // default number of splitted fastq
             return [meta, [fastq_1, fastq_2]]
@@ -853,8 +856,8 @@ def extract_csv(csv_file) {
         } else if (row.lane && row.bam) {
             meta.id         = "${row.sample}-${row.lane}".toString()
             def bam         = file(row.bam,   checkIfExists: true)
-            def CN          = params.sequencing_center ? "CN:${params.sequencing_center}\\t" : ''
-            def read_group  = "\"@RG\\tID:${row.lane}\\t${CN}PU:${row.lane}\\tSM:${row.sample}\\tLB:${row.sample}\\tPL:ILLUMINA\""
+            def CN          = params.seq_center ? "CN:${params.seq_center}\\t" : ''
+            def read_group  = "\"@RG\\tID:${row.lane}\\t${CN}PU:${row.lane}\\tSM:${row.sample}\\tLB:${row.sample}\\tPL:${params.seq_platform}\""
             meta.numLanes   = numLanes.toInteger()
             meta.read_group = read_group.toString()
             meta.data_type  = "bam"

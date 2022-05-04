@@ -203,14 +203,6 @@
                     "help_text": "> **WARNING** Current indices for `bwa` in AWS iGenomes are not compatible with `bwa-mem2` and `dragmap`.\n> Use `--bwa=false` to have `Sarek` build them automatically.\n\n> **WARNING** BWA-mem2 is in active development\n> Sarek might not be able to require the right amount of resources for it at the moment\n> We recommend to use pre-built indexes",
                     "hidden": true
                 },
-                "markdup_java_options": {
-                    "type": "string",
-                    "default": "\"-Xms4000m -Xmx7g\"",
-                    "fa_icon": "fas fa-memory",
-                    "description": "Establish values for GATK MarkDuplicates memory consumption",
-                    "help_text": "See [SciLifeLab/Sarek/pull/689](https://github.com/SciLifeLab/Sarek/pull/689)",
-                    "hidden": true
-                },
                 "use_gatk_spark": {
                     "type": "string",
                     "fa_icon": "fas fa-forward",
@@ -607,11 +599,18 @@
                     "hidden": true,
                     "fa_icon": "fas fa-users-cog"
                 },
-                "sequencing_center": {
+                "seq_center": {
                     "type": "string",
                     "fa_icon": "fas fa-university",
-                    "description": "Name of sequencing center to be displayed in BAM file",
-                    "help_text": "It will be in the CN field",
+                    "description": "Sequencing center information to be added to read group (CN field).",
+                    "hidden": true
+                },
+                "seq_platform": {
+                    "type": "string",
+                    "fa_icon": "fas fa-university",
+                    "default": "ILLUMINA",
+                    "description": "Sequencing platform information to be added to read group (PL field).",
+                    "help_text": "Default: ILLUMINA. Will be used to create a proper header for further GATK4 downstream analysis",
                     "hidden": true
                 }
             }
