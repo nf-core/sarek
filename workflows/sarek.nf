@@ -49,6 +49,7 @@ else {
     log.warn "No samplesheet specified, attempting to restart from csv files present in ${params.outdir}"
     switch (params.step) {
         case 'mapping': exit 1, "Can't start with step $params.step without samplesheet"
+        //case 'markduplicates': csv_file = file("${params.outdir}/preprocessing/csv/markduplicates_no_table.csv", checkIfExists: true); break
         case 'prepare_recalibration': csv_file = file("${params.outdir}/preprocessing/csv/markduplicates_no_table.csv", checkIfExists: true); break
         case 'recalibrate':           csv_file = file("${params.outdir}/preprocessing/csv/markduplicates.csv",          checkIfExists: true); break
         case 'variant_calling':       csv_file = file("${params.outdir}/preprocessing/csv/recalibrated.csv",            checkIfExists: true); break
@@ -410,7 +411,6 @@ workflow SAREK {
         ch_versions = ch_versions.mix(GATK4_MAPPING.out.versions)
     }
 
-    //TODO prepare_recal can be removed here I think
     if (params.step in ['mapping', 'markduplicates']) {
         ch_cram_markduplicates_no_spark = Channel.empty()
         ch_cram_markduplicates_spark    = Channel.empty()

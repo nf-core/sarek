@@ -20,6 +20,7 @@
                     "help_text": "Only one step",
                     "enum": [
                         "mapping",
+                        "markduplicates",
                         "prepare_recalibration",
                         "recalibrate",
                         "variant_calling",
