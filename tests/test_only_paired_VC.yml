@@ -6,6 +6,10 @@
     - variant_calling
     - variantcalling_channel
   files:
+    - path: results/variant_calling/sample1/strelka/sample1.variants.vcf.gz
+    - path: results/variant_calling/sample1/strelka/sample1.variants.vcf.gz.tbi
+    - path: results/variant_calling/sample1/strelka/sample1.genome.vcf.gz
+    - path: results/variant_calling/sample1/strelka/sample1.genome.vcf.gz.tbi
     - path: results/variant_calling/sample3/strelka/sample3.variants.vcf.gz
       should_exist: false
     - path: results/variant_calling/sample3/strelka/sample3.variants.vcf.gz.tbi
@@ -31,6 +35,10 @@
     - variant_calling
     - variantcalling_channel
   files:
+    - path: results/variant_calling/sample1/strelka/sample1.variants.vcf.gz
+    - path: results/variant_calling/sample1/strelka/sample1.variants.vcf.gz.tbi
+    - path: results/variant_calling/sample1/strelka/sample1.genome.vcf.gz
+    - path: results/variant_calling/sample1/strelka/sample1.genome.vcf.gz.tbi
     - path: results/variant_calling/sample3/strelka/sample3.variants.vcf.gz
     - path: results/variant_calling/sample3/strelka/sample3.variants.vcf.gz.tbi
     - path: results/variant_calling/sample3/strelka/sample3.genome.vcf.gz
