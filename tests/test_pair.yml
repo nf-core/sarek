@@ -4,7 +4,7 @@
     - preprocessing
     - tumor_normal_pair
   files:
-    # - path: results/multiqc
+    - path: results/multiqc
     - path: results/preprocessing/test/markduplicates/test.md.cram
     - path: results/preprocessing/test/markduplicates/test.md.cram.crai
     - path: results/preprocessing/test/recal_table/test.recal.table
@@ -26,6 +26,8 @@
     - path: results/preprocessing/csv/recalibrated_test2.csv
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/fastqc/test2-test2_L1
+    - path: results/reports/markduplicates/test/test.md.metrics
+    - path: results/reports/markduplicates/test2/test2.md.metrics
     - path: results/reports/qualimap/test/test.mapped
     - path: results/reports/qualimap/test/test.recal
     - path: results/reports/qualimap/test2/test2.mapped
@@ -34,3 +36,5 @@
     - path: results/reports/samtools_stats/test/test.recal.cram.stats
     - path: results/reports/samtools_stats/test2/test2.md.cram.stats
     - path: results/reports/samtools_stats/test2/test2.recal.cram.stats
+    - path: results/reports/deeptools/test/test.bigWig
+    - path: results/reports/deeptools/test2/test2.bigWig

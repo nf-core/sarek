@@ -8,11 +8,11 @@ process GATK4_VARIANTRECALIBRATOR {
         'quay.io/biocontainers/gatk4:4.2.5.0--hdfd78af_0' }"
 
     input:
-    tuple val(meta), path(vcf) , path(tbi)
-    path fasta
-    path fai
-    path dict
-    tuple path(resvcfs), path(restbis), val(reslabels)
+    tuple val(meta), path(vcf), path(tbi)
+    tuple path(vcfs), path(tbis), val(labels)
+    path  fasta
+    path  fai
+    path  dict
 
     output:
     tuple val(meta), path("*.recal")   , emit: recal
@@ -27,8 +27,8 @@ process GATK4_VARIANTRECALIBRATOR {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    refCommand = fasta ? "-R ${fasta} " : ''
-    resourceCommand = '--resource:' + reslabels.join( ' --resource:')
+    def reference_command = fasta ? "--reference $fasta " : ''
+    def resource_command = labels.collect{"--resource:$it"}.join(' ')
 
     def avail_mem = 3
     if (!task.memory) {
@@ -38,11 +38,12 @@ process GATK4_VARIANTRECALIBRATOR {
     }
     """
     gatk --java-options "-Xmx${avail_mem}g" VariantRecalibrator \\
-        ${refCommand} \\
-        -V ${vcf} \\
-        -O ${prefix}.recal \\
+        --variant $vcf \\
+        --output ${prefix}.recal \\
         --tranches-file ${prefix}.tranches \\
-        ${resourceCommand} \\
+        $reference_command \\
+        $resource_command \\
+        --tmp-dir . \\
         $args
 
     cat <<-END_VERSIONS > versions.yml

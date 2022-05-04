@@ -2,10 +2,10 @@ process SAMTOOLS_MERGE {
     tag "$meta.id"
     label 'process_low'
 
-    conda (params.enable_conda ? "bioconda::samtools=1.15" : null)
+    conda (params.enable_conda ? "bioconda::samtools=1.15.1" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/samtools:1.15--h1170115_1' :
-        'quay.io/biocontainers/samtools:1.15--h1170115_1' }"
+        'https://depot.galaxyproject.org/singularity/samtools:1.15.1--h1170115_0' :
+        'quay.io/biocontainers/samtools:1.15.1--h1170115_0' }"
 
     input:
     tuple val(meta), path(input_files)
@@ -32,6 +32,18 @@ process SAMTOOLS_MERGE {
         ${reference} \\
         ${prefix}.${file_type} \\
         $input_files
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
+    END_VERSIONS
+    """
+
+    stub:
+    prefix = task.ext.suffix ? "${meta.id}${task.ext.suffix}" : "${meta.id}"
+    def file_type = input_files[0].getExtension()
+    """
+    touch ${prefix}.${file_type}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

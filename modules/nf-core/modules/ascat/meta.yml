@@ -1,0 +1,92 @@
+name: ascat
+description: copy number profiles of tumour cells.
+keywords:
+  - sort
+tools:
+  - ascat:
+      description: ASCAT is a method to derive copy number profiles of tumour cells, accounting for normal cell admixture and tumour aneuploidy. ASCAT infers tumour purity (the fraction of tumour cells) and ploidy (the amount of DNA per tumour cell), expressed as multiples of haploid genomes from SNP array or massively parallel sequencing data, and calculates whole-genome allele-specific copy number profiles (the number of copies of both parental alleles for all SNP loci across the genome).
+      homepage: None
+      documentation: None
+      tool_dev_url: https://github.com/Crick-CancerGenomics/ascat
+      doi: "10.1093/bioinformatics/btaa538"
+      licence: ["GPL v3"]
+
+input:
+  - args:
+      type: map
+      description: |
+        Groovy Map containing tool parameters. MUST follow the structure/keywords below and be provided via modules.config. Parameters must be set between quotes. (optional) parameters can be removed from the map, if they are not set. For default values, please check the documentation above.
+
+        ```
+        {
+          [
+            "gender": "XX",
+            "genomeVersion": "hg19"
+            "purity": (optional),
+            "ploidy": (optional),
+            "gc_files": (optional),
+            "minCounts": (optional),
+            "chrom_names": (optional),
+            "min_base_qual": (optional),
+            "min_map_qual": (optional),
+            "ref_fasta": (optional),
+            "skip_allele_counting_tumour": (optional),
+            "skip_allele_counting_normal": (optional)
+          ]
+        }
+        ```
+
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - input_normal:
+      type: file
+      description: BAM/CRAM/SAM file
+      pattern: "*.{bam,cram,sam}"
+  - index_normal:
+      type: file
+      description: index for normal_bam
+      pattern: "*.{bai}"
+  - input_tumor:
+      type: file
+      description: BAM/CRAM/SAM file
+      pattern: "*.{bam,cram,sam}"
+  - index_tumor:
+      type: file
+      description: index for tumor_bam
+      pattern: "*.{bai}"
+  - allele_files:
+      type: file
+      description: allele files for ASCAT. Can be downloaded here https://github.com/VanLoo-lab/ascat/tree/master/ReferenceFiles/WGS
+  - loci_files:
+      type: file
+      description: loci files for ASCAT. Can be downloaded here https://github.com/VanLoo-lab/ascat/tree/master/ReferenceFiles/WGS
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+  - png:
+      type: file
+      description: ASCAT plots
+      pattern: "*.{png}"
+  - purityploidy:
+      type: file
+      description: purity and ploidy data
+      pattern: "*.purityploidy.txt"
+  - segments:
+      type: file
+      description: segments data
+      pattern: "*.segments.txt"
+authors:
+  - "@aasNGC"
+  - "@lassefolkersen"
+  - "@FriederikeHanssen"
+  - "@maxulysse"

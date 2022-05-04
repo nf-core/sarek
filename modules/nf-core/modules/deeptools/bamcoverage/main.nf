@@ -23,11 +23,11 @@ process DEEPTOOLS_BAMCOVERAGE {
     def prefix = task.ext.prefix ?: "${meta.id}.bigWig"
 
     """
-    bamCoverage \
-    --bam $input \
-    $args \
-    --numberOfProcessors ${task.cpus} \
-    --outFileName ${prefix}
+    bamCoverage \\
+        --bam $input \\
+        $args \\
+        --numberOfProcessors ${task.cpus} \\
+        --outFileName ${prefix}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

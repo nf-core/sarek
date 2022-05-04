@@ -8,14 +8,14 @@ process GATK4_ESTIMATELIBRARYCOMPLEXITY {
         'quay.io/biocontainers/gatk4:4.2.5.0--hdfd78af_0' }"
 
     input:
-    tuple val(meta), path(cram)
-    path(fasta)
-    path(fai)
-    path(dict)
+    tuple val(meta), path(input)
+    path  fasta
+    path  fai
+    path  dict
 
     output:
     tuple val(meta), path('*.metrics'), emit: metrics
-    path "versions.yml"                  , emit: versions
+    path "versions.yml"               , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -23,7 +23,7 @@ process GATK4_ESTIMATELIBRARYCOMPLEXITY {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def crams = cram.collect(){ x -> "-I ".concat(x.toString()) }.join(" ")
+    def input_list = input.collect(){"--INPUT $it"}.join(" ")
 
     def avail_mem = 3
     if (!task.memory) {
@@ -32,12 +32,12 @@ process GATK4_ESTIMATELIBRARYCOMPLEXITY {
         avail_mem = task.memory.giga
     }
     """
-    gatk --java-options "-Xmx${avail_mem}g" EstimateLibraryComplexity \
-        ${crams} \
-        -O ${prefix}.metrics \
-        --REFERENCE_SEQUENCE ${fasta} \
-        --VALIDATION_STRINGENCY SILENT \
-        --TMP_DIR . $args
+    gatk --java-options "-Xmx${avail_mem}g" EstimateLibraryComplexity \\
+        $input_list \\
+        --OUTPUT ${prefix}.metrics \\
+        --REFERENCE_SEQUENCE ${fasta} \\
+        --TMP_DIR . \\
+        $args
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

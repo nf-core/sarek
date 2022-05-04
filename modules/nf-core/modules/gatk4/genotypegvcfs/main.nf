@@ -10,10 +10,10 @@ process GATK4_GENOTYPEGVCFS {
     input:
     tuple val(meta), path(gvcf), path(gvcf_index), path(intervals), path(intervals_index)
     path  fasta
-    path  fasta_index
-    path  fasta_dict
+    path  fai
+    path  dict
     path  dbsnp
-    path  dbsnp_index
+    path  dbsnp_tbi
 
     output:
     tuple val(meta), path("*.vcf.gz"), emit: vcf
@@ -26,9 +26,10 @@ process GATK4_GENOTYPEGVCFS {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def dbsnp_options    = dbsnp ? "-D ${dbsnp}" : ""
-    def interval_options = intervals ? "-L ${intervals}" : ""
-    def gvcf_options     = gvcf.name.endsWith(".vcf") || gvcf.name.endsWith(".vcf.gz") ? "$gvcf" : "gendb://$gvcf"
+    def gvcf_command = gvcf.name.endsWith(".vcf") || gvcf.name.endsWith(".vcf.gz") ? "$gvcf" : "gendb://$gvcf"
+    def dbsnp_command = dbsnp ? "--dbsnp $dbsnp" : ""
+    def interval_command = intervals ? "--intervals $intervals" : ""
+
     def avail_mem = 3
     if (!task.memory) {
         log.info '[GATK GenotypeGVCFs] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this.'
@@ -36,14 +37,14 @@ process GATK4_GENOTYPEGVCFS {
         avail_mem = task.memory.giga
     }
     """
-    gatk --java-options "-Xmx${avail_mem}g" \\
-        GenotypeGVCFs \\
-        $args \\
-        $interval_options \\
-        $dbsnp_options \\
-        -R $fasta \\
-        -V $gvcf_options \\
-        -O ${prefix}.vcf.gz
+    gatk --java-options "-Xmx${avail_mem}g" GenotypeGVCFs \\
+        --variant $gvcf_command \\
+        --output ${prefix}.vcf.gz \\
+        --reference $fasta \\
+        $interval_command \\
+        $dbsnp_command \\
+        --tmp-dir . \\
+        $args
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

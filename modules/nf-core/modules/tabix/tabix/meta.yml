@@ -31,6 +31,10 @@ output:
       type: file
       description: tabix index file
       pattern: "*.{tbi}"
+  - csi:
+      type: file
+      description: coordinate sorted index file
+      pattern: "*.{csi}"
   - versions:
       type: file
       description: File containing software versions

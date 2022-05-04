@@ -26,9 +26,9 @@ input:
       type: file
       description: compressed vcf file of mutect2calls
       pattern: "*.vcf.gz"
-  - tbi:
+  - vcf_tbi:
       type: file
-      description: Index of vcf file
+      description: Tabix index of vcf file
       pattern: "*vcf.gz.tbi"
   - stats:
       type: file
@@ -42,13 +42,13 @@ input:
       type: list
       description: tables containing segmentation information for input vcf. Optional input.
       pattern: "*.segmentation.table"
-  - contaminationfile:
+  - table:
       type: list
-      description: table(s) containing contamination contamination data for input vcf. Optional input, takes priority over contaminationest.
+      description: table(s) containing contamination data for input vcf. Optional input, takes priority over estimate.
       pattern: "*.contamination.table"
-  - contaminationest:
+  - estimate:
       type: val
-      description: estimation of contamination value as a double. Optional input, will only be used if contaminationfile is not specified.
+      description: estimation of contamination value as a double. Optional input, will only be used if table is not specified.
   - fasta:
       type: file
       description: The reference fasta file
@@ -82,3 +82,4 @@ output:
 
 authors:
   - "@GCJMackenzie"
+  - "@maxulysse"

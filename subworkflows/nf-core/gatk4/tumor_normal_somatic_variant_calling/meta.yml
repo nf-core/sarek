@@ -74,7 +74,7 @@ output:
   - versions:
       type: file
       description: File containing software versions
-      pattern: 'versions.yml'
+      pattern: "versions.yml"
   - mutect2_vcf:
       type: file
       description: Compressed vcf file to be used for variant_calling.
@@ -124,4 +124,4 @@ output:
       description: file containing statistics of the filtermutectcalls run.
       pattern: "*.filteringStats.tsv"
 authors:
-  - '@GCJMackenzie'
+  - "@GCJMackenzie"

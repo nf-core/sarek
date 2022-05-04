@@ -10,6 +10,7 @@
 
 include { BWA_INDEX as BWAMEM1_INDEX             } from '../../modules/nf-core/modules/bwa/index/main'
 include { BWAMEM2_INDEX                          } from '../../modules/nf-core/modules/bwamem2/index/main'
+include { DRAGMAP_HASHTABLE                      } from '../../modules/nf-core/modules/dragmap/hashtable/main'
 include { GATK4_CREATESEQUENCEDICTIONARY         } from '../../modules/nf-core/modules/gatk4/createsequencedictionary/main'
 include { MSISENSORPRO_SCAN                      } from '../../modules/nf-core/modules/msisensorpro/scan/main'
 include { SAMTOOLS_FAIDX                         } from '../../modules/nf-core/modules/samtools/faidx/main'
@@ -17,9 +18,11 @@ include { TABIX_TABIX as TABIX_DBSNP             } from '../../modules/nf-core/m
 include { TABIX_TABIX as TABIX_GERMLINE_RESOURCE } from '../../modules/nf-core/modules/tabix/tabix/main'
 include { TABIX_TABIX as TABIX_KNOWN_INDELS      } from '../../modules/nf-core/modules/tabix/tabix/main'
 include { TABIX_TABIX as TABIX_PON               } from '../../modules/nf-core/modules/tabix/tabix/main'
+include { UNTAR as UNTAR_CHR_DIR                 } from '../../modules/nf-core/modules/untar/main'
 
 workflow PREPARE_GENOME {
     take:
+        chr_dir           // channel: [optional]  chromosome files
         dbsnp             // channel: [optional]  dbsnp
         fasta             // channel: [mandatory] fasta
         fasta_fai         // channel: [optional]  fasta_fai
@@ -31,10 +34,9 @@ workflow PREPARE_GENOME {
 
     ch_versions = Channel.empty()
 
-    BWAMEM1_INDEX(fasta) // If aligner is bwa-mem
-    BWAMEM2_INDEX(fasta) // If aligner is bwa-mem2
-    // if we use mix here, bwa becomes a channel that is comsumed
-    ch_bwa = params.aligner == "bwa-mem" ? BWAMEM1_INDEX.out.index : BWAMEM2_INDEX.out.index
+    BWAMEM1_INDEX(fasta)     // If aligner is bwa-mem
+    BWAMEM2_INDEX(fasta)     // If aligner is bwa-mem2
+    DRAGMAP_HASHTABLE(fasta) // If aligner is dragmap
 
     GATK4_CREATESEQUENCEDICTIONARY(fasta)
     MSISENSORPRO_SCAN(fasta.map{ it -> [[id:it[0].baseName], it] })
@@ -44,8 +46,16 @@ workflow PREPARE_GENOME {
     TABIX_KNOWN_INDELS(known_indels.map{ it -> [[id:it[0].baseName], it] })
     TABIX_PON(pon.map{ it -> [[id:it[0].baseName], it] })
 
+    chr_files = chr_dir
+    //TODO this works, but is not pretty. I will leave this in your hands during refactoring @Maxime
+    if ( params.chr_dir.endsWith('tar.gz')){
+        UNTAR_CHR_DIR(chr_dir.map{ it -> [[id:it[0].baseName], it] })
+        chr_files = UNTAR_CHR_DIR.out.untar.map{ it[1] }
+        ch_versions = ch_versions.mix(UNTAR_CHR_DIR.out.versions)
+    }
+
     // Gather versions of all tools used
-    ch_versions  = ch_versions.mix(SAMTOOLS_FAIDX.out.versions)
+    ch_versions = ch_versions.mix(SAMTOOLS_FAIDX.out.versions)
     ch_versions = ch_versions.mix(BWAMEM1_INDEX.out.versions)
     ch_versions = ch_versions.mix(BWAMEM2_INDEX.out.versions)
     ch_versions = ch_versions.mix(GATK4_CREATESEQUENCEDICTIONARY.out.versions)
@@ -56,7 +66,9 @@ workflow PREPARE_GENOME {
     ch_versions = ch_versions.mix(TABIX_PON.out.versions)
 
     emit:
-        bwa                              = ch_bwa                                                         // path: {bwamem1,bwamem2}/index
+        bwa                              = BWAMEM1_INDEX.out.index                                        // path: bwa/*
+        bwamem2                          = BWAMEM2_INDEX.out.index                                        // path: bwamem2/*
+        hashtable                        = DRAGMAP_HASHTABLE.out.hashmap                                  // path: dragmap/*
         dbsnp_tbi                        = TABIX_DBSNP.out.tbi.map{ meta, tbi -> [tbi] }                  // path: dbsnb.vcf.gz.tbi
         dict                             = GATK4_CREATESEQUENCEDICTIONARY.out.dict                        // path: genome.fasta.dict
         fasta_fai                        = SAMTOOLS_FAIDX.out.fai.map{ meta, fai -> [fai] }               // path: genome.fasta.fai
@@ -64,6 +76,6 @@ workflow PREPARE_GENOME {
         known_indels_tbi                 = TABIX_KNOWN_INDELS.out.tbi.map{ meta, tbi -> [tbi] }.collect() // path: {known_indels*}.vcf.gz.tbi
         msisensorpro_scan                = MSISENSORPRO_SCAN.out.list.map{ meta, list -> [list] }         // path: genome_msi.list
         pon_tbi                          = TABIX_PON.out.tbi.map{ meta, tbi -> [tbi] }                    // path: pon.vcf.gz.tbi
-
+        chr_files                        = chr_files
         versions                         = ch_versions                                                    // channel: [ versions.yml ]
 }

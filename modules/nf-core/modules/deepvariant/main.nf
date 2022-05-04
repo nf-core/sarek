@@ -44,4 +44,16 @@ process DEEPVARIANT {
         deepvariant: \$(echo \$(/opt/deepvariant/bin/run_deepvariant --version) | sed 's/^.*version //; s/ .*\$//' )
     END_VERSIONS
     """
+
+    stub:
+    prefix = task.ext.prefix ?: "${meta.id}"
+    """
+    touch ${prefix}.vcf.gz
+    touch ${prefix}.g.vcf.gz
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        deepvariant: \$(echo \$(/opt/deepvariant/bin/run_deepvariant --version) | sed 's/^.*version //; s/ .*\$//' )
+    END_VERSIONS
+    """
 }

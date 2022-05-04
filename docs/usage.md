@@ -39,7 +39,7 @@ It is recommended to use the absolute path of the files, but a relative path sho
 If necessary, a tumor sample can be associated to a normal sample as a pair, if specified with the same `patient` ID, a different `sample`, and the respective `status`.
 An additional tumor sample (such as a relapse for example), can be added if specified with the same `patient` ID, a different `sample`, and the `status` value `1`.
 
-`Sarek` will output results in a different directory for *each sample*.
+`Sarek` will output results in a different directory for _each sample_.
 If multiple samples IDs are specified in the `CSV` file, `Sarek` will consider all files to be from different samples.
 
 Output from Variant Calling and/or Annotation will be in a specific directory for each sample and tool configuration (or normal/tumor pair if applicable).
@@ -50,21 +50,21 @@ Multiple `CSV` files can be specified if the path is enclosed in quotes.
 --input '[path to samplesheet file(s)]'
 ```
 
-| Column         | Description                                                                                                                                                                            |
-|----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `patient`       | **Custom patient ID**; designates the patient/subject; must be unique for each patient, but one patient can have multiple samples (e.g. normal and tumor).|
-| `gender`       | **Sex chromosomes of the patient**; i.e. XX, XY..., only used for Copy-Number Variation analysis in a tumor/pair<br /> *Optional, Default: `NA`* |
-| `status`       | **Normal/tumor status of sample**; can be `0` (normal) or `1` (tumor).<br /> *Optional, Default: `0`*|
-| `sample`       | **Custom sample ID** for each tumor and normal sample; more than one tumor sample for each subject is possible, i.e. a tumor and a relapse; samples can have multiple lanes for which the *same* ID must be used to merge them later (see also `lane`). Sample IDs must be unique for unique biological samples |
-| `lane`       | Lane ID, used when the `sample` is multiplexed on several lanes. Must be unique for each lane in the same sample (but does not need to be the original lane name), and must contain at least one character <br /> *Required for `--step_mapping`* |
-| `fastq_1`      | Full path to FastQ file for Illumina short reads 1. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz". |
-| `fastq_2`      | Full path to FastQ file for Illumina short reads 2. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                             |
-| `bam`       | Full path to (u)BAM file |
-| `bai`       | Full path to BAM index file |
-| `cram`      | Full path to CRAM file |
-| `crai`      | Full path to CRAM index file |
-| `table`     | Full path to recalibration table file |
-| `mpileup`   | Full path to pileup file |
+| Column    | Description                                                                                                                                                                                                                                                                                                     |
+| --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `patient` | **Custom patient ID**; designates the patient/subject; must be unique for each patient, but one patient can have multiple samples (e.g. normal and tumor).                                                                                                                                                      |
+| `gender`  | **Sex chromosomes of the patient**; i.e. XX, XY..., only used for Copy-Number Variation analysis in a tumor/pair<br /> _Optional, Default: `NA`_                                                                                                                                                                |
+| `status`  | **Normal/tumor status of sample**; can be `0` (normal) or `1` (tumor).<br /> _Optional, Default: `0`_                                                                                                                                                                                                           |
+| `sample`  | **Custom sample ID** for each tumor and normal sample; more than one tumor sample for each subject is possible, i.e. a tumor and a relapse; samples can have multiple lanes for which the _same_ ID must be used to merge them later (see also `lane`). Sample IDs must be unique for unique biological samples |
+| `lane`    | Lane ID, used when the `sample` is multiplexed on several lanes. Must be unique for each lane in the same sample (but does not need to be the original lane name), and must contain at least one character <br /> _Required for `--step_mapping`_                                                               |
+| `fastq_1` | Full path to FastQ file for Illumina short reads 1. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                                                                                                                                                      |
+| `fastq_2` | Full path to FastQ file for Illumina short reads 2. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                                                                                                                                                      |
+| `bam`     | Full path to (u)BAM file                                                                                                                                                                                                                                                                                        |
+| `bai`     | Full path to BAM index file                                                                                                                                                                                                                                                                                     |
+| `cram`    | Full path to CRAM file                                                                                                                                                                                                                                                                                          |
+| `crai`    | Full path to CRAM index file                                                                                                                                                                                                                                                                                    |
+| `table`   | Full path to recalibration table file                                                                                                                                                                                                                                                                           |
+| `mpileup` | Full path to pileup file                                                                                                                                                                                                                                                                                        |
 
 An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
 
@@ -141,7 +141,7 @@ patient1,test_sample,test_mapped.bam,test_mapped.bam.bai
 
 ##### Prepare Recalibration
 
-For starting directly from preparing recalibration and skipping duplicate marking, the `CSV` file must contain at least the columns `patient`, `sample`, `cram`, `crai` with *non-recalibrated CRAM* files. Additionally, the parameter `--skip_tools markduplicates` must be set.
+For starting directly from preparing recalibration and skipping duplicate marking, the `CSV` file must contain at least the columns `patient`, `sample`, `cram`, `crai` with _non-recalibrated CRAM_ files. Additionally, the parameter `--skip_tools markduplicates` must be set.
 
 Example:
 
@@ -172,7 +172,7 @@ patient1,XX,1,relapse_sample,test3_mapped.cram,test3_mapped.cram.crai
 
 #### Start with base quality recalibration (`--step recalibrate`)
 
-For starting from base quality recalibration the `CSV` file must contain at least the columns `patient`, `sample`, `cram`, `crai`, `table` containing the paths to *non-recalibrated CRAM* files and the associated recalibration table.
+For starting from base quality recalibration the `CSV` file must contain at least the columns `patient`, `sample`, `cram`, `crai`, `table` containing the paths to _non-recalibrated CRAM_ files and the associated recalibration table.
 
 Example:
 
@@ -250,7 +250,7 @@ This version number will be logged in reports when you run the pipeline, so that
 
 ## Core Nextflow arguments
 
-> **NB:** These options are part of Nextflow and use a *single* hyphen (pipeline parameters use a double-hyphen).
+> **NB:** These options are part of Nextflow and use a _single_ hyphen (pipeline parameters use a double-hyphen).
 
 ### `-profile`
 
@@ -268,27 +268,27 @@ Note that multiple profiles can be loaded, for example: `-profile test,docker` -
 They are loaded in sequence, so later profiles can overwrite earlier profiles.
 
 If `-profile` is not specified, the pipeline will run locally and expect all software to be installed and available on the `PATH`.
-This is *not* recommended.
+This is _not_ recommended.
 
-* `docker`
-    * A generic configuration profile to be used with [Docker](https://docker.com/)
-* `singularity`
-    * A generic configuration profile to be used with [Singularity](https://sylabs.io/docs/)
-* `podman`
-    * A generic configuration profile to be used with [Podman](https://podman.io/)
-* `shifter`
-    * A generic configuration profile to be used with [Shifter](https://nersc.gitlab.io/development/shifter/how-to-use/)
-* `charliecloud`
-    * A generic configuration profile to be used with [Charliecloud](https://hpc.github.io/charliecloud/)
-* `conda`
-    * A generic configuration profile to be used with [Conda](https://conda.io/docs/). Please only use Conda as a last resort i.e. when it's not possible to run the pipeline with Docker, Singularity, Podman, Shifter or Charliecloud.
-* `test`
-    * A profile with a complete configuration for automated testing
-    * Includes links to test data so needs no other parameters
+- `docker`
+  - A generic configuration profile to be used with [Docker](https://docker.com/)
+- `singularity`
+  - A generic configuration profile to be used with [Singularity](https://sylabs.io/docs/)
+- `podman`
+  - A generic configuration profile to be used with [Podman](https://podman.io/)
+- `shifter`
+  - A generic configuration profile to be used with [Shifter](https://nersc.gitlab.io/development/shifter/how-to-use/)
+- `charliecloud`
+  - A generic configuration profile to be used with [Charliecloud](https://hpc.github.io/charliecloud/)
+- `conda`
+  - A generic configuration profile to be used with [Conda](https://conda.io/docs/). Please only use Conda as a last resort i.e. when it's not possible to run the pipeline with Docker, Singularity, Podman, Shifter or Charliecloud.
+- `test`
+  - A profile with a complete configuration for automated testing
+  - Includes links to test data so needs no other parameters
 
 ### `-resume`
 
-Specify this when restarting a pipeline. Nextflow will used cached results from any pipeline steps where the inputs are the same, continuing from where it got to previously.
+Specify this when restarting a pipeline. Nextflow will use cached results from any pipeline steps where the inputs are the same, continuing from where it got to previously. For input to be considered the same, not only the names must be identical but the files' contents as well. For more info about this parameter, see [this blog post](https://www.nextflow.io/blog/2019/demystifying-nextflow-resume.html).
 
 You can also supply a run name to resume a specific run: `-resume [run-name]`. Use the `nextflow log` command to show previous run names.
 
@@ -368,6 +368,7 @@ process {
 ```
 
 > **NB:** We specify the full process name i.e. `NFCORE_RNASEQ:RNASEQ:ALIGN_STAR:STAR_ALIGN` in the config file because this takes priority over the short name (`STAR_ALIGN`) and allows existing configuration using the full process name to be correctly overridden.
+>
 > If you get a warning suggesting that the process selector isn't recognised check that the process name has been specified correctly.
 
 ### Updating containers
@@ -378,35 +379,35 @@ The [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) implementatio
 2. Find the latest version of the Biocontainer available on [Quay.io](https://quay.io/repository/biocontainers/pangolin?tag=latest&tab=tags)
 3. Create the custom config accordingly:
 
-    * For Docker:
+   - For Docker:
 
-        ```nextflow
-        process {
-            withName: PANGOLIN {
-                container = 'quay.io/biocontainers/pangolin:3.0.5--pyhdfd78af_0'
-            }
-        }
-        ```
+     ```nextflow
+     process {
+         withName: PANGOLIN {
+             container = 'quay.io/biocontainers/pangolin:3.0.5--pyhdfd78af_0'
+         }
+     }
+     ```
 
-    * For Singularity:
+   - For Singularity:
 
-        ```nextflow
-        process {
-            withName: PANGOLIN {
-                container = 'https://depot.galaxyproject.org/singularity/pangolin:3.0.5--pyhdfd78af_0'
-            }
-        }
-        ```
+     ```nextflow
+     process {
+         withName: PANGOLIN {
+             container = 'https://depot.galaxyproject.org/singularity/pangolin:3.0.5--pyhdfd78af_0'
+         }
+     }
+     ```
 
-    * For Conda:
+   - For Conda:
 
-        ```nextflow
-        process {
-            withName: PANGOLIN {
-                conda = 'bioconda::pangolin=3.0.5'
-            }
-        }
-        ```
+     ```nextflow
+     process {
+         withName: PANGOLIN {
+             conda = 'bioconda::pangolin=3.0.5'
+         }
+     }
+     ```
 
 > **NB:** If you wish to periodically update individual tool-specific results (e.g. Pangolin) generated by the pipeline then you must ensure to keep the `work/` directory otherwise the `-resume` ability of the pipeline will be compromised and it will restart from scratch.
 
@@ -423,10 +424,10 @@ If you have any questions or issues please send us a message on [Slack](https://
 ### Which tool for which data type
 
 Strelka2: WGS, WES, Panel; Tumor, normal, somatic
-Freebayes: WGS, WES, Panel; Tumor,normal,  somatic
+Freebayes: WGS, WES, Panel; Tumor,normal, somatic
 mutect: WGS, WES, Panel; Tumor, somatic
 Haplotypecaller: WGS, WES, Panel; normal
-Deepvariant: WGS, WES, Panel;  normal
+Deepvariant: WGS, WES, Panel; normal
 cnvkit: WGS, WES, Panel; Tumor, normal, somatic
 Msisensor: WGS, WES, Panel; Tumor, normal, somatic
 controlfreec: WGS, WES, Panel; Tumor, normal, somatic
@@ -452,8 +453,8 @@ For annotation, cache has to be downloaded, or specifically designed containers 
 
 Based on [nfcore/base:1.12.1](https://hub.docker.com/r/nfcore/base/tags), it contains:
 
-* **[snpEff](http://snpeff.sourceforge.net/)** 4.3.1t
-* Cache for `GRCh37`, `GRCh38`, `GRCm38`, `CanFam3.1` or `WBcel235`
+- **[snpEff](http://snpeff.sourceforge.net/)** 4.3.1t
+- Cache for `GRCh37`, `GRCh38`, `GRCm38`, `CanFam3.1` or `WBcel235`
 
 `sarekvep`, our `vep` container is designed using [Conda](https://conda.io/).
 
@@ -461,9 +462,9 @@ Based on [nfcore/base:1.12.1](https://hub.docker.com/r/nfcore/base/tags), it con
 
 Based on [nfcore/base:1.12.1](https://hub.docker.com/r/nfcore/base/tags), it contains:
 
-* **[GeneSplicer](https://ccb.jhu.edu/software/genesplicer/)** 1.0
-* **[VEP](https://github.com/Ensembl/ensembl-vep)** 99.2
-* Cache for `GRCh37`, `GRCh38`, `GRCm38`, `CanFam3.1` or `WBcel235`
+- **[GeneSplicer](https://ccb.jhu.edu/software/genesplicer/)** 1.0
+- **[VEP](https://github.com/Ensembl/ensembl-vep)** 99.2
+- Cache for `GRCh37`, `GRCh38`, `GRCm38`, `CanFam3.1` or `WBcel235`
 
 #### Using downloaded cache
 
@@ -493,9 +494,9 @@ nextflow run download_cache.nf --vep_cache </path/to/VEP/cache> --species <speci
 
 To enable the use of the `VEP` `CADD` plugin:
 
-* Download the `CADD` files
-* Specify them (either on the command line, like in the example or in a configuration file)
-* use the `--cadd_cache` flag
+- Download the `CADD` files
+- Specify them (either on the command line, like in the example or in a configuration file)
+- use the `--cadd_cache` flag
 
 Example:
 
@@ -565,7 +566,7 @@ This tool is enabled within `Sarek` if both `--sentieon` and `--tools DNAscope` 
 
 ### Spark related issues
 
-If you have problems running processes that make use of Spark such as ```MarkDuplicates```.
+If you have problems running processes that make use of Spark such as `MarkDuplicates`.
 You are probably experiencing issues with the limit of open files in your system.
 You can check your current limit by typing the following:
 
@@ -576,20 +577,20 @@ ulimit -n
 The default limit size is usually 1024 which is quite low to run Spark jobs.
 In order to increase the size limit permanently you can:
 
-Edit the file ```/etc/security/limits.conf``` and add the lines:
+Edit the file `/etc/security/limits.conf` and add the lines:
 
 ```bash
 *     soft   nofile  65535
 *     hard   nofile  65535
 ```
 
-Edit the file ```/etc/sysctl.conf``` and add the line:
+Edit the file `/etc/sysctl.conf` and add the line:
 
 ```bash
 fs.file-max = 65535
 ```
 
-Edit the file ```/etc/sysconfig/docker``` and add the new limits to OPTIONS like this:
+Edit the file `/etc/sysconfig/docker` and add the new limits to OPTIONS like this:
 
 ```bash
 OPTIONS=”—default-ulimit nofile=65535:65535"

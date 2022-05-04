@@ -9,7 +9,7 @@ tools:
       documentation: https://gatk.broadinstitute.org/hc/en-us
       tool_dev_url: https://github.com/broadinstitute/gatk
       doi: "10.1158/1538-7445.AM2017-3590"
-      licence: ['BSD-3-clause']
+      licence: ["BSD-3-clause"]
 
 input:
   - meta:
@@ -28,14 +28,15 @@ output:
       description: |
         Groovy Map containing sample information
         e.g. [ id:'test', single_end:false ]
+  - table:
+      type: file
+      description: pileup summaries table file
+      pattern: "*.pileupsummaries.table"
   - versions:
       type: file
       description: File containing software versions
       pattern: "versions.yml"
-  - table:
-      type: file
-      description: Pileup file
-      pattern: "*.pileups.table"
 
 authors:
   - "@FriederikeHanssen"
+  - "@maxulysse"

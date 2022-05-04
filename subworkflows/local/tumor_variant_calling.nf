@@ -3,249 +3,142 @@
 // Should be only run on patients without normal sample
 //
 
-
-include { BGZIP as BGZIP_VC_FREEBAYES             } from '../../modules/local/bgzip'
-include { BGZIP as BGZIP_VC_MANTA_SMALL_INDELS    } from '../../modules/local/bgzip'
-include { BGZIP as BGZIP_VC_MANTA_SV              } from '../../modules/local/bgzip'
-include { BGZIP as BGZIP_VC_MANTA_TUMOR           } from '../../modules/local/bgzip'
-include { BGZIP as BGZIP_VC_STRELKA               } from '../../modules/local/bgzip'
-include { BGZIP as BGZIP_VC_STRELKA_GENOME        } from '../../modules/local/bgzip'
-include { CONCAT_VCF as CONCAT_FREEBAYES          } from '../../modules/local/concat_vcf/main'
-include { CONCAT_VCF as CONCAT_MANTA_SMALL_INDELS } from '../../modules/local/concat_vcf/main'
-include { CONCAT_VCF as CONCAT_MANTA_SV           } from '../../modules/local/concat_vcf/main'
-include { CONCAT_VCF as CONCAT_MANTA_TUMOR        } from '../../modules/local/concat_vcf/main'
-include { CONCAT_VCF as CONCAT_STRELKA            } from '../../modules/local/concat_vcf/main'
-include { CONCAT_VCF as CONCAT_STRELKA_GENOME     } from '../../modules/local/concat_vcf/main'
-include { FREEBAYES                               } from '../../modules/nf-core/modules/freebayes/main'
+//include { RUN_CONTROLFREEC                        } from '../nf-core/variantcalling/controlfreec/main.nf'
+include { RUN_FREEBAYES                           } from '../nf-core/variantcalling/freebayes/main.nf'
 include { GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING } from '../../subworkflows/nf-core/gatk4/tumor_only_somatic_variant_calling/main'
-include { MANTA_TUMORONLY                         } from '../../modules/local/manta/tumoronly/main'
-include { STRELKA_GERMLINE as STRELKA_TUMORONLY   } from '../../modules/nf-core/modules/strelka/germline/main'
-include { TABIX_TABIX as TABIX_VC_FREEBAYES       } from '../../modules/nf-core/modules/tabix/tabix/main'
+include { RUN_MANTA_TUMORONLY                     } from '../nf-core/variantcalling/manta/tumoronly/main.nf'
+include { RUN_STRELKA_SINGLE                      } from '../nf-core/variantcalling/strelka/single/main.nf'
+include { RUN_CONTROLFREEC_TUMORONLY              } from '../nf-core/variantcalling/controlfreec/tumoronly/main.nf'
 
 workflow TUMOR_ONLY_VARIANT_CALLING {
     take:
-        tools                           // Mandatory, list of tools to apply
-        cram_recalibrated               // channel: [mandatory] cram
-        dbsnp                           // channel: [mandatory] dbsnp
-        dbsnp_tbi                       // channel: [mandatory] dbsnp_tbi
-        dict                            // channel: [mandatory] dict
-        fasta                           // channel: [mandatory] fasta
-        fasta_fai                       // channel: [mandatory] fasta_fai
-        intervals                       // channel: [mandatory] intervals/target regions
-        intervals_bed_gz_tbi            // channel: [mandatory] intervals/target regions index zipped and indexed
-        intervals_bed_combine_gz_tbi    // channel: [mandatory] intervals/target regions index zipped and indexed
-        intervals_bed_combine_gz        // channel: [mandatory] intervals/target regions index zipped and indexed in one file
-        num_intervals                   // val: number of intervals that are used to parallelize exection, either based on capture kit or GATK recommended for WGS
-        no_intervals
-        germline_resource
-        germline_resource_tbi   // channel
-        panel_of_normals
-        panel_of_normals_tbi
-
+        tools                        // Mandatory, list of tools to apply
+        cram_recalibrated            // channel: [mandatory] cram
+        dbsnp                        // channel: [mandatory] dbsnp
+        dbsnp_tbi                    // channel: [mandatory] dbsnp_tbi
+        dict                         // channel: [mandatory] dict
+        fasta                        // channel: [mandatory] fasta
+        fasta_fai                    // channel: [mandatory] fasta_fai
+        intervals                    // channel: [mandatory] intervals/target regions
+        intervals_bed_gz_tbi         // channel: [mandatory] intervals/target regions index zipped and indexed
+        intervals_bed_combine_gz_tbi // channel: [mandatory] intervals/target regions index zipped and indexed
+        intervals_bed_combine_gz     // channel: [mandatory] intervals/target regions index zipped and indexed in one file
+        intervals_bed_combined        // channel: [mandatory] intervals/target regions in one file unzipped
+        germline_resource            // channel: [optional]  germline_resource
+        germline_resource_tbi        // channel: [optional]  germline_resource_tbi
+        panel_of_normals             // channel: [optional]  panel_of_normals
+        panel_of_normals_tbi         // channel: [optional]  panel_of_normals_tbi
+        chr_files
+        mappability
 
     main:
 
-    if(!tools) tools = ""
-
     ch_versions         = Channel.empty()
+
+    //TODO: Temporary until the if's can be removed and printing to terminal is prevented with "when" in the modules.config
     freebayes_vcf       = Channel.empty()
     manta_vcf           = Channel.empty()
     mutect2_vcf         = Channel.empty()
     strelka_vcf         = Channel.empty()
 
-    cram_recalibrated.combine(intervals).map{ meta, cram, crai, intervals ->
-        sample = meta.sample
-        new_intervals = intervals.baseName != "no_intervals" ? intervals : []
-        id = new_intervals ? sample + "_" + new_intervals.baseName : sample
-        new_new_meta = [ id: id, sample: meta.sample, gender: meta.gender, status: meta.status, patient: meta.patient ]
-        [new_new_meta, cram, crai, new_intervals]
-    }.set{cram_recalibrated_intervals}
+    // Remap channel with intervals
+    cram_recalibrated_intervals = cram_recalibrated.combine(intervals)
+        .map{ meta, cram, crai, intervals, num_intervals ->
+            new_meta = meta.clone()
 
-    cram_recalibrated.combine(intervals_bed_gz_tbi)
-        .map{ meta, cram, crai, bed, tbi ->
-            sample = meta.sample
-            new_bed = bed.simpleName != "no_intervals" ? bed : []
-            new_tbi = tbi.simpleName != "no_intervals" ? tbi : []
-            id = new_bed ? sample + "_" + new_bed.simpleName : sample
-            new_meta = [ id: id, sample: meta.sample, gender: meta.gender, status: meta.status, patient: meta.patient ]
-            [new_meta, cram, crai, new_bed, new_tbi]
-        }.set{cram_recalibrated_intervals_gz_tbi}
+            // If either no scatter/gather is done, i.e. no interval (0) or one interval (1), then don't rename samples
+            new_meta.id = num_intervals <= 1 ? meta.sample : meta.sample + "_" + intervals.baseName
+            new_meta.num_intervals = num_intervals
 
+            //If no interval file provided (0) then add empty list
+            intervals_new = num_intervals == 0 ? [] : intervals
+
+            [new_meta, cram, crai, intervals_new]
+        }
+
+    // Remap channel with gzipped intervals + indexes
+    cram_recalibrated_intervals_gz_tbi = cram_recalibrated.combine(intervals_bed_gz_tbi)
+        .map{ meta, cram, crai, bed_tbi, num_intervals ->
+            new_meta = meta.clone()
+
+            // If either no scatter/gather is done, i.e. no interval (0) or one interval (1), then don't rename samples
+            new_meta.id = num_intervals <= 1 ? meta.sample : meta.sample + "_" + bed_tbi[0].simpleName
+            new_meta.num_intervals = num_intervals
+
+            //If no interval file provided (0) then add empty list
+            bed_new = num_intervals == 0 ? [] : bed_tbi[0]
+            tbi_new = num_intervals == 0 ? [] : bed_tbi[1]
+
+            [new_meta, cram, crai, bed_new, tbi_new]
+        }
+
+    if(tools.contains('controlfreec')){
+        cram_intervals_no_index = cram_recalibrated_intervals.map { meta, cram, crai, intervals ->
+                                                                    [meta, cram, intervals]
+                                                                    }
+        RUN_CONTROLFREEC_TUMORONLY(
+                        cram_intervals_no_index,
+                        fasta,
+                        fasta_fai,
+                        dbsnp,
+                        dbsnp_tbi,
+                        chr_files,
+                        mappability,
+                        intervals_bed_combined)
+        ch_versions = ch_versions.mix(RUN_CONTROLFREEC_TUMORONLY.out.versions)
+    }
 
     if (tools.contains('freebayes')){
+        // Remap channel for Freebayes
+        cram_recalibrated_intervals_freebayes = cram_recalibrated_intervals
+            .map{ meta, cram, crai, intervals ->
+                [meta, cram, crai, [], [], intervals]
+            }
 
-        cram_recalibrated.combine(intervals).map{ meta, cram, crai, intervals ->
-            new_meta = meta.clone()
-            new_meta.id = meta.sample + "_" + intervals.simpleName
-            new_meta.id = intervals.baseName != "no_intervals" ? meta.sample + "_" + intervals.baseName : meta.sample
-            intervals = intervals.baseName != "no_intervals" ? intervals : []
-            [new_meta, cram, crai, [], [], intervals]
-        }.set{cram_recalibrated_intervals_freebayes}
+        RUN_FREEBAYES(cram_recalibrated_intervals_freebayes, fasta, fasta_fai, intervals_bed_combine_gz)
 
-        FREEBAYES(
-            cram_recalibrated_intervals_freebayes,
-            fasta,
-            fasta_fai,
-            [],
-            [],
-            []
-        )
-        ch_versions = ch_versions.mix(FREEBAYES.out.versions)
-
-        if(no_intervals){
-            TABIX_VC_FREEBAYES(FREEBAYES.out.vcf)
-            freebayes_vcf_gz = FREEBAYES.out.vcf
-            ch_versions = ch_versions.mix(TABIX_VC_FREEBAYES.out.versions)
-        }else{
-            BGZIP_VC_FREEBAYES(FREEBAYES.out.vcf)
-            BGZIP_VC_FREEBAYES.out.vcf.map{ meta, vcf ->
-                new_meta = meta.clone()
-                new_meta.id = new_meta.sample
-                [new_meta, vcf]
-            }.groupTuple(size: num_intervals)
-            .set{freebayes_vcf_to_concat}
-
-            CONCAT_FREEBAYES(freebayes_vcf_to_concat,fasta_fai, intervals_bed_combine_gz)
-            freebayes_vcf_gz = CONCAT_FREEBAYES.out.vcf
-
-            ch_versions = ch_versions.mix(BGZIP_VC_FREEBAYES.out.versions)
-            ch_versions = ch_versions.mix(CONCAT_FREEBAYES.out.versions)
-        }
-
-        freebayes_vcf = freebayes_vcf.mix(freebayes_vcf_gz)
-
+        freebayes_vcf = RUN_FREEBAYES.out.freebayes_vcf
+        ch_versions   = ch_versions.mix(RUN_FREEBAYES.out.versions)
     }
 
-    if (tools.contains('mutect2')) {
+    // if (tools.contains('mutect2')) {
 
-        which_norm = []
-        cram_recalibrated_intervals.map{ meta, cram, crai, intervals -> [meta, cram, crai, intervals, which_norm]}.set{cram_recalibrated_mutect2}
-        GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING(
-            cram_recalibrated_mutect2,
-            fasta,
-            fasta_fai,
-            dict,
-            germline_resource,
-            germline_resource_tbi,
-            panel_of_normals,
-            panel_of_normals_tbi,
-            num_intervals,
-            no_intervals,
-            intervals_bed_combine_gz
-        )
+    //     which_norm = []
+    //     cram_recalibrated_intervals.map{ meta, cram, crai, intervals -> [meta, cram, crai, intervals, which_norm]}.set{cram_recalibrated_mutect2}
+    //     GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING(cram_recalibrated_mutect2,
+    //                                             fasta,
+    //                                             fasta_fai,
+    //                                             dict,
+    //                                             germline_resource,
+    //                                             germline_resource_tbi,
+    //                                             panel_of_normals,
+    //                                             panel_of_normals_tbi,
+    //                                             intervals_bed_combine_gz,
+    //                                             num_intervals)
 
-        ch_versions = ch_versions.mix(GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING.out.versions)
+    //     mutect2_vcf = GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING.out.mutect2_vcf
+    //     ch_versions = ch_versions.mix(GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING.out.versions)
 
-        //mutect2_vcf_tbi = mutect2_vcf_tbi.mix(GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING.out.mutect2_vcf_gz_tbi)
-    }
+    // }
 
     if (tools.contains('manta')){
-        //TODO: Research if splitting by intervals is ok, we pretend for now it is fine. Seems to be the consensus on upstream modules implementaiton too
+        RUN_MANTA_TUMORONLY(cram_recalibrated_intervals_gz_tbi,
+                            fasta,
+                            fasta_fai,
+                            intervals_bed_combine_gz)
 
-        MANTA_TUMORONLY(
-            cram_recalibrated_intervals_gz_tbi,
-            fasta,
-            fasta_fai
-        )
-
-        ch_versions = ch_versions.mix(MANTA_TUMORONLY.out.versions)
-
-        if(no_intervals){
-            manta_candidate_small_indels_vcf = MANTA_TUMORONLY.out.candidate_small_indels_vcf
-            manta_candidate_sv_vcf           = MANTA_TUMORONLY.out.candidate_sv_vcf
-            manta_tumor_sv_vcf               = MANTA_TUMORONLY.out.tumor_sv_vcf
-        }else{
-
-            BGZIP_VC_MANTA_SV(MANTA_TUMORONLY.out.candidate_small_indels_vcf)
-            BGZIP_VC_MANTA_SMALL_INDELS(MANTA_TUMORONLY.out.candidate_sv_vcf)
-            BGZIP_VC_MANTA_TUMOR(MANTA_TUMORONLY.out.tumor_sv_vcf)
-
-            BGZIP_VC_MANTA_SV.out.vcf.map{ meta, vcf ->
-                new_meta = meta.clone()
-                new_meta.id = new_meta.sample
-                [new_meta, vcf]
-            }.groupTuple(size: num_intervals)
-            .set{manta_sv_vcf_to_concat}
-
-            BGZIP_VC_MANTA_SMALL_INDELS.out.vcf.map{ meta, vcf ->
-                new_meta = meta.clone()
-                new_meta.id = new_meta.sample
-                [new_meta, vcf]
-            }.groupTuple(size: num_intervals)
-            .set{manta_small_indels_vcf_to_concat}
-
-            BGZIP_VC_MANTA_TUMOR.out.vcf.map{ meta, vcf ->
-                new_meta = meta.clone()
-                new_meta.id = new_meta.sample
-                [new_meta, vcf]
-            }.groupTuple(size: num_intervals)
-            .set{manta_tumor_sv_vcf_to_concat}
-
-            CONCAT_MANTA_SV(manta_sv_vcf_to_concat, fasta_fai, intervals_bed_combine_gz)
-            CONCAT_MANTA_SMALL_INDELS(manta_small_indels_vcf_to_concat,fasta_fai, intervals_bed_combine_gz)
-            CONCAT_MANTA_TUMOR(manta_tumor_sv_vcf_to_concat, fasta_fai, intervals_bed_combine_gz)
-
-            manta_candidate_small_indels_vcf = CONCAT_MANTA_SV.out.vcf
-            manta_candidate_sv_vcf           = CONCAT_MANTA_SMALL_INDELS.out.vcf
-            manta_tumor_sv_vcf               = CONCAT_MANTA_TUMOR.out.vcf
-
-            ch_versions = ch_versions.mix(BGZIP_VC_MANTA_SV.out.versions)
-            ch_versions = ch_versions.mix(BGZIP_VC_MANTA_SMALL_INDELS.out.versions)
-            ch_versions = ch_versions.mix(BGZIP_VC_MANTA_TUMOR.out.versions)
-
-            ch_versions = ch_versions.mix(CONCAT_MANTA_SV.out.versions)
-            ch_versions = ch_versions.mix(CONCAT_MANTA_SMALL_INDELS.out.versions)
-            ch_versions = ch_versions.mix(CONCAT_MANTA_TUMOR.out.versions)
-
-        }
-
-        manta_vcf = manta_vcf.mix(manta_candidate_small_indels_vcf, manta_candidate_sv_vcf, manta_tumor_sv_vcf)
+        manta_vcf   = RUN_MANTA_TUMORONLY.out.manta_vcf
+        ch_versions = ch_versions.mix(RUN_MANTA_TUMORONLY.out.versions)
     }
 
     if (tools.contains('strelka')) {
-        //TODO: research if multiple targets can be provided: waiting for reply
+        RUN_STRELKA_SINGLE( cram_recalibrated_intervals_gz_tbi,
+                            fasta,
+                            fasta_fai,
+                            intervals_bed_combine_gz)
 
-        STRELKA_TUMORONLY(
-            cram_recalibrated_intervals_gz_tbi,
-            fasta,
-            fasta_fai
-            )
-
-        ch_versions = ch_versions.mix(STRELKA_TUMORONLY.out.versions)
-
-        if(no_intervals){
-            strelka_vcf_gz = STRELKA_TUMORONLY.out.vcf
-            strelka_genome_vcf_gz = STRELKA_TUMORONLY.out.genome_vcf
-
-        }else{
-            BGZIP_VC_STRELKA(STRELKA_TUMORONLY.out.vcf)
-            BGZIP_VC_STRELKA_GENOME(STRELKA_TUMORONLY.out.genome_vcf)
-
-            BGZIP_VC_STRELKA.out.vcf.map{ meta, vcf ->
-                new_meta = meta.clone()
-                new_meta.id = new_meta.sample
-                [new_meta, vcf]
-            }.groupTuple(size: num_intervals)
-            .set{strelka_vcf_to_concat}
-
-            BGZIP_VC_STRELKA_GENOME.out.vcf.map{ meta, vcf ->
-                new_meta = meta.clone()
-                new_meta.id = new_meta.sample
-                [new_meta, vcf]
-            }.groupTuple(size: num_intervals)
-            .set{strelka_genome_vcf_to_concat}
-
-            CONCAT_STRELKA(strelka_vcf_to_concat,fasta_fai, intervals_bed_combine_gz)
-            CONCAT_STRELKA_GENOME(strelka_genome_vcf_to_concat,fasta_fai, intervals_bed_combine_gz)
-
-            strelka_vcf_gz = CONCAT_STRELKA.out.vcf
-            strelka_genome_vcf_gz = CONCAT_STRELKA_GENOME.out.vcf
-
-            ch_versions = ch_versions.mix(BGZIP_VC_STRELKA.out.versions)
-            ch_versions = ch_versions.mix(CONCAT_STRELKA.out.versions)
-        }
-
-        strelka_vcf = strelka_vcf.mix(strelka_vcf_gz,strelka_genome_vcf_gz )
+        strelka_vcf = RUN_STRELKA_SINGLE.out.strelka_vcf
+        ch_versions = ch_versions.mix(RUN_STRELKA_SINGLE.out.versions)
     }
 
 
@@ -259,4 +152,5 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
     manta_vcf
     mutect2_vcf
     strelka_vcf
+
 }
