@@ -23,7 +23,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - [Base (Quality Score) Recalibration](#base-quality-score-recalibration)
         - [GATK BaseRecalibrator (Spark)](#gatk-baserecalibrator)
         - [GATK ApplyBQSR (Spark)](#gatk-applybqsr)
-    - [CSV files](#tsv-files)
+    - [CSV files](#csv-files)
     - [CSV files with `--skip_markduplicates`](#csv-files-with---skip_markduplicates)
     - [CSV files with `--sentieon`](#tsv-files-with---sentieon)
 - [Variant Calling](#variant-calling)
