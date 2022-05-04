@@ -150,6 +150,8 @@ include { GATK4_MAPPING                                  } from '../subworkflows
 // Merge and index BAM files (optional)
 include { MERGE_INDEX_BAM                                } from '../subworkflows/nf-core/merge_index_bam'
 
+include {SAMTOOLS_VIEW as SAMTOOLS_CRAMTOBAM } from '../modules/nf-core/modules/samtools/view/main'
+
 // Mark Duplicates (+QC)
 include { MARKDUPLICATES                                 } from '../subworkflows/nf-core/gatk4/markduplicates/main'
 
@@ -158,7 +160,6 @@ include { MARKDUPLICATES_SPARK                           } from '../subworkflows
 
 // Convert to CRAM (+QC)
 include { BAM_TO_CRAM                                    } from '../subworkflows/nf-core/bam_to_cram'
-
 // QC on CRAM
 include { SAMTOOLS_STATS as SAMTOOLS_STATS_CRAM          } from '../modules/nf-core/modules/samtools/stats/main'
 include { CRAM_QC                                        } from '../subworkflows/nf-core/cram_qc'
@@ -412,6 +413,10 @@ workflow SAREK {
     }
 
     if (params.step in ['mapping', 'markduplicates']) {
+
+        //TODO Allow bam already supported, also allow cram:
+        // 1. SAMTOOLS_CRAMTOBAM ( to speed up computation)
+        // 2. Need fasta for cram compression (maybe just using --fasta, because this reference will be used elsewhere)
         ch_cram_markduplicates_no_spark = Channel.empty()
         ch_cram_markduplicates_spark    = Channel.empty()
         ch_cram_no_markduplicates       = Channel.empty()
@@ -420,7 +425,25 @@ workflow SAREK {
 
         // ch_bam_for_markduplicates will countain bam mapped with GATK4_MAPPING when step is mapping
         // Or bams that are specified in the samplesheet.csv when step is prepare_recalibration
-        ch_bam_for_markduplicates = params.step == 'mapping' ? ch_bam_mapped : ch_input_sample.map{ meta, bam, bai -> [meta, bam] }
+        // ch_bam_for_markduplicates = params.step == 'mapping'? ch_bam_mapped : ch_input_sample.map{ meta, input, index -> [meta, input] }
+
+        ch_bam_for_markduplicates = Channel.empty()
+        if(params.step == 'mapping'){
+
+            ch_bam_for_markduplicates = ch_bam_mapped
+
+        }else{
+
+            ch_input_sample.map{ meta, input, index -> [meta, input] }.branch{
+                bam: it[0].data_type == "bam"
+                cram: it[0].data_type == "cram"
+            }.set{convert}
+
+            SAMTOOLS_CRAMTOBAM(convert.cram, fasta)
+            ch_versions = ch_versions.mix(SAMTOOLS_CRAMTOBAM.out.versions)
+
+            ch_bam_for_markduplicates = ch_bam_for_markduplicates.mix(SAMTOOLS_CRAMTOBAM.out.bam, convert.bam)
+        }
 
         if (params.skip_tools && params.skip_tools.contains('markduplicates')) {
 
@@ -429,6 +452,7 @@ workflow SAREK {
             // Or bams that are specified in the samplesheet.csv when step is prepare_recalibration
             ch_bam_indexed = params.step == 'mapping' ? MERGE_INDEX_BAM.out.bam_bai : ch_input_sample
 
+            //TODO if we get a CRAM file and MD is skipped just get the
             BAM_TO_CRAM(ch_bam_indexed,
                 fasta,
                 fasta_fai,
@@ -462,15 +486,13 @@ workflow SAREK {
 
             ch_cram_markduplicates_no_spark = MARKDUPLICATES.out.cram
 
+            ch_cram_markduplicates_no_spark.view()
             // Gather QC reports
             ch_reports  = ch_reports.mix(MARKDUPLICATES.out.qc.collect{it[1]}.ifEmpty([]))
 
             // Gather used softwares versions
             ch_versions = ch_versions.mix(MARKDUPLICATES.out.versions)
         }
-    }
-
-    if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration']) {
 
         // ch_cram_for_prepare_recalibration contains either:
         // - crams from markduplicates
@@ -481,6 +503,7 @@ workflow SAREK {
             ch_cram_markduplicates_spark,
             ch_cram_no_markduplicates)
 
+        ch_cram_for_prepare_recalibration.view()
         // Run Samtools stats on CRAM
         SAMTOOLS_STATS_CRAM(ch_cram_for_prepare_recalibration, fasta)
 
@@ -492,6 +515,13 @@ workflow SAREK {
 
         // Gather used softwares versions
         ch_versions = ch_versions.mix(SAMTOOLS_STATS_CRAM.out.versions)
+    }
+
+    if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration']) {
+
+        //TODO Allow cram already supported, also allow bam:
+        // 1. SAMTOOLS_BAMTOCRAM ( to speed up computation)
+        // 2. Need fasta for cram compression (maybe just using --fasta, because this reference will be used elsewhere)
 
         // STEP 3: Create recalibration tables
         if (!(params.skip_tools && params.skip_tools.contains('baserecalibrator'))) {
@@ -512,6 +542,7 @@ workflow SAREK {
                 // Gather used softwares versions
                 ch_versions = ch_versions.mix(PREPARE_RECALIBRATION_SPARK.out.versions)
             } else {
+
             PREPARE_RECALIBRATION(ch_cram_for_prepare_recalibration,
                 dict,
                 fasta,
@@ -542,6 +573,10 @@ workflow SAREK {
 
     // STEP 4: RECALIBRATING
     if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration', 'recalibrate']) {
+
+        //TODO Allow cram already supported, also allow bam:
+        // 1. SAMTOOLS_BAMTOCRAM ( to speed up computation)
+        // 2. Need fasta for cram compression (maybe just using --fasta, because this reference will be used elsewhere)
 
         if (!(params.skip_tools && params.skip_tools.contains('baserecalibrator'))) {
             ch_cram_applybqsr = params.step == 'recalibrate' ? ch_input_sample : ch_cram_for_prepare_recalibration.join(ch_table_bqsr)
@@ -835,6 +870,7 @@ def extract_csv(csv_file) {
             meta.numLanes   = numLanes.toInteger()
             meta.read_group = read_group.toString()
             meta.data_type  = "fastq"
+            meta.test = "test"
             meta.size       = 1 // default number of splitted fastq
             return [meta, [fastq_1, fastq_2]]
         // start from BAM
@@ -871,7 +907,7 @@ def extract_csv(csv_file) {
             def crai = file(row.crai, checkIfExists: true)
             meta.data_type  = "cram"
             return [meta, cram, crai]
-        // prepare_recalibration when skipping MarkDuplicates
+        // prepare_recalibration when skipping MarkDuplicates or `--step markduplicates`
         } else if (row.bam) {
             meta.id = meta.sample
             def bam = file(row.bam, checkIfExists: true)

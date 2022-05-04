@@ -34,6 +34,11 @@ workflow PREPARE_RECALIBRATION {
             [new_meta, cram, crai, intervals_new]
         }
 
+    // cram_intervals.view()
+    // fasta.view()
+    // fasta_fai.view()
+    // dict.view()
+    // known_sites.view()
     // Run Baserecalibrator
     BASERECALIBRATOR(cram_intervals, fasta, fasta_fai, dict, known_sites, known_sites_tbi)
 
