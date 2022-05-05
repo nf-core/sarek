@@ -46,6 +46,7 @@ jobs:
           # - 'save_bam_mapped'
           - "prepare_recalibration"
           - "recalibrate"
+          - "variantcalling_channel"
           - "skip_markduplicates"
           - "strelka"
           - "split_fastq"

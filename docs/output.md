@@ -19,12 +19,13 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - [BWA-mem2](#bwa-mem2)
   - [Mark Duplicates](#mark-duplicates)
     - [GATK MarkDuplicates](#gatk-markduplicates)
+    - [GATK MarkDuplicates Spark](#gatk-markduplicates-spark)
   - [Base (Quality Score) Recalibration](#base-quality-score-recalibration)
-    - [GATK BaseRecalibrator](#gatk-baserecalibrator)
-    - [GATK ApplyBQSR](#gatk-applybqsr)
-  - [TSV files](#tsv-files)
-  - [TSV files with `--skip_markduplicates`](#tsv-files-with---skip_markduplicates)
-  - [TSV files with `--sentieon`](#tsv-files-with---sentieon)
+    - [GATK BaseRecalibrator (Spark)](#gatk-baserecalibrator)
+    - [GATK ApplyBQSR (Spark)](#gatk-applybqsr)
+  - [CSV files](#csv-files)
+  - [CSV files with `--skip_markduplicates`](#csv-files-with---skip_markduplicates)
+  - [CSV files with `--sentieon`](#tsv-files-with---sentieon)
 - [Variant Calling](#variant-calling)
   - [SNVs and small indels](#snvs-and-small-indels)
     - [FreeBayes](#freebayes)
@@ -107,6 +108,8 @@ For all samples:
 
 For further reading and documentation see the [data pre-processing for variant discovery from the GATK best practices](https://gatk.broadinstitute.org/hc/en-us/articles/360035535912-Data-pre-processing-for-variant-discovery).
 
+#### GATK MarkDuplicates Spark
+
 ### Base (Quality Score) Recalibration
 
 #### GATK BaseRecalibrator
@@ -137,9 +140,9 @@ For all samples:
 
 For further reading and documentation see the [data pre-processing for variant discovery from the GATK best practices](https://gatk.broadinstitute.org/hc/en-us/articles/360035535912-Data-pre-processing-for-variant-discovery).
 
-### TSV files
+### CSV files
 
-The `TSV` files are auto-generated and can be used by `Sarek` for further processing and/or variant calling.
+The `CSV` files are auto-generated and can be used by `Sarek` for further processing and/or variant calling.
 
 For further reading and documentation see the [`--input`](usage.md#--input) section in the usage documentation.
 
@@ -152,7 +155,7 @@ For all samples:
 - `duplicates_marked_no_table_[SAMPLE].tsv`, `duplicates_marked_[SAMPLE].tsv` and `recalibrated_[SAMPLE].tsv`
   - `TSV` files to start `Sarek` from `prepare_recalibration`, `recalibrate` or `variantcalling` steps for a specific sample.
 
-### TSV files with `--skip_markduplicates`
+### CSV files with `--skip_markduplicates`
 
 > **WARNING** Only with [`--skip_markduplicates`](usage.md#--skip_markduplicates)
 
@@ -165,7 +168,7 @@ For all samples:
 - `mapped_[SAMPLE].tsv`, `mapped_no_duplicates_marked_[SAMPLE].tsv` and `recalibrated_[SAMPLE].tsv`
   - `TSV` files to start `Sarek` from `prepare_recalibration`, `recalibrate` or `variantcalling` steps for a specific sample.
 
-### TSV files with `--sentieon`
+### CSV files with `--sentieon`
 
 > **WARNING** Only with [`--sentieon`](usage.md#--sentieon)
 
