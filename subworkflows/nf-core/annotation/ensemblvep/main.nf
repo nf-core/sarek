@@ -12,11 +12,12 @@ workflow ANNOTATION_ENSEMBLVEP {
     vep_species       //   value: species to use
     vep_cache_version //   value: cache version to use
     vep_cache         //    path: /path/to/vep/cache (optionnal)
+    vep_extra_files   // channel: [ file1, file2...] (optionnal)
 
     main:
     ch_versions = Channel.empty()
 
-    ENSEMBLVEP(vcf, vep_genome, vep_species, vep_cache_version, vep_cache)
+    ENSEMBLVEP(vcf, vep_genome, vep_species, vep_cache_version, vep_cache, vep_extra_files)
     TABIX_BGZIPTABIX(ENSEMBLVEP.out.vcf)
 
     // Gather versions of all tools used

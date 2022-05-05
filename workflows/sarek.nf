@@ -106,6 +106,17 @@ snpeff_cache       = params.snpeff_cache       ? Channel.fromPath(params.snpeff_
 //target_bed         = params.target_bed         ? Channel.fromPath(params.target_bed).collect()               : []
 vep_cache          = params.vep_cache          ? Channel.fromPath(params.vep_cache).collect()                : []
 
+if (params.cadd_wg_snvs && params.cadd_wg_snvs_tbi && params.cadd_indels && params.cadd_indels && params.cadd_indels_tbi) {
+    vep_extra_files = Channel.empty().mix(
+        Channel.fromPath(params.cadd_wg_snvs),
+        Channel.fromPath(params.cadd_wg_snvs_tbi),
+        Channel.fromPath(params.cadd_indels),
+        Channel.fromPath(params.cadd_indels_tbi)
+    ).collect()
+} else {
+    vep_extra_files = []
+}
+
 // Initialize value channels based on params, not defined within the params.genomes[params.genome] scope
 umi_read_structure = params.umi_read_structure ? "${params.umi_read_structure} ${params.umi_read_structure}" : Channel.empty()
 
@@ -756,7 +767,8 @@ workflow SAREK {
                 vep_genome,
                 vep_species,
                 vep_cache_version,
-                vep_cache)
+                vep_cache,
+                vep_extra_files)
 
             // Gather used softwares versions
             ch_versions = ch_versions.mix(ANNOTATE.out.versions)
