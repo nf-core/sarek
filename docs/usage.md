@@ -2,59 +2,16 @@
 
 ## :warning: Please read this documentation on the nf-core website: [https://nf-co.re/sarek/usage](https://nf-co.re/sarek/usage)
 
-> _Documentation of pipeline parameters is generated automatically from the pipeline schema and can no longer be found in markdown files._
-
 ## Introduction
 
-Sarek is a workflow designed to detect variants on whole genome or targeted sequencing data.
-Initially designed for Human, and Mouse, it can work on any species with a reference genome.
-Sarek can also handle tumour / normal pairs and could include additional relapses.
+Sarek is a workflow designed to detect germline and somatic variants on whole genome, whole exome, or targeted sequencing data.
 
-## Samplesheet input
-
-You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row as shown in the examples below.
-
-```console
---input '[path to samplesheet file]'
-```
-
-### Multiple runs of the same sample
-
-The `sample` identifiers have to be the same when you have re-sequenced the same sample more than once e.g. to increase sequencing depth. The pipeline will concatenate the raw reads before performing any downstream analysis. Below is an example for the same sample sequenced across 3 lanes:
-
-```console
-sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
-CONTROL_REP1,AEG588A1_S1_L003_R1_001.fastq.gz,AEG588A1_S1_L003_R2_001.fastq.gz
-CONTROL_REP1,AEG588A1_S1_L004_R1_001.fastq.gz,AEG588A1_S1_L004_R2_001.fastq.gz
-```
-
-### Full samplesheet
-
-The pipeline will auto-detect whether a sample is single- or paired-end using the information provided in the samplesheet. The samplesheet can have as many columns as you desire, however, there is a strict requirement for the first 3 columns to match those defined in the table below.
-
-A final samplesheet file consisting of both single- and paired-end data may look something like the one below. This is for 6 samples, where `TREATMENT_REP3` has been sequenced twice.
-
-```console
-sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
-CONTROL_REP2,AEG588A2_S2_L002_R1_001.fastq.gz,AEG588A2_S2_L002_R2_001.fastq.gz
-CONTROL_REP3,AEG588A3_S3_L002_R1_001.fastq.gz,AEG588A3_S3_L002_R2_001.fastq.gz
-TREATMENT_REP1,AEG588A4_S4_L003_R1_001.fastq.gz,
-TREATMENT_REP2,AEG588A5_S5_L003_R1_001.fastq.gz,
-TREATMENT_REP3,AEG588A6_S6_L003_R1_001.fastq.gz,
-TREATMENT_REP3,AEG588A6_S6_L004_R1_001.fastq.gz,
-```
-
-| Column    | Description                                                                                                                                                                            |
-| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `sample`  | Custom sample name. This entry will be identical for multiple sequencing libraries/runs from the same sample. Spaces in sample names are automatically converted to underscores (`_`). |
-| `fastq_1` | Full path to FastQ file for Illumina short reads 1. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                             |
-| `fastq_2` | Full path to FastQ file for Illumina short reads 2. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                             |
-
-An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
+Initially designed for human and mouse, it can work on any species if a reference genome is available.
+Sarek is designed to handle single samples, such as single-normal or single-tumor samples, and tumor-normal pairs including additional relapses.
 
 ## Running the pipeline
+
+### Quickstart
 
 The typical command for running the pipeline is as follows:
 
@@ -67,10 +24,209 @@ This will launch the pipeline with the `docker` configuration profile. See below
 Note that the pipeline will create the following files in your working directory:
 
 ```console
-work                # Directory containing the nextflow working files
-<OUTIDR>            # Finished results in specified location (defined with --outdir)
-.nextflow_log       # Log file from Nextflow
+work            # Directory containing the nextflow working files
+results         # Finished results (configurable, see below)
+.nextflow_log   # Log file from Nextflow
 # Other nextflow hidden files, eg. history of pipeline runs and old logs.
+```
+
+### Input: Samplesheet configurations
+
+You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. Use the parameter `--input` to specify its location. It has to be a comma-separated file with at least 3 columns, and a header row as shown in the examples below.
+
+It is recommended to use the absolute path of the files, but a relative path should also work.
+
+If necessary, a tumor sample can be associated to a normal sample as a pair, if specified with the same `patient` ID, a different `sample`, and the respective `status`.
+An additional tumor sample (such as a relapse for example), can be added if specified with the same `patient` ID, a different `sample`, and the `status` value `1`.
+
+`Sarek` will output results in a different directory for _each sample_.
+If multiple samples IDs are specified in the `CSV` file, `Sarek` will consider all files to be from different samples.
+
+Output from Variant Calling and/or Annotation will be in a specific directory for each sample and tool configuration (or normal/tumor pair if applicable).
+
+Multiple `CSV` files can be specified if the path is enclosed in quotes.
+
+```console
+--input '[path to samplesheet file(s)]'
+```
+
+| Column    | Description                                                                                                                                                                                                                                                                                                     |
+| --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `patient` | **Custom patient ID**; designates the patient/subject; must be unique for each patient, but one patient can have multiple samples (e.g. normal and tumor).                                                                                                                                                      |
+| `gender`  | **Sex chromosomes of the patient**; i.e. XX, XY..., only used for Copy-Number Variation analysis in a tumor/pair<br /> _Optional, Default: `NA`_                                                                                                                                                                |
+| `status`  | **Normal/tumor status of sample**; can be `0` (normal) or `1` (tumor).<br /> _Optional, Default: `0`_                                                                                                                                                                                                           |
+| `sample`  | **Custom sample ID** for each tumor and normal sample; more than one tumor sample for each subject is possible, i.e. a tumor and a relapse; samples can have multiple lanes for which the _same_ ID must be used to merge them later (see also `lane`). Sample IDs must be unique for unique biological samples |
+| `lane`    | Lane ID, used when the `sample` is multiplexed on several lanes. Must be unique for each lane in the same sample (but does not need to be the original lane name), and must contain at least one character <br /> _Required for `--step_mapping`_                                                               |
+| `fastq_1` | Full path to FastQ file for Illumina short reads 1. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                                                                                                                                                      |
+| `fastq_2` | Full path to FastQ file for Illumina short reads 2. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                                                                                                                                                      |
+| `bam`     | Full path to (u)BAM file                                                                                                                                                                                                                                                                                        |
+| `bai`     | Full path to BAM index file                                                                                                                                                                                                                                                                                     |
+| `cram`    | Full path to CRAM file                                                                                                                                                                                                                                                                                          |
+| `crai`    | Full path to CRAM index file                                                                                                                                                                                                                                                                                    |
+| `table`   | Full path to recalibration table file                                                                                                                                                                                                                                                                           |
+| `mpileup` | Full path to pileup file                                                                                                                                                                                                                                                                                        |
+
+An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
+
+#### Start with mapping (`--step mapping` [default])
+
+This step can be started either from `fastq` files or (u)`bam`s. The `CSV` must contain at least the columns `patient`, `sample`, `lane`, and either `fastq_1/fastq_2` or `bam`.
+
+##### Examples
+
+Minimal config file:
+
+```console
+patient,sample,lane,fastq_1,fastq_2
+patient1,test_sample,lane_1,test_1.fastq.gz,test_2.fastq.gz
+```
+
+```console
+patient,sample,lane,bam
+patient1,test_sample,lane_1,test.bam
+```
+
+In this example, there are 3 read groups:
+
+```console
+patient,sample,lane,fastq_1,fastq_2
+patient1,test_sample,lane_1,test_L001_1.fastq.gz,test_L001_2.fastq.gz
+patient1,test_sample,lane_2,test_L002_1.fastq.gz,test_L002_2.fastq.gz
+patient1,test_sample,lane_3,test_L003_1.fastq.gz,test_L003_2.fastq.gz
+```
+
+```console
+patient,sample,lane,bam
+patient1,test_sample,1,test_L001.bam
+patient1,test_sample,2,test_L002.bam
+patient1,test_sample,3,test_L003.bam
+```
+
+##### Full samplesheet
+
+In this example, all possible columns are used. There are 3 read groups for the normal sample, 2 for the tumor sample, 1 for the relapse, including the `gender` and `status` information per patient:
+
+```console
+patient,gender,status,sample,lane,fastq_1,fastq_2
+patient1,XX,0,normal_sample,lane_1,test_L001_1.fastq.gz,test_L001_2.fastq.gz
+patient1,XX,0,normal_sample,lane_2,test_L002_1.fastq.gz,test_L002_2.fastq.gz
+patient1,XX,0,normal_sample,lane_3,test_L003_1.fastq.gz,test_L003_2.fastq.gz
+patient1,XX,1,tumor_sample,lane_1,test2_L001_1.fastq.gz,test2_L001_2.fastq.gz
+patient1,XX,1,tumor_sample,lane_2,test2_L002_1.fastq.gz,test2_L002_2.fastq.gz
+patient1,XX,1,relapse_sample,lane_1,test3_L001_1.fastq.gz,test3_L001_2.fastq.gz
+```
+
+```console
+patient,gender,status,sample,lane,bam
+patient1,XX,0,normal_sample,lane_1,test_L001.bam
+patient1,XX,0,normal_sample,lane_2,test_L002.bam
+patient1,XX,0,normal_sample,lane_3,test_L003.bam
+patient1,XX,1,tumor_sample,lane_1,test2_L001.bam
+patient1,XX,1,tumor_sample,lane_2,test2_L002.bam
+patient1,XX,1,relapse_sample,lane_1,test3_L001.bam
+```
+
+#### Start with duplicate marking and/or preparing recalibration (`--step prepare_recalibration`)
+
+##### Duplicate Marking
+
+For starting from duplicate marking, the `CSV` file must contain at least the columns `patient`, `sample`, `bam`, `bai`.
+
+Example:
+
+```console
+patient,sample,bam,bai
+patient1,test_sample,test_mapped.bam,test_mapped.bam.bai
+```
+
+##### Prepare Recalibration
+
+For starting directly from preparing recalibration and skipping duplicate marking, the `CSV` file must contain at least the columns `patient`, `sample`, `cram`, `crai` with _non-recalibrated CRAM_ files. Additionally, the parameter `--skip_tools markduplicates` must be set.
+
+Example:
+
+```console
+patient,sample,cram,crai
+patient1,test_sample,test_mapped.cram,test_mapped.cram.crai
+```
+
+The `Sarek`-generated `CSV` file is stored under `results/Preprocessing/CSV/duplicates_marked_no_table.csv` and will automatically be used as an input when specifying the parameter `--step prepare_recalibration`.
+
+##### Full samplesheet
+
+In this example, all possible columns are used including the `gender` and `status` information per patient:
+
+```console
+patient,gender,status,sample,bam,bai
+patient1,XX,0,test_sample,test_mapped.bam,test_mapped.bam.bai
+patient1,XX,1,tumor_sample,test2_mapped.bam,test2_mapped.bam.bai
+patient1,XX,1,relapse_sample,test3_mapped.bam,test3_mapped.bam.bai
+```
+
+```console
+patient,gender,status,sample,cram,crai
+patient1,XX,0,normal_sample,test_mapped.cram,test_mapped.cram.crai
+patient1,XX,1,tumor_sample,test2_mapped.cram,test2_mapped.cram.crai
+patient1,XX,1,relapse_sample,test3_mapped.cram,test3_mapped.cram.crai
+```
+
+#### Start with base quality recalibration (`--step recalibrate`)
+
+For starting from base quality recalibration the `CSV` file must contain at least the columns `patient`, `sample`, `cram`, `crai`, `table` containing the paths to _non-recalibrated CRAM_ files and the associated recalibration table.
+
+Example:
+
+```console
+patient,sample,cram,crai,table
+patient1,test_sample,test_mapped.cram,test_mapped.cram.crai,test.table
+```
+
+The `Sarek`-generated `CSV` file is stored under `results/Preprocessing/CSV/duplicates_marked.csv` and will automatically be used as an input when specifying the parameter `--step recalibrate`.
+
+##### Full samplesheet
+
+In this example, all possible columns are used including the `gender` and `status` information per patient:
+
+```console
+patient,gender,status,sample,cram,crai,table
+patient1,XX,0,test_sample,test_mapped.cram,test_mapped.cram.crai,test.table
+patient1,XX,1,tumor_sample,test2_mapped.cram,test2_mapped.cram.crai,test2.table
+patient1,XX,1,relapse_sample,test3_mapped.cram,test3_mapped.cram.crai,test3.table
+```
+
+#### Start with variant calling (`--step variant_calling`)
+
+For starting from the variant calling step, the `CSV` file must contain at least the columns `patient`, `sample`, `cram`, `crai`.
+
+Example:
+
+```console
+patient,sample,cram,crai
+patient1,test_sample,test_mapped.cram,test_mapped.cram.crai
+```
+
+The `Sarek`-generated `CSV` file is stored under `results/Preprocessing/CSV/recalibrated.csv` and will automatically be used as an input when specifying the parameter `--step variant_calling`.
+
+##### Full samplesheet
+
+In this example, all possible columns are used including the `gender` and `status` information per patient:
+
+```console
+patient,gender,status,sample,cram,crai
+patient1,XX,0,normal_sample,test_mapped.cram,test_mapped.cram.crai
+patient1,XX,1,tumor_sample,test2_mapped.cram,test2_mapped.cram.crai
+patient1,XX,1,relapse_sample,test3_mapped.cram,test3_mapped.cram.crai
+```
+
+#### Start with annotation (`--step annotate`)
+
+Starting with annotation, is a special case in that it doesn't require an input sample sheet. The input files for Sarek can be specified using the path to a `VCF` file given to the `--input` command only with the annotation step (`--step annotate`).
+As `Sarek` will use `bgzip` and `tabix` to compress and index the annotated `VCF` files, it expects the input `VCF` files to be sorted.
+Multiple `VCF` files can be specified, using a [glob path](https://docs.oracle.com/javase/tutorial/essential/io/fileOps.html#glob), if enclosed in quotes.
+For example:
+
+```bash
+--step annotate --input "results/VariantCalling/*/{HaplotypeCaller,Manta,Mutect2,Strelka,TIDDIT}/*.vcf.gz"
 ```
 
 ### Updating the pipeline
@@ -85,10 +241,12 @@ nextflow pull nf-core/sarek
 
 It is a good idea to specify a pipeline version when running the pipeline on your data. This ensures that a specific version of the pipeline code and software are used when you run your pipeline. If you keep using the same tag, you'll be running the same version of the pipeline, even if there have been changes to the code since.
 
-First, go to the [nf-core/sarek releases page](https://github.com/nf-core/sarek/releases) and find the latest version number - numeric only (eg. `2.6.1`).
-Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 2.6.1`.
+First, go to the [nf-core/sarek releases page](https://github.com/nf-core/sarek/releases) and find the latest version number - numeric only (eg. `3.0.0`).
+Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 3.0.0`.
 
 This version number will be logged in reports when you run the pipeline, so that you'll know what you used when you look back in the future.
+
+### Automatic Resubmission
 
 ## Core Nextflow arguments
 
@@ -137,6 +295,24 @@ You can also supply a run name to resume a specific run: `-resume [run-name]`. U
 ### `-c`
 
 Specify the path to a specific config file (this is a core Nextflow command). See the [nf-core website documentation](https://nf-co.re/usage/configuration) for more information.
+
+### Nextflow memory requirements
+
+In some cases, the Nextflow Java virtual machines can start to request a large amount of memory.
+We recommend adding the following line to your environment to limit this (typically in `~/.bashrc` or `~./bash_profile`):
+
+```console
+NXF_OPTS='-Xms1g -Xmx4g'
+```
+
+### Running in the background
+
+Nextflow handles job submissions and supervises the running jobs. The Nextflow process must run until the pipeline is finished.
+
+The Nextflow `-bg` flag launches Nextflow in the background, detached from your terminal so that the workflow does not stop if you log out of your session. The logs are saved to a file.
+
+Alternatively, you can use `screen` / `tmux` or similar tool to create a detached session which you can log back into at a later time.
+Some HPC setups also allow you to run nextflow within a cluster job submitted your job scheduler (from where it submits more jobs).
 
 ## Custom configuration
 
@@ -243,308 +419,107 @@ See the main [Nextflow documentation](https://www.nextflow.io/docs/latest/config
 
 If you have any questions or issues please send us a message on [Slack](https://nf-co.re/join/slack) on the [`#configs` channel](https://nfcore.slack.com/channels/configs).
 
-## Running in the background
+## Tutorials
 
-Nextflow handles job submissions and supervises the running jobs. The Nextflow process must run until the pipeline is finished.
+### Which tool for which data type
 
-The Nextflow `-bg` flag launches Nextflow in the background, detached from your terminal so that the workflow does not stop if you log out of your session. The logs are saved to a file.
+Strelka2: WGS, WES, Panel; Tumor, normal, somatic
+Freebayes: WGS, WES, Panel; Tumor,normal, somatic
+mutect: WGS, WES, Panel; Tumor, somatic
+Haplotypecaller: WGS, WES, Panel; normal
+Deepvariant: WGS, WES, Panel; normal
+cnvkit: WGS, WES, Panel; Tumor, normal, somatic
+Msisensor: WGS, WES, Panel; Tumor, normal, somatic
+controlfreec: WGS, WES, Panel; Tumor, normal, somatic
+ascat: WGS, WES, Panel; Tumor, normal, somatic
+manta: WGS, WES, Panel; Tumor, normal, somatic
+tiddit: WGS, WES, Panel; Tumor, normal, somatic
 
-Alternatively, you can use `screen` / `tmux` or similar tool to create a detached session which you can log back into at a later time.
-Some HPC setups also allow you to run nextflow within a cluster job submitted your job scheduler (from where it submits more jobs).
+### How to run sarek when not all reference files are in igenomes
 
-## Nextflow memory requirements
+### How to deal with a (custom) annotation cache
 
-In some cases, the Nextflow Java virtual machines can start to request a large amount of memory.
-We recommend adding the following line to your environment to limit this (typically in `~/.bashrc` or `~./bash_profile`):
+Examples for both snpeff and VEP
 
-```console
-NXF_OPTS='-Xms1g -Xmx4g'
-```
+#### Containers
 
-## Troubleshooting
+With `Nextflow DSL2`, each process use its own `Conda` environment or container from `biocontainers`.
 
-### TSV file
+For annotation, cache has to be downloaded, or specifically designed containers are available with cache.
 
-> **NB** Delimiter is the tab (`\t`) character, and no header is required
+`sareksnpeff`, our `snpeff` container is designed using [Conda](https://conda.io/).
 
-There are different kinds of `TSV` files that can be used as input, depending on the input files available (`FASTQ`, `unmapped BAM`, `recalibrated BAM`...).
-The `TSV` file should correspond to the correct step.
-For all possible `TSV` files, described in the next sections, here is an explanation of what the columns refer to:
+[![sareksnpeff-docker status](https://img.shields.io/docker/automated/nfcore/sareksnpeff.svg)](https://hub.docker.com/r/nfcore/sareksnpeff)
 
-`Sarek` auto-generates `TSV` files for all and for each individual samples, depending of the options specified.
+Based on [nfcore/base:1.12.1](https://hub.docker.com/r/nfcore/base/tags), it contains:
 
-- `subject` designates the subject, it should be the ID of the subject, and it must be unique for each subject, but one subject can have multiple samples (e.g.
-  normal and tumor)
-- `sex` are the sex chromosomes of the subject, (ie `XX`, `XY`...) and will only be used for Copy-Number Variation in a tumor/pair.
-- `status` is the status of the measured sample, (`0` for Normal or `1` for Tumor)
-- `sample` designates the sample, it should be the ID of the sample (it is possible to have more than one tumor sample for each subject, i.e. a tumor and a relapse), it must be unique, but samples can have multiple lanes (which will later be merged)
-- `lane` is used when the sample is multiplexed on several lanes, it must be unique for each lane in the same sample (but does not need to be the original lane name), and must contain at least one character
-- `fastq1` is the path to the first pair of the `FASTQ` file
-- `fastq2` is the path to the second pair of the `FASTQ` file
-- `bam` is the path to the `BAM` file
-- `bai` is the path to the `BAM` index file
-- `recaltable` is the path to the recalibration table
-- `mpileup` is the path to the mpileup file
+- **[snpEff](http://snpeff.sourceforge.net/)** 4.3.1t
+- Cache for `GRCh37`, `GRCh38`, `GRCm38`, `CanFam3.1` or `WBcel235`
 
-It is recommended to use the absolute path of the files, but relative path should also work.
+`sarekvep`, our `vep` container is designed using [Conda](https://conda.io/).
 
-If necessary, a tumor sample can be associated to a normal sample as a pair, if specified with the same `subject`and a different `sample`.
-An additional tumor sample (such as a relapse for example), can be added if specified with the same `subject` and a different `sample`.
+[![sarekvep-docker status](https://img.shields.io/docker/automated/nfcore/sarekvep.svg)](https://hub.docker.com/r/nfcore/sarekvep)
 
-`Sarek` will output results in a different directory for each sample.
-If multiple samples are specified in the `TSV` file, `Sarek` will consider all files to be from different samples.
-Multiple `TSV` files can be specified if the path is enclosed in quotes.
+Based on [nfcore/base:1.12.1](https://hub.docker.com/r/nfcore/base/tags), it contains:
 
-Output from Variant Calling and/or Annotation will be in a specific directory for each sample (or normal/tumor pair if applicable).
+- **[GeneSplicer](https://ccb.jhu.edu/software/genesplicer/)** 1.0
+- **[VEP](https://github.com/Ensembl/ensembl-vep)** 99.2
+- Cache for `GRCh37`, `GRCh38`, `GRCm38`, `CanFam3.1` or `WBcel235`
 
-#### --input &lt;FASTQ&gt; --step mapping
+#### Using downloaded cache
 
-The `TSV` file to start with the mapping step (`--step mapping`) with paired-end `FASTQs` should contain the columns:
+Both `snpEff` and `VEP` enable usage of cache.
+If cache is available on the machine where `Sarek` is run, it is possible to run annotation using cache.
+You need to specify the cache directory using `--snpeff_cache` and `--vep_cache` in the command lines or within configuration files.
+The cache will only be used when `--annotation_cache` and cache directories are specified (either in command lines or in a configuration file).
 
-`subject sex status sample lane fastq1 fastq2`
-
-In this example (`example_fastq.tsv`), there are 3 read groups.
-
-|            |     |     |           |     |                             |                             |
-| ---------- | --- | --- | --------- | --- | --------------------------- | --------------------------- |
-| SUBJECT_ID | XX  | 0   | SAMPLE_ID | 1   | /samples/normal1_1.fastq.gz | /samples/normal1_2.fastq.gz |
-| SUBJECT_ID | XX  | 0   | SAMPLE_ID | 2   | /samples/normal2_1.fastq.gz | /samples/normal2_2.fastq.gz |
-| SUBJECT_ID | XX  | 0   | SAMPLE_ID | 3   | /samples/normal3_1.fastq.gz | /samples/normal3_2.fastq.gz |
+Example:
 
 ```bash
---input example_fastq.tsv
+nextflow run nf-core/sarek --tools snpEff --step annotate --sample <file.vcf.gz> --snpeff_cache </path/to/snpEff/cache> --annotation_cache
+nextflow run nf-core/sarek --tools VEP --step annotate --sample <file.vcf.gz> --vep_cache </path/to/VEP/cache> --annotation_cache
 ```
 
-Or, for a normal/tumor pair:
+#### Download cache
 
-In this example (`example_pair_fastq.tsv`), there are 3 read groups for the normal sample and 2 for the tumor sample.
-
-|            |     |     |            |     |                             |                             |
-| ---------- | --- | --- | ---------- | --- | --------------------------- | --------------------------- |
-| SUBJECT_ID | XX  | 0   | SAMPLE_ID1 | 1   | /samples/normal1_1.fastq.gz | /samples/normal1_2.fastq.gz |
-| SUBJECT_ID | XX  | 0   | SAMPLE_ID1 | 2   | /samples/normal2_1.fastq.gz | /samples/normal2_2.fastq.gz |
-| SUBJECT_ID | XX  | 0   | SAMPLE_ID1 | 3   | /samples/normal3_1.fastq.gz | /samples/normal3_2.fastq.gz |
-| SUBJECT_ID | XX  | 1   | SAMPLE_ID2 | 1   | /samples/tumor1_1.fastq.gz  | /samples/tumor1_2.fastq.gz  |
-| SUBJECT_ID | XX  | 1   | SAMPLE_ID2 | 2   | /samples/tumor2_1.fastq.gz  | /samples/tumor2_2.fastq.gz  |
+A `Nextflow` helper script has been designed to help downloading `snpEff` and `VEP` caches.
+Such files are meant to be shared between multiple users, so this script is mainly meant for people administrating servers, clusters and advanced users.
 
 ```bash
---input example_pair_fastq.tsv
+nextflow run download_cache.nf --snpeff_cache </path/to/snpEff/cache> --snpeff_db <snpEff DB version> --genome <GENOME>
+nextflow run download_cache.nf --vep_cache </path/to/VEP/cache> --species <species> --vep_cache_version <VEP cache version> --genome <GENOME>
 ```
 
-#### --input &lt;uBAM&gt; --step mapping
+#### Using VEP CADD plugin
 
-The `TSV` file to start with the mapping step (`--step mapping`) with `unmapped BAM` files should contain the columns:
+To enable the use of the `VEP` `CADD` plugin:
 
-`subject sex status sample lane bam`
+- Download the `CADD` files
+- Specify them (either on the command line, like in the example or in a configuration file)
+- use the `--cadd_cache` flag
 
-In this example (`example_ubam.tsv`), there are 3 read groups.
-
-|            |     |     |           |     |                       |
-| ---------- | --- | --- | --------- | --- | --------------------- |
-| SUBJECT_ID | XX  | 0   | SAMPLE_ID | 1   | /samples/normal_1.bam |
-| SUBJECT_ID | XX  | 0   | SAMPLE_ID | 2   | /samples/normal_2.bam |
-| SUBJECT_ID | XX  | 0   | SAMPLE_ID | 3   | /samples/normal_3.bam |
+Example:
 
 ```bash
---input example_ubam.tsv
+nextflow run nf-core/sarek --step annotate --tools VEP --sample <file.vcf.gz> --cadd_cache \
+    --cadd_indels </path/to/CADD/cache/InDels.tsv.gz> \
+    --cadd_indels_tbi </path/to/CADD/cache/InDels.tsv.gz.tbi> \
+    --cadd_wg_snvs </path/to/CADD/cache/whole_genome_SNVs.tsv.gz> \
+    --cadd_wg_snvs_tbi </path/to/CADD/cache/whole_genome_SNVs.tsv.gz.tbi>
 ```
 
-Or, for a normal/tumor pair:
+#### Downloading CADD files
 
-In this example (`example_pair_ubam.tsv`), there are 3 read groups for the normal sample and 2 for the tumor sample.
-
-|            |     |     |            |     |                       |
-| ---------- | --- | --- | ---------- | --- | --------------------- |
-| SUBJECT_ID | XX  | 0   | SAMPLE_ID1 | 1   | /samples/normal_1.bam |
-| SUBJECT_ID | XX  | 0   | SAMPLE_ID1 | 2   | /samples/normal_2.bam |
-| SUBJECT_ID | XX  | 0   | SAMPLE_ID1 | 3   | /samples/normal_3.bam |
-| SUBJECT_ID | XX  | 1   | SAMPLE_ID2 | 1   | /samples/tumor_1.bam  |
-| SUBJECT_ID | XX  | 1   | SAMPLE_ID2 | 2   | /samples/tumor_2.bam  |
+An helper script has been designed to help downloading `CADD` files.
+Such files are meant to be share between multiple users, so this script is mainly meant for people administrating servers, clusters and advanced users.
 
 ```bash
---input example_pair_ubam.tsv
+nextflow run download_cache.nf --cadd_cache </path/to/CADD/cache> --cadd_version <CADD version> --genome <GENOME>
 ```
 
-#### --input &lt;TSV&gt; --step prepare_recalibration
+### How to set sarek up to use sentieon
 
-To start from the preparation of the recalibration step (`--step prepare_recalibration`), a `TSV` file needs to be given as input containing the paths to the `non-recalibrated BAM` files.
-The `Sarek`-generated `TSV` file is stored under `results/Preprocessing/TSV/duplicates_marked_no_table.tsv` and will automatically be used as an input when specifying the parameter `--step prepare_recalibration`.
-
-The `TSV` contains the following columns:
-
-`subject sex status sample bam bai`
-
-|            |     |     |           |                        |                        |
-| ---------- | --- | --- | --------- | ---------------------- | ---------------------- |
-| SUBJECT_ID | XX  | 0   | SAMPLE_ID | /samples/normal.md.bam | /samples/normal.md.bai |
-
-Or, for a normal/tumor pair:
-
-|            |     |     |            |                        |                        |
-| ---------- | --- | --- | ---------- | ---------------------- | ---------------------- |
-| SUBJECT_ID | XX  | 0   | SAMPLE_ID1 | /samples/normal.md.bam | /samples/normal.md.bai |
-| SUBJECT_ID | XX  | 1   | SAMPLE_ID2 | /samples/tumor.md.bam  | /samples/tumor.md.bai  |
-
-#### --input &lt;TSV&gt; --step prepare_recalibration --skip_markduplicates
-
-The `Sarek`-generated `TSV` file is stored under `results/Preprocessing/TSV/mapped.tsv` and will automatically be used as an input when specifying the parameter `--step prepare_recalibration --skip_markduplicates`.
-The `TSV` file contains the same columns, but the content is slightly different:
-
-|            |     |     |           |                     |                     |
-| ---------- | --- | --- | --------- | ------------------- | ------------------- |
-| SUBJECT_ID | XX  | 0   | SAMPLE_ID | /samples/normal.bam | /samples/normal.bai |
-
-Or, for a normal/tumor pair:
-
-|            |     |     |            |                     |                     |
-| ---------- | --- | --- | ---------- | ------------------- | ------------------- |
-| SUBJECT_ID | XX  | 0   | SAMPLE_ID1 | /samples/normal.bam | /samples/normal.bai |
-| SUBJECT_ID | XX  | 1   | SAMPLE_ID2 | /samples/tumor.bam  | /samples/tumor.bai  |
-
-#### --input &lt;TSV&gt; --step recalibrate
-
-To start from the recalibrate step (`--step recalibrate`), a `TSV` file needs to be given as input containing the paths to the `non-recalibrated BAM` file and the associated recalibration table.
-The `Sarek`-generated `TSV` file is stored under `results/Preprocessing/TSV/duplicates_marked.tsv` and will automatically be used as an input when specifying the parameter `--step recalibrate`.
-
-The `TSV` contains the following columns:
-
-`subject sex status sample bam bai recaltable`
-
-|            |     |     |           |                        |                        |                             |
-| ---------- | --- | --- | --------- | ---------------------- | ---------------------- | --------------------------- |
-| SUBJECT_ID | XX  | 0   | SAMPLE_ID | /samples/normal.md.bam | /samples/normal.md.bai | /samples/normal.recal.table |
-
-Or, for a normal/tumor pair:
-
-|            |     |     |            |                        |                        |                             |
-| ---------- | --- | --- | ---------- | ---------------------- | ---------------------- | --------------------------- |
-| SUBJECT_ID | XX  | 0   | SAMPLE_ID1 | /samples/normal.md.bam | /samples/normal.md.bai | /samples/normal.recal.table |
-| SUBJECT_ID | XX  | 1   | SAMPLE_ID2 | /samples/tumor.md.bam  | /samples/tumor.md.bai  | /samples/tumor.recal.table  |
-
-#### --input &lt;TSV&gt; --step recalibrate --skip_markduplicates
-
-The `Sarek`-generated `TSV` file is stored under `results/Preprocessing/TSV/mapped_no_duplicates_marked.tsv` and will automatically be used as an input when specifying the parameter `--step recalibrate --skip_markduplicates`.
-The `TSV` file contains the same columns, but the content is slightly different:
-
-|            |     |     |           |                     |                     |                             |
-| ---------- | --- | --- | --------- | ------------------- | ------------------- | --------------------------- |
-| SUBJECT_ID | XX  | 0   | SAMPLE_ID | /samples/normal.bam | /samples/normal.bai | /samples/normal.recal.table |
-
-Or, for a normal/tumor pair:
-
-|            |     |     |            |                     |                     |                             |
-| ---------- | --- | --- | ---------- | ------------------- | ------------------- | --------------------------- |
-| SUBJECT_ID | XX  | 0   | SAMPLE_ID1 | /samples/normal.bam | /samples/normal.bai | /samples/normal.recal.table |
-| SUBJECT_ID | XX  | 1   | SAMPLE_ID2 | /samples/tumor.bam  | /samples/tumor.bai  | /samples/tumor.recal.table  |
-
-#### --input &lt;TSV&gt; --step variant_calling
-
-To start from the variant calling step (`--step variant_calling`), a `TSV` file needs to be given as input containing the paths to the `recalibrated BAM` file and the associated index.
-The `Sarek`-generated `TSV` file is stored under `results/Preprocessing/TSV/recalibrated.tsv` and will automatically be used as an input when specifying the parameter `--step variant_calling`.
-
-The `TSV` file should contain the columns:
-
-`subject sex status sample bam bai`
-
-Here is an example for two samples from the same subject:
-
-|            |     |     |           |                           |                           |
-| ---------- | --- | --- | --------- | ------------------------- | ------------------------- |
-| SUBJECT_ID | XX  | 0   | SAMPLE_ID | /samples/normal.recal.bam | /samples/normal.recal.bai |
-
-Or, for a normal/tumor pair:
-
-|            |     |     |            |                           |                           |
-| ---------- | --- | --- | ---------- | ------------------------- | ------------------------- |
-| SUBJECT_ID | XX  | 0   | SAMPLE_ID1 | /samples/normal.recal.bam | /samples/normal.recal.bai |
-| SUBJECT_ID | XX  | 1   | SAMPLE_ID2 | /samples/tumor.recal.bam  | /samples/tumor.recal.bai  |
-
-#### --input &lt;TSV&gt; --step Control-FREEC
-
-To start from the Control-FREEC step (`--step Control-FREEC`), a `TSV` file needs to be given as input containing the paths to the mpileup files.
-The `Sarek`-generated `TSV` file is stored under `results/VariantCalling/TSV/control-freec_mpileup.tsv` and will automatically be used as an input when specifying the parameter `--step Control-FREEC`.
-
-The `TSV` file should contain the columns:
-
-`subject sex status sample mpileup`
-
-Here is an example for one normal/tumor pair from one subjects:
-
-|            |     |     |            |                        |
-| ---------- | --- | --- | ---------- | ---------------------- |
-| SUBJECT_ID | XX  | 0   | SAMPLE_ID1 | /samples/normal.pileup |
-| SUBJECT_ID | XX  | 1   | SAMPLE_ID2 | /samples/tumor.pileup  |
-
-### --input &lt;sample/&gt; --step mapping
-
-Use this to specify the location to a directory with `FASTQ` files for the `mapping` step of a single germline sample only.
-For example:
-
-```bash
---input </path/to/directory>
-```
-
-> **NB** All of the found `FASTQ` files are considered to belong to the same sample.
-
-The input folder, containing the `FASTQ` files for one subject (ID) should be organized into one sub-folder for every sample.
-The given directory is searched recursively for `FASTQ` files that are named `*_R1_*.fastq.gz`, and a matching pair with the same name except `_R2_` instead of `_R1_` is expected to exist alongside.
-All `FASTQ` files for that sample should be collected here.
-
-```text
-ID
-+--sample1
-+------sample1_<lib>_<flowcell-index>_lane1_R1_1000.fastq.gz
-+------sample1_<lib>_<flowcell-index>_lane1_R2_1000.fastq.gz
-+------sample1_<lib>_<flowcell-index>_lane2_R1_1000.fastq.gz
-+------sample1_<lib>_<flowcell-index>_lane2_R2_1000.fastq.gz
-+--sample2
-+------sample2_<lib>_<flowcell-index>_lane1_R1_1000.fastq.gz
-+------sample2_<lib>_<flowcell-index>_lane1_R2_1000.fastq.gz
-+--sample3
-+------sample3_<lib>_<flowcell-index>_lane1_R1_1000.fastq.gz
-+------sample3_<lib>_<flowcell-index>_lane1_R2_1000.fastq.gz
-+------sample3_<lib>_<flowcell-index>_lane2_R1_1000.fastq.gz
-+------sample3_<lib>_<flowcell-index>_lane2_R2_1000.fastq.gz
-```
-
-`FASTQ` filename structure:
-
-- `<sample>_<lib>_<flowcell-index>_<lane>_R1_<XXX>.fastq.gz` and
-- `<sample>_<lib>_<flowcell-index>_<lane>_R2_<XXX>.fastq.gz`
-
-Where:
-
-- `sample` = sample id
-- `lib` = identifier of library preparation
-- `flowcell-index` = identifier of flow cell for the sequencing run
-- `lane` = identifier of the lane of the sequencing run
-
-Read group information will be parsed from `FASTQ` file names according to this:
-
-- `RGID` = "sample_lib_flowcell_index_lane"
-- `RGPL` = "Illumina"
-- `PU` = sample
-- `RGLB` = lib
-
-Each `FASTQ` file pair gets its own read group (`@RG`) in the resulting `BAM` file in the following way.
-
-- The sample name (`SM`) is derived from the the last component of the path given to `--input`.
-  That is, you should make sure that that directory has a meaningful name! For example, with `--input=/my/fastqs/sample123`, the sample name will be `sample123`.
-- The read group id is set to _flowcell.samplename.lane_.
-  The flowcell id and lane number are auto-detected from the name of the first read in the `FASTQ` file.
-
-### --input &lt;VCF&gt; --step annotate
-
-Input files for Sarek can be specified using the path to a `VCF` file given to the `--input` command only with the annotation step (`--step annotate`).
-As `Sarek` will use `bgzip` and `tabix` to compress and index `VCF` files annotated, it expects `VCF` files to be sorted.
-Multiple `VCF` files can be specified, using a [glob path](https://docs.oracle.com/javase/tutorial/essential/io/fileOps.html#glob), if enclosed in quotes.
-For example:
-
-```bash
---step annotate --input "results/VariantCalling/*/{HaplotypeCaller,Manta,Mutect2,Strelka,TIDDIT}/*.vcf.gz"
-```
-
-### Sentieon
+#### Sentieon
 
 Sentieon is a commercial solution to process genomics data with high computing efficiency, fast turnaround time, exceptional accuracy, and 100% consistency.
 
@@ -587,44 +562,7 @@ This tool is enabled within `Sarek` if both `--sentieon` and `--tools TNscope` a
 
 This tool is enabled within `Sarek` if both `--sentieon` and `--tools DNAscope` are specified.
 
-### Containers
-
-With `Nextflow DSL2`, each process use its own `Conda` environment or container from `biocontainers`.
-
-For annotation, cache has to be downloaded, or specifically designed containers are available with cache.
-
-`sareksnpeff`, our `snpeff` container is designed using [Conda](https://conda.io/).
-
-[![sareksnpeff-docker status](https://img.shields.io/docker/automated/nfcore/sareksnpeff.svg)](https://hub.docker.com/r/nfcore/sareksnpeff)
-
-Based on [nfcore/base:1.12.1](https://hub.docker.com/r/nfcore/base/tags), it contains:
-
-- **[snpEff](http://snpeff.sourceforge.net/)** 4.3.1t
-- Cache for `GRCh37`, `GRCh38`, `GRCm38`, `CanFam3.1` or `WBcel235`
-
-`sarekvep`, our `vep` container is designed using [Conda](https://conda.io/).
-
-[![sarekvep-docker status](https://img.shields.io/docker/automated/nfcore/sarekvep.svg)](https://hub.docker.com/r/nfcore/sarekvep)
-
-Based on [nfcore/base:1.12.1](https://hub.docker.com/r/nfcore/base/tags), it contains:
-
-- **[GeneSplicer](https://ccb.jhu.edu/software/genesplicer/)** 1.0
-- **[VEP](https://github.com/Ensembl/ensembl-vep)** 99.2
-- Cache for `GRCh37`, `GRCh38`, `GRCm38`, `CanFam3.1` or `WBcel235`
-
-### Using downloaded cache
-
-Both `snpEff` and `VEP` enable usage of cache.
-If cache is available on the machine where `Sarek` is run, it is possible to run annotation using cache.
-You need to specify the cache directory using `--snpeff_cache` and `--vep_cache` in the command lines or within configuration files.
-The cache will only be used when `--annotation_cache` and cache directories are specified (either in command lines or in a configuration file).
-
-Example:
-
-```bash
-nextflow run nf-core/sarek --tools snpEff --step annotate --sample <file.vcf.gz> --snpeff_cache </path/to/snpEff/cache> --annotation_cache
-nextflow run nf-core/sarek --tools VEP --step annotate --sample <file.vcf.gz> --vep_cache </path/to/VEP/cache> --annotation_cache
-```
+## Troubleshooting & FAQ
 
 ### Spark related issues
 
@@ -661,40 +599,3 @@ OPTIONS=”—default-ulimit nofile=65535:65535"
 Re-start your session.
 
 Note that the way to increase the open file limit in your system may be slightly different or require additional steps.
-
-### Download cache
-
-A `Nextflow` helper script has been designed to help downloading `snpEff` and `VEP` caches.
-Such files are meant to be shared between multiple users, so this script is mainly meant for people administrating servers, clusters and advanced users.
-
-```bash
-nextflow run download_cache.nf --snpeff_cache </path/to/snpEff/cache> --snpeff_db <snpEff DB version> --genome <GENOME>
-nextflow run download_cache.nf --vep_cache </path/to/VEP/cache> --species <species> --vep_cache_version <VEP cache version> --genome <GENOME>
-```
-
-### Using VEP CADD plugin
-
-To enable the use of the `VEP` `CADD` plugin:
-
-- Download the `CADD` files
-- Specify them (either on the command line, like in the example or in a configuration file)
-- use the `--cadd_cache` flag
-
-Example:
-
-```bash
-nextflow run nf-core/sarek --step annotate --tools VEP --sample <file.vcf.gz> --cadd_cache \
-    --cadd_indels </path/to/CADD/cache/InDels.tsv.gz> \
-    --cadd_indels_tbi </path/to/CADD/cache/InDels.tsv.gz.tbi> \
-    --cadd_wg_snvs </path/to/CADD/cache/whole_genome_SNVs.tsv.gz> \
-    --cadd_wg_snvs_tbi </path/to/CADD/cache/whole_genome_SNVs.tsv.gz.tbi>
-```
-
-### Downloading CADD files
-
-An helper script has been designed to help downloading `CADD` files.
-Such files are meant to be share between multiple users, so this script is mainly meant for people administrating servers, clusters and advanced users.
-
-```bash
-nextflow run download_cache.nf --cadd_cache </path/to/CADD/cache> --cadd_version <CADD version> --genome <GENOME>
-```

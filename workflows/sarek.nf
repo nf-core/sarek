@@ -709,6 +709,22 @@ workflow SAREK {
         // and remove patient ID field & null value for further processing [meta1, [cram1,crai1]] [meta2, [cram2,crai2]]
         cram_variant_calling_tumor_only = cram_variant_calling_tumor_filtered.transpose().map{ it -> [it[1], it[2], it[3]] }
 
+        if(params.only_paired_variant_calling){
+            // Normal only samples
+
+            // 1. Join with tumor samples, in each channel there is one key per patient now. Patients without matched tumor end up with: [patient1, [meta1], [cram1,crai1], null] as there is only one matched normal possible
+            cram_variant_calling_normal_joined = cram_variant_calling_normal_to_cross.join(cram_variant_calling_tumor_grouped, remainder: true)
+
+            // 2. Filter out entries with last entry null
+            cram_variant_calling_normal_filtered = cram_variant_calling_normal_joined.filter{ it ->  !(it.last()) }
+
+            // 3. Remove patient ID field & null value for further processing [meta1, [cram1,crai1]] [meta2, [cram2,crai2]] (no transposing needed since only one normal per patient ID)
+            cram_variant_calling_status_normal = cram_variant_calling_normal_filtered.map{ it -> [it[1], it[2], it[3]] }
+
+        }else{
+            cram_variant_calling_status_normal = cram_variant_calling_status.normal
+        }
+
         // Tumor - normal pairs
         // Use cross to combine normal with all tumor samples, i.e. multi tumor samples from recurrences
         cram_variant_calling_pair = cram_variant_calling_normal_to_cross.cross(cram_variant_calling_pair_to_cross)
@@ -725,7 +741,7 @@ workflow SAREK {
 
         // GERMLINE VARIANT CALLING
         GERMLINE_VARIANT_CALLING(
-            cram_variant_calling_status.normal,
+            cram_variant_calling_status_normal,
             dbsnp,
             dbsnp_tbi,
             dict,
@@ -908,10 +924,13 @@ def extract_csv(csv_file) {
             meta.id         = "${row.sample}-${row.lane}".toString()
             def fastq_1     = file(row.fastq_1, checkIfExists: true)
             def fastq_2     = file(row.fastq_2, checkIfExists: true)
-            def CN          = params.sequencing_center ? "CN:${params.sequencing_center}\\t" : ''
-            def read_group  = "\"@RG\\tID:${row.lane}\\t${CN}PU:${row.lane}\\tSM:${row.sample}\\tLB:${row.sample}\\tPL:ILLUMINA\""
+            def CN          = params.seq_center ? "CN:${params.seq_center}\\t" : ''
+            def read_group  = "\"@RG\\tID:${row.lane}\\t${CN}PU:${row.lane}\\tSM:${row.sample}\\tLB:${row.sample}\\tPL:${params.seq_platform}\""
             meta.numLanes   = numLanes.toInteger()
             meta.read_group = read_group.toString()
+
+            println read_group
+
             meta.data_type  = "fastq"
             meta.test = "test"
             meta.size       = 1 // default number of splitted fastq
@@ -920,8 +939,8 @@ def extract_csv(csv_file) {
         } else if (row.lane && row.bam) {
             meta.id         = "${row.sample}-${row.lane}".toString()
             def bam         = file(row.bam,   checkIfExists: true)
-            def CN          = params.sequencing_center ? "CN:${params.sequencing_center}\\t" : ''
-            def read_group  = "\"@RG\\tID:${row.lane}\\t${CN}PU:${row.lane}\\tSM:${row.sample}\\tLB:${row.sample}\\tPL:ILLUMINA\""
+            def CN          = params.seq_center ? "CN:${params.seq_center}\\t" : ''
+            def read_group  = "\"@RG\\tID:${row.lane}\\t${CN}PU:${row.lane}\\tSM:${row.sample}\\tLB:${row.sample}\\tPL:${params.seq_platform}\""
             meta.numLanes   = numLanes.toInteger()
             meta.read_group = read_group.toString()
             meta.data_type  = "bam"
