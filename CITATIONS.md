@@ -71,7 +71,12 @@
   > Danecek P, Auton A, Abecasis G, et al.: The variant call format and VCFtools. Bioinformatics. 2011 Aug 1;27(15):2156-8. doi: 10.1093/bioinformatics/btr330. Epub 2011 Jun 7. PubMed PMID: 21653522; PubMed Central PMCID: PMC3137218.
 
 - [VEP](https://pubmed.ncbi.nlm.nih.gov/27268795/)
+
   > McLaren W, Gil L, Hunt SE, et al.: The Ensembl Variant Effect Predictor. Genome Biol. 2016 Jun 6;17(1):122. doi: 10.1186/s13059-016-0974-4. PubMed PMID: 27268795; PubMed Central PMCID: PMC4893825.
+
+- [CADD](https://pubmed.ncbi.nlm.nih.gov/24487276/)
+
+  > Kircher M, et al.: A general framework for estimating the relative pathogenicity of human genetic variants. Nat Genet. 2014 Mar;46(3):310-5. doi: 10.1038/ng.2892. PubMed PMID: 24487276; PubMed Central PMCID: PMC3992975.
 
 ## R packages
 
@@ -88,6 +93,7 @@
   > Trevor L Davis (2018). optparse: Command Line Option Parser.
 
 - [RColorBrewer](https://CRAN.R-project.org/package=RColorBrewer)
+
   > Erich Neuwirth (2014). RColorBrewer: ColorBrewer Palettes.
 
 ## Software packaging/containerisation tools
@@ -107,4 +113,5 @@
 - [Docker](https://dl.acm.org/doi/10.5555/2600239.2600241)
 
 - [Singularity](https://pubmed.ncbi.nlm.nih.gov/28494014/)
+
   > Kurtzer GM, Sochat V, Bauer MW. Singularity: Scientific containers for mobility of compute. PLoS One. 2017 May 11;12(5):e0177459. doi: 10.1371/journal.pone.0177459. eCollection 2017. PubMed PMID: 28494014; PubMed Central PMCID: PMC5426675.
