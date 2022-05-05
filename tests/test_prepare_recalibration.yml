@@ -1,22 +1,31 @@
-- name: Run Prepare_recal
-  command: nextflow run main.nf -profile test,prepare_recalibration,docker
+- name: Run Prepare_recal starting from bam
+  command: nextflow run main.nf -profile test,prepare_recalibration_bam,docker
   tags:
+    - bam
     - prepare_recalibration
     - preprocessing
   files:
     - path: results/multiqc
-    - path: results/preprocessing/test/markduplicates/test.md.cram
-    - path: results/preprocessing/test/markduplicates/test.md.cram.crai
     - path: results/preprocessing/test/recal_table/test.recal.table
     - path: results/preprocessing/test/recalibrated/test.recal.cram
     - path: results/preprocessing/test/recalibrated/test.recal.cram.crai
-    - path: results/preprocessing/csv/markduplicates.csv
-    - path: results/preprocessing/csv/markduplicates_test.csv
-    - path: results/preprocessing/csv/markduplicates_no_table.csv
-    - path: results/preprocessing/csv/markduplicates_no_table_test.csv
     - path: results/preprocessing/csv/recalibrated.csv
     - path: results/preprocessing/csv/recalibrated_test.csv
-    - path: results/reports/qualimap/test/test.mapped
     - path: results/reports/qualimap/test/test.recal
-    - path: results/reports/samtools_stats/test/test.md.cram.stats
+    - path: results/reports/samtools_stats/test/test.recal.cram.stats
+
+- name: Run Prepare_recal starting from cram
+  command: nextflow run main.nf -profile test,prepare_recalibration_cram,docker
+  tags:
+    - cram
+    - prepare_recalibration
+    - preprocessing
+  files:
+    - path: results/multiqc
+    - path: results/preprocessing/test/recal_table/test.recal.table
+    - path: results/preprocessing/test/recalibrated/test.recal.cram
+    - path: results/preprocessing/test/recalibrated/test.recal.cram.crai
+    - path: results/preprocessing/csv/recalibrated.csv
+    - path: results/preprocessing/csv/recalibrated_test.csv
+    - path: results/reports/qualimap/test/test.recal
     - path: results/reports/samtools_stats/test/test.recal.cram.stats
