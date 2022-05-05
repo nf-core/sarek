@@ -161,6 +161,7 @@ include { MARKDUPLICATES_SPARK                           } from '../subworkflows
 
 // Convert to CRAM (+QC)
 include { BAM_TO_CRAM                                    } from '../subworkflows/nf-core/bam_to_cram'
+include { MAPPING_CRAM_QC                                } from '../subworkflows/nf-core/mapping_cram_qc'
 // QC on CRAM
 include { SAMTOOLS_STATS as SAMTOOLS_STATS_CRAM          } from '../modules/nf-core/modules/samtools/stats/main'
 include { CRAM_QC                                        } from '../subworkflows/nf-core/cram_qc'
@@ -436,16 +437,20 @@ workflow SAREK {
 
         }else{
 
-            ch_input_sample.map{ meta, input, index -> [meta, input] }.branch{
+            ch_input_sample.map{ meta, input, index -> [meta, input, index] }.branch{
                 bam: it[0].data_type == "bam"
                 cram: it[0].data_type == "cram"
             }.set{convert}
 
+            if (!(params.skip_tools && params.skip_tools.contains('markduplicates'))){
 
-            SAMTOOLS_CRAMTOBAM(convert.cram, fasta)
-            ch_versions = ch_versions.mix(SAMTOOLS_CRAMTOBAM.out.versions)
+                SAMTOOLS_CRAMTOBAM(convert.cram.map{ meta, input, index -> [meta, input]}, fasta)
+                ch_versions = ch_versions.mix(SAMTOOLS_CRAMTOBAM.out.versions)
 
-            ch_bam_for_markduplicates = ch_bam_for_markduplicates.mix(SAMTOOLS_CRAMTOBAM.out.bam, convert.bam)
+                ch_bam_for_markduplicates = ch_bam_for_markduplicates.mix(
+                                                SAMTOOLS_CRAMTOBAM.out.bam,
+                                                convert.bam)
+            }
         }
 
         if (params.skip_tools && params.skip_tools.contains('markduplicates')) {
@@ -453,21 +458,28 @@ workflow SAREK {
             // ch_bam_indexed will countain bam mapped with GATK4_MAPPING when step is mapping
             // which are then merged and indexed
             // Or bams that are specified in the samplesheet.csv when step is prepare_recalibration
-            ch_bam_indexed = params.step == 'mapping' ? MERGE_INDEX_BAM.out.bam_bai : ch_input_sample
+            ch_bam_indexed = params.step == 'mapping' ? MERGE_INDEX_BAM.out.bam_bai : convert.bam
+            ch_cram_indexed = convert.cram
 
-            //TODO if we get a CRAM file and MD is skipped we currently have the extra conversion step
+            MAPPING_CRAM_QC (ch_cram_indexed,
+                fasta,
+                fasta_fai,
+                intervals_for_preprocessing)
+
             BAM_TO_CRAM(ch_bam_indexed,
                 fasta,
                 fasta_fai,
                 intervals_for_preprocessing)
 
-            ch_cram_no_markduplicates = BAM_TO_CRAM.out.cram
+            ch_cram_no_markduplicates = Channel.empty().mix(BAM_TO_CRAM.out.cram, ch_cram_indexed)
 
             // Gather QC reports
             ch_reports  = ch_reports.mix(BAM_TO_CRAM.out.qc.collect{it[1]}.ifEmpty([]))
+            ch_reports  = ch_reports.mix(MAPPING_CRAM_QC.out.qc.collect{it[1]}.ifEmpty([]))
 
             // Gather used softwares versions
             ch_versions = ch_versions.mix(BAM_TO_CRAM.out.versions)
+            ch_versions = ch_versions.mix(MAPPING_CRAM_QC.out.versions)
         } else if (params.use_gatk_spark && params.use_gatk_spark.contains('markduplicates')) {
             MARKDUPLICATES_SPARK(ch_bam_for_markduplicates,
                 dict,
@@ -661,184 +673,184 @@ workflow SAREK {
 
     }
 
-    // if (params.step == 'variant_calling') cram_variant_calling = ch_input_sample
+    if (params.step == 'variant_calling') cram_variant_calling = ch_input_sample
 
-    // if (params.tools) {
+    if (params.tools) {
 
-    //     if (params.step == 'annotate') cram_variant_calling = Channel.empty()
+        if (params.step == 'annotate') cram_variant_calling = Channel.empty()
 
-    //     //
-    //     // Logic to separate germline samples, tumor samples with no matched normal, and combine tumor-normal pairs
-    //     //
-    //     cram_variant_calling.branch{
-    //         normal: it[0].status == 0
-    //         tumor:  it[0].status == 1
-    //     }.set{cram_variant_calling_status}
+        //
+        // Logic to separate germline samples, tumor samples with no matched normal, and combine tumor-normal pairs
+        //
+        cram_variant_calling.branch{
+            normal: it[0].status == 0
+            tumor:  it[0].status == 1
+        }.set{cram_variant_calling_status}
 
-    //     // All Germline samples
-    //     cram_variant_calling_normal_to_cross = cram_variant_calling_status.normal.map{ meta, cram, crai -> [meta.patient, meta, cram, crai] }
+        // All Germline samples
+        cram_variant_calling_normal_to_cross = cram_variant_calling_status.normal.map{ meta, cram, crai -> [meta.patient, meta, cram, crai] }
 
-    //     // All tumor samples
-    //     cram_variant_calling_pair_to_cross = cram_variant_calling_status.tumor.map{ meta, cram, crai -> [meta.patient, meta, cram, crai] }
+        // All tumor samples
+        cram_variant_calling_pair_to_cross = cram_variant_calling_status.tumor.map{ meta, cram, crai -> [meta.patient, meta, cram, crai] }
 
-    //     // Tumor only samples
-    //     // 1. Group together all tumor samples by patient ID [patient1, [meta1, meta2], [cram1,crai1, cram2, crai2]]
+        // Tumor only samples
+        // 1. Group together all tumor samples by patient ID [patient1, [meta1, meta2], [cram1,crai1, cram2, crai2]]
 
-    //     // Downside: this only works by waiting for all tumor samples to finish preprocessing, since no group size is provided
-    //     cram_variant_calling_tumor_grouped = cram_variant_calling_pair_to_cross.groupTuple()
+        // Downside: this only works by waiting for all tumor samples to finish preprocessing, since no group size is provided
+        cram_variant_calling_tumor_grouped = cram_variant_calling_pair_to_cross.groupTuple()
 
-    //     // 2. Join with normal samples, in each channel there is one key per patient now. Patients without matched normal end up with: [patient1, [meta1, meta2], [cram1,crai1, cram2, crai2], null]
-    //     cram_variant_calling_tumor_joined = cram_variant_calling_tumor_grouped.join(cram_variant_calling_normal_to_cross, remainder: true)
+        // 2. Join with normal samples, in each channel there is one key per patient now. Patients without matched normal end up with: [patient1, [meta1, meta2], [cram1,crai1, cram2, crai2], null]
+        cram_variant_calling_tumor_joined = cram_variant_calling_tumor_grouped.join(cram_variant_calling_normal_to_cross, remainder: true)
 
-    //     // 3. Filter out entries with last entry null
-    //     cram_variant_calling_tumor_filtered = cram_variant_calling_tumor_joined.filter{ it ->  !(it.last()) }
+        // 3. Filter out entries with last entry null
+        cram_variant_calling_tumor_filtered = cram_variant_calling_tumor_joined.filter{ it ->  !(it.last()) }
 
-    //     // 4. Transpose [patient1, [meta1, meta2], [cram1,crai1, cram2, crai2]] back to [patient1, meta1, [cram1,crai1], null] [patient1, meta2, [cram2,crai2], null]
-    //     // and remove patient ID field & null value for further processing [meta1, [cram1,crai1]] [meta2, [cram2,crai2]]
-    //     cram_variant_calling_tumor_only = cram_variant_calling_tumor_filtered.transpose().map{ it -> [it[1], it[2], it[3]] }
+        // 4. Transpose [patient1, [meta1, meta2], [cram1,crai1, cram2, crai2]] back to [patient1, meta1, [cram1,crai1], null] [patient1, meta2, [cram2,crai2], null]
+        // and remove patient ID field & null value for further processing [meta1, [cram1,crai1]] [meta2, [cram2,crai2]]
+        cram_variant_calling_tumor_only = cram_variant_calling_tumor_filtered.transpose().map{ it -> [it[1], it[2], it[3]] }
 
-    //     // Tumor - normal pairs
-    //     // Use cross to combine normal with all tumor samples, i.e. multi tumor samples from recurrences
-    //     cram_variant_calling_pair = cram_variant_calling_normal_to_cross.cross(cram_variant_calling_pair_to_cross)
-    //         .map { normal, tumor ->
-    //             def meta = [:]
-    //             meta.patient    = normal[0]
-    //             meta.normal_id  = normal[1].sample
-    //             meta.tumor_id   = tumor[1].sample
-    //             meta.gender     = normal[1].gender
-    //             meta.id         = "${meta.tumor_id}_vs_${meta.normal_id}".toString()
+        // Tumor - normal pairs
+        // Use cross to combine normal with all tumor samples, i.e. multi tumor samples from recurrences
+        cram_variant_calling_pair = cram_variant_calling_normal_to_cross.cross(cram_variant_calling_pair_to_cross)
+            .map { normal, tumor ->
+                def meta = [:]
+                meta.patient    = normal[0]
+                meta.normal_id  = normal[1].sample
+                meta.tumor_id   = tumor[1].sample
+                meta.gender     = normal[1].gender
+                meta.id         = "${meta.tumor_id}_vs_${meta.normal_id}".toString()
 
-    //             [meta, normal[2], normal[3], tumor[2], tumor[3]]
-    //         }
+                [meta, normal[2], normal[3], tumor[2], tumor[3]]
+            }
 
-    //     // GERMLINE VARIANT CALLING
-    //     GERMLINE_VARIANT_CALLING(
-    //         cram_variant_calling_status.normal,
-    //         dbsnp,
-    //         dbsnp_tbi,
-    //         dict,
-    //         fasta,
-    //         fasta_fai,
-    //         intervals,
-    //         intervals_bed_gz_tbi,
-    //         intervals_bed_combined_gz_tbi,
-    //         intervals_bed_combined_gz)
-    //         // params.joint_germline)
+        // GERMLINE VARIANT CALLING
+        GERMLINE_VARIANT_CALLING(
+            cram_variant_calling_status.normal,
+            dbsnp,
+            dbsnp_tbi,
+            dict,
+            fasta,
+            fasta_fai,
+            intervals,
+            intervals_bed_gz_tbi,
+            intervals_bed_combined_gz_tbi,
+            intervals_bed_combined_gz)
+            // params.joint_germline)
 
-    //     // TUMOR ONLY VARIANT CALLING
-    //     TUMOR_ONLY_VARIANT_CALLING(
-    //         params.tools,
-    //         cram_variant_calling_tumor_only,
-    //         dbsnp,
-    //         dbsnp_tbi,
-    //         dict,
-    //         fasta,
-    //         fasta_fai,
-    //         intervals,
-    //         intervals_bed_gz_tbi,
-    //         intervals_bed_combined_gz_tbi,
-    //         intervals_bed_combined_gz,
-    //         intervals_bed_combined,
-    //         germline_resource,
-    //         germline_resource_tbi,
-    //         pon,
-    //         pon_tbi,
-    //         chr_files,
-    //         mappability
-    //     )
+        // TUMOR ONLY VARIANT CALLING
+        TUMOR_ONLY_VARIANT_CALLING(
+            params.tools,
+            cram_variant_calling_tumor_only,
+            dbsnp,
+            dbsnp_tbi,
+            dict,
+            fasta,
+            fasta_fai,
+            intervals,
+            intervals_bed_gz_tbi,
+            intervals_bed_combined_gz_tbi,
+            intervals_bed_combined_gz,
+            intervals_bed_combined,
+            germline_resource,
+            germline_resource_tbi,
+            pon,
+            pon_tbi,
+            chr_files,
+            mappability
+        )
 
-    //     // PAIR VARIANT CALLING
-    //     PAIR_VARIANT_CALLING(
-    //         params.tools,
-    //         cram_variant_calling_pair,
-    //         dbsnp,
-    //         dbsnp_tbi,
-    //         dict,
-    //         fasta,
-    //         fasta_fai,
-    //         intervals,
-    //         intervals_bed_gz_tbi,
-    //         intervals_bed_combined_gz_tbi,
-    //         intervals_bed_combined_gz,
-    //         intervals_bed_combined,
-    //         msisensorpro_scan,
-    //         germline_resource,
-    //         germline_resource_tbi,
-    //         pon,
-    //         pon_tbi,
-    //         chr_files,
-    //         mappability)
+        // PAIR VARIANT CALLING
+        PAIR_VARIANT_CALLING(
+            params.tools,
+            cram_variant_calling_pair,
+            dbsnp,
+            dbsnp_tbi,
+            dict,
+            fasta,
+            fasta_fai,
+            intervals,
+            intervals_bed_gz_tbi,
+            intervals_bed_combined_gz_tbi,
+            intervals_bed_combined_gz,
+            intervals_bed_combined,
+            msisensorpro_scan,
+            germline_resource,
+            germline_resource_tbi,
+            pon,
+            pon_tbi,
+            chr_files,
+            mappability)
 
-    //     // Gather vcf files for annotation and QC
-    //     vcf_to_annotate = Channel.empty()
-    //     vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.deepvariant_vcf)
-    //     vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.freebayes_vcf)
-    //     vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.haplotypecaller_vcf)
-    //     vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.manta_vcf)
-    //     vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.strelka_vcf)
-    //     vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.freebayes_vcf)
-    //     vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.mutect2_vcf)
-    //     vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.manta_vcf)
-    //     vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.strelka_vcf)
-    //     vcf_to_annotate = vcf_to_annotate.mix(PAIR_VARIANT_CALLING.out.mutect2_vcf)
-    //     vcf_to_annotate = vcf_to_annotate.mix(PAIR_VARIANT_CALLING.out.manta_vcf)
-    //     vcf_to_annotate = vcf_to_annotate.mix(PAIR_VARIANT_CALLING.out.strelka_vcf)
+        // Gather vcf files for annotation and QC
+        vcf_to_annotate = Channel.empty()
+        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.deepvariant_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.freebayes_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.haplotypecaller_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.manta_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.strelka_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.freebayes_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.mutect2_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.manta_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.strelka_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(PAIR_VARIANT_CALLING.out.mutect2_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(PAIR_VARIANT_CALLING.out.manta_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(PAIR_VARIANT_CALLING.out.strelka_vcf)
 
-    //     // Gather used softwares versions
-    //     ch_versions = ch_versions.mix(GERMLINE_VARIANT_CALLING.out.versions)
-    //     ch_versions = ch_versions.mix(PAIR_VARIANT_CALLING.out.versions)
-    //     ch_versions = ch_versions.mix(TUMOR_ONLY_VARIANT_CALLING.out.versions)
+        // Gather used softwares versions
+        ch_versions = ch_versions.mix(GERMLINE_VARIANT_CALLING.out.versions)
+        ch_versions = ch_versions.mix(PAIR_VARIANT_CALLING.out.versions)
+        ch_versions = ch_versions.mix(TUMOR_ONLY_VARIANT_CALLING.out.versions)
 
-    //     //QC
-    //     VCF_QC(vcf_to_annotate, intervals_bed_combined)
+        //QC
+        VCF_QC(vcf_to_annotate, intervals_bed_combined)
 
-    //     ch_versions = ch_versions.mix(VCF_QC.out.versions)
-    //     ch_reports  = ch_reports.mix(VCF_QC.out.bcftools_stats.collect{it[1]}.ifEmpty([]))
-    //     ch_reports  = ch_reports.mix(VCF_QC.out.vcftools_tstv_counts.collect{it[1]}.ifEmpty([]))
-    //     ch_reports  = ch_reports.mix(VCF_QC.out.vcftools_tstv_qual.collect{it[1]}.ifEmpty([]))
-    //     ch_reports  = ch_reports.mix(VCF_QC.out.vcftools_filter_summary.collect{it[1]}.ifEmpty([]))
+        ch_versions = ch_versions.mix(VCF_QC.out.versions)
+        ch_reports  = ch_reports.mix(VCF_QC.out.bcftools_stats.collect{it[1]}.ifEmpty([]))
+        ch_reports  = ch_reports.mix(VCF_QC.out.vcftools_tstv_counts.collect{it[1]}.ifEmpty([]))
+        ch_reports  = ch_reports.mix(VCF_QC.out.vcftools_tstv_qual.collect{it[1]}.ifEmpty([]))
+        ch_reports  = ch_reports.mix(VCF_QC.out.vcftools_filter_summary.collect{it[1]}.ifEmpty([]))
 
-    //     // ANNOTATE
-    //     if (params.step == 'annotate') vcf_to_annotate = ch_input_sample
+        // ANNOTATE
+        if (params.step == 'annotate') vcf_to_annotate = ch_input_sample
 
-    //     if (params.tools.contains('merge') || params.tools.contains('snpeff') || params.tools.contains('vep')) {
+        if (params.tools.contains('merge') || params.tools.contains('snpeff') || params.tools.contains('vep')) {
 
-    //         ANNOTATE(vcf_to_annotate,
-    //             params.tools,
-    //             snpeff_db,
-    //             snpeff_cache,
-    //             vep_genome,
-    //             vep_species,
-    //             vep_cache_version,
-    //             vep_cache)
+            ANNOTATE(vcf_to_annotate,
+                params.tools,
+                snpeff_db,
+                snpeff_cache,
+                vep_genome,
+                vep_species,
+                vep_cache_version,
+                vep_cache)
 
-    //         // Gather used softwares versions
-    //         ch_versions = ch_versions.mix(ANNOTATE.out.versions)
-    //         ch_reports  = ch_reports.mix(ANNOTATE.out.reports)
+            // Gather used softwares versions
+            ch_versions = ch_versions.mix(ANNOTATE.out.versions)
+            ch_reports  = ch_reports.mix(ANNOTATE.out.reports)
 
-    //     }
-    // }
+        }
+    }
 
-    // ch_version_yaml = Channel.empty()
-    // if (!(params.skip_tools && params.skip_tools.contains('versions'))) {
-    //     CUSTOM_DUMPSOFTWAREVERSIONS(ch_versions.unique().collectFile(name: 'collated_versions.yml'))
-    //     ch_version_yaml = CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect()
-    // }
+    ch_version_yaml = Channel.empty()
+    if (!(params.skip_tools && params.skip_tools.contains('versions'))) {
+        CUSTOM_DUMPSOFTWAREVERSIONS(ch_versions.unique().collectFile(name: 'collated_versions.yml'))
+        ch_version_yaml = CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect()
+    }
 
-    // if (!(params.skip_tools && params.skip_tools.contains('multiqc'))) {
-    //     workflow_summary    = WorkflowSarek.paramsSummaryMultiqc(workflow, summary_params)
-    //     ch_workflow_summary = Channel.value(workflow_summary)
+    if (!(params.skip_tools && params.skip_tools.contains('multiqc'))) {
+        workflow_summary    = WorkflowSarek.paramsSummaryMultiqc(workflow, summary_params)
+        ch_workflow_summary = Channel.value(workflow_summary)
 
-    //     ch_multiqc_files =  Channel.empty().mix(ch_version_yaml,
-    //                                         ch_multiqc_custom_config.collect().ifEmpty([]),
-    //                                         ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'),
-    //                                         ch_reports.collect(),
-    //                                         ch_multiqc_config,
-    //                                         ch_sarek_logo)
+        ch_multiqc_files =  Channel.empty().mix(ch_version_yaml,
+                                            ch_multiqc_custom_config.collect().ifEmpty([]),
+                                            ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'),
+                                            ch_reports.collect(),
+                                            ch_multiqc_config,
+                                            ch_sarek_logo)
 
-    //     MULTIQC(ch_multiqc_files.collect())
-    //     multiqc_report = MULTIQC.out.report.toList()
-    // }
+        MULTIQC(ch_multiqc_files.collect())
+        multiqc_report = MULTIQC.out.report.toList()
+    }
 }
 
 /*
