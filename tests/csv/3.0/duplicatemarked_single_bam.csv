@@ -1,2 +1,0 @@
-patient,status,sample,bam,bai
-test1,0,test1,https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/bam/test.paired_end.markduplicates.sorted.bam,https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/bam/test.paired_end.markduplicates.sorted.bam.bai

@@ -441,6 +441,7 @@ workflow SAREK {
                 cram: it[0].data_type == "cram"
             }.set{convert}
 
+
             SAMTOOLS_CRAMTOBAM(convert.cram, fasta)
             ch_versions = ch_versions.mix(SAMTOOLS_CRAMTOBAM.out.versions)
 
@@ -454,7 +455,7 @@ workflow SAREK {
             // Or bams that are specified in the samplesheet.csv when step is prepare_recalibration
             ch_bam_indexed = params.step == 'mapping' ? MERGE_INDEX_BAM.out.bam_bai : ch_input_sample
 
-            //TODO if we get a CRAM file and MD is skipped just get the
+            //TODO if we get a CRAM file and MD is skipped we currently have the extra conversion step
             BAM_TO_CRAM(ch_bam_indexed,
                 fasta,
                 fasta_fai,
@@ -588,12 +589,28 @@ workflow SAREK {
     // STEP 4: RECALIBRATING
     if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration', 'recalibrate']) {
 
-        //TODO Allow cram already supported, also allow bam:
-        // 1. SAMTOOLS_BAMTOCRAM ( to speed up computation)
-        // 2. Need fasta for cram compression (maybe just using --fasta, because this reference will be used elsewhere)
+        // Run if starting from step "prepare_recalibration"
+        if(params.step == 'recalibrate'){
+
+            //Support if starting from BAM or CRAM files
+            ch_input_sample.branch{
+                bam: it[0].data_type == "bam"
+                cram: it[0].data_type == "cram"
+            }.set{convert}
+
+            //If BAM file, split up table and mapped file to convert BAM to CRAM
+            ch_bam_table = convert.bam.map{ meta, bam, bai, table -> [meta, table]}
+            ch_bam_bam   = convert.bam.map{ meta, bam, bai, table -> [meta, bam, bai]}
+            //BAM files first must be converted to CRAM files since from this step on we base everything on CRAM format
+            SAMTOOLS_BAMTOCRAM(ch_bam_bam, fasta, fasta_fai)
+            ch_versions = ch_versions.mix(SAMTOOLS_BAMTOCRAM.out.versions)
+
+            ch_cram_applybqsr = Channel.empty().mix(SAMTOOLS_BAMTOCRAM.out.cram_crai.join(ch_bam_table) // Join together converted cram with input tables
+                                                    , convert.cram)
+
+        }else ch_cram_applybqsr = ch_cram_for_prepare_recalibration.join(ch_table_bqsr)
 
         if (!(params.skip_tools && params.skip_tools.contains('baserecalibrator'))) {
-            ch_cram_applybqsr = params.step == 'recalibrate' ? ch_input_sample : ch_cram_for_prepare_recalibration.join(ch_table_bqsr)
             ch_cram_variant_calling_no_spark = Channel.empty()
             ch_cram_variant_calling_spark    = Channel.empty()
 

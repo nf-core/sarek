@@ -45,6 +45,7 @@ jobs:
           - "msisensorpro"
           # - 'save_bam_mapped'
           - "prepare_recalibration"
+          - "recalibrate"
           - "skip_markduplicates"
           - "strelka"
           - "split_fastq"
