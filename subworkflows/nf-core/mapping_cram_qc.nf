@@ -1,5 +1,5 @@
 //
-// BAM TO CRAM and optionnal QC
+// CRAM and optionnal QC for mapped reads provided as CRAM
 //
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
