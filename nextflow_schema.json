@@ -509,6 +509,12 @@
                     "fa_icon": "fas fa-database",
                     "description": "snpEff DB version"
                 },
+                "snpeff_genome": {
+                    "type": "string",
+                    "fa_icon": "fas fa-microscope",
+                    "description": "snpeff genome",
+                    "help_text": "If you use AWS iGenomes or a local resource with genomes.conf, this has already been set for you appropriately."
+                },
                 "vep_genome": {
                     "type": "string",
                     "fa_icon": "fas fa-microscope",
