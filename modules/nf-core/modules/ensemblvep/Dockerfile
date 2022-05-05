@@ -8,13 +8,14 @@ LABEL \
 COPY environment.yml /
 RUN conda env create -f /environment.yml && conda clean -a
 
-# Add conda installation dir to PATH (instead of doing 'conda activate')
-ENV PATH /opt/conda/envs/nf-core-vep-104.3/bin:$PATH
-
 # Setup default ARG variables
 ARG GENOME=GRCh38
 ARG SPECIES=homo_sapiens
-ARG VEP_VERSION=99
+ARG VEP_VERSION=104
+ARG VEP_TAG=104.3
+
+# Add conda installation dir to PATH (instead of doing 'conda activate')
+ENV PATH /opt/conda/envs/nf-core-vep-${VEP_TAG}/bin:$PATH
 
 # Download Genome
 RUN vep_install \
@@ -27,4 +28,4 @@ RUN vep_install \
     --NO_BIOPERL --NO_HTSLIB --NO_TEST --NO_UPDATE
 
 # Dump the details of the installed packages to a file for posterity
-RUN conda env export --name nf-core-vep-104.3 > nf-core-vep-104.3.yml
+RUN conda env export --name nf-core-vep-${VEP_TAG} > nf-core-vep-${VEP_TAG}.yml
