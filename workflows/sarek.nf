@@ -161,7 +161,7 @@ include { MARKDUPLICATES_SPARK                           } from '../subworkflows
 
 // Convert to CRAM (+QC)
 include { BAM_TO_CRAM                                    } from '../subworkflows/nf-core/bam_to_cram'
-include { MAPPING_CRAM_QC                                } from '../subworkflows/nf-core/mapping_cram_qc'
+
 // QC on CRAM
 include { SAMTOOLS_STATS as SAMTOOLS_STATS_CRAM          } from '../modules/nf-core/modules/samtools/stats/main'
 include { CRAM_QC                                        } from '../subworkflows/nf-core/cram_qc'
@@ -383,7 +383,6 @@ workflow SAREK {
             new_meta.id = meta.sample
 
             // update data_type
-            //TODO: This is never used again as far as I see, could probably be removed
             new_meta.data_type = 'bam'
 
             // Use groupKey to make sure that the correct group can advance as soon as it is complete
@@ -416,7 +415,6 @@ workflow SAREK {
 
     if (params.step in ['mapping', 'markduplicates']) {
 
-        //TODO Allow bam already supported, also allow cram:
         // 1. SAMTOOLS_CRAMTOBAM ( to speed up computation)
         // 2. Need fasta for cram compression (maybe just using --fasta, because this reference will be used elsewhere)
         ch_cram_markduplicates_no_spark = Channel.empty()
@@ -460,11 +458,6 @@ workflow SAREK {
             // Or bams that are specified in the samplesheet.csv when step is prepare_recalibration
             ch_bam_indexed = params.step == 'mapping' ? MERGE_INDEX_BAM.out.bam_bai : convert.bam
             ch_cram_indexed = convert.cram
-
-            MAPPING_CRAM_QC (ch_cram_indexed,
-                fasta,
-                fasta_fai,
-                intervals_for_preprocessing)
 
             BAM_TO_CRAM(ch_bam_indexed,
                 ch_cram_indexed,
