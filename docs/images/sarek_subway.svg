@@ -9,9 +9,9 @@
    id="svg5"
    inkscape:version="1.1 (c4e8f9e, 2021-05-24)"
    sodipodi:docname="sarek_subway.svg"
-   inkscape:export-filename="/Users/monarchy/bitmap.png"
-   inkscape:export-xdpi="305.81"
-   inkscape:export-ydpi="305.81"
+   inkscape:export-filename="/Users/monarchy/Projects/Coding/sarek/docs/images/sarek_subway.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -22,18 +22,18 @@
      bordercolor="#666666"
      borderopacity="1.0"
      inkscape:pageshadow="2"
-     inkscape:pageopacity="0.0"
+     inkscape:pageopacity="1"
      inkscape:pagecheckerboard="0"
      inkscape:document-units="mm"
      showgrid="false"
      inkscape:zoom="0.78741022"
-     inkscape:cx="439.41517"
-     inkscape:cy="462.90992"
+     inkscape:cx="436.8752"
+     inkscape:cy="511.16939"
      inkscape:window-width="1600"
      inkscape:window-height="847"
-     inkscape:window-x="0"
+     inkscape:window-x="1"
      inkscape:window-y="25"
-     inkscape:window-maximized="1"
+     inkscape:window-maximized="0"
      inkscape:current-layer="layer1"
      width="211mm" />
   <defs
@@ -908,7 +908,10 @@
       <g
          id="g8614"
          transform="translate(-4.285391)"
-         style="stroke-width:1.00002">
+         style="stroke-width:1.00002"
+         inkscape:export-filename="/Users/monarchy/Projects/Coding/sarek/docs/images/sarek_subway.png"
+         inkscape:export-xdpi="90"
+         inkscape:export-ydpi="90">
         <path
            style="stroke-width:0.435688"
            sodipodi:nodetypes="scsccccccccssscsssscsssscsscsccsscccccccccc"
@@ -1273,15 +1276,15 @@
          inkscape:export-xdpi="90"
          inkscape:export-filename="./polygon4618.png"
          id="text690"
-         y="11.579792"
-         x="554.44385"
+         y="-12.285065"
+         x="530.57935"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.937508"
          xml:space="preserve"
          transform="rotate(-45)"><tspan
            sodipodi:role="line"
            id="tspan5916"
-           x="554.44385"
-           y="11.579792"
+           x="530.57935"
+           y="-12.285065"
            style="stroke-width:0.937508">deeptools, samtools, qualimap</tspan></text>
       <text
          xml:space="preserve"
@@ -1370,21 +1373,21 @@
       <text
          xml:space="preserve"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro';display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.937508"
-         x="719.42841"
-         y="-83.001534"
+         x="720.75427"
+         y="-84.327385"
          id="text6811"
          inkscape:export-filename="./polygon4618.png"
          inkscape:export-xdpi="90"
          inkscape:export-ydpi="90"
          transform="rotate(-45)"><tspan
            sodipodi:role="line"
-           x="719.42841"
-           y="-83.001534"
+           x="720.75427"
+           y="-84.327385"
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro';text-align:center;text-anchor:middle;stroke-width:0.937508"
            id="tspan6809">convert</tspan></text>
       <g
          id="g3217"
-         transform="translate(-143.83158)"
+         transform="translate(-104.45658)"
          style="stroke-width:1.00002">
         <g
            id="g3211"
@@ -1433,7 +1436,7 @@
       </g>
       <g
          id="g3217-5"
-         transform="translate(-54.030782)"
+         transform="translate(-57.780782)"
          style="display:inline;stroke-width:1.00002">
         <g
            id="g3211-1"
@@ -1532,13 +1535,13 @@
          inkscape:export-xdpi="90"
          inkscape:export-filename="./polygon4618.png"
          id="text3914"
-         y="103.35526"
-         x="906.68829"
+         y="102.02941"
+         x="908.01416"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro';display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.937508"
          xml:space="preserve"><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro';text-align:center;text-anchor:middle;stroke-width:0.937508"
-           y="103.35526"
-           x="906.68829"
+           y="102.02941"
+           x="908.01416"
            sodipodi:role="line"
            id="tspan3912">variant calling</tspan></text>
       <circle
@@ -1682,7 +1685,7 @@
       <circle
          r="9.375"
          cy="527.26086"
-         cx="522.54944"
+         cx="498.17444"
          id="circle1664-1"
          style="display:inline;fill:#ffffff;fill-rule:evenodd;stroke:#000000;stroke-width:3.54334;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          transform="scale(1,-1)" />
@@ -1692,19 +1695,19 @@
          inkscape:export-xdpi="90"
          inkscape:export-filename="./polygon4618.png"
          id="text6815"
-         y="39.687943"
-         x="695.01276"
+         y="33.058819"
+         x="688.38373"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro';display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.937508"
          xml:space="preserve"><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro';text-align:center;text-anchor:middle;stroke-width:0.937508"
-           y="39.687943"
-           x="695.01276"
+           y="33.058819"
+           x="688.38373"
            sodipodi:role="line"
            id="tspan1644">prepare recalibration</tspan></text>
       <circle
          r="9.375"
          cy="527.2608"
-         cx="558.50732"
+         cx="551.00732"
          id="circle1664-3"
          style="display:inline;fill:#ffffff;fill-rule:evenodd;stroke:#000000;stroke-width:3.54334;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          transform="scale(1,-1)" />
@@ -2359,14 +2362,14 @@
          inkscape:export-xdpi="90"
          inkscape:export-filename="./polygon4618.png"
          id="text5939"
-         y="-281.31885"
-         x="530.71936"
+         y="-279.99301"
+         x="532.04517"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro';display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.937508"
          xml:space="preserve"><tspan
            id="tspan5937"
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro';text-align:center;text-anchor:middle;stroke-width:0.937508"
-           y="-281.31885"
-           x="530.71936"
+           y="-279.99301"
+           x="532.04517"
            sodipodi:role="line">convert</tspan></text>
       <rect
          style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:3.54366;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers fill stroke"
