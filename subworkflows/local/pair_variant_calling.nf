@@ -6,6 +6,7 @@ include { MSISENSORPRO_MSI_SOMATIC                  } from '../../modules/nf-cor
 include { RUN_CONTROLFREEC_SOMATIC                  } from '../nf-core/variantcalling/controlfreec/somatic/main.nf'
 include { RUN_MANTA_SOMATIC                         } from '../nf-core/variantcalling/manta/somatic/main.nf'
 include { RUN_STRELKA_SOMATIC                       } from '../nf-core/variantcalling/strelka/somatic/main.nf'
+include { RUN_CNVKIT_SOMATIC                        } from '../nf-core/variantcalling/cnvkit/somatic/main.nf'
 
 workflow PAIR_VARIANT_CALLING {
     take:
@@ -91,6 +92,17 @@ workflow PAIR_VARIANT_CALLING {
                         mappability,
                         intervals_bed_combined)
         ch_versions = ch_versions.mix(RUN_CONTROLFREEC_SOMATIC.out.versions)
+    }
+
+    if (tools.contains('cnvkit')){
+        cram_test = cram_pair
+            .map{meta, normal_cram, normal_crai, tumor_cram, tumor_crai ->
+                [meta, tumor_cram, normal_cram]
+        }
+        RUN_CNVKIT_SOMATIC( cram_test,
+                            fasta,
+                            intervals_bed_combined,
+                            [])
     }
 
     if (tools.contains('manta')) {
