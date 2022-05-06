@@ -2,9 +2,9 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="267mm"
-   height="297mm"
-   viewBox="0 0 267 297"
+   width="256.3284mm"
+   height="186.52504mm"
+   viewBox="0 0 256.3284 186.52504"
    version="1.1"
    id="svg5"
    inkscape:version="1.1 (c4e8f9e, 2021-05-24)"
@@ -23,19 +23,23 @@
      borderopacity="1.0"
      inkscape:pageshadow="2"
      inkscape:pageopacity="1"
-     inkscape:pagecheckerboard="0"
+     inkscape:pagecheckerboard="false"
      inkscape:document-units="mm"
      showgrid="false"
      inkscape:zoom="0.78741022"
-     inkscape:cx="436.8752"
-     inkscape:cy="511.16939"
+     inkscape:cx="426.71531"
+     inkscape:cy="334.64132"
      inkscape:window-width="1600"
      inkscape:window-height="847"
      inkscape:window-x="1"
      inkscape:window-y="25"
      inkscape:window-maximized="0"
      inkscape:current-layer="layer1"
-     width="211mm" />
+     width="211mm"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
   <defs
      id="defs2">
     <clipPath
@@ -775,7 +779,8 @@
   <g
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
-     id="layer1">
+     id="layer1"
+     transform="translate(-2.8132356,-46.639854)">
     <g
        id="layer4"
        inkscape:label="Sarek"
