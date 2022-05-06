@@ -467,6 +467,7 @@ workflow SAREK {
                 intervals_for_preprocessing)
 
             BAM_TO_CRAM(ch_bam_indexed,
+                ch_cram_indexed,
                 fasta,
                 fasta_fai,
                 intervals_for_preprocessing)
@@ -516,7 +517,12 @@ workflow SAREK {
         ch_cram_for_prepare_recalibration = Channel.empty().mix(
             ch_cram_markduplicates_no_spark,
             ch_cram_markduplicates_spark,
-            ch_cram_no_markduplicates)
+            ch_cram_no_markduplicates).map{ meta, cram, crai ->
+                        meta_new = meta.clone()
+                        meta_new.data_type = "cram" //Make sure correct data types are carried through
+                        [meta_new, cram, crai]
+                    }
+
 
         ch_cram_for_prepare_recalibration.view()
         // Run Samtools stats on CRAM
