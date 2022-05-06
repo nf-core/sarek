@@ -326,14 +326,6 @@
             "default": "",
             "fa_icon": "fas fa-toolbox",
             "properties": {
-                "annotate_tools": {
-                    "type": "string",
-                    "fa_icon": "fas fa-hammer",
-                    "description": "Specify from which tools Sarek should look for VCF files to annotate.",
-                    "help_text": "Only for step `annotate`.",
-                    "pattern": "^((haplotypecaller|manta|mutect2|strelka|tiddit)*(,)*)*$",
-                    "hidden": true
-                },
                 "vep_dbnsfp": {
                     "type": "boolean",
                     "fa_icon": "fas fa-database",
