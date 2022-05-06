@@ -2,9 +2,9 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="256.3284mm"
-   height="186.52504mm"
-   viewBox="0 0 256.3284 186.52504"
+   width="297mm"
+   height="210mm"
+   viewBox="0 0 297 210"
    version="1.1"
    id="svg5"
    inkscape:version="1.1 (c4e8f9e, 2021-05-24)"
@@ -26,9 +26,9 @@
      inkscape:pagecheckerboard="false"
      inkscape:document-units="mm"
      showgrid="false"
-     inkscape:zoom="0.78741022"
-     inkscape:cx="426.71531"
-     inkscape:cy="334.64132"
+     inkscape:zoom="0.3993225"
+     inkscape:cx="227.88598"
+     inkscape:cy="289.2399"
      inkscape:window-width="1600"
      inkscape:window-height="847"
      inkscape:window-x="1"
@@ -39,7 +39,9 @@
      fit-margin-top="0"
      fit-margin-left="0"
      fit-margin-right="0"
-     fit-margin-bottom="0" />
+     fit-margin-bottom="0"
+     lock-margins="false"
+     units="mm" />
   <defs
      id="defs2">
     <clipPath
@@ -785,7 +787,7 @@
        id="layer4"
        inkscape:label="Sarek"
        style="display:inline;stroke-width:1.00002"
-       transform="matrix(0.28222222,0,0,0.28221664,-16.497622,221.18994)"
+       transform="matrix(0.28222222,0,0,0.28221664,3.8381786,232.92742)"
        inkscape:export-filename="/Users/monarchy/Projects/Coding/sarek/docs/images/sarek_subway.png"
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90">
