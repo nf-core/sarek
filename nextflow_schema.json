@@ -334,47 +334,77 @@
                     "pattern": "^((haplotypecaller|manta|mutect2|strelka|tiddit)*(,)*)*$",
                     "hidden": true
                 },
+                "vep_dbnsfp": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-database",
+                    "description": "Enable the use of the VEP dbNSFP plugin.",
+                    "hidden": true
+                },
+                "dbnsfp": {
+                    "type": "string",
+                    "fa_icon": "fas fa-database",
+                    "description": "Path to dbNSFP processed file.",
+                    "help_text": "To be used with `--vep_dbnsfp`.",
+                    "hidden": true
+                },
+                "dbnsfp_tbi": {
+                    "type": "string",
+                    "fa_icon": "fas fa-database",
+                    "description": "Path to dbNSFP tabix indexed file.",
+                    "help_text": "To be used with `--vep_dbnsfp`.",
+                    "hidden": true
+                },
+                "vep_loftee": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-database",
+                    "description": "Enable the use of the VEP LOFTEE plugin.",
+                    "hidden": true
+                },
+                "vep_spliceai": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-database",
+                    "description": "Enable the use of the VEP SpliceAI plugin.",
+                    "hidden": true
+                },
+                "spliceai_snv": {
+                    "type": "string",
+                    "fa_icon": "fas fa-database",
+                    "description": "Path to spliceai raw scores snv file.",
+                    "help_text": "To be used with `--vep_spliceai`.",
+                    "hidden": true
+                },
+                "spliceai_snv_tbi": {
+                    "type": "string",
+                    "fa_icon": "fas fa-database",
+                    "description": "Path to spliceai raw scores snv tabix indexed file.",
+                    "help_text": "To be used with `--vep_spliceai`.",
+                    "hidden": true
+                },
+                "spliceai_indel": {
+                    "type": "string",
+                    "fa_icon": "fas fa-database",
+                    "description": "Path to spliceai raw scores indel file.",
+                    "help_text": "To be used with `--vep_spliceai`.",
+                    "hidden": true
+                },
+                "spliceai_indel_tbi": {
+                    "type": "string",
+                    "fa_icon": "fas fa-database",
+                    "description": "Path to spliceai raw scores indel tabix indexed file.",
+                    "help_text": "To be used with `--vep_spliceai`.",
+                    "hidden": true
+                },
+                "vep_spliceregion": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-database",
+                    "description": "Enable the use of the VEP SpliceRegion plugin.",
+                    "hidden": true
+                },
                 "annotation_cache": {
                     "type": "boolean",
                     "fa_icon": "fas fa-database",
                     "description": "Enable the use of cache for annotation.",
                     "help_text": "And disable usage of Sarek snpeff and vep specific containers for annotation\n\nTo be used with `--snpeff_cache` and/or `--vep_cache`.",
-                    "hidden": true
-                },
-                "cadd": {
-                    "type": "boolean",
-                    "fa_icon": "fas fa-database",
-                    "description": "Enable the use of the VEP CADD plugin.",
-                    "hidden": true
-                },
-                "cadd_indels": {
-                    "type": "string",
-                    "fa_icon": "fas fa-file",
-                    "description": "Path to CADD InDels file.",
-                    "hidden": true
-                },
-                "cadd_indels_tbi": {
-                    "type": "string",
-                    "fa_icon": "fas fa-file",
-                    "description": "Path to CADD InDels index.",
-                    "hidden": true
-                },
-                "cadd_wg_snvs": {
-                    "type": "string",
-                    "fa_icon": "fas fa-file",
-                    "description": "Path to CADD SNVs file.",
-                    "hidden": true
-                },
-                "cadd_wg_snvs_tbi": {
-                    "type": "string",
-                    "fa_icon": "fas fa-file",
-                    "description": "Path to CADD SNVs index.",
-                    "hidden": true
-                },
-                "genesplicer": {
-                    "type": "boolean",
-                    "fa_icon": "fas fa-gavel",
-                    "description": "Enable the use of the VEP GeneSplicer plugin.",
                     "hidden": true
                 },
                 "snpeff_cache": {
@@ -528,7 +558,7 @@
                     "help_text": "If you use AWS iGenomes or a local resource with genomes.conf, this has already been set for you appropriately."
                 },
                 "vep_cache_version": {
-                    "type": "string",
+                    "type": "number",
                     "fa_icon": "fas fa-tag",
                     "description": "VEP cache version."
                 },
