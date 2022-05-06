@@ -469,11 +469,9 @@ workflow SAREK {
 
             // Gather QC reports
             ch_reports  = ch_reports.mix(BAM_TO_CRAM.out.qc.collect{it[1]}.ifEmpty([]))
-            ch_reports  = ch_reports.mix(MAPPING_CRAM_QC.out.qc.collect{it[1]}.ifEmpty([]))
 
             // Gather used softwares versions
             ch_versions = ch_versions.mix(BAM_TO_CRAM.out.versions)
-            ch_versions = ch_versions.mix(MAPPING_CRAM_QC.out.versions)
         } else if (params.use_gatk_spark && params.use_gatk_spark.contains('markduplicates')) {
             MARKDUPLICATES_SPARK(ch_bam_for_markduplicates,
                 dict,
@@ -495,7 +493,6 @@ workflow SAREK {
 
             ch_cram_markduplicates_no_spark = MARKDUPLICATES.out.cram
 
-            ch_cram_markduplicates_no_spark.view()
             // Gather QC reports
             ch_reports  = ch_reports.mix(MARKDUPLICATES.out.qc.collect{it[1]}.ifEmpty([]))
 
@@ -516,8 +513,6 @@ workflow SAREK {
                         [meta_new, cram, crai]
                     }
 
-
-        ch_cram_for_prepare_recalibration.view()
         // Run Samtools stats on CRAM
         SAMTOOLS_STATS_CRAM(ch_cram_for_prepare_recalibration, fasta)
 
