@@ -74,9 +74,19 @@
 
   > McLaren W, Gil L, Hunt SE, et al.: The Ensembl Variant Effect Predictor. Genome Biol. 2016 Jun 6;17(1):122. doi: 10.1186/s13059-016-0974-4. PubMed PMID: 27268795; PubMed Central PMCID: PMC4893825.
 
-- [CADD](https://pubmed.ncbi.nlm.nih.gov/24487276/)
+- [dbNSFP](https://pubmed.ncbi.nlm.nih.gov/33261662/)
 
-  > Kircher M, et al.: A general framework for estimating the relative pathogenicity of human genetic variants. Nat Genet. 2014 Mar;46(3):310-5. doi: 10.1038/ng.2892. PubMed PMID: 24487276; PubMed Central PMCID: PMC3992975.
+  > Liu X, et al.: dbNSFP v4: a comprehensive database of transcript-specific functional predictions and annotations for human nonsynonymous and splice-site SNVs. Genome Med. 2020 Dec 2;12(1):103. doi: 10.1186/s13073-020-00803-9. PubMed PMID: 33261662; PubMed Central PMCID: PMC7709417.
+
+- [LOFTEE](https://pubmed.ncbi.nlm.nih.gov/32461654/)
+
+  > Karczewski KJ, et al.: The mutational constraint spectrum quantified from variation in 141,456 humans. Nature. 2020 May;581(7809):434-443. doi: 10.1038/s41586-020-2308-7. PubMed PMID: 32461654; PubMed Central PMCID: PMC7334197.
+
+- [SpliceAI](https://pubmed.ncbi.nlm.nih.gov/30661751/)
+
+  > Jaganathan K, et al.: Predicting Splicing from Primary Sequence with Deep Learning.  Cell. 2019 Jan 24;176(3):535-548.e24. doi: 10.1016/j.cell.2018.12.015. PubMed PMID: 30661751.
+
+- [SpliceRegion](https://github.com/Ensembl/VEP_plugins/blob/release/106/SpliceRegion.pm)
 
 ## R packages
 
