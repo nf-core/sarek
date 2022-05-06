@@ -922,9 +922,6 @@ def extract_csv(csv_file) {
             def read_group  = "\"@RG\\tID:${row.lane}\\t${CN}PU:${row.lane}\\tSM:${row.sample}\\tLB:${row.sample}\\tPL:${params.seq_platform}\""
             meta.numLanes   = numLanes.toInteger()
             meta.read_group = read_group.toString()
-
-            println read_group
-
             meta.data_type  = "fastq"
             meta.test = "test"
             meta.size       = 1 // default number of splitted fastq
