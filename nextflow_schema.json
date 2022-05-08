@@ -200,7 +200,7 @@
                     "fa_icon": "fas fa-puzzle-piece",
                     "enum": ["bwa-mem", "bwa-mem2", "dragmap"],
                     "description": "Specify aligner to be used to map reads to reference genome.",
-                    "help_text": "> **WARNING** Current indices for `bwa` in AWS iGenomes are not compatible with `bwa-mem2` and `dragmap`.\n> Use `--bwa=false` to have `Sarek` build them automatically.\n\n> **WARNING** BWA-mem2 is in active development\n> Sarek might not be able to require the right amount of resources for it at the moment\n> We recommend to use pre-built indexes.",
+                    "help_text": "> **WARNING** Current indices for `bwa` in AWS iGenomes are not compatible with `bwa-mem2` and `dragmap`.\n> `Sarek` will build them automatically if not provided.\n\n> **WARNING** BWA-mem2 is in active development\n> Sarek might not be able to require the right amount of resources for it at the moment\n> We recommend to use pre-built indexes.",
                     "hidden": true
                 },
                 "use_gatk_spark": {
@@ -297,7 +297,7 @@
                     "type": "boolean",
                     "fa_icon": "fas fa-ban",
                     "description": "Will not use Manta candidateSmallIndels for Strelka.",
-                    "help_text": "Not recommended by Best Practice.s"
+                    "help_text": "Not recommended by Best Practices."
                 },
                 "pon": {
                     "type": "string",
@@ -441,13 +441,13 @@
                     "type": "string",
                     "fa_icon": "fas fa-copy",
                     "description": "Path to BWA mem indices.",
-                    "help_text": "> **NB** If none provided, will be generated automatically from the FASTA reference."
+                    "help_text": "> **NB** If none provided, will be generated automatically from the FASTA reference. Combine with `--save_reference` to save for future runs."
                 },
                 "bwamem2": {
                     "type": "string",
                     "fa_icon": "fas fa-copy",
-                    "description": "Path to bwamem2 mem indices.",
-                    "help_text": "> **NB** If none provided, will be generated automatically from the FASTA reference, if --aligner bwamem-2 is specified."
+                    "description": "Path to bwa-mem2 mem indices.",
+                    "help_text": "> **NB** If none provided, will be generated automatically from the FASTA reference, if `--aligner bwa-mem2` is specified. Combine with `--save_reference` to save for future runs."
                 },
                 "chr_dir": {
                     "type": "string",
@@ -463,19 +463,19 @@
                     "type": "string",
                     "fa_icon": "fas fa-file",
                     "description": "Path to dbsnp index.",
-                    "help_text": "> **NB** If none provided, will be generated automatically from the dbsnp file."
+                    "help_text": "> **NB** If none provided, will be generated automatically from the dbsnp file. Combine with `--save_reference` to save for future runs."
                 },
                 "dict": {
                     "type": "string",
                     "fa_icon": "fas fa-file",
                     "description": "Path to FASTA dictionary file.",
-                    "help_text": "> **NB** If none provided, will be generated automatically from the FASTA reference."
+                    "help_text": "> **NB** If none provided, will be generated automatically from the FASTA reference. Combine with `--save_reference` to save for future runs."
                 },
                 "dragmap": {
                     "type": "string",
                     "fa_icon": "fas fa-copy",
                     "description": "Path to dragmap indices.",
-                    "help_text": "> **NB** If none provided, will be generated automatically from the FASTA reference, if --aligner dragmap is specified"
+                    "help_text": "> **NB** If none provided, will be generated automatically from the FASTA reference, if `--aligner dragmap` is specified. Combine with `--save_reference` to save for future runs."
                 },
                 "fasta": {
                     "type": "string",
@@ -483,13 +483,13 @@
                     "mimetype": "text/plain",
                     "pattern": "\\.fn?a(sta)?(\\.gz)?$",
                     "description": "Path to FASTA genome file.",
-                    "help_text": "This parameter is *mandatory* if `--genome` is not specified. If you don't have a BWA index available this will be generated for you automatically. Combine with `--save_reference` to save BWA index for future runs.",
+                    "help_text": "This parameter is *mandatory* if `--genome` is not specified.",
                     "fa_icon": "far fa-file-code"
                 },
                 "fasta_fai": {
                     "type": "string",
                     "fa_icon": "fas fa-file",
-                    "help_text": "> **NB** If none provided, will be generated automatically from the FASTA reference.",
+                    "help_text": "> **NB** If none provided, will be generated automatically from the FASTA reference. Combine with `--save_reference` to save for future runs.",
                     "description": "Path to FASTA reference index."
                 },
                 "germline_resource": {
@@ -502,7 +502,7 @@
                     "type": "string",
                     "fa_icon": "fas fa-file",
                     "description": "Path to GATK Mutect2 Germline Resource Index.",
-                    "help_text": "> **NB** If none provided, will be generated automatically from the Germline Resource file, if provided."
+                    "help_text": "> **NB** If none provided, will be generated automatically from the Germline Resource file, if provided. Combine with `--save_reference` to save for future runs."
                 },
                 "intervals": {
                     "type": "string",
@@ -519,7 +519,7 @@
                     "type": "string",
                     "fa_icon": "fas fa-copy",
                     "description": "Path to known indels file index.",
-                    "help_text": "> **NB** If none provided, will be generated automatically from the known index file, if provided."
+                    "help_text": "> **NB** If none provided, will be generated automatically from the known index file, if provided. Combine with `--save_reference` to save for future runs."
                 },
                 "mappability": {
                     "type": "string",
@@ -535,24 +535,25 @@
                     "type": "string",
                     "fa_icon": "fas fa-microscope",
                     "description": "snpeff genome.",
-                    "help_text": "If you use AWS iGenomes or a local resource with genomes.conf, this has already been set for you appropriately."
+                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
                 },
                 "vep_genome": {
                     "type": "string",
                     "fa_icon": "fas fa-microscope",
                     "description": "VEP genome.",
-                    "help_text": "If you use AWS iGenomes or a local resource with genomes.conf, this has already been set for you appropriately."
+                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
                 },
                 "vep_species": {
                     "type": "string",
                     "fa_icon": "fas fa-microscope",
                     "description": "VEP species.",
-                    "help_text": "If you use AWS iGenomes or a local resource with genomes.conf, this has already been set for you appropriately."
+                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
                 },
                 "vep_cache_version": {
                     "type": "number",
                     "fa_icon": "fas fa-tag",
-                    "description": "VEP cache version."
+                    "description": "VEP cache version.",
+                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
                 },
                 "save_reference": {
                     "type": "boolean",
@@ -566,17 +567,11 @@
                     "default": "s3://ngi-igenomes/igenomes",
                     "fa_icon": "fas fa-cloud-download-alt"
                 },
-                "genomes_base": {
-                    "type": "string",
-                    "fa_icon": "fas fa-map-marker-alt",
-                    "description": "Directory / URL base for genomes references.",
-                    "help_text": "All files are supposed to be in the same folder."
-                },
                 "igenomes_ignore": {
                     "type": "boolean",
                     "description": "Do not load the iGenomes reference config.",
                     "fa_icon": "fas fa-ban",
-                    "help_text": "Do not load `igenomes.config` when running the pipeline.\nYou may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`.\nThis option will load the `genomes.config` file instead.\n\n> **NB** You can then specify the genome custom and specify at least a FASTA genome file."
+                    "help_text": "Do not load `igenomes.config` when running the pipeline.\nYou may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`.\n\n> **NB** You can then run `Sarek` by specifying at least a FASTA genome file."
                 }
             },
             "help_text": "The pipeline config files come bundled with paths to the Illumina iGenomes reference index files.\nThe configuration is set up to use the AWS-iGenomes resource\ncf https://ewels.github.io/AWS-iGenomes/."
