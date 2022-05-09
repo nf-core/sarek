@@ -9,7 +9,7 @@
     - path: results/reports/SnpEff/test/test.csv
     - path: results/multiqc
 - name: Run VEP
-  command: nextflow run main.nf -profile test,annotation,docker --tools vep
+  command: nextflow run main.nf -profile test,annotation,docker --tools vep --skip_tools multiqc
   tags:
     - annotation
     - vep
@@ -17,9 +17,8 @@
     - path: results/annotation/test/test_VEP.ann.vcf.gz
     - path: results/annotation/test/test_VEP.ann.vcf.gz.tbi
     - path: results/reports/EnsemblVEP/test/test.summary.html
-    - path: results/multiqc
 - name: Run snpEff followed by VEP
-  command: nextflow run main.nf -profile test,annotation,docker --tools merge
+  command: nextflow run main.nf -profile test,annotation,docker --tools merge --skip_tools multiqc
   tags:
     - annotation
     - merge
@@ -28,4 +27,3 @@
   files:
     - path: results/annotation/test/test_snpEff_VEP.ann.vcf.gz
     - path: results/annotation/test/test_snpEff_VEP.ann.vcf.gz.tbi
-    - path: results/multiqc
