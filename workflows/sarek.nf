@@ -150,8 +150,8 @@ include { GATK4_MAPPING                                  } from '../subworkflows
 // Merge and index BAM files (optional)
 include { MERGE_INDEX_BAM                                } from '../subworkflows/nf-core/merge_index_bam'
 
-include {SAMTOOLS_VIEW as SAMTOOLS_CRAMTOBAM } from '../modules/nf-core/modules/samtools/view/main'
-include { SAMTOOLS_BAMTOCRAM    } from '../modules/nf-core/modules/samtools/bamtocram/main'
+include { SAMTOOLS_CRAMTOBAM                             } from '../modules/local/samtools/cramtobam'
+include { SAMTOOLS_BAMTOCRAM                             } from '../modules/nf-core/modules/samtools/bamtocram/main'
 
 // Mark Duplicates (+QC)
 include { MARKDUPLICATES                                 } from '../subworkflows/nf-core/gatk4/markduplicates/main'
@@ -428,6 +428,7 @@ workflow SAREK {
         // ch_bam_for_markduplicates = params.step == 'mapping'? ch_bam_mapped : ch_input_sample.map{ meta, input, index -> [meta, input] }
 
         ch_bam_for_markduplicates = Channel.empty()
+        ch_cram_indexed           = Channel.empty()
 
         if(params.step == 'mapping'){
 
@@ -440,14 +441,16 @@ workflow SAREK {
                 cram: it[0].data_type == "cram"
             }.set{convert}
 
+            ch_cram_indexed           = ch_cram_indexed.mix(convert.cram)
+            ch_bam_for_markduplicates = ch_bam_for_markduplicates.mix(convert.bam)
+
             if (!(params.skip_tools && params.skip_tools.contains('markduplicates'))){
 
-                SAMTOOLS_CRAMTOBAM(convert.cram.map{ meta, input, index -> [meta, input]}, fasta)
+                SAMTOOLS_CRAMTOBAM(ch_cram_indexed.map{ meta, input, index -> [meta, input]}, fasta)
                 ch_versions = ch_versions.mix(SAMTOOLS_CRAMTOBAM.out.versions)
 
-                ch_bam_for_markduplicates = ch_bam_for_markduplicates.mix(
-                                                SAMTOOLS_CRAMTOBAM.out.bam,
-                                                convert.bam)
+                SAMTOOLS_CRAMTOBAM.out.bam.view()
+                ch_bam_for_markduplicates = ch_bam_for_markduplicates.mix(SAMTOOLS_CRAMTOBAM.out.bam)
             }
         }
 
@@ -457,7 +460,6 @@ workflow SAREK {
             // which are then merged and indexed
             // Or bams that are specified in the samplesheet.csv when step is prepare_recalibration
             ch_bam_indexed = params.step == 'mapping' ? MERGE_INDEX_BAM.out.bam_bai : convert.bam
-            ch_cram_indexed = convert.cram
 
             BAM_TO_CRAM(ch_bam_indexed,
                 ch_cram_indexed,
