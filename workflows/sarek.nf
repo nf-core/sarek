@@ -150,8 +150,8 @@ include { GATK4_MAPPING                                  } from '../subworkflows
 // Merge and index BAM files (optional)
 include { MERGE_INDEX_BAM                                } from '../subworkflows/nf-core/merge_index_bam'
 
-include { SAMTOOLS_CRAMTOBAM                             } from '../modules/local/samtools/cramtobam'
-include { SAMTOOLS_BAMTOCRAM                             } from '../modules/nf-core/modules/samtools/bamtocram/main'
+include { SAMTOOLS_CONVERT as SAMTOOLS_CRAMTOBAM         } from '../modules/nf-core/modules/samtools/convert/main'
+include { SAMTOOLS_CONVERT as SAMTOOLS_BAMTOCRAM         } from '../modules/nf-core/modules/samtools/convert/main'
 
 // Mark Duplicates (+QC)
 include { MARKDUPLICATES                                 } from '../subworkflows/nf-core/gatk4/markduplicates/main'
@@ -437,20 +437,21 @@ workflow SAREK {
         }else{
 
             ch_input_sample.map{ meta, input, index -> [meta, input, index] }.branch{
-                bam: it[0].data_type == "bam"
+                bam:  it[0].data_type == "bam"
                 cram: it[0].data_type == "cram"
             }.set{convert}
 
             ch_cram_indexed           = ch_cram_indexed.mix(convert.cram)
             ch_bam_for_markduplicates = ch_bam_for_markduplicates.mix(convert.bam)
 
+
+            //In case Markduplicates is run convert CRAM files to BAM, because the tool only runs on BAM files. MD_SPARK does run on CRAM but is a lot slower
             if (!(params.skip_tools && params.skip_tools.contains('markduplicates'))){
 
-                SAMTOOLS_CRAMTOBAM(ch_cram_indexed.map{ meta, input, index -> [meta, input]}, fasta)
+                SAMTOOLS_CRAMTOBAM(ch_cram_indexed.map{ meta, input, index -> [meta, input]}, fasta, fasta_fai)
                 ch_versions = ch_versions.mix(SAMTOOLS_CRAMTOBAM.out.versions)
 
-                SAMTOOLS_CRAMTOBAM.out.bam.view()
-                ch_bam_for_markduplicates = ch_bam_for_markduplicates.mix(SAMTOOLS_CRAMTOBAM.out.bam)
+                ch_bam_for_markduplicates = ch_bam_for_markduplicates.mix(SAMTOOLS_CRAMTOBAM.out.alignment_index)
             }
         }
 
@@ -519,7 +520,9 @@ workflow SAREK {
         SAMTOOLS_STATS_CRAM(ch_cram_for_prepare_recalibration, fasta)
 
         // Create CSV to restart from this step
-        MARKDUPLICATES_CSV(ch_cram_for_prepare_recalibration)
+        if(params.step == 'mapping'){
+            MARKDUPLICATES_CSV(ch_cram_for_prepare_recalibration)
+        }
 
         // Gather QC reports
         ch_reports  = ch_reports.mix(SAMTOOLS_STATS_CRAM.out.stats.collect{it[1]}.ifEmpty([]))
@@ -543,7 +546,7 @@ workflow SAREK {
             SAMTOOLS_BAMTOCRAM(convert.bam, fasta, fasta_fai)
             ch_versions = ch_versions.mix(SAMTOOLS_BAMTOCRAM.out.versions)
 
-            ch_cram_for_prepare_recalibration = Channel.empty().mix(SAMTOOLS_BAMTOCRAM.out.cram_crai, convert.cram)
+            ch_cram_for_prepare_recalibration = Channel.empty().mix(SAMTOOLS_BAMTOCRAM.out.alignment_index, convert.cram)
         }
 
         // STEP 3: Create recalibration tables
@@ -613,7 +616,7 @@ workflow SAREK {
             SAMTOOLS_BAMTOCRAM(ch_bam_bam, fasta, fasta_fai)
             ch_versions = ch_versions.mix(SAMTOOLS_BAMTOCRAM.out.versions)
 
-            ch_cram_applybqsr = Channel.empty().mix(SAMTOOLS_BAMTOCRAM.out.cram_crai.join(ch_bam_table) // Join together converted cram with input tables
+            ch_cram_applybqsr = Channel.empty().mix(SAMTOOLS_BAMTOCRAM.out.alignment_index.join(ch_bam_table) // Join together converted cram with input tables
                                                     , convert.cram)
 
         }else ch_cram_applybqsr = ch_cram_for_prepare_recalibration.join(ch_table_bqsr)

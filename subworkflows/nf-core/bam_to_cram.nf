@@ -4,9 +4,9 @@
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
-include { DEEPTOOLS_BAMCOVERAGE } from '../../modules/nf-core/modules/deeptools/bamcoverage/main'
-include { QUALIMAP_BAMQCCRAM    } from '../../modules/nf-core/modules/qualimap/bamqccram/main'
-include { SAMTOOLS_BAMTOCRAM    } from '../../modules/nf-core/modules/samtools/bamtocram/main'
+include { DEEPTOOLS_BAMCOVERAGE                  } from '../../modules/nf-core/modules/deeptools/bamcoverage/main'
+include { QUALIMAP_BAMQCCRAM                     } from '../../modules/nf-core/modules/qualimap/bamqccram/main'
+include { SAMTOOLS_CONVERT as SAMTOOLS_BAMTOCRAM } from '../../modules/nf-core/modules/samtools/convert/main'
 
 workflow BAM_TO_CRAM {
     take:
@@ -26,7 +26,7 @@ workflow BAM_TO_CRAM {
     // Convert bam input to cram
     SAMTOOLS_BAMTOCRAM(bam_indexed, fasta, fasta_fai)
 
-    cram_indexed = cram_indexed ?: SAMTOOLS_BAMTOCRAM.out.cram_crai
+    cram_indexed = cram_indexed ?: SAMTOOLS_BAMTOCRAM.out.alignment_index
 
     // Reports on bam input
     DEEPTOOLS_BAMCOVERAGE(cram_indexed)
@@ -44,7 +44,7 @@ workflow BAM_TO_CRAM {
     ch_versions = ch_versions.mix(SAMTOOLS_BAMTOCRAM.out.versions.first())
 
     emit:
-        cram     = SAMTOOLS_BAMTOCRAM.out.cram_crai
+        cram     = cram_indexed
         qc       = qc_reports
 
         versions = ch_versions // channel: [ versions.yml ]
