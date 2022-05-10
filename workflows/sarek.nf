@@ -440,16 +440,18 @@ workflow SAREK {
                 cram: it[0].data_type == "cram"
             }.set{convert}
 
-            ch_input_cram_indexed     = ch_input_cram_indexed.mix(convert.cram)
             ch_bam_for_markduplicates = ch_bam_for_markduplicates.mix(convert.bam)
 
             //In case Markduplicates is run convert CRAM files to BAM, because the tool only runs on BAM files. MD_SPARK does run on CRAM but is a lot slower
             if (!(params.skip_tools && params.skip_tools.contains('markduplicates'))){
 
-                SAMTOOLS_CRAMTOBAM(ch_input_cram_indexed, fasta, fasta_fai)
+                SAMTOOLS_CRAMTOBAM(convert.cram, fasta, fasta_fai)
                 ch_versions = ch_versions.mix(SAMTOOLS_CRAMTOBAM.out.versions)
 
                 ch_bam_for_markduplicates = ch_bam_for_markduplicates.mix(SAMTOOLS_CRAMTOBAM.out.alignment_index.map{ meta, bam, bai -> [meta, bam]})
+            }else{
+                ch_input_cram_indexed     = convert.cram
+
             }
         }
 
@@ -541,6 +543,8 @@ workflow SAREK {
             // - crams from markduplicates_spark
             // - crams converted from bam mapped when skipping markduplicates
             // - input cram files, when start from step markduplicates
+            //ch_cram_for_restart.view() //contains md.cram.crai
+            ch_input_cram_indexed.view()
             ch_cram_for_prepare_recalibration = Channel.empty().mix(ch_cram_for_restart, ch_input_cram_indexed)
 
         }
@@ -672,9 +676,12 @@ workflow SAREK {
             // - crams from markduplicates = ch_cram_for_prepare_recalibration
             // - input bams converted to crams, if started from step recal + skip BQSR
             // - input crams if started from step recal + skip BQSR
-            cram_variant_calling = Channel.mix(ch_cram_for_prepare_recalibration,
-                                                SAMTOOLS_BAMTOCRAM.out.alignment_index,
-                                                convert.cram)
+            cram_variant_calling = Channel.mix(ch_cram_for_prepare_recalibration)
+
+            if (params.step == 'recalibrate'){
+                cram_variant_calling = cram_variant_calling.mix(SAMTOOLS_BAMTOCRAM.out.alignment_index,
+                                                                convert.cram)
+            }
         }
 
     }
