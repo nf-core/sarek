@@ -428,7 +428,7 @@ workflow SAREK {
         // ch_bam_for_markduplicates = params.step == 'mapping'? ch_bam_mapped : ch_input_sample.map{ meta, input, index -> [meta, input] }
 
         ch_bam_for_markduplicates = Channel.empty()
-        ch_cram_indexed           = Channel.empty()
+        ch_input_cram_indexed     = Channel.empty()
 
         if(params.step == 'mapping'){
 
@@ -441,14 +441,13 @@ workflow SAREK {
                 cram: it[0].data_type == "cram"
             }.set{convert}
 
-            ch_cram_indexed           = ch_cram_indexed.mix(convert.cram)
+            ch_input_cram_indexed     = ch_input_cram_indexed.mix(convert.cram)
             ch_bam_for_markduplicates = ch_bam_for_markduplicates.mix(convert.bam)
-
 
             //In case Markduplicates is run convert CRAM files to BAM, because the tool only runs on BAM files. MD_SPARK does run on CRAM but is a lot slower
             if (!(params.skip_tools && params.skip_tools.contains('markduplicates'))){
 
-                SAMTOOLS_CRAMTOBAM(ch_cram_indexed, fasta, fasta_fai)
+                SAMTOOLS_CRAMTOBAM(ch_input_cram_indexed, fasta, fasta_fai)
                 ch_versions = ch_versions.mix(SAMTOOLS_CRAMTOBAM.out.versions)
 
                 ch_bam_for_markduplicates = ch_bam_for_markduplicates.mix(SAMTOOLS_CRAMTOBAM.out.alignment_index.map{ meta, bam, bai -> [meta, bam]})
@@ -463,12 +462,12 @@ workflow SAREK {
             ch_bam_indexed = params.step == 'mapping' ? MERGE_INDEX_BAM.out.bam_bai : convert.bam
 
             BAM_TO_CRAM(ch_bam_indexed,
-                ch_cram_indexed,
+                ch_input_cram_indexed,
                 fasta,
                 fasta_fai,
                 intervals_for_preprocessing)
 
-            ch_cram_no_markduplicates = Channel.empty().mix(BAM_TO_CRAM.out.cram, ch_cram_indexed)
+            ch_cram_no_markduplicates = Channel.empty().mix(BAM_TO_CRAM.out.cram)
 
             // Gather QC reports
             ch_reports  = ch_reports.mix(BAM_TO_CRAM.out.qc.collect{it[1]}.ifEmpty([]))
@@ -503,11 +502,11 @@ workflow SAREK {
             ch_versions = ch_versions.mix(MARKDUPLICATES.out.versions)
         }
 
-        // ch_cram_for_prepare_recalibration contains either:
+        // ch_cram_for_restart contains either:
         // - crams from markduplicates
         // - crams from markduplicates_spark
         // - crams converted from bam mapped when skipping markduplicates
-        ch_cram_for_prepare_recalibration = Channel.empty().mix(
+        ch_cram_for_restart = Channel.empty().mix(
             ch_cram_markduplicates_no_spark,
             ch_cram_markduplicates_spark,
             ch_cram_no_markduplicates).map{ meta, cram, crai ->
@@ -516,19 +515,15 @@ workflow SAREK {
                         [meta_new, cram, crai]
                     }
 
-        // Run Samtools stats on CRAM
-        SAMTOOLS_STATS_CRAM(ch_cram_for_prepare_recalibration, fasta)
-
         // Create CSV to restart from this step
-        if(params.step == 'mapping'){
-            MARKDUPLICATES_CSV(ch_cram_for_prepare_recalibration)
-        }
+        MARKDUPLICATES_CSV(ch_cram_for_restart)
 
-        // Gather QC reports
-        ch_reports  = ch_reports.mix(SAMTOOLS_STATS_CRAM.out.stats.collect{it[1]}.ifEmpty([]))
-
-        // Gather used softwares versions
-        ch_versions = ch_versions.mix(SAMTOOLS_STATS_CRAM.out.versions)
+        // ch_cram_for_prepare_recalibration contains either:
+        // - crams from markduplicates
+        // - crams from markduplicates_spark
+        // - crams converted from bam mapped when skipping markduplicates
+        // - input cram files, when start from step markduplicates
+        ch_cram_for_prepare_recalibration = Channel.empty().mix(ch_cram_for_restart, ch_input_cram_indexed)
     }
 
     if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration']) {
