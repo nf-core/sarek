@@ -448,10 +448,10 @@ workflow SAREK {
             //In case Markduplicates is run convert CRAM files to BAM, because the tool only runs on BAM files. MD_SPARK does run on CRAM but is a lot slower
             if (!(params.skip_tools && params.skip_tools.contains('markduplicates'))){
 
-                SAMTOOLS_CRAMTOBAM(ch_cram_indexed.map{ meta, input, index -> [meta, input]}, fasta, fasta_fai)
+                SAMTOOLS_CRAMTOBAM(ch_cram_indexed, fasta, fasta_fai)
                 ch_versions = ch_versions.mix(SAMTOOLS_CRAMTOBAM.out.versions)
 
-                ch_bam_for_markduplicates = ch_bam_for_markduplicates.mix(SAMTOOLS_CRAMTOBAM.out.alignment_index)
+                ch_bam_for_markduplicates = ch_bam_for_markduplicates.mix(SAMTOOLS_CRAMTOBAM.out.alignment_index.map{ meta, bam, bai -> [meta, bam]})
             }
         }
 
