@@ -7,7 +7,7 @@
 include { DEEPTOOLS_BAMCOVERAGE                  } from '../../modules/nf-core/modules/deeptools/bamcoverage/main'
 include { QUALIMAP_BAMQCCRAM                     } from '../../modules/nf-core/modules/qualimap/bamqccram/main'
 include { SAMTOOLS_CONVERT as SAMTOOLS_BAMTOCRAM } from '../../modules/nf-core/modules/samtools/convert/main'
-include { SAMTOOLS_STATS as SAMTOOLS_STATS_CRAM  } from '../modules/nf-core/modules/samtools/stats/main'
+include { SAMTOOLS_STATS as SAMTOOLS_STATS_CRAM  } from '../../modules/nf-core/modules/samtools/stats/main'
 
 workflow BAM_TO_CRAM {
     take:
