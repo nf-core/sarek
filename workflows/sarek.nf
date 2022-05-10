@@ -688,6 +688,8 @@ workflow SAREK {
 
     if (params.step == 'variant_calling') cram_variant_calling = ch_input_sample
 
+    //TODO also add SAMTOOLS BAMTOCRAM if starting from VC
+
     if (params.tools) {
 
         if (params.step == 'annotate') cram_variant_calling = Channel.empty()
