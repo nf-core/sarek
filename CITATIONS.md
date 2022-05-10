@@ -84,7 +84,7 @@
 
 - [SpliceAI](https://pubmed.ncbi.nlm.nih.gov/30661751/)
 
-  > Jaganathan K, et al.: Predicting Splicing from Primary Sequence with Deep Learning.  Cell. 2019 Jan 24;176(3):535-548.e24. doi: 10.1016/j.cell.2018.12.015. PubMed PMID: 30661751.
+  > Jaganathan K, et al.: Predicting Splicing from Primary Sequence with Deep Learning. Cell. 2019 Jan 24;176(3):535-548.e24. doi: 10.1016/j.cell.2018.12.015. PubMed PMID: 30661751.
 
 - [SpliceRegion](https://github.com/Ensembl/VEP_plugins/blob/release/106/SpliceRegion.pm)
 
