@@ -8,7 +8,7 @@ workflow PREPARE_RECALIBRATION_CSV {
 
     main:
         // Creating csv files to restart from this step
-        table_bqsr.collectFile(storeDir: "${params.outdir}/preprocessing/csv") { meta, cram, crai, table ->
+        cram_table_bqsr.collectFile(storeDir: "${params.outdir}/preprocessing/csv") { meta, cram, crai, table ->
             patient = meta.patient
             sample  = meta.sample
             gender  = meta.gender
