@@ -1,6 +1,6 @@
 process CNVKIT_BATCH {
     tag "$meta.id"
-    label 'process_low'
+    label 'process_medium'
 
     conda (params.enable_conda ? 'bioconda::cnvkit=0.9.9' : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
