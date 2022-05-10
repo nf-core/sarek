@@ -14,11 +14,11 @@
     - path: results/preprocessing/csv/markduplicates.csv
       should_exist: false
     - path: results/preprocessing/csv/markduplicates_test.csv
-      should_exists: false
+      should_exist: false
     - path: results/preprocessing/csv/markduplicates_no_table.csv
-      should_exists: false
+      should_exist: false
     - path: results/preprocessing/csv/markduplicates_no_table_test.csv
-      should_exists: false
+      should_exist: false
     - path: results/preprocessing/csv/recalibrated.csv
     - path: results/preprocessing/csv/recalibrated_test.csv
     - path: results/reports/qualimap/test/test.mapped
@@ -40,13 +40,13 @@
     - path: results/preprocessing/test/recalibrated/test.recal.cram
     - path: results/preprocessing/test/recalibrated/test.recal.cram.crai
     - path: results/preprocessing/csv/markduplicates.csv
-      should_exists: false
+      should_exist: false
     - path: results/preprocessing/csv/markduplicates_test.csv
-      should_exists: false
+      should_exist: false
     - path: results/preprocessing/csv/markduplicates_no_table.csv
-      should_exists: false
+      should_exist: false
     - path: results/preprocessing/csv/markduplicates_no_table_test.csv
-      should_exists: false
+      should_exist: false
     - path: results/preprocessing/csv/recalibrated.csv
     - path: results/preprocessing/csv/recalibrated_test.csv
     - path: results/reports/qualimap/test/test.mapped
