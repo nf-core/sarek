@@ -163,7 +163,6 @@ include { MARKDUPLICATES_SPARK                           } from '../subworkflows
 include { BAM_TO_CRAM                                    } from '../subworkflows/nf-core/bam_to_cram'
 
 // QC on CRAM
-include { SAMTOOLS_STATS as SAMTOOLS_STATS_CRAM          } from '../modules/nf-core/modules/samtools/stats/main'
 include { CRAM_QC                                        } from '../subworkflows/nf-core/cram_qc'
 
 // Create recalibration tables
@@ -517,13 +516,6 @@ workflow SAREK {
 
         // Create CSV to restart from this step
         MARKDUPLICATES_CSV(ch_cram_for_restart)
-
-        // ch_cram_for_prepare_recalibration contains either:
-        // - crams from markduplicates
-        // - crams from markduplicates_spark
-        // - crams converted from bam mapped when skipping markduplicates
-        // - input cram files, when start from step markduplicates
-        ch_cram_for_prepare_recalibration = Channel.empty().mix(ch_cram_for_restart, ch_input_cram_indexed)
     }
 
     if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration']) {
@@ -542,6 +534,15 @@ workflow SAREK {
             ch_versions = ch_versions.mix(SAMTOOLS_BAMTOCRAM.out.versions)
 
             ch_cram_for_prepare_recalibration = Channel.empty().mix(SAMTOOLS_BAMTOCRAM.out.alignment_index, convert.cram)
+        }else{
+
+            // ch_cram_for_prepare_recalibration contains either:
+            // - crams from markduplicates
+            // - crams from markduplicates_spark
+            // - crams converted from bam mapped when skipping markduplicates
+            // - input cram files, when start from step markduplicates
+            ch_cram_for_prepare_recalibration = Channel.empty().mix(ch_cram_for_restart, ch_input_cram_indexed)
+
         }
 
         // STEP 3: Create recalibration tables
@@ -585,10 +586,12 @@ workflow SAREK {
                 ch_table_bqsr_no_spark,
                 ch_table_bqsr_spark)
 
-            // Create CSV to restart from this step
-            PREPARE_RECALIBRATION_CSV(ch_table_bqsr)
-
             ch_reports  = ch_reports.mix(ch_table_bqsr.map{ meta, table -> table})
+
+            ch_cram_applybqsr = ch_cram_for_prepare_recalibration.join(ch_table_bqsr)
+
+            // Create CSV to restart from this step
+            PREPARE_RECALIBRATION_CSV(ch_cram_applybqsr)
         }
     }
 
@@ -607,14 +610,14 @@ workflow SAREK {
             //If BAM file, split up table and mapped file to convert BAM to CRAM
             ch_bam_table = convert.bam.map{ meta, bam, bai, table -> [meta, table]}
             ch_bam_bam   = convert.bam.map{ meta, bam, bai, table -> [meta, bam, bai]}
+
             //BAM files first must be converted to CRAM files since from this step on we base everything on CRAM format
             SAMTOOLS_BAMTOCRAM(ch_bam_bam, fasta, fasta_fai)
             ch_versions = ch_versions.mix(SAMTOOLS_BAMTOCRAM.out.versions)
 
-            ch_cram_applybqsr = Channel.empty().mix(SAMTOOLS_BAMTOCRAM.out.alignment_index.join(ch_bam_table) // Join together converted cram with input tables
-                                                    , convert.cram)
-
-        }else ch_cram_applybqsr = ch_cram_for_prepare_recalibration.join(ch_table_bqsr)
+            ch_cram_applybqsr = Channel.empty().mix(SAMTOOLS_BAMTOCRAM.out.alignment_index.join(ch_bam_table), // Join together converted cram with input tables
+                                                    convert.cram)
+        }
 
         if (!(params.skip_tools && params.skip_tools.contains('baserecalibrator'))) {
             ch_cram_variant_calling_no_spark = Channel.empty()
@@ -663,7 +666,16 @@ workflow SAREK {
 
             // Gather used softwares versions
             ch_versions = ch_versions.mix(CRAM_QC.out.versions)
-        } else cram_variant_calling = ch_cram_for_prepare_recalibration
+        } else {
+
+            // ch_cram_variant_calling contains either:
+            // - crams from markduplicates = ch_cram_for_prepare_recalibration
+            // - input bams converted to crams, if started from step recal + skip BQSR
+            // - input crams if started from step recal + skip BQSR
+            cram_variant_calling = Channel.mix(ch_cram_for_prepare_recalibration,
+                                                SAMTOOLS_BAMTOCRAM.out.alignment_index,
+                                                convert.cram)
+        }
 
     }
 
