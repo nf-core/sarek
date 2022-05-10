@@ -35,9 +35,9 @@ def checkPathParamList = [
     params.pon,
     params.pon_tbi,
     params.snpeff_cache,
+    params.spliceai_indel,
+    params.spliceai_indel_tbi,
     params.spliceai_snv,
-    params.spliceai_snv,
-    params.spliceai_snv_tbi,
     params.spliceai_snv_tbi,
     //params.target_bed,
     params.vep_cache
@@ -115,8 +115,8 @@ if (params.dbnsfp && params.dbnsfp_tbi) {
 
 if (params.spliceai_snv && params.spliceai_snv_tbi && params.spliceai_indel && params.spliceai_indel_tbi) {
     vep_extra_files = vep_extra_files.mix(
-        Channel.fromPath(params.spliceai_snv),
-        Channel.fromPath(params.spliceai_snv_tbi),
+        Channel.fromPath(params.spliceai_indel),
+        Channel.fromPath(params.spliceai_indel_tbi),
         Channel.fromPath(params.spliceai_snv),
         Channel.fromPath(params.spliceai_snv_tbi)
     ).collect()
