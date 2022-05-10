@@ -7,6 +7,7 @@
 include { DEEPTOOLS_BAMCOVERAGE                  } from '../../modules/nf-core/modules/deeptools/bamcoverage/main'
 include { QUALIMAP_BAMQCCRAM                     } from '../../modules/nf-core/modules/qualimap/bamqccram/main'
 include { SAMTOOLS_CONVERT as SAMTOOLS_BAMTOCRAM } from '../../modules/nf-core/modules/samtools/convert/main'
+include { SAMTOOLS_STATS as SAMTOOLS_STATS_CRAM  } from '../modules/nf-core/modules/samtools/stats/main'
 
 workflow BAM_TO_CRAM {
     take:
@@ -28,20 +29,21 @@ workflow BAM_TO_CRAM {
 
     cram_indexed = Channel.empty().mix(cram_indexed,SAMTOOLS_BAMTOCRAM.out.alignment_index)
 
-    // Reports on bam input
+    // Reports on cram
     DEEPTOOLS_BAMCOVERAGE(cram_indexed)
     QUALIMAP_BAMQCCRAM(cram_indexed, intervals_combined_bed_gz_tbi, fasta, fasta_fai)
-
-    // Other reports run on cram
+    SAMTOOLS_STATS_CRAM(cram_indexed, fasta)
 
     // Gather all reports generated
     qc_reports = qc_reports.mix(DEEPTOOLS_BAMCOVERAGE.out.bigwig)
     qc_reports = qc_reports.mix(QUALIMAP_BAMQCCRAM.out.results)
+    qc_reports = qc_reports.mix(SAMTOOLS_STATS_CRAM.out.stats.collect{it[1]}.ifEmpty([]))
 
     // Gather versions of all tools used
     ch_versions = ch_versions.mix(DEEPTOOLS_BAMCOVERAGE.out.versions.first())
     ch_versions = ch_versions.mix(QUALIMAP_BAMQCCRAM.out.versions.first())
     ch_versions = ch_versions.mix(SAMTOOLS_BAMTOCRAM.out.versions.first())
+    ch_versions = ch_versions.mix(SAMTOOLS_STATS_CRAM.out.versions)
 
     emit:
         cram     = cram_indexed
