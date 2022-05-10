@@ -1,5 +1,5 @@
 - name: Run Recalibration starting from bam
-  command: nextflow run main.nf -profile test,recalibrate,docker
+  command: nextflow run main.nf -profile test,recalibrate_bam,docker
   tags:
     - bam
     - recalibrate
@@ -10,3 +10,50 @@
     - path: results/preprocessing/test/recalibrated/test.recal.cram.crai
     - path: results/reports/qualimap/test/test.recal
     - path: results/reports/samtools_stats/test/test.recal.cram.stats
+    - path: results/preprocessing/csv/recalibrated.csv
+    - path: results/preprocessing/csv/recalibrated_test.csv
+
+- name: Run Recalibration starting from cram
+  command: nextflow run main.nf -profile test,recalibrate_cram,docker
+  tags:
+    - cram
+    - recalibrate
+    - preprocessing
+  files:
+    - path: results/multiqc
+    - path: results/preprocessing/test/recalibrated/test.recal.cram
+    - path: results/preprocessing/test/recalibrated/test.recal.cram.crai
+    - path: results/reports/qualimap/test/test.recal
+    - path: results/reports/samtools_stats/test/test.recal.cram.stats
+    - path: results/preprocessing/csv/recalibrated.csv
+    - path: results/preprocessing/csv/recalibrated_test.csv
+
+- name: Run Recalibration starting from bam and skip baserecalibration
+  command: nextflow run main.nf -profile test,recalibrate_bam,skip_bqsr,docker
+  tags:
+    - bam
+    - recalibrate
+    - preprocessing
+  files:
+    - path: results/multiqc
+    - path: results/preprocessing/test/recalibrated/test.recal.cram
+    - path: results/preprocessing/test/recalibrated/test.recal.cram.crai
+    - path: results/reports/qualimap/test/test.recal
+    - path: results/reports/samtools_stats/test/test.recal.cram.stats
+    - path: results/preprocessing/csv/recalibrated.csv
+    - path: results/preprocessing/csv/recalibrated_test.csv
+
+- name: Run Recalibration starting from cram  and skip baserecalibration
+  command: nextflow run main.nf -profile test,recalibrate_cram,skip_bqsr,docker
+  tags:
+    - cram
+    - recalibrate
+    - preprocessing
+  files:
+    - path: results/multiqc
+    - path: results/preprocessing/test/recalibrated/test.recal.cram
+    - path: results/preprocessing/test/recalibrated/test.recal.cram.crai
+    - path: results/reports/qualimap/test/test.recal
+    - path: results/reports/samtools_stats/test/test.recal.cram.stats
+    - path: results/preprocessing/csv/recalibrated.csv
+    - path: results/preprocessing/csv/recalibrated_test.csv
