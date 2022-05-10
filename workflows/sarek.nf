@@ -676,7 +676,7 @@ workflow SAREK {
             // - crams from markduplicates = ch_cram_for_prepare_recalibration
             // - input bams converted to crams, if started from step recal + skip BQSR
             // - input crams if started from step recal + skip BQSR
-            cram_variant_calling = Channel.mix(ch_cram_for_prepare_recalibration)
+            cram_variant_calling = Channel.empty().mix(ch_cram_for_prepare_recalibration)
 
             if (params.step == 'recalibrate'){
                 cram_variant_calling = cram_variant_calling.mix(SAMTOOLS_BAMTOCRAM.out.alignment_index,
