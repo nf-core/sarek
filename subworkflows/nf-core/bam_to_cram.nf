@@ -26,7 +26,7 @@ workflow BAM_TO_CRAM {
     // Convert bam input to cram
     SAMTOOLS_BAMTOCRAM(bam_indexed, fasta, fasta_fai)
 
-    cram_indexed = cram_indexed ?: SAMTOOLS_BAMTOCRAM.out.alignment_index
+    cram_indexed = Channel.empty().mix(cram_indexed,SAMTOOLS_BAMTOCRAM.out.alignment_index)
 
     // Reports on bam input
     DEEPTOOLS_BAMCOVERAGE(cram_indexed)
