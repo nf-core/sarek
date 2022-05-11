@@ -38,13 +38,22 @@
     - preprocessing
   files:
     - path: results/multiqc
+    - path: results/preprocessing/test/markduplicates/test.md.cram
+    - path: results/preprocessing/test/markduplicates/test.md.cram.crai
     - path: results/preprocessing/test/recal_table/test.recal.table
+      should_exist: false
     - path: results/preprocessing/test/recalibrated/test.recal.cram
+      should_exist: false
     - path: results/preprocessing/test/recalibrated/test.recal.cram.crai
+      should_exist: false
     - path: results/preprocessing/csv/recalibrated.csv
+      should_exist: false
     - path: results/preprocessing/csv/recalibrated_test.csv
+      should_exist: false
     - path: results/reports/qualimap/test/test.recal
+      should_exist: false
     - path: results/reports/samtools_stats/test/test.recal.cram.stats
+      should_exist: false
 
 - name: Run Prepare_recal starting from cram and skip baserecalibration
   command: nextflow run main.nf -profile test,prepare_recalibration_cram,skip_bqsr,docker
