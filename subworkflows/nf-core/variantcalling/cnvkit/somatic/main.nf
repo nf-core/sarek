@@ -4,7 +4,7 @@
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
-include { CNVKIT_BATCH     } from '../../../../../modules/nf-core/modules/cnvkit/batch/main'
+include { CNVKIT_BATCH as CNVKIT_BATCH_SOMATIC } from '../../../../../modules/nf-core/modules/cnvkit/batch/main'
 
 workflow RUN_CNVKIT_SOMATIC {
     take:
@@ -16,9 +16,9 @@ workflow RUN_CNVKIT_SOMATIC {
     main:
         ch_versions = Channel.empty()
 
-        CNVKIT_BATCH(cram_pair, fasta, targets, reference)
+        CNVKIT_BATCH_SOMATIC(cram_pair, fasta, targets, reference)
 
-        ch_versions = ch_versions.mix(CNVKIT_BATCH.out.versions.first())
+        ch_versions = ch_versions.mix(CNVKIT_BATCH_SOMATIC.out.versions.first())
 
     emit:
         versions = ch_versions              // channel: [ versions.yml ]
