@@ -536,7 +536,7 @@ workflow SAREK {
             ch_versions = ch_versions.mix(SAMTOOLS_BAMTOCRAM.out.versions)
 
             ch_cram_for_prepare_recalibration = Channel.empty().mix(SAMTOOLS_BAMTOCRAM.out.alignment_index, convert.cram)
-        }else{
+        } else {
 
             // ch_cram_for_prepare_recalibration contains either:
             // - crams from markduplicates
@@ -544,7 +544,6 @@ workflow SAREK {
             // - crams converted from bam mapped when skipping markduplicates
             // - input cram files, when start from step markduplicates
             //ch_cram_for_restart.view() //contains md.cram.crai
-            ch_input_cram_indexed.view()
             ch_cram_for_prepare_recalibration = Channel.empty().mix(ch_cram_for_restart, ch_input_cram_indexed)
 
         }
@@ -672,7 +671,7 @@ workflow SAREK {
             ch_versions = ch_versions.mix(CRAM_QC.out.versions)
         } else {
 
-            // ch_cram_variant_calling contains either:
+             // ch_cram_variant_calling contains either:
             // - crams from markduplicates = ch_cram_for_prepare_recalibration
             // - input bams converted to crams, if started from step recal + skip BQSR
             // - input crams if started from step recal + skip BQSR
@@ -680,7 +679,7 @@ workflow SAREK {
 
             if (params.step == 'recalibrate'){
                 cram_variant_calling = cram_variant_calling.mix(SAMTOOLS_BAMTOCRAM.out.alignment_index,
-                                                                convert.cram)
+                                                                                convert.cram)
             }
         }
 
@@ -878,7 +877,6 @@ workflow SAREK {
                                             ch_reports.collect(),
                                             ch_multiqc_config,
                                             ch_sarek_logo)
-
         MULTIQC(ch_multiqc_files.collect())
         multiqc_report = MULTIQC.out.report.toList()
     }

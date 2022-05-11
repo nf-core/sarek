@@ -37,7 +37,7 @@ workflow BAM_TO_CRAM {
     // Gather all reports generated
     qc_reports = qc_reports.mix(DEEPTOOLS_BAMCOVERAGE.out.bigwig)
     qc_reports = qc_reports.mix(QUALIMAP_BAMQCCRAM.out.results)
-    qc_reports = qc_reports.mix(SAMTOOLS_STATS_CRAM.out.stats.collect{it[1]}.ifEmpty([]))
+    qc_reports = qc_reports.mix(SAMTOOLS_STATS_CRAM.out.stats)
 
     // Gather versions of all tools used
     ch_versions = ch_versions.mix(DEEPTOOLS_BAMCOVERAGE.out.versions.first())
