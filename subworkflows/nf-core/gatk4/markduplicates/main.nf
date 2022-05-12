@@ -32,7 +32,7 @@ workflow MARKDUPLICATES {
     ch_versions = ch_versions.mix(BAM_TO_CRAM.out.versions)
 
     emit:
-        cram     = BAM_TO_CRAM.out.cram
+        cram     = BAM_TO_CRAM.out.cram_converted
         qc       = qc_reports
 
         versions = ch_versions // channel: [ versions.yml ]

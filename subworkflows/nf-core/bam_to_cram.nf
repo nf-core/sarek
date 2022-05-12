@@ -46,8 +46,8 @@ workflow BAM_TO_CRAM {
     ch_versions = ch_versions.mix(SAMTOOLS_STATS_CRAM.out.versions)
 
     emit:
-        cram     = cram_indexed
-        qc       = qc_reports
+        cram_converted  = SAMTOOLS_BAMTOCRAM.out.alignment_index
+        qc              = qc_reports
 
         versions = ch_versions // channel: [ versions.yml ]
 }

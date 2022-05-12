@@ -468,7 +468,7 @@ workflow SAREK {
                 fasta_fai,
                 intervals_for_preprocessing)
 
-            ch_cram_no_markduplicates = Channel.empty().mix(BAM_TO_CRAM.out.cram)
+            ch_cram_no_markduplicates_restart = Channel.empty().mix(BAM_TO_CRAM.out.cram_converted)
 
             // Gather QC reports
             ch_reports  = ch_reports.mix(BAM_TO_CRAM.out.qc.collect{it[1]}.ifEmpty([]))
@@ -510,7 +510,7 @@ workflow SAREK {
         ch_cram_for_restart = Channel.empty().mix(
             ch_cram_markduplicates_no_spark,
             ch_cram_markduplicates_spark,
-            ch_cram_no_markduplicates).map{ meta, cram, crai ->
+            ch_cram_no_markduplicates_restart).map{ meta, cram, crai ->
                         meta_new = meta.clone()
                         meta_new.data_type = "cram" //Make sure correct data types are carried through
                         [meta_new, cram, crai]
@@ -545,7 +545,6 @@ workflow SAREK {
             // - input cram files, when start from step markduplicates
             //ch_cram_for_restart.view() //contains md.cram.crai
             ch_cram_for_prepare_recalibration = Channel.empty().mix(ch_cram_for_restart, ch_input_cram_indexed)
-
         }
 
         // STEP 3: Create recalibration tables
