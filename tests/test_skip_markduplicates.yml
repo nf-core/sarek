@@ -1,5 +1,5 @@
 - name: Run default pipeline with skipping MarkDuplicates
-  command: nextflow run main.nf -profile test,docker,skip_markduplicates
+  command: nextflow run main.nf -profile test,docker,skip_markduplicates --tools strelka
   tags:
     - preprocessing
     - skip_markduplicates
@@ -24,9 +24,13 @@
     - path: results/reports/samtools_stats/test/test.md.cram.stats
     - path: results/reports/samtools_stats/test/test.recal.cram.stats
     - path: results/reports/deeptools/test/test.bigWig
+    - path: results/variant_calling/test/strelka/test.genome.vcf.gz
+    - path: results/variant_calling/test/strelka/test.genome.vcf.gz.tbi
+    - path: results/variant_calling/test/strelka/test.variants.vcf.gz
+    - path: results/variant_calling/test/strelka/test.variants.vcf.gz.tbi
 
 - name: Run skip markduplicates bam from step markduplicates
-  command: nextflow run main.nf -profile test,docker,markduplicates_bam,skip_markduplicates
+  command: nextflow run main.nf -profile test,docker,markduplicates_bam,skip_markduplicates --tools strelka
   tags:
     - bam
     - preprocessing
@@ -49,9 +53,13 @@
     - path: results/reports/samtools_stats/test/test.md.cram.stats
     - path: results/reports/samtools_stats/test/test.recal.cram.stats
     - path: results/reports/deeptools/test/test.bigWig
+    - path: results/variant_calling/test/strelka/test.genome.vcf.gz
+    - path: results/variant_calling/test/strelka/test.genome.vcf.gz.tbi
+    - path: results/variant_calling/test/strelka/test.variants.vcf.gz
+    - path: results/variant_calling/test/strelka/test.variants.vcf.gz.tbi
 
 - name: Run skip markduplicates cram from step markduplicates
-  command: nextflow run main.nf -profile test,docker,markduplicates_cram,skip_markduplicates
+  command: nextflow run main.nf -profile test,docker,markduplicates_cram,skip_markduplicates --tools strelka
   tags:
     - cram
     - preprocessing
@@ -80,3 +88,7 @@
     - path: results/reports/samtools_stats/test/test.md.cram.stats
     - path: results/reports/samtools_stats/test/test.recal.cram.stats
     - path: results/reports/deeptools/test/test.bigWig
+    - path: results/variant_calling/test/strelka/test.genome.vcf.gz
+    - path: results/variant_calling/test/strelka/test.genome.vcf.gz.tbi
+    - path: results/variant_calling/test/strelka/test.variants.vcf.gz
+    - path: results/variant_calling/test/strelka/test.variants.vcf.gz.tbi
