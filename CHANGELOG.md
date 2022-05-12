@@ -23,7 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#512](https://github.com/nf-core/sarek/pull/512), [#531](https://github.com/nf-core/sarek/pull/531), [#537](https://github.com/nf-core/sarek/pull/537) - Subway map for pipeline
 - [#522](https://github.com/nf-core/sarek/pull/522) - Add QC for vcf files & MultiQC
 - [#533](https://github.com/nf-core/sarek/pull/533) - Add param `--only_paired_variant_calling` to allow skipping of germline variantcalling for paired samples
-- [#536](https://github.com/nf-core/sarek/pull/536) - Add `--step markduplicates` to start from duplicate marking, `--step prepare_recalibration` now ONLY starts at process `BaseRecalibrator` & adding `bam` and `cram` input support for `--step` `markduplicates`, `prepare_recalibration` and `recalibrate`
+- [#536](https://github.com/nf-core/sarek/pull/536) - Add `--step markduplicates` to start from duplicate marking, `--step prepare_recalibration` now ONLY starts at process `BaseRecalibrator` & adding `bam` and `cram` input support for `--step` `markduplicates`, `prepare_recalibration`, `recalibrate`, and `variant_calling`
 - [#538](https://github.com/nf-core/sarek/pull/538) - Add param `--seq_platform`, default: `ILLUMINA`
 
 ### Changed
