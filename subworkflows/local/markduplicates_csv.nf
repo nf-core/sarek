@@ -15,7 +15,6 @@ workflow MARKDUPLICATES_CSV {
             status  = meta.status
             cram   = "${params.outdir}/preprocessing/${sample}/markduplicates/${sample}.md.cram"
             crai   = "${params.outdir}/preprocessing/${sample}/markduplicates/${sample}.md.cram.crai"
-            table = "${params.outdir}/preprocessing/${sample}/recal_table/${sample}.recal.table"
-            ["markduplicates_${sample}.csv", "patient,gender,status,sample,cram,crai,table\n${patient},${gender},${status},${sample},${cram},${crai},${table}\n"]
-        }.collectFile(name: 'markduplicates.csv', keepHeader: true, skip: 1, sort: true, storeDir: "${params.outdir}/preprocessing/csv")
+            ["markduplicates_no_table_${sample}.csv", "patient,gender,status,sample,cram,crai\n${patient},${gender},${status},${sample},${cram},${crai}\n"]
+        }.collectFile(name: 'markduplicates_no_table.csv', keepHeader: true, skip: 1, sort: true, storeDir: "${params.outdir}/preprocessing/csv")
 }
