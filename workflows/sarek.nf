@@ -416,9 +416,9 @@ workflow SAREK {
 
         // 1. SAMTOOLS_CRAMTOBAM ( to speed up computation)
         // 2. Need fasta for cram compression (maybe just using --fasta, because this reference will be used elsewhere)
-        ch_cram_markduplicates_no_spark = Channel.empty()
-        ch_cram_markduplicates_spark    = Channel.empty()
-        ch_cram_no_markduplicates       = Channel.empty()
+        ch_cram_no_markduplicates_restart = Channel.empty()
+        ch_cram_markduplicates_spark      = Channel.empty()
+        ch_cram_no_markduplicates         = Channel.empty()
 
         // STEP 2: markduplicates (+QC) + convert to CRAM
 
