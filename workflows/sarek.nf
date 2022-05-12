@@ -685,8 +685,6 @@ workflow SAREK {
 
     if (params.step == 'variant_calling') {
 
-        ch_input_sample.view()
-
         ch_input_sample.branch{
                 bam: it[0].data_type == "bam"
                 cram: it[0].data_type == "cram"
@@ -698,7 +696,6 @@ workflow SAREK {
 
         cram_variant_calling = Channel.empty().mix(SAMTOOLS_BAMTOCRAM_VARIANTCALLING.out.alignment_index, convert.cram)
 
-        cram_variant_calling.view()
     }
 
     if (params.tools) {
