@@ -1,7 +1,6 @@
 - name: Run default pipeline with skipping MarkDuplicates
-  command: nextflow run main.nf -profile test,docker,skip_markduplicates
+  command: nextflow run main.nf -profile test,docker,skip_markduplicates --tools strelka
   tags:
-    - markduplicates
     - preprocessing
     - skip_markduplicates
   files:
@@ -9,14 +8,14 @@
     - path: results/preprocessing/test/mapped/test.bam
     - path: results/preprocessing/test/mapped/test.bam.bai
     - path: results/preprocessing/test/recal_table/test.recal.table
-    - path: results/preprocessing/test/markduplicates/test.md.cram
-    - path: results/preprocessing/test/markduplicates/test.md.cram.crai
+    - path: results/preprocessing/test/markduplicates/test.md.cram # These are no actually duplicate marked crams, but just mapped converted crams TODO renaming
+    - path: results/preprocessing/test/markduplicates/test.md.cram.crai # TODO These are no actually duplicate marked crams, but just mapped converted crams TODO renaming
     - path: results/preprocessing/test/recalibrated/test.recal.cram
     - path: results/preprocessing/test/recalibrated/test.recal.cram.crai
     - path: results/preprocessing/csv/markduplicates.csv
     - path: results/preprocessing/csv/markduplicates_test.csv
-    - path: results/preprocessing/csv/markduplicates_no_table.csv
-    - path: results/preprocessing/csv/markduplicates_no_table_test.csv
+    - path: results/preprocessing/csv/markduplicates_no_table.csv # TODO These are no actually duplicate marked crams, but just mapped converted crams TODO renaming
+    - path: results/preprocessing/csv/markduplicates_no_table_test.csv # TODO These are no actually duplicate marked crams, but just mapped converted crams TODO renaming
     - path: results/preprocessing/csv/recalibrated.csv
     - path: results/preprocessing/csv/recalibrated_test.csv
     - path: results/reports/fastqc/test-test_L1
@@ -25,29 +24,71 @@
     - path: results/reports/samtools_stats/test/test.md.cram.stats
     - path: results/reports/samtools_stats/test/test.recal.cram.stats
     - path: results/reports/deeptools/test/test.bigWig
+    - path: results/variant_calling/test/strelka/test.genome.vcf.gz
+    - path: results/variant_calling/test/strelka/test.genome.vcf.gz.tbi
+    - path: results/variant_calling/test/strelka/test.variants.vcf.gz
+    - path: results/variant_calling/test/strelka/test.variants.vcf.gz.tbi
 
-- name: Run skip markduplicates preparerecal
-  command: nextflow run main.nf -profile test,docker,prepare_recalibration,skip_markduplicates
+- name: Run skip markduplicates bam from step markduplicates
+  command: nextflow run main.nf -profile test,docker,markduplicates_bam,skip_markduplicates --tools strelka
   tags:
-    - markduplicates
-    - prepare_recalibration
+    - bam
     - preprocessing
     - skip_markduplicates
   files:
     - path: results/multiqc
+    - path: results/preprocessing/test/markduplicates/test.md.cram # TODO These are no actually duplicate marked crams, but just mapped converted crams TODO renaming
+    - path: results/preprocessing/test/markduplicates/test.md.cram.crai # TODO These are no actually duplicate marked crams, but just mapped converted crams TODO renaming
     - path: results/preprocessing/test/recal_table/test.recal.table
-    - path: results/preprocessing/test/markduplicates/test.md.cram
-    - path: results/preprocessing/test/markduplicates/test.md.cram.crai
     - path: results/preprocessing/test/recalibrated/test.recal.cram
     - path: results/preprocessing/test/recalibrated/test.recal.cram.crai
-    - path: results/preprocessing/csv/markduplicates.csv
-    - path: results/preprocessing/csv/markduplicates_test.csv
-    - path: results/preprocessing/csv/markduplicates_no_table.csv
-    - path: results/preprocessing/csv/markduplicates_no_table_test.csv
     - path: results/preprocessing/csv/recalibrated.csv
     - path: results/preprocessing/csv/recalibrated_test.csv
-    # - path: results/reports/qualimap/test/test.mapped
-    # - path: results/reports/qualimap/test/test.recal
+    - path: results/preprocessing/csv/markduplicates.csv
+    - path: results/preprocessing/csv/markduplicates_test.csv
+    - path: results/preprocessing/csv/markduplicates_no_table.csv # TODO These are no actually duplicate marked crams, but just mapped converted crams TODO renaming
+    - path: results/preprocessing/csv/markduplicates_no_table_test.csv # TODO These are no actually duplicate marked crams, but just mapped converted crams TODO renaming
+    - path: results/reports/qualimap/test/test.mapped
+    - path: results/reports/qualimap/test/test.recal
     - path: results/reports/samtools_stats/test/test.md.cram.stats
     - path: results/reports/samtools_stats/test/test.recal.cram.stats
     - path: results/reports/deeptools/test/test.bigWig
+    - path: results/variant_calling/test/strelka/test.genome.vcf.gz
+    - path: results/variant_calling/test/strelka/test.genome.vcf.gz.tbi
+    - path: results/variant_calling/test/strelka/test.variants.vcf.gz
+    - path: results/variant_calling/test/strelka/test.variants.vcf.gz.tbi
+
+- name: Run skip markduplicates cram from step markduplicates
+  command: nextflow run main.nf -profile test,docker,markduplicates_cram,skip_markduplicates --tools strelka
+  tags:
+    - cram
+    - preprocessing
+    - skip_markduplicates
+  files:
+    - path: results/multiqc
+    - path: results/preprocessing/test/markduplicates/test.md.cram
+      should_exist: false
+    - path: results/preprocessing/test/markduplicates/test.md.cram.crai
+      should_exist: false
+    - path: results/preprocessing/test/recal_table/test.recal.table
+    - path: results/preprocessing/test/recalibrated/test.recal.cram
+    - path: results/preprocessing/test/recalibrated/test.recal.cram.crai
+    - path: results/preprocessing/csv/recalibrated.csv
+    - path: results/preprocessing/csv/recalibrated_test.csv
+    - path: results/preprocessing/csv/markduplicates.csv
+      should_exist: false
+    - path: results/preprocessing/csv/markduplicates_test.csv
+      should_exist: false
+    - path: results/preprocessing/csv/markduplicates_no_table.csv
+      should_exist: false
+    - path: results/preprocessing/csv/markduplicates_no_table_test.csv
+      should_exist: false
+    - path: results/reports/qualimap/test/test.mapped
+    - path: results/reports/qualimap/test/test.recal
+    - path: results/reports/samtools_stats/test/test.paired_end.sorted.cram.stats
+    - path: results/reports/samtools_stats/test/test.recal.cram.stats
+    - path: results/reports/deeptools/test/test.bigWig
+    - path: results/variant_calling/test/strelka/test.genome.vcf.gz
+    - path: results/variant_calling/test/strelka/test.genome.vcf.gz.tbi
+    - path: results/variant_calling/test/strelka/test.variants.vcf.gz
+    - path: results/variant_calling/test/strelka/test.variants.vcf.gz.tbi

@@ -1,5 +1,5 @@
-name: samtools_bamtocram
-description: filter/convert and then index CRAM file
+name: samtools_convert
+description: convert and then index CRAM -> BAM or BAM -> CRAM file
 keywords:
   - view
   - index
@@ -23,12 +23,12 @@ input:
         e.g. [ id:'test', single_end:false ]
   - input:
       type: file
-      description: BAM/SAM file
-      pattern: "*.{bam,sam}"
+      description: BAM/CRAM file
+      pattern: "*.{bam,cram}"
   - index:
       type: file
-      description: BAM/SAM index file
-      pattern: "*.{bai,sai}"
+      description: BAM/CRAM index file
+      pattern: "*.{bai,crai}"
   - fasta:
       type: file
       description: Reference file to create the CRAM file
@@ -39,10 +39,10 @@ output:
       description: |
         Groovy Map containing sample information
         e.g. [ id:'test', single_end:false ]
-  - cram_crai:
+  - alignment_index:
       type: file
-      description: filtered/converted CRAM file + index
-      pattern: "*{.cram,.crai}"
+      description: filtered/converted BAM/CRAM file + index
+      pattern: "*{.bam/cram,.bai/crai}"
   - version:
       type: file
       description: File containing software version
