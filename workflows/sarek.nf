@@ -15,11 +15,9 @@ def checkPathParamList = [
     params.ac_loci_gc,
     params.bwa,
     params.bwamem2,
-    params.cadd_indels,
-    params.cadd_indels_tbi,
-    params.cadd_wg_snvs,
-    params.cadd_wg_snvs_tbi,
     params.chr_dir,
+    params.dbnsfp,
+    params.dbnsfp_tbi,
     params.dbsnp,
     params.dbsnp_tbi,
     params.dict,
@@ -37,6 +35,10 @@ def checkPathParamList = [
     params.pon,
     params.pon_tbi,
     params.snpeff_cache,
+    params.spliceai_indel,
+    params.spliceai_indel_tbi,
+    params.spliceai_snv,
+    params.spliceai_snv_tbi,
     //params.target_bed,
     params.vep_cache
 ]
@@ -98,14 +100,28 @@ vep_genome         = params.vep_genome         ?: Channel.empty()
 vep_species        = params.vep_species        ?: Channel.empty()
 
 // Initialize files channels based on params, not defined within the params.genomes[params.genome] scope
-cadd_indels        = params.cadd_indels        ? Channel.fromPath(params.cadd_indels).collect()              : []
-cadd_indels_tbi    = params.cadd_indels_tbi    ? Channel.fromPath(params.cadd_indels_tbi).collect()          : []
-cadd_wg_snvs       = params.cadd_wg_snvs       ? Channel.fromPath(params.cadd_wg_snvs).collect()             : []
-cadd_wg_snvs_tbi   = params.cadd_wg_snvs_tbi   ? Channel.fromPath(params.cadd_wg_snvs_tbi).collect()         : []
 pon                = params.pon                ? Channel.fromPath(params.pon).collect()                      : Channel.empty()
 snpeff_cache       = params.snpeff_cache       ? Channel.fromPath(params.snpeff_cache).collect()             : []
 //target_bed         = params.target_bed         ? Channel.fromPath(params.target_bed).collect()               : []
 vep_cache          = params.vep_cache          ? Channel.fromPath(params.vep_cache).collect()                : []
+
+vep_extra_files = []
+
+if (params.dbnsfp && params.dbnsfp_tbi) {
+    vep_extra_files = vep_extra_files.mix(
+        Channel.fromPath(params.dbnsfp),
+        Channel.fromPath(params.dbnsfp_tbi)
+    ).collect()
+}
+
+if (params.spliceai_snv && params.spliceai_snv_tbi && params.spliceai_indel && params.spliceai_indel_tbi) {
+    vep_extra_files = vep_extra_files.mix(
+        Channel.fromPath(params.spliceai_indel),
+        Channel.fromPath(params.spliceai_indel_tbi),
+        Channel.fromPath(params.spliceai_snv),
+        Channel.fromPath(params.spliceai_snv_tbi)
+    ).collect()
+}
 
 // Initialize value channels based on params, not defined within the params.genomes[params.genome] scope
 umi_read_structure = params.umi_read_structure ? "${params.umi_read_structure} ${params.umi_read_structure}" : Channel.empty()
@@ -861,7 +877,8 @@ workflow SAREK {
                 vep_genome,
                 vep_species,
                 vep_cache_version,
-                vep_cache)
+                vep_cache,
+                vep_extra_files)
 
             // Gather used softwares versions
             ch_versions = ch_versions.mix(ANNOTATE.out.versions)

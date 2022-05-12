@@ -47,6 +47,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#511](https://github.com/nf-core/sarek/pull/511) - Sync `TEMPLATE` with `tools` `2.3.2`
 - [#520](https://github.com/nf-core/sarek/pull/520) - Improve annotation subworkflows
 - [#537](https://github.com/nf-core/sarek/pull/537) - Update workflow figure
+- [#539](https://github.com/nf-core/sarek/pull/539) - Update `CITATIONS.md`
 
 ### Fixed
 
@@ -78,6 +79,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#485](https://github.com/nf-core/sarek/pull/485) - `--skip_qc`, `--skip_markduplicates` and `--skip_bqsr` is now `--skip_tools`
 - [#538](https://github.com/nf-core/sarek/pull/538) - `--sequencing_center` is now `--seq_center`
 - [#538](https://github.com/nf-core/sarek/pull/538) - `--markdup_java_options` has been removed
+- [#539](https://github.com/nf-core/sarek/pull/539) - `--annotate_tools` has been removed
+- [#539](https://github.com/nf-core/sarek/pull/539) - `--cadd_cache`, `--cadd_indels`, `--cadd_indels_tbi`, `--cadd_wg_snvs`, `--cadd_wg_snvs_tbi` have been removed
+- [#539](https://github.com/nf-core/sarek/pull/539) - `--genesplicer` has been removed
+- [#539](https://github.com/nf-core/sarek/pull/539) - `conf/genomes.config` and `params.genomes_base` have been removed
 
 ## [2.7.1](https://github.com/nf-core/sarek/releases/tag/2.7.1) - Pårtejekna
 

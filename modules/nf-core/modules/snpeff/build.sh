@@ -9,10 +9,11 @@ build_push() {
     SNPEFF_TAG=$3
 
     docker build \
+        . \
         -t nfcore/snpeff:${SNPEFF_TAG}.${GENOME} \
-        software/snpeff/. \
         --build-arg GENOME=${GENOME} \
-        --build-arg SNPEFF_CACHE_VERSION=${SNPEFF_CACHE_VERSION}
+        --build-arg SNPEFF_CACHE_VERSION=${SNPEFF_CACHE_VERSION} \
+        --build-arg SNPEFF_TAG=${SNPEFF_TAG}
 
     docker push nfcore/snpeff:${SNPEFF_TAG}.${GENOME}
 }

@@ -10,17 +10,6 @@ tools:
       homepage: https://www.ensembl.org/info/docs/tools/vep/index.html
       documentation: https://www.ensembl.org/info/docs/tools/vep/script/index.html
       licence: ["Apache-2.0"]
-params:
-  - use_cache:
-      type: boolean
-      description: |
-        Enable the usage of containers with cache
-        Does not work with conda
-  - vep_tag:
-      type: value
-      description: |
-        Specify the tag for the container
-        https://hub.docker.com/r/nfcore/vep/tags
 input:
   - meta:
       type: map
@@ -47,6 +36,10 @@ input:
       type: file
       description: |
         path to VEP cache (optional)
+  - extra_files:
+      type: tuple
+      description: |
+        path to file(s) needed for plugins  (optional)
 output:
   - vcf:
       type: file
