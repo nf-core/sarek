@@ -126,11 +126,11 @@ patient1,XX,1,tumor_sample,lane_2,test2_L002.bam
 patient1,XX,1,relapse_sample,lane_1,test3_L001.bam
 ```
 
-#### Start with duplicate marking and/or preparing recalibration (`--step prepare_recalibration`)
+#### Start with duplicate marking (`--step markduplicates`)
 
 ##### Duplicate Marking
 
-For starting from duplicate marking, the `CSV` file must contain at least the columns `patient`, `sample`, `bam`, `bai`.
+For starting from duplicate marking, the `CSV` file must contain at least the columns `patient`, `sample`, `bam`, `bai` or `patient`, `sample`, `cram`, `crai`
 
 Example:
 
@@ -139,11 +139,21 @@ patient,sample,bam,bai
 patient1,test_sample,test_mapped.bam,test_mapped.bam.bai
 ```
 
+```console
+patient,sample,cram,crai
+patient1,test_sample,test_mapped.cram,test_mapped.cram.crai
+```
+
 ##### Prepare Recalibration
 
-For starting directly from preparing recalibration and skipping duplicate marking, the `CSV` file must contain at least the columns `patient`, `sample`, `cram`, `crai` with _non-recalibrated CRAM_ files. Additionally, the parameter `--skip_tools markduplicates` must be set.
+For starting directly from preparing recalibration, the `CSV` file must contain at least the columns `patient`, `sample`, `bam`, `bai` or `patient`, `sample`, `cram`, `crai`.
 
 Example:
+
+```console
+patient,sample,bam,bai
+patient1,test_sample,test_mapped.bam,test_mapped.bam.bai
+```
 
 ```console
 patient,sample,cram,crai
