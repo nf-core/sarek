@@ -502,11 +502,11 @@ workflow SAREK {
             ch_versions = ch_versions.mix(MARKDUPLICATES.out.versions)
         }
 
-        // ch_cram_for_restart contains either:
+        // ch_md_cram_for_restart contains either:
         // - crams from markduplicates
         // - crams from markduplicates_spark
         // - crams converted from bam mapped when skipping markduplicates
-        ch_cram_for_restart = Channel.empty().mix(
+        ch_md_cram_for_restart = Channel.empty().mix(
             ch_cram_markduplicates_no_spark,
             ch_cram_markduplicates_spark,
             ch_cram_no_markduplicates_restart).map{ meta, cram, crai ->
@@ -516,7 +516,7 @@ workflow SAREK {
                     }
 
         // Create CSV to restart from this step
-        MARKDUPLICATES_CSV(ch_cram_for_restart)
+        MARKDUPLICATES_CSV(ch_md_cram_for_restart)
     }
 
     if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration']) {
@@ -535,6 +535,9 @@ workflow SAREK {
             ch_versions = ch_versions.mix(SAMTOOLS_BAMTOCRAM.out.versions)
 
             ch_cram_for_prepare_recalibration = Channel.empty().mix(SAMTOOLS_BAMTOCRAM.out.alignment_index, convert.cram)
+
+            ch_md_cram_for_restart = SAMTOOLS_BAMTOCRAM.out.alignment_index
+
         } else {
 
             // ch_cram_for_prepare_recalibration contains either:
@@ -542,8 +545,8 @@ workflow SAREK {
             // - crams from markduplicates_spark
             // - crams converted from bam mapped when skipping markduplicates
             // - input cram files, when start from step markduplicates
-            //ch_cram_for_restart.view() //contains md.cram.crai
-            ch_cram_for_prepare_recalibration = Channel.empty().mix(ch_cram_for_restart, ch_input_cram_indexed)
+            //ch_md_cram_for_restart.view() //contains md.cram.crai
+            ch_cram_for_prepare_recalibration = Channel.empty().mix(ch_md_cram_for_restart, ch_input_cram_indexed)
         }
 
         // STEP 3: Create recalibration tables
@@ -592,7 +595,7 @@ workflow SAREK {
             ch_cram_applybqsr = ch_cram_for_prepare_recalibration.join(ch_table_bqsr)
 
             // Create CSV to restart from this step
-            PREPARE_RECALIBRATION_CSV(ch_cram_applybqsr)
+            PREPARE_RECALIBRATION_CSV(ch_md_cram_for_restart.join(ch_table_bqsr))
         }
     }
 
@@ -680,7 +683,18 @@ workflow SAREK {
         }
     }
 
-    if (params.step == 'variant_calling') cram_variant_calling = ch_input_sample
+    if (params.step == 'variant_calling') {
+
+        ch_input_sample.branch{
+                bam: it[0].data_type == "bam"
+                cram: it[0].data_type == "cram"
+            }.set{convert}
+
+        //BAM files first must be converted to CRAM files since from this step on we base everything on CRAM format
+        SAMTOOLS_BAMTOCRAM(ch_bam_bam, fasta, fasta_fai)
+
+        cram_variant_calling = Channel.empty().mix(convert.bam, SAMTOOLS_BAMTOCRAM.out.alignment_index)
+    }
 
     //TODO also add SAMTOOLS BAMTOCRAM if starting from VC
 
