@@ -451,7 +451,6 @@ workflow SAREK {
                 ch_bam_for_markduplicates = ch_bam_for_markduplicates.mix(SAMTOOLS_CRAMTOBAM.out.alignment_index.map{ meta, bam, bai -> [meta, bam]})
             }else{
                 ch_input_cram_indexed     = convert.cram
-
             }
         }
 
@@ -668,18 +667,16 @@ workflow SAREK {
 
             // Gather used softwares versions
             ch_versions = ch_versions.mix(CRAM_QC.out.versions)
-        } else {
-
-             // ch_cram_variant_calling contains either:
-            // - crams from markduplicates = ch_cram_for_prepare_recalibration
+        } else if (params.step == 'recalibrate'){
+            // ch_cram_variant_calling contains either:
             // - input bams converted to crams, if started from step recal + skip BQSR
             // - input crams if started from step recal + skip BQSR
-            cram_variant_calling = Channel.empty().mix(ch_cram_for_prepare_recalibration)
-
-            if (params.step == 'recalibrate'){
-                cram_variant_calling = cram_variant_calling.mix(SAMTOOLS_BAMTOCRAM.out.alignment_index,
+            cram_variant_calling = Channel.empty().mix(SAMTOOLS_BAMTOCRAM.out.alignment_index,
                                                                                 convert.cram)
-            }
+        } else{
+            // ch_cram_variant_calling contains either:
+            // - crams from markduplicates = ch_cram_for_prepare_recalibration if skip BQSR but not started from step recalibration
+            cram_variant_calling = Channel.empty().mix(ch_cram_for_prepare_recalibration)
         }
 
     }
