@@ -182,9 +182,14 @@ patient1,XX,1,relapse_sample,test3_mapped.cram,test3_mapped.cram.crai
 
 #### Start with base quality recalibration (`--step recalibrate`)
 
-For starting from base quality recalibration the `CSV` file must contain at least the columns `patient`, `sample`, `cram`, `crai`, `table` containing the paths to _non-recalibrated CRAM_ files and the associated recalibration table.
+For starting from base quality recalibration the `CSV` file must contain at least the columns `patient`, `sample`, `bam`, `bai`, `table` or `patient`, `sample`, `cram`, `crai`, `table` containing the paths to _non-recalibrated CRAM/BAM_ files and the associated recalibration table.
 
 Example:
+
+```console
+patient,sample,bam,bai,table
+patient1,test_sample,test_mapped.cram,test_mapped.cram.crai,test.table
+```
 
 ```console
 patient,sample,cram,crai,table
@@ -206,9 +211,14 @@ patient1,XX,1,relapse_sample,test3_mapped.cram,test3_mapped.cram.crai,test3.tabl
 
 #### Start with variant calling (`--step variant_calling`)
 
-For starting from the variant calling step, the `CSV` file must contain at least the columns `patient`, `sample`, `cram`, `crai`.
+For starting from the variant calling step, the `CSV` file must contain at least the columns `patient`, `sample`, `bam`, `bai` or `patient`, `sample`, `cram`, `crai`.
 
 Example:
+
+```console
+patient,sample,bam,bai
+patient1,test_sample,test_mapped.bam,test_mapped.bam.bai
+```
 
 ```console
 patient,sample,cram,crai
