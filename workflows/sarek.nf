@@ -694,8 +694,9 @@ workflow SAREK {
 
         //BAM files first must be converted to CRAM files since from this step on we base everything on CRAM format
         SAMTOOLS_BAMTOCRAM_VARIANTCALLING(convert.bam, fasta, fasta_fai)
+        ch_versions = ch_versions.mix(SAMTOOLS_BAMTOCRAM_VARIANTCALLING.out.versions)
 
-        cram_variant_calling = Channel.empty().mix(convert.cram, SAMTOOLS_BAMTOCRAM.out.alignment_index)
+        cram_variant_calling = Channel.empty().mix(SAMTOOLS_BAMTOCRAM_VARIANTCALLING.out.alignment_index, convert.cram)
 
         cram_variant_calling.view()
     }
