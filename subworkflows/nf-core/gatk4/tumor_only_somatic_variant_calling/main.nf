@@ -112,7 +112,7 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
                 def groupKey = groupKey(meta, meta.num_intervals)
                 [new_meta, f1r2]
             }.groupTuple(),
-            mutect2_f1r2_branch.no_intervals)
+            mutect2_f1r2_branch.no_intervals))
 
     //
     //Generate pileup summary table using getepileupsummaries.
