@@ -12,7 +12,7 @@ process CNVKIT_REFERENCE {
     path    antitargets
 
     output:
-    path("*.cnn"), emit: CNN
+    path("*.cnn")                 , emit: CNN
     path "versions.yml"           , emit: versions
 
     when:

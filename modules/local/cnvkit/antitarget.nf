@@ -10,7 +10,7 @@ process CNVKIT_ANTITARGET {
     path  targets
 
     output:
-    path("*.bed"), emit: BED
+    path("*.bed")                 , emit: BED
     path "versions.yml"           , emit: versions
 
     when:
