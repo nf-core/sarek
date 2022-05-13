@@ -91,11 +91,18 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
 
     if(tools.contains('cnvkit')){
         cram_recalibrated_cnvkit = cram_recalibrated
-            .map(meta, cram, crai) ->
-                [meta, cram]
-    }
-        RUN_CNVKIT_TUMORONLY (cram_recalibrated_cnvkit, [], [], reference)
+            .map{ meta, cram, crai ->
+                [meta, cram, []]
+            }
 
+
+        RUN_CNVKIT_TUMORONLY (  cram_recalibrated_cnvkit,
+                                fasta,
+                                intervals_bed_combined,
+                                [] )
+
+        ch_versions = ch_versions.mix(RUN_CNVKIT_TUMORONLY.out.versions)
+    }
 
     if (tools.contains('freebayes')){
         // Remap channel for Freebayes
