@@ -2,7 +2,7 @@
 // Run GATK mutect2 in tumor normal mode, getepileupsummaries, calculatecontamination, learnreadorientationmodel and filtermutectcalls
 //
 
-include { TABIX_BGZIP                     as BGZIP_MUTECT2               } from '../../../../modules/nf-core/modules/tabix/bgzip/main'
+include { TABIX_BGZIP                     as BGZIP_VC_MUTECT2            } from '../../../../modules/nf-core/modules/tabix/bgzip/main'
 include { CONCAT_VCF                      as CONCAT_MUTECT2              } from '../../../../modules/local/concat_vcf/main'
 include { GATK4_CALCULATECONTAMINATION    as CALCULATECONTAMINATION      } from '../../../../modules/nf-core/modules/gatk4/calculatecontamination/main'
 include { GATK4_FILTERMUTECTCALLS         as FILTERMUTECTCALLS           } from '../../../../modules/nf-core/modules/gatk4/filtermutectcalls/main'
@@ -88,7 +88,7 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
 
     //Merge Muteect2 Stats
     MERGEMUTECTSTATS(
-        mutect2_stats.intervals
+        mutect2_stats_branch.intervals
         .map{ meta, stats ->
             new_meta = meta.clone()
             new_meta.id = new_meta.tumor_id + "_vs_" + new_meta.normal_id
@@ -99,7 +99,7 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
 
     mutect2_stats = Channel.empty().mix(
         MERGEMUTECTSTATS.out.stats,
-        mutect2_stats.no_intervals)
+        mutect2_stats_branch.no_intervals)
 
     //
     //Generate artifactpriors using learnreadorientationmodel on the f1r2 output of mutect2.
@@ -117,13 +117,31 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
     //
     //Generate pileup summary tables using getepileupsummaries. tumor sample should always be passed in as the first input and input list entries of ch_mutect2_in,
     //to ensure correct file order for calculatecontamination.
-    input.multiMap{  meta, input_list, input_index_list, intervals ->
+    pileup = input.multiMap{  meta, input_list, input_index_list, intervals ->
         tumor: [ meta, input_list[1], input_index_list[1], intervals ]
         normal: [ meta, input_list[0], input_index_list[0], intervals ]
-    }.set{pileup}
+    }
+    pileup.tumor.map{
+                                    meta, cram, crai, intervals ->
+                                    new_meta = meta.clone()
+                                    new_meta.id = new_meta.num_intervals <= 1 ? new_meta.tumor_id : new_meta.tumor_id + "_" + intervals.baseName
+                                    [new_meta, cram, crai, intervals]
+                                }.view()
+    GETPILEUPSUMMARIES_TUMOR ( pileup.tumor.map{
+                                    meta, cram, crai, intervals ->
+                                    new_meta = meta.clone()
+                                    new_meta.id = new_meta.num_intervals <= 1 ? new_meta.tumor_id : new_meta.tumor_id + "_" + intervals.baseName
+                                    [new_meta, cram, crai, intervals]
+                                },
+                                fasta, fai, dict, germline_resource, germline_resource_tbi )
 
-    GETPILEUPSUMMARIES_TUMOR ( pileup.tumor, fasta, fai, dict, germline_resource, germline_resource_tbi )
-    GETPILEUPSUMMARIES_NORMAL ( pileup.normal, fasta, fai, dict, germline_resource, germline_resource_tbi )
+    GETPILEUPSUMMARIES_NORMAL ( pileup.normal.map{
+                                    meta, cram, crai, intervals ->
+                                    new_meta = meta.clone()
+                                    new_meta.id = new_meta.num_intervals <= 1 ? new_meta.normal_id : new_meta.normal_id + "_" + intervals.baseName
+                                    [new_meta, cram, crai, intervals]
+                                },
+                                fasta, fai, dict, germline_resource, germline_resource_tbi )
 
     GETPILEUPSUMMARIES_NORMAL.out.table.branch{
             intervals:    it[0].num_intervals > 1
@@ -140,7 +158,7 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
         GETPILEUPSUMMARIES_NORMAL.out.table
         .map{ meta, table ->
             new_meta = meta.clone()
-            new_meta.id = new_meta.tumor_id + "_vs_" + new_meta.normal_id
+            new_meta.id = new_meta.normal_id
 
             def groupKey = groupKey(meta, meta.num_intervals)
             [new_meta, table]
@@ -151,11 +169,13 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
         GATHERPILEUPSUMMARIES_NORMAL.out.table,
         pileup_table_normal.no_intervals)
 
+    gather_table_normal.view()
+
     GATHERPILEUPSUMMARIES_TUMOR(
         GETPILEUPSUMMARIES_TUMOR.out.table
         .map{ meta, table ->
             new_meta = meta.clone()
-            new_meta.id = new_meta.tumor_id + "_vs_" + new_meta.normal_id
+            new_meta.id = new_meta.tumor_id
 
             def groupKey = groupKey(meta, meta.num_intervals)
             [new_meta, table]
@@ -165,6 +185,8 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
     gather_table_tumor = Channel.empty().mix(
         GATHERPILEUPSUMMARIES_TUMOR.out.table,
         pileup_table_tumor.no_intervals)
+
+    gather_table_tumor.view()
 
     //
     //Contamination and segmentation tables created using calculatecontamination on the pileup summary table.
@@ -183,7 +205,7 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
 
     FILTERMUTECTCALLS ( ch_filtermutect_in, fasta, fai, dict )
 
-    ch_versions = ch_versions.mix(BGZIP_MUTECT2.out.versions)
+    ch_versions = ch_versions.mix(BGZIP_VC_MUTECT2.out.versions)
     ch_versions = ch_versions.mix(CONCAT_MUTECT2.out.versions)
     ch_versions = ch_versions.mix(CALCULATECONTAMINATION.out.versions)
     ch_versions = ch_versions.mix(FILTERMUTECTCALLS.out.versions)
@@ -198,7 +220,6 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
     emit:
     mutect2_vcf            = mutect2_vcf                                    // channel: [ val(meta), [ vcf ] ]
     mutect2_stats          = mutect2_stats                                  // channel: [ val(meta), [ stats ] ]
-    mutect2_f1r2           = MUTECT2.out.f1r2                               // channel: [ val(meta), [ f1r2 ] ]
 
     artifact_priors        = LEARNREADORIENTATIONMODEL.out.artifactprior    // channel: [ val(meta), [ artifactprior ] ]
 

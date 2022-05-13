@@ -169,17 +169,19 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
     ch_versions = ch_versions.mix(MUTECT2.out.versions)
 
     emit:
-    // mutect2_vcf         = mutect2_vcf                               // channel: [ val(meta), [ vcf ] ]
-    // mutect2_stats       = mutect2_stats                              // channel: [ val(meta), [ stats ] ]
+    mutect2_vcf         = mutect2_vcf                               // channel: [ val(meta), [ vcf ] ]
+    mutect2_stats       = mutect2_stats                              // channel: [ val(meta), [ stats ] ]
 
-    // pileup_table        = pileup_table                              // channel: [ val(meta), [ table ] ]
+    artifact_priors        = LEARNREADORIENTATIONMODEL.out.artifactprior    // channel: [ val(meta), [ artifactprior ] ]
 
-    // contamination_table = CALCULATECONTAMINATION.out.contamination  // channel: [ val(meta), [ contamination ] ]
-    // segmentation_table  = CALCULATECONTAMINATION.out.segmentation   // channel: [ val(meta), [ segmentation ] ]
+    pileup_table        = pileup_table                              // channel: [ val(meta), [ table ] ]
 
-    // filtered_vcf        = FILTERMUTECTCALLS.out.vcf                 // channel: [ val(meta), [ vcf ] ]
-    // filtered_index      = FILTERMUTECTCALLS.out.tbi                 // channel: [ val(meta), [ tbi ] ]
-    // filtered_stats      = FILTERMUTECTCALLS.out.stats               // channel: [ val(meta), [ stats ] ]
+    contamination_table = CALCULATECONTAMINATION.out.contamination  // channel: [ val(meta), [ contamination ] ]
+    segmentation_table  = CALCULATECONTAMINATION.out.segmentation   // channel: [ val(meta), [ segmentation ] ]
+
+    filtered_vcf        = FILTERMUTECTCALLS.out.vcf                 // channel: [ val(meta), [ vcf ] ]
+    filtered_index      = FILTERMUTECTCALLS.out.tbi                 // channel: [ val(meta), [ tbi ] ]
+    filtered_stats      = FILTERMUTECTCALLS.out.stats               // channel: [ val(meta), [ stats ] ]
 
     versions            = ch_versions                               // channel: [ versions.yml ]
 }
