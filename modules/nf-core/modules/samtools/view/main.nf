@@ -8,7 +8,7 @@ process SAMTOOLS_VIEW {
         'quay.io/biocontainers/samtools:1.15.1--h1170115_0' }"
 
     input:
-    tuple val(meta), path(input)
+    tuple val(meta), path(input), path(index)
     path fasta
 
     output:
@@ -35,6 +35,18 @@ process SAMTOOLS_VIEW {
         $input \\
         $args2 \\
         > ${prefix}.${file_type}
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
+    END_VERSIONS
+    """
+
+    stub:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    """
+    touch ${prefix}.bam
+    touch ${prefix}.cram
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

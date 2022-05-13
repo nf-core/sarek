@@ -139,7 +139,7 @@
                 "git_sha": "409af2f27cbe45109acc7fee70718d2bf20aa449"
             },
             "gatk4/mutect2": {
-                "git_sha": "409af2f27cbe45109acc7fee70718d2bf20aa449"
+                "git_sha": "62c6123ec48e15b42bd60b344603a83b658054d8"
             },
             "gatk4/variantrecalibrator": {
                 "git_sha": "409af2f27cbe45109acc7fee70718d2bf20aa449"
@@ -172,7 +172,7 @@
                 "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
             },
             "samtools/bam2fq": {
-                "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
+                "git_sha": "5510ea39fe638594bc26ac34cadf4a84bf27d159"
             },
             "samtools/collatefastq": {
                 "git_sha": "705f8c9ac4dfdf07666e71abde28f267e2dfd5eb"
@@ -196,7 +196,7 @@
                 "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
             },
             "samtools/view": {
-                "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
+                "git_sha": "6b64f9cb6c3dd3577931cc3cd032d6fb730000ce"
             },
             "seqkit/split2": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
