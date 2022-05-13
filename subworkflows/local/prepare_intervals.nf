@@ -37,7 +37,6 @@ workflow PREPARE_INTERVALS {
 
         ch_intervals_combined_bed_gz_tbi = Channel.fromPath(file("${params.outdir}/no_intervals.bed.{gz,gz.tbi}"))
                                             .collect()
-        ch_intervals_combined_bed_gz_tbi.view()
 
     } else if (params.step != 'annotate' && params.step != 'controlfreec') {
 

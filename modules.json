@@ -61,7 +61,7 @@
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
             "ensemblvep": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                "git_sha": "40dd662fd26c3eb3160b7c8cbbe9bff80bbe2c30"
             },
             "fastqc": {
                 "git_sha": "49b18b1639f4f7104187058866a8fab33332bdfe"
@@ -174,11 +174,11 @@
             "samtools/bam2fq": {
                 "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
             },
-            "samtools/bamtocram": {
-                "git_sha": "569e07f0af74e2a6ea43fca61ae90bb762893461"
-            },
             "samtools/collatefastq": {
                 "git_sha": "705f8c9ac4dfdf07666e71abde28f267e2dfd5eb"
+            },
+            "samtools/convert": {
+                "git_sha": "da79396f066a96450d9cc9f115c17c9d738595fd"
             },
             "samtools/faidx": {
                 "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
@@ -202,7 +202,7 @@
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
             "snpeff": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                "git_sha": "40dd662fd26c3eb3160b7c8cbbe9bff80bbe2c30"
             },
             "strelka/germline": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"

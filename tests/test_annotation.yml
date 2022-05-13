@@ -4,28 +4,26 @@
     - annotation
     - snpeff
   files:
-    - path: results/annotation/1234N/1234N_snpEff.ann.vcf.gz
-    - path: results/annotation/1234N/1234N_snpEff.ann.vcf.gz.tbi
-    - path: results/reports/SnpEff/1234N/1234N.csv
-    # - path: results/multiqc //MultiQC not working (finishes succesfully, but log shows issues between human vcf and annotation)
+    - path: results/annotation/test/test_snpEff.ann.vcf.gz
+    - path: results/annotation/test/test_snpEff.ann.vcf.gz.tbi
+    - path: results/reports/SnpEff/test/test.csv
+    - path: results/multiqc
 - name: Run VEP
-  command: nextflow run main.nf -profile test,annotation,docker --tools vep
+  command: nextflow run main.nf -profile test,annotation,docker --tools vep --skip_tools multiqc
   tags:
     - annotation
     - vep
   files:
-    - path: results/annotation/1234N/1234N_VEP.ann.vcf.gz
-    - path: results/annotation/1234N/1234N_VEP.ann.vcf.gz.tbi
-    - path: results/reports/EnsemblVEP/1234N/1234N.summary.html
-    # - path: results/multiqc //MultiQC not working issues between human vcf and annotation
+    - path: results/annotation/test/test_VEP.ann.vcf.gz
+    - path: results/annotation/test/test_VEP.ann.vcf.gz.tbi
+    - path: results/reports/EnsemblVEP/test/test.summary.html
 - name: Run snpEff followed by VEP
-  command: nextflow run main.nf -profile test,annotation,docker --tools merge
+  command: nextflow run main.nf -profile test,annotation,docker --tools merge --skip_tools multiqc
   tags:
     - annotation
     - merge
     - snpeff
     - vep
   files:
-    - path: results/annotation/1234N/1234N_snpEff_VEP.ann.vcf.gz
-    - path: results/annotation/1234N/1234N_snpEff_VEP.ann.vcf.gz.tbi
-    # - path: results/multiqc //MultiQC not working  issues between human vcf and annotation
+    - path: results/annotation/test/test_snpEff_VEP.ann.vcf.gz
+    - path: results/annotation/test/test_snpEff_VEP.ann.vcf.gz.tbi

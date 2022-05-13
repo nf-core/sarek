@@ -10,18 +10,6 @@ tools:
       homepage: https://pcingola.github.io/SnpEff/
       documentation: https://pcingola.github.io/SnpEff/se_introduction/
       licence: ["MIT"]
-params:
-  - use_cache:
-      type: boolean
-      description: |
-        boolean to enable the usage of containers with cache
-        Enable the usage of containers with cache
-        Does not work with conda
-  - snpeff_tag:
-      type: value
-      description: |
-        Specify the tag for the container
-        https://hub.docker.com/r/nfcore/snpeff/tags
 input:
   - meta:
       type: map
