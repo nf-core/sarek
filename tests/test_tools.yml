@@ -298,6 +298,7 @@
     - path: results/variant_calling/sample2/mutect2/sample2.vcf.gz.stats
     - path: results/variant_calling/sample2/mutect2/sample2.contamination.table
     - path: results/variant_calling/sample2/mutect2/sample2.segmentation.table
+    - path: results/variant_calling/sample2/mutect2/sample2.learnreadorientationmodel.tar.gz
     - path: results/variant_calling/sample2/mutect2/sample2.table.pileupsummaries.table
     - path: results/variant_calling/sample2/mutect2/sample2.filtered.vcf.gz
     - path: results/variant_calling/sample2/mutect2/sample2.filtered.vcf.gz.tbi
@@ -316,6 +317,7 @@
     - path: results/variant_calling/sample2/mutect2/sample2.vcf.gz.stats
     - path: results/variant_calling/sample2/mutect2/sample2.contamination.table
     - path: results/variant_calling/sample2/mutect2/sample2.segmentation.table
+    - path: results/variant_calling/sample2/mutect2/sample2.learnreadorientationmodel.tar.gz
     - path: results/variant_calling/sample2/mutect2/sample2.pileups.table
     - path: results/variant_calling/sample2/mutect2/sample2.filtered.vcf.gz
     - path: results/variant_calling/sample2/mutect2/sample2.filtered.vcf.gz.tbi

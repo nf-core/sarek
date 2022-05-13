@@ -53,7 +53,7 @@ process ASCAT {
     ascat.prepareHTS(
         tumourseqfile = "$input_tumor",
         normalseqfile = "$input_normal",
-        tumourname = "Tumour",
+        tumourname = "meta.sample_id",
         normalname = "Normal",
         allelecounter_exe = "alleleCounter",
         alleles.prefix = "$allele_files",

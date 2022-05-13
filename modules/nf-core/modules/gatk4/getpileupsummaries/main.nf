@@ -40,7 +40,7 @@ process GATK4_GETPILEUPSUMMARIES {
         --variant $variants \\
         --output ${prefix}.pileups.table \\
         $reference_command \\
-        $sites_command \\
+        $interval_command \\
         --tmp-dir . \\
         $args
 

@@ -101,25 +101,20 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
         ch_versions   = ch_versions.mix(RUN_FREEBAYES.out.versions)
     }
 
-    // if (tools.contains('mutect2')) {
+    if (tools.contains('mutect2')) {
+        GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING(cram_recalibrated_intervals,
+                                                fasta,
+                                                fasta_fai,
+                                                dict,
+                                                germline_resource,
+                                                germline_resource_tbi,
+                                                panel_of_normals,
+                                                panel_of_normals_tbi,
+                                                intervals_bed_combine_gz)
 
-    //     which_norm = []
-    //     cram_recalibrated_intervals.map{ meta, cram, crai, intervals -> [meta, cram, crai, intervals, which_norm]}.set{cram_recalibrated_mutect2}
-    //     GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING(cram_recalibrated_mutect2,
-    //                                             fasta,
-    //                                             fasta_fai,
-    //                                             dict,
-    //                                             germline_resource,
-    //                                             germline_resource_tbi,
-    //                                             panel_of_normals,
-    //                                             panel_of_normals_tbi,
-    //                                             intervals_bed_combine_gz,
-    //                                             num_intervals)
-
-    //     mutect2_vcf = GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING.out.mutect2_vcf
-    //     ch_versions = ch_versions.mix(GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING.out.versions)
-
-    // }
+        //mutect2_vcf = GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING.out.mutect2_vcf
+        ch_versions = ch_versions.mix(GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING.out.versions)
+    }
 
     if (tools.contains('manta')){
         RUN_MANTA_TUMORONLY(cram_recalibrated_intervals_gz_tbi,
