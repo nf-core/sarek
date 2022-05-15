@@ -32,6 +32,7 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
     //
     //Perform variant calling using mutect2 module in tumor single mode.
     //
+    input.view()
     MUTECT2(input,
             fasta,
             fai,
@@ -121,12 +122,7 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
         tumor: [ meta, input_list[1], input_index_list[1], intervals ]
         normal: [ meta, input_list[0], input_index_list[0], intervals ]
     }
-    pileup.tumor.map{
-                                    meta, cram, crai, intervals ->
-                                    new_meta = meta.clone()
-                                    new_meta.id = new_meta.num_intervals <= 1 ? new_meta.tumor_id : new_meta.tumor_id + "_" + intervals.baseName
-                                    [new_meta, cram, crai, intervals]
-                                }.view()
+
     GETPILEUPSUMMARIES_TUMOR ( pileup.tumor.map{
                                     meta, cram, crai, intervals ->
                                     new_meta = meta.clone()
@@ -169,7 +165,7 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
         GATHERPILEUPSUMMARIES_NORMAL.out.table,
         pileup_table_normal.no_intervals)
 
-    gather_table_normal.view()
+    //gather_table_normal.view()
 
     GATHERPILEUPSUMMARIES_TUMOR(
         GETPILEUPSUMMARIES_TUMOR.out.table
@@ -186,7 +182,7 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
         GATHERPILEUPSUMMARIES_TUMOR.out.table,
         pileup_table_tumor.no_intervals)
 
-    gather_table_tumor.view()
+    //gather_table_tumor.view()
 
     //
     //Contamination and segmentation tables created using calculatecontamination on the pileup summary table.
