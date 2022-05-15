@@ -172,7 +172,7 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
     mutect2_vcf         = mutect2_vcf                               // channel: [ val(meta), [ vcf ] ]
     mutect2_stats       = mutect2_stats                              // channel: [ val(meta), [ stats ] ]
 
-    artifact_priors        = LEARNREADORIENTATIONMODEL.out.artifactprior    // channel: [ val(meta), [ artifactprior ] ]
+    artifact_priors     = LEARNREADORIENTATIONMODEL.out.artifactprior    // channel: [ val(meta), [ artifactprior ] ]
 
     pileup_table        = pileup_table                              // channel: [ val(meta), [ table ] ]
 
