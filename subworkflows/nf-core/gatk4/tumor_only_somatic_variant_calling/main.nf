@@ -78,7 +78,10 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
 
     mutect2_vcf = Channel.empty().mix(
         CONCAT_MUTECT2.out.vcf,
-        mutect2_vcf_branch.no_intervals)
+        mutect2_vcf_branch.no_intervals).map{ meta, vcf ->
+                    meta.variantcaller = "Mutect2"
+                    [meta, vcf]
+        }
 
     mutect2_tbi = Channel.empty().mix(
         CONCAT_MUTECT2.out.tbi,
