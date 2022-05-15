@@ -324,7 +324,7 @@
 #     - path: results/variant_calling/sample2/mutect2/sample2.filtered.vcf.gz.filteringStats.tsv
 
 - name: Run variant calling on somatic sample with mutect2
-  command: nextflow run main.nf -profile test,tools_somatic,docker --tools mutect2
+  command: nextflow run main.nf -profile test,tools_somatic,docker --tools mutect2 -c nextflow.config
   tags:
     - mutect2
     - somatic
