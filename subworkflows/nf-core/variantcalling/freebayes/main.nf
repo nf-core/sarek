@@ -25,6 +25,8 @@ workflow RUN_FREEBAYES {
             no_intervals: it[0].num_intervals <= 1
         }.set{freebayes_vcf_out}
 
+    //FREEBAYES.out.vcf.view()
+    freebayes_vcf_out.no_intervals.view()
     // Only when no intervals
     TABIX_VC_FREEBAYES(freebayes_vcf_out.no_intervals)
 

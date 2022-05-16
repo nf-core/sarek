@@ -98,46 +98,24 @@
     - path: results/variant_calling/sample1/deepvariant/sample1.vcf.gz.tbi
 
 - name: Run variant calling on germline sample with freebayes
-  command: nextflow run main.nf -profile test,tools_germline,docker --tools freebayes
+  command: nextflow run main.nf -profile test,docker --tools freebayes
   tags:
     - freebayes
     - germline
     - variant_calling
   files:
-    - path: results/variant_calling/sample1/freebayes/sample1.vcf.gz
-    - path: results/variant_calling/sample1/freebayes/sample1.vcf.gz.tbi
+    - path: results/variant_calling/test/freebayes/test.vcf.gz
+    - path: results/variant_calling/test/freebayes/test.vcf.gz.tbi
 
-- name: Run variant calling on germline sample with freebayes without intervals
-  command: nextflow run main.nf -profile test,tools_germline,docker --tools freebayes --no_intervals
+- name: Run variant calling on somatic sample with freebayes with intervals
+  command: nextflow run main.nf -profile test,pair,docker --tools freebayes
   tags:
     - freebayes
-    - germline
-    - no_intervals
+    - somatic
     - variant_calling
   files:
-    - path: results/variant_calling/sample1/freebayes/sample1.vcf.gz
-    - path: results/variant_calling/sample1/freebayes/sample1.vcf.gz.tbi
-
-- name: Run variant calling on tumor_only sample with freebayes
-  command: nextflow run main.nf -profile test,tools_tumoronly,docker --tools freebayes
-  tags:
-    - freebayes
-    - tumor_only
-    - variant_calling
-  files:
-    - path: results/variant_calling/sample2/freebayes/sample2.vcf.gz
-    - path: results/variant_calling/sample2/freebayes/sample2.vcf.gz.tbi
-
-- name: Run variant calling on tumor_only sample with freebayes without intervals
-  command: nextflow run main.nf -profile test,tools_tumoronly,docker --tools freebayes --no_intervals
-  tags:
-    - freebayes
-    - no_intervals
-    - tumor_only
-    - variant_calling
-  files:
-    - path: results/variant_calling/sample2/freebayes/sample2.vcf.gz
-    - path: results/variant_calling/sample2/freebayes/sample2.vcf.gz.tbi
+    - path: results/variant_calling/test2_vs_test/freebayes/test2_vs_test.vcf.gz
+    - path: results/variant_calling/test2_vs_test/freebayes/test2_vs_test.vcf.gz.tbi
 
 - name: Run variant calling on germline sample with haplotypecaller
   command: nextflow run main.nf -profile test,tools_germline,docker --tools haplotypecaller
