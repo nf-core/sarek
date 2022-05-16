@@ -69,6 +69,11 @@ if (params.wes) {
     if (params.intervals && !params.intervals.endsWith("bed") && !params.intervals.endsWith("interval_list")) exit 1, "Interval file must end with .bed or .interval_list"
 }
 
+
+if(params.tools && params.tools.contains('mutect2') && params.no_intervals){
+    log.error "--tools mutect2 and --no_intervals cannot be used together.\nOne of the tools within the Mutect2 subworkflow requires intervals. They can be provided to the pipeline with --intervals. If none are provided, they will be generated from the FASTA file.\nFor more information on the Mutect2 workflow, see here: https://gatk.broadinstitute.org/hc/en-us/articles/360035531132--How-to-Call-somatic-mutations-using-GATK4-Mutect2.\nFor more information on GetPileupsummaries, see here: https://gatk.broadinstitute.org/hc/en-us/articles/5358860217115-GetPileupSummaries"
+    exit 1
+}
 // Save AWS IGenomes file containing annotation version
 def anno_readme = params.genomes[params.genome]?.readme
 if (anno_readme && file(anno_readme).exists()) {
@@ -965,7 +970,7 @@ def extract_csv(csv_file) {
             def fastq_1     = file(row.fastq_1, checkIfExists: true)
             def fastq_2     = file(row.fastq_2, checkIfExists: true)
             def CN          = params.seq_center ? "CN:${params.seq_center}\\t" : ''
-            def read_group  = "\"@RG\\tID:${row.lane}\\t${CN}PU:${row.lane}\\tSM:${row.sample}\\tLB:${row.sample}\\tPL:${params.seq_platform}\""
+            def read_group  = "\"@RG\\tID:${row.lane}\\t${CN}PU:${row.lane}\\tSM:${row.patient}_${row.sample}\\tLB:${row.sample}\\tDS:${params.fasta}\\tPL:${params.seq_platform}\""
             meta.numLanes   = numLanes.toInteger()
             meta.read_group = read_group.toString()
             meta.data_type  = "fastq"
