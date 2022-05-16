@@ -3,7 +3,6 @@
 // Should be only run on patients without normal sample
 //
 
-//include { RUN_CONTROLFREEC                        } from '../nf-core/variantcalling/controlfreec/main.nf'
 include { RUN_FREEBAYES                           } from '../nf-core/variantcalling/freebayes/main.nf'
 include { GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING } from '../../subworkflows/nf-core/gatk4/tumor_only_somatic_variant_calling/main'
 include { RUN_MANTA_TUMORONLY                     } from '../nf-core/variantcalling/manta/tumoronly/main.nf'

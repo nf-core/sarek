@@ -4,6 +4,7 @@
 include { GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING } from '../../subworkflows/nf-core/gatk4/tumor_normal_somatic_variant_calling/main'
 include { MSISENSORPRO_MSI_SOMATIC                  } from '../../modules/nf-core/modules/msisensorpro/msi_somatic/main'
 include { RUN_CONTROLFREEC_SOMATIC                  } from '../nf-core/variantcalling/controlfreec/somatic/main.nf'
+include { RUN_FREEBAYES as RUN_FREEBAYES_SOMATIC    } from '../nf-core/variantcalling/freebayes/main.nf'
 include { RUN_MANTA_SOMATIC                         } from '../nf-core/variantcalling/manta/somatic/main.nf'
 include { RUN_STRELKA_SOMATIC                       } from '../nf-core/variantcalling/strelka/somatic/main.nf'
 
@@ -93,6 +94,13 @@ workflow PAIR_VARIANT_CALLING {
         ch_versions = ch_versions.mix(RUN_CONTROLFREEC_SOMATIC.out.versions)
     }
 
+    if (tools.contains('freebayes')){
+        RUN_FREEBAYES_SOMATIC(cram_pair_intervals, fasta, fasta_fai, intervals_bed_combine_gz)
+
+        freebayes_vcf = RUN_FREEBAYES_SOMATIC.out.freebayes_vcf
+        ch_versions   = ch_versions.mix(RUN_FREEBAYES_SOMATIC.out.versions)
+    }
+
     if (tools.contains('manta')) {
         RUN_MANTA_SOMATIC(  cram_pair_intervals_gz_tbi,
                             fasta,
@@ -172,6 +180,7 @@ workflow PAIR_VARIANT_CALLING {
     // }
 
     emit:
+    freebayes_vcf
     manta_vcf
     msisensorpro_output
     mutect2_vcf
