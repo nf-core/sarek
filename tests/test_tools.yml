@@ -304,24 +304,17 @@
     - path: results/variant_calling/sample2/mutect2/sample2.filtered.vcf.gz.tbi
     - path: results/variant_calling/sample2/mutect2/sample2.filtered.vcf.gz.filteringStats.tsv
 
-# - name: Run variant calling on tumoronly sample with mutect2 without intervals
-#   command: nextflow run main.nf -profile test,tools_tumoronly,docker --tools mutect2 --no_intervals
-#   tags:
-#     - mutect2
-#     - no_intervals
-#     - tumor_only
-#     - variant_calling
-#   files:
-#     - path: results/variant_calling/sample2/mutect2/sample2.vcf.gz
-#     - path: results/variant_calling/sample2/mutect2/sample2.vcf.gz.tbi
-#     - path: results/variant_calling/sample2/mutect2/sample2.vcf.gz.stats
-#     - path: results/variant_calling/sample2/mutect2/sample2.contamination.table
-#     - path: results/variant_calling/sample2/mutect2/sample2.segmentation.table
-#     - path: results/variant_calling/sample2/mutect2/sample2.learnreadorientationmodel.tar.gz
-#     - path: results/variant_calling/sample2/mutect2/sample2.pileups.table
-#     - path: results/variant_calling/sample2/mutect2/sample2.filtered.vcf.gz
-#     - path: results/variant_calling/sample2/mutect2/sample2.filtered.vcf.gz.tbi
-#     - path: results/variant_calling/sample2/mutect2/sample2.filtered.vcf.gz.filteringStats.tsv
+- name: Run variant calling on tumoronly sample with mutect2 without intervals
+  command: nextflow run main.nf -profile test,tools_tumoronly,docker --tools mutect2 --no_intervals
+  tags:
+    - mutect2
+    - no_intervals
+    - tumor_only
+    - variant_calling
+  exit_code: 1
+  stdout:
+    contains:
+      - "--tools mutect2 and --no_intervals cannot be used together."
 
 - name: Run variant calling on somatic sample with mutect2
   command: nextflow run main.nf -profile test,tools_somatic,docker --tools mutect2 -c ./tests/nextflow.config
@@ -342,25 +335,17 @@
     - path: results/variant_calling/sample4_vs_sample3/mutect2/sample4_vs_sample3.filtered.vcf.gz.tbi
     - path: results/variant_calling/sample4_vs_sample3/mutect2/sample4_vs_sample3.filtered.vcf.gz.filteringStats.tsv
 
-# - name: Run variant calling on somatic sample with mutect2 without intervals
-#   command: nextflow run main.nf -profile test,tools_somatic,docker --tools mutect2 --no_intervals
-#   tags:
-#     - mutect2
-#     - no_intervals
-#     - somatic
-#     - variant_calling
-#   files:
-#     - path: results/variant_calling/sample4_vs_sample3/mutect2/sample4_vs_sample3.vcf.gz
-#     - path: results/variant_calling/sample4_vs_sample3/mutect2/sample4_vs_sample3.vcf.gz.tbi
-#     - path: results/variant_calling/sample4_vs_sample3/mutect2/sample4_vs_sample3.vcf.gz.stats
-#     - path: results/variant_calling/sample4_vs_sample3/mutect2/sample4_vs_sample3.contamination.table
-#     - path: results/variant_calling/sample4_vs_sample3/mutect2/sample4_vs_sample3.segmentation.table
-#     - path: results/variant_calling/sample4_vs_sample3/mutect2/sample3.pileups.table
-#     - path: results/variant_calling/sample4_vs_sample3/mutect2/sample4.pileups.table
-#     - path: results/variant_calling/sample4_vs_sample3/mutect2/sample4_vs_sample3.learnreadorientationmodel.tar.gz
-#     - path: results/variant_calling/sample4_vs_sample3/mutect2/sample4_vs_sample3.filtered.vcf.gz
-#     - path: results/variant_calling/sample4_vs_sample3/mutect2/sample4_vs_sample3.filtered.vcf.gz.tbi
-#     - path: results/variant_calling/sample4_vs_sample3/mutect2/sample4_vs_sample3.filtered.vcf.gz.filteringStats.tsv
+- name: Run variant calling on somatic sample with mutect2 without intervals
+  command: nextflow run main.nf -profile test,tools_somatic,docker --tools mutect2 --no_intervals
+  tags:
+    - mutect2
+    - no_intervals
+    - somatic
+    - variant_calling
+  exit_code: 1
+  stdout:
+    contains:
+      - "--tools mutect2 and --no_intervals cannot be used together."
 
 - name: Run variant calling on somatic sample with msisensor-pro
   command: nextflow run main.nf -profile test,tools_somatic,docker --tools msisensorpro
