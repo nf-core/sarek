@@ -80,10 +80,7 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
 
     mutect2_vcf = Channel.empty().mix(
         CONCAT_MUTECT2.out.vcf,
-        mutect2_vcf_branch.no_intervals).map{ meta, vcf ->
-                    meta.variantcaller = "Mutect2"
-                    [meta, vcf]
-        }
+        mutect2_vcf_branch.no_intervals)
 
     mutect2_tbi = Channel.empty().mix(
         CONCAT_MUTECT2.out.tbi,
@@ -165,7 +162,11 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
 
     gather_table_normal = Channel.empty().mix(
         GATHERPILEUPSUMMARIES_NORMAL.out.table,
-        pileup_table_normal.no_intervals)
+        pileup_table_normal.no_intervals).map{ meta, table ->
+            new_meta = meta.clone()
+            new_meta.id = new_meta.tumor_id + "_vs_" + new_meta.normal_id
+            [new_meta, table]
+        }
 
     GATHERPILEUPSUMMARIES_TUMOR(
         GETPILEUPSUMMARIES_TUMOR.out.table
@@ -180,7 +181,11 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
 
     gather_table_tumor = Channel.empty().mix(
         GATHERPILEUPSUMMARIES_TUMOR.out.table,
-        pileup_table_tumor.no_intervals)
+        pileup_table_tumor.no_intervals).map{ meta, table ->
+            new_meta = meta.clone()
+            new_meta.id = new_meta.tumor_id + "_vs_" + new_meta.normal_id
+            [new_meta, table]
+        }
 
     //
     //Contamination and segmentation tables created using calculatecontamination on the pileup summary table.
@@ -190,6 +195,11 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
     //
     //Mutect2 calls filtered by filtermutectcalls using the artifactpriors, contamination and segmentation tables.
     //
+    mutect2_vcf.view()
+    mutect2_tbi.view()
+    LEARNREADORIENTATIONMODEL.out.artifactprior.view()
+    CALCULATECONTAMINATION.out.segmentation.view()
+    CALCULATECONTAMINATION.out.contamination.view()
     ch_filtermutect    = mutect2_vcf.join(mutect2_tbi)
                                     .join(mutect2_stats)
                                     .join(LEARNREADORIENTATIONMODEL.out.artifactprior)
@@ -223,7 +233,9 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
     contamination_table    = CALCULATECONTAMINATION.out.contamination       // channel: [ val(meta), [ contamination ] ]
     segmentation_table     = CALCULATECONTAMINATION.out.segmentation        // channel: [ val(meta), [ segmentation ] ]
 
-    filtered_vcf           = FILTERMUTECTCALLS.out.vcf                      // channel: [ val(meta), [ vcf ] ]
+    filtered_vcf           = FILTERMUTECTCALLS.out.vcf.map{ meta, vcf ->
+                                            meta.variantcaller = "Mutect2"
+                                            [meta, vcf]}                      // channel: [ val(meta), [ vcf ] ]
     filtered_tbi           = FILTERMUTECTCALLS.out.tbi                      // channel: [ val(meta), [ tbi ] ]
     filtered_stats         = FILTERMUTECTCALLS.out.stats                    // channel: [ val(meta), [ stats ] ]
 

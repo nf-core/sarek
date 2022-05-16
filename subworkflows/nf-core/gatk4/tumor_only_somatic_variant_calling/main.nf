@@ -78,10 +78,7 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
 
     mutect2_vcf = Channel.empty().mix(
         CONCAT_MUTECT2.out.vcf,
-        mutect2_vcf_branch.no_intervals).map{ meta, vcf ->
-                    meta.variantcaller = "Mutect2"
-                    [meta, vcf]
-        }
+        mutect2_vcf_branch.no_intervals)
 
     mutect2_tbi = Channel.empty().mix(
         CONCAT_MUTECT2.out.tbi,
@@ -182,7 +179,9 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
     contamination_table = CALCULATECONTAMINATION.out.contamination  // channel: [ val(meta), [ contamination ] ]
     segmentation_table  = CALCULATECONTAMINATION.out.segmentation   // channel: [ val(meta), [ segmentation ] ]
 
-    filtered_vcf        = FILTERMUTECTCALLS.out.vcf                 // channel: [ val(meta), [ vcf ] ]
+    filtered_vcf        = FILTERMUTECTCALLS.out.vcf.map{ meta, vcf ->
+                                            meta.variantcaller = "Mutect2"
+                                        [meta, vcf] }                 // channel: [ val(meta), [ vcf ] ]
     filtered_index      = FILTERMUTECTCALLS.out.tbi                 // channel: [ val(meta), [ tbi ] ]
     filtered_stats      = FILTERMUTECTCALLS.out.stats               // channel: [ val(meta), [ stats ] ]
 
