@@ -299,7 +299,7 @@
     - path: results/variant_calling/sample2/mutect2/sample2.contamination.table
     - path: results/variant_calling/sample2/mutect2/sample2.segmentation.table
     - path: results/variant_calling/sample2/mutect2/sample2.artifactprior.tar.gz
-    - path: results/variant_calling/sample2/mutect2/sample2.pileupsummaries.table
+    - path: results/variant_calling/sample2/mutect2/sample2.table.pileupsummaries.table
     - path: results/variant_calling/sample2/mutect2/sample2.filtered.vcf.gz
     - path: results/variant_calling/sample2/mutect2/sample2.filtered.vcf.gz.tbi
     - path: results/variant_calling/sample2/mutect2/sample2.filtered.vcf.gz.filteringStats.tsv
@@ -328,8 +328,8 @@
     - path: results/variant_calling/sample4_vs_sample3/mutect2/sample4_vs_sample3.vcf.gz.stats
     - path: results/variant_calling/sample4_vs_sample3/mutect2/sample4_vs_sample3.contamination.table
     - path: results/variant_calling/sample4_vs_sample3/mutect2/sample4_vs_sample3.segmentation.table
-    - path: results/variant_calling/sample4_vs_sample3/mutect2/sample3.pileupsummaries.table
-    - path: results/variant_calling/sample4_vs_sample3/mutect2/sample4.pileupsummaries.table
+    - path: results/variant_calling/sample4_vs_sample3/mutect2/sample3.table.pileupsummaries.table
+    - path: results/variant_calling/sample4_vs_sample3/mutect2/sample4.table.pileupsummaries.table
     - path: results/variant_calling/sample4_vs_sample3/mutect2/sample4_vs_sample3.artifactprior.tar.gz
     - path: results/variant_calling/sample4_vs_sample3/mutect2/sample4_vs_sample3.filtered.vcf.gz
     - path: results/variant_calling/sample4_vs_sample3/mutect2/sample4_vs_sample3.filtered.vcf.gz.tbi
