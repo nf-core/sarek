@@ -1,5 +1,7 @@
 # ![nf-core/sarek](docs/images/nf-core-sarek_logo_light.png#gh-light-mode-only) ![nf-core/sarek](docs/images/nf-core-sarek_logo_dark.png#gh-dark-mode-only)
 
+> **An open-source analysis pipeline to detect germline or somatic variants from whole genome or targeted sequencing**
+
 [![GitHub Actions CI Status](https://github.com/nf-core/sarek/workflows/nf-core%20CI/badge.svg)](https://github.com/nf-core/sarek/actions?query=workflow%3A%22nf-core+CI%22)
 [![GitHub Actions Linting Status](https://github.com/nf-core/sarek/workflows/nf-core%20linting/badge.svg)](https://github.com/nf-core/sarek/actions?query=workflow%3A%22nf-core+linting%22)
 [![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?logo=Amazon%20AWS)](https://nf-co.re/sarek/results)
