@@ -70,7 +70,7 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
             new_meta = meta.clone()
             new_meta.id = new_meta.sample
 
-            def groupKey = groupKey(meta, meta.num_intervals)
+            def groupKey = groupKey(new_meta, meta.num_intervals)
             [new_meta, vcf]
         }.groupTuple(),
         fai,
@@ -91,7 +91,7 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
             new_meta = meta.clone()
             new_meta.id = new_meta.sample
 
-            def groupKey = groupKey(meta, meta.num_intervals)
+            def groupKey = groupKey(new_meta, meta.num_intervals)
             [new_meta, stats]
         }.groupTuple())
 
@@ -109,7 +109,7 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
                 new_meta = meta.clone()
                 new_meta.id = new_meta.sample
 
-                def groupKey = groupKey(meta, meta.num_intervals)
+                def groupKey = groupKey(new_meta, meta.num_intervals)
                 [new_meta, f1r2]
             }.groupTuple(),
             mutect2_f1r2_branch.no_intervals))
@@ -131,7 +131,7 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
             new_meta = meta.clone()
             new_meta.id = new_meta.sample
 
-            def groupKey = groupKey(meta, meta.num_intervals)
+            def groupKey = groupKey(new_meta, meta.num_intervals)
             [new_meta, table]
         }.groupTuple(),
         dict)
