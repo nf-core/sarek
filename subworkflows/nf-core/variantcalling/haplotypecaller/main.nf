@@ -46,8 +46,10 @@ workflow RUN_HAPLOTYPECALLER {
             .map{ meta, vcf ->
                 new_meta = meta.clone()
                 new_meta.id = new_meta.sample
+
+                def groupKey = groupKey(meta, meta.num_intervals)
                 [new_meta, vcf]
-            }.groupTuple(size: num_intervals),
+            }.groupTuple(),
         fasta_fai,
         intervals_bed_gz)
 
