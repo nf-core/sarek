@@ -37,7 +37,7 @@ workflow RUN_STRELKA_SINGLE {
                 new_meta = meta.clone()
                 new_meta.id = new_meta.sample
 
-                def groupKey = groupKey(meta, meta.num_intervals)
+                def groupKey = groupKey(new_meta, meta.num_intervals)
                 [new_meta, vcf]
             }.groupTuple(),
         fasta_fai,
@@ -51,7 +51,7 @@ workflow RUN_STRELKA_SINGLE {
                 new_meta = meta.clone()
                 new_meta.id = new_meta.sample
 
-                def groupKey = groupKey(meta, meta.num_intervals)
+                def groupKey = groupKey(new_meta, meta.num_intervals)
                 [new_meta, vcf]
             }.groupTuple(),
         fasta_fai,
