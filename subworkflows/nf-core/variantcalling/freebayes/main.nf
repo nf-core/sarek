@@ -1,3 +1,4 @@
+include { BCFTOOLS_SORT                     } from '../../../../modules/nf-core/modules/bcftools/sort/main'
 include { TABIX_BGZIP as BGZIP_VC_FREEBAYES } from '../../../../modules/nf-core/modules/tabix/bgzip/main'
 include { CONCAT_VCF as CONCAT_FREEBAYES    } from '../../../../modules/local/concat_vcf/main'
 include { FREEBAYES                         } from '../../../../modules/nf-core/modules/freebayes/main'
@@ -25,10 +26,9 @@ workflow RUN_FREEBAYES {
             no_intervals: it[0].num_intervals <= 1
         }.set{freebayes_vcf_out}
 
-    //FREEBAYES.out.vcf.view()
-    freebayes_vcf_out.no_intervals.view()
     // Only when no intervals
-    TABIX_VC_FREEBAYES(freebayes_vcf_out.no_intervals)
+    BCFTOOLS_SORT(freebayes_vcf_out.no_intervals)
+    TABIX_VC_FREEBAYES(BCFTOOLS_SORT.out.vcf)
 
     // Only when using intervals
     BGZIP_VC_FREEBAYES(freebayes_vcf_out.intervals)
@@ -54,6 +54,7 @@ workflow RUN_FREEBAYES {
                         [meta, vcf]
                     }
 
+    ch_versions = ch_versions.mix(BCFTOOLS_SORT.out.versions)
     ch_versions = ch_versions.mix(BGZIP_VC_FREEBAYES.out.versions)
     ch_versions = ch_versions.mix(CONCAT_FREEBAYES.out.versions)
     ch_versions = ch_versions.mix(FREEBAYES.out.versions)
