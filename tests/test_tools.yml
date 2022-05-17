@@ -98,7 +98,7 @@
     - path: results/variant_calling/sample1/deepvariant/sample1.vcf.gz.tbi
 
 - name: Run variant calling on germline sample with freebayes
-  command: nextflow run main.nf -profile test,docker --tools freebayes
+  command: nextflow run main.nf -profile test,targeted,docker --tools freebayes
   tags:
     - freebayes
     - germline
@@ -119,7 +119,7 @@
     - path: results/variant_calling/test/freebayes/test.vcf.gz.tbi
 
 - name: Run variant calling on somatic sample with freebayes
-  command: nextflow run main.nf -profile test,pair,docker --tools freebayes
+  command: nextflow run main.nf -profile test,pair,targeted,docker --tools freebayes
   tags:
     - freebayes
     - somatic
