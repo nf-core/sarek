@@ -970,8 +970,11 @@ def extract_csv(csv_file) {
             def fastq_1     = file(row.fastq_1, checkIfExists: true)
             def fastq_2     = file(row.fastq_2, checkIfExists: true)
             def CN          = params.seq_center ? "CN:${params.seq_center}\\t" : ''
-            //def flowcell    = flowcellLaneFromFastq(fastq_1)
-            def read_group  = "\"@RG\\tID:${row.sample}_${row.sample}_${row.lane}\\t${CN}PU:${row.lane}\\tSM:${row.patient}_${row.sample}\\tLB:${row.sample}\\tDS:${params.fasta}\\tPL:${params.seq_platform}\""
+
+            def flowcell    = flowcellLaneFromFastq(fastq_1)
+            String random = org.apache.commons.lang.RandomStringUtils.random(8, true, true) // random string to avoid duplicate names
+            def read_group  = "\"@RG\\tID:${flowcell}.${row.sample}.${row.lane}.${random}\\t${CN}PU:${row.lane}\\tSM:${row.patient}_${row.sample}\\tLB:${row.sample}\\tDS:${params.fasta}\\tPL:${params.seq_platform}\""
+            println read_group
             meta.numLanes   = numLanes.toInteger()
             meta.read_group = read_group.toString()
             meta.data_type  = "fastq"
@@ -1038,25 +1041,27 @@ def flowcellLaneFromFastq(path) {
     // xx:yy:FLOWCELLID:LANE:... (seven fields)
     // or
     // FLOWCELLID:LANE:xx:... (five fields)
-    InputStream fileStream = new FileInputStream(path.toFile())
-    InputStream gzipStream = new java.util.zip.GZIPInputStream(fileStream)
-    Reader decoder = new InputStreamReader(gzipStream, 'ASCII')
-    BufferedReader buffered = new BufferedReader(decoder)
-    def line = buffered.readLine()
+    def line
+    path.withInputStream {
+        InputStream gzipStream = new java.util.zip.GZIPInputStream(it)
+        Reader decoder = new InputStreamReader(gzipStream, 'ASCII')
+        BufferedReader buffered = new BufferedReader(decoder)
+        line = buffered.readLine()
+    }
     assert line.startsWith('@')
     line = line.substring(1)
-    def fields = line.split(' ')[0].split(':')
+    def fields = line.split(':')
     String fcid
-    int lane
-    if (fields.size() == 7) {
-        // CASAVA 1.8+ format
+    println fields
+    if (fields.size() >= 7) {
+        // CASAVA 1.8+ format, from  https://support.illumina.com/help/BaseSpace_OLH_009008/Content/Source/Informatics/BS/FileFormat_FASTQ-files_swBS.htm
+        // "@<instrument>:<run number>:<flowcell ID>:<lane>:<tile>:<x-pos>:<y-pos>:<UMI> <read>:<is filtered>:<control number>:<index>"
         fcid = fields[2]
-        lane = fields[3].toInteger()
     } else if (fields.size() == 5) {
         fcid = fields[0]
-        lane = fields[1].toInteger()
     }
-    [fcid, lane]
+    println fcid
+    return fcid
 }
 
 /*
