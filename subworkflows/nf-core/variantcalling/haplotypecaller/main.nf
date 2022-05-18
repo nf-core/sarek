@@ -3,7 +3,7 @@ include { CONCAT_VCF as CONCAT_HAPLOTYPECALLER     } from '../../../../modules/l
 include { GATK4_GENOTYPEGVCFS as GENOTYPEGVCFS     } from '../../../../modules/nf-core/modules/gatk4/genotypegvcfs/main'
 include { GATK4_HAPLOTYPECALLER as HAPLOTYPECALLER } from '../../../../modules/nf-core/modules/gatk4/haplotypecaller/main'
 include { GATK_JOINT_GERMLINE_VARIANT_CALLING      } from '../../../../subworkflows/nf-core/gatk4/joint_germline_variant_calling/main'
-
+include { GATK4_CNNSCOREVARIANTS } from '../modules/nf-core/modules/gatk4/cnnscorevariants/main’
 workflow RUN_HAPLOTYPECALLER {
     take:
     cram                            // channel: [mandatory] [meta, cram, crai, interval.bed.gz, interval.bed.gz.tbi]
