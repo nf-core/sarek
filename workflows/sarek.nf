@@ -974,7 +974,7 @@ def extract_csv(csv_file) {
             def flowcell    = flowcellLaneFromFastq(fastq_1)
             String random = org.apache.commons.lang.RandomStringUtils.random(8, true, true) // random string to avoid duplicate names
             def read_group  = "\"@RG\\tID:${flowcell}.${row.sample}.${row.lane}.${random}\\t${CN}PU:${row.lane}\\tSM:${row.patient}_${row.sample}\\tLB:${row.sample}\\tDS:${params.fasta}\\tPL:${params.seq_platform}\""
-            println read_group
+
             meta.numLanes   = numLanes.toInteger()
             meta.read_group = read_group.toString()
             meta.data_type  = "fastq"
@@ -1052,7 +1052,7 @@ def flowcellLaneFromFastq(path) {
     line = line.substring(1)
     def fields = line.split(':')
     String fcid
-    println fields
+
     if (fields.size() >= 7) {
         // CASAVA 1.8+ format, from  https://support.illumina.com/help/BaseSpace_OLH_009008/Content/Source/Informatics/BS/FileFormat_FASTQ-files_swBS.htm
         // "@<instrument>:<run number>:<flowcell ID>:<lane>:<tile>:<x-pos>:<y-pos>:<UMI> <read>:<is filtered>:<control number>:<index>"
@@ -1060,7 +1060,6 @@ def flowcellLaneFromFastq(path) {
     } else if (fields.size() == 5) {
         fcid = fields[0]
     }
-    println fcid
     return fcid
 }
 
