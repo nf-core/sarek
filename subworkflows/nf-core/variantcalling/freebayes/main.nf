@@ -36,10 +36,12 @@ workflow RUN_FREEBAYES {
     CONCAT_FREEBAYES(
         BGZIP_VC_FREEBAYES.out.output
             .map{ meta, vcf ->
-                new_meta = meta.clone()
-                new_meta.id = new_meta.tumor_id ? new_meta.tumor_id + "_vs_" + new_meta.normal_id : new_meta.sample
 
-                def groupKey = groupKey(new_meta, new_meta.num_intervals)
+                id = meta.tumor_id ? meta.tumor_id + "_vs_" + meta.normal_id : meta.sample
+
+                new_meta = meta.tumor_id ? [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:id, num_intervals:meta.num_intervals]
+                                        : [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:id, num_intervals:meta.num_intervals]
+                def groupKey = groupKey(new_meta, meta.num_intervals)
                 [new_meta, vcf]
             }.groupTuple(),
         fasta_fai,

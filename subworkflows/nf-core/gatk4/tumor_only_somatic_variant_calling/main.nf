@@ -67,8 +67,7 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
     CONCAT_MUTECT2(
         BGZIP_VC_MUTECT2.out.output
         .map{ meta, vcf ->
-            new_meta = meta.clone()
-            new_meta.id = new_meta.sample
+            new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals]
 
             def groupKey = groupKey(new_meta, meta.num_intervals)
             [new_meta, vcf]
@@ -88,8 +87,7 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
     MERGEMUTECTSTATS(
         mutect2_stats_branch.intervals
         .map{ meta, stats ->
-            new_meta = meta.clone()
-            new_meta.id = new_meta.sample
+            new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals]
 
             def groupKey = groupKey(new_meta, meta.num_intervals)
             [new_meta, stats]
@@ -106,8 +104,7 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
         Channel.empty().mix(
             mutect2_f1r2_branch.intervals
             .map{ meta, f1r2 ->
-                new_meta = meta.clone()
-                new_meta.id = new_meta.sample
+                new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals]
 
                 def groupKey = groupKey(new_meta, meta.num_intervals)
                 [new_meta, f1r2]
@@ -128,8 +125,7 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
     GATHERPILEUPSUMMARIES(
         GETPILEUPSUMMARIES.out.table
         .map{ meta, table ->
-            new_meta = meta.clone()
-            new_meta.id = new_meta.sample
+            new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals]
 
             def groupKey = groupKey(new_meta, meta.num_intervals)
             [new_meta, table]

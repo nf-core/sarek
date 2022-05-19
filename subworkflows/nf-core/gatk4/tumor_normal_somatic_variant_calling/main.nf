@@ -69,8 +69,8 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
     CONCAT_MUTECT2(
         BGZIP_VC_MUTECT2.out.output
         .map{ meta, vcf ->
-            new_meta = meta.clone()
-            new_meta.id = new_meta.tumor_id + "_vs_" + new_meta.normal_id
+
+            new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals]
 
             def groupKey = groupKey(new_meta, meta.num_intervals)
             [new_meta, vcf]
@@ -90,8 +90,8 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
     MERGEMUTECTSTATS(
         mutect2_stats_branch.intervals
         .map{ meta, stats ->
-            new_meta = meta.clone()
-            new_meta.id = new_meta.tumor_id + "_vs_" + new_meta.normal_id
+
+            new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals]
 
             def groupKey = groupKey(new_meta, meta.num_intervals)
             [new_meta, stats]
@@ -107,8 +107,8 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
     LEARNREADORIENTATIONMODEL(
         mutect2_f1r2_branch.intervals
             .map{ meta, f1r2 ->
-                new_meta = meta.clone()
-                new_meta.id = new_meta.tumor_id + "_vs_" + new_meta.normal_id
+
+                new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals]
 
                 def groupKey = groupKey(new_meta, meta.num_intervals)
                 [new_meta, f1r2]
@@ -124,16 +124,20 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
 
     GETPILEUPSUMMARIES_TUMOR ( pileup.tumor.map{
                                     meta, cram, crai, intervals ->
-                                    new_meta = meta.clone()
-                                    new_meta.id = new_meta.num_intervals <= 1 ? new_meta.tumor_id : new_meta.tumor_id + "_" + intervals.baseName
+
+                                    id = new_meta.num_intervals <= 1 ? new_meta.tumor_id : new_meta.tumor_id + "_" + intervals.baseName
+                                    new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:id, num_intervals:meta.num_intervals]
+
                                     [new_meta, cram, crai, intervals]
                                 },
                                 fasta, fai, dict, germline_resource, germline_resource_tbi )
 
     GETPILEUPSUMMARIES_NORMAL ( pileup.normal.map{
                                     meta, cram, crai, intervals ->
-                                    new_meta = meta.clone()
-                                    new_meta.id = new_meta.num_intervals <= 1 ? new_meta.normal_id : new_meta.normal_id + "_" + intervals.baseName
+
+                                    id = new_meta.num_intervals <= 1 ? new_meta.normal_id : new_meta.normal_id + "_" + intervals.baseName
+                                    new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:id, num_intervals:meta.num_intervals]
+
                                     [new_meta, cram, crai, intervals]
                                 },
                                 fasta, fai, dict, germline_resource, germline_resource_tbi )
@@ -152,8 +156,8 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
     GATHERPILEUPSUMMARIES_NORMAL(
         GETPILEUPSUMMARIES_NORMAL.out.table
         .map{ meta, table ->
-            new_meta = meta.clone()
-            new_meta.id = new_meta.normal_id
+
+            new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.normal_id, num_intervals:meta.num_intervals]
 
             def groupKey = groupKey(new_meta, meta.num_intervals)
             [new_meta, table]
@@ -163,16 +167,15 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
     gather_table_normal = Channel.empty().mix(
         GATHERPILEUPSUMMARIES_NORMAL.out.table,
         pileup_table_normal.no_intervals).map{ meta, table ->
-            new_meta = meta.clone()
-            new_meta.id = new_meta.tumor_id + "_vs_" + new_meta.normal_id
+
+            new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals]
             [new_meta, table]
         }
 
     GATHERPILEUPSUMMARIES_TUMOR(
         GETPILEUPSUMMARIES_TUMOR.out.table
         .map{ meta, table ->
-            new_meta = meta.clone()
-            new_meta.id = new_meta.tumor_id
+            new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id, num_intervals:meta.num_intervals]
 
             def groupKey = groupKey(new_meta, meta.num_intervals)
             [new_meta, table]
@@ -182,8 +185,8 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
     gather_table_tumor = Channel.empty().mix(
         GATHERPILEUPSUMMARIES_TUMOR.out.table,
         pileup_table_tumor.no_intervals).map{ meta, table ->
-            new_meta = meta.clone()
-            new_meta.id = new_meta.tumor_id + "_vs_" + new_meta.normal_id
+            new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals]
+
             [new_meta, table]
         }
 
@@ -195,11 +198,6 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
     //
     //Mutect2 calls filtered by filtermutectcalls using the artifactpriors, contamination and segmentation tables.
     //
-    mutect2_vcf.view()
-    mutect2_tbi.view()
-    LEARNREADORIENTATIONMODEL.out.artifactprior.view()
-    CALCULATECONTAMINATION.out.segmentation.view()
-    CALCULATECONTAMINATION.out.contamination.view()
     ch_filtermutect    = mutect2_vcf.join(mutect2_tbi)
                                     .join(mutect2_stats)
                                     .join(LEARNREADORIENTATIONMODEL.out.artifactprior)
