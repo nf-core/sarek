@@ -377,9 +377,9 @@ workflow SAREK {
         // reads will be sorted
         ch_reads_to_map = ch_reads_to_map.map{ meta, reads ->
             // update ID when no multiple lanes or splitted fastqs
-            id = meta.size * meta.numLanes == 1 ? meta.sample : meta.id
+            new_id = meta.size * meta.numLanes == 1 ? meta.sample : meta.id
 
-            [[patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:id, numLanes:meta.numLanes, read_group:meta.read_group, data_type:meta.data_type, size:meta.size],
+            [[patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:new_id, numLanes:meta.numLanes, read_group:meta.read_group, data_type:meta.data_type, size:meta.size],
             reads]
         }
 
