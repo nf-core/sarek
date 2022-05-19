@@ -375,36 +375,28 @@ workflow SAREK {
 
         // STEP 1: MAPPING READS TO REFERENCE GENOME
         // reads will be sorted
-
         ch_reads_to_map = ch_reads_to_map.map{ meta, reads ->
-            new_meta = meta.clone()
-
             // update ID when no multiple lanes or splitted fastqs
-            new_meta.id = meta.size * meta.numLanes == 1 ? meta.sample : meta.id
+            id = meta.size * meta.numLanes == 1 ? meta.sample : meta.id
 
-            [new_meta, reads]
+            [[patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:id, numLanes:meta.numLanes, read_group:meta.read_group, data_type:meta.data_type, size:meta.size],
+            reads]
         }
 
         GATK4_MAPPING(ch_reads_to_map, ch_map_index, true)
 
         // Grouping the bams from the same samples not to stall the workflow
         ch_bam_mapped = GATK4_MAPPING.out.bam.map{ meta, bam ->
-            new_meta = meta.clone()
-
             numLanes = meta.numLanes ?: 1
             size     = meta.size     ?: 1
 
-            // remove no longer necessary fields
-            new_meta.remove('read_group') // Now in the BAM header
-            new_meta.remove('numLanes')   // Was only needed for mapping
-            new_meta.remove('size')       // Was only needed for mapping
-
             // update ID to be based on the sample name
-            new_meta.id = meta.sample
-
             // update data_type
-            new_meta.data_type = 'bam'
-
+            // remove no longer necessary fields:
+            //   read_group: Now in the BAM header
+            //     numLanes: Was only needed for mapping
+            //         size: Was only needed for mapping
+            new_meta = [patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:meta.sample, data_type:"bam"]
             // Use groupKey to make sure that the correct group can advance as soon as it is complete
             // and not stall the workflow until all reads from all channels are mapped
             def groupKey = groupKey(new_meta, numLanes * size)
@@ -531,9 +523,8 @@ workflow SAREK {
             ch_cram_markduplicates_no_spark,
             ch_cram_markduplicates_spark,
             ch_cram_no_markduplicates_restart).map{ meta, cram, crai ->
-                        meta_new = meta.clone()
-                        meta_new.data_type = "cram" //Make sure correct data types are carried through
-                        [meta_new, cram, crai]
+                        //Make sure correct data types are carried through
+                        [[patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:meta.id, data_type:"cram"], cram, crai]
                     }
 
         // Create CSV to restart from this step
@@ -972,13 +963,13 @@ def extract_csv(csv_file) {
             def CN          = params.seq_center ? "CN:${params.seq_center}\\t" : ''
 
             def flowcell    = flowcellLaneFromFastq(fastq_1)
-            String random = org.apache.commons.lang.RandomStringUtils.random(8, true, true) // random string to avoid duplicate names
-            def read_group  = "\"@RG\\tID:${flowcell}.${row.sample}.${row.lane}.${random}\\t${CN}PU:${row.lane}\\tSM:${row.patient}_${row.sample}\\tLB:${row.sample}\\tDS:${params.fasta}\\tPL:${params.seq_platform}\""
+            //Don't use a random element for ID, it breaks resuming
+            def read_group  = "\"@RG\\tID:${flowcell}.${row.sample}.${row.lane}\\t${CN}PU:${row.lane}\\tSM:${row.patient}_${row.sample}\\tLB:${row.sample}\\tDS:${params.fasta}\\tPL:${params.seq_platform}\""
 
             meta.numLanes   = numLanes.toInteger()
             meta.read_group = read_group.toString()
             meta.data_type  = "fastq"
-            meta.test = "test"
+
             meta.size       = 1 // default number of splitted fastq
             return [meta, [fastq_1, fastq_2]]
         // start from BAM

@@ -40,8 +40,8 @@ workflow RUN_CONTROLFREEC_SOMATIC {
 
     //Merge mpileup only when intervals and natural order sort them
     CAT_MPILEUP_NORMAL( mpileup_normal.intervals.map{ meta, pileup ->
-                new_meta = meta.clone()
-                new_meta.id = new_meta.tumor_id + "_vs_" + new_meta.normal_id
+
+                new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals]
 
                 def groupKey = groupKey(new_meta, meta.num_intervals)
                 [new_meta, pileup]
@@ -49,8 +49,7 @@ workflow RUN_CONTROLFREEC_SOMATIC {
 
     CAT_MPILEUP_TUMOR(mpileup_tumor.intervals
         .map{ meta, pileup ->
-            new_meta = meta.clone()
-            new_meta.id = new_meta.tumor_id + "_vs_" + new_meta.normal_id
+            new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals]
 
             def groupKey = groupKey(new_meta, meta.num_intervals)
             [new_meta, pileup]
@@ -61,8 +60,8 @@ workflow RUN_CONTROLFREEC_SOMATIC {
         CAT_MPILEUP_NORMAL.out.file_out,
         mpileup_normal.no_intervals
     ).map{ meta, pileup ->
-        new_meta = meta.clone()
-        new_meta.id = new_meta.tumor_id + "_vs_" + new_meta.normal_id
+        new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals]
+
         [new_meta, pileup]
     }
 
@@ -70,8 +69,7 @@ workflow RUN_CONTROLFREEC_SOMATIC {
         CAT_MPILEUP_TUMOR.out.file_out,
         mpileup_tumor.no_intervals
     ).map{ meta, pileup ->
-        new_meta = meta.clone()
-        new_meta.id = new_meta.tumor_id + "_vs_" + new_meta.normal_id
+        new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals]
         [new_meta, pileup]
     }
 
