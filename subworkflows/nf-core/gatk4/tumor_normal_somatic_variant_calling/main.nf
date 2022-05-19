@@ -125,7 +125,7 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
     GETPILEUPSUMMARIES_TUMOR ( pileup.tumor.map{
                                     meta, cram, crai, intervals ->
 
-                                    new_id = new_meta.num_intervals <= 1 ? new_meta.tumor_id : new_meta.tumor_id + "_" + intervals.baseName
+                                    new_id = meta.num_intervals <= 1 ? meta.tumor_id : meta.tumor_id + "_" + intervals.baseName
                                     new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:new_id, num_intervals:meta.num_intervals]
 
                                     [new_meta, cram, crai, intervals]
@@ -135,7 +135,7 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
     GETPILEUPSUMMARIES_NORMAL ( pileup.normal.map{
                                     meta, cram, crai, intervals ->
 
-                                    new_id = new_meta.num_intervals <= 1 ? new_meta.normal_id : new_meta.normal_id + "_" + intervals.baseName
+                                    new_id = meta.num_intervals <= 1 ? meta.tumor_id : meta.tumor_id + "_" + intervals.baseName
                                     new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:new_id, num_intervals:meta.num_intervals]
 
                                     [new_meta, cram, crai, intervals]
