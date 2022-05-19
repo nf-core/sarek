@@ -43,15 +43,13 @@ workflow PREPARE_RECALIBRATION {
                 new_meta = [patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:meta.sample, data_type:meta.data_type, num_intervals:meta.num_intervals]
 
                 def groupKey = groupKey(new_meta, meta.num_intervals)
-                [groupKey, new_meta, table]
-        }.groupTuple(by:[0,1]).map{ groupKey, meta, table -> [meta, table]}
+                [new_meta, table]
+        }.groupTuple()
     .branch{
         //Warning: size() calculates file size not list length here, so use num_intervals instead
         single:   it[0].num_intervals <= 1
         multiple: it[0].num_intervals > 1
     }
-
-
 
     // STEP 3.5: MERGING RECALIBRATION TABLES
 
