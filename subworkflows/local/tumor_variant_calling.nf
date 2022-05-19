@@ -44,12 +44,12 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
     cram_recalibrated_intervals = cram_recalibrated.combine(intervals)
         .map{ meta, cram, crai, intervals, num_intervals ->
             // If either no scatter/gather is done, i.e. no interval (0) or one interval (1), then don't rename samples
-            id = num_intervals <= 1 ? meta.sample : meta.sample + "_" + intervals.baseName
+            new_id = num_intervals <= 1 ? meta.sample : meta.sample + "_" + intervals.baseName
 
             //If no interval file provided (0) then add empty list
             intervals_new = num_intervals == 0 ? [] : intervals
 
-            [[patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:id, data_type:meta.data_type, num_intervals:num_intervals],
+            [[patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:new_id, data_type:meta.data_type, num_intervals:num_intervals],
             cram, crai, intervals_new]
         }
 
@@ -57,13 +57,13 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
     cram_recalibrated_intervals_gz_tbi = cram_recalibrated.combine(intervals_bed_gz_tbi)
         .map{ meta, cram, crai, bed_tbi, num_intervals ->
             // If either no scatter/gather is done, i.e. no interval (0) or one interval (1), then don't rename samples
-            id = num_intervals <= 1 ? meta.sample : meta.sample + "_" + bed_tbi[0].simpleName
+            new_id = num_intervals <= 1 ? meta.sample : meta.sample + "_" + bed_tbi[0].simpleName
 
             //If no interval file provided (0) then add empty list
             bed_new = num_intervals == 0 ? [] : bed_tbi[0]
             tbi_new = num_intervals == 0 ? [] : bed_tbi[1]
 
-            [[patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:id, data_type:meta.data_type, num_intervals:num_intervals],
+            [[patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:new_id, data_type:meta.data_type, num_intervals:num_intervals],
             cram, crai, bed_new, tbi_new]
         }
 

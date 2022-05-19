@@ -37,10 +37,10 @@ workflow RUN_FREEBAYES {
         BGZIP_VC_FREEBAYES.out.output
             .map{ meta, vcf ->
 
-                id = meta.tumor_id ? meta.tumor_id + "_vs_" + meta.normal_id : meta.sample
+                new_id = meta.tumor_id ? meta.tumor_id + "_vs_" + meta.normal_id : meta.sample
 
-                new_meta = meta.tumor_id ? [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:id, num_intervals:meta.num_intervals]
-                                        : [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:id, num_intervals:meta.num_intervals]
+                new_meta = meta.tumor_id ? [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:new_id, num_intervals:meta.num_intervals]
+                                        : [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:new_id, num_intervals:meta.num_intervals]
                 def groupKey = groupKey(new_meta, meta.num_intervals)
                 [new_meta, vcf]
             }.groupTuple(),

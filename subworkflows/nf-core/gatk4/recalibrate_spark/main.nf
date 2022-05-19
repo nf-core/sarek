@@ -21,12 +21,12 @@ workflow RECALIBRATE_SPARK {
     cram_intervals = cram.combine(intervals)
         .map{ meta, cram, crai, recal, intervals, num_intervals ->
             // If either no scatter/gather is done, i.e. no interval (0) or one interval (1), then don't rename samples
-            id = num_intervals <= 1 ? meta.sample : meta.sample + "_" + intervals.baseName
+            new_id = num_intervals <= 1 ? meta.sample : meta.sample + "_" + intervals.baseName
 
             //If no interval file provided (0) then add empty list
             intervals_new = num_intervals == 0 ? [] : intervals
 
-            [[patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:id, data_type:meta.data_type, num_intervals:num_intervals],
+            [[patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:new_id, data_type:meta.data_type, num_intervals:num_intervals],
             cram, crai, recal, intervals_new]
         }
 
@@ -38,7 +38,7 @@ workflow RECALIBRATE_SPARK {
 
     ch_cram_recal_out = MERGE_INDEX_CRAM.out.cram_crai.map{ meta, cram, crai ->
                              // remove no longer necessary fields to make sure joining can be done correctly: num_intervals
-                            [[patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:id, data_type:meta.data_type],
+                            [[patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:meta.id, data_type:meta.data_type],
                             cram, crai]
                         }
 
