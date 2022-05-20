@@ -68,8 +68,7 @@ workflow RUN_DEEPVARIANT {
                         deepvariant_gvcf_out.no_intervals,
                         deepvariant_vcf_out.no_intervals)
                     .map{ meta, vcf ->
-                        meta.variantcaller = "Deepvariant"
-                        [meta, vcf]
+                        [[patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals, variantcaller:"Deepvariant"], vcf]
                     }
 
     ch_versions = ch_versions.mix(BGZIP_VC_DEEPVARIANT_GVCF.out.versions)
