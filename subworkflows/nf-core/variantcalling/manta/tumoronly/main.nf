@@ -83,9 +83,8 @@ workflow RUN_MANTA_TUMORONLY {
         manta_candidate_sv_vcf.no_intervals,
         manta_tumor_sv_vcf.no_intervals
     ).map{ meta, vcf ->
-        meta.variantcaller = "Manta"
         [[patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals, variantcaller:"Manta"],
-        , vcf]
+         vcf]
     }
 
     ch_versions = ch_versions.mix(BGZIP_VC_MANTA_SV.out.versions)
