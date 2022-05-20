@@ -55,8 +55,7 @@ workflow RUN_MANTA_SOMATIC {
 
                 new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals]
 
-                def groupKey = groupKey(new_meta, meta.num_intervals)
-                [new_meta, vcf]
+                [ groupKey(new_meta, meta.num_intervals), vcf]
             }.groupTuple(),
         fasta_fai,
         intervals_bed_gz)
@@ -67,8 +66,7 @@ workflow RUN_MANTA_SOMATIC {
         BGZIP_VC_MANTA_SMALL_INDELS.out.output.map{ meta, vcf ->
                 new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals]
 
-                def groupKey = groupKey(new_meta, meta.num_intervals)
-                [new_meta, vcf]
+                [groupKey(new_meta, meta.num_intervals), vcf]
             }.groupTuple(),
         fasta_fai,
         intervals_bed_gz)
@@ -79,8 +77,7 @@ workflow RUN_MANTA_SOMATIC {
         BGZIP_VC_MANTA_DIPLOID.out.output.map{ meta, vcf ->
                 new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals]
 
-                def groupKey = groupKey(new_meta, meta.num_intervals)
-                [new_meta, vcf]
+                [groupKey(new_meta, meta.num_intervals), vcf]
             }.groupTuple(),
         fasta_fai,
         intervals_bed_gz)
@@ -91,8 +88,7 @@ workflow RUN_MANTA_SOMATIC {
         BGZIP_VC_MANTA_SOMATIC.out.output.map{ meta, vcf ->
                 new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals]
 
-                def groupKey = groupKey(new_meta, meta.num_intervals)
-                [new_meta, vcf]
+                [groupKey(new_meta, meta.num_intervals), vcf]
             }.groupTuple(),
         fasta_fai,
         intervals_bed_gz)

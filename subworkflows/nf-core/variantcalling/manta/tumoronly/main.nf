@@ -45,8 +45,7 @@ workflow RUN_MANTA_TUMORONLY {
 
                 new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals]
 
-                def groupKey = groupKey(new_meta, meta.num_intervals)
-                [new_meta, vcf]
+                [groupKey(new_meta, meta.num_intervals), vcf]
             }.groupTuple(),
         fasta_fai,
         intervals_bed_gz)
@@ -58,8 +57,7 @@ workflow RUN_MANTA_TUMORONLY {
 
                 new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals]
 
-                def groupKey = groupKey(new_meta, meta.num_intervals)
-                [new_meta, vcf]
+                [groupKey(new_meta, meta.num_intervals), vcf]
             }.groupTuple(),
         fasta_fai,
         intervals_bed_gz)
@@ -71,8 +69,7 @@ workflow RUN_MANTA_TUMORONLY {
 
                 new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals]
 
-                def groupKey = groupKey(new_meta, meta.num_intervals)
-                [new_meta, vcf]
+                [groupKey(new_meta, meta.num_intervals), vcf]
             }.groupTuple(),
         fasta_fai,
         intervals_bed_gz)

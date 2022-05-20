@@ -72,8 +72,7 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
 
             new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals]
 
-            def groupKey = groupKey(new_meta, meta.num_intervals)
-            [new_meta, vcf]
+            [groupKey(new_meta, meta.num_intervals), vcf]
         }.groupTuple(),
         fai,
         intervals_bed_combine_gz)
@@ -93,8 +92,7 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
 
             new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals]
 
-            def groupKey = groupKey(new_meta, meta.num_intervals)
-            [new_meta, stats]
+            [groupKey(new_meta, meta.num_intervals), stats]
         }.groupTuple())
 
     mutect2_stats = Channel.empty().mix(
@@ -110,8 +108,7 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
 
                 new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals]
 
-                def groupKey = groupKey(new_meta, meta.num_intervals)
-                [new_meta, f1r2]
+                [groupKey(new_meta, meta.num_intervals), f1r2]
             }.groupTuple())
 
     //
@@ -159,8 +156,7 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
 
             new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.normal_id, num_intervals:meta.num_intervals]
 
-            def groupKey = groupKey(new_meta, meta.num_intervals)
-            [new_meta, table]
+            [groupKey(new_meta, meta.num_intervals), table]
         }.groupTuple(),
         dict)
 
@@ -177,8 +173,7 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
         .map{ meta, table ->
             new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id, num_intervals:meta.num_intervals]
 
-            def groupKey = groupKey(new_meta, meta.num_intervals)
-            [new_meta, table]
+            [groupKey(new_meta, meta.num_intervals), table]
         }.groupTuple(),
         dict)
 

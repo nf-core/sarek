@@ -69,8 +69,7 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
         .map{ meta, vcf ->
             new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals]
 
-            def groupKey = groupKey(new_meta, meta.num_intervals)
-            [new_meta, vcf]
+            [groupKey(new_meta, meta.num_intervals), vcf]
         }.groupTuple(),
         fai,
         intervals_bed_combine_gz)
@@ -89,8 +88,7 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
         .map{ meta, stats ->
             new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals]
 
-            def groupKey = groupKey(new_meta, meta.num_intervals)
-            [new_meta, stats]
+            [groupKey(new_meta, meta.num_intervals), stats]
         }.groupTuple())
 
     mutect2_stats = Channel.empty().mix(
@@ -106,8 +104,7 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
             .map{ meta, f1r2 ->
                 new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals]
 
-                def groupKey = groupKey(new_meta, meta.num_intervals)
-                [new_meta, f1r2]
+                [groupKey(new_meta, meta.num_intervals), f1r2]
             }.groupTuple(),
             mutect2_f1r2_branch.no_intervals))
 
@@ -127,8 +124,7 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
         .map{ meta, table ->
             new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals]
 
-            def groupKey = groupKey(new_meta, meta.num_intervals)
-            [new_meta, table]
+            [groupKey(new_meta, meta.num_intervals), table]
         }.groupTuple(),
         dict)
 
