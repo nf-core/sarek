@@ -43,16 +43,14 @@ workflow RUN_CONTROLFREEC_SOMATIC {
 
                 new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals]
 
-                def groupKey = groupKey(new_meta, meta.num_intervals)
-                [new_meta, pileup]
+                [groupKey(new_meta, meta.num_intervals), pileup]
             }.groupTuple(sort:true))
 
     CAT_MPILEUP_TUMOR(mpileup_tumor.intervals
         .map{ meta, pileup ->
             new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals]
 
-            def groupKey = groupKey(new_meta, meta.num_intervals)
-            [new_meta, pileup]
+            [groupKey(new_meta, meta.num_intervals), pileup]
         }
         .groupTuple(sort:true))
 

@@ -42,8 +42,7 @@ workflow PREPARE_RECALIBRATION_SPARK {
 
                 new_meta = [patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:meta.sample, data_type:meta.data_type, num_intervals:meta.num_intervals]
 
-                def groupKey = groupKey(new_meta, meta.num_intervals)
-                [new_meta, table]
+                [groupKey(new_meta, meta.num_intervals), table]
         }.groupTuple()
     .branch{
         //Warning: size() calculates file size not list length here, so use num_intervals instead
