@@ -51,8 +51,9 @@ workflow RUN_FREEBAYES {
                         CONCAT_FREEBAYES.out.vcf,
                         freebayes_vcf_out.no_intervals)
                     .map{ meta, vcf ->
-                        meta.variantcaller = "FreeBayes"
-                        [meta, vcf]
+                        new_meta = meta.tumor_id ? [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:new_id, num_intervals:meta.num_intervals, variantcaller:"Freebayes"]
+                                        : [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:new_id, num_intervals:meta.num_intervals, variantcaller:"Freebayes"]
+                        [new_meta, vcf]
                     }
 
     ch_versions = ch_versions.mix(BCFTOOLS_SORT.out.versions)
