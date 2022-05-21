@@ -39,7 +39,7 @@ workflow GERMLINE_VARIANT_CALLING {
     cram_recalibrated_intervals = cram_recalibrated.combine(intervals)
         .map{ meta, cram, crai, intervals, num_intervals ->
             // If either no scatter/gather is done, i.e. no interval (0) or one interval (1), then don't rename samples
-            new_id = num_intervals <= 1 ? meta.sample : meta.sample + "_" + intervals.baseName
+            def new_id = num_intervals <= 1 ? meta.sample : meta.sample + "_" + intervals.baseName
 
             //If no interval file provided (0) then add empty list
             intervals_new = num_intervals == 0 ? [] : intervals
@@ -52,7 +52,7 @@ workflow GERMLINE_VARIANT_CALLING {
     cram_recalibrated_intervals_gz_tbi = cram_recalibrated.combine(intervals_bed_gz_tbi)
         .map{ meta, cram, crai, bed_tbi, num_intervals ->
             // If either no scatter/gather is done, i.e. no interval (0) or one interval (1), then don't rename samples
-            new_id = num_intervals <= 1 ? meta.sample : meta.sample + "_" + bed_tbi[0].simpleName
+            def new_id = num_intervals <= 1 ? meta.sample : meta.sample + "_" + bed_tbi[0].simpleName
 
             //If no interval file provided (0) then add empty list
             bed_new = num_intervals == 0 ? [] : bed_tbi[0]
