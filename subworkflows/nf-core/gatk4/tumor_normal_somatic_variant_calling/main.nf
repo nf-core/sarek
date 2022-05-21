@@ -226,9 +226,8 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
     contamination_table    = CALCULATECONTAMINATION.out.contamination       // channel: [ val(meta), [ contamination ] ]
     segmentation_table     = CALCULATECONTAMINATION.out.segmentation        // channel: [ val(meta), [ segmentation ] ]
 
-    filtered_vcf           = FILTERMUTECTCALLS.out.vcf.map{ meta, vcf ->
-                                            meta.variantcaller = "Mutect2"
-                                            [meta, vcf]}                      // channel: [ val(meta), [ vcf ] ]
+    filtered_vcf           = FILTERMUTECTCALLS.out.vcf.map{ meta, vcf -> [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals, variantcaller:"Mutect2"],
+                                                                            vcf]} // channel: [ val(meta), [ vcf ] ]
     filtered_tbi           = FILTERMUTECTCALLS.out.tbi                      // channel: [ val(meta), [ tbi ] ]
     filtered_stats         = FILTERMUTECTCALLS.out.stats                    // channel: [ val(meta), [ stats ] ]
 
