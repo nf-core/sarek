@@ -85,13 +85,12 @@ workflow RUN_HAPLOTYPECALLER {
         // )
         // ch_versions = ch_versions.mix(GATK_JOINT_GERMLINE_VARIANT_CALLING.out.versions)
     } else {
-        // CNNScoreVariants
+        //GATK_SINGLE_SAMPLE_GERMLINE_VARIANT_CALLING()
     }
 
 
     ch_versions = ch_versions.mix(BGZIP_VC_HAPLOTYPECALLER.out.versions)
     ch_versions = ch_versions.mix(CONCAT_HAPLOTYPECALLER.out.versions)
-    //ch_versions = ch_versions.mix(GENOTYPEGVCFS.out.versions)
     //ch_versions = ch_versions.mix(GATK_JOINT_GERMLINE_VARIANT_CALLING.out.versions)
     ch_versions = ch_versions.mix(HAPLOTYPECALLER.out.versions)
     // ch_versions = ch_versions.mix(TABIX_VC_HAPLOTYPECALLER.out.versions)
