@@ -67,11 +67,9 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
     CONCAT_MUTECT2(
         BGZIP_VC_MUTECT2.out.output
         .map{ meta, vcf ->
-            new_meta = meta.clone()
-            new_meta.id = new_meta.sample
+            new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals]
 
-            def groupKey = groupKey(meta, meta.num_intervals)
-            [new_meta, vcf]
+            [groupKey(new_meta, meta.num_intervals), vcf]
         }.groupTuple(),
         fai,
         intervals_bed_combine_gz)
@@ -88,11 +86,9 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
     MERGEMUTECTSTATS(
         mutect2_stats_branch.intervals
         .map{ meta, stats ->
-            new_meta = meta.clone()
-            new_meta.id = new_meta.sample
+            new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals]
 
-            def groupKey = groupKey(meta, meta.num_intervals)
-            [new_meta, stats]
+            [groupKey(new_meta, meta.num_intervals), stats]
         }.groupTuple())
 
     mutect2_stats = Channel.empty().mix(
@@ -106,11 +102,9 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
         Channel.empty().mix(
             mutect2_f1r2_branch.intervals
             .map{ meta, f1r2 ->
-                new_meta = meta.clone()
-                new_meta.id = new_meta.sample
+                new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals]
 
-                def groupKey = groupKey(meta, meta.num_intervals)
-                [new_meta, f1r2]
+                [groupKey(new_meta, meta.num_intervals), f1r2]
             }.groupTuple(),
             mutect2_f1r2_branch.no_intervals))
 
@@ -128,11 +122,9 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
     GATHERPILEUPSUMMARIES(
         GETPILEUPSUMMARIES.out.table
         .map{ meta, table ->
-            new_meta = meta.clone()
-            new_meta.id = new_meta.sample
+            new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals]
 
-            def groupKey = groupKey(meta, meta.num_intervals)
-            [new_meta, table]
+            [groupKey(new_meta, meta.num_intervals), table]
         }.groupTuple(),
         dict)
 
@@ -179,9 +171,8 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
     contamination_table = CALCULATECONTAMINATION.out.contamination  // channel: [ val(meta), [ contamination ] ]
     segmentation_table  = CALCULATECONTAMINATION.out.segmentation   // channel: [ val(meta), [ segmentation ] ]
 
-    filtered_vcf        = FILTERMUTECTCALLS.out.vcf.map{ meta, vcf ->
-                                            meta.variantcaller = "Mutect2"
-                                        [meta, vcf] }                 // channel: [ val(meta), [ vcf ] ]
+    filtered_vcf        = FILTERMUTECTCALLS.out.vcf.map{ meta, vcf -> [[patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals, variantcaller:"Mutect2"]
+                                                                        , vcf] } // channel: [ val(meta), [ vcf ] ]
     filtered_index      = FILTERMUTECTCALLS.out.tbi                 // channel: [ val(meta), [ tbi ] ]
     filtered_stats      = FILTERMUTECTCALLS.out.stats               // channel: [ val(meta), [ stats ] ]
 

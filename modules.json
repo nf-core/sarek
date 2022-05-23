@@ -6,6 +6,9 @@
             "ascat": {
                 "git_sha": "f0800157544a82ae222931764483331a81812012"
             },
+            "bcftools/sort": {
+                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+            },
             "bcftools/stats": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
@@ -130,7 +133,7 @@
                 "git_sha": "169b2b96c1167f89ab07127b7057c1d90a6996c7"
             },
             "gatk4/markduplicates": {
-                "git_sha": "169b2b96c1167f89ab07127b7057c1d90a6996c7"
+                "git_sha": "df2620cfc7e4c21b14ed03c1c928f09fbabf83c4"
             },
             "gatk4/markduplicatesspark": {
                 "git_sha": "e04970b7d249365cafa5a52912f9a28840481c05"
