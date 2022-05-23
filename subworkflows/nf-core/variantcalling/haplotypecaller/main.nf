@@ -85,7 +85,14 @@ workflow RUN_HAPLOTYPECALLER {
         // )
         // ch_versions = ch_versions.mix(GATK_JOINT_GERMLINE_VARIANT_CALLING.out.versions)
     } else {
-        //GATK_SINGLE_SAMPLE_GERMLINE_VARIANT_CALLING()
+        GATK_SINGLE_SAMPLE_GERMLINE_VARIANT_CALLING(haplotypecaller_vcf.join(haplotypecaller_tbi),
+                                                    fasta,
+                                                    fasta_fai,
+                                                    dict,
+                                                    dbsnp,
+                                                    dbsnp_tbi)
+
+        ch_versions = ch_versions.mix(GATK_SINGLE_SAMPLE_GERMLINE_VARIANT_CALLING.out.versions)
     }
 
 
