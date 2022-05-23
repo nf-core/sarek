@@ -1,8 +1,8 @@
-include { TABIX_BGZIP as BGZIP_VC_HAPLOTYPECALLER  } from '../../../../modules/nf-core/modules/tabix/bgzip/main'
-include { CONCAT_VCF as CONCAT_HAPLOTYPECALLER     } from '../../../../modules/local/concat_vcf/main'
-include { GATK4_GENOTYPEGVCFS as GENOTYPEGVCFS     } from '../../../../modules/nf-core/modules/gatk4/genotypegvcfs/main'
-include { GATK4_HAPLOTYPECALLER as HAPLOTYPECALLER } from '../../../../modules/nf-core/modules/gatk4/haplotypecaller/main'
-include { GATK_JOINT_GERMLINE_VARIANT_CALLING      } from '../../../../subworkflows/nf-core/gatk4/joint_germline_variant_calling/main'
+include { TABIX_BGZIP as BGZIP_VC_HAPLOTYPECALLER     } from '../../../../modules/nf-core/modules/tabix/bgzip/main'
+include { CONCAT_VCF as CONCAT_HAPLOTYPECALLER        } from '../../../../modules/local/concat_vcf/main'
+include { GATK4_HAPLOTYPECALLER as HAPLOTYPECALLER    } from '../../../../modules/nf-core/modules/gatk4/haplotypecaller/main'
+include { GATK_JOINT_GERMLINE_VARIANT_CALLING         } from '../../../../subworkflows/nf-core/gatk4/joint_germline_variant_calling/main'
+include { GATK_SINGLE_SAMPLE_GERMLINE_VARIANT_CALLING } from '../../../../subworkflows/nf-core/gatk4/single_sample_germline_variant_calling/main'
 
 workflow RUN_HAPLOTYPECALLER {
     take:
@@ -60,29 +60,6 @@ workflow RUN_HAPLOTYPECALLER {
         CONCAT_HAPLOTYPECALLER.out.tbi,
         haplotypecaller_vcf_branch.no_intervals)
 
-    // genotype_gvcf_to_call = haplotypecaller_gvcf.join(haplotypecaller_gvcf_tbi)
-    //     .combine(intervals_bed_combine_gz_tbi)
-    //     .map{
-    //         meta, gvcf, gvf_tbi, intervals, intervals_tbi ->
-    //         new_intervals = intervals.simpleName != "no_intervals" ? intervals : []
-    //         new_intervals_tbi = intervals_tbi.simpleName != "no_intervals" ? intervals_tbi : []
-    //         [meta, gvcf, gvf_tbi, new_intervals, new_intervals_tbi]
-    //     }
-
-    // GENOTYPEGVCFS
-
-    // GENOTYPEGVCFS(
-    //     genotype_gvcf_to_call,
-    //     fasta,
-    //     fasta_fai,
-    //     dict,
-    //     dbsnp,
-    //     dbsnp_tbi)
-    //workflow haplotypecaller (default mode)-> CNNScoreVariants
-    //workflow haplotypecaller (ERC mode) -> GenomicsDBimport -> GenotypeGVCFs -> VQSR
-
-    //genotype_gvcf = GENOTYPEGVCFS.out.vcf
-
     if (params.joint_germline) {
 
         haplotypecaller_vcf_list = haplotypecaller_vcf.toList()
@@ -108,13 +85,12 @@ workflow RUN_HAPLOTYPECALLER {
         // )
         // ch_versions = ch_versions.mix(GATK_JOINT_GERMLINE_VARIANT_CALLING.out.versions)
     } else {
-        // CNNScoreVariants
+        //GATK_SINGLE_SAMPLE_GERMLINE_VARIANT_CALLING()
     }
 
 
     ch_versions = ch_versions.mix(BGZIP_VC_HAPLOTYPECALLER.out.versions)
     ch_versions = ch_versions.mix(CONCAT_HAPLOTYPECALLER.out.versions)
-    //ch_versions = ch_versions.mix(GENOTYPEGVCFS.out.versions)
     //ch_versions = ch_versions.mix(GATK_JOINT_GERMLINE_VARIANT_CALLING.out.versions)
     ch_versions = ch_versions.mix(HAPLOTYPECALLER.out.versions)
     // ch_versions = ch_versions.mix(TABIX_VC_HAPLOTYPECALLER.out.versions)
