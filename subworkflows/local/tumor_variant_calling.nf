@@ -90,7 +90,6 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
                 [meta, cram, []]
             }
 
-
         RUN_CNVKIT_TUMORONLY (  cram_recalibrated_cnvkit,
                                 fasta,
                                 intervals_bed_combined,
