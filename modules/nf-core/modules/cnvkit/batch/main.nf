@@ -27,7 +27,6 @@ process CNVKIT_BATCH {
 
     script:
     def args = task.ext.args ?: ''
-    print args
 
     // execute samtools only when cram files are input, cnvkit runs natively on bam but is prohibitively slow
     // input pair is assumed to have same extension if both exist

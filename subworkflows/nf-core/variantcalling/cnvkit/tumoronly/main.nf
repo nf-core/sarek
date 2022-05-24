@@ -20,7 +20,6 @@ workflow RUN_CNVKIT_TUMORONLY {
         ch_versions = Channel.empty()
 
         // prepare a reference for tumor_only mode based on target_baits
-        targets.view()
 
         CNVKIT_ANTITARGET(targets.map{ it -> [[id:it[0].baseName], it] })
 
