@@ -40,20 +40,17 @@ workflow RUN_CONTROLFREEC_SOMATIC {
 
     //Merge mpileup only when intervals and natural order sort them
     CAT_MPILEUP_NORMAL( mpileup_normal.intervals.map{ meta, pileup ->
-                new_meta = meta.clone()
-                new_meta.id = new_meta.tumor_id + "_vs_" + new_meta.normal_id
 
-                def groupKey = groupKey(meta, meta.num_intervals)
-                [new_meta, pileup]
+                new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals]
+
+                [groupKey(new_meta, meta.num_intervals), pileup]
             }.groupTuple(sort:true))
 
     CAT_MPILEUP_TUMOR(mpileup_tumor.intervals
         .map{ meta, pileup ->
-            new_meta = meta.clone()
-            new_meta.id = new_meta.tumor_id + "_vs_" + new_meta.normal_id
+            new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals]
 
-            def groupKey = groupKey(meta, meta.num_intervals)
-            [new_meta, pileup]
+            [groupKey(new_meta, meta.num_intervals), pileup]
         }
         .groupTuple(sort:true))
 
@@ -61,8 +58,8 @@ workflow RUN_CONTROLFREEC_SOMATIC {
         CAT_MPILEUP_NORMAL.out.file_out,
         mpileup_normal.no_intervals
     ).map{ meta, pileup ->
-        new_meta = meta.clone()
-        new_meta.id = new_meta.tumor_id + "_vs_" + new_meta.normal_id
+        new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals]
+
         [new_meta, pileup]
     }
 
@@ -70,8 +67,7 @@ workflow RUN_CONTROLFREEC_SOMATIC {
         CAT_MPILEUP_TUMOR.out.file_out,
         mpileup_tumor.no_intervals
     ).map{ meta, pileup ->
-        new_meta = meta.clone()
-        new_meta.id = new_meta.tumor_id + "_vs_" + new_meta.normal_id
+        new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals]
         [new_meta, pileup]
     }
 

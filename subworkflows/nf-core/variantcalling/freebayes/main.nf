@@ -1,3 +1,4 @@
+include { BCFTOOLS_SORT                     } from '../../../../modules/nf-core/modules/bcftools/sort/main'
 include { TABIX_BGZIP as BGZIP_VC_FREEBAYES } from '../../../../modules/nf-core/modules/tabix/bgzip/main'
 include { CONCAT_VCF as CONCAT_FREEBAYES    } from '../../../../modules/local/concat_vcf/main'
 include { FREEBAYES                         } from '../../../../modules/nf-core/modules/freebayes/main'
@@ -26,7 +27,8 @@ workflow RUN_FREEBAYES {
         }.set{freebayes_vcf_out}
 
     // Only when no intervals
-    TABIX_VC_FREEBAYES(freebayes_vcf_out.no_intervals)
+    BCFTOOLS_SORT(freebayes_vcf_out.no_intervals)
+    TABIX_VC_FREEBAYES(BCFTOOLS_SORT.out.vcf)
 
     // Only when using intervals
     BGZIP_VC_FREEBAYES(freebayes_vcf_out.intervals)
@@ -34,11 +36,12 @@ workflow RUN_FREEBAYES {
     CONCAT_FREEBAYES(
         BGZIP_VC_FREEBAYES.out.output
             .map{ meta, vcf ->
-                new_meta = meta.clone()
-                new_meta.id = new_meta.sample
 
-                def groupKey = groupKey(meta, meta.num_intervals)
-                [new_meta, vcf]
+                new_id = meta.tumor_id ? meta.tumor_id + "_vs_" + meta.normal_id : meta.sample
+
+                new_meta = meta.tumor_id ? [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:new_id, num_intervals:meta.num_intervals]
+                                        : [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:new_id, num_intervals:meta.num_intervals]
+                [groupKey(new_meta, meta.num_intervals), vcf]
             }.groupTuple(),
         fasta_fai,
         intervals_bed_gz)
@@ -48,10 +51,15 @@ workflow RUN_FREEBAYES {
                         CONCAT_FREEBAYES.out.vcf,
                         freebayes_vcf_out.no_intervals)
                     .map{ meta, vcf ->
-                        meta.variantcaller = "FreeBayes"
-                        [meta, vcf]
+
+                        new_id = meta.tumor_id ? meta.tumor_id + "_vs_" + meta.normal_id : meta.sample
+
+                        new_meta = meta.tumor_id ? [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:new_id, num_intervals:meta.num_intervals, variantcaller:"Freebayes"]
+                                        : [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:new_id, num_intervals:meta.num_intervals, variantcaller:"Freebayes"]
+                        [new_meta, vcf]
                     }
 
+    ch_versions = ch_versions.mix(BCFTOOLS_SORT.out.versions)
     ch_versions = ch_versions.mix(BGZIP_VC_FREEBAYES.out.versions)
     ch_versions = ch_versions.mix(CONCAT_FREEBAYES.out.versions)
     ch_versions = ch_versions.mix(FREEBAYES.out.versions)

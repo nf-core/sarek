@@ -22,16 +22,15 @@ workflow PREPARE_RECALIBRATION_SPARK {
 
     cram_intervals = cram.combine(intervals)
         .map{ meta, cram, crai, intervals, num_intervals ->
-            new_meta = meta.clone()
 
             // If either no scatter/gather is done, i.e. no interval (0) or one interval (1), then don't rename samples
-            new_meta.id = num_intervals <= 1 ? meta.sample : meta.sample + "_" + intervals.baseName
-            new_meta.num_intervals = num_intervals
+            new_id = num_intervals <= 1 ? meta.sample : meta.sample + "_" + intervals.baseName
 
             //If no interval file provided (0) then add empty list
             intervals_new = num_intervals == 0 ? [] : intervals
 
-            [new_meta, cram, crai, intervals_new]
+            [[patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:new_id, data_type:meta.data_type, num_intervals:num_intervals],
+            cram, crai, intervals_new]
         }
 
     // Run Baserecalibrator spark
@@ -40,11 +39,10 @@ workflow PREPARE_RECALIBRATION_SPARK {
     // Figuring out if there is one or more table(s) from the same sample
     table_to_merge = BASERECALIBRATOR_SPARK.out.table
         .map{ meta, table ->
-                new_meta = meta.clone()
-                new_meta.id = meta.sample
 
-                def groupKey = groupKey(new_meta, meta.num_intervals)
-                [new_meta, table]
+                new_meta = [patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:meta.sample, data_type:meta.data_type, num_intervals:meta.num_intervals]
+
+                [groupKey(new_meta, meta.num_intervals), table]
         }.groupTuple()
     .branch{
         //Warning: size() calculates file size not list length here, so use num_intervals instead
@@ -58,12 +56,9 @@ workflow PREPARE_RECALIBRATION_SPARK {
     GATHERBQSRREPORTS(table_to_merge.multiple)
     table_bqsr = table_to_merge.single.mix(GATHERBQSRREPORTS.out.table)
                                         .map{ meta, table ->
-                                            new_meta = meta.clone()
-
-                                            // remove no longer necessary fields to make sure joining can be done correctly
-                                            new_meta.remove('num_intervals')
-
-                                            [new_meta, table]
+                                            // remove no longer necessary fields to make sure joining can be done correctly: num_intervals
+                                            [[patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:meta.sample, data_type:meta.data_type],
+                                            table]
                                         }
 
     // Gather versions of all tools used

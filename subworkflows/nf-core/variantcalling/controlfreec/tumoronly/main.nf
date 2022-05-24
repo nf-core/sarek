@@ -31,11 +31,9 @@ workflow RUN_CONTROLFREEC_TUMORONLY {
     //Merge mpileup only when intervals and natural order sort them
     CAT_MPILEUP_TUMOR(mpileup_tumor.intervals
         .map{ meta, pileup ->
-            new_meta = meta.clone()
-            new_meta.id = new_meta.sample
+            new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals]
 
-            def groupKey = groupKey(meta, meta.num_intervals)
-            [new_meta, pileup]
+            [groupKey(new_meta, meta.num_intervals), pileup]
         }
         .groupTuple(sort:true))
 
@@ -43,8 +41,8 @@ workflow RUN_CONTROLFREEC_TUMORONLY {
         CAT_MPILEUP_TUMOR.out.file_out,
         mpileup_tumor.no_intervals
     ).map{ meta, pileup ->
-        new_meta = meta.clone()
-        new_meta.id = new_meta.sample
+        new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals]
+
         [new_meta, pileup]
     }
 
