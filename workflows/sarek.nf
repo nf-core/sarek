@@ -46,22 +46,22 @@ def checkPathParamList = [
 for (param in checkPathParamList) if (param) file(param, checkIfExists: true)
 
 // Check mandatory parameters
-if (params.input) csv_file = file(params.input)
-else {
-    log.warn "No samplesheet specified, attempting to restart from csv files present in ${params.outdir}"
-    switch (params.step) {
-        case 'mapping': exit 1, "Can't start with step $params.step without samplesheet"
-        //case 'markduplicates': csv_file = file("${params.outdir}/preprocessing/csv/markduplicates_no_table.csv", checkIfExists: true); break
-        case 'prepare_recalibration': csv_file = file("${params.outdir}/preprocessing/csv/markduplicates_no_table.csv", checkIfExists: true); break
-        case 'recalibrate':           csv_file = file("${params.outdir}/preprocessing/csv/markduplicates.csv",          checkIfExists: true); break
-        case 'variant_calling':       csv_file = file("${params.outdir}/preprocessing/csv/recalibrated.csv",            checkIfExists: true); break
-        // case 'controlfreec':         csv_file = file("${params.outdir}/variant_calling/csv/control-freec_mpileup.csv", checkIfExists: true); break
-        case 'annotate':              csv_file = file("${params.outdir}/variant_calling/csv/recalibrated.csv",          checkIfExists: true); break
-        default: exit 1, "Unknown step $params.step"
-    }
-}
+// if (params.input) csv_file = file(params.input, checkIfExists: true)
+// else {
+//     log.warn "No samplesheet specified, attempting to restart from csv files present in ${params.outdir}"
+//     // switch (params.step) {
+//     //     case 'mapping': exit 1, "Can't start with step $params.step without samplesheet"
+//     //     //case 'markduplicates': csv_file = file("${params.outdir}/preprocessing/csv/markduplicates_no_table.csv", checkIfExists: true); break
+//     //     case 'prepare_recalibration': csv_file = file("${params.outdir}/preprocessing/csv/markduplicates_no_table.csv", checkIfExists: true); break
+//     //     case 'recalibrate':           csv_file = file("${params.outdir}/preprocessing/csv/markduplicates.csv",          checkIfExists: true); break
+//     //     case 'variant_calling':       csv_file = file("${params.outdir}/preprocessing/csv/recalibrated.csv",            checkIfExists: true); break
+//     //     // case 'controlfreec':         csv_file = file("${params.outdir}/variant_calling/csv/control-freec_mpileup.csv", checkIfExists: true); break
+//     //     case 'annotate':              csv_file = file("${params.outdir}/variant_calling/csv/recalibrated.csv",          checkIfExists: true); break
+//     //     default: exit 1, "Unknown step $params.step"
+//     // }
+// }
 
-ch_input_sample = extract_csv(csv_file)
+ch_input_sample = extract_csv(file(params.input, checkIfExists: true))
 
 if (params.wes) {
     if (params.intervals && !params.intervals.endsWith("bed")) exit 1, "Target file must be in BED format"
