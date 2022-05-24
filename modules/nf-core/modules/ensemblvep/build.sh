@@ -10,11 +10,12 @@ build_push() {
     VEP_TAG=$4
 
     docker build \
+        . \
         -t nfcore/vep:${VEP_TAG}.${GENOME} \
-        software/vep/. \
         --build-arg GENOME=${GENOME} \
         --build-arg SPECIES=${SPECIES} \
-        --build-arg VEP_VERSION=${VEP_VERSION}
+        --build-arg VEP_VERSION=${VEP_VERSION} \
+        --build-arg VEP_TAG=${VEP_TAG}
 
     docker push nfcore/vep:${VEP_TAG}.${GENOME}
 }

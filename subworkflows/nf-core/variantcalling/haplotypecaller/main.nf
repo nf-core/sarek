@@ -44,10 +44,11 @@ workflow RUN_HAPLOTYPECALLER {
     CONCAT_HAPLOTYPECALLER(
         BGZIP_VC_HAPLOTYPECALLER.out.output
             .map{ meta, vcf ->
-                new_meta = meta.clone()
-                new_meta.id = new_meta.sample
-                [new_meta, vcf]
-            }.groupTuple(size: num_intervals),
+
+                new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals]
+
+                [groupKey(new_meta, new_meta.num_intervals), vcf]
+            }.groupTuple(),
         fasta_fai,
         intervals_bed_gz)
 

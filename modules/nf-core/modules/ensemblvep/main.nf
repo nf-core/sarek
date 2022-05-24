@@ -13,6 +13,7 @@ process ENSEMBLVEP {
     val   species
     val   cache_version
     path  cache
+    path  extra_files
 
     output:
     tuple val(meta), path("*.ann.vcf"), emit: vcf

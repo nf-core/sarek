@@ -34,11 +34,10 @@ workflow RUN_STRELKA_SINGLE {
     CONCAT_STRELKA(
         BGZIP_VC_STRELKA.out.output
             .map{ meta, vcf ->
-                new_meta = meta.clone()
-                new_meta.id = new_meta.sample
 
-                def groupKey = groupKey(meta, meta.num_intervals)
-                [new_meta, vcf]
+                new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals]
+
+                [groupKey(new_meta, meta.num_intervals), vcf]
             }.groupTuple(),
         fasta_fai,
         intervals_bed_gz)
@@ -48,11 +47,10 @@ workflow RUN_STRELKA_SINGLE {
     CONCAT_STRELKA_GENOME(
         BGZIP_VC_STRELKA_GENOME.out.output
             .map{ meta, vcf ->
-                new_meta = meta.clone()
-                new_meta.id = new_meta.sample
 
-                def groupKey = groupKey(meta, meta.num_intervals)
-                [new_meta, vcf]
+                new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals]
+
+                [groupKey(new_meta, meta.num_intervals), vcf]
             }.groupTuple(),
         fasta_fai,
         intervals_bed_gz)
@@ -64,8 +62,7 @@ workflow RUN_STRELKA_SINGLE {
                     //strelka_genome_vcf.no_intervals,
                     strelka_vcf.no_intervals)
                 .map{ meta, vcf ->
-                    meta.variantcaller = "Strelka"
-                    [meta, vcf]
+                    [[patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals, variantcaller:"Strelka"], vcf]
                 }
 
     ch_versions = ch_versions.mix(BGZIP_VC_STRELKA.out.versions)

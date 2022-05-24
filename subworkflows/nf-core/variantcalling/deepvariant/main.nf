@@ -42,11 +42,10 @@ workflow RUN_DEEPVARIANT {
     CONCAT_DEEPVARIANT_VCF(
         BGZIP_VC_DEEPVARIANT_VCF.out.output
             .map{ meta, vcf ->
-                new_meta = meta.clone()
-                new_meta.id = new_meta.sample
 
-                def groupKey = groupKey(meta, meta.num_intervals)
-                [new_meta, vcf]
+                new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals]
+
+                [groupKey(new_meta, meta.num_intervals), vcf]
             }.groupTuple(),
         fasta_fai,
         intervals_bed_gz)
@@ -54,11 +53,10 @@ workflow RUN_DEEPVARIANT {
     CONCAT_DEEPVARIANT_GVCF(
         BGZIP_VC_DEEPVARIANT_GVCF.out.output
             .map{ meta, vcf ->
-                new_meta = meta.clone()
-                new_meta.id = new_meta.sample
 
-                def groupKey = groupKey(meta, meta.num_intervals)
-                [new_meta, vcf]
+                new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals]
+
+                [groupKey(new_meta, meta.num_intervals), vcf]
             }.groupTuple(),
         fasta_fai,
         intervals_bed_gz)
@@ -70,8 +68,7 @@ workflow RUN_DEEPVARIANT {
                         deepvariant_gvcf_out.no_intervals,
                         deepvariant_vcf_out.no_intervals)
                     .map{ meta, vcf ->
-                        meta.variantcaller = "Deepvariant"
-                        [meta, vcf]
+                        [[patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals, variantcaller:"Deepvariant"], vcf]
                     }
 
     ch_versions = ch_versions.mix(BGZIP_VC_DEEPVARIANT_GVCF.out.versions)

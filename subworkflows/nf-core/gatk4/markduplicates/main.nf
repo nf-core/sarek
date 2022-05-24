@@ -22,7 +22,7 @@ workflow MARKDUPLICATES {
     GATK4_MARKDUPLICATES(bam)
 
     // Convert output to cram
-    BAM_TO_CRAM(GATK4_MARKDUPLICATES.out.bam.join(GATK4_MARKDUPLICATES.out.bai), fasta, fasta_fai, intervals_combined_bed_gz_tbi)
+    BAM_TO_CRAM(GATK4_MARKDUPLICATES.out.bam.join(GATK4_MARKDUPLICATES.out.bai), Channel.empty(), fasta, fasta_fai, intervals_combined_bed_gz_tbi)
 
     // Gather all reports generated
     qc_reports = qc_reports.mix(GATK4_MARKDUPLICATES.out.metrics)
@@ -32,7 +32,7 @@ workflow MARKDUPLICATES {
     ch_versions = ch_versions.mix(BAM_TO_CRAM.out.versions)
 
     emit:
-        cram     = BAM_TO_CRAM.out.cram
+        cram     = BAM_TO_CRAM.out.cram_converted
         qc       = qc_reports
 
         versions = ch_versions // channel: [ versions.yml ]

@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#512](https://github.com/nf-core/sarek/pull/512), [#531](https://github.com/nf-core/sarek/pull/531), [#537](https://github.com/nf-core/sarek/pull/537) - Subway map for pipeline
 - [#522](https://github.com/nf-core/sarek/pull/522) - Add QC for vcf files & MultiQC
 - [#533](https://github.com/nf-core/sarek/pull/533) - Add param `--only_paired_variant_calling` to allow skipping of germline variantcalling for paired samples
+- [#536](https://github.com/nf-core/sarek/pull/536) - Add `--step markduplicates` to start from duplicate marking, `--step prepare_recalibration` now ONLY starts at process `BaseRecalibrator` & adding `bam` and `cram` input support for `--step` `markduplicates`, `prepare_recalibration`, `recalibrate`, and `variant_calling`
 - [#538](https://github.com/nf-core/sarek/pull/538) - Add param `--seq_platform`, default: `ILLUMINA`
 
 ### Changed
@@ -46,6 +47,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#511](https://github.com/nf-core/sarek/pull/511) - Sync `TEMPLATE` with `tools` `2.3.2`
 - [#520](https://github.com/nf-core/sarek/pull/520) - Improve annotation subworkflows
 - [#537](https://github.com/nf-core/sarek/pull/537) - Update workflow figure
+- [#539](https://github.com/nf-core/sarek/pull/539) - Update `CITATIONS.md`
+- [#544](https://github.com/nf-core/sarek/pull/544) - `Mutect2` is no longer compatible with `--no_intervals`
+- [#551](https://github.com/nf-core/sarek/pull/551) - Sync `TEMPLATE` with `tools` `2.4`
 
 ### Fixed
 
@@ -69,6 +73,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#513](https://github.com/nf-core/sarek/pull/513), [#527](https://github.com/nf-core/sarek/pull/527) - CNV is back
 - [#529](https://github.com/nf-core/sarek/pull/529) - Do not save `versions.yml` files
 - [#524](https://github.com/nf-core/sarek/pull/524) - Fix intervals usage by counting the actual list of scatter/gather files produced and not overall number of intervals
+- [#549](https://github.com/nf-core/sarek/pull/549) - Fix unique lanes required for Freebayes: issue [#311](https://github.com/nf-core/sarek/issues/311), replaces `meta.clone()` with actual copy of map to avoid issues with https://nfcore.slack.com/archives/C027CM7P08M/p1644241819942339
 
 ### Deprecated
 
@@ -77,6 +82,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#485](https://github.com/nf-core/sarek/pull/485) - `--skip_qc`, `--skip_markduplicates` and `--skip_bqsr` is now `--skip_tools`
 - [#538](https://github.com/nf-core/sarek/pull/538) - `--sequencing_center` is now `--seq_center`
 - [#538](https://github.com/nf-core/sarek/pull/538) - `--markdup_java_options` has been removed
+- [#539](https://github.com/nf-core/sarek/pull/539) - `--annotate_tools` has been removed
+- [#539](https://github.com/nf-core/sarek/pull/539) - `--cadd_cache`, `--cadd_indels`, `--cadd_indels_tbi`, `--cadd_wg_snvs`, `--cadd_wg_snvs_tbi` have been removed
+- [#539](https://github.com/nf-core/sarek/pull/539) - `--genesplicer` has been removed
+- [#539](https://github.com/nf-core/sarek/pull/539) - `conf/genomes.config` and `params.genomes_base` have been removed
 
 ## [2.7.1](https://github.com/nf-core/sarek/releases/tag/2.7.1) - Pårtejekna
 

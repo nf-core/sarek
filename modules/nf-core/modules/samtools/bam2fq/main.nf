@@ -45,7 +45,7 @@ process SAMTOOLS_BAM2FQ {
             bam2fq \\
             $args \\
             -@ $task.cpus \\
-            $inputbam >${prefix}_interleaved.fq.gz
+            $inputbam | gzip --no-name > ${prefix}_interleaved.fq.gz
 
         cat <<-END_VERSIONS > versions.yml
         "${task.process}":
