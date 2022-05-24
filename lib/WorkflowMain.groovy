@@ -94,9 +94,9 @@ class WorkflowMain {
                                                 break
             //    // case 'controlfreec':         csv_file = file("${params.outdir}/variant_calling/csv/control-freec_mpileup.csv", checkIfExists: true); break
             //    case 'annotate':              csv_file = file("${params.outdir}/variant_calling/csv/recalibrated.csv",          checkIfExists: true); break
-                default: log.warn "Please provide an input samplesheet to the pipeline e.g. '--input samplesheet.csv'"
-                          exit 1, "Unknown step $params.step"
-            }
+                default:    log.warn "Please provide an input samplesheet to the pipeline e.g. '--input samplesheet.csv'"
+                            exit 1, "Unknown step $params.step"
+
             //log.warn "Please provide an input samplesheet to the pipeline e.g. '--input samplesheet.csv'"
             //System.exit(1)
         }
