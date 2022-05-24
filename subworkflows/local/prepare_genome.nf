@@ -43,7 +43,7 @@ workflow PREPARE_GENOME {
     SAMTOOLS_FAIDX(fasta.map{ it -> [[id:it[0].getName()], it] })
     TABIX_DBSNP(dbsnp.map{ it -> [[id:it[0].baseName], it] })
     TABIX_GERMLINE_RESOURCE(germline_resource.map{ it -> [[id:it[0].baseName], it] })
-    TABIX_KNOWN_INDELS(known_indels.map{ it -> [[id:it[0].baseName], it] })
+    TABIX_KNOWN_INDELS( known_indels.flatten().map{ it -> [[id:it.baseName], it] } )
     TABIX_PON(pon.map{ it -> [[id:it[0].baseName], it] })
 
     chr_files = chr_dir
