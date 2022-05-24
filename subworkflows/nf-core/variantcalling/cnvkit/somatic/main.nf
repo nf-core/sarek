@@ -11,12 +11,12 @@ workflow RUN_CNVKIT_SOMATIC {
         cram_pair       // channel: [mandatory] cram tumor, cram normal
         fasta           // channel: [mandatory] fasta
         targets         // channel: [mandatory] bed
-        reference       // channel: [mandatory]
+        reference       // channel: [optional]
 
     main:
         ch_versions = Channel.empty()
 
-        CNVKIT_BATCH_SOMATIC(cram_pair, fasta, targets, reference)
+        CNVKIT_BATCH_SOMATIC(cram_pair, fasta, targets, [])
 
         ch_versions = ch_versions.mix(CNVKIT_BATCH_SOMATIC.out.versions.first())
 
