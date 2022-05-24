@@ -10,7 +10,7 @@
             "type": "object",
             "fa_icon": "fas fa-terminal",
             "description": "Define where the pipeline should find input data and save output data.",
-            "required": ["step", "input", "outdir"],
+            "required": ["step", "outdir"],
             "properties": {
                 "step": {
                     "type": "string",
@@ -293,12 +293,6 @@
                     "type": "boolean",
                     "fa_icon": "fas fa-copy",
                     "description": "Generate g.vcf output from GATK HaplotypeCaller."
-                },
-                "no_strelka_bp": {
-                    "type": "boolean",
-                    "fa_icon": "fas fa-ban",
-                    "description": "Will not use Manta candidateSmallIndels for Strelka.",
-                    "help_text": "Not recommended by Best Practices."
                 },
                 "pon": {
                     "type": "string",
