@@ -2,10 +2,10 @@ process CNVKIT_BATCH {
     tag "$meta.id"
     label 'process_low'
 
-    conda (params.enable_conda ? 'bioconda::cnvkit=0.9.9' : null)
+    conda (params.enable_conda ? 'bioconda::cnvkit=0.9.9 bioconda::samtools=1.15.1' : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/cnvkit:0.9.9--pyhdfd78af_0' :
-        'quay.io/biocontainers/cnvkit:0.9.9--pyhdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/mulled-v2-780d630a9bb6a0ff2e7b6f730906fd703e40e98f:304d1c5ab610f216e77c61420ebe85f1e7c5968a-0' :
+        'quay.io/biocontainers/mulled-v2-780d630a9bb6a0ff2e7b6f730906fd703e40e98f:304d1c5ab610f216e77c61420ebe85f1e7c5968a-0' }"
 
     input:
     tuple val(meta), path(tumor), path(normal)
@@ -18,6 +18,8 @@ process CNVKIT_BATCH {
     tuple val(meta), path("*.cnn"), emit: cnn, optional: true
     tuple val(meta), path("*.cnr"), emit: cnr, optional: true
     tuple val(meta), path("*.cns"), emit: cns, optional: true
+    tuple val(meta), path("*.pdf"), emit: pdf, optional: true
+    tuple val(meta), path("*.png"), emit: png, optional: true
     path "versions.yml"           , emit: versions
 
     when:
@@ -25,21 +27,39 @@ process CNVKIT_BATCH {
 
     script:
     def args = task.ext.args ?: ''
-    def normal_args = normal ? "--normal $normal" : ""
-    def fasta_args = fasta ? "--fasta $fasta" : ""
+
+    // execute samtools only when cram files are input, cnvkit runs natively on bam but is prohibitively slow
+    // input pair is assumed to have same extension if both exist
+    def is_cram = tumor.Extension == "cram" ? true : false
+    def tumor_out = is_cram ? tumor.BaseName + ".bam" : "${tumor}"
+
+    // do not run samtools on normal samples in tumor_only mode
+    def normal_exists = normal ? true: false
+    // tumor_only mode does not need fasta & target
+    // instead it requires a pre-computed reference.cnn which is built from fasta & target
+    def (normal_out, normal_args, fasta_args) = ["", "", ""]
+
+    if (normal_exists){
+        def normal_prefix = normal.BaseName
+        normal_out = is_cram ? "${normal_prefix}" + ".bam" : "${normal}"
+        normal_args = normal_prefix ? "--normal $normal_out" : ""
+        fasta_args = fasta ? "--fasta $fasta" : ""
+    }
+
+    def target_args = targets ? "--targets $targets" : ""
     def reference_args = reference ? "--reference $reference" : ""
 
-    def target_args = ""
-    if (args.contains("--method wgs") || args.contains("-m wgs")) {
-        target_args = targets ? "--targets $targets" : ""
-    }
-    else {
-        target_args = "--targets $targets"
-    }
     """
+    if $is_cram; then
+        samtools view -T $fasta $tumor -@ $task.cpus -o $tumor_out
+        if $normal_exists; then
+            samtools view -T $fasta $normal -@ $task.cpus -o $normal_out
+        fi
+    fi
+
     cnvkit.py \\
         batch \\
-        $tumor \\
+        $tumor_out \\
         $normal_args \\
         $fasta_args \\
         $reference_args \\
