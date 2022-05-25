@@ -56,4 +56,30 @@ class WorkflowSarek {
             System.exit(1)
         }
     }
+
+    public static String retrieveInput(params, log){
+        switch (params.step) {
+            case 'mapping': log.warn "Can't start with step $params.step without samplesheet"
+                            System.exit(1);
+                            break
+            //case 'markduplicates':          log.warn "Using file ${params.outdir}/preprocessing/csv/markduplicates_no_table.csv"
+            //                                params.input = "${params.outdir}/preprocessing/csv/markduplicates_no_table.csv";
+            //                                break
+            case 'prepare_recalibration':   log.warn "Using file ${params.outdir}/preprocessing/csv/markduplicates_no_table.csv"
+                                            params.input = "${params.outdir}/preprocessing/csv/markduplicates_no_table.csv";
+                                            break
+            case 'recalibrate':             log.warn "Using file ${params.outdir}/preprocessing/csv/markduplicates.csv"
+                                            params.input = "${params.outdir}/preprocessing/csv/markduplicates.csv";
+                                            break
+            case 'variant_calling':         log.warn "Using file ${params.outdir}/preprocessing/csv/recalibrated.csv"
+                                                params.input = "${params.outdir}/preprocessing/csv/recalibrated.csv";
+                                                break
+            //    // case 'controlfreec':         csv_file = file("${params.outdir}/variant_calling/csv/control-freec_mpileup.csv", checkIfExists: true); break
+            //    case 'annotate':              csv_file = file("${params.outdir}/variant_calling/csv/recalibrated.csv",          checkIfExists: true); break
+                default:    log.warn "Please provide an input samplesheet to the pipeline e.g. '--input samplesheet.csv'"
+                            exit 1, "Unknown step $params.step"
+     }
+
+            //log.warn "Please provide an input samplesheet to the pipeline e.g. '--input samplesheet.csv'"
+    }
 }
