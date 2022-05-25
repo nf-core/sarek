@@ -26,7 +26,7 @@ workflow MPILEUP {
             intervals:    it[0].num_intervals > 1
             no_intervals: it[0].num_intervals <= 1
         }.set{mpileup_tumor}
-        //TODO: Strelka anschauen? Single wird sowohl für tumor only und dingens verwendet
+
     //Merge mpileup only when intervals and natural order sort them
     CAT_MPILEUP_NORMAL(mpileup_normal.intervals
         .map{ meta, pileup ->
