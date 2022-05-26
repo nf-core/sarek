@@ -49,7 +49,7 @@ workflow RUN_MANTA_SOMATIC {
 
     //Only when using intervals
     BGZIP_VC_MANTA_SMALL_INDELS(manta_candidate_small_indels_vcf.intervals)
-
+    BGZIP_VC_MANTA_SMALL_INDELS.out.output.dump()
     CONCAT_MANTA_SMALL_INDELS(
         BGZIP_VC_MANTA_SMALL_INDELS.out.output.map{ meta, vcf ->
 
