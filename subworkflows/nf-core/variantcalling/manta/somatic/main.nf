@@ -53,9 +53,10 @@ workflow RUN_MANTA_SOMATIC {
     CONCAT_MANTA_SMALL_INDELS(
         BGZIP_VC_MANTA_SMALL_INDELS.out.output.map{ meta, vcf ->
 
-                new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals]
+                [ groupKey([patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals],
+                            meta.num_intervals),
+                vcf]
 
-                [ groupKey(new_meta, meta.num_intervals), vcf]
             }.groupTuple(),
         fasta_fai,
         intervals_bed_gz)
@@ -64,9 +65,11 @@ workflow RUN_MANTA_SOMATIC {
 
     CONCAT_MANTA_SV(
         BGZIP_VC_MANTA_SV.out.output.map{ meta, vcf ->
-                new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals]
 
-                [groupKey(new_meta, meta.num_intervals), vcf]
+                [groupKey([patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals],
+                            meta.num_intervals),
+                vcf]
+
             }.groupTuple(),
         fasta_fai,
         intervals_bed_gz)
@@ -75,9 +78,11 @@ workflow RUN_MANTA_SOMATIC {
 
     CONCAT_MANTA_DIPLOID(
         BGZIP_VC_MANTA_DIPLOID.out.output.map{ meta, vcf ->
-                new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals]
 
-                [groupKey(new_meta, meta.num_intervals), vcf]
+                [groupKey([patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals],
+                            meta.num_intervals),
+                vcf]
+
             }.groupTuple(),
         fasta_fai,
         intervals_bed_gz)
@@ -86,9 +91,11 @@ workflow RUN_MANTA_SOMATIC {
 
     CONCAT_MANTA_SOMATIC(
         BGZIP_VC_MANTA_SOMATIC.out.output.map{ meta, vcf ->
-                new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals]
 
-                [groupKey(new_meta, meta.num_intervals), vcf]
+                [groupKey([patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals],
+                            meta.num_intervals),
+                vcf]
+
             }.groupTuple(),
         fasta_fai,
         intervals_bed_gz)
@@ -104,11 +111,12 @@ workflow RUN_MANTA_SOMATIC {
         vcf]
     }
 
+    // Don't set variantcaller & num_intervals key. These files are not annotated, so they don't need it and joining with reads for StrelkaBP then fails
     manta_candidate_small_indels_vcf = Channel.empty().mix(
         CONCAT_MANTA_SMALL_INDELS.out.vcf,
         manta_candidate_small_indels_vcf.no_intervals
     ).map{ meta, vcf ->
-        [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals, variantcaller:"Manta"],
+        [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id],
         vcf]
     }
 
@@ -116,7 +124,7 @@ workflow RUN_MANTA_SOMATIC {
         CONCAT_MANTA_SMALL_INDELS.out.tbi,
         manta_candidate_small_indels_vcf_tbi.no_intervals
     ).map{ meta, vcf ->
-        [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals, variantcaller:"Manta"],
+        [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id],
         vcf]
     }
 

@@ -49,6 +49,7 @@ jobs:
           - "variantcalling_channel"
           - "skip_markduplicates"
           - "strelka"
+          - "strelkabp"
           - "split_fastq"
           - "targeted"
           - "tumor_normal_pair"

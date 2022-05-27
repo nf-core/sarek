@@ -118,8 +118,8 @@ workflow PAIR_VARIANT_CALLING {
             cram_pair_strelka = cram_pair.join(manta_candidate_small_indels_vcf)
                                         .join(manta_candidate_small_indels_vcf_tbi)
                                         .combine(intervals_bed_gz_tbi)
-                                        .map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, vcf, bed_tbi, num_intervals ->
-
+                                        .map{
+                                            meta, normal_cram, normal_crai, tumor_cram, tumor_crai, vcf, vcf_tbi, bed_tbi, num_intervals ->
                                             //If no interval file provided (0) then add empty list
                                             bed_new = num_intervals == 0 ? [] : bed_tbi[0]
                                             tbi_new = num_intervals == 0 ? [] : bed_tbi[1]
@@ -128,7 +128,7 @@ workflow PAIR_VARIANT_CALLING {
                                             new_id = num_intervals <= 1 ? meta.tumor_id + "_vs_" + meta.normal_id : meta.tumor_id + "_vs_" + meta.normal_id + "_" + bed_new.simpleName
 
                                             [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:new_id, num_intervals:num_intervals],
-                                            normal_cram, normal_crai, tumor_cram, tumor_crai, vcf, vcf_tbi, bed_new, tbi_new]
+                                            normal_cram, normal_crai, tumor_cram, tumor_crai, vcf, vcf_tbi, bed_new, tbi_new, num_intervals]
                                         }
         } else {
             cram_pair_strelka = cram_pair_intervals_gz_tbi.map{
