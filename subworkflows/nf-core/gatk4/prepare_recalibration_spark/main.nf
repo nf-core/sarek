@@ -27,7 +27,7 @@ workflow PREPARE_RECALIBRATION_SPARK {
             intervals_new = num_intervals == 0 ? [] : intervals
 
             // If either no scatter/gather is done, i.e. no interval (0) or one interval (1), then don't rename samples
-            new_id = num_intervals <= 1 ? meta.sample : meta.sample + "_" + new String(intervals_new.baseName)
+            new_id = num_intervals <= 1 ? meta.sample : meta.sample + "_" + intervals_new.baseName
 
             [[patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:new_id, data_type:meta.data_type, num_intervals:num_intervals],
             cram, crai, intervals_new]

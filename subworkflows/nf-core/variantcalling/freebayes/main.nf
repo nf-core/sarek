@@ -37,7 +37,7 @@ workflow RUN_FREEBAYES {
         BGZIP_VC_FREEBAYES.out.output
             .map{ meta, vcf ->
 
-                new_id = meta.tumor_id ? meta.tumor_id + "_vs_" + meta.normal_id : new String(meta.sample)
+                new_id = meta.tumor_id ? meta.tumor_id + "_vs_" + meta.normal_id : meta.sample
 
                 new_meta = meta.tumor_id ? [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:new_id, num_intervals:meta.num_intervals]
                                         : [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:new_id, num_intervals:meta.num_intervals]
@@ -52,7 +52,7 @@ workflow RUN_FREEBAYES {
                         freebayes_vcf_out.no_intervals)
                     .map{ meta, vcf ->
 
-                        new_id = meta.tumor_id ? meta.tumor_id + "_vs_" + meta.normal_id : new String(meta.sample)
+                        new_id = meta.tumor_id ? meta.tumor_id + "_vs_" + meta.normal_id : meta.sample
 
                         new_meta = meta.tumor_id ? [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:new_id, num_intervals:meta.num_intervals, variantcaller:"Freebayes"]
                                         : [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:new_id, num_intervals:meta.num_intervals, variantcaller:"Freebayes"]
