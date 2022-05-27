@@ -44,9 +44,9 @@ workflow RUN_MANTA_GERMLINE {
         BGZIP_VC_MANTA_SMALL_INDELS.out.output
             .map{ meta, vcf ->
 
-                new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals]
-
-                [groupKey(new_meta, meta.num_intervals), vcf]
+                [groupKey([patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals],
+                        meta.num_intervals),
+                vcf]
             }.groupTuple(),
         fasta_fai,
         intervals_bed_gz)
@@ -57,9 +57,10 @@ workflow RUN_MANTA_GERMLINE {
         BGZIP_VC_MANTA_SV.out.output
             .map{ meta, vcf ->
 
-                new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals]
+                [groupKey([patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals],
+                        meta.num_intervals),
+                vcf]
 
-                [ groupKey(new_meta, meta.num_intervals), vcf]
             }.groupTuple(),
         fasta_fai,
         intervals_bed_gz)
@@ -70,9 +71,10 @@ workflow RUN_MANTA_GERMLINE {
         BGZIP_VC_MANTA_DIPLOID.out.output
             .map{ meta, vcf ->
 
-                new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals]
+                [groupKey([patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals],
+                        meta.num_intervals),
+                vcf]
 
-                [groupKey(new_meta, meta.num_intervals), vcf]
             }.groupTuple(),
         fasta_fai,
         intervals_bed_gz)
@@ -83,7 +85,7 @@ workflow RUN_MANTA_GERMLINE {
                     CONCAT_MANTA_DIPLOID.out.vcf,
                     manta_diploid_sv_vcf.no_intervals)
                 .map{ meta, vcf ->
-                    [ [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals, variantcaller:"Manta"], vcf]
+                    [[patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals, variantcaller:"Manta"], vcf]
                 }
 
     ch_versions = ch_versions.mix(BGZIP_VC_MANTA_DIPLOID.out.versions)

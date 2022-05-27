@@ -43,9 +43,10 @@ workflow RUN_MANTA_TUMORONLY {
     CONCAT_MANTA_SMALL_INDELS(
         BGZIP_VC_MANTA_SMALL_INDELS.out.output.map{ meta, vcf ->
 
-                new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals]
+                [groupKey([patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals],
+                        meta.num_intervals),
+                vcf]
 
-                [groupKey(new_meta, meta.num_intervals), vcf]
             }.groupTuple(),
         fasta_fai,
         intervals_bed_gz)
@@ -55,9 +56,10 @@ workflow RUN_MANTA_TUMORONLY {
     CONCAT_MANTA_SV(
         BGZIP_VC_MANTA_SV.out.output.map{ meta, vcf ->
 
-                new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals]
+                [groupKey([patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals],
+                        meta.num_intervals),
+                vcf]
 
-                [groupKey(new_meta, meta.num_intervals), vcf]
             }.groupTuple(),
         fasta_fai,
         intervals_bed_gz)
@@ -67,9 +69,10 @@ workflow RUN_MANTA_TUMORONLY {
     CONCAT_MANTA_TUMOR(
         BGZIP_VC_MANTA_TUMOR.out.output.map{ meta, vcf ->
 
-                new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals]
+                [groupKey( [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals],
+                        meta.num_intervals),
+                vcf]
 
-                [groupKey(new_meta, meta.num_intervals), vcf]
             }.groupTuple(),
         fasta_fai,
         intervals_bed_gz)
@@ -81,7 +84,7 @@ workflow RUN_MANTA_TUMORONLY {
         manta_tumor_sv_vcf.no_intervals
     ).map{ meta, vcf ->
         [[patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals, variantcaller:"Manta"],
-         vcf]
+            vcf]
     }
 
     ch_versions = ch_versions.mix(BGZIP_VC_MANTA_SV.out.versions)

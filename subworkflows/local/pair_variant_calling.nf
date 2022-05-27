@@ -47,14 +47,11 @@ workflow PAIR_VARIANT_CALLING {
             //If no interval file provided (0) then add empty list
             intervals_new = num_intervals == 0 ? [] : intervals
 
-            [meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals_new, num_intervals]
-        }.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals, num_intervals ->
-
             // If either no scatter/gather is done, i.e. no interval (0) or one interval (1), then don't rename samples
-            new_id = num_intervals <= 1 ? meta.tumor_id + "_vs_" + meta.normal_id : meta.tumor_id + "_vs_" + meta.normal_id + "_" + intervals.baseName
+            new_id = num_intervals <= 1 ? meta.tumor_id + "_vs_" + meta.normal_id : meta.tumor_id + "_vs_" + meta.normal_id + "_" + new String(intervals_new.baseName)
 
             [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:new_id, num_intervals:num_intervals],
-            normal_cram, normal_crai, tumor_cram, tumor_crai, intervals]
+            normal_cram, normal_crai, tumor_cram, tumor_crai, intervals_new]
         }
 
     // Remap channel with gzipped intervals + indexes
@@ -65,14 +62,12 @@ workflow PAIR_VARIANT_CALLING {
             bed_new = num_intervals == 0 ? [] : bed_tbi[0]
             tbi_new = num_intervals == 0 ? [] : bed_tbi[1]
 
-            [meta, normal_cram, normal_crai, tumor_cram, tumor_crai, bed_new, tbi_new, num_intervals]
-
-        }.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, bed, tbi, num_intervals ->
             // If either no scatter/gather is done, i.e. no interval (0) or one interval (1), then don't rename samples
-            new_id = num_intervals <= 1 ? meta.tumor_id + "_vs_" + meta.normal_id : meta.tumor_id + "_vs_" + meta.normal_id + "_" + bed.simpleName
+            new_id = num_intervals <= 1 ? meta.tumor_id + "_vs_" + meta.normal_id : meta.tumor_id + "_vs_" + meta.normal_id + "_" + new String(bed_new.simpleName)
 
             [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:new_id, num_intervals:num_intervals],
-            normal_cram, normal_crai, tumor_cram, tumor_crai, bed, tbi]
+            normal_cram, normal_crai, tumor_cram, tumor_crai, bed_new, tbi_new]
+
         }
 
     if (tools.contains('controlfreec')){
@@ -129,14 +124,13 @@ workflow PAIR_VARIANT_CALLING {
                                             bed_new = num_intervals == 0 ? [] : bed_tbi[0]
                                             tbi_new = num_intervals == 0 ? [] : bed_tbi[1]
 
-                                            [meta, normal_cram, normal_crai, tumor_cram, tumor_crai, vcf, vcf_tbi, bed_new, tbi_new, num_intervals]
-                                        }.map{  meta, normal_cram, normal_crai, tumor_cram, tumor_crai, vcf, vcf_tbi, bed, tbi, num_intervals ->
                                             // If either no scatter/gather is done, i.e. no interval (0) or one interval (1), then don't rename samples
-                                            new_id = num_intervals <= 1 ? meta.tumor_id + "_vs_" + meta.normal_id : meta.tumor_id + "_vs_" + meta.normal_id + "_" + bed.simpleName
+                                            new_id = num_intervals <= 1 ? meta.tumor_id + "_vs_" + meta.normal_id : meta.tumor_id + "_vs_" + meta.normal_id + "_" + new String(bed_new.simpleName)
 
                                             [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:new_id, num_intervals:num_intervals],
-                                            normal_cram, normal_crai, tumor_cram, tumor_crai, vcf, vcf_tbi,  bed, tbi]
+                                            normal_cram, normal_crai, tumor_cram, tumor_crai, vcf, vcf_tbi, bed_new, tbi_new]
                                         }
+
         } else {
             cram_pair_strelka = cram_pair_intervals_gz_tbi.map{
                     meta, normal_cram, normal_crai, tumor_cram, tumor_crai, bed, tbi ->

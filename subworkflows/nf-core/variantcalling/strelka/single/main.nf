@@ -35,9 +35,10 @@ workflow RUN_STRELKA_SINGLE {
         BGZIP_VC_STRELKA.out.output
             .map{ meta, vcf ->
 
-                new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals]
+                [groupKey([patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals],
+                        meta.num_intervals),
+                vcf]
 
-                [groupKey(new_meta, meta.num_intervals), vcf]
             }.groupTuple(),
         fasta_fai,
         intervals_bed_gz)
@@ -47,10 +48,10 @@ workflow RUN_STRELKA_SINGLE {
     CONCAT_STRELKA_GENOME(
         BGZIP_VC_STRELKA_GENOME.out.output
             .map{ meta, vcf ->
+                [groupKey([patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals],
+                        meta.num_intervals),
+                vcf]
 
-                new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals]
-
-                [groupKey(new_meta, meta.num_intervals), vcf]
             }.groupTuple(),
         fasta_fai,
         intervals_bed_gz)
