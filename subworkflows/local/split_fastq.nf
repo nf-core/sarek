@@ -20,7 +20,7 @@ workflow SPLIT_FASTQ {
     // Remapping the channel
     reads = SEQKIT_SPLIT2.out.reads.map{ key, reads ->
         //TODO maybe this can be replaced by a regex to include part_001 etc.
-        println key
+
         //sorts list of split fq files by :
         //[R1.part_001, R2.part_001, R1.part_002, R2.part_002,R1.part_003, R2.part_003,...]
         //TODO: determine whether it is possible to have an uneven number of parts, so remainder: true woud need to be used, I guess this could be possible for unfiltered reads, reads that don't have pairs etc.
