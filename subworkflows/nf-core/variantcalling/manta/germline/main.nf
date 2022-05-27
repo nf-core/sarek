@@ -78,13 +78,10 @@ workflow RUN_MANTA_GERMLINE {
         intervals_bed_gz)
 
     // Mix output channels for "no intervals" and "with intervals" results
+    // Only diploid SV should get annotated
     manta_vcf = Channel.empty().mix(
                     CONCAT_MANTA_DIPLOID.out.vcf,
-                    //CONCAT_MANTA_SMALL_INDELS.out.vcf,
-                    CONCAT_MANTA_SV.out.vcf,
-                    manta_diploid_sv_vcf.no_intervals,
-                    //manta_small_indels_vcf.no_intervals,
-                    manta_sv_vcf.no_intervals)
+                    manta_diploid_sv_vcf.no_intervals)
                 .map{ meta, vcf ->
                     [ [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals, variantcaller:"Manta"], vcf]
                 }
@@ -98,6 +95,6 @@ workflow RUN_MANTA_GERMLINE {
     ch_versions = ch_versions.mix(MANTA_GERMLINE.out.versions)
 
     emit:
-    manta_vcf = Channel.empty()
+    manta_vcf
     versions = ch_versions
 }

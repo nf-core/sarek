@@ -49,7 +49,7 @@ workflow RUN_MANTA_SOMATIC {
 
     //Only when using intervals
     BGZIP_VC_MANTA_SMALL_INDELS(manta_candidate_small_indels_vcf.intervals)
-    BGZIP_VC_MANTA_SMALL_INDELS.out.output.dump()
+
     CONCAT_MANTA_SMALL_INDELS(
         BGZIP_VC_MANTA_SMALL_INDELS.out.output.map{ meta, vcf ->
 
@@ -103,8 +103,6 @@ workflow RUN_MANTA_SOMATIC {
         [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals, variantcaller:"Manta"],
         vcf]
     }
-
-    manta_vcf.view()
 
     manta_candidate_small_indels_vcf = Channel.empty().mix(
         CONCAT_MANTA_SMALL_INDELS.out.vcf,

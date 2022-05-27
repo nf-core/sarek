@@ -75,12 +75,9 @@ workflow RUN_MANTA_TUMORONLY {
         intervals_bed_gz)
 
     // Mix output channels for "no intervals" and "with intervals" results
+    // Only tumor sv should get annotated
     manta_vcf = Channel.empty().mix(
-        CONCAT_MANTA_SMALL_INDELS.out.vcf,
-        CONCAT_MANTA_SV.out.vcf,
         CONCAT_MANTA_TUMOR.out.vcf,
-        manta_small_indels_vcf.no_intervals,
-        manta_candidate_sv_vcf.no_intervals,
         manta_tumor_sv_vcf.no_intervals
     ).map{ meta, vcf ->
         [[patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals, variantcaller:"Manta"],

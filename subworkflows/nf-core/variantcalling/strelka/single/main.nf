@@ -56,10 +56,9 @@ workflow RUN_STRELKA_SINGLE {
         intervals_bed_gz)
 
     // Mix output channels for "no intervals" and "with intervals" results
+    // Only strelka variant vcf should get annotated
     strelka_vcf = Channel.empty().mix(
                     CONCAT_STRELKA.out.vcf,
-                    //CONCAT_STRELKA_GENOME.out.vcf,
-                    //strelka_genome_vcf.no_intervals,
                     strelka_vcf.no_intervals)
                 .map{ meta, vcf ->
                     [[patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals, variantcaller:"Strelka"], vcf]
