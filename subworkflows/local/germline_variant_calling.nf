@@ -113,6 +113,7 @@ workflow GERMLINE_VARIANT_CALLING {
     // STRELKA
     if (params.tools.contains('strelka')){
         RUN_STRELKA_SINGLE(cram_recalibrated_intervals_gz_tbi,
+                dict,
                 fasta,
                 fasta_fai,
                 intervals_bed_combine_gz)

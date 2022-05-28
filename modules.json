@@ -141,6 +141,9 @@
             "gatk4/mergemutectstats": {
                 "git_sha": "169b2b96c1167f89ab07127b7057c1d90a6996c7"
             },
+            "gatk4/mergevcfs": {
+                "git_sha": "169b2b96c1167f89ab07127b7057c1d90a6996c7"
+            },
             "gatk4/mutect2": {
                 "git_sha": "169b2b96c1167f89ab07127b7057c1d90a6996c7"
             },

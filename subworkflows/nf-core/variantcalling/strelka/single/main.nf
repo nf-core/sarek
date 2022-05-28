@@ -1,11 +1,12 @@
 include { CONCAT_VCF as CONCAT_STRELKA           } from '../../../../../modules/local/concat_vcf/main'
-include { MERGE_VCFS as MERGE_STRELKA            } from '../../../../../modules/local/merge_vcfs/main'
-include { MERGE_VCFS as MERGE_STRELKA_GENOME     } from '../../../../../modules/local/merge_vcfs/main'
+include { GATK4_MERGEVCFS as MERGE_STRELKA            } from '../../../../../modules/nf-core/modules/gatk4/mergevcfs/main'
+include { GATK4_MERGEVCFS as MERGE_STRELKA_GENOME     } from '../../../../../modules/nf-core/modules/gatk4/mergevcfs/main'
 include { STRELKA_GERMLINE as STRELKA_SINGLE     } from '../../../../../modules/nf-core/modules/strelka/germline/main'
 
 workflow RUN_STRELKA_SINGLE {
     take:
     cram                     // channel: [mandatory] [meta, cram, crai, interval.bed.gz, interval.bed.gz.tbi]
+    dict                     // channel: [mandatory]
     fasta                    // channel: [mandatory]
     fasta_fai                // channel: [mandatory]
     intervals_bed_gz         // channel: [optional]  Contains a bed.gz file of all intervals combined provided with the cram input(s). Mandatory if interval files are used.
@@ -34,8 +35,8 @@ workflow RUN_STRELKA_SINGLE {
 
                 [groupKey(new_meta, meta.num_intervals), vcf]
             }.groupTuple(),
-        fasta_fai,
-        intervals_bed_gz)
+        dict
+    )
 
     MERGE_STRELKA_GENOME(
         strelka_genome_vcf.intervals
@@ -45,8 +46,8 @@ workflow RUN_STRELKA_SINGLE {
 
                 [groupKey(new_meta, meta.num_intervals), vcf]
             }.groupTuple(),
-        fasta_fai,
-        intervals_bed_gz)
+        dict
+    )
 
     // Mix output channels for "no intervals" and "with intervals" results
     strelka_vcf = Channel.empty().mix(
