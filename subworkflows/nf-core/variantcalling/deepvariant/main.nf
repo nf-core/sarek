@@ -35,8 +35,6 @@ workflow RUN_DEEPVARIANT {
     TABIX_VC_DEEPVARIANT_GVCF(deepvariant_gvcf_out.no_intervals)
 
     // Only when using intervals
-    BGZIP_VC_DEEPVARIANT_VCF(deepvariant_vcf_out.intervals)
-    BGZIP_VC_DEEPVARIANT_GVCF(deepvariant_gvcf_out.intervals)
 
     MERGE_DEEPVARIANT_VCF(
         deepvariant_vcf_out.intervals
