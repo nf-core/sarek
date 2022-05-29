@@ -74,11 +74,11 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
     )
 
     mutect2_vcf = Channel.empty().mix(
-        CONCAT_MUTECT2.out.vcf,
+        MERGE_MUTECT2.out.vcf,
         mutect2_vcf_branch.no_intervals)
 
     mutect2_tbi = Channel.empty().mix(
-        CONCAT_MUTECT2.out.tbi,
+        MERGE_MUTECT2.out.tbi,
         mutect2_tbi_branch.no_intervals)
 
     //Merge Muteect2 Stats
