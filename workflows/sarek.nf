@@ -895,6 +895,7 @@ workflow SAREK {
                                             ch_reports.collect(),
                                             ch_multiqc_config,
                                             ch_sarek_logo)
+        ch_multiqc_files.view()
 
         MULTIQC(ch_multiqc_files.collect())
         multiqc_report = MULTIQC.out.report.toList()
