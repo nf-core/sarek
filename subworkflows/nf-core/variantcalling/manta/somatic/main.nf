@@ -103,11 +103,14 @@ workflow RUN_MANTA_SOMATIC {
     // Mix output channels for "no intervals" and "with intervals" results
     manta_vcf = Channel.empty().mix(
         CONCAT_MANTA_DIPLOID.out.vcf,
-        CONCAT_MANTA_SOMATIC.out.vcf,
+
         manta_diploid_sv_vcf.no_intervals,
-        manta_somatic_sv_vcf.no_intervals
     ).map{ meta, vcf ->
-        [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals, variantcaller:"Manta"],
+        [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals, variantcaller:"Manta_DIPLOID"],
+        vcf]
+    }.mix(CONCAT_MANTA_SOMATIC.out.vcf, manta_somatic_sv_vcf.no_intervals)
+    .map{ meta, vcf ->
+        [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals, variantcaller:"Manta_SOMATIC"],
         vcf]
     }
 
