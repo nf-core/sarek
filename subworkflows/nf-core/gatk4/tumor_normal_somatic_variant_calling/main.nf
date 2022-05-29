@@ -122,20 +122,16 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
     GETPILEUPSUMMARIES_TUMOR ( pileup.tumor.map{
                                     meta, cram, crai, intervals ->
 
-                                    //new_id = meta.num_intervals <= 1 ? meta.tumor_id : meta.tumor_id + "_" + intervals.baseName
-                                    new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id, num_intervals:meta.num_intervals]
-
-                                    [new_meta, cram, crai, intervals]
+                                    [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id, num_intervals:meta.num_intervals],
+                                        cram, crai, intervals]
                                 },
                                 fasta, fai, dict, germline_resource, germline_resource_tbi )
 
     GETPILEUPSUMMARIES_NORMAL ( pileup.normal.map{
                                     meta, cram, crai, intervals ->
 
-                                    //new_id = meta.num_intervals <= 1 ? meta.tumor_id : meta.tumor_id + "_" + intervals.baseName
-                                    new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.normal_id, num_intervals:meta.num_intervals]
-
-                                    [new_meta, cram, crai, intervals]
+                                    [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.normal_id, num_intervals:meta.num_intervals],
+                                        cram, crai, intervals]
                                 },
                                 fasta, fai, dict, germline_resource, germline_resource_tbi )
 
