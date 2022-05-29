@@ -37,7 +37,8 @@ workflow PAIR_VARIANT_CALLING {
     //TODO: Temporary until the if's can be removed and printing to terminal is prevented with "when" in the modules.config
     freebayes_vcf        = Channel.empty()
     manta_vcf            = Channel.empty()
-    strelka_vcf          = Channel.empty()
+    strelka_vcf_snvs     = Channel.empty()
+    strelka_vcf_indels   = Channel.empty()
     msisensorpro_output  = Channel.empty()
     mutect2_vcf          = Channel.empty()
 
