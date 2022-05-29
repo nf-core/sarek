@@ -134,7 +134,9 @@ workflow PAIR_VARIANT_CALLING {
                             fasta_fai,
                             intervals_bed_combine_gz)
 
-        strelka_vcf = RUN_STRELKA_SOMATIC.out.strelka_vcf
+        strelka_vcf_snvs = RUN_STRELKA_SOMATIC.out.strelka_vcf_snvs
+        strelka_vcf_indels = RUN_STRELKA_SOMATIC.out.strelka_vcf_indels
+
         ch_versions = ch_versions.mix(RUN_STRELKA_SOMATIC.out.versions)
     }
 
@@ -175,6 +177,7 @@ workflow PAIR_VARIANT_CALLING {
     manta_vcf
     msisensorpro_output
     mutect2_vcf
-    strelka_vcf
+    strelka_vcf_snvs
+    strelka_vcf_indels
     versions    = ch_versions
 }
