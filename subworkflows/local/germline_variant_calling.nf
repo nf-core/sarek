@@ -102,6 +102,7 @@ workflow GERMLINE_VARIANT_CALLING {
     // MANTA
     if (params.tools.contains('manta')){
         RUN_MANTA_GERMLINE (cram_recalibrated_intervals_gz_tbi,
+                        dict,
                         fasta,
                         fasta_fai,
                         intervals_bed_combine_gz)

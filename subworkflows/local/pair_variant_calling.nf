@@ -100,6 +100,7 @@ workflow PAIR_VARIANT_CALLING {
 
     if (tools.contains('manta')) {
         RUN_MANTA_SOMATIC(  cram_pair_intervals_gz_tbi,
+                            dict,
                             fasta,
                             fasta_fai,
                             intervals_bed_combine_gz)

@@ -128,6 +128,7 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
 
     if (tools.contains('manta')){
         RUN_MANTA_TUMORONLY(cram_recalibrated_intervals_gz_tbi,
+                            dict,
                             fasta,
                             fasta_fai,
                             intervals_bed_combine_gz)
