@@ -1,16 +1,16 @@
-include { CAT_CAT as CAT_MPILEUP_NORMAL                          } from '../../../../../modules/nf-core/modules/cat/cat/main.nf'
-include { CAT_CAT as CAT_MPILEUP_TUMOR                           } from '../../../../../modules/nf-core/modules/cat/cat/main.nf'
+include { CAT_CAT as CAT_mpileup_normal                          } from '../../../../../modules/nf-core/modules/cat/cat/main.nf'
+include { CAT_CAT as CAT_mpileup_tumor                           } from '../../../../../modules/nf-core/modules/cat/cat/main.nf'
 include { CONTROLFREEC_FREEC as FREEC_SOMATIC                    } from '../../../../../modules/nf-core/modules/controlfreec/freec/main'
 include { CONTROLFREEC_ASSESSSIGNIFICANCE as ASSESS_SIGNIFICANCE } from '../../../../../modules/nf-core/modules/controlfreec/assesssignificance/main'
 include { CONTROLFREEC_FREEC2BED as FREEC2BED                    } from '../../../../../modules/nf-core/modules/controlfreec/freec2bed/main'
 include { CONTROLFREEC_FREEC2CIRCOS as FREEC2CIRCOS              } from '../../../../../modules/nf-core/modules/controlfreec/freec2circos/main'
 include { CONTROLFREEC_MAKEGRAPH as MAKEGRAPH                    } from '../../../../../modules/nf-core/modules/controlfreec/makegraph/main'
-include { MPILEUP                                                } from '../../../../../subworkflows/nf-core/variantcalling/mpileup/main'
 
 workflow RUN_CONTROLFREEC_SOMATIC {
     take:
-    cram_normal              // channel: [mandatory] [meta, cram, crai, interval]
-    cram_tumor               // channel: [mandatory] [meta, cram, crai, interval]
+//    mpileup_normal              // channel: [mandatory] [meta, cram, crai, interval]
+//    mpileup_tumor               // channel: [mandatory] [meta, cram, crai, interval]
+    controlfreec_input
     fasta                    // channel: [mandatory]
     fasta_fai                // channel: [mandatory]
     dbsnp                    // channel: [mandatory]
@@ -23,11 +23,9 @@ workflow RUN_CONTROLFREEC_SOMATIC {
 
     ch_versions = Channel.empty()
 
-    MPILEUP(cram_normal, cram_tumor, fasta)
-
-    controlfreec_input_normal = Channel.empty().mix(
-        MPILEUP.out.cat_mpileup_normal,
-        MPILEUP.out.mpileup_normal_no_intervals
+/*    controlfreec_input_normal = Channel.empty().mix(
+        mpileup_normal.out.cat_mpileup,
+        mpileup_normal.out.mpileup_no_intervals
     ).map{ meta, pileup ->
         new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals]
 
@@ -35,19 +33,13 @@ workflow RUN_CONTROLFREEC_SOMATIC {
     }
 
     controlfreec_input_tumor = Channel.empty().mix(
-        MPILEUP.out.cat_mpileup_tumor,
-        MPILEUP.out.mpileup_tumor_no_intervals
+        mpileup_tumor.out.cat_mpileup,
+        mpileup_tumor.out.mpileup_no_intervals
     ).map{ meta, pileup ->
         new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals]
         [new_meta, pileup]
     }
-
-    controlfreec_input_normal.cross(controlfreec_input_tumor)
-        .map{ normal, tumor ->
-            [normal[0], normal[1], tumor[1], [], [], [], []]
-        }
-        .set{controlfreec_input}
-
+*/
     FREEC_SOMATIC(controlfreec_input,
                 fasta,
                 fasta_fai,
@@ -64,7 +56,6 @@ workflow RUN_CONTROLFREEC_SOMATIC {
     FREEC2CIRCOS( FREEC_SOMATIC.out.ratio )
     MAKEGRAPH(FREEC_SOMATIC.out.ratio.join(FREEC_SOMATIC.out.BAF))
 
-    ch_versions = ch_versions.mix(MPILEUP.out.versions)
     ch_versions = ch_versions.mix(FREEC_SOMATIC.out.versions)
     ch_versions = ch_versions.mix(ASSESS_SIGNIFICANCE.out.versions)
     ch_versions = ch_versions.mix(FREEC2BED.out.versions)
