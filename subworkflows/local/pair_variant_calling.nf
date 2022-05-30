@@ -93,7 +93,7 @@ workflow PAIR_VARIANT_CALLING {
     }
 
     if (tools.contains('cnvkit')){
-        cram_test = cram_pair
+        cram_pair_cnvkit = cram_pair
             .map{meta, normal_cram, normal_crai, tumor_cram, tumor_crai ->
                 [meta, tumor_cram, normal_cram]
         }
