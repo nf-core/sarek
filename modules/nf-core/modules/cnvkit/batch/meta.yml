@@ -11,27 +11,6 @@ tools:
       homepage: https://cnvkit.readthedocs.io/en/stable/index.html
       documentation: https://cnvkit.readthedocs.io/en/stable/index.html
       licence: ["Apache-2.0"]
-params:
-  - outdir:
-      type: string
-      description: |
-        The pipeline's output directory. By default, the module will
-        output files into `$params.outdir/<SOFTWARE>`
-  - publish_dir_mode:
-      type: string
-      description: |
-        Value for the Nextflow `publishDir` mode parameter.
-        Available: symlink, rellink, link, copy, copyNoFollow, move.
-  - enable_conda:
-      type: boolean
-      description: |
-        Run the module with Conda using the software specified
-        via the `conda` directive
-  - singularity_pull_docker_container:
-      type: boolean
-      description: |
-        Instead of directly downloading Singularity images for use with Singularity,
-        force the workflow to pull and convert Docker containers instead.
 input:
   - meta:
       type: map
@@ -49,7 +28,7 @@ input:
   - fasta:
       type: file
       description: |
-        Input reference genome fasta file
+        Input reference genome fasta file (only needed for cram_input and/or when normal_samples are provided)
   - targetfile:
       type: file
       description: |
@@ -80,6 +59,14 @@ output:
       type: file
       description: File containing copy number segment information
       pattern: "*.{cns}"
+  - pdf:
+      type: file
+      description: File with plot of copy numbers or segments on chromosomes
+      pattern: "*.{pdf}"
+  - png:
+      type: file
+      description: File with plot of bin-level log2 coverages and segmentation calls
+      pattern: "*.{png}"
   - versions:
       type: file
       description: File containing software versions
@@ -91,3 +78,4 @@ authors:
   - "@drpatelh"
   - "@fbdtemme"
   - "@lassefolkersen"
+  - "@SusiJo"

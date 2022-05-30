@@ -8,6 +8,7 @@ include { GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING } from '../../subworkflows/nf-
 include { RUN_MANTA_TUMORONLY                     } from '../nf-core/variantcalling/manta/tumoronly/main.nf'
 include { RUN_STRELKA_SINGLE                      } from '../nf-core/variantcalling/strelka/single/main.nf'
 include { RUN_CONTROLFREEC_TUMORONLY              } from '../nf-core/variantcalling/controlfreec/tumoronly/main.nf'
+include { RUN_CNVKIT_TUMORONLY                    } from '../nf-core/variantcalling/cnvkit/tumoronly/main.nf'
 
 workflow TUMOR_ONLY_VARIANT_CALLING {
     take:
@@ -81,6 +82,20 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
                         mappability,
                         intervals_bed_combined)
         ch_versions = ch_versions.mix(RUN_CONTROLFREEC_TUMORONLY.out.versions)
+    }
+
+    if(tools.contains('cnvkit')){
+        cram_recalibrated_cnvkit = cram_recalibrated
+            .map{ meta, cram, crai ->
+                [meta, cram, []]
+            }
+
+        RUN_CNVKIT_TUMORONLY (  cram_recalibrated_cnvkit,
+                                fasta,
+                                intervals_bed_combined,
+                                [] )
+
+        ch_versions = ch_versions.mix(RUN_CNVKIT_TUMORONLY.out.versions)
     }
 
     if (tools.contains('freebayes')){
