@@ -1,5 +1,4 @@
 include { BCFTOOLS_SORT                      } from '../../../../modules/nf-core/modules/bcftools/sort/main'
-include { TABIX_BGZIP as BGZIP_VC_FREEBAYES  } from '../../../../modules/nf-core/modules/tabix/bgzip/main'
 include { GATK4_MERGEVCFS as MERGE_FREEBAYES } from '../../../../modules/nf-core/modules/gatk4/mergevcfs/main'
 include { FREEBAYES                          } from '../../../../modules/nf-core/modules/freebayes/main'
 include { TABIX_TABIX as TABIX_VC_FREEBAYES  } from '../../../../modules/nf-core/modules/tabix/tabix/main'

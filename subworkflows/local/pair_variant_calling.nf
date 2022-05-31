@@ -137,6 +137,7 @@ workflow PAIR_VARIANT_CALLING {
         }
 
         RUN_STRELKA_SOMATIC(cram_pair_strelka,
+                            dict,
                             fasta,
                             fasta_fai,
                             intervals_bed_combine_gz)
