@@ -1,0 +1,62 @@
+name: gatk_joint_germline_variant_calling
+description: |
+  merge samples with genomicsdbimport, perform joint genotyping with genotypeGVCFS
+keywords:
+  - gatk4
+  - genomisdbimport
+  - genotypegvcfs
+  - joint_germline
+modules:
+  - gatk4/genomicsdbimport
+  - gatk4/genotypegvcfs
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test' ]
+  - input:
+      type: list
+      description: |
+        list containing gvcf files and their indexes from haplotypecaller run in GVCF mode.
+      pattern: "[[ id:'test' ], .g.vcf, .g.vcf.tbi]"
+  - fasta:
+      type: file
+      description: The reference fasta file
+      pattern: "*.fasta"
+  - fai:
+      type: file
+      description: Index of reference fasta file
+      pattern: "*.fasta.fai"
+  - dict:
+      type: file
+      description: GATK sequence dictionary
+      pattern: "*.dict"
+  - sites:
+      type: file
+      description: Population vcf of germline sequencing, containing known sites.
+      pattern: "*.vcf.gz"
+  - sites_index:
+      type: file
+      description: Index file for the known sites.
+      pattern: "*.vcf.gz.tbi"
+
+output:
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: 'versions.yml'
+  - genomicsdb:
+      type: directory
+      description: Genomicsddworkspace made using genomicsdbimport.
+      pattern: "/genomicsdbworkspace"
+  - genotype_vcf:
+      type: file
+      description: File containing the joint vcf file from genotypegvcfs.
+      pattern: "*.vcf.gz"
+  - genotype_index:
+      type: file
+      description: File containing the contamination table.
+      pattern: ".vcf.gz.tbi"
+authors:
+  - '@GCJMackenzie'
