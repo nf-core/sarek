@@ -781,7 +781,8 @@ workflow SAREK {
             intervals,
             intervals_bed_gz_tbi,
             intervals_bed_combined_gz_tbi,
-            intervals_bed_combined_gz)
+            intervals_bed_combined_gz,
+            intervals_bed_combined)
             // params.joint_germline)
 
         // TUMOR ONLY VARIANT CALLING
