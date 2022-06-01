@@ -84,10 +84,10 @@
     - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3_ratio.png
     - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.bed
     - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.circos.txt
-    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.normal.mpileup
+    - path: results/variant_calling/sample4_vs_sample3/mpileup/sample4_vs_sample3.normal.mpileup
     - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.normal.mpileup_control.cpn
     - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.p.value.txt
-    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.mpileup
+    - path: results/variant_calling/sample4_vs_sample3/mpileup/sample4_vs_sample3.tumor.mpileup
     - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.mpileup_BAF.txt
     - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.mpileup_CNVs
     - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.mpileup_info.txt
@@ -110,10 +110,10 @@
     - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3_ratio.png
     - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.bed
     - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.circos.txt
-    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.normal.mpileup
+    - path: results/variant_calling/sample4_vs_sample3/mpileup/sample4_vs_sample3.normal.mpileup
     - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.normal.mpileup_control.cpn
     - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.p.value.txt
-    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.mpileup
+    - path: results/variant_calling/sample4_vs_sample3/mpileup/sample4_vs_sample3.tumor.mpileup
     - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.mpileup_BAF.txt
     - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.mpileup_CNVs
     - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.mpileup_info.txt
@@ -141,7 +141,7 @@
     - path: results/variant_calling/sample2/controlfreec/sample2_sample.cpn
     - path: results/variant_calling/sample2/controlfreec/sample2.bed
     - path: results/variant_calling/sample2/controlfreec/sample2.circos.txt
-    - path: results/variant_calling/sample2/controlfreec/sample2.tumor.mpileup
+    - path: results/variant_calling/sample2/mpileup/sample2.tumor.mpileup
     - path: results/variant_calling/sample2/controlfreec/sample2.p.value.txt
 
 - name: Run variant calling on germline sample with deepvariant

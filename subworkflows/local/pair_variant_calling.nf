@@ -90,11 +90,10 @@ workflow PAIR_VARIANT_CALLING {
     }
 
     if (tools.contains('controlfreec')){
-        RUN_MPILEUP_NORMAL.out.mpileup.cross(RUN_MPILEUP_TUMOR.out.mpileup)
+        controlfreec_input = RUN_MPILEUP_NORMAL.out.mpileup.cross(RUN_MPILEUP_TUMOR.out.mpileup)
         .map{ normal, tumor ->
             [normal[0], normal[1], tumor[1], [], [], [], []]
         }
-        .set{controlfreec_input}
 
         RUN_CONTROLFREEC_SOMATIC(controlfreec_input,
                         fasta,
