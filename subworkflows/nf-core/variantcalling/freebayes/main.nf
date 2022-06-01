@@ -1,7 +1,8 @@
-include { BCFTOOLS_SORT                      } from '../../../../modules/nf-core/modules/bcftools/sort/main'
-include { GATK4_MERGEVCFS as MERGE_FREEBAYES } from '../../../../modules/nf-core/modules/gatk4/mergevcfs/main'
-include { FREEBAYES                          } from '../../../../modules/nf-core/modules/freebayes/main'
-include { TABIX_TABIX as TABIX_VC_FREEBAYES  } from '../../../../modules/nf-core/modules/tabix/tabix/main'
+include { BCFTOOLS_SORT as BCFTOOLS_SORT_INTERVAL_VCFS } from '../../../../modules/nf-core/modules/bcftools/sort/main'
+include { BCFTOOLS_SORT                                } from '../../../../modules/nf-core/modules/bcftools/sort/main'
+include { GATK4_MERGEVCFS as MERGE_FREEBAYES           } from '../../../../modules/nf-core/modules/gatk4/mergevcfs/main'
+include { FREEBAYES                                    } from '../../../../modules/nf-core/modules/freebayes/main'
+include { TABIX_TABIX as TABIX_VC_FREEBAYES            } from '../../../../modules/nf-core/modules/tabix/tabix/main'
 
 workflow RUN_FREEBAYES {
     take:
@@ -31,8 +32,9 @@ workflow RUN_FREEBAYES {
     TABIX_VC_FREEBAYES(BCFTOOLS_SORT.out.vcf)
 
     // Only when using intervals
+    BCFTOOLS_SORT_INTERVAL_VCFS(freebayes_vcf_out.intervals)
     MERGE_FREEBAYES(
-        freebayes_vcf_out.intervals
+        BCFTOOLS_SORT_INTERVAL_VCFS.out.vcf
             .map{ meta, vcf ->
 
                 new_id = meta.tumor_id ? meta.tumor_id + "_vs_" + meta.normal_id : meta.sample
