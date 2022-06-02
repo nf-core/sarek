@@ -2,7 +2,7 @@ include { GATK4_MERGEVCFS as MERGE_MANTA_DIPLOID           } from '../../../../.
 include { GATK4_MERGEVCFS as MERGE_MANTA_SMALL_INDELS      } from '../../../../../modules/nf-core/modules/gatk4/mergevcfs/main'
 include { GATK4_MERGEVCFS as MERGE_MANTA_SOMATIC           } from '../../../../../modules/nf-core/modules/gatk4/mergevcfs/main'
 include { GATK4_MERGEVCFS as MERGE_MANTA_SV                } from '../../../../../modules/nf-core/modules/gatk4/mergevcfs/main'
-include { MANTA_SOMATIC                              } from '../../../../../modules/nf-core/modules/manta/somatic/main'
+include { MANTA_SOMATIC                                    } from '../../../../../modules/nf-core/modules/manta/somatic/main'
 
 workflow RUN_MANTA_SOMATIC {
     take:

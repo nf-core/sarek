@@ -1,7 +1,7 @@
-include { GATK4_MERGEVCFS as MERGE_MANTA_DIPLOID           } from '../../../../../modules/nf-core/modules/gatk4/mergevcfs/main'
-include { GATK4_MERGEVCFS as MERGE_MANTA_SMALL_INDELS      } from '../../../../../modules/nf-core/modules/gatk4/mergevcfs/main'
-include { GATK4_MERGEVCFS as MERGE_MANTA_SV                } from '../../../../../modules/nf-core/modules/gatk4/mergevcfs/main'
-include { MANTA_GERMLINE                             } from '../../../../../modules/nf-core/modules/manta/germline/main'
+include { GATK4_MERGEVCFS as MERGE_MANTA_DIPLOID      } from '../../../../../modules/nf-core/modules/gatk4/mergevcfs/main'
+include { GATK4_MERGEVCFS as MERGE_MANTA_SMALL_INDELS } from '../../../../../modules/nf-core/modules/gatk4/mergevcfs/main'
+include { GATK4_MERGEVCFS as MERGE_MANTA_SV           } from '../../../../../modules/nf-core/modules/gatk4/mergevcfs/main'
+include { MANTA_GERMLINE                              } from '../../../../../modules/nf-core/modules/manta/germline/main'
 
 // TODO: Research if splitting by intervals is ok, we pretend for now it is fine.
 // Seems to be the consensus on upstream modules implementation too
