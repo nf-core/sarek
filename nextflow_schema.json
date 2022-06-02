@@ -552,7 +552,7 @@
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
                 },
                 "vep_cache_version": {
-                    "type": "integer",
+                    "type": "number",
                     "fa_icon": "fas fa-tag",
                     "description": "VEP cache version.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
