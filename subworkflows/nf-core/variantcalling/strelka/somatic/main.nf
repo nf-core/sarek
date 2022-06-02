@@ -57,13 +57,13 @@ workflow RUN_STRELKA_SOMATIC {
                     strelka_vcf_snvs.no_intervals
                     )
                 .map{ meta, vcf ->
-                    [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals, variantcaller:"Strelka_SNVS"],
+                    [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals, variantcaller:"Strelka", type:"snvs"],
                     vcf]
                 }
 
     strelka_vcf_indels = Channel.empty()mix(CONCAT_STRELKA_INDELS.out.vcf, strelka_vcf_indels.no_intervals)
                 .map{ meta, vcf ->
-                    [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals, variantcaller:"Strelka_INDELS"],
+                    [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals, variantcaller:"Strelka", type: "indels"],
                     vcf]
                 }
 

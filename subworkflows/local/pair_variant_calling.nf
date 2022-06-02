@@ -37,8 +37,7 @@ workflow PAIR_VARIANT_CALLING {
     //TODO: Temporary until the if's can be removed and printing to terminal is prevented with "when" in the modules.config
     freebayes_vcf        = Channel.empty()
     manta_vcf            = Channel.empty()
-    strelka_vcf_snvs     = Channel.empty()
-    strelka_vcf_indels   = Channel.empty()
+    strelka_vcf          = Channel.empty()
     msisensorpro_output  = Channel.empty()
     mutect2_vcf          = Channel.empty()
 
@@ -109,7 +108,7 @@ workflow PAIR_VARIANT_CALLING {
 
     if (tools.contains('strelka')) {
 
-        if (tools.contains('manta') && !params.no_strelka_bp) {
+        if (tools.contains('manta')) {
             cram_pair_strelka = cram_pair.join(manta_candidate_small_indels_vcf)
                                         .join(manta_candidate_small_indels_vcf_tbi)
                                         .combine(intervals_bed_gz_tbi)
@@ -135,9 +134,7 @@ workflow PAIR_VARIANT_CALLING {
                             fasta_fai,
                             intervals_bed_combine_gz)
 
-        strelka_vcf_snvs = RUN_STRELKA_SOMATIC.out.strelka_vcf_snvs
-        strelka_vcf_indels = RUN_STRELKA_SOMATIC.out.strelka_vcf_indels
-
+        strelka_vcf  = Channel.empty().mix(RUN_STRELKA_SOMATIC.out.strelka_vcf_snvs, RUN_STRELKA_SOMATIC.out.strelka_vcf_indels)
         ch_versions = ch_versions.mix(RUN_STRELKA_SOMATIC.out.versions)
     }
 
@@ -178,7 +175,6 @@ workflow PAIR_VARIANT_CALLING {
     manta_vcf
     msisensorpro_output
     mutect2_vcf
-    strelka_vcf_snvs
-    strelka_vcf_indels
+    strelka_vcf
     versions    = ch_versions
 }

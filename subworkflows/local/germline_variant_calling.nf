@@ -62,7 +62,7 @@ workflow GERMLINE_VARIANT_CALLING {
     if(params.tools.contains('deepvariant')){
         RUN_DEEPVARIANT(cram_recalibrated_intervals, fasta, fasta_fai, intervals_bed_combine_gz)
 
-        deepvariant_vcf = RUN_DEEPVARIANT.out.deepvariant_vcf
+        deepvariant_vcf = Channel.empty().mix(RUN_DEEPVARIANT.out.deepvariant_vcf,RUN_DEEPVARIANT.out.deepvariant_gvcf)
         ch_versions     = ch_versions.mix(RUN_DEEPVARIANT.out.versions)
     }
 

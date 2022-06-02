@@ -62,13 +62,17 @@ workflow RUN_DEEPVARIANT {
         intervals_bed_gz)
 
     // Mix output channels for "no intervals" and "with intervals" results
-    deepvariant_vcf = Channel.empty().mix(
+    deepvariant_gvcf = Channel.empty().mix(
                         CONCAT_DEEPVARIANT_GVCF.out.vcf,
+                        deepvariant_gvcf_out.no_intervals)
+                    .map{ meta, vcf ->
+                        [[patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals, variantcaller:"Deepvariant", type: "gvcf"], vcf]
+                    }
+    deepvariant_vcf = Channel.empty().mix(
                         CONCAT_DEEPVARIANT_VCF.out.vcf,
-                        deepvariant_gvcf_out.no_intervals,
                         deepvariant_vcf_out.no_intervals)
                     .map{ meta, vcf ->
-                        [[patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals, variantcaller:"Deepvariant"], vcf]
+                        [[patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals, variantcaller:"Deepvariant", type: "vcf"], vcf]
                     }
 
     ch_versions = ch_versions.mix(BGZIP_VC_DEEPVARIANT_GVCF.out.versions)
@@ -81,5 +85,6 @@ workflow RUN_DEEPVARIANT {
 
     emit:
     deepvariant_vcf
+    deepvariant_gvcf
     versions = ch_versions
 }
