@@ -11,7 +11,7 @@ process BCFTOOLS_SORT {
     tuple val(meta), path(vcf)
 
     output:
-    tuple val(meta), path("*.gz") , emit: vcf
+    tuple val(meta), path("*.gz"), emit: vcf
     path "versions.yml"           , emit: versions
 
     when:
