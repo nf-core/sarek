@@ -1,4 +1,3 @@
-include { BCFTOOLS_SORT as BCFTOOLS_SORT_INTERVAL_VCFS } from '../../../../modules/nf-core/modules/bcftools/sort/main'
 include { BCFTOOLS_SORT                                } from '../../../../modules/nf-core/modules/bcftools/sort/main'
 include { GATK4_MERGEVCFS as MERGE_FREEBAYES           } from '../../../../modules/nf-core/modules/gatk4/mergevcfs/main'
 include { FREEBAYES                                    } from '../../../../modules/nf-core/modules/freebayes/main'
@@ -22,19 +21,18 @@ workflow RUN_FREEBAYES {
         fasta_fai,
         [], [], [])
 
-    FREEBAYES.out.vcf.branch{
+    BCFTOOLS_SORT(FREEBAYES.out.vcf)
+    BCFTOOLS_SORT.out.vcf.branch{
             intervals:    it[0].num_intervals > 1
             no_intervals: it[0].num_intervals <= 1
-        }.set{freebayes_vcf_out}
+        }.set{bcftools_vcf_out}
 
     // Only when no intervals
-    BCFTOOLS_SORT(freebayes_vcf_out.no_intervals)
-    TABIX_VC_FREEBAYES(BCFTOOLS_SORT.out.vcf)
+    TABIX_VC_FREEBAYES(bcftools_vcf_out.no_intervals)
 
     // Only when using intervals
-    BCFTOOLS_SORT_INTERVAL_VCFS(freebayes_vcf_out.intervals)
     MERGE_FREEBAYES(
-        BCFTOOLS_SORT_INTERVAL_VCFS.out.vcf
+        bcftools_vcf_out.intervals
             .map{ meta, vcf ->
 
                 new_id = meta.tumor_id ? meta.tumor_id + "_vs_" + meta.normal_id : meta.sample
@@ -49,7 +47,7 @@ workflow RUN_FREEBAYES {
     // Mix output channels for "no intervals" and "with intervals" results
     freebayes_vcf = Channel.empty().mix(
                         MERGE_FREEBAYES.out.vcf,
-                        freebayes_vcf_out.no_intervals)
+                        bcftools_vcf_out.no_intervals)
                     .map{ meta, vcf ->
 
                         new_id = meta.tumor_id ? meta.tumor_id + "_vs_" + meta.normal_id : meta.sample
