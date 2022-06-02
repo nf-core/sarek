@@ -148,7 +148,7 @@
                 "git_sha": "169b2b96c1167f89ab07127b7057c1d90a6996c7"
             },
             "gatk4/mergevcfs": {
-                "git_sha": "169b2b96c1167f89ab07127b7057c1d90a6996c7"
+                "git_sha": "4199a05aeb0ec277d40cb112949bb85893310873"
             },
             "gatk4/mutect2": {
                 "git_sha": "169b2b96c1167f89ab07127b7057c1d90a6996c7"

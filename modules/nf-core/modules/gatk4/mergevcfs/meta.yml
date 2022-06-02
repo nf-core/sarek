@@ -35,6 +35,11 @@ output:
       type: file
       description: merged vcf file
       pattern: "*.vcf.gz"
+  - tbi:
+      type: file
+      description: index files for the merged vcf files
+      pattern: "*.tbi"
+
   - versions:
       type: file
       description: File containing software versions
