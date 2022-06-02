@@ -109,7 +109,7 @@ workflow PAIR_VARIANT_CALLING {
 
     if (tools.contains('strelka')) {
 
-        if (tools.contains('manta')) {
+        if (tools.contains('manta') && !params.no_strelka_bp) {
             cram_pair_strelka = cram_pair.join(manta_candidate_small_indels_vcf)
                                         .join(manta_candidate_small_indels_vcf_tbi)
                                         .combine(intervals_bed_gz_tbi)
