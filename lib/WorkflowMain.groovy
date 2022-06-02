@@ -75,7 +75,10 @@ class WorkflowMain {
         // Check input has been provided
         if (!params.input) {
             log.warn "No samplesheet specified, attempting to restart from csv files present in ${params.outdir}"
-            WorkflowSarek.retrieveInput(params,log)
+            println "checksamplesheet: " + params.input
+            WorkflowSarek.retrieveInput(params, log)
+            println "retrievedInput: " + params.input
+
         }
     }
 

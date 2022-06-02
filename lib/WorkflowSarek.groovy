@@ -66,7 +66,9 @@ class WorkflowSarek {
             //                                params.input = "${params.outdir}/preprocessing/csv/markduplicates_no_table.csv";
             //                                break
             case 'prepare_recalibration':   log.warn "Using file ${params.outdir}/preprocessing/csv/markduplicates_no_table.csv"
+                                            println "case before: " + params.input
                                             params.input = "${params.outdir}/preprocessing/csv/markduplicates_no_table.csv";
+                                            println "case: " + "${params.outdir}/preprocessing/csv/markduplicates_no_table.csv"
                                             break
             case 'recalibrate':             log.warn "Using file ${params.outdir}/preprocessing/csv/markduplicates.csv"
                                             params.input = "${params.outdir}/preprocessing/csv/markduplicates.csv";

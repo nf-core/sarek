@@ -61,7 +61,11 @@ for (param in checkPathParamList) if (param) file(param, checkIfExists: true)
 //     // }
 // }
 
-ch_input_sample = extract_csv(file(params.input, checkIfExists: true))
+println params.input
+f = file(params.input, checkIfExists: true)
+//println f
+ch_input_sample = extract_csv(f)
+
 
 if (params.wes) {
     if (params.intervals && !params.intervals.endsWith("bed")) exit 1, "Target file must be in BED format"
