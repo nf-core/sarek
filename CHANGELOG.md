@@ -54,6 +54,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#551](https://github.com/nf-core/sarek/pull/551) - Sync `TEMPLATE` with `tools` `2.4`
 - [#563](https://github.com/nf-core/sarek/pull/563) - Updated subway map
 - [#572](https://github.com/nf-core/sarek/pull/572) - Adjusted subway map svg for firefox compatibility
+- [#577](https://github.com/nf-core/sarek/pull/577) - Update `RELEASE_CHECKLIST`
 
 ### Fixed
 
