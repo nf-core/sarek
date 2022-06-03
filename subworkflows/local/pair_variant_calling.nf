@@ -104,7 +104,7 @@ workflow PAIR_VARIANT_CALLING {
     }
 
     if (tools.contains('freebayes')){
-        RUN_FREEBAYES_SOMATIC(cram_pair_intervals, fasta, fasta_fai, intervals_bed_combine_gz)
+        RUN_FREEBAYES_SOMATIC(cram_pair_intervals, dict, fasta, fasta_fai, intervals_bed_combine_gz)
 
         freebayes_vcf = RUN_FREEBAYES_SOMATIC.out.freebayes_vcf
         ch_versions   = ch_versions.mix(RUN_FREEBAYES_SOMATIC.out.versions)
@@ -112,6 +112,7 @@ workflow PAIR_VARIANT_CALLING {
 
     if (tools.contains('manta')) {
         RUN_MANTA_SOMATIC(  cram_pair_intervals_gz_tbi,
+                            dict,
                             fasta,
                             fasta_fai,
                             intervals_bed_combine_gz)
@@ -148,6 +149,7 @@ workflow PAIR_VARIANT_CALLING {
         }
 
         RUN_STRELKA_SOMATIC(cram_pair_strelka,
+                            dict,
                             fasta,
                             fasta_fai,
                             intervals_bed_combine_gz)
