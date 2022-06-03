@@ -1,3 +1,97 @@
+- name: Run variant calling on somatic samples with cnvkit
+- command: nextflow run main.nf -profile test,tools_somatic,docker --tools cnvkit -c ./tests/nextflow.config
+- tags:
+    - cnvkit
+    - somatic
+    - variant_calling
+    - copy_number_calling
+- files:
+    - path: results/variant_calling/sample3/cnvkit/multi_intervals.antitarget.bed
+    - path: results/variant_calling/sample3/cnvkit/test.paired_end.recalibrated.sorted.antitargetcoverage.cnn
+    - path: results/variant_calling/sample3/cnvkit/test.paired_end.recalibrated.sorted.targetcoverage.cnn
+    - path: results/variant_calling/sample3/cnvkit/reference.cnn
+    - path: results/variant_calling/sample3/cnvkit/test.paired_end.recalibrated.sorted-diagram.pdf
+    - path: results/variant_calling/sample3/cnvkit/test.paired_end.recalibrated.sorted-scatter.png
+    - path: results/variant_calling/sample3/cnvkit/test.paired_end.recalibrated.sorted.bintest.cns
+    - path: results/variant_calling/sample3/cnvkit/multi_intervals.target.bed
+    - path: results/variant_calling/sample3/cnvkit/test.paired_end.recalibrated.sorted.cnr
+    - path: results/variant_calling/sample3/cnvkit/test.paired_end.recalibrated.sorted.cns
+    - path: results/variant_calling/sample3/cnvkit/test.paired_end.recalibrated.sorted.call.cns
+    - path: results/variant_calling/sample4_vs_sample3/cnvkit/multi_intervals.antitarget.bed
+    - path: results/variant_calling/sample4_vs_sample3/cnvkit/test.paired_end.recalibrated.sorted.antitargetcoverage.cnn
+    - path: results/variant_calling/sample4_vs_sample3/cnvkit/test.paired_end.recalibrated.sorted.targetcoverage.cnn
+    - path: results/variant_calling/sample4_vs_sample3/cnvkit/test2.paired_end.recalibrated.sorted.antitargetcoverage.cnn
+    - path: results/variant_calling/sample4_vs_sample3/cnvkit/test2.paired_end.recalibrated.sorted.bintest.cns
+    - path: results/variant_calling/sample4_vs_sample3/cnvkit/reference.cnn
+    - path: results/variant_calling/sample4_vs_sample3/cnvkit/test2.paired_end.recalibrated.sorted-scatter.png
+    - path: results/variant_calling/sample4_vs_sample3/cnvkit/test2.paired_end.recalibrated.sorted-diagram.pdf
+    - path: results/variant_calling/sample4_vs_sample3/cnvkit/test2.paired_end.recalibrated.sorted.cnr
+    - path: results/variant_calling/sample4_vs_sample3/cnvkit/test2.paired_end.recalibrated.sorted.cns
+    - path: results/variant_calling/sample4_vs_sample3/cnvkit/multi_intervals.target.bed
+    - path: results/variant_calling/sample4_vs_sample3/cnvkit/test2.paired_end.recalibrated.sorted.targetcoverage.cnn
+    - path: results/variant_calling/sample4_vs_sample3/cnvkit/test2.paired_end.recalibrated.sorted.call.cns
+
+- name: Run variant calling on somatic samples with cnvkit only paired variant calling
+- command: nextflow run main.nf -profile test,tools_somatic,docker --tools cnvkit -c ./tests/nextflow.config  --only_paired_variant_calling
+- tags:
+    - cnvkit
+    - somatic
+    - only_paired_variant_calling
+    - copy_number_calling
+- files:
+    - path: results/variant_calling/sample4_vs_sample3/cnvkit/multi_intervals.antitarget.bed
+    - path: results/variant_calling/sample4_vs_sample3/cnvkit/test.paired_end.recalibrated.sorted.antitargetcoverage.cnn
+    - path: results/variant_calling/sample4_vs_sample3/cnvkit/test.paired_end.recalibrated.sorted.targetcoverage.cnn
+    - path: results/variant_calling/sample4_vs_sample3/cnvkit/test2.paired_end.recalibrated.sorted.antitargetcoverage.cnn
+    - path: results/variant_calling/sample4_vs_sample3/cnvkit/test2.paired_end.recalibrated.sorted.bintest.cns
+    - path: results/variant_calling/sample4_vs_sample3/cnvkit/reference.cnn
+    - path: results/variant_calling/sample4_vs_sample3/cnvkit/test2.paired_end.recalibrated.sorted-scatter.png
+    - path: results/variant_calling/sample4_vs_sample3/cnvkit/test2.paired_end.recalibrated.sorted-diagram.pdf
+    - path: results/variant_calling/sample4_vs_sample3/cnvkit/test2.paired_end.recalibrated.sorted.cnr
+    - path: results/variant_calling/sample4_vs_sample3/cnvkit/test2.paired_end.recalibrated.sorted.cns
+    - path: results/variant_calling/sample4_vs_sample3/cnvkit/multi_intervals.target.bed
+    - path: results/variant_calling/sample4_vs_sample3/cnvkit/test2.paired_end.recalibrated.sorted.targetcoverage.cnn
+    - path: results/variant_calling/sample4_vs_sample3/cnvkit/test2.paired_end.recalibrated.sorted.call.cns
+
+- name: Run variant calling on tumor_only sample with cnvkit
+- command: nextflow run main.nf -profile test,tools_tumoronly,docker --tools cnvkit -c ./tests/nextflow.config
+- tags:
+    - cnvkit
+    - tumor_only
+    - variant_calling
+    - copy_number_calling
+- files:
+    - path: results/variant_calling/sample2/cnvkit/cnvkit.reference.target-tmp.bed
+    - path: results/variant_calling/sample2/cnvkit/test2.paired_end.recalibrated.sorted.antitargetcoverage.cnn
+    - path: results/variant_calling/sample2/cnvkit/test2.paired_end.recalibrated.sorted.bintest.cns
+    - path: results/variant_calling/sample2/cnvkit/test2.paired_end.recalibrated.sorted-scatter.png
+    - path: results/variant_calling/sample2/cnvkit/cnvkit.reference.antitarget-tmp.bed
+    - path: results/variant_calling/sample2/cnvkit/test2.paired_end.recalibrated.sorted-diagram.pdf
+    - path: results/variant_calling/sample2/cnvkit/test2.paired_end.recalibrated.sorted.cnr
+    - path: results/variant_calling/sample2/cnvkit/test2.paired_end.recalibrated.sorted.cns
+    - path: results/variant_calling/sample2/cnvkit/test2.paired_end.recalibrated.sorted.targetcoverage.cnn
+    - path: results/variant_calling/sample2/cnvkit/test2.paired_end.recalibrated.sorted.call.cns
+
+- name: Run variant calling on germline sample with cnvkit
+- command: nextflow run main.nf -profile test,tools_germline,docker --tools cnvkit -c ./tests/nextflow.config
+- tags:
+    - cnvkit
+    - germline
+    - variant_calling
+    - copy_number_calling
+- files:
+    - path: results/variant_calling/sample1/cnvkit/multi_intervals.antitarget.bed
+    - path: results/variant_calling/sample1/cnvkit/test.paired_end.recalibrated.sorted.antitargetcoverage.cnn
+    - path: results/variant_calling/sample1/cnvkit/test.paired_end.recalibrated.sorted.targetcoverage.cnn
+    - path: results/variant_calling/sample1/cnvkit/reference.cnn
+    - path: results/variant_calling/sample1/cnvkit/test.paired_end.recalibrated.sorted-diagram.pdf
+    - path: results/variant_calling/sample1/cnvkit/test.paired_end.recalibrated.sorted-scatter.png
+    - path: results/variant_calling/sample1/cnvkit/test.paired_end.recalibrated.sorted.bintest.cns
+    - path: results/variant_calling/sample1/cnvkit/multi_intervals.target.bed
+    - path: results/variant_calling/sample1/cnvkit/test.paired_end.recalibrated.sorted.cnr
+    - path: results/variant_calling/sample1/cnvkit/test.paired_end.recalibrated.sorted.cns
+    - path: results/variant_calling/sample1/cnvkit/test.paired_end.recalibrated.sorted.call.cns
+
 - name: Run variant calling on somatic samples with controlfreec
   command: nextflow run main.nf -profile test,tools_somatic,docker --tools controlfreec -c ./tests/nextflow.config
   tags:
