@@ -7,6 +7,7 @@ include { RUN_CONTROLFREEC_SOMATIC                  } from '../nf-core/variantca
 include { RUN_FREEBAYES as RUN_FREEBAYES_SOMATIC    } from '../nf-core/variantcalling/freebayes/main.nf'
 include { RUN_MANTA_SOMATIC                         } from '../nf-core/variantcalling/manta/somatic/main.nf'
 include { RUN_STRELKA_SOMATIC                       } from '../nf-core/variantcalling/strelka/somatic/main.nf'
+include { RUN_CNVKIT_SOMATIC                        } from '../nf-core/variantcalling/cnvkit/somatic/main.nf'
 
 workflow PAIR_VARIANT_CALLING {
     take:
@@ -89,6 +90,17 @@ workflow PAIR_VARIANT_CALLING {
                         mappability,
                         intervals_bed_combined)
         ch_versions = ch_versions.mix(RUN_CONTROLFREEC_SOMATIC.out.versions)
+    }
+
+    if (tools.contains('cnvkit')){
+        cram_pair_cnvkit = cram_pair
+            .map{meta, normal_cram, normal_crai, tumor_cram, tumor_crai ->
+                [meta, tumor_cram, normal_cram]
+        }
+        RUN_CNVKIT_SOMATIC( cram_test,
+                            fasta,
+                            intervals_bed_combined,
+                            [])
     }
 
     if (tools.contains('freebayes')){
