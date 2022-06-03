@@ -779,9 +779,7 @@ workflow SAREK {
             fasta,
             fasta_fai,
             intervals,
-            intervals_bed_gz_tbi,
-            intervals_bed_combined_gz_tbi,
-            intervals_bed_combined_gz)
+            intervals_bed_gz_tbi)
             // params.joint_germline)
 
         // TUMOR ONLY VARIANT CALLING
@@ -795,8 +793,6 @@ workflow SAREK {
             fasta_fai,
             intervals,
             intervals_bed_gz_tbi,
-            intervals_bed_combined_gz_tbi,
-            intervals_bed_combined_gz,
             intervals_bed_combined,
             germline_resource,
             germline_resource_tbi,
@@ -817,8 +813,6 @@ workflow SAREK {
             fasta_fai,
             intervals,
             intervals_bed_gz_tbi,
-            intervals_bed_combined_gz_tbi,
-            intervals_bed_combined_gz,
             intervals_bed_combined,
             msisensorpro_scan,
             germline_resource,

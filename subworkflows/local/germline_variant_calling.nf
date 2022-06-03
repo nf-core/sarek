@@ -19,8 +19,6 @@ workflow GERMLINE_VARIANT_CALLING {
         fasta_fai                    // channel: [mandatory] fasta_fai
         intervals                    // channel: [mandatory] intervals/target regions
         intervals_bed_gz_tbi         // channel: [mandatory] intervals/target regions index zipped and indexed
-        intervals_bed_combine_gz_tbi // channel: [mandatory] intervals/target regions index zipped and indexed in one file
-        intervals_bed_combine_gz     // channel: [mandatory] intervals/target regions index zipped in one file
         // joint_germline               // val: true/false on whether to run joint_germline calling, only works in combination with haplotypecaller at the moment
 
     main:
@@ -60,7 +58,7 @@ workflow GERMLINE_VARIANT_CALLING {
 
     // DEEPVARIANT
     if(params.tools.contains('deepvariant')){
-        RUN_DEEPVARIANT(cram_recalibrated_intervals, dict, fasta, fasta_fai, intervals_bed_combine_gz)
+        RUN_DEEPVARIANT(cram_recalibrated_intervals, dict, fasta, fasta_fai)
 
         deepvariant_vcf = Channel.empty().mix(RUN_DEEPVARIANT.out.deepvariant_vcf,RUN_DEEPVARIANT.out.deepvariant_gvcf)
         ch_versions     = ch_versions.mix(RUN_DEEPVARIANT.out.versions)
@@ -73,7 +71,7 @@ workflow GERMLINE_VARIANT_CALLING {
             .map{ meta, cram, crai, intervals ->
                 [meta, cram, crai, [], [], intervals]
             }
-        RUN_FREEBAYES(cram_recalibrated_intervals_freebayes, dict, fasta, fasta_fai, intervals_bed_combine_gz)
+        RUN_FREEBAYES(cram_recalibrated_intervals_freebayes, dict, fasta, fasta_fai)
 
         freebayes_vcf   = RUN_FREEBAYES.out.freebayes_vcf
         ch_versions     = ch_versions.mix(RUN_FREEBAYES.out.versions)
@@ -86,9 +84,7 @@ workflow GERMLINE_VARIANT_CALLING {
                         fasta_fai,
                         dict,
                         dbsnp,
-                        dbsnp_tbi,
-                        intervals_bed_combine_gz,
-                        intervals_bed_combine_gz_tbi)
+                        dbsnp_tbi)
 
         haplotypecaller_vcf  = RUN_HAPLOTYPECALLER.out.haplotypecaller_vcf
         //genotype_gvcf        = RUN_HAPLOTYPECALLER.out.genotype_gvcf
@@ -100,8 +96,7 @@ workflow GERMLINE_VARIANT_CALLING {
         RUN_MANTA_GERMLINE (cram_recalibrated_intervals_gz_tbi,
                         dict,
                         fasta,
-                        fasta_fai,
-                        intervals_bed_combine_gz)
+                        fasta_fai)
 
         manta_vcf   = RUN_MANTA_GERMLINE.out.manta_vcf
         ch_versions = ch_versions.mix(RUN_MANTA_GERMLINE.out.versions)
@@ -112,8 +107,7 @@ workflow GERMLINE_VARIANT_CALLING {
         RUN_STRELKA_SINGLE(cram_recalibrated_intervals_gz_tbi,
                 dict,
                 fasta,
-                fasta_fai,
-                intervals_bed_combine_gz)
+                fasta_fai)
 
         strelka_vcf = RUN_STRELKA_SINGLE.out.strelka_vcf
         ch_versions = ch_versions.mix(RUN_STRELKA_SINGLE.out.versions)

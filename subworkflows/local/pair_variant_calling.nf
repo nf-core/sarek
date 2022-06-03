@@ -20,8 +20,6 @@ workflow PAIR_VARIANT_CALLING {
         fasta_fai                     // channel: [mandatory] fasta_fai
         intervals                     // channel: [mandatory] intervals/target regions
         intervals_bed_gz_tbi          // channel: [mandatory] intervals/target regions index zipped and indexed
-        intervals_bed_combined_gz_tbi // channel: [mandatory] intervals/target regions all in one file zipped and indexed
-        intervals_bed_combine_gz      // channel: [mandatory] intervals/target regions zipped in one file
         intervals_bed_combined        // channel: [mandatory] intervals/target regions in one file unzipped
         msisensorpro_scan             // channel: [optional]  msisensorpro_scan
         germline_resource             // channel: [optional]  germline_resource
@@ -100,7 +98,7 @@ workflow PAIR_VARIANT_CALLING {
     }
 
     if (tools.contains('freebayes')){
-        RUN_FREEBAYES_SOMATIC(cram_pair_intervals, dict, fasta, fasta_fai, intervals_bed_combine_gz)
+        RUN_FREEBAYES_SOMATIC(cram_pair_intervals, dict, fasta, fasta_fai)
 
         freebayes_vcf = RUN_FREEBAYES_SOMATIC.out.freebayes_vcf
         ch_versions   = ch_versions.mix(RUN_FREEBAYES_SOMATIC.out.versions)
@@ -110,8 +108,7 @@ workflow PAIR_VARIANT_CALLING {
         RUN_MANTA_SOMATIC(  cram_pair_intervals_gz_tbi,
                             dict,
                             fasta,
-                            fasta_fai,
-                            intervals_bed_combine_gz)
+                            fasta_fai)
 
         manta_vcf                            = RUN_MANTA_SOMATIC.out.manta_vcf
         manta_candidate_small_indels_vcf     = RUN_MANTA_SOMATIC.out.manta_candidate_small_indels_vcf
@@ -145,8 +142,7 @@ workflow PAIR_VARIANT_CALLING {
         RUN_STRELKA_SOMATIC(cram_pair_strelka,
                             dict,
                             fasta,
-                            fasta_fai,
-                            intervals_bed_combine_gz)
+                            fasta_fai)
 
         strelka_vcf  = Channel.empty().mix(RUN_STRELKA_SOMATIC.out.strelka_vcf_snvs, RUN_STRELKA_SOMATIC.out.strelka_vcf_indels)
         ch_versions = ch_versions.mix(RUN_STRELKA_SOMATIC.out.versions)
@@ -173,9 +169,7 @@ workflow PAIR_VARIANT_CALLING {
             germline_resource,
             germline_resource_tbi,
             panel_of_normals,
-            panel_of_normals_tbi,
-            intervals_bed_combine_gz
-            )
+            panel_of_normals_tbi)
 
         mutect2_vcf = GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING.out.filtered_vcf
         ch_versions = ch_versions.mix(GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING.out.versions)

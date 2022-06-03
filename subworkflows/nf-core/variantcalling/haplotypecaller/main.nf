@@ -11,8 +11,6 @@ workflow RUN_HAPLOTYPECALLER {
     dict                            // channel: [mandatory]
     dbsnp                           // channel: [mandatory]
     dbsnp_tbi                       // channel: [mandatory]
-    intervals_bed_gz                // channel: [optional]  Contains a bed.gz file of all intervals combined provided with the cram input(s). Mandatory if interval files are used.
-    intervals_bed_combine_gz_tbi    // channel: [optional]  Contains a [bed.gz, bed.gz.tbi ]file of all intervals combined provided with the cram input(s). Mandatory if interval files are used.
 
     main:
 
