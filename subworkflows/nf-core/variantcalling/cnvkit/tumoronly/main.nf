@@ -13,6 +13,7 @@ workflow RUN_CNVKIT_TUMORONLY {
     take:
         cram_recalibrated   // channel: [mandatory] cram tumor
         fasta               // channel: [mandatory] fasta
+        fasta_fai           // channel: [optional]  fasta_fai
         targets             // channel: [mandatory] bed
         reference           // channel: [] cnn
 
@@ -28,7 +29,7 @@ workflow RUN_CNVKIT_TUMORONLY {
         // use reference for calling CNVs
         // cram_input needs the fasta reference genome for bam_conversion
 
-        CNVKIT_BATCH_TUMORONLY(cram_recalibrated, fasta, [], CNVKIT_REFERENCE.out.cnn)
+        CNVKIT_BATCH_TUMORONLY(cram_recalibrated, fasta, fasta_fai, [], CNVKIT_REFERENCE.out.cnn)
 
         ch_versions = ch_versions.mix(CNVKIT_ANTITARGET.out.versions)
         ch_versions = ch_versions.mix(CNVKIT_REFERENCE.out.versions)
