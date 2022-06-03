@@ -94,3 +94,4 @@ jobs:
             /home/runner/pytest_workflow_*/*/work
             !/home/runner/pytest_workflow_*/*/work/conda
             !/home/runner/pytest_workflow_*/*/work/singularity
+            /home/runner/pytest_workflow_*/**/.command.log
