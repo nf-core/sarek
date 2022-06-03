@@ -45,15 +45,8 @@ workflow RUN_MANTA_SOMATIC {
         }.set{manta_somatic_sv_vcf}
 
     //Only when using intervals
-<<<<<<< HEAD
-    BGZIP_VC_MANTA_SMALL_INDELS(manta_candidate_small_indels_vcf.intervals)
-
-    CONCAT_MANTA_SMALL_INDELS(
-        BGZIP_VC_MANTA_SMALL_INDELS.out.output.map{ meta, vcf ->
-=======
     MERGE_MANTA_SV(
         manta_candidate_small_indels_vcf.intervals.map{ meta, vcf ->
->>>>>>> origin/dev
 
                 [groupKey([patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals],
                             meta.num_intervals),
@@ -62,34 +55,16 @@ workflow RUN_MANTA_SOMATIC {
             }.groupTuple(),
         dict)
 
-<<<<<<< HEAD
-    BGZIP_VC_MANTA_SV(manta_candidate_sv_vcf.intervals)
-
-    CONCAT_MANTA_SV(
-        BGZIP_VC_MANTA_SV.out.output.map{ meta, vcf ->
-
-                [groupKey([patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals],
-                            meta.num_intervals),
-                vcf]
-=======
     MERGE_MANTA_SMALL_INDELS(
         manta_candidate_sv_vcf.intervals.map{ meta, vcf ->
                 new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals]
->>>>>>> origin/dev
 
             }.groupTuple(),
         dict)
 
-<<<<<<< HEAD
-    BGZIP_VC_MANTA_DIPLOID(manta_diploid_sv_vcf.intervals)
-
-    CONCAT_MANTA_DIPLOID(
-        BGZIP_VC_MANTA_DIPLOID.out.output.map{ meta, vcf ->
-=======
     MERGE_MANTA_DIPLOID(
         manta_diploid_sv_vcf.intervals.map{ meta, vcf ->
                 new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals]
->>>>>>> origin/dev
 
                 [groupKey([patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals],
                             meta.num_intervals),
@@ -98,16 +73,8 @@ workflow RUN_MANTA_SOMATIC {
             }.groupTuple(),
         dict)
 
-<<<<<<< HEAD
-    BGZIP_VC_MANTA_SOMATIC(manta_somatic_sv_vcf.intervals)
-
-    CONCAT_MANTA_SOMATIC(
-        BGZIP_VC_MANTA_SOMATIC.out.output.map{ meta, vcf ->
-=======
     MERGE_MANTA_SOMATIC(
         manta_somatic_sv_vcf.intervals.map{ meta, vcf ->
-                new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals]
->>>>>>> origin/dev
 
                 [groupKey([patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals],
                             meta.num_intervals),
