@@ -8,6 +8,7 @@ include { GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING } from '../../subworkflows/nf-
 include { RUN_MANTA_TUMORONLY                     } from '../nf-core/variantcalling/manta/tumoronly/main.nf'
 include { RUN_STRELKA_SINGLE                      } from '../nf-core/variantcalling/strelka/single/main.nf'
 include { RUN_CONTROLFREEC_TUMORONLY              } from '../nf-core/variantcalling/controlfreec/tumoronly/main.nf'
+include { RUN_CNVKIT_TUMORONLY                    } from '../nf-core/variantcalling/cnvkit/tumoronly/main.nf'
 
 workflow TUMOR_ONLY_VARIANT_CALLING {
     take:
@@ -79,6 +80,20 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
         ch_versions = ch_versions.mix(RUN_CONTROLFREEC_TUMORONLY.out.versions)
     }
 
+    if(tools.contains('cnvkit')){
+        cram_recalibrated_cnvkit = cram_recalibrated
+            .map{ meta, cram, crai ->
+                [meta, cram, []]
+            }
+
+        RUN_CNVKIT_TUMORONLY (  cram_recalibrated_cnvkit,
+                                fasta,
+                                intervals_bed_combined,
+                                [] )
+
+        ch_versions = ch_versions.mix(RUN_CNVKIT_TUMORONLY.out.versions)
+    }
+
     if (tools.contains('freebayes')){
         // Remap channel for Freebayes
         cram_recalibrated_intervals_freebayes = cram_recalibrated_intervals
@@ -86,7 +101,7 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
                 [meta, cram, crai, [], [], intervals]
             }
 
-        RUN_FREEBAYES(cram_recalibrated_intervals_freebayes, fasta, fasta_fai, intervals_bed_combine_gz)
+        RUN_FREEBAYES(cram_recalibrated_intervals_freebayes, dict, fasta, fasta_fai, intervals_bed_combine_gz)
 
         freebayes_vcf = RUN_FREEBAYES.out.freebayes_vcf
         ch_versions   = ch_versions.mix(RUN_FREEBAYES.out.versions)
@@ -109,6 +124,7 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
 
     if (tools.contains('manta')){
         RUN_MANTA_TUMORONLY(cram_recalibrated_intervals_gz_tbi,
+                            dict,
                             fasta,
                             fasta_fai,
                             intervals_bed_combine_gz)
@@ -118,10 +134,11 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
     }
 
     if (tools.contains('strelka')) {
-        RUN_STRELKA_SINGLE( cram_recalibrated_intervals_gz_tbi,
-                            fasta,
-                            fasta_fai,
-                            intervals_bed_combine_gz)
+        RUN_STRELKA_SINGLE(cram_recalibrated_intervals_gz_tbi,
+                           dict,
+                           fasta,
+                           fasta_fai,
+                           intervals_bed_combine_gz)
 
         strelka_vcf = RUN_STRELKA_SINGLE.out.strelka_vcf
         ch_versions = ch_versions.mix(RUN_STRELKA_SINGLE.out.versions)

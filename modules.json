@@ -30,8 +30,14 @@
             "cat/fastq": {
                 "git_sha": "9aadd9a6d3f5964476582319b3a1c54a3e3fe7c9"
             },
+            "cnvkit/antitarget": {
+                "git_sha": "58c5ec2f4eb44eff1fb7cc9e02df07bd448c6aaf"
+            },
             "cnvkit/batch": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                "git_sha": "9096be5464d800156761b7c73c574f5a5bad2f72"
+            },
+            "cnvkit/reference": {
+                "git_sha": "8208140d21f3a754fff2e177db7a0e570fa2af6e"
             },
             "controlfreec/assesssignificance": {
                 "git_sha": "9ae34a01d1747019fd37753ff4cafb05aec35a2b"
@@ -141,6 +147,9 @@
             "gatk4/mergemutectstats": {
                 "git_sha": "169b2b96c1167f89ab07127b7057c1d90a6996c7"
             },
+            "gatk4/mergevcfs": {
+                "git_sha": "4199a05aeb0ec277d40cb112949bb85893310873"
+            },
             "gatk4/mutect2": {
                 "git_sha": "169b2b96c1167f89ab07127b7057c1d90a6996c7"
             },
@@ -212,9 +221,6 @@
             },
             "strelka/somatic": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
-            },
-            "tabix/bgzip": {
-                "git_sha": "37bf3936f3665483d070a5e0e0b314311032af7c"
             },
             "tabix/bgziptabix": {
                 "git_sha": "49b18b1639f4f7104187058866a8fab33332bdfe"

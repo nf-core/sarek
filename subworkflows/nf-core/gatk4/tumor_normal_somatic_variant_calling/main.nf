@@ -2,8 +2,7 @@
 // Run GATK mutect2 in tumor normal mode, getepileupsummaries, calculatecontamination, learnreadorientationmodel and filtermutectcalls
 //
 
-include { TABIX_BGZIP                     as BGZIP_VC_MUTECT2            } from '../../../../modules/nf-core/modules/tabix/bgzip/main'
-include { CONCAT_VCF                      as CONCAT_MUTECT2              } from '../../../../modules/local/concat_vcf/main'
+include { GATK4_MERGEVCFS                 as MERGE_MUTECT2               } from '../../../../modules/nf-core/modules/gatk4/mergevcfs/main'
 include { GATK4_CALCULATECONTAMINATION    as CALCULATECONTAMINATION      } from '../../../../modules/nf-core/modules/gatk4/calculatecontamination/main'
 include { GATK4_FILTERMUTECTCALLS         as FILTERMUTECTCALLS           } from '../../../../modules/nf-core/modules/gatk4/filtermutectcalls/main'
 include { GATK4_GATHERPILEUPSUMMARIES     as GATHERPILEUPSUMMARIES_NORMAL} from '../../../../modules/nf-core/modules/gatk4/gatherpileupsummaries/main'
@@ -63,26 +62,23 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
         }.set{ mutect2_f1r2_branch }
 
     //Only when using intervals
-    //Merge Mutect2 VCF
-    BGZIP_VC_MUTECT2(mutect2_vcf_branch.intervals)
-
-    CONCAT_MUTECT2(
-        BGZIP_VC_MUTECT2.out.output
+    MERGE_MUTECT2(
+        mutect2_vcf_branch.intervals
         .map{ meta, vcf ->
 
             new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals]
 
             [groupKey(new_meta, meta.num_intervals), vcf]
         }.groupTuple(),
-        fai,
-        intervals_bed_combine_gz)
+        dict
+    )
 
     mutect2_vcf = Channel.empty().mix(
-        CONCAT_MUTECT2.out.vcf,
+        MERGE_MUTECT2.out.vcf,
         mutect2_vcf_branch.no_intervals)
 
     mutect2_tbi = Channel.empty().mix(
-        CONCAT_MUTECT2.out.tbi,
+        MERGE_MUTECT2.out.tbi,
         mutect2_tbi_branch.no_intervals)
 
     //Merge Muteect2 Stats
@@ -198,8 +194,7 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
 
     FILTERMUTECTCALLS ( ch_filtermutect_in, fasta, fai, dict )
 
-    ch_versions = ch_versions.mix(BGZIP_VC_MUTECT2.out.versions)
-    ch_versions = ch_versions.mix(CONCAT_MUTECT2.out.versions)
+    ch_versions = ch_versions.mix(MERGE_MUTECT2.out.versions)
     ch_versions = ch_versions.mix(CALCULATECONTAMINATION.out.versions)
     ch_versions = ch_versions.mix(FILTERMUTECTCALLS.out.versions)
     ch_versions = ch_versions.mix(GETPILEUPSUMMARIES_NORMAL.out.versions)
