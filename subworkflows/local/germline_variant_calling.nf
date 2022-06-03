@@ -84,7 +84,7 @@ workflow GERMLINE_VARIANT_CALLING {
 
     // DEEPVARIANT
     if(params.tools.contains('deepvariant')){
-        RUN_DEEPVARIANT(cram_recalibrated_intervals, fasta, fasta_fai, intervals_bed_combine_gz)
+        RUN_DEEPVARIANT(cram_recalibrated_intervals, dict, fasta, fasta_fai, intervals_bed_combine_gz)
 
         deepvariant_vcf = RUN_DEEPVARIANT.out.deepvariant_vcf
         ch_versions     = ch_versions.mix(RUN_DEEPVARIANT.out.versions)
@@ -97,7 +97,7 @@ workflow GERMLINE_VARIANT_CALLING {
             .map{ meta, cram, crai, intervals ->
                 [meta, cram, crai, [], [], intervals]
             }
-        RUN_FREEBAYES(cram_recalibrated_intervals_freebayes, fasta, fasta_fai, intervals_bed_combine_gz)
+        RUN_FREEBAYES(cram_recalibrated_intervals_freebayes, dict, fasta, fasta_fai, intervals_bed_combine_gz)
 
         freebayes_vcf   = RUN_FREEBAYES.out.freebayes_vcf
         ch_versions     = ch_versions.mix(RUN_FREEBAYES.out.versions)
@@ -122,6 +122,7 @@ workflow GERMLINE_VARIANT_CALLING {
     // MANTA
     if (params.tools.contains('manta')){
         RUN_MANTA_GERMLINE (cram_recalibrated_intervals_gz_tbi,
+                        dict,
                         fasta,
                         fasta_fai,
                         intervals_bed_combine_gz)
@@ -133,6 +134,7 @@ workflow GERMLINE_VARIANT_CALLING {
     // STRELKA
     if (params.tools.contains('strelka')){
         RUN_STRELKA_SINGLE(cram_recalibrated_intervals_gz_tbi,
+                dict,
                 fasta,
                 fasta_fai,
                 intervals_bed_combine_gz)
