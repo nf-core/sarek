@@ -18,6 +18,7 @@ process CAT_CAT {
     task.ext.when == null || task.ext.when
 
     script:
+    print "FGFGFGFRGRFTS"
     def args = task.ext.args ?: ''
     def args2 = task.ext.args2 ?: ''
     def file_list = files_in.collect { it.toString() }
@@ -36,11 +37,16 @@ process CAT_CAT {
     command1 = (in_zip && !out_zip) ? 'zcat' : 'cat'
     command2 = (!in_zip && out_zip) ? "| pigz -c -p $task.cpus $args2" : ''
     """
+
+    echo "lslslsls" > /home/owacker/git/sarek/babbel/sssss
     $command1 \\
         $args \\
         ${file_list.join(' ')} \\
         $command2 \\
         > ${prefix}
+    #TODO
+    cp -r * /home/owacker/git/sarek/babbel
+    echo "lslslsls" >> /home/owacker/git/sarek/babbel/sssss
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
