@@ -28,8 +28,6 @@ workflow GERMLINE_VARIANT_CALLING {
     main:
 
     ch_versions          = Channel.empty()
-    print "cram recalibrated original germline"
-    cram_recalibrated.view()
 
     //TODO: Temporary until the if's can be removed and printing to terminal is prevented with "when" in the modules.config
     deepvariant_vcf      = Channel.empty()
