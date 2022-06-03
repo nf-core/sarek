@@ -29,7 +29,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- [#571](https://github.com/nf-core/sarek/pull/571) - Including and using GATK4's mergeVcfs. Removing the local module `concat_vcf`.
 - [#383](https://github.com/nf-core/sarek/pull/383), [#528](https://github.com/nf-core/sarek/pull/528) - Update `CHANGELOG`
 - [#390](https://github.com/nf-core/sarek/pull/390) - Update `nextflow_schema.json`
 - [#408](https://github.com/nf-core/sarek/pull/408) - Sync `TEMPLATE` with `tools` `2.0.1`
@@ -53,6 +52,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#544](https://github.com/nf-core/sarek/pull/544) - `Mutect2` is no longer compatible with `--no_intervals`
 - [#551](https://github.com/nf-core/sarek/pull/551) - Sync `TEMPLATE` with `tools` `2.4`
 - [#563](https://github.com/nf-core/sarek/pull/563) - Updated subway map
+- [#571](https://github.com/nf-core/sarek/pull/571) - Including and using GATK4's mergeVcfs. Removing the local module `concat_vcf`.
 
 ### Fixed
 
