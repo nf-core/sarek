@@ -10,14 +10,14 @@ workflow RUN_CNVKIT_GERMLINE {
     take:
         cram_recalibrated   // channel: [mandatory] cram
         fasta               // channel: [mandatory] fasta
+        fasta_fai           // channel: [optional]  fasta_fai
         targets             // channel: [mandatory] bed
         reference           // channel: [] cnn
 
     main:
         ch_versions = Channel.empty()
-        cram_recalibrated.view()
 
-        CNVKIT_BATCH_GERMLINE(cram_recalibrated, fasta, targets, [])
+        CNVKIT_BATCH_GERMLINE(cram_recalibrated, fasta, fasta_fai, targets, [])
 
         ch_versions = ch_versions.mix(CNVKIT_BATCH_GERMLINE.out.versions)
 

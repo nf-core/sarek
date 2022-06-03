@@ -28,6 +28,8 @@ workflow GERMLINE_VARIANT_CALLING {
     main:
 
     ch_versions          = Channel.empty()
+    print "cram recalibrated original germline"
+    cram_recalibrated.view()
 
     //TODO: Temporary until the if's can be removed and printing to terminal is prevented with "when" in the modules.config
     deepvariant_vcf      = Channel.empty()
@@ -65,18 +67,16 @@ workflow GERMLINE_VARIANT_CALLING {
         }
 
     // CNVKIT
-    cram_recalibrated.view()
 
     if(params.tools.contains('cnvkit')){
-        cram_recalibrated_cnvkit = cram_recalibrated
+        cram_recalibrated_cnvkit_germline = cram_recalibrated
             .map{ meta, cram, crai ->
                 [meta, [], cram]
             }
 
-        cram_recalibrated_cnvkit.view()
-
-        RUN_CNVKIT_GERMLINE(cram_recalibrated_cnvkit,
+        RUN_CNVKIT_GERMLINE(cram_recalibrated_cnvkit_germline,
                             fasta,
+                            fasta_fai,
                             intervals_bed_combined,
                             [])
         ch_versions     = ch_versions.mix(RUN_CNVKIT_GERMLINE.out.versions)
