@@ -93,12 +93,14 @@ workflow PAIR_VARIANT_CALLING {
     }
 
     if (tools.contains('cnvkit')){
-        cram_pair_cnvkit = cram_pair
+        cram_pair_cnvkit_somatic = cram_pair
             .map{meta, normal_cram, normal_crai, tumor_cram, tumor_crai ->
                 [meta, tumor_cram, normal_cram]
-        }
-        RUN_CNVKIT_SOMATIC( cram_test,
+            }
+
+        RUN_CNVKIT_SOMATIC( cram_pair_cnvkit_somatic,
                             fasta,
+                            fasta_fai,
                             intervals_bed_combined,
                             [])
     }
