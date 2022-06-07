@@ -1,5 +1,5 @@
 - name: Run variant calling on somatic samples with cnvkit
-- command: nextflow run main.nf -profile test,tools_somatic,docker --tools cnvkit -c ./tests/nextflow.config
+  command: nextflow run main.nf -profile test,tools_somatic,docker --tools cnvkit -c ./tests/nextflow.config
 - tags:
     - cnvkit
     - somatic
@@ -51,7 +51,7 @@
     - path: results/variant_calling/sample2/cnvkit/test2.paired_end.recalibrated.sorted.call.cns
 
 - name: Run variant calling on germline sample with cnvkit
-- command: nextflow run main.nf -profile test,tools_germline,docker --tools cnvkit -c ./tests/nextflow.config
+  command: nextflow run main.nf -profile test,tools_germline,docker --tools cnvkit -c ./tests/nextflow.config
 - tags:
     - cnvkit
     - germline
