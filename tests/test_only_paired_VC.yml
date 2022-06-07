@@ -1,11 +1,11 @@
 - name: Run variant calling on somatic samples with cnvkit and skip variant calling on matched normal
   command: nextflow run main.nf -profile test,tools_somatic,docker --tools cnvkit -c ./tests/nextflow.config  --only_paired_variant_calling
-- tags:
+  tags:
     - cnvkit
     - somatic
     - only_paired_variant_calling
     - copy_number_calling
-- files:
+  files:
     - path: results/variant_calling/sample4_vs_sample3/cnvkit/multi_intervals.antitarget.bed
     - path: results/variant_calling/sample4_vs_sample3/cnvkit/test.paired_end.recalibrated.sorted.antitargetcoverage.cnn
     - path: results/variant_calling/sample4_vs_sample3/cnvkit/test.paired_end.recalibrated.sorted.targetcoverage.cnn

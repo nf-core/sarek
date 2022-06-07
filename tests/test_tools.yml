@@ -1,11 +1,11 @@
 - name: Run variant calling on somatic samples with cnvkit
   command: nextflow run main.nf -profile test,tools_somatic,docker --tools cnvkit -c ./tests/nextflow.config
-- tags:
+  tags:
     - cnvkit
     - somatic
     - variant_calling
     - copy_number_calling
-- files:
+  files:
     - path: results/variant_calling/sample3/cnvkit/multi_intervals.antitarget.bed
     - path: results/variant_calling/sample3/cnvkit/test.paired_end.recalibrated.sorted.antitargetcoverage.cnn
     - path: results/variant_calling/sample3/cnvkit/test.paired_end.recalibrated.sorted.targetcoverage.cnn
