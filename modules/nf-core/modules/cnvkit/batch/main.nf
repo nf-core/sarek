@@ -172,7 +172,7 @@ process CNVKIT_BATCH {
         END_VERSIONS
         """
     }
-    // germline mode bam_input    
+    // germline mode bam_input
     else if (normal_bam && !tumor_exists){
         """
         cnvkit.py \\
