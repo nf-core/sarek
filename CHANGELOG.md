@@ -30,7 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- [#580] (https://github.com/nf-core/sarek/pull/580) - changed the test_full config to real public WXS data. 1 sample WXS germline, 1 Tumor/Normal pair. https://doi.org/10.1038/sdata.2016.25 and https://doi.org/10.1038/s41587-021-00994-5
+- [#580](https://github.com/nf-core/sarek/pull/580) - changed the test_full config to real public WXS data. 1 sample WXS germline, 1 Tumor/Normal pair. https://doi.org/10.1038/sdata.2016.25 and https://doi.org/10.1038/s41587-021-00994-5
 - [#383](https://github.com/nf-core/sarek/pull/383), [#528](https://github.com/nf-core/sarek/pull/528) - Update `CHANGELOG`
 - [#390](https://github.com/nf-core/sarek/pull/390) - Update `nextflow_schema.json`
 - [#408](https://github.com/nf-core/sarek/pull/408) - Sync `TEMPLATE` with `tools` `2.0.1`
