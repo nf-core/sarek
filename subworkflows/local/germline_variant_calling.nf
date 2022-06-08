@@ -75,11 +75,6 @@ workflow GERMLINE_VARIANT_CALLING {
         RUN_MPILEUP(cram_intervals_no_index,
                         fasta)
 
-        controlfreec_input = RUN_MPILEUP.out.mpileup
-        .map{ meta, pileup_tumor ->
-            [meta, [], pileup_tumor, [], [], [], []]
-        }
-
         ch_versions = ch_versions.mix(RUN_MPILEUP.out.versions)
     }
 
