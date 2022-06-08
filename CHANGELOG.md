@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [dev](https://github.com/nf-core/sarek/tree/dev)
 
+### Changed
+- [#580] (https://github.com/nf-core/sarek/pull/580) - changed the test_full config to real public WXS data. 1 sample WXS germline, 1 Tumor/Normal pair. 
+
 ### Added
 
 - [#388](https://github.com/nf-core/sarek/pull/388) - Add cram support + read splitting with `SeqKit` for speedup
