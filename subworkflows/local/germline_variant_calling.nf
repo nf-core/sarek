@@ -7,6 +7,7 @@ include { RUN_FREEBAYES       } from '../nf-core/variantcalling/freebayes/main.n
 include { RUN_HAPLOTYPECALLER } from '../nf-core/variantcalling/haplotypecaller/main.nf'
 include { RUN_MANTA_GERMLINE  } from '../nf-core/variantcalling/manta/germline/main.nf'
 include { RUN_STRELKA_SINGLE  } from '../nf-core/variantcalling/strelka/single/main.nf'
+include { RUN_CNVKIT_GERMLINE  } from '../nf-core/variantcalling/cnvkit/germline/main.nf'
 //include { TIDDIT          } from './variantcalling/tiddit.nf'
 
 workflow GERMLINE_VARIANT_CALLING {
@@ -19,6 +20,7 @@ workflow GERMLINE_VARIANT_CALLING {
         fasta_fai                    // channel: [mandatory] fasta_fai
         intervals                    // channel: [mandatory] intervals/target regions
         intervals_bed_gz_tbi         // channel: [mandatory] intervals/target regions index zipped and indexed
+        intervals_bed_combined       // channel: [mandatory] intervals/target regions in one file unzipped
         // joint_germline               // val: true/false on whether to run joint_germline calling, only works in combination with haplotypecaller at the moment
 
     main:
@@ -55,6 +57,22 @@ workflow GERMLINE_VARIANT_CALLING {
             [[patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:meta.sample, data_type:meta.data_type, num_intervals:num_intervals],
             cram, crai, bed_new, tbi_new]
         }
+
+    // CNVKIT
+
+    if(params.tools.contains('cnvkit')){
+        cram_recalibrated_cnvkit_germline = cram_recalibrated
+            .map{ meta, cram, crai ->
+                [meta, [], cram]
+            }
+
+        RUN_CNVKIT_GERMLINE(cram_recalibrated_cnvkit_germline,
+                            fasta,
+                            fasta_fai,
+                            intervals_bed_combined,
+                            [])
+        ch_versions     = ch_versions.mix(RUN_CNVKIT_GERMLINE.out.versions)
+    }
 
     // DEEPVARIANT
     if(params.tools.contains('deepvariant')){

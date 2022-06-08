@@ -79,13 +79,14 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
     }
 
     if(tools.contains('cnvkit')){
-        cram_recalibrated_cnvkit = cram_recalibrated
+        cram_recalibrated_cnvkit_tumoronly = cram_recalibrated
             .map{ meta, cram, crai ->
                 [meta, cram, []]
             }
 
-        RUN_CNVKIT_TUMORONLY (  cram_recalibrated_cnvkit,
+        RUN_CNVKIT_TUMORONLY (  cram_recalibrated_cnvkit_tumoronly,
                                 fasta,
+                                fasta_fai,
                                 intervals_bed_combined,
                                 [] )
 
