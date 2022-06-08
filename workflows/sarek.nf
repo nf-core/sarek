@@ -285,8 +285,6 @@ workflow SAREK {
 
     // Intervals for speed up preprocessing/variant calling by spread/gather
     intervals_bed_combined        = (params.intervals && params.wes) ? Channel.fromPath(params.intervals).collect() : []
-    intervals_bed_combined_gz_tbi = PREPARE_INTERVALS.out.intervals_combined_bed_gz_tbi.collect()   // one file containing all intervals interval.bed.gz/.tbi file
-    intervals_bed_combined_gz     = intervals_bed_combined_gz_tbi.map{ bed, tbi -> [bed]}.collect() // one file containing all intervals interval.bed.gz file
 
     intervals                     = PREPARE_INTERVALS.out.intervals_bed        // [interval, num_intervals] multiple interval.bed files, divided by useful intervals for scatter/gather
     intervals_bed_gz_tbi          = PREPARE_INTERVALS.out.intervals_bed_gz_tbi // [interval_bed, tbi, num_intervals] multiple interval.bed.gz/.tbi files, divided by useful intervals for scatter/gather
@@ -784,8 +782,7 @@ workflow SAREK {
             fasta_fai,
             intervals,
             intervals_bed_gz_tbi,
-            intervals_bed_combined_gz_tbi,
-            intervals_bed_combined_gz)
+            intervals_bed_combined)
             // params.joint_germline)
 
         // TUMOR ONLY VARIANT CALLING
@@ -799,8 +796,6 @@ workflow SAREK {
             fasta_fai,
             intervals,
             intervals_bed_gz_tbi,
-            intervals_bed_combined_gz_tbi,
-            intervals_bed_combined_gz,
             intervals_bed_combined,
             germline_resource,
             germline_resource_tbi,
@@ -821,8 +816,6 @@ workflow SAREK {
             fasta_fai,
             intervals,
             intervals_bed_gz_tbi,
-            intervals_bed_combined_gz_tbi,
-            intervals_bed_combined_gz,
             intervals_bed_combined,
             msisensorpro_scan,
             germline_resource,
@@ -837,15 +830,16 @@ workflow SAREK {
         vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.deepvariant_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.freebayes_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.haplotypecaller_vcf)
-        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.manta_vcf)
+        //vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.manta_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.strelka_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.freebayes_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.mutect2_vcf)
-        vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.manta_vcf)
+        //vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.manta_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.strelka_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(PAIR_VARIANT_CALLING.out.mutect2_vcf)
-        vcf_to_annotate = vcf_to_annotate.mix(PAIR_VARIANT_CALLING.out.manta_vcf)
+        //vcf_to_annotate = vcf_to_annotate.mix(PAIR_VARIANT_CALLING.out.manta_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(PAIR_VARIANT_CALLING.out.strelka_vcf)
+
 
         // Gather used softwares versions
         ch_versions = ch_versions.mix(GERMLINE_VARIANT_CALLING.out.versions)

@@ -3,9 +3,6 @@
     "homePage": "https://github.com/nf-core/sarek",
     "repos": {
         "nf-core/modules": {
-            "ascat": {
-                "git_sha": "f0800157544a82ae222931764483331a81812012"
-            },
             "bcftools/sort": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
@@ -30,8 +27,14 @@
             "cat/fastq": {
                 "git_sha": "9aadd9a6d3f5964476582319b3a1c54a3e3fe7c9"
             },
+            "cnvkit/antitarget": {
+                "git_sha": "58c5ec2f4eb44eff1fb7cc9e02df07bd448c6aaf"
+            },
             "cnvkit/batch": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                "git_sha": "2f3ddc90fbeda9fcf54f25b84465f5ac149d2b75"
+            },
+            "cnvkit/reference": {
+                "git_sha": "8208140d21f3a754fff2e177db7a0e570fa2af6e"
             },
             "controlfreec/assesssignificance": {
                 "git_sha": "9ae34a01d1747019fd37753ff4cafb05aec35a2b"
@@ -52,7 +55,7 @@
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
             "deeptools/bamcoverage": {
-                "git_sha": "fe088745e03f21d07477cc0c655c24ae9f72ac31"
+                "git_sha": "a21cfb666eed7517060f1d2d61a21c340753b0ec"
             },
             "deepvariant": {
                 "git_sha": "fd5f6f5f4ffef4ab5a4e809bd3211bbc71c38d30"
@@ -141,6 +144,9 @@
             "gatk4/mergemutectstats": {
                 "git_sha": "169b2b96c1167f89ab07127b7057c1d90a6996c7"
             },
+            "gatk4/mergevcfs": {
+                "git_sha": "4199a05aeb0ec277d40cb112949bb85893310873"
+            },
             "gatk4/mutect2": {
                 "git_sha": "169b2b96c1167f89ab07127b7057c1d90a6996c7"
             },
@@ -213,9 +219,6 @@
             "strelka/somatic": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
-            "tabix/bgzip": {
-                "git_sha": "37bf3936f3665483d070a5e0e0b314311032af7c"
-            },
             "tabix/bgziptabix": {
                 "git_sha": "49b18b1639f4f7104187058866a8fab33332bdfe"
             },
@@ -229,7 +232,7 @@
                 "git_sha": "85ec13ff1fc2196c5a507ea497de468101baabed"
             },
             "untar": {
-                "git_sha": "9aadd9a6d3f5964476582319b3a1c54a3e3fe7c9"
+                "git_sha": "51be617b1ca9bff973655eb899d591ed6ab253b5"
             },
             "vcftools": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"

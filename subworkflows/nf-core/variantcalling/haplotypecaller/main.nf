@@ -1,5 +1,4 @@
-include { TABIX_BGZIP as BGZIP_VC_HAPLOTYPECALLER  } from '../../../../modules/nf-core/modules/tabix/bgzip/main'
-include { CONCAT_VCF as CONCAT_HAPLOTYPECALLER     } from '../../../../modules/local/concat_vcf/main'
+include { GATK4_MERGEVCFS as MERGE_HAPLOTYPECALLER } from '../../../../modules/nf-core/modules/gatk4/mergevcfs/main'
 include { GATK4_GENOTYPEGVCFS as GENOTYPEGVCFS     } from '../../../../modules/nf-core/modules/gatk4/genotypegvcfs/main'
 include { GATK4_HAPLOTYPECALLER as HAPLOTYPECALLER } from '../../../../modules/nf-core/modules/gatk4/haplotypecaller/main'
 include { GATK_JOINT_GERMLINE_VARIANT_CALLING      } from '../../../../subworkflows/nf-core/gatk4/joint_germline_variant_calling/main'
@@ -12,8 +11,6 @@ workflow RUN_HAPLOTYPECALLER {
     dict                            // channel: [mandatory]
     dbsnp                           // channel: [mandatory]
     dbsnp_tbi                       // channel: [mandatory]
-    intervals_bed_gz                // channel: [optional]  Contains a bed.gz file of all intervals combined provided with the cram input(s). Mandatory if interval files are used.
-    intervals_bed_combine_gz_tbi    // channel: [optional]  Contains a [bed.gz, bed.gz.tbi ]file of all intervals combined provided with the cram input(s). Mandatory if interval files are used.
 
     main:
 
@@ -39,25 +36,22 @@ workflow RUN_HAPLOTYPECALLER {
         }.set{haplotypecaller_tbi_branch}
 
     // Only when using intervals
-    BGZIP_VC_HAPLOTYPECALLER(haplotypecaller_vcf_branch.intervals)
-
-    CONCAT_HAPLOTYPECALLER(
-        BGZIP_VC_HAPLOTYPECALLER.out.output
+    MERGE_HAPLOTYPECALLER(
+        haplotypecaller_vcf_branch.intervals
             .map{ meta, vcf ->
 
                 new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals]
 
                 [groupKey(new_meta, new_meta.num_intervals), vcf]
             }.groupTuple(),
-        fasta_fai,
-        intervals_bed_gz)
+        dict)
 
     haplotypecaller_vcf = Channel.empty().mix(
-        CONCAT_HAPLOTYPECALLER.out.vcf,
+        MERGE_HAPLOTYPECALLER.out.vcf,
         haplotypecaller_vcf_branch.no_intervals)
 
     haplotypecaller_tbi = Channel.empty().mix(
-        CONCAT_HAPLOTYPECALLER.out.tbi,
+        MERGE_HAPLOTYPECALLER.out.tbi,
         haplotypecaller_vcf_branch.no_intervals)
 
     // genotype_gvcf_to_call = haplotypecaller_gvcf.join(haplotypecaller_gvcf_tbi)
@@ -112,8 +106,7 @@ workflow RUN_HAPLOTYPECALLER {
     }
 
 
-    ch_versions = ch_versions.mix(BGZIP_VC_HAPLOTYPECALLER.out.versions)
-    ch_versions = ch_versions.mix(CONCAT_HAPLOTYPECALLER.out.versions)
+    ch_versions = ch_versions.mix(MERGE_HAPLOTYPECALLER.out.versions)
     //ch_versions = ch_versions.mix(GENOTYPEGVCFS.out.versions)
     //ch_versions = ch_versions.mix(GATK_JOINT_GERMLINE_VARIANT_CALLING.out.versions)
     ch_versions = ch_versions.mix(HAPLOTYPECALLER.out.versions)

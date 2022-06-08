@@ -30,7 +30,7 @@ workflow BAM_TO_CRAM {
     cram_indexed = Channel.empty().mix(cram_indexed,SAMTOOLS_BAMTOCRAM.out.alignment_index)
 
     // Reports on cram
-    DEEPTOOLS_BAMCOVERAGE(cram_indexed)
+    DEEPTOOLS_BAMCOVERAGE(cram_indexed, fasta, fasta_fai)
     QUALIMAP_BAMQCCRAM(cram_indexed, intervals_combined_bed_gz_tbi, fasta, fasta_fai)
     SAMTOOLS_STATS_CRAM(cram_indexed, fasta)
 
