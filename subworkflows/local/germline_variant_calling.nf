@@ -9,7 +9,6 @@ include { RUN_MANTA_GERMLINE  } from '../nf-core/variantcalling/manta/germline/m
 include { RUN_MPILEUP         } from '../nf-core/variantcalling/mpileup/main'
 include { RUN_STRELKA_SINGLE  } from '../nf-core/variantcalling/strelka/single/main.nf'
 include { RUN_CNVKIT_GERMLINE  } from '../nf-core/variantcalling/cnvkit/germline/main.nf'
-include { RUN_MPILEUP         } from '../nf-core/variantcalling/mpileup/main'
 //include { TIDDIT          } from './variantcalling/tiddit.nf'
 
 workflow GERMLINE_VARIANT_CALLING {
@@ -65,18 +64,6 @@ workflow GERMLINE_VARIANT_CALLING {
             [[patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:new_id, data_type:meta.data_type, num_intervals:num_intervals],
             cram, crai, bed_new, tbi_new]
         }
-    //if contains mpileup or controlfreec?
-    if(params.tools.contains('mpileup')){
-        cram_intervals_no_index = cram_recalibrated_intervals
-        .map { meta, cram, crai, intervals ->
-            [meta, cram, intervals]
-        }
-
-        RUN_MPILEUP(cram_intervals_no_index,
-                        fasta)
-
-        ch_versions = ch_versions.mix(RUN_MPILEUP.out.versions)
-    }
 
     if(params.tools.contains('mpileup')){
         cram_intervals_no_index = cram_recalibrated_intervals
