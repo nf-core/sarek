@@ -39,16 +39,18 @@ def checkPathParamList = [
     params.spliceai_indel_tbi,
     params.spliceai_snv,
     params.spliceai_snv_tbi,
-    //params.target_bed,
     params.vep_cache
 ]
 
-// Check mandatory parameters
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    Check mandatory parameters
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
 for (param in checkPathParamList) if (param) file(param, checkIfExists: true)
 
 // Set input, can either be from --input or from automatic retrieval in WorkflowSarek.groovy
 ch_input_sample = extract_csv(file(params.input, checkIfExists: true))
-
 
 if (params.wes) {
     if (params.intervals && !params.intervals.endsWith("bed")) exit 1, "Target file must be in BED format"
@@ -56,11 +58,13 @@ if (params.wes) {
     if (params.intervals && !params.intervals.endsWith("bed") && !params.intervals.endsWith("interval_list")) exit 1, "Interval file must end with .bed or .interval_list"
 }
 
-
-if(params.tools && params.tools.contains('mutect2') && params.no_intervals){
-    log.error "--tools mutect2 and --no_intervals cannot be used together.\nOne of the tools within the Mutect2 subworkflow requires intervals. They can be provided to the pipeline with --intervals. If none are provided, they will be generated from the FASTA file.\nFor more information on the Mutect2 workflow, see here: https://gatk.broadinstitute.org/hc/en-us/articles/360035531132--How-to-Call-somatic-mutations-using-GATK4-Mutect2.\nFor more information on GetPileupsummaries, see here: https://gatk.broadinstitute.org/hc/en-us/articles/5358860217115-GetPileupSummaries"
-    exit 1
+if(params.tools && params.tools.contains('mutect2')){
+    if(params.no_intervals){
+        log.error "--tools mutect2 and --no_intervals cannot be used together.\nOne of the tools within the Mutect2 subworkflow requires intervals. They can be provided to the pipeline with --intervals. If none are provided, they will be generated from the FASTA file.\nFor more information on the Mutect2 workflow, see here: https://gatk.broadinstitute.org/hc/en-us/articles/360035531132--How-to-Call-somatic-mutations-using-GATK4-Mutect2.\nFor more information on GetPileupsummaries, see here: https://gatk.broadinstitute.org/hc/en-us/articles/5358860217115-GetPileupSummaries"
+        exit 1
+    }
 }
+
 // Save AWS IGenomes file containing annotation version
 def anno_readme = params.genomes[params.genome]?.readme
 if (anno_readme && file(anno_readme).exists()) {
@@ -94,7 +98,6 @@ vep_species        = params.vep_species        ?: Channel.empty()
 // Initialize files channels based on params, not defined within the params.genomes[params.genome] scope
 pon                = params.pon                ? Channel.fromPath(params.pon).collect()                      : Channel.empty()
 snpeff_cache       = params.snpeff_cache       ? Channel.fromPath(params.snpeff_cache).collect()             : []
-//target_bed         = params.target_bed         ? Channel.fromPath(params.target_bed).collect()               : []
 vep_cache          = params.vep_cache          ? Channel.fromPath(params.vep_cache).collect()                : []
 
 vep_extra_files = []
