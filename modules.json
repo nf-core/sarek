@@ -3,9 +3,6 @@
     "homePage": "https://github.com/nf-core/sarek",
     "repos": {
         "nf-core/modules": {
-            "ascat": {
-                "git_sha": "f0800157544a82ae222931764483331a81812012"
-            },
             "bcftools/sort": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
@@ -58,7 +55,7 @@
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
             "deeptools/bamcoverage": {
-                "git_sha": "fe088745e03f21d07477cc0c655c24ae9f72ac31"
+                "git_sha": "a21cfb666eed7517060f1d2d61a21c340753b0ec"
             },
             "deepvariant": {
                 "git_sha": "fd5f6f5f4ffef4ab5a4e809bd3211bbc71c38d30"
@@ -235,7 +232,7 @@
                 "git_sha": "85ec13ff1fc2196c5a507ea497de468101baabed"
             },
             "untar": {
-                "git_sha": "9aadd9a6d3f5964476582319b3a1c54a3e3fe7c9"
+                "git_sha": "51be617b1ca9bff973655eb899d591ed6ab253b5"
             },
             "vcftools": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"

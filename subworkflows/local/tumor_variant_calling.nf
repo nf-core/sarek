@@ -22,8 +22,6 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
         fasta_fai                    // channel: [mandatory] fasta_fai
         intervals                    // channel: [mandatory] intervals/target regions
         intervals_bed_gz_tbi         // channel: [mandatory] intervals/target regions index zipped and indexed
-        intervals_bed_combine_gz_tbi // channel: [mandatory] intervals/target regions index zipped and indexed
-        intervals_bed_combine_gz     // channel: [mandatory] intervals/target regions index zipped and indexed in one file
         intervals_bed_combined        // channel: [mandatory] intervals/target regions in one file unzipped
         germline_resource            // channel: [optional]  germline_resource
         germline_resource_tbi        // channel: [optional]  germline_resource_tbi
@@ -45,27 +43,23 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
     // Remap channel with intervals
     cram_recalibrated_intervals = cram_recalibrated.combine(intervals)
         .map{ meta, cram, crai, intervals, num_intervals ->
-            // If either no scatter/gather is done, i.e. no interval (0) or one interval (1), then don't rename samples
-            new_id = num_intervals <= 1 ? meta.sample : meta.sample + "_" + intervals.baseName
 
             //If no interval file provided (0) then add empty list
             intervals_new = num_intervals == 0 ? [] : intervals
 
-            [[patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:new_id, data_type:meta.data_type, num_intervals:num_intervals],
+            [[patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:meta.sample, data_type:meta.data_type, num_intervals:num_intervals],
             cram, crai, intervals_new]
         }
 
     // Remap channel with gzipped intervals + indexes
     cram_recalibrated_intervals_gz_tbi = cram_recalibrated.combine(intervals_bed_gz_tbi)
         .map{ meta, cram, crai, bed_tbi, num_intervals ->
-            // If either no scatter/gather is done, i.e. no interval (0) or one interval (1), then don't rename samples
-            new_id = num_intervals <= 1 ? meta.sample : meta.sample + "_" + bed_tbi[0].simpleName
 
             //If no interval file provided (0) then add empty list
             bed_new = num_intervals == 0 ? [] : bed_tbi[0]
             tbi_new = num_intervals == 0 ? [] : bed_tbi[1]
 
-            [[patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:new_id, data_type:meta.data_type, num_intervals:num_intervals],
+            [[patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:meta.sample, data_type:meta.data_type, num_intervals:num_intervals],
             cram, crai, bed_new, tbi_new]
         }
 
@@ -117,7 +111,7 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
                 [meta, cram, crai, [], [], intervals]
             }
 
-        RUN_FREEBAYES(cram_recalibrated_intervals_freebayes, dict, fasta, fasta_fai, intervals_bed_combine_gz)
+        RUN_FREEBAYES(cram_recalibrated_intervals_freebayes, dict, fasta, fasta_fai)
 
         freebayes_vcf = RUN_FREEBAYES.out.freebayes_vcf
         ch_versions   = ch_versions.mix(RUN_FREEBAYES.out.versions)
@@ -131,8 +125,7 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
                                                 germline_resource,
                                                 germline_resource_tbi,
                                                 panel_of_normals,
-                                                panel_of_normals_tbi,
-                                                intervals_bed_combine_gz)
+                                                panel_of_normals_tbi)
 
         mutect2_vcf = GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING.out.filtered_vcf
         ch_versions = ch_versions.mix(GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING.out.versions)
@@ -142,8 +135,7 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
         RUN_MANTA_TUMORONLY(cram_recalibrated_intervals_gz_tbi,
                             dict,
                             fasta,
-                            fasta_fai,
-                            intervals_bed_combine_gz)
+                            fasta_fai)
 
         manta_vcf   = RUN_MANTA_TUMORONLY.out.manta_vcf
         ch_versions = ch_versions.mix(RUN_MANTA_TUMORONLY.out.versions)
@@ -153,8 +145,7 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
         RUN_STRELKA_SINGLE(cram_recalibrated_intervals_gz_tbi,
                             dict,
                             fasta,
-                            fasta_fai,
-                            intervals_bed_combine_gz)
+                            fasta_fai)
 
         strelka_vcf = RUN_STRELKA_SINGLE.out.strelka_vcf
         ch_versions = ch_versions.mix(RUN_STRELKA_SINGLE.out.versions)
