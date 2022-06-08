@@ -59,12 +59,12 @@ class WorkflowSarek {
 
     public static String retrieveInput(params, log){
         switch (params.step) {
-            case 'mapping': log.warn "Can't start with step $params.step without samplesheet"
-                            System.exit(1);
-                            break
-            //case 'markduplicates':          log.warn "Using file ${params.outdir}/preprocessing/csv/markduplicates_no_table.csv"
-            //                                params.input = "${params.outdir}/preprocessing/csv/markduplicates_no_table.csv";
-            //                                break
+            case 'mapping':                 log.warn "Can't start with step $params.step without samplesheet"
+                                            System.exit(1);
+                                            break
+            case 'markduplicates':          log.warn "Using file ${params.outdir}/preprocessing/csv/mapped.csv"
+                                            params.replace("input","${params.outdir}/preprocessing/csv/mapped.csv");
+                                            break
             case 'prepare_recalibration':   log.warn "Using file ${params.outdir}/preprocessing/csv/markduplicates_no_table.csv"
                                             params.replace("input", "${params.outdir}/preprocessing/csv/markduplicates_no_table.csv");
                                             break
