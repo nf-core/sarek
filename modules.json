@@ -58,7 +58,7 @@
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
             "deeptools/bamcoverage": {
-                "git_sha": "fe088745e03f21d07477cc0c655c24ae9f72ac31"
+                "git_sha": "a21cfb666eed7517060f1d2d61a21c340753b0ec"
             },
             "deepvariant": {
                 "git_sha": "fd5f6f5f4ffef4ab5a4e809bd3211bbc71c38d30"

@@ -56,6 +56,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#563](https://github.com/nf-core/sarek/pull/563) - Updated subway map
 - [#571](https://github.com/nf-core/sarek/pull/571) - Including and using GATK4's mergeVcfs. Removing the local module `concat_vcf`.
 - [#572](https://github.com/nf-core/sarek/pull/572) - Adjusted subway map svg for firefox compatibility
+- [#578](https://github.com/nf-core/sarek/pull/578) - Updated module deeptools/bamcoverage
 
 ### Fixed
 

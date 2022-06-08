@@ -25,6 +25,14 @@ input:
       type: file
       description: BAM/CRAM index file
       pattern: "*.{bai,crai}"
+  - fasta:
+      type: file
+      description: Reference file the CRAM file was created with (required with CRAM input)
+      pattern: "*.{fasta,fa}"
+  - fasta_fai:
+      type: file
+      description: Index of the reference file (optional, but recommended)
+      pattern: "*.{fai}"
 
 output:
   - meta:
@@ -47,3 +55,4 @@ output:
 
 authors:
   - "@FriederikeHanssen"
+  - "@SusiJo"
