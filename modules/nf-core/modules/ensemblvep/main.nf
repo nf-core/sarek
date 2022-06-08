@@ -9,6 +9,7 @@ process ENSEMBLVEP {
 
     input:
     tuple val(meta), path(vcf)
+    val   vep_output
     val   genome
     val   species
     val   cache_version
@@ -16,15 +17,18 @@ process ENSEMBLVEP {
     path  extra_files
 
     output:
-    tuple val(meta), path("*.ann.vcf"), emit: vcf
-    path "*.summary.html"             , emit: report
-    path "versions.yml"               , emit: versions
+    tuple val(meta), path("*.ann.vcf")  , optional:true, emit: vcf
+    tuple val(meta), path("*.ann.tab")  , optional:true, emit: tab
+    tuple val(meta), path("*.ann.json") , optional:true, emit: json
+    path "*.summary.html"               , emit: report
+    path "versions.yml"                 , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
 
     script:
     def args = task.ext.args ?: ''
+    def suffix = task.ext.suffix ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     def dir_cache = cache ? "\${PWD}/${cache}" : "/.vep"
     """
@@ -32,7 +36,7 @@ process ENSEMBLVEP {
 
     vep \\
         -i $vcf \\
-        -o ${prefix}.ann.vcf \\
+        -o ${prefix}${suffix}.ann.$vep_output \\
         $args \\
         --assembly $genome \\
         --species $species \\
@@ -40,8 +44,8 @@ process ENSEMBLVEP {
         --cache_version $cache_version \\
         --dir_cache $dir_cache \\
         --fork $task.cpus \\
-        --vcf \\
-        --stats_file ${prefix}.summary.html
+        --stats_file ${prefix}.summary.html \\
+        --$vep_output
 
     rm -rf $prefix
 
