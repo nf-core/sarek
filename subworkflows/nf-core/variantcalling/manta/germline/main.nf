@@ -11,7 +11,6 @@ workflow RUN_MANTA_GERMLINE {
     dict                     // channel: [optional]
     fasta                    // channel: [mandatory]
     fasta_fai                // channel: [mandatory]
-    intervals_bed_gz         // channel: [optional]  Contains a bed.gz file of all intervals combined provided with the cram input(s). Mandatory if interval files are used.
 
     main:
 
@@ -40,9 +39,9 @@ workflow RUN_MANTA_GERMLINE {
         manta_small_indels_vcf.intervals
             .map{ meta, vcf ->
 
-                new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals]
-
-                [groupKey(new_meta, meta.num_intervals), vcf]
+                [groupKey([patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals],
+                        meta.num_intervals),
+                vcf]
             }.groupTuple(),
         dict)
 
@@ -50,9 +49,10 @@ workflow RUN_MANTA_GERMLINE {
         manta_sv_vcf.intervals
             .map{ meta, vcf ->
 
-                new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals]
+                [groupKey([patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals],
+                        meta.num_intervals),
+                vcf]
 
-                [ groupKey(new_meta, meta.num_intervals), vcf]
             }.groupTuple(),
         dict)
 
@@ -60,22 +60,20 @@ workflow RUN_MANTA_GERMLINE {
         manta_diploid_sv_vcf.intervals
             .map{ meta, vcf ->
 
-                new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals]
+                [groupKey([patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals],
+                        meta.num_intervals),
+                vcf]
 
-                [groupKey(new_meta, meta.num_intervals), vcf]
             }.groupTuple(),
         dict)
 
     // Mix output channels for "no intervals" and "with intervals" results
+    // Only diploid SV should get annotated
     manta_vcf = Channel.empty().mix(
                     MERGE_MANTA_DIPLOID.out.vcf,
-                    //MERGE_MANTA_SMALL_INDELS.out.vcf,
-                    MERGE_MANTA_SV.out.vcf,
-                    manta_diploid_sv_vcf.no_intervals,
-                    //manta_small_indels_vcf.no_intervals,
-                    manta_sv_vcf.no_intervals)
+                    manta_diploid_sv_vcf.no_intervals)
                 .map{ meta, vcf ->
-                    [ [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals, variantcaller:"Manta"], vcf]
+                    [[patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals, variantcaller:"Manta"], vcf]
                 }
 
     ch_versions = ch_versions.mix(MERGE_MANTA_DIPLOID.out.versions)
@@ -84,6 +82,6 @@ workflow RUN_MANTA_GERMLINE {
     ch_versions = ch_versions.mix(MANTA_GERMLINE.out.versions)
 
     emit:
-    manta_vcf = Channel.empty()
+    manta_vcf
     versions = ch_versions
 }

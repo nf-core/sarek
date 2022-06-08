@@ -21,7 +21,6 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
     germline_resource_tbi     // channel: /path/to/germline/index
     panel_of_normals          // channel: /path/to/panel/of/normals
     panel_of_normals_tbi      // channel: /path/to/panel/of/normals/index
-    intervals_bed_combine_gz  // Combined intervals file for merging!
 
     main:
     ch_versions = Channel.empty()

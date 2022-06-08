@@ -20,8 +20,6 @@ workflow PAIR_VARIANT_CALLING {
         fasta_fai                     // channel: [mandatory] fasta_fai
         intervals                     // channel: [mandatory] intervals/target regions
         intervals_bed_gz_tbi          // channel: [mandatory] intervals/target regions index zipped and indexed
-        intervals_bed_combined_gz_tbi // channel: [mandatory] intervals/target regions all in one file zipped and indexed
-        intervals_bed_combine_gz      // channel: [mandatory] intervals/target regions zipped in one file
         intervals_bed_combined        // channel: [mandatory] intervals/target regions in one file unzipped
         msisensorpro_scan             // channel: [optional]  msisensorpro_scan
         germline_resource             // channel: [optional]  germline_resource
@@ -45,28 +43,24 @@ workflow PAIR_VARIANT_CALLING {
     // Remap channel with intervals
     cram_pair_intervals = cram_pair.combine(intervals)
         .map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals, num_intervals ->
-            // If either no scatter/gather is done, i.e. no interval (0) or one interval (1), then don't rename samples
-            new_id = num_intervals <= 1 ? meta.tumor_id + "_vs_" + meta.normal_id : meta.tumor_id + "_vs_" + meta.normal_id + "_" + intervals.baseName
-
             //If no interval file provided (0) then add empty list
             intervals_new = num_intervals == 0 ? [] : intervals
 
-            [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:new_id, num_intervals:num_intervals],
+            [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id: meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:num_intervals],
             normal_cram, normal_crai, tumor_cram, tumor_crai, intervals_new]
         }
 
     // Remap channel with gzipped intervals + indexes
     cram_pair_intervals_gz_tbi = cram_pair.combine(intervals_bed_gz_tbi)
         .map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, bed_tbi, num_intervals ->
-            // If either no scatter/gather is done, i.e. no interval (0) or one interval (1), then don't rename samples
-            new_id = num_intervals <= 1 ? meta.tumor_id + "_vs_" + meta.normal_id : meta.tumor_id + "_vs_" + meta.normal_id + "_" + bed_tbi[0].simpleName
 
             //If no interval file provided (0) then add empty list
             bed_new = num_intervals == 0 ? [] : bed_tbi[0]
             tbi_new = num_intervals == 0 ? [] : bed_tbi[1]
 
-            [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:new_id, num_intervals:num_intervals],
+            [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id: meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:num_intervals],
             normal_cram, normal_crai, tumor_cram, tumor_crai, bed_new, tbi_new]
+
         }
 
     if (tools.contains('controlfreec')){
@@ -106,7 +100,7 @@ workflow PAIR_VARIANT_CALLING {
     }
 
     if (tools.contains('freebayes')){
-        RUN_FREEBAYES_SOMATIC(cram_pair_intervals, dict, fasta, fasta_fai, intervals_bed_combine_gz)
+        RUN_FREEBAYES_SOMATIC(cram_pair_intervals, dict, fasta, fasta_fai)
 
         freebayes_vcf = RUN_FREEBAYES_SOMATIC.out.freebayes_vcf
         ch_versions   = ch_versions.mix(RUN_FREEBAYES_SOMATIC.out.versions)
@@ -116,8 +110,7 @@ workflow PAIR_VARIANT_CALLING {
         RUN_MANTA_SOMATIC(  cram_pair_intervals_gz_tbi,
                             dict,
                             fasta,
-                            fasta_fai,
-                            intervals_bed_combine_gz)
+                            fasta_fai)
 
         manta_vcf                            = RUN_MANTA_SOMATIC.out.manta_vcf
         manta_candidate_small_indels_vcf     = RUN_MANTA_SOMATIC.out.manta_candidate_small_indels_vcf
@@ -131,18 +124,16 @@ workflow PAIR_VARIANT_CALLING {
             cram_pair_strelka = cram_pair.join(manta_candidate_small_indels_vcf)
                                         .join(manta_candidate_small_indels_vcf_tbi)
                                         .combine(intervals_bed_gz_tbi)
-                                        .map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, vcf, bed_tbi, num_intervals ->
-
-                                             // If either no scatter/gather is done, i.e. no interval (0) or one interval (1), then don't rename samples
-                                            new_id = num_intervals <= 1 ? meta.tumor_id + "_vs_" + meta.normal_id : meta.tumor_id + "_vs_" + meta.normal_id + "_" + bed_tbi[0].simpleName
-
+                                        .map{
+                                            meta, normal_cram, normal_crai, tumor_cram, tumor_crai, vcf, vcf_tbi, bed_tbi, num_intervals ->
                                             //If no interval file provided (0) then add empty list
                                             bed_new = num_intervals == 0 ? [] : bed_tbi[0]
                                             tbi_new = num_intervals == 0 ? [] : bed_tbi[1]
 
-                                            [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:new_id, num_intervals:num_intervals],
+                                            [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:num_intervals],
                                             normal_cram, normal_crai, tumor_cram, tumor_crai, vcf, vcf_tbi, bed_new, tbi_new]
                                         }
+
         } else {
             cram_pair_strelka = cram_pair_intervals_gz_tbi.map{
                     meta, normal_cram, normal_crai, tumor_cram, tumor_crai, bed, tbi ->
@@ -153,10 +144,9 @@ workflow PAIR_VARIANT_CALLING {
         RUN_STRELKA_SOMATIC(cram_pair_strelka,
                             dict,
                             fasta,
-                            fasta_fai,
-                            intervals_bed_combine_gz)
+                            fasta_fai)
 
-        strelka_vcf = RUN_STRELKA_SOMATIC.out.strelka_vcf
+        strelka_vcf  = Channel.empty().mix(RUN_STRELKA_SOMATIC.out.strelka_vcf_snvs, RUN_STRELKA_SOMATIC.out.strelka_vcf_indels)
         ch_versions = ch_versions.mix(RUN_STRELKA_SOMATIC.out.versions)
     }
 
@@ -181,9 +171,7 @@ workflow PAIR_VARIANT_CALLING {
             germline_resource,
             germline_resource_tbi,
             panel_of_normals,
-            panel_of_normals_tbi,
-            intervals_bed_combine_gz
-            )
+            panel_of_normals_tbi)
 
         mutect2_vcf = GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING.out.filtered_vcf
         ch_versions = ch_versions.mix(GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING.out.versions)

@@ -9,7 +9,6 @@ workflow RUN_FREEBAYES {
     dict
     fasta                    // channel: [mandatory]
     fasta_fai                // channel: [mandatory]
-    intervals_bed_gz         // channel: [optional]  Contains a bed.gz file of all intervals combined provided with the cram input(s). Mandatory if interval files are used.
 
     main:
 
@@ -35,10 +34,8 @@ workflow RUN_FREEBAYES {
         bcftools_vcf_out.intervals
             .map{ meta, vcf ->
 
-                new_id = meta.tumor_id ? meta.tumor_id + "_vs_" + meta.normal_id : meta.sample
-
-                new_meta = meta.tumor_id ? [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:new_id, num_intervals:meta.num_intervals]
-                                        : [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:new_id, num_intervals:meta.num_intervals]
+                new_meta = meta.tumor_id ? [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals]
+                                        : [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals]
                 [groupKey(new_meta, meta.num_intervals), vcf]
             }.groupTuple(),
         dict
@@ -49,12 +46,8 @@ workflow RUN_FREEBAYES {
                         MERGE_FREEBAYES.out.vcf,
                         bcftools_vcf_out.no_intervals)
                     .map{ meta, vcf ->
-
-                        new_id = meta.tumor_id ? meta.tumor_id + "_vs_" + meta.normal_id : meta.sample
-
-                        new_meta = meta.tumor_id ? [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:new_id, num_intervals:meta.num_intervals, variantcaller:"Freebayes"]
-                                        : [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:new_id, num_intervals:meta.num_intervals, variantcaller:"Freebayes"]
-                        [new_meta, vcf]
+                        [ [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.id, num_intervals:meta.num_intervals, variantcaller:"Freebayes"],
+                            vcf]
                     }
 
     ch_versions = ch_versions.mix(BCFTOOLS_SORT.out.versions)

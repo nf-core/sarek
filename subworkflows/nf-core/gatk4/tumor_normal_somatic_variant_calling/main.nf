@@ -23,7 +23,6 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
     germline_resource_tbi     // channel: /path/to/germline/index
     panel_of_normals          // channel: /path/to/panel/of/normals
     panel_of_normals_tbi      // channel: /path/to/panel/of/normals/index
-    intervals_bed_combine_gz  // Combined intervals file for merging!
 
     main:
     ch_versions = Channel.empty()
@@ -118,20 +117,16 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
     GETPILEUPSUMMARIES_TUMOR ( pileup.tumor.map{
                                     meta, cram, crai, intervals ->
 
-                                    new_id = meta.num_intervals <= 1 ? meta.tumor_id : meta.tumor_id + "_" + intervals.baseName
-                                    new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:new_id, num_intervals:meta.num_intervals]
-
-                                    [new_meta, cram, crai, intervals]
+                                    [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id, num_intervals:meta.num_intervals],
+                                        cram, crai, intervals]
                                 },
                                 fasta, fai, dict, germline_resource, germline_resource_tbi )
 
     GETPILEUPSUMMARIES_NORMAL ( pileup.normal.map{
                                     meta, cram, crai, intervals ->
 
-                                    new_id = meta.num_intervals <= 1 ? meta.tumor_id : meta.tumor_id + "_" + intervals.baseName
-                                    new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:new_id, num_intervals:meta.num_intervals]
-
-                                    [new_meta, cram, crai, intervals]
+                                    [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.normal_id, num_intervals:meta.num_intervals],
+                                        cram, crai, intervals]
                                 },
                                 fasta, fai, dict, germline_resource, germline_resource_tbi )
 
