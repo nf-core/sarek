@@ -151,10 +151,10 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
 
     if (tools.contains('strelka')) {
         RUN_STRELKA_SINGLE(cram_recalibrated_intervals_gz_tbi,
-                           dict,
-                           fasta,
-                           fasta_fai,
-                           intervals_bed_combine_gz)
+                            dict,
+                            fasta,
+                            fasta_fai,
+                            intervals_bed_combine_gz)
 
         strelka_vcf = RUN_STRELKA_SINGLE.out.strelka_vcf
         ch_versions = ch_versions.mix(RUN_STRELKA_SINGLE.out.versions)
