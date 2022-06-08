@@ -132,6 +132,7 @@ include { MAPPING_CSV                                          } from '../subwor
 include { MARKDUPLICATES_CSV                                   } from '../subworkflows/local/markduplicates_csv'
 include { PREPARE_RECALIBRATION_CSV                            } from '../subworkflows/local/prepare_recalibration_csv'
 include { RECALIBRATE_CSV                                      } from '../subworkflows/local/recalibrate_csv'
+include { VARIANTCALLING_CSV                                   } from '../subworkflows/local/variantcalling_csv'
 
 // Build indices if needed
 include { PREPARE_GENOME                                       } from '../subworkflows/local/prepare_genome'
@@ -840,6 +841,8 @@ workflow SAREK {
         ch_reports  = ch_reports.mix(VCF_QC.out.vcftools_tstv_counts.collect{it[1]}.ifEmpty([]))
         ch_reports  = ch_reports.mix(VCF_QC.out.vcftools_tstv_qual.collect{it[1]}.ifEmpty([]))
         ch_reports  = ch_reports.mix(VCF_QC.out.vcftools_filter_summary.collect{it[1]}.ifEmpty([]))
+
+        VARIANTCALLING_CSV(vcf_to_annotate)
 
         // ANNOTATE
         if (params.step == 'annotate') vcf_to_annotate = ch_input_sample
