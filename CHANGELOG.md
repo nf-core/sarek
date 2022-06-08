@@ -5,23 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.7.1a](https://github.com/nf-core/sarek/releases/tag/2.7.1a) - Áhkká
+## [2.7.2](https://github.com/nf-core/sarek/releases/tag/2.7.2) - Áhkká
 
 Áhkká is one of the massifs just outside of the Sarek National Park.
-
-This patch release is a hotfix that doesn't change how the containers are used, so it will continue to use `sarek:2.7.1`,  `sarekvep:2.7.1.*`, and `sareksnpeff:2.7.1.*`.
-
-### Added
-
-### Changed
 
 ### Fixed
 
 - [#566](https://github.com/nf-core/sarek/pull/566) - Fix caching bug affecting a variable number of `MapReads` jobs due to non-deterministic state of `statusMap` during caching evaluation
 
-### Deprecated
-
-### Removed
 
 ## [2.7.1](https://github.com/nf-core/sarek/releases/tag/2.7.1) - Pårtejekna
 
