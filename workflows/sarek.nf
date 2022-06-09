@@ -761,6 +761,7 @@ workflow SAREK {
 
         // GERMLINE VARIANT CALLING
         GERMLINE_VARIANT_CALLING(
+            params.tools,
             cram_variant_calling_status_normal,
             dbsnp,
             dbsnp_tbi,
