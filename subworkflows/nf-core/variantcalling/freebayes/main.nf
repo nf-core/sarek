@@ -46,7 +46,7 @@ workflow RUN_FREEBAYES {
                         MERGE_FREEBAYES.out.vcf,
                         bcftools_vcf_out.no_intervals)
                     .map{ meta, vcf ->
-                        [ [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.id, num_intervals:meta.num_intervals, variantcaller:"Freebayes"],
+                        [ [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.id, num_intervals:meta.num_intervals, variantcaller:"freebayes"],
                             vcf]
                     }
 

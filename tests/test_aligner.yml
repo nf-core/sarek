@@ -6,12 +6,12 @@
     - preprocessing
   files:
     - path: results/multiqc
-    - path: results/preprocessing/csv/markduplicates.csv
-    - path: results/preprocessing/csv/markduplicates_no_table.csv
-    - path: results/preprocessing/csv/markduplicates_no_table_test.csv
-    - path: results/preprocessing/csv/markduplicates_test.csv
-    - path: results/preprocessing/csv/recalibrated.csv
-    - path: results/preprocessing/csv/recalibrated_test.csv
+    - path: results/csv/markduplicates.csv
+    - path: results/csv/markduplicates_no_table.csv
+    - path: results/csv/markduplicates_no_table_test.csv
+    - path: results/csv/markduplicates_test.csv
+    - path: results/csv/recalibrated.csv
+    - path: results/csv/recalibrated_test.csv
     - path: results/preprocessing/test/markduplicates/test.md.cram
     - path: results/preprocessing/test/markduplicates/test.md.cram.crai
     - path: results/preprocessing/test/recal_table/test.recal.table
@@ -35,12 +35,12 @@
     - preprocessing
   files:
     - path: results/multiqc
-    - path: results/preprocessing/csv/markduplicates.csv
-    - path: results/preprocessing/csv/markduplicates_no_table.csv
-    - path: results/preprocessing/csv/markduplicates_no_table_test.csv
-    - path: results/preprocessing/csv/markduplicates_test.csv
-    - path: results/preprocessing/csv/recalibrated.csv
-    - path: results/preprocessing/csv/recalibrated_test.csv
+    - path: results/csv/markduplicates.csv
+    - path: results/csv/markduplicates_no_table.csv
+    - path: results/csv/markduplicates_no_table_test.csv
+    - path: results/csv/markduplicates_test.csv
+    - path: results/csv/recalibrated.csv
+    - path: results/csv/recalibrated_test.csv
     - path: results/preprocessing/test/markduplicates/test.md.cram
     - path: results/preprocessing/test/markduplicates/test.md.cram.crai
     - path: results/preprocessing/test/recal_table/test.recal.table

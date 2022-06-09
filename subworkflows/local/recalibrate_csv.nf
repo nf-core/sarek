@@ -8,7 +8,7 @@ workflow RECALIBRATE_CSV {
 
     main:
         // Creating csv files to restart from this step
-        cram_recalibrated_index.collectFile(storeDir: "${params.outdir}/preprocessing/csv") { meta, cram, crai ->
+        cram_recalibrated_index.collectFile(storeDir: "${params.outdir}/csv") { meta, cram, crai ->
             patient = meta.patient
             sample  = meta.sample
             gender  = meta.gender
@@ -16,5 +16,5 @@ workflow RECALIBRATE_CSV {
             cram = "${params.outdir}/preprocessing/${sample}/recalibrated/${cram.name}"
             crai = "${params.outdir}/preprocessing/${sample}/recalibrated/${crai.name}"
             ["recalibrated_${sample}.csv", "patient,gender,status,sample,cram,crai\n${patient},${gender},${status},${sample},${cram},${crai}\n"]
-        }.collectFile(name: 'recalibrated.csv', keepHeader: true, skip: 1, sort: true, storeDir: "${params.outdir}/preprocessing/csv")
+        }.collectFile(name: 'recalibrated.csv', keepHeader: true, skip: 1, sort: true, storeDir: "${params.outdir}/csv")
 }
