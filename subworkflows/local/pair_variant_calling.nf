@@ -13,7 +13,7 @@ include { RUN_MPILEUP as RUN_MPILEUP_TUMOR          } from '../nf-core/variantca
 
 workflow PAIR_VARIANT_CALLING {
     take:
-        tools
+        tools                         // Mandatory, list of tools to apply
         cram_pair                     // channel: [mandatory] cram
         dbsnp                         // channel: [mandatory] dbsnp
         dbsnp_tbi                     // channel: [mandatory] dbsnp_tbi

@@ -13,20 +13,20 @@ include { RUN_MPILEUP                             } from '../nf-core/variantcall
 
 workflow TUMOR_ONLY_VARIANT_CALLING {
     take:
-        tools                        // Mandatory, list of tools to apply
-        cram_recalibrated            // channel: [mandatory] cram
-        dbsnp                        // channel: [mandatory] dbsnp
-        dbsnp_tbi                    // channel: [mandatory] dbsnp_tbi
-        dict                         // channel: [mandatory] dict
-        fasta                        // channel: [mandatory] fasta
-        fasta_fai                    // channel: [mandatory] fasta_fai
-        intervals                    // channel: [mandatory] intervals/target regions
-        intervals_bed_gz_tbi         // channel: [mandatory] intervals/target regions index zipped and indexed
+        tools                         // Mandatory, list of tools to apply
+        cram_recalibrated             // channel: [mandatory] cram
+        dbsnp                         // channel: [mandatory] dbsnp
+        dbsnp_tbi                     // channel: [mandatory] dbsnp_tbi
+        dict                          // channel: [mandatory] dict
+        fasta                         // channel: [mandatory] fasta
+        fasta_fai                     // channel: [mandatory] fasta_fai
+        intervals                     // channel: [mandatory] intervals/target regions
+        intervals_bed_gz_tbi          // channel: [mandatory] intervals/target regions index zipped and indexed
         intervals_bed_combined        // channel: [mandatory] intervals/target regions in one file unzipped
-        germline_resource            // channel: [optional]  germline_resource
-        germline_resource_tbi        // channel: [optional]  germline_resource_tbi
-        panel_of_normals             // channel: [optional]  panel_of_normals
-        panel_of_normals_tbi         // channel: [optional]  panel_of_normals_tbi
+        germline_resource             // channel: [optional]  germline_resource
+        germline_resource_tbi         // channel: [optional]  germline_resource_tbi
+        panel_of_normals              // channel: [optional]  panel_of_normals
+        panel_of_normals_tbi          // channel: [optional]  panel_of_normals_tbi
         chr_files
         mappability
 
