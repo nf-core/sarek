@@ -72,7 +72,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#334](https://github.com/nf-core/sarek/pull/334) - Sync `dsl2` and `dev` branches
 - [#342](https://github.com/nf-core/sarek/pull/342) - Update `README.md`
 - [#386](https://github.com/nf-core/sarek/pull/386) - Annotation is back
-- [#410](https://github.com/nf-core/sarek/pull/410), [#412](https://github.com/nf-core/sarek/pull/412) - Update `CI` tests
+- [#410](https://github.com/nf-core/sarek/pull/410), [#412](https://github.com/nf-core/sarek/pull/412), [#584](https://github.com/nf-core/sarek/pull/584) - Update `CI` tests
 - [#418](https://github.com/nf-core/sarek/pull/418) - Fix `known_sites` channels
 - [#432](https://github.com/nf-core/sarek/pull/432), [#457](https://github.com/nf-core/sarek/pull/457) - Sort before `tabix index`
 - [#454](https://github.com/nf-core/sarek/pull/454) - Input is optional (can actually be found automatically by `Sarek` if previously run)
