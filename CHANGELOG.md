@@ -53,11 +53,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#539](https://github.com/nf-core/sarek/pull/539) - Update `CITATIONS.md`
 - [#544](https://github.com/nf-core/sarek/pull/544) - `Mutect2` is no longer compatible with `--no_intervals`
 - [#551](https://github.com/nf-core/sarek/pull/551) - Sync `TEMPLATE` with `tools` `2.4`
+- [#562](https://github.com/nf-core/sarek/pull/562) - Restart from `--step annotate` is now also requiring a CSV file.
 - [#563](https://github.com/nf-core/sarek/pull/563) - Updated subway map
 - [#571](https://github.com/nf-core/sarek/pull/571) - Including and using GATK4's mergeVcfs
 - [#572](https://github.com/nf-core/sarek/pull/572) - Adjusted subway map svg for firefox compatibility
 - [#578](https://github.com/nf-core/sarek/pull/578) - Updated module deeptools/bamcoverage
-- [#562](https://github.com/nf-core/sarek/pull/562) - Restart from `--step annotate` is now also requiring a CSV file.
+- [#585](https://github.com/nf-core/sarek/pull/585) - Remove explicit BAM to CRAM conversion after MarkduplicatesSpark; tool does it internally
 
 ### Fixed
 
@@ -83,6 +84,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#524](https://github.com/nf-core/sarek/pull/524) - Fix intervals usage by counting the actual list of scatter/gather files produced and not overall number of intervals
 - [#549](https://github.com/nf-core/sarek/pull/549) - Fix unique lanes required for Freebayes: issue [#311](https://github.com/nf-core/sarek/issues/311), replaces `meta.clone()` with actual copy of map to avoid issues with <https://nfcore.slack.com/archives/C027CM7P08M/p1644241819942339>
 - [#567](https://github.com/nf-core/sarek/pull/567) - Fix interval name resolving during scatter/gather by moving logic to modules.config causing name to be correctly resolved on process execution; also fixed duplicate naming when variant callers produce multiple vcf files by adding field `type` to `meta` map
+- [#585](https://github.com/nf-core/sarek/pull/585) - Fix Spark usage for GATK4 modules.
 
 ### Deprecated
 
