@@ -67,7 +67,7 @@ workflow GERMLINE_VARIANT_CALLING {
 
         RUN_MPILEUP(cram_intervals_no_index,
                         fasta)
-
+        mpileup_germline = RUN_MPILEUP.out.mpileup
         ch_versions = ch_versions.mix(RUN_MPILEUP.out.versions)
     }
 

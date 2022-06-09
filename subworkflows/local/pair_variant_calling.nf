@@ -75,16 +75,22 @@ workflow PAIR_VARIANT_CALLING {
                     .map {meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals ->
                             [meta, tumor_cram, intervals]
                         }
-
-        RUN_MPILEUP_NORMAL(cram_normal_intervals_no_index,
+        mpileup_normal = Channel.empty()
+        if (params.only_paired_variant_calling){
+            mpileup_normal.mix(mpileup_germline)
+        }
+        else {
+            RUN_MPILEUP_NORMAL(cram_normal_intervals_no_index,
                         fasta)
-
+            mpileup_normal.mix(RUN_MPILEUP_NORMAL.out.mpileup)
+        }
         RUN_MPILEUP_TUMOR(cram_tumor_intervals_no_index,
                         fasta)
+        mpileup_tumor = RUN_MPILEUP_TUMOR.out.mpileup
     }
 
     if (tools.contains('controlfreec')){
-        controlfreec_input = RUN_MPILEUP_NORMAL.out.mpileup.cross(RUN_MPILEUP_TUMOR.out.mpileup)
+        controlfreec_input = mpileup_normal.cross(mpileup_tumor)
         .map{ normal, tumor ->
             [normal[0], normal[1], tumor[1], [], [], [], []]
         }
