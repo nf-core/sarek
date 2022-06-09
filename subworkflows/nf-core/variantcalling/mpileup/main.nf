@@ -15,7 +15,9 @@ workflow RUN_MPILEUP {
             intervals:    it[0].num_intervals > 1
             no_intervals: it[0].num_intervals <= 1
         }
-
+    print "lala"
+    mpileup.intervals.view()
+    print "trala"
     //Merge mpileup only when intervals and natural order sort them
     CAT_MPILEUP(mpileup.intervals
         .map{ meta, pileup ->
