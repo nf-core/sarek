@@ -92,7 +92,7 @@ workflow RUN_MANTA_SOMATIC {
         manta_diploid_sv_vcf.no_intervals,
         manta_somatic_sv_vcf.no_intervals
     ).map{ meta, vcf ->
-        [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals, variantcaller:"Manta"],
+        [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals, variantcaller:"manta"],
         vcf]
     }
 
