@@ -15,15 +15,9 @@
     - path: results/preprocessing/test2/recal_table/test2.recal.table
     - path: results/preprocessing/test2/recalibrated/test2.recal.cram
     - path: results/preprocessing/test2/recalibrated/test2.recal.cram.crai
-    - path: results/preprocessing/csv/markduplicates.csv
-    - path: results/preprocessing/csv/markduplicates_test.csv
-    - path: results/preprocessing/csv/markduplicates_test2.csv
-    - path: results/preprocessing/csv/markduplicates_no_table.csv
-    - path: results/preprocessing/csv/markduplicates_no_table_test.csv
-    - path: results/preprocessing/csv/markduplicates_no_table_test2.csv
-    - path: results/preprocessing/csv/recalibrated.csv
-    - path: results/preprocessing/csv/recalibrated_test.csv
-    - path: results/preprocessing/csv/recalibrated_test2.csv
+    - path: results/csv/markduplicates.csv
+    - path: results/csv/markduplicates_no_table.csv
+    - path: results/csv/recalibrated.csv
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/fastqc/test2-test_L1
     - path: results/reports/markduplicates/test/test.md.metrics
