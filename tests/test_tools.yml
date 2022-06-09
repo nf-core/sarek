@@ -70,6 +70,25 @@
     - path: results/variant_calling/sample1/cnvkit/test.paired_end.recalibrated.sorted.cns
     - path: results/variant_calling/sample1/cnvkit/test.paired_end.recalibrated.sorted.call.cns
 
+- name: Run variant calling on germline sample with tiddit
+  command: nextflow run main.nf -profile test,tools_germline,docker --tools tiddit -c ./tests/nextflow.config
+  tags:
+    - tiddit
+    - germline
+    - variant_calling
+  files:
+    - path: results/variant_calling/sample1/tiddit/multi_intervals.antitarget.bed
+    - path: results/variant_calling/sample1/tiddit/test.paired_end.recalibrated.sorted.antitargetcoverage.cnn
+    - path: results/variant_calling/sample1/tiddit/test.paired_end.recalibrated.sorted.targetcoverage.cnn
+    - path: results/variant_calling/sample1/tiddit/reference.cnn
+    - path: results/variant_calling/sample1/tiddit/test.paired_end.recalibrated.sorted-diagram.pdf
+    - path: results/variant_calling/sample1/tiddit/test.paired_end.recalibrated.sorted-scatter.png
+    - path: results/variant_calling/sample1/tiddit/test.paired_end.recalibrated.sorted.bintest.cns
+    - path: results/variant_calling/sample1/tiddit/multi_intervals.target.bed
+    - path: results/variant_calling/sample1/tiddit/test.paired_end.recalibrated.sorted.cnr
+    - path: results/variant_calling/sample1/tiddit/test.paired_end.recalibrated.sorted.cns
+    - path: results/variant_calling/sample1/tiddit/test.paired_end.recalibrated.sorted.call.cns
+
 - name: Run variant calling on somatic samples with controlfreec
   command: nextflow run main.nf -profile test,tools_somatic,docker --tools controlfreec -c ./tests/nextflow.config
   tags:
