@@ -88,7 +88,7 @@
                 "git_sha": "169b2b96c1167f89ab07127b7057c1d90a6996c7"
             },
             "gatk4/applybqsrspark": {
-                "git_sha": "169b2b96c1167f89ab07127b7057c1d90a6996c7"
+                "git_sha": "6a4732ef3b76b54d75533e6be9ba57e3008d4853"
             },
             "gatk4/applyvqsr": {
                 "git_sha": "169b2b96c1167f89ab07127b7057c1d90a6996c7"
@@ -97,7 +97,7 @@
                 "git_sha": "169b2b96c1167f89ab07127b7057c1d90a6996c7"
             },
             "gatk4/baserecalibratorspark": {
-                "git_sha": "fd7ee6799abf1bd5228b4b59ce541f3aeaa2280b"
+                "git_sha": "6a4732ef3b76b54d75533e6be9ba57e3008d4853"
             },
             "gatk4/calculatecontamination": {
                 "git_sha": "169b2b96c1167f89ab07127b7057c1d90a6996c7"
@@ -139,7 +139,7 @@
                 "git_sha": "df2620cfc7e4c21b14ed03c1c928f09fbabf83c4"
             },
             "gatk4/markduplicatesspark": {
-                "git_sha": "cda434611f851bbc4fe3d876e6b702cf721a0175"
+                "git_sha": "8e8f4c9c51a7b229dd45e9b287d48115c238baf3"
             },
             "gatk4/mergemutectstats": {
                 "git_sha": "169b2b96c1167f89ab07127b7057c1d90a6996c7"
