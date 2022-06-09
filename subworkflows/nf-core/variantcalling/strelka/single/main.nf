@@ -1,15 +1,13 @@
-include { TABIX_BGZIP as BGZIP_VC_STRELKA        } from '../../../../../modules/nf-core/modules/tabix/bgzip/main'
-include { TABIX_BGZIP as BGZIP_VC_STRELKA_GENOME } from '../../../../../modules/nf-core/modules/tabix/bgzip/main'
-include { CONCAT_VCF as CONCAT_STRELKA           } from '../../../../../modules/local/concat_vcf/main'
-include { CONCAT_VCF as CONCAT_STRELKA_GENOME    } from '../../../../../modules/local/concat_vcf/main'
-include { STRELKA_GERMLINE as STRELKA_SINGLE     } from '../../../../../modules/nf-core/modules/strelka/germline/main'
+include { GATK4_MERGEVCFS as MERGE_STRELKA        } from '../../../../../modules/nf-core/modules/gatk4/mergevcfs/main'
+include { GATK4_MERGEVCFS as MERGE_STRELKA_GENOME } from '../../../../../modules/nf-core/modules/gatk4/mergevcfs/main'
+include { STRELKA_GERMLINE as STRELKA_SINGLE      } from '../../../../../modules/nf-core/modules/strelka/germline/main'
 
 workflow RUN_STRELKA_SINGLE {
     take:
     cram                     // channel: [mandatory] [meta, cram, crai, interval.bed.gz, interval.bed.gz.tbi]
+    dict                     // channel: [optional]
     fasta                    // channel: [mandatory]
     fasta_fai                // channel: [mandatory]
-    intervals_bed_gz         // channel: [optional]  Contains a bed.gz file of all intervals combined provided with the cram input(s). Mandatory if interval files are used.
 
     main:
 
@@ -28,47 +26,39 @@ workflow RUN_STRELKA_SINGLE {
             no_intervals: it[0].num_intervals <= 1
         }.set{strelka_genome_vcf}
 
-    // Only when using intervals
-    BGZIP_VC_STRELKA(strelka_vcf.intervals)
-
-    CONCAT_STRELKA(
-        BGZIP_VC_STRELKA.out.output
+    MERGE_STRELKA(
+        strelka_vcf.intervals
             .map{ meta, vcf ->
-
                 new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals]
 
                 [groupKey(new_meta, meta.num_intervals), vcf]
             }.groupTuple(),
-        fasta_fai,
-        intervals_bed_gz)
+        dict
+    )
 
-    BGZIP_VC_STRELKA_GENOME(strelka_genome_vcf.intervals)
-
-    CONCAT_STRELKA_GENOME(
-        BGZIP_VC_STRELKA_GENOME.out.output
+    MERGE_STRELKA_GENOME(
+        strelka_genome_vcf.intervals
             .map{ meta, vcf ->
 
-                new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals]
+                [groupKey([patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals],
+                        meta.num_intervals),
+                vcf]
 
-                [groupKey(new_meta, meta.num_intervals), vcf]
             }.groupTuple(),
-        fasta_fai,
-        intervals_bed_gz)
+        dict
+    )
 
     // Mix output channels for "no intervals" and "with intervals" results
+    // Only strelka variant vcf should get annotated
     strelka_vcf = Channel.empty().mix(
-                    CONCAT_STRELKA.out.vcf,
-                    //CONCAT_STRELKA_GENOME.out.vcf,
-                    //strelka_genome_vcf.no_intervals,
+                    MERGE_STRELKA.out.vcf,
                     strelka_vcf.no_intervals)
                 .map{ meta, vcf ->
                     [[patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals, variantcaller:"Strelka"], vcf]
                 }
 
-    ch_versions = ch_versions.mix(BGZIP_VC_STRELKA.out.versions)
-    ch_versions = ch_versions.mix(BGZIP_VC_STRELKA_GENOME.out.versions)
-    ch_versions = ch_versions.mix(CONCAT_STRELKA.out.versions)
-    ch_versions = ch_versions.mix(CONCAT_STRELKA_GENOME.out.versions)
+    ch_versions = ch_versions.mix(MERGE_STRELKA.out.versions)
+    ch_versions = ch_versions.mix(MERGE_STRELKA_GENOME.out.versions)
     ch_versions = ch_versions.mix(STRELKA_SINGLE.out.versions)
 
     emit:

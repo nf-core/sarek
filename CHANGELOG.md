@@ -25,6 +25,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#533](https://github.com/nf-core/sarek/pull/533) - Add param `--only_paired_variant_calling` to allow skipping of germline variantcalling for paired samples
 - [#536](https://github.com/nf-core/sarek/pull/536) - Add `--step markduplicates` to start from duplicate marking, `--step prepare_recalibration` now ONLY starts at process `BaseRecalibrator` & adding `bam` and `cram` input support for `--step` `markduplicates`, `prepare_recalibration`, `recalibrate`, and `variant_calling`
 - [#538](https://github.com/nf-core/sarek/pull/538) - Add param `--seq_platform`, default: `ILLUMINA`
+- [#545](https://github.com/nf-core/sarek/pull/545) - Add modules and subworkflows for `cnvkit` tumor_only mode
+- [#540](https://github.com/nf-core/sarek/pull/540) - Add modules and subworkflows for `cnvkit` somatic mode
+- [#576](https://github.com/nf-core/sarek/pull/576) - Add modules and subworkflows for `cnvkit` germline mode
 
 ### Changed
 
@@ -50,6 +53,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#539](https://github.com/nf-core/sarek/pull/539) - Update `CITATIONS.md`
 - [#544](https://github.com/nf-core/sarek/pull/544) - `Mutect2` is no longer compatible with `--no_intervals`
 - [#551](https://github.com/nf-core/sarek/pull/551) - Sync `TEMPLATE` with `tools` `2.4`
+- [#563](https://github.com/nf-core/sarek/pull/563) - Updated subway map
+- [#571](https://github.com/nf-core/sarek/pull/571) - Including and using GATK4's mergeVcfs. Removing the local module `concat_vcf`.
+- [#572](https://github.com/nf-core/sarek/pull/572) - Adjusted subway map svg for firefox compatibility
+- [#578](https://github.com/nf-core/sarek/pull/578) - Updated module deeptools/bamcoverage
 
 ### Fixed
 
@@ -73,7 +80,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#513](https://github.com/nf-core/sarek/pull/513), [#527](https://github.com/nf-core/sarek/pull/527) - CNV is back
 - [#529](https://github.com/nf-core/sarek/pull/529) - Do not save `versions.yml` files
 - [#524](https://github.com/nf-core/sarek/pull/524) - Fix intervals usage by counting the actual list of scatter/gather files produced and not overall number of intervals
-- [#549](https://github.com/nf-core/sarek/pull/549) - Fix unique lanes required for Freebayes: issue [#311](https://github.com/nf-core/sarek/issues/311), replaces `meta.clone()` with actual copy of map to avoid issues with https://nfcore.slack.com/archives/C027CM7P08M/p1644241819942339
+- [#549](https://github.com/nf-core/sarek/pull/549) - Fix unique lanes required for Freebayes: issue [#311](https://github.com/nf-core/sarek/issues/311), replaces `meta.clone()` with actual copy of map to avoid issues with <https://nfcore.slack.com/archives/C027CM7P08M/p1644241819942339>
+- [#567](https://github.com/nf-core/sarek/pull/567) - Fix interval name resolving during scatter/gather by moving logic to modules.config causing name to be correctly resolved on process execution; also fixed duplicate naming when variant callers produce multiple vcf files by adding field `type` to `meta` map
 
 ### Deprecated
 
