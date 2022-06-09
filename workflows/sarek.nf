@@ -1001,7 +1001,7 @@ def extract_csv(csv_file) {
             meta.id = meta.sample
             def vcf = file(row.vcf, checkIfExists: true)
             meta.data_type     = "vcf"
-            meta.variantcaller = ""
+            meta.variantcaller = row.variantcaller ?: ""
             return [meta, vcf]
         } else {
             log.warn "Missing or unknown field in csv file header"
