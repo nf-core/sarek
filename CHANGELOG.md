@@ -57,6 +57,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#571](https://github.com/nf-core/sarek/pull/571) - Including and using GATK4's mergeVcfs. Removing the local module `concat_vcf`.
 - [#572](https://github.com/nf-core/sarek/pull/572) - Adjusted subway map svg for firefox compatibility
 - [#578](https://github.com/nf-core/sarek/pull/578) - Updated module deeptools/bamcoverage
+- [#562](https://github.com/nf-core/sarek/pull/562) - Restart from `--step annotate` is now also requiring a CSV file.
 
 ### Fixed
 
@@ -94,6 +95,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#539](https://github.com/nf-core/sarek/pull/539) - `--cadd_cache`, `--cadd_indels`, `--cadd_indels_tbi`, `--cadd_wg_snvs`, `--cadd_wg_snvs_tbi` have been removed
 - [#539](https://github.com/nf-core/sarek/pull/539) - `--genesplicer` has been removed
 - [#539](https://github.com/nf-core/sarek/pull/539) - `conf/genomes.config` and `params.genomes_base` have been removed
+- [#562](https://github.com/nf-core/sarek/pull/562) - Restart from `--step annotate` from folder is removed. Use a `csv` file instead
 
 ## [2.7.1](https://github.com/nf-core/sarek/releases/tag/2.7.1) - Pårtejekna
 
