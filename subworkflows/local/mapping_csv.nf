@@ -8,7 +8,7 @@ workflow MAPPING_CSV {
 
     main:
         // Creating csv files to restart from this step
-        csv_bam_mapped.collectFile(keepHeader: true, skip: 1, sort: true, storeDir: "${params.outdir}/csv") { meta, bam, bai ->
+        bam_indexed.collectFile(keepHeader: true, skip: 1, sort: true, storeDir: "${params.outdir}/csv") { meta, bam, bai ->
             patient = meta.patient
             sample  = meta.sample
             gender  = meta.gender
