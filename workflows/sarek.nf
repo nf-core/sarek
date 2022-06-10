@@ -811,7 +811,8 @@ workflow SAREK {
             pon,
             pon_tbi,
             chr_files,
-            mappability)
+            mappability
+        )
 
         // Gather vcf files for annotation and QC
         vcf_to_annotate = Channel.empty()

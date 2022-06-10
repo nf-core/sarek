@@ -75,12 +75,9 @@ workflow PAIR_VARIANT_CALLING {
                     .map {meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals ->
                             [meta, tumor_cram, intervals]
                         }
-        if (!params.only_paired_variant_calling){
-            RUN_MPILEUP_NORMAL(cram_normal_intervals_no_index, fasta)
-        }
-        mpileup_normal = Channel.empty().mix(RUN_MPILEUP_NORMAL.out.mpileup, mpileup_germline)
-        RUN_MPILEUP_TUMOR(cram_tumor_intervals_no_index,
-                        fasta)
+        RUN_MPILEUP_NORMAL(cram_normal_intervals_no_index, fasta)
+        mpileup_normal = RUN_MPILEUP_NORMAL.out.mpileup
+        RUN_MPILEUP_TUMOR(cram_tumor_intervals_no_index, fasta)
         mpileup_tumor = RUN_MPILEUP_TUMOR.out.mpileup
     }
 
