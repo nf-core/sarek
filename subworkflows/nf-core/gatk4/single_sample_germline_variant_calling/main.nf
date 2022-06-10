@@ -17,12 +17,8 @@ workflow GATK_SINGLE_SAMPLE_GERMLINE_VARIANT_CALLING{
     ch_versions = Channel.empty()
 
     // intervals and merging?
-    vcf.view()
     CNNSCOREVARIANTS(vcf.map{meta, vcf,tbi -> [meta,vcf,tbi,[],[]]}, fasta, fasta_fai, dict, [], [])
 
-    known_sites.view()
-        known_sites_tbi.view()
-    //
     FILTERVARIANTTRANCHES(CNNSCOREVARIANTS.out.vcf.join(CNNSCOREVARIANTS.out.tbi).map{meta, vcf,tbi -> [meta,vcf,tbi,[]]},
                             known_sites,
                             known_sites_tbi,
