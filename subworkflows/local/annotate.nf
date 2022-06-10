@@ -12,7 +12,6 @@ workflow ANNOTATE {
     tools
     snpeff_db
     snpeff_cache
-    vep_output
     vep_genome
     vep_species
     vep_cache_version
@@ -42,7 +41,7 @@ workflow ANNOTATE {
     }
 
     if (tools.contains('vep')) {
-        ANNOTATION_ENSEMBLVEP(vcf, vep_output, vep_genome, vep_species, vep_cache_version, vep_cache, vep_extra_files)
+        ANNOTATION_ENSEMBLVEP(vcf, vep_genome, vep_species, vep_cache_version, vep_cache, vep_extra_files)
 
         ch_reports   = ch_reports.mix(ANNOTATION_ENSEMBLVEP.out.reports)
         ch_vcf_ann   = ch_vcf_ann.mix(ANNOTATION_ENSEMBLVEP.out.vcf_tbi)

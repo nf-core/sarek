@@ -867,7 +867,6 @@ workflow SAREK {
                 params.tools,
                 snpeff_db,
                 snpeff_cache,
-                params.vep_output,
                 vep_genome,
                 vep_species,
                 vep_cache_version,

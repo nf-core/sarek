@@ -8,7 +8,6 @@ include { TABIX_BGZIPTABIX } from '../../../../modules/nf-core/modules/tabix/bgz
 workflow ANNOTATION_ENSEMBLVEP {
     take:
     vcf               // channel: [ val(meta), vcf ]
-    vep_output
     vep_genome        //   value: genome to use
     vep_species       //   value: species to use
     vep_cache_version //   value: cache version to use
@@ -18,7 +17,7 @@ workflow ANNOTATION_ENSEMBLVEP {
     main:
     ch_versions = Channel.empty()
 
-    ENSEMBLVEP(vcf, vep_output, vep_genome, vep_species, vep_cache_version, vep_cache, vep_extra_files)
+    ENSEMBLVEP(vcf, vep_genome, vep_species, vep_cache_version, vep_cache, vep_extra_files)
     TABIX_BGZIPTABIX(ENSEMBLVEP.out.vcf)
 
     // Gather versions of all tools used

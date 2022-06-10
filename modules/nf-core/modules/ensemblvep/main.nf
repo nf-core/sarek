@@ -9,7 +9,6 @@ process ENSEMBLVEP {
 
     input:
     tuple val(meta), path(vcf)
-    val   vep_output
     val   genome
     val   species
     val   cache_version
@@ -28,8 +27,9 @@ process ENSEMBLVEP {
 
     script:
     def args = task.ext.args ?: ''
+    def vep_output = task.ext.vep_output ?: 'vcf'
     def suffix = task.ext.suffix ?: ''
-    def prefix = args.prefix ? "$args.prefix" : "${meta.id}"
+    def prefix = task.ext.prefix ?: "${meta.id}"
     def dir_cache = cache ? "\${PWD}/${cache}" : "/.vep"
     """
     mkdir $prefix
