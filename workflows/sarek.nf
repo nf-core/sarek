@@ -265,6 +265,7 @@ workflow SAREK {
     // Which can either or both be optional
     // Actually BQSR has been throwing erros if no sides were provided so it must be at least one
     known_sites     = dbsnp.concat(known_indels).collect()
+    known_indels_tbi.view()
     known_sites_tbi = dbsnp_tbi.concat(known_indels_tbi).collect()
 
     // Build intervals if needed
@@ -765,6 +766,8 @@ workflow SAREK {
             cram_variant_calling_status_normal,
             dbsnp,
             dbsnp_tbi,
+            known_sites,
+            known_sites_tbi,
             dict,
             fasta,
             fasta_fai,

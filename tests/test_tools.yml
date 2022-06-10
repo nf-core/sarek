@@ -239,7 +239,7 @@
 #     - path: results/variant_calling/sample2/freebayes/sample2.vcf.gz.tbi
 
 - name: Run variant calling on germline sample with haplotypecaller
-  command: nextflow run main.nf -profile test,tools_germline,docker --tools haplotypecaller
+  command: nextflow run main.nf -profile test,tools_germline,docker --tools haplotypecaller -c ./tests/nextflow.config
   tags:
     - germline
     - haplotypecaller
@@ -247,10 +247,10 @@
   files:
     - path: results/variant_calling/sample1/haplotypecaller/sample1.vcf.gz
     - path: results/variant_calling/sample1/haplotypecaller/sample1.vcf.gz.tbi
-    - path: results/csv/variantcalled.csv
+      - path: results/csv/variantcalled.csv
 
 - name: Run variant calling on germline sample with haplotypecaller without intervals
-  command: nextflow run main.nf -profile test,tools_germline,docker --tools haplotypecaller --no_intervals
+  command: nextflow run main.nf -profile test,tools_germline,docker --tools haplotypecaller --no_intervals -c ./tests/nextflow.config
   tags:
     - germline
     - haplotypecaller
@@ -262,7 +262,7 @@
     - path: results/csv/variantcalled.csv
 
 - name: Run variant calling on germline sample with haplotypecaller and generate gvcf
-  command: nextflow run main.nf -profile test,tools_germline,docker --tools haplotypecaller --generate_gvcf
+  command: nextflow run main.nf -profile test,tools_germline,docker --tools haplotypecaller --generate_gvcf -c ./tests/nextflow.config
   tags:
     - germline
     - gvcf
@@ -276,7 +276,7 @@
     - path: results/csv/variantcalled.csv
 
 - name: Run variant calling on germline sample with haplotypecaller without intervals and generate gvcf
-  command: nextflow run main.nf -profile test,tools_germline,docker --tools haplotypecaller --generate_gvcf --no_intervals
+  command: nextflow run main.nf -profile test,tools_germline,docker --tools haplotypecaller --generate_gvcf --no_intervals -c ./tests/nextflow.config
   tags:
     - germline
     - gvcf

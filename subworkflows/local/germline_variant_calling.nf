@@ -14,8 +14,10 @@ workflow GERMLINE_VARIANT_CALLING {
     take:
         tools                         // Mandatory, list of tools to apply
         cram_recalibrated             // channel: [mandatory] cram
-        dbsnp                         // channel: [mandatory] dbsnp
-        dbsnp_tbi                     // channel: [mandatory] dbsnp_tbi
+        dbsnp
+        dbsnp_tbi                         // channel: []
+        known_sites
+        known_sites_tbi
         dict                          // channel: [mandatory] dict
         fasta                         // channel: [mandatory] fasta
         fasta_fai                     // channel: [mandatory] fasta_fai
@@ -103,7 +105,9 @@ workflow GERMLINE_VARIANT_CALLING {
                         fasta_fai,
                         dict,
                         dbsnp,
-                        dbsnp_tbi)
+                        dbsnp_tbi,
+                        known_sites,
+                        known_sites_tbi)
 
         haplotypecaller_vcf  = RUN_HAPLOTYPECALLER.out.haplotypecaller_vcf
         //genotype_gvcf        = RUN_HAPLOTYPECALLER.out.genotype_gvcf

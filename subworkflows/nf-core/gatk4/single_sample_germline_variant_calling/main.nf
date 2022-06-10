@@ -8,15 +8,27 @@ workflow GATK_SINGLE_SAMPLE_GERMLINE_VARIANT_CALLING{
     fasta
     fasta_fai
     dict
-    germline_resource //TODO more resources here, dbsnp, omni, 1000g, hapmap
-    germline_resource_tbi
+       //TODO more resources here, dbsnp (done), omni, 1000g(done), hapmap
+    known_sites
+    known_sites_tbi
 
     main:
 
     ch_versions = Channel.empty()
 
+    // intervals and merging?
+    vcf.view()
     CNNSCOREVARIANTS(vcf.map{meta, vcf,tbi -> [meta,vcf,tbi,[],[]]}, fasta, fasta_fai, dict, [], [])
-    FILTERVARIANTTRANCHES(CNNSCOREVARIANTS.out.vcf.join(CNNSCOREVARIANTS.out.tbi).map{meta, vcf,tbi -> [meta,vcf,tbi,[]]}, germline_resource, germline_resource_tbi, fasta, fasta_fai, dict)
+
+    known_sites.view()
+        known_sites_tbi.view()
+    //
+    FILTERVARIANTTRANCHES(CNNSCOREVARIANTS.out.vcf.join(CNNSCOREVARIANTS.out.tbi).map{meta, vcf,tbi -> [meta,vcf,tbi,[]]},
+                            known_sites,
+                            known_sites_tbi,
+                            fasta,
+                            fasta_fai,
+                            dict)
 
     ch_versions = ch_versions.mix(CNNSCOREVARIANTS.out.versions)
     ch_versions = ch_versions.mix(FILTERVARIANTTRANCHES.out.versions)
