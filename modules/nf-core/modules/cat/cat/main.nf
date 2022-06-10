@@ -41,6 +41,7 @@ process CAT_CAT {
         ${file_list.join(' ')} \\
         $command2 \\
         > ${prefix}
+
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         pigz: \$( pigz --version 2>&1 | sed 's/pigz //g' )
@@ -52,6 +53,7 @@ process CAT_CAT {
     prefix   = task.ext.prefix ?: "${meta.id}${file_list[0].substring(file_list[0].lastIndexOf('.'))}"
     """
     touch $prefix
+
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         pigz: \$( pigz --version 2>&1 | sed 's/pigz //g' )
