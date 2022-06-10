@@ -247,7 +247,7 @@
   files:
     - path: results/variant_calling/sample1/haplotypecaller/sample1.vcf.gz
     - path: results/variant_calling/sample1/haplotypecaller/sample1.vcf.gz.tbi
-      - path: results/csv/variantcalled.csv
+    - path: results/csv/variantcalled.csv
 
 - name: Run variant calling on germline sample with haplotypecaller without intervals
   command: nextflow run main.nf -profile test,tools_germline,docker --tools haplotypecaller --no_intervals -c ./tests/nextflow.config
