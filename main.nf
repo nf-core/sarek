@@ -4168,6 +4168,9 @@ def extractInfos(channel) {
         statusMap[idPatient, idSample] = status
         [idPatient] + it[3..-1]
     }
+    // This forces a roundtrip as a list to ensure that genderMap and
+    // statusMap are fully populated before being used downstream
+    channel = Channel.fromList(channel.toList().val)
     [genderMap, statusMap, channel]
 }
 

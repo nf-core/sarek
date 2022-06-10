@@ -6,7 +6,7 @@ jobs:
     environment:
       GENOME: GRCh37
       SNPEFF_CACHE_VERSION: "75"
-      SAREK_TAG: 2.7.1
+      SAREK_TAG: 2.7.2
     steps:
       - checkout
       - setup_remote_docker
@@ -20,28 +20,28 @@ jobs:
     environment:
       GENOME: GRCh38
       SNPEFF_CACHE_VERSION: "86"
-      SAREK_TAG: 2.7.1
+      SAREK_TAG: 2.7.2
 
   snpeffgrcm38:
     << : *buildsnpeff
     environment:
       GENOME: GRCm38
       SNPEFF_CACHE_VERSION: "86"
-      SAREK_TAG: 2.7.1
+      SAREK_TAG: 2.7.2
 
   snpeffcanfam3_1:
     << : *buildsnpeff
     environment:
       GENOME: CanFam3.1
       SNPEFF_CACHE_VERSION: "86"
-      SAREK_TAG: 2.7.1
+      SAREK_TAG: 2.7.2
 
   snpeffwbcel235:
     << : *buildsnpeff
     environment:
       GENOME: WBcel235
       SNPEFF_CACHE_VERSION: "86"
-      SAREK_TAG: 2.7.1
+      SAREK_TAG: 2.7.2
 
   vepgrch37: &buildvep
     docker:
@@ -50,7 +50,7 @@ jobs:
       GENOME: GRCh37
       SPECIES: homo_sapiens
       VEP_VERSION: "99"
-      SAREK_TAG: 2.7.1
+      SAREK_TAG: 2.7.2
     steps:
       - checkout
       - setup_remote_docker
@@ -67,7 +67,7 @@ jobs:
       GENOME: GRCh38
       SPECIES: homo_sapiens
       VEP_VERSION: "99"
-      SAREK_TAG: 2.7.1
+      SAREK_TAG: 2.7.2
 
   vepgrcm38:
     << : *buildvep
@@ -75,7 +75,7 @@ jobs:
       GENOME: GRCm38
       SPECIES: mus_musculus
       VEP_VERSION: "99"
-      SAREK_TAG: 2.7.1
+      SAREK_TAG: 2.7.2
 
   vepcanfam3_1:
     << : *buildvep
@@ -83,7 +83,7 @@ jobs:
       GENOME: CanFam3.1
       SPECIES: canis_familiaris
       VEP_VERSION: "99"
-      SAREK_TAG: 2.7.1
+      SAREK_TAG: 2.7.2
 
   vepwbcel235:
     << : *buildvep
@@ -91,7 +91,7 @@ jobs:
       GENOME: WBcel235
       SPECIES: caenorhabditis_elegans
       VEP_VERSION: "99"
-      SAREK_TAG: 2.7.1
+      SAREK_TAG: 2.7.2
 
 workflows:
   version: 2
