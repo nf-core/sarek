@@ -6,7 +6,7 @@ include { CONTROLFREEC_MAKEGRAPH as MAKEGRAPH                    } from '../../.
 
 workflow RUN_CONTROLFREEC_SOMATIC {
     take:
-    controlfreec_input       // channel: [mandatory]
+    controlfreec_input       // channel: [mandatory] [meta, pileup_normal, pileup_tumor, [], [], [], []]
     fasta                    // channel: [mandatory]
     fasta_fai                // channel: [mandatory]
     dbsnp                    // channel: [mandatory]

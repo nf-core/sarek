@@ -64,8 +64,7 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
         }
 
     if(tools.contains('controlfreec')){
-        cram_intervals_no_index = cram_recalibrated_intervals
-        .map { meta, cram, crai, intervals ->
+        cram_intervals_no_index = cram_recalibrated_intervals.map { meta, cram, crai, intervals ->
             [meta, cram, intervals]
         }
 
