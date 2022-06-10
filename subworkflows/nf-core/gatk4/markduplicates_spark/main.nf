@@ -26,21 +26,11 @@ workflow MARKDUPLICATES_SPARK {
     GATK4_MARKDUPLICATES_SPARK(bam, fasta, fasta_fai, dict)
     INDEX_MARKDUPLICATES(GATK4_MARKDUPLICATES_SPARK.out.output)
 
-    bam_bai = GATK4_MARKDUPLICATES_SPARK.out.output
-        .join(INDEX_MARKDUPLICATES.out.bai)
-
-    cram_crai = GATK4_MARKDUPLICATES_SPARK.out.output
+    cram_markduplicates = GATK4_MARKDUPLICATES_SPARK.out.output
         .join(INDEX_MARKDUPLICATES.out.crai)
 
     // Convert Markupduplicates spark bam output to cram when running bamqc and/or deeptools
-    BAM_TO_CRAM(bam_bai, Channel.empty(), fasta, fasta_fai, intervals_combined_bed_gz_tbi)
-
-    // Only one of these channel is not empty:
-    // - running Markupduplicates spark with bam output
-    // - running Markupduplicates spark with cram output
-    cram_markduplicates = Channel.empty().mix(
-        BAM_TO_CRAM.out.cram_converted,
-        cram_crai)
+    BAM_TO_CRAM(Channel.empty(), cram_markduplicates, fasta, fasta_fai, intervals_combined_bed_gz_tbi)
 
     // When running Marduplicates spark, and saving reports
     GATK4_ESTIMATELIBRARYCOMPLEXITY(bam, fasta, fasta_fai, dict)
