@@ -86,7 +86,7 @@ workflow RUN_MANTA_SOMATIC {
         dict)
 
     // Mix output channels for "no intervals" and "with intervals" results
-    manta_diploid = Channel.empty().mix(
+    manta_vcf = Channel.empty().mix(
         MERGE_MANTA_DIPLOID.out.vcf,
         MERGE_MANTA_SOMATIC.out.vcf,
         manta_diploid_sv_vcf.no_intervals,
