@@ -25,8 +25,8 @@ workflow RUN_HAPLOTYPECALLER {
         fasta,
         fasta_fai,
         dict,
-        dbsnp,
-        dbsnp_tbi)
+        [],
+        [])
 
     // Figure out if using intervals or no_intervals
     HAPLOTYPECALLER.out.vcf.branch{
