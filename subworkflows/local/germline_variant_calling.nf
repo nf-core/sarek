@@ -7,21 +7,22 @@ include { RUN_FREEBAYES       } from '../nf-core/variantcalling/freebayes/main.n
 include { RUN_HAPLOTYPECALLER } from '../nf-core/variantcalling/haplotypecaller/main.nf'
 include { RUN_MANTA_GERMLINE  } from '../nf-core/variantcalling/manta/germline/main.nf'
 include { RUN_STRELKA_SINGLE  } from '../nf-core/variantcalling/strelka/single/main.nf'
-include { RUN_CNVKIT_GERMLINE  } from '../nf-core/variantcalling/cnvkit/germline/main.nf'
+include { RUN_CNVKIT_GERMLINE } from '../nf-core/variantcalling/cnvkit/germline/main.nf'
 //include { TIDDIT          } from './variantcalling/tiddit.nf'
 
 workflow GERMLINE_VARIANT_CALLING {
     take:
-        cram_recalibrated            // channel: [mandatory] cram
-        dbsnp                        // channel: [mandatory] dbsnp
-        dbsnp_tbi                    // channel: [mandatory] dbsnp_tbi
-        dict                         // channel: [mandatory] dict
-        fasta                        // channel: [mandatory] fasta
-        fasta_fai                    // channel: [mandatory] fasta_fai
-        intervals                    // channel: [mandatory] intervals/target regions
-        intervals_bed_gz_tbi         // channel: [mandatory] intervals/target regions index zipped and indexed
-        intervals_bed_combined       // channel: [mandatory] intervals/target regions in one file unzipped
-        // joint_germline               // val: true/false on whether to run joint_germline calling, only works in combination with haplotypecaller at the moment
+        tools                         // Mandatory, list of tools to apply
+        cram_recalibrated             // channel: [mandatory] cram
+        dbsnp                         // channel: [mandatory] dbsnp
+        dbsnp_tbi                     // channel: [mandatory] dbsnp_tbi
+        dict                          // channel: [mandatory] dict
+        fasta                         // channel: [mandatory] fasta
+        fasta_fai                     // channel: [mandatory] fasta_fai
+        intervals                     // channel: [mandatory] intervals/target regions
+        intervals_bed_gz_tbi          // channel: [mandatory] intervals/target regions index zipped and indexed
+        intervals_bed_combined        // channel: [mandatory] intervals/target regions in one file unzipped
+        // joint_germline                // val: true/false on whether to run joint_germline calling, only works in combination with haplotypecaller at the moment
 
     main:
 
@@ -60,7 +61,7 @@ workflow GERMLINE_VARIANT_CALLING {
 
     // CNVKIT
 
-    if(params.tools.contains('cnvkit')){
+    if(tools.contains('cnvkit')){
         cram_recalibrated_cnvkit_germline = cram_recalibrated
             .map{ meta, cram, crai ->
                 [meta, [], cram]
@@ -75,7 +76,7 @@ workflow GERMLINE_VARIANT_CALLING {
     }
 
     // DEEPVARIANT
-    if(params.tools.contains('deepvariant')){
+    if(tools.contains('deepvariant')){
         RUN_DEEPVARIANT(cram_recalibrated_intervals, dict, fasta, fasta_fai)
 
         deepvariant_vcf = Channel.empty().mix(RUN_DEEPVARIANT.out.deepvariant_vcf,RUN_DEEPVARIANT.out.deepvariant_gvcf)
@@ -83,7 +84,7 @@ workflow GERMLINE_VARIANT_CALLING {
     }
 
     // FREEBAYES
-    if (params.tools.contains('freebayes')){
+    if (tools.contains('freebayes')){
         // Remap channel for Freebayes
         cram_recalibrated_intervals_freebayes = cram_recalibrated_intervals
             .map{ meta, cram, crai, intervals ->
@@ -96,7 +97,7 @@ workflow GERMLINE_VARIANT_CALLING {
     }
 
     // HAPLOTYPECALLER
-    if (params.tools.contains('haplotypecaller')){
+    if (tools.contains('haplotypecaller')){
         RUN_HAPLOTYPECALLER(cram_recalibrated_intervals,
                         fasta,
                         fasta_fai,
@@ -110,7 +111,7 @@ workflow GERMLINE_VARIANT_CALLING {
     }
 
     // MANTA
-    if (params.tools.contains('manta')){
+    if (tools.contains('manta')){
         RUN_MANTA_GERMLINE (cram_recalibrated_intervals_gz_tbi,
                         dict,
                         fasta,
@@ -121,7 +122,7 @@ workflow GERMLINE_VARIANT_CALLING {
     }
 
     // STRELKA
-    if (params.tools.contains('strelka')){
+    if (tools.contains('strelka')){
         RUN_STRELKA_SINGLE(cram_recalibrated_intervals_gz_tbi,
                 dict,
                 fasta,

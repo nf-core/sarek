@@ -44,7 +44,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#466](https://github.com/nf-core/sarek/pull/466), [#478](https://github.com/nf-core/sarek/pull/478), [#492](https://github.com/nf-core/sarek/pull/492), [#521](https://github.com/nf-core/sarek/pull/521) - Move some local modules to `nf-core/modules`
 - [#466](https://github.com/nf-core/sarek/pull/466), [#485](https://github.com/nf-core/sarek/pull/485), [#492](https://github.com/nf-core/sarek/pull/492), [#494](https://github.com/nf-core/sarek/pull/494), [#515](https://github.com/nf-core/sarek/pull/515) - Improve preprocessing subworkflows
 - [#474](https://github.com/nf-core/sarek/pull/474), [#475](https://github.com/nf-core/sarek/pull/475) - Sync `TEMPLATE` with `tools` `2.2`
-- [#487](https://github.com/nf-core/sarek/pull/487), [#489](https://github.com/nf-core/sarek/pull/489), [#492](https://github.com/nf-core/sarek/pull/492), [#497](https://github.com/nf-core/sarek/pull/497), [#522](https://github.com/nf-core/sarek/pull/522) - Improve variant calling subworkflows
+- [#487](https://github.com/nf-core/sarek/pull/487), [#489](https://github.com/nf-core/sarek/pull/489), [#492](https://github.com/nf-core/sarek/pull/492), [#497](https://github.com/nf-core/sarek/pull/497), [#522](https://github.com/nf-core/sarek/pull/522), [#583](https://github.com/nf-core/sarek/pull/583) - Improve variant calling subworkflows
 - [#498](https://github.com/nf-core/sarek/pull/498) - Update docs
 - [#501](https://github.com/nf-core/sarek/pull/501) - Sync `TEMPLATE` with `tools` `2.3`
 - [#511](https://github.com/nf-core/sarek/pull/511) - Sync `TEMPLATE` with `tools` `2.3.2`
@@ -53,10 +53,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#539](https://github.com/nf-core/sarek/pull/539) - Update `CITATIONS.md`
 - [#544](https://github.com/nf-core/sarek/pull/544) - `Mutect2` is no longer compatible with `--no_intervals`
 - [#551](https://github.com/nf-core/sarek/pull/551) - Sync `TEMPLATE` with `tools` `2.4`
+- [#562](https://github.com/nf-core/sarek/pull/562) - Restart from `--step annotate` is now also requiring a CSV file.
 - [#563](https://github.com/nf-core/sarek/pull/563) - Updated subway map
-- [#571](https://github.com/nf-core/sarek/pull/571) - Including and using GATK4's mergeVcfs. Removing the local module `concat_vcf`.
+- [#571](https://github.com/nf-core/sarek/pull/571) - Including and using GATK4's mergeVcfs
 - [#572](https://github.com/nf-core/sarek/pull/572) - Adjusted subway map svg for firefox compatibility
 - [#578](https://github.com/nf-core/sarek/pull/578) - Updated module deeptools/bamcoverage
+- [#585](https://github.com/nf-core/sarek/pull/585) - Remove explicit BAM to CRAM conversion after MarkduplicatesSpark; tool does it internally
 
 ### Fixed
 
@@ -72,7 +74,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#334](https://github.com/nf-core/sarek/pull/334) - Sync `dsl2` and `dev` branches
 - [#342](https://github.com/nf-core/sarek/pull/342) - Update `README.md`
 - [#386](https://github.com/nf-core/sarek/pull/386) - Annotation is back
-- [#410](https://github.com/nf-core/sarek/pull/410), [#412](https://github.com/nf-core/sarek/pull/412) - Update `CI` tests
+- [#410](https://github.com/nf-core/sarek/pull/410), [#412](https://github.com/nf-core/sarek/pull/412), [#584](https://github.com/nf-core/sarek/pull/584) - Update `CI` tests
 - [#418](https://github.com/nf-core/sarek/pull/418) - Fix `known_sites` channels
 - [#432](https://github.com/nf-core/sarek/pull/432), [#457](https://github.com/nf-core/sarek/pull/457) - Sort before `tabix index`
 - [#454](https://github.com/nf-core/sarek/pull/454) - Input is optional (can actually be found automatically by `Sarek` if previously run)
@@ -82,6 +84,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#524](https://github.com/nf-core/sarek/pull/524) - Fix intervals usage by counting the actual list of scatter/gather files produced and not overall number of intervals
 - [#549](https://github.com/nf-core/sarek/pull/549) - Fix unique lanes required for Freebayes: issue [#311](https://github.com/nf-core/sarek/issues/311), replaces `meta.clone()` with actual copy of map to avoid issues with <https://nfcore.slack.com/archives/C027CM7P08M/p1644241819942339>
 - [#567](https://github.com/nf-core/sarek/pull/567) - Fix interval name resolving during scatter/gather by moving logic to modules.config causing name to be correctly resolved on process execution; also fixed duplicate naming when variant callers produce multiple vcf files by adding field `type` to `meta` map
+- [#585](https://github.com/nf-core/sarek/pull/585) - Fix Spark usage for GATK4 modules.
 
 ### Deprecated
 
@@ -94,6 +97,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#539](https://github.com/nf-core/sarek/pull/539) - `--cadd_cache`, `--cadd_indels`, `--cadd_indels_tbi`, `--cadd_wg_snvs`, `--cadd_wg_snvs_tbi` have been removed
 - [#539](https://github.com/nf-core/sarek/pull/539) - `--genesplicer` has been removed
 - [#539](https://github.com/nf-core/sarek/pull/539) - `conf/genomes.config` and `params.genomes_base` have been removed
+- [#562](https://github.com/nf-core/sarek/pull/562) - Restart from `--step annotate` from folder is removed. Use a `csv` file instead
+- [#571](https://github.com/nf-core/sarek/pull/571) - Removed the local module `concat_vcf`.
 
 ## [2.7.1](https://github.com/nf-core/sarek/releases/tag/2.7.1) - Pårtejekna
 
