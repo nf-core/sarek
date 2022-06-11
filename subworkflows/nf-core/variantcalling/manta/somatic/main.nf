@@ -3,7 +3,7 @@ include { GATK4_MERGEVCFS as MERGE_MANTA_SMALL_INDELS      } from '../../../../.
 include { GATK4_MERGEVCFS as MERGE_MANTA_SOMATIC           } from '../../../../../modules/nf-core/modules/gatk4/mergevcfs/main'
 include { GATK4_MERGEVCFS as MERGE_MANTA_SV                } from '../../../../../modules/nf-core/modules/gatk4/mergevcfs/main'
 include { MANTA_SOMATIC                                    } from '../../../../../modules/nf-core/modules/manta/somatic/main'
-include { MANTA_CONVERTINVERSION                           } from '../../../../../modules/nf-core/modules/manta/convertinversion/main'
+
 workflow RUN_MANTA_SOMATIC {
     take:
     cram                     // channel: [mandatory] [meta, normal_cram, normal_crai, tumor_cram, tumor_crai, interval.bed.gz, interval.bed.gz.tbi]
@@ -86,7 +86,7 @@ workflow RUN_MANTA_SOMATIC {
         dict)
 
     // Mix output channels for "no intervals" and "with intervals" results
-    manta_vcf = Channel.empty().mix(
+    manta_diploid = Channel.empty().mix(
         MERGE_MANTA_DIPLOID.out.vcf,
         MERGE_MANTA_SOMATIC.out.vcf,
         manta_diploid_sv_vcf.no_intervals,
@@ -95,11 +95,6 @@ workflow RUN_MANTA_SOMATIC {
         [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals, variantcaller:"Manta"],
         vcf]
     }
-
-    // if(params.tools.contains('vep')){
-    //     MANTA_CONVERTINVERSION(manta_vcf, fasta)
-    //     manta_vcf = MANTA_CONVERTINVERSION.out.vcf
-    // }
 
     // Don't set variantcaller & num_intervals key. These files are not annotated, so they don't need it and joining with reads for StrelkaBP then fails
     manta_candidate_small_indels_vcf = Channel.empty().mix(
