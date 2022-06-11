@@ -96,10 +96,10 @@ workflow RUN_MANTA_SOMATIC {
         vcf]
     }
 
-    if(params.tools.contains('vep')){
-        MANTA_CONVERTINVERSION(manta_vcf, fasta)
-        manta_vcf = MANTA_CONVERTINVERSION.out.vcf
-    }
+    // if(params.tools.contains('vep')){
+    //     MANTA_CONVERTINVERSION(manta_vcf, fasta)
+    //     manta_vcf = MANTA_CONVERTINVERSION.out.vcf
+    // }
 
     // Don't set variantcaller & num_intervals key. These files are not annotated, so they don't need it and joining with reads for StrelkaBP then fails
     manta_candidate_small_indels_vcf = Channel.empty().mix(
