@@ -279,12 +279,7 @@
                 "joint_germline": {
                     "type": "boolean",
                     "fa_icon": "fas fa-align-justify",
-                    "description": "Enables GATK4 joint germline variant calling, if also haplotypecaller is selected."
-                },
-                "generate_gvcf": {
-                    "type": "boolean",
-                    "fa_icon": "fas fa-copy",
-                    "description": "Generate g.vcf output from GATK HaplotypeCaller."
+                    "description": "Enables GATK4 joint germline variant calling and g.vcf generation, if also Haplotypecaller is selected."
                 },
                 "pon": {
                     "type": "string",
