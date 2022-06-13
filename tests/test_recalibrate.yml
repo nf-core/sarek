@@ -10,8 +10,7 @@
     - path: results/preprocessing/test/recalibrated/test.recal.cram.crai
     - path: results/reports/qualimap/test/test.recal
     - path: results/reports/samtools_stats/test/test.recal.cram.stats
-    - path: results/preprocessing/csv/recalibrated.csv
-    - path: results/preprocessing/csv/recalibrated_test.csv
+    - path: results/csv/recalibrated.csv
     - path: results/variant_calling/test/strelka/test.genome.vcf.gz
     - path: results/variant_calling/test/strelka/test.genome.vcf.gz.tbi
     - path: results/variant_calling/test/strelka/test.variants.vcf.gz
@@ -29,8 +28,7 @@
     - path: results/preprocessing/test/recalibrated/test.recal.cram.crai
     - path: results/reports/qualimap/test/test.recal
     - path: results/reports/samtools_stats/test/test.recal.cram.stats
-    - path: results/preprocessing/csv/recalibrated.csv
-    - path: results/preprocessing/csv/recalibrated_test.csv
+    - path: results/csv/recalibrated.csv
     - path: results/variant_calling/test/strelka/test.genome.vcf.gz
     - path: results/variant_calling/test/strelka/test.genome.vcf.gz.tbi
     - path: results/variant_calling/test/strelka/test.variants.vcf.gz
@@ -52,9 +50,7 @@
       should_exist: false
     - path: results/preprocessing/test/recalibrated/test.recal.cram.crai
       should_exist: false
-    - path: results/preprocessing/csv/recalibrated.csv
-      should_exist: false
-    - path: results/preprocessing/csv/recalibrated_test.csv
+    - path: results/csv/recalibrated.csv
       should_exist: false
     - path: results/reports/qualimap/test/test.recal
       should_exist: false
@@ -83,9 +79,7 @@
       should_exist: false
     - path: results/preprocessing/test/recalibrated/test.recal.cram.crai
       should_exist: false
-    - path: results/preprocessing/csv/recalibrated.csv
-      should_exist: false
-    - path: results/preprocessing/csv/recalibrated_test.csv
+    - path: results/csv/recalibrated.csv
       should_exist: false
     - path: results/reports/qualimap/test/test.recal
       should_exist: false

@@ -8,22 +8,23 @@ include { RUN_FREEBAYES       } from '../nf-core/variantcalling/freebayes/main.n
 include { RUN_HAPLOTYPECALLER } from '../nf-core/variantcalling/haplotypecaller/main.nf'
 include { RUN_MANTA_GERMLINE  } from '../nf-core/variantcalling/manta/germline/main.nf'
 include { RUN_STRELKA_SINGLE  } from '../nf-core/variantcalling/strelka/single/main.nf'
+include { RUN_CNVKIT_GERMLINE } from '../nf-core/variantcalling/cnvkit/germline/main.nf'
 include { RUN_TIDDIT          } from '../nf-core/variantcalling/tiddit/main.nf'
 
 workflow GERMLINE_VARIANT_CALLING {
     take:
-        tools                        // Mandatory, list of tools to apply
-        cram_recalibrated            // channel: [mandatory] cram
-        bwa                          // channel: [mandatory] bwa
-        dbsnp                        // channel: [mandatory] dbsnp
-        dbsnp_tbi                    // channel: [mandatory] dbsnp_tbi
-        dict                         // channel: [mandatory] dict
-        fasta                        // channel: [mandatory] fasta
-        fasta_fai                    // channel: [mandatory] fasta_fai
-        intervals                    // channel: [mandatory] intervals/target regions
-        intervals_bed_gz_tbi         // channel: [mandatory] intervals/target regions index zipped and indexed
-        intervals_bed_combined       // channel: [mandatory] intervals/target regions in one file unzipped
-        // joint_germline               // val: true/false on whether to run joint_germline calling, only works in combination with haplotypecaller at the moment
+        tools                         // Mandatory, list of tools to apply
+        cram_recalibrated             // channel: [mandatory] cram
+        bwa                           // channel: [mandatory] bwa
+        dbsnp                         // channel: [mandatory] dbsnp
+        dbsnp_tbi                     // channel: [mandatory] dbsnp_tbi
+        dict                          // channel: [mandatory] dict
+        fasta                         // channel: [mandatory] fasta
+        fasta_fai                     // channel: [mandatory] fasta_fai
+        intervals                     // channel: [mandatory] intervals/target regions
+        intervals_bed_gz_tbi          // channel: [mandatory] intervals/target regions index zipped and indexed
+        intervals_bed_combined        // channel: [mandatory] intervals/target regions in one file unzipped
+        // joint_germline                // val: true/false on whether to run joint_germline calling, only works in combination with haplotypecaller at the moment
 
     main:
 

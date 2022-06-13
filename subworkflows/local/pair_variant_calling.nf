@@ -11,7 +11,7 @@ include { RUN_CNVKIT_SOMATIC                        } from '../nf-core/variantca
 
 workflow PAIR_VARIANT_CALLING {
     take:
-        tools
+        tools                         // Mandatory, list of tools to apply
         cram_pair                     // channel: [mandatory] cram
         dbsnp                         // channel: [mandatory] dbsnp
         dbsnp_tbi                     // channel: [mandatory] dbsnp_tbi
@@ -146,7 +146,7 @@ workflow PAIR_VARIANT_CALLING {
                             fasta,
                             fasta_fai)
 
-        strelka_vcf  = Channel.empty().mix(RUN_STRELKA_SOMATIC.out.strelka_vcf_snvs, RUN_STRELKA_SOMATIC.out.strelka_vcf_indels)
+        strelka_vcf  = Channel.empty().mix(RUN_STRELKA_SOMATIC.out.strelka_vcf)
         ch_versions = ch_versions.mix(RUN_STRELKA_SOMATIC.out.versions)
     }
 

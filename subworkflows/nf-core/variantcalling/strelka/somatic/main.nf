@@ -45,20 +45,14 @@ workflow RUN_STRELKA_SOMATIC {
             dict)
 
     // Mix output channels for "no intervals" and "with intervals" results
-    strelka_vcf_snvs = Channel.empty().mix(
+    strelka_vcf = Channel.empty().mix(
                     MERGE_STRELKA_SNVS.out.vcf,
-                    strelka_vcf_snvs.no_intervals
+                    strelka_vcf_snvs.no_intervals,
+                    MERGE_STRELKA_INDELS.out.vcf,
+                    strelka_vcf_indels.no_intervals
                     )
                 .map{ meta, vcf ->
-                    [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals, variantcaller:"Strelka", type:"snvs"],
-                    vcf]
-                }
-
-    strelka_vcf_indels = Channel.empty().mix(
-                    MERGE_STRELKA_INDELS.out.vcf,
-                    strelka_vcf_indels.no_intervals)
-                .map{ meta, vcf ->
-                    [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals, variantcaller:"Strelka", type: "indels"],
+                    [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals, variantcaller:"strelka"],
                     vcf]
                 }
 
@@ -67,7 +61,6 @@ workflow RUN_STRELKA_SOMATIC {
     ch_versions = ch_versions.mix(STRELKA_SOMATIC.out.versions)
 
     emit:
-    strelka_vcf_snvs
-    strelka_vcf_indels
+    strelka_vcf
     versions = ch_versions
 }

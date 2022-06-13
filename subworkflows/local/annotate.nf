@@ -8,15 +8,15 @@ include { ANNOTATION_ENSEMBLVEP                     } from '../nf-core/annotatio
 
 workflow ANNOTATE {
     take:
-    vcf          // channel: [ val(meta), vcf ]
-    tools
-    snpeff_db
-    snpeff_cache
-    vep_genome
-    vep_species
-    vep_cache_version
-    vep_cache
-    vep_extra_files
+        vcf                           // channel: [ val(meta), vcf ]
+        tools                         // Mandatory, list of tools to apply
+        snpeff_db
+        snpeff_cache
+        vep_genome
+        vep_species
+        vep_cache_version
+        vep_cache
+        vep_extra_files
 
     main:
     ch_reports  = Channel.empty()

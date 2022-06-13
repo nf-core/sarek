@@ -64,13 +64,13 @@ Multiple `CSV` files can be specified if the path is enclosed in quotes.
 | `cram`    | Full path to CRAM file                                                                                                                                                                                                                                                                                          |
 | `crai`    | Full path to CRAM index file                                                                                                                                                                                                                                                                                    |
 | `table`   | Full path to recalibration table file                                                                                                                                                                                                                                                                           |
-| `mpileup` | Full path to pileup file                                                                                                                                                                                                                                                                                        |
+| `vcf`     | Full path to vcf file                                                                                                                                                                                                                                                                                           |
 
 An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
 
 #### Start with mapping (`--step mapping` [default])
 
-This step can be started either from `fastq` files or (u)`bam`s. The `CSV` must contain at least the columns `patient`, `sample`, `lane`, and either `fastq_1/fastq_2` or `bam`.
+This step can be started either from `fastq` files or `(u)bam`s. The `CSV` must contain at least the columns `patient`, `sample`, `lane`, and either `fastq_1/fastq_2` or `bam`.
 
 ##### Examples
 
@@ -144,23 +144,7 @@ patient,sample,cram,crai
 patient1,test_sample,test_mapped.cram,test_mapped.cram.crai
 ```
 
-##### Prepare Recalibration
-
-For starting directly from preparing recalibration, the `CSV` file must contain at least the columns `patient`, `sample`, `bam`, `bai` or `patient`, `sample`, `cram`, `crai`.
-
-Example:
-
-```console
-patient,sample,bam,bai
-patient1,test_sample,test_mapped.bam,test_mapped.bam.bai
-```
-
-```console
-patient,sample,cram,crai
-patient1,test_sample,test_mapped.cram,test_mapped.cram.crai
-```
-
-The `Sarek`-generated `CSV` file is stored under `results/Preprocessing/CSV/duplicates_marked_no_table.csv` and will automatically be used as an input when specifying the parameter `--step prepare_recalibration`.
+The `Sarek`-generated `CSV` file is stored under `results/csv/mapped.csv` if in a previous run `--save_bam_mapped` was set and will automatically be used as an input when specifying the parameter `--step prepare_recalibration`. Otherwise this file will need to be manually generated.
 
 ##### Full samplesheet
 
@@ -180,9 +164,45 @@ patient1,XX,1,tumor_sample,test2_mapped.cram,test2_mapped.cram.crai
 patient1,XX,1,relapse_sample,test3_mapped.cram,test3_mapped.cram.crai
 ```
 
-#### Start with base quality recalibration (`--step recalibrate`)
+##### Prepare Recalibration
 
-For starting from base quality recalibration the `CSV` file must contain at least the columns `patient`, `sample`, `bam`, `bai`, `table` or `patient`, `sample`, `cram`, `crai`, `table` containing the paths to _non-recalibrated CRAM/BAM_ files and the associated recalibration table.
+For starting directly from preparing recalibration, the `CSV` file must contain at least the columns `patient`, `sample`, `bam`, `bai` or `patient`, `sample`, `cram`, `crai`.
+
+Example:
+
+```console
+patient,sample,bam,bai
+patient1,test_sample,test_md.bam,test_md.bam.bai
+```
+
+```console
+patient,sample,cram,crai
+patient1,test_sample,test_md.cram,test_md.cram.crai
+```
+
+The `Sarek`-generated `CSV` file is stored under `results/csv/markduplicates_no_table.csv` and will automatically be used as an input when specifying the parameter `--step prepare_recalibration`.
+
+##### Full samplesheet
+
+In this example, all possible columns are used including the `gender` and `status` information per patient:
+
+```console
+patient,gender,status,sample,bam,bai
+patient1,XX,0,test_sample,test_md.bam,test_md.bam.bai
+patient1,XX,1,tumor_sample,test2_md.bam,test2_md.bam.bai
+patient1,XX,1,relapse_sample,test3_md.bam,test3_md.bam.bai
+```
+
+```console
+patient,gender,status,sample,cram,crai
+patient1,XX,0,normal_sample,test_md.cram,test_md.cram.crai
+patient1,XX,1,tumor_sample,test2_md.cram,test2_md.cram.crai
+patient1,XX,1,relapse_sample,test3_md.cram,test3_md.cram.crai
+```
+
+#### Start with base quality score recalibration (`--step recalibrate`)
+
+For starting from base quality score recalibration the `CSV` file must contain at least the columns `patient`, `sample`, `bam`, `bai`, `table` or `patient`, `sample`, `cram`, `crai`, `table` containing the paths to _non-recalibrated CRAM/BAM_ files and the associated recalibration table.
 
 Example:
 
@@ -196,7 +216,7 @@ patient,sample,cram,crai,table
 patient1,test_sample,test_mapped.cram,test_mapped.cram.crai,test.table
 ```
 
-The `Sarek`-generated `CSV` file is stored under `results/Preprocessing/CSV/duplicates_marked.csv` and will automatically be used as an input when specifying the parameter `--step recalibrate`.
+The `Sarek`-generated `CSV` file is stored under `results/csv/markduplicates.csv` and will automatically be used as an input when specifying the parameter `--step recalibrate`.
 
 ##### Full samplesheet
 
@@ -225,7 +245,7 @@ patient,sample,cram,crai
 patient1,test_sample,test_mapped.cram,test_mapped.cram.crai
 ```
 
-The `Sarek`-generated `CSV` file is stored under `results/Preprocessing/CSV/recalibrated.csv` and will automatically be used as an input when specifying the parameter `--step variant_calling`.
+The `Sarek`-generated `CSV` file is stored under `results/csv/recalibrated.csv` and will automatically be used as an input when specifying the parameter `--step variant_calling`.
 
 ##### Full samplesheet
 
@@ -240,13 +260,28 @@ patient1,XX,1,relapse_sample,test3_mapped.cram,test3_mapped.cram.crai
 
 #### Start with annotation (`--step annotate`)
 
-Starting with annotation, is a special case in that it doesn't require an input sample sheet. The input files for Sarek can be specified using the path to a `VCF` file given to the `--input` command only with the annotation step (`--step annotate`).
-As `Sarek` will use `bgzip` and `tabix` to compress and index the annotated `VCF` files, it expects the input `VCF` files to be sorted.
-Multiple `VCF` files can be specified, using a [glob path](https://docs.oracle.com/javase/tutorial/essential/io/fileOps.html#glob), if enclosed in quotes.
-For example:
+For starting from the annotation step, the `CSV` file must contain at least the columns `patient`, `sample`, `vcf`.
 
-```bash
---step annotate --input "results/VariantCalling/*/{HaplotypeCaller,Manta,Mutect2,Strelka,TIDDIT}/*.vcf.gz"
+As `Sarek` will use `bgzip` and `tabix` to compress and index the annotated `VCF` files, it expects the input `VCF` files to be sorted.
+
+Example:
+
+```console
+patient,sample,vcf
+patient1,test_sample,test,vcf
+```
+
+The `Sarek`-generated `CSV` file is stored under `results/csv/variantcalled.csv` and will automatically be used as an input when specifying the parameter `--step annotation`.
+
+##### Full samplesheet
+
+In this example, all possible columns are used including the `variantcaller` information per sample:
+
+```console
+patient,sample,variantcaller,vcf
+test,sample3,strelka,sample3.variants.vcf.gz
+test,sample4_vs_sample3,manta,sample4_vs_sample3.diploid_sv.vcf.gz
+test,sample4_vs_sample3,manta,sample4_vs_sample3.somatic_sv.vcf.gz
 ```
 
 ### Updating the pipeline
