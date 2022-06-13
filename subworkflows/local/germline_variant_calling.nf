@@ -36,7 +36,7 @@ workflow GERMLINE_VARIANT_CALLING {
     genotype_gvcf        = Channel.empty()
     manta_vcf            = Channel.empty()
     strelka_vcf          = Channel.empty()
-    mpileup_germline     = Channel.empty()
+    mpileup              = Channel.empty()
 
     // Remap channel with intervals
     cram_recalibrated_intervals = cram_recalibrated.combine(intervals)
