@@ -2,10 +2,10 @@ process TIDDIT_SV {
     tag "$meta.id"
     label 'process_medium'
 
-    conda (params.enable_conda ? "bioconda::tiddit=3.0.0" : null)
+    conda (params.enable_conda ? "bioconda::tiddit=3.1.0" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/tiddit:3.0.0--py39h59fae87_1' :
-        'quay.io/biocontainers/tiddit:3.0.0--py39h59fae87_1' }"
+        'https://depot.galaxyproject.org/singularity/tiddit:3.1.0--py39h59fae87_1' :
+        'quay.io/biocontainers/tiddit:3.1.0--py39h59fae87_1' }"
 
     input:
     tuple val(meta), path(input), path(input_index)
