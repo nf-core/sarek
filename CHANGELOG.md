@@ -59,6 +59,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#572](https://github.com/nf-core/sarek/pull/572) - Adjusted subway map svg for firefox compatibility
 - [#578](https://github.com/nf-core/sarek/pull/578) - Updated module deeptools/bamcoverage
 - [#585](https://github.com/nf-core/sarek/pull/585) - Remove explicit BAM to CRAM conversion after MarkduplicatesSpark; tool does it internally
+- [#581](https://github.com/nf-core/sarek/pull/581) - `TIDDIT` is updated to `3.1.0`
 
 ### Fixed
 
@@ -86,6 +87,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#567](https://github.com/nf-core/sarek/pull/567) - Fix interval name resolving during scatter/gather by moving logic to modules.config causing name to be correctly resolved on process execution; also fixed duplicate naming when variant callers produce multiple vcf files by adding field `type` to `meta` map
 - [#585](https://github.com/nf-core/sarek/pull/585) - Fix Spark usage for GATK4 modules
 - [#587](https://github.com/nf-core/sarek/pull/587) - Fix issue with VEP extra files
+- [#581](https://github.com/nf-core/sarek/pull/581) - `TIDDIT` is back
 
 ### Deprecated
 
