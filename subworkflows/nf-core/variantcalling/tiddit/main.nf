@@ -11,10 +11,6 @@ workflow RUN_TIDDIT {
 
     ch_versions = Channel.empty()
 
-    cram_recalibrated.view()
-    fasta.view()
-    bwa.view()
-
     TIDDIT_SV(
         cram_recalibrated,
         fasta,
