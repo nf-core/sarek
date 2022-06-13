@@ -8,7 +8,6 @@ include { RUN_FREEBAYES       } from '../nf-core/variantcalling/freebayes/main.n
 include { RUN_HAPLOTYPECALLER } from '../nf-core/variantcalling/haplotypecaller/main.nf'
 include { RUN_MANTA_GERMLINE  } from '../nf-core/variantcalling/manta/germline/main.nf'
 include { RUN_STRELKA_SINGLE  } from '../nf-core/variantcalling/strelka/single/main.nf'
-include { RUN_CNVKIT_GERMLINE } from '../nf-core/variantcalling/cnvkit/germline/main.nf'
 include { RUN_TIDDIT          } from '../nf-core/variantcalling/tiddit/main.nf'
 
 workflow GERMLINE_VARIANT_CALLING {
