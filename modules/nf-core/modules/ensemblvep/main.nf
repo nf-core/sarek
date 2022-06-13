@@ -27,16 +27,13 @@ process ENSEMBLVEP {
 
     script:
     def args = task.ext.args ?: ''
-    def vep_output = task.ext.vep_output ?: 'vcf'
-    def suffix = task.ext.suffix ?: ''
+    def args2 = task.ext.args2 ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     def dir_cache = cache ? "\${PWD}/${cache}" : "/.vep"
     """
-    mkdir $prefix
-
     vep \\
         -i $vcf \\
-        -o ${prefix}${suffix}.ann.$vep_output \\
+        -o ${prefix}.${args2} \\
         $args \\
         --assembly $genome \\
         --species $species \\
@@ -45,9 +42,7 @@ process ENSEMBLVEP {
         --dir_cache $dir_cache \\
         --fork $task.cpus \\
         --stats_file ${prefix}.summary.html \\
-        --$vep_output
 
-    rm -rf $prefix
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
