@@ -100,7 +100,7 @@ pon                = params.pon                ? Channel.fromPath(params.pon).co
 snpeff_cache       = params.snpeff_cache       ? Channel.fromPath(params.snpeff_cache).collect()             : []
 vep_cache          = params.vep_cache          ? Channel.fromPath(params.vep_cache).collect()                : []
 
-vep_extra_files = []
+vep_extra_files = Channel.empty()
 
 if (params.dbnsfp && params.dbnsfp_tbi) {
     vep_extra_files = vep_extra_files.mix(
