@@ -100,22 +100,18 @@ pon                = params.pon                ? Channel.fromPath(params.pon).co
 snpeff_cache       = params.snpeff_cache       ? Channel.fromPath(params.snpeff_cache).collect()             : []
 vep_cache          = params.vep_cache          ? Channel.fromPath(params.vep_cache).collect()                : []
 
-vep_extra_files = Channel.empty()
+vep_extra_files = []
 
 if (params.dbnsfp && params.dbnsfp_tbi) {
-    vep_extra_files = vep_extra_files.mix(
-        Channel.fromPath(params.dbnsfp),
-        Channel.fromPath(params.dbnsfp_tbi)
-    ).collect()
+    vep_extra_files.add(file(params.dbnsfp, checkIfExists: true))
+    vep_extra_files.add(file(params.dbnsfp_tbi, checkIfExists: true))
 }
 
 if (params.spliceai_snv && params.spliceai_snv_tbi && params.spliceai_indel && params.spliceai_indel_tbi) {
-    vep_extra_files = vep_extra_files.mix(
-        Channel.fromPath(params.spliceai_indel),
-        Channel.fromPath(params.spliceai_indel_tbi),
-        Channel.fromPath(params.spliceai_snv),
-        Channel.fromPath(params.spliceai_snv_tbi)
-    ).collect()
+    vep_extra_files.add(file(params.spliceai_indel, checkIfExists: true))
+    vep_extra_files.add(file(params.spliceai_indel_tbi, checkIfExists: true))
+    vep_extra_files.add(file(params.spliceai_snv, checkIfExists: true))
+    vep_extra_files.add(file(params.spliceai_snv_tbi, checkIfExists: true))
 }
 
 // Initialize value channels based on params, not defined within the params.genomes[params.genome] scope
