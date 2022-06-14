@@ -1,8 +1,8 @@
-include { GATK4_MERGEVCFS as MERGE_HAPLOTYPECALLER                     } from '../../../../modules/nf-core/modules/gatk4/mergevcfs/main'
-include { GATK4_GENOTYPEGVCFS as GENOTYPEGVCFS                         } from '../../../../modules/nf-core/modules/gatk4/genotypegvcfs/main'
-include { GATK4_HAPLOTYPECALLER as HAPLOTYPECALLER                     } from '../../../../modules/nf-core/modules/gatk4/haplotypecaller/main'
-include { GATK_JOINT_GERMLINE_VARIANT_CALLING                          } from '../../../../subworkflows/nf-core/gatk4/joint_germline_variant_calling/main'
-include { GATK_SINGLE_SAMPLE_GERMLINE_VARIANT_CALLING as SINGLE_SAMPLE } from '../../../../subworkflows/nf-core/gatk4/single_sample_germline_variant_calling/main'
+include { GATK4_MERGEVCFS                             as MERGE_HAPLOTYPECALLER } from '../../../../modules/nf-core/modules/gatk4/mergevcfs/main'
+include { GATK4_GENOTYPEGVCFS                         as GENOTYPEGVCFS         } from '../../../../modules/nf-core/modules/gatk4/genotypegvcfs/main'
+include { GATK4_HAPLOTYPECALLER                       as HAPLOTYPECALLER       } from '../../../../modules/nf-core/modules/gatk4/haplotypecaller/main'
+include { GATK_JOINT_GERMLINE_VARIANT_CALLING         as JOINT_GERMLINE        } from '../../../../subworkflows/nf-core/gatk4/joint_germline_variant_calling/main'
+include { GATK_SINGLE_SAMPLE_GERMLINE_VARIANT_CALLING as SINGLE_SAMPLE         } from '../../../../subworkflows/nf-core/gatk4/single_sample_germline_variant_calling/main'
 
 workflow RUN_HAPLOTYPECALLER {
     take:
@@ -10,7 +10,7 @@ workflow RUN_HAPLOTYPECALLER {
     fasta                           // channel: [mandatory]
     fasta_fai                       // channel: [mandatory]
     dict                            // channel: [mandatory]
-    dbsnp                    // channel: []
+    dbsnp                           // channel: []
     dbsnp_tbi
     known_sites
     known_sites_tbi
@@ -19,6 +19,7 @@ workflow RUN_HAPLOTYPECALLER {
     main:
 
     ch_versions = Channel.empty()
+    filtered_vcf = Channel.empty()
 
     HAPLOTYPECALLER(
         cram,
@@ -81,6 +82,8 @@ workflow RUN_HAPLOTYPECALLER {
         //     true,
         //     truthsensitivity -> parameter or module?
         // )
+
+        // filtered_vcf = JOINT_GERMLINE.out.vcf
         // ch_versions = ch_versions.mix(GATK_JOINT_GERMLINE_VARIANT_CALLING.out.versions)
     } else {
         SINGLE_SAMPLE(haplotypecaller_vcf.join(haplotypecaller_tbi),
@@ -90,17 +93,16 @@ workflow RUN_HAPLOTYPECALLER {
                         known_sites,
                         known_sites_tbi)
 
+        filtered_vcf = SINGLE_SAMPLE.out.vcf
         ch_versions = ch_versions.mix(SINGLE_SAMPLE.out.versions)
     }
 
 
     ch_versions = ch_versions.mix(MERGE_HAPLOTYPECALLER.out.versions)
-    //ch_versions = ch_versions.mix(GENOTYPEGVCFS.out.versions)
     //ch_versions = ch_versions.mix(GATK_JOINT_GERMLINE_VARIANT_CALLING.out.versions)
     ch_versions = ch_versions.mix(HAPLOTYPECALLER.out.versions)
 
     emit:
     versions = ch_versions
-    //genotype_gvcf
-    haplotypecaller_vcf
+    filtered_vcf
 }

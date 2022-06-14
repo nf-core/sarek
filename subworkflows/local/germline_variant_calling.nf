@@ -109,8 +109,7 @@ workflow GERMLINE_VARIANT_CALLING {
                         known_sites,
                         known_sites_tbi)
 
-        haplotypecaller_vcf  = RUN_HAPLOTYPECALLER.out.haplotypecaller_vcf
-        //genotype_gvcf        = RUN_HAPLOTYPECALLER.out.genotype_gvcf
+        haplotypecaller_vcf  = RUN_HAPLOTYPECALLER.out.filtered_vcf
         ch_versions          = ch_versions.mix(RUN_HAPLOTYPECALLER.out.versions)
     }
 
