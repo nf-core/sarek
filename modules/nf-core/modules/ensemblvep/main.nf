@@ -27,7 +27,7 @@ process ENSEMBLVEP {
 
     script:
     def args = task.ext.args ?: ''
-    def file_extension = args.contains("--vcf") ? 'vcf' : args.contains("--json")? 'json' : args.contains("--tab")? 'tab' : 'vcf'
+    def file_extension = args.contains("--vcf") ? 'vcf' : args.contains("--json") ? 'json' : args.contains("--tab") ? 'tab' : 'vcf'
     def prefix = task.ext.prefix ?: "${meta.id}"
     def dir_cache = cache ? "\${PWD}/${cache}" : "/.vep"
     """
