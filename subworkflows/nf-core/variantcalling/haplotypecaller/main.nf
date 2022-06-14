@@ -6,7 +6,7 @@ include { GATK_SINGLE_SAMPLE_GERMLINE_VARIANT_CALLING as SINGLE_SAMPLE         }
 
 workflow RUN_HAPLOTYPECALLER {
     take:
-    cram                            // channel: [mandatory] [meta, cram, crai, interval.bed.gz, interval.bed.gz.tbi]
+    cram                            // channel: [mandatory] [meta, cram, crai, interval.bed]
     fasta                           // channel: [mandatory]
     fasta_fai                       // channel: [mandatory]
     dict                            // channel: [mandatory]
@@ -21,52 +21,52 @@ workflow RUN_HAPLOTYPECALLER {
     ch_versions = Channel.empty()
     filtered_vcf = Channel.empty()
 
-    HAPLOTYPECALLER(
-        cram,
-        fasta,
-        fasta_fai,
-        dict,
-        dbsnp,
-        dbsnp_tbi)
+    // HAPLOTYPECALLER(
+    //     cram,
+    //     fasta,
+    //     fasta_fai,
+    //     dict,
+    //     dbsnp,
+    //     dbsnp_tbi)
 
-    // Figure out if using intervals or no_intervals
-    HAPLOTYPECALLER.out.vcf.branch{
-            intervals:    it[0].num_intervals > 1
-            no_intervals: it[0].num_intervals <= 1
-        }.set{haplotypecaller_vcf_branch}
+    // // Figure out if using intervals or no_intervals
+    // HAPLOTYPECALLER.out.vcf.branch{
+    //         intervals:    it[0].num_intervals > 1
+    //         no_intervals: it[0].num_intervals <= 1
+    //     }.set{haplotypecaller_vcf_branch}
 
-    HAPLOTYPECALLER.out.tbi.branch{
-            intervals:    it[0].num_intervals > 1
-            no_intervals: it[0].num_intervals <= 1
-        }.set{haplotypecaller_tbi_branch}
+    // HAPLOTYPECALLER.out.tbi.branch{
+    //         intervals:    it[0].num_intervals > 1
+    //         no_intervals: it[0].num_intervals <= 1
+    //     }.set{haplotypecaller_tbi_branch}
 
-    // Only when using intervals
-    MERGE_HAPLOTYPECALLER(
-        haplotypecaller_vcf_branch.intervals
-            .map{ meta, vcf ->
+    // // Only when using intervals
+    // MERGE_HAPLOTYPECALLER(
+    //     haplotypecaller_vcf_branch.intervals
+    //         .map{ meta, vcf ->
 
-                new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals]
+    //             new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals]
 
-                [groupKey(new_meta, new_meta.num_intervals), vcf]
-            }.groupTuple(),
-        dict)
+    //             [groupKey(new_meta, new_meta.num_intervals), vcf]
+    //         }.groupTuple(),
+    //     dict)
 
-    haplotypecaller_vcf = Channel.empty().mix(
-        MERGE_HAPLOTYPECALLER.out.vcf,
-        haplotypecaller_vcf_branch.no_intervals)
+    // haplotypecaller_vcf = Channel.empty().mix(
+    //     MERGE_HAPLOTYPECALLER.out.vcf,
+    //     haplotypecaller_vcf_branch.no_intervals)
 
-    haplotypecaller_tbi = Channel.empty().mix(
-        MERGE_HAPLOTYPECALLER.out.tbi,
-        haplotypecaller_tbi_branch.no_intervals)
+    // haplotypecaller_tbi = Channel.empty().mix(
+    //     MERGE_HAPLOTYPECALLER.out.tbi,
+    //     haplotypecaller_tbi_branch.no_intervals)
 
     if (params.joint_germline) {
 
-        haplotypecaller_vcf_list = haplotypecaller_vcf.toList()
-        haplotypecaller_tbi_list = haplotypecaller_vcf.toList()
+        // haplotypecaller_vcf_list = haplotypecaller_vcf.toList()
+        // haplotypecaller_tbi_list = haplotypecaller_vcf.toList()
 
-        joint_germline_vcf_tbi = [ [id: "joint_germline"],
-                                    haplotypecaller_vcf_list,
-                                    haplotypecaller_tbi_list ]
+        // joint_germline_vcf_tbi = [ [id: "joint_germline"],
+        //                             haplotypecaller_vcf_list,
+        //                             haplotypecaller_tbi_list ]
         // GATK_JOINT_GERMLINE_VARIANT_CALLING(
         //     joint_germline_vcf_tbi,
         //     fasta,
@@ -86,12 +86,14 @@ workflow RUN_HAPLOTYPECALLER {
         // filtered_vcf = JOINT_GERMLINE.out.vcf
         // ch_versions = ch_versions.mix(GATK_JOINT_GERMLINE_VARIANT_CALLING.out.versions)
     } else {
-        SINGLE_SAMPLE(haplotypecaller_vcf.join(haplotypecaller_tbi),
+        SINGLE_SAMPLE(cram,
                         fasta,
                         fasta_fai,
                         dict,
                         known_sites,
-                        known_sites_tbi)
+                        known_sites_tbi,
+                        dbsnp,
+                        dbsnp_tbi)
 
         filtered_vcf = SINGLE_SAMPLE.out.vcf
         ch_versions = ch_versions.mix(SINGLE_SAMPLE.out.versions)
