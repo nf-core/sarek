@@ -146,7 +146,7 @@ workflow PAIR_VARIANT_CALLING {
                             fasta,
                             fasta_fai)
 
-        strelka_vcf  = Channel.empty().mix(RUN_STRELKA_SOMATIC.out.strelka_vcf_snvs, RUN_STRELKA_SOMATIC.out.strelka_vcf_indels)
+        strelka_vcf  = Channel.empty().mix(RUN_STRELKA_SOMATIC.out.strelka_vcf)
         ch_versions = ch_versions.mix(RUN_STRELKA_SOMATIC.out.versions)
     }
 
