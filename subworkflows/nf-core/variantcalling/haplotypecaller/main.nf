@@ -51,13 +51,13 @@ workflow RUN_HAPLOTYPECALLER {
             }.groupTuple(),
         dict)
 
-    // haplotypecaller_vcf = Channel.empty().mix(
-    //     MERGE_HAPLOTYPECALLER.out.vcf,
-    //     haplotypecaller_vcf_branch.no_intervals)
+    haplotypecaller_vcf = Channel.empty().mix(
+        MERGE_HAPLOTYPECALLER.out.vcf,
+        haplotypecaller_vcf_branch.no_intervals)
 
-    // haplotypecaller_tbi = Channel.empty().mix(
-    //     MERGE_HAPLOTYPECALLER.out.tbi,
-    //     haplotypecaller_tbi_branch.no_intervals)
+    haplotypecaller_tbi = Channel.empty().mix(
+        MERGE_HAPLOTYPECALLER.out.tbi,
+        haplotypecaller_tbi_branch.no_intervals)
 
     if (params.joint_germline) {
 
@@ -97,14 +97,13 @@ workflow RUN_HAPLOTYPECALLER {
                         known_sites,
                         known_sites_tbi)
 
-        // filtered_vcf = SINGLE_SAMPLE.out.vcf
-        // ch_versions = ch_versions.mix(SINGLE_SAMPLE.out.versions)
+        filtered_vcf = SINGLE_SAMPLE.out.vcf
+        ch_versions = ch_versions.mix(SINGLE_SAMPLE.out.versions)
     }
 
 
-    //ch_versions = ch_versions.mix(MERGE_HAPLOTYPECALLER.out.versions)
-    //ch_versions = ch_versions.mix(GATK_JOINT_GERMLINE_VARIANT_CALLING.out.versions)
-    //ch_versions = ch_versions.mix(HAPLOTYPECALLER.out.versions)
+    ch_versions = ch_versions.mix(MERGE_HAPLOTYPECALLER.out.versions)
+    ch_versions = ch_versions.mix(HAPLOTYPECALLER.out.versions)
 
     emit:
     versions = ch_versions
