@@ -906,7 +906,7 @@ workflow.onComplete {
 def extract_csv(csv_file) {
 
     // check that the sample sheet is not 1 line or less, because it'll skip all subsequent checks if so.
-    if(Channel.fromPath(csv_file).splitCsv(header: false).toList().size() <= 1){
+    if(Channel.fromPath(csv_file).splitCsv(header: false).toList().map(it -> it[0]).contains('patient'))
       log.error "The samplesheet only contained one line. It must have a header."
       System.exit(1)
     }
