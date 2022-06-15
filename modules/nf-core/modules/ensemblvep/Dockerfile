@@ -11,8 +11,8 @@ RUN conda env create -f /environment.yml && conda clean -a
 # Setup default ARG variables
 ARG GENOME=GRCh38
 ARG SPECIES=homo_sapiens
-ARG VEP_VERSION=104
-ARG VEP_TAG=104.3
+ARG VEP_VERSION=105
+ARG VEP_TAG=105.0
 
 # Add conda installation dir to PATH (instead of doing 'conda activate')
 ENV PATH /opt/conda/envs/nf-core-vep-${VEP_TAG}/bin:$PATH

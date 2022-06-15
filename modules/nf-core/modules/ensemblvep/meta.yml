@@ -1,5 +1,5 @@
 name: ENSEMBLVEP
-description: Ensembl Variant Effect Predictor (VEP)
+description: Ensembl Variant Effect Predictor (VEP). The output-file-format is controlled through `task.ext.args`.
 keywords:
   - annotation
 tools:
@@ -36,6 +36,11 @@ input:
       type: file
       description: |
         path to VEP cache (optional)
+  - fasta:
+      type: file
+      description: |
+        reference FASTA file (optional)
+      pattern: "*.{fasta,fa}"
   - extra_files:
       type: tuple
       description: |
@@ -44,8 +49,18 @@ output:
   - vcf:
       type: file
       description: |
-        annotated vcf
+        annotated vcf (optional)
       pattern: "*.ann.vcf"
+  - tab:
+      type: file
+      description: |
+        tab file with annotated variants (optional)
+      pattern: "*.ann.tab"
+  - json:
+      type: file
+      description: |
+        json file with annotated variants (optional)
+      pattern: "*.ann.json"
   - report:
       type: file
       description: VEP report file

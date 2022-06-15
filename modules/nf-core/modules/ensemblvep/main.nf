@@ -13,6 +13,7 @@ process ENSEMBLVEP {
     val   species
     val   cache_version
     path  cache
+    path  fasta
     path  extra_files
 
     output:
@@ -27,14 +28,17 @@ process ENSEMBLVEP {
 
     script:
     def args = task.ext.args ?: ''
-    def file_extension = args.contains("--vcf") ? 'vcf' : args.contains("--json") ? 'json' : args.contains("--tab") ? 'tab' : 'vcf'
+    def file_extension = args.contains("--vcf") ? 'vcf' : args.contains("--json")? 'json' : args.contains("--tab")? 'tab' : 'vcf'
     def prefix = task.ext.prefix ?: "${meta.id}"
     def dir_cache = cache ? "\${PWD}/${cache}" : "/.vep"
+    def reference = fasta ? "--fasta $fasta" : ""
+
     """
     vep \\
         -i $vcf \\
         -o ${prefix}.ann.${file_extension} \\
         $args \\
+        $reference \\
         --assembly $genome \\
         --species $species \\
         --cache \\
