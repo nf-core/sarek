@@ -89,8 +89,14 @@ process CONTROLFREEC_FREEC {
 
     //"Target" configuration
     def target_bed                 = target_bed                                                 ? "captureRegions = ${target_bed}"                                                              : ""
+
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    def witch = task.ext.prefix ? "pref" : "meta"
+
     """
     touch config.txt
+    echo ${witch} > /home/owacker/git/sarek/pref
+    echo ${prefix} >> /home/owacker/git/sarek/pref
 
     echo "[general]" >> config.txt
     echo ${bedgraphoutput} >> config.txt

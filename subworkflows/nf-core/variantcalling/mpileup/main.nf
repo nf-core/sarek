@@ -28,7 +28,7 @@ workflow RUN_MPILEUP {
 
     ch_versions = ch_versions.mix(SAMTOOLS_MPILEUP.out.versions)
     ch_versions = ch_versions.mix(CAT_MPILEUP.out.versions)
-    
+
     emit:
     versions = ch_versions
     mpileup = Channel.empty().mix(CAT_MPILEUP.out.file_out, mpileup.no_intervals)
