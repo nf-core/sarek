@@ -247,6 +247,8 @@
   files:
     - path: results/variant_calling/sample1/haplotypecaller/sample1.vcf.gz
     - path: results/variant_calling/sample1/haplotypecaller/sample1.vcf.gz.tbi
+    - path: results/variant_calling/sample1/haplotypecaller/sample1.filtered.vcf.gz
+    - path: results/variant_calling/sample1/haplotypecaller/sample1.filtered.vcf.gz.tbi
     - path: results/csv/variantcalled.csv
 
 - name: Run variant calling on germline sample with haplotypecaller without intervals
@@ -259,6 +261,8 @@
   files:
     - path: results/variant_calling/sample1/haplotypecaller/sample1.vcf.gz
     - path: results/variant_calling/sample1/haplotypecaller/sample1.vcf.gz.tbi
+    - path: results/variant_calling/sample1/haplotypecaller/sample1.filtered.vcf.gz
+    - path: results/variant_calling/sample1/haplotypecaller/sample1.filtered.vcf.gz.tbi
     - path: results/csv/variantcalled.csv
 
 # - name: Run joint germline variant calling with haplotypecaller
