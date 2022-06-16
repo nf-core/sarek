@@ -48,7 +48,7 @@ workflow PREPARE_GENOME {
     // outputs are collected to maintain a single channel for relevant TBI files
 
     //dbsnp is optional, thus could be '[]'. In this case do not run below, as [].flatten errors out.
-    dbsnp_tbi = []
+    dbsnp_tbi = Channel.empty()
     if(dbsnp){
         TABIX_DBSNP(dbsnp.flatten().map{ it -> [[id:it.baseName], it] })
         ch_versions = ch_versions.mix(TABIX_DBSNP.out.versions)
@@ -98,16 +98,16 @@ workflow PREPARE_GENOME {
     ch_versions = ch_versions.mix(MSISENSORPRO_SCAN.out.versions)
 
     emit:
-        bwa                              = BWAMEM1_INDEX.out.index                                             // path: bwa/*
-        bwamem2                          = BWAMEM2_INDEX.out.index                                             // path: bwamem2/*
-        hashtable                        = DRAGMAP_HASHTABLE.out.hashmap                                       // path: dragmap/*
-        dbsnp_tbi                                                                                              // path: dbsnb.vcf.gz.tbi
-        dict                             = GATK4_CREATESEQUENCEDICTIONARY.out.dict                             // path: genome.fasta.dict
-        fasta_fai                        = SAMTOOLS_FAIDX.out.fai.map{ meta, fai -> [fai] }                    // path: genome.fasta.fai
-        germline_resource_tbi                                                                                  // path: germline_resource.vcf.gz.tbi
-        known_indels_tbi                                                                                       // path: {known_indels*}.vcf.gz.tbi
-        msisensorpro_scan                = MSISENSORPRO_SCAN.out.list.map{ meta, list -> [list] }              // path: genome_msi.list
-        pon_tbi                                                                                                // path: pon.vcf.gz.tbi
+        bwa                              = BWAMEM1_INDEX.out.index                                // path: bwa/*
+        bwamem2                          = BWAMEM2_INDEX.out.index                                // path: bwamem2/*
+        hashtable                        = DRAGMAP_HASHTABLE.out.hashmap                          // path: dragmap/*
+        dbsnp_tbi                                                                                 // path: dbsnb.vcf.gz.tbi
+        dict                             = GATK4_CREATESEQUENCEDICTIONARY.out.dict                // path: genome.fasta.dict
+        fasta_fai                        = SAMTOOLS_FAIDX.out.fai.map{ meta, fai -> [fai] }       // path: genome.fasta.fai
+        germline_resource_tbi                                                                     // path: germline_resource.vcf.gz.tbi
+        known_indels_tbi                                                                          // path: {known_indels*}.vcf.gz.tbi
+        msisensorpro_scan                = MSISENSORPRO_SCAN.out.list.map{ meta, list -> [list] } // path: genome_msi.list
+        pon_tbi                                                                                   // path: pon.vcf.gz.tbi
         chr_files                        = chr_files
-        versions                         = ch_versions                                                         // channel: [ versions.yml ]
+        versions                         = ch_versions                                            // channel: [ versions.yml ]
 }
