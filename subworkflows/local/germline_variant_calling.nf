@@ -17,6 +17,8 @@ workflow GERMLINE_VARIANT_CALLING {
         bwa                           // channel: [mandatory] bwa
         dbsnp                         // channel: [mandatory] dbsnp
         dbsnp_tbi                     // channel: [mandatory] dbsnp_tbi
+        known_sites
+        known_sites_tbi
         dict                          // channel: [mandatory] dict
         fasta                         // channel: [mandatory] fasta
         fasta_fai                     // channel: [mandatory] fasta_fai
@@ -105,10 +107,12 @@ workflow GERMLINE_VARIANT_CALLING {
                         fasta_fai,
                         dict,
                         dbsnp,
-                        dbsnp_tbi)
+                        dbsnp_tbi,
+                        known_sites,
+                        known_sites_tbi,
+                        intervals_bed_combined)
 
-        haplotypecaller_vcf  = RUN_HAPLOTYPECALLER.out.haplotypecaller_vcf
-        //genotype_gvcf        = RUN_HAPLOTYPECALLER.out.genotype_gvcf
+        haplotypecaller_vcf  = RUN_HAPLOTYPECALLER.out.filtered_vcf
         ch_versions          = ch_versions.mix(RUN_HAPLOTYPECALLER.out.versions)
     }
 

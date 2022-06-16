@@ -762,6 +762,8 @@ workflow SAREK {
             [],
             dbsnp,
             dbsnp_tbi,
+            known_sites,
+            known_sites_tbi,
             dict,
             fasta,
             fasta_fai,
