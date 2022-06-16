@@ -71,7 +71,7 @@
                     "fa_icon": "fas fa-clock",
                     "description": "Estimate interval size.",
                     "help_text": "Intervals are part of the genome chopped up, used to speed up preprocessing and variant calling.",
-                    "default": 1000
+                    "default": 1000.0
                 },
                 "sentieon": {
                     "type": "boolean",
@@ -225,7 +225,7 @@
                 "ploidy": {
                     "type": "number",
                     "fa_icon": "fas fa-bacon",
-                    "default": 2,
+                    "default": 2.0,
                     "description": "genome ploidy; In case of doubt, you can set different values and Control-FREEC will select the one that explains most observed CNAs.",
                     "hidden": true
                 },
@@ -250,21 +250,21 @@
                 },
                 "cf_contamination": {
                     "type": "number",
-                    "default": 0,
+                    "default": 0.0,
                     "fa_icon": "fas fa-wrench",
                     "description": "Design known contamination value for Control-FREEC",
                     "hidden": true
                 },
                 "cf_minqual": {
                     "type": "number",
-                    "default": 0,
+                    "default": 0.0,
                     "fa_icon": "fas fa-greater-than",
                     "hidden": true,
                     "description": "Minimal sequencing quality for a position to be considered in BAF analysis."
                 },
                 "cf_mincov": {
                     "type": "number",
-                    "default": 0,
+                    "default": 0.0,
                     "fa_icon": "fas fa-align-center",
                     "hidden": true,
                     "description": "Minimal read coverage for a position to be considered in BAF analysis."
@@ -279,12 +279,7 @@
                 "joint_germline": {
                     "type": "boolean",
                     "fa_icon": "fas fa-align-justify",
-                    "description": "Enables GATK4 joint germline variant calling, if also haplotypecaller is selected."
-                },
-                "generate_gvcf": {
-                    "type": "boolean",
-                    "fa_icon": "fas fa-copy",
-                    "description": "Generate g.vcf output from GATK HaplotypeCaller."
+                    "description": "Enables GATK4 joint germline variant calling and g.vcf generation, if also Haplotypecaller is selected."
                 },
                 "pon": {
                     "type": "string",

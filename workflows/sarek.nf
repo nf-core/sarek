@@ -761,6 +761,8 @@ workflow SAREK {
             cram_variant_calling_status_normal,
             dbsnp,
             dbsnp_tbi,
+            known_sites,
+            known_sites_tbi,
             dict,
             fasta,
             fasta_fai,

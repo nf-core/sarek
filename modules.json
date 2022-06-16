@@ -102,6 +102,9 @@
             "gatk4/calculatecontamination": {
                 "git_sha": "169b2b96c1167f89ab07127b7057c1d90a6996c7"
             },
+            "gatk4/cnnscorevariants": {
+                "git_sha": "5d72500d601432f5396e9022c3a709854197db1a"
+            },
             "gatk4/createsequencedictionary": {
                 "git_sha": "169b2b96c1167f89ab07127b7057c1d90a6996c7"
             },
@@ -110,6 +113,9 @@
             },
             "gatk4/filtermutectcalls": {
                 "git_sha": "169b2b96c1167f89ab07127b7057c1d90a6996c7"
+            },
+            "gatk4/filtervarianttranches": {
+                "git_sha": "175ea9b7f95a0e2fd3679f7a052c6dcb60b61a6e"
             },
             "gatk4/gatherbqsrreports": {
                 "git_sha": "169b2b96c1167f89ab07127b7057c1d90a6996c7"
