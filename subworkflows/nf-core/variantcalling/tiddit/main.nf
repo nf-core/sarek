@@ -19,8 +19,7 @@ workflow RUN_TIDDIT {
 
     TABIX_BGZIP_TIDDIT_SV(TIDDIT_SV.out.vcf)
     tiddit_ploidy = TIDDIT_SV.out.ploidy
-    tiddit_vcf_gz = TABIX_BGZIP_TIDDIT_SV.out.gz_tbi
-        .map( meta, gz, tbi -> [meta, gz])
+    tiddit_vcf_gz = TABIX_BGZIP_TIDDIT_SV.out.gz_tbi.map{ meta, gz, tbi -> [meta, gz]}
 
     ch_versions = ch_versions.mix(TABIX_BGZIP_TIDDIT_SV.out.versions)
     ch_versions = ch_versions.mix(TIDDIT_SV.out.versions)
