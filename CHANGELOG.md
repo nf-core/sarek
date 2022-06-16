@@ -88,6 +88,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#585](https://github.com/nf-core/sarek/pull/585) - Fix Spark usage for GATK4 modules
 - [#587](https://github.com/nf-core/sarek/pull/587) - Fix issue with VEP extra files
 - [#581](https://github.com/nf-core/sarek/pull/581) - `TIDDIT` is back
+- [#590](https://github.com/nf-core/sarek/pull/590) - Fix empty folders during scatter/gather
 
 ### Deprecated
 
