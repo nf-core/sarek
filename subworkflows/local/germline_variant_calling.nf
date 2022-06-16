@@ -107,7 +107,8 @@ workflow GERMLINE_VARIANT_CALLING {
                         dbsnp,
                         dbsnp_tbi,
                         known_sites,
-                        known_sites_tbi)
+                        known_sites_tbi,
+                        intervals_bed_combined)
 
         haplotypecaller_vcf  = RUN_HAPLOTYPECALLER.out.filtered_vcf
         ch_versions          = ch_versions.mix(RUN_HAPLOTYPECALLER.out.versions)
