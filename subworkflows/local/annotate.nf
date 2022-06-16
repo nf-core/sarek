@@ -10,7 +10,7 @@ workflow ANNOTATE {
     take:
     vcf          // channel: [ val(meta), vcf ]
     fasta
-    tools
+    tools        // Mandatory, list of tools to apply
     snpeff_db
     snpeff_cache
     vep_genome
@@ -18,7 +18,7 @@ workflow ANNOTATE {
     vep_cache_version
     vep_cache
     vep_extra_files
-
+    
     main:
     ch_reports   = Channel.empty()
     ch_vcf_ann   = Channel.empty()

@@ -7,23 +7,24 @@ include { RUN_FREEBAYES       } from '../nf-core/variantcalling/freebayes/main.n
 include { RUN_HAPLOTYPECALLER } from '../nf-core/variantcalling/haplotypecaller/main.nf'
 include { RUN_MANTA_GERMLINE  } from '../nf-core/variantcalling/manta/germline/main.nf'
 include { RUN_STRELKA_SINGLE  } from '../nf-core/variantcalling/strelka/single/main.nf'
-include { RUN_CNVKIT_GERMLINE  } from '../nf-core/variantcalling/cnvkit/germline/main.nf'
+include { RUN_CNVKIT_GERMLINE } from '../nf-core/variantcalling/cnvkit/germline/main.nf'
 //include { TIDDIT          } from './variantcalling/tiddit.nf'
 
 workflow GERMLINE_VARIANT_CALLING {
     take:
-        cram_recalibrated            // channel: [mandatory] cram
-        dbsnp                        // channel: [mandatory] dbsnp
-        dbsnp_tbi                    // channel: [mandatory] dbsnp_tbi
-        dict                         // channel: [mandatory] dict
-        fasta                        // channel: [mandatory] fasta
-        fasta_fai                    // channel: [mandatory] fasta_fai
-        intervals                    // channel: [mandatory] intervals/target regions
-        intervals_bed_gz_tbi         // channel: [mandatory] intervals/target regions index zipped and indexed
-        intervals_bed_combine_gz_tbi // channel: [mandatory] intervals/target regions index zipped and indexed in one file
-        intervals_bed_combine_gz     // channel: [mandatory] intervals/target regions index zipped in one file
-        intervals_bed_combined       // channel: [mandatory] intervals/target regions in one file unzipped
-        // joint_germline               // val: true/false on whether to run joint_germline calling, only works in combination with haplotypecaller at the moment
+        tools                         // Mandatory, list of tools to apply
+        cram_recalibrated             // channel: [mandatory] cram
+        dbsnp
+        dbsnp_tbi                         // channel: []
+        known_sites
+        known_sites_tbi
+        dict                          // channel: [mandatory] dict
+        fasta                         // channel: [mandatory] fasta
+        fasta_fai                     // channel: [mandatory] fasta_fai
+        intervals                     // channel: [mandatory] intervals/target regions
+        intervals_bed_gz_tbi          // channel: [mandatory] intervals/target regions index zipped and indexed
+        intervals_bed_combined        // channel: [mandatory] intervals/target regions in one file unzipped
+        // joint_germline                // val: true/false on whether to run joint_germline calling, only works in combination with haplotypecaller at the moment
 
     main:
 
@@ -40,33 +41,29 @@ workflow GERMLINE_VARIANT_CALLING {
     // Remap channel with intervals
     cram_recalibrated_intervals = cram_recalibrated.combine(intervals)
         .map{ meta, cram, crai, intervals, num_intervals ->
-            // If either no scatter/gather is done, i.e. no interval (0) or one interval (1), then don't rename samples
-            def new_id = num_intervals <= 1 ? meta.sample : meta.sample + "_" + intervals.baseName
 
             //If no interval file provided (0) then add empty list
             intervals_new = num_intervals == 0 ? [] : intervals
 
-            [[patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:new_id, data_type:meta.data_type, num_intervals:num_intervals],
+            [[patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:meta.sample, data_type:meta.data_type, num_intervals:num_intervals],
             cram, crai, intervals_new]
         }
 
     // Remap channel with gzipped intervals + indexes
     cram_recalibrated_intervals_gz_tbi = cram_recalibrated.combine(intervals_bed_gz_tbi)
         .map{ meta, cram, crai, bed_tbi, num_intervals ->
-            // If either no scatter/gather is done, i.e. no interval (0) or one interval (1), then don't rename samples
-            def new_id = num_intervals <= 1 ? meta.sample : meta.sample + "_" + bed_tbi[0].simpleName
 
             //If no interval file provided (0) then add empty list
             bed_new = num_intervals == 0 ? [] : bed_tbi[0]
             tbi_new = num_intervals == 0 ? [] : bed_tbi[1]
 
-            [[patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:new_id, data_type:meta.data_type, num_intervals:num_intervals],
+            [[patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:meta.sample, data_type:meta.data_type, num_intervals:num_intervals],
             cram, crai, bed_new, tbi_new]
         }
 
     // CNVKIT
 
-    if(params.tools.contains('cnvkit')){
+    if(tools.contains('cnvkit')){
         cram_recalibrated_cnvkit_germline = cram_recalibrated
             .map{ meta, cram, crai ->
                 [meta, [], cram]
@@ -81,61 +78,59 @@ workflow GERMLINE_VARIANT_CALLING {
     }
 
     // DEEPVARIANT
-    if(params.tools.contains('deepvariant')){
-        RUN_DEEPVARIANT(cram_recalibrated_intervals, dict, fasta, fasta_fai, intervals_bed_combine_gz)
+    if(tools.contains('deepvariant')){
+        RUN_DEEPVARIANT(cram_recalibrated_intervals, dict, fasta, fasta_fai)
 
-        deepvariant_vcf = RUN_DEEPVARIANT.out.deepvariant_vcf
+        deepvariant_vcf = Channel.empty().mix(RUN_DEEPVARIANT.out.deepvariant_vcf,RUN_DEEPVARIANT.out.deepvariant_gvcf)
         ch_versions     = ch_versions.mix(RUN_DEEPVARIANT.out.versions)
     }
 
     // FREEBAYES
-    if (params.tools.contains('freebayes')){
+    if (tools.contains('freebayes')){
         // Remap channel for Freebayes
         cram_recalibrated_intervals_freebayes = cram_recalibrated_intervals
             .map{ meta, cram, crai, intervals ->
                 [meta, cram, crai, [], [], intervals]
             }
-        RUN_FREEBAYES(cram_recalibrated_intervals_freebayes, dict, fasta, fasta_fai, intervals_bed_combine_gz)
+        RUN_FREEBAYES(cram_recalibrated_intervals_freebayes, dict, fasta, fasta_fai)
 
         freebayes_vcf   = RUN_FREEBAYES.out.freebayes_vcf
         ch_versions     = ch_versions.mix(RUN_FREEBAYES.out.versions)
     }
 
     // HAPLOTYPECALLER
-    if (params.tools.contains('haplotypecaller')){
+    if (tools.contains('haplotypecaller')){
         RUN_HAPLOTYPECALLER(cram_recalibrated_intervals,
                         fasta,
                         fasta_fai,
                         dict,
                         dbsnp,
                         dbsnp_tbi,
-                        intervals_bed_combine_gz,
-                        intervals_bed_combine_gz_tbi)
+                        known_sites,
+                        known_sites_tbi,
+                        intervals_bed_combined)
 
-        haplotypecaller_vcf  = RUN_HAPLOTYPECALLER.out.haplotypecaller_vcf
-        //genotype_gvcf        = RUN_HAPLOTYPECALLER.out.genotype_gvcf
+        haplotypecaller_vcf  = RUN_HAPLOTYPECALLER.out.filtered_vcf
         ch_versions          = ch_versions.mix(RUN_HAPLOTYPECALLER.out.versions)
     }
 
     // MANTA
-    if (params.tools.contains('manta')){
+    if (tools.contains('manta')){
         RUN_MANTA_GERMLINE (cram_recalibrated_intervals_gz_tbi,
                         dict,
                         fasta,
-                        fasta_fai,
-                        intervals_bed_combine_gz)
+                        fasta_fai)
 
         manta_vcf   = RUN_MANTA_GERMLINE.out.manta_vcf
         ch_versions = ch_versions.mix(RUN_MANTA_GERMLINE.out.versions)
     }
 
     // STRELKA
-    if (params.tools.contains('strelka')){
+    if (tools.contains('strelka')){
         RUN_STRELKA_SINGLE(cram_recalibrated_intervals_gz_tbi,
                 dict,
                 fasta,
-                fasta_fai,
-                intervals_bed_combine_gz)
+                fasta_fai)
 
         strelka_vcf = RUN_STRELKA_SINGLE.out.strelka_vcf
         ch_versions = ch_versions.mix(RUN_STRELKA_SINGLE.out.versions)

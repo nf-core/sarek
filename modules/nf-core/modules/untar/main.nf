@@ -21,12 +21,18 @@ process UNTAR {
     def args  = task.ext.args ?: ''
     def args2 = task.ext.args2 ?: ''
     untar     = archive.toString() - '.tar.gz'
+
     """
+    mkdir output
+
     tar \\
+        -C output --strip-components 1 \\
         -xzvf \\
         $args \\
         $archive \\
-        $args2 \\
+        $args2
+
+    mv output ${untar}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

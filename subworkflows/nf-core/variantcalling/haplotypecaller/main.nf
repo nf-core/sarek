@@ -1,22 +1,26 @@
-include { GATK4_MERGEVCFS as MERGE_HAPLOTYPECALLER } from '../../../../modules/nf-core/modules/gatk4/mergevcfs/main'
-include { GATK4_GENOTYPEGVCFS as GENOTYPEGVCFS     } from '../../../../modules/nf-core/modules/gatk4/genotypegvcfs/main'
-include { GATK4_HAPLOTYPECALLER as HAPLOTYPECALLER } from '../../../../modules/nf-core/modules/gatk4/haplotypecaller/main'
-include { GATK_JOINT_GERMLINE_VARIANT_CALLING      } from '../../../../subworkflows/nf-core/gatk4/joint_germline_variant_calling/main'
+include { GATK4_MERGEVCFS                             as MERGE_HAPLOTYPECALLER } from '../../../../modules/nf-core/modules/gatk4/mergevcfs/main'
+include { GATK4_GENOTYPEGVCFS                         as GENOTYPEGVCFS         } from '../../../../modules/nf-core/modules/gatk4/genotypegvcfs/main'
+include { GATK4_HAPLOTYPECALLER                       as HAPLOTYPECALLER       } from '../../../../modules/nf-core/modules/gatk4/haplotypecaller/main'
+include { GATK_JOINT_GERMLINE_VARIANT_CALLING         as JOINT_GERMLINE        } from '../../../../subworkflows/nf-core/gatk4/joint_germline_variant_calling/main'
+include { GATK_SINGLE_SAMPLE_GERMLINE_VARIANT_CALLING as SINGLE_SAMPLE         } from '../../../../subworkflows/nf-core/gatk4/single_sample_germline_variant_calling/main'
 
 workflow RUN_HAPLOTYPECALLER {
     take:
-    cram                            // channel: [mandatory] [meta, cram, crai, interval.bed.gz, interval.bed.gz.tbi]
+    cram                            // channel: [mandatory] [meta, cram, crai, interval.bed]
     fasta                           // channel: [mandatory]
     fasta_fai                       // channel: [mandatory]
     dict                            // channel: [mandatory]
-    dbsnp                           // channel: [mandatory]
-    dbsnp_tbi                       // channel: [mandatory]
-    intervals_bed_gz                // channel: [optional]  Contains a bed.gz file of all intervals combined provided with the cram input(s). Mandatory if interval files are used.
-    intervals_bed_combine_gz_tbi    // channel: [optional]  Contains a [bed.gz, bed.gz.tbi ]file of all intervals combined provided with the cram input(s). Mandatory if interval files are used.
+    dbsnp                           // channel: []
+    dbsnp_tbi
+    known_sites
+    known_sites_tbi
+    intervals_bed_combined          // channel: [optional]
+
 
     main:
 
     ch_versions = Channel.empty()
+    filtered_vcf = Channel.empty()
 
     HAPLOTYPECALLER(
         cram,
@@ -54,39 +58,16 @@ workflow RUN_HAPLOTYPECALLER {
 
     haplotypecaller_tbi = Channel.empty().mix(
         MERGE_HAPLOTYPECALLER.out.tbi,
-        haplotypecaller_vcf_branch.no_intervals)
-
-    // genotype_gvcf_to_call = haplotypecaller_gvcf.join(haplotypecaller_gvcf_tbi)
-    //     .combine(intervals_bed_combine_gz_tbi)
-    //     .map{
-    //         meta, gvcf, gvf_tbi, intervals, intervals_tbi ->
-    //         new_intervals = intervals.simpleName != "no_intervals" ? intervals : []
-    //         new_intervals_tbi = intervals_tbi.simpleName != "no_intervals" ? intervals_tbi : []
-    //         [meta, gvcf, gvf_tbi, new_intervals, new_intervals_tbi]
-    //     }
-
-    // GENOTYPEGVCFS
-
-    // GENOTYPEGVCFS(
-    //     genotype_gvcf_to_call,
-    //     fasta,
-    //     fasta_fai,
-    //     dict,
-    //     dbsnp,
-    //     dbsnp_tbi)
-    //workflow haplotypecaller (default mode)-> CNNScoreVariants
-    //workflow haplotypecaller (ERC mode) -> GenomicsDBimport -> GenotypeGVCFs -> VQSR
-
-    //genotype_gvcf = GENOTYPEGVCFS.out.vcf
+        haplotypecaller_tbi_branch.no_intervals)
 
     if (params.joint_germline) {
 
-        haplotypecaller_vcf_list = haplotypecaller_vcf.toList()
-        haplotypecaller_tbi_list = haplotypecaller_vcf.toList()
+        // haplotypecaller_vcf_list = haplotypecaller_vcf.toList()
+        // haplotypecaller_tbi_list = haplotypecaller_vcf.toList()
 
-        joint_germline_vcf_tbi = [ [id: "joint_germline"],
-                                    haplotypecaller_vcf_list,
-                                    haplotypecaller_tbi_list ]
+        // joint_germline_vcf_tbi = [ [id: "joint_germline"],
+        //                             haplotypecaller_vcf_list,
+        //                             haplotypecaller_tbi_list ]
         // GATK_JOINT_GERMLINE_VARIANT_CALLING(
         //     joint_germline_vcf_tbi,
         //     fasta,
@@ -102,20 +83,40 @@ workflow RUN_HAPLOTYPECALLER {
         //     true,
         //     truthsensitivity -> parameter or module?
         // )
+
+        // filtered_vcf = JOINT_GERMLINE.out.vcf
         // ch_versions = ch_versions.mix(GATK_JOINT_GERMLINE_VARIANT_CALLING.out.versions)
     } else {
-        // CNNScoreVariants
+
+        //Scatter/gather on WGS, on targeted data run all intervals at once to avoid  "A USER ERROR has occurred: Bad input: VCF contains no variants or no variants with INFO score key "CNN_1D"" which happens on small-ish regions frequently
+        if(params.wes){
+            single_sample_in = Channel.empty().mix(haplotypecaller_vcf.join(haplotypecaller_tbi).combine(intervals_bed_combined).map{
+                meta, vcf, tbi, intervals ->
+                [[id:meta.id, patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, num_intervals:1 ],
+                vcf, tbi, intervals]
+            })
+        }else{
+            single_sample_in = Channel.empty().mix(HAPLOTYPECALLER.out.vcf.join(HAPLOTYPECALLER.out.tbi).join(cram).map{ meta, vcf, tbi, cram, crai, intervals ->
+                [meta, vcf, tbi, intervals]
+            })
+        }
+
+        SINGLE_SAMPLE(single_sample_in,
+                        fasta,
+                        fasta_fai,
+                        dict,
+                        known_sites,
+                        known_sites_tbi)
+
+        filtered_vcf = SINGLE_SAMPLE.out.filtered_vcf
+        ch_versions = ch_versions.mix(SINGLE_SAMPLE.out.versions)
     }
 
 
     ch_versions = ch_versions.mix(MERGE_HAPLOTYPECALLER.out.versions)
-    //ch_versions = ch_versions.mix(GENOTYPEGVCFS.out.versions)
-    //ch_versions = ch_versions.mix(GATK_JOINT_GERMLINE_VARIANT_CALLING.out.versions)
     ch_versions = ch_versions.mix(HAPLOTYPECALLER.out.versions)
-    // ch_versions = ch_versions.mix(TABIX_VC_HAPLOTYPECALLER.out.versions)
 
     emit:
     versions = ch_versions
-    //genotype_gvcf
-    haplotypecaller_vcf
+    filtered_vcf
 }

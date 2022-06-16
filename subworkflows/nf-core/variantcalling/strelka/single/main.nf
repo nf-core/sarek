@@ -8,7 +8,6 @@ workflow RUN_STRELKA_SINGLE {
     dict                     // channel: [optional]
     fasta                    // channel: [mandatory]
     fasta_fai                // channel: [mandatory]
-    intervals_bed_gz         // channel: [optional]  Contains a bed.gz file of all intervals combined provided with the cram input(s). Mandatory if interval files are used.
 
     main:
 
@@ -41,19 +40,21 @@ workflow RUN_STRELKA_SINGLE {
         strelka_genome_vcf.intervals
             .map{ meta, vcf ->
 
-                new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals]
+                [groupKey([patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals],
+                        meta.num_intervals),
+                vcf]
 
-                [groupKey(new_meta, meta.num_intervals), vcf]
             }.groupTuple(),
         dict
     )
 
     // Mix output channels for "no intervals" and "with intervals" results
+    // Only strelka variant vcf should get annotated
     strelka_vcf = Channel.empty().mix(
                     MERGE_STRELKA.out.vcf,
                     strelka_vcf.no_intervals)
                 .map{ meta, vcf ->
-                    [[patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals, variantcaller:"Strelka"], vcf]
+                    [[patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals, variantcaller:"strelka"], vcf]
                 }
 
     ch_versions = ch_versions.mix(MERGE_STRELKA.out.versions)

@@ -3,9 +3,6 @@
     "homePage": "https://github.com/nf-core/sarek",
     "repos": {
         "nf-core/modules": {
-            "ascat": {
-                "git_sha": "f0800157544a82ae222931764483331a81812012"
-            },
             "bcftools/sort": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
@@ -58,7 +55,7 @@
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
             "deeptools/bamcoverage": {
-                "git_sha": "fe088745e03f21d07477cc0c655c24ae9f72ac31"
+                "git_sha": "a21cfb666eed7517060f1d2d61a21c340753b0ec"
             },
             "deepvariant": {
                 "git_sha": "fd5f6f5f4ffef4ab5a4e809bd3211bbc71c38d30"
@@ -91,7 +88,7 @@
                 "git_sha": "169b2b96c1167f89ab07127b7057c1d90a6996c7"
             },
             "gatk4/applybqsrspark": {
-                "git_sha": "169b2b96c1167f89ab07127b7057c1d90a6996c7"
+                "git_sha": "6a4732ef3b76b54d75533e6be9ba57e3008d4853"
             },
             "gatk4/applyvqsr": {
                 "git_sha": "169b2b96c1167f89ab07127b7057c1d90a6996c7"
@@ -100,10 +97,13 @@
                 "git_sha": "169b2b96c1167f89ab07127b7057c1d90a6996c7"
             },
             "gatk4/baserecalibratorspark": {
-                "git_sha": "fd7ee6799abf1bd5228b4b59ce541f3aeaa2280b"
+                "git_sha": "6a4732ef3b76b54d75533e6be9ba57e3008d4853"
             },
             "gatk4/calculatecontamination": {
                 "git_sha": "169b2b96c1167f89ab07127b7057c1d90a6996c7"
+            },
+            "gatk4/cnnscorevariants": {
+                "git_sha": "5d72500d601432f5396e9022c3a709854197db1a"
             },
             "gatk4/createsequencedictionary": {
                 "git_sha": "169b2b96c1167f89ab07127b7057c1d90a6996c7"
@@ -113,6 +113,9 @@
             },
             "gatk4/filtermutectcalls": {
                 "git_sha": "169b2b96c1167f89ab07127b7057c1d90a6996c7"
+            },
+            "gatk4/filtervarianttranches": {
+                "git_sha": "175ea9b7f95a0e2fd3679f7a052c6dcb60b61a6e"
             },
             "gatk4/gatherbqsrreports": {
                 "git_sha": "169b2b96c1167f89ab07127b7057c1d90a6996c7"
@@ -142,7 +145,7 @@
                 "git_sha": "df2620cfc7e4c21b14ed03c1c928f09fbabf83c4"
             },
             "gatk4/markduplicatesspark": {
-                "git_sha": "e04970b7d249365cafa5a52912f9a28840481c05"
+                "git_sha": "8e8f4c9c51a7b229dd45e9b287d48115c238baf3"
             },
             "gatk4/mergemutectstats": {
                 "git_sha": "169b2b96c1167f89ab07127b7057c1d90a6996c7"
@@ -235,7 +238,7 @@
                 "git_sha": "85ec13ff1fc2196c5a507ea497de468101baabed"
             },
             "untar": {
-                "git_sha": "9aadd9a6d3f5964476582319b3a1c54a3e3fe7c9"
+                "git_sha": "51be617b1ca9bff973655eb899d591ed6ab253b5"
             },
             "vcftools": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"

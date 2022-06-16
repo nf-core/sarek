@@ -8,7 +8,6 @@ workflow RUN_STRELKA_SOMATIC {
     dict                     // channel: [optional]
     fasta                    // channel: [mandatory]
     fasta_fai                // channel: [mandatory]
-    intervals_bed_gz         // channel: [optional]  Contains a bed.gz file of all intervals combined provided with the cram input(s). Mandatory if interval files are used.
 
     main:
 
@@ -29,28 +28,32 @@ workflow RUN_STRELKA_SOMATIC {
 
     // Only when using intervals
     MERGE_STRELKA_SNVS(strelka_vcf_snvs.intervals.map{ meta, vcf ->
-                new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals]
 
-                [groupKey(new_meta, new_meta.num_intervals), vcf]
+                [groupKey([patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals],
+                        meta.num_intervals),
+                vcf]
+
             }.groupTuple(),
             dict)
 
     MERGE_STRELKA_INDELS(strelka_vcf_indels.intervals.map{ meta, vcf ->
-                new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals]
 
-                [groupKey(new_meta, new_meta.num_intervals), vcf]
+                [groupKey([patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals],
+                            meta.num_intervals),
+                vcf]
             }.groupTuple(),
             dict)
 
     // Mix output channels for "no intervals" and "with intervals" results
     strelka_vcf = Channel.empty().mix(
                     MERGE_STRELKA_SNVS.out.vcf,
-                    MERGE_STRELKA_INDELS.out.vcf,
                     strelka_vcf_snvs.no_intervals,
-                    strelka_vcf_indels.no_intervals)
+                    MERGE_STRELKA_INDELS.out.vcf,
+                    strelka_vcf_indels.no_intervals
+                    )
                 .map{ meta, vcf ->
-                    [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals, variantcaller:"Strelka"]
-                    , vcf]
+                    [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals, variantcaller:"strelka"],
+                    vcf]
                 }
 
     ch_versions = ch_versions.mix(MERGE_STRELKA_SNVS.out.versions)

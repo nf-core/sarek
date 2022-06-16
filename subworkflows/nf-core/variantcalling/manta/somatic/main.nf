@@ -10,7 +10,6 @@ workflow RUN_MANTA_SOMATIC {
     dict                     // channel: [optional]
     fasta                    // channel: [mandatory]
     fasta_fai                // channel: [mandatory]
-    intervals_bed_gz         // channel: [optional]  Contains a bed.gz file of all intervals combined provided with the cram input(s). Mandatory if interval files are used.
 
     main:
 
@@ -48,17 +47,20 @@ workflow RUN_MANTA_SOMATIC {
     MERGE_MANTA_SV(
         manta_candidate_small_indels_vcf.intervals.map{ meta, vcf ->
 
-                new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals]
+                [groupKey([patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals],
+                            meta.num_intervals),
+                vcf]
 
-                [ groupKey(new_meta, meta.num_intervals), vcf]
             }.groupTuple(),
         dict)
 
     MERGE_MANTA_SMALL_INDELS(
         manta_candidate_sv_vcf.intervals.map{ meta, vcf ->
-                new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals]
 
-                [groupKey(new_meta, meta.num_intervals), vcf]
+                [groupKey([patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals],
+                            meta.num_intervals),
+                vcf]
+
             }.groupTuple(),
         dict)
 
@@ -66,38 +68,40 @@ workflow RUN_MANTA_SOMATIC {
         manta_diploid_sv_vcf.intervals.map{ meta, vcf ->
                 new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals]
 
-                [groupKey(new_meta, meta.num_intervals), vcf]
+                [groupKey([patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals],
+                            meta.num_intervals),
+                vcf]
+
             }.groupTuple(),
         dict)
 
     MERGE_MANTA_SOMATIC(
         manta_somatic_sv_vcf.intervals.map{ meta, vcf ->
-                new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals]
 
-                [groupKey(new_meta, meta.num_intervals), vcf]
+                [groupKey([patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals],
+                            meta.num_intervals),
+                vcf]
+
             }.groupTuple(),
         dict)
 
     // Mix output channels for "no intervals" and "with intervals" results
     manta_vcf = Channel.empty().mix(
-        //MERGE_MANTA_SV.out.vcf,
-        //MERGE_MANTA_SMALL_INDELS.out.vcf,
         MERGE_MANTA_DIPLOID.out.vcf,
         MERGE_MANTA_SOMATIC.out.vcf,
-        //manta_candidate_sv_vcf.no_intervals,
-        //manta_candidate_small_indels_vcf.no_intervals,
         manta_diploid_sv_vcf.no_intervals,
         manta_somatic_sv_vcf.no_intervals
     ).map{ meta, vcf ->
-        [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals, variantcaller:"Manta"],
+        [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals, variantcaller:"manta"],
         vcf]
     }
 
+    // Don't set variantcaller & num_intervals key. These files are not annotated, so they don't need it and joining with reads for StrelkaBP then fails
     manta_candidate_small_indels_vcf = Channel.empty().mix(
         MERGE_MANTA_SMALL_INDELS.out.vcf,
         manta_candidate_small_indels_vcf.no_intervals
     ).map{ meta, vcf ->
-        [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals, variantcaller:"Manta"],
+        [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id],
         vcf]
     }
 
@@ -105,7 +109,7 @@ workflow RUN_MANTA_SOMATIC {
         MERGE_MANTA_SMALL_INDELS.out.tbi,
         manta_candidate_small_indels_vcf_tbi.no_intervals
     ).map{ meta, vcf ->
-        [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals, variantcaller:"Manta"],
+        [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id],
         vcf]
     }
 
