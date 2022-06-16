@@ -59,6 +59,12 @@ if (params.wes) {
 }
 
 if(params.tools && params.tools.contains('mutect2')){
+    if(!params.pon){
+        log.warn("No Panel-of-normal was specified for Mutect2.\nIt is highly recommended to use one: https://gatk.broadinstitute.org/hc/en-us/articles/5358911630107-Mutect2\nFor more information on how to create one: https://gatk.broadinstitute.org/hc/en-us/articles/5358921041947-CreateSomaticPanelOfNormals-BETA-")
+    }
+    if(params.pon && params.pon.contains("/Homo_sapiens/GATK/GRCh38/Annotation/GATKBundle/1000g_pon.hg38.vcf.gz")){
+        log.warn("The default Panel-of-Normals provided by GATK is used for Mutect2.\nIt is highly recommended to generate one from normal samples that are technical similar to the tumor ones.\nFor more information: https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON-")
+    }
     if(params.no_intervals){
         log.error "--tools mutect2 and --no_intervals cannot be used together.\nOne of the tools within the Mutect2 subworkflow requires intervals. They can be provided to the pipeline with --intervals. If none are provided, they will be generated from the FASTA file.\nFor more information on the Mutect2 workflow, see here: https://gatk.broadinstitute.org/hc/en-us/articles/360035531132--How-to-Call-somatic-mutations-using-GATK4-Mutect2.\nFor more information on GetPileupsummaries, see here: https://gatk.broadinstitute.org/hc/en-us/articles/5358860217115-GetPileupSummaries"
         exit 1
@@ -108,7 +114,7 @@ vep_genome         = params.vep_genome         ?: Channel.empty()
 vep_species        = params.vep_species        ?: Channel.empty()
 
 // Initialize files channels based on params, not defined within the params.genomes[params.genome] scope
-pon                = params.pon                ? Channel.fromPath(params.pon).collect()                      : Channel.empty()
+pon                = params.pon                ? Channel.fromPath(params.pon).collect()                      : [] //PON is optional for Mutect2 (but highly recommended)
 snpeff_cache       = params.snpeff_cache       ? Channel.fromPath(params.snpeff_cache).collect()             : []
 vep_cache          = params.vep_cache          ? Channel.fromPath(params.vep_cache).collect()                : []
 
