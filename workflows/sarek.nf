@@ -66,15 +66,12 @@ if(params.tools && params.tools.contains('mutect2')){
 }
 
 if(!params.dbsnp && !params.known_indels){
-    if(!params.skip_tools.contains('baserecalibrator')){
-        log.error "Base quality recalibration requires at least one resource file. Please provide at least one of `--dbsnp` or `--known_indels`"
+    if(!params.skip_tools || params.skip_tools && !params.skip_tools.contains('baserecalibrator')){
+        log.error "Base quality score recalibration requires at least one resource file. Please provide at least one of `--dbsnp` or `--known_indels`\nYou can skip this step in the workflow by adding `--skip_tools baserecalibrator` to the command."
         exit 1
     }
-    if(params.tools.contains('haplotypecaller')){
-        log.error "The Haplotypecaller workflow requires  at least one resource file. Please provide at least one of `--dbsnp` or `--known_indels`.\n
-        For more information see FilterVariantTranches (single-sample, default): https://gatk.broadinstitute.org/hc/en-us/articles/5358928898971-FilterVariantTranches\n
-        For more information see VariantRecalibration (--joint_germline): https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator\n
-        For more information on GATK Best practice germline variant calling: https://gatk.broadinstitute.org/hc/en-us/articles/360035535932-Germline-short-variant-discovery-SNPs-Indels-"
+    if(params.tools && params.tools.contains('haplotypecaller')){
+        log.error "The Haplotypecaller workflow requires  at least one resource file. Please provide at least one of `--dbsnp` or `--known_indels`.\nFor more information see FilterVariantTranches (single-sample, default): https://gatk.broadinstitute.org/hc/en-us/articles/5358928898971-FilterVariantTranches\nFor more information see VariantRecalibration (--joint_germline): https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator\nFor more information on GATK Best practice germline variant calling: https://gatk.broadinstitute.org/hc/en-us/articles/360035535932-Germline-short-variant-discovery-SNPs-Indels-"
         exit 1
     }
 
