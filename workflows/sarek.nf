@@ -62,6 +62,9 @@ if(params.tools && params.tools.contains('mutect2')){
     if(!params.pon){
         log.warn("No Panel-of-normal was specified for Mutect2.\nIt is highly recommended to use one: https://gatk.broadinstitute.org/hc/en-us/articles/5358911630107-Mutect2\nFor more information on how to create one: https://gatk.broadinstitute.org/hc/en-us/articles/5358921041947-CreateSomaticPanelOfNormals-BETA-")
     }
+    if(!params.germline_resource){
+        log.warn("If Mutect2 is specified without a germline resource, no filtering will be done.\nIt is recommended to use one: https://gatk.broadinstitute.org/hc/en-us/articles/5358911630107-Mutect2")
+    }
     if(params.pon && params.pon.contains("/Homo_sapiens/GATK/GRCh38/Annotation/GATKBundle/1000g_pon.hg38.vcf.gz")){
         log.warn("The default Panel-of-Normals provided by GATK is used for Mutect2.\nIt is highly recommended to generate one from normal samples that are technical similar to the tumor ones.\nFor more information: https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON-")
     }
@@ -77,7 +80,7 @@ if(!params.dbsnp && !params.known_indels){
         exit 1
     }
     if(params.tools && params.tools.contains('haplotypecaller')){
-        log.error "The Haplotypecaller workflow requires  at least one resource file. Please provide at least one of `--dbsnp` or `--known_indels`.\nFor more information see FilterVariantTranches (single-sample, default): https://gatk.broadinstitute.org/hc/en-us/articles/5358928898971-FilterVariantTranches\nFor more information see VariantRecalibration (--joint_germline): https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator\nFor more information on GATK Best practice germline variant calling: https://gatk.broadinstitute.org/hc/en-us/articles/360035535932-Germline-short-variant-discovery-SNPs-Indels-"
+        log.warn "The Haplotypecaller without filtering. For filtering, please provide at least one of `--dbsnp` or `--known_indels`.\nFor more information see FilterVariantTranches (single-sample, default): https://gatk.broadinstitute.org/hc/en-us/articles/5358928898971-FilterVariantTranches\nFor more information see VariantRecalibration (--joint_germline): https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator\nFor more information on GATK Best practice germline variant calling: https://gatk.broadinstitute.org/hc/en-us/articles/360035535932-Germline-short-variant-discovery-SNPs-Indels-"
         exit 1
     }
 
@@ -101,7 +104,7 @@ chr_dir            = params.chr_dir            ? Channel.fromPath(params.chr_dir
 dbsnp              = params.dbsnp              ? Channel.fromPath(params.dbsnp).collect()                    : Channel.empty()
 fasta              = params.fasta              ? Channel.fromPath(params.fasta).collect()                    : Channel.empty()
 fasta_fai          = params.fasta_fai          ? Channel.fromPath(params.fasta_fai).collect()                : Channel.empty()
-germline_resource  = params.germline_resource  ? Channel.fromPath(params.germline_resource).collect()        : Channel.empty()
+germline_resource  = params.germline_resource  ? Channel.fromPath(params.germline_resource).collect()        : []               //Mutec2 does not require a germline resource, so set to optional input
 known_indels       = params.known_indels       ? Channel.fromPath(params.known_indels).collect()             : Channel.empty()
 loci               = params.ac_loci            ? Channel.fromPath(params.ac_loci).collect()                  : []
 loci_gc            = params.ac_loci_gc         ? Channel.fromPath(params.ac_loci_gc).collect()               : []

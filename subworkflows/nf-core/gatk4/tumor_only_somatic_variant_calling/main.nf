@@ -107,7 +107,9 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
     //
     //Generate pileup summary table using getepileupsummaries.
     //
-    GETPILEUPSUMMARIES ( input , fasta, fai, dict, germline_resource , germline_resource_tbi )
+    germline_resource_pileup = germline_resource ?: Channel.empty()
+    germline_resource_pileup_tbi = germline_resource_tbi ?: Channel.empty()
+    GETPILEUPSUMMARIES ( input , fasta, fai, dict, germline_resource_pileup , germline_resource_pileup_tbi )
 
     GETPILEUPSUMMARIES.out.table.branch{
             intervals:    it[0].num_intervals > 1

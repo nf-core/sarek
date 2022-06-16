@@ -114,13 +114,15 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
         normal: [ meta, input_list[0], input_index_list[0], intervals ]
     }
 
+    germline_resource_pileup = germline_resource ?: Channel.empty()
+    germline_resource_pileup_tbi = germline_resource_tbi ?: Channel.empty()
     GETPILEUPSUMMARIES_TUMOR ( pileup.tumor.map{
                                     meta, cram, crai, intervals ->
 
                                     [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id, num_intervals:meta.num_intervals],
                                         cram, crai, intervals]
                                 },
-                                fasta, fai, dict, germline_resource, germline_resource_tbi )
+                                fasta, fai, dict, germline_resource_pileup, germline_resource_pileup_tbi )
 
     GETPILEUPSUMMARIES_NORMAL ( pileup.normal.map{
                                     meta, cram, crai, intervals ->
@@ -128,7 +130,7 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
                                     [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.normal_id, num_intervals:meta.num_intervals],
                                         cram, crai, intervals]
                                 },
-                                fasta, fai, dict, germline_resource, germline_resource_tbi )
+                                fasta, fai, dict, germline_resource_pileup, germline_resource_pileup_tbi )
 
     GETPILEUPSUMMARIES_NORMAL.out.table.branch{
             intervals:    it[0].num_intervals > 1
