@@ -70,6 +70,17 @@
     - path: results/variant_calling/sample1/cnvkit/test.paired_end.recalibrated.sorted.cns
     - path: results/variant_calling/sample1/cnvkit/test.paired_end.recalibrated.sorted.call.cns
 
+- name: Run variant calling on germline sample with tiddit
+  command: nextflow run main.nf -profile test,tools_germline,docker --tools tiddit -c ./tests/nextflow.config
+  tags:
+    - tiddit
+    - germline
+    - variant_calling
+  files:
+    - path: results/variant_calling/sample1/tiddit/sample1.ploidies.tab
+    - path: results/variant_calling/sample1/tiddit/sample1.vcf.gz
+    - path: results/variant_calling/sample1/tiddit/sample1.vcf.gz.tbi
+
 - name: Run variant calling on somatic samples with controlfreec
   command: nextflow run main.nf -profile test,tools_somatic,docker --tools controlfreec -c ./tests/nextflow.config
   tags:

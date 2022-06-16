@@ -33,27 +33,28 @@ jobs:
         test:
           - "aligner"
           - "annotation"
-          - "default"
           - "cnvkit"
           - "controlfreec"
           - "deepvariant"
+          - "default"
           - "freebayes"
           - "gatk4_spark"
           - "haplotypecaller"
           - "manta"
           - "markduplicates"
-          - "mutect2"
           - "msisensorpro"
-          # - 'save_bam_mapped'
+          - "mutect2"
           - "prepare_recalibration"
           - "recalibrate"
-          - "variantcalling_channel"
+          # - 'save_bam_mapped'
           - "skip_markduplicates"
+          - "split_fastq"
           - "strelka"
           - "strelkabp"
-          - "split_fastq"
           - "targeted"
+          - "tiddit"
           - "tumor_normal_pair"
+          - "variantcalling_channel"
 
     steps:
       - name: Check out pipeline code
