@@ -65,6 +65,21 @@ if(params.tools && params.tools.contains('mutect2')){
     }
 }
 
+if(!params.dbsnp && !params.known_indels){
+    if(!params.skip_tools.contains('baserecalibrator')){
+        log.error "Base quality recalibration requires at least one resource file. Please provide at least one of `--dbsnp` or `--known_indels`"
+        exit 1
+    }
+    if(params.tools.contains('haplotypecaller')){
+        log.error "The Haplotypecaller workflow requires  at least one resource file. Please provide at least one of `--dbsnp` or `--known_indels`.\n
+        For more information see FilterVariantTranches (single-sample, default): https://gatk.broadinstitute.org/hc/en-us/articles/5358928898971-FilterVariantTranches\n
+        For more information see VariantRecalibration (--joint_germline): https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator\n
+        For more information on GATK Best practice germline variant calling: https://gatk.broadinstitute.org/hc/en-us/articles/360035535932-Germline-short-variant-discovery-SNPs-Indels-"
+        exit 1
+    }
+
+}
+
 // Save AWS IGenomes file containing annotation version
 def anno_readme = params.genomes[params.genome]?.readme
 if (anno_readme && file(anno_readme).exists()) {

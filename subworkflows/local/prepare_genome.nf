@@ -74,7 +74,7 @@ workflow PREPARE_GENOME {
         bwa                              = BWAMEM1_INDEX.out.index                                        // path: bwa/*
         bwamem2                          = BWAMEM2_INDEX.out.index                                        // path: bwamem2/*
         hashtable                        = DRAGMAP_HASHTABLE.out.hashmap                                  // path: dragmap/*
-        dbsnp_tbi                        = TABIX_DBSNP.out.tbi.map{ meta, tbi -> [tbi] }.collect()        // path: dbsnb.vcf.gz.tbi 
+        dbsnp_tbi                        = TABIX_DBSNP.out.tbi.map{ meta, tbi -> [tbi] }.collect()        // path: dbsnb.vcf.gz.tbi
         dict                             = GATK4_CREATESEQUENCEDICTIONARY.out.dict                        // path: genome.fasta.dict
         fasta_fai                        = SAMTOOLS_FAIDX.out.fai.map{ meta, fai -> [fai] }               // path: genome.fasta.fai
         germline_resource_tbi            = TABIX_GERMLINE_RESOURCE.out.tbi.map{ meta, tbi -> [tbi] }.collect()      // path: germline_resource.vcf.gz.tbi
