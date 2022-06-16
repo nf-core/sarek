@@ -9,6 +9,7 @@ include { ANNOTATION_ENSEMBLVEP                     } from '../nf-core/annotatio
 workflow ANNOTATE {
     take:
     vcf          // channel: [ val(meta), vcf ]
+    fasta
     tools
     snpeff_db
     snpeff_cache
@@ -35,7 +36,7 @@ workflow ANNOTATE {
 
     if (tools.contains('merge')) {
         vcf_ann_for_merge = ANNOTATION_SNPEFF.out.vcf_tbi.map{ meta, vcf, tbi -> [meta, vcf] }
-        ANNOTATION_MERGE(vcf_ann_for_merge, vep_genome, vep_species, vep_cache_version, vep_cache, vep_extra_files)
+        ANNOTATION_MERGE(vcf_ann_for_merge, fasta, vep_genome, vep_species, vep_cache_version, vep_cache, vep_extra_files)
 
         ch_reports  = ch_reports.mix(ANNOTATION_MERGE.out.reports)
         ch_vcf_ann  = ch_vcf_ann.mix(ANNOTATION_MERGE.out.vcf_tbi)
@@ -43,7 +44,7 @@ workflow ANNOTATE {
     }
 
     if (tools.contains('vep')) {
-        ANNOTATION_ENSEMBLVEP(vcf, vep_genome, vep_species, vep_cache_version, vep_cache, vep_extra_files)
+        ANNOTATION_ENSEMBLVEP(vcf, fasta, vep_genome, vep_species, vep_cache_version, vep_cache, vep_extra_files)
 
         ch_reports   = ch_reports.mix(ANNOTATION_ENSEMBLVEP.out.reports)
         ch_vcf_ann   = ch_vcf_ann.mix(ANNOTATION_ENSEMBLVEP.out.vcf_tbi)
