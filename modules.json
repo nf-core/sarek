@@ -130,7 +130,7 @@
                 "git_sha": "169b2b96c1167f89ab07127b7057c1d90a6996c7"
             },
             "gatk4/getpileupsummaries": {
-                "git_sha": "f40cfefc0899fd6bb6adc300142ca6c3a35573ff"
+                "git_sha": "1ac223ad436c1410e9c16a5966274b7ca1f8d855"
             },
             "gatk4/haplotypecaller": {
                 "git_sha": "169b2b96c1167f89ab07127b7057c1d90a6996c7"

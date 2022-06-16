@@ -46,7 +46,6 @@ workflow PREPARE_GENOME {
     // written for KNOWN_INDELS, but preemptively applied to the rest
     // [file1,file2] becomes [[meta1,file1],[meta2,file2]]
     // outputs are collected to maintain a single channel for relevant TBI files
-    TABIX_KNOWN_INDELS( known_indels.flatten().map{ it -> [[id:it.baseName], it] } )
 
     //dbsnp is optional, thus could be '[]'. In this case do not run below, as [].flatten errors out.
     dbsnp_tbi = []
@@ -66,6 +65,14 @@ workflow PREPARE_GENOME {
         germline_resource_tbi = TABIX_GERMLINE_RESOURCE.out.tbi.map{ meta, tbi -> [tbi] }.collect()
     }
 
+    //germline_resource is optional, thus could be '[]'. In this case do not run below, as [].flatten errors out.
+    known_indels_tbi = Channel.empty()
+    if(known_indels){
+        TABIX_KNOWN_INDELS( known_indels.flatten().map{ it -> [[id:it.baseName], it] } )
+        ch_versions = ch_versions.mix(TABIX_KNOWN_INDELS.out.versions)
+
+        known_indels_tbi = TABIX_KNOWN_INDELS.out.tbi.map{ meta, tbi -> [tbi] }.collect()
+    }
 
     //pon is optional, thus could be '[]'. In this case do not run below, as [].flatten errors out.
     pon_tbi = Channel.empty()
@@ -89,7 +96,6 @@ workflow PREPARE_GENOME {
     ch_versions = ch_versions.mix(BWAMEM2_INDEX.out.versions)
     ch_versions = ch_versions.mix(GATK4_CREATESEQUENCEDICTIONARY.out.versions)
     ch_versions = ch_versions.mix(MSISENSORPRO_SCAN.out.versions)
-    ch_versions = ch_versions.mix(TABIX_KNOWN_INDELS.out.versions)
 
     emit:
         bwa                              = BWAMEM1_INDEX.out.index                                             // path: bwa/*
@@ -99,7 +105,7 @@ workflow PREPARE_GENOME {
         dict                             = GATK4_CREATESEQUENCEDICTIONARY.out.dict                             // path: genome.fasta.dict
         fasta_fai                        = SAMTOOLS_FAIDX.out.fai.map{ meta, fai -> [fai] }                    // path: genome.fasta.fai
         germline_resource_tbi                                                                                  // path: germline_resource.vcf.gz.tbi
-        known_indels_tbi                 = TABIX_KNOWN_INDELS.out.tbi.map{ meta, tbi -> [tbi] }.collect()      // path: {known_indels*}.vcf.gz.tbi
+        known_indels_tbi                                                                                       // path: {known_indels*}.vcf.gz.tbi
         msisensorpro_scan                = MSISENSORPRO_SCAN.out.list.map{ meta, list -> [list] }              // path: genome_msi.list
         pon_tbi                                                                                                // path: pon.vcf.gz.tbi
         chr_files                        = chr_files
