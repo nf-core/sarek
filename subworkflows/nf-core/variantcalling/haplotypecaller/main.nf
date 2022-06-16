@@ -96,7 +96,7 @@ workflow RUN_HAPLOTYPECALLER {
                 vcf, tbi, intervals]
             })
         }else{
-            single_sample_in = Channel.empty().mix(HAPLOTYPECALLER.out.vcf.join.(HAPLOTYPECALLER.out.tbi).join(cram).map{ meta, vcf, tbi, cram, crai, intervals ->
+            single_sample_in = Channel.empty().mix(HAPLOTYPECALLER.out.vcf.join(HAPLOTYPECALLER.out.tbi).join(cram).map{ meta, vcf, tbi, cram, crai, intervals ->
                 [meta, vcf, tbi, intervals]
             })
         }

@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#538](https://github.com/nf-core/sarek/pull/538) - Add param `--seq_platform`, default: `ILLUMINA`
 - [#545](https://github.com/nf-core/sarek/pull/545) - Add modules and subworkflows for `cnvkit` tumor_only mode
 - [#540](https://github.com/nf-core/sarek/pull/540) - Add modules and subworkflows for `cnvkit` somatic mode
+- [#557](https://github.com/nf-core/sarek/pull/557) - Add `Haplotypecaller` single sample mode together with `CNNScoreVariants` and `FilterVariantTranches`
 - [#576](https://github.com/nf-core/sarek/pull/576) - Add modules and subworkflows for `cnvkit` germline mode
 
 ### Changed
