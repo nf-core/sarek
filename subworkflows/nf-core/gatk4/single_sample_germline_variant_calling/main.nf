@@ -60,11 +60,17 @@ workflow GATK_SINGLE_SAMPLE_GERMLINE_VARIANT_CALLING{
             }.groupTuple(),
         dict)
 
+    filtered_vcf = Channel.empty().mix(
+                        MERGE_HAPLOTYPECALLER_FILTERED.out.vcf,
+                        filtervarianttranches_vcf_branch.no_intervals
+                ).map{ meta, vcf ->
+                    [[patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals, variantcaller:"haplotypecaller"], vcf]
+                }
     ch_versions = ch_versions.mix(MERGE_HAPLOTYPECALLER_FILTERED.out.versions)
     ch_versions = ch_versions.mix(CNNSCOREVARIANTS.out.versions)
     ch_versions = ch_versions.mix(FILTERVARIANTTRANCHES.out.versions)
 
     emit:
     versions = ch_versions
-    vcf = Channel.empty() //FILTERVARIANTTRANCHES.out.vcf
+    filtered_vcf
 }

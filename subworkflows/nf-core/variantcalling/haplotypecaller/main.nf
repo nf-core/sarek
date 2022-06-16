@@ -108,7 +108,7 @@ workflow RUN_HAPLOTYPECALLER {
                         known_sites,
                         known_sites_tbi)
 
-        filtered_vcf = SINGLE_SAMPLE.out.vcf
+        filtered_vcf = SINGLE_SAMPLE.out.filtered_vcf
         ch_versions = ch_versions.mix(SINGLE_SAMPLE.out.versions)
     }
 
