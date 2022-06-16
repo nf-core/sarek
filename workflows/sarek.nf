@@ -906,10 +906,15 @@ workflow.onComplete {
 def extract_csv(csv_file) {
 
     // check that the sample sheet is not 1 line or less, because it'll skip all subsequent checks if so.
-    if(Channel.fromPath(csv_file).splitCsv(header: false).toList().map(it -> it[0]).contains('patient'))
-      log.error "The samplesheet only contained one line. It must have a header."
-      System.exit(1)
+    new File(csv_file).withReader('UTF-8') { reader ->
+      def line, noOfLines = 0;
+      while ((line = reader.readLine()) != null) {
+        noOfLines++
+      }
+      assert noOfLines > 1
     }
+
+
 
     Channel.from(csv_file).splitCsv(header: true)
         //Retrieves number of lanes by grouping together by patient and sample and counting how many entries there are for this combination
