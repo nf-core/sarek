@@ -39,34 +39,30 @@ def checkPathParamList = [
     params.spliceai_indel_tbi,
     params.spliceai_snv,
     params.spliceai_snv_tbi,
-    //params.target_bed,
     params.vep_cache
 ]
 
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    Check mandatory parameters
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
 for (param in checkPathParamList) if (param) file(param, checkIfExists: true)
 
-// Check mandatory parameters
-if (params.input) csv_file = file(params.input)
-else {
-    log.warn "No samplesheet specified, attempting to restart from csv files present in ${params.outdir}"
-    switch (params.step) {
-        case 'mapping': exit 1, "Can't start with step $params.step without samplesheet"
-        //case 'markduplicates': csv_file = file("${params.outdir}/preprocessing/csv/markduplicates_no_table.csv", checkIfExists: true); break
-        case 'prepare_recalibration': csv_file = file("${params.outdir}/preprocessing/csv/markduplicates_no_table.csv", checkIfExists: true); break
-        case 'recalibrate':           csv_file = file("${params.outdir}/preprocessing/csv/markduplicates.csv",          checkIfExists: true); break
-        case 'variant_calling':       csv_file = file("${params.outdir}/preprocessing/csv/recalibrated.csv",            checkIfExists: true); break
-        // case 'controlfreec':         csv_file = file("${params.outdir}/variant_calling/csv/control-freec_mpileup.csv", checkIfExists: true); break
-        case 'annotate':              csv_file = file("${params.outdir}/variant_calling/csv/recalibrated.csv",          checkIfExists: true); break
-        default: exit 1, "Unknown step $params.step"
-    }
-}
-
-ch_input_sample = extract_csv(csv_file)
+// Set input, can either be from --input or from automatic retrieval in WorkflowSarek.groovy
+ch_input_sample = extract_csv(file(params.input, checkIfExists: true))
 
 if (params.wes) {
     if (params.intervals && !params.intervals.endsWith("bed")) exit 1, "Target file must be in BED format"
 } else {
     if (params.intervals && !params.intervals.endsWith("bed") && !params.intervals.endsWith("interval_list")) exit 1, "Interval file must end with .bed or .interval_list"
+}
+
+if(params.tools && params.tools.contains('mutect2')){
+    if(params.no_intervals){
+        log.error "--tools mutect2 and --no_intervals cannot be used together.\nOne of the tools within the Mutect2 subworkflow requires intervals. They can be provided to the pipeline with --intervals. If none are provided, they will be generated from the FASTA file.\nFor more information on the Mutect2 workflow, see here: https://gatk.broadinstitute.org/hc/en-us/articles/360035531132--How-to-Call-somatic-mutations-using-GATK4-Mutect2.\nFor more information on GetPileupsummaries, see here: https://gatk.broadinstitute.org/hc/en-us/articles/5358860217115-GetPileupSummaries"
+        exit 1
+    }
 }
 
 // Save AWS IGenomes file containing annotation version
@@ -102,25 +98,20 @@ vep_species        = params.vep_species        ?: Channel.empty()
 // Initialize files channels based on params, not defined within the params.genomes[params.genome] scope
 pon                = params.pon                ? Channel.fromPath(params.pon).collect()                      : Channel.empty()
 snpeff_cache       = params.snpeff_cache       ? Channel.fromPath(params.snpeff_cache).collect()             : []
-//target_bed         = params.target_bed         ? Channel.fromPath(params.target_bed).collect()               : []
 vep_cache          = params.vep_cache          ? Channel.fromPath(params.vep_cache).collect()                : []
 
 vep_extra_files = []
 
 if (params.dbnsfp && params.dbnsfp_tbi) {
-    vep_extra_files = vep_extra_files.mix(
-        Channel.fromPath(params.dbnsfp),
-        Channel.fromPath(params.dbnsfp_tbi)
-    ).collect()
+    vep_extra_files.add(file(params.dbnsfp, checkIfExists: true))
+    vep_extra_files.add(file(params.dbnsfp_tbi, checkIfExists: true))
 }
 
 if (params.spliceai_snv && params.spliceai_snv_tbi && params.spliceai_indel && params.spliceai_indel_tbi) {
-    vep_extra_files = vep_extra_files.mix(
-        Channel.fromPath(params.spliceai_indel),
-        Channel.fromPath(params.spliceai_indel_tbi),
-        Channel.fromPath(params.spliceai_snv),
-        Channel.fromPath(params.spliceai_snv_tbi)
-    ).collect()
+    vep_extra_files.add(file(params.spliceai_indel, checkIfExists: true))
+    vep_extra_files.add(file(params.spliceai_indel_tbi, checkIfExists: true))
+    vep_extra_files.add(file(params.spliceai_snv, checkIfExists: true))
+    vep_extra_files.add(file(params.spliceai_snv_tbi, checkIfExists: true))
 }
 
 // Initialize value channels based on params, not defined within the params.genomes[params.genome] scope
@@ -137,6 +128,7 @@ include { MAPPING_CSV                                          } from '../subwor
 include { MARKDUPLICATES_CSV                                   } from '../subworkflows/local/markduplicates_csv'
 include { PREPARE_RECALIBRATION_CSV                            } from '../subworkflows/local/prepare_recalibration_csv'
 include { RECALIBRATE_CSV                                      } from '../subworkflows/local/recalibrate_csv'
+include { VARIANTCALLING_CSV                                   } from '../subworkflows/local/variantcalling_csv'
 
 // Build indices if needed
 include { PREPARE_GENOME                                       } from '../subworkflows/local/prepare_genome'
@@ -276,8 +268,6 @@ workflow SAREK {
 
     // Intervals for speed up preprocessing/variant calling by spread/gather
     intervals_bed_combined        = (params.intervals && params.wes) ? Channel.fromPath(params.intervals).collect() : []
-    intervals_bed_combined_gz_tbi = PREPARE_INTERVALS.out.intervals_combined_bed_gz_tbi.collect()   // one file containing all intervals interval.bed.gz/.tbi file
-    intervals_bed_combined_gz     = intervals_bed_combined_gz_tbi.map{ bed, tbi -> [bed]}.collect() // one file containing all intervals interval.bed.gz file
 
     intervals                     = PREPARE_INTERVALS.out.intervals_bed        // [interval, num_intervals] multiple interval.bed files, divided by useful intervals for scatter/gather
     intervals_bed_gz_tbi          = PREPARE_INTERVALS.out.intervals_bed_gz_tbi // [interval_bed, tbi, num_intervals] multiple interval.bed.gz/.tbi files, divided by useful intervals for scatter/gather
@@ -370,44 +360,32 @@ workflow SAREK {
 
         // STEP 1: MAPPING READS TO REFERENCE GENOME
         // reads will be sorted
-
         ch_reads_to_map = ch_reads_to_map.map{ meta, reads ->
-            new_meta = meta.clone()
-
             // update ID when no multiple lanes or splitted fastqs
-            new_meta.id = meta.size * meta.numLanes == 1 ? meta.sample : meta.id
+            new_id = meta.size * meta.numLanes == 1 ? meta.sample : meta.id
 
-            [new_meta, reads]
+            [[patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:new_id, numLanes:meta.numLanes, read_group:meta.read_group, data_type:meta.data_type, size:meta.size],
+            reads]
         }
 
         GATK4_MAPPING(ch_reads_to_map, ch_map_index, true)
 
         // Grouping the bams from the same samples not to stall the workflow
         ch_bam_mapped = GATK4_MAPPING.out.bam.map{ meta, bam ->
-            new_meta = meta.clone()
-
             numLanes = meta.numLanes ?: 1
             size     = meta.size     ?: 1
 
-            // remove no longer necessary fields
-            new_meta.remove('read_group') // Now in the BAM header
-            new_meta.remove('numLanes')   // Was only needed for mapping
-            new_meta.remove('size')       // Was only needed for mapping
-
             // update ID to be based on the sample name
-            new_meta.id = meta.sample
-
             // update data_type
-            new_meta.data_type = 'bam'
-
+            // remove no longer necessary fields:
+            //   read_group: Now in the BAM header
+            //     numLanes: Was only needed for mapping
+            //         size: Was only needed for mapping
+            new_meta = [patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:meta.sample, data_type:"bam"]
             // Use groupKey to make sure that the correct group can advance as soon as it is complete
             // and not stall the workflow until all reads from all channels are mapped
-            def groupKey = groupKey(new_meta, numLanes * size)
-
-            //Returns the values we need
-            [groupKey, new_meta, bam]
-        }.groupTuple(by:[0,1])
-        .map{ groupKey, new_meta, bam -> [new_meta, bam] }
+            [ groupKey(new_meta, numLanes * size), bam]
+        }.groupTuple()
 
         // gatk4 markduplicates can handle multiple bams as input, so no need to merge/index here
         // Except if and only if skipping markduplicates or saving mapped bams
@@ -526,9 +504,8 @@ workflow SAREK {
             ch_cram_markduplicates_no_spark,
             ch_cram_markduplicates_spark,
             ch_cram_no_markduplicates_restart).map{ meta, cram, crai ->
-                        meta_new = meta.clone()
-                        meta_new.data_type = "cram" //Make sure correct data types are carried through
-                        [meta_new, cram, crai]
+                        //Make sure correct data types are carried through
+                        [[patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:meta.id, data_type:"cram"], cram, crai]
                     }
 
         // Create CSV to restart from this step
@@ -780,16 +757,19 @@ workflow SAREK {
 
         // GERMLINE VARIANT CALLING
         GERMLINE_VARIANT_CALLING(
+            params.tools,
             cram_variant_calling_status_normal,
+            [],
             dbsnp,
             dbsnp_tbi,
+            known_sites,
+            known_sites_tbi,
             dict,
             fasta,
             fasta_fai,
             intervals,
             intervals_bed_gz_tbi,
-            intervals_bed_combined_gz_tbi,
-            intervals_bed_combined_gz)
+            intervals_bed_combined)
             // params.joint_germline)
 
         // TUMOR ONLY VARIANT CALLING
@@ -803,8 +783,6 @@ workflow SAREK {
             fasta_fai,
             intervals,
             intervals_bed_gz_tbi,
-            intervals_bed_combined_gz_tbi,
-            intervals_bed_combined_gz,
             intervals_bed_combined,
             germline_resource,
             germline_resource_tbi,
@@ -825,8 +803,6 @@ workflow SAREK {
             fasta_fai,
             intervals,
             intervals_bed_gz_tbi,
-            intervals_bed_combined_gz_tbi,
-            intervals_bed_combined_gz,
             intervals_bed_combined,
             msisensorpro_scan,
             germline_resource,
@@ -842,6 +818,7 @@ workflow SAREK {
         vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.freebayes_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.haplotypecaller_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.manta_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.tiddit_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.strelka_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.freebayes_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.mutect2_vcf)
@@ -865,12 +842,15 @@ workflow SAREK {
         ch_reports  = ch_reports.mix(VCF_QC.out.vcftools_tstv_qual.collect{it[1]}.ifEmpty([]))
         ch_reports  = ch_reports.mix(VCF_QC.out.vcftools_filter_summary.collect{it[1]}.ifEmpty([]))
 
+        VARIANTCALLING_CSV(vcf_to_annotate)
+
         // ANNOTATE
         if (params.step == 'annotate') vcf_to_annotate = ch_input_sample
 
         if (params.tools.contains('merge') || params.tools.contains('snpeff') || params.tools.contains('vep')) {
 
             ANNOTATE(vcf_to_annotate,
+                fasta,
                 params.tools,
                 snpeff_db,
                 snpeff_cache,
@@ -929,10 +909,28 @@ workflow.onComplete {
 */
 // Function to extract information (meta data + file(s)) from csv file(s)
 def extract_csv(csv_file) {
+
+    // check that the sample sheet is not 1 line or less, because it'll skip all subsequent checks if so.
+    new File(csv_file.toString()).withReader('UTF-8') { reader ->
+      def line, numberOfLinesInSampleSheet = 0;
+      while ((line = reader.readLine()) != null) {
+        numberOfLinesInSampleSheet++
+      }
+      if( numberOfLinesInSampleSheet < 2){
+        log.error "Sample sheet had less than two lines. The sample sheet must be a csv file with a header, so at least two lines."
+        System.exit(1)
+      }
+    }
+
+
+
     Channel.from(csv_file).splitCsv(header: true)
         //Retrieves number of lanes by grouping together by patient and sample and counting how many entries there are for this combination
         .map{ row ->
-            if (!(row.patient && row.sample)) log.warn "Missing or unknown field in csv file header"
+            if (!(row.patient && row.sample)){
+                log.error "Missing field in csv file header. The csv file must have fields named 'patient' and 'sample'."
+                System.exit(1)
+            }
             [[row.patient.toString(), row.sample.toString()], row]
         }.groupTuple()
         .map{ meta, rows ->
@@ -942,7 +940,6 @@ def extract_csv(csv_file) {
         .map{ row, numLanes -> //from here do the usual thing for csv parsing
         def meta = [:]
 
-        //TODO since it is mandatory: error/warning if not present?
         // Meta data to identify samplesheet
         // Both patient and sample are mandatory
         // Several sample can belong to the same patient
@@ -965,11 +962,15 @@ def extract_csv(csv_file) {
             def fastq_1     = file(row.fastq_1, checkIfExists: true)
             def fastq_2     = file(row.fastq_2, checkIfExists: true)
             def CN          = params.seq_center ? "CN:${params.seq_center}\\t" : ''
-            def read_group  = "\"@RG\\tID:${row.lane}\\t${CN}PU:${row.lane}\\tSM:${row.sample}\\tLB:${row.sample}\\tPL:${params.seq_platform}\""
+
+            def flowcell    = flowcellLaneFromFastq(fastq_1)
+            //Don't use a random element for ID, it breaks resuming
+            def read_group  = "\"@RG\\tID:${flowcell}.${row.sample}.${row.lane}\\t${CN}PU:${row.lane}\\tSM:${row.patient}_${row.sample}\\tLB:${row.sample}\\tDS:${params.fasta}\\tPL:${params.seq_platform}\""
+
             meta.numLanes   = numLanes.toInteger()
             meta.read_group = read_group.toString()
             meta.data_type  = "fastq"
-            meta.test = "test"
+
             meta.size       = 1 // default number of splitted fastq
             return [meta, [fastq_1, fastq_2]]
         // start from BAM
@@ -977,7 +978,7 @@ def extract_csv(csv_file) {
             meta.id         = "${row.sample}-${row.lane}".toString()
             def bam         = file(row.bam,   checkIfExists: true)
             def CN          = params.seq_center ? "CN:${params.seq_center}\\t" : ''
-            def read_group  = "\"@RG\\tID:${row.lane}\\t${CN}PU:${row.lane}\\tSM:${row.sample}\\tLB:${row.sample}\\tPL:${params.seq_platform}\""
+            def read_group  = "\"@RG\\tID:${row_sample}_${row.lane}\\t${CN}PU:${row.lane}\\tSM:${row.sample}\\tLB:${row.sample}\\tPL:${params.seq_platform}\""
             meta.numLanes   = numLanes.toInteger()
             meta.read_group = read_group.toString()
             meta.data_type  = "bam"
@@ -1018,12 +1019,40 @@ def extract_csv(csv_file) {
             meta.id = meta.sample
             def vcf = file(row.vcf, checkIfExists: true)
             meta.data_type     = "vcf"
-            meta.variantcaller = ""
+            meta.variantcaller = row.variantcaller ?: ""
             return [meta, vcf]
         } else {
             log.warn "Missing or unknown field in csv file header"
         }
     }
+}
+
+// Parse first line of a FASTQ file, return the flowcell id and lane number.
+def flowcellLaneFromFastq(path) {
+    // expected format:
+    // xx:yy:FLOWCELLID:LANE:... (seven fields)
+    // or
+    // FLOWCELLID:LANE:xx:... (five fields)
+    def line
+    path.withInputStream {
+        InputStream gzipStream = new java.util.zip.GZIPInputStream(it)
+        Reader decoder = new InputStreamReader(gzipStream, 'ASCII')
+        BufferedReader buffered = new BufferedReader(decoder)
+        line = buffered.readLine()
+    }
+    assert line.startsWith('@')
+    line = line.substring(1)
+    def fields = line.split(':')
+    String fcid
+
+    if (fields.size() >= 7) {
+        // CASAVA 1.8+ format, from  https://support.illumina.com/help/BaseSpace_OLH_009008/Content/Source/Informatics/BS/FileFormat_FASTQ-files_swBS.htm
+        // "@<instrument>:<run number>:<flowcell ID>:<lane>:<tile>:<x-pos>:<y-pos>:<UMI> <read>:<is filtered>:<control number>:<index>"
+        fcid = fields[2]
+    } else if (fields.size() == 5) {
+        fcid = fields[0]
+    }
+    return fcid
 }
 
 /*

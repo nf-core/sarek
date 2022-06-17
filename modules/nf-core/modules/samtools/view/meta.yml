@@ -25,6 +25,10 @@ input:
       type: file
       description: BAM/CRAM/SAM file
       pattern: "*.{bam,cram,sam}"
+  - index:
+      type: optional file
+      description: BAM.BAI/CRAM.CRAI file
+      pattern: "*.{.bai,.crai}"
   - fasta:
       type: optional file
       description: Reference file the CRAM was created with

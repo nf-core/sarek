@@ -20,16 +20,12 @@ workflow RECALIBRATE {
 
     cram_intervals = cram.combine(intervals)
         .map{ meta, cram, crai, recal, intervals, num_intervals ->
-            new_meta = meta.clone()
-
-            // If either no scatter/gather is done, i.e. no interval (0) or one interval (1), then don't rename samples
-            new_meta.id = num_intervals <= 1 ? meta.sample : meta.sample + "_" + intervals.baseName
-            new_meta.num_intervals = num_intervals
 
             //If no interval file provided (0) then add empty list
             intervals_new = num_intervals == 0 ? [] : intervals
 
-            [new_meta, cram, crai, recal, intervals_new]
+            [[patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:meta.sample, data_type:meta.data_type, num_intervals:num_intervals],
+            cram, crai, recal, intervals_new]
         }
 
     // Run Applybqsr
@@ -39,12 +35,9 @@ workflow RECALIBRATE {
     MERGE_INDEX_CRAM(APPLYBQSR.out.cram, fasta)
 
     ch_cram_recal_out = MERGE_INDEX_CRAM.out.cram_crai.map{ meta, cram, crai ->
-                            new_meta = meta.clone()
-
-                            // remove no longer necessary fields to make sure joining can be done correctly
-                            new_meta.remove('num_intervals')
-
-                            [new_meta, cram, crai]
+                            // remove no longer necessary fields to make sure joining can be done correctly: num_intervals
+                            [[patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:meta.id, data_type:meta.data_type],
+                            cram, crai]
                         }
 
     // Gather versions of all tools used
