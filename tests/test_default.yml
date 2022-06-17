@@ -72,15 +72,15 @@
     - path: results/variant_calling/test/strelka/test.variants.vcf.gz
     - path: results/variant_calling/test/strelka/test.variants.vcf.gz.tbi
 
-- name: Run default pipeline with VC
+- name: Run default pipeline with bam output during preprocessing
   command: nextflow run main.nf -profile test,docker --save_output_as_bam
   tags:
     - default
     - preprocessing
   files:
     - path: results/multiqc
-    - path: results/preprocessing/test/markduplicates/test.md.cram
-    - path: results/preprocessing/test/markduplicates/test.md.cram.crai
+    - path: results/preprocessing/test/markduplicates/test.md.bam
+    - path: results/preprocessing/test/markduplicates/test.md.bam.bai
     - path: results/preprocessing/test/recal_table/test.recal.table
     - path: results/preprocessing/test/recalibrated/test.recal.bam
     - path: results/preprocessing/test/recalibrated/test.recal.bam.bai
