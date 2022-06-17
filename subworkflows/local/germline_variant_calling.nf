@@ -40,7 +40,7 @@ workflow GERMLINE_VARIANT_CALLING {
     manta_vcf           = Channel.empty()
     strelka_vcf         = Channel.empty()
     tiddit_vcf          = Channel.empty()
-    mpileup              = Channel.empty()
+    mpileup             = Channel.empty()
 
     // Remap channel with intervals
     cram_recalibrated_intervals = cram_recalibrated.combine(intervals)

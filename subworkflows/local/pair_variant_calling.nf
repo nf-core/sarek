@@ -65,7 +65,7 @@ workflow PAIR_VARIANT_CALLING {
 
         }
 
-    if (tools.contains('mpileup') || tools.contains('controlfreec')){
+    if (tools.contains('controlfreec')){
         cram_normal_intervals_no_index = cram_pair_intervals
                     .map {meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals ->
                             [meta, normal_cram, intervals]
@@ -79,9 +79,7 @@ workflow PAIR_VARIANT_CALLING {
         mpileup_normal = RUN_MPILEUP_NORMAL.out.mpileup
         RUN_MPILEUP_TUMOR(cram_tumor_intervals_no_index, fasta)
         mpileup_tumor = RUN_MPILEUP_TUMOR.out.mpileup
-    }
 
-    if (tools.contains('controlfreec')){
         controlfreec_input = mpileup_normal.cross(mpileup_tumor)
         .map{ normal, tumor ->
             [normal[0], normal[1], tumor[1], [], [], [], []]
