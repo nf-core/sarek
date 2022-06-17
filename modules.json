@@ -67,7 +67,7 @@
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
             "ensemblvep": {
-                "git_sha": "30f72e24822576c6f90a0bf9db678b403c70eccf"
+                "git_sha": "757c20c8ebfab85e1de9f98773a2269f6d34025a"
             },
             "fastqc": {
                 "git_sha": "49b18b1639f4f7104187058866a8fab33332bdfe"

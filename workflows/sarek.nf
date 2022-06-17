@@ -910,10 +910,28 @@ workflow.onComplete {
 */
 // Function to extract information (meta data + file(s)) from csv file(s)
 def extract_csv(csv_file) {
+
+    // check that the sample sheet is not 1 line or less, because it'll skip all subsequent checks if so.
+    new File(csv_file.toString()).withReader('UTF-8') { reader ->
+      def line, numberOfLinesInSampleSheet = 0;
+      while ((line = reader.readLine()) != null) {
+        numberOfLinesInSampleSheet++
+      }
+      if( numberOfLinesInSampleSheet < 2){
+        log.error "Sample sheet had less than two lines. The sample sheet must be a csv file with a header, so at least two lines."
+        System.exit(1)
+      }
+    }
+
+
+
     Channel.from(csv_file).splitCsv(header: true)
         //Retrieves number of lanes by grouping together by patient and sample and counting how many entries there are for this combination
         .map{ row ->
-            if (!(row.patient && row.sample)) log.warn "Missing or unknown field in csv file header"
+            if (!(row.patient && row.sample)){
+                log.error "Missing field in csv file header. The csv file must have fields named 'patient' and 'sample'."
+                System.exit(1)
+            }
             [[row.patient.toString(), row.sample.toString()], row]
         }.groupTuple()
         .map{ meta, rows ->
@@ -923,7 +941,6 @@ def extract_csv(csv_file) {
         .map{ row, numLanes -> //from here do the usual thing for csv parsing
         def meta = [:]
 
-        //TODO since it is mandatory: error/warning if not present?
         // Meta data to identify samplesheet
         // Both patient and sample are mandatory
         // Several sample can belong to the same patient
