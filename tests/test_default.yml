@@ -71,3 +71,30 @@
     - path: results/variant_calling/test/strelka/test.genome.vcf.gz.tbi
     - path: results/variant_calling/test/strelka/test.variants.vcf.gz
     - path: results/variant_calling/test/strelka/test.variants.vcf.gz.tbi
+
+- name: Run default pipeline with VC
+  command: nextflow run main.nf -profile test,docker --save_output_as_bam
+  tags:
+    - default
+    - preprocessing
+  files:
+    - path: results/multiqc
+    - path: results/preprocessing/test/markduplicates/test.md.cram
+    - path: results/preprocessing/test/markduplicates/test.md.cram.crai
+    - path: results/preprocessing/test/recal_table/test.recal.table
+    - path: results/preprocessing/test/recalibrated/test.recal.bam
+    - path: results/preprocessing/test/recalibrated/test.recal.bam.bai
+    - path: results/csv/markduplicates.csv
+    - path: results/csv/markduplicates_no_table.csv
+    - path: results/csv/recalibrated.csv
+    - path: results/reports/fastqc/test-test_L1
+    - path: results/reports/markduplicates/test/test.md.metrics
+    - path: results/reports/qualimap/test/test.mapped
+    - path: results/reports/qualimap/test/test.recal
+    - path: results/reports/samtools_stats/test/test.md.cram.stats
+    - path: results/reports/samtools_stats/test/test.recal.cram.stats
+    - path: results/reports/deeptools/test/test.bigWig
+    - path: results/variant_calling/test/strelka/test.genome.vcf.gz
+    - path: results/variant_calling/test/strelka/test.genome.vcf.gz.tbi
+    - path: results/variant_calling/test/strelka/test.variants.vcf.gz
+    - path: results/variant_calling/test/strelka/test.variants.vcf.gz.tbi
