@@ -95,14 +95,15 @@ if (anno_readme && file(anno_readme).exists()) {
 
 // Initialize file channels based on params, defined in the params.genomes[params.genome] scope
 chr_dir            = params.chr_dir            ? Channel.fromPath(params.chr_dir).collect()                  : []
-dbsnp              = params.dbsnp              ? Channel.fromPath(params.dbsnp).collect()                    : [] //Channel.empty()
+dbsnp              = params.dbsnp              ? Channel.fromPath(params.dbsnp).collect()                    : Channel.value([])
 fasta              = params.fasta              ? Channel.fromPath(params.fasta).collect()                    : Channel.empty()
 fasta_fai          = params.fasta_fai          ? Channel.fromPath(params.fasta_fai).collect()                : Channel.empty()
-germline_resource  = params.germline_resource  ? Channel.fromPath(params.germline_resource).collect()        : []               //Mutec2 does not require a germline resource, so set to optional input
-known_indels       = params.known_indels       ? Channel.fromPath(params.known_indels).collect()             : [] //Channel.empty()
+germline_resource  = params.germline_resource  ? Channel.fromPath(params.germline_resource).collect()        : Channel.value([]) //Mutec2 does not require a germline resource, so set to optional input
+known_indels       = params.known_indels       ? Channel.fromPath(params.known_indels).collect()             : Channel.value([]) //Channel.empty()
 loci               = params.ac_loci            ? Channel.fromPath(params.ac_loci).collect()                  : []
 loci_gc            = params.ac_loci_gc         ? Channel.fromPath(params.ac_loci_gc).collect()               : []
 mappability        = params.mappability        ? Channel.fromPath(params.mappability).collect()              : []
+pon                = params.pon                ? Channel.fromPath(params.pon).collect()                      : Channel.value([]) //PON is optional for Mutect2 (but highly recommended)
 
 // Initialize value channels based on params, defined in the params.genomes[params.genome] scope
 snpeff_db          = params.snpeff_db          ?: Channel.empty()
@@ -111,7 +112,6 @@ vep_genome         = params.vep_genome         ?: Channel.empty()
 vep_species        = params.vep_species        ?: Channel.empty()
 
 // Initialize files channels based on params, not defined within the params.genomes[params.genome] scope
-pon                = params.pon                ? Channel.fromPath(params.pon).collect()                      : [] //PON is optional for Mutect2 (but highly recommended)
 snpeff_cache       = params.snpeff_cache       ? Channel.fromPath(params.snpeff_cache).collect()             : []
 vep_cache          = params.vep_cache          ? Channel.fromPath(params.vep_cache).collect()                : []
 
@@ -274,9 +274,8 @@ workflow SAREK {
 
     // known_sites is made by grouping both the dbsnp and the known indels ressources
     // Which can either or both be optional
-    known_sites     = dbsnp || known_indels ? dbsnp.concat(known_indels).collect() : Channel.empty()
-    known_sites_tbi = dbsnp_tbi || known_indels_tbi ? dbsnp_tbi.concat(known_indels_tbi).collect() : Channel.empty()
-
+    known_sites     = dbsnp.concat(known_indels).collect() //dbsnp && known_indels ? dbsnp.concat(known_indels).collect() : dbsnp && !known_indels ? dbsnp : ( !dbsnp && known_indels ? known_indels : Channel.empty() )
+    known_sites_tbi = dbsnp_tbi.concat(known_indels_tbi).collect()//dbsnp_tbi && known_indels_tbi ? dbsnp_tbi.concat(known_indels_tbi).collect() : dbsnp_tbi && !known_indels_tbi ? dbsnp_tbi : ( !dbsnp_tbi && known_indels_tbi ? known_indels_tbi : Channel.empty() )
     // Build intervals if needed
     PREPARE_INTERVALS(fasta_fai)
 
