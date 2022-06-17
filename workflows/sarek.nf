@@ -911,7 +911,10 @@ def extract_csv(csv_file) {
       while ((line = reader.readLine()) != null) {
         noOfLinesInSampleSheet++
       }
-      assert noOfLinesInSampleSheet > 1
+      if( noOfLinesInSampleSheet < 2){
+        log.error "Sample sheet had less than two lines. The sample sheet must be a csv file with a header, so at least two lines."
+        System.exit(1)
+      }
     }
 
 
@@ -920,7 +923,7 @@ def extract_csv(csv_file) {
         //Retrieves number of lanes by grouping together by patient and sample and counting how many entries there are for this combination
         .map{ row ->
             if (!(row.patient && row.sample)){
-                log.error "Missing or unknown field in csv file header. Must have at least fields named patient and sample."
+                log.error "Missing field in csv file header. The csv file must have fields named 'patient' and 'sample'."
                 System.exit(1)
             }
             [[row.patient.toString(), row.sample.toString()], row]
