@@ -18,39 +18,28 @@ workflow GATK_JOINT_GERMLINE_VARIANT_CALLING {
 
     gendb_input = input.map{
         meta, gvcf, tbi ->
-            interval_file = meta.num_intervals > 1 ? []                                                    : params.intervals
-            interval_val  = meta.num_intervals > 1 ? (gvcf.simpleName - "${meta.id}_").replaceFirst("_",":") : []
-            interval_name = meta.num_intervals > 1 ? gvcf.simpleName: meta.id
-            new_meta = [patient:meta.patient,
-                        sample:meta.sample,
-                        id:meta.id,
-                        interval_name:interval_name, 
-                        num_intervals:meta.num_intervals]
-            [new_meta, gvcf, tbi, interval_file, interval_val, []]
+            interval_file = meta.num_intervals > 1 ? []                 : params.intervals
+            interval_val  = meta.num_intervals > 1 ? meta.interval_name : []
+            [meta, gvcf, tbi, interval_file, interval_val, []]
         }
-    gendb_input.dump(tag:"gdb")
 
     //
     //Convert all sample vcfs into a genomicsdb workspace using genomicsdbimport.
     //
     GATK4_GENOMICSDBIMPORT ( gendb_input, false, false, false )
     genotype_input = GATK4_GENOMICSDBIMPORT.out.genomicsdb.join(gendb_input).map{
-        new_meta, genomicsdb, gvcf, tbi, interval_file, interval_val, wpath ->
-            [new_meta, genomicsdb, [], interval_file, interval_val]
+        meta, genomicsdb, gvcf, tbi, interval_file, interval_val, wpath ->
+            new_meta = meta
+            new_meta.interval_name = meta.interval_name.replaceAll(":","_")
+            [new_meta, genomicsdb, [], [], []]
         }
-    genotype_input.view()
     ch_versions = ch_versions.mix(GATK4_GENOMICSDBIMPORT.out.versions)
 
     //
     //Joint genotyping performed using GenotypeGVCFs
     //
     vcfs = GATK4_GENOTYPEGVCFS ( genotype_input, fasta, fai, dict, sites, sites_index).vcf
-    merge_vcfs_input = vcfs.map{ meta, vcf  ->
-        // remove the coordinates from meta to group by patient, sample, ... for merging
-        new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status,
-                    gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals]
-        [groupKey(new_meta, new_meta.num_intervals), vcf]
-    }.groupTuple()
+    merge_vcfs_input = vcfs.groupTuple()
 
    //
    //Merge vcfs called by interval into a single VCF

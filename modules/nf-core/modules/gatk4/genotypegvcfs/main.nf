@@ -28,7 +28,7 @@ process GATK4_GENOTYPEGVCFS {
     def prefix = task.ext.prefix ?: "${meta.id}"
     def gvcf_command = gvcf.name.endsWith(".vcf") || gvcf.name.endsWith(".vcf.gz") ? "$gvcf" : "gendb://$gvcf"
     def dbsnp_command = dbsnp ? "--dbsnp $dbsnp" : ""
-    def interval_command = interval_file ? "--intervals ${interval_file}" : "--intervals ${interval_value}"
+    def interval_command = interval_file ? "--intervals ${interval_file}" : interval_value ? "--intervals ${interval_value}" : ""
 
 
     def avail_mem = 3
