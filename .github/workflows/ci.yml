@@ -46,7 +46,7 @@ jobs:
           - "mutect2"
           - "prepare_recalibration"
           - "recalibrate"
-          # - 'save_bam_mapped'
+          - "save_bam_mapped"
           - "skip_markduplicates"
           - "split_fastq"
           - "strelka"
