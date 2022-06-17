@@ -159,6 +159,9 @@ include { GATK4_MAPPING                                        } from '../subwor
 include { MERGE_INDEX_BAM                                      } from '../subworkflows/nf-core/merge_index_bam'
 
 include { SAMTOOLS_CONVERT as SAMTOOLS_CRAMTOBAM               } from '../modules/nf-core/modules/samtools/convert/main'
+include { SAMTOOLS_CONVERT as SAMTOOLS_CRAMTOBAM_MARKDUPLICATES} from '../modules/nf-core/modules/samtools/convert/main'
+include { SAMTOOLS_CONVERT as SAMTOOLS_CRAMTOBAM_RECAL         } from '../modules/nf-core/modules/samtools/convert/main'
+
 include { SAMTOOLS_CONVERT as SAMTOOLS_BAMTOCRAM               } from '../modules/nf-core/modules/samtools/convert/main'
 include { SAMTOOLS_CONVERT as SAMTOOLS_BAMTOCRAM_VARIANTCALLING} from '../modules/nf-core/modules/samtools/convert/main'
 // Mark Duplicates (+QC)
@@ -508,6 +511,9 @@ workflow SAREK {
                         [[patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:meta.id, data_type:"cram"], cram, crai]
                     }
 
+        //slightly inefficient, there are files that get converted back and forth between bam and cram now
+        SAMTOOLS_CRAMTOBAM_MARKDUPLICATES(ch_md_cram_for_restart, fasta, fasta_fai)
+
         // Create CSV to restart from this step
         MARKDUPLICATES_CSV(ch_md_cram_for_restart)
     }
@@ -655,14 +661,24 @@ workflow SAREK {
                 fasta_fai,
                 intervals_for_preprocessing)
 
-            // Create CSV to restart from this step
-            RECALIBRATE_CSV(cram_variant_calling)
-
             // Gather QC reports
             ch_reports  = ch_reports.mix(CRAM_QC.out.qc.collect{it[1]}.ifEmpty([]))
 
             // Gather used softwares versions
             ch_versions = ch_versions.mix(CRAM_QC.out.versions)
+
+            //If params.save_output_as_bam, then convert CRAM files to BAM
+            SAMTOOLS_CRAMTOBAM_RECAL(cram_variant_calling, fasta, fasta_fai)
+            ch_versions = ch_versions.mix(SAMTOOLS_CRAMTOBAM_RECAL.out.versions)
+
+            // CSV should be written for the file actually out out, either CRAM or BAM
+            csv_recalibration = Channel.empty()
+            csv_recalibration = params.save_output_as_bam ?  SAMTOOLS_CRAMTOBAM_RECAL.out.alignment_index : cram_variant_calling
+
+            // Create CSV to restart from this step
+            RECALIBRATE_CSV(csv_recalibration)
+
+
         } else if (params.step == 'recalibrate'){
             // ch_cram_variant_calling contains either:
             // - input bams converted to crams, if started from step recal + skip BQSR
