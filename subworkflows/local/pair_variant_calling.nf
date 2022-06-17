@@ -79,15 +79,13 @@ workflow PAIR_VARIANT_CALLING {
         mpileup_normal = RUN_MPILEUP_NORMAL.out.mpileup
         RUN_MPILEUP_TUMOR(cram_tumor_intervals_no_index, fasta)
         mpileup_tumor = RUN_MPILEUP_TUMOR.out.mpileup
+        ch_versions = ch_versions.mix(RUN_MPILEUP_NORMAL.out.versions)
+        ch_versions = ch_versions.mix(RUN_MPILEUP_TUMOR.out.versions)
 
         controlfreec_input = mpileup_normal.cross(mpileup_tumor)
         .map{ normal, tumor ->
             [normal[0], normal[1], tumor[1], [], [], [], []]
-
-        ch_versions = ch_versions.mix(RUN_MPILEUP_NORMAL.out.versions)
-        ch_versions = ch_versions.mix(RUN_MPILEUP_TUMOR.out.versions)
         }
-
         RUN_CONTROLFREEC_SOMATIC(controlfreec_input,
                         fasta,
                         fasta_fai,
