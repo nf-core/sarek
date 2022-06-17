@@ -2,21 +2,24 @@
 // GERMLINE VARIANT CALLING
 //
 
+include { RUN_CNVKIT_GERMLINE } from '../nf-core/variantcalling/cnvkit/germline/main.nf'
 include { RUN_DEEPVARIANT     } from '../nf-core/variantcalling/deepvariant/main.nf'
 include { RUN_FREEBAYES       } from '../nf-core/variantcalling/freebayes/main.nf'
 include { RUN_HAPLOTYPECALLER } from '../nf-core/variantcalling/haplotypecaller/main.nf'
 include { RUN_MANTA_GERMLINE  } from '../nf-core/variantcalling/manta/germline/main.nf'
 include { RUN_MPILEUP         } from '../nf-core/variantcalling/mpileup/main'
 include { RUN_STRELKA_SINGLE  } from '../nf-core/variantcalling/strelka/single/main.nf'
-include { RUN_CNVKIT_GERMLINE } from '../nf-core/variantcalling/cnvkit/germline/main.nf'
-//include { TIDDIT          } from './variantcalling/tiddit.nf'
+include { RUN_TIDDIT          } from '../nf-core/variantcalling/tiddit/main.nf'
 
 workflow GERMLINE_VARIANT_CALLING {
     take:
         tools                         // Mandatory, list of tools to apply
         cram_recalibrated             // channel: [mandatory] cram
+        bwa                           // channel: [mandatory] bwa
         dbsnp                         // channel: [mandatory] dbsnp
         dbsnp_tbi                     // channel: [mandatory] dbsnp_tbi
+        known_sites
+        known_sites_tbi
         dict                          // channel: [mandatory] dict
         fasta                         // channel: [mandatory] fasta
         fasta_fai                     // channel: [mandatory] fasta_fai
@@ -27,15 +30,16 @@ workflow GERMLINE_VARIANT_CALLING {
 
     main:
 
-    ch_versions          = Channel.empty()
+    ch_versions         = Channel.empty()
 
     //TODO: Temporary until the if's can be removed and printing to terminal is prevented with "when" in the modules.config
-    deepvariant_vcf      = Channel.empty()
-    freebayes_vcf        = Channel.empty()
-    haplotypecaller_vcf  = Channel.empty()
-    genotype_gvcf        = Channel.empty()
-    manta_vcf            = Channel.empty()
-    strelka_vcf          = Channel.empty()
+    deepvariant_vcf     = Channel.empty()
+    freebayes_vcf       = Channel.empty()
+    genotype_gvcf       = Channel.empty()
+    haplotypecaller_vcf = Channel.empty()
+    manta_vcf           = Channel.empty()
+    strelka_vcf         = Channel.empty()
+    tiddit_vcf          = Channel.empty()
     mpileup              = Channel.empty()
 
     // Remap channel with intervals
@@ -117,10 +121,12 @@ workflow GERMLINE_VARIANT_CALLING {
                         fasta_fai,
                         dict,
                         dbsnp,
-                        dbsnp_tbi)
+                        dbsnp_tbi,
+                        known_sites,
+                        known_sites_tbi,
+                        intervals_bed_combined)
 
-        haplotypecaller_vcf  = RUN_HAPLOTYPECALLER.out.haplotypecaller_vcf
-        //genotype_gvcf        = RUN_HAPLOTYPECALLER.out.genotype_gvcf
+        haplotypecaller_vcf  = RUN_HAPLOTYPECALLER.out.filtered_vcf
         ch_versions          = ch_versions.mix(RUN_HAPLOTYPECALLER.out.versions)
     }
 
@@ -147,15 +153,23 @@ workflow GERMLINE_VARIANT_CALLING {
     }
 
     //TIDDIT
-    //TODO
+    if (tools.contains('tiddit')){
+        RUN_TIDDIT(cram_recalibrated,
+                fasta,
+                bwa)
+
+        tiddit_vcf = RUN_TIDDIT.out.tiddit_vcf
+        ch_versions = ch_versions.mix(RUN_TIDDIT.out.versions)
+    }
 
     emit:
     deepvariant_vcf
     freebayes_vcf
-    haplotypecaller_vcf
     genotype_gvcf
+    haplotypecaller_vcf
     manta_vcf
     strelka_vcf
+    tiddit_vcf
 
     versions = ch_versions
 }

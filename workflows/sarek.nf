@@ -759,8 +759,11 @@ workflow SAREK {
         GERMLINE_VARIANT_CALLING(
             params.tools,
             cram_variant_calling_status_normal,
+            [],
             dbsnp,
             dbsnp_tbi,
+            known_sites,
+            known_sites_tbi,
             dict,
             fasta,
             fasta_fai,
@@ -816,6 +819,7 @@ workflow SAREK {
         vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.freebayes_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.haplotypecaller_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.manta_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.tiddit_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.strelka_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.freebayes_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.mutect2_vcf)
@@ -847,6 +851,7 @@ workflow SAREK {
         if (params.tools.contains('merge') || params.tools.contains('snpeff') || params.tools.contains('vep')) {
 
             ANNOTATE(vcf_to_annotate,
+                fasta,
                 params.tools,
                 snpeff_db,
                 snpeff_cache,
