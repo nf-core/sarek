@@ -2,8 +2,8 @@
 // merge samples with genomicsdbimport, perform joint genotyping with genotypeGVCFS
 
 
-include { GATK4_GENOMICSDBIMPORT } from '../../../modules/gatk4/genomicsdbimport/main'
-include { GATK4_GENOTYPEGVCFS } from '../../../modules/gatk4/genotypegvcfs/main'
+include { GATK4_GENOMICSDBIMPORT } from '../../../../modules/nf-core/modules/gatk4/genomicsdbimport/main'
+include { GATK4_GENOTYPEGVCFS } from '../../../../modules/nf-core/modules/gatk4/genotypegvcfs/main'
 
 workflow GATK_JOINT_GERMLINE_VARIANT_CALLING {
     take:
