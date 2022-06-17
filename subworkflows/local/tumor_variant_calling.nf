@@ -9,6 +9,7 @@ include { RUN_MANTA_TUMORONLY                     } from '../nf-core/variantcall
 include { RUN_STRELKA_SINGLE                      } from '../nf-core/variantcalling/strelka/single/main.nf'
 include { RUN_CONTROLFREEC_TUMORONLY              } from '../nf-core/variantcalling/controlfreec/tumoronly/main.nf'
 include { RUN_CNVKIT_TUMORONLY                    } from '../nf-core/variantcalling/cnvkit/tumoronly/main.nf'
+include { RUN_MPILEUP                             } from '../nf-core/variantcalling/mpileup/main'
 
 workflow TUMOR_ONLY_VARIANT_CALLING {
     take:
@@ -62,12 +63,23 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
             cram, crai, bed_new, tbi_new]
         }
 
-    if(tools.contains('controlfreec')){
+    if (tools.contains('mpileup') || tools.contains('controlfreec')){
         cram_intervals_no_index = cram_recalibrated_intervals.map { meta, cram, crai, intervals ->
                                                                     [meta, cram, intervals]
                                                                     }
+        RUN_MPILEUP(cram_intervals_no_index,
+                        fasta)
+        ch_versions = ch_versions.mix(RUN_MPILEUP.out.versions)
+    }
+
+    if (tools.contains('controlfreec')){
+        controlfreec_input = RUN_MPILEUP.out.mpileup
+                                .map{ meta, pileup_tumor ->
+                                    [meta, [], pileup_tumor, [], [], [], []]
+                                }
+
         RUN_CONTROLFREEC_TUMORONLY(
-                        cram_intervals_no_index,
+                        controlfreec_input,
                         fasta,
                         fasta_fai,
                         dbsnp,
