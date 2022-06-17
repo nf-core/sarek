@@ -513,9 +513,14 @@ workflow SAREK {
 
         //slightly inefficient, there are files that get converted back and forth between bam and cram now
         SAMTOOLS_CRAMTOBAM_MARKDUPLICATES(ch_md_cram_for_restart, fasta, fasta_fai)
+        ch_versions = ch_versions.mix(SAMTOOLS_CRAMTOBAM_MARKDUPLICATES.out.versions)
+
+        // CSV should be written for the file actually out out, either CRAM or BAM
+        csv_markduplicates = Channel.empty()
+        csv_markduplicates = params.save_output_as_bam ?  SAMTOOLS_CRAMTOBAM_MARKDUPLICATES.out.alignment_index : ch_md_cram_for_restart
 
         // Create CSV to restart from this step
-        MARKDUPLICATES_CSV(ch_md_cram_for_restart)
+        MARKDUPLICATES_CSV(csv_markduplicates)
     }
 
     if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration']) {
