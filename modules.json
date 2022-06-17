@@ -67,7 +67,7 @@
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
             "ensemblvep": {
-                "git_sha": "40dd662fd26c3eb3160b7c8cbbe9bff80bbe2c30"
+                "git_sha": "757c20c8ebfab85e1de9f98773a2269f6d34025a"
             },
             "fastqc": {
                 "git_sha": "49b18b1639f4f7104187058866a8fab33332bdfe"
@@ -232,7 +232,7 @@
                 "git_sha": "b3e9b88e80880f450ad79a95b2b7aa05e1de5484"
             },
             "tiddit/sv": {
-                "git_sha": "57cb730e78634673fb254a77606e014ce942734c"
+                "git_sha": "b689b8ed88a9f89eb2f7c75d3eb0bace77ade109"
             },
             "trimgalore": {
                 "git_sha": "85ec13ff1fc2196c5a507ea497de468101baabed"
