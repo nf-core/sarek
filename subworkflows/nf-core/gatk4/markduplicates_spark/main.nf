@@ -16,7 +16,7 @@ workflow MARKDUPLICATES_SPARK {
         fasta                         // channel: [mandatory] fasta
         fasta_fai                     // channel: [mandatory] fasta_fai
         intervals_combined_bed_gz_tbi // channel: [optional]  intervals_bed.gz, intervals_bed.gz.tbi
-
+        intervals_bed_combined
     main:
     ch_versions = Channel.empty()
     qc_reports  = Channel.empty()
@@ -30,7 +30,7 @@ workflow MARKDUPLICATES_SPARK {
         .join(INDEX_MARKDUPLICATES.out.crai)
 
     // Convert Markupduplicates spark bam output to cram when running bamqc and/or deeptools
-    BAM_TO_CRAM(Channel.empty(), cram_markduplicates, fasta, fasta_fai, intervals_combined_bed_gz_tbi)
+    BAM_TO_CRAM(Channel.empty(), cram_markduplicates, fasta, fasta_fai, intervals_combined_bed_gz_tbi, intervals_bed_combined)
 
     // When running Marduplicates spark, and saving reports
     GATK4_ESTIMATELIBRARYCOMPLEXITY(bam, fasta, fasta_fai, dict)

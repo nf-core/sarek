@@ -459,7 +459,8 @@ workflow SAREK {
                 ch_input_cram_indexed,
                 fasta,
                 fasta_fai,
-                intervals_for_preprocessing)
+                intervals_for_preprocessing,
+                intervals_bed_combined)
 
             ch_cram_no_markduplicates_restart = Channel.empty().mix(BAM_TO_CRAM.out.cram_converted)
 
@@ -473,7 +474,8 @@ workflow SAREK {
                 dict,
                 fasta,
                 fasta_fai,
-                intervals_for_preprocessing)
+                intervals_for_preprocessing,
+                intervals_bed_combined)
             ch_cram_markduplicates_spark = MARKDUPLICATES_SPARK.out.cram
 
             // Gather QC reports
@@ -485,7 +487,8 @@ workflow SAREK {
             MARKDUPLICATES(ch_bam_for_markduplicates,
                 fasta,
                 fasta_fai,
-                intervals_for_preprocessing)
+                intervals_for_preprocessing,
+                intervals_bed_combined)
 
             ch_cram_markduplicates_no_spark = MARKDUPLICATES.out.cram
 
@@ -653,7 +656,8 @@ workflow SAREK {
             CRAM_QC(cram_variant_calling,
                 fasta,
                 fasta_fai,
-                intervals_for_preprocessing)
+                intervals_for_preprocessing,
+                intervals_bed_combined)
 
             // Create CSV to restart from this step
             RECALIBRATE_CSV(cram_variant_calling)

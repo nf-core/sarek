@@ -22,6 +22,7 @@ run_modules:
   - picard
   - samtools
   - qualimap
+  - mosdepth
   - gatk
   - bcftools
   - vcftools
@@ -46,6 +47,8 @@ module_order:
       name: "Samtools Flagstat"
   - qualimap:
       name: "Qualimap"
+  - mosdepth:
+      name: "Mosdepth"
   - gatk:
       name: "GATK4 BQSR"
   - bcftools:
