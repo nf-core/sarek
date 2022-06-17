@@ -42,6 +42,7 @@ jobs:
           - "haplotypecaller"
           - "manta"
           - "markduplicates"
+          - "mpileup"
           - "msisensorpro"
           - "mutect2"
           - "prepare_recalibration"

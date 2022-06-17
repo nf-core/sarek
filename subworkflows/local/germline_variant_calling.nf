@@ -7,6 +7,7 @@ include { RUN_DEEPVARIANT     } from '../nf-core/variantcalling/deepvariant/main
 include { RUN_FREEBAYES       } from '../nf-core/variantcalling/freebayes/main.nf'
 include { RUN_HAPLOTYPECALLER } from '../nf-core/variantcalling/haplotypecaller/main.nf'
 include { RUN_MANTA_GERMLINE  } from '../nf-core/variantcalling/manta/germline/main.nf'
+include { RUN_MPILEUP         } from '../nf-core/variantcalling/mpileup/main'
 include { RUN_STRELKA_SINGLE  } from '../nf-core/variantcalling/strelka/single/main.nf'
 include { RUN_TIDDIT          } from '../nf-core/variantcalling/tiddit/main.nf'
 
@@ -39,6 +40,7 @@ workflow GERMLINE_VARIANT_CALLING {
     manta_vcf           = Channel.empty()
     strelka_vcf         = Channel.empty()
     tiddit_vcf          = Channel.empty()
+    mpileup             = Channel.empty()
 
     // Remap channel with intervals
     cram_recalibrated_intervals = cram_recalibrated.combine(intervals)
@@ -62,6 +64,18 @@ workflow GERMLINE_VARIANT_CALLING {
             [[patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:meta.sample, data_type:meta.data_type, num_intervals:num_intervals],
             cram, crai, bed_new, tbi_new]
         }
+
+    if(params.tools.contains('mpileup')){
+        cram_intervals_no_index = cram_recalibrated_intervals
+            .map { meta, cram, crai, intervals ->
+                [meta, cram, intervals]
+            }
+
+        RUN_MPILEUP(cram_intervals_no_index,
+                        fasta)
+        mpileup_germline = RUN_MPILEUP.out.mpileup
+        ch_versions = ch_versions.mix(RUN_MPILEUP.out.versions)
+    }
 
     // CNVKIT
 

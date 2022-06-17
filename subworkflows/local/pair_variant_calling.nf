@@ -8,6 +8,8 @@ include { RUN_FREEBAYES as RUN_FREEBAYES_SOMATIC    } from '../nf-core/variantca
 include { RUN_MANTA_SOMATIC                         } from '../nf-core/variantcalling/manta/somatic/main.nf'
 include { RUN_STRELKA_SOMATIC                       } from '../nf-core/variantcalling/strelka/somatic/main.nf'
 include { RUN_CNVKIT_SOMATIC                        } from '../nf-core/variantcalling/cnvkit/somatic/main.nf'
+include { RUN_MPILEUP as RUN_MPILEUP_NORMAL         } from '../nf-core/variantcalling/mpileup/main'
+include { RUN_MPILEUP as RUN_MPILEUP_TUMOR          } from '../nf-core/variantcalling/mpileup/main'
 
 workflow PAIR_VARIANT_CALLING {
     take:
@@ -73,9 +75,18 @@ workflow PAIR_VARIANT_CALLING {
                     .map {meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals ->
                             [meta, tumor_cram, intervals]
                         }
+        RUN_MPILEUP_NORMAL(cram_normal_intervals_no_index, fasta)
+        mpileup_normal = RUN_MPILEUP_NORMAL.out.mpileup
+        RUN_MPILEUP_TUMOR(cram_tumor_intervals_no_index, fasta)
+        mpileup_tumor = RUN_MPILEUP_TUMOR.out.mpileup
+        ch_versions = ch_versions.mix(RUN_MPILEUP_NORMAL.out.versions)
+        ch_versions = ch_versions.mix(RUN_MPILEUP_TUMOR.out.versions)
 
-        RUN_CONTROLFREEC_SOMATIC(cram_normal_intervals_no_index,
-                        cram_tumor_intervals_no_index,
+        controlfreec_input = mpileup_normal.cross(mpileup_tumor)
+        .map{ normal, tumor ->
+            [normal[0], normal[1], tumor[1], [], [], [], []]
+        }
+        RUN_CONTROLFREEC_SOMATIC(controlfreec_input,
                         fasta,
                         fasta_fai,
                         dbsnp,

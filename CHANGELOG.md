@@ -57,11 +57,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#551](https://github.com/nf-core/sarek/pull/551) - Sync `TEMPLATE` with `tools` `2.4`
 - [#562](https://github.com/nf-core/sarek/pull/562) - Restart from `--step annotate` is now also requiring a CSV file.
 - [#563](https://github.com/nf-core/sarek/pull/563) - Updated subway map
+- [#570](https://github.com/nf-core/sarek/pull/570) - Extract mpileup into its own subworkflow; zip mpileup files
 - [#571](https://github.com/nf-core/sarek/pull/571) - Including and using GATK4's mergeVcfs
 - [#572](https://github.com/nf-core/sarek/pull/572) - Adjusted subway map svg for firefox compatibility
 - [#578](https://github.com/nf-core/sarek/pull/578) - Updated module deeptools/bamcoverage
 - [#585](https://github.com/nf-core/sarek/pull/585) - Remove explicit BAM to CRAM conversion after MarkduplicatesSpark; tool does it internally
 - [#581](https://github.com/nf-core/sarek/pull/581) - `TIDDIT` is updated to `3.1.0`
+- [#593](https://github.com/nf-core/sarek/pull/593) - update `ensembl-vep` cache version and module
 
 ### Fixed
 
