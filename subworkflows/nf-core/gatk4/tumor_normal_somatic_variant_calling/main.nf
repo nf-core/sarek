@@ -114,7 +114,7 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
         normal: [ meta, input_list[0], input_index_list[0], intervals ]
     }
 
-    germline_resource_pileup = germline_resource ?: Channel.empty()
+    germline_resource_pileup = germline_resource_tbi ? germline_resource : Channel.empty()
     germline_resource_pileup_tbi = germline_resource_tbi ?: Channel.empty()
     GETPILEUPSUMMARIES_TUMOR ( pileup.tumor.map{
                                     meta, cram, crai, intervals ->

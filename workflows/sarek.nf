@@ -261,9 +261,9 @@ workflow SAREK {
     dragmap                = params.fasta                   ? params.dragmap               ? Channel.fromPath(params.dragmap).collect()               : PREPARE_GENOME.out.hashtable             : []
     dict                   = params.fasta                   ? params.dict                  ? Channel.fromPath(params.dict).collect()                  : PREPARE_GENOME.out.dict                  : []
     fasta_fai              = params.fasta                   ? params.fasta_fai             ? Channel.fromPath(params.fasta_fai).collect()             : PREPARE_GENOME.out.fasta_fai             : []
-    dbsnp_tbi              = params.dbsnp                   ? params.dbsnp_tbi             ? Channel.fromPath(params.dbsnp_tbi).collect()             : PREPARE_GENOME.out.dbsnp_tbi             : []
+    dbsnp_tbi              = params.dbsnp                   ? params.dbsnp_tbi             ? Channel.fromPath(params.dbsnp_tbi).collect()             : PREPARE_GENOME.out.dbsnp_tbi             : Channel.value([])
     germline_resource_tbi  = params.germline_resource       ? params.germline_resource_tbi ? Channel.fromPath(params.germline_resource_tbi).collect() : PREPARE_GENOME.out.germline_resource_tbi : []
-    known_indels_tbi       = params.known_indels            ? params.known_indels_tbi      ? Channel.fromPath(params.known_indels_tbi).collect()      : PREPARE_GENOME.out.known_indels_tbi      : []
+    known_indels_tbi       = params.known_indels            ? params.known_indels_tbi      ? Channel.fromPath(params.known_indels_tbi).collect()      : PREPARE_GENOME.out.known_indels_tbi      : Channel.value([])
     pon_tbi                = params.pon                     ? params.pon_tbi               ? Channel.fromPath(params.pon_tbi).collect()               : PREPARE_GENOME.out.pon_tbi               : []
     msisensorpro_scan      = PREPARE_GENOME.out.msisensorpro_scan
 
@@ -274,8 +274,9 @@ workflow SAREK {
 
     // known_sites is made by grouping both the dbsnp and the known indels ressources
     // Which can either or both be optional
-    known_sites     = dbsnp.concat(known_indels).collect() //dbsnp && known_indels ? dbsnp.concat(known_indels).collect() : dbsnp && !known_indels ? dbsnp : ( !dbsnp && known_indels ? known_indels : Channel.empty() )
-    known_sites_tbi = dbsnp_tbi.concat(known_indels_tbi).collect()//dbsnp_tbi && known_indels_tbi ? dbsnp_tbi.concat(known_indels_tbi).collect() : dbsnp_tbi && !known_indels_tbi ? dbsnp_tbi : ( !dbsnp_tbi && known_indels_tbi ? known_indels_tbi : Channel.empty() )
+    known_sites     = dbsnp.concat(known_indels).collect()
+    known_sites_tbi = dbsnp_tbi.concat(known_indels_tbi).collect()
+
     // Build intervals if needed
     PREPARE_INTERVALS(fasta_fai)
 
