@@ -907,11 +907,11 @@ def extract_csv(csv_file) {
 
     // check that the sample sheet is not 1 line or less, because it'll skip all subsequent checks if so.
     new File(csv_file.toString()).withReader('UTF-8') { reader ->
-      def line, noOfLinesInSampleSheet = 0;
+      def line, numberOfLinesInSampleSheet = 0;
       while ((line = reader.readLine()) != null) {
-        noOfLinesInSampleSheet++
+        numberOfLinesInSampleSheet++
       }
-      if( noOfLinesInSampleSheet < 2){
+      if( numberOfLinesInSampleSheet < 2){
         log.error "Sample sheet had less than two lines. The sample sheet must be a csv file with a header, so at least two lines."
         System.exit(1)
       }
