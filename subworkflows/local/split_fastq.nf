@@ -15,20 +15,20 @@ workflow SPLIT_FASTQ {
     ch_versions = Channel.empty()
 
     // Only if we want to split fastq files
-    SEQKIT_SPLIT2(reads_input)
+    //SEQKIT_SPLIT2(reads_input)
 
     // Remapping the channel
-    reads = SEQKIT_SPLIT2.out.reads.map{ key, reads ->
-        //TODO maybe this can be replaced by a regex to include part_001 etc.
+    reads = reads_input.map{ key, reads ->
         //sorts list of split fq files by :
-        //[R1.part_001, R2.part_001, R1.part_002, R2.part_002,R1.part_003, R2.part_003,...]
-        //TODO: determine whether it is possible to have an uneven number of parts, so remainder: true woud need to be used, I guess this could be possible for unfiltered reads, reads that don't have pairs etc.
-        read_files = reads.sort{ a,b -> a.getName().tokenize('.')[ a.getName().tokenize('.').size() - 3] <=> b.getName().tokenize('.')[ b.getName().tokenize('.').size() - 3]}.collate(2)
+        //[0001.Read_1.trim.fastq.gz,0001.Read_2.trim.fastq.gz,0002.Read_1.trim.fastq.gz,0002.Read_2.trim.fastq.gz]
+        // 1. Get element until first . -> 0001
+        // 2. sort by it: 0001_Read1, 0001_Read2, 0002_Read2, 0002_Read1 etc
+        // 3. Collate two elements together: [0001_Read1, 0001_Read2], [0002_Read2, 0002_Read1]
+        read_files = reads.sort{ a,b -> a.getName().tokenize('.')[0] <=> b.getName().tokenize('.')[0]}.collate(2)
         [[patient: key.patient, sample:key.sample, gender:key.gender, status:key.status, id:key.id, numLanes:key.numLanes, read_group:key.read_group, data_type:key.data_type, size:read_files.size()],
         read_files]
     }.transpose()
-
-    ch_versions = ch_versions.mix(SEQKIT_SPLIT2.out.versions)
+    //ch_versions = ch_versions.mix(SEQKIT_SPLIT2.out.versions)
 
     emit:
         reads    = reads

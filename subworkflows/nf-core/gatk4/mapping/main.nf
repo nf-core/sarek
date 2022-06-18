@@ -20,6 +20,7 @@ workflow GATK4_MAPPING {
     ch_reports  = Channel.empty()
 
     // Only one of the following should be run
+    ch_reads.view()
     BWAMEM1_MEM(ch_reads,   ch_map_index, sort) // If aligner is bwa-mem
     BWAMEM2_MEM(ch_reads,   ch_map_index, sort) // If aligner is bwa-mem2
     DRAGMAP_ALIGN(ch_reads, ch_map_index, sort) // If aligner is dragmap
