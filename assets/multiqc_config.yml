@@ -19,6 +19,7 @@ run_modules:
   - custom_content
   - fastqc
   - cutadapt
+  - fastp
   - picard
   - samtools
   - qualimap
@@ -40,6 +41,8 @@ module_order:
       name: "FastQC (trimmed)"
       path_filters:
         - "*_val_*.zip"
+  - fastp:
+      name: "FastP (before and after trimming?)"
   - picard:
       name: "GATK4 MarkDuplicates"
       info: " metrics generated either by GATK4 MarkDuplicates or EstimateLibraryComplexity (with --use_gatk_spark)."

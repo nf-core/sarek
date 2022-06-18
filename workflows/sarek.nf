@@ -53,7 +53,7 @@ for (param in checkPathParamList) if (param) file(param, checkIfExists: true)
 ch_input_sample = extract_csv(file(params.input, checkIfExists: true))
 
 if (params.wes) {
-    if (params.intervals && !params.intervals.endsWith("bed")) exit 1, "Target file must be in BED format"
+    if (params.intervals && !params.intervals.endsWith("bed")) exit 1, "Target file specified with `--intervals` must be in BED format"
 } else {
     if (params.intervals && !params.intervals.endsWith("bed") && !params.intervals.endsWith("interval_list")) exit 1, "Interval file must end with .bed or .interval_list"
 }
@@ -148,7 +148,7 @@ include { RUN_FASTQC                                           } from '../subwor
 
 // Run TRIMGALORE
 include { RUN_TRIMGALORE                                       } from '../subworkflows/nf-core/run_trimgalore'
-
+include { FASTP                                                } from '../modules/nf-core/modules/fastp/main'
 // Create umi consensus bams from fastq
 include { CREATE_UMI_CONSENSUS                                 } from '../subworkflows/nf-core/fgbio_create_umi_consensus/main'
 
@@ -267,13 +267,17 @@ workflow SAREK {
     PREPARE_INTERVALS(fasta_fai)
 
     // Intervals for speed up preprocessing/variant calling by spread/gather
-    intervals_bed_combined        = (params.intervals && params.wes) ? Channel.fromPath(params.intervals).collect() : []
+    // this is not good, we need the combined bed for some tools that don't support scatter/gather. Why would we not use the same intervals for WGS?
+    // intervals_bed_combined        = (params.intervals && params.wes) ? Channel.fromPath(params.intervals).collect() : []
+    // check if this actually still works if interval_list format
+    intervals_bed_combined        = params.intervals ? Channel.fromPath(params.intervals).collect() : []
+    //TODO: intervals also with WGS data? Probably need a parameter if WGS for deepvariant tool, that would allow to check here too
+    intervals_for_preprocessing              = (params.wes && params.intervals) ? intervals_bed_combined : []
 
     intervals                     = PREPARE_INTERVALS.out.intervals_bed        // [interval, num_intervals] multiple interval.bed files, divided by useful intervals for scatter/gather
     intervals_bed_gz_tbi          = PREPARE_INTERVALS.out.intervals_bed_gz_tbi // [interval_bed, tbi, num_intervals] multiple interval.bed.gz/.tbi files, divided by useful intervals for scatter/gather
 
-    //TODO: intervals also with WGS data? Probably need a parameter if WGS for deepvariant tool, that would allow to check here too
-    intervals_for_preprocessing   = (params.wes && !params.no_intervals) ? intervals_bed_combined : []
+
 
     // Gather used softwares versions
     ch_versions = ch_versions.mix(PREPARE_GENOME.out.versions)
@@ -312,51 +316,49 @@ workflow SAREK {
         }
 
         // Trimming
-        if (params.trim_fastq) {
-            RUN_TRIMGALORE(ch_input_fastq)
+        if (params.trim_fastq || params.split_fastq > 1) {
+            FASTP(ch_input_fastq, false, false)
 
-            ch_reads = RUN_TRIMGALORE.out.reads
+            ch_reports = ch_reports.mix(FASTP.out.json.collect{it[1]}.ifEmpty([]),FASTP.out.html.collect{it[1]}.ifEmpty([]))
 
-            ch_reports  = ch_reports.mix(RUN_TRIMGALORE.out.trim_html.collect{it[1]}.ifEmpty([]))
-            ch_reports  = ch_reports.mix(RUN_TRIMGALORE.out.trim_log.collect{it[1]}.ifEmpty([]))
-            ch_reports  = ch_reports.mix(RUN_TRIMGALORE.out.trim_zip.collect{it[1]}.ifEmpty([]))
+            ch_reads_to_sort = FASTP.out.reads
 
-            ch_versions = ch_versions.mix(RUN_TRIMGALORE.out.versions)
+            ch_versions = ch_versions.mix(FASTP.out.versions)
         } else {
-            ch_reads = ch_input_fastq
+            ch_reads_to_map = ch_input_fastq
         }
 
         // UMI consensus calling
-        if (params.umi_read_structure) {
-            CREATE_UMI_CONSENSUS(ch_reads,
-                fasta,
-                ch_map_index,
-                umi_read_structure,
-                params.group_by_umi_strategy)
+        // if (params.umi_read_structure) {
+        //     CREATE_UMI_CONSENSUS(ch_reads,
+        //         fasta,
+        //         ch_map_index,
+        //         umi_read_structure,
+        //         params.group_by_umi_strategy)
 
-            // convert back to fastq for further preprocessing
-            ALIGNMENT_TO_FASTQ_UMI(CREATE_UMI_CONSENSUS.out.consensusbam, [])
+        //     // convert back to fastq for further preprocessing
+        //     ALIGNMENT_TO_FASTQ_UMI(CREATE_UMI_CONSENSUS.out.consensusbam, [])
 
-            ch_input_sample_to_split = ALIGNMENT_TO_FASTQ_UMI.out.reads
+        //     ch_input_sample_to_split = ALIGNMENT_TO_FASTQ_UMI.out.reads
 
-            // Gather used softwares versions
-            ch_versions = ch_versions.mix(ALIGNMENT_TO_FASTQ_UMI.out.versions)
-            ch_versions = ch_versions.mix(CREATE_UMI_CONSENSUS.out.versions)
-        } else {
-            ch_input_sample_to_split = ch_reads
-        }
+        //     // Gather used softwares versions
+        //     ch_versions = ch_versions.mix(ALIGNMENT_TO_FASTQ_UMI.out.versions)
+        //     ch_versions = ch_versions.mix(CREATE_UMI_CONSENSUS.out.versions)
+        // } else {
+        //     ch_input_sample_to_split = ch_reads
+        // }
 
         // SPLIT OF FASTQ FILES WITH SEQKIT_SPLIT2
-        if (params.split_fastq > 1) {
-            SPLIT_FASTQ(ch_input_sample_to_split)
+        // if (params.split_fastq > 1) {
+        SPLIT_FASTQ(ch_reads_to_sort)
 
-            ch_reads_to_map = SPLIT_FASTQ.out.reads
+        ch_reads_to_map = SPLIT_FASTQ.out.reads
 
-            // Gather used softwares versions
-            ch_versions = ch_versions.mix(SPLIT_FASTQ.out.versions)
-        } else {
-            ch_reads_to_map = ch_input_sample_to_split
-        }
+        //     // Gather used softwares versions
+        //     ch_versions = ch_versions.mix(SPLIT_FASTQ.out.versions)
+        // } else {
+        //     ch_reads_to_map = ch_input_sample_to_split
+        // }
 
         // STEP 1: MAPPING READS TO REFERENCE GENOME
         // reads will be sorted
@@ -459,8 +461,7 @@ workflow SAREK {
                 ch_input_cram_indexed,
                 fasta,
                 fasta_fai,
-                intervals_for_preprocessing,
-                intervals_bed_combined)
+                intervals_for_preprocessing)
 
             ch_cram_no_markduplicates_restart = Channel.empty().mix(BAM_TO_CRAM.out.cram_converted)
 
@@ -474,8 +475,7 @@ workflow SAREK {
                 dict,
                 fasta,
                 fasta_fai,
-                intervals_for_preprocessing,
-                intervals_bed_combined)
+                intervals_for_preprocessing)
             ch_cram_markduplicates_spark = MARKDUPLICATES_SPARK.out.cram
 
             // Gather QC reports
@@ -487,8 +487,7 @@ workflow SAREK {
             MARKDUPLICATES(ch_bam_for_markduplicates,
                 fasta,
                 fasta_fai,
-                intervals_for_preprocessing,
-                intervals_bed_combined)
+                intervals_for_preprocessing)
 
             ch_cram_markduplicates_no_spark = MARKDUPLICATES.out.cram
 
@@ -656,8 +655,7 @@ workflow SAREK {
             CRAM_QC(cram_variant_calling,
                 fasta,
                 fasta_fai,
-                intervals_for_preprocessing,
-                intervals_bed_combined)
+                intervals_for_preprocessing)
 
             // Create CSV to restart from this step
             RECALIBRATE_CSV(cram_variant_calling)
