@@ -316,49 +316,60 @@ workflow SAREK {
         }
 
         // Trimming
-        if (params.trim_fastq || params.split_fastq > 1) {
+        if (params.trim_fastq || params.split_fastq > 0) {
             FASTP(ch_input_fastq, false, false)
 
             ch_reports = ch_reports.mix(FASTP.out.json.collect{it[1]}.ifEmpty([]),FASTP.out.html.collect{it[1]}.ifEmpty([]))
 
-            ch_reads_to_sort = FASTP.out.reads
+            ch_reads = FASTP.out.reads
 
             ch_versions = ch_versions.mix(FASTP.out.versions)
         } else {
-            ch_reads_to_map = ch_input_fastq
+            ch_reads = ch_input_fastq
         }
 
         // UMI consensus calling
-        // if (params.umi_read_structure) {
-        //     CREATE_UMI_CONSENSUS(ch_reads,
-        //         fasta,
-        //         ch_map_index,
-        //         umi_read_structure,
-        //         params.group_by_umi_strategy)
+        if (params.umi_read_structure) {
+            CREATE_UMI_CONSENSUS(ch_reads,
+                fasta,
+                ch_map_index,
+                umi_read_structure,
+                params.group_by_umi_strategy)
 
-        //     // convert back to fastq for further preprocessing
-        //     ALIGNMENT_TO_FASTQ_UMI(CREATE_UMI_CONSENSUS.out.consensusbam, [])
+            // convert back to fastq for further preprocessing
+            ALIGNMENT_TO_FASTQ_UMI(CREATE_UMI_CONSENSUS.out.consensusbam, [])
 
-        //     ch_input_sample_to_split = ALIGNMENT_TO_FASTQ_UMI.out.reads
+            ch_input_sample_to_split = ALIGNMENT_TO_FASTQ_UMI.out.reads
 
-        //     // Gather used softwares versions
-        //     ch_versions = ch_versions.mix(ALIGNMENT_TO_FASTQ_UMI.out.versions)
-        //     ch_versions = ch_versions.mix(CREATE_UMI_CONSENSUS.out.versions)
-        // } else {
-        //     ch_input_sample_to_split = ch_reads
-        // }
+            // Gather used softwares versions
+            ch_versions = ch_versions.mix(ALIGNMENT_TO_FASTQ_UMI.out.versions)
+            ch_versions = ch_versions.mix(CREATE_UMI_CONSENSUS.out.versions)
+        } else {
+            ch_input_sample_to_split = ch_reads
+        }
 
         // SPLIT OF FASTQ FILES WITH SEQKIT_SPLIT2
         // if (params.split_fastq > 1) {
-        SPLIT_FASTQ(ch_reads_to_sort)
+        //     SPLIT_FASTQ(FASTP.out.reads)
 
-        ch_reads_to_map = SPLIT_FASTQ.out.reads
+        //     ch_reads_to_map = SPLIT_FASTQ.out.reads
 
         //     // Gather used softwares versions
         //     ch_versions = ch_versions.mix(SPLIT_FASTQ.out.versions)
         // } else {
         //     ch_reads_to_map = ch_input_sample_to_split
         // }
+
+        ch_reads_to_map = FASTP.out.reads.map{ key, reads ->
+                        //TODO maybe this can be replaced by a regex to include part_001 etc.
+                        //sorts list of split fq files by :
+                        //[R1.part_001, R2.part_001, R1.part_002, R2.part_002,R1.part_003, R2.part_003,...]
+                        //TODO: determine whether it is possible to have an uneven number of parts, so remainder: true woud need to be used, I guess this could be possible for unfiltered reads, reads that don't have pairs etc.
+                        println reads[0].getName().tokenize('.')[0]
+                        read_files = reads.sort{ a,b -> a.getName().tokenize('.')[0] <=> b.getName().tokenize('.')[0] }.collate(2)
+                        [[patient: key.patient, sample:key.sample, gender:key.gender, status:key.status, id:key.id, numLanes:key.numLanes, read_group:key.read_group, data_type:key.data_type, size:read_files.size()],
+                        read_files]
+                    }.transpose()
 
         // STEP 1: MAPPING READS TO REFERENCE GENOME
         // reads will be sorted
@@ -369,7 +380,7 @@ workflow SAREK {
             [[patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:new_id, numLanes:meta.numLanes, read_group:meta.read_group, data_type:meta.data_type, size:meta.size],
             reads]
         }
-
+        ch_reads_to_map.view()
         GATK4_MAPPING(ch_reads_to_map, ch_map_index, true)
 
         // Grouping the bams from the same samples not to stall the workflow
