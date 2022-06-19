@@ -140,15 +140,15 @@ include { PREPARE_INTERVALS                                    } from '../subwor
 include { ALIGNMENT_TO_FASTQ as ALIGNMENT_TO_FASTQ_INPUT       } from '../subworkflows/nf-core/alignment_to_fastq'
 include { ALIGNMENT_TO_FASTQ as ALIGNMENT_TO_FASTQ_UMI         } from '../subworkflows/nf-core/alignment_to_fastq'
 
-// Split FASTQ files
+// Map FASTQ files
 include { SPLIT_FASTQ                                          } from '../subworkflows/local/split_fastq'
 
 // Run FASTQC
 include { RUN_FASTQC                                           } from '../subworkflows/nf-core/run_fastqc'
 
-// Run TRIMGALORE
-include { RUN_TRIMGALORE                                       } from '../subworkflows/nf-core/run_trimgalore'
+// TRIM/SPLIT FASTQ Files
 include { FASTP                                                } from '../modules/nf-core/modules/fastp/main'
+
 // Create umi consensus bams from fastq
 include { CREATE_UMI_CONSENSUS                                 } from '../subworkflows/nf-core/fgbio_create_umi_consensus/main'
 

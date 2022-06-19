@@ -3,7 +3,7 @@
   tags:
     - split_fastq
   files:
-    - path: results/read_preprocessing/test-test_L1/0001.test-test_L1_1.trim.fastq.gz
-    - path: results/read_preprocessing/test-test_L1/0001.test-test_L1_2.trim.fastq.gz
-    - path: results/read_preprocessing/test-test_L1/0002.test-test_L1_1.trim.fastq.gz
-    - path: results/read_preprocessing/test-test_L1/0002.test-test_L1_2.trim.fastq.gz
+    - path: results/preprocessing/test/fastp/0001.test-test_L1_1.trim.fastq.gz
+    - path: results/preprocessing/test/fastp/0001.test-test_L1_2.trim.fastq.gz
+    - path: results/preprocessing/test/fastp/0002.test-test_L1_1.trim.fastq.gz
+    - path: results/preprocessing/test/fastp/0002.test-test_L1_2.trim.fastq.gz

@@ -24,7 +24,7 @@ workflow CRAM_QC {
 
     // Gather all reports generated
     qc_reports = qc_reports.mix(SAMTOOLS_STATS.out.stats)
-    qc_reports = qc_reports.mix(MMOSDEPTH.out.global_txt,
+    qc_reports = qc_reports.mix(MOSDEPTH.out.global_txt,
                                 MOSDEPTH.out.summary_txt,
                                 MOSDEPTH.out.per_base_bed,
                                 MOSDEPTH.out.regions_bed)
