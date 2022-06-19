@@ -24,7 +24,6 @@ process BWA_MEM {
     def args2 = task.ext.args2 ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     def samtools_command = sort_bam ? 'sort' : 'view'
-    println "${reads}"
     """
     INDEX=`find -L ./ -name "*.amb" | sed 's/.amb//'`
 
