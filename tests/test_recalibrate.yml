@@ -8,7 +8,10 @@
     - path: results/multiqc
     - path: results/preprocessing/test/recalibrated/test.recal.cram
     - path: results/preprocessing/test/recalibrated/test.recal.cram.crai
-    - path: results/reports/qualimap/test/test.recal
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
     - path: results/reports/samtools_stats/test/test.recal.cram.stats
     - path: results/csv/recalibrated.csv
     - path: results/variant_calling/test/strelka/test.genome.vcf.gz
@@ -26,7 +29,10 @@
     - path: results/multiqc
     - path: results/preprocessing/test/recalibrated/test.recal.cram
     - path: results/preprocessing/test/recalibrated/test.recal.cram.crai
-    - path: results/reports/qualimap/test/test.recal
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
     - path: results/reports/samtools_stats/test/test.recal.cram.stats
     - path: results/csv/recalibrated.csv
     - path: results/variant_calling/test/strelka/test.genome.vcf.gz
@@ -52,7 +58,13 @@
       should_exist: false
     - path: results/csv/recalibrated.csv
       should_exist: false
-    - path: results/reports/qualimap/test/test.recal
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+      should_exist: false
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+      should_exist: false
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+      should_exist: false
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
       should_exist: false
     - path: results/reports/samtools_stats/test/test.recal.cram.stats
       should_exist: false
@@ -81,7 +93,13 @@
       should_exist: false
     - path: results/csv/recalibrated.csv
       should_exist: false
-    - path: results/reports/qualimap/test/test.recal
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+      should_exist: false
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+      should_exist: false
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+      should_exist: false
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
       should_exist: false
     - path: results/reports/samtools_stats/test/test.recal.cram.stats
       should_exist: false
