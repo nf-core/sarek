@@ -94,6 +94,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#581](https://github.com/nf-core/sarek/pull/581) - `TIDDIT` is back
 - [#590](https://github.com/nf-core/sarek/pull/590) - Fix empty folders during scatter/gather
 - [#592](https://github.com/nf-core/sarek/pull/592) - Fix optional resources for Mutect2, GetPileupSummaries, and HaplotypeCaller: issue [#299](https://github.com/nf-core/sarek/issues/299), [#359](https://github.com/nf-core/sarek/issues/359), [#367](https://github.com/nf-core/sarek/issues/367)
+- [#598](https://github.com/nf-core/sarek/pull/598) - Remove WARNING message for config selector not matching
 
 ### Deprecated
 
