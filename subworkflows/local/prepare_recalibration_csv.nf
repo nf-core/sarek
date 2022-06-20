@@ -13,8 +13,10 @@ workflow PREPARE_RECALIBRATION_CSV {
             sample  = meta.sample
             gender  = meta.gender
             status  = meta.status
-            cram = "${params.outdir}/preprocessing/${sample}/markduplicates/${sample}.md.cram"
-            crai = "${params.outdir}/preprocessing/${sample}/markduplicates/${sample}.md.cram.crai"
+            suffix_aligned = params.save_output_as_bam ? "bam" : "cram"
+            suffix_index   = params.save_output_as_bam ? "bam.bai" : "cram.crai"
+            cram = "${params.outdir}/preprocessing/${sample}/markduplicates/${cram.baseName}.${suffix_aligned}"
+            crai = "${params.outdir}/preprocessing/${sample}/markduplicates/${crai.baseName.minus(".cram")}.${suffix_index}"
             table = "${params.outdir}/preprocessing/${sample}/recal_table/${sample}.recal.table"
             ["markduplicates.csv", "patient,gender,status,sample,cram,crai,table\n${patient},${gender},${status},${sample},${cram},${crai},${table}\n"]
         }
