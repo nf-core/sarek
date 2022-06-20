@@ -18,8 +18,8 @@ workflow GATK_JOINT_GERMLINE_VARIANT_CALLING {
 
     gendb_input = input.map{
         meta, gvcf, tbi ->
-            interval_file = meta.num_intervals > 1 ? []                 : params.intervals
-            interval_val  = meta.num_intervals > 1 ? meta.interval_name : []
+            interval_file = meta.num_intervals > 1 ? []      : params.intervals
+            interval_val  = meta.num_intervals > 1 ? meta.id : []
             [meta, gvcf, tbi, interval_file, interval_val, []]
         }
 
@@ -30,7 +30,7 @@ workflow GATK_JOINT_GERMLINE_VARIANT_CALLING {
     genotype_input = GATK4_GENOMICSDBIMPORT.out.genomicsdb.join(gendb_input).map{
         meta, genomicsdb, gvcf, tbi, interval_file, interval_val, wpath ->
             new_meta = meta
-            new_meta.interval_name = meta.interval_name.replaceAll(":","_")
+            new_meta.id = meta.id.replaceAll(":","_")
             [new_meta, genomicsdb, [], [], []]
         }
     ch_versions = ch_versions.mix(GATK4_GENOMICSDBIMPORT.out.versions)
@@ -39,7 +39,8 @@ workflow GATK_JOINT_GERMLINE_VARIANT_CALLING {
     //Joint genotyping performed using GenotypeGVCFs
     //
     vcfs = GATK4_GENOTYPEGVCFS ( genotype_input, fasta, fai, dict, sites, sites_index).vcf
-    merge_vcfs_input = vcfs.groupTuple()
+    merge_vcfs_input = vcfs.map { meta, vcf ->
+        [[id:"joint variant calling", num_intervals: meta.num_intervals], vcf]}.groupTuple()
 
    //
    //Merge vcfs called by interval into a single VCF

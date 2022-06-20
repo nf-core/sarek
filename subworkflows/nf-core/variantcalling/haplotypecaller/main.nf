@@ -34,11 +34,10 @@ workflow RUN_HAPLOTYPECALLER {
         // group by interval
         genotype_gvcf_to_call = HAPLOTYPECALLER.out.vcf.join(HAPLOTYPECALLER.out.tbi).map{
         meta, gvcf, tbi ->
-            interval_name = meta.num_intervals > 1 ? (gvcf.simpleName - "${meta.id}_").replaceFirst("_",":") : meta.id
-            new_meta = [id: "joint_germline", interval_name: interval_name, num_intervals: meta.num_intervals]
+            interval_name = meta.num_intervals > 1 ? (gvcf.simpleName - "${meta.id}_").replaceFirst("_",":") : file(params.intervals).simpleName
+            new_meta = [id: interval_name, num_intervals: meta.num_intervals]
             [new_meta, gvcf, tbi]
         }.groupTuple()
-        genotype_gvcf_to_call.view()
 
         genotype_vcf = GATK_JOINT_GERMLINE_VARIANT_CALLING(
              genotype_gvcf_to_call,
