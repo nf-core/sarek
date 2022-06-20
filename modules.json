@@ -9,6 +9,9 @@
             "bcftools/stats": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
+            "biobambam/bamsormadup": {
+                "git_sha": "dc95e67e153ad937b869d90229333c0654628912"
+            },
             "bwa/index": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },

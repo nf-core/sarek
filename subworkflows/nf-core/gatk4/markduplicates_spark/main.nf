@@ -8,6 +8,7 @@ include { GATK4_ESTIMATELIBRARYCOMPLEXITY        } from '../../../../modules/nf-
 include { GATK4_MARKDUPLICATES_SPARK             } from '../../../../modules/nf-core/modules/gatk4/markduplicatesspark/main'
 include { SAMTOOLS_INDEX as INDEX_MARKDUPLICATES } from '../../../../modules/nf-core/modules/samtools/index/main'
 include { BAM_TO_CRAM                            } from '../../bam_to_cram'
+include { BIOBAMBAM_BAMSORMADUP } from '../../../../modules/nf-core/modules/biobambam/bamsormadup/main'
 
 workflow MARKDUPLICATES_SPARK {
     take:
@@ -23,28 +24,29 @@ workflow MARKDUPLICATES_SPARK {
 
     // Run Markupduplicates spark
     // When running bamqc and/or deeptools output is bam, else cram
-    GATK4_MARKDUPLICATES_SPARK(bam, fasta, fasta_fai, dict)
-    INDEX_MARKDUPLICATES(GATK4_MARKDUPLICATES_SPARK.out.output)
+    //GATK4_MARKDUPLICATES_SPARK(bam, fasta, fasta_fai, dict)
+    BIOBAMBAM_BAMSORMADUP(bam, fasta)
+    INDEX_MARKDUPLICATES(BIOBAMBAM_BAMSORMADUP.out.bam)
 
-    cram_markduplicates = GATK4_MARKDUPLICATES_SPARK.out.output
+    cram_markduplicates = BIOBAMBAM_BAMSORMADUP.out.bam
         .join(INDEX_MARKDUPLICATES.out.crai)
 
     // Convert Markupduplicates spark bam output to cram when running bamqc and/or deeptools
     BAM_TO_CRAM(Channel.empty(), cram_markduplicates, fasta, fasta_fai, intervals_bed_combined)
 
     // When running Marduplicates spark, and saving reports
-    GATK4_ESTIMATELIBRARYCOMPLEXITY(bam, fasta, fasta_fai, dict)
+    //GATK4_ESTIMATELIBRARYCOMPLEXITY(bam, fasta, fasta_fai, dict)
 
     // Other reports done either with BAM_TO_CRAM subworkflow
     // or CRAM_QC subworkflow
 
     // Gather all reports generated
-    qc_reports = qc_reports.mix(GATK4_ESTIMATELIBRARYCOMPLEXITY.out.metrics)
+    qc_reports = qc_reports.mix(BIOBAMBAM_BAMSORMADUP.out.metrics)
 
     // Gather versions of all tools used
-    ch_versions = ch_versions.mix(GATK4_ESTIMATELIBRARYCOMPLEXITY.out.versions.first())
-    ch_versions = ch_versions.mix(GATK4_MARKDUPLICATES_SPARK.out.versions.first())
-    ch_versions = ch_versions.mix(INDEX_MARKDUPLICATES.out.versions.first())
+    // ch_versions = ch_versions.mix(GATK4_ESTIMATELIBRARYCOMPLEXITY.out.versions.first())
+    // ch_versions = ch_versions.mix(GATK4_MARKDUPLICATES_SPARK.out.versions.first())
+    // ch_versions = ch_versions.mix(INDEX_MARKDUPLICATES.out.versions.first())
     ch_versions = ch_versions.mix(BAM_TO_CRAM.out.versions.first())
 
     emit:
