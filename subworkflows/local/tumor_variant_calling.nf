@@ -10,6 +10,7 @@ include { RUN_STRELKA_SINGLE                      } from '../nf-core/variantcall
 include { RUN_CONTROLFREEC_TUMORONLY              } from '../nf-core/variantcalling/controlfreec/tumoronly/main.nf'
 include { RUN_CNVKIT_TUMORONLY                    } from '../nf-core/variantcalling/cnvkit/tumoronly/main.nf'
 include { RUN_MPILEUP                             } from '../nf-core/variantcalling/mpileup/main'
+include { RUN_TIDDIT                              } from '../nf-core/variantcalling/tiddit/main.nf'
 
 workflow TUMOR_ONLY_VARIANT_CALLING {
     take:
@@ -29,6 +30,7 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
         panel_of_normals_tbi          // channel: [optional]  panel_of_normals_tbi
         chr_files
         mappability
+        bwa                           // channel: [optional] bwa
 
     main:
 
@@ -39,6 +41,7 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
     manta_vcf           = Channel.empty()
     mutect2_vcf         = Channel.empty()
     strelka_vcf         = Channel.empty()
+    tiddit_vcf          = Channel.empty()
 
     // Remap channel with intervals
     cram_recalibrated_intervals = cram_recalibrated.combine(intervals)
@@ -152,16 +155,26 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
         ch_versions = ch_versions.mix(RUN_STRELKA_SINGLE.out.versions)
     }
 
+        //TIDDIT
+    if (tools.contains('tiddit')){
+        RUN_TIDDIT(cram_recalibrated,
+                fasta,
+                bwa)
+
+        tiddit_vcf = RUN_TIDDIT.out.tiddit_vcf
+        ch_versions = ch_versions.mix(RUN_TIDDIT.out.versions)
+    }
+
 
     // if (tools.contains('tiddit')){
     // }
 
     emit:
-    versions = ch_versions
-
     freebayes_vcf
     manta_vcf
     mutect2_vcf
     strelka_vcf
+    tiddit_vcf
 
+    versions = ch_versions
 }
