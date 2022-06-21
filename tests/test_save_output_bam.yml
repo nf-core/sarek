@@ -6,7 +6,7 @@
   files:
     - path: results/multiqc
     - path: results/preprocessing/test/markduplicates/test.md.bam
-    - path: results/preprocessing/test/markduplicates/test.md.bam.bai
+    - path: results/preprocessing/test/markduplicates/test.md.bai
     - path: results/preprocessing/test/recal_table/test.recal.table
     - path: results/preprocessing/test/recalibrated/test.recal.bam
     - path: results/preprocessing/test/recalibrated/test.recal.bam.bai
