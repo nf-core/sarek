@@ -1,4 +1,3 @@
 patient,status,sample,lane,fastq_1,fastq_2
 HG002,0,HG002,1,s3://giab/data/AshkenazimTrio/HG002_NA24385_son/NIST_Illumina_2x250bps/reads/D1_S1_L001_R1_001.fastq.gz,s3://giab/data/AshkenazimTrio/HG002_NA24385_son/NIST_Illumina_2x250bps/reads/D1_S1_L001_R2_001.fastq.gz
-HCC1395,0,HCC1395-Normal,1,https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR789/001/SRR7890851/SRR7890851_1.fastq.gz,https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR789/001/SRR7890851/SRR7890851_2.fastq.gz
 HCC1395,1,HCC1395-Tumor,1,https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR789/000/SRR7890850/SRR7890850_1.fastq.gz,https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR789/000/SRR7890850/SRR7890850_2.fastq.gz
