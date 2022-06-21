@@ -5,14 +5,11 @@
     - save_output_as_bam
   files:
     - path: results/multiqc
-    - path: results/preprocessing/test/mapped/test.bam
-    - path: results/preprocessing/test/mapped/test.bam.bai
     - path: results/preprocessing/test/markduplicates/test.md.bam
     - path: results/preprocessing/test/markduplicates/test.md.bam.bai
     - path: results/preprocessing/test/recal_table/test.recal.table
     - path: results/preprocessing/test/recalibrated/test.recal.bam
     - path: results/preprocessing/test/recalibrated/test.recal.bam.bai
-    - path: results/csv/mapped.csv
     - path: results/csv/markduplicates.csv
     - path: results/csv/markduplicates_no_table.csv
     - path: results/csv/recalibrated.csv
@@ -29,14 +26,11 @@
     - save_output_as_bam
   files:
     - path: results/multiqc
-    - path: results/preprocessing/test/mapped/test.bam
-    - path: results/preprocessing/test/mapped/test.bam.bai
     - path: results/preprocessing/test/markduplicates/test.md.bam
     - path: results/preprocessing/test/markduplicates/test.md.bam.bai
     - path: results/preprocessing/test/recal_table/test.recal.table
     - path: results/preprocessing/test/recalibrated/test.recal.bam
     - path: results/preprocessing/test/recalibrated/test.recal.bam.bai
-    - path: results/csv/mapped.csv
     - path: results/csv/markduplicates.csv
     - path: results/csv/markduplicates_no_table.csv
     - path: results/csv/recalibrated.csv
