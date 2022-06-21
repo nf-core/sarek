@@ -80,6 +80,16 @@ if(!params.dbsnp && !params.known_indels){
     }
 }
 
+if (params.step == "variant_calling" && !params.tools) {
+    log.error "Please specify at least one tool when using `--step variant_calling`.\nhttps://nf-co.re/sarek/parameters#tools"
+    exit 1
+}
+
+if (params.step == "annotation" && !params.tools) {
+    log.error "Please specify at least one tool when using `--step annotation`.\nhttps://nf-co.re/sarek/parameters#tools"
+    exit 1
+}
+
 // Save AWS IGenomes file containing annotation version
 def anno_readme = params.genomes[params.genome]?.readme
 if (anno_readme && file(anno_readme).exists()) {
