@@ -1028,7 +1028,7 @@ def extract_csv(csv_file) {
 
             meta.data_type  = "cram"
 
-            if (!(params.step == 'mapping' || params.step == 'annotation')) return [meta, cram, crai, table]
+            if (!(params.step == 'mapping' || params.step == 'annotate')) return [meta, cram, crai, table]
             else {
                 log.error "Samplesheet contains cram files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
                 System.exit(1)
@@ -1043,7 +1043,7 @@ def extract_csv(csv_file) {
 
             meta.data_type  = "bam"
 
-            if (!(params.step == 'mapping' || params.step == 'annotation')) return [meta, bam, bai, table]
+            if (!(params.step == 'mapping' || params.step == 'annotate')) return [meta, bam, bai, table]
             else {
                 log.error "Samplesheet contains bam files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
                 System.exit(1)
@@ -1057,7 +1057,7 @@ def extract_csv(csv_file) {
 
             meta.data_type  = "cram"
 
-            if (!(params.step == 'mapping' || params.step == 'annotation')) return [meta, cram, crai]
+            if (!(params.step == 'mapping' || params.step == 'annotate')) return [meta, cram, crai]
             else {
                 log.error "Samplesheet contains bam files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
                 System.exit(1)
@@ -1071,7 +1071,7 @@ def extract_csv(csv_file) {
 
             meta.data_type  = "bam"
 
-            if (!(params.step == 'mapping' || params.step == 'annotation')) return [meta, bam, bai]
+            if (!(params.step == 'mapping' || params.step == 'annotate')) return [meta, bam, bai]
             else {
                 log.error "Samplesheet contains bam files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
                 System.exit(1)
@@ -1085,9 +1085,9 @@ def extract_csv(csv_file) {
             meta.data_type     = "vcf"
             meta.variantcaller = row.variantcaller ?: ""
 
-            if (params.step == 'annotation') return [meta, vcf]
+            if (params.step == 'annotate') return [meta, vcf]
             else {
-                log.error "Samplesheet contains vcf but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
+                log.error "Samplesheet contains vcf files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
                 System.exit(1)
             }
         } else {
