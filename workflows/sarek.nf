@@ -59,9 +59,24 @@ if (params.wes) {
 }
 
 if(params.tools && params.tools.contains('mutect2')){
-    if(params.no_intervals){
-        log.error "--tools mutect2 and --no_intervals cannot be used together.\nOne of the tools within the Mutect2 subworkflow requires intervals. They can be provided to the pipeline with --intervals. If none are provided, they will be generated from the FASTA file.\nFor more information on the Mutect2 workflow, see here: https://gatk.broadinstitute.org/hc/en-us/articles/360035531132--How-to-Call-somatic-mutations-using-GATK4-Mutect2.\nFor more information on GetPileupsummaries, see here: https://gatk.broadinstitute.org/hc/en-us/articles/5358860217115-GetPileupSummaries"
+    if(!params.pon){
+        log.warn("No Panel-of-normal was specified for Mutect2.\nIt is highly recommended to use one: https://gatk.broadinstitute.org/hc/en-us/articles/5358911630107-Mutect2\nFor more information on how to create one: https://gatk.broadinstitute.org/hc/en-us/articles/5358921041947-CreateSomaticPanelOfNormals-BETA-")
+    }
+    if(!params.germline_resource){
+        log.warn("If Mutect2 is specified without a germline resource, no filtering will be done.\nIt is recommended to use one: https://gatk.broadinstitute.org/hc/en-us/articles/5358911630107-Mutect2")
+    }
+    if(params.pon && params.pon.contains("/Homo_sapiens/GATK/GRCh38/Annotation/GATKBundle/1000g_pon.hg38.vcf.gz")){
+        log.warn("The default Panel-of-Normals provided by GATK is used for Mutect2.\nIt is highly recommended to generate one from normal samples that are technical similar to the tumor ones.\nFor more information: https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON-")
+    }
+}
+
+if(!params.dbsnp && !params.known_indels){
+    if(!params.skip_tools || params.skip_tools && !params.skip_tools.contains('baserecalibrator')){
+        log.error "Base quality score recalibration requires at least one resource file. Please provide at least one of `--dbsnp` or `--known_indels`\nYou can skip this step in the workflow by adding `--skip_tools baserecalibrator` to the command."
         exit 1
+    }
+    if(params.tools && params.tools.contains('haplotypecaller')){
+        log.warn "If Haplotypecaller is specified, without `--dbsnp` or `--known_indels no filtering will be done. For filtering, please provide at least one of `--dbsnp` or `--known_indels`.\nFor more information see FilterVariantTranches (single-sample, default): https://gatk.broadinstitute.org/hc/en-us/articles/5358928898971-FilterVariantTranches\nFor more information see VariantRecalibration (--joint_germline): https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator\nFor more information on GATK Best practice germline variant calling: https://gatk.broadinstitute.org/hc/en-us/articles/360035535932-Germline-short-variant-discovery-SNPs-Indels-"
     }
 }
 
@@ -79,15 +94,16 @@ if (anno_readme && file(anno_readme).exists()) {
 */
 
 // Initialize file channels based on params, defined in the params.genomes[params.genome] scope
-chr_dir            = params.chr_dir            ? Channel.fromPath(params.chr_dir).collect()                  : []
-dbsnp              = params.dbsnp              ? Channel.fromPath(params.dbsnp).collect()                    : Channel.empty()
+chr_dir            = params.chr_dir            ? Channel.fromPath(params.chr_dir).collect()                  : Channel.value([])
+dbsnp              = params.dbsnp              ? Channel.fromPath(params.dbsnp).collect()                    : Channel.value([])
 fasta              = params.fasta              ? Channel.fromPath(params.fasta).collect()                    : Channel.empty()
 fasta_fai          = params.fasta_fai          ? Channel.fromPath(params.fasta_fai).collect()                : Channel.empty()
-germline_resource  = params.germline_resource  ? Channel.fromPath(params.germline_resource).collect()        : Channel.empty()
-known_indels       = params.known_indels       ? Channel.fromPath(params.known_indels).collect()             : Channel.empty()
-loci               = params.ac_loci            ? Channel.fromPath(params.ac_loci).collect()                  : []
-loci_gc            = params.ac_loci_gc         ? Channel.fromPath(params.ac_loci_gc).collect()               : []
-mappability        = params.mappability        ? Channel.fromPath(params.mappability).collect()              : []
+germline_resource  = params.germline_resource  ? Channel.fromPath(params.germline_resource).collect()        : Channel.value([]) //Mutec2 does not require a germline resource, so set to optional input
+known_indels       = params.known_indels       ? Channel.fromPath(params.known_indels).collect()             : Channel.value([])
+loci               = params.ac_loci            ? Channel.fromPath(params.ac_loci).collect()                  : Channel.value([])
+loci_gc            = params.ac_loci_gc         ? Channel.fromPath(params.ac_loci_gc).collect()               : Channel.value([])
+mappability        = params.mappability        ? Channel.fromPath(params.mappability).collect()              : Channel.value([])
+pon                = params.pon                ? Channel.fromPath(params.pon).collect()                      : Channel.value([]) //PON is optional for Mutect2 (but highly recommended)
 
 // Initialize value channels based on params, defined in the params.genomes[params.genome] scope
 snpeff_db          = params.snpeff_db          ?: Channel.empty()
@@ -96,7 +112,6 @@ vep_genome         = params.vep_genome         ?: Channel.empty()
 vep_species        = params.vep_species        ?: Channel.empty()
 
 // Initialize files channels based on params, not defined within the params.genomes[params.genome] scope
-pon                = params.pon                ? Channel.fromPath(params.pon).collect()                      : Channel.empty()
 snpeff_cache       = params.snpeff_cache       ? Channel.fromPath(params.snpeff_cache).collect()             : []
 vep_cache          = params.vep_cache          ? Channel.fromPath(params.vep_cache).collect()                : []
 
@@ -246,9 +261,9 @@ workflow SAREK {
     dragmap                = params.fasta                   ? params.dragmap               ? Channel.fromPath(params.dragmap).collect()               : PREPARE_GENOME.out.hashtable             : []
     dict                   = params.fasta                   ? params.dict                  ? Channel.fromPath(params.dict).collect()                  : PREPARE_GENOME.out.dict                  : []
     fasta_fai              = params.fasta                   ? params.fasta_fai             ? Channel.fromPath(params.fasta_fai).collect()             : PREPARE_GENOME.out.fasta_fai             : []
-    dbsnp_tbi              = params.dbsnp                   ? params.dbsnp_tbi             ? Channel.fromPath(params.dbsnp_tbi).collect()             : PREPARE_GENOME.out.dbsnp_tbi             : Channel.empty()
+    dbsnp_tbi              = params.dbsnp                   ? params.dbsnp_tbi             ? Channel.fromPath(params.dbsnp_tbi).collect()             : PREPARE_GENOME.out.dbsnp_tbi             : Channel.value([])
     germline_resource_tbi  = params.germline_resource       ? params.germline_resource_tbi ? Channel.fromPath(params.germline_resource_tbi).collect() : PREPARE_GENOME.out.germline_resource_tbi : []
-    known_indels_tbi       = params.known_indels            ? params.known_indels_tbi      ? Channel.fromPath(params.known_indels_tbi).collect()      : PREPARE_GENOME.out.known_indels_tbi      : Channel.empty()
+    known_indels_tbi       = params.known_indels            ? params.known_indels_tbi      ? Channel.fromPath(params.known_indels_tbi).collect()      : PREPARE_GENOME.out.known_indels_tbi      : Channel.value([])
     pon_tbi                = params.pon                     ? params.pon_tbi               ? Channel.fromPath(params.pon_tbi).collect()               : PREPARE_GENOME.out.pon_tbi               : []
     msisensorpro_scan      = PREPARE_GENOME.out.msisensorpro_scan
 
@@ -259,7 +274,6 @@ workflow SAREK {
 
     // known_sites is made by grouping both the dbsnp and the known indels ressources
     // Which can either or both be optional
-    // Actually BQSR has been throwing erros if no sides were provided so it must be at least one
     known_sites     = dbsnp.concat(known_indels).collect()
     known_sites_tbi = dbsnp_tbi.concat(known_indels_tbi).collect()
 

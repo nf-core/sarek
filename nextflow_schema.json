@@ -171,11 +171,13 @@
                 "umi_read_structure": {
                     "type": "string",
                     "fa_icon": "fas fa-tape",
+                    "description": "Specify UMI read structure.",
                     "hidden": true
                 },
                 "group_by_umi_strategy": {
                     "type": "string",
                     "default": "Adjacency",
+                    "description": "Default strategy with UMI.",
                     "hidden": true
                 }
             }
