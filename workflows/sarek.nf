@@ -11,8 +11,11 @@ WorkflowSarek.initialise(params, log)
 
 // Check input path parameters to see if they exist
 def checkPathParamList = [
-    params.ac_loci,
-    params.ac_loci_gc,
+    params.ascat_alleles,
+    params.ascat_loci,
+    params.ascat_loci_gc,
+    params.ascat_loci_rt,
+    param.ascat_purity,
     params.bwa,
     params.bwamem2,
     params.chr_dir,
@@ -58,6 +61,17 @@ if (params.wes) {
     if (params.intervals && !params.intervals.endsWith("bed") && !params.intervals.endsWith("interval_list")) exit 1, "Interval file must end with .bed or .interval_list"
 }
 
+if(params.tools && params.tools.contains('ascat')){
+    if(!params.ascat_alleles){
+        log.error "No allele files were provided for running ASCAT. Please provide a zip folder with allele files."
+        exit 1
+    }
+    if(!params.ascat_loci){
+        log.error "No loci files were provided for running ASCAT. Please provide a zip folder with loci files."
+        exit 1
+    }
+}
+
 if(params.tools && params.tools.contains('mutect2')){
     if(!params.pon){
         log.warn("No Panel-of-normal was specified for Mutect2.\nIt is highly recommended to use one: https://gatk.broadinstitute.org/hc/en-us/articles/5358911630107-Mutect2\nFor more information on how to create one: https://gatk.broadinstitute.org/hc/en-us/articles/5358921041947-CreateSomaticPanelOfNormals-BETA-")
@@ -94,16 +108,18 @@ if (anno_readme && file(anno_readme).exists()) {
 */
 
 // Initialize file channels based on params, defined in the params.genomes[params.genome] scope
+allele_path        = params.ascat_alleles      ? Channel.fromPath(params.ascat_alleles).collect()
 chr_dir            = params.chr_dir            ? Channel.fromPath(params.chr_dir).collect()                  : Channel.value([])
 dbsnp              = params.dbsnp              ? Channel.fromPath(params.dbsnp).collect()                    : Channel.value([])
 fasta              = params.fasta              ? Channel.fromPath(params.fasta).collect()                    : Channel.empty()
 fasta_fai          = params.fasta_fai          ? Channel.fromPath(params.fasta_fai).collect()                : Channel.empty()
+gc_path            = params.ascat_loci_gc      ? Channel.fromPath(params.ascat_loci_gc).collect()
 germline_resource  = params.germline_resource  ? Channel.fromPath(params.germline_resource).collect()        : Channel.value([]) //Mutec2 does not require a germline resource, so set to optional input
 known_indels       = params.known_indels       ? Channel.fromPath(params.known_indels).collect()             : Channel.value([])
-loci               = params.ac_loci            ? Channel.fromPath(params.ac_loci).collect()                  : Channel.value([])
-loci_gc            = params.ac_loci_gc         ? Channel.fromPath(params.ac_loci_gc).collect()               : Channel.value([])
+loci_path          = params.ascat_loci         ? Channel.fromPath(params.ascat_loci).collect()                 : Channel.value([])             : Channel.value([])
 mappability        = params.mappability        ? Channel.fromPath(params.mappability).collect()              : Channel.value([])
-pon                = params.pon                ? Channel.fromPath(params.pon).collect()                      : Channel.value([]) //PON is optional for Mutect2 (but highly recommended)
+pon                = params.pon                ? Channel.fromPath(params.pon).collect()
+rt_path            = params.ascat_loci_rt      ? Channel.fromPath(params.ascat_loci_rt).collect()                    : Channel.value([]) //PON is optional for Mutect2 (but highly recommended)
 
 // Initialize value channels based on params, defined in the params.genomes[params.genome] scope
 snpeff_db          = params.snpeff_db          ?: Channel.empty()
@@ -824,7 +840,11 @@ workflow SAREK {
             pon,
             pon_tbi,
             chr_files,
-            mappability
+            mappability,
+            allele_path,
+            loci_path,
+            gc_path,
+            rt_path,
         )
 
         // Gather vcf files for annotation and QC

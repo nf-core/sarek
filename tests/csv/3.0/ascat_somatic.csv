@@ -1,0 +1,16 @@
+patient,gender,status,sample,cram,crai
+test3,XX,0,sample3,"/mnt/volume/ascat/HG00145.mapped.ILLUMINA.bwa.GBR.low_coverage.20120522.bam.cram","/mnt/volume/ascat/HG00145.mapped.ILLUMINA.bwa.GBR.low_coverage.20120522.bam.cram.crai"
+test3,XX,1,sample4,"/mnt/volume/ascat/HG00146.mapped.ILLUMINA.bwa.GBR.low_coverage.20120522.bam.cram","/mnt/volume/ascat/HG00146.mapped.ILLUMINA.bwa.GBR.low_coverage.20120522.bam.cram.crai"
+
+
+    allele_path  = file("/mnt/volume/repos/modules/test_ascat2/G1000_alleles_hg19.zip", checkIfExists: true)   
+    allele_files = [[ id: allele_path.BaseName ], allele_path  ]
+
+    loci_path    = file("/mnt/volume/repos/modules/test_ascat2/G1000_loci_hg19.zip", checkIfExists: true)   
+    loci_files   = [[ id: loci_path.BaseName ], loci_path  ]
+
+    gc_path      = file("/mnt/volume/repos/modules/test_ascat2/GC_G1000_hg19.zip", checkIfExists: true)   
+    gc_file      = [[ id: gc_path.BaseName ], gc_path  ]
+
+    rt_path     = file("/mnt/volume/repos/modules/test_ascat2/RT_G1000_hg19.zip", checkIfExists: true)   
+    rt_file     = [[ id: rt_path.BaseName ], rt_path  ]

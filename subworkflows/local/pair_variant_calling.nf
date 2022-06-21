@@ -10,6 +10,7 @@ include { RUN_STRELKA_SOMATIC                       } from '../nf-core/variantca
 include { RUN_CNVKIT_SOMATIC                        } from '../nf-core/variantcalling/cnvkit/somatic/main.nf'
 include { RUN_MPILEUP as RUN_MPILEUP_NORMAL         } from '../nf-core/variantcalling/mpileup/main'
 include { RUN_MPILEUP as RUN_MPILEUP_TUMOR          } from '../nf-core/variantcalling/mpileup/main'
+include { RUN_ASCAT_SOMATIC                         } from '../nf-core/variantcalling/ascat/main'
 
 workflow PAIR_VARIANT_CALLING {
     take:
@@ -30,6 +31,10 @@ workflow PAIR_VARIANT_CALLING {
         panel_of_normals_tbi          // channel: [optional]  panel_of_normals_tbi
         chr_files
         mappability
+        allele_path                   // channel: [optional]  ascat_alleles
+        loci_path                     // channel: [optional]  ascat_loci
+        gc_file                       // channel: [optional]  ascat_loci_gc
+        rt_file                       // channel: [optional]  ascat_loci_rt
 
     main:
 
@@ -64,6 +69,26 @@ workflow PAIR_VARIANT_CALLING {
             normal_cram, normal_crai, tumor_cram, tumor_crai, bed_new, tbi_new]
 
         }
+
+    if (tools.contains('ascat')){
+
+        allele_files = allele_path
+            .map{  ->
+                [meta, tumor_cram, normal_cram]
+            }
+
+
+        RUN_ASCAT_SOMATIC(cram_pair,
+                        allele_files,
+                        loci_files,
+                        gc_file,
+                        rt_file,
+                        [],
+                        fasta)
+
+        ch_versions = ch_versions.mix(RUN_ASCAT_SOMATIC.out.versions)
+
+    }
 
     if (tools.contains('controlfreec')){
         cram_normal_intervals_no_index = cram_pair_intervals
