@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#557](https://github.com/nf-core/sarek/pull/557) - Add `Haplotypecaller` single sample mode together with `CNNScoreVariants` and `FilterVariantTranches`
 - [#576](https://github.com/nf-core/sarek/pull/576) - Add modules and subworkflows for `cnvkit` germline mode
 - [#582](https://github.com/nf-core/sarek/pull/582) - Added option `--vep_out_format` for setting the format of the output-file from VEP to `json`, `tab` or `vcf` (default)
+- [#600](https://github.com/nf-core/sarek/pull/600) - Added description for UMI related params in schema
 
 ### Changed
 
@@ -65,6 +66,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#585](https://github.com/nf-core/sarek/pull/585) - Remove explicit BAM to CRAM conversion after MarkduplicatesSpark; tool does it internally
 - [#581](https://github.com/nf-core/sarek/pull/581) - `TIDDIT` is updated to `3.1.0`
 - [#593](https://github.com/nf-core/sarek/pull/593) - update `ensembl-vep` cache version and module
+- [#600](https://github.com/nf-core/sarek/pull/600) - Remove `TODO` in awsfulltest
 
 ### Fixed
 
@@ -98,6 +100,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#598](https://github.com/nf-core/sarek/pull/598) - Remove WARNING message for config selector not matching
 - [#599](https://github.com/nf-core/sarek/pull/599) - Add checks for correct data type for `params.step`
 - [#599](https://github.com/nf-core/sarek/pull/599) - Add checks for no empty `--tools` with `--step variant_calling` or `--step annotation`
+- [#600](https://github.com/nf-core/sarek/pull/600) - Remove `nf-core lint` warnings
 
 ### Deprecated
 
