@@ -918,4 +918,3 @@ First release under the `Sarek` name, from the National Park in Northern Sweden
 ## [0.8](https://github.com/SciLifeLab/Sarek/releases/tag/0.8) - 2016-11-16
 
 ## [0.1] - 2016-04-05
-
