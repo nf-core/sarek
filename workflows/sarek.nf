@@ -937,8 +937,6 @@ def extract_csv(csv_file) {
       }
     }
 
-
-
     Channel.from(csv_file).splitCsv(header: true)
         //Retrieves number of lanes by grouping together by patient and sample and counting how many entries there are for this combination
         .map{ row ->
@@ -987,57 +985,106 @@ def extract_csv(csv_file) {
             meta.data_type  = "fastq"
 
             meta.size       = 1 // default number of splitted fastq
-            return [meta, [fastq_1, fastq_2]]
+
+            if (params.step == 'mapping') return [meta, [fastq_1, fastq_2]]
+            else {
+                log.error "Samplesheet contains fastq files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
+                System.exit(1)
+            }
+
         // start from BAM
         } else if (row.lane && row.bam) {
             meta.id         = "${row.sample}-${row.lane}".toString()
             def bam         = file(row.bam,   checkIfExists: true)
             def CN          = params.seq_center ? "CN:${params.seq_center}\\t" : ''
             def read_group  = "\"@RG\\tID:${row_sample}_${row.lane}\\t${CN}PU:${row.lane}\\tSM:${row.sample}\\tLB:${row.sample}\\tPL:${params.seq_platform}\""
+
             meta.numLanes   = numLanes.toInteger()
             meta.read_group = read_group.toString()
             meta.data_type  = "bam"
+
             meta.size       = 1 // default number of splitted fastq
-            return [meta, bam]
+
+            if (params.step == 'mapping') return [meta, bam]
+            else {
+                log.error "Samplesheet contains ubam files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
+                System.exit(1)
+            }
+
         // recalibration
         } else if (row.table && row.cram) {
             meta.id   = meta.sample
             def cram  = file(row.cram,  checkIfExists: true)
             def crai  = file(row.crai,  checkIfExists: true)
             def table = file(row.table, checkIfExists: true)
+
             meta.data_type  = "cram"
-            return [meta, cram, crai, table]
+
+            if (!(params.step == 'mapping' || params.step == 'annotation')) return [meta, cram, crai, table]
+            else {
+                log.error "Samplesheet contains cram files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
+                System.exit(1)
+            }
+
         // recalibration when skipping MarkDuplicates
         } else if (row.table && row.bam) {
             meta.id   = meta.sample
             def bam   = file(row.bam,   checkIfExists: true)
             def bai   = file(row.bai,   checkIfExists: true)
             def table = file(row.table, checkIfExists: true)
+
             meta.data_type  = "bam"
-            return [meta, bam, bai, table]
+
+            if (!(params.step == 'mapping' || params.step == 'annotation')) return [meta, bam, bai, table]
+            else {
+                log.error "Samplesheet contains bam files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
+                System.exit(1)
+            }
+
         // prepare_recalibration or variant_calling
         } else if (row.cram) {
             meta.id = meta.sample
             def cram = file(row.cram, checkIfExists: true)
             def crai = file(row.crai, checkIfExists: true)
+
             meta.data_type  = "cram"
-            return [meta, cram, crai]
+
+            if (!(params.step == 'mapping' || params.step == 'annotation')) return [meta, cram, crai]
+            else {
+                log.error "Samplesheet contains bam files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
+                System.exit(1)
+            }
+
         // prepare_recalibration when skipping MarkDuplicates or `--step markduplicates`
         } else if (row.bam) {
             meta.id = meta.sample
             def bam = file(row.bam, checkIfExists: true)
             def bai = file(row.bai, checkIfExists: true)
+
             meta.data_type  = "bam"
-            return [meta, bam, bai]
+
+            if (!(params.step == 'mapping' || params.step == 'annotation')) return [meta, bam, bai]
+            else {
+                log.error "Samplesheet contains bam files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
+                System.exit(1)
+            }
+
         // annotation
         } else if (row.vcf) {
             meta.id = meta.sample
             def vcf = file(row.vcf, checkIfExists: true)
+
             meta.data_type     = "vcf"
             meta.variantcaller = row.variantcaller ?: ""
-            return [meta, vcf]
+
+            if (params.step == 'annotation') return [meta, vcf]
+            else {
+                log.error "Samplesheet contains vcf but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
+                System.exit(1)
+            }
         } else {
-            log.warn "Missing or unknown field in csv file header"
+            log.warn "Missing or unknown field in csv file header. Please check your samplesheet"
+            System.exit(1)
         }
     }
 }
