@@ -8,13 +8,15 @@ workflow MARKDUPLICATES_CSV {
 
     main:
         // Creating csv files to restart from this step
-        cram_markduplicates.collectFile(keepHeader: true, skip: 1, sort: true, storeDir: "${params.outdir}/csv") { meta, cram, crai ->
-            patient = meta.patient
-            sample  = meta.sample
-            gender  = meta.gender
-            status  = meta.status
-            cram   = "${params.outdir}/preprocessing/${sample}/markduplicates/${cram.name}"
-            crai   = "${params.outdir}/preprocessing/${sample}/markduplicates/${crai.name}"
-            ["markduplicates_no_table.csv", "patient,gender,status,sample,cram,crai\n${patient},${gender},${status},${sample},${cram},${crai}\n"]
+        cram_markduplicates.collectFile(keepHeader: true, skip: 1, sort: true, storeDir: "${params.outdir}/csv") { meta, file, index ->
+            patient        = meta.patient
+            sample         = meta.sample
+            gender         = meta.gender
+            status         = meta.status
+            suffix_aligned = params.save_output_as_bam ? "bam" : "cram"
+            suffix_index   = params.save_output_as_bam ? "bam.bai" : "cram.crai"
+            file   = "${params.outdir}/preprocessing/${sample}/markduplicates/${file.baseName}.${suffix_aligned}"
+            index   = "${params.outdir}/preprocessing/${sample}/markduplicates/${index.baseName.minus(".cram")}.${suffix_index}"
+            ["markduplicates_no_table.csv", "patient,gender,status,sample,cram,crai\n${patient},${gender},${status},${sample},${file},${index}\n"]
         }
 }
