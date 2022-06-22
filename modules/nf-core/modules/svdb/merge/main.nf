@@ -1,5 +1,5 @@
 process SVDB_MERGE {
-  //  tag "$meta.id"
+    tag "$meta.id"
     label 'process_medium'
 
     conda (params.enable_conda ? "bioconda::svdb=2.6.1" : null)
@@ -19,7 +19,6 @@ process SVDB_MERGE {
     task.ext.when == null || task.ext.when
 
     script:
-    def meta = "${meta}"
     def args   = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     def input  = "${vcfs.join(" ")}"
@@ -32,8 +31,6 @@ process SVDB_MERGE {
         }
     }
     """
-    echo $meta > /home/owacker/git/sarek/tra
-
     svdb \\
         --merge \\
         $args \\

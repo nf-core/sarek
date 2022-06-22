@@ -195,30 +195,23 @@ workflow PAIR_VARIANT_CALLING {
 
     //TIDDIT
     if (tools.contains('tiddit')){
-        cram_pair_intervals.view()
-        cram_pair.view()
-        meta = cram_pair
-            .map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals, num_intervals ->
-                meta
-            }
+        cram_pair.dump()
+        cram_meta = cram_pair
+            .map{it -> it[0]}
         cram_normal = cram_pair
-            .map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals, num_intervals ->
-                normal_cram
-            }
+            .map{it -> it[1]}
         cram_tumor = cram_pair
-            .map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals, num_intervals ->
-                tumor_cram
-            }
+            .map{it -> it[3]}
 
-        cram_normal.view()
-        cram_tumor.view()
-        meta.view()
+        cram_normal.dump()
+        cram_tumor.dump()
+        cram_meta.dump()
         RUN_TIDDIT_NORMAL(cram_normal, fasta, bwa)
         RUN_TIDDIT_TUMOR(cram_tumor, fasta, bwa)
-        RUN_TIDDIT_NORMAL.out.tiddit_vcf.view()
+        RUN_TIDDIT_NORMAL.out.tiddit_vcf.dump()
         svbd_input = [RUN_TIDDIT_NORMAL.out.tiddit_vcf, RUN_TIDDIT_TUMOR.out.tiddit_vcf]
 
-        SVDB_MERGE([meta, svbd_input], Channel.from(false))
+        SVDB_MERGE([cram_meta, svbd_input], Channel.from(false))
         tiddit_vcf = SVDB_MERGE.out.vcf
         ch_versions = ch_versions.mix(RUN_TIDDIT_NORMAL.out.versions)
         ch_versions = ch_versions.mix(RUN_TIDDIT_TUMOR.out.versions)
