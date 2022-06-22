@@ -30,10 +30,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#557](https://github.com/nf-core/sarek/pull/557) - Add `Haplotypecaller` single sample mode together with `CNNScoreVariants` and `FilterVariantTranches`
 - [#576](https://github.com/nf-core/sarek/pull/576) - Add modules and subworkflows for `cnvkit` germline mode
 - [#582](https://github.com/nf-core/sarek/pull/582) - Added option `--vep_out_format` for setting the format of the output-file from VEP to `json`, `tab` or `vcf` (default)
-- [#597](https://github.com/nf-core/sarek/pull/597) - Added tiddit for pair and tumor variant calling
+- [#594](https://github.com/nf-core/sarek/pull/594) - Add parameter `--save_output_as_bam` to allow output of result files in BAM format
+- [#597](https://github.com/nf-core/sarek/pull/597) - Added tiddit for tumor variant calling
+- [#600](https://github.com/nf-core/sarek/pull/600) - Added description for UMI related params in schema
 
 ### Changed
 
+- [#580](https://github.com/nf-core/sarek/pull/580) - changed the test_full config to real public WXS data. 1 sample WXS germline, 1 Tumor/Normal pair. https://doi.org/10.1038/sdata.2016.25 and https://doi.org/10.1038/s41587-021-00994-5
 - [#383](https://github.com/nf-core/sarek/pull/383), [#528](https://github.com/nf-core/sarek/pull/528) - Update `CHANGELOG`
 - [#390](https://github.com/nf-core/sarek/pull/390) - Update `nextflow_schema.json`
 - [#408](https://github.com/nf-core/sarek/pull/408) - Sync `TEMPLATE` with `tools` `2.0.1`
@@ -65,6 +68,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#585](https://github.com/nf-core/sarek/pull/585) - Remove explicit BAM to CRAM conversion after MarkduplicatesSpark; tool does it internally
 - [#581](https://github.com/nf-core/sarek/pull/581) - `TIDDIT` is updated to `3.1.0`
 - [#593](https://github.com/nf-core/sarek/pull/593) - update `ensembl-vep` cache version and module
+- [#600](https://github.com/nf-core/sarek/pull/600) - Remove `TODO` in awsfulltest
 
 ### Fixed
 
@@ -94,6 +98,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#587](https://github.com/nf-core/sarek/pull/587) - Fix issue with VEP extra files
 - [#581](https://github.com/nf-core/sarek/pull/581) - `TIDDIT` is back
 - [#590](https://github.com/nf-core/sarek/pull/590) - Fix empty folders during scatter/gather
+- [#592](https://github.com/nf-core/sarek/pull/592) - Fix optional resources for Mutect2, GetPileupSummaries, and HaplotypeCaller: issue [#299](https://github.com/nf-core/sarek/issues/299), [#359](https://github.com/nf-core/sarek/issues/359), [#367](https://github.com/nf-core/sarek/issues/367)
+- [#598](https://github.com/nf-core/sarek/pull/598) - Remove WARNING message for config selector not matching
+- [#600](https://github.com/nf-core/sarek/pull/600) - Remove `nf-core lint` warnings
 
 ### Deprecated
 

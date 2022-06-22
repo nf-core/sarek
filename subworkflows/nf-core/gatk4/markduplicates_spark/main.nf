@@ -4,10 +4,11 @@
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
+include { BAM_TO_CRAM                            } from '../../bam_to_cram'
 include { GATK4_ESTIMATELIBRARYCOMPLEXITY        } from '../../../../modules/nf-core/modules/gatk4/estimatelibrarycomplexity/main'
 include { GATK4_MARKDUPLICATES_SPARK             } from '../../../../modules/nf-core/modules/gatk4/markduplicatesspark/main'
 include { SAMTOOLS_INDEX as INDEX_MARKDUPLICATES } from '../../../../modules/nf-core/modules/samtools/index/main'
-include { BAM_TO_CRAM                            } from '../../bam_to_cram'
+include { SAMTOOLS_CONVERT as SAMTOOLS_CRAMTOBAM } from '../../../../modules/nf-core/modules/samtools/convert/main'
 
 workflow MARKDUPLICATES_SPARK {
     take:
@@ -29,6 +30,8 @@ workflow MARKDUPLICATES_SPARK {
     cram_markduplicates = GATK4_MARKDUPLICATES_SPARK.out.output
         .join(INDEX_MARKDUPLICATES.out.crai)
 
+    SAMTOOLS_CRAMTOBAM(cram_markduplicates, fasta, fasta_fai)
+
     // Convert Markupduplicates spark bam output to cram when running bamqc and/or deeptools
     BAM_TO_CRAM(Channel.empty(), cram_markduplicates, fasta, fasta_fai, intervals_combined_bed_gz_tbi)
 
@@ -46,7 +49,7 @@ workflow MARKDUPLICATES_SPARK {
     ch_versions = ch_versions.mix(GATK4_MARKDUPLICATES_SPARK.out.versions.first())
     ch_versions = ch_versions.mix(INDEX_MARKDUPLICATES.out.versions.first())
     ch_versions = ch_versions.mix(BAM_TO_CRAM.out.versions.first())
-
+    ch_versions = ch_versions.mix(SAMTOOLS_CRAMTOBAM.out.versions)
     emit:
         cram     = cram_markduplicates
         qc       = qc_reports
