@@ -108,18 +108,19 @@ if (anno_readme && file(anno_readme).exists()) {
 */
 
 // Initialize file channels based on params, defined in the params.genomes[params.genome] scope
-allele_path        = params.ascat_alleles      ? Channel.fromPath(params.ascat_alleles).collect()            : Channel.empty()
+ascat_alleles      = params.ascat_alleles      ? Channel.fromPath(params.ascat_alleles).collect()            : Channel.value([])
+ascat_loci         = params.ascat_loci         ? Channel.fromPath(params.ascat_loci).collect()               : Channel.value([])
+ascat_loci_gc      = params.ascat_loci_gc      ? Channel.fromPath(params.ascat_loci_gc).collect()            : Channel.value([])
+ascat_loci_rt      = params.ascat_loci_rt      ? Channel.fromPath(params.ascat_loci_rt).collect()            : Channel.value([])
 chr_dir            = params.chr_dir            ? Channel.fromPath(params.chr_dir).collect()                  : Channel.value([])
 dbsnp              = params.dbsnp              ? Channel.fromPath(params.dbsnp).collect()                    : Channel.value([])
 fasta              = params.fasta              ? Channel.fromPath(params.fasta).collect()                    : Channel.empty()
 fasta_fai          = params.fasta_fai          ? Channel.fromPath(params.fasta_fai).collect()                : Channel.empty()
-gc_path            = params.ascat_loci_gc      ? Channel.fromPath(params.ascat_loci_gc).collect()            : Channel.empty()
 germline_resource  = params.germline_resource  ? Channel.fromPath(params.germline_resource).collect()        : Channel.value([]) //Mutec2 does not require a germline resource, so set to optional input
 known_indels       = params.known_indels       ? Channel.fromPath(params.known_indels).collect()             : Channel.value([])
-loci_path          = params.ascat_loci         ? Channel.fromPath(params.ascat_loci).collect()               : Channel.value([])
 mappability        = params.mappability        ? Channel.fromPath(params.mappability).collect()              : Channel.value([])
 pon                = params.pon                ? Channel.fromPath(params.pon).collect()                      : Channel.value([]) //PON is optional for Mutect2 (but highly recommended)
-rt_path            = params.ascat_loci_rt      ? Channel.fromPath(params.ascat_loci_rt).collect()            : Channel.empty()
+
 // Initialize value channels based on params, defined in the params.genomes[params.genome] scope
 ascat_genome       = params.ascat_genome       ?: Channel.empty()
 snpeff_db          = params.snpeff_db          ?: Channel.empty()
@@ -262,17 +263,17 @@ workflow SAREK {
 
     // Build indices if needed
     PREPARE_GENOME(
-        allele_path,
+        ascat_alleles,
+        ascat_loci,
+        ascat_loci_gc,
+        ascat_loci_rt,
         chr_dir,
         dbsnp,
         fasta,
         fasta_fai,
-        gc_path,
         germline_resource,
         known_indels,
-        loci_path,
-        pon,
-        rt_path)
+        pon)
 
     // Gather built indices or get them from the params
     allele_files           = PREPARE_GENOME.out.allele_files
