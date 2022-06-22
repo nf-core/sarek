@@ -31,10 +31,10 @@ workflow PAIR_VARIANT_CALLING {
         panel_of_normals_tbi          // channel: [optional]  panel_of_normals_tbi
         chr_files
         mappability
-        allele_path                   // channel: [optional]  ascat_alleles
-        loci_path                     // channel: [optional]  ascat_loci
-        gc_file                       // channel: [optional]  ascat_loci_gc
-        rt_file                       // channel: [optional]  ascat_loci_rt
+        allele_files                  // channel: [optional]  ascat allele files
+        loci_files                    // channel: [optional]  ascat loci files
+        gc_file                       // channel: [optional]  ascat gc content file
+        rt_file                       // channel: [optional]  ascat rt file
 
     main:
 
@@ -71,12 +71,6 @@ workflow PAIR_VARIANT_CALLING {
         }
 
     if (tools.contains('ascat')){
-
-        allele_files = allele_path
-            .map{  ->
-                [meta, tumor_cram, normal_cram]
-            }
-
 
         RUN_ASCAT_SOMATIC(cram_pair,
                         allele_files,

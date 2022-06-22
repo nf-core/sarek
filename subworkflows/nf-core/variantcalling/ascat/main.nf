@@ -16,12 +16,7 @@ workflow RUN_ASCAT_SOMATIC {
 
     ch_versions = Channel.empty()
 
-    UNZIP_ALLELES(allele_files)
-    UNZIP_LOCI(loci_files)
-    //UNZIP_GC(gc_file)
-    //UNZIP_RT(rt_file)
-
-    ASCAT(cram_pair, allele_files, loci_files, [], [], [], [])
+    ASCAT(cram_pair, allele_files, loci_files, gc_file, rt_file, [], [])
 
     ch_versions = ch_versions.mix(RUN_ASCAT_SOMATIC.out.versions)
 

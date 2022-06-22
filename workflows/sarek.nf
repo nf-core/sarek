@@ -262,15 +262,20 @@ workflow SAREK {
 
     // Build indices if needed
     PREPARE_GENOME(
+        allele_path,
         chr_dir,
         dbsnp,
         fasta,
         fasta_fai,
+        gc_path,
         germline_resource,
         known_indels,
-        pon)
+        loci_path,
+        pon,
+        rt_path)
 
     // Gather built indices or get them from the params
+    allele_files           = PREPARE_GENOME.out.allele_files
     bwa                    = params.fasta                   ? params.bwa                   ? Channel.fromPath(params.bwa).collect()                   : PREPARE_GENOME.out.bwa                   : []
     chr_files              = PREPARE_GENOME.out.chr_files
     bwamem2                = params.fasta                   ? params.bwamem2               ? Channel.fromPath(params.bwamem2).collect()               : PREPARE_GENOME.out.bwamem2               : []
@@ -278,10 +283,13 @@ workflow SAREK {
     dict                   = params.fasta                   ? params.dict                  ? Channel.fromPath(params.dict).collect()                  : PREPARE_GENOME.out.dict                  : []
     fasta_fai              = params.fasta                   ? params.fasta_fai             ? Channel.fromPath(params.fasta_fai).collect()             : PREPARE_GENOME.out.fasta_fai             : []
     dbsnp_tbi              = params.dbsnp                   ? params.dbsnp_tbi             ? Channel.fromPath(params.dbsnp_tbi).collect()             : PREPARE_GENOME.out.dbsnp_tbi             : Channel.value([])
+    gc_file                = PREPARE_GENOME.out.gc_file
     germline_resource_tbi  = params.germline_resource       ? params.germline_resource_tbi ? Channel.fromPath(params.germline_resource_tbi).collect() : PREPARE_GENOME.out.germline_resource_tbi : []
     known_indels_tbi       = params.known_indels            ? params.known_indels_tbi      ? Channel.fromPath(params.known_indels_tbi).collect()      : PREPARE_GENOME.out.known_indels_tbi      : Channel.value([])
+    loci_files             = PREPARE_GENOME.out.loci_files
     pon_tbi                = params.pon                     ? params.pon_tbi               ? Channel.fromPath(params.pon_tbi).collect()               : PREPARE_GENOME.out.pon_tbi               : []
     msisensorpro_scan      = PREPARE_GENOME.out.msisensorpro_scan
+    rt_file                = PREPARE_GENOME.out.rt_file
 
     // Gather index for mapping given the chosen aligner
     ch_map_index = params.aligner == "bwa-mem" ? bwa :
@@ -841,10 +849,10 @@ workflow SAREK {
             pon_tbi,
             chr_files,
             mappability,
-            allele_path,
-            loci_path,
-            gc_path,
-            rt_path,
+            allele_files,
+            loci_files,
+            gc_file,
+            rt_file,
         )
 
         // Gather vcf files for annotation and QC

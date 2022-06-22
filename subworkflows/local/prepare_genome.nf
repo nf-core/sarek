@@ -19,16 +19,24 @@ include { TABIX_TABIX as TABIX_GERMLINE_RESOURCE } from '../../modules/nf-core/m
 include { TABIX_TABIX as TABIX_KNOWN_INDELS      } from '../../modules/nf-core/modules/tabix/tabix/main'
 include { TABIX_TABIX as TABIX_PON               } from '../../modules/nf-core/modules/tabix/tabix/main'
 include { UNTAR as UNTAR_CHR_DIR                 } from '../../modules/nf-core/modules/untar/main'
+include { UNZIP as UNZIP_ALLELES                 } from '../../modules/nf-core/modules/unzip/main'
+include { UNZIP as UNZIP_LOCI                    } from '../../modules/nf-core/modules/unzip/main'
+include { UNZIP as UNZIP_GC                      } from '../../modules/nf-core/modules/unzip/main'
+include { UNZIP as UNZIP_RT                      } from '../../modules/nf-core/modules/unzip/main'
 
 workflow PREPARE_GENOME {
     take:
+        allele_path       // channel: [optional]  ascat allele files
         chr_dir           // channel: [optional]  chromosome files
         dbsnp             // channel: [optional]  dbsnp
         fasta             // channel: [mandatory] fasta
         fasta_fai         // channel: [optional]  fasta_fai
+        gc_path           // channel: [optional]  ascat gc content file
         germline_resource // channel: [optional]  germline_resource
         known_indels      // channel: [optional]  known_indels
+        loci_path         // channel: [optional]  ascat loci files
         pon               // channel: [optional]  pon
+        rt_path           // channel: [optional]  ascat replictiming file
 
     main:
 
@@ -50,6 +58,31 @@ workflow PREPARE_GENOME {
     TABIX_GERMLINE_RESOURCE(germline_resource.flatten().map{ it -> [[id:it.baseName], it] })
     TABIX_KNOWN_INDELS( known_indels.flatten().map{ it -> [[id:it.baseName], it] } )
     TABIX_PON(pon.flatten().map{ it -> [[id:it.baseName], it] })
+
+    // prepare ascat reference files
+    allele_path.view()
+    if( params.allele_path.endsWith('.zip')){
+        UNZIP_ALLELES(allele_path.map{ it ->  it -> [[id:it[0].baseName], it] })
+        allele_files = UNZIP_ALLELES.out.unzipped_archive.map{ it[1] }
+        allele_files.view()
+        ch_versions = ch_versions.mix(UNZIP_ALLELES.out.versions)
+    }
+    if( params.loci_path.endsWith('.zip')){
+        UNZIP_LOCI(loci_path.map{ it ->  it -> [[id:it[0].baseName], it] })
+        loci_files = UNZIP_LOCI.out.unzipped_archive.map{ it[1] }
+        ch_versions = ch_versions.mix(UNZIP_LOCI.out.versions)
+    }
+    if( params.gc_path.endsWith('.zip')){
+        UNZIP_GC(gc_path.map{ it ->  it -> [[id:it[0].baseName], it] })
+        gc_file = UNZIP_GC.out.unzipped_archive.map{ it[1] }
+        ch_versions = ch_versions.mix(UNZIP_GC.out.versions)
+    }
+    if( params.rt_path.endsWith('.zip')){
+        UNZIP_RT(rt_path.map{ it ->  it -> [[id:it[0].baseName], it] })
+        rt_file = UNZIP_RT.out.unzipped_archive.map{ it[1] }
+        ch_versions = ch_versions.mix(UNZIP_RT.out.versions)
+    }
+
 
     chr_files = chr_dir
     if ( params.chr_dir.endsWith('tar.gz')){
