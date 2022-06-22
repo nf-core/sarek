@@ -209,8 +209,13 @@ workflow PAIR_VARIANT_CALLING {
             .map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals, num_intervals ->
                 tumor_cram
             }
+
+        cram_normal.view()
+        cram_tumor.view()
+        meta.view()
         RUN_TIDDIT_NORMAL(cram_normal, fasta, bwa)
         RUN_TIDDIT_TUMOR(cram_tumor, fasta, bwa)
+        RUN_TIDDIT_NORMAL.out.tiddit_vcf.view()
         svbd_input = [RUN_TIDDIT_NORMAL.out.tiddit_vcf, RUN_TIDDIT_TUMOR.out.tiddit_vcf]
 
         SVDB_MERGE([meta, svbd_input], Channel.from(false))
