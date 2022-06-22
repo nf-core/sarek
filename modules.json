@@ -240,6 +240,9 @@
             "untar": {
                 "git_sha": "51be617b1ca9bff973655eb899d591ed6ab253b5"
             },
+            "unzip": {
+                "git_sha": "e080f4c8acf5760039ed12ec1f206170f3f9a918"
+            },
             "vcftools": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             }
