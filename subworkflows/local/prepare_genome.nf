@@ -114,5 +114,9 @@ workflow PREPARE_GENOME {
         msisensorpro_scan                = MSISENSORPRO_SCAN.out.list.map{ meta, list -> [list] }              // path: genome_msi.list
         pon_tbi                          = TABIX_PON.out.tbi.map{ meta, tbi -> [tbi] }.collect()               // path: pon.vcf.gz.tbi
         chr_files                        = chr_files
+        allele_files                     = allele_files
+        loci_files                       = loci_files
+        gc_file                          = gc_file
+        rt_file                          = rt_file
         versions                         = ch_versions                                                         // channel: [ versions.yml ]
 }
