@@ -166,9 +166,6 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
     }
 
 
-    // if (tools.contains('tiddit')){
-    // }
-
     emit:
     freebayes_vcf
     manta_vcf

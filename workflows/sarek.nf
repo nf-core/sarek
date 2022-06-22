@@ -811,8 +811,7 @@ workflow SAREK {
             pon,
             pon_tbi,
             chr_files,
-            mappability,
-            []
+            mappability
         )
 
         // Gather vcf files for annotation and QC

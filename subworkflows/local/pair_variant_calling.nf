@@ -10,7 +10,6 @@ include { RUN_STRELKA_SOMATIC                       } from '../nf-core/variantca
 include { RUN_CNVKIT_SOMATIC                        } from '../nf-core/variantcalling/cnvkit/somatic/main.nf'
 include { RUN_MPILEUP as RUN_MPILEUP_NORMAL         } from '../nf-core/variantcalling/mpileup/main'
 include { RUN_MPILEUP as RUN_MPILEUP_TUMOR          } from '../nf-core/variantcalling/mpileup/main'
-include { RUN_TIDDIT                                } from '../nf-core/variantcalling/tiddit/main.nf'
 
 workflow PAIR_VARIANT_CALLING {
     take:
@@ -31,7 +30,6 @@ workflow PAIR_VARIANT_CALLING {
         panel_of_normals_tbi          // channel: [optional]  panel_of_normals_tbi
         chr_files
         mappability
-        bwa                           // channel: [optional] bwa
 
     main:
 
@@ -43,7 +41,6 @@ workflow PAIR_VARIANT_CALLING {
     strelka_vcf          = Channel.empty()
     msisensorpro_output  = Channel.empty()
     mutect2_vcf          = Channel.empty()
-    tiddit_vcf           = Channel.empty()
 
     // Remap channel with intervals
     cram_pair_intervals = cram_pair.combine(intervals)
@@ -191,15 +188,8 @@ workflow PAIR_VARIANT_CALLING {
         ch_versions = ch_versions.mix(GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING.out.versions)
     }
 
-    //TIDDIT
-    if (tools.contains('tiddit')){
-        RUN_TIDDIT(cram_pair,
-                fasta,
-                bwa)
-
-        tiddit_vcf = RUN_TIDDIT.out.tiddit_vcf
-        ch_versions = ch_versions.mix(RUN_TIDDIT.out.versions)
-    }
+    // if (tools.contains('tiddit')) {
+    // }
 
     emit:
     freebayes_vcf
@@ -207,7 +197,5 @@ workflow PAIR_VARIANT_CALLING {
     msisensorpro_output
     mutect2_vcf
     strelka_vcf
-    tiddit_vcf
-
     versions    = ch_versions
 }
