@@ -415,6 +415,12 @@
                     "fa_icon": "fas fa-file",
                     "description": "Path to ASCAT allele zip file."
                 },
+                "ascat_genome": {
+                    "type": "string",
+                    "fa_icon": "fas fa-microscope",
+                    "description": "ASCAT genome.",
+                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
+                },
                 "ascat_loci": {
                     "type": "string",
                     "fa_icon": "fas fa-file",
