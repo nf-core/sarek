@@ -1,8 +1,10 @@
 //
 // merge samples with genomicsdbimport, perform joint genotyping with genotypeGVCFS
-include { GATK4_GENOMICSDBIMPORT } from '../../../../modules/nf-core/modules/gatk4/genomicsdbimport/main'
-include { GATK4_GENOTYPEGVCFS } from '../../../../modules/nf-core/modules/gatk4/genotypegvcfs/main'
+include { GATK4_GENOMICSDBIMPORT }                 from '../../../../modules/nf-core/modules/gatk4/genomicsdbimport/main'
+include { GATK4_GENOTYPEGVCFS }                    from '../../../../modules/nf-core/modules/gatk4/genotypegvcfs/main'
 include { GATK4_MERGEVCFS as MERGE_GENOTYPEGVCFS } from '../../../../modules/nf-core/modules/gatk4/mergevcfs/main'
+include { GATK4_VARIANTRECALIBRATOR as SNP_VQSR }  from '../../../../modules/nf-core/modules/gatk4/variantrecalibrator/main'
+include { GATK4_VARIANTRECALIBRATOR as INDEL_VQSR} from '../../../../modules/nf-core/modules/gatk4/variantrecalibrator/main'
 
 workflow GATK_JOINT_GERMLINE_VARIANT_CALLING {
     take:
@@ -14,7 +16,9 @@ workflow GATK_JOINT_GERMLINE_VARIANT_CALLING {
     sites_index      // channel: /path/to/known/sites/index
 
     main:
-    ch_versions = Channel.empty()
+    ch_versions    = Channel.empty()
+    resources_snp   = (params.RESOURCE_SNP     ? params.genome.RESOURCE_SNP   : Channel.empty() )
+    resources_indel = (params.RESOURCE_INDEL   ? params.genome.RESOURCE_INDEL : Channel.empty() )
 
     gendb_input = input.map{
         meta, gvcf, tbi ->
@@ -42,11 +46,22 @@ workflow GATK_JOINT_GERMLINE_VARIANT_CALLING {
     merge_vcfs_input = vcfs.map { meta, vcf ->
         [[id:"joint variant calling", num_intervals: meta.num_intervals], vcf]}.groupTuple()
 
-   //
-   //Merge vcfs called by interval into a single VCF
-   //
-   MERGE_GENOTYPEGVCFS(merge_vcfs_input,dict)
+    //
+    //Merge vcfs called by interval into a single VCF
+    //
+    merged_vcf = MERGE_GENOTYPEGVCFS(merge_vcfs_input,dict)
 
+    vqsr_input = merged_vcf.vcf.join(merged_vcf.tbi)
+    SNP_VQSR(vqsr_input,
+             resources_snp,
+             fasta,
+             fai,
+             dict)
+    INDEL_VQSR(vqsr_input,
+             resources_indel,
+             fasta,
+             fai,
+             dict)
 
     ch_versions = ch_versions.mix(GATK4_GENOTYPEGVCFS.out.versions)
 

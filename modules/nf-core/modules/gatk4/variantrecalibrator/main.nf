@@ -8,8 +8,8 @@ process GATK4_VARIANTRECALIBRATOR {
         'quay.io/biocontainers/gatk4:4.2.6.1--hdfd78af_0' }"
 
     input:
-    tuple val(meta), path(vcf), path(tbi)
-    tuple path(vcfs), path(tbis), val(labels)
+    tuple val(meta), path(vcf), path(tbi) // input vcf and tbi of variants to recalibrate
+    tuple path(vcfs), path(tbis), val(labels) // resource vcf tbis and prebuilt vqsr labels
     path  fasta
     path  fai
     path  dict
