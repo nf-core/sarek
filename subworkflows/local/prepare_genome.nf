@@ -61,7 +61,6 @@ workflow PREPARE_GENOME {
     TABIX_PON(pon.flatten().map{ it -> [[id:it.baseName], it] })
 
     // prepare ascat reference files
-    ascat_alleles.view()
     if( params.ascat_alleles.endsWith('.zip')){
         UNZIP_ALLELES(ascat_alleles.map{ it -> [[id:it[0].baseName], it] })
         allele_files = UNZIP_ALLELES.out.unzipped_archive.map{ it[1] }

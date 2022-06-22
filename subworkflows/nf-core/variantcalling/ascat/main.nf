@@ -1,4 +1,4 @@
-include { ASCAT } from '../../modules/nf-core/modules/ascat/main'
+include { ASCAT } from '../../../../modules/local/ascat/main'
 
 workflow RUN_ASCAT_SOMATIC {
 
@@ -16,9 +16,12 @@ workflow RUN_ASCAT_SOMATIC {
 
     ch_versions = Channel.empty()
 
+    cram_pair.view()
+    allele_files.view()
+
     ASCAT(cram_pair, allele_files, loci_files, gc_file, rt_file, [], [])
 
-    ch_versions = ch_versions.mix(RUN_ASCAT_SOMATIC.out.versions)
+    ch_versions = ch_versions.mix(ASCAT.out.versions)
 
 
     emit:

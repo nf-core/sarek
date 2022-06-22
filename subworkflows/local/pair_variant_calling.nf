@@ -39,6 +39,7 @@ workflow PAIR_VARIANT_CALLING {
     main:
 
     ch_versions          = Channel.empty()
+    cram_pair.view()
 
     //TODO: Temporary until the if's can be removed and printing to terminal is prevented with "when" in the modules.config
     freebayes_vcf        = Channel.empty()
@@ -71,6 +72,8 @@ workflow PAIR_VARIANT_CALLING {
         }
 
     if (tools.contains('ascat')){
+
+        cram_pair.view()
 
         RUN_ASCAT_SOMATIC(cram_pair,
                         allele_files,
