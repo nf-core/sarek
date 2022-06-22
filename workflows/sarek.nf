@@ -15,7 +15,7 @@ def checkPathParamList = [
     params.ascat_loci,
     params.ascat_loci_gc,
     params.ascat_loci_rt,
-    param.ascat_purity,
+    params.ascat_purity,
     params.bwa,
     params.bwamem2,
     params.chr_dir,

@@ -62,23 +62,23 @@ workflow PREPARE_GENOME {
     // prepare ascat reference files
     allele_path.view()
     if( params.allele_path.endsWith('.zip')){
-        UNZIP_ALLELES(allele_path.map{ it ->  it -> [[id:it[0].baseName], it] })
+        UNZIP_ALLELES(allele_path.map{ it -> [[id:it[0].baseName], it] })
         allele_files = UNZIP_ALLELES.out.unzipped_archive.map{ it[1] }
         allele_files.view()
         ch_versions = ch_versions.mix(UNZIP_ALLELES.out.versions)
     }
     if( params.loci_path.endsWith('.zip')){
-        UNZIP_LOCI(loci_path.map{ it ->  it -> [[id:it[0].baseName], it] })
+        UNZIP_LOCI(loci_path.map{ it -> [[id:it[0].baseName], it] })
         loci_files = UNZIP_LOCI.out.unzipped_archive.map{ it[1] }
         ch_versions = ch_versions.mix(UNZIP_LOCI.out.versions)
     }
     if( params.gc_path.endsWith('.zip')){
-        UNZIP_GC(gc_path.map{ it ->  it -> [[id:it[0].baseName], it] })
+        UNZIP_GC(gc_path.map{ it -> [[id:it[0].baseName], it] })
         gc_file = UNZIP_GC.out.unzipped_archive.map{ it[1] }
         ch_versions = ch_versions.mix(UNZIP_GC.out.versions)
     }
     if( params.rt_path.endsWith('.zip')){
-        UNZIP_RT(rt_path.map{ it ->  it -> [[id:it[0].baseName], it] })
+        UNZIP_RT(rt_path.map{ it -> [[id:it[0].baseName], it] })
         rt_file = UNZIP_RT.out.unzipped_archive.map{ it[1] }
         ch_versions = ch_versions.mix(UNZIP_RT.out.versions)
     }
