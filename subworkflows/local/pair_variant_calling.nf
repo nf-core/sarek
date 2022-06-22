@@ -10,7 +10,9 @@ include { RUN_STRELKA_SOMATIC                       } from '../nf-core/variantca
 include { RUN_CNVKIT_SOMATIC                        } from '../nf-core/variantcalling/cnvkit/somatic/main.nf'
 include { RUN_MPILEUP as RUN_MPILEUP_NORMAL         } from '../nf-core/variantcalling/mpileup/main'
 include { RUN_MPILEUP as RUN_MPILEUP_TUMOR          } from '../nf-core/variantcalling/mpileup/main'
-include { RUN_TIDDIT                                } from '../nf-core/variantcalling/tiddit/main.nf'
+include { RUN_TIDDIT as RUN_TIDDIT_NORMAL           } from '../nf-core/variantcalling/tiddit/main.nf'
+include { RUN_TIDDIT as RUN_TIDDIT_TUMOR            } from '../nf-core/variantcalling/tiddit/main.nf'
+include { SVDB_MERGE                                } from '../../modules/nf-core/modules/svdb/merge/main.nf'
 
 workflow PAIR_VARIANT_CALLING {
     take:
@@ -160,7 +162,7 @@ workflow PAIR_VARIANT_CALLING {
                             fasta,
                             fasta_fai)
 
-        strelka_vcf  = Channel.empty().mix(RUN_STRELKA_SOMATIC.out.strelka_vcf)
+        strelka_vcf = Channel.empty().mix(RUN_STRELKA_SOMATIC.out.strelka_vcf)
         ch_versions = ch_versions.mix(RUN_STRELKA_SOMATIC.out.versions)
     }
 
@@ -193,12 +195,29 @@ workflow PAIR_VARIANT_CALLING {
 
     //TIDDIT
     if (tools.contains('tiddit')){
-        RUN_TIDDIT(cram_pair,
-                fasta,
-                bwa)
+        cram_pair_intervals.view()
+        cram_pair.view()
+        meta = cram_pair
+            .map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals, num_intervals ->
+                meta
+            }
+        cram_normal = cram_pair
+            .map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals, num_intervals ->
+                normal_cram
+            }
+        cram_tumor = cram_pair
+            .map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals, num_intervals ->
+                tumor_cram
+            }
+        RUN_TIDDIT_NORMAL(cram_normal, fasta, bwa)
+        RUN_TIDDIT_TUMOR(cram_tumor, fasta, bwa)
+        svbd_input = [RUN_TIDDIT_NORMAL.out.tiddit_vcf, RUN_TIDDIT_TUMOR.out.tiddit_vcf]
 
-        tiddit_vcf = RUN_TIDDIT.out.tiddit_vcf
-        ch_versions = ch_versions.mix(RUN_TIDDIT.out.versions)
+        SVDB_MERGE([meta, svbd_input], Channel.from(false))
+        tiddit_vcf = SVDB_MERGE.out.vcf
+        ch_versions = ch_versions.mix(RUN_TIDDIT_NORMAL.out.versions)
+        ch_versions = ch_versions.mix(RUN_TIDDIT_TUMOR.out.versions)
+        ch_versions = ch_versions.mix(SVDB_MERGE.out.versions)
     }
 
     emit:

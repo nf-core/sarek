@@ -34,7 +34,9 @@ process TIDDIT_SV {
         --bam $input \\
         --ref $fasta \\
         -o $prefix
-
+    echo "asdasd" > /home/owacker/git/sarek/hm
+    echo $prefix >> /home/owacker/git/sarek/hm
+    pwd >> /home/owacker/git/sarek/hm
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         tiddit: \$(echo \$(tiddit 2>&1) | sed 's/^.*tiddit-//; s/ .*\$//')

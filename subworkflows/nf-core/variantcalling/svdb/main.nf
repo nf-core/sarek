@@ -10,6 +10,7 @@ workflow RUN_TIDDIT {
     main:
 
     ch_versions = Channel.empty()
+
     TIDDIT_SV(
         cram_recalibrated,
         fasta,
@@ -27,4 +28,5 @@ workflow RUN_TIDDIT {
     versions = ch_versions
 
     tiddit_vcf = tiddit_vcf_gz
+    tiddit_ploidy
 }
