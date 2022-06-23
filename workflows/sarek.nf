@@ -306,11 +306,8 @@ workflow SAREK {
             fastq: it[0].data_type == "fastq"
         }.set{ch_input_sample_type}
 
-        ch_input_sample_type.bam.dump(tag:"ch_input_sample_type_bam")
         // convert any bam input to fastq
         ALIGNMENT_TO_FASTQ_INPUT(ch_input_sample_type.bam, [])
-
-        ALIGNMENT_TO_FASTQ_INPUT.out.reads.dump(tag:"Output alignment to fastq")
 
         // gather fastq (inputed or converted)
         // Theorically this could work on mixed input (fastq for one sample and bam for another)
