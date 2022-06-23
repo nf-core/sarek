@@ -342,38 +342,38 @@ workflow SAREK {
             ch_versions = ch_versions.mix(RUN_FASTQC.out.versions)
         }
 
+        // UMI consensus calling
+        if (params.umi_read_structure) {
+            CREATE_UMI_CONSENSUS(ch_input_fastq,
+                fasta,
+                ch_map_index,
+                umi_read_structure,
+                params.group_by_umi_strategy)
+
+            // convert back to fastq for further preprocessing
+            ALIGNMENT_TO_FASTQ_UMI(CREATE_UMI_CONSENSUS.out.consensusbam, [])
+
+            ch_reads_preprocessed = ALIGNMENT_TO_FASTQ_UMI.out.reads
+
+            // Gather used softwares versions
+            ch_versions = ch_versions.mix(ALIGNMENT_TO_FASTQ_UMI.out.versions)
+            ch_versions = ch_versions.mix(CREATE_UMI_CONSENSUS.out.versions)
+        } else {
+            ch_reads_fastp = ch_input_fastq
+        }
+
         // Trimming and/or splitting
         if (params.trim_fastq || params.split_fastq > 0) {
-            FASTP(ch_input_fastq, false, false)
+            FASTP(ch_reads_fastp, false, false)
 
             ch_reports = ch_reports.mix(FASTP.out.json.collect{it[1]}.ifEmpty([]),FASTP.out.html.collect{it[1]}.ifEmpty([]))
 
-            ch_reads = FASTP.out.reads
+            ch_reads_preprocessed = FASTP.out.reads
 
             ch_versions = ch_versions.mix(FASTP.out.versions)
         } else {
-            ch_reads = ch_input_fastq
+            ch_reads_preprocessed = ch_reads_fastp
         }
-
-        // // UMI consensus calling -> this would need some rework if FASTP is used
-        // if (params.umi_read_structure) {
-        //     CREATE_UMI_CONSENSUS(ch_reads,
-        //         fasta,
-        //         ch_map_index,
-        //         umi_read_structure,
-        //         params.group_by_umi_strategy)
-
-        //     // convert back to fastq for further preprocessing
-        //     ALIGNMENT_TO_FASTQ_UMI(CREATE_UMI_CONSENSUS.out.consensusbam, [])
-
-        //     ch_reads_preprocessed = ALIGNMENT_TO_FASTQ_UMI.out.reads
-
-        //     // Gather used softwares versions
-        //     ch_versions = ch_versions.mix(ALIGNMENT_TO_FASTQ_UMI.out.versions)
-        //     ch_versions = ch_versions.mix(CREATE_UMI_CONSENSUS.out.versions)
-        // } else {
-            ch_reads_preprocessed = ch_reads
-        // }
 
         // Properly assign split reads
         if (params.split_fastq > 0) {
