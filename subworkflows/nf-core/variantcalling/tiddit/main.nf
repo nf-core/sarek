@@ -27,4 +27,5 @@ workflow RUN_TIDDIT {
     versions = ch_versions
 
     tiddit_vcf = tiddit_vcf_gz
+    tiddit_ploidy
 }

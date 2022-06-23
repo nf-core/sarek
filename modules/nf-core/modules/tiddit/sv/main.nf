@@ -34,6 +34,7 @@ process TIDDIT_SV {
         --bam $input \\
         --ref $fasta \\
         -o $prefix
+
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         tiddit: \$(echo \$(tiddit 2>&1) | sed 's/^.*tiddit-//; s/ .*\$//')
