@@ -97,14 +97,16 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
     //
     //Generate artifactpriors using learnreadorientationmodel on the f1r2 output of mutect2.
     //
-    LEARNREADORIENTATIONMODEL(
+    LEARNREADORIENTATIONMODEL(Channel.empty().mix(
         mutect2_f1r2_branch.intervals
             .map{ meta, f1r2 ->
 
                 new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals]
 
                 [groupKey(new_meta, meta.num_intervals), f1r2]
-            }.groupTuple())
+            }.groupTuple(),
+        mutect2_f1r2_branch.no_intervals)
+    )
 
     //
     //Generate pileup summary tables using getepileupsummaries. tumor sample should always be passed in as the first input and input list entries of ch_mutect2_in,

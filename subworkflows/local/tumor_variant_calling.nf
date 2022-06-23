@@ -10,25 +10,27 @@ include { RUN_STRELKA_SINGLE                      } from '../nf-core/variantcall
 include { RUN_CONTROLFREEC_TUMORONLY              } from '../nf-core/variantcalling/controlfreec/tumoronly/main.nf'
 include { RUN_CNVKIT_TUMORONLY                    } from '../nf-core/variantcalling/cnvkit/tumoronly/main.nf'
 include { RUN_MPILEUP                             } from '../nf-core/variantcalling/mpileup/main'
+include { RUN_TIDDIT                              } from '../nf-core/variantcalling/tiddit/main.nf'
 
 workflow TUMOR_ONLY_VARIANT_CALLING {
     take:
         tools                         // Mandatory, list of tools to apply
         cram_recalibrated             // channel: [mandatory] cram
+        bwa                           // channel: [optional] bwa
+        chr_files
         dbsnp                         // channel: [mandatory] dbsnp
         dbsnp_tbi                     // channel: [mandatory] dbsnp_tbi
         dict                          // channel: [mandatory] dict
         fasta                         // channel: [mandatory] fasta
         fasta_fai                     // channel: [mandatory] fasta_fai
+        germline_resource             // channel: [optional]  germline_resource
+        germline_resource_tbi         // channel: [optional]  germline_resource_tbi
         intervals                     // channel: [mandatory] intervals/target regions
         intervals_bed_gz_tbi          // channel: [mandatory] intervals/target regions index zipped and indexed
         intervals_bed_combined        // channel: [mandatory] intervals/target regions in one file unzipped
-        germline_resource             // channel: [optional]  germline_resource
-        germline_resource_tbi         // channel: [optional]  germline_resource_tbi
+        mappability
         panel_of_normals              // channel: [optional]  panel_of_normals
         panel_of_normals_tbi          // channel: [optional]  panel_of_normals_tbi
-        chr_files
-        mappability
 
     main:
 
@@ -39,6 +41,7 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
     manta_vcf           = Channel.empty()
     mutect2_vcf         = Channel.empty()
     strelka_vcf         = Channel.empty()
+    tiddit_vcf          = Channel.empty()
 
     // Remap channel with intervals
     cram_recalibrated_intervals = cram_recalibrated.combine(intervals)
@@ -152,16 +155,23 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
         ch_versions = ch_versions.mix(RUN_STRELKA_SINGLE.out.versions)
     }
 
+        //TIDDIT
+    if (tools.contains('tiddit')){
+        RUN_TIDDIT(cram_recalibrated,
+                fasta,
+                bwa)
 
-    // if (tools.contains('tiddit')){
-    // }
+        tiddit_vcf = RUN_TIDDIT.out.tiddit_vcf
+        ch_versions = ch_versions.mix(RUN_TIDDIT.out.versions)
+    }
+
 
     emit:
-    versions = ch_versions
-
     freebayes_vcf
     manta_vcf
     mutect2_vcf
     strelka_vcf
+    tiddit_vcf
 
+    versions = ch_versions
 }
