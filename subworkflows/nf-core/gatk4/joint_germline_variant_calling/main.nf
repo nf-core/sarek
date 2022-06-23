@@ -52,6 +52,8 @@ workflow GATK_JOINT_GERMLINE_VARIANT_CALLING {
     merged_vcf = MERGE_GENOTYPEGVCFS(merge_vcfs_input,dict)
 
     vqsr_input = merged_vcf.vcf.join(merged_vcf.tbi)
+    vqsr_input.dump(tag:'vqsr')
+    resources_snp.dump(tag:'res')
     SNP_VQSR(vqsr_input,
              resources_snp,
              fasta,
