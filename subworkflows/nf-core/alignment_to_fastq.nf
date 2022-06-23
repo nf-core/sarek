@@ -53,17 +53,13 @@ workflow ALIGNMENT_TO_FASTQ {
 
     // join Mapped & unmapped fastq
     unmapped_reads = COLLATE_FASTQ_UNMAP.out.reads
-        .map{ meta, reads ->
-            fq_1 = reads.find{ it.toString().endsWith("_1.fq.gz") }
-            fq_2 = reads.find{ it.toString().endsWith("_2.fq.gz") }
-            [meta, [ fq_1, fq_2]]
+        .map{ meta, reads_R1_R2, reads_other, reads_singleton ->
+            [meta, reads_R1_R2]
         }
 
     mapped_reads = COLLATE_FASTQ_MAP.out.reads
-        .map{ meta, reads ->
-            fq_1 = reads.find{ it.toString().endsWith("_1.fq.gz") }
-            fq_2 = reads.find{ it.toString().endsWith("_2.fq.gz") }
-            [meta, [ fq_1, fq_2]]
+        .map{ meta, reads_R1_R2, reads_other, reads_singleton ->
+            [meta, reads_R1_R2]
         }
 
     reads_to_concat = mapped_reads.join(unmapped_reads)
