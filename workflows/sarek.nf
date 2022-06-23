@@ -306,8 +306,11 @@ workflow SAREK {
             fastq: it[0].data_type == "fastq"
         }.set{ch_input_sample_type}
 
+        ch_input_sample_type.bam.dump(tag:"ch_input_sample_type_bam")
         // convert any bam input to fastq
         ALIGNMENT_TO_FASTQ_INPUT(ch_input_sample_type.bam, [])
+
+        ALIGNMENT_TO_FASTQ_INPUT.out.reads.dump(tag:"Output alignment to fastq")
 
         // gather fastq (inputed or converted)
         // Theorically this could work on mixed input (fastq for one sample and bam for another)
@@ -1004,17 +1007,22 @@ def extract_csv(csv_file) {
 
             meta.size       = 1 // default number of splitted fastq
             return [meta, [fastq_1, fastq_2]]
+
         // start from BAM
         } else if (row.lane && row.bam) {
+            if (!row.bai) {
+                log.error "BAM index (bai) should be provided."
+            }
             meta.id         = "${row.sample}-${row.lane}".toString()
             def bam         = file(row.bam,   checkIfExists: true)
+            def bai         = file(row.bai,   checkIfExists: true)
             def CN          = params.seq_center ? "CN:${params.seq_center}\\t" : ''
-            def read_group  = "\"@RG\\tID:${row_sample}_${row.lane}\\t${CN}PU:${row.lane}\\tSM:${row.sample}\\tLB:${row.sample}\\tPL:${params.seq_platform}\""
+            def read_group  = "\"@RG\\tID:${row.sample}_${row.lane}\\t${CN}PU:${row.lane}\\tSM:${row.sample}\\tLB:${row.sample}\\tPL:${params.seq_platform}\""
             meta.numLanes   = numLanes.toInteger()
             meta.read_group = read_group.toString()
             meta.data_type  = "bam"
             meta.size       = 1 // default number of splitted fastq
-            return [meta, bam]
+            return [meta, bam, bai]
         // recalibration
         } else if (row.table && row.cram) {
             meta.id   = meta.sample
