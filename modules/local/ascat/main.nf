@@ -19,6 +19,7 @@ process ASCAT {
     output:
     tuple val(meta), path("*png"),                             emit: png
     tuple val(meta), path("*cnvs.txt"),                        emit: cnvs
+    tuple val(meta), path("*metrics.txt"),                     emit: metrics
     tuple val(meta), path("*purityploidy.txt"),                emit: purityploidy
     tuple val(meta), path("*segments.txt"),                    emit: segments
     tuple val(meta), path("*alleleFrequencies_chr*.txt"),      emit: allelefreqs
@@ -159,7 +160,7 @@ process ASCAT {
     f <- file("versions.yml","w")
     alleleCounter_version = system(paste("alleleCounter --version"), intern = T)
     ascat_version = sessionInfo()\$otherPkgs\$ASCAT\$Version
-    writeLines(paste0('"', "$task.process", ':"'), f)
+    writeLines(paste0('"', "$task.process", '"', ":"), f)
     writeLines(paste("    alleleCounter:", alleleCounter_version), f)
     writeLines(paste("    ascat:", ascat_version), f)
     close(f)
