@@ -61,22 +61,26 @@ workflow PREPARE_GENOME {
     TABIX_PON(pon.flatten().map{ it -> [[id:it.baseName], it] })
 
     // prepare ascat reference files
+    allele_files = ascat_alleles
     if( params.ascat_alleles.endsWith('.zip')){
         UNZIP_ALLELES(ascat_alleles.map{ it -> [[id:it[0].baseName], it] })
         allele_files = UNZIP_ALLELES.out.unzipped_archive.map{ it[1] }
         allele_files.view()
         ch_versions = ch_versions.mix(UNZIP_ALLELES.out.versions)
     }
+    loci_files = ascat_loci
     if( params.ascat_loci.endsWith('.zip')){
         UNZIP_LOCI(ascat_loci.map{ it -> [[id:it[0].baseName], it] })
         loci_files = UNZIP_LOCI.out.unzipped_archive.map{ it[1] }
         ch_versions = ch_versions.mix(UNZIP_LOCI.out.versions)
     }
+    gc_file = ascat_loci_gc
     if( params.ascat_loci_gc.endsWith('.zip')){
         UNZIP_GC(ascat_loci_gc.map{ it -> [[id:it[0].baseName], it] })
         gc_file = UNZIP_GC.out.unzipped_archive.map{ it[1] }
         ch_versions = ch_versions.mix(UNZIP_GC.out.versions)
     }
+    rt_file = ascat_loci_rt
     if( params.ascat_loci_rt.endsWith('.zip')){
         UNZIP_RT(ascat_loci_rt.map{ it -> [[id:it[0].baseName], it] })
         rt_file = UNZIP_RT.out.unzipped_archive.map{ it[1] }

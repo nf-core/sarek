@@ -11,10 +11,10 @@ process ASCAT {
     tuple val(meta), path(input_normal), path(index_normal), path(input_tumor), path(index_tumor)
     path(allele_files)
     path(loci_files)
-    path(gc_file)
+    path(gc_file)   // optional
     path(rt_file)  // optional
-    path(bed_file)
-    path(ref_fasta)
+    path(bed_file) // optional
+    path(ref_fasta) // optional
 
     output:
     tuple val(meta), path("*png"),                             emit: png
@@ -28,7 +28,6 @@ process ASCAT {
     task.ext.when == null || task.ext.when
 
     script:
-    print input_normal
     def args           = task.ext.args        ?: ''
     def prefix         = task.ext.prefix      ?: "${meta.id}"
     def gender         = args.gender          ?  "$args.gender" :        "NULL"
@@ -55,7 +54,6 @@ process ASCAT {
     options(bitmapType='cairo')
 
     #build prefixes: <abspath_to_files/prefix_chr>
-    print("$allele_files")
     allele_path = normalizePath("$allele_files")
     allele_prefix = paste0(allele_path, "/", "$allele_files", "_chr")
 

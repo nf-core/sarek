@@ -16,10 +16,7 @@ workflow RUN_ASCAT_SOMATIC {
 
     ch_versions = Channel.empty()
 
-    cram_pair.view()
-    allele_files.view()
-
-    ASCAT(cram_pair, allele_files, loci_files, gc_file, rt_file, [], [])
+    ASCAT(cram_pair, allele_files, loci_files, gc_file, rt_file, [], ref_fasta)
 
     ch_versions = ch_versions.mix(ASCAT.out.versions)
 
