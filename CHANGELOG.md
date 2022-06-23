@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#582](https://github.com/nf-core/sarek/pull/582) - Added option `--vep_out_format` for setting the format of the output-file from VEP to `json`, `tab` or `vcf` (default)
 - [#594](https://github.com/nf-core/sarek/pull/594) - Add parameter `--save_output_as_bam` to allow output of result files in BAM format
 - [#600](https://github.com/nf-core/sarek/pull/600) - Added description for UMI related params in schema
+- [#597](https://github.com/nf-core/sarek/pull/597) - Added tiddit for tumor variant calling
 
 ### Changed
 
