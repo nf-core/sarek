@@ -18,14 +18,14 @@ workflow GERMLINE_VARIANT_CALLING {
         bwa                           // channel: [mandatory] bwa
         dbsnp                         // channel: [mandatory] dbsnp
         dbsnp_tbi                     // channel: [mandatory] dbsnp_tbi
-        known_sites
-        known_sites_tbi
         dict                          // channel: [mandatory] dict
         fasta                         // channel: [mandatory] fasta
         fasta_fai                     // channel: [mandatory] fasta_fai
         intervals                     // channel: [mandatory] intervals/target regions
         intervals_bed_gz_tbi          // channel: [mandatory] intervals/target regions index zipped and indexed
         intervals_bed_combined        // channel: [mandatory] intervals/target regions in one file unzipped
+        known_sites
+        known_sites_tbi
         // joint_germline                // val: true/false on whether to run joint_germline calling, only works in combination with haplotypecaller at the moment
 
     main:
