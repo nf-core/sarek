@@ -4,4 +4,14 @@
     - alignment_to_fastq
 
   files:
-    - path: results/multiqc
+    - path: results/cat/test-1_1.merged.fastq.gz
+    - path: results/cat/test-1_2.merged.fastq.gz
+    - path: results/csv/markduplicates.csv
+    - path: results/csv/markduplicates_no_table.csv
+    - path: results/csv/recalibrated.csv
+    - path: results/multiqc/multiqc_report.html
+    - path: results/pipeline_info
+    - path: results/preprocessing/test
+    - path: results/reports
+    - path: results/samtools
+    - path: results/collate
