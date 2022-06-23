@@ -792,35 +792,35 @@ workflow SAREK {
             [],
             dbsnp,
             dbsnp_tbi,
-            known_sites,
-            known_sites_tbi,
-            dict,
-            fasta,
-            fasta_fai,
-            intervals,
-            intervals_bed_gz_tbi,
-            intervals_bed_combined)
-            // params.joint_germline)
-
-        // TUMOR ONLY VARIANT CALLING
-        TUMOR_ONLY_VARIANT_CALLING(
-            params.tools,
-            cram_variant_calling_tumor_only,
-            dbsnp,
-            dbsnp_tbi,
             dict,
             fasta,
             fasta_fai,
             intervals,
             intervals_bed_gz_tbi,
             intervals_bed_combined,
+            known_sites,
+            known_sites_tbi)
+            // params.joint_germline)
+
+        // TUMOR ONLY VARIANT CALLING
+        TUMOR_ONLY_VARIANT_CALLING(
+            params.tools,
+            cram_variant_calling_tumor_only,
+            [],
+            chr_files,
+            dbsnp,
+            dbsnp_tbi,
+            dict,
+            fasta,
+            fasta_fai,
             germline_resource,
             germline_resource_tbi,
-            pon,
-            pon_tbi,
-            chr_files,
+            intervals,
+            intervals_bed_gz_tbi,
+            intervals_bed_combined,
             mappability,
-            []
+            pon,
+            pon_tbi
         )
 
         // PAIR VARIANT CALLING
@@ -834,13 +834,13 @@ workflow SAREK {
             dict,
             fasta,
             fasta_fai,
+            germline_resource,
+            germline_resource_tbi,
             intervals,
             intervals_bed_gz_tbi,
             intervals_bed_combined,
             mappability,
             msisensorpro_scan,
-            germline_resource,
-            germline_resource_tbi,
             pon,
             pon_tbi
         )
@@ -857,6 +857,7 @@ workflow SAREK {
         vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.mutect2_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.manta_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.strelka_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.tiddit_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(PAIR_VARIANT_CALLING.out.mutect2_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(PAIR_VARIANT_CALLING.out.manta_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(PAIR_VARIANT_CALLING.out.strelka_vcf)

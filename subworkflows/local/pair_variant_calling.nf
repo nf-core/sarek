@@ -25,16 +25,15 @@ workflow PAIR_VARIANT_CALLING {
         dict                          // channel: [mandatory] dict
         fasta                         // channel: [mandatory] fasta
         fasta_fai                     // channel: [mandatory] fasta_fai
+        germline_resource             // channel: [optional]  germline_resource
+        germline_resource_tbi         // channel: [optional]  germline_resource_tbi
         intervals                     // channel: [mandatory] intervals/target regions
         intervals_bed_gz_tbi          // channel: [mandatory] intervals/target regions index zipped and indexed
         intervals_bed_combined        // channel: [mandatory] intervals/target regions in one file unzipped
         mappability
         msisensorpro_scan             // channel: [optional]  msisensorpro_scan
-        germline_resource             // channel: [optional]  germline_resource
-        germline_resource_tbi         // channel: [optional]  germline_resource_tbi
         panel_of_normals              // channel: [optional]  panel_of_normals
         panel_of_normals_tbi          // channel: [optional]  panel_of_normals_tbi
-
 
     main:
 
@@ -46,7 +45,6 @@ workflow PAIR_VARIANT_CALLING {
     strelka_vcf          = Channel.empty()
     msisensorpro_output  = Channel.empty()
     mutect2_vcf          = Channel.empty()
-    tiddit_vcf           = Channel.empty()
 
     // Remap channel with intervals
     cram_pair_intervals = cram_pair.combine(intervals)
@@ -195,7 +193,6 @@ workflow PAIR_VARIANT_CALLING {
     }
 
     //TIDDIT
-        //TIDDIT
     if (tools.contains('tiddit')){
         cram_normal = cram_pair.map{meta, normal_cram, normal_crai, tumor_cram, tumor_crai ->
             [meta, normal_cram, normal_crai]
@@ -205,9 +202,9 @@ workflow PAIR_VARIANT_CALLING {
         }
         RUN_TIDDIT_NORMAL(cram_normal, fasta, bwa)
         RUN_TIDDIT_TUMOR(cram_tumor, fasta, bwa)
-
-        svbd_input = RUN_TIDDIT_NORMAL.out.tiddit_vcf.join(RUN_TIDDIT_TUMOR.out.tiddit_vcf)
-        SVDB_MERGE(svbd_input, false)
+        svdb_input = RUN_TIDDIT_NORMAL.out.tiddit_vcf.join(RUN_TIDDIT_TUMOR.out.tiddit_vcf)
+        svdb_input_correct = svdb_input.map{ meta, vcf_normal, vcf_tumor -> [meta, [vcf_normal, vcf_tumor]]}
+        SVDB_MERGE(svdb_input_correct, false)
         tiddit_vcf = SVDB_MERGE.out.vcf
         ch_versions = ch_versions.mix(RUN_TIDDIT_NORMAL.out.versions)
         ch_versions = ch_versions.mix(RUN_TIDDIT_TUMOR.out.versions)
