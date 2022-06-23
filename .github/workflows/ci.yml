@@ -55,6 +55,7 @@ jobs:
           - "strelkabp"
           - "targeted"
           - "tiddit"
+          - "trimming"
           - "tumor_normal_pair"
           - "variantcalling_channel"
 
