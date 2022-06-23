@@ -18,6 +18,8 @@ workflow PAIR_VARIANT_CALLING {
     take:
         tools                         // Mandatory, list of tools to apply
         cram_pair                     // channel: [mandatory] cram
+        bwa                           // channel: [optional] bwa
+        chr_files
         dbsnp                         // channel: [mandatory] dbsnp
         dbsnp_tbi                     // channel: [mandatory] dbsnp_tbi
         dict                          // channel: [mandatory] dict
@@ -26,14 +28,13 @@ workflow PAIR_VARIANT_CALLING {
         intervals                     // channel: [mandatory] intervals/target regions
         intervals_bed_gz_tbi          // channel: [mandatory] intervals/target regions index zipped and indexed
         intervals_bed_combined        // channel: [mandatory] intervals/target regions in one file unzipped
+        mappability
         msisensorpro_scan             // channel: [optional]  msisensorpro_scan
         germline_resource             // channel: [optional]  germline_resource
         germline_resource_tbi         // channel: [optional]  germline_resource_tbi
         panel_of_normals              // channel: [optional]  panel_of_normals
         panel_of_normals_tbi          // channel: [optional]  panel_of_normals_tbi
-        chr_files
-        mappability
-        bwa                           // channel: [optional] bwa
+
 
     main:
 
@@ -194,24 +195,19 @@ workflow PAIR_VARIANT_CALLING {
     }
 
     //TIDDIT
+        //TIDDIT
     if (tools.contains('tiddit')){
-        cram_pair.dump()
-        cram_meta = cram_pair
-            .map{it -> it[0]}
-        cram_normal = cram_pair
-            .map{it -> it[1]}
-        cram_tumor = cram_pair
-            .map{it -> it[3]}
-
-        cram_normal.dump()
-        cram_tumor.dump()
-        cram_meta.dump()
+        cram_normal = cram_pair.map{meta, normal_cram, normal_crai, tumor_cram, tumor_crai ->
+            [meta, normal_cram, normal_crai]
+        }
+        cram_tumor = cram_pair.map{meta, normal_cram, normal_crai, tumor_cram, tumor_crai ->
+            [meta, tumor_cram, tumor_crai]
+        }
         RUN_TIDDIT_NORMAL(cram_normal, fasta, bwa)
         RUN_TIDDIT_TUMOR(cram_tumor, fasta, bwa)
-        RUN_TIDDIT_NORMAL.out.tiddit_vcf.dump()
-        svbd_input = [RUN_TIDDIT_NORMAL.out.tiddit_vcf, RUN_TIDDIT_TUMOR.out.tiddit_vcf]
 
-        SVDB_MERGE([cram_meta, svbd_input], Channel.from(false))
+        svbd_input = RUN_TIDDIT_NORMAL.out.tiddit_vcf.join(RUN_TIDDIT_TUMOR.out.tiddit_vcf)
+        SVDB_MERGE(svbd_input, false)
         tiddit_vcf = SVDB_MERGE.out.vcf
         ch_versions = ch_versions.mix(RUN_TIDDIT_NORMAL.out.versions)
         ch_versions = ch_versions.mix(RUN_TIDDIT_TUMOR.out.versions)
