@@ -71,7 +71,7 @@
                     "fa_icon": "fas fa-clock",
                     "description": "Estimate interval size.",
                     "help_text": "Intervals are part of the genome chopped up, used to speed up preprocessing and variant calling.",
-                    "default": 1000.0
+                    "default": 1000
                 },
                 "sentieon": {
                     "type": "boolean",
@@ -198,17 +198,22 @@
                     "help_text": "> **WARNING** Current indices for `bwa` in AWS iGenomes are not compatible with `bwa-mem2` and `dragmap`.\n> `Sarek` will build them automatically if not provided.\n\n> **WARNING** BWA-mem2 is in active development\n> Sarek might not be able to require the right amount of resources for it at the moment\n> We recommend to use pre-built indexes.",
                     "hidden": true
                 },
+                "save_bam_mapped": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-download",
+                    "description": "Save Mapped BAMs."
+                },
+                "save_output_as_bam": {
+                    "type": "boolean",
+                    "description": "Saves output from Markduplicates & Baserecalibration as BAM file instead of CRAM",
+                    "fa_icon": "fas fa-download"
+                },
                 "use_gatk_spark": {
                     "type": "string",
                     "fa_icon": "fas fa-forward",
                     "description": "Tools for which to enable usage of GATK Spark implementation.",
                     "help_text": "Multiple separated with commas.\n\n GATK4 BQSR tools are currently only available as Beta release. Use with caution!",
                     "pattern": "^((baserecalibrator|markduplicates)*,?)*$"
-                },
-                "save_bam_mapped": {
-                    "type": "boolean",
-                    "fa_icon": "fas fa-download",
-                    "description": "Save Mapped BAMs."
                 }
             }
         },
@@ -227,7 +232,7 @@
                 "ploidy": {
                     "type": "number",
                     "fa_icon": "fas fa-bacon",
-                    "default": 2.0,
+                    "default": 2,
                     "description": "genome ploidy; In case of doubt, you can set different values and Control-FREEC will select the one that explains most observed CNAs.",
                     "hidden": true
                 },
@@ -252,21 +257,21 @@
                 },
                 "cf_contamination": {
                     "type": "number",
-                    "default": 0.0,
+                    "default": 0,
                     "fa_icon": "fas fa-wrench",
                     "description": "Design known contamination value for Control-FREEC",
                     "hidden": true
                 },
                 "cf_minqual": {
                     "type": "number",
-                    "default": 0.0,
+                    "default": 0,
                     "fa_icon": "fas fa-greater-than",
                     "hidden": true,
                     "description": "Minimal sequencing quality for a position to be considered in BAF analysis."
                 },
                 "cf_mincov": {
                     "type": "number",
-                    "default": 0.0,
+                    "default": 0,
                     "fa_icon": "fas fa-align-center",
                     "hidden": true,
                     "description": "Minimal read coverage for a position to be considered in BAF analysis."
