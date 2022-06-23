@@ -48,9 +48,6 @@ workflow ALIGNMENT_TO_FASTQ {
     // Collate & convert mapped
     COLLATE_FASTQ_MAP(SAMTOOLS_VIEW_MAP_MAP.out.bam)
 
-    COLLATE_FASTQ_UNMAP.out.reads.dump(tag:'collate_fastq_unmap_out')
-    COLLATE_FASTQ_MAP.out.reads.dump(tag:'collate_fastq_map')
-
     // join Mapped & unmapped fastq
     unmapped_reads = COLLATE_FASTQ_UNMAP.out.reads
         .map{ meta, reads_R1_R2, reads_other, reads_singleton ->
