@@ -38,7 +38,7 @@ output:
   - reads:
       type: file
       description: The trimmed/modified/unmerged fastq reads
-      pattern: "*trim.fastq.gz"
+      pattern: "*fastp.fastq.gz"
   - json:
       type: file
       description: Results in JSON format

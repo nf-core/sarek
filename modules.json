@@ -67,7 +67,7 @@
                 "git_sha": "757c20c8ebfab85e1de9f98773a2269f6d34025a"
             },
             "fastp": {
-                "git_sha": "d0a1cbb703a130c19f6796c3fce24fbe7dfce789"
+                "git_sha": "9b51362a532a14665f513cf987531f9ea5046b74"
             },
             "fastqc": {
                 "git_sha": "49b18b1639f4f7104187058866a8fab33332bdfe"
