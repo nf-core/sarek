@@ -207,6 +207,7 @@ workflow PAIR_VARIANT_CALLING {
         svdb_input_correct = svdb_input.map{ meta, vcf_normal, vcf_tumor -> [meta, [vcf_normal, vcf_tumor]]}
         SVDB_MERGE(svdb_input_correct, false)
         tiddit_vcf = SVDB_MERGE.out.vcf
+        
         ch_versions = ch_versions.mix(RUN_TIDDIT_NORMAL.out.versions)
         ch_versions = ch_versions.mix(RUN_TIDDIT_TUMOR.out.versions)
         ch_versions = ch_versions.mix(SVDB_MERGE.out.versions)
