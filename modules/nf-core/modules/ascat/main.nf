@@ -2,7 +2,7 @@ process ASCAT {
     tag "$meta.id"
     label 'process_medium'
 
-    conda (params.enable_conda ? "bioconda::ascat=3.0.0 bioconda::cancerit-allelecount=4.3.0": null)
+    conda (params.enable_conda ? "bioconda::ascat=3.0.0 bioconda::cancerit-allelecount=4.3.0" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/mulled-v2-c278c7398beb73294d78639a864352abef2931ce:dfe5aaa885de434adb2b490b68972c5840c6d761-0':
         'quay.io/biocontainers/mulled-v2-c278c7398beb73294d78639a864352abef2931ce:dfe5aaa885de434adb2b490b68972c5840c6d761-0' }"
@@ -11,10 +11,10 @@ process ASCAT {
     tuple val(meta), path(input_normal), path(index_normal), path(input_tumor), path(index_tumor)
     path(allele_files)
     path(loci_files)
+    path(bed_file)  // optional
+    path(fasta)     // optional
     path(gc_file)   // optional
-    path(rt_file)  // optional
-    path(bed_file) // optional
-    path(ref_fasta) // optional
+    path(rt_file)   // optional
 
     output:
     tuple val(meta), path("*png"),                             emit: png
@@ -43,10 +43,9 @@ process ASCAT {
     def chrom_names_arg                  = args.chrom_names                   ?  ",chrom_names = $args.chrom_names" : ""
     def min_base_qual_arg                = args.min_base_qual                 ?  ",min_base_qual = $args.min_base_qual" : ""
     def min_map_qual_arg                 = args.min_map_qual                  ?  ",min_map_qual = $args.min_map_qual" : ""
-    def ref_fasta_arg                    = ref_fasta                          ?  ",ref.fasta = '$ref_fasta'" : ""
+    def fasta_arg                        = fasta                              ?  ",ref.fasta = '$fasta'" : ""
     def skip_allele_counting_tumour_arg  = args.skip_allele_counting_tumour   ?  ",skip_allele_counting_tumour = $args.skip_allele_counting_tumour" : ""
     def skip_allele_counting_normal_arg  = args.skip_allele_counting_normal   ?  ",skip_allele_counting_normal = $args.skip_allele_counting_normal" : ""
-
 
     """
     #!/usr/bin/env Rscript
@@ -78,7 +77,7 @@ process ASCAT {
         $chrom_names_arg
         $min_base_qual_arg
         $min_map_qual_arg
-        $ref_fasta_arg
+        $fasta_arg
         $skip_allele_counting_tumour_arg
         $skip_allele_counting_normal_arg
     )
@@ -100,7 +99,6 @@ process ASCAT {
     # optional LogRCorrection
     if("$gc_input" != "NULL") {
         gc_input = paste0(normalizePath("$gc_input"), "/", "$gc_input", ".txt")
-        print(gc_input)
 
         if("$rt_input" != "NULL"){
             rt_input = paste0(normalizePath("$rt_input"), "/", "$rt_input", ".txt")
@@ -164,6 +162,7 @@ process ASCAT {
     writeLines(paste("    alleleCounter:", alleleCounter_version), f)
     writeLines(paste("    ascat:", ascat_version), f)
     close(f)
+
     """
 
 
@@ -177,20 +176,19 @@ process ASCAT {
     echo stub > Tumour.ASCATprofile.png
     echo stub > Tumour.ASPCF.png
     echo stub > Before_correction_Tumour.germline.png
-    echo stub > After_correction_Tumour.germline.png
+    echo stub > After_correction_GC_Tumour.germline.png
     echo stub > Tumour.rawprofile.png
     echo stub > Tumour.sunrise.png
     echo stub > Before_correction_Tumour.tumour.png
-    echo stub > After_correction_Tumour.tumour.png
+    echo stub > After_correction_GC_Tumour.tumour.png
     echo stub > Tumour_alleleFrequencies_chr21.txt
     echo stub > Tumour_alleleFrequencies_chr22.txt
     echo stub > Normal_alleleFrequencies_chr21.txt
     echo stub > Normal_alleleFrequencies_chr22.txt
 
-    echo 'ASCAT:' > versions.yml
+    echo "${task.process}:" > versions.yml
     echo ' alleleCounter: 4.3.0' >> versions.yml
     echo ' ascat: 3.0.0' >> versions.yml
-
 
     """
 
