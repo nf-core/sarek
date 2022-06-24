@@ -204,6 +204,7 @@ workflow PAIR_VARIANT_CALLING {
 
         RUN_TIDDIT_NORMAL(cram_normal, fasta, bwa)
         RUN_TIDDIT_TUMOR(cram_tumor, fasta, bwa)
+        
         SVDB_MERGE(RUN_TIDDIT_NORMAL.out.tiddit_vcf.join(RUN_TIDDIT_TUMOR.out.tiddit_vcf).map{
             meta, vcf_normal, vcf_tumor ->
                 [meta, [vcf_normal, vcf_tumor]]
