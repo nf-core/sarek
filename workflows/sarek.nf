@@ -53,7 +53,7 @@ for (param in checkPathParamList) if (param) file(param, checkIfExists: true)
 ch_input_sample = extract_csv(file(params.input, checkIfExists: true))
 
 if (params.wes) {
-    if (params.intervals && !params.intervals.endsWith("bed")) exit 1, "Target file must be in BED format"
+    if (params.intervals && !params.intervals.endsWith("bed")) exit 1, "Target file specified with `--intervals` must be in BED format"
 } else {
     if (params.intervals && !params.intervals.endsWith("bed") && !params.intervals.endsWith("interval_list")) exit 1, "Interval file must end with .bed or .interval_list"
 }
@@ -165,14 +165,11 @@ include { PREPARE_INTERVALS                                    } from '../subwor
 include { ALIGNMENT_TO_FASTQ as ALIGNMENT_TO_FASTQ_INPUT       } from '../subworkflows/nf-core/alignment_to_fastq'
 include { ALIGNMENT_TO_FASTQ as ALIGNMENT_TO_FASTQ_UMI         } from '../subworkflows/nf-core/alignment_to_fastq'
 
-// Split FASTQ files
-include { SPLIT_FASTQ                                          } from '../subworkflows/local/split_fastq'
-
 // Run FASTQC
 include { RUN_FASTQC                                           } from '../subworkflows/nf-core/run_fastqc'
 
-// Run TRIMGALORE
-include { RUN_TRIMGALORE                                       } from '../subworkflows/nf-core/run_trimgalore'
+// TRIM/SPLIT FASTQ Files
+include { FASTP                                                } from '../modules/nf-core/modules/fastp/main'
 
 // Create umi consensus bams from fastq
 include { CREATE_UMI_CONSENSUS                                 } from '../subworkflows/nf-core/fgbio_create_umi_consensus/main'
@@ -294,13 +291,17 @@ workflow SAREK {
     PREPARE_INTERVALS(fasta_fai)
 
     // Intervals for speed up preprocessing/variant calling by spread/gather
-    intervals_bed_combined        = (params.intervals && params.wes) ? Channel.fromPath(params.intervals).collect() : []
+    // this is not good, we need the combined bed for some tools that don't support scatter/gather. Why would we not use the same intervals for WGS?
+    // intervals_bed_combined        = (params.intervals && params.wes) ? Channel.fromPath(params.intervals).collect() : []
+    // check if this actually still works if interval_list format
+    intervals_bed_combined        = params.intervals ? Channel.fromPath(params.intervals).collect() : []
+    //TODO: intervals also with WGS data? Probably need a parameter if WGS for deepvariant tool, that would allow to check here too
+    intervals_for_preprocessing              = (params.wes && params.intervals) ? intervals_bed_combined : []
 
     intervals                     = PREPARE_INTERVALS.out.intervals_bed        // [interval, num_intervals] multiple interval.bed files, divided by useful intervals for scatter/gather
     intervals_bed_gz_tbi          = PREPARE_INTERVALS.out.intervals_bed_gz_tbi // [interval_bed, tbi, num_intervals] multiple interval.bed.gz/.tbi files, divided by useful intervals for scatter/gather
 
-    //TODO: intervals also with WGS data? Probably need a parameter if WGS for deepvariant tool, that would allow to check here too
-    intervals_for_preprocessing   = (params.wes && !params.no_intervals) ? intervals_bed_combined : []
+
 
     // Gather used softwares versions
     ch_versions = ch_versions.mix(PREPARE_GENOME.out.versions)
@@ -338,24 +339,9 @@ workflow SAREK {
             ch_versions = ch_versions.mix(RUN_FASTQC.out.versions)
         }
 
-        // Trimming
-        if (params.trim_fastq) {
-            RUN_TRIMGALORE(ch_input_fastq)
-
-            ch_reads = RUN_TRIMGALORE.out.reads
-
-            ch_reports  = ch_reports.mix(RUN_TRIMGALORE.out.trim_html.collect{it[1]}.ifEmpty([]))
-            ch_reports  = ch_reports.mix(RUN_TRIMGALORE.out.trim_log.collect{it[1]}.ifEmpty([]))
-            ch_reports  = ch_reports.mix(RUN_TRIMGALORE.out.trim_zip.collect{it[1]}.ifEmpty([]))
-
-            ch_versions = ch_versions.mix(RUN_TRIMGALORE.out.versions)
-        } else {
-            ch_reads = ch_input_fastq
-        }
-
         // UMI consensus calling
         if (params.umi_read_structure) {
-            CREATE_UMI_CONSENSUS(ch_reads,
+            CREATE_UMI_CONSENSUS(ch_input_fastq,
                 fasta,
                 ch_map_index,
                 umi_read_structure,
@@ -364,25 +350,35 @@ workflow SAREK {
             // convert back to fastq for further preprocessing
             ALIGNMENT_TO_FASTQ_UMI(CREATE_UMI_CONSENSUS.out.consensusbam, [])
 
-            ch_input_sample_to_split = ALIGNMENT_TO_FASTQ_UMI.out.reads
+            ch_reads_fastp = ALIGNMENT_TO_FASTQ_UMI.out.reads
 
             // Gather used softwares versions
             ch_versions = ch_versions.mix(ALIGNMENT_TO_FASTQ_UMI.out.versions)
             ch_versions = ch_versions.mix(CREATE_UMI_CONSENSUS.out.versions)
         } else {
-            ch_input_sample_to_split = ch_reads
+            ch_reads_fastp = ch_input_fastq
         }
 
-        // SPLIT OF FASTQ FILES WITH SEQKIT_SPLIT2
-        if (params.split_fastq > 1) {
-            SPLIT_FASTQ(ch_input_sample_to_split)
+        // Trimming and/or splitting
+        if (params.trim_fastq || params.split_fastq > 0) {
+            FASTP(ch_reads_fastp, false, false)
 
-            ch_reads_to_map = SPLIT_FASTQ.out.reads
+            ch_reports = ch_reports.mix(FASTP.out.json.collect{it[1]}.ifEmpty([]),FASTP.out.html.collect{it[1]}.ifEmpty([]))
 
-            // Gather used softwares versions
-            ch_versions = ch_versions.mix(SPLIT_FASTQ.out.versions)
+            if(params.split_fastq){
+                ch_reads_to_map = FASTP.out.reads.map{ key, reads ->
+
+                        read_files = reads.sort{ a,b -> a.getName().tokenize('.')[0] <=> b.getName().tokenize('.')[0] }.collate(2)
+                        [[patient: key.patient, sample:key.sample, gender:key.gender, status:key.status, id:key.id, numLanes:key.numLanes, read_group:key.read_group, data_type:key.data_type, size:read_files.size()],
+                        read_files]
+                    }.transpose()
+            }else{
+                ch_reads_to_map = FASTP.out.reads
+            }
+
+            ch_versions = ch_versions.mix(FASTP.out.versions)
         } else {
-            ch_reads_to_map = ch_input_sample_to_split
+            ch_reads_to_map = ch_reads_fastp
         }
 
         // STEP 1: MAPPING READS TO REFERENCE GENOME

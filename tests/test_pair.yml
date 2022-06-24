@@ -22,13 +22,23 @@
     - path: results/reports/fastqc/test2-test_L1
     - path: results/reports/markduplicates/test/test.md.metrics
     - path: results/reports/markduplicates/test2/test2.md.metrics
-    - path: results/reports/qualimap/test/test.mapped
-    - path: results/reports/qualimap/test/test.recal
-    - path: results/reports/qualimap/test2/test2.mapped
-    - path: results/reports/qualimap/test2/test2.recal
+    - path: results/reports/mosdepth/test/test.mapped.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/test/test.mapped.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test/test.mapped.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.mapped.regions.bed.gz
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
+    - path: results/reports/mosdepth/test2/test2.mapped.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/test2/test2.mapped.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test2/test2.mapped.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test2/test2.mapped.regions.bed.gz
+    - path: results/reports/mosdepth/test2/test2.recal.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/test2/test2.recal.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test2/test2.recal.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test2/test2.recal.regions.bed.gz
     - path: results/reports/samtools_stats/test/test.md.cram.stats
     - path: results/reports/samtools_stats/test/test.recal.cram.stats
     - path: results/reports/samtools_stats/test2/test2.md.cram.stats
     - path: results/reports/samtools_stats/test2/test2.recal.cram.stats
-    - path: results/reports/deeptools/test/test.bigWig
-    - path: results/reports/deeptools/test2/test2.bigWig
