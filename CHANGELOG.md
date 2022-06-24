@@ -69,7 +69,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#581](https://github.com/nf-core/sarek/pull/581) - `TIDDIT` is updated to `3.1.0`
 - [#593](https://github.com/nf-core/sarek/pull/593) - update `ensembl-vep` cache version and module
 - [#600](https://github.com/nf-core/sarek/pull/600) - Remove `TODO` in awsfulltest
-- [#603](https://github.com/nf-core/sarek/pull/603) - Updated `ASCAT` to version `3.0` as module
+- [#606](https://github.com/nf-core/sarek/pull/606) - Updated `ASCAT` to version `3.0` as module
 
 ### Fixed
 

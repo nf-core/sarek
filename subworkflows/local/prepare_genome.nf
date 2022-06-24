@@ -65,9 +65,9 @@ workflow PREPARE_GENOME {
     if( params.ascat_alleles.endsWith('.zip')){
         UNZIP_ALLELES(ascat_alleles.map{ it -> [[id:it[0].baseName], it] })
         allele_files = UNZIP_ALLELES.out.unzipped_archive.map{ it[1] }
-        allele_files.view()
         ch_versions = ch_versions.mix(UNZIP_ALLELES.out.versions)
     }
+
     loci_files = ascat_loci
     if( params.ascat_loci.endsWith('.zip')){
         UNZIP_LOCI(ascat_loci.map{ it -> [[id:it[0].baseName], it] })
