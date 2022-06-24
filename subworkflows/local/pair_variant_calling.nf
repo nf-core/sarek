@@ -45,6 +45,7 @@ workflow PAIR_VARIANT_CALLING {
     strelka_vcf          = Channel.empty()
     msisensorpro_output  = Channel.empty()
     mutect2_vcf          = Channel.empty()
+    tiddit_vcf           = Channel.empty()
 
     // Remap channel with intervals
     cram_pair_intervals = cram_pair.combine(intervals)
