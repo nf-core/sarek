@@ -38,7 +38,7 @@ workflow GATK_SINGLE_SAMPLE_GERMLINE_VARIANT_CALLING{
                             dict)
 
     // Figure out if using intervals or no_intervals
-    FILTERVARIANTTRANCHES.out.vcf.map{ meta, vcf ->
+    filtered_vcf = FILTERVARIANTTRANCHES.out.vcf.map{ meta, vcf ->
                                             [[patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals, variantcaller:"haplotypecaller"], vcf]
                                         }
 
@@ -47,5 +47,5 @@ workflow GATK_SINGLE_SAMPLE_GERMLINE_VARIANT_CALLING{
 
     emit:
     versions = ch_versions
-    filtered_vcf = FILTERVARIANTTRANCHES.out.vcf
+    filtered_vcf
 }
