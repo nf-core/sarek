@@ -1022,10 +1022,14 @@ def extract_csv(csv_file) {
 
         // start from BAM
         } else if (row.lane && row.bam) {
+            if (!row.bai) {
+                log.error "BAM index (bai) should be provided."
+            }
             meta.id         = "${row.sample}-${row.lane}".toString()
             def bam         = file(row.bam,   checkIfExists: true)
+            def bai         = file(row.bai,   checkIfExists: true)
             def CN          = params.seq_center ? "CN:${params.seq_center}\\t" : ''
-            def read_group  = "\"@RG\\tID:${row_sample}_${row.lane}\\t${CN}PU:${row.lane}\\tSM:${row.sample}\\tLB:${row.sample}\\tPL:${params.seq_platform}\""
+            def read_group  = "\"@RG\\tID:${row.sample}_${row.lane}\\t${CN}PU:${row.lane}\\tSM:${row.sample}\\tLB:${row.sample}\\tPL:${params.seq_platform}\""
 
             meta.numLanes   = numLanes.toInteger()
             meta.read_group = read_group.toString()
@@ -1033,7 +1037,7 @@ def extract_csv(csv_file) {
 
             meta.size       = 1 // default number of splitted fastq
 
-            if (params.step == 'mapping') return [meta, bam]
+            if (params.step == 'mapping') return [meta, bam, bai]
             else {
                 log.error "Samplesheet contains ubam files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
                 System.exit(1)
