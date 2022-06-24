@@ -61,16 +61,19 @@ if (params.wes) {
     if (params.intervals && !params.intervals.endsWith("bed") && !params.intervals.endsWith("interval_list")) exit 1, "Interval file must end with .bed or .interval_list"
 }
 
-// if(params.tools && params.tools.contains('ascat')){
-//     if(!params.ascat_alleles){
-//         log.error "No allele files were provided for running ASCAT. Please provide a zip folder with allele files."
-//         exit 1
-//     }
-//     if(!params.ascat_loci){
-//         log.error "No loci files were provided for running ASCAT. Please provide a zip folder with loci files."
-//         exit 1
-//     }
-// }
+if(params.tools && params.tools.contains('ascat')){
+    if(!params.ascat_alleles){
+        log.error "No allele files were provided for running ASCAT. Please provide a zip folder with allele files."
+        exit 1
+    }
+    if(!params.ascat_loci){
+        log.error "No loci files were provided for running ASCAT. Please provide a zip folder with loci files."
+        exit 1
+    }
+    if(params.wes){
+        log.warn("Reference files not suited for running ASCAT on WES data. It's recommended to use the reference files provided here: https://github.com/Wedge-lab/battenberg#required-reference-files")
+    }
+}
 
 if(params.tools && params.tools.contains('mutect2')){
     if(!params.pon){
@@ -120,8 +123,8 @@ if (anno_readme && file(anno_readme).exists()) {
 // Initialize file channels based on params, defined in the params.genomes[params.genome] scope
 ascat_alleles      = params.ascat_alleles      ? Channel.fromPath(params.ascat_alleles).collect()            : Channel.empty()
 ascat_loci         = params.ascat_loci         ? Channel.fromPath(params.ascat_loci).collect()               : Channel.empty()
-ascat_loci_gc      = params.ascat_loci_gc      ? Channel.fromPath(params.ascat_loci_gc).collect()            : Channel.empty()
-ascat_loci_rt      = params.ascat_loci_rt      ? Channel.fromPath(params.ascat_loci_rt).collect()            : Channel.empty()
+ascat_loci_gc      = params.ascat_loci_gc      ? Channel.fromPath(params.ascat_loci_gc).collect()            : Channel.value([])
+ascat_loci_rt      = params.ascat_loci_rt      ? Channel.fromPath(params.ascat_loci_rt).collect()            : Channel.value([])
 chr_dir            = params.chr_dir            ? Channel.fromPath(params.chr_dir).collect()                  : Channel.value([])
 dbsnp              = params.dbsnp              ? Channel.fromPath(params.dbsnp).collect()                    : Channel.value([])
 fasta              = params.fasta              ? Channel.fromPath(params.fasta).collect()                    : Channel.empty()
@@ -297,13 +300,13 @@ workflow SAREK {
     dict                   = params.fasta                   ? params.dict                       ? Channel.fromPath(params.dict).collect()                  : PREPARE_GENOME.out.dict                  : []
     fasta_fai              = params.fasta                   ? params.fasta_fai                  ? Channel.fromPath(params.fasta_fai).collect()             : PREPARE_GENOME.out.fasta_fai             : []
     dbsnp_tbi              = params.dbsnp                   ? params.dbsnp_tbi                  ? Channel.fromPath(params.dbsnp_tbi).collect()             : PREPARE_GENOME.out.dbsnp_tbi             : Channel.value([])
-    gc_file                = params.ascat_loci_gc           ? PREPARE_GENOME.out.gc_file        : []
+    gc_file                = PREPARE_GENOME.out.gc_file
     germline_resource_tbi  = params.germline_resource       ? params.germline_resource_tbi      ? Channel.fromPath(params.germline_resource_tbi).collect() : PREPARE_GENOME.out.germline_resource_tbi : []
     known_indels_tbi       = params.known_indels            ? params.known_indels_tbi           ? Channel.fromPath(params.known_indels_tbi).collect()      : PREPARE_GENOME.out.known_indels_tbi      : Channel.value([])
     loci_files             = PREPARE_GENOME.out.loci_files
     pon_tbi                = params.pon                     ? params.pon_tbi                    ? Channel.fromPath(params.pon_tbi).collect()               : PREPARE_GENOME.out.pon_tbi               : []
     msisensorpro_scan      = PREPARE_GENOME.out.msisensorpro_scan
-    rt_file                = params.ascat_loci_rt           ? PREPARE_GENOME.out.rt_file       : []
+    rt_file                = PREPARE_GENOME.out.rt_file
 
     // Gather index for mapping given the chosen aligner
     ch_map_index = params.aligner == "bwa-mem" ? bwa :
