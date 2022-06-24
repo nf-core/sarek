@@ -118,7 +118,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#539](https://github.com/nf-core/sarek/pull/539) - `conf/genomes.config` and `params.genomes_base` have been removed
 - [#562](https://github.com/nf-core/sarek/pull/562) - Restart from `--step annotate` from folder is removed. Use a `csv` file instead
 - [#571](https://github.com/nf-core/sarek/pull/571) - Removed the local module `concat_vcf`.
-
+- [#605](https://github.com/nf-core/sarek/pull/605) - Removed MERGE_HAPLOTYPECALLER_FILTERED from GATK_SINGLE_SAMPLE_GERMLINE_VARIANT_CALLING.
 ## [2.7.1](https://github.com/nf-core/sarek/releases/tag/2.7.1) - Pårtejekna
 
 Pårtejekna is one of glaciers of the Pårte Massif.
