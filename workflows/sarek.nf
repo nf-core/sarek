@@ -61,16 +61,16 @@ if (params.wes) {
     if (params.intervals && !params.intervals.endsWith("bed") && !params.intervals.endsWith("interval_list")) exit 1, "Interval file must end with .bed or .interval_list"
 }
 
-if(params.tools && params.tools.contains('ascat')){
-    if(!params.ascat_alleles){
-        log.error "No allele files were provided for running ASCAT. Please provide a zip folder with allele files."
-        exit 1
-    }
-    if(!params.ascat_loci){
-        log.error "No loci files were provided for running ASCAT. Please provide a zip folder with loci files."
-        exit 1
-    }
-}
+// if(params.tools && params.tools.contains('ascat')){
+//     if(!params.ascat_alleles){
+//         log.error "No allele files were provided for running ASCAT. Please provide a zip folder with allele files."
+//         exit 1
+//     }
+//     if(!params.ascat_loci){
+//         log.error "No loci files were provided for running ASCAT. Please provide a zip folder with loci files."
+//         exit 1
+//     }
+// }
 
 if(params.tools && params.tools.contains('mutect2')){
     if(!params.pon){
