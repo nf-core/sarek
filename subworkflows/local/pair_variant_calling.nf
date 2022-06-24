@@ -71,20 +71,14 @@ workflow PAIR_VARIANT_CALLING {
         }
 
     if (tools.contains('ascat')){
-        cram_pair.view()
-        allele_files.view()
-        loci_files.view()
-        gc_file.view()
-        rt_file.view()
-        fasta.view()
 
-        RUN_ASCAT_SOMATIC(cram_pair,
-                        allele_files,
-                        loci_files,
-                        gc_file,
-                        rt_file,
-                        intervals_bed_combined,
-                        fasta)
+        RUN_ASCAT_SOMATIC(  cram_pair,
+                            allele_files,
+                            loci_files,
+                            intervals_bed_combined,
+                            fasta,
+                            gc_file,
+                            rt_file)
 
         ch_versions = ch_versions.mix(RUN_ASCAT_SOMATIC.out.versions)
 
