@@ -70,6 +70,9 @@ if(params.tools && params.tools.contains('ascat')){
         log.error "No loci files were provided for running ASCAT. Please provide a zip folder with loci files."
         exit 1
     }
+    if(!params.ascat_loci_gc && !params.ascat_loci_rt){
+        log.warn("No LogRCorrection performed in ASCAT.")
+    }
     if(params.wes){
         log.warn("Reference files not suited for running ASCAT on WES data. It's recommended to use the reference files provided here: https://github.com/Wedge-lab/battenberg#required-reference-files")
     }
