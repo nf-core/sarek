@@ -5,7 +5,7 @@
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
 include { SAMTOOLS_STATS     } from '../../modules/nf-core/modules/samtools/stats/main'
-include { MOSDEPTH } from '../../modules/nf-core/modules/mosdepth/main'
+include { MOSDEPTH           } from '../../modules/nf-core/modules/mosdepth/main'
 
 workflow CRAM_QC {
     take:
