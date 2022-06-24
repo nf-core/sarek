@@ -353,7 +353,7 @@ workflow SAREK {
             // convert back to fastq for further preprocessing
             ALIGNMENT_TO_FASTQ_UMI(CREATE_UMI_CONSENSUS.out.consensusbam, [])
 
-            ch_reads_preprocessed = ALIGNMENT_TO_FASTQ_UMI.out.reads
+            ch_reads_fastp = ALIGNMENT_TO_FASTQ_UMI.out.reads
 
             // Gather used softwares versions
             ch_versions = ch_versions.mix(ALIGNMENT_TO_FASTQ_UMI.out.versions)
@@ -368,20 +368,20 @@ workflow SAREK {
 
             ch_reports = ch_reports.mix(FASTP.out.json.collect{it[1]}.ifEmpty([]),FASTP.out.html.collect{it[1]}.ifEmpty([]))
 
-            ch_reads_preprocessed = FASTP.out.reads
+            if(params.split_fastq){
+                ch_reads_to_map = FASTP.out.reads.map{ key, reads ->
+
+                        read_files = reads.sort{ a,b -> a.getName().tokenize('.')[0] <=> b.getName().tokenize('.')[0] }.collate(2)
+                        [[patient: key.patient, sample:key.sample, gender:key.gender, status:key.status, id:key.id, numLanes:key.numLanes, read_group:key.read_group, data_type:key.data_type, size:read_files.size()],
+                        read_files]
+                    }.transpose()
+            }else{
+                ch_reads_to_map = FASTP.out.reads
+            }
 
             ch_versions = ch_versions.mix(FASTP.out.versions)
         } else {
-            ch_reads_preprocessed = ch_reads_fastp
-        }
-
-        // Properly assign split reads
-        if (params.split_fastq > 0) {
-            SPLIT_FASTQ(ch_reads_preprocessed)
-            ch_reads_to_map = SPLIT_FASTQ.out.reads
-
-        } else {
-            ch_reads_to_map = ch_reads_preprocessed
+            ch_reads_to_map = ch_reads_fastp
         }
 
         // STEP 1: MAPPING READS TO REFERENCE GENOME
