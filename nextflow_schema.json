@@ -450,21 +450,21 @@
                     "fa_icon": "fas fa-file",
                     "description": "Path to ASCAT RT (replictiming) correction file. If you use AWS iGenomes, this has already been set for you appropriately."
                 },
-                "ascat_min_base_qual":{
+                "ascat_min_base_qual": {
                     "type": "number",
                     "default": 20,
                     "fa_icon": "fas fa-wrench",
                     "description": "Overwrite Ascat min base quality required for a read to be counted.",
                     "hidden": true
                 },
-                "ascat_min_counts":{
+                "ascat_min_counts": {
                     "type": "number",
                     "default": 10,
                     "fa_icon": "fas fa-wrench",
                     "description": "Overwrite Ascat minimum depth required in the normal for a SNP to be considered.",
                     "hidden": true
                 },
-                "ascat_min_map_qual":{
+                "ascat_min_map_qual": {
                     "type": "number",
                     "default": 35,
                     "fa_icon": "fas fa-wrench",
