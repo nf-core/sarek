@@ -15,7 +15,6 @@ def checkPathParamList = [
     params.ascat_loci,
     params.ascat_loci_gc,
     params.ascat_loci_rt,
-    params.ascat_purity,
     params.bwa,
     params.bwamem2,
     params.chr_dir,
@@ -75,6 +74,10 @@ if(params.tools && params.tools.contains('ascat')){
     }
     if(params.wes){
         log.warn("Reference files not suited for running ASCAT on WES data. It's recommended to use the reference files provided here: https://github.com/Wedge-lab/battenberg#required-reference-files")
+    }
+    if(params.ascat_genome!="hg19" && params.ascat_genome!="hg38"){
+        log.error "Parameter ascat_genome must be either hg19 or hg38."
+        exit 1
     }
 }
 

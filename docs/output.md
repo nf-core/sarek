@@ -42,7 +42,6 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - [TIDDIT](#tiddit)
     - [Sentieon DNAscope SV](#sentieon-dnascope-sv)
   - [Sample heterogeneity, ploidy and CNVs](#sample-heterogeneity-ploidy-and-cnvs)
-    - [ConvertAlleleCounts](#convertallelecounts)
     - [ASCAT](#ascat)
     - [Control-FREEC](#control-freec)
   - [MSI status](#msi-status)
@@ -432,30 +431,18 @@ For further reading and documentation see the [Sentieon DNAscope user guide](htt
 
 ### Sample heterogeneity, ploidy and CNVs
 
-#### ConvertAlleleCounts
-
-Running ASCAT on NGS data requires that the `BAM` files are converted into BAF and LogR values.
-This can be done using the software [AlleleCount](https://github.com/cancerit/alleleCount) followed by the provided [ConvertAlleleCounts](https://github.com/nf-core/sarek/blob/master/bin/convertAlleleCounts.r) R-script.
-
-For a Tumor/Normal pair:
-
-**Output directory: `results/VariantCalling/[TUMOR_vs_NORMAL]/ASCAT`**
-
-- `[TUMORSAMPLE].BAF` and `[NORMALSAMPLE].BAF`
-  - file with beta allele frequencies
-- `[TUMORSAMPLE].LogR` and `[NORMALSAMPLE].LogR`
-  - file with total copy number on a logarithmic scale
-
 #### ASCAT
 
 [ASCAT](https://github.com/Crick-CancerGenomics/ascat) is a software for performing allele-specific copy number analysis of tumor samples and for estimating tumor ploidy and purity (normal contamination).
 It infers tumor purity and ploidy and calculates whole-genome allele-specific copy number profiles.
 `ASCAT` is written in `R` and available here: [github.com/Crick-CancerGenomics/ascat](https://github.com/Crick-CancerGenomics/ascat).
 The `ASCAT` process gives several images as output, described in detail in this [book chapter](http://www.ncbi.nlm.nih.gov/pubmed/22130873).
+Running ASCAT on NGS data requires that the `BAM` files are converted into BAF and LogR values.
+This is done internally using the software [AlleleCount](https://github.com/cancerit/alleleCount).
 
 For a Tumor/Normal pair:
 
-**Output directory: `results/VariantCalling/[TUMOR_vs_NORMAL]/ASCAT`**
+**Output directory: `results/variant_calling/[TUMOR_vs_NORMAL]/ascat`**
 
 - `[TUMORSAMPLE].aberrationreliability.png`
   - Image with information about aberration reliability
@@ -475,8 +462,12 @@ For a Tumor/Normal pair:
   - file with information about LogR
 - `[TUMORSAMPLE].purityploidy.txt`
   - file with information about purity ploidy
+- `[TUMORSAMPLE].BAF` and `[NORMALSAMPLE].BAF`
+  - file with beta allele frequencies
+- `[TUMORSAMPLE].LogR` and `[NORMALSAMPLE].LogR`
+  - file with total copy number on a logarithmic scale
 
-The text file `[TUMORSAMPLE].cnvs.txt` countains predictions about copy number state for all the segments.
+The text file `[TUMORSAMPLE].cnvs.txt` contains predictions about copy number state for all the segments.
 The output is a tab delimited text file with the following columns:
 
 - _chr_: chromosome number

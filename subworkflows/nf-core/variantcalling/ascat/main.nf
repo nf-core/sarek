@@ -21,8 +21,6 @@ workflow RUN_ASCAT_SOMATIC {
         ASCAT(cram_pair, allele_files, loci_files, [], fasta, gc_file, rt_file)
     }
 
-
-
     ch_versions = ch_versions.mix(ASCAT.out.versions)
 
     emit:

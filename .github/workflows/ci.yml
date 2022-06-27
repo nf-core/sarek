@@ -45,7 +45,6 @@ jobs:
           - "markduplicates"
           - "mpileup"
           - "msisensorpro"
-          - "mutect2"
           - "prepare_recalibration"
           - "recalibrate"
           - "save_bam_mapped"
