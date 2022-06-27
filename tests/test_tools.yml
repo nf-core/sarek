@@ -323,10 +323,6 @@
     - manta
     - variant_calling
   files:
-    - path: results/variant_calling/sample1/manta/sample1.candidate_small_indels.vcf.gz
-    - path: results/variant_calling/sample1/manta/sample1.candidate_small_indels.vcf.gz.tbi
-    - path: results/variant_calling/sample1/manta/sample1.candidate_sv.vcf.gz
-    - path: results/variant_calling/sample1/manta/sample1.candidate_sv.vcf.gz.tbi
     - path: results/variant_calling/sample1/manta/sample1.diploid_sv.vcf.gz
     - path: results/variant_calling/sample1/manta/sample1.diploid_sv.vcf.gz.tbi
 
@@ -338,10 +334,6 @@
     - no_intervals
     - variant_calling
   files:
-    - path: results/variant_calling/sample1/manta/sample1.candidate_small_indels.vcf.gz
-    - path: results/variant_calling/sample1/manta/sample1.candidate_small_indels.vcf.gz.tbi
-    - path: results/variant_calling/sample1/manta/sample1.candidate_sv.vcf.gz
-    - path: results/variant_calling/sample1/manta/sample1.candidate_sv.vcf.gz.tbi
     - path: results/variant_calling/sample1/manta/sample1.diploid_sv.vcf.gz
     - path: results/variant_calling/sample1/manta/sample1.diploid_sv.vcf.gz.tbi
 
@@ -352,10 +344,6 @@
     - tumor_only
     - variant_calling
   files:
-    - path: results/variant_calling/sample2/manta/sample2.candidate_small_indels.vcf.gz
-    - path: results/variant_calling/sample2/manta/sample2.candidate_small_indels.vcf.gz.tbi
-    - path: results/variant_calling/sample2/manta/sample2.candidate_sv.vcf.gz
-    - path: results/variant_calling/sample2/manta/sample2.candidate_sv.vcf.gz.tbi
     - path: results/variant_calling/sample2/manta/sample2.tumor_sv.vcf.gz
     - path: results/variant_calling/sample2/manta/sample2.tumor_sv.vcf.gz.tbi
 
@@ -367,10 +355,6 @@
     - tumor_only
     - variant_calling
   files:
-    - path: results/variant_calling/sample2/manta/sample2.candidate_small_indels.vcf.gz
-    - path: results/variant_calling/sample2/manta/sample2.candidate_small_indels.vcf.gz.tbi
-    - path: results/variant_calling/sample2/manta/sample2.candidate_sv.vcf.gz
-    - path: results/variant_calling/sample2/manta/sample2.candidate_sv.vcf.gz.tbi
     - path: results/variant_calling/sample2/manta/sample2.tumor_sv.vcf.gz
     - path: results/variant_calling/sample2/manta/sample2.tumor_sv.vcf.gz.tbi
 
@@ -381,18 +365,12 @@
     - somatic
     - variant_calling
   files:
-    - path: results/variant_calling/sample3/manta/sample3.candidate_small_indels.vcf.gz
-    - path: results/variant_calling/sample3/manta/sample3.candidate_small_indels.vcf.gz.tbi
-    - path: results/variant_calling/sample3/manta/sample3.candidate_sv.vcf.gz
-    - path: results/variant_calling/sample3/manta/sample3.candidate_sv.vcf.gz.tbi
     - path: results/variant_calling/sample3/manta/sample3.diploid_sv.vcf.gz
     - path: results/variant_calling/sample3/manta/sample3.diploid_sv.vcf.gz.tbi
-    - path: results/variant_calling/sample4_vs_sample3/manta/sample4_vs_sample3.candidate_small_indels.vcf.gz
-    - path: results/variant_calling/sample4_vs_sample3/manta/sample4_vs_sample3.candidate_small_indels.vcf.gz.tbi
-    - path: results/variant_calling/sample4_vs_sample3/manta/sample4_vs_sample3.candidate_sv.vcf.gz
-    - path: results/variant_calling/sample4_vs_sample3/manta/sample4_vs_sample3.candidate_sv.vcf.gz.tbi
     - path: results/variant_calling/sample4_vs_sample3/manta/sample4_vs_sample3.diploid_sv.vcf.gz
     - path: results/variant_calling/sample4_vs_sample3/manta/sample4_vs_sample3.diploid_sv.vcf.gz.tbi
+    - path: results/variant_calling/sample4_vs_sample3/manta/sample4_vs_sample3.somatic_sv.vcf.gz
+    - path: results/variant_calling/sample4_vs_sample3/manta/sample4_vs_sample3.somatic_sv.vcf.gz.tbi
 
 - name: Run variant calling on somatic sample with manta without intervals
   command: nextflow run main.nf -profile test,tools_somatic,docker --tools manta --no_intervals
@@ -402,18 +380,12 @@
     - somatic
     - variant_calling
   files:
-    - path: results/variant_calling/sample3/manta/sample3.candidate_small_indels.vcf.gz
-    - path: results/variant_calling/sample3/manta/sample3.candidate_small_indels.vcf.gz.tbi
-    - path: results/variant_calling/sample3/manta/sample3.candidate_sv.vcf.gz
-    - path: results/variant_calling/sample3/manta/sample3.candidate_sv.vcf.gz.tbi
     - path: results/variant_calling/sample3/manta/sample3.diploid_sv.vcf.gz
     - path: results/variant_calling/sample3/manta/sample3.diploid_sv.vcf.gz.tbi
-    - path: results/variant_calling/sample4_vs_sample3/manta/sample4_vs_sample3.candidate_small_indels.vcf.gz
-    - path: results/variant_calling/sample4_vs_sample3/manta/sample4_vs_sample3.candidate_small_indels.vcf.gz.tbi
-    - path: results/variant_calling/sample4_vs_sample3/manta/sample4_vs_sample3.candidate_sv.vcf.gz
-    - path: results/variant_calling/sample4_vs_sample3/manta/sample4_vs_sample3.candidate_sv.vcf.gz.tbi
     - path: results/variant_calling/sample4_vs_sample3/manta/sample4_vs_sample3.diploid_sv.vcf.gz
     - path: results/variant_calling/sample4_vs_sample3/manta/sample4_vs_sample3.diploid_sv.vcf.gz.tbi
+    - path: results/variant_calling/sample4_vs_sample3/manta/sample4_vs_sample3.somatic_sv.vcf.gz
+    - path: results/variant_calling/sample4_vs_sample3/manta/sample4_vs_sample3.somatic_sv.vcf.gz.tbi
 
 - name: Run variant calling on tumoronly sample with mutect2
   command: nextflow run main.nf -profile test,tools_tumoronly,docker --tools mutect2
