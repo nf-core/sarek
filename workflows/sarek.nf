@@ -883,12 +883,10 @@ workflow SAREK {
             msisensorpro_scan,
             pon,
             pon_tbi,
-            chr_files,
-            mappability,
             allele_files,
             loci_files,
             gc_file,
-            rt_file,
+            rt_file
         )
 
         // Gather vcf files for annotation and QC

@@ -35,8 +35,6 @@ workflow PAIR_VARIANT_CALLING {
         msisensorpro_scan             // channel: [optional]  msisensorpro_scan
         panel_of_normals              // channel: [optional]  panel_of_normals
         panel_of_normals_tbi          // channel: [optional]  panel_of_normals_tbi
-        chr_files
-        mappability
         allele_files                  // channel: [optional]  ascat allele files
         loci_files                    // channel: [optional]  ascat loci files
         gc_file                       // channel: [optional]  ascat gc content file
