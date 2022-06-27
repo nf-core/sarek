@@ -22,26 +22,27 @@ workflow GATK_JOINT_GERMLINE_VARIANT_CALLING {
 
     gendb_input = input.map{
         meta, gvcf, tbi ->
-            interval_file = meta.num_intervals > 1 ? []      : params.intervals
-            interval_val  = meta.num_intervals > 1 ? meta.id : []
-            [meta, gvcf, tbi, interval_file, interval_val, []]
-        }
+            new_meta = [id: meta.interval_file.simpleName, num_intervals: meta.num_intervals, interval_file: meta.interval_file]
+            [ new_meta, gvcf, tbi ]
+        }.groupTuple().map{ new_meta, gvcf, tbi -> 
+            interval_file = new_meta.num_intervals > 1 ? new_meta.interval_file : params.intervals
+            [ new_meta, gvcf, tbi, interval_file, [], [] ] }
 
     //
     //Convert all sample vcfs into a genomicsdb workspace using genomicsdbimport.
     //
     GATK4_GENOMICSDBIMPORT ( gendb_input, false, false, false )
-    genotype_input = GATK4_GENOMICSDBIMPORT.out.genomicsdb.join(gendb_input).map{
-        meta, genomicsdb, gvcf, tbi, interval_file, interval_val, wpath ->
-            new_meta = meta
-            new_meta.id = meta.id.replaceAll(":","_")
-            [new_meta, genomicsdb, [], [], []]
+
+    genotype_input = GATK4_GENOMICSDBIMPORT.out.genomicsdb.map{
+        meta, genomicsdb ->
+            [meta, genomicsdb, [], [], []]
         }
     ch_versions = ch_versions.mix(GATK4_GENOMICSDBIMPORT.out.versions)
 
     //
     //Joint genotyping performed using GenotypeGVCFs
     //
+
     vcfs = GATK4_GENOTYPEGVCFS ( genotype_input, fasta, fai, dict, sites, sites_index).vcf
     merge_vcfs_input = vcfs.map { meta, vcf ->
         [[id:"joint variant calling", num_intervals: meta.num_intervals], vcf]}.groupTuple()
@@ -52,8 +53,6 @@ workflow GATK_JOINT_GERMLINE_VARIANT_CALLING {
     merged_vcf = MERGE_GENOTYPEGVCFS(merge_vcfs_input,dict)
 
     vqsr_input = merged_vcf.vcf.join(merged_vcf.tbi)
-    vqsr_input.dump(tag:'vqsr')
-    resources_snp.dump(tag:'res')
     SNP_VQSR(vqsr_input,
              resources_snp,
              fasta,

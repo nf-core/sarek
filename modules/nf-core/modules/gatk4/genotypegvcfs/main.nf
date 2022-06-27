@@ -8,7 +8,7 @@ process GATK4_GENOTYPEGVCFS {
         'quay.io/biocontainers/gatk4:4.2.6.1--hdfd78af_0' }"
 
     input:
-    tuple val(meta), path(gvcf), path(gvcf_index), path(interval_file), val(interval_value)
+    tuple val(meta), path(gvcf), path(gvcf_index), path(intervals), path(intervals_index)
     path  fasta
     path  fai
     path  dict
@@ -28,8 +28,7 @@ process GATK4_GENOTYPEGVCFS {
     def prefix = task.ext.prefix ?: "${meta.id}"
     def gvcf_command = gvcf.name.endsWith(".vcf") || gvcf.name.endsWith(".vcf.gz") ? "$gvcf" : "gendb://$gvcf"
     def dbsnp_command = dbsnp ? "--dbsnp $dbsnp" : ""
-    def interval_command = interval_file ? "--intervals ${interval_file}" : interval_value ? "--intervals ${interval_value}" : ""
-
+    def interval_command = intervals ? "--intervals $intervals" : ""
 
     def avail_mem = 3
     if (!task.memory) {

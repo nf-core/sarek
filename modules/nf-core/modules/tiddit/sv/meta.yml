@@ -17,14 +17,22 @@ input:
       description: |
         Groovy Map containing sample information
         e.g. [ id:'test', single_end:false ]
+  - input:
+      type: file
+      description: BAM/CRAM file
+      pattern: "*.{bam,cram}"
+  - index:
+      type: file
+      description: BAM/CRAM index file
+      pattern: "*.{bai,crai}"
   - fasta:
       type: file
       description: Input FASTA file
       pattern: "*.{fasta,fa}"
-  - fai:
+  - bwa_index:
       type: file
-      description: FASTA index file
-      pattern: "*.{fai}"
+      description: BWA genome index files
+      pattern: "Directory containing BWA index *.{amb,ann,bwt,pac,sa}"
 output:
   - meta:
       type: map
@@ -38,11 +46,7 @@ output:
   - ploidy:
       type: file
       description: tab
-      pattern: "*.{ploidy.tab}"
-  - signals:
-      type: file
-      description: tab
-      pattern: "*.{signals.tab}"
+      pattern: "*.{ploidies.tab}"
   - versions:
       type: file
       description: File containing software versions

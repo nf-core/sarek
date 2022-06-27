@@ -4,10 +4,11 @@
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
+include { BAM_TO_CRAM                            } from '../../bam_to_cram'
 include { GATK4_ESTIMATELIBRARYCOMPLEXITY        } from '../../../../modules/nf-core/modules/gatk4/estimatelibrarycomplexity/main'
 include { GATK4_MARKDUPLICATES_SPARK             } from '../../../../modules/nf-core/modules/gatk4/markduplicatesspark/main'
 include { SAMTOOLS_INDEX as INDEX_MARKDUPLICATES } from '../../../../modules/nf-core/modules/samtools/index/main'
-include { BAM_TO_CRAM                            } from '../../bam_to_cram'
+include { SAMTOOLS_CONVERT as SAMTOOLS_CRAMTOBAM } from '../../../../modules/nf-core/modules/samtools/convert/main'
 
 workflow MARKDUPLICATES_SPARK {
     take:
@@ -26,21 +27,13 @@ workflow MARKDUPLICATES_SPARK {
     GATK4_MARKDUPLICATES_SPARK(bam, fasta, fasta_fai, dict)
     INDEX_MARKDUPLICATES(GATK4_MARKDUPLICATES_SPARK.out.output)
 
-    bam_bai = GATK4_MARKDUPLICATES_SPARK.out.output
-        .join(INDEX_MARKDUPLICATES.out.bai)
-
-    cram_crai = GATK4_MARKDUPLICATES_SPARK.out.output
+    cram_markduplicates = GATK4_MARKDUPLICATES_SPARK.out.output
         .join(INDEX_MARKDUPLICATES.out.crai)
 
-    // Convert Markupduplicates spark bam output to cram when running bamqc and/or deeptools
-    BAM_TO_CRAM(bam_bai, Channel.empty(), fasta, fasta_fai, intervals_combined_bed_gz_tbi)
+    SAMTOOLS_CRAMTOBAM(cram_markduplicates, fasta, fasta_fai)
 
-    // Only one of these channel is not empty:
-    // - running Markupduplicates spark with bam output
-    // - running Markupduplicates spark with cram output
-    cram_markduplicates = Channel.empty().mix(
-        BAM_TO_CRAM.out.cram_converted,
-        cram_crai)
+    // Convert Markupduplicates spark bam output to cram when running bamqc and/or deeptools
+    BAM_TO_CRAM(Channel.empty(), cram_markduplicates, fasta, fasta_fai, intervals_combined_bed_gz_tbi)
 
     // When running Marduplicates spark, and saving reports
     GATK4_ESTIMATELIBRARYCOMPLEXITY(bam, fasta, fasta_fai, dict)
@@ -56,7 +49,7 @@ workflow MARKDUPLICATES_SPARK {
     ch_versions = ch_versions.mix(GATK4_MARKDUPLICATES_SPARK.out.versions.first())
     ch_versions = ch_versions.mix(INDEX_MARKDUPLICATES.out.versions.first())
     ch_versions = ch_versions.mix(BAM_TO_CRAM.out.versions.first())
-
+    ch_versions = ch_versions.mix(SAMTOOLS_CRAMTOBAM.out.versions)
     emit:
         cram     = cram_markduplicates
         qc       = qc_reports

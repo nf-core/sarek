@@ -33,27 +33,31 @@ jobs:
         test:
           - "aligner"
           - "annotation"
-          - "default"
           - "cnvkit"
           - "controlfreec"
           - "deepvariant"
+          - "default"
           - "freebayes"
           - "gatk4_spark"
           - "haplotypecaller"
           - "manta"
           - "markduplicates"
-          - "mutect2"
+          - "mpileup"
           - "msisensorpro"
-          # - 'save_bam_mapped'
+          - "mutect2"
           - "prepare_recalibration"
           - "recalibrate"
-          - "variantcalling_channel"
+          - "save_bam_mapped"
+          - "save_output_as_bam"
           - "skip_markduplicates"
+          - "split_fastq"
           - "strelka"
           - "strelkabp"
-          - "split_fastq"
           - "targeted"
+          - "tiddit"
           - "tumor_normal_pair"
+          - "variantcalling_channel"
+
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
@@ -68,15 +72,21 @@ jobs:
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
           nextflow self-update
+
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
           python-version: "3.x"
+
       - name: Install dependencies
         run: python -m pip install --upgrade pip pytest-workflow
 
       - name: Run pipeline with tests settings
-        run: pytest --tag ${{ matrix.test }} --symlink --kwdof --git-aware --color=yes
+        uses: Wandalen/wretry.action@v1.0.11
+        with:
+          command: pytest --tag ${{ matrix.test }} --symlink --kwdof --git-aware --color=yes
+          attempt_limit: 3
+
       - name: Output log on failure
         if: failure()
         run: |
