@@ -70,6 +70,23 @@
     - path: results/variant_calling/sample1/cnvkit/test.paired_end.recalibrated.sorted.cns
     - path: results/variant_calling/sample1/cnvkit/test.paired_end.recalibrated.sorted.call.cns
 
+- name: Run variant calling on somatic sample with tiddit
+  command: nextflow run main.nf -profile test,tools_somatic,docker --tools tiddit -c ./tests/nextflow.config
+  tags:
+    - tiddit
+    - somatic
+    - variant_calling
+  files:
+    - path: results/variant_calling/sample3/tiddit/sample3.ploidies.tab
+    - path: results/variant_calling/sample3/tiddit/sample3.vcf.gz
+    - path: results/variant_calling/sample3/tiddit/sample3.vcf.gz.tbi
+    - path: results/variant_calling/sample4_vs_sample3/tiddit/sample4_vs_sample3.normal.vcf.gz
+    - path: results/variant_calling/sample4_vs_sample3/tiddit/sample4_vs_sample3.normal.vcf.gz.tbi
+    - path: results/variant_calling/sample4_vs_sample3/tiddit/sample4_vs_sample3.tumor.vcf.gz
+    - path: results/variant_calling/sample4_vs_sample3/tiddit/sample4_vs_sample3.tumor.vcf.gz.tbi
+    - path: results/variant_calling/sample4_vs_sample3/tiddit/sample4_vs_sample3_sv_merge.vcf
+    - path: results/variant_calling/sample4_vs_sample3/tiddit/sample4_vs_sample3.ploidies.tab
+
 - name: Run variant calling on germline sample with tiddit
   command: nextflow run main.nf -profile test,tools_germline,docker --tools tiddit -c ./tests/nextflow.config
   tags:
