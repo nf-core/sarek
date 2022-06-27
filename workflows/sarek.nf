@@ -833,21 +833,22 @@ workflow SAREK {
         PAIR_VARIANT_CALLING(
             params.tools,
             cram_variant_calling_pair,
+            [],
+            chr_files,
             dbsnp,
             dbsnp_tbi,
             dict,
             fasta,
             fasta_fai,
+            germline_resource,
+            germline_resource_tbi,
             intervals,
             intervals_bed_gz_tbi,
             intervals_bed_combined,
+            mappability,
             msisensorpro_scan,
-            germline_resource,
-            germline_resource_tbi,
             pon,
-            pon_tbi,
-            chr_files,
-            mappability
+            pon_tbi
         )
 
         // Gather vcf files for annotation and QC
@@ -866,6 +867,7 @@ workflow SAREK {
         vcf_to_annotate = vcf_to_annotate.mix(PAIR_VARIANT_CALLING.out.mutect2_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(PAIR_VARIANT_CALLING.out.manta_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(PAIR_VARIANT_CALLING.out.strelka_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(PAIR_VARIANT_CALLING.out.tiddit_vcf)
 
         // Gather used softwares versions
         ch_versions = ch_versions.mix(GERMLINE_VARIANT_CALLING.out.versions)
