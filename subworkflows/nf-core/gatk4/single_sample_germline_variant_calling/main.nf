@@ -8,6 +8,7 @@ workflow GATK_SINGLE_SAMPLE_GERMLINE_VARIANT_CALLING{
     fasta
     fasta_fai
     dict
+    intervals_bed_combined
     known_sites
     known_sites_tbi
 
@@ -16,7 +17,10 @@ workflow GATK_SINGLE_SAMPLE_GERMLINE_VARIANT_CALLING{
     ch_versions = Channel.empty()
 
     //Don't scatter/gather by intervals, because especially for small regions (targeted or WGS), it easily fails with 0 SNPS in region
-    cnn_in = vcf.map{ meta, vcf, tbi, intervals -> [meta,vcf,tbi,[], intervals]}
+    cnn_in = vcf.combine(intervals_bed_combined).map{ meta, vcf, tbi, intervals ->
+            new_intervals = intervals.simpleName == "no_intervals" ? [] : intervals
+            [meta, vcf, tbi, [], new_intervals]
+    }
 
     CNNSCOREVARIANTS(cnn_in,
                     fasta,
@@ -25,9 +29,10 @@ workflow GATK_SINGLE_SAMPLE_GERMLINE_VARIANT_CALLING{
                     [],
                     [])
 
-    cnn_out = CNNSCOREVARIANTS.out.vcf.join(CNNSCOREVARIANTS.out.tbi).join(vcf)
-        .map{   meta, cnn_vcf,cnn_tbi, haplotyc_vcf, haplotyc_tbi, intervals
-            -> [meta, cnn_vcf, cnn_tbi, intervals]
+    cnn_out = CNNSCOREVARIANTS.out.vcf.join(CNNSCOREVARIANTS.out.tbi).combine(intervals_bed_combined)
+        .map{   meta, cnn_vcf,cnn_tbi, intervals ->
+            new_intervals = intervals.simpleName == "no_intervals" ? [] : intervals
+            [meta, cnn_vcf, cnn_tbi, new_intervals]
         }
 
     FILTERVARIANTTRANCHES(cnn_out,

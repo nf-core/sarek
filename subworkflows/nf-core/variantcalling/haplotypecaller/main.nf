@@ -12,9 +12,9 @@ workflow RUN_HAPLOTYPECALLER {
     dict                            // channel: [mandatory]
     dbsnp                           // channel: []
     dbsnp_tbi
+    intervals_bed_combined          // channel: [mandatory] intervals/target regions in one file unzipped, no_intervals.bed if no_intervals
     known_sites
-    known_sites_tbi
-    intervals_bed_combined          // channel: [optional]
+    known_sites_tbi               // channel: [optional]
 
 
     main:
@@ -87,16 +87,23 @@ workflow RUN_HAPLOTYPECALLER {
         // filtered_vcf = JOINT_GERMLINE.out.vcf
         // ch_versions = ch_versions.mix(GATK_JOINT_GERMLINE_VARIANT_CALLING.out.versions)
     } else {
-        single_sample_in = Channel.empty().mix(haplotypecaller_vcf.join(haplotypecaller_tbi).combine(intervals_bed_combined).map{
-            meta, vcf, tbi, intervals ->
-            [[id:meta.id, patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, num_intervals:1 ],
-            vcf, tbi, intervals]
-        })
 
-        SINGLE_SAMPLE(single_sample_in,
+        //filter_intervals = intervals_bed_combined ?: Channel.empty()
+        //single_sample_in = Channel.empty().mix(haplotypecaller_vcf.join(haplotypecaller_tbi).combine(filter_intervals).map{
+        //    meta, vcf, tbi, intervals ->
+//
+//
+        //    [[id:meta.id, patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status],
+        //    vcf, tbi, intervals]
+        //})
+
+        //single_sample_in.view()
+
+        SINGLE_SAMPLE(haplotypecaller_vcf.join(haplotypecaller_tbi),
                         fasta,
                         fasta_fai,
                         dict,
+                        intervals_bed_combined,
                         known_sites,
                         known_sites_tbi)
 

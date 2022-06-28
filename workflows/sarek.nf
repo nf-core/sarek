@@ -291,7 +291,7 @@ workflow SAREK {
     PREPARE_INTERVALS(fasta_fai)
 
     // Intervals for speed up preprocessing/variant calling by spread/gather
-    intervals_bed_combined      = params.no_intervals ? [] : PREPARE_INTERVALS.out.intervals_bed_combined  // [interval.bed] all intervals in one file
+    intervals_bed_combined      = params.no_intervals ? Channel.value([]) : PREPARE_INTERVALS.out.intervals_bed_combined  // [interval.bed] all intervals in one file
     intervals_for_preprocessing = params.wes ? intervals_bed_combined : []      // For QC during preprocessing, we don't need any intervals (MOSDEPTH doesn't take them for WGS)
 
     intervals                   = PREPARE_INTERVALS.out.intervals_bed        // [interval, num_intervals] multiple interval.bed files, divided by useful intervals for scatter/gather
@@ -797,7 +797,8 @@ workflow SAREK {
             fasta_fai,
             intervals,
             intervals_bed_gz_tbi,
-            intervals_bed_combined,
+            intervals_bed_combined, // [] if no_intervals, else interval_bed_combined.bed
+            PREPARE_INTERVALS.out.intervals_bed_combined // no_intervals.bed if no intervals, else interval_bed_combined.bed; Channel operations possible
             known_sites,
             known_sites_tbi)
             // params.joint_germline)
