@@ -482,12 +482,12 @@ If you have any questions or issues please send us a message on [Slack](https://
 | :-------------- | :-: | :-: | :----: | :---: | :-----: | :-----: |
 | Strelka2        |  x  |  x  |   x    |   x   |    x    |    x    |
 | Freebayes       |  x  |  x  |   x    |   x   |    x    |    x    |
-| mutect          |  x  |  x  |   x    |   x   |    x    |    x    |
-| Haplotypecaller |  x  |  x  |   x    |   x   |    x    |    x    |
-| Deepvariant     |  x  |  x  |   x    |   x   |    x    |    x    |
+| mutect          |  x  |  x  |   x    |   x   |    -    |    x    |
+| Haplotypecaller |  x  |  x  |   x    |   -   |    x    |    -    |
+| Deepvariant     |  x  |  x  |   x    |   -   |    x    |    -    |
 | cnvkit          |  x  |  x  |   -    |   x   |    x    |    x    |
-| Msisensor       |  x  |  x  |   x    |   x   |    x    |    x    |
-| controlfreec    |  x  |  x  |   x    |   x   |    x    |    x    |
+| Msisensor       |  x  |  x  |   x    |   x   |    -    |    x    |
+| controlfreec    |  x  |  x  |   x    |   x   |    -    |    x    |
 | ascat           |  x  |  x  |   -    |   -   |    -    |    x    |
 | manta           |  x  |  x  |   x    |   x   |    x    |    x    |
 | tiddit          |  x  |  x  |   x    |   x   |    x    |    x    |

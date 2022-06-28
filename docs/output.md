@@ -444,30 +444,32 @@ For a Tumor/Normal pair:
 
 **Output directory: `results/variant_calling/[TUMOR_vs_NORMAL]/ascat`**
 
-- `[TUMORSAMPLE].aberrationreliability.png`
-  - Image with information about aberration reliability
-- `[TUMORSAMPLE].ASCATprofile.png`
-  - Image with information about ASCAT profile
-- `[TUMORSAMPLE].ASPCF.png`
+- `[TUMORSAMPLE_VS_NORMALSAMPLE].tumour.ASPCF.png`
   - Image with information about ASPCF
-- `[TUMORSAMPLE].rawprofile.png`
-  - Image with information about raw profile
-- `[TUMORSAMPLE].sunrise.png`
-  - Image with information about sunrise
-- `[TUMORSAMPLE].tumour.png`
-  - Image with information about tumor
-- `[TUMORSAMPLE].cnvs.txt`
-  - file with information about CNVS
-- `[TUMORSAMPLE].LogR.PCFed.txt`
-  - file with information about LogR
-- `[TUMORSAMPLE].purityploidy.txt`
-  - file with information about purity ploidy
-- `[TUMORSAMPLE].BAF` and `[NORMALSAMPLE].BAF`
+- `[TUMORSAMPLE_VS_NORMALSAMPLE].before_correction.[TUMORSAMPLE_VS_NORMALSAMPLE].tumour.png`
+  - Image with information about raw profile of tumor sample of logR and BAF values
+- `[TUMORSAMPLE_VS_NORMALSAMPLE].before_correction.[TUMORSAMPLE_VS_NORMALSAMPLE].germline.png`
+  - Image with information about raw profile of normal sample  of logR and BAF values
+- `[TUMORSAMPLE_VS_NORMALSAMPLE].after_correction_gc_rt.[TUMORSAMPLE_VS_NORMALSAMPLE].tumour.png`
+  - Image with information about GC and RT corrected logR and BAF values of tumor sample
+- `[TUMORSAMPLE_VS_NORMALSAMPLE].after_correction_gc_rt.[TUMORSAMPLE_VS_NORMALSAMPLE].germline.png`
+  - Image with information about GC and RT corrected logR and BAF values of normal sample
+- `[TUMORSAMPLE_VS_NORMALSAMPLE].sunrise.png`
+  - Image visualising the range of ploidy and tumor percentage values
+- `[TUMORSAMPLE_VS_NORMALSAMPLE].metrics.txt`
+  - File with information about different metrics from ASCAT profiles
+- `[TUMORSAMPLE_VS_NORMALSAMPLE].cnvs.txt`
+  - File with information about CNVS
+- `[TUMORSAMPLE_VS_NORMALSAMPLE].purityploidy.txt`
+  - File with information about purity and ploidy
+- `[TUMORSAMPLE_VS_NORMALSAMPLE].segments.txt`
+  - File with information about copy number segments
+- `[TUMORSAMPLE_VS_NORMALSAMPLE].tumour_tumourBAF.txt` and `[TUMORSAMPLE_VS_NORMALSAMPLE].tumour_normalBAF.txt`
   - file with beta allele frequencies
-- `[TUMORSAMPLE].LogR` and `[NORMALSAMPLE].LogR`
-  - file with total copy number on a logarithmic scale
+- `[TUMORSAMPLE_VS_NORMALSAMPLE].tumour_tumourLogR.txt` and `[TUMORSAMPLE_VS_NORMALSAMPLE].tumour_normalLogR.txt`
+  - File with total copy number on a logarithmic scale
 
-The text file `[TUMORSAMPLE].cnvs.txt` contains predictions about copy number state for all the segments.
+The text file `[TUMORSAMPLE_VS_NORMALSAMPLE].cnvs.txt` contains predictions about copy number state for all the segments.
 The output is a tab delimited text file with the following columns:
 
 - _chr_: chromosome number
