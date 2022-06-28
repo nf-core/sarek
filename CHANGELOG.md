@@ -104,7 +104,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#599](https://github.com/nf-core/sarek/pull/599) - Add checks for correct data type for `params.step`
 - [#599](https://github.com/nf-core/sarek/pull/599) - Add checks for no empty `--tools` with `--step variant_calling` or `--step annotation`
 - [#600](https://github.com/nf-core/sarek/pull/600) - Remove `nf-core lint` warnings
-- [#602](https://github.com/nf-core/sarek/pull/602/) - Fixed bug in `alignment_to_fastq` and added tests
+- [#602](https://github.com/nf-core/sarek/pull/602) - Fixed bug in `alignment_to_fastq` and added tests
+- [#609](https://github.com/nf-core/sarek/pull/609) - Remove unused intervals code, reorganize combined intervals file
 
 ### Deprecated
 
