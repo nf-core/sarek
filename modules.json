@@ -54,9 +54,6 @@
             "custom/dumpsoftwareversions": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
-            "deeptools/bamcoverage": {
-                "git_sha": "a21cfb666eed7517060f1d2d61a21c340753b0ec"
-            },
             "deepvariant": {
                 "git_sha": "fd5f6f5f4ffef4ab5a4e809bd3211bbc71c38d30"
             },
@@ -68,6 +65,9 @@
             },
             "ensemblvep": {
                 "git_sha": "757c20c8ebfab85e1de9f98773a2269f6d34025a"
+            },
+            "fastp": {
+                "git_sha": "9b51362a532a14665f513cf987531f9ea5046b74"
             },
             "fastqc": {
                 "git_sha": "49b18b1639f4f7104187058866a8fab33332bdfe"
@@ -168,6 +168,9 @@
             "manta/tumoronly": {
                 "git_sha": "979e57b7ac6a405a395dd7a6dbe1a275c5bc226b"
             },
+            "mosdepth": {
+                "git_sha": "72a31b76eb1b58879e0d91fb1d992e0118693098"
+            },
             "msisensorpro/msi_somatic": {
                 "git_sha": "f0800157544a82ae222931764483331a81812012"
             },
@@ -176,12 +179,6 @@
             },
             "multiqc": {
                 "git_sha": "49b18b1639f4f7104187058866a8fab33332bdfe"
-            },
-            "qualimap/bamqc": {
-                "git_sha": "49b18b1639f4f7104187058866a8fab33332bdfe"
-            },
-            "qualimap/bamqccram": {
-                "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
             },
             "samblaster": {
                 "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
@@ -213,9 +210,6 @@
             "samtools/view": {
                 "git_sha": "6b64f9cb6c3dd3577931cc3cd032d6fb730000ce"
             },
-            "seqkit/split2": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
-            },
             "snpeff": {
                 "git_sha": "40dd662fd26c3eb3160b7c8cbbe9bff80bbe2c30"
             },
@@ -225,6 +219,9 @@
             "strelka/somatic": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
+            "svdb/merge": {
+                "git_sha": "313d76e00525c8e975dabce0c34973fd53c3f4dd"
+            },
             "tabix/bgziptabix": {
                 "git_sha": "49b18b1639f4f7104187058866a8fab33332bdfe"
             },
@@ -233,9 +230,6 @@
             },
             "tiddit/sv": {
                 "git_sha": "b689b8ed88a9f89eb2f7c75d3eb0bace77ade109"
-            },
-            "trimgalore": {
-                "git_sha": "85ec13ff1fc2196c5a507ea497de468101baabed"
             },
             "untar": {
                 "git_sha": "51be617b1ca9bff973655eb899d591ed6ab253b5"
