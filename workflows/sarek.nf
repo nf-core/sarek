@@ -291,11 +291,11 @@ workflow SAREK {
     PREPARE_INTERVALS(fasta_fai)
 
     // Intervals for speed up preprocessing/variant calling by spread/gather
-    intervals_bed_combined        = PREPARE_GENOME.out.intervals_bed_combined  // [interval.bed] all intervals in one file
-    intervals_for_preprocessing   = params.wes ? intervals_bed_combined : []   // For QC during preprocessing, we don't need any intervals (MOSDEPTH doesn't take them for WGS)
+    intervals_bed_combined      = params.no_intervals ? [] : PREPARE_INTERVALS.out.intervals_bed_combined  // [interval.bed] all intervals in one file
+    intervals_for_preprocessing = params.wes ? intervals_bed_combined : []      // For QC during preprocessing, we don't need any intervals (MOSDEPTH doesn't take them for WGS)
 
-    intervals                     = PREPARE_INTERVALS.out.intervals_bed        // [interval, num_intervals] multiple interval.bed files, divided by useful intervals for scatter/gather
-    intervals_bed_gz_tbi          = PREPARE_INTERVALS.out.intervals_bed_gz_tbi // [interval_bed, tbi, num_intervals] multiple interval.bed.gz/.tbi files, divided by useful intervals for scatter/gather
+    intervals                   = PREPARE_INTERVALS.out.intervals_bed        // [interval, num_intervals] multiple interval.bed files, divided by useful intervals for scatter/gather
+    intervals_bed_gz_tbi        = PREPARE_INTERVALS.out.intervals_bed_gz_tbi // [interval_bed, tbi, num_intervals] multiple interval.bed.gz/.tbi files, divided by useful intervals for scatter/gather
 
     // Gather used softwares versions
     ch_versions = ch_versions.mix(PREPARE_GENOME.out.versions)
