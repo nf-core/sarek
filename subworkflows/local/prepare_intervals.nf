@@ -24,17 +24,17 @@ workflow PREPARE_INTERVALS {
     ch_intervals_combined            = Channel.empty() // Bed file containing all intervals
 
     if (params.no_intervals) {
-        file("${params.outdir}/reference/no_intervals.bed").text = "no_intervals\n"
-        file("${params.outdir}/reference/no_intervals.bed.gz").text = "no_intervals\n"
-        file("${params.outdir}/reference/no_intervals.bed.gz.tbi").text = "no_intervals\n"
+        file("${params.outdir}/no_intervals.bed").text = "no_intervals\n"
+        file("${params.outdir}/no_intervals.bed.gz").text = "no_intervals\n"
+        file("${params.outdir}/no_intervals.bed.gz.tbi").text = "no_intervals\n"
 
-        ch_intervals = Channel.fromPath(file("${params.outdir}/reference/no_intervals.bed"))
+        ch_intervals = Channel.fromPath(file("${params.outdir}/no_intervals.bed"))
                                             .map{ it -> [it, 0]}
 
-        ch_intervals_bed_gz_tbi = Channel.fromPath(file("${params.outdir}/reference/no_intervals.bed.{gz,gz.tbi}"))
+        ch_intervals_bed_gz_tbi = Channel.fromPath(file("${params.outdir}/no_intervals.bed.{gz,gz.tbi}"))
                                             .collect().map{ it -> [it, 0]}
 
-        ch_intervals_combined = Channel.fromPath(file("${params.outdir}/reference/no_intervals.bed"))
+        ch_intervals_combined = Channel.fromPath(file("${params.outdir}/no_intervals.bed"))
                                             .map{ it -> [it, 0]}
 
     } else if (params.step != 'annotate' && params.step != 'controlfreec') {
