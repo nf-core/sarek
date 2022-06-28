@@ -798,7 +798,7 @@ workflow SAREK {
             intervals,
             intervals_bed_gz_tbi,
             intervals_bed_combined, // [] if no_intervals, else interval_bed_combined.bed
-            PREPARE_INTERVALS.out.intervals_bed_combined // no_intervals.bed if no intervals, else interval_bed_combined.bed; Channel operations possible
+            PREPARE_INTERVALS.out.intervals_bed_combined, // no_intervals.bed if no intervals, else interval_bed_combined.bed; Channel operations possible
             known_sites,
             known_sites_tbi)
             // params.joint_germline)
