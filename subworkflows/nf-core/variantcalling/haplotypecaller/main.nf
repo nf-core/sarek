@@ -92,9 +92,6 @@ workflow RUN_HAPLOTYPECALLER {
             [[id:meta.id, patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, num_intervals:1 ],
             vcf, tbi, intervals]
         })
-        single_sample_in = Channel.empty().mix(HAPLOTYPECALLER.out.vcf.join(HAPLOTYPECALLER.out.tbi).join(cram).map{ meta, vcf, tbi, cram, crai, intervals ->
-            [meta, vcf, tbi, intervals]
-        })
 
         SINGLE_SAMPLE(single_sample_in,
                         fasta,

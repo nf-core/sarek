@@ -4,7 +4,7 @@ include { GATK4_FILTERVARIANTTRANCHES as FILTERVARIANTTRANCHES          } from '
 workflow GATK_SINGLE_SAMPLE_GERMLINE_VARIANT_CALLING{
 
     take:
-    vcf             // meta, vcf, tbi
+    vcf             // meta, vcf, tbi, intervals
     fasta
     fasta_fai
     dict
@@ -15,7 +15,7 @@ workflow GATK_SINGLE_SAMPLE_GERMLINE_VARIANT_CALLING{
 
     ch_versions = Channel.empty()
 
-    //not Using intervals, because especially for targeted analysis, it easily fails with 0 SNPS in region, WGS?
+    //Don't scatter/gather by intervals, because especially for small regions (targeted or WGS), it easily fails with 0 SNPS in region
     cnn_in = vcf.map{ meta, vcf, tbi, intervals -> [meta,vcf,tbi,[], intervals]}
 
     CNNSCOREVARIANTS(cnn_in,
