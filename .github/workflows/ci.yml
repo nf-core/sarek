@@ -58,6 +58,7 @@ jobs:
           - "tiddit"
           - "trimming"
           - "tumor_normal_pair"
+          - "umi"
           - "variantcalling_channel"
 
     steps:
