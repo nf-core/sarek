@@ -52,7 +52,7 @@ for (param in checkPathParamList) if (param) file(param, checkIfExists: true)
 // Set input, can either be from --input or from automatic retrieval in WorkflowSarek.groovy
 ch_input_sample = extract_csv(file(params.input, checkIfExists: true))
 
-if (params.wes) {
+if (params.wes && !params.step == 'annotate') {
     if (params.intervals && !params.intervals.endsWith("bed")) exit 1, "Target file specified with `--intervals` must be in BED format"
 } else {
     if (params.intervals && !params.intervals.endsWith("bed") && !params.intervals.endsWith("interval_list")) exit 1, "Interval file must end with .bed or .interval_list"
