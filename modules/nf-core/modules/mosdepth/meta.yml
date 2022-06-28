@@ -1,0 +1,99 @@
+name: mosdepth
+description: Calculates genome-wide sequencing coverage.
+keywords:
+  - mosdepth
+  - bam
+  - cram
+  - coverage
+tools:
+  - mosdepth:
+      description: |
+        Fast BAM/CRAM depth calculation for WGS, exome, or targeted sequencing.
+      documentation: https://github.com/brentp/mosdepth
+      doi: 10.1093/bioinformatics/btx699
+      licence: ["MIT"]
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - bam:
+      type: file
+      description: Input BAM/CRAM file
+      pattern: "*.{bam,cram}"
+  - bai:
+      type: file
+      description: Index for BAM/CRAM file
+      pattern: "*.{bai,crai}"
+  - bed:
+      type: file
+      description: BED file with intersected intervals
+      pattern: "*.{bed}"
+  - fasta:
+      type: file
+      description: Reference genome FASTA file
+      pattern: "*.{fa,fasta}"
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - global_txt:
+      type: file
+      description: Text file with global cumulative coverage distribution
+      pattern: "*.{global.dist.txt}"
+  - regions_txt:
+      type: file
+      description: Text file with region cumulative coverage distribution
+      pattern: "*.{region.dist.txt}"
+  - summary_txt:
+      type: file
+      description: Text file with summary mean depths per chromosome and regions
+      pattern: "*.{summary.txt}"
+  - per_base_bed:
+      type: file
+      description: BED file with per-base coverage
+      pattern: "*.{per-base.bed.gz}"
+  - per_base_csi:
+      type: file
+      description: Index file for BED file with per-base coverage
+      pattern: "*.{per-base.bed.gz.csi}"
+  - per_base_d4:
+      type: file
+      description: D4 file with per-base coverage
+      pattern: "*.{per-base.d4}"
+  - regions_bed:
+      type: file
+      description: BED file with per-region coverage
+      pattern: "*.{regions.bed.gz}"
+  - regions_csi:
+      type: file
+      description: Index file for BED file with per-region coverage
+      pattern: "*.{regions.bed.gz.csi}"
+  - quantized_bed:
+      type: file
+      description: BED file with binned coverage
+      pattern: "*.{quantized.bed.gz}"
+  - quantized_csi:
+      type: file
+      description: Index file for BED file with binned coverage
+      pattern: "*.{quantized.bed.gz.csi}"
+  - thresholds_bed:
+      type: file
+      description: BED file with the number of bases in each region that are covered at or above each threshold
+      pattern: "*.{thresholds.bed.gz}"
+  - thresholds_csi:
+      type: file
+      description: Index file for BED file with threshold coverage
+      pattern: "*.{thresholds.bed.gz.csi}"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@joseespinosa"
+  - "@drpatelh"
+  - "@ramprasadn"
+  - "@matthdsm"
