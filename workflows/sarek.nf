@@ -291,17 +291,11 @@ workflow SAREK {
     PREPARE_INTERVALS(fasta_fai)
 
     // Intervals for speed up preprocessing/variant calling by spread/gather
-    // this is not good, we need the combined bed for some tools that don't support scatter/gather. Why would we not use the same intervals for WGS?
-    // intervals_bed_combined        = (params.intervals && params.wes) ? Channel.fromPath(params.intervals).collect() : []
-    // check if this actually still works if interval_list format
-    intervals_bed_combined        = params.intervals ? Channel.fromPath(params.intervals).collect() : []
-    //TODO: intervals also with WGS data? Probably need a parameter if WGS for deepvariant tool, that would allow to check here too
-    intervals_for_preprocessing              = (params.wes && params.intervals) ? intervals_bed_combined : []
+    intervals_bed_combined      = params.no_intervals ? [] : PREPARE_INTERVALS.out.intervals_bed_combined  // [interval.bed] all intervals in one file
+    intervals_for_preprocessing = params.wes ? intervals_bed_combined : []      // For QC during preprocessing, we don't need any intervals (MOSDEPTH doesn't take them for WGS)
 
-    intervals                     = PREPARE_INTERVALS.out.intervals_bed        // [interval, num_intervals] multiple interval.bed files, divided by useful intervals for scatter/gather
-    intervals_bed_gz_tbi          = PREPARE_INTERVALS.out.intervals_bed_gz_tbi // [interval_bed, tbi, num_intervals] multiple interval.bed.gz/.tbi files, divided by useful intervals for scatter/gather
-
-
+    intervals                   = PREPARE_INTERVALS.out.intervals_bed        // [interval, num_intervals] multiple interval.bed files, divided by useful intervals for scatter/gather
+    intervals_bed_gz_tbi        = PREPARE_INTERVALS.out.intervals_bed_gz_tbi // [interval_bed, tbi, num_intervals] multiple interval.bed.gz/.tbi files, divided by useful intervals for scatter/gather
 
     // Gather used softwares versions
     ch_versions = ch_versions.mix(PREPARE_GENOME.out.versions)
