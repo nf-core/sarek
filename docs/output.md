@@ -449,7 +449,7 @@ For a Tumor/Normal pair:
 - `[TUMORSAMPLE_VS_NORMALSAMPLE].before_correction.[TUMORSAMPLE_VS_NORMALSAMPLE].tumour.png`
   - Image with information about raw profile of tumor sample of logR and BAF values
 - `[TUMORSAMPLE_VS_NORMALSAMPLE].before_correction.[TUMORSAMPLE_VS_NORMALSAMPLE].germline.png`
-  - Image with information about raw profile of normal sample  of logR and BAF values
+  - Image with information about raw profile of normal sample of logR and BAF values
 - `[TUMORSAMPLE_VS_NORMALSAMPLE].after_correction_gc_rt.[TUMORSAMPLE_VS_NORMALSAMPLE].tumour.png`
   - Image with information about GC and RT corrected logR and BAF values of tumor sample
 - `[TUMORSAMPLE_VS_NORMALSAMPLE].after_correction_gc_rt.[TUMORSAMPLE_VS_NORMALSAMPLE].germline.png`
