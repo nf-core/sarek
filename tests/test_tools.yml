@@ -111,15 +111,15 @@
     - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.bed
     - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.circos.txt
     - path: results/variant_calling/sample4_vs_sample3/mpileup/sample4_vs_sample3.normal.mpileup.gz
-    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.normal.mpileup.gz_control.cpn
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3_sample.cpn
     - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.p.value.txt
     - path: results/variant_calling/sample4_vs_sample3/mpileup/sample4_vs_sample3.tumor.mpileup.gz
-    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.mpileup.gz_BAF.txt
-    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.mpileup.gz_CNVs
-    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.mpileup.gz_info.txt
-    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.mpileup.gz_ratio.BedGraph
-    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.mpileup.gz_ratio.txt
-    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.mpileup.gz_sample.cpn
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3_BAF.txt
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3_CNVs
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3_info.txt
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3_ratio.BedGraph
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3_ratio.txt
+    - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3_sample.cpn
 
 - name: Run variant calling on tumor_only sample with controlfreec
   command: nextflow run main.nf -profile test,tools_tumoronly,docker --tools controlfreec -stub-run
