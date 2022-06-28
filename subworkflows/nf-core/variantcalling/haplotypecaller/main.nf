@@ -31,7 +31,7 @@ workflow RUN_HAPLOTYPECALLER {
         dbsnp_tbi)
 
     if (params.joint_germline) {
-        // group by interval
+        // merge vcf and tbis
         genotype_gvcf_to_call = HAPLOTYPECALLER.out.vcf.join(HAPLOTYPECALLER.out.tbi)
 
         genotype_vcf = JOINT_GERMLINE(
