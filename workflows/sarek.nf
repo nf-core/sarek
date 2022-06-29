@@ -70,10 +70,10 @@ if(params.tools && params.tools.contains('ascat')){
         exit 1
     }
     if(!params.ascat_loci_gc && !params.ascat_loci_rt){
-        log.warn("No LogRCorrection performed in ASCAT.")
+        log.warn("No LogRCorrection performed in ASCAT. For LogRCorrection to run, please provide either loci gc files or both loci gc files and loci rt files.")
     }
     if(params.wes){
-        log.warn("Reference files not suited for running ASCAT on WES data. It's recommended to use the reference files provided here: https://github.com/Wedge-lab/battenberg#required-reference-files")
+        log.warn("Default reference files not suited for running ASCAT on WES data. It's recommended to use the reference files provided here: https://github.com/Wedge-lab/battenberg#required-reference-files")
     }
     if(params.ascat_genome!="hg19" && params.ascat_genome!="hg38"){
         log.error "Parameter ascat_genome must be either hg19 or hg38."
