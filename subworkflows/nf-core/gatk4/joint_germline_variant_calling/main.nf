@@ -18,6 +18,7 @@ workflow GATK_JOINT_GERMLINE_VARIANT_CALLING {
     main:
     ch_versions    = Channel.empty()
 
+    /*
     known_snps      = (params.known_snps      ?: Channel.empty() )
     known_snps_tbi  = (params.known_snps_tbi  ?: Channel.empty() )
     known_snps_vqsr = (params.known_snps_vqsr ?: Channel.empty() )
@@ -30,7 +31,6 @@ workflow GATK_JOINT_GERMLINE_VARIANT_CALLING {
     dbsnp_tbi  = (params.dbsnp_tbi  ?: Channel.empty() )
     dbsnp_vqsr = (params.dbsnp_vqsr ?: Channel.empty() )
 
-    /*
     resource_SNP = [
         [ known_snps, dbsnp ],
         [ known_snps_tbi, dbsnp_tbi ],
@@ -44,14 +44,15 @@ workflow GATK_JOINT_GERMLINE_VARIANT_CALLING {
     ]
     */
 
-
     gendb_input = input.map{
-        meta, gvcf, tbi ->
-            new_meta = [id: meta.num_intervals > 1 ? meta.interval_file.simpleName : "no_intervals",
-                        num_intervals: meta.num_intervals, interval_file: meta.interval_file]
-            [ new_meta, gvcf, tbi ]
-        }.groupTuple().map{ new_meta, gvcf, tbi -> 
-            interval_file = new_meta.num_intervals > 1 ? new_meta.interval_file : params.intervals
+        meta, gvcf, tbi, intervals->
+            new_meta = [id: meta.num_intervals > 1 ? "joint variant calling" : "no_intervals",
+                        intervals_name: meta.intervals_name,
+                        num_intervals: meta.num_intervals
+                       ]
+            [ new_meta, gvcf, tbi, intervals ]
+        }.groupTuple(by:[0,3]).map{ new_meta, gvcf, tbi, intervals -> 
+            interval_file = new_meta.num_intervals > 1 ? intervals : params.intervals
             [ new_meta, gvcf, tbi, interval_file, [], [] ] }
 
     //
@@ -78,6 +79,8 @@ workflow GATK_JOINT_GERMLINE_VARIANT_CALLING {
     //
     merged_vcf = MERGE_GENOTYPEGVCFS(merge_vcfs_input,dict)
 
+
+    /*
     vqsr_input = merged_vcf.vcf.join(merged_vcf.tbi)
     SNP_VQSR(vqsr_input,
              resources_snp,
@@ -89,6 +92,7 @@ workflow GATK_JOINT_GERMLINE_VARIANT_CALLING {
              fasta,
              fai,
              dict)
+   */
 
     ch_versions = ch_versions.mix(GATK4_GENOTYPEGVCFS.out.versions)
 

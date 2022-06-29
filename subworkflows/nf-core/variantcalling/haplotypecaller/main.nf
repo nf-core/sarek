@@ -32,7 +32,11 @@ workflow RUN_HAPLOTYPECALLER {
 
     if (params.joint_germline) {
         // merge vcf and tbis
-        genotype_gvcf_to_call = HAPLOTYPECALLER.out.vcf.join(HAPLOTYPECALLER.out.tbi)
+        genotype_gvcf_to_call = Channel.empty().mix(HAPLOTYPECALLER.out.vcf
+                                .join(HAPLOTYPECALLER.out.tbi)
+                                .join(cram).map{ meta, vcf, tbi, cram, crai, intervals ->
+                                     [ meta, vcf, tbi, intervals ]
+                                     })
 
         genotype_vcf = JOINT_GERMLINE(
              genotype_gvcf_to_call,

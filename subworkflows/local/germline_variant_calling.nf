@@ -47,10 +47,10 @@ workflow GERMLINE_VARIANT_CALLING {
         .map{ meta, cram, crai, intervals, num_intervals ->
 
             //If no interval file provided (0) then add empty list
-            intervals_new = num_intervals == 0 ? [] : intervals
-            interval_file = num_intervals == 0 ? "no_intervals" : intervals
+            intervals_new  = num_intervals == 0 ? []            : intervals
+            intervals_name = num_intervals == 0 ? "no_interval" : intervals.simpleName
 
-            [[patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:meta.sample, data_type:meta.data_type, num_intervals:num_intervals, interval_file:interval_file],
+            [[patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:meta.sample, data_type:meta.data_type, num_intervals:num_intervals, intervals_name:intervals_name],
             cram, crai, intervals_new]
         }
 
@@ -61,9 +61,8 @@ workflow GERMLINE_VARIANT_CALLING {
             //If no interval file provided (0) then add empty list
             bed_new = num_intervals == 0 ? [] : bed_tbi[0]
             tbi_new = num_intervals == 0 ? [] : bed_tbi[1]
-            interval_file = num_intervals == 0 ? "no_intervals" : bed_tbi
 
-            [[patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:meta.sample, data_type:meta.data_type, num_intervals:num_intervals, interval_file:interval_file],
+            [[patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:meta.sample, data_type:meta.data_type, num_intervals:num_intervals],
             cram, crai, bed_new, tbi_new]
         }
 
