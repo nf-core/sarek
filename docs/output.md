@@ -14,47 +14,45 @@ All paths are relative to the top-level results directory.
 The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:
 
 - [Preprocessing](#preprocessing)
+  - [Prepare input files](#prepare-input)
+    - [Trim adapters](#trimming)
+    - [Split fastq files](#split)
   - [Map to Reference](#map-to-reference)
     - [BWA](#bwa)
     - [BWA-mem2](#bwa-mem2)
-  - [Mark Duplicates](#mark-duplicates)
-    - [GATK MarkDuplicates](#gatk-markduplicates)
-    - [GATK MarkDuplicates Spark](#gatk-markduplicates-spark)
-  - [Base (Quality Score) Recalibration](#base-quality-score-recalibration)
+    - [DragMap](#dragmap)
+  - [Duplicate Marking](#duplicate-marking)
+    - [GATK MarkDuplicates (Spark)](#gatk-markduplicates)
+  - [Base Quality Score Recalibration](#base-quality-score-recalibration)
     - [GATK BaseRecalibrator (Spark)](#gatk-baserecalibrator)
     - [GATK ApplyBQSR (Spark)](#gatk-applybqsr)
   - [CSV files](#csv-files)
-  - [CSV files with `--skip_markduplicates`](#csv-files-with---skip_markduplicates)
-  - [CSV files with `--sentieon`](#tsv-files-with---sentieon)
 - [Variant Calling](#variant-calling)
   - [SNVs and small indels](#snvs-and-small-indels)
+    - [DeepVariant](#deepvariant)
     - [FreeBayes](#freebayes)
     - [GATK HaplotypeCaller](#gatk-haplotypecaller)
-    - [GATK GenotypeGVCFs](#gatk-genotypegvcfs)
     - [GATK Mutect2](#gatk-mutect2)
     - [samtools mpileup](#samtools-mpileup)
     - [Strelka2](#strelka2)
-    - [Sentieon DNAseq](#sentieon-dnaseq)
-    - [Sentieon DNAscope](#sentieon-dnascope)
-    - [Sentieon TNscope](#sentieon-tnscope)
   - [Structural Variants](#structural-variants)
     - [Manta](#manta)
     - [TIDDIT](#tiddit)
-    - [Sentieon DNAscope SV](#sentieon-dnascope-sv)
   - [Sample heterogeneity, ploidy and CNVs](#sample-heterogeneity-ploidy-and-cnvs)
-    - [ConvertAlleleCounts](#convertallelecounts)
     - [ASCAT](#ascat)
     - [Control-FREEC](#control-freec)
+    - [CNVKit](#cnvkit)
   - [MSI status](#msi-status)
-    - [MSIsensor](#msisensor)
+    - [MSIsensorPro](#msisensorpro)
 - [Variant annotation](#variant-annotation)
   - [snpEff](#snpeff)
   - [VEP](#vep)
 - [QC and reporting](#qc-and-reporting)
   - [QC](#qc)
     - [FastQC](#fastqc)
-    - [bamQC](#bamqc)
+    - [FastP](#fastp)
     - [GATK MarkDuplicates reports](#gatk-markduplicates-reports)
+    - [Mosdepth](#mosdepth)
     - [samtools stats](#samtools-stats)
     - [bcftools stats](#bcftools-stats)
     - [VCFtools](#vcftools)
@@ -63,82 +61,115 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
   - [Reporting](#reporting)
     - [MultiQC](#multiqc)
   - [Pipeline information](#pipeline-information)
+- [Reference files](#reference-files)
 
 ## Preprocessing
 
 `Sarek` pre-processes raw `FASTQ` files or `unmapped BAM` files, based on [GATK best practices](https://gatk.broadinstitute.org/hc/en-us/sections/360007226651-Best-Practices-Workflows).
 
+### Preparation of input files (FastQ or (u)BAM)
+
+[FastP](https://github.com/OpenGene/fastp) is a tool designed to provide all-in-one preprocessing for FastQ files and as such is used for trimming and splitting. By default, these files are not published. However, if publishing is enabled, please be aware that these files are only published once, meaning if trimming and splitting is enabled, then the resulting files will be sharded fastq files with trimmed reads. If only one of them is enabled then the files contain either trimmed or split reads respectively.
+
+#### Trim adapters
+
+[FastP](https://github.com/OpenGene/fastp) supports global trimming, which means trim all reads in the front or the tail. This function is useful since sometimes you want to drop some cycles of a sequencing run. In the current implementation in `sarek`
+`--detect_adapter_for_pe` is set by default which enables auto-detection of adapter sequences. For more information on how to fine-tune adapter trimming, take a look into the parameter docs.
+
+The resulting files are intermediate and by default not kept in the final files delivered to users. Set `--save_trimmed`to enable publishing of the files in `{outdir}/preprocessing/<sample>/fastp/<sample_lane_{1,2}.fastp.fastq.gz>`
+
+#### Split fastq files
+
+[FastP](https://github.com/OpenGene/fastp) supports splitting of FastQ into multiple files which enables parallel alignment. To enable splitting, the number of reads per output can be specified. For more information, take a look into the parameter `--split_fastq`in the parameter docs .
+
+These files are intermediate and by default not kept in the final files delivered to users. Set `--save_split` to enable publishing of these files to `{outdir}/preprocessing/<sample>/fastp/<sample_lane_{1,2}.fastp.fastq.gz>`
+
 ### Map to Reference
 
 #### BWA
 
-[BWA](https://github.com/lh3/bwa) is a software package for mapping low-divergent sequences against a large reference genome.
+[BWA](https://github.com/lh3/bwa) is a software package for mapping low-divergent sequences against a large reference genome. The aligned reads are then `coordinate` sorted (or `name` sorted if MarkDuplicates Spark is used for duplicate marking) with [samtools](https://www.htslib.org/doc/samtools.html)
 
-Such files are intermediate and not kept in the final files delivered to users.
+These files are intermediate and by default not kept in the final files delivered to users. Set `--save_bam_mapped` to enable publishing.
 
 #### BWA-mem2
 
-[BWA-mem2](https://github.com/bwa-mem2/bwa-mem2) is a software package for mapping low-divergent sequences against a large reference genome.
+[BWA-mem2](https://github.com/bwa-mem2/bwa-mem2) is a software package for mapping low-divergent sequences against a large reference genome.The aligned reads are then `coordinate` sorted (or `name` sorted if MarkDuplicates Spark is used for duplicate marking) with [samtools](https://www.htslib.org/doc/samtools.html)
 
-Such files are intermediate and not kept in the final files delivered to users.
+These files are intermediate and by default not kept in the final files delivered to users.Set `--save_bam_mapped` to enable publishing.
 
-#### DRAGMAP
+#### DragMap
 
-[DRAGMAP](https://github.com/Illumina/dragmap) is an open-source software implementation of the DRAGEN mapper, which the Illumina team created so that we would have an open-source way to produce the same results as their proprietary DRAGEN hardware.
+[DragMap](https://github.com/Illumina/dragmap) is an open-source software implementation of the DRAGEN mapper, which the Illumina team created so that we would have an open-source way to produce the same results as their proprietary DRAGEN hardware. The aligned reads are then `coordinate` sorted (or `name` sorted if MarkDuplicates Spark is used for duplicate marking) with [samtools](https://www.htslib.org/doc/samtools.html)
 
-Such files are intermediate and not kept in the final files delivered to users.
+These files are intermediate and by default not kept in the final files delivered to users. Set `--save_bam_mapped` to enable publishing.
+
+For all mappers and samples:
+
+**Output directory: `{outdir}/preprocessing/<sample>/mapped`**
+
+- `<sample>.bam` and `<sample>.bam.bai`
+  - `BAM` file and index
 
 ### Mark Duplicates
 
-#### GATK MarkDuplicates
-
-By default, `Sarek` will use [GATK MarkDuplicates](https://gatk.broadinstitute.org/hc/en-us/articles/360042477492-MarkDuplicates-Picard), which locates and tags duplicate reads in a `BAM` or `SAM` file, where duplicate reads are defined as originating from a single fragment of DNA.
-
-Specify `--use_gatk_spark` to use [`GATK MarkDuplicatesSpark`](https://gatk.broadinstitute.org/hc/en-us/articles/360042912511-MarkDuplicatesSpark) instead, `Spark` implementation of `GATK MarkDuplicates`.
-
-This directory is the location for the `BAM` files delivered to users.
-Besides the `duplicates-marked BAM` files, the recalibration tables (`*.recal.table`) are also stored, and can be used to create `recalibrated BAM` files.
-
-For all samples:
-
-**Output directory: `results/Preprocessing/[SAMPLE]/DuplicatesMarked`**
-
-- `[SAMPLE].md.bam` and `[SAMPLE].md.bai`
-  - `BAM` file and index
+During duplicate marking read pairs that are likely to have originated from duplicates of the same original DNA fragments through some artifactual processes are identified. These are considered to be non-independent observations, so all but a single read pair within each set of duplicates, causing the marked pairs to be ignored by default during the variant discovery process
 
 For further reading and documentation see the [data pre-processing for variant discovery from the GATK best practices](https://gatk.broadinstitute.org/hc/en-us/articles/360035535912-Data-pre-processing-for-variant-discovery).
 
-#### GATK MarkDuplicates Spark
+#### GATK MarkDuplicates (Spark)
+
+By default, `Sarek` will use [GATK MarkDuplicates](https://gatk.broadinstitute.org/hc/en-us/articles/5358880192027-MarkDuplicates-Picard-).
+
+Specify `--use_gatk_spark markduplicates` to use [`GATK MarkDuplicatesSpark`](https://gatk.broadinstitute.org/hc/en-us/articles/5358833264411-MarkDuplicatesSpark) instead, the `Spark` implementation. The resulting files are converted to `CRAM` either with [samtools](https://www.htslib.org/doc/samtools.html) when `GATK MarkDuplicates` is used or implicitly by `GATK MarkDuplicatesSpark`
+
+The resulting `CRAM` files are delivered to the users.
+
+For all samples:
+
+**Output directory: `{outdir}/preprocessing/<sample>/markduplicates`**
+
+- `<sample>.md.cram` and `<sample>.md.cram.crai`
+  - `CRAM` file and index
+- if `--save_output_as_bam`:
+  - `<sample>.md.bam` and `<sample>.md.bam.bai`
 
 ### Base (Quality Score) Recalibration
 
-#### GATK BaseRecalibrator
+During Base Quality Score Recalibration systematic errors in the base quality scores are corrected by applying machine learning to detect and correct for them. This is important, for evaluating the correct call of a variant during the variant discovery process. However, this is not needed for all combinations of tools in sarek. Notably, this should be turned of when having UMI tagged reads or using DragMap (see [here](https://gatk.broadinstitute.org/hc/en-us/articles/4407897446939--How-to-Run-germline-single-sample-short-variant-discovery-in-DRAGEN-mode)) as mapper.
+
+For further reading and documentation see the [technical documentation by GATK](https://gatk.broadinstitute.org/hc/en-us/articles/360035890531-Base-Quality-Score-Recalibration-BQSR-).
+
+#### GATK BaseRecalibrator (Spark)
 
 [GATK BaseRecalibrator](https://gatk.broadinstitute.org/hc/en-us/articles/360042477672-BaseRecalibrator) generates a recalibration table based on various co-variates.
 
-For all samples:
-
-**Output directory: `results/Preprocessing/[SAMPLE]/DuplicatesMarked`**
-
-- `[SAMPLE].recal.table`
-  - Recalibration table associated to the `duplicates-marked BAM` file.
-
-#### GATK ApplyBQSR
-
-[GATK ApplyBQSR](https://gatk.broadinstitute.org/hc/en-us/articles/360042476852-ApplyBQSR) recalibrates the base qualities of the input reads based on the recalibration table produced by the [GATK BaseRecalibrator](#gatk-baserecalibrator) tool.
-
-This directory is the location for the final `recalibrated BAM` files.
-`Recalibrated BAM` files are usually 2-3 times larger than the `duplicates-marked BAM` files.
-To re-generate `recalibrated BAM` file you have to apply the recalibration table delivered to the `DuplicatesMarked\` folder either using `Sarek` ( [`--step recalibrate`](usage.md#step-recalibrate) ) , or doing this recalibration yourself.
+Specify `--use_gatk_spark baserecalibrator` to use [`GATK BaseRecalibratorSpark`](https://gatk.broadinstitute.org/hc/en-us/articles/5358896138011-BaseRecalibrator) instead, the respective `Spark` implementation.
 
 For all samples:
 
-**Output directory: `results/Preprocessing/[SAMPLE]/Recalibrated`**
+**Output directory: `results/preprocessing/<sample>/recal_table`**
 
-- `[SAMPLE].recal.bam` and `[SAMPLE].recal.bam.bai`
-  - `BAM` file and index
+- `<sample>.recal.table`
+  - Recalibration table associated to the `duplicates-marked CRAM` file.
 
-For further reading and documentation see the [data pre-processing for variant discovery from the GATK best practices](https://gatk.broadinstitute.org/hc/en-us/articles/360035535912-Data-pre-processing-for-variant-discovery).
+#### GATK ApplyBQSR (Spark)
+
+[GATK ApplyBQSR](https://gatk.broadinstitute.org/hc/en-us/articles/5358826654875-ApplyBQSR) recalibrates the base qualities of the input reads based on the recalibration table produced by the [GATK BaseRecalibrator](#gatk-baserecalibrator) tool.
+
+Specify `--use_gatk_spark baserecalibrator` to use [`GATK ApplyBQSRSpark`](https://gatk.broadinstitute.org/hc/en-us/articles/5358898266011-ApplyBQSRSpark-BETA-) instead, the respective `Spark` implementation.
+
+The resulting `recalibrated CRAM` files are delivered to the user. `Recalibrated CRAM` files are usually 2-3 times larger than the `duplicate-marked CRAM` files.
+To re-generate `recalibrated CRAM` files you have to apply the recalibration table delivered to the `recal_table/` folder either using `Sarek` ( [`--step recalibrate`](usage.md#step-recalibrate) ) , or doing this recalibration yourself.
+
+For all samples:
+
+**Output directory: `results/Preprocessing/<sample>/recalibrated`**
+
+- `<sample>.recal.cram` and `<sample>.recal.cram.crai`
+  - `CRAM` file and index
+- if `--save_output_as_bam`:
+  - `<sample>.recal.bam` and `<sample>.recal.bam.bai`
 
 ### CSV files
 
@@ -155,8 +186,6 @@ For all samples:
 - `duplicates_marked_no_table_[SAMPLE].tsv`, `duplicates_marked_[SAMPLE].tsv` and `recalibrated_[SAMPLE].tsv`
   - `TSV` files to start `Sarek` from `prepare_recalibration`, `recalibrate` or `variantcalling` steps for a specific sample.
 
-### CSV files with `--skip_markduplicates`
-
 > **WARNING** Only with [`--skip_markduplicates`](usage.md#--skip_markduplicates)
 
 For all samples:
@@ -168,40 +197,40 @@ For all samples:
 - `mapped_[SAMPLE].tsv`, `mapped_no_duplicates_marked_[SAMPLE].tsv` and `recalibrated_[SAMPLE].tsv`
   - `TSV` files to start `Sarek` from `prepare_recalibration`, `recalibrate` or `variantcalling` steps for a specific sample.
 
-### CSV files with `--sentieon`
-
-> **WARNING** Only with [`--sentieon`](usage.md#--sentieon)
-
-For all samples:
-
-**Output directory: `results/Preprocessing/TSV`**
-
-- `sentieon_deduped.tsv` and `recalibrated_sentieon.tsv`
-  - `TSV` files to start `Sarek` from `variantcalling` step.
-- `sentieon_deduped_[SAMPLE].tsv` and `recalibrated_sentieon_[SAMPLE].tsv`
-  - `TSV` files to start `Sarek` from `variantcalling` step for a specific sample.
-
 ## Variant Calling
 
-All the results regarding Variant Calling are collected in this directory.
-If some results from a variant caller do not appear here, please check out the [`--tools`](usage.md#--tools) section in the usage documentation.
+The results regarding variant calling are collected in `{outdir}/variantcalling/`.
+If some results from a variant caller do not appear here, please check out the [`--tools`]section in the parameter [documentation](https://nf-co.re/sarek/3.0.0/parameters).
 
-`Recalibrated BAM` files can used as an input to start the Variant Calling.
+`(Recalibrated) CRAM` files can used as an input to start the Variant Calling.
 
 ### SNVs and small indels
 
+For single nucleotide variants (SNVs) and small indels, multiple tools are available for normal, tumor-only, and tumor-normal paired data. For a list of the appropriate tool(s) for the data and sequencing type at hand, please check [here](usage.md#Which tool can be used for for which data type?)
+
+#### DeepVariant
+
+[DeepVariant](https://github.com/google/deepvariant) is a deep learning-based variant caller that takes aligned reads, produces pileup image tensors from them, classifies each tensor using a convolutional neural network, and finally reports the results in a standard VCF or gVCF file.
+
+For normal samples:
+
+**Output directory: `results/variantcalling/<sample>/deepvariant`**
+
+- `<sample>.vcf.gz` and `<sample>.vcf.gz.tbi`
+  - `VCF` with Tabix index
+- `<sample>.g.vcf.gz` and `<sample>.g.vcf.gz.tbi`
+  - `.g.VCF` with Tabix index
+
 #### FreeBayes
 
-[FreeBayes](https://github.com/ekg/freebayes) is a Bayesian genetic variant detector designed to find small polymorphisms, specifically SNPs, indels, MNPs, and complex events smaller than the length of a short-read sequencing alignment.
+[FreeBayes](https://github.com/ekg/freebayes) is a Bayesian genetic variant detector designed to find small polymorphisms, specifically SNPs, indels, MNPs, and complex events smaller than the length of a short-read sequencing alignment. For further reading and documentation see the [FreeBayes manual](https://github.com/ekg/freebayes/blob/master/README.md#user-manual-and-guide).
 
 For all samples:
 
-**Output directory: `results/VariantCalling/[SAMPLE]/FreeBayes`**
+**Output directory: `results/variantcalling/{sample,normalsample_vs_tumorsample}/freebayes`**
 
-- `FreeBayes_[SAMPLE].vcf.gz` and `FreeBayes_[SAMPLE].vcf.gz.tbi`
+- `<sample>.vcf.gz` and `<sample>.vcf.gz.tbi`
   - `VCF` with Tabix index
-
-For further reading and documentation see the [FreeBayes manual](https://github.com/ekg/freebayes/blob/master/README.md#user-manual-and-guide).
 
 #### GATK HaplotypeCaller
 
@@ -209,7 +238,7 @@ For further reading and documentation see the [FreeBayes manual](https://github.
 
 Germline calls are provided for all samples, to enable comparison of both, tumor and normal, for possible mixup.
 
-For all samples:
+For normal samples:
 
 **Output directory: `results/VariantCalling/[SAMPLE]/HaploTypeCaller`**
 
@@ -218,7 +247,7 @@ For all samples:
 
 For further reading and documentation see the [HaplotypeCaller manual](https://gatk.broadinstitute.org/hc/en-us/articles/360042913231-HaplotypeCaller).
 
-#### GATK GenotypeGVCFs
+##### GATK GenotypeGVCFs
 
 [GATK GenotypeGVCFs](https://gatk.broadinstitute.org/hc/en-us/articles/360042914991-GenotypeGVCFs) performs joint genotyping on one or more samples pre-called with HaplotypeCaller.
 
@@ -258,94 +287,37 @@ Files created:
 
 #### samtools mpileup
 
-[samtools mpileup](https://www.htslib.org/doc/samtools.html) generates pileup of a `BAM` file.
+[samtools mpileup](https://www.htslib.org/doc/samtools.html) generates pileup of a `CRAM` file.
+For further reading and documentation see the [samtools manual](https://www.htslib.org/doc/samtools.html#COMMANDS_AND_OPTIONS).
 
 For all samples:
 
-**Output directory: `results/VariantCalling/[SAMPLE]/mpileup`**
+**Output directory: `results/variantcalling/<sample>/mpileup`**
 
-- `[SAMPLE].pileup.gz`
+- `<sample>.pileup.gz`
   - The pileup format is a text-based format for summarizing the base calls of aligned reads to a reference sequence. Alignment records are grouped by sample (`SM`) identifiers in `@RG` header lines.
-
-For further reading and documentation see the [samtools manual](https://www.htslib.org/doc/samtools.html#COMMANDS_AND_OPTIONS).
 
 #### Strelka2
 
-[Strelka2](https://github.com/Illumina/strelka) is a fast and accurate small variant caller optimized for analysis of germline variation in small cohorts and somatic variation in tumor/normal sample pairs.
+[Strelka2](https://github.com/Illumina/strelka) is a fast and accurate small variant caller optimized for analysis of germline variation in small cohorts and somatic variation in tumor/normal sample pairs. For further reading and documentation see the [Strelka2 user guide](https://github.com/Illumina/strelka/blob/master/docs/userGuide/README.md). If [Strelka2](https://github.com/Illumina/strelka) is used for somatic variant calling and [Manta](https://github.com/Illumina/manta) is also specified in tools, the output candidate indels from [Manta](https://github.com/Illumina/manta) are used according to [Strelka Best Practices](https://github.com/Illumina/strelka/blob/master/docs/userGuide/README.md#somatic-configuration-example).
 
-For all samples:
+For single samples (normal-only or tumor-only):
 
-**Output directory: `results/VariantCalling/[SAMPLE]/Strelka`**
+**Output directory: `results/variantcalling/<sample>/strelka`**
 
-- `Strelka_Sample_genome.vcf.gz` and `Strelka_Sample_genome.vcf.gz.tbi`
+- `<sample>.genome.vcf.gz` and `<sample>.genome.vcf.gz.tbi`
   - `VCF` with Tabix index
-- `Strelka_Sample_variants.vcf.gz` and `Strelka_Sample_variants.vcf.gz.tbi`
+- `<sample>.variants.vcf.gz` and `<sample>.variants.vcf.gz.tbi`
   - `VCF` with Tabix index
 
 For a Tumor/Normal pair:
 
-**Output directory: `results/VariantCalling/[TUMOR_vs_NORMAL]/Strelka`**
+**Output directory: `results/variantcalling/<tumorsample_vs_normalsample>/strelka`**
 
-- `Strelka_[TUMORSAMPLE]_vs_[NORMALSAMPLE]_somatic_indels.vcf.gz` and `Strelka_[TUMORSAMPLE]_vs_[NORMALSAMPLE]_somatic_indels.vcf.gz.tbi`
+- `<tumorsample_vs_normalsample>.somatic_indels.vcf.gz` and `<tumorsample_vs_normalsample>.somatic_indels.vcf.gz.tbi`
   - `VCF` with Tabix index
-- `Strelka_[TUMORSAMPLE]_vs_[NORMALSAMPLE]_somatic_snvs.vcf.gz` and `Strelka_[TUMORSAMPLE]_vs_[NORMALSAMPLE]_somatic_snvs.vcf.gz.tbi`
+- `<tumorsample_vs_normalsample>.somatic_snvs.vcf.gz` and `<tumorsample_vs_normalsample>.somatic_snvs.vcf.gz.tbi`
   - `VCF` with Tabix index
-
-Using [Strelka Best Practices](https://github.com/Illumina/strelka/blob/master/docs/userGuide/README.md#somatic-configuration-example) with the `candidateSmallIndels` from `Manta`:
-
-**Output directory: `results/VariantCalling/[TUMOR_vs_NORMAL]/Strelka`**
-
-- `StrelkaBP_[TUMORSAMPLE]_vs_[NORMALSAMPLE]_somatic_indels.vcf.gz` and `StrelkaBP_[TUMORSAMPLE]_vs_[NORMALSAMPLE]_somatic_indels.vcf.gz.tbi`
-  - `VCF` with Tabix index
-- `StrelkaBP_[TUMORSAMPLE]_vs_[NORMALSAMPLE]_somatic_snvs.vcf.gz` and `StrelkaBP_[TUMORSAMPLE]_vs_[NORMALSAMPLE]_somatic_snvs.vcf.gz.tbi`
-  - `VCF` with Tabix index
-
-For further reading and documentation see the [Strelka2 user guide](https://github.com/Illumina/strelka/blob/master/docs/userGuide/README.md).
-
-#### Sentieon DNAseq
-
-> **WARNING** Only with [`--sentieon`](usage.md#--sentieon)
-
-[Sentieon DNAseq](https://www.sentieon.com/products/#dnaseq) implements the same mathematics used in the Broad Institute's BWA-GATK HaplotypeCaller 3.3-4.1 Best Practices Workflow pipeline.
-
-For all samples:
-
-**Output directory: `results/VariantCalling/[SAMPLE]/SentieonDNAseq`**
-
-- `DNAseq_Sample.vcf.gz` and `DNAseq_Sample.vcf.gz.tbi`
-  - `VCF` with Tabix index
-
-For further reading and documentation see the [Sentieon DNAseq user guide](https://support.sentieon.com/manual/DNAseq_usage/dnaseq/).
-
-#### Sentieon DNAscope
-
-> **WARNING** Only with [`--sentieon`](usage.md#--sentieon)
-
-[Sentieon DNAscope](https://www.sentieon.com/products) calls SNPs and small indels.
-
-For all samples:
-
-**Output directory: `results/VariantCalling/[SAMPLE]/SentieonDNAscope`**
-
-- `DNAscope_Sample.vcf.gz` and `DNAscope_Sample.vcf.gz.tbi`
-  - `VCF` with Tabix index
-
-For further reading and documentation see the [Sentieon DNAscope user guide](https://support.sentieon.com/manual/DNAscope_usage/dnascope/).
-
-#### Sentieon TNscope
-
-> **WARNING** Only with [`--sentieon`](usage.md#--sentieon)
-
-[Sentieon TNscope](https://www.sentieon.com/products/#tnscope) calls SNPs and small indels on an Tumor/Normal pair.
-
-For a Tumor/Normal pair:
-
-**Output directory: `results/VariantCalling/[TUMOR_vs_NORMAL]/SentieonTNscope`**
-
-- `TNscope_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz` and `TNscope_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz.tbi`
-  - `VCF` with Tabix index
-
-For further reading and documentation see the [Sentieon TNscope user guide](https://support.sentieon.com/manual/TNscope_usage/tnscope/).
 
 ### Structural Variants
 
@@ -353,41 +325,28 @@ For further reading and documentation see the [Sentieon TNscope user guide](http
 
 [Manta](https://github.com/Illumina/manta) calls structural variants (SVs) and indels from mapped paired-end sequencing reads.
 It is optimized for analysis of germline variation in small sets of individuals and somatic variation in tumor/normal sample pairs.
-`Manta` provides a candidate list for small indels that can be fed to `Strelka` following [Strelka Best Practices](https://github.com/Illumina/strelka/blob/master/docs/userGuide/README.md#somatic-configuration-example).
+`Manta` provides a candidate list for small indels that can be fed to `Strelka` following [Strelka Best Practices](https://github.com/Illumina/strelka/blob/master/docs/userGuide/README.md#somatic-configuration-example). For further reading and documentation see the [Manta user guide](https://github.com/Illumina/manta/blob/master/docs/userGuide/README.md).
 
-For all samples:
+For normal samples:
 
-**Output directory: `results/VariantCalling/[SAMPLE]/Manta`**
+**Output directory: `results/variantcalling/<sample>/manta`**
 
-- `Manta_[SAMPLE].candidateSmallIndels.vcf.gz` and `Manta_[SAMPLE].candidateSmallIndels.vcf.gz.tbi`
-  - `VCF` with Tabix index
-- `Manta_[SAMPLE].candidateSV.vcf.gz` and `Manta_[SAMPLE].candidateSV.vcf.gz.tbi`
+- `<sample>.diploid_sv.vcf.gz` and `<sample>.diploid_sv.vcf.gz.tbi`
   - `VCF` with Tabix index
 
-For Normal sample only:
+For a Tumor-only samples:
 
-- `Manta_[NORMALSAMPLE].diploidSV.vcf.gz` and `Manta_[NORMALSAMPLE].diploidSV.vcf.gz.tbi`
-  - `VCF` with Tabix index
-
-For a Tumor sample only:
-
-- `Manta_[TUMORSAMPLE].tumorSV.vcf.gz` and `Manta_[TUMORSAMPLE].tumorSV.vcf.gz.tbi`
+- `<sample>.tumor_sv.vcf.gz` and `<sample>.tumor_sv.vcf.gz.tbi`
   - `VCF` with Tabix index
 
 For a Tumor/Normal pair:
 
-**Output directory: `results/VariantCalling/[TUMOR_vs_NORMAL]/Manta`**
+**Output directory: `results/variantcalling/<tumorsample_vs_normalsample>/manta`**
 
-- `Manta_[TUMORSAMPLE]_vs_[NORMALSAMPLE].candidateSmallIndels.vcf.gz` and `Manta_[TUMORSAMPLE]_vs_[NORMALSAMPLE].candidateSmallIndels.vcf.gz.tbi`
+- `<tumorsample_vs_normalsample>.diploid_sv.vcf.gz` and `<tumorsample_vs_normalsample>.diploid_sv.vcf.gz.tbi`
   - `VCF` with Tabix index
-- `Manta_[TUMORSAMPLE]_vs_[NORMALSAMPLE].candidateSV.vcf.gz` and `Manta_[TUMORSAMPLE]_vs_[NORMALSAMPLE].candidateSV.vcf.gz.tbi`
+- `<tumorsample_vs_normalsample>.somatic_sv.vcf.gz` and `<tumorsample_vs_normalsample>.somatic_sv.vcf.gz.tbi`
   - `VCF` with Tabix index
-- `Manta_[TUMORSAMPLE]_vs_[NORMALSAMPLE].diploidSV.vcf.gz` and `Manta_[TUMORSAMPLE]_vs_[NORMALSAMPLE].diploidSV.vcf.gz.tbi`
-  - `VCF` with Tabix index
-- `Manta_[TUMORSAMPLE]_vs_[NORMALSAMPLE].somaticSV.vcf.gz` and `Manta_[TUMORSAMPLE]_vs_[NORMALSAMPLE].somaticSV.vcf.gz.tbi`
-  - `VCF` with Tabix index
-
-For further reading and documentation see the [Manta user guide](https://github.com/Illumina/manta/blob/master/docs/userGuide/README.md).
 
 #### TIDDIT
 
@@ -395,56 +354,31 @@ For further reading and documentation see the [Manta user guide](https://github.
 
 Germline calls are provided for all samples, to enable comparison of both, tumor and normal, for possible mixup.
 Low quality calls are removed internally, to simplify processing of variant calls but they are saved by `Sarek`.
-
-For all samples:
-
-**Output directory: `results/VariantCalling/[SAMPLE]/TIDDIT`**
-
-- `TIDDIT_[SAMPLE].vcf.gz` and `TIDDIT_[SAMPLE].vcf.gz.tbi`
-  - `VCF` with Tabix index
-- `TIDDIT_[SAMPLE].signals.tab`
-  - tab file describing coverage across the genome, binned per 50 bp
-- `TIDDIT_[SAMPLE].ploidy.tab`
-  - tab file describing the estimated ploidy and coverage across each contig
-- `TIDDIT_[SAMPLE].old.vcf`
-  - `VCF` including the low qualiy calls
-- `TIDDIT_[SAMPLE].wig`
-  - wiggle file containing coverage across the genome, binned per 50 bp
-- `TIDDIT_[SAMPLE].gc.wig`
-  - wiggle file containing fraction of gc content, binned per 50 bp
-
 For further reading and documentation see the [TIDDIT manual](https://github.com/SciLifeLab/TIDDIT/blob/master/README.md).
 
-#### Sentieon DNAscope SV
+For normal-only and tumor-only samples:
 
-> **WARNING** Only with [`--sentieon`](usage.md#--sentieon)
+**Output directory: `results/variantcalling/<sample>/tiddit`**
 
-[Sentieon DNAscope](https://www.sentieon.com/products) can perform structural variant calling in addition to calling SNPs and small indels.
-
-For all samples:
-
-**Output directory: `results/VariantCalling/[SAMPLE]/SentieonDNAscope`**
-
-- `DNAscope_SV_Sample.vcf.gz` and `DNAscope_SV_Sample.vcf.gz.tbi`
+- `<sample>.vcf.gz` and `<sample>.vcf.gz.tbi`
   - `VCF` with Tabix index
+- `<sample>.ploidy.tab`
+  - tab file describing the estimated ploidy and coverage across each contig
 
-For further reading and documentation see the [Sentieon DNAscope user guide](https://support.sentieon.com/manual/DNAscope_usage/dnascope/).
+For tumor/normal paired samples:
+
+**Output directory: `results/variantcalling/<tumorsample_vs_normal_sample>/tiddit`**
+
+- `<tumorsample_vs_normal_sample>.normal.vcf.gz` and `<tumorsample_vs_normal_sample>.normal.vcf.gz.tbi`
+  - `VCF` with Tabix index
+- `<tumorsample_vs_normal_sample>.tumor.vcf.gz` and `<tumorsample_vs_normal_sample>.tumor.vcf.gz.tbi`
+  - `VCF` with Tabix index
+- `<tumorsample_vs_normal_sample>_sv_merge.vcf`
+  - `VCF`
+- `<tumorsample_vs_normal_sample>.ploidy.tab`
+  - tab file describing the estimated ploidy and coverage across each contig
 
 ### Sample heterogeneity, ploidy and CNVs
-
-#### ConvertAlleleCounts
-
-Running ASCAT on NGS data requires that the `BAM` files are converted into BAF and LogR values.
-This can be done using the software [AlleleCount](https://github.com/cancerit/alleleCount) followed by the provided [ConvertAlleleCounts](https://github.com/nf-core/sarek/blob/master/bin/convertAlleleCounts.r) R-script.
-
-For a Tumor/Normal pair:
-
-**Output directory: `results/VariantCalling/[TUMOR_vs_NORMAL]/ASCAT`**
-
-- `[TUMORSAMPLE].BAF` and `[NORMALSAMPLE].BAF`
-  - file with beta allele frequencies
-- `[TUMORSAMPLE].LogR` and `[NORMALSAMPLE].LogR`
-  - file with total copy number on a logarithmic scale
 
 #### ASCAT
 
@@ -510,12 +444,14 @@ For a Tumor/Normal pair:
 
 For further reading and documentation see the [Control-FREEC manual](http://boevalab.com/FREEC/tutorial.html).
 
+#### CNVKit
+
 ### MSI status
 
 [Microsatellite instability](https://en.wikipedia.org/wiki/Microsatellite_instability) is a genetic condition associated to deficiencies in the mismatch repair (MMR) system which causes a tendency to accumulate a high number of mutations (SNVs and indels).
 An altered distribution of microsatellite length is associated to a missed replication slippage which would be corrected under normal MMR conditions.
 
-#### MSIsensor
+#### MSIsensorPro
 
 [MSIsensor](https://github.com/ding-lab/msisensor) is a tool to detect the MSI status of a tumor scanning the length of the microsatellite regions.
 It requires a normal sample for each tumour to differentiate the somatic and germline cases.
@@ -586,8 +522,6 @@ For further reading and documentation see the [VEP manual](https://www.ensembl.o
 
 ## QC and reporting
 
-### QC
-
 #### FastQC
 
 [FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) gives general quality metrics about your sequenced reads. It provides information about the quality score distribution across your reads, per base sequence content (%A/T/G/C), adapter contamination and overrepresented sequences. For further reading and documentation see the [FastQC help pages](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/).
@@ -608,7 +542,9 @@ For all samples:
   - `*_fastqc.html`: FastQC report containing quality metrics.
   - `*_fastqc.zip`: Zip archive containing the FastQC report, tab-delimited data file and plot images.
 
-#### bamQC
+#### FastP
+
+#### Mosdepth
 
 [Qualimap bamqc](http://qualimap.bioinfo.cipf.es/) reports information for the evaluation of the quality of the provided alignment data.
 In short, the basic statistics of the alignment (number of reads, coverage, GC-content, etc.) are summarized and a number of useful graphs are produced.
@@ -776,3 +712,5 @@ Results generated by MultiQC collate pipeline QC from supported tools e.g. FastQ
 </details>
 
 [Nextflow](https://www.nextflow.io/docs/latest/tracing.html) provides excellent functionality for generating various reports relevant to the running and execution of the pipeline. This will allow you to troubleshoot errors with the running of the pipeline, and also provide you with other information such as launch commands, run times and resource usage.
+
+## Reference files
