@@ -52,8 +52,8 @@ for (param in checkPathParamList) if (param) file(param, checkIfExists: true)
 // Set input, can either be from --input or from automatic retrieval in WorkflowSarek.groovy
 ch_input_sample = extract_csv(file(params.input, checkIfExists: true))
 
-if (params.wes) {
-    if (params.intervals && !params.intervals.endsWith("bed")) exit 1, "Target file must be in BED format"
+if (params.wes && !params.step == 'annotate') {
+    if (params.intervals && !params.intervals.endsWith("bed")) exit 1, "Target file specified with `--intervals` must be in BED format"
 } else {
     if (params.intervals && !params.intervals.endsWith("bed") && !params.intervals.endsWith("interval_list")) exit 1, "Interval file must end with .bed or .interval_list"
 }
@@ -78,6 +78,16 @@ if(!params.dbsnp && !params.known_indels){
     if(params.tools && params.tools.contains('haplotypecaller')){
         log.warn "If Haplotypecaller is specified, without `--dbsnp` or `--known_indels no filtering will be done. For filtering, please provide at least one of `--dbsnp` or `--known_indels`.\nFor more information see FilterVariantTranches (single-sample, default): https://gatk.broadinstitute.org/hc/en-us/articles/5358928898971-FilterVariantTranches\nFor more information see VariantRecalibration (--joint_germline): https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator\nFor more information on GATK Best practice germline variant calling: https://gatk.broadinstitute.org/hc/en-us/articles/360035535932-Germline-short-variant-discovery-SNPs-Indels-"
     }
+}
+
+if (params.step == "variant_calling" && !params.tools) {
+    log.error "Please specify at least one tool when using `--step variant_calling`.\nhttps://nf-co.re/sarek/parameters#tools"
+    exit 1
+}
+
+if (params.step == "annotation" && !params.tools) {
+    log.error "Please specify at least one tool when using `--step annotation`.\nhttps://nf-co.re/sarek/parameters#tools"
+    exit 1
 }
 
 // Save AWS IGenomes file containing annotation version
@@ -155,14 +165,11 @@ include { PREPARE_INTERVALS                                    } from '../subwor
 include { ALIGNMENT_TO_FASTQ as ALIGNMENT_TO_FASTQ_INPUT       } from '../subworkflows/nf-core/alignment_to_fastq'
 include { ALIGNMENT_TO_FASTQ as ALIGNMENT_TO_FASTQ_UMI         } from '../subworkflows/nf-core/alignment_to_fastq'
 
-// Split FASTQ files
-include { SPLIT_FASTQ                                          } from '../subworkflows/local/split_fastq'
-
 // Run FASTQC
 include { RUN_FASTQC                                           } from '../subworkflows/nf-core/run_fastqc'
 
-// Run TRIMGALORE
-include { RUN_TRIMGALORE                                       } from '../subworkflows/nf-core/run_trimgalore'
+// TRIM/SPLIT FASTQ Files
+include { FASTP                                                } from '../modules/nf-core/modules/fastp/main'
 
 // Create umi consensus bams from fastq
 include { CREATE_UMI_CONSENSUS                                 } from '../subworkflows/nf-core/fgbio_create_umi_consensus/main'
@@ -284,13 +291,11 @@ workflow SAREK {
     PREPARE_INTERVALS(fasta_fai)
 
     // Intervals for speed up preprocessing/variant calling by spread/gather
-    intervals_bed_combined        = (params.intervals && params.wes) ? Channel.fromPath(params.intervals).collect() : []
+    intervals_bed_combined      = params.no_intervals ? [] : PREPARE_INTERVALS.out.intervals_bed_combined  // [interval.bed] all intervals in one file
+    intervals_for_preprocessing = params.wes ? intervals_bed_combined : []      // For QC during preprocessing, we don't need any intervals (MOSDEPTH doesn't take them for WGS)
 
-    intervals                     = PREPARE_INTERVALS.out.intervals_bed        // [interval, num_intervals] multiple interval.bed files, divided by useful intervals for scatter/gather
-    intervals_bed_gz_tbi          = PREPARE_INTERVALS.out.intervals_bed_gz_tbi // [interval_bed, tbi, num_intervals] multiple interval.bed.gz/.tbi files, divided by useful intervals for scatter/gather
-
-    //TODO: intervals also with WGS data? Probably need a parameter if WGS for deepvariant tool, that would allow to check here too
-    intervals_for_preprocessing   = (params.wes && !params.no_intervals) ? intervals_bed_combined : []
+    intervals                   = PREPARE_INTERVALS.out.intervals_bed        // [interval, num_intervals] multiple interval.bed files, divided by useful intervals for scatter/gather
+    intervals_bed_gz_tbi        = PREPARE_INTERVALS.out.intervals_bed_gz_tbi // [interval_bed, tbi, num_intervals] multiple interval.bed.gz/.tbi files, divided by useful intervals for scatter/gather
 
     // Gather used softwares versions
     ch_versions = ch_versions.mix(PREPARE_GENOME.out.versions)
@@ -328,24 +333,9 @@ workflow SAREK {
             ch_versions = ch_versions.mix(RUN_FASTQC.out.versions)
         }
 
-        // Trimming
-        if (params.trim_fastq) {
-            RUN_TRIMGALORE(ch_input_fastq)
-
-            ch_reads = RUN_TRIMGALORE.out.reads
-
-            ch_reports  = ch_reports.mix(RUN_TRIMGALORE.out.trim_html.collect{it[1]}.ifEmpty([]))
-            ch_reports  = ch_reports.mix(RUN_TRIMGALORE.out.trim_log.collect{it[1]}.ifEmpty([]))
-            ch_reports  = ch_reports.mix(RUN_TRIMGALORE.out.trim_zip.collect{it[1]}.ifEmpty([]))
-
-            ch_versions = ch_versions.mix(RUN_TRIMGALORE.out.versions)
-        } else {
-            ch_reads = ch_input_fastq
-        }
-
         // UMI consensus calling
         if (params.umi_read_structure) {
-            CREATE_UMI_CONSENSUS(ch_reads,
+            CREATE_UMI_CONSENSUS(ch_input_fastq,
                 fasta,
                 ch_map_index,
                 umi_read_structure,
@@ -354,25 +344,35 @@ workflow SAREK {
             // convert back to fastq for further preprocessing
             ALIGNMENT_TO_FASTQ_UMI(CREATE_UMI_CONSENSUS.out.consensusbam, [])
 
-            ch_input_sample_to_split = ALIGNMENT_TO_FASTQ_UMI.out.reads
+            ch_reads_fastp = ALIGNMENT_TO_FASTQ_UMI.out.reads
 
             // Gather used softwares versions
             ch_versions = ch_versions.mix(ALIGNMENT_TO_FASTQ_UMI.out.versions)
             ch_versions = ch_versions.mix(CREATE_UMI_CONSENSUS.out.versions)
         } else {
-            ch_input_sample_to_split = ch_reads
+            ch_reads_fastp = ch_input_fastq
         }
 
-        // SPLIT OF FASTQ FILES WITH SEQKIT_SPLIT2
-        if (params.split_fastq > 1) {
-            SPLIT_FASTQ(ch_input_sample_to_split)
+        // Trimming and/or splitting
+        if (params.trim_fastq || params.split_fastq > 0) {
+            FASTP(ch_reads_fastp, false, false)
 
-            ch_reads_to_map = SPLIT_FASTQ.out.reads
+            ch_reports = ch_reports.mix(FASTP.out.json.collect{it[1]}.ifEmpty([]),FASTP.out.html.collect{it[1]}.ifEmpty([]))
 
-            // Gather used softwares versions
-            ch_versions = ch_versions.mix(SPLIT_FASTQ.out.versions)
+            if(params.split_fastq){
+                ch_reads_to_map = FASTP.out.reads.map{ key, reads ->
+
+                        read_files = reads.sort{ a,b -> a.getName().tokenize('.')[0] <=> b.getName().tokenize('.')[0] }.collate(2)
+                        [[patient: key.patient, sample:key.sample, gender:key.gender, status:key.status, id:key.id, numLanes:key.numLanes, read_group:key.read_group, data_type:key.data_type, size:read_files.size()],
+                        read_files]
+                    }.transpose()
+            }else{
+                ch_reads_to_map = FASTP.out.reads
+            }
+
+            ch_versions = ch_versions.mix(FASTP.out.versions)
         } else {
-            ch_reads_to_map = ch_input_sample_to_split
+            ch_reads_to_map = ch_reads_fastp
         }
 
         // STEP 1: MAPPING READS TO REFERENCE GENOME
@@ -792,55 +792,57 @@ workflow SAREK {
             [],
             dbsnp,
             dbsnp_tbi,
-            known_sites,
-            known_sites_tbi,
             dict,
             fasta,
             fasta_fai,
             intervals,
             intervals_bed_gz_tbi,
-            intervals_bed_combined)
+            intervals_bed_combined,
+            known_sites,
+            known_sites_tbi)
             // params.joint_germline)
 
         // TUMOR ONLY VARIANT CALLING
         TUMOR_ONLY_VARIANT_CALLING(
             params.tools,
             cram_variant_calling_tumor_only,
+            [],
+            chr_files,
             dbsnp,
             dbsnp_tbi,
             dict,
             fasta,
             fasta_fai,
+            germline_resource,
+            germline_resource_tbi,
             intervals,
             intervals_bed_gz_tbi,
             intervals_bed_combined,
-            germline_resource,
-            germline_resource_tbi,
+            mappability,
             pon,
-            pon_tbi,
-            chr_files,
-            mappability
+            pon_tbi
         )
 
         // PAIR VARIANT CALLING
         PAIR_VARIANT_CALLING(
             params.tools,
             cram_variant_calling_pair,
+            [],
+            chr_files,
             dbsnp,
             dbsnp_tbi,
             dict,
             fasta,
             fasta_fai,
+            germline_resource,
+            germline_resource_tbi,
             intervals,
             intervals_bed_gz_tbi,
             intervals_bed_combined,
+            mappability,
             msisensorpro_scan,
-            germline_resource,
-            germline_resource_tbi,
             pon,
-            pon_tbi,
-            chr_files,
-            mappability
+            pon_tbi
         )
 
         // Gather vcf files for annotation and QC
@@ -855,9 +857,11 @@ workflow SAREK {
         vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.mutect2_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.manta_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.strelka_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.tiddit_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(PAIR_VARIANT_CALLING.out.mutect2_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(PAIR_VARIANT_CALLING.out.manta_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(PAIR_VARIANT_CALLING.out.strelka_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(PAIR_VARIANT_CALLING.out.tiddit_vcf)
 
         // Gather used softwares versions
         ch_versions = ch_versions.mix(GERMLINE_VARIANT_CALLING.out.versions)
@@ -943,17 +947,13 @@ def extract_csv(csv_file) {
 
     // check that the sample sheet is not 1 line or less, because it'll skip all subsequent checks if so.
     new File(csv_file.toString()).withReader('UTF-8') { reader ->
-      def line, numberOfLinesInSampleSheet = 0;
-      while ((line = reader.readLine()) != null) {
-        numberOfLinesInSampleSheet++
-      }
-      if( numberOfLinesInSampleSheet < 2){
-        log.error "Sample sheet had less than two lines. The sample sheet must be a csv file with a header, so at least two lines."
-        System.exit(1)
-      }
+        def line, numberOfLinesInSampleSheet = 0;
+        while ((line = reader.readLine()) != null) {numberOfLinesInSampleSheet++}
+        if (numberOfLinesInSampleSheet < 2) {
+            log.error "Sample sheet had less than two lines. The sample sheet must be a csv file with a header, so at least two lines."
+            System.exit(1)
+        }
     }
-
-
 
     Channel.from(csv_file).splitCsv(header: true)
         //Retrieves number of lanes by grouping together by patient and sample and counting how many entries there are for this combination
@@ -1003,57 +1003,110 @@ def extract_csv(csv_file) {
             meta.data_type  = "fastq"
 
             meta.size       = 1 // default number of splitted fastq
-            return [meta, [fastq_1, fastq_2]]
+
+            if (params.step == 'mapping') return [meta, [fastq_1, fastq_2]]
+            else {
+                log.error "Samplesheet contains fastq files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
+                System.exit(1)
+            }
+
         // start from BAM
         } else if (row.lane && row.bam) {
+            if (!row.bai) {
+                log.error "BAM index (bai) should be provided."
+            }
             meta.id         = "${row.sample}-${row.lane}".toString()
             def bam         = file(row.bam,   checkIfExists: true)
+            def bai         = file(row.bai,   checkIfExists: true)
             def CN          = params.seq_center ? "CN:${params.seq_center}\\t" : ''
-            def read_group  = "\"@RG\\tID:${row_sample}_${row.lane}\\t${CN}PU:${row.lane}\\tSM:${row.sample}\\tLB:${row.sample}\\tPL:${params.seq_platform}\""
+            def read_group  = "\"@RG\\tID:${row.sample}_${row.lane}\\t${CN}PU:${row.lane}\\tSM:${row.sample}\\tLB:${row.sample}\\tPL:${params.seq_platform}\""
+
             meta.numLanes   = numLanes.toInteger()
             meta.read_group = read_group.toString()
             meta.data_type  = "bam"
+
             meta.size       = 1 // default number of splitted fastq
-            return [meta, bam]
+
+            if (params.step == 'mapping') return [meta, bam, bai]
+            else {
+                log.error "Samplesheet contains ubam files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
+                System.exit(1)
+            }
+
         // recalibration
         } else if (row.table && row.cram) {
             meta.id   = meta.sample
             def cram  = file(row.cram,  checkIfExists: true)
             def crai  = file(row.crai,  checkIfExists: true)
             def table = file(row.table, checkIfExists: true)
+
             meta.data_type  = "cram"
-            return [meta, cram, crai, table]
+
+            if (!(params.step == 'mapping' || params.step == 'annotate')) return [meta, cram, crai, table]
+            else {
+                log.error "Samplesheet contains cram files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
+                System.exit(1)
+            }
+
         // recalibration when skipping MarkDuplicates
         } else if (row.table && row.bam) {
             meta.id   = meta.sample
             def bam   = file(row.bam,   checkIfExists: true)
             def bai   = file(row.bai,   checkIfExists: true)
             def table = file(row.table, checkIfExists: true)
+
             meta.data_type  = "bam"
-            return [meta, bam, bai, table]
+
+            if (!(params.step == 'mapping' || params.step == 'annotate')) return [meta, bam, bai, table]
+            else {
+                log.error "Samplesheet contains bam files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
+                System.exit(1)
+            }
+
         // prepare_recalibration or variant_calling
         } else if (row.cram) {
             meta.id = meta.sample
             def cram = file(row.cram, checkIfExists: true)
             def crai = file(row.crai, checkIfExists: true)
+
             meta.data_type  = "cram"
-            return [meta, cram, crai]
+
+            if (!(params.step == 'mapping' || params.step == 'annotate')) return [meta, cram, crai]
+            else {
+                log.error "Samplesheet contains bam files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
+                System.exit(1)
+            }
+
         // prepare_recalibration when skipping MarkDuplicates or `--step markduplicates`
         } else if (row.bam) {
             meta.id = meta.sample
             def bam = file(row.bam, checkIfExists: true)
             def bai = file(row.bai, checkIfExists: true)
+
             meta.data_type  = "bam"
-            return [meta, bam, bai]
+
+            if (!(params.step == 'mapping' || params.step == 'annotate')) return [meta, bam, bai]
+            else {
+                log.error "Samplesheet contains bam files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
+                System.exit(1)
+            }
+
         // annotation
         } else if (row.vcf) {
             meta.id = meta.sample
             def vcf = file(row.vcf, checkIfExists: true)
+
             meta.data_type     = "vcf"
             meta.variantcaller = row.variantcaller ?: ""
-            return [meta, vcf]
+
+            if (params.step == 'annotate') return [meta, vcf]
+            else {
+                log.error "Samplesheet contains vcf files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
+                System.exit(1)
+            }
         } else {
-            log.warn "Missing or unknown field in csv file header"
+            log.warn "Missing or unknown field in csv file header. Please check your samplesheet"
+            System.exit(1)
         }
     }
 }

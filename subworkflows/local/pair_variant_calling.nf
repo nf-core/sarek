@@ -10,26 +10,30 @@ include { RUN_STRELKA_SOMATIC                       } from '../nf-core/variantca
 include { RUN_CNVKIT_SOMATIC                        } from '../nf-core/variantcalling/cnvkit/somatic/main.nf'
 include { RUN_MPILEUP as RUN_MPILEUP_NORMAL         } from '../nf-core/variantcalling/mpileup/main'
 include { RUN_MPILEUP as RUN_MPILEUP_TUMOR          } from '../nf-core/variantcalling/mpileup/main'
+include { RUN_TIDDIT as RUN_TIDDIT_NORMAL           } from '../nf-core/variantcalling/tiddit/main.nf'
+include { RUN_TIDDIT as RUN_TIDDIT_TUMOR            } from '../nf-core/variantcalling/tiddit/main.nf'
+include { SVDB_MERGE                                } from '../../modules/nf-core/modules/svdb/merge/main.nf'
 
 workflow PAIR_VARIANT_CALLING {
     take:
         tools                         // Mandatory, list of tools to apply
         cram_pair                     // channel: [mandatory] cram
+        bwa                           // channel: [optional] bwa
+        chr_files
         dbsnp                         // channel: [mandatory] dbsnp
         dbsnp_tbi                     // channel: [mandatory] dbsnp_tbi
         dict                          // channel: [mandatory] dict
         fasta                         // channel: [mandatory] fasta
         fasta_fai                     // channel: [mandatory] fasta_fai
+        germline_resource             // channel: [optional]  germline_resource
+        germline_resource_tbi         // channel: [optional]  germline_resource_tbi
         intervals                     // channel: [mandatory] intervals/target regions
         intervals_bed_gz_tbi          // channel: [mandatory] intervals/target regions index zipped and indexed
         intervals_bed_combined        // channel: [mandatory] intervals/target regions in one file unzipped
+        mappability
         msisensorpro_scan             // channel: [optional]  msisensorpro_scan
-        germline_resource             // channel: [optional]  germline_resource
-        germline_resource_tbi         // channel: [optional]  germline_resource_tbi
         panel_of_normals              // channel: [optional]  panel_of_normals
         panel_of_normals_tbi          // channel: [optional]  panel_of_normals_tbi
-        chr_files
-        mappability
 
     main:
 
@@ -41,6 +45,7 @@ workflow PAIR_VARIANT_CALLING {
     strelka_vcf          = Channel.empty()
     msisensorpro_output  = Channel.empty()
     mutect2_vcf          = Channel.empty()
+    tiddit_vcf           = Channel.empty()
 
     // Remap channel with intervals
     cram_pair_intervals = cram_pair.combine(intervals)
@@ -76,16 +81,16 @@ workflow PAIR_VARIANT_CALLING {
                             [meta, tumor_cram, intervals]
                         }
         RUN_MPILEUP_NORMAL(cram_normal_intervals_no_index, fasta)
-        mpileup_normal = RUN_MPILEUP_NORMAL.out.mpileup
         RUN_MPILEUP_TUMOR(cram_tumor_intervals_no_index, fasta)
+
+        mpileup_normal = RUN_MPILEUP_NORMAL.out.mpileup
         mpileup_tumor = RUN_MPILEUP_TUMOR.out.mpileup
-        ch_versions = ch_versions.mix(RUN_MPILEUP_NORMAL.out.versions)
-        ch_versions = ch_versions.mix(RUN_MPILEUP_TUMOR.out.versions)
 
         controlfreec_input = mpileup_normal.cross(mpileup_tumor)
         .map{ normal, tumor ->
             [normal[0], normal[1], tumor[1], [], [], [], []]
         }
+
         RUN_CONTROLFREEC_SOMATIC(controlfreec_input,
                         fasta,
                         fasta_fai,
@@ -94,6 +99,9 @@ workflow PAIR_VARIANT_CALLING {
                         chr_files,
                         mappability,
                         intervals_bed_combined)
+
+        ch_versions = ch_versions.mix(RUN_MPILEUP_NORMAL.out.versions)
+        ch_versions = ch_versions.mix(RUN_MPILEUP_TUMOR.out.versions)
         ch_versions = ch_versions.mix(RUN_CONTROLFREEC_SOMATIC.out.versions)
     }
 
@@ -157,7 +165,7 @@ workflow PAIR_VARIANT_CALLING {
                             fasta,
                             fasta_fai)
 
-        strelka_vcf  = Channel.empty().mix(RUN_STRELKA_SOMATIC.out.strelka_vcf)
+        strelka_vcf = Channel.empty().mix(RUN_STRELKA_SOMATIC.out.strelka_vcf)
         ch_versions = ch_versions.mix(RUN_STRELKA_SOMATIC.out.versions)
     }
 
@@ -188,8 +196,27 @@ workflow PAIR_VARIANT_CALLING {
         ch_versions = ch_versions.mix(GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING.out.versions)
     }
 
-    // if (tools.contains('tiddit')) {
-    // }
+    //TIDDIT
+    if (tools.contains('tiddit')){
+        cram_normal = cram_pair.map{meta, normal_cram, normal_crai, tumor_cram, tumor_crai ->
+            [meta, normal_cram, normal_crai]
+        }
+        cram_tumor = cram_pair.map{meta, normal_cram, normal_crai, tumor_cram, tumor_crai ->
+            [meta, tumor_cram, tumor_crai]
+        }
+
+        RUN_TIDDIT_NORMAL(cram_normal, fasta, bwa)
+        RUN_TIDDIT_TUMOR(cram_tumor, fasta, bwa)
+        SVDB_MERGE(RUN_TIDDIT_NORMAL.out.tiddit_vcf.join(RUN_TIDDIT_TUMOR.out.tiddit_vcf)
+                                                    .map{meta, vcf_normal, vcf_tumor ->
+                                                        [meta, [vcf_normal, vcf_tumor]]
+                                                    }, false)
+        tiddit_vcf = SVDB_MERGE.out.vcf
+
+        ch_versions = ch_versions.mix(RUN_TIDDIT_NORMAL.out.versions)
+        ch_versions = ch_versions.mix(RUN_TIDDIT_TUMOR.out.versions)
+        ch_versions = ch_versions.mix(SVDB_MERGE.out.versions)
+    }
 
     emit:
     freebayes_vcf
@@ -197,5 +224,7 @@ workflow PAIR_VARIANT_CALLING {
     msisensorpro_output
     mutect2_vcf
     strelka_vcf
+    tiddit_vcf
+
     versions    = ch_versions
 }
