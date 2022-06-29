@@ -50,21 +50,23 @@ Multiple `CSV` files can be specified if the path is enclosed in quotes.
 --input '[path to samplesheet file(s)]'
 ```
 
-| Column    | Description                                                                                                                                                                                                                                                                                                     |
-| --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `patient` | **Custom patient ID**; designates the patient/subject; must be unique for each patient, but one patient can have multiple samples (e.g. normal and tumor).                                                                                                                                                      |
-| `gender`  | **Sex chromosomes of the patient**; i.e. XX, XY..., only used for Copy-Number Variation analysis in a tumor/pair<br /> _Optional, Default: `NA`_                                                                                                                                                                |
-| `status`  | **Normal/tumor status of sample**; can be `0` (normal) or `1` (tumor).<br /> _Optional, Default: `0`_                                                                                                                                                                                                           |
-| `sample`  | **Custom sample ID** for each tumor and normal sample; more than one tumor sample for each subject is possible, i.e. a tumor and a relapse; samples can have multiple lanes for which the _same_ ID must be used to merge them later (see also `lane`). Sample IDs must be unique for unique biological samples |
-| `lane`    | Lane ID, used when the `sample` is multiplexed on several lanes. Must be unique for each lane in the same sample (but does not need to be the original lane name), and must contain at least one character <br /> _Required for `--step_mapping`_                                                               |
-| `fastq_1` | Full path to FastQ file for Illumina short reads 1. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                                                                                                                                                      |
-| `fastq_2` | Full path to FastQ file for Illumina short reads 2. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                                                                                                                                                      |
-| `bam`     | Full path to (u)BAM file                                                                                                                                                                                                                                                                                        |
-| `bai`     | Full path to BAM index file                                                                                                                                                                                                                                                                                     |
-| `cram`    | Full path to CRAM file                                                                                                                                                                                                                                                                                          |
-| `crai`    | Full path to CRAM index file                                                                                                                                                                                                                                                                                    |
-| `table`   | Full path to recalibration table file                                                                                                                                                                                                                                                                           |
-| `vcf`     | Full path to vcf file                                                                                                                                                                                                                                                                                           |
+#### Overview: Samplesheet Columns
+
+| Column    | Description                                                                                                                                                                                                                                                                                                                       |
+| --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `patient` | **Custom patient ID**; designates the patient/subject; must be unique for each patient, but one patient can have multiple samples (e.g. normal and tumor). <br /> _Required_                                                                                                                                                      |
+| `gender`  | **Sex chromosomes of the patient**; i.e. XX, XY..., only used for Copy-Number Variation analysis in a tumor/pair<br /> _Optional, Default: `NA`_                                                                                                                                                                                  |
+| `status`  | **Normal/tumor status of sample**; can be `0` (normal) or `1` (tumor).<br /> _Optional, Default: `0`_                                                                                                                                                                                                                             |
+| `sample`  | **Custom sample ID** for each tumor and normal sample; more than one tumor sample for each subject is possible, i.e. a tumor and a relapse; samples can have multiple lanes for which the _same_ ID must be used to merge them later (see also `lane`). Sample IDs must be unique for unique biological samples <br /> _Required_ |
+| `lane`    | Lane ID, used when the `sample` is multiplexed on several lanes. Must be unique for each lane in the same sample (but does not need to be the original lane name), and must contain at least one character <br /> _Required for `--step_mapping`_                                                                                 |
+| `fastq_1` | Full path to FastQ file for Illumina short reads 1. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                                                                                                                                                                        |
+| `fastq_2` | Full path to FastQ file for Illumina short reads 2. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                                                                                                                                                                        |
+| `bam`     | Full path to (u)BAM file                                                                                                                                                                                                                                                                                                          |
+| `bai`     | Full path to BAM index file                                                                                                                                                                                                                                                                                                       |
+| `cram`    | Full path to CRAM file                                                                                                                                                                                                                                                                                                            |
+| `crai`    | Full path to CRAM index file                                                                                                                                                                                                                                                                                                      |
+| `table`   | Full path to recalibration table file                                                                                                                                                                                                                                                                                             |
+| `vcf`     | Full path to vcf file                                                                                                                                                                                                                                                                                                             |
 
 An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
 
@@ -86,7 +88,7 @@ patient,sample,lane,bam
 patient1,test_sample,lane_1,test.bam
 ```
 
-In this example, there are 3 read groups:
+In this example, the sample is multiplexed over 3 lanes:
 
 ```console
 patient,sample,lane,fastq_1,fastq_2
@@ -104,7 +106,7 @@ patient1,test_sample,3,test_L003.bam
 
 ##### Full samplesheet
 
-In this example, all possible columns are used. There are 3 read groups for the normal sample, 2 for the tumor sample, 1 for the relapse, including the `gender` and `status` information per patient:
+In this example, all possible columns are used. There are 3 lanes for the normal sample, 2 for the tumor sample, 1 for the relapse, including the `gender` and `status` information per patient:
 
 ```console
 patient,gender,status,sample,lane,fastq_1,fastq_2
@@ -144,7 +146,7 @@ patient,sample,cram,crai
 patient1,test_sample,test_mapped.cram,test_mapped.cram.crai
 ```
 
-The `Sarek`-generated `CSV` file is stored under `results/csv/mapped.csv` if in a previous run `--save_bam_mapped` was set and will automatically be used as an input when specifying the parameter `--step prepare_recalibration`. Otherwise this file will need to be manually generated.
+The `Sarek`-generated `CSV` file is stored under `results/csv/mapped.csv` if in a previous run `--save_bam_mapped` was set and will automatically be used as an input when specifying the parameter `--step markduplicates`. Otherwise this file will need to be manually generated.
 
 ##### Full samplesheet
 
@@ -164,9 +166,9 @@ patient1,XX,1,tumor_sample,test2_mapped.cram,test2_mapped.cram.crai
 patient1,XX,1,relapse_sample,test3_mapped.cram,test3_mapped.cram.crai
 ```
 
-##### Prepare Recalibration
+#### Start with preparing the recalibration tables (`--step prepare_recalibration`)
 
-For starting directly from preparing recalibration, the `CSV` file must contain at least the columns `patient`, `sample`, `bam`, `bai` or `patient`, `sample`, `cram`, `crai`.
+For starting directly from preparing the recalibration tables, the `CSV` file must contain at least the columns `patient`, `sample`, `bam`, `bai` or `patient`, `sample`, `cram`, `crai`.
 
 Example:
 
@@ -262,13 +264,13 @@ patient1,XX,1,relapse_sample,test3_mapped.cram,test3_mapped.cram.crai
 
 For starting from the annotation step, the `CSV` file must contain at least the columns `patient`, `sample`, `vcf`.
 
-As `Sarek` will use `bgzip` and `tabix` to compress and index the annotated `VCF` files, it expects the input `VCF` files to be sorted.
+As `Sarek` will use `bgzip` and `tabix` to compress and index the annotated `VCF` files, it expects the input `VCF` files to be sorted and compressed.
 
 Example:
 
 ```console
 patient,sample,vcf
-patient1,test_sample,test,vcf
+patient1,test_sample,test.vcf.gz
 ```
 
 The `Sarek`-generated `CSV` file is stored under `results/csv/variantcalled.csv` and will automatically be used as an input when specifying the parameter `--step annotation`.
@@ -300,8 +302,6 @@ First, go to the [nf-core/sarek releases page](https://github.com/nf-core/sarek/
 Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 3.0.0`.
 
 This version number will be logged in reports when you run the pipeline, so that you'll know what you used when you look back in the future.
-
-### Automatic Resubmission
 
 ## Core Nextflow arguments
 
@@ -474,9 +474,15 @@ See the main [Nextflow documentation](https://www.nextflow.io/docs/latest/config
 
 If you have any questions or issues please send us a message on [Slack](https://nf-co.re/join/slack) on the [`#configs` channel](https://nfcore.slack.com/channels/configs).
 
-## Tutorials
+## Troubleshooting & FAQ
 
-### Which tool for which data type
+### How to test the pipeline
+
+### Variantcalling tools
+
+#### Which tool can be used for for which data type?
+
+This list is by no means exhaustive and it will depend on the specific analysis you would like to run. This is a suggestion based on the individual docs of the tools specifically for human genomes and a garden-variety sequencing run.
 
 Strelka2: WGS, WES, Panel; Tumor, normal, somatic
 Freebayes: WGS, WES, Panel; Tumor,normal, somatic
@@ -490,7 +496,11 @@ ascat: WGS, WES, Panel; Tumor, normal, somatic
 manta: WGS, WES, Panel; Tumor, normal, somatic
 tiddit: WGS, WES, Panel; Tumor, normal, somatic
 
-### How to run sarek when not all reference files are in igenomes
+#### How to create a panel-of-normals
+
+#### How to run ASCAT with WES?
+
+#### How to run sarek when not all reference files are in igenomes
 
 ### How to deal with a (custom) annotation cache
 
@@ -572,53 +582,6 @@ Such files are meant to be share between multiple users, so this script is mainl
 nextflow run download_cache.nf --cadd_cache </path/to/CADD/cache> --cadd_version <CADD version> --genome <GENOME>
 ```
 
-### How to set sarek up to use sentieon
-
-#### Sentieon
-
-Sentieon is a commercial solution to process genomics data with high computing efficiency, fast turnaround time, exceptional accuracy, and 100% consistency.
-
-Please refer to the [nf-core/configs](https://github.com/nf-core/configs#adding-a-new-pipeline-specific-config) repository on how to make a pipeline-specific configuration file based on the [munin-sarek specific configuration file](https://github.com/nf-core/configs/blob/master/conf/pipeline/sarek/munin.config).
-
-Or ask us on the [nf-core Slack](http://nf-co.re/join/slack) on the following channels: [#sarek](https://nfcore.slack.com/channels/sarek) or [#configs](https://nfcore.slack.com/channels/configs).
-
-#### Alignment
-
-> Sentieon BWA matches BWA-MEM with > 2X speedup.
-
-This tool is enabled by default within `Sarek` if both `--sentieon` and `--step mapping` are specified.
-
-#### Germline SNV/INDEL Variant Calling - DNAseq
-
-> Precision FDA award-winning software.
-> Matches GATK 3.3-4.1, and without down-sampling.
-> Results up to 10x faster and 100% consistent every time.
-
-This tool is enabled within `Sarek` if both `--sentieon` and `--tools DNAseq` are specified.
-
-#### Germline SNV/INDEL Variant Calling - DNAscope
-
-> Improved accuracy and genome characterization.
-> Machine learning enhanced filtering producing top variant calling accuracy.
-
-This tool is enabled within `Sarek` if both `--sentieon` and `--tools DNAscope` are specified.
-
-#### Somatic SNV/INDEL Variant Calling - TNscope
-
-> Winner of ICGC-TCGA DREAM challenge.
-> Improved accuracy, machine learning enhanced filtering.
-> Supports molecular barcodes and unique molecular identifiers.
-
-This tool is enabled within `Sarek` if both `--sentieon` and `--tools TNscope` are specified.
-
-#### Structural Variant Calling
-
-> Germline and somatic SV calling, including translocations, inversions, duplications and large INDELs
-
-This tool is enabled within `Sarek` if both `--sentieon` and `--tools DNAscope` are specified.
-
-## Troubleshooting & FAQ
-
 ### Spark related issues
 
 If you have problems running processes that make use of Spark such as `MarkDuplicates`.
@@ -654,3 +617,11 @@ OPTIONS=”—default-ulimit nofile=65535:65535"
 Re-start your session.
 
 Note that the way to increase the open file limit in your system may be slightly different or require additional steps.
+
+#### Cannot delete work folder when using docker + Spark
+
+### MultiQC is missing plots for snpeff or VEP
+
+### How to set sarek up to use sentieon
+
+Sarek 3.0 is currently not supporting sentieon. It is planned for the upcoming release 3.1. In the meantime, please revert to the last release 2.7.2.
