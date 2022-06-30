@@ -87,18 +87,6 @@ workflow RUN_HAPLOTYPECALLER {
         // filtered_vcf = JOINT_GERMLINE.out.vcf
         // ch_versions = ch_versions.mix(GATK_JOINT_GERMLINE_VARIANT_CALLING.out.versions)
     } else {
-
-        //filter_intervals = intervals_bed_combined ?: Channel.empty()
-        //single_sample_in = Channel.empty().mix(haplotypecaller_vcf.join(haplotypecaller_tbi).combine(filter_intervals).map{
-        //    meta, vcf, tbi, intervals ->
-//
-//
-        //    [[id:meta.id, patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status],
-        //    vcf, tbi, intervals]
-        //})
-
-        //single_sample_in.view()
-
         SINGLE_SAMPLE(haplotypecaller_vcf.join(haplotypecaller_tbi),
                         fasta,
                         fasta_fai,
