@@ -34,6 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#597](https://github.com/nf-core/sarek/pull/597) - Added tiddit for tumor variant calling
 - [#600](https://github.com/nf-core/sarek/pull/600) - Added description for UMI related params in schema
 - [#604](https://github.com/nf-core/sarek/pull/604) - Added full size tests WGS 30x NA12878
+- [#613](https://github.com/nf-core/sarek/pull/613) - Added params `--dbnsfp_fields` to allow configuration of fields for the `dbnsfp` `VEP` plugin
 
 ### Changed
 
