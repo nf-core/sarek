@@ -148,6 +148,8 @@ patient1,test_sample,test_mapped.cram,test_mapped.cram.crai
 
 The `Sarek`-generated `CSV` file is stored under `results/csv/mapped.csv` if in a previous run `--save_bam_mapped` was set and will automatically be used as an input when specifying the parameter `--step markduplicates`. Otherwise this file will need to be manually generated.
 
+TODO: when using spark then reads should be name sorted!
+
 ##### Full samplesheet
 
 In this example, all possible columns are used including the `gender` and `status` information per patient:
