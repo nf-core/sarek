@@ -1,0 +1,46 @@
+- name: Run variant calling on somatic samples with ascat
+  command: nextflow run main.nf -profile test,tools_somatic_ascat,docker
+  tags:
+    - ascat_manual
+    - manual
+    - somatic
+    - variant_calling
+  files:
+    - path: results/variant_calling/sample4_vs_sample3/ascat/After_correction_GC_Tumour.germline.png
+    - path: results/variant_calling/sample4_vs_sample3/ascat/After_correction_GC_Tumour.tumour.png
+    - path: results/variant_calling/sample4_vs_sample3/ascat/Before_correction_Tumour.germline.png
+    - path: results/variant_calling/sample4_vs_sample3/ascat/Before_correction_Tumour.tumour.png
+    - path: results/variant_calling/sample4_vs_sample3/ascat/Normal_alleleFrequencies_chr21.txt
+    - path: results/variant_calling/sample4_vs_sample3/ascat/Normal_alleleFrequencies_chr22.txt
+    - path: results/variant_calling/sample4_vs_sample3/ascat/sample4_vs_sample3.cnvs.txt
+    - path: results/variant_calling/sample4_vs_sample3/ascat/sample4_vs_sample3.metrics.txt
+    - path: results/variant_calling/sample4_vs_sample3/ascat/sample4_vs_sample3.purityploidy.txt
+    - path: results/variant_calling/sample4_vs_sample3/ascat/sample4_vs_sample3.segments.txt
+    - path: results/variant_calling/sample4_vs_sample3/ascat/Tumour_alleleFrequencies_chr21.txt
+    - path: results/variant_calling/sample4_vs_sample3/ascat/Tumour_alleleFrequencies_chr22.txt
+    - path: results/variant_calling/sample4_vs_sample3/ascat/Tumour.ASCATprofile.png
+    - path: results/variant_calling/sample4_vs_sample3/ascat/Tumour.ASPCF.png
+    - path: results/variant_calling/sample4_vs_sample3/ascat/Tumour.rawprofile.png
+    - path: results/variant_calling/sample4_vs_sample3/ascat/Tumour.sunrise.png
+
+- name: Run variant calling on somatic sample with mutect2 without intervals
+  command: nextflow run main.nf -profile test,tools_somatic,docker --tools mutect2 --no_intervals -c ./tests/nextflow.config
+  tags:
+    - mutect2_manual
+    - manual
+    - no_intervals
+    - somatic
+    - variant_calling
+  files:
+    - path: results/variant_calling/sample4_vs_sample3/mutect2/sample4_vs_sample3.vcf.gz
+    - path: results/variant_calling/sample4_vs_sample3/mutect2/sample4_vs_sample3.vcf.gz.tbi
+    - path: results/variant_calling/sample4_vs_sample3/mutect2/sample4_vs_sample3.vcf.gz.stats
+    - path: results/variant_calling/sample4_vs_sample3/mutect2/sample4_vs_sample3.contamination.table
+    - path: results/variant_calling/sample4_vs_sample3/mutect2/sample4_vs_sample3.segmentation.table
+    - path: results/variant_calling/sample4_vs_sample3/mutect2/sample3.pileupsummaries.table
+    - path: results/variant_calling/sample4_vs_sample3/mutect2/sample4.pileupsummaries.table
+    - path: results/variant_calling/sample4_vs_sample3/mutect2/sample4_vs_sample3.artifactprior.tar.gz
+    - path: results/variant_calling/sample4_vs_sample3/mutect2/sample4_vs_sample3.filtered.vcf.gz
+    - path: results/variant_calling/sample4_vs_sample3/mutect2/sample4_vs_sample3.filtered.vcf.gz.tbi
+    - path: results/variant_calling/sample4_vs_sample3/mutect2/sample4_vs_sample3.filtered.vcf.gz.filteringStats.tsv
+    - path: results/csv/variantcalled.csv
