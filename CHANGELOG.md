@@ -111,7 +111,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#600](https://github.com/nf-core/sarek/pull/600) - Remove `nf-core lint` warnings
 - [#602](https://github.com/nf-core/sarek/pull/602) - Fixed bug in `alignment_to_fastq` and added tests
 - [#609](https://github.com/nf-core/sarek/pull/609) - Remove unused intervals code, reorganize combined intervals file
-- [#613](https://github.com/nf-core/sarek/pull/613) - Fixed filenames for  `dbnsfp` and `SpliceAI` `VEP` plugin
+- [#613](https://github.com/nf-core/sarek/pull/613) - Fixed filenames for `dbnsfp` and `SpliceAI` `VEP` plugin
 
 ### Deprecated
 
