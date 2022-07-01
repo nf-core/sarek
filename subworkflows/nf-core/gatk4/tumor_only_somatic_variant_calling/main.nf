@@ -2,8 +2,7 @@
 // Run GATK mutect2 in tumor only mode, getepileupsummaries, calculatecontamination and filtermutectcalls
 //
 
-include { TABIX_BGZIP                     as BGZIP_VC_MUTECT2          } from '../../../../modules/nf-core/modules/tabix/bgzip/main'
-include { CONCAT_VCF                      as CONCAT_MUTECT2            } from '../../../../modules/local/concat_vcf/main'
+include { GATK4_MERGEVCFS                 as MERGE_MUTECT2             } from '../../../../modules/nf-core/modules/gatk4/mergevcfs/main'
 include { GATK4_CALCULATECONTAMINATION    as CALCULATECONTAMINATION    } from '../../../../modules/nf-core/modules/gatk4/calculatecontamination/main'
 include { GATK4_FILTERMUTECTCALLS         as FILTERMUTECTCALLS         } from '../../../../modules/nf-core/modules/gatk4/filtermutectcalls/main'
 include { GATK4_GETPILEUPSUMMARIES        as GETPILEUPSUMMARIES        } from '../../../../modules/nf-core/modules/gatk4/getpileupsummaries/main'
@@ -22,7 +21,6 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
     germline_resource_tbi     // channel: /path/to/germline/index
     panel_of_normals          // channel: /path/to/panel/of/normals
     panel_of_normals_tbi      // channel: /path/to/panel/of/normals/index
-    intervals_bed_combine_gz  // Combined intervals file for merging!
 
     main:
     ch_versions = Channel.empty()
@@ -62,24 +60,22 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
 
     //Only when using intervals
     //Merge Mutect2 VCF
-    BGZIP_VC_MUTECT2(mutect2_vcf_branch.intervals)
 
-    CONCAT_MUTECT2(
-        BGZIP_VC_MUTECT2.out.output
+    MERGE_MUTECT2(
+        mutect2_vcf_branch.intervals
         .map{ meta, vcf ->
             new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals]
 
             [groupKey(new_meta, meta.num_intervals), vcf]
         }.groupTuple(),
-        fai,
-        intervals_bed_combine_gz)
+        dict)
 
     mutect2_vcf = Channel.empty().mix(
-        CONCAT_MUTECT2.out.vcf,
+        MERGE_MUTECT2.out.vcf,
         mutect2_vcf_branch.no_intervals)
 
     mutect2_tbi = Channel.empty().mix(
-        CONCAT_MUTECT2.out.tbi,
+        MERGE_MUTECT2.out.tbi,
         mutect2_tbi_branch.no_intervals)
 
     //Merge Mutect2 Stats
@@ -111,7 +107,9 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
     //
     //Generate pileup summary table using getepileupsummaries.
     //
-    GETPILEUPSUMMARIES ( input , fasta, fai, dict, germline_resource , germline_resource_tbi )
+    germline_resource_pileup = germline_resource_tbi ? germline_resource : Channel.empty() //Channel.empty().concat(germline_resource) //germline_resource.ifEmpty() ?: Channel.empty()
+    germline_resource_pileup_tbi = germline_resource_tbi ?: Channel.empty()
+    GETPILEUPSUMMARIES ( input , fasta, fai, dict, germline_resource_pileup , germline_resource_pileup_tbi )
 
     GETPILEUPSUMMARIES.out.table.branch{
             intervals:    it[0].num_intervals > 1
@@ -150,8 +148,7 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
 
     FILTERMUTECTCALLS ( ch_filtermutect_in, fasta, fai, dict )
 
-    ch_versions = ch_versions.mix(BGZIP_VC_MUTECT2.out.versions)
-    ch_versions = ch_versions.mix(CONCAT_MUTECT2.out.versions)
+    ch_versions = ch_versions.mix(MERGE_MUTECT2.out.versions)
     ch_versions = ch_versions.mix(CALCULATECONTAMINATION.out.versions)
     ch_versions = ch_versions.mix(FILTERMUTECTCALLS.out.versions)
     ch_versions = ch_versions.mix(GETPILEUPSUMMARIES.out.versions)

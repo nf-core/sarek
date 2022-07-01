@@ -1,19 +1,16 @@
-include { TABIX_BGZIP as BGZIP_VC_MANTA_SMALL_INDELS } from '../../../../../modules/nf-core/modules/tabix/bgzip/main'
-include { TABIX_BGZIP as BGZIP_VC_MANTA_SV           } from '../../../../../modules/nf-core/modules/tabix/bgzip/main'
-include { TABIX_BGZIP as BGZIP_VC_MANTA_TUMOR        } from '../../../../../modules/nf-core/modules/tabix/bgzip/main'
-include { CONCAT_VCF as CONCAT_MANTA_SMALL_INDELS    } from '../../../../../modules/local/concat_vcf/main'
-include { CONCAT_VCF as CONCAT_MANTA_SV              } from '../../../../../modules/local/concat_vcf/main'
-include { CONCAT_VCF as CONCAT_MANTA_TUMOR           } from '../../../../../modules/local/concat_vcf/main'
-include { MANTA_TUMORONLY                            } from '../../../../../modules/nf-core/modules/manta/tumoronly/main'
+include { GATK4_MERGEVCFS as MERGE_MANTA_SMALL_INDELS      } from '../../../../../modules/nf-core/modules/gatk4/mergevcfs/main'
+include { GATK4_MERGEVCFS as MERGE_MANTA_SV                } from '../../../../../modules/nf-core/modules/gatk4/mergevcfs/main'
+include { GATK4_MERGEVCFS as MERGE_MANTA_TUMOR             } from '../../../../../modules/nf-core/modules/gatk4/mergevcfs/main'
+include { MANTA_TUMORONLY                                  } from '../../../../../modules/nf-core/modules/manta/tumoronly/main'
 
 // TODO: Research if splitting by intervals is ok, we pretend for now it is fine.
 // Seems to be the consensus on upstream modules implementation too
 workflow RUN_MANTA_TUMORONLY {
     take:
     cram                     // channel: [mandatory] [meta, cram, crai, interval.bed.gz, interval.bed.gz.tbi]
+    dict                     // channel: [optional]
     fasta                    // channel: [mandatory]
     fasta_fai                // channel: [mandatory]
-    intervals_bed_gz         // channel: [optional]  Contains a bed.gz file of all intervals combined provided with the cram input(s). Mandatory if interval files are used.
 
     main:
 
@@ -38,61 +35,49 @@ workflow RUN_MANTA_TUMORONLY {
         }.set{manta_tumor_sv_vcf}
 
     //Only when using intervals
-    BGZIP_VC_MANTA_SMALL_INDELS(manta_small_indels_vcf.intervals)
+    MERGE_MANTA_SMALL_INDELS(
+        manta_small_indels_vcf.intervals.map{ meta, vcf ->
 
-    CONCAT_MANTA_SMALL_INDELS(
-        BGZIP_VC_MANTA_SMALL_INDELS.out.output.map{ meta, vcf ->
+                [groupKey([patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals],
+                        meta.num_intervals),
+                vcf]
 
-                new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals]
-
-                [groupKey(new_meta, meta.num_intervals), vcf]
             }.groupTuple(),
-        fasta_fai,
-        intervals_bed_gz)
+        dict)
 
-    BGZIP_VC_MANTA_SV(manta_candidate_sv_vcf.intervals)
+    MERGE_MANTA_SV(
+        manta_candidate_sv_vcf.intervals.map{ meta, vcf ->
 
-    CONCAT_MANTA_SV(
-        BGZIP_VC_MANTA_SV.out.output.map{ meta, vcf ->
+                [groupKey([patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals],
+                        meta.num_intervals),
+                vcf]
 
-                new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals]
-
-                [groupKey(new_meta, meta.num_intervals), vcf]
             }.groupTuple(),
-        fasta_fai,
-        intervals_bed_gz)
+        dict)
 
-    BGZIP_VC_MANTA_TUMOR(manta_tumor_sv_vcf.intervals)
+    MERGE_MANTA_TUMOR(
+        manta_tumor_sv_vcf.intervals.map{ meta, vcf ->
 
-    CONCAT_MANTA_TUMOR(
-        BGZIP_VC_MANTA_TUMOR.out.output.map{ meta, vcf ->
+                [groupKey( [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals],
+                        meta.num_intervals),
+                vcf]
 
-                new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals]
-
-                [groupKey(new_meta, meta.num_intervals), vcf]
             }.groupTuple(),
-        fasta_fai,
-        intervals_bed_gz)
+        dict)
 
     // Mix output channels for "no intervals" and "with intervals" results
+    // Only tumor sv should get annotated
     manta_vcf = Channel.empty().mix(
-        CONCAT_MANTA_SMALL_INDELS.out.vcf,
-        CONCAT_MANTA_SV.out.vcf,
-        CONCAT_MANTA_TUMOR.out.vcf,
-        manta_small_indels_vcf.no_intervals,
-        manta_candidate_sv_vcf.no_intervals,
+        MERGE_MANTA_TUMOR.out.vcf,
         manta_tumor_sv_vcf.no_intervals
     ).map{ meta, vcf ->
-        [[patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals, variantcaller:"Manta"],
-         vcf]
+        [[patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals, variantcaller:"manta"],
+            vcf]
     }
 
-    ch_versions = ch_versions.mix(BGZIP_VC_MANTA_SV.out.versions)
-    ch_versions = ch_versions.mix(BGZIP_VC_MANTA_SMALL_INDELS.out.versions)
-    ch_versions = ch_versions.mix(BGZIP_VC_MANTA_TUMOR.out.versions)
-    ch_versions = ch_versions.mix(CONCAT_MANTA_SV.out.versions)
-    ch_versions = ch_versions.mix(CONCAT_MANTA_SMALL_INDELS.out.versions)
-    ch_versions = ch_versions.mix(CONCAT_MANTA_TUMOR.out.versions)
+    ch_versions = ch_versions.mix(MERGE_MANTA_SV.out.versions)
+    ch_versions = ch_versions.mix(MERGE_MANTA_SMALL_INDELS.out.versions)
+    ch_versions = ch_versions.mix(MERGE_MANTA_TUMOR.out.versions)
     ch_versions = ch_versions.mix(MANTA_TUMORONLY.out.versions)
 
     emit:

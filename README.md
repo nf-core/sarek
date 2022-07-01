@@ -91,6 +91,7 @@ We thank the following people for their extensive assistance in the development 
 - [Abhinav Sharma](https://github.com/abhi18av)
 - [Adrian Lärkeryd](https://github.com/adrlar)
 - [Alexander Peltzer](https://github.com/apeltzer)
+- [Anders Sune Pedersen](https://github.com/asp8200)
 - [Chela James](https://github.com/chelauk)
 - [David Mas-Ponte](https://github.com/davidmasp)
 - [Francesco L](https://github.com/nibscles)

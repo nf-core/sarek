@@ -10,7 +10,7 @@
             "type": "object",
             "fa_icon": "fas fa-terminal",
             "description": "Define where the pipeline should find input data and save output data.",
-            "required": ["step", "input", "outdir"],
+            "required": ["step", "outdir"],
             "properties": {
                 "step": {
                     "type": "string",
@@ -84,15 +84,7 @@
                     "fa_icon": "fas fa-forward",
                     "description": "Disable specified tools.",
                     "help_text": "Multiple tools can be specified, separated by commas.\n\n> **NB** `--skip_tools baserecalibrator_report` is actually just not saving the reports.\n> **NB** `--skip_tools markduplicates_report` does not skip `MarkDuplicates` but prevent the collection of duplicate metrics that slows down performance.\n> **NB** tools can be specified with no concern for case.",
-                    "pattern": "^((bamqc|baserecalibrator|baserecalibrator_report|bcftools|documentation|fastqc|markduplicates|markduplicates_report|multiqc|samtools|vcftools|versions|deeptools)*(,)*)*$"
-                },
-                "target_bed": {
-                    "type": "string",
-                    "format": "file-path",
-                    "pattern": "\\.bed$",
-                    "fa_icon": "fas fa-crosshairs",
-                    "description": "Target BED file for whole exome or targeted sequencing.",
-                    "help_text": "This parameter does _not_  imply that the workflow is running alignment or variant calling only for the supplied targets.\nInstead, we are aligning for the whole genome, and selecting variants only at the very end by intersecting with the provided target file.\nAdding every exon as an interval in case of `WES` can generate >200K processes or jobs, much more forks, and similar number of directories in the Nextflow work directory.\nFurthermore, primers and/or baits are not 100% specific, (certainly not for MHC and KIR, etc.), quite likely there going to be reads mapping to multiple locations.\nIf you are certain that the target is unique for your genome (all the reads will certainly map to only one location), and aligning to the whole genome is an overkill, it is actually better to change the reference itself.\n\nThe recommended flow for targeted sequencing data is to use the workflow as it is, but also provide a `BED` file containing targets for all steps using the `--target_bed` option.\nThe workflow will pick up these intervals, and activate any `--exome` flag in any tools that allow it to process deeper coverage.\nIt is advised to pad the variant calling regions (exons or target) to some extent before submitting to the workflow."
+                    "pattern": "^((baserecalibrator|baserecalibrator_report|bcftools|documentation|fastqc|markduplicates|markduplicates_report|mosdepth|multiqc|samtools|vcftools|versions)*(,)*)*$"
                 },
                 "wes": {
                     "type": "boolean",
@@ -179,11 +171,13 @@
                 "umi_read_structure": {
                     "type": "string",
                     "fa_icon": "fas fa-tape",
+                    "description": "Specify UMI read structure.",
                     "hidden": true
                 },
                 "group_by_umi_strategy": {
                     "type": "string",
                     "default": "Adjacency",
+                    "description": "Default strategy with UMI.",
                     "hidden": true
                 }
             }
@@ -204,17 +198,22 @@
                     "help_text": "> **WARNING** Current indices for `bwa` in AWS iGenomes are not compatible with `bwa-mem2` and `dragmap`.\n> `Sarek` will build them automatically if not provided.\n\n> **WARNING** BWA-mem2 is in active development\n> Sarek might not be able to require the right amount of resources for it at the moment\n> We recommend to use pre-built indexes.",
                     "hidden": true
                 },
+                "save_bam_mapped": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-download",
+                    "description": "Save Mapped BAMs."
+                },
+                "save_output_as_bam": {
+                    "type": "boolean",
+                    "description": "Saves output from Markduplicates & Baserecalibration as BAM file instead of CRAM",
+                    "fa_icon": "fas fa-download"
+                },
                 "use_gatk_spark": {
                     "type": "string",
                     "fa_icon": "fas fa-forward",
                     "description": "Tools for which to enable usage of GATK Spark implementation.",
                     "help_text": "Multiple separated with commas.\n\n GATK4 BQSR tools are currently only available as Beta release. Use with caution!",
                     "pattern": "^((baserecalibrator|markduplicates)*,?)*$"
-                },
-                "save_bam_mapped": {
-                    "type": "boolean",
-                    "fa_icon": "fas fa-download",
-                    "description": "Save Mapped BAMs."
                 }
             }
         },
@@ -287,18 +286,7 @@
                 "joint_germline": {
                     "type": "boolean",
                     "fa_icon": "fas fa-align-justify",
-                    "description": "Enables GATK4 joint germline variant calling, if also haplotypecaller is selected."
-                },
-                "generate_gvcf": {
-                    "type": "boolean",
-                    "fa_icon": "fas fa-copy",
-                    "description": "Generate g.vcf output from GATK HaplotypeCaller."
-                },
-                "no_strelka_bp": {
-                    "type": "boolean",
-                    "fa_icon": "fas fa-ban",
-                    "description": "Will not use Manta candidateSmallIndels for Strelka.",
-                    "help_text": "Not recommended by Best Practices."
+                    "description": "Enables GATK4 joint germline variant calling and g.vcf generation, if also Haplotypecaller is selected."
                 },
                 "pon": {
                     "type": "string",
@@ -429,15 +417,59 @@
                     "fa_icon": "fas fa-book",
                     "help_text": "If using a reference genome configured in the pipeline using iGenomes, use this parameter to give the ID for the reference. This is then used to build the full paths for all required reference genome files e.g. `--genome GRCh38`.\n\nSee the [nf-core website docs](https://nf-co.re/usage/reference_genomes) for more details."
                 },
-                "ac_loci": {
+                "ascat_alleles": {
                     "type": "string",
                     "fa_icon": "fas fa-file",
-                    "description": "Path to ASCAT loci file."
+                    "description": "Path to ASCAT allele zip file. If you use AWS iGenomes, this has already been set for you appropriately."
                 },
-                "ac_loci_gc": {
+                "ascat_chromosomes": {
+                    "type": "string",
+                    "fa_icon": "fa-solid fa-text",
+                    "default": "'c(1:22, 'X')'",
+                    "help_text": "Specify specific chromosomes to run ASCAT on, i.e 'c('21', '22')'."
+                },
+                "ascat_genome": {
+                    "type": "string",
+                    "fa_icon": "fa-solid fa-text",
+                    "default": "hg38",
+                    "description": "ASCAT genome.",
+                    "help_text": "Must be set to run ASCAT, either hg19 or hg38. If you use AWS iGenomes, this has already been set for you appropriately."
+                },
+                "ascat_loci": {
                     "type": "string",
                     "fa_icon": "fas fa-file",
-                    "description": "Path to ASCAT GC correction file."
+                    "description": "Path to ASCAT loci zip file. If you use AWS iGenomes, this has already been set for you appropriately."
+                },
+                "ascat_loci_gc": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file",
+                    "description": "Path to ASCAT GC content correction file. If you use AWS iGenomes, this has already been set for you appropriately."
+                },
+                "ascat_loci_rt": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file",
+                    "description": "Path to ASCAT RT (replictiming) correction file. If you use AWS iGenomes, this has already been set for you appropriately."
+                },
+                "ascat_min_base_qual": {
+                    "type": "number",
+                    "default": 20,
+                    "fa_icon": "fas fa-wrench",
+                    "description": "Overwrite Ascat min base quality required for a read to be counted.",
+                    "hidden": true
+                },
+                "ascat_min_counts": {
+                    "type": "number",
+                    "default": 10,
+                    "fa_icon": "fas fa-wrench",
+                    "description": "Overwrite Ascat minimum depth required in the normal for a SNP to be considered.",
+                    "hidden": true
+                },
+                "ascat_min_map_qual": {
+                    "type": "number",
+                    "default": 35,
+                    "fa_icon": "fas fa-wrench",
+                    "description": "Overwrite Ascat min mapping quality required for a read to be counted.",
+                    "hidden": true
                 },
                 "bwa": {
                     "type": "string",
@@ -509,8 +541,8 @@
                 "intervals": {
                     "type": "string",
                     "fa_icon": "fas fa-file-alt",
-                    "help_text": "To speed up some preprocessing and variant calling processes, the reference is chopped into smaller pieces.\nThe intervals are chromosomes cut at their centromeres (so each chromosome arm processed separately) also additional unassigned contigs.\nWe are ignoring the `hs37d5` contig that contains concatenated decoy sequences.\nParts of preprocessing and variant calling are done by these intervals, and the different resulting files are then merged.\nThis can parallelize processes, and push down wall clock time significantly.\n\nThe calling intervals can be defined using a .list or a BED file.\nA .list file contains one interval per line in the format `chromosome:start-end` (1-based coordinates).\nA BED file must be a tab-separated text file with one interval per line.\nThere must be at least three columns: chromosome, start, and end (0-based coordinates).\nAdditionally, the score column of the BED file can be used to provide an estimate of how many seconds it will take to call variants on that interval.\nThe fourth column remains unused.\n\n```\n|chr1|10000|207666|NA|47.3|\n```\nThis indicates that variant calling on the interval chr1:10001-207666 takes approximately 47.3 seconds.\n\nThe runtime estimate is used in two different ways.\nFirst, when there are multiple consecutive intervals in the file that take little time to compute, they are processed as a single job, thus reducing the number of processes that needs to be spawned.\nSecond, the jobs with largest processing time are started first, which reduces wall-clock time.\nIf no runtime is given, a time of 1000 nucleotides per second is assumed.\nActual figures vary from 2 nucleotides/second to 30000 nucleotides/second.\nIf you prefer, you can specify the full path to your reference genome when you run the pipeline:\n\n> **NB** If none provided, will be generated automatically from the FASTA reference\n> **NB** Use --no_intervals to disable automatic generation.",
-                    "description": "Path to intervals file."
+                    "help_text": "To speed up preprocessing and variant calling processes, the execution is parallelized across a reference chopped into smaller pieces.\n\nParts of preprocessing and variant calling are done by these intervals, and the different resulting files are then merged.\nThis can parallelize processes, and push down wall clock time significantly.\n\nThis parameter does _not_  imply that the workflow is running alignment or variant calling only for the supplied regions. Instead, we are aligning to the whole genome, and selecting variants only at the very end by intersecting with the provided file.\n\n**Whole Genome Sequencing:**\n\nThe (provided) intervals are chromosomes cut at their centromeres (so each chromosome arm processed separately) also additional unassigned contigs.\n\nWe are ignoring the `hs37d5` contig that contains concatenated decoy sequences.\n\nThe calling intervals can be defined using a .list or a BED file.\nA .list file contains one interval per line in the format `chromosome:start-end` (1-based coordinates).\nA BED file must be a tab-separated text file with one interval per line.\nThere must be at least three columns: chromosome, start, and end (0-based coordinates).\nAdditionally, the score column of the BED file can be used to provide an estimate of how many seconds it will take to call variants on that interval.\nThe fourth column remains unused.\n\n```\n|chr1|10000|207666|NA|47.3|\n```\nThis indicates that variant calling on the interval chr1:10001-207666 takes approximately 47.3 seconds.\n\nThe runtime estimate is used in two different ways.\nFirst, when there are multiple consecutive intervals in the file that take little time to compute, they are processed as a single job, thus reducing the number of processes that needs to be spawned.\nSecond, the jobs with largest processing time are started first, which reduces wall-clock time.\nIf no runtime is given, a time of 1000 nucleotides per second is assumed.\nActual figures vary from 2 nucleotides/second to 30000 nucleotides/second.\nIf you prefer, you can specify the full path to your reference genome when you run the pipeline:\n\n> **NB** If none provided, will be generated automatically from the FASTA reference\n> **NB** Use --no_intervals to disable automatic generation.\n\n\n**Targeted Sequencing:**\n\nThe recommended flow for targeted sequencing data is to use the workflow as it is, but also provide a `BED` file containing targets for all steps using the `--intervals` option. In addition, the parameter `--wes` should be set.\nIt is advised to pad the variant calling regions (exons or target) to some extent before submitting to the workflow.\n\nThe procedure is similar to whole genome sequencing, except that only BED file are accepted. See above for formatting description.\nAdding every exon as an interval in case of `WES` can generate >200K processes or jobs, much more forks, and similar number of directories in the Nextflow work directory. These are appropriately  grouped together to reduce number of processes run in parallel (see above and `--nucleotides_per_second` for details. \nFurthermore, primers and/or baits are not 100% specific, (certainly not for MHC and KIR, etc.), quite likely there going to be reads mapping to multiple locations.\nIf you are certain that the target is unique for your genome (all the reads will certainly map to only one location), and aligning to the whole genome is an overkill, it is actually better to change the reference itself.",
+                    "description": "Path to target bed file in case of whole exome or targeted sequencing or intervals file."
                 },
                 "known_indels": {
                     "type": "string",
@@ -556,6 +588,14 @@
                     "fa_icon": "fas fa-tag",
                     "description": "VEP cache version.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
+                },
+                "vep_out_format": {
+                    "type": "string",
+                    "default": "vcf",
+                    "description": "VEP output-file format.",
+                    "enum": ["json", "tab", "vcf"],
+                    "help_text": "Sets the format of the output-file from VEP. Available formats: json, tab and vcf.",
+                    "fa_icon": "fas fa-table"
                 },
                 "save_reference": {
                     "type": "boolean",
