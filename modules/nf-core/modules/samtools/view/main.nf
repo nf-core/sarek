@@ -8,7 +8,7 @@ process SAMTOOLS_VIEW {
         'quay.io/biocontainers/samtools:1.15.1--h1170115_0' }"
 
     input:
-    tuple val(meta), path(input), val(index) //path(index) causes   Not a valid path value type: org.codehaus.groovy.runtime.NullObject (null)
+    tuple val(meta), path(input), path(index) //path(index) causes   Not a valid path value type: org.codehaus.groovy.runtime.NullObject (null)
     path fasta
 
     output:
@@ -27,7 +27,7 @@ process SAMTOOLS_VIEW {
     def file_type = input.getExtension()
     if ("$input" == "${prefix}.${file_type}") error "Input and output names are the same, use \"task.ext.prefix\" to disambiguate!"
     """
-    echo $meta > /home/owacker/git/sarek/meta
+    echo $index > /home/owacker/git/sarek/index
     samtools \\
         view \\
         --threads ${task.cpus-1} \\
