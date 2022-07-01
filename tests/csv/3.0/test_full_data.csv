@@ -1,2 +1,2 @@
 patient,status,sample,lane,fastq_1,fastq_2
-HG002,0,HG002,1,s3://giab/data/AshkenazimTrio/HG002_NA24385_son/NIST_Illumina_2x250bps/reads/D1_S1_L001_R1_001.fastq.gz,s3://giab/data/AshkenazimTrio/HG002_NA24385_son/NIST_Illumina_2x250bps/reads/D1_S1_L001_R2_001.fastq.gz
+NA12878,0,NA12878,1,s3://nf-core-awsmegatests/sarek/input/NA12878_1.merged.fastq.gz,s3://nf-core-awsmegatests/sarek/input/NA12878_2.merged.fastq.gz

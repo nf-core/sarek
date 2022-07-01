@@ -34,7 +34,8 @@ workflow PREPARE_INTERVALS {
         ch_intervals_bed_gz_tbi = Channel.fromPath(file("${params.outdir}/no_intervals.bed.{gz,gz.tbi}"))
                                             .collect().map{ it -> [it, 0]}
 
-        ch_intervals_combined = Channel.fromPath(file("${params.outdir}/no_intervals.bed")).collect().map{ it -> [[id:it.simpleName], it]}
+        ch_intervals_combined = Channel.fromPath(file("${params.outdir}/no_intervals.bed"))
+                                            .map{ it -> [[id:it.simpleName], it]}
 
     } else if (params.step != 'annotate' && params.step != 'controlfreec') {
 
