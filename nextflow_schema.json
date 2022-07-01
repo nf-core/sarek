@@ -335,6 +335,13 @@
                     "help_text": "To be used with `--vep_dbnsfp`.",
                     "hidden": true
                 },
+                "dbnsfp_consequence": {
+                    "type": "string",
+                    "fa_icon": "fas fa-database",
+                    "description": "Consequence to annotate with",
+                    "help_text": "To be used with `--vep_dbnsfp`.",
+                    "hidden": true
+                },
                 "dbnsfp_fields": {
                     "type": "string",
                     "fa_icon": "fas fa-database",
