@@ -1,5 +1,5 @@
 process SAMTOOLS_VIEW {
-   // tag "$meta.id" // This causes:  java.lang.NullPointerException: Cannot get property 'id' on null object. -- Check script '/home/owacker/git/sarek/./workflows/../subworkflows/nf-core/../../modules/nf-core/modules/samtools/view/main.nf' at line: 2 or see '.nextflow.log' file for more details
+    tag "$meta.id"
     label 'process_medium'
 
     conda (params.enable_conda ? "bioconda::samtools=1.15.1" : null)
@@ -27,6 +27,7 @@ process SAMTOOLS_VIEW {
     def file_type = input.getExtension()
     if ("$input" == "${prefix}.${file_type}") error "Input and output names are the same, use \"task.ext.prefix\" to disambiguate!"
     """
+    echo $meta > /home/owacker/git/sarek/meta
     samtools \\
         view \\
         --threads ${task.cpus-1} \\
