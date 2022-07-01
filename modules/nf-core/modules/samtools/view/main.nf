@@ -1,5 +1,5 @@
 process SAMTOOLS_VIEW {
-    tag "$meta.id"
+   // tag "$meta.id" // This causes:  java.lang.NullPointerException: Cannot get property 'id' on null object. -- Check script '/home/owacker/git/sarek/./workflows/../subworkflows/nf-core/../../modules/nf-core/modules/samtools/view/main.nf' at line: 2 or see '.nextflow.log' file for more details
     label 'process_medium'
 
     conda (params.enable_conda ? "bioconda::samtools=1.15.1" : null)
@@ -8,7 +8,7 @@ process SAMTOOLS_VIEW {
         'quay.io/biocontainers/samtools:1.15.1--h1170115_0' }"
 
     input:
-    tuple val(meta), path(input), path(index)
+    tuple val(meta), path(input), val(index) //path(index) causes   Not a valid path value type: org.codehaus.groovy.runtime.NullObject (null)
     path fasta
 
     output:
