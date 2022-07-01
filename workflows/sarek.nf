@@ -11,8 +11,10 @@ WorkflowSarek.initialise(params, log)
 
 // Check input path parameters to see if they exist
 def checkPathParamList = [
-    params.ac_loci,
-    params.ac_loci_gc,
+    params.ascat_alleles,
+    params.ascat_loci,
+    params.ascat_loci_gc,
+    params.ascat_loci_rt,
     params.bwa,
     params.bwamem2,
     params.chr_dir,
@@ -56,6 +58,27 @@ if (params.wes && !params.step == 'annotate') {
     if (params.intervals && !params.intervals.endsWith("bed")) exit 1, "Target file specified with `--intervals` must be in BED format"
 } else {
     if (params.intervals && !params.intervals.endsWith("bed") && !params.intervals.endsWith("interval_list")) exit 1, "Interval file must end with .bed or .interval_list"
+}
+
+if(params.tools && params.tools.contains('ascat')){
+    if(!params.ascat_alleles){
+        log.error "No allele files were provided for running ASCAT. Please provide a zip folder with allele files."
+        exit 1
+    }
+    if(!params.ascat_loci){
+        log.error "No loci files were provided for running ASCAT. Please provide a zip folder with loci files."
+        exit 1
+    }
+    if(!params.ascat_loci_gc && !params.ascat_loci_rt){
+        log.warn("No LogRCorrection performed in ASCAT. For LogRCorrection to run, please provide either loci gc files or both loci gc files and loci rt files.")
+    }
+    if(params.wes){
+        log.warn("Default reference files not suited for running ASCAT on WES data. It's recommended to use the reference files provided here: https://github.com/Wedge-lab/battenberg#required-reference-files")
+    }
+    if(params.ascat_genome!="hg19" && params.ascat_genome!="hg38"){
+        log.error "Parameter ascat_genome must be either hg19 or hg38."
+        exit 1
+    }
 }
 
 if(params.tools && params.tools.contains('mutect2')){
@@ -104,18 +127,21 @@ if (anno_readme && file(anno_readme).exists()) {
 */
 
 // Initialize file channels based on params, defined in the params.genomes[params.genome] scope
+ascat_alleles      = params.ascat_alleles      ? Channel.fromPath(params.ascat_alleles).collect()            : Channel.empty()
+ascat_loci         = params.ascat_loci         ? Channel.fromPath(params.ascat_loci).collect()               : Channel.empty()
+ascat_loci_gc      = params.ascat_loci_gc      ? Channel.fromPath(params.ascat_loci_gc).collect()            : Channel.value([])
+ascat_loci_rt      = params.ascat_loci_rt      ? Channel.fromPath(params.ascat_loci_rt).collect()            : Channel.value([])
 chr_dir            = params.chr_dir            ? Channel.fromPath(params.chr_dir).collect()                  : Channel.value([])
 dbsnp              = params.dbsnp              ? Channel.fromPath(params.dbsnp).collect()                    : Channel.value([])
 fasta              = params.fasta              ? Channel.fromPath(params.fasta).collect()                    : Channel.empty()
 fasta_fai          = params.fasta_fai          ? Channel.fromPath(params.fasta_fai).collect()                : Channel.empty()
 germline_resource  = params.germline_resource  ? Channel.fromPath(params.germline_resource).collect()        : Channel.value([]) //Mutec2 does not require a germline resource, so set to optional input
 known_indels       = params.known_indels       ? Channel.fromPath(params.known_indels).collect()             : Channel.value([])
-loci               = params.ac_loci            ? Channel.fromPath(params.ac_loci).collect()                  : Channel.value([])
-loci_gc            = params.ac_loci_gc         ? Channel.fromPath(params.ac_loci_gc).collect()               : Channel.value([])
 mappability        = params.mappability        ? Channel.fromPath(params.mappability).collect()              : Channel.value([])
 pon                = params.pon                ? Channel.fromPath(params.pon).collect()                      : Channel.value([]) //PON is optional for Mutect2 (but highly recommended)
 
 // Initialize value channels based on params, defined in the params.genomes[params.genome] scope
+ascat_genome       = params.ascat_genome       ?: Channel.empty()
 snpeff_db          = params.snpeff_db          ?: Channel.empty()
 vep_cache_version  = params.vep_cache_version  ?: Channel.empty()
 vep_genome         = params.vep_genome         ?: Channel.empty()
@@ -256,6 +282,10 @@ workflow SAREK {
 
     // Build indices if needed
     PREPARE_GENOME(
+        ascat_alleles,
+        ascat_loci,
+        ascat_loci_gc,
+        ascat_loci_rt,
         chr_dir,
         dbsnp,
         fasta,
@@ -265,17 +295,21 @@ workflow SAREK {
         pon)
 
     // Gather built indices or get them from the params
-    bwa                    = params.fasta                   ? params.bwa                   ? Channel.fromPath(params.bwa).collect()                   : PREPARE_GENOME.out.bwa                   : []
+    allele_files           = PREPARE_GENOME.out.allele_files
+    bwa                    = params.fasta                   ? params.bwa                        ? Channel.fromPath(params.bwa).collect()                   : PREPARE_GENOME.out.bwa                   : []
     chr_files              = PREPARE_GENOME.out.chr_files
-    bwamem2                = params.fasta                   ? params.bwamem2               ? Channel.fromPath(params.bwamem2).collect()               : PREPARE_GENOME.out.bwamem2               : []
-    dragmap                = params.fasta                   ? params.dragmap               ? Channel.fromPath(params.dragmap).collect()               : PREPARE_GENOME.out.hashtable             : []
-    dict                   = params.fasta                   ? params.dict                  ? Channel.fromPath(params.dict).collect()                  : PREPARE_GENOME.out.dict                  : []
-    fasta_fai              = params.fasta                   ? params.fasta_fai             ? Channel.fromPath(params.fasta_fai).collect()             : PREPARE_GENOME.out.fasta_fai             : []
-    dbsnp_tbi              = params.dbsnp                   ? params.dbsnp_tbi             ? Channel.fromPath(params.dbsnp_tbi).collect()             : PREPARE_GENOME.out.dbsnp_tbi             : Channel.value([])
-    germline_resource_tbi  = params.germline_resource       ? params.germline_resource_tbi ? Channel.fromPath(params.germline_resource_tbi).collect() : PREPARE_GENOME.out.germline_resource_tbi : []
-    known_indels_tbi       = params.known_indels            ? params.known_indels_tbi      ? Channel.fromPath(params.known_indels_tbi).collect()      : PREPARE_GENOME.out.known_indels_tbi      : Channel.value([])
-    pon_tbi                = params.pon                     ? params.pon_tbi               ? Channel.fromPath(params.pon_tbi).collect()               : PREPARE_GENOME.out.pon_tbi               : []
+    bwamem2                = params.fasta                   ? params.bwamem2                    ? Channel.fromPath(params.bwamem2).collect()               : PREPARE_GENOME.out.bwamem2               : []
+    dragmap                = params.fasta                   ? params.dragmap                    ? Channel.fromPath(params.dragmap).collect()               : PREPARE_GENOME.out.hashtable             : []
+    dict                   = params.fasta                   ? params.dict                       ? Channel.fromPath(params.dict).collect()                  : PREPARE_GENOME.out.dict                  : []
+    fasta_fai              = params.fasta                   ? params.fasta_fai                  ? Channel.fromPath(params.fasta_fai).collect()             : PREPARE_GENOME.out.fasta_fai             : []
+    dbsnp_tbi              = params.dbsnp                   ? params.dbsnp_tbi                  ? Channel.fromPath(params.dbsnp_tbi).collect()             : PREPARE_GENOME.out.dbsnp_tbi             : Channel.value([])
+    gc_file                = PREPARE_GENOME.out.gc_file
+    germline_resource_tbi  = params.germline_resource       ? params.germline_resource_tbi      ? Channel.fromPath(params.germline_resource_tbi).collect() : PREPARE_GENOME.out.germline_resource_tbi : []
+    known_indels_tbi       = params.known_indels            ? params.known_indels_tbi           ? Channel.fromPath(params.known_indels_tbi).collect()      : PREPARE_GENOME.out.known_indels_tbi      : Channel.value([])
+    loci_files             = PREPARE_GENOME.out.loci_files
+    pon_tbi                = params.pon                     ? params.pon_tbi                    ? Channel.fromPath(params.pon_tbi).collect()               : PREPARE_GENOME.out.pon_tbi               : []
     msisensorpro_scan      = PREPARE_GENOME.out.msisensorpro_scan
+    rt_file                = PREPARE_GENOME.out.rt_file
 
     // Gather index for mapping given the chosen aligner
     ch_map_index = params.aligner == "bwa-mem" ? bwa :
@@ -291,7 +325,7 @@ workflow SAREK {
     PREPARE_INTERVALS(fasta_fai)
 
     // Intervals for speed up preprocessing/variant calling by spread/gather
-    intervals_bed_combined      = params.no_intervals ? [] : PREPARE_INTERVALS.out.intervals_bed_combined  // [interval.bed] all intervals in one file
+    intervals_bed_combined      = params.no_intervals ? Channel.value([]) : PREPARE_INTERVALS.out.intervals_bed_combined  // [interval.bed] all intervals in one file
     intervals_for_preprocessing = params.wes ? intervals_bed_combined : []      // For QC during preprocessing, we don't need any intervals (MOSDEPTH doesn't take them for WGS)
 
     intervals                   = PREPARE_INTERVALS.out.intervals_bed        // [interval, num_intervals] multiple interval.bed files, divided by useful intervals for scatter/gather
@@ -797,7 +831,8 @@ workflow SAREK {
             fasta_fai,
             intervals,
             intervals_bed_gz_tbi,
-            intervals_bed_combined,
+            intervals_bed_combined, // [] if no_intervals, else interval_bed_combined.bed
+            PREPARE_INTERVALS.out.intervals_bed_combined, // no_intervals.bed if no intervals, else interval_bed_combined.bed; Channel operations possible
             known_sites,
             known_sites_tbi)
             // params.joint_germline)
@@ -842,7 +877,11 @@ workflow SAREK {
             mappability,
             msisensorpro_scan,
             pon,
-            pon_tbi
+            pon_tbi,
+            allele_files,
+            loci_files,
+            gc_file,
+            rt_file
         )
 
         // Gather vcf files for annotation and QC

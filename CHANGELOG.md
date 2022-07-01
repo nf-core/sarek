@@ -67,11 +67,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#570](https://github.com/nf-core/sarek/pull/570) - Extract mpileup into its own subworkflow; zip mpileup files
 - [#571](https://github.com/nf-core/sarek/pull/571) - Including and using GATK4's mergeVcfs
 - [#572](https://github.com/nf-core/sarek/pull/572) - Adjusted subway map svg for firefox compatibility
+- [#577](https://github.com/nf-core/sarek/pull/577) - Update `RELEASE_CHECKLIST`
 - [#578](https://github.com/nf-core/sarek/pull/578) - Updated module deeptools/bamcoverage
 - [#585](https://github.com/nf-core/sarek/pull/585) - Remove explicit BAM to CRAM conversion after MarkduplicatesSpark; tool does it internally
 - [#581](https://github.com/nf-core/sarek/pull/581) - `TIDDIT` is updated to `3.1.0`
 - [#593](https://github.com/nf-core/sarek/pull/593) - update `ensembl-vep` cache version and module
 - [#600](https://github.com/nf-core/sarek/pull/600) - Remove `TODO` in awsfulltest
+- [#606](https://github.com/nf-core/sarek/pull/606) - Updated `ASCAT` to version `3.0` as module
 - [#608](https://github.com/nf-core/sarek/pull/608) - Prevent candidate VCFs from getting published in manta
 
 ### Fixed
@@ -124,6 +126,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#539](https://github.com/nf-core/sarek/pull/539) - `conf/genomes.config` and `params.genomes_base` have been removed
 - [#562](https://github.com/nf-core/sarek/pull/562) - Restart from `--step annotate` from folder is removed. Use a `csv` file instead
 - [#571](https://github.com/nf-core/sarek/pull/571) - Removed the local module `concat_vcf`.
+- [#605](https://github.com/nf-core/sarek/pull/605) - Removed Scatter/gather from GATK_SINGLE_SAMPLE_GERMLINE_VARIANT_CALLING, all intervals are processed together
 
 ## [2.7.1](https://github.com/nf-core/sarek/releases/tag/2.7.1) - Pårtejekna
 
