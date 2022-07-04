@@ -3,8 +3,8 @@
 include { GATK4_GENOMICSDBIMPORT }                 from '../../../../modules/nf-core/modules/gatk4/genomicsdbimport/main'
 include { GATK4_GENOTYPEGVCFS }                    from '../../../../modules/nf-core/modules/gatk4/genotypegvcfs/main'
 include { GATK4_MERGEVCFS as MERGE_GENOTYPEGVCFS } from '../../../../modules/nf-core/modules/gatk4/mergevcfs/main'
-include { GATK4_VARIANTRECALIBRATOR as SNP_VQSR }  from '../../../../modules/nf-core/modules/gatk4/variantrecalibrator/main'
-include { GATK4_VARIANTRECALIBRATOR as INDEL_VQSR} from '../../../../modules/nf-core/modules/gatk4/variantrecalibrator/main'
+include { GATK4_VARIANTRECALIBRATOR as VARIANTRECALIBRATOR_SNP }  from '../../../../modules/nf-core/modules/gatk4/variantrecalibrator/main'
+include { GATK4_VARIANTRECALIBRATOR as VARIANTRECALIBRATOR_INDEL} from '../../../../modules/nf-core/modules/gatk4/variantrecalibrator/main'
 
 workflow GATK_JOINT_GERMLINE_VARIANT_CALLING {
     take:
@@ -17,33 +17,26 @@ workflow GATK_JOINT_GERMLINE_VARIANT_CALLING {
 
     main:
     ch_versions    = Channel.empty()
+    resources_snps = Channel.empty()
+    resources_indels = Channel.empty()
 
-    /*
-    known_snps      = (params.known_snps      ?: Channel.empty() )
-    known_snps_tbi  = (params.known_snps_tbi  ?: Channel.empty() )
-    known_snps_vqsr = (params.known_snps_vqsr ?: Channel.empty() )
 
-    known_indels      = (params.known_indels      ?: Channel.empty() )
-    known_indels_tbi  = (params.known_indels_tbi  ?: Channel.empty() )
-    known_indels_vqsr = (params.known_indels_vqsr ?: Channel.empty() )
+    known_snps      = params.known_snps      ? Channel.fromPath(params.known_snps).collect() : Channel.empty()
+    known_snps_tbi  = params.known_snps_tbi  ? Channel.fromPath(params.known_snps_tbi).collect() : Channel.empty()
 
-    dbsnp      = (params.dbsnp      ?: Channel.empty() )
-    dbsnp_tbi  = (params.dbsnp_tbi  ?: Channel.empty() )
-    dbsnp_vqsr = (params.dbsnp_vqsr ?: Channel.empty() )
 
-    resource_SNP = [
-        [ known_snps, dbsnp ],
-        [ known_snps_tbi, dbsnp_tbi ],
-        [ known_snps_vqsr, dbsnp_vqsr ]
-    ]
+    known_indels       = params.known_indels ? Channel.fromPath(params.known_indels).collect() : Channel.empty()
+    known_indels_tbi   = params.known_indels_tbi ? Channel.fromPath(params.known_indels_tbi).collect() : Channel.empty()
 
-    resource_INDEL = [
-        [ known_indels, dbsnp ],
-        [ known_indels_tbi, dbsnp_tbi ],
-        [ known_indels_gatk1_vqsr, known_indels_gatk2_vqsr, dbsnp_vqsr ]
-    ]
-    */
+    dbsnp       = params.dbsnp      ? Channel.fromPath(params.dbsnp).collect() : Channel.empty()
+    dbsnp_tbi   = params.dbsnp_tbi  ? Channel.fromPath(params.dbsnp_tbi).collect() : Channel.empty()
 
+    resource_snps_vcf = known_snps.combine(dbsnp)
+    resource_snps_tbi = known_snps_tbi.combine(dbsnp_tbi)
+
+    resource_indels_vcf = known_indels.combine(dbsnp)
+    resource_indels_tbi = known_indels_tbi.combine(dbsnp_tbi)
+    
     gendb_input = input.map{
         meta, gvcf, tbi, intervals->
             new_meta = [id: meta.num_intervals > 1 ? "joint variant calling" : "no_intervals",
@@ -72,7 +65,7 @@ workflow GATK_JOINT_GERMLINE_VARIANT_CALLING {
 
     vcfs = GATK4_GENOTYPEGVCFS ( genotype_input, fasta, fai, dict, sites, sites_index).vcf
     merge_vcfs_input = vcfs.map { meta, vcf ->
-        [[id:"joint variant calling", num_intervals: meta.num_intervals], vcf]}.groupTuple()
+        [[id:"joint_variant_calling", num_intervals: meta.num_intervals], vcf]}.groupTuple()
 
     //
     //Merge vcfs called by interval into a single VCF
@@ -80,19 +73,22 @@ workflow GATK_JOINT_GERMLINE_VARIANT_CALLING {
     merged_vcf = MERGE_GENOTYPEGVCFS(merge_vcfs_input,dict)
 
 
-    /*
     vqsr_input = merged_vcf.vcf.join(merged_vcf.tbi)
-    SNP_VQSR(vqsr_input,
-             resources_snp,
-             fasta,
-             fai,
-             dict)
-    INDEL_VQSR(vqsr_input,
-             resources_indel,
-             fasta,
-             fai,
-             dict)
-   */
+
+    VARIANTRECALIBRATOR_SNP(vqsr_input,
+            resource_snps_vcf,
+            resource_snps_tbi,
+            fasta,
+            fai,
+            dict)
+
+    VARIANTRECALIBRATOR_INDEL(vqsr_input,
+            resource_indels_vcf,
+            resource_indels_tbi,
+            fasta,
+            fai,
+            dict)
+
 
     ch_versions = ch_versions.mix(GATK4_GENOTYPEGVCFS.out.versions)
 

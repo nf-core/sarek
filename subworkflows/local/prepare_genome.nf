@@ -17,6 +17,7 @@ include { SAMTOOLS_FAIDX                         } from '../../modules/nf-core/m
 include { TABIX_TABIX as TABIX_DBSNP             } from '../../modules/nf-core/modules/tabix/tabix/main'
 include { TABIX_TABIX as TABIX_GERMLINE_RESOURCE } from '../../modules/nf-core/modules/tabix/tabix/main'
 include { TABIX_TABIX as TABIX_KNOWN_INDELS      } from '../../modules/nf-core/modules/tabix/tabix/main'
+include { TABIX_TABIX as TABIX_KNOWN_SNPS      } from '../../modules/nf-core/modules/tabix/tabix/main'
 include { TABIX_TABIX as TABIX_PON               } from '../../modules/nf-core/modules/tabix/tabix/main'
 include { UNTAR as UNTAR_CHR_DIR                 } from '../../modules/nf-core/modules/untar/main'
 
@@ -27,6 +28,7 @@ workflow PREPARE_GENOME {
         fasta             // channel: [mandatory] fasta
         fasta_fai         // channel: [optional]  fasta_fai
         germline_resource // channel: [optional]  germline_resource
+        known_snps      // channel: [optional]  known_indels
         known_indels      // channel: [optional]  known_indels
         pon               // channel: [optional]  pon
 
@@ -48,6 +50,7 @@ workflow PREPARE_GENOME {
     // outputs are collected to maintain a single channel for relevant TBI files
     TABIX_DBSNP(dbsnp.flatten().map{ it -> [[id:it.baseName], it] })
     TABIX_GERMLINE_RESOURCE(germline_resource.flatten().map{ it -> [[id:it.baseName], it] })
+    TABIX_KNOWN_SNPS( known_snps.flatten().map{ it -> [[id:it.baseName], it] } )
     TABIX_KNOWN_INDELS( known_indels.flatten().map{ it -> [[id:it.baseName], it] } )
     TABIX_PON(pon.flatten().map{ it -> [[id:it.baseName], it] })
 
@@ -66,6 +69,7 @@ workflow PREPARE_GENOME {
     ch_versions = ch_versions.mix(MSISENSORPRO_SCAN.out.versions)
     ch_versions = ch_versions.mix(TABIX_DBSNP.out.versions)
     ch_versions = ch_versions.mix(TABIX_GERMLINE_RESOURCE.out.versions)
+    ch_versions = ch_versions.mix(TABIX_KNOWN_SNPS.out.versions)
     ch_versions = ch_versions.mix(TABIX_KNOWN_INDELS.out.versions)
     ch_versions = ch_versions.mix(TABIX_PON.out.versions)
 
@@ -77,6 +81,7 @@ workflow PREPARE_GENOME {
         dict                             = GATK4_CREATESEQUENCEDICTIONARY.out.dict                             // path: genome.fasta.dict
         fasta_fai                        = SAMTOOLS_FAIDX.out.fai.map{ meta, fai -> [fai] }                    // path: genome.fasta.fai
         germline_resource_tbi            = TABIX_GERMLINE_RESOURCE.out.tbi.map{ meta, tbi -> [tbi] }.collect() // path: germline_resource.vcf.gz.tbi
+        known_snps_tbi                   = TABIX_KNOWN_SNPS.out.tbi.map{ meta, tbi -> [tbi] }.collect()      // path: {known_indels*}.vcf.gz.tbi
         known_indels_tbi                 = TABIX_KNOWN_INDELS.out.tbi.map{ meta, tbi -> [tbi] }.collect()      // path: {known_indels*}.vcf.gz.tbi
         msisensorpro_scan                = MSISENSORPRO_SCAN.out.list.map{ meta, list -> [list] }              // path: genome_msi.list
         pon_tbi                          = TABIX_PON.out.tbi.map{ meta, tbi -> [tbi] }.collect()               // path: pon.vcf.gz.tbi
