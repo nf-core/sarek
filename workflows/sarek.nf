@@ -250,6 +250,9 @@ include { VCF_QC                                               } from '../subwor
 // Annotation
 include { ANNOTATE                                             } from '../subworkflows/local/annotate'
 
+// Tumor mutational burden
+include { TUMOR_MUTATIONAL_BURDEN                              } from '../subworkflows/nf-core/tumor_mutational_burden'
+
 // REPORTING VERSIONS OF SOFTWARE USED
 include { CUSTOM_DUMPSOFTWAREVERSIONS                          } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
 
@@ -937,6 +940,11 @@ workflow SAREK {
             // Gather used softwares versions
             ch_versions = ch_versions.mix(ANNOTATE.out.versions)
             ch_reports  = ch_reports.mix(ANNOTATE.out.reports)
+
+        }
+
+        if(params.tools && params.tools.contains('tmb')){
+            //bcftools norm -f FASTA -m- -o file_norm.vcf file
 
         }
     }

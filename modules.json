@@ -6,6 +6,9 @@
             "ascat": {
                 "git_sha": "98ffb090029d17a9fb8de75dadcfe6bc8b6377ec"
             },
+            "bcftools/norm": {
+                "git_sha": "d596571a03161ee9992b0720c05084cb2ddef324"
+            },
             "bcftools/sort": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
