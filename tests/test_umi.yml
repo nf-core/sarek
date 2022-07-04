@@ -1,49 +1,51 @@
 - name: Run UMI Quiaseq test
   command: nextflow run main.nf -profile test,umi,docker
   tags:
-    #  - umi_quiaseq
     - umi
   files:
-    - path: results/fastqtobam/1234N-SRR7545951_umi_converted.bam
-      md5sum: 1473c98be04aff10f80e2946b111c459
-    - path: results/bam2fastq/1234N-SRR7545951_interleaved.fq.gz
-      md5sum: 17c0cb479e8117016e9f0d835d4df50f
-    - path: results/callumiconsensus/1234N-SRR7545951_umi-consensus.bam
-      md5sum: 3be1adf27d473de12cab895423a5f3ed
-    - path: results/cat/1234N-SRR7545951_1.merged.fastq.gz
-      md5sum: c1ed636a11b3031c72f3d4c84a7a0949
-    - path: results/cat/1234N-SRR7545951_2.merged.fastq.gz
-      md5sum: 0bbef631b8de80f2abe441de713cbb49
-    - path: results/groupreadsbyumi/1234N-SRR7545951_umi-grouped.bam
-      md5sum: e3bb348056513c46d7a60df4d7a8cc97
-    - path: results/groupreadsbyumi/1234N-SRR7545951_umi_histogram.txt
-      md5sum: 2e1e9a774135675a3d1a3b0a88d29c53
-    - path: results/samblaster/1234N-SRR7545951_unsorted_tagged.bam
-      md5sum: daa51939768c256315ce700dabaccad6
-    - path: results/samtools/1234N-SRR7545951.map_map.bam
-      md5sum: 741de784bb83815fab8b2d23d88c74d7
-    - path: results/samtools/1234N-SRR7545951.map_unmap.bam
-      md5sum: 31627b2d163da372584bb78258c046e5
-    - path: results/samtools/1234N-SRR7545951.mapped_1.fq.gz
-      md5sum: 709872fc2910431b1e8b7074bfe38c67
-    - path: results/samtools/1234N-SRR7545951.mapped_2.fq.gz
-      md5sum: 709872fc2910431b1e8b7074bfe38c67
-    - path: results/samtools/1234N-SRR7545951.mapped_other.fq.gz
-      md5sum: 709872fc2910431b1e8b7074bfe38c67
-    - path: results/samtools/1234N-SRR7545951.mapped_singleton.fq.gz
-      md5sum: 709872fc2910431b1e8b7074bfe38c67
-    - path: results/samtools/1234N-SRR7545951.unmap_map.bam
-      md5sum: 42fb9dbb5a157c194c77b1de5b4f3b39
-    - path: results/samtools/1234N-SRR7545951.unmap_unmap.bam
-      md5sum: 2075e48cd007f29c8f6fdc518e587e27
-    - path: results/samtools/1234N-SRR7545951.unmapped_1.fq.gz
-      md5sum: 1f95ae5bbc7345372005b6673884f853
-    - path: results/samtools/1234N-SRR7545951.unmapped_2.fq.gz
-      md5sum: 9902e27a99c2a628d184cb91759d6ff7
-    - path: results/samtools/1234N-SRR7545951.unmapped_other.fq.gz
-      md5sum: 709872fc2910431b1e8b7074bfe38c67
-    - path: results/samtools/1234N-SRR7545951.unmapped_singleton.fq.gz
-      md5sum: 709872fc2910431b1e8b7074bfe38c67
+    - path: results/fastqtobam/test-test_L1_umi_converted.bam
+      md5sum: ce67e3b1f46302127cd07cb3c2d2e739
+    - path: results/bam2fastq/test-test_L1_interleaved.fq.gz
+      md5sum: 7a57a8ab53dd1d799cca67a85c47ccd9
+    - path: results/callumiconsensus/test-test_L1_umi-consensus.bam
+      md5sum: 8d52eadfa1919eb01c795c29b3f3a2f3
+    - path: results/cat/test-test_L1_1.merged.fastq.gz
+      md5sum: 56689dad7749b989c003a18f83445cae
+    - path: results/cat/test-test_L1_2.merged.fastq.gz
+      md5sum: bede34e291fd70f6e5fb5ad576617272
+    - path: results/groupreadsbyumi/test-test_L1_umi-grouped.bam
+      md5sum: 14b02a0279f715586d3671d184a83d6b
+    - path: results/groupreadsbyumi/test-test_L1_umi_histogram.txt
+      md5sum: d17fd167b2a765d46e4b01bf08ece01b
+    - path: results/samblaster/test-test_L1_unsorted_tagged
+      md5sum: ba3425e6722d6f6cc36e6dec42b19207
+    - path: results/samtools/test-test_L1.map_map.bam
+      md5sum: f29dc564311e592941bdf152dd722b4f
+    - path: results/samtools/test-test_L1.map_unmap.bam
+      md5sum: 6518cea4d9c0bdb17af66932b68e0ad9
+    - path: results/samtools/test-test_L1.bam
+      md5sum: 41f807e2f3be27a6054a1b7ab4a438b2
+      # TODO: The following files are not produced anymore
+#    - path: results/samtools/test-test_L1.mapped_1.fq.gz
+#      md5sum: 709872fc2910431b1e8b7074bfe38c67
+#    - path: results/samtools/test-test_L1.mapped_2.fq.gz
+#      md5sum: 709872fc2910431b1e8b7074bfe38c67
+#    - path: results/samtools/test-test_L1.mapped_other.fq.gz
+#      md5sum: 709872fc2910431b1e8b7074bfe38c67
+#    - path: results/samtools/test-test_L1.mapped_singleton.fq.gz
+#      md5sum: 709872fc2910431b1e8b7074bfe38c67
+#    - path: results/samtools/test-test_L1.unmap_map.bam
+#      md5sum: 9479aabdbbfdc8f5c79f8daa1011e9fb
+#    - path: results/samtools/test-test_L1.unmap_unmap.bam
+#      md5sum: 68bcb7f856c1933b81c4733da2fcd8df
+#    - path: results/samtools/test-test_L1.unmapped_1.fq.gz
+#      md5sum: 1f95ae5bbc7345372005b6673884f853
+#    - path: results/samtools/test-test_L1.unmapped_2.fq.gz
+#      md5sum: 9902e27a99c2a628d184cb91759d6ff7
+#    - path: results/samtools/test-test_L1.unmapped_other.fq.gz
+#      md5sum: 709872fc2910431b1e8b7074bfe38c67
+#    - path: results/samtools/test-test_L1.unmapped_singleton.fq.gz
+#      md5sum: 709872fc2910431b1e8b7074bfe38c67
 # - name: Run UMI TSO test
 #   command: nextflow run main.nf -profile test,umi_tso,docker
 #   tags:
