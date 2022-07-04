@@ -3,6 +3,9 @@
     "homePage": "https://github.com/nf-core/sarek",
     "repos": {
         "nf-core/modules": {
+            "ascat": {
+                "git_sha": "98ffb090029d17a9fb8de75dadcfe6bc8b6377ec"
+            },
             "bcftools/sort": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
@@ -219,6 +222,9 @@
             "strelka/somatic": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
+            "svdb/merge": {
+                "git_sha": "313d76e00525c8e975dabce0c34973fd53c3f4dd"
+            },
             "tabix/bgziptabix": {
                 "git_sha": "49b18b1639f4f7104187058866a8fab33332bdfe"
             },
@@ -230,6 +236,9 @@
             },
             "untar": {
                 "git_sha": "51be617b1ca9bff973655eb899d591ed6ab253b5"
+            },
+            "unzip": {
+                "git_sha": "e080f4c8acf5760039ed12ec1f206170f3f9a918"
             },
             "vcftools": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"

@@ -13,17 +13,18 @@ include { RUN_TIDDIT          } from '../nf-core/variantcalling/tiddit/main.nf'
 
 workflow GERMLINE_VARIANT_CALLING {
     take:
-        tools                         // Mandatory, list of tools to apply
-        cram_recalibrated             // channel: [mandatory] cram
-        bwa                           // channel: [mandatory] bwa
-        dbsnp                         // channel: [mandatory] dbsnp
-        dbsnp_tbi                     // channel: [mandatory] dbsnp_tbi
-        dict                          // channel: [mandatory] dict
-        fasta                         // channel: [mandatory] fasta
-        fasta_fai                     // channel: [mandatory] fasta_fai
-        intervals                     // channel: [mandatory] intervals/target regions
-        intervals_bed_gz_tbi          // channel: [mandatory] intervals/target regions index zipped and indexed
-        intervals_bed_combined        // channel: [mandatory] intervals/target regions in one file unzipped
+        tools                             // Mandatory, list of tools to apply
+        cram_recalibrated                 // channel: [mandatory] cram
+        bwa                               // channel: [mandatory] bwa
+        dbsnp                             // channel: [mandatory] dbsnp
+        dbsnp_tbi                         // channel: [mandatory] dbsnp_tbi
+        dict                              // channel: [mandatory] dict
+        fasta                             // channel: [mandatory] fasta
+        fasta_fai                         // channel: [mandatory] fasta_fai
+        intervals                         // channel: [mandatory] intervals/target regions
+        intervals_bed_gz_tbi              // channel: [mandatory] intervals/target regions index zipped and indexed
+        intervals_bed_combined            // channel: [mandatory] intervals/target regions in one file unzipped, [] if no_intervals
+        intervals_bed_combined_haplotypec // channel: [mandatory] intervals/target regions in one file unzipped, no_intervals.bed if no_intervals
         known_sites
         known_sites_tbi
         // joint_germline                // val: true/false on whether to run joint_germline calling, only works in combination with haplotypecaller at the moment
@@ -40,7 +41,6 @@ workflow GERMLINE_VARIANT_CALLING {
     manta_vcf           = Channel.empty()
     strelka_vcf         = Channel.empty()
     tiddit_vcf          = Channel.empty()
-    mpileup             = Channel.empty()
 
     // Remap channel with intervals
     cram_recalibrated_intervals = cram_recalibrated.combine(intervals)
@@ -122,9 +122,9 @@ workflow GERMLINE_VARIANT_CALLING {
                         dict,
                         dbsnp,
                         dbsnp_tbi,
+                        intervals_bed_combined_haplotypec,
                         known_sites,
-                        known_sites_tbi,
-                        intervals_bed_combined)
+                        known_sites_tbi)
 
         haplotypecaller_vcf  = RUN_HAPLOTYPECALLER.out.filtered_vcf
         ch_versions          = ch_versions.mix(RUN_HAPLOTYPECALLER.out.versions)

@@ -12,9 +12,9 @@ workflow RUN_HAPLOTYPECALLER {
     dict                            // channel: [mandatory]
     dbsnp                           // channel: []
     dbsnp_tbi
+    intervals_bed_combined          // channel: [mandatory] intervals/target regions in one file unzipped, no_intervals.bed if no_intervals
     known_sites
-    known_sites_tbi
-    intervals_bed_combined          // channel: [optional]
+    known_sites_tbi               // channel: [optional]
 
 
     main:
@@ -87,24 +87,11 @@ workflow RUN_HAPLOTYPECALLER {
         // filtered_vcf = JOINT_GERMLINE.out.vcf
         // ch_versions = ch_versions.mix(GATK_JOINT_GERMLINE_VARIANT_CALLING.out.versions)
     } else {
-
-        //Scatter/gather on WGS, on targeted data run all intervals at once to avoid  "A USER ERROR has occurred: Bad input: VCF contains no variants or no variants with INFO score key "CNN_1D"" which happens on small-ish regions frequently
-        if(params.wes){
-            single_sample_in = Channel.empty().mix(haplotypecaller_vcf.join(haplotypecaller_tbi).combine(intervals_bed_combined).map{
-                meta, vcf, tbi, intervals ->
-                [[id:meta.id, patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, num_intervals:1 ],
-                vcf, tbi, intervals]
-            })
-        }else{
-            single_sample_in = Channel.empty().mix(HAPLOTYPECALLER.out.vcf.join(HAPLOTYPECALLER.out.tbi).join(cram).map{ meta, vcf, tbi, cram, crai, intervals ->
-                [meta, vcf, tbi, intervals]
-            })
-        }
-
-        SINGLE_SAMPLE(single_sample_in,
+        SINGLE_SAMPLE(haplotypecaller_vcf.join(haplotypecaller_tbi),
                         fasta,
                         fasta_fai,
                         dict,
+                        intervals_bed_combined,
                         known_sites,
                         known_sites_tbi)
 
