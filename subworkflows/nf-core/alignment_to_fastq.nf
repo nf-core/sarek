@@ -20,11 +20,6 @@ workflow ALIGNMENT_TO_FASTQ {
     ch_versions = Channel.empty()
     // Index File if not PROVIDED -> this also requires updates to samtools view possibly URGH
 
-    if (input.collect{it[2]}.ifEmpty()) {
-        input  = input.mix([])
-    }
-  //  input  = input.mix(input.collect{it[2]}.ifEmpty([]))
-    input.dump(tag:"inputn")
     // MAP - MAP
     SAMTOOLS_VIEW_MAP_MAP(input, fasta)
 
