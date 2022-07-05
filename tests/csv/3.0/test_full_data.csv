@@ -1,2 +1,0 @@
-patient,status,sample,lane,fastq_1,fastq_2
-NA12878,0,NA12878,1,s3://nf-core-awsmegatests/sarek/input/NA12878_1.merged.fastq.gz,s3://nf-core-awsmegatests/sarek/input/NA12878_2.merged.fastq.gz
