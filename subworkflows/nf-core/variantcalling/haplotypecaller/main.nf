@@ -108,7 +108,7 @@ workflow RUN_HAPLOTYPECALLER {
                         known_sites,
                         known_sites_tbi)
 
-        filtered_vcf = SINGLE_SAMPLE.out.filtered_vcf
+        filtered_vcf = SINGLE_SAMPLE.out.filtered_vcf.map{ meta, vcf-> [[patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals, variantcaller:"haplotypecaller"], vcf]}
         ch_versions = ch_versions.mix(SINGLE_SAMPLE.out.versions)
     }
 

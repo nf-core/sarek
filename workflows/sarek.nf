@@ -882,6 +882,8 @@ workflow SAREK {
         // ANNOTATE
         if (params.step == 'annotate') vcf_to_annotate = ch_input_sample
 
+        ch_input_sample.dump(tag:'ch_input_sample')
+
         if (params.tools.contains('merge') || params.tools.contains('snpeff') || params.tools.contains('vep')) {
 
             ANNOTATE(vcf_to_annotate,
@@ -899,8 +901,12 @@ workflow SAREK {
             ch_versions = ch_versions.mix(ANNOTATE.out.versions)
             ch_reports  = ch_reports.mix(ANNOTATE.out.reports)
 
+
+
         }
     }
+    ch_reports.dump(tag:'ch_reports1')
+    ch_reports.collect().dump(tag:'ch_reports2')
 
     ch_version_yaml = Channel.empty()
     if (!(params.skip_tools && params.skip_tools.contains('versions'))) {
@@ -919,6 +925,7 @@ workflow SAREK {
                                             ch_multiqc_config,
                                             ch_sarek_logo)
 
+        ch_multiqc_files.dump(tag:'multicq files')
         MULTIQC(ch_multiqc_files.collect())
         multiqc_report = MULTIQC.out.report.toList()
     }
