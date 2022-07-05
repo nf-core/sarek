@@ -82,4 +82,43 @@ class WorkflowSarek {
                         exit 1, "Unknown step $params.step"
         }
     }
+
+    public static String getTMBdatabase(String annotation) {
+
+        String dbConfig = "";
+
+        switch (annotation) {
+            case 'snpeff': dbConfig = "$projectDir/assets/tmb/snpeff.yml";
+                            break
+            case 'vep': dbConfig = "$projectDir/assets/tmb/vep.yml";
+                            break
+            case 'merge': dbConfig = "$projectDir/assets/tmb/merge.yml";
+                            break
+        }
+
+        return dbConfig
+    }
+
+    public static String getTMBvariantcaller(String variantcaller) {
+
+        String varConfig = "";
+
+        switch (variantcaller) {
+            case 'deepvariant': varConfig = "$projectDir/assets/tmb/deepvariant.yml";
+                            break
+            case 'freebayes': varConfig = "$projectDir/assets/tmb/freebayes.yml";
+                            break
+            case 'haplotypecaller': varConfig = "$projectDir/assets/tmb/haplotypecaller.yml";
+                            break
+            case 'mpileup': varConfig = "$projectDir/assets/tmb/mpileup.yml";
+                            break
+            case 'mutect2': varConfig = "$projectDir/assets/tmb/mutect2.yml";
+                            break
+            case 'strelka': varConfig = "$projectDir/assets/tmb/strelka.yml";
+                            break
+        }
+
+        return varConfig
+
+    }
 }
