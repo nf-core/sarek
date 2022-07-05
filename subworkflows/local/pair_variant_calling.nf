@@ -58,7 +58,7 @@ workflow PAIR_VARIANT_CALLING {
             //If no interval file provided (0) then add empty list
             intervals_new = num_intervals == 0 ? [] : intervals
 
-            [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id: meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:num_intervals],
+            [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, sex:meta.sex, id: meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:num_intervals],
             normal_cram, normal_crai, tumor_cram, tumor_crai, intervals_new]
         }
 
@@ -70,7 +70,7 @@ workflow PAIR_VARIANT_CALLING {
             bed_new = num_intervals == 0 ? [] : bed_tbi[0]
             tbi_new = num_intervals == 0 ? [] : bed_tbi[1]
 
-            [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id: meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:num_intervals],
+            [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, sex:meta.sex, id: meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:num_intervals],
             normal_cram, normal_crai, tumor_cram, tumor_crai, bed_new, tbi_new]
 
         }
@@ -168,7 +168,7 @@ workflow PAIR_VARIANT_CALLING {
                                             bed_new = num_intervals == 0 ? [] : bed_tbi[0]
                                             tbi_new = num_intervals == 0 ? [] : bed_tbi[1]
 
-                                            [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:num_intervals],
+                                            [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, sex:meta.sex, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:num_intervals],
                                             normal_cram, normal_crai, tumor_cram, tumor_crai, vcf, vcf_tbi, bed_new, tbi_new]
                                         }
 
