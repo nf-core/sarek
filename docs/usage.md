@@ -53,7 +53,7 @@ Multiple `CSV` files can be specified if the path is enclosed in quotes.
 | Column    | Description                                                                                                                                                                                                                                                                                                     |
 | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `patient` | **Custom patient ID**; designates the patient/subject; must be unique for each patient, but one patient can have multiple samples (e.g. normal and tumor).                                                                                                                                                      |
-| `gender`  | **Sex chromosomes of the patient**; i.e. XX, XY..., only used for Copy-Number Variation analysis in a tumor/pair<br /> _Optional, Default: `NA`_                                                                                                                                                                |
+| `sex`  | **Sex chromosomes of the patient**; i.e. XX, XY..., only used for Copy-Number Variation analysis in a tumor/pair<br /> _Optional, Default: `NA`_                                                                                                                                                                |
 | `status`  | **Normal/tumor status of sample**; can be `0` (normal) or `1` (tumor).<br /> _Optional, Default: `0`_                                                                                                                                                                                                           |
 | `sample`  | **Custom sample ID** for each tumor and normal sample; more than one tumor sample for each subject is possible, i.e. a tumor and a relapse; samples can have multiple lanes for which the _same_ ID must be used to merge them later (see also `lane`). Sample IDs must be unique for unique biological samples |
 | `lane`    | Lane ID, used when the `sample` is multiplexed on several lanes. Must be unique for each lane in the same sample (but does not need to be the original lane name), and must contain at least one character <br /> _Required for `--step_mapping`_                                                               |
@@ -104,10 +104,10 @@ patient1,test_sample,3,test_L003.bam
 
 ##### Full samplesheet
 
-In this example, all possible columns are used. There are 3 read groups for the normal sample, 2 for the tumor sample, 1 for the relapse, including the `gender` and `status` information per patient:
+In this example, all possible columns are used. There are 3 read groups for the normal sample, 2 for the tumor sample, 1 for the relapse, including the `sex` and `status` information per patient:
 
 ```console
-patient,gender,status,sample,lane,fastq_1,fastq_2
+patient,sex,status,sample,lane,fastq_1,fastq_2
 patient1,XX,0,normal_sample,lane_1,test_L001_1.fastq.gz,test_L001_2.fastq.gz
 patient1,XX,0,normal_sample,lane_2,test_L002_1.fastq.gz,test_L002_2.fastq.gz
 patient1,XX,0,normal_sample,lane_3,test_L003_1.fastq.gz,test_L003_2.fastq.gz
@@ -117,7 +117,7 @@ patient1,XX,1,relapse_sample,lane_1,test3_L001_1.fastq.gz,test3_L001_2.fastq.gz
 ```
 
 ```console
-patient,gender,status,sample,lane,bam
+patient,sex,status,sample,lane,bam
 patient1,XX,0,normal_sample,lane_1,test_L001.bam
 patient1,XX,0,normal_sample,lane_2,test_L002.bam
 patient1,XX,0,normal_sample,lane_3,test_L003.bam
@@ -148,17 +148,17 @@ The `Sarek`-generated `CSV` file is stored under `results/csv/mapped.csv` if in 
 
 ##### Full samplesheet
 
-In this example, all possible columns are used including the `gender` and `status` information per patient:
+In this example, all possible columns are used including the `sex` and `status` information per patient:
 
 ```console
-patient,gender,status,sample,bam,bai
+patient,sex,status,sample,bam,bai
 patient1,XX,0,test_sample,test_mapped.bam,test_mapped.bam.bai
 patient1,XX,1,tumor_sample,test2_mapped.bam,test2_mapped.bam.bai
 patient1,XX,1,relapse_sample,test3_mapped.bam,test3_mapped.bam.bai
 ```
 
 ```console
-patient,gender,status,sample,cram,crai
+patient,sex,status,sample,cram,crai
 patient1,XX,0,normal_sample,test_mapped.cram,test_mapped.cram.crai
 patient1,XX,1,tumor_sample,test2_mapped.cram,test2_mapped.cram.crai
 patient1,XX,1,relapse_sample,test3_mapped.cram,test3_mapped.cram.crai
@@ -184,17 +184,17 @@ The `Sarek`-generated `CSV` file is stored under `results/csv/markduplicates_no_
 
 ##### Full samplesheet
 
-In this example, all possible columns are used including the `gender` and `status` information per patient:
+In this example, all possible columns are used including the `sex` and `status` information per patient:
 
 ```console
-patient,gender,status,sample,bam,bai
+patient,sex,status,sample,bam,bai
 patient1,XX,0,test_sample,test_md.bam,test_md.bam.bai
 patient1,XX,1,tumor_sample,test2_md.bam,test2_md.bam.bai
 patient1,XX,1,relapse_sample,test3_md.bam,test3_md.bam.bai
 ```
 
 ```console
-patient,gender,status,sample,cram,crai
+patient,sex,status,sample,cram,crai
 patient1,XX,0,normal_sample,test_md.cram,test_md.cram.crai
 patient1,XX,1,tumor_sample,test2_md.cram,test2_md.cram.crai
 patient1,XX,1,relapse_sample,test3_md.cram,test3_md.cram.crai
@@ -220,10 +220,10 @@ The `Sarek`-generated `CSV` file is stored under `results/csv/markduplicates.csv
 
 ##### Full samplesheet
 
-In this example, all possible columns are used including the `gender` and `status` information per patient:
+In this example, all possible columns are used including the `sex` and `status` information per patient:
 
 ```console
-patient,gender,status,sample,cram,crai,table
+patient,sex,status,sample,cram,crai,table
 patient1,XX,0,test_sample,test_mapped.cram,test_mapped.cram.crai,test.table
 patient1,XX,1,tumor_sample,test2_mapped.cram,test2_mapped.cram.crai,test2.table
 patient1,XX,1,relapse_sample,test3_mapped.cram,test3_mapped.cram.crai,test3.table
@@ -249,10 +249,10 @@ The `Sarek`-generated `CSV` file is stored under `results/csv/recalibrated.csv` 
 
 ##### Full samplesheet
 
-In this example, all possible columns are used including the `gender` and `status` information per patient:
+In this example, all possible columns are used including the `sex` and `status` information per patient:
 
 ```console
-patient,gender,status,sample,cram,crai
+patient,sex,status,sample,cram,crai
 patient1,XX,0,normal_sample,test_mapped.cram,test_mapped.cram.crai
 patient1,XX,1,tumor_sample,test2_mapped.cram,test2_mapped.cram.crai
 patient1,XX,1,relapse_sample,test3_mapped.cram,test3_mapped.cram.crai

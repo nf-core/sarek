@@ -113,6 +113,15 @@ if (params.step == 'annotate' && !params.tools) {
     exit 1
 }
 
+if (params.tools && (params.tools.contains('ascat') || params.tools.contains('controlfreec'))) {
+    ch_input_sample.map{ meta, input ->
+        if (meta.sex == 'NA' ) {
+            log.error "Please specify sex information for each sample in your samplesheet when using '--tools' with 'ascat' or 'controlfreec'.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
+            exit 1
+        }
+    }
+}
+
 // Save AWS IGenomes file containing annotation version
 def anno_readme = params.genomes[params.genome]?.readme
 if (anno_readme && file(anno_readme).exists()) {
@@ -397,7 +406,7 @@ workflow SAREK {
                 ch_reads_to_map = FASTP.out.reads.map{ key, reads ->
 
                         read_files = reads.sort{ a,b -> a.getName().tokenize('.')[0] <=> b.getName().tokenize('.')[0] }.collate(2)
-                        [[patient: key.patient, sample:key.sample, gender:key.gender, status:key.status, id:key.id, numLanes:key.numLanes, read_group:key.read_group, data_type:key.data_type, size:read_files.size()],
+                        [[patient: key.patient, sample:key.sample, sex:key.sex, status:key.status, id:key.id, numLanes:key.numLanes, read_group:key.read_group, data_type:key.data_type, size:read_files.size()],
                         read_files]
                     }.transpose()
             }else{
@@ -415,7 +424,7 @@ workflow SAREK {
             // update ID when no multiple lanes or splitted fastqs
             new_id = meta.size * meta.numLanes == 1 ? meta.sample : meta.id
 
-            [[patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:new_id, numLanes:meta.numLanes, read_group:meta.read_group, data_type:meta.data_type, size:meta.size],
+            [[patient:meta.patient, sample:meta.sample, sex:meta.sex, status:meta.status, id:new_id, numLanes:meta.numLanes, read_group:meta.read_group, data_type:meta.data_type, size:meta.size],
             reads]
         }
 
@@ -432,7 +441,7 @@ workflow SAREK {
             //   read_group: Now in the BAM header
             //     numLanes: Was only needed for mapping
             //         size: Was only needed for mapping
-            new_meta = [patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:meta.sample, data_type:"bam"]
+            new_meta = [patient:meta.patient, sample:meta.sample, sex:meta.sex, status:meta.status, id:meta.sample, data_type:"bam"]
             // Use groupKey to make sure that the correct group can advance as soon as it is complete
             // and not stall the workflow until all reads from all channels are mapped
             [ groupKey(new_meta, numLanes * size), bam]
@@ -556,7 +565,7 @@ workflow SAREK {
             ch_cram_markduplicates_spark,
             ch_cram_no_markduplicates_restart).map{ meta, cram, crai ->
                         //Make sure correct data types are carried through
-                        [[patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:meta.id, data_type:"cram"], cram, crai]
+                        [[patient:meta.patient, sample:meta.sample, sex:meta.sex, status:meta.status, id:meta.id, data_type:"cram"], cram, crai]
                     }
 
         // CSV should be written for the file actually out out, either CRAM or BAM
@@ -813,7 +822,7 @@ workflow SAREK {
                 meta.patient    = normal[0]
                 meta.normal_id  = normal[1].sample
                 meta.tumor_id   = tumor[1].sample
-                meta.gender     = normal[1].gender
+                meta.sex        = normal[1].sex
                 meta.id         = "${meta.tumor_id}_vs_${meta.normal_id}".toString()
 
                 [meta, normal[2], normal[3], tumor[2], tumor[3]]
@@ -989,7 +998,7 @@ def extract_csv(csv_file) {
         def line, numberOfLinesInSampleSheet = 0;
         while ((line = reader.readLine()) != null) {numberOfLinesInSampleSheet++}
         if (numberOfLinesInSampleSheet < 2) {
-            log.error "Sample sheet had less than two lines. The sample sheet must be a csv file with a header, so at least two lines."
+            log.error "Samplesheet had less than two lines. The sample sheet must be a csv file with a header, so at least two lines."
             System.exit(1)
         }
     }
@@ -1017,10 +1026,10 @@ def extract_csv(csv_file) {
         if (row.patient) meta.patient = row.patient.toString()
         if (row.sample)  meta.sample  = row.sample.toString()
 
-        // If no gender specified, gender is not considered
-        // gender is only mandatory for somatic CNV
-        if (row.gender) meta.gender = row.gender.toString()
-        else meta.gender = "NA"
+        // If no sex specified, sex is not considered
+        // sex is only mandatory for somatic CNV
+        if (row.sex) meta.sex = row.sex.toString()
+        else meta.sex = 'NA'
 
         // If no status specified, sample is assumed normal
         if (row.status) meta.status = row.status.toInteger()
@@ -1039,7 +1048,7 @@ def extract_csv(csv_file) {
 
             meta.numLanes   = numLanes.toInteger()
             meta.read_group = read_group.toString()
-            meta.data_type  = "fastq"
+            meta.data_type  = 'fastq'
 
             meta.size       = 1 // default number of splitted fastq
 
@@ -1062,7 +1071,7 @@ def extract_csv(csv_file) {
 
             meta.numLanes   = numLanes.toInteger()
             meta.read_group = read_group.toString()
-            meta.data_type  = "bam"
+            meta.data_type  = 'bam'
 
             meta.size       = 1 // default number of splitted fastq
 
@@ -1079,7 +1088,7 @@ def extract_csv(csv_file) {
             def crai  = file(row.crai,  checkIfExists: true)
             def table = file(row.table, checkIfExists: true)
 
-            meta.data_type  = "cram"
+            meta.data_type  = 'cram'
 
             if (!(params.step == 'mapping' || params.step == 'annotate')) return [meta, cram, crai, table]
             else {
@@ -1094,7 +1103,7 @@ def extract_csv(csv_file) {
             def bai   = file(row.bai,   checkIfExists: true)
             def table = file(row.table, checkIfExists: true)
 
-            meta.data_type  = "bam"
+            meta.data_type  = 'bam'
 
             if (!(params.step == 'mapping' || params.step == 'annotate')) return [meta, bam, bai, table]
             else {
@@ -1108,7 +1117,7 @@ def extract_csv(csv_file) {
             def cram = file(row.cram, checkIfExists: true)
             def crai = file(row.crai, checkIfExists: true)
 
-            meta.data_type  = "cram"
+            meta.data_type  = 'cram'
 
             if (!(params.step == 'mapping' || params.step == 'annotate')) return [meta, cram, crai]
             else {
@@ -1122,7 +1131,7 @@ def extract_csv(csv_file) {
             def bam = file(row.bam, checkIfExists: true)
             def bai = file(row.bai, checkIfExists: true)
 
-            meta.data_type  = "bam"
+            meta.data_type  = 'bam'
 
             if (!(params.step == 'mapping' || params.step == 'annotate')) return [meta, bam, bai]
             else {
@@ -1135,8 +1144,8 @@ def extract_csv(csv_file) {
             meta.id = meta.sample
             def vcf = file(row.vcf, checkIfExists: true)
 
-            meta.data_type     = "vcf"
-            meta.variantcaller = row.variantcaller ?: ""
+            meta.data_type     = 'vcf'
+            meta.variantcaller = row.variantcaller ?: ''
 
             if (params.step == 'annotate') return [meta, vcf]
             else {
