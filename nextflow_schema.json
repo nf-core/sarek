@@ -417,15 +417,59 @@
                     "fa_icon": "fas fa-book",
                     "help_text": "If using a reference genome configured in the pipeline using iGenomes, use this parameter to give the ID for the reference. This is then used to build the full paths for all required reference genome files e.g. `--genome GRCh38`.\n\nSee the [nf-core website docs](https://nf-co.re/usage/reference_genomes) for more details."
                 },
-                "ac_loci": {
+                "ascat_alleles": {
                     "type": "string",
                     "fa_icon": "fas fa-file",
-                    "description": "Path to ASCAT loci file."
+                    "description": "Path to ASCAT allele zip file. If you use AWS iGenomes, this has already been set for you appropriately."
                 },
-                "ac_loci_gc": {
+                "ascat_chromosomes": {
+                    "type": "string",
+                    "fa_icon": "fa-solid fa-text",
+                    "default": "'c(1:22, 'X')'",
+                    "help_text": "Specify specific chromosomes to run ASCAT on, i.e 'c('21', '22')'."
+                },
+                "ascat_genome": {
+                    "type": "string",
+                    "fa_icon": "fa-solid fa-text",
+                    "default": "hg38",
+                    "description": "ASCAT genome.",
+                    "help_text": "Must be set to run ASCAT, either hg19 or hg38. If you use AWS iGenomes, this has already been set for you appropriately."
+                },
+                "ascat_loci": {
                     "type": "string",
                     "fa_icon": "fas fa-file",
-                    "description": "Path to ASCAT GC correction file."
+                    "description": "Path to ASCAT loci zip file. If you use AWS iGenomes, this has already been set for you appropriately."
+                },
+                "ascat_loci_gc": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file",
+                    "description": "Path to ASCAT GC content correction file. If you use AWS iGenomes, this has already been set for you appropriately."
+                },
+                "ascat_loci_rt": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file",
+                    "description": "Path to ASCAT RT (replictiming) correction file. If you use AWS iGenomes, this has already been set for you appropriately."
+                },
+                "ascat_min_base_qual": {
+                    "type": "number",
+                    "default": 20,
+                    "fa_icon": "fas fa-wrench",
+                    "description": "Overwrite Ascat min base quality required for a read to be counted.",
+                    "hidden": true
+                },
+                "ascat_min_counts": {
+                    "type": "number",
+                    "default": 10,
+                    "fa_icon": "fas fa-wrench",
+                    "description": "Overwrite Ascat minimum depth required in the normal for a SNP to be considered.",
+                    "hidden": true
+                },
+                "ascat_min_map_qual": {
+                    "type": "number",
+                    "default": 35,
+                    "fa_icon": "fas fa-wrench",
+                    "description": "Overwrite Ascat min mapping quality required for a read to be counted.",
+                    "hidden": true
                 },
                 "bwa": {
                     "type": "string",
