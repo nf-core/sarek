@@ -103,13 +103,13 @@ if(!params.dbsnp && !params.known_indels){
     }
 }
 
-if (params.step == "variant_calling" && !params.tools) {
+if (params.step == 'variant_calling' && !params.tools) {
     log.error "Please specify at least one tool when using `--step variant_calling`.\nhttps://nf-co.re/sarek/parameters#tools"
     exit 1
 }
 
-if (params.step == "annotation" && !params.tools) {
-    log.error "Please specify at least one tool when using `--step annotation`.\nhttps://nf-co.re/sarek/parameters#tools"
+if (params.step == 'annotate' && !params.tools) {
+    log.error "Please specify at least one tool when using `--step annotate`.\nhttps://nf-co.re/sarek/parameters#tools"
     exit 1
 }
 
