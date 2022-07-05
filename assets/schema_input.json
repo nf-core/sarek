@@ -17,8 +17,8 @@
                 "pattern": "^\\S+$",
                 "errorMessage": "Sample name must be provided and cannot contain spaces"
             },
-            "gender": {
-                "errorMessage": "Gender cannot contain spaces",
+            "sex": {
+                "errorMessage": "Sex cannot contain spaces",
                 "anyOf": [
                     {
                         "type": "string",
