@@ -1121,7 +1121,7 @@ def extract_csv(csv_file) {
 
             if (!(params.step == 'mapping' || params.step == 'annotate')) return [meta, cram, crai]
             else {
-                log.error "Samplesheet contains bam files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
+                log.error "Samplesheet contains cram files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
                 System.exit(1)
             }
 
