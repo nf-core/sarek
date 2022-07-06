@@ -18,7 +18,7 @@ workflow MERGE_INDEX_CRAM {
     // Figuring out if there is one or more cram(s) from the same sample
     ch_cram_to_merge = ch_cram.map{ meta, cram ->
 
-        [groupKey([patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:meta.sample, data_type:meta.data_type, num_intervals:meta.num_intervals],
+        [groupKey([patient:meta.patient, sample:meta.sample, sex:meta.sex, status:meta.status, id:meta.sample, data_type:meta.data_type, num_intervals:meta.num_intervals],
                 meta.num_intervals),
         cram]
     }.groupTuple()
