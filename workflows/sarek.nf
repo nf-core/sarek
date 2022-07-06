@@ -921,11 +921,8 @@ workflow SAREK {
         ch_versions = ch_versions.mix(TUMOR_ONLY_VARIANT_CALLING.out.versions)
 
         //QC
-        //vcf_to_annotate.dump(tag:'vcf_to_annotate')
-        //intervals_bed_combined.dump(tag:'intervals bed combined')
-        //intervals_bed_combined.ifEmpty('intervals_bed_combined is empty"!!!!!!!!!!!!!!').view()
-        //PREPARE_INTERVALS.out.intervals_bed_combined.ifEmpty('intervals_bed_combined is empty PREPARE INTERVALS!!!!!!!!!!!!!!').view()
-        VCF_QC(vcf_to_annotate, PREPARE_INTERVALS.out.intervals_bed_combined)
+        vcf_to_annotate.dump(tag:'vcf_to_annotate')
+        VCF_QC(vcf_to_annotate, intervals_bed_combined)
 
         ch_versions = ch_versions.mix(VCF_QC.out.versions)
         ch_reports  = ch_reports.mix(VCF_QC.out.bcftools_stats.collect{it[1]}.ifEmpty([]))
@@ -933,16 +930,11 @@ workflow SAREK {
         ch_reports  = ch_reports.mix(VCF_QC.out.vcftools_tstv_qual.collect{it[1]}.ifEmpty([]))
         ch_reports  = ch_reports.mix(VCF_QC.out.vcftools_filter_summary.collect{it[1]}.ifEmpty([]))
 
-        //ch_reports.collect().dump(tag:'ch_reports after VCF_QC')
-
-
         VARIANTCALLING_CSV(vcf_to_annotate)
 
 
         // ANNOTATE
         if (params.step == 'annotate') vcf_to_annotate = ch_input_sample
-
-        //ch_input_sample.dump(tag:'ch_input_sample')
 
         if (params.tools.contains('merge') || params.tools.contains('snpeff') || params.tools.contains('vep')) {
 
@@ -963,7 +955,7 @@ workflow SAREK {
         }
     }
 
-    //ch_reports.collect().dump(tag:'ch_reports2')
+    ch_reports.collect().dump(tag:'ch_reports2')
 
     ch_version_yaml = Channel.empty()
     if (!(params.skip_tools && params.skip_tools.contains('versions'))) {
