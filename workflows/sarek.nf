@@ -54,12 +54,14 @@ for (param in checkPathParamList) if (param) file(param, checkIfExists: true)
 // Set input, can either be from --input or from automatic retrieval in WorkflowSarek.groovy
 ch_input_sample = extract_csv(file(params.input, checkIfExists: true))
 
+// Fails when wrongfull extension for intervals file
 if (params.wes && !params.step == 'annotate') {
     if (params.intervals && !params.intervals.endsWith("bed")) exit 1, "Target file specified with `--intervals` must be in BED format"
 } else {
     if (params.intervals && !params.intervals.endsWith("bed") && !params.intervals.endsWith("interval_list")) exit 1, "Interval file must end with .bed or .interval_list"
 }
 
+// Fails or warns when missing files or params for ascat
 if(params.tools && params.tools.contains('ascat')){
     if(!params.ascat_alleles){
         log.error "No allele files were provided for running ASCAT. Please provide a zip folder with allele files."
@@ -69,18 +71,19 @@ if(params.tools && params.tools.contains('ascat')){
         log.error "No loci files were provided for running ASCAT. Please provide a zip folder with loci files."
         exit 1
     }
+    if(params.ascat_genome!="hg19" && params.ascat_genome!="hg38"){
+        log.error "Parameter ascat_genome must be either hg19 or hg38."
+        exit 1
+    }
     if(!params.ascat_loci_gc && !params.ascat_loci_rt){
         log.warn("No LogRCorrection performed in ASCAT. For LogRCorrection to run, please provide either loci gc files or both loci gc files and loci rt files.")
     }
     if(params.wes){
         log.warn("Default reference files not suited for running ASCAT on WES data. It's recommended to use the reference files provided here: https://github.com/Wedge-lab/battenberg#required-reference-files")
     }
-    if(params.ascat_genome!="hg19" && params.ascat_genome!="hg38"){
-        log.error "Parameter ascat_genome must be either hg19 or hg38."
-        exit 1
-    }
 }
 
+// Warns when missing files or params for mutect2
 if(params.tools && params.tools.contains('mutect2')){
     if(!params.pon){
         log.warn("No Panel-of-normal was specified for Mutect2.\nIt is highly recommended to use one: https://gatk.broadinstitute.org/hc/en-us/articles/5358911630107-Mutect2\nFor more information on how to create one: https://gatk.broadinstitute.org/hc/en-us/articles/5358921041947-CreateSomaticPanelOfNormals-BETA-")
@@ -93,6 +96,8 @@ if(params.tools && params.tools.contains('mutect2')){
     }
 }
 
+// Fails when missing resources for baserecalibrator
+// Warns when missing resources for haplotypecaller
 if(!params.dbsnp && !params.known_indels){
     if(!params.skip_tools || params.skip_tools && !params.skip_tools.contains('baserecalibrator')){
         log.error "Base quality score recalibration requires at least one resource file. Please provide at least one of `--dbsnp` or `--known_indels`\nYou can skip this step in the workflow by adding `--skip_tools baserecalibrator` to the command."
@@ -103,24 +108,28 @@ if(!params.dbsnp && !params.known_indels){
     }
 }
 
+// Fails when missing tools for variant calling
 if (params.step == 'variant_calling' && !params.tools) {
     log.error "Please specify at least one tool when using `--step variant_calling`.\nhttps://nf-co.re/sarek/parameters#tools"
     exit 1
 }
 
+// Fails when missing tools for annotate
 if (params.step == 'annotate' && !params.tools) {
     log.error "Please specify at least one tool when using `--step annotate`.\nhttps://nf-co.re/sarek/parameters#tools"
     exit 1
 }
 
+// Fails when missing sex information for CNV tools
 if (params.tools && (params.tools.contains('ascat') || params.tools.contains('controlfreec'))) {
-    ch_input_sample.map{ meta, input ->
-        if (meta.sex == 'NA' ) {
+    ch_input_sample.map{
+        if (it[0].sex == 'NA' ) {
             log.error "Please specify sex information for each sample in your samplesheet when using '--tools' with 'ascat' or 'controlfreec'.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
             exit 1
         }
     }
 }
+
 
 // Save AWS IGenomes file containing annotation version
 def anno_readme = params.genomes[params.genome]?.readme
