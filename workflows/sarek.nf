@@ -108,15 +108,9 @@ if(!params.dbsnp && !params.known_indels){
     }
 }
 
-// Fails when missing tools for variant calling
-if (params.step == 'variant_calling' && !params.tools) {
-    log.error "Please specify at least one tool when using `--step variant_calling`.\nhttps://nf-co.re/sarek/parameters#tools"
-    exit 1
-}
-
-// Fails when missing tools for annotate
-if (params.step == 'annotate' && !params.tools) {
-    log.error "Please specify at least one tool when using `--step annotate`.\nhttps://nf-co.re/sarek/parameters#tools"
+// Fails when missing tools for variant_calling or annotate
+if ((params.step == 'variant_calling' || params.step == 'annotate') && !params.tools) {
+    log.error "Please specify at least one tool when using `--step ${params.step}`.\nhttps://nf-co.re/sarek/parameters#tools"
     exit 1
 }
 
@@ -129,7 +123,6 @@ if (params.tools && (params.tools.contains('ascat') || params.tools.contains('co
         }
     }
 }
-
 
 // Save AWS IGenomes file containing annotation version
 def anno_readme = params.genomes[params.genome]?.readme
