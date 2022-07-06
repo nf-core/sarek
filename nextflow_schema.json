@@ -612,7 +612,7 @@
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
                 },
                 "vep_version": {
-                    "type": "number",
+                    "type": "string",
                     "fa_icon": "fas fa-tag",
                     "description": "VEP version.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
