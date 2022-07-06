@@ -34,6 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#597](https://github.com/nf-core/sarek/pull/597) - Added tiddit for tumor variant calling
 - [#600](https://github.com/nf-core/sarek/pull/600) - Added description for UMI related params in schema
 - [#604](https://github.com/nf-core/sarek/pull/604), [#617](https://github.com/nf-core/sarek/pull/617) - Added full size tests WGS 30x NA12878
+- [#620](https://github.com/nf-core/sarek/pull/620) - Added checks for sex information when running a CNV tools
 
 ### Changed
 
@@ -73,6 +74,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#600](https://github.com/nf-core/sarek/pull/600) - Remove `TODO` in awsfulltest
 - [#606](https://github.com/nf-core/sarek/pull/606) - Updated `ASCAT` to version `3.0` as module
 - [#608](https://github.com/nf-core/sarek/pull/608) - Prevent candidate VCFs from getting published in manta
+- [#620](https://github.com/nf-core/sarek/pull/620) - `gender` is now `sex` in the samplesheet
 
 ### Fixed
 
