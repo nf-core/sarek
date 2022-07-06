@@ -36,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#604](https://github.com/nf-core/sarek/pull/604), [#617](https://github.com/nf-core/sarek/pull/617) - Added full size tests WGS 30x NA12878
 - [#613](https://github.com/nf-core/sarek/pull/613) - Added params `--dbnsfp_fields` to allow configuration of fields for the `dbnsfp` `VEP` plugin
 - [#613](https://github.com/nf-core/sarek/pull/613) - Added params `--dbnsfp_consequence` to allow configuration of consequence for the `dbnsfp` `VEP` plugin
+- [#613](https://github.com/nf-core/sarek/pull/613) - Added params `--vep_version` to allow more configuration on the vep container definition
 
 ### Changed
 
