@@ -40,8 +40,8 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - [TIDDIT](#tiddit)
   - [Sample heterogeneity, ploidy and CNVs](#sample-heterogeneity-ploidy-and-cnvs)
     - [ASCAT](#ascat)
-    - [Control-FREEC](#control-freec)
     - [CNVKit](#cnvkit)
+    - [Control-FREEC](#control-freec)
   - [MSI status](#msi-status)
     - [MSIsensorPro](#msisensorpro)
 - [Variant annotation](#variant-annotation)
@@ -52,10 +52,10 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - [FastQC](#fastqc)
     - [FastP](#fastp)
     - [GATK MarkDuplicates reports](#gatk-markduplicates-reports)
-    - [Mosdepth](#mosdepth)
+    - [mosdepth](#mosdepth)
     - [samtools stats](#samtools-stats)
     - [bcftools stats](#bcftools-stats)
-    - [VCFtools](#vcftools)
+    - [vcftools](#vcftools)
     - [snpEff reports](#snpeff-reports)
     - [VEP reports](#vep-reports)
   - [Reporting](#reporting)
@@ -69,26 +69,36 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 
 ### Preparation of input files (FastQ or (u)BAM)
 
-[FastP](https://github.com/OpenGene/fastp) is a tool designed to provide all-in-one preprocessing for FastQ files and as such is used for trimming and splitting. By default, these files are not published. However, if publishing is enabled, please be aware that these files are only published once, meaning if trimming and splitting is enabled, then the resulting files will be sharded fastq files with trimmed reads. If only one of them is enabled then the files contain either trimmed or split reads respectively.
+[FastP](https://github.com/OpenGene/fastp) is a tool designed to provide all-in-one preprocessing for FastQ files and as such is used for trimming and splitting. By default, these files are not published. However, if publishing is enabled, please be aware that these files are only published once, meaning if trimming and splitting is enabled, then the resulting files will be sharded fastq files with trimmed reads. If only one of them is enabled then the files contain either trimmed or split reads, respectively.
 
 #### Trim adapters
 
-[FastP](https://github.com/OpenGene/fastp) supports global trimming, which means trim all reads in the front or the tail. This function is useful since sometimes you want to drop some cycles of a sequencing run. In the current implementation in `sarek`
+[FastP](https://github.com/OpenGene/fastp) supports global trimming, which means it trims all reads in the front or the tail. This function is useful since sometimes you want to drop some cycles of a sequencing run. In the current implementation in `sarek`
 `--detect_adapter_for_pe` is set by default which enables auto-detection of adapter sequences. For more information on how to fine-tune adapter trimming, take a look into the parameter docs.
 
-The resulting files are intermediate and by default not kept in the final files delivered to users. Set `--save_trimmed`to enable publishing of the files in `{outdir}/preprocessing/<sample>/fastp/<sample_lane_{1,2}.fastp.fastq.gz>`
+The resulting files are intermediate and by default not kept in the final files delivered to users. Set `--save_trimmed`to enable publishing of the files in:
+
+**Output directory: `{outdir}/preprocessing/<sample>/fastp/`**
+
+- `<sample_lane_{1,2}.fastp.fastq.gz>`
+  - Bgzipped `fastq` file
 
 #### Split fastq files
 
-[FastP](https://github.com/OpenGene/fastp) supports splitting of FastQ into multiple files which enables parallel alignment. To enable splitting, the number of reads per output can be specified. For more information, take a look into the parameter `--split_fastq`in the parameter docs .
+[FastP](https://github.com/OpenGene/fastp) supports splitting of FastQ into multiple files allowing parallel alignment of sharded `fastq` file. To enable splitting, the number of reads per output can be specified. For more information, take a look into the parameter `--split_fastq`in the parameter docs .
 
-These files are intermediate and by default not kept in the final files delivered to users. Set `--save_split` to enable publishing of these files to `{outdir}/preprocessing/<sample>/fastp/<sample_lane_{1,2}.fastp.fastq.gz>`
+These files are intermediate and by default not kept in the final files delivered to users. Set `--save_split` to enable publishing of these files to:
+
+**Output directory: `{outdir}/preprocessing/<sample>/fastp/`**
+
+- `<sample_lane_{1,2}.fastp.fastq.gz>`
+  - Bgzipped `fastq` file
 
 ### Map to Reference
 
 #### BWA
 
-[BWA](https://github.com/lh3/bwa) is a software package for mapping low-divergent sequences against a large reference genome. The aligned reads are then `coordinate` sorted (or `name` sorted if MarkDuplicates Spark is used for duplicate marking) with [samtools](https://www.htslib.org/doc/samtools.html)
+[BWA](https://github.com/lh3/bwa) is a software package for mapping low-divergent sequences against a large reference genome. The aligned reads are then `coordinate` sorted (or `name` sorted if `MarkDuplicatesSpark` is used for duplicate marking) with [samtools](https://www.htslib.org/doc/samtools.html)
 
 These files are intermediate and by default not kept in the final files delivered to users. Set `--save_bam_mapped` to enable publishing.
 
@@ -113,7 +123,7 @@ For all mappers and samples:
 
 ### Mark Duplicates
 
-During duplicate marking read pairs that are likely to have originated from duplicates of the same original DNA fragments through some artifactual processes are identified. These are considered to be non-independent observations, so all but a single read pair within each set of duplicates, causing the marked pairs to be ignored by default during the variant discovery process
+During duplicate marking read pairs that are likely to have originated from duplicates of the same original DNA fragments through some artificial processes are identified. These are considered to be non-independent observations, so all but a single read pair within each set of duplicates are marked, causing the marked pairs to be ignored by default during the variant discovery process
 
 For further reading and documentation see the [data pre-processing for variant discovery from the GATK best practices](https://gatk.broadinstitute.org/hc/en-us/articles/360035535912-Data-pre-processing-for-variant-discovery).
 
@@ -136,7 +146,7 @@ For all samples:
 
 ### Base (Quality Score) Recalibration
 
-During Base Quality Score Recalibration systematic errors in the base quality scores are corrected by applying machine learning to detect and correct for them. This is important, for evaluating the correct call of a variant during the variant discovery process. However, this is not needed for all combinations of tools in sarek. Notably, this should be turned of when having UMI tagged reads or using DragMap (see [here](https://gatk.broadinstitute.org/hc/en-us/articles/4407897446939--How-to-Run-germline-single-sample-short-variant-discovery-in-DRAGEN-mode)) as mapper.
+During Base Quality Score Recalibration systematic errors in the base quality scores are corrected by applying machine learning to detect and correct for them. This is important for evaluating the correct call of a variant during the variant discovery process. However, this is not needed for all combinations of tools in sarek. Notably, this should be turned of when having UMI tagged reads or using DragMap (see [here](https://gatk.broadinstitute.org/hc/en-us/articles/4407897446939--How-to-Run-germline-single-sample-short-variant-discovery-in-DRAGEN-mode)) as mapper.
 
 For further reading and documentation see the [technical documentation by GATK](https://gatk.broadinstitute.org/hc/en-us/articles/360035890531-Base-Quality-Score-Recalibration-BQSR-).
 
@@ -164,7 +174,7 @@ To re-generate `recalibrated CRAM` files you have to apply the recalibration tab
 
 For all samples:
 
-**Output directory: `results/Preprocessing/<sample>/recalibrated`**
+**Output directory: `results/preprocessing/<sample>/recalibrated`**
 
 - `<sample>.recal.cram` and `<sample>.recal.cram.crai`
   - `CRAM` file and index
@@ -175,27 +185,23 @@ For all samples:
 
 The `CSV` files are auto-generated and can be used by `Sarek` for further processing and/or variant calling.
 
-For further reading and documentation see the [`--input`](usage.md#--input) section in the usage documentation.
+See the the [`--input`](usage.md#--input) section in the usage documentation for further reading and documentation on how to make the most of them.
 
 For all samples:
 
-**Output directory: `results/Preprocessing/TSV`**
+**Output directory: `results/preprocessing/csv`**
 
-- `duplicates_marked_no_table.tsv`, `duplicates_marked.tsv` and `recalibrated.tsv`
-  - `TSV` files to start `Sarek` from `prepare_recalibration`, `recalibrate` or `variantcalling` steps.
-- `duplicates_marked_no_table_[SAMPLE].tsv`, `duplicates_marked_[SAMPLE].tsv` and `recalibrated_[SAMPLE].tsv`
-  - `TSV` files to start `Sarek` from `prepare_recalibration`, `recalibrate` or `variantcalling` steps for a specific sample.
-
-> **WARNING** Only with [`--skip_markduplicates`](usage.md#--skip_markduplicates)
-
-For all samples:
-
-**Output directory: `results/Preprocessing/TSV`**
-
-- `mapped.tsv`, `mapped_no_duplicates_marked.tsv` and `recalibrated.tsv`
-  - `TSV` files to start `Sarek` from `prepare_recalibration`, `recalibrate` or `variantcalling` steps.
-- `mapped_[SAMPLE].tsv`, `mapped_no_duplicates_marked_[SAMPLE].tsv` and `recalibrated_[SAMPLE].tsv`
-  - `TSV` files to start `Sarek` from `prepare_recalibration`, `recalibrate` or `variantcalling` steps for a specific sample.
+- `mapped.csv`
+  - if `--save_bam_mapped`
+  - `CSV` containing an entry for each sample with the columns `patient,sample,sex,status,bam,bai`
+- `markduplicates_no_table.csv`
+  - `CSV` containing an entry for each sample with the columns `patient,sample,sex,status,cram,crai`
+- `markduplicates.csv`
+  - `CSV` containing an entry for each sample with the columns `patient,sample,sex,status,cram,crai,table`
+- `recalibrated.csv`
+  - `CSV` containing an entry for each sample with the columns`patient,sample,sex,status,cram,crai`
+- `variantcalled.csv`
+  - `CSV` containing an entry for each sample with the columns `patient,sample,vcf`
 
 ## Variant Calling
 
@@ -206,13 +212,13 @@ If some results from a variant caller do not appear here, please check out the [
 
 ### SNVs and small indels
 
-For single nucleotide variants (SNVs) and small indels, multiple tools are available for normal, tumor-only, and tumor-normal paired data. For a list of the appropriate tool(s) for the data and sequencing type at hand, please check [here](usage.md#Which tool can be used for for which data type?)
+For single nucleotide variants (SNVs) and small indels, multiple tools are available for normal, tumor-only, and tumor-normal paired data. For a list of the appropriate tool(s) for the data and sequencing type at hand, please check [here](usage.md#which-tool).
 
 #### DeepVariant
 
 [DeepVariant](https://github.com/google/deepvariant) is a deep learning-based variant caller that takes aligned reads, produces pileup image tensors from them, classifies each tensor using a convolutional neural network, and finally reports the results in a standard VCF or gVCF file.
 
-For normal samples:
+For normal samples only:
 
 **Output directory: `results/variantcalling/<sample>/deepvariant`**
 
@@ -236,18 +242,19 @@ For all samples:
 
 [GATK HaplotypeCaller](https://gatk.broadinstitute.org/hc/en-us/articles/360042913231-HaplotypeCaller) calls germline SNPs and indels via local re-assembly of haplotypes.
 
+#TODO: we are not doing this anymore :( :
 Germline calls are provided for all samples, to enable comparison of both, tumor and normal, for possible mixup.
 
-For normal samples:
+For normal only samples:
 
-**Output directory: `results/VariantCalling/[SAMPLE]/HaploTypeCaller`**
+**Output directory: `results/variantCalling/<sample>/haplotypecaller`**
 
-- `HaplotypeCaller_[SAMPLE].vcf.gz` and `HaplotypeCaller_[SAMPLE].vcf.gz.tbi`
+- `<sample>.vcf.gz` and `<sample>.vcf.gz.tbi`
   - `VCF` with Tabix index
 
 For further reading and documentation see the [HaplotypeCaller manual](https://gatk.broadinstitute.org/hc/en-us/articles/360042913231-HaplotypeCaller).
 
-##### GATK GenotypeGVCFs
+##### GATK Joint Germline Calling
 
 [GATK GenotypeGVCFs](https://gatk.broadinstitute.org/hc/en-us/articles/360042914991-GenotypeGVCFs) performs joint genotyping on one or more samples pre-called with HaplotypeCaller.
 
@@ -262,28 +269,38 @@ For all samples:
 
 For further reading and documentation see the [GenotypeGVCFs manual](https://gatk.broadinstitute.org/hc/en-us/articles/360042914991-GenotypeGVCFs).
 
+##### GATK Single Sample
+
 #### GATK Mutect2
 
 [GATK Mutect2](https://gatk.broadinstitute.org/hc/en-us/articles/360042477952-Mutect2) calls somatic SNVs and indels via local assembly of haplotypes.
 
 For further reading and documentation see the [Mutect2 manual](https://gatk.broadinstitute.org/hc/en-us/articles/360042477952-Mutect2).
-It is recommended to have [panel of normals (PON)](https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON) for this version of `GATK Mutect2` using at least 40 normal samples.
+It is recommended to have a [panel of normals (PON)](https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON) for this version of `GATK Mutect2` using at least 40 normal samples.
 Additionally, you can add your `PON` file to get filtered somatic calls.
 
-For a Tumor/Normal pair:
+For a tumor-only sample or tumor/normal pair:
 
-**Output directory: `results/VariantCalling/[TUMOR_vs_NORMAL]/Mutect2`**
+**Output directory: `results/variantcalling/{sample,tumorsample_vs_normalsample}/mutect2`**
 
 Files created:
 
-- `Mutect2_unfiltered_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz` and `Mutect2_unfiltered_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz.tbi`
+- `{sample,tumorsample_vs_normalsample}.vcf.gz` and `{sample,tumorsample_vs_normalsample}.vcf.gz.tbi`
   - unfiltered (raw) Mutect2 calls `VCF` with Tabix index
-- `Mutect2_filtered_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz` and `Mutect2_filtered_[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz.tbi`
-  - filtered Mutect2 calls `VCF` with Tabix index: these entries have a `PASS` filter, you can get these when supplying a panel of normals using the `--pon` option
-- `[TUMORSAMPLE]_vs_[NORMALSAMPLE].vcf.gz.stats`
+- `{sample,tumorsample_vs_normalsample}.vcf.gz.stats`
   - a stats file generated during calling of raw variants (needed for filtering)
-- `[TUMORSAMPLE]_contamination.table`
+- `{sample,tumorsample_vs_normalsample}.filtered.vcf.gz` and `{sample,tumorsample_vs_normalsample}.filtered.vcf.gz.tbi`
+  - filtered Mutect2 calls `VCF` with Tabix index: these entries have a `PASS` filter, you can get these when supplying a panel of normals using the `--pon` option
+- `{sample,tumorsample_vs_normalsample}.filtered.vcf.gz.filteringStats.tsv`
+  - a stats file generated during calling of raw variants (needed for filtering)
+- `{sample,tumorsample_vs_normalsample}.contamination.table`
   - a text file exported when panel-of-normals about sample contamination are provided
+- `{sample,tumorsample_vs_normalsample}.segmentation.table`
+  - blub
+- `{sample,tumorsample_vs_normalsample}.artifactprior.tar.gz`
+  - blub
+- `{sample,tumorsample,normalsample}.pileupsummaries.table`
+  - blub
 
 #### samtools mpileup
 
@@ -334,12 +351,12 @@ For normal samples:
 - `<sample>.diploid_sv.vcf.gz` and `<sample>.diploid_sv.vcf.gz.tbi`
   - `VCF` with Tabix index
 
-For a Tumor-only samples:
+For a tumor-only samples:
 
 - `<sample>.tumor_sv.vcf.gz` and `<sample>.tumor_sv.vcf.gz.tbi`
   - `VCF` with Tabix index
 
-For a Tumor/Normal pair:
+For a tumor/normal pair:
 
 **Output directory: `results/variantcalling/<tumorsample_vs_normalsample>/manta`**
 
@@ -352,6 +369,7 @@ For a Tumor/Normal pair:
 
 [TIDDIT](https://github.com/SciLifeLab/TIDDIT) identifies intra and inter-chromosomal translocations, deletions, tandem-duplications and inversions.
 
+//TODO: Actually we are not doing this anymore
 Germline calls are provided for all samples, to enable comparison of both, tumor and normal, for possible mixup.
 Low quality calls are removed internally, to simplify processing of variant calls but they are saved by `Sarek`.
 For further reading and documentation see the [TIDDIT manual](https://github.com/SciLifeLab/TIDDIT/blob/master/README.md).
@@ -369,13 +387,13 @@ For tumor/normal paired samples:
 
 **Output directory: `results/variantcalling/<tumorsample_vs_normal_sample>/tiddit`**
 
-- `<tumorsample_vs_normal_sample>.normal.vcf.gz` and `<tumorsample_vs_normal_sample>.normal.vcf.gz.tbi`
+- `<tumorsample_vs_normalsample>.normal.vcf.gz` and `<tumorsample_vs_normalsample>.normal.vcf.gz.tbi`
   - `VCF` with Tabix index
-- `<tumorsample_vs_normal_sample>.tumor.vcf.gz` and `<tumorsample_vs_normal_sample>.tumor.vcf.gz.tbi`
+- `<tumorsample_vs_normalsample>.tumor.vcf.gz` and `<tumorsample_vs_normalsample>.tumor.vcf.gz.tbi`
   - `VCF` with Tabix index
-- `<tumorsample_vs_normal_sample>_sv_merge.vcf`
+- `<tumorsample_vs_normalsample>_sv_merge.vcf`
   - `VCF`
-- `<tumorsample_vs_normal_sample>.ploidy.tab`
+- `<tumorsample_vs_normalsample>.ploidy.tab`
   - tab file describing the estimated ploidy and coverage across each contig
 
 ### Sample heterogeneity, ploidy and CNVs
@@ -387,9 +405,9 @@ It infers tumor purity and ploidy and calculates whole-genome allele-specific co
 `ASCAT` is written in `R` and available here: [github.com/Crick-CancerGenomics/ascat](https://github.com/Crick-CancerGenomics/ascat).
 The `ASCAT` process gives several images as output, described in detail in this [book chapter](http://www.ncbi.nlm.nih.gov/pubmed/22130873).
 
-For a Tumor/Normal pair:
+For a tumor/normal pair:
 
-**Output directory: `results/VariantCalling/[TUMOR_vs_NORMAL]/ASCAT`**
+**Output directory: `results/variantcalling/<tumorsample_vs_normalsample>/ASCAT`**
 
 - `[TUMORSAMPLE].aberrationreliability.png`
   - Image with information about aberration reliability
@@ -423,17 +441,19 @@ The file `[TUMORSAMPLE].cnvs.txt` contains all segments predicted by ASCAT, both
 
 For further reading and documentation see the [ASCAT manual](https://www.crick.ac.uk/research/labs/peter-van-loo/software).
 
+#### CNVKit
+
 #### Control-FREEC
 
 [Control-FREEC](https://github.com/BoevaLab/FREEC) is a tool for detection of copy-number changes and allelic imbalances (including loss of heterozygoity (LOH)) using deep-sequencing data.
 `Control-FREEC` automatically computes, normalizes, segments copy number and beta allele frequency profiles, then calls copy number alterations and LOH.
 And also detects subclonal gains and losses and evaluate the most likely average ploidy of the sample.
 
-For a Tumor/Normal pair:
+For a tumor-only and tumor/normal pair:
 
-**Output directory: `results/VariantCalling/[TUMOR_vs_NORMAL]/ControlFREEC`**
+**Output directory: `results/variantcalling/{sample,tumorsample_vs_normalsample}/controlfreec`**
 
-- `[TUMORSAMPLE]_vs_[NORMALSAMPLE].config.txt`
+- `<tumorsample_vs_normalsample>.config.txt`
   - Configuration file used to run Control-FREEC
 - `[TUMORSAMPLE].pileup.gz_CNVs` and `[TUMORSAMPLE].pileup.gz_normal_CNVs`
   - file with coordinates of predicted copy number alterations
@@ -444,29 +464,27 @@ For a Tumor/Normal pair:
 
 For further reading and documentation see the [Control-FREEC manual](http://boevalab.com/FREEC/tutorial.html).
 
-#### CNVKit
-
-### MSI status
+### Microsatellite instability
 
 [Microsatellite instability](https://en.wikipedia.org/wiki/Microsatellite_instability) is a genetic condition associated to deficiencies in the mismatch repair (MMR) system which causes a tendency to accumulate a high number of mutations (SNVs and indels).
 An altered distribution of microsatellite length is associated to a missed replication slippage which would be corrected under normal MMR conditions.
 
 #### MSIsensorPro
 
-[MSIsensor](https://github.com/ding-lab/msisensor) is a tool to detect the MSI status of a tumor scanning the length of the microsatellite regions.
+[MSIsensorPro](https://github.com/xjtu-omics/msisensor-pro) is a tool to detect the MSI status of a tumor scanning the length of the microsatellite regions.
 It requires a normal sample for each tumour to differentiate the somatic and germline cases.
 
-For a Tumor/Normal pair:
+For a tumor/normal pair:
 
-**Output directory: `results/VariantCalling/[TUMORSAMPLE]_vs_[NORMALSAMPLE]/MSIsensor`**
+**Output directory: `results/variantcalling/<tumorsample_vs_normalsample>/msisensor`**
 
-- `[TUMORSAMPLE]_vs_[NORMALSAMPLE]_msisensor`
+- `<tumorsample_vs_normalsample>.msisensor`
   - MSI score output, contains information about the number of somatic sites.
-- `[TUMORSAMPLE]_vs_[NORMALSAMPLE]_msisensor_dis`
+- `<tumorsample_vs_normalsample>.msisensor_dis`
   - The normal and tumor length distribution for each microsatellite position.
-- `[TUMORSAMPLE]_vs_[NORMALSAMPLE]_msisensor_germline`
+- `<tumorsample_vs_normalsample>.msisensor_germline`
   - Somatic sites detected.
-- `[TUMORSAMPLE]_vs_[NORMALSAMPLE]_msisensor_somatic`
+- `<tumorsample_vs_normalsample>.msisensor_somatic`
   - Germline sites detected.
 
 For further reading see the [MSIsensor paper](https://www.ncbi.nlm.nih.gov/pubmed/24371154).
@@ -474,8 +492,7 @@ For further reading see the [MSIsensor paper](https://www.ncbi.nlm.nih.gov/pubme
 ## Variant annotation
 
 This directory contains results from the final annotation steps: two tools are used for annotation, [snpEff](http://snpeff.sourceforge.net/) and [VEP](https://www.ensembl.org/info/docs/tools/vep/index.html).
-Only a subset of the `VCF` files are annotated, and only variants that have a `PASS` filter.
-Currently, `FreeBayes` results are not annotated as we are lacking a decent somatic filter.
+Only a subset of the `VCF` files are annotated, and only variants that have a `PASS` filter (//TODO this is not true for all i.e. strelka).
 
 ### snpEff
 
@@ -485,9 +502,9 @@ The generated `VCF` header contains the software version and the used command li
 
 For all samples:
 
-**Output directory: `results/Annotation/[SAMPLE]/snpEff`**
+**Output directory: `results/annotation/{sample,tumorsample_vs_normalsample}`**
 
-- `VariantCaller_Sample_snpEff.ann.vcf.gz` and `VariantCaller_Sample_snpEff.ann.vcf.gz.tbi`
+- `{sample,tumorsample_vs_normalsample}_snpEff.ann.vcf.gz` and `{sample,tumorsample_vs_normalsample}_snpEff.ann.vcf.gz.tbi`
   - `VCF` with Tabix index
 
 For further reading and documentation see the [snpEff manual](http://snpeff.sourceforge.net/SnpEff_manual.html#outputSummary)
@@ -513,7 +530,7 @@ Currently, it contains:
 
 For all samples:
 
-**Output directory: `results/Annotation/[SAMPLE]/VEP`**
+**Output directory: `results/annotation/{sample,tumorsample_vs_normalsample}`**
 
 - `VariantCaller_Sample_VEP.ann.vcf.gz` and `VariantCaller_Sample_VEP.ann.vcf.gz.tbi`
   - `VCF` with Tabix index
