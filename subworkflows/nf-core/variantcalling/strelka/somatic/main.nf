@@ -29,7 +29,7 @@ workflow RUN_STRELKA_SOMATIC {
     // Only when using intervals
     MERGE_STRELKA_SNVS(strelka_vcf_snvs.intervals.map{ meta, vcf ->
 
-                [groupKey([patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals],
+                [groupKey([patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, sex:meta.sex, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals],
                         meta.num_intervals),
                 vcf]
 
@@ -38,7 +38,7 @@ workflow RUN_STRELKA_SOMATIC {
 
     MERGE_STRELKA_INDELS(strelka_vcf_indels.intervals.map{ meta, vcf ->
 
-                [groupKey([patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals],
+                [groupKey([patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, sex:meta.sex, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals],
                             meta.num_intervals),
                 vcf]
             }.groupTuple(),
@@ -52,7 +52,7 @@ workflow RUN_STRELKA_SOMATIC {
                     strelka_vcf_indels.no_intervals
                     )
                 .map{ meta, vcf ->
-                    [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals, variantcaller:"strelka"],
+                    [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, sex:meta.sex, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals, variantcaller:"strelka"],
                     vcf]
                 }
 

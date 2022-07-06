@@ -30,9 +30,9 @@ workflow RUN_CONTROLFREEC_SOMATIC {
                 intervals_bed,
                 [])
 
-    ASSESS_SIGNIFICANCE( FREEC_SOMATIC.out.CNV.join(FREEC_SOMATIC.out.ratio))
-    FREEC2BED( FREEC_SOMATIC.out.ratio )
-    FREEC2CIRCOS( FREEC_SOMATIC.out.ratio )
+    ASSESS_SIGNIFICANCE(FREEC_SOMATIC.out.CNV.join(FREEC_SOMATIC.out.ratio))
+    FREEC2BED(FREEC_SOMATIC.out.ratio)
+    FREEC2CIRCOS(FREEC_SOMATIC.out.ratio)
     MAKEGRAPH(FREEC_SOMATIC.out.ratio.join(FREEC_SOMATIC.out.BAF))
 
     ch_versions = ch_versions.mix(FREEC_SOMATIC.out.versions)

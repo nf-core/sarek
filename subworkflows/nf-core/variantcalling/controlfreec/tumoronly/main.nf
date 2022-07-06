@@ -30,9 +30,9 @@ workflow RUN_CONTROLFREEC_TUMORONLY {
                 intervals_bed,
                 [])
 
-    ASSESS_SIGNIFICANCE( FREEC_TUMORONLY.out.CNV.join(FREEC_TUMORONLY.out.ratio))
-    FREEC2BED( FREEC_TUMORONLY.out.ratio )
-    FREEC2CIRCOS( FREEC_TUMORONLY.out.ratio )
+    ASSESS_SIGNIFICANCE(FREEC_TUMORONLY.out.CNV.join(FREEC_TUMORONLY.out.ratio))
+    FREEC2BED(FREEC_TUMORONLY.out.ratio)
+    FREEC2CIRCOS(FREEC_TUMORONLY.out.ratio)
     MAKEGRAPH(FREEC_TUMORONLY.out.ratio.join(FREEC_TUMORONLY.out.BAF))
 
     ch_versions = ch_versions.mix(FREEC_TUMORONLY.out.versions)

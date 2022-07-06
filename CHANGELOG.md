@@ -33,7 +33,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#594](https://github.com/nf-core/sarek/pull/594) - Add parameter `--save_output_as_bam` to allow output of result files in BAM format
 - [#597](https://github.com/nf-core/sarek/pull/597) - Added tiddit for tumor variant calling
 - [#600](https://github.com/nf-core/sarek/pull/600) - Added description for UMI related params in schema
-- [#604](https://github.com/nf-core/sarek/pull/604) - Added full size tests WGS 30x NA12878
+- [#604](https://github.com/nf-core/sarek/pull/604), [#617](https://github.com/nf-core/sarek/pull/617) - Added full size tests WGS 30x NA12878
+- [#620](https://github.com/nf-core/sarek/pull/620) - Added checks for sex information when running a CNV tools
 
 ### Changed
 
@@ -73,6 +74,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#600](https://github.com/nf-core/sarek/pull/600) - Remove `TODO` in awsfulltest
 - [#606](https://github.com/nf-core/sarek/pull/606) - Updated `ASCAT` to version `3.0` as module
 - [#608](https://github.com/nf-core/sarek/pull/608) - Prevent candidate VCFs from getting published in manta
+- [#620](https://github.com/nf-core/sarek/pull/620) - `gender` is now `sex` in the samplesheet
 
 ### Fixed
 
@@ -110,6 +112,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#602](https://github.com/nf-core/sarek/pull/602) - Fixed bug in `alignment_to_fastq` and added tests
 - [#609](https://github.com/nf-core/sarek/pull/609) - Remove unused intervals code, reorganize combined intervals file
 - [#615](https://github.com/nf-core/sarek/pull/615) - Fix ASCAT igenomes file paths
+- [#619](https://github.com/nf-core/sarek/pull/619) - Fix issue with checking samplesheet content with AWS
 
 ### Deprecated
 

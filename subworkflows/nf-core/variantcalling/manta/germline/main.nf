@@ -39,7 +39,7 @@ workflow RUN_MANTA_GERMLINE {
         manta_small_indels_vcf.intervals
             .map{ meta, vcf ->
 
-                [groupKey([patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals],
+                [groupKey([patient:meta.patient, sample:meta.sample, status:meta.status, sex:meta.sex, id:meta.sample, num_intervals:meta.num_intervals],
                         meta.num_intervals),
                 vcf]
             }.groupTuple(),
@@ -49,7 +49,7 @@ workflow RUN_MANTA_GERMLINE {
         manta_sv_vcf.intervals
             .map{ meta, vcf ->
 
-                [groupKey([patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals],
+                [groupKey([patient:meta.patient, sample:meta.sample, status:meta.status, sex:meta.sex, id:meta.sample, num_intervals:meta.num_intervals],
                         meta.num_intervals),
                 vcf]
 
@@ -60,7 +60,7 @@ workflow RUN_MANTA_GERMLINE {
         manta_diploid_sv_vcf.intervals
             .map{ meta, vcf ->
 
-                [groupKey([patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals],
+                [groupKey([patient:meta.patient, sample:meta.sample, status:meta.status, sex:meta.sex, id:meta.sample, num_intervals:meta.num_intervals],
                         meta.num_intervals),
                 vcf]
 
@@ -73,7 +73,7 @@ workflow RUN_MANTA_GERMLINE {
                     MERGE_MANTA_DIPLOID.out.vcf,
                     manta_diploid_sv_vcf.no_intervals)
                 .map{ meta, vcf ->
-                    [[patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals, variantcaller:"manta"], vcf]
+                    [[patient:meta.patient, sample:meta.sample, status:meta.status, sex:meta.sex, id:meta.sample, num_intervals:meta.num_intervals, variantcaller:"manta"], vcf]
                 }
 
     ch_versions = ch_versions.mix(MERGE_MANTA_DIPLOID.out.versions)

@@ -64,7 +64,7 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
     MERGE_MUTECT2(
         mutect2_vcf_branch.intervals
         .map{ meta, vcf ->
-            new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals]
+            new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, sex:meta.sex, id:meta.sample, num_intervals:meta.num_intervals]
 
             [groupKey(new_meta, meta.num_intervals), vcf]
         }.groupTuple(),
@@ -82,7 +82,7 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
     MERGEMUTECTSTATS(
         mutect2_stats_branch.intervals
         .map{ meta, stats ->
-            new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals]
+            new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, sex:meta.sex, id:meta.sample, num_intervals:meta.num_intervals]
 
             [groupKey(new_meta, meta.num_intervals), stats]
         }.groupTuple())
@@ -98,7 +98,7 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
         Channel.empty().mix(
             mutect2_f1r2_branch.intervals
             .map{ meta, f1r2 ->
-                new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals]
+                new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, sex:meta.sex, id:meta.sample, num_intervals:meta.num_intervals]
 
                 [groupKey(new_meta, meta.num_intervals), f1r2]
             }.groupTuple(),
@@ -120,7 +120,7 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
     GATHERPILEUPSUMMARIES(
         GETPILEUPSUMMARIES.out.table
         .map{ meta, table ->
-            new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals]
+            new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, sex:meta.sex, id:meta.sample, num_intervals:meta.num_intervals]
 
             [groupKey(new_meta, meta.num_intervals), table]
         }.groupTuple(),
@@ -168,7 +168,7 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
     contamination_table = CALCULATECONTAMINATION.out.contamination  // channel: [ val(meta), [ contamination ] ]
     segmentation_table  = CALCULATECONTAMINATION.out.segmentation   // channel: [ val(meta), [ segmentation ] ]
 
-    filtered_vcf        = FILTERMUTECTCALLS.out.vcf.map{ meta, vcf -> [[patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals, variantcaller:"mutect2"]
+    filtered_vcf        = FILTERMUTECTCALLS.out.vcf.map{ meta, vcf -> [[patient:meta.patient, sample:meta.sample, status:meta.status, sex:meta.sex, id:meta.sample, num_intervals:meta.num_intervals, variantcaller:"Mutect2"]
                                                                         , vcf] } // channel: [ val(meta), [ vcf ] ]
     filtered_index      = FILTERMUTECTCALLS.out.tbi                 // channel: [ val(meta), [ tbi ] ]
     filtered_stats      = FILTERMUTECTCALLS.out.stats               // channel: [ val(meta), [ stats ] ]

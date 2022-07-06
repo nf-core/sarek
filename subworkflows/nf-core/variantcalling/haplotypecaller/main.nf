@@ -46,7 +46,7 @@ workflow RUN_HAPLOTYPECALLER {
         haplotypecaller_vcf_branch.intervals
             .map{ meta, vcf ->
 
-                new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals]
+                new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, sex:meta.sex, id:meta.sample, num_intervals:meta.num_intervals]
 
                 [groupKey(new_meta, new_meta.num_intervals), vcf]
             }.groupTuple(),
