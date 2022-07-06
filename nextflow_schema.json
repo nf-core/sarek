@@ -325,7 +325,7 @@
                     "type": "string",
                     "fa_icon": "fas fa-database",
                     "description": "Path to dbNSFP processed file.",
-                    "help_text": "To be used with `--vep_dbnsfp`.",
+                    "help_text": "To be used with `--vep_dbnsfp`.\ndbNSFP files and more information are available at https://www.ensembl.org/info/docs/tools/vep/script/vep_plugins.html#dbnsfp and https://sites.google.com/site/jpopgen/dbNSFP/",
                     "hidden": true
                 },
                 "dbnsfp_tbi": {
@@ -339,7 +339,8 @@
                     "type": "string",
                     "fa_icon": "fas fa-database",
                     "description": "Consequence to annotate with",
-                    "help_text": "To be used with `--vep_dbnsfp`.",
+                    "default": "rs_dbSNP,HGVSc_VEP,HGVSp_VEP,1000Gp3_EAS_AF,1000Gp3_AMR_AF,LRT_score,GERP++_RS,gnomAD_exomes_AF",
+                    "help_text": "To be used with `--vep_dbnsfp`.\nThis params can be used to retrieve individual values from the dbNSFP file. The values correspond to the name of the columns in the dbNSFP file and are separated by comma.\nThe column names might differ between the different dbNSFP versions. Please check the Readme.txt file, which is provided with the dbNSFP file, to obtain the correct column names. The Readme file contains also a short description of the provided values and the version of the tools used to generate them.\nDefault value are explained below;/nrs_dbSNP - rs number from dbSNP/nHGVSc_VEP - HGVS coding variant presentation from VEP. Multiple entries separated by ";", corresponds to Ensembl_transcriptid/nHGVSp_VEP - HGVS protein variant presentation from VEP. Multiple entries separated by ";", corresponds to Ensembl_proteinid/n1000Gp3_EAS_AF - Alternative allele frequency in the 1000Gp3 East Asian descendent samples/n1000Gp3_AMR_AF - Alternative allele counts in the 1000Gp3 American descendent samples/nLRT_score - Original LRT two-sided p-value (LRTori), ranges from 0 to 1/nGERP++_RS - Conservation score. The larger the score, the more conserved the site, ranges from -12.3 to 6.17/ngnomAD_exomes_AF - Alternative allele frequency in the whole gnomAD exome samples/n.",
                     "hidden": true
                 },
                 "dbnsfp_fields": {
