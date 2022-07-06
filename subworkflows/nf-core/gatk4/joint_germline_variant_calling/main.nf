@@ -1,5 +1,6 @@
 //
 // merge samples with genomicsdbimport, perform joint genotyping with genotypeGVCFS
+include { BCFTOOLS_SORT }                          from '../../../../modules/nf-core/modules/bcftools/sort/main'
 include { GATK4_GENOMICSDBIMPORT }                 from '../../../../modules/nf-core/modules/gatk4/genomicsdbimport/main'
 include { GATK4_GENOTYPEGVCFS }                    from '../../../../modules/nf-core/modules/gatk4/genotypegvcfs/main'
 include { GATK4_MERGEVCFS as MERGE_GENOTYPEGVCFS } from '../../../../modules/nf-core/modules/gatk4/mergevcfs/main'
@@ -68,9 +69,11 @@ workflow GATK_JOINT_GERMLINE_VARIANT_CALLING {
         [[id:"joint_variant_calling", num_intervals: meta.num_intervals], vcf]}.groupTuple()
 
     //
+    //Sort vcfs called by interval within each VCF
     //Merge vcfs called by interval into a single VCF
     //
-    merged_vcf = MERGE_GENOTYPEGVCFS(merge_vcfs_input,dict)
+    merge_vcfs_sorted_input = BCFTOOLS_SORT(vcfs).vcf
+    merged_vcf = MERGE_GENOTYPEGVCFS(merge_vcfs_sorted_input,dict)
 
 
     vqsr_input = merged_vcf.vcf.join(merged_vcf.tbi)
