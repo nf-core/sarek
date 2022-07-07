@@ -34,6 +34,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#597](https://github.com/nf-core/sarek/pull/597) - Added tiddit for tumor variant calling
 - [#600](https://github.com/nf-core/sarek/pull/600) - Added description for UMI related params in schema
 - [#604](https://github.com/nf-core/sarek/pull/604), [#617](https://github.com/nf-core/sarek/pull/617) - Added full size tests WGS 30x NA12878
+- [#613](https://github.com/nf-core/sarek/pull/613) - Added params `--dbnsfp_fields` to allow configuration of fields for the `dbnsfp` `VEP` plugin
+- [#613](https://github.com/nf-core/sarek/pull/613) - Added params `--dbnsfp_consequence` to allow configuration of consequence for the `dbnsfp` `VEP` plugin
+- [#613](https://github.com/nf-core/sarek/pull/613) - Added params `--vep_version` to allow more configuration on the vep container definition
 - [#620](https://github.com/nf-core/sarek/pull/620) - Added checks for sex information when running a CNV tools
 
 ### Changed
@@ -111,6 +114,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#600](https://github.com/nf-core/sarek/pull/600) - Remove `nf-core lint` warnings
 - [#602](https://github.com/nf-core/sarek/pull/602) - Fixed bug in `alignment_to_fastq` and added tests
 - [#609](https://github.com/nf-core/sarek/pull/609) - Remove unused intervals code, reorganize combined intervals file
+- [#613](https://github.com/nf-core/sarek/pull/613) - Fixed filenames for `dbnsfp` and `SpliceAI` `VEP` plugin
 - [#615](https://github.com/nf-core/sarek/pull/615) - Fix ASCAT igenomes file paths
 - [#619](https://github.com/nf-core/sarek/pull/619) - Fix issue with checking samplesheet content with AWS
 
