@@ -1005,6 +1005,29 @@ def extract_csv(csv_file) {
         }
     }
 
+    // check that the sample sheet doesn't contain
+    // 1. multiple rows with the same combination of patient, sample and lane, and
+    // 2. same sample for different patients 
+    def patient_sample_lane_combinations_in_samplesheet = []
+    def sample2patient = [:]
+
+    Channel.from(csv_file).splitCsv(header: true)
+        .map{ row ->
+            def patient_sample_lane = [row.patient.toString(), row.sample.toString(), row.lane.toString()]
+            if (patient_sample_lane in patient_sample_lane_combinations_in_samplesheet) {
+                log.error "The patient-sample-lane combination (${row.patient.toString()}, ${row.sample.toString()}, ${row.lane.toString()}) present multiple times in the samplesheet."
+                System.exit(1)
+            } else {
+                patient_sample_lane_combinations_in_samplesheet.add(patient_sample_lane)
+            }
+            if (!sample2patient.containsKey(row.sample.toString())) {
+                sample2patient[row.sample.toString()] = row.patient.toString()
+            } else if (sample2patient[row.sample.toString()] !== row.patient.toString()) {
+                log.error "The sample ${row.sample.toString()} is registered in samplesheet for both patient ${row.patient.toString()} and ${sample2patient[row.sample.toString()]}."
+                System.exit(1)
+            }
+        }
+
     Channel.from(csv_file).splitCsv(header: true)
         //Retrieves number of lanes by grouping together by patient and sample and counting how many entries there are for this combination
         .map{ row ->
