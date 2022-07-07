@@ -62,17 +62,20 @@ workflow GATK_JOINT_GERMLINE_VARIANT_CALLING {
 
     //
     //Joint genotyping performed using GenotypeGVCFs
+    //Sort vcfs called by interval within each VCF
     //
 
     vcfs = GATK4_GENOTYPEGVCFS ( genotype_input, fasta, fai, dict, sites, sites_index).vcf
-    merge_vcfs_input = vcfs.map { meta, vcf ->
+
+    vcfs_sorted_input = BCFTOOLS_SORT(vcfs).vcf
+    merge_vcfs_sorted_input = vcfs_sorted_input.map { meta, vcf ->
         [[id:"joint_variant_calling", num_intervals: meta.num_intervals], vcf]}.groupTuple()
 
     //
-    //Sort vcfs called by interval within each VCF
     //Merge vcfs called by interval into a single VCF
     //
-    merge_vcfs_sorted_input = BCFTOOLS_SORT(vcfs).vcf
+    vcfs_sorted_input.dump(tag:"vqsr")
+    merge_vcfs_sorted_input.dump(tag:"in")
     merged_vcf = MERGE_GENOTYPEGVCFS(merge_vcfs_sorted_input,dict)
 
 
