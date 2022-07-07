@@ -339,7 +339,7 @@
                     "type": "string",
                     "fa_icon": "fas fa-database",
                     "description": "Consequence to annotate with",
-                    "help_text": "To be used with `--vep_dbnsfp`.",
+                    "help_text": "To be used with `--vep_dbnsfp`.\nThis params is used to filter/limit outputs to a specific effect of the variant.\nThe set of consequence terms is defined by the Sequence Ontology and an overview of those used in VEP can be found here: https://www.ensembl.org/info/genome/variation/prediction/predicted_data.html\nIf one wants to filter using several consequences, then separate those by using '&' (i.e. 'consequence=3_prime_UTR_variant&intron_variant'.",
                     "hidden": true
                 },
                 "dbnsfp_fields": {
