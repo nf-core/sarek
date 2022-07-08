@@ -4,7 +4,10 @@ include { BCFTOOLS_SORT }                          from '../../../../modules/nf-
 include { GATK4_GENOMICSDBIMPORT }                 from '../../../../modules/nf-core/modules/gatk4/genomicsdbimport/main'
 include { GATK4_GENOTYPEGVCFS }                    from '../../../../modules/nf-core/modules/gatk4/genotypegvcfs/main'
 include { GATK4_MERGEVCFS as MERGE_GENOTYPEGVCFS } from '../../../../modules/nf-core/modules/gatk4/mergevcfs/main'
+include { GATK4_MERGEVCFS as MERGE_VQSR }          from '../../../../modules/nf-core/modules/gatk4/mergevcfs/main'
 include { GATK4_VARIANTRECALIBRATOR as VARIANTRECALIBRATOR_SNP }  from '../../../../modules/nf-core/modules/gatk4/variantrecalibrator/main'
+include { GATK4_APPLYVQSR as GATK4_APPLYVQSR_SNP } from '../../../../modules/nf-core/modules/gatk4/applyvqsr/main'
+include { GATK4_APPLYVQSR as GATK4_APPLYVQSR_INDEL } from '../../../../modules/nf-core/modules/gatk4/applyvqsr/main'
 include { GATK4_VARIANTRECALIBRATOR as VARIANTRECALIBRATOR_INDEL} from '../../../../modules/nf-core/modules/gatk4/variantrecalibrator/main'
 
 workflow GATK_JOINT_GERMLINE_VARIANT_CALLING {
@@ -74,33 +77,72 @@ workflow GATK_JOINT_GERMLINE_VARIANT_CALLING {
     //
     //Merge vcfs called by interval into a single VCF
     //
-    vcfs_sorted_input.dump(tag:"vqsr")
-    merge_vcfs_sorted_input.dump(tag:"in")
     merged_vcf = MERGE_GENOTYPEGVCFS(merge_vcfs_sorted_input,dict)
 
+    if (params.variant_recalibration){
+        vqsr_input = merged_vcf.vcf.join(merged_vcf.tbi)
 
-    vqsr_input = merged_vcf.vcf.join(merged_vcf.tbi)
+        //
+        //Recalibrate SNP and INDEL separately.
+        //
+        VARIANTRECALIBRATOR_SNP(vqsr_input,
+                resource_snps_vcf,
+                resource_snps_tbi,
+                fasta,
+                fai,
+                dict)
 
-    VARIANTRECALIBRATOR_SNP(vqsr_input,
-            resource_snps_vcf,
-            resource_snps_tbi,
-            fasta,
-            fai,
-            dict)
+        VARIANTRECALIBRATOR_INDEL(vqsr_input,
+                resource_indels_vcf,
+                resource_indels_tbi,
+                fasta,
+                fai,
+                dict)
 
-    VARIANTRECALIBRATOR_INDEL(vqsr_input,
-            resource_indels_vcf,
-            resource_indels_tbi,
-            fasta,
-            fai,
-            dict)
+        //
+        //Prepare SNP and INDEL separately for ApplyVQSR
+        //
+        vqsr_input.dump(tag:"in")
+        VARIANTRECALIBRATOR_INDEL.out.recal.dump(tag:"vqsr")
+       
+        vqsr_input_snp   = vqsr_input.join( VARIANTRECALIBRATOR_SNP.out.recal).join(
+                                            VARIANTRECALIBRATOR_SNP.out.idx).join(
+                                            VARIANTRECALIBRATOR_SNP.out.tranches)
 
+        vqsr_input_indel   = vqsr_input.join( VARIANTRECALIBRATOR_INDEL.out.recal).join(
+                                            VARIANTRECALIBRATOR_INDEL.out.idx).join(
+                                            VARIANTRECALIBRATOR_INDEL.out.tranches)
 
-    ch_versions = ch_versions.mix(GATK4_GENOTYPEGVCFS.out.versions)
+        vqsr_snp_vcf = GATK4_APPLYVQSR_SNP(vqsr_input_snp,
+                            fasta,
+                            fai,
+                            dict ).vcf
+                         
+        vqsr_indel_vcf = GATK4_APPLYVQSR_INDEL(vqsr_input_indel,
+                            fasta,
+                            fai,
+                            dict ).vcf
+
+        vqsr_snp_vcf.mix(vqsr_indel_vcf).groupTuple().dump(tag:"merge")
+        //
+        //Merge VQSR outputs into final VCF
+        //
+        output_ch = MERGE_VQSR(
+            vqsr_snp_vcf.mix(vqsr_indel_vcf).groupTuple(),
+            dict
+        )
+
+    } else {
+        output_ch = merged_vcf
+    }
+
+    ch_versions = ch_versions.mix(GATK4_GENOTYPEGVCFS.out.versions,
+                                  VARIANTRECALIBRATION_SNP.versions,
+                                  GATK4_APPLYVQSR_SNP.out.versions
+                                 )
 
     emit:
     versions       = ch_versions                           // channel: [ versions.yml ]
-    genomicsdb     = GATK4_GENOMICSDBIMPORT.out.genomicsdb // channel: [ val(meta), [ genomicsdb ] ]
-    genotype_vcf   = MERGE_GENOTYPEGVCFS.out.vcf           // channel: [ val(meta), [ vcf ] ]
-    genotype_index = MERGE_GENOTYPEGVCFS.out.tbi           // channel: [ val(meta), [ tbi ] ]
+    genotype_vcf   = output_ch.vcf           // channel: [ val(meta), [ vcf ] ]
+    genotype_index = output_ch.tbi           // channel: [ val(meta), [ tbi ] ]
 }

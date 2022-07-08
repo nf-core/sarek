@@ -30,7 +30,6 @@ def checkPathParamList = [
     params.intervals,
     params.known_snps,
     params.known_snps_tbi,
-    params.known_snps_vqsr,
     params.known_indels,
     params.known_indels_tbi,
     params.mappability,
