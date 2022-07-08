@@ -34,6 +34,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#597](https://github.com/nf-core/sarek/pull/597) - Added tiddit for tumor variant calling
 - [#600](https://github.com/nf-core/sarek/pull/600) - Added description for UMI related params in schema
 - [#604](https://github.com/nf-core/sarek/pull/604), [#617](https://github.com/nf-core/sarek/pull/617) - Added full size tests WGS 30x NA12878
+- [#613](https://github.com/nf-core/sarek/pull/613) - Added params `--dbnsfp_fields` to allow configuration of fields for the `dbnsfp` `VEP` plugin
+- [#613](https://github.com/nf-core/sarek/pull/613) - Added params `--dbnsfp_consequence` to allow configuration of consequence for the `dbnsfp` `VEP` plugin
+- [#613](https://github.com/nf-core/sarek/pull/613) - Added params `--vep_version` to allow more configuration on the vep container definition
 - [#620](https://github.com/nf-core/sarek/pull/620) - Added checks for sex information when running a CNV tools
 
 ### Changed
@@ -105,12 +108,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#581](https://github.com/nf-core/sarek/pull/581) - `TIDDIT` is back
 - [#590](https://github.com/nf-core/sarek/pull/590) - Fix empty folders during scatter/gather
 - [#592](https://github.com/nf-core/sarek/pull/592) - Fix optional resources for Mutect2, GetPileupSummaries, and HaplotypeCaller: issue [#299](https://github.com/nf-core/sarek/issues/299), [#359](https://github.com/nf-core/sarek/issues/359), [#367](https://github.com/nf-core/sarek/issues/367)
-- [#598](https://github.com/nf-core/sarek/pull/598) - Remove WARNING message for config selector not matching
+- [#598](https://github.com/nf-core/sarek/pull/598), [#614](https://github.com/nf-core/sarek/pull/614), [#626](https://github.com/nf-core/sarek/pull/626) - Remove WARNING message for config selector not matching
 - [#599](https://github.com/nf-core/sarek/pull/599) - Add checks for correct data type for `params.step`
 - [#599](https://github.com/nf-core/sarek/pull/599) - Add checks for no empty `--tools` with `--step variant_calling` or `--step annotation`
 - [#600](https://github.com/nf-core/sarek/pull/600) - Remove `nf-core lint` warnings
 - [#602](https://github.com/nf-core/sarek/pull/602) - Fixed bug in `alignment_to_fastq` and added tests
 - [#609](https://github.com/nf-core/sarek/pull/609) - Remove unused intervals code, reorganize combined intervals file
+- [#613](https://github.com/nf-core/sarek/pull/613) - Fixed filenames for `dbnsfp` and `SpliceAI` `VEP` plugin
 - [#615](https://github.com/nf-core/sarek/pull/615) - Fix ASCAT igenomes file paths
 - [#619](https://github.com/nf-core/sarek/pull/619) - Fix issue with checking samplesheet content with AWS
 
