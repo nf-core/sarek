@@ -108,7 +108,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#581](https://github.com/nf-core/sarek/pull/581) - `TIDDIT` is back
 - [#590](https://github.com/nf-core/sarek/pull/590) - Fix empty folders during scatter/gather
 - [#592](https://github.com/nf-core/sarek/pull/592) - Fix optional resources for Mutect2, GetPileupSummaries, and HaplotypeCaller: issue [#299](https://github.com/nf-core/sarek/issues/299), [#359](https://github.com/nf-core/sarek/issues/359), [#367](https://github.com/nf-core/sarek/issues/367)
-- [#598](https://github.com/nf-core/sarek/pull/598), [#614](https://github.com/nf-core/sarek/pull/614) - Remove WARNING message for config selector not matching
+- [#598](https://github.com/nf-core/sarek/pull/598), [#614](https://github.com/nf-core/sarek/pull/614), [#626](https://github.com/nf-core/sarek/pull/626) - Remove WARNING message for config selector not matching
 - [#599](https://github.com/nf-core/sarek/pull/599) - Add checks for correct data type for `params.step`
 - [#599](https://github.com/nf-core/sarek/pull/599) - Add checks for no empty `--tools` with `--step variant_calling` or `--step annotation`
 - [#600](https://github.com/nf-core/sarek/pull/600) - Remove `nf-core lint` warnings
