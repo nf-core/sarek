@@ -38,6 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#613](https://github.com/nf-core/sarek/pull/613) - Added params `--dbnsfp_consequence` to allow configuration of consequence for the `dbnsfp` `VEP` plugin
 - [#613](https://github.com/nf-core/sarek/pull/613) - Added params `--vep_version` to allow more configuration on the vep container definition
 - [#620](https://github.com/nf-core/sarek/pull/620) - Added checks for sex information when running a CNV tools
+- [#623](https://github.com/nf-core/sarek/pull/623) - Additional checks of data in the input sample sheet.
 
 ### Changed
 

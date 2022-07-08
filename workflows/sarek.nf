@@ -1005,6 +1005,35 @@ def extract_csv(csv_file) {
         }
     }
 
+    // Additional check of sample sheet:
+    // 1. If params.step == "mapping", then each row should specify a lane and the same combination of patient, sample and lane shouldn't be present in different rows.
+    // 2. The same sample shouldn't be listed for different patients.
+    def patient_sample_lane_combinations_in_samplesheet = []
+    def sample2patient = [:]
+
+    Channel.from(csv_file).splitCsv(header: true)
+        .map{ row ->
+            if (params.step == "mapping") {
+                if ( !row.lane ) {  // This also handles the case where the lane is left as an empty string
+                    log.error('The sample sheet should specify a lane for patient "' + row.patient.toString() + '" and sample "' + row.sample.toString() + '".')
+                    System.exit(1)
+                }
+                def patient_sample_lane = [row.patient.toString(), row.sample.toString(), row.lane.toString()]
+                if (patient_sample_lane in patient_sample_lane_combinations_in_samplesheet) {
+                    log.error('The patient-sample-lane combination "' + row.patient.toString() + '", "' + row.sample.toString() + '", and "' + row.lane.toString() + '" is present multiple times in the sample sheet.')
+                    System.exit(1)
+                } else {
+                    patient_sample_lane_combinations_in_samplesheet.add(patient_sample_lane)
+                }
+            }
+            if (!sample2patient.containsKey(row.sample.toString())) {
+                sample2patient[row.sample.toString()] = row.patient.toString()
+            } else if (sample2patient[row.sample.toString()] !== row.patient.toString()) {
+                log.error('The sample "' + row.sample.toString() + '" is registered for both patient "' + row.patient.toString() + '" and "' + sample2patient[row.sample.toString()] + '" in the sample sheet.')
+                System.exit(1)
+            }
+        }
+
     Channel.from(csv_file).splitCsv(header: true)
         //Retrieves number of lanes by grouping together by patient and sample and counting how many entries there are for this combination
         .map{ row ->
