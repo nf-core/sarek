@@ -25,6 +25,10 @@
       md5sum: 6518cea4d9c0bdb17af66932b68e0ad9
     - path: results/samtools/test-test_L1.bam
       md5sum: 41f807e2f3be27a6054a1b7ab4a438b2
+    - path: results/samtools/test-test_L1.unmap_map.bam
+      md5sum: 9479aabdbbfdc8f5c79f8daa1011e9fb
+    - path: results/samtools/test-test_L1.unmap_unmap.bam
+      md5sum: 68bcb7f856c1933b81c4733da2fcd8df
       # TODO: The following files are not produced anymore
 #    - path: results/samtools/test-test_L1.mapped_1.fq.gz
 #      md5sum: 709872fc2910431b1e8b7074bfe38c67
@@ -34,10 +38,6 @@
 #      md5sum: 709872fc2910431b1e8b7074bfe38c67
 #    - path: results/samtools/test-test_L1.mapped_singleton.fq.gz
 #      md5sum: 709872fc2910431b1e8b7074bfe38c67
-#    - path: results/samtools/test-test_L1.unmap_map.bam
-#      md5sum: 9479aabdbbfdc8f5c79f8daa1011e9fb
-#    - path: results/samtools/test-test_L1.unmap_unmap.bam
-#      md5sum: 68bcb7f856c1933b81c4733da2fcd8df
 #    - path: results/samtools/test-test_L1.unmapped_1.fq.gz
 #      md5sum: 1f95ae5bbc7345372005b6673884f853
 #    - path: results/samtools/test-test_L1.unmapped_2.fq.gz
