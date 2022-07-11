@@ -5,7 +5,7 @@ process FGBIO_FASTQTOBAM {
     conda (params.enable_conda ? "bioconda::fgbio=1.4.0" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/fgbio:1.4.0--hdfd78af_0' :
-        'quay.io/biocontainers/fgbio:1.4.0--hdfd78af_0' }"
+        'quay.io/biocontainers/fgbio:2.0.2--hdfd78af_0' }"
 
     input:
     tuple val(meta), path(reads)
@@ -23,7 +23,7 @@ process FGBIO_FASTQTOBAM {
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
     mkdir tmp
-
+    echo "fgbio --tmp-dir=${PWD}/tmp FastqToBam -i $reads -o ${prefix}_umi_converted.bam --read-structures $read_structure --sample $meta.id --library $meta.id $args" > /home/owacker/git/sarek/müde
     fgbio \\
         --tmp-dir=${PWD}/tmp \\
         FastqToBam \\

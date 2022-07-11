@@ -1,4 +1,4 @@
-- name: Run UMI Quiaseq test
+- name: Run UMI test
   command: nextflow run main.nf -profile test,umi,docker
   tags:
     - umi
