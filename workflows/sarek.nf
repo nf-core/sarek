@@ -273,9 +273,11 @@ include { MULTIQC                                              } from '../module
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-ch_multiqc_config        = Channel.fromPath(file("$projectDir/assets/multiqc_config.yml", checkIfExists: true))
+ch_multiqc_config        = [
+                            file("$projectDir/assets/multiqc_config.yml", checkIfExists: true),
+                            file("$projectDir/assets/nf-core-sarek_logo_light.png", checkIfExists: true)
+                            ]
 ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config) : Channel.empty()
-ch_sarek_logo            = Channel.fromPath(file("$projectDir/assets/nf-core-sarek_logo_light.png", checkIfExists: true))
 def multiqc_report = []
 
 /*
@@ -759,7 +761,7 @@ workflow SAREK {
             }.set{convert}
 
         //BAM files first must be converted to CRAM files since from this step on we base everything on CRAM format
-        SAMTOOLS_BAMTOCRAM_VARIANTCALLING(convert.bam, fasta, fasta_fai)
+        BAMTOCRAM_VARIANTCALLING(convert.bam, fasta, fasta_fai)
         ch_versions = ch_versions.mix(SAMTOOLS_BAMTOCRAM_VARIANTCALLING.out.versions)
 
         cram_variant_calling = Channel.empty().mix(SAMTOOLS_BAMTOCRAM_VARIANTCALLING.out.alignment_index, convert.cram)
@@ -968,14 +970,15 @@ workflow SAREK {
         ch_workflow_summary = Channel.value(workflow_summary)
 
         ch_multiqc_files =  Channel.empty().mix(ch_version_yaml,
+                                            Channel.from(ch_multiqc_config),
                                             ch_multiqc_custom_config.collect().ifEmpty([]),
                                             ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'),
-                                            ch_reports.collect(),
-                                            ch_multiqc_config,
-                                            ch_sarek_logo)
+                                            ch_reports.collect()
+                                            )
 
-        //ch_multiqc_files.dump(tag:'multicq files')
-        MULTIQC(ch_multiqc_files.collect())
+        ch_multiqc_files.view()
+
+        MULTIQC(ch_multiqc_files.collect(), ch_multiqc_config)
         multiqc_report = MULTIQC.out.report.toList()
     }
 }
