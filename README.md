@@ -100,6 +100,7 @@ We thank the following people for their extensive assistance in the development 
 - [Jesper Eisfeldt](https://github.com/J35P312)
 - [Johannes Alneberg](https://github.com/alneberg)
 - [José Fernández Navarro](https://github.com/jfnavarro)
+- [Lasse Westergaard Folkersen](https://github.com/lassefolkersen)
 - [Lucia Conde](https://github.com/lconde-ucl)
 - [Malin Larsson](https://github.com/malinlarsson)
 - [Marcel Martin](https://github.com/marcelm)

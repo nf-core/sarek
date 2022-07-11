@@ -24,7 +24,7 @@ workflow RUN_CNVKIT_TUMORONLY {
 
         CNVKIT_ANTITARGET(targets.map{ it -> [[id:it[0].baseName], it] })
 
-        CNVKIT_REFERENCE(fasta, targets, CNVKIT_ANTITARGET.out.bed.map{ meta,bed -> [bed]} )
+        CNVKIT_REFERENCE(fasta, targets, CNVKIT_ANTITARGET.out.bed.map{ meta, bed -> [bed]} )
 
         // use reference for calling CNVs
         // cram_input needs the fasta reference genome for bam_conversion
