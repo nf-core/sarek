@@ -41,6 +41,8 @@ workflow GATK_JOINT_GERMLINE_VARIANT_CALLING {
     resource_indels_vcf = known_indels.combine(dbsnp)
     resource_indels_tbi = known_indels_tbi.combine(dbsnp_tbi)
     
+    resource_snps_vcf.dump(tag:"snp")
+    resource_indels_vcf.dump(tag:"indel")
     gendb_input = input.map{
         meta, gvcf, tbi, intervals->
             new_meta = [id: meta.num_intervals > 1 ? "joint variant calling" : "no_intervals",
@@ -113,15 +115,18 @@ workflow GATK_JOINT_GERMLINE_VARIANT_CALLING {
                                             VARIANTRECALIBRATOR_INDEL.out.idx).join(
                                             VARIANTRECALIBRATOR_INDEL.out.tranches)
 
-        vqsr_snp_vcf = GATK4_APPLYVQSR_SNP(vqsr_input_snp,
+        GATK4_APPLYVQSR_SNP(vqsr_input_snp,
                             fasta,
                             fai,
-                            dict ).vcf
+                            dict )
                          
-        vqsr_indel_vcf = GATK4_APPLYVQSR_INDEL(vqsr_input_indel,
+        GATK4_APPLYVQSR_INDEL(vqsr_input_indel,
                             fasta,
                             fai,
-                            dict ).vcf
+                            dict )
+
+        vqsr_snp_vcf = GATK4_APPLYVQSR_SNP.out.vcf
+        vqsr_indel_vcf = GATK4_APPLYVQSR_INDEL.out.vcf
 
         vqsr_snp_vcf.mix(vqsr_indel_vcf).groupTuple().dump(tag:"merge")
         //
@@ -137,7 +142,7 @@ workflow GATK_JOINT_GERMLINE_VARIANT_CALLING {
     }
 
     ch_versions = ch_versions.mix(GATK4_GENOTYPEGVCFS.out.versions,
-                                  VARIANTRECALIBRATION_SNP.versions,
+                                  VARIANTRECALIBRATOR.out.versions,
                                   GATK4_APPLYVQSR_SNP.out.versions
                                  )
 
