@@ -99,7 +99,7 @@ if(params.tools && params.tools.contains('mutect2')){
 // Fails when missing resources for baserecalibrator
 // Warns when missing resources for haplotypecaller
 if(!params.dbsnp && !params.known_indels){
-    if(!params.skip_tools || params.skip_tools && !params.skip_tools.contains('baserecalibrator')){
+    if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration', 'recalibrate'] && (!params.skip_tools || (params.skip_tools && !params.skip_tools.contains('baserecalibrator')))){
         log.error "Base quality score recalibration requires at least one resource file. Please provide at least one of `--dbsnp` or `--known_indels`\nYou can skip this step in the workflow by adding `--skip_tools baserecalibrator` to the command."
         exit 1
     }
