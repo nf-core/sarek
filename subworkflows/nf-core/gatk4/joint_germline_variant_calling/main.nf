@@ -142,7 +142,7 @@ workflow GATK_JOINT_GERMLINE_VARIANT_CALLING {
     }
 
     ch_versions = ch_versions.mix(GATK4_GENOTYPEGVCFS.out.versions,
-                                  VARIANTRECALIBRATOR.out.versions,
+                                  VARIANTRECALIBRATOR_SNP.out.versions,
                                   GATK4_APPLYVQSR_SNP.out.versions
                                  )
 
