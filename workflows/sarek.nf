@@ -1034,14 +1034,14 @@ def extract_csv(csv_file) {
             }
         }
 
-    numberOfSamples = 0
-    numberOfNormalSamples = 0
-    numberOfTumorSamples = 0
+    sample_count_all = 0
+    sample_count_normal = 0
+    sample_count_tumor = 0
 
     Channel.from(csv_file).splitCsv(header: true)
         //Retrieves number of lanes by grouping together by patient and sample and counting how many entries there are for this combination
         .map{ row ->
-            numberOfSamples++
+            sample_count_all++
             if (!(row.patient && row.sample)){
                 log.error "Missing field in csv file header. The csv file must have fields named 'patient' and 'sample'."
                 System.exit(1)
@@ -1072,13 +1072,13 @@ def extract_csv(csv_file) {
         if (row.status) meta.status = row.status.toInteger()
         else meta.status = 0
 
-        if (meta.status == 0) numberOfNormalSamples++
-        else numberOfTumorSamples++
+        if (meta.status == 0) sample_count_normal++
+        else sample_count_tumor++
 
         // Two checks for ensuring that the pipeline stops with a meaningful error message if
         // 1. the sample-sheet only contains normal-samples, but some of the requested tools require tumor-samples, and
-        // 2. the sample-sheet only contains tumor-samples, but some of the requested tools require normal/germline-samples.
-        if ((numberOfNormalSamples == numberOfSamples) && params.tools) { // In this case, the sample-sheet contains no tumor-samples
+        // 2. the sample-sheet only contains tumor-samples, but some of the requested tools require normal-samples.
+        if ((sample_count_normal == sample_count_all) && params.tools) { // In this case, the sample-sheet contains no tumor-samples
             def tools_requiring_tumor_samples = ['ascat', 'controlfreec', 'mutect2', 'msisensorpro']
             def requested_tools_requiring_tumor_samples = []
             tools_requiring_tumor_samples.each{ tool_requiring_tumor_samples ->
@@ -1088,7 +1088,7 @@ def extract_csv(csv_file) {
                 log.error('The sample-sheet only contains normal-samples, but the following tools, which were requested by the option "tools", expect at least one tumor-sample : ' + requested_tools_requiring_tumor_samples.join(", "))
                 System.exit(1)
             }
-        } else if ((numberOfTumorSamples == numberOfSamples) && params.tools) {  // In this case, the sample-sheet contains no normal/germline-samples
+        } else if ((sample_count_tumor == sample_count_all) && params.tools) {  // In this case, the sample-sheet contains no normal/germline-samples
             def tools_requiring_normal_samples = ['ascat', 'deepvariant', 'haplotypecaller']
             def requested_tools_requiring_normal_samples = []
             tools_requiring_normal_samples.each{ tool_requiring_normal_samples ->
