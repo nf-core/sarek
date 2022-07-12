@@ -9,8 +9,9 @@ process GATK4_VARIANTRECALIBRATOR {
 
     input:
     tuple val(meta), path(vcf), path(tbi) // input vcf and tbi of variants to recalibrate
-    path resource_vcf // resource vcf 
-    path resource_tbi // resource tbi
+    path resource_vcf   // resource vcf 
+    path resource_tbi   // resource tbi
+    val labels // string containing labels
     path  fasta
     path  fai
     path  dict
@@ -29,6 +30,7 @@ process GATK4_VARIANTRECALIBRATOR {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     def reference_command = fasta ? "--reference $fasta " : ''
+    def labels_command = labels.join(' ')
 
     def avail_mem = 3
     if (!task.memory) {
@@ -43,6 +45,7 @@ process GATK4_VARIANTRECALIBRATOR {
         --tranches-file ${prefix}.tranches \\
         $reference_command \\
         --tmp-dir . \\
+        $labels_command \\
         $args
 
     cat <<-END_VERSIONS > versions.yml

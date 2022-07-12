@@ -12,8 +12,10 @@ workflow RUN_HAPLOTYPECALLER {
     dict                            // channel: [mandatory]
     dbsnp                           // channel: []
     dbsnp_tbi
-    known_sites
-    known_sites_tbi
+    known_sites_indels
+    known_sites_indels_tbi
+    known_sites_snps
+    known_sites_snps_tbi
     intervals_bed_combined          // channel: [optional]
 
 
@@ -44,7 +46,11 @@ workflow RUN_HAPLOTYPECALLER {
              fasta_fai,
              dict,
              dbsnp,
-             dbsnp_tbi).genotype_vcf
+             dbsnp_tbi,
+             known_sites_indels,
+             known_sites_indels_tbi,
+             known_sites_snps,
+             known_sites_snps_tbi).genotype_vcf
 
         ch_versions = ch_versions.mix(JOINT_GERMLINE.out.versions)
     } else {
@@ -97,8 +103,8 @@ workflow RUN_HAPLOTYPECALLER {
                         fasta,
                         fasta_fai,
                         dict,
-                        known_sites,
-                        known_sites_tbi)
+                        known_sites_indels,
+                        known_sites_indels_tbi)
 
         filtered_vcf = SINGLE_SAMPLE.out.filtered_vcf
         ch_versions = ch_versions.mix(SINGLE_SAMPLE.out.versions)

@@ -117,6 +117,8 @@ fasta              = params.fasta              ? Channel.fromPath(params.fasta).
 fasta_fai          = params.fasta_fai          ? Channel.fromPath(params.fasta_fai).collect()                : Channel.empty()
 germline_resource  = params.germline_resource  ? Channel.fromPath(params.germline_resource).collect()        : Channel.value([]) //Mutec2 does not require a germline resource, so set to optional input
 known_indels       = params.known_indels       ? Channel.fromPath(params.known_indels).collect()             : Channel.value([])
+known_snps         = params.known_snps         ? Channel.fromPath(params.known_snps).collect()               : Channel.value([])
+
 loci               = params.ac_loci            ? Channel.fromPath(params.ac_loci).collect()                  : Channel.value([])
 loci_gc            = params.ac_loci_gc         ? Channel.fromPath(params.ac_loci_gc).collect()               : Channel.value([])
 mappability        = params.mappability        ? Channel.fromPath(params.mappability).collect()              : Channel.value([])
@@ -279,10 +281,10 @@ workflow SAREK {
     dragmap                = params.fasta                   ? params.dragmap               ? Channel.fromPath(params.dragmap).collect()               : PREPARE_GENOME.out.hashtable             : []
     dict                   = params.fasta                   ? params.dict                  ? Channel.fromPath(params.dict).collect()                  : PREPARE_GENOME.out.dict                  : []
     fasta_fai              = params.fasta                   ? params.fasta_fai             ? Channel.fromPath(params.fasta_fai).collect()             : PREPARE_GENOME.out.fasta_fai             : []
-    dbsnp_tbi              = params.dbsnp                   ? params.dbsnp_tbi             ? Channel.fromPath(params.dbsnp_tbi).collect()             : PREPARE_GENOME.out.dbsnp_tbi             : Channel.value([])
-    known_snps_tbi         = params.known_snps              ? params.known_snps_tbi        ? Channel.fromPath(params.known_snps_tbi).collect()        : PREPARE_GENOME.out.known_snps_tbi        : Channel.value([])
+    dbsnp_tbi              = params.dbsnp                   ? params.dbsnp_tbi             ? Channel.fromPath(params.dbsnp_tbi).collect()             : PREPARE_GENOME.out.dbsnp_tbi             : []
     germline_resource_tbi  = params.germline_resource       ? params.germline_resource_tbi ? Channel.fromPath(params.germline_resource_tbi).collect() : PREPARE_GENOME.out.germline_resource_tbi : []
-    known_indels_tbi       = params.known_indels            ? params.known_indels_tbi      ? Channel.fromPath(params.known_indels_tbi).collect()      : PREPARE_GENOME.out.known_indels_tbi      : Channel.value([])
+    known_snps_tbi         = params.known_snps              ? params.known_snps_tbi        ? Channel.fromPath(params.known_snps_tbi).collect()        : PREPARE_GENOME.out.known_snps_tbi        : []
+    known_indels_tbi       = params.known_indels            ? params.known_indels_tbi      ? Channel.fromPath(params.known_indels_tbi).collect()      : PREPARE_GENOME.out.known_indels_tbi      : []
     pon_tbi                = params.pon                     ? params.pon_tbi               ? Channel.fromPath(params.pon_tbi).collect()               : PREPARE_GENOME.out.pon_tbi               : []
     msisensorpro_scan      = PREPARE_GENOME.out.msisensorpro_scan
 
@@ -293,8 +295,11 @@ workflow SAREK {
 
     // known_sites is made by grouping both the dbsnp and the known indels ressources
     // Which can either or both be optional
-    known_sites     = dbsnp.concat(known_indels).collect()
-    known_sites_tbi = dbsnp_tbi.concat(known_indels_tbi).collect()
+    known_sites_indels     = dbsnp.concat(known_indels).collect()
+    known_sites_indels_tbi = dbsnp_tbi.concat(known_indels_tbi).collect()
+
+    known_sites_snps     = dbsnp.concat(known_snps).collect()
+    known_sites_snps_tbi = dbsnp_tbi.concat(known_snps_tbi).collect()
 
     // Build intervals if needed
     PREPARE_INTERVALS(fasta_fai)
@@ -582,8 +587,8 @@ workflow SAREK {
                 fasta,
                 fasta_fai,
                 intervals,
-                known_sites,
-                known_sites_tbi)
+                known_sites_indels,
+                known_sites_indels_tbi)
 
                 ch_table_bqsr_spark = PREPARE_RECALIBRATION_SPARK.out.table_bqsr
 
@@ -596,8 +601,8 @@ workflow SAREK {
                 fasta,
                 fasta_fai,
                 intervals,
-                known_sites,
-                known_sites_tbi)
+                known_sites_indels,
+                known_sites_indels_tbi)
 
                 ch_table_bqsr_no_spark = PREPARE_RECALIBRATION.out.table_bqsr
 
@@ -807,8 +812,10 @@ workflow SAREK {
             intervals,
             intervals_bed_gz_tbi,
             intervals_bed_combined,
-            known_sites,
-            known_sites_tbi)
+            known_sites_indels,
+            known_sites_indels_tbi,
+            known_sites_snps,
+            known_sites_snps_tbi)
             // params.joint_germline)
 
         // TUMOR ONLY VARIANT CALLING

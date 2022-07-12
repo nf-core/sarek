@@ -26,7 +26,6 @@ nextflow.enable.dsl = 2
     GENOME PARAMETER VALUES
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-
 params.ac_loci               = WorkflowMain.getGenomeAttribute(params, 'ac_loci')
 params.ac_loci_gc            = WorkflowMain.getGenomeAttribute(params, 'ac_loci_gc')
 params.bwa                   = WorkflowMain.getGenomeAttribute(params, 'bwa')
@@ -34,6 +33,7 @@ params.bwamem2               = WorkflowMain.getGenomeAttribute(params, 'bwamem2'
 params.chr_dir               = WorkflowMain.getGenomeAttribute(params, 'chr_dir')
 params.dbsnp                 = WorkflowMain.getGenomeAttribute(params, 'dbsnp')
 params.dbsnp_tbi             = WorkflowMain.getGenomeAttribute(params, 'dbsnp_tbi')
+params.dbsnp_vqsr            = WorkflowMain.getGenomeAttribute(params, 'dbsnp_vqsr')
 params.dict                  = WorkflowMain.getGenomeAttribute(params, 'dict')
 params.dragmap               = WorkflowMain.getGenomeAttribute(params, 'dragmap')
 params.fasta                 = WorkflowMain.getGenomeAttribute(params, 'fasta')
@@ -41,8 +41,13 @@ params.fasta_fai             = WorkflowMain.getGenomeAttribute(params, 'fasta_fa
 params.germline_resource     = WorkflowMain.getGenomeAttribute(params, 'germline_resource')
 params.germline_resource_tbi = WorkflowMain.getGenomeAttribute(params, 'germline_resource_tbi')
 params.intervals             = WorkflowMain.getGenomeAttribute(params, 'intervals')
+params.known_snps            = WorkflowMain.getGenomeAttribute(params, 'known_snps')
+params.known_snps_tbi        = WorkflowMain.getGenomeAttribute(params, 'known_snps_tbi')
+params.known_snps_vqsr       = WorkflowMain.getGenomeAttribute(params, 'known_snps_vqsr')
 params.known_indels          = WorkflowMain.getGenomeAttribute(params, 'known_indels')
 params.known_indels_tbi      = WorkflowMain.getGenomeAttribute(params, 'known_indels_tbi')
+params.known_indels_gatk1_vqsr      = WorkflowMain.getGenomeAttribute(params, 'known_indels_gatk1_vqsr')
+params.known_indels_gatk2_vqsr      = WorkflowMain.getGenomeAttribute(params, 'known_indels_gatk2_vqsr')
 params.mappability           = WorkflowMain.getGenomeAttribute(params, 'mappability')
 params.pon                   = WorkflowMain.getGenomeAttribute(params, 'pon')
 params.pon_tbi               = WorkflowMain.getGenomeAttribute(params, 'pon_tbi')

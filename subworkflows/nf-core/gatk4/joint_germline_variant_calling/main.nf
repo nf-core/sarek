@@ -16,33 +16,16 @@ workflow GATK_JOINT_GERMLINE_VARIANT_CALLING {
     fasta            // channel: /path/to/reference/fasta
     fai              // channel: /path/to/reference/fasta/index
     dict             // channel: /path/to/reference/fasta/dictionary
-    sites            // channel: /path/to/known/sites/file
-    sites_index      // channel: /path/to/known/sites/index
+    dbsnp
+    dbsnp_tbi
+    resource_indels_vcf
+    resource_indels_tbi
+    resource_snps_vcf
+    resource_snps_tbi
 
     main:
     ch_versions    = Channel.empty()
-    resources_snps = Channel.empty()
-    resources_indels = Channel.empty()
 
-
-    known_snps      = params.known_snps      ? Channel.fromPath(params.known_snps).collect() : Channel.empty()
-    known_snps_tbi  = params.known_snps_tbi  ? Channel.fromPath(params.known_snps_tbi).collect() : Channel.empty()
-
-
-    known_indels       = params.known_indels ? Channel.fromPath(params.known_indels).collect() : Channel.empty()
-    known_indels_tbi   = params.known_indels_tbi ? Channel.fromPath(params.known_indels_tbi).collect() : Channel.empty()
-
-    dbsnp       = params.dbsnp      ? Channel.fromPath(params.dbsnp).collect() : Channel.empty()
-    dbsnp_tbi   = params.dbsnp_tbi  ? Channel.fromPath(params.dbsnp_tbi).collect() : Channel.empty()
-
-    resource_snps_vcf = known_snps.combine(dbsnp)
-    resource_snps_tbi = known_snps_tbi.combine(dbsnp_tbi)
-
-    resource_indels_vcf = known_indels.combine(dbsnp)
-    resource_indels_tbi = known_indels_tbi.combine(dbsnp_tbi)
-    
-    resource_snps_vcf.dump(tag:"snp")
-    resource_indels_vcf.dump(tag:"indel")
     gendb_input = input.map{
         meta, gvcf, tbi, intervals->
             new_meta = [id: meta.num_intervals > 1 ? "joint variant calling" : "no_intervals",
@@ -70,7 +53,7 @@ workflow GATK_JOINT_GERMLINE_VARIANT_CALLING {
     //Sort vcfs called by interval within each VCF
     //
 
-    vcfs = GATK4_GENOTYPEGVCFS ( genotype_input, fasta, fai, dict, sites, sites_index).vcf
+    vcfs = GATK4_GENOTYPEGVCFS ( genotype_input, fasta, fai, dict, dbsnp, dbsnp_tbi).vcf
 
     vcfs_sorted_input = BCFTOOLS_SORT(vcfs).vcf
     merge_vcfs_sorted_input = vcfs_sorted_input.map { meta, vcf ->
@@ -84,12 +67,16 @@ workflow GATK_JOINT_GERMLINE_VARIANT_CALLING {
     if (params.variant_recalibration){
         vqsr_input = merged_vcf.vcf.join(merged_vcf.tbi)
 
+        snp_resource_labels =   (params.known_snps_vqsr && params.dbsnp_vqsr)                                           ? Channel.of([params.known_snps_vqsr,params.dbsnp_vqsr])                                        : Channel.empty()
+        indel_resource_labels = (params.known_indels_gatk1_vqsr && params.known_indels_gatk2_vqsr && params.dbsnp_vqsr) ? Channel.of([params.known_indels_gatk1_vqsr,params.known_indels_gatk2_vqsr,params.dbsnp_vqsr]) : Channel.empty()
+
         //
         //Recalibrate SNP and INDEL separately.
         //
         VARIANTRECALIBRATOR_SNP(vqsr_input,
                 resource_snps_vcf,
                 resource_snps_tbi,
+                snp_resource_labels,
                 fasta,
                 fai,
                 dict)
@@ -97,6 +84,7 @@ workflow GATK_JOINT_GERMLINE_VARIANT_CALLING {
         VARIANTRECALIBRATOR_INDEL(vqsr_input,
                 resource_indels_vcf,
                 resource_indels_tbi,
+                indel_resource_labels,
                 fasta,
                 fai,
                 dict)
@@ -104,8 +92,6 @@ workflow GATK_JOINT_GERMLINE_VARIANT_CALLING {
         //
         //Prepare SNP and INDEL separately for ApplyVQSR
         //
-        vqsr_input.dump(tag:"in")
-        VARIANTRECALIBRATOR_INDEL.out.recal.dump(tag:"vqsr")
        
         vqsr_input_snp   = vqsr_input.join( VARIANTRECALIBRATOR_SNP.out.recal).join(
                                             VARIANTRECALIBRATOR_SNP.out.idx).join(
@@ -128,7 +114,6 @@ workflow GATK_JOINT_GERMLINE_VARIANT_CALLING {
         vqsr_snp_vcf = GATK4_APPLYVQSR_SNP.out.vcf
         vqsr_indel_vcf = GATK4_APPLYVQSR_INDEL.out.vcf
 
-        vqsr_snp_vcf.mix(vqsr_indel_vcf).groupTuple().dump(tag:"merge")
         //
         //Merge VQSR outputs into final VCF
         //
