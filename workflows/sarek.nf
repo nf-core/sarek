@@ -1079,13 +1079,13 @@ def extract_csv(csv_file) {
         // 1. the sample-sheet only contains normal-samples, but some of the requested tools require tumor-samples, and
         // 2. the sample-sheet only contains tumor-samples, but some of the requested tools require normal-samples.
         if ((sample_count_normal == sample_count_all) && params.tools) { // In this case, the sample-sheet contains no tumor-samples
-            def tools_requiring_tumor_samples = ['ascat', 'controlfreec', 'mutect2', 'msisensorpro']
-            def requested_tools_requiring_tumor_samples = []
-            tools_requiring_tumor_samples.each{ tool_requiring_tumor_samples ->
-                if (params.tools.contains(tool_requiring_tumor_samples)) requested_tools_requiring_tumor_samples.add(tool_requiring_tumor_samples)
+            def tools_tumor = ['ascat', 'controlfreec', 'mutect2', 'msisensorpro']
+            def tools_tumor_asked = []
+            tools_tumor.each{ tool ->
+                if (params.tools.contains(tool)) tools_tumor_asked.add(tool)
             }
-            if (!requested_tools_requiring_tumor_samples.isEmpty()) {
-                log.error('The sample-sheet only contains normal-samples, but the following tools, which were requested by the option "tools", expect at least one tumor-sample : ' + requested_tools_requiring_tumor_samples.join(", "))
+            if (!tools_tumor_asked.isEmpty()) {
+                log.error('The sample-sheet only contains normal-samples, but the following tools, which were requested with "--tools", expect at least one tumor-sample : ' + tools_tumor_asked.join(", "))
                 System.exit(1)
             }
         } else if ((sample_count_tumor == sample_count_all) && params.tools) {  // In this case, the sample-sheet contains no normal/germline-samples
