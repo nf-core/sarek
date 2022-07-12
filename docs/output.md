@@ -221,9 +221,9 @@ For normal samples only:
 **Output directory: `results/variantcalling/<sample>/deepvariant`**
 
 - `<sample>.deepvariant.vcf.gz` and `<sample>.deepvariant.vcf.gz.tbi`
-  - `VCF` with Tabix index
+  - `VCF` with tabix index
 - `<sample>.deepvariant.g.vcf.gz` and `<sample>.deepvariant.g.vcf.gz.tbi`
-  - `.g.VCF` with Tabix index
+  - `.g.VCF` with tabix index
 
 #### FreeBayes
 
@@ -234,7 +234,7 @@ For all samples:
 **Output directory: `results/variantcalling/{sample,normalsample_vs_tumorsample}/freebayes`**
 
 - `<sample>.freebayes.vcf.gz` and `<sample>.freebayes.vcf.gz.tbi`
-  - `VCF` with Tabix index
+  - `VCF` with tabix index
 
 #### GATK HaplotypeCaller
 
@@ -245,7 +245,7 @@ For normal only samples:
 **Output directory: `results/variantcalling/<sample>/haplotypecaller`**
 
 - `<sample>.haplotypecaller.vcf.gz` and `<sample>.haplotypecaller.vcf.gz.tbi`
-  - `VCF` with Tabix index
+  - `VCF` with tabix index
 
 ##### GATK Germline Single Sample Variantcalling
 
@@ -257,7 +257,7 @@ If the haplotype called vcfs are not filtered, check that at least one of `--dbs
 **Output directory: `results/variantcalling/<sample>/haplotypecaller`**
 
 - `<sample>.haplotypecaller.filtered.vcf.gz` and `<sample>.haplotypecaller.filtered.vcf.gz.tbi`
-  - `VCF` with Tabix index
+  - `VCF` with tabix index
 
 ##### GATK Joint Germline Variantcalling
 
@@ -265,8 +265,7 @@ If the haplotype called vcfs are not filtered, check that at least one of `--dbs
 
 **Output directory: `results/variantcalling/<sample>/haplotypecaller`**
 
-- `<sample>.haplotypecaller.vcf.gz` and `<sample>.haplotypecaller.vcf.gz.tbi`
-  - `VCF` with Tabix index
+_TODO_
 
 #### GATK Mutect2
 
@@ -281,7 +280,7 @@ For a tumor-only sample or tumor/normal pair:
 Files created:
 
 - `{sample,tumorsample_vs_normalsample}.mutect2.vcf.gz` and `{sample,tumorsample_vs_normalsample}.mutect2.vcf.gz.tbi`
-  - unfiltered (raw) Mutect2 calls `VCF` with Tabix index
+  - unfiltered (raw) Mutect2 calls `VCF` with tabix index
 - `{sample,tumorsample_vs_normalsample}.mutect2.vcf.gz.stats`
   - a stats file generated during calling of raw variants (needed for filtering)
 - `{sample,tumorsample_vs_normalsample}.mutect2.contamination.table`
@@ -293,7 +292,7 @@ Files created:
 - `{sample,tumorsample,normalsample}.mutect2.pileupsummaries.table`
   - tabulates pileup metrics for inferring contamination
 - `{sample,tumorsample_vs_normalsample}.mutect2.filtered.vcf.gz` and `{sample,tumorsample_vs_normalsample}.mutect2.filtered.vcf.gz.tbi`
-  - filtered Mutect2 calls `VCF` with Tabix index based on the probability that a variant is somatic
+  - filtered Mutect2 calls `VCF` with tabix index based on the probability that a variant is somatic
 - `{sample,tumorsample_vs_normalsample}.mutect2.filtered.vcf.gz.filteringStats.tsv`
   - a stats file generated during the filtering of Mutect2 called variants
 
@@ -319,18 +318,18 @@ For single samples (normal-only or tumor-only):
 **Output directory: `results/variantcalling/<sample>/strelka`**
 
 - `<sample>.strelka.genome.vcf.gz` and `<sample>.strelka.genome.vcf.gz.tbi`
-  - genome `VCF` with Tabix index
+  - genome `VCF` with tabix index
 - `<sample>.strelka.variants.vcf.gz` and `<sample>.strelka.variants.vcf.gz.tbi`
-  - `VCF` with Tabix index with all potential variant loci across the sample. Note this file includes non-variant loci if they have a non-trivial level of variant evidence or contain one or more alleles for which genotyping has been forced.
+  - `VCF` with tabix index with all potential variant loci across the sample. Note this file includes non-variant loci if they have a non-trivial level of variant evidence or contain one or more alleles for which genotyping has been forced.
 
 For a Tumor/Normal pair:
 
 **Output directory: `results/variantcalling/<tumorsample_vs_normalsample>/strelka`**
 
 - `<tumorsample_vs_normalsample>.strelka.somatic_indels.vcf.gz` and `<tumorsample_vs_normalsample>.strelka.somatic_indels.vcf.gz.tbi`
-  - `VCF` with Tabix index with all somatic indels inferred in the tumor sample.
+  - `VCF` with tabix index with all somatic indels inferred in the tumor sample.
 - `<tumorsample_vs_normalsample>.strelka.somatic_snvs.vcf.gz` and `<tumorsample_vs_normalsample>.strelka.somatic_snvs.vcf.gz.tbi`
-  - `VCF` with Tabix index with all somatic SNVs inferred in the tumor sample.
+  - `VCF` with tabix index with all somatic SNVs inferred in the tumor sample.
 
 ### Structural Variants
 
@@ -345,23 +344,23 @@ For normal samples:
 **Output directory: `results/variantcalling/<sample>/manta`**
 
 - `<sample>.manta.diploid_sv.vcf.gz` and `<sample>.manta.diploid_sv.vcf.gz.tbi`
-  - `VCF` with Tabix index containing SVs and indels scored and genotyped under a diploid model for the sample.
+  - `VCF` with tabix index containing SVs and indels scored and genotyped under a diploid model for the sample.
 
 For a tumor-only samples:
 
 **Output directory: `results/variantcalling/<sample>/manta`**
 
 - `<sample>.manta.tumor_sv.vcf.gz` and `<sample>.manta.tumor_sv.vcf.gz.tbi`
-  - `VCF` with Tabix index containing a subset of the candidateSV.vcf.gz file after removing redundant candidates and small indels less than the minimum scored variant size (50 by default). The SVs are not scored, but include additional details: (1) paired and split read supporting evidence counts for each allele (2) a subset of the filters from the scored tumor-normal model are applied to the single tumor case to improve precision.
+  - `VCF` with tabix index containing a subset of the candidateSV.vcf.gz file after removing redundant candidates and small indels less than the minimum scored variant size (50 by default). The SVs are not scored, but include additional details: (1) paired and split read supporting evidence counts for each allele (2) a subset of the filters from the scored tumor-normal model are applied to the single tumor case to improve precision.
 
 For a tumor/normal pair:
 
 **Output directory: `results/variantcalling/<tumorsample_vs_normalsample>/manta`**
 
 - `<tumorsample_vs_normalsample>.manta.diploid_sv.vcf.gz` and `<tumorsample_vs_normalsample>.manta.diploid_sv.vcf.gz.tbi`
-  - `VCF` with Tabix index containing SVs and indels scored and genotyped under a diploid model for the sample. In the case of a tumor/normal subtraction, the scores in this file do not reflect any information from the tumor sample.
+  - `VCF` with tabix index containing SVs and indels scored and genotyped under a diploid model for the sample. In the case of a tumor/normal subtraction, the scores in this file do not reflect any information from the tumor sample.
 - `<tumorsample_vs_normalsample>.manta.somatic_sv.vcf.gz` and `<tumorsample_vs_normalsample>.manta.somatic_sv.vcf.gz.tbi`
-  - `VCF` with Tabix index containing SVs and indels scored under a somatic variant model.
+  - `VCF` with tabix index containing SVs and indels scored under a somatic variant model.
 
 #### TIDDIT
 
@@ -372,7 +371,7 @@ For normal-only and tumor-only samples:
 **Output directory: `results/variantcalling/<sample>/tiddit`**
 
 - `<sample>.tiddit.vcf.gz` and `<sample>.tiddit.vcf.gz.tbi`
-  - `VCF` with Tabix index containing SV calls
+  - `VCF` with tabix index containing SV calls
 - `<sample>.tiddit.ploidies.tab`
   - tab file describing the estimated ploidy and coverage across each contig
 
@@ -381,9 +380,9 @@ For tumor/normal paired samples:
 **Output directory: `results/variantcalling/<tumorsample_vs_normal_sample>/tiddit`**
 
 - `<tumorsample_vs_normalsample>.tiddit.normal.vcf.gz` and `<tumorsample_vs_normalsample>.tiddit.normal.vcf.gz.tbi`
-  - `VCF` with Tabix index containing SV calls
+  - `VCF` with tabix index containing SV calls
 - `<tumorsample_vs_normalsample>.tiddit.tumor.vcf.gz` and `<tumorsample_vs_normalsample>.tiddit.tumor.vcf.gz.tbi`
-  - `VCF` with Tabix index containing SV calls
+  - `VCF` with tabix index containing SV calls
 - `<tumorsample_vs_normalsample>_sv_merge.tiddit.vcf.gz` and `<tumorsample_vs_normalsample>_sv_merge.tiddit.vcf.gz.tbi`
   - merged tumor/normal `VCF` with tabix index
 - `<tumorsample_vs_normalsample>.tiddit.ploidies.tab`
@@ -393,14 +392,13 @@ For tumor/normal paired samples:
 
 #### ASCAT
 
-[ASCAT](https://github.com/Crick-CancerGenomics/ascat) is a software for performing allele-specific copy number analysis of tumor samples and for estimating tumor ploidy and purity (normal contamination).
+[ASCAT](https://github.com/VanLoo-lab/ascat) is a software for performing allele-specific copy number analysis of tumor samples and for estimating tumor ploidy and purity (normal contamination).
 It infers tumor purity and ploidy and calculates whole-genome allele-specific copy number profiles.
-`ASCAT` is written in `R` and available here: [github.com/Crick-CancerGenomics/ascat](https://github.com/Crick-CancerGenomics/ascat).
 The `ASCAT` process gives several images as output, described in detail in this [book chapter](http://www.ncbi.nlm.nih.gov/pubmed/22130873).
 
 For a tumor/normal pair:
 
-**Output directory: `results/variantcalling/<tumorsample_vs_normalsample>/ASCAT`**
+**Output directory: `results/variantcalling/<tumorsample_vs_normalsample>/ascat`**
 
 - `[TUMORSAMPLE].aberrationreliability.png`
   - Image with information about aberration reliability
@@ -498,7 +496,7 @@ For all samples:
 **Output directory: `results/annotation/{sample,tumorsample_vs_normalsample}`**
 
 - `{sample,tumorsample_vs_normalsample}_snpEff.ann.vcf.gz` and `{sample,tumorsample_vs_normalsample}_snpEff.ann.vcf.gz.tbi`
-  - `VCF` with Tabix index
+  - `VCF` with tabix index
 
 For further reading and documentation see the [snpEff manual](http://snpeff.sourceforge.net/SnpEff_manual.html#outputSummary)
 
@@ -526,7 +524,7 @@ For all samples:
 **Output directory: `results/annotation/{sample,tumorsample_vs_normalsample}`**
 
 - `VariantCaller_Sample_VEP.ann.vcf.gz` and `VariantCaller_Sample_VEP.ann.vcf.gz.tbi`
-  - `VCF` with Tabix index
+  - `VCF` with tabix index
 
 For further reading and documentation see the [VEP manual](https://www.ensembl.org/info/docs/tools/vep/index.html)
 
