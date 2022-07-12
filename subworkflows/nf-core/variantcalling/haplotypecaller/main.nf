@@ -21,6 +21,7 @@ workflow RUN_HAPLOTYPECALLER {
 
     main:
 
+    intervals_bed_combined.dump(tag:"int")
     ch_versions = Channel.empty()
     filtered_vcf = Channel.empty()
 
@@ -31,6 +32,36 @@ workflow RUN_HAPLOTYPECALLER {
         dict,
         dbsnp,
         dbsnp_tbi)
+
+    // Figure out if using intervals or no_intervals
+    HAPLOTYPECALLER.out.vcf.branch{
+            intervals:    it[0].num_intervals > 1
+            no_intervals: it[0].num_intervals <= 1
+        }.set{haplotypecaller_vcf_branch}
+
+    HAPLOTYPECALLER.out.tbi.branch{
+            intervals:    it[0].num_intervals > 1
+            no_intervals: it[0].num_intervals <= 1
+        }.set{haplotypecaller_tbi_branch}
+
+    // Only when using intervals
+    MERGE_HAPLOTYPECALLER(
+        haplotypecaller_vcf_branch.intervals
+            .map{ meta, vcf ->
+
+                new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, sex:meta.sex, id:meta.sample, num_intervals:meta.num_intervals]
+
+                [groupKey(new_meta, new_meta.num_intervals), vcf]
+            }.groupTuple(),
+        dict)
+
+    haplotypecaller_vcf = Channel.empty().mix(
+        MERGE_HAPLOTYPECALLER.out.vcf,
+        haplotypecaller_vcf_branch.no_intervals)
+
+    haplotypecaller_tbi = Channel.empty().mix(
+        MERGE_HAPLOTYPECALLER.out.tbi,
+        haplotypecaller_tbi_branch.no_intervals)
 
     if (params.joint_germline) {
         // merge vcf and tbis
@@ -54,57 +85,13 @@ workflow RUN_HAPLOTYPECALLER {
 
         ch_versions = ch_versions.mix(JOINT_GERMLINE.out.versions)
     } else {
-        // Figure out if using intervals or no_intervals
-        HAPLOTYPECALLER.out.vcf.branch{
-                intervals:    it[0].num_intervals > 1
-                no_intervals: it[0].num_intervals <= 1
-            }.set{haplotypecaller_vcf_branch}
-
-        HAPLOTYPECALLER.out.tbi.branch{
-                intervals:    it[0].num_intervals > 1
-                no_intervals: it[0].num_intervals <= 1
-            }.set{haplotypecaller_tbi_branch}
-
-
-        // Only when using intervals
-        MERGE_HAPLOTYPECALLER(
-            haplotypecaller_vcf_branch.intervals
-                .map{ meta, vcf ->
-
-                    new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals]
-
-                    [groupKey(new_meta, new_meta.num_intervals), vcf]
-                }.groupTuple(),
-            dict)
-
-        haplotypecaller_vcf = Channel.empty().mix(
-            MERGE_HAPLOTYPECALLER.out.vcf,
-            haplotypecaller_vcf_branch.no_intervals)
-
-        haplotypecaller_tbi = Channel.empty().mix(
-            MERGE_HAPLOTYPECALLER.out.tbi,
-            haplotypecaller_tbi_branch.no_intervals)
-
-
-        //Scatter/gather on WGS, on targeted data run all intervals at once to avoid  "A USER ERROR has occurred: Bad input: VCF contains no variants or no variants with INFO score key "CNN_1D"" which happens on small-ish regions frequently
-        if(params.wes){
-            single_sample_in = Channel.empty().mix(haplotypecaller_vcf.join(haplotypecaller_tbi).combine(intervals_bed_combined).map{
-                meta, vcf, tbi, intervals ->
-                [[id:meta.id, patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, num_intervals:1 ],
-                vcf, tbi, intervals]
-            })
-        }else{
-            single_sample_in = Channel.empty().mix(HAPLOTYPECALLER.out.vcf.join(HAPLOTYPECALLER.out.tbi).join(cram).map{ meta, vcf, tbi, cram, crai, intervals ->
-                [meta, vcf, tbi, intervals]
-            })
-        }
-
-        SINGLE_SAMPLE(single_sample_in,
+        SINGLE_SAMPLE(haplotypecaller_vcf.join(haplotypecaller_tbi),
                         fasta,
                         fasta_fai,
                         dict,
-                        known_sites_indels,
-                        known_sites_indels_tbi)
+                        intervals_bed_combined,
+                        known_sites,
+                        known_sites_tbi)
 
         filtered_vcf = SINGLE_SAMPLE.out.filtered_vcf
         ch_versions = ch_versions.mix(SINGLE_SAMPLE.out.versions)

@@ -28,7 +28,7 @@ workflow GATK_JOINT_GERMLINE_VARIANT_CALLING {
 
     gendb_input = input.map{
         meta, gvcf, tbi, intervals->
-            new_meta = [id: meta.num_intervals > 1 ? "joint variant calling" : "no_intervals",
+            new_meta = [id: meta.num_intervals > 1 ? "joint_variant_calling" : "no_intervals",
                         intervals_name: meta.intervals_name,
                         num_intervals: meta.num_intervals
                        ]
@@ -37,6 +37,7 @@ workflow GATK_JOINT_GERMLINE_VARIANT_CALLING {
             interval_file = new_meta.num_intervals > 1 ? intervals : params.intervals
             [ new_meta, gvcf, tbi, interval_file, [], [] ] }
 
+    gendb_input.dump(tag:"in")
     //
     //Convert all sample vcfs into a genomicsdb workspace using genomicsdbimport.
     //
