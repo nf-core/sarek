@@ -38,7 +38,7 @@ workflow RUN_MANTA_TUMORONLY {
     MERGE_MANTA_SMALL_INDELS(
         manta_small_indels_vcf.intervals.map{ meta, vcf ->
 
-                [groupKey([patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals],
+                [groupKey([patient:meta.patient, sample:meta.sample, status:meta.status, sex:meta.sex, id:meta.sample, num_intervals:meta.num_intervals],
                         meta.num_intervals),
                 vcf]
 
@@ -48,7 +48,7 @@ workflow RUN_MANTA_TUMORONLY {
     MERGE_MANTA_SV(
         manta_candidate_sv_vcf.intervals.map{ meta, vcf ->
 
-                [groupKey([patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals],
+                [groupKey([patient:meta.patient, sample:meta.sample, status:meta.status, sex:meta.sex, id:meta.sample, num_intervals:meta.num_intervals],
                         meta.num_intervals),
                 vcf]
 
@@ -58,7 +58,7 @@ workflow RUN_MANTA_TUMORONLY {
     MERGE_MANTA_TUMOR(
         manta_tumor_sv_vcf.intervals.map{ meta, vcf ->
 
-                [groupKey( [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals],
+                [groupKey( [patient:meta.patient, sample:meta.sample, status:meta.status, sex:meta.sex, id:meta.sample, num_intervals:meta.num_intervals],
                         meta.num_intervals),
                 vcf]
 
@@ -71,7 +71,7 @@ workflow RUN_MANTA_TUMORONLY {
         MERGE_MANTA_TUMOR.out.vcf,
         manta_tumor_sv_vcf.no_intervals
     ).map{ meta, vcf ->
-        [[patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals, variantcaller:"manta"],
+        [[patient:meta.patient, sample:meta.sample, status:meta.status, sex:meta.sex, id:meta.sample, num_intervals:meta.num_intervals, variantcaller:"manta"],
             vcf]
     }
 

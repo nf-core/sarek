@@ -29,7 +29,7 @@ workflow RUN_STRELKA_SINGLE {
     MERGE_STRELKA(
         strelka_vcf.intervals
             .map{ meta, vcf ->
-                new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals]
+                new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, sex:meta.sex, id:meta.sample, num_intervals:meta.num_intervals]
 
                 [groupKey(new_meta, meta.num_intervals), vcf]
             }.groupTuple(),
@@ -40,7 +40,7 @@ workflow RUN_STRELKA_SINGLE {
         strelka_genome_vcf.intervals
             .map{ meta, vcf ->
 
-                [groupKey([patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals],
+                [groupKey([patient:meta.patient, sample:meta.sample, status:meta.status, sex:meta.sex, id:meta.sample, num_intervals:meta.num_intervals],
                         meta.num_intervals),
                 vcf]
 
@@ -54,7 +54,7 @@ workflow RUN_STRELKA_SINGLE {
                     MERGE_STRELKA.out.vcf,
                     strelka_vcf.no_intervals)
                 .map{ meta, vcf ->
-                    [[patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals, variantcaller:"strelka"], vcf]
+                    [[patient:meta.patient, sample:meta.sample, status:meta.status, sex:meta.sex, id:meta.sample, num_intervals:meta.num_intervals, variantcaller:"strelka"], vcf]
                 }
 
     ch_versions = ch_versions.mix(MERGE_STRELKA.out.versions)

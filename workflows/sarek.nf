@@ -11,8 +11,10 @@ WorkflowSarek.initialise(params, log)
 
 // Check input path parameters to see if they exist
 def checkPathParamList = [
-    params.ac_loci,
-    params.ac_loci_gc,
+    params.ascat_alleles,
+    params.ascat_loci,
+    params.ascat_loci_gc,
+    params.ascat_loci_rt,
     params.bwa,
     params.bwamem2,
     params.chr_dir,
@@ -52,12 +54,36 @@ for (param in checkPathParamList) if (param) file(param, checkIfExists: true)
 // Set input, can either be from --input or from automatic retrieval in WorkflowSarek.groovy
 ch_input_sample = extract_csv(file(params.input, checkIfExists: true))
 
+// Fails when wrongfull extension for intervals file
 if (params.wes && !params.step == 'annotate') {
     if (params.intervals && !params.intervals.endsWith("bed")) exit 1, "Target file specified with `--intervals` must be in BED format"
 } else {
     if (params.intervals && !params.intervals.endsWith("bed") && !params.intervals.endsWith("interval_list")) exit 1, "Interval file must end with .bed or .interval_list"
 }
 
+// Fails or warns when missing files or params for ascat
+if(params.tools && params.tools.contains('ascat')){
+    if(!params.ascat_alleles){
+        log.error "No allele files were provided for running ASCAT. Please provide a zip folder with allele files."
+        exit 1
+    }
+    if(!params.ascat_loci){
+        log.error "No loci files were provided for running ASCAT. Please provide a zip folder with loci files."
+        exit 1
+    }
+    if(params.ascat_genome!="hg19" && params.ascat_genome!="hg38"){
+        log.error "Parameter ascat_genome must be either hg19 or hg38."
+        exit 1
+    }
+    if(!params.ascat_loci_gc && !params.ascat_loci_rt){
+        log.warn("No LogRCorrection performed in ASCAT. For LogRCorrection to run, please provide either loci gc files or both loci gc files and loci rt files.")
+    }
+    if(params.wes){
+        log.warn("Default reference files not suited for running ASCAT on WES data. It's recommended to use the reference files provided here: https://github.com/Wedge-lab/battenberg#required-reference-files")
+    }
+}
+
+// Warns when missing files or params for mutect2
 if(params.tools && params.tools.contains('mutect2')){
     if(!params.pon){
         log.warn("No Panel-of-normal was specified for Mutect2.\nIt is highly recommended to use one: https://gatk.broadinstitute.org/hc/en-us/articles/5358911630107-Mutect2\nFor more information on how to create one: https://gatk.broadinstitute.org/hc/en-us/articles/5358921041947-CreateSomaticPanelOfNormals-BETA-")
@@ -70,8 +96,10 @@ if(params.tools && params.tools.contains('mutect2')){
     }
 }
 
+// Fails when missing resources for baserecalibrator
+// Warns when missing resources for haplotypecaller
 if(!params.dbsnp && !params.known_indels){
-    if(!params.skip_tools || params.skip_tools && !params.skip_tools.contains('baserecalibrator')){
+    if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration', 'recalibrate'] && (!params.skip_tools || (params.skip_tools && !params.skip_tools.contains('baserecalibrator')))){
         log.error "Base quality score recalibration requires at least one resource file. Please provide at least one of `--dbsnp` or `--known_indels`\nYou can skip this step in the workflow by adding `--skip_tools baserecalibrator` to the command."
         exit 1
     }
@@ -80,14 +108,20 @@ if(!params.dbsnp && !params.known_indels){
     }
 }
 
-if (params.step == "variant_calling" && !params.tools) {
-    log.error "Please specify at least one tool when using `--step variant_calling`.\nhttps://nf-co.re/sarek/parameters#tools"
+// Fails when missing tools for variant_calling or annotate
+if ((params.step == 'variant_calling' || params.step == 'annotate') && !params.tools) {
+    log.error "Please specify at least one tool when using `--step ${params.step}`.\nhttps://nf-co.re/sarek/parameters#tools"
     exit 1
 }
 
-if (params.step == "annotation" && !params.tools) {
-    log.error "Please specify at least one tool when using `--step annotation`.\nhttps://nf-co.re/sarek/parameters#tools"
-    exit 1
+// Fails when missing sex information for CNV tools
+if (params.tools && (params.tools.contains('ascat') || params.tools.contains('controlfreec'))) {
+    ch_input_sample.map{
+        if (it[0].sex == 'NA' ) {
+            log.error "Please specify sex information for each sample in your samplesheet when using '--tools' with 'ascat' or 'controlfreec'.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
+            exit 1
+        }
+    }
 }
 
 // Save AWS IGenomes file containing annotation version
@@ -104,18 +138,21 @@ if (anno_readme && file(anno_readme).exists()) {
 */
 
 // Initialize file channels based on params, defined in the params.genomes[params.genome] scope
+ascat_alleles      = params.ascat_alleles      ? Channel.fromPath(params.ascat_alleles).collect()            : Channel.empty()
+ascat_loci         = params.ascat_loci         ? Channel.fromPath(params.ascat_loci).collect()               : Channel.empty()
+ascat_loci_gc      = params.ascat_loci_gc      ? Channel.fromPath(params.ascat_loci_gc).collect()            : Channel.value([])
+ascat_loci_rt      = params.ascat_loci_rt      ? Channel.fromPath(params.ascat_loci_rt).collect()            : Channel.value([])
 chr_dir            = params.chr_dir            ? Channel.fromPath(params.chr_dir).collect()                  : Channel.value([])
 dbsnp              = params.dbsnp              ? Channel.fromPath(params.dbsnp).collect()                    : Channel.value([])
 fasta              = params.fasta              ? Channel.fromPath(params.fasta).collect()                    : Channel.empty()
 fasta_fai          = params.fasta_fai          ? Channel.fromPath(params.fasta_fai).collect()                : Channel.empty()
 germline_resource  = params.germline_resource  ? Channel.fromPath(params.germline_resource).collect()        : Channel.value([]) //Mutec2 does not require a germline resource, so set to optional input
 known_indels       = params.known_indels       ? Channel.fromPath(params.known_indels).collect()             : Channel.value([])
-loci               = params.ac_loci            ? Channel.fromPath(params.ac_loci).collect()                  : Channel.value([])
-loci_gc            = params.ac_loci_gc         ? Channel.fromPath(params.ac_loci_gc).collect()               : Channel.value([])
 mappability        = params.mappability        ? Channel.fromPath(params.mappability).collect()              : Channel.value([])
 pon                = params.pon                ? Channel.fromPath(params.pon).collect()                      : Channel.value([]) //PON is optional for Mutect2 (but highly recommended)
 
 // Initialize value channels based on params, defined in the params.genomes[params.genome] scope
+ascat_genome       = params.ascat_genome       ?: Channel.empty()
 snpeff_db          = params.snpeff_db          ?: Channel.empty()
 vep_cache_version  = params.vep_cache_version  ?: Channel.empty()
 vep_genome         = params.vep_genome         ?: Channel.empty()
@@ -256,6 +293,10 @@ workflow SAREK {
 
     // Build indices if needed
     PREPARE_GENOME(
+        ascat_alleles,
+        ascat_loci,
+        ascat_loci_gc,
+        ascat_loci_rt,
         chr_dir,
         dbsnp,
         fasta,
@@ -265,17 +306,21 @@ workflow SAREK {
         pon)
 
     // Gather built indices or get them from the params
-    bwa                    = params.fasta                   ? params.bwa                   ? Channel.fromPath(params.bwa).collect()                   : PREPARE_GENOME.out.bwa                   : []
+    allele_files           = PREPARE_GENOME.out.allele_files
+    bwa                    = params.fasta                   ? params.bwa                        ? Channel.fromPath(params.bwa).collect()                   : PREPARE_GENOME.out.bwa                   : []
     chr_files              = PREPARE_GENOME.out.chr_files
-    bwamem2                = params.fasta                   ? params.bwamem2               ? Channel.fromPath(params.bwamem2).collect()               : PREPARE_GENOME.out.bwamem2               : []
-    dragmap                = params.fasta                   ? params.dragmap               ? Channel.fromPath(params.dragmap).collect()               : PREPARE_GENOME.out.hashtable             : []
-    dict                   = params.fasta                   ? params.dict                  ? Channel.fromPath(params.dict).collect()                  : PREPARE_GENOME.out.dict                  : []
-    fasta_fai              = params.fasta                   ? params.fasta_fai             ? Channel.fromPath(params.fasta_fai).collect()             : PREPARE_GENOME.out.fasta_fai             : []
-    dbsnp_tbi              = params.dbsnp                   ? params.dbsnp_tbi             ? Channel.fromPath(params.dbsnp_tbi).collect()             : PREPARE_GENOME.out.dbsnp_tbi             : Channel.value([])
-    germline_resource_tbi  = params.germline_resource       ? params.germline_resource_tbi ? Channel.fromPath(params.germline_resource_tbi).collect() : PREPARE_GENOME.out.germline_resource_tbi : []
-    known_indels_tbi       = params.known_indels            ? params.known_indels_tbi      ? Channel.fromPath(params.known_indels_tbi).collect()      : PREPARE_GENOME.out.known_indels_tbi      : Channel.value([])
-    pon_tbi                = params.pon                     ? params.pon_tbi               ? Channel.fromPath(params.pon_tbi).collect()               : PREPARE_GENOME.out.pon_tbi               : []
+    bwamem2                = params.fasta                   ? params.bwamem2                    ? Channel.fromPath(params.bwamem2).collect()               : PREPARE_GENOME.out.bwamem2               : []
+    dragmap                = params.fasta                   ? params.dragmap                    ? Channel.fromPath(params.dragmap).collect()               : PREPARE_GENOME.out.hashtable             : []
+    dict                   = params.fasta                   ? params.dict                       ? Channel.fromPath(params.dict).collect()                  : PREPARE_GENOME.out.dict                  : []
+    fasta_fai              = params.fasta                   ? params.fasta_fai                  ? Channel.fromPath(params.fasta_fai).collect()             : PREPARE_GENOME.out.fasta_fai             : []
+    dbsnp_tbi              = params.dbsnp                   ? params.dbsnp_tbi                  ? Channel.fromPath(params.dbsnp_tbi).collect()             : PREPARE_GENOME.out.dbsnp_tbi             : Channel.value([])
+    gc_file                = PREPARE_GENOME.out.gc_file
+    germline_resource_tbi  = params.germline_resource       ? params.germline_resource_tbi      ? Channel.fromPath(params.germline_resource_tbi).collect() : PREPARE_GENOME.out.germline_resource_tbi : []
+    known_indels_tbi       = params.known_indels            ? params.known_indels_tbi           ? Channel.fromPath(params.known_indels_tbi).collect()      : PREPARE_GENOME.out.known_indels_tbi      : Channel.value([])
+    loci_files             = PREPARE_GENOME.out.loci_files
+    pon_tbi                = params.pon                     ? params.pon_tbi                    ? Channel.fromPath(params.pon_tbi).collect()               : PREPARE_GENOME.out.pon_tbi               : []
     msisensorpro_scan      = PREPARE_GENOME.out.msisensorpro_scan
+    rt_file                = PREPARE_GENOME.out.rt_file
 
     // Gather index for mapping given the chosen aligner
     ch_map_index = params.aligner == "bwa-mem" ? bwa :
@@ -291,7 +336,7 @@ workflow SAREK {
     PREPARE_INTERVALS(fasta_fai)
 
     // Intervals for speed up preprocessing/variant calling by spread/gather
-    intervals_bed_combined      = params.no_intervals ? [] : PREPARE_INTERVALS.out.intervals_bed_combined  // [interval.bed] all intervals in one file
+    intervals_bed_combined      = params.no_intervals ? Channel.value([]) : PREPARE_INTERVALS.out.intervals_bed_combined  // [interval.bed] all intervals in one file
     intervals_for_preprocessing = params.wes ? intervals_bed_combined : []      // For QC during preprocessing, we don't need any intervals (MOSDEPTH doesn't take them for WGS)
 
     intervals                   = PREPARE_INTERVALS.out.intervals_bed        // [interval, num_intervals] multiple interval.bed files, divided by useful intervals for scatter/gather
@@ -363,7 +408,7 @@ workflow SAREK {
                 ch_reads_to_map = FASTP.out.reads.map{ key, reads ->
 
                         read_files = reads.sort{ a,b -> a.getName().tokenize('.')[0] <=> b.getName().tokenize('.')[0] }.collate(2)
-                        [[patient: key.patient, sample:key.sample, gender:key.gender, status:key.status, id:key.id, numLanes:key.numLanes, read_group:key.read_group, data_type:key.data_type, size:read_files.size()],
+                        [[patient: key.patient, sample:key.sample, sex:key.sex, status:key.status, id:key.id, numLanes:key.numLanes, read_group:key.read_group, data_type:key.data_type, size:read_files.size()],
                         read_files]
                     }.transpose()
             }else{
@@ -381,7 +426,7 @@ workflow SAREK {
             // update ID when no multiple lanes or splitted fastqs
             new_id = meta.size * meta.numLanes == 1 ? meta.sample : meta.id
 
-            [[patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:new_id, numLanes:meta.numLanes, read_group:meta.read_group, data_type:meta.data_type, size:meta.size],
+            [[patient:meta.patient, sample:meta.sample, sex:meta.sex, status:meta.status, id:new_id, numLanes:meta.numLanes, read_group:meta.read_group, data_type:meta.data_type, size:meta.size],
             reads]
         }
 
@@ -398,7 +443,7 @@ workflow SAREK {
             //   read_group: Now in the BAM header
             //     numLanes: Was only needed for mapping
             //         size: Was only needed for mapping
-            new_meta = [patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:meta.sample, data_type:"bam"]
+            new_meta = [patient:meta.patient, sample:meta.sample, sex:meta.sex, status:meta.status, id:meta.sample, data_type:"bam"]
             // Use groupKey to make sure that the correct group can advance as soon as it is complete
             // and not stall the workflow until all reads from all channels are mapped
             [ groupKey(new_meta, numLanes * size), bam]
@@ -522,7 +567,7 @@ workflow SAREK {
             ch_cram_markduplicates_spark,
             ch_cram_no_markduplicates_restart).map{ meta, cram, crai ->
                         //Make sure correct data types are carried through
-                        [[patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:meta.id, data_type:"cram"], cram, crai]
+                        [[patient:meta.patient, sample:meta.sample, sex:meta.sex, status:meta.status, id:meta.id, data_type:"cram"], cram, crai]
                     }
 
         // CSV should be written for the file actually out out, either CRAM or BAM
@@ -779,7 +824,7 @@ workflow SAREK {
                 meta.patient    = normal[0]
                 meta.normal_id  = normal[1].sample
                 meta.tumor_id   = tumor[1].sample
-                meta.gender     = normal[1].gender
+                meta.sex        = normal[1].sex
                 meta.id         = "${meta.tumor_id}_vs_${meta.normal_id}".toString()
 
                 [meta, normal[2], normal[3], tumor[2], tumor[3]]
@@ -797,7 +842,8 @@ workflow SAREK {
             fasta_fai,
             intervals,
             intervals_bed_gz_tbi,
-            intervals_bed_combined,
+            intervals_bed_combined, // [] if no_intervals, else interval_bed_combined.bed
+            PREPARE_INTERVALS.out.intervals_bed_combined, // no_intervals.bed if no intervals, else interval_bed_combined.bed; Channel operations possible
             known_sites,
             known_sites_tbi)
             // params.joint_germline)
@@ -842,7 +888,11 @@ workflow SAREK {
             mappability,
             msisensorpro_scan,
             pon,
-            pon_tbi
+            pon_tbi,
+            allele_files,
+            loci_files,
+            gc_file,
+            rt_file
         )
 
         // Gather vcf files for annotation and QC
@@ -946,14 +996,43 @@ workflow.onComplete {
 def extract_csv(csv_file) {
 
     // check that the sample sheet is not 1 line or less, because it'll skip all subsequent checks if so.
-    new File(csv_file.toString()).withReader('UTF-8') { reader ->
+    file(csv_file).withReader('UTF-8') { reader ->
         def line, numberOfLinesInSampleSheet = 0;
         while ((line = reader.readLine()) != null) {numberOfLinesInSampleSheet++}
         if (numberOfLinesInSampleSheet < 2) {
-            log.error "Sample sheet had less than two lines. The sample sheet must be a csv file with a header, so at least two lines."
+            log.error "Samplesheet had less than two lines. The sample sheet must be a csv file with a header, so at least two lines."
             System.exit(1)
         }
     }
+
+    // Additional check of sample sheet:
+    // 1. If params.step == "mapping", then each row should specify a lane and the same combination of patient, sample and lane shouldn't be present in different rows.
+    // 2. The same sample shouldn't be listed for different patients.
+    def patient_sample_lane_combinations_in_samplesheet = []
+    def sample2patient = [:]
+
+    Channel.from(csv_file).splitCsv(header: true)
+        .map{ row ->
+            if (params.step == "mapping") {
+                if ( !row.lane ) {  // This also handles the case where the lane is left as an empty string
+                    log.error('The sample sheet should specify a lane for patient "' + row.patient.toString() + '" and sample "' + row.sample.toString() + '".')
+                    System.exit(1)
+                }
+                def patient_sample_lane = [row.patient.toString(), row.sample.toString(), row.lane.toString()]
+                if (patient_sample_lane in patient_sample_lane_combinations_in_samplesheet) {
+                    log.error('The patient-sample-lane combination "' + row.patient.toString() + '", "' + row.sample.toString() + '", and "' + row.lane.toString() + '" is present multiple times in the sample sheet.')
+                    System.exit(1)
+                } else {
+                    patient_sample_lane_combinations_in_samplesheet.add(patient_sample_lane)
+                }
+            }
+            if (!sample2patient.containsKey(row.sample.toString())) {
+                sample2patient[row.sample.toString()] = row.patient.toString()
+            } else if (sample2patient[row.sample.toString()] !== row.patient.toString()) {
+                log.error('The sample "' + row.sample.toString() + '" is registered for both patient "' + row.patient.toString() + '" and "' + sample2patient[row.sample.toString()] + '" in the sample sheet.')
+                System.exit(1)
+            }
+        }
 
     Channel.from(csv_file).splitCsv(header: true)
         //Retrieves number of lanes by grouping together by patient and sample and counting how many entries there are for this combination
@@ -978,10 +1057,10 @@ def extract_csv(csv_file) {
         if (row.patient) meta.patient = row.patient.toString()
         if (row.sample)  meta.sample  = row.sample.toString()
 
-        // If no gender specified, gender is not considered
-        // gender is only mandatory for somatic CNV
-        if (row.gender) meta.gender = row.gender.toString()
-        else meta.gender = "NA"
+        // If no sex specified, sex is not considered
+        // sex is only mandatory for somatic CNV
+        if (row.sex) meta.sex = row.sex.toString()
+        else meta.sex = 'NA'
 
         // If no status specified, sample is assumed normal
         if (row.status) meta.status = row.status.toInteger()
@@ -1000,7 +1079,7 @@ def extract_csv(csv_file) {
 
             meta.numLanes   = numLanes.toInteger()
             meta.read_group = read_group.toString()
-            meta.data_type  = "fastq"
+            meta.data_type  = 'fastq'
 
             meta.size       = 1 // default number of splitted fastq
 
@@ -1023,7 +1102,7 @@ def extract_csv(csv_file) {
 
             meta.numLanes   = numLanes.toInteger()
             meta.read_group = read_group.toString()
-            meta.data_type  = "bam"
+            meta.data_type  = 'bam'
 
             meta.size       = 1 // default number of splitted fastq
 
@@ -1040,7 +1119,7 @@ def extract_csv(csv_file) {
             def crai  = file(row.crai,  checkIfExists: true)
             def table = file(row.table, checkIfExists: true)
 
-            meta.data_type  = "cram"
+            meta.data_type  = 'cram'
 
             if (!(params.step == 'mapping' || params.step == 'annotate')) return [meta, cram, crai, table]
             else {
@@ -1055,7 +1134,7 @@ def extract_csv(csv_file) {
             def bai   = file(row.bai,   checkIfExists: true)
             def table = file(row.table, checkIfExists: true)
 
-            meta.data_type  = "bam"
+            meta.data_type  = 'bam'
 
             if (!(params.step == 'mapping' || params.step == 'annotate')) return [meta, bam, bai, table]
             else {
@@ -1069,11 +1148,11 @@ def extract_csv(csv_file) {
             def cram = file(row.cram, checkIfExists: true)
             def crai = file(row.crai, checkIfExists: true)
 
-            meta.data_type  = "cram"
+            meta.data_type  = 'cram'
 
             if (!(params.step == 'mapping' || params.step == 'annotate')) return [meta, cram, crai]
             else {
-                log.error "Samplesheet contains bam files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
+                log.error "Samplesheet contains cram files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
                 System.exit(1)
             }
 
@@ -1083,7 +1162,7 @@ def extract_csv(csv_file) {
             def bam = file(row.bam, checkIfExists: true)
             def bai = file(row.bai, checkIfExists: true)
 
-            meta.data_type  = "bam"
+            meta.data_type  = 'bam'
 
             if (!(params.step == 'mapping' || params.step == 'annotate')) return [meta, bam, bai]
             else {
@@ -1096,8 +1175,8 @@ def extract_csv(csv_file) {
             meta.id = meta.sample
             def vcf = file(row.vcf, checkIfExists: true)
 
-            meta.data_type     = "vcf"
-            meta.variantcaller = row.variantcaller ?: ""
+            meta.data_type     = 'vcf'
+            meta.variantcaller = row.variantcaller ?: ''
 
             if (params.step == 'annotate') return [meta, vcf]
             else {

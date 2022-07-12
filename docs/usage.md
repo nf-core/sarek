@@ -50,6 +50,7 @@ Multiple `CSV` files can be specified if the path is enclosed in quotes.
 --input '[path to samplesheet file(s)]'
 ```
 
+<<<<<<< HEAD
 #### Overview: Samplesheet Columns
 
 | Column    | Description                                                                                                                                                                                                                                                                                                                       |
@@ -67,6 +68,23 @@ Multiple `CSV` files can be specified if the path is enclosed in quotes.
 | `crai`    | Full path to CRAM index file                                                                                                                                                                                                                                                                                                      |
 | `table`   | Full path to recalibration table file                                                                                                                                                                                                                                                                                             |
 | `vcf`     | Full path to vcf file                                                                                                                                                                                                                                                                                                             |
+=======
+| Column    | Description                                                                                                                                                                                                                                                                                                     |
+| --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `patient` | **Custom patient ID**; designates the patient/subject; must be unique for each patient, but one patient can have multiple samples (e.g. normal and tumor).                                                                                                                                                      |
+| `sex`     | **Sex chromosomes of the patient**; i.e. XX, XY..., only used for Copy-Number Variation analysis in a tumor/pair<br /> _Optional, Default: `NA`_                                                                                                                                                                |
+| `status`  | **Normal/tumor status of sample**; can be `0` (normal) or `1` (tumor).<br /> _Optional, Default: `0`_                                                                                                                                                                                                           |
+| `sample`  | **Custom sample ID** for each tumor and normal sample; more than one tumor sample for each subject is possible, i.e. a tumor and a relapse; samples can have multiple lanes for which the _same_ ID must be used to merge them later (see also `lane`). Sample IDs must be unique for unique biological samples |
+| `lane`    | Lane ID, used when the `sample` is multiplexed on several lanes. Must be unique for each lane in the same sample (but does not need to be the original lane name), and must contain at least one character <br /> _Required for `--step_mapping`_                                                               |
+| `fastq_1` | Full path to FastQ file for Illumina short reads 1. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                                                                                                                                                      |
+| `fastq_2` | Full path to FastQ file for Illumina short reads 2. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                                                                                                                                                      |
+| `bam`     | Full path to (u)BAM file                                                                                                                                                                                                                                                                                        |
+| `bai`     | Full path to BAM index file                                                                                                                                                                                                                                                                                     |
+| `cram`    | Full path to CRAM file                                                                                                                                                                                                                                                                                          |
+| `crai`    | Full path to CRAM index file                                                                                                                                                                                                                                                                                    |
+| `table`   | Full path to recalibration table file                                                                                                                                                                                                                                                                           |
+| `vcf`     | Full path to vcf file                                                                                                                                                                                                                                                                                           |
+>>>>>>> upstream/dev
 
 An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
 
@@ -106,10 +124,14 @@ patient1,test_sample,3,test_L003.bam
 
 ##### Full samplesheet
 
+<<<<<<< HEAD
 In this example, all possible columns are used. There are 3 lanes for the normal sample, 2 for the tumor sample, 1 for the relapse, including the `gender` and `status` information per patient:
+=======
+In this example, all possible columns are used. There are 3 read groups for the normal sample, 2 for the tumor sample, 1 for the relapse, including the `sex` and `status` information per patient:
+>>>>>>> upstream/dev
 
 ```console
-patient,gender,status,sample,lane,fastq_1,fastq_2
+patient,sex,status,sample,lane,fastq_1,fastq_2
 patient1,XX,0,normal_sample,lane_1,test_L001_1.fastq.gz,test_L001_2.fastq.gz
 patient1,XX,0,normal_sample,lane_2,test_L002_1.fastq.gz,test_L002_2.fastq.gz
 patient1,XX,0,normal_sample,lane_3,test_L003_1.fastq.gz,test_L003_2.fastq.gz
@@ -119,7 +141,7 @@ patient1,XX,1,relapse_sample,lane_1,test3_L001_1.fastq.gz,test3_L001_2.fastq.gz
 ```
 
 ```console
-patient,gender,status,sample,lane,bam
+patient,sex,status,sample,lane,bam
 patient1,XX,0,normal_sample,lane_1,test_L001.bam
 patient1,XX,0,normal_sample,lane_2,test_L002.bam
 patient1,XX,0,normal_sample,lane_3,test_L003.bam
@@ -152,17 +174,17 @@ TODO: when using spark then reads should be name sorted!
 
 ##### Full samplesheet
 
-In this example, all possible columns are used including the `gender` and `status` information per patient:
+In this example, all possible columns are used including the `sex` and `status` information per patient:
 
 ```console
-patient,gender,status,sample,bam,bai
+patient,sex,status,sample,bam,bai
 patient1,XX,0,test_sample,test_mapped.bam,test_mapped.bam.bai
 patient1,XX,1,tumor_sample,test2_mapped.bam,test2_mapped.bam.bai
 patient1,XX,1,relapse_sample,test3_mapped.bam,test3_mapped.bam.bai
 ```
 
 ```console
-patient,gender,status,sample,cram,crai
+patient,sex,status,sample,cram,crai
 patient1,XX,0,normal_sample,test_mapped.cram,test_mapped.cram.crai
 patient1,XX,1,tumor_sample,test2_mapped.cram,test2_mapped.cram.crai
 patient1,XX,1,relapse_sample,test3_mapped.cram,test3_mapped.cram.crai
@@ -188,17 +210,17 @@ The `Sarek`-generated `CSV` file is stored under `results/csv/markduplicates_no_
 
 ##### Full samplesheet
 
-In this example, all possible columns are used including the `gender` and `status` information per patient:
+In this example, all possible columns are used including the `sex` and `status` information per patient:
 
 ```console
-patient,gender,status,sample,bam,bai
+patient,sex,status,sample,bam,bai
 patient1,XX,0,test_sample,test_md.bam,test_md.bam.bai
 patient1,XX,1,tumor_sample,test2_md.bam,test2_md.bam.bai
 patient1,XX,1,relapse_sample,test3_md.bam,test3_md.bam.bai
 ```
 
 ```console
-patient,gender,status,sample,cram,crai
+patient,sex,status,sample,cram,crai
 patient1,XX,0,normal_sample,test_md.cram,test_md.cram.crai
 patient1,XX,1,tumor_sample,test2_md.cram,test2_md.cram.crai
 patient1,XX,1,relapse_sample,test3_md.cram,test3_md.cram.crai
@@ -224,10 +246,10 @@ The `Sarek`-generated `CSV` file is stored under `results/csv/markduplicates.csv
 
 ##### Full samplesheet
 
-In this example, all possible columns are used including the `gender` and `status` information per patient:
+In this example, all possible columns are used including the `sex` and `status` information per patient:
 
 ```console
-patient,gender,status,sample,cram,crai,table
+patient,sex,status,sample,cram,crai,table
 patient1,XX,0,test_sample,test_mapped.cram,test_mapped.cram.crai,test.table
 patient1,XX,1,tumor_sample,test2_mapped.cram,test2_mapped.cram.crai,test2.table
 patient1,XX,1,relapse_sample,test3_mapped.cram,test3_mapped.cram.crai,test3.table
@@ -253,10 +275,10 @@ The `Sarek`-generated `CSV` file is stored under `results/csv/recalibrated.csv` 
 
 ##### Full samplesheet
 
-In this example, all possible columns are used including the `gender` and `status` information per patient:
+In this example, all possible columns are used including the `sex` and `status` information per patient:
 
 ```console
-patient,gender,status,sample,cram,crai
+patient,sex,status,sample,cram,crai
 patient1,XX,0,normal_sample,test_mapped.cram,test_mapped.cram.crai
 patient1,XX,1,tumor_sample,test2_mapped.cram,test2_mapped.cram.crai
 patient1,XX,1,relapse_sample,test3_mapped.cram,test3_mapped.cram.crai
@@ -486,6 +508,21 @@ If you have any questions or issues please send us a message on [Slack](https://
 
 This list is by no means exhaustive and it will depend on the specific analysis you would like to run. This is a suggestion based on the individual docs of the tools specifically for human genomes and a garden-variety sequencing run.
 
+| Tool            | WGS | WES |  Panel | Tumor |  Normal | Somatic |
+| :-------------- | :-: | :-: | :----: | :---: | :-----: | :-----: |
+| Strelka2        |  x  |  x  |   x    |   x   |    x    |    x    |
+| Freebayes       |  x  |  x  |   x    |   x   |    x    |    x    |
+| mutect          |  x  |  x  |   x    |   x   |    -    |    x    |
+| Haplotypecaller |  x  |  x  |   x    |   -   |    x    |    -    |
+| Deepvariant     |  x  |  x  |   x    |   -   |    x    |    -    |
+| cnvkit          |  x  |  x  |   -    |   x   |    x    |    x    |
+| Msisensor       |  x  |  x  |   x    |   x   |    -    |    x    |
+| controlfreec    |  x  |  x  |   x    |   x   |    -    |    x    |
+| ascat           |  x  |  x  |   -    |   -   |    -    |    x    |
+| manta           |  x  |  x  |   x    |   x   |    x    |    x    |
+| tiddit          |  x  |  x  |   x    |   x   |    x    |    x    |
+
+<!---
 Strelka2: WGS, WES, Panel; Tumor, normal, somatic
 Freebayes: WGS, WES, Panel; Tumor,normal, somatic
 mutect: WGS, WES, Panel; Tumor, somatic
@@ -497,6 +534,7 @@ controlfreec: WGS, WES, Panel; Tumor, normal, somatic
 ascat: WGS, WES, Panel; Tumor, normal, somatic
 manta: WGS, WES, Panel; Tumor, normal, somatic
 tiddit: WGS, WES, Panel; Tumor, normal, somatic
+--->
 
 #### How to create a panel-of-normals
 

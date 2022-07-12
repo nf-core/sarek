@@ -50,7 +50,7 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
             //If no interval file provided (0) then add empty list
             intervals_new = num_intervals == 0 ? [] : intervals
 
-            [[patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:meta.sample, data_type:meta.data_type, num_intervals:num_intervals],
+            [[patient:meta.patient, sample:meta.sample, sex:meta.sex, status:meta.status, id:meta.sample, data_type:meta.data_type, num_intervals:num_intervals],
             cram, crai, intervals_new]
         }
 
@@ -62,7 +62,7 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
             bed_new = num_intervals == 0 ? [] : bed_tbi[0]
             tbi_new = num_intervals == 0 ? [] : bed_tbi[1]
 
-            [[patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:meta.sample, data_type:meta.data_type, num_intervals:num_intervals],
+            [[patient:meta.patient, sample:meta.sample, sex:meta.sex, status:meta.status, id:meta.sample, data_type:meta.data_type, num_intervals:num_intervals],
             cram, crai, bed_new, tbi_new]
         }
 
