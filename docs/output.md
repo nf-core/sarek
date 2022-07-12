@@ -377,7 +377,7 @@ For normal-only and tumor-only samples:
 
 For tumor/normal paired samples:
 
-**Output directory: `results/variantcalling/<tumorsample_vs_normal_sample>/tiddit`**
+**Output directory: `results/variantcalling/<tumorsample_vs_normalsample>/tiddit`**
 
 - `<tumorsample_vs_normalsample>.tiddit.normal.vcf.gz` and `<tumorsample_vs_normalsample>.tiddit.normal.vcf.gz.tbi`
   - `VCF` with tabix index containing SV calls
@@ -400,33 +400,29 @@ This is done internally using the software [AlleleCount](https://github.com/canc
 
 For a tumor/normal pair:
 
-<<<<<<< HEAD
 **Output directory: `results/variantcalling/<tumorsample_vs_normalsample>/ascat`**
-=======
-**Output directory: `results/variant_calling/[TUMOR_vs_NORMAL]/ascat`**
->>>>>>> upstream/dev
 
-- `[TUMORSAMPLE_VS_NORMALSAMPLE].tumour.ASPCF.png`
+- `Tumour.ASPCF.png`
   - Image with information about ASPCF
-- `[TUMORSAMPLE_VS_NORMALSAMPLE].before_correction.[TUMORSAMPLE_VS_NORMALSAMPLE].tumour.png`
+- `Before_correction_Tumour.tumour.png`
   - Image with information about raw profile of tumor sample of logR and BAF values
-- `[TUMORSAMPLE_VS_NORMALSAMPLE].before_correction.[TUMORSAMPLE_VS_NORMALSAMPLE].germline.png`
+- `Before_correction_Tumour.germline.png`
   - Image with information about raw profile of normal sample of logR and BAF values
-- `[TUMORSAMPLE_VS_NORMALSAMPLE].after_correction_gc_rt.[TUMORSAMPLE_VS_NORMALSAMPLE].tumour.png`
+- `After_correction_GC_Tumour.tumour.png`
   - Image with information about GC and RT corrected logR and BAF values of tumor sample
-- `[TUMORSAMPLE_VS_NORMALSAMPLE].after_correction_gc_rt.[TUMORSAMPLE_VS_NORMALSAMPLE].germline.png`
+- `After_correction_GC_Tumour.germline.png`
   - Image with information about GC and RT corrected logR and BAF values of normal sample
-- `[TUMORSAMPLE_VS_NORMALSAMPLE].sunrise.png`
+- `Tumour.sunrise.png`
   - Image visualising the range of ploidy and tumor percentage values
-- `[TUMORSAMPLE_VS_NORMALSAMPLE].metrics.txt`
+- `<tumorsample_vs_normalsample>.metrics.txt`
   - File with information about different metrics from ASCAT profiles
-- `[TUMORSAMPLE_VS_NORMALSAMPLE].cnvs.txt`
+- `<tumorsample_vs_normalsample>.cnvs.txt`
   - File with information about CNVS
-- `[TUMORSAMPLE_VS_NORMALSAMPLE].purityploidy.txt`
+- `<tumorsample_vs_normalsample>.purityploidy.txt`
   - File with information about purity and ploidy
-- `[TUMORSAMPLE_VS_NORMALSAMPLE].segments.txt`
+- `<tumorsample_vs_normalsample>.segments.txt`
   - File with information about copy number segments
-- `[TUMORSAMPLE_VS_NORMALSAMPLE].tumour_tumourBAF.txt` and `[TUMORSAMPLE_VS_NORMALSAMPLE].tumour_normalBAF.txt`
+- `.tumour_tumourBAF.txt` and `[TUMORSAMPLE_VS_NORMALSAMPLE].tumour_normalBAF.txt`
   - file with beta allele frequencies
 - `[TUMORSAMPLE_VS_NORMALSAMPLE].tumour_tumourLogR.txt` and `[TUMORSAMPLE_VS_NORMALSAMPLE].tumour_normalLogR.txt`
   - File with total copy number on a logarithmic scale
@@ -445,6 +441,42 @@ The file `[TUMORSAMPLE].cnvs.txt` contains all segments predicted by ASCAT, both
 For further reading and documentation see the [ASCAT manual](https://www.crick.ac.uk/research/labs/peter-van-loo/software).
 
 #### CNVKit
+
+[CNVKit](https://cnvkit.readthedocs.io/en/stable/) is a toolkit to infer and visualize copy number from high-throughput DNA sequencing data. It is designed for use with hybrid capture, including both whole-exome and custom target panels, and short-read sequencing platforms such as Illumina and Ion Torrent.
+
+For normal-only or tumor-only samples:
+
+**Output directory: `results/variantcalling/<sample>/cnvkit`**
+
+- `multi_intervals.antitarget.bed`
+- `<sample>.antitargetcoverage.cnn`
+- `<sample>.targetcoverage.cnn`
+- `reference.cnn`
+- `<sample>-diagram.pdf`
+- `<sample>-scatter.png`
+- `<sample>.bintest.cns`
+- `multi_intervals.target.bed`
+- `<sample>.cnr`
+- `<sample>.cns`
+- `<sample>.call.cns`
+
+For tumor/normal pairs:
+
+**Output directory: `results/variantcalling/<tumorsample_vs_normalsample>/cnvkit`**
+
+multi_intervals.antitarget.bed
+test.paired_end.recalibrated.sorted.antitargetcoverage.cnn
+test.paired_end.recalibrated.sorted.targetcoverage.cnn
+test2.paired_end.recalibrated.sorted.antitargetcoverage.cnn
+test2.paired_end.recalibrated.sorted.bintest.cns
+reference.cnn
+test2.paired_end.recalibrated.sorted-scatter.png
+test2.paired_end.recalibrated.sorted-diagram.pdf
+test2.paired_end.recalibrated.sorted.cnr
+test2.paired_end.recalibrated.sorted.cns
+multi_intervals.target.bed
+test2.paired_end.recalibrated.sorted.targetcoverage.cnn
+test2.paired_end.recalibrated.sorted.call.cns
 
 #### Control-FREEC
 

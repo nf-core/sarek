@@ -50,7 +50,6 @@ Multiple `CSV` files can be specified if the path is enclosed in quotes.
 --input '[path to samplesheet file(s)]'
 ```
 
-<<<<<<< HEAD
 #### Overview: Samplesheet Columns
 
 | Column    | Description                                                                                                                                                                                                                                                                                                                       |
@@ -68,23 +67,6 @@ Multiple `CSV` files can be specified if the path is enclosed in quotes.
 | `crai`    | Full path to CRAM index file                                                                                                                                                                                                                                                                                                      |
 | `table`   | Full path to recalibration table file                                                                                                                                                                                                                                                                                             |
 | `vcf`     | Full path to vcf file                                                                                                                                                                                                                                                                                                             |
-=======
-| Column    | Description                                                                                                                                                                                                                                                                                                     |
-| --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `patient` | **Custom patient ID**; designates the patient/subject; must be unique for each patient, but one patient can have multiple samples (e.g. normal and tumor).                                                                                                                                                      |
-| `sex`     | **Sex chromosomes of the patient**; i.e. XX, XY..., only used for Copy-Number Variation analysis in a tumor/pair<br /> _Optional, Default: `NA`_                                                                                                                                                                |
-| `status`  | **Normal/tumor status of sample**; can be `0` (normal) or `1` (tumor).<br /> _Optional, Default: `0`_                                                                                                                                                                                                           |
-| `sample`  | **Custom sample ID** for each tumor and normal sample; more than one tumor sample for each subject is possible, i.e. a tumor and a relapse; samples can have multiple lanes for which the _same_ ID must be used to merge them later (see also `lane`). Sample IDs must be unique for unique biological samples |
-| `lane`    | Lane ID, used when the `sample` is multiplexed on several lanes. Must be unique for each lane in the same sample (but does not need to be the original lane name), and must contain at least one character <br /> _Required for `--step_mapping`_                                                               |
-| `fastq_1` | Full path to FastQ file for Illumina short reads 1. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                                                                                                                                                      |
-| `fastq_2` | Full path to FastQ file for Illumina short reads 2. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                                                                                                                                                      |
-| `bam`     | Full path to (u)BAM file                                                                                                                                                                                                                                                                                        |
-| `bai`     | Full path to BAM index file                                                                                                                                                                                                                                                                                     |
-| `cram`    | Full path to CRAM file                                                                                                                                                                                                                                                                                          |
-| `crai`    | Full path to CRAM index file                                                                                                                                                                                                                                                                                    |
-| `table`   | Full path to recalibration table file                                                                                                                                                                                                                                                                           |
-| `vcf`     | Full path to vcf file                                                                                                                                                                                                                                                                                           |
->>>>>>> upstream/dev
 
 An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
 
@@ -124,11 +106,7 @@ patient1,test_sample,3,test_L003.bam
 
 ##### Full samplesheet
 
-<<<<<<< HEAD
 In this example, all possible columns are used. There are 3 lanes for the normal sample, 2 for the tumor sample, 1 for the relapse, including the `gender` and `status` information per patient:
-=======
-In this example, all possible columns are used. There are 3 read groups for the normal sample, 2 for the tumor sample, 1 for the relapse, including the `sex` and `status` information per patient:
->>>>>>> upstream/dev
 
 ```console
 patient,sex,status,sample,lane,fastq_1,fastq_2
