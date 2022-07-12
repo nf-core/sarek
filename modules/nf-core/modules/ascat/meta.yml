@@ -22,7 +22,7 @@ input:
         ```
         {
           [
-            "gender": "XX",
+            "sex": "XX",
             "genomeVersion": "hg19"
             "purity": (optional),
             "ploidy": (optional),

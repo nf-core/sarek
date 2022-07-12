@@ -20,7 +20,6 @@ workflow RUN_HAPLOTYPECALLER {
 
     main:
 
-    intervals_bed_combined.dump(tag:"int")
     ch_versions = Channel.empty()
     filtered_vcf = Channel.empty()
 
@@ -43,24 +42,6 @@ workflow RUN_HAPLOTYPECALLER {
             no_intervals: it[0].num_intervals <= 1
         }.set{haplotypecaller_tbi_branch}
 
-    // Only when using intervals
-    MERGE_HAPLOTYPECALLER(
-        haplotypecaller_vcf_branch.intervals
-            .map{ meta, vcf ->
-
-                new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, sex:meta.sex, id:meta.sample, num_intervals:meta.num_intervals]
-
-                [groupKey(new_meta, new_meta.num_intervals), vcf]
-            }.groupTuple(),
-        dict)
-
-    haplotypecaller_vcf = Channel.empty().mix(
-        MERGE_HAPLOTYPECALLER.out.vcf,
-        haplotypecaller_vcf_branch.no_intervals)
-
-    haplotypecaller_tbi = Channel.empty().mix(
-        MERGE_HAPLOTYPECALLER.out.tbi,
-        haplotypecaller_tbi_branch.no_intervals)
 
     if (params.joint_germline) {
         // merge vcf and tbis
@@ -70,7 +51,7 @@ workflow RUN_HAPLOTYPECALLER {
                                      [ meta, vcf, tbi, intervals ]
                                      })
 
-        genotype_vcf = JOINT_GERMLINE(
+        filtered_vcf = JOINT_GERMLINE(
              genotype_gvcf_to_call,
              fasta,
              fasta_fai,
@@ -84,6 +65,25 @@ workflow RUN_HAPLOTYPECALLER {
 
         ch_versions = ch_versions.mix(JOINT_GERMLINE.out.versions)
     } else {
+        // Only when using intervals
+        MERGE_HAPLOTYPECALLER(
+            haplotypecaller_vcf_branch.intervals
+                .map{ meta, vcf ->
+
+                    new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, sex:meta.sex, id:meta.sample, num_intervals:meta.num_intervals]
+
+                    [groupKey(new_meta, new_meta.num_intervals), vcf]
+                }.groupTuple(),
+            dict)
+
+        haplotypecaller_vcf = Channel.empty().mix(
+            MERGE_HAPLOTYPECALLER.out.vcf,
+            haplotypecaller_vcf_branch.no_intervals)
+
+        haplotypecaller_tbi = Channel.empty().mix(
+            MERGE_HAPLOTYPECALLER.out.tbi,
+            haplotypecaller_tbi_branch.no_intervals)
+
         SINGLE_SAMPLE(haplotypecaller_vcf.join(haplotypecaller_tbi),
                         fasta,
                         fasta_fai,
