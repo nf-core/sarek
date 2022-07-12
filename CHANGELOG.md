@@ -79,6 +79,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#606](https://github.com/nf-core/sarek/pull/606) - Updated `ASCAT` to version `3.0` as module
 - [#608](https://github.com/nf-core/sarek/pull/608) - Prevent candidate VCFs from getting published in manta
 - [#620](https://github.com/nf-core/sarek/pull/620) - `gender` is now `sex` in the samplesheet
+- [#630](https://github.com/nf-core/sarek/pull/630) - Update citations file
 
 ### Fixed
 
