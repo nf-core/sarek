@@ -104,17 +104,17 @@ These files are intermediate and by default not kept in the final files delivere
 
 #### BWA-mem2
 
-[BWA-mem2](https://github.com/bwa-mem2/bwa-mem2) is a software package for mapping low-divergent sequences against a large reference genome.The aligned reads are then `coordinate` sorted (or `name` sorted if MarkDuplicates Spark is used for duplicate marking) with [samtools](https://www.htslib.org/doc/samtools.html)
-
-These files are intermediate and by default not kept in the final files delivered to users.Set `--save_bam_mapped` to enable publishing.
-
-#### DragMap
-
-[DragMap](https://github.com/Illumina/dragmap) is an open-source software implementation of the DRAGEN mapper, which the Illumina team created so that we would have an open-source way to produce the same results as their proprietary DRAGEN hardware. The aligned reads are then `coordinate` sorted (or `name` sorted if MarkDuplicates Spark is used for duplicate marking) with [samtools](https://www.htslib.org/doc/samtools.html)
+[BWA-mem2](https://github.com/bwa-mem2/bwa-mem2) is a software package for mapping low-divergent sequences against a large reference genome.The aligned reads are then `coordinate` sorted (or `name` sorted if `MarkDuplicatesSpark` is used for duplicate marking) with [samtools](https://www.htslib.org/doc/samtools.html).
 
 These files are intermediate and by default not kept in the final files delivered to users. Set `--save_bam_mapped` to enable publishing.
 
-For all mappers and samples:
+#### DragMap
+
+[DragMap](https://github.com/Illumina/dragmap) is an open-source software implementation of the DRAGEN mapper, which the Illumina team created so that we would have an open-source way to produce the same results as their proprietary DRAGEN hardware. The aligned reads are then `coordinate` sorted (or `name` sorted if `MarkDuplicatesSpark` is used for duplicate marking) with [samtools](https://www.htslib.org/doc/samtools.html)
+
+These files are intermediate and by default not kept in the final files delivered to users. Set `--save_bam_mapped` to enable publishing.
+
+_For all mappers and samples_:
 
 **Output directory: `{outdir}/preprocessing/<sample>/mapped`**
 
@@ -123,7 +123,7 @@ For all mappers and samples:
 
 ### Mark Duplicates
 
-During duplicate marking read pairs that are likely to have originated from duplicates of the same original DNA fragments through some artificial processes are identified. These are considered to be non-independent observations, so all but a single read pair within each set of duplicates are marked, causing the marked pairs to be ignored by default during the variant discovery process
+During duplicate marking, read pairs that are likely to have originated from duplicates of the same original DNA fragments through some artificial processes are identified. These are considered to be non-independent observations, so all but a single read pair within each set of duplicates are marked, causing the marked pairs to be ignored by default during the variant discovery process
 
 For further reading and documentation see the [data pre-processing for variant discovery from the GATK best practices](https://gatk.broadinstitute.org/hc/en-us/articles/360035535912-Data-pre-processing-for-variant-discovery).
 
@@ -131,11 +131,11 @@ For further reading and documentation see the [data pre-processing for variant d
 
 By default, `Sarek` will use [GATK MarkDuplicates](https://gatk.broadinstitute.org/hc/en-us/articles/5358880192027-MarkDuplicates-Picard-).
 
-Specify `--use_gatk_spark markduplicates` to use [`GATK MarkDuplicatesSpark`](https://gatk.broadinstitute.org/hc/en-us/articles/5358833264411-MarkDuplicatesSpark) instead, the `Spark` implementation. The resulting files are converted to `CRAM` either with [samtools](https://www.htslib.org/doc/samtools.html) when `GATK MarkDuplicates` is used or implicitly by `GATK MarkDuplicatesSpark`
+Specify `--use_gatk_spark markduplicates` to use [`GATK MarkDuplicatesSpark`](https://gatk.broadinstitute.org/hc/en-us/articles/5358833264411-MarkDuplicatesSpark) instead, the corresponding `Spark` implementation. The resulting files are converted to `CRAM` either with [samtools](https://www.htslib.org/doc/samtools.html) when `GATK MarkDuplicates` is used or implicitly by `GATK MarkDuplicatesSpark`
 
 The resulting `CRAM` files are delivered to the users.
 
-For all samples:
+_For all samples_:
 
 **Output directory: `{outdir}/preprocessing/<sample>/markduplicates`**
 
@@ -146,7 +146,7 @@ For all samples:
 
 ### Base (Quality Score) Recalibration
 
-During Base Quality Score Recalibration systematic errors in the base quality scores are corrected by applying machine learning to detect and correct for them. This is important for evaluating the correct call of a variant during the variant discovery process. However, this is not needed for all combinations of tools in sarek. Notably, this should be turned of when having UMI tagged reads or using DragMap (see [here](https://gatk.broadinstitute.org/hc/en-us/articles/4407897446939--How-to-Run-germline-single-sample-short-variant-discovery-in-DRAGEN-mode)) as mapper.
+During Base Quality Score Recalibration, systematic errors in the base quality scores are corrected by applying machine learning to detect and correct for them. This is important for evaluating the correct call of a variant during the variant discovery process. However, this is not needed for all combinations of tools in sarek. Notably, this should be turned of when having UMI tagged reads or using DragMap (see [here](https://gatk.broadinstitute.org/hc/en-us/articles/4407897446939--How-to-Run-germline-single-sample-short-variant-discovery-in-DRAGEN-mode)) as mapper.
 
 For further reading and documentation see the [technical documentation by GATK](https://gatk.broadinstitute.org/hc/en-us/articles/360035890531-Base-Quality-Score-Recalibration-BQSR-).
 
@@ -156,7 +156,7 @@ For further reading and documentation see the [technical documentation by GATK](
 
 Specify `--use_gatk_spark baserecalibrator` to use [`GATK BaseRecalibratorSpark`](https://gatk.broadinstitute.org/hc/en-us/articles/5358896138011-BaseRecalibrator) instead, the respective `Spark` implementation.
 
-For all samples:
+_For all samples_:
 
 **Output directory: `results/preprocessing/<sample>/recal_table`**
 
@@ -172,7 +172,7 @@ Specify `--use_gatk_spark baserecalibrator` to use [`GATK ApplyBQSRSpark`](https
 The resulting `recalibrated CRAM` files are delivered to the user. `Recalibrated CRAM` files are usually 2-3 times larger than the `duplicate-marked CRAM` files.
 To re-generate `recalibrated CRAM` files you have to apply the recalibration table delivered to the `recal_table/` folder either using `Sarek` ( [`--step recalibrate`](usage.md#step-recalibrate) ) , or doing this recalibration yourself.
 
-For all samples:
+_For all samples_:
 
 **Output directory: `results/preprocessing/<sample>/recalibrated`**
 
@@ -186,8 +186,6 @@ For all samples:
 The `CSV` files are auto-generated and can be used by `Sarek` for further processing and/or variant calling.
 
 See the the [`--input`](usage.md#--input) section in the usage documentation for further reading and documentation on how to make the most of them.
-
-For all samples:
 
 **Output directory: `results/preprocessing/csv`**
 
