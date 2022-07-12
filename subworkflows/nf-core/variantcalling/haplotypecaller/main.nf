@@ -18,7 +18,6 @@ workflow RUN_HAPLOTYPECALLER {
     known_sites_snps_tbi
     intervals_bed_combined          // channel: [optional]
 
-
     main:
 
     intervals_bed_combined.dump(tag:"int")

@@ -26,8 +26,11 @@ nextflow.enable.dsl = 2
     GENOME PARAMETER VALUES
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-params.ac_loci               = WorkflowMain.getGenomeAttribute(params, 'ac_loci')
-params.ac_loci_gc            = WorkflowMain.getGenomeAttribute(params, 'ac_loci_gc')
+params.ascat_alleles         = WorkflowMain.getGenomeAttribute(params, 'ascat_alleles')
+params.ascat_genome          = WorkflowMain.getGenomeAttribute(params, 'ascat_genome')
+params.ascat_loci            = WorkflowMain.getGenomeAttribute(params, 'ascat_loci')
+params.ascat_loci_gc         = WorkflowMain.getGenomeAttribute(params, 'ascat_loci_gc')
+params.ascat_loci_rt         = WorkflowMain.getGenomeAttribute(params, 'ascat_loci_rt')
 params.bwa                   = WorkflowMain.getGenomeAttribute(params, 'bwa')
 params.bwamem2               = WorkflowMain.getGenomeAttribute(params, 'bwamem2')
 params.chr_dir               = WorkflowMain.getGenomeAttribute(params, 'chr_dir')
@@ -46,14 +49,14 @@ params.known_snps_tbi        = WorkflowMain.getGenomeAttribute(params, 'known_sn
 params.known_snps_vqsr       = WorkflowMain.getGenomeAttribute(params, 'known_snps_vqsr')
 params.known_indels          = WorkflowMain.getGenomeAttribute(params, 'known_indels')
 params.known_indels_tbi      = WorkflowMain.getGenomeAttribute(params, 'known_indels_tbi')
-params.known_indels_gatk1_vqsr      = WorkflowMain.getGenomeAttribute(params, 'known_indels_gatk1_vqsr')
-params.known_indels_gatk2_vqsr      = WorkflowMain.getGenomeAttribute(params, 'known_indels_gatk2_vqsr')
+params.known_indels_vqsr     = WorkflowMain.getGenomeAttribute(params, 'known_indels_vqsr')
 params.mappability           = WorkflowMain.getGenomeAttribute(params, 'mappability')
 params.pon                   = WorkflowMain.getGenomeAttribute(params, 'pon')
 params.pon_tbi               = WorkflowMain.getGenomeAttribute(params, 'pon_tbi')
 params.snpeff_db             = WorkflowMain.getGenomeAttribute(params, 'snpeff_db')
 params.snpeff_genome         = WorkflowMain.getGenomeAttribute(params, 'snpeff_genome')
 params.vep_cache_version     = WorkflowMain.getGenomeAttribute(params, 'vep_cache_version')
+params.vep_version           = WorkflowMain.getGenomeAttribute(params, 'vep_version')
 params.vep_genome            = WorkflowMain.getGenomeAttribute(params, 'vep_genome')
 params.vep_species           = WorkflowMain.getGenomeAttribute(params, 'vep_species')
 

@@ -11,10 +11,10 @@ workflow MAPPING_CSV {
         bam_indexed.collectFile(keepHeader: true, skip: 1, sort: true, storeDir: "${params.outdir}/csv") { meta, bam, bai ->
             patient = meta.patient
             sample  = meta.sample
-            gender  = meta.gender
+            sex     = meta.sex
             status  = meta.status
             bam   = "${params.outdir}/preprocessing/${sample}/mapped/${bam.name}"
             bai   = "${params.outdir}/preprocessing/${sample}/mapped/${bai.name}"
-            ["mapped.csv", "patient,gender,status,sample,bam,bai\n${patient},${gender},${status},${sample},${bam},${bai}\n"]
+            ["mapped.csv", "patient,sex,status,sample,bam,bai\n${patient},${sex},${status},${sample},${bam},${bai}\n"]
         }
 }

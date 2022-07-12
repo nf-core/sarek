@@ -24,6 +24,7 @@ workflow GERMLINE_VARIANT_CALLING {
         intervals                     // channel: [mandatory] intervals/target regions
         intervals_bed_gz_tbi          // channel: [mandatory] intervals/target regions index zipped and indexed
         intervals_bed_combined        // channel: [mandatory] intervals/target regions in one file unzipped
+        intervals_bed_combined_haplotypec // channel: [mandatory] intervals/target regions in one file unzipped, no_intervals.bed if no_intervals
         known_sites_indels
         known_sites_indels_tbi
         known_sites_snps
@@ -51,7 +52,7 @@ workflow GERMLINE_VARIANT_CALLING {
             intervals_new  = num_intervals == 0 ? []            : intervals
             intervals_name = num_intervals == 0 ? "no_interval" : intervals.simpleName
 
-            [[patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:meta.sample, data_type:meta.data_type, num_intervals:num_intervals, intervals_name:intervals_name],
+            [[patient:meta.patient, sample:meta.sample, sex:meta.sex, status:meta.status, id:meta.sample, data_type:meta.data_type, num_intervals:num_intervals, intervals_name:intervals_name],
             cram, crai, intervals_new]
         }
 
@@ -63,7 +64,7 @@ workflow GERMLINE_VARIANT_CALLING {
             bed_new = num_intervals == 0 ? [] : bed_tbi[0]
             tbi_new = num_intervals == 0 ? [] : bed_tbi[1]
 
-            [[patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:meta.sample, data_type:meta.data_type, num_intervals:num_intervals],
+            [[patient:meta.patient, sample:meta.sample, sex:meta.sex, status:meta.status, id:meta.sample, data_type:meta.data_type, num_intervals:num_intervals],
             cram, crai, bed_new, tbi_new]
         }
 
@@ -128,7 +129,7 @@ workflow GERMLINE_VARIANT_CALLING {
                         known_sites_indels_tbi,
                         known_sites_snps,
                         known_sites_snps_tbi,
-                        intervals_bed_combined)
+                        intervals_bed_combined_haplotypec)
 
         haplotypecaller_vcf  = RUN_HAPLOTYPECALLER.out.filtered_vcf
         ch_versions          = ch_versions.mix(RUN_HAPLOTYPECALLER.out.versions)

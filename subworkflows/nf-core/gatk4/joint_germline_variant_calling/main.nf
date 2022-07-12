@@ -69,7 +69,7 @@ workflow GATK_JOINT_GERMLINE_VARIANT_CALLING {
         vqsr_input = merged_vcf.vcf.join(merged_vcf.tbi)
 
         snp_resource_labels =   (params.known_snps_vqsr && params.dbsnp_vqsr)                                           ? Channel.of([params.known_snps_vqsr,params.dbsnp_vqsr])                                        : Channel.empty()
-        indel_resource_labels = (params.known_indels_gatk1_vqsr && params.known_indels_gatk2_vqsr && params.dbsnp_vqsr) ? Channel.of([params.known_indels_gatk1_vqsr,params.known_indels_gatk2_vqsr,params.dbsnp_vqsr]) : Channel.empty()
+        indel_resource_labels = (params.known_indels_vqsr && params.dbsnp_vqsr) ? Channel.of([params.known_indels_vqsr,params.dbsnp_vqsr]) : Channel.empty()
 
         //
         //Recalibrate SNP and INDEL separately.
@@ -122,15 +122,16 @@ workflow GATK_JOINT_GERMLINE_VARIANT_CALLING {
             vqsr_snp_vcf.mix(vqsr_indel_vcf).groupTuple(),
             dict
         )
+        ch_versions = ch_versions.mix(GATK4_GENOTYPEGVCFS.out.versions,
+                                  VARIANTRECALIBRATOR_SNP.out.versions,
+                                  GATK4_APPLYVQSR_SNP.out.versions
+                                 )
 
     } else {
         output_ch = merged_vcf
     }
 
-    ch_versions = ch_versions.mix(GATK4_GENOTYPEGVCFS.out.versions,
-                                  VARIANTRECALIBRATOR_SNP.out.versions,
-                                  GATK4_APPLYVQSR_SNP.out.versions
-                                 )
+    ch_versions = ch_versions.mix(GATK4_GENOTYPEGVCFS.out.versions)
 
     emit:
     versions       = ch_versions                           // channel: [ versions.yml ]

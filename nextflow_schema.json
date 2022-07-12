@@ -330,7 +330,7 @@
                     "type": "string",
                     "fa_icon": "fas fa-database",
                     "description": "Path to dbNSFP processed file.",
-                    "help_text": "To be used with `--vep_dbnsfp`.",
+                    "help_text": "To be used with `--vep_dbnsfp`.\ndbNSFP files and more information are available at https://www.ensembl.org/info/docs/tools/vep/script/vep_plugins.html#dbnsfp and https://sites.google.com/site/jpopgen/dbNSFP/",
                     "hidden": true
                 },
                 "dbnsfp_tbi": {
@@ -338,6 +338,21 @@
                     "fa_icon": "fas fa-database",
                     "description": "Path to dbNSFP tabix indexed file.",
                     "help_text": "To be used with `--vep_dbnsfp`.",
+                    "hidden": true
+                },
+                "dbnsfp_consequence": {
+                    "type": "string",
+                    "fa_icon": "fas fa-database",
+                    "description": "Consequence to annotate with",
+                    "help_text": "To be used with `--vep_dbnsfp`.\nThis params is used to filter/limit outputs to a specific effect of the variant.\nThe set of consequence terms is defined by the Sequence Ontology and an overview of those used in VEP can be found here: https://www.ensembl.org/info/genome/variation/prediction/predicted_data.html\nIf one wants to filter using several consequences, then separate those by using '&' (i.e. 'consequence=3_prime_UTR_variant&intron_variant'.",
+                    "hidden": true
+                },
+                "dbnsfp_fields": {
+                    "type": "string",
+                    "fa_icon": "fas fa-database",
+                    "description": "Fields to annotate with",
+                    "default": "rs_dbSNP,HGVSc_VEP,HGVSp_VEP,1000Gp3_EAS_AF,1000Gp3_AMR_AF,LRT_score,GERP++_RS,gnomAD_exomes_AF",
+                    "help_text": "To be used with `--vep_dbnsfp`.\nThis params can be used to retrieve individual values from the dbNSFP file. The values correspond to the name of the columns in the dbNSFP file and are separated by comma.\nThe column names might differ between the different dbNSFP versions. Please check the Readme.txt file, which is provided with the dbNSFP file, to obtain the correct column names. The Readme file contains also a short description of the provided values and the version of the tools used to generate them.\nDefault value are explained below;/nrs_dbSNP - rs number from dbSNP/nHGVSc_VEP - HGVS coding variant presentation from VEP. Multiple entries separated by ';', corresponds to Ensembl_transcriptid/nHGVSp_VEP - HGVS protein variant presentation from VEP. Multiple entries separated by ';', corresponds to Ensembl_proteinid/n1000Gp3_EAS_AF - Alternative allele frequency in the 1000Gp3 East Asian descendent samples/n1000Gp3_AMR_AF - Alternative allele counts in the 1000Gp3 American descendent samples/nLRT_score - Original LRT two-sided p-value (LRTori), ranges from 0 to 1/nGERP++_RS - Conservation score. The larger the score, the more conserved the site, ranges from -12.3 to 6.17/ngnomAD_exomes_AF - Alternative allele frequency in the whole gnomAD exome samples/n.",
                     "hidden": true
                 },
                 "vep_loftee": {
@@ -406,6 +421,14 @@
                     "description": "Path to VEP cache.",
                     "help_text": "To be used with `--annotation_cache`.",
                     "hidden": true
+                },
+                "vep_out_format": {
+                    "type": "string",
+                    "default": "vcf",
+                    "description": "VEP output-file format.",
+                    "enum": ["json", "tab", "vcf"],
+                    "help_text": "Sets the format of the output-file from VEP. Available formats: json, tab and vcf.",
+                    "fa_icon": "fas fa-table"
                 }
             }
         },
@@ -422,15 +445,58 @@
                     "fa_icon": "fas fa-book",
                     "help_text": "If using a reference genome configured in the pipeline using iGenomes, use this parameter to give the ID for the reference. This is then used to build the full paths for all required reference genome files e.g. `--genome GRCh38`.\n\nSee the [nf-core website docs](https://nf-co.re/usage/reference_genomes) for more details."
                 },
-                "ac_loci": {
+                "ascat_alleles": {
                     "type": "string",
                     "fa_icon": "fas fa-file",
-                    "description": "Path to ASCAT loci file."
+                    "description": "Path to ASCAT allele zip file. If you use AWS iGenomes, this has already been set for you appropriately."
                 },
-                "ac_loci_gc": {
+                "ascat_chromosomes": {
+                    "type": "string",
+                    "fa_icon": "fa-solid fa-text",
+                    "default": "c(1:22, 'X')",
+                    "help_text": "Specify specific chromosomes to run ASCAT on, i.e 'c('21', '22')'."
+                },
+                "ascat_genome": {
+                    "type": "string",
+                    "fa_icon": "fa-solid fa-text",
+                    "description": "ASCAT genome.",
+                    "help_text": "Must be set to run ASCAT, either hg19 or hg38. If you use AWS iGenomes, this has already been set for you appropriately."
+                },
+                "ascat_loci": {
                     "type": "string",
                     "fa_icon": "fas fa-file",
-                    "description": "Path to ASCAT GC correction file."
+                    "description": "Path to ASCAT loci zip file. If you use AWS iGenomes, this has already been set for you appropriately."
+                },
+                "ascat_loci_gc": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file",
+                    "description": "Path to ASCAT GC content correction file. If you use AWS iGenomes, this has already been set for you appropriately."
+                },
+                "ascat_loci_rt": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file",
+                    "description": "Path to ASCAT RT (replictiming) correction file. If you use AWS iGenomes, this has already been set for you appropriately."
+                },
+                "ascat_min_base_qual": {
+                    "type": "number",
+                    "default": 20,
+                    "fa_icon": "fas fa-wrench",
+                    "description": "Overwrite Ascat min base quality required for a read to be counted.",
+                    "hidden": true
+                },
+                "ascat_min_counts": {
+                    "type": "number",
+                    "default": 10,
+                    "fa_icon": "fas fa-wrench",
+                    "description": "Overwrite Ascat minimum depth required in the normal for a SNP to be considered.",
+                    "hidden": true
+                },
+                "ascat_min_map_qual": {
+                    "type": "number",
+                    "default": 35,
+                    "fa_icon": "fas fa-wrench",
+                    "description": "Overwrite Ascat min mapping quality required for a read to be counted.",
+                    "hidden": true
                 },
                 "bwa": {
                     "type": "string",
@@ -521,15 +587,10 @@
                     "description": "Path to known indels file index.",
                     "help_text": "> **NB** If none provided, will be generated automatically from the known index file, if provided. Combine with `--save_reference` to save for future runs."
                 },
-                "known_indels_gatk1_vqsr": {
+                "known_indels_vqsr": {
                     "type": "string",
                     "fa_icon": "fas fa-copy",
                     "description": "1st label string for VariantRecalibration (haplotypecaller joint variant calling)"
-                },
-                "known_indels_gatk2_vqsr": {
-                    "type": "string",
-                    "fa_icon": "fas fa-copy",
-                    "description": "2nd label string for VariantRecalibration (haplotypecaller joint variant calling)"
                 },
                 "known_snps": {
                     "type": "string",
@@ -581,13 +642,11 @@
                     "description": "VEP cache version.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
                 },
-                "vep_out_format": {
+                "vep_version": {
                     "type": "string",
-                    "default": "vcf",
-                    "description": "VEP output-file format.",
-                    "enum": ["json", "tab", "vcf"],
-                    "help_text": "Sets the format of the output-file from VEP. Available formats: json, tab and vcf.",
-                    "fa_icon": "fas fa-table"
+                    "fa_icon": "fas fa-tag",
+                    "description": "VEP version.",
+                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
                 },
                 "save_reference": {
                     "type": "boolean",

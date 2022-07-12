@@ -10,6 +10,7 @@ include { RUN_STRELKA_SOMATIC                       } from '../nf-core/variantca
 include { RUN_CNVKIT_SOMATIC                        } from '../nf-core/variantcalling/cnvkit/somatic/main.nf'
 include { RUN_MPILEUP as RUN_MPILEUP_NORMAL         } from '../nf-core/variantcalling/mpileup/main'
 include { RUN_MPILEUP as RUN_MPILEUP_TUMOR          } from '../nf-core/variantcalling/mpileup/main'
+include { RUN_ASCAT_SOMATIC                         } from '../nf-core/variantcalling/ascat/main'
 include { RUN_TIDDIT as RUN_TIDDIT_NORMAL           } from '../nf-core/variantcalling/tiddit/main.nf'
 include { RUN_TIDDIT as RUN_TIDDIT_TUMOR            } from '../nf-core/variantcalling/tiddit/main.nf'
 include { SVDB_MERGE                                } from '../../modules/nf-core/modules/svdb/merge/main.nf'
@@ -34,6 +35,10 @@ workflow PAIR_VARIANT_CALLING {
         msisensorpro_scan             // channel: [optional]  msisensorpro_scan
         panel_of_normals              // channel: [optional]  panel_of_normals
         panel_of_normals_tbi          // channel: [optional]  panel_of_normals_tbi
+        allele_files                  // channel: [optional]  ascat allele files
+        loci_files                    // channel: [optional]  ascat loci files
+        gc_file                       // channel: [optional]  ascat gc content file
+        rt_file                       // channel: [optional]  ascat rt file
 
     main:
 
@@ -53,7 +58,7 @@ workflow PAIR_VARIANT_CALLING {
             //If no interval file provided (0) then add empty list
             intervals_new = num_intervals == 0 ? [] : intervals
 
-            [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id: meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:num_intervals],
+            [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, sex:meta.sex, id: meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:num_intervals],
             normal_cram, normal_crai, tumor_cram, tumor_crai, intervals_new]
         }
 
@@ -65,10 +70,24 @@ workflow PAIR_VARIANT_CALLING {
             bed_new = num_intervals == 0 ? [] : bed_tbi[0]
             tbi_new = num_intervals == 0 ? [] : bed_tbi[1]
 
-            [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id: meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:num_intervals],
+            [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, sex:meta.sex, id: meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:num_intervals],
             normal_cram, normal_crai, tumor_cram, tumor_crai, bed_new, tbi_new]
 
         }
+
+    if (tools.contains('ascat')){
+
+        RUN_ASCAT_SOMATIC(  cram_pair,
+                            allele_files,
+                            loci_files,
+                            intervals_bed_combined,
+                            fasta,
+                            gc_file,
+                            rt_file)
+
+        ch_versions = ch_versions.mix(RUN_ASCAT_SOMATIC.out.versions)
+
+    }
 
     if (tools.contains('controlfreec')){
         cram_normal_intervals_no_index = cram_pair_intervals
@@ -149,7 +168,7 @@ workflow PAIR_VARIANT_CALLING {
                                             bed_new = num_intervals == 0 ? [] : bed_tbi[0]
                                             tbi_new = num_intervals == 0 ? [] : bed_tbi[1]
 
-                                            [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:num_intervals],
+                                            [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, sex:meta.sex, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:num_intervals],
                                             normal_cram, normal_crai, tumor_cram, tumor_crai, vcf, vcf_tbi, bed_new, tbi_new]
                                         }
 
