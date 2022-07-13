@@ -99,7 +99,7 @@ if(params.tools && params.tools.contains('mutect2')){
 // Fails when missing resources for baserecalibrator
 // Warns when missing resources for haplotypecaller
 if(!params.dbsnp && !params.known_indels){
-    if(!params.skip_tools || params.skip_tools && !params.skip_tools.contains('baserecalibrator')){
+    if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration', 'recalibrate'] && (!params.skip_tools || (params.skip_tools && !params.skip_tools.contains('baserecalibrator')))){
         log.error "Base quality score recalibration requires at least one resource file. Please provide at least one of `--dbsnp` or `--known_indels`\nYou can skip this step in the workflow by adding `--skip_tools baserecalibrator` to the command."
         exit 1
     }
@@ -1012,9 +1012,43 @@ def extract_csv(csv_file) {
         }
     }
 
+    // Additional check of sample sheet:
+    // 1. If params.step == "mapping", then each row should specify a lane and the same combination of patient, sample and lane shouldn't be present in different rows.
+    // 2. The same sample shouldn't be listed for different patients.
+    def patient_sample_lane_combinations_in_samplesheet = []
+    def sample2patient = [:]
+
+    Channel.from(csv_file).splitCsv(header: true)
+        .map{ row ->
+            if (params.step == "mapping") {
+                if ( !row.lane ) {  // This also handles the case where the lane is left as an empty string
+                    log.error('The sample sheet should specify a lane for patient "' + row.patient.toString() + '" and sample "' + row.sample.toString() + '".')
+                    System.exit(1)
+                }
+                def patient_sample_lane = [row.patient.toString(), row.sample.toString(), row.lane.toString()]
+                if (patient_sample_lane in patient_sample_lane_combinations_in_samplesheet) {
+                    log.error('The patient-sample-lane combination "' + row.patient.toString() + '", "' + row.sample.toString() + '", and "' + row.lane.toString() + '" is present multiple times in the sample sheet.')
+                    System.exit(1)
+                } else {
+                    patient_sample_lane_combinations_in_samplesheet.add(patient_sample_lane)
+                }
+            }
+            if (!sample2patient.containsKey(row.sample.toString())) {
+                sample2patient[row.sample.toString()] = row.patient.toString()
+            } else if (sample2patient[row.sample.toString()] != row.patient.toString()) {
+                log.error('The sample "' + row.sample.toString() + '" is registered for both patient "' + row.patient.toString() + '" and "' + sample2patient[row.sample.toString()] + '" in the sample sheet.')
+                System.exit(1)
+            }
+        }
+
+    sample_count_all = 0
+    sample_count_normal = 0
+    sample_count_tumor = 0
+
     Channel.from(csv_file).splitCsv(header: true)
         //Retrieves number of lanes by grouping together by patient and sample and counting how many entries there are for this combination
         .map{ row ->
+            sample_count_all++
             if (!(row.patient && row.sample)){
                 log.error "Missing field in csv file header. The csv file must have fields named 'patient' and 'sample'."
                 System.exit(1)
@@ -1026,6 +1060,7 @@ def extract_csv(csv_file) {
             [rows, size]
         }.transpose()
         .map{ row, numLanes -> //from here do the usual thing for csv parsing
+
         def meta = [:]
 
         // Meta data to identify samplesheet
@@ -1043,6 +1078,34 @@ def extract_csv(csv_file) {
         // If no status specified, sample is assumed normal
         if (row.status) meta.status = row.status.toInteger()
         else meta.status = 0
+
+        if (meta.status == 0) sample_count_normal++
+        else sample_count_tumor++
+
+        // Two checks for ensuring that the pipeline stops with a meaningful error message if
+        // 1. the sample-sheet only contains normal-samples, but some of the requested tools require tumor-samples, and
+        // 2. the sample-sheet only contains tumor-samples, but some of the requested tools require normal-samples.
+        if ((sample_count_normal == sample_count_all) && params.tools) { // In this case, the sample-sheet contains no tumor-samples
+            def tools_tumor = ['ascat', 'controlfreec', 'mutect2', 'msisensorpro']
+            def tools_tumor_asked = []
+            tools_tumor.each{ tool ->
+                if (params.tools.contains(tool)) tools_tumor_asked.add(tool)
+            }
+            if (!tools_tumor_asked.isEmpty()) {
+                log.error('The sample-sheet only contains normal-samples, but the following tools, which were requested with "--tools", expect at least one tumor-sample : ' + tools_tumor_asked.join(", "))
+                System.exit(1)
+            }
+        } else if ((sample_count_tumor == sample_count_all) && params.tools) {  // In this case, the sample-sheet contains no normal/germline-samples
+            def tools_requiring_normal_samples = ['ascat', 'deepvariant', 'haplotypecaller']
+            def requested_tools_requiring_normal_samples = []
+            tools_requiring_normal_samples.each{ tool_requiring_normal_samples ->
+                if (params.tools.contains(tool_requiring_normal_samples)) requested_tools_requiring_normal_samples.add(tool_requiring_normal_samples)
+            }
+            if (!requested_tools_requiring_normal_samples.isEmpty()) {
+                log.error('The sample-sheet only contains tumor-samples, but the following tools, which were requested by the option "tools", expect at least one normal-sample : ' + requested_tools_requiring_normal_samples.join(", "))
+                System.exit(1)
+            }
+        }
 
         // mapping with fastq
         if (row.lane && row.fastq_2) {
