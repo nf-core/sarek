@@ -6,22 +6,20 @@
     - somatic
     - variant_calling
   files:
-    - path: results/variant_calling/sample4_vs_sample3/ascat/After_correction_GC_Tumour.germline.png
-    - path: results/variant_calling/sample4_vs_sample3/ascat/After_correction_GC_Tumour.tumour.png
-    - path: results/variant_calling/sample4_vs_sample3/ascat/Before_correction_Tumour.germline.png
-    - path: results/variant_calling/sample4_vs_sample3/ascat/Before_correction_Tumour.tumour.png
-    - path: results/variant_calling/sample4_vs_sample3/ascat/Normal_alleleFrequencies_chr21.txt
-    - path: results/variant_calling/sample4_vs_sample3/ascat/Normal_alleleFrequencies_chr22.txt
+    - path: results/variant_calling/sample4_vs_sample3/ascat/sample4_vs_sample3.after_correction_gc_rt.sample4_vs_sample3.tumour.germline.png
+    - path: results/variant_calling/sample4_vs_sample3/ascat/sample4_vs_sample3.after_correction_gc_rt.sample4_vs_sample3.tumour.tumour.png
+    - path: results/variant_calling/sample4_vs_sample3/ascat/sample4_vs_sample3.before_correction.sample4_vs_sample3.tumour.germline.png
+    - path: results/variant_calling/sample4_vs_sample3/ascat/sample4_vs_sample3.before_correction.sample4_vs_sample3.tumour.tumour.png
     - path: results/variant_calling/sample4_vs_sample3/ascat/sample4_vs_sample3.cnvs.txt
     - path: results/variant_calling/sample4_vs_sample3/ascat/sample4_vs_sample3.metrics.txt
     - path: results/variant_calling/sample4_vs_sample3/ascat/sample4_vs_sample3.purityploidy.txt
     - path: results/variant_calling/sample4_vs_sample3/ascat/sample4_vs_sample3.segments.txt
-    - path: results/variant_calling/sample4_vs_sample3/ascat/Tumour_alleleFrequencies_chr21.txt
-    - path: results/variant_calling/sample4_vs_sample3/ascat/Tumour_alleleFrequencies_chr22.txt
-    - path: results/variant_calling/sample4_vs_sample3/ascat/Tumour.ASCATprofile.png
-    - path: results/variant_calling/sample4_vs_sample3/ascat/Tumour.ASPCF.png
-    - path: results/variant_calling/sample4_vs_sample3/ascat/Tumour.rawprofile.png
-    - path: results/variant_calling/sample4_vs_sample3/ascat/Tumour.sunrise.png
+    - path: results/variant_calling/sample4_vs_sample3/ascat/sample4_vs_sample3.tumour.ASPCF.png
+    - path: results/variant_calling/sample4_vs_sample3/ascat/sample4_vs_sample3.tumour_normalBAF.txt
+    - path: results/variant_calling/sample4_vs_sample3/ascat/sample4_vs_sample3.tumour_normalLogR.txt
+    - path: results/variant_calling/sample4_vs_sample3/ascat/sample4_vs_sample3.tumour.sunrise.png
+    - path: results/variant_calling/sample4_vs_sample3/ascat/sample4_vs_sample3.tumour_tumourBAF.txt
+    - path: results/variant_calling/sample4_vs_sample3/ascat/sample4_vs_sample3.tumour_tumourLogR.txt
 
 - name: Run variant calling on somatic sample with mutect2 without intervals
   command: nextflow run main.nf -profile test,tools_somatic,docker --tools mutect2 --no_intervals -c ./tests/nextflow.config
