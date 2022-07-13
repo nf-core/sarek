@@ -315,6 +315,13 @@
             "default": "",
             "fa_icon": "fas fa-toolbox",
             "properties": {
+                "vep_include_fasta": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-database",
+                    "description": "Allow usage of fasta file for annotation with VEP",
+                    "default": false,
+                    "hidden": true
+                },
                 "vep_dbnsfp": {
                     "type": "boolean",
                     "fa_icon": "fas fa-database",
