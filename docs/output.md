@@ -6,9 +6,6 @@ This document describes the output produced by the pipeline. Most of the plots a
 
 The directories listed below will be created in the results directory after the pipeline has finished. All paths are relative to the top-level results directory.
 
-The directories listed below will be created in the results directory after the pipeline has finished.
-All paths are relative to the top-level results directory.
-
 ## Pipeline overview <!-- omit in toc -->
 
 The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:
@@ -144,7 +141,7 @@ _For all samples_:
 - if `--save_output_as_bam`:
   - `<sample>.md.bam` and `<sample>.md.bam.bai`
 
-### Base (Quality Score) Recalibration
+### Base Quality Score Recalibration
 
 During Base Quality Score Recalibration, systematic errors in the base quality scores are corrected by applying machine learning to detect and correct for them. This is important for evaluating the correct call of a variant during the variant discovery process. However, this is not needed for all combinations of tools in sarek. Notably, this should be turned of when having UMI tagged reads or using DragMap (see [here](https://gatk.broadinstitute.org/hc/en-us/articles/4407897446939--How-to-Run-germline-single-sample-short-variant-discovery-in-DRAGEN-mode)) as mapper.
 
@@ -216,7 +213,7 @@ For single nucleotide variants (SNVs) and small indels, multiple tools are avail
 
 [DeepVariant](https://github.com/google/deepvariant) is a deep learning-based variant caller that takes aligned reads, produces pileup image tensors from them, classifies each tensor using a convolutional neural network, and finally reports the results in a standard VCF or gVCF file. For further documentation take a look [here](https://github.com/google/deepvariant/tree/r1.4/docs).
 
-For normal samples only:
+_For normal samples_:
 
 **Output directory: `results/variantcalling/<sample>/deepvariant`**
 
@@ -229,7 +226,7 @@ For normal samples only:
 
 [FreeBayes](https://github.com/ekg/freebayes) is a Bayesian genetic variant detector designed to find small polymorphisms, specifically SNPs, indels, MNPs, and complex events smaller than the length of a short-read sequencing alignment. For further reading and documentation see the [FreeBayes manual](https://github.com/ekg/freebayes/blob/master/README.md#user-manual-and-guide).
 
-For all samples:
+_For all samples_:
 
 **Output directory: `results/variantcalling/{sample,normalsample_vs_tumorsample}/freebayes`**
 
@@ -240,7 +237,7 @@ For all samples:
 
 [GATK HaplotypeCaller](https://gatk.broadinstitute.org/hc/en-us/articles/5358864757787-HaplotypeCaller) calls germline SNPs and indels via local re-assembly of haplotypes.
 
-For normal only samples:
+_For normal samples_:
 
 **Output directory: `results/variantcalling/<sample>/haplotypecaller`**
 
@@ -273,7 +270,7 @@ _TODO_
 For further reading and documentation see the [Mutect2 manual](https://gatk.broadinstitute.org/hc/en-us/articles/360035531132).
 It is not required, but recommended to have a [panel of normals (PON)](https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON) using at least 40 normal samples to get filtered somatic calls. When using `--genome GATK.GRCh38`, a panel-of-normals file is available. However, it is _highly_ recommended to create one matching your tumor samples. Creating your own panel-of-normals is currently not natively supported by the pipeline. See [here](https://gatk.broadinstitute.org/hc/en-us/articles/360035531132) for how to create one manually.
 
-For a tumor-only sample or tumor/normal pair:
+_For a tumor-only sample or tumor/normal pair_:
 
 **Output directory: `results/variantcalling/{sample,tumorsample_vs_normalsample}/mutect2`**
 
@@ -301,7 +298,7 @@ Files created:
 [samtools mpileup](https://www.htslib.org/doc/samtools.html) generates pileup of a `CRAM` file.
 For further reading and documentation see the [samtools manual](https://www.htslib.org/doc/samtools.html#COMMANDS_AND_OPTIONS).
 
-For all samples:
+_For all samples_:
 
 **Output directory: `results/variantcalling/<sample>/mpileup`**
 
@@ -313,7 +310,7 @@ For all samples:
 [Strelka2](https://github.com/Illumina/strelka) is a fast and accurate small variant caller optimized for analysis of germline variation in small cohorts and somatic variation in tumor/normal sample pairs. For further reading and documentation see the [Strelka2 user guide](https://github.com/Illumina/strelka/blob/master/docs/userGuide/README.md). If [Strelka2](https://github.com/Illumina/strelka) is used for somatic variant calling and [Manta](https://github.com/Illumina/manta) is also specified in tools, the output candidate indels from [Manta](https://github.com/Illumina/manta) are used according to [Strelka Best Practices](https://github.com/Illumina/strelka/blob/master/docs/userGuide/README.md#somatic-configuration-example).
 For further downstream analysis, take a look [here](https://github.com/Illumina/strelka/blob/v2.9.x/docs/userGuide/README.md#interpreting-the-germline-multi-sample-variants-vcf).
 
-For single samples (normal-only or tumor-only):
+_For single samples (normal-only or tumor-only)_:
 
 **Output directory: `results/variantcalling/<sample>/strelka`**
 
@@ -322,7 +319,7 @@ For single samples (normal-only or tumor-only):
 - `<sample>.strelka.variants.vcf.gz` and `<sample>.strelka.variants.vcf.gz.tbi`
   - `VCF` with tabix index with all potential variant loci across the sample. Note this file includes non-variant loci if they have a non-trivial level of variant evidence or contain one or more alleles for which genotyping has been forced.
 
-For a Tumor/Normal pair:
+_For a tumor/normal pair_:
 
 **Output directory: `results/variantcalling/<tumorsample_vs_normalsample>/strelka`**
 
@@ -339,21 +336,21 @@ For a Tumor/Normal pair:
 It is optimized for analysis of germline variation in small sets of individuals and somatic variation in tumor/normal sample pairs.
 `Manta` provides a candidate list for small indels that can be fed to `Strelka` following [Strelka Best Practices](https://github.com/Illumina/strelka/blob/master/docs/userGuide/README.md#somatic-configuration-example). For further reading and documentation see the [Manta user guide](https://github.com/Illumina/manta/blob/master/docs/userGuide/README.md).
 
-For normal samples:
+_For normal samples_:
 
 **Output directory: `results/variantcalling/<sample>/manta`**
 
 - `<sample>.manta.diploid_sv.vcf.gz` and `<sample>.manta.diploid_sv.vcf.gz.tbi`
   - `VCF` with tabix index containing SVs and indels scored and genotyped under a diploid model for the sample.
 
-For a tumor-only samples:
+_For a tumor-only samples_:
 
 **Output directory: `results/variantcalling/<sample>/manta`**
 
 - `<sample>.manta.tumor_sv.vcf.gz` and `<sample>.manta.tumor_sv.vcf.gz.tbi`
   - `VCF` with tabix index containing a subset of the candidateSV.vcf.gz file after removing redundant candidates and small indels less than the minimum scored variant size (50 by default). The SVs are not scored, but include additional details: (1) paired and split read supporting evidence counts for each allele (2) a subset of the filters from the scored tumor-normal model are applied to the single tumor case to improve precision.
 
-For a tumor/normal pair:
+_For a tumor/normal pair_:
 
 **Output directory: `results/variantcalling/<tumorsample_vs_normalsample>/manta`**
 
@@ -366,7 +363,7 @@ For a tumor/normal pair:
 
 [TIDDIT](https://github.com/SciLifeLab/TIDDIT) identifies intra and inter-chromosomal translocations, deletions, tandem-duplications and inversions. For further reading and documentation see the [TIDDIT manual](https://github.com/SciLifeLab/TIDDIT/blob/master/README.md).
 
-For normal-only and tumor-only samples:
+_For normal and tumor-only samples_:
 
 **Output directory: `results/variantcalling/<sample>/tiddit`**
 
@@ -375,7 +372,7 @@ For normal-only and tumor-only samples:
 - `<sample>.tiddit.ploidies.tab`
   - tab file describing the estimated ploidy and coverage across each contig
 
-For tumor/normal paired samples:
+_For tumor/normal paired samples_:
 
 **Output directory: `results/variantcalling/<tumorsample_vs_normalsample>/tiddit`**
 
@@ -396,23 +393,23 @@ For tumor/normal paired samples:
 It infers tumor purity and ploidy and calculates whole-genome allele-specific copy number profiles.
 The `ASCAT` process gives several images as output, described in detail in this [book chapter](http://www.ncbi.nlm.nih.gov/pubmed/22130873).
 Running ASCAT on NGS data requires that the `BAM` files are converted into BAF and LogR values.
-This is done internally using the software [AlleleCount](https://github.com/cancerit/alleleCount).
+This is done internally using the software [AlleleCount](https://github.com/cancerit/alleleCount). For further reading and documentation see the [ASCAT manual](https://www.crick.ac.uk/research/labs/peter-van-loo/software).
 
-For a tumor/normal pair:
+_For a tumor/normal pair_:
 
 **Output directory: `results/variantcalling/<tumorsample_vs_normalsample>/ascat`**
 
-- `Tumour.ASPCF.png`
-  - Image with information about ASPCF
-- `Before_correction_Tumour.tumour.png`
-  - Image with information about raw profile of tumor sample of logR and BAF values
-- `Before_correction_Tumour.germline.png`
-  - Image with information about raw profile of normal sample of logR and BAF values
-- `After_correction_GC_Tumour.tumour.png`
-  - Image with information about GC and RT corrected logR and BAF values of tumor sample
-- `After_correction_GC_Tumour.germline.png`
-  - Image with information about GC and RT corrected logR and BAF values of normal sample
-- `Tumour.sunrise.png`
+- `<tumorsample_vs_normalsample>.tumour.ASPCF.png`
+  - Image with information about allele-specific copy number segmentation
+- `<tumorsample_vs_normalsample>.before_correction_Tumour.<tumorsample_vs_normalsample>.tumour.png`
+  - Image with information about raw profile of tumor sample of logR and BAF values before GC correction
+- `<tumorsample_vs_normalsample>.before_correction_Tumour.<tumorsample_vs_normalsample>.germline.png`
+  - Image with information about raw profile of normal sample of logR and BAF values before GC correction
+- `<tumorsample_vs_normalsample>.after_correction_GC_Tumour.<tumorsample_vs_normalsample>.tumour.png`
+  - Image with information about GC and RT corrected logR and BAF values of tumor sample after GC correction
+- `<tumorsample_vs_normalsample>.after_correction_GC_Tumour.<tumorsample_vs_normalsample>.germline.png`
+  - Image with information about GC and RT corrected logR and BAF values of normal sample after GC correction
+- `<tumorsample_vs_normalsample>.tumour.sunrise.png`
   - Image visualising the range of ploidy and tumor percentage values
 - `<tumorsample_vs_normalsample>.metrics.txt`
   - File with information about different metrics from ASCAT profiles
@@ -422,82 +419,112 @@ For a tumor/normal pair:
   - File with information about purity and ploidy
 - `<tumorsample_vs_normalsample>.segments.txt`
   - File with information about copy number segments
-- `.tumour_tumourBAF.txt` and `[TUMORSAMPLE_VS_NORMALSAMPLE].tumour_normalBAF.txt`
+- `<tumorsample_vs_normalsample>.tumour_tumourBAF.txt` and `<tumorsample_vs_normalsample>.tumour_normalBAF.txt`
   - file with beta allele frequencies
-- `[TUMORSAMPLE_VS_NORMALSAMPLE].tumour_tumourLogR.txt` and `[TUMORSAMPLE_VS_NORMALSAMPLE].tumour_normalLogR.txt`
+- `<tumorsample_vs_normalsample>.tumour_tumourLogR.txt` and `<tumorsample_vs_normalsample>.tumour_normalLogR.txt`
   - File with total copy number on a logarithmic scale
 
-The text file `[TUMORSAMPLE_VS_NORMALSAMPLE].cnvs.txt` contains predictions about copy number state for all the segments.
+The text file `<tumorsample_vs_normalsample>.cnvs.txt` contains predictions about copy number state for all the segments.
 The output is a tab delimited text file with the following columns:
 
 - _chr_: chromosome number
 - _startpos_: start position of the segment
 - _endpos_: end position of the segment
-- _nMajor_: number of copies of one of the allels (for example the chromosome inherited from the father)
-- _nMinor_: number of copies of the other allele (for example the chromosome inherited of the mother)
+- _nMajor_: number of copies of one of the allels (for example the chromosome inherited of one parent)
+- _nMinor_: number of copies of the other allele (for example the chromosome inherited of the other parent)
 
-The file `[TUMORSAMPLE].cnvs.txt` contains all segments predicted by ASCAT, both those with normal copy number (nMinor = 1 and nMajor =1) and those corresponding to copy number aberrations.
-
-For further reading and documentation see the [ASCAT manual](https://www.crick.ac.uk/research/labs/peter-van-loo/software).
+The file `<tumorsample_vs_normalsample>.cnvs.txt` contains all segments predicted by ASCAT, both those with normal copy number (nMinor = 1 and nMajor =1) and those corresponding to copy number aberrations.
 
 #### CNVKit
 
-[CNVKit](https://cnvkit.readthedocs.io/en/stable/) is a toolkit to infer and visualize copy number from high-throughput DNA sequencing data. It is designed for use with hybrid capture, including both whole-exome and custom target panels, and short-read sequencing platforms such as Illumina and Ion Torrent.
+[CNVKit](https://cnvkit.readthedocs.io/en/stable/) is a toolkit to infer and visualize copy number from high-throughput DNA sequencing data. It is designed for use with hybrid capture, including both whole-exome and custom target panels, and short-read sequencing platforms such as Illumina. For further reading and documentation, see the [CNVKit Documentation](https://cnvkit.readthedocs.io/en/stable/plots.html)
 
-For normal-only or tumor-only samples:
+_For normal or tumor-only samples_:
 
 **Output directory: `results/variantcalling/<sample>/cnvkit`**
 
-- `multi_intervals.antitarget.bed`
 - `<sample>.antitargetcoverage.cnn`
+  - File containing coverage information
 - `<sample>.targetcoverage.cnn`
-- `reference.cnn`
+  - File containing coverage information
 - `<sample>-diagram.pdf`
+  - File with plot of copy numbers or segments on chromosomes
 - `<sample>-scatter.png`
+  - File with plot of bin-level log2 coverages and segmentation calls
 - `<sample>.bintest.cns`
-- `multi_intervals.target.bed`
+  - File containing copy number segment information
 - `<sample>.cnr`
+  - File containing copy number ratio information
 - `<sample>.cns`
+  - File containing copy number segment information
 - `<sample>.call.cns`
+  - File containing copy number segment information
 
-For tumor/normal pairs:
+_For tumor/normal pairs_:
 
 **Output directory: `results/variantcalling/<tumorsample_vs_normalsample>/cnvkit`**
 
-multi_intervals.antitarget.bed
-test.paired_end.recalibrated.sorted.antitargetcoverage.cnn
-test.paired_end.recalibrated.sorted.targetcoverage.cnn
-test2.paired_end.recalibrated.sorted.antitargetcoverage.cnn
-test2.paired_end.recalibrated.sorted.bintest.cns
-reference.cnn
-test2.paired_end.recalibrated.sorted-scatter.png
-test2.paired_end.recalibrated.sorted-diagram.pdf
-test2.paired_end.recalibrated.sorted.cnr
-test2.paired_end.recalibrated.sorted.cns
-multi_intervals.target.bed
-test2.paired_end.recalibrated.sorted.targetcoverage.cnn
-test2.paired_end.recalibrated.sorted.call.cns
+- `<normalsample>.antitargetcoverage.cnn`
+  - File containing coverage information
+- `<normalsample>.targetcoverage.cnn`
+  - File containing coverage information
+- `<tumorsample>.antitargetcoverage.cnn`
+  - File containing coverage information
+- `<tumorsample>.bintest.cns`
+  - File containing copy number segment information
+- `<tumorsample>-scatter.png`
+  - File with plot of bin-level log2 coverages and segmentation calls
+- `<tumorsample>-diagram.pdf`
+  - File with plot of copy numbers or segments on chromosomes
+- `<tumorsample>.cnr`
+  - File containing copy number ratio information
+- `<tumorsample>.cns`
+  - File containing copy number segment information
+- `<tumorsample>.targetcoverage.cnn`
+  - File containing coverage information
+- `<tumorsample>.call.cns`
+  - File containing copy number segment information
 
 #### Control-FREEC
 
 [Control-FREEC](https://github.com/BoevaLab/FREEC) is a tool for detection of copy-number changes and allelic imbalances (including loss of heterozygoity (LOH)) using deep-sequencing data.
 `Control-FREEC` automatically computes, normalizes, segments copy number and beta allele frequency profiles, then calls copy number alterations and LOH.
-And also detects subclonal gains and losses and evaluate the most likely average ploidy of the sample.
+It also detects subclonal gains and losses and evaluate the most likely average ploidy of the sample. For further reading and documentation see the [Control-FREEC Documentation](http://boevalab.inf.ethz.ch/FREEC/tutorial.html).
 
-For a tumor-only and tumor/normal pair:
+_For a tumor-only and tumor/normal pair_:
 
-**Output directory: `results/variantcalling/{sample,tumorsample_vs_normalsample}/controlfreec`**
+**Output directory: `results/variantcalling/{tumorsample,tumorsample_vs_normalsample}/controlfreec`**
 
-- `<tumorsample_vs_normalsample>.config.txt`
+- `config.txt`
   - Configuration file used to run Control-FREEC
-- `[TUMORSAMPLE].pileup.gz_CNVs` and `[TUMORSAMPLE].pileup.gz_normal_CNVs`
-  - file with coordinates of predicted copy number alterations
-- `[TUMORSAMPLE].pileup.gz_ratio.txt` and `[TUMORSAMPLE].pileup.gz_normal_ratio.txt`
-  - file with ratios and predicted copy number alterations for each window
-- `[TUMORSAMPLE].pileup.gz_BAF.txt` and `[NORMALSAMPLE].pileup.gz_BAF.txt`
+- `<tumorsample>_BAF.png` and `<tumorsample_vs_normalsample>_BAF.png`
+  - Image of BAF plot
+- `<tumorsample>_ratio.log2.png` and `<tumorsample_vs_normalsample>_ratio.log2.png`
+  - Image of ratio log2 plot
+- `<tumorsample>_ratio.png` and `<tumorsample_vs_normalsample>_ratio.png`
+  - Image of ratio plot
+- `<tumorsample>.bed` and `<tumorsample_vs_normalsample>.bed`
+  - translated output to a .BED file (so to view it in the UCSC Genome Browser)
+- `<tumorsample>.circos.txt` and `<tumorsample_vs_normalsample>.circos.txt`
+  - translated output to the Circos format
+- `<tumorsample>.p.value.txt` and `<tumorsample_vs_normalsample>.p.value.txt`
+  - CNV file containing p_values for each call
+- `<tumorsample>_BAF.txt` and `<tumorsample_vs_normalsample>.mpileup.gz_BAF.txt`
   - file with beta allele frequencies for each possibly heterozygous SNP position
-
-For further reading and documentation see the [Control-FREEC manual](http://boevalab.com/FREEC/tutorial.html).
+- `<tumorsample_vs_normalsample>.tumor.mpileup.gz_CNVs`
+  - file with coordinates of predicted copy number alterations
+- `<tumorsample>_info.txt` and `<tumorsample_vs_normalsample>.tumor.mpileup.gz_info.txt`
+  - parsable file with information about FREEC run
+- ` <tumorsample>_ratio.BedGraph``<tumorsample_vs_normalsample>.tumor.mpileup.gz_ratio.BedGraph `
+  - file with ratios in BedGraph format for visualization in the UCSC genome browser. The file contains tracks for normal copy number, gains and losses, and copy neutral LOH (\*).
+- `<tumorsample>_ratio.txt` and `<tumorsample_vs_normalsample>.tumor.mpileup.gz_ratio.txt`
+  - file with ratios and predicted copy number alterations for each window
+- `<tumorsample>_sample.cpn` and `<tumorsample_vs_normalsample>.tumor.mpileup.gz_sample.cpn`
+  - files with raw copy number profiles for the tumor sample
+- `<tumorsample_vs_normalsample>.normal.mpileup.gz_control.cpn`
+  - files with raw copy number profiles for the control sample
+- `<GC_profile.<tumorsample>.cpn>`
+  - file with GC-content profile
 
 ### Microsatellite instability
 
@@ -507,42 +534,38 @@ An altered distribution of microsatellite length is associated to a missed repli
 #### MSIsensorPro
 
 [MSIsensorPro](https://github.com/xjtu-omics/msisensor-pro) is a tool to detect the MSI status of a tumor scanning the length of the microsatellite regions.
-It requires a normal sample for each tumour to differentiate the somatic and germline cases.
+It requires a normal sample for each tumour to differentiate the somatic and germline cases. For further reading see the [MSIsensor paper](https://www.ncbi.nlm.nih.gov/pubmed/24371154).
 
-For a tumor/normal pair:
+_For a tumor/normal pair_:
 
 **Output directory: `results/variantcalling/<tumorsample_vs_normalsample>/msisensor`**
 
-- `<tumorsample_vs_normalsample>.msisensor`
+- `<tumorsample_vs_normalsample>`
   - MSI score output, contains information about the number of somatic sites.
-- `<tumorsample_vs_normalsample>.msisensor_dis`
+- `<tumorsample_vs_normalsample>_dis`
   - The normal and tumor length distribution for each microsatellite position.
-- `<tumorsample_vs_normalsample>.msisensor_germline`
+- `<tumorsample_vs_normalsample>_germline`
   - Somatic sites detected.
-- `<tumorsample_vs_normalsample>.msisensor_somatic`
+- `<tumorsample_vs_normalsample>_somatic`
   - Germline sites detected.
-
-For further reading see the [MSIsensor paper](https://www.ncbi.nlm.nih.gov/pubmed/24371154).
 
 ## Variant annotation
 
-This directory contains results from the final annotation steps: two tools are used for annotation, [snpEff](http://snpeff.sourceforge.net/) and [VEP](https://www.ensembl.org/info/docs/tools/vep/index.html).
-Only a subset of the `VCF` files are annotated, and only variants that have a `PASS` filter (//TODO this is not true for all i.e. strelka).
+This directory contains results from the final annotation steps: two tools are used for annotation, [snpEff](http://snpeff.sourceforge.net/) and [VEP](https://www.ensembl.org/info/docs/tools/vep/index.html). Both results can also be combined by setting `--tools merge`.
+All variants present in the called `VCF` files are annotated. For some variantcallers this can mean that the variants are already filtered by `PASS`, for some this needs to be done during post-processing.
 
 ### snpEff
 
 [snpeff](http://snpeff.sourceforge.net/) is a genetic variant annotation and effect prediction toolbox.
 It annotates and predicts the effects of variants on genes (such as amino acid changes) using multiple databases for annotations.
-The generated `VCF` header contains the software version and the used command line.
+The generated `VCF` header contains the software version and the used command line. For further reading and documentation see the [snpEff manual](http://snpeff.sourceforge.net/SnpEff_manual.html#outputSummary)
 
-For all samples:
+_For all samples_:
 
 **Output directory: `results/annotation/{sample,tumorsample_vs_normalsample}`**
 
-- `{sample,tumorsample_vs_normalsample}_snpEff.ann.vcf.gz` and `{sample,tumorsample_vs_normalsample}_snpEff.ann.vcf.gz.tbi`
+- `{sample,tumorsample_vs_normalsample}.<variantcaller>_snpEff.ann.vcf.gz` and `{sample,tumorsample_vs_normalsample}.<variantcaller>_snpEff.ann.vcf.gz.tbi`
   - `VCF` with tabix index
-
-For further reading and documentation see the [snpEff manual](http://snpeff.sourceforge.net/SnpEff_manual.html#outputSummary)
 
 ### VEP
 
@@ -563,14 +586,14 @@ Currently, it contains:
 - _Protein_position_: Relative position of amino acid in protein
 - _BIOTYPE_: Biotype of transcript or regulatory feature
 
-For all samples:
+For further reading and documentation see the [VEP manual](https://www.ensembl.org/info/docs/tools/vep/index.html)
+
+_For all samples_:
 
 **Output directory: `results/annotation/{sample,tumorsample_vs_normalsample}`**
 
-- `VariantCaller_Sample_VEP.ann.vcf.gz` and `VariantCaller_Sample_VEP.ann.vcf.gz.tbi`
+- `{sample,tumorsample_vs_normalsample}.<variantcaller>_VEP.ann.vcf.gz` and `{sample,tumorsample_vs_normalsample}.<variantcaller>_VEP.ann.vcf.gz.tbi`
   - `VCF` with tabix index
-
-For further reading and documentation see the [VEP manual](https://www.ensembl.org/info/docs/tools/vep/index.html)
 
 ## QC and reporting
 
@@ -578,7 +601,7 @@ For further reading and documentation see the [VEP manual](https://www.ensembl.o
 
 [FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) gives general quality metrics about your sequenced reads. It provides information about the quality score distribution across your reads, per base sequence content (%A/T/G/C), adapter contamination and overrepresented sequences. For further reading and documentation see the [FastQC help pages](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/).
 
-For all samples:
+_For all samples_:
 
 **Output directory: `results/Reports/[SAMPLE]/fastqc`**
 
@@ -766,3 +789,5 @@ Results generated by MultiQC collate pipeline QC from supported tools e.g. FastQ
 [Nextflow](https://www.nextflow.io/docs/latest/tracing.html) provides excellent functionality for generating various reports relevant to the running and execution of the pipeline. This will allow you to troubleshoot errors with the running of the pipeline, and also provide you with other information such as launch commands, run times and resource usage.
 
 ## Reference files
+
+-`<intervals>.target.bed` -`reference.cnn` -`<intervals>.antitarget.bed`
