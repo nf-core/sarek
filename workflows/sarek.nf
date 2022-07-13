@@ -1042,7 +1042,7 @@ def extract_csv(csv_file) {
             }
             if (!sample2patient.containsKey(row.sample.toString())) {
                 sample2patient[row.sample.toString()] = row.patient.toString()
-            } else if (sample2patient[row.sample.toString()] !== row.patient.toString()) {
+            } else if (sample2patient[row.sample.toString()] != row.patient.toString()) {
                 log.error('The sample "' + row.sample.toString() + '" is registered for both patient "' + row.patient.toString() + '" and "' + sample2patient[row.sample.toString()] + '" in the sample sheet.')
                 System.exit(1)
             }
