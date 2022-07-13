@@ -576,10 +576,16 @@
     - strelkabp
     - variant_calling
   files:
-    - path: results/variant_calling/sample3/strelka/sample3.variants.vcf.gz
-    - path: results/variant_calling/sample3/strelka/sample3.variants.vcf.gz.tbi
-    - path: results/variant_calling/sample3/strelka/sample3.genome.vcf.gz
-    - path: results/variant_calling/sample3/strelka/sample3.genome.vcf.gz.tbi
+    - path: results/variant_calling/sample3/manta/sample3.manta.variants.vcf.gz
+    - path: results/variant_calling/sample3/manta/sample3.manta.variants.vcf.gz.tbi
+    - path: results/variant_calling/sample3/strelka/sample3.strelka.genome.vcf.gz
+    - path: results/variant_calling/sample3/strelka/sample3.strelka.genome.vcf.gz.tbi
+    - path: results//variant_calling/sample3/strelka/sample3.strelka.variants.vcf.gz
+    - path: results//variant_calling/sample3/strelka/sample3.strelka.variants.vcf.gz.tbi
+    - path: results//variant_calling/sample4_vs_sample3/manta/sample4_vs_sample3.manta.diploid_sv.vcf.gz
+    - path: results//variant_calling/sample4_vs_sample3/manta/sample4_vs_sample3.manta.diploid_sv.vcf.gz.tbi
+    - path: results//variant_calling/sample4_vs_sample3/manta/sample4_vs_sample3.manta.somatic_sv.vcf.gz
+    - path: results//variant_calling/sample4_vs_sample3/manta/sample4_vs_sample3.manta.somatic_sv.vcf.gz.tbi
     - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.somatic_indels.vcf.gz
     - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.somatic_indels.vcf.gz.tbi
     - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.somatic_snvs.vcf.gz
