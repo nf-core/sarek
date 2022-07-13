@@ -315,6 +315,13 @@
             "default": "",
             "fa_icon": "fas fa-toolbox",
             "properties": {
+                "vep_include_fasta": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-database",
+                    "description": "Allow usage of fasta file for annotation with VEP.\ncf https://www.ensembl.org/info/docs/tools/vep/script/vep_cache.html#fasta",
+                    "default": false,
+                    "hidden": true
+                },
                 "vep_dbnsfp": {
                     "type": "boolean",
                     "fa_icon": "fas fa-database",
@@ -585,37 +592,44 @@
                 "snpeff_db": {
                     "type": "string",
                     "fa_icon": "fas fa-database",
-                    "description": "snpEff DB version."
+                    "description": "snpEff DB version.",
+                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately.\nThis is used to specify the database to be use to annotate with.\nAlternatively databases' names can be listed with the `snpEff databases`."
                 },
                 "snpeff_genome": {
                     "type": "string",
                     "fa_icon": "fas fa-microscope",
-                    "description": "snpeff genome.",
-                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
+                    "description": "snpEff genome.",
+                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately.\nThis is used to specify the genome when using the container with pre-downloaded cache."
+                },
+                "snpeff_version": {
+                    "type": "string",
+                    "fa_icon": "fas fa-tag",
+                    "description": "snpEff version.",
+                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately.\nThis is used to specify the snpeff version when using the container with pre-downloaded cache."
                 },
                 "vep_genome": {
                     "type": "string",
                     "fa_icon": "fas fa-microscope",
                     "description": "VEP genome.",
-                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
+                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately.\nThis is used to specify the genome when using the container with pre-downloaded cache."
                 },
                 "vep_species": {
                     "type": "string",
                     "fa_icon": "fas fa-microscope",
                     "description": "VEP species.",
-                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
+                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately.\nAlternatively species listed in Ensembl Genomes caches can be used."
                 },
                 "vep_cache_version": {
                     "type": "number",
                     "fa_icon": "fas fa-tag",
                     "description": "VEP cache version.",
-                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
+                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately.\nAlternatively cache version can be use to specify the correct Ensembl Genomes version number as these differ from the concurrent Ensembl/VEP version numbers"
                 },
                 "vep_version": {
                     "type": "string",
                     "fa_icon": "fas fa-tag",
                     "description": "VEP version.",
-                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
+                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately.\nThis is used to specify the VEP version when using the container with pre-downloaded cache."
                 },
                 "save_reference": {
                     "type": "boolean",

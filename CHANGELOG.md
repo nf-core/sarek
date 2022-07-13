@@ -40,6 +40,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#620](https://github.com/nf-core/sarek/pull/620) - Added checks for sex information when running a CNV tools
 - [#623](https://github.com/nf-core/sarek/pull/623) - Additional checks of data in the input sample sheet.
 - [#629](https://github.com/nf-core/sarek/pull/629) - Added checks to catch inconsistency between supplied samples and requested tools.
+- [#632](https://github.com/nf-core/sarek/pull/632) - Added params `--snpeff_version` to allow more configuration on the snpeff container definition
+- [#632](https://github.com/nf-core/sarek/pull/632) - Added params `--vep_include_fasta` to use the fasta file for annotation
 
 ### Changed
 
@@ -81,6 +83,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#608](https://github.com/nf-core/sarek/pull/608) - Prevent candidate VCFs from getting published in manta
 - [#620](https://github.com/nf-core/sarek/pull/620) - `gender` is now `sex` in the samplesheet
 - [#630](https://github.com/nf-core/sarek/pull/630) - Update citations file
+- [#632](https://github.com/nf-core/sarek/pull/632) - Update `snpEff` version to `5.1` and cache up to `105`
+- [#632](https://github.com/nf-core/sarek/pull/632) - Update `VEP` version to `106.1` and cache up to `106`
 
 ### Fixed
 
