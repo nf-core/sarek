@@ -1,0 +1,45 @@
+name: tabix_bgziptabix
+description: bgzip a sorted tab-delimited genome file and then create tabix index
+keywords:
+  - bgzip
+  - compress
+  - index
+  - tabix
+  - vcf
+tools:
+  - tabix:
+      description: Generic indexer for TAB-delimited genome position files.
+      homepage: https://www.htslib.org/doc/tabix.html
+      documentation: https://www.htslib.org/doc/tabix.1.html
+      doi: 10.1093/bioinformatics/btq671
+      licence: ["MIT"]
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - tab:
+      type: file
+      description: TAB-delimited genome position file
+      pattern: "*.{bed,gff,sam,vcf}"
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - gz:
+      type: file
+      description: Output compressed file
+      pattern: "*.{gz}"
+  - tbi:
+      type: file
+      description: tabix index file
+      pattern: "*.{gz.tbi}"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@maxulysse"

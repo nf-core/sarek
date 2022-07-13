@@ -1,0 +1,73 @@
+- name: Run variant calling on somatic samples with cnvkit and skip variant calling on matched normal
+  command: nextflow run main.nf -profile test,tools_somatic,docker --tools cnvkit -c ./tests/nextflow.config  --only_paired_variant_calling
+  tags:
+    - cnvkit
+    - somatic
+    - only_paired_variant_calling
+    - copy_number_calling
+  files:
+    - path: results/variant_calling/sample4_vs_sample3/cnvkit/multi_intervals.antitarget.bed
+    - path: results/variant_calling/sample4_vs_sample3/cnvkit/test.paired_end.recalibrated.sorted.antitargetcoverage.cnn
+    - path: results/variant_calling/sample4_vs_sample3/cnvkit/test.paired_end.recalibrated.sorted.targetcoverage.cnn
+    - path: results/variant_calling/sample4_vs_sample3/cnvkit/test2.paired_end.recalibrated.sorted.antitargetcoverage.cnn
+    - path: results/variant_calling/sample4_vs_sample3/cnvkit/test2.paired_end.recalibrated.sorted.bintest.cns
+    - path: results/variant_calling/sample4_vs_sample3/cnvkit/reference.cnn
+    - path: results/variant_calling/sample4_vs_sample3/cnvkit/test2.paired_end.recalibrated.sorted-scatter.png
+    - path: results/variant_calling/sample4_vs_sample3/cnvkit/test2.paired_end.recalibrated.sorted-diagram.pdf
+    - path: results/variant_calling/sample4_vs_sample3/cnvkit/test2.paired_end.recalibrated.sorted.cnr
+    - path: results/variant_calling/sample4_vs_sample3/cnvkit/test2.paired_end.recalibrated.sorted.cns
+    - path: results/variant_calling/sample4_vs_sample3/cnvkit/multi_intervals.target.bed
+    - path: results/variant_calling/sample4_vs_sample3/cnvkit/test2.paired_end.recalibrated.sorted.targetcoverage.cnn
+    - path: results/variant_calling/sample4_vs_sample3/cnvkit/test2.paired_end.recalibrated.sorted.call.cns
+
+- name: Skip variant calling on matched normal
+  command: nextflow run main.nf -profile test,variantcalling_channels,docker --tools strelka --only_paired_variant_calling
+  tags:
+    - somatic
+    - strelka
+    - variantcalling_channel
+  files:
+    - path: results/variant_calling/sample1/strelka/sample1.variants.vcf.gz
+    - path: results/variant_calling/sample1/strelka/sample1.variants.vcf.gz.tbi
+    - path: results/variant_calling/sample1/strelka/sample1.genome.vcf.gz
+    - path: results/variant_calling/sample1/strelka/sample1.genome.vcf.gz.tbi
+    - path: results/variant_calling/sample3/strelka/sample3.variants.vcf.gz
+      should_exist: false
+    - path: results/variant_calling/sample3/strelka/sample3.variants.vcf.gz.tbi
+      should_exist: false
+    - path: results/variant_calling/sample3/strelka/sample3.genome.vcf.gz
+      should_exist: false
+    - path: results/variant_calling/sample3/strelka/sample3.genome.vcf.gz.tbi
+      should_exist: false
+    - path: results/variant_calling/sample2/strelka/sample2.variants.vcf.gz
+    - path: results/variant_calling/sample2/strelka/sample2.variants.vcf.gz.tbi
+    - path: results/variant_calling/sample2/strelka/sample2.genome.vcf.gz
+    - path: results/variant_calling/sample2/strelka/sample2.genome.vcf.gz.tbi
+    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.somatic_indels.vcf.gz
+    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.somatic_indels.vcf.gz.tbi
+    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.somatic_snvs.vcf.gz
+    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.somatic_snvs.vcf.gz.tbi
+
+- name: Do germline variant calling on matched normal
+  command: nextflow run main.nf -profile test,variantcalling_channels,docker --tools strelka
+  tags:
+    - somatic
+    - strelka
+    - variantcalling_channel
+  files:
+    - path: results/variant_calling/sample1/strelka/sample1.variants.vcf.gz
+    - path: results/variant_calling/sample1/strelka/sample1.variants.vcf.gz.tbi
+    - path: results/variant_calling/sample1/strelka/sample1.genome.vcf.gz
+    - path: results/variant_calling/sample1/strelka/sample1.genome.vcf.gz.tbi
+    - path: results/variant_calling/sample3/strelka/sample3.variants.vcf.gz
+    - path: results/variant_calling/sample3/strelka/sample3.variants.vcf.gz.tbi
+    - path: results/variant_calling/sample3/strelka/sample3.genome.vcf.gz
+    - path: results/variant_calling/sample3/strelka/sample3.genome.vcf.gz.tbi
+    - path: results/variant_calling/sample2/strelka/sample2.variants.vcf.gz
+    - path: results/variant_calling/sample2/strelka/sample2.variants.vcf.gz.tbi
+    - path: results/variant_calling/sample2/strelka/sample2.genome.vcf.gz
+    - path: results/variant_calling/sample2/strelka/sample2.genome.vcf.gz.tbi
+    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.somatic_indels.vcf.gz
+    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.somatic_indels.vcf.gz.tbi
+    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.somatic_snvs.vcf.gz
+    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.somatic_snvs.vcf.gz.tbi

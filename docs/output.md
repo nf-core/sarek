@@ -6,23 +6,26 @@ This document describes the output produced by the pipeline. Most of the plots a
 
 The directories listed below will be created in the results directory after the pipeline has finished. All paths are relative to the top-level results directory.
 
+The directories listed below will be created in the results directory after the pipeline has finished.
+All paths are relative to the top-level results directory.
+
 ## Pipeline overview <!-- omit in toc -->
 
-The pipeline is built using [Nextflow](https://www.nextflow.io/)
-and processes data using the following steps:
+The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:
 
 - [Preprocessing](#preprocessing)
   - [Map to Reference](#map-to-reference)
-    - [bwa](#bwa)
+    - [BWA](#bwa)
     - [BWA-mem2](#bwa-mem2)
   - [Mark Duplicates](#mark-duplicates)
     - [GATK MarkDuplicates](#gatk-markduplicates)
+    - [GATK MarkDuplicates Spark](#gatk-markduplicates-spark)
   - [Base (Quality Score) Recalibration](#base-quality-score-recalibration)
-    - [GATK BaseRecalibrator](#gatk-baserecalibrator)
-    - [GATK ApplyBQSR](#gatk-applybqsr)
-  - [TSV files](#tsv-files)
-  - [TSV files with `--skip_markduplicates`](#tsv-files-with---skip_markduplicates)
-  - [TSV files with `--sentieon`](#tsv-files-with---sentieon)
+    - [GATK BaseRecalibrator (Spark)](#gatk-baserecalibrator)
+    - [GATK ApplyBQSR (Spark)](#gatk-applybqsr)
+  - [CSV files](#csv-files)
+  - [CSV files with `--skip_markduplicates`](#csv-files-with---skip_markduplicates)
+  - [CSV files with `--sentieon`](#tsv-files-with---sentieon)
 - [Variant Calling](#variant-calling)
   - [SNVs and small indels](#snvs-and-small-indels)
     - [FreeBayes](#freebayes)
@@ -39,7 +42,6 @@ and processes data using the following steps:
     - [TIDDIT](#tiddit)
     - [Sentieon DNAscope SV](#sentieon-dnascope-sv)
   - [Sample heterogeneity, ploidy and CNVs](#sample-heterogeneity-ploidy-and-cnvs)
-    - [ConvertAlleleCounts](#convertallelecounts)
     - [ASCAT](#ascat)
     - [Control-FREEC](#control-freec)
   - [MSI status](#msi-status)
@@ -59,7 +61,7 @@ and processes data using the following steps:
     - [VEP reports](#vep-reports)
   - [Reporting](#reporting)
     - [MultiQC](#multiqc)
-- [Pipeline information](#pipeline-information)
+  - [Pipeline information](#pipeline-information)
 
 ## Preprocessing
 
@@ -67,9 +69,9 @@ and processes data using the following steps:
 
 ### Map to Reference
 
-#### bwa
+#### BWA
 
-[bwa](https://github.com/lh3/bwa) is a software package for mapping low-divergent sequences against a large reference genome.
+[BWA](https://github.com/lh3/bwa) is a software package for mapping low-divergent sequences against a large reference genome.
 
 Such files are intermediate and not kept in the final files delivered to users.
 
@@ -79,13 +81,19 @@ Such files are intermediate and not kept in the final files delivered to users.
 
 Such files are intermediate and not kept in the final files delivered to users.
 
+#### DRAGMAP
+
+[DRAGMAP](https://github.com/Illumina/dragmap) is an open-source software implementation of the DRAGEN mapper, which the Illumina team created so that we would have an open-source way to produce the same results as their proprietary DRAGEN hardware.
+
+Such files are intermediate and not kept in the final files delivered to users.
+
 ### Mark Duplicates
 
 #### GATK MarkDuplicates
 
-By default, `Sarek` will use [GATK MarkDuplicatesSpark](https://gatk.broadinstitute.org/hc/en-us/articles/360042912511-MarkDuplicatesSpark), `Spark` implementation of [GATK MarkDuplicates](https://gatk.broadinstitute.org/hc/en-us/articles/360042477492-MarkDuplicates-Picard), which locates and tags duplicate reads in a `BAM` or `SAM` file, where duplicate reads are defined as originating from a single fragment of DNA.
+By default, `Sarek` will use [GATK MarkDuplicates](https://gatk.broadinstitute.org/hc/en-us/articles/360042477492-MarkDuplicates-Picard), which locates and tags duplicate reads in a `BAM` or `SAM` file, where duplicate reads are defined as originating from a single fragment of DNA.
 
-Specify `--no_gatk_spark` to use `GATK MarkDuplicates` instead.
+Specify `--use_gatk_spark` to use [`GATK MarkDuplicatesSpark`](https://gatk.broadinstitute.org/hc/en-us/articles/360042912511-MarkDuplicatesSpark) instead, `Spark` implementation of `GATK MarkDuplicates`.
 
 This directory is the location for the `BAM` files delivered to users.
 Besides the `duplicates-marked BAM` files, the recalibration tables (`*.recal.table`) are also stored, and can be used to create `recalibrated BAM` files.
@@ -98,6 +106,8 @@ For all samples:
   - `BAM` file and index
 
 For further reading and documentation see the [data pre-processing for variant discovery from the GATK best practices](https://gatk.broadinstitute.org/hc/en-us/articles/360035535912-Data-pre-processing-for-variant-discovery).
+
+#### GATK MarkDuplicates Spark
 
 ### Base (Quality Score) Recalibration
 
@@ -129,9 +139,9 @@ For all samples:
 
 For further reading and documentation see the [data pre-processing for variant discovery from the GATK best practices](https://gatk.broadinstitute.org/hc/en-us/articles/360035535912-Data-pre-processing-for-variant-discovery).
 
-### TSV files
+### CSV files
 
-The `TSV` files are auto-generated and can be used by `Sarek` for further processing and/or variant calling.
+The `CSV` files are auto-generated and can be used by `Sarek` for further processing and/or variant calling.
 
 For further reading and documentation see the [`--input`](usage.md#--input) section in the usage documentation.
 
@@ -144,7 +154,7 @@ For all samples:
 - `duplicates_marked_no_table_[SAMPLE].tsv`, `duplicates_marked_[SAMPLE].tsv` and `recalibrated_[SAMPLE].tsv`
   - `TSV` files to start `Sarek` from `prepare_recalibration`, `recalibrate` or `variantcalling` steps for a specific sample.
 
-### TSV files with `--skip_markduplicates`
+### CSV files with `--skip_markduplicates`
 
 > **WARNING** Only with [`--skip_markduplicates`](usage.md#--skip_markduplicates)
 
@@ -157,7 +167,7 @@ For all samples:
 - `mapped_[SAMPLE].tsv`, `mapped_no_duplicates_marked_[SAMPLE].tsv` and `recalibrated_[SAMPLE].tsv`
   - `TSV` files to start `Sarek` from `prepare_recalibration`, `recalibrate` or `variantcalling` steps for a specific sample.
 
-### TSV files with `--sentieon`
+### CSV files with `--sentieon`
 
 > **WARNING** Only with [`--sentieon`](usage.md#--sentieon)
 
@@ -421,58 +431,52 @@ For further reading and documentation see the [Sentieon DNAscope user guide](htt
 
 ### Sample heterogeneity, ploidy and CNVs
 
-#### ConvertAlleleCounts
-
-Running ASCAT on NGS data requires that the `BAM` files are converted into BAF and LogR values.
-This can be done using the software [AlleleCount](https://github.com/cancerit/alleleCount) followed by the provided [ConvertAlleleCounts](https://github.com/nf-core/sarek/blob/master/bin/convertAlleleCounts.r) R-script.
-
-For a Tumor/Normal pair:
-
-**Output directory: `results/VariantCalling/[TUMOR_vs_NORMAL]/ASCAT`**
-
-- `[TUMORSAMPLE].BAF` and `[NORMALSAMPLE].BAF`
-  - file with beta allele frequencies
-- `[TUMORSAMPLE].LogR` and `[NORMALSAMPLE].LogR`
-  - file with total copy number on a logarithmic scale
-
 #### ASCAT
 
 [ASCAT](https://github.com/Crick-CancerGenomics/ascat) is a software for performing allele-specific copy number analysis of tumor samples and for estimating tumor ploidy and purity (normal contamination).
 It infers tumor purity and ploidy and calculates whole-genome allele-specific copy number profiles.
 `ASCAT` is written in `R` and available here: [github.com/Crick-CancerGenomics/ascat](https://github.com/Crick-CancerGenomics/ascat).
 The `ASCAT` process gives several images as output, described in detail in this [book chapter](http://www.ncbi.nlm.nih.gov/pubmed/22130873).
+Running ASCAT on NGS data requires that the `BAM` files are converted into BAF and LogR values.
+This is done internally using the software [AlleleCount](https://github.com/cancerit/alleleCount).
 
 For a Tumor/Normal pair:
 
-**Output directory: `results/VariantCalling/[TUMOR_vs_NORMAL]/ASCAT`**
+**Output directory: `results/variant_calling/[TUMOR_vs_NORMAL]/ascat`**
 
-- `[TUMORSAMPLE].aberrationreliability.png`
-  - Image with information about aberration reliability
-- `[TUMORSAMPLE].ASCATprofile.png`
-  - Image with information about ASCAT profile
-- `[TUMORSAMPLE].ASPCF.png`
+- `[TUMORSAMPLE_VS_NORMALSAMPLE].tumour.ASPCF.png`
   - Image with information about ASPCF
-- `[TUMORSAMPLE].rawprofile.png`
-  - Image with information about raw profile
-- `[TUMORSAMPLE].sunrise.png`
-  - Image with information about sunrise
-- `[TUMORSAMPLE].tumour.png`
-  - Image with information about tumor
-- `[TUMORSAMPLE].cnvs.txt`
-  - file with information about CNVS
-- `[TUMORSAMPLE].LogR.PCFed.txt`
-  - file with information about LogR
-- `[TUMORSAMPLE].purityploidy.txt`
-  - file with information about purity ploidy
+- `[TUMORSAMPLE_VS_NORMALSAMPLE].before_correction.[TUMORSAMPLE_VS_NORMALSAMPLE].tumour.png`
+  - Image with information about raw profile of tumor sample of logR and BAF values
+- `[TUMORSAMPLE_VS_NORMALSAMPLE].before_correction.[TUMORSAMPLE_VS_NORMALSAMPLE].germline.png`
+  - Image with information about raw profile of normal sample of logR and BAF values
+- `[TUMORSAMPLE_VS_NORMALSAMPLE].after_correction_gc_rt.[TUMORSAMPLE_VS_NORMALSAMPLE].tumour.png`
+  - Image with information about GC and RT corrected logR and BAF values of tumor sample
+- `[TUMORSAMPLE_VS_NORMALSAMPLE].after_correction_gc_rt.[TUMORSAMPLE_VS_NORMALSAMPLE].germline.png`
+  - Image with information about GC and RT corrected logR and BAF values of normal sample
+- `[TUMORSAMPLE_VS_NORMALSAMPLE].sunrise.png`
+  - Image visualising the range of ploidy and tumor percentage values
+- `[TUMORSAMPLE_VS_NORMALSAMPLE].metrics.txt`
+  - File with information about different metrics from ASCAT profiles
+- `[TUMORSAMPLE_VS_NORMALSAMPLE].cnvs.txt`
+  - File with information about CNVS
+- `[TUMORSAMPLE_VS_NORMALSAMPLE].purityploidy.txt`
+  - File with information about purity and ploidy
+- `[TUMORSAMPLE_VS_NORMALSAMPLE].segments.txt`
+  - File with information about copy number segments
+- `[TUMORSAMPLE_VS_NORMALSAMPLE].tumour_tumourBAF.txt` and `[TUMORSAMPLE_VS_NORMALSAMPLE].tumour_normalBAF.txt`
+  - file with beta allele frequencies
+- `[TUMORSAMPLE_VS_NORMALSAMPLE].tumour_tumourLogR.txt` and `[TUMORSAMPLE_VS_NORMALSAMPLE].tumour_normalLogR.txt`
+  - File with total copy number on a logarithmic scale
 
-The text file `[TUMORSAMPLE].cnvs.txt` countains predictions about copy number state for all the segments.
+The text file `[TUMORSAMPLE_VS_NORMALSAMPLE].cnvs.txt` contains predictions about copy number state for all the segments.
 The output is a tab delimited text file with the following columns:
 
-- *chr*: chromosome number
-- *startpos*: start position of the segment
-- *endpos*: end position of the segment
-- *nMajor*: number of copies of one of the allels (for example the chromosome inherited from the father)
-- *nMinor*: number of copies of the other allele (for example the chromosome inherited of the mother)
+- _chr_: chromosome number
+- _startpos_: start position of the segment
+- _endpos_: end position of the segment
+- _nMajor_: number of copies of one of the allels (for example the chromosome inherited from the father)
+- _nMinor_: number of copies of the other allele (for example the chromosome inherited of the mother)
 
 The file `[TUMORSAMPLE].cnvs.txt` contains all segments predicted by ASCAT, both those with normal copy number (nMinor = 1 and nMajor =1) and those corresponding to copy number aberrations.
 
@@ -552,17 +556,17 @@ The generated `VCF` header contains the software version, also the version numbe
 The format of the [consequence annotations](https://www.ensembl.org/info/genome/variation/prediction/predicted_data.html) is also in the `VCF` header describing the `INFO` field.
 Currently, it contains:
 
-- *Consequence*: impact of the variation, if there is any
-- *Codons*: the codon change, i.e. cGt/cAt
-- *Amino_acids*: change in amino acids, i.e. R/H if there is any
-- *Gene*: ENSEMBL gene name
-- *SYMBOL*: gene symbol
-- *Feature*: actual transcript name
-- *EXON*: affected exon
-- *PolyPhen*: prediction based on [PolyPhen](http://genetics.bwh.harvard.edu/pph2/)
-- *SIFT*: prediction by [SIFT](http://sift.bii.a-star.edu.sg/)
-- *Protein_position*: Relative position of amino acid in protein
-- *BIOTYPE*: Biotype of transcript or regulatory feature
+- _Consequence_: impact of the variation, if there is any
+- _Codons_: the codon change, i.e. cGt/cAt
+- _Amino_acids_: change in amino acids, i.e. R/H if there is any
+- _Gene_: ENSEMBL gene name
+- _SYMBOL_: gene symbol
+- _Feature_: actual transcript name
+- _EXON_: affected exon
+- _PolyPhen_: prediction based on [PolyPhen](http://genetics.bwh.harvard.edu/pph2/)
+- _SIFT_: prediction by [SIFT](http://sift.bii.a-star.edu.sg/)
+- _Protein_position_: Relative position of amino acid in protein
+- _BIOTYPE_: Biotype of transcript or regulatory feature
 
 For all samples:
 
@@ -579,8 +583,7 @@ For further reading and documentation see the [VEP manual](https://www.ensembl.o
 
 #### FastQC
 
-[FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) gives general quality metrics about your sequenced reads.
-It provides information about the quality score distribution across your reads, per base sequence content (`%A/T/G/C`), adapter contamination and overrepresented sequences.
+[FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) gives general quality metrics about your sequenced reads. It provides information about the quality score distribution across your reads, per base sequence content (%A/T/G/C), adapter contamination and overrepresented sequences. For further reading and documentation see the [FastQC help pages](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/).
 
 For all samples:
 
@@ -594,7 +597,9 @@ For all samples:
 > **NB:** The `FastQC` plots displayed in the `MultiQC` report shows _untrimmed_ reads.
 > They may contain adapter sequence and potentially regions with low quality.
 
-For further reading and documentation see the [FastQC help pages](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/).
+- `fastqc/`
+  - `*_fastqc.html`: FastQC report containing quality metrics.
+  - `*_fastqc.zip`: Zip archive containing the FastQC report, tab-delimited data file and plot images.
 
 #### bamQC
 
@@ -735,25 +740,32 @@ Most of the pipeline QC results are visualised in the report and further statist
 
 The pipeline has special steps which also allow the software versions to be reported in the `MultiQC` output for future traceability.
 
-**Output files:**
+<details markdown="1">
+<summary>Output files</summary>
 
-- `multiqc/`  
-  - `multiqc_report.html`
-    - Standalone HTML file that can be viewed in your web browser
-  - `multiqc_data/`
-    - Directory containing parsed statistics from the different tools used in the pipeline
-  - `multiqc_plots/`
-    - Directory containing static images from the report in various formats
+- `multiqc/`
+  - `multiqc_report.html`: a standalone HTML file that can be viewed in your web browser.
+  - `multiqc_data/`: directory containing parsed statistics from the different tools used in the pipeline.
+  - `multiqc_plots/`: directory containing static images from the report in various formats.
 
 For more information about how to use `MultiQC` reports, see [https://multiqc.info](https://multiqc.info).
 
-## Pipeline information
+</details>
 
-[Nextflow](https://www.nextflow.io/docs/latest/tracing.html) provides excellent functionality for generating various reports relevant to the running and execution of the pipeline. This will allow you to troubleshoot errors with the running of the pipeline, and also provide you with other information such as launch commands, run times and resource usage.
+[MultiQC](http://multiqc.info) is a visualization tool that generates a single HTML report summarising all samples in your project. Most of the pipeline QC results are visualised in the report and further statistics are available in the report data directory.
 
-**Output files:**
+Results generated by MultiQC collate pipeline QC from supported tools e.g. FastQC. The pipeline has special steps which also allow the software versions to be reported in the MultiQC output for future traceability. For more information about how to use MultiQC reports, see <http://multiqc.info>.
+
+### Pipeline information
+
+<details markdown="1">
+<summary>Output files</summary>
 
 - `pipeline_info/`
   - Reports generated by Nextflow: `execution_report.html`, `execution_timeline.html`, `execution_trace.txt` and `pipeline_dag.dot`/`pipeline_dag.svg`.
-  - Reports generated by the pipeline: `pipeline_report.html`, `pipeline_report.txt` and `software_versions.csv`.
-  - Documentation for interpretation of results in HTML format: `results_description.html`.
+  - Reports generated by the pipeline: `pipeline_report.html`, `pipeline_report.txt` and `software_versions.yml`. The `pipeline_report*` files will only be present if the `--email` / `--email_on_fail` parameter's are used when running the pipeline.
+  - Reformatted samplesheet files used as input to the pipeline: `samplesheet.valid.csv`.
+
+</details>
+
+[Nextflow](https://www.nextflow.io/docs/latest/tracing.html) provides excellent functionality for generating various reports relevant to the running and execution of the pipeline. This will allow you to troubleshoot errors with the running of the pipeline, and also provide you with other information such as launch commands, run times and resource usage.

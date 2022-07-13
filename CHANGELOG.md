@@ -20,6 +20,141 @@ Pårtejekna is one of glaciers of the Pårte Massif.
 
 ### Added
 
+- [#388](https://github.com/nf-core/sarek/pull/388) - Add cram support + read splitting with `SeqKit` for speedup
+- [#394](https://github.com/nf-core/sarek/pull/394) - Add `DeepVariant`
+- [#411](https://github.com/nf-core/sarek/pull/411) - cram in csv samplesheet
+- [#448](https://github.com/nf-core/sarek/pull/448) - Allow to skip base quality recalibration with `--skip_bqsr`
+- [#449](https://github.com/nf-core/sarek/pull/449) - [@FriederikeHanssen](https://github.com/FriederikeHanssen) is now a `CODEOWNERS`
+- [#460](https://github.com/nf-core/sarek/pull/460) - Add posters
+- [#463](https://github.com/nf-core/sarek/pull/463) - Add dark/light logo versions
+- [#464](https://github.com/nf-core/sarek/pull/464), [#514](https://github.com/nf-core/sarek/pull/514) - Add `DRAGMAP` as a possible aligner
+- [#479](https://github.com/nf-core/sarek/pull/479) - Add more subworkflows
+- [#485](https://github.com/nf-core/sarek/pull/485) - `--skip_qc`, `--skip_markduplicates` and `--skip_bqsr` is now `--skip_tools`
+- [#507](https://github.com/nf-core/sarek/pull/507), [#537](https://github.com/nf-core/sarek/pull/537) - Subway map for building indexes
+- [#512](https://github.com/nf-core/sarek/pull/512), [#531](https://github.com/nf-core/sarek/pull/531), [#537](https://github.com/nf-core/sarek/pull/537) - Subway map for pipeline
+- [#522](https://github.com/nf-core/sarek/pull/522) - Add QC for vcf files & MultiQC
+- [#533](https://github.com/nf-core/sarek/pull/533) - Add param `--only_paired_variant_calling` to allow skipping of germline variantcalling for paired samples
+- [#536](https://github.com/nf-core/sarek/pull/536) - Add `--step markduplicates` to start from duplicate marking, `--step prepare_recalibration` now ONLY starts at process `BaseRecalibrator` & adding `bam` and `cram` input support for `--step` `markduplicates`, `prepare_recalibration`, `recalibrate`, and `variant_calling`
+- [#538](https://github.com/nf-core/sarek/pull/538) - Add param `--seq_platform`, default: `ILLUMINA`
+- [#545](https://github.com/nf-core/sarek/pull/545) - Add modules and subworkflows for `cnvkit` tumor_only mode
+- [#540](https://github.com/nf-core/sarek/pull/540) - Add modules and subworkflows for `cnvkit` somatic mode
+- [#557](https://github.com/nf-core/sarek/pull/557) - Add `Haplotypecaller` single sample mode together with `CNNScoreVariants` and `FilterVariantTranches`
+- [#576](https://github.com/nf-core/sarek/pull/576) - Add modules and subworkflows for `cnvkit` germline mode
+- [#582](https://github.com/nf-core/sarek/pull/582) - Added option `--vep_out_format` for setting the format of the output-file from VEP to `json`, `tab` or `vcf` (default)
+- [#594](https://github.com/nf-core/sarek/pull/594) - Add parameter `--save_output_as_bam` to allow output of result files in BAM format
+- [#597](https://github.com/nf-core/sarek/pull/597) - Added tiddit for tumor variant calling
+- [#600](https://github.com/nf-core/sarek/pull/600) - Added description for UMI related params in schema
+- [#604](https://github.com/nf-core/sarek/pull/604), [#617](https://github.com/nf-core/sarek/pull/617) - Added full size tests WGS 30x NA12878
+- [#613](https://github.com/nf-core/sarek/pull/613) - Added params `--dbnsfp_fields` to allow configuration of fields for the `dbnsfp` `VEP` plugin
+- [#613](https://github.com/nf-core/sarek/pull/613) - Added params `--dbnsfp_consequence` to allow configuration of consequence for the `dbnsfp` `VEP` plugin
+- [#613](https://github.com/nf-core/sarek/pull/613) - Added params `--vep_version` to allow more configuration on the vep container definition
+- [#620](https://github.com/nf-core/sarek/pull/620) - Added checks for sex information when running a CNV tools
+- [#623](https://github.com/nf-core/sarek/pull/623) - Additional checks of data in the input sample sheet.
+- [#629](https://github.com/nf-core/sarek/pull/629) - Added checks to catch inconsistency between supplied samples and requested tools.
+
+### Changed
+
+- [#580](https://github.com/nf-core/sarek/pull/580) - changed the test_full config to real public WXS data. 1 sample WXS germline, 1 Tumor/Normal pair. https://doi.org/10.1038/sdata.2016.25 and https://doi.org/10.1038/s41587-021-00994-5
+- [#383](https://github.com/nf-core/sarek/pull/383), [#528](https://github.com/nf-core/sarek/pull/528) - Update `CHANGELOG`
+- [#390](https://github.com/nf-core/sarek/pull/390) - Update `nextflow_schema.json`
+- [#408](https://github.com/nf-core/sarek/pull/408) - Sync `TEMPLATE` with `tools` `2.0.1`
+- [#416](https://github.com/nf-core/sarek/pull/416) - Sync `TEMPLATE` with `tools` `2.1`
+- [#417](https://github.com/nf-core/sarek/pull/417) - Merge `dsl2` and `dev` branches
+- [#419](https://github.com/nf-core/sarek/pull/419) - Improve preprocessing
+- [#420](https://github.com/nf-core/sarek/pull/420), [#455](https://github.com/nf-core/sarek/pull/455), [#459](https://github.com/nf-core/sarek/pull/459) - `nf-core modules update --all`
+- [#427](https://github.com/nf-core/sarek/pull/427) - Update `DeepVariant`
+- [#462](https://github.com/nf-core/sarek/pull/462) - Update modules and `modules.config`
+- [#465](https://github.com/nf-core/sarek/pull/465) - Improve `test_data.config`
+- [#466](https://github.com/nf-core/sarek/pull/466), [#478](https://github.com/nf-core/sarek/pull/478), [#492](https://github.com/nf-core/sarek/pull/492), [#521](https://github.com/nf-core/sarek/pull/521) - Move some local modules to `nf-core/modules`
+- [#466](https://github.com/nf-core/sarek/pull/466), [#485](https://github.com/nf-core/sarek/pull/485), [#492](https://github.com/nf-core/sarek/pull/492), [#494](https://github.com/nf-core/sarek/pull/494), [#515](https://github.com/nf-core/sarek/pull/515) - Improve preprocessing subworkflows
+- [#474](https://github.com/nf-core/sarek/pull/474), [#475](https://github.com/nf-core/sarek/pull/475) - Sync `TEMPLATE` with `tools` `2.2`
+- [#487](https://github.com/nf-core/sarek/pull/487), [#489](https://github.com/nf-core/sarek/pull/489), [#492](https://github.com/nf-core/sarek/pull/492), [#497](https://github.com/nf-core/sarek/pull/497), [#522](https://github.com/nf-core/sarek/pull/522), [#583](https://github.com/nf-core/sarek/pull/583) - Improve variant calling subworkflows
+- [#498](https://github.com/nf-core/sarek/pull/498) - Update docs
+- [#501](https://github.com/nf-core/sarek/pull/501) - Sync `TEMPLATE` with `tools` `2.3`
+- [#511](https://github.com/nf-core/sarek/pull/511) - Sync `TEMPLATE` with `tools` `2.3.2`
+- [#520](https://github.com/nf-core/sarek/pull/520) - Improve annotation subworkflows
+- [#537](https://github.com/nf-core/sarek/pull/537) - Update workflow figure
+- [#539](https://github.com/nf-core/sarek/pull/539) - Update `CITATIONS.md`
+- [#544](https://github.com/nf-core/sarek/pull/544) - `Mutect2` is no longer compatible with `--no_intervals`
+- [#551](https://github.com/nf-core/sarek/pull/551) - Sync `TEMPLATE` with `tools` `2.4`
+- [#562](https://github.com/nf-core/sarek/pull/562) - Restart from `--step annotate` is now also requiring a CSV file.
+- [#563](https://github.com/nf-core/sarek/pull/563) - Updated subway map
+- [#570](https://github.com/nf-core/sarek/pull/570) - Extract mpileup into its own subworkflow; zip mpileup files
+- [#571](https://github.com/nf-core/sarek/pull/571) - Including and using GATK4's mergeVcfs
+- [#572](https://github.com/nf-core/sarek/pull/572) - Adjusted subway map svg for firefox compatibility
+- [#577](https://github.com/nf-core/sarek/pull/577) - Update `RELEASE_CHECKLIST`
+- [#578](https://github.com/nf-core/sarek/pull/578) - Updated module deeptools/bamcoverage
+- [#585](https://github.com/nf-core/sarek/pull/585) - Remove explicit BAM to CRAM conversion after MarkduplicatesSpark; tool does it internally
+- [#581](https://github.com/nf-core/sarek/pull/581) - `TIDDIT` is updated to `3.1.0`
+- [#593](https://github.com/nf-core/sarek/pull/593) - update `ensembl-vep` cache version and module
+- [#600](https://github.com/nf-core/sarek/pull/600) - Remove `TODO` in awsfulltest
+- [#606](https://github.com/nf-core/sarek/pull/606) - Updated `ASCAT` to version `3.0` as module
+- [#608](https://github.com/nf-core/sarek/pull/608) - Prevent candidate VCFs from getting published in manta
+- [#620](https://github.com/nf-core/sarek/pull/620) - `gender` is now `sex` in the samplesheet
+- [#630](https://github.com/nf-core/sarek/pull/630) - Update citations file
+
+### Fixed
+
+- [#234](https://github.com/nf-core/sarek/pull/234) - Switching to DSL2
+- [#234](https://github.com/nf-core/sarek/pull/234), [#238](https://github.com/nf-core/sarek/pull/238) - Add modules and sub workflow for building indices
+- [#234](https://github.com/nf-core/sarek/pull/234), [#252](https://github.com/nf-core/sarek/pull/252), [#256](https://github.com/nf-core/sarek/pull/256), [#283](https://github.com/nf-core/sarek/pull/283), [#334](https://github.com/nf-core/sarek/pull/334) - Update Nextflow `19.10.0` -> `20.11.0-edge`
+- [#239](https://github.com/nf-core/sarek/pull/239) - Restore Sarek ascii art to header
+- [#241](https://github.com/nf-core/sarek/pull/241), [#248](https://github.com/nf-core/sarek/pull/248), [#250](https://github.com/nf-core/sarek/pull/250), [#257](https://github.com/nf-core/sarek/pull/257), [#259](https://github.com/nf-core/sarek/pull/259) - Add modules and sub workflow for preprocessing
+- [#242](https://github.com/nf-core/sarek/pull/242), [#244](https://github.com/nf-core/sarek/pull/244), [#245](https://github.com/nf-core/sarek/pull/245), [#246](https://github.com/nf-core/sarek/pull/246), [#247](https://github.com/nf-core/sarek/pull/247), [#249](https://github.com/nf-core/sarek/pull/249), [#252](https://github.com/nf-core/sarek/pull/252), [#256](https://github.com/nf-core/sarek/pull/256), [#263](https://github.com/nf-core/sarek/pull/263), [#264](https://github.com/nf-core/sarek/pull/264), [#283](https://github.com/nf-core/sarek/pull/283), [#285](https://github.com/nf-core/sarek/pull/285), [#338](https://github.com/nf-core/sarek/pull/338) - Refactor `dsl2` branch
+- [#257](https://github.com/nf-core/sarek/pull/257) - Use a params modules config file
+- [#266](https://github.com/nf-core/sarek/pull/266), [#285](https://github.com/nf-core/sarek/pull/285), [#297](https://github.com/nf-core/sarek/pull/297) - Add modules and sub workflow for variant calling
+- [#333](https://github.com/nf-core/sarek/pull/333) - Bump `Sarek` version to `3.0dev`
+- [#334](https://github.com/nf-core/sarek/pull/334) - Sync `dsl2` and `dev` branches
+- [#342](https://github.com/nf-core/sarek/pull/342) - Update `README.md`
+- [#386](https://github.com/nf-core/sarek/pull/386) - Annotation is back
+- [#410](https://github.com/nf-core/sarek/pull/410), [#412](https://github.com/nf-core/sarek/pull/412), [#584](https://github.com/nf-core/sarek/pull/584) - Update `CI` tests
+- [#418](https://github.com/nf-core/sarek/pull/418) - Fix `known_sites` channels
+- [#432](https://github.com/nf-core/sarek/pull/432), [#457](https://github.com/nf-core/sarek/pull/457) - Sort before `tabix index`
+- [#454](https://github.com/nf-core/sarek/pull/454) - Input is optional (can actually be found automatically by `Sarek` if previously run)
+- [#463](https://github.com/nf-core/sarek/pull/463), [#468](https://github.com/nf-core/sarek/pull/468) - Fix `nf-core lint`
+- [#513](https://github.com/nf-core/sarek/pull/513), [#527](https://github.com/nf-core/sarek/pull/527) - CNV is back
+- [#529](https://github.com/nf-core/sarek/pull/529) - Do not save `versions.yml` files
+- [#524](https://github.com/nf-core/sarek/pull/524) - Fix intervals usage by counting the actual list of scatter/gather files produced and not overall number of intervals
+- [#549](https://github.com/nf-core/sarek/pull/549) - Fix unique lanes required for Freebayes: issue [#311](https://github.com/nf-core/sarek/issues/311), replaces `meta.clone()` with actual copy of map to avoid issues with <https://nfcore.slack.com/archives/C027CM7P08M/p1644241819942339>
+- [#567](https://github.com/nf-core/sarek/pull/567) - Fix interval name resolving during scatter/gather by moving logic to modules.config causing name to be correctly resolved on process execution; also fixed duplicate naming when variant callers produce multiple vcf files by adding field `type` to `meta` map
+- [#585](https://github.com/nf-core/sarek/pull/585) - Fix Spark usage for GATK4 modules
+- [#587](https://github.com/nf-core/sarek/pull/587) - Fix issue with VEP extra files
+- [#581](https://github.com/nf-core/sarek/pull/581) - `TIDDIT` is back
+- [#590](https://github.com/nf-core/sarek/pull/590) - Fix empty folders during scatter/gather
+- [#592](https://github.com/nf-core/sarek/pull/592) - Fix optional resources for Mutect2, GetPileupSummaries, and HaplotypeCaller: issue [#299](https://github.com/nf-core/sarek/issues/299), [#359](https://github.com/nf-core/sarek/issues/359), [#367](https://github.com/nf-core/sarek/issues/367)
+- [#598](https://github.com/nf-core/sarek/pull/598), [#614](https://github.com/nf-core/sarek/pull/614), [#626](https://github.com/nf-core/sarek/pull/626) - Remove WARNING message for config selector not matching
+- [#599](https://github.com/nf-core/sarek/pull/599) - Add checks for correct data type for `params.step`
+- [#599](https://github.com/nf-core/sarek/pull/599) - Add checks for no empty `--tools` with `--step variant_calling` or `--step annotate`
+- [#600](https://github.com/nf-core/sarek/pull/600) - Remove `nf-core lint` warnings
+- [#602](https://github.com/nf-core/sarek/pull/602) - Fixed bug in `alignment_to_fastq` and added tests
+- [#609](https://github.com/nf-core/sarek/pull/609) - Remove unused intervals code, reorganize combined intervals file
+- [#613](https://github.com/nf-core/sarek/pull/613) - Fixed filenames for `dbnsfp` and `SpliceAI` `VEP` plugin
+- [#615](https://github.com/nf-core/sarek/pull/615) - Fix ASCAT igenomes file paths
+- [#619](https://github.com/nf-core/sarek/pull/619) - Fix issue with checking samplesheet content with AWS
+- [#628](https://github.com/nf-core/sarek/pull/628) - Fix issue with value converting to string before schema validation
+- [#628](https://github.com/nf-core/sarek/pull/628) - Fix dbsnp check issue with `--step annotate`
+
+### Deprecated
+
+### Removed
+
+- [#485](https://github.com/nf-core/sarek/pull/485) - `--skip_qc`, `--skip_markduplicates` and `--skip_bqsr` is now `--skip_tools`
+- [#538](https://github.com/nf-core/sarek/pull/538) - `--sequencing_center` is now `--seq_center`
+- [#538](https://github.com/nf-core/sarek/pull/538) - `--markdup_java_options` has been removed
+- [#539](https://github.com/nf-core/sarek/pull/539) - `--annotate_tools` has been removed
+- [#539](https://github.com/nf-core/sarek/pull/539) - `--cadd_cache`, `--cadd_indels`, `--cadd_indels_tbi`, `--cadd_wg_snvs`, `--cadd_wg_snvs_tbi` have been removed
+- [#539](https://github.com/nf-core/sarek/pull/539) - `--genesplicer` has been removed
+- [#539](https://github.com/nf-core/sarek/pull/539) - `conf/genomes.config` and `params.genomes_base` have been removed
+- [#562](https://github.com/nf-core/sarek/pull/562) - Restart from `--step annotate` from folder is removed. Use a `csv` file instead
+- [#571](https://github.com/nf-core/sarek/pull/571) - Removed the local module `concat_vcf`.
+- [#605](https://github.com/nf-core/sarek/pull/605) - Removed Scatter/gather from GATK_SINGLE_SAMPLE_GERMLINE_VARIANT_CALLING, all intervals are processed together
+
+## [2.7.1](https://github.com/nf-core/sarek/releases/tag/2.7.1) - Pårtejekna
+
+Pårtejekna is one of glaciers of the Pårte Massif.
+
+### Added
+
 - [#353](https://github.com/nf-core/sarek/pull/353) - Add support for task retries with exit code 247 (exhibited by `Picard MarkDuplicates`)
 - [#354](https://github.com/nf-core/sarek/pull/354) - Add tumor only mode for `Mutect2` and `MSIsensor`
 - [#356](https://github.com/nf-core/sarek/pull/356) - Add `--cf_contamination_adjustment` params to adjust contamination with `Control-FREEC`
@@ -34,7 +169,6 @@ Pårtejekna is one of glaciers of the Pårte Massif.
 ### Fixed
 
 - [#375](https://github.com/nf-core/sarek/pull/375), [#381](https://github.com/nf-core/sarek/pull/381), [#382](https://github.com/nf-core/sarek/pull/382), [#385](https://github.com/nf-core/sarek/pull/385) - Fix bugs due to `TEMPLATE` sync from [#373](https://github.com/nf-core/sarek/pull/373)
-- [#378](https://github.com/nf-core/sarek/pull/378) - Fix `Spark` related issue due to `Docker` settings in `nextflow.config`
 - [#378](https://github.com/nf-core/sarek/pull/378) - Fix `Spark` related issue due to `Docker` settings in `nextflow.config`
 
 ### Deprecated
@@ -361,7 +495,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#7](https://github.com/nf-core/sarek/pull/8), [#23](https://github.com/nf-core/sarek/pull/23) - `--annotateVCF` is now deprecated, use `--input` instead
 - [#8](https://github.com/nf-core/sarek/pull/8), [#12](https://github.com/nf-core/sarek/pull/12) - Improve helper script `build.nf` for downloading and building reference files
 - [#9](https://github.com/nf-core/sarek/pull/9) - `ApplyBQSR` is now parallelized
-- [#9](https://github.com/nf-core/sarek/pull/9) - Fastq files are named following "${idRun}_R1.fastq.gz" in the `FastQC` output for easier reporting
+- [#9](https://github.com/nf-core/sarek/pull/9) - Fastq files are named following "${idRun}\_R1.fastq.gz" in the `FastQC` output for easier reporting
 - [#9](https://github.com/nf-core/sarek/pull/9) - Status is now a map with `idpatient`, `idsample` as keys (ie: `status = statusMap[idPatient, idSample]`)
 - [#9](https://github.com/nf-core/sarek/pull/9) - Use `ensembl-vep` `95.2` instead of `96.0`
 - [#11](https://github.com/nf-core/sarek/pull/11) - Summary HTML from `VEP` is now in the `Reports` directory
@@ -378,7 +512,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#18](https://github.com/nf-core/sarek/pull/18), [#29](https://github.com/nf-core/sarek/pull/29) - `--noReports` is now `--skipQC all`
 - [#18](https://github.com/nf-core/sarek/pull/18), [#21](https://github.com/nf-core/sarek/pull/21) - Update logo
 - [#21](https://github.com/nf-core/sarek/pull/21) - Moved `smallGRCh37` path to `genomes.config`
-- [#23](https://github.com/nf-core/sarek/pull/23) - Rename `genomeFile`, `genomeIndex` and  `genomeDict` by `fasta`, `fastaFai` and `dict`
+- [#23](https://github.com/nf-core/sarek/pull/23) - Rename `genomeFile`, `genomeIndex` and `genomeDict` by `fasta`, `fastaFai` and `dict`
 - [#23](https://github.com/nf-core/sarek/pull/23) - `--sample` is now deprecated, use `--input` instead
 - [#23](https://github.com/nf-core/sarek/pull/23) - `--genomeFile` is now deprecated, use `--fasta` instead
 - [#23](https://github.com/nf-core/sarek/pull/23) - `--genomeIndex` is now deprecated, use `--fastaFai` instead
@@ -513,7 +647,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 ### Added
 
 - [#671](https://github.com/SciLifeLab/Sarek/pull/671) - New `publishDirMode` param and docs
-- [#673](https://github.com/SciLifeLab/Sarek/pull/673), [#675](https://github.com/SciLifeLab/Sarek/pull/675),  [#676](https://github.com/SciLifeLab/Sarek/pull/676) - Profiles for BinAC and CFC clusters in Tübingen
+- [#673](https://github.com/SciLifeLab/Sarek/pull/673), [#675](https://github.com/SciLifeLab/Sarek/pull/675), [#676](https://github.com/SciLifeLab/Sarek/pull/676) - Profiles for BinAC and CFC clusters in Tübingen
 - [#679](https://github.com/SciLifeLab/Sarek/pull/679) - Add container for `CreateIntervalBeds`
 - [#692](https://github.com/SciLifeLab/Sarek/pull/692), [#697](https://github.com/SciLifeLab/Sarek/pull/697) - Add `AWS iGenomes` possibilities (within `conf/igenomes.conf`)
 - [#694](https://github.com/SciLifeLab/Sarek/pull/694) - Add monochrome and grey logos for light or dark background
@@ -613,7 +747,7 @@ Ruotes is one of the main massif in the Sarek National Park.
 - [#556](https://github.com/SciLifeLab/Sarek/pull/556) - `Strelka` Best Practices
 - [#563](https://github.com/SciLifeLab/Sarek/pull/563) - Use `SnpEFF` reports in `MultiQC`
 - [#568](https://github.com/SciLifeLab/Sarek/pull/568) - `VCFTools` process `RunVcftools` for QC
-- [#574](https://github.com/SciLifeLab/Sarek/pull/574), [#580](https://github.com/SciLifeLab/Sarek/pull/580) - Abstracts for `NPMI`, `JOBIM` and  `EACR25`
+- [#574](https://github.com/SciLifeLab/Sarek/pull/574), [#580](https://github.com/SciLifeLab/Sarek/pull/580) - Abstracts for `NPMI`, `JOBIM` and `EACR25`
 - [#577](https://github.com/SciLifeLab/Sarek/pull/577) - New repository for testing: [Sarek-data](https://github.com/SciLifeLab/Sarek-data)
 - [#595](https://github.com/SciLifeLab/Sarek/pull/595) - New library `QC` for functions `bamQC`, `bcftools`, `samtoolsStats`, `vcftools`, `getVersionBCFtools`, `getVersionGATK`, `getVersionManta`, `getVersionSnpEFF`, `getVersionStrelka`, `getVersionVCFtools`, `getVersionVEP`
 - [#595](https://github.com/SciLifeLab/Sarek/pull/595) - New Processes `GetVersionBCFtools`, `GetVersionGATK`, `GetVersionManta`, `GetVersionSnpEFF`, `GetVersionStrelka`, `GetVersionVCFtools`, `GetVersionVEP`
@@ -645,7 +779,7 @@ Ruotes is one of the main massif in the Sarek National Park.
 - [#607](https://github.com/SciLifeLab/Sarek/pull/607) - Update to `GATK4`
 - [#608](https://github.com/SciLifeLab/Sarek/pull/608) - Update `Nextflow` required version
 - [#616](https://github.com/SciLifeLab/Sarek/pull/616) - Update `CHANGELOG`
-- [#617](https://github.com/SciLifeLab/Sarek/pull/617) - Replace deprecated `Nextflow ``$name` syntax with `withName`
+- [#617](https://github.com/SciLifeLab/Sarek/pull/617) - Replace deprecated ` Nextflow ``$name ` syntax with `withName`
 
 ### Fixed
 
@@ -654,7 +788,7 @@ Ruotes is one of the main massif in the Sarek National Park.
 - [#579](https://github.com/SciLifeLab/Sarek/pull/579), [#584](https://github.com/SciLifeLab/Sarek/pull/584) - `Manta` output reorganized after modification for `Strelka Best Practices` process
 - [#585](https://github.com/SciLifeLab/Sarek/pull/583) - Trace file is plain txt
 - [#590](https://github.com/SciLifeLab/Sarek/pull/590), [#593](https://github.com/SciLifeLab/Sarek/pull/593) - Fix `Singularity` installation in `Travis CI` testing
-- [#598](https://github.com/SciLifeLab/Sarek/pull/598), [#601](https://github.com/SciLifeLab/Sarek/pull/601) - Fixes for  `Python` script `selectROI.py` to work with `CLC` viewer
+- [#598](https://github.com/SciLifeLab/Sarek/pull/598), [#601](https://github.com/SciLifeLab/Sarek/pull/601) - Fixes for `Python` script `selectROI.py` to work with `CLC` viewer
 
 ### Removed
 

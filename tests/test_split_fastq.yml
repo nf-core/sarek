@@ -1,0 +1,9 @@
+- name: Run split fastq module
+  command: nextflow run main.nf -profile test,split_fastq,docker
+  tags:
+    - split_fastq
+  files:
+    - path: results/preprocessing/test/fastp/0001.test-test_L1_1.fastp.fastq.gz
+    - path: results/preprocessing/test/fastp/0001.test-test_L1_2.fastp.fastq.gz
+    - path: results/preprocessing/test/fastp/0002.test-test_L1_1.fastp.fastq.gz
+    - path: results/preprocessing/test/fastp/0002.test-test_L1_2.fastp.fastq.gz

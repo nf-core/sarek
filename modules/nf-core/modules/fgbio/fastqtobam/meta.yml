@@ -1,0 +1,47 @@
+name: fgbio_fastqtobam
+description: |
+  Using the FGBIO tools, converts FASTQ files sequenced with UMIs into BAM files, moving the UMI barcode into the RX field of the BAM file
+keywords:
+  - fastqtobam
+  - fgbio
+tools:
+  - fgbio:
+      description: A set of tools for working with genomic and high throughput sequencing data, including UMIs
+      homepage: http://fulcrumgenomics.github.io/fgbio/
+      documentation: http://fulcrumgenomics.github.io/fgbio/tools/latest/
+      tool_dev_url: https://github.com/fulcrumgenomics/fgbio
+      doi: ""
+      licence: ["MIT"]
+
+input:
+  - reads:
+      type: file
+      description: pair of reads to be converted into BAM file
+      pattern: "*.{fastq.gz}"
+
+  - read_structure:
+      type: string
+      description: |
+        A read structure should always be provided for each of the fastq files.
+        If single end, the string will contain only one structure (i.e. "2M11S+T"), if paired-end the string
+        will contain two structures separated by a blank space (i.e. "2M11S+T 2M11S+T").
+        If the read does not contain any UMI, the structure will be +T (i.e. only template of any length).
+        https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures
+
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - version:
+      type: file
+      description: File containing software version
+      pattern: "*.{version.yml}"
+  - umibam:
+      type: file
+      description: Converted, unsorted BAM file with RX tag reporting UMI sequence (if any)
+      pattern: "*.{bam}"
+
+authors:
+  - "@lescai"

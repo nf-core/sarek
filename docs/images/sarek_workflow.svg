@@ -2133,6 +2133,25 @@
          stop-color="#25af64" /><stop
          id="stop20-97"
          offset="1"
+         stop-color="#25af64" /></linearGradient><linearGradient
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(14.322136,11.189559,-11.189559,14.322136,103.39117,-43.22521)"
+       x2="1"
+       id="f-2-3"><stop
+         id="stop12-2-3"
+         offset="0"
+         stop-color="#0c542a" /><stop
+         id="stop14-16-6"
+         offset=".21472"
+         stop-color="#0c542a" /><stop
+         id="stop16-20-7"
+         offset=".57995"
+         stop-color="#25af64" /><stop
+         id="stop18-22-5"
+         offset=".84663"
+         stop-color="#25af64" /><stop
+         id="stop20-97-3"
+         offset="1"
          stop-color="#25af64" /></linearGradient></defs><sodipodi:namedview
      pagecolor="#ffffff"
      bordercolor="#666666"
@@ -2143,16 +2162,16 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:window-width="1920"
-     inkscape:window-height="1015"
+     inkscape:window-height="1007"
      id="namedview4"
      showgrid="false"
-     inkscape:zoom="0.5"
-     inkscape:cx="-231.80431"
-     inkscape:cy="904.42745"
+     inkscape:zoom="1"
+     inkscape:cx="283.21667"
+     inkscape:cy="615.62244"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
-     inkscape:current-layer="g2380"
+     inkscape:current-layer="g2011"
      units="mm"
      showguides="false"
      fit-margin-top="0"
@@ -2176,6 +2195,8 @@
      id="tspan3424"
      y="-2749.4028"
      x="866.00854" /></text>
+
+
 
 
 <g
@@ -2693,6 +2714,8 @@
    transform="matrix(1.9071373,0,0,-1.9071373,430.82327,2077.7321)" />
 
 
+
+
 <text
    style="font-style:normal;font-weight:bold;font-size:medium;font-family:sans-serif;color-interpolation:auto;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:1.45000005;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"
    x="32.745098"
@@ -2702,6 +2725,8 @@
    xml:space="preserve"
    id="text8514"
    transform="matrix(1.9071373,0,0,-1.9071373,542.56229,2077.7321)" />
+
+
 
 
 <g
@@ -3008,7 +3033,7 @@
    xml:space="preserve"
    id="flowRoot5740-9"
    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0.01%;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-   transform="matrix(1.1618218,0,0,-1.1618218,1038.5505,4346.1534)"><flowRegion
+   transform="matrix(1.1618218,0,0,-1.1618218,1031.4657,4346.1534)"><flowRegion
      id="flowRegion5742-2"><rect
        id="rect5744-0"
        width="476.5625"
@@ -3017,7 +3042,7 @@
        y="2056.7422"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:27.5px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro'" /></flowRegion><flowPara
      id="flowPara5746-2"
-     style="font-size:20.2700367px;line-height:1.25">Based on GATK Best Practices</flowPara></flowRoot><text
+     style="font-size:20.2700367px;line-height:1.25">Based on GATK4 Best Practices</flowPara></flowRoot><text
    transform="matrix(2.769692,0,0,-2.769692,923.56254,2280.3213)"
    id="text4883"
    clip-path="url(#clipPath2-60-2)"
@@ -3027,6 +3052,8 @@
    style="font-style:normal;font-weight:bold;font-size:medium;line-height:0%;font-family:sans-serif;color-interpolation:auto;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:1.45000005;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"><tspan
      style="font-size:11.90393639px"
      id="tspan4885">Preprocessing</tspan></text>
+
+
 
 
 </g><flowRoot
@@ -3067,7 +3094,7 @@
        width="476.5625"
        id="rect4901" /></flowRegion><flowPara
      style="font-size:20.2700367px;line-height:1.25"
-     id="flowPara4903">snpEff, VEP</flowPara></flowRoot><text
+     id="flowPara4903">snpeff, vep</flowPara></flowRoot><text
    style="font-style:normal;font-weight:bold;font-size:medium;line-height:0%;font-family:sans-serif;color-interpolation:auto;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:1.45000005;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"
    x="279.19431"
    xml:space="preserve"
@@ -3077,6 +3104,8 @@
    transform="matrix(2.769692,0,0,-2.769692,961.7472,1712.0404)"><tspan
      id="tspan4907"
      style="font-size:11.90393639px">Annotation</tspan></text>
+
+
 
 
 </g><g
@@ -3101,6 +3130,8 @@
    transform="matrix(2.769692,0,0,-2.769692,990.1937,1587.2949)"><tspan
      id="tspan4923"
      style="font-size:11.90393639px">Reports</tspan></text>
+
+
 
 
 <g
@@ -3198,13 +3229,13 @@
        style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:20.2700367px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold'"
        id="flowPara1168">Germline</flowPara><flowPara
        style="font-size:20.2700367px;line-height:1.25"
-       id="flowPara1176">• GATK HaplotypeCaller</flowPara><flowPara
+       id="flowPara4887">• deepvariant, freebayes</flowPara><flowPara
        style="font-size:20.2700367px;line-height:1.25"
-       id="flowPara4887">    FreeBayes, mpileup, </flowPara><flowPara
+       id="flowPara2647">  haplotypecaller</flowPara><flowPara
        style="font-size:20.2700367px;line-height:1.25"
-       id="flowPara1150">    Strelka2</flowPara><flowPara
+       id="flowPara2667">  strelka2</flowPara><flowPara
        style="font-size:20.2700367px;line-height:1.25"
-       id="flowPara5971">• Manta, TIDDIT</flowPara></flowRoot><flowRoot
+       id="flowPara5971">• manta, tiddit</flowPara></flowRoot><flowRoot
      transform="matrix(1.8840137,0,0,-1.8840137,795.36013,2374.9498)"
      style="font-style:normal;font-weight:normal;line-height:0.01%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
      id="flowRoot5047"
@@ -3231,9 +3262,9 @@
        id="flowPara1946"
        style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:20.2700367px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold'">Somatic</flowPara><flowPara
        style="font-size:20.2700367px;line-height:1.25"
-       id="flowPara1178">• GATK Mutect2</flowPara><flowPara
-       id="flowPara1953"
-       style="font-size:20.2700367px;line-height:1.25">    FreeBayes, Strelka2</flowPara><flowPara
+       id="flowPara2657">• deepvariant, freebayes</flowPara><flowPara
+       style="font-size:20.2700367px;line-height:1.25"
+       id="flowPara2649">  mutect2, strelka2</flowPara><flowPara
        id="flowPara1955"
        style="font-size:20.2700367px;line-height:1.25" /><flowPara
        id="flowPara1944"
@@ -3243,11 +3274,11 @@
        id="flowPara1949"
        style="font-size:20.2700367px;line-height:1.25" /><flowPara
        id="flowPara1951"
-       style="font-size:20.2700367px;line-height:1.25">• Manta</flowPara><flowPara
+       style="font-size:20.2700367px;line-height:1.25">• manta</flowPara><flowPara
        id="flowPara1950"
-       style="font-size:20.2700367px;line-height:1.25">• ASCAT, Control-FREEC</flowPara><flowPara
+       style="font-size:20.2700367px;line-height:1.25">• ascat, controlfreec</flowPara><flowPara
        id="flowPara1954"
-       style="font-size:20.2700367px;line-height:1.25">• MSIsensor</flowPara></flowRoot><path
+       style="font-size:20.2700367px;line-height:1.25">• msisensorpro</flowPara></flowRoot><path
      style="display:inline;fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:3.76504421;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
      d="M 1837.0633,1710.5361 V 1551.5039"
      id="path4994"
@@ -3456,8 +3487,8 @@
                height="103"
                width="150"
                id="rect2357-0" /></flowRegion><flowPara
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro'"
-             id="flowPara2359-7">2.7.2</flowPara></flowRoot></g></g></g><g
+             style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Medium'"
+             id="flowPara2359-7">3.0</flowPara></flowRoot></g></g></g><g
      id="g2024"><g
        id="g557-5"
        transform="matrix(0.63891071,0,0,-0.63891071,1686.6721,2304.9241)"><path
@@ -3592,6 +3623,8 @@
      x="2378.6733"
      y="-1482.9191"
      style="stroke-width:0.75" /></text>
+
+
 
 
 </g><style

@@ -1,0 +1,98 @@
+name: gatk4_variantrecalibrator
+description: |
+  Build a recalibration model to score variant quality for filtering purposes.
+  It is highly recommended to follow GATK best practices when using this module,
+  the gaussian mixture model requires a large number of samples to be used for the
+  tool to produce optimal results. For example, 30 samples for exome data. For more details see
+  https://gatk.broadinstitute.org/hc/en-us/articles/4402736812443-Which-training-sets-arguments-should-I-use-for-running-VQSR-
+keywords:
+  - VariantRecalibrator
+  - gatk4
+  - recalibration_model
+tools:
+  - gatk4:
+      description: |
+        Developed in the Data Sciences Platform at the Broad Institute, the toolkit offers a wide variety of tools
+        with a primary focus on variant discovery and genotyping. Its powerful processing engine
+        and high-performance computing features make it capable of taking on projects of any size.
+      homepage: https://gatk.broadinstitute.org/hc/en-us
+      documentation: https://gatk.broadinstitute.org/hc/en-us/categories/360002369672s
+      doi: 10.1158/1538-7445.AM2017-3590
+
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test' ]
+  - vcf:
+      type: file
+      description: input vcf file containing the variants to be recalibrated
+      pattern: "*.vcf.gz"
+  - tbi:
+      type: file
+      description: tbi file matching with -vcf
+      pattern: "*.vcf.gz.tbi"
+  - fasta:
+      type: file
+      description: The reference fasta file
+      pattern: "*.fasta"
+  - fai:
+      type: file
+      description: Index of reference fasta file
+      pattern: "fasta.fai"
+  - dict:
+      type: file
+      description: GATK sequence dictionary
+      pattern: "*.dict"
+  - allelespecific:
+      type: boolean
+      description: specify whether to use allele specific annotations
+      pattern: "{true,false}"
+  - resvcfs:
+      type: list
+      description: resource files to be used as truth, training and known sites resources, this imports the files into the module, file names are specified again in the resource_labels to be called via the command.
+      pattern: "*/hapmap_3.3.hg38_chr21.vcf.gz"
+  - restbis:
+      type: list
+      description: tbis for the corresponding vcfs files to be used as truth, training and known resources.
+      pattern: "*/hapmap_3.3.hg38_chr21.vcf.gz.tbi"
+  - reslabels:
+      type: list
+      description: labels for the resource files to be used as truth, training and known sites resources, label should include an identifier,which kind of resource(s) it is, prior value and name of the file.
+      pattern: "hapmap,known=false,training=true,truth=true,prior=15.0 hapmap_3.3.hg38_chr21.vcf.gz"
+  - annotation:
+      type: list
+      description: specify which annotations should be used for calculations.
+      pattern: "['QD', 'MQ', 'FS', 'SOR']"
+  - mode:
+      type: string
+      description: specifies which recalibration mode to employ (SNP is default, BOTH is intended for testing only)
+      pattern: "{SNP,INDEL,BOTH}"
+  - rscript:
+      type: boolean
+      description: specify whether to generate rscript.plot output file
+      pattern: "{true,false}"
+output:
+  - recal:
+      type: file
+      description: Output recal file used by ApplyVQSR
+      pattern: "*.recal"
+  - idx:
+      type: file
+      description: Index file for the recal output file
+      pattern: "*.idx"
+  - tranches:
+      type: file
+      description: Output tranches file used by ApplyVQSR
+      pattern: "*.tranches"
+  - plots:
+      type: file
+      description: Optional output rscript file to aid in visualization of the input data and learned model.
+      pattern: "*plots.R"
+  - version:
+      type: file
+      description: File containing software versions
+      pattern: "*.versions.yml"
+authors:
+  - "@GCJMackenzie"
