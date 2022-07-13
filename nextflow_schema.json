@@ -590,7 +590,13 @@
                 "snpeff_genome": {
                     "type": "string",
                     "fa_icon": "fas fa-microscope",
-                    "description": "snpeff genome.",
+                    "description": "snpEff genome.",
+                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
+                },
+                "snpeff_version": {
+                    "type": "string",
+                    "fa_icon": "fas fa-tag",
+                    "description": "snpEff version.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
                 },
                 "vep_genome": {
