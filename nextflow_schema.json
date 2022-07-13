@@ -318,7 +318,7 @@
                 "vep_include_fasta": {
                     "type": "boolean",
                     "fa_icon": "fas fa-database",
-                    "description": "Allow usage of fasta file for annotation with VEP",
+                    "description": "Allow usage of fasta file for annotation with VEP.\ncf https://www.ensembl.org/info/docs/tools/vep/script/vep_cache.html#fasta",
                     "default": false,
                     "hidden": true
                 },
