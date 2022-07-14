@@ -9,9 +9,9 @@ process GATK4_VARIANTRECALIBRATOR {
 
     input:
     tuple val(meta), path(vcf), path(tbi) // input vcf and tbi of variants to recalibrate
-    path resource_vcf   // resource vcf 
+    path resource_vcf   // resource vcf
     path resource_tbi   // resource tbi
-    val labels // string containing labels
+    val labels          // string (or list of strings) containing dedicated resource labels already formatted with '--resource:' tag
     path  fasta
     path  fai
     path  dict

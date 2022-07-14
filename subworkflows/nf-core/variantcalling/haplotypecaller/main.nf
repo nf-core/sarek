@@ -49,18 +49,26 @@ workflow RUN_HAPLOTYPECALLER {
                                 .join(cram).map{ meta, vcf, tbi, cram, crai, intervals ->
                                      [ meta, vcf, tbi, intervals ]
                                      })
+        // make channels from labels
+            dbsnp_vqsr        = params.dbsnp_vqsr        ? Channel.value(params.dbsnp_vqsr)        : Channel.empty()
+            known_indels_vqsr = params.known_indels_vqsr ? Channel.value(params.known_indels_vqsr) : Channel.empty()
+            known_snps_vqsr   = params.known_snps_vqsr   ? Channel.value(params.known_snps_vqsr)   : Channel.empty()
 
-        genotype_vcf = JOINT_GERMLINE(
+
+        filtered_vcf = JOINT_GERMLINE(
              genotype_gvcf_to_call,
              fasta,
              fasta_fai,
              dict,
              dbsnp,
              dbsnp_tbi,
+             dbsnp_vqsr,
              known_sites_indels,
              known_sites_indels_tbi,
+             known_indels_vqsr,
              known_sites_snps,
-             known_sites_snps_tbi).genotype_vcf
+             known_sites_snps_tbi,
+             known_snps_vqsr).genotype_vcf
 
         ch_versions = ch_versions.mix(JOINT_GERMLINE.out.versions)
     } else {
@@ -83,25 +91,19 @@ workflow RUN_HAPLOTYPECALLER {
             MERGE_HAPLOTYPECALLER.out.tbi,
             haplotypecaller_tbi_branch.no_intervals)
 
-        if(params.variant_recalibration) {
-            SINGLE_SAMPLE(haplotypecaller_vcf.join(haplotypecaller_tbi),
-                        fasta,
-                        fasta_fai,
-                        dict,
-                        intervals_bed_combined,
-                        known_sites_indels.concat(known_sites_snps).unique().collect(),
-                        known_sites_indels_tbi.concat(known_sites_snps_tbi).unique().collect())
+        SINGLE_SAMPLE(haplotypecaller_vcf.join(haplotypecaller_tbi),
+                    fasta,
+                    fasta_fai,
+                    dict,
+                    intervals_bed_combined,
+                    known_sites_indels.concat(known_sites_snps).unique().collect(),
+                    known_sites_indels_tbi.concat(known_sites_snps_tbi).unique().collect())
 
-            filtered_vcf = SINGLE_SAMPLE.out.filtered_vcf
-            ch_versions = ch_versions.mix(SINGLE_SAMPLE.out.versions)
-        } else {
-
-            filtered_vcf = MERGE_HAPLOTYPECALLER.out.vcf
-        }
+        filtered_vcf = SINGLE_SAMPLE.out.filtered_vcf
+        ch_versions = ch_versions.mix(SINGLE_SAMPLE.out.versions, HAPLOTYPECALLER.out.versions, MERGE_HAPLOTYPECALLER.out.versions)
     }
 
 
-    ch_versions = ch_versions.mix(HAPLOTYPECALLER.out.versions, MERGE_HAPLOTYPECALLER.out.versions)
 
     emit:
     versions = ch_versions
