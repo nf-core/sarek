@@ -76,13 +76,13 @@
                 "git_sha": "49b18b1639f4f7104187058866a8fab33332bdfe"
             },
             "fgbio/callmolecularconsensusreads": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                "git_sha": "c29b3fe11a8b619925d7c90c8c6daa55ee6d38f1"
             },
             "fgbio/fastqtobam": {
                 "git_sha": "b2a8464e3ee06397e85f697e9b792cfafe1fad85"
             },
             "fgbio/groupreadsbyumi": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                "git_sha": "c29b3fe11a8b619925d7c90c8c6daa55ee6d38f1"
             },
             "freebayes": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
