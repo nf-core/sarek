@@ -273,9 +273,11 @@ include { MULTIQC                                              } from '../module
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-ch_multiqc_config        = Channel.fromPath(file("$projectDir/assets/multiqc_config.yml", checkIfExists: true))
+ch_multiqc_config        = [
+                            file("$projectDir/assets/multiqc_config.yml", checkIfExists: true),
+                            file("$projectDir/assets/nf-core-sarek_logo_light.png", checkIfExists: true)
+                            ]
 ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config) : Channel.empty()
-ch_sarek_logo            = Channel.fromPath(file("$projectDir/assets/nf-core-sarek_logo_light.png", checkIfExists: true))
 def multiqc_report = []
 
 /*
@@ -908,6 +910,7 @@ workflow SAREK {
         vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.manta_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.strelka_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.tiddit_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(PAIR_VARIANT_CALLING.out.freebayes_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(PAIR_VARIANT_CALLING.out.mutect2_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(PAIR_VARIANT_CALLING.out.manta_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(PAIR_VARIANT_CALLING.out.strelka_vcf)
@@ -929,13 +932,16 @@ workflow SAREK {
 
         VARIANTCALLING_CSV(vcf_to_annotate)
 
+
         // ANNOTATE
         if (params.step == 'annotate') vcf_to_annotate = ch_input_sample
 
         if (params.tools.contains('merge') || params.tools.contains('snpeff') || params.tools.contains('vep')) {
 
+            vep_fasta = (params.vep_include_fasta) ? fasta : []
+
             ANNOTATE(vcf_to_annotate,
-                fasta,
+                vep_fasta,
                 params.tools,
                 snpeff_db,
                 snpeff_cache,
@@ -948,9 +954,9 @@ workflow SAREK {
             // Gather used softwares versions
             ch_versions = ch_versions.mix(ANNOTATE.out.versions)
             ch_reports  = ch_reports.mix(ANNOTATE.out.reports)
-
         }
     }
+
 
     ch_version_yaml = Channel.empty()
     if (!(params.skip_tools && params.skip_tools.contains('versions'))) {
@@ -963,13 +969,13 @@ workflow SAREK {
         ch_workflow_summary = Channel.value(workflow_summary)
 
         ch_multiqc_files =  Channel.empty().mix(ch_version_yaml,
+                                            Channel.from(ch_multiqc_config),
                                             ch_multiqc_custom_config.collect().ifEmpty([]),
                                             ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'),
-                                            ch_reports.collect(),
-                                            ch_multiqc_config,
-                                            ch_sarek_logo)
+                                            ch_reports.collect()
+                                            )
 
-        MULTIQC(ch_multiqc_files.collect())
+        MULTIQC(ch_multiqc_files.collect(), ch_multiqc_config)
         multiqc_report = MULTIQC.out.report.toList()
     }
 }
