@@ -202,7 +202,7 @@ See the the [`--input`](usage.md#--input) section in the usage documentation for
 The results regarding variant calling are collected in `{outdir}/variantcalling/`.
 If some results from a variant caller do not appear here, please check out the `--tools` section in the parameter [documentation](https://nf-co.re/sarek/3.0.0/parameters).
 
-`(Recalibrated) CRAM` files can used as an input to start the Variant Calling.
+(Recalibrated) CRAM files can used as an input to start the variant calling.
 
 ### SNVs and small indels
 
