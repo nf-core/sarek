@@ -106,7 +106,7 @@ patient1,test_sample,3,test_L003.bam
 
 ##### Full samplesheet
 
-In this example, all possible columns are used. There are 3 lanes for the normal sample, 2 for the tumor sample, 1 for the relapse, including the `sex` and `status` information per patient:
+In this example, all possible columns are used. There are three lanes for the normal sample, two for the tumor sample, and one for the relapse sample, including the `sex` and `status` information per patient:
 
 ```console
 patient,sex,status,sample,lane,fastq_1,fastq_2
