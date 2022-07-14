@@ -300,7 +300,7 @@ For single nucleotide variants (SNVs) and small indels, multiple tools are avail
 
 ##### GATK Germline Single Sample Variant Calling
 
-[GATK Single Sample Variantcalling](https://gatk.broadinstitute.org/hc/en-us/articles/360035535932-Germline-short-variant-discovery-SNPs-Indels-)
+[GATK Single Sample Variant Calling](https://gatk.broadinstitute.org/hc/en-us/articles/360035535932-Germline-short-variant-discovery-SNPs-Indels-)
 uses HaplotypeCaller in its default single-sample mode to call variants. The VCF that HaplotypeCaller emits errs on the side of sensitivity, therefore they are filtered by first running the [CNNScoreVariants](https://gatk.broadinstitute.org/hc/en-us/articles/5358904862107-CNNScoreVariants) tool. This tool annotates each variant with a score indicating the model's prediction of the quality of each variant. To apply filters based on those scores run the [FilterVariantTranches](https://gatk.broadinstitute.org/hc/en-us/articles/5358928898971-FilterVariantTranches) tool with SNP and INDEL sensitivity tranches appropriate for your task.
 
 If the haplotype-called VCF files are not filtered, then Sarek should be run with at least one of the options `--dbsnp` or `--known_indels`.
