@@ -181,7 +181,7 @@ _For all samples_:
 
 The `CSV` files are auto-generated and can be used by `Sarek` for further processing and/or variant calling.
 
-See the the [`--input`](usage.md#--input) section in the usage documentation for further reading and documentation on how to make the most of them.
+See the [`--input`](usage.md#--input) section in the usage documentation for further reading and documentation on how to make the most of them.
 
 **Output directory: `{outdir}/preprocessing/csv`**
 
@@ -202,7 +202,7 @@ See the the [`--input`](usage.md#--input) section in the usage documentation for
 The results regarding variant calling are collected in `{outdir}/variantcalling/`.
 If some results from a variant caller do not appear here, please check out the `--tools` section in the parameter [documentation](https://nf-co.re/sarek/3.0.0/parameters).
 
-`(Recalibrated) CRAM` files can used as an input to start the Variant Calling.
+`(Recalibrated) CRAM` files can used as an input to start the variant calling.
 
 ### SNVs and small indels
 
@@ -243,21 +243,21 @@ _For normal samples_:
 - `<sample>.haplotypecaller.vcf.gz` and `<sample>.haplotypecaller.vcf.gz.tbi`
   - `VCF` with tabix index
 
-##### GATK Germline Single Sample Variantcalling
+##### GATK Germline Single Sample Variant Calling
 
 [GATK Single Sample Variantcalling](https://gatk.broadinstitute.org/hc/en-us/articles/360035535932-Germline-short-variant-discovery-SNPs-Indels-)
 uses HaplotypeCaller in its default single-sample mode to call variants. The VCF that HaplotypeCaller emits errs on the side of sensitivity, therefore they are filtered by first running the [CNNScoreVariants](https://gatk.broadinstitute.org/hc/en-us/articles/5358904862107-CNNScoreVariants) tool. This tool annotates each variant with a score indicating the model's prediction of the quality of each variant. To apply filters based on those scores run the [FilterVariantTranches](https://gatk.broadinstitute.org/hc/en-us/articles/5358928898971-FilterVariantTranches) tool with SNP and INDEL sensitivity tranches appropriate for your task.
 
-If the haplotype called vcfs are not filtered, check that at least one of `--dbsnp` or `--known_indels` is available.
+If the haplotype-called VCF files are not filtered, then Sarek should be run with at least one of the options `--dbsnp` or `--known_indels`.
 
 **Output directory: `{outdir}/variantcalling/<sample>/haplotypecaller`**
 
 - `<sample>.haplotypecaller.filtered.vcf.gz` and `<sample>.haplotypecaller.filtered.vcf.gz.tbi`
   - `VCF` with tabix index
 
-##### GATK Joint Germline Variantcalling
+##### GATK Joint Germline Variant Calling
 
-[GATK Joint germline Variantcalling](https://gatk.broadinstitute.org/hc/en-us/articles/360035535932-Germline-short-variant-discovery-SNPs-Indels-) uses Haplotypecaller per sample in `gvcf` mode. Next, the GVCFs are consolidated from multiple samples into a [GenomicsDB](https://gatk.broadinstitute.org/hc/en-us/articles/5358869876891-GenomicsDBImport) datastore. After joint [genotyping](https://gatk.broadinstitute.org/hc/en-us/articles/5358906861083-GenotypeGVCFs), [VQSR](https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator) is applied for filtering to produce the final multisample callset with the desired balance of precision and sensitivity.
+[GATK Joint germline Variant Calling](https://gatk.broadinstitute.org/hc/en-us/articles/360035535932-Germline-short-variant-discovery-SNPs-Indels-) uses Haplotypecaller per sample in `gvcf` mode. Next, the GVCFs are consolidated from multiple samples into a [GenomicsDB](https://gatk.broadinstitute.org/hc/en-us/articles/5358869876891-GenomicsDBImport) datastore. After joint [genotyping](https://gatk.broadinstitute.org/hc/en-us/articles/5358906861083-GenotypeGVCFs), [VQSR](https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator) is applied for filtering to produce the final multisample callset with the desired balance of precision and sensitivity.
 
 **Output directory: `{outdir}/variantcalling/<sample>/haplotypecaller`**
 
@@ -571,6 +571,8 @@ _For all samples_:
 [VEP (Variant Effect Predictor)](https://www.ensembl.org/info/docs/tools/vep/index.html), based on `Ensembl`, is a tool to determine the effects of all sorts of variants, including SNPs, indels, structural variants, CNVs.
 The generated `VCF` header contains the software version, also the version numbers for additional databases like `Clinvar` or `dbSNP` used in the `VEP` line.
 The format of the [consequence annotations](https://www.ensembl.org/info/genome/variation/prediction/predicted_data.html) is also in the `VCF` header describing the `INFO` field.
+For further reading and documentation see the [VEP manual](https://www.ensembl.org/info/docs/tools/vep/index.html)
+
 Currently, it contains:
 
 - _Consequence_: impact of the variation, if there is any
@@ -585,7 +587,7 @@ Currently, it contains:
 - _Protein_position_: Relative position of amino acid in protein
 - _BIOTYPE_: Biotype of transcript or regulatory feature
 
-For further reading and documentation see the [VEP manual](https://www.ensembl.org/info/docs/tools/vep/index.html)
+plus any additional filed selected via the plugins: dbnsfp, loftee, spliceai, spliceregion.
 
 _For all samples_:
 
@@ -602,21 +604,30 @@ _For all samples_:
 
 _For all samples_:
 
-**Output directory: `{outdir}/Reports/[SAMPLE]/fastqc`**
+**Output directory: `{outdir}/reports/fastqc/<sample-lane>`**
 
-- `sample_R1_XXX_fastqc.html` and `sample_R2_XXX_fastqc.html`
+- `<sample-lane_1>_fastqc.html` and `<sample-lane_2>_fastqc.html`
   - `FastQC` report containing quality metrics for your untrimmed raw `FASTQ` files
-- `sample_R1_XXX_fastqc.zip` and `sample_R2_XXX_fastqc.zip`
+- `<sample-lane_1>_fastqc.zip` and `<sample-lane_2>_fastqc.zip`
   - Zip archive containing the FastQC report, tab-delimited data file and plot images
 
 > **NB:** The `FastQC` plots displayed in the `MultiQC` report shows _untrimmed_ reads.
 > They may contain adapter sequence and potentially regions with low quality.
 
-- `fastqc/`
-  - `*_fastqc.html`: FastQC report containing quality metrics.
-  - `*_fastqc.zip`: Zip archive containing the FastQC report, tab-delimited data file and plot images.
-
 #### FastP
+
+[FastP](https://github.com/OpenGene/fastp) is a tool designed to provide all-in-one preprocessing for FastQ files and as such is used for trimming and splitting. The tool then determines QC metrics for the processed reads.
+
+_For all samples_:
+
+**Output directory: `{outdir}/reports/fastp/<sample>`**
+
+- `<sample-lane>_fastp.html`
+  - report in HTML format
+- `<sample-lane>_fastp.json`
+  - report in JSON format
+- `<sample-lane>_fastp.log`
+  - fastq log file
 
 #### Mosdepth
 
