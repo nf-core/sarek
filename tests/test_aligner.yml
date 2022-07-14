@@ -20,10 +20,10 @@
     - path: results/reference/bwamem2/genome.fasta.bwt.2bit.64
     - path: results/reference/bwamem2/genome.fasta.pac
     - path: results/reports/fastqc/test-test_L1
-    - path: results/reports/mosdepth/test/test.mapped.mosdepth.global.dist.txt
-    - path: results/reports/mosdepth/test/test.mapped.mosdepth.summary.txt
-    - path: results/reports/mosdepth/test/test.mapped.mosdepth.region.dist.txt
-    - path: results/reports/mosdepth/test/test.mapped.regions.bed.gz
+    - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
@@ -55,10 +55,10 @@
     - path: results/reference/dragmap/repeat_mask.bin
     - path: results/reference/dragmap/str_table.bin
     - path: results/reports/fastqc/test-test_L1
-    - path: results/reports/mosdepth/test/test.mapped.mosdepth.global.dist.txt
-    - path: results/reports/mosdepth/test/test.mapped.mosdepth.summary.txt
-    - path: results/reports/mosdepth/test/test.mapped.mosdepth.region.dist.txt
-    - path: results/reports/mosdepth/test/test.mapped.regions.bed.gz
+    - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt

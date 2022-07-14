@@ -55,6 +55,9 @@ module_order:
 
 extra_fn_clean_exts:
   - "_val"
+  - type: regex_keep
+    pattern: "^.*.(md|recal).mosdepth.(global|region).dist"
+    module: mosdepth
 
 sp:
   snpeff:

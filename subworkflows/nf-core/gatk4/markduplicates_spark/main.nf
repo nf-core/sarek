@@ -42,7 +42,8 @@ workflow MARKDUPLICATES_SPARK {
     // or CRAM_QC subworkflow
 
     // Gather all reports generated
-    qc_reports = qc_reports.mix(GATK4_ESTIMATELIBRARYCOMPLEXITY.out.metrics)
+    qc_reports = qc_reports.mix(GATK4_ESTIMATELIBRARYCOMPLEXITY.out.metrics,
+                                BAM_TO_CRAM.out.qc)
 
     // Gather versions of all tools used
     ch_versions = ch_versions.mix(GATK4_ESTIMATELIBRARYCOMPLEXITY.out.versions.first())
