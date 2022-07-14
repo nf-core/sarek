@@ -58,7 +58,7 @@ jobs:
           - "tiddit"
           - "trimming"
           - "tumor_normal_pair"
-          # TODO: This produces a snappyerror when run with pytest          - "umi"
+          - "umi"
           - "variantcalling_channel"
 
     steps:
