@@ -39,6 +39,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#613](https://github.com/nf-core/sarek/pull/613) - Added params `--vep_version` to allow more configuration on the vep container definition
 - [#620](https://github.com/nf-core/sarek/pull/620) - Added checks for sex information when running a CNV tools
 - [#623](https://github.com/nf-core/sarek/pull/623) - Additional checks of data in the input sample sheet.
+- [#629](https://github.com/nf-core/sarek/pull/629) - Added checks to catch inconsistency between supplied samples and requested tools.
+- [#632](https://github.com/nf-core/sarek/pull/632) - Added params `--snpeff_version` to allow more configuration on the snpeff container definition
+- [#632](https://github.com/nf-core/sarek/pull/632) - Added params `--vep_include_fasta` to use the fasta file for annotation
 
 ### Changed
 
@@ -80,6 +83,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#608](https://github.com/nf-core/sarek/pull/608) - Prevent candidate VCFs from getting published in manta
 - [#620](https://github.com/nf-core/sarek/pull/620) - `gender` is now `sex` in the samplesheet
 - [#630](https://github.com/nf-core/sarek/pull/630) - Update citations file
+- [#632](https://github.com/nf-core/sarek/pull/632) - Update `snpEff` version to `5.1` and cache up to `105`
+- [#632](https://github.com/nf-core/sarek/pull/632) - Update `VEP` version to `106.1` and cache up to `106`
+- [#618](https://github.com/nf-core/sarek/pull/618) - Update `multiqc` module update test yml files
+- [#618](https://github.com/nf-core/sarek/pull/618) - Update test yml files
 
 ### Fixed
 
@@ -121,6 +128,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#619](https://github.com/nf-core/sarek/pull/619) - Fix issue with checking samplesheet content with AWS
 - [#628](https://github.com/nf-core/sarek/pull/628) - Fix issue with value converting to string before schema validation
 - [#628](https://github.com/nf-core/sarek/pull/628) - Fix dbsnp check issue with `--step annotate`
+- [#618](https://github.com/nf-core/sarek/pull/618) - Fix `bcftools/vcftools` sample labelling in multiqc report
+- [#618](https://github.com/nf-core/sarek/pull/618) - Fix issue with tiddit [#621](https://github.com/nf-core/sarek/issues/621)
+- [#618](https://github.com/nf-core/sarek/pull/618) - Fix channel issue with `targets.bed` in prepare_intervals
 
 ### Deprecated
 
