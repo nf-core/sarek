@@ -357,8 +357,8 @@ Files created:
 
 #### samtools mpileup
 
-[samtools mpileup](https://www.htslib.org/doc/samtools.html) generates pileup of a CRAM file.
-For further reading and documentation see the [samtools manual](https://www.htslib.org/doc/samtools.html#COMMANDS_AND_OPTIONS).
+[samtools mpileup](https://www.htslib.org/doc/samtools-mpileup.html) generates pileup of a CRAM file.
+For further reading and documentation see the [samtools manual](https://www.htslib.org/doc/samtools-mpileup.html).
 
 <details markdown="1">
 <summary>Output files for all samples</summary>
