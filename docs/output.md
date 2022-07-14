@@ -13,7 +13,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 - [Preprocessing](#preprocessing)
   - [Prepare input files](#prepare-input)
     - [Trim adapters](#trimming)
-    - [Split fastq files](#split)
+    - [Split FastQ files](#split)
   - [Map to Reference](#map-to-reference)
     - [BWA](#bwa)
     - [BWA-mem2](#bwa-mem2)
@@ -62,15 +62,15 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 
 ## Preprocessing
 
-`Sarek` pre-processes raw `fastq` files or `unmapped BAM` files, based on [GATK best practices](https://gatk.broadinstitute.org/hc/en-us/sections/360007226651-Best-Practices-Workflows).
+Sarek pre-processes raw FastQ files or unmapped BAM files, based on [GATK best practices](https://gatk.broadinstitute.org/hc/en-us/sections/360007226651-Best-Practices-Workflows).
 
-### Preparation of input files (fastq or (u)bam)
+### Preparation of input files (FastQ or (u)BAM)
 
-[FastP](https://github.com/OpenGene/fastp) is a tool designed to provide all-in-one preprocessing for FastQ files and as such is used for trimming and splitting. By default, these files are not published. However, if publishing is enabled, please be aware that these files are only published once, meaning if trimming and splitting is enabled, then the resulting files will be sharded fastq files with trimmed reads. If only one of them is enabled then the files contain either trimmed or split reads, respectively.
+[FastP](https://github.com/OpenGene/fastp) is a tool designed to provide all-in-one preprocessing for FastQ files and as such is used for trimming and splitting. By default, these files are not published. However, if publishing is enabled, please be aware that these files are only published once, meaning if trimming and splitting is enabled, then the resulting files will be sharded FastQ files with trimmed reads. If only one of them is enabled then the files contain either trimmed or split reads, respectively.
 
 #### Trim adapters
 
-[FastP](https://github.com/OpenGene/fastp) supports global trimming, which means it trims all reads in the front or the tail. This function is useful since sometimes you want to drop some cycles of a sequencing run. In the current implementation in `sarek`
+[FastP](https://github.com/OpenGene/fastp) supports global trimming, which means it trims all reads in the front or the tail. This function is useful since sometimes you want to drop some cycles of a sequencing run. In the current implementation in sarek
 `--detect_adapter_for_pe` is set by default which enables auto-detection of adapter sequences. For more information on how to fine-tune adapter trimming, take a look into the parameter docs.
 
 The resulting files are intermediate and by default not kept in the final files delivered to users. Set `--save_trimmed`to enable publishing of the files in:
@@ -78,36 +78,36 @@ The resulting files are intermediate and by default not kept in the final files 
 **Output directory: `{outdir}/preprocessing/<sample>/fastp/`**
 
 - `<sample>_<lane>_{1,2}.fastp.fastq.gz>`
-  - Bgzipped `fastq` file
+  - Bgzipped FastQ file
 
-#### Split fastq files
+#### Split FastQ files
 
-[FastP](https://github.com/OpenGene/fastp) supports splitting of one `fastq` file into multiple files allowing parallel alignment of sharded `fastq` file. To enable splitting, the number of reads per output can be specified. For more information, take a look into the parameter `--split_fastq`in the parameter docs .
+[FastP](https://github.com/OpenGene/fastp) supports splitting of one FastQ file into multiple files allowing parallel alignment of sharded FastQ file. To enable splitting, the number of reads per output can be specified. For more information, take a look into the parameter `--split_fastq`in the parameter docs .
 
 These files are intermediate and by default not kept in the final files delivered to users. Set `--save_split` to enable publishing of these files to:
 
 **Output directory: `{outdir}/preprocessing/<sample>/fastp/`**
 
 - `<sample_lane_{1,2}.fastp.fastq.gz>`
-  - Bgzipped `fastq` file
+  - Bgzipped FastQ file
 
 ### Map to Reference
 
 #### BWA
 
-[BWA](https://github.com/lh3/bwa) is a software package for mapping low-divergent sequences against a large reference genome. The aligned reads are then `coordinate` sorted (or `name` sorted if `MarkDuplicatesSpark` is used for duplicate marking) with [samtools](https://www.htslib.org/doc/samtools.html).
+[BWA](https://github.com/lh3/bwa) is a software package for mapping low-divergent sequences against a large reference genome. The aligned reads are then coordinate-sorted (or name-sorted if [`GATK MarkDuplicatesSpark`](https://gatk.broadinstitute.org/hc/en-us/articles/5358833264411-MarkDuplicatesSpark) is used for duplicate marking) with [samtools](https://www.htslib.org/doc/samtools.html).
 
 These files are intermediate and by default not kept in the final files delivered to users. Set `--save_bam_mapped` to enable publishing.
 
 #### BWA-mem2
 
-[BWA-mem2](https://github.com/bwa-mem2/bwa-mem2) is a software package for mapping low-divergent sequences against a large reference genome.The aligned reads are then `coordinate` sorted (or `name` sorted if `MarkDuplicatesSpark` is used for duplicate marking) with [samtools](https://www.htslib.org/doc/samtools.html).
+[BWA-mem2](https://github.com/bwa-mem2/bwa-mem2) is a software package for mapping low-divergent sequences against a large reference genome.The aligned reads are then coordinate-sorted (or name-sorted if [`GATK MarkDuplicatesSpark`](https://gatk.broadinstitute.org/hc/en-us/articles/5358833264411-MarkDuplicatesSpark) is used for duplicate marking) with [samtools](https://www.htslib.org/doc/samtools.html).
 
 These files are intermediate and by default not kept in the final files delivered to users. Set `--save_bam_mapped` to enable publishing.
 
 #### DragMap
 
-[DragMap](https://github.com/Illumina/dragmap) is an open-source software implementation of the DRAGEN mapper, which the Illumina team created so that we would have an open-source way to produce the same results as their proprietary DRAGEN hardware. The aligned reads are then `coordinate` sorted (or `name` sorted if `MarkDuplicatesSpark` is used for duplicate marking) with [samtools](https://www.htslib.org/doc/samtools.html).
+[DragMap](https://github.com/Illumina/dragmap) is an open-source software implementation of the DRAGEN mapper, which the Illumina team created so that we would have an open-source way to produce the same results as their proprietary DRAGEN hardware. The aligned reads are then coordinate-sorted (or name-sorted if [`GATK MarkDuplicatesSpark`](https://gatk.broadinstitute.org/hc/en-us/articles/5358833264411-MarkDuplicatesSpark) is used for duplicate marking) with [samtools](https://www.htslib.org/doc/samtools.html).
 
 These files are intermediate and by default not kept in the final files delivered to users. Set `--save_bam_mapped` to enable publishing.
 
@@ -115,8 +115,8 @@ _For all mappers and samples_:
 
 **Output directory: `{outdir}/preprocessing/<sample>/mapped`**
 
-- `<sample>.bam` and `<sample>.bam.bai`
-  - `BAM` file and index
+- if `--save_bam_mapped`: `<sample>.bam` and `<sample>.bam.bai`
+  - BAM file and index
 
 ### Mark Duplicates
 
@@ -126,18 +126,18 @@ For further reading and documentation see the [data pre-processing for variant d
 
 #### GATK MarkDuplicates (Spark)
 
-By default, `Sarek` will use [GATK MarkDuplicates](https://gatk.broadinstitute.org/hc/en-us/articles/5358880192027-MarkDuplicates-Picard-).
+By default, Sarek will use [GATK MarkDuplicates](https://gatk.broadinstitute.org/hc/en-us/articles/5358880192027-MarkDuplicates-Picard-).
 
-Specify `--use_gatk_spark markduplicates` to use [`GATK MarkDuplicatesSpark`](https://gatk.broadinstitute.org/hc/en-us/articles/5358833264411-MarkDuplicatesSpark) instead, the corresponding `Spark` implementation. The resulting files are converted to `CRAM` with either [samtools](https://www.htslib.org/doc/samtools.html), when `GATK MarkDuplicates` is used, or, implicitly, by `GATK MarkDuplicatesSpark`.
+Specify `--use_gatk_spark markduplicates` to use [`GATK MarkDuplicatesSpark`](https://gatk.broadinstitute.org/hc/en-us/articles/5358833264411-MarkDuplicatesSpark) instead, the corresponding spark implementation. The resulting files are converted to CRAM with either [samtools](https://www.htslib.org/doc/samtools.html), when GATK MarkDuplicates is used, or, implicitly, by GATK MarkDuplicatesSpark.
 
-The resulting `CRAM` files are delivered to the users.
+The resulting CRAM files are delivered to the users.
 
 _For all samples_:
 
 **Output directory: `{outdir}/preprocessing/<sample>/markduplicates`**
 
 - `<sample>.md.cram` and `<sample>.md.cram.crai`
-  - `CRAM` file and index
+  - CRAM file and index
 - if `--save_output_as_bam`:
   - `<sample>.md.bam` and `<sample>.md.bam.bai`
 
@@ -151,35 +151,36 @@ For further reading and documentation see the [technical documentation by GATK](
 
 [GATK BaseRecalibrator](https://gatk.broadinstitute.org/hc/en-us/articles/360042477672-BaseRecalibrator) generates a recalibration table based on various co-variates.
 
-Specify `--use_gatk_spark baserecalibrator` to use [`GATK BaseRecalibratorSpark`](https://gatk.broadinstitute.org/hc/en-us/articles/5358896138011-BaseRecalibrator) instead of the corresponding Spark implementation.
+Specify `--use_gatk_spark baserecalibrator` to use [GATK BaseRecalibratorSpark](https://gatk.broadinstitute.org/hc/en-us/articles/5358896138011-BaseRecalibrator) instead of the corresponding Spark implementation.
 
 _For all samples_:
 
 **Output directory: `{outdir}/preprocessing/<sample>/recal_table`**
 
 - `<sample>.recal.table`
-  - Recalibration table associated to the `duplicates-marked CRAM` file.
+  - Recalibration table associated to the duplicates-marked CRAM file.
 
 #### GATK ApplyBQSR (Spark)
 
 [GATK ApplyBQSR](https://gatk.broadinstitute.org/hc/en-us/articles/5358826654875-ApplyBQSR) recalibrates the base qualities of the input reads based on the recalibration table produced by the [GATK BaseRecalibrator](#gatk-baserecalibrator) tool.
 
-Specify `--use_gatk_spark baserecalibrator` to use [`GATK ApplyBQSRSpark`](https://gatk.broadinstitute.org/hc/en-us/articles/5358898266011-ApplyBQSRSpark-BETA-) instead, the respective `Spark` implementation.
+Specify `--use_gatk_spark baserecalibrator` to use [GATK ApplyBQSRSpark](https://gatk.broadinstitute.org/hc/en-us/articles/5358898266011-ApplyBQSRSpark-BETA-) instead, the respective spark implementation.
 
-The resulting `recalibrated CRAM` files are delivered to the user. `Recalibrated CRAM` files are usually 2-3 times larger than the `duplicate-marked CRAM` files.
+The resulting recalibrated CRAM files are delivered to the user. Recalibrated CRAM files are usually 2-3 times larger than the duplicate-marked CRAM files.
 
 _For all samples_:
 
 **Output directory: `{outdir}/preprocessing/<sample>/recalibrated`**
 
 - `<sample>.recal.cram` and `<sample>.recal.cram.crai`
-  - `CRAM` file and index
+  - CRAM file and index
 - if `--save_output_as_bam`:
   - `<sample>.recal.bam` and `<sample>.recal.bam.bai`
+    - BAM file and index
 
 ### CSV files
 
-The `CSV` files are auto-generated and can be used by `Sarek` for further processing and/or variant calling.
+The CSV files are auto-generated and can be used by Sarek for further processing and/or variant calling.
 
 See the [`--input`](usage.md#--input) section in the usage documentation for further reading and documentation on how to make the most of them.
 
@@ -187,15 +188,15 @@ See the [`--input`](usage.md#--input) section in the usage documentation for fur
 
 - `mapped.csv`
   - if `--save_bam_mapped`
-  - `CSV` containing an entry for each sample with the columns `patient,sample,sex,status,bam,bai`
+  - CSV containing an entry for each sample with the columns `patient,sample,sex,status,bam,bai`
 - `markduplicates_no_table.csv`
-  - `CSV` containing an entry for each sample with the columns `patient,sample,sex,status,cram,crai`
+  - CSV containing an entry for each sample with the columns `patient,sample,sex,status,cram,crai`
 - `markduplicates.csv`
-  - `CSV` containing an entry for each sample with the columns `patient,sample,sex,status,cram,crai,table`
+  - CSV containing an entry for each sample with the columns `patient,sample,sex,status,cram,crai,table`
 - `recalibrated.csv`
-  - `CSV` containing an entry for each sample with the columns`patient,sample,sex,status,cram,crai`
+  - CSV containing an entry for each sample with the columns`patient,sample,sex,status,cram,crai`
 - `variantcalled.csv`
-  - `CSV` containing an entry for each sample with the columns `patient,sample,vcf`
+  - CSV containing an entry for each sample with the columns `patient,sample,vcf`
 
 ## Variant Calling
 
@@ -217,9 +218,9 @@ _For normal samples_:
 **Output directory: `{outdir}/variantcalling/<sample>/deepvariant`**
 
 - `<sample>.deepvariant.vcf.gz` and `<sample>.deepvariant.vcf.gz.tbi`
-  - `VCF` with tabix index
+  - VCF with tabix index
 - `<sample>.deepvariant.g.vcf.gz` and `<sample>.deepvariant.g.vcf.gz.tbi`
-  - `.g.VCF` with tabix index
+  - .g.VCF with tabix index
 
 #### FreeBayes
 
@@ -230,7 +231,7 @@ _For all samples_:
 **Output directory: `{outdir}/variantcalling/{sample,normalsample_vs_tumorsample}/freebayes`**
 
 - `<sample>.freebayes.vcf.gz` and `<sample>.freebayes.vcf.gz.tbi`
-  - `VCF` with tabix index
+  - VCF with tabix index
 
 #### GATK HaplotypeCaller
 
@@ -241,7 +242,7 @@ _For normal samples_:
 **Output directory: `{outdir}/variantcalling/<sample>/haplotypecaller`**
 
 - `<sample>.haplotypecaller.vcf.gz` and `<sample>.haplotypecaller.vcf.gz.tbi`
-  - `VCF` with tabix index
+  - VCF with tabix index
 
 ##### GATK Germline Single Sample Variant Calling
 
@@ -253,7 +254,7 @@ If the haplotype-called VCF files are not filtered, then Sarek should be run wit
 **Output directory: `{outdir}/variantcalling/<sample>/haplotypecaller`**
 
 - `<sample>.haplotypecaller.filtered.vcf.gz` and `<sample>.haplotypecaller.filtered.vcf.gz.tbi`
-  - `VCF` with tabix index
+  - VCF with tabix index
 
 ##### GATK Joint Germline Variant Calling
 
@@ -276,7 +277,7 @@ _For a tumor-only sample or tumor/normal pair_:
 Files created:
 
 - `{sample,tumorsample_vs_normalsample}.mutect2.vcf.gz` and `{sample,tumorsample_vs_normalsample}.mutect2.vcf.gz.tbi`
-  - unfiltered (raw) Mutect2 calls `VCF` with tabix index
+  - unfiltered (raw) Mutect2 calls VCF with tabix index
 - `{sample,tumorsample_vs_normalsample}.mutect2.vcf.gz.stats`
   - a stats file generated during calling of raw variants (needed for filtering)
 - `{sample,tumorsample_vs_normalsample}.mutect2.contamination.table`
@@ -288,13 +289,13 @@ Files created:
 - `{sample,tumorsample,normalsample}.mutect2.pileupsummaries.table`
   - tabulates pileup metrics for inferring contamination
 - `{sample,tumorsample_vs_normalsample}.mutect2.filtered.vcf.gz` and `{sample,tumorsample_vs_normalsample}.mutect2.filtered.vcf.gz.tbi`
-  - filtered Mutect2 calls `VCF` with tabix index based on the probability that a variant is somatic
+  - filtered Mutect2 calls VCF with tabix index based on the probability that a variant is somatic
 - `{sample,tumorsample_vs_normalsample}.mutect2.filtered.vcf.gz.filteringStats.tsv`
   - a stats file generated during the filtering of Mutect2 called variants
 
 #### samtools mpileup
 
-[samtools mpileup](https://www.htslib.org/doc/samtools.html) generates pileup of a `CRAM` file.
+[samtools mpileup](https://www.htslib.org/doc/samtools.html) generates pileup of a CRAM file.
 For further reading and documentation see the [samtools manual](https://www.htslib.org/doc/samtools.html#COMMANDS_AND_OPTIONS).
 
 _For all samples_:
@@ -314,18 +315,18 @@ _For single samples (normal-only or tumor-only)_:
 **Output directory: `{outdir}/variantcalling/<sample>/strelka`**
 
 - `<sample>.strelka.genome.vcf.gz` and `<sample>.strelka.genome.vcf.gz.tbi`
-  - genome `VCF` with tabix index
+  - genome VCF with tabix index
 - `<sample>.strelka.variants.vcf.gz` and `<sample>.strelka.variants.vcf.gz.tbi`
-  - `VCF` with tabix index with all potential variant loci across the sample. Note this file includes non-variant loci if they have a non-trivial level of variant evidence or contain one or more alleles for which genotyping has been forced.
+  - VCF with tabix index with all potential variant loci across the sample. Note this file includes non-variant loci if they have a non-trivial level of variant evidence or contain one or more alleles for which genotyping has been forced.
 
 _For a tumor/normal pair_:
 
 **Output directory: `{outdir}/variantcalling/<tumorsample_vs_normalsample>/strelka`**
 
 - `<tumorsample_vs_normalsample>.strelka.somatic_indels.vcf.gz` and `<tumorsample_vs_normalsample>.strelka.somatic_indels.vcf.gz.tbi`
-  - `VCF` with tabix index with all somatic indels inferred in the tumor sample.
+  - VCF with tabix index with all somatic indels inferred in the tumor sample.
 - `<tumorsample_vs_normalsample>.strelka.somatic_snvs.vcf.gz` and `<tumorsample_vs_normalsample>.strelka.somatic_snvs.vcf.gz.tbi`
-  - `VCF` with tabix index with all somatic SNVs inferred in the tumor sample.
+  - VCF with tabix index with all somatic SNVs inferred in the tumor sample.
 
 ### Structural Variants
 
@@ -333,30 +334,30 @@ _For a tumor/normal pair_:
 
 [Manta](https://github.com/Illumina/manta) calls structural variants (SVs) and indels from mapped paired-end sequencing reads.
 It is optimized for analysis of germline variation in small sets of individuals and somatic variation in tumor/normal sample pairs.
-`Manta` provides a candidate list for small indels that can be fed to `Strelka` following [Strelka Best Practices](https://github.com/Illumina/strelka/blob/master/docs/userGuide/README.md#somatic-configuration-example). For further reading and documentation see the [Manta user guide](https://github.com/Illumina/manta/blob/master/docs/userGuide/README.md).
+[Manta](https://github.com/Illumina/manta) provides a candidate list for small indels that can be fed to [Strelka2](https://github.com/Illumina/strelka) following [Strelka Best Practices](https://github.com/Illumina/strelka/blob/master/docs/userGuide/README.md#somatic-configuration-example). For further reading and documentation see the [Manta user guide](https://github.com/Illumina/manta/blob/master/docs/userGuide/README.md).
 
 _For normal samples_:
 
 **Output directory: `{outdir}/variantcalling/<sample>/manta`**
 
 - `<sample>.manta.diploid_sv.vcf.gz` and `<sample>.manta.diploid_sv.vcf.gz.tbi`
-  - `VCF` with tabix index containing SVs and indels scored and genotyped under a diploid model for the sample.
+  - VCF with tabix index containing SVs and indels scored and genotyped under a diploid model for the sample.
 
 _For a tumor-only samples_:
 
 **Output directory: `{outdir}/variantcalling/<sample>/manta`**
 
 - `<sample>.manta.tumor_sv.vcf.gz` and `<sample>.manta.tumor_sv.vcf.gz.tbi`
-  - `VCF` with tabix index containing a subset of the candidateSV.vcf.gz file after removing redundant candidates and small indels less than the minimum scored variant size (50 by default). The SVs are not scored, but include additional details: (1) paired and split read supporting evidence counts for each allele (2) a subset of the filters from the scored tumor-normal model are applied to the single tumor case to improve precision.
+  - VCF with tabix index containing a subset of the candidateSV.vcf.gz file after removing redundant candidates and small indels less than the minimum scored variant size (50 by default). The SVs are not scored, but include additional details: (1) paired and split read supporting evidence counts for each allele (2) a subset of the filters from the scored tumor-normal model are applied to the single tumor case to improve precision.
 
 _For a tumor/normal pair_:
 
 **Output directory: `{outdir}/variantcalling/<tumorsample_vs_normalsample>/manta`**
 
 - `<tumorsample_vs_normalsample>.manta.diploid_sv.vcf.gz` and `<tumorsample_vs_normalsample>.manta.diploid_sv.vcf.gz.tbi`
-  - `VCF` with tabix index containing SVs and indels scored and genotyped under a diploid model for the sample. In the case of a tumor/normal subtraction, the scores in this file do not reflect any information from the tumor sample.
+  - VCF with tabix index containing SVs and indels scored and genotyped under a diploid model for the sample. In the case of a tumor/normal subtraction, the scores in this file do not reflect any information from the tumor sample.
 - `<tumorsample_vs_normalsample>.manta.somatic_sv.vcf.gz` and `<tumorsample_vs_normalsample>.manta.somatic_sv.vcf.gz.tbi`
-  - `VCF` with tabix index containing SVs and indels scored under a somatic variant model.
+  - VCF with tabix index containing SVs and indels scored under a somatic variant model.
 
 #### TIDDIT
 
@@ -367,7 +368,7 @@ _For normal and tumor-only samples_:
 **Output directory: `{outdir}/variantcalling/<sample>/tiddit`**
 
 - `<sample>.tiddit.vcf.gz` and `<sample>.tiddit.vcf.gz.tbi`
-  - `VCF` with tabix index containing SV calls
+  - VCF with tabix index containing SV calls
 - `<sample>.tiddit.ploidies.tab`
   - tab file describing the estimated ploidy and coverage across each contig
 
@@ -376,11 +377,11 @@ _For tumor/normal paired samples_:
 **Output directory: `{outdir}/variantcalling/<tumorsample_vs_normalsample>/tiddit`**
 
 - `<tumorsample_vs_normalsample>.tiddit.normal.vcf.gz` and `<tumorsample_vs_normalsample>.tiddit.normal.vcf.gz.tbi`
-  - `VCF` with tabix index containing SV calls
+  - VCF with tabix index containing SV calls
 - `<tumorsample_vs_normalsample>.tiddit.tumor.vcf.gz` and `<tumorsample_vs_normalsample>.tiddit.tumor.vcf.gz.tbi`
-  - `VCF` with tabix index containing SV calls
+  - VCF with tabix index containing SV calls
 - `<tumorsample_vs_normalsample>_sv_merge.tiddit.vcf.gz` and `<tumorsample_vs_normalsample>_sv_merge.tiddit.vcf.gz.tbi`
-  - merged tumor/normal `VCF` with tabix index
+  - merged tumor/normal VCF with tabix index
 - `<tumorsample_vs_normalsample>.tiddit.ploidies.tab`
   - tab file describing the estimated ploidy and coverage across each contig
 
@@ -390,8 +391,8 @@ _For tumor/normal paired samples_:
 
 [ASCAT](https://github.com/VanLoo-lab/ascat) is a software for performing allele-specific copy number analysis of tumor samples and for estimating tumor ploidy and purity (normal contamination).
 It infers tumor purity and ploidy and calculates whole-genome allele-specific copy number profiles.
-The `ASCAT` process gives several images as output, described in detail in this [book chapter](http://www.ncbi.nlm.nih.gov/pubmed/22130873).
-Running ASCAT on NGS data requires that the `BAM` files are converted into BAF and LogR values.
+The [ASCAT](https://github.com/VanLoo-lab/ascat) process gives several images as output, described in detail in this [book chapter](http://www.ncbi.nlm.nih.gov/pubmed/22130873).
+Running ASCAT on NGS data requires that the BAM files are converted into BAF and LogR values.
 This is done internally using the software [AlleleCount](https://github.com/cancerit/alleleCount). For further reading and documentation see the [ASCAT manual](https://www.crick.ac.uk/research/labs/peter-van-loo/software).
 
 _For a tumor/normal pair_:
@@ -399,29 +400,29 @@ _For a tumor/normal pair_:
 **Output directory: `{outdir}/variantcalling/<tumorsample_vs_normalsample>/ascat`**
 
 - `<tumorsample_vs_normalsample>.tumour.ASPCF.png`
-  - Image with information about allele-specific copy number segmentation
+  - image with information about allele-specific copy number segmentation
 - `<tumorsample_vs_normalsample>.before_correction_Tumour.<tumorsample_vs_normalsample>.tumour.png`
-  - Image with information about raw profile of tumor sample of logR and BAF values before GC correction
+  - image with information about raw profile of tumor sample of logR and BAF values before GC correction
 - `<tumorsample_vs_normalsample>.before_correction_Tumour.<tumorsample_vs_normalsample>.germline.png`
-  - Image with information about raw profile of normal sample of logR and BAF values before GC correction
+  - image with information about raw profile of normal sample of logR and BAF values before GC correction
 - `<tumorsample_vs_normalsample>.after_correction_GC_Tumour.<tumorsample_vs_normalsample>.tumour.png`
-  - Image with information about GC and RT corrected logR and BAF values of tumor sample after GC correction
+  - image with information about GC and RT corrected logR and BAF values of tumor sample after GC correction
 - `<tumorsample_vs_normalsample>.after_correction_GC_Tumour.<tumorsample_vs_normalsample>.germline.png`
-  - Image with information about GC and RT corrected logR and BAF values of normal sample after GC correction
+  - image with information about GC and RT corrected logR and BAF values of normal sample after GC correction
 - `<tumorsample_vs_normalsample>.tumour.sunrise.png`
-  - Image visualising the range of ploidy and tumor percentage values
+  - image visualising the range of ploidy and tumor percentage values
 - `<tumorsample_vs_normalsample>.metrics.txt`
-  - File with information about different metrics from ASCAT profiles
+  - file with information about different metrics from ASCAT profiles
 - `<tumorsample_vs_normalsample>.cnvs.txt`
-  - File with information about CNVS
+  - file with information about CNVS
 - `<tumorsample_vs_normalsample>.purityploidy.txt`
-  - File with information about purity and ploidy
+  - file with information about purity and ploidy
 - `<tumorsample_vs_normalsample>.segments.txt`
-  - File with information about copy number segments
+  - file with information about copy number segments
 - `<tumorsample_vs_normalsample>.tumour_tumourBAF.txt` and `<tumorsample_vs_normalsample>.tumour_normalBAF.txt`
   - file with beta allele frequencies
 - `<tumorsample_vs_normalsample>.tumour_tumourLogR.txt` and `<tumorsample_vs_normalsample>.tumour_normalLogR.txt`
-  - File with total copy number on a logarithmic scale
+  - file with total copy number on a logarithmic scale
 
 The text file `<tumorsample_vs_normalsample>.cnvs.txt` contains predictions about copy number state for all the segments.
 The output is a tab delimited text file with the following columns:
@@ -443,51 +444,51 @@ _For normal or tumor-only samples_:
 **Output directory: `{outdir}/variantcalling/<sample>/cnvkit`**
 
 - `<sample>.antitargetcoverage.cnn`
-  - File containing coverage information
+  - file containing coverage information
 - `<sample>.targetcoverage.cnn`
-  - File containing coverage information
+  - file containing coverage information
 - `<sample>-diagram.pdf`
-  - File with plot of copy numbers or segments on chromosomes
+  - file with plot of copy numbers or segments on chromosomes
 - `<sample>-scatter.png`
-  - File with plot of bin-level log2 coverages and segmentation calls
+  - file with plot of bin-level log2 coverages and segmentation calls
 - `<sample>.bintest.cns`
-  - File containing copy number segment information
+  - file containing copy number segment information
 - `<sample>.cnr`
-  - File containing copy number ratio information
+  - file containing copy number ratio information
 - `<sample>.cns`
-  - File containing copy number segment information
+  - file containing copy number segment information
 - `<sample>.call.cns`
-  - File containing copy number segment information
+  - file containing copy number segment information
 
 _For tumor/normal pairs_:
 
 **Output directory: `{outdir}/variantcalling/<tumorsample_vs_normalsample>/cnvkit`**
 
 - `<normalsample>.antitargetcoverage.cnn`
-  - File containing coverage information
+  - file containing coverage information
 - `<normalsample>.targetcoverage.cnn`
-  - File containing coverage information
+  - file containing coverage information
 - `<tumorsample>.antitargetcoverage.cnn`
-  - File containing coverage information
+  - file containing coverage information
 - `<tumorsample>.bintest.cns`
-  - File containing copy number segment information
+  - file containing copy number segment information
 - `<tumorsample>-scatter.png`
-  - File with plot of bin-level log2 coverages and segmentation calls
+  - file with plot of bin-level log2 coverages and segmentation calls
 - `<tumorsample>-diagram.pdf`
-  - File with plot of copy numbers or segments on chromosomes
+  - file with plot of copy numbers or segments on chromosomes
 - `<tumorsample>.cnr`
-  - File containing copy number ratio information
+  - file containing copy number ratio information
 - `<tumorsample>.cns`
-  - File containing copy number segment information
+  - file containing copy number segment information
 - `<tumorsample>.targetcoverage.cnn`
-  - File containing coverage information
+  - file containing coverage information
 - `<tumorsample>.call.cns`
-  - File containing copy number segment information
+  - file containing copy number segment information
 
 #### Control-FREEC
 
 [Control-FREEC](https://github.com/BoevaLab/FREEC) is a tool for detection of copy-number changes and allelic imbalances (including loss of heterozygoity (LOH)) using deep-sequencing data.
-`Control-FREEC` automatically computes, normalizes, segments copy number and beta allele frequency profiles, then calls copy number alterations and LOH.
+[Control-FREEC](https://github.com/BoevaLab/FREEC) automatically computes, normalizes, segments copy number and beta allele frequency profiles, then calls copy number alterations and LOH.
 It also detects subclonal gains and losses and evaluate the most likely average ploidy of the sample. For further reading and documentation see the [Control-FREEC Documentation](http://boevalab.inf.ethz.ch/FREEC/tutorial.html).
 
 _For a tumor-only and tumor/normal pair_:
@@ -497,11 +498,11 @@ _For a tumor-only and tumor/normal pair_:
 - `config.txt`
   - Configuration file used to run Control-FREEC
 - `<tumorsample>_BAF.png` and `<tumorsample_vs_normalsample>_BAF.png`
-  - Image of BAF plot
+  - image of BAF plot
 - `<tumorsample>_ratio.log2.png` and `<tumorsample_vs_normalsample>_ratio.log2.png`
-  - Image of ratio log2 plot
+  - image of ratio log2 plot
 - `<tumorsample>_ratio.png` and `<tumorsample_vs_normalsample>_ratio.png`
-  - Image of ratio plot
+  - image of ratio plot
 - `<tumorsample>.bed` and `<tumorsample_vs_normalsample>.bed`
   - translated output to a .BED file (so to view it in the UCSC Genome Browser)
 - `<tumorsample>.circos.txt` and `<tumorsample_vs_normalsample>.circos.txt`
@@ -551,26 +552,26 @@ _For a tumor/normal pair_:
 ## Variant annotation
 
 This directory contains results from the final annotation steps: two tools are used for annotation, [snpEff](http://snpeff.sourceforge.net/) and [VEP](https://www.ensembl.org/info/docs/tools/vep/index.html). Both results can also be combined by setting `--tools merge`.
-All variants present in the called `VCF` files are annotated. For some variantcallers this can mean that the variants are already filtered by `PASS`, for some this needs to be done during post-processing.
+All variants present in the called VCF files are annotated. For some variantcallers this can mean that the variants are already filtered by `PASS`, for some this needs to be done during post-processing.
 
 ### snpEff
 
 [snpeff](http://snpeff.sourceforge.net/) is a genetic variant annotation and effect prediction toolbox.
 It annotates and predicts the effects of variants on genes (such as amino acid changes) using multiple databases for annotations.
-The generated `VCF` header contains the software version and the used command line. For further reading and documentation see the [snpEff manual](http://snpeff.sourceforge.net/SnpEff_manual.html#outputSummary)
+The generated VCF header contains the software version and the used command line. For further reading and documentation see the [snpEff manual](http://snpeff.sourceforge.net/SnpEff_manual.html#outputSummary)
 
 _For all samples_:
 
 **Output directory: `{outdir}/annotation/{sample,tumorsample_vs_normalsample}`**
 
 - `{sample,tumorsample_vs_normalsample}.<variantcaller>_snpEff.ann.vcf.gz` and `{sample,tumorsample_vs_normalsample}.<variantcaller>_snpEff.ann.vcf.gz.tbi`
-  - `VCF` with tabix index
+  - VCF with tabix index
 
 ### VEP
 
 [VEP (Variant Effect Predictor)](https://www.ensembl.org/info/docs/tools/vep/index.html), based on `Ensembl`, is a tool to determine the effects of all sorts of variants, including SNPs, indels, structural variants, CNVs.
-The generated `VCF` header contains the software version, also the version numbers for additional databases like `Clinvar` or `dbSNP` used in the `VEP` line.
-The format of the [consequence annotations](https://www.ensembl.org/info/genome/variation/prediction/predicted_data.html) is also in the `VCF` header describing the `INFO` field.
+The generated VCF header contains the software version, also the version numbers for additional databases like `Clinvar` or `dbSNP` used in the `VEP` line.
+The format of the [consequence annotations](https://www.ensembl.org/info/genome/variation/prediction/predicted_data.html) is also in the VCF header describing the `INFO` field.
 For further reading and documentation see the [VEP manual](https://www.ensembl.org/info/docs/tools/vep/index.html)
 
 Currently, it contains:
@@ -594,7 +595,7 @@ _For all samples_:
 **Output directory: `{outdir}/annotation/{sample,tumorsample_vs_normalsample}`**
 
 - `{sample,tumorsample_vs_normalsample}.<variantcaller>_VEP.ann.vcf.gz` and `{sample,tumorsample_vs_normalsample}.<variantcaller>_VEP.ann.vcf.gz.tbi`
-  - `VCF` with tabix index
+  - VCF with tabix index
 
 ## QC and reporting
 
@@ -627,7 +628,7 @@ _For all samples_:
 - `<sample-lane>_fastp.json`
   - report in JSON format
 - `<sample-lane>_fastp.log`
-  - fastq log file
+  - FastQ log file
 
 #### Mosdepth
 
@@ -683,7 +684,7 @@ For further reading and documentation see the [`samtools` manual](https://www.ht
 
 #### bcftools stats
 
-[bcftools](https://samtools.github.io/bcftools/) is a program for variant calling and manipulating `VCF` files.
+[bcftools](https://samtools.github.io/bcftools/) is a program for variant calling and manipulating VCF files.
 
 Plot will show:
 
@@ -700,7 +701,7 @@ For further reading and documentation see the [bcftools stats manual](https://sa
 
 #### VCFtools
 
-[VCFtools](https://vcftools.github.io/) is a program package designed for working with `VCF` files.
+[VCFtools](https://vcftools.github.io/) is a program package designed for working with VCF files.
 
 Plots will show:
 
