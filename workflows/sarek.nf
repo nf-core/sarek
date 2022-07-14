@@ -938,8 +938,10 @@ workflow SAREK {
 
         if (params.tools.contains('merge') || params.tools.contains('snpeff') || params.tools.contains('vep')) {
 
+            vep_fasta = (params.vep_include_fasta) ? fasta : []
+
             ANNOTATE(vcf_to_annotate,
-                fasta,
+                vep_fasta,
                 params.tools,
                 snpeff_db,
                 snpeff_cache,
