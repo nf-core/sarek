@@ -88,7 +88,7 @@ patient,sample,lane,bam
 patient1,test_sample,lane_1,test.bam
 ```
 
-In this example, the sample is multiplexed over 3 lanes:
+In this example, the sample is multiplexed over three lanes:
 
 ```console
 patient,sample,lane,fastq_1,fastq_2
