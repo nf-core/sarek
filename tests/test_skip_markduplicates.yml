@@ -26,10 +26,10 @@
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
     - path: results/reports/samtools_stats/test/test.md.cram.stats
     - path: results/reports/samtools_stats/test/test.recal.cram.stats
-    - path: results/variant_calling/test/strelka/test.genome.vcf.gz
-    - path: results/variant_calling/test/strelka/test.genome.vcf.gz.tbi
-    - path: results/variant_calling/test/strelka/test.variants.vcf.gz
-    - path: results/variant_calling/test/strelka/test.variants.vcf.gz.tbi
+    - path: results/variant_calling/test/strelka/test.strelka.genome.vcf.gz
+    - path: results/variant_calling/test/strelka/test.strelka.genome.vcf.gz.tbi
+    - path: results/variant_calling/test/strelka/test.strelka.variants.vcf.gz
+    - path: results/variant_calling/test/strelka/test.strelka.variants.vcf.gz.tbi
 
 - name: Run skip markduplicates bam from step markduplicates
   command: nextflow run main.nf -profile test,docker,markduplicates_bam,skip_markduplicates --tools strelka
@@ -57,10 +57,10 @@
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
     - path: results/reports/samtools_stats/test/test.md.cram.stats
     - path: results/reports/samtools_stats/test/test.recal.cram.stats
-    - path: results/variant_calling/test/strelka/test.genome.vcf.gz
-    - path: results/variant_calling/test/strelka/test.genome.vcf.gz.tbi
-    - path: results/variant_calling/test/strelka/test.variants.vcf.gz
-    - path: results/variant_calling/test/strelka/test.variants.vcf.gz.tbi
+    - path: results/variant_calling/test/strelka/test.strelka.genome.vcf.gz
+    - path: results/variant_calling/test/strelka/test.strelka.genome.vcf.gz.tbi
+    - path: results/variant_calling/test/strelka/test.strelka.variants.vcf.gz
+    - path: results/variant_calling/test/strelka/test.strelka.variants.vcf.gz.tbi
 
 - name: Run skip markduplicates cram from step markduplicates
   command: nextflow run main.nf -profile test,docker,markduplicates_cram,skip_markduplicates --tools strelka
@@ -92,7 +92,7 @@
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
     - path: results/reports/samtools_stats/test/test.paired_end.sorted.cram.stats
     - path: results/reports/samtools_stats/test/test.recal.cram.stats
-    - path: results/variant_calling/test/strelka/test.genome.vcf.gz
-    - path: results/variant_calling/test/strelka/test.genome.vcf.gz.tbi
-    - path: results/variant_calling/test/strelka/test.variants.vcf.gz
-    - path: results/variant_calling/test/strelka/test.variants.vcf.gz.tbi
+    - path: results/variant_calling/test/strelka/test.strelka.genome.vcf.gz
+    - path: results/variant_calling/test/strelka/test.strelka.genome.vcf.gz.tbi
+    - path: results/variant_calling/test/strelka/test.strelka.variants.vcf.gz
+    - path: results/variant_calling/test/strelka/test.strelka.variants.vcf.gz.tbi

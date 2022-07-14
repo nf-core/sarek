@@ -15,10 +15,10 @@
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
     - path: results/reports/samtools_stats/test/test.recal.cram.stats
-    - path: results/variant_calling/test/strelka/test.genome.vcf.gz
-    - path: results/variant_calling/test/strelka/test.genome.vcf.gz.tbi
-    - path: results/variant_calling/test/strelka/test.variants.vcf.gz
-    - path: results/variant_calling/test/strelka/test.variants.vcf.gz.tbi
+    - path: results/variant_calling/test/strelka/test.strelka.genome.vcf.gz
+    - path: results/variant_calling/test/strelka/test.strelka.genome.vcf.gz.tbi
+    - path: results/variant_calling/test/strelka/test.strelka.variants.vcf.gz
+    - path: results/variant_calling/test/strelka/test.strelka.variants.vcf.gz.tbi
 
 - name: Run Prepare_recal starting from cram
   command: nextflow run main.nf -profile test,prepare_recalibration_cram,docker --tools strelka
@@ -37,10 +37,10 @@
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
     - path: results/reports/samtools_stats/test/test.recal.cram.stats
-    - path: results/variant_calling/test/strelka/test.genome.vcf.gz
-    - path: results/variant_calling/test/strelka/test.genome.vcf.gz.tbi
-    - path: results/variant_calling/test/strelka/test.variants.vcf.gz
-    - path: results/variant_calling/test/strelka/test.variants.vcf.gz.tbi
+    - path: results/variant_calling/test/strelka/test.strelka.genome.vcf.gz
+    - path: results/variant_calling/test/strelka/test.strelka.genome.vcf.gz.tbi
+    - path: results/variant_calling/test/strelka/test.strelka.variants.vcf.gz
+    - path: results/variant_calling/test/strelka/test.strelka.variants.vcf.gz.tbi
 
 - name: Run Prepare_recal starting from bam and skip baserecalibration
   command: nextflow run main.nf -profile test,prepare_recalibration_bam,skip_bqsr,docker --tools strelka
@@ -70,10 +70,10 @@
       should_exist: false
     - path: results/reports/samtools_stats/test/test.recal.cram.stats
       should_exist: false
-    - path: results/variant_calling/test/strelka/test.genome.vcf.gz
-    - path: results/variant_calling/test/strelka/test.genome.vcf.gz.tbi
-    - path: results/variant_calling/test/strelka/test.variants.vcf.gz
-    - path: results/variant_calling/test/strelka/test.variants.vcf.gz.tbi
+    - path: results/variant_calling/test/strelka/test.strelka.genome.vcf.gz
+    - path: results/variant_calling/test/strelka/test.strelka.genome.vcf.gz.tbi
+    - path: results/variant_calling/test/strelka/test.strelka.variants.vcf.gz
+    - path: results/variant_calling/test/strelka/test.strelka.variants.vcf.gz.tbi
 
 - name: Run Prepare_recal starting from cram and skip baserecalibration
   command: nextflow run main.nf -profile test,prepare_recalibration_cram,skip_bqsr,docker --tools strelka
@@ -105,7 +105,7 @@
       should_exist: false
     - path: results/reports/samtools_stats/test/test.recal.cram.stats
       should_exist: false
-    - path: results/variant_calling/test/strelka/test.genome.vcf.gz
-    - path: results/variant_calling/test/strelka/test.genome.vcf.gz.tbi
-    - path: results/variant_calling/test/strelka/test.variants.vcf.gz
-    - path: results/variant_calling/test/strelka/test.variants.vcf.gz.tbi
+    - path: results/variant_calling/test/strelka/test.strelka.genome.vcf.gz
+    - path: results/variant_calling/test/strelka/test.strelka.genome.vcf.gz.tbi
+    - path: results/variant_calling/test/strelka/test.strelka.variants.vcf.gz
+    - path: results/variant_calling/test/strelka/test.strelka.variants.vcf.gz.tbi

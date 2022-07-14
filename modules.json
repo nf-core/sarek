@@ -67,7 +67,7 @@
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
             "ensemblvep": {
-                "git_sha": "757c20c8ebfab85e1de9f98773a2269f6d34025a"
+                "git_sha": "973151e9eab9bac400aa99f099075a10cdd8e84c"
             },
             "fastp": {
                 "git_sha": "9b51362a532a14665f513cf987531f9ea5046b74"
@@ -181,7 +181,7 @@
                 "git_sha": "f0800157544a82ae222931764483331a81812012"
             },
             "multiqc": {
-                "git_sha": "49b18b1639f4f7104187058866a8fab33332bdfe"
+                "git_sha": "5138acca0985ca01c38a1c4fba917d83772b1106"
             },
             "samblaster": {
                 "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
@@ -214,7 +214,7 @@
                 "git_sha": "6b64f9cb6c3dd3577931cc3cd032d6fb730000ce"
             },
             "snpeff": {
-                "git_sha": "40dd662fd26c3eb3160b7c8cbbe9bff80bbe2c30"
+                "git_sha": "d8bef6057bc2cf657d33ed496426be8416edd780"
             },
             "strelka/germline": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
