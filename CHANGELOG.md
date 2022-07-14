@@ -81,6 +81,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#600](https://github.com/nf-core/sarek/pull/600) - Remove `TODO` in awsfulltest
 - [#606](https://github.com/nf-core/sarek/pull/606) - Updated `ASCAT` to version `3.0` as module
 - [#608](https://github.com/nf-core/sarek/pull/608) - Prevent candidate VCFs from getting published in manta
+- [#618](https://github.com/nf-core/sarek/pull/618) - Update `multiqc` module
+- [#618](https://github.com/nf-core/sarek/pull/618) - Update test yml files
 - [#620](https://github.com/nf-core/sarek/pull/620) - `gender` is now `sex` in the samplesheet
 - [#630](https://github.com/nf-core/sarek/pull/630) - Update citations file
 - [#632](https://github.com/nf-core/sarek/pull/632) - Update `snpEff` version to `5.1` and cache up to `105`
@@ -127,6 +129,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#619](https://github.com/nf-core/sarek/pull/619) - Fix issue with checking samplesheet content with AWS
 - [#628](https://github.com/nf-core/sarek/pull/628) - Fix issue with value converting to string before schema validation
 - [#628](https://github.com/nf-core/sarek/pull/628) - Fix dbsnp check issue with `--step annotate`
+- [#618](https://github.com/nf-core/sarek/pull/618) - Fix `bcftools/vcftools` sample labelling in multiqc report
+- [#618](https://github.com/nf-core/sarek/pull/618) - Fix issue with tiddit [#621](https://github.com/nf-core/sarek/issues/621)
+- [#618](https://github.com/nf-core/sarek/pull/618) - Fix channel issue with `targets.bed` in prepare_intervals
 
 ### Deprecated
 

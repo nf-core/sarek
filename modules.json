@@ -181,7 +181,7 @@
                 "git_sha": "f0800157544a82ae222931764483331a81812012"
             },
             "multiqc": {
-                "git_sha": "49b18b1639f4f7104187058866a8fab33332bdfe"
+                "git_sha": "5138acca0985ca01c38a1c4fba917d83772b1106"
             },
             "samblaster": {
                 "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"

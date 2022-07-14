@@ -17,6 +17,14 @@ input:
       type: file
       description: |
         List of reports / files recognised by MultiQC, for example the html and zip output of FastQC
+  - multiqc_config:
+      type: file
+      description: Config yml for MultiQC
+      pattern: "*.{yml,yaml}"
+  - multiqc_logo:
+      type: file
+      description: Logo file for MultiQC
+      pattern: "*.{png}"
 output:
   - report:
       type: file

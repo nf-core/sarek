@@ -151,10 +151,10 @@
     - germline
     - variant_calling
   files:
-    - path: results/variant_calling/sample1/deepvariant/sample1.g.vcf.gz
-    - path: results/variant_calling/sample1/deepvariant/sample1.g.vcf.gz.tbi
-    - path: results/variant_calling/sample1/deepvariant/sample1.vcf.gz
-    - path: results/variant_calling/sample1/deepvariant/sample1.vcf.gz.tbi
+    - path: results/variant_calling/sample1/deepvariant/sample1.deepvariant.g.vcf.gz
+    - path: results/variant_calling/sample1/deepvariant/sample1.deepvariant.g.vcf.gz.tbi
+    - path: results/variant_calling/sample1/deepvariant/sample1.deepvariant.vcf.gz
+    - path: results/variant_calling/sample1/deepvariant/sample1.deepvariant.vcf.gz.tbi
     - path: results/csv/variantcalled.csv
 
 - name: Run variant calling on germline sample with deepvariant without intervals
@@ -165,10 +165,10 @@
     - no_intervals
     - variant_calling
   files:
-    - path: results/variant_calling/sample1/deepvariant/sample1.g.vcf.gz
-    - path: results/variant_calling/sample1/deepvariant/sample1.g.vcf.gz.tbi
-    - path: results/variant_calling/sample1/deepvariant/sample1.vcf.gz
-    - path: results/variant_calling/sample1/deepvariant/sample1.vcf.gz.tbi
+    - path: results/variant_calling/sample1/deepvariant/sample1.deepvariant.g.vcf.gz
+    - path: results/variant_calling/sample1/deepvariant/sample1.deepvariant.g.vcf.gz.tbi
+    - path: results/variant_calling/sample1/deepvariant/sample1.deepvariant.vcf.gz
+    - path: results/variant_calling/sample1/deepvariant/sample1.deepvariant.vcf.gz.tbi
     - path: results/csv/variantcalled.csv
 
 - name: Run variant calling on germline sample with freebayes
@@ -178,8 +178,8 @@
     - germline
     - variant_calling
   files:
-    - path: results/variant_calling/test/freebayes/test.vcf.gz
-    - path: results/variant_calling/test/freebayes/test.vcf.gz.tbi
+    - path: results/variant_calling/test/freebayes/test.freebayes.vcf.gz
+    - path: results/variant_calling/test/freebayes/test.freebayes.vcf.gz.tbi
     - path: results/csv/variantcalled.csv
 
 - name: Run variant calling on germline sample with freebayes without intervals
@@ -190,8 +190,8 @@
     - no_intervals
     - variant_calling
   files:
-    - path: results/variant_calling/test/freebayes/test.vcf.gz
-    - path: results/variant_calling/test/freebayes/test.vcf.gz.tbi
+    - path: results/variant_calling/test/freebayes/test.freebayes.vcf.gz
+    - path: results/variant_calling/test/freebayes/test.freebayes.vcf.gz.tbi
     - path: results/csv/variantcalled.csv
 
 - name: Run variant calling on somatic sample with freebayes
@@ -201,8 +201,8 @@
     - somatic
     - variant_calling
   files:
-    - path: results/variant_calling/test2_vs_test/freebayes/test2_vs_test.vcf.gz
-    - path: results/variant_calling/test2_vs_test/freebayes/test2_vs_test.vcf.gz.tbi
+    - path: results/variant_calling/test2_vs_test/freebayes/test2_vs_test.freebayes.vcf.gz
+    - path: results/variant_calling/test2_vs_test/freebayes/test2_vs_test.freebayes.vcf.gz.tbi
     - path: results/csv/variantcalled.csv
 
 - name: Run variant calling on somatic sample with freebayes without intervals
@@ -213,8 +213,8 @@
     - no_intervals
     - variant_calling
   files:
-    - path: results/variant_calling/test2_vs_test/freebayes/test2_vs_test.vcf.gz
-    - path: results/variant_calling/test2_vs_test/freebayes/test2_vs_test.vcf.gz.tbi
+    - path: results/variant_calling/test2_vs_test/freebayes/test2_vs_test.freebayes.vcf.gz
+    - path: results/variant_calling/test2_vs_test/freebayes/test2_vs_test.freebayes.vcf.gz.tbi
     - path: results/csv/variantcalled.csv
 
 # - name: Run variant calling on tumor_only sample with freebayes
@@ -224,8 +224,8 @@
 #     - tumor_only
 #     - variant_calling
 #   files:
-#     - path: results/variant_calling/sample2/freebayes/sample2.vcf.gz
-#     - path: results/variant_calling/sample2/freebayes/sample2.vcf.gz.tbi
+#     - path: results/variant_calling/sample2/freebayes/sample2.freebayes.vcf.gz
+#     - path: results/variant_calling/sample2/freebayes/sample2.freebayes.vcf.gz.tbi
 
 # - name: Run variant calling on tumor_only sample with freebayes without intervals
 #   command: nextflow run main.nf -profile test,tools_tumoronly,docker --tools freebayes --no_intervals
@@ -235,8 +235,8 @@
 #     - tumor_only
 #     - variant_calling
 #   files:
-#     - path: results/variant_calling/sample2/freebayes/sample2.vcf.gz
-#     - path: results/variant_calling/sample2/freebayes/sample2.vcf.gz.tbi
+#     - path: results/variant_calling/sample2/freebayes/sample2.freebayes.vcf.gz
+#     - path: results/variant_calling/sample2/freebayes/sample2.freebayes.vcf.gz.tbi
 
 - name: Run variant calling on germline sample with haplotypecaller
   command: nextflow run main.nf -profile test,targeted,docker --input ./tests/csv/3.0/mapped_single_bam.csv --tools haplotypecaller  -c ./tests/nextflow.config --step variant_calling
@@ -245,11 +245,15 @@
     - haplotypecaller
     - variant_calling
   files:
-    - path: results/variant_calling/test/haplotypecaller/test.vcf.gz
-    - path: results/variant_calling/test/haplotypecaller/test.vcf.gz.tbi
-    - path: results/variant_calling/test/haplotypecaller/test.filtered.vcf.gz
-    - path: results/variant_calling/test/haplotypecaller/test.filtered.vcf.gz.tbi
+    - path: results/variant_calling/test/haplotypecaller/test.haplotypecaller.vcf.gz
+    - path: results/variant_calling/test/haplotypecaller/test.haplotypecaller.vcf.gz.tbi
+    - path: results/variant_calling/test/haplotypecaller/test.haplotypecaller.filtered.vcf.gz
+    - path: results/variant_calling/test/haplotypecaller/test.haplotypecaller.filtered.vcf.gz.tbi
     - path: results/csv/variantcalled.csv
+    - path: results/variant_calling/test1/haplotypecaller/test1.haplotypecaller.vcf.gz
+    - path: results/variant_calling/test1/haplotypecaller/test1.haplotypecaller.vcf.gz.tbi
+    - path: results/variant_calling/test1/haplotypecaller/test1.haplotypecaller.filtered.vcf.gz
+    - path: results/variant_calling/test1/haplotypecaller/test1.haplotypecaller.filtered.vcf.gz.tbi
 
 - name: Run variant calling on germline sample with haplotypecaller without intervals
   command: nextflow run main.nf -profile test,docker --input ./tests/csv/3.0/mapped_single_bam.csv --tools haplotypecaller  -c ./tests/nextflow.config --step variant_calling --no_intervals
@@ -259,11 +263,15 @@
     - no_intervals
     - variant_calling
   files:
-    - path: results/variant_calling/test/haplotypecaller/test.vcf.gz
-    - path: results/variant_calling/test/haplotypecaller/test.vcf.gz.tbi
-    - path: results/variant_calling/test/haplotypecaller/test.filtered.vcf.gz
-    - path: results/variant_calling/test/haplotypecaller/test.filtered.vcf.gz.tbi
+    - path: results/variant_calling/test/haplotypecaller/test.haplotypecaller.vcf.gz
+    - path: results/variant_calling/test/haplotypecaller/test.haplotypecaller.vcf.gz.tbi
+    - path: results/variant_calling/test/haplotypecaller/test.haplotypecaller.filtered.vcf.gz
+    - path: results/variant_calling/test/haplotypecaller/test.haplotypecaller.filtered.vcf.gz.tbi
     - path: results/csv/variantcalled.csv
+    - path: results/variant_calling/test1/haplotypecaller/test1.haplotypecaller.vcf.gz
+    - path: results/variant_calling/test1/haplotypecaller/test1.haplotypecaller.vcf.gz.tbi
+    - path: results/variant_calling/test1/haplotypecaller/test1.haplotypecaller.filtered.vcf.gz
+    - path: results/variant_calling/test1/haplotypecaller/test1.haplotypecaller.filtered.vcf.gz.tbi
 
 # - name: Run joint germline variant calling with haplotypecaller
 #   command: nextflow run main.nf -profile test,tools_germline,docker --tools haplotypecaller --joint_germline -c ./tests/nextflow.config
@@ -273,10 +281,10 @@
 #     - haplotypecaller
 #     - variant_calling
 #   files:
-#     - path: results/variant_calling/sample1/haplotypecaller/sample1.g.vcf.gz
-#     - path: results/variant_calling/sample1/haplotypecaller/sample1.g.vcf.gz.tbi
-#     - path: results/variant_calling/sample1/haplotypecaller/sample1.vcf.gz
-#     - path: results/variant_calling/sample1/haplotypecaller/sample1.vcf.gz.tbi
+#     - path: results/variant_calling/sample1/haplotypecaller/sample1.haplotypecaller.g.vcf.gz
+#     - path: results/variant_calling/sample1/haplotypecaller/sample1.haplotypecaller.g.vcf.gz.tbi
+#     - path: results/variant_calling/sample1/haplotypecaller/sample1.haplotypecaller.vcf.gz
+#     - path: results/variant_calling/sample1/haplotypecaller/sample1.haplotypecaller.vcf.gz.tbi
 #     - path: results/csv/variantcalled.csv
 
 # - name: Run joint germline variant calling with haplotypecaller without intervals
@@ -288,10 +296,10 @@
 #     - no_intervals
 #     - variant_calling
 #   files:
-#     - path: results/variant_calling/sample1/haplotypecaller/sample1.g.vcf.gz
-#     - path: results/variant_calling/sample1/haplotypecaller/sample1.g.vcf.gz.tbi
-#     - path: results/variant_calling/sample1/haplotypecaller/sample1.vcf.gz
-#     - path: results/variant_calling/sample1/haplotypecaller/sample1.vcf.gz.tbi
+#     - path: results/variant_calling/sample1/haplotypecaller/sample1.haplotypecaller.g.vcf.gz
+#     - path: results/variant_calling/sample1/haplotypecaller/sample1.haplotypecaller.g.vcf.gz.tbi
+#     - path: results/variant_calling/sample1/haplotypecaller/sample1.haplotypecaller.vcf.gz
+#     - path: results/variant_calling/sample1/haplotypecaller/sample1.haplotypecaller.vcf.gz.tbi
 #     - path: results/csv/variantcalled.csv
 
 - name: Run variant calling on germline sample with manta
@@ -301,8 +309,8 @@
     - manta
     - variant_calling
   files:
-    - path: results/variant_calling/sample1/manta/sample1.diploid_sv.vcf.gz
-    - path: results/variant_calling/sample1/manta/sample1.diploid_sv.vcf.gz.tbi
+    - path: results/variant_calling/sample1/manta/sample1.manta.diploid_sv.vcf.gz
+    - path: results/variant_calling/sample1/manta/sample1.manta.diploid_sv.vcf.gz.tbi
 
 - name: Run variant calling on germline sample with manta without intervals
   command: nextflow run main.nf -profile test,tools_germline,docker --tools manta --no_intervals
@@ -312,8 +320,8 @@
     - no_intervals
     - variant_calling
   files:
-    - path: results/variant_calling/sample1/manta/sample1.diploid_sv.vcf.gz
-    - path: results/variant_calling/sample1/manta/sample1.diploid_sv.vcf.gz.tbi
+    - path: results/variant_calling/sample1/manta/sample1.manta.diploid_sv.vcf.gz
+    - path: results/variant_calling/sample1/manta/sample1.manta.diploid_sv.vcf.gz.tbi
 
 - name: Run variant calling on tumor_only sample with manta
   command: nextflow run main.nf -profile test,tools_tumoronly,docker --tools manta
@@ -322,8 +330,8 @@
     - tumor_only
     - variant_calling
   files:
-    - path: results/variant_calling/sample2/manta/sample2.tumor_sv.vcf.gz
-    - path: results/variant_calling/sample2/manta/sample2.tumor_sv.vcf.gz.tbi
+    - path: results/variant_calling/sample2/manta/sample2.manta.tumor_sv.vcf.gz
+    - path: results/variant_calling/sample2/manta/sample2.manta.tumor_sv.vcf.gz.tbi
 
 - name: Run variant calling on tumor_only sample with manta without intervals
   command: nextflow run main.nf -profile test,tools_tumoronly,docker --tools manta --no_intervals
@@ -333,8 +341,8 @@
     - tumor_only
     - variant_calling
   files:
-    - path: results/variant_calling/sample2/manta/sample2.tumor_sv.vcf.gz
-    - path: results/variant_calling/sample2/manta/sample2.tumor_sv.vcf.gz.tbi
+    - path: results/variant_calling/sample2/manta/sample2.manta.tumor_sv.vcf.gz
+    - path: results/variant_calling/sample2/manta/sample2.manta.tumor_sv.vcf.gz.tbi
 
 - name: Run variant calling on somatic sample with manta
   command: nextflow run main.nf -profile test,tools_somatic,docker --tools manta
@@ -343,12 +351,12 @@
     - somatic
     - variant_calling
   files:
-    - path: results/variant_calling/sample3/manta/sample3.diploid_sv.vcf.gz
-    - path: results/variant_calling/sample3/manta/sample3.diploid_sv.vcf.gz.tbi
-    - path: results/variant_calling/sample4_vs_sample3/manta/sample4_vs_sample3.diploid_sv.vcf.gz
-    - path: results/variant_calling/sample4_vs_sample3/manta/sample4_vs_sample3.diploid_sv.vcf.gz.tbi
-    - path: results/variant_calling/sample4_vs_sample3/manta/sample4_vs_sample3.somatic_sv.vcf.gz
-    - path: results/variant_calling/sample4_vs_sample3/manta/sample4_vs_sample3.somatic_sv.vcf.gz.tbi
+    - path: results/variant_calling/sample3/manta/sample3.manta.diploid_sv.vcf.gz
+    - path: results/variant_calling/sample3/manta/sample3.manta.diploid_sv.vcf.gz.tbi
+    - path: results/variant_calling/sample4_vs_sample3/manta/sample4_vs_sample3.manta.diploid_sv.vcf.gz
+    - path: results/variant_calling/sample4_vs_sample3/manta/sample4_vs_sample3.manta.diploid_sv.vcf.gz.tbi
+    - path: results/variant_calling/sample4_vs_sample3/manta/sample4_vs_sample3.manta.somatic_sv.vcf.gz
+    - path: results/variant_calling/sample4_vs_sample3/manta/sample4_vs_sample3.manta.somatic_sv.vcf.gz.tbi
 
 - name: Run variant calling on somatic sample with manta without intervals
   command: nextflow run main.nf -profile test,tools_somatic,docker --tools manta --no_intervals
@@ -358,12 +366,12 @@
     - somatic
     - variant_calling
   files:
-    - path: results/variant_calling/sample3/manta/sample3.diploid_sv.vcf.gz
-    - path: results/variant_calling/sample3/manta/sample3.diploid_sv.vcf.gz.tbi
-    - path: results/variant_calling/sample4_vs_sample3/manta/sample4_vs_sample3.diploid_sv.vcf.gz
-    - path: results/variant_calling/sample4_vs_sample3/manta/sample4_vs_sample3.diploid_sv.vcf.gz.tbi
-    - path: results/variant_calling/sample4_vs_sample3/manta/sample4_vs_sample3.somatic_sv.vcf.gz
-    - path: results/variant_calling/sample4_vs_sample3/manta/sample4_vs_sample3.somatic_sv.vcf.gz.tbi
+    - path: results/variant_calling/sample3/manta/sample3.manta.diploid_sv.vcf.gz
+    - path: results/variant_calling/sample3/manta/sample3.manta.diploid_sv.vcf.gz.tbi
+    - path: results/variant_calling/sample4_vs_sample3/manta/sample4_vs_sample3.manta.diploid_sv.vcf.gz
+    - path: results/variant_calling/sample4_vs_sample3/manta/sample4_vs_sample3.manta.diploid_sv.vcf.gz.tbi
+    - path: results/variant_calling/sample4_vs_sample3/manta/sample4_vs_sample3.manta.somatic_sv.vcf.gz
+    - path: results/variant_calling/sample4_vs_sample3/manta/sample4_vs_sample3.manta.somatic_sv.vcf.gz.tbi
 
 - name: Run variant calling on tumor_only sample to test mpileup
   command: nextflow run main.nf -profile test,tools_tumoronly,docker --tools mpileup
@@ -406,16 +414,16 @@
     - tumor_only
     - variant_calling
   files:
-    - path: results/variant_calling/sample2/mutect2/sample2.vcf.gz
-    - path: results/variant_calling/sample2/mutect2/sample2.vcf.gz.tbi
-    - path: results/variant_calling/sample2/mutect2/sample2.vcf.gz.stats
-    - path: results/variant_calling/sample2/mutect2/sample2.contamination.table
-    - path: results/variant_calling/sample2/mutect2/sample2.segmentation.table
-    - path: results/variant_calling/sample2/mutect2/sample2.artifactprior.tar.gz
-    - path: results/variant_calling/sample2/mutect2/sample2.pileupsummaries.table
-    - path: results/variant_calling/sample2/mutect2/sample2.filtered.vcf.gz
-    - path: results/variant_calling/sample2/mutect2/sample2.filtered.vcf.gz.tbi
-    - path: results/variant_calling/sample2/mutect2/sample2.filtered.vcf.gz.filteringStats.tsv
+    - path: results/variant_calling/sample2/mutect2/sample2.mutect2.vcf.gz
+    - path: results/variant_calling/sample2/mutect2/sample2.mutect2.vcf.gz.tbi
+    - path: results/variant_calling/sample2/mutect2/sample2.mutect2.vcf.gz.stats
+    - path: results/variant_calling/sample2/mutect2/sample2.mutect2.contamination.table
+    - path: results/variant_calling/sample2/mutect2/sample2.mutect2.segmentation.table
+    - path: results/variant_calling/sample2/mutect2/sample2.mutect2.artifactprior.tar.gz
+    - path: results/variant_calling/sample2/mutect2/sample2.mutect2.pileupsummaries.table
+    - path: results/variant_calling/sample2/mutect2/sample2.mutect2.filtered.vcf.gz
+    - path: results/variant_calling/sample2/mutect2/sample2.mutect2.filtered.vcf.gz.tbi
+    - path: results/variant_calling/sample2/mutect2/sample2.mutect2.filtered.vcf.gz.filteringStats.tsv
     - path: results/csv/variantcalled.csv
 
 - name: Run variant calling on tumoronly sample with mutect2 without intervals
@@ -426,16 +434,17 @@
     - tumor_only
     - variant_calling
   files:
-    - path: results/variant_calling/sample2/mutect2/sample2.vcf.gz
-    - path: results/variant_calling/sample2/mutect2/sample2.vcf.gz.tbi
-    - path: results/variant_calling/sample2/mutect2/sample2.vcf.gz.stats
-    - path: results/variant_calling/sample2/mutect2/sample2.contamination.table
-    - path: results/variant_calling/sample2/mutect2/sample2.segmentation.table
-    - path: results/variant_calling/sample2/mutect2/sample2.artifactprior.tar.gz
-    - path: results/variant_calling/sample2/mutect2/sample2.pileupsummaries.table
-    - path: results/variant_calling/sample2/mutect2/sample2.filtered.vcf.gz
-    - path: results/variant_calling/sample2/mutect2/sample2.filtered.vcf.gz.tbi
-    - path: results/variant_calling/sample2/mutect2/sample2.filtered.vcf.gz.filteringStats.tsv
+    - path: results/variant_calling/sample2/mutect2/sample2.mutect2.pileups.table
+    - path: results/variant_calling/sample2/mutect2/sample2.mutect2.vcf.gz
+    - path: results/variant_calling/sample2/mutect2/sample2.mutect2.vcf.gz.tbi
+    - path: results/variant_calling/sample2/mutect2/sample2.mutect2.vcf.gz.stats
+    - path: results/variant_calling/sample2/mutect2/sample2.mutect2.contamination.table
+    - path: results/variant_calling/sample2/mutect2/sample2.mutect2.segmentation.table
+    - path: results/variant_calling/sample2/mutect2/sample2.mutect2.artifactprior.tar.gz
+    - path: results/variant_calling/sample2/mutect2/sample2.mutect2.pileupsummaries.table
+    - path: results/variant_calling/sample2/mutect2/sample2.mutect2.filtered.vcf.gz
+    - path: results/variant_calling/sample2/mutect2/sample2.mutect2.filtered.vcf.gz.tbi
+    - path: results/variant_calling/sample2/mutect2/sample2.mutect2.filtered.vcf.gz.filteringStats.tsv
     - path: results/csv/variantcalled.csv
 
 - name: Run variant calling on somatic sample with mutect2
@@ -446,17 +455,17 @@
     - somatic
     - variant_calling
   files:
-    - path: results/variant_calling/sample4_vs_sample3/mutect2/sample4_vs_sample3.vcf.gz
-    - path: results/variant_calling/sample4_vs_sample3/mutect2/sample4_vs_sample3.vcf.gz.tbi
-    - path: results/variant_calling/sample4_vs_sample3/mutect2/sample4_vs_sample3.vcf.gz.stats
-    - path: results/variant_calling/sample4_vs_sample3/mutect2/sample4_vs_sample3.contamination.table
-    - path: results/variant_calling/sample4_vs_sample3/mutect2/sample4_vs_sample3.segmentation.table
-    - path: results/variant_calling/sample4_vs_sample3/mutect2/sample3.pileupsummaries.table
-    - path: results/variant_calling/sample4_vs_sample3/mutect2/sample4.pileupsummaries.table
-    - path: results/variant_calling/sample4_vs_sample3/mutect2/sample4_vs_sample3.artifactprior.tar.gz
-    - path: results/variant_calling/sample4_vs_sample3/mutect2/sample4_vs_sample3.filtered.vcf.gz
-    - path: results/variant_calling/sample4_vs_sample3/mutect2/sample4_vs_sample3.filtered.vcf.gz.tbi
-    - path: results/variant_calling/sample4_vs_sample3/mutect2/sample4_vs_sample3.filtered.vcf.gz.filteringStats.tsv
+    - path: results/variant_calling/sample4_vs_sample3/mutect2/sample4_vs_sample3.mutect2.vcf.gz
+    - path: results/variant_calling/sample4_vs_sample3/mutect2/sample4_vs_sample3.mutect2.vcf.gz.tbi
+    - path: results/variant_calling/sample4_vs_sample3/mutect2/sample4_vs_sample3.mutect2.vcf.gz.stats
+    - path: results/variant_calling/sample4_vs_sample3/mutect2/sample4_vs_sample3.mutect2.contamination.table
+    - path: results/variant_calling/sample4_vs_sample3/mutect2/sample4_vs_sample3.mutect2.segmentation.table
+    - path: results/variant_calling/sample4_vs_sample3/mutect2/sample3.mutect2.pileupsummaries.table
+    - path: results/variant_calling/sample4_vs_sample3/mutect2/sample4.mutect2.pileupsummaries.table
+    - path: results/variant_calling/sample4_vs_sample3/mutect2/sample4_vs_sample3.mutect2.artifactprior.tar.gz
+    - path: results/variant_calling/sample4_vs_sample3/mutect2/sample4_vs_sample3.mutect2.filtered.vcf.gz
+    - path: results/variant_calling/sample4_vs_sample3/mutect2/sample4_vs_sample3.mutect2.filtered.vcf.gz.tbi
+    - path: results/variant_calling/sample4_vs_sample3/mutect2/sample4_vs_sample3.mutect2.filtered.vcf.gz.filteringStats.tsv
     - path: results/csv/variantcalled.csv
 
 - name: Run variant calling on somatic sample with msisensor-pro
@@ -478,10 +487,10 @@
     - strelka
     - variant_calling
   files:
-    - path: results/variant_calling/sample1/strelka/sample1.variants.vcf.gz
-    - path: results/variant_calling/sample1/strelka/sample1.variants.vcf.gz.tbi
-    - path: results/variant_calling/sample1/strelka/sample1.genome.vcf.gz
-    - path: results/variant_calling/sample1/strelka/sample1.genome.vcf.gz.tbi
+    - path: results/variant_calling/sample1/strelka/sample1.strelka.variants.vcf.gz
+    - path: results/variant_calling/sample1/strelka/sample1.strelka.variants.vcf.gz.tbi
+    - path: results/variant_calling/sample1/strelka/sample1.strelka.genome.vcf.gz
+    - path: results/variant_calling/sample1/strelka/sample1.strelka.genome.vcf.gz.tbi
     - path: results/csv/variantcalled.csv
 
 - name: Run variant calling on germline sample with strelka without intervals
@@ -492,10 +501,10 @@
     - no_intervals
     - variant_calling
   files:
-    - path: results/variant_calling/sample1/strelka/sample1.variants.vcf.gz
-    - path: results/variant_calling/sample1/strelka/sample1.variants.vcf.gz.tbi
-    - path: results/variant_calling/sample1/strelka/sample1.genome.vcf.gz
-    - path: results/variant_calling/sample1/strelka/sample1.genome.vcf.gz.tbi
+    - path: results/variant_calling/sample1/strelka/sample1.strelka.variants.vcf.gz
+    - path: results/variant_calling/sample1/strelka/sample1.strelka.variants.vcf.gz.tbi
+    - path: results/variant_calling/sample1/strelka/sample1.strelka.genome.vcf.gz
+    - path: results/variant_calling/sample1/strelka/sample1.strelka.genome.vcf.gz.tbi
     - path: results/csv/variantcalled.csv
 
 - name: Run variant calling on tumoronly sample with strelka
@@ -505,10 +514,10 @@
     - tumor_only
     - variant_calling
   files:
-    - path: results/variant_calling/sample2/strelka/sample2.variants.vcf.gz
-    - path: results/variant_calling/sample2/strelka/sample2.variants.vcf.gz.tbi
-    - path: results/variant_calling/sample2/strelka/sample2.genome.vcf.gz
-    - path: results/variant_calling/sample2/strelka/sample2.genome.vcf.gz.tbi
+    - path: results/variant_calling/sample2/strelka/sample2.strelka.variants.vcf.gz
+    - path: results/variant_calling/sample2/strelka/sample2.strelka.variants.vcf.gz.tbi
+    - path: results/variant_calling/sample2/strelka/sample2.strelka.genome.vcf.gz
+    - path: results/variant_calling/sample2/strelka/sample2.strelka.genome.vcf.gz.tbi
     - path: results/csv/variantcalled.csv
 
 - name: Run variant calling on tumoronly sample with strelka without intervals
@@ -519,10 +528,10 @@
     - tumor_only
     - variant_calling
   files:
-    - path: results/variant_calling/sample2/strelka/sample2.variants.vcf.gz
-    - path: results/variant_calling/sample2/strelka/sample2.variants.vcf.gz.tbi
-    - path: results/variant_calling/sample2/strelka/sample2.genome.vcf.gz
-    - path: results/variant_calling/sample2/strelka/sample2.genome.vcf.gz.tbi
+    - path: results/variant_calling/sample2/strelka/sample2.strelka.variants.vcf.gz
+    - path: results/variant_calling/sample2/strelka/sample2.strelka.variants.vcf.gz.tbi
+    - path: results/variant_calling/sample2/strelka/sample2.strelka.genome.vcf.gz
+    - path: results/variant_calling/sample2/strelka/sample2.strelka.genome.vcf.gz.tbi
     - path: results/csv/variantcalled.csv
 
 - name: Run variant calling on somatic sample with strelka
@@ -532,14 +541,14 @@
     - strelka
     - variant_calling
   files:
-    - path: results/variant_calling/sample3/strelka/sample3.variants.vcf.gz
-    - path: results/variant_calling/sample3/strelka/sample3.variants.vcf.gz.tbi
-    - path: results/variant_calling/sample3/strelka/sample3.genome.vcf.gz
-    - path: results/variant_calling/sample3/strelka/sample3.genome.vcf.gz.tbi
-    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.somatic_indels.vcf.gz
-    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.somatic_indels.vcf.gz.tbi
-    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.somatic_snvs.vcf.gz
-    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.somatic_snvs.vcf.gz.tbi
+    - path: results/variant_calling/sample3/strelka/sample3.strelka.variants.vcf.gz
+    - path: results/variant_calling/sample3/strelka/sample3.strelka.variants.vcf.gz.tbi
+    - path: results/variant_calling/sample3/strelka/sample3.strelka.genome.vcf.gz
+    - path: results/variant_calling/sample3/strelka/sample3.strelka.genome.vcf.gz.tbi
+    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.strelka.somatic_indels.vcf.gz
+    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.strelka.somatic_indels.vcf.gz.tbi
+    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz
+    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz.tbi
     - path: results/csv/variantcalled.csv
 
 - name: Run variant calling on somatic sample with strelka without intervals
@@ -550,14 +559,14 @@
     - strelka
     - variant_calling
   files:
-    - path: results/variant_calling/sample3/strelka/sample3.variants.vcf.gz
-    - path: results/variant_calling/sample3/strelka/sample3.variants.vcf.gz.tbi
-    - path: results/variant_calling/sample3/strelka/sample3.genome.vcf.gz
-    - path: results/variant_calling/sample3/strelka/sample3.genome.vcf.gz.tbi
-    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.somatic_indels.vcf.gz
-    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.somatic_indels.vcf.gz.tbi
-    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.somatic_snvs.vcf.gz
-    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.somatic_snvs.vcf.gz.tbi
+    - path: results/variant_calling/sample3/strelka/sample3.strelka.variants.vcf.gz
+    - path: results/variant_calling/sample3/strelka/sample3.strelka.variants.vcf.gz.tbi
+    - path: results/variant_calling/sample3/strelka/sample3.strelka.genome.vcf.gz
+    - path: results/variant_calling/sample3/strelka/sample3.strelka.genome.vcf.gz.tbi
+    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.strelka.somatic_indels.vcf.gz
+    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.strelka.somatic_indels.vcf.gz.tbi
+    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz
+    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz.tbi
     - path: results/csv/variantcalled.csv
 
 - name: Run variant calling on somatic sample with strelka & manta (StrelkaBP)
@@ -567,14 +576,20 @@
     - strelkabp
     - variant_calling
   files:
-    - path: results/variant_calling/sample3/strelka/sample3.variants.vcf.gz
-    - path: results/variant_calling/sample3/strelka/sample3.variants.vcf.gz.tbi
-    - path: results/variant_calling/sample3/strelka/sample3.genome.vcf.gz
-    - path: results/variant_calling/sample3/strelka/sample3.genome.vcf.gz.tbi
-    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.somatic_indels.vcf.gz
-    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.somatic_indels.vcf.gz.tbi
-    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.somatic_snvs.vcf.gz
-    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.somatic_snvs.vcf.gz.tbi
+    - path: results/variant_calling/sample3/manta/sample3.manta.diploid_sv.vcf.gz
+    - path: results/variant_calling/sample3/manta/sample3.manta.diploid_sv.vcf.gz.tbi
+    - path: results/variant_calling/sample3/strelka/sample3.strelka.genome.vcf.gz
+    - path: results/variant_calling/sample3/strelka/sample3.strelka.genome.vcf.gz.tbi
+    - path: results//variant_calling/sample3/strelka/sample3.strelka.variants.vcf.gz
+    - path: results//variant_calling/sample3/strelka/sample3.strelka.variants.vcf.gz.tbi
+    - path: results//variant_calling/sample4_vs_sample3/manta/sample4_vs_sample3.manta.diploid_sv.vcf.gz
+    - path: results//variant_calling/sample4_vs_sample3/manta/sample4_vs_sample3.manta.diploid_sv.vcf.gz.tbi
+    - path: results//variant_calling/sample4_vs_sample3/manta/sample4_vs_sample3.manta.somatic_sv.vcf.gz
+    - path: results//variant_calling/sample4_vs_sample3/manta/sample4_vs_sample3.manta.somatic_sv.vcf.gz.tbi
+    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.strelka.somatic_indels.vcf.gz
+    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.strelka.somatic_indels.vcf.gz.tbi
+    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz
+    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz.tbi
     - path: results/csv/variantcalled.csv
 
 - name: Run variant calling on somatic sample with & manta (StrelkaBP) without intervals
@@ -585,14 +600,20 @@
     - strelkabp
     - variant_calling
   files:
-    - path: results/variant_calling/sample3/strelka/sample3.variants.vcf.gz
-    - path: results/variant_calling/sample3/strelka/sample3.variants.vcf.gz.tbi
-    - path: results/variant_calling/sample3/strelka/sample3.genome.vcf.gz
-    - path: results/variant_calling/sample3/strelka/sample3.genome.vcf.gz.tbi
-    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.somatic_indels.vcf.gz
-    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.somatic_indels.vcf.gz.tbi
-    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.somatic_snvs.vcf.gz
-    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.somatic_snvs.vcf.gz.tbi
+    - path: results/variant_calling/sample3/manta/sample3.manta.diploid_sv.vcf.gz
+    - path: results/variant_calling/sample3/manta/sample3.manta.diploid_sv.vcf.gz.tbi
+    - path: results/variant_calling/sample3/strelka/sample3.strelka.genome.vcf.gz
+    - path: results/variant_calling/sample3/strelka/sample3.strelka.genome.vcf.gz.tbi
+    - path: results/variant_calling/sample3/strelka/sample3.strelka.variants.vcf.gz
+    - path: results/variant_calling/sample3/strelka/sample3.strelka.variants.vcf.gz.tbi
+    - path: results/variant_calling/sample4_vs_sample3/manta/sample4_vs_sample3.manta.diploid_sv.vcf.gz
+    - path: results/variant_calling/sample4_vs_sample3/manta/sample4_vs_sample3.manta.diploid_sv.vcf.gz.tbi
+    - path: results/variant_calling/sample4_vs_sample3/manta/sample4_vs_sample3.manta.somatic_sv.vcf.gz
+    - path: results/variant_calling/sample4_vs_sample3/manta/sample4_vs_sample3.manta.somatic_sv.vcf.gz.tbi
+    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.strelka.somatic_indels.vcf.gz
+    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.strelka.somatic_indels.vcf.gz.tbi
+    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz
+    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz.tbi
     - path: results/csv/variantcalled.csv
 
 - name: Run variant calling on somatic sample with tiddit
@@ -602,15 +623,15 @@
     - somatic
     - variant_calling
   files:
-    - path: results/variant_calling/sample3/tiddit/sample3.ploidies.tab
-    - path: results/variant_calling/sample3/tiddit/sample3.vcf.gz
-    - path: results/variant_calling/sample3/tiddit/sample3.vcf.gz.tbi
-    - path: results/variant_calling/sample4_vs_sample3/tiddit/sample4_vs_sample3.normal.vcf.gz
-    - path: results/variant_calling/sample4_vs_sample3/tiddit/sample4_vs_sample3.normal.vcf.gz.tbi
-    - path: results/variant_calling/sample4_vs_sample3/tiddit/sample4_vs_sample3.tumor.vcf.gz
-    - path: results/variant_calling/sample4_vs_sample3/tiddit/sample4_vs_sample3.tumor.vcf.gz.tbi
-    - path: results/variant_calling/sample4_vs_sample3/tiddit/sample4_vs_sample3_sv_merge.vcf
-    - path: results/variant_calling/sample4_vs_sample3/tiddit/sample4_vs_sample3.ploidies.tab
+    - path: results/variant_calling/sample3/tiddit/sample3.tiddit.ploidies.tab
+    - path: results/variant_calling/sample3/tiddit/sample3.tiddit.vcf.gz
+    - path: results/variant_calling/sample3/tiddit/sample3.tiddit.vcf.gz.tbi
+    - path: results/variant_calling/sample4_vs_sample3/tiddit/sample4_vs_sample3.tiddit.normal.vcf.gz
+    - path: results/variant_calling/sample4_vs_sample3/tiddit/sample4_vs_sample3.tiddit.normal.vcf.gz.tbi
+    - path: results/variant_calling/sample4_vs_sample3/tiddit/sample4_vs_sample3.tiddit.tumor.vcf.gz
+    - path: results/variant_calling/sample4_vs_sample3/tiddit/sample4_vs_sample3.tiddit.tumor.vcf.gz.tbi
+    - path: results/variant_calling/sample4_vs_sample3/tiddit/sample4_vs_sample3.tiddit_sv_merge.vcf
+    - path: results/variant_calling/sample4_vs_sample3/tiddit/sample4_vs_sample3.tiddit.ploidies.tab
 
 - name: Run variant calling on germline sample with tiddit
   command: nextflow run main.nf -profile test,tools_germline,docker --tools tiddit -c ./tests/nextflow.config
@@ -619,9 +640,9 @@
     - germline
     - variant_calling
   files:
-    - path: results/variant_calling/sample1/tiddit/sample1.ploidies.tab
-    - path: results/variant_calling/sample1/tiddit/sample1.vcf.gz
-    - path: results/variant_calling/sample1/tiddit/sample1.vcf.gz.tbi
+    - path: results/variant_calling/sample1/tiddit/sample1.tiddit.ploidies.tab
+    - path: results/variant_calling/sample1/tiddit/sample1.tiddit.vcf.gz
+    - path: results/variant_calling/sample1/tiddit/sample1.tiddit.vcf.gz.tbi
 
 - name: Run variant calling on tumor_only sample with tiddit
   command: nextflow run main.nf -profile test,tools_tumoronly,docker --tools tiddit -c ./tests/nextflow.config
@@ -630,6 +651,6 @@
     - tumor_only
     - variant_calling
   files:
-    - path: results/variant_calling/sample2/tiddit/sample2.ploidies.tab
-    - path: results/variant_calling/sample2/tiddit/sample2.vcf.gz
-    - path: results/variant_calling/sample2/tiddit/sample2.vcf.gz.tbi
+    - path: results/variant_calling/sample2/tiddit/sample2.tiddit.ploidies.tab
+    - path: results/variant_calling/sample2/tiddit/sample2.tiddit.vcf.gz
+    - path: results/variant_calling/sample2/tiddit/sample2.tiddit.vcf.gz.tbi
