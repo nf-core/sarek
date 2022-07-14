@@ -544,6 +544,10 @@ nextflow run nf-core/sarek -r 3.0.0 -profile test,<container/institute> --tools 
 
 If you are interested in any of the other tests that are run on every code change or would like to run them yourself, you can take a look at `tests/<filename>.yml`. For each entry the respective nextflow command run and the expected output is specified.
 
+### How can the different steps be used
+
+Sarek can be started at different points in the analysis by setting the parameter `--step`. Once started at a certain point, the pipeline runs through all the following steps without additional intervention. For example when starting from `--step mapping` (set by default) and `--tools strelka,vep`, the input reads will be aligned, duplicate marked, recalibrated, variant called with Strelka, and finally VEP will annotae the called variants.
+
 ### Which variant calling tool is implemented for which data type?
 
 This list is by no means exhaustive and it will depend on the specific analysis you would like to run. This is a suggestion based on the individual docs of the tools specifically for human genomes and a garden-variety sequencing run as well as what has been added to the pipeline.
@@ -590,7 +594,7 @@ Then, you can derive both loci (just chromosome and position) and allele files (
 
 For further reading and documentation, please take a look at the Battenberg repository.
 
-### Where do the used reference genomes come from
+### Where do the used reference genomes originate from
 
 GATK.GRCh38:
 
@@ -656,7 +660,7 @@ nextflow run nf-core/sarek --known_indels false --genome GRCh38.GATK
 
 Sarek comes shipped with containers for both snpEff and VEP for human reference genome GATK.GRCh38
 
-#### Containers
+<!-- #### Containers
 
 With `Nextflow DSL2`, each process use its own `Conda` environment or container from `biocontainers`.
 
@@ -730,7 +734,11 @@ Such files are meant to be share between multiple users, so this script is mainl
 
 ```bash
 nextflow run download_cache.nf --cadd_cache </path/to/CADD/cache> --cadd_version <CADD version> --genome <GENOME>
-```
+``` -->
+
+### Why is bwa/bwa-mem2 ran with different settings for normal and tumor samples?
+
+### Some plots in the MultiQC report are empty
 
 ### Spark related issues
 
@@ -769,6 +777,8 @@ Re-start your session.
 Note that the way to increase the open file limit in your system may be slightly different or require additional steps.
 
 #### Cannot delete work folder when using docker + Spark
+
+Currently, when running spark-based tools in combination with docker, it is required to set `docker.userEmulation = false`. This can unfortunately causes permission issues when `work/` is being written with root permissions. In case this happens, you might need to configure docker to run without `userEmulation` (see [here](https://github.com/Midnighter/nf-core-adr/blob/main/docs/adr/0008-refrain-from-using-docker-useremulation-in-nextflow.md)).
 
 ### MultiQC is missing plots for snpeff or VEP
 
