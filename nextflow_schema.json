@@ -454,6 +454,7 @@
                 },
                 "ascat_chromosomes": {
                     "type": "string",
+                    "description": "Chromosomes to run ASCAT on.",
                     "fa_icon": "fa-solid fa-text",
                     "default": "c(1:22, 'X')",
                     "help_text": "Specify specific chromosomes to run ASCAT on, i.e 'c('21', '22')'."
