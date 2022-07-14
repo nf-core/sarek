@@ -14,7 +14,7 @@
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
-    - path: results/reports/samtools_stats/test/test.recal.cram.stats
+    - path: results/reports/samtools/test/test.recal.cram.stats
     - path: results/variant_calling/test/strelka/test.genome.vcf.gz
     - path: results/variant_calling/test/strelka/test.genome.vcf.gz.tbi
     - path: results/variant_calling/test/strelka/test.variants.vcf.gz
@@ -36,7 +36,7 @@
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
-    - path: results/reports/samtools_stats/test/test.recal.cram.stats
+    - path: results/reports/samtools/test/test.recal.cram.stats
     - path: results/variant_calling/test/strelka/test.genome.vcf.gz
     - path: results/variant_calling/test/strelka/test.genome.vcf.gz.tbi
     - path: results/variant_calling/test/strelka/test.variants.vcf.gz
@@ -68,7 +68,7 @@
       should_exist: false
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
       should_exist: false
-    - path: results/reports/samtools_stats/test/test.recal.cram.stats
+    - path: results/reports/samtools/test/test.recal.cram.stats
       should_exist: false
     - path: results/variant_calling/test/strelka/test.genome.vcf.gz
     - path: results/variant_calling/test/strelka/test.genome.vcf.gz.tbi
@@ -103,7 +103,7 @@
       should_exist: false
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
       should_exist: false
-    - path: results/reports/samtools_stats/test/test.recal.cram.stats
+    - path: results/reports/samtools/test/test.recal.cram.stats
       should_exist: false
     - path: results/variant_calling/test/strelka/test.genome.vcf.gz
     - path: results/variant_calling/test/strelka/test.genome.vcf.gz.tbi

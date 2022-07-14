@@ -60,6 +60,28 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
   - [Pipeline information](#pipeline-information)
 - [Reference files](#reference-files)
 
+## Directory Structure
+
+The default directory structure is as follows
+
+```
+{outdir}
+├── csv
+├── multiqc
+├── pipeline_info
+├── preprocessing
+│   └── <sample>
+│       ├── markduplicates
+│       ├── recal_table
+│       └── recalibrated
+├── reference
+└── reports
+    ├── <tool1>
+    └── <tool2>
+work/
+.nextflow.log
+```
+
 ## Preprocessing
 
 Sarek pre-processes raw FastQ files or unmapped BAM files, based on [GATK best practices](https://gatk.broadinstitute.org/hc/en-us/sections/360007226651-Best-Practices-Workflows).
@@ -515,7 +537,7 @@ _For a tumor-only and tumor/normal pair_:
   - file with coordinates of predicted copy number alterations
 - `<tumorsample>_info.txt` and `<tumorsample_vs_normalsample>.tumor.mpileup.gz_info.txt`
   - parsable file with information about FREEC run
-- ` <tumorsample>_ratio.BedGraph``<tumorsample_vs_normalsample>.tumor.mpileup.gz_ratio.BedGraph `
+- ` <tumorsample>_ratio.BedGraph` and `<tumorsample_vs_normalsample>.tumor.mpileup.gz_ratio.BedGraph `
   - file with ratios in BedGraph format for visualization in the UCSC genome browser. The file contains tracks for normal copy number, gains and losses, and copy neutral LOH (\*).
 - `<tumorsample>_ratio.txt` and `<tumorsample_vs_normalsample>.tumor.mpileup.gz_ratio.txt`
   - file with ratios and predicted copy number alterations for each window
@@ -570,7 +592,7 @@ _For all samples_:
 ### VEP
 
 [VEP (Variant Effect Predictor)](https://www.ensembl.org/info/docs/tools/vep/index.html), based on `Ensembl`, is a tool to determine the effects of all sorts of variants, including SNPs, indels, structural variants, CNVs.
-The generated VCF header contains the software version, also the version numbers for additional databases like `Clinvar` or `dbSNP` used in the `VEP` line.
+The generated VCF header contains the software version, also the version numbers for additional databases like [Clinvar](https://www.ncbi.nlm.nih.gov/clinvar/) or [dbSNP](https://www.ncbi.nlm.nih.gov/snp/) used in the [VEP](https://www.ensembl.org/info/docs/tools/vep/index.html) line.
 The format of the [consequence annotations](https://www.ensembl.org/info/genome/variation/prediction/predicted_data.html) is also in the VCF header describing the `INFO` field.
 For further reading and documentation see the [VEP manual](https://www.ensembl.org/info/docs/tools/vep/index.html)
 
@@ -588,7 +610,7 @@ Currently, it contains:
 - _Protein_position_: Relative position of amino acid in protein
 - _BIOTYPE_: Biotype of transcript or regulatory feature
 
-plus any additional filed selected via the plugins: dbnsfp, loftee, spliceai, spliceregion.
+plus any additional filed selected via the plugins: [dbNSFP](https://sites.google.com/site/jpopgen/dbNSFP), [LOFTEE](https://github.com/konradjk/loftee), [SpliceAI](https://spliceailookup.broadinstitute.org/), [SpliceRegion](https://www.ensembl.info/2018/10/26/cool-stuff-the-vep-can-do-splice-site-variant-annotation/).
 
 _For all samples_:
 
@@ -608,11 +630,11 @@ _For all samples_:
 **Output directory: `{outdir}/reports/fastqc/<sample-lane>`**
 
 - `<sample-lane_1>_fastqc.html` and `<sample-lane_2>_fastqc.html`
-  - `FastQC` report containing quality metrics for your untrimmed raw `FASTQ` files
+  - [FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) report containing quality metrics for your untrimmed raw FastQ files
 - `<sample-lane_1>_fastqc.zip` and `<sample-lane_2>_fastqc.zip`
-  - Zip archive containing the FastQC report, tab-delimited data file and plot images
+  - Zip archive containing the [FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) report, tab-delimited data file and plot images
 
-> **NB:** The `FastQC` plots displayed in the `MultiQC` report shows _untrimmed_ reads.
+> **NB:** The FastQC plots displayed in the [MultiQC](https://multiqc.info/) report shows _untrimmed_ reads.
 > They may contain adapter sequence and potentially regions with low quality.
 
 #### FastP
@@ -632,21 +654,30 @@ _For all samples_:
 
 #### Mosdepth
 
-[Qualimap bamqc](http://qualimap.bioinfo.cipf.es/) reports information for the evaluation of the quality of the provided alignment data.
+[Mosdepth](https://github.com/brentp/mosdepth) reports information for the evaluation of the quality of the provided alignment data.
 In short, the basic statistics of the alignment (number of reads, coverage, GC-content, etc.) are summarized and a number of useful graphs are produced.
+For further reading and documentation see the [Mosdepth](https://github.com/brentp/mosdepth).
 
-Plot will show:
+Plots will show:
 
-- Stats by non-reference allele frequency, depth distribution, stats by quality and per-sample counts, singleton stats, etc.
+- cumulative coverage distribution
+- absolute coverage distribution
+- average coverage per contig/chromosome
 
-For all samples:
+_For all samples_:
 
-**Output directory: `{outdir}/Reports/[SAMPLE]/bamQC`**
+**Output directory: `{outdir}/reports/mosdepth/<sample>`**
 
-- `VariantCaller_[SAMPLE].bcf.tools.stats.out`
-  - Raw statistics used by `MultiQC`
-
-For further reading and documentation see the [Qualimap bamqc manual](http://qualimap.bioinfo.cipf.es/doc_html/analysis.html#id7)
+- `<sample>.{md,recal}.mosdepth.global.dist.txt`
+  - file used by [MultiQC](https://multiqc.info/), if `.region` file does not exist
+- `<sample>.{md,recal}.mosdepth.region.dist.txt`
+  - file used by [MultiQC](https://multiqc.info/)
+- `<sample>.{md,recal}.mosdepth.summary.txt`
+  -A summary of mean depths per chromosome and within specified regions per chromosome.
+- `<sample>.{md,recal}.{per-base,regions}.bed.gz`
+  - per-base depth for targeted data, per-window (500bp) depth of WGS
+- `<sample>.{md,recal}.regions.bed.gz.csi`
+  - CSI index for per-base depth for targeted data, per-window (500bp) depth of WGS
 
 #### GATK MarkDuplicates reports
 
@@ -654,54 +685,55 @@ More information in the [GATK MarkDuplicates section](#gatk-markduplicates)
 
 Duplicates can arise during sample preparation _e.g._ library construction using PCR.
 Duplicate reads can also result from a single amplification cluster, incorrectly detected as multiple clusters by the optical sensor of the sequencing instrument.
-These duplication artifacts are referred to as optical duplicates.
-
-For all samples:
-
-**Output directory: `{outdir}/Reports/[SAMPLE]/MarkDuplicates`**
-
-- `[SAMPLE].bam.metrics`
-  - Raw statistics used by `MultiQC`
-
+These duplication artifacts are referred to as optical duplicates. If [GATK MarkDuplicates](https://gatk.broadinstitute.org/hc/en-us/articles/5358880192027-MarkDuplicates-Picard-) is used, the metrics file generated by the tool is used, if [`GATK MarkDuplicatesSpark`](https://gatk.broadinstitute.org/hc/en-us/articles/5358833264411-MarkDuplicatesSpark) is used the report is generated by [GATK4 EstimateLibraryComplexity](https://gatk.broadinstitute.org/hc/en-us/articles/5358838684187-EstimateLibraryComplexity-Picard-) on the mapped BAM files.
 For further reading and documentation see the [MarkDuplicates manual](https://software.broadinstitute.org/gatk/documentation/tooldocs/4.1.2.0/picard_sam_markduplicates_MarkDuplicates.php).
+
+Plot will show:
+
+- duplication statistic
+
+_For all samples_:
+
+**Output directory: `{outdir}/reports/markduplicates/<sample>`**
+
+- `<sample>.md.metrics`
+  - file used by [MultiQC](https://multiqc.info/)
 
 #### samtools stats
 
-[samtools stats](https://www.htslib.org/doc/samtools.html) collects statistics from `BAM` files and outputs in a text format.
+[samtools stats](https://www.htslib.org/doc/samtools.html) collects statistics from CRAM files and outputs in a text format.
+For further reading and documentation see the [`samtools` manual](https://www.htslib.org/doc/samtools.html#COMMANDS_AND_OPTIONS).
 
 Plots will show:
 
 - Alignment metrics.
 
-For all samples:
+_For all samples_:
 
-**Output directory: `{outdir}/Reports/[SAMPLE]/SamToolsStats`**
+**Output directory: `{outdir}/reports/samtools/<sample>`**
 
-- `[SAMPLE].bam.samtools.stats.out`
+- `<sample>.{md,recal}.samtools.stats.out`
   - Raw statistics used by `MultiQC`
-
-For further reading and documentation see the [`samtools` manual](https://www.htslib.org/doc/samtools.html#COMMANDS_AND_OPTIONS)
 
 #### bcftools stats
 
-[bcftools](https://samtools.github.io/bcftools/) is a program for variant calling and manipulating VCF files.
+[bcftools stats](https://samtools.github.io/bcftools/bcftools.html#stats) produces text file stats which is suitable for machine processing and can be plotted using plot-vcfstats.
+For further reading and documentation see the [bcftools stats manual](https://samtools.github.io/bcftools/bcftools.html#stats).
 
 Plot will show:
 
 - Stats by non-reference allele frequency, depth distribution, stats by quality and per-sample counts, singleton stats, etc.
 
-For all samples:
+_For all samples_:
 
-**Output directory: `{outdir}/Reports/[SAMPLE]/BCFToolsStats`**
+**Output directory: `{outdir}/reports/bcftools/`**
 
-- `VariantCaller_[SAMPLE].bcf.tools.stats.out`
+- `<sample>.<variantcaller>.bcftools_stats.out`
   - Raw statistics used by `MultiQC`
-
-For further reading and documentation see the [bcftools stats manual](https://samtools.github.io/bcftools/bcftools.html#stats)
 
 #### VCFtools
 
-[VCFtools](https://vcftools.github.io/) is a program package designed for working with VCF files.
+[VCFtools](https://vcftools.github.io/) is a program package designed for working with VCF files. For further reading and documentation see the [VCFtools manual](https://vcftools.github.io/man_latest.html#OUTPUT%20OPTIONS).
 
 Plots will show:
 
@@ -709,23 +741,21 @@ Plots will show:
 - the transition to transversion ratio as a function of alternative allele count (using only bi-allelic SNPs).
 - the transition to transversion ratio as a function of SNP quality threshold (using only bi-allelic SNPs).
 
-For all samples:
+_For all samples_:
 
-**Output directory: `{outdir}/Reports/[SAMPLE]/VCFTools`**
+**Output directory: `{outdir}/reports/vcftools/`**
 
-- `VariantCaller_[SAMPLE].FILTER.summary`
-  - Raw statistics used by `MultiQC`
-- `VariantCaller_[SAMPLE].TsTv.count`
-  - Raw statistics used by `MultiQC`
-- `VariantCaller_[SAMPLE].TsTv.qual`
-  - Raw statistics used by `MultiQC`
-
-For further reading and documentation see the [VCFtools manual](https://vcftools.github.io/man_latest.html#OUTPUT%20OPTIONS)
+- `<sample>.<variantcaller>.FILTER.summary`
+  - Raw statistics used by `MultiQC` with a summary of the number of SNPs and Ts/Tv ratio for each FILTER category
+- `<sample>.<variantcaller>.TsTv.count`
+  - Raw statistics used by `MultiQC` with the Transition / Transversion ratio as a function of alternative allele count. Only uses bi-allelic SNPs.
+- `<sample>.<variantcaller>.TsTv.qual`
+  - Raw statistics used by `MultiQC` with Transition / Transversion ratio as a function of SNP quality threshold. Only uses bi-allelic SNPs.
 
 #### snpEff reports
 
 [snpeff](http://snpeff.sourceforge.net/) is a genetic variant annotation and effect prediction toolbox.
-It annotates and predicts the effects of variants on genes (such as amino acid changes) using multiple databases for annotations.
+It annotates and predicts the effects of variants on genes (such as amino acid changes) using multiple databases for annotations. For further reading and documentation see the [snpEff manual](http://snpeff.sourceforge.net/SnpEff_manual.html#outputSummary)
 
 Plots will shows :
 
@@ -734,31 +764,31 @@ Plots will shows :
 - the effect of variants at protein level and the number of variants for each effect type.
 - the quantity as function of the variant quality score.
 
-For all samples:
+_For all samples_:
 
-**Output directory: `{outdir}/Reports/[SAMPLE]/snpEff`**
+**Output directory: `{outdir}/reports/SnpEff/{sample,tumorsample_vs_normalsample}/<variantcaller>/`**
 
-- `VariantCaller_Sample_snpEff.csv`
+- `<sample>.<variantcaller>_snpEff.csv`
+
   - Raw statistics used by `MultiQC`
+
+  _TODO_:
+
 - `VariantCaller_Sample_snpEff.html`
   - Statistics to be visualised with a web browser
 - `VariantCaller_Sample_snpEff.genes.txt`
   - TXT (tab separated) summary counts for variants affecting each transcript and gene
 
-For further reading and documentation see the [snpEff manual](http://snpeff.sourceforge.net/SnpEff_manual.html#outputSummary)
-
 #### VEP reports
 
-[VEP (Variant Effect Predictor)](https://www.ensembl.org/info/docs/tools/vep/index.html), based on `Ensembl`, is a tools to determine the effects of all sorts of variants, including SNPs, indels, structural variants, CNVs.
+[VEP (Variant Effect Predictor)](https://www.ensembl.org/info/docs/tools/vep/index.html), based on `Ensembl`, is a tools to determine the effects of all sorts of variants, including SNPs, indels, structural variants, CNVs. For further reading and documentation see the [VEP manual](https://www.ensembl.org/info/docs/tools/vep/index.html)
 
-For all samples:
+_For all samples_:
 
-**Output directory: `{outdir}/Reports/[SAMPLE]/VEP`**
+**Output directory: `{outdir}/reports/EnsemblVEP/{sample,tumorsamplt_vs_normalsample}/<variantcaller>/`**
 
-- `VariantCaller_Sample_VEP.summary.html`
+- `<sample>.<variantcaller>_VEP.summary.html`
   - Summary of the VEP run to be visualised with a web browser
-
-For further reading and documentation see the [VEP manual](https://www.ensembl.org/info/docs/tools/vep/index.html)
 
 ### Reporting
 
@@ -766,39 +796,53 @@ For further reading and documentation see the [VEP manual](https://www.ensembl.o
 
 [MultiQC](http://multiqc.info) is a visualization tool that generates a single HTML report summarizing all samples in your project.
 Most of the pipeline QC results are visualised in the report and further statistics are available in the report data directory.
+Results generated by MultiQC collate pipeline QC from supported tools e.g. FastQC. The pipeline has special steps which also allow the software versions to be reported in the MultiQC output for future traceability. For more information about how to use MultiQC reports, see <http://multiqc.info>.
 
-The pipeline has special steps which also allow the software versions to be reported in the `MultiQC` output for future traceability.
-
-<details markdown="1">
-<summary>Output files</summary>
+_Output files_:
 
 - `multiqc/`
   - `multiqc_report.html`: a standalone HTML file that can be viewed in your web browser.
   - `multiqc_data/`: directory containing parsed statistics from the different tools used in the pipeline.
   - `multiqc_plots/`: directory containing static images from the report in various formats.
 
-For more information about how to use `MultiQC` reports, see [https://multiqc.info](https://multiqc.info).
-
-</details>
-
-[MultiQC](http://multiqc.info) is a visualization tool that generates a single HTML report summarising all samples in your project. Most of the pipeline QC results are visualised in the report and further statistics are available in the report data directory.
-
-Results generated by MultiQC collate pipeline QC from supported tools e.g. FastQC. The pipeline has special steps which also allow the software versions to be reported in the MultiQC output for future traceability. For more information about how to use MultiQC reports, see <http://multiqc.info>.
-
 ### Pipeline information
 
-<details markdown="1">
-<summary>Output files</summary>
+_Output files_:
 
 - `pipeline_info/`
   - Reports generated by Nextflow: `execution_report.html`, `execution_timeline.html`, `execution_trace.txt` and `pipeline_dag.dot`/`pipeline_dag.svg`.
   - Reports generated by the pipeline: `pipeline_report.html`, `pipeline_report.txt` and `software_versions.yml`. The `pipeline_report*` files will only be present if the `--email` / `--email_on_fail` parameter's are used when running the pipeline.
   - Reformatted samplesheet files used as input to the pipeline: `samplesheet.valid.csv`.
 
-</details>
-
 [Nextflow](https://www.nextflow.io/docs/latest/tracing.html) provides excellent functionality for generating various reports relevant to the running and execution of the pipeline. This will allow you to troubleshoot errors with the running of the pipeline, and also provide you with other information such as launch commands, run times and resource usage.
 
 ## Reference files
 
--`<intervals>.target.bed` -`reference.cnn` -`<intervals>.antitarget.bed`
+Contains reference folders generated by the pipeline. These files are only published, if `--save_reference` is set.
+
+_Output folders_:
+
+- `bwa/`
+  - Index corresponding to the [BWA](https://github.com/lh3/bwa) aligner
+- `bwamem2/`
+  - Index corresponding to the [BWA-mem2](https://github.com/bwa-mem2/bwa-mem2) aligner
+- `cnvkit/`
+  - Reference files generated by [CNVKit](https://cnvkit.readthedocs.io/en/stable/)
+- `dragmap/`
+  - Index corresponding to the [DragMap](https://github.com/Illumina/dragmap) aligner
+- `dbsnp/`
+  - Tabix index generated by [Tabix](http://www.htslib.org/doc/tabix.html) from the given dbsnp file
+- `dict/`
+  - Sequence dictionary generated by [GATK4 CreateSequenceDictionary](https://gatk.broadinstitute.org/hc/en-us/articles/5358872471963-CreateSequenceDictionary-Picard-) from the given fasta
+- `fai/`
+  - Fasta index generated with [samtools faidx](http://www.htslib.org/doc/samtools-faidx.html) from the given fasta
+- `germline_resource/`
+  - Tabix index generated by [Tabix](http://www.htslib.org/doc/tabix.html) from the given gernline resource file
+- `intervals/`
+  - Bed files in various stages: .bed, .bed.gz, .bed per chromosome, .bed.gz per chromsome
+- `known_indels/`
+  - Tabix index generated by [Tabix](http://www.htslib.org/doc/tabix.html) from the given known indels file
+- `msi/`
+  - [MSIsensorPro](https://github.com/xjtu-omics/msisensor-pro) scan of the reference genome to get microsatellites information
+- `pon/`
+  - Tabix index generated by [Tabix](http://www.htslib.org/doc/tabix.html) from the given panel-of-normals file
