@@ -871,8 +871,6 @@ workflow SAREK {
             pon_tbi
         )
 
-        //intervals_bed_combined.dump(tag:'intervals before pair variant calling')
-        //PREPARE_INTERVALS.out.intervals_bed_combined.dump(tag:'intervals before pair variant calling PREPARE INTERVALS:OUT')
         // PAIR VARIANT CALLING
         PAIR_VARIANT_CALLING(
             params.tools,
@@ -957,7 +955,6 @@ workflow SAREK {
         }
     }
 
-    ch_reports.collect().dump(tag:'ch_reports2')
 
     ch_version_yaml = Channel.empty()
     if (!(params.skip_tools && params.skip_tools.contains('versions'))) {
