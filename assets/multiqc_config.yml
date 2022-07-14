@@ -59,7 +59,6 @@ extra_fn_clean_exts:
     pattern: "^.*.(md|recal).mosdepth.(global|region).dist"
     module: mosdepth
 
-
 sp:
   snpeff:
     contents: "SnpEff_version"
