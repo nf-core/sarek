@@ -116,7 +116,12 @@ workflow GERMLINE_VARIANT_CALLING {
 
     // HAPLOTYPECALLER
     if (tools.contains('haplotypecaller')){
-        RUN_HAPLOTYPECALLER(cram_recalibrated_intervals,
+        // Remap channel for Haplotypecaller
+        cram_recalibrated_intervals_haplotypecaller = cram_recalibrated_intervals
+            .map{ meta, cram, crai, intervals ->
+                [meta, cram, crai, intervals, []]
+            }
+        RUN_HAPLOTYPECALLER(cram_recalibrated_intervals_haplotypecaller,
                         fasta,
                         fasta_fai,
                         dict,
