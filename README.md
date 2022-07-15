@@ -36,7 +36,7 @@ By default, the pipeline currently performs the following:
 - Mark Duplicates (`GATK MarkDuplicates`)
 - Base (Quality Score) Recalibration (`GATK BaseRecalibrator`, `GATK ApplyBQSR`)
 - Preprocessing quality control (`samtools stats`)
-- Preprocessing quality control (`Qualimap bamqc`)
+- Preprocessing quality control (`mosdepth`)
 - Overall pipeline run summaries (`MultiQC`)
 
 <p align="center">
@@ -76,8 +76,8 @@ The nf-core/sarek pipeline comes with documentation about the pipeline [usage](h
 
 ## Credits
 
-Sarek was originally written by Maxime Garcia, Szilveszter Juhos at the [National Genomics Infastructure](https://ngisweden.scilifelab.se) and [National Bioinformatics Infastructure Sweden](https://nbis.se) which are both platforms at [SciLifeLab](https://scilifelab.se), with the support of [The Swedish Childhood Tumor Biobank (Barntumörbanken)](https://ki.se/forskning/barntumorbanken).
-[QBiC](https://www.qbic.uni-tuebingen.de/) later joined and helped with further development.
+Sarek was originally written by Maxime Garcia and Szilveszter Juhos at the [National Genomics Infastructure](https://ngisweden.scilifelab.se) and [National Bioinformatics Infastructure Sweden](https://nbis.se) which are both platforms at [SciLifeLab](https://scilifelab.se), with the support of [The Swedish Childhood Tumor Biobank (Barntumörbanken)](https://ki.se/forskning/barntumorbanken).
+Friederike Hanssen and Gisela Gabernet at [QBiC](https://www.qbic.uni-tuebingen.de/) later joined and helped with further development.
 
 Main authors:
 
@@ -104,12 +104,15 @@ We thank the following people for their extensive assistance in the development 
 - [Lucia Conde](https://github.com/lconde-ucl)
 - [Malin Larsson](https://github.com/malinlarsson)
 - [Marcel Martin](https://github.com/marcelm)
+- [Nick Smith](https://github,com/nickhsmith)
 - [Nilesh Tawari](https://github.com/nilesh-tawari)
 - [Olga Botvinnik](https://github.com/olgabot)
+- [Oskar Wacker](https://github.com/WackerO)
 - [Paul Cantalupo](https://github.com/pcantalupo)
 - [Phil Ewels](https://github.com/ewels)
 - [Sabrina Krakau](https://github.com/skrakau)
 - [Sebastian-D](https://github.com/Sebastian-D)
+- [Susanne Jodoin](https://github.com/SusiJo)
 - [Tobias Koch](https://github.com/KochTobi)
 - [Winni Kretzschmar](https://github.com/winni2k)
 - [arontommi](https://github.com/arontommi)
@@ -117,7 +120,7 @@ We thank the following people for their extensive assistance in the development 
 - [cgpu](https://github.com/cgpu)
 - [gulfshores](https://github.com/gulfshores)
 - [pallolason](https://github.com/pallolason)
-- [silviamorins](https://github.com/silviamorins)
+- [Silvia Morini](https://github.com/silviamorins)
 
 ## Acknowledgements
 
