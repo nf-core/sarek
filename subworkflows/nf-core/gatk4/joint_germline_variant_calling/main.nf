@@ -35,7 +35,7 @@ workflow GATK_JOINT_GERMLINE_VARIANT_CALLING {
     //
     gendb_input = input.map{
         meta, gvcf, tbi, intervals->
-            new_meta = [id: "joint_variant_calling"
+            new_meta = [id: "joint_variant_calling",
                         intervals_name: meta.intervals_name,
                         num_intervals: meta.num_intervals
                        ]
