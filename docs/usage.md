@@ -598,7 +598,7 @@ For further reading and documentation, please take a look at the Battenberg repo
 
 ### Where do the used reference genomes originate from
 
-_under construction_
+_under construction - help needed_
 
 GATK.GRCh38:
 
@@ -662,7 +662,7 @@ nextflow run nf-core/sarek --known_indels false --genome GRCh38.GATK
 
 ### How to deal with a (custom) annotation cache for SnpEff and VEP
 
-_under construction_
+_under construction help needed_
 
 Sarek comes shipped with containers for both snpEff and VEP for human reference genome GATK.GRCh38
 
@@ -744,9 +744,7 @@ nextflow run download_cache.nf --cadd_cache </path/to/CADD/cache> --cadd_version
 
 ### Why is bwa/bwa-mem2 ran with different settings for normal and tumor samples?
 
-_under construction_
-
-### Some plots in the MultiQC report are empty
+_under construction discussion in issue 101_
 
 ### Spark related issues
 
@@ -792,10 +790,9 @@ Currently, when running spark-based tools in combination with docker, it is requ
 
 Sarek can process UMI-reads, using [fgbio](http://fulcrumgenomics.github.io/fgbio/tools/latest/) tools.
 
-In order to use reads containing UMI tags as your initial input, you need to include `--umi_read_structure [structure]` in your parameters. 
+In order to use reads containing UMI tags as your initial input, you need to include `--umi_read_structure [structure]` in your parameters.
 
 This will enable pre-processing of the reads and UMI consensus reads calling, which will then be used to continue Sarek workflow.
-
 
 #### UMI Read Structure
 
@@ -808,7 +805,9 @@ Recent updates to Samtools have been introduced, which can speed-up performance 
 The current workflow does not handle duplex UMIs (i.e. where opposite strands of a duplex molecule have been tagged with a different UMI), and best practices have been proposed to process this type of data.
 Both changes will be implemented in a future release.
 
-### MultiQC is missing plots for snpeff or VEP
+### MultiQC related issues
+
+#### Plots for snpeff or VEP are missing
 
 _under construction_
 
