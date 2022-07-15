@@ -788,6 +788,26 @@ Note that the way to increase the open file limit in your system may be slightly
 
 Currently, when running spark-based tools in combination with docker, it is required to set `docker.userEmulation = false`. This can unfortunately causes permission issues when `work/` is being written with root permissions. In case this happens, you might need to configure docker to run without `userEmulation` (see [here](https://github.com/Midnighter/nf-core-adr/blob/main/docs/adr/0008-refrain-from-using-docker-useremulation-in-nextflow.md)).
 
+### How to handle UMIs
+
+Sarek can process UMI-reads, using [fgbio](http://fulcrumgenomics.github.io/fgbio/tools/latest/) tools.
+
+In order to use reads containing UMI tags as your initial input, you need to include `--umi_read_structure [structure]` in your parameters. 
+
+This will enable pre-processing of the reads and UMI consensus reads calling, which will then be used to continue Sarek workflow.
+
+
+#### UMI Read Structure
+
+This parameter is a string, which follows a [convention](https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures) to describe the structure of the umi.
+If your reads contain a UMI only on one end, the string should only represent one structure (i.e. "2M11S+T"); should your reads contain a UMI on both ends, the string will contain two structures separated by a blank space (i.e. "2M11S+T 2M11S+T").
+
+#### Limitations and future updates
+
+Recent updates to Samtools have been introduced, which can speed-up performance of fgbio tools used in this workflow.
+The current workflow does not handle duplex UMIs (i.e. where opposite strands of a duplex molecule have been tagged with a different UMI), and best practices have been proposed to process this type of data.
+Both changes will be implemented in a future release.
+
 ### MultiQC is missing plots for snpeff or VEP
 
 _under construction_
