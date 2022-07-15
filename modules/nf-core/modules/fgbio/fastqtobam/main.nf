@@ -22,10 +22,9 @@ process FGBIO_FASTQTOBAM {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    mkdir tmp
 
     fgbio \\
-        --tmp-dir=${PWD}/tmp \\
+        --tmp-dir=. \\
         FastqToBam \\
         -i $reads \\
         -o "${prefix}_umi_converted.bam" \\

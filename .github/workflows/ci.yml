@@ -58,7 +58,7 @@ jobs:
           - "tiddit"
           - "trimming"
           - "tumor_normal_pair"
-          # This produces a snappy error in pytest; umi should therefore be tested manually with nextflow run main.nf -profile test,umi,docker - "umi"
+          - "umi"
           - "variantcalling_channel"
 
     steps:

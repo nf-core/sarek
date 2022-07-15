@@ -22,6 +22,7 @@ process FGBIO_CALLMOLECULARCONSENSUSREADS {
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
     fgbio \\
+        --tmp-dir=. \\
         CallMolecularConsensusReads \\
         -i $bam \\
         $args \\
