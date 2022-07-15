@@ -12,7 +12,7 @@
     - path: results/cat/test-test_L1_1.merged.fastq.gz
       md5sum: 401d4e7ccead0696d6d77e0f679fc608
     - path: results/cat/test-test_L1_2.merged.fastq.gz
-      md5sum: 01e6167468f6c46c6455a3e6bb6c4d1
+      md5sum: 01e6167468f6c46c6455a3e6bb6c4d1b
     - path: results/groupreadsbyumi/test-test_L1_umi-grouped.bam
       md5sum: 287c894f8c191e56dd069448db8e0fd0
     - path: results/groupreadsbyumi/test-test_L1_umi_histogram.txt
