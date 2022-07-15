@@ -742,9 +742,23 @@ Such files are meant to be share between multiple users, so this script is mainl
 nextflow run download_cache.nf --cadd_cache </path/to/CADD/cache> --cadd_version <CADD version> --genome <GENOME>
 ``` -->
 
-### Why is bwa/bwa-mem2 ran with different settings for normal and tumor samples?
+### What are the bwa/bwa-mem2 parameters?
 
-_under construction discussion in issue 101_
+_under construction discussion in issue 101 and issue 62_
+
+For mapping, sarek follows the parameter suggestions provided in this [paper](https://www.nature.com/articles/s41467-018-06159-4)
+
+`-K 100000000` : for deterministic pipeline results, for more info see [here](https://github.com/CCDG/Pipeline-Standardization/issues/2)
+
+// To add after discussion
+`-Y`: force soft-clipping rather than default hard-clipping of supplementary alignments
+
+//To remove after discussions
+`-M`
+`-B 3`
+
+for umi: https
+ext.args = { "-C -M -R ${meta.read_group}" }
 
 ### Spark related issues
 
