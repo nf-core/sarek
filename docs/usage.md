@@ -546,7 +546,7 @@ If you are interested in any of the other tests that are run on every code chang
 
 ### How can the different steps be used
 
-Sarek can be started at different points in the analysis by setting the parameter `--step`. Once started at a certain point, the pipeline runs through all the following steps without additional intervention. For example when starting from `--step mapping` (set by default) and `--tools strelka,vep`, the input reads will be aligned, duplicate marked, recalibrated, variant called with Strelka, and finally VEP will annotae the called variants.
+Sarek can be started at different points in the analysis by setting the parameter `--step`. Once started at a certain point, the pipeline runs through all the following steps without additional intervention. For example when starting from `--step mapping` (set by default) and `--tools strelka,vep`, the input reads will be aligned, duplicate marked, recalibrated, variant called with Strelka, and finally VEP will annotate the called variants.
 
 ### Which variant calling tool is implemented for which data type?
 
@@ -573,6 +573,8 @@ For a detailed tutorial on how to create a panel-of-normals, see [here](https://
 
 ### How to run ASCAT with WES
 
+_under construction_
+
 While the ASCAT implementation in sarek is capable of running with whole-exome sequencing data, the needed references are currently not provided with the igenomes.config. The following steps should be followed to generate them manually:
 
 1. Extracting biallelic SNPs from the vcf files for [hg19](http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/) and query the resulting vcf files:
@@ -595,6 +597,8 @@ Then, you can derive both loci (just chromosome and position) and allele files (
 For further reading and documentation, please take a look at the Battenberg repository.
 
 ### Where do the used reference genomes originate from
+
+_under construction_
 
 GATK.GRCh38:
 
@@ -657,6 +661,8 @@ nextflow run nf-core/sarek --known_indels false --genome GRCh38.GATK
 ```
 
 ### How to deal with a (custom) annotation cache for SnpEff and VEP
+
+_under construction_
 
 Sarek comes shipped with containers for both snpEff and VEP for human reference genome GATK.GRCh38
 
@@ -738,6 +744,8 @@ nextflow run download_cache.nf --cadd_cache </path/to/CADD/cache> --cadd_version
 
 ### Why is bwa/bwa-mem2 ran with different settings for normal and tumor samples?
 
+_under construction_
+
 ### Some plots in the MultiQC report are empty
 
 ### Spark related issues
@@ -781,6 +789,8 @@ Note that the way to increase the open file limit in your system may be slightly
 Currently, when running spark-based tools in combination with docker, it is required to set `docker.userEmulation = false`. This can unfortunately causes permission issues when `work/` is being written with root permissions. In case this happens, you might need to configure docker to run without `userEmulation` (see [here](https://github.com/Midnighter/nf-core-adr/blob/main/docs/adr/0008-refrain-from-using-docker-useremulation-in-nextflow.md)).
 
 ### MultiQC is missing plots for snpeff or VEP
+
+_under construction_
 
 ### How to set sarek up to use sentieon
 
