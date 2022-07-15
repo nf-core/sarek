@@ -174,7 +174,7 @@
                 "umi_read_structure": {
                     "type": "string",
                     "fa_icon": "fas fa-tape",
-                    "description": "Specify UMI read structure.",
+                    "description": "Specify UMI read structure: one structure if UMI is present on one end (i.e. '2M11S+T'), or two structures separated by a blank space if UMIs a present on both ends (i.e. '2M11S+T 2M11S+T'); please note, this does not handle duplex-UMIs",
                     "hidden": true,
                     "help_text": "\n"
                 },
