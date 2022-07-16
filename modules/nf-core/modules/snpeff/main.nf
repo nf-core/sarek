@@ -15,6 +15,8 @@ process SNPEFF {
     output:
     tuple val(meta), path("*.ann.vcf"), emit: vcf
     path "*.csv"                      , emit: report
+    path "*.html"                     , emit: summary_html
+    path "*.genes.txt"                , emit: genes_txt
     path "versions.yml"               , emit: versions
 
     when:
