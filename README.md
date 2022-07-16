@@ -27,6 +27,10 @@ The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool
 
 It's listed on [Elixir - Tools and Data Services Registry](https://bio.tools/nf-core-sarek) and [Dockstore](https://dockstore.org/workflows/github.com/nf-core/sarek).
 
+<p align="center">
+    <img title="Sarek Workflow" src="docs/images/sarek_workflow.png" width=30%>
+</p>
+
 ## Pipeline summary
 
 By default, the pipeline currently performs the following:
@@ -40,7 +44,7 @@ By default, the pipeline currently performs the following:
 - Overall pipeline run summaries (`MultiQC`)
 
 <p align="center">
-    <img title="Sarek Workflow" src="docs/images/sarek_workflow.png" width=40%>
+    <img title="Sarek Workflow" src="docs/images/sarek_subway.png" width=60%>
 </p>
 
 ## Quick Start
