@@ -42,6 +42,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#629](https://github.com/nf-core/sarek/pull/629) - Added checks to catch inconsistency between supplied samples and requested tools.
 - [#632](https://github.com/nf-core/sarek/pull/632) - Added params `--snpeff_version` to allow more configuration on the snpeff container definition
 - [#632](https://github.com/nf-core/sarek/pull/632) - Added params `--vep_include_fasta` to use the fasta file for annotation
+- [#639](https://github.com/nf-core/sarek/pull/639) - Adding genes-txt-file and summary-html-file to the published output from snpEff.
+
 
 ### Changed
 
