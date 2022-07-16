@@ -453,7 +453,7 @@ workflow SAREK {
 
         // gatk4 markduplicates can handle multiple bams as input, so no need to merge/index here
         // Except if and only if skipping markduplicates or saving mapped bams
-        if (params.save_bam_mapped || (params.skip_tools && params.skip_tools.contains('markduplicates'))) {
+        if (params.save_bam_mapped || (params.skip_tools && params.skip_tools.split(',').contains('markduplicates'))) {
 
             // bams are merged (when multiple lanes from the same sample), indexed and then converted to cram
             MERGE_INDEX_BAM(ch_bam_mapped)
@@ -501,7 +501,7 @@ workflow SAREK {
             ch_bam_for_markduplicates = ch_bam_for_markduplicates.mix(convert.bam)
 
             //In case Markduplicates is run convert CRAM files to BAM, because the tool only runs on BAM files. MD_SPARK does run on CRAM but is a lot slower
-            if (!(params.skip_tools && params.skip_tools.contains('markduplicates'))){
+            if (!(params.skip_tools && params.skip_tools.split(',').contains('markduplicates'))){
 
                 SAMTOOLS_CRAMTOBAM(convert.cram, fasta, fasta_fai)
                 ch_versions = ch_versions.mix(SAMTOOLS_CRAMTOBAM.out.versions)
@@ -512,7 +512,7 @@ workflow SAREK {
             }
         }
 
-        if (params.skip_tools && params.skip_tools.contains('markduplicates')) {
+        if (params.skip_tools && params.skip_tools.split(',').contains('markduplicates')) {
 
             // ch_bam_indexed will countain bam mapped with GATK4_MAPPING when step is mapping
             // which are then merged and indexed
