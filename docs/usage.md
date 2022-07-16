@@ -544,6 +544,13 @@ nextflow run nf-core/sarek -r 3.0.0 -profile test,<container/institute> --tools 
 
 If you are interested in any of the other tests that are run on every code change or would like to run them yourself, you can take a look at `tests/<filename>.yml`. For each entry the respective nextflow command run and the expected output is specified.
 
+Currently, available test profiles:
+
+| Test profile | Run command |
+| :----------- | :---------- |
+
+|
+
 ### How can the different steps be used
 
 Sarek can be started at different points in the analysis by setting the parameter `--step`. Once started at a certain point, the pipeline runs through all the following steps without additional intervention. For example when starting from `--step mapping` (set by default) and `--tools strelka,vep`, the input reads will be aligned, duplicate marked, recalibrated, variant called with Strelka, and finally VEP will annotate the called variants.
@@ -806,7 +813,7 @@ Sarek can process UMI-reads, using [fgbio](http://fulcrumgenomics.github.io/fgbi
 
 In order to use reads containing UMI tags as your initial input, you need to include `--umi_read_structure [structure]` in your parameters.
 
-This will enable pre-processing of the reads and UMI consensus reads calling, which will then be used to continue Sarek workflow.
+This will enable pre-processing of the reads and UMI consensus reads calling, which will then be used to continue Sarek workflow. It is then recommended to skip an additional duplicate marking and base quality score recalibration. See [`--skip_tools`].
 
 #### UMI Read Structure
 

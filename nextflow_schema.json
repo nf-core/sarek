@@ -174,15 +174,16 @@
                 "umi_read_structure": {
                     "type": "string",
                     "fa_icon": "fas fa-tape",
-                    "description": "Specify UMI read structure: one structure if UMI is present on one end (i.e. '2M11S+T'), or two structures separated by a blank space if UMIs a present on both ends (i.e. '2M11S+T 2M11S+T'); please note, this does not handle duplex-UMIs",
+                    "description": "Specify UMI read structure",
                     "hidden": true,
-                    "help_text": "\n"
+                    "help_text": "One structure if UMI is present on one end (i.e. '2M11S+T'), or two structures separated by a blank space if UMIs a present on both ends (i.e. '2M11S+T 2M11S+T'); please note, this does not handle duplex-UMIs.\n\nIt is recommended to skip duplicate marking and base quality score recalibration. See `--skip_tools`."
                 },
                 "group_by_umi_strategy": {
                     "type": "string",
                     "default": "Adjacency",
-                    "description": "Default strategy with UMI.",
-                    "hidden": true
+                    "description": "Default strategy with UMI",
+                    "hidden": true,
+                    "help_text": "Available values: Identity, Edit, Adjacency, Paired"
                 }
             }
         },
