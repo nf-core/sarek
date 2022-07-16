@@ -44,7 +44,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#632](https://github.com/nf-core/sarek/pull/632) - Added params `--vep_include_fasta` to use the fasta file for annotation
 - [#639](https://github.com/nf-core/sarek/pull/639) - Adding genes-txt-file and summary-html-file to the published output from snpEff.
 
-
 ### Changed
 
 - [#580](https://github.com/nf-core/sarek/pull/580) - changed the test_full config to real public WXS data. 1 sample WXS germline, 1 Tumor/Normal pair. https://doi.org/10.1038/sdata.2016.25 and https://doi.org/10.1038/s41587-021-00994-5
