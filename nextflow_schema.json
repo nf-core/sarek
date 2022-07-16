@@ -10,7 +10,10 @@
             "type": "object",
             "fa_icon": "fas fa-terminal",
             "description": "Define where the pipeline should find input data and save output data.",
-            "required": ["step", "outdir"],
+            "required": [
+                "step",
+                "outdir"
+            ],
             "properties": {
                 "step": {
                     "type": "string",
@@ -57,7 +60,7 @@
                     "type": "string",
                     "fa_icon": "fas fa-toolbox",
                     "description": "Tools to use for variant calling and/or for annotation.",
-                    "help_text": "Multiple separated with commas.\n\nGermline variant calling can currently only be performed with the following variant callers:\n- FreeBayes, HaplotypeCaller, Manta, mpileup, Strelka, TIDDIT\n\nSomatic variant calling can currently only be performed with the following variant callers:\n- ASCAT, Control-FREEC, FreeBayes, Manta, MSIsensorpro, Mutect2, Strelka\n\n**NB** Mutect2 for somatic variant calling cannot be combined with `--no_intervals`\n\nTumor-only somatic variant calling can currently only be performed with the following variant callers:\n- Control-FREEC, Manta, mpileup, Mutect2, TIDDIT\n\nAnnotation is done using snpEff, VEP, or even both consecutively.\n\n> **NB** As Sarek will use bgzip and tabix to compress and index VCF files annotated, it expects VCF files to be sorted.\n\n\n\n`DNAseq`, `DNAscope` and `TNscope` are only available with `--sentieon`\n\n> **NB** tools can be specified with no concern for case.",
+                    "help_text": "Multiple separated with commas.\n\nGermline variant calling can currently only be performed with the following variant callers:\n- FreeBayes, HaplotypeCaller, Manta, mpileup, Strelka, TIDDIT\n\nSomatic variant calling can currently only be performed with the following variant callers:\n- ASCAT, Control-FREEC, FreeBayes, Manta, MSIsensorpro, Mutect2, Strelka\n\n**NB** Mutect2 for somatic variant calling cannot be combined with `--no_intervals`\n\nTumor-only somatic variant calling can currently only be performed with the following variant callers:\n- Control-FREEC, Manta, mpileup, Mutect2, TIDDIT\n\nAnnotation is done using snpEff, VEP, or even both consecutively.\n\n> **NB** As Sarek will use bgzip and tabix to compress and index VCF files annotated, it expects VCF files to be sorted.\n\n> **NB** tools can be specified with no concern for case.",
                     "pattern": "^((ascat|cnvkit|controlfreec|deepvariant|dnascope|dnaseq|freebayes|haplotypecaller|manta|merge|mpileup|msisensorpro|mutect2|snpeff|strelka|tiddit|tnscope|vep)*,?)*$"
                 },
                 "no_intervals": {
@@ -72,12 +75,6 @@
                     "description": "Estimate interval size.",
                     "help_text": "Intervals are part of the genome chopped up, used to speed up preprocessing and variant calling.",
                     "default": 1000
-                },
-                "sentieon": {
-                    "type": "boolean",
-                    "fa_icon": "fas fa-tools",
-                    "description": "Enable Sentieon if available.",
-                    "help_text": "Sentieon is a commercial solution to process genomics data with high computing efficiency, fast turnaround time, exceptional accuracy, and 100% consistency.\n\n> **NB** Adds the following tools for the `--tools` options: `DNAseq`, `DNAscope` and `TNscope`."
                 },
                 "skip_tools": {
                     "type": "string",
@@ -193,7 +190,11 @@
                     "type": "string",
                     "default": "bwa-mem",
                     "fa_icon": "fas fa-puzzle-piece",
-                    "enum": ["bwa-mem", "bwa-mem2", "dragmap"],
+                    "enum": [
+                        "bwa-mem",
+                        "bwa-mem2",
+                        "dragmap"
+                    ],
                     "description": "Specify aligner to be used to map reads to reference genome.",
                     "help_text": "> **WARNING** Current indices for `bwa` in AWS iGenomes are not compatible with `bwa-mem2` and `dragmap`.\n> `Sarek` will build them automatically if not provided.\n\n> **WARNING** BWA-mem2 is in active development\n> Sarek might not be able to require the right amount of resources for it at the moment\n> We recommend to use pre-built indexes.",
                     "hidden": true
@@ -291,7 +292,7 @@
                 "pon": {
                     "type": "string",
                     "fa_icon": "fas fa-file",
-                    "description": "Panel-of-normals VCF (bgzipped) for GATK Mutect2 / Sentieon TNscope.",
+                    "description": "Panel-of-normals VCF (bgzipped) for GATK Mutect2",
                     "help_text": "Without PON, there will be no calls with PASS in the INFO field, only an unfiltered VCF is written.\nIt is recommended to make your own PON, as it depends on sequencer and library preparation.\nFor tests in iGenomes there is a dummy PON file in the Annotation/GermlineResource directory, but it should not be used as a real PON file.\n\nSee [PON documentation](https://gatk.broadinstitute.org/hc/en-us/articles/360042479112-CreateSomaticPanelOfNormals-BETA)\n> **NB** PON file should be bgzipped."
                 },
                 "pon_tbi": {
@@ -319,7 +320,6 @@
                     "type": "boolean",
                     "fa_icon": "fas fa-database",
                     "description": "Allow usage of fasta file for annotation with VEP.\ncf https://www.ensembl.org/info/docs/tools/vep/script/vep_cache.html#fasta",
-                    "default": false,
                     "hidden": true
                 },
                 "vep_dbnsfp": {
@@ -428,7 +428,11 @@
                     "type": "string",
                     "default": "vcf",
                     "description": "VEP output-file format.",
-                    "enum": ["json", "tab", "vcf"],
+                    "enum": [
+                        "json",
+                        "tab",
+                        "vcf"
+                    ],
                     "help_text": "Sets the format of the output-file from VEP. Available formats: json, tab and vcf.",
                     "fa_icon": "fas fa-table"
                 }
@@ -769,7 +773,14 @@
                     "description": "Method used to save pipeline results to output directory.",
                     "help_text": "The Nextflow `publishDir` option specifies which intermediate files should be saved to the output directory. This option tells the pipeline what method should be used to move these files. See [Nextflow docs](https://www.nextflow.io/docs/latest/process.html#publishdir) for details.",
                     "fa_icon": "fas fa-copy",
-                    "enum": ["symlink", "rellink", "link", "copy", "copyNoFollow", "move"],
+                    "enum": [
+                        "symlink",
+                        "rellink",
+                        "link",
+                        "copy",
+                        "copyNoFollow",
+                        "move"
+                    ],
                     "hidden": true
                 },
                 "email": {
