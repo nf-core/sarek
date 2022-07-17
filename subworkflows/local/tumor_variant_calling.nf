@@ -103,7 +103,7 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
         RUN_CNVKIT ( cram_recalibrated_cnvkit_tumoronly,
                         fasta,
                         fasta_fai,
-                        intervals_bed_combined,
+                        [],
                         cnvkit_reference )
 
         ch_versions = ch_versions.mix(RUN_CNVKIT.out.versions)
