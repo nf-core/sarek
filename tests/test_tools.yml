@@ -1,5 +1,5 @@
 - name: Run variant calling on somatic samples with cnvkit
-  command: nextflow run main.nf -profile test,tools_somatic,docker --tools cnvkit -c ./tests/nextflow.config
+  command: nextflow run main.nf -profile test,tools_somatic,docker --tools cnvkit
   tags:
     - cnvkit
     - somatic
@@ -32,7 +32,7 @@
     - path: results/variant_calling/sample4_vs_sample3/cnvkit/test2.paired_end.recalibrated.sorted.call.cns
 
 - name: Run variant calling on tumor_only sample with cnvkit
-  command: nextflow run main.nf -profile test,tools_tumoronly,docker --tools cnvkit -c ./tests/nextflow.config
+  command: nextflow run main.nf -profile test,tools_tumoronly,docker --tools cnvkit
   tags:
     - cnvkit
     - tumor_only
@@ -51,7 +51,7 @@
     - path: results/variant_calling/sample2/cnvkit/test2.paired_end.recalibrated.sorted.call.cns
 
 - name: Run variant calling on germline sample with cnvkit
-  command: nextflow run main.nf -profile test,tools_germline,docker --tools cnvkit -c ./tests/nextflow.config
+  command: nextflow run main.nf -profile test,tools_germline,docker --tools cnvkit
   tags:
     - cnvkit
     - germline
@@ -71,7 +71,7 @@
     - path: results/variant_calling/sample1/cnvkit/test.paired_end.recalibrated.sorted.call.cns
 
 - name: Run variant calling on somatic samples with controlfreec
-  command: nextflow run main.nf -profile test,tools_somatic,docker --tools controlfreec -c ./tests/nextflow.config
+  command: nextflow run main.nf -profile test,tools_somatic,docker --tools controlfreec
   tags:
     - controlfreec
     - somatic
@@ -96,7 +96,7 @@
     - path: results/variant_calling/sample4_vs_sample3/controlfreec/sample4_vs_sample3.tumor.mpileup.gz_sample.cpn
 
 - name: Run variant calling on somatic samples with controlfreec without intervals
-  command: nextflow run main.nf -profile test,tools_somatic,docker --tools controlfreec -c ./tests/nextflow.config --no_intervals -stub-run
+  command: nextflow run main.nf -profile test,tools_somatic,docker --tools controlfreec --no_intervals -stub-run
   tags:
     - controlfreec
     - no_intervals
@@ -239,7 +239,7 @@
 #     - path: results/variant_calling/sample2/freebayes/sample2.freebayes.vcf.gz.tbi
 
 - name: Run variant calling on germline sample with haplotypecaller
-  command: nextflow run main.nf -profile test,targeted,docker --input ./tests/csv/3.0/mapped_single_bam.csv --tools haplotypecaller  -c ./tests/nextflow.config --step variant_calling
+  command: nextflow run main.nf -profile test,targeted,docker --input ./tests/csv/3.0/mapped_single_bam.csv --tools haplotypecaller  --step variant_calling
   tags:
     - germline
     - haplotypecaller
@@ -256,7 +256,7 @@
     - path: results/variant_calling/test1/haplotypecaller/test1.haplotypecaller.filtered.vcf.gz.tbi
 
 - name: Run variant calling on germline sample with haplotypecaller without intervals
-  command: nextflow run main.nf -profile test,docker --input ./tests/csv/3.0/mapped_single_bam.csv --tools haplotypecaller  -c ./tests/nextflow.config --step variant_calling --no_intervals
+  command: nextflow run main.nf -profile test,docker --input ./tests/csv/3.0/mapped_single_bam.csv --tools haplotypecaller  --step variant_calling --no_intervals
   tags:
     - germline
     - haplotypecaller
@@ -274,7 +274,7 @@
     - path: results/variant_calling/test1/haplotypecaller/test1.haplotypecaller.filtered.vcf.gz.tbi
 
 # - name: Run joint germline variant calling with haplotypecaller
-#   command: nextflow run main.nf -profile test,tools_germline,docker --tools haplotypecaller --joint_germline -c ./tests/nextflow.config
+#   command: nextflow run main.nf -profile test,tools_germline,docker --tools haplotypecaller --joint_germline
 #   tags:
 #     - germline
 #     - gvcf
@@ -288,7 +288,7 @@
 #     - path: results/csv/variantcalled.csv
 
 # - name: Run joint germline variant calling with haplotypecaller without intervals
-#   command: nextflow run main.nf -profile test,tools_germline,docker --tools haplotypecaller --joint_germline --no_intervals -c ./tests/nextflow.config
+#   command: nextflow run main.nf -profile test,tools_germline,docker --tools haplotypecaller --joint_germline --no_intervals
 #   tags:
 #     - germline
 #     - gvcf
@@ -448,7 +448,7 @@
     - path: results/csv/variantcalled.csv
 
 - name: Run variant calling on somatic sample with mutect2
-  command: nextflow run main.nf -profile test,tools_somatic,docker --tools mutect2 -c ./tests/nextflow.config
+  command: nextflow run main.nf -profile test,tools_somatic,docker --tools mutect2
   tags:
     - mutect2_manual
     - manual
@@ -617,7 +617,7 @@
     - path: results/csv/variantcalled.csv
 
 - name: Run variant calling on somatic sample with tiddit
-  command: nextflow run main.nf -profile test,tools_somatic,docker --tools tiddit -c ./tests/nextflow.config
+  command: nextflow run main.nf -profile test,tools_somatic,docker --tools tiddit
   tags:
     - tiddit
     - somatic
@@ -634,7 +634,7 @@
     - path: results/variant_calling/sample4_vs_sample3/tiddit/sample4_vs_sample3.tiddit.ploidies.tab
 
 - name: Run variant calling on germline sample with tiddit
-  command: nextflow run main.nf -profile test,tools_germline,docker --tools tiddit -c ./tests/nextflow.config
+  command: nextflow run main.nf -profile test,tools_germline,docker --tools tiddit
   tags:
     - tiddit
     - germline
@@ -645,7 +645,7 @@
     - path: results/variant_calling/sample1/tiddit/sample1.tiddit.vcf.gz.tbi
 
 - name: Run variant calling on tumor_only sample with tiddit
-  command: nextflow run main.nf -profile test,tools_tumoronly,docker --tools tiddit -c ./tests/nextflow.config
+  command: nextflow run main.nf -profile test,tools_tumoronly,docker --tools tiddit
   tags:
     - tiddit
     - tumor_only

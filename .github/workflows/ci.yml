@@ -51,6 +51,7 @@ jobs:
           - "save_bam_mapped"
           - "save_output_as_bam"
           - "skip_markduplicates"
+          - "skip_qc"
           - "split_fastq"
           - "strelka"
           - "strelkabp"
