@@ -89,6 +89,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#618](https://github.com/nf-core/sarek/pull/618) - Update `multiqc` module update test yml files
 - [#618](https://github.com/nf-core/sarek/pull/618) - Update test yml files
 - [#644](https://github.com/nf-core/sarek/pull/644) - Use `-Y` for `bwa-mem(2)` and remove `-M`
+- [#645](https://github.com/nf-core/sarek/pull/645) - Merge `tests/nextflow.config` in `conf/test.config`
 
 ### Fixed
 
