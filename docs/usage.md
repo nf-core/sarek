@@ -582,7 +582,7 @@ For a detailed tutorial on how to create a panel-of-normals, see [here](https://
 
 _under construction_
 
-While the ASCAT implementation in sarek is capable of running with whole-exome sequencing data, the needed references are currently not provided with the igenomes.config. The following steps should be followed to generate them manually:
+<!-- While the ASCAT implementation in sarek is capable of running with whole-exome sequencing data, the needed references are currently not provided with the igenomes.config. The following steps should be followed to generate them manually:
 
 1. Extracting biallelic SNPs from the vcf files for [hg19](http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/) and query the resulting vcf files:
 
@@ -601,12 +601,13 @@ Then, you can derive both loci (just chromosome and position) and allele files (
 
 3. I've used a simple R script to sort, remove duplicates (chr-position must be unique), remove blacklisted regions (GRanges) and remove probloci (based on chr-position).
 
-For further reading and documentation, please take a look at the Battenberg repository.
+For further reading and documentation, please take a look at the Battenberg repository. -->
 
 ### Where do the used reference genomes originate from
 
 _under construction - help needed_
 
+<!--
 GATK.GRCh38:
 
 | File                  | Tools                                                                                                                                                                                                                                                                                                                                                                                                                                                | Origin                                                                                                                                                                                  | Docs                                                                                 |
@@ -635,7 +636,7 @@ GATK.GRCh38:
 | snpeff_genome         |                                                                                                                                                                                                                                                                                                                                                                                                                                                      | 'GRCh38'                                                                                                                                                                                |                                                                                      |
 | vep_cache_version     |                                                                                                                                                                                                                                                                                                                                                                                                                                                      | 105                                                                                                                                                                                     |                                                                                      |
 | vep_genome            |                                                                                                                                                                                                                                                                                                                                                                                                                                                      | 'GRCh38'                                                                                                                                                                                |                                                                                      |
-| chr_dir               |                                                                                                                                                                                                                                                                                                                                                                                                                                                      | "${params.igenomes_base}/Homo_sapiens/GATK/GRCh38/Sequence/Chromosomes"                                                                                                                 |                                                                                      |
+| chr_dir               |                                                                                                                                                                                                                                                                                                                                                                                                                                                      | "${params.igenomes_base}/Homo_sapiens/GATK/GRCh38/Sequence/Chromosomes"                                                                                                                 |                                                                                      | -->
 
 ### How to run sarek when no(t all) reference files are in igenomes
 
