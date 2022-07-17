@@ -42,7 +42,6 @@ workflow GERMLINE_VARIANT_CALLING {
     strelka_vcf         = Channel.empty()
     tiddit_vcf          = Channel.empty()
 
-    println tools
     // Remap channel with intervals
     cram_recalibrated_intervals = cram_recalibrated.combine(intervals)
         .map{ meta, cram, crai, intervals, num_intervals ->
