@@ -814,7 +814,7 @@ Sarek can process UMI-reads, using [fgbio](http://fulcrumgenomics.github.io/fgbi
 
 In order to use reads containing UMI tags as your initial input, you need to include `--umi_read_structure [structure]` in your parameters.
 
-This will enable pre-processing of the reads and UMI consensus reads calling, which will then be used to continue Sarek workflow. It is then recommended to skip an additional duplicate marking and base quality score recalibration. See [`--skip_tools`].
+This will enable pre-processing of the reads and UMI consensus reads calling, which will then be used to continue the workflow from the mapping steps. For post-UMI processing depending on the experimental setup, duplicate marking and base quality recalibration can be skipped with [`--skip_tools`].
 
 #### UMI Read Structure
 
