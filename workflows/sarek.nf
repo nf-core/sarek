@@ -61,6 +61,11 @@ if (params.wes && !params.step == 'annotate') {
     if (params.intervals && !params.intervals.endsWith("bed") && !params.intervals.endsWith("interval_list")) exit 1, "Interval file must end with .bed or .interval_list"
 }
 
+//Warning if interval file provided and not `--wes`
+if (params.intervals && !params.wes) {
+    log.warn("Interval file was provided without parameter `--wes`: Pipeline will assume this is Whole-genome-sequencing data.")
+}
+
 // Fails or warns when missing files or params for ascat
 if(params.tools && params.tools.contains('ascat')){
     if(!params.ascat_alleles){
