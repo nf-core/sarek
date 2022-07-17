@@ -24,7 +24,6 @@
     - path: results/samtools/test-test_L1.map_unmap.bam
       md5sum: 6518cea4d9c0bdb17af66932b68e0ad9
     - path: results/samtools/test-test_L1.bam
-      md5sum: f721a1e83491451a715f92560dabfc31
     - path: results/samtools/test-test_L1.unmap_map.bam
       md5sum: 9479aabdbbfdc8f5c79f8daa1011e9fb
     - path: results/samtools/test-test_L1.unmap_unmap.bam
