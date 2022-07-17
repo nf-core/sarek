@@ -13,7 +13,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#566](https://github.com/nf-core/sarek/pull/566) - Fix caching bug affecting a variable number of `MapReads` jobs due to non-deterministic state of `statusMap` during caching evaluation
 
-
 ## [2.7.1](https://github.com/nf-core/sarek/releases/tag/2.7.1) - Pårtejekna
 
 Pårtejekna is one of glaciers of the Pårte Massif.
