@@ -5,7 +5,7 @@
     - preprocessing
   files:
     - path: results/multiqc
-      ç
+      should_exist: false
     - path: results/preprocessing/test/markduplicates/test.md.cram
     - path: results/preprocessing/test/markduplicates/test.md.cram.crai
     - path: results/preprocessing/test/recal_table/test.recal.table
