@@ -90,7 +90,7 @@
     - path: results/reports/mosdepth/test/test.sorted.mosdepth.region.dist.txt
     - path: results/reports/mosdepth/test/test.sorted.mosdepth.summary.txt
     - path: results/reports/mosdepth/test/test.sorted.regions.bed.gz
-    - path: results/reports/samtools_stats/test/test.paired_end.sorted.cram.stats
+    - path: results/reports/samtools_stats/test/test.sorted.cram.stats
     - path: results/reports/samtools_stats/test/test.recal.cram.stats
     - path: results/variant_calling/test/strelka/test.strelka.genome.vcf.gz
     - path: results/variant_calling/test/strelka/test.strelka.genome.vcf.gz.tbi
