@@ -388,8 +388,10 @@ workflow SAREK {
                 umi_read_structure,
                 params.group_by_umi_strategy)
 
+            bamtofastq = CREATE_UMI_CONSENSUS.out.consensusbam.map{meta, bam -> [meta,bam,[]]}
+
             // convert back to fastq for further preprocessing
-            ALIGNMENT_TO_FASTQ_UMI(CREATE_UMI_CONSENSUS.out.consensusbam, [])
+            ALIGNMENT_TO_FASTQ_UMI(bamtofastq, [])
 
             ch_reads_fastp = ALIGNMENT_TO_FASTQ_UMI.out.reads
 
