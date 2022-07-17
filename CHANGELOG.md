@@ -98,6 +98,7 @@ Pårtejekna is one of glaciers of the Pårte Massif.
 - [#632](https://github.com/nf-core/sarek/pull/632) - Update `VEP` version to `106.1` and cache up to `106`
 - [#618](https://github.com/nf-core/sarek/pull/618) - Update `multiqc` module update test yml files
 - [#618](https://github.com/nf-core/sarek/pull/618) - Update test yml files
+- [#644](https://github.com/nf-core/sarek/pull/644) - Use `-Y` for `bwa-mem(2)` and remove `-M`
 
 ### Fixed
 
@@ -143,6 +144,7 @@ Pårtejekna is one of glaciers of the Pårte Massif.
 - [#618](https://github.com/nf-core/sarek/pull/618) - Fix issue with tiddit [#621](https://github.com/nf-core/sarek/issues/621)
 - [#618](https://github.com/nf-core/sarek/pull/618) - Fix channel issue with `targets.bed` in prepare_intervals
 - [#634](https://github.com/nf-core/sarek/pull/634) - Fix issue with samtools/mosdepth plots in multiqc_report
+- [#641](https://github.com/nf-core/sarek/pull/641) - Fix issue with duplicate substring in tools and skip_tools
 
 ### Deprecated
 
