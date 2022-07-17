@@ -8,7 +8,7 @@ process GATK4_HAPLOTYPECALLER {
         'quay.io/biocontainers/gatk4:4.2.6.1--hdfd78af_0' }"
 
     input:
-    tuple val(meta), path(input), path(input_index), path(intervals)
+    tuple val(meta), path(input), path(input_index), path(intervals), path(dragstr_model)
     path  fasta
     path  fai
     path  dict
@@ -28,6 +28,7 @@ process GATK4_HAPLOTYPECALLER {
     def prefix = task.ext.prefix ?: "${meta.id}"
     def dbsnp_command = dbsnp ? "--dbsnp $dbsnp" : ""
     def interval_command = intervals ? "--intervals $intervals" : ""
+    def dragstr_command = dragstr_model ? "--dragstr-params-path $dragstr_model" : ""
 
     def avail_mem = 3
     if (!task.memory) {
@@ -42,6 +43,7 @@ process GATK4_HAPLOTYPECALLER {
         --reference $fasta \\
         $dbsnp_command \\
         $interval_command \\
+        $dragstr_command \\
         --tmp-dir . \\
         $args
 
