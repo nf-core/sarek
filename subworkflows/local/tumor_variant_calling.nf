@@ -18,6 +18,7 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
         cram_recalibrated             // channel: [mandatory] cram
         bwa                           // channel: [optional] bwa
         chr_files
+        cnvkit_reference
         dbsnp                         // channel: [mandatory] dbsnp
         dbsnp_tbi                     // channel: [mandatory] dbsnp_tbi
         dict                          // channel: [mandatory] dict
@@ -103,7 +104,7 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
                                 fasta,
                                 fasta_fai,
                                 intervals_bed_combined,
-                                [] )
+                                cnvkit_reference )
 
         ch_versions = ch_versions.mix(RUN_CNVKIT_TUMORONLY.out.versions)
     }
