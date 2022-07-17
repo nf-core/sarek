@@ -197,7 +197,7 @@
                     "fa_icon": "fas fa-puzzle-piece",
                     "enum": ["bwa-mem", "bwa-mem2", "dragmap"],
                     "description": "Specify aligner to be used to map reads to reference genome.",
-                    "help_text": "Parameter chooses the mapper used. We recommend using pre-build indices. If they are not part of the available `igenome.config` they can be provided with `--bwa` . \nIf none are provided,  `Sarek` will build them automatically.",
+                    "help_text": "Parameter chooses the mapper used. We recommend using pre-build indices. If they are not part of the available `igenome.config` they can be provided with `--bwa`, `--bwamem2` or `--dragmap`. \nIf none are provided,  `Sarek` will build them automatically.",
                     "hidden": true
                 },
                 "save_bam_mapped": {
