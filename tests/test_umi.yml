@@ -14,17 +14,17 @@
     - path: results/cat/test-test_L1_2.merged.fastq.gz
       md5sum: 01e6167468f6c46c6455a3e6bb6c4d1b
     - path: results/groupreadsbyumi/test-test_L1_umi-grouped.bam
-      md5sum: 287c894f8c191e56dd069448db8e0fd0
+      md5sum: 7f7775bd971c6c6790642cb14e7140a0
     - path: results/groupreadsbyumi/test-test_L1_umi_histogram.txt
       md5sum: f2f29523bb7016e1a78fe634466cbfba
     - path: results/samblaster/test-test_L1_unsorted_tagged.bam
-      md5sum: ba3425e6722d6f6cc36e6dec42b19207
+      md5sum: b6b55546a1134b1083fd50b8f36d5a13
     - path: results/samtools/test-test_L1.map_map.bam
       md5sum: f29dc564311e592941bdf152dd722b4f
     - path: results/samtools/test-test_L1.map_unmap.bam
       md5sum: 6518cea4d9c0bdb17af66932b68e0ad9
     - path: results/samtools/test-test_L1.bam
-      md5sum: 1e8cc02cfce0689f41bb823cda43a2a8
+      md5sum: f721a1e83491451a715f92560dabfc31
     - path: results/samtools/test-test_L1.unmap_map.bam
       md5sum: 9479aabdbbfdc8f5c79f8daa1011e9fb
     - path: results/samtools/test-test_L1.unmap_unmap.bam
