@@ -1,67 +1,81 @@
-- name: Run bwa-mem2
-  command: nextflow run main.nf -profile test,docker --aligner bwa-mem2 --save_reference
+- name: Run default pipeline with skipping all QC steps
+  command: nextflow run main.nf -profile test,docker --skip_tools 'fastqc,markduplicates_report,mosdepth,multiqc,samtools'
   tags:
-    - aligner
-    - bwa-mem2
+    - skip_qc
     - preprocessing
   files:
     - path: results/multiqc
-    - path: results/csv/markduplicates.csv
-    - path: results/csv/markduplicates_no_table.csv
-    - path: results/csv/recalibrated.csv
+      should_exist: false
     - path: results/preprocessing/test/markduplicates/test.md.cram
     - path: results/preprocessing/test/markduplicates/test.md.cram.crai
     - path: results/preprocessing/test/recal_table/test.recal.table
     - path: results/preprocessing/test/recalibrated/test.recal.cram
     - path: results/preprocessing/test/recalibrated/test.recal.cram.crai
-    - path: results/reference/bwamem2/genome.fasta.0123
-    - path: results/reference/bwamem2/genome.fasta.amb
-    - path: results/reference/bwamem2/genome.fasta.ann
-    - path: results/reference/bwamem2/genome.fasta.bwt.2bit.64
-    - path: results/reference/bwamem2/genome.fasta.pac
-    - path: results/reports/fastqc/test-test_L1
-    - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
-    - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
-    - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
-    - path: results/reports/mosdepth/test/test.md.regions.bed.gz
-    - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
-    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
-    - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
-    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
-    - path: results/reports/samtools/test/test.md.cram.stats
-    - path: results/reports/samtools/test/test.recal.cram.stats
-- name: Run dragmap
-  command: nextflow run main.nf -profile test,docker --aligner dragmap --save_reference
-  tags:
-    - aligner
-    - dragmap
-    - preprocessing
-  files:
-    - path: results/multiqc
     - path: results/csv/markduplicates.csv
     - path: results/csv/markduplicates_no_table.csv
     - path: results/csv/recalibrated.csv
+    - path: results/reports/fastqc/test-test_L1
+      should_exist: false
+    - path: results/reports/markduplicates/test/test.md.metrics
+      should_exist: false
+    - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
+      should_exist: false
+    - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
+      should_exist: false
+    - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
+      should_exist: false
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz
+      should_exist: false
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+      should_exist: false
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+      should_exist: false
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+      should_exist: false
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
+      should_exist: false
+    - path: results/reports/samtools_stats/test/test.md.cram.stats
+      should_exist: false
+    - path: results/reports/samtools_stats/test/test.recal.cram.stats
+      should_exist: false
+
+- name: Run spark pipeline with skipping all QC steps
+  command: nextflow run main.nf -profile test,use_gatk_spark,docker --skip_tools 'fastqc,markduplicates_report,mosdepth,multiqc,samtools'
+  tags:
+    - skip_qc
+    - preprocessing
+  files:
+    - path: results/multiqc
+      should_exist: false
     - path: results/preprocessing/test/markduplicates/test.md.cram
     - path: results/preprocessing/test/markduplicates/test.md.cram.crai
     - path: results/preprocessing/test/recal_table/test.recal.table
     - path: results/preprocessing/test/recalibrated/test.recal.cram
     - path: results/preprocessing/test/recalibrated/test.recal.cram.crai
-    - path: results/reference/dragmap/hash_table.cfg
-    - path: results/reference/dragmap/hash_table.cfg.bin
-    - path: results/reference/dragmap/hash_table.cmp
-    - path: results/reference/dragmap/hash_table_stats.txt
-    - path: results/reference/dragmap/ref_index.bin
-    - path: results/reference/dragmap/reference.bin
-    - path: results/reference/dragmap/repeat_mask.bin
-    - path: results/reference/dragmap/str_table.bin
+    - path: results/csv/markduplicates.csv
+    - path: results/csv/markduplicates_no_table.csv
+    - path: results/csv/recalibrated.csv
     - path: results/reports/fastqc/test-test_L1
+      should_exist: false
+    - path: results/reports/markduplicates/test/test.md.metrics
+      should_exist: false
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
+      should_exist: false
     - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
+      should_exist: false
     - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
+      should_exist: false
     - path: results/reports/mosdepth/test/test.md.regions.bed.gz
+      should_exist: false
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+      should_exist: false
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+      should_exist: false
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+      should_exist: false
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
-    - path: results/reports/samtools/test/test.md.cram.stats
-    - path: results/reports/samtools/test/test.recal.cram.stats
+      should_exist: false
+    - path: results/reports/samtools_stats/test/test.md.cram.stats
+      should_exist: false
+    - path: results/reports/samtools_stats/test/test.recal.cram.stats
+      should_exist: false
