@@ -544,12 +544,19 @@ nextflow run nf-core/sarek -r 3.0.0 -profile test,<container/institute> --tools 
 
 If you are interested in any of the other tests that are run on every code change or would like to run them yourself, you can take a look at `tests/<filename>.yml`. For each entry the respective nextflow command run and the expected output is specified.
 
-Currently, available test profiles:
+Some of the currently, available test profiles:
 
-| Test profile | Run command |
-| :----------- | :---------- |
-
-|
+| Test profile    | Run command                                                                     |
+| :-------------- | :------------------------------------------------------------------------------ |
+| annotation      | `nextflow run main.nf -profile test,annotation,docker --tools snpeff.vep,merge` |
+| no_intervals    | `nextflow run main.nf -profile test,no_intervals,docker`                        |
+| targeted        | ` nextflow run main.nf -profile test,targeted,docker`                           |
+| tools_germline  | `nextflow run main.nf -profile test,tools_germline,docker --tools strelka`      |
+| tools_tumoronly | `nextflow run main.nf -profile test,tools_tumoronly,docker --tools strelka`     |
+| tools_somatic   | `nextflow run main.nf -profile test,tools_somatic,docker --tools strelka`       |
+| trimming        | `nextflow run main.nf -profile test,trim_fastq,docker`                          |
+| umi             | `nextflow run main.nf -profile test,umi,docker`                                 |
+| use_gatk_spark  | `nextflow run main.nf -profile test,use_gatk_spark,docker`                      |
 
 ### How can the different steps be used
 
@@ -668,17 +675,15 @@ Example for not using known indels, but all other provided reference file:
 nextflow run nf-core/sarek --known_indels false --genome GRCh38.GATK
 ```
 
-### How to deal with a (custom) annotation cache for SnpEff and VEP
+### How to customise SnpEff and VEP annotation
 
 _under construction help needed_
 
-Sarek comes shipped with containers for both snpEff and VEP for human reference genome GATK.GRCh38
+Sarek comes shipped with containers for both snpEff and VEP for human reference genomes with `--genome GATK.GRCh38` and `--genome GATK.GRCh37`. Different containers however can be provided.
 
-<!-- #### Containers
+<!-- #### Create containers
 
-With `Nextflow DSL2`, each process use its own `Conda` environment or container from `biocontainers`.
-
-For annotation, cache has to be downloaded, or specifically designed containers are available with cache.
+The cache has to be downloaded.
 
 `sareksnpeff`, our `snpeff` container is designed using [Conda](https://conda.io/).
 
@@ -697,20 +702,27 @@ Based on [nfcore/base:1.12.1](https://hub.docker.com/r/nfcore/base/tags), it con
 
 - **[GeneSplicer](https://ccb.jhu.edu/software/genesplicer/)** 1.0
 - **[VEP](https://github.com/Ensembl/ensembl-vep)** 99.2
-- Cache for `GRCh37`, `GRCh38`, `GRCm38`, `CanFam3.1` or `WBcel235`
+- Cache for `GRCh37`, `GRCh38`, `GRCm38`, `CanFam3.1` or `WBcel235` -->
+
+  <!-- "snpeff_db"
+  "snpeff_genome":
+  "snpeff_version":
+  "vep_genome":
+  "vep_species":
+  "vep_cache_version":
+  "vep_version": -->
 
 #### Using downloaded cache
 
-Both `snpEff` and `VEP` enable usage of cache.
-If cache is available on the machine where Sarek is run, it is possible to run annotation using cache.
+Both `snpEff` and `VEP` enable usage of cache, if no pre-build container is available.
+The cache needs to made available on the machine where Sarek is run.
 You need to specify the cache directory using `--snpeff_cache` and `--vep_cache` in the command lines or within configuration files.
-The cache will only be used when `--annotation_cache` and cache directories are specified (either in command lines or in a configuration file).
 
 Example:
 
 ```bash
-nextflow run nf-core/sarek --tools snpEff --step annotate --sample <file.vcf.gz> --snpeff_cache </path/to/snpEff/cache> --annotation_cache
-nextflow run nf-core/sarek --tools VEP --step annotate --sample <file.vcf.gz> --vep_cache </path/to/VEP/cache> --annotation_cache
+nextflow run nf-core/sarek --tools snpEff --step annotate --sample <file.vcf.gz> --snpeff_cache </path/to/snpEff/cache>
+nextflow run nf-core/sarek --tools VEP --step annotate --sample <file.vcf.gz> --vep_cache </path/to/VEP/cache>
 ```
 
 #### Download cache
@@ -723,9 +735,9 @@ nextflow run download_cache.nf --snpeff_cache </path/to/snpEff/cache> --snpeff_d
 nextflow run download_cache.nf --vep_cache </path/to/VEP/cache> --species <species> --vep_cache_version <VEP cache version> --genome <GENOME>
 ```
 
-#### Using VEP CADD plugin
+#### Using VEP plugins
 
-To enable the use of the `VEP` `CADD` plugin:
+<!-- To enable the use of the `VEP` `CADD` plugin:
 
 - Download the `CADD` files
 - Specify them (either on the command line, like in the example or in a configuration file)
@@ -749,6 +761,14 @@ Such files are meant to be share between multiple users, so this script is mainl
 ```bash
 nextflow run download_cache.nf --cadd_cache </path/to/CADD/cache> --cadd_version <CADD version> --genome <GENOME>
 ``` -->
+
+##### dbnsfp
+
+##### LOFTEE
+
+##### SpliceAi
+
+##### SpliceRegions
 
 ### What are the bwa/bwa-mem2 parameters?
 
@@ -821,9 +841,16 @@ Both changes will be implemented in a future release.
 
 ### MultiQC related issues
 
-#### Plots for snpeff or VEP are missing
+#### Plots for SnpEff are missing
 
-_under construction_
+When plots are missing, it is possible that the fasta and the custom SnpEff database are not matching https://pcingola.github.io/SnpEff/se_faq/#error_chromosome_not_found-details.
+The SnpEff completes without throwing an error causing nextflow to complete successfully. An indication for the error are these lines in the `.command` files:
+
+```
+ERRORS: Some errors were detected
+Error type      Number of errors
+ERROR_CHROMOSOME_NOT_FOUND      17522411
+```
 
 ### How to set sarek up to use sentieon
 
