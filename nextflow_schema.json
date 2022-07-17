@@ -56,7 +56,7 @@
                     "type": "integer",
                     "default": 0,
                     "fa_icon": "fas fa-clock",
-                    "description": "Specify how many reads each split of a FastQ file contains. Set 0 to turn of splitting at all.",
+                    "description": "Specify how many reads each split of a FastQ file contains. Set 0 to turn off splitting at all.",
                     "help_text": "Use the the tool FastP to split FASTQ file by number of reads. This parallelizes across fastq file shards speeding up mapping. "
                 },
                 "wes": {
