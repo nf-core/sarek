@@ -42,6 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#629](https://github.com/nf-core/sarek/pull/629) - Added checks to catch inconsistency between supplied samples and requested tools.
 - [#632](https://github.com/nf-core/sarek/pull/632) - Added params `--snpeff_version` to allow more configuration on the snpeff container definition
 - [#632](https://github.com/nf-core/sarek/pull/632) - Added params `--vep_include_fasta` to use the fasta file for annotation
+- [#639](https://github.com/nf-core/sarek/pull/639) - Adding genes-txt-file and summary-html-file to the published output from snpEff.
 
 ### Changed
 
@@ -87,6 +88,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#632](https://github.com/nf-core/sarek/pull/632) - Update `VEP` version to `106.1` and cache up to `106`
 - [#618](https://github.com/nf-core/sarek/pull/618) - Update `multiqc` module update test yml files
 - [#618](https://github.com/nf-core/sarek/pull/618) - Update test yml files
+- [#644](https://github.com/nf-core/sarek/pull/644) - Use `-Y` for `bwa-mem(2)` and remove `-M`
+- [#645](https://github.com/nf-core/sarek/pull/645) - Merge `tests/nextflow.config` in `conf/test.config`
 
 ### Fixed
 
@@ -132,6 +135,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#618](https://github.com/nf-core/sarek/pull/618) - Fix issue with tiddit [#621](https://github.com/nf-core/sarek/issues/621)
 - [#618](https://github.com/nf-core/sarek/pull/618) - Fix channel issue with `targets.bed` in prepare_intervals
 - [#634](https://github.com/nf-core/sarek/pull/634) - Fix issue with samtools/mosdepth plots in multiqc_report
+- [#641](https://github.com/nf-core/sarek/pull/641) - Fix issue with duplicate substring in tools and skip_tools
 - [#642](https://github.com/nf-core/sarek/pull/642) - Only unzip ref files if tool is run, only publish ref files if `--save_reference` and simplify CNKit logic
 
 ### Deprecated
@@ -148,6 +152,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#562](https://github.com/nf-core/sarek/pull/562) - Restart from `--step annotate` from folder is removed. Use a `csv` file instead
 - [#571](https://github.com/nf-core/sarek/pull/571) - Removed the local module `concat_vcf`.
 - [#605](https://github.com/nf-core/sarek/pull/605) - Removed Scatter/gather from GATK_SINGLE_SAMPLE_GERMLINE_VARIANT_CALLING, all intervals are processed together
+- [#643](https://github.com/nf-core/sarek/pull/643) - Removed Sentieon parameters
 
 ## [2.7.1](https://github.com/nf-core/sarek/releases/tag/2.7.1) - Pårtejekna
 
