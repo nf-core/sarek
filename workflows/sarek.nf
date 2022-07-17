@@ -1095,7 +1095,7 @@ def extract_csv(csv_file) {
                 System.exit(1)
             }
         } else if ((sample_count_tumor == sample_count_all) && params.tools) {  // In this case, the sample-sheet contains no normal/germline-samples
-            def tools_requiring_normal_samples = ['ascat', 'deepvariant', 'haplotypecaller']
+            def tools_requiring_normal_samples = ['ascat', 'deepvariant', 'haplotypecaller', 'msisensorpro']
             def requested_tools_requiring_normal_samples = []
             tools_requiring_normal_samples.each{ tool_requiring_normal_samples ->
                 if (params.tools.contains(tool_requiring_normal_samples)) requested_tools_requiring_normal_samples.add(tool_requiring_normal_samples)
