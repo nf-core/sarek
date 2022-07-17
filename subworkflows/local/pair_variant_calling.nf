@@ -7,7 +7,7 @@ include { RUN_CONTROLFREEC_SOMATIC                  } from '../nf-core/variantca
 include { RUN_FREEBAYES as RUN_FREEBAYES_SOMATIC    } from '../nf-core/variantcalling/freebayes/main.nf'
 include { RUN_MANTA_SOMATIC                         } from '../nf-core/variantcalling/manta/somatic/main.nf'
 include { RUN_STRELKA_SOMATIC                       } from '../nf-core/variantcalling/strelka/somatic/main.nf'
-include { RUN_CNVKIT_SOMATIC                        } from '../nf-core/variantcalling/cnvkit/somatic/main.nf'
+include { RUN_CNVKIT                                } from '../nf-core/variantcalling/cnvkit/main.nf'
 include { RUN_MPILEUP as RUN_MPILEUP_NORMAL         } from '../nf-core/variantcalling/mpileup/main'
 include { RUN_MPILEUP as RUN_MPILEUP_TUMOR          } from '../nf-core/variantcalling/mpileup/main'
 include { RUN_ASCAT_SOMATIC                         } from '../nf-core/variantcalling/ascat/main'
@@ -130,11 +130,11 @@ workflow PAIR_VARIANT_CALLING {
                 [meta, tumor_cram, normal_cram]
             }
 
-        RUN_CNVKIT_SOMATIC( cram_pair_cnvkit_somatic,
-                            fasta,
-                            fasta_fai,
-                            intervals_bed_combined,
-                            [])
+        RUN_CNVKIT( cram_pair_cnvkit_somatic,
+                    fasta,
+                    fasta_fai,
+                    intervals_bed_combined,
+                    [])
     }
 
     if (tools.contains('freebayes')){
