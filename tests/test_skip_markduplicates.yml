@@ -10,8 +10,8 @@
     - path: results/multiqc
     - path: results/preprocessing/test/mapped/test.bam
     - path: results/preprocessing/test/mapped/test.bam.bai
-    - path: results/preprocessing/test/mapped/test.cram
-    - path: results/preprocessing/test/mapped/test.cram.crai
+    - path: results/preprocessing/test/mapped/test.sorted.cram
+    - path: results/preprocessing/test/mapped/test.sorted.cram.crai
     - path: results/preprocessing/test/recal_table/test.recal.table
     - path: results/preprocessing/test/recalibrated/test.recal.cram
     - path: results/preprocessing/test/recalibrated/test.recal.cram.crai
@@ -42,8 +42,8 @@
     - path: results/csv/markduplicates_no_table.csv # TODO These are no actually duplicate marked crams, but just mapped converted crams TODO renaming
     - path: results/csv/recalibrated.csv
     - path: results/multiqc
-    - path: results/preprocessing/test/mapped/test.cram
-    - path: results/preprocessing/test/mapped/test.cram.crai
+    - path: results/preprocessing/test/mapped/test.sorted.cram
+    - path: results/preprocessing/test/mapped/test.sorted.cram.crai
     - path: results/preprocessing/test/recal_table/test.recal.table
     - path: results/preprocessing/test/recalibrated/test.recal.cram
     - path: results/preprocessing/test/recalibrated/test.recal.cram.crai
@@ -75,9 +75,9 @@
       should_exist: false
     - path: results/csv/recalibrated.csv
     - path: results/multiqc
-    - path: results/preprocessing/test/mapped/test.cram
+    - path: results/preprocessing/test/mapped/test.sorted.cram
       should_exist: false
-    - path: results/preprocessing/test/mapped/test.cram.crai
+    - path: results/preprocessing/test/mapped/test.sorted.cram.crai
       should_exist: false
     - path: results/preprocessing/test/recal_table/test.recal.table
     - path: results/preprocessing/test/recalibrated/test.recal.cram
