@@ -17,7 +17,7 @@
                     "default": "mapping",
                     "fa_icon": "fas fa-play",
                     "description": "Starting step",
-                    "help_text": "The pipeline starts from this step and then runs through the subsequent steps.\n\n",
+                    "help_text": "The pipeline starts from this step and then runs through the possible subsequent steps.\n\n",
                     "enum": [
                         "mapping",
                         "markduplicates",
