@@ -64,7 +64,7 @@ workflow PREPARE_GENOME {
     TABIX_PON(pon.flatten().map{ it -> [[id:it.baseName], it] })
 
     // prepare a reference for tumor_only mode based on target_baits
-    CNVKIT_ANTITARGET(intervals_bed_combined.map{ it -> [[id:it[0].baseName], it] })
+    CNVKIT_ANTITARGET(intervals_bed_combined.flatten().map{ it -> [[id:it[0].baseName], it] })
     CNVKIT_REFERENCE(fasta, intervals_bed_combined, CNVKIT_ANTITARGET.out.bed.map{ meta, bed -> [bed]} )
 
     // prepare ascat reference files
