@@ -324,9 +324,9 @@ workflow SAREK {
         fasta,
         fasta_fai,
         germline_resource,
-        known_snps,
         intervals_bed_combined,
         known_indels,
+        known_snps,
         pon)
 
     // Gather built indices or get them from the params

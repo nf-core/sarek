@@ -40,6 +40,7 @@ workflow PREPARE_GENOME {
         germline_resource       // channel: [optional]  germline_resource
         intervals_bed_combined  // channel: []
         known_indels            // channel: [optional]  known_indels
+        known_snps
         pon                     // channel: [optional]  pon
 
 
