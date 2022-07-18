@@ -51,7 +51,7 @@ workflow PREPARE_INTERVALS {
             ch_intervals = CREATE_INTERVALS_BED.out.bed.map{meta, intervals -> intervals}
 
             //ch_versions = ch_intervals.mix(BUILD_INTERVALS.out.versions)
-            ch_versions = ch_intervals.mix(CREATE_INTERVALS_BED.out.versions)
+            //ch_versions = ch_intervals.mix(CREATE_INTERVALS_BED.out.versions)
 
         } else {
 
@@ -60,7 +60,7 @@ workflow PREPARE_INTERVALS {
             CREATE_INTERVALS_BED(ch_intervals_combined)
             ch_intervals = CREATE_INTERVALS_BED.out.bed.map{meta, intervals -> intervals}
 
-            ch_versions = ch_intervals.mix(CREATE_INTERVALS_BED.out.versions)
+            //ch_versions = ch_intervals.mix(CREATE_INTERVALS_BED.out.versions)
 
             //If interval file is not provided as .bed, but e.g. as .interval_list then convert to BED format
             if(!params.intervals.endsWith(".bed")) {
