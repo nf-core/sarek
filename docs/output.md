@@ -12,7 +12,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 
 - [Preprocessing](#preprocessing)
   - [Prepare input files](#preparation-of-input-files-fastq-or-ubam)
-    - [Trim adapters](#trimming)
+    - [Trim adapters](#trim-adapters)
     - [Split FastQ files](#split)
   - [Map to Reference](#map-to-reference)
     - [BWA](#bwa)
