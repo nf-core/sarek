@@ -70,10 +70,12 @@ The default directory structure is as follows
 ├── multiqc
 ├── pipeline_info
 ├── preprocessing
-│   └── <sample>
-│       ├── markduplicates
-│       ├── recal_table
-│       └── recalibrated
+│   ├── markduplicates
+│       └── <sample>
+│   ├── recal_table
+│       └── <sample>
+│   └── recalibrated
+│       └── <sample>
 ├── reference
 └── reports
     ├── <tool1>
@@ -100,7 +102,7 @@ The resulting files are intermediate and by default not kept in the final files 
 <details markdown="1">
 <summary>Output files for all samples</summary>
 
-**Output directory: `{outdir}/preprocessing/<sample>/fastp/`**
+**Output directory: `{outdir}/preprocessing/fastp/<sample>`**
 
 - `<sample>_<lane>_{1,2}.fastp.fastq.gz>`
   - Bgzipped FastQ file
@@ -116,7 +118,7 @@ These files are intermediate and by default not kept in the final files delivere
 <details markdown="1">
 <summary>Output files for all samples</summary>
 
-**Output directory: `{outdir}/preprocessing/<sample>/fastp/`**
+**Output directory: `{outdir}/preprocessing/fastp/<sample>/`**
 
 - `<sample_lane_{1,2}.fastp.fastq.gz>`
   - Bgzipped FastQ file
@@ -146,7 +148,7 @@ These files are intermediate and by default not kept in the final files delivere
 <details markdown="1">
 <summary>Output files for all mappers and samples</summary>
 
-**Output directory: `{outdir}/preprocessing/<sample>/mapped`**
+**Output directory: `{outdir}/preprocessing/mapped/<sample>/`**
 
 - if `--save_bam_mapped`: `<sample>.bam` and `<sample>.bam.bai`
   - BAM file and index
@@ -170,7 +172,7 @@ The resulting CRAM files are delivered to the users.
 <details markdown="1">
 <summary>Output files for all samples</summary>
 
-**Output directory: `{outdir}/preprocessing/<sample>/markduplicates`**
+**Output directory: `{outdir}/preprocessing/markduplicates/<sample>/`**
 
 - `<sample>.md.cram` and `<sample>.md.cram.crai`
   - CRAM file and index
@@ -194,7 +196,7 @@ To use the corresponding spark implementation [GATK BaseRecalibratorSpark](https
 <details markdown="1">
 <summary>Output files for all samples</summary>
 
-**Output directory: `{outdir}/preprocessing/<sample>/recal_table`**
+**Output directory: `{outdir}/preprocessing/recal_table/<sample>/`**
 
 - `<sample>.recal.table`
   - Recalibration table associated to the duplicates-marked CRAM file.
@@ -212,7 +214,7 @@ The resulting recalibrated CRAM files are delivered to the user. Recalibrated CR
 <details markdown="1">
 <summary>Output files for all samples</summary>
 
-**Output directory: `{outdir}/preprocessing/<sample>/recalibrated`**
+**Output directory: `{outdir}/preprocessing/recalibrated/<sample>/`**
 
 - `<sample>.recal.cram` and `<sample>.recal.cram.crai`
   - CRAM file and index
@@ -262,7 +264,7 @@ For single nucleotide variants (SNVs) and small indels, multiple tools are avail
 <details markdown="1">
 <summary>Output files for normal samples</summary>
 
-**Output directory: `{outdir}/variantcalling/<sample>/deepvariant`**
+**Output directory: `{outdir}/variantcalling/deepvariant/<sample>/`**
 
 - `<sample>.deepvariant.vcf.gz` and `<sample>.deepvariant.vcf.gz.tbi`
   - VCF with tabix index
@@ -277,7 +279,7 @@ For single nucleotide variants (SNVs) and small indels, multiple tools are avail
 <details markdown="1">
 <summary>Output files for all samples</summary>
 
-**Output directory: `{outdir}/variantcalling/{sample,normalsample_vs_tumorsample}/freebayes`**
+**Output directory: `{outdir}/variantcalling/freebayes/{sample,normalsample_vs_tumorsample}/`**
 
 - `<sample>.freebayes.vcf.gz` and `<sample>.freebayes.vcf.gz.tbi`
   - VCF with tabix index
@@ -291,7 +293,7 @@ For single nucleotide variants (SNVs) and small indels, multiple tools are avail
 <details markdown="1">
 <summary>Output files for normal samples</summary>
 
-**Output directory: `{outdir}/variantcalling/<sample>/haplotypecaller`**
+**Output directory: `{outdir}/variantcalling/haplotypecaller/<sample>/`**
 
 - `<sample>.haplotypecaller.vcf.gz` and `<sample>.haplotypecaller.vcf.gz.tbi`
   - VCF with tabix index
@@ -308,7 +310,7 @@ If the haplotype-called VCF files are not filtered, then Sarek should be run wit
 <details markdown="1">
 <summary>Output files for normal samples</summary>
 
-**Output directory: `{outdir}/variantcalling/<sample>/haplotypecaller`**
+**Output directory: `{outdir}/variantcalling/haplotypecaller/<sample>/`**
 
 - `<sample>.haplotypecaller.filtered.vcf.gz` and `<sample>.haplotypecaller.filtered.vcf.gz.tbi`
   - VCF with tabix index
@@ -319,7 +321,7 @@ If the haplotype-called VCF files are not filtered, then Sarek should be run wit
 
 [GATK Joint germline Variant Calling](https://gatk.broadinstitute.org/hc/en-us/articles/360035535932-Germline-short-variant-discovery-SNPs-Indels-) uses Haplotypecaller per sample in `gvcf` mode. Next, the gVCFs are consolidated from multiple samples into a [GenomicsDB](https://gatk.broadinstitute.org/hc/en-us/articles/5358869876891-GenomicsDBImport) datastore. After joint [genotyping](https://gatk.broadinstitute.org/hc/en-us/articles/5358906861083-GenotypeGVCFs), [VQSR](https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator) is applied for filtering to produce the final multisample callset with the desired balance of precision and sensitivity.
 
-**Output directory: `{outdir}/variantcalling/<sample>/haplotypecaller`**
+**Output directory: `{outdir}/variantcalling/haplotypecaller/<sample>/`**
 
 _TODO_
 
@@ -332,7 +334,7 @@ It is not required, but recommended to have a [panel of normals (PON)](https://g
 <details markdown="1">
 <summary>Output files for tumor-only and tumor/normal paired samples</summary>
 
-**Output directory: `{outdir}/variantcalling/{sample,tumorsample_vs_normalsample}/mutect2`**
+**Output directory: `{outdir}/variantcalling/mutect2/{sample,tumorsample_vs_normalsample}/`**
 
 Files created:
 
@@ -363,7 +365,7 @@ For further reading and documentation see the [samtools manual](https://www.htsl
 <details markdown="1">
 <summary>Output files for all samples</summary>
 
-**Output directory: `{outdir}/variantcalling/<sample>/mpileup`**
+**Output directory: `{outdir}/variantcalling/mpileup/<sample>/`**
 
 - `<sample>.pileup.gz`
   - The pileup format is a text-based format for summarizing the base calls of aligned reads to a reference sequence. Alignment records are grouped by sample (`SM`) identifiers in `@RG` header lines.
@@ -378,7 +380,7 @@ For further downstream analysis, take a look [here](https://github.com/Illumina/
 <details markdown="1">
 <summary>Output files for all single samples (normal or tumor-only)</summary>
 
-**Output directory: `{outdir}/variantcalling/<sample>/strelka`**
+**Output directory: `{outdir}/variantcalling/strelka/<sample>/`**
 
 - `<sample>.strelka.genome.vcf.gz` and `<sample>.strelka.genome.vcf.gz.tbi`
   - genome VCF with tabix index
@@ -389,7 +391,7 @@ For further downstream analysis, take a look [here](https://github.com/Illumina/
 <details markdown="1">
 <summary>Output files for tumor/normal paired samples</summary>
 
-**Output directory: `{outdir}/variantcalling/<tumorsample_vs_normalsample>/strelka`**
+**Output directory: `{outdir}/variantcalling/strelka/<tumorsample_vs_normalsample>/`**
 
 - `<tumorsample_vs_normalsample>.strelka.somatic_indels.vcf.gz` and `<tumorsample_vs_normalsample>.strelka.somatic_indels.vcf.gz.tbi`
   - VCF with tabix index with all somatic indels inferred in the tumor sample.
@@ -409,7 +411,7 @@ It is optimized for analysis of germline variation in small sets of individuals 
 <details markdown="1">
 <summary>Output files for normal samples</summary>
 
-**Output directory: `{outdir}/variantcalling/<sample>/manta`**
+**Output directory: `{outdir}/variantcalling/manta/<sample>/`**
 
 - `<sample>.manta.diploid_sv.vcf.gz` and `<sample>.manta.diploid_sv.vcf.gz.tbi`
   - VCF with tabix index containing SVs and indels scored and genotyped under a diploid model for the sample.
@@ -418,7 +420,7 @@ It is optimized for analysis of germline variation in small sets of individuals 
 <details markdown="1">
 <summary>Output files for tumor-only samples</summary>
 
-**Output directory: `{outdir}/variantcalling/<sample>/manta`**
+**Output directory: `{outdir}/variantcalling/manta/<sample>/`**
 
 - `<sample>.manta.tumor_sv.vcf.gz` and `<sample>.manta.tumor_sv.vcf.gz.tbi`
   - VCF with tabix index containing a subset of the candidateSV.vcf.gz file after removing redundant candidates and small indels less than the minimum scored variant size (50 by default). The SVs are not scored, but include additional details: (1) paired and split read supporting evidence counts for each allele (2) a subset of the filters from the scored tumor-normal model are applied to the single tumor case to improve precision.
@@ -427,7 +429,7 @@ It is optimized for analysis of germline variation in small sets of individuals 
 <details markdown="1">
 <summary>Output files for tumor/normal paired samples</summary>
 
-**Output directory: `{outdir}/variantcalling/<tumorsample_vs_normalsample>/manta`**
+**Output directory: `{outdir}/variantcalling/manta/<tumorsample_vs_normalsample>/`**
 
 - `<tumorsample_vs_normalsample>.manta.diploid_sv.vcf.gz` and `<tumorsample_vs_normalsample>.manta.diploid_sv.vcf.gz.tbi`
   - VCF with tabix index containing SVs and indels scored and genotyped under a diploid model for the sample. In the case of a tumor/normal subtraction, the scores in this file do not reflect any information from the tumor sample.
@@ -442,7 +444,7 @@ It is optimized for analysis of germline variation in small sets of individuals 
 <details markdown="1">
 <summary>Output files for normal and tumor-only samples</summary>
 
-**Output directory: `{outdir}/variantcalling/<sample>/tiddit`**
+**Output directory: `{outdir}/variantcalling/tiddit/<sample>/`**
 
 - `<sample>.tiddit.vcf.gz` and `<sample>.tiddit.vcf.gz.tbi`
   - VCF with tabix index containing SV calls
@@ -454,7 +456,7 @@ It is optimized for analysis of germline variation in small sets of individuals 
 <details markdown="1">
 <summary>Output files for tumor/normal paired samples</summary>
 
-**Output directory: `{outdir}/variantcalling/<tumorsample_vs_normalsample>/tiddit`**
+**Output directory: `{outdir}/variantcalling/tiddit/<tumorsample_vs_normalsample>/`**
 
 - `<tumorsample_vs_normalsample>.tiddit.normal.vcf.gz` and `<tumorsample_vs_normalsample>.tiddit.normal.vcf.gz.tbi`
   - VCF with tabix index containing SV calls
@@ -480,7 +482,7 @@ This is done internally using the software [AlleleCount](https://github.com/canc
 <details markdown="1">
 <summary>Output files for tumor/normal paired samples</summary>
 
-**Output directory: `{outdir}/variantcalling/<tumorsample_vs_normalsample>/ascat`**
+**Output directory: `{outdir}/variantcalling/ascat/<tumorsample_vs_normalsample>/`**
 
 - `<tumorsample_vs_normalsample>.tumour.ASPCF.png`
   - image with information about allele-specific copy number segmentation
@@ -527,7 +529,7 @@ The file `<tumorsample_vs_normalsample>.cnvs.txt` contains all segments predicte
 <details markdown="1">
 <summary>Output files for normal and tumor-only samples</summary>
 
-**Output directory: `{outdir}/variantcalling/<sample>/cnvkit`**
+**Output directory: `{outdir}/variantcalling/cnvkit/<sample>/`**
 
 - `<sample>.antitargetcoverage.cnn`
   - file containing coverage information
@@ -551,7 +553,7 @@ The file `<tumorsample_vs_normalsample>.cnvs.txt` contains all segments predicte
 <details markdown="1">
 <summary>Output files for tumor/normal samples</summary>
 
-**Output directory: `{outdir}/variantcalling/<tumorsample_vs_normalsample>/cnvkit`**
+**Output directory: `{outdir}/variantcalling/cnvkit/<tumorsample_vs_normalsample>/`**
 
 - `<normalsample>.antitargetcoverage.cnn`
   - file containing coverage information
@@ -584,7 +586,7 @@ It also detects subclonal gains and losses and evaluates the most likely average
 <details markdown="1">
 <summary>Output files for tumor-only and tumor/normal paired samples</summary>
 
-**Output directory: `{outdir}/variantcalling/{tumorsample,tumorsample_vs_normalsample}/controlfreec`**
+**Output directory: `{outdir}/variantcalling/controlfreec/{tumorsample,tumorsample_vs_normalsample}/`**
 
 - `config.txt`
   - Configuration file used to run Control-FREEC
@@ -632,7 +634,7 @@ It requires a normal sample for each tumour to differentiate the somatic and ger
 <details markdown="1">
 <summary>Output files for tumor/normal paired samples</summary>
 
-**Output directory: `{outdir}/variantcalling/<tumorsample_vs_normalsample>/msisensor`**
+**Output directory: `{outdir}/variantcalling/msisensor/<tumorsample_vs_normalsample>/`**
 
 - `<tumorsample_vs_normalsample>`
   - MSI score output, contains information about the number of somatic sites.

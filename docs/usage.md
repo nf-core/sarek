@@ -30,7 +30,7 @@ results         # Finished results (configurable, see below)
 # Other nextflow hidden files, eg. history of pipeline runs and old logs.
 ```
 
-### Input: Samplesheet configurations
+### Input: Sample sheet configurations
 
 You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. Use the parameter `--input` to specify its location. It has to be a comma-separated file with at least 3 columns, and a header row as shown in the examples below.
 
@@ -47,7 +47,7 @@ Output from Variant Calling and/or Annotation will be in a specific directory fo
 Multiple CSV files can be specified if the path is enclosed in quotes.
 
 ```console
---input '[path to samplesheet file(s)]'
+--input '[path to sample sheet file(s)]'
 ```
 
 #### Overview: Samplesheet Columns
@@ -550,7 +550,7 @@ Some of the currently, available test profiles:
 | :-------------- | :------------------------------------------------------------------------------ |
 | annotation      | `nextflow run main.nf -profile test,annotation,docker --tools snpeff.vep,merge` |
 | no_intervals    | `nextflow run main.nf -profile test,no_intervals,docker`                        |
-| targeted        | ` nextflow run main.nf -profile test,targeted,docker`                           |
+| targeted        | `nextflow run main.nf -profile test,targeted,docker`                            |
 | tools_germline  | `nextflow run main.nf -profile test,tools_germline,docker --tools strelka`      |
 | tools_tumoronly | `nextflow run main.nf -profile test,tools_tumoronly,docker --tools strelka`     |
 | tools_somatic   | `nextflow run main.nf -profile test,tools_somatic,docker --tools strelka`       |
