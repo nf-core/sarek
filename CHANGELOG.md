@@ -93,6 +93,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#644](https://github.com/nf-core/sarek/pull/644) - Use `-Y` for `bwa-mem(2)` and remove `-M`
 - [#645](https://github.com/nf-core/sarek/pull/645) - Merge `tests/nextflow.config` in `conf/test.config`
 - [#646](https://github.com/nf-core/sarek/pull/646) - Update `nextflow_schema.json` to reflect new parameters and functions, removes `--annotation_cache`, removes `--ascat_chromosomes`
+- [#653](https://github.com/nf-core/sarek/pull/653) - Coherent results subfolder structure between preprocessing, variantcalling and reporting
 
 ### Fixed
 
