@@ -61,7 +61,7 @@ if (params.wes && !params.step == 'annotate') {
 } else if (params.intervals && !params.intervals.endsWith("bed") && !params.intervals.endsWith("interval_list")) exit 1, "Intervals file must end with .bed or .interval_list"
 
 if(params.aligner && params.aligner.contains("dragmap") && !(params.skip_tools && params.skip_tools.contains("baserecalibrator"))){
-    log.warn("DragMap was specified as aligner. Base recalibration is not contained in --skip_tools. It is recommended to skip baserecalibration when using DragMap\nhttps://gatk.broadinstitute.org/hc/en-us/articles/4407897446939--How-to-Run-germline-single-sample-short-variant-discovery-in-DRAGEN-mode")
+    log.warn("DragMap was specified as aligner. Base recalibration is not contained in `--skip_tools`. It is recommended to skip baserecalibration when using DragMap\nhttps://gatk.broadinstitute.org/hc/en-us/articles/4407897446939--How-to-Run-germline-single-sample-short-variant-discovery-in-DRAGEN-mode")
 }
 
 // Fails or warns when missing files or params for ascat
