@@ -34,8 +34,8 @@
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
-    - path: results/reports/samtools_stats/test/test.md.cram.stats
-    - path: results/reports/samtools_stats/test/test.recal.cram.stats
+    - path: results/reports/samtools/test/test.md.cram.stats
+    - path: results/reports/samtools/test/test.recal.cram.stats
     - path: results/samtools/test-1.bam
     - path: results/samtools/test-1.map_map.bam
     - path: results/samtools/test-1.map_unmap.bam
