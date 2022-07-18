@@ -5,25 +5,46 @@
     - markduplicates
     - preprocessing
   files:
+    - path: results/csv/markduplicates.csv
+    - path: results/csv/markduplicates_no_table.csv
+    - path: results/csv/recalibrated.csv
     - path: results/multiqc
     - path: results/preprocessing/test/markduplicates/test.md.cram
     - path: results/preprocessing/test/markduplicates/test.md.cram.crai
     - path: results/preprocessing/test/recal_table/test.recal.table
     - path: results/preprocessing/test/recalibrated/test.recal.cram
     - path: results/preprocessing/test/recalibrated/test.recal.cram.crai
-    - path: results/csv/markduplicates.csv
-    - path: results/csv/markduplicates_no_table.csv
-    - path: results/csv/recalibrated.csv
+    - path: results/preprocessing/test1/markduplicates/test1.md.cram
+    - path: results/preprocessing/test1/markduplicates/test1.md.cram.crai
+    - path: results/preprocessing/test1/recal_table/test1.recal.table
+    - path: results/preprocessing/test1/recalibrated/test1.recal.cram
+    - path: results/preprocessing/test1/recalibrated/test1.recal.cram.crai
+    - path: results/reports/markduplicates/test/test.md.metrics
+    - path: results/reports/markduplicates/test1/test1.md.metrics
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
-    - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
     - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
     - path: results/reports/mosdepth/test/test.md.regions.bed.gz
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz.csi
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
-    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
+    - path: results/reports/mosdepth/test1/test1.md.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/test1/test1.md.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test1/test1.md.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test1/test1.md.regions.bed.gz
+    - path: results/reports/mosdepth/test1/test1.md.regions.bed.gz.csi
+    - path: results/reports/mosdepth/test1/test1.recal.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/test1/test1.recal.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test1/test1.recal.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test1/test1.recal.regions.bed.gz
+    - path: results/reports/mosdepth/test1/test1.recal.regions.bed.gz.csi
     - path: results/reports/samtools_stats/test/test.md.cram.stats
     - path: results/reports/samtools_stats/test/test.recal.cram.stats
+    - path: results/reports/samtools_stats/test1/test1.md.cram.stats
+    - path: results/reports/samtools_stats/test1/test1.recal.cram.stats
 - name: Run markduplicates starting from CRAM
   command: nextflow run main.nf -profile test,markduplicates_cram,docker
   tags:
@@ -31,22 +52,27 @@
     - markduplicates
     - preprocessing
   files:
+    - path: results/csv/markduplicates.csv
+    - path: results/csv/markduplicates_no_table.csv
+    - path: results/csv/recalibrated.csv
     - path: results/multiqc
     - path: results/preprocessing/test/markduplicates/test.md.cram
     - path: results/preprocessing/test/markduplicates/test.md.cram.crai
     - path: results/preprocessing/test/recal_table/test.recal.table
     - path: results/preprocessing/test/recalibrated/test.recal.cram
     - path: results/preprocessing/test/recalibrated/test.recal.cram.crai
-    - path: results/csv/markduplicates.csv
-    - path: results/csv/markduplicates_no_table.csv
-    - path: results/csv/recalibrated.csv
+    - path: results/reports/markduplicates/test/test.md.metrics
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
-    - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
     - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
     - path: results/reports/mosdepth/test/test.md.regions.bed.gz
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz.csi
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
-    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
     - path: results/reports/samtools_stats/test/test.md.cram.stats
     - path: results/reports/samtools_stats/test/test.recal.cram.stats
+    - path: results/samtools/test.bam
+    - path: results/samtools/test.bam.bai
