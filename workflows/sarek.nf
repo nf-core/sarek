@@ -497,7 +497,7 @@ workflow SAREK {
 
         }else{
 
-            ch_input_sample.map{ meta, input, index -> [meta, input, index] }.branch{
+            ch_input_sample.map{ meta, input, index -> [meta, input] }.branch{
                 bam:  it[0].data_type == "bam"
                 cram: it[0].data_type == "cram"
             }.set{convert}
