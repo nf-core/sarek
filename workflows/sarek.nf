@@ -579,7 +579,7 @@ workflow SAREK {
         csv_markduplicates = ch_md_cram_for_restart
 
         // Create CSV to restart from this step
-        MARKDUPLICATES_CSV(csv_markduplicates)
+        if (params.skip_tools && !(params.skip_tools.split(',').contains('markduplicates'))) MARKDUPLICATES_CSV(csv_markduplicates)
     }
 
     if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration']) {
@@ -658,7 +658,7 @@ workflow SAREK {
             ch_cram_applybqsr = ch_cram_for_prepare_recalibration.join(ch_table_bqsr)
 
             // Create CSV to restart from this step
-            PREPARE_RECALIBRATION_CSV(ch_md_cram_for_restart.join(ch_table_bqsr))
+            PREPARE_RECALIBRATION_CSV(ch_md_cram_for_restart.join(ch_table_bqsr), params.skip_tools)
         }
     }
 
@@ -749,7 +749,7 @@ workflow SAREK {
             // - input crams if started from step recal + skip BQSR
             cram_variant_calling = Channel.empty().mix(SAMTOOLS_BAMTOCRAM.out.alignment_index,
                                                         convert.cram.map{ meta, cram, crai, table -> [meta, cram, crai]})
-        } else{
+        } else {
             // ch_cram_variant_calling contains either:
             // - crams from markduplicates = ch_cram_for_prepare_recalibration if skip BQSR but not started from step recalibration
             cram_variant_calling = Channel.empty().mix(ch_cram_for_prepare_recalibration)
