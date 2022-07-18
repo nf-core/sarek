@@ -267,7 +267,7 @@ For single nucleotide variants (SNVs) and small indels, multiple tools are avail
 - `<sample>.deepvariant.vcf.gz` and `<sample>.deepvariant.vcf.gz.tbi`
   - VCF with tabix index
 - `<sample>.deepvariant.g.vcf.gz` and `<sample>.deepvariant.g.vcf.gz.tbi`
-  - .g.VCF with tabix index
+  - `.g.VCF` with tabix index
   </details>
 
 #### FreeBayes
