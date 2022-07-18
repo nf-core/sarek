@@ -56,8 +56,10 @@ ch_input_sample = extract_csv(file(params.input, checkIfExists: true))
 
 // Fails when wrongfull extension for intervals file
 if (params.wes && !params.step == 'annotate') {
-    if (params.intervals && !params.intervals.endsWith("bed")) exit 1, "Target file specified with `--intervals` must be in BED format"
+    if (params.intervals && !params.intervals.endsWith("bed")) exit 1, "Target file specified with `--intervals` must be in BED format for targeted data"
 } else {
+    log.warn("Interval file was provided without parameter `--wes`: Pipeline will assume this is Whole-genome-sequencing data.")
+
     if (params.intervals && !params.intervals.endsWith("bed") && !params.intervals.endsWith("interval_list")) exit 1, "Interval file must end with .bed or .interval_list"
 }
 
@@ -392,8 +394,10 @@ workflow SAREK {
                 umi_read_structure,
                 params.group_by_umi_strategy)
 
+            bamtofastq = CREATE_UMI_CONSENSUS.out.consensusbam.map{meta, bam -> [meta,bam,[]]}
+
             // convert back to fastq for further preprocessing
-            ALIGNMENT_TO_FASTQ_UMI(CREATE_UMI_CONSENSUS.out.consensusbam, [])
+            ALIGNMENT_TO_FASTQ_UMI(bamtofastq, [])
 
             ch_reads_fastp = ALIGNMENT_TO_FASTQ_UMI.out.reads
 
