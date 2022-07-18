@@ -20,12 +20,12 @@
     - path: results/reference/bwamem2/genome.fasta.bwt.2bit.64
     - path: results/reference/bwamem2/genome.fasta.pac
     - path: results/reference/dbsnp/dbsnp_146.hg38.vcf.gz.tbi
+    - path: results/reference/dict/genome.dict
     - path: results/reference/fai/genome.fasta.fai
-    - path: results/reference/gatk4/genome.dict
     - path: results/reference/intervals/chr22_1-40001.bed
+    - path: results/reference/intervals/chr22_1-40001.bed.gz
     - path: results/reference/intervals/genome.bed
     - path: results/reference/known_indels/mills_and_1000G.indels.vcf.gz.tbi
-    - path: results/reference/target/chr22_1-40001.bed.gz
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.metrics
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
@@ -57,6 +57,7 @@
     - path: results/preprocessing/test/recalibrated/test.recal.cram
     - path: results/preprocessing/test/recalibrated/test.recal.cram.crai
     - path: results/reference/dbsnp/dbsnp_146.hg38.vcf.gz.tbi
+    - path: results/reference/dict/genome.dict
     - path: results/reference/dragmap/hash_table.cfg
     - path: results/reference/dragmap/hash_table.cfg.bin
     - path: results/reference/dragmap/hash_table.cmp
@@ -66,11 +67,10 @@
     - path: results/reference/dragmap/repeat_mask.bin
     - path: results/reference/dragmap/str_table.bin
     - path: results/reference/fai/genome.fasta.fai
-    - path: results/reference/gatk4/genome.dict
     - path: results/reference/intervals/chr22_1-40001.bed
+    - path: results/reference/intervals/chr22_1-40001.bed.gz
     - path: results/reference/intervals/genome.bed
     - path: results/reference/known_indels/mills_and_1000G.indels.vcf.gz.tbi
-    - path: results/reference/target/chr22_1-40001.bed.gz
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.metrics
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
