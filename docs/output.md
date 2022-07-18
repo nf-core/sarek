@@ -181,7 +181,7 @@ The resulting CRAM files are delivered to the users.
 
 ### Base Quality Score Recalibration
 
-During Base Quality Score Recalibration, systematic errors in the base quality scores are corrected by applying machine learning to detect and correct for them. This is important for evaluating the correct call of a variant during the variant discovery process. However, this is not needed for all combinations of tools in sarek. Notably, this should be turned off when having UMI tagged reads or using DragMap (see [here](https://gatk.broadinstitute.org/hc/en-us/articles/4407897446939--How-to-Run-germline-single-sample-short-variant-discovery-in-DRAGEN-mode)) as mapper.
+During Base Quality Score Recalibration, systematic errors in the base quality scores are corrected by applying machine learning to detect and correct for them. This is important for evaluating the correct call of a variant during the variant discovery process. However, this is not needed for all combinations of tools in Sarek. Notably, this should be turned off when having UMI tagged reads or using DragMap (see [here](https://gatk.broadinstitute.org/hc/en-us/articles/4407897446939--How-to-Run-germline-single-sample-short-variant-discovery-in-DRAGEN-mode)) as mapper.
 
 For further reading and documentation see the [technical documentation by GATK](https://gatk.broadinstitute.org/hc/en-us/articles/360035890531-Base-Quality-Score-Recalibration-BQSR-).
 
@@ -267,7 +267,7 @@ For single nucleotide variants (SNVs) and small indels, multiple tools are avail
 - `<sample>.deepvariant.vcf.gz` and `<sample>.deepvariant.vcf.gz.tbi`
   - VCF with tabix index
 - `<sample>.deepvariant.g.vcf.gz` and `<sample>.deepvariant.g.vcf.gz.tbi`
-  - .g.VCF with tabix index
+  - `.g.VCF` with tabix index
   </details>
 
 #### FreeBayes
@@ -579,7 +579,7 @@ The file `<tumorsample_vs_normalsample>.cnvs.txt` contains all segments predicte
 
 [Control-FREEC](https://github.com/BoevaLab/FREEC) is a tool for detection of copy-number changes and allelic imbalances (including loss of heterozygoity (LOH)) using deep-sequencing data.
 [Control-FREEC](https://github.com/BoevaLab/FREEC) automatically computes, normalizes, segments copy number and beta allele frequency profiles, then calls copy number alterations and LOH.
-It also detects subclonal gains and losses and evaluate the most likely average ploidy of the sample. For further reading and documentation see the [Control-FREEC Documentation](http://boevalab.inf.ethz.ch/FREEC/tutorial.html).
+It also detects subclonal gains and losses and evaluates the most likely average ploidy of the sample. For further reading and documentation see the [Control-FREEC Documentation](http://boevalab.inf.ethz.ch/FREEC/tutorial.html).
 
 <details markdown="1">
 <summary>Output files for tumor-only and tumor/normal paired samples</summary>
@@ -619,7 +619,7 @@ It also detects subclonal gains and losses and evaluate the most likely average 
 
 </details>
 
-### Microsatellite instability
+### Microsatellite instability (MSI)
 
 [Microsatellite instability](https://en.wikipedia.org/wiki/Microsatellite_instability) is a genetic condition associated to deficiencies in the mismatch repair (MMR) system which causes a tendency to accumulate a high number of mutations (SNVs and indels).
 An altered distribution of microsatellite length is associated to a missed replication slippage which would be corrected under normal MMR conditions.
@@ -647,13 +647,13 @@ It requires a normal sample for each tumour to differentiate the somatic and ger
 ## Variant annotation
 
 This directory contains results from the final annotation steps: two tools are used for annotation, [snpEff](http://snpeff.sourceforge.net/) and [VEP](https://www.ensembl.org/info/docs/tools/vep/index.html). Both results can also be combined by setting `--tools merge`.
-All variants present in the called VCF files are annotated. For some variantcallers this can mean that the variants are already filtered by `PASS`, for some this needs to be done during post-processing.
+All variants present in the called VCF files are annotated. For some variant callers this can mean that the variants are already filtered by `PASS`, for some this needs to be done during post-processing.
 
 ### snpEff
 
 [snpeff](http://snpeff.sourceforge.net/) is a genetic variant annotation and effect prediction toolbox.
 It annotates and predicts the effects of variants on genes (such as amino acid changes) using multiple databases for annotations.
-The generated VCF header contains the software version and the used command line. For further reading and documentation see the [snpEff manual](http://snpeff.sourceforge.net/SnpEff_manual.html#outputSummary)
+The generated VCF header contains the software version and the used command line. For further reading and documentation see the [snpEff manual](http://snpeff.sourceforge.net/SnpEff_manual.html#outputSummary).
 
 <details markdown="1">
 <summary>Output files for all samples</summary>
@@ -669,7 +669,7 @@ The generated VCF header contains the software version and the used command line
 [VEP (Variant Effect Predictor)](https://www.ensembl.org/info/docs/tools/vep/index.html), based on `Ensembl`, is a tool to determine the effects of all sorts of variants, including SNPs, indels, structural variants, CNVs.
 The generated VCF header contains the software version, also the version numbers for additional databases like [Clinvar](https://www.ncbi.nlm.nih.gov/clinvar/) or [dbSNP](https://www.ncbi.nlm.nih.gov/snp/) used in the [VEP](https://www.ensembl.org/info/docs/tools/vep/index.html) line.
 The format of the [consequence annotations](https://www.ensembl.org/info/genome/variation/prediction/predicted_data.html) is also in the VCF header describing the `INFO` field.
-For further reading and documentation see the [VEP manual](https://www.ensembl.org/info/docs/tools/vep/index.html)
+For further reading and documentation see the [VEP manual](https://www.ensembl.org/info/docs/tools/vep/index.html).
 
 Currently, it contains:
 
@@ -705,7 +705,7 @@ plus any additional filed selected via the plugins: [dbNSFP](https://sites.googl
 
 [FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) gives general quality metrics about your sequenced reads. It provides information about the quality score distribution across your reads, per base sequence content (%A/T/G/C), adapter contamination and overrepresented sequences. For further reading and documentation see the [FastQC help pages](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/).
 
-Plots will show:
+The plots display:
 
 - Sequence counts for each sample.
 - Sequence Quality Histograms: The mean quality value across each base position in the read.
@@ -714,7 +714,7 @@ Plots will show:
 - Per Sequence GC Content: The average GC content of reads. Normal random library typically have a roughly normal distribution of GC content.
 - Per Base N Content: The percentage of base calls at each position for which an N was called.
 - Sequence Length Distribution.
-- Sequence Duplication Levels: The relative level of duplication found for every sequence.
+- Sequence Duplication Levels: The relative level of duplication found for each sequence.
 - Overrepresented sequences: The total amount of overrepresented sequences found in each library.
 - Adapter Content: The cumulative percentage count of the proportion of your library which has seen each of the adapter sequences at each position.
 
@@ -735,7 +735,7 @@ Plots will show:
 
 #### FastP
 
-[FastP](https://github.com/OpenGene/fastp) is a tool designed to provide all-in-one preprocessing for FastQ files and as such is used for trimming and splitting. The tool then determines QC metrics for the processed reads.
+[FastP](https://github.com/OpenGene/fastp) is a tool designed to provide all-in-one preprocessing for FastQ files and is used for trimming and splitting. The tool then determines QC metrics for the processed reads.
 
 <details markdown="1">
 <summary>Output files for all samples</summary>
@@ -755,7 +755,7 @@ Plots will show:
 
 [Mosdepth](https://github.com/brentp/mosdepth) reports information for the evaluation of the quality of the provided alignment data.
 In short, the basic statistics of the alignment (number of reads, coverage, GC-content, etc.) are summarized and a number of useful graphs are produced.
-For further reading and documentation see the [Mosdepth](https://github.com/brentp/mosdepth).
+For further reading and documentation see the [Mosdepth documentation](https://github.com/brentp/mosdepth).
 
 Plots will show:
 
@@ -789,9 +789,9 @@ Duplicate reads can also result from a single amplification cluster, incorrectly
 These duplication artifacts are referred to as optical duplicates. If [GATK MarkDuplicates](https://gatk.broadinstitute.org/hc/en-us/articles/5358880192027-MarkDuplicates-Picard-) is used, the metrics file generated by the tool is used, if [`GATK MarkDuplicatesSpark`](https://gatk.broadinstitute.org/hc/en-us/articles/5358833264411-MarkDuplicatesSpark) is used the report is generated by [GATK4 EstimateLibraryComplexity](https://gatk.broadinstitute.org/hc/en-us/articles/5358838684187-EstimateLibraryComplexity-Picard-) on the mapped BAM files.
 For further reading and documentation see the [MarkDuplicates manual](https://software.broadinstitute.org/gatk/documentation/tooldocs/4.1.2.0/picard_sam_markduplicates_MarkDuplicates.php).
 
-Plot will show:
+The plot will show:
 
-- duplication statistic
+- duplication statistics
 
 <details markdown="1">
 <summary>Output files for all samples</summary>
@@ -807,7 +807,7 @@ Plot will show:
 [samtools stats](https://www.htslib.org/doc/samtools.html) collects statistics from CRAM files and outputs in a text format.
 For further reading and documentation see the [`samtools` manual](https://www.htslib.org/doc/samtools.html#COMMANDS_AND_OPTIONS).
 
-Plots will show:
+The plots will show:
 
 - Alignment metrics.
 
@@ -823,7 +823,7 @@ Plots will show:
 
 #### bcftools stats
 
-[bcftools stats](https://samtools.github.io/bcftools/bcftools.html#stats) produces text file stats which is suitable for machine processing and can be plotted using plot-vcfstats.
+[bcftools stats](https://samtools.github.io/bcftools/bcftools.html#stats) produces a statistics text file which is suitable for machine processing and can be plotted using plot-vcfstats.
 For further reading and documentation see the [bcftools stats manual](https://samtools.github.io/bcftools/bcftools.html#stats).
 
 Plot will show:
@@ -835,7 +835,7 @@ Plot will show:
 
 **Output directory: `{outdir}/reports/bcftools/`**
 
-- `<sample>.<variantcaller>.bcftools_stats.out`
+- `<sample>.<variantcaller>.bcftools_stats.txt`
   - Raw statistics used by `MultiQC`
   </details>
 
@@ -865,9 +865,9 @@ Plots will show:
 #### snpEff reports
 
 [snpeff](http://snpeff.sourceforge.net/) is a genetic variant annotation and effect prediction toolbox.
-It annotates and predicts the effects of variants on genes (such as amino acid changes) using multiple databases for annotations. For further reading and documentation see the [snpEff manual](http://snpeff.sourceforge.net/SnpEff_manual.html#outputSummary)
+It annotates and predicts the effects of variants on genes (such as amino acid changes) using multiple databases for annotations. For further reading and documentation see the [snpEff manual](http://snpeff.sourceforge.net/SnpEff_manual.html#outputSummary).
 
-Plots will shows :
+The plots will show:
 
 - locations of detected variants in the genome and the number of variants for each location.
 - the putative impact of detected variants and the number of variants for each impact.
@@ -889,7 +889,7 @@ Plots will shows :
 
 #### VEP reports
 
-[VEP (Variant Effect Predictor)](https://www.ensembl.org/info/docs/tools/vep/index.html), based on `Ensembl`, is a tools to determine the effects of all sorts of variants, including SNPs, indels, structural variants, CNVs. For further reading and documentation see the [VEP manual](https://www.ensembl.org/info/docs/tools/vep/index.html)
+[VEP (Variant Effect Predictor)](https://www.ensembl.org/info/docs/tools/vep/index.html), based on `Ensembl`, is a tool to determine the effects of all sorts of variants, including SNPs, indels, structural variants, CNVs. For further reading and documentation see the [VEP manual](https://www.ensembl.org/info/docs/tools/vep/index.html)
 
 <details markdown="1">
 <summary>Output files for all samples</summary>
@@ -906,7 +906,7 @@ Plots will shows :
 
 [MultiQC](http://multiqc.info) is a visualization tool that generates a single HTML report summarizing all samples in your project.
 Most of the pipeline QC results are visualised in the report and further statistics are available in the report data directory.
-Results generated by MultiQC collate pipeline QC from supported tools e.g. FastQC. The pipeline has special steps which also allow the software versions to be reported in the MultiQC output for future traceability. For more information about how to use MultiQC reports, see <http://multiqc.info>.
+Results generated by MultiQC collect pipeline QC from supported tools e.g. FastQC. The pipeline has special steps which also allow the software versions to be reported in the MultiQC output for future traceability. For more information about how to use MultiQC reports, see <http://multiqc.info>.
 
 <details markdown="1">
 <summary>Output files</summary>
