@@ -96,8 +96,8 @@ workflow RUN_HAPLOTYPECALLER {
                     fasta_fai,
                     dict,
                     intervals_bed_combined,
-                    known_sites_indels.concat(known_sites_snps).unique().collect(),
-                    known_sites_indels_tbi.concat(known_sites_snps_tbi).unique().collect())
+                    known_sites_indels.concat(known_sites_snps).flatten().unique().collect(),
+                    known_sites_indels_tbi.concat(known_sites_snps_tbi).flatten().unique().collect())
 
         filtered_vcf = SINGLE_SAMPLE.out.filtered_vcf
         ch_versions = ch_versions.mix(SINGLE_SAMPLE.out.versions, HAPLOTYPECALLER.out.versions, MERGE_HAPLOTYPECALLER.out.versions)
