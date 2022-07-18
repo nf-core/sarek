@@ -8,13 +8,13 @@
     - path: results/csv/markduplicates_no_table.csv # TODO These are no actually duplicate marked crams, but just mapped converted crams TODO renaming
     - path: results/csv/recalibrated.csv
     - path: results/multiqc
-    - path: results/preprocessing/test/mapped/test.bam
-    - path: results/preprocessing/test/mapped/test.bam.bai
-    - path: results/preprocessing/test/mapped/test.sorted.cram
-    - path: results/preprocessing/test/mapped/test.sorted.cram.crai
-    - path: results/preprocessing/test/recal_table/test.recal.table
-    - path: results/preprocessing/test/recalibrated/test.recal.cram
-    - path: results/preprocessing/test/recalibrated/test.recal.cram.crai
+    - path: results/preprocessing/mapped/test/test.bam
+    - path: results/preprocessing/mapped/test/test.bam.bai
+    - path: results/preprocessing/mapped/test/test.sorted.cram
+    - path: results/preprocessing/mapped/test/test.sorted.cram.crai
+    - path: results/preprocessing/recal_table/test/test.recal.table
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
@@ -26,10 +26,10 @@
     - path: results/reports/mosdepth/test/test.sorted.regions.bed.gz
     - path: results/reports/samtools_stats/test/test.recal.cram.stats
     - path: results/reports/samtools_stats/test/test.sorted.cram.stats
-    - path: results/variant_calling/test/strelka/test.strelka.genome.vcf.gz
-    - path: results/variant_calling/test/strelka/test.strelka.genome.vcf.gz.tbi
-    - path: results/variant_calling/test/strelka/test.strelka.variants.vcf.gz
-    - path: results/variant_calling/test/strelka/test.strelka.variants.vcf.gz.tbi
+    - path: results/variant_calling/strelka/test/test.strelka.genome.vcf.gz
+    - path: results/variant_calling/strelka/test/test.strelka.genome.vcf.gz.tbi
+    - path: results/variant_calling/strelka/test/test.strelka.variants.vcf.gz
+    - path: results/variant_calling/strelka/test/test.strelka.variants.vcf.gz.tbi
 
 - name: Run skip markduplicates bam from step markduplicates
   command: nextflow run main.nf -profile test,docker,markduplicates_bam,skip_markduplicates --tools strelka
@@ -42,11 +42,11 @@
     - path: results/csv/markduplicates_no_table.csv # TODO These are no actually duplicate marked crams, but just mapped converted crams TODO renaming
     - path: results/csv/recalibrated.csv
     - path: results/multiqc
-    - path: results/preprocessing/test/mapped/test.sorted.cram
-    - path: results/preprocessing/test/mapped/test.sorted.cram.crai
-    - path: results/preprocessing/test/recal_table/test.recal.table
-    - path: results/preprocessing/test/recalibrated/test.recal.cram
-    - path: results/preprocessing/test/recalibrated/test.recal.cram.crai
+    - path: results/preprocessing/mapped/test/test.sorted.cram
+    - path: results/preprocessing/mapped/test/test.sorted.cram.crai
+    - path: results/preprocessing/recal_table/test/test.recal.table
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
@@ -57,10 +57,10 @@
     - path: results/reports/mosdepth/test/test.sorted.regions.bed.gz
     - path: results/reports/samtools_stats/test/test.recal.cram.stats
     - path: results/reports/samtools_stats/test/test.sorted.cram.stats
-    - path: results/variant_calling/test/strelka/test.strelka.genome.vcf.gz
-    - path: results/variant_calling/test/strelka/test.strelka.genome.vcf.gz.tbi
-    - path: results/variant_calling/test/strelka/test.strelka.variants.vcf.gz
-    - path: results/variant_calling/test/strelka/test.strelka.variants.vcf.gz.tbi
+    - path: results/variant_calling/strelka/test/test.strelka.genome.vcf.gz
+    - path: results/variant_calling/strelka/test/test.strelka.genome.vcf.gz.tbi
+    - path: results/variant_calling/strelka/test/test.strelka.variants.vcf.gz
+    - path: results/variant_calling/strelka/test/test.strelka.variants.vcf.gz.tbi
 
 - name: Run skip markduplicates cram from step markduplicates
   command: nextflow run main.nf -profile test,docker,markduplicates_cram,skip_markduplicates --tools strelka
@@ -75,13 +75,13 @@
       should_exist: false
     - path: results/csv/recalibrated.csv
     - path: results/multiqc
-    - path: results/preprocessing/test/mapped/test.sorted.cram
+    - path: results/preprocessing/mapped/test/test.sorted.cram
       should_exist: false
-    - path: results/preprocessing/test/mapped/test.sorted.cram.crai
+    - path: results/preprocessing/mapped/test/test.sorted.cram.crai
       should_exist: false
-    - path: results/preprocessing/test/recal_table/test.recal.table
-    - path: results/preprocessing/test/recalibrated/test.recal.cram
-    - path: results/preprocessing/test/recalibrated/test.recal.cram.crai
+    - path: results/preprocessing/recal_table/test/test.recal.table
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
@@ -92,7 +92,7 @@
     - path: results/reports/mosdepth/test/test.sorted.regions.bed.gz
     - path: results/reports/samtools_stats/test/test.sorted.cram.stats
     - path: results/reports/samtools_stats/test/test.recal.cram.stats
-    - path: results/variant_calling/test/strelka/test.strelka.genome.vcf.gz
-    - path: results/variant_calling/test/strelka/test.strelka.genome.vcf.gz.tbi
-    - path: results/variant_calling/test/strelka/test.strelka.variants.vcf.gz
-    - path: results/variant_calling/test/strelka/test.strelka.variants.vcf.gz.tbi
+    - path: results/variant_calling/strelka/test/test.strelka.genome.vcf.gz
+    - path: results/variant_calling/strelka/test/test.strelka.genome.vcf.gz.tbi
+    - path: results/variant_calling/strelka/test/test.strelka.variants.vcf.gz
+    - path: results/variant_calling/strelka/test/test.strelka.variants.vcf.gz.tbi
