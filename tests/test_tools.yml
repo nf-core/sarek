@@ -274,12 +274,12 @@
     - path: results/variant_calling/test1/haplotypecaller/test1.haplotypecaller.filtered.vcf.gz.tbi
 
 - name: Run joint germline variant calling with haplotypecaller
-   command: nextflow run main.nf -profile test,targeted,docker --input ./tests/csv/3.0/mapped_single_bam.csv --tools haplotypecaller --joint_germline true
-   tags:
+  command: nextflow run main.nf -profile test,targeted,docker --input ./tests/csv/3.0/mapped_single_bam.csv --tools haplotypecaller --joint_germline true
+  tags:
     - germline
     - haplotypecaller
     - variant_calling
-   files:
+  files:
     - path: results/variant_calling/sample1/haplotypecaller/joint_germline.vcf.gz
     - path: results/variant_calling/sample1/haplotypecaller/joint_germline.vcf.gz.tbi
 
