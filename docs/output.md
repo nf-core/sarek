@@ -714,7 +714,7 @@ Plots will show:
 - Per Sequence GC Content: The average GC content of reads. Normal random library typically have a roughly normal distribution of GC content.
 - Per Base N Content: The percentage of base calls at each position for which an N was called.
 - Sequence Length Distribution.
-- Sequence Duplication Levels: The relative level of duplication found for every sequence.
+- Sequence Duplication Levels: The relative level of duplication found for each sequence.
 - Overrepresented sequences: The total amount of overrepresented sequences found in each library.
 - Adapter Content: The cumulative percentage count of the proportion of your library which has seen each of the adapter sequences at each position.
 
