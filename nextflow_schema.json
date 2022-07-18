@@ -65,6 +65,12 @@
                     "description": "Enable when exome or panel data is provided.",
                     "help_text": "With this parameter flags in various tools are set for targeted sequencing data. It is recommended to enable for whole-exome and panel data analysis."
                 },
+                "joint_germline": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-toolbox",
+                    "description": "Turn on the joint germline variant calling for GATK haplotypecaller",
+                    "help_text": "Uses all normal germline samples (as designated by `status` in the input csv) in the joint germline variant calling process."
+                },
                 "intervals": {
                     "type": "string",
                     "fa_icon": "fas fa-file-alt",
