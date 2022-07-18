@@ -160,7 +160,7 @@
                 "git_sha": "169b2b96c1167f89ab07127b7057c1d90a6996c7"
             },
             "gatk4/variantrecalibrator": {
-                "git_sha": "169b2b96c1167f89ab07127b7057c1d90a6996c7"
+                "git_sha": "edfe28a5e0088b66ee92e7c58186059f9b5e62d5"
             },
             "manta/germline": {
                 "git_sha": "ffedf09b6e84b479c9c901274f74bb33f3777243"
