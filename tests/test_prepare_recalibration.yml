@@ -49,7 +49,7 @@
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
     - path: results/reports/samtools_stats/test/test.recal.cram.stats
 - name: Run prepare_recalibration starting from bam and skip baserecalibration
-  command: nextflow run main.nf -profile test,prepare_recalibration_bam,skip_bqsr,docker --tools stelka
+  command: nextflow run main.nf -profile test,prepare_recalibration_bam,skip_bqsr,docker --tools strelka
   tags:
     - bam
     - prepare_recalibration
@@ -62,13 +62,21 @@
     - path: results/preprocessing/test1/markduplicates/test1.md.cram
     - path: results/preprocessing/test1/markduplicates/test1.md.cram.crai
     - path: results/reports/bcftools/test/strelka/test.strelka.variants.bcftools_stats.txt
+    - path: results/reports/bcftools/test1/strelka/test1.strelka.variants.bcftools_stats.txt
     - path: results/reports/vcftools/test/strelka/test.strelka.variants.FILTER.summary
     - path: results/reports/vcftools/test/strelka/test.strelka.variants.TsTv.count
     - path: results/reports/vcftools/test/strelka/test.strelka.variants.TsTv.qual
+    - path: results/reports/vcftools/test1/strelka/test1.strelka.variants.FILTER.summary
+    - path: results/reports/vcftools/test1/strelka/test1.strelka.variants.TsTv.count
+    - path: results/reports/vcftools/test1/strelka/test1.strelka.variants.TsTv.qual
     - path: results/variant_calling/test/strelka/test.strelka.genome.vcf.gz
     - path: results/variant_calling/test/strelka/test.strelka.genome.vcf.gz.tbi
     - path: results/variant_calling/test/strelka/test.strelka.variants.vcf.gz
     - path: results/variant_calling/test/strelka/test.strelka.variants.vcf.gz.tbi
+    - path: results/variant_calling/test1/strelka/test1.strelka.genome.vcf.gz
+    - path: results/variant_calling/test1/strelka/test1.strelka.genome.vcf.gz.tbi
+    - path: results/variant_calling/test1/strelka/test1.strelka.variants.vcf.gz
+    - path: results/variant_calling/test1/strelka/test1.strelka.variants.vcf.gz.tbi
     - path: results/csv/recalibrated.csv
       should_exist: false
     - path: results/preprocessing/test/recal_table/test.recal.table
@@ -77,18 +85,12 @@
       should_exist: false
     - path: results/preprocessing/test/recalibrated/test.recal.cram.crai
       should_exist: false
-    - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth
       should_exist: false
-    - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
-      should_exist: false
-    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
-      should_exist: false
-    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
-      should_exist: false
-    - path: results/reports/samtools_stats/test/test.recal.cram.stats
+    - path: results/reports/samtools_stats
       should_exist: false
 - name: Run prepare_recalibration starting from cram and skip baserecalibration
-  command: nextflow run main.nf -profile test,prepare_recalibration_cram,skip_bqsr,docker --tools stelka
+  command: nextflow run main.nf -profile test,prepare_recalibration_cram,skip_bqsr,docker --tools strelka
   tags:
     - cram
     - prepare_recalibration
