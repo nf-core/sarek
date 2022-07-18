@@ -25,8 +25,8 @@
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
-    - path: results/reports/samtools_stats/test/test.md.cram.stats
-    - path: results/reports/samtools_stats/test/test.recal.cram.stats
+    - path: results/reports/samtools/test/test.md.cram.stats
+    - path: results/reports/samtools/test/test.recal.cram.stats
 - name: Run default pipeline without intervals
   command: nextflow run main.nf -profile test,no_intervals,docker
   tags:
@@ -58,8 +58,8 @@
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
-    - path: results/reports/samtools_stats/test/test.md.cram.stats
-    - path: results/reports/samtools_stats/test/test.recal.cram.stats
+    - path: results/reports/samtools/test/test.md.cram.stats
+    - path: results/reports/samtools/test/test.recal.cram.stats
 - name: Run default pipeline with VC
   command: nextflow run main.nf -profile test,docker --tools strelka
   tags:
@@ -91,8 +91,8 @@
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
-    - path: results/reports/samtools_stats/test/test.md.cram.stats
-    - path: results/reports/samtools_stats/test/test.recal.cram.stats
+    - path: results/reports/samtools/test/test.md.cram.stats
+    - path: results/reports/samtools/test/test.recal.cram.stats
     - path: results/reports/vcftools/test/strelka/test.strelka.variants.FILTER.summary
     - path: results/reports/vcftools/test/strelka/test.strelka.variants.TsTv.count
     - path: results/reports/vcftools/test/strelka/test.strelka.variants.TsTv.qual

@@ -16,7 +16,7 @@ Sarek is designed to handle single samples, such as single-normal or single-tumo
 The typical command for running the pipeline is as follows:
 
 ```console
-nextflow run nf-core/sarek --input samplesheet.csv  --outdir <OUTDIR> --genome GRCh38 -profile docker
+nextflow run nf-core/sarek --input samplesheet.csv  --outdir <OUTDIR> -profile docker
 ```
 
 This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.
@@ -39,38 +39,40 @@ It is recommended to use the absolute path of the files, but a relative path sho
 If necessary, a tumor sample can be associated to a normal sample as a pair, if specified with the same `patient` ID, a different `sample`, and the respective `status`.
 An additional tumor sample (such as a relapse for example), can be added if specified with the same `patient` ID, a different `sample`, and the `status` value `1`.
 
-`Sarek` will output results in a different directory for _each sample_.
-If multiple samples IDs are specified in the `CSV` file, `Sarek` will consider all files to be from different samples.
+Sarek will output results in a different directory for _each sample_.
+If multiple samples IDs are specified in the CSV file, Sarek will consider all files to be from different samples.
 
 Output from Variant Calling and/or Annotation will be in a specific directory for each sample and tool configuration (or normal/tumor pair if applicable).
 
-Multiple `CSV` files can be specified if the path is enclosed in quotes.
+Multiple CSV files can be specified if the path is enclosed in quotes.
 
 ```console
 --input '[path to samplesheet file(s)]'
 ```
 
-| Column    | Description                                                                                                                                                                                                                                                                                                     |
-| --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `patient` | **Custom patient ID**; designates the patient/subject; must be unique for each patient, but one patient can have multiple samples (e.g. normal and tumor).                                                                                                                                                      |
-| `sex`     | **Sex chromosomes of the patient**; i.e. XX, XY..., only used for Copy-Number Variation analysis in a tumor/pair<br /> _Optional, Default: `NA`_                                                                                                                                                                |
-| `status`  | **Normal/tumor status of sample**; can be `0` (normal) or `1` (tumor).<br /> _Optional, Default: `0`_                                                                                                                                                                                                           |
-| `sample`  | **Custom sample ID** for each tumor and normal sample; more than one tumor sample for each subject is possible, i.e. a tumor and a relapse; samples can have multiple lanes for which the _same_ ID must be used to merge them later (see also `lane`). Sample IDs must be unique for unique biological samples |
-| `lane`    | Lane ID, used when the `sample` is multiplexed on several lanes. Must be unique for each lane in the same sample (but does not need to be the original lane name), and must contain at least one character <br /> _Required for `--step_mapping`_                                                               |
-| `fastq_1` | Full path to FastQ file for Illumina short reads 1. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                                                                                                                                                      |
-| `fastq_2` | Full path to FastQ file for Illumina short reads 2. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                                                                                                                                                      |
-| `bam`     | Full path to (u)BAM file                                                                                                                                                                                                                                                                                        |
-| `bai`     | Full path to BAM index file                                                                                                                                                                                                                                                                                     |
-| `cram`    | Full path to CRAM file                                                                                                                                                                                                                                                                                          |
-| `crai`    | Full path to CRAM index file                                                                                                                                                                                                                                                                                    |
-| `table`   | Full path to recalibration table file                                                                                                                                                                                                                                                                           |
-| `vcf`     | Full path to vcf file                                                                                                                                                                                                                                                                                           |
+#### Overview: Samplesheet Columns
+
+| Column    | Description                                                                                                                                                                                                                                                                                                                       |
+| --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `patient` | **Custom patient ID**; designates the patient/subject; must be unique for each patient, but one patient can have multiple samples (e.g. normal and tumor). <br /> _Required_                                                                                                                                                      |
+| `sex`     | **Sex chromosomes of the patient**; i.e. XX, XY..., only used for Copy-Number Variation analysis in a tumor/pair<br /> _Optional, Default: `NA`_                                                                                                                                                                                  |
+| `status`  | **Normal/tumor status of sample**; can be `0` (normal) or `1` (tumor).<br /> _Optional, Default: `0`_                                                                                                                                                                                                                             |
+| `sample`  | **Custom sample ID** for each tumor and normal sample; more than one tumor sample for each subject is possible, i.e. a tumor and a relapse; samples can have multiple lanes for which the _same_ ID must be used to merge them later (see also `lane`). Sample IDs must be unique for unique biological samples <br /> _Required_ |
+| `lane`    | Lane ID, used when the `sample` is multiplexed on several lanes. Must be unique for each lane in the same sample (but does not need to be the original lane name), and must contain at least one character <br /> _Required for `--step_mapping`_                                                                                 |
+| `fastq_1` | Full path to FastQ file for Illumina short reads 1. File has to be gzipped and have the extension `.fastq.gz` or `.fq.gz`.                                                                                                                                                                                                        |
+| `fastq_2` | Full path to FastQ file for Illumina short reads 2. File has to be gzipped and have the extension `.fastq.gz` or `.fq.gz`.                                                                                                                                                                                                        |
+| `bam`     | Full path to (u)BAM file                                                                                                                                                                                                                                                                                                          |
+| `bai`     | Full path to BAM index file                                                                                                                                                                                                                                                                                                       |
+| `cram`    | Full path to CRAM file                                                                                                                                                                                                                                                                                                            |
+| `crai`    | Full path to CRAM index file                                                                                                                                                                                                                                                                                                      |
+| `table`   | Full path to recalibration table file                                                                                                                                                                                                                                                                                             |
+| `vcf`     | Full path to vcf file                                                                                                                                                                                                                                                                                                             |
 
 An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
 
 #### Start with mapping (`--step mapping` [default])
 
-This step can be started either from `fastq` files or `(u)bam`s. The `CSV` must contain at least the columns `patient`, `sample`, `lane`, and either `fastq_1/fastq_2` or `bam`.
+This step can be started either from FastQ files or (u)BAMs. The CSV must contain at least the columns `patient`, `sample`, `lane`, and either `fastq_1/fastq_2` or `bam`.
 
 ##### Examples
 
@@ -86,7 +88,7 @@ patient,sample,lane,bam
 patient1,test_sample,lane_1,test.bam
 ```
 
-In this example, there are 3 read groups:
+In this example, the sample is multiplexed over three lanes:
 
 ```console
 patient,sample,lane,fastq_1,fastq_2
@@ -104,7 +106,7 @@ patient1,test_sample,3,test_L003.bam
 
 ##### Full samplesheet
 
-In this example, all possible columns are used. There are 3 read groups for the normal sample, 2 for the tumor sample, 1 for the relapse, including the `sex` and `status` information per patient:
+In this example, all possible columns are used. There are three lanes for the normal sample, two for the tumor sample, and one for the relapse sample, including the `sex` and `status` information per patient:
 
 ```console
 patient,sex,status,sample,lane,fastq_1,fastq_2
@@ -130,7 +132,9 @@ patient1,XX,1,relapse_sample,lane_1,test3_L001.bam
 
 ##### Duplicate Marking
 
-For starting from duplicate marking, the `CSV` file must contain at least the columns `patient`, `sample`, `bam`, `bai` or `patient`, `sample`, `cram`, `crai`
+For starting from duplicate marking, the CSV file must contain at least the columns `patient`, `sample`, `bam`, `bai` or `patient`, `sample`, `cram`, `crai`
+
+> **NB:** When using [GATK4 MarkduplicatesSpark](https://gatk.broadinstitute.org/hc/en-us/articles/5358833264411-MarkDuplicatesSpark) reads should be name-sorted for efficient execution
 
 Example:
 
@@ -144,7 +148,7 @@ patient,sample,cram,crai
 patient1,test_sample,test_mapped.cram,test_mapped.cram.crai
 ```
 
-The `Sarek`-generated `CSV` file is stored under `results/csv/mapped.csv` if in a previous run `--save_bam_mapped` was set and will automatically be used as an input when specifying the parameter `--step prepare_recalibration`. Otherwise this file will need to be manually generated.
+The Sarek-generated CSV file is stored under `results/csv/mapped.csv` if in a previous run `--save_bam_mapped` was set and will automatically be used as an input when specifying the parameter `--step markduplicates`. Otherwise this file will need to be manually generated.
 
 ##### Full samplesheet
 
@@ -164,9 +168,9 @@ patient1,XX,1,tumor_sample,test2_mapped.cram,test2_mapped.cram.crai
 patient1,XX,1,relapse_sample,test3_mapped.cram,test3_mapped.cram.crai
 ```
 
-##### Prepare Recalibration
+#### Start with preparing the recalibration tables (`--step prepare_recalibration`)
 
-For starting directly from preparing recalibration, the `CSV` file must contain at least the columns `patient`, `sample`, `bam`, `bai` or `patient`, `sample`, `cram`, `crai`.
+For starting directly from preparing the recalibration tables, the CSV file must contain at least the columns `patient`, `sample`, `bam`, `bai` or `patient`, `sample`, `cram`, `crai`.
 
 Example:
 
@@ -180,7 +184,7 @@ patient,sample,cram,crai
 patient1,test_sample,test_md.cram,test_md.cram.crai
 ```
 
-The `Sarek`-generated `CSV` file is stored under `results/csv/markduplicates_no_table.csv` and will automatically be used as an input when specifying the parameter `--step prepare_recalibration`.
+The Sarek-generated CSV file is stored under `results/csv/markduplicates_no_table.csv` and will automatically be used as an input when specifying the parameter `--step prepare_recalibration`.
 
 ##### Full samplesheet
 
@@ -202,7 +206,7 @@ patient1,XX,1,relapse_sample,test3_md.cram,test3_md.cram.crai
 
 #### Start with base quality score recalibration (`--step recalibrate`)
 
-For starting from base quality score recalibration the `CSV` file must contain at least the columns `patient`, `sample`, `bam`, `bai`, `table` or `patient`, `sample`, `cram`, `crai`, `table` containing the paths to _non-recalibrated CRAM/BAM_ files and the associated recalibration table.
+For starting from base quality score recalibration the CSV file must contain at least the columns `patient`, `sample`, `bam`, `bai`, `table` or `patient`, `sample`, `cram`, `crai`, `table` containing the paths to _non-recalibrated CRAM/BAM_ files and the associated recalibration table.
 
 Example:
 
@@ -216,7 +220,7 @@ patient,sample,cram,crai,table
 patient1,test_sample,test_mapped.cram,test_mapped.cram.crai,test.table
 ```
 
-The `Sarek`-generated `CSV` file is stored under `results/csv/markduplicates.csv` and will automatically be used as an input when specifying the parameter `--step recalibrate`.
+The Sarek-generated CSV file is stored under `results/csv/markduplicates.csv` and will automatically be used as an input when specifying the parameter `--step recalibrate`.
 
 ##### Full samplesheet
 
@@ -231,7 +235,7 @@ patient1,XX,1,relapse_sample,test3_mapped.cram,test3_mapped.cram.crai,test3.tabl
 
 #### Start with variant calling (`--step variant_calling`)
 
-For starting from the variant calling step, the `CSV` file must contain at least the columns `patient`, `sample`, `bam`, `bai` or `patient`, `sample`, `cram`, `crai`.
+For starting from the variant calling step, the CSV file must contain at least the columns `patient`, `sample`, `bam`, `bai` or `patient`, `sample`, `cram`, `crai`.
 
 Example:
 
@@ -245,7 +249,7 @@ patient,sample,cram,crai
 patient1,test_sample,test_mapped.cram,test_mapped.cram.crai
 ```
 
-The `Sarek`-generated `CSV` file is stored under `results/csv/recalibrated.csv` and will automatically be used as an input when specifying the parameter `--step variant_calling`.
+The Sarek-generated CSV file is stored under `results/csv/recalibrated.csv` and will automatically be used as an input when specifying the parameter `--step variant_calling`.
 
 ##### Full samplesheet
 
@@ -260,18 +264,18 @@ patient1,XX,1,relapse_sample,test3_mapped.cram,test3_mapped.cram.crai
 
 #### Start with annotation (`--step annotate`)
 
-For starting from the annotation step, the `CSV` file must contain at least the columns `patient`, `sample`, `vcf`.
+For starting from the annotation step, the CSV file must contain at least the columns `patient`, `sample`, `vcf`.
 
-As `Sarek` will use `bgzip` and `tabix` to compress and index the annotated `VCF` files, it expects the input `VCF` files to be sorted.
+As Sarek will use [bgzip](http://www.htslib.org/doc/bgzip.html) and [tabix](http://www.htslib.org/doc/tabix.html) to compress and index the annotated VCF files, it expects the input VCF files to be sorted and compressed.
 
 Example:
 
 ```console
 patient,sample,vcf
-patient1,test_sample,test,vcf
+patient1,test_sample,test.vcf.gz
 ```
 
-The `Sarek`-generated `CSV` file is stored under `results/csv/variantcalled.csv` and will automatically be used as an input when specifying the parameter `--step annotation`.
+The Sarek-generated CSV file is stored under `results/csv/variantcalled.csv` and will automatically be used as an input when specifying the parameter `--step annotation`.
 
 ##### Full samplesheet
 
@@ -300,8 +304,6 @@ First, go to the [nf-core/sarek releases page](https://github.com/nf-core/sarek/
 Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 3.0.0`.
 
 This version number will be logged in reports when you run the pipeline, so that you'll know what you used when you look back in the future.
-
-### Automatic Resubmission
 
 ## Core Nextflow arguments
 
@@ -474,49 +476,213 @@ See the main [Nextflow documentation](https://www.nextflow.io/docs/latest/config
 
 If you have any questions or issues please send us a message on [Slack](https://nf-co.re/join/slack) on the [`#configs` channel](https://nfcore.slack.com/channels/configs).
 
-## Tutorials
+## Troubleshooting & FAQ
 
-### Which tool for which data type
+### How to test the pipeline
 
-| Tool            | WGS | WES |  Panel | Tumor |  Normal | Somatic |
-| :-------------- | :-: | :-: | :----: | :---: | :-----: | :-----: |
-| Strelka2        |  x  |  x  |   x    |   x   |    x    |    x    |
-| Freebayes       |  x  |  x  |   x    |   x   |    x    |    x    |
-| mutect          |  x  |  x  |   x    |   x   |    -    |    x    |
-| Haplotypecaller |  x  |  x  |   x    |   -   |    x    |    -    |
-| Deepvariant     |  x  |  x  |   x    |   -   |    x    |    -    |
-| cnvkit          |  x  |  x  |   -    |   x   |    x    |    x    |
-| Msisensor       |  x  |  x  |   x    |   x   |    -    |    x    |
-| controlfreec    |  x  |  x  |   x    |   x   |    -    |    x    |
-| ascat           |  x  |  x  |   -    |   -   |    -    |    x    |
-| manta           |  x  |  x  |   x    |   x   |    x    |    x    |
-| tiddit          |  x  |  x  |   x    |   x   |    x    |    x    |
+When using default parameters only, sarek runs preprocessing and exits after base quality score recalibration. This is reflected in the default test profile:
 
-<!---
-Strelka2: WGS, WES, Panel; Tumor, normal, somatic
-Freebayes: WGS, WES, Panel; Tumor,normal, somatic
-mutect: WGS, WES, Panel; Tumor, somatic
-Haplotypecaller: WGS, WES, Panel; normal
-Deepvariant: WGS, WES, Panel; normal
-cnvkit: WGS, WES, Panel; Tumor, normal, somatic
-Msisensor: WGS, WES, Panel; Tumor, normal, somatic
-controlfreec: WGS, WES, Panel; Tumor, normal, somatic
-ascat: WGS, WES, Panel; Tumor, normal, somatic
-manta: WGS, WES, Panel; Tumor, normal, somatic
-tiddit: WGS, WES, Panel; Tumor, normal, somatic
---->
+```
+nextflow run nf-core/sarek -r 3.0.0 -profile test,<container/institute>
+```
 
-### How to run sarek when not all reference files are in igenomes
+Expected run output:
 
-### How to deal with a (custom) annotation cache
+```
+[91/018ca5] process > NFCORE_SAREK:SAREK:PREPARE_GENOME:BWAMEM1_INDEX (genome.fasta)                       [100%] 1 of 1 ✔
+[-        ] process > NFCORE_SAREK:SAREK:PREPARE_GENOME:BWAMEM2_INDEX                                      -
+[-        ] process > NFCORE_SAREK:SAREK:PREPARE_GENOME:DRAGMAP_HASHTABLE                                  -
+[45/7ad672] process > NFCORE_SAREK:SAREK:PREPARE_GENOME:GATK4_CREATESEQUENCEDICTIONARY (genome.fasta)      [100%] 1 of 1 ✔
+[-        ] process > NFCORE_SAREK:SAREK:PREPARE_GENOME:MSISENSORPRO_SCAN                                  -
+[79/7139ec] process > NFCORE_SAREK:SAREK:PREPARE_GENOME:SAMTOOLS_FAIDX (genome.fasta)                      [100%] 1 of 1 ✔
+[44/913bf9] process > NFCORE_SAREK:SAREK:PREPARE_GENOME:TABIX_DBSNP (dbsnp_146.hg38.vcf)                   [100%] 1 of 1 ✔
+[-        ] process > NFCORE_SAREK:SAREK:PREPARE_GENOME:TABIX_GERMLINE_RESOURCE                            -
+[dc/348c16] process > NFCORE_SAREK:SAREK:PREPARE_GENOME:TABIX_KNOWN_INDELS (mills_and_1000G.indels.vcf)    [100%] 1 of 1 ✔
+[-        ] process > NFCORE_SAREK:SAREK:PREPARE_GENOME:TABIX_PON                                          -
+[9f/53d6ad] process > NFCORE_SAREK:SAREK:PREPARE_INTERVALS:CREATE_INTERVALS_BED (genome.interval_list)     [100%] 1 of 1 ✔
+[57/a9312f] process > NFCORE_SAREK:SAREK:PREPARE_INTERVALS:GATK4_INTERVALLISTTOBED (genome)                [100%] 1 of 1 ✔
+[7e/b02b16] process > NFCORE_SAREK:SAREK:PREPARE_INTERVALS:TABIX_BGZIPTABIX_INTERVAL_SPLIT (chr22_1-40001) [100%] 1 of 1 ✔
+[-        ] process > NFCORE_SAREK:SAREK:ALIGNMENT_TO_FASTQ_INPUT:SAMTOOLS_VIEW_MAP_MAP                    -
+[-        ] process > NFCORE_SAREK:SAREK:ALIGNMENT_TO_FASTQ_INPUT:SAMTOOLS_VIEW_UNMAP_UNMAP                -
+[-        ] process > NFCORE_SAREK:SAREK:ALIGNMENT_TO_FASTQ_INPUT:SAMTOOLS_VIEW_UNMAP_MAP                  -
+[-        ] process > NFCORE_SAREK:SAREK:ALIGNMENT_TO_FASTQ_INPUT:SAMTOOLS_VIEW_MAP_UNMAP                  -
+[-        ] process > NFCORE_SAREK:SAREK:ALIGNMENT_TO_FASTQ_INPUT:SAMTOOLS_MERGE_UNMAP                     -
+[-        ] process > NFCORE_SAREK:SAREK:ALIGNMENT_TO_FASTQ_INPUT:COLLATE_FASTQ_UNMAP                      -
+[-        ] process > NFCORE_SAREK:SAREK:ALIGNMENT_TO_FASTQ_INPUT:COLLATE_FASTQ_MAP                        -
+[-        ] process > NFCORE_SAREK:SAREK:ALIGNMENT_TO_FASTQ_INPUT:CAT_FASTQ                                -
+[37/2d4ea9] process > NFCORE_SAREK:SAREK:RUN_FASTQC:FASTQC (test-test_L1)                                  [100%] 1 of 1 ✔
+[a1/a64d09] process > NFCORE_SAREK:SAREK:GATK4_MAPPING:BWAMEM1_MEM (test)                                  [100%] 1 of 1 ✔
+[-        ] process > NFCORE_SAREK:SAREK:GATK4_MAPPING:BWAMEM2_MEM                                         -
+[-        ] process > NFCORE_SAREK:SAREK:GATK4_MAPPING:DRAGMAP_ALIGN                                       -
+[d3/488df3] process > NFCORE_SAREK:SAREK:MARKDUPLICATES:GATK4_MARKDUPLICATES (test)                        [100%] 1 of 1 ✔
+[f1/0b56c6] process > NFCORE_SAREK:SAREK:MARKDUPLICATES:BAM_TO_CRAM:SAMTOOLS_BAMTOCRAM (test)              [100%] 1 of 1 ✔
+[ae/e92179] process > NFCORE_SAREK:SAREK:MARKDUPLICATES:BAM_TO_CRAM:SAMTOOLS_STATS_CRAM (test)             [100%] 1 of 1 ✔
+[8f/d06f35] process > NFCORE_SAREK:SAREK:MARKDUPLICATES:BAM_TO_CRAM:MOSDEPTH (test)                        [100%] 1 of 1 ✔
+[38/af6ec2] process > NFCORE_SAREK:SAREK:PREPARE_RECALIBRATION:BASERECALIBRATOR (test)                     [100%] 1 of 1 ✔
+[-        ] process > NFCORE_SAREK:SAREK:PREPARE_RECALIBRATION:GATHERBQSRREPORTS                           -
+[8b/f3ca07] process > NFCORE_SAREK:SAREK:RECALIBRATE:APPLYBQSR (test)                                      [100%] 1 of 1 ✔
+[-        ] process > NFCORE_SAREK:SAREK:RECALIBRATE:MERGE_INDEX_CRAM:MERGE_CRAM                           -
+[a7/16bb3f] process > NFCORE_SAREK:SAREK:RECALIBRATE:MERGE_INDEX_CRAM:INDEX_CRAM (test)                    [100%] 1 of 1 ✔
+[4d/309cb9] process > NFCORE_SAREK:SAREK:CRAM_QC:SAMTOOLS_STATS (test)                                     [100%] 1 of 1 ✔
+[44/06eaf2] process > NFCORE_SAREK:SAREK:CRAM_QC:MOSDEPTH (test)                                           [100%] 1 of 1 ✔
+[-        ] process > NFCORE_SAREK:SAREK:SAMTOOLS_CRAMTOBAM_RECAL                                          [100%] 1 of 1 ✔
+[-        ] process > NFCORE_SAREK:SAREK:CUSTOM_DUMPSOFTWAREVERSIONS                                       [100%] 1 of 1 ✔
+[-        ] process > NFCORE_SAREK:SAREK:MULTIQC                                                           [100%] 1 of 1 ✔
+```
 
-Examples for both snpeff and VEP
+The pipeline comes with a number of possible paths and tools that can be used. The easiest and fastest test to see that the preprocessing + variantcalling (in this case Strelka2) works, is to run:
 
-#### Containers
+```
+nextflow run nf-core/sarek -r 3.0.0 -profile test,<container/institute> --tools strelka
+```
 
-With `Nextflow DSL2`, each process use its own `Conda` environment or container from `biocontainers`.
+Due to the small test data size, unfortunately not everything can be tested from top-to-bottom, but often is done by utilizing the pipeline's `--step` parameter. Annotation has to tested separatly from the remaining workflow, since we use references for `C.elegans`, while the remaining tests are run on downsampled human data.
 
-For annotation, cache has to be downloaded, or specifically designed containers are available with cache.
+```
+nextflow run nf-core/sarek -r 3.0.0 -profile test,<container/institute> --tools snpeff --step annotation
+```
+
+If you are interested in any of the other tests that are run on every code change or would like to run them yourself, you can take a look at `tests/<filename>.yml`. For each entry the respective nextflow command run and the expected output is specified.
+
+Some of the currently, available test profiles:
+
+| Test profile    | Run command                                                                     |
+| :-------------- | :------------------------------------------------------------------------------ |
+| annotation      | `nextflow run main.nf -profile test,annotation,docker --tools snpeff.vep,merge` |
+| no_intervals    | `nextflow run main.nf -profile test,no_intervals,docker`                        |
+| targeted        | ` nextflow run main.nf -profile test,targeted,docker`                           |
+| tools_germline  | `nextflow run main.nf -profile test,tools_germline,docker --tools strelka`      |
+| tools_tumoronly | `nextflow run main.nf -profile test,tools_tumoronly,docker --tools strelka`     |
+| tools_somatic   | `nextflow run main.nf -profile test,tools_somatic,docker --tools strelka`       |
+| trimming        | `nextflow run main.nf -profile test,trim_fastq,docker`                          |
+| umi             | `nextflow run main.nf -profile test,umi,docker`                                 |
+| use_gatk_spark  | `nextflow run main.nf -profile test,use_gatk_spark,docker`                      |
+
+### How can the different steps be used
+
+Sarek can be started at different points in the analysis by setting the parameter `--step`. Once started at a certain point, the pipeline runs through all the following steps without additional intervention. For example when starting from `--step mapping` (set by default) and `--tools strelka,vep`, the input reads will be aligned, duplicate marked, recalibrated, variant called with Strelka, and finally VEP will annotate the called variants.
+
+### Which variant calling tool is implemented for which data type?
+
+This list is by no means exhaustive and it will depend on the specific analysis you would like to run. This is a suggestion based on the individual docs of the tools specifically for human genomes and a garden-variety sequencing run as well as what has been added to the pipeline.
+
+| Tool                                                                                                    | WGS | WES |  Panel |  Normal | Tumor | Somatic |
+| :------------------------------------------------------------------------------------------------------ | :-: | :-: | :----: | :-----: | :---: | :-----: |
+| [DeepVariant](https://github.com/google/deepvariant)                                                    |  x  |  x  |   x    |    x    |   -   |    -    |
+| [FreeBayes](https://github.com/ekg/freebayes)                                                           |  x  |  x  |   x    |    x    |   x   |    x    |
+| [GATK HaplotypeCaller](https://gatk.broadinstitute.org/hc/en-us/articles/5358864757787-HaplotypeCaller) |  x  |  x  |   x    |    x    |   -   |    -    |
+| [GATK Mutect2](https://gatk.broadinstitute.org/hc/en-us/articles/5358911630107-Mutect2)                 |  x  |  x  |   x    |    -    |   x   |    x    |
+| [mpileup](https://www.htslib.org/doc/samtools-mpileup.html)                                             |  x  |  x  |   x    |    x    |   x   |    -    |
+| [Strelka2](https://github.com/Illumina/strelka)                                                         |  x  |  x  |   x    |    x    |   x   |    x    |
+| [Manta](https://github.com/Illumina/manta)                                                              |  x  |  x  |   x    |    x    |   x   |    x    |
+| [TIDDIT](https://github.com/SciLifeLab/TIDDIT)                                                          |  x  |  x  |   x    |    x    |   x   |    x    |
+| [ASCAT](https://github.com/VanLoo-lab/ascat)                                                            |  x  |  x  |   -    |    -    |   -   |    x    |
+| [CNVKit](https://cnvkit.readthedocs.io/en/stable/)                                                      |  x  |  x  |   -    |    x    |   x   |    x    |
+| [Control-FREEC](https://github.com/BoevaLab/FREEC)                                                      |  x  |  x  |   x    |    -    |   x   |    x    |
+| [MSIsensorPro](https://github.com/xjtu-omics/msisensor-pro)                                             |  x  |  x  |   x    |    -    |   -   |    x    |
+
+### How to create a panel-of-normals for Mutect2
+
+For a detailed tutorial on how to create a panel-of-normals, see [here](https://gatk.broadinstitute.org/hc/en-us/articles/360035531132).
+
+### How to run ASCAT with WES
+
+_under construction_
+
+<!-- While the ASCAT implementation in sarek is capable of running with whole-exome sequencing data, the needed references are currently not provided with the igenomes.config. The following steps should be followed to generate them manually:
+
+1. Extracting biallelic SNPs from the vcf files for [hg19](http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/) and query the resulting vcf files:
+
+   ```
+   bcftools view -i "((EAS_AF>0.05 && EAS_AF<0.95) || (SAS_AF>0.05 && SAS_AF<0.95) || (EUR_AF>0.05 && EUR_AF<0.95) || (AFR_AF>0.05 && AFR_AF<0.95) || (AMR_AF>0.05 && AMR_AF<0.95)) && VT=\"SNP\" && MULTI_ALLELIC=0" ALL.chr1.phase3_shapeit2_mvncall_integrated_v5b.20130502.genotypes.vcf.gz
+   |
+   bcftools query -f '%CHROM\t%POS\t%REF\t%ALT\n' - > G1000_chr1.txt
+   ```
+
+   gives the SNP information for chr1, hg19.
+
+2. Derive loci file
+3. Derive allel files
+
+Then, you can derive both loci (just chromosome and position) and allele files (position, a0 and a1). For allele files, you don't need to specify chromosome since there is one file per chromosome and a0/a1 (ref/alt) are integers (A=1, C=2, G=3, T=4). Therefore, A>C at chr1:12345 would be 12345<tab>1<tab>2 in a file called (say) allele_chr1.txt. See reference files for WGS as an exemple.
+
+3. I've used a simple R script to sort, remove duplicates (chr-position must be unique), remove blacklisted regions (GRanges) and remove probloci (based on chr-position).
+
+For further reading and documentation, please take a look at the Battenberg repository. -->
+
+### Where do the used reference genomes originate from
+
+_under construction - help needed_
+
+GATK.GRCh38:
+
+| File                  | Tools                                                                                                                                                                                                                                                                                                                                                                                                                                                | Origin                                                                                                                                                                                  | Docs                                                                                 |
+| :-------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------- |
+| ascat_alleles         | ASCAT                                                                                                                                                                                                                                                                                                                                                                                                                                                | https://www.dropbox.com/s/uouszfktzgoqfy7/G1000_alleles_hg38.zip                                                                                                                        | https://github.com/VanLoo-lab/ascat/tree/master/ReferenceFiles/WGS                   |
+| ascat_loci            | ASCAT                                                                                                                                                                                                                                                                                                                                                                                                                                                | https://www.dropbox.com/s/80cq0qgao8l1inj/G1000_loci_hg38.zip                                                                                                                           | https://github.com/VanLoo-lab/ascat/tree/master/ReferenceFiles/WGS                   |
+| ascat_loci_gc         | ASCAT                                                                                                                                                                                                                                                                                                                                                                                                                                                | https://www.dropbox.com/s/80cq0qgao8l1inj/G1000_loci_hg38.zip                                                                                                                           | https://github.com/VanLoo-lab/ascat/tree/master/ReferenceFiles/WGS                   |
+| ascat_loci_rt         | ASCAT                                                                                                                                                                                                                                                                                                                                                                                                                                                | https://www.dropbox.com/s/xlp99uneqh6nh6p/RT_G1000_hg38.zip                                                                                                                             | https://github.com/VanLoo-lab/ascat/tree/master/ReferenceFiles/WGS                   |
+| bwa                   | bwa-mem                                                                                                                                                                                                                                                                                                                                                                                                                                              | bwa index -p bwa/${fasta.baseName} $fasta                                                                                                                                               |                                                                                      |
+| bwamem2               | bwa-mem2                                                                                                                                                                                                                                                                                                                                                                                                                                             | bwa-mem2 index -p bwamem2/${fasta} $fasta                                                                                                                                               |                                                                                      |
+| dragmap               | DragMap                                                                                                                                                                                                                                                                                                                                                                                                                                              | dragen-os --build-hash-table true --ht-reference $fasta --output-directory dragmap                                                                                                      |                                                                                      |
+| dbsnp                 | Baserecalibrator, ControlFREEC, GenotypeGVCF, HaplotypeCaller                                                                                                                                                                                                                                                                                                                                                                                        | possibly from an old ftp server dbsnp_146.hg38.vcf.gz                                                                                                                                   | https://gatk.broadinstitute.org/hc/en-us/articles/360035890811-Resource-bundle       |
+| dbsnp_tbi             | Baserecalibrator, ControlFREEC, GenotypeGVCF, HaplotypeCaller                                                                                                                                                                                                                                                                                                                                                                                        |                                                                                                                                                                                         |                                                                                      |
+| dict                  | Baserecalibrator(Spark), CNNScoreVariant, EstimateLibraryComplexity, FilterMutectCalls, FilterVariantTranches, GatherPileupSummaries,GenotypeGVCF, GetPileupSummaries, HaplotypeCaller, MarkDulpicates(Spark), MergeVCFs, Mutect2, Variantrecalibrator                                                                                                                                                                                               | https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/Homo_sapiens_assembly38.dict                                                     | https://gatk.broadinstitute.org/hc/en-us/articles/360035890811-Resource-bundle       |
+| fasta                 | ApplyBQSR(Spark), ApplyVQSR, ASCAT, Baserecalibrator(Spark), BWA, BWAMem2, CNNScoreVariant, CNVKit, ControlFREEC, DragMap, DEEPVariant, EnsemblVEP, EstimateLibraryComplexity, FilterMutectCalls, FilterVariantTranches, FreeBayes, GatherPileupSummaries,GenotypeGVCF, GetPileupSummaries, HaplotypeCaller, interval building, Manta, MarkDuplicates(Spark),MergeVCFs,MSISensorPro, Mutect2, Samtools, snpEff, Strelka, Tiddit, Variantrecalibrator | https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/Homo_sapiens_assembly38.fasta                                                    | https://gatk.broadinstitute.org/hc/en-us/articles/360035890811-Resource-bundle       |
+| fasta_fai             | ApplyBQSR(Spark), ApplyVQSR, ASCAT, Baserecalibrator(Spark), BWA, BWAMem2, CNNScoreVariant, CNVKit, ControlFREEC, DragMap, DEEPVariant, EnsemblVEP, EstimateLibraryComplexity, FilterMutectCalls, FilterVariantTranches, FreeBayes, GatherPileupSummaries,GenotypeGVCF, GetPileupSummaries, HaplotypeCaller, interval building, Manta, MarkDuplicates(Spark),MergeVCFs,MSISensorPro, Mutect2, Samtools, snpEff, Strelka, Tiddit, Variantrecalibrator | https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/Homo_sapiens_assembly38.fasta.fai                                                | https://gatk.broadinstitute.org/hc/en-us/articles/360035890811-Resource-bundle       |
+| germline_resource     | GetPileupsummaries,Mutect2                                                                                                                                                                                                                                                                                                                                                                                                                           | ? gnomAD.r2.1.1.GRCh38.PASS.AC.AF.only.vcf.gz"                                                                                                                                          |                                                                                      |
+| germline_resource_tbi | GetPileupsummaries,Mutect2                                                                                                                                                                                                                                                                                                                                                                                                                           | ? gnomAD.r2.1.1.GRCh38.PASS.AC.AF.only.vcf.gz.tbi"                                                                                                                                      |                                                                                      |
+| intervals             | ApplyBQSR(Spark), ASCAT, Baserecalibraotr(Spark), BCFTools, CNNScoreVariants, ControlFREEC, Deepvariant, FilterVariantTranches, FreeBayes, GenotypeGVCF, GetPileupSummaries, HaplotypeCaller, Strelka, mpileup, MSISensorPro, Mutect2, VCFTools                                                                                                                                                                                                      | https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/wgs_calling_regions.hg38.interval_list                                           |                                                                                      |
+| known_indels          | BaseRecalibrator(Spark), FilterVariantTranches                                                                                                                                                                                                                                                                                                                                                                                                       | https://storage.googleapis.com/genomics-public-data/resources/broad/hg38/v0/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz,beta/Homo_sapiens_assembly38.known_indels}.vcf.            |                                                                                      |
+| known_indels_tbi      | BaseRecalibrator(Spark), FilterVariantTranches                                                                                                                                                                                                                                                                                                                                                                                                       | https://storage.googleapis.com/genomics-public-data/resources/broad/hg38/v0/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz.tbi,beta/Homo_sapiens_assembly38.known_indels}.vcf.gz.tbi" |                                                                                      |
+| mappability           | ControlFREEC                                                                                                                                                                                                                                                                                                                                                                                                                                         | http://xfer.curie.fr/get/vyIi4w8EONl/out100m2_hg38.zip                                                                                                                                  | http://boevalab.inf.ethz.ch/FREEC/tutorial.html                                      |
+| pon                   | Mutect2                                                                                                                                                                                                                                                                                                                                                                                                                                              | https://console.cloud.google.com/storage/browser/_details/gatk-best-practices/somatic-hg38/1000g_pon.hg38.vcf.gz                                                                        | https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON- |
+| pon_tbi               | Mutect2                                                                                                                                                                                                                                                                                                                                                                                                                                              | https://console.cloud.google.com/storage/browser/_details/gatk-best-practices/somatic-hg38/1000g_pon.hg38.vcf.gz.tbi                                                                    | https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON- |
+| snpeff_db             |                                                                                                                                                                                                                                                                                                                                                                                                                                                      | 'GRCh38.99'                                                                                                                                                                             |                                                                                      |
+| snpeff_genome         |                                                                                                                                                                                                                                                                                                                                                                                                                                                      | 'GRCh38'                                                                                                                                                                                |                                                                                      |
+| vep_cache_version     |                                                                                                                                                                                                                                                                                                                                                                                                                                                      | 105                                                                                                                                                                                     |                                                                                      |
+| vep_genome            |                                                                                                                                                                                                                                                                                                                                                                                                                                                      | 'GRCh38'                                                                                                                                                                                |                                                                                      |
+| chr_dir               |                                                                                                                                                                                                                                                                                                                                                                                                                                                      | "${params.igenomes_base}/Homo_sapiens/GATK/GRCh38/Sequence/Chromosomes"                                                                                                                 |                                                                                      |
+
+### How to run sarek when no(t all) reference files are in igenomes
+
+For common genomes, such as GRCh38 and GRCh37, the pipeline is shipped with (almost) all necessary reference files. However, sometimes it is necessary to use custom references for some or all files:
+
+#### No igenomes reference files are used
+
+If none of your required genome files are in igenomes, `--igenomes_ignore` must be set to ignore any igenomes input and `--genome null`. The `fasta` file is the only required input file and must be provided to run the pipeline. All other possible reference file can be provided in addition. For details, see the paramter documentation.
+
+Minimal example for custom genomes:
+
+```
+nextflow run nf-core/sarek --genome null --igenomes_ignore --fasta <custom.fasta>
+```
+
+#### Overwrite specific reference files
+
+If you don't want to use some of the provided reference genomes, they can be overwritten by either providing a new file or setting the respective file parameter to `false`, if it should be ignored:
+
+Example for using a custom known indels file:
+
+```
+nextflow run nf-core/sarek --known_indels <my_known_indels.vcf.gz> --genome GRCh38.GATK
+```
+
+Example for not using known indels, but all other provided reference file:
+
+```
+nextflow run nf-core/sarek --known_indels false --genome GRCh38.GATK
+```
+
+### How to customise SnpEff and VEP annotation
+
+_under construction help needed_
+
+Sarek comes shipped with containers for both snpEff and VEP for human reference genomes with `--genome GATK.GRCh38` and `--genome GATK.GRCh37`. Different containers however can be provided.
+
+<!-- #### Create containers
+
+The cache has to be downloaded.
 
 `sareksnpeff`, our `snpeff` container is designed using [Conda](https://conda.io/).
 
@@ -535,20 +701,27 @@ Based on [nfcore/base:1.12.1](https://hub.docker.com/r/nfcore/base/tags), it con
 
 - **[GeneSplicer](https://ccb.jhu.edu/software/genesplicer/)** 1.0
 - **[VEP](https://github.com/Ensembl/ensembl-vep)** 99.2
-- Cache for `GRCh37`, `GRCh38`, `GRCm38`, `CanFam3.1` or `WBcel235`
+- Cache for `GRCh37`, `GRCh38`, `GRCm38`, `CanFam3.1` or `WBcel235` -->
+
+  <!-- "snpeff_db"
+  "snpeff_genome":
+  "snpeff_version":
+  "vep_genome":
+  "vep_species":
+  "vep_cache_version":
+  "vep_version": -->
 
 #### Using downloaded cache
 
-Both `snpEff` and `VEP` enable usage of cache.
-If cache is available on the machine where `Sarek` is run, it is possible to run annotation using cache.
+Both `snpEff` and `VEP` enable usage of cache, if no pre-build container is available.
+The cache needs to made available on the machine where Sarek is run.
 You need to specify the cache directory using `--snpeff_cache` and `--vep_cache` in the command lines or within configuration files.
-The cache will only be used when `--annotation_cache` and cache directories are specified (either in command lines or in a configuration file).
 
 Example:
 
 ```bash
-nextflow run nf-core/sarek --tools snpEff --step annotate --sample <file.vcf.gz> --snpeff_cache </path/to/snpEff/cache> --annotation_cache
-nextflow run nf-core/sarek --tools VEP --step annotate --sample <file.vcf.gz> --vep_cache </path/to/VEP/cache> --annotation_cache
+nextflow run nf-core/sarek --tools snpEff --step annotate --sample <file.vcf.gz> --snpeff_cache </path/to/snpEff/cache>
+nextflow run nf-core/sarek --tools VEP --step annotate --sample <file.vcf.gz> --vep_cache </path/to/VEP/cache>
 ```
 
 #### Download cache
@@ -561,9 +734,9 @@ nextflow run download_cache.nf --snpeff_cache </path/to/snpEff/cache> --snpeff_d
 nextflow run download_cache.nf --vep_cache </path/to/VEP/cache> --species <species> --vep_cache_version <VEP cache version> --genome <GENOME>
 ```
 
-#### Using VEP CADD plugin
+#### Using VEP plugins
 
-To enable the use of the `VEP` `CADD` plugin:
+<!-- To enable the use of the `VEP` `CADD` plugin:
 
 - Download the `CADD` files
 - Specify them (either on the command line, like in the example or in a configuration file)
@@ -586,54 +759,25 @@ Such files are meant to be share between multiple users, so this script is mainl
 
 ```bash
 nextflow run download_cache.nf --cadd_cache </path/to/CADD/cache> --cadd_version <CADD version> --genome <GENOME>
-```
+``` -->
 
-### How to set sarek up to use sentieon
+##### dbnsfp
 
-#### Sentieon
+##### LOFTEE
 
-Sentieon is a commercial solution to process genomics data with high computing efficiency, fast turnaround time, exceptional accuracy, and 100% consistency.
+##### SpliceAi
 
-Please refer to the [nf-core/configs](https://github.com/nf-core/configs#adding-a-new-pipeline-specific-config) repository on how to make a pipeline-specific configuration file based on the [munin-sarek specific configuration file](https://github.com/nf-core/configs/blob/master/conf/pipeline/sarek/munin.config).
+##### SpliceRegions
 
-Or ask us on the [nf-core Slack](http://nf-co.re/join/slack) on the following channels: [#sarek](https://nfcore.slack.com/channels/sarek) or [#configs](https://nfcore.slack.com/channels/configs).
+### What are the bwa/bwa-mem2 parameters?
 
-#### Alignment
+For mapping, sarek follows the parameter suggestions provided in this [paper](https://www.nature.com/articles/s41467-018-06159-4):
 
-> Sentieon BWA matches BWA-MEM with > 2X speedup.
+`-K 100000000` : for deterministic pipeline results, for more info see [here](https://github.com/CCDG/Pipeline-Standardization/issues/2)
 
-This tool is enabled by default within `Sarek` if both `--sentieon` and `--step mapping` are specified.
+`-Y`: force soft-clipping rather than default hard-clipping of supplementary alignments
 
-#### Germline SNV/INDEL Variant Calling - DNAseq
-
-> Precision FDA award-winning software.
-> Matches GATK 3.3-4.1, and without down-sampling.
-> Results up to 10x faster and 100% consistent every time.
-
-This tool is enabled within `Sarek` if both `--sentieon` and `--tools DNAseq` are specified.
-
-#### Germline SNV/INDEL Variant Calling - DNAscope
-
-> Improved accuracy and genome characterization.
-> Machine learning enhanced filtering producing top variant calling accuracy.
-
-This tool is enabled within `Sarek` if both `--sentieon` and `--tools DNAscope` are specified.
-
-#### Somatic SNV/INDEL Variant Calling - TNscope
-
-> Winner of ICGC-TCGA DREAM challenge.
-> Improved accuracy, machine learning enhanced filtering.
-> Supports molecular barcodes and unique molecular identifiers.
-
-This tool is enabled within `Sarek` if both `--sentieon` and `--tools TNscope` are specified.
-
-#### Structural Variant Calling
-
-> Germline and somatic SV calling, including translocations, inversions, duplications and large INDELs
-
-This tool is enabled within `Sarek` if both `--sentieon` and `--tools DNAscope` are specified.
-
-## Troubleshooting & FAQ
+In addition, currently the mismatch penalty for reads with tumor status in the sample sheet are mapped with a mismatch penalty of `-B 3`.
 
 ### Spark related issues
 
@@ -670,3 +814,43 @@ OPTIONS=”—default-ulimit nofile=65535:65535"
 Re-start your session.
 
 Note that the way to increase the open file limit in your system may be slightly different or require additional steps.
+
+#### Cannot delete work folder when using docker + Spark
+
+Currently, when running spark-based tools in combination with docker, it is required to set `docker.userEmulation = false`. This can unfortunately causes permission issues when `work/` is being written with root permissions. In case this happens, you might need to configure docker to run without `userEmulation` (see [here](https://github.com/Midnighter/nf-core-adr/blob/main/docs/adr/0008-refrain-from-using-docker-useremulation-in-nextflow.md)).
+
+### How to handle UMIs
+
+Sarek can process UMI-reads, using [fgbio](http://fulcrumgenomics.github.io/fgbio/tools/latest/) tools.
+
+In order to use reads containing UMI tags as your initial input, you need to include `--umi_read_structure [structure]` in your parameters.
+
+This will enable pre-processing of the reads and UMI consensus reads calling, which will then be used to continue the workflow from the mapping steps. For post-UMI processing depending on the experimental setup, duplicate marking and base quality recalibration can be skipped with [`--skip_tools`].
+
+#### UMI Read Structure
+
+This parameter is a string, which follows a [convention](https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures) to describe the structure of the umi.
+If your reads contain a UMI only on one end, the string should only represent one structure (i.e. "2M11S+T"); should your reads contain a UMI on both ends, the string will contain two structures separated by a blank space (i.e. "2M11S+T 2M11S+T").
+
+#### Limitations and future updates
+
+Recent updates to Samtools have been introduced, which can speed-up performance of fgbio tools used in this workflow.
+The current workflow does not handle duplex UMIs (i.e. where opposite strands of a duplex molecule have been tagged with a different UMI), and best practices have been proposed to process this type of data.
+Both changes will be implemented in a future release.
+
+### MultiQC related issues
+
+#### Plots for SnpEff are missing
+
+When plots are missing, it is possible that the fasta and the custom SnpEff database are not matching https://pcingola.github.io/SnpEff/se_faq/#error_chromosome_not_found-details.
+The SnpEff completes without throwing an error causing nextflow to complete successfully. An indication for the error are these lines in the `.command` files:
+
+```
+ERRORS: Some errors were detected
+Error type      Number of errors
+ERROR_CHROMOSOME_NOT_FOUND      17522411
+```
+
+### How to set sarek up to use sentieon
+
+Sarek 3.0 is currently not supporting sentieon. It is planned for the upcoming release 3.1. In the meantime, please revert to the last release 2.7.2.
