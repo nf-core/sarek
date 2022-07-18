@@ -807,7 +807,7 @@ Plot will show:
 [samtools stats](https://www.htslib.org/doc/samtools.html) collects statistics from CRAM files and outputs in a text format.
 For further reading and documentation see the [`samtools` manual](https://www.htslib.org/doc/samtools.html#COMMANDS_AND_OPTIONS).
 
-Plots will show:
+The plots will show:
 
 - Alignment metrics.
 
