@@ -116,6 +116,7 @@ We thank the following people for their extensive assistance in the development 
 - [Phil Ewels](https://github.com/ewels)
 - [Sabrina Krakau](https://github.com/skrakau)
 - [Sebastian-D](https://github.com/Sebastian-D)
+- [Silvia Morini](https://github.com/silviamorins)
 - [Susanne Jodoin](https://github.com/SusiJo)
 - [Tobias Koch](https://github.com/KochTobi)
 - [Winni Kretzschmar](https://github.com/winni2k)
@@ -124,7 +125,6 @@ We thank the following people for their extensive assistance in the development 
 - [cgpu](https://github.com/cgpu)
 - [gulfshores](https://github.com/gulfshores)
 - [pallolason](https://github.com/pallolason)
-- [Silvia Morini](https://github.com/silviamorins)
 
 ## Acknowledgements
 
