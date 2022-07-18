@@ -705,7 +705,7 @@ plus any additional filed selected via the plugins: [dbNSFP](https://sites.googl
 
 [FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) gives general quality metrics about your sequenced reads. It provides information about the quality score distribution across your reads, per base sequence content (%A/T/G/C), adapter contamination and overrepresented sequences. For further reading and documentation see the [FastQC help pages](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/).
 
-Plots will show:
+The plots display:
 
 - Sequence counts for each sample.
 - Sequence Quality Histograms: The mean quality value across each base position in the read.
