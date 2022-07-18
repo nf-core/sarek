@@ -11,7 +11,7 @@
     - path: results/csv/recalibrated.csv
     - path: results/multiqc/multiqc_report.html
     - path: results/pipeline_info
-    - path: results/preprocessing/test
+    - path: results/preprocessing/
     - path: results/reports
     - path: results/samtools
     - path: results/collate
