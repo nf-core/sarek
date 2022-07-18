@@ -47,7 +47,9 @@ workflow PREPARE_INTERVALS {
             BUILD_INTERVALS(fasta_fai)
             ch_intervals_combined = BUILD_INTERVALS.out.bed
 
-            CREATE_INTERVALS_BED(ch_intervals_combined)
+            ch_intervals_combined.view()
+
+            CREATE_INTERVALS_BED(ch_intervals_combined.map{v,p -> [p]})
             ch_intervals = CREATE_INTERVALS_BED.out.bed
 
             ch_versions = ch_intervals.mix(BUILD_INTERVALS.out.versions)
