@@ -823,7 +823,7 @@ Plots will show:
 
 #### bcftools stats
 
-[bcftools stats](https://samtools.github.io/bcftools/bcftools.html#stats) produces text file stats which is suitable for machine processing and can be plotted using plot-vcfstats.
+[bcftools stats](https://samtools.github.io/bcftools/bcftools.html#stats) produces a statistics text file which is suitable for machine processing and can be plotted using plot-vcfstats.
 For further reading and documentation see the [bcftools stats manual](https://samtools.github.io/bcftools/bcftools.html#stats).
 
 Plot will show:
