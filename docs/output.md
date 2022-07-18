@@ -109,7 +109,7 @@ The resulting files are intermediate and by default not kept in the final files 
 
 #### Split FastQ files
 
-[FastP](https://github.com/OpenGene/fastp) supports splitting of one FastQ file into multiple files allowing parallel alignment of sharded FastQ file. To enable splitting, the number of reads per output can be specified. For more information, take a look into the parameter `--split_fastq`in the parameter docs .
+[FastP](https://github.com/OpenGene/fastp) supports splitting of one FastQ file into multiple files allowing parallel alignment of sharded FastQ file. To enable splitting, the number of reads per output can be specified. For more information, take a look into the parameter `--split_fastq`in the parameter docs.
 
 These files are intermediate and by default not kept in the final files delivered to users. Set `--save_split` to enable publishing of these files to:
 
