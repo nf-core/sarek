@@ -6,7 +6,9 @@
   files:
     - path: results/annotation/test/test_snpEff.ann.vcf.gz
     - path: results/annotation/test/test_snpEff.ann.vcf.gz.tbi
-    - path: results/reports/SnpEff/test/test_snpEff.csv
+    - path: results/reports/snpeff/test/test_snpEff.csv
+    - path: results/reports/snpeff/test/snpEff_summary.html
+    - path: results/reports/snpeff/test/test_snpEff.genes.txt
     - path: results/multiqc
 - name: Run VEP
   command: nextflow run main.nf -profile test,annotation,docker --tools vep --skip_tools multiqc
@@ -27,3 +29,12 @@
   files:
     - path: results/annotation/test/test_snpEff_VEP.ann.vcf.gz
     - path: results/annotation/test/test_snpEff_VEP.ann.vcf.gz.tbi
+- name: Run VEP with fasta
+  command: nextflow run main.nf -profile test,annotation,docker --tools vep --vep_include_fasta --skip_tools multiqc
+  tags:
+    - annotation
+    - vep
+  files:
+    - path: results/annotation/test/test_VEP.ann.vcf.gz
+    - path: results/annotation/test/test_VEP.ann.vcf.gz.tbi
+    - path: results/reports/EnsemblVEP/test/test_VEP.summary.html

@@ -58,13 +58,12 @@ ch_input_sample = extract_csv(file(params.input, checkIfExists: true))
 
 // Fails when wrongfull extension for intervals file
 if (params.wes && !params.step == 'annotate') {
-    if (params.intervals && !params.intervals.endsWith("bed")) exit 1, "Target file specified with `--intervals` must be in BED format"
-} else {
-    if (params.intervals && !params.intervals.endsWith("bed") && !params.intervals.endsWith("interval_list")) exit 1, "Interval file must end with .bed or .interval_list"
-}
+    if (params.intervals && !params.intervals.endsWith("bed")) exit 1, "Target file specified with `--intervals` must be in BED format for targeted data"
+    else log.warn("Intervals file was provided without parameter `--wes`: Pipeline will assume this is Whole-Genome-Sequencing data.")
+} else if (params.intervals && !params.intervals.endsWith("bed") && !params.intervals.endsWith("interval_list")) exit 1, "Intervals file must end with .bed or .interval_list"
 
 // Fails or warns when missing files or params for ascat
-if(params.tools && params.tools.contains('ascat')){
+if(params.tools && params.tools.split(',').contains('ascat')){
     if(!params.ascat_alleles){
         log.error "No allele files were provided for running ASCAT. Please provide a zip folder with allele files."
         exit 1
@@ -86,7 +85,7 @@ if(params.tools && params.tools.contains('ascat')){
 }
 
 // Warns when missing files or params for mutect2
-if(params.tools && params.tools.contains('mutect2')){
+if(params.tools && params.tools.split(',').contains('mutect2')){
     if(!params.pon){
         log.warn("No Panel-of-normal was specified for Mutect2.\nIt is highly recommended to use one: https://gatk.broadinstitute.org/hc/en-us/articles/5358911630107-Mutect2\nFor more information on how to create one: https://gatk.broadinstitute.org/hc/en-us/articles/5358921041947-CreateSomaticPanelOfNormals-BETA-")
     }
@@ -101,11 +100,11 @@ if(params.tools && params.tools.contains('mutect2')){
 // Fails when missing resources for baserecalibrator
 // Warns when missing resources for haplotypecaller
 if(!params.dbsnp && !params.known_indels){
-    if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration', 'recalibrate'] && (!params.skip_tools || (params.skip_tools && !params.skip_tools.contains('baserecalibrator')))){
+    if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration', 'recalibrate'] && (!params.skip_tools || (params.skip_tools && !params.skip_tools.split(',').contains('baserecalibrator')))){
         log.error "Base quality score recalibration requires at least one resource file. Please provide at least one of `--dbsnp` or `--known_indels`\nYou can skip this step in the workflow by adding `--skip_tools baserecalibrator` to the command."
         exit 1
     }
-    if(params.tools && params.tools.contains('haplotypecaller')){
+    if(params.tools && params.tools.split(',').contains('haplotypecaller')){
         log.warn "If Haplotypecaller is specified, without `--dbsnp` or `--known_indels no filtering will be done. For filtering, please provide at least one of `--dbsnp` or `--known_indels`.\nFor more information see FilterVariantTranches (single-sample, default): https://gatk.broadinstitute.org/hc/en-us/articles/5358928898971-FilterVariantTranches\nFor more information see VariantRecalibration (--joint_germline): https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator\nFor more information on GATK Best practice germline variant calling: https://gatk.broadinstitute.org/hc/en-us/articles/360035535932-Germline-short-variant-discovery-SNPs-Indels-"
     }
     if(params.tools && params.tools.contains('haplotypecaller') && !params.known_snps) {
@@ -120,7 +119,7 @@ if ((params.step == 'variant_calling' || params.step == 'annotate') && !params.t
 }
 
 // Fails when missing sex information for CNV tools
-if (params.tools && (params.tools.contains('ascat') || params.tools.contains('controlfreec'))) {
+if (params.tools && (params.tools.split(',').contains('ascat') || params.tools.split(',').contains('controlfreec'))) {
     ch_input_sample.map{
         if (it[0].sex == 'NA' ) {
             log.error "Please specify sex information for each sample in your samplesheet when using '--tools' with 'ascat' or 'controlfreec'.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
@@ -280,9 +279,11 @@ include { MULTIQC                                              } from '../module
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-ch_multiqc_config        = Channel.fromPath(file("$projectDir/assets/multiqc_config.yml", checkIfExists: true))
+ch_multiqc_config        = [
+                            file("$projectDir/assets/multiqc_config.yml", checkIfExists: true),
+                            file("$projectDir/assets/nf-core-sarek_logo_light.png", checkIfExists: true)
+                            ]
 ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config) : Channel.empty()
-ch_sarek_logo            = Channel.fromPath(file("$projectDir/assets/nf-core-sarek_logo_light.png", checkIfExists: true))
 def multiqc_report = []
 
 /*
@@ -383,7 +384,7 @@ workflow SAREK {
         // additional options to be set up
 
         // QC
-        if (!(params.skip_tools && params.skip_tools.contains('fastqc'))) {
+        if (!(params.skip_tools && params.skip_tools.split(',').contains('fastqc'))) {
             RUN_FASTQC(ch_input_fastq)
 
             ch_reports  = ch_reports.mix(RUN_FASTQC.out.fastqc_zip.collect{it[1]}.ifEmpty([]))
@@ -398,8 +399,10 @@ workflow SAREK {
                 umi_read_structure,
                 params.group_by_umi_strategy)
 
+            bamtofastq = CREATE_UMI_CONSENSUS.out.consensusbam.map{meta, bam -> [meta,bam,[]]}
+
             // convert back to fastq for further preprocessing
-            ALIGNMENT_TO_FASTQ_UMI(CREATE_UMI_CONSENSUS.out.consensusbam, [])
+            ALIGNMENT_TO_FASTQ_UMI(bamtofastq, [])
 
             ch_reads_fastp = ALIGNMENT_TO_FASTQ_UMI.out.reads
 
@@ -463,7 +466,7 @@ workflow SAREK {
 
         // gatk4 markduplicates can handle multiple bams as input, so no need to merge/index here
         // Except if and only if skipping markduplicates or saving mapped bams
-        if (params.save_bam_mapped || (params.skip_tools && params.skip_tools.contains('markduplicates'))) {
+        if (params.save_bam_mapped || (params.skip_tools && params.skip_tools.split(',').contains('markduplicates'))) {
 
             // bams are merged (when multiple lanes from the same sample), indexed and then converted to cram
             MERGE_INDEX_BAM(ch_bam_mapped)
@@ -511,7 +514,7 @@ workflow SAREK {
             ch_bam_for_markduplicates = ch_bam_for_markduplicates.mix(convert.bam)
 
             //In case Markduplicates is run convert CRAM files to BAM, because the tool only runs on BAM files. MD_SPARK does run on CRAM but is a lot slower
-            if (!(params.skip_tools && params.skip_tools.contains('markduplicates'))){
+            if (!(params.skip_tools && params.skip_tools.split(',').contains('markduplicates'))){
 
                 SAMTOOLS_CRAMTOBAM(convert.cram, fasta, fasta_fai)
                 ch_versions = ch_versions.mix(SAMTOOLS_CRAMTOBAM.out.versions)
@@ -522,7 +525,7 @@ workflow SAREK {
             }
         }
 
-        if (params.skip_tools && params.skip_tools.contains('markduplicates')) {
+        if (params.skip_tools && params.skip_tools.split(',').contains('markduplicates')) {
 
             // ch_bam_indexed will countain bam mapped with GATK4_MAPPING when step is mapping
             // which are then merged and indexed
@@ -620,7 +623,7 @@ workflow SAREK {
         }
 
         // STEP 3: Create recalibration tables
-        if (!(params.skip_tools && params.skip_tools.contains('baserecalibrator'))) {
+        if (!(params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'))) {
             ch_table_bqsr_no_spark = Channel.empty()
             ch_table_bqsr_spark    = Channel.empty()
 
@@ -693,7 +696,7 @@ workflow SAREK {
                                                     convert.cram)
         }
 
-        if (!(params.skip_tools && params.skip_tools.contains('baserecalibrator'))) {
+        if (!(params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'))) {
             ch_cram_variant_calling_no_spark = Channel.empty()
             ch_cram_variant_calling_spark    = Channel.empty()
 
@@ -921,6 +924,7 @@ workflow SAREK {
         vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.manta_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.strelka_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.tiddit_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(PAIR_VARIANT_CALLING.out.freebayes_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(PAIR_VARIANT_CALLING.out.mutect2_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(PAIR_VARIANT_CALLING.out.manta_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(PAIR_VARIANT_CALLING.out.strelka_vcf)
@@ -942,13 +946,16 @@ workflow SAREK {
 
         VARIANTCALLING_CSV(vcf_to_annotate)
 
+
         // ANNOTATE
         if (params.step == 'annotate') vcf_to_annotate = ch_input_sample
 
-        if (params.tools.contains('merge') || params.tools.contains('snpeff') || params.tools.contains('vep')) {
+        if (params.tools.split(',').contains('merge') || params.tools.split(',').contains('snpeff') || params.tools.split(',').contains('vep')) {
+
+            vep_fasta = (params.vep_include_fasta) ? fasta : []
 
             ANNOTATE(vcf_to_annotate,
-                fasta,
+                vep_fasta,
                 params.tools,
                 snpeff_db,
                 snpeff_cache,
@@ -961,28 +968,28 @@ workflow SAREK {
             // Gather used softwares versions
             ch_versions = ch_versions.mix(ANNOTATE.out.versions)
             ch_reports  = ch_reports.mix(ANNOTATE.out.reports)
-
         }
     }
 
+
     ch_version_yaml = Channel.empty()
-    if (!(params.skip_tools && params.skip_tools.contains('versions'))) {
+    if (!(params.skip_tools && params.skip_tools.split(',').contains('versions'))) {
         CUSTOM_DUMPSOFTWAREVERSIONS(ch_versions.unique().collectFile(name: 'collated_versions.yml'))
         ch_version_yaml = CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect()
     }
 
-    if (!(params.skip_tools && params.skip_tools.contains('multiqc'))) {
+    if (!(params.skip_tools && params.skip_tools.split(',').contains('multiqc'))) {
         workflow_summary    = WorkflowSarek.paramsSummaryMultiqc(workflow, summary_params)
         ch_workflow_summary = Channel.value(workflow_summary)
 
         ch_multiqc_files =  Channel.empty().mix(ch_version_yaml,
+                                            Channel.from(ch_multiqc_config),
                                             ch_multiqc_custom_config.collect().ifEmpty([]),
                                             ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'),
-                                            ch_reports.collect(),
-                                            ch_multiqc_config,
-                                            ch_sarek_logo)
+                                            ch_reports.collect()
+                                            )
 
-        MULTIQC(ch_multiqc_files.collect())
+        MULTIQC(ch_multiqc_files.collect(), ch_multiqc_config)
         multiqc_report = MULTIQC.out.report.toList()
     }
 }
@@ -1095,17 +1102,17 @@ def extract_csv(csv_file) {
             def tools_tumor = ['ascat', 'controlfreec', 'mutect2', 'msisensorpro']
             def tools_tumor_asked = []
             tools_tumor.each{ tool ->
-                if (params.tools.contains(tool)) tools_tumor_asked.add(tool)
+                if (params.tools.split(',').contains(tool)) tools_tumor_asked.add(tool)
             }
             if (!tools_tumor_asked.isEmpty()) {
                 log.error('The sample-sheet only contains normal-samples, but the following tools, which were requested with "--tools", expect at least one tumor-sample : ' + tools_tumor_asked.join(", "))
                 System.exit(1)
             }
         } else if ((sample_count_tumor == sample_count_all) && params.tools) {  // In this case, the sample-sheet contains no normal/germline-samples
-            def tools_requiring_normal_samples = ['ascat', 'deepvariant', 'haplotypecaller']
+            def tools_requiring_normal_samples = ['ascat', 'deepvariant', 'haplotypecaller', 'msisensorpro']
             def requested_tools_requiring_normal_samples = []
             tools_requiring_normal_samples.each{ tool_requiring_normal_samples ->
-                if (params.tools.contains(tool_requiring_normal_samples)) requested_tools_requiring_normal_samples.add(tool_requiring_normal_samples)
+                if (params.tools.split(',').contains(tool_requiring_normal_samples)) requested_tools_requiring_normal_samples.add(tool_requiring_normal_samples)
             }
             if (!requested_tools_requiring_normal_samples.isEmpty()) {
                 log.error('The sample-sheet only contains tumor-samples, but the following tools, which were requested by the option "tools", expect at least one normal-sample : ' + requested_tools_requiring_normal_samples.join(", "))

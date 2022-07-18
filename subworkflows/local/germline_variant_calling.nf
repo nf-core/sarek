@@ -68,7 +68,7 @@ workflow GERMLINE_VARIANT_CALLING {
             cram, crai, bed_new, tbi_new]
         }
 
-    if(params.tools.contains('mpileup')){
+    if(tools.split(',').contains('mpileup')){
         cram_intervals_no_index = cram_recalibrated_intervals
             .map { meta, cram, crai, intervals ->
                 [meta, cram, intervals]
@@ -82,7 +82,7 @@ workflow GERMLINE_VARIANT_CALLING {
 
     // CNVKIT
 
-    if(tools.contains('cnvkit')){
+    if(tools.split(',').contains('cnvkit')){
         cram_recalibrated_cnvkit_germline = cram_recalibrated
             .map{ meta, cram, crai ->
                 [meta, [], cram]
@@ -97,7 +97,7 @@ workflow GERMLINE_VARIANT_CALLING {
     }
 
     // DEEPVARIANT
-    if(tools.contains('deepvariant')){
+    if(tools.split(',').contains('deepvariant')){
         RUN_DEEPVARIANT(cram_recalibrated_intervals, dict, fasta, fasta_fai)
 
         deepvariant_vcf = Channel.empty().mix(RUN_DEEPVARIANT.out.deepvariant_vcf,RUN_DEEPVARIANT.out.deepvariant_gvcf)
@@ -105,7 +105,7 @@ workflow GERMLINE_VARIANT_CALLING {
     }
 
     // FREEBAYES
-    if (tools.contains('freebayes')){
+    if (tools.split(',').contains('freebayes')){
         // Remap channel for Freebayes
         cram_recalibrated_intervals_freebayes = cram_recalibrated_intervals
             .map{ meta, cram, crai, intervals ->
@@ -118,8 +118,12 @@ workflow GERMLINE_VARIANT_CALLING {
     }
 
     // HAPLOTYPECALLER
-    if (tools.contains('haplotypecaller')){
-        RUN_HAPLOTYPECALLER(cram_recalibrated_intervals,
+    if (tools.split(',').contains('haplotypecaller')){
+        cram_recalibrated_intervals_haplotypecaller = cram_recalibrated_intervals
+            .map{ meta, cram, crai, intervals ->
+                [meta, cram, crai, intervals, []]
+            }
+        RUN_HAPLOTYPECALLER(cram_recalibrated_intervals_haplotypecaller,
                         fasta,
                         fasta_fai,
                         dict,
@@ -136,7 +140,7 @@ workflow GERMLINE_VARIANT_CALLING {
     }
 
     // MANTA
-    if (tools.contains('manta')){
+    if (tools.split(',').contains('manta')){
         RUN_MANTA_GERMLINE (cram_recalibrated_intervals_gz_tbi,
                         dict,
                         fasta,
@@ -147,7 +151,7 @@ workflow GERMLINE_VARIANT_CALLING {
     }
 
     // STRELKA
-    if (tools.contains('strelka')){
+    if (tools.split(',').contains('strelka')){
         RUN_STRELKA_SINGLE(cram_recalibrated_intervals_gz_tbi,
                 dict,
                 fasta,
@@ -158,7 +162,7 @@ workflow GERMLINE_VARIANT_CALLING {
     }
 
     //TIDDIT
-    if (tools.contains('tiddit')){
+    if (tools.split(',').contains('tiddit')){
         RUN_TIDDIT(cram_recalibrated,
                 fasta,
                 bwa)

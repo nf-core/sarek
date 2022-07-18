@@ -6,23 +6,23 @@ set -euo pipefail
 build_push() {
     GENOME=$1
     SPECIES=$2
-    VEP_VERSION=$3
-    VEP_TAG=$4
+    VEP_CACHE_VERSION=$3
+    VEP_VERSION=$4
 
     docker build \
         . \
-        -t nfcore/vep:${VEP_TAG}.${GENOME} \
+        -t nfcore/vep:${VEP_VERSION}.${GENOME} \
         --build-arg GENOME=${GENOME} \
         --build-arg SPECIES=${SPECIES} \
-        --build-arg VEP_VERSION=${VEP_VERSION} \
-        --build-arg VEP_TAG=${VEP_TAG}
+        --build-arg VEP_CACHE_VERSION=${VEP_CACHE_VERSION} \
+        --build-arg VEP_VERSION=${VEP_VERSION}
 
-    docker push nfcore/vep:${VEP_TAG}.${GENOME}
+    docker push nfcore/vep:${VEP_VERSION}.${GENOME}
 }
 
-build_push "GRCh37"    "homo_sapiens"           "105" "105.0"
-build_push "GRCh38"    "homo_sapiens"           "105" "105.0"
-build_push "GRCm38"    "mus_musculus"           "102" "105.0"
-build_push "GRCm39"    "mus_musculus"           "105" "105.0"
-build_push "CanFam3.1" "canis_lupus_familiaris" "104" "105.0"
-build_push "WBcel235"  "caenorhabditis_elegans" "105" "105.0"
+build_push "GRCh37"    "homo_sapiens"           "106" "106.1"
+build_push "GRCh38"    "homo_sapiens"           "106" "106.1"
+build_push "GRCm38"    "mus_musculus"           "102" "106.1"
+build_push "GRCm39"    "mus_musculus"           "106" "106.1"
+build_push "CanFam3.1" "canis_lupus_familiaris" "104" "106.1"
+build_push "WBcel235"  "caenorhabditis_elegans" "106" "106.1"

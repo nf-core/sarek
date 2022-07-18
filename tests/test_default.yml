@@ -15,10 +15,10 @@
     - path: results/csv/recalibrated.csv
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.metrics
-    - path: results/reports/mosdepth/test/test.mapped.mosdepth.global.dist.txt
-    - path: results/reports/mosdepth/test/test.mapped.mosdepth.summary.txt
-    - path: results/reports/mosdepth/test/test.mapped.mosdepth.region.dist.txt
-    - path: results/reports/mosdepth/test/test.mapped.regions.bed.gz
+    - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
@@ -44,10 +44,10 @@
     - path: results/csv/recalibrated.csv
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.metrics
-    - path: results/reports/mosdepth/test/test.mapped.mosdepth.global.dist.txt
-    - path: results/reports/mosdepth/test/test.mapped.mosdepth.summary.txt
-    - path: results/reports/mosdepth/test/test.mapped.mosdepth.region.dist.txt
-    - path: results/reports/mosdepth/test/test.mapped.regions.bed.gz
+    - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
@@ -72,17 +72,17 @@
     - path: results/csv/recalibrated.csv
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.metrics
-    - path: results/reports/mosdepth/test/test.mapped.mosdepth.global.dist.txt
-    - path: results/reports/mosdepth/test/test.mapped.mosdepth.summary.txt
-    - path: results/reports/mosdepth/test/test.mapped.mosdepth.region.dist.txt
-    - path: results/reports/mosdepth/test/test.mapped.regions.bed.gz
+    - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
     - path: results/reports/samtools_stats/test/test.md.cram.stats
     - path: results/reports/samtools_stats/test/test.recal.cram.stats
-    - path: results/variant_calling/test/strelka/test.genome.vcf.gz
-    - path: results/variant_calling/test/strelka/test.genome.vcf.gz.tbi
-    - path: results/variant_calling/test/strelka/test.variants.vcf.gz
-    - path: results/variant_calling/test/strelka/test.variants.vcf.gz.tbi
+    - path: results/variant_calling/test/strelka/test.strelka.genome.vcf.gz
+    - path: results/variant_calling/test/strelka/test.strelka.genome.vcf.gz.tbi
+    - path: results/variant_calling/test/strelka/test.strelka.variants.vcf.gz
+    - path: results/variant_calling/test/strelka/test.strelka.variants.vcf.gz.tbi
