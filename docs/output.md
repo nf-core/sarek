@@ -19,7 +19,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - [BWA-mem2](#bwa-mem2)
     - [DragMap](#dragmap)
   - [Duplicate Marking](#duplicate-marking)
-    - [GATK MarkDuplicates (Spark)](#gatk-markduplicates)
+    - [GATK MarkDuplicates (Spark)](#gatk-markduplicates-spark)
   - [Base Quality Score Recalibration](#base-quality-score-recalibration)
     - [GATK BaseRecalibrator (Spark)](#gatk-baserecalibrator-spark)
     - [GATK ApplyBQSR (Spark)](#gatk-applybqsr-spark)
