@@ -579,7 +579,7 @@ The file `<tumorsample_vs_normalsample>.cnvs.txt` contains all segments predicte
 
 [Control-FREEC](https://github.com/BoevaLab/FREEC) is a tool for detection of copy-number changes and allelic imbalances (including loss of heterozygoity (LOH)) using deep-sequencing data.
 [Control-FREEC](https://github.com/BoevaLab/FREEC) automatically computes, normalizes, segments copy number and beta allele frequency profiles, then calls copy number alterations and LOH.
-It also detects subclonal gains and losses and evaluate the most likely average ploidy of the sample. For further reading and documentation see the [Control-FREEC Documentation](http://boevalab.inf.ethz.ch/FREEC/tutorial.html).
+It also detects subclonal gains and losses and evaluates the most likely average ploidy of the sample. For further reading and documentation see the [Control-FREEC Documentation](http://boevalab.inf.ethz.ch/FREEC/tutorial.html).
 
 <details markdown="1">
 <summary>Output files for tumor-only and tumor/normal paired samples</summary>
