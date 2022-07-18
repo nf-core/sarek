@@ -2,7 +2,7 @@
 // GERMLINE VARIANT CALLING
 //
 
-include { RUN_CNVKIT_GERMLINE } from '../nf-core/variantcalling/cnvkit/germline/main.nf'
+include { RUN_CNVKIT          } from '../nf-core/variantcalling/cnvkit/main.nf'
 include { RUN_DEEPVARIANT     } from '../nf-core/variantcalling/deepvariant/main.nf'
 include { RUN_FREEBAYES       } from '../nf-core/variantcalling/freebayes/main.nf'
 include { RUN_HAPLOTYPECALLER } from '../nf-core/variantcalling/haplotypecaller/main.nf'
@@ -88,12 +88,12 @@ workflow GERMLINE_VARIANT_CALLING {
                 [meta, [], cram]
             }
 
-        RUN_CNVKIT_GERMLINE(cram_recalibrated_cnvkit_germline,
+        RUN_CNVKIT(cram_recalibrated_cnvkit_germline,
                             fasta,
                             fasta_fai,
                             intervals_bed_combined,
                             [])
-        ch_versions     = ch_versions.mix(RUN_CNVKIT_GERMLINE.out.versions)
+        ch_versions     = ch_versions.mix(RUN_CNVKIT.out.versions)
     }
 
     // DEEPVARIANT

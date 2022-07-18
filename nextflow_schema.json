@@ -170,17 +170,16 @@
                 "umi_read_structure": {
                     "type": "string",
                     "fa_icon": "fas fa-tape",
-                    "description": "Specify UMI read structure.",
-                    "hidden": true
+                    "description": "Specify UMI read structure",
+                    "hidden": true,
+                    "help_text": "One structure if UMI is present on one end (i.e. '2M11S+T'), or two structures separated by a blank space if UMIs a present on both ends (i.e. '2M11S+T 2M11S+T'); please note, this does not handle duplex-UMIs.\n\nIt is recommended to skip duplicate marking and base quality score recalibration. See `--skip_tools`."
                 },
                 "group_by_umi_strategy": {
                     "type": "string",
                     "default": "Adjacency",
-                    "description": "Strategy to group reads that appear to have come from the same original molecule.",
+                    "description": "Default strategy with UMI",
                     "hidden": true,
-                    "enum": ["Identity", "Edit", "Adjacency", "Paired"],
-                    "help_text": "For more information see [FgBio](http://fulcrumgenomics.github.io/fgbio/tools/latest/GroupReadsByUmi.html).",
-                    "fa_icon": "fab fa-blackberry"
+                    "help_text": "Available values: Identity, Edit, Adjacency, Paired"
                 },
                 "save_split_fastqs": {
                     "type": "boolean",
@@ -203,7 +202,7 @@
                     "fa_icon": "fas fa-puzzle-piece",
                     "enum": ["bwa-mem", "bwa-mem2", "dragmap"],
                     "description": "Specify aligner to be used to map reads to reference genome.",
-                    "help_text": "Parameter chooses the mapper used. We recommend using pre-build indices. If they are not part of the available `igenome.config` they can be provided with `--bwa`, `--bwamem2`, or `--dragmap`. \nIf none are provided,  `Sarek` will build them automatically.",
+                    "help_text": "`Sarek` will build missing indices automatically if not provided. Set `--bwa false` if indices should be (re-)built.\nIf `DragMap` is selected as aligner, it is recommended to skip baserecalibration with `--skip_tools baserecalibrator`. See [here](https://gatk.broadinstitute.org/hc/en-us/articles/4407897446939--How-to-Run-germline-single-sample-short-variant-discovery-in-DRAGEN-mode) for more info.\n",
                     "hidden": true
                 },
                 "save_bam_mapped": {
