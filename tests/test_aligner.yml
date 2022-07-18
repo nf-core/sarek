@@ -47,7 +47,6 @@
     - dragmap
     - preprocessing
   files:
-    - path: chr22_1-40001.bed.bed.gz
     - path: results/csv/markduplicates.csv
     - path: results/csv/markduplicates_no_table.csv
     - path: results/csv/recalibrated.csv
