@@ -189,7 +189,7 @@ For further reading and documentation see the [technical documentation by GATK](
 
 [GATK BaseRecalibrator](https://gatk.broadinstitute.org/hc/en-us/articles/360042477672-BaseRecalibrator) generates a recalibration table based on various co-variates.
 
-Specify `--use_gatk_spark baserecalibrator` to use [GATK BaseRecalibratorSpark](https://gatk.broadinstitute.org/hc/en-us/articles/5358896138011-BaseRecalibrator) instead of the corresponding Spark implementation.
+To use the corresponding spark implementation [GATK BaseRecalibratorSpark](https://gatk.broadinstitute.org/hc/en-us/articles/5358896138011-BaseRecalibrator), please specify `--use_gatk_spark baserecalibrator`.
 
 <details markdown="1">
 <summary>Output files for all samples</summary>
@@ -253,7 +253,7 @@ If some results from a variant caller do not appear here, please check out the `
 
 ### SNVs and small indels
 
-For single nucleotide variants (SNVs) and small indels, multiple tools are available for normal, tumor-only, and tumor-normal paired data. For a list of the appropriate tool(s) for the data and sequencing type at hand, please check [here](usage.md#which-tool).
+For single nucleotide variants (SNVs) and small indels, multiple tools are available for normal (germline), tumor-only, and tumor-normal (somatic) paired data. For a list of the appropriate tool(s) for the data and sequencing type at hand, please check [here](usage.md#which-tool).
 
 #### DeepVariant
 
