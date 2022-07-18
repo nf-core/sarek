@@ -559,6 +559,8 @@ The file `<tumorsample_vs_normalsample>.cnvs.txt` contains all segments predicte
   - file containing coverage information
 - `<tumorsample>.antitargetcoverage.cnn`
   - file containing coverage information
+- `<tumorsample>.targetcoverage.cnn`
+  - file containing coverage information
 - `<tumorsample>.bintest.cns`
   - file containing copy number segment information
 - `<tumorsample>-scatter.png`
@@ -569,8 +571,6 @@ The file `<tumorsample_vs_normalsample>.cnvs.txt` contains all segments predicte
   - file containing copy number ratio information
 - `<tumorsample>.cns`
   - file containing copy number segment information
-- `<tumorsample>.targetcoverage.cnn`
-  - file containing coverage information
 - `<tumorsample>.call.cns`
   - file containing copy number segment information
   </details>
