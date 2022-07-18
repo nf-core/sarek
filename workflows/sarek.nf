@@ -505,7 +505,7 @@ workflow SAREK {
 
                 ch_bam_for_markduplicates = ch_bam_for_markduplicates.mix(SAMTOOLS_CRAMTOBAM.out.alignment_index.map{ meta, bam, bai -> [meta, bam]})
             } else {
-                ch_input_cram_indexed     = convert.cram.map{ meta, input, index -> [meta, input] }
+                ch_input_cram_indexed     = convert.cram
             }
         }
 
@@ -522,7 +522,7 @@ workflow SAREK {
                 fasta_fai,
                 intervals_for_preprocessing)
 
-            ch_cram_no_markduplicates_restart = Channel.empty().mix(BAM_TO_CRAM.out.cram_converted)
+            ch_cram_no_markduplicates_restart = BAM_TO_CRAM.out.cram_converted
 
             // Gather QC reports
             ch_reports  = ch_reports.mix(BAM_TO_CRAM.out.qc.collect{it[1]}.ifEmpty([]))
