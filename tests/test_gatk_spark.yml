@@ -14,7 +14,7 @@
     - path: results/preprocessing/test/recal_table/test.recal.table
     - path: results/preprocessing/test/recalibrated/test.recal.cram
     - path: results/preprocessing/test/recalibrated/test.recal.cram.crai
-    - path: results/reports/fastqc/
+    - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.metrics
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
     - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
