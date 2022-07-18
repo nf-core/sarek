@@ -501,7 +501,7 @@ workflow SAREK {
                 cram: it[0].data_type == "cram"
             }.set{convert}
 
-            ch_bam_for_markduplicates = ch_bam_for_markduplicates.mix(convert.bam)
+            ch_bam_for_markduplicates = convert.bam.map{ meta, bam, bai -> [meta, bam]}
 
             //In case Markduplicates is run convert CRAM files to BAM, because the tool only runs on BAM files. MD_SPARK does run on CRAM but is a lot slower
             if (!(params.skip_tools && params.skip_tools.split(',').contains('markduplicates'))){
