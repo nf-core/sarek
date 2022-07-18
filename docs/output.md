@@ -257,7 +257,7 @@ For single nucleotide variants (SNVs) and small indels, multiple tools are avail
 
 #### DeepVariant
 
-[DeepVariant](https://github.com/google/deepvariant) is a deep learning-based variant caller that takes aligned reads, produces pileup image tensors from them, classifies each tensor using a convolutional neural network, and finally reports the results in a standard VCF or gVCF file. For further documentation take a look [here](https://github.com/google/deepvariant/tree/r1.4/docs).
+[DeepVariant](https://github.com/google/deepvariant) is a deep learning-based variant caller that takes aligned reads, produces pileup image tensors from them, classifies each tensor using a convolutional neural network and finally reports the results in a standard VCF or gVCF file. For further documentation take a look [here](https://github.com/google/deepvariant/tree/r1.4/docs).
 
 <details markdown="1">
 <summary>Output files for normal samples</summary>
