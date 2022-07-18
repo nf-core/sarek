@@ -28,8 +28,8 @@
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
-    - path: results/reports/samtools_stats/test/test.md.cram.stats
-    - path: results/reports/samtools_stats/test/test.recal.cram.stats
+    - path: results/reports/samtools/test/test.md.cram.stats
+    - path: results/reports/samtools/test/test.recal.cram.stats
 - name: Run dragmap
   command: nextflow run main.nf -profile test,docker --aligner dragmap --save_reference
   tags:
@@ -63,5 +63,5 @@
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
-    - path: results/reports/samtools_stats/test/test.md.cram.stats
-    - path: results/reports/samtools_stats/test/test.recal.cram.stats
+    - path: results/reports/samtools/test/test.md.cram.stats
+    - path: results/reports/samtools/test/test.recal.cram.stats
