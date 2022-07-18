@@ -42,7 +42,6 @@ workflow GERMLINE_VARIANT_CALLING {
     strelka_vcf         = Channel.empty()
     tiddit_vcf          = Channel.empty()
 
-    println tools
     // Remap channel with intervals
     cram_recalibrated_intervals = cram_recalibrated.combine(intervals)
         .map{ meta, cram, crai, intervals, num_intervals ->
@@ -117,7 +116,11 @@ workflow GERMLINE_VARIANT_CALLING {
 
     // HAPLOTYPECALLER
     if (tools.split(',').contains('haplotypecaller')){
-        RUN_HAPLOTYPECALLER(cram_recalibrated_intervals,
+        cram_recalibrated_intervals_haplotypecaller = cram_recalibrated_intervals
+            .map{ meta, cram, crai, intervals ->
+                [meta, cram, crai, intervals, []]
+            }
+        RUN_HAPLOTYPECALLER(cram_recalibrated_intervals_haplotypecaller,
                         fasta,
                         fasta_fai,
                         dict,
