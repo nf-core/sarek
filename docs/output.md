@@ -735,7 +735,7 @@ Plots will show:
 
 #### FastP
 
-[FastP](https://github.com/OpenGene/fastp) is a tool designed to provide all-in-one preprocessing for FastQ files and as such is used for trimming and splitting. The tool then determines QC metrics for the processed reads.
+[FastP](https://github.com/OpenGene/fastp) is a tool designed to provide all-in-one preprocessing for FastQ files and is used for trimming and splitting. The tool then determines QC metrics for the processed reads.
 
 <details markdown="1">
 <summary>Output files for all samples</summary>
