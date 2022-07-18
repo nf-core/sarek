@@ -579,7 +579,7 @@ workflow SAREK {
         csv_markduplicates = ch_md_cram_for_restart
 
         // Create CSV to restart from this step
-        if (params.skip_tools && !(params.skip_tools.split(',').contains('markduplicates'))) MARKDUPLICATES_CSV(csv_markduplicates)
+        if (!(params.skip_tools && params.skip_tools.split(',').contains('markduplicates'))) MARKDUPLICATES_CSV(csv_markduplicates)
     }
 
     if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration']) {
