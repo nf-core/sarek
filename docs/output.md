@@ -791,7 +791,7 @@ For further reading and documentation see the [MarkDuplicates manual](https://so
 
 Plot will show:
 
-- duplication statistic
+- duplication statistics
 
 <details markdown="1">
 <summary>Output files for all samples</summary>
