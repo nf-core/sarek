@@ -835,7 +835,7 @@ Plot will show:
 
 **Output directory: `{outdir}/reports/bcftools/`**
 
-- `<sample>.<variantcaller>.bcftools_stats.out`
+- `<sample>.<variantcaller>.bcftools_stats.txt`
   - Raw statistics used by `MultiQC`
   </details>
 
