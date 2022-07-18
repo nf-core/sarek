@@ -44,20 +44,21 @@ workflow PREPARE_INTERVALS {
         //If no interval/target file is provided, then intervals are generated from FASTA file
         if (!params.intervals) {
 
-            BUILD_INTERVALS(fasta_fai)
+            BUILD_INTERVALS(fasta_fai.map{ it -> [[id:it[0].name], it] }.view())
             ch_intervals_combined = BUILD_INTERVALS.out.bed
 
-            ch_intervals_combined.view()
+            CREATE_INTERVALS_BED(ch_intervals_combined)
+            ch_intervals = CREATE_INTERVALS_BED.out.bed.map{meta, intervals -> intervals}
 
-            CREATE_INTERVALS_BED(ch_intervals_combined.map{v,p -> [p]})
-            ch_intervals = CREATE_INTERVALS_BED.out.bed
-
-            ch_versions = ch_intervals.mix(BUILD_INTERVALS.out.versions)
+            //ch_versions = ch_intervals.mix(BUILD_INTERVALS.out.versions)
+            ch_versions = ch_intervals.mix(CREATE_INTERVALS_BED.out.versions)
 
         } else {
 
             ch_intervals_combined = Channel.fromPath(file(params.intervals)).map{it -> [[id:it.baseName], it] }
-            ch_intervals = CREATE_INTERVALS_BED(file(params.intervals))
+
+            CREATE_INTERVALS_BED(ch_intervals_combined)
+            ch_intervals = CREATE_INTERVALS_BED.out.bed.map{meta, intervals -> intervals}
 
             ch_versions = ch_intervals.mix(CREATE_INTERVALS_BED.out.versions)
 
