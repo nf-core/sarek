@@ -163,7 +163,7 @@ For further reading and documentation see the [data pre-processing for variant d
 
 By default, Sarek will use [GATK MarkDuplicates](https://gatk.broadinstitute.org/hc/en-us/articles/5358880192027-MarkDuplicates-Picard-).
 
-Specify `--use_gatk_spark markduplicates` to use [`GATK MarkDuplicatesSpark`](https://gatk.broadinstitute.org/hc/en-us/articles/5358833264411-MarkDuplicatesSpark) instead, the corresponding spark implementation. The resulting files are converted to CRAM with either [samtools](https://www.htslib.org/doc/samtools.html), when GATK MarkDuplicates is used, or, implicitly, by GATK MarkDuplicatesSpark.
+To use the corresponding spark implementation [`GATK MarkDuplicatesSpark`](https://gatk.broadinstitute.org/hc/en-us/articles/5358833264411-MarkDuplicatesSpark), please specify `--use_gatk_spark markduplicates`. The resulting files are converted to CRAM with either [samtools](https://www.htslib.org/doc/samtools.html), when GATK MarkDuplicates is used, or, implicitly, by GATK MarkDuplicatesSpark.
 
 The resulting CRAM files are delivered to the users.
 
