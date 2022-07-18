@@ -768,15 +768,15 @@ Plots will show:
 
 **Output directory: `{outdir}/reports/mosdepth/<sample>`**
 
-- `<sample>.{md,recal}.mosdepth.global.dist.txt`
+- `<sample>.{sorted,md,recal}.mosdepth.global.dist.txt`
   - file used by [MultiQC](https://multiqc.info/), if `.region` file does not exist
-- `<sample>.{md,recal}.mosdepth.region.dist.txt`
+- `<sample>.{sorted,md,recal}.mosdepth.region.dist.txt`
   - file used by [MultiQC](https://multiqc.info/)
-- `<sample>.{md,recal}.mosdepth.summary.txt`
+- `<sample>.{sorted,md,recal}.mosdepth.summary.txt`
   -A summary of mean depths per chromosome and within specified regions per chromosome.
-- `<sample>.{md,recal}.{per-base,regions}.bed.gz`
+- `<sample>.{sorted,md,recal}.{per-base,regions}.bed.gz`
   - per-base depth for targeted data, per-window (500bp) depth of WGS
-- `<sample>.{md,recal}.regions.bed.gz.csi`
+- `<sample>.{sorted,md,recal}.regions.bed.gz.csi`
   - CSI index for per-base depth for targeted data, per-window (500bp) depth of WGS
   </details>
 
@@ -816,7 +816,7 @@ The plots will show:
 
 **Output directory: `{outdir}/reports/samtools/<sample>`**
 
-- `<sample>.{md,recal}.samtools.stats.out`
+- `<sample>.{sorted,md,recal}.samtools.stats.out`
   - Raw statistics used by `MultiQC`
 
 </details>
