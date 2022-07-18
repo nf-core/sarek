@@ -33,7 +33,7 @@ process ASCAT {
     script:
     def args           = task.ext.args        ?: ''
     def prefix         = task.ext.prefix      ?: "${meta.id}"
-    def sex         = args.sex          ?  "$args.sex" :        "NULL"
+    def gender         = args.gender          ?  "$args.gender" :        "NULL"
     def genomeVersion  = args.genomeVersion   ?  "$args.genomeVersion" : "NULL"
     def purity         = args.purity          ?  "$args.purity" :        "NULL"
     def ploidy         = args.ploidy          ?  "$args.ploidy" :        "NULL"
@@ -71,7 +71,7 @@ process ASCAT {
         allelecounter_exe = "alleleCounter",
         alleles.prefix = allele_prefix,
         loci.prefix = loci_prefix,
-        sex = "$sex",
+        gender = "$gender",
         genomeVersion = "$genomeVersion",
         nthreads = $task.cpus
         $minCounts_arg
@@ -92,7 +92,7 @@ process ASCAT {
         Germline_LogR_file = paste0("$prefix", ".tumour_normalLogR.txt"),
         Germline_BAF_file = paste0("$prefix", ".tumour_normalBAF.txt"),
         genomeVersion = "$genomeVersion",
-        sex = "$sex"
+        gender = "$gender"
     )
 
     #Plot the raw data

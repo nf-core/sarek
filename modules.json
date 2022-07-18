@@ -3,6 +3,9 @@
     "homePage": "https://github.com/nf-core/sarek",
     "repos": {
         "nf-core/modules": {
+            "": {
+                "git_sha": "035e4183696eee73daddf6efe821083d6ffb2fd4"
+            },
             "ascat": {
                 "git_sha": "98ffb090029d17a9fb8de75dadcfe6bc8b6377ec"
             },
