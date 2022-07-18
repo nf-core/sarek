@@ -26,19 +26,9 @@
     - path: results/reports/mosdepth/test/test.sorted.mosdepth.region.dist.txt
     - path: results/reports/mosdepth/test/test.sorted.mosdepth.summary.txt
     - path: results/reports/mosdepth/test/test.sorted.regions.bed.gz
-<<<<<<< HEAD
     - path: results/reports/mosdepth/test/test.sorted.regions.bed.gz.csi
-    - path: results/reports/samtools_stats/test/test.recal.cram.stats
-    - path: results/reports/samtools_stats/test/test.sorted.cram.stats
-=======
     - path: results/reports/samtools/test/test.recal.cram.stats
     - path: results/reports/samtools/test/test.sorted.cram.stats
-    - path: results/variant_calling/test/strelka/test.strelka.genome.vcf.gz
-    - path: results/variant_calling/test/strelka/test.strelka.genome.vcf.gz.tbi
-    - path: results/variant_calling/test/strelka/test.strelka.variants.vcf.gz
-    - path: results/variant_calling/test/strelka/test.strelka.variants.vcf.gz.tbi
-
->>>>>>> upstream/dev
 - name: Run skip markduplicates bam from step markduplicates
   command: nextflow run main.nf -profile test,docker,markduplicates_bam,skip_markduplicates
   tags:
