@@ -11,7 +11,7 @@ The directories listed below will be created in the results directory after the 
 The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:
 
 - [Preprocessing](#preprocessing)
-  - [Prepare input files](#prepare-input)
+  - [Prepare input files](#preparation-of-input-files-fastq-or-ubam)
     - [Trim adapters](#trimming)
     - [Split FastQ files](#split)
   - [Map to Reference](#map-to-reference)
