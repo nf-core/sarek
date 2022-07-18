@@ -1,6 +1,5 @@
 process CREATE_INTERVALS_BED {
-    tag "$intervals"
-    label 'process_medium'
+    tag "$meta.id"
 
     conda (params.enable_conda ? "anaconda::gawk=5.1.0" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -8,11 +7,11 @@ process CREATE_INTERVALS_BED {
         'quay.io/biocontainers/gawk:5.1.0' }"
 
     input:
-    path intervals
+    tuple val(meta), path(intervals)
 
     output:
-    path "*.bed"          , emit: bed
-    path "versions.yml"     , emit: versions
+    tuple val(meta), path("*.bed") , emit: bed
+    path "versions.yml"            , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
