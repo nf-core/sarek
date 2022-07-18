@@ -45,7 +45,7 @@ workflow RUN_HAPLOTYPECALLER {
         // merge vcf and tbis
         genotype_gvcf_to_call = Channel.empty().mix(HAPLOTYPECALLER.out.vcf
                                 .join(HAPLOTYPECALLER.out.tbi)
-                                .join(cram).map{ meta, vcf, tbi, cram, crai, intervals ->
+                                .join(cram).map{ meta, vcf, tbi, cram, crai, intervals, dragstr_model ->
                                      [ meta, vcf, tbi, intervals ]
                                      })
         // make channels from labels
@@ -54,7 +54,7 @@ workflow RUN_HAPLOTYPECALLER {
             known_snps_vqsr   = params.known_snps_vqsr   ? Channel.value(params.known_snps_vqsr)   : Channel.empty()
 
 
-        filtered_vcf = JOINT_GERMLINE(
+        JOINT_GERMLINE(
              genotype_gvcf_to_call,
              fasta,
              fasta_fai,
@@ -67,8 +67,9 @@ workflow RUN_HAPLOTYPECALLER {
              known_indels_vqsr,
              known_sites_snps,
              known_sites_snps_tbi,
-             known_snps_vqsr).genotype_vcf
+             known_snps_vqsr)
 
+        filtered_vcf = JOINT_GERMLINE.out.genotype_vcf.map{ meta, vcf-> [[patient:meta.patient, sample:meta.sample, status:meta.status, sex:meta.sex, id:meta.sample, num_intervals:meta.num_intervals, variantcaller:"haplotypecaller"], vcf]}
         ch_versions = ch_versions.mix(JOINT_GERMLINE.out.versions)
     } else {
         // Only when using intervals

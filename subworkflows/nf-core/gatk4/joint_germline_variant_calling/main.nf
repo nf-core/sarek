@@ -41,7 +41,7 @@ workflow GATK_JOINT_GERMLINE_VARIANT_CALLING {
                        ]
             [ new_meta, gvcf, tbi, intervals ]
         }.groupTuple(by:[0,3]).map{ new_meta, gvcf, tbi, intervals ->
-            interval_file = new_meta.num_intervals > 1 ? intervals : []
+            interval_file = new_meta.num_intervals > 1 ? intervals : params.intervals
             [ new_meta, gvcf, tbi, interval_file, [], [] ] }
 
     //

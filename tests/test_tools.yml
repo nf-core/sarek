@@ -273,34 +273,15 @@
     - path: results/variant_calling/test1/haplotypecaller/test1.haplotypecaller.filtered.vcf.gz
     - path: results/variant_calling/test1/haplotypecaller/test1.haplotypecaller.filtered.vcf.gz.tbi
 
-# - name: Run joint germline variant calling with haplotypecaller
-#   command: nextflow run main.nf -profile test,tools_germline,docker --tools haplotypecaller --joint_germline
-#   tags:
-#     - germline
-#     - gvcf
-#     - haplotypecaller
-#     - variant_calling
-#   files:
-#     - path: results/variant_calling/sample1/haplotypecaller/sample1.haplotypecaller.g.vcf.gz
-#     - path: results/variant_calling/sample1/haplotypecaller/sample1.haplotypecaller.g.vcf.gz.tbi
-#     - path: results/variant_calling/sample1/haplotypecaller/sample1.haplotypecaller.vcf.gz
-#     - path: results/variant_calling/sample1/haplotypecaller/sample1.haplotypecaller.vcf.gz.tbi
-#     - path: results/csv/variantcalled.csv
-
-# - name: Run joint germline variant calling with haplotypecaller without intervals
-#   command: nextflow run main.nf -profile test,tools_germline,docker --tools haplotypecaller --joint_germline --no_intervals
-#   tags:
-#     - germline
-#     - gvcf
-#     - haplotypecaller
-#     - no_intervals
-#     - variant_calling
-#   files:
-#     - path: results/variant_calling/sample1/haplotypecaller/sample1.haplotypecaller.g.vcf.gz
-#     - path: results/variant_calling/sample1/haplotypecaller/sample1.haplotypecaller.g.vcf.gz.tbi
-#     - path: results/variant_calling/sample1/haplotypecaller/sample1.haplotypecaller.vcf.gz
-#     - path: results/variant_calling/sample1/haplotypecaller/sample1.haplotypecaller.vcf.gz.tbi
-#     - path: results/csv/variantcalled.csv
+- name: Run joint germline variant calling with haplotypecaller
+   command: nextflow run main.nf -profile test,targeted,docker --input ./tests/csv/3.0/mapped_single_bam.csv --tools haplotypecaller --joint_germline true
+   tags:
+     - germline
+     - haplotypecaller
+     - variant_calling
+   files:
+     - path: results/variant_calling/sample1/haplotypecaller/joint_germline.vcf.gz
+     - path: results/variant_calling/sample1/haplotypecaller/joint_germline.vcf.gz.tbi
 
 - name: Run variant calling on germline sample with manta
   command: nextflow run main.nf -profile test,tools_germline,docker --tools manta
