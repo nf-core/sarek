@@ -44,8 +44,8 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 - [Variant annotation](#variant-annotation)
   - [snpEff](#snpeff)
   - [VEP](#vep)
-- [QC and reporting](#qc-and-reporting)
-  - [QC](#qc)
+- [Quality control and reporting](#qc-and-reporting)
+  - [Quality control](#quality-control)
     - [FastQC](#fastqc)
     - [FastP](#fastp)
     - [GATK MarkDuplicates reports](#gatk-markduplicates-reports)
@@ -697,7 +697,9 @@ plus any additional filed selected via the plugins: [dbNSFP](https://sites.googl
 
 </details>
 
-## QC and reporting
+## Quality control and reporting
+
+### Quality control
 
 #### FastQC
 
