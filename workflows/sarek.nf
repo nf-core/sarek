@@ -296,6 +296,16 @@ workflow SAREK {
     // To gather used softwares versions for MultiQC
     ch_versions = Channel.empty()
 
+    // Build intervals if needed
+    PREPARE_INTERVALS(fasta_fai)
+
+    // Intervals for speed up preprocessing/variant calling by spread/gather
+    intervals_bed_combined      = params.no_intervals ? Channel.value([]) : PREPARE_INTERVALS.out.intervals_bed_combined  // [interval.bed] all intervals in one file
+    intervals_for_preprocessing = params.wes ? intervals_bed_combined : []      // For QC during preprocessing, we don't need any intervals (MOSDEPTH doesn't take them for WGS)
+
+    intervals                   = PREPARE_INTERVALS.out.intervals_bed        // [interval, num_intervals] multiple interval.bed files, divided by useful intervals for scatter/gather
+    intervals_bed_gz_tbi        = PREPARE_INTERVALS.out.intervals_bed_gz_tbi // [interval_bed, tbi, num_intervals] multiple interval.bed.gz/.tbi files, divided by useful intervals for scatter/gather
+
     // Build indices if needed
     PREPARE_GENOME(
         ascat_alleles,
@@ -307,14 +317,16 @@ workflow SAREK {
         fasta,
         fasta_fai,
         germline_resource,
+        intervals_bed_combined,
         known_indels,
         pon)
 
     // Gather built indices or get them from the params
     allele_files           = PREPARE_GENOME.out.allele_files
     bwa                    = params.fasta                   ? params.bwa                        ? Channel.fromPath(params.bwa).collect()                   : PREPARE_GENOME.out.bwa                   : []
-    chr_files              = PREPARE_GENOME.out.chr_files
     bwamem2                = params.fasta                   ? params.bwamem2                    ? Channel.fromPath(params.bwamem2).collect()               : PREPARE_GENOME.out.bwamem2               : []
+    chr_files              = PREPARE_GENOME.out.chr_files
+    cnvkit_reference       = params.tools && params.tools.split(',').contains('cnvkit')         ? PREPARE_GENOME.out.cnvkit_reference                      : Channel.empty()
     dragmap                = params.fasta                   ? params.dragmap                    ? Channel.fromPath(params.dragmap).collect()               : PREPARE_GENOME.out.hashtable             : []
     dict                   = params.fasta                   ? params.dict                       ? Channel.fromPath(params.dict).collect()                  : PREPARE_GENOME.out.dict                  : []
     fasta_fai              = params.fasta                   ? params.fasta_fai                  ? Channel.fromPath(params.fasta_fai).collect()             : PREPARE_GENOME.out.fasta_fai             : []
@@ -336,16 +348,6 @@ workflow SAREK {
     // Which can either or both be optional
     known_sites     = dbsnp.concat(known_indels).collect()
     known_sites_tbi = dbsnp_tbi.concat(known_indels_tbi).collect()
-
-    // Build intervals if needed
-    PREPARE_INTERVALS(fasta_fai)
-
-    // Intervals for speed up preprocessing/variant calling by spread/gather
-    intervals_bed_combined      = params.no_intervals ? Channel.value([]) : PREPARE_INTERVALS.out.intervals_bed_combined  // [interval.bed] all intervals in one file
-    intervals_for_preprocessing = params.wes ? intervals_bed_combined : []      // For QC during preprocessing, we don't need any intervals (MOSDEPTH doesn't take them for WGS)
-
-    intervals                   = PREPARE_INTERVALS.out.intervals_bed        // [interval, num_intervals] multiple interval.bed files, divided by useful intervals for scatter/gather
-    intervals_bed_gz_tbi        = PREPARE_INTERVALS.out.intervals_bed_gz_tbi // [interval_bed, tbi, num_intervals] multiple interval.bed.gz/.tbi files, divided by useful intervals for scatter/gather
 
     // Gather used softwares versions
     ch_versions = ch_versions.mix(PREPARE_GENOME.out.versions)
@@ -861,6 +863,7 @@ workflow SAREK {
             cram_variant_calling_tumor_only,
             [],
             chr_files,
+            cnvkit_reference,
             dbsnp,
             dbsnp_tbi,
             dict,
