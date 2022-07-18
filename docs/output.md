@@ -647,13 +647,13 @@ It requires a normal sample for each tumour to differentiate the somatic and ger
 ## Variant annotation
 
 This directory contains results from the final annotation steps: two tools are used for annotation, [snpEff](http://snpeff.sourceforge.net/) and [VEP](https://www.ensembl.org/info/docs/tools/vep/index.html). Both results can also be combined by setting `--tools merge`.
-All variants present in the called VCF files are annotated. For some variantcallers this can mean that the variants are already filtered by `PASS`, for some this needs to be done during post-processing.
+All variants present in the called VCF files are annotated. For some variant callers this can mean that the variants are already filtered by `PASS`, for some this needs to be done during post-processing.
 
 ### snpEff
 
 [snpeff](http://snpeff.sourceforge.net/) is a genetic variant annotation and effect prediction toolbox.
 It annotates and predicts the effects of variants on genes (such as amino acid changes) using multiple databases for annotations.
-The generated VCF header contains the software version and the used command line. For further reading and documentation see the [snpEff manual](http://snpeff.sourceforge.net/SnpEff_manual.html#outputSummary)
+The generated VCF header contains the software version and the used command line. For further reading and documentation see the [snpEff manual](http://snpeff.sourceforge.net/SnpEff_manual.html#outputSummary).
 
 <details markdown="1">
 <summary>Output files for all samples</summary>
@@ -669,7 +669,7 @@ The generated VCF header contains the software version and the used command line
 [VEP (Variant Effect Predictor)](https://www.ensembl.org/info/docs/tools/vep/index.html), based on `Ensembl`, is a tool to determine the effects of all sorts of variants, including SNPs, indels, structural variants, CNVs.
 The generated VCF header contains the software version, also the version numbers for additional databases like [Clinvar](https://www.ncbi.nlm.nih.gov/clinvar/) or [dbSNP](https://www.ncbi.nlm.nih.gov/snp/) used in the [VEP](https://www.ensembl.org/info/docs/tools/vep/index.html) line.
 The format of the [consequence annotations](https://www.ensembl.org/info/genome/variation/prediction/predicted_data.html) is also in the VCF header describing the `INFO` field.
-For further reading and documentation see the [VEP manual](https://www.ensembl.org/info/docs/tools/vep/index.html)
+For further reading and documentation see the [VEP manual](https://www.ensembl.org/info/docs/tools/vep/index.html).
 
 Currently, it contains:
 
