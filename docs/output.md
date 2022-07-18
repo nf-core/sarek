@@ -755,7 +755,7 @@ Plots will show:
 
 [Mosdepth](https://github.com/brentp/mosdepth) reports information for the evaluation of the quality of the provided alignment data.
 In short, the basic statistics of the alignment (number of reads, coverage, GC-content, etc.) are summarized and a number of useful graphs are produced.
-For further reading and documentation see the [Mosdepth](https://github.com/brentp/mosdepth).
+For further reading and documentation see the [Mosdepth documentation](https://github.com/brentp/mosdepth).
 
 Plots will show:
 
