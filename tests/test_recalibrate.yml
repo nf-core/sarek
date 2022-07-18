@@ -1,86 +1,99 @@
 - name: Run Recalibration starting from bam
-  command: nextflow run main.nf -profile test,recalibrate_bam,docker --tools strelka
+  command: nextflow run main.nf -profile test,recalibrate_bam,docker
   tags:
     - bam
     - recalibrate
     - preprocessing
   files:
+    - path: results/csv/recalibrated.csv
     - path: results/multiqc
+    - path: results/preprocessing/test/markduplicates/test.md.cram
+    - path: results/preprocessing/test/markduplicates/test.md.cram.crai
     - path: results/preprocessing/test/recalibrated/test.recal.cram
     - path: results/preprocessing/test/recalibrated/test.recal.cram.crai
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
-    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
     - path: results/reports/samtools_stats/test/test.recal.cram.stats
-    - path: results/csv/recalibrated.csv
-    - path: results/variant_calling/test/strelka/test.strelka.genome.vcf.gz
-    - path: results/variant_calling/test/strelka/test.strelka.genome.vcf.gz.tbi
-    - path: results/variant_calling/test/strelka/test.strelka.variants.vcf.gz
-    - path: results/variant_calling/test/strelka/test.strelka.variants.vcf.gz.tbi
-
 - name: Run Recalibration starting from cram
-  command: nextflow run main.nf -profile test,recalibrate_cram,docker --tools strelka
+  command: nextflow run main.nf -profile test,recalibrate_cram,docker
   tags:
     - cram
     - recalibrate
     - preprocessing
   files:
+    - path: results/csv/recalibrated.csv
     - path: results/multiqc
     - path: results/preprocessing/test/recalibrated/test.recal.cram
     - path: results/preprocessing/test/recalibrated/test.recal.cram.crai
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
-    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
     - path: results/reports/samtools_stats/test/test.recal.cram.stats
-    - path: results/csv/recalibrated.csv
-    - path: results/variant_calling/test/strelka/test.strelka.genome.vcf.gz
-    - path: results/variant_calling/test/strelka/test.strelka.genome.vcf.gz.tbi
-    - path: results/variant_calling/test/strelka/test.strelka.variants.vcf.gz
-    - path: results/variant_calling/test/strelka/test.strelka.variants.vcf.gz.tbi
-
 - name: Run Recalibration starting from bam and skip baserecalibration
   command: nextflow run main.nf -profile test,recalibrate_bam,skip_bqsr,docker --tools strelka
   tags:
     - bam
     - recalibrate
     - preprocessing
+    - variant_calling
+    - strelka
   files:
+    - path: results/csv/variantcalled.csv
     - path: results/multiqc
     - path: results/preprocessing/test/markduplicates/test.md.cram
     - path: results/preprocessing/test/markduplicates/test.md.cram.crai
+    - path: results/reports/bcftools/test/strelka/test.strelka.variants.bcftools_stats.txt
+    - path: results/reports/vcftools/test/strelka/test.strelka.variants.FILTER.summary
+    - path: results/reports/vcftools/test/strelka/test.strelka.variants.TsTv.count
+    - path: results/reports/vcftools/test/strelka/test.strelka.variants.TsTv.qual
+    - path: results/variant_calling/test/strelka/test.strelka.genome.vcf.gz
+    - path: results/variant_calling/test/strelka/test.strelka.genome.vcf.gz.tbi
+    - path: results/variant_calling/test/strelka/test.strelka.variants.vcf.gz
+    - path: results/variant_calling/test/strelka/test.strelka.variants.vcf.gz.tbi
+    - path: results/csv/recalibrated.csv
+      should_exist: false
     - path: results/preprocessing/test/recal_table/test.recal.table
       should_exist: false
     - path: results/preprocessing/test/recalibrated/test.recal.cram
       should_exist: false
     - path: results/preprocessing/test/recalibrated/test.recal.cram.crai
       should_exist: false
-    - path: results/csv/recalibrated.csv
-      should_exist: false
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
       should_exist: false
-    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
-      should_exist: false
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+      should_exist: false
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
       should_exist: false
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
       should_exist: false
     - path: results/reports/samtools_stats/test/test.recal.cram.stats
       should_exist: false
-    - path: results/variant_calling/test/strelka/test.strelka.genome.vcf.gz
-    - path: results/variant_calling/test/strelka/test.strelka.genome.vcf.gz.tbi
-    - path: results/variant_calling/test/strelka/test.strelka.variants.vcf.gz
-    - path: results/variant_calling/test/strelka/test.strelka.variants.vcf.gz.tbi
-
-- name: Run Recalibration starting from cram  and skip baserecalibration
+- name: Run Recalibration starting from cram and skip baserecalibration
   command: nextflow run main.nf -profile test,recalibrate_cram,skip_bqsr,docker --tools strelka
   tags:
     - cram
     - recalibrate
     - preprocessing
+    - variant_calling
+    - strelka
   files:
+    - path: results/csv/variantcalled.csv
     - path: results/multiqc
+    - path: results/reports/bcftools/test/strelka/test.strelka.variants.bcftools_stats.txt
+    - path: results/reports/vcftools/test/strelka/test.strelka.variants.FILTER.summary
+    - path: results/reports/vcftools/test/strelka/test.strelka.variants.TsTv.count
+    - path: results/reports/vcftools/test/strelka/test.strelka.variants.TsTv.qual
+    - path: results/variant_calling/test/strelka/test.strelka.genome.vcf.gz
+    - path: results/variant_calling/test/strelka/test.strelka.genome.vcf.gz.tbi
+    - path: results/variant_calling/test/strelka/test.strelka.variants.vcf.gz
+    - path: results/variant_calling/test/strelka/test.strelka.variants.vcf.gz.tbi
+    - path: results/csv/recalibrated.csv
+      should_exist: false
     - path: results/preprocessing/test/markduplicates/test.md.cram
       should_exist: false
     - path: results/preprocessing/test/markduplicates/test.md.cram.crai
@@ -91,19 +104,13 @@
       should_exist: false
     - path: results/preprocessing/test/recalibrated/test.recal.cram.crai
       should_exist: false
-    - path: results/csv/recalibrated.csv
-      should_exist: false
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
       should_exist: false
-    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
-      should_exist: false
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+      should_exist: false
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
       should_exist: false
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
       should_exist: false
     - path: results/reports/samtools_stats/test/test.recal.cram.stats
       should_exist: false
-    - path: results/variant_calling/test/strelka/test.strelka.genome.vcf.gz
-    - path: results/variant_calling/test/strelka/test.strelka.genome.vcf.gz.tbi
-    - path: results/variant_calling/test/strelka/test.strelka.variants.vcf.gz
-    - path: results/variant_calling/test/strelka/test.strelka.variants.vcf.gz.tbi
