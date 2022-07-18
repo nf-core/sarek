@@ -148,6 +148,7 @@ Pårtejekna is one of glaciers of the Pårte Massif.
 - [#618](https://github.com/nf-core/sarek/pull/618) - Fix channel issue with `targets.bed` in prepare_intervals
 - [#634](https://github.com/nf-core/sarek/pull/634) - Fix issue with samtools/mosdepth plots in multiqc_report
 - [#641](https://github.com/nf-core/sarek/pull/641) - Fix issue with duplicate substring in tools and skip_tools
+- [#650](https://github.com/nf-core/sarek/pull/650) - Fix intervals checks
 
 ### Deprecated
 
