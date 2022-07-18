@@ -621,7 +621,7 @@ It also detects subclonal gains and losses and evaluates the most likely average
 
 ### Microsatellite instability (MSI)
 
-[Microsatellite instability](https://en.wikipedia.org/wiki/Microsatellite_instability) is a genetic condition associated to deficiencies in the mismatch repair (MMR) system which causes a tendency to accumulate a high number of mutations (SNVs and indels).
+[Microsatellite instability](https://en.wikipedia.org/wiki/Microsatellite_instability) is a genetic condition associated with deficiencies in the mismatch repair (MMR) system which causes a tendency to accumulate a high number of mutations (SNVs and indels).
 An altered distribution of microsatellite length is associated with a missed replication slippage which would be corrected under normal MMR conditions.
 
 #### MSIsensorPro
