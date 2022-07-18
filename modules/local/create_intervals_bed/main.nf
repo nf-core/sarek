@@ -11,8 +11,8 @@ process CREATE_INTERVALS_BED {
     path intervals
 
     output:
-    path ("*.bed"), emit: bed
-    //TODO version number missing
+    path "*.bed"          , emit: bed
+    path "versions.yml"     , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -40,6 +40,11 @@ process CREATE_INTERVALS_BED {
             chunk += t
             print \$0 > name
         }' ${intervals}
+
+        cat <<-END_VERSIONS > versions.yml
+        "${task.process}":
+            awk: \$(awk -Wversion 2>/dev/null | head -n 1 | awk '{split(\$0,a,","); print a[1];}' | egrep -o "([0-9]{1,}\\.)+[0-9]{1,}")
+        END_VERSIONS
         """
     else if (intervals.toString().toLowerCase().endsWith("interval_list"))
         """
@@ -47,6 +52,11 @@ process CREATE_INTERVALS_BED {
             name = sprintf("%s_%d-%d", \$1, \$2, \$3);
             printf("%s\\t%d\\t%d\\n", \$1, \$2-1, \$3) > name ".bed"
         }'
+
+        cat <<-END_VERSIONS > versions.yml
+        "${task.process}":
+            awk: \$(awk -Wversion 2>/dev/null | head -n 1 | awk '{split(\$0,a,","); print a[1];}' | egrep -o "([0-9]{1,}\\.)+[0-9]{1,}")
+        END_VERSIONS
         """
     else
         """
@@ -54,5 +64,10 @@ process CREATE_INTERVALS_BED {
             name = sprintf("%s_%d-%d", \$1, \$2, \$3);
             printf("%s\\t%d\\t%d\\n", \$1, \$2-1, \$3) > name ".bed"
         }' ${intervals}
+
+        cat <<-END_VERSIONS > versions.yml
+        "${task.process}":
+            awk: \$(awk -Wversion 2>/dev/null | head -n 1 | awk '{split(\$0,a,","); print a[1];}' | egrep -o "([0-9]{1,}\\.)+[0-9]{1,}")
+        END_VERSIONS
         """
 }
