@@ -889,7 +889,7 @@ Plots will shows :
 
 #### VEP reports
 
-[VEP (Variant Effect Predictor)](https://www.ensembl.org/info/docs/tools/vep/index.html), based on `Ensembl`, is a tools to determine the effects of all sorts of variants, including SNPs, indels, structural variants, CNVs. For further reading and documentation see the [VEP manual](https://www.ensembl.org/info/docs/tools/vep/index.html)
+[VEP (Variant Effect Predictor)](https://www.ensembl.org/info/docs/tools/vep/index.html), based on `Ensembl`, is a tool to determine the effects of all sorts of variants, including SNPs, indels, structural variants, CNVs. For further reading and documentation see the [VEP manual](https://www.ensembl.org/info/docs/tools/vep/index.html)
 
 <details markdown="1">
 <summary>Output files for all samples</summary>
