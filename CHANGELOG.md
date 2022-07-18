@@ -144,7 +144,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#650](https://github.com/nf-core/sarek/pull/650) - Fix intervals checks
 - [#654](https://github.com/nf-core/sarek/pull/654) - Allow any step but annotation to start from BAM files
 
-
 ### Deprecated
 
 ### Removed
