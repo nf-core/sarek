@@ -488,13 +488,9 @@ workflow SAREK {
         ch_bam_for_markduplicates = Channel.empty()
         ch_input_cram_indexed     = Channel.empty()
 
-        if(params.step == 'mapping'){
-
-            ch_bam_for_markduplicates = ch_bam_mapped
-
-        }else{
-
-            ch_input_sample.map{ meta, input, index -> [meta, input] }.branch{
+        if (params.step == 'mapping') ch_bam_for_markduplicates = ch_bam_mapped
+        else {
+            ch_input_sample.branch{
                 bam:  it[0].data_type == "bam"
                 cram: it[0].data_type == "cram"
             }.set{convert}
@@ -508,8 +504,8 @@ workflow SAREK {
                 ch_versions = ch_versions.mix(SAMTOOLS_CRAMTOBAM.out.versions)
 
                 ch_bam_for_markduplicates = ch_bam_for_markduplicates.mix(SAMTOOLS_CRAMTOBAM.out.alignment_index.map{ meta, bam, bai -> [meta, bam]})
-            }else{
-                ch_input_cram_indexed     = convert.cram
+            } else {
+                ch_input_cram_indexed     = convert.cram.map{ meta, input, index -> [meta, input] }
             }
         }
 
