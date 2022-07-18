@@ -867,7 +867,7 @@ Plots will show:
 [snpeff](http://snpeff.sourceforge.net/) is a genetic variant annotation and effect prediction toolbox.
 It annotates and predicts the effects of variants on genes (such as amino acid changes) using multiple databases for annotations. For further reading and documentation see the [snpEff manual](http://snpeff.sourceforge.net/SnpEff_manual.html#outputSummary)
 
-Plots will shows :
+The plots will show:
 
 - locations of detected variants in the genome and the number of variants for each location.
 - the putative impact of detected variants and the number of variants for each impact.
