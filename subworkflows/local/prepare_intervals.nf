@@ -50,7 +50,7 @@ workflow PREPARE_INTERVALS {
             CREATE_INTERVALS_BED(ch_intervals_combined)
             ch_intervals = CREATE_INTERVALS_BED.out.bed.map{meta, intervals -> intervals}
 
-            //ch_versions = ch_intervals.mix(BUILD_INTERVALS.out.versions)
+            ch_versions = ch_intervals.mix(BUILD_INTERVALS.out.versions)
             //ch_versions = ch_intervals.mix(CREATE_INTERVALS_BED.out.versions)
 
         } else {

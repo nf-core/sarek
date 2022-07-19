@@ -11,7 +11,7 @@ process BUILD_INTERVALS {
 
     output:
     tuple val(meta), path("*.bed") , emit: bed
-    //path "versions.yml"            , emit: versions
+    path "versions.yml"            , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -19,5 +19,10 @@ process BUILD_INTERVALS {
     script:
     """
     awk -v FS='\t' -v OFS='\t' '{ print \$1, \"0\", \$2 }' ${fasta_fai} > ${fasta_fai.baseName}.bed
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        awk: \$(awk -Wversion 2>/dev/null | head -n 1 | awk '{split(\$0,a,","); print a[1];}' | egrep -o "([0-9]{1,}\\.)+[0-9]{1,}")
+    END_VERSIONS
     """
 }
