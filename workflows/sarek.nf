@@ -388,11 +388,13 @@ workflow SAREK {
 
         // UMI consensus calling
         if (params.umi_read_structure) {
-            CREATE_UMI_CONSENSUS(ch_input_fastq,
+            CREATE_UMI_CONSENSUS(
+                ch_input_fastq,
                 fasta,
                 ch_map_index,
                 umi_read_structure,
-                params.group_by_umi_strategy)
+                params.group_by_umi_strategy
+            )
 
             bamtofastq = CREATE_UMI_CONSENSUS.out.consensusbam.map{meta, bam -> [meta,bam,[]]}
 
@@ -410,7 +412,10 @@ workflow SAREK {
 
         // Trimming and/or splitting
         if (params.trim_fastq || params.split_fastq > 0) {
-            FASTP(ch_reads_fastp, false, false)
+
+            save_trimmed_fail = false
+            save_merged = false
+            FASTP(ch_reads_fastp, save_trimmed_fail, save_merged)
 
             ch_reports = ch_reports.mix(
                                     FASTP.out.json.collect{meta, json -> json},
@@ -559,7 +564,8 @@ workflow SAREK {
             // Or bams that are specified in the samplesheet.csv when step is prepare_recalibration
             ch_bam_indexed = params.step == 'mapping' ? MERGE_INDEX_BAM.out.bam_bai : convert.bam
 
-            BAM_TO_CRAM(ch_bam_indexed,
+            BAM_TO_CRAM(
+                ch_bam_indexed,
                 ch_input_cram_indexed,
                 fasta,
                 fasta_fai,
@@ -573,7 +579,8 @@ workflow SAREK {
             // Gather used softwares versions
             ch_versions = ch_versions.mix(BAM_TO_CRAM.out.versions)
         } else if (params.use_gatk_spark && params.use_gatk_spark.contains('markduplicates')) {
-            MARKDUPLICATES_SPARK(ch_bam_for_markduplicates,
+            MARKDUPLICATES_SPARK(
+                ch_bam_for_markduplicates,
                 dict,
                 fasta,
                 fasta_fai,
@@ -586,7 +593,8 @@ workflow SAREK {
             // Gather used softwares versions
             ch_versions = ch_versions.mix(MARKDUPLICATES_SPARK.out.versions)
         } else {
-            MARKDUPLICATES(ch_bam_for_markduplicates,
+            MARKDUPLICATES(
+                ch_bam_for_markduplicates,
                 fasta,
                 fasta_fai,
                 intervals_for_preprocessing)
@@ -661,7 +669,8 @@ workflow SAREK {
             ch_table_bqsr_spark    = Channel.empty()
 
             if (params.use_gatk_spark && params.use_gatk_spark.contains('baserecalibrator')) {
-            PREPARE_RECALIBRATION_SPARK(ch_cram_for_prepare_recalibration,
+            PREPARE_RECALIBRATION_SPARK(
+                ch_cram_for_prepare_recalibration,
                 dict,
                 fasta,
                 fasta_fai,
@@ -675,7 +684,8 @@ workflow SAREK {
                 ch_versions = ch_versions.mix(PREPARE_RECALIBRATION_SPARK.out.versions)
             } else {
 
-            PREPARE_RECALIBRATION(ch_cram_for_prepare_recalibration,
+            PREPARE_RECALIBRATION(
+                ch_cram_for_prepare_recalibration,
                 dict,
                 fasta,
                 fasta_fai,
@@ -736,7 +746,8 @@ workflow SAREK {
 
             if (params.use_gatk_spark && params.use_gatk_spark.contains('baserecalibrator')) {
 
-                RECALIBRATE_SPARK(ch_cram_applybqsr,
+                RECALIBRATE_SPARK(
+                    ch_cram_applybqsr,
                     dict,
                     fasta,
                     fasta_fai,
@@ -749,7 +760,8 @@ workflow SAREK {
 
             } else {
 
-                RECALIBRATE(ch_cram_applybqsr,
+                RECALIBRATE(
+                    ch_cram_applybqsr,
                     dict,
                     fasta,
                     fasta_fai,
@@ -764,7 +776,8 @@ workflow SAREK {
                 ch_cram_variant_calling_no_spark,
                 ch_cram_variant_calling_spark)
 
-            CRAM_QC(ch_cram_variant_calling,
+            CRAM_QC(
+                ch_cram_variant_calling,
                 fasta,
                 fasta_fai,
                 intervals_for_preprocessing)
@@ -901,7 +914,7 @@ workflow SAREK {
         TUMOR_ONLY_VARIANT_CALLING(
             params.tools,
             ch_cram_variant_calling_tumor_only,
-            [],
+            [], //bwa_index for tiddit; not used here
             chr_files,
             cnvkit_reference,
             dbsnp,
@@ -923,7 +936,7 @@ workflow SAREK {
         PAIR_VARIANT_CALLING(
             params.tools,
             ch_cram_variant_calling_pair,
-            [],
+            [], //bwa_index for tiddit; not used here
             chr_files,
             dbsnp,
             dbsnp_tbi,
@@ -988,7 +1001,8 @@ workflow SAREK {
 
             vep_fasta = (params.vep_include_fasta) ? fasta : []
 
-            ANNOTATE(vcf_to_annotate,
+            ANNOTATE(
+                vcf_to_annotate,
                 vep_fasta,
                 params.tools,
                 snpeff_db,
