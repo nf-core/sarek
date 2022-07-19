@@ -416,7 +416,7 @@ workflow SAREK {
             if(params.split_fastq){
                 ch_reads_to_map = FASTP.out.reads.map{ key, reads ->
 
-                        read_files = reads.sort{ a,b -> a.getName().tokenize('.')[0] <=> b.getName().tokenize('.')[0] }.collate(2)
+                        read_files = key.single_end ? reads : reads.sort{ a,b -> a.getName().tokenize('.')[0] <=> b.getName().tokenize('.')[0] }.collate(2)
                         [[patient: key.patient, sample:key.sample, sex:key.sex, status:key.status, id:key.id, numLanes:key.numLanes, read_group:key.read_group, data_type:key.data_type, size:read_files.size()],
                         read_files]
                     }.transpose()
