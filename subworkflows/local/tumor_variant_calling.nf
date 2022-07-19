@@ -51,7 +51,15 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
             //If no interval file provided (0) then add empty list
             intervals_new = num_intervals == 0 ? [] : intervals
 
-            [[patient:meta.patient, sample:meta.sample, sex:meta.sex, status:meta.status, id:meta.sample, data_type:meta.data_type, num_intervals:num_intervals],
+            [[
+                data_type:      meta.data_type,
+                id:             meta.sample,
+                num_intervals:  num_intervals,
+                patient:        meta.patient,
+                sample:         meta.sample,
+                sex:            meta.sex,
+                status:         meta.status,
+            ],
             cram, crai, intervals_new]
         }
 
@@ -63,7 +71,15 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
             bed_new = num_intervals == 0 ? [] : bed_tbi[0]
             tbi_new = num_intervals == 0 ? [] : bed_tbi[1]
 
-            [[patient:meta.patient, sample:meta.sample, sex:meta.sex, status:meta.status, id:meta.sample, data_type:meta.data_type, num_intervals:num_intervals],
+            [[
+                data_type:      meta.data_type,
+                id:             meta.sample,
+                num_intervals:  num_intervals,
+                patient:        meta.patient,
+                sample:         meta.sample,
+                sex:            meta.sex,
+                status:         meta.status,
+            ],
             cram, crai, bed_new, tbi_new]
         }
 
@@ -71,8 +87,7 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
         cram_intervals_no_index = cram_recalibrated_intervals.map { meta, cram, crai, intervals ->
                                                                     [meta, cram, intervals]
                                                                     }
-        RUN_MPILEUP(cram_intervals_no_index,
-                        fasta)
+        RUN_MPILEUP(cram_intervals_no_index,fasta)
         ch_versions = ch_versions.mix(RUN_MPILEUP.out.versions)
     }
 

@@ -450,15 +450,15 @@ workflow SAREK {
             new_id = meta.size * meta.numLanes == 1 ? meta.sample : meta.id
 
             [[
-                data_type:meta.data_type,
-                id:new_id,
-                numLanes:meta.numLanes,
-                patient:meta.patient,
-                read_group:meta.read_group,
-                sample:meta.sample,
-                sex:meta.sex,
-                size:meta.size,
-                status:meta.status,
+                data_type:  meta.data_type,
+                id:         new_id,
+                numLanes:   meta.numLanes,
+                patient:    meta.patient,
+                read_group: meta.read_group,
+                sample:     meta.sample,
+                sex:        meta.sex,
+                size:       meta.size,
+                status:     meta.status,
                 ],
             reads]
         }
@@ -568,7 +568,7 @@ workflow SAREK {
             ch_cram_no_markduplicates_restart = Channel.empty().mix(BAM_TO_CRAM.out.cram_converted)
 
             // Gather QC reports
-            ch_reports  = ch_reports.mix(BAM_TO_CRAM.out.qc)
+            ch_reports  = ch_reports.mix(BAM_TO_CRAM.out.qc.collect{meta, report -> report})
 
             // Gather used softwares versions
             ch_versions = ch_versions.mix(BAM_TO_CRAM.out.versions)
@@ -581,7 +581,7 @@ workflow SAREK {
             ch_cram_markduplicates_spark = MARKDUPLICATES_SPARK.out.cram
 
             // Gather QC reports
-            ch_reports  = ch_reports.mix(MARKDUPLICATES_SPARK.out.qc)
+            ch_reports  = ch_reports.mix(MARKDUPLICATES_SPARK.out.qc.collect{meta, report -> report})
 
             // Gather used softwares versions
             ch_versions = ch_versions.mix(MARKDUPLICATES_SPARK.out.versions)
@@ -594,7 +594,7 @@ workflow SAREK {
             ch_cram_markduplicates_no_spark = MARKDUPLICATES.out.cram
 
             // Gather QC reports
-            ch_reports  = ch_reports.mix(MARKDUPLICATES.out.qc)
+            ch_reports  = ch_reports.mix(MARKDUPLICATES.out.qc.collect{meta, report -> report})
 
             // Gather used softwares versions
             ch_versions = ch_versions.mix(MARKDUPLICATES.out.versions)
@@ -610,12 +610,12 @@ workflow SAREK {
             ch_cram_no_markduplicates_restart).map{ meta, cram, crai ->
                         //Make sure correct data types are carried through
                         [[
-                            data_type:"cram",
-                            id:meta.id,
-                            patient:meta.patient,
-                            sample:meta.sample,
-                            sex:meta.sex,
-                            status:meta.status
+                            data_type:  "cram",
+                            id:         meta.id,
+                            patient:    meta.patient,
+                            sample:     meta.sample,
+                            sex:        meta.sex,
+                            status:     meta.status
                             ],
                         cram, crai]
                     }
@@ -770,7 +770,7 @@ workflow SAREK {
                 intervals_for_preprocessing)
 
             // Gather QC reports
-            ch_reports  = ch_reports.mix(CRAM_QC.out.qc)
+            ch_reports  = ch_reports.mix(CRAM_QC.out.qc.collect{meta, report -> report})
 
             // Gather used softwares versions
             ch_versions = ch_versions.mix(CRAM_QC.out.versions)

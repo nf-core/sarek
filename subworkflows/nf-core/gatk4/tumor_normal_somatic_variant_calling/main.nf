@@ -65,7 +65,14 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
         mutect2_vcf_branch.intervals
         .map{ meta, vcf ->
 
-            new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, sex:meta.sex, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals]
+            new_meta = [
+                        id:meta.tumor_id + "_vs_" + meta.normal_id,
+                        normal_id:meta.normal_id,
+                        num_intervals:meta.num_intervals,
+                        patient:meta.patient,
+                        sex:meta.sex,
+                        tumor_id:meta.tumor_id
+                    ]
 
             [groupKey(new_meta, meta.num_intervals), vcf]
         }.groupTuple(),
@@ -85,7 +92,14 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
         mutect2_stats_branch.intervals
         .map{ meta, stats ->
 
-            new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, sex:meta.sex, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals]
+            new_meta = [
+                        id:             meta.tumor_id + "_vs_" + meta.normal_id,
+                        normal_id:      meta.normal_id,
+                        num_intervals:  meta.num_intervals,
+                        patient:        meta.patient,
+                        sex:            meta.sex,
+                        tumor_id:       meta.tumor_id
+                    ]
 
             [groupKey(new_meta, meta.num_intervals), stats]
         }.groupTuple())
@@ -101,7 +115,14 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
         mutect2_f1r2_branch.intervals
             .map{ meta, f1r2 ->
 
-                new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, sex:meta.sex, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals]
+                new_meta = [
+                            id:             meta.tumor_id + "_vs_" + meta.normal_id,
+                            normal_id:      meta.normal_id,
+                            num_intervals:  meta.num_intervals,
+                            patient:        meta.patient,
+                            sex:            meta.sex,
+                            tumor_id:       meta.tumor_id,
+                        ]
 
                 [groupKey(new_meta, meta.num_intervals), f1r2]
             }.groupTuple(),
@@ -121,7 +142,14 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
     GETPILEUPSUMMARIES_TUMOR ( pileup.tumor.map{
                                     meta, cram, crai, intervals ->
 
-                                    [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, sex:meta.sex, id:meta.tumor_id, num_intervals:meta.num_intervals],
+                                    [[
+                                        id:             meta.tumor_id,
+                                        normal_id:      meta.normal_id,
+                                        num_intervals:  meta.num_intervals,
+                                        patient:        meta.patient,
+                                        sex:            meta.sex,
+                                        tumor_id:       meta.tumor_id,
+                                    ],
                                         cram, crai, intervals]
                                 },
                                 fasta, fai, dict, germline_resource_pileup, germline_resource_pileup_tbi )
@@ -129,7 +157,14 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
     GETPILEUPSUMMARIES_NORMAL ( pileup.normal.map{
                                     meta, cram, crai, intervals ->
 
-                                    [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, sex:meta.sex, id:meta.normal_id, num_intervals:meta.num_intervals],
+                                    [[
+                                        id:             meta.normal_id,
+                                        normal_id:      meta.normal_id,
+                                        num_intervals:  meta.num_intervals,
+                                        patient:        meta.patient,
+                                        tumor_id:       meta.tumor_id,
+                                        sex:            meta.sex,
+                                    ],
                                         cram, crai, intervals]
                                 },
                                 fasta, fai, dict, germline_resource_pileup, germline_resource_pileup_tbi )
@@ -149,7 +184,14 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
         GETPILEUPSUMMARIES_NORMAL.out.table
         .map{ meta, table ->
 
-            new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, sex:meta.sex, id:meta.normal_id, num_intervals:meta.num_intervals]
+            new_meta = [
+                            id:             meta.normal_id,
+                            normal_id:      meta.normal_id,
+                            num_intervals:  meta.num_intervals,
+                            patient:        meta.patient,
+                            sex:            meta.sex,
+                            tumor_id:       meta.tumor_id,
+                        ]
 
             [groupKey(new_meta, meta.num_intervals), table]
         }.groupTuple(),
@@ -159,14 +201,28 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
         GATHERPILEUPSUMMARIES_NORMAL.out.table,
         pileup_table_normal.no_intervals).map{ meta, table ->
 
-            new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, sex:meta.sex, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals]
+            new_meta = [
+                            id:             meta.tumor_id + "_vs_" + meta.normal_id,
+                            normal_id:      meta.normal_id,
+                            num_intervals:  meta.num_intervals,
+                            patient:        meta.patient,
+                            sex:            meta.sex,
+                            tumor_id:       meta.tumor_id,
+                        ]
             [new_meta, table]
         }
 
     GATHERPILEUPSUMMARIES_TUMOR(
         GETPILEUPSUMMARIES_TUMOR.out.table
         .map{ meta, table ->
-            new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, sex:meta.sex, id:meta.tumor_id, num_intervals:meta.num_intervals]
+            new_meta = [
+                            id:             meta.tumor_id,
+                            normal_id:      meta.normal_id,
+                            num_intervals:  meta.num_intervals,
+                            patient:        meta.patient,
+                            sex:            meta.sex,
+                            tumor_id:       meta.tumor_id,
+                        ]
 
             [groupKey(new_meta, meta.num_intervals), table]
         }.groupTuple(),
@@ -175,7 +231,14 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
     gather_table_tumor = Channel.empty().mix(
         GATHERPILEUPSUMMARIES_TUMOR.out.table,
         pileup_table_tumor.no_intervals).map{ meta, table ->
-            new_meta = [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, sex:meta.sex, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals]
+            new_meta = [
+                        id:             meta.tumor_id + "_vs_" + meta.normal_id,
+                        normal_id:      meta.normal_id,
+                        num_intervals:  meta.num_intervals,
+                        patient:        meta.patient,
+                        sex:            meta.sex,
+                        tumor_id:       meta.tumor_id,
+                    ]
 
             [new_meta, table]
         }

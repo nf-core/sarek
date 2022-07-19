@@ -40,12 +40,12 @@ workflow RUN_MANTA_GERMLINE {
             .map{ meta, vcf ->
 
                 [groupKey([
-                            id:meta.sample,
-                            num_intervals:meta.num_intervals,
-                            patient:meta.patient,
-                            sample:meta.sample,
-                            sex:meta.sex,
-                            status:meta.status,
+                            id:             meta.sample,
+                            num_intervals:  meta.num_intervals,
+                            patient:        meta.patient,
+                            sample:         meta.sample,
+                            sex:            meta.sex,
+                            status:         meta.status,
                         ],
                         meta.num_intervals),
                 vcf]
@@ -57,12 +57,12 @@ workflow RUN_MANTA_GERMLINE {
             .map{ meta, vcf ->
 
                 [groupKey([
-                            id:meta.sample,
-                            num_intervals:meta.num_intervals,
-                            patient:meta.patient,
-                            sample:meta.sample,
-                            sex:meta.sex,
-                            status:meta.status,
+                            id:             meta.sample,
+                            num_intervals:  meta.num_intervals,
+                            patient:        meta.patient,
+                            sample:         meta.sample,
+                            sex:            meta.sex,
+                            status:         meta.status,
                         ],
                         meta.num_intervals),
                 vcf]
@@ -75,12 +75,12 @@ workflow RUN_MANTA_GERMLINE {
             .map{ meta, vcf ->
 
                 [groupKey([
-                            id:meta.sample,
-                            num_intervals:meta.num_intervals,
-                            patient:meta.patient,
-                            sample:meta.sample,
-                            status:meta.status,
-                            sex:meta.sex,
+                            id:             meta.sample,
+                            num_intervals:  meta.num_intervals,
+                            patient:        meta.patient,
+                            sample:         meta.sample,
+                            status:         meta.status,
+                            sex:            meta.sex,
                         ],
                         meta.num_intervals),
                 vcf]
@@ -95,13 +95,13 @@ workflow RUN_MANTA_GERMLINE {
                     manta_diploid_sv_vcf.no_intervals)
                 .map{ meta, vcf ->
                     [[
-                        id:meta.sample,
-                        num_intervals:meta.num_intervals,
-                        patient:meta.patient,
-                        sample:meta.sample,
-                        status:meta.status,
-                        sex:meta.sex,
-                        variantcaller:"manta"],
+                        id:             meta.sample,
+                        num_intervals:  meta.num_intervals,
+                        patient:        meta.patient,
+                        sample:         meta.sample,
+                        status:         meta.status,
+                        sex:            meta.sex,
+                        variantcaller:  "manta"],
                     vcf]
                 }
 

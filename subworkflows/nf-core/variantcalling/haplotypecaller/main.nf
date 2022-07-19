@@ -46,7 +46,14 @@ workflow RUN_HAPLOTYPECALLER {
         haplotypecaller_vcf_branch.intervals
             .map{ meta, vcf ->
 
-                new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, sex:meta.sex, id:meta.sample, num_intervals:meta.num_intervals]
+                new_meta = [
+                                id:             meta.sample,
+                                num_intervals:  meta.num_intervals,
+                                patient:        meta.patient,
+                                sample:         meta.sample,
+                                sex:            meta.sex,
+                                status:         meta.status
+                            ]
 
                 [groupKey(new_meta, new_meta.num_intervals), vcf]
             }.groupTuple(),
@@ -95,7 +102,17 @@ workflow RUN_HAPLOTYPECALLER {
                         known_sites,
                         known_sites_tbi)
 
-        filtered_vcf = SINGLE_SAMPLE.out.filtered_vcf.map{ meta, vcf-> [[patient:meta.patient, sample:meta.sample, status:meta.status, sex:meta.sex, id:meta.sample, num_intervals:meta.num_intervals, variantcaller:"haplotypecaller"], vcf]}
+        filtered_vcf = SINGLE_SAMPLE.out.filtered_vcf.map{ meta, vcf ->
+                        [[
+                            id:             meta.sample,
+                            num_intervals:  meta.num_intervals,
+                            patient:        meta.patient,
+                            sample:         meta.sample,
+                            sex:            meta.sex,
+                            status:         meta.status,
+                            variantcaller:  "haplotypecaller"
+                        ],
+                        vcf]}
         ch_versions = ch_versions.mix(SINGLE_SAMPLE.out.versions)
     }
 

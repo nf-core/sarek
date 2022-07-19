@@ -19,13 +19,13 @@ workflow MERGE_INDEX_CRAM {
     ch_cram_to_merge = ch_cram.map{ meta, cram ->
 
         [groupKey([
-                    data_type:meta.data_type,
-                    id:meta.sample,
-                    num_intervals:meta.num_intervals,
-                    patient:meta.patient,
-                    sample:meta.sample,
-                    sex:meta.sex,
-                    status:meta.status,
+                    data_type:      meta.data_type,
+                    id:             meta.sample,
+                    num_intervals:  meta.num_intervals,
+                    patient:        meta.patient,
+                    sample:         meta.sample,
+                    sex:            meta.sex,
+                    status:         meta.status,
                     ],
                 meta.num_intervals),
         cram]

@@ -21,22 +21,22 @@ workflow RUN_TIDDIT {
     tiddit_vcf_gz = TABIX_BGZIP_TIDDIT_SV.out.gz_tbi.map{ meta, gz, tbi ->
 
         new_meta = meta.tumor_id ? [
-                                        id:meta.tumor_id + "_vs_" + meta.normal_id,
-                                        patient:meta.patient,
-                                        normal_id:meta.normal_id,
-                                        num_intervals:meta.num_intervals,
-                                        sex:meta.sex,
-                                        tumor_id:meta.tumor_id,
-                                        variantcaller:'tiddit'
+                                        id:             meta.tumor_id + "_vs_" + meta.normal_id,
+                                        patient:        meta.patient,
+                                        normal_id:      meta.normal_id,
+                                        num_intervals:  meta.num_intervals,
+                                        sex:            meta.sex,
+                                        tumor_id:       meta.tumor_id,
+                                        variantcaller:  'tiddit'
                                     ]
                                     : [
-                                        id:meta.sample,
-                                        num_intervals:meta.num_intervals,
-                                        patient:meta.patient,
-                                        sample:meta.sample,
-                                        sex:meta.sex,
-                                        status:meta.status,
-                                        variantcaller:'tiddit'
+                                        id:             meta.sample,
+                                        num_intervals:  meta.num_intervals,
+                                        patient:        meta.patient,
+                                        sample:         meta.sample,
+                                        sex:            meta.sex,
+                                        status:         meta.status,
+                                        variantcaller:  'tiddit'
                                     ]
         [new_meta, gz]}
 

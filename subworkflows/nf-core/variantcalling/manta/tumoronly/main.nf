@@ -39,12 +39,12 @@ workflow RUN_MANTA_TUMORONLY {
         manta_small_indels_vcf.intervals.map{ meta, vcf ->
 
                 [groupKey([
-                            id:meta.sample,
-                            num_intervals:meta.num_intervals,
-                            patient:meta.patient,
-                            sample:meta.sample,
-                            sex:meta.sex,
-                            status:meta.status,
+                            id:             meta.sample,
+                            num_intervals:  meta.num_intervals,
+                            patient:        meta.patient,
+                            sample:         meta.sample,
+                            sex:            meta.sex,
+                            status:         meta.status,
                         ],
                         meta.num_intervals),
                 vcf]
@@ -56,12 +56,12 @@ workflow RUN_MANTA_TUMORONLY {
         manta_candidate_sv_vcf.intervals.map{ meta, vcf ->
 
                 [groupKey([
-                            id:meta.sample,
-                            num_intervals:meta.num_intervals,
-                            patient:meta.patient,
-                            sample:meta.sample,
-                            sex:meta.sex,
-                            status:meta.status
+                            id:             meta.sample,
+                            num_intervals:  meta.num_intervals,
+                            patient:        meta.patient,
+                            sample:         meta.sample,
+                            sex:            meta.sex,
+                            status:         meta.status
                         ],
                         meta.num_intervals),
                 vcf]
@@ -73,12 +73,12 @@ workflow RUN_MANTA_TUMORONLY {
         manta_tumor_sv_vcf.intervals.map{ meta, vcf ->
 
                 [groupKey( [
-                            id:meta.sample,
-                            num_intervals:meta.num_intervals,
-                            patient:meta.patient,
-                            sample:meta.sample,
-                            sex:meta.sex,
-                            status:meta.status,
+                            id:             meta.sample,
+                            num_intervals:  meta.num_intervals,
+                            patient:        meta.patient,
+                            sample:         meta.sample,
+                            sex:            meta.sex,
+                            status:         meta.status,
                         ],
                         meta.num_intervals),
                 vcf]
@@ -93,13 +93,13 @@ workflow RUN_MANTA_TUMORONLY {
         manta_tumor_sv_vcf.no_intervals
     ).map{ meta, vcf ->
         [[
-            id:meta.sample,
-            num_intervals:meta.num_intervals,
-            patient:meta.patient,
-            sample:meta.sample,
-            sex:meta.sex,
-            status:meta.status,
-            variantcaller:"manta"
+            id:             meta.sample,
+            num_intervals:  meta.num_intervals,
+            patient:        meta.patient,
+            sample:         meta.sample,
+            sex:            meta.sex,
+            status:         meta.status,
+            variantcaller:  "manta"
         ],
         vcf]
     }

@@ -48,12 +48,12 @@ workflow RUN_MANTA_SOMATIC {
         manta_candidate_small_indels_vcf.intervals.map{ meta, vcf ->
 
                 [groupKey([
-                            id:meta.tumor_id + "_vs_" + meta.normal_id,
-                            normal_id:meta.normal_id,
-                            num_intervals:meta.num_intervals,
-                            patient:meta.patient,
-                            sex:meta.sex,
-                            tumor_id:meta.tumor_id
+                            id:             meta.tumor_id + "_vs_" + meta.normal_id,
+                            normal_id:      meta.normal_id,
+                            num_intervals:  meta.num_intervals,
+                            patient:        meta.patient,
+                            sex:            meta.sex,
+                            tumor_id:       meta.tumor_id
                         ],
                         meta.num_intervals),
                 vcf]
@@ -65,12 +65,12 @@ workflow RUN_MANTA_SOMATIC {
         manta_candidate_sv_vcf.intervals.map{ meta, vcf ->
 
                 [groupKey([
-                            id:meta.tumor_id + "_vs_" + meta.normal_id,
-                            normal_id:meta.normal_id,
-                            num_intervals:meta.num_intervals,
-                            patient:meta.patient,
-                            sex:meta.sex,
-                            tumor_id:meta.tumor_id
+                            id:             meta.tumor_id + "_vs_" + meta.normal_id,
+                            normal_id:      meta.normal_id,
+                            num_intervals:  meta.num_intervals,
+                            patient:        meta.patient,
+                            sex:            meta.sex,
+                            tumor_id:       meta.tumor_id
                         ],
                         meta.num_intervals),
                 vcf]
@@ -81,21 +81,21 @@ workflow RUN_MANTA_SOMATIC {
     MERGE_MANTA_DIPLOID(
         manta_diploid_sv_vcf.intervals.map{ meta, vcf ->
                 new_meta = [
-                            id:meta.tumor_id + "_vs_" + meta.normal_id,
-                            normal_id:meta.normal_id,
-                            num_intervals:meta.num_intervals,
-                            patient:meta.patient,
-                            sex:meta.sex,
-                            tumor_id:meta.tumor_id
+                            id:             meta.tumor_id + "_vs_" + meta.normal_id,
+                            normal_id:      meta.normal_id,
+                            num_intervals:  meta.num_intervals,
+                            patient:        meta.patient,
+                            sex:            meta.sex,
+                            tumor_id:       meta.tumor_id
                         ]
 
                 [groupKey([
-                            id:meta.tumor_id + "_vs_" + meta.normal_id,
-                            normal_id:meta.normal_id,
-                            num_intervals:meta.num_intervals,
-                            patient:meta.patient,
-                            sex:meta.sex,
-                            tumor_id:meta.tumor_id
+                            id:             meta.tumor_id + "_vs_" + meta.normal_id,
+                            normal_id:      meta.normal_id,
+                            num_intervals:  meta.num_intervals,
+                            patient:        meta.patient,
+                            sex:            meta.sex,
+                            tumor_id:       meta.tumor_id
                         ],
                         meta.num_intervals),
                 vcf]
@@ -107,12 +107,12 @@ workflow RUN_MANTA_SOMATIC {
         manta_somatic_sv_vcf.intervals.map{ meta, vcf ->
 
                 [groupKey([
-                            id:meta.tumor_id + "_vs_" + meta.normal_id,
-                            normal_id:meta.normal_id,
-                            num_intervals:meta.num_intervals,
-                            patient:meta.patient,
-                            sex:meta.sex,
-                            tumor_id:meta.tumor_id
+                            id:             meta.tumor_id + "_vs_" + meta.normal_id,
+                            normal_id:      meta.normal_id,
+                            num_intervals:  meta.num_intervals,
+                            patient:        meta.patient,
+                            sex:            meta.sex,
+                            tumor_id:       meta.tumor_id
                         ],
                         meta.num_intervals),
                 vcf]
@@ -128,13 +128,13 @@ workflow RUN_MANTA_SOMATIC {
         manta_somatic_sv_vcf.no_intervals
     ).map{ meta, vcf ->
         [[
-            id:meta.tumor_id + "_vs_" + meta.normal_id,
-            num_intervals:meta.num_intervals,
-            normal_id:meta.normal_id,
-            patient:meta.patient,
-            sex:meta.sex,
-            tumor_id:meta.tumor_id,
-            variantcaller:"manta"
+            id:             meta.tumor_id + "_vs_" + meta.normal_id,
+            num_intervals:  meta.num_intervals,
+            normal_id:      meta.normal_id,
+            patient:        meta.patient,
+            sex:            meta.sex,
+            tumor_id:       meta.tumor_id,
+            variantcaller:  "manta"
         ],
         vcf]
     }
@@ -145,11 +145,11 @@ workflow RUN_MANTA_SOMATIC {
         manta_candidate_small_indels_vcf.no_intervals
     ).map{ meta, vcf ->
         [[
-            id:meta.tumor_id + "_vs_" + meta.normal_id,
-            normal_id:meta.normal_id,
-            patient:meta.patient,
-            sex:meta.sex,
-            tumor_id:meta.tumor_id,
+            id:         meta.tumor_id + "_vs_" + meta.normal_id,
+            normal_id:  meta.normal_id,
+            patient:    meta.patient,
+            sex:        meta.sex,
+            tumor_id:   meta.tumor_id,
         ],
         vcf]
     }
@@ -159,11 +159,11 @@ workflow RUN_MANTA_SOMATIC {
         manta_candidate_small_indels_vcf_tbi.no_intervals
     ).map{ meta, vcf ->
         [[
-            id:meta.tumor_id + "_vs_" + meta.normal_id,
-            normal_id:meta.normal_id,
-            patient:meta.patient,
-            sex:meta.sex,
-            tumor_id:meta.tumor_id
+            id:         meta.tumor_id + "_vs_" + meta.normal_id,
+            normal_id:  meta.normal_id,
+            patient:    meta.patient,
+            sex:        meta.sex,
+            tumor_id:   meta.tumor_id
         ],
         vcf]
     }

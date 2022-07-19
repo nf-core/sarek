@@ -30,12 +30,12 @@ workflow RUN_STRELKA_SOMATIC {
     MERGE_STRELKA_SNVS(strelka_vcf_snvs.intervals.map{ meta, vcf ->
 
                 [groupKey([
-                            id:meta.tumor_id + "_vs_" + meta.normal_id,
-                            normal_id:meta.normal_id,
-                            num_intervals:meta.num_intervals,
-                            patient:meta.patient,
-                            sex:meta.sex,
-                            tumor_id:meta.tumor_id,
+                            id:             meta.tumor_id + "_vs_" + meta.normal_id,
+                            normal_id:      meta.normal_id,
+                            num_intervals:  meta.num_intervals,
+                            patient:        meta.patient,
+                            sex:            meta.sex,
+                            tumor_id:       meta.tumor_id,
                             ],
                         meta.num_intervals),
                 vcf]
@@ -46,12 +46,12 @@ workflow RUN_STRELKA_SOMATIC {
     MERGE_STRELKA_INDELS(strelka_vcf_indels.intervals.map{ meta, vcf ->
 
                 [groupKey([
-                            id:meta.tumor_id + "_vs_" + meta.normal_id,
-                            normal_id:meta.normal_id,
-                            num_intervals:meta.num_intervals,
-                            patient:meta.patient,
-                            sex:meta.sex,
-                            tumor_id:meta.tumor_id,
+                            id:             meta.tumor_id + "_vs_" + meta.normal_id,
+                            normal_id:      meta.normal_id,
+                            num_intervals:  meta.num_intervals,
+                            patient:        meta.patient,
+                            sex:            meta.sex,
+                            tumor_id:       meta.tumor_id,
                             ],
                             meta.num_intervals),
                 vcf]
@@ -67,13 +67,13 @@ workflow RUN_STRELKA_SOMATIC {
                     )
                 .map{ meta, vcf ->
                     [[
-                        id:meta.tumor_id + "_vs_" + meta.normal_id,
-                        normal_id:meta.normal_id,
-                        num_intervals:meta.num_intervals,
-                        patient:meta.patient,
-                        sex:meta.sex,
-                        tumor_id:meta.tumor_id,
-                        variantcaller:"strelka"
+                        id:             meta.tumor_id + "_vs_" + meta.normal_id,
+                        normal_id:      meta.normal_id,
+                        num_intervals:  meta.num_intervals,
+                        patient:        meta.patient,
+                        sex:            meta.sex,
+                        tumor_id:       meta.tumor_id,
+                        variantcaller:  "strelka"
                         ],
                     vcf]
                 }

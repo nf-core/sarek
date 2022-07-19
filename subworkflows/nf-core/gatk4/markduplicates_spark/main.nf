@@ -51,6 +51,7 @@ workflow MARKDUPLICATES_SPARK {
     ch_versions = ch_versions.mix(INDEX_MARKDUPLICATES.out.versions.first())
     ch_versions = ch_versions.mix(BAM_TO_CRAM.out.versions.first())
     ch_versions = ch_versions.mix(SAMTOOLS_CRAMTOBAM.out.versions)
+
     emit:
         cram     = cram_markduplicates
         qc       = qc_reports
