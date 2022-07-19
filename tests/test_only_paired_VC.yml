@@ -10,19 +10,19 @@
     - path: results/reference/cnvkit.reference.cnn
     - path: results/reference/multi_intervals.antitarget.bed
     - path: results/untar/chromosomes/chr21.fasta
-    - path: results/variant_calling/sample4_vs_sample3/cnvkit/multi_intervals.antitarget.bed
-    - path: results/variant_calling/sample4_vs_sample3/cnvkit/multi_intervals.target.bed
-    - path: results/variant_calling/sample4_vs_sample3/cnvkit/reference.cnn
-    - path: results/variant_calling/sample4_vs_sample3/cnvkit/test.paired_end.recalibrated.sorted.antitargetcoverage.cnn
-    - path: results/variant_calling/sample4_vs_sample3/cnvkit/test.paired_end.recalibrated.sorted.targetcoverage.cnn
-    - path: results/variant_calling/sample4_vs_sample3/cnvkit/test2.paired_end.recalibrated.sorted-diagram.pdf
-    - path: results/variant_calling/sample4_vs_sample3/cnvkit/test2.paired_end.recalibrated.sorted-scatter.png
-    - path: results/variant_calling/sample4_vs_sample3/cnvkit/test2.paired_end.recalibrated.sorted.antitargetcoverage.cnn
-    - path: results/variant_calling/sample4_vs_sample3/cnvkit/test2.paired_end.recalibrated.sorted.bintest.cns
-    - path: results/variant_calling/sample4_vs_sample3/cnvkit/test2.paired_end.recalibrated.sorted.call.cns
-    - path: results/variant_calling/sample4_vs_sample3/cnvkit/test2.paired_end.recalibrated.sorted.cnr
-    - path: results/variant_calling/sample4_vs_sample3/cnvkit/test2.paired_end.recalibrated.sorted.cns
-    - path: results/variant_calling/sample4_vs_sample3/cnvkit/test2.paired_end.recalibrated.sorted.targetcoverage.cnn
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/multi_intervals.antitarget.bed
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/multi_intervals.target.bed
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/reference.cnn
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/test.paired_end.recalibrated.sorted.antitargetcoverage.cnn
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/test.paired_end.recalibrated.sorted.targetcoverage.cnn
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted-diagram.pdf
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted-scatter.png
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.antitargetcoverage.cnn
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.bintest.cns
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.call.cns
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.cnr
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.cns
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.targetcoverage.cnn
 - name: Skip variant calling on matched normal
   command: nextflow run main.nf -profile test,variantcalling_channels,docker --tools strelka --only_paired_variant_calling
   tags:
@@ -55,15 +55,15 @@
     - path: results/variant_calling/sample2/strelka/sample2.strelka.genome.vcf.gz.tbi
     - path: results/variant_calling/sample2/strelka/sample2.strelka.variants.vcf.gz
     - path: results/variant_calling/sample2/strelka/sample2.strelka.variants.vcf.gz.tbi
-    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.strelka.somatic_indels.vcf.gz
-    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.strelka.somatic_indels.vcf.gz.tbi
-    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz
-    - path: results/variant_calling/sample4_vs_sample3/strelka/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz.tbi
+    - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.vcf.gz
+    - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.vcf.gz.tbi
+    - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz
+    - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz.tbi
     - path: results/variant_calling/sample3/strelka/sample3.strelka.variants.vcf.gz
       should_exist: false
-    - path: results/variant_calling/sample3/strelka/sample3.strelka.variants.vcf.gz.tbi
+    - path: results/variant_calling/strelka/sample3/sample3.strelka.variants.vcf.gz.tbi
       should_exist: false
-    - path: results/variant_calling/sample3/strelka/sample3.strelka.genome.vcf.gz
+    - path: results/variant_calling/strelka/sample3/sample3.strelka.genome.vcf.gz
       should_exist: false
-    - path: results/variant_calling/sample3/strelka/sample3.strelka.genome.vcf.gz.tbi
+    - path: results/variant_calling/strelka/sample3/sample3.strelka.genome.vcf.gz.tbi
       should_exist: false

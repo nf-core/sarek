@@ -9,11 +9,11 @@
     - path: results/csv/markduplicates_no_table.csv
     - path: results/csv/recalibrated.csv
     - path: results/multiqc
-    - path: results/preprocessing/test/markduplicates/test.md.cram
-    - path: results/preprocessing/test/markduplicates/test.md.cram.crai
-    - path: results/preprocessing/test/recal_table/test.recal.table
-    - path: results/preprocessing/test/recalibrated/test.recal.cram
-    - path: results/preprocessing/test/recalibrated/test.recal.cram.crai
+    - path: results/preprocessing/markduplicates/test/test.md.cram
+    - path: results/preprocessing/markduplicates/test/test.md.cram.crai
+    - path: results/preprocessing/recal_table/test/test.recal.table
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
     - path: results/reports/markduplicates/test/test.md.metrics
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
     - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
@@ -38,11 +38,11 @@
     - path: results/csv/markduplicates_no_table.csv
     - path: results/csv/recalibrated.csv
     - path: results/multiqc
-    - path: results/preprocessing/test/markduplicates/test.md.cram
-    - path: results/preprocessing/test/markduplicates/test.md.cram.crai
-    - path: results/preprocessing/test/recal_table/test.recal.table
-    - path: results/preprocessing/test/recalibrated/test.recal.cram
-    - path: results/preprocessing/test/recalibrated/test.recal.cram.crai
+    - path: results/preprocessing/markduplicates/test/test.md.cram
+    - path: results/preprocessing/markduplicates/test/test.md.cram.crai
+    - path: results/preprocessing/recal_table/test/test.recal.table
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
     - path: results/reports/markduplicates/test/test.md.metrics
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
     - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt

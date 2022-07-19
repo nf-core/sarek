@@ -8,17 +8,14 @@
     - path: results/csv/recalibrated.csv
     - path: results/csv/sorted.csv
     - path: results/multiqc
-    - path: results/preprocessing/test/mapped/test.bam
-    - path: results/preprocessing/test/mapped/test.bam.bai
-    - path: results/preprocessing/test/mapped/test.sorted.cram
-    - path: results/preprocessing/test/mapped/test.sorted.cram.crai
-    - path: results/preprocessing/test/recal_table/test.recal.table
-    - path: results/preprocessing/test/recalibrated/test.recal.cram
-    - path: results/preprocessing/test/recalibrated/test.recal.cram.crai
-    - path: results/reports/fastqc/test-test_L1/test-test_L1_1_fastqc.html
-    - path: results/reports/fastqc/test-test_L1/test-test_L1_1_fastqc.zip
-    - path: results/reports/fastqc/test-test_L1/test-test_L1_2_fastqc.html
-    - path: results/reports/fastqc/test-test_L1/test-test_L1_2_fastqc.zip
+    - path: results/preprocessing/mapped/test/test.bam
+    - path: results/preprocessing/mapped/test/test.bam.bai
+    - path: results/preprocessing/mapped/test/test.sorted.cram
+    - path: results/preprocessing/mapped/test/test.sorted.cram.crai
+    - path: results/preprocessing/recal_table/test/test.recal.table
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+    - path: results/reports/fastqc/test-test_L1
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
@@ -45,11 +42,11 @@
     - path: results/csv/recalibrated.csv
     - path: results/csv/sorted.csv
     - path: results/multiqc
-    - path: results/preprocessing/test/mapped/test.sorted.cram
-    - path: results/preprocessing/test/mapped/test.sorted.cram.crai
-    - path: results/preprocessing/test/recal_table/test.recal.table
-    - path: results/preprocessing/test/recalibrated/test.recal.cram
-    - path: results/preprocessing/test/recalibrated/test.recal.cram.crai
+    - path: results/preprocessing/mapped/test/test.sorted.cram
+    - path: results/preprocessing/mapped/test/test.sorted.cram.crai
+    - path: results/preprocessing/recal_table/test/test.recal.table
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
@@ -75,9 +72,9 @@
   files:
     - path: results/csv/recalibrated.csv
     - path: results/multiqc
-    - path: results/preprocessing/test/recal_table/test.recal.table
-    - path: results/preprocessing/test/recalibrated/test.recal.cram
-    - path: results/preprocessing/test/recalibrated/test.recal.cram.crai
+    - path: results/preprocessing/recal_table/test/test.recal.table
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
@@ -94,7 +91,7 @@
       should_exist: false
     - path: results/csv/markduplicates_no_table.csv
       should_exist: false
-    - path: results/preprocessing/test/mapped/test.sorted.cram
+    - path: results/preprocessing/mapped/test/test.sorted.cram
       should_exist: false
-    - path: results/preprocessing/test/mapped/test.sorted.cram.crai
+    - path: results/preprocessing/mapped/test/test.sorted.cram.crai
       should_exist: false

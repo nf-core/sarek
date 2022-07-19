@@ -8,11 +8,11 @@
     - path: results/csv/markduplicates_no_table.csv
     - path: results/csv/recalibrated.csv
     - path: results/multiqc
-    - path: results/preprocessing/test/markduplicates/test.md.bai
-    - path: results/preprocessing/test/markduplicates/test.md.bam
-    - path: results/preprocessing/test/recal_table/test.recal.table
-    - path: results/preprocessing/test/recalibrated/test.recal.bam
-    - path: results/preprocessing/test/recalibrated/test.recal.bam.bai
+    - path: results/preprocessing/markduplicates/test/test.md.bai
+    - path: results/preprocessing/markduplicates/test/test.md.bam
+    - path: results/preprocessing/recal_table/test/test.recal.table
+    - path: results/preprocessing/recalibrated/test/test.recal.bam
+    - path: results/preprocessing/recalibrated/test/test.recal.bam.bai
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.metrics
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
@@ -37,11 +37,11 @@
     - path: results/csv/markduplicates_no_table.csv
     - path: results/csv/recalibrated.csv
     - path: results/multiqc
-    - path: results/preprocessing/test/markduplicates/test.md.bam
-    - path: results/preprocessing/test/markduplicates/test.md.bam.bai
-    - path: results/preprocessing/test/recal_table/test.recal.table
-    - path: results/preprocessing/test/recalibrated/test.recal.bam
-    - path: results/preprocessing/test/recalibrated/test.recal.bam.bai
+    - path: results/preprocessing/markduplicates/test/test.md.bam
+    - path: results/preprocessing/markduplicates/test/test.md.bam.bai
+    - path: results/preprocessing/recal_table/test/test.recal.table
+    - path: results/preprocessing/recalibrated/test/test.recal.bam
+    - path: results/preprocessing/recalibrated/test/test.recal.bam.bai
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.metrics
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt

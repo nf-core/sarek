@@ -8,11 +8,11 @@
     - path: results/csv/markduplicates_no_table.csv
     - path: results/csv/recalibrated.csv
     - path: results/multiqc
-    - path: results/preprocessing/test/markduplicates/test.md.cram
-    - path: results/preprocessing/test/markduplicates/test.md.cram.crai
-    - path: results/preprocessing/test/recal_table/test.recal.table
-    - path: results/preprocessing/test/recalibrated/test.recal.cram
-    - path: results/preprocessing/test/recalibrated/test.recal.cram.crai
+    - path: results/preprocessing/markduplicates/test/test.md.cram
+    - path: results/preprocessing/markduplicates/test/test.md.cram.crai
+    - path: results/preprocessing/recal_table/test/test.recal.table
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.metrics
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
@@ -41,11 +41,11 @@
     - path: results/no_intervals.bed
     - path: results/no_intervals.bed.gz
     - path: results/no_intervals.bed.gz.tbi
-    - path: results/preprocessing/test/markduplicates/test.md.cram
-    - path: results/preprocessing/test/markduplicates/test.md.cram.crai
-    - path: results/preprocessing/test/recal_table/test.recal.table
-    - path: results/preprocessing/test/recalibrated/test.recal.cram
-    - path: results/preprocessing/test/recalibrated/test.recal.cram.crai
+    - path: results/preprocessing/markduplicates/test/test.md.cram
+    - path: results/preprocessing/markduplicates/test/test.md.cram.crai
+    - path: results/preprocessing/recal_table/test/test.recal.table
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.metrics
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
@@ -73,11 +73,11 @@
     - path: results/csv/recalibrated.csv
     - path: results/csv/variantcalled.csv
     - path: results/multiqc
-    - path: results/preprocessing/test/markduplicates/test.md.cram
-    - path: results/preprocessing/test/markduplicates/test.md.cram.crai
-    - path: results/preprocessing/test/recal_table/test.recal.table
-    - path: results/preprocessing/test/recalibrated/test.recal.cram
-    - path: results/preprocessing/test/recalibrated/test.recal.cram.crai
+    - path: results/preprocessing/markduplicates/test/test.md.cram
+    - path: results/preprocessing/markduplicates/test/test.md.cram.crai
+    - path: results/preprocessing/recal_table/test/test.recal.table
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
     - path: results/reports/bcftools/test/strelka/test.strelka.variants.bcftools_stats.txt
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.metrics
@@ -96,7 +96,7 @@
     - path: results/reports/vcftools/test/strelka/test.strelka.variants.FILTER.summary
     - path: results/reports/vcftools/test/strelka/test.strelka.variants.TsTv.count
     - path: results/reports/vcftools/test/strelka/test.strelka.variants.TsTv.qual
-    - path: results/variant_calling/test/strelka/test.strelka.genome.vcf.gz
-    - path: results/variant_calling/test/strelka/test.strelka.genome.vcf.gz.tbi
-    - path: results/variant_calling/test/strelka/test.strelka.variants.vcf.gz
-    - path: results/variant_calling/test/strelka/test.strelka.variants.vcf.gz.tbi
+    - path: results/variant_calling/strelka/test/test.strelka.genome.vcf.gz
+    - path: results/variant_calling/strelka/test/test.strelka.genome.vcf.gz.tbi
+    - path: results/variant_calling/strelka/test/test.strelka.variants.vcf.gz
+    - path: results/variant_calling/strelka/test/test.strelka.variants.vcf.gz.tbi
