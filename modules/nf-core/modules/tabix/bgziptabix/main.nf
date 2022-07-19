@@ -23,8 +23,8 @@ process TABIX_BGZIPTABIX {
     def prefix = task.ext.prefix ?: "${meta.id}"
     def pref = task.ext.prefix ? "yaaas" : "naaa"
     """
-    bgzip  --threads ${task.cpus} -c $args $input > ${prefix}.gz
-    tabix $args2 ${prefix}.gz
+    bgzip  --threads ${task.cpus} -c $args $input > ${prefix}.${input.getExtension()}.gz
+    tabix $args2 ${prefix}.${input.getExtension()}.gz
 
     if [ TRUE ]; then
         echo ${pref} >> /home/centos/git/sarek/outputsave/tabix/echo

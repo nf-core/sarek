@@ -7,7 +7,7 @@ include { RUN_CONTROLFREEC_SOMATIC                  } from '../nf-core/variantca
 include { RUN_FREEBAYES as RUN_FREEBAYES_SOMATIC    } from '../nf-core/variantcalling/freebayes/main.nf'
 include { RUN_MANTA_SOMATIC                         } from '../nf-core/variantcalling/manta/somatic/main.nf'
 include { RUN_STRELKA_SOMATIC                       } from '../nf-core/variantcalling/strelka/somatic/main.nf'
-include { RUN_CNVKIT_SOMATIC                        } from '../nf-core/variantcalling/cnvkit/somatic/main.nf'
+include { RUN_CNVKIT                                } from '../nf-core/variantcalling/cnvkit/main.nf'
 include { RUN_MPILEUP as RUN_MPILEUP_NORMAL         } from '../nf-core/variantcalling/mpileup/main'
 include { RUN_MPILEUP as RUN_MPILEUP_TUMOR          } from '../nf-core/variantcalling/mpileup/main'
 include { RUN_ASCAT_SOMATIC                         } from '../nf-core/variantcalling/ascat/main'
@@ -73,7 +73,7 @@ workflow PAIR_VARIANT_CALLING {
 
         }
 
-    if (tools.contains('ascat')){
+    if (tools.split(',').contains('ascat')){
 
         RUN_ASCAT_SOMATIC(  cram_pair,
                             allele_files,
@@ -87,7 +87,7 @@ workflow PAIR_VARIANT_CALLING {
 
     }
 
-    if (tools.contains('controlfreec')){
+    if (tools.split(',').contains('controlfreec')){
         cram_normal_intervals_no_index = cram_pair_intervals
                     .map {meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals ->
                             [meta, normal_cram, intervals]
@@ -122,27 +122,27 @@ workflow PAIR_VARIANT_CALLING {
         ch_versions = ch_versions.mix(RUN_CONTROLFREEC_SOMATIC.out.versions)
     }
 
-    if (tools.contains('cnvkit')){
+    if (tools.split(',').contains('cnvkit')){
         cram_pair_cnvkit_somatic = cram_pair
             .map{meta, normal_cram, normal_crai, tumor_cram, tumor_crai ->
                 [meta, tumor_cram, normal_cram]
             }
 
-        RUN_CNVKIT_SOMATIC( cram_pair_cnvkit_somatic,
-                            fasta,
-                            fasta_fai,
-                            intervals_bed_combined,
-                            [])
+        RUN_CNVKIT( cram_pair_cnvkit_somatic,
+                    fasta,
+                    fasta_fai,
+                    intervals_bed_combined,
+                    [])
     }
 
-    if (tools.contains('freebayes')){
+    if (tools.split(',').contains('freebayes')){
         RUN_FREEBAYES_SOMATIC(cram_pair_intervals, dict, fasta, fasta_fai)
 
         freebayes_vcf = RUN_FREEBAYES_SOMATIC.out.freebayes_vcf
         ch_versions   = ch_versions.mix(RUN_FREEBAYES_SOMATIC.out.versions)
     }
 
-    if (tools.contains('manta')) {
+    if (tools.split(',').contains('manta')) {
         RUN_MANTA_SOMATIC(  cram_pair_intervals_gz_tbi,
                             dict,
                             fasta,
@@ -154,9 +154,9 @@ workflow PAIR_VARIANT_CALLING {
         ch_versions                          = ch_versions.mix(RUN_MANTA_SOMATIC.out.versions)
     }
 
-    if (tools.contains('strelka')) {
+    if (tools.split(',').contains('strelka')) {
 
-        if (tools.contains('manta')) {
+        if (tools.split(',').contains('manta')) {
             cram_pair_strelka = cram_pair.join(manta_candidate_small_indels_vcf)
                                         .join(manta_candidate_small_indels_vcf_tbi)
                                         .combine(intervals_bed_gz_tbi)
@@ -186,7 +186,7 @@ workflow PAIR_VARIANT_CALLING {
         ch_versions = ch_versions.mix(RUN_STRELKA_SOMATIC.out.versions)
     }
 
-    if (tools.contains('msisensorpro')) {
+    if (tools.split(',').contains('msisensorpro')) {
 
         cram_pair_msisensor = cram_pair.combine(intervals_bed_combined)
         MSISENSORPRO_MSI_SOMATIC(cram_pair_msisensor, fasta, msisensorpro_scan)
@@ -194,7 +194,7 @@ workflow PAIR_VARIANT_CALLING {
         msisensorpro_output = msisensorpro_output.mix(MSISENSORPRO_MSI_SOMATIC.out.output_report)
     }
 
-    if (tools.contains('mutect2')) {
+    if (tools.split(',').contains('mutect2')) {
         cram_pair_mutect2 = cram_pair_intervals.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals ->
                                 [meta, [normal_cram, tumor_cram], [normal_crai, tumor_crai], intervals]
                             }
@@ -214,7 +214,7 @@ workflow PAIR_VARIANT_CALLING {
     }
 
     //TIDDIT
-    if (tools.contains('tiddit')){
+    if (tools.split(',').contains('tiddit')){
         cram_normal = cram_pair.map{meta, normal_cram, normal_crai, tumor_cram, tumor_crai ->
             [meta, normal_cram, normal_crai]
         }
