@@ -99,10 +99,13 @@ Pårtejekna is one of glaciers of the Pårte Massif.
 - [#630](https://github.com/nf-core/sarek/pull/630) - Update citations file
 - [#632](https://github.com/nf-core/sarek/pull/632) - Update `snpEff` version to `5.1` and cache up to `105`
 - [#632](https://github.com/nf-core/sarek/pull/632) - Update `VEP` version to `106.1` and cache up to `106`
+- [#618](https://github.com/nf-core/sarek/pull/618) - Update `multiqc` module update test yml files
+- [#618](https://github.com/nf-core/sarek/pull/618) - Update test yml files
 - [#633](https://github.com/nf-core/sarek/pull/633) - Update `BCFTOOLS` version to `1.15.1`
 - [#644](https://github.com/nf-core/sarek/pull/644) - Use `-Y` for `bwa-mem(2)` and remove `-M`
 - [#645](https://github.com/nf-core/sarek/pull/645) - Merge `tests/nextflow.config` in `conf/test.config`
 - [#646](https://github.com/nf-core/sarek/pull/646) - Update `nextflow_schema.json` to reflect new parameters and functions, removes `--annotation_cache`, removes `--ascat_chromosomes`
+- [#651](https://github.com/nf-core/sarek/pull/651) - Added TIDDIT_SOMATIC subworkflow
 - [#653](https://github.com/nf-core/sarek/pull/653) - Coherent results subfolder structure between preprocessing, variantcalling and reporting
 
 ### Fixed
