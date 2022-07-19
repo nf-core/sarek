@@ -53,6 +53,7 @@ Pårtejekna is one of glaciers of the Pårte Massif.
 - [#632](https://github.com/nf-core/sarek/pull/632) - Added params `--snpeff_version` to allow more configuration on the snpeff container definition
 - [#632](https://github.com/nf-core/sarek/pull/632) - Added params `--vep_include_fasta` to use the fasta file for annotation
 - [#639](https://github.com/nf-core/sarek/pull/639) - Adding genes-txt-file and summary-html-file to the published output from snpEff.
+- [#652](https://github.com/nf-core/sarek/pull/652) - Added full size somatic test profile.
 
 ### Changed
 
@@ -102,6 +103,7 @@ Pårtejekna is one of glaciers of the Pårte Massif.
 - [#644](https://github.com/nf-core/sarek/pull/644) - Use `-Y` for `bwa-mem(2)` and remove `-M`
 - [#645](https://github.com/nf-core/sarek/pull/645) - Merge `tests/nextflow.config` in `conf/test.config`
 - [#646](https://github.com/nf-core/sarek/pull/646) - Update `nextflow_schema.json` to reflect new parameters and functions, removes `--annotation_cache`, removes `--ascat_chromosomes`
+- [#653](https://github.com/nf-core/sarek/pull/653) - Coherent results subfolder structure between preprocessing, variantcalling and reporting
 
 ### Fixed
 
@@ -150,6 +152,7 @@ Pårtejekna is one of glaciers of the Pårte Massif.
 - [#641](https://github.com/nf-core/sarek/pull/641) - Fix issue with duplicate substring in tools and skip_tools
 - [#642](https://github.com/nf-core/sarek/pull/642) - Only unzip ref files if tool is run, only publish ref files if `--save_reference` and simplify CNKit logic
 - [#650](https://github.com/nf-core/sarek/pull/650) - Fix intervals checks
+- [#654](https://github.com/nf-core/sarek/pull/654) - Allow any step but annotation to start from BAM files
 
 ### Deprecated
 
