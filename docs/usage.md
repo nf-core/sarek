@@ -589,8 +589,11 @@ For a detailed tutorial on how to create a panel-of-normals, see [here](https://
 
 _under construction_
 
-<!-- While the ASCAT implementation in sarek is capable of running with whole-exome sequencing data, the needed references are currently not provided with the igenomes.config. The following steps should be followed to generate them manually:
+While the ASCAT implementation in sarek is capable of running with whole-exome sequencing data, the needed references are currently not provided with the igenomes.config. The loci and allele files (one file per chromosome) can be downloaded from the [Battenberg repository](https://ora.ox.ac.uk/objects/uuid:08e24957-7e76-438a-bd38-66c48008cf52).
 
+
+<!--
+The following steps should be followed to generate them manually:
 1. Extracting biallelic SNPs from the vcf files for [hg19](http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/) and query the resulting vcf files:
 
    ```
