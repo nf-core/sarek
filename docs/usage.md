@@ -2,16 +2,16 @@
 
 ## :warning: Please read this documentation on the nf-core website: [https://nf-co.re/sarek/usage](https://nf-co.re/sarek/usage)
 
-## Introduction
+# Introduction
 
 Sarek is a workflow designed to detect germline and somatic variants on whole genome, whole exome, or targeted sequencing data.
 
 Initially designed for human and mouse, it can work on any species if a reference genome is available.
 Sarek is designed to handle single samples, such as single-normal or single-tumor samples, and tumor-normal pairs including additional relapses.
 
-## Running the pipeline
+# Running the pipeline
 
-### Quickstart
+## Quickstart
 
 The typical command for running the pipeline is as follows:
 
@@ -30,7 +30,7 @@ results         # Finished results (configurable, see below)
 # Other nextflow hidden files, eg. history of pipeline runs and old logs.
 ```
 
-### Input: Samplesheet configurations
+## Input: Sample sheet configurations
 
 You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. Use the parameter `--input` to specify its location. It has to be a comma-separated file with at least 3 columns, and a header row as shown in the examples below.
 
@@ -47,10 +47,10 @@ Output from Variant Calling and/or Annotation will be in a specific directory fo
 Multiple CSV files can be specified if the path is enclosed in quotes.
 
 ```console
---input '[path to samplesheet file(s)]'
+--input '[path to sample sheet file(s)]'
 ```
 
-#### Overview: Samplesheet Columns
+### Overview: Samplesheet Columns
 
 | Column    | Description                                                                                                                                                                                                                                                                                                                       |
 | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -70,11 +70,11 @@ Multiple CSV files can be specified if the path is enclosed in quotes.
 
 An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
 
-#### Start with mapping (`--step mapping` [default])
+### Start with mapping (`--step mapping` [default])
 
 This step can be started either from FastQ files or (u)BAMs. The CSV must contain at least the columns `patient`, `sample`, `lane`, and either `fastq_1/fastq_2` or `bam`.
 
-##### Examples
+#### Examples
 
 Minimal config file:
 
@@ -104,7 +104,7 @@ patient1,test_sample,2,test_L002.bam
 patient1,test_sample,3,test_L003.bam
 ```
 
-##### Full samplesheet
+#### Full samplesheet
 
 In this example, all possible columns are used. There are three lanes for the normal sample, two for the tumor sample, and one for the relapse sample, including the `sex` and `status` information per patient:
 
@@ -128,9 +128,9 @@ patient1,XX,1,tumor_sample,lane_2,test2_L002.bam
 patient1,XX,1,relapse_sample,lane_1,test3_L001.bam
 ```
 
-#### Start with duplicate marking (`--step markduplicates`)
+### Start with duplicate marking (`--step markduplicates`)
 
-##### Duplicate Marking
+#### Duplicate Marking
 
 For starting from duplicate marking, the CSV file must contain at least the columns `patient`, `sample`, `bam`, `bai` or `patient`, `sample`, `cram`, `crai`
 
@@ -150,7 +150,7 @@ patient1,test_sample,test_mapped.cram,test_mapped.cram.crai
 
 The Sarek-generated CSV file is stored under `results/csv/mapped.csv` if in a previous run `--save_bam_mapped` was set and will automatically be used as an input when specifying the parameter `--step markduplicates`. Otherwise this file will need to be manually generated.
 
-##### Full samplesheet
+#### Full samplesheet
 
 In this example, all possible columns are used including the `sex` and `status` information per patient:
 
@@ -168,7 +168,7 @@ patient1,XX,1,tumor_sample,test2_mapped.cram,test2_mapped.cram.crai
 patient1,XX,1,relapse_sample,test3_mapped.cram,test3_mapped.cram.crai
 ```
 
-#### Start with preparing the recalibration tables (`--step prepare_recalibration`)
+### Start with preparing the recalibration tables (`--step prepare_recalibration`)
 
 For starting directly from preparing the recalibration tables, the CSV file must contain at least the columns `patient`, `sample`, `bam`, `bai` or `patient`, `sample`, `cram`, `crai`.
 
@@ -186,7 +186,7 @@ patient1,test_sample,test_md.cram,test_md.cram.crai
 
 The Sarek-generated CSV file is stored under `results/csv/markduplicates_no_table.csv` and will automatically be used as an input when specifying the parameter `--step prepare_recalibration`.
 
-##### Full samplesheet
+#### Full samplesheet
 
 In this example, all possible columns are used including the `sex` and `status` information per patient:
 
@@ -204,7 +204,7 @@ patient1,XX,1,tumor_sample,test2_md.cram,test2_md.cram.crai
 patient1,XX,1,relapse_sample,test3_md.cram,test3_md.cram.crai
 ```
 
-#### Start with base quality score recalibration (`--step recalibrate`)
+### Start with base quality score recalibration (`--step recalibrate`)
 
 For starting from base quality score recalibration the CSV file must contain at least the columns `patient`, `sample`, `bam`, `bai`, `table` or `patient`, `sample`, `cram`, `crai`, `table` containing the paths to _non-recalibrated CRAM/BAM_ files and the associated recalibration table.
 
@@ -222,7 +222,7 @@ patient1,test_sample,test_mapped.cram,test_mapped.cram.crai,test.table
 
 The Sarek-generated CSV file is stored under `results/csv/markduplicates.csv` and will automatically be used as an input when specifying the parameter `--step recalibrate`.
 
-##### Full samplesheet
+#### Full samplesheet
 
 In this example, all possible columns are used including the `sex` and `status` information per patient:
 
@@ -233,7 +233,7 @@ patient1,XX,1,tumor_sample,test2_mapped.cram,test2_mapped.cram.crai,test2.table
 patient1,XX,1,relapse_sample,test3_mapped.cram,test3_mapped.cram.crai,test3.table
 ```
 
-#### Start with variant calling (`--step variant_calling`)
+### Start with variant calling (`--step variant_calling`)
 
 For starting from the variant calling step, the CSV file must contain at least the columns `patient`, `sample`, `bam`, `bai` or `patient`, `sample`, `cram`, `crai`.
 
@@ -251,7 +251,7 @@ patient1,test_sample,test_mapped.cram,test_mapped.cram.crai
 
 The Sarek-generated CSV file is stored under `results/csv/recalibrated.csv` and will automatically be used as an input when specifying the parameter `--step variant_calling`.
 
-##### Full samplesheet
+#### Full samplesheet
 
 In this example, all possible columns are used including the `sex` and `status` information per patient:
 
@@ -262,7 +262,7 @@ patient1,XX,1,tumor_sample,test2_mapped.cram,test2_mapped.cram.crai
 patient1,XX,1,relapse_sample,test3_mapped.cram,test3_mapped.cram.crai
 ```
 
-#### Start with annotation (`--step annotate`)
+### Start with annotation (`--step annotate`)
 
 For starting from the annotation step, the CSV file must contain at least the columns `patient`, `sample`, `vcf`.
 
@@ -277,7 +277,7 @@ patient1,test_sample,test.vcf.gz
 
 The Sarek-generated CSV file is stored under `results/csv/variantcalled.csv` and will automatically be used as an input when specifying the parameter `--step annotation`.
 
-##### Full samplesheet
+#### Full samplesheet
 
 In this example, all possible columns are used including the `variantcaller` information per sample:
 
@@ -288,7 +288,7 @@ test,sample4_vs_sample3,manta,sample4_vs_sample3.diploid_sv.vcf.gz
 test,sample4_vs_sample3,manta,sample4_vs_sample3.somatic_sv.vcf.gz
 ```
 
-### Updating the pipeline
+## Updating the pipeline
 
 When you run the above command, Nextflow automatically pulls the pipeline code from GitHub and stores it as a cached version. When running the pipeline after this, it will always use the cached version if available - even if the pipeline has been updated since. To make sure that you're running the latest version of the pipeline, make sure that you regularly update the cached version of the pipeline:
 
@@ -296,7 +296,7 @@ When you run the above command, Nextflow automatically pulls the pipeline code f
 nextflow pull nf-core/sarek
 ```
 
-### Reproducibility
+## Reproducibility
 
 It is a good idea to specify a pipeline version when running the pipeline on your data. This ensures that a specific version of the pipeline code and software are used when you run your pipeline. If you keep using the same tag, you'll be running the same version of the pipeline, even if there have been changes to the code since.
 
@@ -305,11 +305,11 @@ Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 3.0
 
 This version number will be logged in reports when you run the pipeline, so that you'll know what you used when you look back in the future.
 
-## Core Nextflow arguments
+# Core Nextflow arguments
 
 > **NB:** These options are part of Nextflow and use a _single_ hyphen (pipeline parameters use a double-hyphen).
 
-### `-profile`
+## `-profile`
 
 Use this parameter to choose a configuration profile.
 Profiles can give configuration presets for different compute environments.
@@ -343,17 +343,17 @@ This is _not_ recommended.
   - A profile with a complete configuration for automated testing
   - Includes links to test data so needs no other parameters
 
-### `-resume`
+## `-resume`
 
 Specify this when restarting a pipeline. Nextflow will use cached results from any pipeline steps where the inputs are the same, continuing from where it got to previously. For input to be considered the same, not only the names must be identical but the files' contents as well. For more info about this parameter, see [this blog post](https://www.nextflow.io/blog/2019/demystifying-nextflow-resume.html).
 
 You can also supply a run name to resume a specific run: `-resume [run-name]`. Use the `nextflow log` command to show previous run names.
 
-### `-c`
+## `-c`
 
 Specify the path to a specific config file (this is a core Nextflow command). See the [nf-core website documentation](https://nf-co.re/usage/configuration) for more information.
 
-### Nextflow memory requirements
+## Nextflow memory requirements
 
 In some cases, the Nextflow Java virtual machines can start to request a large amount of memory.
 We recommend adding the following line to your environment to limit this (typically in `~/.bashrc` or `~./bash_profile`):
@@ -362,7 +362,7 @@ We recommend adding the following line to your environment to limit this (typica
 NXF_OPTS='-Xms1g -Xmx4g'
 ```
 
-### Running in the background
+## Running in the background
 
 Nextflow handles job submissions and supervises the running jobs. The Nextflow process must run until the pipeline is finished.
 
@@ -371,9 +371,9 @@ The Nextflow `-bg` flag launches Nextflow in the background, detached from your 
 Alternatively, you can use `screen` / `tmux` or similar tool to create a detached session which you can log back into at a later time.
 Some HPC setups also allow you to run nextflow within a cluster job submitted your job scheduler (from where it submits more jobs).
 
-## Custom configuration
+# Custom configuration
 
-### Resource requests
+## Resource requests
 
 Whilst the default requirements set within the pipeline will hopefully work for most people and with most input data, you may find that you want to customise the compute resources that the pipeline requests. Each step in the pipeline has a default set of requirements for number of CPUs, memory and time. For most of the steps in the pipeline, if the job exits with any of the error codes specified [here](https://github.com/nf-core/rnaseq/blob/4c27ef5610c87db00c3c5a3eed10b1d161abf575/conf/base.config#L18) it will automatically be resubmitted with higher requests (2 x original, then 3 x original). If it still fails after the third attempt then the pipeline execution is stopped.
 
@@ -428,7 +428,7 @@ process {
 >
 > If you get a warning suggesting that the process selector isn't recognised check that the process name has been specified correctly.
 
-### Updating containers
+## Updating containers
 
 The [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) implementation of this pipeline uses one container per process which makes it much easier to maintain and update software dependencies. If for some reason you need to use a different version of a particular tool with the pipeline then you just need to identify the `process` name and override the Nextflow `container` definition for that process using the `withName` declaration. For example, in the [nf-core/viralrecon](https://nf-co.re/viralrecon) pipeline a tool called [Pangolin](https://github.com/cov-lineages/pangolin) has been used during the COVID-19 pandemic to assign lineages to SARS-CoV-2 genome sequenced samples. Given that the lineage assignments change quite frequently it doesn't make sense to re-release the nf-core/viralrecon everytime a new version of Pangolin has been released. However, you can override the default container used by the pipeline by creating a custom config file and passing it as a command-line argument via `-c custom.config`.
 
@@ -468,7 +468,7 @@ The [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) implementatio
 
 > **NB:** If you wish to periodically update individual tool-specific results (e.g. Pangolin) generated by the pipeline then you must ensure to keep the `work/` directory otherwise the `-resume` ability of the pipeline will be compromised and it will restart from scratch.
 
-### nf-core/configs
+## nf-core/configs
 
 In most cases, you will only need to create a custom config as a one-off but if you and others within your organisation are likely to be running nf-core pipelines regularly and need to use the same settings regularly it may be a good idea to request that your custom config file is uploaded to the `nf-core/configs` git repository. Before you do this please can you test that the config file works with your pipeline of choice using the `-c` parameter. You can then create a pull request to the `nf-core/configs` repository with the addition of your config file, associated documentation file (see examples in [`nf-core/configs/docs`](https://github.com/nf-core/configs/tree/master/docs)), and amending [`nfcore_custom.config`](https://github.com/nf-core/configs/blob/master/nfcore_custom.config) to include your custom profile.
 
@@ -476,9 +476,9 @@ See the main [Nextflow documentation](https://www.nextflow.io/docs/latest/config
 
 If you have any questions or issues please send us a message on [Slack](https://nf-co.re/join/slack) on the [`#configs` channel](https://nfcore.slack.com/channels/configs).
 
-## Troubleshooting & FAQ
+# Troubleshooting & FAQ
 
-### How to test the pipeline
+## How to test the pipeline
 
 When using default parameters only, sarek runs preprocessing and exits after base quality score recalibration. This is reflected in the default test profile:
 
@@ -550,7 +550,7 @@ Some of the currently, available test profiles:
 | :-------------- | :------------------------------------------------------------------------------ |
 | annotation      | `nextflow run main.nf -profile test,annotation,docker --tools snpeff.vep,merge` |
 | no_intervals    | `nextflow run main.nf -profile test,no_intervals,docker`                        |
-| targeted        | ` nextflow run main.nf -profile test,targeted,docker`                           |
+| targeted        | `nextflow run main.nf -profile test,targeted,docker`                            |
 | tools_germline  | `nextflow run main.nf -profile test,tools_germline,docker --tools strelka`      |
 | tools_tumoronly | `nextflow run main.nf -profile test,tools_tumoronly,docker --tools strelka`     |
 | tools_somatic   | `nextflow run main.nf -profile test,tools_somatic,docker --tools strelka`       |
@@ -558,11 +558,11 @@ Some of the currently, available test profiles:
 | umi             | `nextflow run main.nf -profile test,umi,docker`                                 |
 | use_gatk_spark  | `nextflow run main.nf -profile test,use_gatk_spark,docker`                      |
 
-### How can the different steps be used
+## How can the different steps be used
 
 Sarek can be started at different points in the analysis by setting the parameter `--step`. Once started at a certain point, the pipeline runs through all the following steps without additional intervention. For example when starting from `--step mapping` (set by default) and `--tools strelka,vep`, the input reads will be aligned, duplicate marked, recalibrated, variant called with Strelka, and finally VEP will annotate the called variants.
 
-### Which variant calling tool is implemented for which data type?
+## Which variant calling tool is implemented for which data type?
 
 This list is by no means exhaustive and it will depend on the specific analysis you would like to run. This is a suggestion based on the individual docs of the tools specifically for human genomes and a garden-variety sequencing run as well as what has been added to the pipeline.
 
@@ -581,11 +581,11 @@ This list is by no means exhaustive and it will depend on the specific analysis 
 | [Control-FREEC](https://github.com/BoevaLab/FREEC)                                                      |  x  |  x  |   x    |    -    |   x   |    x    |
 | [MSIsensorPro](https://github.com/xjtu-omics/msisensor-pro)                                             |  x  |  x  |   x    |    -    |   -   |    x    |
 
-### How to create a panel-of-normals for Mutect2
+## How to create a panel-of-normals for Mutect2
 
 For a detailed tutorial on how to create a panel-of-normals, see [here](https://gatk.broadinstitute.org/hc/en-us/articles/360035531132).
 
-### How to run ASCAT with WES
+## How to run ASCAT with WES
 
 _under construction_
 
@@ -610,7 +610,7 @@ Then, you can derive both loci (just chromosome and position) and allele files (
 
 For further reading and documentation, please take a look at the Battenberg repository. -->
 
-### Where do the used reference genomes originate from
+## Where do the used reference genomes originate from
 
 _under construction - help needed_
 
@@ -644,11 +644,11 @@ GATK.GRCh38:
 | vep_genome            |                                                                                                                                                                                                                                                                                                                                                                                                                                                      | 'GRCh38'                                                                                                                                                                                |                                                                                      |
 | chr_dir               |                                                                                                                                                                                                                                                                                                                                                                                                                                                      | "${params.igenomes_base}/Homo_sapiens/GATK/GRCh38/Sequence/Chromosomes"                                                                                                                 |                                                                                      |
 
-### How to run sarek when no(t all) reference files are in igenomes
+## How to run sarek when no(t all) reference files are in igenomes
 
 For common genomes, such as GRCh38 and GRCh37, the pipeline is shipped with (almost) all necessary reference files. However, sometimes it is necessary to use custom references for some or all files:
 
-#### No igenomes reference files are used
+### No igenomes reference files are used
 
 If none of your required genome files are in igenomes, `--igenomes_ignore` must be set to ignore any igenomes input and `--genome null`. The `fasta` file is the only required input file and must be provided to run the pipeline. All other possible reference file can be provided in addition. For details, see the paramter documentation.
 
@@ -658,7 +658,7 @@ Minimal example for custom genomes:
 nextflow run nf-core/sarek --genome null --igenomes_ignore --fasta <custom.fasta>
 ```
 
-#### Overwrite specific reference files
+### Overwrite specific reference files
 
 If you don't want to use some of the provided reference genomes, they can be overwritten by either providing a new file or setting the respective file parameter to `false`, if it should be ignored:
 
@@ -674,7 +674,7 @@ Example for not using known indels, but all other provided reference file:
 nextflow run nf-core/sarek --known_indels false --genome GRCh38.GATK
 ```
 
-### How to customise SnpEff and VEP annotation
+## How to customise SnpEff and VEP annotation
 
 _under construction help needed_
 
@@ -711,7 +711,7 @@ Based on [nfcore/base:1.12.1](https://hub.docker.com/r/nfcore/base/tags), it con
   "vep_cache_version":
   "vep_version": -->
 
-#### Using downloaded cache
+### Using downloaded cache
 
 Both `snpEff` and `VEP` enable usage of cache, if no pre-build container is available.
 The cache needs to made available on the machine where Sarek is run.
@@ -724,7 +724,7 @@ nextflow run nf-core/sarek --tools snpEff --step annotate --sample <file.vcf.gz>
 nextflow run nf-core/sarek --tools VEP --step annotate --sample <file.vcf.gz> --vep_cache </path/to/VEP/cache>
 ```
 
-#### Download cache
+### Download cache
 
 A `Nextflow` helper script has been designed to help downloading `snpEff` and `VEP` caches.
 Such files are meant to be shared between multiple users, so this script is mainly meant for people administrating servers, clusters and advanced users.
@@ -734,7 +734,7 @@ nextflow run download_cache.nf --snpeff_cache </path/to/snpEff/cache> --snpeff_d
 nextflow run download_cache.nf --vep_cache </path/to/VEP/cache> --species <species> --vep_cache_version <VEP cache version> --genome <GENOME>
 ```
 
-#### Using VEP plugins
+### Using VEP plugins
 
 <!-- To enable the use of the `VEP` `CADD` plugin:
 
@@ -761,15 +761,15 @@ Such files are meant to be share between multiple users, so this script is mainl
 nextflow run download_cache.nf --cadd_cache </path/to/CADD/cache> --cadd_version <CADD version> --genome <GENOME>
 ``` -->
 
-##### dbnsfp
+#### dbnsfp
 
-##### LOFTEE
+#### LOFTEE
 
-##### SpliceAi
+#### SpliceAi
 
-##### SpliceRegions
+#### SpliceRegions
 
-### What are the bwa/bwa-mem2 parameters?
+## What are the bwa/bwa-mem2 parameters?
 
 For mapping, sarek follows the parameter suggestions provided in this [paper](https://www.nature.com/articles/s41467-018-06159-4):
 
@@ -779,7 +779,7 @@ For mapping, sarek follows the parameter suggestions provided in this [paper](ht
 
 In addition, currently the mismatch penalty for reads with tumor status in the sample sheet are mapped with a mismatch penalty of `-B 3`.
 
-### Spark related issues
+## Spark related issues
 
 If you have problems running processes that make use of Spark such as `MarkDuplicates`.
 You are probably experiencing issues with the limit of open files in your system.
@@ -815,11 +815,11 @@ Re-start your session.
 
 Note that the way to increase the open file limit in your system may be slightly different or require additional steps.
 
-#### Cannot delete work folder when using docker + Spark
+### Cannot delete work folder when using docker + Spark
 
 Currently, when running spark-based tools in combination with docker, it is required to set `docker.userEmulation = false`. This can unfortunately causes permission issues when `work/` is being written with root permissions. In case this happens, you might need to configure docker to run without `userEmulation` (see [here](https://github.com/Midnighter/nf-core-adr/blob/main/docs/adr/0008-refrain-from-using-docker-useremulation-in-nextflow.md)).
 
-### How to handle UMIs
+## How to handle UMIs
 
 Sarek can process UMI-reads, using [fgbio](http://fulcrumgenomics.github.io/fgbio/tools/latest/) tools.
 
@@ -827,20 +827,20 @@ In order to use reads containing UMI tags as your initial input, you need to inc
 
 This will enable pre-processing of the reads and UMI consensus reads calling, which will then be used to continue the workflow from the mapping steps. For post-UMI processing depending on the experimental setup, duplicate marking and base quality recalibration can be skipped with [`--skip_tools`].
 
-#### UMI Read Structure
+### UMI Read Structure
 
 This parameter is a string, which follows a [convention](https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures) to describe the structure of the umi.
 If your reads contain a UMI only on one end, the string should only represent one structure (i.e. "2M11S+T"); should your reads contain a UMI on both ends, the string will contain two structures separated by a blank space (i.e. "2M11S+T 2M11S+T").
 
-#### Limitations and future updates
+### Limitations and future updates
 
 Recent updates to Samtools have been introduced, which can speed-up performance of fgbio tools used in this workflow.
 The current workflow does not handle duplex UMIs (i.e. where opposite strands of a duplex molecule have been tagged with a different UMI), and best practices have been proposed to process this type of data.
 Both changes will be implemented in a future release.
 
-### MultiQC related issues
+## MultiQC related issues
 
-#### Plots for SnpEff are missing
+### Plots for SnpEff are missing
 
 When plots are missing, it is possible that the fasta and the custom SnpEff database are not matching https://pcingola.github.io/SnpEff/se_faq/#error_chromosome_not_found-details.
 The SnpEff completes without throwing an error causing nextflow to complete successfully. An indication for the error are these lines in the `.command` files:
@@ -851,6 +851,6 @@ Error type      Number of errors
 ERROR_CHROMOSOME_NOT_FOUND      17522411
 ```
 
-### How to set sarek up to use sentieon
+## How to set sarek up to use sentieon
 
 Sarek 3.0 is currently not supporting sentieon. It is planned for the upcoming release 3.1. In the meantime, please revert to the last release 2.7.2.
