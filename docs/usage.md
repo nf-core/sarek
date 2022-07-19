@@ -668,7 +668,7 @@ Example for using a custom known indels file:
 nextflow run nf-core/sarek --known_indels <my_known_indels.vcf.gz> --genome GRCh38.GATK
 ```
 
-Example for not using known indels, but all other provided reference file:
+Example for not using known indels, but all other provided reference files:
 
 ```
 nextflow run nf-core/sarek --known_indels false --genome GRCh38.GATK
