@@ -537,19 +537,19 @@ workflow SAREK {
             ch_input_sample.branch{
                 bam:  it[0].data_type == "bam"
                 cram: it[0].data_type == "cram"
-            }.set{convert}
+            }.set{ch_convert}
 
-            ch_bam_for_markduplicates = convert.bam.map{ meta, bam, bai -> [meta, bam]}
+            ch_bam_for_markduplicates = ch_convert.bam.map{ meta, bam, bai -> [meta, bam]}
 
             //In case Markduplicates is run convert CRAM files to BAM, because the tool only runs on BAM files. MD_SPARK does run on CRAM but is a lot slower
             if (!(params.skip_tools && params.skip_tools.split(',').contains('markduplicates'))){
 
-                SAMTOOLS_CRAMTOBAM(convert.cram, fasta, fasta_fai)
+                SAMTOOLS_CRAMTOBAM(ch_convert.cram, fasta, fasta_fai)
                 ch_versions = ch_versions.mix(SAMTOOLS_CRAMTOBAM.out.versions)
 
                 ch_bam_for_markduplicates = ch_bam_for_markduplicates.mix(SAMTOOLS_CRAMTOBAM.out.alignment_index.map{ meta, bam, bai -> [meta, bam]})
             } else {
-                ch_input_cram_indexed     = convert.cram
+                ch_input_cram_indexed     = ch_convert.cram
             }
         }
 
@@ -558,7 +558,7 @@ workflow SAREK {
             // ch_bam_indexed will countain bam mapped with GATK4_MAPPING when step is mapping
             // which are then merged and indexed
             // Or bams that are specified in the samplesheet.csv when step is prepare_recalibration
-            ch_bam_indexed = params.step == 'mapping' ? MERGE_INDEX_BAM.out.bam_bai : convert.bam
+            ch_bam_indexed = params.step == 'mapping' ? MERGE_INDEX_BAM.out.bam_bai : ch_convert.bam
 
             BAM_TO_CRAM(
                 ch_bam_indexed,
@@ -638,13 +638,13 @@ workflow SAREK {
             ch_input_sample.branch{
                 bam: it[0].data_type == "bam"
                 cram: it[0].data_type == "cram"
-            }.set{convert}
+            }.set{ch_convert}
 
             //BAM files first must be converted to CRAM files since from this step on we base everything on CRAM format
-            SAMTOOLS_BAMTOCRAM(convert.bam, fasta, fasta_fai)
+            SAMTOOLS_BAMTOCRAM(ch_convert.bam, fasta, fasta_fai)
             ch_versions = ch_versions.mix(SAMTOOLS_BAMTOCRAM.out.versions)
 
-            ch_cram_for_prepare_recalibration = Channel.empty().mix(SAMTOOLS_BAMTOCRAM.out.alignment_index, convert.cram)
+            ch_cram_for_prepare_recalibration = Channel.empty().mix(SAMTOOLS_BAMTOCRAM.out.alignment_index, ch_convert.cram)
 
             ch_md_cram_for_restart = SAMTOOLS_BAMTOCRAM.out.alignment_index
 
@@ -801,7 +801,7 @@ workflow SAREK {
             // - input bams converted to crams, if started from step recal + skip BQSR
             // - input crams if started from step recal + skip BQSR
             ch_cram_variant_calling = Channel.empty().mix(SAMTOOLS_BAMTOCRAM.out.alignment_index,
-                                                        convert.cram.map{ meta, cram, crai, table -> [meta, cram, crai]})
+                                                        ch_convert.cram.map{ meta, cram, crai, table -> [meta, cram, crai]})
         } else {
             // ch_cram_variant_calling contains either:
             // - crams from markduplicates = ch_cram_for_prepare_recalibration if skip BQSR but not started from step recalibration
@@ -814,13 +814,13 @@ workflow SAREK {
         ch_input_sample.branch{
                 bam: it[0].data_type == "bam"
                 cram: it[0].data_type == "cram"
-            }.set{convert}
+            }.set{ch_convert}
 
         //BAM files first must be converted to CRAM files since from this step on we base everything on CRAM format
-        SAMTOOLS_BAMTOCRAM_VARIANTCALLING(convert.bam, fasta, fasta_fai)
+        SAMTOOLS_BAMTOCRAM_VARIANTCALLING(ch_convert.bam, fasta, fasta_fai)
         ch_versions = ch_versions.mix(SAMTOOLS_BAMTOCRAM_VARIANTCALLING.out.versions)
 
-        ch_cram_variant_calling = Channel.empty().mix(SAMTOOLS_BAMTOCRAM_VARIANTCALLING.out.alignment_index, convert.cram)
+        ch_cram_variant_calling = Channel.empty().mix(SAMTOOLS_BAMTOCRAM_VARIANTCALLING.out.alignment_index, ch_convert.cram)
 
     }
 
