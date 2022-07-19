@@ -7,9 +7,6 @@
     - copy_number_calling
   files:
     - path: results/multiqc
-    - path: results/reference/cnvkit.reference.cnn
-    - path: results/reference/multi_intervals.antitarget.bed
-    - path: results/untar/chromosomes/chr21.fasta
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/multi_intervals.antitarget.bed
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/multi_intervals.target.bed
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/reference.cnn
