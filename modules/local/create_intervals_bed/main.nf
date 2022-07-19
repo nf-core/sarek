@@ -20,7 +20,7 @@ process CREATE_INTERVALS_BED {
     // If intervals file is in BED format,
     // Fifth column is interpreted to contain runtime estimates
     // Which is then used to combine short-running jobs
-    if (intervals.toString().toLowerCase().endsWith("bed"))
+    if (intervals.toString().toLowerCase().endsWith("bed")) {
         """
         awk -vFS="\t" '{
             t = \$5  # runtime estimate
@@ -40,18 +40,19 @@ process CREATE_INTERVALS_BED {
             print \$0 > name
         }' ${intervals}
         """
-    else if (intervals.toString().toLowerCase().endsWith("interval_list"))
+    } else if (intervals.toString().toLowerCase().endsWith("interval_list")) {
         """
         grep -v '^@' ${intervals} | awk -vFS="\t" '{
             name = sprintf("%s_%d-%d", \$1, \$2, \$3);
             printf("%s\\t%d\\t%d\\n", \$1, \$2-1, \$3) > name ".bed"
         }'
         """
-    else
+    } else {
         """
         awk -vFS="[:-]" '{
             name = sprintf("%s_%d-%d", \$1, \$2, \$3);
             printf("%s\\t%d\\t%d\\n", \$1, \$2-1, \$3) > name ".bed"
         }' ${intervals}
         """
+    }
 }
