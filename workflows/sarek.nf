@@ -357,7 +357,7 @@ workflow SAREK {
 
      // Antitarget based reference for CNVKit
     PREPARE_CNVKIT_REFERENCE(fasta, intervals_bed_combined)
-    cnvkit_reference            = params.tools && params.tools.split(',').contains('cnvkit') ? PREPARE_INTERVALS.out.cnvkit_reference : Channel.empty()
+    cnvkit_reference            = params.tools && params.tools.split(',').contains('cnvkit') ? PREPARE_CNVKIT_REFERENCE.out.cnvkit_reference : Channel.empty()
     ch_versions = ch_versions.mix(PREPARE_CNVKIT_REFERENCE.out.versions)
 
     // PREPROCESSING
