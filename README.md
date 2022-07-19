@@ -85,7 +85,6 @@ Friederike Hanssen and Gisela Gabernet at [QBiC](https://www.qbic.uni-tuebingen.
 
 Main authors:
 
-- [Gisela Gabernet](https://github.com/ggabernet)
 - [Maxime Garcia](https://github.com/maxulysse)
 - [Friederike Hanssen](https://github.com/FriederikeHanssen)
 - [Szilveszter Juhos](https://github.com/szilvajuhos)
