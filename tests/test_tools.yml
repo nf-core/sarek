@@ -280,8 +280,8 @@
     - haplotypecaller
     - variant_calling
   files:
-    - path: results/variant_calling/sample1/haplotypecaller/joint_germline.vcf.gz
-    - path: results/variant_calling/sample1/haplotypecaller/joint_germline.vcf.gz.tbi
+    - path: results/variant_calling/haplotypecaller/joint_germline.vcf.gz
+    - path: results/variant_calling/haplotypecaller/joint_germline.vcf.gz.tbi
 
 - name: Run variant calling on germline sample with manta
   command: nextflow run main.nf -profile test,tools_germline,docker --tools manta
