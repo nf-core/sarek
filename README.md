@@ -108,7 +108,7 @@ We thank the following people for their extensive assistance in the development 
 - [Lucia Conde](https://github.com/lconde-ucl)
 - [Malin Larsson](https://github.com/malinlarsson)
 - [Marcel Martin](https://github.com/marcelm)
-- [Nick Smith](https://github,com/nickhsmith)
+- [Nick Smith](https://github.com/nickhsmith)
 - [Nilesh Tawari](https://github.com/nilesh-tawari)
 - [Olga Botvinnik](https://github.com/olgabot)
 - [Oskar Wacker](https://github.com/WackerO)
