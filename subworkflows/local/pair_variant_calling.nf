@@ -91,13 +91,15 @@ workflow PAIR_VARIANT_CALLING {
 
     if (tools.split(',').contains('ascat')){
 
-        RUN_ASCAT_SOMATIC(  cram_pair,
-                            allele_files,
-                            loci_files,
-                            intervals_bed_combined,
-                            fasta,
-                            gc_file,
-                            rt_file)
+        RUN_ASCAT_SOMATIC(
+            cram_pair,
+            allele_files,
+            loci_files,
+            intervals_bed_combined,
+            fasta,
+            gc_file,
+            rt_file
+        )
 
         ch_versions = ch_versions.mix(RUN_ASCAT_SOMATIC.out.versions)
 
@@ -113,8 +115,16 @@ workflow PAIR_VARIANT_CALLING {
                     .map {meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals ->
                             [meta, tumor_cram, intervals]
                         }
-        RUN_MPILEUP_NORMAL(cram_normal_intervals_no_index, fasta)
-        RUN_MPILEUP_TUMOR(cram_tumor_intervals_no_index, fasta)
+
+        RUN_MPILEUP_NORMAL(
+            cram_normal_intervals_no_index,
+            fasta
+        )
+
+        RUN_MPILEUP_TUMOR(
+            cram_tumor_intervals_no_index,
+            fasta
+        )
 
         mpileup_normal = RUN_MPILEUP_NORMAL.out.mpileup
         mpileup_tumor = RUN_MPILEUP_TUMOR.out.mpileup
@@ -124,14 +134,16 @@ workflow PAIR_VARIANT_CALLING {
             [normal[0], normal[1], tumor[1], [], [], [], []]
         }
 
-        RUN_CONTROLFREEC_SOMATIC(controlfreec_input,
-                        fasta,
-                        fasta_fai,
-                        dbsnp,
-                        dbsnp_tbi,
-                        chr_files,
-                        mappability,
-                        intervals_bed_combined)
+        RUN_CONTROLFREEC_SOMATIC(
+            controlfreec_input,
+            fasta,
+            fasta_fai,
+            dbsnp,
+            dbsnp_tbi,
+            chr_files,
+            mappability,
+            intervals_bed_combined
+        )
 
         ch_versions = ch_versions.mix(RUN_MPILEUP_NORMAL.out.versions)
         ch_versions = ch_versions.mix(RUN_MPILEUP_TUMOR.out.versions)
@@ -144,25 +156,37 @@ workflow PAIR_VARIANT_CALLING {
                 [meta, tumor_cram, normal_cram]
             }
 
-        RUN_CNVKIT( cram_pair_cnvkit_somatic,
-                    fasta,
-                    fasta_fai,
-                    intervals_bed_combined,
-                    [])
+        RUN_CNVKIT(
+            cram_pair_cnvkit_somatic,
+            fasta,
+            fasta_fai,
+            intervals_bed_combined,
+            []
+        )
+
+        ch_versions = ch_versions.mix(RUN_CNVKIT.out.versions)
     }
 
     if (tools.split(',').contains('freebayes')){
-        RUN_FREEBAYES_SOMATIC(cram_pair_intervals, dict, fasta, fasta_fai)
+
+        RUN_FREEBAYES_SOMATIC(
+            cram_pair_intervals,
+            dict,
+            fasta,
+            fasta_fai
+        )
 
         freebayes_vcf = RUN_FREEBAYES_SOMATIC.out.freebayes_vcf
         ch_versions   = ch_versions.mix(RUN_FREEBAYES_SOMATIC.out.versions)
     }
 
     if (tools.split(',').contains('manta')) {
-        RUN_MANTA_SOMATIC(  cram_pair_intervals_gz_tbi,
-                            dict,
-                            fasta,
-                            fasta_fai)
+        RUN_MANTA_SOMATIC(
+            cram_pair_intervals_gz_tbi,
+            dict,
+            fasta,
+            fasta_fai
+        )
 
         manta_vcf                            = RUN_MANTA_SOMATIC.out.manta_vcf
         manta_candidate_small_indels_vcf     = RUN_MANTA_SOMATIC.out.manta_candidate_small_indels_vcf
@@ -200,10 +224,12 @@ workflow PAIR_VARIANT_CALLING {
             }
         }
 
-        RUN_STRELKA_SOMATIC(cram_pair_strelka,
-                            dict,
-                            fasta,
-                            fasta_fai)
+        RUN_STRELKA_SOMATIC(
+            cram_pair_strelka,
+            dict,
+            fasta,
+            fasta_fai
+        )
 
         strelka_vcf = Channel.empty().mix(RUN_STRELKA_SOMATIC.out.strelka_vcf)
         ch_versions = ch_versions.mix(RUN_STRELKA_SOMATIC.out.versions)
@@ -230,7 +256,8 @@ workflow PAIR_VARIANT_CALLING {
             germline_resource,
             germline_resource_tbi,
             panel_of_normals,
-            panel_of_normals_tbi)
+            panel_of_normals_tbi
+        )
 
         mutect2_vcf = GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING.out.filtered_vcf
         ch_versions = ch_versions.mix(GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING.out.versions)
