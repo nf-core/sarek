@@ -1,6 +1,6 @@
 include { RUN_TIDDIT as RUN_TIDDIT_NORMAL           } from '../main.nf'
 include { RUN_TIDDIT as RUN_TIDDIT_TUMOR            } from '../main.nf'
-include { SVDB_MERGE                                } from '../../../../modules/nf-core/modules/svdb/merge/main.nf'
+include { SVDB_MERGE                                } from '../../../../../modules/nf-core/modules/svdb/merge/main.nf'
 
 workflow RUN_TIDDIT_SOMATIC {
     take:
@@ -14,6 +14,8 @@ workflow RUN_TIDDIT_SOMATIC {
     ch_versions = Channel.empty()
     RUN_TIDDIT_NORMAL(cram_normal, fasta, bwa)
     RUN_TIDDIT_TUMOR(cram_tumor, fasta, bwa)
+    RUN_TIDDIT_NORMAL.out.tiddit_vcf.dump(tag:"normal")
+    RUN_TIDDIT_TUMOR.out.tiddit_vcf.dump(tag:"tumor")
     SVDB_MERGE(RUN_TIDDIT_NORMAL.out.tiddit_vcf.join(RUN_TIDDIT_TUMOR.out.tiddit_vcf)
                                                 .map{meta, vcf_normal, vcf_tumor ->
                                                     [meta, [vcf_normal, vcf_tumor]]
