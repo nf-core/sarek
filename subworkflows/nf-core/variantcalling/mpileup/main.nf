@@ -19,7 +19,14 @@ workflow RUN_MPILEUP {
     //Merge mpileup only when intervals and natural order sort them
     CAT_MPILEUP(mpileup.intervals
         .map{ meta, pileup ->
-            new_meta = meta.tumor_id ? [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, sex:meta.sex, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals] // not annotated, so no variantcaller necessary
+            new_meta = meta.tumor_id ? [
+                                            id:meta.tumor_id + "_vs_" + meta.normal_id,
+                                            normal_id:meta.normal_id,
+                                            num_intervals:meta.num_intervals
+                                            patient:meta.patient,
+                                            sex:meta.sex,
+                                            tumor_id:meta.tumor_id,
+                                        ] // not annotated, so no variantcaller necessary
                                         : [patient:meta.patient, sample:meta.sample, status:meta.status, sex:meta.sex, id:meta.sample, num_intervals:meta.num_intervals]
             [groupKey(new_meta, meta.num_intervals), pileup]
             }

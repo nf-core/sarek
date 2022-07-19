@@ -20,8 +20,24 @@ workflow RUN_TIDDIT {
     tiddit_ploidy = TIDDIT_SV.out.ploidy
     tiddit_vcf_gz = TABIX_BGZIP_TIDDIT_SV.out.gz_tbi.map{ meta, gz, tbi ->
 
-        new_meta = meta.tumor_id ? [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, sex:meta.sex, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals, variantcaller:'tiddit']
-                                        : [patient:meta.patient, sample:meta.sample, status:meta.status, sex:meta.sex, id:meta.sample, num_intervals:meta.num_intervals, variantcaller:'tiddit']
+        new_meta = meta.tumor_id ? [
+                                        id:meta.tumor_id + "_vs_" + meta.normal_id,
+                                        patient:meta.patient,
+                                        normal_id:meta.normal_id,
+                                        num_intervals:meta.num_intervals,
+                                        sex:meta.sex,
+                                        tumor_id:meta.tumor_id,
+                                        variantcaller:'tiddit'
+                                    ]
+                                    : [
+                                        id:meta.sample,
+                                        num_intervals:meta.num_intervals,
+                                        patient:meta.patient,
+                                        sample:meta.sample,
+                                        sex:meta.sex,
+                                        status:meta.status,
+                                        variantcaller:'tiddit'
+                                    ]
         [new_meta, gz]}
 
     ch_versions = ch_versions.mix(TABIX_BGZIP_TIDDIT_SV.out.versions)
