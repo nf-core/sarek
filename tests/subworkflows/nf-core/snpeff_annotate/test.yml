@@ -1,7 +1,0 @@
-- name: subworkflow snpeff_annotate
-  command: nextflow run ./tests/subworkflows/nf-core/snpeff_annotate/ -entry test_snpeff_annotate -c tests/config/nextflow.config
-  tags:
-    - snpeff_annotate
-  files:
-    - path: output/annotation/test/test_snpEff.ann.gz
-    - path: output/annotation/test/test_snpEff.ann.gz.tbi
