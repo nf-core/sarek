@@ -94,13 +94,15 @@ workflow RUN_HAPLOTYPECALLER {
         // filtered_vcf = JOINT_GERMLINE.out.vcf
         // ch_versions = ch_versions.mix(GATK_JOINT_GERMLINE_VARIANT_CALLING.out.versions)
     } else {
-        SINGLE_SAMPLE(haplotypecaller_vcf.join(haplotypecaller_tbi),
-                        fasta,
-                        fasta_fai,
-                        dict,
-                        intervals_bed_combined,
-                        known_sites,
-                        known_sites_tbi)
+        SINGLE_SAMPLE(
+            haplotypecaller_vcf.join(haplotypecaller_tbi),
+            fasta,
+            fasta_fai,
+            dict,
+            intervals_bed_combined,
+            known_sites,
+            known_sites_tbi
+        )
 
         filtered_vcf = SINGLE_SAMPLE.out.filtered_vcf.map{ meta, vcf ->
                         [[
