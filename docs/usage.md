@@ -583,28 +583,16 @@ This list is by no means exhaustive and it will depend on the specific analysis 
 
 ## How to run ASCAT with WES
 
-_under construction_
+While the ASCAT implementation in sarek is capable of running with whole-exome sequencing data, the needed references are currently not provided with the igenomes.config. According to the [developers](https://github.com/VanLoo-lab/ascat/issues/97) of ASCAT, loci and allele files (one file per chromosome) can be downloaded directly from the [Battenberg repository](https://ora.ox.ac.uk/objects/uuid:08e24957-7e76-438a-bd38-66c48008cf52).
 
-<!-- While the ASCAT implementation in sarek is capable of running with whole-exome sequencing data, the needed references are currently not provided with the igenomes.config. The following steps should be followed to generate them manually:
+The GC correction file needs to be derived, so one has to concatenate all chromosomes into a single file and modify the header so it fits [this example](https://github.com/VanLoo-lab/ascat/tree/master/LogRcorrection#gc-correction-file-creation).
 
-1. Extracting biallelic SNPs from the vcf files for [hg19](http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/) and query the resulting vcf files:
+The RT correction file is missing for hg38 but can be derived using [ASCAT scripts](https://github.com/VanLoo-lab/ascat/tree/master/LogRcorrection#replication-timing-correction-file-creation) for hg19. For hg38, one needs to lift-over hg38 to hg19, run the script on hg19 positions and set coordinates back to hg38.
 
-   ```
-   bcftools view -i "((EAS_AF>0.05 && EAS_AF<0.95) || (SAS_AF>0.05 && SAS_AF<0.95) || (EUR_AF>0.05 && EUR_AF<0.95) || (AFR_AF>0.05 && AFR_AF<0.95) || (AMR_AF>0.05 && AMR_AF<0.95)) && VT=\"SNP\" && MULTI_ALLELIC=0" ALL.chr1.phase3_shapeit2_mvncall_integrated_v5b.20130502.genotypes.vcf.gz
-   |
-   bcftools query -f '%CHROM\t%POS\t%REF\t%ALT\n' - > G1000_chr1.txt
-   ```
+Please note that:
 
-   gives the SNP information for chr1, hg19.
-
-2. Derive loci file
-3. Derive allel files
-
-Then, you can derive both loci (just chromosome and position) and allele files (position, a0 and a1). For allele files, you don't need to specify chromosome since there is one file per chromosome and a0/a1 (ref/alt) are integers (A=1, C=2, G=3, T=4). Therefore, A>C at chr1:12345 would be 12345<tab>1<tab>2 in a file called (say) allele_chr1.txt. See reference files for WGS as an exemple.
-
-3. I've used a simple R script to sort, remove duplicates (chr-position must be unique), remove blacklisted regions (GRanges) and remove probloci (based on chr-position).
-
-For further reading and documentation, please take a look at the Battenberg repository. -->
+Row names (for GC and RT correction files) should be `${chr}_${position}` (there is no SNP/probe ID for HTS data).
+ASCAT developers strongly recommend using a BED file for WES/TS data. This prevents considering SNPs covered by off-targeted reads that would add noise to log/BAF tracks.
 
 ## What are the bwa/bwa-mem2 parameters?
 
