@@ -57,7 +57,7 @@ workflow PREPARE_INTERVALS {
 
             ch_intervals_combined = Channel.fromPath(file(params.intervals)).map{it -> [[id:it.baseName], it] }
 
-            ch_intervals = CREATE_INTERVALS_BED(file(params.intervals))
+            ch_intervals = CREATE_INTERVALS_BED(file(params.intervals)).bed
             ch_versions = ch_versions.mix(CREATE_INTERVALS_BED.out.versions)
 
             //If interval file is not provided as .bed, but e.g. as .interval_list then convert to BED format
