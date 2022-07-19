@@ -725,7 +725,7 @@ workflow SAREK {
             SAMTOOLS_BAMTOCRAM(ch_bam_bam, fasta, fasta_fai)
             ch_versions = ch_versions.mix(SAMTOOLS_BAMTOCRAM.out.versions)
 
-            ch_cram_applybqsr = Channel.empty.mix(
+            ch_cram_applybqsr = Channel.empty().mix(
                                     SAMTOOLS_BAMTOCRAM.out.alignment_index.join(ch_bam_table),
                                     ch_convert.cram) // Join together converted cram with input tables
         }
