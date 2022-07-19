@@ -501,18 +501,14 @@ workflow SAREK {
         ch_bam_for_markduplicates = Channel.empty()
         ch_input_cram_indexed     = Channel.empty()
 
-        if(params.step == 'mapping'){
-
-            ch_bam_for_markduplicates = ch_bam_mapped
-
-        }else{
-
-            ch_input_sample.map{ meta, input, index -> [meta, input, index] }.branch{
+        if (params.step == 'mapping') ch_bam_for_markduplicates = ch_bam_mapped
+        else {
+            ch_input_sample.branch{
                 bam:  it[0].data_type == "bam"
                 cram: it[0].data_type == "cram"
             }.set{convert}
 
-            ch_bam_for_markduplicates = ch_bam_for_markduplicates.mix(convert.bam)
+            ch_bam_for_markduplicates = convert.bam.map{ meta, bam, bai -> [meta, bam]}
 
             //In case Markduplicates is run convert CRAM files to BAM, because the tool only runs on BAM files. MD_SPARK does run on CRAM but is a lot slower
             if (!(params.skip_tools && params.skip_tools.split(',').contains('markduplicates'))){
@@ -521,7 +517,7 @@ workflow SAREK {
                 ch_versions = ch_versions.mix(SAMTOOLS_CRAMTOBAM.out.versions)
 
                 ch_bam_for_markduplicates = ch_bam_for_markduplicates.mix(SAMTOOLS_CRAMTOBAM.out.alignment_index.map{ meta, bam, bai -> [meta, bam]})
-            }else{
+            } else {
                 ch_input_cram_indexed     = convert.cram
             }
         }
@@ -539,7 +535,7 @@ workflow SAREK {
                 fasta_fai,
                 intervals_for_preprocessing)
 
-            ch_cram_no_markduplicates_restart = Channel.empty().mix(BAM_TO_CRAM.out.cram_converted)
+            ch_cram_no_markduplicates_restart = BAM_TO_CRAM.out.cram_converted
 
             // Gather QC reports
             ch_reports  = ch_reports.mix(BAM_TO_CRAM.out.qc.collect{it[1]}.ifEmpty([]))
@@ -590,7 +586,7 @@ workflow SAREK {
         csv_markduplicates = ch_md_cram_for_restart
 
         // Create CSV to restart from this step
-        MARKDUPLICATES_CSV(csv_markduplicates)
+        if (!(params.skip_tools && params.skip_tools.split(',').contains('markduplicates'))) MARKDUPLICATES_CSV(csv_markduplicates)
     }
 
     if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration']) {
@@ -669,7 +665,7 @@ workflow SAREK {
             ch_cram_applybqsr = ch_cram_for_prepare_recalibration.join(ch_table_bqsr)
 
             // Create CSV to restart from this step
-            PREPARE_RECALIBRATION_CSV(ch_md_cram_for_restart.join(ch_table_bqsr))
+            PREPARE_RECALIBRATION_CSV(ch_md_cram_for_restart.join(ch_table_bqsr), params.skip_tools)
         }
     }
 
@@ -760,7 +756,7 @@ workflow SAREK {
             // - input crams if started from step recal + skip BQSR
             cram_variant_calling = Channel.empty().mix(SAMTOOLS_BAMTOCRAM.out.alignment_index,
                                                         convert.cram.map{ meta, cram, crai, table -> [meta, cram, crai]})
-        } else{
+        } else {
             // ch_cram_variant_calling contains either:
             // - crams from markduplicates = ch_cram_for_prepare_recalibration if skip BQSR but not started from step recalibration
             cram_variant_calling = Channel.empty().mix(ch_cram_for_prepare_recalibration)
