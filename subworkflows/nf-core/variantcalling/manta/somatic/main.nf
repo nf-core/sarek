@@ -53,7 +53,7 @@ workflow RUN_MANTA_SOMATIC {
                             num_intervals:meta.num_intervals,
                             patient:meta.patient,
                             sex:meta.sex,
-                            tumor_id:meta.tumor_id,
+                            tumor_id:meta.tumor_id
                         ],
                         meta.num_intervals),
                 vcf]
@@ -70,7 +70,7 @@ workflow RUN_MANTA_SOMATIC {
                             num_intervals:meta.num_intervals,
                             patient:meta.patient,
                             sex:meta.sex,
-                            tumor_id:meta.tumor_id,
+                            tumor_id:meta.tumor_id
                         ],
                         meta.num_intervals),
                 vcf]
@@ -112,7 +112,7 @@ workflow RUN_MANTA_SOMATIC {
                             num_intervals:meta.num_intervals,
                             patient:meta.patient,
                             sex:meta.sex,
-                            tumor_id:meta.tumor_id,
+                            tumor_id:meta.tumor_id
                         ],
                         meta.num_intervals),
                 vcf]
@@ -150,7 +150,7 @@ workflow RUN_MANTA_SOMATIC {
             patient:meta.patient,
             sex:meta.sex,
             tumor_id:meta.tumor_id,
-        ß],
+        ],
         vcf]
     }
 

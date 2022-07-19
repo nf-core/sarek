@@ -457,7 +457,7 @@ workflow SAREK {
                 read_group:meta.read_group,
                 sample:meta.sample,
                 sex:meta.sex,
-                size:meta.size
+                size:meta.size,
                 status:meta.status,
                 ],
             reads]
@@ -776,7 +776,7 @@ workflow SAREK {
             ch_versions = ch_versions.mix(CRAM_QC.out.versions)
 
             //If params.save_output_as_bam, then convert CRAM files to BAM
-            SAMTOOLS_CRAMTOBAM_RECAL(cram_variant_calling, fasta, fasta_fai)
+            SAMTOOLS_CRAMTOBAM_RECAL(ch_cram_variant_calling, fasta, fasta_fai)
             ch_versions = ch_versions.mix(SAMTOOLS_CRAMTOBAM_RECAL.out.versions)
 
             // CSV should be written for the file actually out out, either CRAM or BAM

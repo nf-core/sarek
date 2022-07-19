@@ -14,7 +14,7 @@ workflow RUN_HAPLOTYPECALLER {
     dbsnp_tbi
     intervals_bed_combined          // channel: [mandatory] intervals/target regions in one file unzipped, no_intervals.bed if no_intervals
     known_sites
-    known_sites_tbi               // channel: [optional]
+    known_sites_tbi                 // channel: [optional]
 
 
     main:

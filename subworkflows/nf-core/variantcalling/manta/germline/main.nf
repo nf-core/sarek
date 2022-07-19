@@ -58,7 +58,7 @@ workflow RUN_MANTA_GERMLINE {
 
                 [groupKey([
                             id:meta.sample,
-                            num_intervals:meta.num_intervals
+                            num_intervals:meta.num_intervals,
                             patient:meta.patient,
                             sample:meta.sample,
                             sex:meta.sex,

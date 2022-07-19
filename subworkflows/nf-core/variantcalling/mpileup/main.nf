@@ -22,12 +22,19 @@ workflow RUN_MPILEUP {
             new_meta = meta.tumor_id ? [
                                             id:meta.tumor_id + "_vs_" + meta.normal_id,
                                             normal_id:meta.normal_id,
-                                            num_intervals:meta.num_intervals
+                                            num_intervals:meta.num_intervals,
                                             patient:meta.patient,
                                             sex:meta.sex,
                                             tumor_id:meta.tumor_id,
                                         ] // not annotated, so no variantcaller necessary
-                                        : [patient:meta.patient, sample:meta.sample, status:meta.status, sex:meta.sex, id:meta.sample, num_intervals:meta.num_intervals]
+                                        : [
+                                            id:meta.sample,
+                                            num_intervals:meta.num_intervals,
+                                            patient:meta.patient,
+                                            sample:meta.sample,
+                                            status:meta.status,
+                                            sex:meta.sex,
+                                        ]
             [groupKey(new_meta, meta.num_intervals), pileup]
             }
         .groupTuple(sort:true))
