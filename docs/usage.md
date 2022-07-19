@@ -596,7 +596,7 @@ The RT correction file is missing for hg38 but can be derived using [ASCAT scrip
 Please note that:
 
 Row names (for GC and RT correction files) should be `${chr}_${position}` (there is no SNP/probe ID for HTS data).
-ASCAT developers stronly recommend using a BED file for WES/TS data. This prevents considering SNPs covered by off-targeted reads that would add noise to log/BAF tracks.
+ASCAT developers strongly recommend using a BED file for WES/TS data. This prevents considering SNPs covered by off-targeted reads that would add noise to log/BAF tracks.
 
 ## Where do the used reference genomes originate from
 
