@@ -641,7 +641,6 @@
     - mpileup
     - no_intervals
   files:
-    - path: results/csv/variantcalled.csv
     - path: results/multiqc
     - path: results/no_intervals.bed
     - path: results/no_intervals.bed.gz
@@ -662,7 +661,6 @@
     - mpileup
     - no_intervals
   files:
-    - path: results/csv/variantcalled.csv
     - path: results/multiqc
     - path: results/no_intervals.bed
     - path: results/no_intervals.bed.gz
