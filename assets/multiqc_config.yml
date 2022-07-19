@@ -59,6 +59,10 @@ extra_fn_clean_exts:
     pattern: "^.*.(md|recal).mosdepth.(global|region).dist"
     module: mosdepth
 
+sample_names_replace_regex: True
+sample_names_replace:
+  ".[0-9]{4}": ".md"
+
 sp:
   snpeff:
     contents: "SnpEff_version"
