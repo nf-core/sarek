@@ -6,31 +6,31 @@
     - variant_calling
     - copy_number_calling
   files:
+    - path: results/multiqc
     - path: results/variant_calling/cnvkit/sample3/multi_intervals.antitarget.bed
-    - path: results/variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted.antitargetcoverage.cnn
-    - path: results/variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted.targetcoverage.cnn
+    - path: results/variant_calling/cnvkit/sample3/multi_intervals.target.bed
     - path: results/variant_calling/cnvkit/sample3/reference.cnn
     - path: results/variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted-diagram.pdf
     - path: results/variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted-scatter.png
+    - path: results/variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted.antitargetcoverage.cnn
     - path: results/variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted.bintest.cns
-    - path: results/variant_calling/cnvkit/sample3/multi_intervals.target.bed
+    - path: results/variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted.call.cns
     - path: results/variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted.cnr
     - path: results/variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted.cns
-    - path: results/variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted.call.cns
+    - path: results/variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted.targetcoverage.cnn
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/multi_intervals.antitarget.bed
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/multi_intervals.target.bed
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/reference.cnn
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test.paired_end.recalibrated.sorted.antitargetcoverage.cnn
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test.paired_end.recalibrated.sorted.targetcoverage.cnn
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted-diagram.pdf
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted-scatter.png
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.antitargetcoverage.cnn
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.bintest.cns
-    - path: results/variant_calling/cnvkit/sample4_vs_sample3/reference.cnn
-    - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted-scatter.png
-    - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted-diagram.pdf
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.call.cns
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.cnr
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.cns
-    - path: results/variant_calling/cnvkit/sample4_vs_sample3/multi_intervals.target.bed
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.targetcoverage.cnn
-    - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.call.cns
-
 - name: Run variant calling on tumor_only sample with cnvkit
   command: nextflow run main.nf -profile test,tools_tumoronly,docker --tools cnvkit
   tags:
@@ -39,17 +39,17 @@
     - variant_calling
     - copy_number_calling
   files:
+    - path: results/multiqc
+    - path: results/variant_calling/cnvkit/sample2/cnvkit.reference.antitarget-tmp.bed
     - path: results/variant_calling/cnvkit/sample2/cnvkit.reference.target-tmp.bed
+    - path: results/variant_calling/cnvkit/sample2/test2.paired_end.recalibrated.sorted-diagram.pdf
+    - path: results/variant_calling/cnvkit/sample2/test2.paired_end.recalibrated.sorted-scatter.png
     - path: results/variant_calling/cnvkit/sample2/test2.paired_end.recalibrated.sorted.antitargetcoverage.cnn
     - path: results/variant_calling/cnvkit/sample2/test2.paired_end.recalibrated.sorted.bintest.cns
-    - path: results/variant_calling/cnvkit/sample2/test2.paired_end.recalibrated.sorted-scatter.png
-    - path: results/variant_calling/cnvkit/sample2/cnvkit.reference.antitarget-tmp.bed
-    - path: results/variant_calling/cnvkit/sample2/test2.paired_end.recalibrated.sorted-diagram.pdf
+    - path: results/variant_calling/cnvkit/sample2/test2.paired_end.recalibrated.sorted.call.cns
     - path: results/variant_calling/cnvkit/sample2/test2.paired_end.recalibrated.sorted.cnr
     - path: results/variant_calling/cnvkit/sample2/test2.paired_end.recalibrated.sorted.cns
     - path: results/variant_calling/cnvkit/sample2/test2.paired_end.recalibrated.sorted.targetcoverage.cnn
-    - path: results/variant_calling/cnvkit/sample2/test2.paired_end.recalibrated.sorted.call.cns
-
 - name: Run variant calling on germline sample with cnvkit
   command: nextflow run main.nf -profile test,tools_germline,docker --tools cnvkit
   tags:
@@ -58,18 +58,18 @@
     - variant_calling
     - copy_number_calling
   files:
+    - path: results/multiqc
     - path: results/variant_calling/cnvkit/sample1/multi_intervals.antitarget.bed
-    - path: results/variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted.antitargetcoverage.cnn
-    - path: results/variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted.targetcoverage.cnn
+    - path: results/variant_calling/cnvkit/sample1/multi_intervals.target.bed
     - path: results/variant_calling/cnvkit/sample1/reference.cnn
     - path: results/variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted-diagram.pdf
     - path: results/variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted-scatter.png
+    - path: results/variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted.antitargetcoverage.cnn
     - path: results/variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted.bintest.cns
-    - path: results/variant_calling/cnvkit/sample1/multi_intervals.target.bed
+    - path: results/variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted.call.cns
     - path: results/variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted.cnr
     - path: results/variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted.cns
-    - path: results/variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted.call.cns
-
+    - path: results/variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted.targetcoverage.cnn
 - name: Run variant calling on somatic samples with controlfreec
   command: nextflow run main.nf -profile test,tools_somatic,docker --tools controlfreec
   tags:
@@ -78,23 +78,24 @@
     - variant_calling
     - copy_number_calling
   files:
+    - path: results/multiqc
+    - path: results/untar/chromosomes/chr21.fasta
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/config.txt
-    - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_BAF.png
-    - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_ratio.log2.png
-    - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_ratio.png
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.bed
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.circos.txt
-    - path: results/variant_calling/mpileup/sample4_vs_sample3/sample4_vs_sample3.normal.mpileup.gz
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.normal.mpileup.gz_control.cpn
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.p.value.txt
-    - path: results/variant_calling/mpileup/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz_BAF.txt
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz_CNVs
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz_info.txt
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz_ratio.BedGraph
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz_ratio.txt
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz_sample.cpn
-
+    - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_BAF.png
+    - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_ratio.log2.png
+    - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_ratio.png
+    - path: results/variant_calling/mpileup/sample4_vs_sample3/sample4_vs_sample3.normal.mpileup.gz
+    - path: results/variant_calling/mpileup/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz
 - name: Run variant calling on somatic samples with controlfreec without intervals
   command: nextflow run main.nf -profile test,tools_somatic,docker --tools controlfreec --no_intervals -stub-run
   tags:
@@ -104,23 +105,27 @@
     - variant_calling
     - copy_number_calling
   files:
+    - path: results/multiqc
+    - path: results/no_intervals.bed
+    - path: results/no_intervals.bed.gz
+    - path: results/no_intervals.bed.gz.tbi
+    - path: results/untar/chromosomes
+    - path: results/variant_calling/controlfreec/sample4_vs_sample3/GC_profile.sample4_vs_sample3.cpn
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/config.txt
-    - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_BAF.png
-    - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_ratio.log2.png
-    - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_ratio.png
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.bed
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.circos.txt
-    - path: results/variant_calling/mpileup/sample4_vs_sample3/sample4_vs_sample3.normal.mpileup.gz
-    - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_sample.cpn
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.p.value.txt
-    - path: results/variant_calling/mpileup/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz
+    - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_BAF.png
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_BAF.txt
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_CNVs
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_info.txt
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_ratio.BedGraph
+    - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_ratio.log2.png
+    - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_ratio.png
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_ratio.txt
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_sample.cpn
-
+    - path: results/variant_calling/mpileup/sample4_vs_sample3/sample4_vs_sample3.normal.mpileup.gz
+    - path: results/variant_calling/mpileup/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz
 - name: Run variant calling on tumor_only sample with controlfreec
   command: nextflow run main.nf -profile test,tools_tumoronly,docker --tools controlfreec -stub-run
   tags:
@@ -129,21 +134,22 @@
     - variant_calling
     - copy_number_calling
   files:
-    - path: results/variant_calling/controlfreec/sample2/config.txt
+    - path: results/multiqc
     - path: results/variant_calling/controlfreec/sample2/GC_profile.sample2.cpn
+    - path: results/variant_calling/controlfreec/sample2/config.txt
+    - path: results/variant_calling/controlfreec/sample2/sample2.bed
+    - path: results/variant_calling/controlfreec/sample2/sample2.circos.txt
+    - path: results/variant_calling/controlfreec/sample2/sample2.p.value.txt
     - path: results/variant_calling/controlfreec/sample2/sample2_BAF.png
     - path: results/variant_calling/controlfreec/sample2/sample2_BAF.txt
+    - path: results/variant_calling/controlfreec/sample2/sample2_CNVs
     - path: results/variant_calling/controlfreec/sample2/sample2_info.txt
     - path: results/variant_calling/controlfreec/sample2/sample2_ratio.BedGraph
     - path: results/variant_calling/controlfreec/sample2/sample2_ratio.log2.png
     - path: results/variant_calling/controlfreec/sample2/sample2_ratio.png
     - path: results/variant_calling/controlfreec/sample2/sample2_ratio.txt
     - path: results/variant_calling/controlfreec/sample2/sample2_sample.cpn
-    - path: results/variant_calling/controlfreec/sample2/sample2.bed
-    - path: results/variant_calling/controlfreec/sample2/sample2.circos.txt
     - path: results/variant_calling/mpileup/sample2/sample2.tumor.mpileup.gz
-    - path: results/variant_calling/controlfreec/sample2/sample2.p.value.txt
-
 - name: Run variant calling on germline sample with deepvariant
   command: nextflow run main.nf -profile test,tools_germline,docker --tools deepvariant
   tags:
@@ -151,12 +157,19 @@
     - germline
     - variant_calling
   files:
+    - path: results/multiqc
+    - path: results/reports/bcftools/deepvariant/sample1/sample1.deepvariant.bcftools_stats.txt
+    - path: results/reports/bcftools/deepvariant/sample1/sample1.deepvariant.g.bcftools_stats.txt
+    - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.FILTER.summary
+    - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.TsTv.count
+    - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.TsTv.qual
+    - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.g.FILTER.summary
+    - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.g.TsTv.count
+    - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.g.TsTv.qual
     - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.g.vcf.gz
     - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.g.vcf.gz.tbi
     - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.vcf.gz
     - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.vcf.gz.tbi
-    - path: results/csv/variantcalled.csv
-
 - name: Run variant calling on germline sample with deepvariant without intervals
   command: nextflow run main.nf -profile test,tools_germline,docker --tools deepvariant --no_intervals
   tags:
@@ -165,12 +178,22 @@
     - no_intervals
     - variant_calling
   files:
+    - path: results/multiqc
+    - path: results/no_intervals.bed
+    - path: results/no_intervals.bed.gz
+    - path: results/no_intervals.bed.gz.tbi
+    - path: results/reports/bcftools/deepvariant/sample1/sample1.deepvariant.bcftools_stats.txt
+    - path: results/reports/bcftools/deepvariant/sample1/sample1.deepvariant.g.bcftools_stats.txt
+    - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.FILTER.summary
+    - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.TsTv.count
+    - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.TsTv.qual
+    - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.g.FILTER.summary
+    - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.g.TsTv.count
+    - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.g.TsTv.qual
     - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.g.vcf.gz
     - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.g.vcf.gz.tbi
     - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.vcf.gz
     - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.vcf.gz.tbi
-    - path: results/csv/variantcalled.csv
-
 - name: Run variant calling on germline sample with freebayes
   command: nextflow run main.nf -profile test,targeted,docker --tools freebayes
   tags:
@@ -178,10 +201,40 @@
     - germline
     - variant_calling
   files:
+    - path: results/csv/markduplicates.csv
+    - path: results/csv/markduplicates_no_table.csv
+    - path: results/csv/recalibrated.csv
+    - path: results/csv/variantcalled.csv
+    - path: results/multiqc
+    - path: results/preprocessing/markduplicates/test/test.md.cram
+    - path: results/preprocessing/markduplicates/test/test.md.cram.crai
+    - path: results/preprocessing/recal_table/test/test.recal.table
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+    - path: results/reports/bcftools/freebayes/test/test.freebayes.bcftools_stats.txt
+    - path: results/reports/fastqc/test-test_L1
+    - path: results/reports/markduplicates/test/test.md.metrics
+    - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test/test.md.per-base.bed.gz
+    - path: results/reports/mosdepth/test/test.md.per-base.bed.gz.csi
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz.csi
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test/test.recal.per-base.bed.gz
+    - path: results/reports/mosdepth/test/test.recal.per-base.bed.gz.csi
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
+    - path: results/reports/samtools/test/test.md.cram.stats
+    - path: results/reports/samtools/test/test.recal.cram.stats
+    - path: results/reports/vcftools/freebayes/test/test.freebayes.FILTER.summary
+    - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.count
+    - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.qual
     - path: results/variant_calling/freebayes/test/test.freebayes.vcf.gz
     - path: results/variant_calling/freebayes/test/test.freebayes.vcf.gz.tbi
-    - path: results/csv/variantcalled.csv
-
 - name: Run variant calling on germline sample with freebayes without intervals
   command: nextflow run main.nf -profile test,docker --tools freebayes --no_intervals
   tags:
@@ -190,10 +243,39 @@
     - no_intervals
     - variant_calling
   files:
+    - path: results/csv/markduplicates.csv
+    - path: results/csv/markduplicates_no_table.csv
+    - path: results/csv/recalibrated.csv
+    - path: results/csv/variantcalled.csv
+    - path: results/multiqc
+    - path: results/no_intervals.bed
+    - path: results/no_intervals.bed.gz
+    - path: results/no_intervals.bed.gz.tbi
+    - path: results/preprocessing/markduplicates/test/test.md.cram
+    - path: results/preprocessing/markduplicates/test/test.md.cram.crai
+    - path: results/preprocessing/recal_table/test/test.recal.table
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+    - path: results/reports/bcftools/freebayes/test/test.freebayes.bcftools_stats.txt
+    - path: results/reports/fastqc/test-test_L1
+    - path: results/reports/markduplicates/test/test.md.metrics
+    - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz.csi
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
+    - path: results/reports/samtools/test/test.md.cram.stats
+    - path: results/reports/samtools/test/test.recal.cram.stats
+    - path: results/reports/vcftools/freebayes/test/test.freebayes.FILTER.summary
+    - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.count
+    - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.qual
     - path: results/variant_calling/freebayes/test/test.freebayes.vcf.gz
     - path: results/variant_calling/freebayes/test/test.freebayes.vcf.gz.tbi
-    - path: results/csv/variantcalled.csv
-
 - name: Run variant calling on somatic sample with freebayes
   command: nextflow run main.nf -profile test,pair,targeted,docker --tools freebayes
   tags:
@@ -201,21 +283,129 @@
     - somatic
     - variant_calling
   files:
+    - path: results/csv/markduplicates.csv
+    - path: results/csv/markduplicates_no_table.csv
+    - path: results/csv/recalibrated.csv
+    - path: results/csv/variantcalled.csv
+    - path: results/multiqc
+    - path: results/preprocessing/markduplicates/test/test.md.cram
+    - path: results/preprocessing/markduplicates/test/test.md.cram.crai
+    - path: results/preprocessing/markduplicates/test2/test2.md.cram
+    - path: results/preprocessing/markduplicates/test2/test2.md.cram.crai
+    - path: results/preprocessing/recal_table/test/test.recal.table
+    - path: results/preprocessing/recal_table/test2/test2.recal.table
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+    - path: results/preprocessing/recalibrated/test2/test2.recal.cram
+    - path: results/preprocessing/recalibrated/test2/test2.recal.cram.crai
+    - path: results/reports/bcftools/freebayes/test/test.freebayes.bcftools_stats.txt
+    - path: results/reports/bcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.bcftools_stats.txt
+    - path: results/reports/fastqc/test-test_L1
+    - path: results/reports/markduplicates/test/test.md.metrics
+    - path: results/reports/markduplicates/test2/test2.md.metrics
+    - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test/test.md.per-base.bed.gz
+    - path: results/reports/mosdepth/test/test.md.per-base.bed.gz.csi
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz.csi
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test/test.recal.per-base.bed.gz
+    - path: results/reports/mosdepth/test/test.recal.per-base.bed.gz.csi
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
+    - path: results/reports/mosdepth/test2/test2.md.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/test2/test2.md.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test2/test2.md.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test2/test2.md.per-base.bed.gz
+    - path: results/reports/mosdepth/test2/test2.md.per-base.bed.gz.csi
+    - path: results/reports/mosdepth/test2/test2.md.regions.bed.gz
+    - path: results/reports/mosdepth/test2/test2.md.regions.bed.gz.csi
+    - path: results/reports/mosdepth/test2/test2.recal.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/test2/test2.recal.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test2/test2.recal.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test2/test2.recal.per-base.bed.gz
+    - path: results/reports/mosdepth/test2/test2.recal.per-base.bed.gz.csi
+    - path: results/reports/mosdepth/test2/test2.recal.regions.bed.gz
+    - path: results/reports/mosdepth/test2/test2.recal.regions.bed.gz.csi
+    - path: results/reports/samtools/test/test.md.cram.stats
+    - path: results/reports/samtools/test/test.recal.cram.stats
+    - path: results/reports/samtools/test2/test2.md.cram.stats
+    - path: results/reports/samtools/test2/test2.recal.cram.stats
+    - path: results/reports/vcftools/freebayes/test/test.freebayes.FILTER.summary
+    - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.count
+    - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.qual
+    - path: results/reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.FILTER.summary
+    - path: results/reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.TsTv.count
+    - path: results/reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.TsTv.qual
+    - path: results/variant_calling/freebayes/test/test.freebayes.vcf.gz
+    - path: results/variant_calling/freebayes/test/test.freebayes.vcf.gz.tbi
     - path: results/variant_calling/freebayes/test2_vs_test/test2_vs_test.freebayes.vcf.gz
     - path: results/variant_calling/freebayes/test2_vs_test/test2_vs_test.freebayes.vcf.gz.tbi
-    - path: results/csv/variantcalled.csv
-
 - name: Run variant calling on somatic sample with freebayes without intervals
-  command: nextflow run main.nf -profile test,pair,docker --tools freebayes --no_intervals
+  command: nextflow run main.nf -profile test,pair,targeted,docker --tools freebayes --no_intervals
   tags:
     - freebayes
     - somatic
     - no_intervals
     - variant_calling
   files:
+    - path: results/csv/markduplicates.csv
+    - path: results/csv/markduplicates_no_table.csv
+    - path: results/csv/recalibrated.csv
+    - path: results/csv/variantcalled.csv
+    - path: results/multiqc
+    - path: results/no_intervals.bed
+    - path: results/no_intervals.bed.gz
+    - path: results/no_intervals.bed.gz.tbi
+    - path: results/preprocessing/markduplicates/test/test.md.cram
+    - path: results/preprocessing/markduplicates/test/test.md.cram.crai
+    - path: results/preprocessing/markduplicates/test2/test2.md.cram
+    - path: results/preprocessing/markduplicates/test2/test2.md.cram.crai
+    - path: results/preprocessing/recal_table/test/test.recal.table
+    - path: results/preprocessing/recal_table/test2/test2.recal.table
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+    - path: results/preprocessing/recalibrated/test2/test2.recal.cram
+    - path: results/preprocessing/recalibrated/test2/test2.recal.cram.crai
+    - path: results/reports/bcftools/freebayes/test/test.freebayes.bcftools_stats.txt
+    - path: results/reports/bcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.bcftools_stats.txt
+    - path: results/reports/fastqc/test-test_L1
+    - path: results/reports/markduplicates/test/test.md.metrics
+    - path: results/reports/markduplicates/test2/test2.md.metrics
+    - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test/test.md.per-base.bed.gz
+    - path: results/reports/mosdepth/test/test.md.per-base.bed.gz.csi
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test/test.recal.per-base.bed.gz
+    - path: results/reports/mosdepth/test/test.recal.per-base.bed.gz.csi
+    - path: results/reports/mosdepth/test2/test2.md.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/test2/test2.md.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test2/test2.md.per-base.bed.gz
+    - path: results/reports/mosdepth/test2/test2.md.per-base.bed.gz.csi
+    - path: results/reports/mosdepth/test2/test2.recal.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/test2/test2.recal.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test2/test2.recal.per-base.bed.gz
+    - path: results/reports/mosdepth/test2/test2.recal.per-base.bed.gz.csi
+    - path: results/reports/samtools/test/test.md.cram.stats
+    - path: results/reports/samtools/test/test.recal.cram.stats
+    - path: results/reports/samtools/test2/test2.md.cram.stats
+    - path: results/reports/samtools/test2/test2.recal.cram.stats
+    - path: results/reports/vcftools/freebayes/test/test.freebayes.FILTER.summary
+    - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.count
+    - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.qual
+    - path: results/reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.FILTER.summary
+    - path: results/reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.TsTv.count
+    - path: results/reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.TsTv.qual
+    - path: results/variant_calling/freebayes/test/test.freebayes.vcf.gz
+    - path: results/variant_calling/freebayes/test/test.freebayes.vcf.gz.tbi
     - path: results/variant_calling/freebayes/test2_vs_test/test2_vs_test.freebayes.vcf.gz
     - path: results/variant_calling/freebayes/test2_vs_test/test2_vs_test.freebayes.vcf.gz.tbi
-    - path: results/csv/variantcalled.csv
 
 # - name: Run variant calling on tumor_only sample with freebayes
 #   command: nextflow run main.nf -profile test,tools_tumoronly,docker --tools freebayes
@@ -239,39 +429,47 @@
 #     - path: results/variant_calling/freebayes/sample2/sample2.freebayes.vcf.gz.tbi
 
 - name: Run variant calling on germline sample with haplotypecaller
-  command: nextflow run main.nf -profile test,targeted,docker --input ./tests/csv/3.0/mapped_single_bam.csv --tools haplotypecaller  --step variant_calling
+  command: nextflow run main.nf -profile test,targeted,docker --input ./tests/csv/3.0/mapped_single_bam.csv --tools haplotypecaller --step variant_calling
   tags:
     - germline
     - haplotypecaller
     - variant_calling
   files:
-    - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.vcf.gz
-    - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.vcf.gz.tbi
+    - path: results/csv/variantcalled.csv
+    - path: results/multiqc
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+    - path: results/reports/bcftools/haplotypecaller/test/test.haplotypecaller.filtered.bcftools_stats.txt
+    - path: results/reports/vcftools/haplotypecaller/test/test.haplotypecaller.filtered.FILTER.summary
+    - path: results/reports/vcftools/haplotypecaller/test/test.haplotypecaller.filtered.TsTv.count
+    - path: results/reports/vcftools/haplotypecaller/test/test.haplotypecaller.filtered.TsTv.qual
     - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.filtered.vcf.gz
     - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.filtered.vcf.gz.tbi
-    - path: results/csv/variantcalled.csv
-    - path: results/variant_calling/haplotypecaller/test1/test1.haplotypecaller.vcf.gz
-    - path: results/variant_calling/haplotypecaller/test1/test1.haplotypecaller.vcf.gz.tbi
-    - path: results/variant_calling/haplotypecaller/test1/test1.haplotypecaller.filtered.vcf.gz
-    - path: results/variant_calling/haplotypecaller/test1/test1.haplotypecaller.filtered.vcf.gz.tbi
-
+    - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.vcf.gz
+    - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.vcf.gz.tbi
 - name: Run variant calling on germline sample with haplotypecaller without intervals
-  command: nextflow run main.nf -profile test,docker --input ./tests/csv/3.0/mapped_single_bam.csv --tools haplotypecaller  --step variant_calling --no_intervals
+  command: nextflow run main.nf -profile test,targeted,docker --input ./tests/csv/3.0/mapped_single_bam.csv --tools haplotypecaller --step variant_calling --no_intervals
   tags:
     - germline
     - haplotypecaller
     - no_intervals
     - variant_calling
   files:
-    - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.vcf.gz
-    - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.vcf.gz.tbi
+    - path: results/csv/variantcalled.csv
+    - path: results/multiqc
+    - path: results/no_intervals.bed
+    - path: results/no_intervals.bed.gz
+    - path: results/no_intervals.bed.gz.tbi
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+    - path: results/reports/bcftools/haplotypecaller/test/test.haplotypecaller.filtered.bcftools_stats.txt
+    - path: results/reports/vcftools/haplotypecaller/test/test.haplotypecaller.filtered.FILTER.summary
+    - path: results/reports/vcftools/haplotypecaller/test/test.haplotypecaller.filtered.TsTv.count
+    - path: results/reports/vcftools/haplotypecaller/test/test.haplotypecaller.filtered.TsTv.qual
     - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.filtered.vcf.gz
     - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.filtered.vcf.gz.tbi
-    - path: results/csv/variantcalled.csv
-    - path: results/variant_calling/haplotypecaller/test1/test1.haplotypecaller.vcf.gz
-    - path: results/variant_calling/haplotypecaller/test1/test1.haplotypecaller.vcf.gz.tbi
-    - path: results/variant_calling/haplotypecaller/test1/test1.haplotypecaller.filtered.vcf.gz
-    - path: results/variant_calling/haplotypecaller/test1/test1.haplotypecaller.filtered.vcf.gz.tbi
+    - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.vcf.gz
+    - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.vcf.gz.tbi
 
 # - name: Run joint germline variant calling with haplotypecaller
 #   command: nextflow run main.nf -profile test,tools_germline,docker --tools haplotypecaller --joint_germline
@@ -309,9 +507,14 @@
     - manta
     - variant_calling
   files:
+    - path: results/csv/variantcalled.csv
+    - path: results/multiqc
+    - path: results/reports/bcftools/manta/sample1/sample1.manta.diploid_sv.bcftools_stats.txt
+    - path: results/reports/vcftools/manta/sample1/sample1.manta.diploid_sv.FILTER.summary
+    - path: results/reports/vcftools/manta/sample1/sample1.manta.diploid_sv.TsTv.count
+    - path: results/reports/vcftools/manta/sample1/sample1.manta.diploid_sv.TsTv.qual
     - path: results/variant_calling/manta/sample1/sample1.manta.diploid_sv.vcf.gz
     - path: results/variant_calling/manta/sample1/sample1.manta.diploid_sv.vcf.gz.tbi
-
 - name: Run variant calling on germline sample with manta without intervals
   command: nextflow run main.nf -profile test,tools_germline,docker --tools manta --no_intervals
   tags:
@@ -320,9 +523,17 @@
     - no_intervals
     - variant_calling
   files:
+    - path: results/csv/variantcalled.csv
+    - path: results/multiqc
+    - path: results/no_intervals.bed
+    - path: results/no_intervals.bed.gz
+    - path: results/no_intervals.bed.gz.tbi
+    - path: results/reports/bcftools/manta/sample1/sample1.manta.diploid_sv.bcftools_stats.txt
+    - path: results/reports/vcftools/manta/sample1/sample1.manta.diploid_sv.FILTER.summary
+    - path: results/reports/vcftools/manta/sample1/sample1.manta.diploid_sv.TsTv.count
+    - path: results/reports/vcftools/manta/sample1/sample1.manta.diploid_sv.TsTv.qual
     - path: results/variant_calling/manta/sample1/sample1.manta.diploid_sv.vcf.gz
     - path: results/variant_calling/manta/sample1/sample1.manta.diploid_sv.vcf.gz.tbi
-
 - name: Run variant calling on tumor_only sample with manta
   command: nextflow run main.nf -profile test,tools_tumoronly,docker --tools manta
   tags:
@@ -330,9 +541,14 @@
     - tumor_only
     - variant_calling
   files:
+    - path: results/csv/variantcalled.csv
+    - path: results/multiqc
+    - path: results/reports/bcftools/manta/sample2/sample2.manta.tumor_sv.bcftools_stats.txt
+    - path: results/reports/vcftools/manta/sample2/sample2.manta.tumor_sv.FILTER.summary
+    - path: results/reports/vcftools/manta/sample2/sample2.manta.tumor_sv.TsTv.count
+    - path: results/reports/vcftools/manta/sample2/sample2.manta.tumor_sv.TsTv.qual
     - path: results/variant_calling/manta/sample2/sample2.manta.tumor_sv.vcf.gz
     - path: results/variant_calling/manta/sample2/sample2.manta.tumor_sv.vcf.gz.tbi
-
 - name: Run variant calling on tumor_only sample with manta without intervals
   command: nextflow run main.nf -profile test,tools_tumoronly,docker --tools manta --no_intervals
   tags:
@@ -341,9 +557,17 @@
     - tumor_only
     - variant_calling
   files:
+    - path: results/csv/variantcalled.csv
+    - path: results/multiqc
+    - path: results/no_intervals.bed
+    - path: results/no_intervals.bed.gz
+    - path: results/no_intervals.bed.gz.tbi
+    - path: results/reports/bcftools/manta/sample2/sample2.manta.tumor_sv.bcftools_stats.txt
+    - path: results/reports/vcftools/manta/sample2/sample2.manta.tumor_sv.FILTER.summary
+    - path: results/reports/vcftools/manta/sample2/sample2.manta.tumor_sv.TsTv.count
+    - path: results/reports/vcftools/manta/sample2/sample2.manta.tumor_sv.TsTv.qual
     - path: results/variant_calling/manta/sample2/sample2.manta.tumor_sv.vcf.gz
     - path: results/variant_calling/manta/sample2/sample2.manta.tumor_sv.vcf.gz.tbi
-
 - name: Run variant calling on somatic sample with manta
   command: nextflow run main.nf -profile test,tools_somatic,docker --tools manta
   tags:
@@ -351,13 +575,26 @@
     - somatic
     - variant_calling
   files:
+    - path: results/csv/variantcalled.csv
+    - path: results/multiqc
+    - path: results/reports/bcftools/manta/sample3/sample3.manta.diploid_sv.bcftools_stats.txt
+    - path: results/reports/bcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.bcftools_stats.txt
+    - path: results/reports/bcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.bcftools_stats.txt
+    - path: results/reports/vcftools/manta/sample3/sample3.manta.diploid_sv.FILTER.summary
+    - path: results/reports/vcftools/manta/sample3/sample3.manta.diploid_sv.TsTv.count
+    - path: results/reports/vcftools/manta/sample3/sample3.manta.diploid_sv.TsTv.qual
+    - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.FILTER.summary
+    - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.TsTv.count
+    - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.TsTv.qual
+    - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.FILTER.summary
+    - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.TsTv.count
+    - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.TsTv.qual
     - path: results/variant_calling/manta/sample3/sample3.manta.diploid_sv.vcf.gz
     - path: results/variant_calling/manta/sample3/sample3.manta.diploid_sv.vcf.gz.tbi
     - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.vcf.gz
     - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.vcf.gz.tbi
     - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.vcf.gz
     - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.vcf.gz.tbi
-
 - name: Run variant calling on somatic sample with manta without intervals
   command: nextflow run main.nf -profile test,tools_somatic,docker --tools manta --no_intervals
   tags:
@@ -366,21 +603,37 @@
     - somatic
     - variant_calling
   files:
+    - path: results/csv/variantcalled.csv
+    - path: results/multiqc
+    - path: results/no_intervals.bed
+    - path: results/no_intervals.bed.gz
+    - path: results/no_intervals.bed.gz.tbi
+    - path: results/reports/bcftools/manta/sample3/sample3.manta.diploid_sv.bcftools_stats.txt
+    - path: results/reports/bcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.bcftools_stats.txt
+    - path: results/reports/bcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.bcftools_stats.txt
+    - path: results/reports/vcftools/manta/sample3/sample3.manta.diploid_sv.FILTER.summary
+    - path: results/reports/vcftools/manta/sample3/sample3.manta.diploid_sv.TsTv.count
+    - path: results/reports/vcftools/manta/sample3/sample3.manta.diploid_sv.TsTv.qual
+    - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.FILTER.summary
+    - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.TsTv.count
+    - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.TsTv.qual
+    - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.FILTER.summary
+    - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.TsTv.count
+    - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.TsTv.qual
     - path: results/variant_calling/manta/sample3/sample3.manta.diploid_sv.vcf.gz
     - path: results/variant_calling/manta/sample3/sample3.manta.diploid_sv.vcf.gz.tbi
     - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.vcf.gz
     - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.vcf.gz.tbi
     - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.vcf.gz
     - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.vcf.gz.tbi
-
 - name: Run variant calling on tumor_only sample to test mpileup
   command: nextflow run main.nf -profile test,tools_tumoronly,docker --tools mpileup
   tags:
     - tumor_only
     - mpileup
   files:
+    - path: results/multiqc
     - path: results/variant_calling/mpileup/sample2/sample2.tumor.mpileup.gz
-
 - name: Run variant calling on tumor_only sample to test mpileup without intervals
   command: nextflow run main.nf -profile test,tools_tumoronly,docker --tools mpileup --no_intervals
   tags:
@@ -388,16 +641,20 @@
     - mpileup
     - no_intervals
   files:
+    - path: results/csv/variantcalled.csv
+    - path: results/multiqc
+    - path: results/no_intervals.bed
+    - path: results/no_intervals.bed.gz
+    - path: results/no_intervals.bed.gz.tbi
     - path: results/variant_calling/mpileup/sample2/sample2.tumor.mpileup.gz
-
 - name: Run variant calling on germline sample to test mpileup
   command: nextflow run main.nf -profile test,tools_germline,docker --tools mpileup
   tags:
     - germline
     - mpileup
   files:
+    - path: results/multiqc
     - path: results/variant_calling/mpileup/sample1/sample1.normal.mpileup.gz
-
 - name: Run variant calling on germline sample to test mpileup without intervals
   command: nextflow run main.nf -profile test,tools_germline,docker --tools mpileup --no_intervals
   tags:
@@ -405,28 +662,36 @@
     - mpileup
     - no_intervals
   files:
+    - path: results/csv/variantcalled.csv
+    - path: results/multiqc
+    - path: results/no_intervals.bed
+    - path: results/no_intervals.bed.gz
+    - path: results/no_intervals.bed.gz.tbi
     - path: results/variant_calling/mpileup/sample1/sample1.normal.mpileup.gz
-
-- name: Run variant calling on tumoronly sample with mutect2
+- name: Run variant calling on tumor only sample with mutect2
   command: nextflow run main.nf -profile test,tools_tumoronly,docker --tools mutect2
   tags:
     - mutect2
     - tumor_only
     - variant_calling
   files:
-    - path: results/variant_calling/mutect2/sample2/sample2.mutect2.vcf.gz
-    - path: results/variant_calling/mutect2/sample2/sample2.mutect2.vcf.gz.tbi
-    - path: results/variant_calling/mutect2/sample2/sample2.mutect2.vcf.gz.stats
-    - path: results/variant_calling/mutect2/sample2/sample2.mutect2.contamination.table
-    - path: results/variant_calling/mutect2/sample2/sample2.mutect2.segmentation.table
-    - path: results/variant_calling/mutect2/sample2/sample2.mutect2.artifactprior.tar.gz
-    - path: results/variant_calling/mutect2/sample2/sample2.mutect2.pileupsummaries.table
-    - path: results/variant_calling/mutect2/sample2/sample2.mutect2.filtered.vcf.gz
-    - path: results/variant_calling/mutect2/sample2/sample2.mutect2.filtered.vcf.gz.tbi
-    - path: results/variant_calling/mutect2/sample2/sample2.mutect2.filtered.vcf.gz.filteringStats.tsv
     - path: results/csv/variantcalled.csv
-
-- name: Run variant calling on tumoronly sample with mutect2 without intervals
+    - path: results/multiqc
+    - path: results/reports/bcftools/mutect2/sample2/sample2.mutect2.filtered.bcftools_stats.txt
+    - path: results/reports/vcftools/mutect2/sample2/sample2.mutect2.filtered.FILTER.summary
+    - path: results/reports/vcftools/mutect2/sample2/sample2.mutect2.filtered.TsTv.count
+    - path: results/reports/vcftools/mutect2/sample2/sample2.mutect2.filtered.TsTv.qual
+    - path: results/variant_calling/mutect2/sample2/sample2.mutect2.artifactprior.tar.gz
+    - path: results/variant_calling/mutect2/sample2/sample2.mutect2.contamination.table
+    - path: results/variant_calling/mutect2/sample2/sample2.mutect2.filtered.vcf.gz
+    - path: results/variant_calling/mutect2/sample2/sample2.mutect2.filtered.vcf.gz.filteringStats.tsv
+    - path: results/variant_calling/mutect2/sample2/sample2.mutect2.filtered.vcf.gz.tbi
+    - path: results/variant_calling/mutect2/sample2/sample2.mutect2.pileupsummaries.table
+    - path: results/variant_calling/mutect2/sample2/sample2.mutect2.segmentation.table
+    - path: results/variant_calling/mutect2/sample2/sample2.mutect2.vcf.gz
+    - path: results/variant_calling/mutect2/sample2/sample2.mutect2.vcf.gz.stats
+    - path: results/variant_calling/mutect2/sample2/sample2.mutect2.vcf.gz.tbi
+- name: Run variant calling on tumor only sample with mutect2 without intervals
   command: nextflow run main.nf -profile test,tools_tumoronly,docker --tools mutect2 --no_intervals
   tags:
     - mutect2
@@ -434,40 +699,25 @@
     - tumor_only
     - variant_calling
   files:
-    - path: results/variant_calling/mutect2/sample2/sample2.mutect2.pileups.table
-    - path: results/variant_calling/mutect2/sample2/sample2.mutect2.vcf.gz
-    - path: results/variant_calling/mutect2/sample2/sample2.mutect2.vcf.gz.tbi
-    - path: results/variant_calling/mutect2/sample2/sample2.mutect2.vcf.gz.stats
-    - path: results/variant_calling/mutect2/sample2/sample2.mutect2.contamination.table
-    - path: results/variant_calling/mutect2/sample2/sample2.mutect2.segmentation.table
+    - path: results/csv/variantcalled.csv
+    - path: results/multiqc
+    - path: results/no_intervals.bed
+    - path: results/no_intervals.bed.gz
+    - path: results/no_intervals.bed.gz.tbi
+    - path: results/reports/bcftools/mutect2/sample2/sample2.mutect2.filtered.bcftools_stats.txt
+    - path: results/reports/vcftools/mutect2/sample2/sample2.mutect2.filtered.FILTER.summary
+    - path: results/reports/vcftools/mutect2/sample2/sample2.mutect2.filtered.TsTv.count
+    - path: results/reports/vcftools/mutect2/sample2/sample2.mutect2.filtered.TsTv.qual
     - path: results/variant_calling/mutect2/sample2/sample2.mutect2.artifactprior.tar.gz
-    - path: results/variant_calling/mutect2/sample2/sample2.mutect2.pileupsummaries.table
+    - path: results/variant_calling/mutect2/sample2/sample2.mutect2.contamination.table
     - path: results/variant_calling/mutect2/sample2/sample2.mutect2.filtered.vcf.gz
-    - path: results/variant_calling/mutect2/sample2/sample2.mutect2.filtered.vcf.gz.tbi
     - path: results/variant_calling/mutect2/sample2/sample2.mutect2.filtered.vcf.gz.filteringStats.tsv
-    - path: results/csv/variantcalled.csv
-
-- name: Run variant calling on somatic sample with mutect2
-  command: nextflow run main.nf -profile test,tools_somatic,docker --tools mutect2
-  tags:
-    - mutect2_manual
-    - manual
-    - somatic
-    - variant_calling
-  files:
-    - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.vcf.gz
-    - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.vcf.gz.tbi
-    - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.vcf.gz.stats
-    - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.contamination.table
-    - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.segmentation.table
-    - path: results/variant_calling/mutect2/sample4_vs_sample3/sample3.mutect2.pileupsummaries.table
-    - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4.mutect2.pileupsummaries.table
-    - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.artifactprior.tar.gz
-    - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.filtered.vcf.gz
-    - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.filtered.vcf.gz.tbi
-    - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.filtered.vcf.gz.filteringStats.tsv
-    - path: results/csv/variantcalled.csv
-
+    - path: results/variant_calling/mutect2/sample2/sample2.mutect2.filtered.vcf.gz.tbi
+    - path: results/variant_calling/mutect2/sample2/sample2.mutect2.pileupsummaries.table
+    - path: results/variant_calling/mutect2/sample2/sample2.mutect2.segmentation.table
+    - path: results/variant_calling/mutect2/sample2/sample2.mutect2.vcf.gz
+    - path: results/variant_calling/mutect2/sample2/sample2.mutect2.vcf.gz.stats
+    - path: results/variant_calling/mutect2/sample2/sample2.mutect2.vcf.gz.tbi
 - name: Run variant calling on somatic sample with msisensor-pro
   command: nextflow run main.nf -profile test,tools_somatic,docker --tools msisensorpro
   tags:
@@ -475,11 +725,11 @@
     - somatic
     - variant_calling
   files:
+    - path: results/multiqc
     - path: results/variant_calling/msisensorpro/sample4_vs_sample3/sample4_vs_sample3
     - path: results/variant_calling/msisensorpro/sample4_vs_sample3/sample4_vs_sample3_dis
     - path: results/variant_calling/msisensorpro/sample4_vs_sample3/sample4_vs_sample3_germline
     - path: results/variant_calling/msisensorpro/sample4_vs_sample3/sample4_vs_sample3_somatic
-
 - name: Run variant calling on germline sample with strelka
   command: nextflow run main.nf -profile test,tools_germline,docker --tools strelka
   tags:
@@ -487,12 +737,16 @@
     - strelka
     - variant_calling
   files:
-    - path: results/variant_calling/strelka/sample1/sample1.strelka.variants.vcf.gz
-    - path: results/variant_calling/strelka/sample1/sample1.strelka.variants.vcf.gz.tbi
+    - path: results/csv/variantcalled.csv
+    - path: results/multiqc
+    - path: results/reports/bcftools/strelka/sample1/sample1.strelka.variants.bcftools_stats.txt
+    - path: results/reports/vcftools/strelka/sample1/sample1.strelka.variants.FILTER.summary
+    - path: results/reports/vcftools/strelka/sample1/sample1.strelka.variants.TsTv.count
+    - path: results/reports/vcftools/strelka/sample1/sample1.strelka.variants.TsTv.qual
     - path: results/variant_calling/strelka/sample1/sample1.strelka.genome.vcf.gz
     - path: results/variant_calling/strelka/sample1/sample1.strelka.genome.vcf.gz.tbi
-    - path: results/csv/variantcalled.csv
-
+    - path: results/variant_calling/strelka/sample1/sample1.strelka.variants.vcf.gz
+    - path: results/variant_calling/strelka/sample1/sample1.strelka.variants.vcf.gz.tbi
 - name: Run variant calling on germline sample with strelka without intervals
   command: nextflow run main.nf -profile test,tools_germline,docker --tools strelka --no_intervals
   tags:
@@ -501,26 +755,37 @@
     - no_intervals
     - variant_calling
   files:
-    - path: results/variant_calling/strelka/sample1/sample1.strelka.variants.vcf.gz
-    - path: results/variant_calling/strelka/sample1/sample1.strelka.variants.vcf.gz.tbi
+    - path: results/csv/variantcalled.csv
+    - path: results/multiqc
+    - path: results/no_intervals.bed
+    - path: results/no_intervals.bed.gz
+    - path: results/no_intervals.bed.gz.tbi
+    - path: results/reports/bcftools/strelka/sample1/sample1.strelka.variants.bcftools_stats.txt
+    - path: results/reports/vcftools/strelka/sample1/sample1.strelka.variants.FILTER.summary
+    - path: results/reports/vcftools/strelka/sample1/sample1.strelka.variants.TsTv.count
+    - path: results/reports/vcftools/strelka/sample1/sample1.strelka.variants.TsTv.qual
     - path: results/variant_calling/strelka/sample1/sample1.strelka.genome.vcf.gz
     - path: results/variant_calling/strelka/sample1/sample1.strelka.genome.vcf.gz.tbi
-    - path: results/csv/variantcalled.csv
-
-- name: Run variant calling on tumoronly sample with strelka
+    - path: results/variant_calling/strelka/sample1/sample1.strelka.variants.vcf.gz
+    - path: results/variant_calling/strelka/sample1/sample1.strelka.variants.vcf.gz.tbi
+- name: Run variant calling on tumor only sample with strelka
   command: nextflow run main.nf -profile test,tools_tumoronly,docker --tools strelka
   tags:
     - strelka
     - tumor_only
     - variant_calling
   files:
-    - path: results/variant_calling/strelka/sample2/sample2.strelka.variants.vcf.gz
-    - path: results/variant_calling/strelka/sample2/sample2.strelka.variants.vcf.gz.tbi
+    - path: results/csv/variantcalled.csv
+    - path: results/multiqc
+    - path: results/reports/bcftools/strelka/sample2/sample2.strelka.variants.bcftools_stats.txt
+    - path: results/reports/vcftools/strelka/sample2/sample2.strelka.variants.FILTER.summary
+    - path: results/reports/vcftools/strelka/sample2/sample2.strelka.variants.TsTv.count
+    - path: results/reports/vcftools/strelka/sample2/sample2.strelka.variants.TsTv.qual
     - path: results/variant_calling/strelka/sample2/sample2.strelka.genome.vcf.gz
     - path: results/variant_calling/strelka/sample2/sample2.strelka.genome.vcf.gz.tbi
-    - path: results/csv/variantcalled.csv
-
-- name: Run variant calling on tumoronly sample with strelka without intervals
+    - path: results/variant_calling/strelka/sample2/sample2.strelka.variants.vcf.gz
+    - path: results/variant_calling/strelka/sample2/sample2.strelka.variants.vcf.gz.tbi
+- name: Run variant calling on tumor only sample with strelka without intervals
   command: nextflow run main.nf -profile test,tools_tumoronly,docker --tools strelka --no_intervals
   tags:
     - no_intervals
@@ -528,12 +793,19 @@
     - tumor_only
     - variant_calling
   files:
-    - path: results/variant_calling/strelka/sample2/sample2.strelka.variants.vcf.gz
-    - path: results/variant_calling/strelka/sample2/sample2.strelka.variants.vcf.gz.tbi
+    - path: results/csv/variantcalled.csv
+    - path: results/multiqc
+    - path: results/no_intervals.bed
+    - path: results/no_intervals.bed.gz
+    - path: results/no_intervals.bed.gz.tbi
+    - path: results/reports/bcftools/strelka/sample2/sample2.strelka.variants.bcftools_stats.txt
+    - path: results/reports/vcftools/strelka/sample2/sample2.strelka.variants.FILTER.summary
+    - path: results/reports/vcftools/strelka/sample2/sample2.strelka.variants.TsTv.count
+    - path: results/reports/vcftools/strelka/sample2/sample2.strelka.variants.TsTv.qual
     - path: results/variant_calling/strelka/sample2/sample2.strelka.genome.vcf.gz
     - path: results/variant_calling/strelka/sample2/sample2.strelka.genome.vcf.gz.tbi
-    - path: results/csv/variantcalled.csv
-
+    - path: results/variant_calling/strelka/sample2/sample2.strelka.variants.vcf.gz
+    - path: results/variant_calling/strelka/sample2/sample2.strelka.variants.vcf.gz.tbi
 - name: Run variant calling on somatic sample with strelka
   command: nextflow run main.nf -profile test,tools_somatic,docker --tools strelka
   tags:
@@ -541,16 +813,28 @@
     - strelka
     - variant_calling
   files:
-    - path: results/variant_calling/strelka/sample3/sample3.strelka.variants.vcf.gz
-    - path: results/variant_calling/strelka/sample3/sample3.strelka.variants.vcf.gz.tbi
+    - path: results/csv/variantcalled.csv
+    - path: results/multiqc
+    - path: results/reports/bcftools/strelka/sample3/sample3.strelka.variants.bcftools_stats.txt
+    - path: results/reports/bcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.bcftools_stats.txt
+    - path: results/reports/bcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.bcftools_stats.txt
+    - path: results/reports/vcftools/strelka/sample3/sample3.strelka.variants.FILTER.summary
+    - path: results/reports/vcftools/strelka/sample3/sample3.strelka.variants.TsTv.count
+    - path: results/reports/vcftools/strelka/sample3/sample3.strelka.variants.TsTv.qual
+    - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.FILTER.summary
+    - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.TsTv.count
+    - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.TsTv.qual
+    - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.FILTER.summary
+    - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.TsTv.count
+    - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.TsTv.qual
     - path: results/variant_calling/strelka/sample3/sample3.strelka.genome.vcf.gz
     - path: results/variant_calling/strelka/sample3/sample3.strelka.genome.vcf.gz.tbi
+    - path: results/variant_calling/strelka/sample3/sample3.strelka.variants.vcf.gz
+    - path: results/variant_calling/strelka/sample3/sample3.strelka.variants.vcf.gz.tbi
     - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.vcf.gz
     - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.vcf.gz.tbi
     - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz
     - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz.tbi
-    - path: results/csv/variantcalled.csv
-
 - name: Run variant calling on somatic sample with strelka without intervals
   command: nextflow run main.nf -profile test,tools_somatic,docker --tools strelka --no_intervals
   tags:
@@ -559,16 +843,31 @@
     - strelka
     - variant_calling
   files:
-    - path: results/variant_calling/strelka/sample3/sample3.strelka.variants.vcf.gz
-    - path: results/variant_calling/strelka/sample3/sample3.strelka.variants.vcf.gz.tbi
+    - path: results/csv/variantcalled.csv
+    - path: results/multiqc
+    - path: results/no_intervals.bed
+    - path: results/no_intervals.bed.gz
+    - path: results/no_intervals.bed.gz.tbi
+    - path: results/reports/bcftools/strelka/sample3/sample3.strelka.variants.bcftools_stats.txt
+    - path: results/reports/bcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.bcftools_stats.txt
+    - path: results/reports/bcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.bcftools_stats.txt
+    - path: results/reports/vcftools/strelka/sample3/sample3.strelka.variants.FILTER.summary
+    - path: results/reports/vcftools/strelka/sample3/sample3.strelka.variants.TsTv.count
+    - path: results/reports/vcftools/strelka/sample3/sample3.strelka.variants.TsTv.qual
+    - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.FILTER.summary
+    - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.TsTv.count
+    - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.TsTv.qual
+    - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.FILTER.summary
+    - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.TsTv.count
+    - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.TsTv.qual
     - path: results/variant_calling/strelka/sample3/sample3.strelka.genome.vcf.gz
     - path: results/variant_calling/strelka/sample3/sample3.strelka.genome.vcf.gz.tbi
+    - path: results/variant_calling/strelka/sample3/sample3.strelka.variants.vcf.gz
+    - path: results/variant_calling/strelka/sample3/sample3.strelka.variants.vcf.gz.tbi
     - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.vcf.gz
     - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.vcf.gz.tbi
     - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz
     - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz.tbi
-    - path: results/csv/variantcalled.csv
-
 - name: Run variant calling on somatic sample with strelka & manta (StrelkaBP)
   command: nextflow run main.nf -profile test,tools_somatic,docker --tools strelka,manta
   tags:
@@ -576,22 +875,46 @@
     - strelkabp
     - variant_calling
   files:
+    - path: results/csv/variantcalled.csv
+    - path: results/multiqc
+    - path: results/reports/bcftools/manta/sample3/sample3.manta.diploid_sv.bcftools_stats.txt
+    - path: results/reports/bcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.bcftools_stats.txt
+    - path: results/reports/bcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.bcftools_stats.txt
+    - path: results/reports/bcftools/strelka/sample3/sample3.strelka.variants.bcftools_stats.txt
+    - path: results/reports/bcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.bcftools_stats.txt
+    - path: results/reports/bcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.bcftools_stats.txt
+    - path: results/reports/vcftools/manta/sample3/sample3.manta.diploid_sv.FILTER.summary
+    - path: results/reports/vcftools/manta/sample3/sample3.manta.diploid_sv.TsTv.count
+    - path: results/reports/vcftools/manta/sample3/sample3.manta.diploid_sv.TsTv.qual
+    - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.FILTER.summary
+    - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.TsTv.count
+    - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.TsTv.qual
+    - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.FILTER.summary
+    - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.TsTv.count
+    - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.TsTv.qual
+    - path: results/reports/vcftools/strelka/sample3/sample3.strelka.variants.FILTER.summary
+    - path: results/reports/vcftools/strelka/sample3/sample3.strelka.variants.TsTv.count
+    - path: results/reports/vcftools/strelka/sample3/sample3.strelka.variants.TsTv.qual
+    - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.FILTER.summary
+    - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.TsTv.count
+    - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.TsTv.qual
+    - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.FILTER.summary
+    - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.TsTv.count
+    - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.TsTv.qual
     - path: results/variant_calling/manta/sample3/sample3.manta.diploid_sv.vcf.gz
     - path: results/variant_calling/manta/sample3/sample3.manta.diploid_sv.vcf.gz.tbi
-    - path: results/variant_calling/strelka/sample3/sample3.strelka.genome.vcf.gz
-    - path: results/variant_calling/strelka/sample3/sample3.strelka.genome.vcf.gz.tbi
-    - path: results/variant_calling/strelka/sample3/sample3.strelka.variants.vcf.gz
-    - path: results/variant_calling/strelka/sample3/sample3.strelka.variants.vcf.gz.tbi
     - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.vcf.gz
     - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.vcf.gz.tbi
     - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.vcf.gz
     - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.vcf.gz.tbi
+    - path: results/variant_calling/strelka/sample3/sample3.strelka.genome.vcf.gz
+    - path: results/variant_calling/strelka/sample3/sample3.strelka.genome.vcf.gz.tbi
+    - path: results/variant_calling/strelka/sample3/sample3.strelka.variants.vcf.gz
+    - path: results/variant_calling/strelka/sample3/sample3.strelka.variants.vcf.gz.tbi
     - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.vcf.gz
     - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.vcf.gz.tbi
     - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz
     - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz.tbi
-    - path: results/csv/variantcalled.csv
-
 - name: Run variant calling on somatic sample with & manta (StrelkaBP) without intervals
   command: nextflow run main.nf -profile test,tools_somatic,docker --tools strelka,manta --no_intervals
   tags:
@@ -600,22 +923,49 @@
     - strelkabp
     - variant_calling
   files:
+    - path: results/csv/variantcalled.csv
+    - path: results/multiqc
+    - path: results/no_intervals.bed
+    - path: results/no_intervals.bed.gz
+    - path: results/no_intervals.bed.gz.tbi
+    - path: results/reports/bcftools/manta/sample3/sample3.manta.diploid_sv.bcftools_stats.txt
+    - path: results/reports/bcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.bcftools_stats.txt
+    - path: results/reports/bcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.bcftools_stats.txt
+    - path: results/reports/bcftools/strelka/sample3/sample3.strelka.variants.bcftools_stats.txt
+    - path: results/reports/bcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.bcftools_stats.txt
+    - path: results/reports/bcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.bcftools_stats.txt
+    - path: results/reports/vcftools/manta/sample3/sample3.manta.diploid_sv.FILTER.summary
+    - path: results/reports/vcftools/manta/sample3/sample3.manta.diploid_sv.TsTv.count
+    - path: results/reports/vcftools/manta/sample3/sample3.manta.diploid_sv.TsTv.qual
+    - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.FILTER.summary
+    - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.TsTv.count
+    - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.TsTv.qual
+    - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.FILTER.summary
+    - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.TsTv.count
+    - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.TsTv.qual
+    - path: results/reports/vcftools/strelka/sample3/sample3.strelka.variants.FILTER.summary
+    - path: results/reports/vcftools/strelka/sample3/sample3.strelka.variants.TsTv.count
+    - path: results/reports/vcftools/strelka/sample3/sample3.strelka.variants.TsTv.qual
+    - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.FILTER.summary
+    - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.TsTv.count
+    - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.TsTv.qual
+    - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.FILTER.summary
+    - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.TsTv.count
+    - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.TsTv.qual
     - path: results/variant_calling/manta/sample3/sample3.manta.diploid_sv.vcf.gz
     - path: results/variant_calling/manta/sample3/sample3.manta.diploid_sv.vcf.gz.tbi
-    - path: results/variant_calling/strelka/sample3/sample3.strelka.genome.vcf.gz
-    - path: results/variant_calling/strelka/sample3/sample3.strelka.genome.vcf.gz.tbi
-    - path: results/variant_calling/strelka/sample3/sample3.strelka.variants.vcf.gz
-    - path: results/variant_calling/strelka/sample3/sample3.strelka.variants.vcf.gz.tbi
     - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.vcf.gz
     - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.vcf.gz.tbi
     - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.vcf.gz
     - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.vcf.gz.tbi
+    - path: results/variant_calling/strelka/sample3/sample3.strelka.genome.vcf.gz
+    - path: results/variant_calling/strelka/sample3/sample3.strelka.genome.vcf.gz.tbi
+    - path: results/variant_calling/strelka/sample3/sample3.strelka.variants.vcf.gz
+    - path: results/variant_calling/strelka/sample3/sample3.strelka.variants.vcf.gz.tbi
     - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.vcf.gz
     - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.vcf.gz.tbi
     - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz
     - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz.tbi
-    - path: results/csv/variantcalled.csv
-
 - name: Run variant calling on somatic sample with tiddit
   command: nextflow run main.nf -profile test,tools_somatic,docker --tools tiddit
   tags:
@@ -623,16 +973,25 @@
     - somatic
     - variant_calling
   files:
+    - path: results/csv/variantcalled.csv
+    - path: results/multiqc
+    - path: results/reports/bcftools/tiddit/sample3/sample3.tiddit.bcftools_stats.txt
+    - path: results/reports/bcftools/tiddit/sample4_vs_sample3/sample4_vs_sample3.tiddit_sv_merge.bcftools_stats.txt
+    - path: results/reports/vcftools/tiddit/sample3/sample3.tiddit.FILTER.summary
+    - path: results/reports/vcftools/tiddit/sample3/sample3.tiddit.TsTv.count
+    - path: results/reports/vcftools/tiddit/sample3/sample3.tiddit.TsTv.qual
+    - path: results/reports/vcftools/tiddit/sample4_vs_sample3/sample4_vs_sample3.tiddit_sv_merge.FILTER.summary
+    - path: results/reports/vcftools/tiddit/sample4_vs_sample3/sample4_vs_sample3.tiddit_sv_merge.TsTv.count
+    - path: results/reports/vcftools/tiddit/sample4_vs_sample3/sample4_vs_sample3.tiddit_sv_merge.TsTv.qual
     - path: results/variant_calling/tiddit/sample3/sample3.tiddit.ploidies.tab
     - path: results/variant_calling/tiddit/sample3/sample3.tiddit.vcf.gz
     - path: results/variant_calling/tiddit/sample3/sample3.tiddit.vcf.gz.tbi
     - path: results/variant_calling/tiddit/sample4_vs_sample3/sample4_vs_sample3.tiddit.normal.vcf.gz
     - path: results/variant_calling/tiddit/sample4_vs_sample3/sample4_vs_sample3.tiddit.normal.vcf.gz.tbi
+    - path: results/variant_calling/tiddit/sample4_vs_sample3/sample4_vs_sample3.tiddit.ploidies.tab
     - path: results/variant_calling/tiddit/sample4_vs_sample3/sample4_vs_sample3.tiddit.tumor.vcf.gz
     - path: results/variant_calling/tiddit/sample4_vs_sample3/sample4_vs_sample3.tiddit.tumor.vcf.gz.tbi
     - path: results/variant_calling/tiddit/sample4_vs_sample3/sample4_vs_sample3.tiddit_sv_merge.vcf
-    - path: results/variant_calling/tiddit/sample4_vs_sample3/sample4_vs_sample3.tiddit.ploidies.tab
-
 - name: Run variant calling on germline sample with tiddit
   command: nextflow run main.nf -profile test,tools_germline,docker --tools tiddit
   tags:
@@ -640,10 +999,15 @@
     - germline
     - variant_calling
   files:
+    - path: results/csv/variantcalled.csv
+    - path: results/multiqc
+    - path: results/reports/bcftools/tiddit/sample1/sample1.tiddit.bcftools_stats.txt
+    - path: results/reports/vcftools/tiddit/sample1/sample1.tiddit.FILTER.summary
+    - path: results/reports/vcftools/tiddit/sample1/sample1.tiddit.TsTv.count
+    - path: results/reports/vcftools/tiddit/sample1/sample1.tiddit.TsTv.qual
     - path: results/variant_calling/tiddit/sample1/sample1.tiddit.ploidies.tab
     - path: results/variant_calling/tiddit/sample1/sample1.tiddit.vcf.gz
     - path: results/variant_calling/tiddit/sample1/sample1.tiddit.vcf.gz.tbi
-
 - name: Run variant calling on tumor_only sample with tiddit
   command: nextflow run main.nf -profile test,tools_tumoronly,docker --tools tiddit
   tags:
@@ -651,6 +1015,12 @@
     - tumor_only
     - variant_calling
   files:
+    - path: results/csv/variantcalled.csv
+    - path: results/multiqc
+    - path: results/reports/bcftools/tiddit/sample2/sample2.tiddit.bcftools_stats.txt
+    - path: results/reports/vcftools/tiddit/sample2/sample2.tiddit.FILTER.summary
+    - path: results/reports/vcftools/tiddit/sample2/sample2.tiddit.TsTv.count
+    - path: results/reports/vcftools/tiddit/sample2/sample2.tiddit.TsTv.qual
     - path: results/variant_calling/tiddit/sample2/sample2.tiddit.ploidies.tab
     - path: results/variant_calling/tiddit/sample2/sample2.tiddit.vcf.gz
     - path: results/variant_calling/tiddit/sample2/sample2.tiddit.vcf.gz.tbi
