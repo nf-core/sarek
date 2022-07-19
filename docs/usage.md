@@ -714,7 +714,7 @@ Based on [nfcore/base:1.12.1](https://hub.docker.com/r/nfcore/base/tags), it con
 ### Using downloaded cache
 
 Both `snpEff` and `VEP` enable usage of cache, if no pre-build container is available.
-The cache needs to made available on the machine where Sarek is run.
+The cache needs to be made available on the machine where Sarek is run.
 You need to specify the cache directory using `--snpeff_cache` and `--vep_cache` in the command lines or within configuration files.
 
 Example:
@@ -777,7 +777,7 @@ For mapping, sarek follows the parameter suggestions provided in this [paper](ht
 
 `-Y`: force soft-clipping rather than default hard-clipping of supplementary alignments
 
-In addition, currently the mismatch penalty for reads with tumor status in the sample sheet are mapped with a mismatch penalty of `-B 3`.
+In addition, currently, reads with tumor status in the sample sheet are mapped with a mismatch penalty of `-B 3`.
 
 ## Spark related issues
 
@@ -817,7 +817,7 @@ Note that the way to increase the open file limit in your system may be slightly
 
 ### Cannot delete work folder when using docker + Spark
 
-Currently, when running spark-based tools in combination with docker, it is required to set `docker.userEmulation = false`. This can unfortunately causes permission issues when `work/` is being written with root permissions. In case this happens, you might need to configure docker to run without `userEmulation` (see [here](https://github.com/Midnighter/nf-core-adr/blob/main/docs/adr/0008-refrain-from-using-docker-useremulation-in-nextflow.md)).
+Currently, when running spark-based tools in combination with docker, it is required to set `docker.userEmulation = false`. This can unfortunately cause permission issues when `work/` is being written with root permissions. In case this happens, you might need to configure docker to run without `userEmulation` (see [here](https://github.com/Midnighter/nf-core-adr/blob/main/docs/adr/0008-refrain-from-using-docker-useremulation-in-nextflow.md)).
 
 ## How to handle UMIs
 
