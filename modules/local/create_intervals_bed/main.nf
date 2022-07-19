@@ -1,17 +1,17 @@
 process CREATE_INTERVALS_BED {
-    tag "$meta.id"
+    tag "$intervals"
 
-    conda (params.enable_conda ? "anaconda::gawk=5.1.0" : null)
+    conda (params.enable_conda ? "bioconda::gawk=4.1.3" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/gawk:5.1.0' :
-        'quay.io/biocontainers/gawk:5.1.0' }"
+        'https://depot.galaxyproject.org/singularity/gawk:4.1.3--0':
+        'quay.io/biocontainers/gawk:4.1.3--1' }"
 
     input:
-    tuple val(meta), path(intervals)
+    path(intervals)
 
     output:
-    tuple val(meta), path("*.bed") , emit: bed
-    //path "versions.yml"            , emit: versions
+    path("*.bed")       , emit: bed
+    //path "versions.yml" , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
