@@ -78,7 +78,7 @@
     - path: results/preprocessing/recal_table/test/test.recal.table
     - path: results/preprocessing/recalibrated/test/test.recal.cram
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
-    - path: results/reports/bcftools/test/strelka/test.strelka.variants.bcftools_stats.txt
+    - path: results/reports/bcftools/strelka/test/test.strelka.variants.bcftools_stats.txt
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.metrics
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
@@ -93,9 +93,9 @@
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
     - path: results/reports/samtools/test/test.md.cram.stats
     - path: results/reports/samtools/test/test.recal.cram.stats
-    - path: results/reports/vcftools/test/strelka/test.strelka.variants.FILTER.summary
-    - path: results/reports/vcftools/test/strelka/test.strelka.variants.TsTv.count
-    - path: results/reports/vcftools/test/strelka/test.strelka.variants.TsTv.qual
+    - path: results/reports/vcftools/strelka/test/test.strelka.variants.FILTER.summary
+    - path: results/reports/vcftools/strelka/test/test.strelka.variants.TsTv.count
+    - path: results/reports/vcftools/strelka/test/test.strelka.variants.TsTv.qual
     - path: results/variant_calling/strelka/test/test.strelka.genome.vcf.gz
     - path: results/variant_calling/strelka/test/test.strelka.genome.vcf.gz.tbi
     - path: results/variant_calling/strelka/test/test.strelka.variants.vcf.gz
