@@ -95,6 +95,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#646](https://github.com/nf-core/sarek/pull/646) - Update `nextflow_schema.json` to reflect new parameters and functions, removes `--annotation_cache`, removes `--ascat_chromosomes`
 - [#653](https://github.com/nf-core/sarek/pull/653) - Coherent results subfolder structure between preprocessing, variantcalling and reporting
 - [#659](https://github.com/nf-core/sarek/pull/659) - Update usage.md docu section on `How to run ASCAT with WES`
+
 ### Fixed
 
 - [#234](https://github.com/nf-core/sarek/pull/234) - Switching to DSL2
