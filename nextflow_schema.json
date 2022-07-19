@@ -65,12 +65,6 @@
                     "description": "Enable when exome or panel data is provided.",
                     "help_text": "With this parameter flags in various tools are set for targeted sequencing data. It is recommended to enable for whole-exome and panel data analysis."
                 },
-                "joint_germline": {
-                    "type": "boolean",
-                    "fa_icon": "fas fa-toolbox",
-                    "description": "Turn on the joint germline variant calling for GATK haplotypecaller",
-                    "help_text": "Uses all normal germline samples (as designated by `status` in the input csv) in the joint germline variant calling process."
-                },
                 "intervals": {
                     "type": "string",
                     "fa_icon": "fas fa-file-alt",
@@ -237,6 +231,12 @@
                     "fa_icon": "fas fa-forward",
                     "description": "If true, skips germline variant calling for matched normal to tumor sample. Normal samples without matched tumor will still be processed through germline variant calling tools.",
                     "help_text": "This can speed up computation for somatic variant calling with matched normal samples. If false, all normal samples are processed as well through the germline variantcalling tools. If true, only somatic variant calling is done."
+                },
+                "joint_germline": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-toolbox",
+                    "description": "Turn on the joint germline variant calling for GATK haplotypecaller",
+                    "help_text": "Uses all normal germline samples (as designated by `status` in the input csv) in the joint germline variant calling process."
                 },
                 "ploidy": {
                     "type": "number",
