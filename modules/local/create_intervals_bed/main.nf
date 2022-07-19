@@ -1,6 +1,5 @@
 process CREATE_INTERVALS_BED {
     tag "$intervals"
-    label 'process_medium'
 
     conda (params.enable_conda ? "anaconda::gawk=5.1.0" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
