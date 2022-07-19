@@ -1,5 +1,5 @@
 - name: Run alignment to fastq and then remap on bam files
-  command: nextflow run main.nf -profile test,alignment_to_fastq,docker -c ./tests/nextflow.config
+  command: nextflow run main.nf -profile test,alignment_to_fastq,docker
   tags:
     - alignment_to_fastq
 
@@ -11,7 +11,7 @@
     - path: results/csv/recalibrated.csv
     - path: results/multiqc/multiqc_report.html
     - path: results/pipeline_info
-    - path: results/preprocessing/test
+    - path: results/preprocessing/
     - path: results/reports
     - path: results/samtools
     - path: results/collate

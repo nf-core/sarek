@@ -18,7 +18,7 @@ workflow ANNOTATE {
     vep_cache_version
     vep_cache
     vep_extra_files
-    
+
     main:
     ch_reports   = Channel.empty()
     ch_vcf_ann   = Channel.empty()
@@ -26,7 +26,7 @@ workflow ANNOTATE {
     ch_json_ann  = Channel.empty()
     ch_versions  = Channel.empty()
 
-    if (tools.contains('merge') || tools.contains('snpeff')) {
+    if (tools.split(',').contains('merge') || tools.split(',').contains('snpeff')) {
         ANNOTATION_SNPEFF(vcf, snpeff_db, snpeff_cache)
 
         ch_reports  = ch_reports.mix(ANNOTATION_SNPEFF.out.reports)
@@ -34,7 +34,7 @@ workflow ANNOTATE {
         ch_versions = ch_versions.mix(ANNOTATION_SNPEFF.out.versions.first())
     }
 
-    if (tools.contains('merge')) {
+    if (tools.split(',').contains('merge')) {
         vcf_ann_for_merge = ANNOTATION_SNPEFF.out.vcf_tbi.map{ meta, vcf, tbi -> [meta, vcf] }
         ANNOTATION_MERGE(vcf_ann_for_merge, fasta, vep_genome, vep_species, vep_cache_version, vep_cache, vep_extra_files)
 
@@ -43,7 +43,7 @@ workflow ANNOTATE {
         ch_versions = ch_versions.mix(ANNOTATION_MERGE.out.versions.first())
     }
 
-    if (tools.contains('vep')) {
+    if (tools.split(',').contains('vep')) {
         ANNOTATION_ENSEMBLVEP(vcf, fasta, vep_genome, vep_species, vep_cache_version, vep_cache, vep_extra_files)
 
         ch_reports   = ch_reports.mix(ANNOTATION_ENSEMBLVEP.out.reports)
