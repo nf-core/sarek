@@ -11,7 +11,7 @@ include { RUN_CNVKIT                                } from '../nf-core/variantca
 include { RUN_MPILEUP as RUN_MPILEUP_NORMAL         } from '../nf-core/variantcalling/mpileup/main'
 include { RUN_MPILEUP as RUN_MPILEUP_TUMOR          } from '../nf-core/variantcalling/mpileup/main'
 include { RUN_ASCAT_SOMATIC                         } from '../nf-core/variantcalling/ascat/main'
-include { RUN_TIDDIT_SOMATIC                        } from '../nf-core/variantcalling/tiddit/tiddit_somatic/main'
+include { RUN_TIDDIT_SOMATIC                        } from '../nf-core/variantcalling/tiddit/somatic/main'
 
 workflow PAIR_VARIANT_CALLING {
     take:

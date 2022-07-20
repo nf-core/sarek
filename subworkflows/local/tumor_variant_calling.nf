@@ -10,7 +10,7 @@ include { RUN_STRELKA_SINGLE                      } from '../nf-core/variantcall
 include { RUN_CONTROLFREEC_TUMORONLY              } from '../nf-core/variantcalling/controlfreec/tumoronly/main.nf'
 include { RUN_CNVKIT                              } from '../nf-core/variantcalling/cnvkit/main.nf'
 include { RUN_MPILEUP                             } from '../nf-core/variantcalling/mpileup/main'
-include { RUN_TIDDIT                              } from '../nf-core/variantcalling/tiddit/main.nf'
+include { RUN_TIDDIT                              } from '../nf-core/variantcalling/tiddit/single/main.nf'
 
 workflow TUMOR_ONLY_VARIANT_CALLING {
     take:

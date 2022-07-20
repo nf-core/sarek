@@ -9,7 +9,7 @@ include { RUN_HAPLOTYPECALLER } from '../nf-core/variantcalling/haplotypecaller/
 include { RUN_MANTA_GERMLINE  } from '../nf-core/variantcalling/manta/germline/main.nf'
 include { RUN_MPILEUP         } from '../nf-core/variantcalling/mpileup/main'
 include { RUN_STRELKA_SINGLE  } from '../nf-core/variantcalling/strelka/single/main.nf'
-include { RUN_TIDDIT          } from '../nf-core/variantcalling/tiddit/main.nf'
+include { RUN_TIDDIT          } from '../nf-core/variantcalling/tiddit/single/main.nf'
 
 workflow GERMLINE_VARIANT_CALLING {
     take:

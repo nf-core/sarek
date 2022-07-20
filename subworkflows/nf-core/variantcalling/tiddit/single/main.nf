@@ -1,5 +1,5 @@
-include { TABIX_BGZIPTABIX as TABIX_BGZIP_TIDDIT_SV } from '../../../../modules/nf-core/modules/tabix/bgziptabix/main'
-include { TIDDIT_SV                                 } from '../../../../modules/nf-core/modules/tiddit/sv/main'
+include { TABIX_BGZIPTABIX as TABIX_BGZIP_TIDDIT_SV } from '../../../../../modules/nf-core/modules/tabix/bgziptabix/main'
+include { TIDDIT_SV                                 } from '../../../../../modules/nf-core/modules/tiddit/sv/main'
 
 workflow RUN_TIDDIT {
     take:
@@ -22,9 +22,9 @@ workflow RUN_TIDDIT {
 
         new_meta = meta.tumor_id ? [
                                         id:             meta.tumor_id + "_vs_" + meta.normal_id,
-                                        patient:        meta.patient,
                                         normal_id:      meta.normal_id,
                                         num_intervals:  meta.num_intervals,
+                                        patient:        meta.patient,
                                         sex:            meta.sex,
                                         tumor_id:       meta.tumor_id,
                                         variantcaller:  'tiddit'

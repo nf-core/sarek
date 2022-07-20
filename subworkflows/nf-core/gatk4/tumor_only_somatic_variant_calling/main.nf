@@ -94,8 +94,8 @@ workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
                         num_intervals:  meta.num_intervals,
                         patient:        meta.patient,
                         sample:         meta.sample,
-                        status:         meta.status,
                         sex:            meta.sex,
+                        status:         meta.status,
                     ]
 
             [groupKey(new_meta, meta.num_intervals), stats]
