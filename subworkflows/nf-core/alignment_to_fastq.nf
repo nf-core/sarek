@@ -40,7 +40,7 @@ workflow ALIGNMENT_TO_FASTQ {
             [meta, [unmap_unmap, unmap_map, map_unmap]]
         }
 
-    SAMTOOLS_MERGE_UNMAP(all_unmapped_bam, fasta)
+    SAMTOOLS_MERGE_UNMAP(all_unmapped_bam, fasta, [])
 
     // Collate & convert unmapped
     COLLATE_FASTQ_UNMAP(SAMTOOLS_MERGE_UNMAP.out.bam)
