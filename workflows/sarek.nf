@@ -180,7 +180,7 @@ if (params.spliceai_snv && params.spliceai_snv_tbi && params.spliceai_indel && p
 }
 
 // Initialize value channels based on params, not defined within the params.genomes[params.genome] scope
-umi_read_structure = params.umi_read_structure ? "${params.umi_read_structure} ${params.umi_read_structure}" : Channel.empty()
+umi_read_structure = params.umi_read_structure ? "${params.umi_read_structure}" : Channel.empty()
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

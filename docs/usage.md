@@ -672,7 +672,8 @@ This will enable pre-processing of the reads and UMI consensus reads calling, wh
 ### UMI Read Structure
 
 This parameter is a string, which follows a [convention](https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures) to describe the structure of the umi.
-If your reads contain a UMI only on one end, the string should only represent one structure (i.e. "2M11S+T"); should your reads contain a UMI on both ends, the string will contain two structures separated by a blank space (i.e. "2M11S+T 2M11S+T").
+
+As an example: if your reads contain a UMI only on the forward read, the string can only represent one structure (i.e. "2M11S+T"); should your reads contain a UMI on both reas, the string will contain two structures separated by a blank space (i.e. "2M11S+T 2M11S+T"); should your reads contain a UMI only on the reverse read, your structure must represent the template only for the forward read and template plus UMI for the reverse read (i.e. +T 12M11S+T). Please do refer to FGBIO documentation for more details, as providing the correct structure is essential and specific to the UMI kit used.
 
 ### Limitations and future updates
 
