@@ -118,14 +118,18 @@ workflow GERMLINE_VARIANT_CALLING {
 
     // HAPLOTYPECALLER
     if (tools.split(',').contains('haplotypecaller')){
-        cram_recalibrated_intervals_haplotypecaller = cram_recalibrated_intervals
-            .map{ meta, cram, crai, intervals ->
+        if (params.joint_germline){
+            cram_recalibrated_intervals_haplotypecaller = cram_recalibrated_intervals
+                .map{ meta, cram, crai, intervals ->
 
-                intervals_name = meta.num_intervals == 0 ? "no_interval" : intervals.simpleName
-                new_meta = [patient:meta.patient, sample:meta.sample, sex:meta.sex, status:meta.status, id:meta.sample, data_type:meta.data_type, num_intervals:meta.num_intervals, intervals_name:intervals_name]
+                    intervals_name = meta.num_intervals == 0 ? "no_interval" : intervals.simpleName
+                    new_meta = [patient:meta.patient, sample:meta.sample, sex:meta.sex, status:meta.status, id:meta.sample, data_type:meta.data_type, num_intervals:meta.num_intervals, intervals_name:intervals_name]
 
-                [new_meta, cram, crai, intervals, []]
-            }
+                    [new_meta, cram, crai, intervals, []]
+                }
+        } else {
+            cram_recalibrated_intervals_haplotypecaller = cram_recalibrated_intervals
+        }
         RUN_HAPLOTYPECALLER(cram_recalibrated_intervals_haplotypecaller,
                         fasta,
                         fasta_fai,
