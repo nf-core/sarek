@@ -98,6 +98,7 @@ We thank the following people for their extensive assistance in the development 
 - [Chela James](https://github.com/chelauk)
 - [David Mas-Ponte](https://github.com/davidmasp)
 - [Francesco Lescai](https://github.com/lescai)
+- [Gavin Mackenzie](https://github.com/GCJMackenzie)
 - [Gisela Gabernet](https://github.com/ggabernet)
 - [Harshil Patel](https://github.com/drpatelh)
 - [James A. Fellows Yates](https://github.com/jfy133)
