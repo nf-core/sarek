@@ -13,17 +13,18 @@ include { RUN_TIDDIT          } from '../nf-core/variantcalling/tiddit/main.nf'
 
 workflow GERMLINE_VARIANT_CALLING {
     take:
-        tools                         // Mandatory, list of tools to apply
-        cram_recalibrated             // channel: [mandatory] cram
-        bwa                           // channel: [mandatory] bwa
-        dbsnp                         // channel: [mandatory] dbsnp
-        dbsnp_tbi                     // channel: [mandatory] dbsnp_tbi
-        dict                          // channel: [mandatory] dict
-        fasta                         // channel: [mandatory] fasta
-        fasta_fai                     // channel: [mandatory] fasta_fai
-        intervals                     // channel: [mandatory] intervals/target regions
-        intervals_bed_gz_tbi          // channel: [mandatory] intervals/target regions index zipped and indexed
-        intervals_bed_combined        // channel: [mandatory] intervals/target regions in one file unzipped
+        tools                             // Mandatory, list of tools to apply
+        cram_recalibrated                 // channel: [mandatory] cram
+        bwa                               // channel: [mandatory] bwa
+        dbsnp                             // channel: [mandatory] dbsnp
+        dbsnp_tbi                         // channel: [mandatory] dbsnp_tbi
+        dict                              // channel: [mandatory] dict
+        fasta                             // channel: [mandatory] fasta
+        fasta_fai                         // channel: [mandatory] fasta_fai
+        intervals                         // channel: [mandatory] intervals/target regions
+        intervals_bed_gz_tbi              // channel: [mandatory] intervals/target regions index zipped and indexed
+        intervals_bed_combined            // channel: [mandatory] intervals/target regions in one file unzipped
+ 
         intervals_bed_combined_haplotypec // channel: [mandatory] intervals/target regions in one file unzipped, no_intervals.bed if no_intervals
         known_sites_indels
         known_sites_indels_tbi
