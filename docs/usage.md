@@ -483,7 +483,7 @@ If you have any questions or issues please send us a message on [Slack](https://
 When using default parameters only, sarek runs preprocessing and exits after base quality score recalibration. This is reflected in the default test profile:
 
 ```console
-nextflow run nf-core/sarek -r 3.0.0 -profile test,<container/institute>
+nextflow run nf-core/sarek -r 3.0 -profile test,<container/institute>
 ```
 
 Expected run output:
@@ -611,7 +611,7 @@ In addition, currently the mismatch penalty for reads with tumor status in the s
 When plots are missing, it is possible that the fasta and the custom SnpEff database are not matching https://pcingola.github.io/SnpEff/se_faq/#error_chromosome_not_found-details.
 The SnpEff completes without throwing an error causing nextflow to complete successfully. An indication for the error are these lines in the `.command` files:
 
-```
+```text
 ERRORS: Some errors were detected
 Error type      Number of errors
 ERROR_CHROMOSOME_NOT_FOUND      17522411
@@ -746,40 +746,7 @@ GATK.GRCh38:
 
 ## How to customise SnpEff and VEP annotation
 
-_under construction help needed_
-
-Sarek comes shipped with containers for both snpEff and VEP for human reference genomes with `--genome GATK.GRCh38` and `--genome GATK.GRCh37`. Different containers however can be provided.
-
-<!-- #### Create containers
-
-The cache has to be downloaded.
-
-`sareksnpeff`, our `snpeff` container is designed using [Conda](https://conda.io/).
-
-[![sareksnpeff-docker status](https://img.shields.io/docker/automated/nfcore/sareksnpeff.svg)](https://hub.docker.com/r/nfcore/sareksnpeff)
-
-Based on [nfcore/base:1.12.1](https://hub.docker.com/r/nfcore/base/tags), it contains:
-
-- **[snpEff](http://snpeff.sourceforge.net/)** 4.3.1t
-- Cache for `GRCh37`, `GRCh38`, `GRCm38`, `CanFam3.1` or `WBcel235`
-
-`sarekvep`, our `vep` container is designed using [Conda](https://conda.io/).
-
-[![sarekvep-docker status](https://img.shields.io/docker/automated/nfcore/sarekvep.svg)](https://hub.docker.com/r/nfcore/sarekvep)
-
-Based on [nfcore/base:1.12.1](https://hub.docker.com/r/nfcore/base/tags), it contains:
-
-- **[GeneSplicer](https://ccb.jhu.edu/software/genesplicer/)** 1.0
-- **[VEP](https://github.com/Ensembl/ensembl-vep)** 99.2
-- Cache for `GRCh37`, `GRCh38`, `GRCm38`, `CanFam3.1` or `WBcel235` -->
-
-  <!-- "snpeff_db"
-  "snpeff_genome":
-  "snpeff_version":
-  "vep_genome":
-  "vep_species":
-  "vep_cache_version":
-  "vep_version": -->
+Sarek uses nf-core provided containers for both snpEff and VEP for several reference genomes ('CanFam3', 'GRCh37', 'GRCh38', 'GRCm38' and 'WBcel235').
 
 ### Using downloaded cache
 
@@ -796,14 +763,46 @@ nextflow run nf-core/sarek --tools VEP --step annotate --sample <file.vcf.gz> --
 
 ### Using VEP plugins
 
-
 #### dbnsfp
+
+Enable with `--vep_dbnsfp`. The following parameters are mandatory:
+
+- `--dbnsfp`, to specify the path to the dbNSFP processed file.
+- `--dbnsfp_tbi`, to specify the path to the dbNSFP tabix indexed file.
+
+The following parameters are optionnal:
+
+- `--dbnsfp_consequence`, to filter/limit outputs to a specific effect of the variant.
+  - The set of consequence terms is defined by the Sequence Ontology and an overview of those used in VEP can be found [here](https://www.ensembl.org/info/genome/variation/prediction/predicted_data.html).
+  - If one wants to filter using several consequences, then separate those by using '&' (i.e. `--dbnsfp_consequence '3_prime_UTR_variant&intron_variant'`.",
+- `--dbnsfp_fields`, to retrieve individual values from the dbNSFP file.
+  - The values correspond to the name of the columns in the dbNSFP file and are separated by comma.
+  - The column names might differ between the different dbNSFP versions. Please check the Readme.txt file, which is provided with the dbNSFP file, to obtain the correct column names. The Readme file contains also a short description of the provided values and the version of the tools used to generate them.
+
+For more details, see [here](https://www.ensembl.org/info/docs/tools/vep/script/vep_plugins.html#dbnsfp).
 
 #### LOFTEE
 
+Enable with `--vep_loftee`.
+
+For more details, see [here](https://github.com/konradjk/loftee).
+
 #### SpliceAi
 
+Enable with `--vep_spliceai`. The following parameters are mandatory:
+
+- `--spliceai_snv`, to specify the path to SpliceAI raw scores snv file.
+- `--spliceai_snv_tbi`, to specify the path to SpliceAI raw scores snv tabix indexed file.
+- `--spliceai_indel`, to specify the path to SpliceAI raw scores indel file.
+- `--spliceai_indel_tbi`, to specify the path to SpliceAI raw scores indel tabix indexed file.
+
+For more details, see [here](https://www.ensembl.org/info/docs/tools/vep/script/vep_plugins.html#spliceai).
+
 #### SpliceRegions
+
+Enable with `--vep_spliceregion`.
+
+For more details, see [here](https://www.ensembl.org/info/docs/tools/vep/script/vep_plugins.html#spliceregion) and [here](https://www.ensembl.info/2018/10/26/cool-stuff-the-vep-can-do-splice-site-variant-annotation/)."
 
 ## Requested resources for the tools
 
