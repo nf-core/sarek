@@ -27,8 +27,8 @@
      inkscape:document-units="mm"
      showgrid="true"
      inkscape:zoom="1.4127647"
-     inkscape:cx="552.10893"
-     inkscape:cy="530.52005"
+     inkscape:cx="763.39676"
+     inkscape:cy="609.0894"
      inkscape:window-width="2560"
      inkscape:window-height="1027"
      inkscape:window-x="1440"
@@ -1809,6 +1809,17 @@
            y="33.198135"
            x="599.31244"
            sodipodi:role="line">Tumor-normal pair variant calling</tspan></text>
+      <text
+         id="text8555-7-2"
+         y="69.032829"
+         x="754.50287"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.75009px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.937508"
+         xml:space="preserve"><tspan
+           id="tspan8553-5-1"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.75009px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.937508"
+           y="69.032829"
+           x="754.50287"
+           sodipodi:role="line">Adapted from: Yates, James A. Fellows, et al.  PeerJ 9 (2021).</tspan></text>
       <text
          id="text8555-1-8"
          y="-66.762802"

@@ -2963,11 +2963,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
-     inkscape:zoom="2.6962241"
-     inkscape:cx="522.02635"
-     inkscape:cy="141.49418"
+     inkscape:zoom="1.2050791"
+     inkscape:cx="412.83596"
+     inkscape:cy="385.45186"
      inkscape:document-units="px"
-     inkscape:current-layer="g12087-3"
+     inkscape:current-layer="layer4"
      showgrid="false"
      fit-margin-top="0"
      fit-margin-left="0"
@@ -2975,9 +2975,9 @@
      fit-margin-bottom="0"
      units="mm"
      width="200mm"
-     inkscape:window-width="1600"
-     inkscape:window-height="847"
-     inkscape:window-x="0"
+     inkscape:window-width="2560"
+     inkscape:window-height="1027"
+     inkscape:window-x="1440"
      inkscape:window-y="25"
      inkscape:window-maximized="1"
      showguides="false"
@@ -3194,7 +3194,7 @@
          id="flowPara10298-5" /></flowRoot>
     <g
        id="g17220"
-       transform="translate(-75.000001)">
+       transform="translate(-112.58034,-34.661402)">
       <path
          inkscape:connector-curvature="0"
          style="display:inline;fill:none;stroke:#24af63;stroke-width:3.75;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
@@ -3475,7 +3475,7 @@
          inkscape:export-ydpi="90"
          inkscape:export-xdpi="90"
          inkscape:export-filename="./polygon4618.png"
-         style="display:inline;fill:#ffffff;fill-rule:evenodd;stroke:#000000;stroke-width:3.56250048;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         style="display:inline;fill:#ffffff;fill-rule:evenodd;stroke:#000000;stroke-width:3.5625;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          id="circle6759-5"
          cx="-350.30692"
          cy="62.5373"
@@ -4420,6 +4420,17 @@
              inkscape:connector-curvature="0"
              d="m 804.52681,-543.70477 h 20.71177 v 9.14861 c 0,0.49398 0.40075,0.89406 0.89406,0.89406 h 7.89809 v 4.47922 h -29.50392 z m 29.504,41.5363 h -29.504 v -8.61368 h 29.50392 v 8.61368 z"
              id="path11834-3" />
+          <text
+             id="text8555-7-2"
+             y="-147.8349"
+             x="504.86429"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.75px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.937499"
+             xml:space="preserve"><tspan
+               id="tspan8553-5-1"
+               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.75px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.937499"
+               y="-147.8349"
+               x="504.86429"
+               sodipodi:role="line">Adapted from: Yates, James A. Fellows, et al.  PeerJ 9 (2021).</tspan></text>
         </g>
         <g
            id="g12219"
