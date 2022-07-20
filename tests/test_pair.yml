@@ -4,41 +4,45 @@
     - preprocessing
     - tumor_normal_pair
   files:
-    - path: results/multiqc
-    - path: results/preprocessing/test/markduplicates/test.md.cram
-    - path: results/preprocessing/test/markduplicates/test.md.cram.crai
-    - path: results/preprocessing/test/recal_table/test.recal.table
-    - path: results/preprocessing/test/recalibrated/test.recal.cram
-    - path: results/preprocessing/test/recalibrated/test.recal.cram.crai
-    - path: results/preprocessing/test2/markduplicates/test2.md.cram
-    - path: results/preprocessing/test2/markduplicates/test2.md.cram.crai
-    - path: results/preprocessing/test2/recal_table/test2.recal.table
-    - path: results/preprocessing/test2/recalibrated/test2.recal.cram
-    - path: results/preprocessing/test2/recalibrated/test2.recal.cram.crai
     - path: results/csv/markduplicates.csv
     - path: results/csv/markduplicates_no_table.csv
     - path: results/csv/recalibrated.csv
+    - path: results/multiqc
+    - path: results/preprocessing/markduplicates/test/test.md.cram
+    - path: results/preprocessing/markduplicates/test/test.md.cram.crai
+    - path: results/preprocessing/recal_table/test/test.recal.table
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+    - path: results/preprocessing/markduplicates/test2/test2.md.cram
+    - path: results/preprocessing/markduplicates/test2/test2.md.cram.crai
+    - path: results/preprocessing/recal_table/test2/test2.recal.table
+    - path: results/preprocessing/recalibrated/test2/test2.recal.cram
+    - path: results/preprocessing/recalibrated/test2/test2.recal.cram.crai
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/fastqc/test2-test_L1
     - path: results/reports/markduplicates/test/test.md.metrics
     - path: results/reports/markduplicates/test2/test2.md.metrics
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
-    - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
     - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
     - path: results/reports/mosdepth/test/test.md.regions.bed.gz
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz.csi
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
-    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
     - path: results/reports/mosdepth/test2/test2.md.mosdepth.global.dist.txt
-    - path: results/reports/mosdepth/test2/test2.md.mosdepth.summary.txt
     - path: results/reports/mosdepth/test2/test2.md.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test2/test2.md.mosdepth.summary.txt
     - path: results/reports/mosdepth/test2/test2.md.regions.bed.gz
+    - path: results/reports/mosdepth/test2/test2.md.regions.bed.gz.csi
     - path: results/reports/mosdepth/test2/test2.recal.mosdepth.global.dist.txt
-    - path: results/reports/mosdepth/test2/test2.recal.mosdepth.summary.txt
     - path: results/reports/mosdepth/test2/test2.recal.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test2/test2.recal.mosdepth.summary.txt
     - path: results/reports/mosdepth/test2/test2.recal.regions.bed.gz
-    - path: results/reports/samtools_stats/test/test.md.cram.stats
-    - path: results/reports/samtools_stats/test/test.recal.cram.stats
-    - path: results/reports/samtools_stats/test2/test2.md.cram.stats
-    - path: results/reports/samtools_stats/test2/test2.recal.cram.stats
+    - path: results/reports/mosdepth/test2/test2.recal.regions.bed.gz.csi
+    - path: results/reports/samtools/test/test.md.cram.stats
+    - path: results/reports/samtools/test/test.recal.cram.stats
+    - path: results/reports/samtools/test2/test2.md.cram.stats
+    - path: results/reports/samtools/test2/test2.recal.cram.stats

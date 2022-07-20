@@ -4,28 +4,29 @@
     - default
     - preprocessing
   files:
-    - path: results/multiqc
-    - path: results/preprocessing/test/markduplicates/test.md.cram
-    - path: results/preprocessing/test/markduplicates/test.md.cram.crai
-    - path: results/preprocessing/test/recal_table/test.recal.table
-    - path: results/preprocessing/test/recalibrated/test.recal.cram
-    - path: results/preprocessing/test/recalibrated/test.recal.cram.crai
     - path: results/csv/markduplicates.csv
     - path: results/csv/markduplicates_no_table.csv
     - path: results/csv/recalibrated.csv
+    - path: results/multiqc
+    - path: results/preprocessing/markduplicates/test/test.md.cram
+    - path: results/preprocessing/markduplicates/test/test.md.cram.crai
+    - path: results/preprocessing/recal_table/test/test.recal.table
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.metrics
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
-    - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
     - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
     - path: results/reports/mosdepth/test/test.md.regions.bed.gz
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz.csi
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
-    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
-    - path: results/reports/samtools_stats/test/test.md.cram.stats
-    - path: results/reports/samtools_stats/test/test.recal.cram.stats
-
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
+    - path: results/reports/samtools/test/test.md.cram.stats
+    - path: results/reports/samtools/test/test.recal.cram.stats
 - name: Run default pipeline without intervals
   command: nextflow run main.nf -profile test,no_intervals,docker
   tags:
@@ -33,56 +34,69 @@
     - no_intervals
     - preprocessing
   files:
-    - path: results/multiqc
-    - path: results/preprocessing/test/markduplicates/test.md.cram
-    - path: results/preprocessing/test/markduplicates/test.md.cram.crai
-    - path: results/preprocessing/test/recal_table/test.recal.table
-    - path: results/preprocessing/test/recalibrated/test.recal.cram
-    - path: results/preprocessing/test/recalibrated/test.recal.cram.crai
     - path: results/csv/markduplicates.csv
     - path: results/csv/markduplicates_no_table.csv
     - path: results/csv/recalibrated.csv
+    - path: results/multiqc
+    - path: results/no_intervals.bed
+    - path: results/no_intervals.bed.gz
+    - path: results/no_intervals.bed.gz.tbi
+    - path: results/preprocessing/markduplicates/test/test.md.cram
+    - path: results/preprocessing/markduplicates/test/test.md.cram.crai
+    - path: results/preprocessing/recal_table/test/test.recal.table
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.metrics
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
-    - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
     - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
     - path: results/reports/mosdepth/test/test.md.regions.bed.gz
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz.csi
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
-    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
-    - path: results/reports/samtools_stats/test/test.md.cram.stats
-    - path: results/reports/samtools_stats/test/test.recal.cram.stats
-
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
+    - path: results/reports/samtools/test/test.md.cram.stats
+    - path: results/reports/samtools/test/test.recal.cram.stats
 - name: Run default pipeline with VC
   command: nextflow run main.nf -profile test,docker --tools strelka
   tags:
     - default
     - preprocessing
+    - variant_calling
+    - strelka
   files:
-    - path: results/multiqc
-    - path: results/preprocessing/test/markduplicates/test.md.cram
-    - path: results/preprocessing/test/markduplicates/test.md.cram.crai
-    - path: results/preprocessing/test/recal_table/test.recal.table
-    - path: results/preprocessing/test/recalibrated/test.recal.cram
-    - path: results/preprocessing/test/recalibrated/test.recal.cram.crai
     - path: results/csv/markduplicates.csv
     - path: results/csv/markduplicates_no_table.csv
     - path: results/csv/recalibrated.csv
+    - path: results/csv/variantcalled.csv
+    - path: results/multiqc
+    - path: results/preprocessing/markduplicates/test/test.md.cram
+    - path: results/preprocessing/markduplicates/test/test.md.cram.crai
+    - path: results/preprocessing/recal_table/test/test.recal.table
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+    - path: results/reports/bcftools/strelka/test/test.strelka.variants.bcftools_stats.txt
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.metrics
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
-    - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
     - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
     - path: results/reports/mosdepth/test/test.md.regions.bed.gz
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz.csi
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
-    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
-    - path: results/reports/samtools_stats/test/test.md.cram.stats
-    - path: results/reports/samtools_stats/test/test.recal.cram.stats
-    - path: results/variant_calling/test/strelka/test.strelka.genome.vcf.gz
-    - path: results/variant_calling/test/strelka/test.strelka.genome.vcf.gz.tbi
-    - path: results/variant_calling/test/strelka/test.strelka.variants.vcf.gz
-    - path: results/variant_calling/test/strelka/test.strelka.variants.vcf.gz.tbi
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
+    - path: results/reports/samtools/test/test.md.cram.stats
+    - path: results/reports/samtools/test/test.recal.cram.stats
+    - path: results/reports/vcftools/strelka/test/test.strelka.variants.FILTER.summary
+    - path: results/reports/vcftools/strelka/test/test.strelka.variants.TsTv.count
+    - path: results/reports/vcftools/strelka/test/test.strelka.variants.TsTv.qual
+    - path: results/variant_calling/strelka/test/test.strelka.genome.vcf.gz
+    - path: results/variant_calling/strelka/test/test.strelka.genome.vcf.gz.tbi
+    - path: results/variant_calling/strelka/test/test.strelka.variants.vcf.gz
+    - path: results/variant_calling/strelka/test/test.strelka.variants.vcf.gz.tbi

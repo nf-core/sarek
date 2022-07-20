@@ -1,93 +1,84 @@
-- name: Run UMI Quiaseq test
-  command: nextflow run main.nf -profile test,umi_quiaseq,docker
+- name: Run UMI test
+  command: nextflow run main.nf -profile test,umi,docker
   tags:
-    - umi_quiaseq
     - umi
   files:
-    - path: results/fastqtobam/1234N-SRR7545951_umi_converted.bam
-      md5sum: 1473c98be04aff10f80e2946b111c459
-    - path: results/bam2fastq/1234N-SRR7545951_interleaved.fq.gz
-      md5sum: 17c0cb479e8117016e9f0d835d4df50f
-    - path: results/callumiconsensus/1234N-SRR7545951_umi-consensus.bam
-      md5sum: 3be1adf27d473de12cab895423a5f3ed
-    - path: results/cat/1234N-SRR7545951_1.merged.fastq.gz
-      md5sum: c1ed636a11b3031c72f3d4c84a7a0949
-    - path: results/cat/1234N-SRR7545951_2.merged.fastq.gz
-      md5sum: 0bbef631b8de80f2abe441de713cbb49
-    - path: results/groupreadsbyumi/1234N-SRR7545951_umi-grouped.bam
-      md5sum: e3bb348056513c46d7a60df4d7a8cc97
-    - path: results/groupreadsbyumi/1234N-SRR7545951_umi_histogram.txt
-      md5sum: 2e1e9a774135675a3d1a3b0a88d29c53
-    - path: results/samblaster/1234N-SRR7545951_unsorted_tagged.bam
-      md5sum: daa51939768c256315ce700dabaccad6
-    - path: results/samtools/1234N-SRR7545951.map_map.bam
-      md5sum: 741de784bb83815fab8b2d23d88c74d7
-    - path: results/samtools/1234N-SRR7545951.map_unmap.bam
-      md5sum: 31627b2d163da372584bb78258c046e5
-    - path: results/samtools/1234N-SRR7545951.mapped_1.fq.gz
-      md5sum: 709872fc2910431b1e8b7074bfe38c67
-    - path: results/samtools/1234N-SRR7545951.mapped_2.fq.gz
-      md5sum: 709872fc2910431b1e8b7074bfe38c67
-    - path: results/samtools/1234N-SRR7545951.mapped_other.fq.gz
-      md5sum: 709872fc2910431b1e8b7074bfe38c67
-    - path: results/samtools/1234N-SRR7545951.mapped_singleton.fq.gz
-      md5sum: 709872fc2910431b1e8b7074bfe38c67
-    - path: results/samtools/1234N-SRR7545951.unmap_map.bam
-      md5sum: 42fb9dbb5a157c194c77b1de5b4f3b39
-    - path: results/samtools/1234N-SRR7545951.unmap_unmap.bam
-      md5sum: 2075e48cd007f29c8f6fdc518e587e27
-    - path: results/samtools/1234N-SRR7545951.unmapped_1.fq.gz
-      md5sum: 1f95ae5bbc7345372005b6673884f853
-    - path: results/samtools/1234N-SRR7545951.unmapped_2.fq.gz
-      md5sum: 9902e27a99c2a628d184cb91759d6ff7
-    - path: results/samtools/1234N-SRR7545951.unmapped_other.fq.gz
-      md5sum: 709872fc2910431b1e8b7074bfe38c67
-    - path: results/samtools/1234N-SRR7545951.unmapped_singleton.fq.gz
-      md5sum: 709872fc2910431b1e8b7074bfe38c67
+    - path: results/bam2fastq/test-test_L1_interleaved.fq.gz
+    - path: results/bwamem1/test-test_L1.umi_unsorted.bam
+    - path: results/callumiconsensus/test-test_L1_umi-consensus.bam
+    - path: results/cat/test-test_L1_1.merged.fastq.gz
+    - path: results/cat/test-test_L1_2.merged.fastq.gz
+    - path: results/collate/test-test_L1.mapped_1.fq.gz
+    - path: results/collate/test-test_L1.mapped_2.fq.gz
+    - path: results/collate/test-test_L1.mapped_other.fq.gz
+    - path: results/collate/test-test_L1.mapped_singleton.fq.gz
+    - path: results/collate/test-test_L1.unmapped_1.fq.gz
+    - path: results/collate/test-test_L1.unmapped_2.fq.gz
+    - path: results/collate/test-test_L1.unmapped_other.fq.gz
+    - path: results/collate/test-test_L1.unmapped_singleton.fq.gz
+    - path: results/csv/markduplicates.csv
+    - path: results/csv/markduplicates_no_table.csv
+    - path: results/csv/recalibrated.csv
+    - path: results/fastqtobam/test-test_L1_umi_converted.bam
+    - path: results/groupreadsbyumi/test-test_L1_umi-grouped.bam
+    - path: results/groupreadsbyumi/test-test_L1_umi_histogram.txt
+    - path: results/preprocessing/markduplicates/test/test.md.cram
+    - path: results/preprocessing/markduplicates/test/test.md.cram.crai
+    - path: results/preprocessing/recal_table/test/test.recal.table
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+    - path: results/reports/markduplicates/test/test.md.metrics
+    - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz.csi
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
+    - path: results/reports/samtools/test/test.md.cram.stats
+    - path: results/reports/samtools/test/test.recal.cram.stats
+    - path: results/samblaster/test-test_L1_unsorted_tagged.bam
+    - path: results/samtools/test-test_L1.bam
+    - path: results/samtools/test-test_L1.map_map.bam
+    - path: results/samtools/test-test_L1.map_unmap.bam
+    - path: results/samtools/test-test_L1.unmap_map.bam
+    - path: results/samtools/test-test_L1.unmap_unmap.bam
+      # TODO: The following files are not produced anymore
+#    - path: results/samtools/test-test_L1.mapped_1.fq.gz
+#    - path: results/samtools/test-test_L1.mapped_2.fq.gz
+#    - path: results/samtools/test-test_L1.mapped_other.fq.gz
+#    - path: results/samtools/test-test_L1.mapped_singleton.fq.gz
+#    - path: results/samtools/test-test_L1.unmapped_1.fq.gz
+#    - path: results/samtools/test-test_L1.unmapped_2.fq.gz
+#    - path: results/samtools/test-test_L1.unmapped_other.fq.gz
+#    - path: results/samtools/test-test_L1.unmapped_singleton.fq.gz
 
-- name: Run UMI TSO test
-  command: nextflow run main.nf -profile test,umi_tso,docker
-  tags:
-    - umi_tso
-    - umi
-  files:
-    - path: results/fastqtobam/1234N-HT1080_umi_converted.bam
-      md5sum: aaf4b9a80f4b780d93820df8b536c531
-    - path: results/bam2fastq/1234N-HT1080_interleaved.fq.gz
-      md5sum: b037fe8e180e805226485d9bea4a69e5
-    - path: results/callumiconsensus/1234N-HT1080_umi-consensus.bam
-      md5sum: 807bfe6a82eabdf29aaf8bc6a832f0cd
-    - path: results/cat/1234N-HT1080_1.merged.fastq.gz
-      md5sum: c8f0d1308df4c46c0716ccfe76f78fb4
-    - path: results/cat/1234N-HT1080_2.merged.fastq.gz
-      md5sum: 1b42767b2d5dbc99e447c41d6d2418ab
-    - path: results/groupreadsbyumi/1234N-HT1080_umi-grouped.bam
-      md5sum: c9c76b410ba208fea76c79cecfb45241
-    - path: results/groupreadsbyumi/1234N-HT1080_umi_histogram.txt
-      md5sum: 3dec92ae49763c10c0b2e79827d25ffb
-    - path: results/samblaster/1234N-HT1080_unsorted_tagged.bam
-      md5sum: 628bd970fa00615fb9f841bad7c8f597
-    - path: results/samtools/1234N-HT1080.map_map.bam
-      md5sum: 2689e640c3ededf70228a44ee4b1de48
-    - path: results/samtools/1234N-HT1080.map_unmap.bam
-      md5sum: 37300fea69f7c400220a03ca5854d04b
-    - path: results/samtools/1234N-HT1080.mapped_1.fq.gz
-      md5sum: 709872fc2910431b1e8b7074bfe38c67
-    - path: results/samtools/1234N-HT1080.mapped_2.fq.gz
-      md5sum: 709872fc2910431b1e8b7074bfe38c67
-    - path: results/samtools/1234N-HT1080.mapped_other.fq.gz
-      md5sum: 709872fc2910431b1e8b7074bfe38c67
-    - path: results/samtools/1234N-HT1080.mapped_singleton.fq.gz
-      md5sum: 709872fc2910431b1e8b7074bfe38c67
-    - path: results/samtools/1234N-HT1080.unmap_map.bam
-      md5sum: 6267d0ed8274e1fa7aad8d1e71d98696
-    - path: results/samtools/1234N-HT1080.unmap_unmap.bam
-      md5sum: 32ed07aa23900f5722e5983a646a5ac2
-    - path: results/samtools/1234N-HT1080.unmapped_1.fq.gz
-      md5sum: d9a7a279c05563a37d9a5a6938be68fb
-    - path: results/samtools/1234N-HT1080.unmapped_2.fq.gz
-      md5sum: afe191dcd48360f96bdb583fa60ff400
-    - path: results/samtools/1234N-HT1080.unmapped_other.fq.gz
-      md5sum: 709872fc2910431b1e8b7074bfe38c67
-    - path: results/samtools/1234N-HT1080.unmapped_singleton.fq.gz
-      md5sum: 709872fc2910431b1e8b7074bfe38c67
+# - name: Run UMI TSO test
+#   command: nextflow run main.nf -profile test,umi_tso,docker
+#   tags:
+#     - umi_tso
+#     - umi
+#   files:
+#     - path: results/fastqtobam/1234N-HT1080_umi_converted.bam
+#     - path: results/bam2fastq/1234N-HT1080_interleaved.fq.gz
+#     - path: results/callumiconsensus/1234N-HT1080_umi-consensus.bam
+#     - path: results/cat/1234N-HT1080_1.merged.fastq.gz
+#     - path: results/cat/1234N-HT1080_2.merged.fastq.gz
+#     - path: results/groupreadsbyumi/1234N-HT1080_umi-grouped.bam
+#     - path: results/groupreadsbyumi/1234N-HT1080_umi_histogram.txt
+#     - path: results/samblaster/1234N-HT1080_unsorted_tagged.bam
+#     - path: results/samtools/1234N-HT1080.map_map.bam
+#     - path: results/samtools/1234N-HT1080.map_unmap.bam
+#     - path: results/samtools/1234N-HT1080.mapped_1.fq.gz
+#     - path: results/samtools/1234N-HT1080.mapped_2.fq.gz
+#     - path: results/samtools/1234N-HT1080.mapped_other.fq.gz
+#     - path: results/samtools/1234N-HT1080.mapped_singleton.fq.gz
+#     - path: results/samtools/1234N-HT1080.unmap_map.bam
+#     - path: results/samtools/1234N-HT1080.unmap_unmap.bam
+#     - path: results/samtools/1234N-HT1080.unmapped_1.fq.gz
+#     - path: results/samtools/1234N-HT1080.unmapped_2.fq.gz
+#     - path: results/samtools/1234N-HT1080.unmapped_other.fq.gz
+#     - path: results/samtools/1234N-HT1080.unmapped_singleton.fq.gz
