@@ -143,6 +143,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#642](https://github.com/nf-core/sarek/pull/642) - Only unzip ref files if tool is run, only publish ref files if `--save_reference` and simplify CNKit logic
 - [#650](https://github.com/nf-core/sarek/pull/650) - Fix intervals checks
 - [#654](https://github.com/nf-core/sarek/pull/654) - Allow any step but annotation to start from BAM files
+- [#666](https://github.com/nf-core/sarek/pull/666) - Simplify multiqc config channel input
 
 ### Deprecated
 
