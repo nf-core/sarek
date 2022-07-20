@@ -5,17 +5,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.7.2](https://github.com/nf-core/sarek/releases/tag/2.7.2) - Áhkká
+## [3.0](https://github.com/nf-core/sarek/releases/tag/3.0) - Skierfe
 
-Áhkká is one of the massifs just outside of the Sarek National Park.
-
-### Fixed
-
-- [#566](https://github.com/nf-core/sarek/pull/566) - Fix caching bug affecting a variable number of `MapReads` jobs due to non-deterministic state of `statusMap` during caching evaluation
-
-## [2.7.1](https://github.com/nf-core/sarek/releases/tag/2.7.1) - Pårtejekna
-
-Pårtejekna is one of glaciers of the Pårte Massif.
+Skierfe is a mountain in the Sarek national park, and the inspiration for the logo.
 
 ### Added
 
@@ -112,6 +104,7 @@ Pårtejekna is one of glaciers of the Pårte Massif.
 - [#659](https://github.com/nf-core/sarek/pull/659) - Update usage.md docu section on `How to run ASCAT with WES`
 - [#661](https://github.com/nf-core/sarek/pull/661) - Add cnvkit reference creation to index subway map
 - [#663](https://github.com/nf-core/sarek/pull/663) - Add separate parameters for `ASCAT` and `ControlFREEC` back in
+- [#668](https://github.com/nf-core/sarek/pull/668) - Update annotation documentation
 
 ### Fixed
 
@@ -164,6 +157,7 @@ Pårtejekna is one of glaciers of the Pårte Massif.
 - [#655](https://github.com/nf-core/sarek/pull/655) - Fix `--intervals false` logic & add versioning for local modules
 - [#658](https://github.com/nf-core/sarek/pull/658) - Fix split fastq names in multiqc-report
 - [#666](https://github.com/nf-core/sarek/pull/666) - Simplify multiqc config channel input
+- [#668](https://github.com/nf-core/sarek/pull/668) - Add `snpeff_version` and `vep_version` to `schema_ignore_params` to avoid issue when specifying on command line
 - [#669](https://github.com/nf-core/sarek/pull/669) - Fix path to files when creating csv files
 
 ### Deprecated
@@ -181,6 +175,14 @@ Pårtejekna is one of glaciers of the Pårte Massif.
 - [#571](https://github.com/nf-core/sarek/pull/571) - Removed the local module `concat_vcf`.
 - [#605](https://github.com/nf-core/sarek/pull/605) - Removed Scatter/gather from GATK_SINGLE_SAMPLE_GERMLINE_VARIANT_CALLING, all intervals are processed together
 - [#643](https://github.com/nf-core/sarek/pull/643) - Removed Sentieon parameters
+
+## [2.7.2](https://github.com/nf-core/sarek/releases/tag/2.7.2) - Áhkká
+
+Áhkká is one of the massifs just outside of the Sarek National Park.
+
+### Fixed
+
+- [#566](https://github.com/nf-core/sarek/pull/566) - Fix caching bug affecting a variable number of `MapReads` jobs due to non-deterministic state of `statusMap` during caching evaluation
 
 ## [2.7.1](https://github.com/nf-core/sarek/releases/tag/2.7.1) - Pårtejekna
 
