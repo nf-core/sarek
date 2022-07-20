@@ -1,10 +1,10 @@
 process BUILD_INTERVALS {
     tag "$meta.id"
 
-    conda (params.enable_conda ? "bioconda::gawk=4.1.3" : null)
+    conda (params.enable_conda ? "anaconda::gawk=5.1.0" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/gawk:4.1.3--0':
-        'quay.io/biocontainers/gawk:4.1.3--1' }"
+        'https://depot.galaxyproject.org/singularity/gawk:5.1.0' :
+        'quay.io/biocontainers/gawk:5.1.0' }"
 
     input:
     tuple val(meta), path(fasta_fai)
