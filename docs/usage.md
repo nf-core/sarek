@@ -846,8 +846,7 @@ For targeted data analysis, this is overshooting by a lot. In this case resource
 
 ## Spark related issues
 
-If you have problems running processes that make use of Spark such as `MarkDuplicates`.
-You are probably experiencing issues with the limit of open files in your system.
+If you have problems running processes that make use of Spark such, for instance, as `MarkDuplicates`, then that might be due to a limit on the number of simultaneously open files on your system.
 You can check your current limit by typing the following:
 
 ```bash
@@ -888,9 +887,9 @@ Currently, when running spark-based tools in combination with docker, it is requ
 
 Sarek can process UMI-reads, using [fgbio](http://fulcrumgenomics.github.io/fgbio/tools/latest/) tools.
 
-In order to use reads containing UMI tags as your initial input, you need to include `--umi_read_structure [structure]` in your parameters.
+In order to use reads containing UMI tags as your initial input, you need to include `--umi_read_structure <UMI_string>` in your parameters.
 
-This will enable pre-processing of the reads and UMI consensus reads calling, which will then be used to continue the workflow from the mapping steps. For post-UMI processing depending on the experimental setup, duplicate marking and base quality recalibration can be skipped with [`--skip_tools`].
+This will enable pre-processing of the reads and UMI consensus reads calling, which will then be used to continue the workflow from the mapping steps. For post-UMI processing depending on the experimental setup, duplicate marking and base quality recalibration can be skipped with `--skip_tools`.
 
 ### UMI Read Structure
 
