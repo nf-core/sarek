@@ -952,6 +952,7 @@ workflow SAREK {
         ch_reports  = ch_reports.mix(VCF_QC.out.vcftools_tstv_qual.collect{it[1]}.ifEmpty([]))
         ch_reports  = ch_reports.mix(VCF_QC.out.vcftools_filter_summary.collect{it[1]}.ifEmpty([]))
 
+        vcf_to_annotate.dump(tag:"vcf")
         VARIANTCALLING_CSV(vcf_to_annotate)
 
 

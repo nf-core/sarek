@@ -71,7 +71,7 @@ workflow GATK_JOINT_GERMLINE_VARIANT_CALLING {
     // Index vcf files if no scatter/gather by intervals
     TABIX(vcfs_sorted_input.no_intervals)
     // Merge scatter/gather vcfs & index
-    MERGE_GENOTYPEGVCFS(vcfs_sorted_input.intervals,dict)
+    MERGE_GENOTYPEGVCFS(vcfs_sorted_input.intervals.groupTuple(),dict)
     vqsr_input = Channel.empty().mix(
         MERGE_GENOTYPEGVCFS.out.vcf.join(MERGE_GENOTYPEGVCFS.out.tbi), 
         vcfs_sorted_input.no_intervals.join(TABIX.out.tbi)
