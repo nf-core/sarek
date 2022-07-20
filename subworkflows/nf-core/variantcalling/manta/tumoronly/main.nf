@@ -3,7 +3,6 @@ include { GATK4_MERGEVCFS as MERGE_MANTA_SV                } from '../../../../.
 include { GATK4_MERGEVCFS as MERGE_MANTA_TUMOR             } from '../../../../../modules/nf-core/modules/gatk4/mergevcfs/main'
 include { MANTA_TUMORONLY                                  } from '../../../../../modules/nf-core/modules/manta/tumoronly/main'
 
-// TODO: Research if splitting by intervals is ok, we pretend for now it is fine.
 // Seems to be the consensus on upstream modules implementation too
 workflow RUN_MANTA_TUMORONLY {
     take:
