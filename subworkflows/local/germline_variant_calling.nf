@@ -29,7 +29,6 @@ workflow GERMLINE_VARIANT_CALLING {
         known_sites_indels_tbi
         known_sites_snps
         known_sites_snps_tbi
-        // joint_germline                // val: true/false on whether to run joint_germline calling, only works in combination with haplotypecaller at the moment
 
     main:
 
