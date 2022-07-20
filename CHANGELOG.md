@@ -55,7 +55,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#416](https://github.com/nf-core/sarek/pull/416) - Sync `TEMPLATE` with `tools` `2.1`
 - [#417](https://github.com/nf-core/sarek/pull/417) - Merge `dsl2` and `dev` branches
 - [#419](https://github.com/nf-core/sarek/pull/419) - Improve preprocessing
-- [#420](https://github.com/nf-core/sarek/pull/420), [#455](https://github.com/nf-core/sarek/pull/455), [#459](https://github.com/nf-core/sarek/pull/459), [#633](https://github.com/nf-core/sarek/pull/633) - `nf-core modules update --all`
+- [#420](https://github.com/nf-core/sarek/pull/420), [#455](https://github.com/nf-core/sarek/pull/455), [#459](https://github.com/nf-core/sarek/pull/459), [#633](https://github.com/nf-core/sarek/pull/633), [#671](https://github.com/nf-core/sarek/pull/671) - `nf-core modules update --all`
 - [#427](https://github.com/nf-core/sarek/pull/427) - Update `DeepVariant`
 - [#462](https://github.com/nf-core/sarek/pull/462) - Update modules and `modules.config`
 - [#465](https://github.com/nf-core/sarek/pull/465) - Improve `test_data.config`
