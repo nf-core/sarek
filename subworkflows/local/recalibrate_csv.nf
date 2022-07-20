@@ -13,8 +13,8 @@ workflow RECALIBRATE_CSV {
             sample  = meta.sample
             sex     = meta.sex
             status  = meta.status
-            file = "${params.outdir}/preprocessing/${sample}/recalibrated/${file.name}"
-            index = "${params.outdir}/preprocessing/${sample}/recalibrated/${index.name}"
+            file = "${params.outdir}/preprocessing/recalibrated/${sample}/${file.name}"
+            index = "${params.outdir}/preprocessing/recalibrated/${sample}/${index.name}"
             ["recalibrated.csv", "patient,sex,status,sample,cram,crai\n${patient},${sex},${status},${sample},${file},${index}\n"]
         }
 }

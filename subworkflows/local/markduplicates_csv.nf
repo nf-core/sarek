@@ -15,8 +15,8 @@ workflow MARKDUPLICATES_CSV {
             status         = meta.status
             suffix_aligned = params.save_output_as_bam ? "bam" : "cram"
             suffix_index   = params.save_output_as_bam ? "bam.bai" : "cram.crai"
-            file   = "${params.outdir}/preprocessing/${sample}/markduplicates/${file.baseName}.${suffix_aligned}"
-            index   = "${params.outdir}/preprocessing/${sample}/markduplicates/${index.baseName.minus(".cram")}.${suffix_index}"
+            file   = "${params.outdir}/preprocessing/markduplicates/${sample}/${file.baseName}.${suffix_aligned}"
+            index   = "${params.outdir}/preprocessing/markduplicates/${sample}/${index.baseName.minus(".cram")}.${suffix_index}"
             ["markduplicates_no_table.csv", "patient,sex,status,sample,cram,crai\n${patient},${sex},${status},${sample},${file},${index}\n"]
         }
 }

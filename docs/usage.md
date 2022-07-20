@@ -482,8 +482,8 @@ If you have any questions or issues please send us a message on [Slack](https://
 
 When using default parameters only, sarek runs preprocessing and exits after base quality score recalibration. This is reflected in the default test profile:
 
-```
-nextflow run nf-core/sarek -r 3.0.0 -profile test,<container/institute>
+```console
+nextflow run nf-core/sarek -r 3.0 -profile test,<container/institute>
 ```
 
 Expected run output:
@@ -532,13 +532,13 @@ Expected run output:
 
 The pipeline comes with a number of possible paths and tools that can be used. The easiest and fastest test to see that the preprocessing + variantcalling (in this case Strelka2) works, is to run:
 
-```
+```console
 nextflow run nf-core/sarek -r 3.0.0 -profile test,<container/institute> --tools strelka
 ```
 
 Due to the small test data size, unfortunately not everything can be tested from top-to-bottom, but often is done by utilizing the pipeline's `--step` parameter. Annotation has to tested separatly from the remaining workflow, since we use references for `C.elegans`, while the remaining tests are run on downsampled human data.
 
-```
+```console
 nextflow run nf-core/sarek -r 3.0.0 -profile test,<container/institute> --tools snpeff --step annotation
 ```
 
@@ -611,7 +611,7 @@ In addition, currently the mismatch penalty for reads with tumor status in the s
 When plots are missing, it is possible that the fasta and the custom SnpEff database are not matching https://pcingola.github.io/SnpEff/se_faq/#error_chromosome_not_found-details.
 The SnpEff completes without throwing an error causing nextflow to complete successfully. An indication for the error are these lines in the `.command` files:
 
-```
+```text
 ERRORS: Some errors were detected
 Error type      Number of errors
 ERROR_CHROMOSOME_NOT_FOUND      17522411
@@ -627,7 +627,7 @@ If you have problems running processes that make use of Spark such as `MarkDupli
 You are probably experiencing issues with the limit of open files in your system.
 You can check your current limit by typing the following:
 
-```bash
+```console
 ulimit -n
 ```
 
@@ -636,20 +636,20 @@ In order to increase the size limit permanently you can:
 
 Edit the file `/etc/security/limits.conf` and add the lines:
 
-```bash
+```console
 *     soft   nofile  65535
 *     hard   nofile  65535
 ```
 
 Edit the file `/etc/sysctl.conf` and add the line:
 
-```bash
+```console
 fs.file-max = 65535
 ```
 
 Edit the file `/etc/sysconfig/docker` and add the new limits to OPTIONS like this:
 
-```bash
+```console
 OPTIONS=”—default-ulimit nofile=65535:65535"
 ```
 
@@ -690,7 +690,7 @@ If none of your required genome files are in igenomes, `--igenomes_ignore` must 
 
 Minimal example for custom genomes:
 
-```
+```console
 nextflow run nf-core/sarek --genome null --igenomes_ignore --fasta <custom.fasta>
 ```
 
@@ -700,13 +700,13 @@ If you don't want to use some of the provided reference genomes, they can be ove
 
 Example for using a custom known indels file:
 
-```
+```console
 nextflow run nf-core/sarek --known_indels <my_known_indels.vcf.gz> --genome GRCh38.GATK
 ```
 
 Example for not using known indels, but all other provided reference file:
 
-```
+```console
 nextflow run nf-core/sarek --known_indels false --genome GRCh38.GATK
 ```
 
@@ -744,105 +744,173 @@ GATK.GRCh38:
 | vep_genome            |                                                                                                                                                                                                                                                                                                                                                                                                                                                      | 'GRCh38'                                                                                                                                                                                |                                                                                      |
 | chr_dir               |                                                                                                                                                                                                                                                                                                                                                                                                                                                      | "${params.igenomes_base}/Homo_sapiens/GATK/GRCh38/Sequence/Chromosomes"                                                                                                                 |                                                                                      |
 
+## How to run sarek when no(t all) reference files are in igenomes
+
+For common genomes, such as GRCh38 and GRCh37, the pipeline is shipped with (almost) all necessary reference files. However, sometimes it is necessary to use custom references for some or all files:
+
+### No igenomes reference files are used
+
+If none of your required genome files are in igenomes, `--igenomes_ignore` must be set to ignore any igenomes input and `--genome null`. The `fasta` file is the only required input file and must be provided to run the pipeline. All other possible reference file can be provided in addition. For details, see the paramter documentation.
+
+Minimal example for custom genomes:
+
+```
+nextflow run nf-core/sarek --genome null --igenomes_ignore --fasta <custom.fasta>
+```
+
+### Overwrite specific reference files
+
+If you don't want to use some of the provided reference genomes, they can be overwritten by either providing a new file or setting the respective file parameter to `false`, if it should be ignored:
+
+Example for using a custom known indels file:
+
+```
+nextflow run nf-core/sarek --known_indels <my_known_indels.vcf.gz> --genome GRCh38.GATK
+```
+
+Example for not using known indels, but all other provided reference files:
+
+```
+nextflow run nf-core/sarek --known_indels false --genome GRCh38.GATK
+```
+
 ## How to customise SnpEff and VEP annotation
 
-_under construction help needed_
-
-Sarek comes shipped with containers for both snpEff and VEP for human reference genomes with `--genome GATK.GRCh38` and `--genome GATK.GRCh37`. Different containers however can be provided.
-
-<!-- #### Create containers
-
-The cache has to be downloaded.
-
-`sareksnpeff`, our `snpeff` container is designed using [Conda](https://conda.io/).
-
-[![sareksnpeff-docker status](https://img.shields.io/docker/automated/nfcore/sareksnpeff.svg)](https://hub.docker.com/r/nfcore/sareksnpeff)
-
-Based on [nfcore/base:1.12.1](https://hub.docker.com/r/nfcore/base/tags), it contains:
-
-- **[snpEff](http://snpeff.sourceforge.net/)** 4.3.1t
-- Cache for `GRCh37`, `GRCh38`, `GRCm38`, `CanFam3.1` or `WBcel235`
-
-`sarekvep`, our `vep` container is designed using [Conda](https://conda.io/).
-
-[![sarekvep-docker status](https://img.shields.io/docker/automated/nfcore/sarekvep.svg)](https://hub.docker.com/r/nfcore/sarekvep)
-
-Based on [nfcore/base:1.12.1](https://hub.docker.com/r/nfcore/base/tags), it contains:
-
-- **[GeneSplicer](https://ccb.jhu.edu/software/genesplicer/)** 1.0
-- **[VEP](https://github.com/Ensembl/ensembl-vep)** 99.2
-- Cache for `GRCh37`, `GRCh38`, `GRCm38`, `CanFam3.1` or `WBcel235` -->
-
-  <!-- "snpeff_db"
-  "snpeff_genome":
-  "snpeff_version":
-  "vep_genome":
-  "vep_species":
-  "vep_cache_version":
-  "vep_version": -->
+Sarek uses nf-core provided containers for both snpEff and VEP for several reference genomes ('CanFam3', 'GRCh37', 'GRCh38', 'GRCm38' and 'WBcel235').
 
 ### Using downloaded cache
 
 Both `snpEff` and `VEP` enable usage of cache, if no pre-build container is available.
-The cache needs to made available on the machine where Sarek is run.
+The cache needs to be made available on the machine where Sarek is run.
 You need to specify the cache directory using `--snpeff_cache` and `--vep_cache` in the command lines or within configuration files.
 
 Example:
 
-```bash
+```console
 nextflow run nf-core/sarek --tools snpEff --step annotate --sample <file.vcf.gz> --snpeff_cache </path/to/snpEff/cache>
 nextflow run nf-core/sarek --tools VEP --step annotate --sample <file.vcf.gz> --vep_cache </path/to/VEP/cache>
 ```
 
-### Download cache
-
-A `Nextflow` helper script has been designed to help downloading `snpEff` and `VEP` caches.
-Such files are meant to be shared between multiple users, so this script is mainly meant for people administrating servers, clusters and advanced users.
-
-```bash
-nextflow run download_cache.nf --snpeff_cache </path/to/snpEff/cache> --snpeff_db <snpEff DB version> --genome <GENOME>
-nextflow run download_cache.nf --vep_cache </path/to/VEP/cache> --species <species> --vep_cache_version <VEP cache version> --genome <GENOME>
-```
+Similarly, when wanting to use a different cache than the one specified in the iGenomes config file, one can use `--snpeff_db`, `--snpeff_genome`, `--snpeff_version`, `--vep_cache_version`, `--vep_genome`, `--vep_species` and `--vep_version` to overwrite these default value related to the databases, genomes, versions and caches' versions used by these tools.
 
 ### Using VEP plugins
 
-<!-- To enable the use of the `VEP` `CADD` plugin:
-
-- Download the `CADD` files
-- Specify them (either on the command line, like in the example or in a configuration file)
-- use the `--cadd_cache` flag
-
-Example:
-
-```bash
-nextflow run nf-core/sarek --step annotate --tools VEP --sample <file.vcf.gz> --cadd_cache \
-    --cadd_indels </path/to/CADD/cache/InDels.tsv.gz> \
-    --cadd_indels_tbi </path/to/CADD/cache/InDels.tsv.gz.tbi> \
-    --cadd_wg_snvs </path/to/CADD/cache/whole_genome_SNVs.tsv.gz> \
-    --cadd_wg_snvs_tbi </path/to/CADD/cache/whole_genome_SNVs.tsv.gz.tbi>
-```
-
-#### Downloading CADD files
-
-An helper script has been designed to help downloading `CADD` files.
-Such files are meant to be share between multiple users, so this script is mainly meant for people administrating servers, clusters and advanced users.
-
-```bash
-nextflow run download_cache.nf --cadd_cache </path/to/CADD/cache> --cadd_version <CADD version> --genome <GENOME>
-``` -->
-
 #### dbnsfp
+
+Enable with `--vep_dbnsfp`. The following parameters are mandatory:
+
+- `--dbnsfp`, to specify the path to the dbNSFP processed file.
+- `--dbnsfp_tbi`, to specify the path to the dbNSFP tabix indexed file.
+
+The following parameters are optionnal:
+
+- `--dbnsfp_consequence`, to filter/limit outputs to a specific effect of the variant.
+  - The set of consequence terms is defined by the Sequence Ontology and an overview of those used in VEP can be found [here](https://www.ensembl.org/info/genome/variation/prediction/predicted_data.html).
+  - If one wants to filter using several consequences, then separate those by using '&' (i.e. `--dbnsfp_consequence '3_prime_UTR_variant&intron_variant'`.",
+- `--dbnsfp_fields`, to retrieve individual values from the dbNSFP file.
+  - The values correspond to the name of the columns in the dbNSFP file and are separated by comma.
+  - The column names might differ between the different dbNSFP versions. Please check the Readme.txt file, which is provided with the dbNSFP file, to obtain the correct column names. The Readme file contains also a short description of the provided values and the version of the tools used to generate them.
+
+For more details, see [here](https://www.ensembl.org/info/docs/tools/vep/script/vep_plugins.html#dbnsfp).
 
 #### LOFTEE
 
+Enable with `--vep_loftee`.
+
+For more details, see [here](https://github.com/konradjk/loftee).
+
 #### SpliceAi
 
+Enable with `--vep_spliceai`. The following parameters are mandatory:
+
+- `--spliceai_snv`, to specify the path to SpliceAI raw scores snv file.
+- `--spliceai_snv_tbi`, to specify the path to SpliceAI raw scores snv tabix indexed file.
+- `--spliceai_indel`, to specify the path to SpliceAI raw scores indel file.
+- `--spliceai_indel_tbi`, to specify the path to SpliceAI raw scores indel tabix indexed file.
+
+For more details, see [here](https://www.ensembl.org/info/docs/tools/vep/script/vep_plugins.html#spliceai).
+
 #### SpliceRegions
+
+Enable with `--vep_spliceregion`.
+
+For more details, see [here](https://www.ensembl.org/info/docs/tools/vep/script/vep_plugins.html#spliceregion) and [here](https://www.ensembl.info/2018/10/26/cool-stuff-the-vep-can-do-splice-site-variant-annotation/)."
 
 ## Requested resources for the tools
 
 Resource requests are difficult to generalize and are often dependent on input data size. Currently, the number of cpus and memory requested by default were adapted from tests on 5 ICGC paired whole-genome sequencing samples with approximately 40X and 80X depth.
 For targeted data analysis, this is overshooting by a lot. In this case resources for each process can be limited by either setting `--max_memory` and `-max_cpus` or tailoring the request by process name as described [here](#resource-requests). If you are using sarek for a certain data type regulary, and would like to make these requests available to others on your system, an institution-specific, pipeline-specific config file can be added [here](https://github.com/nf-core/configs/tree/master/conf/pipeline/sarek).
+
+## Spark related issues
+
+If you have problems running processes that make use of Spark such, for instance, as `MarkDuplicates`, then that might be due to a limit on the number of simultaneously open files on your system.
+You can check your current limit by typing the following:
+
+```bash
+ulimit -n
+```
+
+The default limit size is usually 1024 which is quite low to run Spark jobs.
+In order to increase the size limit permanently you can:
+
+Edit the file `/etc/security/limits.conf` and add the lines:
+
+```bash
+*     soft   nofile  65535
+*     hard   nofile  65535
+```
+
+Edit the file `/etc/sysctl.conf` and add the line:
+
+```bash
+fs.file-max = 65535
+```
+
+Edit the file `/etc/sysconfig/docker` and add the new limits to OPTIONS like this:
+
+```bash
+OPTIONS=”—default-ulimit nofile=65535:65535"
+```
+
+Re-start your session.
+
+Note that the way to increase the open file limit in your system may be slightly different or require additional steps.
+
+### Cannot delete work folder when using docker + Spark
+
+Currently, when running spark-based tools in combination with docker, it is required to set `docker.userEmulation = false`. This can unfortunately cause permission issues when `work/` is being written with root permissions. In case this happens, you might need to configure docker to run without `userEmulation` (see [here](https://github.com/Midnighter/nf-core-adr/blob/main/docs/adr/0008-refrain-from-using-docker-useremulation-in-nextflow.md)).
+
+## How to handle UMIs
+
+Sarek can process UMI-reads, using [fgbio](http://fulcrumgenomics.github.io/fgbio/tools/latest/) tools.
+
+In order to use reads containing UMI tags as your initial input, you need to include `--umi_read_structure <UMI_string>` in your parameters.
+
+This will enable pre-processing of the reads and UMI consensus reads calling, which will then be used to continue the workflow from the mapping steps. For post-UMI processing depending on the experimental setup, duplicate marking and base quality recalibration can be skipped with `--skip_tools`.
+
+### UMI Read Structure
+
+This parameter is a string, which follows a [convention](https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures) to describe the structure of the umi.
+If your reads contain a UMI only on one end, the string should only represent one structure (i.e. "2M11S+T"); should your reads contain a UMI on both ends, the string will contain two structures separated by a blank space (i.e. "2M11S+T 2M11S+T").
+
+### Limitations and future updates
+
+Recent updates to Samtools have been introduced, which can speed-up performance of fgbio tools used in this workflow.
+The current workflow does not handle duplex UMIs (i.e. where opposite strands of a duplex molecule have been tagged with a different UMI), and best practices have been proposed to process this type of data.
+Both changes will be implemented in a future release.
+
+## MultiQC related issues
+
+### Plots for SnpEff are missing
+
+When plots are missing, it is possible that the fasta and the custom SnpEff database are not matching https://pcingola.github.io/SnpEff/se_faq/#error_chromosome_not_found-details.
+The SnpEff completes without throwing an error causing nextflow to complete successfully. An indication for the error are these lines in the `.command` files:
+
+```
+ERRORS: Some errors were detected
+Error type      Number of errors
+ERROR_CHROMOSOME_NOT_FOUND      17522411
+```
 
 ## How to set sarek up to use sentieon
 

@@ -1248,7 +1248,7 @@ def extract_csv(csv_file) {
                 System.exit(1)
             }
         } else {
-            log.warn "Missing or unknown field in csv file header. Please check your samplesheet"
+            log.error "Missing or unknown field in csv file header. Please check your samplesheet"
             System.exit(1)
         }
     }
