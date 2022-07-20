@@ -69,7 +69,7 @@ workflow RUN_HAPLOTYPECALLER {
              known_sites_snps_tbi,
              known_snps_vqsr)
 
-        filtered_vcf = JOINT_GERMLINE.out.genotype_vcf.map{ meta, vcf-> [[patient:meta.patient, sample:meta.sample, status:meta.status, sex:meta.sex, id:meta.sample, num_intervals:meta.num_intervals, variantcaller:"haplotypecaller"], vcf]}
+filtered_vcf = JOINT_GERMLINE.out.genotype_vcf.map{ meta, vcf-> [[id:"joint_germline", variantcaller:"haplotypecaller"], vcf]}
         ch_versions = ch_versions.mix(JOINT_GERMLINE.out.versions)
     } else {
         // Only when using intervals
