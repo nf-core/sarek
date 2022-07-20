@@ -105,6 +105,7 @@ Skierfe is a mountain in the Sarek national park, and the inspiration for the lo
 - [#661](https://github.com/nf-core/sarek/pull/661) - Add cnvkit reference creation to index subway map
 - [#663](https://github.com/nf-core/sarek/pull/663) - Add separate parameters for `ASCAT` and `ControlFREEC` back in
 - [#668](https://github.com/nf-core/sarek/pull/668) - Update annotation documentation
+- [#674](https://github.com/nf-core/sarek/pull/664) - Default value for splitting is `50000000`
 
 ### Fixed
 
