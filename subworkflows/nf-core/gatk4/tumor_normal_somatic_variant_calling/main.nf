@@ -162,8 +162,8 @@ workflow GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING {
                                         normal_id:      meta.normal_id,
                                         num_intervals:  meta.num_intervals,
                                         patient:        meta.patient,
-                                        tumor_id:       meta.tumor_id,
                                         sex:            meta.sex,
+                                        tumor_id:       meta.tumor_id,
                                     ],
                                         cram, crai, intervals]
                                 },
