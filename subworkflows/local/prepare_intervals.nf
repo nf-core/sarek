@@ -6,10 +6,12 @@
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
-include { BUILD_INTERVALS                                       } from '../../modules/local/build_intervals/main'
-include { CREATE_INTERVALS_BED                                  } from '../../modules/local/create_intervals_bed/main'
-include { GATK4_INTERVALLISTTOBED                               } from '../../modules/nf-core/modules/gatk4/intervallisttobed/main'
-include { TABIX_BGZIPTABIX as TABIX_BGZIPTABIX_INTERVAL_SPLIT   } from '../../modules/nf-core/modules/tabix/bgziptabix/main'
+include { BUILD_INTERVALS                                     } from '../../modules/local/build_intervals/main'
+include { CNVKIT_ANTITARGET                                   } from '../../modules/nf-core/modules/cnvkit/antitarget/main'
+include { CNVKIT_REFERENCE                                    } from '../../modules/nf-core/modules/cnvkit/reference/main'
+include { CREATE_INTERVALS_BED                                } from '../../modules/local/create_intervals_bed/main'
+include { GATK4_INTERVALLISTTOBED                             } from '../../modules/nf-core/modules/gatk4/intervallisttobed/main'
+include { TABIX_BGZIPTABIX as TABIX_BGZIPTABIX_INTERVAL_SPLIT } from '../../modules/nf-core/modules/tabix/bgziptabix/main'
 
 workflow PREPARE_INTERVALS {
     take:
@@ -42,15 +44,21 @@ workflow PREPARE_INTERVALS {
         //If no interval/target file is provided, then intervals are generated from FASTA file
         if (!params.intervals) {
 
-            BUILD_INTERVALS(fasta_fai)
-            ch_intervals_combined = BUILD_INTERVALS.out.bed.map{it -> [[id:it.simpleName], it] }
+            BUILD_INTERVALS(fasta_fai.map{it -> [[id:it.baseName], it]})
 
-            ch_intervals = CREATE_INTERVALS_BED(ch_intervals_combined)
+            ch_intervals_combined = BUILD_INTERVALS.out.bed
+
+            ch_intervals = CREATE_INTERVALS_BED(ch_intervals_combined.map{meta, path -> path}).bed
+
+            ch_versions = ch_versions.mix(BUILD_INTERVALS.out.versions)
+            ch_versions = ch_versions.mix(CREATE_INTERVALS_BED.out.versions)
 
         } else {
 
             ch_intervals_combined = Channel.fromPath(file(params.intervals)).map{it -> [[id:it.baseName], it] }
-            ch_intervals = CREATE_INTERVALS_BED(file(params.intervals))
+
+            ch_intervals = CREATE_INTERVALS_BED(file(params.intervals)).bed
+            ch_versions = ch_versions.mix(CREATE_INTERVALS_BED.out.versions)
 
             //If interval file is not provided as .bed, but e.g. as .interval_list then convert to BED format
             if(!params.intervals.endsWith(".bed")) {
@@ -98,8 +106,8 @@ workflow PREPARE_INTERVALS {
     }
 
     emit:
-        intervals_bed                    = ch_intervals                                           // path: intervals.bed, num_intervals                        [intervals split for parallel execution]
-        intervals_bed_gz_tbi             = ch_intervals_bed_gz_tbi                                // path: target.bed.gz, target.bed.gz.tbi, num_intervals     [intervals split for parallel execution]
-        intervals_bed_combined           = ch_intervals_combined.map{meta, bed -> bed }.collect() // path: intervals.bed                        [all intervals in one file]
-        versions                         = ch_versions                                            // channel: [ versions.yml ]
+        intervals_bed               = ch_intervals                                           // path: intervals.bed, num_intervals                        [intervals split for parallel execution]
+        intervals_bed_gz_tbi        = ch_intervals_bed_gz_tbi                                // path: target.bed.gz, target.bed.gz.tbi, num_intervals     [intervals split for parallel execution]
+        intervals_bed_combined      = ch_intervals_combined.map{meta, bed -> bed }.collect() // path: intervals.bed                        [all intervals in one file]
+        versions                    = ch_versions                                            // channel: [ versions.yml ]
 }
