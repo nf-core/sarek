@@ -166,7 +166,7 @@
                     "fa_icon": "fas fa-tape",
                     "description": "Specify UMI read structure",
                     "hidden": true,
-                    "help_text": "One structure if UMI is present on one end (i.e. '2M11S+T'), or two structures separated by a blank space if UMIs a present on both ends (i.e. '2M11S+T 2M11S+T'); please note, this does not handle duplex-UMIs.\n\nIt is recommended to skip duplicate marking and base quality score recalibration. See `--skip_tools`."
+                    "help_text": "One structure if UMI is present on one end (i.e. '+T 2M11S+T'), or two structures separated by a blank space if UMIs a present on both ends (i.e. '2M11S+T 2M11S+T'); please note, this does not handle duplex-UMIs.\n\nFor more info on UMI usage in the pipeline, also check docs [here](./docs/usage.md/#how-to-handle-umis)."
                 },
                 "group_by_umi_strategy": {
                     "type": "string",

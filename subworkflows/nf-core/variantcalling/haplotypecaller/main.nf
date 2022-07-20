@@ -15,7 +15,8 @@ workflow RUN_HAPLOTYPECALLER {
     known_sites_indels_tbi
     known_sites_snps
     known_sites_snps_tbi
-    intervals_bed_combined          // channel: [optional]
+    intervals_bed_combined          // channel: [mandatory] intervals/target regions in one file unzipped, no_intervals.bed if no_intervals
+
 
     main:
 
@@ -72,13 +73,21 @@ workflow RUN_HAPLOTYPECALLER {
         filtered_vcf = JOINT_GERMLINE.out.genotype_vcf
         ch_versions = ch_versions.mix(JOINT_GERMLINE.out.versions)
     } else {
+
         // Only when using intervals
         MERGE_HAPLOTYPECALLER(
             haplotypecaller_vcf_branch.intervals
-                .map{ meta, vcf ->
+            .map{ meta, vcf ->
 
-                    new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, sex:meta.sex, id:meta.sample, num_intervals:meta.num_intervals]
-
+                new_meta = [
+                                id:             meta.sample,
+                                num_intervals:  meta.num_intervals,
+                                patient:        meta.patient,
+                                sample:         meta.sample,
+                                sex:            meta.sex,
+                                status:         meta.status
+                            ]
+                            
                     [groupKey(new_meta, new_meta.num_intervals), vcf]
                 }.groupTuple(),
             dict)
@@ -104,8 +113,6 @@ workflow RUN_HAPLOTYPECALLER {
                                         HAPLOTYPECALLER.out.versions, 
                                         MERGE_HAPLOTYPECALLER.out.versions)
     }
-
-
 
     emit:
     versions = ch_versions

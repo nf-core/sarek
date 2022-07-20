@@ -34,8 +34,22 @@ workflow RUN_FREEBAYES {
         bcftools_vcf_out.intervals
             .map{ meta, vcf ->
 
-                new_meta = meta.tumor_id ? [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, sex:meta.sex, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:meta.num_intervals]
-                                        : [patient:meta.patient, sample:meta.sample, status:meta.status, sex:meta.sex, id:meta.sample, num_intervals:meta.num_intervals]
+                new_meta = meta.tumor_id ? [
+                                                id:             meta.tumor_id + "_vs_" + meta.normal_id,
+                                                normal_id:      meta.normal_id,
+                                                num_intervals:  meta.num_intervals,
+                                                patient:        meta.patient,
+                                                sex:            meta.sex,
+                                                tumor_id:       meta.tumor_id,
+                                            ]
+                                        :   [
+                                                id:             meta.sample,
+                                                num_intervals:  meta.num_intervals,
+                                                patient:        meta.patient,
+                                                sample:         meta.sample,
+                                                sex:            meta.sex,
+                                                status:         meta.status,
+                                            ]
                 [groupKey(new_meta, meta.num_intervals), vcf]
             }.groupTuple(),
         dict
@@ -46,7 +60,15 @@ workflow RUN_FREEBAYES {
                         MERGE_FREEBAYES.out.vcf,
                         bcftools_vcf_out.no_intervals)
                     .map{ meta, vcf ->
-                        [ [patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, sex:meta.sex, id:meta.id, num_intervals:meta.num_intervals, variantcaller:"freebayes"],
+                        [ [
+                            id:             meta.id,
+                            normal_id:      meta.normal_id,
+                            num_intervals:  meta.num_intervals,
+                            patient:        meta.patient,
+                            sex:            meta.sex,
+                            tumor_id:       meta.tumor_id,
+                            variantcaller:  "freebayes"
+                        ],
                             vcf]
                     }
 
