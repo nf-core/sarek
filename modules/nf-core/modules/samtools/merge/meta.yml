@@ -29,6 +29,10 @@ input:
       type: optional file
       description: Reference file the CRAM was created with
       pattern: "*.{fasta,fa}"
+  - fai:
+      type: optional file
+      description: Index of the reference file the CRAM was created with
+      pattern: "*.fai"
 output:
   - meta:
       type: map

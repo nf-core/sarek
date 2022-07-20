@@ -9,6 +9,7 @@ process BCFTOOLS_STATS {
 
     input:
     tuple val(meta), path(vcf)
+    path(target_bed)
 
     output:
     tuple val(meta), path("*stats.txt"), emit: stats
@@ -20,8 +21,13 @@ process BCFTOOLS_STATS {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
+    def target = target_bed ? "--regions-file ${target_bed}" : ""
     """
-    bcftools stats $args $vcf > ${prefix}.bcftools_stats.txt
+    bcftools stats \\
+        $args \\
+        $target \\
+        $vcf > ${prefix}.bcftools_stats.txt
+
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         bcftools: \$(bcftools --version 2>&1 | head -n1 | sed 's/^.*bcftools //; s/ .*\$//')
