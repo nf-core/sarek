@@ -737,36 +737,6 @@ For GATK.GRCh38 the links for each reference file and the corresponding processe
 | pon                   | Mutect2                                                                                                                                                                                                                                                                                                                                                                                                                                              | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) | https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON- |
 | pon_tbi               | Mutect2                                                                                                                                                                                                                                                                                                                                                                                                                                              | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) | https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON- |
 
-## How to run sarek when no(t all) reference files are in igenomes
-
-For common genomes, such as GRCh38 and GRCh37, the pipeline is shipped with (almost) all necessary reference files. However, sometimes it is necessary to use custom references for some or all files:
-
-### No igenomes reference files are used
-
-If none of your required genome files are in igenomes, `--igenomes_ignore` must be set to ignore any igenomes input and `--genome null`. The `fasta` file is the only required input file and must be provided to run the pipeline. All other possible reference file can be provided in addition. For details, see the paramter documentation.
-
-Minimal example for custom genomes:
-
-```
-nextflow run nf-core/sarek --genome null --igenomes_ignore --fasta <custom.fasta>
-```
-
-### Overwrite specific reference files
-
-If you don't want to use some of the provided reference genomes, they can be overwritten by either providing a new file or setting the respective file parameter to `false`, if it should be ignored:
-
-Example for using a custom known indels file:
-
-```
-nextflow run nf-core/sarek --known_indels <my_known_indels.vcf.gz> --genome GRCh38.GATK
-```
-
-Example for not using known indels, but all other provided reference files:
-
-```
-nextflow run nf-core/sarek --known_indels false --genome GRCh38.GATK
-```
-
 ## How to customise SnpEff and VEP annotation
 
 Sarek uses nf-core provided containers for both snpEff and VEP for several reference genomes ('CanFam3', 'GRCh37', 'GRCh38', 'GRCm38' and 'WBcel235').
@@ -905,6 +875,6 @@ Error type      Number of errors
 ERROR_CHROMOSOME_NOT_FOUND      17522411
 ```
 
-## How to set sarek up to use sentieon
+## How to set up sarek to use sentieon
 
 Sarek 3.0 is currently not supporting sentieon. It is planned for the upcoming release 3.1. In the meantime, please revert to the last release 2.7.2.
