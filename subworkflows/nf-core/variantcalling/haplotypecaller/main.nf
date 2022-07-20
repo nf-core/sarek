@@ -14,7 +14,7 @@ workflow RUN_HAPLOTYPECALLER {
     dbsnp_tbi
     intervals_bed_combined          // channel: [mandatory] intervals/target regions in one file unzipped, no_intervals.bed if no_intervals
     known_sites
-    known_sites_tbi               // channel: [optional]
+    known_sites_tbi                 // channel: [optional]
 
 
     main:
@@ -46,7 +46,14 @@ workflow RUN_HAPLOTYPECALLER {
         haplotypecaller_vcf_branch.intervals
             .map{ meta, vcf ->
 
-                new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, sex:meta.sex, id:meta.sample, num_intervals:meta.num_intervals]
+                new_meta = [
+                                id:             meta.sample,
+                                num_intervals:  meta.num_intervals,
+                                patient:        meta.patient,
+                                sample:         meta.sample,
+                                sex:            meta.sex,
+                                status:         meta.status
+                            ]
 
                 [groupKey(new_meta, new_meta.num_intervals), vcf]
             }.groupTuple(),
@@ -87,15 +94,27 @@ workflow RUN_HAPLOTYPECALLER {
         // filtered_vcf = JOINT_GERMLINE.out.vcf
         // ch_versions = ch_versions.mix(GATK_JOINT_GERMLINE_VARIANT_CALLING.out.versions)
     } else {
-        SINGLE_SAMPLE(haplotypecaller_vcf.join(haplotypecaller_tbi),
-                        fasta,
-                        fasta_fai,
-                        dict,
-                        intervals_bed_combined,
-                        known_sites,
-                        known_sites_tbi)
+        SINGLE_SAMPLE(
+            haplotypecaller_vcf.join(haplotypecaller_tbi),
+            fasta,
+            fasta_fai,
+            dict,
+            intervals_bed_combined,
+            known_sites,
+            known_sites_tbi
+        )
 
-        filtered_vcf = SINGLE_SAMPLE.out.filtered_vcf.map{ meta, vcf-> [[patient:meta.patient, sample:meta.sample, status:meta.status, sex:meta.sex, id:meta.sample, num_intervals:meta.num_intervals, variantcaller:"haplotypecaller"], vcf]}
+        filtered_vcf = SINGLE_SAMPLE.out.filtered_vcf.map{ meta, vcf ->
+                        [[
+                            id:             meta.sample,
+                            num_intervals:  meta.num_intervals,
+                            patient:        meta.patient,
+                            sample:         meta.sample,
+                            sex:            meta.sex,
+                            status:         meta.status,
+                            variantcaller:  "haplotypecaller"
+                        ],
+                        vcf]}
         ch_versions = ch_versions.mix(SINGLE_SAMPLE.out.versions)
     }
 

@@ -38,7 +38,14 @@ workflow RUN_DEEPVARIANT {
         deepvariant_vcf_out.intervals
             .map{ meta, vcf ->
 
-                new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, sex:meta.sex, id:meta.sample, num_intervals:meta.num_intervals]
+                new_meta = [
+                            id:             meta.sample,
+                            num_intervals:  meta.num_intervals,
+                            patient:        meta.patient,
+                            sample:         meta.sample,
+                            sex:            meta.sex,
+                            status:         meta.status,
+                        ]
 
                 [groupKey(new_meta, meta.num_intervals), vcf]
             }.groupTuple(),
@@ -48,7 +55,14 @@ workflow RUN_DEEPVARIANT {
         deepvariant_gvcf_out.intervals
             .map{ meta, vcf ->
 
-                new_meta = [patient:meta.patient, sample:meta.sample, status:meta.status, sex:meta.sex, id:meta.sample, num_intervals:meta.num_intervals]
+                new_meta = [
+                            id:             meta.sample,
+                            num_intervals:  meta.num_intervals,
+                            patient:        meta.patient,
+                            sample:         meta.sample,
+                            sex:            meta.sex,
+                            status:         meta.status,
+                        ]
 
                 [groupKey(new_meta, meta.num_intervals), vcf]
             }.groupTuple(),
@@ -59,13 +73,29 @@ workflow RUN_DEEPVARIANT {
                         MERGE_DEEPVARIANT_GVCF.out.vcf,
                         deepvariant_gvcf_out.no_intervals)
                     .map{ meta, vcf ->
-                        [[patient:meta.patient, sample:meta.sample, status:meta.status, sex:meta.sex, id:meta.sample, num_intervals:meta.num_intervals, variantcaller:"deepvariant"], vcf]
+                        [[
+                            id:             meta.sample,
+                            num_intervals:  meta.num_intervals,
+                            patient:        meta.patient,
+                            sample:         meta.sample,
+                            sex:            meta.sex,
+                            status:         meta.status,
+                            variantcaller:  "deepvariant"
+                        ], vcf]
                     }
     deepvariant_vcf = Channel.empty().mix(
                         MERGE_DEEPVARIANT_VCF.out.vcf,
                         deepvariant_vcf_out.no_intervals)
                     .map{ meta, vcf ->
-                        [[patient:meta.patient, sample:meta.sample, status:meta.status, sex:meta.sex, id:meta.sample, num_intervals:meta.num_intervals, variantcaller:"deepvariant"], vcf]
+                        [[
+                            id:             meta.sample,
+                            num_intervals:  meta.num_intervals,
+                            patient:        meta.patient,
+                            sample:         meta.sample,
+                            sex:            meta.sex,
+                            status:         meta.status,
+                            variantcaller:  "deepvariant"
+                        ], vcf]
                     }
 
     ch_versions = ch_versions.mix(MERGE_DEEPVARIANT_GVCF.out.versions)
