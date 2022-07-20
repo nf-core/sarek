@@ -625,23 +625,23 @@
                 "known_indels_vqsr": {
                     "type": "string",
                     "fa_icon": "fas fa-copy",
-                    "description": "1st label string for VariantRecalibration (haplotypecaller joint variant calling)"
+                    "description": ""If you use AWS iGenomes, this has already been set for you appropriately.\n\n1st label string for VariantRecalibration (haplotypecaller joint variant calling)"
                 },
                 "known_snps": {
                     "type": "string",
                     "fa_icon": "fas fa-copy",
-                    "description": "Path to known snps file."
+                    "description": ""If you use AWS iGenomes, this has already been set for you appropriately.\n\nPath to known snps file."
                 },
                 "known_snps_tbi": {
                     "type": "string",
                     "fa_icon": "fas fa-copy",
                     "description": "Path to known snps file snps.",
-                    "help_text": "> **NB** If none provided, will be generated automatically from the known index file, if provided. Combine with `--save_reference` to save for future runs."
+                    "help_text": ""If you use AWS iGenomes, this has already been set for you appropriately.\n\n> **NB** If none provided, will be generated automatically from the known index file, if provided. Combine with `--save_reference` to save for future runs."
                 },
                 "known_snps_vqsr": {
                     "type": "string",
                     "fa_icon": "fas fa-copy",
-                    "description": "label string for VariantRecalibration (haplotypecaller joint variant calling)"
+                    "description": ""If you use AWS iGenomes, this has already been set for you appropriately.\n\nlabel string for VariantRecalibration (haplotypecaller joint variant calling)"
                 },
                 "mappability": {
                     "type": "string",
