@@ -482,7 +482,7 @@ If you have any questions or issues please send us a message on [Slack](https://
 
 When using default parameters only, sarek runs preprocessing and exits after base quality score recalibration. This is reflected in the default test profile:
 
-```
+```console
 nextflow run nf-core/sarek -r 3.0.0 -profile test,<container/institute>
 ```
 
@@ -532,13 +532,13 @@ Expected run output:
 
 The pipeline comes with a number of possible paths and tools that can be used. The easiest and fastest test to see that the preprocessing + variantcalling (in this case Strelka2) works, is to run:
 
-```
+```console
 nextflow run nf-core/sarek -r 3.0.0 -profile test,<container/institute> --tools strelka
 ```
 
 Due to the small test data size, unfortunately not everything can be tested from top-to-bottom, but often is done by utilizing the pipeline's `--step` parameter. Annotation has to tested separatly from the remaining workflow, since we use references for `C.elegans`, while the remaining tests are run on downsampled human data.
 
-```
+```console
 nextflow run nf-core/sarek -r 3.0.0 -profile test,<container/institute> --tools snpeff --step annotation
 ```
 
@@ -627,7 +627,7 @@ If you have problems running processes that make use of Spark such as `MarkDupli
 You are probably experiencing issues with the limit of open files in your system.
 You can check your current limit by typing the following:
 
-```bash
+```console
 ulimit -n
 ```
 
@@ -636,20 +636,20 @@ In order to increase the size limit permanently you can:
 
 Edit the file `/etc/security/limits.conf` and add the lines:
 
-```bash
+```console
 *     soft   nofile  65535
 *     hard   nofile  65535
 ```
 
 Edit the file `/etc/sysctl.conf` and add the line:
 
-```bash
+```console
 fs.file-max = 65535
 ```
 
 Edit the file `/etc/sysconfig/docker` and add the new limits to OPTIONS like this:
 
-```bash
+```console
 OPTIONS=”—default-ulimit nofile=65535:65535"
 ```
 
@@ -690,7 +690,7 @@ If none of your required genome files are in igenomes, `--igenomes_ignore` must 
 
 Minimal example for custom genomes:
 
-```
+```console
 nextflow run nf-core/sarek --genome null --igenomes_ignore --fasta <custom.fasta>
 ```
 
@@ -700,13 +700,13 @@ If you don't want to use some of the provided reference genomes, they can be ove
 
 Example for using a custom known indels file:
 
-```
+```console
 nextflow run nf-core/sarek --known_indels <my_known_indels.vcf.gz> --genome GRCh38.GATK
 ```
 
 Example for not using known indels, but all other provided reference file:
 
-```
+```console
 nextflow run nf-core/sarek --known_indels false --genome GRCh38.GATK
 ```
 
@@ -789,47 +789,13 @@ You need to specify the cache directory using `--snpeff_cache` and `--vep_cache`
 
 Example:
 
-```bash
+```console
 nextflow run nf-core/sarek --tools snpEff --step annotate --sample <file.vcf.gz> --snpeff_cache </path/to/snpEff/cache>
 nextflow run nf-core/sarek --tools VEP --step annotate --sample <file.vcf.gz> --vep_cache </path/to/VEP/cache>
 ```
 
-### Download cache
-
-A `Nextflow` helper script has been designed to help downloading `snpEff` and `VEP` caches.
-Such files are meant to be shared between multiple users, so this script is mainly meant for people administrating servers, clusters and advanced users.
-
-```bash
-nextflow run download_cache.nf --snpeff_cache </path/to/snpEff/cache> --snpeff_db <snpEff DB version> --genome <GENOME>
-nextflow run download_cache.nf --vep_cache </path/to/VEP/cache> --species <species> --vep_cache_version <VEP cache version> --genome <GENOME>
-```
-
 ### Using VEP plugins
 
-<!-- To enable the use of the `VEP` `CADD` plugin:
-
-- Download the `CADD` files
-- Specify them (either on the command line, like in the example or in a configuration file)
-- use the `--cadd_cache` flag
-
-Example:
-
-```bash
-nextflow run nf-core/sarek --step annotate --tools VEP --sample <file.vcf.gz> --cadd_cache \
-    --cadd_indels </path/to/CADD/cache/InDels.tsv.gz> \
-    --cadd_indels_tbi </path/to/CADD/cache/InDels.tsv.gz.tbi> \
-    --cadd_wg_snvs </path/to/CADD/cache/whole_genome_SNVs.tsv.gz> \
-    --cadd_wg_snvs_tbi </path/to/CADD/cache/whole_genome_SNVs.tsv.gz.tbi>
-```
-
-#### Downloading CADD files
-
-An helper script has been designed to help downloading `CADD` files.
-Such files are meant to be share between multiple users, so this script is mainly meant for people administrating servers, clusters and advanced users.
-
-```bash
-nextflow run download_cache.nf --cadd_cache </path/to/CADD/cache> --cadd_version <CADD version> --genome <GENOME>
-``` -->
 
 #### dbnsfp
 
