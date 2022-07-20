@@ -3,48 +3,58 @@
   tags:
     - umi
   files:
-    - path: results/fastqtobam/test-test_L1_umi_converted.bam
-      md5sum: ce67e3b1f46302127cd07cb3c2d2e739
     - path: results/bam2fastq/test-test_L1_interleaved.fq.gz
-      md5sum: 7a57a8ab53dd1d799cca67a85c47ccd9
+    - path: results/bwamem1/test-test_L1.umi_unsorted.bam
     - path: results/callumiconsensus/test-test_L1_umi-consensus.bam
-      md5sum: ccd8b0b95119b6f42655800cf9d07975
     - path: results/cat/test-test_L1_1.merged.fastq.gz
-      md5sum: 401d4e7ccead0696d6d77e0f679fc608
     - path: results/cat/test-test_L1_2.merged.fastq.gz
-      md5sum: 01e6167468f6c46c6455a3e6bb6c4d1b
+    - path: results/collate/test-test_L1.mapped_1.fq.gz
+    - path: results/collate/test-test_L1.mapped_2.fq.gz
+    - path: results/collate/test-test_L1.mapped_other.fq.gz
+    - path: results/collate/test-test_L1.mapped_singleton.fq.gz
+    - path: results/collate/test-test_L1.unmapped_1.fq.gz
+    - path: results/collate/test-test_L1.unmapped_2.fq.gz
+    - path: results/collate/test-test_L1.unmapped_other.fq.gz
+    - path: results/collate/test-test_L1.unmapped_singleton.fq.gz
+    - path: results/csv/markduplicates.csv
+    - path: results/csv/markduplicates_no_table.csv
+    - path: results/csv/recalibrated.csv
+    - path: results/fastqtobam/test-test_L1_umi_converted.bam
     - path: results/groupreadsbyumi/test-test_L1_umi-grouped.bam
-      md5sum: 7f7775bd971c6c6790642cb14e7140a0
     - path: results/groupreadsbyumi/test-test_L1_umi_histogram.txt
-      md5sum: f2f29523bb7016e1a78fe634466cbfba
+    - path: results/preprocessing/markduplicates/test/test.md.cram
+    - path: results/preprocessing/markduplicates/test/test.md.cram.crai
+    - path: results/preprocessing/recal_table/test/test.recal.table
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+    - path: results/reports/markduplicates/test/test.md.metrics
+    - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz.csi
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
+    - path: results/reports/samtools/test/test.md.cram.stats
+    - path: results/reports/samtools/test/test.recal.cram.stats
     - path: results/samblaster/test-test_L1_unsorted_tagged.bam
-      md5sum: b6b55546a1134b1083fd50b8f36d5a13
-    - path: results/samtools/test-test_L1.map_map.bam
-      md5sum: f29dc564311e592941bdf152dd722b4f
-    - path: results/samtools/test-test_L1.map_unmap.bam
-      md5sum: 6518cea4d9c0bdb17af66932b68e0ad9
     - path: results/samtools/test-test_L1.bam
+    - path: results/samtools/test-test_L1.map_map.bam
+    - path: results/samtools/test-test_L1.map_unmap.bam
     - path: results/samtools/test-test_L1.unmap_map.bam
-      md5sum: 9479aabdbbfdc8f5c79f8daa1011e9fb
     - path: results/samtools/test-test_L1.unmap_unmap.bam
-      md5sum: a1801ce12b5b4a486c5b4cba49fad0dd
       # TODO: The following files are not produced anymore
 #    - path: results/samtools/test-test_L1.mapped_1.fq.gz
-#      md5sum: 709872fc2910431b1e8b7074bfe38c67
 #    - path: results/samtools/test-test_L1.mapped_2.fq.gz
-#      md5sum: 709872fc2910431b1e8b7074bfe38c67
 #    - path: results/samtools/test-test_L1.mapped_other.fq.gz
-#      md5sum: 709872fc2910431b1e8b7074bfe38c67
 #    - path: results/samtools/test-test_L1.mapped_singleton.fq.gz
-#      md5sum: 709872fc2910431b1e8b7074bfe38c67
 #    - path: results/samtools/test-test_L1.unmapped_1.fq.gz
-#      md5sum: 1f95ae5bbc7345372005b6673884f853
 #    - path: results/samtools/test-test_L1.unmapped_2.fq.gz
-#      md5sum: 9902e27a99c2a628d184cb91759d6ff7
 #    - path: results/samtools/test-test_L1.unmapped_other.fq.gz
-#      md5sum: 709872fc2910431b1e8b7074bfe38c67
 #    - path: results/samtools/test-test_L1.unmapped_singleton.fq.gz
-#      md5sum: 709872fc2910431b1e8b7074bfe38c67
 
 # - name: Run UMI TSO test
 #   command: nextflow run main.nf -profile test,umi_tso,docker
@@ -53,42 +63,22 @@
 #     - umi
 #   files:
 #     - path: results/fastqtobam/1234N-HT1080_umi_converted.bam
-#       md5sum: aaf4b9a80f4b780d93820df8b536c531
 #     - path: results/bam2fastq/1234N-HT1080_interleaved.fq.gz
-#       md5sum: b037fe8e180e805226485d9bea4a69e5
 #     - path: results/callumiconsensus/1234N-HT1080_umi-consensus.bam
-#       md5sum: 807bfe6a82eabdf29aaf8bc6a832f0cd
 #     - path: results/cat/1234N-HT1080_1.merged.fastq.gz
-#       md5sum: c8f0d1308df4c46c0716ccfe76f78fb4
 #     - path: results/cat/1234N-HT1080_2.merged.fastq.gz
-#       md5sum: 1b42767b2d5dbc99e447c41d6d2418ab
 #     - path: results/groupreadsbyumi/1234N-HT1080_umi-grouped.bam
-#       md5sum: c9c76b410ba208fea76c79cecfb45241
 #     - path: results/groupreadsbyumi/1234N-HT1080_umi_histogram.txt
-#       md5sum: 3dec92ae49763c10c0b2e79827d25ffb
 #     - path: results/samblaster/1234N-HT1080_unsorted_tagged.bam
-#       md5sum: 628bd970fa00615fb9f841bad7c8f597
 #     - path: results/samtools/1234N-HT1080.map_map.bam
-#       md5sum: 2689e640c3ededf70228a44ee4b1de48
 #     - path: results/samtools/1234N-HT1080.map_unmap.bam
-#       md5sum: 37300fea69f7c400220a03ca5854d04b
 #     - path: results/samtools/1234N-HT1080.mapped_1.fq.gz
-#       md5sum: 709872fc2910431b1e8b7074bfe38c67
 #     - path: results/samtools/1234N-HT1080.mapped_2.fq.gz
-#       md5sum: 709872fc2910431b1e8b7074bfe38c67
 #     - path: results/samtools/1234N-HT1080.mapped_other.fq.gz
-#       md5sum: 709872fc2910431b1e8b7074bfe38c67
 #     - path: results/samtools/1234N-HT1080.mapped_singleton.fq.gz
-#       md5sum: 709872fc2910431b1e8b7074bfe38c67
 #     - path: results/samtools/1234N-HT1080.unmap_map.bam
-#       md5sum: 6267d0ed8274e1fa7aad8d1e71d98696
 #     - path: results/samtools/1234N-HT1080.unmap_unmap.bam
-#       md5sum: 32ed07aa23900f5722e5983a646a5ac2
 #     - path: results/samtools/1234N-HT1080.unmapped_1.fq.gz
-#       md5sum: d9a7a279c05563a37d9a5a6938be68fb
 #     - path: results/samtools/1234N-HT1080.unmapped_2.fq.gz
-#       md5sum: afe191dcd48360f96bdb583fa60ff400
 #     - path: results/samtools/1234N-HT1080.unmapped_other.fq.gz
-#       md5sum: 709872fc2910431b1e8b7074bfe38c67
 #     - path: results/samtools/1234N-HT1080.unmapped_singleton.fq.gz
-#       md5sum: 709872fc2910431b1e8b7074bfe38c67

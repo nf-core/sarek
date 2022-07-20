@@ -581,36 +581,136 @@ This list is by no means exhaustive and it will depend on the specific analysis 
 | [Control-FREEC](https://github.com/BoevaLab/FREEC)                                                      |  x  |  x  |   x    |    -    |   x   |    x    |
 | [MSIsensorPro](https://github.com/xjtu-omics/msisensor-pro)                                             |  x  |  x  |   x    |    -    |   -   |    x    |
 
+## How to run ASCAT with WES
+
+While the ASCAT implementation in sarek is capable of running with whole-exome sequencing data, the needed references are currently not provided with the igenomes.config. According to the [developers](https://github.com/VanLoo-lab/ascat/issues/97) of ASCAT, loci and allele files (one file per chromosome) can be downloaded directly from the [Battenberg repository](https://ora.ox.ac.uk/objects/uuid:08e24957-7e76-438a-bd38-66c48008cf52).
+
+The GC correction file needs to be derived, so one has to concatenate all chromosomes into a single file and modify the header so it fits [this example](https://github.com/VanLoo-lab/ascat/tree/master/LogRcorrection#gc-correction-file-creation).
+
+The RT correction file is missing for hg38 but can be derived using [ASCAT scripts](https://github.com/VanLoo-lab/ascat/tree/master/LogRcorrection#replication-timing-correction-file-creation) for hg19. For hg38, one needs to lift-over hg38 to hg19, run the script on hg19 positions and set coordinates back to hg38.
+
+Please note that:
+
+Row names (for GC and RT correction files) should be `${chr}_${position}` (there is no SNP/probe ID for HTS data).
+ASCAT developers strongly recommend using a BED file for WES/TS data. This prevents considering SNPs covered by off-targeted reads that would add noise to log/BAF tracks.
+
+## What are the bwa/bwa-mem2 parameters?
+
+For mapping, sarek follows the parameter suggestions provided in this [paper](https://www.nature.com/articles/s41467-018-06159-4):
+
+`-K 100000000` : for deterministic pipeline results, for more info see [here](https://github.com/CCDG/Pipeline-Standardization/issues/2)
+
+`-Y`: force soft-clipping rather than default hard-clipping of supplementary alignments
+
+In addition, currently the mismatch penalty for reads with tumor status in the sample sheet are mapped with a mismatch penalty of `-B 3`.
+
+## MultiQC related issues
+
+### Plots for SnpEff are missing
+
+When plots are missing, it is possible that the fasta and the custom SnpEff database are not matching https://pcingola.github.io/SnpEff/se_faq/#error_chromosome_not_found-details.
+The SnpEff completes without throwing an error causing nextflow to complete successfully. An indication for the error are these lines in the `.command` files:
+
+```
+ERRORS: Some errors were detected
+Error type      Number of errors
+ERROR_CHROMOSOME_NOT_FOUND      17522411
+```
+
 ## How to create a panel-of-normals for Mutect2
 
 For a detailed tutorial on how to create a panel-of-normals, see [here](https://gatk.broadinstitute.org/hc/en-us/articles/360035531132).
 
-## How to run ASCAT with WES
+## Spark related issues
 
-_under construction_
+If you have problems running processes that make use of Spark such as `MarkDuplicates`.
+You are probably experiencing issues with the limit of open files in your system.
+You can check your current limit by typing the following:
 
-<!-- While the ASCAT implementation in sarek is capable of running with whole-exome sequencing data, the needed references are currently not provided with the igenomes.config. The following steps should be followed to generate them manually:
+```bash
+ulimit -n
+```
 
-1. Extracting biallelic SNPs from the vcf files for [hg19](http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/) and query the resulting vcf files:
+The default limit size is usually 1024 which is quite low to run Spark jobs.
+In order to increase the size limit permanently you can:
 
-   ```
-   bcftools view -i "((EAS_AF>0.05 && EAS_AF<0.95) || (SAS_AF>0.05 && SAS_AF<0.95) || (EUR_AF>0.05 && EUR_AF<0.95) || (AFR_AF>0.05 && AFR_AF<0.95) || (AMR_AF>0.05 && AMR_AF<0.95)) && VT=\"SNP\" && MULTI_ALLELIC=0" ALL.chr1.phase3_shapeit2_mvncall_integrated_v5b.20130502.genotypes.vcf.gz
-   |
-   bcftools query -f '%CHROM\t%POS\t%REF\t%ALT\n' - > G1000_chr1.txt
-   ```
+Edit the file `/etc/security/limits.conf` and add the lines:
 
-   gives the SNP information for chr1, hg19.
+```bash
+*     soft   nofile  65535
+*     hard   nofile  65535
+```
 
-2. Derive loci file
-3. Derive allel files
+Edit the file `/etc/sysctl.conf` and add the line:
 
-Then, you can derive both loci (just chromosome and position) and allele files (position, a0 and a1). For allele files, you don't need to specify chromosome since there is one file per chromosome and a0/a1 (ref/alt) are integers (A=1, C=2, G=3, T=4). Therefore, A>C at chr1:12345 would be 12345<tab>1<tab>2 in a file called (say) allele_chr1.txt. See reference files for WGS as an exemple.
+```bash
+fs.file-max = 65535
+```
 
-3. I've used a simple R script to sort, remove duplicates (chr-position must be unique), remove blacklisted regions (GRanges) and remove probloci (based on chr-position).
+Edit the file `/etc/sysconfig/docker` and add the new limits to OPTIONS like this:
 
-For further reading and documentation, please take a look at the Battenberg repository. -->
+```bash
+OPTIONS=”—default-ulimit nofile=65535:65535"
+```
 
-## Where do the used reference genomes originate from
+Re-start your session.
+
+Note that the way to increase the open file limit in your system may be slightly different or require additional steps.
+
+### Cannot delete work folder when using docker + Spark
+
+Currently, when running spark-based tools in combination with docker, it is required to set `docker.userEmulation = false`. This can unfortunately causes permission issues when `work/` is being written with root permissions. In case this happens, you might need to configure docker to run without `userEmulation` (see [here](https://github.com/Midnighter/nf-core-adr/blob/main/docs/adr/0008-refrain-from-using-docker-useremulation-in-nextflow.md)).
+
+## How to handle UMIs
+
+Sarek can process UMI-reads, using [fgbio](http://fulcrumgenomics.github.io/fgbio/tools/latest/) tools.
+
+In order to use reads containing UMI tags as your initial input, you need to include `--umi_read_structure [structure]` in your parameters.
+
+This will enable pre-processing of the reads and UMI consensus reads calling, which will then be used to continue the workflow from the mapping steps. For post-UMI processing depending on the experimental setup, duplicate marking and base quality recalibration can be skipped with [`--skip_tools`].
+
+### UMI Read Structure
+
+This parameter is a string, which follows a [convention](https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures) to describe the structure of the umi.
+If your reads contain a UMI only on one end, the string should only represent one structure (i.e. "2M11S+T"); should your reads contain a UMI on both ends, the string will contain two structures separated by a blank space (i.e. "2M11S+T 2M11S+T").
+
+### Limitations and future updates
+
+Recent updates to Samtools have been introduced, which can speed-up performance of fgbio tools used in this workflow.
+The current workflow does not handle duplex UMIs (i.e. where opposite strands of a duplex molecule have been tagged with a different UMI), and best practices have been proposed to process this type of data.
+Both changes will be implemented in a future release.
+
+## How to run sarek when no(t all) reference files are in igenomes
+
+For common genomes, such as GRCh38 and GRCh37, the pipeline is shipped with (almost) all necessary reference files. However, sometimes it is necessary to use custom references for some or all files:
+
+### No igenomes reference files are used
+
+If none of your required genome files are in igenomes, `--igenomes_ignore` must be set to ignore any igenomes input and `--genome null`. The `fasta` file is the only required input file and must be provided to run the pipeline. All other possible reference file can be provided in addition. For details, see the paramter documentation.
+
+Minimal example for custom genomes:
+
+```
+nextflow run nf-core/sarek --genome null --igenomes_ignore --fasta <custom.fasta>
+```
+
+### Overwrite specific reference files
+
+If you don't want to use some of the provided reference genomes, they can be overwritten by either providing a new file or setting the respective file parameter to `false`, if it should be ignored:
+
+Example for using a custom known indels file:
+
+```
+nextflow run nf-core/sarek --known_indels <my_known_indels.vcf.gz> --genome GRCh38.GATK
+```
+
+Example for not using known indels, but all other provided reference file:
+
+```
+nextflow run nf-core/sarek --known_indels false --genome GRCh38.GATK
+```
+
+### Where do the used reference genomes originate from
 
 _under construction - help needed_
 
@@ -643,36 +743,6 @@ GATK.GRCh38:
 | vep_cache_version     |                                                                                                                                                                                                                                                                                                                                                                                                                                                      | 105                                                                                                                                                                                     |                                                                                      |
 | vep_genome            |                                                                                                                                                                                                                                                                                                                                                                                                                                                      | 'GRCh38'                                                                                                                                                                                |                                                                                      |
 | chr_dir               |                                                                                                                                                                                                                                                                                                                                                                                                                                                      | "${params.igenomes_base}/Homo_sapiens/GATK/GRCh38/Sequence/Chromosomes"                                                                                                                 |                                                                                      |
-
-## How to run sarek when no(t all) reference files are in igenomes
-
-For common genomes, such as GRCh38 and GRCh37, the pipeline is shipped with (almost) all necessary reference files. However, sometimes it is necessary to use custom references for some or all files:
-
-### No igenomes reference files are used
-
-If none of your required genome files are in igenomes, `--igenomes_ignore` must be set to ignore any igenomes input and `--genome null`. The `fasta` file is the only required input file and must be provided to run the pipeline. All other possible reference file can be provided in addition. For details, see the paramter documentation.
-
-Minimal example for custom genomes:
-
-```
-nextflow run nf-core/sarek --genome null --igenomes_ignore --fasta <custom.fasta>
-```
-
-### Overwrite specific reference files
-
-If you don't want to use some of the provided reference genomes, they can be overwritten by either providing a new file or setting the respective file parameter to `false`, if it should be ignored:
-
-Example for using a custom known indels file:
-
-```
-nextflow run nf-core/sarek --known_indels <my_known_indels.vcf.gz> --genome GRCh38.GATK
-```
-
-Example for not using known indels, but all other provided reference file:
-
-```
-nextflow run nf-core/sarek --known_indels false --genome GRCh38.GATK
-```
 
 ## How to customise SnpEff and VEP annotation
 
@@ -769,87 +839,10 @@ nextflow run download_cache.nf --cadd_cache </path/to/CADD/cache> --cadd_version
 
 #### SpliceRegions
 
-## What are the bwa/bwa-mem2 parameters?
+## Requested resources for the tools
 
-For mapping, sarek follows the parameter suggestions provided in this [paper](https://www.nature.com/articles/s41467-018-06159-4):
-
-`-K 100000000` : for deterministic pipeline results, for more info see [here](https://github.com/CCDG/Pipeline-Standardization/issues/2)
-
-`-Y`: force soft-clipping rather than default hard-clipping of supplementary alignments
-
-In addition, currently the mismatch penalty for reads with tumor status in the sample sheet are mapped with a mismatch penalty of `-B 3`.
-
-## Spark related issues
-
-If you have problems running processes that make use of Spark such as `MarkDuplicates`.
-You are probably experiencing issues with the limit of open files in your system.
-You can check your current limit by typing the following:
-
-```bash
-ulimit -n
-```
-
-The default limit size is usually 1024 which is quite low to run Spark jobs.
-In order to increase the size limit permanently you can:
-
-Edit the file `/etc/security/limits.conf` and add the lines:
-
-```bash
-*     soft   nofile  65535
-*     hard   nofile  65535
-```
-
-Edit the file `/etc/sysctl.conf` and add the line:
-
-```bash
-fs.file-max = 65535
-```
-
-Edit the file `/etc/sysconfig/docker` and add the new limits to OPTIONS like this:
-
-```bash
-OPTIONS=”—default-ulimit nofile=65535:65535"
-```
-
-Re-start your session.
-
-Note that the way to increase the open file limit in your system may be slightly different or require additional steps.
-
-### Cannot delete work folder when using docker + Spark
-
-Currently, when running spark-based tools in combination with docker, it is required to set `docker.userEmulation = false`. This can unfortunately causes permission issues when `work/` is being written with root permissions. In case this happens, you might need to configure docker to run without `userEmulation` (see [here](https://github.com/Midnighter/nf-core-adr/blob/main/docs/adr/0008-refrain-from-using-docker-useremulation-in-nextflow.md)).
-
-## How to handle UMIs
-
-Sarek can process UMI-reads, using [fgbio](http://fulcrumgenomics.github.io/fgbio/tools/latest/) tools.
-
-In order to use reads containing UMI tags as your initial input, you need to include `--umi_read_structure [structure]` in your parameters.
-
-This will enable pre-processing of the reads and UMI consensus reads calling, which will then be used to continue the workflow from the mapping steps. For post-UMI processing depending on the experimental setup, duplicate marking and base quality recalibration can be skipped with [`--skip_tools`].
-
-### UMI Read Structure
-
-This parameter is a string, which follows a [convention](https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures) to describe the structure of the umi.
-If your reads contain a UMI only on one end, the string should only represent one structure (i.e. "2M11S+T"); should your reads contain a UMI on both ends, the string will contain two structures separated by a blank space (i.e. "2M11S+T 2M11S+T").
-
-### Limitations and future updates
-
-Recent updates to Samtools have been introduced, which can speed-up performance of fgbio tools used in this workflow.
-The current workflow does not handle duplex UMIs (i.e. where opposite strands of a duplex molecule have been tagged with a different UMI), and best practices have been proposed to process this type of data.
-Both changes will be implemented in a future release.
-
-## MultiQC related issues
-
-### Plots for SnpEff are missing
-
-When plots are missing, it is possible that the fasta and the custom SnpEff database are not matching https://pcingola.github.io/SnpEff/se_faq/#error_chromosome_not_found-details.
-The SnpEff completes without throwing an error causing nextflow to complete successfully. An indication for the error are these lines in the `.command` files:
-
-```
-ERRORS: Some errors were detected
-Error type      Number of errors
-ERROR_CHROMOSOME_NOT_FOUND      17522411
-```
+Resource requests are difficult to generalize and are often dependent on input data size. Currently, the number of cpus and memory requested by default were adapted from tests on 5 ICGC paired whole-genome sequencing samples with approximately 40X and 80X depth.
+For targeted data analysis, this is overshooting by a lot. In this case resources for each process can be limited by either setting `--max_memory` and `-max_cpus` or tailoring the request by process name as described [here](#resource-requests). If you are using sarek for a certain data type regulary, and would like to make these requests available to others on your system, an institution-specific, pipeline-specific config file can be added [here](https://github.com/nf-core/configs/tree/master/conf/pipeline/sarek).
 
 ## How to set sarek up to use sentieon
 
