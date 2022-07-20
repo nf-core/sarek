@@ -34,6 +34,6 @@ output:
   - vcf:
       type: file
       description: merged VCF file
-      pattern: "*_sv_merge.vcf"
+      pattern: "*_sv_merge.vcf.gz"
 authors:
   - "@ramprasadn"
