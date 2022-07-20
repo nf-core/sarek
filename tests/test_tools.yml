@@ -239,7 +239,7 @@
 #     - path: results/variant_calling/freebayes/sample2/sample2.freebayes.vcf.gz.tbi
 
 - name: Run variant calling on germline sample with haplotypecaller
-  command: nextflow run main.nf -profile test,targeted,docker --input ./tests/csv/3.0/mapped_single_bam.csv --tools haplotypecaller  --step variant_calling
+  command: nextflow run main.nf -profile test,targeted,docker --input ./tests/csv/3.0/mapped_joint_bam.csv --tools haplotypecaller  --step variant_calling
   tags:
     - germline
     - haplotypecaller
@@ -256,7 +256,7 @@
     - path: results/variant_calling/haplotypecaller/test1/test1.haplotypecaller.filtered.vcf.gz.tbi
 
 - name: Run variant calling on germline sample with haplotypecaller without intervals
-  command: nextflow run main.nf -profile test,docker --input ./tests/csv/3.0/mapped_single_bam.csv --tools haplotypecaller  --step variant_calling --no_intervals
+  command: nextflow run main.nf -profile test,docker --input ./tests/csv/3.0/mapped_joint_bam.csv --tools haplotypecaller  --step variant_calling --no_intervals
   tags:
     - germline
     - haplotypecaller
@@ -274,7 +274,7 @@
     - path: results/variant_calling/haplotypecaller/test1/test1.haplotypecaller.filtered.vcf.gz.tbi
 
 - name: Run joint germline variant calling with haplotypecaller
-  command: nextflow run main.nf -profile test,targeted,docker --input ./tests/csv/3.0/mapped_single_bam.csv --tools haplotypecaller --joint_germline true --step variant_calling
+  command: nextflow run main.nf -profile test,targeted,docker --input ./tests/csv/3.0/mapped_joint_bam.csv --tools haplotypecaller --joint_germline true --step variant_calling
   tags:
     - germline
     - haplotypecaller
