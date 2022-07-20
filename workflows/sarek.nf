@@ -209,6 +209,9 @@ include { PREPARE_GENOME                                       } from '../subwor
 // Build intervals if needed
 include { PREPARE_INTERVALS                                    } from '../subworkflows/local/prepare_intervals'
 
+// Build CNVkit reference if needed
+include { PREPARE_CNVKIT_REFERENCE                             } from '../subworkflows/local/prepare_cnvkit_reference'
+
 // Convert BAM files to FASTQ files
 include { ALIGNMENT_TO_FASTQ as ALIGNMENT_TO_FASTQ_INPUT       } from '../subworkflows/nf-core/alignment_to_fastq'
 include { ALIGNMENT_TO_FASTQ as ALIGNMENT_TO_FASTQ_UMI         } from '../subworkflows/nf-core/alignment_to_fastq'
@@ -304,15 +307,6 @@ workflow SAREK {
     // To gather used softwares versions for MultiQC
     ch_versions = Channel.empty()
 
-    // Build intervals if needed
-    PREPARE_INTERVALS(fasta_fai)
-
-    // Intervals for speed up preprocessing/variant calling by spread/gather
-    intervals_bed_combined      = params.no_intervals ? Channel.value([]) : PREPARE_INTERVALS.out.intervals_bed_combined  // [interval.bed] all intervals in one file
-    intervals_for_preprocessing = params.wes ? intervals_bed_combined : []      // For QC during preprocessing, we don't need any intervals (MOSDEPTH doesn't take them for WGS)
-
-    intervals                   = PREPARE_INTERVALS.out.intervals_bed        // [interval, num_intervals] multiple interval.bed files, divided by useful intervals for scatter/gather
-    intervals_bed_gz_tbi        = PREPARE_INTERVALS.out.intervals_bed_gz_tbi // [interval_bed, tbi, num_intervals] multiple interval.bed.gz/.tbi files, divided by useful intervals for scatter/gather
 
     // Build indices if needed
     PREPARE_GENOME(
@@ -325,7 +319,6 @@ workflow SAREK {
         fasta,
         fasta_fai,
         germline_resource,
-        intervals_bed_combined,
         known_indels,
         known_snps,
         pon)
@@ -335,7 +328,6 @@ workflow SAREK {
     bwa                    = params.fasta                   ? params.bwa                        ? Channel.fromPath(params.bwa).collect()                   : PREPARE_GENOME.out.bwa                   : []
     bwamem2                = params.fasta                   ? params.bwamem2                    ? Channel.fromPath(params.bwamem2).collect()               : PREPARE_GENOME.out.bwamem2               : []
     chr_files              = PREPARE_GENOME.out.chr_files
-    cnvkit_reference       = params.tools && params.tools.split(',').contains('cnvkit')         ? PREPARE_GENOME.out.cnvkit_reference                      : Channel.empty()
     dragmap                = params.fasta                   ? params.dragmap                    ? Channel.fromPath(params.dragmap).collect()               : PREPARE_GENOME.out.hashtable             : []
     dict                   = params.fasta                   ? params.dict                       ? Channel.fromPath(params.dict).collect()                  : PREPARE_GENOME.out.dict                  : []
     fasta_fai              = params.fasta                   ? params.fasta_fai                  ? Channel.fromPath(params.fasta_fai).collect()             : PREPARE_GENOME.out.fasta_fai             : []
@@ -362,9 +354,24 @@ workflow SAREK {
     known_sites_snps     = dbsnp.concat(known_snps).collect()
     known_sites_snps_tbi = dbsnp_tbi.concat(known_snps_tbi).collect()
 
+     // Build intervals if needed
+    PREPARE_INTERVALS(fasta_fai)
+
+    // Intervals for speed up preprocessing/variant calling by spread/gather
+    intervals_bed_combined      = params.no_intervals ? Channel.value([])      : PREPARE_INTERVALS.out.intervals_bed_combined  // [interval.bed] all intervals in one file
+    intervals_for_preprocessing = params.wes          ? intervals_bed_combined : []      // For QC during preprocessing, we don't need any intervals (MOSDEPTH doesn't take them for WGS)
+
+    intervals                   = PREPARE_INTERVALS.out.intervals_bed        // [interval, num_intervals] multiple interval.bed files, divided by useful intervals for scatter/gather
+    intervals_bed_gz_tbi        = PREPARE_INTERVALS.out.intervals_bed_gz_tbi // [interval_bed, tbi, num_intervals] multiple interval.bed.gz/.tbi files, divided by useful intervals for scatter/gather
+
     // Gather used softwares versions
     ch_versions = ch_versions.mix(PREPARE_GENOME.out.versions)
     ch_versions = ch_versions.mix(PREPARE_INTERVALS.out.versions)
+
+     // Antitarget based reference for CNVKit
+    PREPARE_CNVKIT_REFERENCE(fasta, intervals_bed_combined)
+    cnvkit_reference            = params.tools && params.tools.split(',').contains('cnvkit') ? PREPARE_CNVKIT_REFERENCE.out.cnvkit_reference : Channel.empty()
+    ch_versions = ch_versions.mix(PREPARE_CNVKIT_REFERENCE.out.versions)
 
     // PREPROCESSING
 
@@ -507,18 +514,14 @@ workflow SAREK {
         ch_bam_for_markduplicates = Channel.empty()
         ch_input_cram_indexed     = Channel.empty()
 
-        if(params.step == 'mapping'){
-
-            ch_bam_for_markduplicates = ch_bam_mapped
-
-        }else{
-
-            ch_input_sample.map{ meta, input, index -> [meta, input, index] }.branch{
+        if (params.step == 'mapping') ch_bam_for_markduplicates = ch_bam_mapped
+        else {
+            ch_input_sample.branch{
                 bam:  it[0].data_type == "bam"
                 cram: it[0].data_type == "cram"
             }.set{convert}
 
-            ch_bam_for_markduplicates = ch_bam_for_markduplicates.mix(convert.bam)
+            ch_bam_for_markduplicates = convert.bam.map{ meta, bam, bai -> [meta, bam]}
 
             //In case Markduplicates is run convert CRAM files to BAM, because the tool only runs on BAM files. MD_SPARK does run on CRAM but is a lot slower
             if (!(params.skip_tools && params.skip_tools.split(',').contains('markduplicates'))){
@@ -527,7 +530,7 @@ workflow SAREK {
                 ch_versions = ch_versions.mix(SAMTOOLS_CRAMTOBAM.out.versions)
 
                 ch_bam_for_markduplicates = ch_bam_for_markduplicates.mix(SAMTOOLS_CRAMTOBAM.out.alignment_index.map{ meta, bam, bai -> [meta, bam]})
-            }else{
+            } else {
                 ch_input_cram_indexed     = convert.cram
             }
         }
@@ -545,7 +548,7 @@ workflow SAREK {
                 fasta_fai,
                 intervals_for_preprocessing)
 
-            ch_cram_no_markduplicates_restart = Channel.empty().mix(BAM_TO_CRAM.out.cram_converted)
+            ch_cram_no_markduplicates_restart = BAM_TO_CRAM.out.cram_converted
 
             // Gather QC reports
             ch_reports  = ch_reports.mix(BAM_TO_CRAM.out.qc.collect{it[1]}.ifEmpty([]))
@@ -596,7 +599,7 @@ workflow SAREK {
         csv_markduplicates = ch_md_cram_for_restart
 
         // Create CSV to restart from this step
-        MARKDUPLICATES_CSV(csv_markduplicates)
+        if (!(params.skip_tools && params.skip_tools.split(',').contains('markduplicates'))) MARKDUPLICATES_CSV(csv_markduplicates)
     }
 
     if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration']) {
@@ -675,7 +678,7 @@ workflow SAREK {
             ch_cram_applybqsr = ch_cram_for_prepare_recalibration.join(ch_table_bqsr)
 
             // Create CSV to restart from this step
-            PREPARE_RECALIBRATION_CSV(ch_md_cram_for_restart.join(ch_table_bqsr))
+            PREPARE_RECALIBRATION_CSV(ch_md_cram_for_restart.join(ch_table_bqsr), params.skip_tools)
         }
     }
 
@@ -766,7 +769,7 @@ workflow SAREK {
             // - input crams if started from step recal + skip BQSR
             cram_variant_calling = Channel.empty().mix(SAMTOOLS_BAMTOCRAM.out.alignment_index,
                                                         convert.cram.map{ meta, cram, crai, table -> [meta, cram, crai]})
-        } else{
+        } else {
             // ch_cram_variant_calling contains either:
             // - crams from markduplicates = ch_cram_for_prepare_recalibration if skip BQSR but not started from step recalibration
             cram_variant_calling = Channel.empty().mix(ch_cram_for_prepare_recalibration)
@@ -992,13 +995,12 @@ workflow SAREK {
         ch_workflow_summary = Channel.value(workflow_summary)
 
         ch_multiqc_files =  Channel.empty().mix(ch_version_yaml,
-                                            Channel.from(ch_multiqc_config),
-                                            ch_multiqc_custom_config.collect().ifEmpty([]),
                                             ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'),
-                                            ch_reports.collect()
-                                            )
+                                            ch_reports.collect())
 
-        MULTIQC(ch_multiqc_files.collect(), ch_multiqc_config)
+        ch_multiqc_configs = Channel.from(ch_multiqc_config).mix(ch_multiqc_custom_config).ifEmpty([])
+
+        MULTIQC(ch_multiqc_files.collect(), ch_multiqc_configs.collect())
         multiqc_report = MULTIQC.out.report.toList()
     }
 }

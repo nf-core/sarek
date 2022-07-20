@@ -4,6 +4,9 @@
     - trimming
     - preprocessing
   files:
+    - path: results/csv/markduplicates.csv
+    - path: results/csv/markduplicates_no_table.csv
+    - path: results/csv/recalibrated.csv
     - path: results/multiqc
     - path: results/preprocessing/fastp/test/test-test_L1_1.fastp.fastq.gz
     - path: results/preprocessing/fastp/test/test-test_L1_2.fastp.fastq.gz
@@ -12,18 +15,18 @@
     - path: results/preprocessing/recal_table/test/test.recal.table
     - path: results/preprocessing/recalibrated/test/test.recal.cram
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
-    - path: results/csv/markduplicates.csv
-    - path: results/csv/markduplicates_no_table.csv
-    - path: results/csv/recalibrated.csv
+    - path: results/reports/fastp/test
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.metrics
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
-    - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
     - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
     - path: results/reports/mosdepth/test/test.md.regions.bed.gz
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz.csi
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
-    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
     - path: results/reports/samtools/test/test.md.cram.stats
     - path: results/reports/samtools/test/test.recal.cram.stats

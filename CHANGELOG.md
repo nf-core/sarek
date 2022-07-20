@@ -96,9 +96,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#644](https://github.com/nf-core/sarek/pull/644) - Use `-Y` for `bwa-mem(2)` and remove `-M`
 - [#645](https://github.com/nf-core/sarek/pull/645) - Merge `tests/nextflow.config` in `conf/test.config`
 - [#646](https://github.com/nf-core/sarek/pull/646) - Update `nextflow_schema.json` to reflect new parameters and functions, removes `--annotation_cache`, removes `--ascat_chromosomes`
+- [#649](https://github.com/nf-core/sarek/pull/649) - Update, simplify and add more files to all `test_*.yml` files
 - [#651](https://github.com/nf-core/sarek/pull/651) - Added TIDDIT_SOMATIC subworkflow
 - [#653](https://github.com/nf-core/sarek/pull/653) - Coherent results subfolder structure between preprocessing, variantcalling and reporting
 - [#659](https://github.com/nf-core/sarek/pull/659) - Update usage.md docu section on `How to run ASCAT with WES`
+- [#663](https://github.com/nf-core/sarek/pull/663) - Add separate parameters for `ASCAT` and `ControlFREEC` back in
 
 ### Fixed
 
@@ -148,6 +150,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#642](https://github.com/nf-core/sarek/pull/642) - Only unzip ref files if tool is run, only publish ref files if `--save_reference` and simplify CNKit logic
 - [#650](https://github.com/nf-core/sarek/pull/650) - Fix intervals checks
 - [#654](https://github.com/nf-core/sarek/pull/654) - Allow any step but annotation to start from BAM files
+- [#655](https://github.com/nf-core/sarek/pull/655) - Fix `--intervals false` logic & add versioning for local modules
+- [#658](https://github.com/nf-core/sarek/pull/658) - Fix split fastq names in multiqc-report
+- [#666](https://github.com/nf-core/sarek/pull/666) - Simplify multiqc config channel input
 
 ### Deprecated
 

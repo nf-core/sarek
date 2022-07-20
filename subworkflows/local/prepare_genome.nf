@@ -10,8 +10,6 @@
 
 include { BWA_INDEX as BWAMEM1_INDEX             } from '../../modules/nf-core/modules/bwa/index/main'
 include { BWAMEM2_INDEX                          } from '../../modules/nf-core/modules/bwamem2/index/main'
-include {CNVKIT_ANTITARGET                       } from '../../modules/nf-core/modules/cnvkit/antitarget/main'
-include {CNVKIT_REFERENCE                        } from '../../modules/nf-core/modules/cnvkit/reference/main'
 include { DRAGMAP_HASHTABLE                      } from '../../modules/nf-core/modules/dragmap/hashtable/main'
 include { GATK4_CREATESEQUENCEDICTIONARY         } from '../../modules/nf-core/modules/gatk4/createsequencedictionary/main'
 include { MSISENSORPRO_SCAN                      } from '../../modules/nf-core/modules/msisensorpro/scan/main'
@@ -38,7 +36,6 @@ workflow PREPARE_GENOME {
         fasta                   // channel: [mandatory] fasta
         fasta_fai               // channel: [optional]  fasta_fai
         germline_resource       // channel: [optional]  germline_resource
-        intervals_bed_combined  // channel: []
         known_indels            // channel: [optional]  known_indels
         known_snps
         pon                     // channel: [optional]  pon
@@ -65,10 +62,6 @@ workflow PREPARE_GENOME {
     TABIX_KNOWN_SNPS( known_snps.flatten().map{ it -> [[id:it.baseName], it] } )
     TABIX_KNOWN_INDELS( known_indels.flatten().map{ it -> [[id:it.baseName], it] } )
     TABIX_PON(pon.flatten().map{ it -> [[id:it.baseName], it] })
-
-    // prepare a reference for tumor_only mode based on target_baits
-    CNVKIT_ANTITARGET(intervals_bed_combined.flatten().map{ it -> [[id:it[0].baseName], it] })
-    CNVKIT_REFERENCE(fasta, intervals_bed_combined, CNVKIT_ANTITARGET.out.bed.map{ meta, bed -> [bed]} )
 
     // prepare ascat reference files
     allele_files = ascat_alleles
@@ -109,8 +102,6 @@ workflow PREPARE_GENOME {
     ch_versions = ch_versions.mix(SAMTOOLS_FAIDX.out.versions)
     ch_versions = ch_versions.mix(BWAMEM1_INDEX.out.versions)
     ch_versions = ch_versions.mix(BWAMEM2_INDEX.out.versions)
-    ch_versions = ch_versions.mix(CNVKIT_ANTITARGET.out.versions)
-    ch_versions = ch_versions.mix(CNVKIT_REFERENCE.out.versions)
     ch_versions = ch_versions.mix(GATK4_CREATESEQUENCEDICTIONARY.out.versions)
     ch_versions = ch_versions.mix(MSISENSORPRO_SCAN.out.versions)
     ch_versions = ch_versions.mix(TABIX_DBSNP.out.versions)
@@ -132,7 +123,6 @@ workflow PREPARE_GENOME {
         msisensorpro_scan                = MSISENSORPRO_SCAN.out.list.map{ meta, list -> [list] }              // path: genome_msi.list
         pon_tbi                          = TABIX_PON.out.tbi.map{ meta, tbi -> [tbi] }.collect()               // path: pon.vcf.gz.tbi
         chr_files                        = chr_files
-        cnvkit_reference                 = CNVKIT_REFERENCE.out.cnn
         allele_files                     = allele_files
         loci_files                       = loci_files
         gc_file                          = gc_file
