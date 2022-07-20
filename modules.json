@@ -223,7 +223,7 @@
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             },
             "svdb/merge": {
-                "git_sha": "8214b737004879e5c84081f8fcd00bb2203c68cb"
+                "git_sha": "6b011dd14821385c282e030c6d993d2116aed23f"
             },
             "tabix/bgziptabix": {
                 "git_sha": "9dbaffff88013bc21460a989cde7a5aa172c2e0b"
