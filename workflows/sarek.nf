@@ -867,7 +867,7 @@ workflow SAREK {
             fasta_fai,
             intervals,
             intervals_bed_gz_tbi,
-            intervals_bed_combined,
+            intervals_bed_combined, // [] if no_intervals, else interval_bed_combined.bed
             PREPARE_INTERVALS.out.intervals_bed_combined, // no_intervals.bed if no intervals, else interval_bed_combined.bed; Channel operations possible
             known_sites_indels,
             known_sites_indels_tbi,
@@ -955,7 +955,6 @@ workflow SAREK {
         ch_reports  = ch_reports.mix(VCF_QC.out.vcftools_tstv_qual.collect{it[1]}.ifEmpty([]))
         ch_reports  = ch_reports.mix(VCF_QC.out.vcftools_filter_summary.collect{it[1]}.ifEmpty([]))
 
-        vcf_to_annotate.dump(tag:"vcf")
         VARIANTCALLING_CSV(vcf_to_annotate)
 
 

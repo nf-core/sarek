@@ -49,9 +49,9 @@ workflow RUN_HAPLOTYPECALLER {
                                      [ meta, vcf, tbi, intervals ]
                                      })
         // make channels from labels
-            dbsnp_vqsr        = params.dbsnp_vqsr        ? Channel.value(params.dbsnp_vqsr)        : Channel.empty()
-            known_indels_vqsr = params.known_indels_vqsr ? Channel.value(params.known_indels_vqsr) : Channel.empty()
-            known_snps_vqsr   = params.known_snps_vqsr   ? Channel.value(params.known_snps_vqsr)   : Channel.empty()
+        dbsnp_vqsr        = params.dbsnp_vqsr        ? Channel.value(params.dbsnp_vqsr)        : Channel.empty()
+        known_indels_vqsr = params.known_indels_vqsr ? Channel.value(params.known_indels_vqsr) : Channel.empty()
+        known_snps_vqsr   = params.known_snps_vqsr   ? Channel.value(params.known_snps_vqsr)   : Channel.empty()
 
 
         JOINT_GERMLINE(
@@ -69,7 +69,7 @@ workflow RUN_HAPLOTYPECALLER {
              known_sites_snps_tbi,
              known_snps_vqsr)
 
-filtered_vcf = JOINT_GERMLINE.out.genotype_vcf.map{ meta, vcf-> [[id:"joint_germline", variantcaller:"haplotypecaller"], vcf]}
+        filtered_vcf = JOINT_GERMLINE.out.genotype_vcf
         ch_versions = ch_versions.mix(JOINT_GERMLINE.out.versions)
     } else {
         // Only when using intervals

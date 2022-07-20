@@ -70,8 +70,12 @@ workflow GATK_JOINT_GERMLINE_VARIANT_CALLING {
     }
     // Index vcf files if no scatter/gather by intervals
     TABIX(vcfs_sorted_input.no_intervals)
-    // Merge scatter/gather vcfs & index
-    MERGE_GENOTYPEGVCFS(vcfs_sorted_input.intervals.groupTuple(),dict)
+
+    //Merge scatter/gather vcfs & index
+    //Rework meta for variantscalled.csv and annotation tools
+    MERGE_GENOTYPEGVCFS(vcfs_sorted_input.intervals.map{meta, vcf ->
+         [[id: "joint_variant_calling", patient: "all_samples", variantcaller: "haplotypecaller", num_intervals: meta.num_intervals], vcf]
+        }.groupTuple(),dict)
     vqsr_input = Channel.empty().mix(
         MERGE_GENOTYPEGVCFS.out.vcf.join(MERGE_GENOTYPEGVCFS.out.tbi), 
         vcfs_sorted_input.no_intervals.join(TABIX.out.tbi)
@@ -104,13 +108,31 @@ workflow GATK_JOINT_GERMLINE_VARIANT_CALLING {
     //Prepare SNP and INDEL separately for ApplyVQSR
     //
 
+    //Join results of variant recalibration into a single channel tuple
+    //Rework meta for variantscalled.csv and annotation tools
     vqsr_input_snp   = vqsr_input.join( VARIANTRECALIBRATOR_SNP.out.recal).join(
                                         VARIANTRECALIBRATOR_SNP.out.idx).join(
-                                        VARIANTRECALIBRATOR_SNP.out.tranches)
+                                        VARIANTRECALIBRATOR_SNP.out.tranches).map{ meta, vcf, tbi, recal, index, tranche ->
+                                            new_meta = [id: "recalibrated_joint_variant_calling",
+                                                        patient: "all_samples",
+                                                        variantcaller: "haplotypecaller",
+                                                        num_intervals: meta.num_intervals]
 
+                                            [new_meta, vcf, tbi, recal, index, tranche]
+                                        }
+
+    //Join results of variant recalibration into a single channel tuple
+    //Rework meta for variantscalled.csv and annotation tools
     vqsr_input_indel = vqsr_input.join( VARIANTRECALIBRATOR_INDEL.out.recal).join(
                                         VARIANTRECALIBRATOR_INDEL.out.idx).join(
-                                        VARIANTRECALIBRATOR_INDEL.out.tranches)
+                                        VARIANTRECALIBRATOR_INDEL.out.tranches).map{ meta, vcf, tbi, recal, index, tranche ->
+                                            new_meta = [id: "recalibrated_joint_variant_calling",
+                                                        patient: "all_samples",
+                                                        variantcaller: "haplotypecaller",
+                                                        num_intervals: meta.num_intervals]
+
+                                            [new_meta, vcf, tbi, recal, index, tranche]
+                                        }
 
     GATK4_APPLYVQSR_SNP(vqsr_input_snp,
                         fasta,
