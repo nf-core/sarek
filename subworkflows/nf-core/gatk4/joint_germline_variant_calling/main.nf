@@ -2,7 +2,6 @@
 // merge samples with genomicsdbimport, perform joint genotyping with genotypeGVCFS
 include { BCFTOOLS_SORT                                         } from '../../../../modules/nf-core/modules/bcftools/sort/main'
 include { TABIX_TABIX as TABIX                                  } from '../../../../modules/nf-core/modules/tabix/tabix/main'
-
 include { GATK4_GENOMICSDBIMPORT                                } from '../../../../modules/nf-core/modules/gatk4/genomicsdbimport/main'
 include { GATK4_GENOTYPEGVCFS                                   } from '../../../../modules/nf-core/modules/gatk4/genotypegvcfs/main'
 include { GATK4_MERGEVCFS as MERGE_GENOTYPEGVCFS                } from '../../../../modules/nf-core/modules/gatk4/mergevcfs/main'
