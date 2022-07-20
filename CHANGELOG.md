@@ -155,8 +155,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#655](https://github.com/nf-core/sarek/pull/655) - Fix `--intervals false` logic & add versioning for local modules
 - [#658](https://github.com/nf-core/sarek/pull/658) - Fix split fastq names in multiqc-report
 - [#666](https://github.com/nf-core/sarek/pull/666) - Simplify multiqc config channel input
-- [#666](https://github.com/nf-core/sarek/pull/666) - Simplify multiqc config channel input
 - [#668](https://github.com/nf-core/sarek/pull/668) - Add `snpeff_version` and `vep_version` to `schema_ignore_params` to avoid issue when specifying on command line
+- [#669](https://github.com/nf-core/sarek/pull/669) - Fix path to files when creating csv files
 
 ### Deprecated
 
