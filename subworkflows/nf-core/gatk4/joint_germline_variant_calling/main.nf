@@ -1,13 +1,15 @@
 //
 // merge samples with genomicsdbimport, perform joint genotyping with genotypeGVCFS
-include { BCFTOOLS_SORT }                          from '../../../../modules/nf-core/modules/bcftools/sort/main'
-include { GATK4_GENOMICSDBIMPORT }                 from '../../../../modules/nf-core/modules/gatk4/genomicsdbimport/main'
-include { GATK4_GENOTYPEGVCFS }                    from '../../../../modules/nf-core/modules/gatk4/genotypegvcfs/main'
-include { GATK4_MERGEVCFS as MERGE_GENOTYPEGVCFS } from '../../../../modules/nf-core/modules/gatk4/mergevcfs/main'
-include { GATK4_MERGEVCFS as MERGE_VQSR }          from '../../../../modules/nf-core/modules/gatk4/mergevcfs/main'
-include { GATK4_VARIANTRECALIBRATOR as VARIANTRECALIBRATOR_SNP }  from '../../../../modules/nf-core/modules/gatk4/variantrecalibrator/main'
-include { GATK4_APPLYVQSR as GATK4_APPLYVQSR_SNP } from '../../../../modules/nf-core/modules/gatk4/applyvqsr/main'
-include { GATK4_APPLYVQSR as GATK4_APPLYVQSR_INDEL } from '../../../../modules/nf-core/modules/gatk4/applyvqsr/main'
+include { BCFTOOLS_SORT                                         } from '../../../../modules/nf-core/modules/bcftools/sort/main'
+include { TABIX_TABIX as TABIX                                  } from '../../../../modules/nf-core/modules/tabix/tabix/main'
+
+include { GATK4_GENOMICSDBIMPORT                                } from '../../../../modules/nf-core/modules/gatk4/genomicsdbimport/main'
+include { GATK4_GENOTYPEGVCFS                                   } from '../../../../modules/nf-core/modules/gatk4/genotypegvcfs/main'
+include { GATK4_MERGEVCFS as MERGE_GENOTYPEGVCFS                } from '../../../../modules/nf-core/modules/gatk4/mergevcfs/main'
+include { GATK4_MERGEVCFS as MERGE_VQSR                         } from '../../../../modules/nf-core/modules/gatk4/mergevcfs/main'
+include { GATK4_VARIANTRECALIBRATOR as VARIANTRECALIBRATOR_SNP  } from '../../../../modules/nf-core/modules/gatk4/variantrecalibrator/main'
+include { GATK4_APPLYVQSR as GATK4_APPLYVQSR_SNP                } from '../../../../modules/nf-core/modules/gatk4/applyvqsr/main'
+include { GATK4_APPLYVQSR as GATK4_APPLYVQSR_INDEL              } from '../../../../modules/nf-core/modules/gatk4/applyvqsr/main'
 include { GATK4_VARIANTRECALIBRATOR as VARIANTRECALIBRATOR_INDEL} from '../../../../modules/nf-core/modules/gatk4/variantrecalibrator/main'
 
 workflow GATK_JOINT_GERMLINE_VARIANT_CALLING {
@@ -32,6 +34,7 @@ workflow GATK_JOINT_GERMLINE_VARIANT_CALLING {
     //
     //Map input for GenomicsDBImport.
     //rename based on num_intervals, group all samples by their interval_name/interval_file and restructure for channel
+    //group by 0,3 to avoid a list of metas and make sure that any intervals
     //
     gendb_input = input.map{
         meta, gvcf, tbi, intervals->
@@ -41,8 +44,7 @@ workflow GATK_JOINT_GERMLINE_VARIANT_CALLING {
                        ]
             [ new_meta, gvcf, tbi, intervals ]
         }.groupTuple(by:[0,3]).map{ new_meta, gvcf, tbi, intervals ->
-            interval_file = new_meta.num_intervals > 1 ? intervals : params.intervals
-            [ new_meta, gvcf, tbi, interval_file, [], [] ] }
+            [ new_meta, gvcf, tbi, intervals, [], [] ] }
 
     //
     //Convert all sample vcfs into a genomicsdb workspace using genomicsdbimport.
@@ -53,7 +55,6 @@ workflow GATK_JOINT_GERMLINE_VARIANT_CALLING {
         meta, genomicsdb ->
             [meta, genomicsdb, [], [], []]
         }
-    ch_versions = ch_versions.mix(GATK4_GENOMICSDBIMPORT.out.versions)
 
     //
     //Joint genotyping performed using GenotypeGVCFs
@@ -62,15 +63,19 @@ workflow GATK_JOINT_GERMLINE_VARIANT_CALLING {
 
     vcfs = GATK4_GENOTYPEGVCFS ( genotype_input, fasta, fai, dict, dbsnp, dbsnp_tbi).vcf
 
-    vcfs_sorted_input = BCFTOOLS_SORT(vcfs).vcf
-    merge_vcfs_sorted_input = vcfs_sorted_input.map { meta, vcf ->
-        [[id:"joint_variant_calling", num_intervals: meta.num_intervals], vcf]}.groupTuple()
-
-    //
-    //Merge vcfs called by interval into a single VCF
-    //
-    merged_vcf = MERGE_GENOTYPEGVCFS(merge_vcfs_sorted_input,dict)
-    vqsr_input = merged_vcf.vcf.join(merged_vcf.tbi)
+    BCFTOOLS_SORT(vcfs)
+    vcfs_sorted_input = BCFTOOLS_SORT.out.vcf.branch{
+        intervals:    it[0].num_intervals > 1
+        no_intervals: it[0].num_intervals <= 1
+    }
+    // Index vcf files if no scatter/gather by intervals
+    TABIX(vcfs_sorted_input.no_intervals)
+    // Merge scatter/gather vcfs & index
+    MERGE_GENOTYPEGVCFS(vcfs_sorted_input.intervals,dict)
+    vqsr_input = Channel.empty().mix(
+        MERGE_GENOTYPEGVCFS.out.vcf.join(MERGE_GENOTYPEGVCFS.out.tbi), 
+        vcfs_sorted_input.no_intervals.join(TABIX.out.tbi)
+    )
 
     // Group resource labels for SNP and INDEL
     snp_resource_labels   = Channel.empty().mix(known_snps_vqsr,dbsnp_vqsr).collect()
@@ -127,14 +132,19 @@ workflow GATK_JOINT_GERMLINE_VARIANT_CALLING {
         vqsr_snp_vcf.mix(vqsr_indel_vcf).groupTuple(),
         dict
     )
-    ch_versions = ch_versions.mix(GATK4_GENOTYPEGVCFS.out.versions,
+    ch_versions = ch_versions.mix(GATK4_GENOMICSDBIMPORT.out.versions,
+                              GATK4_GENOTYPEGVCFS.out.versions,
                               VARIANTRECALIBRATOR_SNP.out.versions,
                               GATK4_APPLYVQSR_SNP.out.versions
                              )
 
 
     emit:
-    versions       = ch_versions                           // channel: [ versions.yml ]
-    genotype_vcf   = MERGE_VQSR.out.vcf           // channel: [ val(meta), [ vcf ] ]
-    genotype_index = MERGE_VQSR.out.tbi           // channel: [ val(meta), [ tbi ] ]
+    versions       = ch_versions                               // channel: [ versions.yml ]
+    genotype_vcf   = Channel.empty().mix(vcfs_sorted_input.no_intervals,
+                                         MERGE_GENOTYPEGVCFS.out.vcf,
+                                         MERGE_VQSR.out.vcf)   // channel: [ val(meta), [ vcf ] ]
+    genotype_index   = Channel.empty().mix(TABIX.out.tbi,
+                                           MERGE_GENOTYPEGVCFS.out.tbi,
+                                           MERGE_VQSR.out.tbi) // channel: [ val(meta), [ tbi ] ]
 }
