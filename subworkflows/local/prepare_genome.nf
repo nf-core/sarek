@@ -19,7 +19,7 @@ include { SAMTOOLS_FAIDX                         } from '../../modules/nf-core/m
 include { TABIX_TABIX as TABIX_DBSNP             } from '../../modules/nf-core/modules/tabix/tabix/main'
 include { TABIX_TABIX as TABIX_GERMLINE_RESOURCE } from '../../modules/nf-core/modules/tabix/tabix/main'
 include { TABIX_TABIX as TABIX_KNOWN_INDELS      } from '../../modules/nf-core/modules/tabix/tabix/main'
-include { TABIX_TABIX as TABIX_KNOWN_SNPS      } from '../../modules/nf-core/modules/tabix/tabix/main'
+include { TABIX_TABIX as TABIX_KNOWN_SNPS        } from '../../modules/nf-core/modules/tabix/tabix/main'
 include { TABIX_TABIX as TABIX_PON               } from '../../modules/nf-core/modules/tabix/tabix/main'
 include { UNTAR as UNTAR_CHR_DIR                 } from '../../modules/nf-core/modules/untar/main'
 include { UNZIP as UNZIP_ALLELES                 } from '../../modules/nf-core/modules/unzip/main'
