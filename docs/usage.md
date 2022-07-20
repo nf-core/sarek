@@ -581,7 +581,7 @@ This list is by no means exhaustive and it will depend on the specific analysis 
 | [Control-FREEC](https://github.com/BoevaLab/FREEC)                                                      |  x  |  x  |   x    |    -    |   x   |    x    |
 | [MSIsensorPro](https://github.com/xjtu-omics/msisensor-pro)                                             |  x  |  x  |   x    |    -    |   -   |    x    |
 
-## How to run ASCAT with WES
+## How to run ASCAT with whole-exome sequencing data?
 
 While the ASCAT implementation in sarek is capable of running with whole-exome sequencing data, the needed references are currently not provided with the igenomes.config. According to the [developers](https://github.com/VanLoo-lab/ascat/issues/97) of ASCAT, loci and allele files (one file per chromosome) can be downloaded directly from the [Battenberg repository](https://ora.ox.ac.uk/objects/uuid:08e24957-7e76-438a-bd38-66c48008cf52).
 
@@ -603,19 +603,6 @@ For mapping, sarek follows the parameter suggestions provided in this [paper](ht
 `-Y`: force soft-clipping rather than default hard-clipping of supplementary alignments
 
 In addition, currently the mismatch penalty for reads with tumor status in the sample sheet are mapped with a mismatch penalty of `-B 3`.
-
-## MultiQC related issues
-
-### Plots for SnpEff are missing
-
-When plots are missing, it is possible that the fasta and the custom SnpEff database are not matching https://pcingola.github.io/SnpEff/se_faq/#error_chromosome_not_found-details.
-The SnpEff completes without throwing an error causing nextflow to complete successfully. An indication for the error are these lines in the `.command` files:
-
-```text
-ERRORS: Some errors were detected
-Error type      Number of errors
-ERROR_CHROMOSOME_NOT_FOUND      17522411
-```
 
 ## How to create a panel-of-normals for Mutect2
 
@@ -805,64 +792,6 @@ For more details, see [here](https://www.ensembl.org/info/docs/tools/vep/script/
 Resource requests are difficult to generalize and are often dependent on input data size. Currently, the number of cpus and memory requested by default were adapted from tests on 5 ICGC paired whole-genome sequencing samples with approximately 40X and 80X depth.
 For targeted data analysis, this is overshooting by a lot. In this case resources for each process can be limited by either setting `--max_memory` and `-max_cpus` or tailoring the request by process name as described [here](#resource-requests). If you are using sarek for a certain data type regulary, and would like to make these requests available to others on your system, an institution-specific, pipeline-specific config file can be added [here](https://github.com/nf-core/configs/tree/master/conf/pipeline/sarek).
 
-## Spark related issues
-
-If you have problems running processes that make use of Spark such, for instance, as `MarkDuplicates`, then that might be due to a limit on the number of simultaneously open files on your system.
-You can check your current limit by typing the following:
-
-```bash
-ulimit -n
-```
-
-The default limit size is usually 1024 which is quite low to run Spark jobs.
-In order to increase the size limit permanently you can:
-
-Edit the file `/etc/security/limits.conf` and add the lines:
-
-```bash
-*     soft   nofile  65535
-*     hard   nofile  65535
-```
-
-Edit the file `/etc/sysctl.conf` and add the line:
-
-```bash
-fs.file-max = 65535
-```
-
-Edit the file `/etc/sysconfig/docker` and add the new limits to OPTIONS like this:
-
-```bash
-OPTIONS=”—default-ulimit nofile=65535:65535"
-```
-
-Re-start your session.
-
-Note that the way to increase the open file limit in your system may be slightly different or require additional steps.
-
-### Cannot delete work folder when using docker + Spark
-
-Currently, when running spark-based tools in combination with docker, it is required to set `docker.userEmulation = false`. This can unfortunately cause permission issues when `work/` is being written with root permissions. In case this happens, you might need to configure docker to run without `userEmulation` (see [here](https://github.com/Midnighter/nf-core-adr/blob/main/docs/adr/0008-refrain-from-using-docker-useremulation-in-nextflow.md)).
-
-## How to handle UMIs
-
-Sarek can process UMI-reads, using [fgbio](http://fulcrumgenomics.github.io/fgbio/tools/latest/) tools.
-
-In order to use reads containing UMI tags as your initial input, you need to include `--umi_read_structure <UMI_string>` in your parameters.
-
-This will enable pre-processing of the reads and UMI consensus reads calling, which will then be used to continue the workflow from the mapping steps. For post-UMI processing depending on the experimental setup, duplicate marking and base quality recalibration can be skipped with `--skip_tools`.
-
-### UMI Read Structure
-
-This parameter is a string, which follows a [convention](https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures) to describe the structure of the umi.
-If your reads contain a UMI only on one end, the string should only represent one structure (i.e. "2M11S+T"); should your reads contain a UMI on both ends, the string will contain two structures separated by a blank space (i.e. "2M11S+T 2M11S+T").
-
-### Limitations and future updates
-
-Recent updates to Samtools have been introduced, which can speed-up performance of fgbio tools used in this workflow.
-The current workflow does not handle duplex UMIs (i.e. where opposite strands of a duplex molecule have been tagged with a different UMI), and best practices have been proposed to process this type of data.
-Both changes will be implemented in a future release.
-
 ## MultiQC related issues
 
 ### Plots for SnpEff are missing
@@ -870,7 +799,7 @@ Both changes will be implemented in a future release.
 When plots are missing, it is possible that the fasta and the custom SnpEff database are not matching https://pcingola.github.io/SnpEff/se_faq/#error_chromosome_not_found-details.
 The SnpEff completes without throwing an error causing nextflow to complete successfully. An indication for the error are these lines in the `.command` files:
 
-```
+```text
 ERRORS: Some errors were detected
 Error type      Number of errors
 ERROR_CHROMOSOME_NOT_FOUND      17522411
