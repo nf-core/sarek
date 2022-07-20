@@ -110,6 +110,7 @@ Pårtejekna is one of glaciers of the Pårte Massif.
 - [#651](https://github.com/nf-core/sarek/pull/651) - Added TIDDIT_SOMATIC subworkflow
 - [#653](https://github.com/nf-core/sarek/pull/653) - Coherent results subfolder structure between preprocessing, variantcalling and reporting
 - [#659](https://github.com/nf-core/sarek/pull/659) - Update usage.md docu section on `How to run ASCAT with WES`
+- [#661](https://github.com/nf-core/sarek/pull/661) - Add cnvkit reference creation to index subway map
 - [#663](https://github.com/nf-core/sarek/pull/663) - Add separate parameters for `ASCAT` and `ControlFREEC` back in
 
 ### Fixed
@@ -160,7 +161,9 @@ Pårtejekna is one of glaciers of the Pårte Massif.
 - [#642](https://github.com/nf-core/sarek/pull/642) - Only unzip ref files if tool is run, only publish ref files if `--save_reference` and simplify CNKit logic
 - [#650](https://github.com/nf-core/sarek/pull/650) - Fix intervals checks
 - [#654](https://github.com/nf-core/sarek/pull/654) - Allow any step but annotation to start from BAM files
+- [#655](https://github.com/nf-core/sarek/pull/655) - Fix `--intervals false` logic & add versioning for local modules
 - [#658](https://github.com/nf-core/sarek/pull/658) - Fix split fastq names in multiqc-report
+- [#666](https://github.com/nf-core/sarek/pull/666) - Simplify multiqc config channel input
 
 ### Deprecated
 
