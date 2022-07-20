@@ -1035,7 +1035,7 @@ workflow SAREK {
 
         ch_multiqc_files =  Channel.empty().mix(ch_version_yaml,
                                             ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'),
-                                            ch_reports.collect())
+                                            ch_reports.collect().ifEmpty([]))
 
         ch_multiqc_configs = Channel.from(ch_multiqc_config).mix(ch_multiqc_custom_config).ifEmpty([])
 
