@@ -680,36 +680,6 @@ Recent updates to Samtools have been introduced, which can speed-up performance 
 The current workflow does not handle duplex UMIs (i.e. where opposite strands of a duplex molecule have been tagged with a different UMI), and best practices have been proposed to process this type of data.
 Both changes will be implemented in a future release.
 
-## How to run sarek when no(t all) reference files are in igenomes
-
-For common genomes, such as GRCh38 and GRCh37, the pipeline is shipped with (almost) all necessary reference files. However, sometimes it is necessary to use custom references for some or all files:
-
-### No igenomes reference files are used
-
-If none of your required genome files are in igenomes, `--igenomes_ignore` must be set to ignore any igenomes input and `--genome null`. The `fasta` file is the only required input file and must be provided to run the pipeline. All other possible reference file can be provided in addition. For details, see the paramter documentation.
-
-Minimal example for custom genomes:
-
-```
-nextflow run nf-core/sarek --genome null --igenomes_ignore --fasta <custom.fasta>
-```
-
-### Overwrite specific reference files
-
-If you don't want to use some of the provided reference genomes, they can be overwritten by either providing a new file or setting the respective file parameter to `false`, if it should be ignored:
-
-Example for using a custom known indels file:
-
-```
-nextflow run nf-core/sarek --known_indels <my_known_indels.vcf.gz> --genome GRCh38.GATK
-```
-
-Example for not using known indels, but all other provided reference file:
-
-```
-nextflow run nf-core/sarek --known_indels false --genome GRCh38.GATK
-```
-
 ### Where do the used reference genomes originate from
 
 _under construction - help needed_
@@ -873,14 +843,6 @@ nextflow run download_cache.nf --cadd_cache </path/to/CADD/cache> --cadd_version
 
 Resource requests are difficult to generalize and are often dependent on input data size. Currently, the number of cpus and memory requested by default were adapted from tests on 5 ICGC paired whole-genome sequencing samples with approximately 40X and 80X depth.
 For targeted data analysis, this is overshooting by a lot. In this case resources for each process can be limited by either setting `--max_memory` and `-max_cpus` or tailoring the request by process name as described [here](#resource-requests). If you are using sarek for a certain data type regulary, and would like to make these requests available to others on your system, an institution-specific, pipeline-specific config file can be added [here](https://github.com/nf-core/configs/tree/master/conf/pipeline/sarek).
-
-For mapping, sarek follows the parameter suggestions provided in this [paper](https://www.nature.com/articles/s41467-018-06159-4):
-
-`-K 100000000` : for deterministic pipeline results, for more info see [here](https://github.com/CCDG/Pipeline-Standardization/issues/2)
-
-`-Y`: force soft-clipping rather than default hard-clipping of supplementary alignments
-
-In addition, currently, reads with tumor status in the sample sheet are mapped with a mismatch penalty of `-B 3`.
 
 ## Spark related issues
 
