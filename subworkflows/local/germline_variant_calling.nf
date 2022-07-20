@@ -49,7 +49,7 @@ workflow GERMLINE_VARIANT_CALLING {
         .map{ meta, cram, crai, intervals, num_intervals ->
 
             //If no interval file provided (0) then add empty list
-            intervals_new  = num_intervals == 0 ? [] : intervals
+            intervals_new = num_intervals == 0 ? [] : intervals
 
             [[patient:meta.patient, sample:meta.sample, sex:meta.sex, status:meta.status, id:meta.sample, data_type:meta.data_type, num_intervals:num_intervals],
             cram, crai, intervals_new]
