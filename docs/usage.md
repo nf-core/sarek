@@ -761,6 +761,8 @@ nextflow run nf-core/sarek --tools snpEff --step annotate --sample <file.vcf.gz>
 nextflow run nf-core/sarek --tools VEP --step annotate --sample <file.vcf.gz> --vep_cache </path/to/VEP/cache>
 ```
 
+Similarly, when wanting to use a different cache than the one specified in the iGenomes config file, one can use  `--snpeff_db`, `--snpeff_genome`, `--snpeff_version`, `--vep_cache_version`, `--vep_genome`, `--vep_species` and `--vep_version` to overwrite these default value related to the databases, genomes, versions and caches' versions used by these tools.
+
 ### Using VEP plugins
 
 #### dbnsfp
