@@ -55,7 +55,7 @@
                 "git_sha": "9ae34a01d1747019fd37753ff4cafb05aec35a2b"
             },
             "custom/dumpsoftwareversions": {
-                "git_sha": "682f789f93070bd047868300dd018faf3d434e7c"
+                "git_sha": "e5b44499efcf6f7fb24874886bac60591c5d94dd"
             },
             "deepvariant": {
                 "git_sha": "fd5f6f5f4ffef4ab5a4e809bd3211bbc71c38d30"
@@ -217,7 +217,7 @@
                 "git_sha": "ffe037504897df081a7497fa5f495d8e23e93e24"
             },
             "strelka/germline": {
-                "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
+                "git_sha": "e5b44499efcf6f7fb24874886bac60591c5d94dd"
             },
             "strelka/somatic": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
