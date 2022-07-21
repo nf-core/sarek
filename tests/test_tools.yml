@@ -480,9 +480,6 @@
   files:
     - path: results/csv/variantcalled.csv
     - path: results/multiqc
-    - path: results/no_intervals.bed
-    - path: results/no_intervals.bed.gz
-    - path: results/no_intervals.bed.gz.tbi
     - path: results/preprocessing/recalibrated/test/test.recal.cram
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
     - path: results/reports/bcftools/haplotypecaller/joint_variant_calling/joint_germline.bcftools_stats.txt
