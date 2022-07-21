@@ -1,0 +1,43 @@
+- name: Run alignment to fastq and then remap on bam files
+  command: nextflow run main.nf -profile test,alignment_to_fastq,docker
+  tags:
+    - alignment_to_fastq
+  files:
+    - path: results/cat/test-1_1.merged.fastq.gz
+    - path: results/cat/test-1_2.merged.fastq.gz
+    - path: results/collate/test-1.mapped_1.fq.gz
+    - path: results/collate/test-1.mapped_2.fq.gz
+    - path: results/collate/test-1.mapped_other.fq.gz
+    - path: results/collate/test-1.mapped_singleton.fq.gz
+    - path: results/collate/test-1.unmapped_1.fq.gz
+    - path: results/collate/test-1.unmapped_2.fq.gz
+    - path: results/collate/test-1.unmapped_other.fq.gz
+    - path: results/collate/test-1.unmapped_singleton.fq.gz
+    - path: results/csv/markduplicates.csv
+    - path: results/csv/markduplicates_no_table.csv
+    - path: results/csv/recalibrated.csv
+    - path: results/multiqc
+    - path: results/preprocessing/markduplicates/test/test.md.cram
+    - path: results/preprocessing/markduplicates/test/test.md.cram.crai
+    - path: results/preprocessing/recal_table/test/test.recal.table
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+    - path: results/reports/fastqc/test-1
+    - path: results/reports/markduplicates/test/test.md.metrics
+    - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz.csi
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
+    - path: results/reports/samtools/test/test.md.cram.stats
+    - path: results/reports/samtools/test/test.recal.cram.stats
+    - path: results/samtools/test-1.bam
+    - path: results/samtools/test-1.map_map.bam
+    - path: results/samtools/test-1.map_unmap.bam
+    - path: results/samtools/test-1.unmap_map.bam
+    - path: results/samtools/test-1.unmap_unmap.bam

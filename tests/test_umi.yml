@@ -1,0 +1,84 @@
+- name: Run UMI test
+  command: nextflow run main.nf -profile test,umi,docker
+  tags:
+    - umi
+  files:
+    - path: results/bam2fastq/test-test_L1_interleaved.fq.gz
+    - path: results/bwamem1/test-test_L1.umi_unsorted.bam
+    - path: results/callumiconsensus/test-test_L1_umi-consensus.bam
+    - path: results/cat/test-test_L1_1.merged.fastq.gz
+    - path: results/cat/test-test_L1_2.merged.fastq.gz
+    - path: results/collate/test-test_L1.mapped_1.fq.gz
+    - path: results/collate/test-test_L1.mapped_2.fq.gz
+    - path: results/collate/test-test_L1.mapped_other.fq.gz
+    - path: results/collate/test-test_L1.mapped_singleton.fq.gz
+    - path: results/collate/test-test_L1.unmapped_1.fq.gz
+    - path: results/collate/test-test_L1.unmapped_2.fq.gz
+    - path: results/collate/test-test_L1.unmapped_other.fq.gz
+    - path: results/collate/test-test_L1.unmapped_singleton.fq.gz
+    - path: results/csv/markduplicates.csv
+    - path: results/csv/markduplicates_no_table.csv
+    - path: results/csv/recalibrated.csv
+    - path: results/fastqtobam/test-test_L1_umi_converted.bam
+    - path: results/groupreadsbyumi/test-test_L1_umi-grouped.bam
+    - path: results/groupreadsbyumi/test-test_L1_umi_histogram.txt
+    - path: results/preprocessing/markduplicates/test/test.md.cram
+    - path: results/preprocessing/markduplicates/test/test.md.cram.crai
+    - path: results/preprocessing/recal_table/test/test.recal.table
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+    - path: results/reports/markduplicates/test/test.md.metrics
+    - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz.csi
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
+    - path: results/reports/samtools/test/test.md.cram.stats
+    - path: results/reports/samtools/test/test.recal.cram.stats
+    - path: results/samblaster/test-test_L1_unsorted_tagged.bam
+    - path: results/samtools/test-test_L1.bam
+    - path: results/samtools/test-test_L1.map_map.bam
+    - path: results/samtools/test-test_L1.map_unmap.bam
+    - path: results/samtools/test-test_L1.unmap_map.bam
+    - path: results/samtools/test-test_L1.unmap_unmap.bam
+      # TODO: The following files are not produced anymore
+#    - path: results/samtools/test-test_L1.mapped_1.fq.gz
+#    - path: results/samtools/test-test_L1.mapped_2.fq.gz
+#    - path: results/samtools/test-test_L1.mapped_other.fq.gz
+#    - path: results/samtools/test-test_L1.mapped_singleton.fq.gz
+#    - path: results/samtools/test-test_L1.unmapped_1.fq.gz
+#    - path: results/samtools/test-test_L1.unmapped_2.fq.gz
+#    - path: results/samtools/test-test_L1.unmapped_other.fq.gz
+#    - path: results/samtools/test-test_L1.unmapped_singleton.fq.gz
+
+# - name: Run UMI TSO test
+#   command: nextflow run main.nf -profile test,umi_tso,docker
+#   tags:
+#     - umi_tso
+#     - umi
+#   files:
+#     - path: results/fastqtobam/1234N-HT1080_umi_converted.bam
+#     - path: results/bam2fastq/1234N-HT1080_interleaved.fq.gz
+#     - path: results/callumiconsensus/1234N-HT1080_umi-consensus.bam
+#     - path: results/cat/1234N-HT1080_1.merged.fastq.gz
+#     - path: results/cat/1234N-HT1080_2.merged.fastq.gz
+#     - path: results/groupreadsbyumi/1234N-HT1080_umi-grouped.bam
+#     - path: results/groupreadsbyumi/1234N-HT1080_umi_histogram.txt
+#     - path: results/samblaster/1234N-HT1080_unsorted_tagged.bam
+#     - path: results/samtools/1234N-HT1080.map_map.bam
+#     - path: results/samtools/1234N-HT1080.map_unmap.bam
+#     - path: results/samtools/1234N-HT1080.mapped_1.fq.gz
+#     - path: results/samtools/1234N-HT1080.mapped_2.fq.gz
+#     - path: results/samtools/1234N-HT1080.mapped_other.fq.gz
+#     - path: results/samtools/1234N-HT1080.mapped_singleton.fq.gz
+#     - path: results/samtools/1234N-HT1080.unmap_map.bam
+#     - path: results/samtools/1234N-HT1080.unmap_unmap.bam
+#     - path: results/samtools/1234N-HT1080.unmapped_1.fq.gz
+#     - path: results/samtools/1234N-HT1080.unmapped_2.fq.gz
+#     - path: results/samtools/1234N-HT1080.unmapped_other.fq.gz
+#     - path: results/samtools/1234N-HT1080.unmapped_singleton.fq.gz

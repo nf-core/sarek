@@ -1,0 +1,87 @@
+- name: Run bwa-mem2
+  command: nextflow run main.nf -profile test,docker --aligner bwa-mem2 --save_reference
+  tags:
+    - aligner
+    - bwa-mem2
+    - preprocessing
+  files:
+    - path: results/csv/markduplicates.csv
+    - path: results/csv/markduplicates_no_table.csv
+    - path: results/csv/recalibrated.csv
+    - path: results/multiqc
+    - path: results/preprocessing/markduplicates/test/test.md.cram
+    - path: results/preprocessing/markduplicates/test/test.md.cram.crai
+    - path: results/preprocessing/recal_table/test/test.recal.table
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+    - path: results/reference/bwamem2/genome.fasta.0123
+    - path: results/reference/bwamem2/genome.fasta.amb
+    - path: results/reference/bwamem2/genome.fasta.ann
+    - path: results/reference/bwamem2/genome.fasta.bwt.2bit.64
+    - path: results/reference/bwamem2/genome.fasta.pac
+    - path: results/reference/dbsnp/dbsnp_146.hg38.vcf.gz.tbi
+    - path: results/reference/dict/genome.dict
+    - path: results/reference/fai/genome.fasta.fai
+    - path: results/reference/intervals/chr22_1-40001.bed
+    - path: results/reference/intervals/chr22_1-40001.bed.gz
+    - path: results/reference/intervals/genome.bed
+    - path: results/reference/known_indels/mills_and_1000G.indels.vcf.gz.tbi
+    - path: results/reports/fastqc/test-test_L1
+    - path: results/reports/markduplicates/test/test.md.metrics
+    - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz.csi
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
+    - path: results/reports/samtools/test/test.md.cram.stats
+    - path: results/reports/samtools/test/test.recal.cram.stats
+- name: Run dragmap
+  command: nextflow run main.nf -profile test,docker --aligner dragmap --save_reference
+  tags:
+    - aligner
+    - dragmap
+    - preprocessing
+  files:
+    - path: results/csv/markduplicates.csv
+    - path: results/csv/markduplicates_no_table.csv
+    - path: results/csv/recalibrated.csv
+    - path: results/multiqc
+    - path: results/preprocessing/markduplicates/test/test.md.cram
+    - path: results/preprocessing/markduplicates/test/test.md.cram.crai
+    - path: results/preprocessing/recal_table/test/test.recal.table
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+    - path: results/reference/dbsnp/dbsnp_146.hg38.vcf.gz.tbi
+    - path: results/reference/dict/genome.dict
+    - path: results/reference/dragmap/hash_table.cfg
+    - path: results/reference/dragmap/hash_table.cfg.bin
+    - path: results/reference/dragmap/hash_table.cmp
+    - path: results/reference/dragmap/hash_table_stats.txt
+    - path: results/reference/dragmap/ref_index.bin
+    - path: results/reference/dragmap/reference.bin
+    - path: results/reference/dragmap/repeat_mask.bin
+    - path: results/reference/dragmap/str_table.bin
+    - path: results/reference/fai/genome.fasta.fai
+    - path: results/reference/intervals/chr22_1-40001.bed
+    - path: results/reference/intervals/chr22_1-40001.bed.gz
+    - path: results/reference/intervals/genome.bed
+    - path: results/reference/known_indels/mills_and_1000G.indels.vcf.gz.tbi
+    - path: results/reports/fastqc/test-test_L1
+    - path: results/reports/markduplicates/test/test.md.metrics
+    - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz.csi
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
+    - path: results/reports/samtools/test/test.md.cram.stats
+    - path: results/reports/samtools/test/test.recal.cram.stats

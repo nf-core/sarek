@@ -1,0 +1,76 @@
+- name: Run snpEff
+  command: nextflow run main.nf -profile test,annotation,docker --tools snpeff
+  tags:
+    - annotation
+    - snpeff
+  files:
+    - path: results/annotation/test/test_snpEff.ann.vcf.gz
+    - path: results/annotation/test/test_snpEff.ann.vcf.gz.tbi
+    - path: results/multiqc
+    - path: results/reports/snpeff/test/snpEff_summary.html
+    - path: results/reports/snpeff/test/test_snpEff.csv
+    - path: results/reports/snpeff/test/test_snpEff.genes.txt
+- name: Run VEP
+  command: nextflow run main.nf -profile test,annotation,docker --tools vep --skip_tools multiqc
+  tags:
+    - annotation
+    - vep
+  files:
+    - path: results/annotation/test/test_VEP.ann.vcf.gz
+    - path: results/annotation/test/test_VEP.ann.vcf.gz.tbi
+    - path: results/reports/EnsemblVEP/test/test_VEP.summary.html
+- name: Run snpEff followed by VEP
+  command: nextflow run main.nf -profile test,annotation,docker --tools merge --skip_tools multiqc
+  tags:
+    - annotation
+    - merge
+    - snpeff
+    - vep
+  files:
+    - path: results/annotation/test/test_snpEff_VEP.ann.vcf.gz
+    - path: results/annotation/test/test_snpEff_VEP.ann.vcf.gz.tbi
+    - path: results/reports/EnsemblVEP/test/test_snpEff_VEP.summary.html
+    - path: results/annotation/test/test_snpEff.ann.vcf.gz
+      should_exist: false
+    - path: results/annotation/test/test_snpEff.ann.vcf.gz.tbi
+      should_exist: false
+    - path: results/annotation/test/test_VEP.ann.vcf.gz
+      should_exist: false
+    - path: results/annotation/test/test_VEP.ann.vcf.gz.tbi
+      should_exist: false
+    - path: results/reports/snpeff/test/snpEff_summary.html
+      should_exist: false
+    - path: results/reports/snpeff/test/test_snpEff.csv
+      should_exist: false
+    - path: results/reports/snpeff/test/test_snpEff.genes.txt
+      should_exist: false
+    - path: results/reports/EnsemblVEP/test/test_VEP.summary.html
+      should_exist: false
+- name: Run snpEff, VEP and both consecutively
+  command: nextflow run main.nf -profile test,annotation,docker --tools merge,snpeff,vep --skip_tools multiqc
+  tags:
+    - annotation
+    - merge
+    - snpeff
+    - vep
+  files:
+    - path: results/annotation/test/test_VEP.ann.vcf.gz
+    - path: results/annotation/test/test_VEP.ann.vcf.gz.tbi
+    - path: results/annotation/test/test_snpEff.ann.vcf.gz
+    - path: results/annotation/test/test_snpEff.ann.vcf.gz.tbi
+    - path: results/annotation/test/test_snpEff_VEP.ann.vcf.gz
+    - path: results/annotation/test/test_snpEff_VEP.ann.vcf.gz.tbi
+    - path: results/reports/EnsemblVEP/test/test_VEP.summary.html
+    - path: results/reports/EnsemblVEP/test/test_snpEff_VEP.summary.html
+    - path: results/reports/snpeff/test/snpEff_summary.html
+    - path: results/reports/snpeff/test/test_snpEff.csv
+    - path: results/reports/snpeff/test/test_snpEff.genes.txt
+- name: Run VEP with fasta
+  command: nextflow run main.nf -profile test,annotation,docker --tools vep --vep_include_fasta --skip_tools multiqc
+  tags:
+    - annotation
+    - vep
+  files:
+    - path: results/annotation/test/test_VEP.ann.vcf.gz
+    - path: results/annotation/test/test_VEP.ann.vcf.gz.tbi
+    - path: results/reports/EnsemblVEP/test/test_VEP.summary.html

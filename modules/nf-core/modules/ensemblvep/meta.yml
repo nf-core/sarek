@@ -1,0 +1,73 @@
+name: ENSEMBLVEP
+description: Ensembl Variant Effect Predictor (VEP). The output-file-format is controlled through `task.ext.args`.
+keywords:
+  - annotation
+tools:
+  - ensemblvep:
+      description: |
+        VEP determines the effect of your variants (SNPs, insertions, deletions, CNVs
+        or structural variants) on genes, transcripts, and protein sequence, as well as regulatory regions.
+      homepage: https://www.ensembl.org/info/docs/tools/vep/index.html
+      documentation: https://www.ensembl.org/info/docs/tools/vep/script/index.html
+      licence: ["Apache-2.0"]
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - vcf:
+      type: file
+      description: |
+        vcf to annotate
+  - genome:
+      type: value
+      description: |
+        which genome to annotate with
+  - species:
+      type: value
+      description: |
+        which species to annotate with
+  - cache_version:
+      type: value
+      description: |
+        which version of the cache to annotate with
+  - cache:
+      type: file
+      description: |
+        path to VEP cache (optional)
+  - fasta:
+      type: file
+      description: |
+        reference FASTA file (optional)
+      pattern: "*.{fasta,fa}"
+  - extra_files:
+      type: tuple
+      description: |
+        path to file(s) needed for plugins  (optional)
+output:
+  - vcf:
+      type: file
+      description: |
+        annotated vcf (optional)
+      pattern: "*.ann.vcf"
+  - tab:
+      type: file
+      description: |
+        tab file with annotated variants (optional)
+      pattern: "*.ann.tab"
+  - json:
+      type: file
+      description: |
+        json file with annotated variants (optional)
+      pattern: "*.ann.json"
+  - report:
+      type: file
+      description: VEP report file
+      pattern: "*.html"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@maxulysse"

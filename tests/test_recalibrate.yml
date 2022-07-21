@@ -1,0 +1,116 @@
+- name: Run Recalibration starting from bam
+  command: nextflow run main.nf -profile test,recalibrate_bam,docker
+  tags:
+    - bam
+    - recalibrate
+    - preprocessing
+  files:
+    - path: results/csv/recalibrated.csv
+    - path: results/multiqc
+    - path: results/preprocessing/markduplicates/test/test.md.cram
+    - path: results/preprocessing/markduplicates/test/test.md.cram.crai
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
+    - path: results/reports/samtools/test/test.recal.cram.stats
+- name: Run Recalibration starting from cram
+  command: nextflow run main.nf -profile test,recalibrate_cram,docker
+  tags:
+    - cram
+    - recalibrate
+    - preprocessing
+  files:
+    - path: results/csv/recalibrated.csv
+    - path: results/multiqc
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
+    - path: results/reports/samtools/test/test.recal.cram.stats
+- name: Run Recalibration starting from bam and skip baserecalibration
+  command: nextflow run main.nf -profile test,recalibrate_bam,skip_bqsr,docker --tools strelka
+  tags:
+    - bam
+    - recalibrate
+    - preprocessing
+    - variant_calling
+    - strelka
+  files:
+    - path: results/csv/variantcalled.csv
+    - path: results/multiqc
+    - path: results/preprocessing/markduplicates/test/test.md.cram
+    - path: results/preprocessing/markduplicates/test/test.md.cram.crai
+    - path: results/reports/bcftools/strelka/test/test.strelka.variants.bcftools_stats.txt
+    - path: results/reports/vcftools/strelka/test/test.strelka.variants.FILTER.summary
+    - path: results/reports/vcftools/strelka/test/test.strelka.variants.TsTv.count
+    - path: results/reports/vcftools/strelka/test/test.strelka.variants.TsTv.qual
+    - path: results/variant_calling/strelka/test/test.strelka.genome.vcf.gz
+    - path: results/variant_calling/strelka/test/test.strelka.genome.vcf.gz.tbi
+    - path: results/variant_calling/strelka/test/test.strelka.variants.vcf.gz
+    - path: results/variant_calling/strelka/test/test.strelka.variants.vcf.gz.tbi
+    - path: results/csv/recalibrated.csv
+      should_exist: false
+    - path: results/preprocessing/recal_table/test/test.recal.table
+      should_exist: false
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+      should_exist: false
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+      should_exist: false
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+      should_exist: false
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+      should_exist: false
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+      should_exist: false
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
+      should_exist: false
+    - path: results/reports/samtools/test/test.recal.cram.stats
+      should_exist: false
+- name: Run Recalibration starting from cram and skip baserecalibration
+  command: nextflow run main.nf -profile test,recalibrate_cram,skip_bqsr,docker --tools strelka
+  tags:
+    - cram
+    - recalibrate
+    - preprocessing
+    - variant_calling
+    - strelka
+  files:
+    - path: results/csv/variantcalled.csv
+    - path: results/multiqc
+    - path: results/reports/bcftools/strelka/test/test.strelka.variants.bcftools_stats.txt
+    - path: results/reports/vcftools/strelka/test/test.strelka.variants.FILTER.summary
+    - path: results/reports/vcftools/strelka/test/test.strelka.variants.TsTv.count
+    - path: results/reports/vcftools/strelka/test/test.strelka.variants.TsTv.qual
+    - path: results/variant_calling/strelka/test/test.strelka.genome.vcf.gz
+    - path: results/variant_calling/strelka/test/test.strelka.genome.vcf.gz.tbi
+    - path: results/variant_calling/strelka/test/test.strelka.variants.vcf.gz
+    - path: results/variant_calling/strelka/test/test.strelka.variants.vcf.gz.tbi
+    - path: results/csv/recalibrated.csv
+      should_exist: false
+    - path: results/preprocessing/markduplicates/test/test.md.cram
+      should_exist: false
+    - path: results/preprocessing/markduplicates/test/test.md.cram.crai
+      should_exist: false
+    - path: results/preprocessing/recal_table/test/test.recal.table
+      should_exist: false
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+      should_exist: false
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+      should_exist: false
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+      should_exist: false
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+      should_exist: false
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+      should_exist: false
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
+      should_exist: false
+    - path: results/reports/samtools/test/test.recal.cram.stats
+      should_exist: false

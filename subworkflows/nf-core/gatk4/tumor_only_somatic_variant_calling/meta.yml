@@ -1,0 +1,108 @@
+name: gatk_tumor_only_somatic_variant_calling
+description: |
+  Perform variant calling on a single tumor sample using mutect2 tumor only mode.
+  Run the input bam file through getpileupsummarries and then calculatecontaminationto get the contamination and segmentation tables.
+  Filter the mutect2 output vcf using filtermutectcalls and the contamination & segmentation tables for additional filtering.
+keywords:
+  - gatk4
+  - mutect2
+  - getpileupsummaries
+  - calculatecontamination
+  - filtermutectcalls
+  - variant_calling
+  - tumor_only
+  - filtered_vcf
+modules:
+  - gatk4/mutect2
+  - gatk4/getpileupsummaries
+  - gatk4/calculatecontamination
+  - gatk4/filtermutectcalls
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test' ]
+  - input:
+      type: list
+      description: list containing one BAM file, also able to take CRAM as an input
+      pattern: "[ *.{bam/cram} ]"
+  - input_index:
+      type: list
+      description: list containing one BAM file indexe, also able to take CRAM index as an input
+      pattern: "[ *.{bam.bai/cram.crai} ]"
+  - fasta:
+      type: file
+      description: The reference fasta file
+      pattern: "*.fasta"
+  - fai:
+      type: file
+      description: Index of reference fasta file
+      pattern: "*.fasta.fai"
+  - dict:
+      type: file
+      description: GATK sequence dictionary
+      pattern: "*.dict"
+  - germline_resource:
+      type: file
+      description: Population vcf of germline sequencing, containing allele fractions.
+      pattern: "*.vcf.gz"
+  - germline_resource_tbi:
+      type: file
+      description: Index file for the germline resource.
+      pattern: "*.vcf.gz.tbi"
+  - panel_of_normals:
+      type: file
+      description: vcf file to be used as a panel of normals.
+      pattern: "*.vcf.gz"
+  - panel_of_normals_tbi:
+      type: file
+      description: Index for the panel of normals.
+      pattern: "*.vcf.gz.tbi"
+  - interval_file:
+      type: file
+      description: File containing intervals.
+      pattern: "*.interval_list"
+output:
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+  - mutect2_vcf:
+      type: file
+      description: Compressed vcf file to be used for variant_calling.
+      pattern: "[ *.vcf.gz ]"
+  - mutect2_tbi:
+      type: file
+      description: Indexes of the mutect2_vcf file
+      pattern: "[ *vcf.gz.tbi ]"
+  - mutect2_stats:
+      type: file
+      description: Stats files for the mutect2 vcf
+      pattern: "[ *vcf.gz.stats ]"
+  - pileup_table:
+      type: file
+      description: File containing the pileup summary table.
+      pattern: "*.pileups.table"
+  - contamination_table:
+      type: file
+      description: File containing the contamination table.
+      pattern: "*.contamination.table"
+  - segmentation_table:
+      type: file
+      description: Output table containing segmentation of tumor minor allele fractions.
+      pattern: "*.segmentation.table"
+  - filtered_vcf:
+      type: file
+      description: file containing filtered mutect2 calls.
+      pattern: "*.vcf.gz"
+  - filtered_tbi:
+      type: file
+      description: tbi file that pairs with filtered vcf.
+      pattern: "*.vcf.gz.tbi"
+  - filtered_stats:
+      type: file
+      description: file containing statistics of the filtermutectcalls run.
+      pattern: "*.filteringStats.tsv"
+authors:
+  - "@GCJMackenzie"

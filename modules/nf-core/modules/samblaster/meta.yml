@@ -1,0 +1,53 @@
+name: samblaster
+description: |
+  This module combines samtools and samblaster in order to use
+  samblaster capability to filter or tag SAM files, with the advantage
+  of maintaining both input and output in BAM format.
+  Samblaster input must contain a sequence header: for this reason it has been piped
+  with the "samtools view -h" command.
+  Additional desired arguments for samtools can be passed using:
+  options.args2 for the input bam file
+  options.args3 for the output bam file
+keywords:
+  - sort
+tools:
+  - samblaster:
+      description: |
+        samblaster is a fast and flexible program for marking duplicates in read-id grouped paired-end SAM files.
+        It can also optionally output discordant read pairs and/or split read mappings to separate SAM files,
+        and/or unmapped/clipped reads to a separate FASTQ file.
+        By default, samblaster reads SAM input from stdin and writes SAM to stdout.
+      homepage: None
+      documentation: https://github.com/GregoryFaust/samblaster
+      tool_dev_url: https://github.com/GregoryFaust/samblaster
+      doi: "10.1093/bioinformatics/btu314"
+      licence: ["MIT"]
+
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - bam:
+      type: file
+      description: BAM file
+      pattern: "*.bam"
+
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+  - bam:
+      type: file
+      description: Tagged or filtered BAM file
+      pattern: "*.bam"
+
+authors:
+  - "@lescai"

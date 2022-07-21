@@ -1,0 +1,61 @@
+name: gatk4_markduplicates_spark
+description: This tool locates and tags duplicate reads in a BAM or SAM file, where duplicate reads are defined as originating from a single fragment of DNA.
+keywords:
+  - markduplicates
+  - bam
+  - sort
+tools:
+  - gatk4:
+      description:
+        Developed in the Data Sciences Platform at the Broad Institute, the toolkit offers a wide variety of tools
+        with a primary focus on variant discovery and genotyping. Its powerful processing engine
+        and high-performance computing features make it capable of taking on projects of any size.
+      homepage: https://gatk.broadinstitute.org/hc/en-us
+      documentation: https://gatk.broadinstitute.org/hc/en-us/articles/360037052812-MarkDuplicates-Picard-
+      tool_dev_url: https://github.com/broadinstitute/gatk
+      doi: 10.1158/1538-7445.AM2017-3590
+      licence: ["MIT"]
+
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - bam:
+      type: file
+      description: Sorted BAM file
+      pattern: "*.{bam}"
+  - fasta:
+      type: file
+      description: The reference fasta file
+      pattern: "*.fasta"
+  - fai:
+      type: file
+      description: Index of reference fasta file
+      pattern: "*.fasta.fai"
+  - dict:
+      type: file
+      description: GATK sequence dictionary
+      pattern: "*.dict"
+
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+  - bam:
+      type: file
+      description: Marked duplicates BAM file
+      pattern: "*.{bam}"
+
+authors:
+  - "@ajodeh-juma"
+  - "@FriederikeHanssen"
+  - "@maxulysse"
+  - "@SusiJo"

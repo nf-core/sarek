@@ -1,0 +1,29 @@
+name: annotation_snpeff
+description: |
+  Perform annotation with snpeff and bgzip + tabix index the resulting VCF file
+keywords:
+  - snpeff
+modules:
+  - snpeff
+  - tabix/bgziptabix
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test' ]
+  - input:
+      type: vcf
+      description: list containing one vcf file
+      pattern: "[ *.{vcf,vcf.gz} ]"
+output:
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+  - vcf_tbi:
+      type: file
+      description: Compressed vcf file + tabix index
+      pattern: "[ *{.vcf.gz,vcf.gz.tbi} ]"
+authors:
+  - "@maxulysse"
