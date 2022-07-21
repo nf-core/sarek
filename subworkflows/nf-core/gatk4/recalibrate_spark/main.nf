@@ -24,7 +24,15 @@ workflow RECALIBRATE_SPARK {
             //If no interval file provided (0) then add empty list
             intervals_new = num_intervals == 0 ? [] : intervals
 
-            [[patient:meta.patient, sample:meta.sample, sex:meta.sex, status:meta.status, id:meta.sample, data_type:meta.data_type, num_intervals:num_intervals],
+            [[
+                id:             meta.sample,
+                data_type:      meta.data_type,
+                num_intervals:  num_intervals,
+                patient:        meta.patient,
+                sample:         meta.sample,
+                sex:            meta.sex,
+                status:         meta.status,
+            ],
             cram, crai, recal, intervals_new]
         }
 
@@ -36,7 +44,14 @@ workflow RECALIBRATE_SPARK {
 
     ch_cram_recal_out = MERGE_INDEX_CRAM.out.cram_crai.map{ meta, cram, crai ->
                              // remove no longer necessary fields to make sure joining can be done correctly: num_intervals
-                            [[patient:meta.patient, sample:meta.sample, sex:meta.sex, status:meta.status, id:meta.id, data_type:meta.data_type],
+                            [[
+                                id:         meta.id,
+                                data_type:  meta.data_type,
+                                patient:    meta.patient,
+                                sample:     meta.sample,
+                                sex:        meta.sex,
+                                status:     meta.status,
+                            ],
                             cram, crai]
                         }
 

@@ -17,9 +17,9 @@ workflow PREPARE_RECALIBRATION_CSV {
                 status  = meta.status
                 suffix_aligned = params.save_output_as_bam ? "bam" : "cram"
                 suffix_index   = params.save_output_as_bam ? "bam.bai" : "cram.crai"
-                cram = "${params.outdir}/preprocessing/${sample}/markduplicates/${cram.baseName}.${suffix_aligned}"
-                crai = "${params.outdir}/preprocessing/${sample}/markduplicates/${crai.baseName.minus(".cram")}.${suffix_index}"
-                table = "${params.outdir}/preprocessing/${sample}/recal_table/${sample}.recal.table"
+                cram = "${params.outdir}/preprocessing/markduplicates/${sample}/${cram.baseName}.${suffix_aligned}"
+                crai = "${params.outdir}/preprocessing/markduplicates/${sample}/${crai.baseName.minus(".cram")}.${suffix_index}"
+                table = "${params.outdir}/preprocessing/recal_table/${sample}/${sample}.recal.table"
                 ["markduplicates.csv", "patient,sex,status,sample,cram,crai,table\n${patient},${sex},${status},${sample},${cram},${crai},${table}\n"]
             }
         } else {

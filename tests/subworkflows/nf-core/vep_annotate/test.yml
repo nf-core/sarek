@@ -1,7 +1,0 @@
-- name: subworkflow vep_annotate
-  command: nextflow run ./tests/subworkflows/nf-core/vep_annotate/ -entry test_vep_annotate -c tests/config/nextflow.config
-  tags:
-    - vep_annotate
-  files:
-    - path: output/annotation/test/test_VEP.ann.gz
-    - path: output/annotation/test/test_VEP.ann.gz.tbi

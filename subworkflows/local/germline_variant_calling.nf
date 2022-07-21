@@ -9,7 +9,7 @@ include { RUN_HAPLOTYPECALLER } from '../nf-core/variantcalling/haplotypecaller/
 include { RUN_MANTA_GERMLINE  } from '../nf-core/variantcalling/manta/germline/main.nf'
 include { RUN_MPILEUP         } from '../nf-core/variantcalling/mpileup/main'
 include { RUN_STRELKA_SINGLE  } from '../nf-core/variantcalling/strelka/single/main.nf'
-include { RUN_TIDDIT          } from '../nf-core/variantcalling/tiddit/main.nf'
+include { RUN_TIDDIT          } from '../nf-core/variantcalling/tiddit/single/main.nf'
 
 workflow GERMLINE_VARIANT_CALLING {
     take:
@@ -23,11 +23,12 @@ workflow GERMLINE_VARIANT_CALLING {
         fasta_fai                         // channel: [mandatory] fasta_fai
         intervals                         // channel: [mandatory] intervals/target regions
         intervals_bed_gz_tbi              // channel: [mandatory] intervals/target regions index zipped and indexed
-        intervals_bed_combined            // channel: [mandatory] intervals/target regions in one file unzipped, [] if no_intervals
+        intervals_bed_combined            // channel: [mandatory] intervals/target regions in one file unzipped
         intervals_bed_combined_haplotypec // channel: [mandatory] intervals/target regions in one file unzipped, no_intervals.bed if no_intervals
-        known_sites
-        known_sites_tbi
-        // joint_germline                // val: true/false on whether to run joint_germline calling, only works in combination with haplotypecaller at the moment
+        known_sites_indels
+        known_sites_indels_tbi
+        known_sites_snps
+        known_sites_snps_tbi
 
     main:
 
@@ -49,7 +50,15 @@ workflow GERMLINE_VARIANT_CALLING {
             //If no interval file provided (0) then add empty list
             intervals_new = num_intervals == 0 ? [] : intervals
 
-            [[patient:meta.patient, sample:meta.sample, sex:meta.sex, status:meta.status, id:meta.sample, data_type:meta.data_type, num_intervals:num_intervals],
+            [[
+                data_type:      meta.data_type,
+                id:             meta.sample,
+                num_intervals:  num_intervals,
+                patient:        meta.patient,
+                sample:         meta.sample,
+                sex:            meta.sex,
+                status:         meta.status,
+            ],
             cram, crai, intervals_new]
         }
 
@@ -61,7 +70,15 @@ workflow GERMLINE_VARIANT_CALLING {
             bed_new = num_intervals == 0 ? [] : bed_tbi[0]
             tbi_new = num_intervals == 0 ? [] : bed_tbi[1]
 
-            [[patient:meta.patient, sample:meta.sample, sex:meta.sex, status:meta.status, id:meta.sample, data_type:meta.data_type, num_intervals:num_intervals],
+            [[
+                data_type:      meta.data_type,
+                id:             meta.sample,
+                num_intervals:  num_intervals,
+                patient:        meta.patient,
+                sample:         meta.sample,
+                sex:            meta.sex,
+                status:         meta.status,
+            ],
             cram, crai, bed_new, tbi_new]
         }
 
@@ -71,8 +88,11 @@ workflow GERMLINE_VARIANT_CALLING {
                 [meta, cram, intervals]
             }
 
-        RUN_MPILEUP(cram_intervals_no_index,
-                        fasta)
+        RUN_MPILEUP(
+            cram_intervals_no_index,
+            fasta
+        )
+
         mpileup_germline = RUN_MPILEUP.out.mpileup
         ch_versions = ch_versions.mix(RUN_MPILEUP.out.versions)
     }
@@ -85,17 +105,25 @@ workflow GERMLINE_VARIANT_CALLING {
                 [meta, [], cram]
             }
 
-        RUN_CNVKIT(cram_recalibrated_cnvkit_germline,
-                            fasta,
-                            fasta_fai,
-                            intervals_bed_combined,
-                            [])
+        RUN_CNVKIT(
+            cram_recalibrated_cnvkit_germline,
+            fasta,
+            fasta_fai,
+            intervals_bed_combined,
+            []
+        )
+
         ch_versions     = ch_versions.mix(RUN_CNVKIT.out.versions)
     }
 
     // DEEPVARIANT
     if(tools.split(',').contains('deepvariant')){
-        RUN_DEEPVARIANT(cram_recalibrated_intervals, dict, fasta, fasta_fai)
+        RUN_DEEPVARIANT(
+            cram_recalibrated_intervals,
+            dict,
+            fasta,
+            fasta_fai
+        )
 
         deepvariant_vcf = Channel.empty().mix(RUN_DEEPVARIANT.out.deepvariant_vcf,RUN_DEEPVARIANT.out.deepvariant_gvcf)
         ch_versions     = ch_versions.mix(RUN_DEEPVARIANT.out.versions)
@@ -108,7 +136,13 @@ workflow GERMLINE_VARIANT_CALLING {
             .map{ meta, cram, crai, intervals ->
                 [meta, cram, crai, [], [], intervals]
             }
-        RUN_FREEBAYES(cram_recalibrated_intervals_freebayes, dict, fasta, fasta_fai)
+
+        RUN_FREEBAYES(
+            cram_recalibrated_intervals_freebayes,
+            dict,
+            fasta,
+            fasta_fai
+        )
 
         freebayes_vcf   = RUN_FREEBAYES.out.freebayes_vcf
         ch_versions     = ch_versions.mix(RUN_FREEBAYES.out.versions)
@@ -118,17 +152,34 @@ workflow GERMLINE_VARIANT_CALLING {
     if (tools.split(',').contains('haplotypecaller')){
         cram_recalibrated_intervals_haplotypecaller = cram_recalibrated_intervals
             .map{ meta, cram, crai, intervals ->
-                [meta, cram, crai, intervals, []]
-            }
+
+            intervals_name = meta.num_intervals == 0 ? "no_interval" : intervals.simpleName
+            new_meta = params.joint_germline ? [
+                                                    data_type:meta.data_type,
+                                                    id:meta.sample,
+                                                    intervals_name:intervals_name,
+                                                    num_intervals:meta.num_intervals,
+                                                    patient:meta.patient,
+                                                    sample:meta.sample,
+                                                    sex:meta.sex,
+                                                    status:meta.status
+                                                ]
+                                            : meta
+
+                [new_meta, cram, crai, intervals, []]
+        }
+
         RUN_HAPLOTYPECALLER(cram_recalibrated_intervals_haplotypecaller,
                         fasta,
                         fasta_fai,
                         dict,
                         dbsnp,
                         dbsnp_tbi,
-                        intervals_bed_combined_haplotypec,
-                        known_sites,
-                        known_sites_tbi)
+                        known_sites_indels,
+                        known_sites_indels_tbi,
+                        known_sites_snps,
+                        known_sites_snps_tbi,
+                        intervals_bed_combined_haplotypec)
 
         haplotypecaller_vcf  = RUN_HAPLOTYPECALLER.out.filtered_vcf
         ch_versions          = ch_versions.mix(RUN_HAPLOTYPECALLER.out.versions)
@@ -136,10 +187,12 @@ workflow GERMLINE_VARIANT_CALLING {
 
     // MANTA
     if (tools.split(',').contains('manta')){
-        RUN_MANTA_GERMLINE (cram_recalibrated_intervals_gz_tbi,
-                        dict,
-                        fasta,
-                        fasta_fai)
+        RUN_MANTA_GERMLINE (
+            cram_recalibrated_intervals_gz_tbi,
+            dict,
+            fasta,
+            fasta_fai
+        )
 
         manta_vcf   = RUN_MANTA_GERMLINE.out.manta_vcf
         ch_versions = ch_versions.mix(RUN_MANTA_GERMLINE.out.versions)
@@ -147,10 +200,12 @@ workflow GERMLINE_VARIANT_CALLING {
 
     // STRELKA
     if (tools.split(',').contains('strelka')){
-        RUN_STRELKA_SINGLE(cram_recalibrated_intervals_gz_tbi,
-                dict,
-                fasta,
-                fasta_fai)
+        RUN_STRELKA_SINGLE(
+            cram_recalibrated_intervals_gz_tbi,
+            dict,
+            fasta,
+            fasta_fai
+        )
 
         strelka_vcf = RUN_STRELKA_SINGLE.out.strelka_vcf
         ch_versions = ch_versions.mix(RUN_STRELKA_SINGLE.out.versions)
@@ -158,9 +213,11 @@ workflow GERMLINE_VARIANT_CALLING {
 
     //TIDDIT
     if (tools.split(',').contains('tiddit')){
-        RUN_TIDDIT(cram_recalibrated,
-                fasta,
-                bwa)
+        RUN_TIDDIT(
+            cram_recalibrated,
+            fasta,
+            bwa
+        )
 
         tiddit_vcf = RUN_TIDDIT.out.tiddit_vcf
         ch_versions = ch_versions.mix(RUN_TIDDIT.out.versions)

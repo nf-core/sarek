@@ -10,8 +10,6 @@
 
 include { BWA_INDEX as BWAMEM1_INDEX             } from '../../modules/nf-core/modules/bwa/index/main'
 include { BWAMEM2_INDEX                          } from '../../modules/nf-core/modules/bwamem2/index/main'
-include {CNVKIT_ANTITARGET                       } from '../../modules/nf-core/modules/cnvkit/antitarget/main'
-include {CNVKIT_REFERENCE                        } from '../../modules/nf-core/modules/cnvkit/reference/main'
 include { DRAGMAP_HASHTABLE                      } from '../../modules/nf-core/modules/dragmap/hashtable/main'
 include { GATK4_CREATESEQUENCEDICTIONARY         } from '../../modules/nf-core/modules/gatk4/createsequencedictionary/main'
 include { MSISENSORPRO_SCAN                      } from '../../modules/nf-core/modules/msisensorpro/scan/main'
@@ -19,6 +17,7 @@ include { SAMTOOLS_FAIDX                         } from '../../modules/nf-core/m
 include { TABIX_TABIX as TABIX_DBSNP             } from '../../modules/nf-core/modules/tabix/tabix/main'
 include { TABIX_TABIX as TABIX_GERMLINE_RESOURCE } from '../../modules/nf-core/modules/tabix/tabix/main'
 include { TABIX_TABIX as TABIX_KNOWN_INDELS      } from '../../modules/nf-core/modules/tabix/tabix/main'
+include { TABIX_TABIX as TABIX_KNOWN_SNPS        } from '../../modules/nf-core/modules/tabix/tabix/main'
 include { TABIX_TABIX as TABIX_PON               } from '../../modules/nf-core/modules/tabix/tabix/main'
 include { UNTAR as UNTAR_CHR_DIR                 } from '../../modules/nf-core/modules/untar/main'
 include { UNZIP as UNZIP_ALLELES                 } from '../../modules/nf-core/modules/unzip/main'
@@ -37,8 +36,8 @@ workflow PREPARE_GENOME {
         fasta                   // channel: [mandatory] fasta
         fasta_fai               // channel: [optional]  fasta_fai
         germline_resource       // channel: [optional]  germline_resource
-        intervals_bed_combined  // channel: []
         known_indels            // channel: [optional]  known_indels
+        known_snps
         pon                     // channel: [optional]  pon
 
 
@@ -60,12 +59,9 @@ workflow PREPARE_GENOME {
     // outputs are collected to maintain a single channel for relevant TBI files
     TABIX_DBSNP(dbsnp.flatten().map{ it -> [[id:it.baseName], it] })
     TABIX_GERMLINE_RESOURCE(germline_resource.flatten().map{ it -> [[id:it.baseName], it] })
+    TABIX_KNOWN_SNPS( known_snps.flatten().map{ it -> [[id:it.baseName], it] } )
     TABIX_KNOWN_INDELS( known_indels.flatten().map{ it -> [[id:it.baseName], it] } )
     TABIX_PON(pon.flatten().map{ it -> [[id:it.baseName], it] })
-
-    // prepare a reference for tumor_only mode based on target_baits
-    CNVKIT_ANTITARGET(intervals_bed_combined.flatten().map{ it -> [[id:it[0].baseName], it] })
-    CNVKIT_REFERENCE(fasta, intervals_bed_combined, CNVKIT_ANTITARGET.out.bed.map{ meta, bed -> [bed]} )
 
     // prepare ascat reference files
     allele_files = ascat_alleles
@@ -106,12 +102,11 @@ workflow PREPARE_GENOME {
     ch_versions = ch_versions.mix(SAMTOOLS_FAIDX.out.versions)
     ch_versions = ch_versions.mix(BWAMEM1_INDEX.out.versions)
     ch_versions = ch_versions.mix(BWAMEM2_INDEX.out.versions)
-    ch_versions = ch_versions.mix(CNVKIT_ANTITARGET.out.versions)
-    ch_versions = ch_versions.mix(CNVKIT_REFERENCE.out.versions)
     ch_versions = ch_versions.mix(GATK4_CREATESEQUENCEDICTIONARY.out.versions)
     ch_versions = ch_versions.mix(MSISENSORPRO_SCAN.out.versions)
     ch_versions = ch_versions.mix(TABIX_DBSNP.out.versions)
     ch_versions = ch_versions.mix(TABIX_GERMLINE_RESOURCE.out.versions)
+    ch_versions = ch_versions.mix(TABIX_KNOWN_SNPS.out.versions)
     ch_versions = ch_versions.mix(TABIX_KNOWN_INDELS.out.versions)
     ch_versions = ch_versions.mix(TABIX_PON.out.versions)
 
@@ -123,11 +118,11 @@ workflow PREPARE_GENOME {
         dict                             = GATK4_CREATESEQUENCEDICTIONARY.out.dict                             // path: genome.fasta.dict
         fasta_fai                        = SAMTOOLS_FAIDX.out.fai.map{ meta, fai -> [fai] }                    // path: genome.fasta.fai
         germline_resource_tbi            = TABIX_GERMLINE_RESOURCE.out.tbi.map{ meta, tbi -> [tbi] }.collect() // path: germline_resource.vcf.gz.tbi
+        known_snps_tbi                   = TABIX_KNOWN_SNPS.out.tbi.map{ meta, tbi -> [tbi] }.collect()      // path: {known_indels*}.vcf.gz.tbi
         known_indels_tbi                 = TABIX_KNOWN_INDELS.out.tbi.map{ meta, tbi -> [tbi] }.collect()      // path: {known_indels*}.vcf.gz.tbi
         msisensorpro_scan                = MSISENSORPRO_SCAN.out.list.map{ meta, list -> [list] }              // path: genome_msi.list
         pon_tbi                          = TABIX_PON.out.tbi.map{ meta, tbi -> [tbi] }.collect()               // path: pon.vcf.gz.tbi
         chr_files                        = chr_files
-        cnvkit_reference                 = CNVKIT_REFERENCE.out.cnn
         allele_files                     = allele_files
         loci_files                       = loci_files
         gc_file                          = gc_file

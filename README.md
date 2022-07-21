@@ -85,7 +85,6 @@ Friederike Hanssen and Gisela Gabernet at [QBiC](https://www.qbic.uni-tuebingen.
 
 Main authors:
 
-- [Gisela Gabernet](https://github.com/ggabernet)
 - [Maxime Garcia](https://github.com/maxulysse)
 - [Friederike Hanssen](https://github.com/FriederikeHanssen)
 - [Szilveszter Juhos](https://github.com/szilvajuhos)
@@ -98,7 +97,9 @@ We thank the following people for their extensive assistance in the development 
 - [Anders Sune Pedersen](https://github.com/asp8200)
 - [Chela James](https://github.com/chelauk)
 - [David Mas-Ponte](https://github.com/davidmasp)
-- [Francesco L](https://github.com/nibscles)
+- [Francesco Lescai](https://github.com/lescai)
+- [Gavin Mackenzie](https://github.com/GCJMackenzie)
+- [Gisela Gabernet](https://github.com/ggabernet)
 - [Harshil Patel](https://github.com/drpatelh)
 - [James A. Fellows Yates](https://github.com/jfy133)
 - [Jesper Eisfeldt](https://github.com/J35P312)
@@ -108,7 +109,7 @@ We thank the following people for their extensive assistance in the development 
 - [Lucia Conde](https://github.com/lconde-ucl)
 - [Malin Larsson](https://github.com/malinlarsson)
 - [Marcel Martin](https://github.com/marcelm)
-- [Nick Smith](https://github,com/nickhsmith)
+- [Nick Smith](https://github.com/nickhsmith)
 - [Nilesh Tawari](https://github.com/nilesh-tawari)
 - [Olga Botvinnik](https://github.com/olgabot)
 - [Oskar Wacker](https://github.com/WackerO)

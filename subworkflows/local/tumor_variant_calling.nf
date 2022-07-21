@@ -10,7 +10,7 @@ include { RUN_STRELKA_SINGLE                      } from '../nf-core/variantcall
 include { RUN_CONTROLFREEC_TUMORONLY              } from '../nf-core/variantcalling/controlfreec/tumoronly/main.nf'
 include { RUN_CNVKIT                              } from '../nf-core/variantcalling/cnvkit/main.nf'
 include { RUN_MPILEUP                             } from '../nf-core/variantcalling/mpileup/main'
-include { RUN_TIDDIT                              } from '../nf-core/variantcalling/tiddit/main.nf'
+include { RUN_TIDDIT                              } from '../nf-core/variantcalling/tiddit/single/main.nf'
 
 workflow TUMOR_ONLY_VARIANT_CALLING {
     take:
@@ -51,7 +51,15 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
             //If no interval file provided (0) then add empty list
             intervals_new = num_intervals == 0 ? [] : intervals
 
-            [[patient:meta.patient, sample:meta.sample, sex:meta.sex, status:meta.status, id:meta.sample, data_type:meta.data_type, num_intervals:num_intervals],
+            [[
+                data_type:      meta.data_type,
+                id:             meta.sample,
+                num_intervals:  num_intervals,
+                patient:        meta.patient,
+                sample:         meta.sample,
+                sex:            meta.sex,
+                status:         meta.status,
+            ],
             cram, crai, intervals_new]
         }
 
@@ -63,7 +71,15 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
             bed_new = num_intervals == 0 ? [] : bed_tbi[0]
             tbi_new = num_intervals == 0 ? [] : bed_tbi[1]
 
-            [[patient:meta.patient, sample:meta.sample, sex:meta.sex, status:meta.status, id:meta.sample, data_type:meta.data_type, num_intervals:num_intervals],
+            [[
+                data_type:      meta.data_type,
+                id:             meta.sample,
+                num_intervals:  num_intervals,
+                patient:        meta.patient,
+                sample:         meta.sample,
+                sex:            meta.sex,
+                status:         meta.status,
+            ],
             cram, crai, bed_new, tbi_new]
         }
 
@@ -71,8 +87,11 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
         cram_intervals_no_index = cram_recalibrated_intervals.map { meta, cram, crai, intervals ->
                                                                     [meta, cram, intervals]
                                                                     }
-        RUN_MPILEUP(cram_intervals_no_index,
-                        fasta)
+        RUN_MPILEUP(
+            cram_intervals_no_index,
+            fasta
+        )
+
         ch_versions = ch_versions.mix(RUN_MPILEUP.out.versions)
     }
 
@@ -83,14 +102,16 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
                                 }
 
         RUN_CONTROLFREEC_TUMORONLY(
-                        controlfreec_input,
-                        fasta,
-                        fasta_fai,
-                        dbsnp,
-                        dbsnp_tbi,
-                        chr_files,
-                        mappability,
-                        intervals_bed_combined)
+            controlfreec_input,
+            fasta,
+            fasta_fai,
+            dbsnp,
+            dbsnp_tbi,
+            chr_files,
+            mappability,
+            intervals_bed_combined
+        )
+
         ch_versions = ch_versions.mix(RUN_CONTROLFREEC_TUMORONLY.out.versions)
     }
 
@@ -100,11 +121,13 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
                 [meta, cram, []]
             }
 
-        RUN_CNVKIT ( cram_recalibrated_cnvkit_tumoronly,
-                        fasta,
-                        fasta_fai,
-                        [],
-                        cnvkit_reference )
+        RUN_CNVKIT (
+            cram_recalibrated_cnvkit_tumoronly,
+            fasta,
+            fasta_fai,
+            [],
+            cnvkit_reference
+        )
 
         ch_versions = ch_versions.mix(RUN_CNVKIT.out.versions)
     }
@@ -116,41 +139,54 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
                 [meta, cram, crai, [], [], intervals]
             }
 
-        RUN_FREEBAYES(cram_recalibrated_intervals_freebayes, dict, fasta, fasta_fai)
+        RUN_FREEBAYES(
+            cram_recalibrated_intervals_freebayes,
+            dict,
+            fasta,
+            fasta_fai
+        )
 
         freebayes_vcf = RUN_FREEBAYES.out.freebayes_vcf
         ch_versions   = ch_versions.mix(RUN_FREEBAYES.out.versions)
     }
 
     if (tools.split(',').contains('mutect2')) {
-        GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING(cram_recalibrated_intervals,
-                                                fasta,
-                                                fasta_fai,
-                                                dict,
-                                                germline_resource,
-                                                germline_resource_tbi,
-                                                panel_of_normals,
-                                                panel_of_normals_tbi)
+        GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING(
+            cram_recalibrated_intervals,
+            fasta,
+            fasta_fai,
+            dict,
+            germline_resource,
+            germline_resource_tbi,
+            panel_of_normals,
+            panel_of_normals_tbi
+        )
 
         mutect2_vcf = GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING.out.filtered_vcf
         ch_versions = ch_versions.mix(GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING.out.versions)
     }
 
     if (tools.split(',').contains('manta')){
-        RUN_MANTA_TUMORONLY(cram_recalibrated_intervals_gz_tbi,
-                            dict,
-                            fasta,
-                            fasta_fai)
+
+        RUN_MANTA_TUMORONLY(
+            cram_recalibrated_intervals_gz_tbi,
+            dict,
+            fasta,
+            fasta_fai
+        )
 
         manta_vcf   = RUN_MANTA_TUMORONLY.out.manta_vcf
         ch_versions = ch_versions.mix(RUN_MANTA_TUMORONLY.out.versions)
     }
 
     if (tools.split(',').contains('strelka')) {
-        RUN_STRELKA_SINGLE(cram_recalibrated_intervals_gz_tbi,
-                            dict,
-                            fasta,
-                            fasta_fai)
+
+        RUN_STRELKA_SINGLE(
+            cram_recalibrated_intervals_gz_tbi,
+            dict,
+            fasta,
+            fasta_fai
+        )
 
         strelka_vcf = RUN_STRELKA_SINGLE.out.strelka_vcf
         ch_versions = ch_versions.mix(RUN_STRELKA_SINGLE.out.versions)
@@ -158,9 +194,12 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
 
         //TIDDIT
     if (tools.split(',').contains('tiddit')){
-        RUN_TIDDIT(cram_recalibrated,
-                fasta,
-                bwa)
+
+        RUN_TIDDIT(
+            cram_recalibrated,
+            fasta,
+            bwa
+        )
 
         tiddit_vcf = RUN_TIDDIT.out.tiddit_vcf
         ch_versions = ch_versions.mix(RUN_TIDDIT.out.versions)

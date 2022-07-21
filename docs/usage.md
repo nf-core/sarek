@@ -26,7 +26,7 @@ Note that the pipeline will create the following files in your working directory
 ```console
 work            # Directory containing the nextflow working files
 results         # Finished results (configurable, see below)
-.nextflow_log   # Log file from Nextflow
+.nextflow.log   # Log file from Nextflow
 # Other nextflow hidden files, eg. history of pipeline runs and old logs.
 ```
 
@@ -58,7 +58,7 @@ Multiple CSV files can be specified if the path is enclosed in quotes.
 | `sex`     | **Sex chromosomes of the patient**; i.e. XX, XY..., only used for Copy-Number Variation analysis in a tumor/pair<br /> _Optional, Default: `NA`_                                                                                                                                                                                  |
 | `status`  | **Normal/tumor status of sample**; can be `0` (normal) or `1` (tumor).<br /> _Optional, Default: `0`_                                                                                                                                                                                                                             |
 | `sample`  | **Custom sample ID** for each tumor and normal sample; more than one tumor sample for each subject is possible, i.e. a tumor and a relapse; samples can have multiple lanes for which the _same_ ID must be used to merge them later (see also `lane`). Sample IDs must be unique for unique biological samples <br /> _Required_ |
-| `lane`    | Lane ID, used when the `sample` is multiplexed on several lanes. Must be unique for each lane in the same sample (but does not need to be the original lane name), and must contain at least one character <br /> _Required for `--step_mapping`_                                                                                 |
+| `lane`    | Lane ID, used when the `sample` is multiplexed on several lanes. Must be unique for each lane in the same sample (but does not need to be the original lane name), and must contain at least one character <br /> _Required for `--step mapping`_                                                                                 |
 | `fastq_1` | Full path to FastQ file for Illumina short reads 1. File has to be gzipped and have the extension `.fastq.gz` or `.fq.gz`.                                                                                                                                                                                                        |
 | `fastq_2` | Full path to FastQ file for Illumina short reads 2. File has to be gzipped and have the extension `.fastq.gz` or `.fq.gz`.                                                                                                                                                                                                        |
 | `bam`     | Full path to (u)BAM file                                                                                                                                                                                                                                                                                                          |
@@ -482,8 +482,8 @@ If you have any questions or issues please send us a message on [Slack](https://
 
 When using default parameters only, sarek runs preprocessing and exits after base quality score recalibration. This is reflected in the default test profile:
 
-```
-nextflow run nf-core/sarek -r 3.0.0 -profile test,<container/institute>
+```console
+nextflow run nf-core/sarek -r 3.0 -profile test,<container/institute>
 ```
 
 Expected run output:
@@ -532,13 +532,13 @@ Expected run output:
 
 The pipeline comes with a number of possible paths and tools that can be used. The easiest and fastest test to see that the preprocessing + variantcalling (in this case Strelka2) works, is to run:
 
-```
+```console
 nextflow run nf-core/sarek -r 3.0.0 -profile test,<container/institute> --tools strelka
 ```
 
 Due to the small test data size, unfortunately not everything can be tested from top-to-bottom, but often is done by utilizing the pipeline's `--step` parameter. Annotation has to tested separatly from the remaining workflow, since we use references for `C.elegans`, while the remaining tests are run on downsampled human data.
 
-```
+```console
 nextflow run nf-core/sarek -r 3.0.0 -profile test,<container/institute> --tools snpeff --step annotation
 ```
 
@@ -581,7 +581,7 @@ This list is by no means exhaustive and it will depend on the specific analysis 
 | [Control-FREEC](https://github.com/BoevaLab/FREEC)                                                      |  x  |  x  |   x    |    -    |   x   |    x    |
 | [MSIsensorPro](https://github.com/xjtu-omics/msisensor-pro)                                             |  x  |  x  |   x    |    -    |   -   |    x    |
 
-## How to run ASCAT with WES
+## How to run ASCAT with whole-exome sequencing data?
 
 While the ASCAT implementation in sarek is capable of running with whole-exome sequencing data, the needed references are currently not provided with the igenomes.config. According to the [developers](https://github.com/VanLoo-lab/ascat/issues/97) of ASCAT, loci and allele files (one file per chromosome) can be downloaded directly from the [Battenberg repository](https://ora.ox.ac.uk/objects/uuid:08e24957-7e76-438a-bd38-66c48008cf52).
 
@@ -604,19 +604,6 @@ For mapping, sarek follows the parameter suggestions provided in this [paper](ht
 
 In addition, currently the mismatch penalty for reads with tumor status in the sample sheet are mapped with a mismatch penalty of `-B 3`.
 
-## MultiQC related issues
-
-### Plots for SnpEff are missing
-
-When plots are missing, it is possible that the fasta and the custom SnpEff database are not matching https://pcingola.github.io/SnpEff/se_faq/#error_chromosome_not_found-details.
-The SnpEff completes without throwing an error causing nextflow to complete successfully. An indication for the error are these lines in the `.command` files:
-
-```
-ERRORS: Some errors were detected
-Error type      Number of errors
-ERROR_CHROMOSOME_NOT_FOUND      17522411
-```
-
 ## How to create a panel-of-normals for Mutect2
 
 For a detailed tutorial on how to create a panel-of-normals, see [here](https://gatk.broadinstitute.org/hc/en-us/articles/360035531132).
@@ -627,7 +614,7 @@ If you have problems running processes that make use of Spark such as `MarkDupli
 You are probably experiencing issues with the limit of open files in your system.
 You can check your current limit by typing the following:
 
-```bash
+```console
 ulimit -n
 ```
 
@@ -636,20 +623,20 @@ In order to increase the size limit permanently you can:
 
 Edit the file `/etc/security/limits.conf` and add the lines:
 
-```bash
+```console
 *     soft   nofile  65535
 *     hard   nofile  65535
 ```
 
 Edit the file `/etc/sysctl.conf` and add the line:
 
-```bash
+```console
 fs.file-max = 65535
 ```
 
 Edit the file `/etc/sysconfig/docker` and add the new limits to OPTIONS like this:
 
-```bash
+```console
 OPTIONS=”—default-ulimit nofile=65535:65535"
 ```
 
@@ -672,7 +659,8 @@ This will enable pre-processing of the reads and UMI consensus reads calling, wh
 ### UMI Read Structure
 
 This parameter is a string, which follows a [convention](https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures) to describe the structure of the umi.
-If your reads contain a UMI only on one end, the string should only represent one structure (i.e. "2M11S+T"); should your reads contain a UMI on both ends, the string will contain two structures separated by a blank space (i.e. "2M11S+T 2M11S+T").
+
+As an example: if your reads contain a UMI only on the forward read, the string can only represent one structure (i.e. "2M11S+T"); should your reads contain a UMI on both reas, the string will contain two structures separated by a blank space (i.e. "2M11S+T 2M11S+T"); should your reads contain a UMI only on the reverse read, your structure must represent the template only for the forward read and template plus UMI for the reverse read (i.e. +T 12M11S+T). Please do refer to FGBIO documentation for more details, as providing the correct structure is essential and specific to the UMI kit used.
 
 ### Limitations and future updates
 
@@ -690,7 +678,7 @@ If none of your required genome files are in igenomes, `--igenomes_ignore` must 
 
 Minimal example for custom genomes:
 
-```
+```console
 nextflow run nf-core/sarek --genome null --igenomes_ignore --fasta <custom.fasta>
 ```
 
@@ -700,150 +688,123 @@ If you don't want to use some of the provided reference genomes, they can be ove
 
 Example for using a custom known indels file:
 
-```
+```console
 nextflow run nf-core/sarek --known_indels <my_known_indels.vcf.gz> --genome GRCh38.GATK
 ```
 
 Example for not using known indels, but all other provided reference file:
 
-```
+```console
 nextflow run nf-core/sarek --known_indels false --genome GRCh38.GATK
 ```
 
 ### Where do the used reference genomes originate from
 
-_under construction - help needed_
+For GATK.GRCh38 the links for each reference file and the corresponding processes that use them is listed below. For GATK.GRCh37 the files originate from the same sources:
 
-GATK.GRCh38:
-
-| File                  | Tools                                                                                                                                                                                                                                                                                                                                                                                                                                                | Origin                                                                                                                                                                                  | Docs                                                                                 |
-| :-------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------- |
-| ascat_alleles         | ASCAT                                                                                                                                                                                                                                                                                                                                                                                                                                                | https://www.dropbox.com/s/uouszfktzgoqfy7/G1000_alleles_hg38.zip                                                                                                                        | https://github.com/VanLoo-lab/ascat/tree/master/ReferenceFiles/WGS                   |
-| ascat_loci            | ASCAT                                                                                                                                                                                                                                                                                                                                                                                                                                                | https://www.dropbox.com/s/80cq0qgao8l1inj/G1000_loci_hg38.zip                                                                                                                           | https://github.com/VanLoo-lab/ascat/tree/master/ReferenceFiles/WGS                   |
-| ascat_loci_gc         | ASCAT                                                                                                                                                                                                                                                                                                                                                                                                                                                | https://www.dropbox.com/s/80cq0qgao8l1inj/G1000_loci_hg38.zip                                                                                                                           | https://github.com/VanLoo-lab/ascat/tree/master/ReferenceFiles/WGS                   |
-| ascat_loci_rt         | ASCAT                                                                                                                                                                                                                                                                                                                                                                                                                                                | https://www.dropbox.com/s/xlp99uneqh6nh6p/RT_G1000_hg38.zip                                                                                                                             | https://github.com/VanLoo-lab/ascat/tree/master/ReferenceFiles/WGS                   |
-| bwa                   | bwa-mem                                                                                                                                                                                                                                                                                                                                                                                                                                              | bwa index -p bwa/${fasta.baseName} $fasta                                                                                                                                               |                                                                                      |
-| bwamem2               | bwa-mem2                                                                                                                                                                                                                                                                                                                                                                                                                                             | bwa-mem2 index -p bwamem2/${fasta} $fasta                                                                                                                                               |                                                                                      |
-| dragmap               | DragMap                                                                                                                                                                                                                                                                                                                                                                                                                                              | dragen-os --build-hash-table true --ht-reference $fasta --output-directory dragmap                                                                                                      |                                                                                      |
-| dbsnp                 | Baserecalibrator, ControlFREEC, GenotypeGVCF, HaplotypeCaller                                                                                                                                                                                                                                                                                                                                                                                        | possibly from an old ftp server dbsnp_146.hg38.vcf.gz                                                                                                                                   | https://gatk.broadinstitute.org/hc/en-us/articles/360035890811-Resource-bundle       |
-| dbsnp_tbi             | Baserecalibrator, ControlFREEC, GenotypeGVCF, HaplotypeCaller                                                                                                                                                                                                                                                                                                                                                                                        |                                                                                                                                                                                         |                                                                                      |
-| dict                  | Baserecalibrator(Spark), CNNScoreVariant, EstimateLibraryComplexity, FilterMutectCalls, FilterVariantTranches, GatherPileupSummaries,GenotypeGVCF, GetPileupSummaries, HaplotypeCaller, MarkDulpicates(Spark), MergeVCFs, Mutect2, Variantrecalibrator                                                                                                                                                                                               | https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/Homo_sapiens_assembly38.dict                                                     | https://gatk.broadinstitute.org/hc/en-us/articles/360035890811-Resource-bundle       |
-| fasta                 | ApplyBQSR(Spark), ApplyVQSR, ASCAT, Baserecalibrator(Spark), BWA, BWAMem2, CNNScoreVariant, CNVKit, ControlFREEC, DragMap, DEEPVariant, EnsemblVEP, EstimateLibraryComplexity, FilterMutectCalls, FilterVariantTranches, FreeBayes, GatherPileupSummaries,GenotypeGVCF, GetPileupSummaries, HaplotypeCaller, interval building, Manta, MarkDuplicates(Spark),MergeVCFs,MSISensorPro, Mutect2, Samtools, snpEff, Strelka, Tiddit, Variantrecalibrator | https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/Homo_sapiens_assembly38.fasta                                                    | https://gatk.broadinstitute.org/hc/en-us/articles/360035890811-Resource-bundle       |
-| fasta_fai             | ApplyBQSR(Spark), ApplyVQSR, ASCAT, Baserecalibrator(Spark), BWA, BWAMem2, CNNScoreVariant, CNVKit, ControlFREEC, DragMap, DEEPVariant, EnsemblVEP, EstimateLibraryComplexity, FilterMutectCalls, FilterVariantTranches, FreeBayes, GatherPileupSummaries,GenotypeGVCF, GetPileupSummaries, HaplotypeCaller, interval building, Manta, MarkDuplicates(Spark),MergeVCFs,MSISensorPro, Mutect2, Samtools, snpEff, Strelka, Tiddit, Variantrecalibrator | https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/Homo_sapiens_assembly38.fasta.fai                                                | https://gatk.broadinstitute.org/hc/en-us/articles/360035890811-Resource-bundle       |
-| germline_resource     | GetPileupsummaries,Mutect2                                                                                                                                                                                                                                                                                                                                                                                                                           | ? gnomAD.r2.1.1.GRCh38.PASS.AC.AF.only.vcf.gz"                                                                                                                                          |                                                                                      |
-| germline_resource_tbi | GetPileupsummaries,Mutect2                                                                                                                                                                                                                                                                                                                                                                                                                           | ? gnomAD.r2.1.1.GRCh38.PASS.AC.AF.only.vcf.gz.tbi"                                                                                                                                      |                                                                                      |
-| intervals             | ApplyBQSR(Spark), ASCAT, Baserecalibraotr(Spark), BCFTools, CNNScoreVariants, ControlFREEC, Deepvariant, FilterVariantTranches, FreeBayes, GenotypeGVCF, GetPileupSummaries, HaplotypeCaller, Strelka, mpileup, MSISensorPro, Mutect2, VCFTools                                                                                                                                                                                                      | https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/wgs_calling_regions.hg38.interval_list                                           |                                                                                      |
-| known_indels          | BaseRecalibrator(Spark), FilterVariantTranches                                                                                                                                                                                                                                                                                                                                                                                                       | https://storage.googleapis.com/genomics-public-data/resources/broad/hg38/v0/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz,beta/Homo_sapiens_assembly38.known_indels}.vcf.            |                                                                                      |
-| known_indels_tbi      | BaseRecalibrator(Spark), FilterVariantTranches                                                                                                                                                                                                                                                                                                                                                                                                       | https://storage.googleapis.com/genomics-public-data/resources/broad/hg38/v0/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz.tbi,beta/Homo_sapiens_assembly38.known_indels}.vcf.gz.tbi" |                                                                                      |
-| mappability           | ControlFREEC                                                                                                                                                                                                                                                                                                                                                                                                                                         | http://xfer.curie.fr/get/vyIi4w8EONl/out100m2_hg38.zip                                                                                                                                  | http://boevalab.inf.ethz.ch/FREEC/tutorial.html                                      |
-| pon                   | Mutect2                                                                                                                                                                                                                                                                                                                                                                                                                                              | https://console.cloud.google.com/storage/browser/_details/gatk-best-practices/somatic-hg38/1000g_pon.hg38.vcf.gz                                                                        | https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON- |
-| pon_tbi               | Mutect2                                                                                                                                                                                                                                                                                                                                                                                                                                              | https://console.cloud.google.com/storage/browser/_details/gatk-best-practices/somatic-hg38/1000g_pon.hg38.vcf.gz.tbi                                                                    | https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON- |
-| snpeff_db             |                                                                                                                                                                                                                                                                                                                                                                                                                                                      | 'GRCh38.99'                                                                                                                                                                             |                                                                                      |
-| snpeff_genome         |                                                                                                                                                                                                                                                                                                                                                                                                                                                      | 'GRCh38'                                                                                                                                                                                |                                                                                      |
-| vep_cache_version     |                                                                                                                                                                                                                                                                                                                                                                                                                                                      | 105                                                                                                                                                                                     |                                                                                      |
-| vep_genome            |                                                                                                                                                                                                                                                                                                                                                                                                                                                      | 'GRCh38'                                                                                                                                                                                |                                                                                      |
-| chr_dir               |                                                                                                                                                                                                                                                                                                                                                                                                                                                      | "${params.igenomes_base}/Homo_sapiens/GATK/GRCh38/Sequence/Chromosomes"                                                                                                                 |                                                                                      |
+| File                  | Tools                                                                                                                                                                                                                                                                                                                                                                                                                                                | Origin                                                                                                                | Docs                                                                                 |
+| :-------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------- |
+| ascat_alleles         | ASCAT                                                                                                                                                                                                                                                                                                                                                                                                                                                | https://www.dropbox.com/s/uouszfktzgoqfy7/G1000_alleles_hg38.zip                                                      | https://github.com/VanLoo-lab/ascat/tree/master/ReferenceFiles/WGS                   |
+| ascat_loci            | ASCAT                                                                                                                                                                                                                                                                                                                                                                                                                                                | https://www.dropbox.com/s/80cq0qgao8l1inj/G1000_loci_hg38.zip                                                         | https://github.com/VanLoo-lab/ascat/tree/master/ReferenceFiles/WGS                   |
+| ascat_loci_gc         | ASCAT                                                                                                                                                                                                                                                                                                                                                                                                                                                | https://www.dropbox.com/s/80cq0qgao8l1inj/G1000_loci_hg38.zip                                                         | https://github.com/VanLoo-lab/ascat/tree/master/ReferenceFiles/WGS                   |
+| ascat_loci_rt         | ASCAT                                                                                                                                                                                                                                                                                                                                                                                                                                                | https://www.dropbox.com/s/xlp99uneqh6nh6p/RT_G1000_hg38.zip                                                           | https://github.com/VanLoo-lab/ascat/tree/master/ReferenceFiles/WGS                   |
+| bwa                   | bwa-mem                                                                                                                                                                                                                                                                                                                                                                                                                                              | bwa index -p bwa/${fasta.baseName} $fasta                                                                             |                                                                                      |
+| bwamem2               | bwa-mem2                                                                                                                                                                                                                                                                                                                                                                                                                                             | bwa-mem2 index -p bwamem2/${fasta} $fasta                                                                             |                                                                                      |
+| dragmap               | DragMap                                                                                                                                                                                                                                                                                                                                                                                                                                              | dragen-os --build-hash-table true --ht-reference $fasta --output-directory dragmap                                    |                                                                                      |
+| dbsnp                 | Baserecalibrator, ControlFREEC, GenotypeGVCF, HaplotypeCaller                                                                                                                                                                                                                                                                                                                                                                                        | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) | https://gatk.broadinstitute.org/hc/en-us/articles/360035890811-Resource-bundle       |
+| dbsnp_tbi             | Baserecalibrator, ControlFREEC, GenotypeGVCF, HaplotypeCaller                                                                                                                                                                                                                                                                                                                                                                                        | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) |                                                                                      |
+| dict                  | Baserecalibrator(Spark), CNNScoreVariant, EstimateLibraryComplexity, FilterMutectCalls, FilterVariantTranches, GatherPileupSummaries,GenotypeGVCF, GetPileupSummaries, HaplotypeCaller, MarkDulpicates(Spark), MergeVCFs, Mutect2, Variantrecalibrator                                                                                                                                                                                               | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) | https://gatk.broadinstitute.org/hc/en-us/articles/360035890811-Resource-bundle       |
+| fasta                 | ApplyBQSR(Spark), ApplyVQSR, ASCAT, Baserecalibrator(Spark), BWA, BWAMem2, CNNScoreVariant, CNVKit, ControlFREEC, DragMap, DEEPVariant, EnsemblVEP, EstimateLibraryComplexity, FilterMutectCalls, FilterVariantTranches, FreeBayes, GatherPileupSummaries,GenotypeGVCF, GetPileupSummaries, HaplotypeCaller, interval building, Manta, MarkDuplicates(Spark),MergeVCFs,MSISensorPro, Mutect2, Samtools, snpEff, Strelka, Tiddit, Variantrecalibrator | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) | https://gatk.broadinstitute.org/hc/en-us/articles/360035890811-Resource-bundle       |
+| fasta_fai             | ApplyBQSR(Spark), ApplyVQSR, ASCAT, Baserecalibrator(Spark), BWA, BWAMem2, CNNScoreVariant, CNVKit, ControlFREEC, DragMap, DEEPVariant, EnsemblVEP, EstimateLibraryComplexity, FilterMutectCalls, FilterVariantTranches, FreeBayes, GatherPileupSummaries,GenotypeGVCF, GetPileupSummaries, HaplotypeCaller, interval building, Manta, MarkDuplicates(Spark),MergeVCFs,MSISensorPro, Mutect2, Samtools, snpEff, Strelka, Tiddit, Variantrecalibrator | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) | https://gatk.broadinstitute.org/hc/en-us/articles/360035890811-Resource-bundle       |
+| germline_resource     | GetPileupsummaries,Mutect2                                                                                                                                                                                                                                                                                                                                                                                                                           | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) |                                                                                      |
+| germline_resource_tbi | GetPileupsummaries,Mutect2                                                                                                                                                                                                                                                                                                                                                                                                                           | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) |                                                                                      |
+| intervals             | ApplyBQSR(Spark), ASCAT, Baserecalibrator(Spark), BCFTools, CNNScoreVariants, ControlFREEC, Deepvariant, FilterVariantTranches, FreeBayes, GenotypeGVCF, GetPileupSummaries, HaplotypeCaller, Strelka, mpileup, MSISensorPro, Mutect2, VCFTools                                                                                                                                                                                                      | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) |                                                                                      |
+| known_indels          | BaseRecalibrator(Spark), FilterVariantTranches                                                                                                                                                                                                                                                                                                                                                                                                       | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) |                                                                                      |
+| known_indels_tbi      | BaseRecalibrator(Spark), FilterVariantTranches                                                                                                                                                                                                                                                                                                                                                                                                       | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) |                                                                                      |
+| mappability           | ControlFREEC                                                                                                                                                                                                                                                                                                                                                                                                                                         | http://xfer.curie.fr/get/vyIi4w8EONl/out100m2_hg38.zip                                                                | http://boevalab.inf.ethz.ch/FREEC/tutorial.html                                      |
+| pon                   | Mutect2                                                                                                                                                                                                                                                                                                                                                                                                                                              | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) | https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON- |
+| pon_tbi               | Mutect2                                                                                                                                                                                                                                                                                                                                                                                                                                              | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) | https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON- |
 
 ## How to customise SnpEff and VEP annotation
 
-_under construction help needed_
-
-Sarek comes shipped with containers for both snpEff and VEP for human reference genomes with `--genome GATK.GRCh38` and `--genome GATK.GRCh37`. Different containers however can be provided.
-
-<!-- #### Create containers
-
-The cache has to be downloaded.
-
-`sareksnpeff`, our `snpeff` container is designed using [Conda](https://conda.io/).
-
-[![sareksnpeff-docker status](https://img.shields.io/docker/automated/nfcore/sareksnpeff.svg)](https://hub.docker.com/r/nfcore/sareksnpeff)
-
-Based on [nfcore/base:1.12.1](https://hub.docker.com/r/nfcore/base/tags), it contains:
-
-- **[snpEff](http://snpeff.sourceforge.net/)** 4.3.1t
-- Cache for `GRCh37`, `GRCh38`, `GRCm38`, `CanFam3.1` or `WBcel235`
-
-`sarekvep`, our `vep` container is designed using [Conda](https://conda.io/).
-
-[![sarekvep-docker status](https://img.shields.io/docker/automated/nfcore/sarekvep.svg)](https://hub.docker.com/r/nfcore/sarekvep)
-
-Based on [nfcore/base:1.12.1](https://hub.docker.com/r/nfcore/base/tags), it contains:
-
-- **[GeneSplicer](https://ccb.jhu.edu/software/genesplicer/)** 1.0
-- **[VEP](https://github.com/Ensembl/ensembl-vep)** 99.2
-- Cache for `GRCh37`, `GRCh38`, `GRCm38`, `CanFam3.1` or `WBcel235` -->
-
-  <!-- "snpeff_db"
-  "snpeff_genome":
-  "snpeff_version":
-  "vep_genome":
-  "vep_species":
-  "vep_cache_version":
-  "vep_version": -->
+Sarek uses nf-core provided containers for both snpEff and VEP for several reference genomes ('CanFam3', 'GRCh37', 'GRCh38', 'GRCm38' and 'WBcel235').
 
 ### Using downloaded cache
 
 Both `snpEff` and `VEP` enable usage of cache, if no pre-build container is available.
-The cache needs to made available on the machine where Sarek is run.
+The cache needs to be made available on the machine where Sarek is run.
 You need to specify the cache directory using `--snpeff_cache` and `--vep_cache` in the command lines or within configuration files.
 
 Example:
 
-```bash
+```console
 nextflow run nf-core/sarek --tools snpEff --step annotate --sample <file.vcf.gz> --snpeff_cache </path/to/snpEff/cache>
 nextflow run nf-core/sarek --tools VEP --step annotate --sample <file.vcf.gz> --vep_cache </path/to/VEP/cache>
 ```
 
-### Download cache
-
-A `Nextflow` helper script has been designed to help downloading `snpEff` and `VEP` caches.
-Such files are meant to be shared between multiple users, so this script is mainly meant for people administrating servers, clusters and advanced users.
-
-```bash
-nextflow run download_cache.nf --snpeff_cache </path/to/snpEff/cache> --snpeff_db <snpEff DB version> --genome <GENOME>
-nextflow run download_cache.nf --vep_cache </path/to/VEP/cache> --species <species> --vep_cache_version <VEP cache version> --genome <GENOME>
-```
+Similarly, when wanting to use a different cache than the one specified in the iGenomes config file, one can use `--snpeff_db`, `--snpeff_genome`, `--snpeff_version`, `--vep_cache_version`, `--vep_genome`, `--vep_species` and `--vep_version` to overwrite these default value related to the databases, genomes, versions and caches' versions used by these tools.
 
 ### Using VEP plugins
 
-<!-- To enable the use of the `VEP` `CADD` plugin:
-
-- Download the `CADD` files
-- Specify them (either on the command line, like in the example or in a configuration file)
-- use the `--cadd_cache` flag
-
-Example:
-
-```bash
-nextflow run nf-core/sarek --step annotate --tools VEP --sample <file.vcf.gz> --cadd_cache \
-    --cadd_indels </path/to/CADD/cache/InDels.tsv.gz> \
-    --cadd_indels_tbi </path/to/CADD/cache/InDels.tsv.gz.tbi> \
-    --cadd_wg_snvs </path/to/CADD/cache/whole_genome_SNVs.tsv.gz> \
-    --cadd_wg_snvs_tbi </path/to/CADD/cache/whole_genome_SNVs.tsv.gz.tbi>
-```
-
-#### Downloading CADD files
-
-An helper script has been designed to help downloading `CADD` files.
-Such files are meant to be share between multiple users, so this script is mainly meant for people administrating servers, clusters and advanced users.
-
-```bash
-nextflow run download_cache.nf --cadd_cache </path/to/CADD/cache> --cadd_version <CADD version> --genome <GENOME>
-``` -->
-
 #### dbnsfp
+
+Enable with `--vep_dbnsfp`. The following parameters are mandatory:
+
+- `--dbnsfp`, to specify the path to the dbNSFP processed file.
+- `--dbnsfp_tbi`, to specify the path to the dbNSFP tabix indexed file.
+
+The following parameters are optionnal:
+
+- `--dbnsfp_consequence`, to filter/limit outputs to a specific effect of the variant.
+  - The set of consequence terms is defined by the Sequence Ontology and an overview of those used in VEP can be found [here](https://www.ensembl.org/info/genome/variation/prediction/predicted_data.html).
+  - If one wants to filter using several consequences, then separate those by using '&' (i.e. `--dbnsfp_consequence '3_prime_UTR_variant&intron_variant'`.",
+- `--dbnsfp_fields`, to retrieve individual values from the dbNSFP file.
+  - The values correspond to the name of the columns in the dbNSFP file and are separated by comma.
+  - The column names might differ between the different dbNSFP versions. Please check the Readme.txt file, which is provided with the dbNSFP file, to obtain the correct column names. The Readme file contains also a short description of the provided values and the version of the tools used to generate them.
+
+For more details, see [here](https://www.ensembl.org/info/docs/tools/vep/script/vep_plugins.html#dbnsfp).
 
 #### LOFTEE
 
+Enable with `--vep_loftee`.
+
+For more details, see [here](https://github.com/konradjk/loftee).
+
 #### SpliceAi
 
+Enable with `--vep_spliceai`. The following parameters are mandatory:
+
+- `--spliceai_snv`, to specify the path to SpliceAI raw scores snv file.
+- `--spliceai_snv_tbi`, to specify the path to SpliceAI raw scores snv tabix indexed file.
+- `--spliceai_indel`, to specify the path to SpliceAI raw scores indel file.
+- `--spliceai_indel_tbi`, to specify the path to SpliceAI raw scores indel tabix indexed file.
+
+For more details, see [here](https://www.ensembl.org/info/docs/tools/vep/script/vep_plugins.html#spliceai).
+
 #### SpliceRegions
+
+Enable with `--vep_spliceregion`.
+
+For more details, see [here](https://www.ensembl.org/info/docs/tools/vep/script/vep_plugins.html#spliceregion) and [here](https://www.ensembl.info/2018/10/26/cool-stuff-the-vep-can-do-splice-site-variant-annotation/)."
 
 ## Requested resources for the tools
 
 Resource requests are difficult to generalize and are often dependent on input data size. Currently, the number of cpus and memory requested by default were adapted from tests on 5 ICGC paired whole-genome sequencing samples with approximately 40X and 80X depth.
 For targeted data analysis, this is overshooting by a lot. In this case resources for each process can be limited by either setting `--max_memory` and `-max_cpus` or tailoring the request by process name as described [here](#resource-requests). If you are using sarek for a certain data type regulary, and would like to make these requests available to others on your system, an institution-specific, pipeline-specific config file can be added [here](https://github.com/nf-core/configs/tree/master/conf/pipeline/sarek).
 
-## How to set sarek up to use sentieon
+## MultiQC related issues
+
+### Plots for SnpEff are missing
+
+When plots are missing, it is possible that the fasta and the custom SnpEff database are not matching https://pcingola.github.io/SnpEff/se_faq/#error_chromosome_not_found-details.
+The SnpEff completes without throwing an error causing nextflow to complete successfully. An indication for the error are these lines in the `.command` files:
+
+```text
+ERRORS: Some errors were detected
+Error type      Number of errors
+ERROR_CHROMOSOME_NOT_FOUND      17522411
+```
+
+## How to set up sarek to use sentieon
 
 Sarek 3.0 is currently not supporting sentieon. It is planned for the upcoming release 3.1. In the meantime, please revert to the last release 2.7.2.

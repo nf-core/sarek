@@ -33,6 +33,17 @@ input:
       type: file
       description: tbi file matching with -vcf
       pattern: "*.vcf.gz.tbi"
+  - resource_vcf:
+      type: file
+      description: all resource vcf files that are used with the corresponding '--resource' label
+      pattern: "*.vcf.gz"
+  - resource_tbi:
+      type: file
+      description: all resource tbi files that are used with the corresponding '--resource' label
+      pattern: "*.vcf.gz.tbi"
+  - labels:
+      type: string
+      description: necessary arguments for GATK VariantRecalibrator. Specified to directly match the resources provided. More information can be found at https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator
   - fasta:
       type: file
       description: The reference fasta file
@@ -45,34 +56,6 @@ input:
       type: file
       description: GATK sequence dictionary
       pattern: "*.dict"
-  - allelespecific:
-      type: boolean
-      description: specify whether to use allele specific annotations
-      pattern: "{true,false}"
-  - resvcfs:
-      type: list
-      description: resource files to be used as truth, training and known sites resources, this imports the files into the module, file names are specified again in the resource_labels to be called via the command.
-      pattern: "*/hapmap_3.3.hg38_chr21.vcf.gz"
-  - restbis:
-      type: list
-      description: tbis for the corresponding vcfs files to be used as truth, training and known resources.
-      pattern: "*/hapmap_3.3.hg38_chr21.vcf.gz.tbi"
-  - reslabels:
-      type: list
-      description: labels for the resource files to be used as truth, training and known sites resources, label should include an identifier,which kind of resource(s) it is, prior value and name of the file.
-      pattern: "hapmap,known=false,training=true,truth=true,prior=15.0 hapmap_3.3.hg38_chr21.vcf.gz"
-  - annotation:
-      type: list
-      description: specify which annotations should be used for calculations.
-      pattern: "['QD', 'MQ', 'FS', 'SOR']"
-  - mode:
-      type: string
-      description: specifies which recalibration mode to employ (SNP is default, BOTH is intended for testing only)
-      pattern: "{SNP,INDEL,BOTH}"
-  - rscript:
-      type: boolean
-      description: specify whether to generate rscript.plot output file
-      pattern: "{true,false}"
 output:
   - recal:
       type: file
@@ -96,3 +79,4 @@ output:
       pattern: "*.versions.yml"
 authors:
   - "@GCJMackenzie"
+  - "@nickhsmith"
