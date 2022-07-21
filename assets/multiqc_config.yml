@@ -61,7 +61,8 @@ extra_fn_clean_exts:
 
 sample_names_replace_regex: True
 sample_names_replace:
-  ".[0-9]{4}": ".md"
+  "\\.[0-9]{4}$": ".md" # should match ".0001" but only at the end of strings for module Markduplicates/EstimateLibraryComplexity
+  module: picard
 
 sp:
   snpeff:
