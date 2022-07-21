@@ -107,6 +107,7 @@ Skierfe is a mountain in the Sarek national park, and the inspiration for the lo
 - [#662](https://github.com/nf-core/sarek/pull/662) - Add bgzipped and indexed GATKBundle reference files for `GATK.GRCh37` and replace germline-resources with GATKBundle one
 - [#663](https://github.com/nf-core/sarek/pull/663) - Add separate parameters for `ASCAT` and `ControlFREEC` back in
 - [#668](https://github.com/nf-core/sarek/pull/668) - Update annotation documentation
+- [#674](https://github.com/nf-core/sarek/pull/664) - Default value for splitting is `50000000`
 
 ### Fixed
 
