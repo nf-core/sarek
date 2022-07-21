@@ -257,8 +257,7 @@
                     "help_text": "For more details, see [here](https://raw.githubusercontent.com/VanLoo-lab/ascat/master/man/ASCAT-manual.pdf)."
                 },
                 "ascat_ploidy": {
-                    "type": "string",
-                    "default": "None",
+                    "type": "number",
                     "fa_icon": "fas fa-bacon",
                     "help_text": "ASCAT: optional argument to override ASCAT optimization and supply psi parameter (expert parameter, don\u2019t adapt unless you know what you\u2019re doing). See [here](https://raw.githubusercontent.com/VanLoo-lab/ascat/master/man/ASCAT-manual.pdf)",
                     "hidden": true,
