@@ -45,10 +45,10 @@ workflow RUN_HAPLOTYPECALLER {
     if (params.joint_germline) {
         // merge vcf and tbis
         genotype_gvcf_to_call = Channel.empty().mix(HAPLOTYPECALLER.out.vcf
-                                .join(HAPLOTYPECALLER.out.tbi)
-                                .join(cram).map{ meta, vcf, tbi, cram, crai, intervals, dragstr_model ->
-                                     [ meta, vcf, tbi, intervals ]
-                                     })
+                                                    .join(HAPLOTYPECALLER.out.tbi)
+                                                    .join(cram).map{ meta, vcf, tbi, cram, crai, intervals, dragstr_model ->
+                                                            [ meta, vcf, tbi, intervals ]
+                                                    })
         // make channels from labels
         dbsnp_vqsr        = params.dbsnp_vqsr        ? Channel.value(params.dbsnp_vqsr)        : Channel.empty()
         known_indels_vqsr = params.known_indels_vqsr ? Channel.value(params.known_indels_vqsr) : Channel.empty()
@@ -56,19 +56,19 @@ workflow RUN_HAPLOTYPECALLER {
 
 
         JOINT_GERMLINE(
-             genotype_gvcf_to_call,
-             fasta,
-             fasta_fai,
-             dict,
-             dbsnp,
-             dbsnp_tbi,
-             dbsnp_vqsr,
-             known_sites_indels,
-             known_sites_indels_tbi,
-             known_indels_vqsr,
-             known_sites_snps,
-             known_sites_snps_tbi,
-             known_snps_vqsr)
+            genotype_gvcf_to_call,
+            fasta,
+            fasta_fai,
+            dict,
+            dbsnp,
+            dbsnp_tbi,
+            dbsnp_vqsr,
+            known_sites_indels,
+            known_sites_indels_tbi,
+            known_indels_vqsr,
+            known_sites_snps,
+            known_sites_snps_tbi,
+            known_snps_vqsr)
 
         filtered_vcf = JOINT_GERMLINE.out.genotype_vcf
         ch_versions = ch_versions.mix(JOINT_GERMLINE.out.versions)
@@ -87,7 +87,7 @@ workflow RUN_HAPLOTYPECALLER {
                                 sex:            meta.sex,
                                 status:         meta.status
                             ]
-                            
+
                     [groupKey(new_meta, new_meta.num_intervals), vcf]
                 }.groupTuple(),
             dict)
@@ -109,8 +109,8 @@ workflow RUN_HAPLOTYPECALLER {
                     known_sites_indels_tbi.concat(known_sites_snps_tbi).flatten().unique().collect())
 
         filtered_vcf = SINGLE_SAMPLE.out.filtered_vcf.map{ meta, vcf-> [[patient:meta.patient, sample:meta.sample, status:meta.status, sex:meta.sex, id:meta.sample, num_intervals:meta.num_intervals, variantcaller:"haplotypecaller"], vcf]}
-        ch_versions = ch_versions.mix(  SINGLE_SAMPLE.out.versions, 
-                                        HAPLOTYPECALLER.out.versions, 
+        ch_versions = ch_versions.mix(  SINGLE_SAMPLE.out.versions,
+                                        HAPLOTYPECALLER.out.versions,
                                         MERGE_HAPLOTYPECALLER.out.versions)
     }
 

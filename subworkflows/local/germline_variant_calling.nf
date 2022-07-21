@@ -24,7 +24,6 @@ workflow GERMLINE_VARIANT_CALLING {
         intervals                         // channel: [mandatory] intervals/target regions
         intervals_bed_gz_tbi              // channel: [mandatory] intervals/target regions index zipped and indexed
         intervals_bed_combined            // channel: [mandatory] intervals/target regions in one file unzipped
- 
         intervals_bed_combined_haplotypec // channel: [mandatory] intervals/target regions in one file unzipped, no_intervals.bed if no_intervals
         known_sites_indels
         known_sites_indels_tbi
@@ -155,20 +154,21 @@ workflow GERMLINE_VARIANT_CALLING {
             .map{ meta, cram, crai, intervals ->
 
             intervals_name = meta.num_intervals == 0 ? "no_interval" : intervals.simpleName
-            new_meta = [
-                data_type:meta.data_type,
-                id:meta.sample,
-                intervals_name:intervals_name,
-                num_intervals:meta.num_intervals,
-                patient:meta.patient,
-                sample:meta.sample,
-                sex:meta.sex,
-                status:meta.status
-            ]
+            new_meta = params.joint_germline ? [
+                                                    data_type:meta.data_type,
+                                                    id:meta.sample,
+                                                    intervals_name:intervals_name,
+                                                    num_intervals:meta.num_intervals,
+                                                    patient:meta.patient,
+                                                    sample:meta.sample,
+                                                    sex:meta.sex,
+                                                    status:meta.status
+                                                ]
+                                            : meta
 
                 [new_meta, cram, crai, intervals, []]
-            }
         }
+
         RUN_HAPLOTYPECALLER(cram_recalibrated_intervals_haplotypecaller,
                         fasta,
                         fasta_fai,

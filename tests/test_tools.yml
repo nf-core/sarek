@@ -478,6 +478,17 @@
     - haplotypecaller
     - variant_calling
   files:
+    - path: results/csv/variantcalled.csv
+    - path: results/multiqc
+    - path: results/no_intervals.bed
+    - path: results/no_intervals.bed.gz
+    - path: results/no_intervals.bed.gz.tbi
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+    - path: results/reports/bcftools/haplotypecaller/joint_variant_calling/joint_germline.bcftools_stats.txt
+    - path: results/reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline.FILTER.summary
+    - path: results/reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline.TsTv.count
+    - path: results/reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline.TsTv.qual
     - path: results/variant_calling/haplotypecaller/joint_variant_calling/joint_germline.vcf.gz
     - path: results/variant_calling/haplotypecaller/joint_variant_calling/joint_germline.vcf.gz.tbi
 
