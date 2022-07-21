@@ -23,11 +23,12 @@ workflow GERMLINE_VARIANT_CALLING {
         fasta_fai                         // channel: [mandatory] fasta_fai
         intervals                         // channel: [mandatory] intervals/target regions
         intervals_bed_gz_tbi              // channel: [mandatory] intervals/target regions index zipped and indexed
-        intervals_bed_combined            // channel: [mandatory] intervals/target regions in one file unzipped, [] if no_intervals
+        intervals_bed_combined            // channel: [mandatory] intervals/target regions in one file unzipped
         intervals_bed_combined_haplotypec // channel: [mandatory] intervals/target regions in one file unzipped, no_intervals.bed if no_intervals
-        known_sites
-        known_sites_tbi
-        // joint_germline                // val: true/false on whether to run joint_germline calling, only works in combination with haplotypecaller at the moment
+        known_sites_indels
+        known_sites_indels_tbi
+        known_sites_snps
+        known_sites_snps_tbi
 
     main:
 
@@ -151,19 +152,34 @@ workflow GERMLINE_VARIANT_CALLING {
     if (tools.split(',').contains('haplotypecaller')){
         cram_recalibrated_intervals_haplotypecaller = cram_recalibrated_intervals
             .map{ meta, cram, crai, intervals ->
-                [meta, cram, crai, intervals, []]
-            }
-        RUN_HAPLOTYPECALLER(
-            cram_recalibrated_intervals_haplotypecaller,
-            fasta,
-            fasta_fai,
-            dict,
-            dbsnp,
-            dbsnp_tbi,
-            intervals_bed_combined_haplotypec,
-            known_sites,
-            known_sites_tbi
-        )
+
+            intervals_name = meta.num_intervals == 0 ? "no_interval" : intervals.simpleName
+            new_meta = params.joint_germline ? [
+                                                    data_type:meta.data_type,
+                                                    id:meta.sample,
+                                                    intervals_name:intervals_name,
+                                                    num_intervals:meta.num_intervals,
+                                                    patient:meta.patient,
+                                                    sample:meta.sample,
+                                                    sex:meta.sex,
+                                                    status:meta.status
+                                                ]
+                                            : meta
+
+                [new_meta, cram, crai, intervals, []]
+        }
+
+        RUN_HAPLOTYPECALLER(cram_recalibrated_intervals_haplotypecaller,
+                        fasta,
+                        fasta_fai,
+                        dict,
+                        dbsnp,
+                        dbsnp_tbi,
+                        known_sites_indels,
+                        known_sites_indels_tbi,
+                        known_sites_snps,
+                        known_sites_snps_tbi,
+                        intervals_bed_combined_haplotypec)
 
         haplotypecaller_vcf  = RUN_HAPLOTYPECALLER.out.filtered_vcf
         ch_versions          = ch_versions.mix(RUN_HAPLOTYPECALLER.out.versions)

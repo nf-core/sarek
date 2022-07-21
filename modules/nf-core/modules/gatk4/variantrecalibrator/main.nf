@@ -8,8 +8,10 @@ process GATK4_VARIANTRECALIBRATOR {
         'quay.io/biocontainers/gatk4:4.2.6.1--hdfd78af_0' }"
 
     input:
-    tuple val(meta), path(vcf), path(tbi)
-    tuple path(vcfs), path(tbis), val(labels)
+    tuple val(meta), path(vcf), path(tbi) // input vcf and tbi of variants to recalibrate
+    path resource_vcf   // resource vcf
+    path resource_tbi   // resource tbi
+    val labels          // string (or list of strings) containing dedicated resource labels already formatted with '--resource:' tag
     path  fasta
     path  fai
     path  dict
@@ -28,7 +30,7 @@ process GATK4_VARIANTRECALIBRATOR {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     def reference_command = fasta ? "--reference $fasta " : ''
-    def resource_command = labels.collect{"--resource:$it"}.join(' ')
+    def labels_command = labels.join(' ')
 
     def avail_mem = 3
     if (!task.memory) {
@@ -42,8 +44,8 @@ process GATK4_VARIANTRECALIBRATOR {
         --output ${prefix}.recal \\
         --tranches-file ${prefix}.tranches \\
         $reference_command \\
-        $resource_command \\
         --tmp-dir . \\
+        $labels_command \\
         $args
 
     cat <<-END_VERSIONS > versions.yml
