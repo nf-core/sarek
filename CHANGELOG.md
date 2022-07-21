@@ -33,6 +33,7 @@ Skierfe is a mountain in the Sarek national park, and the inspiration for the lo
 - [#576](https://github.com/nf-core/sarek/pull/576) - Add modules and subworkflows for `cnvkit` germline mode
 - [#582](https://github.com/nf-core/sarek/pull/582) - Added option `--vep_out_format` for setting the format of the output-file from VEP to `json`, `tab` or `vcf` (default)
 - [#594](https://github.com/nf-core/sarek/pull/594) - Add parameter `--save_output_as_bam` to allow output of result files in BAM format
+- [#595](https://github.com/nf-core/sarek/pull/595) - Added Haplotypecaller joint germline calling
 - [#597](https://github.com/nf-core/sarek/pull/597) - Added tiddit for tumor variant calling
 - [#600](https://github.com/nf-core/sarek/pull/600) - Added description for UMI related params in schema
 - [#604](https://github.com/nf-core/sarek/pull/604), [#617](https://github.com/nf-core/sarek/pull/617) - Added full size tests WGS 30x NA12878
@@ -103,6 +104,7 @@ Skierfe is a mountain in the Sarek national park, and the inspiration for the lo
 - [#653](https://github.com/nf-core/sarek/pull/653) - Coherent results subfolder structure between preprocessing, variantcalling and reporting
 - [#659](https://github.com/nf-core/sarek/pull/659) - Update usage.md docu section on `How to run ASCAT with WES`
 - [#661](https://github.com/nf-core/sarek/pull/661) - Add cnvkit reference creation to index subway map
+- [#662](https://github.com/nf-core/sarek/pull/662) - Add bgzipped and indexed GATKBundle reference files for `GATK.GRCh37` and replace germline-resources with GATKBundle one
 - [#663](https://github.com/nf-core/sarek/pull/663) - Add separate parameters for `ASCAT` and `ControlFREEC` back in
 - [#668](https://github.com/nf-core/sarek/pull/668) - Update annotation documentation
 - [#674](https://github.com/nf-core/sarek/pull/664) - Default value for splitting is `50000000`
