@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [dev](https://github.com/nf-core/sarek/tree/dev)
+
+### Added
+
+### Changed
+
+- [#679](https://github.com/nf-core/sarek/pull/679) - Back to `dev`
+
+### Fixed
+
+- [#679](https://github.com/nf-core/sarek/pull/679) - Fixed typos in subway maps
+
+### Deprecated
+
+### Removed
+
 ## [3.0](https://github.com/nf-core/sarek/releases/tag/3.0) - Skierfe
 
 Skierfe is a mountain in the Sarek national park, and the inspiration for the logo.
