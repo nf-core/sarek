@@ -31,6 +31,8 @@
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.cnr
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.cns
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.targetcoverage.cnn
+    - path: results/cnvkit
+      should_exist: false
 - name: Run variant calling on tumor_only sample with cnvkit
   command: nextflow run main.nf -profile test,tools_tumoronly,docker --tools cnvkit
   tags:
@@ -50,6 +52,8 @@
     - path: results/variant_calling/cnvkit/sample2/test2.paired_end.recalibrated.sorted.cnr
     - path: results/variant_calling/cnvkit/sample2/test2.paired_end.recalibrated.sorted.cns
     - path: results/variant_calling/cnvkit/sample2/test2.paired_end.recalibrated.sorted.targetcoverage.cnn
+    - path: results/cnvkit
+      should_exist: false
 - name: Run variant calling on germline sample with cnvkit
   command: nextflow run main.nf -profile test,tools_germline,docker --tools cnvkit
   tags:
@@ -70,6 +74,8 @@
     - path: results/variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted.cnr
     - path: results/variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted.cns
     - path: results/variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted.targetcoverage.cnn
+    - path: results/cnvkit
+      should_exist: false
 - name: Run variant calling on somatic samples with controlfreec
   command: nextflow run main.nf -profile test,tools_somatic,docker --tools controlfreec
   tags:
@@ -96,6 +102,8 @@
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_ratio.png
     - path: results/variant_calling/mpileup/sample4_vs_sample3/sample4_vs_sample3.normal.mpileup.gz
     - path: results/variant_calling/mpileup/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz
+    - path: results/cnvkit
+      should_exist: false
 - name: Run variant calling on somatic samples with controlfreec without intervals
   command: nextflow run main.nf -profile test,tools_somatic,docker --tools controlfreec --no_intervals -stub-run
   tags:
@@ -126,6 +134,10 @@
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_sample.cpn
     - path: results/variant_calling/mpileup/sample4_vs_sample3/sample4_vs_sample3.normal.mpileup.gz
     - path: results/variant_calling/mpileup/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz
+    - path: results/controlfreec
+      should_exist: false
+    - path: results/mpileup
+      should_exist: false
 - name: Run variant calling on tumor_only sample with controlfreec
   command: nextflow run main.nf -profile test,tools_tumoronly,docker --tools controlfreec -stub-run
   tags:
@@ -150,6 +162,10 @@
     - path: results/variant_calling/controlfreec/sample2/sample2_ratio.txt
     - path: results/variant_calling/controlfreec/sample2/sample2_sample.cpn
     - path: results/variant_calling/mpileup/sample2/sample2.tumor.mpileup.gz
+    - path: results/controlfreec
+      should_exist: false
+    - path: results/mpileup
+      should_exist: false
 - name: Run variant calling on germline sample with deepvariant
   command: nextflow run main.nf -profile test,tools_germline,docker --tools deepvariant
   tags:
@@ -170,6 +186,8 @@
     - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.g.vcf.gz.tbi
     - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.vcf.gz
     - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.vcf.gz.tbi
+    - path: results/deepvariant
+      should_exist: false
 - name: Run variant calling on germline sample with deepvariant without intervals
   command: nextflow run main.nf -profile test,tools_germline,docker --tools deepvariant --no_intervals
   tags:
@@ -194,6 +212,8 @@
     - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.g.vcf.gz.tbi
     - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.vcf.gz
     - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.vcf.gz.tbi
+    - path: results/deepvariant
+      should_exist: false
 - name: Run variant calling on germline sample with freebayes
   command: nextflow run main.nf -profile test,targeted,docker --tools freebayes
   tags:
@@ -235,6 +255,8 @@
     - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.qual
     - path: results/variant_calling/freebayes/test/test.freebayes.vcf.gz
     - path: results/variant_calling/freebayes/test/test.freebayes.vcf.gz.tbi
+    - path: results/freebayes
+      should_exist: false
 - name: Run variant calling on germline sample with freebayes without intervals
   command: nextflow run main.nf -profile test,docker --tools freebayes --no_intervals
   tags:
@@ -276,6 +298,8 @@
     - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.qual
     - path: results/variant_calling/freebayes/test/test.freebayes.vcf.gz
     - path: results/variant_calling/freebayes/test/test.freebayes.vcf.gz.tbi
+    - path: results/freebayes
+      should_exist: false
 - name: Run variant calling on somatic sample with freebayes
   command: nextflow run main.nf -profile test,pair,targeted,docker --tools freebayes
   tags:
@@ -345,6 +369,8 @@
     - path: results/variant_calling/freebayes/test/test.freebayes.vcf.gz.tbi
     - path: results/variant_calling/freebayes/test2_vs_test/test2_vs_test.freebayes.vcf.gz
     - path: results/variant_calling/freebayes/test2_vs_test/test2_vs_test.freebayes.vcf.gz.tbi
+    - path: results/freebayes
+      should_exist: false
 - name: Run variant calling on somatic sample with freebayes without intervals
   command: nextflow run main.nf -profile test,pair,targeted,docker --tools freebayes --no_intervals
   tags:
@@ -406,6 +432,8 @@
     - path: results/variant_calling/freebayes/test/test.freebayes.vcf.gz.tbi
     - path: results/variant_calling/freebayes/test2_vs_test/test2_vs_test.freebayes.vcf.gz
     - path: results/variant_calling/freebayes/test2_vs_test/test2_vs_test.freebayes.vcf.gz.tbi
+    - path: results/freebayes
+      should_exist: false
 
 # - name: Run variant calling on tumor_only sample with freebayes
 #   command: nextflow run main.nf -profile test,tools_tumoronly,docker --tools freebayes
@@ -447,6 +475,8 @@
     - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.filtered.vcf.gz.tbi
     - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.vcf.gz
     - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.vcf.gz.tbi
+    - path: results/haplotypecaller
+      should_exist: false
 - name: Run variant calling on germline sample with haplotypecaller without intervals
   command: nextflow run main.nf -profile test,targeted,docker --input ./tests/csv/3.0/mapped_single_bam.csv --tools haplotypecaller --step variant_calling --no_intervals
   tags:
@@ -470,7 +500,8 @@
     - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.filtered.vcf.gz.tbi
     - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.vcf.gz
     - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.vcf.gz.tbi
-
+    - path: results/haplotypecaller
+      should_exist: false
 - name: Run joint germline variant calling with haplotypecaller
   command: nextflow run main.nf -profile test,targeted,docker --input ./tests/csv/3.0/mapped_joint_bam.csv --tools haplotypecaller --joint_germline true --step variant_calling
   tags:
@@ -488,7 +519,8 @@
     - path: results/reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline.TsTv.qual
     - path: results/variant_calling/haplotypecaller/joint_variant_calling/joint_germline.vcf.gz
     - path: results/variant_calling/haplotypecaller/joint_variant_calling/joint_germline.vcf.gz.tbi
-
+    - path: results/haplotypecaller
+      should_exist: false
 - name: Run variant calling on germline sample with manta
   command: nextflow run main.nf -profile test,tools_germline,docker --tools manta
   tags:
@@ -504,6 +536,8 @@
     - path: results/reports/vcftools/manta/sample1/sample1.manta.diploid_sv.TsTv.qual
     - path: results/variant_calling/manta/sample1/sample1.manta.diploid_sv.vcf.gz
     - path: results/variant_calling/manta/sample1/sample1.manta.diploid_sv.vcf.gz.tbi
+    - path: results/manta
+      should_exist: false
 - name: Run variant calling on germline sample with manta without intervals
   command: nextflow run main.nf -profile test,tools_germline,docker --tools manta --no_intervals
   tags:
@@ -523,6 +557,8 @@
     - path: results/reports/vcftools/manta/sample1/sample1.manta.diploid_sv.TsTv.qual
     - path: results/variant_calling/manta/sample1/sample1.manta.diploid_sv.vcf.gz
     - path: results/variant_calling/manta/sample1/sample1.manta.diploid_sv.vcf.gz.tbi
+    - path: results/manta
+      should_exist: false
 - name: Run variant calling on tumor_only sample with manta
   command: nextflow run main.nf -profile test,tools_tumoronly,docker --tools manta
   tags:
@@ -538,6 +574,8 @@
     - path: results/reports/vcftools/manta/sample2/sample2.manta.tumor_sv.TsTv.qual
     - path: results/variant_calling/manta/sample2/sample2.manta.tumor_sv.vcf.gz
     - path: results/variant_calling/manta/sample2/sample2.manta.tumor_sv.vcf.gz.tbi
+    - path: results/manta
+      should_exist: false
 - name: Run variant calling on tumor_only sample with manta without intervals
   command: nextflow run main.nf -profile test,tools_tumoronly,docker --tools manta --no_intervals
   tags:
@@ -557,6 +595,8 @@
     - path: results/reports/vcftools/manta/sample2/sample2.manta.tumor_sv.TsTv.qual
     - path: results/variant_calling/manta/sample2/sample2.manta.tumor_sv.vcf.gz
     - path: results/variant_calling/manta/sample2/sample2.manta.tumor_sv.vcf.gz.tbi
+    - path: results/manta
+      should_exist: false
 - name: Run variant calling on somatic sample with manta
   command: nextflow run main.nf -profile test,tools_somatic,docker --tools manta
   tags:
@@ -584,6 +624,8 @@
     - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.vcf.gz.tbi
     - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.vcf.gz
     - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.vcf.gz.tbi
+    - path: results/manta
+      should_exist: false
 - name: Run variant calling on somatic sample with manta without intervals
   command: nextflow run main.nf -profile test,tools_somatic,docker --tools manta --no_intervals
   tags:
@@ -615,6 +657,8 @@
     - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.vcf.gz.tbi
     - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.vcf.gz
     - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.vcf.gz.tbi
+    - path: results/manta
+      should_exist: false
 - name: Run variant calling on tumor_only sample to test mpileup
   command: nextflow run main.nf -profile test,tools_tumoronly,docker --tools mpileup
   tags:
@@ -623,6 +667,8 @@
   files:
     - path: results/multiqc
     - path: results/variant_calling/mpileup/sample2/sample2.tumor.mpileup.gz
+    - path: results/mpileup
+      should_exist: false
 - name: Run variant calling on tumor_only sample to test mpileup without intervals
   command: nextflow run main.nf -profile test,tools_tumoronly,docker --tools mpileup --no_intervals
   tags:
@@ -635,6 +681,8 @@
     - path: results/no_intervals.bed.gz
     - path: results/no_intervals.bed.gz.tbi
     - path: results/variant_calling/mpileup/sample2/sample2.tumor.mpileup.gz
+    - path: results/mpileup
+      should_exist: false
 - name: Run variant calling on germline sample to test mpileup
   command: nextflow run main.nf -profile test,tools_germline,docker --tools mpileup
   tags:
@@ -643,6 +691,8 @@
   files:
     - path: results/multiqc
     - path: results/variant_calling/mpileup/sample1/sample1.normal.mpileup.gz
+    - path: results/mpileup
+      should_exist: false
 - name: Run variant calling on germline sample to test mpileup without intervals
   command: nextflow run main.nf -profile test,tools_germline,docker --tools mpileup --no_intervals
   tags:
@@ -655,6 +705,8 @@
     - path: results/no_intervals.bed.gz
     - path: results/no_intervals.bed.gz.tbi
     - path: results/variant_calling/mpileup/sample1/sample1.normal.mpileup.gz
+    - path: results/mpileup
+      should_exist: false
 - name: Run variant calling on tumor only sample with mutect2
   command: nextflow run main.nf -profile test,tools_tumoronly,docker --tools mutect2
   tags:
@@ -678,6 +730,8 @@
     - path: results/variant_calling/mutect2/sample2/sample2.mutect2.vcf.gz
     - path: results/variant_calling/mutect2/sample2/sample2.mutect2.vcf.gz.stats
     - path: results/variant_calling/mutect2/sample2/sample2.mutect2.vcf.gz.tbi
+    - path: results/mutect2
+      should_exist: false
 - name: Run variant calling on tumor only sample with mutect2 without intervals
   command: nextflow run main.nf -profile test,tools_tumoronly,docker --tools mutect2 --no_intervals
   tags:
@@ -705,6 +759,8 @@
     - path: results/variant_calling/mutect2/sample2/sample2.mutect2.vcf.gz
     - path: results/variant_calling/mutect2/sample2/sample2.mutect2.vcf.gz.stats
     - path: results/variant_calling/mutect2/sample2/sample2.mutect2.vcf.gz.tbi
+    - path: results/mutect2
+      should_exist: false
 - name: Run variant calling on somatic sample with msisensor-pro
   command: nextflow run main.nf -profile test,tools_somatic,docker --tools msisensorpro
   tags:
@@ -717,6 +773,8 @@
     - path: results/variant_calling/msisensorpro/sample4_vs_sample3/sample4_vs_sample3_dis
     - path: results/variant_calling/msisensorpro/sample4_vs_sample3/sample4_vs_sample3_germline
     - path: results/variant_calling/msisensorpro/sample4_vs_sample3/sample4_vs_sample3_somatic
+    - path: results/msisensorpro
+      should_exist: false
 - name: Run variant calling on germline sample with strelka
   command: nextflow run main.nf -profile test,tools_germline,docker --tools strelka
   tags:
@@ -734,6 +792,8 @@
     - path: results/variant_calling/strelka/sample1/sample1.strelka.genome.vcf.gz.tbi
     - path: results/variant_calling/strelka/sample1/sample1.strelka.variants.vcf.gz
     - path: results/variant_calling/strelka/sample1/sample1.strelka.variants.vcf.gz.tbi
+    - path: results/strelka
+      should_exist: false
 - name: Run variant calling on germline sample with strelka without intervals
   command: nextflow run main.nf -profile test,tools_germline,docker --tools strelka --no_intervals
   tags:
@@ -755,6 +815,8 @@
     - path: results/variant_calling/strelka/sample1/sample1.strelka.genome.vcf.gz.tbi
     - path: results/variant_calling/strelka/sample1/sample1.strelka.variants.vcf.gz
     - path: results/variant_calling/strelka/sample1/sample1.strelka.variants.vcf.gz.tbi
+    - path: results/strelka
+      should_exist: false
 - name: Run variant calling on tumor only sample with strelka
   command: nextflow run main.nf -profile test,tools_tumoronly,docker --tools strelka
   tags:
@@ -772,6 +834,8 @@
     - path: results/variant_calling/strelka/sample2/sample2.strelka.genome.vcf.gz.tbi
     - path: results/variant_calling/strelka/sample2/sample2.strelka.variants.vcf.gz
     - path: results/variant_calling/strelka/sample2/sample2.strelka.variants.vcf.gz.tbi
+    - path: results/strelka
+      should_exist: false
 - name: Run variant calling on tumor only sample with strelka without intervals
   command: nextflow run main.nf -profile test,tools_tumoronly,docker --tools strelka --no_intervals
   tags:
@@ -793,6 +857,8 @@
     - path: results/variant_calling/strelka/sample2/sample2.strelka.genome.vcf.gz.tbi
     - path: results/variant_calling/strelka/sample2/sample2.strelka.variants.vcf.gz
     - path: results/variant_calling/strelka/sample2/sample2.strelka.variants.vcf.gz.tbi
+    - path: results/strelka
+      should_exist: false
 - name: Run variant calling on somatic sample with strelka
   command: nextflow run main.nf -profile test,tools_somatic,docker --tools strelka
   tags:
@@ -822,6 +888,8 @@
     - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.vcf.gz.tbi
     - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz
     - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz.tbi
+    - path: results/strelka
+      should_exist: false
 - name: Run variant calling on somatic sample with strelka without intervals
   command: nextflow run main.nf -profile test,tools_somatic,docker --tools strelka --no_intervals
   tags:
@@ -855,6 +923,8 @@
     - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.vcf.gz.tbi
     - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz
     - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz.tbi
+    - path: results/strelka
+      should_exist: false
 - name: Run variant calling on somatic sample with strelka & manta (StrelkaBP)
   command: nextflow run main.nf -profile test,tools_somatic,docker --tools strelka,manta
   tags:
@@ -902,6 +972,10 @@
     - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.vcf.gz.tbi
     - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz
     - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz.tbi
+    - path: results/manta
+      should_exist: false
+    - path: results/strelka
+      should_exist: false
 - name: Run variant calling on somatic sample with & manta (StrelkaBP) without intervals
   command: nextflow run main.nf -profile test,tools_somatic,docker --tools strelka,manta --no_intervals
   tags:
@@ -953,6 +1027,10 @@
     - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.vcf.gz.tbi
     - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz
     - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz.tbi
+    - path: results/manta
+      should_exist: false
+    - path: results/strelka
+      should_exist: false
 - name: Run variant calling on somatic sample with tiddit
   command: nextflow run main.nf -profile test,tools_somatic,docker --tools tiddit
   tags:
@@ -979,6 +1057,8 @@
     - path: results/variant_calling/tiddit/sample4_vs_sample3/sample4_vs_sample3.tiddit.tumor.vcf.gz
     - path: results/variant_calling/tiddit/sample4_vs_sample3/sample4_vs_sample3.tiddit.tumor.vcf.gz.tbi
     - path: results/variant_calling/tiddit/sample4_vs_sample3/sample4_vs_sample3.tiddit_sv_merge.vcf.gz
+    - path: results/tiddit
+      should_exist: false
 - name: Run variant calling on germline sample with tiddit
   command: nextflow run main.nf -profile test,tools_germline,docker --tools tiddit
   tags:
@@ -995,6 +1075,8 @@
     - path: results/variant_calling/tiddit/sample1/sample1.tiddit.ploidies.tab
     - path: results/variant_calling/tiddit/sample1/sample1.tiddit.vcf.gz
     - path: results/variant_calling/tiddit/sample1/sample1.tiddit.vcf.gz.tbi
+    - path: results/tiddit
+      should_exist: false
 - name: Run variant calling on tumor_only sample with tiddit
   command: nextflow run main.nf -profile test,tools_tumoronly,docker --tools tiddit
   tags:
@@ -1011,3 +1093,5 @@
     - path: results/variant_calling/tiddit/sample2/sample2.tiddit.ploidies.tab
     - path: results/variant_calling/tiddit/sample2/sample2.tiddit.vcf.gz
     - path: results/variant_calling/tiddit/sample2/sample2.tiddit.vcf.gz.tbi
+    - path: results/tiddit
+      should_exist: false
