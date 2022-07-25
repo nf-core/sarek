@@ -176,6 +176,7 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
         )
 
         manta_vcf   = RUN_MANTA_TUMORONLY.out.manta_vcf
+        manta_vcf_tbi   = RUN_MANTA_TUMORONLY.out.manta_vcf_tbi
         ch_versions = ch_versions.mix(RUN_MANTA_TUMORONLY.out.versions)
     }
 
@@ -212,6 +213,7 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
     mutect2_vcf
     strelka_vcf
     tiddit_vcf
+    manta_vcf_tbi
 
     versions = ch_versions
 }

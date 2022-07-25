@@ -103,6 +103,23 @@ workflow RUN_MANTA_TUMORONLY {
         vcf]
     }
 
+    manta_vcf_tbi = Channel.empty().mix(
+        MERGE_MANTA_TUMOR.out.tbi,
+        manta_tumor_sv_vcf.no_intervals
+    ).map{ meta, tbi ->
+        [[
+            id:             meta.sample,
+            num_intervals:  meta.num_intervals,
+            patient:        meta.patient,
+            sample:         meta.sample,
+            sex:            meta.sex,
+            status:         meta.status,
+            variantcaller:  "manta"
+        ],
+        tbi]
+    }
+
+
     ch_versions = ch_versions.mix(MERGE_MANTA_SV.out.versions)
     ch_versions = ch_versions.mix(MERGE_MANTA_SMALL_INDELS.out.versions)
     ch_versions = ch_versions.mix(MERGE_MANTA_TUMOR.out.versions)
@@ -110,5 +127,6 @@ workflow RUN_MANTA_TUMORONLY {
 
     emit:
     manta_vcf
+    manta_vcf_tbi
     versions = ch_versions
 }

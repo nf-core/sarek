@@ -9,6 +9,7 @@ process BCFTOOLS_STATS {
 
     input:
     tuple val(meta), path(vcf)
+    tuple val(meta), path(vcf_tbi)
     path(target_bed)
 
     output:

@@ -1000,7 +1000,7 @@ workflow SAREK {
         ch_versions = ch_versions.mix(TUMOR_ONLY_VARIANT_CALLING.out.versions)
 
         //QC
-        VCF_QC(vcf_to_annotate, intervals_bed_combined)
+        VCF_QC(vcf_to_annotate, TUMOR_ONLY_VARIANT_CALLING.out.manta_vcf_tbi, intervals_bed_combined)
 
         ch_versions = ch_versions.mix(VCF_QC.out.versions)
         ch_reports  = ch_reports.mix(VCF_QC.out.bcftools_stats.collect{meta, stats -> stats})

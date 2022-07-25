@@ -6,13 +6,14 @@ include { VCFTOOLS as VCFTOOLS_TSTV_QUAL  } from '../../modules/nf-core/modules/
 workflow VCF_QC {
     take:
     vcf
+    tbi
     target_bed
 
     main:
 
     ch_versions = Channel.empty()
 
-    BCFTOOLS_STATS(vcf, target_bed)
+    BCFTOOLS_STATS(vcf, tbi, target_bed)
     VCFTOOLS_TSTV_COUNT(vcf, target_bed, [])
     VCFTOOLS_TSTV_QUAL(vcf, target_bed, [])
     VCFTOOLS_SUMMARY(vcf, target_bed, [])
