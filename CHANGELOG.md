@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#679](https://github.com/nf-core/sarek/pull/679) - Fixed typos in subway maps
 - [#681](https://github.com/nf-core/sarek/pull/681) - Fixed intermediate files published cf [#680](https://github.com/nf-core/sarek/issues/680)
+- [#688](https://github.com/nf-core/sarek/pull/688) - Fixed VEP plugins issue cf [#687](https://github.com/nf-core/sarek/issues/687)
+- [#689](https://github.com/nf-core/sarek/pull/689) - Fixed when clause for non `BWA mem` building mapping indexes
 
 ### Deprecated
 
