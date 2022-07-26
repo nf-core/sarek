@@ -122,6 +122,7 @@ We thank the following people for their extensive assistance in the development 
 - [Tobias Koch](https://github.com/KochTobi)
 - [Winni Kretzschmar](https://github.com/winni2k)
 - [arontommi](https://github.com/arontommi)
+- [BarryDigby](https://github.com/BarryDigby)
 - [bjornnystedt](https://github.com/bjornnystedt)
 - [cgpu](https://github.com/cgpu)
 - [gulfshores](https://github.com/gulfshores)
