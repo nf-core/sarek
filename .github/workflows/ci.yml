@@ -19,17 +19,10 @@ jobs:
     if: "${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/sarek') }}"
     runs-on: ubuntu-latest
     strategy:
-      # HACK Remove after DSL2 rewrite is done
-      fail-fast: false
       matrix:
-        # Nextflow versions
-        include:
-          # Test pipeline minimum Nextflow version
-          - NXF_VER: "21.10.3"
-            NXF_EDGE: ""
-          # Test latest edge release of Nextflow
-          - NXF_VER: ""
-            NXF_EDGE: "1"
+        NXF_VER:
+          - "21.10.3"
+          - "latest-everything"
         test:
           - "aligner"
           - "alignment_to_fastq"
@@ -67,16 +60,9 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Install Nextflow
-        env:
-          NXF_VER: ${{ matrix.NXF_VER }}
-          # Uncomment only if the edge release is more recent than the latest stable release
-          # See https://github.com/nextflow-io/nextflow/issues/2467
-          # NXF_EDGE: ${{ matrix.NXF_EDGE }}
-        run: |
-          wget -qO- get.nextflow.io | bash
-          sudo mv nextflow /usr/local/bin/
-          nextflow self-update
-
+        uses: nf-core/setup-nextflow@v1
+        with:
+          version: ${{ matrix.NXF_VER }}
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
