@@ -5,6 +5,14 @@ on:
     branches:
       - dev
   pull_request:
+    paths:
+      - 'main.nf'
+      - 'modules.json'
+      - 'nextflow.config'
+      - 'workflows/sarek.nf'
+      - 'conf/**'
+      - 'subworkflows/**'
+      - 'modules/local/**'
   release:
     types: [published]
 
