@@ -1,5 +1,5 @@
 - name: Run snpEff
-  command: nextflow run main.nf -profile test,annotation,docker --tools snpeff
+  command: nextflow run main.nf -profile test,annotation --tools snpeff
   tags:
     - annotation
     - snpeff
@@ -11,7 +11,7 @@
     - path: results/reports/snpeff/test/test_snpEff.csv
     - path: results/reports/snpeff/test/test_snpEff.genes.txt
 - name: Run VEP
-  command: nextflow run main.nf -profile test,annotation,docker --tools vep --skip_tools multiqc
+  command: nextflow run main.nf -profile test,annotation --tools vep --skip_tools multiqc
   tags:
     - annotation
     - vep
@@ -20,7 +20,7 @@
     - path: results/annotation/test/test_VEP.ann.vcf.gz.tbi
     - path: results/reports/EnsemblVEP/test/test_VEP.summary.html
 - name: Run snpEff followed by VEP
-  command: nextflow run main.nf -profile test,annotation,docker --tools merge --skip_tools multiqc
+  command: nextflow run main.nf -profile test,annotation --tools merge --skip_tools multiqc
   tags:
     - annotation
     - merge
@@ -47,7 +47,7 @@
     - path: results/reports/EnsemblVEP/test/test_VEP.summary.html
       should_exist: false
 - name: Run snpEff, VEP and both consecutively
-  command: nextflow run main.nf -profile test,annotation,docker --tools merge,snpeff,vep --skip_tools multiqc
+  command: nextflow run main.nf -profile test,annotation --tools merge,snpeff,vep --skip_tools multiqc
   tags:
     - annotation
     - merge
@@ -66,7 +66,7 @@
     - path: results/reports/snpeff/test/test_snpEff.csv
     - path: results/reports/snpeff/test/test_snpEff.genes.txt
 - name: Run VEP with fasta
-  command: nextflow run main.nf -profile test,annotation,docker --tools vep --vep_include_fasta --skip_tools multiqc
+  command: nextflow run main.nf -profile test,annotation --tools vep --vep_include_fasta --skip_tools multiqc
   tags:
     - annotation
     - vep

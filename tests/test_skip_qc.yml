@@ -1,5 +1,5 @@
 - name: Run default pipeline with skipping all QC steps
-  command: nextflow run main.nf -profile test,docker --skip_tools fastqc,markduplicates_report,mosdepth,multiqc,samtools
+  command: nextflow run main.nf -profile test --skip_tools fastqc,markduplicates_report,mosdepth,multiqc,samtools
   tags:
     - skip_qc
     - preprocessing
@@ -24,7 +24,7 @@
       should_exist: false
 
 - name: Run spark pipeline with skipping all QC steps
-  command: nextflow run main.nf -profile test,use_gatk_spark,docker --skip_tools fastqc,markduplicates_report,mosdepth,multiqc,samtools
+  command: nextflow run main.nf -profile test,use_gatk_spark --skip_tools fastqc,markduplicates_report,mosdepth,multiqc,samtools
   tags:
     - skip_qc
     - preprocessing

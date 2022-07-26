@@ -1,5 +1,5 @@
 - name: Run default pipeline for tumor normal pair
-  command: nextflow run main.nf -profile test,pair,docker
+  command: nextflow run main.nf -profile test,pair
   tags:
     - preprocessing
     - tumor_normal_pair

@@ -1,5 +1,5 @@
 - name: Run default pipeline with gatk_spark
-  command: nextflow run main.nf -profile test,use_gatk_spark,docker
+  command: nextflow run main.nf -profile test,use_gatk_spark
   tags:
     - gatk4
     - gatk4_spark

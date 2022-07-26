@@ -1,5 +1,5 @@
 - name: Run variant calling on somatic samples with ascat
-  command: nextflow run main.nf -profile test,tools_somatic_ascat,docker
+  command: nextflow run main.nf -profile test,tools_somatic_ascat
   tags:
     - ascat_manual
     - manual
@@ -22,7 +22,7 @@
     - path: results/variant_calling/ascat/sample4_vs_sample3/sample4_vs_sample3.tumour_tumourLogR.txt
 
 - name: Run variant calling on somatic sample with mutect2 without intervals
-  command: nextflow run main.nf -profile test,tools_somatic,docker --tools mutect2 --no_intervals
+  command: nextflow run main.nf -profile test,tools_somatic --tools mutect2 --no_intervals
   tags:
     - mutect2_manual
     - manual
@@ -53,7 +53,7 @@
     - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.vcf.gz.stats
     - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.vcf.gz.tbi
 - name: Run variant calling on somatic sample with mutect2
-  command: nextflow run main.nf -profile test,tools_somatic,docker --tools mutect2
+  command: nextflow run main.nf -profile test,tools_somatic --tools mutect2
   tags:
     - mutect2_manual
     - manual
