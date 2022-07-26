@@ -1,5 +1,5 @@
 - name: Run save_output_as_bam
-  command: nextflow run main.nf -profile test,docker --save_output_as_bam
+  command: nextflow run main.nf -profile test --save_output_as_bam
   tags:
     - preprocessing
     - save_output_as_bam
@@ -28,7 +28,7 @@
     - path: results/reports/samtools/test/test.md.cram.stats
     - path: results/reports/samtools/test/test.recal.cram.stats
 - name: Run save_output_as_bam with gatk4 spark
-  command: nextflow run main.nf -profile test,use_gatk_spark,docker --save_output_as_bam
+  command: nextflow run main.nf -profile test,use_gatk_spark --save_output_as_bam
   tags:
     - preprocessing
     - save_output_as_bam

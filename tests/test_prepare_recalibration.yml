@@ -1,5 +1,5 @@
 - name: Run prepare_recalibration starting from bam
-  command: nextflow run main.nf -profile test,prepare_recalibration_bam,docker
+  command: nextflow run main.nf -profile test,prepare_recalibration_bam
   tags:
     - bam
     - prepare_recalibration
@@ -20,7 +20,7 @@
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
     - path: results/reports/samtools/test/test.recal.cram.stats
 - name: Run prepare_recalibration starting from cram
-  command: nextflow run main.nf -profile test,prepare_recalibration_cram,docker
+  command: nextflow run main.nf -profile test,prepare_recalibration_cram
   tags:
     - cram
     - prepare_recalibration
@@ -38,7 +38,7 @@
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
     - path: results/reports/samtools/test/test.recal.cram.stats
 - name: Run prepare_recalibration starting from bam and skip baserecalibration
-  command: nextflow run main.nf -profile test,prepare_recalibration_bam,skip_bqsr,docker --tools strelka
+  command: nextflow run main.nf -profile test,prepare_recalibration_bam,skip_bqsr --tools strelka
   tags:
     - bam
     - prepare_recalibration
@@ -69,7 +69,7 @@
     - path: results/reports/samtools_stats
       should_exist: false
 - name: Run prepare_recalibration starting from cram and skip baserecalibration
-  command: nextflow run main.nf -profile test,prepare_recalibration_cram,skip_bqsr,docker --tools strelka
+  command: nextflow run main.nf -profile test,prepare_recalibration_cram,skip_bqsr --tools strelka
   tags:
     - cram
     - prepare_recalibration

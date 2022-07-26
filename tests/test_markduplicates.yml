@@ -1,5 +1,5 @@
 - name: Run markduplicates starting from BAM
-  command: nextflow run main.nf -profile test,markduplicates_bam,docker
+  command: nextflow run main.nf -profile test,markduplicates_bam
   tags:
     - bam
     - markduplicates
@@ -28,7 +28,7 @@
     - path: results/reports/samtools/test/test.md.cram.stats
     - path: results/reports/samtools/test/test.recal.cram.stats
 - name: Run markduplicates starting from CRAM
-  command: nextflow run main.nf -profile test,markduplicates_cram,docker
+  command: nextflow run main.nf -profile test,markduplicates_cram
   tags:
     - cram
     - markduplicates

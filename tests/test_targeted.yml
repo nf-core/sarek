@@ -1,5 +1,5 @@
 - name: Run default pipeline with target bed
-  command: nextflow run main.nf -profile test,targeted,docker
+  command: nextflow run main.nf -profile test,targeted
   tags:
     - preprocessing
     - targeted
@@ -33,7 +33,7 @@
     - path: results/reports/samtools/test/test.recal.cram.stats
 
 - name: Run intervals false pipeline
-  command: nextflow run main.nf -profile test,docker --intervals false
+  command: nextflow run main.nf -profile test --intervals false
   tags:
     - default
     - preprocessing
