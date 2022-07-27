@@ -1,5 +1,5 @@
 - name: Run UMI test
-  command: nextflow run main.nf -profile test,umi,docker
+  command: nextflow run main.nf -profile test,umi
   tags:
     - umi
   files:
@@ -57,7 +57,7 @@
 #    - path: results/samtools/test-test_L1.unmapped_singleton.fq.gz
 
 # - name: Run UMI TSO test
-#   command: nextflow run main.nf -profile test,umi_tso,docker
+#   command: nextflow run main.nf -profile test,umi_tso
 #   tags:
 #     - umi_tso
 #     - umi

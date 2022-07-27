@@ -1,5 +1,5 @@
 - name: Run trimming pipeline
-  command: nextflow run main.nf -profile test,trimming,docker --save_trimmed
+  command: nextflow run main.nf -profile test,trimming --save_trimmed
   tags:
     - trimming
     - preprocessing

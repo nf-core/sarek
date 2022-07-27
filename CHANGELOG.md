@@ -9,15 +9,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- [#691](https://github.com/nf-core/sarek/pull/691) - Enable `PROFILE=conda`, `PROFILE=docker` and `PROFILE=singularity` for pytest
+
 ### Changed
 
 - [#679](https://github.com/nf-core/sarek/pull/679) - Back to `dev`
-- [#685](https://github.com/nf-core/sarek/pull/685) - Updating the nf-core modules
+- [#685](https://github.com/nf-core/sarek/pull/685) - Updating the
+- [#691](https://github.com/nf-core/sarek/pull/691) - To run the same pytest as before locally, use `PROFILE=docker`
 
 ### Fixed
 
 - [#679](https://github.com/nf-core/sarek/pull/679) - Fixed typos in subway maps
 - [#681](https://github.com/nf-core/sarek/pull/681) - Fixed intermediate files published cf [#680](https://github.com/nf-core/sarek/issues/680)
+- [#688](https://github.com/nf-core/sarek/pull/688) - Fixed VEP plugins issue cf [#687](https://github.com/nf-core/sarek/issues/687)
+- [#689](https://github.com/nf-core/sarek/pull/689) - Fixed when clause for non `BWA mem` building mapping indexes
 
 ### Deprecated
 

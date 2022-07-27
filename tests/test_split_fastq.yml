@@ -1,5 +1,5 @@
 - name: Run split fastq module
-  command: nextflow run main.nf -profile test,split_fastq,docker
+  command: nextflow run main.nf -profile test,split_fastq
   tags:
     - split_fastq
   files:

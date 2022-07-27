@@ -1,5 +1,5 @@
 - name: Run default pipeline
-  command: nextflow run main.nf -profile test,docker
+  command: nextflow run main.nf -profile test
   tags:
     - default
     - preprocessing
@@ -28,7 +28,7 @@
     - path: results/reports/samtools/test/test.md.cram.stats
     - path: results/reports/samtools/test/test.recal.cram.stats
 - name: Run default pipeline without intervals
-  command: nextflow run main.nf -profile test,no_intervals,docker
+  command: nextflow run main.nf -profile test,no_intervals
   tags:
     - default
     - no_intervals
@@ -61,7 +61,7 @@
     - path: results/reports/samtools/test/test.md.cram.stats
     - path: results/reports/samtools/test/test.recal.cram.stats
 - name: Run default pipeline with VC
-  command: nextflow run main.nf -profile test,docker --tools strelka
+  command: nextflow run main.nf -profile test --tools strelka
   tags:
     - default
     - preprocessing
