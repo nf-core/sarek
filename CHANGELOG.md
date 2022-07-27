@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#679](https://github.com/nf-core/sarek/pull/679) - Back to `dev`
 - [#691](https://github.com/nf-core/sarek/pull/691) - To run the same pytest as before locally, use `PROFILE=docker`
+- [#692](https://github.com/nf-core/sarek/pull/692) - Use `params.tools=strelka` in profile `test`
 
 ### Fixed
 
