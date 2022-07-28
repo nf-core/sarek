@@ -8,8 +8,9 @@ process SAMTOOLS_MERGE {
         'quay.io/biocontainers/samtools:1.15.1--h1170115_0' }"
 
     input:
-    tuple val(meta), path(input_files)
+    tuple val(meta), path(input_files, stageAs: "?/*")
     path fasta
+    path fai
 
     output:
     tuple val(meta), path("${prefix}.bam") , optional:true, emit: bam
