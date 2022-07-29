@@ -13,15 +13,15 @@
       md5sum: 42628ec994c16f565e5407b40a9c1ac3
     - path: results/multiqc
     - path: results/preprocessing/markduplicates/test/test.md.cram
-      md5sum: e55d1f2458f7794bc9060206121c949d
+      md5sum: d55237e5b31b43938c4560cd01497440
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
-      md5sum: cf4e19965d3f6b6fa009deb4ec9ce61e
+      md5sum: 8aa4e0194f2ecd7685b1bf62e298a7a3
     - path: results/preprocessing/recal_table/test/test.recal.table
       md5sum: 4ac774bf5f1157e77426fd82f5ac0fbe
     - path: results/preprocessing/recalibrated/test/test.recal.cram
-      md5sum: dfccc5ede6c988334b6ee3b1b88f2f52
+      md5sum: 191221720a6d18eb033d88921631b0a1
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
-      md5sum: 24723aed83faeff5d10ed99de5475899
+      md5sum: b73f429930befce4b36b8cb647ee3815
     - path: results/reference/bwamem2/genome.fasta.0123
       md5sum: d73300d44f733bcdb7c988fc3ff3e3e9
     - path: results/reference/bwamem2/genome.fasta.amb
@@ -48,7 +48,7 @@
       md5sum: 1bb7ab8f22eb798efd796439d3b29b7a
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.metrics
-      md5sum: ffbec3ecd34452c01b6df4561690231f
+      md5sum: b19e73e4917baf17993c173e2fe0cbb6
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
       md5sum: 76fa71922a3f748e507c2364c531dfcb
     - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
@@ -58,7 +58,7 @@
     - path: results/reports/mosdepth/test/test.md.regions.bed.gz
       md5sum: 38fe39894abe62e38f8ac214cba64f2b
     - path: results/reports/mosdepth/test/test.md.regions.bed.gz.csi
-      md5sum: 38fe39894abe62e38f8ac214cba64f2b
+      md5sum: b1c2a861f64e20a94108a6de3b76c582
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
       md5sum: 76fa71922a3f748e507c2364c531dfcb
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
@@ -88,27 +88,27 @@
       md5sum: 42628ec994c16f565e5407b40a9c1ac3
     - path: results/multiqc
     - path: results/preprocessing/markduplicates/test/test.md.cram
-      md5sum: fd0fe1ea56a9426d4cccea345e0b9474
+      md5sum: 750db229fca85984091253c3846e41d5
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
-      md5sum: 4441ae2ae8403f009924a705869dac18
+      md5sum: f26114444787994aa96515a42d2e619d
     - path: results/preprocessing/recal_table/test/test.recal.table
       md5sum: 75ba4376a17ca69c5134153302f82e92
     - path: results/preprocessing/recalibrated/test/test.recal.cram
-      md5sum: 56f215ff1b30a774ab4db443023cc2ab
+      md5sum: 5fce32de9eeb1b6a3065232324d31844
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
-      md5sum: f80f49e6ccd2b7f470dbfe75c21998c4
+      md5sum: 04d2f589b23c2916170115444a95d82f
     - path: results/reference/dbsnp/dbsnp_146.hg38.vcf.gz.tbi
       md5sum: 628232d0c870f2dbf73c3e81aff7b4b4
     - path: results/reference/dict/genome.dict
       md5sum: 2433fe2ba31257337bf4c4bd4cb8da15
     - path: results/reference/dragmap/hash_table.cfg
-      md5sum: 4c81335b90335d0f25cbbb1a04efe8a2
+      md5sum: 7cfdd5ac56e83149123c676ca8e4394a
     - path: results/reference/dragmap/hash_table.cfg.bin
-      md5sum: b3aead8130e3cf1322800816ecd626b2
+      md5sum: ddea3e8bceb341b0c4d94cb9bc163939
     - path: results/reference/dragmap/hash_table.cmp
       md5sum: 1caab4ffc89f81ace615a2e813295cf4
     - path: results/reference/dragmap/hash_table_stats.txt
-      md5sum: 6bb810d62a0e361a6b2af02107dbb18c
+      md5sum: 0fb7a55ead8e349f34558d7de246bd2f
     - path: results/reference/dragmap/ref_index.bin
       md5sum: dbb5c7d26b974e0ac338024fe4535044
     - path: results/reference/dragmap/reference.bin
@@ -129,7 +129,7 @@
       md5sum: 1bb7ab8f22eb798efd796439d3b29b7a
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.metrics
-      md5sum: 8c6641a4d6658f4e47e99b7eda0ec638
+      md5sum: 24bd58efe43989ab47a056360ac75937
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
       md5sum: be1a800868fc1ce26711654525224e59
     - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
