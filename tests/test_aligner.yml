@@ -13,15 +13,15 @@
       md5sum: 42628ec994c16f565e5407b40a9c1ac3
     - path: results/multiqc
     - path: results/preprocessing/markduplicates/test/test.md.cram
-# binary changing on reruns
+    # binary changing on reruns
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
-# binary changing on reruns
+    # binary changing on reruns
     - path: results/preprocessing/recal_table/test/test.recal.table
       md5sum: 4ac774bf5f1157e77426fd82f5ac0fbe
     - path: results/preprocessing/recalibrated/test/test.recal.cram
-# binary changing on reruns
+    # binary changing on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
-# binary changing on reruns
+    # binary changing on reruns
     - path: results/reference/bwamem2/genome.fasta.0123
       md5sum: d73300d44f733bcdb7c988fc3ff3e3e9
     - path: results/reference/bwamem2/genome.fasta.amb
@@ -88,28 +88,35 @@
       md5sum: 42628ec994c16f565e5407b40a9c1ac3
     - path: results/multiqc
     - path: results/preprocessing/markduplicates/test/test.md.cram
-# binary changing on reruns
+    # binary changing on reruns
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
-# binary changing on reruns
+    # binary changing on reruns
     - path: results/preprocessing/recal_table/test/test.recal.table
       md5sum: 75ba4376a17ca69c5134153302f82e92
     - path: results/preprocessing/recalibrated/test/test.recal.cram
-# binary changing on reruns
+    # binary changing on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
-# binary changing on reruns
+    # binary changing on reruns
     - path: results/reference/dbsnp/dbsnp_146.hg38.vcf.gz.tbi
       md5sum: 628232d0c870f2dbf73c3e81aff7b4b4
     - path: results/reference/dict/genome.dict
       md5sum: 2433fe2ba31257337bf4c4bd4cb8da15
     - path: results/reference/dragmap/hash_table.cfg
-# hash_table.cfg contains many string which we could test for - which do we want to test?
-      contains: ["reference_sequences  = 1", "reference_len        = 368640", "reference_len_raw    = 40001", "reference_len_not_n  = 40001", "reference_alt_seed   = 204800"]
+      # hash_table.cfg contains many string which we could test for - which do we want to test?
+      contains:
+        [
+          "reference_sequences  = 1",
+          "reference_len        = 368640",
+          "reference_len_raw    = 40001",
+          "reference_len_not_n  = 40001",
+          "reference_alt_seed   = 204800",
+        ]
     - path: results/reference/dragmap/hash_table.cfg.bin
-# binary changing on reruns
+    # binary changing on reruns
     - path: results/reference/dragmap/hash_table.cmp
       md5sum: 1caab4ffc89f81ace615a2e813295cf4
     - path: results/reference/dragmap/hash_table_stats.txt
-# hash_table_stats.txt contains many string which we could test for - which do we want to test?
+      # hash_table_stats.txt contains many string which we could test for - which do we want to test?
       contains: ["A bases:       10934", "C bases:        8612", "G bases:        8608", "T bases:       11847"]
     - path: results/reference/dragmap/ref_index.bin
       md5sum: dbb5c7d26b974e0ac338024fe4535044
