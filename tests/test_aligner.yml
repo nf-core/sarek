@@ -102,14 +102,15 @@
     - path: results/reference/dict/genome.dict
       md5sum: 2433fe2ba31257337bf4c4bd4cb8da15
     - path: results/reference/dragmap/hash_table.cfg
-# hash_table.cfg contains many values. Which do we want to test?
+# hash_table.cfg contains many string which we could test for - which do we want to test?
       contains: ["reference_sequences  = 1", "reference_len        = 368640", "reference_len_raw    = 40001", "reference_len_not_n  = 40001", "reference_alt_seed   = 204800"]
     - path: results/reference/dragmap/hash_table.cfg.bin
 # binary changing on reruns
     - path: results/reference/dragmap/hash_table.cmp
       md5sum: 1caab4ffc89f81ace615a2e813295cf4
     - path: results/reference/dragmap/hash_table_stats.txt
-      md5sum: 0fb7a55ead8e349f34558d7de246bd2f
+# hash_table_stats.txt contains many string which we could test for - which do we want to test?
+      contains: ["A bases:       10934", "C bases:        8612", "G bases:        8608", "T bases:       11847"]
     - path: results/reference/dragmap/ref_index.bin
       md5sum: dbb5c7d26b974e0ac338024fe4535044
     - path: results/reference/dragmap/reference.bin
@@ -130,7 +131,7 @@
       md5sum: 1bb7ab8f22eb798efd796439d3b29b7a
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.metrics
-      md5sum: 24bd58efe43989ab47a056360ac75937
+      contains: ["LB0	13607	543	161	518779	6410	0	0	0.436262"]
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
       md5sum: be1a800868fc1ce26711654525224e59
     - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
