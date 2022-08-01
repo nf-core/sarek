@@ -5,11 +5,16 @@
     - snpeff
   files:
     - path: results/annotation/test/test_snpEff.ann.vcf.gz
+      md5sum: 1caab4ffc89f81ace615a2e813290001
     - path: results/annotation/test/test_snpEff.ann.vcf.gz.tbi
+      md5sum: 1caab4ffc89f81ace615a2e813290002
     - path: results/multiqc
     - path: results/reports/snpeff/test/snpEff_summary.html
+      md5sum: 1caab4ffc89f81ace615a2e813290003
     - path: results/reports/snpeff/test/test_snpEff.csv
+      md5sum: 1caab4ffc89f81ace615a2e813290004
     - path: results/reports/snpeff/test/test_snpEff.genes.txt
+      md5sum: 1caab4ffc89f81ace615a2e813290005
 - name: Run VEP
   command: nextflow run main.nf -profile test,annotation --tools vep --skip_tools multiqc
   tags:
@@ -17,8 +22,11 @@
     - vep
   files:
     - path: results/annotation/test/test_VEP.ann.vcf.gz
+      md5sum: 1caab4ffc89f81ace615a2e813290006
     - path: results/annotation/test/test_VEP.ann.vcf.gz.tbi
+      md5sum: 1caab4ffc89f81ace615a2e813290007
     - path: results/reports/EnsemblVEP/test/test_VEP.summary.html
+      md5sum: 1caab4ffc89f81ace615a2e813290008
 - name: Run snpEff followed by VEP
   command: nextflow run main.nf -profile test,annotation --tools merge --skip_tools multiqc
   tags:
@@ -28,8 +36,11 @@
     - vep
   files:
     - path: results/annotation/test/test_snpEff_VEP.ann.vcf.gz
+      md5sum: 1caab4ffc89f81ace615a2e813290009
     - path: results/annotation/test/test_snpEff_VEP.ann.vcf.gz.tbi
+      md5sum: 1caab4ffc89f81ace615a2e813290010
     - path: results/reports/EnsemblVEP/test/test_snpEff_VEP.summary.html
+      md5sum: 1caab4ffc89f81ace615a2e813290011
     - path: results/annotation/test/test_snpEff.ann.vcf.gz
       should_exist: false
     - path: results/annotation/test/test_snpEff.ann.vcf.gz.tbi
@@ -55,16 +66,27 @@
     - vep
   files:
     - path: results/annotation/test/test_VEP.ann.vcf.gz
+      md5sum: 1caab4ffc89f81ace615a2e813290012
     - path: results/annotation/test/test_VEP.ann.vcf.gz.tbi
+      md5sum: 1caab4ffc89f81ace615a2e813290013
     - path: results/annotation/test/test_snpEff.ann.vcf.gz
+      md5sum: 1caab4ffc89f81ace615a2e813290014
     - path: results/annotation/test/test_snpEff.ann.vcf.gz.tbi
+      md5sum: 1caab4ffc89f81ace615a2e813290015
     - path: results/annotation/test/test_snpEff_VEP.ann.vcf.gz
+      md5sum: 1caab4ffc89f81ace615a2e813290016
     - path: results/annotation/test/test_snpEff_VEP.ann.vcf.gz.tbi
+      md5sum: 1caab4ffc89f81ace615a2e813290017
     - path: results/reports/EnsemblVEP/test/test_VEP.summary.html
+      md5sum: 1caab4ffc89f81ace615a2e813290018
     - path: results/reports/EnsemblVEP/test/test_snpEff_VEP.summary.html
+      md5sum: 1caab4ffc89f81ace615a2e813290019
     - path: results/reports/snpeff/test/snpEff_summary.html
+      md5sum: 1caab4ffc89f81ace615a2e813290020
     - path: results/reports/snpeff/test/test_snpEff.csv
+      md5sum: 1caab4ffc89f81ace615a2e813290021
     - path: results/reports/snpeff/test/test_snpEff.genes.txt
+      md5sum: 1caab4ffc89f81ace615a2e813290022
 - name: Run VEP with fasta
   command: nextflow run main.nf -profile test,annotation --tools vep --vep_include_fasta --skip_tools multiqc
   tags:
@@ -72,5 +94,8 @@
     - vep
   files:
     - path: results/annotation/test/test_VEP.ann.vcf.gz
+      md5sum: 1caab4ffc89f81ace615a2e813290023
     - path: results/annotation/test/test_VEP.ann.vcf.gz.tbi
+      md5sum: 1caab4ffc89f81ace615a2e813290024
     - path: results/reports/EnsemblVEP/test/test_VEP.summary.html
+      md5sum: 1caab4ffc89f81ace615a2e813290025
