@@ -42,8 +42,7 @@
     # binary changes md5sums on reruns.
     - path: results/reports/fastqc/test-1
     - path: results/reports/markduplicates/test/test.md.metrics
-    # text-based file changes md5sums on reruns.
-      md5sum: f12dbde1c1f94ed44a5e468c5e8e21fc
+      # text-based file changes md5sums on reruns.
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
       md5sum: 9cb9b181119256ed17a77dcf44d58285
     - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
