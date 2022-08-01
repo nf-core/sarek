@@ -31,17 +31,18 @@
       md5sum: 42628ec994c16f565e5407b40a9c1ac3
     - path: results/multiqc
     - path: results/preprocessing/markduplicates/test/test.md.cram
-      md5sum: 860f9ea737729a08c8d9268c8a2084b7
+    # binary changes md5sums on reruns.
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
-      md5sum: c1923ff3571be37a90f3641ad3a94100
+    # binary changes md5sums on reruns.
     - path: results/preprocessing/recal_table/test/test.recal.table
       md5sum: 9c0517ffdc5d30a5c73b9f7df1ff3060
     - path: results/preprocessing/recalibrated/test/test.recal.cram
-      md5sum: 8cc2e9d3603b5500b7be439cb6fbe3ec
+    # binary changes md5sums on reruns.
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
-      md5sum: bcd8bdefcf315e87d919b914a79ddd9e
+    # binary changes md5sums on reruns.
     - path: results/reports/fastqc/test-1
     - path: results/reports/markduplicates/test/test.md.metrics
+    # text-based file changes md5sums on reruns.
       md5sum: f12dbde1c1f94ed44a5e468c5e8e21fc
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
       md5sum: 9cb9b181119256ed17a77dcf44d58285
@@ -68,7 +69,7 @@
     - path: results/reports/samtools/test/test.recal.cram.stats
       md5sum: bb2fc6118a1404c45f9e828600df8fb1
     - path: results/samtools/test-1.bam
-      md5sum: c5feaeecb263eb288fe718901742f2f9
+    # binary changes md5sums on reruns.
     - path: results/samtools/test-1.map_map.bam
       md5sum: e1d347ccaec52f690c0313047fecf7e6
     - path: results/samtools/test-1.map_unmap.bam
