@@ -12,10 +12,10 @@ workflow VCF_QC {
 
     ch_versions = Channel.empty()
 
-    BCFTOOLS_STATS(vcf)
+    BCFTOOLS_STATS(vcf, [])
     VCFTOOLS_TSTV_COUNT(vcf, target_bed, [])
-    VCFTOOLS_TSTV_QUAL(vcf, target_bed,[])
-    VCFTOOLS_SUMMARY(vcf, target_bed,[])
+    VCFTOOLS_TSTV_QUAL(vcf, target_bed, [])
+    VCFTOOLS_SUMMARY(vcf, target_bed, [])
 
     ch_versions = ch_versions.mix(BCFTOOLS_STATS.out.versions)
     ch_versions = ch_versions.mix(VCFTOOLS_TSTV_COUNT.out.versions)

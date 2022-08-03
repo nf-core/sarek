@@ -3,7 +3,6 @@ include { GATK4_MERGEVCFS as MERGE_MANTA_SV                } from '../../../../.
 include { GATK4_MERGEVCFS as MERGE_MANTA_TUMOR             } from '../../../../../modules/nf-core/modules/gatk4/mergevcfs/main'
 include { MANTA_TUMORONLY                                  } from '../../../../../modules/nf-core/modules/manta/tumoronly/main'
 
-// TODO: Research if splitting by intervals is ok, we pretend for now it is fine.
 // Seems to be the consensus on upstream modules implementation too
 workflow RUN_MANTA_TUMORONLY {
     take:
@@ -38,7 +37,14 @@ workflow RUN_MANTA_TUMORONLY {
     MERGE_MANTA_SMALL_INDELS(
         manta_small_indels_vcf.intervals.map{ meta, vcf ->
 
-                [groupKey([patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals],
+                [groupKey([
+                            id:             meta.sample,
+                            num_intervals:  meta.num_intervals,
+                            patient:        meta.patient,
+                            sample:         meta.sample,
+                            sex:            meta.sex,
+                            status:         meta.status,
+                        ],
                         meta.num_intervals),
                 vcf]
 
@@ -48,7 +54,14 @@ workflow RUN_MANTA_TUMORONLY {
     MERGE_MANTA_SV(
         manta_candidate_sv_vcf.intervals.map{ meta, vcf ->
 
-                [groupKey([patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals],
+                [groupKey([
+                            id:             meta.sample,
+                            num_intervals:  meta.num_intervals,
+                            patient:        meta.patient,
+                            sample:         meta.sample,
+                            sex:            meta.sex,
+                            status:         meta.status
+                        ],
                         meta.num_intervals),
                 vcf]
 
@@ -58,7 +71,14 @@ workflow RUN_MANTA_TUMORONLY {
     MERGE_MANTA_TUMOR(
         manta_tumor_sv_vcf.intervals.map{ meta, vcf ->
 
-                [groupKey( [patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals],
+                [groupKey( [
+                            id:             meta.sample,
+                            num_intervals:  meta.num_intervals,
+                            patient:        meta.patient,
+                            sample:         meta.sample,
+                            sex:            meta.sex,
+                            status:         meta.status,
+                        ],
                         meta.num_intervals),
                 vcf]
 
@@ -71,8 +91,16 @@ workflow RUN_MANTA_TUMORONLY {
         MERGE_MANTA_TUMOR.out.vcf,
         manta_tumor_sv_vcf.no_intervals
     ).map{ meta, vcf ->
-        [[patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals, variantcaller:"manta"],
-            vcf]
+        [[
+            id:             meta.sample,
+            num_intervals:  meta.num_intervals,
+            patient:        meta.patient,
+            sample:         meta.sample,
+            sex:            meta.sex,
+            status:         meta.status,
+            variantcaller:  "manta"
+        ],
+        vcf]
     }
 
     ch_versions = ch_versions.mix(MERGE_MANTA_SV.out.versions)

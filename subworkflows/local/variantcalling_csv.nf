@@ -12,7 +12,7 @@ workflow VARIANTCALLING_CSV {
             patient       = meta.patient
             sample        = meta.id
             variantcaller = meta.variantcaller
-            vcf = "${params.outdir}/variant_calling/${meta.id}/${variantcaller}/${vcf.getName()}"
-            ["variantcalled.csv", "patient,gender,sample,variantcaller,vcf\n${patient},${sample},${variantcaller},${vcf}\n"]
+            vcf = "${params.outdir}/variant_calling/${variantcaller}/${meta.id}/${vcf.getName()}"
+            ["variantcalled.csv", "patient,sample,variantcaller,vcf\n${patient},${sample},${variantcaller},${vcf}\n"]
         }
 }

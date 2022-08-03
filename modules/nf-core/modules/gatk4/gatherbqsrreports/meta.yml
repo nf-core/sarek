@@ -1,5 +1,5 @@
 name: gatk4_gatherbqsrreports
-description: write your description here
+description: Gathers scattered BQSR recalibration reports into a single file
 keywords:
   - gatk4
   - gatk4_gatherbqsrreports

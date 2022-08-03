@@ -51,6 +51,7 @@ jobs:
           - "save_bam_mapped"
           - "save_output_as_bam"
           - "skip_markduplicates"
+          - "skip_qc"
           - "split_fastq"
           - "strelka"
           - "strelkabp"
@@ -58,8 +59,9 @@ jobs:
           - "tiddit"
           - "trimming"
           - "tumor_normal_pair"
+          - "umi"
           - "variantcalling_channel"
-
+        profile: ["docker"]
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
@@ -86,7 +88,7 @@ jobs:
       - name: Run pipeline with tests settings
         uses: Wandalen/wretry.action@v1.0.11
         with:
-          command: pytest --tag ${{ matrix.test }} --symlink --kwdof --git-aware --color=yes
+          command: PROFILE=${{ matrix.profile }} pytest --tag ${{ matrix.test }} --symlink --kwdof --git-aware --color=yes
           attempt_limit: 3
 
       - name: Output log on failure
@@ -105,6 +107,6 @@ jobs:
             /tmp/pytest_workflow_*/*/log.out
             /tmp/pytest_workflow_*/*/log.err
             /tmp/pytest_workflow_*/*/work
+            /tmp/pytest_workflow_*/**/.command.log
             !/tmp/pytest_workflow_*/*/work/conda
             !/tmp/pytest_workflow_*/*/work/singularity
-            /tmp/pytest_workflow_*/**/.command.log

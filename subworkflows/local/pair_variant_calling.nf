@@ -7,13 +7,11 @@ include { RUN_CONTROLFREEC_SOMATIC                  } from '../nf-core/variantca
 include { RUN_FREEBAYES as RUN_FREEBAYES_SOMATIC    } from '../nf-core/variantcalling/freebayes/main.nf'
 include { RUN_MANTA_SOMATIC                         } from '../nf-core/variantcalling/manta/somatic/main.nf'
 include { RUN_STRELKA_SOMATIC                       } from '../nf-core/variantcalling/strelka/somatic/main.nf'
-include { RUN_CNVKIT_SOMATIC                        } from '../nf-core/variantcalling/cnvkit/somatic/main.nf'
+include { RUN_CNVKIT                                } from '../nf-core/variantcalling/cnvkit/main.nf'
 include { RUN_MPILEUP as RUN_MPILEUP_NORMAL         } from '../nf-core/variantcalling/mpileup/main'
 include { RUN_MPILEUP as RUN_MPILEUP_TUMOR          } from '../nf-core/variantcalling/mpileup/main'
 include { RUN_ASCAT_SOMATIC                         } from '../nf-core/variantcalling/ascat/main'
-include { RUN_TIDDIT as RUN_TIDDIT_NORMAL           } from '../nf-core/variantcalling/tiddit/main.nf'
-include { RUN_TIDDIT as RUN_TIDDIT_TUMOR            } from '../nf-core/variantcalling/tiddit/main.nf'
-include { SVDB_MERGE                                } from '../../modules/nf-core/modules/svdb/merge/main.nf'
+include { RUN_TIDDIT_SOMATIC                        } from '../nf-core/variantcalling/tiddit/somatic/main'
 
 workflow PAIR_VARIANT_CALLING {
     take:
@@ -58,7 +56,14 @@ workflow PAIR_VARIANT_CALLING {
             //If no interval file provided (0) then add empty list
             intervals_new = num_intervals == 0 ? [] : intervals
 
-            [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id: meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:num_intervals],
+            [[
+                id:             meta.tumor_id + "_vs_" + meta.normal_id,
+                normal_id:      meta.normal_id,
+                num_intervals:  num_intervals,
+                patient:        meta.patient,
+                sex:            meta.sex,
+                tumor_id:       meta.tumor_id,
+            ],
             normal_cram, normal_crai, tumor_cram, tumor_crai, intervals_new]
         }
 
@@ -70,26 +75,35 @@ workflow PAIR_VARIANT_CALLING {
             bed_new = num_intervals == 0 ? [] : bed_tbi[0]
             tbi_new = num_intervals == 0 ? [] : bed_tbi[1]
 
-            [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id: meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:num_intervals],
+            [[
+                id:             meta.tumor_id + "_vs_" + meta.normal_id,
+                normal_id:      meta.normal_id,
+                num_intervals:  num_intervals,
+                patient:        meta.patient,
+                sex:            meta.sex,
+                tumor_id:       meta.tumor_id,
+            ],
             normal_cram, normal_crai, tumor_cram, tumor_crai, bed_new, tbi_new]
 
         }
 
-    if (tools.contains('ascat')){
+    if (tools.split(',').contains('ascat')){
 
-        RUN_ASCAT_SOMATIC(  cram_pair,
-                            allele_files,
-                            loci_files,
-                            intervals_bed_combined,
-                            fasta,
-                            gc_file,
-                            rt_file)
+        RUN_ASCAT_SOMATIC(
+            cram_pair,
+            allele_files,
+            loci_files,
+            intervals_bed_combined,
+            fasta,
+            gc_file,
+            rt_file
+        )
 
         ch_versions = ch_versions.mix(RUN_ASCAT_SOMATIC.out.versions)
 
     }
 
-    if (tools.contains('controlfreec')){
+    if (tools.split(',').contains('controlfreec')){
         cram_normal_intervals_no_index = cram_pair_intervals
                     .map {meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals ->
                             [meta, normal_cram, intervals]
@@ -99,8 +113,16 @@ workflow PAIR_VARIANT_CALLING {
                     .map {meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals ->
                             [meta, tumor_cram, intervals]
                         }
-        RUN_MPILEUP_NORMAL(cram_normal_intervals_no_index, fasta)
-        RUN_MPILEUP_TUMOR(cram_tumor_intervals_no_index, fasta)
+
+        RUN_MPILEUP_NORMAL(
+            cram_normal_intervals_no_index,
+            fasta
+        )
+
+        RUN_MPILEUP_TUMOR(
+            cram_tumor_intervals_no_index,
+            fasta
+        )
 
         mpileup_normal = RUN_MPILEUP_NORMAL.out.mpileup
         mpileup_tumor = RUN_MPILEUP_TUMOR.out.mpileup
@@ -110,45 +132,59 @@ workflow PAIR_VARIANT_CALLING {
             [normal[0], normal[1], tumor[1], [], [], [], []]
         }
 
-        RUN_CONTROLFREEC_SOMATIC(controlfreec_input,
-                        fasta,
-                        fasta_fai,
-                        dbsnp,
-                        dbsnp_tbi,
-                        chr_files,
-                        mappability,
-                        intervals_bed_combined)
+        RUN_CONTROLFREEC_SOMATIC(
+            controlfreec_input,
+            fasta,
+            fasta_fai,
+            dbsnp,
+            dbsnp_tbi,
+            chr_files,
+            mappability,
+            intervals_bed_combined
+        )
 
         ch_versions = ch_versions.mix(RUN_MPILEUP_NORMAL.out.versions)
         ch_versions = ch_versions.mix(RUN_MPILEUP_TUMOR.out.versions)
         ch_versions = ch_versions.mix(RUN_CONTROLFREEC_SOMATIC.out.versions)
     }
 
-    if (tools.contains('cnvkit')){
+    if (tools.split(',').contains('cnvkit')){
         cram_pair_cnvkit_somatic = cram_pair
             .map{meta, normal_cram, normal_crai, tumor_cram, tumor_crai ->
                 [meta, tumor_cram, normal_cram]
             }
 
-        RUN_CNVKIT_SOMATIC( cram_pair_cnvkit_somatic,
-                            fasta,
-                            fasta_fai,
-                            intervals_bed_combined,
-                            [])
+        RUN_CNVKIT(
+            cram_pair_cnvkit_somatic,
+            fasta,
+            fasta_fai,
+            intervals_bed_combined,
+            []
+        )
+
+        ch_versions = ch_versions.mix(RUN_CNVKIT.out.versions)
     }
 
-    if (tools.contains('freebayes')){
-        RUN_FREEBAYES_SOMATIC(cram_pair_intervals, dict, fasta, fasta_fai)
+    if (tools.split(',').contains('freebayes')){
+
+        RUN_FREEBAYES_SOMATIC(
+            cram_pair_intervals,
+            dict,
+            fasta,
+            fasta_fai
+        )
 
         freebayes_vcf = RUN_FREEBAYES_SOMATIC.out.freebayes_vcf
         ch_versions   = ch_versions.mix(RUN_FREEBAYES_SOMATIC.out.versions)
     }
 
-    if (tools.contains('manta')) {
-        RUN_MANTA_SOMATIC(  cram_pair_intervals_gz_tbi,
-                            dict,
-                            fasta,
-                            fasta_fai)
+    if (tools.split(',').contains('manta')) {
+        RUN_MANTA_SOMATIC(
+            cram_pair_intervals_gz_tbi,
+            dict,
+            fasta,
+            fasta_fai
+        )
 
         manta_vcf                            = RUN_MANTA_SOMATIC.out.manta_vcf
         manta_candidate_small_indels_vcf     = RUN_MANTA_SOMATIC.out.manta_candidate_small_indels_vcf
@@ -156,9 +192,9 @@ workflow PAIR_VARIANT_CALLING {
         ch_versions                          = ch_versions.mix(RUN_MANTA_SOMATIC.out.versions)
     }
 
-    if (tools.contains('strelka')) {
+    if (tools.split(',').contains('strelka')) {
 
-        if (tools.contains('manta')) {
+        if (tools.split(',').contains('manta')) {
             cram_pair_strelka = cram_pair.join(manta_candidate_small_indels_vcf)
                                         .join(manta_candidate_small_indels_vcf_tbi)
                                         .combine(intervals_bed_gz_tbi)
@@ -168,7 +204,14 @@ workflow PAIR_VARIANT_CALLING {
                                             bed_new = num_intervals == 0 ? [] : bed_tbi[0]
                                             tbi_new = num_intervals == 0 ? [] : bed_tbi[1]
 
-                                            [[patient:meta.patient, normal_id:meta.normal_id, tumor_id:meta.tumor_id, gender:meta.gender, id:meta.tumor_id + "_vs_" + meta.normal_id, num_intervals:num_intervals],
+                                            [[
+                                                id:             meta.tumor_id + "_vs_" + meta.normal_id,
+                                                normal_id:      meta.normal_id,
+                                                num_intervals:  num_intervals,
+                                                patient:        meta.patient,
+                                                sex:            meta.sex,
+                                                tumor_id:       meta.tumor_id,
+                                            ],
                                             normal_cram, normal_crai, tumor_cram, tumor_crai, vcf, vcf_tbi, bed_new, tbi_new]
                                         }
 
@@ -179,16 +222,18 @@ workflow PAIR_VARIANT_CALLING {
             }
         }
 
-        RUN_STRELKA_SOMATIC(cram_pair_strelka,
-                            dict,
-                            fasta,
-                            fasta_fai)
+        RUN_STRELKA_SOMATIC(
+            cram_pair_strelka,
+            dict,
+            fasta,
+            fasta_fai
+        )
 
         strelka_vcf = Channel.empty().mix(RUN_STRELKA_SOMATIC.out.strelka_vcf)
         ch_versions = ch_versions.mix(RUN_STRELKA_SOMATIC.out.versions)
     }
 
-    if (tools.contains('msisensorpro')) {
+    if (tools.split(',').contains('msisensorpro')) {
 
         cram_pair_msisensor = cram_pair.combine(intervals_bed_combined)
         MSISENSORPRO_MSI_SOMATIC(cram_pair_msisensor, fasta, msisensorpro_scan)
@@ -196,7 +241,7 @@ workflow PAIR_VARIANT_CALLING {
         msisensorpro_output = msisensorpro_output.mix(MSISENSORPRO_MSI_SOMATIC.out.output_report)
     }
 
-    if (tools.contains('mutect2')) {
+    if (tools.split(',').contains('mutect2')) {
         cram_pair_mutect2 = cram_pair_intervals.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals ->
                                 [meta, [normal_cram, tumor_cram], [normal_crai, tumor_crai], intervals]
                             }
@@ -209,14 +254,15 @@ workflow PAIR_VARIANT_CALLING {
             germline_resource,
             germline_resource_tbi,
             panel_of_normals,
-            panel_of_normals_tbi)
+            panel_of_normals_tbi
+        )
 
         mutect2_vcf = GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING.out.filtered_vcf
         ch_versions = ch_versions.mix(GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING.out.versions)
     }
 
     //TIDDIT
-    if (tools.contains('tiddit')){
+    if (tools.split(',').contains('tiddit')){
         cram_normal = cram_pair.map{meta, normal_cram, normal_crai, tumor_cram, tumor_crai ->
             [meta, normal_cram, normal_crai]
         }
@@ -224,17 +270,9 @@ workflow PAIR_VARIANT_CALLING {
             [meta, tumor_cram, tumor_crai]
         }
 
-        RUN_TIDDIT_NORMAL(cram_normal, fasta, bwa)
-        RUN_TIDDIT_TUMOR(cram_tumor, fasta, bwa)
-        SVDB_MERGE(RUN_TIDDIT_NORMAL.out.tiddit_vcf.join(RUN_TIDDIT_TUMOR.out.tiddit_vcf)
-                                                    .map{meta, vcf_normal, vcf_tumor ->
-                                                        [meta, [vcf_normal, vcf_tumor]]
-                                                    }, false)
-        tiddit_vcf = SVDB_MERGE.out.vcf
-
-        ch_versions = ch_versions.mix(RUN_TIDDIT_NORMAL.out.versions)
-        ch_versions = ch_versions.mix(RUN_TIDDIT_TUMOR.out.versions)
-        ch_versions = ch_versions.mix(SVDB_MERGE.out.versions)
+        RUN_TIDDIT_SOMATIC(cram_normal, cram_tumor, fasta, bwa)
+        tiddit_vcf = RUN_TIDDIT_SOMATIC.out.tiddit_vcf
+        ch_versions = ch_versions.mix(RUN_TIDDIT_SOMATIC.out.versions)
     }
 
     emit:

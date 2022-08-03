@@ -11,6 +11,7 @@ workflow MERGE_INDEX_CRAM {
     take:
         ch_cram       // channel: [mandatory] meta, cram
         fasta         // channel: [mandatory] fasta
+        fasta_fai     // channel: [mandatory] fai for fasta
 
     main:
     ch_versions = Channel.empty()
@@ -18,7 +19,15 @@ workflow MERGE_INDEX_CRAM {
     // Figuring out if there is one or more cram(s) from the same sample
     ch_cram_to_merge = ch_cram.map{ meta, cram ->
 
-        [groupKey([patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:meta.sample, data_type:meta.data_type, num_intervals:meta.num_intervals],
+        [groupKey([
+                    data_type:      meta.data_type,
+                    id:             meta.sample,
+                    num_intervals:  meta.num_intervals,
+                    patient:        meta.patient,
+                    sample:         meta.sample,
+                    sex:            meta.sex,
+                    status:         meta.status,
+                    ],
                 meta.num_intervals),
         cram]
     }.groupTuple()
@@ -28,7 +37,7 @@ workflow MERGE_INDEX_CRAM {
         multiple: it[0].num_intervals > 1
     }
 
-    MERGE_CRAM(ch_cram_to_merge.multiple, fasta)
+    MERGE_CRAM(ch_cram_to_merge.multiple, fasta, fasta_fai)
     INDEX_CRAM(ch_cram_to_merge.single.mix(MERGE_CRAM.out.cram))
 
     cram_crai = ch_cram_to_merge.single

@@ -24,7 +24,15 @@ workflow RECALIBRATE {
             //If no interval file provided (0) then add empty list
             intervals_new = num_intervals == 0 ? [] : intervals
 
-            [[patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:meta.sample, data_type:meta.data_type, num_intervals:num_intervals],
+            [[
+                data_type:      meta.data_type,
+                id:             meta.sample,
+                num_intervals:  num_intervals,
+                patient:        meta.patient,
+                sample:         meta.sample,
+                sex:            meta.sex,
+                status:         meta.status,
+            ],
             cram, crai, recal, intervals_new]
         }
 
@@ -32,11 +40,18 @@ workflow RECALIBRATE {
     APPLYBQSR(cram_intervals, fasta, fasta_fai, dict)
 
     // STEP 4.5: MERGING AND INDEXING THE RECALIBRATED CRAM FILES
-    MERGE_INDEX_CRAM(APPLYBQSR.out.cram, fasta)
+    MERGE_INDEX_CRAM(APPLYBQSR.out.cram, fasta, fasta_fai)
 
     ch_cram_recal_out = MERGE_INDEX_CRAM.out.cram_crai.map{ meta, cram, crai ->
                             // remove no longer necessary fields to make sure joining can be done correctly: num_intervals
-                            [[patient:meta.patient, sample:meta.sample, gender:meta.gender, status:meta.status, id:meta.id, data_type:meta.data_type],
+                            [[
+                                data_type:  meta.data_type,
+                                id:         meta.id,
+                                patient:    meta.patient,
+                                sample:     meta.sample,
+                                sex:        meta.sex,
+                                status:     meta.status,
+                            ],
                             cram, crai]
                         }
 

@@ -1,61 +1,60 @@
-- name: Run Mark Duplicates starting from BAM
-  command: nextflow run main.nf -profile test,markduplicates_bam,docker --tools strelka
+- name: Run markduplicates starting from BAM
+  command: nextflow run main.nf -profile test,markduplicates_bam
   tags:
     - bam
     - markduplicates
     - preprocessing
   files:
-    - path: results/multiqc
-    - path: results/preprocessing/test/markduplicates/test.md.cram
-    - path: results/preprocessing/test/markduplicates/test.md.cram.crai
-    - path: results/preprocessing/test/recal_table/test.recal.table
-    - path: results/preprocessing/test/recalibrated/test.recal.cram
-    - path: results/preprocessing/test/recalibrated/test.recal.cram.crai
     - path: results/csv/markduplicates.csv
     - path: results/csv/markduplicates_no_table.csv
     - path: results/csv/recalibrated.csv
-    - path: results/reports/mosdepth/test/test.mapped.mosdepth.global.dist.txt
-    - path: results/reports/mosdepth/test/test.mapped.mosdepth.summary.txt
-    - path: results/reports/mosdepth/test/test.mapped.mosdepth.region.dist.txt
-    - path: results/reports/mosdepth/test/test.mapped.regions.bed.gz
+    - path: results/multiqc
+    - path: results/preprocessing/markduplicates/test/test.md.cram
+    - path: results/preprocessing/markduplicates/test/test.md.cram.crai
+    - path: results/preprocessing/recal_table/test/test.recal.table
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+    - path: results/reports/markduplicates/test/test.md.metrics
+    - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz.csi
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
-    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
-    - path: results/reports/samtools_stats/test/test.md.cram.stats
-    - path: results/reports/samtools_stats/test/test.recal.cram.stats
-    - path: results/variant_calling/test/strelka/test.genome.vcf.gz
-    - path: results/variant_calling/test/strelka/test.genome.vcf.gz.tbi
-    - path: results/variant_calling/test/strelka/test.variants.vcf.gz
-    - path: results/variant_calling/test/strelka/test.variants.vcf.gz.tbi
-
-- name: Run Mark Duplicates starting from CRAM
-  command: nextflow run main.nf -profile test,markduplicates_cram,docker --tools strelka
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
+    - path: results/reports/samtools/test/test.md.cram.stats
+    - path: results/reports/samtools/test/test.recal.cram.stats
+- name: Run markduplicates starting from CRAM
+  command: nextflow run main.nf -profile test,markduplicates_cram
   tags:
     - cram
     - markduplicates
     - preprocessing
   files:
-    - path: results/multiqc
-    - path: results/preprocessing/test/markduplicates/test.md.cram
-    - path: results/preprocessing/test/markduplicates/test.md.cram.crai
-    - path: results/preprocessing/test/recal_table/test.recal.table
-    - path: results/preprocessing/test/recalibrated/test.recal.cram
-    - path: results/preprocessing/test/recalibrated/test.recal.cram.crai
     - path: results/csv/markduplicates.csv
     - path: results/csv/markduplicates_no_table.csv
     - path: results/csv/recalibrated.csv
-    - path: results/reports/mosdepth/test/test.mapped.mosdepth.global.dist.txt
-    - path: results/reports/mosdepth/test/test.mapped.mosdepth.summary.txt
-    - path: results/reports/mosdepth/test/test.mapped.mosdepth.region.dist.txt
-    - path: results/reports/mosdepth/test/test.mapped.regions.bed.gz
+    - path: results/multiqc
+    - path: results/preprocessing/markduplicates/test/test.md.cram
+    - path: results/preprocessing/markduplicates/test/test.md.cram.crai
+    - path: results/preprocessing/recal_table/test/test.recal.table
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+    - path: results/reports/markduplicates/test/test.md.metrics
+    - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz.csi
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
-    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
-    - path: results/reports/samtools_stats/test/test.md.cram.stats
-    - path: results/reports/samtools_stats/test/test.recal.cram.stats
-    - path: results/variant_calling/test/strelka/test.genome.vcf.gz
-    - path: results/variant_calling/test/strelka/test.genome.vcf.gz.tbi
-    - path: results/variant_calling/test/strelka/test.variants.vcf.gz
-    - path: results/variant_calling/test/strelka/test.variants.vcf.gz.tbi
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
+    - path: results/reports/samtools/test/test.md.cram.stats
+    - path: results/reports/samtools/test/test.recal.cram.stats
+    - path: results/samtools/test.bam
+    - path: results/samtools/test.bam.bai

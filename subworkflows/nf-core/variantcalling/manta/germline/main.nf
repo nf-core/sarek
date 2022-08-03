@@ -3,7 +3,6 @@ include { GATK4_MERGEVCFS as MERGE_MANTA_SMALL_INDELS } from '../../../../../mod
 include { GATK4_MERGEVCFS as MERGE_MANTA_SV           } from '../../../../../modules/nf-core/modules/gatk4/mergevcfs/main'
 include { MANTA_GERMLINE                              } from '../../../../../modules/nf-core/modules/manta/germline/main'
 
-// TODO: Research if splitting by intervals is ok, we pretend for now it is fine.
 // Seems to be the consensus on upstream modules implementation too
 workflow RUN_MANTA_GERMLINE {
     take:
@@ -39,7 +38,14 @@ workflow RUN_MANTA_GERMLINE {
         manta_small_indels_vcf.intervals
             .map{ meta, vcf ->
 
-                [groupKey([patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals],
+                [groupKey([
+                            id:             meta.sample,
+                            num_intervals:  meta.num_intervals,
+                            patient:        meta.patient,
+                            sample:         meta.sample,
+                            sex:            meta.sex,
+                            status:         meta.status,
+                        ],
                         meta.num_intervals),
                 vcf]
             }.groupTuple(),
@@ -49,7 +55,14 @@ workflow RUN_MANTA_GERMLINE {
         manta_sv_vcf.intervals
             .map{ meta, vcf ->
 
-                [groupKey([patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals],
+                [groupKey([
+                            id:             meta.sample,
+                            num_intervals:  meta.num_intervals,
+                            patient:        meta.patient,
+                            sample:         meta.sample,
+                            sex:            meta.sex,
+                            status:         meta.status,
+                        ],
                         meta.num_intervals),
                 vcf]
 
@@ -60,7 +73,14 @@ workflow RUN_MANTA_GERMLINE {
         manta_diploid_sv_vcf.intervals
             .map{ meta, vcf ->
 
-                [groupKey([patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals],
+                [groupKey([
+                            id:             meta.sample,
+                            num_intervals:  meta.num_intervals,
+                            patient:        meta.patient,
+                            sample:         meta.sample,
+                            status:         meta.status,
+                            sex:            meta.sex,
+                        ],
                         meta.num_intervals),
                 vcf]
 
@@ -73,7 +93,15 @@ workflow RUN_MANTA_GERMLINE {
                     MERGE_MANTA_DIPLOID.out.vcf,
                     manta_diploid_sv_vcf.no_intervals)
                 .map{ meta, vcf ->
-                    [[patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals, variantcaller:"manta"], vcf]
+                    [[
+                        id:             meta.sample,
+                        num_intervals:  meta.num_intervals,
+                        patient:        meta.patient,
+                        sample:         meta.sample,
+                        status:         meta.status,
+                        sex:            meta.sex,
+                        variantcaller:  "manta"],
+                    vcf]
                 }
 
     ch_versions = ch_versions.mix(MERGE_MANTA_DIPLOID.out.versions)

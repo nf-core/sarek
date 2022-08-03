@@ -1,92 +1,200 @@
 //
-// Run GATK haplotypecaller for all input samples, merge them with genomicsdbimport, perform joint genotyping with genotypeGVCFS and recalibrate with variantrecalibrator & applyvqsr.
-//
-
-include { GATK4_HAPLOTYPECALLER     as HAPLOTYPECALLER     } from '../../../../modules/nf-core/modules/gatk4/haplotypecaller/main'
-include { GATK4_GENOMICSDBIMPORT    as GENOMICSDBIMPORT    } from '../../../../modules/nf-core/modules/gatk4/genomicsdbimport/main'
-include { GATK4_GENOTYPEGVCFS       as GENOTYPEGVCFS       } from '../../../../modules/nf-core/modules/gatk4/genotypegvcfs/main'
-include { GATK4_VARIANTRECALIBRATOR as VARIANTRECALIBRATOR } from '../../../../modules/nf-core/modules/gatk4/variantrecalibrator/main'
-include { GATK4_APPLYVQSR           as APPLYVQSR           } from '../../../../modules/nf-core/modules/gatk4/applyvqsr/main'
+// merge samples with genomicsdbimport, perform joint genotyping with genotypeGVCFS
+include { BCFTOOLS_SORT                                         } from '../../../../modules/nf-core/modules/bcftools/sort/main'
+include { TABIX_TABIX as TABIX                                  } from '../../../../modules/nf-core/modules/tabix/tabix/main'
+include { GATK4_GENOMICSDBIMPORT                                } from '../../../../modules/nf-core/modules/gatk4/genomicsdbimport/main'
+include { GATK4_GENOTYPEGVCFS                                   } from '../../../../modules/nf-core/modules/gatk4/genotypegvcfs/main'
+include { GATK4_MERGEVCFS as MERGE_GENOTYPEGVCFS                } from '../../../../modules/nf-core/modules/gatk4/mergevcfs/main'
+include { GATK4_MERGEVCFS as MERGE_VQSR                         } from '../../../../modules/nf-core/modules/gatk4/mergevcfs/main'
+include { GATK4_VARIANTRECALIBRATOR as VARIANTRECALIBRATOR_SNP  } from '../../../../modules/nf-core/modules/gatk4/variantrecalibrator/main'
+include { GATK4_APPLYVQSR as GATK4_APPLYVQSR_SNP                } from '../../../../modules/nf-core/modules/gatk4/applyvqsr/main'
+include { GATK4_APPLYVQSR as GATK4_APPLYVQSR_INDEL              } from '../../../../modules/nf-core/modules/gatk4/applyvqsr/main'
+include { GATK4_VARIANTRECALIBRATOR as VARIANTRECALIBRATOR_INDEL} from '../../../../modules/nf-core/modules/gatk4/variantrecalibrator/main'
 
 workflow GATK_JOINT_GERMLINE_VARIANT_CALLING {
     take:
-    input                     // channel: [ val(meta), [ input ], [ input_index ], [] ]
-    fasta                     // channel: /path/to/reference/fasta
-    fai                       // channel: /path/to/reference/fasta/index
-    dict                      // channel: /path/to/reference/fasta/dictionary
-    sites                     // channel: /path/to/known/sites/file
-    sites_index               // channel: /path/to/known/sites/index
-    allelespecific            // channel: true/false run allelespecific mode of vqsr modules
-    resources                 // channel: [[resource, vcfs, forvariantrecal], [resource, tbis, forvariantrecal], [resource, labels, forvariantrecal]]
-    annotation                // channel: [annotations, to, use, for, variantrecal, filtering]
-    mode                      // channel: which mode to run variantrecal: SNP/INDEL/BOTH
-    create_rscript            // channel: true/false whether to generate rscript plots in variantrecal
-    truthsensitivity          // channel: 0-100.0 truthsensitivity cutoff for applyvqsr
+    input            // channel: [ val(meta), [ input ], [ input_index ], interval, [], []]
+    fasta            // channel: /path/to/reference/fasta
+    fai              // channel: /path/to/reference/fasta/index
+    dict             // channel: /path/to/reference/fasta/dictionary
+    dbsnp
+    dbsnp_tbi
+    dbsnp_vqsr
+    resource_indels_vcf
+    resource_indels_tbi
+    known_indels_vqsr
+    resource_snps_vcf
+    resource_snps_tbi
+    known_snps_vqsr
 
     main:
-    ch_versions       = Channel.empty()
+    ch_versions    = Channel.empty()
+
+    //
+    //Map input for GenomicsDBImport.
+    //rename based on num_intervals, group all samples by their interval_name/interval_file and restructure for channel
+    //group by 0,3 to avoid a list of metas and make sure that any intervals
+    //
+    gendb_input = input.map{
+        meta, gvcf, tbi, intervals->
+            new_meta = [
+                        id:             "joint_variant_calling",
+                        intervals_name: meta.intervals_name,
+                        num_intervals:  meta.num_intervals
+                    ]
+
+            [ new_meta, gvcf, tbi, intervals ]
+
+        }.groupTuple(by:[0,3]).map{ new_meta, gvcf, tbi, intervals ->
+            [ new_meta, gvcf, tbi, intervals, [], [] ]
+        }
 
     //
     //Convert all sample vcfs into a genomicsdb workspace using genomicsdbimport.
     //
-    // gendb_input       = .combine([interval_file]).combine(['']).combine([dict])
+    GATK4_GENOMICSDBIMPORT ( gendb_input, false, false, false )
 
-    // GENOMICSDBIMPORT ( gendb_input, false, false, false )
-    // ch_versions       = ch_versions.mix(GENOMICSDBIMPORT.out.versions)
+    genotype_input = GATK4_GENOMICSDBIMPORT.out.genomicsdb.map{
+        meta, genomicsdb ->
+            [meta, genomicsdb, [], [], []]
+        }
 
     //
     //Joint genotyping performed using GenotypeGVCFs
+    //Sort vcfs called by interval within each VCF
     //
-    // ch_genotype_in    = GENOMICSDBIMPORT.out.genomicsdb.collect()
-    // //[] is a placeholder for the input where the vcf tbi file would be passed in for non-genomicsdb workspace runs, which is not necessary for this workflow as it uses genomicsdb workspaces.
-    // ch_genotype_in.add([])
 
-    // GENOTYPEGVCFS ( ch_genotype_in, fasta, fai, dict, sites, sites_index )
-    // ch_versions       = ch_versions.mix(GENOTYPEGVCFS.out.versions)
+    vcfs = GATK4_GENOTYPEGVCFS ( genotype_input, fasta, fai, dict, dbsnp, dbsnp_tbi).vcf
 
-    // // setting run_vqsr to false skips the VQSR process, for if user does not wish to perform VQSR,
-    // // or want to run the hard filtering recommended by gatk best practices for runs with a low number of samples instead.
-    // if (run_vqsr) {
-    //     //
-    //     //Perform first step in VQSR using VariantRecalibrator
-    //     //
-    //     ch_gvcf       = GENOTYPEGVCFS.out.vcf.collect()
-    //     ch_gtbi       = GENOTYPEGVCFS.out.tbi.collect()
-    //     ch_vrecal_in  = ch_gvcf.combine(ch_gtbi, by: 0)
+    BCFTOOLS_SORT(vcfs)
+    vcfs_sorted_input = BCFTOOLS_SORT.out.vcf.branch{
+        intervals:    it[0].num_intervals > 1
+        no_intervals: it[0].num_intervals <= 1
+    }
 
-    //     VARIANTRECALIBRATOR ( ch_vrecal_in, fasta, fai, dict, allelespecific, resources, annotation, mode, create_rscript )
+    vcfs_sorted_input_no_intervals =  vcfs_sorted_input.no_intervals.map{ meta , vcf ->
 
-    //     ch_versions   = ch_versions.mix(VARIANTRECALIBRATOR.out.versions)
+                            [[  id:             "joint_variant_calling",
+                                num_intervals:  meta.num_intervals,
+                                patient:        "all_samples",
+                                variantcaller:  "haplotypecaller"
+                            ] , vcf ]
+    }
 
-    //     //
-    //     //Perform second step in VQSR using ApplyVQSR
-    //     //
-    //     ch_recal      = VARIANTRECALIBRATOR.out.recal.collect()
-    //     ch_idx        = VARIANTRECALIBRATOR.out.idx.collect()
-    //     ch_tranches   = VARIANTRECALIBRATOR.out.tranches.collect()
-    //     ch_vqsr_in    = ch_vrecal_in.combine(ch_recal, by: 0).combine(ch_idx, by: 0).combine(ch_tranches, by: 0)
+    // Index vcf files if no scatter/gather by intervals
+    TABIX(vcfs_sorted_input_no_intervals)
 
-    //     APPLYVQSR ( ch_vqsr_in, fasta, fai, dict, allelespecific, truthsensitivity, mode )
+    //Merge scatter/gather vcfs & index
+    //Rework meta for variantscalled.csv and annotation tools
+    MERGE_GENOTYPEGVCFS(vcfs_sorted_input.intervals.map{meta, vcf ->
+                                [
+                                        [
+                                            id: "joint_variant_calling",
+                                            num_intervals: meta.num_intervals,
+                                            patient: "all_samples",
+                                            variantcaller: "haplotypecaller",
+                                        ],
+                                vcf]
+                            }.groupTuple()
+                            ,dict)
 
-    //     ch_versions   = ch_versions.mix(APPLYVQSR.out.versions)
+    vqsr_input = Channel.empty().mix(
+        MERGE_GENOTYPEGVCFS.out.vcf.join(MERGE_GENOTYPEGVCFS.out.tbi),
+        vcfs_sorted_input_no_intervals.join(TABIX.out.tbi)
+    )
 
-    // }
+    // Group resource labels for SNP and INDEL
+    snp_resource_labels   = Channel.empty().mix(known_snps_vqsr,dbsnp_vqsr).collect()
+    indel_resource_labels = Channel.empty().mix(known_indels_vqsr,dbsnp_vqsr).collect()
+
+    //
+    //Recalibrate SNP and INDEL separately.
+    //
+    VARIANTRECALIBRATOR_SNP(
+        vqsr_input,
+        resource_snps_vcf,
+        resource_snps_tbi,
+        snp_resource_labels,
+        fasta,
+        fai,
+        dict)
+
+    VARIANTRECALIBRATOR_INDEL(
+        vqsr_input,
+        resource_indels_vcf,
+        resource_indels_tbi,
+        indel_resource_labels,
+        fasta,
+        fai,
+        dict)
+
+    //
+    //Prepare SNP and INDEL separately for ApplyVQSR
+    //
+
+    //Join results of variant recalibration into a single channel tuple
+    //Rework meta for variantscalled.csv and annotation tools
+    vqsr_input_snp   = vqsr_input.join( VARIANTRECALIBRATOR_SNP.out.recal)
+                                .join( VARIANTRECALIBRATOR_SNP.out.idx)
+                                .join( VARIANTRECALIBRATOR_SNP.out.tranches)
+                                .map{ meta, vcf, tbi, recal, index, tranche ->
+
+                                            new_meta = [
+                                                        id:             "recalibrated_joint_variant_calling",
+                                                        num_intervals:  meta.num_intervals,
+                                                        patient:        "all_samples",
+                                                        variantcaller:  "haplotypecaller",
+                                                    ]
+
+                                            [new_meta, vcf, tbi, recal, index, tranche]
+                                        }
+
+    //Join results of variant recalibration into a single channel tuple
+    //Rework meta for variantscalled.csv and annotation tools
+    vqsr_input_indel = vqsr_input.join( VARIANTRECALIBRATOR_INDEL.out.recal).join(
+                                        VARIANTRECALIBRATOR_INDEL.out.idx).join(
+                                        VARIANTRECALIBRATOR_INDEL.out.tranches).map{ meta, vcf, tbi, recal, index, tranche ->
+
+                                                new_meta = [
+                                                            id:             "recalibrated_joint_variant_calling",
+                                                            num_intervals:  meta.num_intervals,
+                                                            patient:        "all_samples",
+                                                            variantcaller:  "haplotypecaller"
+                                                ]
+
+                                            [new_meta, vcf, tbi, recal, index, tranche]
+                                        }
+
+    GATK4_APPLYVQSR_SNP(vqsr_input_snp,
+                        fasta,
+                        fai,
+                        dict )
+
+    GATK4_APPLYVQSR_INDEL(vqsr_input_indel,
+                        fasta,
+                        fai,
+                        dict )
+
+    vqsr_snp_vcf = GATK4_APPLYVQSR_SNP.out.vcf
+    vqsr_indel_vcf = GATK4_APPLYVQSR_INDEL.out.vcf
+
+    //
+    //Merge VQSR outputs into final VCF
+    //
+    MERGE_VQSR(
+        vqsr_snp_vcf.mix(vqsr_indel_vcf).groupTuple(),
+        dict
+    )
+
+    ch_versions = ch_versions.mix(GATK4_GENOMICSDBIMPORT.out.versions)
+    ch_versions = ch_versions.mix(GATK4_GENOTYPEGVCFS.out.versions)
+    ch_versions = ch_versions.mix(VARIANTRECALIBRATOR_SNP.out.versions)
+    ch_versions = ch_versions.mix(GATK4_APPLYVQSR_SNP.out.versions)
+
+
 
     emit:
-    // haplotc_vcf    = run_haplotc ? HAPLOTYPECALLER.out.vcf.collect()          : [] // channel: [ val(meta), [ vcf ] ]
-    // haplotc_index  = run_haplotc ? HAPLOTYPECALLER.out.tbi.collect()          : [] // channel: [ val(meta), [ tbi ] ]
-
-    // genomicsdb     =               GENOMICSDBIMPORT.out.genomicsdb.collect()       // channel: [ val(meta), [ genomicsdb ] ]
-
-    // genotype_vcf   =               GENOTYPEGVCFS.out.vcf.collect()                 // channel: [ val(meta), [ vcf ] ]
-    // genotype_index =               GENOTYPEGVCFS.out.vcf.collect()                 // channel: [ val(meta), [ tbi ] ]
-
-    // recal_file     = run_vqsr    ? VARIANTRECALIBRATOR.out.recal.collect()    : [] // channel: [ val(meta), [ recal ] ]
-    // recal_index    = run_vqsr    ? VARIANTRECALIBRATOR.out.idx.collect()      : [] // channel: [ val(meta), [ idx ] ]
-    // recal_tranches = run_vqsr    ? VARIANTRECALIBRATOR.out.tranches.collect() : [] // channel: [ val(meta), [ tranches ] ]
-
-    // vqsr_vcf       = run_vqsr    ? APPLYVQSR.out.vcf.collect()                : [] // channel: [ val(meta), [ vcf ] ]
-    // vqsr_index     = run_vqsr    ? APPLYVQSR.out.tbi.collect()                : [] // channel: [ val(meta), [ tbi ] ]
-
-    versions       =               ch_versions                                     // channel: [ versions.yml ]
+    versions       = ch_versions                                                                                            // channel: [ versions.yml ]
+    genotype_vcf   = Channel.empty().mix( vcfs_sorted_input_no_intervals, MERGE_GENOTYPEGVCFS.out.vcf, MERGE_VQSR.out.vcf)  // channel: [ val(meta), [ vcf ] ]
+    genotype_index = Channel.empty().mix( TABIX.out.tbi, MERGE_GENOTYPEGVCFS.out.tbi, MERGE_VQSR.out.tbi)                    // channel: [ val(meta), [ tbi ] ]
 }

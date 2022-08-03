@@ -9,6 +9,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- [#691](https://github.com/nf-core/sarek/pull/691) - Enable `PROFILE=conda`, `PROFILE=docker` and `PROFILE=singularity` for pytest
+
+### Changed
+
+- [#679](https://github.com/nf-core/sarek/pull/679) - Back to `dev`
+- [#685](https://github.com/nf-core/sarek/pull/685) - Updating the nf-core modules used by Sarek.
+- [#691](https://github.com/nf-core/sarek/pull/691) - To run the same pytest as before locally, use `PROFILE=docker`
+
+### Fixed
+
+- [#679](https://github.com/nf-core/sarek/pull/679) - Fixed typos in subway maps
+- [#681](https://github.com/nf-core/sarek/pull/681) - Fixed intermediate files published cf [#680](https://github.com/nf-core/sarek/issues/680)
+- [#688](https://github.com/nf-core/sarek/pull/688) - Fixed VEP plugins issue cf [#687](https://github.com/nf-core/sarek/issues/687)
+- [#689](https://github.com/nf-core/sarek/pull/689) - Fixed when clause for non `BWA mem` building mapping indexes
+
+### Deprecated
+
+### Removed
+
+## [3.0](https://github.com/nf-core/sarek/releases/tag/3.0) - Skierfe
+
+Skierfe is a mountain in the Sarek national park, and the inspiration for the logo.
+
+### Added
+
 - [#388](https://github.com/nf-core/sarek/pull/388) - Add cram support + read splitting with `SeqKit` for speedup
 - [#394](https://github.com/nf-core/sarek/pull/394) - Add `DeepVariant`
 - [#411](https://github.com/nf-core/sarek/pull/411) - cram in csv samplesheet
@@ -31,9 +56,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#576](https://github.com/nf-core/sarek/pull/576) - Add modules and subworkflows for `cnvkit` germline mode
 - [#582](https://github.com/nf-core/sarek/pull/582) - Added option `--vep_out_format` for setting the format of the output-file from VEP to `json`, `tab` or `vcf` (default)
 - [#594](https://github.com/nf-core/sarek/pull/594) - Add parameter `--save_output_as_bam` to allow output of result files in BAM format
+- [#595](https://github.com/nf-core/sarek/pull/595) - Added Haplotypecaller joint germline calling
 - [#597](https://github.com/nf-core/sarek/pull/597) - Added tiddit for tumor variant calling
 - [#600](https://github.com/nf-core/sarek/pull/600) - Added description for UMI related params in schema
-- [#604](https://github.com/nf-core/sarek/pull/604) - Added full size tests WGS 30x NA12878
+- [#604](https://github.com/nf-core/sarek/pull/604), [#617](https://github.com/nf-core/sarek/pull/617) - Added full size tests WGS 30x NA12878
+- [#613](https://github.com/nf-core/sarek/pull/613) - Added params `--dbnsfp_fields` to allow configuration of fields for the `dbnsfp` `VEP` plugin
+- [#613](https://github.com/nf-core/sarek/pull/613) - Added params `--dbnsfp_consequence` to allow configuration of consequence for the `dbnsfp` `VEP` plugin
+- [#613](https://github.com/nf-core/sarek/pull/613) - Added params `--vep_version` to allow more configuration on the vep container definition
+- [#620](https://github.com/nf-core/sarek/pull/620) - Added checks for sex information when running a CNV tools
+- [#623](https://github.com/nf-core/sarek/pull/623) - Additional checks of data in the input sample sheet.
+- [#629](https://github.com/nf-core/sarek/pull/629) - Added checks to catch inconsistency between supplied samples and requested tools.
+- [#632](https://github.com/nf-core/sarek/pull/632) - Added params `--snpeff_version` to allow more configuration on the snpeff container definition
+- [#632](https://github.com/nf-core/sarek/pull/632) - Added params `--vep_include_fasta` to use the fasta file for annotation
+- [#639](https://github.com/nf-core/sarek/pull/639) - Adding genes-txt-file and summary-html-file to the published output from snpEff.
+- [#647](https://github.com/nf-core/sarek/pull/647) - Update resource requests for preprocessing based on what worked for 5 ICGC matched WGS samples
+- [#652](https://github.com/nf-core/sarek/pull/652) - Added full size somatic test profile.
 
 ### Changed
 
@@ -44,7 +81,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#416](https://github.com/nf-core/sarek/pull/416) - Sync `TEMPLATE` with `tools` `2.1`
 - [#417](https://github.com/nf-core/sarek/pull/417) - Merge `dsl2` and `dev` branches
 - [#419](https://github.com/nf-core/sarek/pull/419) - Improve preprocessing
-- [#420](https://github.com/nf-core/sarek/pull/420), [#455](https://github.com/nf-core/sarek/pull/455), [#459](https://github.com/nf-core/sarek/pull/459) - `nf-core modules update --all`
+- [#420](https://github.com/nf-core/sarek/pull/420), [#455](https://github.com/nf-core/sarek/pull/455), [#459](https://github.com/nf-core/sarek/pull/459), [#633](https://github.com/nf-core/sarek/pull/633) - `nf-core modules update --all`
 - [#427](https://github.com/nf-core/sarek/pull/427) - Update `DeepVariant`
 - [#462](https://github.com/nf-core/sarek/pull/462) - Update modules and `modules.config`
 - [#465](https://github.com/nf-core/sarek/pull/465) - Improve `test_data.config`
@@ -65,6 +102,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#570](https://github.com/nf-core/sarek/pull/570) - Extract mpileup into its own subworkflow; zip mpileup files
 - [#571](https://github.com/nf-core/sarek/pull/571) - Including and using GATK4's mergeVcfs
 - [#572](https://github.com/nf-core/sarek/pull/572) - Adjusted subway map svg for firefox compatibility
+- [#577](https://github.com/nf-core/sarek/pull/577) - Update `RELEASE_CHECKLIST`
 - [#578](https://github.com/nf-core/sarek/pull/578) - Updated module deeptools/bamcoverage
 - [#585](https://github.com/nf-core/sarek/pull/585) - Remove explicit BAM to CRAM conversion after MarkduplicatesSpark; tool does it internally
 - [#581](https://github.com/nf-core/sarek/pull/581) - `TIDDIT` is updated to `3.1.0`
@@ -72,6 +110,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#600](https://github.com/nf-core/sarek/pull/600) - Remove `TODO` in awsfulltest
 - [#606](https://github.com/nf-core/sarek/pull/606) - Updated `ASCAT` to version `3.0` as module
 - [#608](https://github.com/nf-core/sarek/pull/608) - Prevent candidate VCFs from getting published in manta
+- [#618](https://github.com/nf-core/sarek/pull/618) - Update `multiqc` module
+- [#618](https://github.com/nf-core/sarek/pull/618) - Update test yml files
+- [#620](https://github.com/nf-core/sarek/pull/620) - `gender` is now `sex` in the samplesheet
+- [#630](https://github.com/nf-core/sarek/pull/630) - Update citations file
+- [#632](https://github.com/nf-core/sarek/pull/632) - Update `snpEff` version to `5.1` and cache up to `105`
+- [#632](https://github.com/nf-core/sarek/pull/632) - Update `VEP` version to `106.1` and cache up to `106`
+- [#618](https://github.com/nf-core/sarek/pull/618) - Update `multiqc` module update test yml files
+- [#618](https://github.com/nf-core/sarek/pull/618) - Update test yml files
+- [#633](https://github.com/nf-core/sarek/pull/633) - Update `BCFTOOLS` version to `1.15.1`
+- [#644](https://github.com/nf-core/sarek/pull/644) - Use `-Y` for `bwa-mem(2)` and remove `-M`
+- [#645](https://github.com/nf-core/sarek/pull/645) - Merge `tests/nextflow.config` in `conf/test.config`
+- [#646](https://github.com/nf-core/sarek/pull/646) - Update `nextflow_schema.json` to reflect new parameters and functions, removes `--annotation_cache`, removes `--ascat_chromosomes`
+- [#649](https://github.com/nf-core/sarek/pull/649) - Update, simplify and add more files to all `test_*.yml` files
+- [#651](https://github.com/nf-core/sarek/pull/651) - Added TIDDIT_SOMATIC subworkflow
+- [#653](https://github.com/nf-core/sarek/pull/653) - Coherent results subfolder structure between preprocessing, variantcalling and reporting
+- [#659](https://github.com/nf-core/sarek/pull/659) - Update usage.md docu section on `How to run ASCAT with WES`
+- [#661](https://github.com/nf-core/sarek/pull/661) - Add cnvkit reference creation to index subway map
+- [#662](https://github.com/nf-core/sarek/pull/662) - Add bgzipped and indexed GATKBundle reference files for `GATK.GRCh37` and replace germline-resources with GATKBundle one
+- [#663](https://github.com/nf-core/sarek/pull/663) - Add separate parameters for `ASCAT` and `ControlFREEC` back in
+- [#668](https://github.com/nf-core/sarek/pull/668) - Update annotation documentation
+- [#674](https://github.com/nf-core/sarek/pull/664) - Default value for splitting is `50000000`
 
 ### Fixed
 
@@ -102,12 +161,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#581](https://github.com/nf-core/sarek/pull/581) - `TIDDIT` is back
 - [#590](https://github.com/nf-core/sarek/pull/590) - Fix empty folders during scatter/gather
 - [#592](https://github.com/nf-core/sarek/pull/592) - Fix optional resources for Mutect2, GetPileupSummaries, and HaplotypeCaller: issue [#299](https://github.com/nf-core/sarek/issues/299), [#359](https://github.com/nf-core/sarek/issues/359), [#367](https://github.com/nf-core/sarek/issues/367)
-- [#598](https://github.com/nf-core/sarek/pull/598) - Remove WARNING message for config selector not matching
+- [#598](https://github.com/nf-core/sarek/pull/598), [#614](https://github.com/nf-core/sarek/pull/614), [#626](https://github.com/nf-core/sarek/pull/626) - Remove WARNING message for config selector not matching
 - [#599](https://github.com/nf-core/sarek/pull/599) - Add checks for correct data type for `params.step`
-- [#599](https://github.com/nf-core/sarek/pull/599) - Add checks for no empty `--tools` with `--step variant_calling` or `--step annotation`
+- [#599](https://github.com/nf-core/sarek/pull/599) - Add checks for no empty `--tools` with `--step variant_calling` or `--step annotate`
 - [#600](https://github.com/nf-core/sarek/pull/600) - Remove `nf-core lint` warnings
 - [#602](https://github.com/nf-core/sarek/pull/602) - Fixed bug in `alignment_to_fastq` and added tests
 - [#609](https://github.com/nf-core/sarek/pull/609) - Remove unused intervals code, reorganize combined intervals file
+- [#613](https://github.com/nf-core/sarek/pull/613) - Fixed filenames for `dbnsfp` and `SpliceAI` `VEP` plugin
+- [#615](https://github.com/nf-core/sarek/pull/615) - Fix ASCAT igenomes file paths
+- [#619](https://github.com/nf-core/sarek/pull/619) - Fix issue with checking samplesheet content with AWS
+- [#628](https://github.com/nf-core/sarek/pull/628) - Fix issue with value converting to string before schema validation
+- [#628](https://github.com/nf-core/sarek/pull/628) - Fix dbsnp check issue with `--step annotate`
+- [#618](https://github.com/nf-core/sarek/pull/618) - Fix `bcftools/vcftools` sample labelling in multiqc report
+- [#618](https://github.com/nf-core/sarek/pull/618) - Fix issue with tiddit [#621](https://github.com/nf-core/sarek/issues/621)
+- [#618](https://github.com/nf-core/sarek/pull/618) - Fix channel issue with `targets.bed` in prepare_intervals
+- [#634](https://github.com/nf-core/sarek/pull/634) - Fix issue with samtools/mosdepth plots in multiqc_report
+- [#641](https://github.com/nf-core/sarek/pull/641) - Fix issue with duplicate substring in tools and skip_tools
+- [#642](https://github.com/nf-core/sarek/pull/642) - Only unzip ref files if tool is run, only publish ref files if `--save_reference` and simplify CNKit logic
+- [#650](https://github.com/nf-core/sarek/pull/650) - Fix intervals checks
+- [#654](https://github.com/nf-core/sarek/pull/654) - Allow any step but annotation to start from BAM files
+- [#655](https://github.com/nf-core/sarek/pull/655) - Fix `--intervals false` logic & add versioning for local modules
+- [#658](https://github.com/nf-core/sarek/pull/658) - Fix split fastq names in multiqc-report
+- [#666](https://github.com/nf-core/sarek/pull/666) - Simplify multiqc config channel input
+- [#668](https://github.com/nf-core/sarek/pull/668) - Add `snpeff_version` and `vep_version` to `schema_ignore_params` to avoid issue when specifying on command line
+- [#669](https://github.com/nf-core/sarek/pull/669) - Fix path to files when creating csv files
 
 ### Deprecated
 
@@ -123,6 +200,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#562](https://github.com/nf-core/sarek/pull/562) - Restart from `--step annotate` from folder is removed. Use a `csv` file instead
 - [#571](https://github.com/nf-core/sarek/pull/571) - Removed the local module `concat_vcf`.
 - [#605](https://github.com/nf-core/sarek/pull/605) - Removed Scatter/gather from GATK_SINGLE_SAMPLE_GERMLINE_VARIANT_CALLING, all intervals are processed together
+- [#643](https://github.com/nf-core/sarek/pull/643) - Removed Sentieon parameters
+
+## [2.7.2](https://github.com/nf-core/sarek/releases/tag/2.7.2) - Áhkká
+
+Áhkká is one of the massifs just outside of the Sarek National Park.
+
+### Fixed
+
+- [#566](https://github.com/nf-core/sarek/pull/566) - Fix caching bug affecting a variable number of `MapReads` jobs due to non-deterministic state of `statusMap` during caching evaluation
 
 ## [2.7.1](https://github.com/nf-core/sarek/releases/tag/2.7.1) - Pårtejekna
 

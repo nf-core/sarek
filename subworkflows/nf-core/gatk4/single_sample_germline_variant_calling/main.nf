@@ -22,12 +22,14 @@ workflow GATK_SINGLE_SAMPLE_GERMLINE_VARIANT_CALLING{
             [meta, vcf, tbi, [], new_intervals]
     }
 
-    CNNSCOREVARIANTS(cnn_in,
-                    fasta,
-                    fasta_fai,
-                    dict,
-                    [],
-                    [])
+    CNNSCOREVARIANTS(
+        cnn_in,
+        fasta,
+        fasta_fai,
+        dict,
+        [],
+        []
+    )
 
     cnn_out = CNNSCOREVARIANTS.out.vcf.join(CNNSCOREVARIANTS.out.tbi).combine(intervals_bed_combined)
         .map{   meta, cnn_vcf,cnn_tbi, intervals ->
@@ -35,16 +37,26 @@ workflow GATK_SINGLE_SAMPLE_GERMLINE_VARIANT_CALLING{
             [meta, cnn_vcf, cnn_tbi, new_intervals]
         }
 
-    FILTERVARIANTTRANCHES(cnn_out,
-                            known_sites,
-                            known_sites_tbi,
-                            fasta,
-                            fasta_fai,
-                            dict)
+    FILTERVARIANTTRANCHES(
+        cnn_out,
+        known_sites,
+        known_sites_tbi,
+        fasta,
+        fasta_fai,
+        dict
+    )
 
     // Figure out if using intervals or no_intervals
     filtered_vcf = FILTERVARIANTTRANCHES.out.vcf.map{ meta, vcf ->
-                                            [[patient:meta.patient, sample:meta.sample, status:meta.status, gender:meta.gender, id:meta.sample, num_intervals:meta.num_intervals, variantcaller:"haplotypecaller"], vcf]
+                                            [[
+                                                id:             meta.sample,
+                                                num_intervals:  meta.num_intervals,
+                                                patient:        meta.patient,
+                                                sample:         meta.sample,
+                                                sex:            meta.sex,
+                                                status:         meta.status,
+                                                variantcaller:  "haplotypecaller"
+                                            ], vcf]
                                         }
 
     ch_versions = ch_versions.mix(CNNSCOREVARIANTS.out.versions)
