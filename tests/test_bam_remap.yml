@@ -42,7 +42,7 @@
     # binary changes md5sums on reruns.
     - path: results/reports/fastqc/test-1
     - path: results/reports/markduplicates/test/test.md.metrics
-      contains: ["test	8547	767	84	523391	3882	0	0	0.385081", "1.0	767	767"]
+      contains: ["test	0	2820	2	2	0	828	0	0.293617	3807", "1.0	0.999986	1178	1178", "2.0	1.47674	800	800", "100.0	1.911145	0	0"]
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
       md5sum: 9cb9b181119256ed17a77dcf44d58285
     - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
