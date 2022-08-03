@@ -18,7 +18,7 @@
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test.paired_end.recalibrated.sorted.targetcoverage.cnn
       md5sum: 79aae7e9c135fb8c65f8fbda12610faf
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted-diagram.pdf
-      md5sum: f187d77d811e6016f56d81cec22204de
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted-scatter.png
       md5sum: acd87dfb61db5910afaea34053aed561
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.antitargetcoverage.cnn
@@ -74,29 +74,29 @@
     - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.TsTv.qual
       md5sum: c949f848859f138731898aac64a73eaf
     - path: results/variant_calling/strelka/sample1/sample1.strelka.genome.vcf.gz
-      md5sum: fc7ca1bd9410c72155c002fffb0cee5e
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/sample1/sample1.strelka.genome.vcf.gz.tbi
-      md5sum: b6dfcac0f8b62216132108c014c8cdd6
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/sample1/sample1.strelka.variants.vcf.gz
-      md5sum: b73c73caaf4c3f1417fbb7ed89a2f99d
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/sample1/sample1.strelka.variants.vcf.gz.tbi
-      md5sum: f3233e35acdeadd08014b9814c699201
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/sample2/sample2.strelka.genome.vcf.gz
-      md5sum: f6785ea27567c38021aaf4247aee8eba
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/sample2/sample2.strelka.genome.vcf.gz.tbi
-      md5sum: bfeda606cbe5dcc231c1da6fabb94846
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/sample2/sample2.strelka.variants.vcf.gz
-      md5sum: a3808c4f5ca932d7ca24e87bc6719818
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/sample2/sample2.strelka.variants.vcf.gz.tbi
-      md5sum: 5cbaa3994336c90ee37ce27a3b1f7343
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.vcf.gz
-      md5sum: e3e9d81f51be4c153abb42a80eee4293
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.vcf.gz.tbi
-      md5sum: 2d405d832ac9a26947f4d851acfb3a9e
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz
-      md5sum: af7edfffb998375a4a6974569cfc017c
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz.tbi
-      md5sum: c602747e981a8a663fc6661ad7143b4e
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/sample3/strelka/sample3.strelka.variants.vcf.gz
       should_exist: false
     - path: results/variant_calling/strelka/sample3/sample3.strelka.variants.vcf.gz.tbi
