@@ -77,6 +77,7 @@
     - path: results/reports/vcftools/strelka/test/test.strelka.variants.TsTv.count
       md5sum: ee7dafc8d941b8502a04a63dc3126fff
     - path: results/reports/vcftools/strelka/test/test.strelka.variants.TsTv.qual
+    # ??????
       md5sum: 05ead31b9019ced54c64ec032bbe40b4
     - path: results/variant_calling/strelka/test/test.strelka.genome.vcf.gz
     # binary changes md5sums on reruns.
@@ -123,6 +124,7 @@
     - path: results/reports/vcftools/strelka/test/test.strelka.variants.TsTv.count
       md5sum: ee7dafc8d941b8502a04a63dc3126fff
     - path: results/reports/vcftools/strelka/test/test.strelka.variants.TsTv.qual
+    # ?????
       md5sum: a3dc19489e215c04631da4eac20eef41
     - path: results/variant_calling/strelka/test/test.strelka.genome.vcf.gz
     # binary changes md5sums on reruns.
