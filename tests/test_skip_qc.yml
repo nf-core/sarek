@@ -5,11 +5,15 @@
     - preprocessing
   files:
     - path: results/csv/markduplicates.csv
+      md5sum: 0d6120bb99e92f6810343270711ca53e
     - path: results/csv/markduplicates_no_table.csv
+      md5sum: 2a2d3d4842befd4def39156463859ee3
     - path: results/csv/recalibrated.csv
+      md5sum: 42628ec994c16f565e5407b40a9c1ac3
     - path: results/preprocessing/markduplicates/test/test.md.cram
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
     - path: results/preprocessing/recal_table/test/test.recal.table
+      md5sum: 4ac774bf5f1157e77426fd82f5ac0fbe
     - path: results/preprocessing/recalibrated/test/test.recal.cram
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
     - path: results/multiqc
@@ -30,11 +34,15 @@
     - preprocessing
   files:
     - path: results/csv/markduplicates.csv
+      md5sum: 0d6120bb99e92f6810343270711ca53e
     - path: results/csv/markduplicates_no_table.csv
+      md5sum: 2a2d3d4842befd4def39156463859ee3
     - path: results/csv/recalibrated.csv
+      md5sum: 42628ec994c16f565e5407b40a9c1ac3
     - path: results/preprocessing/markduplicates/test/test.md.cram
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
     - path: results/preprocessing/recal_table/test/test.recal.table
+      md5sum: 5b6e5078b4a90f6cb982fa0f0df616c2
     - path: results/preprocessing/recalibrated/test/test.recal.cram
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
     - path: results/multiqc
