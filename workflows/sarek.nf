@@ -1013,7 +1013,6 @@ workflow SAREK {
 
         VARIANTCALLING_CSV(vcf_to_annotate)
 
-
         // ANNOTATE
         if (params.step == 'annotate') vcf_to_annotate = ch_input_sample
 
@@ -1039,8 +1038,9 @@ workflow SAREK {
         }
 
         if(params.tools && params.tools.contains('tmb')){
-            //bcftools norm -f FASTA -m- -o file_norm.vcf file
+            vcf_to_tmb = ANNOTATE.out.vcf_ann
 
+            TUMOR_MUTATIONAL_BURDEN(vcf_to_tmb, fasta, [])
         }
     }
 

@@ -24,7 +24,7 @@ process TMB {
     def target_bed = target_bed ? "--bed ${target_bed}" : ""
     """
     pyTMB.py -i $vcf \
-        --dbConfig ${dbConfig} \
+        --dbConfig ${dbconfig} \
         --varConfig ${varconfig} \
         ${target_bed} \
         $args
