@@ -8,29 +8,53 @@
   files:
     - path: results/multiqc
     - path: results/variant_calling/cnvkit/sample3/multi_intervals.antitarget.bed
+      md5sum: 3d4d20f9f23b39970865d29ef239d20b
     - path: results/variant_calling/cnvkit/sample3/multi_intervals.target.bed
+      md5sum: 86d30493bb2e619a93f4ebc2923d29f3
     - path: results/variant_calling/cnvkit/sample3/reference.cnn
+      md5sum: a09ee4be5dda1cf0f68073bdb3aad8ec
     - path: results/variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted-diagram.pdf
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted-scatter.png
+      md5sum: c96b97b9ce948daf3437ccecfd67a4a7
     - path: results/variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted.antitargetcoverage.cnn
+      md5sum: fe1248aa91fad7769303bb4c031d55ca
     - path: results/variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted.bintest.cns
+      md5sum: e55667a75d7d8eaec2efd3b611f15379
     - path: results/variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted.call.cns
+      md5sum: 9968e02ef2f11ed22e2789c053f7159c
     - path: results/variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted.cnr
+      md5sum: 3f0fe46574d0f7137f779e7ac1c2362d
     - path: results/variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted.cns
+      md5sum: 0b2b81d391965488b8634a2b802b69cd
     - path: results/variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted.targetcoverage.cnn
+      md5sum: 79aae7e9c135fb8c65f8fbda12610faf
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/multi_intervals.antitarget.bed
+      md5sum: 3d4d20f9f23b39970865d29ef239d20b
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/multi_intervals.target.bed
+      md5sum: 86d30493bb2e619a93f4ebc2923d29f3
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/reference.cnn
+      md5sum: 59ec306bb820684b1f6f277d67cb2d92
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test.paired_end.recalibrated.sorted.antitargetcoverage.cnn
+      md5sum: fe1248aa91fad7769303bb4c031d55ca
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test.paired_end.recalibrated.sorted.targetcoverage.cnn
+      md5sum: 79aae7e9c135fb8c65f8fbda12610faf
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted-diagram.pdf
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted-scatter.png
+      md5sum: acd87dfb61db5910afaea34053aed561
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.antitargetcoverage.cnn
+      md5sum: 067115082c4af4b64d58c0dc3a3642e4
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.bintest.cns
+      md5sum: e9a260b81a34d8bc75330435d2a5e8da
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.call.cns
+      md5sum: c7d7fd87b27e103f73988ae307450e82
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.cnr
+      md5sum: 26c506866198d46610c71fa6c0f9e381
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.cns
+      md5sum: 83510b274c24a2671a962477a1ceb436
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.targetcoverage.cnn
+      md5sum: b4a49faf170e436ec32dcc21ccc3ce8f
     - path: results/cnvkit
       should_exist: false
 - name: Run variant calling on tumor_only sample with cnvkit
@@ -43,15 +67,25 @@
   files:
     - path: results/multiqc
     - path: results/variant_calling/cnvkit/sample2/cnvkit.reference.antitarget-tmp.bed
+      md5sum: 3d4d20f9f23b39970865d29ef239d20b
     - path: results/variant_calling/cnvkit/sample2/cnvkit.reference.target-tmp.bed
+      md5sum: 657b25dbda8516624efa8cb2cf3716ca
     - path: results/variant_calling/cnvkit/sample2/test2.paired_end.recalibrated.sorted-diagram.pdf
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/cnvkit/sample2/test2.paired_end.recalibrated.sorted-scatter.png
+      md5sum: 7f2d2380309d5e19c8942131890d0e39
     - path: results/variant_calling/cnvkit/sample2/test2.paired_end.recalibrated.sorted.antitargetcoverage.cnn
+      md5sum: 067115082c4af4b64d58c0dc3a3642e4
     - path: results/variant_calling/cnvkit/sample2/test2.paired_end.recalibrated.sorted.bintest.cns
+      md5sum: f6adc75a0a86b7a921eca1b79a394cb0
     - path: results/variant_calling/cnvkit/sample2/test2.paired_end.recalibrated.sorted.call.cns
+      md5sum: f7caeca04aba28b125ce26b511f42afb
     - path: results/variant_calling/cnvkit/sample2/test2.paired_end.recalibrated.sorted.cnr
+      md5sum: d9bdb71ce807051369577ee7f807a40c
     - path: results/variant_calling/cnvkit/sample2/test2.paired_end.recalibrated.sorted.cns
+      md5sum: 2b56aac606ba6183d018b30ca58afcec
     - path: results/variant_calling/cnvkit/sample2/test2.paired_end.recalibrated.sorted.targetcoverage.cnn
+      md5sum: e6d0190c1c37ce6e41f76ca5b24ccca3
     - path: results/cnvkit
       should_exist: false
 - name: Run variant calling on germline sample with cnvkit
@@ -64,16 +98,27 @@
   files:
     - path: results/multiqc
     - path: results/variant_calling/cnvkit/sample1/multi_intervals.antitarget.bed
+      md5sum: 3d4d20f9f23b39970865d29ef239d20b
     - path: results/variant_calling/cnvkit/sample1/multi_intervals.target.bed
+      md5sum: 86d30493bb2e619a93f4ebc2923d29f3
     - path: results/variant_calling/cnvkit/sample1/reference.cnn
+      md5sum: a09ee4be5dda1cf0f68073bdb3aad8ec
     - path: results/variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted-diagram.pdf
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted-scatter.png
+      md5sum: c96b97b9ce948daf3437ccecfd67a4a7
     - path: results/variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted.antitargetcoverage.cnn
+      md5sum: fe1248aa91fad7769303bb4c031d55ca
     - path: results/variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted.bintest.cns
+      md5sum: e55667a75d7d8eaec2efd3b611f15379
     - path: results/variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted.call.cns
+      md5sum: 9968e02ef2f11ed22e2789c053f7159c
     - path: results/variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted.cnr
+      md5sum: 3f0fe46574d0f7137f779e7ac1c2362d
     - path: results/variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted.cns
+      md5sum: 0b2b81d391965488b8634a2b802b69cd
     - path: results/variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted.targetcoverage.cnn
+      md5sum: 79aae7e9c135fb8c65f8fbda12610faf
     - path: results/cnvkit
       should_exist: false
 - name: Run variant calling on somatic samples with controlfreec
@@ -86,22 +131,39 @@
   files:
     - path: results/multiqc
     - path: results/untar/chromosomes/chr21.fasta
+      md5sum: 69bd44ef67566a76d6cbb8aa4a25ae35
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/config.txt
+      contains: ["BedGraphOutput = TRUE", "minExpectedGC = 0", "maxThreads = 2", "noisyData = TRUE", "readCountThreshold = 1", "sex = XX", "window = 10"]
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.bed
+      md5sum: 833920178e4f40a296d8eab029caf086
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.circos.txt
+      md5sum: 92ce5ce97b27a7214dfa9c2cb20cf854
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.normal.mpileup.gz_control.cpn
+      md5sum: 802b1be61a43379d6a59cd511956da4c
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.p.value.txt
+      md5sum: 94bf84d58c9696f116a9a6d8cb350e14
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz_BAF.txt
+      md5sum: 97614489f64ce8e7f5d4c69e0811a872
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz_CNVs
+      md5sum: 7fa21a187466579fa532d6d40d7412cf
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz_info.txt
+      md5sum: 4b4bca26a60c843a221e480df25514ca
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz_ratio.BedGraph
+      md5sum: 5d3321af93678f16878d59e01d3a87d3
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz_ratio.txt
+      md5sum: 0565ec12db85fb2a84b2072563f27bba
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz_sample.cpn
+      md5sum: c3bd854280920ff99335921efdd13df7
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_BAF.png
+      md5sum: f9d977839e09c7e2472d970bd4aa834c
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_ratio.log2.png
+      md5sum: 2eea2f34e6d05a6da3a8ec23e7075068
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_ratio.png
+      md5sum: 2f1565c565bd6b2306173f6efb916304
     - path: results/variant_calling/mpileup/sample4_vs_sample3/sample4_vs_sample3.normal.mpileup.gz
+      md5sum: 6274feea382028a1ec369cc7f9a5011d
     - path: results/variant_calling/mpileup/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz
+      md5sum: 69e3b31c2db6f4b5fb799b69bbdc7f57
     - path: results/cnvkit
       should_exist: false
 - name: Run variant calling on somatic samples with controlfreec without intervals
@@ -115,25 +177,44 @@
   files:
     - path: results/multiqc
     - path: results/no_intervals.bed
+      md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/no_intervals.bed.gz
+      md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/no_intervals.bed.gz.tbi
+      md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/untar/chromosomes
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/GC_profile.sample4_vs_sample3.cpn
+      md5sum: d41d8cd98f00b204e9800998ecf8427e # This is the md5sum of an empty file. Are all these files suppose to be empty?
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/config.txt
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.bed
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.circos.txt
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.p.value.txt
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_BAF.png
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_BAF.txt
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_CNVs
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_info.txt
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_ratio.BedGraph
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_ratio.log2.png
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_ratio.png
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_ratio.txt
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_sample.cpn
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
     - path: results/variant_calling/mpileup/sample4_vs_sample3/sample4_vs_sample3.normal.mpileup.gz
+      md5sum: 1fe7bb27b18005ee78acfebcb15f4930
     - path: results/variant_calling/mpileup/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz
+      md5sum: 40544e727f449b14523a4f2e20c69420
     - path: results/controlfreec
       should_exist: false
     - path: results/mpileup
@@ -148,20 +229,35 @@
   files:
     - path: results/multiqc
     - path: results/variant_calling/controlfreec/sample2/GC_profile.sample2.cpn
+      md5sum: d41d8cd98f00b204e9800998ecf8427e # This is the md5sum of an empty file. Are all these files suppose to be empty?
     - path: results/variant_calling/controlfreec/sample2/config.txt
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
     - path: results/variant_calling/controlfreec/sample2/sample2.bed
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
     - path: results/variant_calling/controlfreec/sample2/sample2.circos.txt
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
     - path: results/variant_calling/controlfreec/sample2/sample2.p.value.txt
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
     - path: results/variant_calling/controlfreec/sample2/sample2_BAF.png
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
     - path: results/variant_calling/controlfreec/sample2/sample2_BAF.txt
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
     - path: results/variant_calling/controlfreec/sample2/sample2_CNVs
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
     - path: results/variant_calling/controlfreec/sample2/sample2_info.txt
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
     - path: results/variant_calling/controlfreec/sample2/sample2_ratio.BedGraph
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
     - path: results/variant_calling/controlfreec/sample2/sample2_ratio.log2.png
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
     - path: results/variant_calling/controlfreec/sample2/sample2_ratio.png
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
     - path: results/variant_calling/controlfreec/sample2/sample2_ratio.txt
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
     - path: results/variant_calling/controlfreec/sample2/sample2_sample.cpn
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
     - path: results/variant_calling/mpileup/sample2/sample2.tumor.mpileup.gz
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
     - path: results/controlfreec
       should_exist: false
     - path: results/mpileup
@@ -175,17 +271,29 @@
   files:
     - path: results/multiqc
     - path: results/reports/bcftools/deepvariant/sample1/sample1.deepvariant.bcftools_stats.txt
+      md5sum: 4ac774bf5f1157e77426fd82f5a04088
     - path: results/reports/bcftools/deepvariant/sample1/sample1.deepvariant.g.bcftools_stats.txt
+      md5sum: 4ac774bf5f1157e77426fd82f5a04089
     - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.FILTER.summary
+      md5sum: 4ac774bf5f1157e77426fd82f5a04090
     - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.TsTv.count
+      md5sum: 4ac774bf5f1157e77426fd82f5a04091
     - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.TsTv.qual
+      md5sum: 4ac774bf5f1157e77426fd82f5a04092
     - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.g.FILTER.summary
+      md5sum: 4ac774bf5f1157e77426fd82f5a04093
     - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.g.TsTv.count
+      md5sum: 4ac774bf5f1157e77426fd82f5a04094
     - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.g.TsTv.qual
+      md5sum: 4ac774bf5f1157e77426fd82f5a04095
     - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.g.vcf.gz
+      md5sum: 4ac774bf5f1157e77426fd82f5a04096
     - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.g.vcf.gz.tbi
+      md5sum: 4ac774bf5f1157e77426fd82f5a04097
     - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.vcf.gz
+      md5sum: 4ac774bf5f1157e77426fd82f5a04098
     - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.vcf.gz.tbi
+      md5sum: 4ac774bf5f1157e77426fd82f5a04099
     - path: results/deepvariant
       should_exist: false
 - name: Run variant calling on germline sample with deepvariant without intervals
@@ -198,20 +306,35 @@
   files:
     - path: results/multiqc
     - path: results/no_intervals.bed
+      md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/no_intervals.bed.gz
+      md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/no_intervals.bed.gz.tbi
+      md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/reports/bcftools/deepvariant/sample1/sample1.deepvariant.bcftools_stats.txt
+      md5sum: 4ac774bf5f1157e77426fd82f5a04103
     - path: results/reports/bcftools/deepvariant/sample1/sample1.deepvariant.g.bcftools_stats.txt
+      md5sum: 4ac774bf5f1157e77426fd82f5a04104
     - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.FILTER.summary
+      md5sum: 4ac774bf5f1157e77426fd82f5a04105
     - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.TsTv.count
+      md5sum: 4ac774bf5f1157e77426fd82f5a04106
     - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.TsTv.qual
+      md5sum: 4ac774bf5f1157e77426fd82f5a04107
     - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.g.FILTER.summary
+      md5sum: 4ac774bf5f1157e77426fd82f5a04108
     - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.g.TsTv.count
+      md5sum: 4ac774bf5f1157e77426fd82f5a04109
     - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.g.TsTv.qual
+      md5sum: 4ac774bf5f1157e77426fd82f5a04110
     - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.g.vcf.gz
+      md5sum: 4ac774bf5f1157e77426fd82f5a04111
     - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.g.vcf.gz.tbi
+      md5sum: 4ac774bf5f1157e77426fd82f5a04112
     - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.vcf.gz
+      md5sum: 4ac774bf5f1157e77426fd82f5a04113
     - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.vcf.gz.tbi
+      md5sum: 4ac774bf5f1157e77426fd82f5a04114
     - path: results/deepvariant
       should_exist: false
 - name: Run variant calling on germline sample with freebayes
@@ -222,39 +345,68 @@
     - variant_calling
   files:
     - path: results/csv/markduplicates.csv
+      md5sum: 0d6120bb99e92f6810343270711ca53e
     - path: results/csv/markduplicates_no_table.csv
+      md5sum: 2a2d3d4842befd4def39156463859ee3
     - path: results/csv/recalibrated.csv
+      md5sum: 2d29d9e53894dcce96a1b5beb6ef3312
     - path: results/csv/variantcalled.csv
+      md5sum: 0cc6a67fedb2ef9ce97e463d310f9f30
     - path: results/multiqc
     - path: results/preprocessing/markduplicates/test/test.md.cram
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
     - path: results/preprocessing/recal_table/test/test.recal.table
+      md5sum: c990e4f1b7dbd5a3a623882a54ae2bf2
     - path: results/preprocessing/recalibrated/test/test.recal.cram
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
     - path: results/reports/bcftools/freebayes/test/test.freebayes.bcftools_stats.txt
+      md5sum: 16c7673085520b66bd47f59fbf8a7e0e
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.metrics
+      contains: ["test	8547	767	84	523391	3882	0	0	0.385081", "1.0	767	767"]
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
+      md5sum: 5a0679057c530e5945c9c5a3a17312dc
     - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
+      md5sum: 835fdc6fa52cc33e6fb76c0c20a8a6c3
     - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
+      md5sum: dcc9ab2bf3248903e02d8da87e678977
     - path: results/reports/mosdepth/test/test.md.per-base.bed.gz
+      md5sum: 5724f1c6b6a0e63e25ec8a0f38edfda6
     - path: results/reports/mosdepth/test/test.md.per-base.bed.gz.csi
+      md5sum: b0ab630c3241fbd7581b7a38d944ff8b
     - path: results/reports/mosdepth/test/test.md.regions.bed.gz
+      md5sum: 91e0d531f1bab64711ecefe52bfc8255
     - path: results/reports/mosdepth/test/test.md.regions.bed.gz.csi
+      md5sum: c6d1ac97ef4dfe43731c8368d8391cab
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+      md5sum: 0b3162def977123809598639f7698121
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+      md5sum: 835fdc6fa52cc33e6fb76c0c20a8a6c3
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+      md5sum: a8455eb2947de529abfa62b303986e0f
     - path: results/reports/mosdepth/test/test.recal.per-base.bed.gz
+      md5sum: d9fa560ff78ae106cfee9db2c90801b5
     - path: results/reports/mosdepth/test/test.recal.per-base.bed.gz.csi
+      md5sum: 4816eeb9af254ca40177b08cf11b98d2
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
+      md5sum: 91e0d531f1bab64711ecefe52bfc8255
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
+      md5sum: c6d1ac97ef4dfe43731c8368d8391cab
     - path: results/reports/samtools/test/test.md.cram.stats
+      md5sum: dcf70bbcfb92e01027978f28d2035d78
     - path: results/reports/samtools/test/test.recal.cram.stats
+      md5sum: ecad3c41de5b82f6bc0c429e7b24958e
     - path: results/reports/vcftools/freebayes/test/test.freebayes.FILTER.summary
+      md5sum: 43d53e36cbb1091f915b2499e545b41e
     - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.count
+      md5sum: 650f3dc78c5aaaecfe8ffa3d499e812f
     - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.qual
+      md5sum: f2f0b043b167fc411566847bb289f003
     - path: results/variant_calling/freebayes/test/test.freebayes.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/freebayes/test/test.freebayes.vcf.gz.tbi
+      md5sum: a10ab6343c06951cb996bf09640c7615
+    # binary changes md5sums on reruns.
     - path: results/freebayes
       should_exist: false
 - name: Run variant calling on germline sample with freebayes without intervals
@@ -266,38 +418,65 @@
     - variant_calling
   files:
     - path: results/csv/markduplicates.csv
+      md5sum: 0d6120bb99e92f6810343270711ca53e
     - path: results/csv/markduplicates_no_table.csv
+      md5sum: 2a2d3d4842befd4def39156463859ee3
     - path: results/csv/recalibrated.csv
+      md5sum: 42628ec994c16f565e5407b40a9c1ac3
     - path: results/csv/variantcalled.csv
+      md5sum: 0cc6a67fedb2ef9ce97e463d310f9f30
     - path: results/multiqc
     - path: results/no_intervals.bed
+      md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/no_intervals.bed.gz
+      md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/no_intervals.bed.gz.tbi
+      md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/preprocessing/markduplicates/test/test.md.cram
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
     - path: results/preprocessing/recal_table/test/test.recal.table
+      md5sum: 4ac774bf5f1157e77426fd82f5ac0fbe
     - path: results/preprocessing/recalibrated/test/test.recal.cram
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
     - path: results/reports/bcftools/freebayes/test/test.freebayes.bcftools_stats.txt
+      md5sum: f66375a00d692d67df46c129147008b2
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.metrics
+      contains: ["test	8547	767	84	523391	3882	0	0	0.385081", "1.0	767	767"]
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
+      md5sum: 76fa71922a3f748e507c2364c531dfcb
     - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
+      md5sum: abc5df85e302b79985627888870882da
     - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
+      md5sum: d536456436eb275159b8c6af83213d80
     - path: results/reports/mosdepth/test/test.md.regions.bed.gz
+      md5sum: 38fe39894abe62e38f8ac214cba64f2b
     - path: results/reports/mosdepth/test/test.md.regions.bed.gz.csi
+      md5sum: b1c2a861f64e20a94108a6de3b76c582
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+      md5sum: 76fa71922a3f748e507c2364c531dfcb
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+      md5sum: abc5df85e302b79985627888870882da
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+      md5sum: d536456436eb275159b8c6af83213d80
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
+      md5sum: 38fe39894abe62e38f8ac214cba64f2b
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
+      md5sum: b1c2a861f64e20a94108a6de3b76c582
     - path: results/reports/samtools/test/test.md.cram.stats
+      md5sum: dcf70bbcfb92e01027978f28d2035d78
     - path: results/reports/samtools/test/test.recal.cram.stats
+      md5sum: f7005dd4646700e107bfc00e36c432fe
     - path: results/reports/vcftools/freebayes/test/test.freebayes.FILTER.summary
+      md5sum: 76c5919541536c12b5c8a6094d6d78d5
     - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.count
+      md5sum: 0a0464beef110bc0f3c5a35d022b528e
     - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.qual
+      md5sum: 5ea25615d5d244af70ae34259f8aaa0b
     - path: results/variant_calling/freebayes/test/test.freebayes.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/freebayes/test/test.freebayes.vcf.gz.tbi
+    # binary changes md5sums on reruns.
     - path: results/freebayes
       should_exist: false
 - name: Run variant calling on somatic sample with freebayes
@@ -308,69 +487,122 @@
     - variant_calling
   files:
     - path: results/csv/markduplicates.csv
+      md5sum: e8e587ac25253ff7ab8f1cc66d410c98
     - path: results/csv/markduplicates_no_table.csv
+      md5sum: 617574c9b607e5daaf4ad56d48982247
     - path: results/csv/recalibrated.csv
+      md5sum: 008dff17e2a0d96ef9c1cae12fcab6ab
     - path: results/csv/variantcalled.csv
+      md5sum: b31f56256a1cfa839a2ea7f7ba6c1c45
     - path: results/multiqc
     - path: results/preprocessing/markduplicates/test/test.md.cram
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
     - path: results/preprocessing/markduplicates/test2/test2.md.cram
     - path: results/preprocessing/markduplicates/test2/test2.md.cram.crai
     - path: results/preprocessing/recal_table/test/test.recal.table
+      md5sum: c990e4f1b7dbd5a3a623882a54ae2bf2
     - path: results/preprocessing/recal_table/test2/test2.recal.table
+      md5sum: 00d6877d68d622d81e4d633c4e340e7e
     - path: results/preprocessing/recalibrated/test/test.recal.cram
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
     - path: results/preprocessing/recalibrated/test2/test2.recal.cram
     - path: results/preprocessing/recalibrated/test2/test2.recal.cram.crai
     - path: results/reports/bcftools/freebayes/test/test.freebayes.bcftools_stats.txt
+      md5sum: 16c7673085520b66bd47f59fbf8a7e0e
     - path: results/reports/bcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.bcftools_stats.txt
+      md5sum: d857d723152dedf85ae0979d65ca6097
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.metrics
+      contains: ["test	8547	767	84	523391	3882	0	0	0.385081", "1.0	767	767"]
     - path: results/reports/markduplicates/test2/test2.md.metrics
+      contains: ["test2	10103	880	35	523579	4837	2	0	0.408076	193306", "1.0	1	876	876", "100.0	80.515303	0	0"]
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
+      md5sum: 5a0679057c530e5945c9c5a3a17312dc
     - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
+      md5sum: 835fdc6fa52cc33e6fb76c0c20a8a6c3
     - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
+      md5sum: dcc9ab2bf3248903e02d8da87e678977
     - path: results/reports/mosdepth/test/test.md.per-base.bed.gz
+      md5sum: 5724f1c6b6a0e63e25ec8a0f38edfda6
     - path: results/reports/mosdepth/test/test.md.per-base.bed.gz.csi
+      md5sum: b0ab630c3241fbd7581b7a38d944ff8b
     - path: results/reports/mosdepth/test/test.md.regions.bed.gz
+      md5sum: 91e0d531f1bab64711ecefe52bfc8255
     - path: results/reports/mosdepth/test/test.md.regions.bed.gz.csi
+      md5sum: c6d1ac97ef4dfe43731c8368d8391cab
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+      md5sum: 0b3162def977123809598639f7698121
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+      md5sum: 835fdc6fa52cc33e6fb76c0c20a8a6c3
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+      md5sum: a8455eb2947de529abfa62b303986e0f
     - path: results/reports/mosdepth/test/test.recal.per-base.bed.gz
+      md5sum: d9fa560ff78ae106cfee9db2c90801b5
     - path: results/reports/mosdepth/test/test.recal.per-base.bed.gz.csi
+      md5sum: 4816eeb9af254ca40177b08cf11b98d2
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
+      md5sum: 91e0d531f1bab64711ecefe52bfc8255
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
+      md5sum: c6d1ac97ef4dfe43731c8368d8391cab
     - path: results/reports/mosdepth/test2/test2.md.mosdepth.global.dist.txt
+      md5sum: f25166c3a0051bb4d8c11a210278de6c
     - path: results/reports/mosdepth/test2/test2.md.mosdepth.region.dist.txt
+      md5sum: 3211135329e4077bd9bf0ba488e14371
     - path: results/reports/mosdepth/test2/test2.md.mosdepth.summary.txt
+      md5sum: ce0eb6d33c6d0dc720fbc6d1811abef8
     - path: results/reports/mosdepth/test2/test2.md.per-base.bed.gz
+      md5sum: 55c160e8f3c8c7761524646426611f6b
     - path: results/reports/mosdepth/test2/test2.md.per-base.bed.gz.csi
+      md5sum: 4205a09ede17cdbdaad45e3553f73105
     - path: results/reports/mosdepth/test2/test2.md.regions.bed.gz
+      md5sum: 1dd426a45f967a9f37dcddcaea29a582
     - path: results/reports/mosdepth/test2/test2.md.regions.bed.gz.csi
+      md5sum: c6d1ac97ef4dfe43731c8368d8391cab
     - path: results/reports/mosdepth/test2/test2.recal.mosdepth.global.dist.txt
+      md5sum: a1ef7e662ce993da4668e804952014ce
     - path: results/reports/mosdepth/test2/test2.recal.mosdepth.region.dist.txt
+      md5sum: 3211135329e4077bd9bf0ba488e14371
     - path: results/reports/mosdepth/test2/test2.recal.mosdepth.summary.txt
+      md5sum: 70ad653c0c98baeeaf5085f1209a7bdb
     - path: results/reports/mosdepth/test2/test2.recal.per-base.bed.gz
+      md5sum: 250a9f15a7d3f102435fa98adccf48a3
     - path: results/reports/mosdepth/test2/test2.recal.per-base.bed.gz.csi
+      md5sum: 8072f447199c60f24b01eede8b557333
     - path: results/reports/mosdepth/test2/test2.recal.regions.bed.gz
+      md5sum: 1dd426a45f967a9f37dcddcaea29a582
     - path: results/reports/mosdepth/test2/test2.recal.regions.bed.gz.csi
+      md5sum: c6d1ac97ef4dfe43731c8368d8391cab
     - path: results/reports/samtools/test/test.md.cram.stats
+      md5sum: dcf70bbcfb92e01027978f28d2035d78
     - path: results/reports/samtools/test/test.recal.cram.stats
+      md5sum: ecad3c41de5b82f6bc0c429e7b24958e
     - path: results/reports/samtools/test2/test2.md.cram.stats
+      md5sum: ad42bfa581dddc911ebd36d386a330a3
     - path: results/reports/samtools/test2/test2.recal.cram.stats
+      md5sum: d5ecf9b3e13d5de98fcbc2e8f2cb02be
     - path: results/reports/vcftools/freebayes/test/test.freebayes.FILTER.summary
+      md5sum: 43d53e36cbb1091f915b2499e545b41e
     - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.count
+      md5sum: 650f3dc78c5aaaecfe8ffa3d499e812f
     - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.qual
+      md5sum: f2f0b043b167fc411566847bb289f003
     - path: results/reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.FILTER.summary
+      md5sum: 84039d55edf0981d6b9b81252aff6741
     - path: results/reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.TsTv.count
+      md5sum: 6c6038d43eb7fa766909b495979d120e
     - path: results/reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.TsTv.qual
+      md5sum: 4d38368c20ce9aa68842a60b253f3cc7
     - path: results/variant_calling/freebayes/test/test.freebayes.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/freebayes/test/test.freebayes.vcf.gz.tbi
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/freebayes/test2_vs_test/test2_vs_test.freebayes.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/freebayes/test2_vs_test/test2_vs_test.freebayes.vcf.gz.tbi
+    # binary changes md5sums on reruns.
     - path: results/freebayes
       should_exist: false
+
 - name: Run variant calling on somatic sample with freebayes without intervals
   command: nextflow run main.nf -profile test,pair,targeted --tools freebayes --no_intervals
   tags:
@@ -380,58 +612,101 @@
     - variant_calling
   files:
     - path: results/csv/markduplicates.csv
+      md5sum: e8e587ac25253ff7ab8f1cc66d410c98
     - path: results/csv/markduplicates_no_table.csv
+      md5sum: 617574c9b607e5daaf4ad56d48982247
     - path: results/csv/recalibrated.csv
+      md5sum: 16ded46530d8896cecd53cf8c12ea908
     - path: results/csv/variantcalled.csv
+      md5sum: b31f56256a1cfa839a2ea7f7ba6c1c45
     - path: results/multiqc
     - path: results/no_intervals.bed
+      md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/no_intervals.bed.gz
+      md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/no_intervals.bed.gz.tbi
+      md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/preprocessing/markduplicates/test/test.md.cram
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
     - path: results/preprocessing/markduplicates/test2/test2.md.cram
     - path: results/preprocessing/markduplicates/test2/test2.md.cram.crai
     - path: results/preprocessing/recal_table/test/test.recal.table
+      md5sum: 4ac774bf5f1157e77426fd82f5ac0fbe
     - path: results/preprocessing/recal_table/test2/test2.recal.table
+      md5sum: 0626cd4337eab79b38b5bc5c95e0c003
     - path: results/preprocessing/recalibrated/test/test.recal.cram
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
     - path: results/preprocessing/recalibrated/test2/test2.recal.cram
     - path: results/preprocessing/recalibrated/test2/test2.recal.cram.crai
     - path: results/reports/bcftools/freebayes/test/test.freebayes.bcftools_stats.txt
+      md5sum: f66375a00d692d67df46c129147008b2
     - path: results/reports/bcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.bcftools_stats.txt
+      md5sum: e7e8a9a5a3dcf4534a5edd32aaea049e
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.metrics
+      contains: ["test	8547	767	84	523391	3882	0	0	0.385081", "1.0	767	767"]
     - path: results/reports/markduplicates/test2/test2.md.metrics
+      contains: ["test2	10103	880	35	523579	4837	2	0	0.408076	193306", "1.0	1	876	876", "100.0	80.515303	0	0"]
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
+      md5sum: 5a0679057c530e5945c9c5a3a17312dc
     - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
+      md5sum: 0010c2396a3173c7cf4983abe2eb6a4c
     - path: results/reports/mosdepth/test/test.md.per-base.bed.gz
+      md5sum: 5724f1c6b6a0e63e25ec8a0f38edfda6
     - path: results/reports/mosdepth/test/test.md.per-base.bed.gz.csi
+      md5sum: b0ab630c3241fbd7581b7a38d944ff8b
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+      md5sum: 5a0679057c530e5945c9c5a3a17312dc
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+      md5sum: 0010c2396a3173c7cf4983abe2eb6a4c
     - path: results/reports/mosdepth/test/test.recal.per-base.bed.gz
+      md5sum: 5724f1c6b6a0e63e25ec8a0f38edfda6
     - path: results/reports/mosdepth/test/test.recal.per-base.bed.gz.csi
+      md5sum: b0ab630c3241fbd7581b7a38d944ff8b
     - path: results/reports/mosdepth/test2/test2.md.mosdepth.global.dist.txt
+      md5sum: f25166c3a0051bb4d8c11a210278de6c
     - path: results/reports/mosdepth/test2/test2.md.mosdepth.summary.txt
+      md5sum: d5e4084de2ea2a0a7b60b2d71c804d4b
     - path: results/reports/mosdepth/test2/test2.md.per-base.bed.gz
+      md5sum: 55c160e8f3c8c7761524646426611f6b
     - path: results/reports/mosdepth/test2/test2.md.per-base.bed.gz.csi
+      md5sum: 4205a09ede17cdbdaad45e3553f73105
     - path: results/reports/mosdepth/test2/test2.recal.mosdepth.global.dist.txt
+      md5sum: f25166c3a0051bb4d8c11a210278de6c
     - path: results/reports/mosdepth/test2/test2.recal.mosdepth.summary.txt
+      md5sum: d5e4084de2ea2a0a7b60b2d71c804d4b
     - path: results/reports/mosdepth/test2/test2.recal.per-base.bed.gz
+      md5sum: 55c160e8f3c8c7761524646426611f6b
     - path: results/reports/mosdepth/test2/test2.recal.per-base.bed.gz.csi
+      md5sum: 4205a09ede17cdbdaad45e3553f73105
     - path: results/reports/samtools/test/test.md.cram.stats
+      md5sum: dcf70bbcfb92e01027978f28d2035d78
     - path: results/reports/samtools/test/test.recal.cram.stats
+      md5sum: f7005dd4646700e107bfc00e36c432fe
     - path: results/reports/samtools/test2/test2.md.cram.stats
+      md5sum: ad42bfa581dddc911ebd36d386a330a3
     - path: results/reports/samtools/test2/test2.recal.cram.stats
+      md5sum: 5dd3570db59cce7f7addd0257e858289
     - path: results/reports/vcftools/freebayes/test/test.freebayes.FILTER.summary
+      md5sum: 76c5919541536c12b5c8a6094d6d78d5
     - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.count
+      md5sum: 0a0464beef110bc0f3c5a35d022b528e
     - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.qual
+      contains: ["0	0	0	-nan	325	86	3.77907", "2.82572	334	63	5.30159	63	35	1.8", "481.519	397	97	4.09278	0	1	0"]
     - path: results/reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.FILTER.summary
+      md5sum: d2d717fef7c18ef9b40bbbc5c5bbf101
     - path: results/reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.TsTv.count
+      md5sum: e09dacc71bf72254e3aace1cc7c1e16d
     - path: results/reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.TsTv.qual
+      contains: ["0	0	0	-nan	371	267	1.38951", "56.3191	451	329	1.37082	5	1	5"]
     - path: results/variant_calling/freebayes/test/test.freebayes.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/freebayes/test/test.freebayes.vcf.gz.tbi
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/freebayes/test2_vs_test/test2_vs_test.freebayes.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/freebayes/test2_vs_test/test2_vs_test.freebayes.vcf.gz.tbi
+    # binary changes md5sums on reruns.
     - path: results/freebayes
       should_exist: false
 
@@ -464,17 +739,26 @@
     - variant_calling
   files:
     - path: results/csv/variantcalled.csv
+      md5sum: d7d86e82902a4f57876b2414a4f812a4
     - path: results/multiqc
     - path: results/preprocessing/recalibrated/test/test.recal.cram
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
     - path: results/reports/bcftools/haplotypecaller/test/test.haplotypecaller.filtered.bcftools_stats.txt
+      md5sum: f9cc3809106a42601eafd3b09900750a
     - path: results/reports/vcftools/haplotypecaller/test/test.haplotypecaller.filtered.FILTER.summary
+      md5sum: 4e2ceea7f3ff998004691fd71192d9ee
     - path: results/reports/vcftools/haplotypecaller/test/test.haplotypecaller.filtered.TsTv.count
+      md5sum: b77c120ee5cc0423267200c67d60c663
     - path: results/reports/vcftools/haplotypecaller/test/test.haplotypecaller.filtered.TsTv.qual
+      md5sum: 1e34357e5848c318f8c2c7d3b041d229
     - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.filtered.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.filtered.vcf.gz.tbi
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.vcf.gz.tbi
+    # binary changes md5sums on reruns.
     - path: results/haplotypecaller
       should_exist: false
 - name: Run variant calling on germline sample with haplotypecaller without intervals
@@ -486,20 +770,32 @@
     - variant_calling
   files:
     - path: results/csv/variantcalled.csv
+      md5sum: d7d86e82902a4f57876b2414a4f812a4
     - path: results/multiqc
     - path: results/no_intervals.bed
+      md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/no_intervals.bed.gz
+      md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/no_intervals.bed.gz.tbi
+      md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/preprocessing/recalibrated/test/test.recal.cram
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
     - path: results/reports/bcftools/haplotypecaller/test/test.haplotypecaller.filtered.bcftools_stats.txt
+      md5sum: f9cc3809106a42601eafd3b09900750a
     - path: results/reports/vcftools/haplotypecaller/test/test.haplotypecaller.filtered.FILTER.summary
+      md5sum: 4e2ceea7f3ff998004691fd71192d9ee
     - path: results/reports/vcftools/haplotypecaller/test/test.haplotypecaller.filtered.TsTv.count
+      md5sum: b77c120ee5cc0423267200c67d60c663
     - path: results/reports/vcftools/haplotypecaller/test/test.haplotypecaller.filtered.TsTv.qual
+      md5sum: 1e34357e5848c318f8c2c7d3b041d229
     - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.filtered.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.filtered.vcf.gz.tbi
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.vcf.gz.tbi
+    # binary changes md5sums on reruns.
     - path: results/haplotypecaller
       should_exist: false
 - name: Run joint germline variant calling with haplotypecaller
@@ -510,15 +806,22 @@
     - variant_calling
   files:
     - path: results/csv/variantcalled.csv
+      md5sum: d2dffdbd2b4f1f26a06637592d24dab3
     - path: results/multiqc
     - path: results/preprocessing/recalibrated/test/test.recal.cram
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
     - path: results/reports/bcftools/haplotypecaller/joint_variant_calling/joint_germline.bcftools_stats.txt
+      md5sum: f91f185319e00108870911e0ce1a7ed6
     - path: results/reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline.FILTER.summary
+      md5sum: 2a4eb7abfb2e64e45d53fdda17530b7f
     - path: results/reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline.TsTv.count
+      md5sum: 949fa16c755189c23a37f0ea8ecd1b26
     - path: results/reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline.TsTv.qual
+      md5sum: 3b3a249fbc26c80ce0acbe91147291ea
     - path: results/variant_calling/haplotypecaller/joint_variant_calling/joint_germline.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/haplotypecaller/joint_variant_calling/joint_germline.vcf.gz.tbi
+    # binary changes md5sums on reruns.
     - path: results/haplotypecaller
       should_exist: false
 - name: Run variant calling on germline sample with manta
@@ -529,13 +832,20 @@
     - variant_calling
   files:
     - path: results/csv/variantcalled.csv
+      md5sum: 981280af86f69190fdf0639030a80249
     - path: results/multiqc
     - path: results/reports/bcftools/manta/sample1/sample1.manta.diploid_sv.bcftools_stats.txt
+      md5sum: 2afce09f0b53a47acde7f8767fd6fcef
     - path: results/reports/vcftools/manta/sample1/sample1.manta.diploid_sv.FILTER.summary
+      md5sum: 1ce42d34e4ae919afb519efc99146423
     - path: results/reports/vcftools/manta/sample1/sample1.manta.diploid_sv.TsTv.count
+      md5sum: fa27f678965b7cba6a92efcd039f802a
     - path: results/reports/vcftools/manta/sample1/sample1.manta.diploid_sv.TsTv.qual
+      md5sum: bc68ae4e688e9fb772b457069e604883
     - path: results/variant_calling/manta/sample1/sample1.manta.diploid_sv.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/manta/sample1/sample1.manta.diploid_sv.vcf.gz.tbi
+    # binary changes md5sums on reruns.
     - path: results/manta
       should_exist: false
 - name: Run variant calling on germline sample with manta without intervals
@@ -547,16 +857,26 @@
     - variant_calling
   files:
     - path: results/csv/variantcalled.csv
+      md5sum: 981280af86f69190fdf0639030a80249
     - path: results/multiqc
     - path: results/no_intervals.bed
+      md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/no_intervals.bed.gz
+      md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/no_intervals.bed.gz.tbi
+      md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/reports/bcftools/manta/sample1/sample1.manta.diploid_sv.bcftools_stats.txt
+      md5sum: 2afce09f0b53a47acde7f8767fd6fcef
     - path: results/reports/vcftools/manta/sample1/sample1.manta.diploid_sv.FILTER.summary
+      md5sum: 1ce42d34e4ae919afb519efc99146423
     - path: results/reports/vcftools/manta/sample1/sample1.manta.diploid_sv.TsTv.count
+      md5sum: fa27f678965b7cba6a92efcd039f802a
     - path: results/reports/vcftools/manta/sample1/sample1.manta.diploid_sv.TsTv.qual
+      md5sum: bc68ae4e688e9fb772b457069e604883
     - path: results/variant_calling/manta/sample1/sample1.manta.diploid_sv.vcf.gz
+      md5sum: cbe9c55b393b23ebf05e400308e7f143
     - path: results/variant_calling/manta/sample1/sample1.manta.diploid_sv.vcf.gz.tbi
+      md5sum: 4cb176febbc8c26d717a6c6e67b9c905
     - path: results/manta
       should_exist: false
 - name: Run variant calling on tumor_only sample with manta
@@ -567,13 +887,20 @@
     - variant_calling
   files:
     - path: results/csv/variantcalled.csv
+      md5sum: f1051fe647abf202e6332f9a1789c05d
     - path: results/multiqc
     - path: results/reports/bcftools/manta/sample2/sample2.manta.tumor_sv.bcftools_stats.txt
+      md5sum: ea7f369ab8edaccc5bf45347bda15dfa
     - path: results/reports/vcftools/manta/sample2/sample2.manta.tumor_sv.FILTER.summary
+      md5sum: 1ce42d34e4ae919afb519efc99146423
     - path: results/reports/vcftools/manta/sample2/sample2.manta.tumor_sv.TsTv.count
+      md5sum: fa27f678965b7cba6a92efcd039f802a
     - path: results/reports/vcftools/manta/sample2/sample2.manta.tumor_sv.TsTv.qual
+      md5sum: bc68ae4e688e9fb772b457069e604883
     - path: results/variant_calling/manta/sample2/sample2.manta.tumor_sv.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/manta/sample2/sample2.manta.tumor_sv.vcf.gz.tbi
+      md5sum: e7ca7e9fe76ce12198fd54ec9a64fad4
     - path: results/manta
       should_exist: false
 - name: Run variant calling on tumor_only sample with manta without intervals
@@ -585,16 +912,26 @@
     - variant_calling
   files:
     - path: results/csv/variantcalled.csv
+      md5sum: f1051fe647abf202e6332f9a1789c05d
     - path: results/multiqc
     - path: results/no_intervals.bed
+      md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/no_intervals.bed.gz
+      md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/no_intervals.bed.gz.tbi
+      md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/reports/bcftools/manta/sample2/sample2.manta.tumor_sv.bcftools_stats.txt
+      md5sum: ea7f369ab8edaccc5bf45347bda15dfa
     - path: results/reports/vcftools/manta/sample2/sample2.manta.tumor_sv.FILTER.summary
+      md5sum: 1ce42d34e4ae919afb519efc99146423
     - path: results/reports/vcftools/manta/sample2/sample2.manta.tumor_sv.TsTv.count
+      md5sum: fa27f678965b7cba6a92efcd039f802a
     - path: results/reports/vcftools/manta/sample2/sample2.manta.tumor_sv.TsTv.qual
+      md5sum: bc68ae4e688e9fb772b457069e604883
     - path: results/variant_calling/manta/sample2/sample2.manta.tumor_sv.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/manta/sample2/sample2.manta.tumor_sv.vcf.gz.tbi
+      md5sum: 4cb176febbc8c26d717a6c6e67b9c905
     - path: results/manta
       should_exist: false
 - name: Run variant calling on somatic sample with manta
@@ -605,25 +942,44 @@
     - variant_calling
   files:
     - path: results/csv/variantcalled.csv
+      md5sum: 3a8861808601994f89d5c55ce5c95dae
     - path: results/multiqc
     - path: results/reports/bcftools/manta/sample3/sample3.manta.diploid_sv.bcftools_stats.txt
+      md5sum: 5a5ce4cf9c5f48801851d40772d3ba4b
     - path: results/reports/bcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.bcftools_stats.txt
+      md5sum: baa05f77160e6cd985050790334c91e8
     - path: results/reports/bcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.bcftools_stats.txt
+      md5sum: 56c39772dc25e451d8209f608bb16e37
     - path: results/reports/vcftools/manta/sample3/sample3.manta.diploid_sv.FILTER.summary
+      md5sum: 1ce42d34e4ae919afb519efc99146423
     - path: results/reports/vcftools/manta/sample3/sample3.manta.diploid_sv.TsTv.count
+      md5sum: fa27f678965b7cba6a92efcd039f802a
     - path: results/reports/vcftools/manta/sample3/sample3.manta.diploid_sv.TsTv.qual
+      md5sum: bc68ae4e688e9fb772b457069e604883
     - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.FILTER.summary
+      md5sum: 1ce42d34e4ae919afb519efc99146423
     - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.TsTv.count
+      md5sum: fa27f678965b7cba6a92efcd039f802a
     - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.TsTv.qual
+      md5sum: bc68ae4e688e9fb772b457069e604883
     - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.FILTER.summary
+      md5sum: 1ce42d34e4ae919afb519efc99146423
     - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.TsTv.count
+      md5sum: 8dcfdbcaac118df1d5ad407dd2af699f
     - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.TsTv.qual
+      md5sum: bc68ae4e688e9fb772b457069e604883
     - path: results/variant_calling/manta/sample3/sample3.manta.diploid_sv.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/manta/sample3/sample3.manta.diploid_sv.vcf.gz.tbi
+      md5sum: e7ca7e9fe76ce12198fd54ec9a64fad4
     - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.vcf.gz.tbi
+      md5sum: e7ca7e9fe76ce12198fd54ec9a64fad4
     - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.vcf.gz.tbi
+      md5sum: e7ca7e9fe76ce12198fd54ec9a64fad4
     - path: results/manta
       should_exist: false
 - name: Run variant calling on somatic sample with manta without intervals
@@ -635,28 +991,50 @@
     - variant_calling
   files:
     - path: results/csv/variantcalled.csv
+      md5sum: 3a8861808601994f89d5c55ce5c95dae
     - path: results/multiqc
     - path: results/no_intervals.bed
+      md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/no_intervals.bed.gz
+      md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/no_intervals.bed.gz.tbi
+      md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/reports/bcftools/manta/sample3/sample3.manta.diploid_sv.bcftools_stats.txt
+      md5sum: 5a5ce4cf9c5f48801851d40772d3ba4b
     - path: results/reports/bcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.bcftools_stats.txt
+      md5sum: baa05f77160e6cd985050790334c91e8
     - path: results/reports/bcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.bcftools_stats.txt
+      md5sum: 56c39772dc25e451d8209f608bb16e37
     - path: results/reports/vcftools/manta/sample3/sample3.manta.diploid_sv.FILTER.summary
+      md5sum: 1ce42d34e4ae919afb519efc99146423
     - path: results/reports/vcftools/manta/sample3/sample3.manta.diploid_sv.TsTv.count
+      md5sum: fa27f678965b7cba6a92efcd039f802a
     - path: results/reports/vcftools/manta/sample3/sample3.manta.diploid_sv.TsTv.qual
+      md5sum: bc68ae4e688e9fb772b457069e604883
     - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.FILTER.summary
+      md5sum: 1ce42d34e4ae919afb519efc99146423
     - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.TsTv.count
+      md5sum: fa27f678965b7cba6a92efcd039f802a
     - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.TsTv.qual
+      md5sum: bc68ae4e688e9fb772b457069e604883
     - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.FILTER.summary
+      md5sum: 1ce42d34e4ae919afb519efc99146423
     - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.TsTv.count
+      md5sum: 8dcfdbcaac118df1d5ad407dd2af699f
     - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.TsTv.qual
+      md5sum: bc68ae4e688e9fb772b457069e604883
     - path: results/variant_calling/manta/sample3/sample3.manta.diploid_sv.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/manta/sample3/sample3.manta.diploid_sv.vcf.gz.tbi
+      md5sum: 4cb176febbc8c26d717a6c6e67b9c905
     - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.vcf.gz.tbi
+      md5sum: 4cb176febbc8c26d717a6c6e67b9c905
     - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.vcf.gz.tbi
+      md5sum: 4cb176febbc8c26d717a6c6e67b9c905
     - path: results/manta
       should_exist: false
 - name: Run variant calling on tumor_only sample to test mpileup
@@ -667,6 +1045,7 @@
   files:
     - path: results/multiqc
     - path: results/variant_calling/mpileup/sample2/sample2.tumor.mpileup.gz
+      md5sum: 69e3b31c2db6f4b5fb799b69bbdc7f57
     - path: results/mpileup
       should_exist: false
 - name: Run variant calling on tumor_only sample to test mpileup without intervals
@@ -678,9 +1057,13 @@
   files:
     - path: results/multiqc
     - path: results/no_intervals.bed
+      md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/no_intervals.bed.gz
+      md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/no_intervals.bed.gz.tbi
+      md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/variant_calling/mpileup/sample2/sample2.tumor.mpileup.gz
+      md5sum: 40544e727f449b14523a4f2e20c69420
     - path: results/mpileup
       should_exist: false
 - name: Run variant calling on germline sample to test mpileup
@@ -691,6 +1074,7 @@
   files:
     - path: results/multiqc
     - path: results/variant_calling/mpileup/sample1/sample1.normal.mpileup.gz
+      md5sum: 6274feea382028a1ec369cc7f9a5011d
     - path: results/mpileup
       should_exist: false
 - name: Run variant calling on germline sample to test mpileup without intervals
@@ -702,9 +1086,13 @@
   files:
     - path: results/multiqc
     - path: results/no_intervals.bed
+      md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/no_intervals.bed.gz
+      md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/no_intervals.bed.gz.tbi
+      md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/variant_calling/mpileup/sample1/sample1.normal.mpileup.gz
+      md5sum: 1fe7bb27b18005ee78acfebcb15f4930
     - path: results/mpileup
       should_exist: false
 - name: Run variant calling on tumor only sample with mutect2
@@ -715,21 +1103,36 @@
     - variant_calling
   files:
     - path: results/csv/variantcalled.csv
+      md5sum: d57c1beba9005e9790a573bd93398b72
     - path: results/multiqc
     - path: results/reports/bcftools/mutect2/sample2/sample2.mutect2.filtered.bcftools_stats.txt
+      md5sum: b0277a18599f8aa01e4b1b42ff0257b1
     - path: results/reports/vcftools/mutect2/sample2/sample2.mutect2.filtered.FILTER.summary
+      md5sum: ef9bd9a2f41d8872ba25e5616e4c2a5e
     - path: results/reports/vcftools/mutect2/sample2/sample2.mutect2.filtered.TsTv.count
+      md5sum: fe3ff1f0c2ead72f037552727438e00a
     - path: results/reports/vcftools/mutect2/sample2/sample2.mutect2.filtered.TsTv.qual
+      md5sum: 13cc608c3cdc83a12ec53ef78b5aa888
     - path: results/variant_calling/mutect2/sample2/sample2.mutect2.artifactprior.tar.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/mutect2/sample2/sample2.mutect2.contamination.table
+      md5sum: 46c708c943b453da89a3da08acfdb2a7
     - path: results/variant_calling/mutect2/sample2/sample2.mutect2.filtered.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/mutect2/sample2/sample2.mutect2.filtered.vcf.gz.filteringStats.tsv
+      md5sum: 9a8439d0bb5875f1e673cf592af85ffb
     - path: results/variant_calling/mutect2/sample2/sample2.mutect2.filtered.vcf.gz.tbi
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/mutect2/sample2/sample2.mutect2.pileupsummaries.table
+      md5sum: 9afe42339f590937166edcf4746c22ec
     - path: results/variant_calling/mutect2/sample2/sample2.mutect2.segmentation.table
+      md5sum: f4643d9319bde4efbfbe516d6fb13052
     - path: results/variant_calling/mutect2/sample2/sample2.mutect2.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/mutect2/sample2/sample2.mutect2.vcf.gz.stats
+      md5sum: 3cc40a35727af6c5223fb45678f3f172
     - path: results/variant_calling/mutect2/sample2/sample2.mutect2.vcf.gz.tbi
+    # binary changes md5sums on reruns.
     - path: results/mutect2
       should_exist: false
 - name: Run variant calling on tumor only sample with mutect2 without intervals
@@ -741,24 +1144,42 @@
     - variant_calling
   files:
     - path: results/csv/variantcalled.csv
+      md5sum: d57c1beba9005e9790a573bd93398b72
     - path: results/multiqc
     - path: results/no_intervals.bed
+      md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/no_intervals.bed.gz
+      md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/no_intervals.bed.gz.tbi
+      md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/reports/bcftools/mutect2/sample2/sample2.mutect2.filtered.bcftools_stats.txt
+      md5sum: a449e85411b3b295685f05915de6098d
     - path: results/reports/vcftools/mutect2/sample2/sample2.mutect2.filtered.FILTER.summary
+      md5sum: 5a833fd50e6efb26d1df2336eb0caf5e
     - path: results/reports/vcftools/mutect2/sample2/sample2.mutect2.filtered.TsTv.count
+      md5sum: f5295a61da80f12babae74fe4e104aad
     - path: results/reports/vcftools/mutect2/sample2/sample2.mutect2.filtered.TsTv.qual
+      md5sum: 13cc608c3cdc83a12ec53ef78b5aa888
     - path: results/variant_calling/mutect2/sample2/sample2.mutect2.artifactprior.tar.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/mutect2/sample2/sample2.mutect2.contamination.table
+      md5sum: 46c708c943b453da89a3da08acfdb2a7
     - path: results/variant_calling/mutect2/sample2/sample2.mutect2.filtered.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/mutect2/sample2/sample2.mutect2.filtered.vcf.gz.filteringStats.tsv
+      md5sum: e4eac0c602dd25aa61a6dc26a2b61844
     - path: results/variant_calling/mutect2/sample2/sample2.mutect2.filtered.vcf.gz.tbi
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/mutect2/sample2/sample2.mutect2.pileupsummaries.table
+      md5sum: fe35b6bc041f2df8bd1f23420af3ddf9
     - path: results/variant_calling/mutect2/sample2/sample2.mutect2.segmentation.table
+      md5sum: f4643d9319bde4efbfbe516d6fb13052
     - path: results/variant_calling/mutect2/sample2/sample2.mutect2.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/mutect2/sample2/sample2.mutect2.vcf.gz.stats
+      md5sum: 55ed641e16089afb33cdbc478e202d3d
     - path: results/variant_calling/mutect2/sample2/sample2.mutect2.vcf.gz.tbi
+    # binary changes md5sums on reruns.
     - path: results/mutect2
       should_exist: false
 - name: Run variant calling on somatic sample with msisensor-pro
@@ -783,15 +1204,24 @@
     - variant_calling
   files:
     - path: results/csv/variantcalled.csv
+      md5sum: cd8a47dfc3e44c395e9f693770ccc6c9
     - path: results/multiqc
     - path: results/reports/bcftools/strelka/sample1/sample1.strelka.variants.bcftools_stats.txt
+      md5sum: fa17527ede69d65762bd78fe86fbe50a
     - path: results/reports/vcftools/strelka/sample1/sample1.strelka.variants.FILTER.summary
+      md5sum: 2048a5de0201a6052c988a0189979a5f
     - path: results/reports/vcftools/strelka/sample1/sample1.strelka.variants.TsTv.count
+      md5sum: c5b7a8eda2526d899098439ae4c06a49
     - path: results/reports/vcftools/strelka/sample1/sample1.strelka.variants.TsTv.qual
+      md5sum: f01534408c3a87893b523de5f39deb0b
     - path: results/variant_calling/strelka/sample1/sample1.strelka.genome.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/sample1/sample1.strelka.genome.vcf.gz.tbi
+      md5sum: a39a61c39c03dfc08fb91b078497101b
     - path: results/variant_calling/strelka/sample1/sample1.strelka.variants.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/sample1/sample1.strelka.variants.vcf.gz.tbi
+    # binary changes md5sums on reruns.
     - path: results/strelka
       should_exist: false
 - name: Run variant calling on germline sample with strelka without intervals
@@ -803,18 +1233,30 @@
     - variant_calling
   files:
     - path: results/csv/variantcalled.csv
+      md5sum: cd8a47dfc3e44c395e9f693770ccc6c9
     - path: results/multiqc
     - path: results/no_intervals.bed
+      md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/no_intervals.bed.gz
+      md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/no_intervals.bed.gz.tbi
+      md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/reports/bcftools/strelka/sample1/sample1.strelka.variants.bcftools_stats.txt
+      md5sum: 90bd53c11222b5e07b4b37cbefa0e2d6
     - path: results/reports/vcftools/strelka/sample1/sample1.strelka.variants.FILTER.summary
+      md5sum: 2b7be6ff481fddc655210b836587810d
     - path: results/reports/vcftools/strelka/sample1/sample1.strelka.variants.TsTv.count
+      md5sum: 1481854d2a765f5641856ecf95ca4097
     - path: results/reports/vcftools/strelka/sample1/sample1.strelka.variants.TsTv.qual
+      md5sum: fd8e449a715922e24fe4ea9c89870432
     - path: results/variant_calling/strelka/sample1/sample1.strelka.genome.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/sample1/sample1.strelka.genome.vcf.gz.tbi
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/sample1/sample1.strelka.variants.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/sample1/sample1.strelka.variants.vcf.gz.tbi
+    # binary changes md5sums on reruns.
     - path: results/strelka
       should_exist: false
 - name: Run variant calling on tumor only sample with strelka
@@ -825,15 +1267,24 @@
     - variant_calling
   files:
     - path: results/csv/variantcalled.csv
+      md5sum: 8d2a5e0ad12781c99e773b828e478d35
     - path: results/multiqc
     - path: results/reports/bcftools/strelka/sample2/sample2.strelka.variants.bcftools_stats.txt
+      md5sum: 93bf8f09d155e69418fff988e76cbc1d
     - path: results/reports/vcftools/strelka/sample2/sample2.strelka.variants.FILTER.summary
+      md5sum: fa3112841a4575d104916027c8851b30
     - path: results/reports/vcftools/strelka/sample2/sample2.strelka.variants.TsTv.count
+      md5sum: d7f54d09d38af01a574a4930af21cfc9
     - path: results/reports/vcftools/strelka/sample2/sample2.strelka.variants.TsTv.qual
+      md5sum: 5f4c4ea91f4210c2a612f0714e65b80d
     - path: results/variant_calling/strelka/sample2/sample2.strelka.genome.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/sample2/sample2.strelka.genome.vcf.gz.tbi
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/sample2/sample2.strelka.variants.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/sample2/sample2.strelka.variants.vcf.gz.tbi
+    # binary changes md5sums on reruns.
     - path: results/strelka
       should_exist: false
 - name: Run variant calling on tumor only sample with strelka without intervals
@@ -845,18 +1296,30 @@
     - variant_calling
   files:
     - path: results/csv/variantcalled.csv
+      md5sum: 8d2a5e0ad12781c99e773b828e478d35
     - path: results/multiqc
     - path: results/no_intervals.bed
+      md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/no_intervals.bed.gz
+      md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/no_intervals.bed.gz.tbi
+      md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/reports/bcftools/strelka/sample2/sample2.strelka.variants.bcftools_stats.txt
+      md5sum: 9c3427ef0a28c43cc10537974f4bd9c4
     - path: results/reports/vcftools/strelka/sample2/sample2.strelka.variants.FILTER.summary
+      md5sum: d1dcce19d82ced016724ace746e95d01
     - path: results/reports/vcftools/strelka/sample2/sample2.strelka.variants.TsTv.count
+      md5sum: 9de35bbe9ebe45166b6bd195717f733a
     - path: results/reports/vcftools/strelka/sample2/sample2.strelka.variants.TsTv.qual
+      md5sum: d2908c6821e5f45146a382625e4704c9
     - path: results/variant_calling/strelka/sample2/sample2.strelka.genome.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/sample2/sample2.strelka.genome.vcf.gz.tbi
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/sample2/sample2.strelka.variants.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/sample2/sample2.strelka.variants.vcf.gz.tbi
+      md5sum: 22f8718361f6557ad65e43d369aba714
     - path: results/strelka
       should_exist: false
 - name: Run variant calling on somatic sample with strelka
@@ -867,27 +1330,48 @@
     - variant_calling
   files:
     - path: results/csv/variantcalled.csv
+      md5sum: 31ccee9472fed8bd15798724c62aee15
     - path: results/multiqc
     - path: results/reports/bcftools/strelka/sample3/sample3.strelka.variants.bcftools_stats.txt
+      md5sum: af8f05fd8a09e96c4c8850b6ef44729e
     - path: results/reports/bcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.bcftools_stats.txt
+      md5sum: 6cf7a55bcb53b400ce7df7e72c892574
     - path: results/reports/bcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.bcftools_stats.txt
+      md5sum: 7cc6f2412d6b3d8e84ec0daece3d5443
     - path: results/reports/vcftools/strelka/sample3/sample3.strelka.variants.FILTER.summary
+      md5sum: 2048a5de0201a6052c988a0189979a5f
     - path: results/reports/vcftools/strelka/sample3/sample3.strelka.variants.TsTv.count
+      md5sum: c5b7a8eda2526d899098439ae4c06a49
     - path: results/reports/vcftools/strelka/sample3/sample3.strelka.variants.TsTv.qual
+      md5sum: f01534408c3a87893b523de5f39deb0b
     - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.FILTER.summary
+      md5sum: 3441628cd6550ed459ca1c3db989ceea
     - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.TsTv.count
+      md5sum: 8dcfdbcaac118df1d5ad407dd2af699f
     - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.TsTv.qual
+      md5sum: bc68ae4e688e9fb772b457069e604883
     - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.FILTER.summary
+      md5sum: 4fc17fa5625b4d1dcc5d791b1eb22d85
     - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.TsTv.count
+      md5sum: fc7af1f534890c4ad3025588b3af62ae
     - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.TsTv.qual
+      md5sum: c949f848859f138731898aac64a73eaf
     - path: results/variant_calling/strelka/sample3/sample3.strelka.genome.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/sample3/sample3.strelka.genome.vcf.gz.tbi
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/sample3/sample3.strelka.variants.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/sample3/sample3.strelka.variants.vcf.gz.tbi
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.vcf.gz.tbi
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz.tbi
+      md5sum: fdf9262b2cc8cb7e9e737222902c6818
     - path: results/strelka
       should_exist: false
 - name: Run variant calling on somatic sample with strelka without intervals
@@ -899,30 +1383,54 @@
     - variant_calling
   files:
     - path: results/csv/variantcalled.csv
+      md5sum: 31ccee9472fed8bd15798724c62aee15
     - path: results/multiqc
     - path: results/no_intervals.bed
+      md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/no_intervals.bed.gz
+      md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/no_intervals.bed.gz.tbi
+      md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/reports/bcftools/strelka/sample3/sample3.strelka.variants.bcftools_stats.txt
+      md5sum: 572bc880d2bf64a00c8f86567c72f575
     - path: results/reports/bcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.bcftools_stats.txt
+      md5sum: 6cf7a55bcb53b400ce7df7e72c892574
     - path: results/reports/bcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.bcftools_stats.txt
+      md5sum: 21b5d06e7e9f34a05b3d7554240f7669
     - path: results/reports/vcftools/strelka/sample3/sample3.strelka.variants.FILTER.summary
+      md5sum: 2b7be6ff481fddc655210b836587810d
     - path: results/reports/vcftools/strelka/sample3/sample3.strelka.variants.TsTv.count
+      md5sum: 1481854d2a765f5641856ecf95ca4097
     - path: results/reports/vcftools/strelka/sample3/sample3.strelka.variants.TsTv.qual
+      md5sum: fd8e449a715922e24fe4ea9c89870432
     - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.FILTER.summary
+      md5sum: 3441628cd6550ed459ca1c3db989ceea
     - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.TsTv.count
+      md5sum: 8dcfdbcaac118df1d5ad407dd2af699f
     - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.TsTv.qual
+      md5sum: bc68ae4e688e9fb772b457069e604883
     - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.FILTER.summary
+      md5sum: 7a81b11aa29fec73d5bc872b7b58f8aa
     - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.TsTv.count
+      md5sum: a922c51ca3b2ea7cdcfa09e9c8c55d52
     - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.TsTv.qual
+      md5sum: 75af7d1b1e5a2f1bdfe5b530e37a6cbb
     - path: results/variant_calling/strelka/sample3/sample3.strelka.genome.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/sample3/sample3.strelka.genome.vcf.gz.tbi
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/sample3/sample3.strelka.variants.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/sample3/sample3.strelka.variants.vcf.gz.tbi
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.vcf.gz.tbi
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz.tbi
+    # binary changes md5sums on reruns.
     - path: results/strelka
       should_exist: false
 - name: Run variant calling on somatic sample with strelka & manta (StrelkaBP)
@@ -933,45 +1441,84 @@
     - variant_calling
   files:
     - path: results/csv/variantcalled.csv
+      md5sum: eff248896ca462b76c79749403e44f48
     - path: results/multiqc
     - path: results/reports/bcftools/manta/sample3/sample3.manta.diploid_sv.bcftools_stats.txt
+      md5sum: 5a5ce4cf9c5f48801851d40772d3ba4b
     - path: results/reports/bcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.bcftools_stats.txt
+      md5sum: baa05f77160e6cd985050790334c91e8
     - path: results/reports/bcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.bcftools_stats.txt
+      md5sum: 56c39772dc25e451d8209f608bb16e37
     - path: results/reports/bcftools/strelka/sample3/sample3.strelka.variants.bcftools_stats.txt
+      md5sum: af8f05fd8a09e96c4c8850b6ef44729e
     - path: results/reports/bcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.bcftools_stats.txt
+      md5sum: 6cf7a55bcb53b400ce7df7e72c892574
     - path: results/reports/bcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.bcftools_stats.txt
+      md5sum: 7cc6f2412d6b3d8e84ec0daece3d5443
     - path: results/reports/vcftools/manta/sample3/sample3.manta.diploid_sv.FILTER.summary
+      md5sum: 1ce42d34e4ae919afb519efc99146423
     - path: results/reports/vcftools/manta/sample3/sample3.manta.diploid_sv.TsTv.count
+      md5sum: fa27f678965b7cba6a92efcd039f802a
     - path: results/reports/vcftools/manta/sample3/sample3.manta.diploid_sv.TsTv.qual
+      md5sum: bc68ae4e688e9fb772b457069e604883
     - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.FILTER.summary
+      md5sum: 1ce42d34e4ae919afb519efc99146423
     - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.TsTv.count
+      md5sum: fa27f678965b7cba6a92efcd039f802a
     - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.TsTv.qual
+      md5sum: bc68ae4e688e9fb772b457069e604883
     - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.FILTER.summary
+      md5sum: 1ce42d34e4ae919afb519efc99146423
     - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.TsTv.count
+      md5sum: 8dcfdbcaac118df1d5ad407dd2af699f
     - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.TsTv.qual
+      md5sum: bc68ae4e688e9fb772b457069e604883
     - path: results/reports/vcftools/strelka/sample3/sample3.strelka.variants.FILTER.summary
+      md5sum: 2048a5de0201a6052c988a0189979a5f
     - path: results/reports/vcftools/strelka/sample3/sample3.strelka.variants.TsTv.count
+      md5sum: c5b7a8eda2526d899098439ae4c06a49
     - path: results/reports/vcftools/strelka/sample3/sample3.strelka.variants.TsTv.qual
+      md5sum: f01534408c3a87893b523de5f39deb0b
     - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.FILTER.summary
+      md5sum: 3441628cd6550ed459ca1c3db989ceea
     - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.TsTv.count
+      md5sum: 8dcfdbcaac118df1d5ad407dd2af699f
     - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.TsTv.qual
+      md5sum: bc68ae4e688e9fb772b457069e604883
     - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.FILTER.summary
+      md5sum: 4fc17fa5625b4d1dcc5d791b1eb22d85
     - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.TsTv.count
+      md5sum: fc7af1f534890c4ad3025588b3af62ae
     - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.TsTv.qual
+      md5sum: c949f848859f138731898aac64a73eaf
     - path: results/variant_calling/manta/sample3/sample3.manta.diploid_sv.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/manta/sample3/sample3.manta.diploid_sv.vcf.gz.tbi
+      md5sum: e7ca7e9fe76ce12198fd54ec9a64fad4
     - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.vcf.gz.tbi
+      md5sum: e7ca7e9fe76ce12198fd54ec9a64fad4
     - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.vcf.gz.tbi
+      md5sum: e7ca7e9fe76ce12198fd54ec9a64fad4
     - path: results/variant_calling/strelka/sample3/sample3.strelka.genome.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/sample3/sample3.strelka.genome.vcf.gz.tbi
+      md5sum: 6390866df195e4449a1639b425ad9848
     - path: results/variant_calling/strelka/sample3/sample3.strelka.variants.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/sample3/sample3.strelka.variants.vcf.gz.tbi
+      md5sum: 0fc2c72d2601f0076bfc86b1a3288e02
     - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.vcf.gz.tbi
+      md5sum: 180e47627b166d28b026ff3f930f6f4a
     - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz.tbi
+      md5sum: 10ed7385c9323f9154ddfb18ddac1d65
     - path: results/manta
       should_exist: false
     - path: results/strelka
@@ -985,48 +1532,90 @@
     - variant_calling
   files:
     - path: results/csv/variantcalled.csv
+      md5sum: eff248896ca462b76c79749403e44f48
     - path: results/multiqc
     - path: results/no_intervals.bed
+      md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/no_intervals.bed.gz
+      md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/no_intervals.bed.gz.tbi
+      md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/reports/bcftools/manta/sample3/sample3.manta.diploid_sv.bcftools_stats.txt
+      md5sum: 5a5ce4cf9c5f48801851d40772d3ba4b
     - path: results/reports/bcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.bcftools_stats.txt
+      md5sum: baa05f77160e6cd985050790334c91e8
     - path: results/reports/bcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.bcftools_stats.txt
+      md5sum: 56c39772dc25e451d8209f608bb16e37
     - path: results/reports/bcftools/strelka/sample3/sample3.strelka.variants.bcftools_stats.txt
+      md5sum: 572bc880d2bf64a00c8f86567c72f575
     - path: results/reports/bcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.bcftools_stats.txt
+      md5sum: 6cf7a55bcb53b400ce7df7e72c892574
     - path: results/reports/bcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.bcftools_stats.txt
+      md5sum: 21b5d06e7e9f34a05b3d7554240f7669
     - path: results/reports/vcftools/manta/sample3/sample3.manta.diploid_sv.FILTER.summary
+      md5sum: 1ce42d34e4ae919afb519efc99146423
     - path: results/reports/vcftools/manta/sample3/sample3.manta.diploid_sv.TsTv.count
+      md5sum: fa27f678965b7cba6a92efcd039f802a
     - path: results/reports/vcftools/manta/sample3/sample3.manta.diploid_sv.TsTv.qual
+      md5sum: bc68ae4e688e9fb772b457069e604883
     - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.FILTER.summary
+      md5sum: 1ce42d34e4ae919afb519efc99146423
     - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.TsTv.count
+      md5sum: fa27f678965b7cba6a92efcd039f802a
     - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.TsTv.qual
+      md5sum: bc68ae4e688e9fb772b457069e604883
     - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.FILTER.summary
+      md5sum: 1ce42d34e4ae919afb519efc99146423
     - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.TsTv.count
+      md5sum: 8dcfdbcaac118df1d5ad407dd2af699f
     - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.TsTv.qual
+      md5sum: bc68ae4e688e9fb772b457069e604883
     - path: results/reports/vcftools/strelka/sample3/sample3.strelka.variants.FILTER.summary
+      md5sum: 2b7be6ff481fddc655210b836587810d
     - path: results/reports/vcftools/strelka/sample3/sample3.strelka.variants.TsTv.count
+      md5sum: 1481854d2a765f5641856ecf95ca4097
     - path: results/reports/vcftools/strelka/sample3/sample3.strelka.variants.TsTv.qual
+      md5sum: fd8e449a715922e24fe4ea9c89870432
     - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.FILTER.summary
+      md5sum: 3441628cd6550ed459ca1c3db989ceea
     - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.TsTv.count
+      md5sum: 8dcfdbcaac118df1d5ad407dd2af699f
     - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.TsTv.qual
+      md5sum: bc68ae4e688e9fb772b457069e604883
     - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.FILTER.summary
+      md5sum: 7a81b11aa29fec73d5bc872b7b58f8aa
     - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.TsTv.count
+      md5sum: a922c51ca3b2ea7cdcfa09e9c8c55d52
     - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.TsTv.qual
+      md5sum: 75af7d1b1e5a2f1bdfe5b530e37a6cbb
     - path: results/variant_calling/manta/sample3/sample3.manta.diploid_sv.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/manta/sample3/sample3.manta.diploid_sv.vcf.gz.tbi
+      md5sum: 4cb176febbc8c26d717a6c6e67b9c905
     - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.vcf.gz.tbi
+      md5sum: 4cb176febbc8c26d717a6c6e67b9c905
     - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.vcf.gz.tbi
+      md5sum: 4cb176febbc8c26d717a6c6e67b9c905
     - path: results/variant_calling/strelka/sample3/sample3.strelka.genome.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/sample3/sample3.strelka.genome.vcf.gz.tbi
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/sample3/sample3.strelka.variants.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/sample3/sample3.strelka.variants.vcf.gz.tbi
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.vcf.gz.tbi
+      md5sum: bbe7819d25ba9e63bdf886dfcccb0d6b
     - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz.tbi
+    # binary changes md5sums on reruns.
     - path: results/manta
       should_exist: false
     - path: results/strelka
@@ -1039,24 +1628,42 @@
     - variant_calling
   files:
     - path: results/csv/variantcalled.csv
+      md5sum: 76b499e35c128d67b0606ea561bf70e0
     - path: results/multiqc
     - path: results/reports/bcftools/tiddit/sample3/sample3.tiddit.bcftools_stats.txt
+      md5sum: 47af91809c214102f723a7c58e9b8e72
     - path: results/reports/bcftools/tiddit/sample4_vs_sample3/sample4_vs_sample3.tiddit_sv_merge.bcftools_stats.txt
+      md5sum: c071ebe8222acd2c76fc019838e8c230
     - path: results/reports/vcftools/tiddit/sample3/sample3.tiddit.FILTER.summary
+      md5sum: 1ce42d34e4ae919afb519efc99146423
     - path: results/reports/vcftools/tiddit/sample3/sample3.tiddit.TsTv.count
+      md5sum: fa27f678965b7cba6a92efcd039f802a
     - path: results/reports/vcftools/tiddit/sample3/sample3.tiddit.TsTv.qual
+      md5sum: bc68ae4e688e9fb772b457069e604883
     - path: results/reports/vcftools/tiddit/sample4_vs_sample3/sample4_vs_sample3.tiddit_sv_merge.FILTER.summary
+      md5sum: 1ce42d34e4ae919afb519efc99146423
     - path: results/reports/vcftools/tiddit/sample4_vs_sample3/sample4_vs_sample3.tiddit_sv_merge.TsTv.count
+      md5sum: 8dcfdbcaac118df1d5ad407dd2af699f
     - path: results/reports/vcftools/tiddit/sample4_vs_sample3/sample4_vs_sample3.tiddit_sv_merge.TsTv.qual
+      md5sum: bc68ae4e688e9fb772b457069e604883
     - path: results/variant_calling/tiddit/sample3/sample3.tiddit.ploidies.tab
+      md5sum: d65f8aa5bb136f77c23264640481f047
     - path: results/variant_calling/tiddit/sample3/sample3.tiddit.vcf.gz
+      md5sum: 1aeb97037b73251bb79e48b355026c9d
     - path: results/variant_calling/tiddit/sample3/sample3.tiddit.vcf.gz.tbi
+      md5sum: 4cb176febbc8c26d717a6c6e67b9c905
     - path: results/variant_calling/tiddit/sample4_vs_sample3/sample4_vs_sample3.tiddit.normal.vcf.gz
+      md5sum: 5ba8e30a9d831c05e31300b7d2c578ef
     - path: results/variant_calling/tiddit/sample4_vs_sample3/sample4_vs_sample3.tiddit.normal.vcf.gz.tbi
+      md5sum: 4cb176febbc8c26d717a6c6e67b9c905
     - path: results/variant_calling/tiddit/sample4_vs_sample3/sample4_vs_sample3.tiddit.ploidies.tab
+      md5sum: 0f01874e20df10ecc7418d4537c7aa82
     - path: results/variant_calling/tiddit/sample4_vs_sample3/sample4_vs_sample3.tiddit.tumor.vcf.gz
+      md5sum: 302cb980260b313573cf53067fd11120
     - path: results/variant_calling/tiddit/sample4_vs_sample3/sample4_vs_sample3.tiddit.tumor.vcf.gz.tbi
+      md5sum: 4cb176febbc8c26d717a6c6e67b9c905
     - path: results/variant_calling/tiddit/sample4_vs_sample3/sample4_vs_sample3.tiddit_sv_merge.vcf.gz
+      md5sum: f69f1fb9c246ac3bbc9270a2ea979557
     - path: results/tiddit
       should_exist: false
 - name: Run variant calling on germline sample with tiddit
@@ -1067,14 +1674,22 @@
     - variant_calling
   files:
     - path: results/csv/variantcalled.csv
+      md5sum: cd458ebee25e1fb1258d2f390e54c736
     - path: results/multiqc
     - path: results/reports/bcftools/tiddit/sample1/sample1.tiddit.bcftools_stats.txt
+      md5sum: 6bde7b353b927f8e99f5d0f3b592e67b
     - path: results/reports/vcftools/tiddit/sample1/sample1.tiddit.FILTER.summary
+      md5sum: 1ce42d34e4ae919afb519efc99146423
     - path: results/reports/vcftools/tiddit/sample1/sample1.tiddit.TsTv.count
+      md5sum: fa27f678965b7cba6a92efcd039f802a
     - path: results/reports/vcftools/tiddit/sample1/sample1.tiddit.TsTv.qual
+      md5sum: bc68ae4e688e9fb772b457069e604883
     - path: results/variant_calling/tiddit/sample1/sample1.tiddit.ploidies.tab
+      md5sum: d65f8aa5bb136f77c23264640481f047
     - path: results/variant_calling/tiddit/sample1/sample1.tiddit.vcf.gz
+      md5sum: 72cd7a6dc9dece29fdcb0a19f69e1cb5
     - path: results/variant_calling/tiddit/sample1/sample1.tiddit.vcf.gz.tbi
+      md5sum: 4cb176febbc8c26d717a6c6e67b9c905
     - path: results/tiddit
       should_exist: false
 - name: Run variant calling on tumor_only sample with tiddit
@@ -1085,13 +1700,21 @@
     - variant_calling
   files:
     - path: results/csv/variantcalled.csv
+      md5sum: 15076bb78912fe51006e83934c376fc2
     - path: results/multiqc
     - path: results/reports/bcftools/tiddit/sample2/sample2.tiddit.bcftools_stats.txt
+      md5sum: f2e3a2944f28287286f526d069d473e4
     - path: results/reports/vcftools/tiddit/sample2/sample2.tiddit.FILTER.summary
+      md5sum: 1ce42d34e4ae919afb519efc99146423
     - path: results/reports/vcftools/tiddit/sample2/sample2.tiddit.TsTv.count
+      md5sum: fa27f678965b7cba6a92efcd039f802a
     - path: results/reports/vcftools/tiddit/sample2/sample2.tiddit.TsTv.qual
+      md5sum: bc68ae4e688e9fb772b457069e604883
     - path: results/variant_calling/tiddit/sample2/sample2.tiddit.ploidies.tab
+      md5sum: 0f01874e20df10ecc7418d4537c7aa82
     - path: results/variant_calling/tiddit/sample2/sample2.tiddit.vcf.gz
+      md5sum: d75c2688964d79a87d882a8ac9a9a93b
     - path: results/variant_calling/tiddit/sample2/sample2.tiddit.vcf.gz.tbi
+      md5sum: 4cb176febbc8c26d717a6c6e67b9c905
     - path: results/tiddit
       should_exist: false
