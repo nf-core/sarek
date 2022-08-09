@@ -10,6 +10,8 @@
       md5sum: 51e418d9be9bb33f1d4123493b15b6c9
     - path: results/multiqc
     - path: results/reports/snpeff/test/snpEff_summary.html
+      contains: ["<b> Genome total length </b>", "<td> 100,286,402 </td>", "<td> MT192765.1 </td>"]
+      md5sum: 130536bf0237d7f3f746d32aaaaaaaaa
     # snpEff_summary.html changes md5sums on reruns.
     # It should be possible to test snpEff_summary.html using the contains-feature.
     # (I can't access the output-file on GitHub-test-server and I can't run the tests locally as I can't pull the snpeff- or VEP-image)
