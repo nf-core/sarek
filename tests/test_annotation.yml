@@ -14,7 +14,7 @@
       contains: [
         "<b> Genome total length </b>",
         "<td> 100,286,402 </td>",
-        "<td> MT192765.1 </td>"
+        "<td> MT192765.1 </td>",
         """<td valign=top> <b> Number of variants (before filter) </b> </td>
 		<td> 9 </td>"""
       ]
