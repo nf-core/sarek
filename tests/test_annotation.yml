@@ -15,9 +15,7 @@
         [
           "<b> Genome total length </b>",
           "<td> 100,286,402 </td>",
-          "<td> MT192765.1 </td>",
-          "<b> Number of variants (before filter) </b>",
-          "</td>		<td> 9 </td>",
+          "<td> MT192765.1 </td>"
         ]
     - path: results/reports/snpeff/test/test_snpEff.csv
       # test_snpEff.csv changes md5sums on reruns.
