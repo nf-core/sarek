@@ -24,7 +24,7 @@
     - path: results/reports/fastp/test
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.metrics
-      md5sum: 73d9501e856fc29723d91ebb902b3895
+      contains: ["test	8304	930	80	523308	3813	0	0	0.375148", "1.0	930	930"]
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
       md5sum: 626d5c03a6192283a302bde72415c693
     - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
