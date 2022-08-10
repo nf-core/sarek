@@ -102,7 +102,7 @@
     - path: results/reference/dict/genome.dict
       md5sum: 2433fe2ba31257337bf4c4bd4cb8da15
     - path: results/reference/dragmap/hash_table.cfg
-      # hash_table.cfg contains many string which we could test for - which do we want to test?
+      # hash_table.cfg contains many strings which we could test for - which do we want to test?
       contains:
         [
           "reference_sequences  = 1",
