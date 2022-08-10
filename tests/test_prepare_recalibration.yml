@@ -84,16 +84,16 @@
       # The text-based file test.strelka.variants.TsTv.qual has different md5sums on my linux system and the GitHub-test-server.
       # I don't know exactly why that is, but instead I test all the lines in the file.
       contains:
-				[
-					"QUAL_THRESHOLD	N_Ts_LT_QUAL_THRESHOLD	N_Tv_LT_QUAL_THRESHOLD	Ts/Tv_LT_QUAL_THRESHOLD	N_Ts_GT_QUAL_THRESHOLD	N_Tv_GT_QUAL_THRESHOLD	Ts/Tv_GT_QUAL_THRESHOLD",
-					"2	0	1	0	2	4	0.5",
-					"5	1	1	1	2	3	0.666667",
-					"21	1	2	0.5	2	2	1",
-					"28	1	3	0.333333	2	1	2",
-					"33	1	4	0.25	2	1.3526e-319	inf",
-					"42	1	5	0.2	1	1.3526e-319	inf",
-					"391	2	5	0.4	4.00193e-322	1.3526e-319	0.00295869"
-				]
+        [
+          "QUAL_THRESHOLD	N_Ts_LT_QUAL_THRESHOLD	N_Tv_LT_QUAL_THRESHOLD	Ts/Tv_LT_QUAL_THRESHOLD	N_Ts_GT_QUAL_THRESHOLD	N_Tv_GT_QUAL_THRESHOLD	Ts/Tv_GT_QUAL_THRESHOLD",
+          "2	0	1	0	2	4	0.5",
+          "5	1	1	1	2	3	0.666667",
+          "21	1	2	0.5	2	2	1",
+          "28	1	3	0.333333	2	1	2",
+          "33	1	4	0.25	2	1.3526e-319	inf",
+          "42	1	5	0.2	1	1.3526e-319	inf",
+          "391	2	5	0.4	4.00193e-322	1.3526e-319	0.00295869",
+        ]
     - path: results/variant_calling/strelka/test/test.strelka.genome.vcf.gz
     # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/test/test.strelka.genome.vcf.gz.tbi
@@ -134,16 +134,16 @@
       # The text-based file test.strelka.variants.TsTv.qual has different md5sums on my linux system and the GitHub-test-server.
       # I don't know exactly why that is, but instead I test all the lines in the file.
       contains:
-				[
-					"QUAL_THRESHOLD	N_Ts_LT_QUAL_THRESHOLD	N_Tv_LT_QUAL_THRESHOLD	Ts/Tv_LT_QUAL_THRESHOLD	N_Ts_GT_QUAL_THRESHOLD	N_Tv_GT_QUAL_THRESHOLD	Ts/Tv_GT_QUAL_THRESHOLD",
-					"2	0	1	0	2	4	0.5",
-					"5	1	1	1	2	3	0.666667",
-					"21	1	2	0.5	2	2	1",
-					"28	1	3	0.333333	2	1	2",
-					"33	1	4	0.25	2	1.3526e-319	inf",
-					"42	1	5	0.2	1	1.3526e-319	inf",
-					"391	2	5	0.4	4.00193e-322	1.3526e-319	0.00295869"
-				]
+        [
+          "QUAL_THRESHOLD	N_Ts_LT_QUAL_THRESHOLD	N_Tv_LT_QUAL_THRESHOLD	Ts/Tv_LT_QUAL_THRESHOLD	N_Ts_GT_QUAL_THRESHOLD	N_Tv_GT_QUAL_THRESHOLD	Ts/Tv_GT_QUAL_THRESHOLD",
+          "2	0	1	0	2	4	0.5",
+          "5	1	1	1	2	3	0.666667",
+          "21	1	2	0.5	2	2	1",
+          "28	1	3	0.333333	2	1	2",
+          "33	1	4	0.25	2	1.3526e-319	inf",
+          "42	1	5	0.2	1	1.3526e-319	inf",
+          "391	2	5	0.4	4.00193e-322	1.3526e-319	0.00295869",
+        ]
     - path: results/variant_calling/strelka/test/test.strelka.genome.vcf.gz
     # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/test/test.strelka.genome.vcf.gz.tbi
