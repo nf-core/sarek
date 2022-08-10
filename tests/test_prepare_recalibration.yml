@@ -81,7 +81,6 @@
     - path: results/reports/vcftools/strelka/test/test.strelka.variants.TsTv.count
       md5sum: ee7dafc8d941b8502a04a63dc3126fff
     - path: results/reports/vcftools/strelka/test/test.strelka.variants.TsTv.qual
-      # The text-based file test.strelka.variants.TsTv.qual has different md5sums on my linux system and the GitHub-test-server.
       contains:
         [
           "QUAL_THRESHOLD	N_Ts_LT_QUAL_THRESHOLD	N_Tv_LT_QUAL_THRESHOLD	Ts/Tv_LT_QUAL_THRESHOLD	N_Ts_GT_QUAL_THRESHOLD	N_Tv_GT_QUAL_THRESHOLD	Ts/Tv_GT_QUAL_THRESHOLD",
@@ -90,7 +89,7 @@
           "21	1	2	0.5	2	2	1",
           "28	1	3	0.333333	2	1	2",
         ]
-      md5sum: ee7dafc8d941b8502a04a63dc31aaaaa
+      md5sum: 55db15738ecd09d5c97b2db3e398795c
     - path: results/variant_calling/strelka/test/test.strelka.genome.vcf.gz
     # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/test/test.strelka.genome.vcf.gz.tbi
@@ -128,7 +127,6 @@
     - path: results/reports/vcftools/strelka/test/test.strelka.variants.TsTv.count
       md5sum: ee7dafc8d941b8502a04a63dc3126fff
     - path: results/reports/vcftools/strelka/test/test.strelka.variants.TsTv.qual
-      # The text-based file test.strelka.variants.TsTv.qual has different md5sums on my linux system and the GitHub-test-server.
       contains:
         [
           "QUAL_THRESHOLD	N_Ts_LT_QUAL_THRESHOLD	N_Tv_LT_QUAL_THRESHOLD	Ts/Tv_LT_QUAL_THRESHOLD	N_Ts_GT_QUAL_THRESHOLD	N_Tv_GT_QUAL_THRESHOLD	Ts/Tv_GT_QUAL_THRESHOLD",
@@ -137,7 +135,7 @@
           "21	1	2	0.5	2	2	1",
           "28	1	3	0.333333	2	1	2",
         ]
-      md5sum: ee7dafc8d941b8502a04a63dc31bbbbb
+      md5sum: 9fe11e894f7567eb96b43c48593741a7
     - path: results/variant_calling/strelka/test/test.strelka.genome.vcf.gz
     # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/test/test.strelka.genome.vcf.gz.tbi
