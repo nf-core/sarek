@@ -83,26 +83,26 @@ class WorkflowSarek {
         }
     }
 
-    //public static String getTMBdatabase(String annotation) {
-//
-    //    String dbConfig = "";
-//
+    public static String getTMBdatabase(String annotation) {
+
+       String dbConfig = "/assets/tmb/snpeff.yml";
+
     //    switch (annotation) {
     //        case 'snpeff': dbConfig = "$projectDir/assets/tmb/snpeff.yml";
     //                        break
-    //        //case 'vep': dbConfig = "$projectDir/assets/tmb/vep.yml";
-    //        //                break
+    //        case 'vep': dbConfig = "$projectDir/assets/tmb/vep.yml";
+    //                        break
     //        //case 'merge': dbConfig = "$projectDir/assets/tmb/merge.yml";
     //        //                break
     //    }
-//
-    //    return dbConfig
-    //}
 
-    //public static String getTMBvariantcaller(String variantcaller) {
-//
-    //    String varConfig = "";
-//
+       return dbConfig
+    }
+
+    public static String getTMBvariantcaller(String variantcaller) {
+
+       String varConfig = "/assets/tmb/strelka.yml";
+
     //    switch (variantcaller) {
     //        //case 'deepvariant': varConfig = "$projectDir/assets/tmb/deepvariant.yml";
     //        //                break
@@ -114,11 +114,11 @@ class WorkflowSarek {
     //        //                break
     //        case 'mutect2': varConfig = "$projectDir/assets/tmb/mutect2.yml";
     //                        break
-    //        //case 'strelka': varConfig = "$projectDir/assets/tmb/strelka.yml";
-    //        //                break
-    //    }
-//
-    //    return varConfig
-//
-    //}
+    //        case 'strelka': varConfig = "$projectDir/assets/tmb/strelka.yml";
+    //                       break
+    //     }
+
+       return varConfig
+
+    }
 }
