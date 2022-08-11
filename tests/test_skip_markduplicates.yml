@@ -117,7 +117,7 @@
     - path: results/preprocessing/recal_table/test/test.recal.table
       md5sum: 35d89a3811aa31711fc9815b6b80e6ec
     - path: results/preprocessing/recalibrated/test/test.recal.cram
-      md5sum: 97c08c4e6a046cea1990a5acbd229cf6
+    # binary changes md5sums on reruns.
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
       md5sum: adac39d7845f64f6b35b766751393b06
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
