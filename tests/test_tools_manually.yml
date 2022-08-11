@@ -15,25 +15,25 @@
     - path: results/variant_calling/ascat/sample4_vs_sample3/sample4_vs_sample3.before_correction.sample4_vs_sample3.tumour.tumour.png
       md5sum: 4ac774bf5f1157e77426fd82f5a03004
     - path: results/variant_calling/ascat/sample4_vs_sample3/sample4_vs_sample3.cnvs.txt
-      md5sum: 4ac774bf5f1157e77426fd82f5a03005
+      md5sum: 1ade39990eda42baaedfd1c041070cd5
     - path: results/variant_calling/ascat/sample4_vs_sample3/sample4_vs_sample3.metrics.txt
-      md5sum: 4ac774bf5f1157e77426fd82f5a03006
+      md5sum: 6257cd36d411ea16c577ca3a594feb03
     - path: results/variant_calling/ascat/sample4_vs_sample3/sample4_vs_sample3.purityploidy.txt
-      md5sum: 4ac774bf5f1157e77426fd82f5a03007
+      md5sum: e888f26ac0474bd69de2f39cbfe71956
     - path: results/variant_calling/ascat/sample4_vs_sample3/sample4_vs_sample3.segments.txt
-      md5sum: 4ac774bf5f1157e77426fd82f5a03008
+      md5sum: 73469d4382fc72b6c1d11f3491ef6654
     - path: results/variant_calling/ascat/sample4_vs_sample3/sample4_vs_sample3.tumour.ASPCF.png
       md5sum: 4ac774bf5f1157e77426fd82f5a03009
     - path: results/variant_calling/ascat/sample4_vs_sample3/sample4_vs_sample3.tumour_normalBAF.txt
       md5sum: 4ac774bf5f1157e77426fd82f5a03010
     - path: results/variant_calling/ascat/sample4_vs_sample3/sample4_vs_sample3.tumour_normalLogR.txt
-      md5sum: 4ac774bf5f1157e77426fd82f5a03011
+      md5sum: cbb7adfd1780fd98c5231cdc48121d78
     - path: results/variant_calling/ascat/sample4_vs_sample3/sample4_vs_sample3.tumour.sunrise.png
       md5sum: 4ac774bf5f1157e77426fd82f5a03012
     - path: results/variant_calling/ascat/sample4_vs_sample3/sample4_vs_sample3.tumour_tumourBAF.txt
       md5sum: 4ac774bf5f1157e77426fd82f5a03013
     - path: results/variant_calling/ascat/sample4_vs_sample3/sample4_vs_sample3.tumour_tumourLogR.txt
-      md5sum: 4ac774bf5f1157e77426fd82f5a03014
+      md5sum: c6ef56244b8ac53d2c949437918523b2
 
 - name: Run variant calling on somatic sample with mutect2 without intervals
   command: nextflow run main.nf -profile test,tools_somatic --tools mutect2 --no_intervals
