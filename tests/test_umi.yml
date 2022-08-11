@@ -42,11 +42,15 @@
     - path: results/groupreadsbyumi/test-test_L1_umi_histogram.txt
       md5sum: 85292e9acb83edf17110dce17be27f44
     - path: results/preprocessing/markduplicates/test/test.md.cram
+    # binary changes md5sums on reruns.
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
+      md5sum: results/preprocessing/markduplicates/test/test.md.cram.crai
     - path: results/preprocessing/recal_table/test/test.recal.table
       md5sum: 18ea609fa06356aba3bcabda12f2cf7d
     - path: results/preprocessing/recalibrated/test/test.recal.cram
+    # binary changes md5sums on reruns.
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+    # binary changes md5sums on reruns.
     - path: results/reports/markduplicates/test/test.md.metrics
       contains: ["test	0	2804	3	4	0	77	0	0.027461	50115", "1.0	1	2651	2651", "12.0	8.9868	0	0"]
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
@@ -60,18 +64,31 @@
     - path: results/reports/mosdepth/test/test.md.regions.bed.gz.csi
       md5sum: d0713716f63ac573f4a3385733e9a537
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+      md5sum: 09d22913aa50a0207f97a3f85b182c6e
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+      md5sum: 9359ba1c4e09aa47cc95c9134f526675
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+      md5sum: 9bbea5e4d213a51f501c2aadff8d4526
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
+      md5sum: ef4426cd1d433464004bb39d483abad9
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
+      md5sum: d0713716f63ac573f4a3385733e9a537
     - path: results/reports/samtools/test/test.md.cram.stats
+      md5sum: 072daded4cd3bd08f2c94ef1f1478052
     - path: results/reports/samtools/test/test.recal.cram.stats
+      md5sum: 1537c827260f24e3fa0f0dc257580b41
     - path: results/samblaster/test-test_L1_unsorted_tagged.bam
+      md5sum: 9b10a0866ff508aa4b07a963586daaae
     - path: results/samtools/test-test_L1.bam
+    # binary changes md5sums on reruns.
     - path: results/samtools/test-test_L1.map_map.bam
+      md5sum: f29dc564311e592941bdf152dd722b4f
     - path: results/samtools/test-test_L1.map_unmap.bam
+      md5sum: 6518cea4d9c0bdb17af66932b68e0ad9
     - path: results/samtools/test-test_L1.unmap_map.bam
+      md5sum: 9479aabdbbfdc8f5c79f8daa1011e9fb
     - path: results/samtools/test-test_L1.unmap_unmap.bam
+      md5sum: 567bae8f6acddb5380ca1c0488311a53
       # TODO: The following files are not produced anymore
 #    - path: results/samtools/test-test_L1.mapped_1.fq.gz
 #    - path: results/samtools/test-test_L1.mapped_2.fq.gz

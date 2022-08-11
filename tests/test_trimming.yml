@@ -16,11 +16,15 @@
     - path: results/preprocessing/fastp/test/test-test_L1_2.fastp.fastq.gz
       md5sum: af73322b9742bce0dd7f767c5c676c0e
     - path: results/preprocessing/markduplicates/test/test.md.cram
+    # binary changes md5sums on reruns.
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
+    # binary changes md5sums on reruns.
     - path: results/preprocessing/recal_table/test/test.recal.table
       md5sum: 766a4cd88d3d085c19d8e31540040ecd
     - path: results/preprocessing/recalibrated/test/test.recal.cram
+    # binary changes md5sums on reruns.
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+    # binary changes md5sums on reruns.
     - path: results/reports/fastp/test
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.metrics

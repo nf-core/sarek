@@ -363,11 +363,15 @@
       md5sum: 0cc6a67fedb2ef9ce97e463d310f9f30
     - path: results/multiqc
     - path: results/preprocessing/markduplicates/test/test.md.cram
+    # binary changes md5sums on reruns.
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
+    # binary changes md5sums on reruns.
     - path: results/preprocessing/recal_table/test/test.recal.table
       md5sum: c990e4f1b7dbd5a3a623882a54ae2bf2
     - path: results/preprocessing/recalibrated/test/test.recal.cram
+    # binary changes md5sums on reruns.
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+    # binary changes md5sums on reruns.
     - path: results/reports/bcftools/freebayes/test/test.freebayes.bcftools_stats.txt
       md5sum: 16c7673085520b66bd47f59fbf8a7e0e
     - path: results/reports/fastqc/test-test_L1
@@ -441,11 +445,15 @@
     - path: results/no_intervals.bed.gz.tbi
       md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/preprocessing/markduplicates/test/test.md.cram
+    # binary changes md5sums on reruns.
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
+    # binary changes md5sums on reruns.
     - path: results/preprocessing/recal_table/test/test.recal.table
       md5sum: 4ac774bf5f1157e77426fd82f5ac0fbe
     - path: results/preprocessing/recalibrated/test/test.recal.cram
+    # binary changes md5sums on reruns.
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+    # binary changes md5sums on reruns.
     - path: results/reports/bcftools/freebayes/test/test.freebayes.bcftools_stats.txt
       md5sum: f66375a00d692d67df46c129147008b2
     - path: results/reports/fastqc/test-test_L1
@@ -504,17 +512,25 @@
       md5sum: b31f56256a1cfa839a2ea7f7ba6c1c45
     - path: results/multiqc
     - path: results/preprocessing/markduplicates/test/test.md.cram
+    # binary changes md5sums on reruns.
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
+    # binary changes md5sums on reruns.
     - path: results/preprocessing/markduplicates/test2/test2.md.cram
+    # binary changes md5sums on reruns.
     - path: results/preprocessing/markduplicates/test2/test2.md.cram.crai
+    # binary changes md5sums on reruns.
     - path: results/preprocessing/recal_table/test/test.recal.table
       md5sum: c990e4f1b7dbd5a3a623882a54ae2bf2
     - path: results/preprocessing/recal_table/test2/test2.recal.table
       md5sum: 00d6877d68d622d81e4d633c4e340e7e
     - path: results/preprocessing/recalibrated/test/test.recal.cram
+    # binary changes md5sums on reruns.
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+    # binary changes md5sums on reruns.
     - path: results/preprocessing/recalibrated/test2/test2.recal.cram
+    # binary changes md5sums on reruns.
     - path: results/preprocessing/recalibrated/test2/test2.recal.cram.crai
+    # binary changes md5sums on reruns.
     - path: results/reports/bcftools/freebayes/test/test.freebayes.bcftools_stats.txt
       md5sum: 16c7673085520b66bd47f59fbf8a7e0e
     - path: results/reports/bcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.bcftools_stats.txt
@@ -635,17 +651,25 @@
     - path: results/no_intervals.bed.gz.tbi
       md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/preprocessing/markduplicates/test/test.md.cram
+    # binary changes md5sums on reruns.
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
+    # binary changes md5sums on reruns.
     - path: results/preprocessing/markduplicates/test2/test2.md.cram
+    # binary changes md5sums on reruns.
     - path: results/preprocessing/markduplicates/test2/test2.md.cram.crai
+    # binary changes md5sums on reruns.
     - path: results/preprocessing/recal_table/test/test.recal.table
       md5sum: 4ac774bf5f1157e77426fd82f5ac0fbe
     - path: results/preprocessing/recal_table/test2/test2.recal.table
       md5sum: 0626cd4337eab79b38b5bc5c95e0c003
     - path: results/preprocessing/recalibrated/test/test.recal.cram
+    # binary changes md5sums on reruns.
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+    # binary changes md5sums on reruns.
     - path: results/preprocessing/recalibrated/test2/test2.recal.cram
+    # binary changes md5sums on reruns.
     - path: results/preprocessing/recalibrated/test2/test2.recal.cram.crai
+    # binary changes md5sums on reruns.
     - path: results/reports/bcftools/freebayes/test/test.freebayes.bcftools_stats.txt
       md5sum: f66375a00d692d67df46c129147008b2
     - path: results/reports/bcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.bcftools_stats.txt
@@ -750,7 +774,9 @@
       md5sum: d7d86e82902a4f57876b2414a4f812a4
     - path: results/multiqc
     - path: results/preprocessing/recalibrated/test/test.recal.cram
+    # binary changes md5sums on reruns.
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+    # binary changes md5sums on reruns.
     - path: results/reports/bcftools/haplotypecaller/test/test.haplotypecaller.filtered.bcftools_stats.txt
       md5sum: f9cc3809106a42601eafd3b09900750a
     - path: results/reports/vcftools/haplotypecaller/test/test.haplotypecaller.filtered.FILTER.summary
@@ -787,7 +813,9 @@
     - path: results/no_intervals.bed.gz.tbi
       md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/preprocessing/recalibrated/test/test.recal.cram
+    # binary changes md5sums on reruns.
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+    # binary changes md5sums on reruns.
     - path: results/reports/bcftools/haplotypecaller/test/test.haplotypecaller.filtered.bcftools_stats.txt
       md5sum: f9cc3809106a42601eafd3b09900750a
     - path: results/reports/vcftools/haplotypecaller/test/test.haplotypecaller.filtered.FILTER.summary
@@ -817,7 +845,9 @@
       md5sum: d2dffdbd2b4f1f26a06637592d24dab3
     - path: results/multiqc
     - path: results/preprocessing/recalibrated/test/test.recal.cram
+    # binary changes md5sums on reruns.
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+    # binary changes md5sums on reruns.
     - path: results/reports/bcftools/haplotypecaller/joint_variant_calling/joint_germline.bcftools_stats.txt
       md5sum: f91f185319e00108870911e0ce1a7ed6
     - path: results/reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline.FILTER.summary
