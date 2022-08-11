@@ -26,7 +26,7 @@
     - path: results/preprocessing/recalibrated/test/test.recal.cram
     # binary changes md5sums on reruns.
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
-      md5sum: 658361464d7b0a96517ed77150abf9e4
+    # binary changes md5sums on reruns.
     - path: results/reports/fastp/test
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.metrics

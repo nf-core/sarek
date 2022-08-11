@@ -44,7 +44,7 @@
     - path: results/preprocessing/markduplicates/test/test.md.cram
     # binary changes md5sums on reruns.
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
-      md5sum: b106281381b28aa0e4bc031b5caca1a6
+    # binary changes md5sums on reruns.
     - path: results/preprocessing/recal_table/test/test.recal.table
       md5sum: 18ea609fa06356aba3bcabda12f2cf7d
     - path: results/preprocessing/recalibrated/test/test.recal.cram
