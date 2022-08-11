@@ -39,7 +39,7 @@ workflow PREPARE_INTERVALS {
         ch_intervals_combined = Channel.fromPath(file("${params.outdir}/no_intervals.bed"))
                                             .map{ it -> [[id:it.simpleName], it]}
 
-    } else if (params.step != 'annotate' && params.step != 'controlfreec') {
+    } else if (params.step != 'controlfreec') {
 
         //If no interval/target file is provided, then intervals are generated from FASTA file
         if (!params.intervals) {
