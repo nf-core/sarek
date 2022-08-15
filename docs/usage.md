@@ -689,13 +689,13 @@ If you don't want to use some of the provided reference genomes, they can be ove
 Example for using a custom known indels file:
 
 ```console
-nextflow run nf-core/sarek --known_indels <my_known_indels.vcf.gz> --genome GRCh38.GATK
+nextflow run nf-core/sarek --known_indels <my_known_indels.vcf.gz> --genome GATK.GRCh38
 ```
 
 Example for not using known indels, but all other provided reference file:
 
 ```console
-nextflow run nf-core/sarek --known_indels false --genome GRCh38.GATK
+nextflow run nf-core/sarek --known_indels false --genome GATK.GRCh38
 ```
 
 ### Where do the used reference genomes originate from
