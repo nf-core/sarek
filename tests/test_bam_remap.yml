@@ -3,16 +3,6 @@
   tags:
     - alignment_to_fastq
   files:
-    - path: results/cat/test-1_1.merged.fastq.gz
-    - path: results/cat/test-1_2.merged.fastq.gz
-    - path: results/collate/test-1.mapped_1.fq.gz
-    - path: results/collate/test-1.mapped_2.fq.gz
-    - path: results/collate/test-1.mapped_other.fq.gz
-    - path: results/collate/test-1.mapped_singleton.fq.gz
-    - path: results/collate/test-1.unmapped_1.fq.gz
-    - path: results/collate/test-1.unmapped_2.fq.gz
-    - path: results/collate/test-1.unmapped_other.fq.gz
-    - path: results/collate/test-1.unmapped_singleton.fq.gz
     - path: results/csv/markduplicates.csv
     - path: results/csv/markduplicates_no_table.csv
     - path: results/csv/recalibrated.csv
@@ -36,8 +26,3 @@
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
     - path: results/reports/samtools/test/test.md.cram.stats
     - path: results/reports/samtools/test/test.recal.cram.stats
-    - path: results/samtools/test-1.bam
-    - path: results/samtools/test-1.map_map.bam
-    - path: results/samtools/test-1.map_unmap.bam
-    - path: results/samtools/test-1.unmap_map.bam
-    - path: results/samtools/test-1.unmap_unmap.bam
