@@ -26,6 +26,7 @@ process SAMTOOLS_MPILEUP {
         --fasta-ref $fasta \\
         --output ${prefix}.mpileup \\
         $args \\
+        $intervals \\
         $input
     bgzip ${prefix}.mpileup
     cat <<-END_VERSIONS > versions.yml
