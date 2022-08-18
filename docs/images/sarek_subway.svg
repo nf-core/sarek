@@ -28,7 +28,7 @@
      showgrid="true"
      inkscape:zoom="1.4127647"
      inkscape:cx="763.39676"
-     inkscape:cy="609.0894"
+     inkscape:cy="552.46284"
      inkscape:window-width="2560"
      inkscape:window-height="1027"
      inkscape:window-x="1440"
@@ -1786,7 +1786,7 @@
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro';stroke-width:0.937508"
            y="-33.70208"
            x="393.19342"
-           sodipodi:role="line">Optionnal</tspan></text>
+           sodipodi:role="line">Optional</tspan></text>
       <text
          xml:space="preserve"
          style="font-style:normal;font-weight:normal;font-size:12.5px;line-height:1.25;font-family:sans-serif;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.937508"
@@ -1819,7 +1819,7 @@
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.75009px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.937508"
            y="69.032829"
            x="754.50287"
-           sodipodi:role="line">Adapted from: Yates, James A. Fellows, et al.  PeerJ 9 (2021).</tspan></text>
+           sodipodi:role="line">Adapted from: Fellows Yates, James A., et al.  PeerJ 9 (2021).</tspan></text>
       <text
          id="text8555-1-8"
          y="-66.762802"
@@ -3044,7 +3044,7 @@
                    y="-190.50024"
                    style="stroke-width:1.00002" /></flowRegion><flowPara
                  id="flowPara2359-7"
-                 style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Medium';stroke-width:1.00002">3.0</flowPara></flowRoot>
+                 style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Medium';stroke-width:1.00002">3.0.1</flowPara></flowRoot>
           </g>
         </g>
         <g
