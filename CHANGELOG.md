@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Saiva is a lake in the Sarek national park, just below the Skierfe mountain.
 
 ### Fixed
+
 - [#708](https://github.com/nf-core/sarek/pull/708) - Fixes mpileup bug. Update nf-core module `samtools/mpileup` to subset CRAM file by intervals.
 
 ## [3.0](https://github.com/nf-core/sarek/releases/tag/3.0) - Skierfe
