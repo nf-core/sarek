@@ -205,7 +205,7 @@
                 "git_sha": "897c33d5da084b61109500ee44c01da2d3e4e773"
             },
             "samtools/mpileup": {
-                "git_sha": "24e05f6097a5dde57dd80d33295ed120f1b81aef"
+                "git_sha": "454e0acc09de7cdcc90007420bfe8afa251286fb"
             },
             "samtools/stats": {
                 "git_sha": "f48a24770e24358e58de66e9b805a70d77cd154b"
