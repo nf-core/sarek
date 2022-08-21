@@ -172,7 +172,7 @@
     - path: results/variant_calling/mpileup/sample4_vs_sample3/sample4_vs_sample3.normal.mpileup.gz
       md5sum: 25cc8e026d3e70531ba22bac6a125efd
     - path: results/variant_calling/mpileup/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz
-      md5sum: 83654d978b33d00687672c652eeeade7
+      md5sum: 262e13f9ebca61253c24416b5d8ff467
     - path: results/cnvkit
       should_exist: false
 - name: Run variant calling on somatic samples with controlfreec without intervals
