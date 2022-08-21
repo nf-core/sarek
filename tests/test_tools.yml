@@ -148,31 +148,31 @@
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.circos.txt
       md5sum: 92ce5ce97b27a7214dfa9c2cb20cf854
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.normal.mpileup.gz_control.cpn
-      md5sum: 802b1be61a43379d6a59cd511956da4c
+      md5sum: 508a003da85b186d9a60d867ef7cdf15
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.p.value.txt
       md5sum: 94bf84d58c9696f116a9a6d8cb350e14
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz_BAF.txt
-      md5sum: 97614489f64ce8e7f5d4c69e0811a872
+      md5sum: 8ff0fe03f03f715ee533be84eec8eff5
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz_CNVs
       md5sum: 7fa21a187466579fa532d6d40d7412cf
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz_info.txt
-      md5sum: 4b4bca26a60c843a221e480df25514ca
+      md5sum: 271271719c576d9218bdc859850e54ee
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz_ratio.BedGraph
       md5sum: 5d3321af93678f16878d59e01d3a87d3
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz_ratio.txt
       md5sum: 0565ec12db85fb2a84b2072563f27bba
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz_sample.cpn
-      md5sum: c3bd854280920ff99335921efdd13df7
+      md5sum: befe1706c61464635a76c7323a6bd2a2
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_BAF.png
-      md5sum: f9d977839e09c7e2472d970bd4aa834c
+      md5sum: fb311638c98bf227bf95a29c48659d74
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_ratio.log2.png
       md5sum: 2eea2f34e6d05a6da3a8ec23e7075068
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_ratio.png
       md5sum: 2f1565c565bd6b2306173f6efb916304
     - path: results/variant_calling/mpileup/sample4_vs_sample3/sample4_vs_sample3.normal.mpileup.gz
-      md5sum: 6274feea382028a1ec369cc7f9a5011d
+      md5sum: 25cc8e026d3e70531ba22bac6a125efd
     - path: results/variant_calling/mpileup/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz
-      md5sum: 69e3b31c2db6f4b5fb799b69bbdc7f57
+      md5sum: 83654d978b33d00687672c652eeeade7
     - path: results/cnvkit
       should_exist: false
 - name: Run variant calling on somatic samples with controlfreec without intervals
@@ -1083,7 +1083,7 @@
   files:
     - path: results/multiqc
     - path: results/variant_calling/mpileup/sample2/sample2.tumor.mpileup.gz
-      md5sum: 69e3b31c2db6f4b5fb799b69bbdc7f57
+      md5sum: 83654d978b33d00687672c652eeeade7
     - path: results/mpileup
       should_exist: false
 - name: Run variant calling on tumor_only sample to test mpileup without intervals
@@ -1112,7 +1112,7 @@
   files:
     - path: results/multiqc
     - path: results/variant_calling/mpileup/sample1/sample1.normal.mpileup.gz
-      md5sum: 6274feea382028a1ec369cc7f9a5011d
+      md5sum: f541e71aad4942260996107edaaed477
     - path: results/mpileup
       should_exist: false
 - name: Run variant calling on germline sample to test mpileup without intervals
