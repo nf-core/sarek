@@ -109,7 +109,7 @@
           "reference_len        = 368640",
           "reference_len_raw    = 40001",
           "reference_len_not_n  = 40001",
-          "reference_alt_seed   = 204800",
+          "reference_alt_seed   = 204800"
         ]
     - path: results/reference/dragmap/hash_table.cfg.bin
     # binary changing on reruns
