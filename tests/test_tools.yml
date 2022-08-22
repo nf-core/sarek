@@ -172,7 +172,7 @@
     - path: results/variant_calling/mpileup/sample4_vs_sample3/sample4_vs_sample3.normal.mpileup.gz
       md5sum: 25cc8e026d3e70531ba22bac6a125efd
     - path: results/variant_calling/mpileup/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz
-      md5sum: 262e13f9ebca61253c24416b5d8ff467
+      md5sum: 83654d978b33d00687672c652eeeade7
     - path: results/cnvkit
       should_exist: false
 - name: Run variant calling on somatic samples with controlfreec without intervals
@@ -1695,7 +1695,7 @@
     - path: results/variant_calling/tiddit/sample4_vs_sample3/sample4_vs_sample3.tiddit.normal.vcf.gz.tbi
       md5sum: 4cb176febbc8c26d717a6c6e67b9c905
     - path: results/variant_calling/tiddit/sample4_vs_sample3/sample4_vs_sample3.tiddit.ploidies.tab
-      md5sum: 0f01874e20df10ecc7418d4537c7aa82
+      md5sum: d65f8aa5bb136f77c23264640481f047
     - path: results/variant_calling/tiddit/sample4_vs_sample3/sample4_vs_sample3.tiddit.tumor.vcf.gz
       md5sum: 302cb980260b313573cf53067fd11120
     - path: results/variant_calling/tiddit/sample4_vs_sample3/sample4_vs_sample3.tiddit.tumor.vcf.gz.tbi
