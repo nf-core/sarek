@@ -23,7 +23,7 @@
           "Hom , 8",
           "Missing , 0",
           "MT192765.1, Position,0,1",
-          "MT192765.1,Count,0,0"
+          "MT192765.1,Count,0,0",
         ]
     - path: results/reports/snpeff/test/test_snpEff.genes.txt
       md5sum: 130536bf0237d7f3f746d32aaa32840a
