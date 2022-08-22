@@ -117,7 +117,13 @@
       md5sum: 1caab4ffc89f81ace615a2e813295cf4
     - path: results/reference/dragmap/hash_table_stats.txt
       # hash_table_stats.txt contains many string which we could test for - which do we want to test?
-      contains: ["A bases:       10934", "C bases:        8612", "G bases:        8608", "T bases:       11847"]
+      contains:
+        [
+          "A bases:       10934",
+          "C bases:        8612",
+          "G bases:        8608",
+          "T bases:       11847"
+        ]
     - path: results/reference/dragmap/ref_index.bin
       md5sum: dbb5c7d26b974e0ac338024fe4535044
     - path: results/reference/dragmap/reference.bin
