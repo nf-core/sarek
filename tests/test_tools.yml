@@ -1083,7 +1083,7 @@
   files:
     - path: results/multiqc
     - path: results/variant_calling/mpileup/sample2/sample2.tumor.mpileup.gz
-      md5sum: 262e13f9ebca61253c24416b5d8ff467
+    # binary changes md5sums on reruns.
     - path: results/mpileup
       should_exist: false
 - name: Run variant calling on tumor_only sample to test mpileup without intervals
