@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#679](https://github.com/nf-core/sarek/pull/679) - Back to `dev`
 - [#685](https://github.com/nf-core/sarek/pull/685) - Updating the nf-core modules used by Sarek.
 - [#691](https://github.com/nf-core/sarek/pull/691) - To run the same pytest as before locally, use `PROFILE=docker`
+- [#696](https://github.com/nf-core/sarek/pull/696) - Adding check of md5-sums in CI-tests.
 
 ### Fixed
 
