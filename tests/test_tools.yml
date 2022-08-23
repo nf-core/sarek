@@ -150,21 +150,21 @@
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.normal.mpileup.gz_control.cpn
       md5sum: 508a003da85b186d9a60d867ef7cdf15
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.p.value.txt
-      md5sum: 9abc164091e5e330ea0198a99c8deaea
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz_BAF.txt
-      md5sum: 4c1540648d0d7dc0cfe5e3e37942d108
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz_CNVs
-      md5sum: 71f7dee6f22e1bab3c8ec10245508576
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz_info.txt
       md5sum: 271271719c576d9218bdc859850e54ee
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz_ratio.BedGraph
       md5sum: 5d3321af93678f16878d59e01d3a87d3
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz_ratio.txt
-      md5sum: d78e65a7eba953c67b1cd6f9f6d31972
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz_sample.cpn
       md5sum: befe1706c61464635a76c7323a6bd2a2
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_BAF.png
-      md5sum: 99c949fbc14c8a86bdf55552ad3dc35c
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_ratio.log2.png
       md5sum: 2eea2f34e6d05a6da3a8ec23e7075068
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_ratio.png
@@ -172,7 +172,7 @@
     - path: results/variant_calling/mpileup/sample4_vs_sample3/sample4_vs_sample3.normal.mpileup.gz
       md5sum: 25cc8e026d3e70531ba22bac6a125efd
     - path: results/variant_calling/mpileup/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz
-      md5sum: 262e13f9ebca61253c24416b5d8ff467
+    # binary changes md5sums on reruns.
     - path: results/cnvkit
       should_exist: false
 - name: Run variant calling on somatic samples with controlfreec without intervals
