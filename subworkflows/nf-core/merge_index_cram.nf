@@ -11,6 +11,7 @@ workflow MERGE_INDEX_CRAM {
     take:
         ch_cram       // channel: [mandatory] meta, cram
         fasta         // channel: [mandatory] fasta
+        fasta_fai     // channel: [mandatory] fai for fasta
 
     main:
     ch_versions = Channel.empty()
@@ -36,7 +37,7 @@ workflow MERGE_INDEX_CRAM {
         multiple: it[0].num_intervals > 1
     }
 
-    MERGE_CRAM(ch_cram_to_merge.multiple, fasta)
+    MERGE_CRAM(ch_cram_to_merge.multiple, fasta, fasta_fai)
     INDEX_CRAM(ch_cram_to_merge.single.mix(MERGE_CRAM.out.cram))
 
     cram_crai = ch_cram_to_merge.single

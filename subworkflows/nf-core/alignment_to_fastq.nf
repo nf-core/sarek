@@ -15,6 +15,7 @@ workflow ALIGNMENT_TO_FASTQ {
     take:
     input // channel: [meta, alignment (BAM or CRAM), index (optional)]
     fasta // optional: reference file if CRAM format and reference not in header
+    fasta_fai
 
     main:
     ch_versions = Channel.empty()
@@ -40,7 +41,7 @@ workflow ALIGNMENT_TO_FASTQ {
             [meta, [unmap_unmap, unmap_map, map_unmap]]
         }
 
-    SAMTOOLS_MERGE_UNMAP(all_unmapped_bam, fasta)
+    SAMTOOLS_MERGE_UNMAP(all_unmapped_bam, fasta, fasta_fai)
 
     // Collate & convert unmapped
     COLLATE_FASTQ_UNMAP(SAMTOOLS_MERGE_UNMAP.out.bam)

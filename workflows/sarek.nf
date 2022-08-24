@@ -385,7 +385,7 @@ workflow SAREK {
 
         // convert any bam input to fastq
         // Fasta are not needed when converting bam to fastq -> []
-        ALIGNMENT_TO_FASTQ_INPUT(ch_input_sample_type.bam, [])
+        ALIGNMENT_TO_FASTQ_INPUT(ch_input_sample_type.bam, [], [])
 
         // gather fastq (inputed or converted)
         // Theorically this could work on mixed input (fastq for one sample and bam for another)
@@ -419,7 +419,7 @@ workflow SAREK {
             bamtofastq = CREATE_UMI_CONSENSUS.out.consensusbam.map{meta, bam -> [meta,bam,[]]}
 
             // convert back to fastq for further preprocessing
-            ALIGNMENT_TO_FASTQ_UMI(bamtofastq, [])
+            ALIGNMENT_TO_FASTQ_UMI(bamtofastq, [], [])
 
             ch_reads_fastp = ALIGNMENT_TO_FASTQ_UMI.out.reads
 

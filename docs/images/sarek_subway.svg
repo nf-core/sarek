@@ -40,13 +40,13 @@
      inkscape:pagecheckerboard="false"
      inkscape:document-units="mm"
      showgrid="true"
-     inkscape:zoom="0.70638235"
-     inkscape:cx="597.40122"
-     inkscape:cy="403.23134"
-     inkscape:window-width="1920"
-     inkscape:window-height="1007"
-     inkscape:window-x="0"
-     inkscape:window-y="0"
+     inkscape:zoom="1.4127647"
+     inkscape:cx="763.39676"
+     inkscape:cy="552.46284"
+     inkscape:window-width="2560"
+     inkscape:window-height="1027"
+     inkscape:window-x="1440"
+     inkscape:window-y="25"
      inkscape:window-maximized="1"
      inkscape:current-layer="layer4"
      width="211mm"
@@ -3047,7 +3047,8 @@
                    y="-190.50024"
                    style="stroke-width:1.00002" /></flowRegion><flowPara
                  id="flowPara2359-7"
-                 style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Medium';stroke-width:1.00002">3.0</flowPara></flowRoot>          </g>
+                 style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Medium';stroke-width:1.00002">3.0.1</flowPara></flowRoot>
+          </g>
         </g>
         <g
            transform="matrix(0,-0.34467181,0.34467181,0,104.89986,47.752331)"
