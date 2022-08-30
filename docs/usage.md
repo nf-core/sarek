@@ -300,8 +300,8 @@ nextflow pull nf-core/sarek
 
 It is a good idea to specify a pipeline version when running the pipeline on your data. This ensures that a specific version of the pipeline code and software are used when you run your pipeline. If you keep using the same tag, you'll be running the same version of the pipeline, even if there have been changes to the code since.
 
-First, go to the [nf-core/sarek releases page](https://github.com/nf-core/sarek/releases) and find the latest version number - numeric only (eg. `3.0.0`).
-Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 3.0.0`.
+First, go to the [nf-core/sarek releases page](https://github.com/nf-core/sarek/releases) and find the latest version number - numeric only (eg. `3.0.1`).
+Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 3.0.1`.
 
 This version number will be logged in reports when you run the pipeline, so that you'll know what you used when you look back in the future.
 
@@ -483,7 +483,7 @@ If you have any questions or issues please send us a message on [Slack](https://
 When using default parameters only, sarek runs preprocessing and exits after base quality score recalibration. This is reflected in the default test profile:
 
 ```console
-nextflow run nf-core/sarek -r 3.0 -profile test,<container/institute>
+nextflow run nf-core/sarek -r 3.0.1 -profile test,<container/institute>
 ```
 
 Expected run output:
@@ -533,13 +533,13 @@ Expected run output:
 The pipeline comes with a number of possible paths and tools that can be used. The easiest and fastest test to see that the preprocessing + variantcalling (in this case Strelka2) works, is to run:
 
 ```console
-nextflow run nf-core/sarek -r 3.0.0 -profile test,<container/institute> --tools strelka
+nextflow run nf-core/sarek -r 3.0.1 -profile test,<container/institute> --tools strelka
 ```
 
 Due to the small test data size, unfortunately not everything can be tested from top-to-bottom, but often is done by utilizing the pipeline's `--step` parameter. Annotation has to tested separatly from the remaining workflow, since we use references for `C.elegans`, while the remaining tests are run on downsampled human data.
 
 ```console
-nextflow run nf-core/sarek -r 3.0.0 -profile test,<container/institute> --tools snpeff --step annotation
+nextflow run nf-core/sarek -r 3.0.1 -profile test,<container/institute> --tools snpeff --step annotation
 ```
 
 If you are interested in any of the other tests that are run on every code change or would like to run them yourself, you can take a look at `tests/<filename>.yml`. For each entry the respective nextflow command run and the expected output is specified.
@@ -809,4 +809,4 @@ ERROR_CHROMOSOME_NOT_FOUND      17522411
 
 ## How to set up sarek to use sentieon
 
-Sarek 3.0 is currently not supporting sentieon. It is planned for the upcoming release 3.1. In the meantime, please revert to the last release 2.7.2.
+Sarek 3.0.1 is currently not supporting sentieon. It is planned for the upcoming release 3.1. In the meantime, please revert to the last release 2.7.2.
