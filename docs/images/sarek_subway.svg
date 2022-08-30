@@ -9,9 +9,9 @@
    id="svg5"
    inkscape:version="1.1 (c4e8f9e, 2021-05-24)"
    sodipodi:docname="sarek_subway.svg"
-   inkscape:export-filename="/Users/monarchy/Projects/sarek_paper/sarek_subway.png"
-   inkscape:export-xdpi="600"
-   inkscape:export-ydpi="600"
+   inkscape:export-filename="/Users/monarchy/Projects/Coding/sarek/docs/images/sarek_subway.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -42,7 +42,7 @@
      showgrid="true"
      inkscape:zoom="1.4142136"
      inkscape:cx="549.77552"
-     inkscape:cy="118.44039"
+     inkscape:cy="288.14601"
      inkscape:window-width="2560"
      inkscape:window-height="1027"
      inkscape:window-x="1440"
@@ -3646,25 +3646,6 @@
            y="118.59206"
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro';text-align:center;text-anchor:middle;stroke-width:0.937508"
            id="tspan7045-0-2">mpileup</tspan></text>
-      <ellipse
-         style="font-variation-settings:'wght' 900;opacity:0.997;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.900009;stroke-opacity:1;paint-order:stroke fill markers"
-         id="path111908"
-         cx="66.680817"
-         cy="-355.39359"
-         rx="14.0625"
-         ry="14.062778" />
-      <path
-         style="font-variation-settings:'wght' 900;opacity:0.997;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.900009;stroke-opacity:1;paint-order:stroke fill markers"
-         id="path111910"
-         sodipodi:type="arc"
-         sodipodi:cx="61.993313"
-         sodipodi:cy="-360.08118"
-         sodipodi:rx="9.375"
-         sodipodi:ry="9.375185"
-         sodipodi:start="0"
-         sodipodi:end="4.2943771"
-         sodipodi:arc-type="slice"
-         d="m 71.368313,-360.08118 a 9.375,9.375185 0 0 1 -8.072936,9.28433 9.375,9.375185 0 0 1 -10.315385,-6.70539 9.375,9.375185 0 0 1 5.207593,-11.1469 l 3.805728,8.56796 z" />
     </g>
   </g>
 </svg>
