@@ -16,7 +16,7 @@ Sarek is designed to handle single samples, such as single-normal or single-tumo
 The typical command for running the pipeline is as follows:
 
 ```bash
-nextflow run nf-core/sarek --input samplesheet.csv --outdir <OUTDIR> --genome GRCh38 -profile docker
+nextflow run nf-core/sarek --input samplesheet.csv --outdir <OUTDIR> --genome GATK.GRCh38 -profile docker
 ```
 
 This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.

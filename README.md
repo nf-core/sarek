@@ -69,7 +69,7 @@ By default, the pipeline currently performs the following:
 4. Start running your own analysis!
 
    ```bash
-   nextflow run nf-core/sarek --input samplesheet.csv --outdir <OUTDIR> --genome GRCh38 -profile <docker/singularity/podman/shifter/charliecloud/conda/institute>
+   nextflow run nf-core/sarek --input samplesheet.csv --outdir <OUTDIR> --genome GATK.GRCh38 -profile <docker/singularity/podman/shifter/charliecloud/conda/institute>
    ```
 
 See [usage docs](https://nf-co.re/sarek/usage) for all of the available options when running the pipeline.
