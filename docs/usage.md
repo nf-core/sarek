@@ -548,7 +548,7 @@ Some of the currently, available test profiles:
 
 | Test profile    | Run command                                                                     |
 | :-------------- | :------------------------------------------------------------------------------ |
-| annotation      | `nextflow run main.nf -profile test,annotation,docker --tools snpeff.vep,merge` |
+| annotation      | `nextflow run main.nf -profile test,annotation,docker --tools snpeff,vep,merge` |
 | no_intervals    | `nextflow run main.nf -profile test,no_intervals,docker`                        |
 | targeted        | `nextflow run main.nf -profile test,targeted,docker`                            |
 | tools_germline  | `nextflow run main.nf -profile test,tools_germline,docker --tools strelka`      |
