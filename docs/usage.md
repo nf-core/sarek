@@ -480,7 +480,7 @@ If you have any questions or issues please send us a message on [Slack](https://
 
 ## How to test the pipeline
 
-When using default parameters only, sarek runs preprocessing and exits after base quality score recalibration. This is reflected in the default test profile:
+When using default parameters only, sarek runs preprocessing and `Strelka2`. This is reflected in the default test profile:
 
 ```console
 nextflow run nf-core/sarek -r 3.0.1 -profile test,<container/institute>
@@ -489,52 +489,64 @@ nextflow run nf-core/sarek -r 3.0.1 -profile test,<container/institute>
 Expected run output:
 
 ```
-[91/018ca5] process > NFCORE_SAREK:SAREK:PREPARE_GENOME:BWAMEM1_INDEX (genome.fasta)                       [100%] 1 of 1 ✔
-[-        ] process > NFCORE_SAREK:SAREK:PREPARE_GENOME:BWAMEM2_INDEX                                      -
-[-        ] process > NFCORE_SAREK:SAREK:PREPARE_GENOME:DRAGMAP_HASHTABLE                                  -
-[45/7ad672] process > NFCORE_SAREK:SAREK:PREPARE_GENOME:GATK4_CREATESEQUENCEDICTIONARY (genome.fasta)      [100%] 1 of 1 ✔
-[-        ] process > NFCORE_SAREK:SAREK:PREPARE_GENOME:MSISENSORPRO_SCAN                                  -
-[79/7139ec] process > NFCORE_SAREK:SAREK:PREPARE_GENOME:SAMTOOLS_FAIDX (genome.fasta)                      [100%] 1 of 1 ✔
-[44/913bf9] process > NFCORE_SAREK:SAREK:PREPARE_GENOME:TABIX_DBSNP (dbsnp_146.hg38.vcf)                   [100%] 1 of 1 ✔
-[-        ] process > NFCORE_SAREK:SAREK:PREPARE_GENOME:TABIX_GERMLINE_RESOURCE                            -
-[dc/348c16] process > NFCORE_SAREK:SAREK:PREPARE_GENOME:TABIX_KNOWN_INDELS (mills_and_1000G.indels.vcf)    [100%] 1 of 1 ✔
-[-        ] process > NFCORE_SAREK:SAREK:PREPARE_GENOME:TABIX_PON                                          -
-[9f/53d6ad] process > NFCORE_SAREK:SAREK:PREPARE_INTERVALS:CREATE_INTERVALS_BED (genome.interval_list)     [100%] 1 of 1 ✔
-[57/a9312f] process > NFCORE_SAREK:SAREK:PREPARE_INTERVALS:GATK4_INTERVALLISTTOBED (genome)                [100%] 1 of 1 ✔
-[7e/b02b16] process > NFCORE_SAREK:SAREK:PREPARE_INTERVALS:TABIX_BGZIPTABIX_INTERVAL_SPLIT (chr22_1-40001) [100%] 1 of 1 ✔
-[-        ] process > NFCORE_SAREK:SAREK:ALIGNMENT_TO_FASTQ_INPUT:SAMTOOLS_VIEW_MAP_MAP                    -
-[-        ] process > NFCORE_SAREK:SAREK:ALIGNMENT_TO_FASTQ_INPUT:SAMTOOLS_VIEW_UNMAP_UNMAP                -
-[-        ] process > NFCORE_SAREK:SAREK:ALIGNMENT_TO_FASTQ_INPUT:SAMTOOLS_VIEW_UNMAP_MAP                  -
-[-        ] process > NFCORE_SAREK:SAREK:ALIGNMENT_TO_FASTQ_INPUT:SAMTOOLS_VIEW_MAP_UNMAP                  -
-[-        ] process > NFCORE_SAREK:SAREK:ALIGNMENT_TO_FASTQ_INPUT:SAMTOOLS_MERGE_UNMAP                     -
-[-        ] process > NFCORE_SAREK:SAREK:ALIGNMENT_TO_FASTQ_INPUT:COLLATE_FASTQ_UNMAP                      -
-[-        ] process > NFCORE_SAREK:SAREK:ALIGNMENT_TO_FASTQ_INPUT:COLLATE_FASTQ_MAP                        -
-[-        ] process > NFCORE_SAREK:SAREK:ALIGNMENT_TO_FASTQ_INPUT:CAT_FASTQ                                -
-[37/2d4ea9] process > NFCORE_SAREK:SAREK:RUN_FASTQC:FASTQC (test-test_L1)                                  [100%] 1 of 1 ✔
-[a1/a64d09] process > NFCORE_SAREK:SAREK:GATK4_MAPPING:BWAMEM1_MEM (test)                                  [100%] 1 of 1 ✔
-[-        ] process > NFCORE_SAREK:SAREK:GATK4_MAPPING:BWAMEM2_MEM                                         -
-[-        ] process > NFCORE_SAREK:SAREK:GATK4_MAPPING:DRAGMAP_ALIGN                                       -
-[d3/488df3] process > NFCORE_SAREK:SAREK:MARKDUPLICATES:GATK4_MARKDUPLICATES (test)                        [100%] 1 of 1 ✔
-[f1/0b56c6] process > NFCORE_SAREK:SAREK:MARKDUPLICATES:BAM_TO_CRAM:SAMTOOLS_BAMTOCRAM (test)              [100%] 1 of 1 ✔
-[ae/e92179] process > NFCORE_SAREK:SAREK:MARKDUPLICATES:BAM_TO_CRAM:SAMTOOLS_STATS_CRAM (test)             [100%] 1 of 1 ✔
-[8f/d06f35] process > NFCORE_SAREK:SAREK:MARKDUPLICATES:BAM_TO_CRAM:MOSDEPTH (test)                        [100%] 1 of 1 ✔
-[38/af6ec2] process > NFCORE_SAREK:SAREK:PREPARE_RECALIBRATION:BASERECALIBRATOR (test)                     [100%] 1 of 1 ✔
-[-        ] process > NFCORE_SAREK:SAREK:PREPARE_RECALIBRATION:GATHERBQSRREPORTS                           -
-[8b/f3ca07] process > NFCORE_SAREK:SAREK:RECALIBRATE:APPLYBQSR (test)                                      [100%] 1 of 1 ✔
-[-        ] process > NFCORE_SAREK:SAREK:RECALIBRATE:MERGE_INDEX_CRAM:MERGE_CRAM                           -
-[a7/16bb3f] process > NFCORE_SAREK:SAREK:RECALIBRATE:MERGE_INDEX_CRAM:INDEX_CRAM (test)                    [100%] 1 of 1 ✔
-[4d/309cb9] process > NFCORE_SAREK:SAREK:CRAM_QC:SAMTOOLS_STATS (test)                                     [100%] 1 of 1 ✔
-[44/06eaf2] process > NFCORE_SAREK:SAREK:CRAM_QC:MOSDEPTH (test)                                           [100%] 1 of 1 ✔
-[-        ] process > NFCORE_SAREK:SAREK:SAMTOOLS_CRAMTOBAM_RECAL                                          [100%] 1 of 1 ✔
-[-        ] process > NFCORE_SAREK:SAREK:CUSTOM_DUMPSOFTWAREVERSIONS                                       [100%] 1 of 1 ✔
-[-        ] process > NFCORE_SAREK:SAREK:MULTIQC                                                           [100%] 1 of 1 ✔
+[42/360944] process > NFCORE_SAREK:SAREK:PREPARE_GENOME:BWAMEM1_INDEX (genome.fasta)                        [100%] 1 of 1 ✔
+[-        ] process > NFCORE_SAREK:SAREK:PREPARE_GENOME:BWAMEM2_INDEX                                       -
+[-        ] process > NFCORE_SAREK:SAREK:PREPARE_GENOME:DRAGMAP_HASHTABLE                                   -
+[2b/92dc0c] process > NFCORE_SAREK:SAREK:PREPARE_GENOME:GATK4_CREATESEQUENCEDICTIONARY (genome.fasta)       [100%] 1 of 1 ✔
+[-        ] process > NFCORE_SAREK:SAREK:PREPARE_GENOME:MSISENSORPRO_SCAN                                   -
+[58/ecea17] process > NFCORE_SAREK:SAREK:PREPARE_GENOME:SAMTOOLS_FAIDX (genome.fasta)                       [100%] 1 of 1 ✔
+[9c/121939] process > NFCORE_SAREK:SAREK:PREPARE_GENOME:TABIX_DBSNP (dbsnp_146.hg38.vcf)                    [100%] 1 of 1 ✔
+[-        ] process > NFCORE_SAREK:SAREK:PREPARE_GENOME:TABIX_GERMLINE_RESOURCE                             -
+[-        ] process > NFCORE_SAREK:SAREK:PREPARE_GENOME:TABIX_KNOWN_SNPS                                    -
+[28/6f5c14] process > NFCORE_SAREK:SAREK:PREPARE_GENOME:TABIX_KNOWN_INDELS (mills_and_1000G.indels.vcf)     [100%] 1 of 1 ✔
+[-        ] process > NFCORE_SAREK:SAREK:PREPARE_GENOME:TABIX_PON                                           -
+[55/4466e1] process > NFCORE_SAREK:SAREK:PREPARE_INTERVALS:CREATE_INTERVALS_BED (genome.interval_list)      [100%] 1 of 1 ✔
+[f8/df9607] process > NFCORE_SAREK:SAREK:PREPARE_INTERVALS:GATK4_INTERVALLISTTOBED (genome)                 [100%] 1 of 1 ✔
+[ff/26467d] process > NFCORE_SAREK:SAREK:PREPARE_INTERVALS:TABIX_BGZIPTABIX_INTERVAL_SPLIT (chr22_1-40001)  [100%] 1 of 1 ✔
+[-        ] process > NFCORE_SAREK:SAREK:PREPARE_CNVKIT_REFERENCE:CNVKIT_ANTITARGET                         -
+[-        ] process > NFCORE_SAREK:SAREK:PREPARE_CNVKIT_REFERENCE:CNVKIT_REFERENCE                          -
+[-        ] process > NFCORE_SAREK:SAREK:ALIGNMENT_TO_FASTQ_INPUT:SAMTOOLS_VIEW_MAP_MAP                     -
+[-        ] process > NFCORE_SAREK:SAREK:ALIGNMENT_TO_FASTQ_INPUT:SAMTOOLS_VIEW_UNMAP_UNMAP                 -
+[-        ] process > NFCORE_SAREK:SAREK:ALIGNMENT_TO_FASTQ_INPUT:SAMTOOLS_VIEW_UNMAP_MAP                   -
+[-        ] process > NFCORE_SAREK:SAREK:ALIGNMENT_TO_FASTQ_INPUT:SAMTOOLS_VIEW_MAP_UNMAP                   -
+[-        ] process > NFCORE_SAREK:SAREK:ALIGNMENT_TO_FASTQ_INPUT:SAMTOOLS_MERGE_UNMAP                      -
+[-        ] process > NFCORE_SAREK:SAREK:ALIGNMENT_TO_FASTQ_INPUT:COLLATE_FASTQ_UNMAP                       -
+[-        ] process > NFCORE_SAREK:SAREK:ALIGNMENT_TO_FASTQ_INPUT:COLLATE_FASTQ_MAP                         -
+[-        ] process > NFCORE_SAREK:SAREK:ALIGNMENT_TO_FASTQ_INPUT:CAT_FASTQ                                 -
+[74/cd6685] process > NFCORE_SAREK:SAREK:RUN_FASTQC:FASTQC (test-test_L1)                                   [100%] 1 of 1 ✔
+[bc/ea89a8] process > NFCORE_SAREK:SAREK:GATK4_MAPPING:BWAMEM1_MEM (test)                                   [100%] 1 of 1 ✔
+[-        ] process > NFCORE_SAREK:SAREK:GATK4_MAPPING:BWAMEM2_MEM                                          -
+[-        ] process > NFCORE_SAREK:SAREK:GATK4_MAPPING:DRAGMAP_ALIGN                                        -
+[46/35a640] process > NFCORE_SAREK:SAREK:MARKDUPLICATES:GATK4_MARKDUPLICATES (test)                         [100%] 1 of 1 ✔
+[e0/525bb3] process > NFCORE_SAREK:SAREK:MARKDUPLICATES:BAM_TO_CRAM:SAMTOOLS_BAMTOCRAM (test)               [100%] 1 of 1 ✔
+[46/9fe93a] process > NFCORE_SAREK:SAREK:MARKDUPLICATES:BAM_TO_CRAM:SAMTOOLS_STATS_CRAM (test)              [100%] 1 of 1 ✔
+[77/2c8b1b] process > NFCORE_SAREK:SAREK:MARKDUPLICATES:BAM_TO_CRAM:MOSDEPTH (test)                         [100%] 1 of 1 ✔
+[f7/499800] process > NFCORE_SAREK:SAREK:PREPARE_RECALIBRATION:BASERECALIBRATOR (test)                      [100%] 1 of 1 ✔
+[-        ] process > NFCORE_SAREK:SAREK:PREPARE_RECALIBRATION:GATHERBQSRREPORTS                            -
+[9d/3d1fff] process > NFCORE_SAREK:SAREK:RECALIBRATE:APPLYBQSR (test)                                       [100%] 1 of 1 ✔
+[-        ] process > NFCORE_SAREK:SAREK:RECALIBRATE:MERGE_INDEX_CRAM:MERGE_CRAM                            -
+[cb/fa9dcb] process > NFCORE_SAREK:SAREK:RECALIBRATE:MERGE_INDEX_CRAM:INDEX_CRAM (test)                     [100%] 1 of 1 ✔
+[19/f075fb] process > NFCORE_SAREK:SAREK:CRAM_QC:SAMTOOLS_STATS (test)                                      [100%] 1 of 1 ✔
+[a9/aca71f] process > NFCORE_SAREK:SAREK:CRAM_QC:MOSDEPTH (test)                                            [100%] 1 of 1 ✔
+[-        ] process > NFCORE_SAREK:SAREK:SAMTOOLS_CRAMTOBAM_RECAL                                           -
+[14/cb7738] process > NFCORE_SAREK:SAREK:GERMLINE_VARIANT_CALLING:RUN_STRELKA_SINGLE:STRELKA_SINGLE (test)  [100%] 1 of 1 ✔
+[-        ] process > NFCORE_SAREK:SAREK:GERMLINE_VARIANT_CALLING:RUN_STRELKA_SINGLE:MERGE_STRELKA          -
+[-        ] process > NFCORE_SAREK:SAREK:GERMLINE_VARIANT_CALLING:RUN_STRELKA_SINGLE:MERGE_STRELKA_GENOME   -
+[-        ] process > NFCORE_SAREK:SAREK:TUMOR_ONLY_VARIANT_CALLING:RUN_STRELKA_SINGLE:STRELKA_SINGLE       -
+[-        ] process > NFCORE_SAREK:SAREK:TUMOR_ONLY_VARIANT_CALLING:RUN_STRELKA_SINGLE:MERGE_STRELKA        -
+[-        ] process > NFCORE_SAREK:SAREK:TUMOR_ONLY_VARIANT_CALLING:RUN_STRELKA_SINGLE:MERGE_STRELKA_GENOME -
+[-        ] process > NFCORE_SAREK:SAREK:PAIR_VARIANT_CALLING:RUN_STRELKA_SOMATIC:STRELKA_SOMATIC           -
+[-        ] process > NFCORE_SAREK:SAREK:PAIR_VARIANT_CALLING:RUN_STRELKA_SOMATIC:MERGE_STRELKA_SNVS        -
+[-        ] process > NFCORE_SAREK:SAREK:PAIR_VARIANT_CALLING:RUN_STRELKA_SOMATIC:MERGE_STRELKA_INDELS      -
+[3f/68d214] process > NFCORE_SAREK:SAREK:VCF_QC:BCFTOOLS_STATS (test)                                       [100%] 1 of 1 ✔
+[7e/435083] process > NFCORE_SAREK:SAREK:VCF_QC:VCFTOOLS_TSTV_COUNT (test)                                  [100%] 1 of 1 ✔
+[a2/a0c127] process > NFCORE_SAREK:SAREK:VCF_QC:VCFTOOLS_TSTV_QUAL (test)                                   [100%] 1 of 1 ✔
+[98/180e11] process > NFCORE_SAREK:SAREK:VCF_QC:VCFTOOLS_SUMMARY (test)                                     [100%] 1 of 1 ✔
+[40/7f3d8a] process > NFCORE_SAREK:SAREK:CUSTOM_DUMPSOFTWAREVERSIONS (1)                                    [100%] 1 of 1 ✔
+[fa/f4933d] process > NFCORE_SAREK:SAREK:MULTIQC                                                            [100%] 1 of 1 ✔
 ```
 
-The pipeline comes with a number of possible paths and tools that can be used. The easiest and fastest test to see that the preprocessing + variantcalling (in this case Strelka2) works, is to run:
-
-```console
-nextflow run nf-core/sarek -r 3.0.1 -profile test,<container/institute> --tools strelka
-```
+The pipeline comes with a number of possible paths and tools that can be used.
 
 Due to the small test data size, unfortunately not everything can be tested from top-to-bottom, but often is done by utilizing the pipeline's `--step` parameter. Annotation has to tested separatly from the remaining workflow, since we use references for `C.elegans`, while the remaining tests are run on downsampled human data.
 
@@ -548,7 +560,7 @@ Some of the currently, available test profiles:
 
 | Test profile    | Run command                                                                     |
 | :-------------- | :------------------------------------------------------------------------------ |
-| annotation      | `nextflow run main.nf -profile test,annotation,docker --tools snpeff.vep,merge` |
+| annotation      | `nextflow run main.nf -profile test,annotation,docker --tools snpeff,vep,merge` |
 | no_intervals    | `nextflow run main.nf -profile test,no_intervals,docker`                        |
 | targeted        | `nextflow run main.nf -profile test,targeted,docker`                            |
 | tools_germline  | `nextflow run main.nf -profile test,tools_germline,docker --tools strelka`      |
