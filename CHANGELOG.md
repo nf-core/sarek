@@ -20,7 +20,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#696](https://github.com/nf-core/sarek/pull/696) - Adding check of md5-sums in CI-tests
 - [#720](https://github.com/nf-core/sarek/pull/720) - Sync `TEMPLATE` with `tools` `2.5`
 
-
 ### Fixed
 
 - [#679](https://github.com/nf-core/sarek/pull/679) - Fixed typos in subway maps
