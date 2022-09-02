@@ -431,7 +431,7 @@ process {
 ## Azure Resource Requests
 
 To be used with the `azurebatch` profile by specifying the `-profile azurebatch`.
-We recomend providing a compute  `params.vm_type` of `Standard_E64_v3`  VMs by default but these options can be changed if required.
+We recomend providing a compute `params.vm_type` of `Standard_E64_v3` VMs by default but these options can be changed if required.
 
 Note that the choice of VM size depends on your quota and the overall workload during the analysis.For a thorough list, please refer the [Azure Sizes for virtual machines in Azure](https://docs.microsoft.com/en-us/azure/virtual-machines/sizes).
 
