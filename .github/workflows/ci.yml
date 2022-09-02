@@ -22,7 +22,7 @@ jobs:
       fail-fast: false
       matrix:
         NXF_VER:
-          - "21.10.3"
+          - "22.04.5"
           - "latest-everything"
         test:
           - "aligner"
