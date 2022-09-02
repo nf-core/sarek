@@ -6,7 +6,6 @@
                                         `._,._,'
   nf-core/sarek v${version}
 ----------------------------------------------------
-
 Run Name: $runName
 
 <% if (success){

@@ -15,18 +15,18 @@ Sarek is designed to handle single samples, such as single-normal or single-tumo
 
 The typical command for running the pipeline is as follows:
 
-```console
-nextflow run nf-core/sarek --input samplesheet.csv  --outdir <OUTDIR> -profile docker
+```bash
+nextflow run nf-core/sarek --input samplesheet.csv --outdir <OUTDIR> --genome GATK.GRCh38 -profile docker
 ```
 
 This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.
 
 Note that the pipeline will create the following files in your working directory:
 
-```console
-work            # Directory containing the nextflow working files
-results         # Finished results (configurable, see below)
-.nextflow.log   # Log file from Nextflow
+```bash
+work                # Directory containing the nextflow working files
+<OUTDIR>            # Finished results in specified location (defined with --outdir)
+.nextflow_log       # Log file from Nextflow
 # Other nextflow hidden files, eg. history of pipeline runs and old logs.
 ```
 
@@ -46,7 +46,7 @@ Output from Variant Calling and/or Annotation will be in a specific directory fo
 
 Multiple CSV files can be specified if the path is enclosed in quotes.
 
-```console
+```bash
 --input '[path to sample sheet file(s)]'
 ```
 
@@ -78,26 +78,26 @@ This step can be started either from FastQ files or (u)BAMs. The CSV must contai
 
 Minimal config file:
 
-```console
+```bash
 patient,sample,lane,fastq_1,fastq_2
 patient1,test_sample,lane_1,test_1.fastq.gz,test_2.fastq.gz
 ```
 
-```console
+```bash
 patient,sample,lane,bam
 patient1,test_sample,lane_1,test.bam
 ```
 
 In this example, the sample is multiplexed over three lanes:
 
-```console
+```bash
 patient,sample,lane,fastq_1,fastq_2
 patient1,test_sample,lane_1,test_L001_1.fastq.gz,test_L001_2.fastq.gz
 patient1,test_sample,lane_2,test_L002_1.fastq.gz,test_L002_2.fastq.gz
 patient1,test_sample,lane_3,test_L003_1.fastq.gz,test_L003_2.fastq.gz
 ```
 
-```console
+```bash
 patient,sample,lane,bam
 patient1,test_sample,1,test_L001.bam
 patient1,test_sample,2,test_L002.bam
@@ -108,7 +108,7 @@ patient1,test_sample,3,test_L003.bam
 
 In this example, all possible columns are used. There are three lanes for the normal sample, two for the tumor sample, and one for the relapse sample, including the `sex` and `status` information per patient:
 
-```console
+```bash
 patient,sex,status,sample,lane,fastq_1,fastq_2
 patient1,XX,0,normal_sample,lane_1,test_L001_1.fastq.gz,test_L001_2.fastq.gz
 patient1,XX,0,normal_sample,lane_2,test_L002_1.fastq.gz,test_L002_2.fastq.gz
@@ -118,7 +118,7 @@ patient1,XX,1,tumor_sample,lane_2,test2_L002_1.fastq.gz,test2_L002_2.fastq.gz
 patient1,XX,1,relapse_sample,lane_1,test3_L001_1.fastq.gz,test3_L001_2.fastq.gz
 ```
 
-```console
+```bash
 patient,sex,status,sample,lane,bam
 patient1,XX,0,normal_sample,lane_1,test_L001.bam
 patient1,XX,0,normal_sample,lane_2,test_L002.bam
@@ -138,12 +138,12 @@ For starting from duplicate marking, the CSV file must contain at least the colu
 
 Example:
 
-```console
+```bash
 patient,sample,bam,bai
 patient1,test_sample,test_mapped.bam,test_mapped.bam.bai
 ```
 
-```console
+```bash
 patient,sample,cram,crai
 patient1,test_sample,test_mapped.cram,test_mapped.cram.crai
 ```
@@ -154,14 +154,14 @@ The Sarek-generated CSV file is stored under `results/csv/mapped.csv` if in a pr
 
 In this example, all possible columns are used including the `sex` and `status` information per patient:
 
-```console
+```bash
 patient,sex,status,sample,bam,bai
 patient1,XX,0,test_sample,test_mapped.bam,test_mapped.bam.bai
 patient1,XX,1,tumor_sample,test2_mapped.bam,test2_mapped.bam.bai
 patient1,XX,1,relapse_sample,test3_mapped.bam,test3_mapped.bam.bai
 ```
 
-```console
+```bash
 patient,sex,status,sample,cram,crai
 patient1,XX,0,normal_sample,test_mapped.cram,test_mapped.cram.crai
 patient1,XX,1,tumor_sample,test2_mapped.cram,test2_mapped.cram.crai
@@ -174,12 +174,12 @@ For starting directly from preparing the recalibration tables, the CSV file must
 
 Example:
 
-```console
+```bash
 patient,sample,bam,bai
 patient1,test_sample,test_md.bam,test_md.bam.bai
 ```
 
-```console
+```bash
 patient,sample,cram,crai
 patient1,test_sample,test_md.cram,test_md.cram.crai
 ```
@@ -190,14 +190,14 @@ The Sarek-generated CSV file is stored under `results/csv/markduplicates_no_tabl
 
 In this example, all possible columns are used including the `sex` and `status` information per patient:
 
-```console
+```bash
 patient,sex,status,sample,bam,bai
 patient1,XX,0,test_sample,test_md.bam,test_md.bam.bai
 patient1,XX,1,tumor_sample,test2_md.bam,test2_md.bam.bai
 patient1,XX,1,relapse_sample,test3_md.bam,test3_md.bam.bai
 ```
 
-```console
+```bash
 patient,sex,status,sample,cram,crai
 patient1,XX,0,normal_sample,test_md.cram,test_md.cram.crai
 patient1,XX,1,tumor_sample,test2_md.cram,test2_md.cram.crai
@@ -210,12 +210,12 @@ For starting from base quality score recalibration the CSV file must contain at 
 
 Example:
 
-```console
+```bash
 patient,sample,bam,bai,table
 patient1,test_sample,test_mapped.cram,test_mapped.cram.crai,test.table
 ```
 
-```console
+```bash
 patient,sample,cram,crai,table
 patient1,test_sample,test_mapped.cram,test_mapped.cram.crai,test.table
 ```
@@ -226,7 +226,7 @@ The Sarek-generated CSV file is stored under `results/csv/markduplicates.csv` an
 
 In this example, all possible columns are used including the `sex` and `status` information per patient:
 
-```console
+```bash
 patient,sex,status,sample,cram,crai,table
 patient1,XX,0,test_sample,test_mapped.cram,test_mapped.cram.crai,test.table
 patient1,XX,1,tumor_sample,test2_mapped.cram,test2_mapped.cram.crai,test2.table
@@ -239,12 +239,12 @@ For starting from the variant calling step, the CSV file must contain at least t
 
 Example:
 
-```console
+```bash
 patient,sample,bam,bai
 patient1,test_sample,test_mapped.bam,test_mapped.bam.bai
 ```
 
-```console
+```bash
 patient,sample,cram,crai
 patient1,test_sample,test_mapped.cram,test_mapped.cram.crai
 ```
@@ -255,7 +255,7 @@ The Sarek-generated CSV file is stored under `results/csv/recalibrated.csv` and 
 
 In this example, all possible columns are used including the `sex` and `status` information per patient:
 
-```console
+```bash
 patient,sex,status,sample,cram,crai
 patient1,XX,0,normal_sample,test_mapped.cram,test_mapped.cram.crai
 patient1,XX,1,tumor_sample,test2_mapped.cram,test2_mapped.cram.crai
@@ -270,7 +270,7 @@ As Sarek will use [bgzip](http://www.htslib.org/doc/bgzip.html) and [tabix](http
 
 Example:
 
-```console
+```bash
 patient,sample,vcf
 patient1,test_sample,test.vcf.gz
 ```
@@ -281,7 +281,7 @@ The Sarek-generated CSV file is stored under `results/csv/variantcalled.csv` and
 
 In this example, all possible columns are used including the `variantcaller` information per sample:
 
-```console
+```bash
 patient,sample,variantcaller,vcf
 test,sample3,strelka,sample3.variants.vcf.gz
 test,sample4_vs_sample3,manta,sample4_vs_sample3.diploid_sv.vcf.gz
@@ -292,7 +292,7 @@ test,sample4_vs_sample3,manta,sample4_vs_sample3.somatic_sv.vcf.gz
 
 When you run the above command, Nextflow automatically pulls the pipeline code from GitHub and stores it as a cached version. When running the pipeline after this, it will always use the cached version if available - even if the pipeline has been updated since. To make sure that you're running the latest version of the pipeline, make sure that you regularly update the cached version of the pipeline:
 
-```console
+```bash
 nextflow pull nf-core/sarek
 ```
 
@@ -358,7 +358,7 @@ Specify the path to a specific config file (this is a core Nextflow command). Se
 In some cases, the Nextflow Java virtual machines can start to request a large amount of memory.
 We recommend adding the following line to your environment to limit this (typically in `~/.bashrc` or `~./bash_profile`):
 
-```console
+```bash
 NXF_OPTS='-Xms1g -Xmx4g'
 ```
 
@@ -379,7 +379,7 @@ Whilst the default requirements set within the pipeline will hopefully work for 
 
 For example, if the nf-core/rnaseq pipeline is failing after multiple re-submissions of the `STAR_ALIGN` process due to an exit code of `137` this would indicate that there is an out of memory issue:
 
-```console
+```bash
 [62/149eb0] NOTE: Process `NFCORE_RNASEQ:RNASEQ:ALIGN_STAR:STAR_ALIGN (WT_REP1)` terminated with an error exit status (137) -- Execution is retried (1)
 Error executing process > 'NFCORE_RNASEQ:RNASEQ:ALIGN_STAR:STAR_ALIGN (WT_REP1)'
 
@@ -482,7 +482,7 @@ If you have any questions or issues please send us a message on [Slack](https://
 
 When using default parameters only, sarek runs preprocessing and `Strelka2`. This is reflected in the default test profile:
 
-```console
+```bash
 nextflow run nf-core/sarek -r 3.0.1 -profile test,<container/institute>
 ```
 
@@ -550,7 +550,7 @@ The pipeline comes with a number of possible paths and tools that can be used.
 
 Due to the small test data size, unfortunately not everything can be tested from top-to-bottom, but often is done by utilizing the pipeline's `--step` parameter. Annotation has to tested separatly from the remaining workflow, since we use references for `C.elegans`, while the remaining tests are run on downsampled human data.
 
-```console
+```bash
 nextflow run nf-core/sarek -r 3.0.1 -profile test,<container/institute> --tools snpeff --step annotation
 ```
 
@@ -626,7 +626,7 @@ If you have problems running processes that make use of Spark such as `MarkDupli
 You are probably experiencing issues with the limit of open files in your system.
 You can check your current limit by typing the following:
 
-```console
+```bash
 ulimit -n
 ```
 
@@ -635,20 +635,20 @@ In order to increase the size limit permanently you can:
 
 Edit the file `/etc/security/limits.conf` and add the lines:
 
-```console
+```bash
 *     soft   nofile  65535
 *     hard   nofile  65535
 ```
 
 Edit the file `/etc/sysctl.conf` and add the line:
 
-```console
+```bash
 fs.file-max = 65535
 ```
 
 Edit the file `/etc/sysconfig/docker` and add the new limits to OPTIONS like this:
 
-```console
+```bash
 OPTIONS=”—default-ulimit nofile=65535:65535"
 ```
 
@@ -690,7 +690,7 @@ If none of your required genome files are in igenomes, `--igenomes_ignore` must 
 
 Minimal example for custom genomes:
 
-```console
+```bash
 nextflow run nf-core/sarek --genome null --igenomes_ignore --fasta <custom.fasta>
 ```
 
@@ -700,13 +700,13 @@ If you don't want to use some of the provided reference genomes, they can be ove
 
 Example for using a custom known indels file:
 
-```console
+```bash
 nextflow run nf-core/sarek --known_indels <my_known_indels.vcf.gz> --genome GRCh38.GATK
 ```
 
 Example for not using known indels, but all other provided reference file:
 
-```console
+```bash
 nextflow run nf-core/sarek --known_indels false --genome GRCh38.GATK
 ```
 
@@ -751,7 +751,7 @@ You need to specify the cache directory using `--snpeff_cache` and `--vep_cache`
 
 Example:
 
-```console
+```bash
 nextflow run nf-core/sarek --tools snpEff --step annotate --sample <file.vcf.gz> --snpeff_cache </path/to/snpEff/cache>
 nextflow run nf-core/sarek --tools VEP --step annotate --sample <file.vcf.gz> --vep_cache </path/to/VEP/cache>
 ```

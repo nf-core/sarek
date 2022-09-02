@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#691](https://github.com/nf-core/sarek/pull/691) - To run the same pytest as before locally, use `PROFILE=docker`
 - [#692](https://github.com/nf-core/sarek/pull/692) - Use `params.tools=strelka` in profile `test`
 - [#696](https://github.com/nf-core/sarek/pull/696) - Adding check of md5-sums in CI-tests
+- [#720](https://github.com/nf-core/sarek/pull/720) - Sync `TEMPLATE` with `tools` `2.5`
 
 ### Fixed
 
