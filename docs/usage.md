@@ -428,6 +428,13 @@ process {
 >
 > If you get a warning suggesting that the process selector isn't recognised check that the process name has been specified correctly.
 
+## Azure Resource Requests
+
+To be used with the `azurebatch` profile by specifying the `-profile azurebatch`.
+We recomend providing a compute  `params.vm_type` of `Standard_E64_v3`  VMs by default but these options can be changed if required.
+
+Note that the choice of VM size depends on your quota and the overall workload during the analysis.For a thorough list, please refer the [Azure Sizes for virtual machines in Azure](https://docs.microsoft.com/en-us/azure/virtual-machines/sizes).
+
 ## Updating containers
 
 The [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) implementation of this pipeline uses one container per process which makes it much easier to maintain and update software dependencies. If for some reason you need to use a different version of a particular tool with the pipeline then you just need to identify the `process` name and override the Nextflow `container` definition for that process using the `withName` declaration. For example, in the [nf-core/viralrecon](https://nf-co.re/viralrecon) pipeline a tool called [Pangolin](https://github.com/cov-lineages/pangolin) has been used during the COVID-19 pandemic to assign lineages to SARS-CoV-2 genome sequenced samples. Given that the lineage assignments change quite frequently it doesn't make sense to re-release the nf-core/viralrecon everytime a new version of Pangolin has been released. However, you can override the default container used by the pipeline by creating a custom config file and passing it as a command-line argument via `-c custom.config`.

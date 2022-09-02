@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - [#691](https://github.com/nf-core/sarek/pull/691) - Enable `PROFILE=conda`, `PROFILE=docker` and `PROFILE=singularity` for pytest
+- [#716](https://github.com/nf-core/sarek/pull/716) - Add documentation for Azure recomended config vm_size
 
 ### Changed
 
