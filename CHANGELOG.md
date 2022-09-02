@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#696](https://github.com/nf-core/sarek/pull/696) - Adding check of md5-sums in CI-tests
 - [#719](https://github.com/nf-core/sarek/pull/719) - Added boxes to subway map
 - [#720](https://github.com/nf-core/sarek/pull/720) - Sync `TEMPLATE` with `tools` `2.5`
+- [#723](https://github.com/nf-core/sarek/pull/723) - Sync `TEMPLATE` with `tools` `2.5.1`
 
 ### Fixed
 
@@ -30,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#689](https://github.com/nf-core/sarek/pull/689) - Fixed when clause for non `BWA mem` building mapping indexes
 - [#704](https://github.com/nf-core/sarek/pull/704) - Fixed `cf_ploidy` to string instead of number
 - [#706](https://github.com/nf-core/sarek/pull/706) - Fixed `vep_version` not found error when running `--vep_loftee`
+- [#724](https://github.com/nf-core/sarek/pull/724) - Fixed prettier issue
 
 ### Deprecated
 
