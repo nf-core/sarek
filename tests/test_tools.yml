@@ -166,9 +166,9 @@
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_BAF.png
     # binary changes md5sums on reruns.
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_ratio.log2.png
-      md5sum: 279341ecc087319e421da6af0eb31f33
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_ratio.png
-      md5sum: 192f56e54e985ea5cf3756387dbbc6cc
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/mpileup/sample4_vs_sample3/sample4_vs_sample3.normal.mpileup.gz
     # binary changes md5sums on reruns.
     - path: results/variant_calling/mpileup/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz
