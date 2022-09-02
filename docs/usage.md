@@ -483,6 +483,7 @@ We recomend providing a compute `params.vm_type` of `Standard_E64_v3` VMs by def
 
 Note that the choice of VM size depends on your quota and the overall workload during the analysis.
 For a thorough list, please refer the [Azure Sizes for virtual machines in Azure](https://docs.microsoft.com/en-us/azure/virtual-machines/sizes).
+
 # Troubleshooting & FAQ
 
 ## How to test the pipeline
