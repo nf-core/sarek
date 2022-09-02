@@ -166,11 +166,11 @@
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_BAF.png
     # binary changes md5sums on reruns.
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_ratio.log2.png
-      md5sum: 2eea2f34e6d05a6da3a8ec23e7075068
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_ratio.png
-      md5sum: 2f1565c565bd6b2306173f6efb916304
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/mpileup/sample4_vs_sample3/sample4_vs_sample3.normal.mpileup.gz
-      md5sum: 25cc8e026d3e70531ba22bac6a125efd
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/mpileup/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz
     # binary changes md5sums on reruns.
     - path: results/cnvkit
@@ -221,9 +221,9 @@
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_sample.cpn
       md5sum: d41d8cd98f00b204e9800998ecf8427e
     - path: results/variant_calling/mpileup/sample4_vs_sample3/sample4_vs_sample3.normal.mpileup.gz
-      md5sum: 1fe7bb27b18005ee78acfebcb15f4930
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/mpileup/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz
-      md5sum: 40544e727f449b14523a4f2e20c69420
+    # binary changes md5sums on reruns.
     - path: results/controlfreec
       should_exist: false
     - path: results/mpileup
@@ -266,7 +266,7 @@
     - path: results/variant_calling/controlfreec/sample2/sample2_sample.cpn
       md5sum: d41d8cd98f00b204e9800998ecf8427e
     - path: results/variant_calling/mpileup/sample2/sample2.tumor.mpileup.gz
-      md5sum: d41d8cd98f00b204e9800998ecf8427e
+    # binary changes md5sums on reruns.
     - path: results/controlfreec
       should_exist: false
     - path: results/mpileup
@@ -1101,7 +1101,7 @@
     - path: results/no_intervals.bed.gz.tbi
       md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/variant_calling/mpileup/sample2/sample2.tumor.mpileup.gz
-      md5sum: 40544e727f449b14523a4f2e20c69420
+    # binary changes md5sums on reruns.
     - path: results/mpileup
       should_exist: false
 - name: Run variant calling on germline sample to test mpileup
@@ -1112,7 +1112,7 @@
   files:
     - path: results/multiqc
     - path: results/variant_calling/mpileup/sample1/sample1.normal.mpileup.gz
-      md5sum: f541e71aad4942260996107edaaed477
+    # binary changes md5sums on reruns.
     - path: results/mpileup
       should_exist: false
 - name: Run variant calling on germline sample to test mpileup without intervals
@@ -1130,7 +1130,7 @@
     - path: results/no_intervals.bed.gz.tbi
       md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/variant_calling/mpileup/sample1/sample1.normal.mpileup.gz
-      md5sum: 1fe7bb27b18005ee78acfebcb15f4930
+    # binary changes md5sums on reruns.
     - path: results/mpileup
       should_exist: false
 - name: Run variant calling on tumor only sample with mutect2
