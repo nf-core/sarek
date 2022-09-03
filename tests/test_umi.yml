@@ -3,7 +3,7 @@
   tags:
     - umi
   files:
-    - path: results/preprocessing/umi/test-test_L1_umi-consensus.bam
+    - path: results/preprocessing/umi/test/test-test_L1_umi-consensus.bam
       md5sum: c7de733c479032ba670b09db5e5a91fc
     - path: results/reports/umi/test-test_L1_umi_histogram.txt
       md5sum: 85292e9acb83edf17110dce17be27f44
