@@ -49,16 +49,6 @@
       md5sum: 072daded4cd3bd08f2c94ef1f1478052
     - path: results/reports/samtools/test/test.recal.cram.stats
       md5sum: 1537c827260f24e3fa0f0dc257580b41
-      # TODO: The following files are not produced anymore
-#    - path: results/samtools/test-test_L1.mapped_1.fq.gz
-#    - path: results/samtools/test-test_L1.mapped_2.fq.gz
-#    - path: results/samtools/test-test_L1.mapped_other.fq.gz
-#    - path: results/samtools/test-test_L1.mapped_singleton.fq.gz
-#    - path: results/samtools/test-test_L1.unmapped_1.fq.gz
-#    - path: results/samtools/test-test_L1.unmapped_2.fq.gz
-#    - path: results/samtools/test-test_L1.unmapped_other.fq.gz
-#    - path: results/samtools/test-test_L1.unmapped_singleton.fq.gz
-
 # - name: Run UMI TSO test
 #   command: nextflow run main.nf -profile test,umi_tso
 #   tags:

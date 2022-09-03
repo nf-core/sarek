@@ -46,3 +46,4 @@
     - path: results/reports/samtools/test/test.md.cram.stats
       md5sum: 5201890d36c1dd127b930373b6e823e5
     - path: results/reports/samtools/test/test.recal.cram.stats
+      md5sum: bb2fc6118a1404c45f9e828600df8fb1
