@@ -15,18 +15,18 @@ Sarek is designed to handle single samples, such as single-normal or single-tumo
 
 The typical command for running the pipeline is as follows:
 
-```console
-nextflow run nf-core/sarek --input samplesheet.csv  --outdir <OUTDIR> -profile docker
+```bash
+nextflow run nf-core/sarek --input samplesheet.csv --outdir <OUTDIR> --genome GATK.GRCh38 -profile docker
 ```
 
 This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.
 
 Note that the pipeline will create the following files in your working directory:
 
-```console
-work            # Directory containing the nextflow working files
-results         # Finished results (configurable, see below)
-.nextflow.log   # Log file from Nextflow
+```bash
+work                # Directory containing the nextflow working files
+<OUTDIR>            # Finished results in specified location (defined with --outdir)
+.nextflow_log       # Log file from Nextflow
 # Other nextflow hidden files, eg. history of pipeline runs and old logs.
 ```
 
@@ -46,7 +46,7 @@ Output from Variant Calling and/or Annotation will be in a specific directory fo
 
 Multiple CSV files can be specified if the path is enclosed in quotes.
 
-```console
+```bash
 --input '[path to sample sheet file(s)]'
 ```
 
@@ -78,26 +78,26 @@ This step can be started either from FastQ files or (u)BAMs. The CSV must contai
 
 Minimal config file:
 
-```console
+```bash
 patient,sample,lane,fastq_1,fastq_2
 patient1,test_sample,lane_1,test_1.fastq.gz,test_2.fastq.gz
 ```
 
-```console
+```bash
 patient,sample,lane,bam
 patient1,test_sample,lane_1,test.bam
 ```
 
 In this example, the sample is multiplexed over three lanes:
 
-```console
+```bash
 patient,sample,lane,fastq_1,fastq_2
 patient1,test_sample,lane_1,test_L001_1.fastq.gz,test_L001_2.fastq.gz
 patient1,test_sample,lane_2,test_L002_1.fastq.gz,test_L002_2.fastq.gz
 patient1,test_sample,lane_3,test_L003_1.fastq.gz,test_L003_2.fastq.gz
 ```
 
-```console
+```bash
 patient,sample,lane,bam
 patient1,test_sample,1,test_L001.bam
 patient1,test_sample,2,test_L002.bam
@@ -108,7 +108,7 @@ patient1,test_sample,3,test_L003.bam
 
 In this example, all possible columns are used. There are three lanes for the normal sample, two for the tumor sample, and one for the relapse sample, including the `sex` and `status` information per patient:
 
-```console
+```bash
 patient,sex,status,sample,lane,fastq_1,fastq_2
 patient1,XX,0,normal_sample,lane_1,test_L001_1.fastq.gz,test_L001_2.fastq.gz
 patient1,XX,0,normal_sample,lane_2,test_L002_1.fastq.gz,test_L002_2.fastq.gz
@@ -118,7 +118,7 @@ patient1,XX,1,tumor_sample,lane_2,test2_L002_1.fastq.gz,test2_L002_2.fastq.gz
 patient1,XX,1,relapse_sample,lane_1,test3_L001_1.fastq.gz,test3_L001_2.fastq.gz
 ```
 
-```console
+```bash
 patient,sex,status,sample,lane,bam
 patient1,XX,0,normal_sample,lane_1,test_L001.bam
 patient1,XX,0,normal_sample,lane_2,test_L002.bam
@@ -138,12 +138,12 @@ For starting from duplicate marking, the CSV file must contain at least the colu
 
 Example:
 
-```console
+```bash
 patient,sample,bam,bai
 patient1,test_sample,test_mapped.bam,test_mapped.bam.bai
 ```
 
-```console
+```bash
 patient,sample,cram,crai
 patient1,test_sample,test_mapped.cram,test_mapped.cram.crai
 ```
@@ -154,14 +154,14 @@ The Sarek-generated CSV file is stored under `results/csv/mapped.csv` if in a pr
 
 In this example, all possible columns are used including the `sex` and `status` information per patient:
 
-```console
+```bash
 patient,sex,status,sample,bam,bai
 patient1,XX,0,test_sample,test_mapped.bam,test_mapped.bam.bai
 patient1,XX,1,tumor_sample,test2_mapped.bam,test2_mapped.bam.bai
 patient1,XX,1,relapse_sample,test3_mapped.bam,test3_mapped.bam.bai
 ```
 
-```console
+```bash
 patient,sex,status,sample,cram,crai
 patient1,XX,0,normal_sample,test_mapped.cram,test_mapped.cram.crai
 patient1,XX,1,tumor_sample,test2_mapped.cram,test2_mapped.cram.crai
@@ -174,12 +174,12 @@ For starting directly from preparing the recalibration tables, the CSV file must
 
 Example:
 
-```console
+```bash
 patient,sample,bam,bai
 patient1,test_sample,test_md.bam,test_md.bam.bai
 ```
 
-```console
+```bash
 patient,sample,cram,crai
 patient1,test_sample,test_md.cram,test_md.cram.crai
 ```
@@ -190,14 +190,14 @@ The Sarek-generated CSV file is stored under `results/csv/markduplicates_no_tabl
 
 In this example, all possible columns are used including the `sex` and `status` information per patient:
 
-```console
+```bash
 patient,sex,status,sample,bam,bai
 patient1,XX,0,test_sample,test_md.bam,test_md.bam.bai
 patient1,XX,1,tumor_sample,test2_md.bam,test2_md.bam.bai
 patient1,XX,1,relapse_sample,test3_md.bam,test3_md.bam.bai
 ```
 
-```console
+```bash
 patient,sex,status,sample,cram,crai
 patient1,XX,0,normal_sample,test_md.cram,test_md.cram.crai
 patient1,XX,1,tumor_sample,test2_md.cram,test2_md.cram.crai
@@ -210,12 +210,12 @@ For starting from base quality score recalibration the CSV file must contain at 
 
 Example:
 
-```console
+```bash
 patient,sample,bam,bai,table
 patient1,test_sample,test_mapped.cram,test_mapped.cram.crai,test.table
 ```
 
-```console
+```bash
 patient,sample,cram,crai,table
 patient1,test_sample,test_mapped.cram,test_mapped.cram.crai,test.table
 ```
@@ -226,7 +226,7 @@ The Sarek-generated CSV file is stored under `results/csv/markduplicates.csv` an
 
 In this example, all possible columns are used including the `sex` and `status` information per patient:
 
-```console
+```bash
 patient,sex,status,sample,cram,crai,table
 patient1,XX,0,test_sample,test_mapped.cram,test_mapped.cram.crai,test.table
 patient1,XX,1,tumor_sample,test2_mapped.cram,test2_mapped.cram.crai,test2.table
@@ -239,12 +239,12 @@ For starting from the variant calling step, the CSV file must contain at least t
 
 Example:
 
-```console
+```bash
 patient,sample,bam,bai
 patient1,test_sample,test_mapped.bam,test_mapped.bam.bai
 ```
 
-```console
+```bash
 patient,sample,cram,crai
 patient1,test_sample,test_mapped.cram,test_mapped.cram.crai
 ```
@@ -255,7 +255,7 @@ The Sarek-generated CSV file is stored under `results/csv/recalibrated.csv` and 
 
 In this example, all possible columns are used including the `sex` and `status` information per patient:
 
-```console
+```bash
 patient,sex,status,sample,cram,crai
 patient1,XX,0,normal_sample,test_mapped.cram,test_mapped.cram.crai
 patient1,XX,1,tumor_sample,test2_mapped.cram,test2_mapped.cram.crai
@@ -270,7 +270,7 @@ As Sarek will use [bgzip](http://www.htslib.org/doc/bgzip.html) and [tabix](http
 
 Example:
 
-```console
+```bash
 patient,sample,vcf
 patient1,test_sample,test.vcf.gz
 ```
@@ -281,7 +281,7 @@ The Sarek-generated CSV file is stored under `results/csv/variantcalled.csv` and
 
 In this example, all possible columns are used including the `variantcaller` information per sample:
 
-```console
+```bash
 patient,sample,variantcaller,vcf
 test,sample3,strelka,sample3.variants.vcf.gz
 test,sample4_vs_sample3,manta,sample4_vs_sample3.diploid_sv.vcf.gz
@@ -292,7 +292,7 @@ test,sample4_vs_sample3,manta,sample4_vs_sample3.somatic_sv.vcf.gz
 
 When you run the above command, Nextflow automatically pulls the pipeline code from GitHub and stores it as a cached version. When running the pipeline after this, it will always use the cached version if available - even if the pipeline has been updated since. To make sure that you're running the latest version of the pipeline, make sure that you regularly update the cached version of the pipeline:
 
-```console
+```bash
 nextflow pull nf-core/sarek
 ```
 
@@ -300,8 +300,8 @@ nextflow pull nf-core/sarek
 
 It is a good idea to specify a pipeline version when running the pipeline on your data. This ensures that a specific version of the pipeline code and software are used when you run your pipeline. If you keep using the same tag, you'll be running the same version of the pipeline, even if there have been changes to the code since.
 
-First, go to the [nf-core/sarek releases page](https://github.com/nf-core/sarek/releases) and find the latest version number - numeric only (eg. `3.0.0`).
-Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 3.0.0`.
+First, go to the [nf-core/sarek releases page](https://github.com/nf-core/sarek/releases) and find the latest version number - numeric only (eg. `3.0.1`).
+Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 3.0.1`.
 
 This version number will be logged in reports when you run the pipeline, so that you'll know what you used when you look back in the future.
 
@@ -358,7 +358,7 @@ Specify the path to a specific config file (this is a core Nextflow command). Se
 In some cases, the Nextflow Java virtual machines can start to request a large amount of memory.
 We recommend adding the following line to your environment to limit this (typically in `~/.bashrc` or `~./bash_profile`):
 
-```console
+```bash
 NXF_OPTS='-Xms1g -Xmx4g'
 ```
 
@@ -379,7 +379,7 @@ Whilst the default requirements set within the pipeline will hopefully work for 
 
 For example, if the nf-core/rnaseq pipeline is failing after multiple re-submissions of the `STAR_ALIGN` process due to an exit code of `137` this would indicate that there is an out of memory issue:
 
-```console
+```bash
 [62/149eb0] NOTE: Process `NFCORE_RNASEQ:RNASEQ:ALIGN_STAR:STAR_ALIGN (WT_REP1)` terminated with an error exit status (137) -- Execution is retried (1)
 Error executing process > 'NFCORE_RNASEQ:RNASEQ:ALIGN_STAR:STAR_ALIGN (WT_REP1)'
 
@@ -476,70 +476,90 @@ See the main [Nextflow documentation](https://www.nextflow.io/docs/latest/config
 
 If you have any questions or issues please send us a message on [Slack](https://nf-co.re/join/slack) on the [`#configs` channel](https://nfcore.slack.com/channels/configs).
 
+## Azure Resource Requests
+
+To be used with the `azurebatch` profile by specifying the `-profile azurebatch`.
+We recomend providing a compute `params.vm_type` of `Standard_E64_v3` VMs by default but these options can be changed if required.
+
+Note that the choice of VM size depends on your quota and the overall workload during the analysis.
+For a thorough list, please refer the [Azure Sizes for virtual machines in Azure](https://docs.microsoft.com/en-us/azure/virtual-machines/sizes).
+
 # Troubleshooting & FAQ
 
 ## How to test the pipeline
 
-When using default parameters only, sarek runs preprocessing and exits after base quality score recalibration. This is reflected in the default test profile:
+When using default parameters only, sarek runs preprocessing and `Strelka2`. This is reflected in the default test profile:
 
-```console
-nextflow run nf-core/sarek -r 3.0 -profile test,<container/institute>
+```bash
+nextflow run nf-core/sarek -r 3.0.1 -profile test,<container/institute>
 ```
 
 Expected run output:
 
 ```
-[91/018ca5] process > NFCORE_SAREK:SAREK:PREPARE_GENOME:BWAMEM1_INDEX (genome.fasta)                       [100%] 1 of 1 ✔
-[-        ] process > NFCORE_SAREK:SAREK:PREPARE_GENOME:BWAMEM2_INDEX                                      -
-[-        ] process > NFCORE_SAREK:SAREK:PREPARE_GENOME:DRAGMAP_HASHTABLE                                  -
-[45/7ad672] process > NFCORE_SAREK:SAREK:PREPARE_GENOME:GATK4_CREATESEQUENCEDICTIONARY (genome.fasta)      [100%] 1 of 1 ✔
-[-        ] process > NFCORE_SAREK:SAREK:PREPARE_GENOME:MSISENSORPRO_SCAN                                  -
-[79/7139ec] process > NFCORE_SAREK:SAREK:PREPARE_GENOME:SAMTOOLS_FAIDX (genome.fasta)                      [100%] 1 of 1 ✔
-[44/913bf9] process > NFCORE_SAREK:SAREK:PREPARE_GENOME:TABIX_DBSNP (dbsnp_146.hg38.vcf)                   [100%] 1 of 1 ✔
-[-        ] process > NFCORE_SAREK:SAREK:PREPARE_GENOME:TABIX_GERMLINE_RESOURCE                            -
-[dc/348c16] process > NFCORE_SAREK:SAREK:PREPARE_GENOME:TABIX_KNOWN_INDELS (mills_and_1000G.indels.vcf)    [100%] 1 of 1 ✔
-[-        ] process > NFCORE_SAREK:SAREK:PREPARE_GENOME:TABIX_PON                                          -
-[9f/53d6ad] process > NFCORE_SAREK:SAREK:PREPARE_INTERVALS:CREATE_INTERVALS_BED (genome.interval_list)     [100%] 1 of 1 ✔
-[57/a9312f] process > NFCORE_SAREK:SAREK:PREPARE_INTERVALS:GATK4_INTERVALLISTTOBED (genome)                [100%] 1 of 1 ✔
-[7e/b02b16] process > NFCORE_SAREK:SAREK:PREPARE_INTERVALS:TABIX_BGZIPTABIX_INTERVAL_SPLIT (chr22_1-40001) [100%] 1 of 1 ✔
-[-        ] process > NFCORE_SAREK:SAREK:ALIGNMENT_TO_FASTQ_INPUT:SAMTOOLS_VIEW_MAP_MAP                    -
-[-        ] process > NFCORE_SAREK:SAREK:ALIGNMENT_TO_FASTQ_INPUT:SAMTOOLS_VIEW_UNMAP_UNMAP                -
-[-        ] process > NFCORE_SAREK:SAREK:ALIGNMENT_TO_FASTQ_INPUT:SAMTOOLS_VIEW_UNMAP_MAP                  -
-[-        ] process > NFCORE_SAREK:SAREK:ALIGNMENT_TO_FASTQ_INPUT:SAMTOOLS_VIEW_MAP_UNMAP                  -
-[-        ] process > NFCORE_SAREK:SAREK:ALIGNMENT_TO_FASTQ_INPUT:SAMTOOLS_MERGE_UNMAP                     -
-[-        ] process > NFCORE_SAREK:SAREK:ALIGNMENT_TO_FASTQ_INPUT:COLLATE_FASTQ_UNMAP                      -
-[-        ] process > NFCORE_SAREK:SAREK:ALIGNMENT_TO_FASTQ_INPUT:COLLATE_FASTQ_MAP                        -
-[-        ] process > NFCORE_SAREK:SAREK:ALIGNMENT_TO_FASTQ_INPUT:CAT_FASTQ                                -
-[37/2d4ea9] process > NFCORE_SAREK:SAREK:RUN_FASTQC:FASTQC (test-test_L1)                                  [100%] 1 of 1 ✔
-[a1/a64d09] process > NFCORE_SAREK:SAREK:GATK4_MAPPING:BWAMEM1_MEM (test)                                  [100%] 1 of 1 ✔
-[-        ] process > NFCORE_SAREK:SAREK:GATK4_MAPPING:BWAMEM2_MEM                                         -
-[-        ] process > NFCORE_SAREK:SAREK:GATK4_MAPPING:DRAGMAP_ALIGN                                       -
-[d3/488df3] process > NFCORE_SAREK:SAREK:MARKDUPLICATES:GATK4_MARKDUPLICATES (test)                        [100%] 1 of 1 ✔
-[f1/0b56c6] process > NFCORE_SAREK:SAREK:MARKDUPLICATES:BAM_TO_CRAM:SAMTOOLS_BAMTOCRAM (test)              [100%] 1 of 1 ✔
-[ae/e92179] process > NFCORE_SAREK:SAREK:MARKDUPLICATES:BAM_TO_CRAM:SAMTOOLS_STATS_CRAM (test)             [100%] 1 of 1 ✔
-[8f/d06f35] process > NFCORE_SAREK:SAREK:MARKDUPLICATES:BAM_TO_CRAM:MOSDEPTH (test)                        [100%] 1 of 1 ✔
-[38/af6ec2] process > NFCORE_SAREK:SAREK:PREPARE_RECALIBRATION:BASERECALIBRATOR (test)                     [100%] 1 of 1 ✔
-[-        ] process > NFCORE_SAREK:SAREK:PREPARE_RECALIBRATION:GATHERBQSRREPORTS                           -
-[8b/f3ca07] process > NFCORE_SAREK:SAREK:RECALIBRATE:APPLYBQSR (test)                                      [100%] 1 of 1 ✔
-[-        ] process > NFCORE_SAREK:SAREK:RECALIBRATE:MERGE_INDEX_CRAM:MERGE_CRAM                           -
-[a7/16bb3f] process > NFCORE_SAREK:SAREK:RECALIBRATE:MERGE_INDEX_CRAM:INDEX_CRAM (test)                    [100%] 1 of 1 ✔
-[4d/309cb9] process > NFCORE_SAREK:SAREK:CRAM_QC:SAMTOOLS_STATS (test)                                     [100%] 1 of 1 ✔
-[44/06eaf2] process > NFCORE_SAREK:SAREK:CRAM_QC:MOSDEPTH (test)                                           [100%] 1 of 1 ✔
-[-        ] process > NFCORE_SAREK:SAREK:SAMTOOLS_CRAMTOBAM_RECAL                                          [100%] 1 of 1 ✔
-[-        ] process > NFCORE_SAREK:SAREK:CUSTOM_DUMPSOFTWAREVERSIONS                                       [100%] 1 of 1 ✔
-[-        ] process > NFCORE_SAREK:SAREK:MULTIQC                                                           [100%] 1 of 1 ✔
+[42/360944] process > NFCORE_SAREK:SAREK:PREPARE_GENOME:BWAMEM1_INDEX (genome.fasta)                        [100%] 1 of 1 ✔
+[-        ] process > NFCORE_SAREK:SAREK:PREPARE_GENOME:BWAMEM2_INDEX                                       -
+[-        ] process > NFCORE_SAREK:SAREK:PREPARE_GENOME:DRAGMAP_HASHTABLE                                   -
+[2b/92dc0c] process > NFCORE_SAREK:SAREK:PREPARE_GENOME:GATK4_CREATESEQUENCEDICTIONARY (genome.fasta)       [100%] 1 of 1 ✔
+[-        ] process > NFCORE_SAREK:SAREK:PREPARE_GENOME:MSISENSORPRO_SCAN                                   -
+[58/ecea17] process > NFCORE_SAREK:SAREK:PREPARE_GENOME:SAMTOOLS_FAIDX (genome.fasta)                       [100%] 1 of 1 ✔
+[9c/121939] process > NFCORE_SAREK:SAREK:PREPARE_GENOME:TABIX_DBSNP (dbsnp_146.hg38.vcf)                    [100%] 1 of 1 ✔
+[-        ] process > NFCORE_SAREK:SAREK:PREPARE_GENOME:TABIX_GERMLINE_RESOURCE                             -
+[-        ] process > NFCORE_SAREK:SAREK:PREPARE_GENOME:TABIX_KNOWN_SNPS                                    -
+[28/6f5c14] process > NFCORE_SAREK:SAREK:PREPARE_GENOME:TABIX_KNOWN_INDELS (mills_and_1000G.indels.vcf)     [100%] 1 of 1 ✔
+[-        ] process > NFCORE_SAREK:SAREK:PREPARE_GENOME:TABIX_PON                                           -
+[55/4466e1] process > NFCORE_SAREK:SAREK:PREPARE_INTERVALS:CREATE_INTERVALS_BED (genome.interval_list)      [100%] 1 of 1 ✔
+[f8/df9607] process > NFCORE_SAREK:SAREK:PREPARE_INTERVALS:GATK4_INTERVALLISTTOBED (genome)                 [100%] 1 of 1 ✔
+[ff/26467d] process > NFCORE_SAREK:SAREK:PREPARE_INTERVALS:TABIX_BGZIPTABIX_INTERVAL_SPLIT (chr22_1-40001)  [100%] 1 of 1 ✔
+[-        ] process > NFCORE_SAREK:SAREK:PREPARE_CNVKIT_REFERENCE:CNVKIT_ANTITARGET                         -
+[-        ] process > NFCORE_SAREK:SAREK:PREPARE_CNVKIT_REFERENCE:CNVKIT_REFERENCE                          -
+[-        ] process > NFCORE_SAREK:SAREK:ALIGNMENT_TO_FASTQ_INPUT:SAMTOOLS_VIEW_MAP_MAP                     -
+[-        ] process > NFCORE_SAREK:SAREK:ALIGNMENT_TO_FASTQ_INPUT:SAMTOOLS_VIEW_UNMAP_UNMAP                 -
+[-        ] process > NFCORE_SAREK:SAREK:ALIGNMENT_TO_FASTQ_INPUT:SAMTOOLS_VIEW_UNMAP_MAP                   -
+[-        ] process > NFCORE_SAREK:SAREK:ALIGNMENT_TO_FASTQ_INPUT:SAMTOOLS_VIEW_MAP_UNMAP                   -
+[-        ] process > NFCORE_SAREK:SAREK:ALIGNMENT_TO_FASTQ_INPUT:SAMTOOLS_MERGE_UNMAP                      -
+[-        ] process > NFCORE_SAREK:SAREK:ALIGNMENT_TO_FASTQ_INPUT:COLLATE_FASTQ_UNMAP                       -
+[-        ] process > NFCORE_SAREK:SAREK:ALIGNMENT_TO_FASTQ_INPUT:COLLATE_FASTQ_MAP                         -
+[-        ] process > NFCORE_SAREK:SAREK:ALIGNMENT_TO_FASTQ_INPUT:CAT_FASTQ                                 -
+[74/cd6685] process > NFCORE_SAREK:SAREK:RUN_FASTQC:FASTQC (test-test_L1)                                   [100%] 1 of 1 ✔
+[bc/ea89a8] process > NFCORE_SAREK:SAREK:GATK4_MAPPING:BWAMEM1_MEM (test)                                   [100%] 1 of 1 ✔
+[-        ] process > NFCORE_SAREK:SAREK:GATK4_MAPPING:BWAMEM2_MEM                                          -
+[-        ] process > NFCORE_SAREK:SAREK:GATK4_MAPPING:DRAGMAP_ALIGN                                        -
+[46/35a640] process > NFCORE_SAREK:SAREK:MARKDUPLICATES:GATK4_MARKDUPLICATES (test)                         [100%] 1 of 1 ✔
+[e0/525bb3] process > NFCORE_SAREK:SAREK:MARKDUPLICATES:BAM_TO_CRAM:SAMTOOLS_BAMTOCRAM (test)               [100%] 1 of 1 ✔
+[46/9fe93a] process > NFCORE_SAREK:SAREK:MARKDUPLICATES:BAM_TO_CRAM:SAMTOOLS_STATS_CRAM (test)              [100%] 1 of 1 ✔
+[77/2c8b1b] process > NFCORE_SAREK:SAREK:MARKDUPLICATES:BAM_TO_CRAM:MOSDEPTH (test)                         [100%] 1 of 1 ✔
+[f7/499800] process > NFCORE_SAREK:SAREK:PREPARE_RECALIBRATION:BASERECALIBRATOR (test)                      [100%] 1 of 1 ✔
+[-        ] process > NFCORE_SAREK:SAREK:PREPARE_RECALIBRATION:GATHERBQSRREPORTS                            -
+[9d/3d1fff] process > NFCORE_SAREK:SAREK:RECALIBRATE:APPLYBQSR (test)                                       [100%] 1 of 1 ✔
+[-        ] process > NFCORE_SAREK:SAREK:RECALIBRATE:MERGE_INDEX_CRAM:MERGE_CRAM                            -
+[cb/fa9dcb] process > NFCORE_SAREK:SAREK:RECALIBRATE:MERGE_INDEX_CRAM:INDEX_CRAM (test)                     [100%] 1 of 1 ✔
+[19/f075fb] process > NFCORE_SAREK:SAREK:CRAM_QC:SAMTOOLS_STATS (test)                                      [100%] 1 of 1 ✔
+[a9/aca71f] process > NFCORE_SAREK:SAREK:CRAM_QC:MOSDEPTH (test)                                            [100%] 1 of 1 ✔
+[-        ] process > NFCORE_SAREK:SAREK:SAMTOOLS_CRAMTOBAM_RECAL                                           -
+[14/cb7738] process > NFCORE_SAREK:SAREK:GERMLINE_VARIANT_CALLING:RUN_STRELKA_SINGLE:STRELKA_SINGLE (test)  [100%] 1 of 1 ✔
+[-        ] process > NFCORE_SAREK:SAREK:GERMLINE_VARIANT_CALLING:RUN_STRELKA_SINGLE:MERGE_STRELKA          -
+[-        ] process > NFCORE_SAREK:SAREK:GERMLINE_VARIANT_CALLING:RUN_STRELKA_SINGLE:MERGE_STRELKA_GENOME   -
+[-        ] process > NFCORE_SAREK:SAREK:TUMOR_ONLY_VARIANT_CALLING:RUN_STRELKA_SINGLE:STRELKA_SINGLE       -
+[-        ] process > NFCORE_SAREK:SAREK:TUMOR_ONLY_VARIANT_CALLING:RUN_STRELKA_SINGLE:MERGE_STRELKA        -
+[-        ] process > NFCORE_SAREK:SAREK:TUMOR_ONLY_VARIANT_CALLING:RUN_STRELKA_SINGLE:MERGE_STRELKA_GENOME -
+[-        ] process > NFCORE_SAREK:SAREK:PAIR_VARIANT_CALLING:RUN_STRELKA_SOMATIC:STRELKA_SOMATIC           -
+[-        ] process > NFCORE_SAREK:SAREK:PAIR_VARIANT_CALLING:RUN_STRELKA_SOMATIC:MERGE_STRELKA_SNVS        -
+[-        ] process > NFCORE_SAREK:SAREK:PAIR_VARIANT_CALLING:RUN_STRELKA_SOMATIC:MERGE_STRELKA_INDELS      -
+[3f/68d214] process > NFCORE_SAREK:SAREK:VCF_QC:BCFTOOLS_STATS (test)                                       [100%] 1 of 1 ✔
+[7e/435083] process > NFCORE_SAREK:SAREK:VCF_QC:VCFTOOLS_TSTV_COUNT (test)                                  [100%] 1 of 1 ✔
+[a2/a0c127] process > NFCORE_SAREK:SAREK:VCF_QC:VCFTOOLS_TSTV_QUAL (test)                                   [100%] 1 of 1 ✔
+[98/180e11] process > NFCORE_SAREK:SAREK:VCF_QC:VCFTOOLS_SUMMARY (test)                                     [100%] 1 of 1 ✔
+[40/7f3d8a] process > NFCORE_SAREK:SAREK:CUSTOM_DUMPSOFTWAREVERSIONS (1)                                    [100%] 1 of 1 ✔
+[fa/f4933d] process > NFCORE_SAREK:SAREK:MULTIQC                                                            [100%] 1 of 1 ✔
 ```
 
-The pipeline comes with a number of possible paths and tools that can be used. The easiest and fastest test to see that the preprocessing + variantcalling (in this case Strelka2) works, is to run:
-
-```console
-nextflow run nf-core/sarek -r 3.0.0 -profile test,<container/institute> --tools strelka
-```
+The pipeline comes with a number of possible paths and tools that can be used.
 
 Due to the small test data size, unfortunately not everything can be tested from top-to-bottom, but often is done by utilizing the pipeline's `--step` parameter. Annotation has to tested separatly from the remaining workflow, since we use references for `C.elegans`, while the remaining tests are run on downsampled human data.
 
-```console
-nextflow run nf-core/sarek -r 3.0.0 -profile test,<container/institute> --tools snpeff --step annotation
+```bash
+nextflow run nf-core/sarek -r 3.0.1 -profile test,<container/institute> --tools snpeff --step annotation
 ```
 
 If you are interested in any of the other tests that are run on every code change or would like to run them yourself, you can take a look at `tests/<filename>.yml`. For each entry the respective nextflow command run and the expected output is specified.
@@ -548,7 +568,7 @@ Some of the currently, available test profiles:
 
 | Test profile    | Run command                                                                     |
 | :-------------- | :------------------------------------------------------------------------------ |
-| annotation      | `nextflow run main.nf -profile test,annotation,docker --tools snpeff.vep,merge` |
+| annotation      | `nextflow run main.nf -profile test,annotation,docker --tools snpeff,vep,merge` |
 | no_intervals    | `nextflow run main.nf -profile test,no_intervals,docker`                        |
 | targeted        | `nextflow run main.nf -profile test,targeted,docker`                            |
 | tools_germline  | `nextflow run main.nf -profile test,tools_germline,docker --tools strelka`      |
@@ -614,7 +634,7 @@ If you have problems running processes that make use of Spark such as `MarkDupli
 You are probably experiencing issues with the limit of open files in your system.
 You can check your current limit by typing the following:
 
-```console
+```bash
 ulimit -n
 ```
 
@@ -623,20 +643,20 @@ In order to increase the size limit permanently you can:
 
 Edit the file `/etc/security/limits.conf` and add the lines:
 
-```console
+```bash
 *     soft   nofile  65535
 *     hard   nofile  65535
 ```
 
 Edit the file `/etc/sysctl.conf` and add the line:
 
-```console
+```bash
 fs.file-max = 65535
 ```
 
 Edit the file `/etc/sysconfig/docker` and add the new limits to OPTIONS like this:
 
-```console
+```bash
 OPTIONS=”—default-ulimit nofile=65535:65535"
 ```
 
@@ -678,7 +698,7 @@ If none of your required genome files are in igenomes, `--igenomes_ignore` must 
 
 Minimal example for custom genomes:
 
-```console
+```bash
 nextflow run nf-core/sarek --genome null --igenomes_ignore --fasta <custom.fasta>
 ```
 
@@ -688,14 +708,14 @@ If you don't want to use some of the provided reference genomes, they can be ove
 
 Example for using a custom known indels file:
 
-```console
-nextflow run nf-core/sarek --known_indels <my_known_indels.vcf.gz> --genome GATK.GRCh38
+```bash
+nextflow run nf-core/sarek --known_indels <my_known_indels.vcf.gz> --genome GRCh38.GATK
 ```
 
 Example for not using known indels, but all other provided reference file:
 
-```console
-nextflow run nf-core/sarek --known_indels false --genome GATK.GRCh38
+```bash
+nextflow run nf-core/sarek --known_indels false --genome GRCh38.GATK
 ```
 
 ### Where do the used reference genomes originate from
@@ -739,7 +759,7 @@ You need to specify the cache directory using `--snpeff_cache` and `--vep_cache`
 
 Example:
 
-```console
+```bash
 nextflow run nf-core/sarek --tools snpEff --step annotate --sample <file.vcf.gz> --snpeff_cache </path/to/snpEff/cache>
 nextflow run nf-core/sarek --tools VEP --step annotate --sample <file.vcf.gz> --vep_cache </path/to/VEP/cache>
 ```
@@ -809,4 +829,4 @@ ERROR_CHROMOSOME_NOT_FOUND      17522411
 
 ## How to set up sarek to use sentieon
 
-Sarek 3.0 is currently not supporting sentieon. It is planned for the upcoming release 3.1. In the meantime, please revert to the last release 2.7.2.
+Sarek 3.0.1 is currently not supporting sentieon. It is planned for the upcoming release 3.1. In the meantime, please revert to the last release 2.7.2.

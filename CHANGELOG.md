@@ -10,12 +10,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - [#691](https://github.com/nf-core/sarek/pull/691) - Enable `PROFILE=conda`, `PROFILE=docker` and `PROFILE=singularity` for pytest
+- [#716](https://github.com/nf-core/sarek/pull/716) - Add documentation for Azure recomended config vm_size
 
 ### Changed
 
 - [#679](https://github.com/nf-core/sarek/pull/679) - Back to `dev`
-- [#685](https://github.com/nf-core/sarek/pull/685) - Updating the nf-core modules used by Sarek.
+- [#685](https://github.com/nf-core/sarek/pull/685) - Updating the nf-core modules used by Sarek
 - [#691](https://github.com/nf-core/sarek/pull/691) - To run the same pytest as before locally, use `PROFILE=docker`
+- [#692](https://github.com/nf-core/sarek/pull/692) - Use `params.tools=strelka` in profile `test`
+- [#696](https://github.com/nf-core/sarek/pull/696) - Adding check of md5-sums in CI-tests
+- [#719](https://github.com/nf-core/sarek/pull/719) - Added boxes to subway map
+- [#720](https://github.com/nf-core/sarek/pull/720) - Sync `TEMPLATE` with `tools` `2.5`
+- [#723](https://github.com/nf-core/sarek/pull/723) - Sync `TEMPLATE` with `tools` `2.5.1`
 
 ### Fixed
 
@@ -23,11 +29,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#681](https://github.com/nf-core/sarek/pull/681) - Fixed intermediate files published cf [#680](https://github.com/nf-core/sarek/issues/680)
 - [#688](https://github.com/nf-core/sarek/pull/688) - Fixed VEP plugins issue cf [#687](https://github.com/nf-core/sarek/issues/687)
 - [#689](https://github.com/nf-core/sarek/pull/689) - Fixed when clause for non `BWA mem` building mapping indexes
+- [#704](https://github.com/nf-core/sarek/pull/704) - Fixed `cf_ploidy` to string instead of number
 - [#705](https://github.com/nf-core/sarek/pull/705) - Fix publishing for processes in `alignment_to_fastq` subworkflow; prevent tabix computation for `known_snps` when present
+- [#706](https://github.com/nf-core/sarek/pull/706) - Fixed `vep_version` not found error when running `--vep_loftee`
+- [#724](https://github.com/nf-core/sarek/pull/724) - Fixed prettier issue
 
 ### Deprecated
 
 ### Removed
+
+## [3.0.1](https://github.com/nf-core/sarek/releases/tag/3.0.1) - Saiva
+
+Saiva is a lake in the Sarek national park, just below the Skierfe mountain.
+
+### Fixed
+
+- [#708](https://github.com/nf-core/sarek/pull/708) - Fixes mpileup bug. Update nf-core module `samtools/mpileup` to subset CRAM file by intervals.
 
 ## [3.0](https://github.com/nf-core/sarek/releases/tag/3.0) - Skierfe
 
