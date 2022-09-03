@@ -3,44 +3,16 @@
   tags:
     - umi
   files:
-    - path: results/bam2fastq/test-test_L1_interleaved.fq.gz
-      md5sum: 555d05c18bb10be7c8f51bca559cd9ce
-    - path: results/bwamem1/test-test_L1.umi_unsorted.bam
-      md5sum: f037bdc824af9235d9cdbcddfd5ea587
-    - path: results/callumiconsensus/test-test_L1_umi-consensus.bam
+    - path: results/preprocessing/umi/test-test_L1_umi-consensus.bam
       md5sum: c7de733c479032ba670b09db5e5a91fc
-    - path: results/cat/test-test_L1_1.merged.fastq.gz
-      md5sum: 5ef818888a8434a0177c306551dc7f0a
-    - path: results/cat/test-test_L1_2.merged.fastq.gz
-      md5sum: 6f6c44743064b4d0f8df4764441ad5e6
-    - path: results/collate/test-test_L1.mapped_1.fq.gz
-      md5sum: 709872fc2910431b1e8b7074bfe38c67
-    - path: results/collate/test-test_L1.mapped_2.fq.gz
-      md5sum: 709872fc2910431b1e8b7074bfe38c67
-    - path: results/collate/test-test_L1.mapped_other.fq.gz
-      md5sum: 709872fc2910431b1e8b7074bfe38c67
-    - path: results/collate/test-test_L1.mapped_singleton.fq.gz
-      md5sum: 709872fc2910431b1e8b7074bfe38c67
-    - path: results/collate/test-test_L1.unmapped_1.fq.gz
-      md5sum: 0ae1b8aa42de8fbb932605a54051941f
-    - path: results/collate/test-test_L1.unmapped_2.fq.gz
-      md5sum: 57648df503a9f7cf4da73050c81b9fbc
-    - path: results/collate/test-test_L1.unmapped_other.fq.gz
-      md5sum: 709872fc2910431b1e8b7074bfe38c67
-    - path: results/collate/test-test_L1.unmapped_singleton.fq.gz
-      md5sum: 709872fc2910431b1e8b7074bfe38c67
+    - path: results/reports/umi/test-test_L1_umi_histogram.txt
+      md5sum: 85292e9acb83edf17110dce17be27f44
     - path: results/csv/markduplicates.csv
       md5sum: 0d6120bb99e92f6810343270711ca53e
     - path: results/csv/markduplicates_no_table.csv
       md5sum: 2a2d3d4842befd4def39156463859ee3
     - path: results/csv/recalibrated.csv
       md5sum: 42628ec994c16f565e5407b40a9c1ac3
-    - path: results/fastqtobam/test-test_L1_umi_converted.bam
-      md5sum: 56fb7753e620bd9abaf0a6dbe5943c1a
-    - path: results/groupreadsbyumi/test-test_L1_umi-grouped.bam
-      md5sum: 7530db2eca3fade8cdaa87f4189f3756
-    - path: results/groupreadsbyumi/test-test_L1_umi_histogram.txt
-      md5sum: 85292e9acb83edf17110dce17be27f44
     - path: results/preprocessing/markduplicates/test/test.md.cram
     # binary changes md5sums on reruns.
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
@@ -77,18 +49,6 @@
       md5sum: 072daded4cd3bd08f2c94ef1f1478052
     - path: results/reports/samtools/test/test.recal.cram.stats
       md5sum: 1537c827260f24e3fa0f0dc257580b41
-    - path: results/samblaster/test-test_L1_unsorted_tagged.bam
-      md5sum: 9b10a0866ff508aa4b07a963586daaae
-    - path: results/samtools/test-test_L1.bam
-    # binary changes md5sums on reruns.
-    - path: results/samtools/test-test_L1.map_map.bam
-      md5sum: f29dc564311e592941bdf152dd722b4f
-    - path: results/samtools/test-test_L1.map_unmap.bam
-      md5sum: 6518cea4d9c0bdb17af66932b68e0ad9
-    - path: results/samtools/test-test_L1.unmap_map.bam
-      md5sum: 9479aabdbbfdc8f5c79f8daa1011e9fb
-    - path: results/samtools/test-test_L1.unmap_unmap.bam
-      md5sum: 567bae8f6acddb5380ca1c0488311a53
       # TODO: The following files are not produced anymore
 #    - path: results/samtools/test-test_L1.mapped_1.fq.gz
 #    - path: results/samtools/test-test_L1.mapped_2.fq.gz
