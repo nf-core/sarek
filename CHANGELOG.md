@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#719](https://github.com/nf-core/sarek/pull/719) - Added boxes to subway map
 - [#720](https://github.com/nf-core/sarek/pull/720) - Sync `TEMPLATE` with `tools` `2.5`
 - [#723](https://github.com/nf-core/sarek/pull/723) - Sync `TEMPLATE` with `tools` `2.5.1`
+- [#730](https://github.com/nf-core/sarek/pull/730) - Reduce number of tests
 
 ### Fixed
 
