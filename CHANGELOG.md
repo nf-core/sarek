@@ -34,6 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#706](https://github.com/nf-core/sarek/pull/706) - Fixed `vep_version` not found error when running `--vep_loftee`
 - [#724](https://github.com/nf-core/sarek/pull/724) - Fixed prettier issue
 - [#728](https://github.com/nf-core/sarek/pull/728) - Circumvent issue with controlfreec and length file containing regions not in intervals file
+- [#729](https://github.com/nf-core/sarek/pull/729) - Trailing commas in `--tools`, `--skip_tools` and `--use_gatk_spark` now raise failure cf [#722](https://github.com/nf-core/sarek/issues/722)
 
 ### Deprecated
 
