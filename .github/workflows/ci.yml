@@ -25,13 +25,69 @@ jobs:
           - "22.04.5"
           - "latest-everything"
         test:
+          - "default"
+        profile: ["docker"]
+    steps:
+      - name: Check out pipeline code
+        uses: actions/checkout@v2
+
+      - name: Install Nextflow
+        uses: nf-core/setup-nextflow@v1
+        with:
+          version: "${{ matrix.NXF_VER }}"
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.x"
+
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip pytest-workflow
+
+      - name: Run pipeline with tests settings
+        uses: Wandalen/wretry.action@v1.0.11
+        with:
+          command: PROFILE=${{ matrix.profile }} pytest --tag ${{ matrix.test }} --symlink --kwdof --git-aware --color=yes
+          attempt_limit: 3
+
+      - name: Output log on failure
+        if: failure()
+        run: |
+          sudo apt install bat > /dev/null
+          batcat --decorations=always --color=always /tmp/pytest_workflow_*/*/log.{out,err}
+
+      - name: Upload logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: logs-${{ matrix.profile }}
+          path: |
+            /tmp/pytest_workflow_*/*/.nextflow.log
+            /tmp/pytest_workflow_*/*/log.out
+            /tmp/pytest_workflow_*/*/log.err
+            /tmp/pytest_workflow_*/*/work
+            /tmp/pytest_workflow_*/**/.command.log
+            !/tmp/pytest_workflow_*/*/work/conda
+            !/tmp/pytest_workflow_*/*/work/singularity
+
+  test_all:
+    name: Run pipeline with test data (complete)
+    # Only run on push if this is the nf-core dev branch (merged PRs)
+    if: "${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/sarek') }}"
+    runs-on: ubuntu-latest
+    strategy:
+      # HACK Remove after DSL2 rewrite is done
+      fail-fast: false
+      matrix:
+        NXF_VER:
+          - "22.04.5"
+        test:
           - "aligner"
           - "alignment_to_fastq"
           - "annotation"
           - "cnvkit"
           - "controlfreec"
           - "deepvariant"
-          - "default"
           - "freebayes"
           - "gatk4_spark"
           - "haplotypecaller"
