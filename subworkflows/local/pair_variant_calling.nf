@@ -18,6 +18,7 @@ workflow PAIR_VARIANT_CALLING {
         tools                         // Mandatory, list of tools to apply
         cram_pair                     // channel: [mandatory] cram
         bwa                           // channel: [optional] bwa
+        cf_chrom_len                  // channel: [optional] controlfreec length file
         chr_files
         dbsnp                         // channel: [mandatory] dbsnp
         dbsnp_tbi                     // channel: [mandatory] dbsnp_tbi
@@ -132,10 +133,11 @@ workflow PAIR_VARIANT_CALLING {
             [normal[0], normal[1], tumor[1], [], [], [], []]
         }
 
+        length_file = cf_chrom_len ?: fasta_fai
         RUN_CONTROLFREEC_SOMATIC(
             controlfreec_input,
             fasta,
-            fasta_fai,
+            length_file,
             dbsnp,
             dbsnp_tbi,
             chr_files,

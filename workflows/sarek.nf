@@ -17,6 +17,7 @@ def checkPathParamList = [
     params.ascat_loci_rt,
     params.bwa,
     params.bwamem2,
+    params.cf_chrom_len,
     params.chr_dir,
     params.dbnsfp,
     params.dbnsfp_tbi,
@@ -151,6 +152,7 @@ ascat_alleles      = params.ascat_alleles      ? Channel.fromPath(params.ascat_a
 ascat_loci         = params.ascat_loci         ? Channel.fromPath(params.ascat_loci).collect()               : Channel.empty()
 ascat_loci_gc      = params.ascat_loci_gc      ? Channel.fromPath(params.ascat_loci_gc).collect()            : Channel.value([])
 ascat_loci_rt      = params.ascat_loci_rt      ? Channel.fromPath(params.ascat_loci_rt).collect()            : Channel.value([])
+cf_chrom_len       = params.cf_chrom_len       ? Channel.fromPath(params.cf_chrom_len).collect()             : []
 chr_dir            = params.chr_dir            ? Channel.fromPath(params.chr_dir).collect()                  : Channel.value([])
 dbsnp              = params.dbsnp              ? Channel.fromPath(params.dbsnp).collect()                    : Channel.value([])
 known_snps         = params.known_snps         ? Channel.fromPath(params.known_snps).collect()               : Channel.value([])
@@ -932,6 +934,7 @@ workflow SAREK {
             params.tools,
             ch_cram_variant_calling_tumor_only,
             [], //bwa_index for tiddit; not used here
+            cf_chrom_len,
             chr_files,
             cnvkit_reference,
             dbsnp,
@@ -954,6 +957,7 @@ workflow SAREK {
             params.tools,
             ch_cram_variant_calling_pair,
             [], //bwa_index for tiddit; not used here
+            cf_chrom_len,
             chr_files,
             dbsnp,
             dbsnp_tbi,
