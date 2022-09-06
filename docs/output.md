@@ -125,6 +125,25 @@ These files are intermediate and by default not kept in the final files delivere
 
 </details>
 
+#### UMI consensus
+
+Sarek can process UMI-reads, using [fgbio](http://fulcrumgenomics.github.io/fgbio/tools/latest/) tools.
+
+These files are intermediate and by default not kept in the final files delivered to users. Set `--save_split` to enable publishing of these files to:
+
+<details markdown="1">
+<summary>Output files for all samples</summary>
+
+**Output directory: `{outdir}/preprocessing/umi/<sample>/`**
+
+- `<sample_lane_{1,2}.umi-consensus.bam>`
+
+**Output directory: `{outdir}/reports/umi/`**
+
+- `<sample_lane_{1,2}_umi_histogram.txt>`
+
+</details>
+
 ### Map to Reference
 
 #### BWA

@@ -3,26 +3,6 @@
   tags:
     - alignment_to_fastq
   files:
-    - path: results/cat/test-1_1.merged.fastq.gz
-      md5sum: 27b1dd4720d589cda1f33028798e859b
-    - path: results/cat/test-1_2.merged.fastq.gz
-      md5sum: 2bbac774fffd1a9df53f9ab2fc2b86ab
-    - path: results/collate/test-1.mapped_1.fq.gz
-      md5sum: 992b824d00359782db5240eee42d5f06
-    - path: results/collate/test-1.mapped_2.fq.gz
-      md5sum: 118bff0ec11c9cc0427a7db21bdebc9c
-    - path: results/collate/test-1.mapped_other.fq.gz
-      md5sum: 709872fc2910431b1e8b7074bfe38c67
-    - path: results/collate/test-1.mapped_singleton.fq.gz
-      md5sum: 709872fc2910431b1e8b7074bfe38c67
-    - path: results/collate/test-1.unmapped_1.fq.gz
-      md5sum: b79faf89e96948ea52f3ca41bee7de9a
-    - path: results/collate/test-1.unmapped_2.fq.gz
-      md5sum: 8e18a94bfd77739e184856ac95d5b26a
-    - path: results/collate/test-1.unmapped_other.fq.gz
-      md5sum: 709872fc2910431b1e8b7074bfe38c67
-    - path: results/collate/test-1.unmapped_singleton.fq.gz
-      md5sum: 709872fc2910431b1e8b7074bfe38c67
     - path: results/csv/markduplicates.csv
       md5sum: 0d6120bb99e92f6810343270711ca53e
     - path: results/csv/markduplicates_no_table.csv
@@ -67,13 +47,3 @@
       md5sum: 5201890d36c1dd127b930373b6e823e5
     - path: results/reports/samtools/test/test.recal.cram.stats
       md5sum: bb2fc6118a1404c45f9e828600df8fb1
-    - path: results/samtools/test-1.bam
-    # binary changes md5sums on reruns.
-    - path: results/samtools/test-1.map_map.bam
-      md5sum: e1d347ccaec52f690c0313047fecf7e6
-    - path: results/samtools/test-1.map_unmap.bam
-      md5sum: 0be5ce27b94e047a1437596a91560982
-    - path: results/samtools/test-1.unmap_map.bam
-      md5sum: 53423525e9bf327c60916aded73ba8a6
-    - path: results/samtools/test-1.unmap_unmap.bam
-      md5sum: 60a80b7e380e228555b8d90990e1c788

@@ -17,6 +17,7 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
         tools                         // Mandatory, list of tools to apply
         cram_recalibrated             // channel: [mandatory] cram
         bwa                           // channel: [optional] bwa
+        cf_chrom_len                  // channel: [optional] controlfreec length file
         chr_files
         cnvkit_reference
         dbsnp                         // channel: [mandatory] dbsnp
@@ -101,10 +102,11 @@ workflow TUMOR_ONLY_VARIANT_CALLING {
                                     [meta, [], pileup_tumor, [], [], [], []]
                                 }
 
+        length_file = cf_chrom_len ?: fasta_fai
         RUN_CONTROLFREEC_TUMORONLY(
             controlfreec_input,
             fasta,
-            fasta_fai,
+            length_file,
             dbsnp,
             dbsnp_tbi,
             chr_files,
