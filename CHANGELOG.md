@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#723](https://github.com/nf-core/sarek/pull/723) - Sync `TEMPLATE` with `tools` `2.5.1`
 - [#730](https://github.com/nf-core/sarek/pull/730) - Reduce number of tests
 - [#731](https://github.com/nf-core/sarek/pull/731) - Run the somatic test as default on `-profile test_full`, the germline can be tested with `-profile test_full_somatic`
+- [#734](https://github.com/nf-core/sarek/pull/734) - nf-core modules update -a
 
 ### Fixed
 
