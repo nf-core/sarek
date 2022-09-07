@@ -61,7 +61,7 @@ workflow PREPARE_INTERVALS {
             ch_versions = ch_versions.mix(CREATE_INTERVALS_BED.out.versions)
 
             //If interval file is not provided as .bed, but e.g. as .interval_list then convert to BED format
-            if(!params.intervals.endsWith(".bed")) {
+            if(params.intervals.endsWith(".interval_list")) {
                 GATK4_INTERVALLISTTOBED(ch_intervals_combined)
                 ch_intervals_combined = GATK4_INTERVALLISTTOBED.out.bed
                 ch_versions = ch_versions.mix(GATK4_INTERVALLISTTOBED.out.versions)
