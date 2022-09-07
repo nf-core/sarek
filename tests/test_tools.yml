@@ -406,9 +406,9 @@
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
       md5sum: c6d1ac97ef4dfe43731c8368d8391cab
     - path: results/reports/samtools/test/test.md.cram.stats
-      md5sum: dcf70bbcfb92e01027978f28d2035d78
+      md5sum: 52411f93d9b5382342b40a351c2e313c
     - path: results/reports/samtools/test/test.recal.cram.stats
-      md5sum: ecad3c41de5b82f6bc0c429e7b24958e
+      md5sum: 5ed26e702d5c2238a1f3cdc5e5b44f98
     - path: results/reports/vcftools/freebayes/test/test.freebayes.FILTER.summary
       md5sum: 43d53e36cbb1091f915b2499e545b41e
     - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.count
@@ -480,9 +480,9 @@
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
       md5sum: b1c2a861f64e20a94108a6de3b76c582
     - path: results/reports/samtools/test/test.md.cram.stats
-      md5sum: dcf70bbcfb92e01027978f28d2035d78
+      md5sum: 52411f93d9b5382342b40a351c2e313c
     - path: results/reports/samtools/test/test.recal.cram.stats
-      md5sum: f7005dd4646700e107bfc00e36c432fe
+      md5sum: d80ad11b8e308a3d5b1fb6f8e13cef38
     - path: results/reports/vcftools/freebayes/test/test.freebayes.FILTER.summary
       md5sum: 76c5919541536c12b5c8a6094d6d78d5
     - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.count
@@ -597,13 +597,13 @@
     - path: results/reports/mosdepth/test2/test2.recal.regions.bed.gz.csi
       md5sum: c6d1ac97ef4dfe43731c8368d8391cab
     - path: results/reports/samtools/test/test.md.cram.stats
-      md5sum: dcf70bbcfb92e01027978f28d2035d78
+      md5sum: 52411f93d9b5382342b40a351c2e313c
     - path: results/reports/samtools/test/test.recal.cram.stats
-      md5sum: ecad3c41de5b82f6bc0c429e7b24958e
+      md5sum: 5ed26e702d5c2238a1f3cdc5e5b44f98
     - path: results/reports/samtools/test2/test2.md.cram.stats
-      md5sum: ad42bfa581dddc911ebd36d386a330a3
+      md5sum: 60152dbf1e109d4c407c151204388109
     - path: results/reports/samtools/test2/test2.recal.cram.stats
-      md5sum: d5ecf9b3e13d5de98fcbc2e8f2cb02be
+      md5sum: 53a0b34b67fdf90ea68fac8ea744b576
     - path: results/reports/vcftools/freebayes/test/test.freebayes.FILTER.summary
       md5sum: 43d53e36cbb1091f915b2499e545b41e
     - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.count
@@ -712,13 +712,13 @@
     - path: results/reports/mosdepth/test2/test2.recal.per-base.bed.gz.csi
       md5sum: 4205a09ede17cdbdaad45e3553f73105
     - path: results/reports/samtools/test/test.md.cram.stats
-      md5sum: dcf70bbcfb92e01027978f28d2035d78
+      md5sum: 52411f93d9b5382342b40a351c2e313c
     - path: results/reports/samtools/test/test.recal.cram.stats
-      md5sum: f7005dd4646700e107bfc00e36c432fe
+      md5sum: d80ad11b8e308a3d5b1fb6f8e13cef38
     - path: results/reports/samtools/test2/test2.md.cram.stats
-      md5sum: ad42bfa581dddc911ebd36d386a330a3
+      md5sum: 60152dbf1e109d4c407c151204388109
     - path: results/reports/samtools/test2/test2.recal.cram.stats
-      md5sum: 5dd3570db59cce7f7addd0257e858289
+      md5sum: 029b903797dc228e56d6ab74e677fa21
     - path: results/reports/vcftools/freebayes/test/test.freebayes.FILTER.summary
       md5sum: 76c5919541536c12b5c8a6094d6d78d5
     - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.count
