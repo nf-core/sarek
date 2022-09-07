@@ -27,6 +27,9 @@ jobs:
         test:
           - "default"
         profile: ["docker", "singularity", "conda"]
+        exclude:
+          - NXF_VER: "latest-everything"
+            profile: "conda"
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
