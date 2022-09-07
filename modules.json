@@ -195,7 +195,7 @@
                 },
                 "gatk4/markduplicates": {
                     "branch": "master",
-                    "git_sha": "e726b1730dff525bde4a6839e544dabfea4cd7fd"
+                    "git_sha": "df2620cfc7e4c21b14ed03c1c928f09fbabf83c4"
                 },
                 "gatk4/markduplicatesspark": {
                     "branch": "master",

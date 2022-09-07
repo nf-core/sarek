@@ -9,25 +9,20 @@ process GATK4_MARKDUPLICATES {
 
     input:
     tuple val(meta), path(bam)
-    path  fasta
-    path  fasta_fai
 
     output:
-    tuple val(meta), path("*cram"),     emit: cram,  optional: true
-    tuple val(meta), path("*bam"),      emit: bam,   optional: true
-    tuple val(meta), path("*.crai"),    emit: crai,  optional: true
-    tuple val(meta), path("*.bai"),     emit: bai,   optional: true
+    tuple val(meta), path("*.bam")    , emit: bam
+    tuple val(meta), path("*.bai")    , optional:true, emit: bai
     tuple val(meta), path("*.metrics"), emit: metrics
-    path "versions.yml",                emit: versions
+    path "versions.yml"               , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
 
     script:
     def args = task.ext.args ?: ''
-    prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${meta.id}"
     def input_list = bam.collect{"--INPUT $it"}.join(' ')
-    def reference = fasta ? "--REFERENCE_SEQUENCE ${fasta}" : ""
 
     def avail_mem = 3
     if (!task.memory) {
@@ -38,16 +33,10 @@ process GATK4_MARKDUPLICATES {
     """
     gatk --java-options "-Xmx${avail_mem}g" MarkDuplicates \\
         $input_list \\
-        --OUTPUT ${prefix} \\
+        --OUTPUT ${prefix}.bam \\
         --METRICS_FILE ${prefix}.metrics \\
         --TMP_DIR . \\
-        ${reference} \\
         $args
-
-
-    if  [[ ${prefix} == *.cram ]]; then
-        mv ${prefix}.bai ${prefix}.crai
-    fi
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
