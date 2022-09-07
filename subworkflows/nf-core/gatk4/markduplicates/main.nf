@@ -5,7 +5,7 @@
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
 include { GATK4_MARKDUPLICATES } from '../../../../modules/nf-core/modules/gatk4/markduplicates/main'
-include { BAM_TO_CRAM          } from '../../bam_to_cram'
+include { CRAM_QC              } from '../../cram_qc'
 
 workflow MARKDUPLICATES {
     take:
@@ -21,19 +21,21 @@ workflow MARKDUPLICATES {
     // Run Markupduplicates
     GATK4_MARKDUPLICATES(bam)
 
+    cram_markduplicates = GATK4_MARKDUPLICATES.out.cram
+        .join(GATK4_MARKDUPLICATES.out.crai)
     // Convert output to cram
-    BAM_TO_CRAM(GATK4_MARKDUPLICATES.out.bam.join(GATK4_MARKDUPLICATES.out.bai), Channel.empty(), fasta, fasta_fai, intervals_bed_combined)
+    CRAM_QC(cram_markduplicates, fasta, fasta_fai, intervals_bed_combined)
 
     // Gather all reports generated
     qc_reports = qc_reports.mix(GATK4_MARKDUPLICATES.out.metrics,
-                                BAM_TO_CRAM.out.qc)
+                                CRAM_QC.out.qc)
 
     // Gather versions of all tools used
     ch_versions = ch_versions.mix(GATK4_MARKDUPLICATES.out.versions.first())
-    ch_versions = ch_versions.mix(BAM_TO_CRAM.out.versions)
+    ch_versions = ch_versions.mix(CRAM_QC.out.versions)
 
     emit:
-        cram     = BAM_TO_CRAM.out.cram_converted
+        cram     = cram_markduplicates
         qc       = qc_reports
 
         versions = ch_versions // channel: [ versions.yml ]
