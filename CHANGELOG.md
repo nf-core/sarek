@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#720](https://github.com/nf-core/sarek/pull/720) - Sync `TEMPLATE` with `tools` `2.5`
 - [#723](https://github.com/nf-core/sarek/pull/723) - Sync `TEMPLATE` with `tools` `2.5.1`
 - [#730](https://github.com/nf-core/sarek/pull/730) - Reduce number of tests
+- [#735](https://github.com/nf-core/sarek/pull/735) - GATK Markduplciates now natively supports CRAM output
 
 ### Fixed
 
