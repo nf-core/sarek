@@ -51,11 +51,11 @@ workflow PREPARE_GENOME {
 
     GATK4_CREATESEQUENCEDICTIONARY(fasta)
     MSISENSORPRO_SCAN(fasta.map{ it -> [[id:it[0].baseName], it] })
-    SAMTOOLS_FAIDX(fasta.map{ it -> [[id:it[0].getName()], it] })
+    SAMTOOLS_FAIDX(fasta.map{ it -> [[id:it[0].baseName], it] })
 
     // the following are flattened and mapped in case the user supplies more than one value for the param
     // written for KNOWN_INDELS, but preemptively applied to the rest
-    // [file1,file2] becomes [[meta1,file1],[meta2,file2]]
+    // [file1, file2] becomes [[meta1, file1],[meta2, file2]]
     // outputs are collected to maintain a single channel for relevant TBI files
     TABIX_DBSNP(dbsnp.flatten().map{ it -> [[id:it.baseName], it] })
     TABIX_GERMLINE_RESOURCE(germline_resource.flatten().map{ it -> [[id:it.baseName], it] })
