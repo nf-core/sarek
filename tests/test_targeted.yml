@@ -55,7 +55,7 @@
     - path: results/reports/samtools/test/test.md.cram.stats
       md5sum: 52411f93d9b5382342b40a351c2e313c
     - path: results/reports/samtools/test/test.recal.cram.stats
-      md5sum: ecad3c41de5b82f6bc0c429e7b24958e
+      md5sum: 5ed26e702d5c2238a1f3cdc5e5b44f98
 
 - name: Run intervals false pipeline
   command: nextflow run main.nf -profile test --intervals false
