@@ -27,7 +27,7 @@
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
       md5sum: b3716e5cd1744610e69c29bd4ffad259
     - path: results/reports/samtools/test/test.recal.cram.stats
-      md5sum: 1787b3a12b134fe35ab166431f107fc4
+      md5sum: a0841c41460d0d4bdc2a1a777ee7e7c2
 - name: Run Recalibration starting from cram
   command: nextflow run main.nf -profile test,recalibrate_cram
   tags:
@@ -53,7 +53,7 @@
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
       md5sum: b3716e5cd1744610e69c29bd4ffad259
     - path: results/reports/samtools/test/test.recal.cram.stats
-      md5sum: 1787b3a12b134fe35ab166431f107fc4
+      md5sum: a0841c41460d0d4bdc2a1a777ee7e7c2
 - name: Run Recalibration starting from bam and skip baserecalibration
   command: nextflow run main.nf -profile test,recalibrate_bam,skip_bqsr --tools strelka
   tags:

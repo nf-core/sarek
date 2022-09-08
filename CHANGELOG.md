@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - [#691](https://github.com/nf-core/sarek/pull/691) - Enable `PROFILE=conda`, `PROFILE=docker` and `PROFILE=singularity` for pytest
-- [#716](https://github.com/nf-core/sarek/pull/716) - Add documentation for Azure recomended config vm_size
+- [#716](https://github.com/nf-core/sarek/pull/716) - Add documentation for Azure recommended config vm_size
 
 ### Changed
 
@@ -22,7 +22,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#719](https://github.com/nf-core/sarek/pull/719) - Added boxes to subway map
 - [#720](https://github.com/nf-core/sarek/pull/720) - Sync `TEMPLATE` with `tools` `2.5`
 - [#723](https://github.com/nf-core/sarek/pull/723) - Sync `TEMPLATE` with `tools` `2.5.1`
+- [#726](https://github.com/nf-core/sarek/pull/726) - Adapt resource requests
 - [#730](https://github.com/nf-core/sarek/pull/730) - Reduce number of tests
+- [#731](https://github.com/nf-core/sarek/pull/731) - Run the somatic test as default on `-profile test_full`, the germline can be tested with `-profile test_full_somatic`
+- [#733](https://github.com/nf-core/sarek/pull/733) - Add description for params.cf_chrom_len
+- [#734](https://github.com/nf-core/sarek/pull/734) - nf-core modules update -a
+- [#736](https://github.com/nf-core/sarek/pull/736) - More extensive CI for default test
 
 ### Fixed
 
@@ -34,8 +39,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#705](https://github.com/nf-core/sarek/pull/705) - Fix publishing for processes in `alignment_to_fastq` subworkflow; prevent tabix computation for `known_snps` when present; publish `umi` processed files into `preprocessing/umi` subdirectory
 - [#706](https://github.com/nf-core/sarek/pull/706) - Fixed `vep_version` not found error when running `--vep_loftee`
 - [#724](https://github.com/nf-core/sarek/pull/724) - Fixed prettier issue
+- [#727](https://github.com/nf-core/sarek/pull/727) - Allow `.list` interval files; remove `seconds` from GRCh38 file to allow `--nucleotides_per_second` to be used
 - [#728](https://github.com/nf-core/sarek/pull/728) - Circumvent issue with controlfreec and length file containing regions not in intervals file
 - [#729](https://github.com/nf-core/sarek/pull/729) - Trailing commas in `--tools`, `--skip_tools` and `--use_gatk_spark` now raise failure cf [#722](https://github.com/nf-core/sarek/issues/722)
+- [#741](https://github.com/nf-core/sarek/pull/741) - Fix prefix for `bcftools sort` for joint germline variant calling
 
 ### Deprecated
 
