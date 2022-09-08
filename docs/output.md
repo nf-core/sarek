@@ -824,7 +824,7 @@ The plot will show:
 
 **Output directory: `{outdir}/reports/markduplicates/<sample>`**
 
-- `<sample>.md.metrics`
+- `<sample>.md.cram.metrics`
   - file used by [MultiQC](https://multiqc.info/)
   </details>
 
