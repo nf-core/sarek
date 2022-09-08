@@ -15,9 +15,9 @@
       md5sum: 074181cafbe49e829a59a0e164ba7cfe
     - path: results/preprocessing/mapped/test/test.bam.bai
       md5sum: af47d3ab6aa005c35404041c2899ea65
-    - path: results/preprocessing/mapped/test/test.sorted.cram
+    - path: results/preprocessing/mapped/test/test.sorted.bam
     # binary changes md5sums on reruns.
-    - path: results/preprocessing/mapped/test/test.sorted.cram.crai
+    - path: results/preprocessing/mapped/test/test.sorted.bam.bai
     # binary changes md5sums on reruns.
     - path: results/preprocessing/recal_table/test/test.recal.table
       md5sum: 8de213f4c00fac61a1102633760493df
@@ -66,9 +66,9 @@
     - path: results/csv/sorted.csv
       md5sum: bce12dd51c8e520201abde4b9cb8abce
     - path: results/multiqc
-    - path: results/preprocessing/mapped/test/test.sorted.cram
+    - path: results/preprocessing/mapped/test/test.sorted.bam
     # binary changes md5sums on reruns.
-    - path: results/preprocessing/mapped/test/test.sorted.cram.crai
+    - path: results/preprocessing/mapped/test/test.sorted.bam.bai
     # binary changes md5sums on reruns.
     - path: results/preprocessing/recal_table/test/test.recal.table
       md5sum: 35d89a3811aa31711fc9815b6b80e6ec
