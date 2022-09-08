@@ -50,6 +50,6 @@
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
       md5sum: a5ad8f917979f62eacfff1461529dbaa
     - path: results/reports/samtools/test/test.md.cram.stats
-      md5sum: bba23d14aa20be36bf87bedf91c8832c
+      md5sum: 7382e028335a2b057cb54ea160c4be7b
     - path: results/reports/samtools/test/test.recal.cram.stats
-      md5sum: deb6f58a0d339e821e98c25b456f7eb7
+      md5sum: 5adeae7e9ce068009e88bacba549096e

@@ -1,6 +1,6 @@
 process MANTA_TUMORONLY {
     tag "$meta.id"
-    label 'process_high'
+    label 'process_medium'
 
     conda (params.enable_conda ? "bioconda::manta=1.6.0" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?

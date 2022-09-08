@@ -45,9 +45,9 @@
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
       md5sum: b1c2a861f64e20a94108a6de3b76c582
     - path: results/reports/samtools/test/test.md.cram.stats
-      md5sum: dcf70bbcfb92e01027978f28d2035d78
+      md5sum: 52411f93d9b5382342b40a351c2e313c
     - path: results/reports/samtools/test/test.recal.cram.stats
-      md5sum: 5528d952f5dc74a39f28e27165bf96be
+      md5sum: 811d834ff8849e69e7c5925dc2a34257
 - name: Run save_output_as_bam with gatk4 spark
   command: nextflow run main.nf -profile test,use_gatk_spark --save_output_as_bam
   tags:
@@ -96,6 +96,6 @@
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
       md5sum: cf85ba4692f016af70db2a594d9effdf
     - path: results/reports/samtools/test/test.md.cram.stats
-      md5sum: 2e4edbad7d0fb88d7834114a2d5ab534
+      md5sum: b573b2e930c5f68e7e4910faf9e51e44
     - path: results/reports/samtools/test/test.recal.cram.stats
-      md5sum: 996b6f18a9ad4aa4ebc8a38f559471a0
+      md5sum: a75731dca9b42d87d9997ea44aaf82fc

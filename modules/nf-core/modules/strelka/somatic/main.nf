@@ -1,6 +1,6 @@
 process STRELKA_SOMATIC {
     tag "$meta.id"
-    label 'process_high'
+    label 'process_medium'
 
     conda (params.enable_conda ? "bioconda::strelka=2.9.10" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?

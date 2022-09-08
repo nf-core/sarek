@@ -22,9 +22,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#719](https://github.com/nf-core/sarek/pull/719) - Added boxes to subway map
 - [#720](https://github.com/nf-core/sarek/pull/720) - Sync `TEMPLATE` with `tools` `2.5`
 - [#723](https://github.com/nf-core/sarek/pull/723) - Sync `TEMPLATE` with `tools` `2.5.1`
+- [#726](https://github.com/nf-core/sarek/pull/726) - Adapt resource requests
 - [#730](https://github.com/nf-core/sarek/pull/730) - Reduce number of tests
 - [#731](https://github.com/nf-core/sarek/pull/731) - Run the somatic test as default on `-profile test_full`, the germline can be tested with `-profile test_full_somatic`
 - [#733](https://github.com/nf-core/sarek/pull/733) - Add description for params.cf_chrom_len
+- [#734](https://github.com/nf-core/sarek/pull/734) - nf-core modules update -a
 - [#736](https://github.com/nf-core/sarek/pull/736) - More extensive CI for default test
 
 ### Fixed
