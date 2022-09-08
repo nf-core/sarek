@@ -196,89 +196,89 @@ if (params.spliceai_snv && params.spliceai_snv_tbi && params.spliceai_indel && p
 */
 
 // Create samplesheets to restart from different steps
-include { MAPPING_CSV                                          } from '../subworkflows/local/mapping_csv'
-include { MARKDUPLICATES_CSV                                   } from '../subworkflows/local/markduplicates_csv'
-include { PREPARE_RECALIBRATION_CSV                            } from '../subworkflows/local/prepare_recalibration_csv'
-include { RECALIBRATE_CSV                                      } from '../subworkflows/local/recalibrate_csv'
-include { VARIANTCALLING_CSV                                   } from '../subworkflows/local/variantcalling_csv'
+include { MAPPING_CSV                                    } from '../subworkflows/local/mapping_csv'
+include { MARKDUPLICATES_CSV                             } from '../subworkflows/local/markduplicates_csv'
+include { PREPARE_RECALIBRATION_CSV                      } from '../subworkflows/local/prepare_recalibration_csv'
+include { RECALIBRATE_CSV                                } from '../subworkflows/local/recalibrate_csv'
+include { VARIANTCALLING_CSV                             } from '../subworkflows/local/variantcalling_csv'
 
 // Build indices if needed
-include { PREPARE_GENOME                                       } from '../subworkflows/local/prepare_genome'
+include { PREPARE_GENOME                                 } from '../subworkflows/local/prepare_genome'
 
 // Build intervals if needed
-include { PREPARE_INTERVALS                                    } from '../subworkflows/local/prepare_intervals'
+include { PREPARE_INTERVALS                              } from '../subworkflows/local/prepare_intervals'
 
 // Build CNVkit reference if needed
-include { PREPARE_CNVKIT_REFERENCE                             } from '../subworkflows/local/prepare_cnvkit_reference'
+include { PREPARE_CNVKIT_REFERENCE                       } from '../subworkflows/local/prepare_cnvkit_reference'
 
 // Convert BAM files to FASTQ files
-include { ALIGNMENT_TO_FASTQ as ALIGNMENT_TO_FASTQ_INPUT         } from '../subworkflows/nf-core/alignment_to_fastq'
-include { ALIGNMENT_TO_FASTQ as ALIGNMENT_TO_FASTQ_UMI           } from '../subworkflows/nf-core/alignment_to_fastq'
+include { ALIGNMENT_TO_FASTQ as ALIGNMENT_TO_FASTQ_INPUT } from '../subworkflows/nf-core/alignment_to_fastq'
+include { ALIGNMENT_TO_FASTQ as ALIGNMENT_TO_FASTQ_UMI   } from '../subworkflows/nf-core/alignment_to_fastq'
 
 // Run FASTQC
-include { RUN_FASTQC                                             } from '../subworkflows/nf-core/run_fastqc'
+include { RUN_FASTQC                                     } from '../subworkflows/nf-core/run_fastqc'
 
 // TRIM/SPLIT FASTQ Files
-include { FASTP                                                  } from '../modules/nf-core/modules/fastp/main'
+include { FASTP                                          } from '../modules/nf-core/modules/fastp/main'
 
 // Create umi consensus bams from fastq
-include { CREATE_UMI_CONSENSUS                                   } from '../subworkflows/nf-core/fgbio_create_umi_consensus/main'
+include { CREATE_UMI_CONSENSUS                           } from '../subworkflows/nf-core/fgbio_create_umi_consensus/main'
 
 // Map input reads to reference genome
-include { GATK4_MAPPING                                          } from '../subworkflows/nf-core/gatk4/mapping/main'
+include { GATK4_MAPPING                                  } from '../subworkflows/nf-core/gatk4/mapping/main'
 
 // Merge and index BAM files (optional)
-include { MERGE_INDEX_BAM                                        } from '../subworkflows/nf-core/merge_index_bam'
+include { MERGE_INDEX_BAM                                } from '../subworkflows/nf-core/merge_index_bam'
 
-include { SAMTOOLS_CONVERT as CRAMTOBAM_MARKDUPLICATES           } from '../modules/nf-core/modules/samtools/convert/main'
-include { SAMTOOLS_CONVERT as CRAMTOBAM_RECAL                    } from '../modules/nf-core/modules/samtools/convert/main'
+include { SAMTOOLS_CONVERT as CRAMTOBAM_MARKDUPLICATES   } from '../modules/nf-core/modules/samtools/convert/main'
+include { SAMTOOLS_CONVERT as CRAMTOBAM_RECAL            } from '../modules/nf-core/modules/samtools/convert/main'
 
-include { SAMTOOLS_CONVERT as BAMTOCRAM                          } from '../modules/nf-core/modules/samtools/convert/main'
-include { SAMTOOLS_CONVERT as BAMTOCRAM_VARIANTCALLING           } from '../modules/nf-core/modules/samtools/convert/main'
+include { SAMTOOLS_CONVERT as BAMTOCRAM                  } from '../modules/nf-core/modules/samtools/convert/main'
+include { SAMTOOLS_CONVERT as BAMTOCRAM_VARIANTCALLING   } from '../modules/nf-core/modules/samtools/convert/main'
 
 // Mark Duplicates (+QC)
-include { MARKDUPLICATES                                         } from '../subworkflows/nf-core/gatk4/markduplicates/main'
+include { MARKDUPLICATES                                 } from '../subworkflows/nf-core/gatk4/markduplicates/main'
 
 // Mark Duplicates SPARK (+QC)
-include { MARKDUPLICATES_SPARK                                   } from '../subworkflows/nf-core/gatk4/markduplicates_spark/main'
+include { MARKDUPLICATES_SPARK                           } from '../subworkflows/nf-core/gatk4/markduplicates_spark/main'
 
 // Convert to CRAM (+QC)
-include { BAM_TO_CRAM                                            } from '../subworkflows/nf-core/bam_to_cram'
+include { BAM_TO_CRAM                                    } from '../subworkflows/nf-core/bam_to_cram'
 
 // QC on CRAM
-include { CRAM_QC                                                } from '../subworkflows/nf-core/cram_qc'
+include { CRAM_QC                                        } from '../subworkflows/nf-core/cram_qc'
 
 // Create recalibration tables
-include { PREPARE_RECALIBRATION                                  } from '../subworkflows/nf-core/gatk4/prepare_recalibration/main'
+include { PREPARE_RECALIBRATION                          } from '../subworkflows/nf-core/gatk4/prepare_recalibration/main'
 
 // Create recalibration tables SPARK
-include { PREPARE_RECALIBRATION_SPARK                            } from '../subworkflows/nf-core/gatk4/prepare_recalibration_spark/main'
+include { PREPARE_RECALIBRATION_SPARK                    } from '../subworkflows/nf-core/gatk4/prepare_recalibration_spark/main'
 
 // Create recalibrated cram files to use for variant calling (+QC)
-include { RECALIBRATE                                            } from '../subworkflows/nf-core/gatk4/recalibrate/main'
+include { RECALIBRATE                                    } from '../subworkflows/nf-core/gatk4/recalibrate/main'
 
 // Create recalibrated cram files to use for variant calling (+QC)
-include { RECALIBRATE_SPARK                                      } from '../subworkflows/nf-core/gatk4/recalibrate_spark/main'
+include { RECALIBRATE_SPARK                              } from '../subworkflows/nf-core/gatk4/recalibrate_spark/main'
 
 // Variant calling on a single normal sample
-include { GERMLINE_VARIANT_CALLING                               } from '../subworkflows/local/germline_variant_calling'
+include { GERMLINE_VARIANT_CALLING                       } from '../subworkflows/local/germline_variant_calling'
 
 // Variant calling on a single tumor sample
-include { TUMOR_ONLY_VARIANT_CALLING                             } from '../subworkflows/local/tumor_variant_calling'
+include { TUMOR_ONLY_VARIANT_CALLING                     } from '../subworkflows/local/tumor_variant_calling'
 
 // Variant calling on tumor/normal pair
-include { PAIR_VARIANT_CALLING                                   } from '../subworkflows/local/pair_variant_calling'
+include { PAIR_VARIANT_CALLING                           } from '../subworkflows/local/pair_variant_calling'
 
-include { VCF_QC                                                 } from '../subworkflows/nf-core/vcf_qc'
+include { VCF_QC                                         } from '../subworkflows/nf-core/vcf_qc'
 
 // Annotation
-include { ANNOTATE                                               } from '../subworkflows/local/annotate'
+include { ANNOTATE                                       } from '../subworkflows/local/annotate'
 
 // REPORTING VERSIONS OF SOFTWARE USED
-include { CUSTOM_DUMPSOFTWAREVERSIONS                            } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
+include { CUSTOM_DUMPSOFTWAREVERSIONS                    } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
 
 // MULTIQC
-include { MULTIQC                                                } from '../modules/nf-core/modules/multiqc/main'
+include { MULTIQC                                        } from '../modules/nf-core/modules/multiqc/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
