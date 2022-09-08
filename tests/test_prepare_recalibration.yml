@@ -6,7 +6,7 @@
     - preprocessing
   files:
     - path: results/csv/markduplicates.csv
-      md5sum: 8e9408ef8d4f9e6e00e531268eebd42a
+      md5sum: 7be966231ec9614cf69c83967fcf9723
     - path: results/csv/recalibrated.csv
       md5sum: 338715c5e3441d1070c63536fba7244a
     - path: results/multiqc

@@ -23,7 +23,7 @@
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
       md5sum: e1647d01bff62853ac5d8f79795b10ac
     - path: results/reports/fastqc/test-test_L1
-    - path: results/reports/markduplicates/test/test.md.cram.metrics
+    - path: results/reports/markduplicates/test/test.md.metrics
     # The text-based output-file test.md.cram.metrics only contains comments and no metrics, which is a bit odd.
     # The file test.md.cram.metrics contains a timestamp which means that it cannot be tested using the md5sum.
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
