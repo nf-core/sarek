@@ -538,7 +538,7 @@
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.cram.metrics
       contains: ["test	8547	767	84	523391	3882	0	0	0.385081", "1.0	767	767"]
-    - path: results/reports/markduplicates/test2/test2.test.md.cram.metrics
+    - path: results/reports/markduplicates/test2/test2.md.cram.metrics
       contains: ["test2	10103	880	35	523579	4837	2	0	0.408076	193306", "1.0	1	876	876", "100.0	80.515303	0	0"]
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
       md5sum: 5a0679057c530e5945c9c5a3a17312dc
@@ -677,7 +677,7 @@
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.cram.metrics
       contains: ["test	8547	767	84	523391	3882	0	0	0.385081", "1.0	767	767"]
-    - path: results/reports/markduplicates/test2/test2.test.md.cram.metrics
+    - path: results/reports/markduplicates/test2/test2.md.cram.metrics
       contains: ["test2	10103	880	35	523579	4837	2	0	0.408076	193306", "1.0	1	876	876", "100.0	80.515303	0	0"]
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
       md5sum: 5a0679057c530e5945c9c5a3a17312dc
