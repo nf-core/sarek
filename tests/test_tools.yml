@@ -298,7 +298,7 @@
     - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.g.vcf.gz
     # binary changes md5sums on reruns.
     - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.g.vcf.gz.tbi
-      md5sum: 9870fcf1afbf7cbccc3b63d75acf1f4f
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.vcf.gz
     # binary changes md5sums on reruns.
     - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.vcf.gz.tbi
