@@ -526,9 +526,10 @@ Expected run output:
 [-        ] process > NFCORE_SAREK:SAREK:GATK4_MAPPING:BWAMEM2_MEM                                          -
 [-        ] process > NFCORE_SAREK:SAREK:GATK4_MAPPING:DRAGMAP_ALIGN                                        -
 [46/35a640] process > NFCORE_SAREK:SAREK:MARKDUPLICATES:GATK4_MARKDUPLICATES (test)                         [100%] 1 of 1 ✔
-[e0/525bb3] process > NFCORE_SAREK:SAREK:MARKDUPLICATES:BAM_TO_CRAM:SAMTOOLS_BAMTOCRAM (test)               [100%] 1 of 1 ✔
-[46/9fe93a] process > NFCORE_SAREK:SAREK:MARKDUPLICATES:BAM_TO_CRAM:SAMTOOLS_STATS_CRAM (test)              [100%] 1 of 1 ✔
-[77/2c8b1b] process > NFCORE_SAREK:SAREK:MARKDUPLICATES:BAM_TO_CRAM:MOSDEPTH (test)                         [100%] 1 of 1 ✔
+[9a/76cef7] process > NFCORE_SAREK:SAREK:MARKDUPLICATES:INDEX_MARKDUPLICATES (test)                         [100%] 1 of 1 ✔
+[46/9fe93a] process > NFCORE_SAREK:SAREK:MARKDUPLICATES:CRAM_QC:SAMTOOLS_STATS (test)                       [100%] 1 of 1 ✔
+[77/2c8b1b] process > NFCORE_SAREK:SAREK:MARKDUPLICATES:CRAM_QC:MOSDEPTH (test)                             [100%] 1 of 1 ✔
+[-        ] process > NFCORE_SAREK:SAREK:SAMTOOLS_CRAMTOBAM_MARKDUPLICATES                                  -
 [f7/499800] process > NFCORE_SAREK:SAREK:PREPARE_RECALIBRATION:BASERECALIBRATOR (test)                      [100%] 1 of 1 ✔
 [-        ] process > NFCORE_SAREK:SAREK:PREPARE_RECALIBRATION:GATHERBQSRREPORTS                            -
 [9d/3d1fff] process > NFCORE_SAREK:SAREK:RECALIBRATE:APPLYBQSR (test)                                       [100%] 1 of 1 ✔
