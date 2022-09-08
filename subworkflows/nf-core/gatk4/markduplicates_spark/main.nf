@@ -8,7 +8,6 @@ include { CRAM_QC                                } from '../../cram_qc'
 include { GATK4_ESTIMATELIBRARYCOMPLEXITY        } from '../../../../modules/nf-core/modules/gatk4/estimatelibrarycomplexity/main'
 include { GATK4_MARKDUPLICATES_SPARK             } from '../../../../modules/nf-core/modules/gatk4/markduplicatesspark/main'
 include { SAMTOOLS_INDEX as INDEX_MARKDUPLICATES } from '../../../../modules/nf-core/modules/samtools/index/main'
-include { SAMTOOLS_CONVERT as SAMTOOLS_CRAMTOBAM } from '../../../../modules/nf-core/modules/samtools/convert/main'
 
 workflow MARKDUPLICATES_SPARK {
     take:
@@ -30,24 +29,21 @@ workflow MARKDUPLICATES_SPARK {
     cram_markduplicates = GATK4_MARKDUPLICATES_SPARK.out.output
         .join(INDEX_MARKDUPLICATES.out.crai)
 
-    SAMTOOLS_CRAMTOBAM(cram_markduplicates, fasta, fasta_fai)
-
     // Convert Markupduplicates spark bam output to cram when running bamqc and/or deeptools
     CRAM_QC(cram_markduplicates, fasta, fasta_fai, intervals_bed_combined)
 
     // When running Marduplicates spark, and saving reports
-    GATK4_ESTIMATELIBRARYCOMPLEXITY(bam, fasta, fasta_fai, dict)
+    //GATK4_ESTIMATELIBRARYCOMPLEXITY(bam, fasta, fasta_fai, dict)
 
     // Gather all reports generated
-    qc_reports = qc_reports.mix(GATK4_ESTIMATELIBRARYCOMPLEXITY.out.metrics,
+    qc_reports = qc_reports.mix(//GATK4_ESTIMATELIBRARYCOMPLEXITY.out.metrics,
                                 CRAM_QC.out.qc)
 
     // Gather versions of all tools used
-    ch_versions = ch_versions.mix(GATK4_ESTIMATELIBRARYCOMPLEXITY.out.versions.first())
-    ch_versions = ch_versions.mix(GATK4_MARKDUPLICATES_SPARK.out.versions.first())
-    ch_versions = ch_versions.mix(INDEX_MARKDUPLICATES.out.versions.first())
-    ch_versions = ch_versions.mix(CRAM_QC.out.versions.first())
-    ch_versions = ch_versions.mix(SAMTOOLS_CRAMTOBAM.out.versions)
+    //ch_versions = ch_versions.mix(GATK4_ESTIMATELIBRARYCOMPLEXITY.out.versions.first())
+    ch_versions = ch_versions.mix(GATK4_MARKDUPLICATES_SPARK.out.versions)
+    ch_versions = ch_versions.mix(INDEX_MARKDUPLICATES.out.versions)
+    ch_versions = ch_versions.mix(CRAM_QC.out.versions)
 
     emit:
         cram     = cram_markduplicates
