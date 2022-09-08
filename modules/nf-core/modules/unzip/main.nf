@@ -1,6 +1,6 @@
 process UNZIP {
     tag "$archive"
-    label 'process_low'
+    label 'process_single'
 
     conda (params.enable_conda ? "bioconda::p7zip=15.09" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?

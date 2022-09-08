@@ -45,6 +45,6 @@
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
       md5sum: c259a9fd73f576626c3a29841c2dc019
     - path: results/reports/samtools/test/test.md.cram.stats
-      md5sum: 2e4edbad7d0fb88d7834114a2d5ab534
+      md5sum: b573b2e930c5f68e7e4910faf9e51e44
     - path: results/reports/samtools/test/test.recal.cram.stats
-      md5sum: 996b6f18a9ad4aa4ebc8a38f559471a0
+      md5sum: a75731dca9b42d87d9997ea44aaf82fc

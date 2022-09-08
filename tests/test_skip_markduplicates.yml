@@ -47,9 +47,9 @@
     - path: results/reports/mosdepth/test/test.sorted.regions.bed.gz.csi
       md5sum: e3235323f455414ee3acc7144e659caf
     - path: results/reports/samtools/test/test.recal.cram.stats
-      md5sum: 58deb5e1d74a991f863136a218c8f56c
+      md5sum: 55ddd2d98552a1483bf2a965f19d8da4
     - path: results/reports/samtools/test/test.sorted.cram.stats
-      md5sum: 494976d0d5b3ca029c986cf9e79bb7b3
+      md5sum: 59d921ed3970e19145fbae75966de3e3
     - path: results/csv/markduplicates.csv
       should_exist: false
     - path: results/csv/markduplicates_no_table.csv
@@ -97,9 +97,9 @@
     - path: results/reports/mosdepth/test/test.sorted.regions.bed.gz.csi
       md5sum: b3716e5cd1744610e69c29bd4ffad259
     - path: results/reports/samtools/test/test.recal.cram.stats
-      md5sum: 61fd75f684ee1b98fd29d7005199762e
+      md5sum: 71af990f7acad8bf24d37e88c4adcded
     - path: results/reports/samtools/test/test.sorted.cram.stats
-      md5sum: 9fc99b31174fc1ea50cd7644c50f42aa
+      md5sum: ac78da9dde7bae6849c0e2488bf7506a
     - path: results/csv/markduplicates.csv
       should_exist: false
     - path: results/csv/markduplicates_no_table.csv
@@ -141,9 +141,9 @@
     - path: results/reports/mosdepth/test/test.sorted.regions.bed.gz.csi
       md5sum: b3716e5cd1744610e69c29bd4ffad259
     - path: results/reports/samtools/test/test.recal.cram.stats
-      md5sum: 61fd75f684ee1b98fd29d7005199762e
+      md5sum: 71af990f7acad8bf24d37e88c4adcded
     - path: results/reports/samtools/test/test.sorted.cram.stats
-      md5sum: a0105eedd6ff6c840f0853434addb0c1
+      md5sum: 42b536ada66f772bb4dfd741098b2783
     - path: results/csv/markduplicates.csv
       should_exist: false
     - path: results/csv/markduplicates_no_table.csv

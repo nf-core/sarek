@@ -189,9 +189,6 @@ if (params.spliceai_snv && params.spliceai_snv_tbi && params.spliceai_indel && p
     vep_extra_files.add(file(params.spliceai_snv_tbi, checkIfExists: true))
 }
 
-// Initialize value channels based on params, not defined within the params.genomes[params.genome] scope
-umi_read_structure = params.umi_read_structure ? "${params.umi_read_structure}" : Channel.empty()
-
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     IMPORT LOCAL/NF-CORE MODULES/SUBWORKFLOWS
@@ -414,7 +411,6 @@ workflow SAREK {
                 ch_input_fastq,
                 fasta,
                 ch_map_index,
-                umi_read_structure,
                 params.group_by_umi_strategy
             )
 
