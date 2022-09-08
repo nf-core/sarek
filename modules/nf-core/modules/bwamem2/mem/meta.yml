@@ -37,6 +37,11 @@ input:
       description: use samtools sort (true) or samtools view (false)
       pattern: "true or false"
 output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
   - bam:
       type: file
       description: Output BAM file containing read alignments
