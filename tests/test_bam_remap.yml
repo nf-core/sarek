@@ -21,7 +21,7 @@
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
     # binary changes md5sums on reruns.
     - path: results/reports/fastqc/test-1
-    - path: results/reports/markduplicates/test/test.md.metrics
+    - path: results/reports/markduplicates/test/test.md.cram.metrics
       contains: ["test	0	2820	2	2	0	828	0	0.293617	3807", "1.0	0.999986	1178	1178", "2.0	1.47674	800	800", "100.0	1.911145	0	0"]
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
       md5sum: 9cb9b181119256ed17a77dcf44d58285

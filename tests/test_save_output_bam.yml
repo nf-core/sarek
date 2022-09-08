@@ -22,7 +22,7 @@
     - path: results/preprocessing/recalibrated/test/test.recal.bam.bai
     # binary changes md5sums on reruns.
     - path: results/reports/fastqc/test-test_L1
-    - path: results/reports/markduplicates/test/test.md.metrics
+    - path: results/reports/markduplicates/test/test.md.cram.metrics
       contains: ["test	8547	767	84	523391	3882	0	0	0.385081", "1.0	767	767"]
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
       md5sum: 76fa71922a3f748e507c2364c531dfcb
@@ -72,9 +72,9 @@
     - path: results/preprocessing/recalibrated/test/test.recal.bam.bai
       md5sum: 4895a3fe3595d0b7febc11265a2e4012
     - path: results/reports/fastqc/test-test_L1
-    - path: results/reports/markduplicates/test/test.md.metrics
-    # The text-based output-file test.md.metrics only contains comments and no metrics, which is a bit odd.
-    # The file test.md.metrics contains a timestamp which means that it cannot be tested using the md5sum.
+    - path: results/reports/markduplicates/test/test.md.cram.metrics
+    # The text-based output-file test.md.cram.metrics only contains comments and no metrics, which is a bit odd.
+    # The file test.md.cram.metrics contains a timestamp which means that it cannot be tested using the md5sum.
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
       md5sum: 9269e959d5eec5273307693c6274f53e
     - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt

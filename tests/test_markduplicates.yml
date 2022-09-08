@@ -22,7 +22,7 @@
     # binary changes md5sums on reruns.
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
     # binary changes md5sums on reruns.
-    - path: results/reports/markduplicates/test/test.md.metrics
+    - path: results/reports/markduplicates/test/test.md.cram.metrics
       contains: ["testN	0	2820	2	2	0	828	0	0.293617	3807", "1.0	0.999986	1178	1178", "100.0	1.911145	0	0"]
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
       md5sum: 8e875e20e3fb9cf288d68c1d223f6fd5
@@ -72,7 +72,7 @@
     # binary changes md5sums on reruns.
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
     # binary changes md5sums on reruns.
-    - path: results/reports/markduplicates/test/test.md.metrics
+    - path: results/reports/markduplicates/test/test.md.cram.metrics
       contains: ["testN	0	2820	2	2	0	828	0	0.293617	3807", "1.0	0.999986	1178	1178", "100.0	1.911145	0	0"]
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
       md5sum: 8e875e20e3fb9cf288d68c1d223f6fd5
