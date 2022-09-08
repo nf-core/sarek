@@ -230,11 +230,11 @@ include { GATK4_MAPPING                                          } from '../subw
 // Merge and index BAM files (optional)
 include { MERGE_INDEX_BAM                                        } from '../subworkflows/nf-core/merge_index_bam'
 
-include { SAMTOOLS_CONVERT as SAMTOOLS_CRAMTOBAM_MARKDUPLICATES  } from '../modules/nf-core/modules/samtools/convert/main'
-include { SAMTOOLS_CONVERT as SAMTOOLS_CRAMTOBAM_RECAL           } from '../modules/nf-core/modules/samtools/convert/main'
+include { SAMTOOLS_CONVERT as CRAMTOBAM_MARKDUPLICATES           } from '../modules/nf-core/modules/samtools/convert/main'
+include { SAMTOOLS_CONVERT as CRAMTOBAM_RECAL                    } from '../modules/nf-core/modules/samtools/convert/main'
 
-include { SAMTOOLS_CONVERT as SAMTOOLS_BAMTOCRAM                 } from '../modules/nf-core/modules/samtools/convert/main'
-include { SAMTOOLS_CONVERT as SAMTOOLS_BAMTOCRAM_VARIANTCALLING  } from '../modules/nf-core/modules/samtools/convert/main'
+include { SAMTOOLS_CONVERT as BAMTOCRAM                          } from '../modules/nf-core/modules/samtools/convert/main'
+include { SAMTOOLS_CONVERT as BAMTOCRAM_VARIANTCALLING           } from '../modules/nf-core/modules/samtools/convert/main'
 
 // Mark Duplicates (+QC)
 include { MARKDUPLICATES                                         } from '../subworkflows/nf-core/gatk4/markduplicates/main'
@@ -633,12 +633,12 @@ workflow SAREK {
                     }
 
         //If params.save_output_as_bam, then convert CRAM files to BAM
-        SAMTOOLS_CRAMTOBAM_MARKDUPLICATES(ch_md_cram_for_restart, fasta, fasta_fai)
-        ch_versions = ch_versions.mix(SAMTOOLS_CRAMTOBAM_MARKDUPLICATES.out.versions)
+        CRAMTOBAM_MARKDUPLICATES(ch_md_cram_for_restart, fasta, fasta_fai)
+        ch_versions = ch_versions.mix(CRAMTOBAM_MARKDUPLICATES.out.versions)
 
         // CSV should be written for the file actually out, either CRAM or BAM
         // Create CSV to restart from this step
-        if (!(params.skip_tools && params.skip_tools.split(',').contains('markduplicates'))) params.save_output_as_bam ? SAMTOOLS_CRAMTOBAM_MARKDUPLICATES.out.alignment_index : MARKDUPLICATES_CSV(ch_md_cram_for_restart)
+        if (!(params.skip_tools && params.skip_tools.split(',').contains('markduplicates'))) params.save_output_as_bam ? CRAMTOBAM_MARKDUPLICATES.out.alignment_index : MARKDUPLICATES_CSV(ch_md_cram_for_restart)
     }
 
     if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration']) {
@@ -653,12 +653,12 @@ workflow SAREK {
             }.set{ch_convert}
 
             //BAM files first must be converted to CRAM files since from this step on we base everything on CRAM format
-            SAMTOOLS_BAMTOCRAM(ch_convert.bam, fasta, fasta_fai)
-            ch_versions = ch_versions.mix(SAMTOOLS_BAMTOCRAM.out.versions)
+            BAMTOCRAM(ch_convert.bam, fasta, fasta_fai)
+            ch_versions = ch_versions.mix(BAMTOCRAM.out.versions)
 
-            ch_cram_for_prepare_recalibration = Channel.empty().mix(SAMTOOLS_BAMTOCRAM.out.alignment_index, ch_convert.cram)
+            ch_cram_for_prepare_recalibration = Channel.empty().mix(BAMTOCRAM.out.alignment_index, ch_convert.cram)
 
-            ch_md_cram_for_restart = SAMTOOLS_BAMTOCRAM.out.alignment_index
+            ch_md_cram_for_restart = BAMTOCRAM.out.alignment_index
 
         } else {
 
@@ -740,11 +740,11 @@ workflow SAREK {
             ch_bam_bam   = ch_convert.bam.map{ meta, bam, bai, table -> [meta, bam, bai]}
 
             //BAM files first must be converted to CRAM files since from this step on we base everything on CRAM format
-            SAMTOOLS_BAMTOCRAM(ch_bam_bam, fasta, fasta_fai)
-            ch_versions = ch_versions.mix(SAMTOOLS_BAMTOCRAM.out.versions)
+            BAMTOCRAM(ch_bam_bam, fasta, fasta_fai)
+            ch_versions = ch_versions.mix(BAMTOCRAM.out.versions)
 
             ch_cram_applybqsr = Channel.empty().mix(
-                                    SAMTOOLS_BAMTOCRAM.out.alignment_index.join(ch_bam_table),
+                                    BAMTOCRAM.out.alignment_index.join(ch_bam_table),
                                     ch_convert.cram) // Join together converted cram with input tables
         }
 
@@ -797,12 +797,12 @@ workflow SAREK {
             ch_versions = ch_versions.mix(CRAM_QC.out.versions)
 
             //If params.save_output_as_bam, then convert CRAM files to BAM
-            SAMTOOLS_CRAMTOBAM_RECAL(ch_cram_variant_calling, fasta, fasta_fai)
-            ch_versions = ch_versions.mix(SAMTOOLS_CRAMTOBAM_RECAL.out.versions)
+            CRAMTOBAM_RECAL(ch_cram_variant_calling, fasta, fasta_fai)
+            ch_versions = ch_versions.mix(CRAMTOBAM_RECAL.out.versions)
 
             // CSV should be written for the file actually out out, either CRAM or BAM
             csv_recalibration = Channel.empty()
-            csv_recalibration = params.save_output_as_bam ?  SAMTOOLS_CRAMTOBAM_RECAL.out.alignment_index : ch_cram_variant_calling
+            csv_recalibration = params.save_output_as_bam ?  CRAMTOBAM_RECAL.out.alignment_index : ch_cram_variant_calling
 
             // Create CSV to restart from this step
             RECALIBRATE_CSV(csv_recalibration)
@@ -812,7 +812,7 @@ workflow SAREK {
             // ch_cram_variant_calling contains either:
             // - input bams converted to crams, if started from step recal + skip BQSR
             // - input crams if started from step recal + skip BQSR
-            ch_cram_variant_calling = Channel.empty().mix(SAMTOOLS_BAMTOCRAM.out.alignment_index,
+            ch_cram_variant_calling = Channel.empty().mix(BAMTOCRAM.out.alignment_index,
                                                         ch_convert.cram.map{ meta, cram, crai, table -> [meta, cram, crai]})
         } else {
             // ch_cram_variant_calling contains either:
@@ -829,10 +829,10 @@ workflow SAREK {
             }.set{ch_convert}
 
         //BAM files first must be converted to CRAM files since from this step on we base everything on CRAM format
-        SAMTOOLS_BAMTOCRAM_VARIANTCALLING(ch_convert.bam, fasta, fasta_fai)
-        ch_versions = ch_versions.mix(SAMTOOLS_BAMTOCRAM_VARIANTCALLING.out.versions)
+        BAMTOCRAM_VARIANTCALLING(ch_convert.bam, fasta, fasta_fai)
+        ch_versions = ch_versions.mix(BAMTOCRAM_VARIANTCALLING.out.versions)
 
-        ch_cram_variant_calling = Channel.empty().mix(SAMTOOLS_BAMTOCRAM_VARIANTCALLING.out.alignment_index, ch_convert.cram)
+        ch_cram_variant_calling = Channel.empty().mix(BAMTOCRAM_VARIANTCALLING.out.alignment_index, ch_convert.cram)
 
     }
 
