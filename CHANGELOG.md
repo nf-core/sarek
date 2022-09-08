@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#733](https://github.com/nf-core/sarek/pull/733) - Add description for params.cf_chrom_len
 - [#734](https://github.com/nf-core/sarek/pull/734) - nf-core modules update -a
 - [#736](https://github.com/nf-core/sarek/pull/736) - More extensive CI for default test
+- [#740](https://github.com/nf-core/sarek/pull/740) - Update version
 
 ### Fixed
 
