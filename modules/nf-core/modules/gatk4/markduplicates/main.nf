@@ -39,7 +39,7 @@ process GATK4_MARKDUPLICATES {
     gatk --java-options "-Xmx${avail_mem}g" MarkDuplicates \\
         $input_list \\
         --OUTPUT ${prefix} \\
-        --METRICS_FILE ${prefix}.metrics \\
+        --METRICS_FILE ${prefix.baseName}.metrics \\
         --TMP_DIR . \\
         ${reference} \\
         $args
