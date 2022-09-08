@@ -548,7 +548,7 @@ workflow SAREK {
         // ch_bam_for_markduplicates = params.step == 'mapping'? ch_bam_mapped : ch_input_sample.map{ meta, input, index -> [meta, input] }
 
         ch_for_markduplicates = Channel.empty()
-        ch_input_cram_indexed     = Channel.empty()
+        ch_input_cram_indexed = Channel.empty()
 
         if (params.step == 'mapping') ch_for_markduplicates = ch_bam_mapped
         else {
@@ -558,6 +558,7 @@ workflow SAREK {
             }.set{ch_convert}
 
             ch_for_markduplicates = ch_input_sample
+            ch_input_cram_indexed = ch_convert.cram
         }
 
         if (params.skip_tools && params.skip_tools.split(',').contains('markduplicates')) {
@@ -574,7 +575,7 @@ workflow SAREK {
                 fasta_fai,
                 intervals_for_preprocessing)
 
-            ch_cram_no_markduplicates_restart = BAM_TO_CRAM.out.cram_converted.mix(ch_convert.cram)
+            ch_cram_no_markduplicates_restart = BAM_TO_CRAM.out.cram_converted
 
             // Gather QC reports
             ch_reports  = ch_reports.mix(BAM_TO_CRAM.out.qc.collect{meta, report -> report})
