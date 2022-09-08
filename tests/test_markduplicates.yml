@@ -60,7 +60,7 @@
     - path: results/csv/markduplicates_no_table.csv
       md5sum: f8b1b25fec472453a98c3f7f0e3a7953
     - path: results/csv/recalibrated.csv
-      md5sum: 338715c5e3441d1070c63536fba7244a
+      md5sum: 9c450838b83b787cd339f7f3c0e848ef
     - path: results/multiqc
     - path: results/preprocessing/markduplicates/test/test.md.cram
     # binary changes md5sums on reruns.
@@ -98,7 +98,3 @@
       md5sum: a0ecedb6be28639e276d38e4ac18935b
     - path: results/reports/samtools/test/test.recal.cram.stats
       md5sum: 69d2bab6fdbe21ec5c598dc404a3df00
-    - path: results/samtools/test.bam
-    # binary changes md5sums on reruns.
-    - path: results/samtools/test.bam.bai
-    # binary changes md5sums on reruns.
