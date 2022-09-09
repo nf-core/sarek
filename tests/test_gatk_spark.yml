@@ -48,3 +48,5 @@
       md5sum: b573b2e930c5f68e7e4910faf9e51e44
     - path: results/reports/samtools/test/test.recal.cram.stats
       md5sum: a75731dca9b42d87d9997ea44aaf82fc
+    - path: results/preprocessing/mapped/
+      should_exist: false

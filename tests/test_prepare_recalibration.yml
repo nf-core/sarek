@@ -32,6 +32,8 @@
       md5sum: b3716e5cd1744610e69c29bd4ffad259
     - path: results/reports/samtools/test/test.recal.cram.stats
       md5sum: 71af990f7acad8bf24d37e88c4adcded
+    - path: results/preprocessing/mapped/
+      should_exist: false
 - name: Run prepare_recalibration starting from cram
   command: nextflow run main.nf -profile test,prepare_recalibration_cram
   tags:
@@ -60,6 +62,8 @@
       md5sum: b3716e5cd1744610e69c29bd4ffad259
     - path: results/reports/samtools/test/test.recal.cram.stats
       md5sum: 71af990f7acad8bf24d37e88c4adcded
+    - path: results/preprocessing/mapped/
+      should_exist: false
 - name: Run prepare_recalibration starting from bam and skip baserecalibration
   command: nextflow run main.nf -profile test,prepare_recalibration_bam,skip_bqsr --tools strelka
   tags:
@@ -101,6 +105,8 @@
     - path: results/reports/mosdepth
       should_exist: false
     - path: results/reports/samtools_stats
+      should_exist: false
+    - path: results/preprocessing/mapped/
       should_exist: false
 - name: Run prepare_recalibration starting from cram and skip baserecalibration
   command: nextflow run main.nf -profile test,prepare_recalibration_cram,skip_bqsr --tools strelka
@@ -149,4 +155,6 @@
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
       should_exist: false
     - path: results/reports/samtools/test/test.recal.cram.stats
+      should_exist: false
+    - path: results/preprocessing/mapped/
       should_exist: false

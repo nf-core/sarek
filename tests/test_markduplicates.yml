@@ -48,6 +48,8 @@
       md5sum: a0ecedb6be28639e276d38e4ac18935b
     - path: results/reports/samtools/test/test.recal.cram.stats
       md5sum: 69d2bab6fdbe21ec5c598dc404a3df00
+    - path: results/preprocessing/mapped/
+      should_exist: false
 - name: Run markduplicates starting from CRAM
   command: nextflow run main.nf -profile test,markduplicates_cram
   tags:
@@ -98,3 +100,5 @@
       md5sum: a0ecedb6be28639e276d38e4ac18935b
     - path: results/reports/samtools/test/test.recal.cram.stats
       md5sum: 69d2bab6fdbe21ec5c598dc404a3df00
+    - path: results/preprocessing/mapped/
+      should_exist: false

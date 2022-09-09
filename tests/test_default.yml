@@ -67,3 +67,5 @@
     - path: results/variant_calling/strelka/test/test.strelka.variants.vcf.gz.tbi
     - path: results/strelka
       should_exist: false
+    - path: results/preprocessing/mapped/
+      should_exist: false

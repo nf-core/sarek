@@ -4,7 +4,7 @@
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
-include { SAMTOOLS_CONVERT as SAMTOOLS_BAMTOCRAM } from '../../modules/nf-core/modules/samtools/convert/main'
+include { SAMTOOLS_CONVERT as BAMTOCRAM          } from '../../modules/nf-core/modules/samtools/convert/main'
 include { SAMTOOLS_STATS as SAMTOOLS_STATS_CRAM  } from '../../modules/nf-core/modules/samtools/stats/main'
 include { MOSDEPTH                               } from '../../modules/nf-core/modules/mosdepth/main'
 
@@ -25,9 +25,9 @@ workflow BAM_TO_CRAM {
     bam_no_index = bam_indexed.map{ meta, bam, bai -> [meta, bam] }
 
     // Convert bam input to cram
-    SAMTOOLS_BAMTOCRAM(bam_indexed, fasta, fasta_fai)
+    BAMTOCRAM(bam_indexed, fasta, fasta_fai)
 
-    cram_indexed = Channel.empty().mix(cram_indexed,SAMTOOLS_BAMTOCRAM.out.alignment_index)
+    cram_indexed = Channel.empty().mix(cram_indexed,BAMTOCRAM.out.alignment_index)
                     .map{meta, cram, crai ->
                         [
                             [data_type:     "cram",
@@ -51,11 +51,11 @@ workflow BAM_TO_CRAM {
 
     // Gather versions of all tools used
     ch_versions = ch_versions.mix(MOSDEPTH.out.versions)
-    ch_versions = ch_versions.mix(SAMTOOLS_BAMTOCRAM.out.versions)
+    ch_versions = ch_versions.mix(BAMTOCRAM.out.versions)
     ch_versions = ch_versions.mix(SAMTOOLS_STATS_CRAM.out.versions)
 
     emit:
-        cram_converted  = SAMTOOLS_BAMTOCRAM.out.alignment_index
+        cram_converted  = BAMTOCRAM.out.alignment_index
         qc              = qc_reports
 
         versions = ch_versions // channel: [ versions.yml ]

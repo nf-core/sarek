@@ -7,17 +7,13 @@
     - path: results/csv/mapped.csv
       md5sum: b54780e0c3b5fd3b27e7e37bb535b9fb
     - path: results/csv/recalibrated.csv
-      md5sum: 2d29d9e53894dcce96a1b5beb6ef3312
+      md5sum: 42628ec994c16f565e5407b40a9c1ac3
     - path: results/csv/sorted.csv
       md5sum: 84a90e8a97525df140b6b70675ae9b0c
     - path: results/multiqc
-    - path: results/preprocessing/mapped/test/test.bam
-      md5sum: 074181cafbe49e829a59a0e164ba7cfe
-    - path: results/preprocessing/mapped/test/test.bam.bai
-      md5sum: af47d3ab6aa005c35404041c2899ea65
-    - path: results/preprocessing/mapped/test/test.sorted.bam
+    - path: results/preprocessing/mapped/test/test.sorted.cram
     # binary changes md5sums on reruns.
-    - path: results/preprocessing/mapped/test/test.sorted.bam.bai
+    - path: results/preprocessing/mapped/test/test.sorted.cram.crai
     # binary changes md5sums on reruns.
     - path: results/preprocessing/recal_table/test/test.recal.table
       md5sum: 8de213f4c00fac61a1102633760493df
@@ -54,6 +50,10 @@
       should_exist: false
     - path: results/csv/markduplicates_no_table.csv
       should_exist: false
+    - path: results/preprocessing/mapped/test/test.bam
+      should_exist: false
+    - path: results/preprocessing/mapped/test/test.sorted.bam
+      should_exist: false
 - name: Run skip markduplicates bam from step markduplicates
   command: nextflow run main.nf -profile test,markduplicates_bam,skip_markduplicates
   tags:
@@ -66,9 +66,9 @@
     - path: results/csv/sorted.csv
       md5sum: bce12dd51c8e520201abde4b9cb8abce
     - path: results/multiqc
-    - path: results/preprocessing/mapped/test/test.sorted.bam
+    - path: results/preprocessing/mapped/test/test.sorted.cram
     # binary changes md5sums on reruns.
-    - path: results/preprocessing/mapped/test/test.sorted.bam.bai
+    - path: results/preprocessing/mapped/test/test.sorted.cram.crai
     # binary changes md5sums on reruns.
     - path: results/preprocessing/recal_table/test/test.recal.table
       md5sum: 35d89a3811aa31711fc9815b6b80e6ec
@@ -103,6 +103,10 @@
     - path: results/csv/markduplicates.csv
       should_exist: false
     - path: results/csv/markduplicates_no_table.csv
+      should_exist: false
+    - path: results/preprocessing/mapped/test/test.bam
+      should_exist: false
+    - path: results/preprocessing/mapped/test/test.sorted.bam
       should_exist: false
 - name: Run skip markduplicates cram from step markduplicates
   command: nextflow run main.nf -profile test,markduplicates_cram,skip_markduplicates
@@ -151,4 +155,58 @@
     - path: results/preprocessing/mapped/test/test.sorted.cram
       should_exist: false
     - path: results/preprocessing/mapped/test/test.sorted.cram.crai
+      should_exist: false
+- name: Run default pipeline with skipping MarkDuplicates
+  command: nextflow run main.nf -profile test,skip_markduplicates --save_bam_mapped
+  tags:
+    - preprocessing
+    - skip_markduplicates
+  files:
+    - path: results/csv/mapped.csv
+      md5sum: b54780e0c3b5fd3b27e7e37bb535b9fb
+    - path: results/csv/recalibrated.csv
+      md5sum: 42628ec994c16f565e5407b40a9c1ac3
+    - path: results/csv/sorted.csv
+      md5sum: 84a90e8a97525df140b6b70675ae9b0c
+    - path: results/multiqc
+    - path: results/preprocessing/mapped/test/test.sorted.bam
+    # binary changes md5sums on reruns.
+    - path: results/preprocessing/mapped/test/test.sorted.bam.bai
+    # binary changes md5sums on reruns.
+    - path: results/preprocessing/recal_table/test/test.recal.table
+      md5sum: 8de213f4c00fac61a1102633760493df
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+    # binary changes md5sums on reruns.
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+    # binary changes md5sums on reruns.
+    - path: results/reports/fastqc/test-test_L1
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+      md5sum: 48aa760b024d7c0ddd5a66f89a1cb544
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+      md5sum: 71e938314bba70f978271b2b56cb7ad3
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+      md5sum: 0786d56af0672eaef44b29f4ed5c12cb
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
+      md5sum: b8719430e56a58f734884bb422a7b8fa
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
+      md5sum: e3235323f455414ee3acc7144e659caf
+    - path: results/reports/mosdepth/test/test.sorted.mosdepth.global.dist.txt
+      md5sum: 48aa760b024d7c0ddd5a66f89a1cb544
+    - path: results/reports/mosdepth/test/test.sorted.mosdepth.region.dist.txt
+      md5sum: 71e938314bba70f978271b2b56cb7ad3
+    - path: results/reports/mosdepth/test/test.sorted.mosdepth.summary.txt
+      md5sum: 0786d56af0672eaef44b29f4ed5c12cb
+    - path: results/reports/mosdepth/test/test.sorted.regions.bed.gz
+      md5sum: b8719430e56a58f734884bb422a7b8fa
+    - path: results/reports/mosdepth/test/test.sorted.regions.bed.gz.csi
+      md5sum: e3235323f455414ee3acc7144e659caf
+    - path: results/reports/samtools/test/test.recal.cram.stats
+      md5sum: 55ddd2d98552a1483bf2a965f19d8da4
+    - path: results/reports/samtools/test/test.sorted.cram.stats
+      md5sum: 54c784bd13f9485eeef11f3a051aad1e
+    - path: results/csv/markduplicates.csv
+      should_exist: false
+    - path: results/csv/markduplicates_no_table.csv
+      should_exist: false
+    - path: results/preprocessing/mapped/test/test.bam
       should_exist: false

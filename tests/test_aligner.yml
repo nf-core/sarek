@@ -45,7 +45,7 @@
     - path: results/reference/intervals/genome.bed
       md5sum: a87dc7d20ebca626f65cc16ff6c97a3e
     - path: results/reference/known_indels/mills_and_1000G.indels.vcf.gz.tbi
-      md5sum: 1bb7ab8f22eb798efd796439d3b29b7a
+      should_exist: false
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.cram.metrics
       contains: ["test	8547	767	84	523391	3882	0	0	0.385081", "1.0	767	767"]
