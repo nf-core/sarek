@@ -45,6 +45,7 @@ Rapaätno is the river you can see from the Skierfe mountain.
 - [#727](https://github.com/nf-core/sarek/pull/727) - Allow `.list` interval files; remove `seconds` from GRCh38 file to allow `--nucleotides_per_second` to be used
 - [#728](https://github.com/nf-core/sarek/pull/728) - Circumvent issue with controlfreec and length file containing regions not in intervals file
 - [#729](https://github.com/nf-core/sarek/pull/729) - Trailing commas in `--tools`, `--skip_tools` and `--use_gatk_spark` now raise failure cf [#722](https://github.com/nf-core/sarek/issues/722)
+- [#741](https://github.com/nf-core/sarek/pull/741) - Fix prefix for `bcftools sort` for joint germline variant calling
 
 ### Deprecated
 
