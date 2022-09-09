@@ -434,7 +434,7 @@
     - path: results/csv/markduplicates_no_table.csv
       md5sum: 2a2d3d4842befd4def39156463859ee3
     - path: results/csv/recalibrated.csv
-      md5sum: 42628ec994c16f565e5407b40a9c1ac3
+      md5sum: 2d29d9e53894dcce96a1b5beb6ef3312
     - path: results/csv/variantcalled.csv
       md5sum: 0cc6a67fedb2ef9ce97e463d310f9f30
     - path: results/multiqc

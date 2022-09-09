@@ -7,7 +7,7 @@
     - path: results/csv/mapped.csv
       md5sum: b54780e0c3b5fd3b27e7e37bb535b9fb
     - path: results/csv/recalibrated.csv
-      md5sum: 42628ec994c16f565e5407b40a9c1ac3
+      md5sum: 2d29d9e53894dcce96a1b5beb6ef3312
     - path: results/csv/sorted.csv
       md5sum: 84a90e8a97525df140b6b70675ae9b0c
     - path: results/multiqc
