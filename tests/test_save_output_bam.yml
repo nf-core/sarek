@@ -7,14 +7,14 @@
     - path: results/csv/markduplicates.csv
       md5sum: 8679570b8db1937ee574fec36b25d7bc
     - path: results/csv/markduplicates_no_table.csv
-      md5sum: 429bcc69322425d82767ef57bbbac872
+      md5sum: 145154b6037e90448273fbe8e8dec5d3
     - path: results/csv/recalibrated.csv
       md5sum: 3ddc20eb105fdcc483945afd7d7d238c
     - path: results/multiqc
-    - path: results/preprocessing/markduplicates/test/test.md.bai
+    - path: results/preprocessing/markduplicates/test/test.md.bam.bai
       md5sum: a3f9f4054a274a56881be7b4f3662739
     - path: results/preprocessing/markduplicates/test/test.md.bam
-      md5sum: dfeaea71fd1a099d9cafb188aaf41691
+      md5sum: d6a4dd81e68de9d16376ecc9b8f1dd38
     - path: results/preprocessing/recal_table/test/test.recal.table
       md5sum: 4ac774bf5f1157e77426fd82f5ac0fbe
     - path: results/preprocessing/recalibrated/test/test.recal.bam
@@ -57,7 +57,7 @@
     - path: results/csv/markduplicates.csv
       md5sum: 8679570b8db1937ee574fec36b25d7bc
     - path: results/csv/markduplicates_no_table.csv
-      md5sum: 429bcc69322425d82767ef57bbbac872
+      md5sum: 145154b6037e90448273fbe8e8dec5d3
     - path: results/csv/recalibrated.csv
       md5sum: 3ddc20eb105fdcc483945afd7d7d238c
     - path: results/multiqc

@@ -6,7 +6,7 @@
     - preprocessing
   files:
     - path: results/csv/recalibrated.csv
-      md5sum: 338715c5e3441d1070c63536fba7244a
+      md5sum: 1888a924bc70bd80165a96ad641e22d6
     - path: results/multiqc
     - path: results/preprocessing/markduplicates/test/test.md.cram
     # binary changes md5sums on reruns.
@@ -38,7 +38,7 @@
     - preprocessing
   files:
     - path: results/csv/recalibrated.csv
-      md5sum: 338715c5e3441d1070c63536fba7244a
+      md5sum: 1888a924bc70bd80165a96ad641e22d6
     - path: results/multiqc
     - path: results/preprocessing/recalibrated/test/test.recal.cram
     # binary changes md5sums on reruns.

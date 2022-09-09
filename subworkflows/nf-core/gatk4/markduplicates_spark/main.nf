@@ -33,7 +33,7 @@ workflow MARKDUPLICATES_SPARK {
     CRAM_QC(cram_markduplicates, fasta, fasta_fai, intervals_bed_combined)
 
     // When running Marduplicates spark, and saving reports
-    GATK4_ESTIMATELIBRARYCOMPLEXITY(cram_markduplicates, fasta, fasta_fai, dict)
+    GATK4_ESTIMATELIBRARYCOMPLEXITY(bam, fasta, fasta_fai, dict)
 
     // Gather all reports generated
     qc_reports = qc_reports.mix(GATK4_ESTIMATELIBRARYCOMPLEXITY.out.metrics,
