@@ -48,6 +48,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Deprecated
 
 ### Removed
+
 - [#742](https://github.com/nf-core/sarek/pull/742) - Removed some lines from the usage-doc as Sarek no longer support input supplied as a list of multiple csv-files.
 
 ## [3.0.1](https://github.com/nf-core/sarek/releases/tag/3.0.1) - Saiva
