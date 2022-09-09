@@ -557,7 +557,7 @@ workflow SAREK {
                 cram: it[0].data_type == "cram"
             }.set{ch_convert}
 
-            ch_for_markduplicates = ch_input_sample
+            ch_for_markduplicates = ch_input_sample.map{meta, input, index -> [meta, input]}
             ch_input_cram_indexed = ch_convert.cram
         }
 
