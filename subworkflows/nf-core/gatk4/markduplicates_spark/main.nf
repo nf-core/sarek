@@ -36,11 +36,11 @@ workflow MARKDUPLICATES_SPARK {
     GATK4_ESTIMATELIBRARYCOMPLEXITY(cram_markduplicates, fasta, fasta_fai, dict)
 
     // Gather all reports generated
-    qc_reports = qc_reports.mix(//GATK4_ESTIMATELIBRARYCOMPLEXITY.out.metrics,
+    qc_reports = qc_reports.mix(GATK4_ESTIMATELIBRARYCOMPLEXITY.out.metrics,
                                 CRAM_QC.out.qc)
 
     // Gather versions of all tools used
-    //ch_versions = ch_versions.mix(GATK4_ESTIMATELIBRARYCOMPLEXITY.out.versions.first())
+    ch_versions = ch_versions.mix(GATK4_ESTIMATELIBRARYCOMPLEXITY.out.versions.first())
     ch_versions = ch_versions.mix(GATK4_MARKDUPLICATES_SPARK.out.versions)
     ch_versions = ch_versions.mix(INDEX_MARKDUPLICATES.out.versions)
     ch_versions = ch_versions.mix(CRAM_QC.out.versions)
