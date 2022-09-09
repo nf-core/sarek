@@ -28,6 +28,17 @@ workflow BAM_TO_CRAM {
     SAMTOOLS_BAMTOCRAM(bam_indexed, fasta, fasta_fai)
 
     cram_indexed = Channel.empty().mix(cram_indexed,SAMTOOLS_BAMTOCRAM.out.alignment_index)
+                    .map{meta, cram, crai ->
+                        [
+                            [data_type:     "cram",
+                            id:             meta.sample,
+                            num_intervals:  meta.num_intervals,
+                            patient:        meta.patient,
+                            sample:         meta.sample,
+                            sex:            meta.sex,
+                            status:         meta.status,],
+                            cram, crai]
+                    }
 
     // Reports on cram
     SAMTOOLS_STATS_CRAM(cram_indexed, fasta)

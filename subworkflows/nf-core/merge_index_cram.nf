@@ -40,7 +40,7 @@ workflow MERGE_INDEX_CRAM {
     MERGE_CRAM(ch_cram_to_merge.multiple, fasta, fasta_fai)
     INDEX_CRAM(ch_cram_to_merge.single.mix(MERGE_CRAM.out.cram))
 
-    cram_crai = ch_cram_to_merge.single
+    cram_crai = ch_cram_to_merge.single.map{meta, cram -> [meta, cram[0]]}
         .mix(MERGE_CRAM.out.cram)
         .join(INDEX_CRAM.out.crai)
 
