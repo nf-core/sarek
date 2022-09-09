@@ -156,7 +156,7 @@
       should_exist: false
     - path: results/preprocessing/mapped/test/test.sorted.cram.crai
       should_exist: false
-- name: Run default pipeline with skipping MarkDuplicates
+- name: Run default pipeline with skipping MarkDuplicates with save_bam_mapped
   command: nextflow run main.nf -profile test,skip_markduplicates --save_bam_mapped
   tags:
     - preprocessing
