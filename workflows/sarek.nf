@@ -638,7 +638,7 @@ workflow SAREK {
 
         // CSV should be written for the file actually out, either CRAM or BAM
         // Create CSV to restart from this step
-        if (!(params.skip_tools && params.skip_tools.split(',').contains('markduplicates'))) params.save_output_as_bam ? CRAMTOBAM_MARKDUPLICATES.out.alignment_index : MARKDUPLICATES_CSV(ch_md_cram_for_restart)
+        if (!(params.skip_tools && params.skip_tools.split(',').contains('markduplicates'))) params.save_output_as_bam ? MARKDUPLICATES_CSV(CRAMTOBAM_MARKDUPLICATES.out.alignment_index) : MARKDUPLICATES_CSV(ch_md_cram_for_restart)
     }
 
     if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration']) {
