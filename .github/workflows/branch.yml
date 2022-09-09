@@ -9,11 +9,11 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      # PRs to the nf-core repo master branch are only ok if coming from the nf-core repo `dev` or any `patch` branches
+      # PRs to the nf-core repo master branch are only ok if coming from the nf-core repo `dev`, any `patch` branches or any `release_*` branch
       - name: Check PRs
         if: github.repository == 'nf-core/sarek'
         run: |
-          { [[ ${{github.event.pull_request.head.repo.full_name }} == nf-core/sarek ]] && [[ $GITHUB_HEAD_REF = "dev" ]]; } || [[ $GITHUB_HEAD_REF == "patch" ]]
+          { [[ ${{github.event.pull_request.head.repo.full_name }} == nf-core/sarek ]] && [[ $GITHUB_HEAD_REF = "dev" || $GITHUB_HEAD_REF = "release_*"  ]]; } || [[ $GITHUB_HEAD_REF == "patch" ]]
 
       # If the above check failed, post a comment on the PR explaining the failure
       # NOTE - this doesn't currently work if the PR is coming from a fork, due to limitations in GitHub actions secrets
