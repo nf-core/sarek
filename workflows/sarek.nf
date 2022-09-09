@@ -656,8 +656,7 @@ workflow SAREK {
             BAMTOCRAM(ch_convert.bam, fasta, fasta_fai)
             ch_versions = ch_versions.mix(BAMTOCRAM.out.versions)
 
-            ch_cram_for_prepare_recalibration = Channel.empty().mix(BAMTOCRAM.out.alignment_index, ch_convert.cram)
-                                                .map{meta, cram, crai ->
+            ch_cram_from_bam = BAMTOCRAM.out.alignment_index.map{meta, cram, crai ->
                                                         [
                                                             [data_type:     "cram",
                                                             id:             meta.sample,
@@ -668,7 +667,9 @@ workflow SAREK {
                                                             cram, crai]
                                                     }
 
-            ch_md_cram_for_restart = BAMTOCRAM.out.alignment_index
+            ch_cram_for_prepare_recalibration = Channel.empty().mix(ch_cram_from_bam, ch_convert.cram)
+
+            ch_md_cram_for_restart = ch_cram_from_bam
 
         } else {
 

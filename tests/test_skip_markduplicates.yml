@@ -99,7 +99,7 @@
     - path: results/reports/samtools/test/test.recal.cram.stats
       md5sum: 71af990f7acad8bf24d37e88c4adcded
     - path: results/reports/samtools/test/test.sorted.cram.stats
-      md5sum: 77be74249ef272722213bd47e01a2fbb
+      md5sum: ac78da9dde7bae6849c0e2488bf7506a
     - path: results/csv/markduplicates.csv
       should_exist: false
     - path: results/csv/markduplicates_no_table.csv
