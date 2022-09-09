@@ -31,6 +31,7 @@ Rapaätno is the river you can see from the Skierfe mountain.
 - [#734](https://github.com/nf-core/sarek/pull/734) - nf-core modules update -a
 - [#736](https://github.com/nf-core/sarek/pull/736) - More extensive CI for default test
 - [#740](https://github.com/nf-core/sarek/pull/740) - Update version
+- [#742](https://github.com/nf-core/sarek/pull/742) - Requiring the Hyplotypecaller to be specified as one of the tools for joint germline genotyping.
 
 ### Fixed
 
@@ -50,6 +51,8 @@ Rapaätno is the river you can see from the Skierfe mountain.
 ### Deprecated
 
 ### Removed
+
+- [#742](https://github.com/nf-core/sarek/pull/742) - Removed some lines from the usage-doc as Sarek no longer support input supplied as a list of multiple csv-files.
 
 ## [3.0.1](https://github.com/nf-core/sarek/releases/tag/3.0.1) - Saiva
 
