@@ -657,6 +657,16 @@ workflow SAREK {
             ch_versions = ch_versions.mix(BAMTOCRAM.out.versions)
 
             ch_cram_for_prepare_recalibration = Channel.empty().mix(BAMTOCRAM.out.alignment_index, ch_convert.cram)
+                                                .map{meta, cram, crai ->
+                                                        [
+                                                            [data_type:     "cram",
+                                                            id:             meta.sample,
+                                                            patient:        meta.patient,
+                                                            sample:         meta.sample,
+                                                            sex:            meta.sex,
+                                                            status:         meta.status,],
+                                                            cram, crai]
+                                                    }
 
             ch_md_cram_for_restart = BAMTOCRAM.out.alignment_index
 
@@ -780,6 +790,7 @@ workflow SAREK {
                 // Gather used softwares versions
                 ch_versions = ch_versions.mix(RECALIBRATE.out.versions)
             }
+
             ch_cram_variant_calling = Channel.empty().mix(
                 ch_cram_variant_calling_no_spark,
                 ch_cram_variant_calling_spark)
