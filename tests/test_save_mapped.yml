@@ -15,7 +15,7 @@
     - path: results/multiqc
     - path: results/preprocessing/mapped/test/test.sorted.cram
       md5sum: 074181cafbe49e829a59a0e164ba7cfe
-    - path: results/preprocessing/mapped/test/test.sorted.cram.cr ai
+    - path: results/preprocessing/mapped/test/test.sorted.cram.crai
       md5sum: af47d3ab6aa005c35404041c2899ea65
     - path: results/preprocessing/markduplicates/test/test.md.cram
     # binary changes md5sums on reruns.
