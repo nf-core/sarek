@@ -148,7 +148,7 @@ patient,sample,cram,crai
 patient1,test_sample,test_mapped.cram,test_mapped.cram.crai
 ```
 
-The Sarek-generated CSV file is stored under `results/csv/mapped.csv` if in a previous run `--save_bam_mapped` was set and will automatically be used as an input when specifying the parameter `--step markduplicates`. Otherwise this file will need to be manually generated.
+The Sarek-generated CSV file is stored under `results/csv/mapped.csv` if in a previous run `--save_mapped` was set and will automatically be used as an input when specifying the parameter `--step markduplicates`. Otherwise this file will need to be manually generated.
 
 #### Full samplesheet
 

@@ -1,8 +1,8 @@
-- name: Run save_bam_mapped
-  command: nextflow run main.nf -profile test --save_bam_mapped
+- name: Run save_mapped
+  command: nextflow run main.nf -profile test --save_mapped
   tags:
     - preprocessing
-    - save_bam_mapped
+    - save_mapped
   files:
     - path: results/csv/mapped.csv
       md5sum: b54780e0c3b5fd3b27e7e37bb535b9fb

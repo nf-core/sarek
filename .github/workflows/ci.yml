@@ -134,7 +134,7 @@ jobs:
           - "mutect2"
           - "prepare_recalibration"
           - "recalibrate"
-          - "save_bam_mapped"
+          - "save_mapped"
           - "save_output_as_bam"
           - "skip_markduplicates"
           - "skip_qc"

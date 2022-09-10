@@ -150,26 +150,26 @@ These files are intermediate and by default not kept in the final files delivere
 
 [BWA](https://github.com/lh3/bwa) is a software package for mapping low-divergent sequences against a large reference genome. The aligned reads are then coordinate-sorted (or name-sorted if [`GATK MarkDuplicatesSpark`](https://gatk.broadinstitute.org/hc/en-us/articles/5358833264411-MarkDuplicatesSpark) is used for duplicate marking) with [samtools](https://www.htslib.org/doc/samtools.html).
 
-These files are intermediate and by default not kept in the final files delivered to users. Set `--save_bam_mapped` to enable publishing.
+These files are intermediate and by default not kept in the final files delivered to users. Set `--save_mapped` to enable publishing.
 
 #### BWA-mem2
 
 [BWA-mem2](https://github.com/bwa-mem2/bwa-mem2) is a software package for mapping low-divergent sequences against a large reference genome.The aligned reads are then coordinate-sorted (or name-sorted if [`GATK MarkDuplicatesSpark`](https://gatk.broadinstitute.org/hc/en-us/articles/5358833264411-MarkDuplicatesSpark) is used for duplicate marking) with [samtools](https://www.htslib.org/doc/samtools.html).
 
-These files are intermediate and by default not kept in the final files delivered to users. Set `--save_bam_mapped` to enable publishing.
+These files are intermediate and by default not kept in the final files delivered to users. Set `--save_mapped` to enable publishing.
 
 #### DragMap
 
 [DragMap](https://github.com/Illumina/dragmap) is an open-source software implementation of the DRAGEN mapper, which the Illumina team created so that we would have an open-source way to produce the same results as their proprietary DRAGEN hardware. The aligned reads are then coordinate-sorted (or name-sorted if [`GATK MarkDuplicatesSpark`](https://gatk.broadinstitute.org/hc/en-us/articles/5358833264411-MarkDuplicatesSpark) is used for duplicate marking) with [samtools](https://www.htslib.org/doc/samtools.html).
 
-These files are intermediate and by default not kept in the final files delivered to users. Set `--save_bam_mapped` to enable publishing.
+These files are intermediate and by default not kept in the final files delivered to users. Set `--save_mapped` to enable publishing.
 
 <details markdown="1">
 <summary>Output files for all mappers and samples</summary>
 
 **Output directory: `{outdir}/preprocessing/mapped/<sample>/`**
 
-- if `--save_bam_mapped`: `<sample>.bam` and `<sample>.bam.bai`
+- if `--save_mapped`: `<sample>.bam` and `<sample>.bam.bai`
   - BAM file and index
 
 </details>
@@ -253,7 +253,7 @@ See the [`--input`](usage.md#--input) section in the usage documentation for fur
 **Output directory: `{outdir}/preprocessing/csv`**
 
 - `mapped.csv`
-  - if `--save_bam_mapped`
+  - if `--save_mapped`
   - CSV containing an entry for each sample with the columns `patient,sample,sex,status,bam,bai`
 - `markduplicates_no_table.csv`
   - CSV containing an entry for each sample with the columns `patient,sample,sex,status,cram,crai`
