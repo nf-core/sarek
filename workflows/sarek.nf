@@ -245,6 +245,7 @@ include { MARKDUPLICATES_SPARK                           } from '../subworkflows
 
 // QC on CRAM
 include { CRAM_QC as CRAM_QC_NO_MARKDUPLICATES           } from '../subworkflows/nf-core/cram_qc'
+include { CRAM_QC as CRAM_QC_RECALIBRATION               } from '../subworkflows/nf-core/cram_qc'
 
 // Create recalibration tables
 include { PREPARE_RECALIBRATION                          } from '../subworkflows/nf-core/gatk4/prepare_recalibration/main'
@@ -792,17 +793,17 @@ workflow SAREK {
                 ch_cram_variant_calling_no_spark,
                 ch_cram_variant_calling_spark)
 
-            CRAM_QC(
+            CRAM_QC_RECALIBRATION(
                 ch_cram_variant_calling,
                 fasta,
                 fasta_fai,
                 intervals_for_preprocessing)
 
             // Gather QC reports
-            ch_reports  = ch_reports.mix(CRAM_QC.out.qc.collect{meta, report -> report})
+            ch_reports  = ch_reports.mix(CRAM_QC_RECALIBRATION.out.qc.collect{meta, report -> report})
 
             // Gather used softwares versions
-            ch_versions = ch_versions.mix(CRAM_QC.out.versions)
+            ch_versions = ch_versions.mix(CRAM_QC_RECALIBRATION.out.versions)
 
             //If params.save_output_as_bam, then convert CRAM files to BAM
             CRAMTOBAM_RECAL(ch_cram_variant_calling, fasta, fasta_fai)
