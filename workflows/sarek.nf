@@ -651,10 +651,10 @@ workflow SAREK {
             }.set{ch_convert}
 
             //BAM files first must be converted to CRAM files since from this step on we base everything on CRAM format
-            BAMTOCRAM(ch_convert.bam, fasta, fasta_fai)
-            ch_versions = ch_versions.mix(BAMTOCRAM.out.versions)
+            BAMTOCRAM_MARKDUPLICATES(ch_convert.bam, fasta, fasta_fai)
+            ch_versions = ch_versions.mix(BAMTOCRAM_MARKDUPLICATES.out.versions)
 
-            ch_cram_from_bam = BAMTOCRAM.out.alignment_index.map{meta, cram, crai ->
+            ch_cram_from_bam = BAMTOCRAM_MARKDUPLICATES.out.alignment_index.map{meta, cram, crai ->
                                                         [
                                                             [data_type:     "cram",
                                                             id:             meta.sample,
@@ -748,11 +748,11 @@ workflow SAREK {
             ch_bam_bam   = ch_convert.bam.map{ meta, bam, bai, table -> [meta, bam, bai]}
 
             //BAM files first must be converted to CRAM files since from this step on we base everything on CRAM format
-            BAMTOCRAM(ch_bam_bam, fasta, fasta_fai)
-            ch_versions = ch_versions.mix(BAMTOCRAM.out.versions)
+            BAMTOCRAM_MARKDUPLICATES(ch_bam_bam, fasta, fasta_fai)
+            ch_versions = ch_versions.mix(BAMTOCRAM_MARKDUPLICATES.out.versions)
 
             ch_cram_applybqsr = Channel.empty().mix(
-                                    BAMTOCRAM.out.alignment_index.join(ch_bam_table),
+                                    BAMTOCRAM_MARKDUPLICATES.out.alignment_index.join(ch_bam_table),
                                     ch_convert.cram) // Join together converted cram with input tables
         }
 
@@ -821,7 +821,7 @@ workflow SAREK {
             // ch_cram_variant_calling contains either:
             // - input bams converted to crams, if started from step recal + skip BQSR
             // - input crams if started from step recal + skip BQSR
-            ch_cram_variant_calling = Channel.empty().mix(BAMTOCRAM.out.alignment_index,
+            ch_cram_variant_calling = Channel.empty().mix(BAMTOCRAM_MARKDUPLICATES.out.alignment_index,
                                                         ch_convert.cram.map{ meta, cram, crai, table -> [meta, cram, crai]})
         } else {
             // ch_cram_variant_calling contains either:
