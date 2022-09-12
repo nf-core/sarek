@@ -10,9 +10,9 @@
     - path: results/csv/recalibrated.csv
       md5sum: 1888a924bc70bd80165a96ad641e22d6
     - path: results/multiqc
-    - path: results/preprocessing/markduplicates/test/test.md.cram
+    - path: results/preprocessing/converted/test/test.md.cram
     # binary changes md5sums on reruns.
-    - path: results/preprocessing/markduplicates/test/test.md.cram.crai
+    - path: results/preprocessing/converted/test/test.md.cram.crai
     # binary changes md5sums on reruns.
     - path: results/preprocessing/recal_table/test/test.recal.table
       md5sum: 35d89a3811aa31711fc9815b6b80e6ec
@@ -33,6 +33,8 @@
     - path: results/reports/samtools/test/test.recal.cram.stats
       md5sum: 71af990f7acad8bf24d37e88c4adcded
     - path: results/preprocessing/mapped/
+      should_exist: false
+    - path: results/preprocessing/markduplicates/
       should_exist: false
 - name: Run prepare_recalibration starting from cram
   command: nextflow run main.nf -profile test,prepare_recalibration_cram
@@ -64,6 +66,8 @@
       md5sum: 71af990f7acad8bf24d37e88c4adcded
     - path: results/preprocessing/mapped/
       should_exist: false
+    - path: results/preprocessing/markduplicates/
+      should_exist: false
 - name: Run prepare_recalibration starting from bam and skip baserecalibration
   command: nextflow run main.nf -profile test,prepare_recalibration_bam,skip_bqsr --tools strelka
   tags:
@@ -74,9 +78,9 @@
     - path: results/csv/variantcalled.csv
       md5sum: 4d0effd3d8dc2b814230a189e7ca9dba
     - path: results/multiqc
-    - path: results/preprocessing/markduplicates/test/test.md.cram
+    - path: results/preprocessing/converted/test/test.md.cram
     # binary changes md5sums on reruns.
-    - path: results/preprocessing/markduplicates/test/test.md.cram.crai
+    - path: results/preprocessing/converted/test/test.md.cram.crai
     # binary changes md5sums on reruns.
     - path: results/reports/bcftools/strelka/test/test.strelka.variants.bcftools_stats.txt
       md5sum: 0741b5dd5e6c5428bd5d4f1b7a923dd5
@@ -107,6 +111,8 @@
     - path: results/reports/samtools_stats
       should_exist: false
     - path: results/preprocessing/mapped/
+      should_exist: false
+    - path: results/preprocessing/markduplicates/
       should_exist: false
 - name: Run prepare_recalibration starting from cram and skip baserecalibration
   command: nextflow run main.nf -profile test,prepare_recalibration_cram,skip_bqsr --tools strelka
@@ -157,4 +163,6 @@
     - path: results/reports/samtools/test/test.recal.cram.stats
       should_exist: false
     - path: results/preprocessing/mapped/
+      should_exist: false
+    - path: results/preprocessing/markduplicates/
       should_exist: false

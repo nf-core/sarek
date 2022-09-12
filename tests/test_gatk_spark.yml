@@ -13,15 +13,15 @@
       md5sum: 2d29d9e53894dcce96a1b5beb6ef3312
     - path: results/multiqc
     - path: results/preprocessing/markduplicates/test/test.md.cram
-      md5sum: 7a1ff0ec3f9150dd6f10174037c79a8a
+      md5sum: cf0ebfe288ee7164cd2fcd028bda1887
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
-      md5sum: fd96e4bb9c861965c090a54877057908
+      md5sum: 2136b37eca3e806c77c39ee823231679
     - path: results/preprocessing/recal_table/test/test.recal.table
       md5sum: 5b6e5078b4a90f6cb982fa0f0df616c2
     - path: results/preprocessing/recalibrated/test/test.recal.cram
-      md5sum: e61d1e30c33276dd4458f0372da38f9a
+      md5sum: 1c168110f006bacba2ed8783bb5a3dee
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
-      md5sum: e1647d01bff62853ac5d8f79795b10ac
+      md5sum: 1c91543c9f75bc354274b1a1da745ee3
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.metrics
     # The text-based output-file test.md.cram.metrics only contains comments and no metrics, which is a bit odd.
