@@ -5,7 +5,7 @@
     - save_mapped
   files:
     - path: results/csv/mapped.csv
-      md5sum: b54780e0c3b5fd3b27e7e37bb535b9fb
+      md5sum: ae97b7394ab53a6b60921ab06c713cd9
     - path: results/csv/markduplicates.csv
       md5sum: 0d6120bb99e92f6810343270711ca53e
     - path: results/csv/markduplicates_no_table.csv
@@ -14,9 +14,9 @@
       md5sum: 2d29d9e53894dcce96a1b5beb6ef3312
     - path: results/multiqc
     - path: results/preprocessing/mapped/test/test.sorted.cram
-      md5sum: 074181cafbe49e829a59a0e164ba7cfe
+      md5sum: 1a0b425acd729662204c4c4132530e06
     - path: results/preprocessing/mapped/test/test.sorted.cram.crai
-      md5sum: af47d3ab6aa005c35404041c2899ea65
+      md5sum: aa5957cf7f5b0d2e1dfd43d493682c4b
     - path: results/preprocessing/markduplicates/test/test.md.cram
     # binary changes md5sums on reruns.
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
