@@ -207,7 +207,7 @@
                 },
                 "save_output_as_bam": {
                     "type": "boolean",
-                    "description": "Saves output from BWA (if `--save_mapped`), Markduplicates & Baserecalibration as BAM file instead of CRAM",
+                    "description": "Saves output from mapping (if `--save_mapped`), Markduplicates & Baserecalibration as BAM file instead of CRAM",
                     "fa_icon": "fas fa-download"
                 },
                 "use_gatk_spark": {
