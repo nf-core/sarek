@@ -575,7 +575,7 @@ workflow SAREK {
 
             // Gather QC reports
             ch_reports  = ch_reports.mix(CRAM_QC_NO_MARKDUPLICATES.out.qc.collect{meta, report -> report})
-            ch_cram_no_markduplicates_restart = params.save_output_as_bam ? Channel.empty() : BAMTOCRAM_MARKDUPLICATES.out.alignment_index
+            ch_cram_no_markduplicates_restart = params.save_output_as_bam && params.step == 'mapping' ? Channel.empty() : BAMTOCRAM_MAPPING.out.alignment_index
 
             // Gather used softwares versions
             ch_versions = ch_versions.mix(CRAM_QC_NO_MARKDUPLICATES.out.versions)
