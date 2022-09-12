@@ -773,10 +773,14 @@
     - path: results/csv/variantcalled.csv
       md5sum: d7d86e82902a4f57876b2414a4f812a4
     - path: results/multiqc
+    - path: results/preprocessing/converted/test.converted.cram
+      md5sum: 32cf064a58e90412f2e9d8168e9f45fd
+    - path: results/preprocessing/converted/test.converted.cram.crai
+      md5sum: f4c4c347c451150d6879b13d296def72
     - path: results/preprocessing/recalibrated/test/test.recal.cram
-    # binary changes md5sums on reruns.
+      should_exist: false
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
-    # binary changes md5sums on reruns.
+      should_exist: false
     - path: results/reports/bcftools/haplotypecaller/test/test.haplotypecaller.filtered.bcftools_stats.txt
       md5sum: f9cc3809106a42601eafd3b09900750a
     - path: results/reports/vcftools/haplotypecaller/test/test.haplotypecaller.filtered.FILTER.summary
@@ -812,10 +816,14 @@
       md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/no_intervals.bed.gz.tbi
       md5sum: f3dac01ea66b95fe477446fde2d31489
+    - path: results/preprocessing/converted/test.converted.cram
+      md5sum: 32cf064a58e90412f2e9d8168e9f45fd
+    - path: results/preprocessing/converted/test.converted.cram.crai
+      md5sum: f4c4c347c451150d6879b13d296def72
     - path: results/preprocessing/recalibrated/test/test.recal.cram
-    # binary changes md5sums on reruns.
+      should_exist: false
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
-    # binary changes md5sums on reruns.
+      should_exist: false
     - path: results/reports/bcftools/haplotypecaller/test/test.haplotypecaller.filtered.bcftools_stats.txt
       md5sum: f9cc3809106a42601eafd3b09900750a
     - path: results/reports/vcftools/haplotypecaller/test/test.haplotypecaller.filtered.FILTER.summary
@@ -845,9 +853,9 @@
       md5sum: d2dffdbd2b4f1f26a06637592d24dab3
     - path: results/multiqc
     - path: results/preprocessing/recalibrated/test/test.recal.cram
-    # binary changes md5sums on reruns.
+      should_exist: false
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
-    # binary changes md5sums on reruns.
+      should_exist: false
     - path: results/reports/bcftools/haplotypecaller/joint_variant_calling/joint_germline.bcftools_stats.txt
       md5sum: f91f185319e00108870911e0ce1a7ed6
     - path: results/reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline.FILTER.summary

@@ -12,9 +12,9 @@
     - path: results/csv/recalibrated.csv
       md5sum: 43f2424403a6be633516b054c276b70d
     - path: results/multiqc
-    - path: results/preprocessing/converted/test/test.sorted.cram
+    - path: results/preprocessing/converted/test/test.converted.cram
       md5sum: 1888a924bc70bd80165a96ad641e22d6
-    - path: results/preprocessing/converted/test/test.sorted.cram.crai
+    - path: results/preprocessing/converted/test/test.converted.cram.crai
       md5sum: 1888a924bc70bd80165a96ad641e22d6
     - path: results/preprocessing/markduplicates/test/test.md.cram
     # binary changes md5sums on reruns.
