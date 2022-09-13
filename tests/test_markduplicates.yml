@@ -10,12 +10,12 @@
     - path: results/csv/markduplicates_no_table.csv
       md5sum: f8b1b25fec472453a98c3f7f0e3a7953
     - path: results/csv/recalibrated.csv
-      md5sum: 43f2424403a6be633516b054c276b70d
+      md5sum: 1888a924bc70bd80165a96ad641e22d6
     - path: results/multiqc
     - path: results/preprocessing/converted/test/test.converted.cram
-      md5sum: 1888a924bc70bd80165a96ad641e22d6
+      md5sum: 55b33f54251dc771b67d1caf9afc09fe
     - path: results/preprocessing/converted/test/test.converted.cram.crai
-      md5sum: 1888a924bc70bd80165a96ad641e22d6
+      md5sum: 940d04a032d70164f1c46ea65eab11f6
     - path: results/preprocessing/markduplicates/test/test.md.cram
     # binary changes md5sums on reruns.
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
@@ -29,7 +29,7 @@
     - path: results/reports/markduplicates/test/test.md.cram.metrics
       contains: ["testN	0	2820	2	2	0	828	0	0.293617	3807", "1.0	0.999986	1178	1178", "100.0	1.911145	0	0"]
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
-      md5sum: bdb8f185c35dd1eec7ce2f69bce57972
+      md5sum: 8e875e20e3fb9cf288d68c1d223f6fd5
     - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
       md5sum: 75e1ce7e55af51f4985fa91654a5ea2d
     - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
@@ -41,9 +41,9 @@
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
       md5sum: 8e875e20e3fb9cf288d68c1d223f6fd5
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
-      md5sum: 6fd2e5c5c938bf69cdb2811f9e3afef8
+      md5sum: 75e1ce7e55af51f4985fa91654a5ea2d
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
-      md5sum: 32ea70ef1b99def3dc900b4afd513a40
+      md5sum: b23cf96942b2ada3f41172a9349a1175
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
     # binary changes md5sums on reruns.
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
@@ -64,7 +64,7 @@
     - path: results/csv/markduplicates_no_table.csv
       md5sum: f8b1b25fec472453a98c3f7f0e3a7953
     - path: results/csv/recalibrated.csv
-      md5sum: 9c450838b83b787cd339f7f3c0e848ef
+      md5sum: 1888a924bc70bd80165a96ad641e22d6
     - path: results/multiqc
     - path: results/preprocessing/markduplicates/test/test.md.cram
     # binary changes md5sums on reruns.
