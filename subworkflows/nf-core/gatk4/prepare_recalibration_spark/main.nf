@@ -67,7 +67,7 @@ workflow PREPARE_RECALIBRATION_SPARK {
 
     // Merge the tables only when we have intervals
     GATHERBQSRREPORTS(table_to_merge.multiple)
-    table_bqsr = table_to_merge.single.mix(GATHERBQSRREPORTS.out.table)
+    table_bqsr = table_to_merge.single.map{meta, table -> [meta, table[0]]}.mix(GATHERBQSRREPORTS.out.table)
                                         .map{ meta, table ->
                                             // remove no longer necessary fields to make sure joining can be done correctly: num_intervals
                                             [[

@@ -5,7 +5,7 @@
     - skip_markduplicates
   files:
     - path: results/csv/mapped.csv
-      md5sum: b54780e0c3b5fd3b27e7e37bb535b9fb
+      md5sum: ae97b7394ab53a6b60921ab06c713cd9
     - path: results/csv/recalibrated.csv
       md5sum: 2d29d9e53894dcce96a1b5beb6ef3312
     - path: results/csv/sorted.csv
@@ -163,7 +163,7 @@
     - skip_markduplicates
   files:
     - path: results/csv/mapped.csv
-      md5sum: b54780e0c3b5fd3b27e7e37bb535b9fb
+      md5sum: ae97b7394ab53a6b60921ab06c713cd9
     - path: results/csv/recalibrated.csv
       md5sum: 2d29d9e53894dcce96a1b5beb6ef3312
     - path: results/csv/sorted.csv

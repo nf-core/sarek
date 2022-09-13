@@ -534,7 +534,7 @@ workflow SAREK {
 
     if (params.step in ['mapping', 'markduplicates']) {
 
-        ch_cram_no_markduplicates_restart = Channel.empty()
+        //ch_cram_no_markduplicates_restart = Channel.empty()
         ch_cram_markduplicates_no_spark   = Channel.empty()
         ch_cram_markduplicates_spark      = Channel.empty()
 
@@ -559,7 +559,12 @@ workflow SAREK {
 
             // Convert any input BAMs to CRAM
             BAMTOCRAM_INPUT(ch_convert.bam, fasta, fasta_fai)
-            ch_cram_skip_markduplicates = Channel.empty().mix(ch_convert.cram, BAMTOCRAM_INPUT.out.alignment_index)
+            if(params.skip_tools && params.skip_tools.split(',').contains('markduplicates')){
+                ch_cram_skip_markduplicates = Channel.empty().mix(ch_convert.cram, BAMTOCRAM_INPUT.out.alignment_index)
+            }
+
+            // Should it be possible to restart from converted crams?
+            //ch_cram_no_markduplicates_restart = ch_convert.cram
 
             ch_versions = ch_versions.mix(BAMTOCRAM_INPUT.out.versions)
         }
@@ -574,7 +579,6 @@ workflow SAREK {
 
             // Gather QC reports
             ch_reports  = ch_reports.mix(CRAM_QC_NO_MARKDUPLICATES.out.qc.collect{meta, report -> report})
-            ch_cram_no_markduplicates_restart = params.save_output_as_bam && params.step == 'mapping' ? Channel.empty() : BAMTOCRAM_MAPPING.out.alignment_index
 
             // Gather used softwares versions
             ch_versions = ch_versions.mix(CRAM_QC_NO_MARKDUPLICATES.out.versions)
@@ -611,11 +615,10 @@ workflow SAREK {
         // ch_md_cram_for_restart contains either:
         // - crams from markduplicates
         // - crams from markduplicates_spark
-        // - crams from input step markduplicates
+        // - crams from input step markduplicates --> from the converted ones only?
         ch_md_cram_for_restart = Channel.empty().mix(
             ch_cram_markduplicates_no_spark,
-            ch_cram_markduplicates_spark,
-            ch_cram_no_markduplicates_restart).map{ meta, cram, crai ->
+            ch_cram_markduplicates_spark).map{ meta, cram, crai ->
                         //Make sure correct data types are carried through
                         [[
                             data_type:  "cram",
@@ -675,7 +678,18 @@ workflow SAREK {
             // - crams converted from bam mapped when skipping markduplicates
             // - input cram files, when start from step markduplicates
             //ch_md_cram_for_restart.view() //contains md.cram.crai
-            ch_cram_for_prepare_recalibration = Channel.empty().mix(ch_md_cram_for_restart, ch_cram_skip_markduplicates)
+            ch_cram_for_prepare_recalibration = Channel.empty().mix(ch_md_cram_for_restart, ch_cram_skip_markduplicates ).map{ meta, cram, crai ->
+                                                        //Make sure correct data types are carried through
+                                                        [[
+                                                            data_type:  "cram",
+                                                            id:         meta.id,
+                                                            patient:    meta.patient,
+                                                            sample:     meta.sample,
+                                                            sex:        meta.sex,
+                                                            status:     meta.status
+                                                            ],
+                                                        cram, crai]
+                                                    }
         }
 
         // STEP 3: Create recalibration tables

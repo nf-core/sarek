@@ -52,7 +52,7 @@
     - path: results/preprocessing/recalibrated/test/test.recal.cram
       md5sum: 1c168110f006bacba2ed8783bb5a3dee
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
-      md5sum: 1c168110f006bacba2ed8783bb5a3dee
+      md5sum: 1c91543c9f75bc354274b1a1da745ee3
     - path: results/multiqc
       should_exist: false
     - path: results/reports/fastqc
