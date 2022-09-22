@@ -6,7 +6,7 @@
     - preprocessing
   files:
     - path: results/csv/markduplicates.csv
-      md5sum: 8e9408ef8d4f9e6e00e531268eebd42a
+      md5sum: 90e2ab85d8af642d6548af448a9d4226
     - path: results/csv/recalibrated.csv
       md5sum: 1888a924bc70bd80165a96ad641e22d6
     - path: results/multiqc
@@ -89,7 +89,7 @@
     - path: results/reports/vcftools/strelka/test/test.strelka.variants.TsTv.count
       md5sum: ee7dafc8d941b8502a04a63dc3126fff
     - path: results/reports/vcftools/strelka/test/test.strelka.variants.TsTv.qual
-      md5sum: 55db15738ecd09d5c97b2db3e398795c
+      md5sum: 9fe11e894f7567eb96b43c48593741a7
     - path: results/variant_calling/strelka/test/test.strelka.genome.vcf.gz
     # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/test/test.strelka.genome.vcf.gz.tbi

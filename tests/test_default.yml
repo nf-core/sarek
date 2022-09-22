@@ -67,5 +67,8 @@
     - path: results/variant_calling/strelka/test/test.strelka.variants.vcf.gz.tbi
     - path: results/strelka
       should_exist: false
+<<<<<<< Updated upstream
     - path: results/preprocessing/mapped/
       should_exist: false
+=======
+>>>>>>> Stashed changes

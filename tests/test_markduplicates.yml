@@ -6,16 +6,16 @@
     - preprocessing
   files:
     - path: results/csv/markduplicates.csv
-      md5sum: 8e9408ef8d4f9e6e00e531268eebd42a
+      md5sum: 90e2ab85d8af642d6548af448a9d4226
     - path: results/csv/markduplicates_no_table.csv
       md5sum: f8b1b25fec472453a98c3f7f0e3a7953
     - path: results/csv/recalibrated.csv
       md5sum: 1888a924bc70bd80165a96ad641e22d6
     - path: results/multiqc
     - path: results/preprocessing/converted/test/test.converted.cram
-      md5sum: 55b33f54251dc771b67d1caf9afc09fe
+      md5sum: b9724a376dc511728ca1db471ea9e708
     - path: results/preprocessing/converted/test/test.converted.cram.crai
-      md5sum: 940d04a032d70164f1c46ea65eab11f6
+      md5sum: d0145eac9fe01b811d755d5b33266c01
     - path: results/preprocessing/markduplicates/test/test.md.cram
     # binary changes md5sums on reruns.
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
