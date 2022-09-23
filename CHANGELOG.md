@@ -47,6 +47,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#729](https://github.com/nf-core/sarek/pull/729) - Trailing commas in `--tools`, `--skip_tools` and `--use_gatk_spark` now raise failure cf [#722](https://github.com/nf-core/sarek/issues/722)
 - [#741](https://github.com/nf-core/sarek/pull/741) - Fix prefix for `bcftools sort` for joint germline variant calling
 - [#743](https://github.com/nf-core/sarek/pull/743) - Remove profile definitions in profile to avoid issues with Tower
+- [#758](https://github.com/nf-core/sarek/pull/758) - Fix Zenodo batch
 
 ### Deprecated
 
