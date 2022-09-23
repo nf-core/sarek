@@ -22,7 +22,7 @@ jobs:
       fail-fast: false
       matrix:
         NXF_VER:
-          - "22.04.5"
+          - "21.10.3"
           - "latest-everything"
         test:
           - "default"
@@ -115,7 +115,7 @@ jobs:
       fail-fast: false
       matrix:
         NXF_VER:
-          - "22.04.5"
+          - "21.10.3"
         test:
           - "aligner"
           - "alignment_to_fastq"
