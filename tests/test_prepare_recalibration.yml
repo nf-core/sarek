@@ -1,61 +1,95 @@
 - name: Run prepare_recalibration starting from bam
-  command: nextflow run main.nf -profile test,prepare_recalibration_bam,docker
+  command: nextflow run main.nf -profile test,prepare_recalibration_bam
   tags:
     - bam
     - prepare_recalibration
     - preprocessing
   files:
     - path: results/csv/markduplicates.csv
+      md5sum: 8e9408ef8d4f9e6e00e531268eebd42a
     - path: results/csv/recalibrated.csv
+      md5sum: 338715c5e3441d1070c63536fba7244a
     - path: results/multiqc
     - path: results/preprocessing/markduplicates/test/test.md.cram
+    # binary changes md5sums on reruns.
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
+    # binary changes md5sums on reruns.
     - path: results/preprocessing/recal_table/test/test.recal.table
+      md5sum: 35d89a3811aa31711fc9815b6b80e6ec
     - path: results/preprocessing/recalibrated/test/test.recal.cram
+    # binary changes md5sums on reruns.
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+    # binary changes md5sums on reruns.
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+      md5sum: bdb8f185c35dd1eec7ce2f69bce57972
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+      md5sum: 6fd2e5c5c938bf69cdb2811f9e3afef8
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+      md5sum: 32ea70ef1b99def3dc900b4afd513a40
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
+      md5sum: d034a60ae5c0768d67b9ba6442bd2212
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
+      md5sum: b3716e5cd1744610e69c29bd4ffad259
     - path: results/reports/samtools/test/test.recal.cram.stats
+      md5sum: 71af990f7acad8bf24d37e88c4adcded
 - name: Run prepare_recalibration starting from cram
-  command: nextflow run main.nf -profile test,prepare_recalibration_cram,docker
+  command: nextflow run main.nf -profile test,prepare_recalibration_cram
   tags:
     - cram
     - prepare_recalibration
     - preprocessing
   files:
     - path: results/csv/recalibrated.csv
+      md5sum: 338715c5e3441d1070c63536fba7244a
     - path: results/multiqc
     - path: results/preprocessing/recal_table/test/test.recal.table
+      md5sum: 35d89a3811aa31711fc9815b6b80e6ec
     - path: results/preprocessing/recalibrated/test/test.recal.cram
+    # binary changes md5sums on reruns.
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+    # binary changes md5sums on reruns.
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+      md5sum: bdb8f185c35dd1eec7ce2f69bce57972
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+      md5sum: 6fd2e5c5c938bf69cdb2811f9e3afef8
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+      md5sum: 32ea70ef1b99def3dc900b4afd513a40
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
+      md5sum: d034a60ae5c0768d67b9ba6442bd2212
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
+      md5sum: b3716e5cd1744610e69c29bd4ffad259
     - path: results/reports/samtools/test/test.recal.cram.stats
+      md5sum: 71af990f7acad8bf24d37e88c4adcded
 - name: Run prepare_recalibration starting from bam and skip baserecalibration
-  command: nextflow run main.nf -profile test,prepare_recalibration_bam,skip_bqsr,docker --tools strelka
+  command: nextflow run main.nf -profile test,prepare_recalibration_bam,skip_bqsr --tools strelka
   tags:
     - bam
     - prepare_recalibration
     - preprocessing
   files:
     - path: results/csv/variantcalled.csv
+      md5sum: 4d0effd3d8dc2b814230a189e7ca9dba
     - path: results/multiqc
     - path: results/preprocessing/markduplicates/test/test.md.cram
+    # binary changes md5sums on reruns.
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
+    # binary changes md5sums on reruns.
     - path: results/reports/bcftools/strelka/test/test.strelka.variants.bcftools_stats.txt
+      md5sum: 0741b5dd5e6c5428bd5d4f1b7a923dd5
     - path: results/reports/vcftools/strelka/test/test.strelka.variants.FILTER.summary
+      md5sum: 39ff2cc8eb7495a14a6b76e0ab627027
     - path: results/reports/vcftools/strelka/test/test.strelka.variants.TsTv.count
+      md5sum: ee7dafc8d941b8502a04a63dc3126fff
     - path: results/reports/vcftools/strelka/test/test.strelka.variants.TsTv.qual
+      md5sum: 55db15738ecd09d5c97b2db3e398795c
     - path: results/variant_calling/strelka/test/test.strelka.genome.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/test/test.strelka.genome.vcf.gz.tbi
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/test/test.strelka.variants.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/test/test.strelka.variants.vcf.gz.tbi
+    # binary changes md5sums on reruns.
     - path: results/csv/recalibrated.csv
       should_exist: false
     - path: results/preprocessing/recal_table/test/test.recal.table
@@ -69,22 +103,31 @@
     - path: results/reports/samtools_stats
       should_exist: false
 - name: Run prepare_recalibration starting from cram and skip baserecalibration
-  command: nextflow run main.nf -profile test,prepare_recalibration_cram,skip_bqsr,docker --tools strelka
+  command: nextflow run main.nf -profile test,prepare_recalibration_cram,skip_bqsr --tools strelka
   tags:
     - cram
     - prepare_recalibration
     - preprocessing
   files:
     - path: results/csv/variantcalled.csv
+      md5sum: 4d0effd3d8dc2b814230a189e7ca9dba
     - path: results/multiqc
     - path: results/reports/bcftools/strelka/test/test.strelka.variants.bcftools_stats.txt
+      md5sum: 0741b5dd5e6c5428bd5d4f1b7a923dd5
     - path: results/reports/vcftools/strelka/test/test.strelka.variants.FILTER.summary
+      md5sum: 39ff2cc8eb7495a14a6b76e0ab627027
     - path: results/reports/vcftools/strelka/test/test.strelka.variants.TsTv.count
+      md5sum: ee7dafc8d941b8502a04a63dc3126fff
     - path: results/reports/vcftools/strelka/test/test.strelka.variants.TsTv.qual
+      md5sum: 9fe11e894f7567eb96b43c48593741a7
     - path: results/variant_calling/strelka/test/test.strelka.genome.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/test/test.strelka.genome.vcf.gz.tbi
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/test/test.strelka.variants.vcf.gz
+    # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/test/test.strelka.variants.vcf.gz.tbi
+    # binary changes md5sums on reruns.
     - path: results/csv/recalibrated.csv
       should_exist: false
     - path: results/preprocessing/markduplicates/test/test.md.cram

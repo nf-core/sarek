@@ -17,6 +17,7 @@ def checkPathParamList = [
     params.ascat_loci_rt,
     params.bwa,
     params.bwamem2,
+    params.cf_chrom_len,
     params.chr_dir,
     params.dbnsfp,
     params.dbnsfp_tbi,
@@ -60,7 +61,7 @@ ch_input_sample = extract_csv(file(params.input, checkIfExists: true))
 if (params.wes && !params.step == 'annotate') {
     if (params.intervals && !params.intervals.endsWith("bed")) exit 1, "Target file specified with `--intervals` must be in BED format for targeted data"
     else log.warn("Intervals file was provided without parameter `--wes`: Pipeline will assume this is Whole-Genome-Sequencing data.")
-} else if (params.intervals && !params.intervals.endsWith("bed") && !params.intervals.endsWith("interval_list")) exit 1, "Intervals file must end with .bed or .interval_list"
+} else if (params.intervals && !params.intervals.endsWith("bed") && !params.intervals.endsWith("list")) exit 1, "Intervals file must end with .bed, .list, or .interval_list"
 
 if(params.step == 'mapping' && params.aligner.contains("dragmap") && !(params.skip_tools && params.skip_tools.split(',').contains("baserecalibrator"))){
     log.warn("DragMap was specified as aligner. Base recalibration is not contained in --skip_tools. It is recommended to skip baserecalibration when using DragMap\nhttps://gatk.broadinstitute.org/hc/en-us/articles/4407897446939--How-to-Run-germline-single-sample-short-variant-discovery-in-DRAGEN-mode")
@@ -113,6 +114,10 @@ if(!params.dbsnp && !params.known_indels){
 
     }
 }
+if (params.joint_germline && (!params.tools || !params.tools.split(',').contains('haplotypecaller'))){
+    log.error "The Haplotypecaller should be specified as one of the tools when doing joint germline variant calling. (The Haplotypecaller could be specified by adding `--tools haplotypecaller` to the nextflow command.) "
+    exit 1
+}
 if (params.joint_germline && (!params.dbsnp || !params.known_indels || !params.known_snps || params.no_intervals)){
     log.warn "If Haplotypecaller is specified, without `--dbsnp`, `--known_snps`, `--known_indels` or the associated resource labels (ie `known_snps_vqsr`), no variant recalibration will be done. For recalibration you must provide all of these resources.\nFor more information see VariantRecalibration: https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator \nJoint germline variant calling also requires intervals in order to genotype the samples. As a result, if `--no_intervals` is set to `true` the joint germline variant calling will not be performed."
 }
@@ -151,6 +156,7 @@ ascat_alleles      = params.ascat_alleles      ? Channel.fromPath(params.ascat_a
 ascat_loci         = params.ascat_loci         ? Channel.fromPath(params.ascat_loci).collect()               : Channel.empty()
 ascat_loci_gc      = params.ascat_loci_gc      ? Channel.fromPath(params.ascat_loci_gc).collect()            : Channel.value([])
 ascat_loci_rt      = params.ascat_loci_rt      ? Channel.fromPath(params.ascat_loci_rt).collect()            : Channel.value([])
+cf_chrom_len       = params.cf_chrom_len       ? Channel.fromPath(params.cf_chrom_len).collect()             : []
 chr_dir            = params.chr_dir            ? Channel.fromPath(params.chr_dir).collect()                  : Channel.value([])
 dbsnp              = params.dbsnp              ? Channel.fromPath(params.dbsnp).collect()                    : Channel.value([])
 known_snps         = params.known_snps         ? Channel.fromPath(params.known_snps).collect()               : Channel.value([])
@@ -186,9 +192,6 @@ if (params.spliceai_snv && params.spliceai_snv_tbi && params.spliceai_indel && p
     vep_extra_files.add(file(params.spliceai_snv, checkIfExists: true))
     vep_extra_files.add(file(params.spliceai_snv_tbi, checkIfExists: true))
 }
-
-// Initialize value channels based on params, not defined within the params.genomes[params.genome] scope
-umi_read_structure = params.umi_read_structure ? "${params.umi_read_structure}" : Channel.empty()
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -385,7 +388,7 @@ workflow SAREK {
 
         // convert any bam input to fastq
         // Fasta are not needed when converting bam to fastq -> []
-        ALIGNMENT_TO_FASTQ_INPUT(ch_input_sample_type.bam, [])
+        ALIGNMENT_TO_FASTQ_INPUT(ch_input_sample_type.bam, [], [])
 
         // gather fastq (inputed or converted)
         // Theorically this could work on mixed input (fastq for one sample and bam for another)
@@ -412,14 +415,13 @@ workflow SAREK {
                 ch_input_fastq,
                 fasta,
                 ch_map_index,
-                umi_read_structure,
                 params.group_by_umi_strategy
             )
 
             bamtofastq = CREATE_UMI_CONSENSUS.out.consensusbam.map{meta, bam -> [meta,bam,[]]}
 
             // convert back to fastq for further preprocessing
-            ALIGNMENT_TO_FASTQ_UMI(bamtofastq, [])
+            ALIGNMENT_TO_FASTQ_UMI(bamtofastq, [], [])
 
             ch_reads_fastp = ALIGNMENT_TO_FASTQ_UMI.out.reads
 
@@ -932,6 +934,7 @@ workflow SAREK {
             params.tools,
             ch_cram_variant_calling_tumor_only,
             [], //bwa_index for tiddit; not used here
+            cf_chrom_len,
             chr_files,
             cnvkit_reference,
             dbsnp,
@@ -954,6 +957,7 @@ workflow SAREK {
             params.tools,
             ch_cram_variant_calling_pair,
             [], //bwa_index for tiddit; not used here
+            cf_chrom_len,
             chr_files,
             dbsnp,
             dbsnp_tbi,

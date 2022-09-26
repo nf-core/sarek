@@ -1,58 +1,101 @@
 - name: Run save_output_as_bam
-  command: nextflow run main.nf -profile test,docker --save_output_as_bam
+  command: nextflow run main.nf -profile test --save_output_as_bam
   tags:
     - preprocessing
     - save_output_as_bam
   files:
     - path: results/csv/markduplicates.csv
+      md5sum: 8679570b8db1937ee574fec36b25d7bc
     - path: results/csv/markduplicates_no_table.csv
+      md5sum: 429bcc69322425d82767ef57bbbac872
     - path: results/csv/recalibrated.csv
+      md5sum: 3ddc20eb105fdcc483945afd7d7d238c
     - path: results/multiqc
     - path: results/preprocessing/markduplicates/test/test.md.bai
+      md5sum: a3f9f4054a274a56881be7b4f3662739
     - path: results/preprocessing/markduplicates/test/test.md.bam
+      md5sum: dfeaea71fd1a099d9cafb188aaf41691
     - path: results/preprocessing/recal_table/test/test.recal.table
+      md5sum: 4ac774bf5f1157e77426fd82f5ac0fbe
     - path: results/preprocessing/recalibrated/test/test.recal.bam
+    # binary changes md5sums on reruns.
     - path: results/preprocessing/recalibrated/test/test.recal.bam.bai
+    # binary changes md5sums on reruns.
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.metrics
+      contains: ["test	8547	767	84	523391	3882	0	0	0.385081", "1.0	767	767"]
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
+      md5sum: 76fa71922a3f748e507c2364c531dfcb
     - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
+      md5sum: abc5df85e302b79985627888870882da
     - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
+      md5sum: d536456436eb275159b8c6af83213d80
     - path: results/reports/mosdepth/test/test.md.regions.bed.gz
+      md5sum: 38fe39894abe62e38f8ac214cba64f2b
     - path: results/reports/mosdepth/test/test.md.regions.bed.gz.csi
+      md5sum: b1c2a861f64e20a94108a6de3b76c582
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+      md5sum: 76fa71922a3f748e507c2364c531dfcb
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+      md5sum: abc5df85e302b79985627888870882da
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+      md5sum: d536456436eb275159b8c6af83213d80
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
+      md5sum: 38fe39894abe62e38f8ac214cba64f2b
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
+      md5sum: b1c2a861f64e20a94108a6de3b76c582
     - path: results/reports/samtools/test/test.md.cram.stats
+      md5sum: 52411f93d9b5382342b40a351c2e313c
     - path: results/reports/samtools/test/test.recal.cram.stats
+      md5sum: 811d834ff8849e69e7c5925dc2a34257
 - name: Run save_output_as_bam with gatk4 spark
-  command: nextflow run main.nf -profile test,use_gatk_spark,docker --save_output_as_bam
+  command: nextflow run main.nf -profile test,use_gatk_spark --save_output_as_bam
   tags:
     - preprocessing
     - save_output_as_bam
   files:
     - path: results/csv/markduplicates.csv
+      md5sum: 8679570b8db1937ee574fec36b25d7bc
     - path: results/csv/markduplicates_no_table.csv
+      md5sum: 429bcc69322425d82767ef57bbbac872
     - path: results/csv/recalibrated.csv
+      md5sum: 3ddc20eb105fdcc483945afd7d7d238c
     - path: results/multiqc
     - path: results/preprocessing/markduplicates/test/test.md.bam
+      md5sum: 88c1f90792d57ca8e435d4fdff63b89c
     - path: results/preprocessing/markduplicates/test/test.md.bam.bai
+      md5sum: 966e1d9cb18c85c28b5aa95e250c2ab0
     - path: results/preprocessing/recal_table/test/test.recal.table
+      md5sum: 5b6e5078b4a90f6cb982fa0f0df616c2
     - path: results/preprocessing/recalibrated/test/test.recal.bam
+      md5sum: 3adb61574a8c2097a790a3918c35a068
     - path: results/preprocessing/recalibrated/test/test.recal.bam.bai
+      md5sum: 4895a3fe3595d0b7febc11265a2e4012
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.metrics
+    # The text-based output-file test.md.metrics only contains comments and no metrics, which is a bit odd.
+    # The file test.md.metrics contains a timestamp which means that it cannot be tested using the md5sum.
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
+      md5sum: 9269e959d5eec5273307693c6274f53e
     - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
+      md5sum: deb2df4f3ca19f441f0a22f04dea8723
     - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
+      md5sum: 96acf3439477a1448b7e1b43c020c7d0
     - path: results/reports/mosdepth/test/test.md.regions.bed.gz
+      md5sum: c259a9fd73f576626c3a29841c2dc019
     - path: results/reports/mosdepth/test/test.md.regions.bed.gz.csi
+      md5sum: cf85ba4692f016af70db2a594d9effdf
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+      md5sum: 9269e959d5eec5273307693c6274f53e
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+      md5sum: deb2df4f3ca19f441f0a22f04dea8723
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+      md5sum: 96acf3439477a1448b7e1b43c020c7d0
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
+      md5sum: c259a9fd73f576626c3a29841c2dc019
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
+      md5sum: cf85ba4692f016af70db2a594d9effdf
     - path: results/reports/samtools/test/test.md.cram.stats
+      md5sum: b573b2e930c5f68e7e4910faf9e51e44
     - path: results/reports/samtools/test/test.recal.cram.stats
+      md5sum: a75731dca9b42d87d9997ea44aaf82fc
