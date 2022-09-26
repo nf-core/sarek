@@ -51,6 +51,7 @@ Rapaätno is the river you can see from the Skierfe mountain.
 - [#743](https://github.com/nf-core/sarek/pull/743) - Remove profile definitions in profile to avoid issues with Tower
 - [#758](https://github.com/nf-core/sarek/pull/758) - Fix Zenodo batch
 - [#760](https://github.com/nf-core/sarek/pull/760) - Fix CHANGELOG dependencies
+- [#761](https://github.com/nf-core/sarek/pull/761) - Fix font in subway map and workflow image
 
 ### Deprecated
 
