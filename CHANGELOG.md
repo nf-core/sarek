@@ -9,6 +9,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+### Changed
+
+- [#762](https://github.com/nf-core/sarek/pull/762) - Back to dev
+- [#762](https://github.com/nf-core/sarek/pull/762) - Update deepvariant module
+
+### Fixed
+
+- [#762](https://github.com/nf-core/sarek/pull/762) - Polish CHANGELOG + figures
+
+### Deprecated
+
+### Removed
+
+## [3.0.2](https://github.com/nf-core/sarek/releases/tag/3.0.2) - Lájtávrre
+
+Lájtávrre is a lake you can see from the Skierfe mountain, formed by the Rapaätno river.
+
+### Added
+
 - [#691](https://github.com/nf-core/sarek/pull/691) - Enable `PROFILE=conda`, `PROFILE=docker` and `PROFILE=singularity` for pytest
 - [#716](https://github.com/nf-core/sarek/pull/716) - Add documentation for Azure recommended config vm_size
 - [#752](https://github.com/nf-core/sarek/pull/752) - Add tracking of all dependencies starting 3.0
