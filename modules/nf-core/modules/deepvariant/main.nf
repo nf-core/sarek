@@ -7,9 +7,7 @@ process DEEPVARIANT {
         exit 1, "Conda environments cannot be used when using the DeepVariant tool. Please use docker or singularity containers."
     }
 
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'google/deepvariant:1.3.0' :
-        'google/deepvariant:1.3.0' }"
+    container 'google/deepvariant:1.3.0'
 
     input:
     tuple val(meta), path(input), path(index), path(intervals)
