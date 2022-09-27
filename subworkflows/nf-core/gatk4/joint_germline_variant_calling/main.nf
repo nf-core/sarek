@@ -64,9 +64,9 @@ workflow GATK_JOINT_GERMLINE_VARIANT_CALLING {
     //Sort vcfs called by interval within each VCF
     //
 
-    vcfs = GATK4_GENOTYPEGVCFS ( genotype_input, fasta, fai, dict, dbsnp, dbsnp_tbi).vcf
+    GATK4_GENOTYPEGVCFS (genotype_input, fasta, fai, dict, dbsnp, dbsnp_tbi)
 
-    BCFTOOLS_SORT(vcfs)
+    BCFTOOLS_SORT(GATK4_GENOTYPEGVCFS.out.vcf)
     vcfs_sorted_input = BCFTOOLS_SORT.out.vcf.branch{
         intervals:    it[0].num_intervals > 1
         no_intervals: it[0].num_intervals <= 1

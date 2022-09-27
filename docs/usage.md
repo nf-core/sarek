@@ -44,12 +44,6 @@ If multiple samples IDs are specified in the CSV file, Sarek will consider all f
 
 Output from Variant Calling and/or Annotation will be in a specific directory for each sample and tool configuration (or normal/tumor pair if applicable).
 
-Multiple CSV files can be specified if the path is enclosed in quotes.
-
-```bash
---input '[path to sample sheet file(s)]'
-```
-
 ### Overview: Samplesheet Columns
 
 | Column    | Description                                                                                                                                                                                                                                                                                                                       |
