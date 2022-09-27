@@ -5,7 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [dev](https://github.com/nf-core/sarek/tree/dev)
+## [dev](https://github.com/nf-core/sarek/tree/dev) - dev
+
+### Added
+
+### Changed
+
+- [#762](https://github.com/nf-core/sarek/pull/762) - Back to dev
+
+### Fixed
+
+- [#762](https://github.com/nf-core/sarek/pull/762) - Polish CHANGELOG + figures
+
+### Deprecated
+
+### Removed
+
+## [3.0.2](https://github.com/nf-core/sarek/releases/tag/3.0.2) - Lájtávrre
+
+Lájtávrre is a lake you can see from the Skierfe mountain, formed by the Rapaätno river.
 
 ### Added
 
