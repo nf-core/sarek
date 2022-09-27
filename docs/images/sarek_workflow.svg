@@ -2170,13 +2170,13 @@
      inkscape:window-height="1007"
      id="namedview4"
      showgrid="false"
-     inkscape:zoom="1.1729753"
-     inkscape:cx="239.13547"
-     inkscape:cy="1330.3775"
+     inkscape:zoom="0.41470939"
+     inkscape:cx="580.27403"
+     inkscape:cy="814.1521"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
-     inkscape:current-layer="g1976"
+     inkscape:current-layer="g10"
      units="mm"
      showguides="false"
      fit-margin-top="0"
@@ -2202,6 +2202,7 @@
      id="tspan3424"
      y="-2749.4028"
      x="866.00854" /></text>
+
 
 
 
@@ -2725,6 +2726,7 @@
 
 
 
+
 <text
    style="font-style:normal;font-weight:bold;font-size:medium;font-family:sans-serif;color-interpolation:auto;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:1.45;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"
    x="32.745098"
@@ -2734,6 +2736,7 @@
    xml:space="preserve"
    id="text8514"
    transform="matrix(1.9071373,0,0,-1.9071373,542.56229,2077.7321)" />
+
 
 
 
@@ -3044,6 +3047,7 @@
        y="-1934.6896"
        style="line-height:1.25;stroke-width:1px;-inkscape-font-specification:'Maven Pro, Normal';font-family:'Maven Pro';font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;font-size:23.99999878px;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal"
        id="tspan22426">Based on GATK4 Best Practices</tspan></tspan></text>
+
 <text
    transform="matrix(2.769692,0,0,-2.769692,949.33785,2280.3213)"
    id="text4883"
@@ -3052,8 +3056,9 @@
    xml:space="preserve"
    x="279.19431"
    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.2757px;line-height:0%;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, @wght=700';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;color-interpolation:auto;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:1.45;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:geometricPrecision;text-rendering:geometricPrecision;font-variation-settings:'wght' 700"><tspan
-     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.27569916px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, @wght=700';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wght' 700"
+     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:12.27569916px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wght' 700"
      id="tspan4885">Preprocessing</tspan></text>
+
 
 
 
@@ -3100,6 +3105,7 @@
        y="-1366.8191"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:1px"
        id="tspan23832">snpeff, vep</tspan></tspan></text>
+
 <text
    style="font-style:normal;font-weight:bold;font-size:medium;line-height:0%;font-family:sans-serif;color-interpolation:auto;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:1.45;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"
    x="279.19431"
@@ -3109,7 +3115,8 @@
    id="text4905"
    transform="matrix(2.769692,0,0,-2.769692,973.21406,1712.0404)"><tspan
      id="tspan4907"
-     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.2757px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, @wght=700';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wght' 700">Annotation</tspan></text>
+     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:12.2757px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wght' 700">Annotation</tspan></text>
+
 
 
 
@@ -3137,6 +3144,7 @@
    transform="matrix(2.769692,0,0,-2.769692,998.93074,1587.2949)"><tspan
      id="tspan4923"
      style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:12.2757px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal">Reports</tspan></text>
+
 <text
    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18.05249977px;line-height:0%;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, @wght=700';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;color-interpolation:auto;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:1.45000005;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"
    x="279.19431"
@@ -3147,6 +3155,7 @@
    transform="matrix(2.769692,0,0,-2.769692,1112.971,2591.4052)"><tspan
      id="tspan4923-6"
      style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:18.05249977px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal">3.0.2</tspan></text>
+
 
 
 
@@ -3221,186 +3230,189 @@
      d="m 957.06616,1255.6632 h 71.24124 l -0.52,0.6288 h -71.24124 z" /></g></g><g
    id="g2011"
    transform="translate(2.2888183e-5,14.669823)"><rect
-     transform="matrix(2.769692,0,0,2.769692,1557.7601,1163.8834)"
-     id="rect5057"
-     clip-path="url(#clipPath2-2-1-3-367)"
-     y="135.88565"
-     height="83.21154"
-     width="204.70982"
-     x="-1.3207297"
-     style="font-style:normal;font-weight:normal;font-size:medium;font-family:Dialog;color-interpolation:auto;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1.35394108;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:1.45000005;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"
-     rx="5.2434611"
-     ry="5.2434611" /><text
-     xml:space="preserve"
-     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:13.9419px;line-height:0.01%;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+   transform="matrix(2.769692,0,0,2.769692,1557.7601,1163.8834)"
+   id="rect5057"
+   clip-path="url(#clipPath2-2-1-3-367)"
+   y="135.88565"
+   height="83.21154"
+   width="204.70982"
+   x="-1.3207297"
+   style="font-style:normal;font-weight:normal;font-size:medium;font-family:Dialog;color-interpolation:auto;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1.35394108;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:1.45000005;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"
+   rx="5.2434611"
+   ry="5.2434611" /><text
+   xml:space="preserve"
+   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:13.9419px;line-height:0.01%;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+   x="1567.3594"
+   y="-1701.5836"
+   id="text23786"
+   transform="scale(1,-1)"><tspan
+     sodipodi:role="line"
      x="1567.3594"
      y="-1701.5836"
-     id="text23786"
-     transform="scale(1,-1)"><tspan
-       sodipodi:role="line"
+     id="tspan23754"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:26px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, @wght=700';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wght' 700;stroke-width:1px"><tspan
        x="1567.3594"
        y="-1701.5836"
-       id="tspan23754"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:26px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, @wght=700';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wght' 700;stroke-width:1px"><tspan
-         x="1567.3594"
-         y="-1701.5836"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:26px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, @wght=700';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wght' 700;stroke-width:1px"
-         id="tspan23750"
-         dx="0 0 0 0 0 0 0 0 0">Germline</tspan></tspan><tspan
-       sodipodi:role="line"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:26px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, @wght=700';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wght' 700;stroke-width:1px"
+       id="tspan23750"
+       dx="0 0 0 0 0 0 0 0 0">Germline</tspan></tspan><tspan
+     sodipodi:role="line"
+     x="1585.2891"
+     y="-1675.385"
+     id="tspan23762"
+     style="stroke-width:1px"><tspan
+       x="1567.3594"
+       y="-1675.385"
+       style="font-size:19.9999px;line-height:1.25;stroke-width:1px"
+       id="tspan23756">• </tspan><tspan
        x="1585.2891"
        y="-1675.385"
-       id="tspan23762"
-       style="stroke-width:1px"><tspan
-         x="1567.3594"
-         y="-1675.385"
-         style="font-size:19.9999px;line-height:1.25;stroke-width:1px"
-         id="tspan23756">• </tspan><tspan
-         x="1585.2891"
-         y="-1675.385"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:1px"
-         id="tspan23758">deepvariant, freebayes</tspan></tspan><tspan
-       sodipodi:role="line"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:1px"
+       id="tspan23758">deepvariant, freebayes</tspan></tspan><tspan
+     sodipodi:role="line"
+     x="1567.3594"
+     y="-1650.3851"
+     id="tspan23768"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:1px"><tspan
        x="1567.3594"
        y="-1650.3851"
-       id="tspan23768"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:1px"><tspan
-         x="1567.3594"
-         y="-1650.3851"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:1px"
-         id="tspan23764"
-         dx="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0">   haplotypecaller, </tspan></tspan><tspan
-       sodipodi:role="line"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:1px"
+       id="tspan23764"
+       dx="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0">   haplotypecaller, </tspan></tspan><tspan
+     sodipodi:role="line"
+     x="1567.3594"
+     y="-1625.3853"
+     id="tspan23774"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:1px"><tspan
        x="1567.3594"
        y="-1625.3853"
-       id="tspan23774"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:1px"><tspan
-         x="1567.3594"
-         y="-1625.3853"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:1px"
-         id="tspan23770"
-         dx="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0">   mpileup, strelka2</tspan></tspan><tspan
-       sodipodi:role="line"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:1px"
+       id="tspan23770"
+       dx="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0">   mpileup, strelka2</tspan></tspan><tspan
+     sodipodi:role="line"
+     x="1567.3594"
+     y="-1600.3854"
+     id="tspan23780"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:1px"><tspan
        x="1567.3594"
        y="-1600.3854"
-       id="tspan23780"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:1px"><tspan
-         x="1567.3594"
-         y="-1600.3854"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:1px"
-         id="tspan23776"
-         dx="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0">• manta, tiddit</tspan></tspan><tspan
-       sodipodi:role="line"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:1px"
+       id="tspan23776"
+       dx="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0">• manta, tiddit</tspan></tspan><tspan
+     sodipodi:role="line"
+     x="1567.3594"
+     y="-1575.3855"
+     id="tspan23784"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:1px"><tspan
        x="1567.3594"
        y="-1575.3855"
-       id="tspan23784"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:1px"><tspan
-         x="1567.3594"
-         y="-1575.3855"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:1px"
-         id="tspan23782">• cnvkit</tspan></tspan></text>
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:1px"
+       id="tspan23782">• cnvkit</tspan></tspan></text>
+
 <text
-     xml:space="preserve"
-     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:34px;line-height:0.01%;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+   xml:space="preserve"
+   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:34px;line-height:0.01%;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+   x="1718.3259"
+   y="-1730.2793"
+   id="text23748"
+   transform="scale(1,-1)"><tspan
+     sodipodi:role="line"
      x="1718.3259"
      y="-1730.2793"
-     id="text23748"
-     transform="scale(1,-1)"><tspan
-       sodipodi:role="line"
+     id="tspan23746"
+     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:34px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:1px"><tspan
        x="1718.3259"
        y="-1730.2793"
-       id="tspan23746"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:34px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:1px"><tspan
-         x="1718.3259"
-         y="-1730.2793"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:34px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:1px"
-         id="tspan23744">Variant Calling</tspan></tspan></text>
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:34px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:1px"
+       id="tspan23744">Variant Calling</tspan></tspan></text>
+
 <text
-     xml:space="preserve"
-     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:13.9419px;line-height:0.01%;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+   xml:space="preserve"
+   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:13.9419px;line-height:0.01%;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+   x="1850.3204"
+   y="-1701.5836"
+   id="text23830"
+   transform="scale(1,-1)"><tspan
+     sodipodi:role="line"
      x="1850.3204"
      y="-1701.5836"
-     id="text23830"
-     transform="scale(1,-1)"><tspan
-       sodipodi:role="line"
+     id="tspan23792"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:26px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, @wght=700';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wght' 700;stroke-width:1px"><tspan
        x="1850.3204"
        y="-1701.5836"
-       id="tspan23792"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:26px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, @wght=700';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wght' 700;stroke-width:1px"><tspan
-         x="1850.3204"
-         y="-1701.5836"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:26px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, @wght=700';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wght' 700;stroke-width:1px"
-         id="tspan23788"
-         dx="0 0 0 0 0 0 0 0">Somatic</tspan></tspan><tspan
-       sodipodi:role="line"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:26px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, @wght=700';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wght' 700;stroke-width:1px"
+       id="tspan23788"
+       dx="0 0 0 0 0 0 0 0">Somatic</tspan></tspan><tspan
+     sodipodi:role="line"
+     x="1868.2501"
+     y="-1675.385"
+     id="tspan23800"
+     style="stroke-width:1px"><tspan
+       x="1850.3204"
+       y="-1675.385"
+       style="font-size:19.9999px;line-height:1.25;stroke-width:1px"
+       id="tspan23794">• </tspan><tspan
        x="1868.2501"
        y="-1675.385"
-       id="tspan23800"
-       style="stroke-width:1px"><tspan
-         x="1850.3204"
-         y="-1675.385"
-         style="font-size:19.9999px;line-height:1.25;stroke-width:1px"
-         id="tspan23794">• </tspan><tspan
-         x="1868.2501"
-         y="-1675.385"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:1px"
-         id="tspan23796">freebayes, mutect2, </tspan></tspan><tspan
-       sodipodi:role="line"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:1px"
+       id="tspan23796">freebayes, mutect2, </tspan></tspan><tspan
+     sodipodi:role="line"
+     x="1850.3204"
+     y="-1650.3851"
+     id="tspan23806"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:1px"><tspan
        x="1850.3204"
        y="-1650.3851"
-       id="tspan23806"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:1px"><tspan
-         x="1850.3204"
-         y="-1650.3851"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:1px"
-         id="tspan23802"
-         dx="0 0 0 0 0 0 0 0 0 0 0 0">   strelka2</tspan></tspan><tspan
-       sodipodi:role="line"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:1px"
+       id="tspan23802"
+       dx="0 0 0 0 0 0 0 0 0 0 0 0">   strelka2</tspan></tspan><tspan
+     sodipodi:role="line"
+     x="1850.3204"
+     y="-1625.3853"
+     id="tspan23812"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:1px"><tspan
        x="1850.3204"
        y="-1625.3853"
-       id="tspan23812"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:1px"><tspan
-         x="1850.3204"
-         y="-1625.3853"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:1px"
-         id="tspan23808"
-         dx="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0">• manta, tiddit</tspan></tspan><tspan
-       sodipodi:role="line"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:1px"
+       id="tspan23808"
+       dx="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0">• manta, tiddit</tspan></tspan><tspan
+     sodipodi:role="line"
+     x="1850.3204"
+     y="-1600.3854"
+     id="tspan23818"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:1px"><tspan
        x="1850.3204"
        y="-1600.3854"
-       id="tspan23818"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:1px"><tspan
-         x="1850.3204"
-         y="-1600.3854"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:1px"
-         id="tspan23814"
-         dx="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0">• ascat, cnvkit,</tspan></tspan><tspan
-       sodipodi:role="line"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:1px"
+       id="tspan23814"
+       dx="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0">• ascat, cnvkit,</tspan></tspan><tspan
+     sodipodi:role="line"
+     x="1850.3204"
+     y="-1575.3855"
+     id="tspan23824"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:1px"><tspan
        x="1850.3204"
        y="-1575.3855"
-       id="tspan23824"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:1px"><tspan
-         x="1850.3204"
-         y="-1575.3855"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:1px"
-         id="tspan23820"
-         dx="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0">  controlfreec</tspan></tspan><tspan
-       sodipodi:role="line"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:1px"
+       id="tspan23820"
+       dx="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0">  controlfreec</tspan></tspan><tspan
+     sodipodi:role="line"
+     x="1850.3204"
+     y="-1550.3856"
+     id="tspan23828"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:1px"><tspan
        x="1850.3204"
        y="-1550.3856"
-       id="tspan23828"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:1px"><tspan
-         x="1850.3204"
-         y="-1550.3856"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:1px"
-         id="tspan23826">• msisensorpro</tspan></tspan></text>
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:1px"
+       id="tspan23826">• msisensorpro</tspan></tspan></text>
+
 <path
-     style="display:inline;fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:3.76503992;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-     d="M 1837.0633,1710.5361 V 1551.5039"
-     id="path4994"
-     inkscape:connector-type="polyline"
-     inkscape:connector-curvature="0"
-     sodipodi:nodetypes="cc" /></g><g
+   style="display:inline;fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:3.76503992;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+   d="M 1837.0633,1710.5361 V 1551.5039"
+   id="path4994"
+   inkscape:connector-type="polyline"
+   inkscape:connector-curvature="0"
+   sodipodi:nodetypes="cc" /></g><g
    transform="matrix(0.60699338,0,0,-0.60699338,1601.5501,2205.8332)"
    style="display:inline"
    inkscape:label="Sarek"
@@ -3717,6 +3729,7 @@
    y="-1509.462"
    id="text1154"
    transform="scale(1,-1)" />
+
 
 
 
