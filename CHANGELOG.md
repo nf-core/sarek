@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - [#762](https://github.com/nf-core/sarek/pull/762) - Polish CHANGELOG + figures
+- [#766](https://github.com/nf-core/sarek/pull/766) - Align box description in subway map
 
 ### Deprecated
 
