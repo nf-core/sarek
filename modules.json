@@ -79,7 +79,7 @@
                 },
                 "deepvariant": {
                     "branch": "master",
-                    "git_sha": "eb15df80368aa31019d44dc60689ecd0822ed4c2"
+                    "git_sha": "9cecd9993a8e1dcd550a3cd0950f3350d32d31ce"
                 },
                 "dragmap/align": {
                     "branch": "master",
