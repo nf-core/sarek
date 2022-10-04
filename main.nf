@@ -4,7 +4,8 @@
     nf-core/sarek
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     Github : https://github.com/nf-core/sarek
-Website: https://nf-co.re/sarek
+
+    Website: https://nf-co.re/sarek
     Slack  : https://nfcore.slack.com/channels/sarek
 ----------------------------------------------------------------------------------------
 */
