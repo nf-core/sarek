@@ -6,7 +6,7 @@ process GATK4_CNNSCOREVARIANTS {
     if (params.enable_conda) {
         exit 1, "Conda environments cannot be used for GATK4/CNNScoreVariants at the moment. Please use docker or singularity containers."
     }
-    container 'broadinstitute/gatk:4.2.6.1' //Biocontainers is missing a package
+    container "broadinstitute/gatk:4.2.6.1" //Biocontainers is missing a package
 
     input:
     tuple val(meta), path(vcf), path(tbi), path(aligned_input), path(intervals)
