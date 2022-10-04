@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#766](https://github.com/nf-core/sarek/pull/766) - Align box description in subway map
 - [#768](https://github.com/nf-core/sarek/pull/768) - Use double quotes to fix import of singularity images for deepvariant module
 - [#770](https://github.com/nf-core/sarek/pull/770) - Use double quotes to fix import of singularity images for gatk4/cnnscorevariants module
+- [#771](https://github.com/nf-core/sarek/pull/771) - update to new modules syntax
 
 ### Deprecated
 
