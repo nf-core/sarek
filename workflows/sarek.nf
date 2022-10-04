@@ -223,7 +223,7 @@ include { ALIGNMENT_TO_FASTQ as ALIGNMENT_TO_FASTQ_UMI         } from '../subwor
 include { RUN_FASTQC                                           } from '../subworkflows/nf-core/run_fastqc'
 
 // TRIM/SPLIT FASTQ Files
-include { FASTP                                                } from '../modules/nf-core/modules/fastp/main'
+include { FASTP                                                } from '../modules/nf-core/fastp/main'
 
 // Create umi consensus bams from fastq
 include { CREATE_UMI_CONSENSUS                                 } from '../subworkflows/nf-core/fgbio_create_umi_consensus/main'
@@ -234,11 +234,11 @@ include { GATK4_MAPPING                                        } from '../subwor
 // Merge and index BAM files (optional)
 include { MERGE_INDEX_BAM                                      } from '../subworkflows/nf-core/merge_index_bam'
 
-include { SAMTOOLS_CONVERT as SAMTOOLS_CRAMTOBAM               } from '../modules/nf-core/modules/samtools/convert/main'
-include { SAMTOOLS_CONVERT as SAMTOOLS_CRAMTOBAM_RECAL         } from '../modules/nf-core/modules/samtools/convert/main'
+include { SAMTOOLS_CONVERT as SAMTOOLS_CRAMTOBAM               } from '../modules/nf-core/samtools/convert/main'
+include { SAMTOOLS_CONVERT as SAMTOOLS_CRAMTOBAM_RECAL         } from '../modules/nf-core/samtools/convert/main'
 
-include { SAMTOOLS_CONVERT as SAMTOOLS_BAMTOCRAM               } from '../modules/nf-core/modules/samtools/convert/main'
-include { SAMTOOLS_CONVERT as SAMTOOLS_BAMTOCRAM_VARIANTCALLING} from '../modules/nf-core/modules/samtools/convert/main'
+include { SAMTOOLS_CONVERT as SAMTOOLS_BAMTOCRAM               } from '../modules/nf-core/samtools/convert/main'
+include { SAMTOOLS_CONVERT as SAMTOOLS_BAMTOCRAM_VARIANTCALLING} from '../modules/nf-core/samtools/convert/main'
 
 // Mark Duplicates (+QC)
 include { MARKDUPLICATES                                       } from '../subworkflows/nf-core/gatk4/markduplicates/main'
@@ -279,10 +279,10 @@ include { VCF_QC                                               } from '../subwor
 include { ANNOTATE                                             } from '../subworkflows/local/annotate'
 
 // REPORTING VERSIONS OF SOFTWARE USED
-include { CUSTOM_DUMPSOFTWAREVERSIONS                          } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
+include { CUSTOM_DUMPSOFTWAREVERSIONS                          } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 
 // MULTIQC
-include { MULTIQC                                              } from '../modules/nf-core/modules/multiqc/main'
+include { MULTIQC                                              } from '../modules/nf-core/multiqc/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

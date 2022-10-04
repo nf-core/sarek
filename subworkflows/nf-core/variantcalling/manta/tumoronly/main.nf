@@ -1,7 +1,7 @@
-include { GATK4_MERGEVCFS as MERGE_MANTA_SMALL_INDELS      } from '../../../../../modules/nf-core/modules/gatk4/mergevcfs/main'
-include { GATK4_MERGEVCFS as MERGE_MANTA_SV                } from '../../../../../modules/nf-core/modules/gatk4/mergevcfs/main'
-include { GATK4_MERGEVCFS as MERGE_MANTA_TUMOR             } from '../../../../../modules/nf-core/modules/gatk4/mergevcfs/main'
-include { MANTA_TUMORONLY                                  } from '../../../../../modules/nf-core/modules/manta/tumoronly/main'
+include { GATK4_MERGEVCFS as MERGE_MANTA_SMALL_INDELS      } from '../../../../../modules/nf-core/gatk4/mergevcfs/main'
+include { GATK4_MERGEVCFS as MERGE_MANTA_SV                } from '../../../../../modules/nf-core/gatk4/mergevcfs/main'
+include { GATK4_MERGEVCFS as MERGE_MANTA_TUMOR             } from '../../../../../modules/nf-core/gatk4/mergevcfs/main'
+include { MANTA_TUMORONLY                                  } from '../../../../../modules/nf-core/manta/tumoronly/main'
 
 // Seems to be the consensus on upstream modules implementation too
 workflow RUN_MANTA_TUMORONLY {

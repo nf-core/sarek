@@ -1,8 +1,8 @@
-include { CONTROLFREEC_FREEC as FREEC_TUMORONLY                  } from '../../../../../modules/nf-core/modules/controlfreec/freec/main'
-include { CONTROLFREEC_ASSESSSIGNIFICANCE as ASSESS_SIGNIFICANCE } from '../../../../../modules/nf-core/modules/controlfreec/assesssignificance/main'
-include { CONTROLFREEC_FREEC2BED as FREEC2BED                    } from '../../../../../modules/nf-core/modules/controlfreec/freec2bed/main'
-include { CONTROLFREEC_FREEC2CIRCOS as FREEC2CIRCOS              } from '../../../../../modules/nf-core/modules/controlfreec/freec2circos/main'
-include { CONTROLFREEC_MAKEGRAPH as MAKEGRAPH                    } from '../../../../../modules/nf-core/modules/controlfreec/makegraph/main'
+include { CONTROLFREEC_FREEC as FREEC_TUMORONLY                  } from '../../../../../modules/nf-core/controlfreec/freec/main'
+include { CONTROLFREEC_ASSESSSIGNIFICANCE as ASSESS_SIGNIFICANCE } from '../../../../../modules/nf-core/controlfreec/assesssignificance/main'
+include { CONTROLFREEC_FREEC2BED as FREEC2BED                    } from '../../../../../modules/nf-core/controlfreec/freec2bed/main'
+include { CONTROLFREEC_FREEC2CIRCOS as FREEC2CIRCOS              } from '../../../../../modules/nf-core/controlfreec/freec2circos/main'
+include { CONTROLFREEC_MAKEGRAPH as MAKEGRAPH                    } from '../../../../../modules/nf-core/controlfreec/makegraph/main'
 
 workflow RUN_CONTROLFREEC_TUMORONLY {
     take:
