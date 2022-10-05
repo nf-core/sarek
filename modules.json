@@ -144,8 +144,7 @@
                     },
                     "gatk4/cnnscorevariants": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905",
-                        "patch": "modules/nf-core/gatk4/cnnscorevariants/gatk4-cnnscorevariants.diff"
+                        "git_sha": "1832dc139342122c9617bfcd5c38c8fb8dd060ad"
                     },
                     "gatk4/createsequencedictionary": {
                         "branch": "master",
