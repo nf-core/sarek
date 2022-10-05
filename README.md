@@ -134,6 +134,7 @@ We thank the following people for their extensive assistance in the development 
 | :-----------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------: |
 | [![National Genomics Infrastructure](docs/images/NGI_logo.png)](https://ngisweden.scilifelab.se/) | [![National Bioinformatics Infrastructure Sweden](docs/images/NBIS_logo.png)](https://nbis.se) |
 |              [![QBiC](docs/images/QBiC_logo.png)](https://www.qbic.uni-tuebingen.de)              |                   [![GHGA](docs/images/GHGA_logo.png)](https://www.ghga.de/)                   |
+|                     [![DNGC](docs/images/DNGC_logo.png)](https://eng.ngc.dk/)                     |                                                                                                |
 
 ## Contributions & Support
 
