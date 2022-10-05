@@ -1,8 +1,8 @@
-include { GATK4_MERGEVCFS as MERGE_DEEPVARIANT_GVCF } from '../../../../modules/nf-core/modules/gatk4/mergevcfs/main'
-include { GATK4_MERGEVCFS as MERGE_DEEPVARIANT_VCF  } from '../../../../modules/nf-core/modules/gatk4/mergevcfs/main'
-include { DEEPVARIANT                               } from '../../../../modules/nf-core/modules/deepvariant/main'
-include { TABIX_TABIX as TABIX_VC_DEEPVARIANT_GVCF  } from '../../../../modules/nf-core/modules/tabix/tabix/main'
-include { TABIX_TABIX as TABIX_VC_DEEPVARIANT_VCF   } from '../../../../modules/nf-core/modules/tabix/tabix/main'
+include { GATK4_MERGEVCFS as MERGE_DEEPVARIANT_GVCF } from '../../../../modules/nf-core/gatk4/mergevcfs/main'
+include { GATK4_MERGEVCFS as MERGE_DEEPVARIANT_VCF  } from '../../../../modules/nf-core/gatk4/mergevcfs/main'
+include { DEEPVARIANT                               } from '../../../../modules/nf-core/deepvariant/main'
+include { TABIX_TABIX as TABIX_VC_DEEPVARIANT_GVCF  } from '../../../../modules/nf-core/tabix/tabix/main'
+include { TABIX_TABIX as TABIX_VC_DEEPVARIANT_VCF   } from '../../../../modules/nf-core/tabix/tabix/main'
 
 // Deepvariant: https://github.com/google/deepvariant/issues/510
 workflow RUN_DEEPVARIANT {

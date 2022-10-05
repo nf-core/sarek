@@ -1,6 +1,6 @@
 include { RUN_TIDDIT as RUN_TIDDIT_NORMAL           } from '../single/main.nf'
 include { RUN_TIDDIT as RUN_TIDDIT_TUMOR            } from '../single/main.nf'
-include { SVDB_MERGE                                } from '../../../../../modules/nf-core/modules/svdb/merge/main.nf'
+include { SVDB_MERGE                                } from '../../../../../modules/nf-core/svdb/merge/main.nf'
 
 workflow RUN_TIDDIT_SOMATIC {
     take:
