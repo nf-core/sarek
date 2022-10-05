@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#762](https://github.com/nf-core/sarek/pull/762) - Back to dev
 - [#762](https://github.com/nf-core/sarek/pull/762) - Update deepvariant module
+- [#773](https://github.com/nf-core/sarek/pull/773) - Sync `TEMPLATE` with `tools` `2.6`
 
 ### Fixed
 
