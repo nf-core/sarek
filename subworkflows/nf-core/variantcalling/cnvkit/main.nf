@@ -4,7 +4,7 @@
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
-include { CNVKIT_BATCH } from '../../../../modules/nf-core/modules/cnvkit/batch/main'
+include { CNVKIT_BATCH } from '../../../../modules/nf-core/cnvkit/batch/main'
 
 workflow RUN_CNVKIT {
     take:

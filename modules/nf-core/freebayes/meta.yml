@@ -1,0 +1,82 @@
+name: freebayes
+description: A haplotype-based variant detector
+keywords:
+  - variant caller
+  - SNP
+  - genotyping
+  - somatic variant calling
+  - germline variant calling
+  - bacterial variant calling
+  - bayesian
+
+tools:
+  - freebayes:
+      description: Bayesian haplotype-based polymorphism discovery and genotyping
+      homepage: https://github.com/freebayes/freebayes
+      documentation: https://github.com/freebayes/freebayes
+      tool_dev_url: https://github.com/freebayes/freebayes
+      doi: "arXiv:1207.3907"
+      licence: ["MIT"]
+
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - input:
+      type: file
+      description: BAM/CRAM/SAM file
+      pattern: "*.{bam,cram,sam}"
+  - input_index:
+      type: file
+      description: BAM/CRAM/SAM index file
+      pattern: "*.{bai,crai}"
+  - target_bed:
+      type: file
+      description: Optional - Limit analysis to targets listed in this BED-format FILE.
+      pattern: "*.bed"
+  - fasta:
+      type: file
+      description: reference fasta file
+      pattern: ".{fa,fa.gz,fasta,fasta.gz}"
+  - fasta_fai:
+      type: file
+      description: reference fasta file index
+      pattern: "*.{fa,fasta}.fai"
+  - samples:
+      type: file
+      description: Optional - Limit analysis to samples listed (one per line) in the FILE.
+      pattern: "*.txt"
+  - populations:
+      type: file
+      description: Optional - Each line of FILE should list a sample and a population which it is part of.
+      pattern: "*.txt"
+  - cnv:
+      type: file
+      description: |
+        A copy number map BED file, which has either a sample-level ploidy:
+        sample_name copy_number
+        or a region-specific format:
+        seq_name start end sample_name copy_number
+      pattern: "*.bed"
+
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - version:
+      type: file
+      description: File containing software version
+      pattern: "*.{version.txt}"
+  - vcf:
+      type: file
+      description: Compressed VCF file
+      pattern: "*.vcf.gz"
+
+authors:
+  - "@maxibor"
+  - "@FriederikeHanssen"
+  - "@maxulysse"

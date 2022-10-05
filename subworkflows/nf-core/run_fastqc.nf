@@ -2,7 +2,7 @@
 // Read QC
 //
 
-include { FASTQC     } from '../../modules/nf-core/modules/fastqc/main'
+include { FASTQC     } from '../../modules/nf-core/fastqc/main'
 
 workflow RUN_FASTQC {
     take:

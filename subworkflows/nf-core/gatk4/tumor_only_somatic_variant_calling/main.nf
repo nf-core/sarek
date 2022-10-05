@@ -2,14 +2,14 @@
 // Run GATK mutect2 in tumor only mode, getepileupsummaries, calculatecontamination and filtermutectcalls
 //
 
-include { GATK4_MERGEVCFS                 as MERGE_MUTECT2             } from '../../../../modules/nf-core/modules/gatk4/mergevcfs/main'
-include { GATK4_CALCULATECONTAMINATION    as CALCULATECONTAMINATION    } from '../../../../modules/nf-core/modules/gatk4/calculatecontamination/main'
-include { GATK4_FILTERMUTECTCALLS         as FILTERMUTECTCALLS         } from '../../../../modules/nf-core/modules/gatk4/filtermutectcalls/main'
-include { GATK4_GETPILEUPSUMMARIES        as GETPILEUPSUMMARIES        } from '../../../../modules/nf-core/modules/gatk4/getpileupsummaries/main'
-include { GATK4_GATHERPILEUPSUMMARIES     as GATHERPILEUPSUMMARIES     } from '../../../../modules/nf-core/modules/gatk4/gatherpileupsummaries/main'
-include { GATK4_LEARNREADORIENTATIONMODEL as LEARNREADORIENTATIONMODEL } from '../../../../modules/nf-core/modules/gatk4/learnreadorientationmodel/main'
-include { GATK4_MERGEMUTECTSTATS          as MERGEMUTECTSTATS          } from '../../../../modules/nf-core/modules/gatk4/mergemutectstats/main'
-include { GATK4_MUTECT2                   as MUTECT2                   } from '../../../../modules/nf-core/modules/gatk4/mutect2/main'
+include { GATK4_MERGEVCFS                 as MERGE_MUTECT2             } from '../../../../modules/nf-core/gatk4/mergevcfs/main'
+include { GATK4_CALCULATECONTAMINATION    as CALCULATECONTAMINATION    } from '../../../../modules/nf-core/gatk4/calculatecontamination/main'
+include { GATK4_FILTERMUTECTCALLS         as FILTERMUTECTCALLS         } from '../../../../modules/nf-core/gatk4/filtermutectcalls/main'
+include { GATK4_GETPILEUPSUMMARIES        as GETPILEUPSUMMARIES        } from '../../../../modules/nf-core/gatk4/getpileupsummaries/main'
+include { GATK4_GATHERPILEUPSUMMARIES     as GATHERPILEUPSUMMARIES     } from '../../../../modules/nf-core/gatk4/gatherpileupsummaries/main'
+include { GATK4_LEARNREADORIENTATIONMODEL as LEARNREADORIENTATIONMODEL } from '../../../../modules/nf-core/gatk4/learnreadorientationmodel/main'
+include { GATK4_MERGEMUTECTSTATS          as MERGEMUTECTSTATS          } from '../../../../modules/nf-core/gatk4/mergemutectstats/main'
+include { GATK4_MUTECT2                   as MUTECT2                   } from '../../../../modules/nf-core/gatk4/mutect2/main'
 
 workflow GATK_TUMOR_ONLY_SOMATIC_VARIANT_CALLING {
     take:
