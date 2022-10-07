@@ -1055,15 +1055,15 @@ workflow SAREK {
         ch_multiqc_files = ch_multiqc_files.mix(ch_version_yaml)
         ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
         ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'))
-        ch_multiqc_files = ch_multiqc_files.mix(ch_reports.collect().ifEmpty([]))
+        ch_multiqc_files = ch_multiqc_files.mix(ch_reports.toList())
 
         ch_multiqc_configs = Channel.from(ch_multiqc_config).mix(ch_multiqc_custom_config).ifEmpty([])
 
         MULTIQC (
             ch_multiqc_files.collect(),
-            ch_multiqc_config.collect().ifEmpty([]),
-            ch_multiqc_custom_config.collect().ifEmpty([]),
-            ch_multiqc_logo.collect().ifEmpty([])
+            ch_multiqc_config.toList(),
+            ch_multiqc_custom_config.toList(),
+            ch_multiqc_logo.toList()
         )
         multiqc_report = MULTIQC.out.report.toList()
         ch_versions    = ch_versions.mix(MULTIQC.out.versions)
