@@ -9,6 +9,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- [#774](https://github.com/nf-core/sarek/pull/774) - Add logo for Danish National Genome Center
+
+### Changed
+
+- [#762](https://github.com/nf-core/sarek/pull/762) - Back to dev
+- [#762](https://github.com/nf-core/sarek/pull/762) - Update deepvariant module
+- [#773](https://github.com/nf-core/sarek/pull/773) - Sync `TEMPLATE` with `tools` `2.6`
+
+### Fixed
+
+- [#762](https://github.com/nf-core/sarek/pull/762) - Polish CHANGELOG + figures
+- [#766](https://github.com/nf-core/sarek/pull/766) - Align box description in subway map
+- [#768](https://github.com/nf-core/sarek/pull/768) - Use double quotes to fix import of singularity images for deepvariant module
+- [#770](https://github.com/nf-core/sarek/pull/770) - Use double quotes to fix import of singularity images for gatk4/cnnscorevariants module
+- [#771](https://github.com/nf-core/sarek/pull/771) - update to new modules syntax
+
+### Deprecated
+
+### Removed
+
+## [3.0.2](https://github.com/nf-core/sarek/releases/tag/3.0.2) - Lájtávrre
+
+Lájtávrre is a lake you can see from the Skierfe mountain, formed by the Rapaätno river.
+
+### Added
+
 - [#691](https://github.com/nf-core/sarek/pull/691) - Enable `PROFILE=conda`, `PROFILE=docker` and `PROFILE=singularity` for pytest
 - [#716](https://github.com/nf-core/sarek/pull/716) - Add documentation for Azure recommended config vm_size
 - [#752](https://github.com/nf-core/sarek/pull/752) - Add tracking of all dependencies starting 3.0
@@ -48,12 +74,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#729](https://github.com/nf-core/sarek/pull/729) - Trailing commas in `--tools`, `--skip_tools` and `--use_gatk_spark` now raise failure cf [#722](https://github.com/nf-core/sarek/issues/722)
 - [#741](https://github.com/nf-core/sarek/pull/741) - Fix prefix for `bcftools sort` for joint germline variant calling
 - [#743](https://github.com/nf-core/sarek/pull/743) - Remove profile definitions in profile to avoid issues with Tower
+- [#758](https://github.com/nf-core/sarek/pull/758) - Fix Zenodo batch
+- [#760](https://github.com/nf-core/sarek/pull/760) - Fix CHANGELOG dependencies
+- [#761](https://github.com/nf-core/sarek/pull/761) - Fix font in subway map and workflow image
 
 ### Deprecated
 
 ### Removed
 
 - [#742](https://github.com/nf-core/sarek/pull/742) - Removed some lines from the usage-doc as Sarek no longer support input supplied as a list of multiple csv-files
+- [#757](https://github.com/nf-core/sarek/pull/757) - Remove `errorStrategy` in `conf/modules.config`
 
 ## [3.0.1](https://github.com/nf-core/sarek/releases/tag/3.0.1) - Saiva
 
@@ -231,7 +261,7 @@ Skierfe is a mountain in the Sarek national park, and the inspiration for the lo
 | `bwa`                  | 0.7.17      | unchanged   |
 | `cancerit-allelecount` | 4.0.2       | 4.3.0       |
 | `cnvkit`               | 0.9.6       | 0.9.9       |
-| `control-freec`        | 11.6        | 11.6        |
+| `control-freec`        | 11.6        | unchanged   |
 | `deepvariant`          | added       | 1.3.0       |
 | `dragmap`              | added       | 1.2.1       |
 | `ensembl-vep`          | 99.2        | 106.1       |
@@ -246,7 +276,7 @@ Skierfe is a mountain in the Sarek national park, and the inspiration for the lo
 | `llvm-openmp`          | 8.0.1       | removed     |
 | `manta`                | 1.6.0       | unchanged   |
 | `markdown`             | 3.1.1       | removed     |
-| `mosdepth`             | 0.3.3       | 0.3.3       |
+| `mosdepth`             | 0.3.3       | unchanged   |
 | `msisensor-pro`        | 1.1.a       | 1.2.0       |
 | `msisensor`            | 0.5         | removed     |
 | `multiqc`              | 1.8         | 1.13a       |
@@ -262,7 +292,7 @@ Skierfe is a mountain in the Sarek national park, and the inspiration for the lo
 | `samtools`             | 1.9         | 1.15.1      |
 | `sed`                  | added       | 4.7         |
 | `snpeff`               | 4.3.1t      | 5.1         |
-| `strelka`              | 2.9.10      | 2.9.10      |
+| `strelka`              | 2.9.10      | unchanged   |
 | `svdb`                 | added       | 2.6.1       |
 | `tabix`                | added       | 1.11        |
 | `tiddit`               | 2.7.1       | 3.1.0       |

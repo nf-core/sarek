@@ -4,9 +4,14 @@
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
+<<<<<<< HEAD
 include { CRAM_QC                                } from '../../cram_qc'
 include { GATK4_MARKDUPLICATES                   } from '../../../../modules/nf-core/modules/gatk4/markduplicates/main'
 include { SAMTOOLS_INDEX as INDEX_MARKDUPLICATES } from '../../../../modules/nf-core/modules/samtools/index/main'
+=======
+include { GATK4_MARKDUPLICATES } from '../../../../modules/nf-core/gatk4/markduplicates/main'
+include { BAM_TO_CRAM          } from '../../bam_to_cram'
+>>>>>>> upstream/dev
 
 workflow MARKDUPLICATES {
     take:

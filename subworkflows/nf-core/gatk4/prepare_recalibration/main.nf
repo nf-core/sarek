@@ -4,8 +4,8 @@
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
-include { GATK4_BASERECALIBRATOR  as BASERECALIBRATOR  } from '../../../../modules/nf-core/modules/gatk4/baserecalibrator/main'
-include { GATK4_GATHERBQSRREPORTS as GATHERBQSRREPORTS } from '../../../../modules/nf-core/modules/gatk4/gatherbqsrreports/main'
+include { GATK4_BASERECALIBRATOR  as BASERECALIBRATOR  } from '../../../../modules/nf-core/gatk4/baserecalibrator/main'
+include { GATK4_GATHERBQSRREPORTS as GATHERBQSRREPORTS } from '../../../../modules/nf-core/gatk4/gatherbqsrreports/main'
 
 workflow PREPARE_RECALIBRATION {
     take:

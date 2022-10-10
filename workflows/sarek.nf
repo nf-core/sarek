@@ -223,7 +223,7 @@ include { ALIGNMENT_TO_FASTQ as ALIGNMENT_TO_FASTQ_UMI   } from '../subworkflows
 include { RUN_FASTQC                                     } from '../subworkflows/nf-core/run_fastqc'
 
 // TRIM/SPLIT FASTQ Files
-include { FASTP                                          } from '../modules/nf-core/modules/fastp/main'
+include { FASTP                                                } from '../modules/nf-core/fastp/main'
 
 // Create umi consensus bams from fastq
 include { CREATE_UMI_CONSENSUS                           } from '../subworkflows/nf-core/fgbio_create_umi_consensus/main'
@@ -234,11 +234,11 @@ include { GATK4_MAPPING                                  } from '../subworkflows
 // Merge and index BAM files (optional)
 include { MERGE_INDEX_BAM                                } from '../subworkflows/nf-core/merge_index_bam'
 
-include { SAMTOOLS_CONVERT as CRAMTOBAM_MARKDUPLICATES   } from '../modules/nf-core/modules/samtools/convert/main'
-include { SAMTOOLS_CONVERT as CRAMTOBAM_RECAL            } from '../modules/nf-core/modules/samtools/convert/main'
+include { SAMTOOLS_CONVERT as SAMTOOLS_CRAMTOBAM               } from '../modules/nf-core/samtools/convert/main'
+include { SAMTOOLS_CONVERT as SAMTOOLS_CRAMTOBAM_RECAL         } from '../modules/nf-core/samtools/convert/main'
 
-include { SAMTOOLS_CONVERT as BAMTOCRAM_MAPPING          } from '../modules/nf-core/modules/samtools/convert/main'
-include { SAMTOOLS_CONVERT as BAMTOCRAM_INPUT            } from '../modules/nf-core/modules/samtools/convert/main'
+include { SAMTOOLS_CONVERT as SAMTOOLS_BAMTOCRAM               } from '../modules/nf-core/samtools/convert/main'
+include { SAMTOOLS_CONVERT as SAMTOOLS_BAMTOCRAM_VARIANTCALLING} from '../modules/nf-core/samtools/convert/main'
 
 // Mark Duplicates (+QC)
 include { MARKDUPLICATES                                 } from '../subworkflows/nf-core/gatk4/markduplicates/main'
@@ -277,10 +277,10 @@ include { VCF_QC                                         } from '../subworkflows
 include { ANNOTATE                                       } from '../subworkflows/local/annotate'
 
 // REPORTING VERSIONS OF SOFTWARE USED
-include { CUSTOM_DUMPSOFTWAREVERSIONS                    } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
+include { CUSTOM_DUMPSOFTWAREVERSIONS                          } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 
 // MULTIQC
-include { MULTIQC                                        } from '../modules/nf-core/modules/multiqc/main'
+include { MULTIQC                                              } from '../modules/nf-core/multiqc/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -288,12 +288,10 @@ include { MULTIQC                                        } from '../modules/nf-c
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-ch_multiqc_config        = [
-                            file("$projectDir/assets/multiqc_config.yml", checkIfExists: true),
-                            file("$projectDir/assets/nf-core-sarek_logo_light.png", checkIfExists: true)
-                            ]
-ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config) : Channel.empty()
-def multiqc_report = []
+ch_multiqc_config          = Channel.fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
+ch_multiqc_custom_config   = params.multiqc_config ? Channel.fromPath( params.multiqc_config, checkIfExists: true ) : Channel.empty()
+ch_multiqc_logo            = params.multiqc_logo   ? Channel.fromPath( params.multiqc_logo, checkIfExists: true ) : Channel.empty()
+ch_multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1066,15 +1064,25 @@ workflow SAREK {
     if (!(params.skip_tools && params.skip_tools.split(',').contains('multiqc'))) {
         workflow_summary    = WorkflowSarek.paramsSummaryMultiqc(workflow, summary_params)
         ch_workflow_summary = Channel.value(workflow_summary)
+        methods_description    = WorkflowSarek.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description)
+        ch_methods_description = Channel.value(methods_description)
 
-        ch_multiqc_files =  Channel.empty().mix(ch_version_yaml,
-                                            ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'),
-                                            ch_reports.collect().ifEmpty([]))
+        ch_multiqc_files = Channel.empty()
+        ch_multiqc_files = ch_multiqc_files.mix(ch_version_yaml)
+        ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
+        ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'))
+        ch_multiqc_files = ch_multiqc_files.mix(ch_reports.collect().ifEmpty([]))
 
         ch_multiqc_configs = Channel.from(ch_multiqc_config).mix(ch_multiqc_custom_config).ifEmpty([])
 
-        MULTIQC(ch_multiqc_files.collect(), ch_multiqc_configs.collect())
+        MULTIQC (
+            ch_multiqc_files.collect(),
+            ch_multiqc_config.collect().ifEmpty([]),
+            ch_multiqc_custom_config.collect().ifEmpty([]),
+            ch_multiqc_logo.collect().ifEmpty([])
+        )
         multiqc_report = MULTIQC.out.report.toList()
+        ch_versions    = ch_versions.mix(MULTIQC.out.versions)
     }
 }
 
@@ -1089,6 +1097,9 @@ workflow.onComplete {
         NfcoreTemplate.email(workflow, params, summary_params, projectDir, log, multiqc_report)
     }
     NfcoreTemplate.summary(workflow, params, log)
+    if (params.hook_url) {
+        NfcoreTemplate.adaptivecard(workflow, params, summary_params, projectDir, log)
+    }
 }
 
 /*

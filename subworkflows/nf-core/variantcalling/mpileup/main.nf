@@ -1,5 +1,5 @@
-include { CAT_CAT as CAT_MPILEUP         } from '../../../../modules/nf-core/modules/cat/cat/main'
-include { SAMTOOLS_MPILEUP               } from '../../../../modules/nf-core/modules/samtools/mpileup/main'
+include { CAT_CAT as CAT_MPILEUP         } from '../../../../modules/nf-core/cat/cat/main'
+include { SAMTOOLS_MPILEUP               } from '../../../../modules/nf-core/samtools/mpileup/main'
 
 workflow RUN_MPILEUP {
     take:
