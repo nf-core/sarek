@@ -234,12 +234,11 @@ include { GATK4_MAPPING                                  } from '../subworkflows
 // Merge and index BAM files (optional)
 include { MERGE_INDEX_BAM                                } from '../subworkflows/nf-core/merge_index_bam'
 
-include { SAMTOOLS_CONVERT as SAMTOOLS_CRAMTOBAM               } from '../modules/nf-core/samtools/convert/main'
-include { SAMTOOLS_CONVERT as CRAMTOBAM_RECAL         } from '../modules/nf-core/samtools/convert/main'
-include { SAMTOOLS_CONVERT as CRAMTOBAM_MARKDUPLICATES         } from '../modules/nf-core/samtools/convert/main'
+include { SAMTOOLS_CONVERT as SAMTOOLS_CRAMTOBAM         } from '../modules/nf-core/samtools/convert/main'
+include { SAMTOOLS_CONVERT as CRAMTOBAM_RECAL            } from '../modules/nf-core/samtools/convert/main'
+include { SAMTOOLS_CONVERT as CRAMTOBAM_MARKDUPLICATES   } from '../modules/nf-core/samtools/convert/main'
 
-include { SAMTOOLS_CONVERT as SAMTOOLS_BAMTOCRAM               } from '../modules/nf-core/samtools/convert/main'
-include { SAMTOOLS_CONVERT as SAMTOOLS_BAMTOCRAM_VARIANTCALLING} from '../modules/nf-core/samtools/convert/main'
+include { SAMTOOLS_CONVERT as BAMTOCRAM_INPUT            } from '../modules/nf-core/samtools/convert/main'
 
 // Mark Duplicates (+QC)
 include { MARKDUPLICATES                                 } from '../subworkflows/nf-core/gatk4/markduplicates/main'
