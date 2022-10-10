@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - [#774](https://github.com/nf-core/sarek/pull/774) - Add logo for Danish National Genome Center
+- [#783](https://github.com/nf-core/sarek/pull/783) - Add paths for chr length used by controlfreec to GRCh38 config
 
 ### Changed
 
