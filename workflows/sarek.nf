@@ -1005,13 +1005,13 @@ workflow SAREK {
         ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.versions)
 
         //QC
-        VCF_QC(vcf_to_annotate, intervals_bed_combined)
+        VCF_QC_BCFTOOLS_VCFTOOLS(vcf_to_annotate, intervals_bed_combined)
 
-        ch_versions = ch_versions.mix(VCF_QC.out.versions)
-        ch_reports  = ch_reports.mix(VCF_QC.out.bcftools_stats.collect{meta, stats -> stats})
-        ch_reports  = ch_reports.mix(VCF_QC.out.vcftools_tstv_counts.collect{ meta, counts -> counts})
-        ch_reports  = ch_reports.mix(VCF_QC.out.vcftools_tstv_qual.collect{ meta, qual -> qual })
-        ch_reports  = ch_reports.mix(VCF_QC.out.vcftools_filter_summary.collect{meta, summary -> summary})
+        ch_versions = ch_versions.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.versions)
+        ch_reports  = ch_reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.bcftools_stats.collect{meta, stats -> stats})
+        ch_reports  = ch_reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.vcftools_tstv_counts.collect{ meta, counts -> counts})
+        ch_reports  = ch_reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.vcftools_tstv_qual.collect{ meta, qual -> qual })
+        ch_reports  = ch_reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.vcftools_filter_summary.collect{meta, summary -> summary})
 
         CHANNEL_VARIANT_CALLING_CREATE_CSV(vcf_to_annotate)
 

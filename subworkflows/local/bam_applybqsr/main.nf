@@ -4,8 +4,8 @@
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
-include { GATK4_APPLYBQSR          } from '../../../modules/nf-core/gatk4/applybqsr/main'
-include { BAM_MERGE_INDEX_SAMTOOLS } from '../bam_merge_index_samtools/main'
+include { GATK4_APPLYBQSR           } from '../../../modules/nf-core/gatk4/applybqsr/main'
+include { CRAM_MERGE_INDEX_SAMTOOLS } from '../cram_merge_index_samtools/main'
 
 workflow BAM_APPLYBQSR {
     take:
@@ -40,9 +40,9 @@ workflow BAM_APPLYBQSR {
     GATK4_APPLYBQSR(cram_intervals, fasta, fasta_fai, dict)
 
     // STEP 4.5: MERGING AND INDEXING THE RECALIBRATED CRAM FILES
-    BAM_MERGE_INDEX_SAMTOOLS(GATK4_APPLYBQSR.out.cram, fasta, fasta_fai)
+    CRAM_MERGE_INDEX_SAMTOOLS(GATK4_APPLYBQSR.out.cram, fasta, fasta_fai)
 
-    ch_cram_recal_out = BAM_MERGE_INDEX_SAMTOOLS.out.cram_crai.map{ meta, cram, crai ->
+    ch_cram_recal_out = CRAM_MERGE_INDEX_SAMTOOLS.out.cram_crai.map{ meta, cram, crai ->
                             // remove no longer necessary fields to make sure joining can be done correctly: num_intervals
                             [[
                                 data_type:  meta.data_type,
@@ -57,7 +57,7 @@ workflow BAM_APPLYBQSR {
 
     // Gather versions of all tools used
     ch_versions = ch_versions.mix(GATK4_APPLYBQSR.out.versions)
-    ch_versions = ch_versions.mix(BAM_MERGE_INDEX_SAMTOOLS.out.versions)
+    ch_versions = ch_versions.mix(CRAM_MERGE_INDEX_SAMTOOLS.out.versions)
 
     emit:
         cram     = ch_cram_recal_out
