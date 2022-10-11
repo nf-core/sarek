@@ -2,16 +2,16 @@
 // GERMLINE VARIANT CALLING
 //
 
-include { RUN_CNVKIT          } from '../nf-core/variantcalling/cnvkit/main.nf'
-include { RUN_DEEPVARIANT     } from '../nf-core/variantcalling/deepvariant/main.nf'
-include { RUN_FREEBAYES       } from '../nf-core/variantcalling/freebayes/main.nf'
-include { RUN_HAPLOTYPECALLER } from '../nf-core/variantcalling/haplotypecaller/main.nf'
-include { RUN_MANTA_GERMLINE  } from '../nf-core/variantcalling/manta/germline/main.nf'
-include { RUN_MPILEUP         } from '../nf-core/variantcalling/mpileup/main'
-include { RUN_STRELKA_SINGLE  } from '../nf-core/variantcalling/strelka/single/main.nf'
-include { RUN_TIDDIT          } from '../nf-core/variantcalling/tiddit/single/main.nf'
+include { BAM_VARIANT_CALLING_CNVKIT          } from '../bam_variant_calling_cnvkit/main'
+include { BAM_VARIANT_CALLING_DEEPVARIANT     } from '../bam_variant_calling_deepvariant/main'
+include { BAM_VARIANT_CALLING_FREEBAYES       } from '../bam_variant_calling_freebayes/main'
+include { BAM_VARIANT_CALLING_GERMLINE_MANTA  } from '../bam_variant_calling_germline_manta/main'
+include { BAM_VARIANT_CALLING_HAPLOTYPECALLER } from '../bam_variant_calling_haplotypecaller/main'
+include { BAM_VARIANT_CALLING_MPILEUP         } from '../bam_variant_calling_mpileup/main'
+include { BAM_VARIANT_CALLING_SINGLE_STRELKA  } from '../bam_variant_calling_single_strelka/main'
+include { BAM_VARIANT_CALLING_SINGLE_TIDDIT   } from '../bam_variant_calling_single_tiddit/main'
 
-workflow GERMLINE_VARIANT_CALLING {
+workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     take:
         tools                             // Mandatory, list of tools to apply
         cram_recalibrated                 // channel: [mandatory] cram
@@ -88,13 +88,13 @@ workflow GERMLINE_VARIANT_CALLING {
                 [meta, cram, intervals]
             }
 
-        RUN_MPILEUP(
+        BAM_VARIANT_CALLING_MPILEUP(
             cram_intervals_no_index,
             fasta
         )
 
-        mpileup_germline = RUN_MPILEUP.out.mpileup
-        ch_versions = ch_versions.mix(RUN_MPILEUP.out.versions)
+        mpileup_germline = BAM_VARIANT_CALLING_MPILEUP.out.mpileup
+        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_MPILEUP.out.versions)
     }
 
     // CNVKIT
@@ -105,7 +105,7 @@ workflow GERMLINE_VARIANT_CALLING {
                 [meta, [], cram]
             }
 
-        RUN_CNVKIT(
+        BAM_VARIANT_CALLING_CNVKIT(
             cram_recalibrated_cnvkit_germline,
             fasta,
             fasta_fai,
@@ -113,20 +113,20 @@ workflow GERMLINE_VARIANT_CALLING {
             []
         )
 
-        ch_versions     = ch_versions.mix(RUN_CNVKIT.out.versions)
+        ch_versions     = ch_versions.mix(BAM_VARIANT_CALLING_CNVKIT.out.versions)
     }
 
     // DEEPVARIANT
     if(tools.split(',').contains('deepvariant')){
-        RUN_DEEPVARIANT(
+        BAM_VARIANT_CALLING_DEEPVARIANT(
             cram_recalibrated_intervals,
             dict,
             fasta,
             fasta_fai
         )
 
-        deepvariant_vcf = Channel.empty().mix(RUN_DEEPVARIANT.out.deepvariant_vcf,RUN_DEEPVARIANT.out.deepvariant_gvcf)
-        ch_versions     = ch_versions.mix(RUN_DEEPVARIANT.out.versions)
+        deepvariant_vcf = Channel.empty().mix(BAM_VARIANT_CALLING_DEEPVARIANT.out.deepvariant_vcf,BAM_VARIANT_CALLING_DEEPVARIANT.out.deepvariant_gvcf)
+        ch_versions     = ch_versions.mix(BAM_VARIANT_CALLING_DEEPVARIANT.out.versions)
     }
 
     // FREEBAYES
@@ -137,15 +137,15 @@ workflow GERMLINE_VARIANT_CALLING {
                 [meta, cram, crai, [], [], intervals]
             }
 
-        RUN_FREEBAYES(
+        BAM_VARIANT_CALLING_FREEBAYES(
             cram_recalibrated_intervals_freebayes,
             dict,
             fasta,
             fasta_fai
         )
 
-        freebayes_vcf   = RUN_FREEBAYES.out.freebayes_vcf
-        ch_versions     = ch_versions.mix(RUN_FREEBAYES.out.versions)
+        freebayes_vcf   = BAM_VARIANT_CALLING_FREEBAYES.out.freebayes_vcf
+        ch_versions     = ch_versions.mix(BAM_VARIANT_CALLING_FREEBAYES.out.versions)
     }
 
     // HAPLOTYPECALLER
@@ -169,7 +169,7 @@ workflow GERMLINE_VARIANT_CALLING {
                 [new_meta, cram, crai, intervals, []]
         }
 
-        RUN_HAPLOTYPECALLER(cram_recalibrated_intervals_haplotypecaller,
+        BAM_VARIANT_CALLING_HAPLOTYPECALLER(cram_recalibrated_intervals_haplotypecaller,
                         fasta,
                         fasta_fai,
                         dict,
@@ -181,46 +181,46 @@ workflow GERMLINE_VARIANT_CALLING {
                         known_sites_snps_tbi,
                         intervals_bed_combined_haplotypec)
 
-        haplotypecaller_vcf  = RUN_HAPLOTYPECALLER.out.filtered_vcf
-        ch_versions          = ch_versions.mix(RUN_HAPLOTYPECALLER.out.versions)
+        haplotypecaller_vcf  = BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.filtered_vcf
+        ch_versions          = ch_versions.mix(BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.versions)
     }
 
     // MANTA
     if (tools.split(',').contains('manta')){
-        RUN_MANTA_GERMLINE (
+        BAM_VARIANT_CALLING_GERMLINE_MANTA (
             cram_recalibrated_intervals_gz_tbi,
             dict,
             fasta,
             fasta_fai
         )
 
-        manta_vcf   = RUN_MANTA_GERMLINE.out.manta_vcf
-        ch_versions = ch_versions.mix(RUN_MANTA_GERMLINE.out.versions)
+        manta_vcf   = BAM_VARIANT_CALLING_GERMLINE_MANTA.out.manta_vcf
+        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_GERMLINE_MANTA.out.versions)
     }
 
     // STRELKA
     if (tools.split(',').contains('strelka')){
-        RUN_STRELKA_SINGLE(
+        BAM_VARIANT_CALLING_SINGLE_STRELKA(
             cram_recalibrated_intervals_gz_tbi,
             dict,
             fasta,
             fasta_fai
         )
 
-        strelka_vcf = RUN_STRELKA_SINGLE.out.strelka_vcf
-        ch_versions = ch_versions.mix(RUN_STRELKA_SINGLE.out.versions)
+        strelka_vcf = BAM_VARIANT_CALLING_SINGLE_STRELKA.out.strelka_vcf
+        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_SINGLE_STRELKA.out.versions)
     }
 
     //TIDDIT
     if (tools.split(',').contains('tiddit')){
-        RUN_TIDDIT(
+        BAM_VARIANT_CALLING_SINGLE_TIDDIT(
             cram_recalibrated,
             fasta,
             bwa
         )
 
-        tiddit_vcf = RUN_TIDDIT.out.tiddit_vcf
-        ch_versions = ch_versions.mix(RUN_TIDDIT.out.versions)
+        tiddit_vcf = BAM_VARIANT_CALLING_SINGLE_TIDDIT.out.tiddit_vcf
+        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_SINGLE_TIDDIT.out.versions)
     }
 
     emit:

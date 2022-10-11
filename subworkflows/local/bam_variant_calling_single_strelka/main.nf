@@ -1,8 +1,8 @@
-include { GATK4_MERGEVCFS as MERGE_STRELKA        } from '../../../../../modules/nf-core/gatk4/mergevcfs/main'
-include { GATK4_MERGEVCFS as MERGE_STRELKA_GENOME } from '../../../../../modules/nf-core/gatk4/mergevcfs/main'
-include { STRELKA_GERMLINE as STRELKA_SINGLE      } from '../../../../../modules/nf-core/strelka/germline/main'
+include { GATK4_MERGEVCFS as MERGE_STRELKA        } from '../../../modules/nf-core/gatk4/mergevcfs/main'
+include { GATK4_MERGEVCFS as MERGE_STRELKA_GENOME } from '../../../modules/nf-core/gatk4/mergevcfs/main'
+include { STRELKA_GERMLINE as STRELKA_SINGLE      } from '../../../modules/nf-core/strelka/germline/main'
 
-workflow RUN_STRELKA_SINGLE {
+workflow BAM_VARIANT_CALLING_SINGLE_STRELKA {
     take:
     cram                     // channel: [mandatory] [meta, cram, crai, interval.bed.gz, interval.bed.gz.tbi]
     dict                     // channel: [optional]

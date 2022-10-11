@@ -1,7 +1,7 @@
-include { TABIX_BGZIPTABIX as TABIX_BGZIP_TIDDIT_SV } from '../../../../../modules/nf-core/tabix/bgziptabix/main'
-include { TIDDIT_SV                                 } from '../../../../../modules/nf-core/tiddit/sv/main'
+include { TABIX_BGZIPTABIX as TABIX_BGZIP_TIDDIT_SV } from '../../../modules/nf-core/tabix/bgziptabix/main'
+include { TIDDIT_SV                                 } from '../../../modules/nf-core/tiddit/sv/main'
 
-workflow RUN_TIDDIT {
+workflow BAM_VARIANT_CALLING_SINGLE_TIDDIT {
     take:
         cram_recalibrated
         fasta

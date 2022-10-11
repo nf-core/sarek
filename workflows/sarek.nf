@@ -264,13 +264,13 @@ include { BAM_APPLYBQSR                                        } from '../subwor
 include { BAM_APPLYBQSR_SPARK                                  } from '../subworkflows/local/bam_applybqsr_spark/main'
 
 // Variant calling on a single normal sample
-include { GERMLINE_VARIANT_CALLING                             } from '../subworkflows/local/germline_variant_calling'
+include { BAM_VARIANT_CALLING_GERMLINE_ALL                     } from '../subworkflows/local/bam_variant_calling_germline_all/main'
 
 // Variant calling on a single tumor sample
-include { TUMOR_ONLY_VARIANT_CALLING                           } from '../subworkflows/local/tumor_variant_calling'
+include { BAM_VARIANT_CALLING_TUMOR_ONLY_ALL                   } from '../subworkflows/local/bam_variant_calling_tumor_only_all/main'
 
 // Variant calling on tumor/normal pair
-include { PAIR_VARIANT_CALLING                                 } from '../subworkflows/local/pair_variant_calling'
+include { BAM_VARIANT_CALLING_SOMATIC_ALL                      } from '../subworkflows/local/bam_variant_calling_somatic_all/main'
 
 include { VCF_QC                                               } from '../subworkflows/local/vcf_qc'
 
@@ -908,7 +908,7 @@ workflow SAREK {
             }
 
         // GERMLINE VARIANT CALLING
-        GERMLINE_VARIANT_CALLING(
+        BAM_VARIANT_CALLING_GERMLINE_ALL(
             params.tools,
             ch_cram_variant_calling_status_normal,
             [], //bwa_index for tiddit; not used here
@@ -927,7 +927,7 @@ workflow SAREK {
             known_sites_snps_tbi)
 
         // TUMOR ONLY VARIANT CALLING
-        TUMOR_ONLY_VARIANT_CALLING(
+        BAM_VARIANT_CALLING_TUMOR_ONLY_ALL(
             params.tools,
             ch_cram_variant_calling_tumor_only,
             [], //bwa_index for tiddit; not used here
@@ -950,7 +950,7 @@ workflow SAREK {
         )
 
         // PAIR VARIANT CALLING
-        PAIR_VARIANT_CALLING(
+        BAM_VARIANT_CALLING_SOMATIC_ALL(
             params.tools,
             ch_cram_variant_calling_pair,
             [], //bwa_index for tiddit; not used here
@@ -978,27 +978,27 @@ workflow SAREK {
 
         // Gather vcf files for annotation and QC
         vcf_to_annotate = Channel.empty()
-        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.deepvariant_vcf)
-        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.freebayes_vcf)
-        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.haplotypecaller_vcf)
-        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.manta_vcf)
-        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.tiddit_vcf)
-        vcf_to_annotate = vcf_to_annotate.mix(GERMLINE_VARIANT_CALLING.out.strelka_vcf)
-        vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.freebayes_vcf)
-        vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.mutect2_vcf)
-        vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.manta_vcf)
-        vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.strelka_vcf)
-        vcf_to_annotate = vcf_to_annotate.mix(TUMOR_ONLY_VARIANT_CALLING.out.tiddit_vcf)
-        vcf_to_annotate = vcf_to_annotate.mix(PAIR_VARIANT_CALLING.out.freebayes_vcf)
-        vcf_to_annotate = vcf_to_annotate.mix(PAIR_VARIANT_CALLING.out.mutect2_vcf)
-        vcf_to_annotate = vcf_to_annotate.mix(PAIR_VARIANT_CALLING.out.manta_vcf)
-        vcf_to_annotate = vcf_to_annotate.mix(PAIR_VARIANT_CALLING.out.strelka_vcf)
-        vcf_to_annotate = vcf_to_annotate.mix(PAIR_VARIANT_CALLING.out.tiddit_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.deepvariant_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.freebayes_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.haplotypecaller_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.manta_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.tiddit_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.strelka_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.freebayes_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.mutect2_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.manta_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.strelka_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.tiddit_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.freebayes_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.mutect2_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.manta_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.strelka_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.tiddit_vcf)
 
         // Gather used softwares versions
-        ch_versions = ch_versions.mix(GERMLINE_VARIANT_CALLING.out.versions)
-        ch_versions = ch_versions.mix(PAIR_VARIANT_CALLING.out.versions)
-        ch_versions = ch_versions.mix(TUMOR_ONLY_VARIANT_CALLING.out.versions)
+        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.versions)
+        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.versions)
+        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.versions)
 
         //QC
         VCF_QC(vcf_to_annotate, intervals_bed_combined)

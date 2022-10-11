@@ -13,7 +13,7 @@ include { RUN_MPILEUP as RUN_MPILEUP_TUMOR          } from '../nf-core/variantca
 include { RUN_ASCAT_SOMATIC                         } from '../nf-core/variantcalling/ascat/main'
 include { RUN_TIDDIT_SOMATIC                        } from '../nf-core/variantcalling/tiddit/somatic/main'
 
-workflow PAIR_VARIANT_CALLING {
+workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     take:
         tools                         // Mandatory, list of tools to apply
         cram_pair                     // channel: [mandatory] cram

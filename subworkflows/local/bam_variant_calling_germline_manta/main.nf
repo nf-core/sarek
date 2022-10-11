@@ -1,10 +1,10 @@
-include { GATK4_MERGEVCFS as MERGE_MANTA_DIPLOID      } from '../../../../../modules/nf-core/gatk4/mergevcfs/main'
-include { GATK4_MERGEVCFS as MERGE_MANTA_SMALL_INDELS } from '../../../../../modules/nf-core/gatk4/mergevcfs/main'
-include { GATK4_MERGEVCFS as MERGE_MANTA_SV           } from '../../../../../modules/nf-core/gatk4/mergevcfs/main'
-include { MANTA_GERMLINE                              } from '../../../../../modules/nf-core/manta/germline/main'
+include { GATK4_MERGEVCFS as MERGE_MANTA_DIPLOID      } from '../../../modules/nf-core/gatk4/mergevcfs/main'
+include { GATK4_MERGEVCFS as MERGE_MANTA_SMALL_INDELS } from '../../../modules/nf-core/gatk4/mergevcfs/main'
+include { GATK4_MERGEVCFS as MERGE_MANTA_SV           } from '../../../modules/nf-core/gatk4/mergevcfs/main'
+include { MANTA_GERMLINE                              } from '../../../modules/nf-core/manta/germline/main'
 
 // Seems to be the consensus on upstream modules implementation too
-workflow RUN_MANTA_GERMLINE {
+workflow BAM_VARIANT_CALLING_GERMLINE_MANTA {
     take:
     cram                     // channel: [mandatory] [meta, cram, crai, interval.bed.gz, interval.bed.gz.tbi]
     dict                     // channel: [optional]

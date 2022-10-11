@@ -12,7 +12,7 @@ include { RUN_CNVKIT                              } from '../nf-core/variantcall
 include { RUN_MPILEUP                             } from '../nf-core/variantcalling/mpileup/main'
 include { RUN_TIDDIT                              } from '../nf-core/variantcalling/tiddit/single/main.nf'
 
-workflow TUMOR_ONLY_VARIANT_CALLING {
+workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     take:
         tools                         // Mandatory, list of tools to apply
         cram_recalibrated             // channel: [mandatory] cram

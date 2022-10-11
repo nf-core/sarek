@@ -1,7 +1,7 @@
-include { CAT_CAT as CAT_MPILEUP         } from '../../../../modules/nf-core/cat/cat/main'
-include { SAMTOOLS_MPILEUP               } from '../../../../modules/nf-core/samtools/mpileup/main'
+include { CAT_CAT as CAT_MPILEUP         } from '../../../modules/nf-core/cat/cat/main'
+include { SAMTOOLS_MPILEUP               } from '../../../modules/nf-core/samtools/mpileup/main'
 
-workflow RUN_MPILEUP {
+workflow BAM_VARIANT_CALLING_MPILEUP {
     take:
         cram                    // channel: [mandatory] [meta, cram, interval]
         fasta                   // channel: [mandatory]
