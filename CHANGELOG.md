@@ -9,10 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- [#735](https://github.com/nf-core/sarek/pull/735) - GATK Markduplicates now natively supports CRAM output
 - [#774](https://github.com/nf-core/sarek/pull/774) - Add logo for Danish National Genome Center
 
 ### Changed
 
+- [#735](https://github.com/nf-core/sarek/pull/735) - `--save_mapped` now saves mapping output in CRAM format
 - [#762](https://github.com/nf-core/sarek/pull/762) - Back to dev
 - [#762](https://github.com/nf-core/sarek/pull/762) - Update deepvariant module
 - [#773](https://github.com/nf-core/sarek/pull/773) - Sync `TEMPLATE` with `tools` `2.6`
@@ -54,7 +56,6 @@ Lájtávrre is a lake you can see from the Skierfe mountain, formed by the Rapa�
 - [#731](https://github.com/nf-core/sarek/pull/731) - Run the somatic test as default on `-profile test_full`, the germline can be tested with `-profile test_full_germline`
 - [#733](https://github.com/nf-core/sarek/pull/733) - Add description for params.cf_chrom_len
 - [#734](https://github.com/nf-core/sarek/pull/734) - nf-core modules update -a
-- [#735](https://github.com/nf-core/sarek/pull/735) - GATK Markduplicates now natively supports CRAM output
 - [#736](https://github.com/nf-core/sarek/pull/736) - More extensive CI for default test
 - [#742](https://github.com/nf-core/sarek/pull/742) - Requiring the Haplotypecaller to be specified as one of the tools for joint germline genotyping
 - [#752](https://github.com/nf-core/sarek/pull/752) - Code polishing

@@ -62,10 +62,10 @@
     - path: results/csv/recalibrated.csv
       md5sum: 1888a924bc70bd80165a96ad641e22d6
     - path: results/multiqc
-    - path: results/preprocessing/mapped/test/test.sorted.cram
+    - path: results/preprocessing/converted/test/test.converted.cram
     # binary changes md5sums on reruns.
-    - path: results/preprocessing/mapped/test/test.sorted.cram.crai
-    # binary changes md5sums on reruns.
+    - path: results/preprocessing/converted/test/test.converted.cram.crai
+    # binary changes md5sums on reruns.py
     - path: results/preprocessing/recal_table/test/test.recal.table
       md5sum: 35d89a3811aa31711fc9815b6b80e6ec
     - path: results/preprocessing/recalibrated/test/test.recal.cram
@@ -162,8 +162,58 @@
       md5sum: ae97b7394ab53a6b60921ab06c713cd9
     - path: results/csv/recalibrated.csv
       md5sum: 2d29d9e53894dcce96a1b5beb6ef3312
-    - path: results/csv/sorted.csv
-      md5sum: a43e621076274d8c05c62b0bff11dfcd
+    - path: results/multiqc
+    - path: results/preprocessing/mapped/test/test.sorted.cram
+    # binary changes md5sums on reruns.
+    - path: results/preprocessing/mapped/test/test.sorted.cram.crai
+    # binary changes md5sums on reruns.
+    - path: results/preprocessing/recal_table/test/test.recal.table
+      md5sum: 8de213f4c00fac61a1102633760493df
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+    # binary changes md5sums on reruns.
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+    # binary changes md5sums on reruns.
+    - path: results/reports/fastqc/test-test_L1
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+      md5sum: 48aa760b024d7c0ddd5a66f89a1cb544
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+      md5sum: 71e938314bba70f978271b2b56cb7ad3
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+      md5sum: 0786d56af0672eaef44b29f4ed5c12cb
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
+      md5sum: b8719430e56a58f734884bb422a7b8fa
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
+      md5sum: e3235323f455414ee3acc7144e659caf
+    - path: results/reports/mosdepth/test/test.sorted.mosdepth.global.dist.txt
+      md5sum: 48aa760b024d7c0ddd5a66f89a1cb544
+    - path: results/reports/mosdepth/test/test.sorted.mosdepth.region.dist.txt
+      md5sum: 71e938314bba70f978271b2b56cb7ad3
+    - path: results/reports/mosdepth/test/test.sorted.mosdepth.summary.txt
+      md5sum: 0786d56af0672eaef44b29f4ed5c12cb
+    - path: results/reports/mosdepth/test/test.sorted.regions.bed.gz
+      md5sum: b8719430e56a58f734884bb422a7b8fa
+    - path: results/reports/mosdepth/test/test.sorted.regions.bed.gz.csi
+      md5sum: e3235323f455414ee3acc7144e659caf
+    - path: results/reports/samtools/test/test.recal.cram.stats
+      md5sum: 55ddd2d98552a1483bf2a965f19d8da4
+    - path: results/reports/samtools/test/test.sorted.cram.stats
+      md5sum: 59d921ed3970e19145fbae75966de3e3
+    - path: results/csv/markduplicates.csv
+      should_exist: false
+    - path: results/csv/markduplicates_no_table.csv
+      should_exist: false
+    - path: results/preprocessing/mapped/test/test.bam
+      should_exist: false
+- name: Run default pipeline with skipping MarkDuplicates with save_mapped & save_output_as_bam
+  command: nextflow run main.nf -profile test,skip_markduplicates --save_mapped --save_output_as_bam
+  tags:
+    - preprocessing
+    - skip_markduplicates
+  files:
+    - path: results/csv/mapped.csv
+      md5sum: 7f21bf40d3fbc248ee2ea3fdf0f7cdb2
+    - path: results/csv/recalibrated.csv
+      md5sum: 3ddc20eb105fdcc483945afd7d7d238c
     - path: results/multiqc
     - path: results/preprocessing/mapped/test/test.sorted.bam
     # binary changes md5sums on reruns.
@@ -171,9 +221,9 @@
     # binary changes md5sums on reruns.
     - path: results/preprocessing/recal_table/test/test.recal.table
       md5sum: 8de213f4c00fac61a1102633760493df
-    - path: results/preprocessing/recalibrated/test/test.recal.cram
+    - path: results/preprocessing/recalibrated/test/test.recal.bam
     # binary changes md5sums on reruns.
-    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+    - path: results/preprocessing/recalibrated/test/test.recal.bam.bai
     # binary changes md5sums on reruns.
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
