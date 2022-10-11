@@ -1,8 +1,8 @@
 //
-// MARKDUPLICATES_CSV
+// CHANNEL_MARKDUPLICATES_CREATE_CSV
 //
 
-workflow MARKDUPLICATES_CSV {
+workflow CHANNEL_MARKDUPLICATES_CREATE_CSV {
     take:
         cram_markduplicates // channel: [mandatory] meta, cram, crai
 

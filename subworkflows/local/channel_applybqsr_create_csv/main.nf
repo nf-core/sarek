@@ -1,8 +1,8 @@
 //
-// APPLYBQSR_CSV
+// CHANNEL_APPLYBQSR_CREATE_CSV
 //
 
-workflow APPLYBQSR_CSV {
+workflow CHANNEL_APPLYBQSR_CREATE_CSV {
     take:
         cram_recalibrated_index // channel: [mandatory] meta, cram, crai
 

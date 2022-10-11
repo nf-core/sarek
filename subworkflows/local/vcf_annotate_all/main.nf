@@ -6,7 +6,7 @@ include { ANNOTATION_SNPEFF                         } from '../nf-core/annotatio
 include { ANNOTATION_ENSEMBLVEP as ANNOTATION_MERGE } from '../nf-core/annotation/ensemblvep/main'
 include { ANNOTATION_ENSEMBLVEP                     } from '../nf-core/annotation/ensemblvep/main'
 
-workflow ANNOTATE {
+workflow VCF_ANNOTATE_ALL {
     take:
     vcf          // channel: [ val(meta), vcf ]
     fasta

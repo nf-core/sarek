@@ -200,88 +200,92 @@ if (params.spliceai_snv && params.spliceai_snv_tbi && params.spliceai_indel && p
 */
 
 // Create samplesheets to restart from different steps
-include { ALIGN_CSV                                            } from '../subworkflows/local/channel_align_create_csv/main'
-include { MARKDUPLICATES_CSV                                   } from '../subworkflows/local/channel_markduplicates_create_csv/main'
-include { BASERECALIBRATOR_CSV                                 } from '../subworkflows/local/channel_baserecalibrator_create_csv/main'
-include { APPLYBQSR_CSV                                        } from '../subworkflows/local/channel_applybqsr_create_csv/main'
-include { VARIANT_CALLING_CSV                                  } from '../subworkflows/local/channel_variant_calling_create_csv/main'
+include { CHANNEL_ALIGN_CREATE_CSV                       } from '../subworkflows/local/channel_align_create_csv/main'
+include { CHANNEL_MARKDUPLICATES_CREATE_CSV              } from '../subworkflows/local/channel_markduplicates_create_csv/main'
+include { CHANNEL_BASERECALIBRATOR_CREATE_CSV            } from '../subworkflows/local/channel_baserecalibrator_create_csv/main'
+include { CHANNEL_APPLYBQSR_CREATE_CSV                   } from '../subworkflows/local/channel_applybqsr_create_csv/main'
+include { CHANNEL_VARIANT_CALLING_CREATE_CSV             } from '../subworkflows/local/channel_variant_calling_create_csv/main'
 
 // Build indices if needed
-include { PREPARE_GENOME                                       } from '../subworkflows/local/prepare_genome/main'
+include { PREPARE_GENOME                                 } from '../subworkflows/local/prepare_genome/main'
 
 // Build intervals if needed
-include { PREPARE_INTERVALS                                    } from '../subworkflows/local/prepare_intervals/main'
+include { PREPARE_INTERVALS                              } from '../subworkflows/local/prepare_intervals/main'
 
 // Build CNVkit reference if needed
-include { PREPARE_REFERENCE_CNVKIT                             } from '../subworkflows/local/prepare_reference_cnvkit/main'
+include { PREPARE_REFERENCE_CNVKIT                       } from '../subworkflows/local/prepare_reference_cnvkit/main'
 
 // Convert BAM files to FASTQ files
-include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_INPUT          } from '../subworkflows/local/bam_convert_samtools/main'
-include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_UMI            } from '../subworkflows/local/bam_convert_samtools/main'
+include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_INPUT    } from '../subworkflows/local/bam_convert_samtools/main'
+include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_UMI      } from '../subworkflows/local/bam_convert_samtools/main'
 
 // Run FASTQC
-include { FASTQC                                               } from '../modules/nf-core/fastqc/main'
+include { FASTQC                                         } from '../modules/nf-core/fastqc/main'
 
 // TRIM/SPLIT FASTQ Files
-include { FASTP                                                } from '../modules/nf-core/fastp/main'
+include { FASTP                                          } from '../modules/nf-core/fastp/main'
 
 // Create umi consensus bams from fastq
-include { FASTQ_CREATE_UMI_CONSENSUS_FGBIO                     } from '../subworkflows/local/fastq_create_umi_consensus_fgbio/main'
+include { FASTQ_CREATE_UMI_CONSENSUS_FGBIO               } from '../subworkflows/local/fastq_create_umi_consensus_fgbio/main'
 
 // Map input reads to reference genome
-include { FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP                      } from '../subworkflows/local/fastq_align_bwamem_mem2_dragmap/main'
+include { FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP                } from '../subworkflows/local/fastq_align_bwamem_mem2_dragmap/main'
 
 // Merge and index BAM files (optional)
-include { BAM_MERGE_INDEX_SAMTOOLS                             } from '../subworkflows/local/bam_merge_index_samtools/main'
+include { BAM_MERGE_INDEX_SAMTOOLS                       } from '../subworkflows/local/bam_merge_index_samtools/main'
 
-include { SAMTOOLS_CONVERT as BAM_TO_CRAM                      } from '../modules/nf-core/samtools/convert/main'
-include { SAMTOOLS_CONVERT as BAM_TO_CRAM_VARIANTCALLING       } from '../modules/nf-core/samtools/convert/main'
-include { SAMTOOLS_CONVERT as CRAM_TO_BAM                      } from '../modules/nf-core/samtools/convert/main'
-include { SAMTOOLS_CONVERT as CRAM_TO_BAM_RECAL                } from '../modules/nf-core/samtools/convert/main'
+// Convert BAM files
+include { SAMTOOLS_CONVERT as BAM_TO_CRAM                } from '../modules/nf-core/samtools/convert/main'
+include { SAMTOOLS_CONVERT as BAM_TO_CRAM_VARIANTCALLING } from '../modules/nf-core/samtools/convert/main'
+
+// Convert CRAM files (optional)
+include { SAMTOOLS_CONVERT as CRAM_TO_BAM                } from '../modules/nf-core/samtools/convert/main'
+include { SAMTOOLS_CONVERT as CRAM_TO_BAM_RECAL          } from '../modules/nf-core/samtools/convert/main'
 
 // Mark Duplicates (+QC)
-include { BAM_MARKDUPLICATES                                   } from '../subworkflows/local/bam_markduplicates/main'
+include { BAM_MARKDUPLICATES                             } from '../subworkflows/local/bam_markduplicates/main'
 
 // Mark Duplicates SPARK (+QC)
-include { BAM_MARKDUPLICATES_SPARK                             } from '../subworkflows/local/bam_markduplicates_spark/main'
+include { BAM_MARKDUPLICATES_SPARK                       } from '../subworkflows/local/bam_markduplicates_spark/main'
 
 // Convert to CRAM (+QC)
-include { BAM_COMPRESS_SAMTOOLS                                } from '../subworkflows/local/bam_compress_samtools/main'
+include { BAM_COMPRESS_SAMTOOLS                          } from '../subworkflows/local/bam_compress_samtools/main'
 
 // QC on CRAM
-include { CRAM_QC_MOSDEPTH_SAMTOOLS                            } from '../subworkflows/local/cram_qc_mosdepth_samtools/main'
+include { CRAM_QC_MOSDEPTH_SAMTOOLS                      } from '../subworkflows/local/cram_qc_mosdepth_samtools/main'
 
 // Create recalibration tables
-include { BAM_BASERECALIBRATOR                                 } from '../subworkflows/local/bam_baserecalibrator/main'
+include { BAM_BASERECALIBRATOR                           } from '../subworkflows/local/bam_baserecalibrator/main'
 
 // Create recalibration tables SPARK
-include { BAM_BASERECALIBRATOR_SPARK                           } from '../subworkflows/local/bam_baserecalibrator_spark/main'
+include { BAM_BASERECALIBRATOR_SPARK                     } from '../subworkflows/local/bam_baserecalibrator_spark/main'
 
 // Create recalibrated cram files to use for variant calling (+QC)
-include { BAM_APPLYBQSR                                        } from '../subworkflows/local/bam_applybqsr/main'
+include { BAM_APPLYBQSR                                  } from '../subworkflows/local/bam_applybqsr/main'
 
 // Create recalibrated cram files to use for variant calling (+QC)
-include { BAM_APPLYBQSR_SPARK                                  } from '../subworkflows/local/bam_applybqsr_spark/main'
+include { BAM_APPLYBQSR_SPARK                            } from '../subworkflows/local/bam_applybqsr_spark/main'
 
 // Variant calling on a single normal sample
-include { BAM_VARIANT_CALLING_GERMLINE_ALL                     } from '../subworkflows/local/bam_variant_calling_germline_all/main'
+include { BAM_VARIANT_CALLING_GERMLINE_ALL               } from '../subworkflows/local/bam_variant_calling_germline_all/main'
 
 // Variant calling on a single tumor sample
-include { BAM_VARIANT_CALLING_TUMOR_ONLY_ALL                   } from '../subworkflows/local/bam_variant_calling_tumor_only_all/main'
+include { BAM_VARIANT_CALLING_TUMOR_ONLY_ALL             } from '../subworkflows/local/bam_variant_calling_tumor_only_all/main'
 
 // Variant calling on tumor/normal pair
-include { BAM_VARIANT_CALLING_SOMATIC_ALL                      } from '../subworkflows/local/bam_variant_calling_somatic_all/main'
+include { BAM_VARIANT_CALLING_SOMATIC_ALL                } from '../subworkflows/local/bam_variant_calling_somatic_all/main'
 
-include { VCF_QC                                               } from '../subworkflows/local/vcf_qc'
+// QC on VCF files
+include { VCF_QC_BCFTOOLS_VCFTOOLS                       } from '../subworkflows/local/vcf_qc_bcftools_vcftools/main'
 
 // Annotation
-include { ANNOTATE                                             } from '../subworkflows/local/annotate'
+include { VCF_ANNOTATE_ALL                               } from '../subworkflows/local/vcf_annotate_all/main'
 
 // REPORTING VERSIONS OF SOFTWARE USED
-include { CUSTOM_DUMPSOFTWAREVERSIONS                          } from '../modules/nf-core/custom/dumpsoftwareversions/main'
+include { CUSTOM_DUMPSOFTWAREVERSIONS                    } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 
 // MULTIQC
-include { MULTIQC                                              } from '../modules/nf-core/multiqc/main'
+include { MULTIQC                                        } from '../modules/nf-core/multiqc/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -523,7 +527,7 @@ workflow SAREK {
             BAM_MERGE_INDEX_SAMTOOLS(ch_bam_mapped)
 
             // Create CSV to restart from this step
-            ALIGN_CSV(BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai)
+            CHANNEL_ALIGN_CREATE_CSV(BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai)
 
             // Gather used softwares versions
             ch_versions = ch_versions.mix(BAM_MERGE_INDEX_SAMTOOLS.out.versions)
@@ -645,7 +649,7 @@ workflow SAREK {
 
         // CSV should be written for the file actually out, either CRAM or BAM
         // Create CSV to restart from this step
-        if (!(params.skip_tools && params.skip_tools.split(',').contains('markduplicates'))) MARKDUPLICATES_CSV(ch_md_cram_for_restart)
+        if (!(params.skip_tools && params.skip_tools.split(',').contains('markduplicates'))) CHANNEL_MARKDUPLICATES_CREATE_CSV(ch_md_cram_for_restart)
     }
 
     if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration']) {
@@ -726,7 +730,7 @@ workflow SAREK {
             ch_cram_applybqsr = ch_cram_for_bam_baserecalibrator.join(ch_table_bqsr)
 
             // Create CSV to restart from this step
-            BASERECALIBRATOR_CSV(ch_md_cram_for_restart.join(ch_table_bqsr), params.skip_tools)
+            CHANNEL_BASERECALIBRATOR_CREATE_CSV(ch_md_cram_for_restart.join(ch_table_bqsr), params.skip_tools)
         }
     }
 
@@ -812,7 +816,7 @@ workflow SAREK {
             csv_recalibration = params.save_output_as_bam ?  CRAM_TO_BAM_RECAL.out.alignment_index : ch_cram_variant_calling
 
             // Create CSV to restart from this step
-            APPLYBQSR_CSV(csv_recalibration)
+            CHANNEL_APPLYBQSR_CREATE_CSV(csv_recalibration)
 
 
         } else if (params.step == 'recalibrate'){
@@ -1009,7 +1013,7 @@ workflow SAREK {
         ch_reports  = ch_reports.mix(VCF_QC.out.vcftools_tstv_qual.collect{ meta, qual -> qual })
         ch_reports  = ch_reports.mix(VCF_QC.out.vcftools_filter_summary.collect{meta, summary -> summary})
 
-        VARIANT_CALLING_CSV(vcf_to_annotate)
+        CHANNEL_VARIANT_CALLING_CREATE_CSV(vcf_to_annotate)
 
 
         // ANNOTATE
@@ -1019,7 +1023,7 @@ workflow SAREK {
 
             vep_fasta = (params.vep_include_fasta) ? fasta : []
 
-            ANNOTATE(
+            VCF_ANNOTATE_ALL(
                 vcf_to_annotate,
                 vep_fasta,
                 params.tools,
@@ -1032,8 +1036,8 @@ workflow SAREK {
                 vep_extra_files)
 
             // Gather used softwares versions
-            ch_versions = ch_versions.mix(ANNOTATE.out.versions)
-            ch_reports  = ch_reports.mix(ANNOTATE.out.reports)
+            ch_versions = ch_versions.mix(VCF_ANNOTATE_ALL.out.versions)
+            ch_reports  = ch_reports.mix(VCF_ANNOTATE_ALL.out.reports)
         }
     }
 

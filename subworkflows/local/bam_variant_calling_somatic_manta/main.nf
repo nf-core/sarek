@@ -1,10 +1,10 @@
-include { GATK4_MERGEVCFS as MERGE_MANTA_DIPLOID           } from '../../../../../modules/nf-core/gatk4/mergevcfs/main'
-include { GATK4_MERGEVCFS as MERGE_MANTA_SMALL_INDELS      } from '../../../../../modules/nf-core/gatk4/mergevcfs/main'
-include { GATK4_MERGEVCFS as MERGE_MANTA_SOMATIC           } from '../../../../../modules/nf-core/gatk4/mergevcfs/main'
-include { GATK4_MERGEVCFS as MERGE_MANTA_SV                } from '../../../../../modules/nf-core/gatk4/mergevcfs/main'
-include { MANTA_SOMATIC                                    } from '../../../../../modules/nf-core/manta/somatic/main'
+include { GATK4_MERGEVCFS as MERGE_MANTA_DIPLOID           } from '../../../modules/nf-core/gatk4/mergevcfs/main'
+include { GATK4_MERGEVCFS as MERGE_MANTA_SMALL_INDELS      } from '../../../modules/nf-core/gatk4/mergevcfs/main'
+include { GATK4_MERGEVCFS as MERGE_MANTA_SOMATIC           } from '../../../modules/nf-core/gatk4/mergevcfs/main'
+include { GATK4_MERGEVCFS as MERGE_MANTA_SV                } from '../../../modules/nf-core/gatk4/mergevcfs/main'
+include { MANTA_SOMATIC                                    } from '../../../modules/nf-core/manta/somatic/main'
 
-workflow RUN_MANTA_SOMATIC {
+workflow BAM_VARIANT_CALLING_SOMATIC_MANTA {
     take:
     cram                     // channel: [mandatory] [meta, normal_cram, normal_crai, tumor_cram, tumor_crai, interval.bed.gz, interval.bed.gz.tbi]
     dict                     // channel: [optional]

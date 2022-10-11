@@ -1,10 +1,10 @@
-include { GATK4_MERGEVCFS as MERGE_MANTA_SMALL_INDELS      } from '../../../../../modules/nf-core/gatk4/mergevcfs/main'
-include { GATK4_MERGEVCFS as MERGE_MANTA_SV                } from '../../../../../modules/nf-core/gatk4/mergevcfs/main'
-include { GATK4_MERGEVCFS as MERGE_MANTA_TUMOR             } from '../../../../../modules/nf-core/gatk4/mergevcfs/main'
-include { MANTA_TUMORONLY                                  } from '../../../../../modules/nf-core/manta/tumoronly/main'
+include { GATK4_MERGEVCFS as MERGE_MANTA_SMALL_INDELS      } from '../../../modules/nf-core/gatk4/mergevcfs/main'
+include { GATK4_MERGEVCFS as MERGE_MANTA_SV                } from '../../../modules/nf-core/gatk4/mergevcfs/main'
+include { GATK4_MERGEVCFS as MERGE_MANTA_TUMOR             } from '../../../modules/nf-core/gatk4/mergevcfs/main'
+include { MANTA_TUMORONLY                                  } from '../../../modules/nf-core/manta/tumoronly/main'
 
 // Seems to be the consensus on upstream modules implementation too
-workflow RUN_MANTA_TUMORONLY {
+workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA {
     take:
     cram                     // channel: [mandatory] [meta, cram, crai, interval.bed.gz, interval.bed.gz.tbi]
     dict                     // channel: [optional]

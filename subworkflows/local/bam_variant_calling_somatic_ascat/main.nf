@@ -1,6 +1,6 @@
-include { ASCAT } from '../../../../modules/nf-core/ascat/main'
+include { ASCAT } from '../../../modules/nf-core/ascat/main'
 
-workflow RUN_ASCAT_SOMATIC {
+workflow BAM_VARIANT_CALLING_SOMATIC_ASCAT {
 
     take:
     cram_pair                // channel: [mandatory] [meta, normal_cram, normal_crai, tumor_cram, tumor_crai]

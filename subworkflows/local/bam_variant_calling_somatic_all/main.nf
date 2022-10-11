@@ -1,17 +1,18 @@
 //
 // PAIRED VARIANT CALLING
 //
-include { GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING } from '../../subworkflows/nf-core/gatk4/tumor_normal_somatic_variant_calling/main'
-include { MSISENSORPRO_MSI_SOMATIC                  } from '../../modules/nf-core/msisensorpro/msi_somatic/main'
-include { RUN_CONTROLFREEC_SOMATIC                  } from '../nf-core/variantcalling/controlfreec/somatic/main.nf'
-include { RUN_FREEBAYES as RUN_FREEBAYES_SOMATIC    } from '../nf-core/variantcalling/freebayes/main.nf'
-include { RUN_MANTA_SOMATIC                         } from '../nf-core/variantcalling/manta/somatic/main.nf'
-include { RUN_STRELKA_SOMATIC                       } from '../nf-core/variantcalling/strelka/somatic/main.nf'
-include { RUN_CNVKIT                                } from '../nf-core/variantcalling/cnvkit/main.nf'
-include { RUN_MPILEUP as RUN_MPILEUP_NORMAL         } from '../nf-core/variantcalling/mpileup/main'
-include { RUN_MPILEUP as RUN_MPILEUP_TUMOR          } from '../nf-core/variantcalling/mpileup/main'
-include { RUN_ASCAT_SOMATIC                         } from '../nf-core/variantcalling/ascat/main'
-include { RUN_TIDDIT_SOMATIC                        } from '../nf-core/variantcalling/tiddit/somatic/main'
+
+include { BAM_VARIANT_CALLING_CNVKIT                    } from '../bam_variant_calling_cnvkit/main'
+include { BAM_VARIANT_CALLING_FREEBAYES                 } from '../bam_variant_calling_freebayes/main'
+include { BAM_VARIANT_CALLING_MPILEUP as MPILEUP_NORMAL } from '../bam_variant_calling_mpileup/main'
+include { BAM_VARIANT_CALLING_MPILEUP as MPILEUP_TUMOR  } from '../bam_variant_calling_mpileup/main'
+include { BAM_VARIANT_CALLING_SOMATIC_ASCAT             } from '../bam_variant_calling_somatic_ascat/main'
+include { BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC      } from '../bam_variant_calling_somatic_controlfreec/main'
+include { BAM_VARIANT_CALLING_SOMATIC_MANTA             } from '../bam_variant_calling_somatic_manta/main'
+include { BAM_VARIANT_CALLING_SOMATIC_MUTECT2           } from '../bam_variant_calling_somatic_mutect2/main'
+include { BAM_VARIANT_CALLING_SOMATIC_STRELKA           } from '../bam_variant_calling_somatic_strelka/main'
+include { BAM_VARIANT_CALLING_SOMATIC_TIDDIT            } from '../bam_variant_calling_somatic_tiddit/main'
+include { MSISENSORPRO_MSI_SOMATIC                      } from '../../../modules/nf-core/msisensorpro/msi_somatic/main'
 
 workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     take:
@@ -90,7 +91,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
     if (tools.split(',').contains('ascat')){
 
-        RUN_ASCAT_SOMATIC(
+        BAM_VARIANT_CALLING_SOMATIC_ASCAT(
             cram_pair,
             allele_files,
             loci_files,
@@ -100,7 +101,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             rt_file
         )
 
-        ch_versions = ch_versions.mix(RUN_ASCAT_SOMATIC.out.versions)
+        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_SOMATIC_ASCAT.out.versions)
 
     }
 
@@ -115,18 +116,18 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
                             [meta, tumor_cram, intervals]
                         }
 
-        RUN_MPILEUP_NORMAL(
+        MPILEUP_NORMAL(
             cram_normal_intervals_no_index,
             fasta
         )
 
-        RUN_MPILEUP_TUMOR(
+        MPILEUP_TUMOR(
             cram_tumor_intervals_no_index,
             fasta
         )
 
-        mpileup_normal = RUN_MPILEUP_NORMAL.out.mpileup
-        mpileup_tumor = RUN_MPILEUP_TUMOR.out.mpileup
+        mpileup_normal = MPILEUP_NORMAL.out.mpileup
+        mpileup_tumor = MPILEUP_TUMOR.out.mpileup
 
         controlfreec_input = mpileup_normal.cross(mpileup_tumor)
         .map{ normal, tumor ->
@@ -134,7 +135,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         }
 
         length_file = cf_chrom_len ?: fasta_fai
-        RUN_CONTROLFREEC_SOMATIC(
+        BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC(
             controlfreec_input,
             fasta,
             length_file,
@@ -145,9 +146,9 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             intervals_bed_combined
         )
 
-        ch_versions = ch_versions.mix(RUN_MPILEUP_NORMAL.out.versions)
-        ch_versions = ch_versions.mix(RUN_MPILEUP_TUMOR.out.versions)
-        ch_versions = ch_versions.mix(RUN_CONTROLFREEC_SOMATIC.out.versions)
+        ch_versions = ch_versions.mix(MPILEUP_NORMAL.out.versions)
+        ch_versions = ch_versions.mix(MPILEUP_TUMOR.out.versions)
+        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC.out.versions)
     }
 
     if (tools.split(',').contains('cnvkit')){
@@ -156,7 +157,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
                 [meta, tumor_cram, normal_cram]
             }
 
-        RUN_CNVKIT(
+        BAM_VARIANT_CALLING_CNVKIT(
             cram_pair_cnvkit_somatic,
             fasta,
             fasta_fai,
@@ -164,34 +165,34 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             []
         )
 
-        ch_versions = ch_versions.mix(RUN_CNVKIT.out.versions)
+        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_CNVKIT.out.versions)
     }
 
     if (tools.split(',').contains('freebayes')){
 
-        RUN_FREEBAYES_SOMATIC(
+        BAM_VARIANT_CALLING_FREEBAYES(
             cram_pair_intervals,
             dict,
             fasta,
             fasta_fai
         )
 
-        freebayes_vcf = RUN_FREEBAYES_SOMATIC.out.freebayes_vcf
-        ch_versions   = ch_versions.mix(RUN_FREEBAYES_SOMATIC.out.versions)
+        freebayes_vcf = BAM_VARIANT_CALLING_FREEBAYES.out.freebayes_vcf
+        ch_versions   = ch_versions.mix(BAM_VARIANT_CALLING_FREEBAYES.out.versions)
     }
 
     if (tools.split(',').contains('manta')) {
-        RUN_MANTA_SOMATIC(
+        BAM_VARIANT_CALLING_SOMATIC_MANTA(
             cram_pair_intervals_gz_tbi,
             dict,
             fasta,
             fasta_fai
         )
 
-        manta_vcf                            = RUN_MANTA_SOMATIC.out.manta_vcf
-        manta_candidate_small_indels_vcf     = RUN_MANTA_SOMATIC.out.manta_candidate_small_indels_vcf
-        manta_candidate_small_indels_vcf_tbi = RUN_MANTA_SOMATIC.out.manta_candidate_small_indels_vcf_tbi
-        ch_versions                          = ch_versions.mix(RUN_MANTA_SOMATIC.out.versions)
+        manta_vcf                            = BAM_VARIANT_CALLING_SOMATIC_MANTA.out.manta_vcf
+        manta_candidate_small_indels_vcf     = BAM_VARIANT_CALLING_SOMATIC_MANTA.out.manta_candidate_small_indels_vcf
+        manta_candidate_small_indels_vcf_tbi = BAM_VARIANT_CALLING_SOMATIC_MANTA.out.manta_candidate_small_indels_vcf_tbi
+        ch_versions                          = ch_versions.mix(BAM_VARIANT_CALLING_SOMATIC_MANTA.out.versions)
     }
 
     if (tools.split(',').contains('strelka')) {
@@ -224,15 +225,15 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             }
         }
 
-        RUN_STRELKA_SOMATIC(
+        BAM_VARIANT_CALLING_SOMATIC_STRELKA(
             cram_pair_strelka,
             dict,
             fasta,
             fasta_fai
         )
 
-        strelka_vcf = Channel.empty().mix(RUN_STRELKA_SOMATIC.out.strelka_vcf)
-        ch_versions = ch_versions.mix(RUN_STRELKA_SOMATIC.out.versions)
+        strelka_vcf = Channel.empty().mix(BAM_VARIANT_CALLING_SOMATIC_STRELKA.out.strelka_vcf)
+        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_SOMATIC_STRELKA.out.versions)
     }
 
     if (tools.split(',').contains('msisensorpro')) {
@@ -248,7 +249,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
                                 [meta, [normal_cram, tumor_cram], [normal_crai, tumor_crai], intervals]
                             }
 
-        GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING(
+        BAM_VARIANT_CALLING_SOMATIC_MUTECT2(
             cram_pair_mutect2,
             fasta,
             fasta_fai,
@@ -259,8 +260,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             panel_of_normals_tbi
         )
 
-        mutect2_vcf = GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING.out.filtered_vcf
-        ch_versions = ch_versions.mix(GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING.out.versions)
+        mutect2_vcf = BAM_VARIANT_CALLING_SOMATIC_MUTECT2.out.filtered_vcf
+        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_SOMATIC_MUTECT2.out.versions)
     }
 
     //TIDDIT
@@ -272,9 +273,9 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             [meta, tumor_cram, tumor_crai]
         }
 
-        RUN_TIDDIT_SOMATIC(cram_normal, cram_tumor, fasta, bwa)
-        tiddit_vcf = RUN_TIDDIT_SOMATIC.out.tiddit_vcf
-        ch_versions = ch_versions.mix(RUN_TIDDIT_SOMATIC.out.versions)
+        BAM_VARIANT_CALLING_SOMATIC_TIDDIT(cram_normal, cram_tumor, fasta, bwa)
+        tiddit_vcf = BAM_VARIANT_CALLING_SOMATIC_TIDDIT.out.tiddit_vcf
+        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_SOMATIC_TIDDIT.out.versions)
     }
 
     emit:

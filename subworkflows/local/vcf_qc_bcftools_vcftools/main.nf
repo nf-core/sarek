@@ -1,9 +1,9 @@
-include { BCFTOOLS_STATS                  } from '../../modules/nf-core/bcftools/stats/main'
-include { VCFTOOLS as VCFTOOLS_SUMMARY    } from '../../modules/nf-core/vcftools/main'
-include { VCFTOOLS as VCFTOOLS_TSTV_COUNT } from '../../modules/nf-core/vcftools/main'
-include { VCFTOOLS as VCFTOOLS_TSTV_QUAL  } from '../../modules/nf-core/vcftools/main'
+include { BCFTOOLS_STATS                  } from '../../../modules/nf-core/bcftools/stats/main'
+include { VCFTOOLS as VCFTOOLS_SUMMARY    } from '../../../modules/nf-core/vcftools/main'
+include { VCFTOOLS as VCFTOOLS_TSTV_COUNT } from '../../../modules/nf-core/vcftools/main'
+include { VCFTOOLS as VCFTOOLS_TSTV_QUAL  } from '../../../modules/nf-core/vcftools/main'
 
-workflow VCF_QC {
+workflow VCF_QC_BCFTOOLS_VCFTOOLS {
     take:
     vcf
     target_bed

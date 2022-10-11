@@ -1,8 +1,8 @@
 //
-// ALIGN_CSV
+// CHANNEL_ALIGN_CREATE_CSV
 //
 
-workflow ALIGN_CSV {
+workflow CHANNEL_ALIGN_CREATE_CSV {
     take:
         bam_indexed         // channel: [mandatory] meta, bam, bai
 

@@ -1,8 +1,8 @@
-include { GATK4_MERGEVCFS as MERGE_STRELKA_INDELS } from '../../../../../modules/nf-core/gatk4/mergevcfs/main'
-include { GATK4_MERGEVCFS as MERGE_STRELKA_SNVS   } from '../../../../../modules/nf-core/gatk4/mergevcfs/main'
-include { STRELKA_SOMATIC                         } from '../../../../../modules/nf-core/strelka/somatic/main'
+include { GATK4_MERGEVCFS as MERGE_STRELKA_INDELS } from '../../../modules/nf-core/gatk4/mergevcfs/main'
+include { GATK4_MERGEVCFS as MERGE_STRELKA_SNVS   } from '../../../modules/nf-core/gatk4/mergevcfs/main'
+include { STRELKA_SOMATIC                         } from '../../../modules/nf-core/strelka/somatic/main'
 
-workflow RUN_STRELKA_SOMATIC {
+workflow BAM_VARIANT_CALLING_SOMATIC_STRELKA {
     take:
     cram                     // channel: [mandatory] [meta, normal_cram, normal_crai, tumor_cram, tumor_crai, manta_vcf, manta_tbi, interval.bed.gz, interval.bed.gz.tbi] manta* are optional
     dict                     // channel: [optional]
