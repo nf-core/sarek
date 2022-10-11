@@ -406,7 +406,7 @@ workflow SAREK {
         if (!(params.skip_tools && params.skip_tools.split(',').contains('fastqc'))) {
             FASTQC(ch_input_fastq)
 
-            ch_reports  = ch_reports.mix(FASTQ_QC_FASTQC.out.fastqc_zip.collect{meta, logs -> logs})
+            ch_reports  = ch_reports.mix(FASTQC.out.fastqc_zip.collect{meta, logs -> logs})
             ch_versions = ch_versions.mix(FASTQC.out.versions.first())
         }
 

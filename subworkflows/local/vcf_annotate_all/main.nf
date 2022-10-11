@@ -2,9 +2,9 @@
 // ANNOTATION
 //
 
-include { ANNOTATION_SNPEFF                         } from '../nf-core/annotation/snpeff/main'
-include { ANNOTATION_ENSEMBLVEP as ANNOTATION_MERGE } from '../nf-core/annotation/ensemblvep/main'
-include { ANNOTATION_ENSEMBLVEP                     } from '../nf-core/annotation/ensemblvep/main'
+include { VCF_ANNOTATE_ENSEMBLVEP                       } from '../vcf_annotate_ensemblvep/main'
+include { VCF_ANNOTATE_ENSEMBLVEP as VCF_ANNOTATE_MERGE } from '../vcf_annotate_ensemblvep/main'
+include { VCF_ANNOTATE_SNPEFF                           } from '../vcf_annotate_snpeff/main'
 
 workflow VCF_ANNOTATE_ALL {
     take:
@@ -27,30 +27,30 @@ workflow VCF_ANNOTATE_ALL {
     ch_versions  = Channel.empty()
 
     if (tools.split(',').contains('merge') || tools.split(',').contains('snpeff')) {
-        ANNOTATION_SNPEFF(vcf, snpeff_db, snpeff_cache)
+        VCF_ANNOTATE_SNPEFF(vcf, snpeff_db, snpeff_cache)
 
-        ch_reports  = ch_reports.mix(ANNOTATION_SNPEFF.out.reports)
-        ch_vcf_ann  = ch_vcf_ann.mix(ANNOTATION_SNPEFF.out.vcf_tbi)
-        ch_versions = ch_versions.mix(ANNOTATION_SNPEFF.out.versions.first())
+        ch_reports  = ch_reports.mix(VCF_ANNOTATE_SNPEFF.out.reports)
+        ch_vcf_ann  = ch_vcf_ann.mix(VCF_ANNOTATE_SNPEFF.out.vcf_tbi)
+        ch_versions = ch_versions.mix(VCF_ANNOTATE_SNPEFF.out.versions.first())
     }
 
     if (tools.split(',').contains('merge')) {
-        vcf_ann_for_merge = ANNOTATION_SNPEFF.out.vcf_tbi.map{ meta, vcf, tbi -> [meta, vcf] }
-        ANNOTATION_MERGE(vcf_ann_for_merge, fasta, vep_genome, vep_species, vep_cache_version, vep_cache, vep_extra_files)
+        vcf_ann_for_merge = VCF_ANNOTATE_SNPEFF.out.vcf_tbi.map{ meta, vcf, tbi -> [meta, vcf] }
+        VCF_ANNOTATE_MERGE(vcf_ann_for_merge, fasta, vep_genome, vep_species, vep_cache_version, vep_cache, vep_extra_files)
 
-        ch_reports  = ch_reports.mix(ANNOTATION_MERGE.out.reports)
-        ch_vcf_ann  = ch_vcf_ann.mix(ANNOTATION_MERGE.out.vcf_tbi)
-        ch_versions = ch_versions.mix(ANNOTATION_MERGE.out.versions.first())
+        ch_reports  = ch_reports.mix(VCF_ANNOTATE_MERGE.out.reports)
+        ch_vcf_ann  = ch_vcf_ann.mix(VCF_ANNOTATE_MERGE.out.vcf_tbi)
+        ch_versions = ch_versions.mix(VCF_ANNOTATE_MERGE.out.versions.first())
     }
 
     if (tools.split(',').contains('vep')) {
-        ANNOTATION_ENSEMBLVEP(vcf, fasta, vep_genome, vep_species, vep_cache_version, vep_cache, vep_extra_files)
+        VCF_ANNOTATE_ENSEMBLVEP(vcf, fasta, vep_genome, vep_species, vep_cache_version, vep_cache, vep_extra_files)
 
-        ch_reports   = ch_reports.mix(ANNOTATION_ENSEMBLVEP.out.reports)
-        ch_vcf_ann   = ch_vcf_ann.mix(ANNOTATION_ENSEMBLVEP.out.vcf_tbi)
-        ch_tab_ann   = ch_vcf_ann.mix(ANNOTATION_ENSEMBLVEP.out.tab)
-        ch_json_ann  = ch_vcf_ann.mix(ANNOTATION_ENSEMBLVEP.out.json)
-        ch_versions  = ch_versions.mix(ANNOTATION_ENSEMBLVEP.out.versions.first())
+        ch_reports   = ch_reports.mix(VCF_ANNOTATE_ENSEMBLVEP.out.reports)
+        ch_vcf_ann   = ch_vcf_ann.mix(VCF_ANNOTATE_ENSEMBLVEP.out.vcf_tbi)
+        ch_tab_ann   = ch_vcf_ann.mix(VCF_ANNOTATE_ENSEMBLVEP.out.tab)
+        ch_json_ann  = ch_vcf_ann.mix(VCF_ANNOTATE_ENSEMBLVEP.out.json)
+        ch_versions  = ch_versions.mix(VCF_ANNOTATE_ENSEMBLVEP.out.versions.first())
     }
 
     emit:

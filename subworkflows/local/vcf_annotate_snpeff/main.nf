@@ -2,10 +2,10 @@
 // Run SNPEFF to annotate VCF files
 //
 
-include { SNPEFF           } from '../../../../modules/nf-core/snpeff/main'
-include { TABIX_BGZIPTABIX } from '../../../../modules/nf-core/tabix/bgziptabix/main'
+include { SNPEFF           } from '../../../modules/nf-core/snpeff/main'
+include { TABIX_BGZIPTABIX } from '../../../modules/nf-core/tabix/bgziptabix/main'
 
-workflow ANNOTATION_SNPEFF {
+workflow VCF_ANNOTATE_SNPEFF {
     take:
     vcf          // channel: [ val(meta), vcf ]
     snpeff_db    //   value: db version to use
