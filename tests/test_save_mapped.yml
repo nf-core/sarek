@@ -14,9 +14,9 @@
       md5sum: 2d29d9e53894dcce96a1b5beb6ef3312
     - path: results/multiqc
     - path: results/preprocessing/mapped/test/test.sorted.cram
-      md5sum: 168ed6529b78dd641793852445122969
+      md5sum: 03794b0f83f71f0a9571f64f53aa48e5
     - path: results/preprocessing/mapped/test/test.sorted.cram.crai
-      md5sum: 91986e148be9cb7bef9addf2383f94db
+      md5sum: aa5957cf7f5b0d2e1dfd43d493682c4b
     - path: results/preprocessing/markduplicates/test/test.md.cram
     # binary changes md5sums on reruns.
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai

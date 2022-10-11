@@ -774,9 +774,9 @@
       md5sum: d7d86e82902a4f57876b2414a4f812a4
     - path: results/multiqc
     - path: results/preprocessing/converted/test/test.converted.cram
-      md5sum: 32cf064a58e90412f2e9d8168e9f45fd
+      md5sum: b26542139c4198be08c5e5c5bea45af8
     - path: results/preprocessing/converted/test/test.converted.cram.crai
-      md5sum: f4c4c347c451150d6879b13d296def72
+      md5sum: 65a377da5b2fa9b2300ec52ecf6e355b
     - path: results/preprocessing/recalibrated/test/test.recal.cram
       should_exist: false
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
@@ -817,9 +817,9 @@
     - path: results/no_intervals.bed.gz.tbi
       md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/preprocessing/converted/test/test.converted.cram
-      md5sum: 32cf064a58e90412f2e9d8168e9f45fd
+      md5sum: 7928dc039f5149b5137d0fccc93c1839
     - path: results/preprocessing/converted/test/test.converted.cram.crai
-      md5sum: f4c4c347c451150d6879b13d296def72
+      md5sum: 2f6fbb8c98b13da392e5747bc54be07b
     - path: results/preprocessing/recalibrated/test/test.recal.cram
       should_exist: false
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai

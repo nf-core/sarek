@@ -6,14 +6,14 @@
     - preprocessing
   files:
     - path: results/csv/markduplicates.csv
-      md5sum: 90e2ab85d8af642d6548af448a9d4226
+      md5sum: 8e9408ef8d4f9e6e00e531268eebd42a
     - path: results/csv/markduplicates_no_table.csv
       md5sum: f8b1b25fec472453a98c3f7f0e3a7953
     - path: results/csv/recalibrated.csv
       md5sum: 1888a924bc70bd80165a96ad641e22d6
     - path: results/multiqc
     - path: results/preprocessing/converted/test/test.converted.cram
-      md5sum: b9724a376dc511728ca1db471ea9e708
+      md5sum: a625e292d72d5f87ed9c0d301e550863
     - path: results/preprocessing/converted/test/test.converted.cram.crai
       md5sum: d0145eac9fe01b811d755d5b33266c01
     - path: results/preprocessing/markduplicates/test/test.md.cram
@@ -51,7 +51,7 @@
     - path: results/reports/samtools/test/test.md.cram.stats
       md5sum: a0ecedb6be28639e276d38e4ac18935b
     - path: results/reports/samtools/test/test.recal.cram.stats
-      md5sum: 71af990f7acad8bf24d37e88c4adcded
+      md5sum: 69d2bab6fdbe21ec5c598dc404a3df00
 - name: Run markduplicates starting from CRAM
   command: nextflow run main.nf -profile test,markduplicates_cram
   tags:
