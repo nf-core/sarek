@@ -12,20 +12,20 @@ workflow TUMOR_MUTATIONAL_BURDEN {
 
     ch_versions = Channel.empty()
 
-    vcf.view()
+    // vcf.view()
     //bcftools norm -f FASTA -m- -o file_norm.vcf file
     BCFTOOLS_NORM(vcf, fasta)
 
     BCFTOOLS_NORM.out.vcf.view()
 
-    // tmb_in = BCFTOOLS_NORM.out.vcf.map{ meta,vcf ->
-        // dbConfig = file(WorkflowSarek.getTMBdatabase(meta.annotation), checkIfExists: true)
-        // varConfig = file(WorkflowSarek.getTMBvariantcaller(meta.variantcaller), checkIfExists: true)
-//
-        // [meta,vcf,dbConfig,varConfig]
-    // }
+    tmb_in = BCFTOOLS_NORM.out.vcf.map{ meta,vcf ->
+        dbConfig = file("${projectDir}/${WorkflowSarek.getTMBdatabase(meta.annotation)}", checkIfExists: true)
+        varConfig = file("${projectDir}/${WorkflowSarek.getTMBvariantcaller(meta.variantcaller)}", checkIfExists: true)
 
-    //TMB(tmb_in, target_bed)
+        [meta,vcf,dbConfig,varConfig]
+    }
+
+    TMB(tmb_in, target_bed)
 
     emit:
     versions                = ch_versions

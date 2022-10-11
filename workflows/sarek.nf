@@ -1040,9 +1040,10 @@ workflow SAREK {
         }
 
         if(params.tools && params.tools.contains('tmb')){
-            vcf_to_tmb = ANNOTATE.out.vcf_ann
+            vcf_to_tmb = vcf_to_annotate //TODO: proper input ANNOTATE.out.vcf_ann
 
-            TUMOR_MUTATIONAL_BURDEN(vcf_to_tmb, fasta, [])
+            intervals_bed_combined.view()
+            TUMOR_MUTATIONAL_BURDEN(vcf_to_tmb, fasta, intervals_bed_combined)
         }
     }
 
@@ -1315,11 +1316,13 @@ def extract_csv(csv_file) {
         } else if (row.vcf) {
             meta.id = meta.sample
             def vcf = file(row.vcf, checkIfExists: true)
+            def tbi = file(row.tbi, checkIfExists: true)
 
             meta.data_type     = 'vcf'
             meta.variantcaller = row.variantcaller ?: ''
+            meta.annotation = row.annotation ?: ''
 
-            if (params.step == 'annotate') return [meta, vcf]
+            if (params.step == 'annotate') return [meta, vcf, tbi]
             else {
                 log.error "Samplesheet contains vcf files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
                 System.exit(1)
