@@ -12,9 +12,9 @@
       md5sum: 3ddc20eb105fdcc483945afd7d7d238c
     - path: results/multiqc
     - path: results/preprocessing/markduplicates/test/test.md.bam.bai
-      md5sum: a3f9f4054a274a56881be7b4f3662739
+      md5sum: 3add495a02547bd9e6882935d2f3e1f7
     - path: results/preprocessing/markduplicates/test/test.md.bam
-      md5sum: d6a4dd81e68de9d16376ecc9b8f1dd38
+      md5sum: ebb72f603f016ce37964259c61625360
     - path: results/preprocessing/recal_table/test/test.recal.table
       md5sum: 4ac774bf5f1157e77426fd82f5ac0fbe
     - path: results/preprocessing/recalibrated/test/test.recal.bam
@@ -62,15 +62,15 @@
       md5sum: 3ddc20eb105fdcc483945afd7d7d238c
     - path: results/multiqc
     - path: results/preprocessing/markduplicates/test/test.md.bam
-      md5sum: 88c1f90792d57ca8e435d4fdff63b89c
+      md5sum: 8bfd111af60ca7e63b233e59b0fb570b
     - path: results/preprocessing/markduplicates/test/test.md.bam.bai
-      md5sum: 966e1d9cb18c85c28b5aa95e250c2ab0
+      md5sum: fe8bc8655aff0d1a8093680390d98fab
     - path: results/preprocessing/recal_table/test/test.recal.table
       md5sum: 5b6e5078b4a90f6cb982fa0f0df616c2
     - path: results/preprocessing/recalibrated/test/test.recal.bam
-      md5sum: 3adb61574a8c2097a790a3918c35a068
+      md5sum: 085183a45250e929bbcd2e4ca0c30204
     - path: results/preprocessing/recalibrated/test/test.recal.bam.bai
-      md5sum: 4895a3fe3595d0b7febc11265a2e4012
+      md5sum: 57b10fe03532d44388dad45ea3c0761b
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.cram.metrics
     # The text-based output-file test.md.cram.metrics only contains comments and no metrics, which is a bit odd.
