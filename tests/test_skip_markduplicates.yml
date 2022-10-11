@@ -8,8 +8,6 @@
       md5sum: ae97b7394ab53a6b60921ab06c713cd9
     - path: results/csv/recalibrated.csv
       md5sum: 2d29d9e53894dcce96a1b5beb6ef3312
-    - path: results/csv/sorted.csv
-      md5sum: a43e621076274d8c05c62b0bff11dfcd
     - path: results/multiqc
     - path: results/preprocessing/mapped/test/test.sorted.cram
     # binary changes md5sums on reruns.
@@ -63,8 +61,6 @@
   files:
     - path: results/csv/recalibrated.csv
       md5sum: 1888a924bc70bd80165a96ad641e22d6
-    - path: results/csv/sorted.csv
-      md5sum: 26f989310a93f8f56bdd43f58ff5e32d
     - path: results/multiqc
     - path: results/preprocessing/mapped/test/test.sorted.cram
     # binary changes md5sums on reruns.
@@ -99,7 +95,7 @@
     - path: results/reports/samtools/test/test.recal.cram.stats
       md5sum: 71af990f7acad8bf24d37e88c4adcded
     - path: results/reports/samtools/test/test.sorted.cram.stats
-      md5sum: ac78da9dde7bae6849c0e2488bf7506a
+      md5sum: 9de0a2738ab150e2e3fd857b0f42efc4
     - path: results/csv/markduplicates.csv
       should_exist: false
     - path: results/csv/markduplicates_no_table.csv
