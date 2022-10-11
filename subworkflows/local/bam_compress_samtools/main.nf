@@ -4,11 +4,11 @@
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
-include { SAMTOOLS_CONVERT as SAMTOOLS_BAMTOCRAM } from '../../modules/nf-core/samtools/convert/main'
-include { SAMTOOLS_STATS as SAMTOOLS_STATS_CRAM  } from '../../modules/nf-core/samtools/stats/main'
-include { MOSDEPTH                               } from '../../modules/nf-core/mosdepth/main'
+include { SAMTOOLS_CONVERT as SAMTOOLS_BAMTOCRAM } from '../../../modules/nf-core/samtools/convert/main'
+include { SAMTOOLS_STATS as SAMTOOLS_STATS_CRAM  } from '../../../modules/nf-core/samtools/stats/main'
+include { MOSDEPTH                               } from '../../../modules/nf-core/mosdepth/main'
 
-workflow BAM_TO_CRAM {
+workflow BAM_COMPRESS_SAMTOOLS {
     take:
         bam_indexed                   // channel: [mandatory] meta, bam, bai
         cram_indexed

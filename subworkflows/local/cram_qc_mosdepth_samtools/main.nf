@@ -4,10 +4,10 @@
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
-include { SAMTOOLS_STATS     } from '../../modules/nf-core/samtools/stats/main'
-include { MOSDEPTH           } from '../../modules/nf-core/mosdepth/main'
+include { SAMTOOLS_STATS     } from '../../../modules/nf-core/samtools/stats/main'
+include { MOSDEPTH           } from '../../../modules/nf-core/mosdepth/main'
 
-workflow CRAM_QC {
+workflow CRAM_QC_MOSDEPTH_SAMTOOLS {
     take:
         cram                          // channel: [mandatory] meta, cram, crai
         fasta                         // channel: [mandatory] fasta

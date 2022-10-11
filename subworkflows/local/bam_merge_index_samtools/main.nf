@@ -4,10 +4,10 @@
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
-include { SAMTOOLS_INDEX as INDEX_MERGE_BAM } from '../../modules/nf-core/samtools/index/main'
-include { SAMTOOLS_MERGE as MERGE_BAM       } from '../../modules/nf-core/samtools/merge/main'
+include { SAMTOOLS_INDEX as INDEX_MERGE_BAM } from '../../../modules/nf-core/samtools/index/main'
+include { SAMTOOLS_MERGE as MERGE_BAM       } from '../../../modules/nf-core/samtools/merge/main'
 
-workflow MERGE_INDEX_BAM {
+workflow BAM_MERGE_INDEX_SAMTOOLS {
     take:
         bam // channel: [mandatory] meta, bam
 

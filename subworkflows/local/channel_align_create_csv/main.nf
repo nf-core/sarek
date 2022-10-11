@@ -1,8 +1,8 @@
 //
-// MAPPING_CSV
+// ALIGN_CSV
 //
 
-workflow MAPPING_CSV {
+workflow ALIGN_CSV {
     take:
         bam_indexed         // channel: [mandatory] meta, bam, bai
 

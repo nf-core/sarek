@@ -1,13 +1,13 @@
 //
-// PREPARE RECALIBRATION with SPARK
+// PREPARE RECALIBRATION
 //
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
-include { GATK4_BASERECALIBRATOR_SPARK as BASERECALIBRATOR_SPARK } from '../../../../modules/nf-core/gatk4/baserecalibratorspark/main'
-include { GATK4_GATHERBQSRREPORTS      as GATHERBQSRREPORTS      } from '../../../../modules/nf-core/gatk4/gatherbqsrreports/main'
+include { GATK4_BASERECALIBRATOR  } from '../../../modules/nf-core/gatk4/baserecalibrator/main'
+include { GATK4_GATHERBQSRREPORTS } from '../../../modules/nf-core/gatk4/gatherbqsrreports/main'
 
-workflow PREPARE_RECALIBRATION_SPARK {
+workflow BAM_BASERECALIBRATOR {
     take:
         cram            // channel: [mandatory] meta, cram_markduplicates, crai
         dict            // channel: [mandatory] dict
@@ -38,11 +38,11 @@ workflow PREPARE_RECALIBRATION_SPARK {
             cram, crai, intervals_new]
         }
 
-    // Run Baserecalibrator spark
-    BASERECALIBRATOR_SPARK(cram_intervals, fasta, fasta_fai, dict, known_sites, known_sites_tbi)
+    // Run Baserecalibrator
+    GATK4_BASERECALIBRATOR(cram_intervals, fasta, fasta_fai, dict, known_sites, known_sites_tbi)
 
     // Figuring out if there is one or more table(s) from the same sample
-    table_to_merge = BASERECALIBRATOR_SPARK.out.table
+    table_to_merge = GATK4_BASERECALIBRATOR.out.table
         .map{ meta, table ->
 
                 new_meta = [
@@ -66,8 +66,8 @@ workflow PREPARE_RECALIBRATION_SPARK {
     // STEP 3.5: MERGING RECALIBRATION TABLES
 
     // Merge the tables only when we have intervals
-    GATHERBQSRREPORTS(table_to_merge.multiple)
-    table_bqsr = table_to_merge.single.mix(GATHERBQSRREPORTS.out.table)
+    GATK4_GATHERBQSRREPORTS(table_to_merge.multiple)
+    table_bqsr = table_to_merge.single.mix(GATK4_GATHERBQSRREPORTS.out.table)
                                         .map{ meta, table ->
                                             // remove no longer necessary fields to make sure joining can be done correctly: num_intervals
                                             [[
@@ -82,8 +82,8 @@ workflow PREPARE_RECALIBRATION_SPARK {
                                         }
 
     // Gather versions of all tools used
-    ch_versions = ch_versions.mix(BASERECALIBRATOR_SPARK.out.versions)
-    ch_versions = ch_versions.mix(GATHERBQSRREPORTS.out.versions)
+    ch_versions = ch_versions.mix(GATK4_BASERECALIBRATOR.out.versions)
+    ch_versions = ch_versions.mix(GATK4_GATHERBQSRREPORTS.out.versions)
 
     emit:
         table_bqsr = table_bqsr

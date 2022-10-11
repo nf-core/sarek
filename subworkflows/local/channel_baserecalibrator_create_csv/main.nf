@@ -1,8 +1,8 @@
 //
-// PREPARE_RECALIBRATION_CSV
+// BASERECALIBRATOR_CSV
 //
 
-workflow PREPARE_RECALIBRATION_CSV {
+workflow BASERECALIBRATOR_CSV {
     take:
         cram_table_bqsr // channel: [mandatory] meta, cram, crai, table
         skip_tools

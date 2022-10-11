@@ -1,8 +1,8 @@
 //
-// VARIANTCALLING_CSV
+// VARIANT_CALLING_CSV
 //
 
-workflow VARIANTCALLING_CSV {
+workflow VARIANT_CALLING_CSV {
     take:
         vcf_to_annotate // channel: [mandatory] meta, vcf
 

@@ -4,10 +4,10 @@
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
-include { GATK4_APPLYBQSR_SPARK as APPLYBQSR_SPARK } from '../../../../modules/nf-core/gatk4/applybqsrspark/main'
-include { MERGE_INDEX_CRAM                         } from '../../merge_index_cram'
+include { GATK4_APPLYBQSR_SPARK     } from '../../../modules/nf-core/gatk4/applybqsrspark/main'
+include { CRAM_MERGE_INDEX_SAMTOOLS } from '../cram_merge_index_samtools/main'
 
-workflow RECALIBRATE_SPARK {
+workflow BAM_APPLYBQSR_SPARK {
     take:
         cram          // channel: [mandatory] meta, cram, crai, recal
         dict          // channel: [mandatory] dict
@@ -37,12 +37,12 @@ workflow RECALIBRATE_SPARK {
         }
 
     // Run Applybqsr spark
-    APPLYBQSR_SPARK(cram_intervals, fasta, fasta_fai, dict)
+    GATK4_APPLYBQSR_SPARK(cram_intervals, fasta, fasta_fai, dict)
 
     // STEP 4.5: MERGING AND INDEXING THE RECALIBRATED BAM FILES
-    MERGE_INDEX_CRAM(APPLYBQSR_SPARK.out.cram, fasta, fasta_fai)
+    CRAM_MERGE_INDEX_SAMTOOLS(GATK4_APPLYBQSR_SPARK.out.cram, fasta, fasta_fai)
 
-    ch_cram_recal_out = MERGE_INDEX_CRAM.out.cram_crai.map{ meta, cram, crai ->
+    ch_cram_recal_out = CRAM_MERGE_INDEX_SAMTOOLS.out.cram_crai.map{ meta, cram, crai ->
                              // remove no longer necessary fields to make sure joining can be done correctly: num_intervals
                             [[
                                 id:         meta.id,
@@ -56,8 +56,8 @@ workflow RECALIBRATE_SPARK {
                         }
 
     // Gather versions of all tools used
-    ch_versions = ch_versions.mix(APPLYBQSR_SPARK.out.versions)
-    ch_versions = ch_versions.mix(MERGE_INDEX_CRAM.out.versions)
+    ch_versions = ch_versions.mix(GATK4_APPLYBQSR_SPARK.out.versions)
+    ch_versions = ch_versions.mix(CRAM_MERGE_INDEX_SAMTOOLS.out.versions)
 
     emit:
         cram     = ch_cram_recal_out

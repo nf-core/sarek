@@ -9,11 +9,11 @@
 include { FGBIO_CALLMOLECULARCONSENSUSREADS as CALLUMICONSENSUS } from '../../../modules/nf-core/fgbio/callmolecularconsensusreads/main.nf'
 include { FGBIO_FASTQTOBAM                  as FASTQTOBAM       } from '../../../modules/nf-core/fgbio/fastqtobam/main'
 include { FGBIO_GROUPREADSBYUMI             as GROUPREADSBYUMI  } from '../../../modules/nf-core/fgbio/groupreadsbyumi/main'
-include { GATK4_MAPPING                     as MAPPING_UMI      } from '../gatk4/mapping/main'
+include { FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP   as ALIGN_UMI        } from '../fastq_align_bwamem_mem2_dragmap/main'
 include { SAMBLASTER                                            } from '../../../modules/nf-core/samblaster/main'
 include { SAMTOOLS_BAM2FQ                   as BAM2FASTQ        } from '../../../modules/nf-core/samtools/bam2fq/main.nf'
 
-workflow CREATE_UMI_CONSENSUS {
+workflow FASTQ_CREATE_UMI_CONSENSUS_FGBIO {
     take:
     reads                     // channel: [mandatory] [ val(meta), [ reads ] ]
     fasta                     // channel: [mandatory] /path/to/reference/fasta
@@ -37,11 +37,11 @@ workflow CREATE_UMI_CONSENSUS {
     // appropriately tagged interleaved FASTQ reads are mapped to the reference
     // bams will not be sorted (hence, sort = false)
     sort = false
-    MAPPING_UMI(BAM2FASTQ.out.reads, map_index, sort)
+    ALIGN_UMI(BAM2FASTQ.out.reads, map_index, sort)
 
     // samblaster is used in order to tag mates information in the BAM file
     // this is used in order to group reads by UMI
-    SAMBLASTER(MAPPING_UMI.out.bam)
+    SAMBLASTER(ALIGN_UMI.out.bam)
 
     // appropriately tagged reads are now grouped by UMI information
     GROUPREADSBYUMI(SAMBLASTER.out.bam, groupreadsbyumi_strategy)
@@ -52,7 +52,7 @@ workflow CREATE_UMI_CONSENSUS {
     CALLUMICONSENSUS(GROUPREADSBYUMI.out.bam)
 
     ch_versions = ch_versions.mix(BAM2FASTQ.out.versions)
-    ch_versions = ch_versions.mix(MAPPING_UMI.out.versions)
+    ch_versions = ch_versions.mix(ALIGN_UMI.out.versions)
     ch_versions = ch_versions.mix(CALLUMICONSENSUS.out.versions)
     ch_versions = ch_versions.mix(FASTQTOBAM.out.versions)
     ch_versions = ch_versions.mix(GROUPREADSBYUMI.out.versions)
