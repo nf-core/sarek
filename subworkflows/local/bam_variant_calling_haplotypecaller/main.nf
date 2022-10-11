@@ -55,7 +55,7 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
         known_snps_vqsr   = params.known_snps_vqsr   ? Channel.value(params.known_snps_vqsr)   : Channel.empty()
 
 
-        JOINT_GERMLINE(
+        BAM_JOINT_CALLING_GERMLINE_GATK(
             genotype_gvcf_to_call,
             fasta,
             fasta_fai,
@@ -70,8 +70,8 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
             known_sites_snps_tbi,
             known_snps_vqsr)
 
-        filtered_vcf = JOINT_GERMLINE.out.genotype_vcf
-        ch_versions = ch_versions.mix(JOINT_GERMLINE.out.versions)
+        filtered_vcf = BAM_JOINT_CALLING_GERMLINE_GATK.out.genotype_vcf
+        ch_versions = ch_versions.mix(BAM_JOINT_CALLING_GERMLINE_GATK.out.versions)
     } else {
 
         // Only when using intervals
@@ -100,7 +100,7 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
             MERGE_HAPLOTYPECALLER.out.tbi,
             haplotypecaller_tbi_branch.no_intervals)
 
-        SINGLE_SAMPLE(haplotypecaller_vcf.join(haplotypecaller_tbi),
+        VCF_VARIANT_FILTERING_GATK(haplotypecaller_vcf.join(haplotypecaller_tbi),
                     fasta,
                     fasta_fai,
                     dict,
@@ -108,10 +108,10 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
                     known_sites_indels.concat(known_sites_snps).flatten().unique().collect(),
                     known_sites_indels_tbi.concat(known_sites_snps_tbi).flatten().unique().collect())
 
-        filtered_vcf = SINGLE_SAMPLE.out.filtered_vcf.map{ meta, vcf-> [[patient:meta.patient, sample:meta.sample, status:meta.status, sex:meta.sex, id:meta.sample, num_intervals:meta.num_intervals, variantcaller:"haplotypecaller"], vcf]}
-        ch_versions = ch_versions.mix(  SINGLE_SAMPLE.out.versions,
-                                        GATK4_HAPLOTYPECALLER.out.versions,
-                                        MERGE_HAPLOTYPECALLER.out.versions)
+        filtered_vcf = VCF_VARIANT_FILTERING_GATK.out.filtered_vcf.map{ meta, vcf-> [[patient:meta.patient, sample:meta.sample, status:meta.status, sex:meta.sex, id:meta.sample, num_intervals:meta.num_intervals, variantcaller:"haplotypecaller"], vcf]}
+        ch_versions = ch_versions.mix(GATK4_HAPLOTYPECALLER.out.versions)
+        ch_versions = ch_versions.mix(MERGE_HAPLOTYPECALLER.out.versions)
+        ch_versions = ch_versions.mix(VCF_VARIANT_FILTERING_GATK.out.versions)
     }
 
     emit:
