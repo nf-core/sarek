@@ -2,7 +2,7 @@
 // PAIRED VARIANT CALLING
 //
 include { GATK_TUMOR_NORMAL_SOMATIC_VARIANT_CALLING } from '../../subworkflows/nf-core/gatk4/tumor_normal_somatic_variant_calling/main'
-include { MSISENSORPRO_MSI_SOMATIC                  } from '../../modules/nf-core/modules/msisensorpro/msi_somatic/main'
+include { MSISENSORPRO_MSI_SOMATIC                  } from '../../modules/nf-core/msisensorpro/msi_somatic/main'
 include { RUN_CONTROLFREEC_SOMATIC                  } from '../nf-core/variantcalling/controlfreec/somatic/main.nf'
 include { RUN_FREEBAYES as RUN_FREEBAYES_SOMATIC    } from '../nf-core/variantcalling/freebayes/main.nf'
 include { RUN_MANTA_SOMATIC                         } from '../nf-core/variantcalling/manta/somatic/main.nf'
@@ -18,6 +18,7 @@ workflow PAIR_VARIANT_CALLING {
         tools                         // Mandatory, list of tools to apply
         cram_pair                     // channel: [mandatory] cram
         bwa                           // channel: [optional] bwa
+        cf_chrom_len                  // channel: [optional] controlfreec length file
         chr_files
         dbsnp                         // channel: [mandatory] dbsnp
         dbsnp_tbi                     // channel: [mandatory] dbsnp_tbi
@@ -132,10 +133,11 @@ workflow PAIR_VARIANT_CALLING {
             [normal[0], normal[1], tumor[1], [], [], [], []]
         }
 
+        length_file = cf_chrom_len ?: fasta_fai
         RUN_CONTROLFREEC_SOMATIC(
             controlfreec_input,
             fasta,
-            fasta_fai,
+            length_file,
             dbsnp,
             dbsnp_tbi,
             chr_files,

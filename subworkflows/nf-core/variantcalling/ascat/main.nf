@@ -1,4 +1,4 @@
-include { ASCAT } from '../../../../modules/nf-core/modules/ascat/main'
+include { ASCAT } from '../../../../modules/nf-core/ascat/main'
 
 workflow RUN_ASCAT_SOMATIC {
 

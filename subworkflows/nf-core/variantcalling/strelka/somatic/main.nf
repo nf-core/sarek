@@ -1,6 +1,6 @@
-include { GATK4_MERGEVCFS as MERGE_STRELKA_INDELS } from '../../../../../modules/nf-core/modules/gatk4/mergevcfs/main'
-include { GATK4_MERGEVCFS as MERGE_STRELKA_SNVS   } from '../../../../../modules/nf-core/modules/gatk4/mergevcfs/main'
-include { STRELKA_SOMATIC                         } from '../../../../../modules/nf-core/modules/strelka/somatic/main'
+include { GATK4_MERGEVCFS as MERGE_STRELKA_INDELS } from '../../../../../modules/nf-core/gatk4/mergevcfs/main'
+include { GATK4_MERGEVCFS as MERGE_STRELKA_SNVS   } from '../../../../../modules/nf-core/gatk4/mergevcfs/main'
+include { STRELKA_SOMATIC                         } from '../../../../../modules/nf-core/strelka/somatic/main'
 
 workflow RUN_STRELKA_SOMATIC {
     take:

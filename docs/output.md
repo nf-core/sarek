@@ -125,6 +125,25 @@ These files are intermediate and by default not kept in the final files delivere
 
 </details>
 
+#### UMI consensus
+
+Sarek can process UMI-reads, using [fgbio](http://fulcrumgenomics.github.io/fgbio/tools/latest/) tools.
+
+These files are intermediate and by default not kept in the final files delivered to users. Set `--save_split` to enable publishing of these files to:
+
+<details markdown="1">
+<summary>Output files for all samples</summary>
+
+**Output directory: `{outdir}/preprocessing/umi/<sample>/`**
+
+- `<sample_lane_{1,2}.umi-consensus.bam>`
+
+**Output directory: `{outdir}/reports/umi/`**
+
+- `<sample_lane_{1,2}_umi_histogram.txt>`
+
+</details>
+
 ### Map to Reference
 
 #### BWA
@@ -249,7 +268,7 @@ See the [`--input`](usage.md#--input) section in the usage documentation for fur
 ## Variant Calling
 
 The results regarding variant calling are collected in `{outdir}/variantcalling/`.
-If some results from a variant caller do not appear here, please check out the `--tools` section in the parameter [documentation](https://nf-co.re/sarek/3.0.0/parameters).
+If some results from a variant caller do not appear here, please check out the `--tools` section in the parameter [documentation](https://nf-co.re/sarek/3.0.1/parameters).
 
 (Recalibrated) CRAM files can used as an input to start the variant calling.
 
@@ -833,9 +852,10 @@ The plots will show:
 [bcftools stats](https://samtools.github.io/bcftools/bcftools.html#stats) produces a statistics text file which is suitable for machine processing and can be plotted using plot-vcfstats.
 For further reading and documentation see the [bcftools stats manual](https://samtools.github.io/bcftools/bcftools.html#stats).
 
-Plot will show:
+Plots will show:
 
 - Stats by non-reference allele frequency, depth distribution, stats by quality and per-sample counts, singleton stats, etc.
+- Note: When using [Strelka2](https://github.com/Illumina/strelka), there will be no depth distribution plot, as Strelka2 does not report the INFO/DP field
 
 <details markdown="1">
 <summary>Output files for all samples</summary>

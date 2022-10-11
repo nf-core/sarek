@@ -6,8 +6,8 @@
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
-include { CNVKIT_ANTITARGET } from '../../modules/nf-core/modules/cnvkit/antitarget/main'
-include { CNVKIT_REFERENCE  } from '../../modules/nf-core/modules/cnvkit/reference/main'
+include { CNVKIT_ANTITARGET } from '../../modules/nf-core/cnvkit/antitarget/main'
+include { CNVKIT_REFERENCE  } from '../../modules/nf-core/cnvkit/reference/main'
 
 workflow PREPARE_CNVKIT_REFERENCE {
     take:

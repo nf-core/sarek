@@ -1,5 +1,5 @@
-include { GATK4_CNNSCOREVARIANTS      as CNNSCOREVARIANTS               } from '../../../../modules/nf-core/modules/gatk4/cnnscorevariants/main'
-include { GATK4_FILTERVARIANTTRANCHES as FILTERVARIANTTRANCHES          } from '../../../../modules/nf-core/modules/gatk4/filtervarianttranches/main'
+include { GATK4_CNNSCOREVARIANTS      as CNNSCOREVARIANTS               } from '../../../../modules/nf-core/gatk4/cnnscorevariants/main'
+include { GATK4_FILTERVARIANTTRANCHES as FILTERVARIANTTRANCHES          } from '../../../../modules/nf-core/gatk4/filtervarianttranches/main'
 
 workflow GATK_SINGLE_SAMPLE_GERMLINE_VARIANT_CALLING{
 

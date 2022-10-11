@@ -7,11 +7,11 @@
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
 include { BUILD_INTERVALS                                     } from '../../modules/local/build_intervals/main'
-include { CNVKIT_ANTITARGET                                   } from '../../modules/nf-core/modules/cnvkit/antitarget/main'
-include { CNVKIT_REFERENCE                                    } from '../../modules/nf-core/modules/cnvkit/reference/main'
+include { CNVKIT_ANTITARGET                                   } from '../../modules/nf-core/cnvkit/antitarget/main'
+include { CNVKIT_REFERENCE                                    } from '../../modules/nf-core/cnvkit/reference/main'
 include { CREATE_INTERVALS_BED                                } from '../../modules/local/create_intervals_bed/main'
-include { GATK4_INTERVALLISTTOBED                             } from '../../modules/nf-core/modules/gatk4/intervallisttobed/main'
-include { TABIX_BGZIPTABIX as TABIX_BGZIPTABIX_INTERVAL_SPLIT } from '../../modules/nf-core/modules/tabix/bgziptabix/main'
+include { GATK4_INTERVALLISTTOBED                             } from '../../modules/nf-core/gatk4/intervallisttobed/main'
+include { TABIX_BGZIPTABIX as TABIX_BGZIPTABIX_INTERVAL_SPLIT } from '../../modules/nf-core/tabix/bgziptabix/main'
 
 workflow PREPARE_INTERVALS {
     take:
@@ -61,7 +61,7 @@ workflow PREPARE_INTERVALS {
             ch_versions = ch_versions.mix(CREATE_INTERVALS_BED.out.versions)
 
             //If interval file is not provided as .bed, but e.g. as .interval_list then convert to BED format
-            if(!params.intervals.endsWith(".bed")) {
+            if(params.intervals.endsWith(".interval_list")) {
                 GATK4_INTERVALLISTTOBED(ch_intervals_combined)
                 ch_intervals_combined = GATK4_INTERVALLISTTOBED.out.bed
                 ch_versions = ch_versions.mix(GATK4_INTERVALLISTTOBED.out.versions)

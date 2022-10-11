@@ -4,7 +4,7 @@
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
-include { GATK4_MARKDUPLICATES } from '../../../../modules/nf-core/modules/gatk4/markduplicates/main'
+include { GATK4_MARKDUPLICATES } from '../../../../modules/nf-core/gatk4/markduplicates/main'
 include { BAM_TO_CRAM          } from '../../bam_to_cram'
 
 workflow MARKDUPLICATES {

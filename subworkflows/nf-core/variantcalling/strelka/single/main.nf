@@ -1,6 +1,6 @@
-include { GATK4_MERGEVCFS as MERGE_STRELKA        } from '../../../../../modules/nf-core/modules/gatk4/mergevcfs/main'
-include { GATK4_MERGEVCFS as MERGE_STRELKA_GENOME } from '../../../../../modules/nf-core/modules/gatk4/mergevcfs/main'
-include { STRELKA_GERMLINE as STRELKA_SINGLE      } from '../../../../../modules/nf-core/modules/strelka/germline/main'
+include { GATK4_MERGEVCFS as MERGE_STRELKA        } from '../../../../../modules/nf-core/gatk4/mergevcfs/main'
+include { GATK4_MERGEVCFS as MERGE_STRELKA_GENOME } from '../../../../../modules/nf-core/gatk4/mergevcfs/main'
+include { STRELKA_GERMLINE as STRELKA_SINGLE      } from '../../../../../modules/nf-core/strelka/germline/main'
 
 workflow RUN_STRELKA_SINGLE {
     take:
