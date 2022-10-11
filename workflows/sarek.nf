@@ -412,14 +412,14 @@ workflow SAREK {
 
         // UMI consensus calling
         if (params.umi_read_structure) {
-            CREATE_UMI_CONSENSUS(
+            FASTQ_CREATE_UMI_CONSENSUS_FGBIO(
                 ch_input_fastq,
                 fasta,
                 ch_map_index,
                 params.group_by_umi_strategy
             )
 
-            bamtofastq = CREATE_UMI_CONSENSUS.out.consensusbam.map{meta, bam -> [meta,bam,[]]}
+            bamtofastq = FASTQ_CREATE_UMI_CONSENSUS_FGBIO.out.consensusbam.map{meta, bam -> [meta,bam,[]]}
 
             // convert back to fastq for further preprocessing
             CONVERT_FASTQ_UMI(bamtofastq, [], [])
@@ -428,7 +428,7 @@ workflow SAREK {
 
             // Gather used softwares versions
             ch_versions = ch_versions.mix(CONVERT_FASTQ_UMI.out.versions)
-            ch_versions = ch_versions.mix(CREATE_UMI_CONSENSUS.out.versions)
+            ch_versions = ch_versions.mix(FASTQ_CREATE_UMI_CONSENSUS_FGBIO.out.versions)
         } else {
             ch_reads_fastp = ch_input_fastq
         }
