@@ -43,6 +43,9 @@ workflow GERMLINE_VARIANT_CALLING {
     strelka_vcf         = Channel.empty()
     tiddit_vcf          = Channel.empty()
 
+    haplotypecaller_vcf_tbi = Channel.empty()
+    strelka_vcf_tbi         = Channel.empty()
+
     // Remap channel with intervals
     cram_recalibrated_intervals = cram_recalibrated.combine(intervals)
         .map{ meta, cram, crai, intervals, num_intervals ->
@@ -182,7 +185,8 @@ workflow GERMLINE_VARIANT_CALLING {
                         intervals_bed_combined_haplotypec)
 
         haplotypecaller_vcf  = RUN_HAPLOTYPECALLER.out.filtered_vcf
-        ch_versions          = ch_versions.mix(RUN_HAPLOTYPECALLER.out.versions)
+        haplotypecaller_vcf_tbi  = RUN_HAPLOTYPECALLER.out.filtered_vcf_tbi
+        ch_versions = ch_versions.mix(RUN_HAPLOTYPECALLER.out.versions)
     }
 
     // MANTA
@@ -208,6 +212,7 @@ workflow GERMLINE_VARIANT_CALLING {
         )
 
         strelka_vcf = RUN_STRELKA_SINGLE.out.strelka_vcf
+        strelka_vcf_tbi = RUN_STRELKA_SINGLE.out.strelka_vcf_tbi
         ch_versions = ch_versions.mix(RUN_STRELKA_SINGLE.out.versions)
     }
 
@@ -231,6 +236,9 @@ workflow GERMLINE_VARIANT_CALLING {
     manta_vcf
     strelka_vcf
     tiddit_vcf
+
+    haplotypecaller_vcf_tbi
+    strelka_vcf_tbi
 
     versions = ch_versions
 }

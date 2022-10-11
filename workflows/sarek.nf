@@ -273,6 +273,8 @@ include { TUMOR_ONLY_VARIANT_CALLING                           } from '../subwor
 // Variant calling on tumor/normal pair
 include { PAIR_VARIANT_CALLING                                 } from '../subworkflows/local/pair_variant_calling'
 
+include { BCFTOOLS_CONCAT as BCFTOOLS_CONCAT_GERMLINE_VCFS     } from '../modules/nf-core/bcftools/concat/main'
+
 include { VCF_QC                                               } from '../subworkflows/nf-core/vcf_qc'
 
 // Annotation
@@ -976,6 +978,34 @@ workflow SAREK {
             gc_file,
             rt_file
         )
+
+        // Gather vcfs and vcf-tbis for concatenating germline-vcfs
+        germline_vcfs_with_tbis = Channel.empty()
+        germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(
+            GERMLINE_VARIANT_CALLING.out.strelka_vcf.join(GERMLINE_VARIANT_CALLING.out.strelka_vcf_tbi)
+        )
+
+        germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(
+            GERMLINE_VARIANT_CALLING.out.haplotypecaller_vcf.join(GERMLINE_VARIANT_CALLING.out.haplotypecaller_vcf_tbi)
+        )
+
+        // TO-DO: also mix in vcf+tbi from
+        // deepvariant
+        // freebayes
+        // manta
+        // tiddit
+
+        germline_vcfs_with_tbis = germline_vcfs_with_tbis.map{
+            meta, vcf, tbi ->
+                def new_meta = meta.clone()
+                new_meta.remove('variantcaller')
+                [new_meta, vcf, tbi]
+            }.groupTuple()
+
+        BCFTOOLS_CONCAT_GERMLINE_VCFS(germline_vcfs_with_tbis)
+        // TO-DO: The concatenation should be optional, and be default it shouldn't be done.
+        // TO-DO: Similar concatenation should also be done for tumor-vcfs, somatic-vcfs and something (?)
+        // TO-DO: Should all different kinds of variant be concatenated? Probably not.
 
         // Gather vcf files for annotation and QC
         vcf_to_annotate = Channel.empty()
