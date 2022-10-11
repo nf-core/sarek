@@ -852,9 +852,10 @@ The plots will show:
 [bcftools stats](https://samtools.github.io/bcftools/bcftools.html#stats) produces a statistics text file which is suitable for machine processing and can be plotted using plot-vcfstats.
 For further reading and documentation see the [bcftools stats manual](https://samtools.github.io/bcftools/bcftools.html#stats).
 
-Plot will show:
+Plots will show:
 
 - Stats by non-reference allele frequency, depth distribution, stats by quality and per-sample counts, singleton stats, etc.
+- Note: When using [Strelka2](https://github.com/Illumina/strelka), there will be no depth distribution plot, as Strelka2 does not report the INFO/DP field
 
 <details markdown="1">
 <summary>Output files for all samples</summary>

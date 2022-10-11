@@ -89,7 +89,7 @@ jobs:
         if: failure()
         run: |
           sudo apt install bat > /dev/null
-          batcat --decorations=always --color=always /tmp/pytest_workflow_*/*/log.{out,err}
+          batcat --decorations=always --color=always /home/runner/pytest_workflow_*/*/log.{out,err}
 
       - name: Upload logs on failure
         if: failure()
@@ -97,13 +97,12 @@ jobs:
         with:
           name: logs-${{ matrix.profile }}
           path: |
-            /tmp/pytest_workflow_*/*/.nextflow.log
-            /tmp/pytest_workflow_*/*/log.out
-            /tmp/pytest_workflow_*/*/log.err
-            /tmp/pytest_workflow_*/*/work
-            /tmp/pytest_workflow_*/**/.command.log
-            !/tmp/pytest_workflow_*/*/work/conda
-            !/tmp/pytest_workflow_*/*/work/singularity
+            /home/runner/pytest_workflow_*/*/.nextflow.log
+            /home/runner/pytest_workflow_*/*/log.out
+            /home/runner/pytest_workflow_*/*/log.err
+            /home/runner/pytest_workflow_*/*/work
+            !/home/runner/pytest_workflow_*/*/work/conda
+            !/home/runner/pytest_workflow_*/*/work/singularity
 
   test_all:
     name: Run pipeline with test data (complete)
@@ -168,14 +167,14 @@ jobs:
       - name: Run pipeline with tests settings
         uses: Wandalen/wretry.action@v1.0.11
         with:
-          command: PROFILE=${{ matrix.profile }} pytest --tag ${{ matrix.test }} --symlink --kwdof --git-aware --color=yes
+          command:TMPDIR=~ PROFILE=${{ matrix.profile }} pytest --tag ${{ matrix.test }} --symlink --kwdof --git-aware --color=yes
           attempt_limit: 3
 
       - name: Output log on failure
         if: failure()
         run: |
           sudo apt install bat > /dev/null
-          batcat --decorations=always --color=always /tmp/pytest_workflow_*/*/log.{out,err}
+          batcat --decorations=always --color=always /home/runner/pytest_workflow_*/*/log.{out,err}
 
       - name: Upload logs on failure
         if: failure()
@@ -183,10 +182,9 @@ jobs:
         with:
           name: logs-${{ matrix.profile }}
           path: |
-            /tmp/pytest_workflow_*/*/.nextflow.log
-            /tmp/pytest_workflow_*/*/log.out
-            /tmp/pytest_workflow_*/*/log.err
-            /tmp/pytest_workflow_*/*/work
-            /tmp/pytest_workflow_*/**/.command.log
-            !/tmp/pytest_workflow_*/*/work/conda
-            !/tmp/pytest_workflow_*/*/work/singularity
+            /home/runner/pytest_workflow_*/*/.nextflow.log
+            /home/runner/pytest_workflow_*/*/log.out
+            /home/runner/pytest_workflow_*/*/log.err
+            /home/runner/pytest_workflow_*/*/work
+            !/home/runner/pytest_workflow_*/*/work/conda
+            !/home/runner/pytest_workflow_*/*/work/singularity

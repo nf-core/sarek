@@ -11,7 +11,7 @@ include { GATK4_GETPILEUPSUMMARIES        as GETPILEUPSUMMARIES_NORMAL   } from 
 include { GATK4_GETPILEUPSUMMARIES        as GETPILEUPSUMMARIES_TUMOR    } from '../../../modules/nf-core/gatk4/getpileupsummaries/main'
 include { GATK4_LEARNREADORIENTATIONMODEL as LEARNREADORIENTATIONMODEL   } from '../../../modules/nf-core/gatk4/learnreadorientationmodel/main'
 include { GATK4_MERGEMUTECTSTATS          as MERGEMUTECTSTATS            } from '../../../modules/nf-core/gatk4/mergemutectstats/main'
-include { GATK4_MUTECT2                   as MUTECT2                     } from '../../../modules/nf-core/gatk4/mutect2/main'
+include { GATK4_MUTECT2                   as MUTECT2_PAIRED              } from '../../../modules/nf-core/gatk4/mutect2/main'
 
 workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
     take:
@@ -30,7 +30,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
     //
     //Perform variant calling using mutect2 module in tumor single mode.
     //
-    MUTECT2(input,
+    MUTECT2_PAIRED(input,
             fasta,
             fai,
             dict,
@@ -40,22 +40,22 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
             panel_of_normals_tbi)
 
     // Figure out if using intervals or no_intervals
-    MUTECT2.out.vcf.branch{
+    MUTECT2_PAIRED.out.vcf.branch{
             intervals:    it[0].num_intervals > 1
             no_intervals: it[0].num_intervals <= 1
         }.set{ mutect2_vcf_branch }
 
-    MUTECT2.out.tbi.branch{
+    MUTECT2_PAIRED.out.tbi.branch{
             intervals:    it[0].num_intervals > 1
             no_intervals: it[0].num_intervals <= 1
         }.set{ mutect2_tbi_branch }
 
-    MUTECT2.out.stats.branch{
+    MUTECT2_PAIRED.out.stats.branch{
             intervals:    it[0].num_intervals > 1
             no_intervals: it[0].num_intervals <= 1
         }.set{ mutect2_stats_branch }
 
-    MUTECT2.out.f1r2.branch{
+    MUTECT2_PAIRED.out.f1r2.branch{
             intervals:    it[0].num_intervals > 1
             no_intervals: it[0].num_intervals <= 1
         }.set{ mutect2_f1r2_branch }
@@ -269,7 +269,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
     ch_versions = ch_versions.mix(GATHERPILEUPSUMMARIES_TUMOR.out.versions)
     ch_versions = ch_versions.mix(LEARNREADORIENTATIONMODEL.out.versions)
     ch_versions = ch_versions.mix(MERGEMUTECTSTATS.out.versions)
-    ch_versions = ch_versions.mix(MUTECT2.out.versions)
+    ch_versions = ch_versions.mix(MUTECT2_PAIRED.out.versions)
 
     emit:
     mutect2_vcf            = mutect2_vcf                                    // channel: [ val(meta), [ vcf ] ]
