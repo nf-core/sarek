@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#773](https://github.com/nf-core/sarek/pull/773) - Sync `TEMPLATE` with `tools` `2.6`
 - [#782](https://github.com/nf-core/sarek/pull/782) - Reduce scatter/gather for full size tests on AWS
 - [#785](https://github.com/nf-core/sarek/pull/785) - Update description of `bcftools stats`
+
 ### Fixed
 
 - [#762](https://github.com/nf-core/sarek/pull/762) - Polish CHANGELOG + figures
