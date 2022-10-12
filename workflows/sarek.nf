@@ -236,7 +236,7 @@ include { BAM_MERGE_INDEX_SAMTOOLS                       } from '../subworkflows
 
 // Convert BAM files
 include { SAMTOOLS_CONVERT as BAM_TO_CRAM                } from '../modules/nf-core/samtools/convert/main'
-include { SAMTOOLS_CONVERT as BAM_TO_CRAM_VARIANTCALLING } from '../modules/nf-core/samtools/convert/main'
+include { SAMTOOLS_CONVERT as BAM_TO_CRAM_MAPPING        } from '../modules/nf-core/samtools/convert/main'
 
 // Convert CRAM files (optional)
 include { SAMTOOLS_CONVERT as CRAM_TO_BAM                } from '../modules/nf-core/samtools/convert/main'
@@ -524,13 +524,13 @@ workflow SAREK {
             // bams are merged (when multiple lanes from the same sample), indexed and then converted to cram
             BAM_MERGE_INDEX_SAMTOOLS(ch_bam_mapped)
 
-            BAM_TO_CRAM(BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai, fasta, fasta_fai)
+            BAM_TO_CRAM_MAPPING(BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai, fasta, fasta_fai)
             // Create CSV to restart from this step
-            params.save_output_as_bam ? CHANNEL_ALIGN_CREATE_CSV(BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai) : CHANNEL_ALIGN_CREATE_CSV(BAM_TO_CRAM.out.alignment_index)
+            params.save_output_as_bam ? CHANNEL_ALIGN_CREATE_CSV(BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai) : CHANNEL_ALIGN_CREATE_CSV(BAM_TO_CRAM_MAPPING.out.alignment_index)
 
             // Gather used softwares versions
             ch_versions = ch_versions.mix(BAM_MERGE_INDEX_SAMTOOLS.out.versions)
-            ch_versions = ch_versions.mix(BAM_TO_CRAM.out.versions)
+            ch_versions = ch_versions.mix(BAM_TO_CRAM_MAPPING.out.versions)
         }
 
         // Gather used softwares versions
@@ -555,7 +555,7 @@ workflow SAREK {
         ch_cram_skip_markduplicates = Channel.empty()
 
         if (params.step == 'mapping'){
-            if(params.skip_tools && params.skip_tools.split(',').contains('markduplicates')) ch_cram_skip_markduplicates = BAM_TO_CRAM.out.alignment_index
+            if(params.skip_tools && params.skip_tools.split(',').contains('markduplicates')) ch_cram_skip_markduplicates = BAM_TO_CRAM_MAPPING.out.alignment_index
         }
         else {
             ch_input_sample.branch{
@@ -564,15 +564,15 @@ workflow SAREK {
             }.set{ch_convert}
 
             // Convert any input BAMs to CRAM
-            BAM_TO_CRAM(ch_convert.bam, fasta, fasta_fai)
+            BAM_TO_CRAM_MAPPING(ch_convert.bam, fasta, fasta_fai)
             if(params.skip_tools && params.skip_tools.split(',').contains('markduplicates')){
-                ch_cram_skip_markduplicates = Channel.empty().mix(ch_convert.cram, BAM_TO_CRAM.out.alignment_index)
+                ch_cram_skip_markduplicates = Channel.empty().mix(ch_convert.cram, BAM_TO_CRAM_MAPPING.out.alignment_index)
             }
 
             // Should it be possible to restart from converted crams?
             //ch_cram_no_markduplicates_restart = ch_convert.cram
 
-            ch_versions = ch_versions.mix(BAM_TO_CRAM.out.versions)
+            ch_versions = ch_versions.mix(BAM_TO_CRAM_MAPPING.out.versions)
         }
 
         if (params.skip_tools && params.skip_tools.split(',').contains('markduplicates')) {
