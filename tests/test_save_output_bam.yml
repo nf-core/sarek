@@ -68,9 +68,9 @@
     - path: results/preprocessing/recal_table/test/test.recal.table
       md5sum: 5b6e5078b4a90f6cb982fa0f0df616c2
     - path: results/preprocessing/recalibrated/test/test.recal.bam
-      md5sum: 085183a45250e929bbcd2e4ca0c30204
+    # binary changes md5sums on reruns.
     - path: results/preprocessing/recalibrated/test/test.recal.bam.bai
-      md5sum: 57b10fe03532d44388dad45ea3c0761b
+    # binary changes md5sums on reruns.
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.cram.metrics
     # The text-based output-file test.md.cram.metrics only contains comments and no metrics, which is a bit odd.
