@@ -564,15 +564,15 @@ workflow SAREK {
             }.set{ch_convert}
 
             // Convert any input BAMs to CRAM
-            BAM_TO_CRAM_MAPPING(ch_convert.bam, fasta, fasta_fai)
+            BAM_TO_CRAM(ch_convert.bam, fasta, fasta_fai)
             if(params.skip_tools && params.skip_tools.split(',').contains('markduplicates')){
-                ch_cram_skip_markduplicates = Channel.empty().mix(ch_convert.cram, BAM_TO_CRAM_MAPPING.out.alignment_index)
+                ch_cram_skip_markduplicates = Channel.empty().mix(ch_convert.cram, BAM_TO_CRAM.out.alignment_index)
             }
 
             // Should it be possible to restart from converted crams?
             //ch_cram_no_markduplicates_restart = ch_convert.cram
 
-            ch_versions = ch_versions.mix(BAM_TO_CRAM_MAPPING.out.versions)
+            ch_versions = ch_versions.mix(BAM_TO_CRAM.out.versions)
         }
 
         if (params.skip_tools && params.skip_tools.split(',').contains('markduplicates')) {
