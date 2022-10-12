@@ -10,7 +10,7 @@
     - path: results/csv/markduplicates_no_table.csv
       md5sum: 2a2d3d4842befd4def39156463859ee3
     - path: results/csv/recalibrated.csv
-      md5sum: 42628ec994c16f565e5407b40a9c1ac3
+      md5sum: 2d29d9e53894dcce96a1b5beb6ef3312
     - path: results/multiqc
     - path: results/preprocessing/markduplicates/test/test.md.cram
     # binary changing on reruns
@@ -47,7 +47,7 @@
     - path: results/reference/known_indels/mills_and_1000G.indels.vcf.gz.tbi
       md5sum: 1bb7ab8f22eb798efd796439d3b29b7a
     - path: results/reports/fastqc/test-test_L1
-    - path: results/reports/markduplicates/test/test.md.metrics
+    - path: results/reports/markduplicates/test/test.md.cram.metrics
       contains: ["test	8547	767	84	523391	3882	0	0	0.385081", "1.0	767	767"]
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
       md5sum: 76fa71922a3f748e507c2364c531dfcb
@@ -85,7 +85,7 @@
     - path: results/csv/markduplicates_no_table.csv
       md5sum: 2a2d3d4842befd4def39156463859ee3
     - path: results/csv/recalibrated.csv
-      md5sum: 42628ec994c16f565e5407b40a9c1ac3
+      md5sum: 2d29d9e53894dcce96a1b5beb6ef3312
     - path: results/multiqc
     - path: results/preprocessing/markduplicates/test/test.md.cram
     # binary changing on reruns
@@ -137,7 +137,7 @@
     - path: results/reference/known_indels/mills_and_1000G.indels.vcf.gz.tbi
       md5sum: 1bb7ab8f22eb798efd796439d3b29b7a
     - path: results/reports/fastqc/test-test_L1
-    - path: results/reports/markduplicates/test/test.md.metrics
+    - path: results/reports/markduplicates/test/test.md.cram.metrics
       contains: ["LB0	13607	543	161	518779	6410	0	0	0.436262"]
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
       md5sum: be1a800868fc1ce26711654525224e59

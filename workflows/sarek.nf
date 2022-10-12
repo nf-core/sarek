@@ -252,7 +252,8 @@ include { BAM_MARKDUPLICATES_SPARK                       } from '../subworkflows
 include { BAM_COMPRESS_SAMTOOLS                          } from '../subworkflows/local/bam_compress_samtools/main'
 
 // QC on CRAM
-include { CRAM_QC_MOSDEPTH_SAMTOOLS                      } from '../subworkflows/local/cram_qc_mosdepth_samtools/main'
+include { CRAM_QC_MOSDEPTH_SAMTOOLS as CRAM_QC_NO_MD     } from '../subworkflows/local/cram_qc_mosdepth_samtools/main'
+include { CRAM_QC_MOSDEPTH_SAMTOOLS as CRAM_QC_RECAL     } from '../subworkflows/local/cram_qc_mosdepth_samtools/main'
 
 // Create recalibration tables
 include { BAM_BASERECALIBRATOR                           } from '../subworkflows/local/bam_baserecalibrator/main'
@@ -521,16 +522,18 @@ workflow SAREK {
 
         // gatk4 markduplicates can handle multiple bams as input, so no need to merge/index here
         // Except if and only if skipping markduplicates or saving mapped bams
-        if (params.save_bam_mapped || (params.skip_tools && params.skip_tools.split(',').contains('markduplicates'))) {
+        if (params.save_mapped || (params.skip_tools && params.skip_tools.split(',').contains('markduplicates'))) {
 
             // bams are merged (when multiple lanes from the same sample), indexed and then converted to cram
             BAM_MERGE_INDEX_SAMTOOLS(ch_bam_mapped)
 
+            BAM_TO_CRAM(MERGE_INDEX_BAM.out.bam_bai, fasta, fasta_fai)
             // Create CSV to restart from this step
-            CHANNEL_ALIGN_CREATE_CSV(BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai)
+            params.save_output_as_bam ? CHANNEL_ALIGN_CREATE_CSV(BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai) : CHANNEL_ALIGN_CREATE_CSV(BAM_TO_CRAM.out.alignment_index)
 
             // Gather used softwares versions
             ch_versions = ch_versions.mix(BAM_MERGE_INDEX_SAMTOOLS.out.versions)
+            ch_versions = ch_versions.mix(BAM_TO_CRAM.out.versions)
         }
 
         // Gather used softwares versions
@@ -540,9 +543,7 @@ workflow SAREK {
 
     if (params.step in ['mapping', 'markduplicates']) {
 
-        // 1. CRAM_TO_BAM ( to speed up computation)
-        // 2. Need fasta for cram compression (maybe just using --fasta, because this reference will be used elsewhere)
-        ch_cram_no_markduplicates_restart = Channel.empty()
+        //ch_cram_no_markduplicates_restart = Channel.empty()
         ch_cram_markduplicates_no_spark   = Channel.empty()
         ch_cram_markduplicates_spark      = Channel.empty()
 
@@ -550,56 +551,49 @@ workflow SAREK {
 
         // ch_bam_for_markduplicates will countain bam mapped with FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP when step is mapping
         // Or bams that are specified in the samplesheet.csv when step is prepare_recalibration
-        // ch_bam_for_markduplicates = params.step == 'mapping'? ch_bam_mapped : ch_input_sample.map{ meta, input, index -> [meta, input] }
+        ch_for_markduplicates = params.step == 'mapping'? ch_bam_mapped : ch_input_sample.map{ meta, input, index -> [meta, input] }
 
-        ch_bam_for_markduplicates = Channel.empty()
-        ch_input_cram_indexed     = Channel.empty()
+        // if no MD is done, then run QC on mapped & converted CRAM files
+        // or the input BAM (+converted) or CRAM files
+        ch_cram_skip_markduplicates = Channel.empty()
 
-        if (params.step == 'mapping') ch_bam_for_markduplicates = ch_bam_mapped
+        if (params.step == 'mapping'){
+            if(params.skip_tools && params.skip_tools.split(',').contains('markduplicates')) ch_cram_skip_markduplicates = BAMTOCRAM_MAPPING.out.alignment_index
+        }
         else {
             ch_input_sample.branch{
                 bam:  it[0].data_type == "bam"
                 cram: it[0].data_type == "cram"
             }.set{ch_convert}
 
-            ch_bam_for_markduplicates = ch_convert.bam.map{ meta, bam, bai -> [meta, bam]}
-
-            //In case Markduplicates is run convert CRAM files to BAM, because the tool only runs on BAM files. MD_SPARK does run on CRAM but is a lot slower
-            if (!(params.skip_tools && params.skip_tools.split(',').contains('markduplicates'))){
-
-                CRAM_TO_BAM(ch_convert.cram, fasta, fasta_fai)
-                ch_versions = ch_versions.mix(CRAM_TO_BAM.out.versions)
-
-                ch_bam_for_markduplicates = ch_bam_for_markduplicates.mix(CRAM_TO_BAM.out.alignment_index.map{ meta, bam, bai -> [meta, bam]})
-            } else {
-                ch_input_cram_indexed     = ch_convert.cram
+            // Convert any input BAMs to CRAM
+            BAM_TO_CRAM(ch_convert.bam, fasta, fasta_fai)
+            if(params.skip_tools && params.skip_tools.split(',').contains('markduplicates')){
+                ch_cram_skip_markduplicates = Channel.empty().mix(ch_convert.cram, BAM_TO_CRAM.out.alignment_index)
             }
+
+            // Should it be possible to restart from converted crams?
+            //ch_cram_no_markduplicates_restart = ch_convert.cram
+
+            ch_versions = ch_versions.mix(BAMTOCRAM_INPUT.out.versions)
         }
 
         if (params.skip_tools && params.skip_tools.split(',').contains('markduplicates')) {
 
-            // ch_bam_indexed will countain bam mapped with FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP when step is mapping
-            // which are then merged and indexed
-            // Or bams that are specified in the samplesheet.csv when step is prepare_recalibration
-            ch_bam_indexed = params.step == 'mapping' ? BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai : ch_convert.bam
-
-            BAM_COMPRESS_SAMTOOLS(
-                ch_bam_indexed,
-                ch_input_cram_indexed,
+            CRAM_QC_NO_MD(
+                ch_cram_skip_markduplicates,
                 fasta,
                 fasta_fai,
                 intervals_for_preprocessing)
 
-            ch_cram_no_markduplicates_restart = BAM_COMPRESS_SAMTOOLS.out.cram_converted
-
             // Gather QC reports
-            ch_reports  = ch_reports.mix(BAM_COMPRESS_SAMTOOLS.out.qc.collect{meta, report -> report})
+            ch_reports  = ch_reports.mix(CRAM_QC_NO_MD.out.qc.collect{meta, report -> report})
 
             // Gather used softwares versions
-            ch_versions = ch_versions.mix(BAM_COMPRESS_SAMTOOLS.out.versions)
+            ch_versions = ch_versions.mix(CRAM_QC_NO_MD.out.versions)
         } else if (params.use_gatk_spark && params.use_gatk_spark.contains('markduplicates')) {
             BAM_MARKDUPLICATES_SPARK(
-                ch_bam_for_markduplicates,
+                ch_for_markduplicates,
                 dict,
                 fasta,
                 fasta_fai,
@@ -613,7 +607,7 @@ workflow SAREK {
             ch_versions = ch_versions.mix(BAM_MARKDUPLICATES_SPARK.out.versions)
         } else {
             BAM_MARKDUPLICATES(
-                ch_bam_for_markduplicates,
+                ch_for_markduplicates,
                 fasta,
                 fasta_fai,
                 intervals_for_preprocessing)
@@ -630,11 +624,10 @@ workflow SAREK {
         // ch_md_cram_for_restart contains either:
         // - crams from markduplicates
         // - crams from markduplicates_spark
-        // - crams converted from bam mapped when skipping markduplicates
+        // - crams from input step markduplicates --> from the converted ones only?
         ch_md_cram_for_restart = Channel.empty().mix(
             ch_cram_markduplicates_no_spark,
-            ch_cram_markduplicates_spark,
-            ch_cram_no_markduplicates_restart).map{ meta, cram, crai ->
+            ch_cram_markduplicates_spark).map{ meta, cram, crai ->
                         //Make sure correct data types are carried through
                         [[
                             data_type:  "cram",
@@ -647,9 +640,14 @@ workflow SAREK {
                         cram, crai]
                     }
 
+        //If params.save_output_as_bam, then convert CRAM files to BAM
+        CRAM_TO_BAM(ch_md_cram_for_restart, fasta, fasta_fai)
+        ch_versions = ch_versions.mix(CRAM_TO_BAM.out.versions)
+
         // CSV should be written for the file actually out, either CRAM or BAM
         // Create CSV to restart from this step
-        if (!(params.skip_tools && params.skip_tools.split(',').contains('markduplicates'))) CHANNEL_MARKDUPLICATES_CREATE_CSV(ch_md_cram_for_restart)
+        params.save_output_as_bam ? CHANNEL_MARKDUPLICATES_CREATE_CSV(CRAM_TO_BAM.out.alignment_index) : CHANNEL_MARKDUPLICATES_CREATE_CSV(ch_md_cram_for_restart)
+
     }
 
     if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration']) {
@@ -667,9 +665,19 @@ workflow SAREK {
             BAM_TO_CRAM(ch_convert.bam, fasta, fasta_fai)
             ch_versions = ch_versions.mix(BAM_TO_CRAM.out.versions)
 
-            ch_cram_for_bam_baserecalibrator = Channel.empty().mix(BAM_TO_CRAM.out.alignment_index, ch_convert.cram)
+            ch_cram_from_bam = BAM_TO_CRAM.out.alignment_index.map{meta, cram, crai ->
+                                                        [
+                                                            [data_type:     "cram",
+                                                            id:             meta.sample,
+                                                            patient:        meta.patient,
+                                                            sample:         meta.sample,
+                                                            sex:            meta.sex,
+                                                            status:         meta.status,],
+                                                            cram, crai]
+                                                    }
 
-            ch_md_cram_for_restart = BAM_TO_CRAM.out.alignment_index
+            ch_cram_for_bam_baserecalibrator = Channel.empty().mix(ch_cram_from_bam, ch_convert.cram)
+            ch_md_cram_for_restart = ch_cram_from_bam
 
         } else {
 
@@ -679,7 +687,18 @@ workflow SAREK {
             // - crams converted from bam mapped when skipping markduplicates
             // - input cram files, when start from step markduplicates
             //ch_md_cram_for_restart.view() //contains md.cram.crai
-            ch_cram_for_bam_baserecalibrator = Channel.empty().mix(ch_md_cram_for_restart, ch_input_cram_indexed)
+            ch_cram_for_bam_baserecalibrator = Channel.empty().mix(ch_md_cram_for_restart, ch_cram_skip_markduplicates ).map{ meta, cram, crai ->
+                                                        //Make sure correct data types are carried through
+                                                        [[
+                                                            data_type:  "cram",
+                                                            id:         meta.id,
+                                                            patient:    meta.patient,
+                                                            sample:     meta.sample,
+                                                            sex:        meta.sex,
+                                                            status:     meta.status
+                                                            ],
+                                                        cram, crai]
+                                                    }
         }
 
         // STEP 3: Create recalibration tables
@@ -791,21 +810,22 @@ workflow SAREK {
                 // Gather used softwares versions
                 ch_versions = ch_versions.mix(BAM_APPLYBQSR.out.versions)
             }
+
             ch_cram_variant_calling = Channel.empty().mix(
                 ch_cram_variant_calling_no_spark,
                 ch_cram_variant_calling_spark)
 
-            CRAM_QC_MOSDEPTH_SAMTOOLS(
+            CRAM_QC_RECAL(
                 ch_cram_variant_calling,
                 fasta,
                 fasta_fai,
                 intervals_for_preprocessing)
 
             // Gather QC reports
-            ch_reports  = ch_reports.mix(CRAM_QC_MOSDEPTH_SAMTOOLS.out.qc.collect{meta, report -> report})
+            ch_reports  = ch_reports.mix(CRAM_QC_RECAL.out.qc.collect{meta, report -> report})
 
             // Gather used softwares versions
-            ch_versions = ch_versions.mix(CRAM_QC_MOSDEPTH_SAMTOOLS.out.versions)
+            ch_versions = ch_versions.mix(CRAM_QC_RECAL.out.versions)
 
             //If params.save_output_as_bam, then convert CRAM files to BAM
             CRAM_TO_BAM_RECAL(ch_cram_variant_calling, fasta, fasta_fai)
@@ -840,10 +860,10 @@ workflow SAREK {
             }.set{ch_convert}
 
         //BAM files first must be converted to CRAM files since from this step on we base everything on CRAM format
-        BAM_TO_CRAM_VARIANTCALLING(ch_convert.bam, fasta, fasta_fai)
-        ch_versions = ch_versions.mix(BAM_TO_CRAM_VARIANTCALLING.out.versions)
+        BAM_TO_CRAM(ch_convert.bam, fasta, fasta_fai)
+        ch_versions = ch_versions.mix(BAM_TO_CRAM.out.versions)
 
-        ch_cram_variant_calling = Channel.empty().mix(BAM_TO_CRAM_VARIANTCALLING.out.alignment_index, ch_convert.cram)
+        ch_cram_variant_calling = Channel.empty().mix(BAM_TO_CRAM.out.alignment_index, ch_convert.cram)
 
     }
 
