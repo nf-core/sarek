@@ -66,3 +66,4 @@ workflow VCF_VARIANT_FILTERING_GATK {
     versions = ch_versions
     filtered_vcf
 }
+
