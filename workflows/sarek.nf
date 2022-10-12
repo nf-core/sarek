@@ -524,7 +524,7 @@ workflow SAREK {
             // bams are merged (when multiple lanes from the same sample), indexed and then converted to cram
             BAM_MERGE_INDEX_SAMTOOLS(ch_bam_mapped)
 
-            BAM_TO_CRAM(MERGE_INDEX_BAM.out.bam_bai, fasta, fasta_fai)
+            BAM_TO_CRAM(BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai, fasta, fasta_fai)
             // Create CSV to restart from this step
             params.save_output_as_bam ? CHANNEL_ALIGN_CREATE_CSV(BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai) : CHANNEL_ALIGN_CREATE_CSV(BAM_TO_CRAM.out.alignment_index)
 
