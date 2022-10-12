@@ -534,7 +534,7 @@
     - path: results/reports/bcftools/freebayes/test/test.freebayes.bcftools_stats.txt
       md5sum: 16c7673085520b66bd47f59fbf8a7e0e
     - path: results/reports/bcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.bcftools_stats.txt
-      md5sum: d857d723152dedf85ae0979d65ca6097
+      md5sum: 001709e5eeca385908e31ba370f53381
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.cram.metrics
       contains: ["test	8547	767	84	523391	3882	0	0	0.385081", "1.0	767	767"]
@@ -611,9 +611,9 @@
     - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.qual
       contains: ["0	0	0	-nan	82	29	2.82759", "1.1	196	35	5.6	57	24	2.375", "3.16	205	38	5.39474	49	20	2.45"]
     - path: results/reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.FILTER.summary
-      md5sum: 84039d55edf0981d6b9b81252aff6741
+      md5sum: ac61b178a3e15efb861b34f16d80fb67
     - path: results/reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.TsTv.count
-      md5sum: 6c6038d43eb7fa766909b495979d120e
+      md5sum: d7c0e0afd59f87dc4685487c0d497575
     - path: results/reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.TsTv.qual
     # the text-based file test2_vs_test.freebayes.TsTv.qual seemingly changes content on reruns!
     - path: results/variant_calling/freebayes/test/test.freebayes.vcf.gz
@@ -673,7 +673,7 @@
     - path: results/reports/bcftools/freebayes/test/test.freebayes.bcftools_stats.txt
       md5sum: f66375a00d692d67df46c129147008b2
     - path: results/reports/bcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.bcftools_stats.txt
-      md5sum: e7e8a9a5a3dcf4534a5edd32aaea049e
+      md5sum: 41d9835772fa1326769c2dd94749cbea
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.cram.metrics
       contains: ["test	8547	767	84	523391	3882	0	0	0.385081", "1.0	767	767"]
@@ -726,9 +726,9 @@
     - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.qual
       contains: ["0	0	0	-nan	325	86	3.77907", "68.8262	377	88	4.28409	20	10	2", "321.335	393	96	4.09375	4	2	2"]
     - path: results/reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.FILTER.summary
-      md5sum: d2d717fef7c18ef9b40bbbc5c5bbf101
+      md5sum: 59e9d340b588537655020147e6d93e29
     - path: results/reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.TsTv.count
-      md5sum: e09dacc71bf72254e3aace1cc7c1e16d
+      md5sum: 61ad00bb8cd47592b0671fabe26cf8cd
     - path: results/reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.TsTv.qual
     # the text-based file test2_vs_test.freebayes.TsTv.qual seemingly changes content on reruns!
     - path: results/variant_calling/freebayes/test/test.freebayes.vcf.gz
