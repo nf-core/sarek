@@ -125,7 +125,7 @@ workflow GERMLINE_VARIANT_CALLING {
             fasta_fai
         )
 
-        deepvariant_vcf = Channel.empty().mix(RUN_DEEPVARIANT.out.deepvariant_vcf,RUN_DEEPVARIANT.out.deepvariant_gvcf)
+        deepvariant_vcf = Channel.empty().mix(RUN_DEEPVARIANT.out.deepvariant_vcf)
         ch_versions     = ch_versions.mix(RUN_DEEPVARIANT.out.versions)
     }
 
