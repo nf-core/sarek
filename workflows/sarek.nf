@@ -248,9 +248,6 @@ include { BAM_MARKDUPLICATES                             } from '../subworkflows
 // Mark Duplicates SPARK (+QC)
 include { BAM_MARKDUPLICATES_SPARK                       } from '../subworkflows/local/bam_markduplicates_spark/main'
 
-// Convert to CRAM (+QC)
-include { BAM_COMPRESS_SAMTOOLS                          } from '../subworkflows/local/bam_compress_samtools/main'
-
 // QC on CRAM
 include { CRAM_QC_MOSDEPTH_SAMTOOLS as CRAM_QC_NO_MD     } from '../subworkflows/local/cram_qc_mosdepth_samtools/main'
 include { CRAM_QC_MOSDEPTH_SAMTOOLS as CRAM_QC_RECAL     } from '../subworkflows/local/cram_qc_mosdepth_samtools/main'
