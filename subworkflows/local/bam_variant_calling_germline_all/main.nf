@@ -125,8 +125,8 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             fasta_fai
         )
 
-        deepvariant_vcf = Channel.empty().mix(RUN_DEEPVARIANT.out.deepvariant_vcf)
-        ch_versions     = ch_versions.mix(RUN_DEEPVARIANT.out.versions)
+        deepvariant_vcf = Channel.empty().mix(BAM_VARIANT_CALLING_DEEPVARIANT.out.deepvariant_vcf)
+        ch_versions     = ch_versions.mix(BAM_VARIANT_CALLING_DEEPVARIANT.out.versions)
     }
 
     // FREEBAYES
