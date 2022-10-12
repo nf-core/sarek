@@ -198,7 +198,9 @@ workflow GERMLINE_VARIANT_CALLING {
             fasta_fai
         )
 
-        manta_vcf   = RUN_MANTA_GERMLINE.out.manta_vcf
+        manta_vcf       = RUN_MANTA_GERMLINE.out.manta_vcf
+        manta_vcf_tbi   = RUN_MANTA_GERMLINE.out.manta_vcf_tbi
+
         ch_versions = ch_versions.mix(RUN_MANTA_GERMLINE.out.versions)
     }
 
@@ -238,6 +240,7 @@ workflow GERMLINE_VARIANT_CALLING {
     tiddit_vcf
 
     haplotypecaller_vcf_tbi
+    manta_vcf_tbi
     strelka_vcf_tbi
 
     versions = ch_versions

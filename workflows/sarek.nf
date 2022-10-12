@@ -981,18 +981,22 @@ workflow SAREK {
 
         // Gather vcfs and vcf-tbis for concatenating germline-vcfs
         germline_vcfs_with_tbis = Channel.empty()
-        germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(
-            GERMLINE_VARIANT_CALLING.out.strelka_vcf.join(GERMLINE_VARIANT_CALLING.out.strelka_vcf_tbi)
-        )
 
         germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(
             GERMLINE_VARIANT_CALLING.out.haplotypecaller_vcf.join(GERMLINE_VARIANT_CALLING.out.haplotypecaller_vcf_tbi)
         )
 
+        germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(
+            GERMLINE_VARIANT_CALLING.out.manta_vcf.join(GERMLINE_VARIANT_CALLING.out.manta_vcf_tbi)
+        )
+
+        germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(
+            GERMLINE_VARIANT_CALLING.out.strelka_vcf.join(GERMLINE_VARIANT_CALLING.out.strelka_vcf_tbi)
+        )
+
         // TO-DO: also mix in vcf+tbi from
         // deepvariant
         // freebayes
-        // manta
         // tiddit
 
         germline_vcfs_with_tbis = germline_vcfs_with_tbis.map{
