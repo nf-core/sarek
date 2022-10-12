@@ -44,6 +44,7 @@ workflow GERMLINE_VARIANT_CALLING {
     tiddit_vcf          = Channel.empty()
 
     haplotypecaller_vcf_tbi = Channel.empty()
+    manta_vcf_tbi           = Channel.empty()
     strelka_vcf_tbi         = Channel.empty()
 
     // Remap channel with intervals
