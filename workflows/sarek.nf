@@ -555,7 +555,7 @@ workflow SAREK {
         ch_cram_skip_markduplicates = Channel.empty()
 
         if (params.step == 'mapping'){
-            if(params.skip_tools && params.skip_tools.split(',').contains('markduplicates')) ch_cram_skip_markduplicates = BAMTOCRAM_MAPPING.out.alignment_index
+            if(params.skip_tools && params.skip_tools.split(',').contains('markduplicates')) ch_cram_skip_markduplicates = BAM_TO_CRAM.out.alignment_index
         }
         else {
             ch_input_sample.branch{
@@ -572,7 +572,7 @@ workflow SAREK {
             // Should it be possible to restart from converted crams?
             //ch_cram_no_markduplicates_restart = ch_convert.cram
 
-            ch_versions = ch_versions.mix(BAMTOCRAM_INPUT.out.versions)
+            ch_versions = ch_versions.mix(BAM_TO_CRAM.out.versions)
         }
 
         if (params.skip_tools && params.skip_tools.split(',').contains('markduplicates')) {
