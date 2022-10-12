@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#777](https://github.com/nf-core/sarek/pull/777) - Fix mixed up aws full size tests output paths
 - [#789](https://github.com/nf-core/sarek/issues/789) - Fix somatic mutect2 test
 - [#793](https://github.com/nf-core/sarek/pull/793) - Remove DeepVariant GVCF from annotation
+- [#794](https://github.com/nf-core/sarek/issues/794) - Fix publishing for unzipped reference files
 
 ### Deprecated
 
