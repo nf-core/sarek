@@ -200,83 +200,81 @@ if (params.spliceai_snv && params.spliceai_snv_tbi && params.spliceai_indel && p
 */
 
 // Create samplesheets to restart from different steps
-include { MAPPING_CSV                                          } from '../subworkflows/local/mapping_csv'
-include { MARKDUPLICATES_CSV                                   } from '../subworkflows/local/markduplicates_csv'
-include { PREPARE_RECALIBRATION_CSV                            } from '../subworkflows/local/prepare_recalibration_csv'
-include { RECALIBRATE_CSV                                      } from '../subworkflows/local/recalibrate_csv'
-include { VARIANTCALLING_CSV                                   } from '../subworkflows/local/variantcalling_csv'
+include { MAPPING_CSV                                    } from '../subworkflows/local/mapping_csv'
+include { MARKDUPLICATES_CSV                             } from '../subworkflows/local/markduplicates_csv'
+include { PREPARE_RECALIBRATION_CSV                      } from '../subworkflows/local/prepare_recalibration_csv'
+include { RECALIBRATE_CSV                                } from '../subworkflows/local/recalibrate_csv'
+include { VARIANTCALLING_CSV                             } from '../subworkflows/local/variantcalling_csv'
 
 // Build indices if needed
-include { PREPARE_GENOME                                       } from '../subworkflows/local/prepare_genome'
+include { PREPARE_GENOME                                 } from '../subworkflows/local/prepare_genome'
 
 // Build intervals if needed
-include { PREPARE_INTERVALS                                    } from '../subworkflows/local/prepare_intervals'
+include { PREPARE_INTERVALS                              } from '../subworkflows/local/prepare_intervals'
 
 // Build CNVkit reference if needed
-include { PREPARE_CNVKIT_REFERENCE                             } from '../subworkflows/local/prepare_cnvkit_reference'
+include { PREPARE_CNVKIT_REFERENCE                       } from '../subworkflows/local/prepare_cnvkit_reference'
 
 // Convert BAM files to FASTQ files
-include { ALIGNMENT_TO_FASTQ as ALIGNMENT_TO_FASTQ_INPUT       } from '../subworkflows/nf-core/alignment_to_fastq'
-include { ALIGNMENT_TO_FASTQ as ALIGNMENT_TO_FASTQ_UMI         } from '../subworkflows/nf-core/alignment_to_fastq'
+include { ALIGNMENT_TO_FASTQ as ALIGNMENT_TO_FASTQ_INPUT } from '../subworkflows/nf-core/alignment_to_fastq'
+include { ALIGNMENT_TO_FASTQ as ALIGNMENT_TO_FASTQ_UMI   } from '../subworkflows/nf-core/alignment_to_fastq'
 
 // Run FASTQC
-include { RUN_FASTQC                                           } from '../subworkflows/nf-core/run_fastqc'
+include { RUN_FASTQC                                     } from '../subworkflows/nf-core/run_fastqc'
 
 // TRIM/SPLIT FASTQ Files
 include { FASTP                                                } from '../modules/nf-core/fastp/main'
 
 // Create umi consensus bams from fastq
-include { CREATE_UMI_CONSENSUS                                 } from '../subworkflows/nf-core/fgbio_create_umi_consensus/main'
+include { CREATE_UMI_CONSENSUS                           } from '../subworkflows/nf-core/fgbio_create_umi_consensus/main'
 
 // Map input reads to reference genome
-include { GATK4_MAPPING                                        } from '../subworkflows/nf-core/gatk4/mapping/main'
+include { GATK4_MAPPING                                  } from '../subworkflows/nf-core/gatk4/mapping/main'
 
 // Merge and index BAM files (optional)
-include { MERGE_INDEX_BAM                                      } from '../subworkflows/nf-core/merge_index_bam'
+include { MERGE_INDEX_BAM                                } from '../subworkflows/nf-core/merge_index_bam'
 
-include { SAMTOOLS_CONVERT as SAMTOOLS_CRAMTOBAM               } from '../modules/nf-core/samtools/convert/main'
-include { SAMTOOLS_CONVERT as SAMTOOLS_CRAMTOBAM_RECAL         } from '../modules/nf-core/samtools/convert/main'
+include { SAMTOOLS_CONVERT as CRAMTOBAM_RECAL            } from '../modules/nf-core/samtools/convert/main'
+include { SAMTOOLS_CONVERT as CRAMTOBAM_MARKDUPLICATES   } from '../modules/nf-core/samtools/convert/main'
 
-include { SAMTOOLS_CONVERT as SAMTOOLS_BAMTOCRAM               } from '../modules/nf-core/samtools/convert/main'
-include { SAMTOOLS_CONVERT as SAMTOOLS_BAMTOCRAM_VARIANTCALLING} from '../modules/nf-core/samtools/convert/main'
+include { SAMTOOLS_CONVERT as BAMTOCRAM_INPUT            } from '../modules/nf-core/samtools/convert/main'
+include { SAMTOOLS_CONVERT as BAMTOCRAM_MAPPING          } from '../modules/nf-core/samtools/convert/main'
 
 // Mark Duplicates (+QC)
-include { MARKDUPLICATES                                       } from '../subworkflows/nf-core/gatk4/markduplicates/main'
+include { MARKDUPLICATES                                 } from '../subworkflows/nf-core/gatk4/markduplicates/main'
 
 // Mark Duplicates SPARK (+QC)
-include { MARKDUPLICATES_SPARK                                 } from '../subworkflows/nf-core/gatk4/markduplicates_spark/main'
-
-// Convert to CRAM (+QC)
-include { BAM_TO_CRAM                                          } from '../subworkflows/nf-core/bam_to_cram'
+include { MARKDUPLICATES_SPARK                           } from '../subworkflows/nf-core/gatk4/markduplicates_spark/main'
 
 // QC on CRAM
-include { CRAM_QC                                              } from '../subworkflows/nf-core/cram_qc'
+include { CRAM_QC as CRAM_QC_NO_MARKDUPLICATES           } from '../subworkflows/nf-core/cram_qc'
+include { CRAM_QC as CRAM_QC_RECALIBRATION               } from '../subworkflows/nf-core/cram_qc'
 
 // Create recalibration tables
-include { PREPARE_RECALIBRATION                                } from '../subworkflows/nf-core/gatk4/prepare_recalibration/main'
+include { PREPARE_RECALIBRATION                          } from '../subworkflows/nf-core/gatk4/prepare_recalibration/main'
 
 // Create recalibration tables SPARK
-include { PREPARE_RECALIBRATION_SPARK                          } from '../subworkflows/nf-core/gatk4/prepare_recalibration_spark/main'
+include { PREPARE_RECALIBRATION_SPARK                    } from '../subworkflows/nf-core/gatk4/prepare_recalibration_spark/main'
 
 // Create recalibrated cram files to use for variant calling (+QC)
-include { RECALIBRATE                                          } from '../subworkflows/nf-core/gatk4/recalibrate/main'
+include { RECALIBRATE                                    } from '../subworkflows/nf-core/gatk4/recalibrate/main'
 
 // Create recalibrated cram files to use for variant calling (+QC)
-include { RECALIBRATE_SPARK                                    } from '../subworkflows/nf-core/gatk4/recalibrate_spark/main'
+include { RECALIBRATE_SPARK                              } from '../subworkflows/nf-core/gatk4/recalibrate_spark/main'
 
 // Variant calling on a single normal sample
-include { GERMLINE_VARIANT_CALLING                             } from '../subworkflows/local/germline_variant_calling'
+include { GERMLINE_VARIANT_CALLING                       } from '../subworkflows/local/germline_variant_calling'
 
 // Variant calling on a single tumor sample
-include { TUMOR_ONLY_VARIANT_CALLING                           } from '../subworkflows/local/tumor_variant_calling'
+include { TUMOR_ONLY_VARIANT_CALLING                     } from '../subworkflows/local/tumor_variant_calling'
 
 // Variant calling on tumor/normal pair
-include { PAIR_VARIANT_CALLING                                 } from '../subworkflows/local/pair_variant_calling'
+include { PAIR_VARIANT_CALLING                           } from '../subworkflows/local/pair_variant_calling'
 
-include { VCF_QC                                               } from '../subworkflows/nf-core/vcf_qc'
+include { VCF_QC                                         } from '../subworkflows/nf-core/vcf_qc'
 
 // Annotation
-include { ANNOTATE                                             } from '../subworkflows/local/annotate'
+include { ANNOTATE                                       } from '../subworkflows/local/annotate'
 
 // REPORTING VERSIONS OF SOFTWARE USED
 include { CUSTOM_DUMPSOFTWAREVERSIONS                          } from '../modules/nf-core/custom/dumpsoftwareversions/main'
@@ -518,16 +516,17 @@ workflow SAREK {
 
         // gatk4 markduplicates can handle multiple bams as input, so no need to merge/index here
         // Except if and only if skipping markduplicates or saving mapped bams
-        if (params.save_bam_mapped || (params.skip_tools && params.skip_tools.split(',').contains('markduplicates'))) {
+        if (params.save_mapped || (params.skip_tools && params.skip_tools.split(',').contains('markduplicates'))) {
 
             // bams are merged (when multiple lanes from the same sample), indexed and then converted to cram
             MERGE_INDEX_BAM(ch_bam_mapped)
 
-            // Create CSV to restart from this step
-            MAPPING_CSV(MERGE_INDEX_BAM.out.bam_bai)
+            BAMTOCRAM_MAPPING(MERGE_INDEX_BAM.out.bam_bai, fasta, fasta_fai)
+            params.save_output_as_bam ? MAPPING_CSV(MERGE_INDEX_BAM.out.bam_bai) : MAPPING_CSV(BAMTOCRAM_MAPPING.out.alignment_index)
 
             // Gather used softwares versions
             ch_versions = ch_versions.mix(MERGE_INDEX_BAM.out.versions)
+            ch_versions = ch_versions.mix(BAMTOCRAM_MAPPING.out.versions)
         }
 
         // Gather used softwares versions
@@ -537,9 +536,7 @@ workflow SAREK {
 
     if (params.step in ['mapping', 'markduplicates']) {
 
-        // 1. SAMTOOLS_CRAMTOBAM ( to speed up computation)
-        // 2. Need fasta for cram compression (maybe just using --fasta, because this reference will be used elsewhere)
-        ch_cram_no_markduplicates_restart = Channel.empty()
+        //ch_cram_no_markduplicates_restart = Channel.empty()
         ch_cram_markduplicates_no_spark   = Channel.empty()
         ch_cram_markduplicates_spark      = Channel.empty()
 
@@ -547,56 +544,49 @@ workflow SAREK {
 
         // ch_bam_for_markduplicates will countain bam mapped with GATK4_MAPPING when step is mapping
         // Or bams that are specified in the samplesheet.csv when step is prepare_recalibration
-        // ch_bam_for_markduplicates = params.step == 'mapping'? ch_bam_mapped : ch_input_sample.map{ meta, input, index -> [meta, input] }
+        ch_for_markduplicates = params.step == 'mapping'? ch_bam_mapped : ch_input_sample.map{ meta, input, index -> [meta, input] }
 
-        ch_bam_for_markduplicates = Channel.empty()
-        ch_input_cram_indexed     = Channel.empty()
+        // if no MD is done, then run QC on mapped & converted CRAM files
+        // or the input BAM (+converted) or CRAM files
+        ch_cram_skip_markduplicates = Channel.empty()
 
-        if (params.step == 'mapping') ch_bam_for_markduplicates = ch_bam_mapped
+        if (params.step == 'mapping'){
+            if(params.skip_tools && params.skip_tools.split(',').contains('markduplicates')) ch_cram_skip_markduplicates = BAMTOCRAM_MAPPING.out.alignment_index
+        }
         else {
             ch_input_sample.branch{
                 bam:  it[0].data_type == "bam"
                 cram: it[0].data_type == "cram"
             }.set{ch_convert}
 
-            ch_bam_for_markduplicates = ch_convert.bam.map{ meta, bam, bai -> [meta, bam]}
-
-            //In case Markduplicates is run convert CRAM files to BAM, because the tool only runs on BAM files. MD_SPARK does run on CRAM but is a lot slower
-            if (!(params.skip_tools && params.skip_tools.split(',').contains('markduplicates'))){
-
-                SAMTOOLS_CRAMTOBAM(ch_convert.cram, fasta, fasta_fai)
-                ch_versions = ch_versions.mix(SAMTOOLS_CRAMTOBAM.out.versions)
-
-                ch_bam_for_markduplicates = ch_bam_for_markduplicates.mix(SAMTOOLS_CRAMTOBAM.out.alignment_index.map{ meta, bam, bai -> [meta, bam]})
-            } else {
-                ch_input_cram_indexed     = ch_convert.cram
+            // Convert any input BAMs to CRAM
+            BAMTOCRAM_INPUT(ch_convert.bam, fasta, fasta_fai)
+            if(params.skip_tools && params.skip_tools.split(',').contains('markduplicates')){
+                ch_cram_skip_markduplicates = Channel.empty().mix(ch_convert.cram, BAMTOCRAM_INPUT.out.alignment_index)
             }
+
+            // Should it be possible to restart from converted crams?
+            //ch_cram_no_markduplicates_restart = ch_convert.cram
+
+            ch_versions = ch_versions.mix(BAMTOCRAM_INPUT.out.versions)
         }
 
         if (params.skip_tools && params.skip_tools.split(',').contains('markduplicates')) {
 
-            // ch_bam_indexed will countain bam mapped with GATK4_MAPPING when step is mapping
-            // which are then merged and indexed
-            // Or bams that are specified in the samplesheet.csv when step is prepare_recalibration
-            ch_bam_indexed = params.step == 'mapping' ? MERGE_INDEX_BAM.out.bam_bai : ch_convert.bam
-
-            BAM_TO_CRAM(
-                ch_bam_indexed,
-                ch_input_cram_indexed,
+            CRAM_QC_NO_MARKDUPLICATES(
+                ch_cram_skip_markduplicates,
                 fasta,
                 fasta_fai,
                 intervals_for_preprocessing)
 
-            ch_cram_no_markduplicates_restart = BAM_TO_CRAM.out.cram_converted
-
             // Gather QC reports
-            ch_reports  = ch_reports.mix(BAM_TO_CRAM.out.qc.collect{meta, report -> report})
+            ch_reports  = ch_reports.mix(CRAM_QC_NO_MARKDUPLICATES.out.qc.collect{meta, report -> report})
 
             // Gather used softwares versions
-            ch_versions = ch_versions.mix(BAM_TO_CRAM.out.versions)
+            ch_versions = ch_versions.mix(CRAM_QC_NO_MARKDUPLICATES.out.versions)
         } else if (params.use_gatk_spark && params.use_gatk_spark.contains('markduplicates')) {
             MARKDUPLICATES_SPARK(
-                ch_bam_for_markduplicates,
+                ch_for_markduplicates,
                 dict,
                 fasta,
                 fasta_fai,
@@ -610,7 +600,7 @@ workflow SAREK {
             ch_versions = ch_versions.mix(MARKDUPLICATES_SPARK.out.versions)
         } else {
             MARKDUPLICATES(
-                ch_bam_for_markduplicates,
+                ch_for_markduplicates,
                 fasta,
                 fasta_fai,
                 intervals_for_preprocessing)
@@ -627,11 +617,10 @@ workflow SAREK {
         // ch_md_cram_for_restart contains either:
         // - crams from markduplicates
         // - crams from markduplicates_spark
-        // - crams converted from bam mapped when skipping markduplicates
+        // - crams from input step markduplicates --> from the converted ones only?
         ch_md_cram_for_restart = Channel.empty().mix(
             ch_cram_markduplicates_no_spark,
-            ch_cram_markduplicates_spark,
-            ch_cram_no_markduplicates_restart).map{ meta, cram, crai ->
+            ch_cram_markduplicates_spark).map{ meta, cram, crai ->
                         //Make sure correct data types are carried through
                         [[
                             data_type:  "cram",
@@ -644,9 +633,14 @@ workflow SAREK {
                         cram, crai]
                     }
 
+        //If params.save_output_as_bam, then convert CRAM files to BAM
+        CRAMTOBAM_MARKDUPLICATES(ch_md_cram_for_restart, fasta, fasta_fai)
+        ch_versions = ch_versions.mix(CRAMTOBAM_MARKDUPLICATES.out.versions)
+
         // CSV should be written for the file actually out, either CRAM or BAM
         // Create CSV to restart from this step
-        if (!(params.skip_tools && params.skip_tools.split(',').contains('markduplicates'))) MARKDUPLICATES_CSV(ch_md_cram_for_restart)
+        params.save_output_as_bam ? MARKDUPLICATES_CSV(CRAMTOBAM_MARKDUPLICATES.out.alignment_index) : MARKDUPLICATES_CSV(ch_md_cram_for_restart)
+
     }
 
     if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration']) {
@@ -661,12 +655,22 @@ workflow SAREK {
             }.set{ch_convert}
 
             //BAM files first must be converted to CRAM files since from this step on we base everything on CRAM format
-            SAMTOOLS_BAMTOCRAM(ch_convert.bam, fasta, fasta_fai)
-            ch_versions = ch_versions.mix(SAMTOOLS_BAMTOCRAM.out.versions)
+            BAMTOCRAM_INPUT(ch_convert.bam, fasta, fasta_fai)
+            ch_versions = ch_versions.mix(BAMTOCRAM_INPUT.out.versions)
 
-            ch_cram_for_prepare_recalibration = Channel.empty().mix(SAMTOOLS_BAMTOCRAM.out.alignment_index, ch_convert.cram)
+            ch_cram_from_bam = BAMTOCRAM_INPUT.out.alignment_index.map{meta, cram, crai ->
+                                                        [
+                                                            [data_type:     "cram",
+                                                            id:             meta.sample,
+                                                            patient:        meta.patient,
+                                                            sample:         meta.sample,
+                                                            sex:            meta.sex,
+                                                            status:         meta.status,],
+                                                            cram, crai]
+                                                    }
 
-            ch_md_cram_for_restart = SAMTOOLS_BAMTOCRAM.out.alignment_index
+            ch_cram_for_prepare_recalibration = Channel.empty().mix(ch_cram_from_bam, ch_convert.cram)
+            ch_md_cram_for_restart = ch_cram_from_bam
 
         } else {
 
@@ -676,7 +680,18 @@ workflow SAREK {
             // - crams converted from bam mapped when skipping markduplicates
             // - input cram files, when start from step markduplicates
             //ch_md_cram_for_restart.view() //contains md.cram.crai
-            ch_cram_for_prepare_recalibration = Channel.empty().mix(ch_md_cram_for_restart, ch_input_cram_indexed)
+            ch_cram_for_prepare_recalibration = Channel.empty().mix(ch_md_cram_for_restart, ch_cram_skip_markduplicates ).map{ meta, cram, crai ->
+                                                        //Make sure correct data types are carried through
+                                                        [[
+                                                            data_type:  "cram",
+                                                            id:         meta.id,
+                                                            patient:    meta.patient,
+                                                            sample:     meta.sample,
+                                                            sex:        meta.sex,
+                                                            status:     meta.status
+                                                            ],
+                                                        cram, crai]
+                                                    }
         }
 
         // STEP 3: Create recalibration tables
@@ -748,11 +763,11 @@ workflow SAREK {
             ch_bam_bam   = ch_convert.bam.map{ meta, bam, bai, table -> [meta, bam, bai]}
 
             //BAM files first must be converted to CRAM files since from this step on we base everything on CRAM format
-            SAMTOOLS_BAMTOCRAM(ch_bam_bam, fasta, fasta_fai)
-            ch_versions = ch_versions.mix(SAMTOOLS_BAMTOCRAM.out.versions)
+            BAMTOCRAM_INPUT(ch_bam_bam, fasta, fasta_fai)
+            ch_versions = ch_versions.mix(BAMTOCRAM_INPUT.out.versions)
 
             ch_cram_applybqsr = Channel.empty().mix(
-                                    SAMTOOLS_BAMTOCRAM.out.alignment_index.join(ch_bam_table),
+                                    BAMTOCRAM_INPUT.out.alignment_index.join(ch_bam_table),
                                     ch_convert.cram) // Join together converted cram with input tables
         }
 
@@ -788,29 +803,30 @@ workflow SAREK {
                 // Gather used softwares versions
                 ch_versions = ch_versions.mix(RECALIBRATE.out.versions)
             }
+
             ch_cram_variant_calling = Channel.empty().mix(
                 ch_cram_variant_calling_no_spark,
                 ch_cram_variant_calling_spark)
 
-            CRAM_QC(
+            CRAM_QC_RECALIBRATION(
                 ch_cram_variant_calling,
                 fasta,
                 fasta_fai,
                 intervals_for_preprocessing)
 
             // Gather QC reports
-            ch_reports  = ch_reports.mix(CRAM_QC.out.qc.collect{meta, report -> report})
+            ch_reports  = ch_reports.mix(CRAM_QC_RECALIBRATION.out.qc.collect{meta, report -> report})
 
             // Gather used softwares versions
-            ch_versions = ch_versions.mix(CRAM_QC.out.versions)
+            ch_versions = ch_versions.mix(CRAM_QC_RECALIBRATION.out.versions)
 
             //If params.save_output_as_bam, then convert CRAM files to BAM
-            SAMTOOLS_CRAMTOBAM_RECAL(ch_cram_variant_calling, fasta, fasta_fai)
-            ch_versions = ch_versions.mix(SAMTOOLS_CRAMTOBAM_RECAL.out.versions)
+            CRAMTOBAM_RECAL(ch_cram_variant_calling, fasta, fasta_fai)
+            ch_versions = ch_versions.mix(CRAMTOBAM_RECAL.out.versions)
 
             // CSV should be written for the file actually out out, either CRAM or BAM
             csv_recalibration = Channel.empty()
-            csv_recalibration = params.save_output_as_bam ?  SAMTOOLS_CRAMTOBAM_RECAL.out.alignment_index : ch_cram_variant_calling
+            csv_recalibration = params.save_output_as_bam ?  CRAMTOBAM_RECAL.out.alignment_index : ch_cram_variant_calling
 
             // Create CSV to restart from this step
             RECALIBRATE_CSV(csv_recalibration)
@@ -820,7 +836,7 @@ workflow SAREK {
             // ch_cram_variant_calling contains either:
             // - input bams converted to crams, if started from step recal + skip BQSR
             // - input crams if started from step recal + skip BQSR
-            ch_cram_variant_calling = Channel.empty().mix(SAMTOOLS_BAMTOCRAM.out.alignment_index,
+            ch_cram_variant_calling = Channel.empty().mix(BAMTOCRAM_INPUT.out.alignment_index,
                                                         ch_convert.cram.map{ meta, cram, crai, table -> [meta, cram, crai]})
         } else {
             // ch_cram_variant_calling contains either:
@@ -837,10 +853,10 @@ workflow SAREK {
             }.set{ch_convert}
 
         //BAM files first must be converted to CRAM files since from this step on we base everything on CRAM format
-        SAMTOOLS_BAMTOCRAM_VARIANTCALLING(ch_convert.bam, fasta, fasta_fai)
-        ch_versions = ch_versions.mix(SAMTOOLS_BAMTOCRAM_VARIANTCALLING.out.versions)
+        BAMTOCRAM_INPUT(ch_convert.bam, fasta, fasta_fai)
+        ch_versions = ch_versions.mix(BAMTOCRAM_INPUT.out.versions)
 
-        ch_cram_variant_calling = Channel.empty().mix(SAMTOOLS_BAMTOCRAM_VARIANTCALLING.out.alignment_index, ch_convert.cram)
+        ch_cram_variant_calling = Channel.empty().mix(BAMTOCRAM_INPUT.out.alignment_index, ch_convert.cram)
 
     }
 

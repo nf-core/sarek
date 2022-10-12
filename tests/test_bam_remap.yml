@@ -8,7 +8,7 @@
     - path: results/csv/markduplicates_no_table.csv
       md5sum: 2a2d3d4842befd4def39156463859ee3
     - path: results/csv/recalibrated.csv
-      md5sum: 42628ec994c16f565e5407b40a9c1ac3
+      md5sum: 2d29d9e53894dcce96a1b5beb6ef3312
     - path: results/multiqc
     - path: results/preprocessing/markduplicates/test/test.md.cram
     # binary changes md5sums on reruns.
@@ -21,7 +21,7 @@
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
     # binary changes md5sums on reruns.
     - path: results/reports/fastqc/test-1
-    - path: results/reports/markduplicates/test/test.md.metrics
+    - path: results/reports/markduplicates/test/test.md.cram.metrics
       contains: ["test	0	2820	2	2	0	828	0	0.293617	3807", "1.0	0.999986	1178	1178", "2.0	1.47674	800	800", "100.0	1.911145	0	0"]
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
       md5sum: 9cb9b181119256ed17a77dcf44d58285
@@ -47,3 +47,5 @@
       md5sum: d6634d51a009e3da43b2349e424b2d9f
     - path: results/reports/samtools/test/test.recal.cram.stats
       md5sum: 91915547ff9e654c106a42e5edfd9405
+    - path: results/preprocessing/mapped/
+      should_exist: false

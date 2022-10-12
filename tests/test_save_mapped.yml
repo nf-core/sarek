@@ -1,22 +1,22 @@
-- name: Run save_bam_mapped
-  command: nextflow run main.nf -profile test --save_bam_mapped
+- name: Run save_mapped
+  command: nextflow run main.nf -profile test --save_mapped
   tags:
     - preprocessing
-    - save_bam_mapped
+    - save_mapped
   files:
     - path: results/csv/mapped.csv
-      md5sum: b54780e0c3b5fd3b27e7e37bb535b9fb
+      md5sum: ae97b7394ab53a6b60921ab06c713cd9
     - path: results/csv/markduplicates.csv
       md5sum: 0d6120bb99e92f6810343270711ca53e
     - path: results/csv/markduplicates_no_table.csv
       md5sum: 2a2d3d4842befd4def39156463859ee3
     - path: results/csv/recalibrated.csv
-      md5sum: 42628ec994c16f565e5407b40a9c1ac3
+      md5sum: 2d29d9e53894dcce96a1b5beb6ef3312
     - path: results/multiqc
-    - path: results/preprocessing/mapped/test/test.bam
-      md5sum: 074181cafbe49e829a59a0e164ba7cfe
-    - path: results/preprocessing/mapped/test/test.bam.bai
-      md5sum: af47d3ab6aa005c35404041c2899ea65
+    - path: results/preprocessing/mapped/test/test.sorted.cram
+    # binary changes md5sums on reruns.
+    - path: results/preprocessing/mapped/test/test.sorted.cram.crai
+    # binary changes md5sums on reruns.
     - path: results/preprocessing/markduplicates/test/test.md.cram
     # binary changes md5sums on reruns.
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
@@ -28,7 +28,7 @@
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
     # binary changes md5sums on reruns.
     - path: results/reports/fastqc/test-test_L1
-    - path: results/reports/markduplicates/test/test.md.metrics
+    - path: results/reports/markduplicates/test/test.md.cram.metrics
       contains: ["test	8547	767	84	523391	3882	0	0	0.385081", "1.0	767	767"]
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
       md5sum: 76fa71922a3f748e507c2364c531dfcb

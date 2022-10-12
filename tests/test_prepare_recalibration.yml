@@ -6,13 +6,13 @@
     - preprocessing
   files:
     - path: results/csv/markduplicates.csv
-      md5sum: 8e9408ef8d4f9e6e00e531268eebd42a
+      md5sum: 90e2ab85d8af642d6548af448a9d4226
     - path: results/csv/recalibrated.csv
-      md5sum: 338715c5e3441d1070c63536fba7244a
+      md5sum: 1888a924bc70bd80165a96ad641e22d6
     - path: results/multiqc
-    - path: results/preprocessing/markduplicates/test/test.md.cram
+    - path: results/preprocessing/converted/test/test.converted.cram
     # binary changes md5sums on reruns.
-    - path: results/preprocessing/markduplicates/test/test.md.cram.crai
+    - path: results/preprocessing/converted/test/test.converted.cram.crai
     # binary changes md5sums on reruns.
     - path: results/preprocessing/recal_table/test/test.recal.table
       md5sum: 35d89a3811aa31711fc9815b6b80e6ec
@@ -32,6 +32,10 @@
       md5sum: b3716e5cd1744610e69c29bd4ffad259
     - path: results/reports/samtools/test/test.recal.cram.stats
       md5sum: 71af990f7acad8bf24d37e88c4adcded
+    - path: results/preprocessing/mapped/
+      should_exist: false
+    - path: results/preprocessing/markduplicates/
+      should_exist: false
 - name: Run prepare_recalibration starting from cram
   command: nextflow run main.nf -profile test,prepare_recalibration_cram
   tags:
@@ -40,7 +44,7 @@
     - preprocessing
   files:
     - path: results/csv/recalibrated.csv
-      md5sum: 338715c5e3441d1070c63536fba7244a
+      md5sum: 1888a924bc70bd80165a96ad641e22d6
     - path: results/multiqc
     - path: results/preprocessing/recal_table/test/test.recal.table
       md5sum: 35d89a3811aa31711fc9815b6b80e6ec
@@ -60,6 +64,10 @@
       md5sum: b3716e5cd1744610e69c29bd4ffad259
     - path: results/reports/samtools/test/test.recal.cram.stats
       md5sum: 71af990f7acad8bf24d37e88c4adcded
+    - path: results/preprocessing/mapped/
+      should_exist: false
+    - path: results/preprocessing/markduplicates/
+      should_exist: false
 - name: Run prepare_recalibration starting from bam and skip baserecalibration
   command: nextflow run main.nf -profile test,prepare_recalibration_bam,skip_bqsr --tools strelka
   tags:
@@ -70,9 +78,9 @@
     - path: results/csv/variantcalled.csv
       md5sum: 4d0effd3d8dc2b814230a189e7ca9dba
     - path: results/multiqc
-    - path: results/preprocessing/markduplicates/test/test.md.cram
+    - path: results/preprocessing/converted/test/test.converted.cram
     # binary changes md5sums on reruns.
-    - path: results/preprocessing/markduplicates/test/test.md.cram.crai
+    - path: results/preprocessing/converted/test/test.converted.cram.crai
     # binary changes md5sums on reruns.
     - path: results/reports/bcftools/strelka/test/test.strelka.variants.bcftools_stats.txt
       md5sum: 0741b5dd5e6c5428bd5d4f1b7a923dd5
@@ -81,7 +89,7 @@
     - path: results/reports/vcftools/strelka/test/test.strelka.variants.TsTv.count
       md5sum: ee7dafc8d941b8502a04a63dc3126fff
     - path: results/reports/vcftools/strelka/test/test.strelka.variants.TsTv.qual
-      md5sum: 55db15738ecd09d5c97b2db3e398795c
+      md5sum: 9fe11e894f7567eb96b43c48593741a7
     - path: results/variant_calling/strelka/test/test.strelka.genome.vcf.gz
     # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/test/test.strelka.genome.vcf.gz.tbi
@@ -101,6 +109,10 @@
     - path: results/reports/mosdepth
       should_exist: false
     - path: results/reports/samtools_stats
+      should_exist: false
+    - path: results/preprocessing/mapped/
+      should_exist: false
+    - path: results/preprocessing/markduplicates/
       should_exist: false
 - name: Run prepare_recalibration starting from cram and skip baserecalibration
   command: nextflow run main.nf -profile test,prepare_recalibration_cram,skip_bqsr --tools strelka
@@ -149,4 +161,8 @@
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
       should_exist: false
     - path: results/reports/samtools/test/test.recal.cram.stats
+      should_exist: false
+    - path: results/preprocessing/mapped/
+      should_exist: false
+    - path: results/preprocessing/markduplicates/
       should_exist: false

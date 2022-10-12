@@ -375,7 +375,7 @@
     - path: results/reports/bcftools/freebayes/test/test.freebayes.bcftools_stats.txt
       md5sum: 16c7673085520b66bd47f59fbf8a7e0e
     - path: results/reports/fastqc/test-test_L1
-    - path: results/reports/markduplicates/test/test.md.metrics
+    - path: results/reports/markduplicates/test/test.md.cram.metrics
       contains: ["test	8547	767	84	523391	3882	0	0	0.385081", "1.0	767	767"]
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
       md5sum: 5a0679057c530e5945c9c5a3a17312dc
@@ -434,7 +434,7 @@
     - path: results/csv/markduplicates_no_table.csv
       md5sum: 2a2d3d4842befd4def39156463859ee3
     - path: results/csv/recalibrated.csv
-      md5sum: 42628ec994c16f565e5407b40a9c1ac3
+      md5sum: 2d29d9e53894dcce96a1b5beb6ef3312
     - path: results/csv/variantcalled.csv
       md5sum: 0cc6a67fedb2ef9ce97e463d310f9f30
     - path: results/multiqc
@@ -457,7 +457,7 @@
     - path: results/reports/bcftools/freebayes/test/test.freebayes.bcftools_stats.txt
       md5sum: f66375a00d692d67df46c129147008b2
     - path: results/reports/fastqc/test-test_L1
-    - path: results/reports/markduplicates/test/test.md.metrics
+    - path: results/reports/markduplicates/test/test.md.cram.metrics
       contains: ["test	8547	767	84	523391	3882	0	0	0.385081", "1.0	767	767"]
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
       md5sum: 76fa71922a3f748e507c2364c531dfcb
@@ -536,9 +536,9 @@
     - path: results/reports/bcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.bcftools_stats.txt
       md5sum: d857d723152dedf85ae0979d65ca6097
     - path: results/reports/fastqc/test-test_L1
-    - path: results/reports/markduplicates/test/test.md.metrics
+    - path: results/reports/markduplicates/test/test.md.cram.metrics
       contains: ["test	8547	767	84	523391	3882	0	0	0.385081", "1.0	767	767"]
-    - path: results/reports/markduplicates/test2/test2.md.metrics
+    - path: results/reports/markduplicates/test2/test2.md.cram.metrics
       contains: ["test2	10103	880	35	523579	4837	2	0	0.408076	193306", "1.0	1	876	876", "100.0	80.515303	0	0"]
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
       md5sum: 5a0679057c530e5945c9c5a3a17312dc
@@ -640,7 +640,7 @@
     - path: results/csv/markduplicates_no_table.csv
       md5sum: 617574c9b607e5daaf4ad56d48982247
     - path: results/csv/recalibrated.csv
-      md5sum: 16ded46530d8896cecd53cf8c12ea908
+      md5sum: 008dff17e2a0d96ef9c1cae12fcab6ab
     - path: results/csv/variantcalled.csv
       md5sum: b31f56256a1cfa839a2ea7f7ba6c1c45
     - path: results/multiqc
@@ -675,9 +675,9 @@
     - path: results/reports/bcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.bcftools_stats.txt
       md5sum: e7e8a9a5a3dcf4534a5edd32aaea049e
     - path: results/reports/fastqc/test-test_L1
-    - path: results/reports/markduplicates/test/test.md.metrics
+    - path: results/reports/markduplicates/test/test.md.cram.metrics
       contains: ["test	8547	767	84	523391	3882	0	0	0.385081", "1.0	767	767"]
-    - path: results/reports/markduplicates/test2/test2.md.metrics
+    - path: results/reports/markduplicates/test2/test2.md.cram.metrics
       contains: ["test2	10103	880	35	523579	4837	2	0	0.408076	193306", "1.0	1	876	876", "100.0	80.515303	0	0"]
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
       md5sum: 5a0679057c530e5945c9c5a3a17312dc
@@ -773,10 +773,14 @@
     - path: results/csv/variantcalled.csv
       md5sum: d7d86e82902a4f57876b2414a4f812a4
     - path: results/multiqc
+    - path: results/preprocessing/converted/test/test.converted.cram
+    # binary changes md5sums on reruns.
+    - path: results/preprocessing/converted/test/test.converted.cram.crai
+    # binary changes md5sums on reruns.
     - path: results/preprocessing/recalibrated/test/test.recal.cram
-    # binary changes md5sums on reruns.
+      should_exist: false
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
-    # binary changes md5sums on reruns.
+      should_exist: false
     - path: results/reports/bcftools/haplotypecaller/test/test.haplotypecaller.filtered.bcftools_stats.txt
       md5sum: f9cc3809106a42601eafd3b09900750a
     - path: results/reports/vcftools/haplotypecaller/test/test.haplotypecaller.filtered.FILTER.summary
@@ -812,10 +816,14 @@
       md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/no_intervals.bed.gz.tbi
       md5sum: f3dac01ea66b95fe477446fde2d31489
+    - path: results/preprocessing/converted/test/test.converted.cram
+    # binary changes md5sums on reruns.
+    - path: results/preprocessing/converted/test/test.converted.cram.crai
+    # binary changes md5sums on reruns.
     - path: results/preprocessing/recalibrated/test/test.recal.cram
-    # binary changes md5sums on reruns.
+      should_exist: false
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
-    # binary changes md5sums on reruns.
+      should_exist: false
     - path: results/reports/bcftools/haplotypecaller/test/test.haplotypecaller.filtered.bcftools_stats.txt
       md5sum: f9cc3809106a42601eafd3b09900750a
     - path: results/reports/vcftools/haplotypecaller/test/test.haplotypecaller.filtered.FILTER.summary
@@ -845,9 +853,9 @@
       md5sum: d2dffdbd2b4f1f26a06637592d24dab3
     - path: results/multiqc
     - path: results/preprocessing/recalibrated/test/test.recal.cram
-    # binary changes md5sums on reruns.
+      should_exist: false
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
-    # binary changes md5sums on reruns.
+      should_exist: false
     - path: results/reports/bcftools/haplotypecaller/joint_variant_calling/joint_germline.bcftools_stats.txt
       md5sum: f91f185319e00108870911e0ce1a7ed6
     - path: results/reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline.FILTER.summary

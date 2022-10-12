@@ -9,11 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- [#735](https://github.com/nf-core/sarek/pull/735) - GATK Markduplicates now natively supports CRAM output
 - [#774](https://github.com/nf-core/sarek/pull/774) - Add logo for Danish National Genome Center
 - [#783](https://github.com/nf-core/sarek/pull/783) - Add paths for chr length used by controlfreec to GRCh38 config
 
 ### Changed
 
+- [#735](https://github.com/nf-core/sarek/pull/735) - `--save_mapped` now saves mapping output in CRAM format
 - [#762](https://github.com/nf-core/sarek/pull/762) - Back to dev
 - [#762](https://github.com/nf-core/sarek/pull/762) - Update deepvariant module
 - [#773](https://github.com/nf-core/sarek/pull/773) - Sync `TEMPLATE` with `tools` `2.6`
