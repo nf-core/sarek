@@ -1,0 +1,58 @@
+name: "fastq_align_dna"
+description: Align fastq files to a reference genome
+keywords:
+  - fastq
+  - bam
+  - sort
+  - bwamem
+  - bwamem2
+  - dragmap
+  - snapaligner
+modules:
+  - bowtie2/align
+  - bwa/mem
+  - bwamem2/mem
+  - dragmap/align
+  - snapaligner/align
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test' ]
+  - reads:
+      type: file
+      description: |
+        List of input FastQ files of size 1 and 2 for single-end and paired-end data,
+        respectively.
+  - index:
+      type: file
+      description: Aligner genome index files
+      pattern: "Directory containing aligner index"
+  - sort_bam:
+      type: boolean
+      description: sort output
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test' ]
+  - bam:
+      type: file
+      description: BAM file
+      pattern: "*.bam"
+  - bai:
+      type: file
+      description: BAM index (currently only for snapaligner)
+      pattern: "*.bai"
+  - report:
+      type: file
+      description: Alignment report (currently only for dragmap)
+      pattern: "*.txt"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@matthdsm"

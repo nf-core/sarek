@@ -1,0 +1,62 @@
+name: bowtie2_align
+description: Align reads to a reference genome using bowtie2
+keywords:
+  - align
+  - map
+  - fasta
+  - fastq
+  - genome
+  - reference
+tools:
+  - bowtie2:
+      description: |
+        Bowtie 2 is an ultrafast and memory-efficient tool for aligning
+        sequencing reads to long reference sequences.
+      homepage: http://bowtie-bio.sourceforge.net/bowtie2/index.shtml
+      documentation: http://bowtie-bio.sourceforge.net/bowtie2/manual.shtml
+      doi: 10.1038/nmeth.1923
+      licence: ["GPL-3.0-or-later"]
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - reads:
+      type: file
+      description: |
+        List of input FastQ files of size 1 and 2 for single-end and paired-end data,
+        respectively.
+  - index:
+      type: file
+      description: Bowtie2 genome index files
+      pattern: "*.ebwt"
+  - save_unaligned:
+      type: boolean
+      description: |
+        Save reads that do not map to the reference (true) or discard them (false)
+        (default: false)
+  - sort_bam:
+      type: boolean
+      description: use samtools sort (true) or samtools view (false)
+      pattern: "true or false"
+output:
+  - bam:
+      type: file
+      description: Output BAM file containing read alignments
+      pattern: "*.{bam}"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+  - fastq:
+      type: file
+      description: Unaligned FastQ files
+      pattern: "*.fastq.gz"
+  - log:
+      type: file
+      description: Aligment log
+      pattern: "*.log"
+authors:
+  - "@joseespinosa"
+  - "@drpatelh"

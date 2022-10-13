@@ -1,0 +1,51 @@
+name: "snapaligner_align"
+description: Performs fastq alignment to a fasta reference using SNAP
+keywords:
+  - alignment
+  - map
+  - fastq
+  - bam
+  - sam
+tools:
+  - "snapaligner":
+      description: "Scalable Nucleotide Alignment Program -- a fast and accurate read aligner for high-throughput sequencing data"
+      homepage: "http://snap.cs.berkeley.edu"
+      documentation: "https://1drv.ms/b/s!AhuEg_0yZD86hcpblUt-muHKYsG8fA?e=R8ogug"
+      tool_dev_url: "https://github.com/amplab/snap"
+      doi: "10.1101/2021.11.23.469039"
+      licence: "['Apache v2']"
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - reads:
+      type: file
+      description: List of input fastq files of size 2 for paired fastq or 1 for bam or single fastq
+      pattern: "*.{fastq.gz,fq.gz,fastq,fq,bam}"
+  - index:
+      type: file
+      description: List of SNAP genome index files
+      pattern: "{Genome,GenomeIndex,GenomeIndexHash,OverflowTable}"
+
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+  - bam:
+      type: file
+      description: Aligned BAM file
+      pattern: "*.{bam}"
+  - bai:
+      type: file
+      description: Optional aligned BAM file index
+      pattern: "*.{bai}"
+authors:
+  - "@matthdsm"
