@@ -112,7 +112,7 @@ workflow PREPARE_GENOME {
 
     emit:
         bwa                              = BWAMEM1_INDEX.out.index                                             // path: bwa/*
-        bwamem2                          = BWAMEM2_INDEX.out.index.map{ meta, index -> [index] }.collect()     // path: bwamem2/*
+        bwamem2                          = BWAMEM2_INDEX.out.index.collect()                                   // path: bwamem2/*
         hashtable                        = DRAGMAP_HASHTABLE.out.hashmap                                       // path: dragmap/*
         dbsnp_tbi                        = TABIX_DBSNP.out.tbi.map{ meta, tbi -> [tbi] }.collect()             // path: dbsnb.vcf.gz.tbi
         dict                             = GATK4_CREATESEQUENCEDICTIONARY.out.dict                             // path: genome.fasta.dict

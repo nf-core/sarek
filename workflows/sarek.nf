@@ -229,7 +229,6 @@ include { FASTP                                          } from '../modules/nf-c
 include { FASTQ_CREATE_UMI_CONSENSUS_FGBIO               } from '../subworkflows/local/fastq_create_umi_consensus_fgbio/main'
 
 // Map input reads to reference genome
-include { FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP                } from '../subworkflows/local/fastq_align_bwamem_mem2_dragmap/main'
 include { FASTQ_ALIGN_DNA                                } from '../subworkflows/nf-core/fastq_align_dna/main'
 
 // Merge and index BAM files (optional)
