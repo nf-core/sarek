@@ -281,20 +281,12 @@
     - path: results/multiqc
     - path: results/reports/bcftools/deepvariant/sample1/sample1.deepvariant.bcftools_stats.txt
       md5sum: 433aa535e9ce72acddca7be36b12238b
-    - path: results/reports/bcftools/deepvariant/sample1/sample1.deepvariant.g.bcftools_stats.txt
-      md5sum: 7f656b2a03f6fbab42d5bc016b544a67
     - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.FILTER.summary
       md5sum: f97d30123c7e20c704e9a8a73170661e
     - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.TsTv.count
       md5sum: 1f546d259ddc493736507b35ee520dc4
     - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.TsTv.qual
       md5sum: 437d6a802b10f05fa1601166eb6b7d48
-    - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.g.FILTER.summary
-      md5sum: 09ef047ccc9c5864af5d2b86d0df22f7
-    - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.g.TsTv.count
-      md5sum: fa27f678965b7cba6a92efcd039f802a
-    - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.g.TsTv.qual
-      md5sum: bc68ae4e688e9fb772b457069e604883
     - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.g.vcf.gz
     # binary changes md5sums on reruns.
     - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.g.vcf.gz.tbi
@@ -322,20 +314,12 @@
       md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/reports/bcftools/deepvariant/sample1/sample1.deepvariant.bcftools_stats.txt
       md5sum: 0d8602284347cb5acf1c264a301f5093
-    - path: results/reports/bcftools/deepvariant/sample1/sample1.deepvariant.g.bcftools_stats.txt
-      md5sum: 0dd2cd3b648030656b9ef6f56000f431
     - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.FILTER.summary
       md5sum: cffb486232d067db80616c3129bf1322
     - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.TsTv.count
       md5sum: bbd541f33c490df06fee5feb2f6e2c7f
     - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.TsTv.qual
       md5sum: 037063e030edec5fb4e784b1f6c8954f
-    - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.g.FILTER.summary
-      md5sum: 4effd4d26fb75db3c5842be258b8cc8f
-    - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.g.TsTv.count
-      md5sum: fa27f678965b7cba6a92efcd039f802a
-    - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.g.TsTv.qual
-      md5sum: bc68ae4e688e9fb772b457069e604883
     - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.g.vcf.gz
     # binary changes md5sums on reruns.
     - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.g.vcf.gz.tbi
@@ -534,7 +518,7 @@
     - path: results/reports/bcftools/freebayes/test/test.freebayes.bcftools_stats.txt
       md5sum: 16c7673085520b66bd47f59fbf8a7e0e
     - path: results/reports/bcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.bcftools_stats.txt
-      md5sum: d857d723152dedf85ae0979d65ca6097
+      md5sum: 001709e5eeca385908e31ba370f53381
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.cram.metrics
       contains: ["test	8547	767	84	523391	3882	0	0	0.385081", "1.0	767	767"]
@@ -611,9 +595,9 @@
     - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.qual
       contains: ["0	0	0	-nan	82	29	2.82759", "1.1	196	35	5.6	57	24	2.375", "3.16	205	38	5.39474	49	20	2.45"]
     - path: results/reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.FILTER.summary
-      md5sum: 84039d55edf0981d6b9b81252aff6741
+      md5sum: ac61b178a3e15efb861b34f16d80fb67
     - path: results/reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.TsTv.count
-      md5sum: 6c6038d43eb7fa766909b495979d120e
+      md5sum: d7c0e0afd59f87dc4685487c0d497575
     - path: results/reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.TsTv.qual
     # the text-based file test2_vs_test.freebayes.TsTv.qual seemingly changes content on reruns!
     - path: results/variant_calling/freebayes/test/test.freebayes.vcf.gz
@@ -673,7 +657,7 @@
     - path: results/reports/bcftools/freebayes/test/test.freebayes.bcftools_stats.txt
       md5sum: f66375a00d692d67df46c129147008b2
     - path: results/reports/bcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.bcftools_stats.txt
-      md5sum: e7e8a9a5a3dcf4534a5edd32aaea049e
+      md5sum: 41d9835772fa1326769c2dd94749cbea
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.cram.metrics
       contains: ["test	8547	767	84	523391	3882	0	0	0.385081", "1.0	767	767"]
@@ -726,9 +710,9 @@
     - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.qual
       contains: ["0	0	0	-nan	325	86	3.77907", "68.8262	377	88	4.28409	20	10	2", "321.335	393	96	4.09375	4	2	2"]
     - path: results/reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.FILTER.summary
-      md5sum: d2d717fef7c18ef9b40bbbc5c5bbf101
+      md5sum: 59e9d340b588537655020147e6d93e29
     - path: results/reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.TsTv.count
-      md5sum: e09dacc71bf72254e3aace1cc7c1e16d
+      md5sum: 61ad00bb8cd47592b0671fabe26cf8cd
     - path: results/reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.TsTv.qual
     # the text-based file test2_vs_test.freebayes.TsTv.qual seemingly changes content on reruns!
     - path: results/variant_calling/freebayes/test/test.freebayes.vcf.gz
@@ -1703,7 +1687,7 @@
     - path: results/variant_calling/tiddit/sample4_vs_sample3/sample4_vs_sample3.tiddit.normal.vcf.gz.tbi
       md5sum: 4cb176febbc8c26d717a6c6e67b9c905
     - path: results/variant_calling/tiddit/sample4_vs_sample3/sample4_vs_sample3.tiddit.ploidies.tab
-      md5sum: 0f01874e20df10ecc7418d4537c7aa82
+      md5sum: d65f8aa5bb136f77c23264640481f047
     - path: results/variant_calling/tiddit/sample4_vs_sample3/sample4_vs_sample3.tiddit.tumor.vcf.gz
       md5sum: 302cb980260b313573cf53067fd11120
     - path: results/variant_calling/tiddit/sample4_vs_sample3/sample4_vs_sample3.tiddit.tumor.vcf.gz.tbi
