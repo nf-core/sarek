@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#735](https://github.com/nf-core/sarek/pull/735) - GATK Markduplicates now natively supports CRAM output
 - [#774](https://github.com/nf-core/sarek/pull/774) - Add logo for Danish National Genome Center
 - [#783](https://github.com/nf-core/sarek/pull/783) - Add paths for chr length used by controlfreec to GRCh38 config
+- [#797](https://github.com/nf-core/sarek/pull/797) - Add subworkflow FASTQ_ALIGN_DNA
 
 ### Changed
 
@@ -38,6 +39,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Deprecated
 
 ### Removed
+
+- [#797](https://github.com/nf-core/sarek/pull/797) - `--aligner bwa-mem` is replaced by `--aligner bwamem`
+- [#797](https://github.com/nf-core/sarek/pull/797) - `--aligner bwa-mem2` is replaced by `--aligner bwamem2`
 
 ## [3.0.2](https://github.com/nf-core/sarek/releases/tag/3.0.2) - Lájtávrre
 
