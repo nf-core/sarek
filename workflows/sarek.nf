@@ -230,6 +230,7 @@ include { FASTQ_CREATE_UMI_CONSENSUS_FGBIO               } from '../subworkflows
 
 // Map input reads to reference genome
 include { FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP                } from '../subworkflows/local/fastq_align_bwamem_mem2_dragmap/main'
+include { FASTQ_ALIGN_DNA                                } from '../subworkflows/nf-core/fastq_align_dna/main'
 
 // Merge and index BAM files (optional)
 include { BAM_MERGE_INDEX_SAMTOOLS                       } from '../subworkflows/local/bam_merge_index_samtools/main'
@@ -490,10 +491,10 @@ workflow SAREK {
         }
 
         sort_bam = true
-        FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP(ch_reads_to_map, ch_map_index, sort_bam)
+        FASTQ_ALIGN_DNA(ch_reads_to_map, ch_map_index, params.aligner, sort_bam)
 
         // Grouping the bams from the same samples not to stall the workflow
-        ch_bam_mapped = FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP.out.bam.map{ meta, bam ->
+        ch_bam_mapped = FASTQ_ALIGN_DNA.out.bam.map{ meta, bam ->
             numLanes = meta.numLanes ?: 1
             size     = meta.size     ?: 1
 
@@ -535,7 +536,7 @@ workflow SAREK {
 
         // Gather used softwares versions
         ch_versions = ch_versions.mix(CONVERT_FASTQ_INPUT.out.versions)
-        ch_versions = ch_versions.mix(FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP.out.versions)
+        ch_versions = ch_versions.mix(FASTQ_ALIGN_DNA.out.versions)
     }
 
     if (params.step in ['mapping', 'markduplicates']) {
@@ -546,7 +547,7 @@ workflow SAREK {
 
         // STEP 2: markduplicates (+QC) + convert to CRAM
 
-        // ch_bam_for_markduplicates will countain bam mapped with FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP when step is mapping
+        // ch_bam_for_markduplicates will countain bam mapped with FASTQ_ALIGN_DNA when step is mapping
         // Or bams that are specified in the samplesheet.csv when step is prepare_recalibration
         ch_for_markduplicates = params.step == 'mapping'? ch_bam_mapped : ch_input_sample.map{ meta, input, index -> [meta, input] }
 
