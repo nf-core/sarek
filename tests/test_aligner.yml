@@ -1,8 +1,8 @@
-- name: Run bwa-mem2
-  command: nextflow run main.nf -profile test --aligner bwa-mem2 --save_reference
+- name: Run bwamem2
+  command: nextflow run main.nf -profile test --aligner bwamem2 --save_reference
   tags:
     - aligner
-    - bwa-mem2
+    - bwamem2
     - preprocessing
   files:
     - path: results/csv/markduplicates.csv
