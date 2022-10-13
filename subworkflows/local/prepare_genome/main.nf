@@ -45,8 +45,8 @@ workflow PREPARE_GENOME {
 
     ch_versions = Channel.empty()
 
-    BWAMEM1_INDEX(fasta)                                        // If aligner is bwa-mem
-    BWAMEM2_INDEX(fasta.map{ it -> [[id:it[0].baseName], it] }) // If aligner is bwa-mem2
+    BWAMEM1_INDEX(fasta)                                        // If aligner is bwamem
+    BWAMEM2_INDEX(fasta.map{ it -> [[id:it[0].baseName], it] }) // If aligner is bwamem2
     DRAGMAP_HASHTABLE(fasta)                                    // If aligner is dragmap
 
     GATK4_CREATESEQUENCEDICTIONARY(fasta)

@@ -345,8 +345,8 @@ workflow SAREK {
     rt_file                = PREPARE_GENOME.out.rt_file
 
     // Gather index for mapping given the chosen aligner
-    ch_map_index = params.aligner == "bwa-mem" ? bwa :
-        params.aligner == "bwa-mem2" ? bwamem2 :
+    ch_map_index = params.aligner == "bwamem" ? bwa :
+        params.aligner == "bwamem2" ? bwamem2 :
         dragmap
 
     // known_sites is made by grouping both the dbsnp and the known snps/indels resources
