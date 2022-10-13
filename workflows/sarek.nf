@@ -414,7 +414,8 @@ workflow SAREK {
                 ch_input_fastq,
                 fasta,
                 ch_map_index,
-                params.group_by_umi_strategy
+                params.group_by_umi_strategy,
+                params.aligner
             )
 
             bamtofastq = FASTQ_CREATE_UMI_CONSENSUS_FGBIO.out.consensusbam.map{meta, bam -> [meta,bam,[]]}

@@ -19,6 +19,7 @@ workflow FASTQ_CREATE_UMI_CONSENSUS_FGBIO {
     fasta                     // channel: [mandatory] /path/to/reference/fasta
     map_index                 // channel: [mandatory] Pre-computed mapping index
     groupreadsbyumi_strategy  // string:  [mandatory] grouping strategy - default: "Adjacency"
+    aligner
 
     main:
     ch_versions = Channel.empty()
@@ -37,7 +38,7 @@ workflow FASTQ_CREATE_UMI_CONSENSUS_FGBIO {
     // appropriately tagged interleaved FASTQ reads are mapped to the reference
     // bams will not be sorted (hence, sort = false)
     sort = false
-    ALIGN_UMI(BAM2FASTQ.out.reads, map_index, sort)
+    ALIGN_UMI(BAM2FASTQ.out.reads, map_index, aligner, sort)
 
     // samblaster is used in order to tag mates information in the BAM file
     // this is used in order to group reads by UMI
