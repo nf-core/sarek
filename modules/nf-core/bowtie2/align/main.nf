@@ -8,8 +8,8 @@ process BOWTIE2_ALIGN {
         "quay.io/biocontainers/mulled-v2-ac74a7f02cebcfcc07d8e8d1d750af9c83b4d45a:1744f68fe955578c63054b55309e05b41c37a80d-0" }"
 
     input:
-    tuple val(meta), path(reads)
-    path  index
+    tuple val(meta) , path(reads)
+    tuple val(meta2), path(index)
     val   save_unaligned
     val   sort_bam
 

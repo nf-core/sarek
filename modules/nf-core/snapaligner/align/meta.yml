@@ -24,6 +24,11 @@ input:
       type: file
       description: List of input fastq files of size 2 for paired fastq or 1 for bam or single fastq
       pattern: "*.{fastq.gz,fq.gz,fastq,fq,bam}"
+  - meta2:
+      type: map
+      description: |
+        Groovy Map containing reference information
+        e.g. [ id:'test', single_end:false ]
   - index:
       type: file
       description: List of SNAP genome index files

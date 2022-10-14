@@ -20,7 +20,7 @@
                     },
                     "bowtie2/align": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                        "git_sha": "e797efb47b0d3b2124753beb55dc83ab9512bceb"
                     },
                     "bwa/index": {
                         "branch": "master",
@@ -88,7 +88,7 @@
                     },
                     "dragmap/align": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                        "git_sha": "d6363b7ea1b54715677f971a30d417790ee6a0e6"
                     },
                     "dragmap/hashtable": {
                         "branch": "master",
@@ -295,7 +295,7 @@
                     },
                     "snapaligner/align": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                        "git_sha": "20dd9bb4e5f41b1f6d38dd046affc79edad4b0d0"
                     },
                     "snpeff": {
                         "branch": "master",
@@ -343,7 +343,7 @@
                 "nf-core": {
                     "fastq_align_dna": {
                         "branch": "master",
-                        "git_sha": "bbf973e90705cd91c25ea23abda7edf373626c05"
+                        "git_sha": "e797efb47b0d3b2124753beb55dc83ab9512bceb"
                     }
                 }
             }

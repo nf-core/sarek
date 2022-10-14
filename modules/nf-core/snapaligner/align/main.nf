@@ -8,8 +8,8 @@ process SNAPALIGNER_ALIGN {
         'quay.io/biocontainers/snap-aligner:2.0.1--hd03093a_1' }"
 
     input:
-    tuple val(meta), path(reads)
-    path index
+    tuple val(meta) , path(reads)
+    tuple val(meta2), path(index)
 
     output:
     tuple val(meta), path("*.bam"), emit: bam
