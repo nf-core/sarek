@@ -28,7 +28,7 @@
                     },
                     "bwa/mem": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                        "git_sha": "277f4d693a00471690b66598d167bbca78bbe232"
                     },
                     "bwamem2/index": {
                         "branch": "master",
@@ -343,7 +343,7 @@
                 "nf-core": {
                     "fastq_align_dna": {
                         "branch": "master",
-                        "git_sha": "e797efb47b0d3b2124753beb55dc83ab9512bceb"
+                        "git_sha": "277f4d693a00471690b66598d167bbca78bbe232"
                     }
                 }
             }

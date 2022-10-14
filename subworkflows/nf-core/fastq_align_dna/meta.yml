@@ -25,10 +25,24 @@ input:
       description: |
         List of input FastQ files of size 1 and 2 for single-end and paired-end data,
         respectively.
+  - meta2:
+      type: map
+      description: |
+        Groovy Map containing reference information
+        e.g. [ id:'test' ]
   - index:
       type: file
       description: Aligner genome index files
       pattern: "Directory containing aligner index"
+  - aligner:
+      type: string
+      description: Aligner to use for alignment
+      enum:
+        - bowtie2
+        - bwa
+        - bwamem2
+        - dragmap
+        - snap
   - sort_bam:
       type: boolean
       description: sort output
