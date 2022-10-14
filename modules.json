@@ -24,7 +24,7 @@
                     },
                     "bwa/index": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                        "git_sha": "8ddc73f0a37e6be2e852fd828d3effe9734ffa62"
                     },
                     "bwa/mem": {
                         "branch": "master",
@@ -92,7 +92,7 @@
                     },
                     "dragmap/hashtable": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                        "git_sha": "d6363b7ea1b54715677f971a30d417790ee6a0e6"
                     },
                     "ensemblvep": {
                         "branch": "master",
