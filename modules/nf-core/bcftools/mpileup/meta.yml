@@ -22,6 +22,9 @@ input:
       type: file
       description: Input BAM file
       pattern: "*.{bam}"
+  - intervals:
+      type: file
+      description: Input intervals file. A file (commonly '.bed') containing regions to subset
   - fasta:
       type: file
       description: FASTA reference file

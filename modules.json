@@ -11,7 +11,7 @@
                     },
                     "bcftools/mpileup": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                        "git_sha": "bb14352a3a16391c76ee955c424ca4977e8174c5"
                     },
                     "bcftools/sort": {
                         "branch": "master",
