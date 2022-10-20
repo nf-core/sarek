@@ -39,6 +39,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     ch_versions         = Channel.empty()
 
     //TODO: Temporary until the if's can be removed and printing to terminal is prevented with "when" in the modules.config
+    mpileup_vcf       = Channel.empty()
     freebayes_vcf       = Channel.empty()
     manta_vcf           = Channel.empty()
     mutect2_vcf         = Channel.empty()
@@ -90,9 +91,11 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
                                                                     }
         BAM_VARIANT_CALLING_MPILEUP(
             cram_intervals_no_index,
+            dict,
             fasta
         )
 
+        mpileup_vcf = mpileup_vcf.mix(BAM_VARIANT_CALLING_MPILEUP.out.mpileup_vcf)
         ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_MPILEUP.out.versions)
     }
 
@@ -209,6 +212,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
 
 
     emit:
+    mpileup_vcf
     freebayes_vcf
     manta_vcf
     mutect2_vcf

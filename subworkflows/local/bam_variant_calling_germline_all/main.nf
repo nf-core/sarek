@@ -90,10 +90,12 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
 
         BAM_VARIANT_CALLING_MPILEUP(
             cram_intervals_no_index,
+            dict,
             fasta
         )
 
         mpileup_germline = BAM_VARIANT_CALLING_MPILEUP.out.mpileup
+        mpileup_vcf = BAM_VARIANT_CALLING_MPILEUP.out.mpileup_vcf
         ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_MPILEUP.out.versions)
     }
 
@@ -224,6 +226,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     }
 
     emit:
+    mpileup_vcf
     deepvariant_vcf
     freebayes_vcf
     genotype_gvcf

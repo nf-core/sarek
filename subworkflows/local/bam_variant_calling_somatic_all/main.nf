@@ -118,11 +118,13 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
         MPILEUP_NORMAL(
             cram_normal_intervals_no_index,
+            dict,
             fasta
         )
 
         MPILEUP_TUMOR(
             cram_tumor_intervals_no_index,
+            dict,
             fasta
         )
 
