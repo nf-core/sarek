@@ -22,16 +22,16 @@
     # binary changing on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
     # binary changing on reruns
-    - path: results/reference/bwamem/genome.fasta.0123
-      md5sum: d73300d44f733bcdb7c988fc3ff3e3e9
-    - path: results/reference/bwamem/genome.fasta.amb
+    - path: results/reference/bwa/genome.amb
       md5sum: 1891c1de381b3a96d4e72f590fde20c1
-    - path: results/reference/bwamem/genome.fasta.ann
+    - path: results/reference/bwa/genome.ann
       md5sum: 2df4aa2d7580639fa0fcdbcad5e2e969
-    - path: results/reference/bwamem/genome.fasta.bwt.2bit.64
-      md5sum: cd4bdf496eab05228a50c45ee43c1ed0
-    - path: results/reference/bwamem/genome.fasta.pac
+    - path: results/reference/bwa/genome.bwt
+      md5sum: 815eded87e4cb6b0f1daab5c4d6e30af
+    - path: results/reference/bwa/genome.pac
       md5sum: 8569fbdb2c98c6fb16dfa73d8eacb070
+    - path: results/reference/bwa/genome.sa
+      md5sum: e7cff62b919448a3a3d0fe4aaf427594
     - path: results/reference/dbsnp/dbsnp_146.hg38.vcf.gz.tbi
       md5sum: 628232d0c870f2dbf73c3e81aff7b4b4
     - path: results/reference/dict/genome.dict
