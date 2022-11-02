@@ -15,19 +15,19 @@ dragmap:
 # annotate
 merge:
   - conf/modules/annotate.config
-  - modules/nf-core/ensemblvep/main'
-  - modules/nf-core/snpeff/main'
-  - modules/nf-core/tabix/bgziptabix/main'
+  - modules/nf-core/ensemblvep/main.nf'
+  - modules/nf-core/snpeff/main.nf'
+  - modules/nf-core/tabix/bgziptabix/main.nf'
   - subworkflows/local/vcf_annotate_all/main.nf
   - subworkflows/local/vcf_annotate_ensemblvep/main.nf
   - subworkflows/local/vcf_annotate_snpeff/main.nf
 snpeff:
   - conf/modules/annotate.config
-  - modules/nf-core/snpeff/main'
-  - modules/nf-core/tabix/bgziptabix/main'
+  - modules/nf-core/snpeff/main.nf'
+  - modules/nf-core/tabix/bgziptabix/main.nf'
   - subworkflows/local/vcf_annotate_snpeff/main.nf
 vep:
   - conf/modules/annotate.config
-  - modules/nf-core/ensemblvep/main'
-  - modules/nf-core/tabix/bgziptabix/main'
+  - modules/nf-core/ensemblvep/main.nf'
+  - modules/nf-core/tabix/bgziptabix/main.nf'
   - subworkflows/local/vcf_annotate_ensemblvep/main.nf
