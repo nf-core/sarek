@@ -150,29 +150,32 @@ These files are intermediate and by default not kept in the final files delivere
 
 [BWA](https://github.com/lh3/bwa) is a software package for mapping low-divergent sequences against a large reference genome. The aligned reads are then coordinate-sorted (or name-sorted if [`GATK MarkDuplicatesSpark`](https://gatk.broadinstitute.org/hc/en-us/articles/5358833264411-MarkDuplicatesSpark) is used for duplicate marking) with [samtools](https://www.htslib.org/doc/samtools.html).
 
-These files are intermediate and by default not kept in the final files delivered to users. Set `--save_bam_mapped` to enable publishing.
+These files are intermediate and by default not kept in the final files delivered to users. Set `--save_mapped` to enable publishing in CRAM format, furthermore add the flag `save_output_as_bam` for publishing in BAM format.
 
 #### BWA-mem2
 
 [BWA-mem2](https://github.com/bwa-mem2/bwa-mem2) is a software package for mapping low-divergent sequences against a large reference genome.The aligned reads are then coordinate-sorted (or name-sorted if [`GATK MarkDuplicatesSpark`](https://gatk.broadinstitute.org/hc/en-us/articles/5358833264411-MarkDuplicatesSpark) is used for duplicate marking) with [samtools](https://www.htslib.org/doc/samtools.html).
 
-These files are intermediate and by default not kept in the final files delivered to users. Set `--save_bam_mapped` to enable publishing.
+These files are intermediate and by default not kept in the final files delivered to users. Set `--save_mapped` to enable publishing, furthermore add the flag `save_output_as_bam` for publishing in BAM format.
 
 #### DragMap
 
 [DragMap](https://github.com/Illumina/dragmap) is an open-source software implementation of the DRAGEN mapper, which the Illumina team created so that we would have an open-source way to produce the same results as their proprietary DRAGEN hardware. The aligned reads are then coordinate-sorted (or name-sorted if [`GATK MarkDuplicatesSpark`](https://gatk.broadinstitute.org/hc/en-us/articles/5358833264411-MarkDuplicatesSpark) is used for duplicate marking) with [samtools](https://www.htslib.org/doc/samtools.html).
 
-These files are intermediate and by default not kept in the final files delivered to users. Set `--save_bam_mapped` to enable publishing.
+These files are intermediate and by default not kept in the final files delivered to users. Set `--save_mapped` to enable publishing, furthermore add the flag `save_output_as_bam` for publishing in BAM format.
 
 <details markdown="1">
 <summary>Output files for all mappers and samples</summary>
 
 **Output directory: `{outdir}/preprocessing/mapped/<sample>/`**
 
-- if `--save_bam_mapped`: `<sample>.bam` and `<sample>.bam.bai`
-  - BAM file and index
+- if `--save_mapped`: `<sample>.cram` and `<sample>.cram.crai`
 
-</details>
+  - CRAM file and index
+
+- if `--save_mapped --save_output_as_bam`: `<sample>.bam` and `<sample>.bam.bai`
+  - BAM file and index
+  </details>
 
 ### Mark Duplicates
 
@@ -253,7 +256,7 @@ See the [`--input`](usage.md#--input) section in the usage documentation for fur
 **Output directory: `{outdir}/preprocessing/csv`**
 
 - `mapped.csv`
-  - if `--save_bam_mapped`
+  - if `--save_mapped`
   - CSV containing an entry for each sample with the columns `patient,sample,sex,status,bam,bai`
 - `markduplicates_no_table.csv`
   - CSV containing an entry for each sample with the columns `patient,sample,sex,status,cram,crai`
@@ -824,7 +827,7 @@ The plot will show:
 
 **Output directory: `{outdir}/reports/markduplicates/<sample>`**
 
-- `<sample>.md.metrics`
+- `<sample>.md.cram.metrics`
   - file used by [MultiQC](https://multiqc.info/)
   </details>
 
@@ -852,9 +855,10 @@ The plots will show:
 [bcftools stats](https://samtools.github.io/bcftools/bcftools.html#stats) produces a statistics text file which is suitable for machine processing and can be plotted using plot-vcfstats.
 For further reading and documentation see the [bcftools stats manual](https://samtools.github.io/bcftools/bcftools.html#stats).
 
-Plot will show:
+Plots will show:
 
 - Stats by non-reference allele frequency, depth distribution, stats by quality and per-sample counts, singleton stats, etc.
+- Note: When using [Strelka2](https://github.com/Illumina/strelka), there will be no depth distribution plot, as Strelka2 does not report the INFO/DP field
 
 <details markdown="1">
 <summary>Output files for all samples</summary>

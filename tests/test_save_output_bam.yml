@@ -7,14 +7,14 @@
     - path: results/csv/markduplicates.csv
       md5sum: 8679570b8db1937ee574fec36b25d7bc
     - path: results/csv/markduplicates_no_table.csv
-      md5sum: 429bcc69322425d82767ef57bbbac872
+      md5sum: 145154b6037e90448273fbe8e8dec5d3
     - path: results/csv/recalibrated.csv
       md5sum: 3ddc20eb105fdcc483945afd7d7d238c
     - path: results/multiqc
-    - path: results/preprocessing/markduplicates/test/test.md.bai
-      md5sum: a3f9f4054a274a56881be7b4f3662739
+    - path: results/preprocessing/markduplicates/test/test.md.bam.bai
+      md5sum: 3add495a02547bd9e6882935d2f3e1f7
     - path: results/preprocessing/markduplicates/test/test.md.bam
-      md5sum: dfeaea71fd1a099d9cafb188aaf41691
+      md5sum: ebb72f603f016ce37964259c61625360
     - path: results/preprocessing/recal_table/test/test.recal.table
       md5sum: 4ac774bf5f1157e77426fd82f5ac0fbe
     - path: results/preprocessing/recalibrated/test/test.recal.bam
@@ -22,7 +22,7 @@
     - path: results/preprocessing/recalibrated/test/test.recal.bam.bai
     # binary changes md5sums on reruns.
     - path: results/reports/fastqc/test-test_L1
-    - path: results/reports/markduplicates/test/test.md.metrics
+    - path: results/reports/markduplicates/test/test.md.cram.metrics
       contains: ["test	8547	767	84	523391	3882	0	0	0.385081", "1.0	767	767"]
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
       md5sum: 76fa71922a3f748e507c2364c531dfcb
@@ -57,24 +57,24 @@
     - path: results/csv/markduplicates.csv
       md5sum: 8679570b8db1937ee574fec36b25d7bc
     - path: results/csv/markduplicates_no_table.csv
-      md5sum: 429bcc69322425d82767ef57bbbac872
+      md5sum: 145154b6037e90448273fbe8e8dec5d3
     - path: results/csv/recalibrated.csv
       md5sum: 3ddc20eb105fdcc483945afd7d7d238c
     - path: results/multiqc
     - path: results/preprocessing/markduplicates/test/test.md.bam
-      md5sum: 88c1f90792d57ca8e435d4fdff63b89c
+      md5sum: 8bfd111af60ca7e63b233e59b0fb570b
     - path: results/preprocessing/markduplicates/test/test.md.bam.bai
-      md5sum: 966e1d9cb18c85c28b5aa95e250c2ab0
+      md5sum: fe8bc8655aff0d1a8093680390d98fab
     - path: results/preprocessing/recal_table/test/test.recal.table
       md5sum: 5b6e5078b4a90f6cb982fa0f0df616c2
     - path: results/preprocessing/recalibrated/test/test.recal.bam
-      md5sum: 3adb61574a8c2097a790a3918c35a068
+    # binary changes md5sums on reruns.
     - path: results/preprocessing/recalibrated/test/test.recal.bam.bai
-      md5sum: 4895a3fe3595d0b7febc11265a2e4012
+    # binary changes md5sums on reruns.
     - path: results/reports/fastqc/test-test_L1
-    - path: results/reports/markduplicates/test/test.md.metrics
-    # The text-based output-file test.md.metrics only contains comments and no metrics, which is a bit odd.
-    # The file test.md.metrics contains a timestamp which means that it cannot be tested using the md5sum.
+    - path: results/reports/markduplicates/test/test.md.cram.metrics
+    # The text-based output-file test.md.cram.metrics only contains comments and no metrics, which is a bit odd.
+    # The file test.md.cram.metrics contains a timestamp which means that it cannot be tested using the md5sum.
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
       md5sum: 9269e959d5eec5273307693c6274f53e
     - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt

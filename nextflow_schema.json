@@ -199,15 +199,15 @@
                     "help_text": "`Sarek` will build missing indices automatically if not provided. Set `--bwa false` if indices should be (re-)built.\nIf `DragMap` is selected as aligner, it is recommended to skip baserecalibration with `--skip_tools baserecalibrator`. See [here](https://gatk.broadinstitute.org/hc/en-us/articles/4407897446939--How-to-Run-germline-single-sample-short-variant-discovery-in-DRAGEN-mode) for more info.\n",
                     "hidden": true
                 },
-                "save_bam_mapped": {
+                "save_mapped": {
                     "type": "boolean",
                     "fa_icon": "fas fa-download",
-                    "description": "Save mapped BAMs.",
-                    "help_text": "If the parameter `--split-fastq` is used, the sharded bam files are merged before saving them."
+                    "description": "Save mapped files.",
+                    "help_text": "If the parameter `--split-fastq` is used, the sharded bam files are merged and converted to CRAM before saving them."
                 },
                 "save_output_as_bam": {
                     "type": "boolean",
-                    "description": "Saves output from Markduplicates & Baserecalibration as BAM file instead of CRAM",
+                    "description": "Saves output from mapping (if `--save_mapped`), Markduplicates & Baserecalibration as BAM file instead of CRAM",
                     "fa_icon": "fas fa-download"
                 },
                 "use_gatk_spark": {
@@ -894,6 +894,17 @@
                     "fa_icon": "fas fa-cog",
                     "hidden": true
                 },
+                "multiqc_logo": {
+                    "type": "string",
+                    "description": "Custom logo file to supply to MultiQC. File name must also be set in the MultiQC config file",
+                    "fa_icon": "fas fa-image",
+                    "hidden": true
+                },
+                "multiqc_methods_description": {
+                    "type": "string",
+                    "description": "Custom MultiQC yaml file containing HTML including a methods description.",
+                    "fa_icon": "fas fa-cog"
+                },
                 "tracedir": {
                     "type": "string",
                     "description": "Directory to keep pipeline Nextflow logs and reports.",
@@ -920,6 +931,13 @@
                     "description": "Run this workflow with Conda. You can also use '-profile conda' instead of providing this parameter.",
                     "hidden": true,
                     "fa_icon": "fas fa-bacon"
+                },
+                "hook_url": {
+                    "type": "string",
+                    "description": "Incoming hook URL for messaging service",
+                    "fa_icon": "fas fa-people-group",
+                    "help_text": "Incoming hook URL for messaging service. Currently, only MS Teams is supported.",
+                    "hidden": true
                 }
             }
         }

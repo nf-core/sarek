@@ -9,6 +9,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- [#735](https://github.com/nf-core/sarek/pull/735) - GATK Markduplicates now natively supports CRAM output
+- [#774](https://github.com/nf-core/sarek/pull/774) - Add logo for Danish National Genome Center
+- [#783](https://github.com/nf-core/sarek/pull/783) - Add paths for chr length used by controlfreec to GRCh38 config
+
+### Changed
+
+- [#735](https://github.com/nf-core/sarek/pull/735) - `--save_mapped` now saves mapping output in CRAM format
+- [#762](https://github.com/nf-core/sarek/pull/762) - Back to dev
+- [#762](https://github.com/nf-core/sarek/pull/762) - Update deepvariant module
+- [#773](https://github.com/nf-core/sarek/pull/773) - Sync `TEMPLATE` with `tools` `2.6`
+- [#782](https://github.com/nf-core/sarek/pull/782) - Reduce scatter/gather for full size tests on AWS
+- [#785](https://github.com/nf-core/sarek/pull/785) - Update description of `bcftools stats`
+- [#784](https://github.com/nf-core/sarek/pull/784) - Update all subworkflows names thanks to @scorreard
+
+### Fixed
+
+- [#762](https://github.com/nf-core/sarek/pull/762) - Polish CHANGELOG + figures
+- [#766](https://github.com/nf-core/sarek/pull/766) - Align box description in subway map
+- [#768](https://github.com/nf-core/sarek/pull/768) - Use double quotes to fix import of singularity images for deepvariant module
+- [#770](https://github.com/nf-core/sarek/pull/770) - Use double quotes to fix import of singularity images for gatk4/cnnscorevariants module
+- [#771](https://github.com/nf-core/sarek/pull/771) - update to new modules syntax
+- [#777](https://github.com/nf-core/sarek/pull/777) - Fix mixed up aws full size tests output paths
+- [#789](https://github.com/nf-core/sarek/issues/789) - Fix somatic mutect2 test
+- [#793](https://github.com/nf-core/sarek/pull/793) - Remove DeepVariant GVCF from annotation
+- [#794](https://github.com/nf-core/sarek/issues/794) - Fix publishing for unzipped reference files
+
+### Deprecated
+
+### Removed
+
+## [3.0.2](https://github.com/nf-core/sarek/releases/tag/3.0.2) - Lájtávrre
+
+Lájtávrre is a lake you can see from the Skierfe mountain, formed by the Rapaätno river.
+
+### Added
+
 - [#691](https://github.com/nf-core/sarek/pull/691) - Enable `PROFILE=conda`, `PROFILE=docker` and `PROFILE=singularity` for pytest
 - [#716](https://github.com/nf-core/sarek/pull/716) - Add documentation for Azure recommended config vm_size
 - [#752](https://github.com/nf-core/sarek/pull/752) - Add tracking of all dependencies starting 3.0
@@ -49,6 +85,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#743](https://github.com/nf-core/sarek/pull/743) - Remove profile definitions in profile to avoid issues with Tower
 - [#758](https://github.com/nf-core/sarek/pull/758) - Fix Zenodo batch
 - [#760](https://github.com/nf-core/sarek/pull/760) - Fix CHANGELOG dependencies
+- [#761](https://github.com/nf-core/sarek/pull/761) - Fix font in subway map and workflow image
 
 ### Deprecated
 
