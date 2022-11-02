@@ -12,6 +12,15 @@ dragmap:
   - modules/nf-core/dragmap/align/main.nf
   - subworkflows/local/fastq_align_bwamem_mem2_dragmap/main.nf
 
+# alignment_to_fastq
+alignment_to_fastq:
+  - conf/modules/alignment_to_fastq.config
+  - modules/nf-core/cat/fastq/main'
+  - modules/nf-core/samtools/collatefastq/main'
+  - modules/nf-core/samtools/merge/main'
+  - modules/nf-core/samtools/view/main'
+  - subworkflows/local/bam_convert_samtools/main.nf
+
 # annotate
 merge:
   - conf/modules/annotate.config
