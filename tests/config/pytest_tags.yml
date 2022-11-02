@@ -32,11 +32,35 @@ markduplicates:
   - subworkflows/local/bam_markduplicates/main.nf
   - subworkflows/local/cram_qc_mosdepth_samtools/main.nf
 
+# prepare_recalibration
+prepare_recalibration:
+  - conf/modules/prepare_recalibration.config
+  - modules/nf-core/gatk4/baserecalibrator/main.nf
+  - modules/nf-core/gatk4/gatherbqsrreports/main.nf
+  - modules/nf-core/samtools/convert/main.nf
+  - subworkflows/local/bam_baserecalibrator/main.nf
+
+# recalibrate
+recalibrate:
+  - conf/modules/recalibrate.config
+  - modules/nf-core/gatk4/applybqsr/main.nf
+  - modules/nf-core/samtools/convert/main.nf
+  - modules/nf-core/samtools/index/main.nf
+  - modules/nf-core/samtools/merge/main.nf
+  - subworkflows/local/bam_applybqsr/main.nf
+  - subworkflows/local/cram_merge_index_samtools/main.nf
+
 # gatk4_spark
 gatk4_spark:
   - conf/modules/markduplicates.config
+  - conf/modules/prepare_recalibration.config
+  - conf/modules/recalibrate.config
+  - modules/nf-core/gatk4/applybqsrspark/main.nf
+  - modules/nf-core/gatk4/baserecalibratorspark/main.nf
   - modules/nf-core/gatk4/estimatelibrarycomplexity/main.nf
   - modules/nf-core/gatk4/markduplicatesspark/main.nf
+  - subworkflows/local/bam_applybqsr_spark/main.nf
+  - subworkflows/local/bam_baserecalibrator_spark/main.nf
   - subworkflows/local/bam_markduplicates_spark/main.nf
 
 # annotate
