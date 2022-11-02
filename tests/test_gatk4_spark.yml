@@ -1,7 +1,6 @@
-- name: Run default pipeline with gatk_spark
+- name: Run default pipeline with gatk4_spark
   command: nextflow run main.nf -profile test,use_gatk_spark
   tags:
-    - gatk4
     - gatk4_spark
     - preprocessing
   files:

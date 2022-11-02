@@ -15,28 +15,46 @@ dragmap:
 # alignment_to_fastq
 alignment_to_fastq:
   - conf/modules/alignment_to_fastq.config
-  - modules/nf-core/cat/fastq/main'
-  - modules/nf-core/samtools/collatefastq/main'
-  - modules/nf-core/samtools/merge/main'
-  - modules/nf-core/samtools/view/main'
+  - modules/nf-core/cat/fastq/main.nf
+  - modules/nf-core/samtools/collatefastq/main.nf
+  - modules/nf-core/samtools/merge/main.nf
+  - modules/nf-core/samtools/view/main.nf
   - subworkflows/local/bam_convert_samtools/main.nf
+
+# markduplicates
+markduplicates:
+  - conf/modules/markduplicates.config
+  - modules/nf-core/gatk4/markduplicates/main.nf
+  - modules/nf-core/mosdepth/main.nf
+  - modules/nf-core/samtools/convert/main.nf
+  - modules/nf-core/samtools/index/main.nf
+  - modules/nf-core/samtools/stats/main.nf
+  - subworkflows/local/bam_markduplicates/main.nf
+  - subworkflows/local/cram_qc_mosdepth_samtools/main.nf
+
+# gatk4_spark
+gatk4_spark:
+  - conf/modules/markduplicates.config
+  - modules/nf-core/gatk4/estimatelibrarycomplexity/main.nf
+  - modules/nf-core/gatk4/markduplicatesspark/main.nf
+  - subworkflows/local/bam_markduplicates_spark/main.nf
 
 # annotate
 merge:
   - conf/modules/annotate.config
-  - modules/nf-core/ensemblvep/main.nf'
-  - modules/nf-core/snpeff/main.nf'
-  - modules/nf-core/tabix/bgziptabix/main.nf'
+  - modules/nf-core/ensemblvep/main.nf
+  - modules/nf-core/snpeff/main.nf
+  - modules/nf-core/tabix/bgziptabix/main.nf
   - subworkflows/local/vcf_annotate_all/main.nf
   - subworkflows/local/vcf_annotate_ensemblvep/main.nf
   - subworkflows/local/vcf_annotate_snpeff/main.nf
 snpeff:
   - conf/modules/annotate.config
-  - modules/nf-core/snpeff/main.nf'
-  - modules/nf-core/tabix/bgziptabix/main.nf'
+  - modules/nf-core/snpeff/main.nf
+  - modules/nf-core/tabix/bgziptabix/main.nf
   - subworkflows/local/vcf_annotate_snpeff/main.nf
 vep:
   - conf/modules/annotate.config
-  - modules/nf-core/ensemblvep/main.nf'
-  - modules/nf-core/tabix/bgziptabix/main.nf'
+  - modules/nf-core/ensemblvep/main.nf
+  - modules/nf-core/tabix/bgziptabix/main.nf
   - subworkflows/local/vcf_annotate_ensemblvep/main.nf
