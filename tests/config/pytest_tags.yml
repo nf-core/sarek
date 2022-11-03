@@ -113,13 +113,17 @@ cnvkit:
 ## controlfreec
 controlfreec:
   - conf/modules/controlfreec.config
+  - conf/modules/mpileup.config
+  - modules/nf-core/cat/cat/main.nf
   - modules/nf-core/controlfreec/assesssignificance/main.nf
   - modules/nf-core/controlfreec/freec/main.nf
   - modules/nf-core/controlfreec/freec2bed/main.nf
   - modules/nf-core/controlfreec/freec2circos/main.nf
   - modules/nf-core/controlfreec/makegraph/main.nf
+  - modules/nf-core/samtools/mpileup/main.nf
   - subworkflows/local/bam_variant_calling_somatic_controlfreec/main.nf
   - subworkflows/local/bam_variant_calling_tumor_only_controlfreec/main.nf
+  - subworkflows/local/bam_variant_calling_mpileup/main.nf
 
 ## deepvariant
 deepvariant:
@@ -165,6 +169,13 @@ manta:
   - subworkflows/local/bam_variant_calling_germline_manta/main.nf
   - subworkflows/local/bam_variant_calling_somatic_manta/main.nf
   - subworkflows/local/bam_variant_calling_tumor_only_manta/main.nf
+
+## mpileup
+mpileup:
+  - conf/modules/mpileup.config
+  - modules/nf-core/cat/cat/main.nf
+  - modules/nf-core/samtools/mpileup/main.nf
+  - subworkflows/local/bam_variant_calling_mpileup/main.nf
 
 # annotate
 
