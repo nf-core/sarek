@@ -138,6 +138,23 @@ freebayes:
   - modules/nf-core/tabix/tabix/main.nf
   - subworkflows/local/bam_variant_calling_freebayes/main.nf
 
+## haplotypecaller
+haplotypecaller:
+  - conf/modules/haplotypecaller.config
+  - modules/nf-core/bcftools/sort/main.nf
+  - modules/nf-core/gatk4/applyvqsr/main.nf
+  - modules/nf-core/gatk4/cnnscorevariants/main.nf
+  - modules/nf-core/gatk4/filtervarianttranches/main.nf
+  - modules/nf-core/gatk4/genomicsdbimport/main.nf
+  - modules/nf-core/gatk4/genotypegvcfs/main.nf
+  - modules/nf-core/gatk4/haplotypecaller/main.nf
+  - modules/nf-core/gatk4/mergevcfs/main.nf
+  - modules/nf-core/gatk4/variantrecalibrator/main.nf
+  - modules/nf-core/tabix/tabix/main.nf
+  - subworkflows/local/bam_joint_calling_germline_gatk/main.nf
+  - subworkflows/local/bam_variant_calling_haplotypecaller/main.nf
+  - subworkflows/local/vcf_variant_filtering_gatk/main.nf
+
 # annotate
 
 ## merge
