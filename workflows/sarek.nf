@@ -1251,7 +1251,7 @@ def extract_csv(csv_file) {
             def bam         = file(row.bam,   checkIfExists: true)
             def bai         = file(row.bai,   checkIfExists: true)
             def CN          = params.seq_center ? "CN:${params.seq_center}\\t" : ''
-            def read_group  = "\"@RG\\tID:${row.sample}_${row.lane}\\t${CN}PU:${row.lane}\\tSM:${row.sample}\\tLB:${row.sample}\\tPL:${params.seq_platform}\""
+            def read_group  = "\"@RG\\tID:${row.sample}_${row.lane}\\t${CN}PU:${row.lane}\\tSM:${row.patient}_${row.sample}\\tLB:${row.sample}\\tDS:${params.fasta}\\tPL:${params.seq_platform}\""
 
             meta.numLanes   = numLanes.toInteger()
             meta.read_group = read_group.toString()
