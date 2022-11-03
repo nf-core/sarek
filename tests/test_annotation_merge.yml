@@ -3,8 +3,6 @@
   tags:
     - annotation
     - merge
-    - snpeff
-    - vep
   files:
     - path: results/annotation/test/test_snpEff_VEP.ann.vcf.gz
     # binary changes md5sums on reruns.
@@ -45,8 +43,6 @@
   tags:
     - annotation
     - merge
-    - snpeff
-    - vep
   files:
     - path: results/annotation/test/test_VEP.ann.vcf.gz
     # binary changes md5sums on reruns.
