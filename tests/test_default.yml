@@ -3,7 +3,6 @@
   tags:
     - default
     - preprocessing
-    - strelka
     - variant_calling
   files:
     - path: results/csv/markduplicates.csv
@@ -77,7 +76,6 @@
     - default
     - preprocessing
     - save_mapped
-    - strelka
     - variant_calling
   files:
     - path: results/csv/mapped.csv
@@ -153,7 +151,6 @@
     - default
     - preprocessing
     - save_output_as_bam
-    - strelka
     - variant_calling
   files:
     - path: results/csv/markduplicates.csv
@@ -387,7 +384,6 @@
     - default
     - preprocessing
     - skip_qc
-    - strelka
     - variant_calling
   files:
     - path: results/csv/markduplicates.csv
@@ -436,6 +432,7 @@
 - name: Run default pipeline for tumor normal pair
   command: nextflow run main.nf -profile test,pair
   tags:
+    - default
     - preprocessing
     - tumor_normal_pair
   files:
