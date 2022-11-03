@@ -36,6 +36,16 @@ jobs:
         exclude:
           - NXF_VER: "latest-everything"
             profile: "conda"
+          - NXF_VER: "latest-everything"
+            test: "save_mapped"
+          - NXF_VER: "latest-everything"
+            test: "save_output_as_bam"
+          - NXF_VER: "latest-everything"
+            test: "skip_markduplicates"
+          - NXF_VER: "latest-everything"
+            test: "skip_qc"
+          - NXF_VER: "latest-everything"
+            test: "tumor_normal_pair"
     env:
       NXF_ANSI_LOG: false
     steps:
