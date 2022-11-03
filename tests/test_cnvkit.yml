@@ -121,3 +121,38 @@
       md5sum: 79aae7e9c135fb8c65f8fbda12610faf
     - path: results/cnvkit
       should_exist: false
+- name: Run variant calling on somatic samples with cnvkit and skip variant calling on matched normal
+  command: nextflow run main.nf -profile test,tools_somatic --tools cnvkit --only_paired_variant_calling
+  tags:
+    - cnvkit
+    - somatic
+    - only_paired_variant_calling
+    - copy_number_calling
+  files:
+    - path: results/multiqc
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/multi_intervals.antitarget.bed
+      md5sum: 3d4d20f9f23b39970865d29ef239d20b
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/multi_intervals.target.bed
+      md5sum: 86d30493bb2e619a93f4ebc2923d29f3
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/reference.cnn
+      md5sum: 59ec306bb820684b1f6f277d67cb2d92
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/test.paired_end.recalibrated.sorted.antitargetcoverage.cnn
+      md5sum: fe1248aa91fad7769303bb4c031d55ca
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/test.paired_end.recalibrated.sorted.targetcoverage.cnn
+      md5sum: 79aae7e9c135fb8c65f8fbda12610faf
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted-diagram.pdf
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted-scatter.png
+      md5sum: acd87dfb61db5910afaea34053aed561
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.antitargetcoverage.cnn
+      md5sum: 067115082c4af4b64d58c0dc3a3642e4
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.bintest.cns
+      md5sum: e9a260b81a34d8bc75330435d2a5e8da
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.call.cns
+      md5sum: c7d7fd87b27e103f73988ae307450e82
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.cnr
+      md5sum: 26c506866198d46610c71fa6c0f9e381
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.cns
+      md5sum: 83510b274c24a2671a962477a1ceb436
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.targetcoverage.cnn
+      md5sum: b4a49faf170e436ec32dcc21ccc3ce8f
