@@ -155,6 +155,17 @@ haplotypecaller:
   - subworkflows/local/bam_variant_calling_haplotypecaller/main.nf
   - subworkflows/local/vcf_variant_filtering_gatk/main.nf
 
+## manta
+manta:
+  - conf/modules/manta.config
+  - modules/nf-core/gatk4/mergevcfs/main.nf
+  - modules/nf-core/manta/germline/main.nf
+  - modules/nf-core/manta/somatic/main.nf
+  - modules/nf-core/manta/tumoronly/main.nf
+  - subworkflows/local/bam_variant_calling_germline_manta/main.nf
+  - subworkflows/local/bam_variant_calling_somatic_manta/main.nf
+  - subworkflows/local/bam_variant_calling_tumor_only_manta/main.nf
+
 # annotate
 
 ## merge
