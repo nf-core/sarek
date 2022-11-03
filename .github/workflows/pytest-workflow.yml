@@ -37,8 +37,12 @@ jobs:
           - "21.10.3"
           - "latest-everything"
         exclude:
-          - NXF_VER: "latest-everything"
-            profile: "conda"
+          - profile: "conda"
+            NXF_VER: "latest-everything"
+          - profile: "conda"
+            tags: deepvariant
+          - profile: "conda"
+            tags: haplotypecaller
     env:
       NXF_ANSI_LOG: false
     steps:
