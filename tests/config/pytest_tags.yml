@@ -129,6 +129,15 @@ deepvariant:
   - modules/nf-core/tabix/tabix/main.nf
   - subworkflows/local/bam_variant_calling_deepvariant/main.nf
 
+## freebayes
+freebayes:
+  - conf/modules/freebayes.config
+  - modules/nf-core/bcftools/sort/main.nf
+  - modules/nf-core/freebayes/main.nf
+  - modules/nf-core/gatk4/mergevcfs/main.nf
+  - modules/nf-core/tabix/tabix/main.nf
+  - subworkflows/local/bam_variant_calling_freebayes/main.nf
+
 # annotate
 
 ## merge
