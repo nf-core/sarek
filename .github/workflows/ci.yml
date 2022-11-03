@@ -27,6 +27,11 @@ jobs:
           - "latest-everything"
         test:
           - "default"
+          - "save_mapped"
+          - "save_output_as_bam"
+          - "skip_markduplicates"
+          - "skip_qc"
+          - "tumor_normal_pair"
         profile: ["docker", "singularity", "conda"]
         exclude:
           - NXF_VER: "latest-everything"

@@ -73,7 +73,6 @@
 - name: Run save_mapped
   command: nextflow run main.nf -profile test --save_mapped
   tags:
-    - default
     - preprocessing
     - save_mapped
     - variant_calling
@@ -148,7 +147,6 @@
 - name: Run save_output_as_bam
   command: nextflow run main.nf -profile test --save_output_as_bam
   tags:
-    - default
     - preprocessing
     - save_output_as_bam
     - variant_calling
@@ -217,7 +215,6 @@
 - name: Run default pipeline with skipping Markduplicates
   command: nextflow run main.nf -profile test,skip_markduplicates
   tags:
-    - default
     - preprocessing
     - skip_markduplicates
   files:
@@ -272,10 +269,8 @@
 - name: Run default pipeline with skipping Markduplicates with save_mapped
   command: nextflow run main.nf -profile test,skip_markduplicates --save_mapped
   tags:
-    - default
     - preprocessing
     - save_mapped
-    - skip_markduplicates
   files:
     - path: results/csv/mapped.csv
       md5sum: ae97b7394ab53a6b60921ab06c713cd9
@@ -326,11 +321,8 @@
 - name: Run default pipeline with skipping Markduplicates with save_mapped & save_output_as_bam
   command: nextflow run main.nf -profile test,skip_markduplicates --save_mapped --save_output_as_bam
   tags:
-    - default
     - preprocessing
-    - save_mapped
     - save_output_as_bam
-    - skip_markduplicates
   files:
     - path: results/csv/mapped.csv
       md5sum: 7f21bf40d3fbc248ee2ea3fdf0f7cdb2
@@ -381,7 +373,6 @@
 - name: Run default pipeline with skipping all QC steps
   command: nextflow run main.nf -profile test --skip_tools fastqc,markduplicates_report,mosdepth,multiqc,samtools
   tags:
-    - default
     - preprocessing
     - skip_qc
     - variant_calling
@@ -432,7 +423,6 @@
 - name: Run default pipeline for tumor normal pair
   command: nextflow run main.nf -profile test,pair
   tags:
-    - default
     - preprocessing
     - tumor_normal_pair
   files:
