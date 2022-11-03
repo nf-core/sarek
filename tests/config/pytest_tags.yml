@@ -23,8 +23,8 @@ umi:
   - subworkflows/local/fastq_align_bwamem_mem2_dragmap/main.nf
   - subworkflows/local/fastq_create_umi_consensus_fgbio/main.nf
 
-## trimming
-trimming:
+## fastp
+fastp:
   - conf/modules/trimming.config
   - modules/nf-core/fastp/main.nf
 
