@@ -121,6 +121,14 @@ controlfreec:
   - subworkflows/local/bam_variant_calling_somatic_controlfreec/main.nf
   - subworkflows/local/bam_variant_calling_tumor_only_controlfreec/main.nf
 
+## deepvariant
+deepvariant:
+  - conf/modules/deepvariant.config
+  - modules/nf-core/deepvariant/main.nf
+  - modules/nf-core/gatk4/mergevcfs/main.nf
+  - modules/nf-core/tabix/tabix/main.nf
+  - subworkflows/local/bam_variant_calling_deepvariant/main.nf
+
 # annotate
 
 ## merge
