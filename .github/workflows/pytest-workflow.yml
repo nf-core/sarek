@@ -43,6 +43,12 @@ jobs:
             tags: deepvariant
           - profile: "conda"
             tags: haplotypecaller
+          - profile: "conda"
+            tags: merge
+          - profile: "conda"
+            tags: snpeff
+          - profile: "conda"
+            tags: vep
     env:
       NXF_ANSI_LOG: false
     steps:
