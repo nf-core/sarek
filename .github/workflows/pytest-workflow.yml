@@ -34,10 +34,7 @@ jobs:
       fail-fast: false
       matrix:
         tags: ["${{ fromJson(needs.changes.outputs.tags) }}"]
-        # Only docker for now for faster testing while feature in dev
-        profile: ["docker"]
-        # TODO: Need to uncomment that and add exclude for some combination with conda (ie annotation)
-        # profile: ["docker", "singularity", "conda"]
+        profile: ["docker", "singularity", "conda"]
     env:
       NXF_ANSI_LOG: false
     steps:
