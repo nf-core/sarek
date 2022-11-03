@@ -99,6 +99,17 @@ gatk4_spark:
   - subworkflows/local/bam_baserecalibrator_spark/main.nf
   - subworkflows/local/bam_markduplicates_spark/main.nf
 
+# variant calling
+
+## cnvkit
+cnvkit:
+  - conf/modules/cnvkit.config
+  - modules/nf-core/cnvkit/antitarget/main.nf
+  - modules/nf-core/cnvkit/batch/main.nf
+  - modules/nf-core/cnvkit/reference/main.nf
+  - subworkflows/local/bam_variant_calling_cnvkit/main.nf
+  - subworkflows/local/prepare_reference_cnvkit/main.nf
+
 # annotate
 
 ## merge
