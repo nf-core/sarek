@@ -177,6 +177,20 @@ mpileup:
   - modules/nf-core/samtools/mpileup/main.nf
   - subworkflows/local/bam_variant_calling_mpileup/main.nf
 
+## mutect2
+mutect2:
+  - conf/modules/mutect2.config
+  - modules/nf-core/gatk4/calculatecontamination/main.nf
+  - modules/nf-core/gatk4/filtermutectcalls/main.nf
+  - modules/nf-core/gatk4/gatherpileupsummaries/main.nf
+  - modules/nf-core/gatk4/getpileupsummaries/main.nf
+  - modules/nf-core/gatk4/learnreadorientationmodel/main.nf
+  - modules/nf-core/gatk4/mergemutectstats/main.nf
+  - modules/nf-core/gatk4/mergevcfs/main.nf
+  - modules/nf-core/gatk4/mutect2/main.nf
+  - subworkflows/local/bam_variant_calling_somatic_mutect2/main.nf
+  - subworkflows/local/bam_variant_calling_tumor_only_mutect2/main.nf
+
 # annotate
 
 ## merge
