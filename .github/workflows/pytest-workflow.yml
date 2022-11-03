@@ -18,16 +18,14 @@ jobs:
       tags: ${{ steps.filter.outputs.changes }}
     steps:
       - uses: actions/checkout@v3
-
       - uses: dorny/paths-filter@v2
         id: filter
         with:
           filters: "tests/config/pytest_tags.yml"
 
   test:
-    runs-on: ubuntu-20.04
-
     name: ${{ matrix.tags }} ${{ matrix.profile }}
+    runs-on: ubuntu-latest
     needs: changes
     if: needs.changes.outputs.tags != '[]'
     strategy:
@@ -35,6 +33,12 @@ jobs:
       matrix:
         tags: ["${{ fromJson(needs.changes.outputs.tags) }}"]
         profile: ["docker", "singularity", "conda"]
+        NXF_VER:
+          - "21.10.3"
+          - "latest-everything"
+        exclude:
+          - NXF_VER: "latest-everything"
+            profile: "conda"
     env:
       NXF_ANSI_LOG: false
     steps:
@@ -64,11 +68,9 @@ jobs:
             ${{ runner.os }}-nextflow-
 
       - name: Install Nextflow
-        env:
-          CAPSULE_LOG: none
-        run: |
-          wget -qO- get.nextflow.io | bash
-          sudo mv nextflow /usr/local/bin/
+        uses: nf-core/setup-nextflow@v1
+        with:
+          version: "${{ matrix.NXF_VER }}"
 
       - name: Set up Singularity
         if: matrix.profile == 'singularity'
@@ -88,9 +90,7 @@ jobs:
         if: matrix.profile == 'conda'
         run: conda clean -a
 
-      # Test the module
       - name: Run pytest-workflow
-        # only use one thread for pytest-workflow to avoid race condition on conda cache.
         uses: Wandalen/wretry.action@v1.0.11
         with:
           command: TMPDIR=~ PROFILE=${{ matrix.profile }} pytest --tag ${{ matrix.tags }} --symlink --kwdof --git-aware --color=yes

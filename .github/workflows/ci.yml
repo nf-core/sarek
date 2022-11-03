@@ -2,15 +2,12 @@ name: nf-core CI
 # This workflow runs the pipeline with the minimal test dataset to check that it completes without any syntax errors
 on:
   push:
-    branches:
-      - dev
+    branches: [dev]
   pull_request:
   release:
     types: [published]
 
-env:
-  NXF_ANSI_LOG: false
-
+# Cancel if a newer run is started
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
@@ -34,9 +31,11 @@ jobs:
         exclude:
           - NXF_VER: "latest-everything"
             profile: "conda"
+    env:
+      NXF_ANSI_LOG: false
     steps:
       - name: Check out pipeline code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up Python
         uses: actions/setup-python@v2
