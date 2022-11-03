@@ -9,17 +9,24 @@ alignment_to_fastq:
   - modules/nf-core/samtools/view/main.nf
   - subworkflows/local/bam_convert_samtools/main.nf
 
+## trimming
+  - conf/modules/trimming.config
+  - modules/nf-core/fastp/main.nf
+
 ## aligner
+
 ### bwamem
 bwamem:
   - conf/modules/aligner.config
   - modules/nf-core/bwa/mem/main.nf
   - subworkflows/local/fastq_align_bwamem_mem2_dragmap/main.nf
+
 ### bwamem2
 bwamem2:
   - conf/modules/aligner.config
   - modules/nf-core/bwamem2/mem/main.nf
   - subworkflows/local/fastq_align_bwamem_mem2_dragmap/main.nf
+
 ### dragmap
 dragmap:
   - conf/modules/aligner.config
@@ -78,6 +85,7 @@ gatk4_spark:
   - subworkflows/local/bam_markduplicates_spark/main.nf
 
 # annotate
+
 ## merge
 merge:
   - conf/modules/annotate.config
@@ -87,12 +95,14 @@ merge:
   - subworkflows/local/vcf_annotate_all/main.nf
   - subworkflows/local/vcf_annotate_ensemblvep/main.nf
   - subworkflows/local/vcf_annotate_snpeff/main.nf
+
 ## snpeff
 snpeff:
   - conf/modules/annotate.config
   - modules/nf-core/snpeff/main.nf
   - modules/nf-core/tabix/bgziptabix/main.nf
   - subworkflows/local/vcf_annotate_snpeff/main.nf
+
 ## vep
 vep:
   - conf/modules/annotate.config
