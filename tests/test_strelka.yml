@@ -1,0 +1,315 @@
+- name: Skip variant calling on matched normal
+  command: nextflow run main.nf -profile test,variantcalling_channels --tools strelka --only_paired_variant_calling
+  tags:
+    - somatic
+    - strelka
+    - variantcalling_channel
+  files:
+    - path: results/multiqc
+    - path: results/reports/bcftools/strelka/sample1/sample1.strelka.variants.bcftools_stats.txt
+      md5sum: fa17527ede69d65762bd78fe86fbe50a
+    - path: results/reports/bcftools/strelka/sample2/sample2.strelka.variants.bcftools_stats.txt
+      md5sum: 93bf8f09d155e69418fff988e76cbc1d
+    - path: results/reports/bcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.bcftools_stats.txt
+      md5sum: 6cf7a55bcb53b400ce7df7e72c892574
+    - path: results/reports/bcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.bcftools_stats.txt
+      md5sum: 7cc6f2412d6b3d8e84ec0daece3d5443
+    - path: results/reports/vcftools/strelka/sample1/sample1.strelka.variants.FILTER.summary
+      md5sum: 2048a5de0201a6052c988a0189979a5f
+    - path: results/reports/vcftools/strelka/sample1/sample1.strelka.variants.TsTv.count
+      md5sum: c5b7a8eda2526d899098439ae4c06a49
+    - path: results/reports/vcftools/strelka/sample1/sample1.strelka.variants.TsTv.qual
+      md5sum: f01534408c3a87893b523de5f39deb0b
+    - path: results/reports/vcftools/strelka/sample2/sample2.strelka.variants.FILTER.summary
+      md5sum: fa3112841a4575d104916027c8851b30
+    - path: results/reports/vcftools/strelka/sample2/sample2.strelka.variants.TsTv.count
+      md5sum: d7f54d09d38af01a574a4930af21cfc9
+    - path: results/reports/vcftools/strelka/sample2/sample2.strelka.variants.TsTv.qual
+      contains:
+        [
+          "19	453	47848	0.00946748	11	50	0.22",
+          "56	456	47875	0.0095248	8	25	0.32",
+          "72	458	47880	0.00956558	6	20	0.3",
+          "314	463	47899	0.00966617	1	1	1",
+        ]
+    - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.FILTER.summary
+      md5sum: 3441628cd6550ed459ca1c3db989ceea
+    - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.TsTv.count
+      md5sum: 8dcfdbcaac118df1d5ad407dd2af699f
+    - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.TsTv.qual
+      md5sum: bc68ae4e688e9fb772b457069e604883
+    - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.FILTER.summary
+      md5sum: 4fc17fa5625b4d1dcc5d791b1eb22d85
+    - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.TsTv.count
+      md5sum: fc7af1f534890c4ad3025588b3af62ae
+    - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.TsTv.qual
+      md5sum: c949f848859f138731898aac64a73eaf
+    - path: results/variant_calling/strelka/sample1/sample1.strelka.genome.vcf.gz
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/strelka/sample1/sample1.strelka.genome.vcf.gz.tbi
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/strelka/sample1/sample1.strelka.variants.vcf.gz
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/strelka/sample1/sample1.strelka.variants.vcf.gz.tbi
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/strelka/sample2/sample2.strelka.genome.vcf.gz
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/strelka/sample2/sample2.strelka.genome.vcf.gz.tbi
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/strelka/sample2/sample2.strelka.variants.vcf.gz
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/strelka/sample2/sample2.strelka.variants.vcf.gz.tbi
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.vcf.gz
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.vcf.gz.tbi
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz.tbi
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/sample3/strelka/sample3.strelka.variants.vcf.gz
+      should_exist: false
+    - path: results/variant_calling/strelka/sample3/sample3.strelka.variants.vcf.gz.tbi
+      should_exist: false
+    - path: results/variant_calling/strelka/sample3/sample3.strelka.genome.vcf.gz
+      should_exist: false
+    - path: results/variant_calling/strelka/sample3/sample3.strelka.genome.vcf.gz.tbi
+      should_exist: false
+- name: Run variant calling on germline sample with strelka
+  command: nextflow run main.nf -profile test,tools_germline --tools strelka
+  tags:
+    - germline
+    - strelka
+    - variant_calling
+  files:
+    - path: results/csv/variantcalled.csv
+      md5sum: cd8a47dfc3e44c395e9f693770ccc6c9
+    - path: results/multiqc
+    - path: results/reports/bcftools/strelka/sample1/sample1.strelka.variants.bcftools_stats.txt
+      md5sum: fa17527ede69d65762bd78fe86fbe50a
+    - path: results/reports/vcftools/strelka/sample1/sample1.strelka.variants.FILTER.summary
+      md5sum: 2048a5de0201a6052c988a0189979a5f
+    - path: results/reports/vcftools/strelka/sample1/sample1.strelka.variants.TsTv.count
+      md5sum: c5b7a8eda2526d899098439ae4c06a49
+    - path: results/reports/vcftools/strelka/sample1/sample1.strelka.variants.TsTv.qual
+      md5sum: f01534408c3a87893b523de5f39deb0b
+    - path: results/variant_calling/strelka/sample1/sample1.strelka.genome.vcf.gz
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/strelka/sample1/sample1.strelka.genome.vcf.gz.tbi
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/strelka/sample1/sample1.strelka.variants.vcf.gz
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/strelka/sample1/sample1.strelka.variants.vcf.gz.tbi
+    # binary changes md5sums on reruns.
+    - path: results/strelka
+      should_exist: false
+- name: Run variant calling on germline sample with strelka without intervals
+  command: nextflow run main.nf -profile test,tools_germline --tools strelka --no_intervals
+  tags:
+    - germline
+    - strelka
+    - no_intervals
+    - variant_calling
+  files:
+    - path: results/csv/variantcalled.csv
+      md5sum: cd8a47dfc3e44c395e9f693770ccc6c9
+    - path: results/multiqc
+    - path: results/no_intervals.bed
+      md5sum: f3dac01ea66b95fe477446fde2d31489
+    - path: results/no_intervals.bed.gz
+      md5sum: f3dac01ea66b95fe477446fde2d31489
+    - path: results/no_intervals.bed.gz.tbi
+      md5sum: f3dac01ea66b95fe477446fde2d31489
+    - path: results/reports/bcftools/strelka/sample1/sample1.strelka.variants.bcftools_stats.txt
+      md5sum: 90bd53c11222b5e07b4b37cbefa0e2d6
+    - path: results/reports/vcftools/strelka/sample1/sample1.strelka.variants.FILTER.summary
+      md5sum: 2b7be6ff481fddc655210b836587810d
+    - path: results/reports/vcftools/strelka/sample1/sample1.strelka.variants.TsTv.count
+      md5sum: 1481854d2a765f5641856ecf95ca4097
+    - path: results/reports/vcftools/strelka/sample1/sample1.strelka.variants.TsTv.qual
+      md5sum: fd8e449a715922e24fe4ea9c89870432
+    - path: results/variant_calling/strelka/sample1/sample1.strelka.genome.vcf.gz
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/strelka/sample1/sample1.strelka.genome.vcf.gz.tbi
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/strelka/sample1/sample1.strelka.variants.vcf.gz
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/strelka/sample1/sample1.strelka.variants.vcf.gz.tbi
+    # binary changes md5sums on reruns.
+    - path: results/strelka
+      should_exist: false
+- name: Run variant calling on tumor only sample with strelka
+  command: nextflow run main.nf -profile test,tools_tumoronly --tools strelka
+  tags:
+    - strelka
+    - tumor_only
+    - variant_calling
+  files:
+    - path: results/csv/variantcalled.csv
+      md5sum: 8d2a5e0ad12781c99e773b828e478d35
+    - path: results/multiqc
+    - path: results/reports/bcftools/strelka/sample2/sample2.strelka.variants.bcftools_stats.txt
+      md5sum: 93bf8f09d155e69418fff988e76cbc1d
+    - path: results/reports/vcftools/strelka/sample2/sample2.strelka.variants.FILTER.summary
+      md5sum: fa3112841a4575d104916027c8851b30
+    - path: results/reports/vcftools/strelka/sample2/sample2.strelka.variants.TsTv.count
+      md5sum: d7f54d09d38af01a574a4930af21cfc9
+    - path: results/reports/vcftools/strelka/sample2/sample2.strelka.variants.TsTv.qual
+      contains: ["19	453	47848	0.00946748	11	50	0.22", "72	458	47880	0.00956558	6	20	0.3", "314	463	47899	0.00966617	1	1	1"]
+    - path: results/variant_calling/strelka/sample2/sample2.strelka.genome.vcf.gz
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/strelka/sample2/sample2.strelka.genome.vcf.gz.tbi
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/strelka/sample2/sample2.strelka.variants.vcf.gz
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/strelka/sample2/sample2.strelka.variants.vcf.gz.tbi
+    # binary changes md5sums on reruns.
+    - path: results/strelka
+      should_exist: false
+- name: Run variant calling on tumor only sample with strelka without intervals
+  command: nextflow run main.nf -profile test,tools_tumoronly --tools strelka --no_intervals
+  tags:
+    - no_intervals
+    - strelka
+    - tumor_only
+    - variant_calling
+  files:
+    - path: results/csv/variantcalled.csv
+      md5sum: 8d2a5e0ad12781c99e773b828e478d35
+    - path: results/multiqc
+    - path: results/no_intervals.bed
+      md5sum: f3dac01ea66b95fe477446fde2d31489
+    - path: results/no_intervals.bed.gz
+      md5sum: f3dac01ea66b95fe477446fde2d31489
+    - path: results/no_intervals.bed.gz.tbi
+      md5sum: f3dac01ea66b95fe477446fde2d31489
+    - path: results/reports/bcftools/strelka/sample2/sample2.strelka.variants.bcftools_stats.txt
+      md5sum: 9c3427ef0a28c43cc10537974f4bd9c4
+    - path: results/reports/vcftools/strelka/sample2/sample2.strelka.variants.FILTER.summary
+      md5sum: d1dcce19d82ced016724ace746e95d01
+    - path: results/reports/vcftools/strelka/sample2/sample2.strelka.variants.TsTv.count
+      md5sum: 9de35bbe9ebe45166b6bd195717f733a
+    - path: results/reports/vcftools/strelka/sample2/sample2.strelka.variants.TsTv.qual
+      md5sum: d2908c6821e5f45146a382625e4704c9
+    - path: results/variant_calling/strelka/sample2/sample2.strelka.genome.vcf.gz
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/strelka/sample2/sample2.strelka.genome.vcf.gz.tbi
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/strelka/sample2/sample2.strelka.variants.vcf.gz
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/strelka/sample2/sample2.strelka.variants.vcf.gz.tbi
+    # binary changes md5sums on reruns.
+    - path: results/strelka
+      should_exist: false
+- name: Run variant calling on somatic sample with strelka
+  command: nextflow run main.nf -profile test,tools_somatic --tools strelka
+  tags:
+    - somatic
+    - strelka
+    - variant_calling
+  files:
+    - path: results/csv/variantcalled.csv
+      md5sum: 31ccee9472fed8bd15798724c62aee15
+    - path: results/multiqc
+    - path: results/reports/bcftools/strelka/sample3/sample3.strelka.variants.bcftools_stats.txt
+      md5sum: af8f05fd8a09e96c4c8850b6ef44729e
+    - path: results/reports/bcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.bcftools_stats.txt
+      md5sum: 6cf7a55bcb53b400ce7df7e72c892574
+    - path: results/reports/bcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.bcftools_stats.txt
+      md5sum: 7cc6f2412d6b3d8e84ec0daece3d5443
+    - path: results/reports/vcftools/strelka/sample3/sample3.strelka.variants.FILTER.summary
+      md5sum: 2048a5de0201a6052c988a0189979a5f
+    - path: results/reports/vcftools/strelka/sample3/sample3.strelka.variants.TsTv.count
+      md5sum: c5b7a8eda2526d899098439ae4c06a49
+    - path: results/reports/vcftools/strelka/sample3/sample3.strelka.variants.TsTv.qual
+      md5sum: f01534408c3a87893b523de5f39deb0b
+    - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.FILTER.summary
+      md5sum: 3441628cd6550ed459ca1c3db989ceea
+    - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.TsTv.count
+      md5sum: 8dcfdbcaac118df1d5ad407dd2af699f
+    - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.TsTv.qual
+      md5sum: bc68ae4e688e9fb772b457069e604883
+    - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.FILTER.summary
+      md5sum: 4fc17fa5625b4d1dcc5d791b1eb22d85
+    - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.TsTv.count
+      md5sum: fc7af1f534890c4ad3025588b3af62ae
+    - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.TsTv.qual
+      md5sum: c949f848859f138731898aac64a73eaf
+    - path: results/variant_calling/strelka/sample3/sample3.strelka.genome.vcf.gz
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/strelka/sample3/sample3.strelka.genome.vcf.gz.tbi
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/strelka/sample3/sample3.strelka.variants.vcf.gz
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/strelka/sample3/sample3.strelka.variants.vcf.gz.tbi
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.vcf.gz
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.vcf.gz.tbi
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz.tbi
+    # binary changes md5sums on reruns.
+    - path: results/strelka
+      should_exist: false
+- name: Run variant calling on somatic sample with strelka without intervals
+  command: nextflow run main.nf -profile test,tools_somatic --tools strelka --no_intervals
+  tags:
+    - no_intervals
+    - somatic
+    - strelka
+    - variant_calling
+  files:
+    - path: results/csv/variantcalled.csv
+      md5sum: 31ccee9472fed8bd15798724c62aee15
+    - path: results/multiqc
+    - path: results/no_intervals.bed
+      md5sum: f3dac01ea66b95fe477446fde2d31489
+    - path: results/no_intervals.bed.gz
+      md5sum: f3dac01ea66b95fe477446fde2d31489
+    - path: results/no_intervals.bed.gz.tbi
+      md5sum: f3dac01ea66b95fe477446fde2d31489
+    - path: results/reports/bcftools/strelka/sample3/sample3.strelka.variants.bcftools_stats.txt
+      md5sum: 572bc880d2bf64a00c8f86567c72f575
+    - path: results/reports/bcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.bcftools_stats.txt
+      md5sum: 6cf7a55bcb53b400ce7df7e72c892574
+    - path: results/reports/bcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.bcftools_stats.txt
+      md5sum: 21b5d06e7e9f34a05b3d7554240f7669
+    - path: results/reports/vcftools/strelka/sample3/sample3.strelka.variants.FILTER.summary
+      md5sum: 2b7be6ff481fddc655210b836587810d
+    - path: results/reports/vcftools/strelka/sample3/sample3.strelka.variants.TsTv.count
+      md5sum: 1481854d2a765f5641856ecf95ca4097
+    - path: results/reports/vcftools/strelka/sample3/sample3.strelka.variants.TsTv.qual
+      md5sum: fd8e449a715922e24fe4ea9c89870432
+    - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.FILTER.summary
+      md5sum: 3441628cd6550ed459ca1c3db989ceea
+    - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.TsTv.count
+      md5sum: 8dcfdbcaac118df1d5ad407dd2af699f
+    - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.TsTv.qual
+      md5sum: bc68ae4e688e9fb772b457069e604883
+    - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.FILTER.summary
+      md5sum: 7a81b11aa29fec73d5bc872b7b58f8aa
+    - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.TsTv.count
+      md5sum: a922c51ca3b2ea7cdcfa09e9c8c55d52
+    - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.TsTv.qual
+      md5sum: 75af7d1b1e5a2f1bdfe5b530e37a6cbb
+    - path: results/variant_calling/strelka/sample3/sample3.strelka.genome.vcf.gz
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/strelka/sample3/sample3.strelka.genome.vcf.gz.tbi
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/strelka/sample3/sample3.strelka.variants.vcf.gz
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/strelka/sample3/sample3.strelka.variants.vcf.gz.tbi
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.vcf.gz
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.vcf.gz.tbi
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz.tbi
+    # binary changes md5sums on reruns.
+    - path: results/strelka
+      should_exist: false

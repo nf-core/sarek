@@ -1,0 +1,98 @@
+- name: Run variant calling on somatic sample with tiddit
+  command: nextflow run main.nf -profile test,tools_somatic --tools tiddit
+  tags:
+    - tiddit
+    - somatic
+    - variant_calling
+  files:
+    - path: results/csv/variantcalled.csv
+      md5sum: 76b499e35c128d67b0606ea561bf70e0
+    - path: results/multiqc
+    - path: results/reports/bcftools/tiddit/sample3/sample3.tiddit.bcftools_stats.txt
+      md5sum: 47af91809c214102f723a7c58e9b8e72
+    - path: results/reports/bcftools/tiddit/sample4_vs_sample3/sample4_vs_sample3.tiddit_sv_merge.bcftools_stats.txt
+      md5sum: c071ebe8222acd2c76fc019838e8c230
+    - path: results/reports/vcftools/tiddit/sample3/sample3.tiddit.FILTER.summary
+      md5sum: 1ce42d34e4ae919afb519efc99146423
+    - path: results/reports/vcftools/tiddit/sample3/sample3.tiddit.TsTv.count
+      md5sum: fa27f678965b7cba6a92efcd039f802a
+    - path: results/reports/vcftools/tiddit/sample3/sample3.tiddit.TsTv.qual
+      md5sum: bc68ae4e688e9fb772b457069e604883
+    - path: results/reports/vcftools/tiddit/sample4_vs_sample3/sample4_vs_sample3.tiddit_sv_merge.FILTER.summary
+      md5sum: 1ce42d34e4ae919afb519efc99146423
+    - path: results/reports/vcftools/tiddit/sample4_vs_sample3/sample4_vs_sample3.tiddit_sv_merge.TsTv.count
+      md5sum: 8dcfdbcaac118df1d5ad407dd2af699f
+    - path: results/reports/vcftools/tiddit/sample4_vs_sample3/sample4_vs_sample3.tiddit_sv_merge.TsTv.qual
+      md5sum: bc68ae4e688e9fb772b457069e604883
+    - path: results/variant_calling/tiddit/sample3/sample3.tiddit.ploidies.tab
+      md5sum: d65f8aa5bb136f77c23264640481f047
+    - path: results/variant_calling/tiddit/sample3/sample3.tiddit.vcf.gz
+      md5sum: 1aeb97037b73251bb79e48b355026c9d
+    - path: results/variant_calling/tiddit/sample3/sample3.tiddit.vcf.gz.tbi
+      md5sum: 4cb176febbc8c26d717a6c6e67b9c905
+    - path: results/variant_calling/tiddit/sample4_vs_sample3/sample4_vs_sample3.tiddit.normal.vcf.gz
+      md5sum: 5ba8e30a9d831c05e31300b7d2c578ef
+    - path: results/variant_calling/tiddit/sample4_vs_sample3/sample4_vs_sample3.tiddit.normal.vcf.gz.tbi
+      md5sum: 4cb176febbc8c26d717a6c6e67b9c905
+    - path: results/variant_calling/tiddit/sample4_vs_sample3/sample4_vs_sample3.tiddit.ploidies.tab
+      md5sum: d65f8aa5bb136f77c23264640481f047
+    - path: results/variant_calling/tiddit/sample4_vs_sample3/sample4_vs_sample3.tiddit.tumor.vcf.gz
+      md5sum: 302cb980260b313573cf53067fd11120
+    - path: results/variant_calling/tiddit/sample4_vs_sample3/sample4_vs_sample3.tiddit.tumor.vcf.gz.tbi
+      md5sum: 4cb176febbc8c26d717a6c6e67b9c905
+    - path: results/variant_calling/tiddit/sample4_vs_sample3/sample4_vs_sample3.tiddit_sv_merge.vcf.gz
+      md5sum: f69f1fb9c246ac3bbc9270a2ea979557
+    - path: results/tiddit
+      should_exist: false
+- name: Run variant calling on germline sample with tiddit
+  command: nextflow run main.nf -profile test,tools_germline --tools tiddit
+  tags:
+    - tiddit
+    - germline
+    - variant_calling
+  files:
+    - path: results/csv/variantcalled.csv
+      md5sum: cd458ebee25e1fb1258d2f390e54c736
+    - path: results/multiqc
+    - path: results/reports/bcftools/tiddit/sample1/sample1.tiddit.bcftools_stats.txt
+      md5sum: 6bde7b353b927f8e99f5d0f3b592e67b
+    - path: results/reports/vcftools/tiddit/sample1/sample1.tiddit.FILTER.summary
+      md5sum: 1ce42d34e4ae919afb519efc99146423
+    - path: results/reports/vcftools/tiddit/sample1/sample1.tiddit.TsTv.count
+      md5sum: fa27f678965b7cba6a92efcd039f802a
+    - path: results/reports/vcftools/tiddit/sample1/sample1.tiddit.TsTv.qual
+      md5sum: bc68ae4e688e9fb772b457069e604883
+    - path: results/variant_calling/tiddit/sample1/sample1.tiddit.ploidies.tab
+      md5sum: d65f8aa5bb136f77c23264640481f047
+    - path: results/variant_calling/tiddit/sample1/sample1.tiddit.vcf.gz
+      md5sum: 72cd7a6dc9dece29fdcb0a19f69e1cb5
+    - path: results/variant_calling/tiddit/sample1/sample1.tiddit.vcf.gz.tbi
+      md5sum: 4cb176febbc8c26d717a6c6e67b9c905
+    - path: results/tiddit
+      should_exist: false
+- name: Run variant calling on tumor_only sample with tiddit
+  command: nextflow run main.nf -profile test,tools_tumoronly --tools tiddit
+  tags:
+    - tiddit
+    - tumor_only
+    - variant_calling
+  files:
+    - path: results/csv/variantcalled.csv
+      md5sum: 15076bb78912fe51006e83934c376fc2
+    - path: results/multiqc
+    - path: results/reports/bcftools/tiddit/sample2/sample2.tiddit.bcftools_stats.txt
+      md5sum: f2e3a2944f28287286f526d069d473e4
+    - path: results/reports/vcftools/tiddit/sample2/sample2.tiddit.FILTER.summary
+      md5sum: 1ce42d34e4ae919afb519efc99146423
+    - path: results/reports/vcftools/tiddit/sample2/sample2.tiddit.TsTv.count
+      md5sum: fa27f678965b7cba6a92efcd039f802a
+    - path: results/reports/vcftools/tiddit/sample2/sample2.tiddit.TsTv.qual
+      md5sum: bc68ae4e688e9fb772b457069e604883
+    - path: results/variant_calling/tiddit/sample2/sample2.tiddit.ploidies.tab
+      md5sum: 0f01874e20df10ecc7418d4537c7aa82
+    - path: results/variant_calling/tiddit/sample2/sample2.tiddit.vcf.gz
+      md5sum: d75c2688964d79a87d882a8ac9a9a93b
+    - path: results/variant_calling/tiddit/sample2/sample2.tiddit.vcf.gz.tbi
+      md5sum: 4cb176febbc8c26d717a6c6e67b9c905
+    - path: results/tiddit
+      should_exist: false

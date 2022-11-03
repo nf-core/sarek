@@ -177,6 +177,12 @@ mpileup:
   - modules/nf-core/samtools/mpileup/main.nf
   - subworkflows/local/bam_variant_calling_mpileup/main.nf
 
+## msisensorpro
+msisensorpro:
+  - conf/modules/msisensorpro.config
+  - modules/nf-core/msisensorpro/scan/main.nf
+  - modules/nf-core/msisensorpro/msi_somatic/main.nf
+
 ## mutect2
 mutect2:
   - conf/modules/mutect2.config
@@ -190,6 +196,34 @@ mutect2:
   - modules/nf-core/gatk4/mutect2/main.nf
   - subworkflows/local/bam_variant_calling_somatic_mutect2/main.nf
   - subworkflows/local/bam_variant_calling_tumor_only_mutect2/main.nf
+
+## strelka
+strelka:
+  - conf/modules/strelka.config
+  - modules/nf-core/gatk4/mergevcfs/main.nf
+  - modules/nf-core/strelka/germline/main.nf
+  - modules/nf-core/strelka/somatic/main.nf
+  - subworkflows/local/bam_variant_calling_single_strelka/main.nf
+  - subworkflows/local/bam_variant_calling_somatic_strelka/main.nf
+
+## strelka_bp
+strelka_bp:
+  - conf/modules/manta.config
+  - conf/modules/strelka.config
+  - modules/nf-core/gatk4/mergevcfs/main.nf
+  - modules/nf-core/manta/somatic/main.nf
+  - modules/nf-core/strelka/somatic/main.nf
+  - subworkflows/local/bam_variant_calling_somatic_manta/main.nf
+  - subworkflows/local/bam_variant_calling_somatic_strelka/main.nf
+
+## tiddit
+tiddit:
+  - conf/modules/tiddit.config
+  - modules/nf-core/svdb/merge/main.nf.nf
+  - modules/nf-core/tabix/bgziptabix/main.nf
+  - modules/nf-core/tiddit/sv/main.nf
+  - subworkflows/local/bam_variant_calling_single_tiddit/main.nf
+  - subworkflows/local/bam_variant_calling_somatic_tiddit/main.nf
 
 # annotate
 
