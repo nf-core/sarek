@@ -1,3 +1,13 @@
+# default_extended
+
+default_extended:
+  - conf/modules/**
+  - modules/**
+  - subworkflows/**
+  - workflows/**
+  - nextflow.config
+  - main.nf
+
 # preprocessing
 
 ## alignment_to_fastq
