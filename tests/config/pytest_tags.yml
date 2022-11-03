@@ -9,7 +9,22 @@ alignment_to_fastq:
   - modules/nf-core/samtools/view/main.nf
   - subworkflows/local/bam_convert_samtools/main.nf
 
+## umi
+umi:
+  - conf/modules/umi.config
+  - modules/nf-core/bwa/mem/main.nf
+  - modules/nf-core/bwamem2/mem/main.nf
+  - modules/nf-core/dragmap/align/main.nf
+  - modules/nf-core/fgbio/callmolecularconsensusreads/main.nf
+  - modules/nf-core/fgbio/fastqtobam/main.nf
+  - modules/nf-core/fgbio/groupreadsbyumi/main.nf
+  - modules/nf-core/samblaster/main.nf
+  - modules/nf-core/samtools/bam2fq/main.nf
+  - subworkflows/local/fastq_align_bwamem_mem2_dragmap/main.nf
+  - subworkflows/local/fastq_create_umi_consensus_fgbio/main.nf
+
 ## trimming
+trimming:
   - conf/modules/trimming.config
   - modules/nf-core/fastp/main.nf
 
