@@ -1,18 +1,6 @@
-# aligner
-bwamem:
-  - conf/modules/aligner.config
-  - modules/nf-core/bwa/mem/main.nf
-  - subworkflows/local/fastq_align_bwamem_mem2_dragmap/main.nf
-bwamem2:
-  - conf/modules/aligner.config
-  - modules/nf-core/bwamem2/mem/main.nf
-  - subworkflows/local/fastq_align_bwamem_mem2_dragmap/main.nf
-dragmap:
-  - conf/modules/aligner.config
-  - modules/nf-core/dragmap/align/main.nf
-  - subworkflows/local/fastq_align_bwamem_mem2_dragmap/main.nf
+# preprocessing
 
-# alignment_to_fastq
+## alignment_to_fastq
 alignment_to_fastq:
   - conf/modules/alignment_to_fastq.config
   - modules/nf-core/cat/fastq/main.nf
@@ -21,7 +9,24 @@ alignment_to_fastq:
   - modules/nf-core/samtools/view/main.nf
   - subworkflows/local/bam_convert_samtools/main.nf
 
-# markduplicates
+## aligner
+### bwamem
+bwamem:
+  - conf/modules/aligner.config
+  - modules/nf-core/bwa/mem/main.nf
+  - subworkflows/local/fastq_align_bwamem_mem2_dragmap/main.nf
+### bwamem2
+bwamem2:
+  - conf/modules/aligner.config
+  - modules/nf-core/bwamem2/mem/main.nf
+  - subworkflows/local/fastq_align_bwamem_mem2_dragmap/main.nf
+### dragmap
+dragmap:
+  - conf/modules/aligner.config
+  - modules/nf-core/dragmap/align/main.nf
+  - subworkflows/local/fastq_align_bwamem_mem2_dragmap/main.nf
+
+## markduplicates
 markduplicates:
   - conf/modules/markduplicates.config
   - modules/nf-core/gatk4/markduplicates/main.nf
@@ -32,7 +37,7 @@ markduplicates:
   - subworkflows/local/bam_markduplicates/main.nf
   - subworkflows/local/cram_qc_mosdepth_samtools/main.nf
 
-# prepare_recalibration
+## prepare_recalibration
 prepare_recalibration:
   - conf/modules/prepare_recalibration.config
   - modules/nf-core/gatk4/baserecalibrator/main.nf
@@ -40,7 +45,7 @@ prepare_recalibration:
   - modules/nf-core/samtools/convert/main.nf
   - subworkflows/local/bam_baserecalibrator/main.nf
 
-# recalibrate
+## recalibrate
 recalibrate:
   - conf/modules/recalibrate.config
   - modules/nf-core/gatk4/applybqsr/main.nf
@@ -50,7 +55,16 @@ recalibrate:
   - subworkflows/local/bam_applybqsr/main.nf
   - subworkflows/local/cram_merge_index_samtools/main.nf
 
-# gatk4_spark
+## intervals
+intervals:
+  - conf/modules/prepare_intervals.config
+  - modules/local/build_intervals/main.nf
+  - modules/local/create_intervals_bed/main.nf
+  - modules/nf-core/gatk4/intervallisttobed/main.nf
+  - modules/nf-core/tabix/bgziptabix/main.nf
+  - subworkflows/local/prepare_intervals/main.nf
+
+## gatk4_spark
 gatk4_spark:
   - conf/modules/markduplicates.config
   - conf/modules/prepare_recalibration.config
@@ -64,6 +78,7 @@ gatk4_spark:
   - subworkflows/local/bam_markduplicates_spark/main.nf
 
 # annotate
+## merge
 merge:
   - conf/modules/annotate.config
   - modules/nf-core/ensemblvep/main.nf
@@ -72,11 +87,13 @@ merge:
   - subworkflows/local/vcf_annotate_all/main.nf
   - subworkflows/local/vcf_annotate_ensemblvep/main.nf
   - subworkflows/local/vcf_annotate_snpeff/main.nf
+## snpeff
 snpeff:
   - conf/modules/annotate.config
   - modules/nf-core/snpeff/main.nf
   - modules/nf-core/tabix/bgziptabix/main.nf
   - subworkflows/local/vcf_annotate_snpeff/main.nf
+## vep
 vep:
   - conf/modules/annotate.config
   - modules/nf-core/ensemblvep/main.nf

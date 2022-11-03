@@ -2,6 +2,7 @@
   command: nextflow run main.nf -profile test,alignment_to_fastq
   tags:
     - alignment_to_fastq
+    - input_bam
   files:
     - path: results/csv/markduplicates.csv
       md5sum: 0d6120bb99e92f6810343270711ca53e

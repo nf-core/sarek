@@ -1,7 +1,7 @@
 - name: Run prepare_recalibration starting from cram
   command: nextflow run main.nf -profile test,prepare_recalibration_cram
   tags:
-    - cram
+    - input_cram
     - prepare_recalibration
     - preprocessing
   files:
@@ -33,7 +33,7 @@
 - name: Run prepare_recalibration starting from cram and skip baserecalibration
   command: nextflow run main.nf -profile test,prepare_recalibration_cram,skip_bqsr --tools strelka
   tags:
-    - cram
+    - input_cram
     - prepare_recalibration
     - preprocessing
   files:

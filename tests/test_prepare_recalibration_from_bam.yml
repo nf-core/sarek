@@ -1,7 +1,7 @@
 - name: Run prepare_recalibration starting from bam
   command: nextflow run main.nf -profile test,prepare_recalibration_bam
   tags:
-    - bam
+    - input_bam
     - prepare_recalibration
     - preprocessing
   files:
@@ -39,7 +39,7 @@
 - name: Run prepare_recalibration starting from bam and skip baserecalibration
   command: nextflow run main.nf -profile test,prepare_recalibration_bam,skip_bqsr --tools strelka
   tags:
-    - bam
+    - input_bam
     - prepare_recalibration
     - preprocessing
   files:

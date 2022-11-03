@@ -1,7 +1,7 @@
 - name: Run markduplicates starting from BAM
   command: nextflow run main.nf -profile test,markduplicates_bam
   tags:
-    - bam
+    - input_bam
     - markduplicates
     - preprocessing
   files:
