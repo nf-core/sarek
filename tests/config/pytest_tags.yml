@@ -110,6 +110,17 @@ cnvkit:
   - subworkflows/local/bam_variant_calling_cnvkit/main.nf
   - subworkflows/local/prepare_reference_cnvkit/main.nf
 
+## controlfreec
+controlfreec:
+  - conf/modules/controlfreec.config
+  - modules/nf-core/controlfreec/assesssignificance/main.nf
+  - modules/nf-core/controlfreec/freec/main.nf
+  - modules/nf-core/controlfreec/freec2bed/main.nf
+  - modules/nf-core/controlfreec/freec2circos/main.nf
+  - modules/nf-core/controlfreec/makegraph/main.nf
+  - subworkflows/local/bam_variant_calling_somatic_controlfreec/main.nf
+  - subworkflows/local/bam_variant_calling_tumor_only_controlfreec/main.nf
+
 # annotate
 
 ## merge

@@ -1,0 +1,150 @@
+- name: Run variant calling on somatic samples with controlfreec
+  command: nextflow run main.nf -profile test,tools_somatic --tools controlfreec
+  tags:
+    - controlfreec
+    - somatic
+    - variant_calling
+    - copy_number_calling
+  files:
+    - path: results/multiqc
+    - path: results/untar/chromosomes/chr21.fasta
+      md5sum: 69bd44ef67566a76d6cbb8aa4a25ae35
+    - path: results/variant_calling/controlfreec/sample4_vs_sample3/config.txt
+      contains:
+        [
+          "BedGraphOutput = TRUE",
+          "minExpectedGC = 0",
+          "maxThreads = 2",
+          "noisyData = TRUE",
+          "readCountThreshold = 1",
+          "sex = XX",
+          "window = 10",
+        ]
+    - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.bed
+      md5sum: 833920178e4f40a296d8eab029caf086
+    - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.circos.txt
+      md5sum: 92ce5ce97b27a7214dfa9c2cb20cf854
+    - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.normal.mpileup.gz_control.cpn
+      md5sum: 508a003da85b186d9a60d867ef7cdf15
+    - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.p.value.txt
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz_BAF.txt
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz_CNVs
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz_info.txt
+      md5sum: 271271719c576d9218bdc859850e54ee
+    - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz_ratio.BedGraph
+      md5sum: 5d3321af93678f16878d59e01d3a87d3
+    - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz_ratio.txt
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz_sample.cpn
+      md5sum: befe1706c61464635a76c7323a6bd2a2
+    - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_BAF.png
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_ratio.log2.png
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_ratio.png
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/mpileup/sample4_vs_sample3/sample4_vs_sample3.normal.mpileup.gz
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/mpileup/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz
+    # binary changes md5sums on reruns.
+    - path: results/cnvkit
+      should_exist: false
+- name: Run variant calling on somatic samples with controlfreec without intervals
+  command: nextflow run main.nf -profile test,tools_somatic --tools controlfreec --no_intervals -stub-run
+  tags:
+    - controlfreec
+    - no_intervals
+    - somatic
+    - variant_calling
+    - copy_number_calling
+  files:
+    - path: results/multiqc
+    - path: results/no_intervals.bed
+      md5sum: f3dac01ea66b95fe477446fde2d31489
+    - path: results/no_intervals.bed.gz
+      md5sum: f3dac01ea66b95fe477446fde2d31489
+    - path: results/no_intervals.bed.gz.tbi
+      md5sum: f3dac01ea66b95fe477446fde2d31489
+    - path: results/untar/chromosomes
+    - path: results/variant_calling/controlfreec/sample4_vs_sample3/GC_profile.sample4_vs_sample3.cpn
+      md5sum: d41d8cd98f00b204e9800998ecf8427e # This is the md5sum of an empty file. Are all these files suppose to be empty?
+    - path: results/variant_calling/controlfreec/sample4_vs_sample3/config.txt
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
+    - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.bed
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
+    - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.circos.txt
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
+    - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.p.value.txt
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
+    - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_BAF.png
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
+    - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_BAF.txt
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
+    - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_CNVs
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
+    - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_info.txt
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
+    - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_ratio.BedGraph
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
+    - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_ratio.log2.png
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
+    - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_ratio.png
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
+    - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_ratio.txt
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
+    - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_sample.cpn
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
+    - path: results/variant_calling/mpileup/sample4_vs_sample3/sample4_vs_sample3.normal.mpileup.gz
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/mpileup/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz
+    # binary changes md5sums on reruns.
+    - path: results/controlfreec
+      should_exist: false
+    - path: results/mpileup
+      should_exist: false
+- name: Run variant calling on tumor_only sample with controlfreec
+  command: nextflow run main.nf -profile test,tools_tumoronly --tools controlfreec -stub-run
+  tags:
+    - controlfreec
+    - tumor_only
+    - variant_calling
+    - copy_number_calling
+  files:
+    - path: results/multiqc
+    - path: results/variant_calling/controlfreec/sample2/GC_profile.sample2.cpn
+      md5sum: d41d8cd98f00b204e9800998ecf8427e # This is the md5sum of an empty file. Are all these files suppose to be empty?
+    - path: results/variant_calling/controlfreec/sample2/config.txt
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
+    - path: results/variant_calling/controlfreec/sample2/sample2.bed
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
+    - path: results/variant_calling/controlfreec/sample2/sample2.circos.txt
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
+    - path: results/variant_calling/controlfreec/sample2/sample2.p.value.txt
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
+    - path: results/variant_calling/controlfreec/sample2/sample2_BAF.png
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
+    - path: results/variant_calling/controlfreec/sample2/sample2_BAF.txt
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
+    - path: results/variant_calling/controlfreec/sample2/sample2_CNVs
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
+    - path: results/variant_calling/controlfreec/sample2/sample2_info.txt
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
+    - path: results/variant_calling/controlfreec/sample2/sample2_ratio.BedGraph
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
+    - path: results/variant_calling/controlfreec/sample2/sample2_ratio.log2.png
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
+    - path: results/variant_calling/controlfreec/sample2/sample2_ratio.png
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
+    - path: results/variant_calling/controlfreec/sample2/sample2_ratio.txt
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
+    - path: results/variant_calling/controlfreec/sample2/sample2_sample.cpn
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
+    - path: results/variant_calling/mpileup/sample2/sample2.tumor.mpileup.gz
+    # binary changes md5sums on reruns.
+    - path: results/controlfreec
+      should_exist: false
+    - path: results/mpileup
+      should_exist: false
