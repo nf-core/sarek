@@ -24,7 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#784](https://github.com/nf-core/sarek/pull/784) - Update all subworkflows names thanks to @scorreard
 - [#806](https://github.com/nf-core/sarek/pull/806) - Refactor all tests
 - [#806](https://github.com/nf-core/sarek/pull/806) - Split up `modules.config` file
-- [#807](https://github.com/nf-core/sarek/pull/807) - Update CHANGELOG
+- [#810](https://github.com/nf-core/sarek/pull/810) - Update CHANGELOG
 
 ### Fixed
 
