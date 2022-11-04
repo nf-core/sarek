@@ -41,7 +41,7 @@
     - path: results/variant_calling/tiddit/sample4_vs_sample3/sample4_vs_sample3.tiddit.tumor.vcf.gz.tbi
     # conda changes md5sums for test.
     - path: results/variant_calling/tiddit/sample4_vs_sample3/sample4_vs_sample3.tiddit_sv_merge.vcf.gz
-      md5sum: f69f1fb9c246ac3bbc9270a2ea979557
+    # conda changes md5sums for test.
     - path: results/tiddit
       should_exist: false
 - name: Run variant calling on germline sample with tiddit

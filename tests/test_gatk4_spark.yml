@@ -97,9 +97,9 @@
       md5sum: 3ddc20eb105fdcc483945afd7d7d238c
     - path: results/multiqc
     - path: results/preprocessing/markduplicates/test/test.md.bam
-      md5sum: 8bfd111af60ca7e63b233e59b0fb570b
+    # conda changes md5sums for test.
     - path: results/preprocessing/markduplicates/test/test.md.bam.bai
-      md5sum: fe8bc8655aff0d1a8093680390d98fab
+    # conda changes md5sums for test.
     - path: results/preprocessing/recal_table/test/test.recal.table
       md5sum: 5b6e5078b4a90f6cb982fa0f0df616c2
     - path: results/preprocessing/recalibrated/test/test.recal.bam

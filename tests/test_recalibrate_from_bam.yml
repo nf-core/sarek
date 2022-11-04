@@ -39,7 +39,6 @@
     - recalibrate
     - preprocessing
     - variant_calling
-    - strelka
   files:
     - path: results/csv/variantcalled.csv
       md5sum: 4d0effd3d8dc2b814230a189e7ca9dba
