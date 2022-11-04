@@ -186,9 +186,9 @@
     - path: results/reports/mosdepth/test/test.sorted.regions.bed.gz.csi
       md5sum: e3235323f455414ee3acc7144e659caf
     - path: results/reports/samtools/test/test.recal.cram.stats
-      md5sum: 55ddd2d98552a1483bf2a965f19d8da4
+    # conda changes md5sums for test.
     - path: results/reports/samtools/test/test.sorted.cram.stats
-      md5sum: 59d921ed3970e19145fbae75966de3e3
+    # conda changes md5sums for test.
     - path: results/csv/markduplicates.csv
       should_exist: false
     - path: results/csv/markduplicates_no_table.csv
@@ -241,9 +241,9 @@
     - path: results/reports/mosdepth/test/test.sorted.regions.bed.gz.csi
       md5sum: e3235323f455414ee3acc7144e659caf
     - path: results/reports/samtools/test/test.recal.cram.stats
-      md5sum: 55ddd2d98552a1483bf2a965f19d8da4
+    # conda changes md5sums for test.
     - path: results/reports/samtools/test/test.sorted.cram.stats
-      md5sum: 59d921ed3970e19145fbae75966de3e3
+    # conda changes md5sums for test.
     - path: results/csv/markduplicates.csv
       should_exist: false
     - path: results/csv/markduplicates_no_table.csv
@@ -294,9 +294,9 @@
     - path: results/reports/mosdepth/test/test.sorted.regions.bed.gz.csi
       md5sum: e3235323f455414ee3acc7144e659caf
     - path: results/reports/samtools/test/test.recal.cram.stats
-      md5sum: 55ddd2d98552a1483bf2a965f19d8da4
+    # conda changes md5sums for test.
     - path: results/reports/samtools/test/test.sorted.cram.stats
-      md5sum: 59d921ed3970e19145fbae75966de3e3
+    # conda changes md5sums for test.
     - path: results/csv/markduplicates.csv
       should_exist: false
     - path: results/csv/markduplicates_no_table.csv
@@ -439,8 +439,8 @@
     - path: results/reports/samtools/test/test.recal.cram.stats
     # conda changes md5sums for test.
     - path: results/reports/samtools/test2/test2.md.cram.stats
-      md5sum: 60152dbf1e109d4c407c151204388109
+    # conda changes md5sums for test.
     - path: results/reports/samtools/test2/test2.recal.cram.stats
-      md5sum: 2907543ab51cabd97318b15cf035c867
+    # conda changes md5sums for test.
     - path: results/preprocessing/mapped/
       should_exist: false
