@@ -34,7 +34,6 @@
       md5sum: 4ac774bf5f1157e77426fd82f5a03013
     - path: results/variant_calling/ascat/sample4_vs_sample3/sample4_vs_sample3.tumour_tumourLogR.txt
       md5sum: c6ef56244b8ac53d2c949437918523b2
-
 - name: Run variant calling on somatic sample with mutect2 without intervals
   command: nextflow run main.nf -profile test,tools_somatic --tools mutect2 --no_intervals
   tags:
@@ -87,7 +86,6 @@
       md5sum: 17d2091015d04cbd4a26b7a67dc659e6
     - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.vcf.gz.tbi
     # binary changes md5sums on reruns.
-
 - name: Run variant calling on somatic sample with mutect2
   command: nextflow run main.nf -profile test,tools_somatic --tools mutect2
   tags:

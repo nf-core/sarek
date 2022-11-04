@@ -1,6 +1,7 @@
 - name: Run UMI test
   command: nextflow run main.nf -profile test,umi
   tags:
+    - preprocessing
     - umi
   files:
     - path: results/preprocessing/umi/test/test-test_L1_umi-consensus.bam

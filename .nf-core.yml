@@ -1,5 +1,9 @@
 repository_type: pipeline
 lint:
+  files_exist:
+    - conf/modules.config
+    - conf/test.config
+    - conf/test_full.config
   files_unchanged:
     - assets/multiqc_config.yml
     - assets/nf-core-sarek_logo_light.png
