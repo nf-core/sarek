@@ -49,9 +49,9 @@
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
     # binary changes md5sums on reruns.
     - path: results/reports/samtools/test/test.md.cram.stats
-      md5sum: a0ecedb6be28639e276d38e4ac18935b
+    # conda changes md5sums for test.
     - path: results/reports/samtools/test/test.recal.cram.stats
-      md5sum: 69d2bab6fdbe21ec5c598dc404a3df00
+    # conda changes md5sums for test.
 - name: Run skip markduplicates bam from step markduplicates
   command: nextflow run main.nf -profile test,markduplicates_bam,skip_markduplicates
   tags:
@@ -94,9 +94,9 @@
     - path: results/reports/mosdepth/test/test.sorted.regions.bed.gz.csi
       md5sum: b3716e5cd1744610e69c29bd4ffad259
     - path: results/reports/samtools/test/test.recal.cram.stats
-      md5sum: 71af990f7acad8bf24d37e88c4adcded
+    # conda changes md5sums for test.
     - path: results/reports/samtools/test/test.sorted.cram.stats
-      md5sum: 9de0a2738ab150e2e3fd857b0f42efc4
+    # conda changes md5sums for test.
     - path: results/csv/markduplicates.csv
       should_exist: false
     - path: results/csv/markduplicates_no_table.csv

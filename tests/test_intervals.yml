@@ -54,9 +54,9 @@
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
       md5sum: c6d1ac97ef4dfe43731c8368d8391cab
     - path: results/reports/samtools/test/test.md.cram.stats
-      md5sum: 52411f93d9b5382342b40a351c2e313c
+    # conda changes md5sums for test.
     - path: results/reports/samtools/test/test.recal.cram.stats
-      md5sum: 5ed26e702d5c2238a1f3cdc5e5b44f98
+    # conda changes md5sums for test.
 - name: Run intervals false pipeline
   command: nextflow run main.nf -profile test --intervals false --save_reference
   tags:
@@ -105,9 +105,9 @@
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
       md5sum: 38fe39894abe62e38f8ac214cba64f2b
     - path: results/reports/samtools/test/test.md.cram.stats
-      md5sum: 52411f93d9b5382342b40a351c2e313c
+    # conda changes md5sums for test.
     - path: results/reports/samtools/test/test.recal.cram.stats
-      md5sum: 811d834ff8849e69e7c5925dc2a34257
+    # conda changes md5sums for test.
 - name: Run default pipeline without intervals
   command: nextflow run main.nf -profile test,no_intervals
   tags:
@@ -164,6 +164,6 @@
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
       md5sum: b1c2a861f64e20a94108a6de3b76c582
     - path: results/reports/samtools/test/test.md.cram.stats
-      md5sum: 52411f93d9b5382342b40a351c2e313c
+    # conda changes md5sums for test.
     - path: results/reports/samtools/test/test.recal.cram.stats
-      md5sum: d80ad11b8e308a3d5b1fb6f8e13cef38
+    # conda changes md5sums for test.

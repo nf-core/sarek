@@ -9,7 +9,7 @@
       md5sum: 981280af86f69190fdf0639030a80249
     - path: results/multiqc
     - path: results/reports/bcftools/manta/sample1/sample1.manta.diploid_sv.bcftools_stats.txt
-      md5sum: 2afce09f0b53a47acde7f8767fd6fcef
+    # conda changes md5sums for test.
     - path: results/reports/vcftools/manta/sample1/sample1.manta.diploid_sv.FILTER.summary
       md5sum: 1ce42d34e4ae919afb519efc99146423
     - path: results/reports/vcftools/manta/sample1/sample1.manta.diploid_sv.TsTv.count
@@ -40,7 +40,7 @@
     - path: results/no_intervals.bed.gz.tbi
       md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/reports/bcftools/manta/sample1/sample1.manta.diploid_sv.bcftools_stats.txt
-      md5sum: 2afce09f0b53a47acde7f8767fd6fcef
+    # conda changes md5sums for test.
     - path: results/reports/vcftools/manta/sample1/sample1.manta.diploid_sv.FILTER.summary
       md5sum: 1ce42d34e4ae919afb519efc99146423
     - path: results/reports/vcftools/manta/sample1/sample1.manta.diploid_sv.TsTv.count
@@ -64,7 +64,7 @@
       md5sum: f1051fe647abf202e6332f9a1789c05d
     - path: results/multiqc
     - path: results/reports/bcftools/manta/sample2/sample2.manta.tumor_sv.bcftools_stats.txt
-      md5sum: ea7f369ab8edaccc5bf45347bda15dfa
+    # conda changes md5sums for test.
     - path: results/reports/vcftools/manta/sample2/sample2.manta.tumor_sv.FILTER.summary
       md5sum: 1ce42d34e4ae919afb519efc99146423
     - path: results/reports/vcftools/manta/sample2/sample2.manta.tumor_sv.TsTv.count
@@ -95,7 +95,7 @@
     - path: results/no_intervals.bed.gz.tbi
       md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/reports/bcftools/manta/sample2/sample2.manta.tumor_sv.bcftools_stats.txt
-      md5sum: ea7f369ab8edaccc5bf45347bda15dfa
+    # conda changes md5sums for test.
     - path: results/reports/vcftools/manta/sample2/sample2.manta.tumor_sv.FILTER.summary
       md5sum: 1ce42d34e4ae919afb519efc99146423
     - path: results/reports/vcftools/manta/sample2/sample2.manta.tumor_sv.TsTv.count
@@ -119,11 +119,11 @@
       md5sum: 3a8861808601994f89d5c55ce5c95dae
     - path: results/multiqc
     - path: results/reports/bcftools/manta/sample3/sample3.manta.diploid_sv.bcftools_stats.txt
-      md5sum: 5a5ce4cf9c5f48801851d40772d3ba4b
+    # conda changes md5sums for test.
     - path: results/reports/bcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.bcftools_stats.txt
-      md5sum: baa05f77160e6cd985050790334c91e8
+    # conda changes md5sums for test.
     - path: results/reports/bcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.bcftools_stats.txt
-      md5sum: 56c39772dc25e451d8209f608bb16e37
+    # conda changes md5sums for test.
     - path: results/reports/vcftools/manta/sample3/sample3.manta.diploid_sv.FILTER.summary
       md5sum: 1ce42d34e4ae919afb519efc99146423
     - path: results/reports/vcftools/manta/sample3/sample3.manta.diploid_sv.TsTv.count
@@ -174,11 +174,11 @@
     - path: results/no_intervals.bed.gz.tbi
       md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/reports/bcftools/manta/sample3/sample3.manta.diploid_sv.bcftools_stats.txt
-      md5sum: 5a5ce4cf9c5f48801851d40772d3ba4b
+    # conda changes md5sums for test.
     - path: results/reports/bcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.bcftools_stats.txt
-      md5sum: baa05f77160e6cd985050790334c91e8
+    # conda changes md5sums for test.
     - path: results/reports/bcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.bcftools_stats.txt
-      md5sum: 56c39772dc25e451d8209f608bb16e37
+    # conda changes md5sums for test.
     - path: results/reports/vcftools/manta/sample3/sample3.manta.diploid_sv.FILTER.summary
       md5sum: 1ce42d34e4ae919afb519efc99146423
     - path: results/reports/vcftools/manta/sample3/sample3.manta.diploid_sv.TsTv.count

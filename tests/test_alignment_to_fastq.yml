@@ -45,8 +45,8 @@
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
       md5sum: d0713716f63ac573f4a3385733e9a537
     - path: results/reports/samtools/test/test.md.cram.stats
-      md5sum: d6634d51a009e3da43b2349e424b2d9f
+    # conda changes md5sums for test.
     - path: results/reports/samtools/test/test.recal.cram.stats
-      md5sum: 91915547ff9e654c106a42e5edfd9405
+    # conda changes md5sums for test.
     - path: results/preprocessing/mapped/
       should_exist: false

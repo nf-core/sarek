@@ -13,9 +13,9 @@
       md5sum: 2d29d9e53894dcce96a1b5beb6ef3312
     - path: results/multiqc
     - path: results/preprocessing/fastp/test/test-test_L1_1.fastp.fastq.gz
-      md5sum: 325acd143b6fcbf92ca9e34f97d87158
+    # conda changes md5sums for test.
     - path: results/preprocessing/fastp/test/test-test_L1_2.fastp.fastq.gz
-      md5sum: af73322b9742bce0dd7f767c5c676c0e
+    # conda changes md5sums for test.
     - path: results/preprocessing/markduplicates/test/test.md.cram
     # binary changes md5sums on reruns.
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
@@ -51,9 +51,9 @@
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
       md5sum: a5ad8f917979f62eacfff1461529dbaa
     - path: results/reports/samtools/test/test.md.cram.stats
-      md5sum: 7382e028335a2b057cb54ea160c4be7b
+    # conda changes md5sums for test.
     - path: results/reports/samtools/test/test.recal.cram.stats
-      md5sum: 5adeae7e9ce068009e88bacba549096e
+    # conda changes md5sums for test.
 - name: Run split fastq module
   command: nextflow run main.nf -profile test,split_fastq
   tags:
@@ -68,13 +68,13 @@
     - path: results/csv/recalibrated.csv
       md5sum: 2d29d9e53894dcce96a1b5beb6ef3312
     - path: results/preprocessing/fastp/test/0001.test-test_L1_1.fastp.fastq.gz
-      md5sum: dc56d2161f02a4a9f79fe2c4a646aadc
+    # conda changes md5sums for test.
     - path: results/preprocessing/fastp/test/0001.test-test_L1_2.fastp.fastq.gz
-      md5sum: 3ed01c8e26fcc25859322e4f9a07a217
+    # conda changes md5sums for test.
     - path: results/preprocessing/fastp/test/0002.test-test_L1_1.fastp.fastq.gz
-      md5sum: 16c3b700adf22dbac28ffb6b63a9615b
+    # conda changes md5sums for test.
     - path: results/preprocessing/fastp/test/0002.test-test_L1_2.fastp.fastq.gz
-      md5sum: 7efff2539c8cb03e0cc5eaab442870e5
+    # conda changes md5sums for test.
     - path: results/preprocessing/markduplicates/test/test.md.cram
     # binary changes md5sums on reruns.
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
@@ -110,6 +110,6 @@
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
       md5sum: 1b65ac38cd96783394e0cf9b7bdd5bc2
     - path: results/reports/samtools/test/test.md.cram.stats
-      md5sum: 44c873922c844b85c0920d22c98b08cf
+    # conda changes md5sums for test.
     - path: results/reports/samtools/test/test.recal.cram.stats
-      md5sum: 5ad46c4c701943dfc67604ed34c1c69e
+    # conda changes md5sums for test.

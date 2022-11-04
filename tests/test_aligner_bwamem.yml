@@ -33,7 +33,7 @@
     - path: results/reference/bwa/genome.sa
       md5sum: e7cff62b919448a3a3d0fe4aaf427594
     - path: results/reference/dbsnp/dbsnp_146.hg38.vcf.gz.tbi
-      md5sum: 628232d0c870f2dbf73c3e81aff7b4b4
+    # conda changes md5sums for test.
     - path: results/reference/dict/genome.dict
       md5sum: 2433fe2ba31257337bf4c4bd4cb8da15
     - path: results/reference/fai/genome.fasta.fai
@@ -45,7 +45,7 @@
     - path: results/reference/intervals/genome.bed
       md5sum: a87dc7d20ebca626f65cc16ff6c97a3e
     - path: results/reference/known_indels/mills_and_1000G.indels.vcf.gz.tbi
-      md5sum: 1bb7ab8f22eb798efd796439d3b29b7a
+    # conda changes md5sums for test.
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.cram.metrics
       contains: ["test	8547	767	84	523391	3882	0	0	0.385081", "1.0	767	767"]
@@ -70,6 +70,6 @@
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
       md5sum: b1c2a861f64e20a94108a6de3b76c582
     - path: results/reports/samtools/test/test.md.cram.stats
-      md5sum: 52411f93d9b5382342b40a351c2e313c
+    # conda changes md5sums for test.
     - path: results/reports/samtools/test/test.recal.cram.stats
-      md5sum: 811d834ff8849e69e7c5925dc2a34257
+    # conda changes md5sums for test.

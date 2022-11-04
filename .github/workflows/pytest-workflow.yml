@@ -40,6 +40,8 @@ jobs:
           - profile: "conda"
             NXF_VER: "latest-everything"
           - profile: "conda"
+            tags: umi
+          - profile: "conda"
             tags: deepvariant
           - profile: "conda"
             tags: haplotypecaller
@@ -49,6 +51,8 @@ jobs:
             tags: snpeff
           - profile: "conda"
             tags: vep
+          - profile: "singularity"
+            tags: merge
     env:
       NXF_ANSI_LOG: false
     steps:

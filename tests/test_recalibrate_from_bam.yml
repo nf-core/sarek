@@ -27,7 +27,7 @@
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
       md5sum: b3716e5cd1744610e69c29bd4ffad259
     - path: results/reports/samtools/test/test.recal.cram.stats
-      md5sum: a0841c41460d0d4bdc2a1a777ee7e7c2
+    # conda changes md5sums for test.
     - path: results/preprocessing/mapped/
       should_exist: false
     - path: results/preprocessing/markduplicates/
@@ -49,7 +49,7 @@
     - path: results/preprocessing/converted/test/test.converted.cram.crai
     # binary changes md5sums on reruns.
     - path: results/reports/bcftools/strelka/test/test.strelka.variants.bcftools_stats.txt
-      md5sum: 0741b5dd5e6c5428bd5d4f1b7a923dd5
+    # conda changes md5sums for test.
     - path: results/reports/vcftools/strelka/test/test.strelka.variants.FILTER.summary
       md5sum: 39ff2cc8eb7495a14a6b76e0ab627027
     - path: results/reports/vcftools/strelka/test/test.strelka.variants.TsTv.count

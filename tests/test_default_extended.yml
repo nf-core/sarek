@@ -53,9 +53,9 @@
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
       md5sum: b1c2a861f64e20a94108a6de3b76c582
     - path: results/reports/samtools/test/test.md.cram.stats
-      md5sum: 52411f93d9b5382342b40a351c2e313c
+    # conda changes md5sums for test.
     - path: results/reports/samtools/test/test.recal.cram.stats
-      md5sum: 811d834ff8849e69e7c5925dc2a34257
+    # conda changes md5sums for test.
     - path: results/reports/bcftools/strelka/test/test.strelka.variants.bcftools_stats.txt
     # conda changes md5sums for test.
     - path: results/reports/vcftools/strelka/test/test.strelka.variants.FILTER.summary
@@ -89,9 +89,9 @@
       md5sum: 3ddc20eb105fdcc483945afd7d7d238c
     - path: results/multiqc
     - path: results/preprocessing/markduplicates/test/test.md.bam.bai
-      md5sum: 3add495a02547bd9e6882935d2f3e1f7
+    # conda changes md5sums for test.
     - path: results/preprocessing/markduplicates/test/test.md.bam
-      md5sum: ebb72f603f016ce37964259c61625360
+    # conda changes md5sums for test.
     - path: results/preprocessing/recal_table/test/test.recal.table
       md5sum: 4ac774bf5f1157e77426fd82f5ac0fbe
     - path: results/preprocessing/recalibrated/test/test.recal.bam
@@ -122,9 +122,9 @@
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
       md5sum: b1c2a861f64e20a94108a6de3b76c582
     - path: results/reports/samtools/test/test.md.cram.stats
-      md5sum: 52411f93d9b5382342b40a351c2e313c
+    # conda changes md5sums for test.
     - path: results/reports/samtools/test/test.recal.cram.stats
-      md5sum: 811d834ff8849e69e7c5925dc2a34257
+    # conda changes md5sums for test.
     - path: results/reports/bcftools/strelka/test/test.strelka.variants.bcftools_stats.txt
     # conda changes md5sums for test.
     - path: results/reports/vcftools/strelka/test/test.strelka.variants.FILTER.summary
@@ -435,9 +435,9 @@
     - path: results/reports/mosdepth/test2/test2.recal.regions.bed.gz.csi
       md5sum: d5f1c9389ecf52ba839e834780a94549
     - path: results/reports/samtools/test/test.md.cram.stats
-      md5sum: 52411f93d9b5382342b40a351c2e313c
+    # conda changes md5sums for test.
     - path: results/reports/samtools/test/test.recal.cram.stats
-      md5sum: 811d834ff8849e69e7c5925dc2a34257
+    # conda changes md5sums for test.
     - path: results/reports/samtools/test2/test2.md.cram.stats
       md5sum: 60152dbf1e109d4c407c151204388109
     - path: results/reports/samtools/test2/test2.recal.cram.stats

@@ -25,7 +25,7 @@
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
     # binary changes md5sums on reruns.
     - path: results/reports/bcftools/freebayes/test/test.freebayes.bcftools_stats.txt
-      md5sum: 16c7673085520b66bd47f59fbf8a7e0e
+    # conda changes md5sums for test.
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.cram.metrics
       contains: ["test	8547	767	84	523391	3882	0	0	0.385081", "1.0	767	767"]
@@ -58,9 +58,9 @@
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
       md5sum: c6d1ac97ef4dfe43731c8368d8391cab
     - path: results/reports/samtools/test/test.md.cram.stats
-      md5sum: 52411f93d9b5382342b40a351c2e313c
+    # conda changes md5sums for test.
     - path: results/reports/samtools/test/test.recal.cram.stats
-      md5sum: 5ed26e702d5c2238a1f3cdc5e5b44f98
+    # conda changes md5sums for test.
     - path: results/reports/vcftools/freebayes/test/test.freebayes.FILTER.summary
       md5sum: 43d53e36cbb1091f915b2499e545b41e
     - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.count
@@ -107,7 +107,7 @@
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
     # binary changes md5sums on reruns.
     - path: results/reports/bcftools/freebayes/test/test.freebayes.bcftools_stats.txt
-      md5sum: f66375a00d692d67df46c129147008b2
+    # conda changes md5sums for test.
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.cram.metrics
       contains: ["test	8547	767	84	523391	3882	0	0	0.385081", "1.0	767	767"]
@@ -132,9 +132,9 @@
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
       md5sum: b1c2a861f64e20a94108a6de3b76c582
     - path: results/reports/samtools/test/test.md.cram.stats
-      md5sum: 52411f93d9b5382342b40a351c2e313c
+    # conda changes md5sums for test.
     - path: results/reports/samtools/test/test.recal.cram.stats
-      md5sum: d80ad11b8e308a3d5b1fb6f8e13cef38
+    # conda changes md5sums for test.
     - path: results/reports/vcftools/freebayes/test/test.freebayes.FILTER.summary
       md5sum: 76c5919541536c12b5c8a6094d6d78d5
     - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.count
@@ -184,9 +184,9 @@
     - path: results/preprocessing/recalibrated/test2/test2.recal.cram.crai
     # binary changes md5sums on reruns.
     - path: results/reports/bcftools/freebayes/test/test.freebayes.bcftools_stats.txt
-      md5sum: 16c7673085520b66bd47f59fbf8a7e0e
+    # conda changes md5sums for test.
     - path: results/reports/bcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.bcftools_stats.txt
-      md5sum: 001709e5eeca385908e31ba370f53381
+    # conda changes md5sums for test.
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.cram.metrics
       contains: ["test	8547	767	84	523391	3882	0	0	0.385081", "1.0	767	767"]
@@ -249,13 +249,13 @@
     - path: results/reports/mosdepth/test2/test2.recal.regions.bed.gz.csi
       md5sum: c6d1ac97ef4dfe43731c8368d8391cab
     - path: results/reports/samtools/test/test.md.cram.stats
-      md5sum: 52411f93d9b5382342b40a351c2e313c
+    # conda changes md5sums for test.
     - path: results/reports/samtools/test/test.recal.cram.stats
-      md5sum: 5ed26e702d5c2238a1f3cdc5e5b44f98
+    # conda changes md5sums for test.
     - path: results/reports/samtools/test2/test2.md.cram.stats
-      md5sum: 60152dbf1e109d4c407c151204388109
+    # conda changes md5sums for test.
     - path: results/reports/samtools/test2/test2.recal.cram.stats
-      md5sum: 53a0b34b67fdf90ea68fac8ea744b576
+    # conda changes md5sums for test.
     - path: results/reports/vcftools/freebayes/test/test.freebayes.FILTER.summary
       md5sum: 43d53e36cbb1091f915b2499e545b41e
     - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.count
@@ -322,9 +322,9 @@
     - path: results/preprocessing/recalibrated/test2/test2.recal.cram.crai
     # binary changes md5sums on reruns.
     - path: results/reports/bcftools/freebayes/test/test.freebayes.bcftools_stats.txt
-      md5sum: f66375a00d692d67df46c129147008b2
+    # conda changes md5sums for test.
     - path: results/reports/bcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.bcftools_stats.txt
-      md5sum: 41d9835772fa1326769c2dd94749cbea
+    # conda changes md5sums for test.
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.cram.metrics
       contains: ["test	8547	767	84	523391	3882	0	0	0.385081", "1.0	767	767"]
@@ -363,13 +363,13 @@
     - path: results/reports/mosdepth/test2/test2.recal.per-base.bed.gz.csi
       md5sum: 4205a09ede17cdbdaad45e3553f73105
     - path: results/reports/samtools/test/test.md.cram.stats
-      md5sum: 52411f93d9b5382342b40a351c2e313c
+    # conda changes md5sums for test.
     - path: results/reports/samtools/test/test.recal.cram.stats
-      md5sum: d80ad11b8e308a3d5b1fb6f8e13cef38
+    # conda changes md5sums for test.
     - path: results/reports/samtools/test2/test2.md.cram.stats
-      md5sum: 60152dbf1e109d4c407c151204388109
+    # conda changes md5sums for test.
     - path: results/reports/samtools/test2/test2.recal.cram.stats
-      md5sum: 029b903797dc228e56d6ab74e677fa21
+    # conda changes md5sums for test.
     - path: results/reports/vcftools/freebayes/test/test.freebayes.FILTER.summary
       md5sum: 76c5919541536c12b5c8a6094d6d78d5
     - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.count

@@ -25,7 +25,7 @@
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
       md5sum: b3716e5cd1744610e69c29bd4ffad259
     - path: results/reports/samtools/test/test.recal.cram.stats
-      md5sum: 71af990f7acad8bf24d37e88c4adcded
+    # conda changes md5sums for test.
     - path: results/preprocessing/mapped/
       should_exist: false
     - path: results/preprocessing/markduplicates/
@@ -41,13 +41,13 @@
       md5sum: 4d0effd3d8dc2b814230a189e7ca9dba
     - path: results/multiqc
     - path: results/reports/bcftools/strelka/test/test.strelka.variants.bcftools_stats.txt
-      md5sum: 0741b5dd5e6c5428bd5d4f1b7a923dd5
+    # conda changes md5sums for test.
     - path: results/reports/vcftools/strelka/test/test.strelka.variants.FILTER.summary
       md5sum: 39ff2cc8eb7495a14a6b76e0ab627027
     - path: results/reports/vcftools/strelka/test/test.strelka.variants.TsTv.count
       md5sum: ee7dafc8d941b8502a04a63dc3126fff
     - path: results/reports/vcftools/strelka/test/test.strelka.variants.TsTv.qual
-      md5sum: a7e5db212d1e4d05029e93ff6e6b843a
+    # conda changes md5sums for test.
     - path: results/variant_calling/strelka/test/test.strelka.genome.vcf.gz
     # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/test/test.strelka.genome.vcf.gz.tbi

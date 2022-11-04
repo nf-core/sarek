@@ -23,7 +23,7 @@
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
     # binary changing on reruns
     - path: results/reference/dbsnp/dbsnp_146.hg38.vcf.gz.tbi
-      md5sum: 628232d0c870f2dbf73c3e81aff7b4b4
+    # conda changes md5sums for test.
     - path: results/reference/dict/genome.dict
       md5sum: 2433fe2ba31257337bf4c4bd4cb8da15
     - path: results/reference/dragmap/hash_table.cfg
@@ -60,7 +60,7 @@
     - path: results/reference/intervals/genome.bed
       md5sum: a87dc7d20ebca626f65cc16ff6c97a3e
     - path: results/reference/known_indels/mills_and_1000G.indels.vcf.gz.tbi
-      md5sum: 1bb7ab8f22eb798efd796439d3b29b7a
+    # conda changes md5sums for test.
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.cram.metrics
       contains: ["LB0	13607	543	161	518779	6410	0	0	0.436262"]
@@ -85,6 +85,6 @@
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
       md5sum: d5f1c9389ecf52ba839e834780a94549
     - path: results/reports/samtools/test/test.md.cram.stats
-      md5sum: 9f64e86202f2291b33c0e8c3e7981193
+    # conda changes md5sums for test.
     - path: results/reports/samtools/test/test.recal.cram.stats
-      md5sum: a63f247fb403d8679c8f96f3a128aba0
+    # conda changes md5sums for test.

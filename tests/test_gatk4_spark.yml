@@ -44,9 +44,9 @@
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
       md5sum: c259a9fd73f576626c3a29841c2dc019
     - path: results/reports/samtools/test/test.md.cram.stats
-      md5sum: b573b2e930c5f68e7e4910faf9e51e44
+    # conda changes md5sums for test.
     - path: results/reports/samtools/test/test.recal.cram.stats
-      md5sum: a75731dca9b42d87d9997ea44aaf82fc
+    # conda changes md5sums for test.
     - path: results/preprocessing/mapped/
       should_exist: false
 - name: Run default pipeline with gatk4_spark & skipping all QC steps
@@ -131,6 +131,6 @@
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
       md5sum: cf85ba4692f016af70db2a594d9effdf
     - path: results/reports/samtools/test/test.md.cram.stats
-      md5sum: b573b2e930c5f68e7e4910faf9e51e44
+    # conda changes md5sums for test.
     - path: results/reports/samtools/test/test.recal.cram.stats
-      md5sum: a75731dca9b42d87d9997ea44aaf82fc
+    # conda changes md5sums for test.
