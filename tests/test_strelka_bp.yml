@@ -1,4 +1,4 @@
-- name: Run variant calling on somatic sample with strelka & manta (Strelka BP)
+- name: Run variant calling on somatic sample with Strelka BP
   command: nextflow run main.nf -profile test,tools_somatic --tools strelka,manta
   tags:
     - somatic
@@ -88,7 +88,7 @@
       should_exist: false
     - path: results/strelka
       should_exist: false
-- name: Run variant calling on somatic sample with & manta (Strelka BP) without intervals
+- name: Run variant calling on somatic sample with Strelka BP without intervals
   command: nextflow run main.nf -profile test,tools_somatic --tools strelka,manta --no_intervals
   tags:
     - no_intervals
