@@ -38,6 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#793](https://github.com/nf-core/sarek/pull/793) - Remove DeepVariant GVCF from annotation
 - [#794](https://github.com/nf-core/sarek/pull/794) - Fix publishing for unzipped reference files
 - [#807](https://github.com/nf-core/sarek/pull/807) - Fix read group when uBAMs are provided (see issue [#732](https://github.com/nf-core/sarek/issues/732))
+- [#813](https://github.com/nf-core/sarek/pull/813) - Fix input validation when launching from website (see issue [#694](https://github.com/nf-core/sarek/issues/694))
 
 ### Deprecated
 
