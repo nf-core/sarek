@@ -27,7 +27,7 @@ workflow PREPARE_REFERENCE_CNVKIT {
 
     emit:
     versions            = ch_versions
-    cnvkit_reference    = CNVKIT_REFERENCE.out.cnn
+    cnvkit_reference    = CNVKIT_REFERENCE.out.cnn.collect()
 }
 
 
