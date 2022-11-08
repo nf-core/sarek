@@ -39,6 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#794](https://github.com/nf-core/sarek/pull/794) - Fix publishing for unzipped reference files
 - [#807](https://github.com/nf-core/sarek/pull/807) - Fix read group when uBAMs are provided (see issue [#732](https://github.com/nf-core/sarek/issues/732))
 - [#814](https://github.com/nf-core/sarek/pull/814) - Fix readgroups when using DragMap together with FreeBayes or Mutect2 (see issue [#780](https://github.com/nf-core/sarek/issues/780))
+- [#817](https://github.com/nf-core/sarek/pull/817) - Fix CNVKit run on tumor-only sample to be run on all samples
 
 ### Deprecated
 
