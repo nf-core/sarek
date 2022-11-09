@@ -20,11 +20,11 @@
                     },
                     "bwa/index": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                        "git_sha": "9518fa4f65f3fb8cde24fde7d40333b39ec8fd65"
                     },
                     "bwa/mem": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                        "git_sha": "277f4d693a00471690b66598d167bbca78bbe232"
                     },
                     "bwamem2/index": {
                         "branch": "master",
@@ -76,7 +76,7 @@
                     },
                     "custom/dumpsoftwareversions": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                        "git_sha": "8022c68e7403eecbd8ba9c49496f69f8c49d50f0"
                     },
                     "deepvariant": {
                         "branch": "master",
@@ -84,11 +84,11 @@
                     },
                     "dragmap/align": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                        "git_sha": "d6363b7ea1b54715677f971a30d417790ee6a0e6"
                     },
                     "dragmap/hashtable": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                        "git_sha": "d6363b7ea1b54715677f971a30d417790ee6a0e6"
                     },
                     "ensemblvep": {
                         "branch": "master",
@@ -96,11 +96,11 @@
                     },
                     "fastp": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                        "git_sha": "1e49f31e93c56a3832833eef90a02d3cde5a3f7e"
                     },
                     "fastqc": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                        "git_sha": "3dd73937b084b547f9272bc901e0f120a7913fd8"
                     },
                     "fgbio/callmolecularconsensusreads": {
                         "branch": "master",
@@ -120,104 +120,104 @@
                     },
                     "gatk4/applybqsr": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                        "git_sha": "7578005a576f3ac1b0d4f10c037dde34cdedfb67"
                     },
                     "gatk4/applybqsrspark": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                        "git_sha": "7578005a576f3ac1b0d4f10c037dde34cdedfb67"
                     },
                     "gatk4/applyvqsr": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                        "git_sha": "7578005a576f3ac1b0d4f10c037dde34cdedfb67"
                     },
                     "gatk4/baserecalibrator": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                        "git_sha": "7578005a576f3ac1b0d4f10c037dde34cdedfb67"
                     },
                     "gatk4/baserecalibratorspark": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                        "git_sha": "7578005a576f3ac1b0d4f10c037dde34cdedfb67"
                     },
                     "gatk4/calculatecontamination": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                        "git_sha": "7578005a576f3ac1b0d4f10c037dde34cdedfb67"
                     },
                     "gatk4/cnnscorevariants": {
                         "branch": "master",
-                        "git_sha": "1832dc139342122c9617bfcd5c38c8fb8dd060ad"
+                        "git_sha": "7578005a576f3ac1b0d4f10c037dde34cdedfb67"
                     },
                     "gatk4/createsequencedictionary": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                        "git_sha": "7578005a576f3ac1b0d4f10c037dde34cdedfb67"
                     },
                     "gatk4/estimatelibrarycomplexity": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                        "git_sha": "7578005a576f3ac1b0d4f10c037dde34cdedfb67"
                     },
                     "gatk4/filtermutectcalls": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                        "git_sha": "7578005a576f3ac1b0d4f10c037dde34cdedfb67"
                     },
                     "gatk4/filtervarianttranches": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                        "git_sha": "7578005a576f3ac1b0d4f10c037dde34cdedfb67"
                     },
                     "gatk4/gatherbqsrreports": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                        "git_sha": "7578005a576f3ac1b0d4f10c037dde34cdedfb67"
                     },
                     "gatk4/gatherpileupsummaries": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                        "git_sha": "7578005a576f3ac1b0d4f10c037dde34cdedfb67"
                     },
                     "gatk4/genomicsdbimport": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                        "git_sha": "7578005a576f3ac1b0d4f10c037dde34cdedfb67"
                     },
                     "gatk4/genotypegvcfs": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                        "git_sha": "7578005a576f3ac1b0d4f10c037dde34cdedfb67"
                     },
                     "gatk4/getpileupsummaries": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                        "git_sha": "7578005a576f3ac1b0d4f10c037dde34cdedfb67"
                     },
                     "gatk4/haplotypecaller": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                        "git_sha": "7578005a576f3ac1b0d4f10c037dde34cdedfb67"
                     },
                     "gatk4/intervallisttobed": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                        "git_sha": "7578005a576f3ac1b0d4f10c037dde34cdedfb67"
                     },
                     "gatk4/learnreadorientationmodel": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                        "git_sha": "7578005a576f3ac1b0d4f10c037dde34cdedfb67"
                     },
                     "gatk4/markduplicates": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905",
+                        "git_sha": "7578005a576f3ac1b0d4f10c037dde34cdedfb67",
                         "patch": "modules/nf-core/gatk4/markduplicates/gatk4-markduplicates.diff"
                     },
                     "gatk4/markduplicatesspark": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                        "git_sha": "7578005a576f3ac1b0d4f10c037dde34cdedfb67"
                     },
                     "gatk4/mergemutectstats": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                        "git_sha": "7578005a576f3ac1b0d4f10c037dde34cdedfb67"
                     },
                     "gatk4/mergevcfs": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                        "git_sha": "7578005a576f3ac1b0d4f10c037dde34cdedfb67"
                     },
                     "gatk4/mutect2": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                        "git_sha": "7578005a576f3ac1b0d4f10c037dde34cdedfb67"
                     },
                     "gatk4/variantrecalibrator": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                        "git_sha": "7578005a576f3ac1b0d4f10c037dde34cdedfb67"
                     },
                     "manta/germline": {
                         "branch": "master",
