@@ -642,6 +642,8 @@ The amount of scatter/gathering can be customized by adjusting the parameter `--
 > **NB:** The _same_ intervals are processed regardless of the number of groups. The number of groups however determines over how many compute nodes the analysis is scattered.
 
 The default value is `1000`, increasing this value will _reduce_ the number of groups that are processed in parallel.
+Generally, smaller numbers of groups (each group has more regions), the slower the processing, and less storage space is consumed.
+In particular, in cloud computing setting it is often advisable to reduce the number of groups to be run in parallel to reduce data staging steps.
 
 ## How to create a panel-of-normals for Mutect2
 
