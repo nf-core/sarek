@@ -96,7 +96,7 @@
                     },
                     "fastp": {
                         "branch": "master",
-                        "git_sha": "1e49f31e93c56a3832833eef90a02d3cde5a3f7e"
+                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
                     },
                     "fastqc": {
                         "branch": "master",
@@ -196,7 +196,7 @@
                     },
                     "gatk4/markduplicates": {
                         "branch": "master",
-                        "git_sha": "7578005a576f3ac1b0d4f10c037dde34cdedfb67",
+                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905",
                         "patch": "modules/nf-core/gatk4/markduplicates/gatk4-markduplicates.diff"
                     },
                     "gatk4/markduplicatesspark": {
@@ -286,8 +286,7 @@
                     },
                     "samtools/view": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905",
-                        "patch": "modules/nf-core/samtools/view/samtools-view.diff"
+                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
                     },
                     "snpeff": {
                         "branch": "master",
