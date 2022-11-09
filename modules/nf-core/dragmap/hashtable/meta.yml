@@ -14,10 +14,20 @@ tools:
       doi: ""
       licence: ["GPL v3"]
 input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing reference information
+        e.g. [ id:'test', single_end:false ]
   - fasta:
       type: file
       description: Input genome fasta file
 output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing reference information
+        e.g. [ id:'test', single_end:false ]
   - hashmap:
       type: file
       description: DRAGMAP hash table

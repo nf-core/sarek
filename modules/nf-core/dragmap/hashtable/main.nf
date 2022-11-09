@@ -8,11 +8,11 @@ process DRAGMAP_HASHTABLE {
         'quay.io/biocontainers/dragmap:1.2.1--hd4ca14e_0' }"
 
     input:
-    path fasta
+    tuple val(meta), path(fasta)
 
     output:
-    path "dragmap"      , emit: hashmap
-    path "versions.yml" , emit: versions
+    tuple val(meta), path("dragmap")    , emit: hashmap
+    path "versions.yml"                 , emit: versions
 
     when:
     task.ext.when == null || task.ext.when

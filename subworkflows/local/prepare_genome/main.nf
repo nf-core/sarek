@@ -45,9 +45,9 @@ workflow PREPARE_GENOME {
 
     ch_versions = Channel.empty()
 
-    BWAMEM1_INDEX(fasta)                                        // If aligner is bwa-mem
+    BWAMEM1_INDEX(fasta.map{ it -> [[id:it[0].baseName], it] }) // If aligner is bwa-mem
     BWAMEM2_INDEX(fasta.map{ it -> [[id:it[0].baseName], it] }) // If aligner is bwa-mem2
-    DRAGMAP_HASHTABLE(fasta)                                    // If aligner is dragmap
+    DRAGMAP_HASHTABLE(fasta.map{ it -> [[id:it[0].baseName], it] }) // If aligner is dragmap
 
     GATK4_CREATESEQUENCEDICTIONARY(fasta)
     MSISENSORPRO_SCAN(fasta.map{ it -> [[id:it[0].baseName], it] })
@@ -111,7 +111,7 @@ workflow PREPARE_GENOME {
     ch_versions = ch_versions.mix(TABIX_PON.out.versions)
 
     emit:
-        bwa                              = BWAMEM1_INDEX.out.index                                             // path: bwa/*
+        bwa                              = BWAMEM1_INDEX.out.index.map{ meta, index -> [index] }.collect()     // path: bwa/*
         bwamem2                          = BWAMEM2_INDEX.out.index.map{ meta, index -> [index] }.collect()     // path: bwamem2/*
         hashtable                        = DRAGMAP_HASHTABLE.out.hashmap                                       // path: dragmap/*
         dbsnp_tbi                        = TABIX_DBSNP.out.tbi.map{ meta, tbi -> [tbi] }.collect()             // path: dbsnb.vcf.gz.tbi
