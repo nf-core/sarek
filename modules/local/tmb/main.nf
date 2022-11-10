@@ -29,6 +29,7 @@ process TMB {
         ${target_bed} \
         --sample TUMOR
         $args
+
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         tmb: \$(echo \$(pyTMB.py --version 2>&1) | sed 's/^.*pyTMB.py //; s/.*\$//' | sed 's|[()]||g')
