@@ -635,7 +635,10 @@ This parameter determines how many reads are within each split. Setting it to `0
 
 ### Intervals for Base Quality Score Recalibration and Variantcalling
 
-The pipeline attempts to parallelize base quality score recalibration and variant calling where possible across genomic chunks of roughly similar sizes of one samples. For this, a bed file with interesting genomic regions is used. By default, the intervals file for WGS provided by GATK is used (details [here](https://gatk.broadinstitute.org/hc/en-us/articles/360035889551-When-should-I-restrict-my-analysis-to-specific-intervals-)). When running targeted analysis, it is usually good to use the bed file containing the targeted regions.
+The pipeline can parallelize base quality score recalibration and variant calling across genomic chunks of roughly similar sizes.
+For this, a bed file containing genomic regions of interest is used, it's the intervals file.
+By default, the intervals file for WGS used is the one provided by GATK (details [here](https://gatk.broadinstitute.org/hc/en-us/articles/360035889551-When-should-I-restrict-my-analysis-to-specific-intervals-)).
+When running targeted analysis, it is recommended to use the bed file containing the targeted regions.
 
 The amount of scatter/gathering can be customized by adjusting the parameter `--nucleotides_per_second`.
 
