@@ -437,7 +437,7 @@ workflow SAREK {
             save_trimmed_fail = false
             save_merged = false
             FASTP(ch_reads_fastp,
-                    [], // we are not using any dapater fastas at the moment
+                    [], // we are not using any adapter fastas at the moment
                     save_trimmed_fail,
                     save_merged)
 
