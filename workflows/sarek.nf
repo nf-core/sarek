@@ -280,7 +280,7 @@ include { VCF_QC_BCFTOOLS_VCFTOOLS                       } from '../subworkflows
 include { VCF_ANNOTATE_ALL                               } from '../subworkflows/local/vcf_annotate_all/main'
 
 // Tumor mutational burden
-include { TUMOR_MUTATIONAL_BURDEN                              } from '../subworkflows/nf-core/tumor_mutational_burden'
+include { TUMOR_MUTATIONAL_BURDEN                        } from '../subworkflows/local/tumor_mutational_burden'
 
 // REPORTING VERSIONS OF SOFTWARE USED
 include { CUSTOM_DUMPSOFTWAREVERSIONS                    } from '../modules/nf-core/custom/dumpsoftwareversions/main'
@@ -869,7 +869,7 @@ workflow SAREK {
 
     if (params.tools) {
 
-        if (params.step == 'annotate') ch_cram_variant_calling = Channel.empty()
+        if (params.step == 'annotate' || params.step == 'post-process') ch_cram_variant_calling = Channel.empty()
 
         //
         // Logic to separate germline samples, tumor samples with no matched normal, and combine tumor-normal pairs
@@ -1054,16 +1054,22 @@ workflow SAREK {
                 vep_cache,
                 vep_extra_files)
 
+            vcf_to_postprocess = VCF_ANNOTATE_ALL.out.vcf_ann
+
             // Gather used softwares versions
             ch_versions = ch_versions.mix(VCF_ANNOTATE_ALL.out.versions)
             ch_reports  = ch_reports.mix(VCF_ANNOTATE_ALL.out.reports)
         }
 
-        if(params.tools && params.tools.contains('tmb')){
-            vcf_to_tmb = vcf_to_annotate //TODO: proper input ANNOTATE.out.vcf_ann
+        // Post-process
+        if (params.step == 'post-process') vcf_to_postprocess = ch_input_sample
 
-            intervals_bed_combined.view()
-            TUMOR_MUTATIONAL_BURDEN(vcf_to_tmb, fasta, intervals_bed_combined)
+        if (params.tools.split(',').contains('tmb') ) {
+
+            TUMOR_MUTATIONAL_BURDEN(vcf_to_postprocess, fasta, intervals_bed_combined)
+
+            ch_versions = ch_versions.mix(TUMOR_MUTATIONAL_BURDEN.out.versions)
+
         }
     }
 
@@ -1333,7 +1339,20 @@ def extract_csv(csv_file) {
             }
 
         // annotation
-        } else if (row.vcf) {
+        } else if (row.vcf && !row.tbi) {
+            meta.id = meta.sample
+            def vcf = file(row.vcf, checkIfExists: true)
+
+            meta.data_type     = 'vcf'
+            meta.variantcaller = row.variantcaller ?: ''
+
+            if (params.step == 'annotate') return [meta, vcf]
+            else {
+                log.error "Samplesheet contains vcf files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
+                System.exit(1)
+            }
+        // post-process
+        } else if (row.tbi) {
             meta.id = meta.sample
             def vcf = file(row.vcf, checkIfExists: true)
             def tbi = file(row.tbi, checkIfExists: true)
@@ -1342,9 +1361,9 @@ def extract_csv(csv_file) {
             meta.variantcaller = row.variantcaller ?: ''
             meta.annotation = row.annotation ?: ''
 
-            if (params.step == 'annotate') return [meta, vcf, tbi]
+            if (params.step == 'post-process') return [meta, vcf, tbi]
             else {
-                log.error "Samplesheet contains vcf files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
+                log.error "Samplesheet contains vcf & tbi files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
                 System.exit(1)
             }
         } else {

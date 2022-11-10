@@ -24,7 +24,8 @@
                         "prepare_recalibration",
                         "recalibrate",
                         "variant_calling",
-                        "annotate"
+                        "annotate",
+                        "post-process"
                     ]
                 },
                 "input": {
