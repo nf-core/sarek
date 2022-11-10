@@ -932,7 +932,7 @@ workflow SAREK {
         BAM_VARIANT_CALLING_GERMLINE_ALL(
             params.tools,
             ch_cram_variant_calling_status_normal,
-            [], //bwa_index for tiddit; not used here
+            [[id:"bwa"],[]], //bwa_index for tiddit; not used here
             dbsnp,
             dbsnp_tbi,
             dict,
@@ -951,7 +951,7 @@ workflow SAREK {
         BAM_VARIANT_CALLING_TUMOR_ONLY_ALL(
             params.tools,
             ch_cram_variant_calling_tumor_only,
-            [], //bwa_index for tiddit; not used here
+            [[id:"bwa"],[]], //bwa_index for tiddit; not used here
             cf_chrom_len,
             chr_files,
             cnvkit_reference,
@@ -974,7 +974,7 @@ workflow SAREK {
         BAM_VARIANT_CALLING_SOMATIC_ALL(
             params.tools,
             ch_cram_variant_calling_pair,
-            [], //bwa_index for tiddit; not used here
+            [[id:"bwa"],[]], //bwa_index for tiddit; not used here
             cf_chrom_len,
             chr_files,
             dbsnp,
