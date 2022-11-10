@@ -59,7 +59,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | `cancerit-allelecount` | 4.3.0       | unchanged   |
 | `cnvkit`               | 0.9.9       | unchanged   |
 | `control-freec`        | 11.6        | unchanged   |
-| `deepvariant`          | 1.3.0       | unchanged   |
+| `deepvariant`          | 1.3.0       | 1.4.0       |
 | `dragmap`              | 1.2.1       | unchanged   |
 | `ensembl-vep`          | 106.1       | unchanged   | //should we update this here? |
 | `fastp`                | 0.23.2      | unchanged   |
