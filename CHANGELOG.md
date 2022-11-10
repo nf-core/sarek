@@ -52,7 +52,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | Dependency             | Old version | New version |
 | ---------------------- | ----------- | ----------- | ----------------------------- |
 | `ascat`                | 3.0.0       | unchanged   |
-| `bcftools`             | 1.9         | 1.15.1      |
+| `bcftools`             | 1.15.1      | unchanged   |
 | `bwa-mem2`             | 2.2.1       | unchanged   |
 | `bwa`                  | 0.7.17      | unchanged   |
 | `cancerit-allelecount` | 4.3.0       | unchanged   |
@@ -65,7 +65,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | `fastqc`               | 0.11.9      | unchanged   |
 | `fgbio`                | 2.0.2       | unchanged   |
 | `freebayes`            | 1.3.5       | unchanged   |
-| `gatk4`                | 4.3.0.0     | unchanged   |
+| `gatk4`                | 4.2.6.1     | 4.3.0.0     |
 | `gawk`                 | 5.1.0       | unchanged   |
 | `manta`                | 1.6.0       | unchanged   |
 | `mosdepth`             | 0.3.3       | unchanged   |
