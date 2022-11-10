@@ -1,0 +1,158 @@
+- name: Run variant calling on somatic samples with cnvkit
+  command: nextflow run main.nf -profile test,tools_somatic --tools cnvkit
+  tags:
+    - cnvkit
+    - copy_number_calling
+    - somatic
+    - variant_calling
+  files:
+    - path: results/multiqc
+    - path: results/variant_calling/cnvkit/sample3/multi_intervals.antitarget.bed
+      md5sum: 3d4d20f9f23b39970865d29ef239d20b
+    - path: results/variant_calling/cnvkit/sample3/multi_intervals.target.bed
+      md5sum: 86d30493bb2e619a93f4ebc2923d29f3
+    - path: results/variant_calling/cnvkit/sample3/reference.cnn
+      md5sum: a09ee4be5dda1cf0f68073bdb3aad8ec
+    - path: results/variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted-diagram.pdf
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted-scatter.png
+    # conda changes md5sums for test.
+    - path: results/variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted.antitargetcoverage.cnn
+      md5sum: fe1248aa91fad7769303bb4c031d55ca
+    - path: results/variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted.bintest.cns
+      md5sum: e55667a75d7d8eaec2efd3b611f15379
+    - path: results/variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted.call.cns
+      md5sum: 9968e02ef2f11ed22e2789c053f7159c
+    - path: results/variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted.cnr
+      md5sum: 3f0fe46574d0f7137f779e7ac1c2362d
+    - path: results/variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted.cns
+      md5sum: 0b2b81d391965488b8634a2b802b69cd
+    - path: results/variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted.targetcoverage.cnn
+      md5sum: 79aae7e9c135fb8c65f8fbda12610faf
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/multi_intervals.antitarget.bed
+      md5sum: 3d4d20f9f23b39970865d29ef239d20b
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/multi_intervals.target.bed
+      md5sum: 86d30493bb2e619a93f4ebc2923d29f3
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/reference.cnn
+      md5sum: 59ec306bb820684b1f6f277d67cb2d92
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/test.paired_end.recalibrated.sorted.antitargetcoverage.cnn
+      md5sum: fe1248aa91fad7769303bb4c031d55ca
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/test.paired_end.recalibrated.sorted.targetcoverage.cnn
+      md5sum: 79aae7e9c135fb8c65f8fbda12610faf
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted-diagram.pdf
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted-scatter.png
+    # conda changes md5sums for test.
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.antitargetcoverage.cnn
+      md5sum: 067115082c4af4b64d58c0dc3a3642e4
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.bintest.cns
+      md5sum: e9a260b81a34d8bc75330435d2a5e8da
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.call.cns
+      md5sum: c7d7fd87b27e103f73988ae307450e82
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.cnr
+      md5sum: 26c506866198d46610c71fa6c0f9e381
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.cns
+      md5sum: 83510b274c24a2671a962477a1ceb436
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.targetcoverage.cnn
+      md5sum: b4a49faf170e436ec32dcc21ccc3ce8f
+    - path: results/cnvkit
+      should_exist: false
+- name: Run variant calling on tumor_only sample with cnvkit
+  command: nextflow run main.nf -profile test,tools_tumoronly --tools cnvkit
+  tags:
+    - cnvkit
+    - copy_number_calling
+    - tumor_only
+    - variant_calling
+  files:
+    - path: results/multiqc
+    - path: results/variant_calling/cnvkit/sample2/cnvkit.reference.antitarget-tmp.bed
+      md5sum: 3d4d20f9f23b39970865d29ef239d20b
+    - path: results/variant_calling/cnvkit/sample2/cnvkit.reference.target-tmp.bed
+      md5sum: 657b25dbda8516624efa8cb2cf3716ca
+    - path: results/variant_calling/cnvkit/sample2/test2.paired_end.recalibrated.sorted-diagram.pdf
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/cnvkit/sample2/test2.paired_end.recalibrated.sorted-scatter.png
+    # conda changes md5sums for test.
+    - path: results/variant_calling/cnvkit/sample2/test2.paired_end.recalibrated.sorted.antitargetcoverage.cnn
+      md5sum: 067115082c4af4b64d58c0dc3a3642e4
+    - path: results/variant_calling/cnvkit/sample2/test2.paired_end.recalibrated.sorted.bintest.cns
+      md5sum: f6adc75a0a86b7a921eca1b79a394cb0
+    - path: results/variant_calling/cnvkit/sample2/test2.paired_end.recalibrated.sorted.call.cns
+      md5sum: f7caeca04aba28b125ce26b511f42afb
+    - path: results/variant_calling/cnvkit/sample2/test2.paired_end.recalibrated.sorted.cnr
+      md5sum: d9bdb71ce807051369577ee7f807a40c
+    - path: results/variant_calling/cnvkit/sample2/test2.paired_end.recalibrated.sorted.cns
+      md5sum: 2b56aac606ba6183d018b30ca58afcec
+    - path: results/variant_calling/cnvkit/sample2/test2.paired_end.recalibrated.sorted.targetcoverage.cnn
+      md5sum: e6d0190c1c37ce6e41f76ca5b24ccca3
+    - path: results/cnvkit
+      should_exist: false
+- name: Run variant calling on germline sample with cnvkit
+  command: nextflow run main.nf -profile test,tools_germline --tools cnvkit
+  tags:
+    - cnvkit
+    - copy_number_calling
+    - germline
+    - variant_calling
+  files:
+    - path: results/multiqc
+    - path: results/variant_calling/cnvkit/sample1/multi_intervals.antitarget.bed
+      md5sum: 3d4d20f9f23b39970865d29ef239d20b
+    - path: results/variant_calling/cnvkit/sample1/multi_intervals.target.bed
+      md5sum: 86d30493bb2e619a93f4ebc2923d29f3
+    - path: results/variant_calling/cnvkit/sample1/reference.cnn
+      md5sum: a09ee4be5dda1cf0f68073bdb3aad8ec
+    - path: results/variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted-diagram.pdf
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted-scatter.png
+    # conda changes md5sums for test.
+    - path: results/variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted.antitargetcoverage.cnn
+      md5sum: fe1248aa91fad7769303bb4c031d55ca
+    - path: results/variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted.bintest.cns
+      md5sum: e55667a75d7d8eaec2efd3b611f15379
+    - path: results/variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted.call.cns
+      md5sum: 9968e02ef2f11ed22e2789c053f7159c
+    - path: results/variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted.cnr
+      md5sum: 3f0fe46574d0f7137f779e7ac1c2362d
+    - path: results/variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted.cns
+      md5sum: 0b2b81d391965488b8634a2b802b69cd
+    - path: results/variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted.targetcoverage.cnn
+      md5sum: 79aae7e9c135fb8c65f8fbda12610faf
+    - path: results/cnvkit
+      should_exist: false
+- name: Run variant calling on somatic samples with cnvkit and skip variant calling on matched normal
+  command: nextflow run main.nf -profile test,tools_somatic --tools cnvkit --only_paired_variant_calling
+  tags:
+    - cnvkit
+    - somatic
+    - only_paired_variant_calling
+    - copy_number_calling
+  files:
+    - path: results/multiqc
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/multi_intervals.antitarget.bed
+      md5sum: 3d4d20f9f23b39970865d29ef239d20b
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/multi_intervals.target.bed
+      md5sum: 86d30493bb2e619a93f4ebc2923d29f3
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/reference.cnn
+      md5sum: 59ec306bb820684b1f6f277d67cb2d92
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/test.paired_end.recalibrated.sorted.antitargetcoverage.cnn
+      md5sum: fe1248aa91fad7769303bb4c031d55ca
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/test.paired_end.recalibrated.sorted.targetcoverage.cnn
+      md5sum: 79aae7e9c135fb8c65f8fbda12610faf
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted-diagram.pdf
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted-scatter.png
+    # conda changes md5sums for test.
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.antitargetcoverage.cnn
+      md5sum: 067115082c4af4b64d58c0dc3a3642e4
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.bintest.cns
+      md5sum: e9a260b81a34d8bc75330435d2a5e8da
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.call.cns
+      md5sum: c7d7fd87b27e103f73988ae307450e82
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.cnr
+      md5sum: 26c506866198d46610c71fa6c0f9e381
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.cns
+      md5sum: 83510b274c24a2671a962477a1ceb436
+    - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.targetcoverage.cnn
+      md5sum: b4a49faf170e436ec32dcc21ccc3ce8f
