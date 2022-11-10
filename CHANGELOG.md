@@ -81,7 +81,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | `strelka`              | 2.9.10      | unchanged   |
 | `svdb`                 | 2.6.1       | unchanged   |
 | `tabix`                | 1.11        | unchanged   |
-| `tiddit`               | 3.1.0       | unchanged   |
+| `tiddit`               | 3.1.0       | 3.3.2       |
 | `vcftools`             | 0.1.16      | unchanged   |
 
 ## [3.0.2](https://github.com/nf-core/sarek/releases/tag/3.0.2) - Lájtávrre
