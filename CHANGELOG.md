@@ -53,7 +53,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | Dependency             | Old version | New version |
 | ---------------------- | ----------- | ----------- | ----------------------------- |
 | `ascat`                | 3.0.0       | unchanged   |
-| `bcftools`             | 1.15.1      | unchanged   |
+| `bcftools`             | 1.15.1      | 1.16        |
 | `bwa-mem2`             | 2.2.1       | unchanged   |
 | `bwa`                  | 0.7.17      | unchanged   |
 | `cancerit-allelecount` | 4.3.0       | unchanged   |
