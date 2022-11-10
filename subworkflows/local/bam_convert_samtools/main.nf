@@ -22,16 +22,16 @@ workflow BAM_CONVERT_SAMTOOLS {
     // Index File if not PROVIDED -> this also requires updates to samtools view possibly URGH
 
     // MAP - MAP
-    SAMTOOLS_VIEW_MAP_MAP(input, fasta)
+    SAMTOOLS_VIEW_MAP_MAP(input, fasta, [])
 
     // UNMAP - UNMAP
-    SAMTOOLS_VIEW_UNMAP_UNMAP(input, fasta)
+    SAMTOOLS_VIEW_UNMAP_UNMAP(input, fasta, [])
 
     // UNMAP - MAP
-    SAMTOOLS_VIEW_UNMAP_MAP(input, fasta)
+    SAMTOOLS_VIEW_UNMAP_MAP(input, fasta, [])
 
     // MAP - UNMAP
-    SAMTOOLS_VIEW_MAP_UNMAP(input, fasta)
+    SAMTOOLS_VIEW_MAP_UNMAP(input, fasta, [])
 
     // Merge UNMAP
     all_unmapped_bam = SAMTOOLS_VIEW_UNMAP_UNMAP.out.bam
