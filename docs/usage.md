@@ -631,7 +631,7 @@ Therefore, the different scatter/gather options can be set by the user:
 By default, the input fastq files are split into smaller chunks with FASTP, mapped in parallel, and then merged and duplicate marked. This can be customized by setting the parameter `--split_fastq`.
 This parameter determines how many reads are within each split. Setting it to `0` will turn of any splitting and only one mapping process is run per input fastq file.
 
-> FastP always creates as many chunks as CPUs are specified (by default 12). Thus, the parameter `--split_fastq` is an upper bound, e.g. if 1/12th of the Fastq file exceeds the provided value another fastq file will be generated.
+> FastP  creates as many chunks as CPUs are specified (by default 12) and subdivides them further, if the number of reads in a chunk is larger then the value specified in `--split_fastq`. Thus, the parameter `--split_fastq` is an upper bound, e.g. if 1/12th of the Fastq file exceeds the provided value another fastq file will be generated.
 
 ### Intervals for Base Quality Score Recalibration and Variantcalling
 
