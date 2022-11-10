@@ -16,6 +16,7 @@ workflow BAM_CONVERT_SAMTOOLS {
     input // channel: [meta, alignment (BAM or CRAM), index (optional)]
     fasta // optional: reference file if CRAM format and reference not in header
     fasta_fai
+    interleaved // value: true/false
 
     main:
     ch_versions = Channel.empty()
@@ -44,26 +45,18 @@ workflow BAM_CONVERT_SAMTOOLS {
     SAMTOOLS_MERGE_UNMAP(all_unmapped_bam, fasta, fasta_fai)
 
     // Collate & convert unmapped
-    COLLATE_FASTQ_UNMAP(SAMTOOLS_MERGE_UNMAP.out.bam)
+    COLLATE_FASTQ_UNMAP(SAMTOOLS_MERGE_UNMAP.out.bam, fasta, interleaved)
 
     // Collate & convert mapped
-    COLLATE_FASTQ_MAP(SAMTOOLS_VIEW_MAP_MAP.out.bam)
+    COLLATE_FASTQ_MAP(SAMTOOLS_VIEW_MAP_MAP.out.bam, fasta, interleaved)
 
     // join Mapped & unmapped fastq
-    unmapped_reads = COLLATE_FASTQ_UNMAP.out.reads
-        .map{ meta, reads_R1_R2, reads_other, reads_singleton ->
-            [meta, reads_R1_R2]
-        }
 
-    mapped_reads = COLLATE_FASTQ_MAP.out.reads
-        .map{ meta, reads_R1_R2, reads_other, reads_singleton ->
-            [meta, reads_R1_R2]
-        }
-
-    reads_to_concat = mapped_reads.join(unmapped_reads)
-        .map{ meta, mapped_reads, unmapped_reads ->
-            [meta, [mapped_reads[0], mapped_reads[1], unmapped_reads[0], unmapped_reads[1]]]
-        }
+    reads_to_concat = COLLATE_FASTQ_MAP.out.fastq
+                    .join(COLLATE_FASTQ_UNMAP.out.fastq)
+                    .map{ meta, mapped_reads, unmapped_reads ->
+                        [meta, [mapped_reads[0], mapped_reads[1], unmapped_reads[0], unmapped_reads[1]]]
+                    }
 
     // Concatenate Mapped_R1 with Unmapped_R1 and Mapped_R2 with Unmapped_R2
     CAT_FASTQ(reads_to_concat)

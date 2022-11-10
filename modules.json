@@ -257,7 +257,7 @@
                     },
                     "samtools/collatefastq": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905"
+                        "git_sha": "1f3f03be37ae893e6e68469e29d3461519e274de"
                     },
                     "samtools/convert": {
                         "branch": "master",
