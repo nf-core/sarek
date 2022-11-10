@@ -27,8 +27,8 @@ process TMB {
         --dbConfig ${dbconfig} \
         --varConfig ${varconfig} \
         ${target_bed} \
-        --sample TUMOR
-        $args
+        $args \
+        > ${prefix}.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
