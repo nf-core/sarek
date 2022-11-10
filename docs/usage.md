@@ -642,7 +642,7 @@ When running targeted analysis, it is recommended to use the bed file containing
 
 The amount of scatter/gathering can be customized by adjusting the parameter `--nucleotides_per_second`.
 
-> **NB:** The _same_ intervals are processed regardless of the number of groups. The number of groups however determines over how many compute nodes the analysis is scattered.
+> **NB:** The _same_ intervals are processed regardless of the number of groups. The number of groups however determines over how many compute nodes the analysis is scattered on.
 
 The default value is `1000`, increasing this value will _reduce_ the number of groups that are processed in parallel.
 Generally, smaller numbers of groups (each group has more regions), the slower the processing, and less storage space is consumed.
