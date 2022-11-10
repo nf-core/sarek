@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#806](https://github.com/nf-core/sarek/pull/806) - Refactor all tests
 - [#806](https://github.com/nf-core/sarek/pull/806) - Split up `modules.config` file
 - [#810](https://github.com/nf-core/sarek/pull/810) - Update CHANGELOG
+- [#821](https://github.com/nf-core/sarek/pull/810) - Update modules with `nf-core modules update -a`: Update GATK version to 4.3.0
 
 ### Fixed
 
@@ -45,6 +46,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Deprecated
 
 ### Removed
+
+### Dependencies
+
+| Dependency             | Old version | New version |
+| ---------------------- | ----------- | ----------- | ----------------------------- |
+| `ascat`                | 3.0.0       | unchanged   |
+| `bcftools`             | 1.9         | 1.15.1      |
+| `bwa-mem2`             | 2.2.1       | unchanged   |
+| `bwa`                  | 0.7.17      | unchanged   |
+| `cancerit-allelecount` | 4.3.0       | unchanged   |
+| `cnvkit`               | 0.9.9       | unchanged   |
+| `control-freec`        | 11.6        | unchanged   |
+| `deepvariant`          | 1.3.0       | unchanged   |
+| `dragmap`              | 1.2.1       | unchanged   |
+| `ensembl-vep`          | 106.1       | unchanged   | //should we update this here? |
+| `fastp`                | 0.23.2      | unchanged   |
+| `fastqc`               | 0.11.9      | unchanged   |
+| `fgbio`                | 2.0.2       | unchanged   |
+| `freebayes`            | 1.3.5       | unchanged   |
+| `gatk4`                | 4.3.0.0     | unchanged   |
+| `gawk`                 | 5.1.0       | unchanged   |
+| `manta`                | 1.6.0       | unchanged   |
+| `mosdepth`             | 0.3.3       | unchanged   |
+| `msisensor-pro`        | 1.2.0       | unchanged   |
+| `multiqc`              | 1.13a       | unchanged   |
+| `openjdk`              | 8.0.312     | unchanged   |
+| `p7zip`                | 15.09       | unchanged   |
+| `pigz`                 | 2.3.4       | unchanged   |
+| `samblaster`           | 0.1.26      | unchanged   |
+| `samtools`             | 1.15.1      | unchanged   |
+| `sed`                  | 4.7         | unchanged   |
+| `snpeff`               | 5.1         | unchanged   |
+| `strelka`              | 2.9.10      | unchanged   |
+| `svdb`                 | 2.6.1       | unchanged   |
+| `tabix`                | 1.11        | unchanged   |
+| `tiddit`               | 3.1.0       | unchanged   |
+| `vcftools`             | 0.1.16      | unchanged   |
 
 ## [3.0.2](https://github.com/nf-core/sarek/releases/tag/3.0.2) - Lájtávrre
 
