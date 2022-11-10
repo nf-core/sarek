@@ -3,13 +3,14 @@
   tags:
     - default
     - preprocessing
+    - variant_calling
   files:
     - path: results/csv/markduplicates.csv
       md5sum: 0d6120bb99e92f6810343270711ca53e
     - path: results/csv/markduplicates_no_table.csv
       md5sum: 2a2d3d4842befd4def39156463859ee3
     - path: results/csv/recalibrated.csv
-      md5sum: 42628ec994c16f565e5407b40a9c1ac3
+      md5sum: 2d29d9e53894dcce96a1b5beb6ef3312
     - path: results/csv/variantcalled.csv
       md5sum: 4d0effd3d8dc2b814230a189e7ca9dba
     - path: results/multiqc
@@ -26,7 +27,7 @@
     - path: results/reports/bcftools/strelka/test/test.strelka.variants.bcftools_stats.txt
     # conda changes md5sums for test.
     - path: results/reports/fastqc/test-test_L1
-    - path: results/reports/markduplicates/test/test.md.metrics
+    - path: results/reports/markduplicates/test/test.md.cram.metrics
       contains: ["test	8547	767	84	523391	3882	0	0	0.385081", "1.0	767	767"]
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
       md5sum: 76fa71922a3f748e507c2364c531dfcb
@@ -66,4 +67,6 @@
     # binary changes md5sums on reruns.
     - path: results/variant_calling/strelka/test/test.strelka.variants.vcf.gz.tbi
     - path: results/strelka
+      should_exist: false
+    - path: results/preprocessing/mapped/
       should_exist: false

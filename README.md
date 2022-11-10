@@ -118,6 +118,7 @@ We thank the following people for their extensive assistance in the development 
 - [Sabrina Krakau](https://github.com/skrakau)
 - [Sebastian-D](https://github.com/Sebastian-D)
 - [Silvia Morini](https://github.com/silviamorins)
+- [Solenne Correard](https://github.com/scorreard)
 - [Susanne Jodoin](https://github.com/SusiJo)
 - [Tobias Koch](https://github.com/KochTobi)
 - [Winni Kretzschmar](https://github.com/winni2k)

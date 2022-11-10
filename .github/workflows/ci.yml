@@ -2,14 +2,15 @@ name: nf-core CI
 # This workflow runs the pipeline with the minimal test dataset to check that it completes without any syntax errors
 on:
   push:
-    branches:
-      - dev
+    branches: [dev]
   pull_request:
   release:
     types: [published]
 
-env:
-  NXF_ANSI_LOG: false
+# Cancel if a newer run is started
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   test:
@@ -30,9 +31,11 @@ jobs:
         exclude:
           - NXF_VER: "latest-everything"
             profile: "conda"
+    env:
+      NXF_ANSI_LOG: false
     steps:
       - name: Check out pipeline code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up Python
         uses: actions/setup-python@v2
@@ -89,7 +92,7 @@ jobs:
         if: failure()
         run: |
           sudo apt install bat > /dev/null
-          batcat --decorations=always --color=always /tmp/pytest_workflow_*/*/log.{out,err}
+          batcat --decorations=always --color=always /home/runner/pytest_workflow_*/*/log.{out,err}
 
       - name: Upload logs on failure
         if: failure()
@@ -97,96 +100,9 @@ jobs:
         with:
           name: logs-${{ matrix.profile }}
           path: |
-            /tmp/pytest_workflow_*/*/.nextflow.log
-            /tmp/pytest_workflow_*/*/log.out
-            /tmp/pytest_workflow_*/*/log.err
-            /tmp/pytest_workflow_*/*/work
-            /tmp/pytest_workflow_*/**/.command.log
-            !/tmp/pytest_workflow_*/*/work/conda
-            !/tmp/pytest_workflow_*/*/work/singularity
-
-  test_all:
-    name: Run pipeline with test data (complete)
-    # Only run on push if this is the nf-core dev branch (merged PRs)
-    if: "${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/sarek') }}"
-    runs-on: ubuntu-latest
-    strategy:
-      # HACK Remove after DSL2 rewrite is done
-      fail-fast: false
-      matrix:
-        NXF_VER:
-          - "21.10.3"
-        test:
-          - "aligner"
-          - "alignment_to_fastq"
-          - "annotation"
-          - "cnvkit"
-          - "controlfreec"
-          - "deepvariant"
-          - "freebayes"
-          - "gatk4_spark"
-          - "haplotypecaller"
-          - "intervals"
-          - "manta"
-          - "markduplicates"
-          - "mpileup"
-          - "msisensorpro"
-          - "mutect2"
-          - "prepare_recalibration"
-          - "recalibrate"
-          - "save_bam_mapped"
-          - "save_output_as_bam"
-          - "skip_markduplicates"
-          - "skip_qc"
-          - "split_fastq"
-          - "strelka"
-          - "strelkabp"
-          - "targeted"
-          - "tiddit"
-          - "trimming"
-          - "tumor_normal_pair"
-          - "umi"
-          - "variantcalling_channel"
-        profile: ["docker"]
-    steps:
-      - name: Check out pipeline code
-        uses: actions/checkout@v2
-
-      - name: Install Nextflow
-        uses: nf-core/setup-nextflow@v1
-        with:
-          version: "${{ matrix.NXF_VER }}"
-
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: "3.x"
-
-      - name: Install dependencies
-        run: python -m pip install --upgrade pip pytest-workflow
-
-      - name: Run pipeline with tests settings
-        uses: Wandalen/wretry.action@v1.0.11
-        with:
-          command: PROFILE=${{ matrix.profile }} pytest --tag ${{ matrix.test }} --symlink --kwdof --git-aware --color=yes
-          attempt_limit: 3
-
-      - name: Output log on failure
-        if: failure()
-        run: |
-          sudo apt install bat > /dev/null
-          batcat --decorations=always --color=always /tmp/pytest_workflow_*/*/log.{out,err}
-
-      - name: Upload logs on failure
-        if: failure()
-        uses: actions/upload-artifact@v2
-        with:
-          name: logs-${{ matrix.profile }}
-          path: |
-            /tmp/pytest_workflow_*/*/.nextflow.log
-            /tmp/pytest_workflow_*/*/log.out
-            /tmp/pytest_workflow_*/*/log.err
-            /tmp/pytest_workflow_*/*/work
-            /tmp/pytest_workflow_*/**/.command.log
-            !/tmp/pytest_workflow_*/*/work/conda
-            !/tmp/pytest_workflow_*/*/work/singularity
+            /home/runner/pytest_workflow_*/*/.nextflow.log
+            /home/runner/pytest_workflow_*/*/log.out
+            /home/runner/pytest_workflow_*/*/log.err
+            /home/runner/pytest_workflow_*/*/work
+            !/home/runner/pytest_workflow_*/*/work/conda
+            !/home/runner/pytest_workflow_*/*/work/singularity
