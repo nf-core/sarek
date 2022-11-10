@@ -33,7 +33,7 @@ process GATK4_APPLYBQSR_SPARK {
     """
     gatk --java-options "-Xmx${avail_mem}g" ApplyBQSRSpark \\
         --input $input \\
-        --output ${prefix} \\
+        --output ${prefix}.${input.getExtension()} \\
         --reference $fasta \\
         --bqsr-recal-file $bqsr_table \\
         $interval_command \\
