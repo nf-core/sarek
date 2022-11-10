@@ -387,7 +387,10 @@ workflow SAREK {
 
         // convert any bam input to fastq
         // Fasta are not needed when converting bam to fastq -> []
-        CONVERT_FASTQ_INPUT(ch_input_sample_type.bam, [], [])
+        CONVERT_FASTQ_INPUT(ch_input_sample_type.bam,
+                            [],    // fasta
+                            [],    // fasta_fai
+                            false) // Currently don't allow interleaved input
 
         // gather fastq (inputed or converted)
         // Theorically this could work on mixed input (fastq for one sample and bam for another)
