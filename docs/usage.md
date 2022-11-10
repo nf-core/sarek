@@ -622,7 +622,7 @@ In addition, currently the mismatch penalty for reads with tumor status in the s
 ## How to manage scatter/gathering (parallelization with-in each sample)
 
 While Nextflow ensures all samples are run in parallel, the pipeline can split input files for each sample into smaller chunks which are processes in parallel.
-This allows on the one hand to speed up analysis for individual chunks, but might occupy more storage space.
+This speeds up analysis for individual chunks, but might occupy more storage space.
 
 Therefore, the different scatter/gather options can be set by the user:
 
