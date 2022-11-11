@@ -390,9 +390,9 @@ workflow SAREK {
         // convert any bam input to fastq
         // Fasta are not needed when converting bam to fastq -> []
         CONVERT_FASTQ_INPUT(ch_input_sample_type.bam,
-                            [],    // fasta
-                            [],    // fasta_fai
-                            false) // Currently don't allow interleaved input
+                            [[id:"fasta"], []], // fasta
+                            [],                 // fasta_fai
+                            false)              // Currently don't allow interleaved input
 
         // gather fastq (inputed or converted)
         // Theorically this could work on mixed input (fastq for one sample and bam for another)
@@ -425,7 +425,10 @@ workflow SAREK {
             bamtofastq = FASTQ_CREATE_UMI_CONSENSUS_FGBIO.out.consensusbam.map{meta, bam -> [meta,bam,[]]}
 
             // convert back to fastq for further preprocessing
-            CONVERT_FASTQ_UMI(bamtofastq, [], [])
+            CONVERT_FASTQ_UMI(bamtofastq,
+                            [[id:"fasta"], []], // fasta
+                            [],                 // fasta_fai
+                            false)              // Currently don't allow interleaved input
 
             ch_reads_fastp = CONVERT_FASTQ_UMI.out.reads
 
