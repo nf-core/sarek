@@ -94,6 +94,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         )
 
         mpileup_germline = BAM_VARIANT_CALLING_MPILEUP.out.mpileup
+        mpileup_vcf = BAM_VARIANT_CALLING_MPILEUP.out.vcf
         ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_MPILEUP.out.versions)
     }
 
@@ -229,6 +230,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     genotype_gvcf
     haplotypecaller_vcf
     manta_vcf
+    mpileup_vcf
     strelka_vcf
     tiddit_vcf
 
