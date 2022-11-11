@@ -90,7 +90,8 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
 
         BAM_VARIANT_CALLING_MPILEUP(
             cram_intervals_no_index,
-            fasta
+            fasta,
+            dict
         )
 
         mpileup_germline = BAM_VARIANT_CALLING_MPILEUP.out.mpileup
