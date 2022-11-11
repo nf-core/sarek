@@ -7,7 +7,7 @@
     - variant_calling
   files:
     - path: results/csv/mapped.csv
-      md5sum: ae97b7394ab53a6b60921ab06c713cd9
+      md5sum: 3bee45ccf65e301ce09ee4eed8f26933
     - path: results/csv/markduplicates.csv
       md5sum: 0d6120bb99e92f6810343270711ca53e
     - path: results/csv/markduplicates_no_table.csv
@@ -82,11 +82,11 @@
     - variant_calling
   files:
     - path: results/csv/markduplicates.csv
-      md5sum: 8679570b8db1937ee574fec36b25d7bc
+      md5sum: 6004ab16b63012e336f6251396a983c5
     - path: results/csv/markduplicates_no_table.csv
-      md5sum: 145154b6037e90448273fbe8e8dec5d3
+      md5sum: 8a145eca178cfd02403d60122b9d3960
     - path: results/csv/recalibrated.csv
-      md5sum: 3ddc20eb105fdcc483945afd7d7d238c
+      md5sum: 2dfbcaaeaaf4937c51c5c310f1c77614
     - path: results/multiqc
     - path: results/preprocessing/markduplicates/test/test.md.bam.bai
     # conda changes md5sums for test.
@@ -150,7 +150,7 @@
     - skip_markduplicates
   files:
     - path: results/csv/mapped.csv
-      md5sum: ae97b7394ab53a6b60921ab06c713cd9
+      md5sum: 3bee45ccf65e301ce09ee4eed8f26933
     - path: results/csv/recalibrated.csv
       md5sum: 2d29d9e53894dcce96a1b5beb6ef3312
     - path: results/multiqc
@@ -205,7 +205,7 @@
     - save_mapped
   files:
     - path: results/csv/mapped.csv
-      md5sum: ae97b7394ab53a6b60921ab06c713cd9
+      md5sum: 3bee45ccf65e301ce09ee4eed8f26933
     - path: results/csv/recalibrated.csv
       md5sum: 2d29d9e53894dcce96a1b5beb6ef3312
     - path: results/multiqc
@@ -260,7 +260,7 @@
     - path: results/csv/mapped.csv
       md5sum: 7f21bf40d3fbc248ee2ea3fdf0f7cdb2
     - path: results/csv/recalibrated.csv
-      md5sum: 3ddc20eb105fdcc483945afd7d7d238c
+      md5sum: 2dfbcaaeaaf4937c51c5c310f1c77614
     - path: results/multiqc
     - path: results/preprocessing/mapped/test/test.sorted.bam
     # binary changes md5sums on reruns.

@@ -90,11 +90,11 @@
     - save_output_as_bam
   files:
     - path: results/csv/markduplicates.csv
-      md5sum: 8679570b8db1937ee574fec36b25d7bc
+      md5sum: 6004ab16b63012e336f6251396a983c5
     - path: results/csv/markduplicates_no_table.csv
-      md5sum: 145154b6037e90448273fbe8e8dec5d3
+      md5sum: 8a145eca178cfd02403d60122b9d3960
     - path: results/csv/recalibrated.csv
-      md5sum: 3ddc20eb105fdcc483945afd7d7d238c
+      md5sum: 2dfbcaaeaaf4937c51c5c310f1c77614
     - path: results/multiqc
     - path: results/preprocessing/markduplicates/test/test.md.bam
     # conda changes md5sums for test.
