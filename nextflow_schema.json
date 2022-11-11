@@ -278,7 +278,7 @@
                 },
                 "cf_chrom_len": {
                     "type": "string",
-                    "default": null,
+                    "default": "None",
                     "fa_icon": "fas fa-ruler-horizontal",
                     "description": "Specify a custom chromosome length file.",
                     "help_text": "Control-FREEC requires a file containing all chromosome lenghts. By default the fasta.fai is used. If the fasta.fai file contains chromosomes not present in the intervals, it fails (see: https://github.com/BoevaLab/FREEC/issues/106).\n\nIn this case, a custom chromosome length can be specified. It must be of the same format as the fai, but only contain the relevant chromosomes.\n\n\n\n",
@@ -337,6 +337,12 @@
                     "description": "Overwrite Control-FREEC window size.",
                     "help_text": "Details, see [ControlFREEC manual](http://boevalab.inf.ethz.ch/FREEC/tutorial.html).",
                     "hidden": true
+                },
+                "cnvkit_reference": {
+                    "type": "string",
+                    "default": null,
+                    "fa_icon": "fas fa-file",
+                    "help_text": "https://cnvkit.readthedocs.io/en/stable/pipeline.html?highlight=reference.cnn#batch"
                 },
                 "pon": {
                     "type": "string",
