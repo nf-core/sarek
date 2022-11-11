@@ -67,7 +67,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | `fastp`                | 0.23.2      | unchanged   |
 | `fastqc`               | 0.11.9      | unchanged   |
 | `fgbio`                | 2.0.2       | unchanged   |
-| `freebayes`            | 1.3.5       | unchanged   |
+| `freebayes`            | 1.3.5       | 1.3.6       |
 | `gatk4`                | 4.2.6.1     | 4.3.0.0     |
 | `gawk`                 | 5.1.0       | unchanged   |
 | `manta`                | 1.6.0       | unchanged   |
