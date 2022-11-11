@@ -2,10 +2,10 @@ process DRAGMAP_HASHTABLE {
     tag "$fasta"
     label 'process_high'
 
-    conda (params.enable_conda ? "bioconda::dragmap=1.2.1" : null)
+    conda (params.enable_conda ? "bioconda::dragmap=1.3.0" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/dragmap:1.2.1--hd4ca14e_0':
-        'quay.io/biocontainers/dragmap:1.2.1--hd4ca14e_0' }"
+        'https://depot.galaxyproject.org/singularity/dragmap:1.3.0--h72d16da_1':
+        'quay.io/biocontainers/dragmap:1.3.0--h72d16da_1' }"
 
     input:
     tuple val(meta), path(fasta)

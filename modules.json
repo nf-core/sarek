@@ -83,11 +83,11 @@
                     },
                     "dragmap/align": {
                         "branch": "master",
-                        "git_sha": "d6363b7ea1b54715677f971a30d417790ee6a0e6"
+                        "git_sha": "6b8dc21a3afcc92c7446dbdaf27817e7874c5ddf"
                     },
                     "dragmap/hashtable": {
                         "branch": "master",
-                        "git_sha": "d6363b7ea1b54715677f971a30d417790ee6a0e6"
+                        "git_sha": "6b8dc21a3afcc92c7446dbdaf27817e7874c5ddf"
                     },
                     "ensemblvep": {
                         "branch": "master",

@@ -62,7 +62,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | `cnvkit`               | 0.9.9       | unchanged   |
 | `control-freec`        | 11.6        | unchanged   |
 | `deepvariant`          | 1.3.0       | 1.4.0       |
-| `dragmap`              | 1.2.1       | unchanged   |
+| `dragmap`              | 1.2.1       | 1.3.0       |
 | `ensembl-vep`          | 106.1       | unchanged   | //should we update this here? |
 | `fastp`                | 0.23.2      | unchanged   |
 | `fastqc`               | 0.11.9      | unchanged   |
