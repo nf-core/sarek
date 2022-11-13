@@ -12,15 +12,15 @@
       md5sum: 2d29d9e53894dcce96a1b5beb6ef3312
     - path: results/multiqc
     - path: results/preprocessing/markduplicates/test/test.md.cram
-      md5sum: cf0ebfe288ee7164cd2fcd028bda1887
+      md5sum: b1338daf0d2f85c42fdc1bf12764bcae
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
-      md5sum: 2136b37eca3e806c77c39ee823231679
+      md5sum: 4f249f7b2492c37fd2186b02f7e5b03c
     - path: results/preprocessing/recal_table/test/test.recal.table
       md5sum: 5b6e5078b4a90f6cb982fa0f0df616c2
     - path: results/preprocessing/recalibrated/test/test.recal.cram
-      md5sum: 1c168110f006bacba2ed8783bb5a3dee
+      md5sum: f56bee4375f79298fbdcdc2b3a5f2013
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
-      md5sum: 1c91543c9f75bc354274b1a1da745ee3
+      md5sum: 1441e62e7cff530cb71df158693651c7
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.cram.metrics
     # The text-based output-file test.md.cram.metrics only contains comments and no metrics, which is a bit odd.
@@ -63,15 +63,15 @@
     - path: results/csv/recalibrated.csv
       md5sum: 2d29d9e53894dcce96a1b5beb6ef3312
     - path: results/preprocessing/markduplicates/test/test.md.cram
-      md5sum: cf0ebfe288ee7164cd2fcd028bda1887
+      md5sum: b1338daf0d2f85c42fdc1bf12764bcae
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
-      md5sum: 2136b37eca3e806c77c39ee823231679
+      md5sum: 4f249f7b2492c37fd2186b02f7e5b03c
     - path: results/preprocessing/recal_table/test/test.recal.table
       md5sum: 5b6e5078b4a90f6cb982fa0f0df616c2
     - path: results/preprocessing/recalibrated/test/test.recal.cram
-      md5sum: 1c168110f006bacba2ed8783bb5a3dee
+      md5sum: f56bee4375f79298fbdcdc2b3a5f2013
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
-      md5sum: 1c91543c9f75bc354274b1a1da745ee3
+      md5sum: 1441e62e7cff530cb71df158693651c7
     - path: results/multiqc
       should_exist: false
     - path: results/reports/fastqc

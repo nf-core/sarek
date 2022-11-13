@@ -102,6 +102,7 @@ workflow PREPARE_GENOME {
     ch_versions = ch_versions.mix(SAMTOOLS_FAIDX.out.versions)
     ch_versions = ch_versions.mix(BWAMEM1_INDEX.out.versions)
     ch_versions = ch_versions.mix(BWAMEM2_INDEX.out.versions)
+    ch_versions = ch_versions.mix(DRAGMAP_HASHTABLE.out.versions)
     ch_versions = ch_versions.mix(GATK4_CREATESEQUENCEDICTIONARY.out.versions)
     ch_versions = ch_versions.mix(MSISENSORPRO_SCAN.out.versions)
     ch_versions = ch_versions.mix(TABIX_DBSNP.out.versions)
