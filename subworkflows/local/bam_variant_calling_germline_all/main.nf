@@ -43,6 +43,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     strelka_vcf         = Channel.empty()
     tiddit_vcf          = Channel.empty()
 
+    deepvariant_vcf_tbi     = Channel.empty()
     haplotypecaller_vcf_tbi = Channel.empty()
     manta_vcf_tbi           = Channel.empty()
     strelka_vcf_tbi         = Channel.empty()
@@ -130,6 +131,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         )
 
         deepvariant_vcf = Channel.empty().mix(BAM_VARIANT_CALLING_DEEPVARIANT.out.deepvariant_vcf)
+        deepvariant_vcf_tbi  = Channel.empty().mix(BAM_VARIANT_CALLING_DEEPVARIANT.out.deepvariant_vcf_tbi)
         ch_versions     = ch_versions.mix(BAM_VARIANT_CALLING_DEEPVARIANT.out.versions)
     }
 
@@ -241,6 +243,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     strelka_vcf
     tiddit_vcf
 
+    deepvariant_vcf_tbi
     haplotypecaller_vcf_tbi
     manta_vcf_tbi
     strelka_vcf_tbi

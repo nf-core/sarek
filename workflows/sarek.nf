@@ -999,37 +999,45 @@ workflow SAREK {
             rt_file
         )
 
-        // Gather vcfs and vcf-tbis for concatenating germline-vcfs
-        germline_vcfs_with_tbis = Channel.empty()
 
-        germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(
-            BAM_VARIANT_CALLING_GERMLINE_ALL.out.haplotypecaller_vcf.join(BAM_VARIANT_CALLING_GERMLINE_ALL.out.haplotypecaller_vcf_tbi)
-        )
+        if (params.concatenate_vcf) {
+            // Concatenate vcf-files
 
-        germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(
-            BAM_VARIANT_CALLING_GERMLINE_ALL.out.manta_vcf.join(BAM_VARIANT_CALLING_GERMLINE_ALL.out.manta_vcf_tbi)
-        )
+            // Gather vcfs and vcf-tbis for concatenating germline-vcfs
+            germline_vcfs_with_tbis = Channel.empty()
 
-        germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(
-            BAM_VARIANT_CALLING_GERMLINE_ALL.out.strelka_vcf.join(BAM_VARIANT_CALLING_GERMLINE_ALL.out.strelka_vcf_tbi)
-        )
+            germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(
+                BAM_VARIANT_CALLING_GERMLINE_ALL.out.haplotypecaller_vcf.join(BAM_VARIANT_CALLING_GERMLINE_ALL.out.haplotypecaller_vcf_tbi)
+            )
 
-        // TO-DO: also mix in vcf+tbi from
-        // deepvariant
-        // freebayes
-        // tiddit
+            germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(
+                BAM_VARIANT_CALLING_GERMLINE_ALL.out.manta_vcf.join(BAM_VARIANT_CALLING_GERMLINE_ALL.out.manta_vcf_tbi)
+            )
 
-        germline_vcfs_with_tbis = germline_vcfs_with_tbis.map{
-            meta, vcf, tbi ->
-                def new_meta = meta.clone()
-                new_meta.remove('variantcaller')
-                [new_meta, vcf, tbi]
-            }.groupTuple()
+            germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(
+                BAM_VARIANT_CALLING_GERMLINE_ALL.out.strelka_vcf.join(BAM_VARIANT_CALLING_GERMLINE_ALL.out.strelka_vcf_tbi)
+            )
 
-        CONCAT_GERMLINE_VCFS(germline_vcfs_with_tbis)
-        // TO-DO: The concatenation should be optional, and be default it shouldn't be done.
-        // TO-DO: Similar concatenation should also be done for tumor-vcfs, somatic-vcfs and something (?)
-        // TO-DO: Should all different kinds of variant be concatenated? Probably not.
+            germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(
+                BAM_VARIANT_CALLING_GERMLINE_ALL.out.deepvariant_vcf.join(BAM_VARIANT_CALLING_GERMLINE_ALL.out.deepvariant_vcf_tbi)
+            )
+
+
+            // TO-DO: also mix in vcf+tbi from
+            // freebayes
+            // tiddit
+
+            germline_vcfs_with_tbis = germline_vcfs_with_tbis.map{
+                meta, vcf, tbi ->
+                    def new_meta = meta.clone()
+                    new_meta.remove('variantcaller')
+                    [new_meta, vcf, tbi]
+                }.groupTuple()
+
+            CONCAT_GERMLINE_VCFS(germline_vcfs_with_tbis)
+            // TO-DO: Similar concatenation should also be done for tumor-vcfs, somatic-vcfs and something (?)
+            // TO-DO: Should all different kinds of variant be concatenated? Probably not.
+        }
 
         // Gather vcf files for annotation and QC
         vcf_to_annotate = Channel.empty()
