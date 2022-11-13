@@ -83,11 +83,13 @@
                     },
                     "dragmap/align": {
                         "branch": "master",
-                        "git_sha": "6b8dc21a3afcc92c7446dbdaf27817e7874c5ddf"
+                        "git_sha": "6b8dc21a3afcc92c7446dbdaf27817e7874c5ddf",
+                        "patch": "modules/nf-core/dragmap/align/dragmap-align.diff"
                     },
                     "dragmap/hashtable": {
                         "branch": "master",
-                        "git_sha": "6b8dc21a3afcc92c7446dbdaf27817e7874c5ddf"
+                        "git_sha": "6b8dc21a3afcc92c7446dbdaf27817e7874c5ddf",
+                        "patch": "modules/nf-core/dragmap/hashtable/dragmap-hashtable.diff"
                     },
                     "ensemblvep": {
                         "branch": "master",
