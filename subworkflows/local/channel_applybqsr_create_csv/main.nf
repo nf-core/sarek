@@ -15,6 +15,10 @@ workflow CHANNEL_APPLYBQSR_CREATE_CSV {
             status  = meta.status
             file = "${params.outdir}/preprocessing/recalibrated/${sample}/${file.name}"
             index = "${params.outdir}/preprocessing/recalibrated/${sample}/${index.name}"
-            ["recalibrated.csv", "patient,sex,status,sample,cram,crai\n${patient},${sex},${status},${sample},${file},${index}\n"]
+
+            type = params.save_output_as_bam ? "bam" : "cram"
+            type_index = params.save_output_as_bam ? "bai" : "crai"
+
+            ["recalibrated.csv", "patient,sex,status,sample,${type},${type_index}\n${patient},${sex},${status},${sample},${file},${index}\n"]
         }
 }

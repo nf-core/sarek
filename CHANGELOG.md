@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#735](https://github.com/nf-core/sarek/pull/735) - GATK Markduplicates now natively supports CRAM output
 - [#774](https://github.com/nf-core/sarek/pull/774) - Add logo for Danish National Genome Center
 - [#783](https://github.com/nf-core/sarek/pull/783) - Add paths for chr length used by controlfreec to GRCh38 config
+- [#820](https://github.com/nf-core/sarek/pull/820) - Improve documentation on scatter/gather effects
 
 ### Changed
 
@@ -26,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#806](https://github.com/nf-core/sarek/pull/806) - Split up `modules.config` file
 - [#810](https://github.com/nf-core/sarek/pull/810) - Update CHANGELOG
 - [#821](https://github.com/nf-core/sarek/pull/821) - Change `replace` to `putIfAbsent` for automatic search of `input` if none is provided to avoid overwriting values
+- [#827](https://github.com/nf-core/sarek/pull/827) - Add `--genomicsdb-shared-posixfs-optimizations true --bypass-feature-reader` to `GenomicsDB` parameters to speed up the analysis
 
 ### Fixed
 
@@ -42,6 +44,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#813](https://github.com/nf-core/sarek/pull/813) - Fix input validation when launching from website (see issue [#694](https://github.com/nf-core/sarek/issues/694))
 - [#814](https://github.com/nf-core/sarek/pull/814) - Fix readgroups when using DragMap together with FreeBayes or Mutect2 (see issue [#780](https://github.com/nf-core/sarek/issues/780))
 - [#817](https://github.com/nf-core/sarek/pull/817) - Fix CNVKit run on tumor-only sample to be run on all samples
+- [#828](https://github.com/nf-core/sarek/pull/817) - Fix issue [#763](https://github.com/nf-core/sarek/issues/763) to run variantcalling when starting form step recalibration
 
 ### Deprecated
 

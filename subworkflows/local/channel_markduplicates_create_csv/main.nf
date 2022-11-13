@@ -17,6 +17,10 @@ workflow CHANNEL_MARKDUPLICATES_CREATE_CSV {
             suffix_index   = params.save_output_as_bam ? "bam.bai" : "cram.crai"
             file   = "${params.outdir}/preprocessing/markduplicates/${sample}/${file.baseName}.${suffix_aligned}"
             index   = "${params.outdir}/preprocessing/markduplicates/${sample}/${index.baseName.minus(".cram")}.${suffix_index}"
-            ["markduplicates_no_table.csv", "patient,sex,status,sample,cram,crai\n${patient},${sex},${status},${sample},${file},${index}\n"]
+
+            type = params.save_output_as_bam ? "bam" : "cram"
+            type_index = params.save_output_as_bam ? "bai" : "crai"
+
+            ["markduplicates_no_table.csv", "patient,sex,status,sample,${type},${type_index}\n${patient},${sex},${status},${sample},${file},${index}\n"]
         }
 }

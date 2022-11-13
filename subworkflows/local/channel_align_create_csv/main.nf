@@ -15,6 +15,10 @@ workflow CHANNEL_ALIGN_CREATE_CSV {
             status  = meta.status
             bam   = "${params.outdir}/preprocessing/mapped/${sample}/${bam.name}"
             bai   = "${params.outdir}/preprocessing/mapped/${sample}/${bai.name}"
-            ["mapped.csv", "patient,sex,status,sample,bam,bai\n${patient},${sex},${status},${sample},${bam},${bai}\n"]
+
+            type = params.save_output_as_bam ? "bam" : "cram"
+            type_index = params.save_output_as_bam ? "bai" : "crai"
+
+            ["mapped.csv", "patient,sex,status,sample,${type},${type_index}\n${patient},${sex},${status},${sample},${bam},${bai}\n"]
         }
 }
