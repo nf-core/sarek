@@ -1,13 +1,16 @@
 # default_extended
 
 default_extended:
+  - assets/**
   - conf/**
   - lib/**
-  - main.nf
   - modules/**
-  - nextflow.config
   - subworkflows/**
   - workflows/**
+  - main.nf
+  - modules.json
+  - nextflow.config
+  - nextflow_schema.json
 
 # preprocessing
 

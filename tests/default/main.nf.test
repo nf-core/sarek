@@ -1,0 +1,26 @@
+nextflow_pipeline {
+
+    name "default"
+    script "main.nf"
+
+    test("Should run without failures") {
+        when {
+            params {
+                outdir = "$outputDir"
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert new File("$outputDir/csv/markduplicates.csv").exists()
+            // assert path("$outputDir/csv/markduplicates.csv").md5 == "6b60ae9300a4d6ac93010a7d639b2ded"
+            assert new File("$outputDir/csv/markduplicates_no_table.csv").exists()
+            // assert path("$outputDir/csv/markduplicates_no_table.csv").md5 == "2a2d3d4842befd4def39156463859ee3"
+            assert new File("$outputDir/csv/recalibrated.csv").exists()
+            // assert path("$outputDir/csv/recalibrated.csv").md5 == "2d29d9e53894dcce96a1b5beb6ef3312"
+            assert new File("$outputDir/csv/variantcalled.csv").exists()
+            // assert path("$outputDir/csv/variantcalled.csv").md5 == "4d0effd3d8dc2b814230a189e7ca9dba"
+            assert new File("$outputDir/multiqc").exists()
+        }
+    }
+}
