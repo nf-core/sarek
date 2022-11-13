@@ -1,12 +1,13 @@
 # default_extended
 
 default_extended:
-  - conf/modules/**
+  - conf/**
+  - lib/**
+  - main.nf
   - modules/**
+  - nextflow.config
   - subworkflows/**
   - workflows/**
-  - nextflow.config
-  - main.nf
 
 # preprocessing
 
