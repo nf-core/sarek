@@ -24,7 +24,7 @@ jobs:
           filters: "tests/config/pytest_tags.yml"
 
   test:
-    name: ${{ matrix.tags }} ${{ matrix.profile }}
+    name: ${{ matrix.tags }} ${{ matrix.profile }} NF ${{ matrix.NXF_VER }}
     runs-on: ubuntu-latest
     needs: changes
     if: needs.changes.outputs.tags != '[]'
@@ -81,7 +81,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nextflow-
 
-      - name: Install Nextflow
+      - name: Install Nextflow ${{ matrix.NXF_VER }}
         uses: nf-core/setup-nextflow@v1
         with:
           version: "${{ matrix.NXF_VER }}"
