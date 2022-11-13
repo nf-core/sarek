@@ -1,2 +1,0 @@
-patient,sample,vcf,tbi,variantcaller,annotation
-hcc1395,hcc1395,/Users/monarchy/Projects/Coding/sarek/HCC1395T_vs_HCC1395N.mutect2.filtered_VEP.ann.vcf.gz,/Users/monarchy/Projects/Coding/sarek/HCC1395T_vs_HCC1395N.mutect2.filtered_VEP.ann.vcf.gz.tbi,mutect2,vep
