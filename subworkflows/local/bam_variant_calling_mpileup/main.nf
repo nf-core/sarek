@@ -40,7 +40,7 @@ workflow BAM_VARIANT_CALLING_MPILEUP {
                                             patient:        meta.patient,
                                             sample:         meta.sample,
                                             sex:            meta.sex,
-                                            status:         meta.status,
+                                            status:         meta.status
                                         ]
             [groupKey(new_meta, meta.num_intervals), pileup]
             }
