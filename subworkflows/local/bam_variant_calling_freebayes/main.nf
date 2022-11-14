@@ -72,6 +72,22 @@ workflow BAM_VARIANT_CALLING_FREEBAYES {
                             vcf]
                     }
 
+    freebayes_vcf_tbi  = Channel.empty().mix(
+                            MERGE_FREEBAYES.out.tbi,
+                            TABIX_VC_FREEBAYES.out.tbi)
+                        .map{ meta, tbi ->
+                            [ [
+                                id:             meta.id,
+                                normal_id:      meta.normal_id,
+                                num_intervals:  meta.num_intervals,
+                                patient:        meta.patient,
+                                sex:            meta.sex,
+                                tumor_id:       meta.tumor_id,
+                                variantcaller:  "freebayes"
+                            ],
+                                tbi]
+                        }
+
     ch_versions = ch_versions.mix(BCFTOOLS_SORT.out.versions)
     ch_versions = ch_versions.mix(MERGE_FREEBAYES.out.versions)
     ch_versions = ch_versions.mix(FREEBAYES.out.versions)
@@ -79,5 +95,6 @@ workflow BAM_VARIANT_CALLING_FREEBAYES {
 
     emit:
     freebayes_vcf
+    freebayes_vcf_tbi
     versions = ch_versions
 }

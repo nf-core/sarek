@@ -1007,6 +1007,14 @@ workflow SAREK {
             germline_vcfs_with_tbis = Channel.empty()
 
             germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(
+                BAM_VARIANT_CALLING_GERMLINE_ALL.out.deepvariant_vcf.join(BAM_VARIANT_CALLING_GERMLINE_ALL.out.deepvariant_vcf_tbi)
+            )
+
+            germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(
+                BAM_VARIANT_CALLING_GERMLINE_ALL.out.freebayes_vcf.join(BAM_VARIANT_CALLING_GERMLINE_ALL.out.freebayes_vcf_tbi)
+            )
+
+            germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(
                 BAM_VARIANT_CALLING_GERMLINE_ALL.out.haplotypecaller_vcf.join(BAM_VARIANT_CALLING_GERMLINE_ALL.out.haplotypecaller_vcf_tbi)
             )
 
@@ -1018,21 +1026,26 @@ workflow SAREK {
                 BAM_VARIANT_CALLING_GERMLINE_ALL.out.strelka_vcf.join(BAM_VARIANT_CALLING_GERMLINE_ALL.out.strelka_vcf_tbi)
             )
 
-            germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(
-                BAM_VARIANT_CALLING_GERMLINE_ALL.out.deepvariant_vcf.join(BAM_VARIANT_CALLING_GERMLINE_ALL.out.deepvariant_vcf_tbi)
-            )
-
-
             // TO-DO: also mix in vcf+tbi from
-            // freebayes
             // tiddit
 
             germline_vcfs_with_tbis = germline_vcfs_with_tbis.map{
                 meta, vcf, tbi ->
                     def new_meta = meta.clone()
                     new_meta.remove('variantcaller')
-                    [new_meta, vcf, tbi]
+                    def new_meta2 = new_meta.clone()
+                    new_meta2.remove('tumor_id')
+                    def new_meta3 = new_meta2.clone()
+                    new_meta3.remove('normal_id')
+                    def new_meta4 = new_meta3.clone()
+                    new_meta4.remove('sample')
+                    def new_meta5 = new_meta4.clone()
+                    new_meta5.remove('status')          // TO-DO: Better way of removing the unwanted entries in the dict "meta"?
+                                                        // The remaining entries should just be id, num_intervals, patient and sex
+                    [new_meta5, vcf, tbi]
                 }.groupTuple()
+
+            germline_vcfs_with_tbis.view()
 
             CONCAT_GERMLINE_VCFS(germline_vcfs_with_tbis)
             // TO-DO: Similar concatenation should also be done for tumor-vcfs, somatic-vcfs and something (?)

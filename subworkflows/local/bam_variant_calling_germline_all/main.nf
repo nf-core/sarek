@@ -44,6 +44,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     tiddit_vcf          = Channel.empty()
 
     deepvariant_vcf_tbi     = Channel.empty()
+    freebayes_vcf_tbi       = Channel.empty()
     haplotypecaller_vcf_tbi = Channel.empty()
     manta_vcf_tbi           = Channel.empty()
     strelka_vcf_tbi         = Channel.empty()
@@ -150,8 +151,9 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             fasta_fai
         )
 
-        freebayes_vcf   = BAM_VARIANT_CALLING_FREEBAYES.out.freebayes_vcf
-        ch_versions     = ch_versions.mix(BAM_VARIANT_CALLING_FREEBAYES.out.versions)
+        freebayes_vcf     = BAM_VARIANT_CALLING_FREEBAYES.out.freebayes_vcf
+        freebayes_vcf_tbi = BAM_VARIANT_CALLING_FREEBAYES.out.freebayes_vcf_tbi
+        ch_versions       = ch_versions.mix(BAM_VARIANT_CALLING_FREEBAYES.out.versions)
     }
 
     // HAPLOTYPECALLER
@@ -244,6 +246,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     tiddit_vcf
 
     deepvariant_vcf_tbi
+    freebayes_vcf_tbi
     haplotypecaller_vcf_tbi
     manta_vcf_tbi
     strelka_vcf_tbi
