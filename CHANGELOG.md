@@ -53,10 +53,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Dependencies
 
 | Dependency    | Old version | New version |
-| ------------- | ----------- | ----------- | ----------------------------- |
+| ------------- | ----------- | ----------- |
 | `bcftools`    | 1.15.1      | 1.16        |
 | `deepvariant` | 1.3.0       | 1.4.0       |
-| `ensembl-vep` | 106.1       | unchanged   | //should we update this here? |
 | `freebayes`   | 1.3.5       | 1.3.6       |
 | `gatk4`       | 4.2.6.1     | 4.3.0.0     |
 | `samtools`    | 1.15.1      | 1.16.1      |
