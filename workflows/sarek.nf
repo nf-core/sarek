@@ -18,6 +18,7 @@ def checkPathParamList = [
     params.bwa,
     params.bwamem2,
     params.cf_chrom_len,
+    params.cnvkit_reference,
     params.chr_dir,
     params.dbnsfp,
     params.dbnsfp_tbi,
@@ -374,7 +375,8 @@ workflow SAREK {
 
      // Antitarget based reference for CNVKit
     PREPARE_REFERENCE_CNVKIT(fasta, intervals_bed_combined)
-    cnvkit_reference            = params.tools && params.tools.split(',').contains('cnvkit') ? PREPARE_REFERENCE_CNVKIT.out.cnvkit_reference : Channel.empty()
+    cnvkit_reference            = params.tools && params.tools.split(',').contains('cnvkit') ? (params.cnvkit_reference ? Channel.fromPath(params.cnvkit_reference).collect() : PREPARE_REFERENCE_CNVKIT.out.cnvkit_reference) : Channel.empty()
+
     ch_versions = ch_versions.mix(PREPARE_REFERENCE_CNVKIT.out.versions)
 
     // PREPROCESSING
