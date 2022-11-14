@@ -1026,8 +1026,9 @@ workflow SAREK {
                 BAM_VARIANT_CALLING_GERMLINE_ALL.out.strelka_vcf.join(BAM_VARIANT_CALLING_GERMLINE_ALL.out.strelka_vcf_tbi)
             )
 
-            // TO-DO: also mix in vcf+tbi from
-            // tiddit
+            germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(
+                BAM_VARIANT_CALLING_GERMLINE_ALL.out.tiddit_vcf.join(BAM_VARIANT_CALLING_GERMLINE_ALL.out.tiddit_vcf_tbi)
+            )
 
             germline_vcfs_with_tbis = germline_vcfs_with_tbis.map{
                 meta, vcf, tbi ->
@@ -1040,12 +1041,12 @@ workflow SAREK {
                     def new_meta4 = new_meta3.clone()
                     new_meta4.remove('sample')
                     def new_meta5 = new_meta4.clone()
-                    new_meta5.remove('status')          // TO-DO: Better way of removing the unwanted entries in the dict "meta"?
-                                                        // The remaining entries should just be id, num_intervals, patient and sex
-                    [new_meta5, vcf, tbi]
+                    new_meta5.remove('status')
+                    def new_meta6 = new_meta5.clone()
+                    new_meta6.remove('num_intervals')   // TO-DO: Better way of removing the unwanted entries in the dict "meta"?
+                                                        // The remaining entries should just be id, patient and sex
+                    [new_meta6, vcf, tbi]
                 }.groupTuple()
-
-            germline_vcfs_with_tbis.view()
 
             CONCAT_GERMLINE_VCFS(germline_vcfs_with_tbis)
             // TO-DO: Similar concatenation should also be done for tumor-vcfs, somatic-vcfs and something (?)

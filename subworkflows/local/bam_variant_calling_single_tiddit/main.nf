@@ -40,6 +40,28 @@ workflow BAM_VARIANT_CALLING_SINGLE_TIDDIT {
                                     ]
         [new_meta, gz]}
 
+    tiddit_vcf_tbi = TABIX_BGZIP_TIDDIT_SV.out.gz_tbi.map{ meta, gz, tbi ->
+
+        new_meta = meta.tumor_id ? [
+                                        id:             meta.tumor_id + "_vs_" + meta.normal_id,
+                                        normal_id:      meta.normal_id,
+                                        num_intervals:  meta.num_intervals,
+                                        patient:        meta.patient,
+                                        sex:            meta.sex,
+                                        tumor_id:       meta.tumor_id,
+                                        variantcaller:  'tiddit'
+                                    ]
+                                    : [
+                                        id:             meta.sample,
+                                        num_intervals:  meta.num_intervals,
+                                        patient:        meta.patient,
+                                        sample:         meta.sample,
+                                        sex:            meta.sex,
+                                        status:         meta.status,
+                                        variantcaller:  'tiddit'
+                                    ]
+        [new_meta, tbi]}
+
     ch_versions = ch_versions.mix(TABIX_BGZIP_TIDDIT_SV.out.versions)
     ch_versions = ch_versions.mix(TIDDIT_SV.out.versions)
 
@@ -47,5 +69,6 @@ workflow BAM_VARIANT_CALLING_SINGLE_TIDDIT {
     versions = ch_versions
 
     tiddit_vcf = tiddit_vcf_gz
+    tiddit_vcf_tbi
     tiddit_ploidy
 }
