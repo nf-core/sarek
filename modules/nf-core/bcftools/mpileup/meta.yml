@@ -45,7 +45,7 @@ output:
   - tbi:
       type: file
       description: tabix index file
-      pattern: "*.{tbi}"
+      pattern: "*.{vcf.gz.tbi}"
   - stats:
       type: file
       description: Text output file containing stats
