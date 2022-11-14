@@ -40,6 +40,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     genotype_gvcf       = Channel.empty()
     haplotypecaller_vcf = Channel.empty()
     manta_vcf           = Channel.empty()
+    mpileup_vcf         = Channel.empty()
     strelka_vcf         = Channel.empty()
     tiddit_vcf          = Channel.empty()
 
