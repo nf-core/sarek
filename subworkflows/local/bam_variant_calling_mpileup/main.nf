@@ -1,5 +1,6 @@
 include { CAT_CAT as CAT_MPILEUP         } from '../../../modules/nf-core/cat/cat/main'
 include { BCFTOOLS_MPILEUP               } from '../../../modules/nf-core/bcftools/mpileup/main'
+include { SAMTOOLS_MPILEUP               } from '../../../modules/nf-core/samtools/mpileup/main'
 include { GATK4_MERGEVCFS                } from '../../../modules/nf-core/gatk4/mergevcfs/main'
 
 
@@ -13,12 +14,14 @@ workflow BAM_VARIANT_CALLING_MPILEUP {
 
     ch_versions = Channel.empty()
 
-    BCFTOOLS_MPILEUP(cram, fasta,true)
+    keep_mpileup = true
+    BCFTOOLS_MPILEUP(cram, fasta, keep_mpileup)
+    SAMTOOLS_MPILEUP(cram, fasta)
     vcfs = BCFTOOLS_MPILEUP.out.vcf.branch{
             intervals:    it[0].num_intervals > 1
             no_intervals: it[0].num_intervals <= 1
         }
-    mpileup = BCFTOOLS_MPILEUP.out.mpileup.branch{
+    mpileup = SAMTOOLS_MPILEUP.out.mpileup.branch{
             intervals:    it[0].num_intervals > 1
             no_intervals: it[0].num_intervals <= 1
         }
@@ -61,8 +64,10 @@ workflow BAM_VARIANT_CALLING_MPILEUP {
         }.groupTuple(),
     dict)
 
+    ch_versions = ch_versions.mix(SAMTOOLS_MPILEUP.out.versions)
     ch_versions = ch_versions.mix(BCFTOOLS_MPILEUP.out.versions)
     ch_versions = ch_versions.mix(CAT_MPILEUP.out.versions)
+    ch_versions = ch_versions.mix(GATK4_MERGEVCFS.out.versions)
 
     emit:
     versions = ch_versions
