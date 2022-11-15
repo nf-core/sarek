@@ -47,9 +47,9 @@
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
       md5sum: d0713716f63ac573f4a3385733e9a537
     - path: results/reports/samtools/test/test.md.cram.stats
-      md5sum: 9c424aaae1d200f67a1ecc3e55ad5a6a
+      md5sum: f8a2f99e2bf353b8691c1f252a8ef30e
     - path: results/reports/samtools/test/test.recal.cram.stats
-      md5sum: e64175125c512651b2819ced400bc846
+      md5sum: 44cb4ed98f9b18f8522c537264bb69d0
 # - name: Run UMI TSO test
 #   command: nextflow run main.nf -profile test,umi_tso
 #   tags:

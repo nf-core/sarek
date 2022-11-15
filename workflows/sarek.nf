@@ -389,7 +389,10 @@ workflow SAREK {
 
         // convert any bam input to fastq
         // Fasta are not needed when converting bam to fastq -> []
-        CONVERT_FASTQ_INPUT(ch_input_sample_type.bam, [], [])
+        CONVERT_FASTQ_INPUT(ch_input_sample_type.bam,
+                            [[id:"fasta"], []], // fasta
+                            [],                 // fasta_fai
+                            false)              // Currently don't allow interleaved input
 
         // gather fastq (inputed or converted)
         // Theorically this could work on mixed input (fastq for one sample and bam for another)
@@ -422,7 +425,10 @@ workflow SAREK {
             bamtofastq = FASTQ_CREATE_UMI_CONSENSUS_FGBIO.out.consensusbam.map{meta, bam -> [meta,bam,[]]}
 
             // convert back to fastq for further preprocessing
-            CONVERT_FASTQ_UMI(bamtofastq, [], [])
+            CONVERT_FASTQ_UMI(bamtofastq,
+                            [[id:"fasta"], []], // fasta
+                            [],                 // fasta_fai
+                            false)              // Currently don't allow interleaved input
 
             ch_reads_fastp = CONVERT_FASTQ_UMI.out.reads
 
@@ -438,7 +444,10 @@ workflow SAREK {
 
             save_trimmed_fail = false
             save_merged = false
-            FASTP(ch_reads_fastp, save_trimmed_fail, save_merged)
+            FASTP(ch_reads_fastp,
+                    [], // we are not using any adapter fastas at the moment
+                    save_trimmed_fail,
+                    save_merged)
 
             ch_reports = ch_reports.mix(
                                     FASTP.out.json.collect{meta, json -> json},
@@ -934,7 +943,7 @@ workflow SAREK {
         BAM_VARIANT_CALLING_GERMLINE_ALL(
             params.tools,
             ch_cram_variant_calling_status_normal,
-            [], //bwa_index for tiddit; not used here
+            [[id:"bwa"],[]], //bwa_index for tiddit; not used here
             dbsnp,
             dbsnp_tbi,
             dict,
@@ -953,7 +962,7 @@ workflow SAREK {
         BAM_VARIANT_CALLING_TUMOR_ONLY_ALL(
             params.tools,
             ch_cram_variant_calling_tumor_only,
-            [], //bwa_index for tiddit; not used here
+            [[id:"bwa"],[]], //bwa_index for tiddit; not used here
             cf_chrom_len,
             chr_files,
             cnvkit_reference,
@@ -976,7 +985,7 @@ workflow SAREK {
         BAM_VARIANT_CALLING_SOMATIC_ALL(
             params.tools,
             ch_cram_variant_calling_pair,
-            [], //bwa_index for tiddit; not used here
+            [[id:"bwa"],[]], //bwa_index for tiddit; not used here
             cf_chrom_len,
             chr_files,
             dbsnp,

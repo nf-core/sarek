@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#806](https://github.com/nf-core/sarek/pull/806) - Split up `modules.config` file
 - [#810](https://github.com/nf-core/sarek/pull/810) - Update CHANGELOG
 - [#821](https://github.com/nf-core/sarek/pull/821) - Change `replace` to `putIfAbsent` for automatic search of `input` if none is provided to avoid overwriting values
+- [#822](https://github.com/nf-core/sarek/pull/822) - Update modules with `nf-core modules update -a`: Update GATK version to 4.3.0
 - [#827](https://github.com/nf-core/sarek/pull/827) - Add `--genomicsdb-shared-posixfs-optimizations true --bypass-feature-reader` to `GenomicsDB` parameters to speed up the analysis
 
 ### Fixed
@@ -45,10 +46,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#814](https://github.com/nf-core/sarek/pull/814) - Fix readgroups when using DragMap together with FreeBayes or Mutect2 (see issue [#780](https://github.com/nf-core/sarek/issues/780))
 - [#817](https://github.com/nf-core/sarek/pull/817) - Fix CNVKit run on tumor-only sample to be run on all samples
 - [#828](https://github.com/nf-core/sarek/pull/817) - Fix issue [#763](https://github.com/nf-core/sarek/issues/763) to run variantcalling when starting form step recalibration
+- [#837](https://github.com/nf-core/sarek/pull/837) - Fix Freebayes config selector after subworkflow renaming
 
 ### Deprecated
 
 ### Removed
+
+### Dependencies
+
+| Dependency    | Old version | New version |
+| ------------- | ----------- | ----------- |
+| `bcftools`    | 1.15.1      | 1.16        |
+| `deepvariant` | 1.3.0       | 1.4.0       |
+| `freebayes`   | 1.3.5       | 1.3.6       |
+| `gatk4`       | 4.2.6.1     | 4.3.0.0     |
+| `samtools`    | 1.15.1      | 1.16.1      |
+| `tiddit`      | 3.1.0       | 3.3.2       |
 
 ## [3.0.2](https://github.com/nf-core/sarek/releases/tag/3.0.2) - Lájtávrre
 
