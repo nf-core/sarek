@@ -46,6 +46,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#814](https://github.com/nf-core/sarek/pull/814) - Fix readgroups when using DragMap together with FreeBayes or Mutect2 (see issue [#780](https://github.com/nf-core/sarek/issues/780))
 - [#817](https://github.com/nf-core/sarek/pull/817) - Fix CNVKit run on tumor-only sample to be run on all samples
 - [#828](https://github.com/nf-core/sarek/pull/817) - Fix issue [#763](https://github.com/nf-core/sarek/issues/763) to run variantcalling when starting form step recalibration
+- [#837](https://github.com/nf-core/sarek/pull/837) - Fix Freebayes config selector after subworkflow renaming
 
 ### Deprecated
 
