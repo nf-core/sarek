@@ -23,6 +23,10 @@ input:
         List of input FastQ files of size 1 and 2 for single-end and paired-end data,
         respectively. If you wish to run interleaved paired-end data,  supply as single-end data
         but with `--interleaved_in` in your `modules.conf`'s `ext.args` for the module.
+  - adapter_fasta:
+      type: file
+      description: File in FASTA format containing possible adapters to remove.
+      pattern: "*.{fasta,fna,fas,fa}"
   - save_trimmed_fail:
       type: boolean
       description: Specify true to save files that failed to pass trimming thresholds ending in `*.fail.fastq.gz`

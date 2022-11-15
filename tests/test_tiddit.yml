@@ -25,7 +25,7 @@
     - path: results/reports/vcftools/tiddit/sample4_vs_sample3/sample4_vs_sample3.tiddit_sv_merge.TsTv.qual
       md5sum: bc68ae4e688e9fb772b457069e604883
     - path: results/variant_calling/tiddit/sample3/sample3.tiddit.ploidies.tab
-      md5sum: d65f8aa5bb136f77c23264640481f047
+      md5sum: fcfd2ecf6e7eef532e072757354c8a90
     - path: results/variant_calling/tiddit/sample3/sample3.tiddit.vcf.gz
     # conda changes md5sums for test.
     - path: results/variant_calling/tiddit/sample3/sample3.tiddit.vcf.gz.tbi
@@ -63,7 +63,7 @@
     - path: results/reports/vcftools/tiddit/sample1/sample1.tiddit.TsTv.qual
       md5sum: bc68ae4e688e9fb772b457069e604883
     - path: results/variant_calling/tiddit/sample1/sample1.tiddit.ploidies.tab
-      md5sum: d65f8aa5bb136f77c23264640481f047
+      md5sum: fcfd2ecf6e7eef532e072757354c8a90
     - path: results/variant_calling/tiddit/sample1/sample1.tiddit.vcf.gz
     # conda changes md5sums for test.
     - path: results/variant_calling/tiddit/sample1/sample1.tiddit.vcf.gz.tbi
@@ -89,7 +89,7 @@
     - path: results/reports/vcftools/tiddit/sample2/sample2.tiddit.TsTv.qual
       md5sum: bc68ae4e688e9fb772b457069e604883
     - path: results/variant_calling/tiddit/sample2/sample2.tiddit.ploidies.tab
-      md5sum: 0f01874e20df10ecc7418d4537c7aa82
+      md5sum: 5c5d70295c3957990502cb692e07a965
     - path: results/variant_calling/tiddit/sample2/sample2.tiddit.vcf.gz
     # conda changes md5sums for test.
     - path: results/variant_calling/tiddit/sample2/sample2.tiddit.vcf.gz.tbi
