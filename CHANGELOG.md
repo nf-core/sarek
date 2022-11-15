@@ -15,6 +15,7 @@ Rapaätno is the river you can see from the Skierfe mountain.
 - [#774](https://github.com/nf-core/sarek/pull/774) - Add logo for Danish National Genome Center
 - [#783](https://github.com/nf-core/sarek/pull/783) - Add paths for chr length used by controlfreec to GRCh38 config
 - [#820](https://github.com/nf-core/sarek/pull/820) - Improve documentation on scatter/gather effects
+- [#833](https://github.com/nf-core/sarek/pull/833) - Add name to CI tests to avoid confusion between runs
 
 ### Changed
 
@@ -49,6 +50,7 @@ Rapaätno is the river you can see from the Skierfe mountain.
 - [#817](https://github.com/nf-core/sarek/pull/817) - Fix CNVKit run on tumor-only sample to be run on all samples
 - [#828](https://github.com/nf-core/sarek/pull/817) - Fix issue [#763](https://github.com/nf-core/sarek/issues/763) to run variantcalling when starting form step recalibration
 - [#837](https://github.com/nf-core/sarek/pull/837) - Fix Freebayes config selector after subworkflow renaming
+- [#839](https://github.com/nf-core/sarek/pull/839) - Remove `copyTo` method that fails on S3 when the source and destination buckets are in different regions
 
 ### Deprecated
 

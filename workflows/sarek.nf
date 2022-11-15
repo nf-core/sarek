@@ -139,13 +139,6 @@ if (params.tools && (params.tools.split(',').contains('ascat') || params.tools.s
     }
 }
 
-// Save AWS IGenomes file containing annotation version
-def anno_readme = params.genomes[params.genome]?.readme
-if (anno_readme && file(anno_readme).exists()) {
-    file("${params.outdir}/genome/").mkdirs()
-    file(anno_readme).copyTo("${params.outdir}/genome/")
-}
-
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     IMPORT LOCAL MODULES/SUBWORKFLOWS
