@@ -49,6 +49,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#828](https://github.com/nf-core/sarek/pull/817) - Fix issue [#763](https://github.com/nf-core/sarek/issues/763) to run variantcalling when starting form step recalibration
 - [#837](https://github.com/nf-core/sarek/pull/837) - Fix Freebayes config selector after subworkflow renaming
 - [#839](https://github.com/nf-core/sarek/pull/839) - Remove `copyTo` method that fails on S3 when the source and destination buckets are in different regions
+- [#841](https://github.com/nf-core/sarek/pull/841) - Fix path priority for `cf_chrom_len`
 
 ### Deprecated
 
