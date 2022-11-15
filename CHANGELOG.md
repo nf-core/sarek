@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#774](https://github.com/nf-core/sarek/pull/774) - Add logo for Danish National Genome Center
 - [#783](https://github.com/nf-core/sarek/pull/783) - Add paths for chr length used by controlfreec to GRCh38 config
 - [#820](https://github.com/nf-core/sarek/pull/820) - Improve documentation on scatter/gather effects
+- [#833](https://github.com/nf-core/sarek/pull/833) - Add name to CI tests to avoid confusion between runs
 
 ### Changed
 
