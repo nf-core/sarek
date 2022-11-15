@@ -32,6 +32,7 @@ Rapaätno is the river you can see from the Skierfe mountain.
 - [#821](https://github.com/nf-core/sarek/pull/821) - Change `replace` to `putIfAbsent` for automatic search of `input` if none is provided to avoid overwriting values
 - [#822](https://github.com/nf-core/sarek/pull/822) - Update modules with `nf-core modules update -a`: Update GATK version to 4.3.0
 - [#827](https://github.com/nf-core/sarek/pull/827) - Add `--genomicsdb-shared-posixfs-optimizations true --bypass-feature-reader` to `GenomicsDB` parameters to speed up the analysis
+- [#842](https://github.com/nf-core/sarek/pull/842) - Increase default memory for samtools stats
 
 ### Fixed
 
