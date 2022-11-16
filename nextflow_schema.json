@@ -31,7 +31,7 @@
                     "type": "string",
                     "format": "file-path",
                     "mimetype": "text/csv",
-                    "pattern": "\\.csv$",
+                    "pattern": "^\\S+\\.csv$",
                     "schema": "assets/schema_input.json",
                     "description": "Path to comma-separated file containing information about the samples in the experiment.",
                     "help_text": "A design file with information about the samples in your experiment. Use this parameter to specify the location of the input files. It has to be a comma-separated file with a header row. See [usage docs](https://nf-co.re/sarek/usage#input).\n\nIf no input file is specified, sarek will attempt to locate one in the `{outdir}` directory.",
@@ -199,15 +199,15 @@
                     "help_text": "`Sarek` will build missing indices automatically if not provided. Set `--bwa false` if indices should be (re-)built.\nIf `DragMap` is selected as aligner, it is recommended to skip baserecalibration with `--skip_tools baserecalibrator`. See [here](https://gatk.broadinstitute.org/hc/en-us/articles/4407897446939--How-to-Run-germline-single-sample-short-variant-discovery-in-DRAGEN-mode) for more info.\n",
                     "hidden": true
                 },
-                "save_bam_mapped": {
+                "save_mapped": {
                     "type": "boolean",
                     "fa_icon": "fas fa-download",
-                    "description": "Save mapped BAMs.",
-                    "help_text": "If the parameter `--split-fastq` is used, the sharded bam files are merged before saving them."
+                    "description": "Save mapped files.",
+                    "help_text": "If the parameter `--split-fastq` is used, the sharded bam files are merged and converted to CRAM before saving them."
                 },
                 "save_output_as_bam": {
                     "type": "boolean",
-                    "description": "Saves output from Markduplicates & Baserecalibration as BAM file instead of CRAM",
+                    "description": "Saves output from mapping (if `--save_mapped`), Markduplicates & Baserecalibration as BAM file instead of CRAM",
                     "fa_icon": "fas fa-download"
                 },
                 "use_gatk_spark": {
@@ -278,7 +278,7 @@
                 },
                 "cf_chrom_len": {
                     "type": "string",
-                    "default": null,
+                    "default": "None",
                     "fa_icon": "fas fa-ruler-horizontal",
                     "description": "Specify a custom chromosome length file.",
                     "help_text": "Control-FREEC requires a file containing all chromosome lenghts. By default the fasta.fai is used. If the fasta.fai file contains chromosomes not present in the intervals, it fails (see: https://github.com/BoevaLab/FREEC/issues/106).\n\nIn this case, a custom chromosome length can be specified. It must be of the same format as the fai, but only contain the relevant chromosomes.\n\n\n\n",
@@ -337,6 +337,12 @@
                     "description": "Overwrite Control-FREEC window size.",
                     "help_text": "Details, see [ControlFREEC manual](http://boevalab.inf.ethz.ch/FREEC/tutorial.html).",
                     "hidden": true
+                },
+                "cnvkit_reference": {
+                    "type": "string",
+                    "default": null,
+                    "fa_icon": "fas fa-file",
+                    "help_text": "https://cnvkit.readthedocs.io/en/stable/pipeline.html?highlight=reference.cnn#batch"
                 },
                 "pon": {
                     "type": "string",
@@ -894,6 +900,17 @@
                     "fa_icon": "fas fa-cog",
                     "hidden": true
                 },
+                "multiqc_logo": {
+                    "type": "string",
+                    "description": "Custom logo file to supply to MultiQC. File name must also be set in the MultiQC config file",
+                    "fa_icon": "fas fa-image",
+                    "hidden": true
+                },
+                "multiqc_methods_description": {
+                    "type": "string",
+                    "description": "Custom MultiQC yaml file containing HTML including a methods description.",
+                    "fa_icon": "fas fa-cog"
+                },
                 "tracedir": {
                     "type": "string",
                     "description": "Directory to keep pipeline Nextflow logs and reports.",
@@ -920,6 +937,13 @@
                     "description": "Run this workflow with Conda. You can also use '-profile conda' instead of providing this parameter.",
                     "hidden": true,
                     "fa_icon": "fas fa-bacon"
+                },
+                "hook_url": {
+                    "type": "string",
+                    "description": "Incoming hook URL for messaging service",
+                    "fa_icon": "fas fa-people-group",
+                    "help_text": "Incoming hook URL for messaging service. Currently, only MS Teams is supported.",
+                    "hidden": true
                 }
             }
         }

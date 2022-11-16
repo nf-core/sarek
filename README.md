@@ -118,6 +118,7 @@ We thank the following people for their extensive assistance in the development 
 - [Sabrina Krakau](https://github.com/skrakau)
 - [Sebastian-D](https://github.com/Sebastian-D)
 - [Silvia Morini](https://github.com/silviamorins)
+- [Solenne Correard](https://github.com/scorreard)
 - [Susanne Jodoin](https://github.com/SusiJo)
 - [Tobias Koch](https://github.com/KochTobi)
 - [Winni Kretzschmar](https://github.com/winni2k)
@@ -134,6 +135,7 @@ We thank the following people for their extensive assistance in the development 
 | :-----------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------: |
 | [![National Genomics Infrastructure](docs/images/NGI_logo.png)](https://ngisweden.scilifelab.se/) | [![National Bioinformatics Infrastructure Sweden](docs/images/NBIS_logo.png)](https://nbis.se) |
 |              [![QBiC](docs/images/QBiC_logo.png)](https://www.qbic.uni-tuebingen.de)              |                   [![GHGA](docs/images/GHGA_logo.png)](https://www.ghga.de/)                   |
+|                     [![DNGC](docs/images/DNGC_logo.png)](https://eng.ngc.dk/)                     |                                                                                                |
 
 ## Contributions & Support
 

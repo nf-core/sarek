@@ -1,0 +1,90 @@
+- name: Run dragmap
+  command: nextflow run main.nf -profile test --aligner dragmap --save_reference
+  tags:
+    - aligner
+    - dragmap
+    - preprocessing
+  files:
+    - path: results/csv/markduplicates.csv
+      md5sum: 0d6120bb99e92f6810343270711ca53e
+    - path: results/csv/markduplicates_no_table.csv
+      md5sum: 2a2d3d4842befd4def39156463859ee3
+    - path: results/csv/recalibrated.csv
+      md5sum: 2d29d9e53894dcce96a1b5beb6ef3312
+    - path: results/multiqc
+    - path: results/preprocessing/markduplicates/test/test.md.cram
+    # binary changing on reruns
+    - path: results/preprocessing/markduplicates/test/test.md.cram.crai
+    # binary changing on reruns
+    - path: results/preprocessing/recal_table/test/test.recal.table
+      md5sum: 75ba4376a17ca69c5134153302f82e92
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+    # binary changing on reruns
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+    # binary changing on reruns
+    - path: results/reference/dbsnp/dbsnp_146.hg38.vcf.gz.tbi
+    # conda changes md5sums for test.
+    - path: results/reference/dict/genome.dict
+      md5sum: 2433fe2ba31257337bf4c4bd4cb8da15
+    - path: results/reference/dragmap/hash_table.cfg
+      # hash_table.cfg contains many strings which we could test for - which do we want to test?
+      contains:
+        [
+          "reference_sequences  = 1",
+          "reference_len        = 368640",
+          "reference_len_raw    = 40001",
+          "reference_len_not_n  = 40001",
+          "reference_alt_seed   = 204800",
+        ]
+    - path: results/reference/dragmap/hash_table.cfg.bin
+    # binary changing on reruns
+    - path: results/reference/dragmap/hash_table.cmp
+      md5sum: 1caab4ffc89f81ace615a2e813295cf4
+    - path: results/reference/dragmap/hash_table_stats.txt
+      # hash_table_stats.txt contains many string which we could test for - which do we want to test?
+      contains: ["A bases:       10934", "C bases:        8612", "G bases:        8608", "T bases:       11847"]
+    - path: results/reference/dragmap/ref_index.bin
+      md5sum: dbb5c7d26b974e0ac338024fe4535044
+    - path: results/reference/dragmap/reference.bin
+      md5sum: be67b80ee48aa96b383fd72f1ccfefea
+    - path: results/reference/dragmap/repeat_mask.bin
+      md5sum: 294939f1f80aa7f4a70b9b537e4c0f21
+    - path: results/reference/dragmap/str_table.bin
+      md5sum: 45f7818c4a10fdeed04db7a34b5f9ff1
+    - path: results/reference/fai/genome.fasta.fai
+      md5sum: 3520cd30e1b100e55f578db9c855f685
+    - path: results/reference/intervals/chr22_1-40001.bed
+      md5sum: 87a15eb9c2ff20ccd5cd8735a28708f7
+    - path: results/reference/intervals/chr22_1-40001.bed.gz
+      md5sum: d3341fa28986c40b24fcc10a079dbb80
+    - path: results/reference/intervals/genome.bed
+      md5sum: a87dc7d20ebca626f65cc16ff6c97a3e
+    - path: results/reference/known_indels/mills_and_1000G.indels.vcf.gz.tbi
+    # conda changes md5sums for test.
+    - path: results/reports/fastqc/test-test_L1
+    - path: results/reports/markduplicates/test/test.md.cram.metrics
+      contains: ["LB0	13607	543	161	518779	6410	0	0	0.436262"]
+    - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
+      md5sum: be1a800868fc1ce26711654525224e59
+    - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
+      md5sum: 2a3f0fab66518ef0786235470f1f28d0
+    - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
+      md5sum: d38ab9b0e0e551dc22919304929dd71c
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz
+      md5sum: 0d92f4c698a6476ccaf798aa31a557bc
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz.csi
+      md5sum: d5f1c9389ecf52ba839e834780a94549
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+      md5sum: be1a800868fc1ce26711654525224e59
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+      md5sum: 2a3f0fab66518ef0786235470f1f28d0
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+      md5sum: d38ab9b0e0e551dc22919304929dd71c
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
+      md5sum: 0d92f4c698a6476ccaf798aa31a557bc
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
+      md5sum: d5f1c9389ecf52ba839e834780a94549
+    - path: results/reports/samtools/test/test.md.cram.stats
+    # conda changes md5sums for test.
+    - path: results/reports/samtools/test/test.recal.cram.stats
+    # conda changes md5sums for test.

@@ -1,0 +1,187 @@
+- name: Run variant calling on somatic sample with Strelka BP
+  command: nextflow run main.nf -profile test,tools_somatic --tools strelka,manta
+  tags:
+    - somatic
+    - strelka_bp
+    - variant_calling
+  files:
+    - path: results/csv/variantcalled.csv
+      md5sum: eff248896ca462b76c79749403e44f48
+    - path: results/multiqc
+    - path: results/reports/bcftools/manta/sample3/sample3.manta.diploid_sv.bcftools_stats.txt
+    # conda changes md5sums for test.
+    - path: results/reports/bcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.bcftools_stats.txt
+    # conda changes md5sums for test.
+    - path: results/reports/bcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.bcftools_stats.txt
+    # conda changes md5sums for test.
+    - path: results/reports/bcftools/strelka/sample3/sample3.strelka.variants.bcftools_stats.txt
+    # conda changes md5sums for test.
+    - path: results/reports/bcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.bcftools_stats.txt
+    # conda changes md5sums for test.
+    - path: results/reports/bcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.bcftools_stats.txt
+    # conda changes md5sums for test.
+    - path: results/reports/vcftools/manta/sample3/sample3.manta.diploid_sv.FILTER.summary
+      md5sum: 1ce42d34e4ae919afb519efc99146423
+    - path: results/reports/vcftools/manta/sample3/sample3.manta.diploid_sv.TsTv.count
+      md5sum: fa27f678965b7cba6a92efcd039f802a
+    - path: results/reports/vcftools/manta/sample3/sample3.manta.diploid_sv.TsTv.qual
+    # conda changes md5sums for test.
+    - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.FILTER.summary
+      md5sum: 1ce42d34e4ae919afb519efc99146423
+    - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.TsTv.count
+      md5sum: fa27f678965b7cba6a92efcd039f802a
+    - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.TsTv.qual
+    # conda changes md5sums for test.
+    - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.FILTER.summary
+      md5sum: 1ce42d34e4ae919afb519efc99146423
+    - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.TsTv.count
+      md5sum: 8dcfdbcaac118df1d5ad407dd2af699f
+    - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.TsTv.qual
+    # conda changes md5sums for test.
+    - path: results/reports/vcftools/strelka/sample3/sample3.strelka.variants.FILTER.summary
+      md5sum: 2048a5de0201a6052c988a0189979a5f
+    - path: results/reports/vcftools/strelka/sample3/sample3.strelka.variants.TsTv.count
+      md5sum: c5b7a8eda2526d899098439ae4c06a49
+    - path: results/reports/vcftools/strelka/sample3/sample3.strelka.variants.TsTv.qual
+    # conda changes md5sums for test.
+    - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.FILTER.summary
+      md5sum: 3441628cd6550ed459ca1c3db989ceea
+    - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.TsTv.count
+      md5sum: 8dcfdbcaac118df1d5ad407dd2af699f
+    - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.TsTv.qual
+    # conda changes md5sums for test.
+    - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.FILTER.summary
+      md5sum: 4fc17fa5625b4d1dcc5d791b1eb22d85
+    - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.TsTv.count
+      md5sum: fc7af1f534890c4ad3025588b3af62ae
+    - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.TsTv.qual
+    # conda changes md5sums for test.
+    - path: results/variant_calling/manta/sample3/sample3.manta.diploid_sv.vcf.gz
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/manta/sample3/sample3.manta.diploid_sv.vcf.gz.tbi
+      md5sum: e7ca7e9fe76ce12198fd54ec9a64fad4
+    - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.vcf.gz
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.vcf.gz.tbi
+      md5sum: e7ca7e9fe76ce12198fd54ec9a64fad4
+    - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.vcf.gz
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.vcf.gz.tbi
+      md5sum: e7ca7e9fe76ce12198fd54ec9a64fad4
+    - path: results/variant_calling/strelka/sample3/sample3.strelka.genome.vcf.gz
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/strelka/sample3/sample3.strelka.genome.vcf.gz.tbi
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/strelka/sample3/sample3.strelka.variants.vcf.gz
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/strelka/sample3/sample3.strelka.variants.vcf.gz.tbi
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.vcf.gz
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.vcf.gz.tbi
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz.tbi
+    # binary changes md5sums on reruns.
+    - path: results/manta
+      should_exist: false
+    - path: results/strelka
+      should_exist: false
+- name: Run variant calling on somatic sample with Strelka BP without intervals
+  command: nextflow run main.nf -profile test,tools_somatic --tools strelka,manta --no_intervals
+  tags:
+    - no_intervals
+    - somatic
+    - strelka_bp
+    - variant_calling
+  files:
+    - path: results/csv/variantcalled.csv
+      md5sum: eff248896ca462b76c79749403e44f48
+    - path: results/multiqc
+    - path: results/no_intervals.bed
+      md5sum: f3dac01ea66b95fe477446fde2d31489
+    - path: results/no_intervals.bed.gz
+      md5sum: f3dac01ea66b95fe477446fde2d31489
+    - path: results/no_intervals.bed.gz.tbi
+      md5sum: f3dac01ea66b95fe477446fde2d31489
+    - path: results/reports/bcftools/manta/sample3/sample3.manta.diploid_sv.bcftools_stats.txt
+    # conda changes md5sums for test.
+    - path: results/reports/bcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.bcftools_stats.txt
+    # conda changes md5sums for test.
+    - path: results/reports/bcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.bcftools_stats.txt
+    # conda changes md5sums for test.
+    - path: results/reports/bcftools/strelka/sample3/sample3.strelka.variants.bcftools_stats.txt
+    # conda changes md5sums for test.
+    - path: results/reports/bcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.bcftools_stats.txt
+    # conda changes md5sums for test.
+    - path: results/reports/bcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.bcftools_stats.txt
+    # conda changes md5sums for test.
+    - path: results/reports/vcftools/manta/sample3/sample3.manta.diploid_sv.FILTER.summary
+      md5sum: 1ce42d34e4ae919afb519efc99146423
+    - path: results/reports/vcftools/manta/sample3/sample3.manta.diploid_sv.TsTv.count
+      md5sum: fa27f678965b7cba6a92efcd039f802a
+    - path: results/reports/vcftools/manta/sample3/sample3.manta.diploid_sv.TsTv.qual
+    # conda changes md5sums for test.
+    - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.FILTER.summary
+      md5sum: 1ce42d34e4ae919afb519efc99146423
+    - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.TsTv.count
+      md5sum: fa27f678965b7cba6a92efcd039f802a
+    - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.TsTv.qual
+    # conda changes md5sums for test.
+    - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.FILTER.summary
+      md5sum: 1ce42d34e4ae919afb519efc99146423
+    - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.TsTv.count
+      md5sum: 8dcfdbcaac118df1d5ad407dd2af699f
+    - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.TsTv.qual
+    # conda changes md5sums for test.
+    - path: results/reports/vcftools/strelka/sample3/sample3.strelka.variants.FILTER.summary
+      md5sum: 2b7be6ff481fddc655210b836587810d
+    - path: results/reports/vcftools/strelka/sample3/sample3.strelka.variants.TsTv.count
+      md5sum: 1481854d2a765f5641856ecf95ca4097
+    - path: results/reports/vcftools/strelka/sample3/sample3.strelka.variants.TsTv.qual
+    # conda changes md5sums for test.
+    - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.FILTER.summary
+      md5sum: 3441628cd6550ed459ca1c3db989ceea
+    - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.TsTv.count
+      md5sum: 8dcfdbcaac118df1d5ad407dd2af699f
+    - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.TsTv.qual
+    # conda changes md5sums for test.
+    - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.FILTER.summary
+      md5sum: 7a81b11aa29fec73d5bc872b7b58f8aa
+    - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.TsTv.count
+      md5sum: a922c51ca3b2ea7cdcfa09e9c8c55d52
+    - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.TsTv.qual
+    # conda changes md5sums for test.
+    - path: results/variant_calling/manta/sample3/sample3.manta.diploid_sv.vcf.gz
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/manta/sample3/sample3.manta.diploid_sv.vcf.gz.tbi
+      md5sum: 4cb176febbc8c26d717a6c6e67b9c905
+    - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.vcf.gz
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.vcf.gz.tbi
+      md5sum: 4cb176febbc8c26d717a6c6e67b9c905
+    - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.vcf.gz
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.vcf.gz.tbi
+      md5sum: 4cb176febbc8c26d717a6c6e67b9c905
+    - path: results/variant_calling/strelka/sample3/sample3.strelka.genome.vcf.gz
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/strelka/sample3/sample3.strelka.genome.vcf.gz.tbi
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/strelka/sample3/sample3.strelka.variants.vcf.gz
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/strelka/sample3/sample3.strelka.variants.vcf.gz.tbi
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.vcf.gz
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.vcf.gz.tbi
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz.tbi
+    # binary changes md5sums on reruns.
+    - path: results/manta
+      should_exist: false
+    - path: results/strelka
+      should_exist: false

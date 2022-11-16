@@ -1,0 +1,59 @@
+- name: Run variant calling on germline sample with deepvariant
+  command: nextflow run main.nf -profile test,tools_germline --tools deepvariant
+  tags:
+    - deepvariant
+    - germline
+    - variant_calling
+  files:
+    - path: results/multiqc
+    - path: results/reports/bcftools/deepvariant/sample1/sample1.deepvariant.bcftools_stats.txt
+      md5sum: b439cca4aa3ff9d28c9091e384128e54
+    - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.FILTER.summary
+      md5sum: 6830ef43decc97aee6a32ad4626ff0d7
+    - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.TsTv.count
+      md5sum: 4479b87635bdaad485af00949fe5f999
+    - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.TsTv.qual
+      md5sum: 9aa8f0b60b0beeda80f2203afe84da99
+    - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.g.vcf.gz
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.g.vcf.gz.tbi
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.vcf.gz
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.vcf.gz.tbi
+    # binary changes md5sums on reruns.
+    - path: results/deepvariant
+      should_exist: false
+- name: Run variant calling on germline sample with deepvariant without intervals
+  command: nextflow run main.nf -profile test,tools_germline --tools deepvariant --no_intervals
+  tags:
+    - deepvariant
+    - germline
+    - no_intervals
+    - variant_calling
+  files:
+    - path: results/multiqc
+    - path: results/no_intervals.bed
+      md5sum: f3dac01ea66b95fe477446fde2d31489
+    - path: results/no_intervals.bed.gz
+      md5sum: f3dac01ea66b95fe477446fde2d31489
+    - path: results/no_intervals.bed.gz.tbi
+      md5sum: f3dac01ea66b95fe477446fde2d31489
+    - path: results/reports/bcftools/deepvariant/sample1/sample1.deepvariant.bcftools_stats.txt
+      md5sum: 0433be69ade0cd64b4adc1b51d8c3530
+    - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.FILTER.summary
+      md5sum: a23f59a596d6c4715401730bb64a13d9
+    - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.TsTv.count
+      md5sum: b47b737f8838b4879d629d1d7c2429fc
+    - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.TsTv.qual
+      md5sum: 099766a58050c7a709602e4519ec4705
+    - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.g.vcf.gz
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.g.vcf.gz.tbi
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.vcf.gz
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.vcf.gz.tbi
+    # binary changes md5sums on reruns.
+    - path: results/deepvariant
+      should_exist: false

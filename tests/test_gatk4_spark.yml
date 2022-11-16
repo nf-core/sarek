@@ -1,0 +1,136 @@
+- name: Run default pipeline with gatk4_spark
+  command: nextflow run main.nf -profile test,use_gatk_spark
+  tags:
+    - gatk4_spark
+    - preprocessing
+  files:
+    - path: results/csv/markduplicates.csv
+      md5sum: 0d6120bb99e92f6810343270711ca53e
+    - path: results/csv/markduplicates_no_table.csv
+      md5sum: 2a2d3d4842befd4def39156463859ee3
+    - path: results/csv/recalibrated.csv
+      md5sum: 2d29d9e53894dcce96a1b5beb6ef3312
+    - path: results/multiqc
+    - path: results/preprocessing/markduplicates/test/test.md.cram
+      md5sum: b1338daf0d2f85c42fdc1bf12764bcae
+    - path: results/preprocessing/markduplicates/test/test.md.cram.crai
+      md5sum: 4f249f7b2492c37fd2186b02f7e5b03c
+    - path: results/preprocessing/recal_table/test/test.recal.table
+      md5sum: 5b6e5078b4a90f6cb982fa0f0df616c2
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+      md5sum: f56bee4375f79298fbdcdc2b3a5f2013
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+      md5sum: 1441e62e7cff530cb71df158693651c7
+    - path: results/reports/fastqc/test-test_L1
+    - path: results/reports/markduplicates/test/test.md.cram.metrics
+    # The text-based output-file test.md.cram.metrics only contains comments and no metrics, which is a bit odd.
+    # The file test.md.cram.metrics contains a timestamp which means that it cannot be tested using the md5sum.
+    - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
+      md5sum: 9269e959d5eec5273307693c6274f53e
+    - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
+      md5sum: deb2df4f3ca19f441f0a22f04dea8723
+    - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
+      md5sum: 96acf3439477a1448b7e1b43c020c7d0
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz
+      md5sum: c259a9fd73f576626c3a29841c2dc019
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz.csi
+      md5sum: cf85ba4692f016af70db2a594d9effdf
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+      md5sum: 9269e959d5eec5273307693c6274f53e
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+      md5sum: deb2df4f3ca19f441f0a22f04dea8723
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+      md5sum: 96acf3439477a1448b7e1b43c020c7d0
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
+      md5sum: c259a9fd73f576626c3a29841c2dc019
+    - path: results/reports/samtools/test/test.md.cram.stats
+    # conda changes md5sums for test.
+    - path: results/reports/samtools/test/test.recal.cram.stats
+    # conda changes md5sums for test.
+    - path: results/preprocessing/mapped/
+      should_exist: false
+- name: Run default pipeline with gatk4_spark & skipping all QC steps
+  command: nextflow run main.nf -profile test,use_gatk_spark --skip_tools fastqc,markduplicates_report,mosdepth,multiqc,samtools
+  tags:
+    - gatk4_spark
+    - preprocessing
+    - skip_qc
+  files:
+    - path: results/csv/markduplicates.csv
+      md5sum: 0d6120bb99e92f6810343270711ca53e
+    - path: results/csv/markduplicates_no_table.csv
+      md5sum: 2a2d3d4842befd4def39156463859ee3
+    - path: results/csv/recalibrated.csv
+      md5sum: 2d29d9e53894dcce96a1b5beb6ef3312
+    - path: results/preprocessing/markduplicates/test/test.md.cram
+      md5sum: b1338daf0d2f85c42fdc1bf12764bcae
+    - path: results/preprocessing/markduplicates/test/test.md.cram.crai
+      md5sum: 4f249f7b2492c37fd2186b02f7e5b03c
+    - path: results/preprocessing/recal_table/test/test.recal.table
+      md5sum: 5b6e5078b4a90f6cb982fa0f0df616c2
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+      md5sum: f56bee4375f79298fbdcdc2b3a5f2013
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+      md5sum: 1441e62e7cff530cb71df158693651c7
+    - path: results/multiqc
+      should_exist: false
+    - path: results/reports/fastqc
+      should_exist: false
+    - path: results/reports/markduplicates
+      should_exist: false
+    - path: results/reports/mosdepth
+      should_exist: false
+    - path: results/reports/samtools
+      should_exist: false
+- name: Run save_output_as_bam with gatk4 spark
+  command: nextflow run main.nf -profile test,use_gatk_spark --save_output_as_bam
+  tags:
+    - gatk4_spark
+    - preprocessing
+    - save_output_as_bam
+  files:
+    - path: results/csv/markduplicates.csv
+      md5sum: 6004ab16b63012e336f6251396a983c5
+    - path: results/csv/markduplicates_no_table.csv
+      md5sum: 8a145eca178cfd02403d60122b9d3960
+    - path: results/csv/recalibrated.csv
+      md5sum: 2dfbcaaeaaf4937c51c5c310f1c77614
+    - path: results/multiqc
+    - path: results/preprocessing/markduplicates/test/test.md.bam
+    # conda changes md5sums for test.
+    - path: results/preprocessing/markduplicates/test/test.md.bam.bai
+    # conda changes md5sums for test.
+    - path: results/preprocessing/recal_table/test/test.recal.table
+      md5sum: 5b6e5078b4a90f6cb982fa0f0df616c2
+    - path: results/preprocessing/recalibrated/test/test.recal.bam
+    # binary changes md5sums on reruns.
+    - path: results/preprocessing/recalibrated/test/test.recal.bam.bai
+    # binary changes md5sums on reruns.
+    - path: results/reports/fastqc/test-test_L1
+    - path: results/reports/markduplicates/test/test.md.cram.metrics
+    # The text-based output-file test.md.cram.metrics only contains comments and no metrics, which is a bit odd.
+    # The file test.md.cram.metrics contains a timestamp which means that it cannot be tested using the md5sum.
+    - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
+      md5sum: 9269e959d5eec5273307693c6274f53e
+    - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
+      md5sum: deb2df4f3ca19f441f0a22f04dea8723
+    - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
+      md5sum: 96acf3439477a1448b7e1b43c020c7d0
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz
+      md5sum: c259a9fd73f576626c3a29841c2dc019
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz.csi
+      md5sum: cf85ba4692f016af70db2a594d9effdf
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+      md5sum: 9269e959d5eec5273307693c6274f53e
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+      md5sum: deb2df4f3ca19f441f0a22f04dea8723
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+      md5sum: 96acf3439477a1448b7e1b43c020c7d0
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
+      md5sum: c259a9fd73f576626c3a29841c2dc019
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
+      md5sum: cf85ba4692f016af70db2a594d9effdf
+    - path: results/reports/samtools/test/test.md.cram.stats
+    # conda changes md5sums for test.
+    - path: results/reports/samtools/test/test.recal.cram.stats
+    # conda changes md5sums for test.

@@ -20,9 +20,13 @@ jobs:
           workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
           compute_env: ${{ secrets.TOWER_COMPUTE_ENV }}
-          workdir: s3://${{ secrets.AWS_S3_BUCKET }}/work/sarek/work-${{ github.sha }}/germline_test
+          workdir: s3://${{ secrets.AWS_S3_BUCKET }}/work/sarek/work-${{ github.sha }}/somatic_test
           parameters: |
             {
-              "outdir": "s3://${{ secrets.AWS_S3_BUCKET }}/sarek/results-${{ github.sha }}/germline_test"
+              "outdir": "s3://${{ secrets.AWS_S3_BUCKET }}/sarek/results-${{ github.sha }}/somatic_test"
             }
           profiles: test_full,aws_tower
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Tower debug log file
+          path: tower_action_*.log

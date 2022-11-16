@@ -1,0 +1,413 @@
+- name: Run variant calling on germline sample with freebayes
+  command: nextflow run main.nf -profile test,targeted --tools freebayes
+  tags:
+    - freebayes
+    - germline
+    - variant_calling
+  files:
+    - path: results/csv/markduplicates.csv
+      md5sum: 0d6120bb99e92f6810343270711ca53e
+    - path: results/csv/markduplicates_no_table.csv
+      md5sum: 2a2d3d4842befd4def39156463859ee3
+    - path: results/csv/recalibrated.csv
+      md5sum: 2d29d9e53894dcce96a1b5beb6ef3312
+    - path: results/csv/variantcalled.csv
+      md5sum: 0cc6a67fedb2ef9ce97e463d310f9f30
+    - path: results/multiqc
+    - path: results/preprocessing/markduplicates/test/test.md.cram
+    # binary changes md5sums on reruns.
+    - path: results/preprocessing/markduplicates/test/test.md.cram.crai
+    # binary changes md5sums on reruns.
+    - path: results/preprocessing/recal_table/test/test.recal.table
+      md5sum: c990e4f1b7dbd5a3a623882a54ae2bf2
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+    # binary changes md5sums on reruns.
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+    # binary changes md5sums on reruns.
+    - path: results/reports/bcftools/freebayes/test/test.freebayes.bcftools_stats.txt
+    # conda changes md5sums for test.
+    - path: results/reports/fastqc/test-test_L1
+    - path: results/reports/markduplicates/test/test.md.cram.metrics
+      contains: ["test	8547	767	84	523391	3882	0	0	0.385081", "1.0	767	767"]
+    - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
+      md5sum: 5a0679057c530e5945c9c5a3a17312dc
+    - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
+      md5sum: 835fdc6fa52cc33e6fb76c0c20a8a6c3
+    - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
+      md5sum: dcc9ab2bf3248903e02d8da87e678977
+    - path: results/reports/mosdepth/test/test.md.per-base.bed.gz
+      md5sum: 5724f1c6b6a0e63e25ec8a0f38edfda6
+    - path: results/reports/mosdepth/test/test.md.per-base.bed.gz.csi
+      md5sum: b0ab630c3241fbd7581b7a38d944ff8b
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz
+      md5sum: 91e0d531f1bab64711ecefe52bfc8255
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz.csi
+      md5sum: c6d1ac97ef4dfe43731c8368d8391cab
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+      md5sum: 0b3162def977123809598639f7698121
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+      md5sum: 835fdc6fa52cc33e6fb76c0c20a8a6c3
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+      md5sum: a8455eb2947de529abfa62b303986e0f
+    - path: results/reports/mosdepth/test/test.recal.per-base.bed.gz
+      md5sum: d9fa560ff78ae106cfee9db2c90801b5
+    - path: results/reports/mosdepth/test/test.recal.per-base.bed.gz.csi
+      md5sum: 4816eeb9af254ca40177b08cf11b98d2
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
+      md5sum: 91e0d531f1bab64711ecefe52bfc8255
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
+      md5sum: c6d1ac97ef4dfe43731c8368d8391cab
+    - path: results/reports/samtools/test/test.md.cram.stats
+    # conda changes md5sums for test.
+    - path: results/reports/samtools/test/test.recal.cram.stats
+    # conda changes md5sums for test.
+    - path: results/reports/vcftools/freebayes/test/test.freebayes.FILTER.summary
+      md5sum: 43d53e36cbb1091f915b2499e545b41e
+    - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.count
+      md5sum: 650f3dc78c5aaaecfe8ffa3d499e812f
+    - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.qual
+      contains: ["0	0	0	-nan	82	29	2.82759", "1.1	196	35	5.6	57	24	2.375", "3.16	205	38	5.39474	49	20	2.45"]
+    - path: results/variant_calling/freebayes/test/test.freebayes.vcf.gz
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/freebayes/test/test.freebayes.vcf.gz.tbi
+    # binary changes md5sums on reruns.
+    - path: results/freebayes
+      should_exist: false
+- name: Run variant calling on germline sample with freebayes without intervals
+  command: nextflow run main.nf -profile test --tools freebayes --no_intervals
+  tags:
+    - freebayes
+    - germline
+    - no_intervals
+    - variant_calling
+  files:
+    - path: results/csv/markduplicates.csv
+      md5sum: 0d6120bb99e92f6810343270711ca53e
+    - path: results/csv/markduplicates_no_table.csv
+      md5sum: 2a2d3d4842befd4def39156463859ee3
+    - path: results/csv/recalibrated.csv
+      md5sum: 2d29d9e53894dcce96a1b5beb6ef3312
+    - path: results/csv/variantcalled.csv
+      md5sum: 0cc6a67fedb2ef9ce97e463d310f9f30
+    - path: results/multiqc
+    - path: results/no_intervals.bed
+      md5sum: f3dac01ea66b95fe477446fde2d31489
+    - path: results/no_intervals.bed.gz
+      md5sum: f3dac01ea66b95fe477446fde2d31489
+    - path: results/no_intervals.bed.gz.tbi
+      md5sum: f3dac01ea66b95fe477446fde2d31489
+    - path: results/preprocessing/markduplicates/test/test.md.cram
+    # binary changes md5sums on reruns.
+    - path: results/preprocessing/markduplicates/test/test.md.cram.crai
+    # binary changes md5sums on reruns.
+    - path: results/preprocessing/recal_table/test/test.recal.table
+      md5sum: 4ac774bf5f1157e77426fd82f5ac0fbe
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+    # binary changes md5sums on reruns.
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+    # binary changes md5sums on reruns.
+    - path: results/reports/bcftools/freebayes/test/test.freebayes.bcftools_stats.txt
+    # conda changes md5sums for test.
+    - path: results/reports/fastqc/test-test_L1
+    - path: results/reports/markduplicates/test/test.md.cram.metrics
+      contains: ["test	8547	767	84	523391	3882	0	0	0.385081", "1.0	767	767"]
+    - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
+      md5sum: 76fa71922a3f748e507c2364c531dfcb
+    - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
+      md5sum: abc5df85e302b79985627888870882da
+    - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
+      md5sum: d536456436eb275159b8c6af83213d80
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz
+      md5sum: 38fe39894abe62e38f8ac214cba64f2b
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz.csi
+      md5sum: b1c2a861f64e20a94108a6de3b76c582
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+      md5sum: 76fa71922a3f748e507c2364c531dfcb
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+      md5sum: abc5df85e302b79985627888870882da
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+      md5sum: d536456436eb275159b8c6af83213d80
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
+      md5sum: 38fe39894abe62e38f8ac214cba64f2b
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
+      md5sum: b1c2a861f64e20a94108a6de3b76c582
+    - path: results/reports/samtools/test/test.md.cram.stats
+    # conda changes md5sums for test.
+    - path: results/reports/samtools/test/test.recal.cram.stats
+    # conda changes md5sums for test.
+    - path: results/reports/vcftools/freebayes/test/test.freebayes.FILTER.summary
+      md5sum: 76c5919541536c12b5c8a6094d6d78d5
+    - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.count
+      md5sum: 0a0464beef110bc0f3c5a35d022b528e
+    - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.qual
+      contains: ["0	0	0	-nan	325	86	3.77907", "27.5873	359	84	4.27381	39	13	3", "40.5188	368	87	4.22989	30	10	3"]
+    - path: results/variant_calling/freebayes/test/test.freebayes.vcf.gz
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/freebayes/test/test.freebayes.vcf.gz.tbi
+    # binary changes md5sums on reruns.
+    - path: results/freebayes
+      should_exist: false
+- name: Run variant calling on somatic sample with freebayes
+  command: nextflow run main.nf -profile test,pair,targeted --tools freebayes
+  tags:
+    - freebayes
+    - somatic
+    - variant_calling
+  files:
+    - path: results/csv/markduplicates.csv
+      md5sum: e8e587ac25253ff7ab8f1cc66d410c98
+    - path: results/csv/markduplicates_no_table.csv
+      md5sum: 617574c9b607e5daaf4ad56d48982247
+    - path: results/csv/recalibrated.csv
+      md5sum: 008dff17e2a0d96ef9c1cae12fcab6ab
+    - path: results/csv/variantcalled.csv
+      md5sum: b31f56256a1cfa839a2ea7f7ba6c1c45
+    - path: results/multiqc
+    - path: results/preprocessing/markduplicates/test/test.md.cram
+    # binary changes md5sums on reruns.
+    - path: results/preprocessing/markduplicates/test/test.md.cram.crai
+    # binary changes md5sums on reruns.
+    - path: results/preprocessing/markduplicates/test2/test2.md.cram
+    # binary changes md5sums on reruns.
+    - path: results/preprocessing/markduplicates/test2/test2.md.cram.crai
+    # binary changes md5sums on reruns.
+    - path: results/preprocessing/recal_table/test/test.recal.table
+      md5sum: c990e4f1b7dbd5a3a623882a54ae2bf2
+    - path: results/preprocessing/recal_table/test2/test2.recal.table
+      md5sum: 00d6877d68d622d81e4d633c4e340e7e
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+    # binary changes md5sums on reruns.
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+    # binary changes md5sums on reruns.
+    - path: results/preprocessing/recalibrated/test2/test2.recal.cram
+    # binary changes md5sums on reruns.
+    - path: results/preprocessing/recalibrated/test2/test2.recal.cram.crai
+    # binary changes md5sums on reruns.
+    - path: results/reports/bcftools/freebayes/test/test.freebayes.bcftools_stats.txt
+    # conda changes md5sums for test.
+    - path: results/reports/bcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.bcftools_stats.txt
+    # conda changes md5sums for test.
+    - path: results/reports/fastqc/test-test_L1
+    - path: results/reports/markduplicates/test/test.md.cram.metrics
+      contains: ["test	8547	767	84	523391	3882	0	0	0.385081", "1.0	767	767"]
+    - path: results/reports/markduplicates/test2/test2.md.cram.metrics
+      contains: ["test2	10103	880	35	523579	4837	2	0	0.408076	193306", "1.0	1	876	876", "100.0	80.515303	0	0"]
+    - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
+      md5sum: 5a0679057c530e5945c9c5a3a17312dc
+    - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
+      md5sum: 835fdc6fa52cc33e6fb76c0c20a8a6c3
+    - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
+      md5sum: dcc9ab2bf3248903e02d8da87e678977
+    - path: results/reports/mosdepth/test/test.md.per-base.bed.gz
+      md5sum: 5724f1c6b6a0e63e25ec8a0f38edfda6
+    - path: results/reports/mosdepth/test/test.md.per-base.bed.gz.csi
+      md5sum: b0ab630c3241fbd7581b7a38d944ff8b
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz
+      md5sum: 91e0d531f1bab64711ecefe52bfc8255
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz.csi
+      md5sum: c6d1ac97ef4dfe43731c8368d8391cab
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+      md5sum: 0b3162def977123809598639f7698121
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+      md5sum: 835fdc6fa52cc33e6fb76c0c20a8a6c3
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+      md5sum: a8455eb2947de529abfa62b303986e0f
+    - path: results/reports/mosdepth/test/test.recal.per-base.bed.gz
+      md5sum: d9fa560ff78ae106cfee9db2c90801b5
+    - path: results/reports/mosdepth/test/test.recal.per-base.bed.gz.csi
+      md5sum: 4816eeb9af254ca40177b08cf11b98d2
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
+      md5sum: 91e0d531f1bab64711ecefe52bfc8255
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
+      md5sum: c6d1ac97ef4dfe43731c8368d8391cab
+    - path: results/reports/mosdepth/test2/test2.md.mosdepth.global.dist.txt
+      md5sum: f25166c3a0051bb4d8c11a210278de6c
+    - path: results/reports/mosdepth/test2/test2.md.mosdepth.region.dist.txt
+      md5sum: 3211135329e4077bd9bf0ba488e14371
+    - path: results/reports/mosdepth/test2/test2.md.mosdepth.summary.txt
+      md5sum: ce0eb6d33c6d0dc720fbc6d1811abef8
+    - path: results/reports/mosdepth/test2/test2.md.per-base.bed.gz
+      md5sum: 55c160e8f3c8c7761524646426611f6b
+    - path: results/reports/mosdepth/test2/test2.md.per-base.bed.gz.csi
+      md5sum: 4205a09ede17cdbdaad45e3553f73105
+    - path: results/reports/mosdepth/test2/test2.md.regions.bed.gz
+      md5sum: 1dd426a45f967a9f37dcddcaea29a582
+    - path: results/reports/mosdepth/test2/test2.md.regions.bed.gz.csi
+      md5sum: c6d1ac97ef4dfe43731c8368d8391cab
+    - path: results/reports/mosdepth/test2/test2.recal.mosdepth.global.dist.txt
+      md5sum: a1ef7e662ce993da4668e804952014ce
+    - path: results/reports/mosdepth/test2/test2.recal.mosdepth.region.dist.txt
+      md5sum: 3211135329e4077bd9bf0ba488e14371
+    - path: results/reports/mosdepth/test2/test2.recal.mosdepth.summary.txt
+      md5sum: 70ad653c0c98baeeaf5085f1209a7bdb
+    - path: results/reports/mosdepth/test2/test2.recal.per-base.bed.gz
+      md5sum: 250a9f15a7d3f102435fa98adccf48a3
+    - path: results/reports/mosdepth/test2/test2.recal.per-base.bed.gz.csi
+      md5sum: 8072f447199c60f24b01eede8b557333
+    - path: results/reports/mosdepth/test2/test2.recal.regions.bed.gz
+      md5sum: 1dd426a45f967a9f37dcddcaea29a582
+    - path: results/reports/mosdepth/test2/test2.recal.regions.bed.gz.csi
+      md5sum: c6d1ac97ef4dfe43731c8368d8391cab
+    - path: results/reports/samtools/test/test.md.cram.stats
+    # conda changes md5sums for test.
+    - path: results/reports/samtools/test/test.recal.cram.stats
+    # conda changes md5sums for test.
+    - path: results/reports/samtools/test2/test2.md.cram.stats
+    # conda changes md5sums for test.
+    - path: results/reports/samtools/test2/test2.recal.cram.stats
+    # conda changes md5sums for test.
+    - path: results/reports/vcftools/freebayes/test/test.freebayes.FILTER.summary
+      md5sum: 43d53e36cbb1091f915b2499e545b41e
+    - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.count
+      md5sum: 650f3dc78c5aaaecfe8ffa3d499e812f
+    - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.qual
+      contains: ["0	0	0	-nan	82	29	2.82759", "1.1	196	35	5.6	57	24	2.375", "3.16	205	38	5.39474	49	20	2.45"]
+    - path: results/reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.FILTER.summary
+      md5sum: 84039d55edf0981d6b9b81252aff6741
+    - path: results/reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.TsTv.count
+      md5sum: 6c6038d43eb7fa766909b495979d120e
+    - path: results/reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.TsTv.qual
+    # the text-based file test2_vs_test.freebayes.TsTv.qual seemingly changes content on reruns!
+    - path: results/variant_calling/freebayes/test/test.freebayes.vcf.gz
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/freebayes/test/test.freebayes.vcf.gz.tbi
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/freebayes/test2_vs_test/test2_vs_test.freebayes.vcf.gz
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/freebayes/test2_vs_test/test2_vs_test.freebayes.vcf.gz.tbi
+    # binary changes md5sums on reruns.
+    - path: results/freebayes
+      should_exist: false
+- name: Run variant calling on somatic sample with freebayes without intervals
+  command: nextflow run main.nf -profile test,pair,targeted --tools freebayes --no_intervals
+  tags:
+    - freebayes
+    - somatic
+    - no_intervals
+    - variant_calling
+  files:
+    - path: results/csv/markduplicates.csv
+      md5sum: e8e587ac25253ff7ab8f1cc66d410c98
+    - path: results/csv/markduplicates_no_table.csv
+      md5sum: 617574c9b607e5daaf4ad56d48982247
+    - path: results/csv/recalibrated.csv
+      md5sum: 008dff17e2a0d96ef9c1cae12fcab6ab
+    - path: results/csv/variantcalled.csv
+      md5sum: b31f56256a1cfa839a2ea7f7ba6c1c45
+    - path: results/multiqc
+    - path: results/no_intervals.bed
+      md5sum: f3dac01ea66b95fe477446fde2d31489
+    - path: results/no_intervals.bed.gz
+      md5sum: f3dac01ea66b95fe477446fde2d31489
+    - path: results/no_intervals.bed.gz.tbi
+      md5sum: f3dac01ea66b95fe477446fde2d31489
+    - path: results/preprocessing/markduplicates/test/test.md.cram
+    # binary changes md5sums on reruns.
+    - path: results/preprocessing/markduplicates/test/test.md.cram.crai
+    # binary changes md5sums on reruns.
+    - path: results/preprocessing/markduplicates/test2/test2.md.cram
+    # binary changes md5sums on reruns.
+    - path: results/preprocessing/markduplicates/test2/test2.md.cram.crai
+    # binary changes md5sums on reruns.
+    - path: results/preprocessing/recal_table/test/test.recal.table
+      md5sum: 4ac774bf5f1157e77426fd82f5ac0fbe
+    - path: results/preprocessing/recal_table/test2/test2.recal.table
+      md5sum: 0626cd4337eab79b38b5bc5c95e0c003
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+    # binary changes md5sums on reruns.
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+    # binary changes md5sums on reruns.
+    - path: results/preprocessing/recalibrated/test2/test2.recal.cram
+    # binary changes md5sums on reruns.
+    - path: results/preprocessing/recalibrated/test2/test2.recal.cram.crai
+    # binary changes md5sums on reruns.
+    - path: results/reports/bcftools/freebayes/test/test.freebayes.bcftools_stats.txt
+    # conda changes md5sums for test.
+    - path: results/reports/bcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.bcftools_stats.txt
+    # conda changes md5sums for test.
+    - path: results/reports/fastqc/test-test_L1
+    - path: results/reports/markduplicates/test/test.md.cram.metrics
+      contains: ["test	8547	767	84	523391	3882	0	0	0.385081", "1.0	767	767"]
+    - path: results/reports/markduplicates/test2/test2.md.cram.metrics
+      contains: ["test2	10103	880	35	523579	4837	2	0	0.408076	193306", "1.0	1	876	876", "100.0	80.515303	0	0"]
+    - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
+      md5sum: 5a0679057c530e5945c9c5a3a17312dc
+    - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
+      md5sum: 0010c2396a3173c7cf4983abe2eb6a4c
+    - path: results/reports/mosdepth/test/test.md.per-base.bed.gz
+      md5sum: 5724f1c6b6a0e63e25ec8a0f38edfda6
+    - path: results/reports/mosdepth/test/test.md.per-base.bed.gz.csi
+      md5sum: b0ab630c3241fbd7581b7a38d944ff8b
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+      md5sum: 5a0679057c530e5945c9c5a3a17312dc
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+      md5sum: 0010c2396a3173c7cf4983abe2eb6a4c
+    - path: results/reports/mosdepth/test/test.recal.per-base.bed.gz
+      md5sum: 5724f1c6b6a0e63e25ec8a0f38edfda6
+    - path: results/reports/mosdepth/test/test.recal.per-base.bed.gz.csi
+      md5sum: b0ab630c3241fbd7581b7a38d944ff8b
+    - path: results/reports/mosdepth/test2/test2.md.mosdepth.global.dist.txt
+      md5sum: f25166c3a0051bb4d8c11a210278de6c
+    - path: results/reports/mosdepth/test2/test2.md.mosdepth.summary.txt
+      md5sum: d5e4084de2ea2a0a7b60b2d71c804d4b
+    - path: results/reports/mosdepth/test2/test2.md.per-base.bed.gz
+      md5sum: 55c160e8f3c8c7761524646426611f6b
+    - path: results/reports/mosdepth/test2/test2.md.per-base.bed.gz.csi
+      md5sum: 4205a09ede17cdbdaad45e3553f73105
+    - path: results/reports/mosdepth/test2/test2.recal.mosdepth.global.dist.txt
+      md5sum: f25166c3a0051bb4d8c11a210278de6c
+    - path: results/reports/mosdepth/test2/test2.recal.mosdepth.summary.txt
+      md5sum: d5e4084de2ea2a0a7b60b2d71c804d4b
+    - path: results/reports/mosdepth/test2/test2.recal.per-base.bed.gz
+      md5sum: 55c160e8f3c8c7761524646426611f6b
+    - path: results/reports/mosdepth/test2/test2.recal.per-base.bed.gz.csi
+      md5sum: 4205a09ede17cdbdaad45e3553f73105
+    - path: results/reports/samtools/test/test.md.cram.stats
+    # conda changes md5sums for test.
+    - path: results/reports/samtools/test/test.recal.cram.stats
+    # conda changes md5sums for test.
+    - path: results/reports/samtools/test2/test2.md.cram.stats
+    # conda changes md5sums for test.
+    - path: results/reports/samtools/test2/test2.recal.cram.stats
+    # conda changes md5sums for test.
+    - path: results/reports/vcftools/freebayes/test/test.freebayes.FILTER.summary
+      md5sum: 76c5919541536c12b5c8a6094d6d78d5
+    - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.count
+      md5sum: 0a0464beef110bc0f3c5a35d022b528e
+    - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.qual
+      contains: ["0	0	0	-nan	325	86	3.77907", "68.8262	377	88	4.28409	20	10	2", "321.335	393	96	4.09375	4	2	2"]
+    - path: results/reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.FILTER.summary
+      md5sum: d2d717fef7c18ef9b40bbbc5c5bbf101
+    - path: results/reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.TsTv.count
+      md5sum: e09dacc71bf72254e3aace1cc7c1e16d
+    - path: results/reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.TsTv.qual
+    # the text-based file test2_vs_test.freebayes.TsTv.qual seemingly changes content on reruns!
+    - path: results/variant_calling/freebayes/test/test.freebayes.vcf.gz
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/freebayes/test/test.freebayes.vcf.gz.tbi
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/freebayes/test2_vs_test/test2_vs_test.freebayes.vcf.gz
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/freebayes/test2_vs_test/test2_vs_test.freebayes.vcf.gz.tbi
+    # binary changes md5sums on reruns.
+    - path: results/freebayes
+      should_exist: false
+# - name: Run variant calling on tumor_only sample with freebayes
+#   command: nextflow run main.nf -profile test,tools_tumoronly --tools freebayes
+#   tags:
+#     - freebayes
+#     - tumor_only
+#     - variant_calling
+#   files:
+#     - path: results/variant_calling/freebayes/sample2/sample2.freebayes.vcf.gz
+#     - path: results/variant_calling/freebayes/sample2/sample2.freebayes.vcf.gz.tbi
+# - name: Run variant calling on tumor_only sample with freebayes without intervals
+#   command: nextflow run main.nf -profile test,tools_tumoronly --tools freebayes --no_intervals
+#   tags:
+#     - freebayes
+#     - no_intervals
+#     - tumor_only
+#     - variant_calling
+#   files:
+#     - path: results/variant_calling/freebayes/sample2/sample2.freebayes.vcf.gz
+#     - path: results/variant_calling/freebayes/sample2/sample2.freebayes.vcf.gz.tbi

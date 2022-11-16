@@ -1,0 +1,14 @@
+- name: Run variant calling on somatic sample with msisensor-pro
+  command: nextflow run main.nf -profile test,tools_somatic --tools msisensorpro
+  tags:
+    - msisensorpro
+    - somatic
+    - variant_calling
+  files:
+    - path: results/multiqc
+    - path: results/variant_calling/msisensorpro/sample4_vs_sample3/sample4_vs_sample3
+    - path: results/variant_calling/msisensorpro/sample4_vs_sample3/sample4_vs_sample3_dis
+    - path: results/variant_calling/msisensorpro/sample4_vs_sample3/sample4_vs_sample3_germline
+    - path: results/variant_calling/msisensorpro/sample4_vs_sample3/sample4_vs_sample3_somatic
+    - path: results/msisensorpro
+      should_exist: false

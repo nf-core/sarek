@@ -1,0 +1,90 @@
+- name: Run Recalibration starting from bam
+  command: nextflow run main.nf -profile test,recalibrate_bam
+  tags:
+    - input_bam
+    - recalibrate
+    - preprocessing
+  files:
+    - path: results/csv/recalibrated.csv
+      md5sum: 1888a924bc70bd80165a96ad641e22d6
+    - path: results/multiqc
+    - path: results/preprocessing/converted/test/test.converted.cram
+    # binary changes md5sums on reruns.
+    - path: results/preprocessing/converted/test/test.converted.cram.crai
+    # binary changes md5sums on reruns.
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+    # binary changes md5sums on reruns.
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+    # binary changes md5sums on reruns.
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+      md5sum: bdb8f185c35dd1eec7ce2f69bce57972
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+      md5sum: 6fd2e5c5c938bf69cdb2811f9e3afef8
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+      md5sum: 32ea70ef1b99def3dc900b4afd513a40
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
+      md5sum: d034a60ae5c0768d67b9ba6442bd2212
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
+      md5sum: b3716e5cd1744610e69c29bd4ffad259
+    - path: results/reports/samtools/test/test.recal.cram.stats
+    # conda changes md5sums for test.
+    - path: results/preprocessing/mapped/
+      should_exist: false
+    - path: results/preprocessing/markduplicates/
+      should_exist: false
+- name: Run Recalibration starting from bam and skip baserecalibration
+  command: nextflow run main.nf -profile test,recalibrate_bam,skip_bqsr --tools strelka
+  tags:
+    - input_bam
+    - recalibrate
+    - preprocessing
+    - variant_calling
+  files:
+    - path: results/csv/variantcalled.csv
+      md5sum: 4d0effd3d8dc2b814230a189e7ca9dba
+    - path: results/multiqc
+    - path: results/preprocessing/converted/test/test.converted.cram
+    # binary changes md5sums on reruns.
+    - path: results/preprocessing/converted/test/test.converted.cram.crai
+    # binary changes md5sums on reruns.
+    - path: results/reports/bcftools/strelka/test/test.strelka.variants.bcftools_stats.txt
+    # conda changes md5sums for test.
+    - path: results/reports/vcftools/strelka/test/test.strelka.variants.FILTER.summary
+      md5sum: 39ff2cc8eb7495a14a6b76e0ab627027
+    - path: results/reports/vcftools/strelka/test/test.strelka.variants.TsTv.count
+      md5sum: ee7dafc8d941b8502a04a63dc3126fff
+    - path: results/reports/vcftools/strelka/test/test.strelka.variants.TsTv.qual
+      # The text-based file test.strelka.variants.TsTv.qual has different md5sums on my linux system and the GitHub-test-server.
+      # I don't know exactly why that is, but the file contains some very small numbers written in scientific notation 4.00193e-322 which might change slightly on different systems.
+      # Instead I'll try some string testing
+      contains: ["0	0	0	-nan	3	4	0.75", "2	0	1	0	2	4	0.5", "5	1	1	1	2	3	0.666667"]
+    - path: results/variant_calling/strelka/test/test.strelka.genome.vcf.gz
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/strelka/test/test.strelka.genome.vcf.gz.tbi
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/strelka/test/test.strelka.variants.vcf.gz
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/strelka/test/test.strelka.variants.vcf.gz.tbi
+    # binary changes md5sums on reruns.
+    - path: results/csv/recalibrated.csv
+      should_exist: false
+    - path: results/preprocessing/recal_table/test/test.recal.table
+      should_exist: false
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+      should_exist: false
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+      should_exist: false
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+      should_exist: false
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+      should_exist: false
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+      should_exist: false
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
+      should_exist: false
+    - path: results/reports/samtools/test/test.recal.cram.stats
+      should_exist: false
+    - path: results/preprocessing/mapped/
+      should_exist: false
+    - path: results/preprocessing/markduplicates/
+      should_exist: false

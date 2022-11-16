@@ -1,0 +1,40 @@
+name: dragmap_hashtable
+description: Create DRAGEN hashtable for reference genome
+keywords:
+  - index
+  - fasta
+  - genome
+  - reference
+tools:
+  - dragmap:
+      description: Dragmap is the Dragen mapper/aligner Open Source Software.
+      homepage: https://github.com/Illumina/dragmap
+      documentation: https://github.com/Illumina/dragmap
+      tool_dev_url: https://github.com/Illumina/dragmap#basic-command-line-usage
+      doi: ""
+      licence: ["GPL v3"]
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing reference information
+        e.g. [ id:'test', single_end:false ]
+  - fasta:
+      type: file
+      description: Input genome fasta file
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing reference information
+        e.g. [ id:'test', single_end:false ]
+  - hashmap:
+      type: file
+      description: DRAGMAP hash table
+      pattern: "*.{cmp,.bin,.txt}"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@Emiller88"

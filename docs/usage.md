@@ -142,7 +142,7 @@ patient,sample,cram,crai
 patient1,test_sample,test_mapped.cram,test_mapped.cram.crai
 ```
 
-The Sarek-generated CSV file is stored under `results/csv/mapped.csv` if in a previous run `--save_bam_mapped` was set and will automatically be used as an input when specifying the parameter `--step markduplicates`. Otherwise this file will need to be manually generated.
+The Sarek-generated CSV file is stored under `results/csv/mapped.csv` if in a previous run `--save_mapped` was set and will automatically be used as an input when specifying the parameter `--step markduplicates`. Otherwise this file will need to be manually generated.
 
 #### Full samplesheet
 
@@ -473,7 +473,7 @@ If you have any questions or issues please send us a message on [Slack](https://
 ## Azure Resource Requests
 
 To be used with the `azurebatch` profile by specifying the `-profile azurebatch`.
-We recomend providing a compute `params.vm_type` of `Standard_E64_v3` VMs by default but these options can be changed if required.
+We recommend providing a compute `params.vm_type` of `Standard_D16_v3` VMs by default but these options can be changed if required.
 
 Note that the choice of VM size depends on your quota and the overall workload during the analysis.
 For a thorough list, please refer the [Azure Sizes for virtual machines in Azure](https://docs.microsoft.com/en-us/azure/virtual-machines/sizes).
@@ -520,9 +520,10 @@ Expected run output:
 [-        ] process > NFCORE_SAREK:SAREK:GATK4_MAPPING:BWAMEM2_MEM                                          -
 [-        ] process > NFCORE_SAREK:SAREK:GATK4_MAPPING:DRAGMAP_ALIGN                                        -
 [46/35a640] process > NFCORE_SAREK:SAREK:MARKDUPLICATES:GATK4_MARKDUPLICATES (test)                         [100%] 1 of 1 ✔
-[e0/525bb3] process > NFCORE_SAREK:SAREK:MARKDUPLICATES:BAM_TO_CRAM:SAMTOOLS_BAMTOCRAM (test)               [100%] 1 of 1 ✔
-[46/9fe93a] process > NFCORE_SAREK:SAREK:MARKDUPLICATES:BAM_TO_CRAM:SAMTOOLS_STATS_CRAM (test)              [100%] 1 of 1 ✔
-[77/2c8b1b] process > NFCORE_SAREK:SAREK:MARKDUPLICATES:BAM_TO_CRAM:MOSDEPTH (test)                         [100%] 1 of 1 ✔
+[9a/76cef7] process > NFCORE_SAREK:SAREK:MARKDUPLICATES:INDEX_MARKDUPLICATES (test)                         [100%] 1 of 1 ✔
+[46/9fe93a] process > NFCORE_SAREK:SAREK:MARKDUPLICATES:CRAM_QC:SAMTOOLS_STATS (test)                       [100%] 1 of 1 ✔
+[77/2c8b1b] process > NFCORE_SAREK:SAREK:MARKDUPLICATES:CRAM_QC:MOSDEPTH (test)                             [100%] 1 of 1 ✔
+[-        ] process > NFCORE_SAREK:SAREK:SAMTOOLS_CRAMTOBAM_MARKDUPLICATES                                  -
 [f7/499800] process > NFCORE_SAREK:SAREK:PREPARE_RECALIBRATION:BASERECALIBRATOR (test)                      [100%] 1 of 1 ✔
 [-        ] process > NFCORE_SAREK:SAREK:PREPARE_RECALIBRATION:GATHERBQSRREPORTS                            -
 [9d/3d1fff] process > NFCORE_SAREK:SAREK:RECALIBRATE:APPLYBQSR (test)                                       [100%] 1 of 1 ✔
@@ -617,6 +618,35 @@ For mapping, sarek follows the parameter suggestions provided in this [paper](ht
 `-Y`: force soft-clipping rather than default hard-clipping of supplementary alignments
 
 In addition, currently the mismatch penalty for reads with tumor status in the sample sheet are mapped with a mismatch penalty of `-B 3`.
+
+## How to manage scatter/gathering (parallelization with-in each sample)
+
+While Nextflow ensures all samples are run in parallel, the pipeline can split input files for each sample into smaller chunks which are processes in parallel.
+This speeds up analysis for individual chunks, but might occupy more storage space.
+
+Therefore, the different scatter/gather options can be set by the user:
+
+### Split Fastq files
+
+By default, the input fastq files are split into smaller chunks with FASTP, mapped in parallel, and then merged and duplicate marked. This can be customized by setting the parameter `--split_fastq`.
+This parameter determines how many reads are within each split. Setting it to `0` will turn of any splitting and only one mapping process is run per input fastq file.
+
+> FastP creates as many chunks as CPUs are specified (by default 12) and subdivides them further, if the number of reads in a chunk is larger then the value specified in `--split_fastq`. Thus, the parameter `--split_fastq` is an upper bound, e.g. if 1/12th of the Fastq file exceeds the provided value another fastq file will be generated.
+
+### Intervals for Base Quality Score Recalibration and Variantcalling
+
+The pipeline can parallelize base quality score recalibration and variant calling across genomic chunks of roughly similar sizes.
+For this, a bed file containing genomic regions of interest is used, it's the intervals file.
+By default, the intervals file for WGS used is the one provided by GATK (details [here](https://gatk.broadinstitute.org/hc/en-us/articles/360035889551-When-should-I-restrict-my-analysis-to-specific-intervals-)).
+When running targeted analysis, it is recommended to use the bed file containing the targeted regions.
+
+The amount of scatter/gathering can be customized by adjusting the parameter `--nucleotides_per_second`.
+
+> **NB:** The _same_ intervals are processed regardless of the number of groups. The number of groups however determines over how many compute nodes the analysis is scattered on.
+
+The default value is `1000`, increasing this value will _reduce_ the number of groups that are processed in parallel.
+Generally, smaller numbers of groups (each group has more regions), the slower the processing, and less storage space is consumed.
+In particular, in cloud computing setting it is often advisable to reduce the number of groups to be run in parallel to reduce data staging steps.
 
 ## How to create a panel-of-normals for Mutect2
 

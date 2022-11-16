@@ -1,0 +1,262 @@
+# default_extended
+
+default_extended:
+  - conf/modules/**
+  - modules/**
+  - subworkflows/**
+  - workflows/**
+  - nextflow.config
+  - main.nf
+
+# preprocessing
+
+## alignment_to_fastq
+alignment_to_fastq:
+  - conf/modules/alignment_to_fastq.config
+  - modules/nf-core/cat/fastq/main.nf
+  - modules/nf-core/samtools/collatefastq/main.nf
+  - modules/nf-core/samtools/merge/main.nf
+  - modules/nf-core/samtools/view/main.nf
+  - subworkflows/local/bam_convert_samtools/main.nf
+
+## umi
+umi:
+  - conf/modules/umi.config
+  - modules/nf-core/bwa/mem/main.nf
+  - modules/nf-core/bwamem2/mem/main.nf
+  - modules/nf-core/dragmap/align/main.nf
+  - modules/nf-core/fgbio/callmolecularconsensusreads/main.nf
+  - modules/nf-core/fgbio/fastqtobam/main.nf
+  - modules/nf-core/fgbio/groupreadsbyumi/main.nf
+  - modules/nf-core/samblaster/main.nf
+  - modules/nf-core/samtools/bam2fq/main.nf
+  - subworkflows/local/fastq_align_bwamem_mem2_dragmap/main.nf
+  - subworkflows/local/fastq_create_umi_consensus_fgbio/main.nf
+
+## fastp
+fastp:
+  - conf/modules/trimming.config
+  - modules/nf-core/fastp/main.nf
+
+## aligner
+
+### bwamem
+bwamem:
+  - conf/modules/aligner.config
+  - modules/nf-core/bwa/mem/main.nf
+  - subworkflows/local/fastq_align_bwamem_mem2_dragmap/main.nf
+
+### bwamem2
+bwamem2:
+  - conf/modules/aligner.config
+  - modules/nf-core/bwamem2/mem/main.nf
+  - subworkflows/local/fastq_align_bwamem_mem2_dragmap/main.nf
+
+### dragmap
+dragmap:
+  - conf/modules/aligner.config
+  - modules/nf-core/dragmap/align/main.nf
+  - subworkflows/local/fastq_align_bwamem_mem2_dragmap/main.nf
+
+## markduplicates
+markduplicates:
+  - conf/modules/markduplicates.config
+  - modules/nf-core/gatk4/markduplicates/main.nf
+  - modules/nf-core/mosdepth/main.nf
+  - modules/nf-core/samtools/convert/main.nf
+  - modules/nf-core/samtools/index/main.nf
+  - modules/nf-core/samtools/stats/main.nf
+  - subworkflows/local/bam_markduplicates/main.nf
+  - subworkflows/local/cram_qc_mosdepth_samtools/main.nf
+
+## prepare_recalibration
+prepare_recalibration:
+  - conf/modules/prepare_recalibration.config
+  - modules/nf-core/gatk4/baserecalibrator/main.nf
+  - modules/nf-core/gatk4/gatherbqsrreports/main.nf
+  - modules/nf-core/samtools/convert/main.nf
+  - subworkflows/local/bam_baserecalibrator/main.nf
+
+## recalibrate
+recalibrate:
+  - conf/modules/recalibrate.config
+  - modules/nf-core/gatk4/applybqsr/main.nf
+  - modules/nf-core/samtools/convert/main.nf
+  - modules/nf-core/samtools/index/main.nf
+  - modules/nf-core/samtools/merge/main.nf
+  - subworkflows/local/bam_applybqsr/main.nf
+  - subworkflows/local/cram_merge_index_samtools/main.nf
+
+## intervals
+intervals:
+  - conf/modules/prepare_intervals.config
+  - modules/local/build_intervals/main.nf
+  - modules/local/create_intervals_bed/main.nf
+  - modules/nf-core/gatk4/intervallisttobed/main.nf
+  - modules/nf-core/tabix/bgziptabix/main.nf
+  - subworkflows/local/prepare_intervals/main.nf
+
+## gatk4_spark
+gatk4_spark:
+  - conf/modules/markduplicates.config
+  - conf/modules/prepare_recalibration.config
+  - conf/modules/recalibrate.config
+  - modules/nf-core/gatk4/applybqsrspark/main.nf
+  - modules/nf-core/gatk4/baserecalibratorspark/main.nf
+  - modules/nf-core/gatk4/estimatelibrarycomplexity/main.nf
+  - modules/nf-core/gatk4/markduplicatesspark/main.nf
+  - subworkflows/local/bam_applybqsr_spark/main.nf
+  - subworkflows/local/bam_baserecalibrator_spark/main.nf
+  - subworkflows/local/bam_markduplicates_spark/main.nf
+
+# variant calling
+
+## cnvkit
+cnvkit:
+  - conf/modules/cnvkit.config
+  - modules/nf-core/cnvkit/antitarget/main.nf
+  - modules/nf-core/cnvkit/batch/main.nf
+  - modules/nf-core/cnvkit/reference/main.nf
+  - subworkflows/local/bam_variant_calling_cnvkit/main.nf
+  - subworkflows/local/prepare_reference_cnvkit/main.nf
+
+## controlfreec
+controlfreec:
+  - conf/modules/controlfreec.config
+  - conf/modules/mpileup.config
+  - modules/nf-core/cat/cat/main.nf
+  - modules/nf-core/controlfreec/assesssignificance/main.nf
+  - modules/nf-core/controlfreec/freec/main.nf
+  - modules/nf-core/controlfreec/freec2bed/main.nf
+  - modules/nf-core/controlfreec/freec2circos/main.nf
+  - modules/nf-core/controlfreec/makegraph/main.nf
+  - modules/nf-core/samtools/mpileup/main.nf
+  - subworkflows/local/bam_variant_calling_somatic_controlfreec/main.nf
+  - subworkflows/local/bam_variant_calling_tumor_only_controlfreec/main.nf
+  - subworkflows/local/bam_variant_calling_mpileup/main.nf
+
+## deepvariant
+deepvariant:
+  - conf/modules/deepvariant.config
+  - modules/nf-core/deepvariant/main.nf
+  - modules/nf-core/gatk4/mergevcfs/main.nf
+  - modules/nf-core/tabix/tabix/main.nf
+  - subworkflows/local/bam_variant_calling_deepvariant/main.nf
+
+## freebayes
+freebayes:
+  - conf/modules/freebayes.config
+  - modules/nf-core/bcftools/sort/main.nf
+  - modules/nf-core/freebayes/main.nf
+  - modules/nf-core/gatk4/mergevcfs/main.nf
+  - modules/nf-core/tabix/tabix/main.nf
+  - subworkflows/local/bam_variant_calling_freebayes/main.nf
+
+## haplotypecaller
+haplotypecaller:
+  - conf/modules/haplotypecaller.config
+  - modules/nf-core/bcftools/sort/main.nf
+  - modules/nf-core/gatk4/applyvqsr/main.nf
+  - modules/nf-core/gatk4/cnnscorevariants/main.nf
+  - modules/nf-core/gatk4/filtervarianttranches/main.nf
+  - modules/nf-core/gatk4/genomicsdbimport/main.nf
+  - modules/nf-core/gatk4/genotypegvcfs/main.nf
+  - modules/nf-core/gatk4/haplotypecaller/main.nf
+  - modules/nf-core/gatk4/mergevcfs/main.nf
+  - modules/nf-core/gatk4/variantrecalibrator/main.nf
+  - modules/nf-core/tabix/tabix/main.nf
+  - subworkflows/local/bam_joint_calling_germline_gatk/main.nf
+  - subworkflows/local/bam_variant_calling_haplotypecaller/main.nf
+  - subworkflows/local/vcf_variant_filtering_gatk/main.nf
+
+## manta
+manta:
+  - conf/modules/manta.config
+  - modules/nf-core/gatk4/mergevcfs/main.nf
+  - modules/nf-core/manta/germline/main.nf
+  - modules/nf-core/manta/somatic/main.nf
+  - modules/nf-core/manta/tumoronly/main.nf
+  - subworkflows/local/bam_variant_calling_germline_manta/main.nf
+  - subworkflows/local/bam_variant_calling_somatic_manta/main.nf
+  - subworkflows/local/bam_variant_calling_tumor_only_manta/main.nf
+
+## mpileup
+mpileup:
+  - conf/modules/mpileup.config
+  - modules/nf-core/cat/cat/main.nf
+  - modules/nf-core/samtools/mpileup/main.nf
+  - subworkflows/local/bam_variant_calling_mpileup/main.nf
+
+## msisensorpro
+msisensorpro:
+  - conf/modules/msisensorpro.config
+  - modules/nf-core/msisensorpro/scan/main.nf
+  - modules/nf-core/msisensorpro/msi_somatic/main.nf
+
+## mutect2
+mutect2:
+  - conf/modules/mutect2.config
+  - modules/nf-core/gatk4/calculatecontamination/main.nf
+  - modules/nf-core/gatk4/filtermutectcalls/main.nf
+  - modules/nf-core/gatk4/gatherpileupsummaries/main.nf
+  - modules/nf-core/gatk4/getpileupsummaries/main.nf
+  - modules/nf-core/gatk4/learnreadorientationmodel/main.nf
+  - modules/nf-core/gatk4/mergemutectstats/main.nf
+  - modules/nf-core/gatk4/mergevcfs/main.nf
+  - modules/nf-core/gatk4/mutect2/main.nf
+  - subworkflows/local/bam_variant_calling_somatic_mutect2/main.nf
+  - subworkflows/local/bam_variant_calling_tumor_only_mutect2/main.nf
+
+## strelka
+strelka:
+  - conf/modules/strelka.config
+  - modules/nf-core/gatk4/mergevcfs/main.nf
+  - modules/nf-core/strelka/germline/main.nf
+  - modules/nf-core/strelka/somatic/main.nf
+  - subworkflows/local/bam_variant_calling_single_strelka/main.nf
+  - subworkflows/local/bam_variant_calling_somatic_strelka/main.nf
+
+## strelka_bp
+strelka_bp:
+  - conf/modules/manta.config
+  - conf/modules/strelka.config
+  - modules/nf-core/gatk4/mergevcfs/main.nf
+  - modules/nf-core/manta/somatic/main.nf
+  - modules/nf-core/strelka/somatic/main.nf
+  - subworkflows/local/bam_variant_calling_somatic_manta/main.nf
+  - subworkflows/local/bam_variant_calling_somatic_strelka/main.nf
+
+## tiddit
+tiddit:
+  - conf/modules/tiddit.config
+  - modules/nf-core/svdb/merge/main.nf.nf
+  - modules/nf-core/tabix/bgziptabix/main.nf
+  - modules/nf-core/tiddit/sv/main.nf
+  - subworkflows/local/bam_variant_calling_single_tiddit/main.nf
+  - subworkflows/local/bam_variant_calling_somatic_tiddit/main.nf
+
+# annotate
+
+## merge
+merge:
+  - conf/modules/annotate.config
+  - modules/nf-core/ensemblvep/main.nf
+  - modules/nf-core/snpeff/main.nf
+  - modules/nf-core/tabix/bgziptabix/main.nf
+  - subworkflows/local/vcf_annotate_all/main.nf
+  - subworkflows/local/vcf_annotate_ensemblvep/main.nf
+  - subworkflows/local/vcf_annotate_snpeff/main.nf
+
+## snpeff
+snpeff:
+  - conf/modules/annotate.config
+  - modules/nf-core/snpeff/main.nf
+  - modules/nf-core/tabix/bgziptabix/main.nf
+  - subworkflows/local/vcf_annotate_snpeff/main.nf
+
+## vep
+vep:
+  - conf/modules/annotate.config
+  - modules/nf-core/ensemblvep/main.nf
+  - modules/nf-core/tabix/bgziptabix/main.nf
+  - subworkflows/local/vcf_annotate_ensemblvep/main.nf
