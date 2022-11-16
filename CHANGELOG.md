@@ -33,6 +33,7 @@ Rapaätno is the river you can see from the Skierfe mountain.
 - [#822](https://github.com/nf-core/sarek/pull/822) - Update modules with `nf-core modules update -a`: Update GATK version to 4.3.0
 - [#827](https://github.com/nf-core/sarek/pull/827) - Add `--genomicsdb-shared-posixfs-optimizations true --bypass-feature-reader` to `GenomicsDB` parameters to speed up the analysis
 - [#842](https://github.com/nf-core/sarek/pull/842) - Increase default memory for samtools stats
+- [#844](https://github.com/nf-core/sarek/pull/844) - All small scale tests are run on PR to `master`
 
 ### Fixed
 
