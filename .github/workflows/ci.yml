@@ -59,7 +59,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nextflow-
 
-      - name: Install Nextflow
+      - name: Install Nextflow ${{ matrix.NXF_VER }}
         uses: nf-core/setup-nextflow@v1
         with:
           version: "${{ matrix.NXF_VER }}"

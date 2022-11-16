@@ -113,7 +113,7 @@ The resulting files are intermediate and by default not kept in the final files 
 
 [FastP](https://github.com/OpenGene/fastp) supports splitting of one FastQ file into multiple files allowing parallel alignment of sharded FastQ file. To enable splitting, the number of reads per output can be specified. For more information, take a look into the parameter `--split_fastq`in the parameter docs.
 
-These files are intermediate and by default not kept in the final files delivered to users. Set `--save_split` to enable publishing of these files to:
+These files are intermediate and by default not placed in the output-folder kept in the final files delivered to users. Set `--save_split` to enable publishing of these files to:
 
 <details markdown="1">
 <summary>Output files for all samples</summary>
@@ -129,7 +129,7 @@ These files are intermediate and by default not kept in the final files delivere
 
 Sarek can process UMI-reads, using [fgbio](http://fulcrumgenomics.github.io/fgbio/tools/latest/) tools.
 
-These files are intermediate and by default not kept in the final files delivered to users. Set `--save_split` to enable publishing of these files to:
+These files are intermediate and by default not placed in the output-folder kept in the final files delivered to users. Set `--save_split` to enable publishing of these files to:
 
 <details markdown="1">
 <summary>Output files for all samples</summary>
@@ -150,19 +150,19 @@ These files are intermediate and by default not kept in the final files delivere
 
 [BWA](https://github.com/lh3/bwa) is a software package for mapping low-divergent sequences against a large reference genome. The aligned reads are then coordinate-sorted (or name-sorted if [`GATK MarkDuplicatesSpark`](https://gatk.broadinstitute.org/hc/en-us/articles/5358833264411-MarkDuplicatesSpark) is used for duplicate marking) with [samtools](https://www.htslib.org/doc/samtools.html).
 
-These files are intermediate and by default not kept in the final files delivered to users. Set `--save_mapped` to enable publishing in CRAM format, furthermore add the flag `save_output_as_bam` for publishing in BAM format.
+These files are intermediate and by default not placed in the output-folder kept in the final files delivered to users. Set `--save_mapped` to enable publishing in CRAM format, furthermore add the flag `save_output_as_bam` for publishing in BAM format.
 
 #### BWA-mem2
 
 [BWA-mem2](https://github.com/bwa-mem2/bwa-mem2) is a software package for mapping low-divergent sequences against a large reference genome.The aligned reads are then coordinate-sorted (or name-sorted if [`GATK MarkDuplicatesSpark`](https://gatk.broadinstitute.org/hc/en-us/articles/5358833264411-MarkDuplicatesSpark) is used for duplicate marking) with [samtools](https://www.htslib.org/doc/samtools.html).
 
-These files are intermediate and by default not kept in the final files delivered to users. Set `--save_mapped` to enable publishing, furthermore add the flag `save_output_as_bam` for publishing in BAM format.
+These files are intermediate and by default not placed in the output-folder kept in the final files delivered to users. Set `--save_mapped` to enable publishing, furthermore add the flag `save_output_as_bam` for publishing in BAM format.
 
 #### DragMap
 
 [DragMap](https://github.com/Illumina/dragmap) is an open-source software implementation of the DRAGEN mapper, which the Illumina team created so that we would have an open-source way to produce the same results as their proprietary DRAGEN hardware. The aligned reads are then coordinate-sorted (or name-sorted if [`GATK MarkDuplicatesSpark`](https://gatk.broadinstitute.org/hc/en-us/articles/5358833264411-MarkDuplicatesSpark) is used for duplicate marking) with [samtools](https://www.htslib.org/doc/samtools.html).
 
-These files are intermediate and by default not kept in the final files delivered to users. Set `--save_mapped` to enable publishing, furthermore add the flag `save_output_as_bam` for publishing in BAM format.
+These files are intermediate and by default not placed in the output-folder kept in the final files delivered to users. Set `--save_mapped` to enable publishing, furthermore add the flag `save_output_as_bam` for publishing in BAM format.
 
 <details markdown="1">
 <summary>Output files for all mappers and samples</summary>
