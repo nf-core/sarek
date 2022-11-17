@@ -30,8 +30,7 @@
                 "name": "workflow",
                 "success": true
             }
-        ],
-        "timestamp": "2022-11-17T14:05:45+0000"
+        ]
     },
     "files": {
         "content": [
@@ -53,7 +52,6 @@
             "test.strelka.variants.FILTER.summary:md5,dd87f507da7de20d5318841af312493b",
             "test.strelka.variants.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a",
             "test.strelka.variants.TsTv.qual:md5,bc68ae4e688e9fb772b457069e604883"
-        ],
-        "timestamp": "2022-11-17T14:05:45+0000"
+        ]
     }
 }
