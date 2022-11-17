@@ -278,7 +278,6 @@
                 },
                 "cf_chrom_len": {
                     "type": "string",
-                    "default": "None",
                     "fa_icon": "fas fa-ruler-horizontal",
                     "description": "Specify a custom chromosome length file.",
                     "help_text": "Control-FREEC requires a file containing all chromosome lenghts. By default the fasta.fai is used. If the fasta.fai file contains chromosomes not present in the intervals, it fails (see: https://github.com/BoevaLab/FREEC/issues/106).\n\nIn this case, a custom chromosome length can be specified. It must be of the same format as the fai, but only contain the relevant chromosomes.\n\n\n\n",
