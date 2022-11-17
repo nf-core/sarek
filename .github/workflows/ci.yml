@@ -78,7 +78,14 @@ jobs:
           command: PROFILE=${{ matrix.profile }} nf-test test tests/${{ matrix.test }}/*.nf.test --tap=test.tap
           attempt_limit: 3
 
-      - uses: pcolby/tap-summary@v1
-        with:
-          path: >-
-            test.tap
+      - name: Output log on failure
+        if: failure()
+        run: |
+          sudo apt install bat > /dev/null
+          batcat --decorations=always --color=always test.tap
+          batcat --decorations=always --color=always /home/runner/.nf-test/tests/*/meta/std.{err.out}
+          batcat --decorations=always --color=always /home/runner/.nf-test/tests/*/meta/nextflow.log
+          batcat --decorations=always --color=always /home/runner/.nf-test/tests/*/meta/trace.csv
+          batcat --decorations=always --color=always /home/runner/.nf-test/tests/*/meta/params.json
+
+
