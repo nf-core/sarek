@@ -87,5 +87,3 @@ jobs:
           batcat --decorations=always --color=always /home/runner/.nf-test/tests/*/meta/nextflow.log
           batcat --decorations=always --color=always /home/runner/.nf-test/tests/*/meta/trace.csv
           batcat --decorations=always --color=always /home/runner/.nf-test/tests/*/meta/params.json
-
-
