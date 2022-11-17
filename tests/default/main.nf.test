@@ -6,21 +6,46 @@ nextflow_pipeline {
     test("Should run without failures") {
         when {
             params {
-                outdir = "$outputDir"
+                outdir = baseDir.toURI().relativize(outputDir.toURI()).toString()
             }
         }
 
         then {
-            assert workflow.success
-            assert new File("$outputDir/csv/markduplicates.csv").exists()
-            // assert path("$outputDir/csv/markduplicates.csv").md5 == "6b60ae9300a4d6ac93010a7d639b2ded"
-            assert new File("$outputDir/csv/markduplicates_no_table.csv").exists()
-            // assert path("$outputDir/csv/markduplicates_no_table.csv").md5 == "2a2d3d4842befd4def39156463859ee3"
-            assert new File("$outputDir/csv/recalibrated.csv").exists()
-            // assert path("$outputDir/csv/recalibrated.csv").md5 == "2d29d9e53894dcce96a1b5beb6ef3312"
-            assert new File("$outputDir/csv/variantcalled.csv").exists()
-            // assert path("$outputDir/csv/variantcalled.csv").md5 == "4d0effd3d8dc2b814230a189e7ca9dba"
-            assert new File("$outputDir/multiqc").exists()
+            assert path("$outputDir/multiqc").exists()
+            assert path("$outputDir/preprocessing/markduplicates/test/test.md.cram").exists()
+            assert path("$outputDir/preprocessing/markduplicates/test/test.md.cram.crai").exists()
+            assert path("$outputDir/preprocessing/recalibrated/test/test.recal.cram").exists()
+            assert path("$outputDir/preprocessing/recalibrated/test/test.recal.cram.crai").exists()
+            assert path("$outputDir/reports/bcftools/strelka/test/test.strelka.variants.bcftools_stats.txt").exists()
+            assert path("$outputDir/reports/fastqc/test-test_L1").exists()
+            assert path("$outputDir/reports/markduplicates/test/test.md.cram.metrics").exists()
+            assert path("$outputDir/reports/samtools/test/test.md.cram.stats").exists()
+            assert path("$outputDir/reports/samtools/test/test.recal.cram.stats").exists()
+            assert path("$outputDir/variant_calling/strelka/test/test.strelka.genome.vcf.gz").exists()
+            assert path("$outputDir/variant_calling/strelka/test/test.strelka.genome.vcf.gz.tbi").exists()
+            assert path("$outputDir/variant_calling/strelka/test/test.strelka.variants.vcf.gz").exists()
+            assert path("$outputDir/variant_calling/strelka/test/test.strelka.variants.vcf.gz.tbi").exists()
+            assert snapshot(workflow).match("workflow")
+            assert snapshot(
+                "$outputDir/csv/markduplicates.csv",
+                "$outputDir/csv/markduplicates_no_table.csv",
+                "$outputDir/csv/recalibrated.csv",
+                "$outputDir/csv/variantcalled.csv",
+                "$outputDir/preprocessing/recal_table/test/test.recal.table",
+                "$outputDir/reports/mosdepth/test/test.md.mosdepth.global.dist.txt",
+                "$outputDir/reports/mosdepth/test/test.md.mosdepth.region.dist.txt",
+                "$outputDir/reports/mosdepth/test/test.md.mosdepth.summary.txt",
+                "$outputDir/reports/mosdepth/test/test.md.regions.bed.gz",
+                "$outputDir/reports/mosdepth/test/test.md.regions.bed.gz.csi",
+                "$outputDir/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt",
+                "$outputDir/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt",
+                "$outputDir/reports/mosdepth/test/test.recal.mosdepth.summary.txt",
+                "$outputDir/reports/mosdepth/test/test.recal.regions.bed.gz",
+                "$outputDir/reports/mosdepth/test/test.recal.regions.bed.gz.csi",
+                "$outputDir/reports/vcftools/strelka/test/test.strelka.variants.FILTER.summary",
+                "$outputDir/reports/vcftools/strelka/test/test.strelka.variants.TsTv.count",
+                "$outputDir/reports/vcftools/strelka/test/test.strelka.variants.TsTv.qual"
+            ).match("files")
         }
     }
 }
