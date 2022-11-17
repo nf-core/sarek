@@ -39,13 +39,6 @@ jobs:
 
       - uses: actions/cache@v2
         with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-
-      - uses: actions/cache@v2
-        with:
           path: /usr/local/bin/nextflow
           key: ${{ runner.os }}
           restore-keys: |
@@ -55,6 +48,11 @@ jobs:
         uses: nf-core/setup-nextflow@v1
         with:
           version: "${{ matrix.NXF_VER }}"
+
+      - name: Install nf-test
+        run: |
+          wget -qO- https://code.askimed.com/install/nf-test | bash
+          sudo mv nf-test /usr/local/bin/
 
       - name: Set up Singularity
         if: matrix.profile == 'singularity'
