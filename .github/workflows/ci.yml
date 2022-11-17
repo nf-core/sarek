@@ -73,10 +73,11 @@ jobs:
         run: conda clean -a
 
       - name: Run nf-test
-        uses: Wandalen/wretry.action@v1.0.11
-        with:
-          command: PROFILE=${{ matrix.profile }} nf-test test tests/${{ matrix.test }}/*.nf.test --tap=test.tap
-          attempt_limit: 3
+        # uses: Wandalen/wretry.action@v1.0.11
+        # with:
+        #   command: PROFILE=${{ matrix.profile }} nf-test test tests/${{ matrix.test }}/*.nf.test --tap=test.tap
+        #   attempt_limit: 3
+        run: PROFILE=${{ matrix.profile }} nf-test test tests/${{ matrix.test }}/*.nf.test --tap=test.tap
 
       - name: Output log on failure
         if: failure()
