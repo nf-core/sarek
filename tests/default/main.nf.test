@@ -25,7 +25,9 @@ nextflow_pipeline {
             assert path("$outputDir/variant_calling/strelka/test/test.strelka.genome.vcf.gz.tbi").exists()
             assert path("$outputDir/variant_calling/strelka/test/test.strelka.variants.vcf.gz").exists()
             assert path("$outputDir/variant_calling/strelka/test/test.strelka.variants.vcf.gz.tbi").exists()
-            assert snapshot(workflow).match("workflow")
+            assert workflow.success
+            assert workflow.trace.tasks().size() == 26
+            // assert snapshot(workflow).match("workflow")
             assert snapshot(
                 "$outputDir/csv/markduplicates.csv",
                 "$outputDir/csv/markduplicates_no_table.csv",

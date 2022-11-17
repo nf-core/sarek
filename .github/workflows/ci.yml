@@ -83,7 +83,3 @@ jobs:
         if: failure()
         run: |
           cat test.tap
-          cat .nf-test/tests/*/meta/std.{err.out}
-          cat .nf-test/tests/*/meta/nextflow.log
-          cat .nf-test/tests/*/meta/trace.csv
-          cat .nf-test/tests/*/meta/params.json
