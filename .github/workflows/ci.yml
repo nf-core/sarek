@@ -81,9 +81,8 @@ jobs:
       - name: Output log on failure
         if: failure()
         run: |
-          sudo apt install bat > /dev/null
-          batcat --decorations=always --color=always test.tap
-          batcat --decorations=always --color=always /home/runner/.nf-test/tests/*/meta/std.{err.out}
-          batcat --decorations=always --color=always /home/runner/.nf-test/tests/*/meta/nextflow.log
-          batcat --decorations=always --color=always /home/runner/.nf-test/tests/*/meta/trace.csv
-          batcat --decorations=always --color=always /home/runner/.nf-test/tests/*/meta/params.json
+          cat /home/runner/test.tap
+          cat /home/runner/.nf-test/tests/*/meta/std.{err.out}
+          cat /home/runner/.nf-test/tests/*/meta/nextflow.log
+          cat /home/runner/.nf-test/tests/*/meta/trace.csv
+          cat /home/runner/.nf-test/tests/*/meta/params.json
