@@ -45,10 +45,6 @@ nextflow_pipeline {
             assert path("$outputDir/reports/vcftools/strelka/test/test.strelka.variants.FILTER.summary").exists()
             assert path("$outputDir/reports/vcftools/strelka/test/test.strelka.variants.TsTv.count").exists()
             assert path("$outputDir/reports/vcftools/strelka/test/test.strelka.variants.TsTv.qual").exists()
-            assert path("$outputDir/csv/markduplicates.csv").md5 == "49fb7ec7b71d8cae7e456ce1a4b052ca"
-            assert path("$outputDir/csv/markduplicates_no_table.csv").md5 == "cf0d4134d7095064a3aedf3f44ae9d1a"
-            assert path("$outputDir/csv/recalibrated.csv").md5 == "963a07db23dc4acccf79d1e5a0db9ab1"
-            assert path("$outputDir/csv/variantcalled.csv").md5 == "dd3721676d95f0e506316816e32bc4e6"
             assert path("$outputDir/preprocessing/recal_table/test/test.recal.table").md5 == "4ac774bf5f1157e77426fd82f5ac0fbe"
             assert path("$outputDir/reports/mosdepth/test/test.md.mosdepth.global.dist.txt").md5 == "76fa71922a3f748e507c2364c531dfcb"
             assert path("$outputDir/reports/mosdepth/test/test.md.mosdepth.region.dist.txt").md5 == "abc5df85e302b79985627888870882da"
@@ -68,10 +64,10 @@ nextflow_pipeline {
             assert workflow.trace.tasks().size() == 26
             // assert snapshot(workflow).match("workflow")
             // assert snapshot(
-            //     "$outputDir/csv/markduplicates.csv",
-            //     "$outputDir/csv/markduplicates_no_table.csv",
-            //     "$outputDir/csv/recalibrated.csv",
-            //     "$outputDir/csv/variantcalled.csv",
+            //     "$outputDir/csv/markduplicates.csv",          // Can't take md5 from csv files
+            //     "$outputDir/csv/markduplicates_no_table.csv", // Can't take md5 from csv files
+            //     "$outputDir/csv/recalibrated.csv",            // Can't take md5 from csv files
+            //     "$outputDir/csv/variantcalled.csv",           // Can't take md5 from csv files
             //     "$outputDir/preprocessing/recal_table/test/test.recal.table",
             //     "$outputDir/reports/mosdepth/test/test.md.mosdepth.global.dist.txt",
             //     "$outputDir/reports/mosdepth/test/test.md.mosdepth.region.dist.txt",
