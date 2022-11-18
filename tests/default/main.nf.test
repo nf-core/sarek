@@ -25,29 +25,68 @@ nextflow_pipeline {
             assert path("$outputDir/variant_calling/strelka/test/test.strelka.genome.vcf.gz.tbi").exists()
             assert path("$outputDir/variant_calling/strelka/test/test.strelka.variants.vcf.gz").exists()
             assert path("$outputDir/variant_calling/strelka/test/test.strelka.variants.vcf.gz.tbi").exists()
+
+            // Removed once snapshots are fixed
+            assert path("$outputDir/csv/markduplicates.csv").exists()
+            assert path("$outputDir/csv/markduplicates_no_table.csv").exists()
+            assert path("$outputDir/csv/recalibrated.csv").exists()
+            assert path("$outputDir/csv/variantcalled.csv").exists()
+            assert path("$outputDir/preprocessing/recal_table/test/test.recal.table").exists()
+            assert path("$outputDir/reports/mosdepth/test/test.md.mosdepth.global.dist.txt").exists()
+            assert path("$outputDir/reports/mosdepth/test/test.md.mosdepth.region.dist.txt").exists()
+            assert path("$outputDir/reports/mosdepth/test/test.md.mosdepth.summary.txt").exists()
+            assert path("$outputDir/reports/mosdepth/test/test.md.regions.bed.gz").exists()
+            assert path("$outputDir/reports/mosdepth/test/test.md.regions.bed.gz.csi").exists()
+            assert path("$outputDir/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt").exists()
+            assert path("$outputDir/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt").exists()
+            assert path("$outputDir/reports/mosdepth/test/test.recal.mosdepth.summary.txt").exists()
+            assert path("$outputDir/reports/mosdepth/test/test.recal.regions.bed.gz").exists()
+            assert path("$outputDir/reports/mosdepth/test/test.recal.regions.bed.gz.csi").exists()
+            assert path("$outputDir/reports/vcftools/strelka/test/test.strelka.variants.FILTER.summary").exists()
+            assert path("$outputDir/reports/vcftools/strelka/test/test.strelka.variants.TsTv.count").exists()
+            assert path("$outputDir/reports/vcftools/strelka/test/test.strelka.variants.TsTv.qual").exists()
+            assert path("$outputDir/csv/markduplicates.csv").md5 == "49fb7ec7b71d8cae7e456ce1a4b052ca"
+            assert path("$outputDir/csv/markduplicates_no_table.csv").md5 == "cf0d4134d7095064a3aedf3f44ae9d1a"
+            assert path("$outputDir/csv/recalibrated.csv").md5 == "963a07db23dc4acccf79d1e5a0db9ab1"
+            assert path("$outputDir/csv/variantcalled.csv").md5 == "dd3721676d95f0e506316816e32bc4e6"
+            assert path("$outputDir/preprocessing/recal_table/test/test.recal.table").md5 == "4ac774bf5f1157e77426fd82f5ac0fbe"
+            assert path("$outputDir/reports/mosdepth/test/test.md.mosdepth.global.dist.txt").md5 == "76fa71922a3f748e507c2364c531dfcb"
+            assert path("$outputDir/reports/mosdepth/test/test.md.mosdepth.region.dist.txt").md5 == "abc5df85e302b79985627888870882da"
+            assert path("$outputDir/reports/mosdepth/test/test.md.mosdepth.summary.txt").md5 == "d536456436eb275159b8c6af83213d80"
+            assert path("$outputDir/reports/mosdepth/test/test.md.regions.bed.gz").md5 == "38fe39894abe62e38f8ac214cba64f2b"
+            assert path("$outputDir/reports/mosdepth/test/test.md.regions.bed.gz.csi").md5 == "b1c2a861f64e20a94108a6de3b76c582"
+            assert path("$outputDir/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt").md5 == "76fa71922a3f748e507c2364c531dfcb"
+            assert path("$outputDir/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt").md5 == "abc5df85e302b79985627888870882da"
+            assert path("$outputDir/reports/mosdepth/test/test.recal.mosdepth.summary.txt").md5 == "d536456436eb275159b8c6af83213d80"
+            assert path("$outputDir/reports/mosdepth/test/test.recal.regions.bed.gz").md5 == "38fe39894abe62e38f8ac214cba64f2b"
+            assert path("$outputDir/reports/mosdepth/test/test.recal.regions.bed.gz.csi").md5 == "b1c2a861f64e20a94108a6de3b76c582"
+            assert path("$outputDir/reports/vcftools/strelka/test/test.strelka.variants.FILTER.summary").md5 == "dd87f507da7de20d5318841af312493b"
+            assert path("$outputDir/reports/vcftools/strelka/test/test.strelka.variants.TsTv.count").md5 == "fa27f678965b7cba6a92efcd039f802a"
+            assert path("$outputDir/reports/vcftools/strelka/test/test.strelka.variants.TsTv.qual").md5 == "bc68ae4e688e9fb772b457069e604883"
+
             assert workflow.success
             assert workflow.trace.tasks().size() == 26
             // assert snapshot(workflow).match("workflow")
-            assert snapshot(
-                "$outputDir/csv/markduplicates.csv",
-                "$outputDir/csv/markduplicates_no_table.csv",
-                "$outputDir/csv/recalibrated.csv",
-                "$outputDir/csv/variantcalled.csv",
-                "$outputDir/preprocessing/recal_table/test/test.recal.table",
-                "$outputDir/reports/mosdepth/test/test.md.mosdepth.global.dist.txt",
-                "$outputDir/reports/mosdepth/test/test.md.mosdepth.region.dist.txt",
-                "$outputDir/reports/mosdepth/test/test.md.mosdepth.summary.txt",
-                "$outputDir/reports/mosdepth/test/test.md.regions.bed.gz",
-                "$outputDir/reports/mosdepth/test/test.md.regions.bed.gz.csi",
-                "$outputDir/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt",
-                "$outputDir/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt",
-                "$outputDir/reports/mosdepth/test/test.recal.mosdepth.summary.txt",
-                "$outputDir/reports/mosdepth/test/test.recal.regions.bed.gz",
-                "$outputDir/reports/mosdepth/test/test.recal.regions.bed.gz.csi",
-                "$outputDir/reports/vcftools/strelka/test/test.strelka.variants.FILTER.summary",
-                "$outputDir/reports/vcftools/strelka/test/test.strelka.variants.TsTv.count",
-                "$outputDir/reports/vcftools/strelka/test/test.strelka.variants.TsTv.qual"
-            ).match("files")
+            // assert snapshot(
+            //     "$outputDir/csv/markduplicates.csv",
+            //     "$outputDir/csv/markduplicates_no_table.csv",
+            //     "$outputDir/csv/recalibrated.csv",
+            //     "$outputDir/csv/variantcalled.csv",
+            //     "$outputDir/preprocessing/recal_table/test/test.recal.table",
+            //     "$outputDir/reports/mosdepth/test/test.md.mosdepth.global.dist.txt",
+            //     "$outputDir/reports/mosdepth/test/test.md.mosdepth.region.dist.txt",
+            //     "$outputDir/reports/mosdepth/test/test.md.mosdepth.summary.txt",
+            //     "$outputDir/reports/mosdepth/test/test.md.regions.bed.gz",
+            //     "$outputDir/reports/mosdepth/test/test.md.regions.bed.gz.csi",
+            //     "$outputDir/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt",
+            //     "$outputDir/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt",
+            //     "$outputDir/reports/mosdepth/test/test.recal.mosdepth.summary.txt",
+            //     "$outputDir/reports/mosdepth/test/test.recal.regions.bed.gz",
+            //     "$outputDir/reports/mosdepth/test/test.recal.regions.bed.gz.csi",
+            //     "$outputDir/reports/vcftools/strelka/test/test.strelka.variants.FILTER.summary",
+            //     "$outputDir/reports/vcftools/strelka/test/test.strelka.variants.TsTv.count",
+            //     "$outputDir/reports/vcftools/strelka/test/test.strelka.variants.TsTv.qual"
+            // ).match("files")
         }
     }
 }
