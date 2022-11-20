@@ -41,7 +41,7 @@ process GATK4_MARKDUPLICATES {
         --OUTPUT ${prefix}.bam \\
         --METRICS_FILE ${prefix}.metrics \\
         --TMP_DIR . \\
-        ${reference} --COMPRESSION_LEVEL 1 \\
+        ${reference} \\
         $args
 
 
