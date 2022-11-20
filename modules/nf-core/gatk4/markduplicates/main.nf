@@ -38,11 +38,15 @@ process GATK4_MARKDUPLICATES {
     """
     gatk --java-options "-Xmx${avail_mem}g" MarkDuplicates \\
         $input_list \\
-        --OUTPUT /dev/stdout \\
+        --OUTPUT ${prefix}.bam \\
         --METRICS_FILE ${prefix}.metrics \\
         --TMP_DIR . \\
         ${reference} --COMPRESSION_LEVEL 1 \\
-        $args | samtools view -Ch -T ${fasta} -o ${prefix} -
+        $args
+
+
+    samtools view -Ch -T ${fasta} -o ${prefix} ${prefix}.bam
+    samtools index ${prefix}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
