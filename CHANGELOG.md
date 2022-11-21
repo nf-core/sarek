@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- [#856](https://github.com/nf-core/sarek/pull/856) - Add annotation for R64-1-1
+- [#856](https://github.com/nf-core/sarek/pull/856) - Add annotation for `R64-1-1` and `UMD3.1`
 
 ### Changed
 
