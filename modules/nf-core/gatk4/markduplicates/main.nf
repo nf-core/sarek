@@ -44,19 +44,14 @@ process GATK4_MARKDUPLICATES {
         ${reference} \\
         $args
 
-
     samtools view -Ch -T ${fasta} -o ${prefix} ${prefix}.bam
+    rm ${prefix}.bam
     samtools index ${prefix}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         gatk4: \$(echo \$(gatk --version 2>&1) | sed 's/^.*(GATK) v//; s/ .*\$//')
+        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
     END_VERSIONS
     """
 }
-
-// piping to stdout works (just the md chunk without anything after it)
-//
-// if  [[ ${prefix} == *.cram ]]; then
-    // mv ${prefix}.bai ${prefix}.crai
-// fi
