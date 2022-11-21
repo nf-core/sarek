@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [dev]
+
+### Added
+
+### Changed
+
+- [#859](https://github.com/nf-core/sarek/pull/859) - Back to dev
+
+### Fixed
+
+### Deprecated
+
+### Removed
+
+### Dependencies
+
 ## [3.1.1](https://github.com/nf-core/sarek/releases/tag/3.1.1) - Lilla Luleälven
 
 Lilla Luleälven river's main affluent is Rapaätno.
