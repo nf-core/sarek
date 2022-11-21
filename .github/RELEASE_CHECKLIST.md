@@ -12,6 +12,8 @@
 4. Sync `dev` and checkout a new branch for the release
 5. Bump version:
    - `nf-core bump-version . <VERSION>`
+   - edit `docs/images/sarek_indices_subway.svg`
+   - generate a new `docs/images/sarek_indices_subway.png`
    - edit `docs/images/sarek_subway.svg`
    - generate a new `docs/images/sarek_subway.png`
    - edit `docs/images/sarek_workflow.svg`
@@ -28,6 +30,8 @@
     - `git checkout upstream/master -- CHANGELOG.md`
 14. Add a new `Unreleased` section in `CHANGELOG.md` for the `dev` version
 15. Checkout figures from `master`
+    - `git checkout upstream/master -- docs/images/sarek_indices_subway.svg`
+    - `git checkout upstream/master -- docs/images/sarek_indices_subway.png`
     - `git checkout upstream/master -- docs/images/sarek_subway.svg`
     - `git checkout upstream/master -- docs/images/sarek_subway.png`
     - `git checkout upstream/master -- docs/images/sarek_workflow.svg`
