@@ -7,9 +7,9 @@
    viewBox="0 0 744.09448 524.40944"
    id="svg4924"
    version="1.1"
-   inkscape:version="1.1 (c4e8f9e, 2021-05-24)"
+   inkscape:version="1.2.1 (1:1.2.1+202210291243+9c6d41e410)"
    sodipodi:docname="sarek_indices_subway.svg"
-   inkscape:export-filename="/Users/monarchy/Projects/Coding/sarek/docs/images/sarek_indices_subway.png"
+   inkscape:export-filename="sarek_indices_subway.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
@@ -2963,9 +2963,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.8521196"
-     inkscape:cx="407.21983"
-     inkscape:cy="359.69129"
+     inkscape:zoom="3.4084784"
+     inkscape:cx="148.01326"
+     inkscape:cy="148.45334"
      inkscape:document-units="px"
      inkscape:current-layer="g2380"
      showgrid="false"
@@ -2975,13 +2975,15 @@
      fit-margin-bottom="0"
      units="mm"
      width="200mm"
-     inkscape:window-width="1305"
-     inkscape:window-height="847"
+     inkscape:window-width="2560"
+     inkscape:window-height="1412"
      inkscape:window-x="0"
-     inkscape:window-y="25"
-     inkscape:window-maximized="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
      showguides="false"
-     inkscape:pagecheckerboard="0" />
+     inkscape:pagecheckerboard="0"
+     inkscape:showpageshadow="2"
+     inkscape:deskcolor="#d1d1d1" />
   <metadata
      id="metadata4929">
     <rdf:RDF>
@@ -3006,7 +3008,7 @@
     <text
        xml:space="preserve"
        id="text886"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:37.4999px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro';white-space:pre;shape-inside:url(#rect888);fill:#000000;fill-opacity:1;stroke:none;stroke-width:3.54331"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:37.4999px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro';white-space:pre;shape-inside:url(#rect888);display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:3.54331"
        x="-13.845469"
        y="64.38546" />
     <g
@@ -3029,7 +3031,7 @@
     <text
        xml:space="preserve"
        id="text886-8"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:37.4999px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro';white-space:pre;shape-inside:url(#rect888);fill:#000000;fill-opacity:1;stroke:none;stroke-width:3.54331"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:37.4999px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro';white-space:pre;shape-inside:url(#rect888);display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:3.54331"
        x="1499.5474"
        y="-819.54309" />
     <g
@@ -3054,14 +3056,14 @@
        style="font-style:normal;font-weight:normal;font-size:37.5px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.9375"
        xml:space="preserve" />
     <text
-       style="font-style:normal;font-weight:normal;font-size:37.5px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect3780);fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.45228"
+       style="font-style:normal;font-weight:normal;font-size:37.5px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect3780);display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.45228"
        id="text3778"
        xml:space="preserve"
        transform="scale(1,-1)"
        x="-2573.6731"
        y="-1627.6592" />
     <text
-       style="font-style:normal;font-weight:normal;font-size:37.5px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect3848);fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.45228"
+       style="font-style:normal;font-weight:normal;font-size:37.5px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect3848);display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.45228"
        id="text3846"
        xml:space="preserve"
        transform="scale(1,-1)"
@@ -3069,14 +3071,14 @@
        y="-1627.6592" />
     <text
        transform="scale(1,-1)"
-       style="font-style:normal;font-weight:normal;font-size:37.5px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect3273-4);fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.16182"
+       style="font-style:normal;font-weight:normal;font-size:37.5px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect3273-4);display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.16182"
        id="text3271-7"
        xml:space="preserve"
        x="-1999.4596"
        y="-1653.4977" />
     <text
        transform="scale(1,-1)"
-       style="font-style:normal;font-weight:normal;font-size:37.5px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect3279-5);fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.16182"
+       style="font-style:normal;font-weight:normal;font-size:37.5px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect3279-5);display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.16182"
        id="text3277-8"
        xml:space="preserve"
        x="-1999.4596"
@@ -3100,7 +3102,7 @@
     <text
        xml:space="preserve"
        id="text886-7"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:37.4999px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro';white-space:pre;shape-inside:url(#rect888);fill:#000000;fill-opacity:1;stroke:none;stroke-width:3.54331"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:37.4999px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro';white-space:pre;shape-inside:url(#rect888);display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:3.54331"
        x="434.97342"
        y="687.68268" />
     <g
@@ -3123,7 +3125,7 @@
     <text
        xml:space="preserve"
        id="text886-8-8"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:37.4999px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro';white-space:pre;shape-inside:url(#rect888);fill:#000000;fill-opacity:1;stroke:none;stroke-width:3.54331"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:37.4999px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro';white-space:pre;shape-inside:url(#rect888);display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:3.54331"
        x="1948.3662"
        y="-196.24586" />
     <g
@@ -3149,7 +3151,7 @@
     <text
        xml:space="preserve"
        id="text886-5"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:37.4999px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro';white-space:pre;shape-inside:url(#rect888);fill:#000000;fill-opacity:1;stroke:none;stroke-width:3.54331"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:37.4999px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro';white-space:pre;shape-inside:url(#rect888);display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:3.54331"
        x="320.59842"
        y="931.43268" />
     <g
@@ -3172,7 +3174,7 @@
     <text
        xml:space="preserve"
        id="text886-8-0"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:37.4999px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro';white-space:pre;shape-inside:url(#rect888);fill:#000000;fill-opacity:1;stroke:none;stroke-width:3.54331"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:37.4999px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro';white-space:pre;shape-inside:url(#rect888);display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:3.54331"
        x="1833.9912"
        y="47.504139" />
     <g
@@ -4759,7 +4761,7 @@
           <g
              id="g2380">
             <flowRoot
-               transform="matrix(1.9448497,0,0,1.9448497,-609.23694,200.85957)"
+               transform="matrix(1.9448497,0,0,1.9448497,-609.23694,205.47678)"
                style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;display:inline;fill:#000000;fill-opacity:1;stroke:none"
                id="flowRoot2353-8"
                xml:space="preserve"
@@ -4773,7 +4775,7 @@
                    width="150"
                    id="rect2357-0" /></flowRegion><flowPara
                  style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold'"
-                 id="flowPara2359-7">3.1.0</flowPara></flowRoot>
+                 id="flowPara2359-7">3.1.1</flowPara></flowRoot>
           </g>
         </g>
         <g
