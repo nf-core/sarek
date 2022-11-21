@@ -197,7 +197,8 @@
                     },
                     "gatk4/markduplicates": {
                         "branch": "master",
-                        "git_sha": "7578005a576f3ac1b0d4f10c037dde34cdedfb67"
+                        "git_sha": "7578005a576f3ac1b0d4f10c037dde34cdedfb67",
+                        "patch": "modules/nf-core/gatk4/markduplicates/gatk4-markduplicates.diff"
                     },
                     "gatk4/markduplicatesspark": {
                         "branch": "master",
