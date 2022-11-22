@@ -245,14 +245,14 @@ merge:
   - modules/nf-core/tabix/bgziptabix/main.nf
   - subworkflows/local/vcf_annotate_all/main.nf
   - subworkflows/local/vcf_annotate_ensemblvep/main.nf
-  - subworkflows/local/vcf_annotate_snpeff/main.nf
+  - subworkflows/nf-core/vcf_annotate_snpeff/main.nf
 
 ## snpeff
 snpeff:
   - conf/modules/annotate.config
   - modules/nf-core/snpeff/main.nf
   - modules/nf-core/tabix/bgziptabix/main.nf
-  - subworkflows/local/vcf_annotate_snpeff/main.nf
+  - subworkflows/nf-core/vcf_annotate_snpeff/main.nf
 
 ## vep
 vep:
