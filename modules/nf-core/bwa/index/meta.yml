@@ -15,10 +15,20 @@ tools:
       arxiv: arXiv:1303.3997
       licence: ["GPL-3.0-or-later"]
 input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing reference information.
+        e.g. [ id:'test', single_end:false ]
   - fasta:
       type: file
       description: Input genome fasta file
 output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing reference information.
+        e.g. [ id:'test', single_end:false ]
   - index:
       type: file
       description: BWA genome index files

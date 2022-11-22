@@ -218,7 +218,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     if (tools.split(',').contains('tiddit')){
         BAM_VARIANT_CALLING_SINGLE_TIDDIT(
             cram_recalibrated,
-            fasta,
+            fasta.map{ it -> [[id:it[0].baseName], it] },
             bwa
         )
 

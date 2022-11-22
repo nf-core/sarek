@@ -25,19 +25,47 @@ input:
       type: file
       description: BAM/CRAM/SAM file
       pattern: "*.{bam,cram,sam}"
-
+  - meta2:
+      type: map
+      description: |
+        Groovy Map containing reference information
+        e.g. [ id:'test' ]
+  - fasta:
+      type: file
+      description: Reference genome fasta file
+      pattern: "*.{fasta,fa}"
+  - interleave:
+      type: boolean
+      description: |
+        If true, the output is a single interleaved paired-end FASTQ
+        If false, the output split paired-end FASTQ
+      default: false
 output:
   - meta:
       type: map
       description: |
         Groovy Map containing sample information
         e.g. [ id:'test', single_end:false ]
-  - reads:
+  - fastq:
       type: file
       description: |
-        FASTQ files, which will be either a group of 4 files (read_1, read_2, other and singleton)
-        or a single interleaved .fq.gz file if the user chooses not to split the reads.
-      pattern: "*.fq.gz"
+        R1 and R2 FASTQ files
+      pattern: "*_{1,2}.fq.gz"
+  - fastq_interleaved:
+      type: file
+      description: |
+        Interleaved paired end FASTQ files
+      pattern: "*_interleaved.fq.gz"
+  - fastq_other:
+      type: file
+      description: |
+        FASTQ files with reads where the READ1 and READ2 FLAG bits set are either both set or both unset.
+      pattern: "*_other.fq.gz"
+  - fastq_singleton:
+      type: file
+      description: |
+        FASTQ files with singleton reads.
+      pattern: "*_singleton.fq.gz"
   - versions:
       type: file
       description: File containing software versions
@@ -46,3 +74,4 @@ output:
 authors:
   - "@lescai"
   - "@maxulysse"
+  - "@matthdsm"
