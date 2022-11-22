@@ -4,7 +4,7 @@
 
 include { VCF_ANNOTATE_ENSEMBLVEP                       } from '../vcf_annotate_ensemblvep/main'
 include { VCF_ANNOTATE_ENSEMBLVEP as VCF_ANNOTATE_MERGE } from '../vcf_annotate_ensemblvep/main'
-include { VCF_ANNOTATE_SNPEFF                           } from '../vcf_annotate_snpeff/main'
+include { VCF_ANNOTATE_SNPEFF                           } from '../subworkflows/nf-core/vcf_annotate_snpeff/main'
 
 workflow VCF_ANNOTATE_ALL {
     take:
