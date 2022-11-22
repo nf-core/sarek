@@ -15,7 +15,7 @@ workflow BAM_VARIANT_CALLING_MPILEUP {
     ch_versions = Channel.empty()
 
     keep_bcftools_mpileup = false
-    BCFTOOLS_MPILEUP(cram, fasta, keep_mpileup)
+    BCFTOOLS_MPILEUP(cram, fasta, keep_bcftools_mpileup)
     SAMTOOLS_MPILEUP(cram, fasta)
     vcfs = BCFTOOLS_MPILEUP.out.vcf.branch{
             intervals:    it[0].num_intervals > 1
