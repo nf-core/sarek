@@ -10,6 +10,10 @@
                         "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905",
                         "installed_by": ["modules"]
                     },
+                    "bcftools/mpileup": {
+                        "branch": "master",
+                        "git_sha": "6301e29d77e7ec7ce98b55b8a361b316a9a91bfe"
+                    },
                     "bcftools/sort": {
                         "branch": "master",
                         "git_sha": "78cf39939fbe160a1410c44a6c5946f9a4c56e7e",
