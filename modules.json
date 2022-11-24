@@ -10,6 +10,11 @@
                         "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905",
                         "installed_by": ["modules"]
                     },
+                    "bcftools/mpileup": {
+                        "branch": "master",
+                        "git_sha": "6301e29d77e7ec7ce98b55b8a361b316a9a91bfe",
+                        "installed_by": ["modules"]
+                    },
                     "bcftools/sort": {
                         "branch": "master",
                         "git_sha": "78cf39939fbe160a1410c44a6c5946f9a4c56e7e",
@@ -363,6 +368,7 @@
                         "branch": "master",
                         "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905",
                         "installed_by": ["modules"]
+                        "installed_by": ["modules", "vcf_annotate_snpeff"]
                     },
                     "strelka/germline": {
                         "branch": "master",
@@ -383,6 +389,7 @@
                         "branch": "master",
                         "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905",
                         "installed_by": ["modules"]
+                        "installed_by": ["modules", "vcf_annotate_snpeff"]
                     },
                     "tabix/tabix": {
                         "branch": "master",
@@ -408,6 +415,15 @@
                         "branch": "master",
                         "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905",
                         "installed_by": ["modules"]
+                    }
+                }
+            },
+            "subworkflows": {
+                "nf-core": {
+                    "vcf_annotate_snpeff": {
+                        "branch": "master",
+                        "git_sha": "df47164506202e7b994825a9bcd38d2ca5954e1a",
+                        "installed_by": ["subworkflows"]
                     }
                 }
             }
