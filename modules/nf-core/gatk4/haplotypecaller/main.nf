@@ -16,9 +16,10 @@ process GATK4_HAPLOTYPECALLER {
     path  dbsnp_tbi
 
     output:
-    tuple val(meta), path("*.vcf.gz"), emit: vcf
-    tuple val(meta), path("*.tbi")   , optional:true, emit: tbi
-    path "versions.yml"              , emit: versions
+    tuple val(meta), path("*.vcf.gz")       , emit: vcf
+    tuple val(meta), path("*.tbi")          , optional:true, emit: tbi
+    tuple val(meta), path("*.realigned.bam"), optional:true, emit: bam
+    path "versions.yml"                     , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -29,6 +30,7 @@ process GATK4_HAPLOTYPECALLER {
     def dbsnp_command = dbsnp ? "--dbsnp $dbsnp" : ""
     def interval_command = intervals ? "--intervals $intervals" : ""
     def dragstr_command = dragstr_model ? "--dragstr-params-path $dragstr_model" : ""
+    def bamout_command = args.contains("--bam-writer-type") ? "--bam-output ${prefix.replaceAll('.g\\s*$', '')}.realigned.bam" : ""
 
     def avail_mem = 3
     if (!task.memory) {
@@ -44,6 +46,7 @@ process GATK4_HAPLOTYPECALLER {
         $dbsnp_command \\
         $interval_command \\
         $dragstr_command \\
+        $bamout_command \\
         --tmp-dir . \\
         $args
 
