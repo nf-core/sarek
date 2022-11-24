@@ -23,6 +23,7 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
 
     ch_versions = Channel.empty()
     filtered_vcf = Channel.empty()
+    realigned_bam = Channel.empty()
 
     GATK4_HAPLOTYPECALLER(
         cram,
