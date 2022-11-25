@@ -8,8 +8,8 @@
     # binary changes md5sums on reruns.
     - path: results/annotation/test/test_VEP.ann.vcf.gz.tbi
       md5sum: 4cb176febbc8c26d717a6c6e67b9c905
-    - path: results/reports/EnsemblVEP/test/test_VEP.summary.html
-      # test_VEP.summary.html changes md5sums on reruns.
+    - path: results/reports/EnsemblVEP/test/test_VEP.ann.summary.html
+      # test_VEP.ann.summary.html changes md5sums on reruns.
       contains:
         ["<tr><td>Input file</td><td>test.vcf.gz</td></tr><tr><td>Output file</td><td>test_VEP.ann.vcf</td></tr>"]
 - name: Run VEP with fasta
@@ -22,7 +22,7 @@
     # binary changes md5sums on reruns.
     - path: results/annotation/test/test_VEP.ann.vcf.gz.tbi
       md5sum: 4cb176febbc8c26d717a6c6e67b9c905
-    - path: results/reports/EnsemblVEP/test/test_VEP.summary.html
+    - path: results/reports/EnsemblVEP/test/test_VEP.ann.summary.html
       # text-based file changes md5sums on reruns.
       contains:
         ["<tr><td>Input file</td><td>test.vcf.gz</td></tr><tr><td>Output file</td><td>test_VEP.ann.vcf</td></tr>"]
