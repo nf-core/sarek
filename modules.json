@@ -119,8 +119,8 @@
                     },
                     "ensemblvep": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905",
-                        "installed_by": ["modules"]
+                        "git_sha": "69f158610f25a3bff40b3eadfedd3ac67a3cfc23",
+                        "installed_by": ["modules", "vcf_annotate_ensemblvep"]
                     },
                     "fastp": {
                         "branch": "master",
@@ -366,7 +366,7 @@
                     },
                     "snpeff": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905",
+                        "git_sha": "262f7951d491a7f60ac1ae4a558fc2d725be9fc9",
                         "installed_by": ["modules", "vcf_annotate_snpeff"]
                     },
                     "strelka/germline": {
@@ -392,7 +392,7 @@
                     "tabix/tabix": {
                         "branch": "master",
                         "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905",
-                        "installed_by": ["modules"]
+                        "installed_by": ["modules", "vcf_annotate_ensemblvep"]
                     },
                     "tiddit/sv": {
                         "branch": "master",
@@ -418,9 +418,14 @@
             },
             "subworkflows": {
                 "nf-core": {
+                    "vcf_annotate_ensemblvep": {
+                        "branch": "master",
+                        "git_sha": "69f158610f25a3bff40b3eadfedd3ac67a3cfc23",
+                        "installed_by": ["subworkflows"]
+                    },
                     "vcf_annotate_snpeff": {
                         "branch": "master",
-                        "git_sha": "df47164506202e7b994825a9bcd38d2ca5954e1a",
+                        "git_sha": "8c343b3c8a0925949783dc547666007c245c235b",
                         "installed_by": ["subworkflows"]
                     }
                 }
