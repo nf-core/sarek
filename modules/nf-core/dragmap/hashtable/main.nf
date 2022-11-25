@@ -4,15 +4,15 @@ process DRAGMAP_HASHTABLE {
 
     conda (params.enable_conda ? "bioconda::dragmap=1.2.1" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/dragmap:1.2.1--hd4ca14e_0':
-        'quay.io/biocontainers/dragmap:1.2.1--hd4ca14e_0' }"
+        'https://depot.galaxyproject.org/singularity/dragmap:1.3.0--h72d16da_1':
+        'quay.io/biocontainers/dragmap:1.3.0--h72d16da_1' }"
 
     input:
-    path fasta
+    tuple val(meta), path(fasta)
 
     output:
-    path "dragmap"      , emit: hashmap
-    path "versions.yml" , emit: versions
+    tuple val(meta), path("dragmap")    , emit: hashmap
+    path "versions.yml"                 , emit: versions
 
     when:
     task.ext.when == null || task.ext.when

@@ -118,12 +118,14 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
         MPILEUP_NORMAL(
             cram_normal_intervals_no_index,
-            fasta
+            fasta,
+            dict
         )
 
         MPILEUP_TUMOR(
             cram_tumor_intervals_no_index,
-            fasta
+            fasta,
+            dict
         )
 
         mpileup_normal = MPILEUP_NORMAL.out.mpileup
@@ -273,7 +275,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             [meta, tumor_cram, tumor_crai]
         }
 
-        BAM_VARIANT_CALLING_SOMATIC_TIDDIT(cram_normal, cram_tumor, fasta, bwa)
+        BAM_VARIANT_CALLING_SOMATIC_TIDDIT(cram_normal, cram_tumor, fasta.map{ it -> [[id:it[0].baseName], it] }, bwa)
         tiddit_vcf = BAM_VARIANT_CALLING_SOMATIC_TIDDIT.out.tiddit_vcf
         ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_SOMATIC_TIDDIT.out.versions)
     }

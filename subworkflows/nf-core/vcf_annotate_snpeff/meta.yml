@@ -1,0 +1,40 @@
+name: vcf_annotate_snpeff
+description: Perform annotation with snpEff and bgzip + tabix index the resulting VCF file
+keywords:
+  - vcf
+  - annotation
+  - snpeff
+modules:
+  - snpeff
+  - tabix/bgziptabix
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - vcf:
+      type: file
+      description: vcf file
+      pattern: "*.{vcf}"
+  - snpeff_db:
+      type: value
+      description: db version to use
+  - snpeff_cache:
+      type: file
+      description: path to root cache folder for snpEff (optional)
+output:
+  - vcf_tbi:
+      type: file
+      description: Compressed vcf file + tabix index
+      pattern: "[ *{.vcf.gz,vcf.gz.tbi} ]"
+  - reports:
+      type: file
+      description: html reports
+      pattern: "*.html"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@drpatelh"

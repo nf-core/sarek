@@ -40,6 +40,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     genotype_gvcf       = Channel.empty()
     haplotypecaller_vcf = Channel.empty()
     manta_vcf           = Channel.empty()
+    mpileup_vcf         = Channel.empty()
     strelka_vcf         = Channel.empty()
     tiddit_vcf          = Channel.empty()
 
@@ -97,11 +98,12 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
 
         BAM_VARIANT_CALLING_MPILEUP(
             cram_intervals_no_index,
-            fasta
+            fasta,
+            dict
         )
 
-        mpileup_germline = BAM_VARIANT_CALLING_MPILEUP.out.mpileup
-        ch_versions      = ch_versions.mix(BAM_VARIANT_CALLING_MPILEUP.out.versions)
+        mpileup_vcf = BAM_VARIANT_CALLING_MPILEUP.out.vcf
+        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_MPILEUP.out.versions)
     }
 
     // CNVKIT
@@ -229,7 +231,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     if (tools.split(',').contains('tiddit')){
         BAM_VARIANT_CALLING_SINGLE_TIDDIT(
             cram_recalibrated,
-            fasta,
+            fasta.map{ it -> [[id:it[0].baseName], it] },
             bwa
         )
 
@@ -244,6 +246,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     genotype_gvcf
     haplotypecaller_vcf
     manta_vcf
+    mpileup_vcf
     strelka_vcf
     tiddit_vcf
 

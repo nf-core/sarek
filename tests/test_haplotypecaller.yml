@@ -17,7 +17,7 @@
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
       should_exist: false
     - path: results/reports/bcftools/haplotypecaller/test/test.haplotypecaller.filtered.bcftools_stats.txt
-      md5sum: f9cc3809106a42601eafd3b09900750a
+      md5sum: 81df44406e8c015ba45be5cbf53760c8
     - path: results/reports/vcftools/haplotypecaller/test/test.haplotypecaller.filtered.FILTER.summary
       md5sum: 4e2ceea7f3ff998004691fd71192d9ee
     - path: results/reports/vcftools/haplotypecaller/test/test.haplotypecaller.filtered.TsTv.count
@@ -60,7 +60,7 @@
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
       should_exist: false
     - path: results/reports/bcftools/haplotypecaller/test/test.haplotypecaller.filtered.bcftools_stats.txt
-      md5sum: f9cc3809106a42601eafd3b09900750a
+      md5sum: 81df44406e8c015ba45be5cbf53760c8
     - path: results/reports/vcftools/haplotypecaller/test/test.haplotypecaller.filtered.FILTER.summary
       md5sum: 4e2ceea7f3ff998004691fd71192d9ee
     - path: results/reports/vcftools/haplotypecaller/test/test.haplotypecaller.filtered.TsTv.count
@@ -92,7 +92,7 @@
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
       should_exist: false
     - path: results/reports/bcftools/haplotypecaller/joint_variant_calling/joint_germline.bcftools_stats.txt
-      md5sum: f91f185319e00108870911e0ce1a7ed6
+      md5sum: 86b04ea7a8c3c4b8d217a42e868a4f46
     - path: results/reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline.FILTER.summary
       md5sum: 2a4eb7abfb2e64e45d53fdda17530b7f
     - path: results/reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline.TsTv.count

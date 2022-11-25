@@ -5,7 +5,50 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [dev](https://github.com/nf-core/sarek/tree/dev)
+## [dev]
+
+### Added
+
+- [#864](https://github.com/nf-core/sarek/pull/864) - Added possibilities to export assembled haplotypes and locally realigned reads
+
+### Changed
+
+- [#859](https://github.com/nf-core/sarek/pull/859) - Back to dev
+
+### Fixed
+
+### Deprecated
+
+### Removed
+
+### Dependencies
+
+## [3.1.1](https://github.com/nf-core/sarek/releases/tag/3.1.1) - Lilla Luleälven
+
+Lilla Luleälven river's main affluent is Rapaätno.
+
+### Added
+
+- [#856](https://github.com/nf-core/sarek/pull/856) - Add annotation for `R64-1-1` and `UMD3.1`
+
+### Changed
+
+- [#855](https://github.com/nf-core/sarek/pull/855) - Speed up duplicate marking by using `samtools` for CRAM conversion
+- [#858](https://github.com/nf-core/sarek/pull/858) - Prepare release `3.1.1`
+
+### Fixed
+
+- [#851](https://github.com/nf-core/sarek/pull/851) - Fix `schema` definition `None` for `cf_chrom_len`
+
+### Deprecated
+
+### Removed
+
+### Dependencies
+
+## [3.1](https://github.com/nf-core/sarek/releases/tag/3.1) - Rapaätno
+
+Rapaätno is the river you can see from the Skierfe mountain.
 
 ### Added
 
@@ -13,6 +56,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#774](https://github.com/nf-core/sarek/pull/774) - Add logo for Danish National Genome Center
 - [#783](https://github.com/nf-core/sarek/pull/783) - Add paths for chr length used by controlfreec to GRCh38 config
 - [#820](https://github.com/nf-core/sarek/pull/820) - Improve documentation on scatter/gather effects
+- [#833](https://github.com/nf-core/sarek/pull/833) - Add name to CI tests to avoid confusion between runs
 
 ### Changed
 
@@ -27,7 +71,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#806](https://github.com/nf-core/sarek/pull/806) - Split up `modules.config` file
 - [#810](https://github.com/nf-core/sarek/pull/810) - Update CHANGELOG
 - [#821](https://github.com/nf-core/sarek/pull/821) - Change `replace` to `putIfAbsent` for automatic search of `input` if none is provided to avoid overwriting values
+- [#822](https://github.com/nf-core/sarek/pull/822) - Update modules with `nf-core modules update -a`: Update GATK version to 4.3.0
 - [#827](https://github.com/nf-core/sarek/pull/827) - Add `--genomicsdb-shared-posixfs-optimizations true --bypass-feature-reader` to `GenomicsDB` parameters to speed up the analysis
+- [#842](https://github.com/nf-core/sarek/pull/842) - Increase default memory for samtools stats
+- [#844](https://github.com/nf-core/sarek/pull/844) - All small scale tests are run on PR to `master`
 
 ### Fixed
 
@@ -45,10 +92,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#814](https://github.com/nf-core/sarek/pull/814) - Fix readgroups when using DragMap together with FreeBayes or Mutect2 (see issue [#780](https://github.com/nf-core/sarek/issues/780))
 - [#817](https://github.com/nf-core/sarek/pull/817) - Fix CNVKit run on tumor-only sample to be run on all samples
 - [#828](https://github.com/nf-core/sarek/pull/817) - Fix issue [#763](https://github.com/nf-core/sarek/issues/763) to run variantcalling when starting form step recalibration
+- [#837](https://github.com/nf-core/sarek/pull/837) - Fix Freebayes config selector after subworkflow renaming
+- [#839](https://github.com/nf-core/sarek/pull/839) - Remove `copyTo` method that fails on S3 when the source and destination buckets are in different regions
+- [#841](https://github.com/nf-core/sarek/pull/841) - Fix path priority for `cf_chrom_len`
 
 ### Deprecated
 
 ### Removed
+
+### Dependencies
+
+| Dependency    | Old version | New version |
+| ------------- | ----------- | ----------- |
+| `bcftools`    | 1.15.1      | 1.16        |
+| `deepvariant` | 1.3.0       | 1.4.0       |
+| `freebayes`   | 1.3.5       | 1.3.6       |
+| `gatk4`       | 4.2.6.1     | 4.3.0.0     |
+| `samtools`    | 1.15.1      | 1.16.1      |
+| `tiddit`      | 3.1.0       | 3.3.2       |
 
 ## [3.0.2](https://github.com/nf-core/sarek/releases/tag/3.0.2) - Lájtávrre
 

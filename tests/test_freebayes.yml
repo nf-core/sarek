@@ -263,9 +263,9 @@
     - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.qual
       contains: ["0	0	0	-nan	82	29	2.82759", "1.1	196	35	5.6	57	24	2.375", "3.16	205	38	5.39474	49	20	2.45"]
     - path: results/reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.FILTER.summary
-      md5sum: ac61b178a3e15efb861b34f16d80fb67
+      md5sum: 84039d55edf0981d6b9b81252aff6741
     - path: results/reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.TsTv.count
-      md5sum: d7c0e0afd59f87dc4685487c0d497575
+      md5sum: 6c6038d43eb7fa766909b495979d120e
     - path: results/reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.TsTv.qual
     # the text-based file test2_vs_test.freebayes.TsTv.qual seemingly changes content on reruns!
     - path: results/variant_calling/freebayes/test/test.freebayes.vcf.gz
@@ -377,9 +377,9 @@
     - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.qual
       contains: ["0	0	0	-nan	325	86	3.77907", "68.8262	377	88	4.28409	20	10	2", "321.335	393	96	4.09375	4	2	2"]
     - path: results/reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.FILTER.summary
-      md5sum: 59e9d340b588537655020147e6d93e29
+      md5sum: d2d717fef7c18ef9b40bbbc5c5bbf101
     - path: results/reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.TsTv.count
-      md5sum: 61ad00bb8cd47592b0671fabe26cf8cd
+      md5sum: e09dacc71bf72254e3aace1cc7c1e16d
     - path: results/reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.TsTv.qual
     # the text-based file test2_vs_test.freebayes.TsTv.qual seemingly changes content on reruns!
     - path: results/variant_calling/freebayes/test/test.freebayes.vcf.gz

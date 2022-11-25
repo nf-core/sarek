@@ -9,6 +9,7 @@ process FASTP {
 
     input:
     tuple val(meta), path(reads)
+    path  adapter_fasta
     val   save_trimmed_fail
     val   save_merged
 
@@ -27,6 +28,7 @@ process FASTP {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
+    def adapter_list = adapter_fasta ? "--adapter_fasta ${adapter_fasta}" : ""
     def fail_fastq = save_trimmed_fail && meta.single_end ? "--failed_out ${prefix}.fail.fastq.gz" : save_trimmed_fail && !meta.single_end ? "--unpaired1 ${prefix}_1.fail.fastq.gz --unpaired2 ${prefix}_2.fail.fastq.gz" : ''
     // Added soft-links to original fastqs for consistent naming in MultiQC
     // Use single ended for interleaved. Add --interleaved_in in config.
@@ -40,6 +42,7 @@ process FASTP {
             --thread $task.cpus \\
             --json ${prefix}.fastp.json \\
             --html ${prefix}.fastp.html \\
+            $adapter_list \\
             $fail_fastq \\
             $args \\
             2> ${prefix}.fastp.log \\
@@ -61,6 +64,7 @@ process FASTP {
             --thread $task.cpus \\
             --json ${prefix}.fastp.json \\
             --html ${prefix}.fastp.html \\
+            $adapter_list \\
             $fail_fastq \\
             $args \\
             2> ${prefix}.fastp.log
@@ -82,6 +86,7 @@ process FASTP {
             --out2 ${prefix}_2.fastp.fastq.gz \\
             --json ${prefix}.fastp.json \\
             --html ${prefix}.fastp.html \\
+            $adapter_list \\
             $fail_fastq \\
             $merge_fastq \\
             --thread $task.cpus \\

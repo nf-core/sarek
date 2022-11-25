@@ -7,13 +7,13 @@
   files:
     - path: results/multiqc
     - path: results/reports/bcftools/deepvariant/sample1/sample1.deepvariant.bcftools_stats.txt
-      md5sum: 433aa535e9ce72acddca7be36b12238b
+      md5sum: b439cca4aa3ff9d28c9091e384128e54
     - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.FILTER.summary
-      md5sum: f97d30123c7e20c704e9a8a73170661e
+      md5sum: 6830ef43decc97aee6a32ad4626ff0d7
     - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.TsTv.count
-      md5sum: 1f546d259ddc493736507b35ee520dc4
+      md5sum: 4479b87635bdaad485af00949fe5f999
     - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.TsTv.qual
-      md5sum: 437d6a802b10f05fa1601166eb6b7d48
+      md5sum: 9aa8f0b60b0beeda80f2203afe84da99
     - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.g.vcf.gz
     # binary changes md5sums on reruns.
     - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.g.vcf.gz.tbi
@@ -40,13 +40,13 @@
     - path: results/no_intervals.bed.gz.tbi
       md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/reports/bcftools/deepvariant/sample1/sample1.deepvariant.bcftools_stats.txt
-      md5sum: 0d8602284347cb5acf1c264a301f5093
+      md5sum: 0433be69ade0cd64b4adc1b51d8c3530
     - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.FILTER.summary
-      md5sum: cffb486232d067db80616c3129bf1322
+      md5sum: a23f59a596d6c4715401730bb64a13d9
     - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.TsTv.count
-      md5sum: bbd541f33c490df06fee5feb2f6e2c7f
+      md5sum: b47b737f8838b4879d629d1d7c2429fc
     - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.TsTv.qual
-      md5sum: 037063e030edec5fb4e784b1f6c8954f
+      md5sum: 099766a58050c7a709602e4519ec4705
     - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.g.vcf.gz
     # binary changes md5sums on reruns.
     - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.g.vcf.gz.tbi
