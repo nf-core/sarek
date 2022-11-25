@@ -164,8 +164,11 @@ haplotypecaller:
   - modules/nf-core/gatk4/haplotypecaller/main.nf
   - modules/nf-core/gatk4/mergevcfs/main.nf
   - modules/nf-core/gatk4/variantrecalibrator/main.nf
+  - modules/nf-core/samtools/index/main.nf
+  - modules/nf-core/samtools/merge/main.nf
   - modules/nf-core/tabix/tabix/main.nf
   - subworkflows/local/bam_joint_calling_germline_gatk/main.nf
+  - subworkflows/local/bam_merge_index_samtools/main.nf
   - subworkflows/local/bam_variant_calling_haplotypecaller/main.nf
   - subworkflows/local/vcf_variant_filtering_gatk/main.nf
 

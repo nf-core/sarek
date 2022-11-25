@@ -73,6 +73,10 @@ output:
       type: file
       description: Index of VCF file
       pattern: "*.vcf.gz.tbi"
+  - bam:
+      type: file
+      description: Assembled haplotypes and locally realigned reads
+      pattern: "*.realigned.bam"
 
 authors:
   - "@suzannejin"
