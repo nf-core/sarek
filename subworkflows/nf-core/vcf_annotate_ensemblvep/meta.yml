@@ -44,11 +44,11 @@ output:
   - json:
       type: file
       description: json file
-      pattern: "[ *{.json} ]"
+      pattern: "[ *{.json.gz} ]"
   - tab:
       type: file
       description: tab file
-      pattern: "[ *{.tab} ]"
+      pattern: "[ *{.tab.gz} ]"
   - reports:
       type: file
       description: html reports
@@ -59,3 +59,4 @@ output:
       pattern: "versions.yml"
 authors:
   - "@maxulysse"
+  - "@matthdsm"
