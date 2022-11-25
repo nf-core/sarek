@@ -12,7 +12,7 @@
       # test_snpEff_VEP.ann.summary.html changes md5sums on reruns.
       contains:
         [
-          "<tr><td>Input file</td><td>test_snpEff.ann.vcf.gz</td></tr><tr><td>Output file</td><td>test_snpEff_VEP.ann.vcf.gz</td></tr>",
+          "test_snpEff.ann.vcf.gz</td></tr><tr><td>Output file</td><td>test_snpEff_VEP.ann.vcf.gz</td></tr>",
           "General statistics",
           "Lines of input read",
           "Variants processed",
