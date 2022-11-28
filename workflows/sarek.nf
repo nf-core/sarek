@@ -1003,8 +1003,7 @@ workflow SAREK {
             rt_file
         )
 
-
-        if (params.concatenate_vcf) {
+        if (params.concatenate_vcfs) {
             // Concatenate vcf-files
 
             // Gather vcfs and vcf-tbis for concatenating germline-vcfs
