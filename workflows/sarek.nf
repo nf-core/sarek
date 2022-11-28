@@ -1027,6 +1027,10 @@ workflow SAREK {
             )
 
             germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(
+                BAM_VARIANT_CALLING_GERMLINE_ALL.out.mpileup_vcf.join(BAM_VARIANT_CALLING_GERMLINE_ALL.out.mpileup_vcf_tbi)
+            )
+
+            germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(
                 BAM_VARIANT_CALLING_GERMLINE_ALL.out.strelka_vcf.join(BAM_VARIANT_CALLING_GERMLINE_ALL.out.strelka_vcf_tbi)
             )
 
@@ -1046,15 +1050,16 @@ workflow SAREK {
                     new_meta4.remove('sample')
                     def new_meta5 = new_meta4.clone()
                     new_meta5.remove('status')
-                    def new_meta6 = new_meta5.clone()
-                    new_meta6.remove('num_intervals')   // TO-DO: Better way of removing the unwanted entries in the dict "meta"?
-                                                        // The remaining entries should just be id, patient and sex
-                    [new_meta6, vcf, tbi]
+                    def new_meta6 = new_meta5.clone()   // TO-DO: Better way of removing the unwanted entries in the dict "meta"?
+                    new_meta6.remove('num_intervals')   // The remaining entries should just be id, patient and sex
+                    def new_meta7 = new_meta6.clone()
+                    new_meta7.remove('data_type')
+                    [new_meta7, vcf, tbi]
                 }.groupTuple()
 
+            germline_vcfs_with_tbis.view()
+
             CONCAT_GERMLINE_VCFS(germline_vcfs_with_tbis)
-            // TO-DO: Similar concatenation should also be done for tumor-vcfs, somatic-vcfs and something (?)
-            // TO-DO: Should all different kinds of variant be concatenated? Probably not.
         }
 
         // Gather vcf files for annotation and QC

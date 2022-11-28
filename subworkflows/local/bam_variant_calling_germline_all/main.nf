@@ -37,7 +37,6 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     //TODO: Temporary until the if's can be removed and printing to terminal is prevented with "when" in the modules.config
     deepvariant_vcf     = Channel.empty()
     freebayes_vcf       = Channel.empty()
-    genotype_gvcf       = Channel.empty()
     haplotypecaller_vcf = Channel.empty()
     manta_vcf           = Channel.empty()
     mpileup_vcf         = Channel.empty()
@@ -48,6 +47,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     freebayes_vcf_tbi       = Channel.empty()
     haplotypecaller_vcf_tbi = Channel.empty()
     manta_vcf_tbi           = Channel.empty()
+    mpileup_vcf_tbi         = Channel.empty()
     strelka_vcf_tbi         = Channel.empty()
     tiddit_vcf_tbi          = Channel.empty()
 
@@ -103,6 +103,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         )
 
         mpileup_vcf = BAM_VARIANT_CALLING_MPILEUP.out.vcf
+        mpileup_vcf_tbi = BAM_VARIANT_CALLING_MPILEUP.out.tbi
         ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_MPILEUP.out.versions)
     }
 
@@ -243,7 +244,6 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     emit:
     deepvariant_vcf
     freebayes_vcf
-    genotype_gvcf
     haplotypecaller_vcf
     manta_vcf
     mpileup_vcf
@@ -254,6 +254,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     freebayes_vcf_tbi
     haplotypecaller_vcf_tbi
     manta_vcf_tbi
+    mpileup_vcf_tbi
     strelka_vcf_tbi
     tiddit_vcf_tbi
 
