@@ -50,17 +50,17 @@ output:
       type: file
       description: |
         annotated vcf (optional)
-      pattern: "*.ann.vcf"
+      pattern: "*.ann.vcf.gz"
   - tab:
       type: file
       description: |
         tab file with annotated variants (optional)
-      pattern: "*.ann.tab"
+      pattern: "*.ann.tab.gz"
   - json:
       type: file
       description: |
         json file with annotated variants (optional)
-      pattern: "*.ann.json"
+      pattern: "*.ann.json.gz"
   - report:
       type: file
       description: VEP report file
@@ -71,3 +71,4 @@ output:
       pattern: "versions.yml"
 authors:
   - "@maxulysse"
+  - "@matthdsm"
