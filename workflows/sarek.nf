@@ -267,7 +267,12 @@ include { BAM_VARIANT_CALLING_TUMOR_ONLY_ALL             } from '../subworkflows
 // Variant calling on tumor/normal pair
 include { BAM_VARIANT_CALLING_SOMATIC_ALL                } from '../subworkflows/local/bam_variant_calling_somatic_all/main'
 
-include { BCFTOOLS_CONCAT as CONCAT_GERMLINE_VCFS        } from '../modules/nf-core/bcftools/concat/main'
+// Concatenation of germline vcf-files
+include { BCFTOOLS_CONCAT                                } from '../modules/nf-core/bcftools/concat/main'
+
+include { BCFTOOLS_SORT as GERMLINE_VCFS_CONCAT_SORT     } from '../modules/nf-core/bcftools/sort/main'
+
+include { TABIX_TABIX as TABIX_GERMLINE_VCFS_CONCAT_SORT } from '../modules/nf-core/tabix/tabix/main'
 
 // QC on VCF files
 include { VCF_QC_BCFTOOLS_VCFTOOLS                       } from '../subworkflows/local/vcf_qc_bcftools_vcftools/main'
@@ -1056,7 +1061,9 @@ workflow SAREK {
                     [new_meta7, vcf, tbi]
                 }.groupTuple()
 
-            CONCAT_GERMLINE_VCFS(germline_vcfs_with_tbis)
+            BCFTOOLS_CONCAT(germline_vcfs_with_tbis)
+            GERMLINE_VCFS_CONCAT_SORT(BCFTOOLS_CONCAT.out.vcf)
+            TABIX_GERMLINE_VCFS_CONCAT_SORT(GERMLINE_VCFS_CONCAT_SORT.out.vcf)
         }
 
         // Gather vcf files for annotation and QC
