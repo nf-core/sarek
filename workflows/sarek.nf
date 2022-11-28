@@ -1056,8 +1056,6 @@ workflow SAREK {
                     [new_meta7, vcf, tbi]
                 }.groupTuple()
 
-            germline_vcfs_with_tbis.view()
-
             CONCAT_GERMLINE_VCFS(germline_vcfs_with_tbis)
         }
 
