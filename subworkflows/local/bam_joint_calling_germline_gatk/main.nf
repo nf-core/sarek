@@ -94,7 +94,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
                 variantcaller:  "haplotypecaller"
             ], vcf ]
         }.groupTuple(),
-        dict.map{ it -> [[id:it[0].baseName], it})
+        dict.map{ it -> [[id:it[0].baseName], it]})
 
     vqsr_input = Channel.empty().mix(
         MERGE_GENOTYPEGVCFS.out.vcf.join(MERGE_GENOTYPEGVCFS.out.tbi),
@@ -180,7 +180,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
     //
     MERGE_VQSR(
         vqsr_snp_vcf.mix(vqsr_indel_vcf).groupTuple(),
-        dict.map{ it -> [[id:it[0].baseName], it}
+        dict.map{ it -> [[id:it[0].baseName], it]}
     )
 
     ch_versions = ch_versions.mix(GATK4_GENOMICSDBIMPORT.out.versions)

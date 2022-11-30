@@ -59,7 +59,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MANTA {
                 vcf]
 
             }.groupTuple(),
-        dict.map{ it -> [[id:it[0].baseName], it})
+        dict.map{ it -> [[id:it[0].baseName], it]})
 
     MERGE_MANTA_SMALL_INDELS(
         manta_candidate_sv_vcf.intervals.map{ meta, vcf ->
@@ -76,7 +76,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MANTA {
                 vcf]
 
             }.groupTuple(),
-        dict.map{ it -> [[id:it[0].baseName], it})
+        dict.map{ it -> [[id:it[0].baseName], it]})
 
     MERGE_MANTA_DIPLOID(
         manta_diploid_sv_vcf.intervals.map{ meta, vcf ->
@@ -101,7 +101,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MANTA {
                 vcf]
 
             }.groupTuple(),
-        dict.map{ it -> [[id:it[0].baseName], it})
+        dict.map{ it -> [[id:it[0].baseName], it]})
 
     MERGE_MANTA_SOMATIC(
         manta_somatic_sv_vcf.intervals.map{ meta, vcf ->
@@ -118,7 +118,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MANTA {
                 vcf]
 
             }.groupTuple(),
-        dict.map{ it -> [[id:it[0].baseName], it})
+        dict.map{ it -> [[id:it[0].baseName], it]})
 
     // Mix output channels for "no intervals" and "with intervals" results
     manta_vcf = Channel.empty().mix(

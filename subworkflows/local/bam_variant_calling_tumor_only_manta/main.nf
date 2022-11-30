@@ -49,7 +49,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA {
                 vcf]
 
             }.groupTuple(),
-        dict.map{ it -> [[id:it[0].baseName], it})
+        dict.map{ it -> [[id:it[0].baseName], it]})
 
     MERGE_MANTA_SV(
         manta_candidate_sv_vcf.intervals.map{ meta, vcf ->
@@ -66,7 +66,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA {
                 vcf]
 
             }.groupTuple(),
-        dict.map{ it -> [[id:it[0].baseName], it})
+        dict.map{ it -> [[id:it[0].baseName], it]})
 
     MERGE_MANTA_TUMOR(
         manta_tumor_sv_vcf.intervals.map{ meta, vcf ->
@@ -83,7 +83,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA {
                 vcf]
 
             }.groupTuple(),
-        dict.map{ it -> [[id:it[0].baseName], it})
+        dict.map{ it -> [[id:it[0].baseName], it]})
 
     // Mix output channels for "no intervals" and "with intervals" results
     // Only tumor sv should get annotated
