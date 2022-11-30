@@ -49,7 +49,7 @@ workflow BAM_VARIANT_CALLING_DEEPVARIANT {
 
                 [groupKey(new_meta, meta.num_intervals), vcf]
             }.groupTuple(),
-        dict)
+        dict.map{ it -> [[id:it[0].baseName], it})
 
     MERGE_DEEPVARIANT_GVCF(
         deepvariant_gvcf_out.intervals
@@ -66,7 +66,7 @@ workflow BAM_VARIANT_CALLING_DEEPVARIANT {
 
                 [groupKey(new_meta, meta.num_intervals), vcf]
             }.groupTuple(),
-        dict)
+        dict.map{ it -> [[id:it[0].baseName], it})
 
     // Mix output channels for "no intervals" and "with intervals" results
     deepvariant_gvcf = Channel.empty().mix(
