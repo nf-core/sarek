@@ -1,6 +1,38 @@
 # default_extended
 
-default_extended:
+tumor_normal_pair:
+  - conf/modules/**
+  - modules/**
+  - subworkflows/**
+  - workflows/**
+  - nextflow.config
+  - main.nf
+
+save_mapped_only:
+  - conf/modules/**
+  - modules/**
+  - subworkflows/**
+  - workflows/**
+  - nextflow.config
+  - main.nf
+
+save_output_as_bam_only:
+  - conf/modules/**
+  - modules/**
+  - subworkflows/**
+  - workflows/**
+  - nextflow.config
+  - main.nf
+
+skip_all_qc:
+  - conf/modules/**
+  - modules/**
+  - subworkflows/**
+  - workflows/**
+  - nextflow.config
+  - main.nf
+
+skip_markduplicates:
   - conf/modules/**
   - modules/**
   - subworkflows/**
