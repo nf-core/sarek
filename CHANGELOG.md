@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - [#870](https://github.com/nf-core/sarek/pull/870) - Fix output for locally realigned reads from haplotypecaller
+- [#874](https://github.com/nf-core/sarek/pull/874) - Remove `CITATION.cff`
 
 ### Deprecated
 
