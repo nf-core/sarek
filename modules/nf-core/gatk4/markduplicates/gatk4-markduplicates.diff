@@ -1,0 +1,45 @@
+Changes in module 'nf-core/gatk4/markduplicates'
+--- modules/nf-core/gatk4/markduplicates/main.nf
++++ modules/nf-core/gatk4/markduplicates/main.nf
+@@ -2,10 +2,10 @@
+     tag "$meta.id"
+     label 'process_medium'
+ 
+-    conda (params.enable_conda ? "bioconda::gatk4=4.3.0.0" : null)
++    conda (params.enable_conda ? "bioconda::gatk4=4.3.0.0 bioconda::samtools=1.16.1" : null)
+     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+-        'https://depot.galaxyproject.org/singularity/gatk4:4.3.0.0--py36hdfd78af_0':
+-        'quay.io/biocontainers/gatk4:4.3.0.0--py36hdfd78af_0' }"
++        'https://depot.galaxyproject.org/singularity/mulled-v2-d9e7bad0f7fbc8f4458d5c3ab7ffaaf0235b59fb:551156018e5580fb94d44632dfafbc9c27005a0e-0':
++        'quay.io/biocontainers/mulled-v2-d9e7bad0f7fbc8f4458d5c3ab7ffaaf0235b59fb:551156018e5580fb94d44632dfafbc9c27005a0e-0' }"
+ 
+     input:
+     tuple val(meta), path(bam)
+@@ -38,20 +38,20 @@
+     """
+     gatk --java-options "-Xmx${avail_mem}g" MarkDuplicates \\
+         $input_list \\
+-        --OUTPUT ${prefix} \\
++        --OUTPUT ${prefix}.bam \\
+         --METRICS_FILE ${prefix}.metrics \\
+         --TMP_DIR . \\
+         ${reference} \\
+         $args
+ 
+-
+-    if  [[ ${prefix} == *.cram ]]; then
+-        mv ${prefix}.bai ${prefix}.crai
+-    fi
++    samtools view -Ch -T ${fasta} -o ${prefix} ${prefix}.bam
++    rm ${prefix}.bam
++    samtools index ${prefix}
+ 
+     cat <<-END_VERSIONS > versions.yml
+     "${task.process}":
+         gatk4: \$(echo \$(gatk --version 2>&1) | sed 's/^.*(GATK) v//; s/ .*\$//')
++        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
+     END_VERSIONS
+     """
+-}
++}
+************************************************************

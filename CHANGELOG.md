@@ -5,6 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.1](https://github.com/nf-core/sarek/releases/tag/3.1.1) - Lilla Luleälven
+
+Lilla Luleälven river's main affluent is Rapaätno.
+
+### Added
+
+- [#856](https://github.com/nf-core/sarek/pull/856) - Add annotation for `R64-1-1` and `UMD3.1`
+
+### Changed
+
+- [#855](https://github.com/nf-core/sarek/pull/855) - Speed up duplicate marking by using `samtools` for CRAM conversion
+- [#858](https://github.com/nf-core/sarek/pull/858) - Prepare release `3.1.1`
+
+### Fixed
+
+- [#851](https://github.com/nf-core/sarek/pull/851) - Fix `schema` definition `None` for `cf_chrom_len`
+
+### Deprecated
+
+### Removed
+
+### Dependencies
+
 ## [3.1](https://github.com/nf-core/sarek/releases/tag/3.1) - Rapaätno
 
 Rapaätno is the river you can see from the Skierfe mountain.

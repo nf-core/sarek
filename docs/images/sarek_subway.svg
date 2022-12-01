@@ -7,9 +7,9 @@
    viewBox="0 0 297 210"
    version="1.1"
    id="svg5"
-   inkscape:version="1.1 (c4e8f9e, 2021-05-24)"
+   inkscape:version="1.2.1 (1:1.2.1+202210291243+9c6d41e410)"
    sodipodi:docname="sarek_subway.svg"
-   inkscape:export-filename="/Users/monarchy/Projects/Coding/sarek/docs/images/sarek_subway.png"
+   inkscape:export-filename="sarek_subway.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
@@ -41,12 +41,12 @@
      inkscape:document-units="mm"
      showgrid="false"
      inkscape:zoom="0.7071068"
-     inkscape:cx="570.63516"
-     inkscape:cy="381.13054"
-     inkscape:window-width="1600"
-     inkscape:window-height="847"
-     inkscape:window-x="0"
-     inkscape:window-y="25"
+     inkscape:cx="251.0229"
+     inkscape:cy="380.42344"
+     inkscape:window-width="1920"
+     inkscape:window-height="1132"
+     inkscape:window-x="414"
+     inkscape:window-y="1440"
      inkscape:window-maximized="1"
      inkscape:current-layer="g777"
      width="211mm"
@@ -3472,7 +3472,7 @@
                width="150"
                id="rect2357-0" /></flowRegion><flowPara
              style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold'"
-             id="flowPara2359-7">3.1.0</flowPara></flowRoot>
+             id="flowPara2359-7">3.1.1</flowPara></flowRoot>
       </g>
       <text
          transform="rotate(-90)"
