@@ -29,7 +29,7 @@ process ADD_INFO_TO_VCF {
     grep -E "^#CHROM" \$input >> \$output
     ## Add SET value to INFO column of variant calls
     if grep -Ev "^#" \$input; then
-        grep -Ev "^#" \$input | awk 'BEGIN{FS=OFS="\t"} { \$8=="." ? \$8="SOURCE=$vcf_gz" : \$8=\$8";SOURCE==$vcf_gz"; print }' >> \$output
+        grep -Ev "^#" \$input | awk 'BEGIN{FS=OFS="\t"} { \$8=="." ? \$8="SOURCE=$vcf_gz" : \$8=\$8";SOURCE=$vcf_gz"; print }' >> \$output
     fi
 
     cat <<-END_VERSIONS > versions.yml
