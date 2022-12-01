@@ -29,6 +29,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Dependencies
 
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| `svdb`     | 2.6.1       | 2.8.1       |
+
 ## [3.1.1](https://github.com/nf-core/sarek/releases/tag/3.1.1) - Lilla Luleälven
 
 Lilla Luleälven river's main affluent is Rapaätno.
