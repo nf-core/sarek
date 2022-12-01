@@ -268,6 +268,20 @@ include { BAM_VARIANT_CALLING_TUMOR_ONLY_ALL             } from '../subworkflows
 include { BAM_VARIANT_CALLING_SOMATIC_ALL                } from '../subworkflows/local/bam_variant_calling_somatic_all/main'
 
 // Concatenation of germline vcf-files
+include { ADD_INFO_TO_VCF as ADD_INFO_TO_DV_VCF          } from '../modules/local/add_info_to_vcf/main'
+include { ADD_INFO_TO_VCF as ADD_INFO_TO_FB_VCF          } from '../modules/local/add_info_to_vcf/main'
+include { ADD_INFO_TO_VCF as ADD_INFO_TO_HTC_VCF         } from '../modules/local/add_info_to_vcf/main'
+include { ADD_INFO_TO_VCF as ADD_INFO_TO_MANTA_VCF       } from '../modules/local/add_info_to_vcf/main'
+include { ADD_INFO_TO_VCF as ADD_INFO_TO_MPILEUP_VCF     } from '../modules/local/add_info_to_vcf/main'
+include { ADD_INFO_TO_VCF as ADD_INFO_TO_STRELKA_VCF     } from '../modules/local/add_info_to_vcf/main'
+include { ADD_INFO_TO_VCF as ADD_INFO_TO_TIDDIT_VCF      } from '../modules/local/add_info_to_vcf/main'
+include { TABIX_BGZIPTABIX as TABIX_EXT_VCF_DV           } from '../modules/nf-core/tabix/bgziptabix/main'
+include { TABIX_BGZIPTABIX as TABIX_EXT_VCF_FB           } from '../modules/nf-core/tabix/bgziptabix/main'
+include { TABIX_BGZIPTABIX as TABIX_EXT_VCF_HTC          } from '../modules/nf-core/tabix/bgziptabix/main'
+include { TABIX_BGZIPTABIX as TABIX_EXT_VCF_MANTA        } from '../modules/nf-core/tabix/bgziptabix/main'
+include { TABIX_BGZIPTABIX as TABIX_EXT_VCF_MPILEUP      } from '../modules/nf-core/tabix/bgziptabix/main'
+include { TABIX_BGZIPTABIX as TABIX_EXT_VCF_STRELKA      } from '../modules/nf-core/tabix/bgziptabix/main'
+include { TABIX_BGZIPTABIX as TABIX_EXT_VCF_TIDDIT       } from '../modules/nf-core/tabix/bgziptabix/main'
 include { BCFTOOLS_CONCAT                                } from '../modules/nf-core/bcftools/concat/main'
 include { BCFTOOLS_SORT as GERMLINE_VCFS_CONCAT_SORT     } from '../modules/nf-core/bcftools/sort/main'
 include { TABIX_TABIX as TABIX_GERMLINE_VCFS_CONCAT_SORT } from '../modules/nf-core/tabix/tabix/main'
@@ -1009,15 +1023,38 @@ workflow SAREK {
         if (params.concatenate_vcfs) {
             // Concatenate vcf-files
 
+            ADD_INFO_TO_DV_VCF(BAM_VARIANT_CALLING_GERMLINE_ALL.out.deepvariant_vcf)
+            TABIX_EXT_VCF_DV(ADD_INFO_TO_DV_VCF.out.vcf)
+
+            ADD_INFO_TO_FB_VCF(BAM_VARIANT_CALLING_GERMLINE_ALL.out.freebayes_vcf)
+            TABIX_EXT_VCF_FB(ADD_INFO_TO_FB_VCF.out.vcf)
+
+            ADD_INFO_TO_HTC_VCF(BAM_VARIANT_CALLING_GERMLINE_ALL.out.haplotypecaller_vcf)
+            TABIX_EXT_VCF_HTC(ADD_INFO_TO_HTC_VCF.out.vcf)
+
+            ADD_INFO_TO_MANTA_VCF(BAM_VARIANT_CALLING_GERMLINE_ALL.out.manta_vcf)
+            TABIX_EXT_VCF_MANTA(ADD_INFO_TO_MANTA_VCF.out.vcf)
+
+            ADD_INFO_TO_MPILEUP_VCF(BAM_VARIANT_CALLING_GERMLINE_ALL.out.mpileup_vcf)
+            TABIX_EXT_VCF_MPILEUP(ADD_INFO_TO_MPILEUP_VCF.out.vcf)
+
+            ADD_INFO_TO_STRELKA_VCF(BAM_VARIANT_CALLING_GERMLINE_ALL.out.strelka_vcf)
+            TABIX_EXT_VCF_STRELKA(ADD_INFO_TO_STRELKA_VCF.out.vcf)
+
+            ADD_INFO_TO_TIDDIT_VCF(BAM_VARIANT_CALLING_GERMLINE_ALL.out.tiddit_vcf)
+            TABIX_EXT_VCF_TIDDIT(ADD_INFO_TO_TIDDIT_VCF.out.vcf)
+
             // Gather vcfs and vcf-tbis for concatenating germline-vcfs
             germline_vcfs_with_tbis = Channel.empty()
-            germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.deepvariant_vcf.join(BAM_VARIANT_CALLING_GERMLINE_ALL.out.deepvariant_vcf_tbi))
-            germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.freebayes_vcf.join(BAM_VARIANT_CALLING_GERMLINE_ALL.out.freebayes_vcf_tbi))
-            germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.haplotypecaller_vcf.join(BAM_VARIANT_CALLING_GERMLINE_ALL.out.haplotypecaller_vcf_tbi))
-            germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.manta_vcf.join(BAM_VARIANT_CALLING_GERMLINE_ALL.out.manta_vcf_tbi))
-            germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.mpileup_vcf.join(BAM_VARIANT_CALLING_GERMLINE_ALL.out.mpileup_vcf_tbi))
-            germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.strelka_vcf.join(BAM_VARIANT_CALLING_GERMLINE_ALL.out.strelka_vcf_tbi))
-            germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.tiddit_vcf.join(BAM_VARIANT_CALLING_GERMLINE_ALL.out.tiddit_vcf_tbi))
+            germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(TABIX_EXT_VCF_DV.out.gz_tbi)
+            germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(TABIX_EXT_VCF_FB.out.gz_tbi)
+            germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(TABIX_EXT_VCF_HTC.out.gz_tbi)
+            germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(TABIX_EXT_VCF_MANTA.out.gz_tbi)
+            germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(TABIX_EXT_VCF_MPILEUP.out.gz_tbi)
+            germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(TABIX_EXT_VCF_STRELKA.out.gz_tbi)
+            germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(TABIX_EXT_VCF_TIDDIT.out.gz_tbi)
+
+            germline_vcfs_with_tbis.view()
 
             germline_vcfs_with_tbis = germline_vcfs_with_tbis.map{
                 meta, vcf, tbi ->
@@ -1031,6 +1068,8 @@ workflow SAREK {
                     new_meta.remove('data_type')
                     [new_meta, vcf, tbi]
                 }.groupTuple()
+
+            germline_vcfs_with_tbis.view()
 
             BCFTOOLS_CONCAT(germline_vcfs_with_tbis)
             GERMLINE_VCFS_CONCAT_SORT(BCFTOOLS_CONCAT.out.vcf)
