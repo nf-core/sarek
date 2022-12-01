@@ -11,7 +11,7 @@ process ADD_INFO_TO_VCF {
 
     output:
     tuple val(meta), path("*.added_info.vcf"), emit: vcf
-    path "versions.yml"                  , emit: versions
+    path "versions.yml"                      , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -24,7 +24,7 @@ process ADD_INFO_TO_VCF {
     ## Add info header lines
     grep -E "^##" \$input > \$output
     ## Add description of new INFO value
-    echo '##INFO=<ID=SOURCE,Number=1,Type=String,Description="Variant calling tool">' >> \$output
+    echo '##INFO=<ID=SOURCE,Number=1,Type=String,Description="Name of vcf-file from whence the variant came">' >> \$output
     ## Add column header
     grep -E "^#CHROM" \$input >> \$output
     ## Add SET value to INFO column of variant calls

@@ -1054,8 +1054,6 @@ workflow SAREK {
             germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(TABIX_EXT_VCF_STRELKA.out.gz_tbi)
             germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(TABIX_EXT_VCF_TIDDIT.out.gz_tbi)
 
-            germline_vcfs_with_tbis.view()
-
             germline_vcfs_with_tbis = germline_vcfs_with_tbis.map{
                 meta, vcf, tbi ->
                     def new_meta = meta.clone()
@@ -1068,8 +1066,6 @@ workflow SAREK {
                     new_meta.remove('data_type')
                     [new_meta, vcf, tbi]
                 }.groupTuple()
-
-            germline_vcfs_with_tbis.view()
 
             BCFTOOLS_CONCAT(germline_vcfs_with_tbis)
             GERMLINE_VCFS_CONCAT_SORT(BCFTOOLS_CONCAT.out.vcf)
