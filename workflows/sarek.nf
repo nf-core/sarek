@@ -269,9 +269,7 @@ include { BAM_VARIANT_CALLING_SOMATIC_ALL                } from '../subworkflows
 
 // Concatenation of germline vcf-files
 include { BCFTOOLS_CONCAT                                } from '../modules/nf-core/bcftools/concat/main'
-
 include { BCFTOOLS_SORT as GERMLINE_VCFS_CONCAT_SORT     } from '../modules/nf-core/bcftools/sort/main'
-
 include { TABIX_TABIX as TABIX_GERMLINE_VCFS_CONCAT_SORT } from '../modules/nf-core/tabix/tabix/main'
 
 // QC on VCF files
@@ -1013,52 +1011,25 @@ workflow SAREK {
 
             // Gather vcfs and vcf-tbis for concatenating germline-vcfs
             germline_vcfs_with_tbis = Channel.empty()
-
-            germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(
-                BAM_VARIANT_CALLING_GERMLINE_ALL.out.deepvariant_vcf.join(BAM_VARIANT_CALLING_GERMLINE_ALL.out.deepvariant_vcf_tbi)
-            )
-
-            germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(
-                BAM_VARIANT_CALLING_GERMLINE_ALL.out.freebayes_vcf.join(BAM_VARIANT_CALLING_GERMLINE_ALL.out.freebayes_vcf_tbi)
-            )
-
-            germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(
-                BAM_VARIANT_CALLING_GERMLINE_ALL.out.haplotypecaller_vcf.join(BAM_VARIANT_CALLING_GERMLINE_ALL.out.haplotypecaller_vcf_tbi)
-            )
-
-            germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(
-                BAM_VARIANT_CALLING_GERMLINE_ALL.out.manta_vcf.join(BAM_VARIANT_CALLING_GERMLINE_ALL.out.manta_vcf_tbi)
-            )
-
-            germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(
-                BAM_VARIANT_CALLING_GERMLINE_ALL.out.mpileup_vcf.join(BAM_VARIANT_CALLING_GERMLINE_ALL.out.mpileup_vcf_tbi)
-            )
-
-            germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(
-                BAM_VARIANT_CALLING_GERMLINE_ALL.out.strelka_vcf.join(BAM_VARIANT_CALLING_GERMLINE_ALL.out.strelka_vcf_tbi)
-            )
-
-            germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(
-                BAM_VARIANT_CALLING_GERMLINE_ALL.out.tiddit_vcf.join(BAM_VARIANT_CALLING_GERMLINE_ALL.out.tiddit_vcf_tbi)
-            )
+            germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.deepvariant_vcf.join(BAM_VARIANT_CALLING_GERMLINE_ALL.out.deepvariant_vcf_tbi))
+            germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.freebayes_vcf.join(BAM_VARIANT_CALLING_GERMLINE_ALL.out.freebayes_vcf_tbi))
+            germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.haplotypecaller_vcf.join(BAM_VARIANT_CALLING_GERMLINE_ALL.out.haplotypecaller_vcf_tbi))
+            germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.manta_vcf.join(BAM_VARIANT_CALLING_GERMLINE_ALL.out.manta_vcf_tbi))
+            germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.mpileup_vcf.join(BAM_VARIANT_CALLING_GERMLINE_ALL.out.mpileup_vcf_tbi))
+            germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.strelka_vcf.join(BAM_VARIANT_CALLING_GERMLINE_ALL.out.strelka_vcf_tbi))
+            germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.tiddit_vcf.join(BAM_VARIANT_CALLING_GERMLINE_ALL.out.tiddit_vcf_tbi))
 
             germline_vcfs_with_tbis = germline_vcfs_with_tbis.map{
                 meta, vcf, tbi ->
                     def new_meta = meta.clone()
                     new_meta.remove('variantcaller')
-                    def new_meta2 = new_meta.clone()
-                    new_meta2.remove('tumor_id')
-                    def new_meta3 = new_meta2.clone()
-                    new_meta3.remove('normal_id')
-                    def new_meta4 = new_meta3.clone()
-                    new_meta4.remove('sample')
-                    def new_meta5 = new_meta4.clone()
-                    new_meta5.remove('status')
-                    def new_meta6 = new_meta5.clone()   // TO-DO: Better way of removing the unwanted entries in the dict "meta"?
-                    new_meta6.remove('num_intervals')   // The remaining entries should just be id, patient and sex
-                    def new_meta7 = new_meta6.clone()
-                    new_meta7.remove('data_type')
-                    [new_meta7, vcf, tbi]
+                    new_meta.remove('tumor_id')
+                    new_meta.remove('normal_id')
+                    new_meta.remove('sample')
+                    new_meta.remove('status')
+                    new_meta.remove('num_intervals')
+                    new_meta.remove('data_type')
+                    [new_meta, vcf, tbi]
                 }.groupTuple()
 
             BCFTOOLS_CONCAT(germline_vcfs_with_tbis)
