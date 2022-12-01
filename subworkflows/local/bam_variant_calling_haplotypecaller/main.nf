@@ -97,7 +97,7 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
 
                     [groupKey(new_meta, new_meta.num_intervals), vcf]
                 }.groupTuple(),
-            dict)
+            dict.map{ it -> [[id:it[0].baseName], it]})
 
         haplotypecaller_vcf = Channel.empty().mix(
             MERGE_HAPLOTYPECALLER.out.vcf,

@@ -8,7 +8,7 @@ process ENSEMBLVEP {
         'quay.io/biocontainers/ensembl-vep:108.2--pl5321h4a94de4_0' }"
 
     input:
-    tuple val(meta), path(vcf, stageAs: "?/*")
+    tuple val(meta), path(vcf)
     val   genome
     val   species
     val   cache_version

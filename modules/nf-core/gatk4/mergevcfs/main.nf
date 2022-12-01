@@ -9,7 +9,7 @@ process GATK4_MERGEVCFS {
 
     input:
     tuple val(meta), path(vcf)
-    path  dict
+    tuple val(meta2), path(dict)
 
     output:
     tuple val(meta), path('*.vcf.gz'), emit: vcf

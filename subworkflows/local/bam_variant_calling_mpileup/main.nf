@@ -62,7 +62,7 @@ workflow BAM_VARIANT_CALLING_MPILEUP {
 
             [groupKey(new_meta, new_meta.num_intervals), vcf]
         }.groupTuple(),
-    dict)
+    dict.map{ it -> [[id:it[0].baseName], it]})
 
     ch_versions = ch_versions.mix(SAMTOOLS_MPILEUP.out.versions)
     ch_versions = ch_versions.mix(BCFTOOLS_MPILEUP.out.versions)

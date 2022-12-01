@@ -32,7 +32,7 @@
                     },
                     "bwa/mem": {
                         "branch": "master",
-                        "git_sha": "cf5b9c30a2adacc581793afb79fae5f5b50bed01",
+                        "git_sha": "653588be2a4aadab487b530643dbc9baf7a485c4",
                         "installed_by": ["modules"]
                     },
                     "bwamem2/index": {
@@ -42,7 +42,7 @@
                     },
                     "bwamem2/mem": {
                         "branch": "master",
-                        "git_sha": "cf5b9c30a2adacc581793afb79fae5f5b50bed01",
+                        "git_sha": "653588be2a4aadab487b530643dbc9baf7a485c4",
                         "installed_by": ["modules"]
                     },
                     "cat/cat": {
@@ -119,8 +119,8 @@
                     },
                     "ensemblvep": {
                         "branch": "master",
-                        "git_sha": "69f158610f25a3bff40b3eadfedd3ac67a3cfc23",
-                        "installed_by": ["modules", "vcf_annotate_ensemblvep"]
+                        "git_sha": "1ec0d59beb1e794a7a4a4351e15138ffa213aa20",
+                        "installed_by": ["vcf_annotate_ensemblvep", "modules"]
                     },
                     "fastp": {
                         "branch": "master",
@@ -129,7 +129,7 @@
                     },
                     "fastqc": {
                         "branch": "master",
-                        "git_sha": "3dd73937b084b547f9272bc901e0f120a7913fd8",
+                        "git_sha": "810e8f2603ec38401d49a4aaed06f6d058745552",
                         "installed_by": ["modules"]
                     },
                     "fgbio/callmolecularconsensusreads": {
@@ -265,7 +265,7 @@
                     },
                     "gatk4/mergevcfs": {
                         "branch": "master",
-                        "git_sha": "7578005a576f3ac1b0d4f10c037dde34cdedfb67",
+                        "git_sha": "c25943553f62be5f907e3c12c42eaf0a1b40746d",
                         "installed_by": ["modules"]
                     },
                     "gatk4/mutect2": {
@@ -381,7 +381,7 @@
                     },
                     "svdb/merge": {
                         "branch": "master",
-                        "git_sha": "5e34754d42cd2d5d248ca8673c0a53cdf5624905",
+                        "git_sha": "4a8a2caf44b87734b41ea4c67f508c14f0745ee7",
                         "installed_by": ["modules"]
                     },
                     "tabix/bgziptabix": {
