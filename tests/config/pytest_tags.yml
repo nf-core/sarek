@@ -263,3 +263,20 @@ vep:
   - modules/nf-core/ensemblvep/main.nf
   - modules/nf-core/tabix/bgziptabix/main.nf
   - subworkflows/nf-core/vcf_annotate_ensemblvep/main.nf
+
+## concatenate germline vcfs
+concatenate_vcfs:
+  - conf/modules/post_variant_calling.config
+  - modules/nf-core/bcftools/sort/main.nf
+  - modules/nf-core/tabix/bgziptabix/main.nf
+  - modules/nf-core/bcftools/concat/main.nf
+  - modules/nf-core/deepvariant/main.nf # DEEPVARIANT
+  - modules/nf-core/tabix/tabix/main.nf
+  - modules/nf-core/freebayes/main.nf # Freebayes
+  - modules/nf-core/gatk4/haplotypecaller/main.nf # Haplotypecaller
+  - modules/nf-core/manta/germline/main.nf # Manta
+  - modules/nf-core/bcftools/mpileup/main.nf # MPILEUP/BCFTOOLS
+  - modules/nf-core/samtools/mpileup/main.nf
+  - modules/nf-core/gatk4/mergevcfs/main.nf
+  - modules/nf-core/strelka/germline/main.nf
+  - modules/nf-core/tiddit/sv/main.nf
