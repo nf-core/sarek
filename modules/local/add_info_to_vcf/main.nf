@@ -27,7 +27,7 @@ process ADD_INFO_TO_VCF {
     echo '##INFO=<ID=SOURCE,Number=1,Type=String,Description="Name of vcf-file from whence the variant came">' >> \$output
     ## Add column header
     grep -E "^#CHROM" \$input >> \$output
-    ## Add SET value to INFO column of variant calls
+    ## Add SOURCE value to INFO column of variant calls
     if grep -Ev "^#" \$input; then
         grep -Ev "^#" \$input | awk 'BEGIN{FS=OFS="\t"} { \$8=="." ? \$8="SOURCE=$vcf_gz" : \$8=\$8";SOURCE=$vcf_gz"; print }' >> \$output
     fi
