@@ -59,24 +59,10 @@ workflow VCF_VARIANT_FILTERING_GATK {
                                             ], vcf]
                                         }
 
-    filtered_vcf_tbi = FILTERVARIANTTRANCHES.out.tbi.map{ meta, tbi ->
-        [[
-            id:             meta.sample,
-            num_intervals:  meta.num_intervals,
-            patient:        meta.patient,
-            sample:         meta.sample,
-            sex:            meta.sex,
-            status:         meta.status,
-            variantcaller:  "haplotypecaller"
-        ], tbi]
-    }
-
     ch_versions = ch_versions.mix(CNNSCOREVARIANTS.out.versions)
     ch_versions = ch_versions.mix(FILTERVARIANTTRANCHES.out.versions)
 
     emit:
     versions = ch_versions
     filtered_vcf
-    filtered_vcf_tbi
 }
-

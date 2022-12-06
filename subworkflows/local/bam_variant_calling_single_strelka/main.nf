@@ -21,11 +21,6 @@ workflow BAM_VARIANT_CALLING_SINGLE_STRELKA {
             no_intervals: it[0].num_intervals <= 1
         }.set{strelka_vcf}
 
-    STRELKA_SINGLE.out.vcf_tbi.branch{
-            intervals:    it[0].num_intervals > 1
-            no_intervals: it[0].num_intervals <= 1
-        }.set{strelka_vcf_tbi}
-
     STRELKA_SINGLE.out.genome_vcf.branch{
             intervals:    it[0].num_intervals > 1
             no_intervals: it[0].num_intervals <= 1
@@ -84,27 +79,11 @@ workflow BAM_VARIANT_CALLING_SINGLE_STRELKA {
                     ], vcf]
                 }
 
-    strelka_vcf_tbi = Channel.empty().mix(
-                        MERGE_STRELKA.out.tbi,
-                        strelka_vcf_tbi.no_intervals)
-                    .map{ meta, tbi ->
-                        [[
-                            id:             meta.sample,
-                            num_intervals:  meta.num_intervals,
-                            patient:        meta.patient,
-                            sample:         meta.sample,
-                            sex:            meta.sex,
-                            status:         meta.status,
-                            variantcaller:  "strelka"
-                        ], tbi]
-                    }
-
     ch_versions = ch_versions.mix(MERGE_STRELKA.out.versions)
     ch_versions = ch_versions.mix(MERGE_STRELKA_GENOME.out.versions)
     ch_versions = ch_versions.mix(STRELKA_SINGLE.out.versions)
 
     emit:
     strelka_vcf
-    strelka_vcf_tbi
     versions = ch_versions
 }

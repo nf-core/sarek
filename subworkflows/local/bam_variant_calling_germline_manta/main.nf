@@ -33,12 +33,6 @@ workflow BAM_VARIANT_CALLING_GERMLINE_MANTA {
             no_intervals: it[0].num_intervals <= 1
         }.set{manta_diploid_sv_vcf}
 
-    MANTA_GERMLINE.out.diploid_sv_vcf_tbi.branch{
-            intervals:    it[0].num_intervals > 1
-            no_intervals: it[0].num_intervals <= 1
-        }.set{manta_diploid_sv_vcf_tbi}
-
-
     // Only when using intervals
     MERGE_MANTA_SMALL_INDELS(
         manta_small_indels_vcf.intervals
@@ -110,21 +104,6 @@ workflow BAM_VARIANT_CALLING_GERMLINE_MANTA {
                     vcf]
                 }
 
-    manta_vcf_tbi = Channel.empty().mix(
-                        MERGE_MANTA_DIPLOID.out.tbi,
-                        manta_diploid_sv_vcf_tbi.no_intervals)
-                    .map{ meta, tbi ->
-                        [[
-                            id:             meta.sample,
-                            num_intervals:  meta.num_intervals,
-                            patient:        meta.patient,
-                            sample:         meta.sample,
-                            status:         meta.status,
-                            sex:            meta.sex,
-                            variantcaller:  "manta"],
-                        tbi]
-                    }
-
     ch_versions = ch_versions.mix(MERGE_MANTA_DIPLOID.out.versions)
     ch_versions = ch_versions.mix(MERGE_MANTA_SMALL_INDELS.out.versions)
     ch_versions = ch_versions.mix(MERGE_MANTA_SV.out.versions)
@@ -132,6 +111,5 @@ workflow BAM_VARIANT_CALLING_GERMLINE_MANTA {
 
     emit:
     manta_vcf
-    manta_vcf_tbi
     versions = ch_versions
 }

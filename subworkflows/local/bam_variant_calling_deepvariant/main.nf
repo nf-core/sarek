@@ -23,11 +23,6 @@ workflow BAM_VARIANT_CALLING_DEEPVARIANT {
         no_intervals: it[0].num_intervals <= 1
     }.set{deepvariant_vcf_out}
 
-    DEEPVARIANT.out.vcf_tbi.branch{
-        intervals:    it[0].num_intervals > 1
-        no_intervals: it[0].num_intervals <= 1
-    }.set{deepvariant_tbi_out}
-
     DEEPVARIANT.out.gvcf.branch{
         intervals:    it[0].num_intervals > 1
         no_intervals: it[0].num_intervals <= 1
@@ -103,22 +98,6 @@ workflow BAM_VARIANT_CALLING_DEEPVARIANT {
                         ], vcf]
                     }
 
-    deepvariant_vcf_tbi = Channel.empty().mix(
-                        MERGE_DEEPVARIANT_VCF.out.tbi,
-                        deepvariant_tbi_out.no_intervals)
-                    .map{ meta, tbi ->
-                        [[
-                            id:             meta.sample,
-                            num_intervals:  meta.num_intervals,
-                            patient:        meta.patient,
-                            sample:         meta.sample,
-                            sex:            meta.sex,
-                            status:         meta.status,
-                            variantcaller:  "deepvariant"
-                        ], tbi]
-                    }
-
-
     ch_versions = ch_versions.mix(MERGE_DEEPVARIANT_GVCF.out.versions)
     ch_versions = ch_versions.mix(MERGE_DEEPVARIANT_VCF.out.versions)
     ch_versions = ch_versions.mix(DEEPVARIANT.out.versions)
@@ -127,7 +106,6 @@ workflow BAM_VARIANT_CALLING_DEEPVARIANT {
 
     emit:
     deepvariant_vcf
-    deepvariant_vcf_tbi
     deepvariant_gvcf
     versions = ch_versions
 }

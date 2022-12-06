@@ -21,10 +21,6 @@ workflow BAM_VARIANT_CALLING_MPILEUP {
             intervals:    it[0].num_intervals > 1
             no_intervals: it[0].num_intervals <= 1
         }
-    tbis = BCFTOOLS_MPILEUP.out.tbi.branch{
-            intervals:    it[0].num_intervals > 1
-            no_intervals: it[0].num_intervals <= 1
-        }
     mpileup = SAMTOOLS_MPILEUP.out.mpileup.branch{
             intervals:    it[0].num_intervals > 1
             no_intervals: it[0].num_intervals <= 1
@@ -77,5 +73,4 @@ workflow BAM_VARIANT_CALLING_MPILEUP {
     versions = ch_versions
     mpileup = Channel.empty().mix(CAT_MPILEUP.out.file_out, mpileup.no_intervals)
     vcf = Channel.empty().mix(GATK4_MERGEVCFS.out.vcf, vcfs.no_intervals)
-    tbi = Channel.empty().mix(GATK4_MERGEVCFS.out.tbi, tbis.no_intervals)
 }

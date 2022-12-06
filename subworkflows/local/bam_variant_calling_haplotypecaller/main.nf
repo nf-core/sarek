@@ -23,7 +23,6 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
 
     ch_versions = Channel.empty()
     filtered_vcf = Channel.empty()
-    filtered_vcf_tbi = Channel.empty()
     realigned_bam = Channel.empty()
 
     GATK4_HAPLOTYPECALLER(
@@ -149,20 +148,6 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
             ]
         }
 
-        filtered_vcf_tbi = VCF_VARIANT_FILTERING_GATK.out.filtered_vcf_tbi.map{ meta, tbi-> [
-                [
-                    patient:meta.patient,
-                    sample:meta.sample,
-                    status:meta.status,
-                    sex:meta.sex,
-                    id:meta.sample,
-                    num_intervals:meta.num_intervals,
-                    variantcaller:"haplotypecaller"
-                ],
-                tbi
-            ]
-        }
-
         ch_versions = ch_versions.mix(GATK4_HAPLOTYPECALLER.out.versions)
         ch_versions = ch_versions.mix(MERGE_HAPLOTYPECALLER.out.versions)
         ch_versions = ch_versions.mix(VCF_VARIANT_FILTERING_GATK.out.versions)
@@ -171,6 +156,5 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
     emit:
     versions = ch_versions
     filtered_vcf
-    filtered_vcf_tbi
     realigned_bam
 }
