@@ -1,5 +1,5 @@
 - name: Run snpEff followed by VEP
-  command: nextflow run main.nf -profile test,annotation --tools merge --skip_tools multiqc
+  command: nextflow run main.nf -profile test,annotation --tools merge --skip_tools multiqc --outdir ./results
   tags:
     - annotation
     - merge
@@ -39,7 +39,7 @@
     - path: results/reports/EnsemblVEP/test/test_VEP.ann.summary.html
       should_exist: false
 - name: Run snpEff, VEP and both consecutively
-  command: nextflow run main.nf -profile test,annotation --tools merge,snpeff,vep --skip_tools multiqc
+  command: nextflow run main.nf -profile test,annotation --tools merge,snpeff,vep --skip_tools multiqc --outdir ./results
   tags:
     - annotation
     - merge
