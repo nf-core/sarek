@@ -134,7 +134,20 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
                     known_sites_indels.concat(known_sites_snps).flatten().unique().collect(),
                     known_sites_indels_tbi.concat(known_sites_snps_tbi).flatten().unique().collect())
 
-        filtered_vcf = VCF_VARIANT_FILTERING_GATK.out.filtered_vcf.map{ meta, vcf-> [[patient:meta.patient, sample:meta.sample, status:meta.status, sex:meta.sex, id:meta.sample, num_intervals:meta.num_intervals, variantcaller:"haplotypecaller"], vcf]}
+        filtered_vcf = VCF_VARIANT_FILTERING_GATK.out.filtered_vcf.map{ meta, vcf-> [
+                [
+                    patient:meta.patient,
+                    sample:meta.sample,
+                    status:meta.status,
+                    sex:meta.sex,
+                    id:meta.sample,
+                    num_intervals:meta.num_intervals,
+                    variantcaller:"haplotypecaller"
+                ],
+                vcf
+            ]
+        }
+
         ch_versions = ch_versions.mix(GATK4_HAPLOTYPECALLER.out.versions)
         ch_versions = ch_versions.mix(MERGE_HAPLOTYPECALLER.out.versions)
         ch_versions = ch_versions.mix(VCF_VARIANT_FILTERING_GATK.out.versions)

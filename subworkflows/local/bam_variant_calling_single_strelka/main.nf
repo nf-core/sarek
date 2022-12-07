@@ -74,7 +74,7 @@ workflow BAM_VARIANT_CALLING_SINGLE_STRELKA {
                         sex:            meta.sex,
                         status:         meta.status,
                         variantcaller:  "strelka"
-                    ],vcf]
+                    ], vcf]
                 }
 
     ch_versions = ch_versions.mix(MERGE_STRELKA.out.versions)

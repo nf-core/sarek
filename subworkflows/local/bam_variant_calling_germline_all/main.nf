@@ -37,7 +37,6 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     //TODO: Temporary until the if's can be removed and printing to terminal is prevented with "when" in the modules.config
     deepvariant_vcf     = Channel.empty()
     freebayes_vcf       = Channel.empty()
-    genotype_gvcf       = Channel.empty()
     haplotypecaller_vcf = Channel.empty()
     manta_vcf           = Channel.empty()
     mpileup_vcf         = Channel.empty()
@@ -95,7 +94,6 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             dict
         )
 
-        mpileup_germline = BAM_VARIANT_CALLING_MPILEUP.out.mpileup
         mpileup_vcf = BAM_VARIANT_CALLING_MPILEUP.out.vcf
         ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_MPILEUP.out.versions)
     }
@@ -116,7 +114,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             []
         )
 
-        ch_versions     = ch_versions.mix(BAM_VARIANT_CALLING_CNVKIT.out.versions)
+        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_CNVKIT.out.versions)
     }
 
     // DEEPVARIANT
@@ -128,8 +126,8 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             fasta_fai
         )
 
-        deepvariant_vcf = Channel.empty().mix(BAM_VARIANT_CALLING_DEEPVARIANT.out.deepvariant_vcf)
-        ch_versions     = ch_versions.mix(BAM_VARIANT_CALLING_DEEPVARIANT.out.versions)
+        deepvariant_vcf      = Channel.empty().mix(BAM_VARIANT_CALLING_DEEPVARIANT.out.deepvariant_vcf)
+        ch_versions          = ch_versions.mix(BAM_VARIANT_CALLING_DEEPVARIANT.out.versions)
     }
 
     // FREEBAYES
@@ -147,8 +145,8 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             fasta_fai
         )
 
-        freebayes_vcf   = BAM_VARIANT_CALLING_FREEBAYES.out.freebayes_vcf
-        ch_versions     = ch_versions.mix(BAM_VARIANT_CALLING_FREEBAYES.out.versions)
+        freebayes_vcf     = BAM_VARIANT_CALLING_FREEBAYES.out.freebayes_vcf
+        ch_versions       = ch_versions.mix(BAM_VARIANT_CALLING_FREEBAYES.out.versions)
     }
 
     // HAPLOTYPECALLER
@@ -184,8 +182,9 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
                         known_sites_snps_tbi,
                         intervals_bed_combined_haplotypec)
 
-        haplotypecaller_vcf  = BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.filtered_vcf
-        ch_versions          = ch_versions.mix(BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.versions)
+        haplotypecaller_vcf      = BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.filtered_vcf
+        ch_versions              = ch_versions.mix(BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.versions)
+
     }
 
     // MANTA
@@ -197,8 +196,9 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             fasta_fai
         )
 
-        manta_vcf   = BAM_VARIANT_CALLING_GERMLINE_MANTA.out.manta_vcf
-        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_GERMLINE_MANTA.out.versions)
+
+        manta_vcf     = BAM_VARIANT_CALLING_GERMLINE_MANTA.out.manta_vcf
+        ch_versions   = ch_versions.mix(BAM_VARIANT_CALLING_GERMLINE_MANTA.out.versions)
     }
 
     // STRELKA
@@ -210,8 +210,8 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             fasta_fai
         )
 
-        strelka_vcf = BAM_VARIANT_CALLING_SINGLE_STRELKA.out.strelka_vcf
-        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_SINGLE_STRELKA.out.versions)
+        strelka_vcf     = BAM_VARIANT_CALLING_SINGLE_STRELKA.out.strelka_vcf
+        ch_versions     = ch_versions.mix(BAM_VARIANT_CALLING_SINGLE_STRELKA.out.versions)
     }
 
     //TIDDIT
@@ -222,14 +222,13 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             bwa
         )
 
-        tiddit_vcf = BAM_VARIANT_CALLING_SINGLE_TIDDIT.out.tiddit_vcf
-        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_SINGLE_TIDDIT.out.versions)
+        tiddit_vcf     = BAM_VARIANT_CALLING_SINGLE_TIDDIT.out.tiddit_vcf
+        ch_versions    = ch_versions.mix(BAM_VARIANT_CALLING_SINGLE_TIDDIT.out.versions)
     }
 
     emit:
     deepvariant_vcf
     freebayes_vcf
-    genotype_gvcf
     haplotypecaller_vcf
     manta_vcf
     mpileup_vcf

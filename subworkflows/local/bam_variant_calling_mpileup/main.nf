@@ -72,5 +72,5 @@ workflow BAM_VARIANT_CALLING_MPILEUP {
     emit:
     versions = ch_versions
     mpileup = Channel.empty().mix(CAT_MPILEUP.out.file_out, mpileup.no_intervals)
-    vcf = Channel.empty().mix(GATK4_MERGEVCFS.out.vcf,vcfs.no_intervals)
+    vcf = Channel.empty().mix(GATK4_MERGEVCFS.out.vcf, vcfs.no_intervals)
 }
