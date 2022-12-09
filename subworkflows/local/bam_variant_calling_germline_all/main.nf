@@ -14,6 +14,7 @@ include { BAM_VARIANT_CALLING_SINGLE_TIDDIT   } from '../bam_variant_calling_sin
 workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     take:
         tools                             // Mandatory, list of tools to apply
+        skip_tools                        // Mandatory, list of tools to skip
         cram_recalibrated                 // channel: [mandatory] cram
         bwa                               // channel: [mandatory] bwa
         dbsnp                             // channel: [mandatory] dbsnp
@@ -180,7 +181,8 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
                         known_sites_indels_tbi,
                         known_sites_snps,
                         known_sites_snps_tbi,
-                        intervals_bed_combined_haplotypec)
+                        intervals_bed_combined_haplotypec,
+                        skip_tools)
 
         haplotypecaller_vcf      = BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.filtered_vcf
         ch_versions              = ch_versions.mix(BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.versions)

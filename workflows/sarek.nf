@@ -954,6 +954,7 @@ workflow SAREK {
         // GERMLINE VARIANT CALLING
         BAM_VARIANT_CALLING_GERMLINE_ALL(
             params.tools,
+            params.skip_tools,
             ch_cram_variant_calling_status_normal,
             [[id:"bwa"],[]], //bwa_index for tiddit; not used here
             dbsnp,
