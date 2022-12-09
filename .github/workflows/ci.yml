@@ -12,10 +12,6 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
-concurrency:
-  group: "${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}"
-  cancel-in-progress: true
-
 jobs:
   test:
     name: Run pipeline with test data
@@ -27,7 +23,7 @@ jobs:
       fail-fast: false
       matrix:
         NXF_VER:
-          - "22.10.1"
+          - "21.10.3"
           - "latest-everything"
         test:
           - "default"
