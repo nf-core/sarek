@@ -19,7 +19,7 @@ workflow BAM_VARIANT_CALLING_MPILEUP {
     //Merge mpileup only when intervals and natural order sort them
     CAT_MPILEUP(mpileup.intervals
         .map{ meta, pileup ->
-            new_meta = meta.tumor_id ? [
+            def new_meta = meta.tumor_id ? [
                                             id:             meta.tumor_id + "_vs_" + meta.normal_id,
                                             normal_id:      meta.normal_id,
                                             num_intervals:  meta.num_intervals,

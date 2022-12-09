@@ -64,7 +64,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     MERGE_MUTECT2(
         mutect2_vcf_branch.intervals
         .map{ meta, vcf ->
-            new_meta = [
+            def new_meta = [
                         id:             meta.sample,
                         num_intervals:  meta.num_intervals,
                         patient:        meta.patient,
@@ -89,7 +89,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     MERGEMUTECTSTATS(
         mutect2_stats_branch.intervals
         .map{ meta, stats ->
-            new_meta = [
+            def new_meta = [
                         id:             meta.sample,
                         num_intervals:  meta.num_intervals,
                         patient:        meta.patient,
@@ -112,7 +112,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
         Channel.empty().mix(
             mutect2_f1r2_branch.intervals
             .map{ meta, f1r2 ->
-                new_meta = [
+                def new_meta = [
                             id:             meta.sample,
                             num_intervals:  meta.num_intervals,
                             patient:        meta.patient,
@@ -141,7 +141,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     GATHERPILEUPSUMMARIES(
         GETPILEUPSUMMARIES.out.table
         .map{ meta, table ->
-            new_meta = [
+            def new_meta = [
                         id:             meta.sample,
                         num_intervals:  meta.num_intervals,
                         patient:        meta.patient,

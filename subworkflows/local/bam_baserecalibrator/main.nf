@@ -45,7 +45,7 @@ workflow BAM_BASERECALIBRATOR {
     table_to_merge = GATK4_BASERECALIBRATOR.out.table
         .map{ meta, table ->
 
-                new_meta = [
+                def new_meta = [
                                 data_type:      meta.data_type,
                                 id:             meta.sample,
                                 num_intervals:  meta.num_intervals,

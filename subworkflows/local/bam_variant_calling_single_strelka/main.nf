@@ -29,7 +29,7 @@ workflow BAM_VARIANT_CALLING_SINGLE_STRELKA {
     MERGE_STRELKA(
         strelka_vcf.intervals
             .map{ meta, vcf ->
-                new_meta = [
+                def new_meta = [
                                 id:             meta.sample,
                                 num_intervals:  meta.num_intervals,
                                 patient:        meta.patient,

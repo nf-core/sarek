@@ -80,7 +80,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MANTA {
 
     MERGE_MANTA_DIPLOID(
         manta_diploid_sv_vcf.intervals.map{ meta, vcf ->
-                new_meta = [
+                def new_meta = [
                             id:             meta.tumor_id + "_vs_" + meta.normal_id,
                             normal_id:      meta.normal_id,
                             num_intervals:  meta.num_intervals,

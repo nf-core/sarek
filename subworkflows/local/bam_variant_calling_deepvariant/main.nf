@@ -38,7 +38,7 @@ workflow BAM_VARIANT_CALLING_DEEPVARIANT {
         deepvariant_vcf_out.intervals
             .map{ meta, vcf ->
 
-                new_meta = [
+                def new_meta = [
                             id:             meta.sample,
                             num_intervals:  meta.num_intervals,
                             patient:        meta.patient,
@@ -55,7 +55,7 @@ workflow BAM_VARIANT_CALLING_DEEPVARIANT {
         deepvariant_gvcf_out.intervals
             .map{ meta, vcf ->
 
-                new_meta = [
+                def new_meta = [
                             id:             meta.sample,
                             num_intervals:  meta.num_intervals,
                             patient:        meta.patient,

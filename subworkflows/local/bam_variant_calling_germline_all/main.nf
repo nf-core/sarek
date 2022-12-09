@@ -154,7 +154,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             .map{ meta, cram, crai, intervals ->
 
             intervals_name = meta.num_intervals == 0 ? "no_interval" : intervals.simpleName
-            new_meta = params.joint_germline ? [
+            def new_meta = params.joint_germline ? [
                                                     data_type:meta.data_type,
                                                     id:meta.sample,
                                                     intervals_name:intervals_name,

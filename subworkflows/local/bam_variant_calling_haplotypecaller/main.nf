@@ -79,7 +79,7 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
             haplotypecaller_vcf_branch.intervals
             .map{ meta, vcf ->
 
-                new_meta = [
+                def new_meta = [
                                 id:             meta.sample,
                                 num_intervals:  meta.num_intervals,
                                 patient:        meta.patient,

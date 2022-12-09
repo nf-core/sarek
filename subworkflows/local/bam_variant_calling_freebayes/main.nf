@@ -34,7 +34,7 @@ workflow BAM_VARIANT_CALLING_FREEBAYES {
         bcftools_vcf_out.intervals
             .map{ meta, vcf ->
 
-                new_meta = meta.tumor_id ? [
+                def new_meta = meta.tumor_id ? [
                                                 id:             meta.tumor_id + "_vs_" + meta.normal_id,
                                                 normal_id:      meta.normal_id,
                                                 num_intervals:  meta.num_intervals,

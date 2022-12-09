@@ -20,7 +20,7 @@ workflow BAM_VARIANT_CALLING_SINGLE_TIDDIT {
     tiddit_ploidy = TIDDIT_SV.out.ploidy
     tiddit_vcf_gz = TABIX_BGZIP_TIDDIT_SV.out.gz_tbi.map{ meta, gz, tbi ->
 
-        new_meta = meta.tumor_id ? [
+        def new_meta = meta.tumor_id ? [
                                         id:             meta.tumor_id + "_vs_" + meta.normal_id,
                                         normal_id:      meta.normal_id,
                                         num_intervals:  meta.num_intervals,

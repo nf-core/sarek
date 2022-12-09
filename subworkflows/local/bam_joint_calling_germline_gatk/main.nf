@@ -37,7 +37,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
     //
     gendb_input = input.map{
         meta, gvcf, tbi, intervals->
-            new_meta = [
+            def new_meta = [
                         id:             "joint_variant_calling",
                         intervals_name: meta.intervals_name,
                         num_intervals:  meta.num_intervals
@@ -139,7 +139,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
                                 .join( VARIANTRECALIBRATOR_SNP.out.tranches)
                                 .map{ meta, vcf, tbi, recal, index, tranche ->
 
-                                            new_meta = [
+                                            def new_meta = [
                                                         id:             "recalibrated_joint_variant_calling",
                                                         num_intervals:  meta.num_intervals,
                                                         patient:        "all_samples",
@@ -155,7 +155,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
                                         VARIANTRECALIBRATOR_INDEL.out.idx).join(
                                         VARIANTRECALIBRATOR_INDEL.out.tranches).map{ meta, vcf, tbi, recal, index, tranche ->
 
-                                                new_meta = [
+                                                def new_meta = [
                                                             id:             "recalibrated_joint_variant_calling",
                                                             num_intervals:  meta.num_intervals,
                                                             patient:        "all_samples",

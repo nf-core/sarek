@@ -65,7 +65,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
         mutect2_vcf_branch.intervals
         .map{ meta, vcf ->
 
-            new_meta = [
+            def new_meta = [
                         id:meta.tumor_id + "_vs_" + meta.normal_id,
                         normal_id:meta.normal_id,
                         num_intervals:meta.num_intervals,
@@ -92,7 +92,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
         mutect2_stats_branch.intervals
         .map{ meta, stats ->
 
-            new_meta = [
+            def new_meta = [
                         id:             meta.tumor_id + "_vs_" + meta.normal_id,
                         normal_id:      meta.normal_id,
                         num_intervals:  meta.num_intervals,
@@ -115,7 +115,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
         mutect2_f1r2_branch.intervals
             .map{ meta, f1r2 ->
 
-                new_meta = [
+                def new_meta = [
                             id:             meta.tumor_id + "_vs_" + meta.normal_id,
                             normal_id:      meta.normal_id,
                             num_intervals:  meta.num_intervals,
@@ -184,7 +184,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
         GETPILEUPSUMMARIES_NORMAL.out.table
         .map{ meta, table ->
 
-            new_meta = [
+            def new_meta = [
                             id:             meta.normal_id,
                             normal_id:      meta.normal_id,
                             num_intervals:  meta.num_intervals,
@@ -201,7 +201,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
         GATHERPILEUPSUMMARIES_NORMAL.out.table,
         pileup_table_normal.no_intervals).map{ meta, table ->
 
-            new_meta = [
+            def new_meta = [
                             id:             meta.tumor_id + "_vs_" + meta.normal_id,
                             normal_id:      meta.normal_id,
                             num_intervals:  meta.num_intervals,
@@ -215,7 +215,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
     GATHERPILEUPSUMMARIES_TUMOR(
         GETPILEUPSUMMARIES_TUMOR.out.table
         .map{ meta, table ->
-            new_meta = [
+            def new_meta = [
                             id:             meta.tumor_id,
                             normal_id:      meta.normal_id,
                             num_intervals:  meta.num_intervals,
@@ -231,7 +231,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
     gather_table_tumor = Channel.empty().mix(
         GATHERPILEUPSUMMARIES_TUMOR.out.table,
         pileup_table_tumor.no_intervals).map{ meta, table ->
-            new_meta = [
+            def new_meta = [
                         id:             meta.tumor_id + "_vs_" + meta.normal_id,
                         normal_id:      meta.normal_id,
                         num_intervals:  meta.num_intervals,

@@ -507,7 +507,7 @@ workflow SAREK {
             //   read_group: Now in the BAM header
             //     numLanes: Was only needed for mapping
             //         size: Was only needed for mapping
-            new_meta = [
+            def new_meta = [
                         id:meta.sample,
                         data_type:"bam",
                         patient:meta.patient,
