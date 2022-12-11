@@ -27,8 +27,8 @@ process CNVKIT_BATCH {
     task.ext.when == null || task.ext.when
 
     script:
-    def args = task.ext.args && task.ext.custom_args ? task.ext.args + ' ' + task.ext.custom_args :
-        task.ext.args ?: ''
+    def args = task.ext.args ?: ''
+    args += task.ext.custom_args ? ' ' + task.ext.custom_args : ''
 
     def tumor_exists = tumor ? true : false
     def normal_exists = normal ? true : false
