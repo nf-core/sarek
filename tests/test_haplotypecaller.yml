@@ -42,7 +42,7 @@
     - variant_calling
   files:
     - path: results/csv/variantcalled.csv
-      md5sum: d7d86e82902a4f57876b2414a4f812a4
+      md5sum: 228b1257c16f9b12e76f4c05553379c4
     - path: results/multiqc
     - path: results/preprocessing/converted/test/test.converted.cram
     # binary changes md5sums on reruns.
