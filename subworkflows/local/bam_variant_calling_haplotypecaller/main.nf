@@ -95,7 +95,8 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
                         patient:        meta.patient,
                         sample:         meta.sample,
                         sex:            meta.sex,
-                        status:         meta.status
+                        status:         meta.status,
+                        variantcaller:  "haplotypecaller"
                     ]
 
                     [groupKey(new_meta, new_meta.num_intervals), vcf]
@@ -142,13 +143,13 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
 
             vcf = VCF_VARIANT_FILTERING_GATK.out.filtered_vcf.map{ meta, vcf ->
                 [[
-                    id:meta.sample,
-                    num_intervals:meta.num_intervals,
-                    patient:meta.patient,
-                    sample:meta.sample,
-                    sex:meta.sex,
-                    status:meta.status,
-                    variantcaller:"haplotypecaller"
+                    id:             meta.sample,
+                    num_intervals:  meta.num_intervals,
+                    patient:        meta.patient,
+                    sample:         meta.sample,
+                    sex:            meta.sex,
+                    status:         meta.status,
+                    variantcaller:  "haplotypecaller"
                 ], vcf ]}
 
             versions = versions.mix(VCF_VARIANT_FILTERING_GATK.out.versions)
