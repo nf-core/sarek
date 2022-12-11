@@ -182,7 +182,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
                         known_sites_snps,
                         known_sites_snps_tbi,
                         intervals_bed_combined_haplotypec,
-                        skip_tools)
+                        (skip_tools && skip_tools.split(',').contains('haplotypecaller_filter')))
 
         haplotypecaller_vcf      = BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.vcf
         ch_versions              = ch_versions.mix(BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.versions)
