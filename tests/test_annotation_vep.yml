@@ -1,5 +1,5 @@
 - name: Run VEP
-  command: nextflow run main.nf -profile test,annotation --tools vep --skip_tools multiqc
+  command: nextflow run main.nf -profile test,annotation --tools vep --skip_tools multiqc --outdir results
   tags:
     - annotation
     - vep

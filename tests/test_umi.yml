@@ -1,5 +1,5 @@
 - name: Run UMI test
-  command: nextflow run main.nf -profile test,umi
+  command: nextflow run main.nf -profile test,umi --outdir results
   tags:
     - preprocessing
     - umi
@@ -51,7 +51,7 @@
     - path: results/reports/samtools/test/test.recal.cram.stats
       md5sum: 44cb4ed98f9b18f8522c537264bb69d0
 # - name: Run UMI TSO test
-#   command: nextflow run main.nf -profile test,umi_tso
+#   command: nextflow run main.nf -profile test,umi_tso --outdir results
 #   tags:
 #     - umi_tso
 #     - umi

@@ -1,5 +1,5 @@
 - name: Run bwamem2
-  command: nextflow run main.nf -profile test --aligner bwa-mem2 --save_reference
+  command: nextflow run main.nf -profile test --aligner bwa-mem2 --save_reference --outdir results
   tags:
     - aligner
     - bwamem2
