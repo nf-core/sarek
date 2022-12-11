@@ -22,7 +22,7 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
     main:
 
     ch_versions = Channel.empty()
-    filtered_vcf = Channel.empty()
+    vcf = Channel.empty()
     realigned_bam = Channel.empty()
 
     GATK4_HAPLOTYPECALLER(
@@ -77,7 +77,7 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
             known_sites_snps_tbi,
             known_snps_vqsr)
 
-        filtered_vcf = BAM_JOINT_CALLING_GERMLINE_GATK.out.genotype_vcf
+        vcf = BAM_JOINT_CALLING_GERMLINE_GATK.out.genotype_vcf
         ch_versions = ch_versions.mix(BAM_JOINT_CALLING_GERMLINE_GATK.out.versions)
     } else {
 
@@ -136,7 +136,7 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
                         known_sites_indels.concat(known_sites_snps).flatten().unique().collect(),
                         known_sites_indels_tbi.concat(known_sites_snps_tbi).flatten().unique().collect())
 
-            filtered_vcf = VCF_VARIANT_FILTERING_GATK.out.filtered_vcf.map{ meta, vcf-> [
+            vcf = VCF_VARIANT_FILTERING_GATK.out.filtered_vcf.map{ meta, vcf-> [
                     [
                         patient:meta.patient,
                         sample:meta.sample,
@@ -152,12 +152,12 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
             ch_versions = ch_versions.mix(VCF_VARIANT_FILTERING_GATK.out.versions)
         }
 
-        ch_versions = ch_versions.mix(GATK4_HAPLOTYPECALLER.out.versions)
         ch_versions = ch_versions.mix(MERGE_HAPLOTYPECALLER.out.versions)
-    }
+    } else vcf = haplotypecaller_vcf
+    ch_versions = ch_versions.mix(GATK4_HAPLOTYPECALLER.out.versions)
 
     emit:
     versions = ch_versions
-    filtered_vcf
+    vcf
     realigned_bam
 }

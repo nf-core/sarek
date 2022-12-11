@@ -184,7 +184,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
                         intervals_bed_combined_haplotypec,
                         skip_tools)
 
-        haplotypecaller_vcf      = BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.filtered_vcf
+        haplotypecaller_vcf      = BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.vcf
         ch_versions              = ch_versions.mix(BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.versions)
 
     }
