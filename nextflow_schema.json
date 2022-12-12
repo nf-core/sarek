@@ -347,7 +347,9 @@
                     "type": "string",
                     "default": null,
                     "fa_icon": "fas fa-file",
-                    "help_text": "https://cnvkit.readthedocs.io/en/stable/pipeline.html?highlight=reference.cnn#batch"
+                    "help_text": "https://cnvkit.readthedocs.io/en/stable/pipeline.html?highlight=reference.cnn#batch",
+                    "description": "Copy-number reference for CNVkit",
+                    "hidden": true
                 },
                 "pon": {
                     "type": "string",
