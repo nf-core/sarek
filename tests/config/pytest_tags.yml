@@ -5,6 +5,7 @@ tumor_normal_pair:
   - modules/**
   - subworkflows/**
   - workflows/**
+  - nextflow_schema.json
   - nextflow.config
   - main.nf
 
@@ -13,6 +14,7 @@ save_mapped_only:
   - modules/**
   - subworkflows/**
   - workflows/**
+  - nextflow_schema.json
   - nextflow.config
   - main.nf
 
@@ -21,6 +23,7 @@ save_output_as_bam_only:
   - modules/**
   - subworkflows/**
   - workflows/**
+  - nextflow_schema.json
   - nextflow.config
   - main.nf
 
@@ -29,6 +32,7 @@ skip_all_qc:
   - modules/**
   - subworkflows/**
   - workflows/**
+  - nextflow_schema.json
   - nextflow.config
   - main.nf
 
@@ -37,6 +41,7 @@ skip_markduplicates:
   - modules/**
   - subworkflows/**
   - workflows/**
+  - nextflow_schema.json
   - nextflow.config
   - main.nf
 
