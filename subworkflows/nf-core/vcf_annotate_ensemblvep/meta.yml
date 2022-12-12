@@ -1,0 +1,62 @@
+name: vcf_annotate_ensemblvep
+description: Perform annotation with ensemblvep and bgzip + tabix index the resulting VCF file
+keywords:
+  - vcf
+  - annotation
+  - ensemblvep
+modules:
+  - ensemblvep
+  - tabix/bgziptabix
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - vcf:
+      type: file
+      description: vcf file
+      pattern: "*.{vcf}"
+  - fasta:
+      type: file
+      description: Reference genome fasta file (optional)
+      pattern: "*.{fa,fasta}"
+  - vep_genome:
+      type: value
+      description: genome to use
+  - vep_species:
+      type: value
+      description: species to use
+  - vep_cache_version:
+      type: value
+      description: cache version to use
+  - vep_cache:
+      type: file
+      description: path to root cache folder for ensemblvep (optional)
+  - vep_extra_files:
+      type: file
+      description: any extra files needed by plugins for ensemblvep (optional)
+output:
+  - vcf_tbi:
+      type: file
+      description: Compressed vcf file + tabix index
+      pattern: "[ *{.vcf.gz,vcf.gz.tbi} ]"
+  - json:
+      type: file
+      description: json file
+      pattern: "[ *{.json.gz} ]"
+  - tab:
+      type: file
+      description: tab file
+      pattern: "[ *{.tab.gz} ]"
+  - reports:
+      type: file
+      description: html reports
+      pattern: "*.html"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@maxulysse"
+  - "@matthdsm"

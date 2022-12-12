@@ -1,5 +1,5 @@
 - name: Run variant calling on germline sample with haplotypecaller
-  command: nextflow run main.nf -profile test,targeted --input ./tests/csv/3.0/mapped_single_bam.csv --tools haplotypecaller --step variant_calling
+  command: nextflow run main.nf -profile test,targeted --input ./tests/csv/3.0/mapped_single_bam.csv --tools haplotypecaller --step variant_calling --outdir results
   tags:
     - germline
     - haplotypecaller
@@ -34,8 +34,36 @@
     # binary changes md5sums on reruns.
     - path: results/haplotypecaller
       should_exist: false
+- name: Run variant calling on germline sample with haplotypecaller and skip filter
+  command: nextflow run main.nf -profile test,targeted --input ./tests/csv/3.0/mapped_single_bam.csv --tools haplotypecaller --step variant_calling --skip_tools haplotypecaller_filter --outdir results
+  tags:
+    - germline
+    - haplotypecaller
+    - variant_calling
+  files:
+    - path: results/csv/variantcalled.csv
+      md5sum: f1041cfc30cedb240f224dd8e3dbf9d2
+    - path: results/multiqc
+    - path: results/preprocessing/converted/test/test.converted.cram
+    # binary changes md5sums on reruns.
+    - path: results/preprocessing/converted/test/test.converted.cram.crai
+    # binary changes md5sums on reruns.
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+      should_exist: false
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+      should_exist: false
+    - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.filtered.vcf.gz
+      should_exist: false
+    - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.filtered.vcf.gz.tbi
+      should_exist: false
+    - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.vcf.gz
+    # binary changes md5sums on reruns.
+    - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.vcf.gz.tbi
+    # binary changes md5sums on reruns.
+    - path: results/haplotypecaller
+      should_exist: false
 - name: Run variant calling on germline sample with haplotypecaller without intervals
-  command: nextflow run main.nf -profile test,targeted --input ./tests/csv/3.0/mapped_single_bam.csv --tools haplotypecaller --step variant_calling --no_intervals
+  command: nextflow run main.nf -profile test,targeted --input ./tests/csv/3.0/mapped_single_bam.csv --tools haplotypecaller --step variant_calling --no_intervals --outdir results
   tags:
     - germline
     - haplotypecaller
@@ -78,7 +106,7 @@
     - path: results/haplotypecaller
       should_exist: false
 - name: Run joint germline variant calling with haplotypecaller
-  command: nextflow run main.nf -profile test,targeted --input ./tests/csv/3.0/mapped_joint_bam.csv --tools haplotypecaller --joint_germline true --step variant_calling
+  command: nextflow run main.nf -profile test,targeted --input ./tests/csv/3.0/mapped_joint_bam.csv --tools haplotypecaller --joint_germline true --step variant_calling --outdir results
   tags:
     - germline
     - haplotypecaller

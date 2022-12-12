@@ -1,5 +1,5 @@
 - name: Run dragmap
-  command: nextflow run main.nf -profile test --aligner dragmap --save_reference
+  command: nextflow run main.nf -profile test --aligner dragmap --save_reference --outdir results
   tags:
     - aligner
     - dragmap

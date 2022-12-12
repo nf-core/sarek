@@ -1,5 +1,5 @@
 - name: Run default pipeline
-  command: nextflow run main.nf -profile test
+  command: nextflow run main.nf -profile test --outdir results
   tags:
     - default
     - preprocessing

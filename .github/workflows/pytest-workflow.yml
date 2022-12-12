@@ -51,6 +51,8 @@ jobs:
             tags: snpeff
           - profile: "conda"
             tags: vep
+          - profile: "conda"
+            tags: concatenate_vcfs
           - profile: "singularity"
             tags: merge
     env:

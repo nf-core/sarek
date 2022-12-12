@@ -96,7 +96,7 @@
                     "fa_icon": "fas fa-forward",
                     "description": "Disable specified tools.",
                     "help_text": "Multiple tools can be specified, separated by commas.\n\n> **NB** `--skip_tools baserecalibrator_report` is actually just not saving the reports.\n> **NB** `--skip_tools markduplicates_report` does not skip `MarkDuplicates` but prevent the collection of duplicate metrics that slows down performance.",
-                    "pattern": "^((baserecalibrator|baserecalibrator_report|bcftools|documentation|fastqc|markduplicates|markduplicates_report|mosdepth|multiqc|samtools|vcftools|versions)?,?)*[^,]+$"
+                    "pattern": "^((baserecalibrator|baserecalibrator_report|bcftools|documentation|fastqc|haplotypecaller_filter|markduplicates|markduplicates_report|mosdepth|multiqc|samtools|vcftools|versions)?,?)*[^,]+$"
                 }
             },
             "fa_icon": "fas fa-user-cog"
@@ -226,6 +226,12 @@
             "default": "",
             "fa_icon": "fas fa-toolbox",
             "properties": {
+                "concatenate_vcfs": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-merge",
+                    "description": "Option for concatenating germline vcf-files.",
+                    "help_text": "Concatenating the germline vcf-files from each applied variant-caller into one vcf-file using bfctools concat."
+                },
                 "only_paired_variant_calling": {
                     "type": "boolean",
                     "fa_icon": "fas fa-forward",
@@ -844,6 +850,12 @@
                     "fa_icon": "fas fa-question-circle",
                     "hidden": true
                 },
+                "version": {
+                    "type": "boolean",
+                    "description": "Display version and exit.",
+                    "fa_icon": "fas fa-question-circle",
+                    "hidden": true
+                },
                 "publish_dir_mode": {
                     "type": "string",
                     "default": "copy",
@@ -941,7 +953,7 @@
                     "type": "string",
                     "description": "Incoming hook URL for messaging service",
                     "fa_icon": "fas fa-people-group",
-                    "help_text": "Incoming hook URL for messaging service. Currently, only MS Teams is supported.",
+                    "help_text": "Incoming hook URL for messaging service. Currently, MS Teams and Slack are supported.",
                     "hidden": true
                 }
             }

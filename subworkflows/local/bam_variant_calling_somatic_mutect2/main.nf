@@ -76,8 +76,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
 
             [groupKey(new_meta, meta.num_intervals), vcf]
         }.groupTuple(),
-        dict
-    )
+        dict.map{ it -> [[id:it[0].baseName], it]})
 
     mutect2_vcf = Channel.empty().mix(
         MERGE_MUTECT2.out.vcf,

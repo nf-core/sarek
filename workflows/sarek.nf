@@ -267,6 +267,25 @@ include { BAM_VARIANT_CALLING_TUMOR_ONLY_ALL             } from '../subworkflows
 // Variant calling on tumor/normal pair
 include { BAM_VARIANT_CALLING_SOMATIC_ALL                } from '../subworkflows/local/bam_variant_calling_somatic_all/main'
 
+// Concatenation of germline vcf-files
+include { ADD_INFO_TO_VCF as ADD_INFO_TO_DV_VCF          } from '../modules/local/add_info_to_vcf/main'
+include { ADD_INFO_TO_VCF as ADD_INFO_TO_FB_VCF          } from '../modules/local/add_info_to_vcf/main'
+include { ADD_INFO_TO_VCF as ADD_INFO_TO_HTC_VCF         } from '../modules/local/add_info_to_vcf/main'
+include { ADD_INFO_TO_VCF as ADD_INFO_TO_MANTA_VCF       } from '../modules/local/add_info_to_vcf/main'
+include { ADD_INFO_TO_VCF as ADD_INFO_TO_MPILEUP_VCF     } from '../modules/local/add_info_to_vcf/main'
+include { ADD_INFO_TO_VCF as ADD_INFO_TO_STRELKA_VCF     } from '../modules/local/add_info_to_vcf/main'
+include { ADD_INFO_TO_VCF as ADD_INFO_TO_TIDDIT_VCF      } from '../modules/local/add_info_to_vcf/main'
+include { TABIX_BGZIPTABIX as TABIX_EXT_VCF_DV           } from '../modules/nf-core/tabix/bgziptabix/main'
+include { TABIX_BGZIPTABIX as TABIX_EXT_VCF_FB           } from '../modules/nf-core/tabix/bgziptabix/main'
+include { TABIX_BGZIPTABIX as TABIX_EXT_VCF_HTC          } from '../modules/nf-core/tabix/bgziptabix/main'
+include { TABIX_BGZIPTABIX as TABIX_EXT_VCF_MANTA        } from '../modules/nf-core/tabix/bgziptabix/main'
+include { TABIX_BGZIPTABIX as TABIX_EXT_VCF_MPILEUP      } from '../modules/nf-core/tabix/bgziptabix/main'
+include { TABIX_BGZIPTABIX as TABIX_EXT_VCF_STRELKA      } from '../modules/nf-core/tabix/bgziptabix/main'
+include { TABIX_BGZIPTABIX as TABIX_EXT_VCF_TIDDIT       } from '../modules/nf-core/tabix/bgziptabix/main'
+include { BCFTOOLS_CONCAT as GERMLINE_VCFS_CONCAT        } from '../modules/nf-core/bcftools/concat/main'
+include { BCFTOOLS_SORT as GERMLINE_VCFS_CONCAT_SORT     } from '../modules/nf-core/bcftools/sort/main'
+include { TABIX_TABIX as TABIX_GERMLINE_VCFS_CONCAT_SORT } from '../modules/nf-core/tabix/tabix/main'
+
 // QC on VCF files
 include { VCF_QC_BCFTOOLS_VCFTOOLS                       } from '../subworkflows/local/vcf_qc_bcftools_vcftools/main'
 
@@ -935,6 +954,7 @@ workflow SAREK {
         // GERMLINE VARIANT CALLING
         BAM_VARIANT_CALLING_GERMLINE_ALL(
             params.tools,
+            params.skip_tools,
             ch_cram_variant_calling_status_normal,
             [[id:"bwa"],[]], //bwa_index for tiddit; not used here
             dbsnp,
@@ -1001,14 +1021,66 @@ workflow SAREK {
             rt_file
         )
 
+        if (params.concatenate_vcfs) {
+            // Concatenate vcf-files
+
+            ADD_INFO_TO_DV_VCF(BAM_VARIANT_CALLING_GERMLINE_ALL.out.deepvariant_vcf)
+            TABIX_EXT_VCF_DV(ADD_INFO_TO_DV_VCF.out.vcf)
+
+            ADD_INFO_TO_FB_VCF(BAM_VARIANT_CALLING_GERMLINE_ALL.out.freebayes_vcf)
+            TABIX_EXT_VCF_FB(ADD_INFO_TO_FB_VCF.out.vcf)
+
+            ADD_INFO_TO_HTC_VCF(BAM_VARIANT_CALLING_GERMLINE_ALL.out.haplotypecaller_vcf)
+            TABIX_EXT_VCF_HTC(ADD_INFO_TO_HTC_VCF.out.vcf)
+
+            ADD_INFO_TO_MANTA_VCF(BAM_VARIANT_CALLING_GERMLINE_ALL.out.manta_vcf)
+            TABIX_EXT_VCF_MANTA(ADD_INFO_TO_MANTA_VCF.out.vcf)
+
+            ADD_INFO_TO_MPILEUP_VCF(BAM_VARIANT_CALLING_GERMLINE_ALL.out.mpileup_vcf)
+            TABIX_EXT_VCF_MPILEUP(ADD_INFO_TO_MPILEUP_VCF.out.vcf)
+
+            ADD_INFO_TO_STRELKA_VCF(BAM_VARIANT_CALLING_GERMLINE_ALL.out.strelka_vcf)
+            TABIX_EXT_VCF_STRELKA(ADD_INFO_TO_STRELKA_VCF.out.vcf)
+
+            ADD_INFO_TO_TIDDIT_VCF(BAM_VARIANT_CALLING_GERMLINE_ALL.out.tiddit_vcf)
+            TABIX_EXT_VCF_TIDDIT(ADD_INFO_TO_TIDDIT_VCF.out.vcf)
+
+            // Gather vcfs and vcf-tbis for concatenating germline-vcfs
+            germline_vcfs_with_tbis = Channel.empty()
+            germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(TABIX_EXT_VCF_DV.out.gz_tbi)
+            germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(TABIX_EXT_VCF_FB.out.gz_tbi)
+            germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(TABIX_EXT_VCF_HTC.out.gz_tbi)
+            germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(TABIX_EXT_VCF_MANTA.out.gz_tbi)
+            germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(TABIX_EXT_VCF_MPILEUP.out.gz_tbi)
+            germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(TABIX_EXT_VCF_STRELKA.out.gz_tbi)
+            germline_vcfs_with_tbis = germline_vcfs_with_tbis.mix(TABIX_EXT_VCF_TIDDIT.out.gz_tbi)
+
+            germline_vcfs_with_tbis = germline_vcfs_with_tbis.map{
+                meta, vcf, tbi ->
+                    def new_meta = meta.clone()
+                    new_meta.remove('variantcaller')
+                    new_meta.remove('tumor_id')
+                    new_meta.remove('normal_id')
+                    new_meta.remove('sample')
+                    new_meta.remove('status')
+                    new_meta.remove('num_intervals')
+                    new_meta.remove('data_type')
+                    [new_meta, vcf, tbi]
+                }.groupTuple()
+
+            GERMLINE_VCFS_CONCAT(germline_vcfs_with_tbis)
+            GERMLINE_VCFS_CONCAT_SORT(GERMLINE_VCFS_CONCAT.out.vcf)
+            TABIX_GERMLINE_VCFS_CONCAT_SORT(GERMLINE_VCFS_CONCAT_SORT.out.vcf)
+        }
+
         // Gather vcf files for annotation and QC
         vcf_to_annotate = Channel.empty()
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.deepvariant_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.freebayes_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.haplotypecaller_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.manta_vcf)
-        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.tiddit_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.strelka_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.tiddit_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.freebayes_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.mutect2_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.manta_vcf)
@@ -1106,7 +1178,7 @@ workflow.onComplete {
     }
     NfcoreTemplate.summary(workflow, params, log)
     if (params.hook_url) {
-        NfcoreTemplate.adaptivecard(workflow, params, summary_params, projectDir, log)
+        NfcoreTemplate.IM_notification(workflow, params, summary_params, projectDir, log)
     }
 }
 
