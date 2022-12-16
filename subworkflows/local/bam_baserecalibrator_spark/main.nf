@@ -22,20 +22,10 @@ workflow BAM_BASERECALIBRATOR_SPARK {
 
     cram_intervals = cram.combine(intervals)
         .map{ meta, cram, crai, intervals, num_intervals ->
-
-            //If no interval file provided (0) then add empty list
-            intervals_new = num_intervals == 0 ? [] : intervals
-
-            [[
-                data_type:      meta.data_type,
-                id:             meta.sample,
-                num_intervals:  num_intervals,
-                patient:        meta.patient,
-                sample:         meta.sample,
-                sex:            meta.sex,
-                status:         meta.status,
-            ],
-            cram, crai, intervals_new]
+        //If no interval file provided (0) then add empty list
+        [meta.subMap('data_type', 'patient','sample', 'sex', 'status')
+            + [num_intervals:num_intervals, id: meta.sample]
+            ,cram, crai, (num_intervals == 0 ? [] : intervals)]
         }
 
     // Run Baserecalibrator spark
@@ -44,18 +34,7 @@ workflow BAM_BASERECALIBRATOR_SPARK {
     // Figuring out if there is one or more table(s) from the same sample
     table_to_merge = GATK4_BASERECALIBRATOR_SPARK.out.table
         .map{ meta, table ->
-
-                new_meta = [
-                                data_type:      meta.data_type,
-                                id:             meta.sample,
-                                num_intervals:  meta.num_intervals,
-                                patient:        meta.patient,
-                                sample:         meta.sample,
-                                sex:            meta.sex,
-                                status:         meta.status,
-                            ]
-
-                [groupKey(new_meta, meta.num_intervals), table]
+            [groupKey(meta.subMap('data_type', 'id', 'num_intervals', 'patient', 'sample', 'sex', 'status'), meta.num_intervals), table]
         }.groupTuple()
     .branch{
         //Warning: size() calculates file size not list length here, so use num_intervals instead
@@ -67,19 +46,12 @@ workflow BAM_BASERECALIBRATOR_SPARK {
 
     // Merge the tables only when we have intervals
     GATK4_GATHERBQSRREPORTS(table_to_merge.multiple)
-    table_bqsr = table_to_merge.single.map{meta, table -> [meta, table[0]]}.mix(GATK4_GATHERBQSRREPORTS.out.table)
-                                        .map{ meta, table ->
-                                            // remove no longer necessary fields to make sure joining can be done correctly: num_intervals
-                                            [[
-                                                data_type:  meta.data_type,
-                                                id:         meta.sample,
-                                                patient:    meta.patient,
-                                                sample:     meta.sample,
-                                                sex:        meta.sex,
-                                                status:     meta.status,
-                                            ],
-                                            table]
-                                        }
+    table_bqsr = table_to_merge.single.map{meta, table -> [meta, table[0]]}
+        .mix(GATK4_GATHERBQSRREPORTS.out.table).map{ meta, table ->
+            // remove no longer necessary fields to make sure joining can be done correctly: num_intervals
+            [meta.subMap('data_type', 'patient', 'sample', 'sex', 'status') + [id: meta.sample]
+                , table]
+        }
 
     // Gather versions of all tools used
     ch_versions = ch_versions.mix(GATK4_BASERECALIBRATOR_SPARK.out.versions)
