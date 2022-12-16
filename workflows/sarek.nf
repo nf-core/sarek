@@ -64,62 +64,62 @@ if (params.wes && !params.step == 'annotate') {
     else log.warn("Intervals file was provided without parameter `--wes`: Pipeline will assume this is Whole-Genome-Sequencing data.")
 } else if (params.intervals && !params.intervals.endsWith("bed") && !params.intervals.endsWith("list")) exit 1, "Intervals file must end with .bed, .list, or .interval_list"
 
-if (params.step == 'mapping' && params.aligner.contains("dragmap") && !(params.skip_tools && params.skip_tools.split(',').contains("baserecalibrator"))){
+if (params.step == 'mapping' && params.aligner.contains("dragmap") && !(params.skip_tools && params.skip_tools.split(',').contains("baserecalibrator"))) {
     log.warn("DragMap was specified as aligner. Base recalibration is not contained in --skip_tools. It is recommended to skip baserecalibration when using DragMap\nhttps://gatk.broadinstitute.org/hc/en-us/articles/4407897446939--How-to-Run-germline-single-sample-short-variant-discovery-in-DRAGEN-mode")
 }
 
 // Fails or warns when missing files or params for ascat
-if (params.tools && params.tools.split(',').contains('ascat')){
-    if (!params.ascat_alleles){
+if (params.tools && params.tools.split(',').contains('ascat')) {
+    if (!params.ascat_alleles) {
         log.error "No allele files were provided for running ASCAT. Please provide a zip folder with allele files."
         exit 1
     }
-    if (!params.ascat_loci){
+    if (!params.ascat_loci) {
         log.error "No loci files were provided for running ASCAT. Please provide a zip folder with loci files."
         exit 1
     }
-    if (params.ascat_genome!="hg19" && params.ascat_genome!="hg38"){
+    if (params.ascat_genome!="hg19" && params.ascat_genome!="hg38") {
         log.error "Parameter ascat_genome must be either hg19 or hg38."
         exit 1
     }
-    if (!params.ascat_loci_gc && !params.ascat_loci_rt){
+    if (!params.ascat_loci_gc && !params.ascat_loci_rt) {
         log.warn("No LogRCorrection performed in ASCAT. For LogRCorrection to run, please provide either loci gc files or both loci gc files and loci rt files.")
     }
-    if (params.wes){
+    if (params.wes) {
         log.warn("Default reference files not suited for running ASCAT on WES data. It's recommended to use the reference files provided here: https://github.com/Wedge-lab/battenberg#required-reference-files")
     }
 }
 
 // Warns when missing files or params for mutect2
-if (params.tools && params.tools.split(',').contains('mutect2')){
-    if (!params.pon){
+if (params.tools && params.tools.split(',').contains('mutect2')) {
+    if (!params.pon) {
         log.warn("No Panel-of-normal was specified for Mutect2.\nIt is highly recommended to use one: https://gatk.broadinstitute.org/hc/en-us/articles/5358911630107-Mutect2\nFor more information on how to create one: https://gatk.broadinstitute.org/hc/en-us/articles/5358921041947-CreateSomaticPanelOfNormals-BETA-")
     }
-    if (!params.germline_resource){
+    if (!params.germline_resource) {
         log.warn("If Mutect2 is specified without a germline resource, no filtering will be done.\nIt is recommended to use one: https://gatk.broadinstitute.org/hc/en-us/articles/5358911630107-Mutect2")
     }
-    if (params.pon && params.pon.contains("/Homo_sapiens/GATK/GRCh38/Annotation/GATKBundle/1000g_pon.hg38.vcf.gz")){
+    if (params.pon && params.pon.contains("/Homo_sapiens/GATK/GRCh38/Annotation/GATKBundle/1000g_pon.hg38.vcf.gz")) {
         log.warn("The default Panel-of-Normals provided by GATK is used for Mutect2.\nIt is highly recommended to generate one from normal samples that are technical similar to the tumor ones.\nFor more information: https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON-")
     }
 }
 
 // Fails when missing resources for baserecalibrator
 // Warns when missing resources for haplotypecaller
-if (!params.dbsnp && !params.known_indels){
-    if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration', 'recalibrate'] && (!params.skip_tools || (params.skip_tools && !params.skip_tools.split(',').contains('baserecalibrator')))){
+if (!params.dbsnp && !params.known_indels) {
+    if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration', 'recalibrate'] && (!params.skip_tools || (params.skip_tools && !params.skip_tools.split(',').contains('baserecalibrator')))) {
         log.error "Base quality score recalibration requires at least one resource file. Please provide at least one of `--dbsnp` or `--known_indels`\nYou can skip this step in the workflow by adding `--skip_tools baserecalibrator` to the command."
         exit 1
     }
-    if (params.tools && params.tools.split(',').contains('haplotypecaller')){
+    if (params.tools && params.tools.split(',').contains('haplotypecaller')) {
         log.warn "If Haplotypecaller is specified, without `--dbsnp` or `--known_indels no filtering will be done. For filtering, please provide at least one of `--dbsnp` or `--known_indels`.\nFor more information see FilterVariantTranches (single-sample, default): https://gatk.broadinstitute.org/hc/en-us/articles/5358928898971-FilterVariantTranches\nFor more information see VariantRecalibration (--joint_germline): https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator\nFor more information on GATK Best practice germline variant calling: https://gatk.broadinstitute.org/hc/en-us/articles/360035535932-Germline-short-variant-discovery-SNPs-Indels-"
 
     }
 }
-if (params.joint_germline && (!params.tools || !params.tools.split(',').contains('haplotypecaller'))){
+if (params.joint_germline && (!params.tools || !params.tools.split(',').contains('haplotypecaller'))) {
     log.error "The Haplotypecaller should be specified as one of the tools when doing joint germline variant calling. (The Haplotypecaller could be specified by adding `--tools haplotypecaller` to the nextflow command.) "
     exit 1
 }
-if (params.joint_germline && (!params.dbsnp || !params.known_indels || !params.known_snps || params.no_intervals)){
+if (params.joint_germline && (!params.dbsnp || !params.known_indels || !params.known_snps || params.no_intervals)) {
     log.warn "If Haplotypecaller is specified, without `--dbsnp`, `--known_snps`, `--known_indels` or the associated resource labels (ie `known_snps_vqsr`), no variant recalibration will be done. For recalibration you must provide all of these resources.\nFor more information see VariantRecalibration: https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator \nJoint germline variant calling also requires intervals in order to genotype the samples. As a result, if `--no_intervals` is set to `true` the joint germline variant calling will not be performed."
 }
 
@@ -466,24 +466,13 @@ workflow SAREK {
                                     FASTP.out.html.collect{meta, html -> html}
                                     )
 
-            if (params.split_fastq){
-                ch_reads_to_map = FASTP.out.reads.map{ key, reads ->
-
-                        read_files = reads.sort{ a,b -> a.getName().tokenize('.')[0] <=> b.getName().tokenize('.')[0] }.collate(2)
-                        [[
-                            data_type:key.data_type,
-                            id:key.id,
-                            numLanes:key.numLanes,
-                            patient: key.patient,
-                            read_group:key.read_group,
-                            sample:key.sample,
-                            sex:key.sex,
-                            size:read_files.size(),
-                            status:key.status,
-                        ],
-                        read_files]
+            if (params.split_fastq) {
+                ch_reads_to_map = FASTP.out.reads.map{ meta, reads ->
+                    read_files = reads.sort{ a,b -> a.getName().tokenize('.')[0] <=> b.getName().tokenize('.')[0] }.collate(2)
+                    [meta.subMap('data_type', 'id', 'numLanes', 'patient', 'read_group', 'sample', 'sex', 'status' ) + [size:read_files.size()],
+                    read_files]
                     }.transpose()
-            }else{
+            } else {
                 ch_reads_to_map = FASTP.out.reads
             }
 
@@ -577,7 +566,7 @@ workflow SAREK {
         // or the input BAM (+converted) or CRAM files
         ch_cram_skip_markduplicates = Channel.empty()
 
-        if (params.step == 'mapping'){
+        if (params.step == 'mapping') {
             if(params.skip_tools && params.skip_tools.split(',').contains('markduplicates')) ch_cram_skip_markduplicates = BAM_TO_CRAM_MAPPING.out.alignment_index
         }
         else {
@@ -588,7 +577,7 @@ workflow SAREK {
 
             // Convert any input BAMs to CRAM
             BAM_TO_CRAM(ch_convert.bam, fasta, fasta_fai)
-            if(params.skip_tools && params.skip_tools.split(',').contains('markduplicates')){
+            if(params.skip_tools && params.skip_tools.split(',').contains('markduplicates')) {
                 ch_cram_skip_markduplicates = Channel.empty().mix(ch_convert.cram, BAM_TO_CRAM.out.alignment_index)
             }
 
@@ -673,7 +662,7 @@ workflow SAREK {
     if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration']) {
 
         // Run if starting from step "prepare_recalibration"
-        if (params.step == 'prepare_recalibration'){
+        if (params.step == 'prepare_recalibration') {
 
             //Support if starting from BAM or CRAM files
             ch_input_sample.branch{
@@ -777,7 +766,7 @@ workflow SAREK {
     if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration', 'recalibrate']) {
 
         // Run if starting from step "prepare_recalibration"
-        if (params.step == 'recalibrate'){
+        if (params.step == 'recalibrate') {
 
             //Support if starting from BAM or CRAM files
             ch_input_sample.branch{
@@ -859,7 +848,7 @@ workflow SAREK {
             CHANNEL_APPLYBQSR_CREATE_CSV(csv_recalibration)
 
 
-        } else if (params.step == 'recalibrate'){
+        } else if (params.step == 'recalibrate') {
             // ch_cram_variant_calling contains either:
             // - input bams converted to crams, if started from step recal + skip BQSR
             // - input crams if started from step recal + skip BQSR
@@ -921,7 +910,7 @@ workflow SAREK {
         // and remove patient ID field & null value for further processing [meta1, [cram1,crai1]] [meta2, [cram2,crai2]]
         ch_cram_variant_calling_tumor_only = ch_cram_variant_calling_tumor_filtered.transpose().map{ it -> [it[1], it[2], it[3]] }
 
-        if (params.only_paired_variant_calling){
+        if (params.only_paired_variant_calling) {
             // Normal only samples
 
             // 1. Join with tumor samples, in each channel there is one key per patient now. Patients without matched tumor end up with: [patient1, [meta1], [cram1,crai1], null] as there is only one matched normal possible
@@ -933,7 +922,7 @@ workflow SAREK {
             // 3. Remove patient ID field & null value for further processing [meta1, [cram1,crai1]] [meta2, [cram2,crai2]] (no transposing needed since only one normal per patient ID)
             ch_cram_variant_calling_status_normal = ch_cram_variant_calling_normal_filtered.map{ it -> [it[1], it[2], it[3]] }
 
-        }else{
+        } else {
             ch_cram_variant_calling_status_normal = ch_cram_variant_calling_status.normal
         }
 
@@ -1237,7 +1226,7 @@ def extract_csv(csv_file) {
         //Retrieves number of lanes by grouping together by patient and sample and counting how many entries there are for this combination
         .map{ row ->
             sample_count_all++
-            if (!(row.patient && row.sample)){
+            if (!(row.patient && row.sample)) {
                 log.error "Missing field in csv file header. The csv file must have fields named 'patient' and 'sample'."
                 System.exit(1)
             }
