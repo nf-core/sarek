@@ -37,7 +37,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
     //
     gendb_input = input.map{ meta, gvcf, tbi, intervals ->
         [ meta.subMap('intervals_name', 'num_intervals')
-            + [id: "joint_variant_calling"]
+            + [id: 'joint_variant_calling']
             , gvcf, tbi, intervals ]
     }.groupTuple(by:[0,3]).map{ meta, gvcf, tbi, intervals ->
         [ meta, gvcf, tbi, intervals, [], [] ]
@@ -67,7 +67,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
 
     vcfs_sorted_input_no_intervals =  vcfs_sorted_input.no_intervals.map{ meta, vcf ->
         [ meta.subMap('num_intervals')
-            + [id: "joint_variant_calling", patient: "all_samples", variantcaller: "haplotypecaller"]
+            + [id: 'joint_variant_calling', patient: 'all_samples', variantcaller: 'haplotypecaller']
             , vcf ]
     }
 
@@ -78,7 +78,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
     //Rework meta for variantscalled.csv and annotation tools
     MERGE_GENOTYPEGVCFS(vcfs_sorted_input.intervals.map{ meta, vcf ->
         [ meta.subMap('num_intervals')
-            + [id: "joint_variant_calling", patient: "all_samples", variantcaller: "haplotypecaller"]
+            + [id: 'joint_variant_calling', patient: 'all_samples', variantcaller: 'haplotypecaller']
             , vcf ]
         }.groupTuple(),
         dict.map{ it -> [[id:it[0].baseName], it]})
@@ -124,7 +124,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
         .join(VARIANTRECALIBRATOR_SNP.out.tranches)
         .map{ meta, vcf, tbi, recal, index, tranche ->
             [ meta.subMap('num_intervals')
-                + [id: "recalibrated_joint_variant_calling", patient: "all_samples", variantcaller: "haplotypecaller"]
+                + [id: 'recalibrated_joint_variant_calling', patient: 'all_samples', variantcaller: 'haplotypecaller']
                 , vcf, tbi, recal, index, tranche]
         }
 
@@ -135,7 +135,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
         .join(VARIANTRECALIBRATOR_INDEL.out.tranches)
         .map{ meta, vcf, tbi, recal, index, tranche ->
             [ meta.subMap('num_intervals')
-                + [id: "recalibrated_joint_variant_calling", patient: "all_samples", variantcaller: "haplotypecaller"]
+                + [id: 'recalibrated_joint_variant_calling', patient: 'all_samples', variantcaller: 'haplotypecaller']
                 , vcf, tbi, recal, index, tranche]
         }
 

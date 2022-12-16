@@ -23,7 +23,7 @@ workflow BAM_BASERECALIBRATOR {
     cram_intervals = cram.combine(intervals)
         .map{ meta, cram, crai, intervals, num_intervals ->
         //If no interval file provided (0) then add empty list
-        [meta.subMap('data_type', 'patient','sample', 'sex', 'status')
+        [meta.subMap('data_type', 'patient', 'sample', 'sex', 'status')
             + [num_intervals:num_intervals, id: meta.sample]
             ,cram, crai, (num_intervals == 0 ? [] : intervals)]
         }

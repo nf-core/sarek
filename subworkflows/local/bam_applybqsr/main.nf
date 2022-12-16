@@ -20,7 +20,7 @@ workflow BAM_APPLYBQSR {
 
     cram_intervals = cram.combine(intervals).map{ meta, cram, crai, recal, intervals, num_intervals ->
         //If no interval file provided (0) then add empty list
-        [meta.subMap('data_type', 'patient','sample', 'sex', 'status')
+        [meta.subMap('data_type', 'patient', 'sample', 'sex', 'status')
             + [num_intervals:num_intervals, id: meta.sample]
             ,cram, crai, recal, (num_intervals == 0 ? [] : intervals)]
     }
@@ -33,7 +33,7 @@ workflow BAM_APPLYBQSR {
 
     ch_cram_recal_out = CRAM_MERGE_INDEX_SAMTOOLS.out.cram_crai.map{ meta, cram, crai ->
         // remove no longer necessary fields to make sure joining can be done correctly: num_intervals
-        [meta.subMap('data_type', 'id', 'patient','sample', 'sex', 'status')
+        [meta.subMap('data_type', 'id', 'patient', 'sample', 'sex', 'status')
             , cram, crai]
     }
 
