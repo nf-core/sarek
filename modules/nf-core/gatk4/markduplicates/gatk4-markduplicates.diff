@@ -40,6 +40,6 @@ Changes in module 'nf-core/gatk4/markduplicates'
 +        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
      END_VERSIONS
      """
- }
-
+-}
++}
 ************************************************************
