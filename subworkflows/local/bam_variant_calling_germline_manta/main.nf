@@ -12,26 +12,25 @@ workflow BAM_VARIANT_CALLING_GERMLINE_MANTA {
     fasta_fai                // channel: [mandatory]
 
     main:
-
-    ch_versions = Channel.empty()
+    versions = Channel.empty()
 
     MANTA_GERMLINE(cram, fasta, fasta_fai)
 
     // Figure out if using intervals or no_intervals
-    MANTA_GERMLINE.out.candidate_small_indels_vcf.branch{
-            intervals:    it[0].num_intervals > 1
-            no_intervals: it[0].num_intervals <= 1
-        }.set{manta_small_indels_vcf}
+    manta_small_indels_vcf = MANTA_GERMLINE.out.candidate_small_indels_vcf.branch{
+        intervals:    it[0].num_intervals > 1
+        no_intervals: it[0].num_intervals <= 1
+    }
 
-    MANTA_GERMLINE.out.candidate_sv_vcf.branch{
-            intervals:    it[0].num_intervals > 1
-            no_intervals: it[0].num_intervals <= 1
-        }.set{manta_sv_vcf}
+    manta_sv_vcf = MANTA_GERMLINE.out.candidate_sv_vcf.branch{
+        intervals:    it[0].num_intervals > 1
+        no_intervals: it[0].num_intervals <= 1
+    }
 
-    MANTA_GERMLINE.out.diploid_sv_vcf.branch{
-            intervals:    it[0].num_intervals > 1
-            no_intervals: it[0].num_intervals <= 1
-        }.set{manta_diploid_sv_vcf}
+    manta_diploid_sv_vcf = MANTA_GERMLINE.out.diploid_sv_vcf.branch{
+        intervals:    it[0].num_intervals > 1
+        no_intervals: it[0].num_intervals <= 1
+    }
 
     // Only when using intervals
     MERGE_MANTA_SMALL_INDELS(
@@ -49,7 +48,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_MANTA {
                         meta.num_intervals),
                 vcf]
             }.groupTuple(),
-        dict.map{ it -> [[id:it[0].baseName], it]})
+        dict.map{ it -> [ [ id:it[0].baseName ], it ] })
 
     MERGE_MANTA_SV(
         manta_sv_vcf.intervals
@@ -67,7 +66,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_MANTA {
                 vcf]
 
             }.groupTuple(),
-        dict.map{ it -> [[id:it[0].baseName], it]})
+        dict.map{ it -> [ [ id:it[0].baseName ], it ] })
 
     MERGE_MANTA_DIPLOID(
         manta_diploid_sv_vcf.intervals
@@ -85,11 +84,11 @@ workflow BAM_VARIANT_CALLING_GERMLINE_MANTA {
                 vcf]
 
             }.groupTuple(),
-        dict.map{ it -> [[id:it[0].baseName], it]})
+        dict.map{ it -> [ [ id:it[0].baseName ], it ] })
 
     // Mix output channels for "no intervals" and "with intervals" results
     // Only diploid SV should get annotated
-    manta_vcf = Channel.empty().mix(
+    vcf = Channel.empty().mix(
                     MERGE_MANTA_DIPLOID.out.vcf,
                     manta_diploid_sv_vcf.no_intervals)
                 .map{ meta, vcf ->
@@ -104,12 +103,13 @@ workflow BAM_VARIANT_CALLING_GERMLINE_MANTA {
                     vcf]
                 }
 
-    ch_versions = ch_versions.mix(MERGE_MANTA_DIPLOID.out.versions)
-    ch_versions = ch_versions.mix(MERGE_MANTA_SMALL_INDELS.out.versions)
-    ch_versions = ch_versions.mix(MERGE_MANTA_SV.out.versions)
-    ch_versions = ch_versions.mix(MANTA_GERMLINE.out.versions)
+    versions = versions.mix(MERGE_MANTA_DIPLOID.out.versions)
+    versions = versions.mix(MERGE_MANTA_SMALL_INDELS.out.versions)
+    versions = versions.mix(MERGE_MANTA_SV.out.versions)
+    versions = versions.mix(MANTA_GERMLINE.out.versions)
 
     emit:
-    manta_vcf
-    versions = ch_versions
+    vcf
+
+    versions
 }

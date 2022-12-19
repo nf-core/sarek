@@ -19,7 +19,8 @@ workflow BAM_CONVERT_SAMTOOLS {
     interleaved // value: true/false
 
     main:
-    ch_versions = Channel.empty()
+    versions = Channel.empty()
+
     // Index File if not PROVIDED -> this also requires updates to samtools view possibly URGH
 
     // MAP - MAP
@@ -62,16 +63,17 @@ workflow BAM_CONVERT_SAMTOOLS {
     CAT_FASTQ(reads_to_concat)
 
     // Gather versions of all tools used
-    ch_versions = ch_versions.mix(CAT_FASTQ.out.versions)
-    ch_versions = ch_versions.mix(COLLATE_FASTQ_MAP.out.versions)
-    ch_versions = ch_versions.mix(COLLATE_FASTQ_UNMAP.out.versions)
-    ch_versions = ch_versions.mix(SAMTOOLS_MERGE_UNMAP.out.versions)
-    ch_versions = ch_versions.mix(SAMTOOLS_VIEW_MAP_MAP.out.versions)
-    ch_versions = ch_versions.mix(SAMTOOLS_VIEW_MAP_UNMAP.out.versions)
-    ch_versions = ch_versions.mix(SAMTOOLS_VIEW_UNMAP_MAP.out.versions)
-    ch_versions = ch_versions.mix(SAMTOOLS_VIEW_UNMAP_UNMAP.out.versions)
+    versions = versions.mix(CAT_FASTQ.out.versions)
+    versions = versions.mix(COLLATE_FASTQ_MAP.out.versions)
+    versions = versions.mix(COLLATE_FASTQ_UNMAP.out.versions)
+    versions = versions.mix(SAMTOOLS_MERGE_UNMAP.out.versions)
+    versions = versions.mix(SAMTOOLS_VIEW_MAP_MAP.out.versions)
+    versions = versions.mix(SAMTOOLS_VIEW_MAP_UNMAP.out.versions)
+    versions = versions.mix(SAMTOOLS_VIEW_UNMAP_MAP.out.versions)
+    versions = versions.mix(SAMTOOLS_VIEW_UNMAP_UNMAP.out.versions)
 
     emit:
     reads       = CAT_FASTQ.out.reads
-    versions    = ch_versions
+
+    versions
 }

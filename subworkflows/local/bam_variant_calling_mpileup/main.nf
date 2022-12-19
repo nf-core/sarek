@@ -11,20 +11,22 @@ workflow BAM_VARIANT_CALLING_MPILEUP {
         dict
 
     main:
-
-    ch_versions = Channel.empty()
+    versions = Channel.empty()
 
     keep_bcftools_mpileup = false
+
     BCFTOOLS_MPILEUP(cram, fasta, keep_bcftools_mpileup)
     SAMTOOLS_MPILEUP(cram, fasta)
+
     vcfs = BCFTOOLS_MPILEUP.out.vcf.branch{
             intervals:    it[0].num_intervals > 1
             no_intervals: it[0].num_intervals <= 1
-        }
+    }
+
     mpileup = SAMTOOLS_MPILEUP.out.mpileup.branch{
             intervals:    it[0].num_intervals > 1
             no_intervals: it[0].num_intervals <= 1
-        }
+    }
 
     //Merge mpileup only when intervals and natural order sort them
     CAT_MPILEUP(mpileup.intervals
@@ -62,15 +64,19 @@ workflow BAM_VARIANT_CALLING_MPILEUP {
 
             [groupKey(new_meta, new_meta.num_intervals), vcf]
         }.groupTuple(),
-    dict.map{ it -> [[id:it[0].baseName], it]})
+    dict.map{ it -> [ [ id:it[0].baseName ], it ] })
 
-    ch_versions = ch_versions.mix(SAMTOOLS_MPILEUP.out.versions)
-    ch_versions = ch_versions.mix(BCFTOOLS_MPILEUP.out.versions)
-    ch_versions = ch_versions.mix(CAT_MPILEUP.out.versions)
-    ch_versions = ch_versions.mix(GATK4_MERGEVCFS.out.versions)
-
-    emit:
-    versions = ch_versions
     mpileup = Channel.empty().mix(CAT_MPILEUP.out.file_out, mpileup.no_intervals)
     vcf = Channel.empty().mix(GATK4_MERGEVCFS.out.vcf, vcfs.no_intervals)
+
+    versions = versions.mix(SAMTOOLS_MPILEUP.out.versions)
+    versions = versions.mix(BCFTOOLS_MPILEUP.out.versions)
+    versions = versions.mix(CAT_MPILEUP.out.versions)
+    versions = versions.mix(GATK4_MERGEVCFS.out.versions)
+
+    emit:
+    mpileup
+    vcf
+
+    versions
 }

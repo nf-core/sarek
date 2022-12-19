@@ -9,22 +9,22 @@ include { GATK4_GATHERBQSRREPORTS } from '../../../modules/nf-core/gatk4/gatherb
 
 workflow BAM_BASERECALIBRATOR {
     take:
-        cram            // channel: [mandatory] meta, cram_markduplicates, crai
-        dict            // channel: [mandatory] dict
-        fasta           // channel: [mandatory] fasta
-        fasta_fai       // channel: [mandatory] fasta_fai
-        intervals       // channel: [mandatory] intervals, num_intervals
-        known_sites     // channel: [optional]  known_sites
-        known_sites_tbi // channel: [optional]  known_sites_tbi
+    cram            // channel: [mandatory] meta, cram_markduplicates, crai
+    dict            // channel: [mandatory] dict
+    fasta           // channel: [mandatory] fasta
+    fasta_fai       // channel: [mandatory] fasta_fai
+    intervals       // channel: [mandatory] intervals, num_intervals
+    known_sites     // channel: [optional]  known_sites
+    known_sites_tbi // channel: [optional]  known_sites_tbi
 
     main:
-    ch_versions = Channel.empty()
+    versions = Channel.empty()
 
     cram_intervals = cram.combine(intervals)
         .map{ meta, cram, crai, intervals, num_intervals ->
         //If no interval file provided (0) then add empty list
         [ meta.subMap('data_type', 'patient', 'sample', 'sex', 'status')
-            + [ num_intervals:num_intervals, id: meta.sample ],
+            + [ id:meta.sample, num_intervals:num_intervals ],
             cram, crai, (num_intervals == 0 ? [] : intervals) ]
         }
 
@@ -54,10 +54,11 @@ workflow BAM_BASERECALIBRATOR {
         }
 
     // Gather versions of all tools used
-    ch_versions = ch_versions.mix(GATK4_BASERECALIBRATOR.out.versions)
-    ch_versions = ch_versions.mix(GATK4_GATHERBQSRREPORTS.out.versions)
+    versions = versions.mix(GATK4_BASERECALIBRATOR.out.versions)
+    versions = versions.mix(GATK4_GATHERBQSRREPORTS.out.versions)
 
     emit:
-        table_bqsr = table_bqsr
-        versions   = ch_versions // channel: [versions.yml]
+    table_bqsr
+
+    versions    // channel: [versions.yml]
 }

@@ -987,25 +987,25 @@ workflow SAREK {
         if (params.concatenate_vcfs) {
             // Concatenate vcf-files
 
-            ADD_INFO_TO_DV_VCF(BAM_VARIANT_CALLING_GERMLINE_ALL.out.deepvariant_vcf)
+            ADD_INFO_TO_DV_VCF(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_deepvariant)
             TABIX_EXT_VCF_DV(ADD_INFO_TO_DV_VCF.out.vcf)
 
-            ADD_INFO_TO_FB_VCF(BAM_VARIANT_CALLING_GERMLINE_ALL.out.freebayes_vcf)
+            ADD_INFO_TO_FB_VCF(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_freebayes)
             TABIX_EXT_VCF_FB(ADD_INFO_TO_FB_VCF.out.vcf)
 
-            ADD_INFO_TO_HTC_VCF(BAM_VARIANT_CALLING_GERMLINE_ALL.out.haplotypecaller_vcf)
+            ADD_INFO_TO_HTC_VCF(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_haplotypecaller)
             TABIX_EXT_VCF_HTC(ADD_INFO_TO_HTC_VCF.out.vcf)
 
-            ADD_INFO_TO_MANTA_VCF(BAM_VARIANT_CALLING_GERMLINE_ALL.out.manta_vcf)
+            ADD_INFO_TO_MANTA_VCF(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_manta)
             TABIX_EXT_VCF_MANTA(ADD_INFO_TO_MANTA_VCF.out.vcf)
 
-            ADD_INFO_TO_MPILEUP_VCF(BAM_VARIANT_CALLING_GERMLINE_ALL.out.mpileup_vcf)
+            ADD_INFO_TO_MPILEUP_VCF(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_mpileup)
             TABIX_EXT_VCF_MPILEUP(ADD_INFO_TO_MPILEUP_VCF.out.vcf)
 
-            ADD_INFO_TO_STRELKA_VCF(BAM_VARIANT_CALLING_GERMLINE_ALL.out.strelka_vcf)
+            ADD_INFO_TO_STRELKA_VCF(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_strelka)
             TABIX_EXT_VCF_STRELKA(ADD_INFO_TO_STRELKA_VCF.out.vcf)
 
-            ADD_INFO_TO_TIDDIT_VCF(BAM_VARIANT_CALLING_GERMLINE_ALL.out.tiddit_vcf)
+            ADD_INFO_TO_TIDDIT_VCF(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_tiddit)
             TABIX_EXT_VCF_TIDDIT(ADD_INFO_TO_TIDDIT_VCF.out.vcf)
 
             // Gather vcfs and vcf-tbis for concatenating germline-vcfs
@@ -1038,12 +1038,12 @@ workflow SAREK {
 
         // Gather vcf files for annotation and QC
         vcf_to_annotate = Channel.empty()
-        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.deepvariant_vcf)
-        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.freebayes_vcf)
-        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.haplotypecaller_vcf)
-        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.manta_vcf)
-        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.strelka_vcf)
-        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.tiddit_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_deepvariant)
+        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_freebayes)
+        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_haplotypecaller)
+        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_manta)
+        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_strelka)
+        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_tiddit)
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.freebayes_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.mutect2_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.manta_vcf)

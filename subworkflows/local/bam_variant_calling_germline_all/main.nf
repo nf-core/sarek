@@ -13,229 +13,184 @@ include { BAM_VARIANT_CALLING_SINGLE_TIDDIT   } from '../bam_variant_calling_sin
 
 workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     take:
-        tools                             // Mandatory, list of tools to apply
-        skip_tools                        // Mandatory, list of tools to skip
-        cram_recalibrated                 // channel: [mandatory] cram
-        bwa                               // channel: [mandatory] bwa
-        dbsnp                             // channel: [mandatory] dbsnp
-        dbsnp_tbi                         // channel: [mandatory] dbsnp_tbi
-        dict                              // channel: [mandatory] dict
-        fasta                             // channel: [mandatory] fasta
-        fasta_fai                         // channel: [mandatory] fasta_fai
-        intervals                         // channel: [mandatory] intervals/target regions
-        intervals_bed_gz_tbi              // channel: [mandatory] intervals/target regions index zipped and indexed
-        intervals_bed_combined            // channel: [mandatory] intervals/target regions in one file unzipped
-        intervals_bed_combined_haplotypec // channel: [mandatory] intervals/target regions in one file unzipped, no_intervals.bed if no_intervals
-        known_sites_indels
-        known_sites_indels_tbi
-        known_sites_snps
-        known_sites_snps_tbi
+    tools                             // Mandatory, list of tools to apply
+    skip_tools                        // Mandatory, list of tools to skip
+    cram                              // channel: [mandatory] cram
+    bwa                               // channel: [mandatory] bwa
+    dbsnp                             // channel: [mandatory] dbsnp
+    dbsnp_tbi                         // channel: [mandatory] dbsnp_tbi
+    dict                              // channel: [mandatory] dict
+    fasta                             // channel: [mandatory] fasta
+    fasta_fai                         // channel: [mandatory] fasta_fai
+    intervals                         // channel: [mandatory] intervals/target regions
+    intervals_bed_gz_tbi              // channel: [mandatory] intervals/target regions index zipped and indexed
+    intervals_bed_combined            // channel: [mandatory] intervals/target regions in one file unzipped
+    intervals_bed_combined_haplotypec // channel: [mandatory] intervals/target regions in one file unzipped, no_intervals.bed if no_intervals
+    known_sites_indels
+    known_sites_indels_tbi
+    known_sites_snps
+    known_sites_snps_tbi
 
     main:
-
-    ch_versions         = Channel.empty()
+    versions = Channel.empty()
 
     //TODO: Temporary until the if's can be removed and printing to terminal is prevented with "when" in the modules.config
-    deepvariant_vcf     = Channel.empty()
-    freebayes_vcf       = Channel.empty()
-    haplotypecaller_vcf = Channel.empty()
-    manta_vcf           = Channel.empty()
-    mpileup_vcf         = Channel.empty()
-    strelka_vcf         = Channel.empty()
-    tiddit_vcf          = Channel.empty()
+    vcf_deepvariant     = Channel.empty()
+    vcf_freebayes       = Channel.empty()
+    vcf_haplotypecaller = Channel.empty()
+    vcf_manta           = Channel.empty()
+    vcf_mpileup         = Channel.empty()
+    vcf_strelka         = Channel.empty()
+    vcf_tiddit          = Channel.empty()
 
     // Remap channel with intervals
-    cram_recalibrated_intervals = cram_recalibrated.combine(intervals)
-        .map{ meta, cram, crai, intervals, num_intervals ->
-
-            //If no interval file provided (0) then add empty list
-            intervals_new = num_intervals == 0 ? [] : intervals
-
-            [[
-                data_type:      meta.data_type,
-                id:             meta.sample,
-                num_intervals:  num_intervals,
-                patient:        meta.patient,
-                sample:         meta.sample,
-                sex:            meta.sex,
-                status:         meta.status,
-            ],
-            cram, crai, intervals_new]
+    cram_intervals = cram
+        .combine(intervals).map{ meta, cram, crai, intervals, num_intervals ->
+            // If no interval file provided (0) then add empty list
+            [ meta.subMap('data_type', 'patient', 'sample', 'sex', 'status')
+                + [ id:meta.sample, num_intervals:num_intervals ],
+                cram, crai, (num_intervals == 0 ? [] : intervals) ]
         }
 
     // Remap channel with gzipped intervals + indexes
-    cram_recalibrated_intervals_gz_tbi = cram_recalibrated.combine(intervals_bed_gz_tbi)
-        .map{ meta, cram, crai, bed_tbi, num_intervals ->
-
-            //If no interval file provided (0) then add empty list
-            bed_new = num_intervals == 0 ? [] : bed_tbi[0]
-            tbi_new = num_intervals == 0 ? [] : bed_tbi[1]
-
-            [[
-                data_type:      meta.data_type,
-                id:             meta.sample,
-                num_intervals:  num_intervals,
-                patient:        meta.patient,
-                sample:         meta.sample,
-                sex:            meta.sex,
-                status:         meta.status,
-            ],
-            cram, crai, bed_new, tbi_new]
+    cram_intervals_gz_tbi = cram
+        .combine(intervals_bed_gz_tbi).map{ meta, cram, crai, bed_tbi, num_intervals ->
+            // If no interval file provided (0) then add empty list
+            [ meta.subMap('data_type', 'patient', 'sample', 'sex', 'status')
+                + [ id:meta.sample, num_intervals:num_intervals ],
+                cram, crai, (num_intervals == 0 ? [] : bed_tbi[0]), (num_intervals == 0 ? [] : bed_tbi[1])]
         }
 
-    if(tools.split(',').contains('mpileup')){
-        cram_intervals_no_index = cram_recalibrated_intervals
-            .map { meta, cram, crai, intervals ->
-                [meta, cram, intervals]
-            }
-
+    if (tools.split(',').contains('mpileup')) {
+        // Input channel is remapped to match input of module/subworkflow
         BAM_VARIANT_CALLING_MPILEUP(
-            cram_intervals_no_index,
+            cram_intervals.map{ meta, cram, crai, intervals -> [ meta, cram, intervals ] },
             fasta,
             dict
         )
 
-        mpileup_vcf = BAM_VARIANT_CALLING_MPILEUP.out.vcf
-        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_MPILEUP.out.versions)
+        vcf_mpileup = BAM_VARIANT_CALLING_MPILEUP.out.vcf
+        versions = versions.mix(BAM_VARIANT_CALLING_MPILEUP.out.versions)
     }
 
     // CNVKIT
 
-    if(tools.split(',').contains('cnvkit')){
-        cram_recalibrated_cnvkit_germline = cram_recalibrated
-            .map{ meta, cram, crai ->
-                [meta, [], cram]
-            }
-
+    if (tools.split(',').contains('cnvkit')) {
+        // Input channel is remapped to match input of module/subworkflow
         BAM_VARIANT_CALLING_CNVKIT(
-            cram_recalibrated_cnvkit_germline,
+            cram.map{ meta, cram, crai -> [ meta, [], cram ] },
             fasta,
             fasta_fai,
             intervals_bed_combined,
             []
         )
 
-        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_CNVKIT.out.versions)
+        versions = versions.mix(BAM_VARIANT_CALLING_CNVKIT.out.versions)
     }
 
     // DEEPVARIANT
-    if(tools.split(',').contains('deepvariant')){
+    if (tools.split(',').contains('deepvariant')) {
         BAM_VARIANT_CALLING_DEEPVARIANT(
-            cram_recalibrated_intervals,
+            cram_intervals,
             dict,
             fasta,
             fasta_fai
         )
 
-        deepvariant_vcf      = Channel.empty().mix(BAM_VARIANT_CALLING_DEEPVARIANT.out.deepvariant_vcf)
-        ch_versions          = ch_versions.mix(BAM_VARIANT_CALLING_DEEPVARIANT.out.versions)
+        vcf_deepvariant = BAM_VARIANT_CALLING_DEEPVARIANT.out.vcf
+        versions = versions.mix(BAM_VARIANT_CALLING_DEEPVARIANT.out.versions)
     }
 
     // FREEBAYES
-    if (tools.split(',').contains('freebayes')){
-        // Remap channel for Freebayes
-        cram_recalibrated_intervals_freebayes = cram_recalibrated_intervals
-            .map{ meta, cram, crai, intervals ->
-                [meta, cram, crai, [], [], intervals]
-            }
-
+    if (tools.split(',').contains('freebayes')) {
+        // Input channel is remapped to match input of module/subworkflow
         BAM_VARIANT_CALLING_FREEBAYES(
-            cram_recalibrated_intervals_freebayes,
+            cram_intervals.map{ meta, cram, crai, intervals -> [ meta, cram, crai, [], [], intervals ] },
             dict,
             fasta,
             fasta_fai
         )
 
-        freebayes_vcf     = BAM_VARIANT_CALLING_FREEBAYES.out.freebayes_vcf
-        ch_versions       = ch_versions.mix(BAM_VARIANT_CALLING_FREEBAYES.out.versions)
+        vcf_freebayes = BAM_VARIANT_CALLING_FREEBAYES.out.vcf
+        versions = versions.mix(BAM_VARIANT_CALLING_FREEBAYES.out.versions)
     }
 
     // HAPLOTYPECALLER
-    if (tools.split(',').contains('haplotypecaller')){
-        cram_recalibrated_intervals_haplotypecaller = cram_recalibrated_intervals
+    if (tools.split(',').contains('haplotypecaller')) {
+        // Input channel is remapped to match input of module/subworkflow
+        cram_intervals_haplotypecaller = cram_intervals
             .map{ meta, cram, crai, intervals ->
-
-            intervals_name = meta.num_intervals == 0 ? "no_interval" : intervals.simpleName
-            new_meta = params.joint_germline ? [
-                                                    data_type:meta.data_type,
-                                                    id:meta.sample,
-                                                    intervals_name:intervals_name,
-                                                    num_intervals:meta.num_intervals,
-                                                    patient:meta.patient,
-                                                    sample:meta.sample,
-                                                    sex:meta.sex,
-                                                    status:meta.status
-                                                ]
-                                            : meta
-
-                [new_meta, cram, crai, intervals, []]
+                [ (params.joint_germline ?
+                    meta.subMap('data_type', 'num_intervals', 'patient', 'sample', 'sex', 'status')
+                        + [ id:meta.sample, intervals_name:(meta.num_intervals == 0 ? "no_interval" : intervals.simpleName) ] :
+                    meta),
+                cram, crai, intervals, [] ]
         }
 
-        BAM_VARIANT_CALLING_HAPLOTYPECALLER(cram_recalibrated_intervals_haplotypecaller,
-                        fasta,
-                        fasta_fai,
-                        dict,
-                        dbsnp,
-                        dbsnp_tbi,
-                        known_sites_indels,
-                        known_sites_indels_tbi,
-                        known_sites_snps,
-                        known_sites_snps_tbi,
-                        intervals_bed_combined_haplotypec,
-                        (skip_tools && skip_tools.split(',').contains('haplotypecaller_filter')))
+        BAM_VARIANT_CALLING_HAPLOTYPECALLER(
+            cram_intervals_haplotypecaller,
+            fasta,
+            fasta_fai,
+            dict,
+            dbsnp,
+            dbsnp_tbi,
+            known_sites_indels,
+            known_sites_indels_tbi,
+            known_sites_snps,
+            known_sites_snps_tbi,
+            intervals_bed_combined_haplotypec,
+            (skip_tools && skip_tools.split(',').contains('haplotypecaller_filter')))
 
-        haplotypecaller_vcf      = BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.vcf
-        ch_versions              = ch_versions.mix(BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.versions)
-
+        vcf_haplotypecaller = BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.vcf
+        versions = versions.mix(BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.versions)
     }
 
     // MANTA
-    if (tools.split(',').contains('manta')){
+    if (tools.split(',').contains('manta')) {
         BAM_VARIANT_CALLING_GERMLINE_MANTA (
-            cram_recalibrated_intervals_gz_tbi,
+            cram_intervals_gz_tbi,
             dict,
             fasta,
             fasta_fai
         )
 
-
-        manta_vcf     = BAM_VARIANT_CALLING_GERMLINE_MANTA.out.manta_vcf
-        ch_versions   = ch_versions.mix(BAM_VARIANT_CALLING_GERMLINE_MANTA.out.versions)
+        vcf_manta = BAM_VARIANT_CALLING_GERMLINE_MANTA.out.vcf
+        versions = versions.mix(BAM_VARIANT_CALLING_GERMLINE_MANTA.out.versions)
     }
 
     // STRELKA
-    if (tools.split(',').contains('strelka')){
+    if (tools.split(',').contains('strelka')) {
         BAM_VARIANT_CALLING_SINGLE_STRELKA(
-            cram_recalibrated_intervals_gz_tbi,
+            cram_intervals_gz_tbi,
             dict,
             fasta,
             fasta_fai
         )
 
-        strelka_vcf     = BAM_VARIANT_CALLING_SINGLE_STRELKA.out.strelka_vcf
-        ch_versions     = ch_versions.mix(BAM_VARIANT_CALLING_SINGLE_STRELKA.out.versions)
+        vcf_strelka = BAM_VARIANT_CALLING_SINGLE_STRELKA.out.vcf
+        versions = versions.mix(BAM_VARIANT_CALLING_SINGLE_STRELKA.out.versions)
     }
 
     //TIDDIT
-    if (tools.split(',').contains('tiddit')){
+    if (tools.split(',').contains('tiddit')) {
         BAM_VARIANT_CALLING_SINGLE_TIDDIT(
-            cram_recalibrated,
+            cram,
             fasta.map{ it -> [[id:it[0].baseName], it] },
             bwa
         )
 
-        tiddit_vcf     = BAM_VARIANT_CALLING_SINGLE_TIDDIT.out.tiddit_vcf
-        ch_versions    = ch_versions.mix(BAM_VARIANT_CALLING_SINGLE_TIDDIT.out.versions)
+        vcf_tiddit = BAM_VARIANT_CALLING_SINGLE_TIDDIT.out.vcf
+        versions = versions.mix(BAM_VARIANT_CALLING_SINGLE_TIDDIT.out.versions)
     }
 
     emit:
-    deepvariant_vcf
-    freebayes_vcf
-    haplotypecaller_vcf
-    manta_vcf
-    mpileup_vcf
-    strelka_vcf
-    tiddit_vcf
+    vcf_deepvariant
+    vcf_freebayes
+    vcf_haplotypecaller
+    vcf_manta
+    vcf_mpileup
+    vcf_strelka
+    vcf_tiddit
 
-    versions = ch_versions
+    versions
 }

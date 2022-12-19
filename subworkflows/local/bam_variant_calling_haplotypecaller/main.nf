@@ -20,8 +20,8 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
     skip_haplotypecaller_filter
 
     main:
-
     versions = Channel.empty()
+
     vcf = Channel.empty()
     realigned_bam = Channel.empty()
 
@@ -164,5 +164,6 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
     emit:
     realigned_bam
     vcf
+
     versions
 }

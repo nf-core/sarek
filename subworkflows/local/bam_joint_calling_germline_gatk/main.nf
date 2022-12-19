@@ -28,7 +28,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
     known_snps_vqsr
 
     main:
-    ch_versions    = Channel.empty()
+    versions = Channel.empty()
 
     // Map input for GenomicsDBImport
     // Rename based on num_intervals, group all samples by their interval_name/interval_file and restructure for channel
@@ -154,13 +154,14 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
     genotype_vcf   = Channel.empty().mix(vcfs_sorted_input_no_intervals, MERGE_GENOTYPEGVCFS.out.vcf, MERGE_VQSR.out.vcf)
     genotype_index = Channel.empty().mix(TABIX.out.tbi, MERGE_GENOTYPEGVCFS.out.tbi, MERGE_VQSR.out.tbi)
 
-    ch_versions = ch_versions.mix(GATK4_GENOMICSDBIMPORT.out.versions)
-    ch_versions = ch_versions.mix(GATK4_GENOTYPEGVCFS.out.versions)
-    ch_versions = ch_versions.mix(VARIANTRECALIBRATOR_SNP.out.versions)
-    ch_versions = ch_versions.mix(GATK4_APPLYVQSR_SNP.out.versions)
+    versions = versions.mix(GATK4_GENOMICSDBIMPORT.out.versions)
+    versions = versions.mix(GATK4_GENOTYPEGVCFS.out.versions)
+    versions = versions.mix(VARIANTRECALIBRATOR_SNP.out.versions)
+    versions = versions.mix(GATK4_APPLYVQSR_SNP.out.versions)
 
     emit:
-    genotype_index                  // channel: [ val(meta), [ tbi ] ]
-    genotype_vcf                    // channel: [ val(meta), [ vcf ] ]
-    versions       = ch_versions    // channel: [ versions.yml ]
+    genotype_index  // channel: [ val(meta), [ tbi ] ]
+    genotype_vcf    // channel: [ val(meta), [ vcf ] ]
+
+    versions        // channel: [ versions.yml ]
 }

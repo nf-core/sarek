@@ -13,99 +13,64 @@ workflow BAM_VARIANT_CALLING_DEEPVARIANT {
     fasta_fai                // channel: [mandatory]
 
     main:
-
-    ch_versions = Channel.empty()
+    versions = Channel.empty()
 
     DEEPVARIANT(cram, fasta, fasta_fai)
 
-    DEEPVARIANT.out.vcf.branch{
+    vcf_out = DEEPVARIANT.out.vcf.branch{
         intervals:    it[0].num_intervals > 1
         no_intervals: it[0].num_intervals <= 1
-    }.set{deepvariant_vcf_out}
+    }
 
-    DEEPVARIANT.out.gvcf.branch{
+    gvcf_out = DEEPVARIANT.out.gvcf.branch{
         intervals:    it[0].num_intervals > 1
         no_intervals: it[0].num_intervals <= 1
-    }.set{deepvariant_gvcf_out}
+    }
 
-    // Only when no intervals
-    TABIX_VC_DEEPVARIANT_VCF(deepvariant_vcf_out.no_intervals)
-    TABIX_VC_DEEPVARIANT_GVCF(deepvariant_gvcf_out.no_intervals)
+    // Only when no_intervals
+    TABIX_VC_DEEPVARIANT_VCF(vcf_out.no_intervals)
+    TABIX_VC_DEEPVARIANT_GVCF(gvcf_out.no_intervals)
 
     // Only when using intervals
 
     MERGE_DEEPVARIANT_VCF(
-        deepvariant_vcf_out.intervals
-            .map{ meta, vcf ->
-
-                new_meta = [
-                            id:             meta.sample,
-                            num_intervals:  meta.num_intervals,
-                            patient:        meta.patient,
-                            sample:         meta.sample,
-                            sex:            meta.sex,
-                            status:         meta.status,
-                        ]
-
-                [groupKey(new_meta, meta.num_intervals), vcf]
-            }.groupTuple(),
+        vcf_out.intervals.map{ meta, vcf ->
+            [ groupKey(meta.subMap('num_intervals', 'patient', 'sample', 'sex', 'status')
+                + [ id: meta.sample ], meta.num_intervals), vcf ]
+        }.groupTuple(),
         dict.map{ it -> [[id:it[0].baseName], it]})
 
     MERGE_DEEPVARIANT_GVCF(
-        deepvariant_gvcf_out.intervals
-            .map{ meta, vcf ->
-
-                new_meta = [
-                            id:             meta.sample,
-                            num_intervals:  meta.num_intervals,
-                            patient:        meta.patient,
-                            sample:         meta.sample,
-                            sex:            meta.sex,
-                            status:         meta.status,
-                        ]
-
-                [groupKey(new_meta, meta.num_intervals), vcf]
-            }.groupTuple(),
+        gvcf_out.intervals.map{ meta, vcf ->
+            [ groupKey(meta.subMap('num_intervals', 'patient', 'sample', 'sex', 'status')
+                + [ id: meta.sample ], meta.num_intervals), vcf ]
+        }.groupTuple(),
         dict.map{ it -> [[id:it[0].baseName], it]})
 
-    // Mix output channels for "no intervals" and "with intervals" results
-    deepvariant_gvcf = Channel.empty().mix(
-                        MERGE_DEEPVARIANT_GVCF.out.vcf,
-                        deepvariant_gvcf_out.no_intervals)
-                    .map{ meta, vcf ->
-                        [[
-                            id:             meta.sample,
-                            num_intervals:  meta.num_intervals,
-                            patient:        meta.patient,
-                            sample:         meta.sample,
-                            sex:            meta.sex,
-                            status:         meta.status,
-                            variantcaller:  "deepvariant"
-                        ], vcf]
-                    }
-    deepvariant_vcf = Channel.empty().mix(
-                        MERGE_DEEPVARIANT_VCF.out.vcf,
-                        deepvariant_vcf_out.no_intervals)
-                    .map{ meta, vcf ->
-                        [[
-                            id:             meta.sample,
-                            num_intervals:  meta.num_intervals,
-                            patient:        meta.patient,
-                            sample:         meta.sample,
-                            sex:            meta.sex,
-                            status:         meta.status,
-                            variantcaller:  "deepvariant"
-                        ], vcf]
-                    }
+    // Mix output channels for intervals and no_intervals results
+    gvcf = Channel.empty().mix(
+        MERGE_DEEPVARIANT_GVCF.out.vcf, gvcf_out.no_intervals).map{ meta, vcf ->
+            [ meta.subMap('num_intervals', 'patient', 'sample', 'sex', 'status')
+                + [ id: meta.sample, variantcaller:"deepvariant" ],
+                vcf]
+        }
 
-    ch_versions = ch_versions.mix(MERGE_DEEPVARIANT_GVCF.out.versions)
-    ch_versions = ch_versions.mix(MERGE_DEEPVARIANT_VCF.out.versions)
-    ch_versions = ch_versions.mix(DEEPVARIANT.out.versions)
-    ch_versions = ch_versions.mix(TABIX_VC_DEEPVARIANT_GVCF.out.versions)
-    ch_versions = ch_versions.mix(TABIX_VC_DEEPVARIANT_VCF.out.versions)
+    // Mix output channels for intervals and no_intervals results
+    vcf = Channel.empty().mix(
+        MERGE_DEEPVARIANT_VCF.out.vcf, vcf_out.no_intervals).map{ meta, vcf ->
+            [ meta.subMap('num_intervals', 'patient', 'sample', 'sex', 'status')
+                + [ id: meta.sample, variantcaller:"deepvariant" ],
+                vcf]
+
+    versions = versions.mix(MERGE_DEEPVARIANT_GVCF.out.versions)
+    versions = versions.mix(MERGE_DEEPVARIANT_VCF.out.versions)
+    versions = versions.mix(DEEPVARIANT.out.versions)
+    versions = versions.mix(TABIX_VC_DEEPVARIANT_GVCF.out.versions)
+    versions = versions.mix(TABIX_VC_DEEPVARIANT_VCF.out.versions)
 
     emit:
-    deepvariant_vcf
-    deepvariant_gvcf
-    versions = ch_versions
+    gvcf
+    vcf
+
+    versions
 }

@@ -10,24 +10,23 @@ workflow BAM_VARIANT_CALLING_SINGLE_STRELKA {
     fasta_fai                // channel: [mandatory]
 
     main:
-
-    ch_versions = Channel.empty()
+    versions = Channel.empty()
 
     STRELKA_SINGLE(cram, fasta, fasta_fai)
 
     // Figure out if using intervals or no_intervals
-    STRELKA_SINGLE.out.vcf.branch{
-            intervals:    it[0].num_intervals > 1
-            no_intervals: it[0].num_intervals <= 1
-        }.set{strelka_vcf}
+    vcf = STRELKA_SINGLE.out.vcf.branch{
+        intervals:    it[0].num_intervals > 1
+        no_intervals: it[0].num_intervals <= 1
+    }
 
-    STRELKA_SINGLE.out.genome_vcf.branch{
-            intervals:    it[0].num_intervals > 1
-            no_intervals: it[0].num_intervals <= 1
-        }.set{strelka_genome_vcf}
+    genome_vcf = STRELKA_SINGLE.out.genome_vcf.branch{
+        intervals:    it[0].num_intervals > 1
+        no_intervals: it[0].num_intervals <= 1
+    }
 
     MERGE_STRELKA(
-        strelka_vcf.intervals
+        vcf.intervals
             .map{ meta, vcf ->
                 new_meta = [
                                 id:             meta.sample,
@@ -40,10 +39,10 @@ workflow BAM_VARIANT_CALLING_SINGLE_STRELKA {
 
                 [groupKey(new_meta, meta.num_intervals), vcf]
             }.groupTuple(),
-        dict.map{ it -> [[id:it[0].baseName], it]})
+        dict.map{ it -> [ [ id:it[0].baseName ], it ] })
 
     MERGE_STRELKA_GENOME(
-        strelka_genome_vcf.intervals
+        genome_vcf.intervals
             .map{ meta, vcf ->
 
                 [groupKey([
@@ -58,15 +57,15 @@ workflow BAM_VARIANT_CALLING_SINGLE_STRELKA {
                 vcf]
 
             }.groupTuple(),
-        dict.map{ it -> [[id:it[0].baseName], it]})
+        dict.map{ it -> [ [ id:it[0].baseName ], it ] })
 
     // Mix output channels for "no intervals" and "with intervals" results
     // Only strelka variant vcf should get annotated
-    strelka_vcf = Channel.empty().mix(
+    vcf = Channel.empty().mix(
                     MERGE_STRELKA.out.vcf,
-                    strelka_vcf.no_intervals)
+                    vcf.no_intervals)
                 .map{ meta, vcf ->
-                    [[
+                    [ [
                         id:             meta.sample,
                         num_intervals:  meta.num_intervals,
                         patient:        meta.patient,
@@ -74,14 +73,15 @@ workflow BAM_VARIANT_CALLING_SINGLE_STRELKA {
                         sex:            meta.sex,
                         status:         meta.status,
                         variantcaller:  "strelka"
-                    ], vcf]
+                    ], vcf ]
                 }
 
-    ch_versions = ch_versions.mix(MERGE_STRELKA.out.versions)
-    ch_versions = ch_versions.mix(MERGE_STRELKA_GENOME.out.versions)
-    ch_versions = ch_versions.mix(STRELKA_SINGLE.out.versions)
+    versions = versions.mix(MERGE_STRELKA.out.versions)
+    versions = versions.mix(MERGE_STRELKA_GENOME.out.versions)
+    versions = versions.mix(STRELKA_SINGLE.out.versions)
 
     emit:
-    strelka_vcf
-    versions = ch_versions
+    vcf
+
+    versions
 }
