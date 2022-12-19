@@ -24,7 +24,7 @@ workflow BAM_BASERECALIBRATOR_SPARK {
         .map{ meta, cram, crai, intervals, num_intervals ->
         //If no interval file provided (0) then add empty list
         [ meta.subMap('data_type', 'patient', 'sample', 'sex', 'status')
-            + [num_intervals:num_intervals, id: meta.sample],
+            + [ num_intervals:num_intervals, id: meta.sample ],
             cram, crai, (num_intervals == 0 ? [] : intervals) ]
         }
 
@@ -34,8 +34,7 @@ workflow BAM_BASERECALIBRATOR_SPARK {
     // Figuring out if there is one or more table(s) from the same sample
     table_to_merge = GATK4_BASERECALIBRATOR_SPARK.out.table
         .map{ meta, table ->
-            [ groupKey(meta.subMap('data_type', 'id', 'num_intervals', 'patient', 'sample', 'sex', 'status'), meta.num_intervals),
-                table ]
+            [ groupKey(meta.subMap('data_type', 'id', 'num_intervals', 'patient', 'sample', 'sex', 'status'), meta.num_intervals), table ]
         }.groupTuple()
     .branch{
         //Warning: size() calculates file size not list length here, so use num_intervals instead
@@ -50,7 +49,7 @@ workflow BAM_BASERECALIBRATOR_SPARK {
     table_bqsr = table_to_merge.single.map{ meta, table -> [ meta, table[0] ] }
         .mix(GATK4_GATHERBQSRREPORTS.out.table).map{ meta, table ->
             // remove no longer necessary fields to make sure joining can be done correctly: num_intervals
-            [ meta.subMap('data_type', 'patient', 'sample', 'sex', 'status') + [id: meta.sample],
+            [ meta.subMap('data_type', 'patient', 'sample', 'sex', 'status') + [ id: meta.sample ],
                 table ]
         }
 

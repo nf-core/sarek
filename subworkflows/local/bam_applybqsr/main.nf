@@ -21,7 +21,7 @@ workflow BAM_APPLYBQSR {
     cram_intervals = cram.combine(intervals).map{ meta, cram, crai, recal, intervals, num_intervals ->
         //If no interval file provided (0) then add empty list
         [ meta.subMap('data_type', 'patient', 'sample', 'sex', 'status')
-            + [num_intervals:num_intervals, id: meta.sample],
+            + [ num_intervals:num_intervals, id: meta.sample ],
             cram, crai, recal, (num_intervals == 0 ? [] : intervals) ]
     }
 

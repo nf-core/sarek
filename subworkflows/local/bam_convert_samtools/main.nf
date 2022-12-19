@@ -39,7 +39,7 @@ workflow BAM_CONVERT_SAMTOOLS {
         .join(SAMTOOLS_VIEW_UNMAP_MAP.out.bam, remainder: true)
         .join(SAMTOOLS_VIEW_MAP_UNMAP.out.bam, remainder: true)
         .map{ meta, unmap_unmap, unmap_map, map_unmap ->
-            [meta, [unmap_unmap, unmap_map, map_unmap]]
+            [ meta, [ unmap_unmap, unmap_map, map_unmap ] ]
         }
 
     SAMTOOLS_MERGE_UNMAP(all_unmapped_bam, fasta[1], fasta_fai)
@@ -55,7 +55,7 @@ workflow BAM_CONVERT_SAMTOOLS {
     reads_to_concat = COLLATE_FASTQ_MAP.out.fastq
                     .join(COLLATE_FASTQ_UNMAP.out.fastq)
                     .map{ meta, mapped_reads, unmapped_reads ->
-                        [meta, [mapped_reads[0], mapped_reads[1], unmapped_reads[0], unmapped_reads[1]]]
+                        [ meta, [ mapped_reads[0], mapped_reads[1], unmapped_reads[0], unmapped_reads[1] ] ]
                     }
 
     // Concatenate Mapped_R1 with Unmapped_R1 and Mapped_R2 with Unmapped_R2
