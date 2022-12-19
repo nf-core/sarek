@@ -8,7 +8,9 @@ process MULTIQC {
 
     input:
     path  multiqc_files, stageAs: "?/*"
-    tuple path(multiqc_config), path(multiqc_logo)
+    path(multiqc_config)
+    path(extra_multiqc_config)
+    path(multiqc_logo)
 
     output:
     path "*multiqc_report.html", emit: report
