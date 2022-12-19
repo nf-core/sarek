@@ -28,9 +28,6 @@ jobs:
         test:
           - "default"
         profile: ["docker", "singularity", "conda"]
-        exclude:
-          - NXF_VER: "latest-everything"
-            profile: "conda"
     env:
       NXF_ANSI_LOG: false
     steps:
