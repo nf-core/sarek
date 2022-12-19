@@ -29,8 +29,8 @@ workflow BAM_MERGE_INDEX_SAMTOOLS {
         .join(INDEX_MERGE_BAM.out.bai)
 
     // Gather versions of all tools used
-    versions = versions.mix(INDEX_MERGE_BAM.out.versions.first())
-    versions = versions.mix(MERGE_BAM.out.versions.first())
+    versions = versions.mix(INDEX_MERGE_BAM.out.versions)
+    versions = versions.mix(MERGE_BAM.out.versions)
 
     emit:
     bam_bai

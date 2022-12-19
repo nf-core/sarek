@@ -12,10 +12,13 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
     dict                            // channel: [mandatory]
     dbsnp                           // channel: []
     dbsnp_tbi
+    dbsnp_vqsr
     known_sites_indels
     known_sites_indels_tbi
+    known_indels_vqsr
     known_sites_snps
     known_sites_snps_tbi
+    known_snps_vqsr
     intervals_bed_combined          // channel: [mandatory] intervals/target regions in one file unzipped, no_intervals.bed if no_intervals
     skip_haplotypecaller_filter
 
@@ -58,12 +61,6 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
                 .map{ meta, vcf, tbi, cram, crai, intervals, dragstr_model ->
                     [ meta, vcf, tbi, intervals ]
                 })
-
-        // make channels from labels
-        dbsnp_vqsr        = params.dbsnp_vqsr        ? Channel.value(params.dbsnp_vqsr)        : Channel.empty()
-        known_indels_vqsr = params.known_indels_vqsr ? Channel.value(params.known_indels_vqsr) : Channel.empty()
-        known_snps_vqsr   = params.known_snps_vqsr   ? Channel.value(params.known_snps_vqsr)   : Channel.empty()
-
 
         BAM_JOINT_CALLING_GERMLINE_GATK(
             genotype_gvcf_to_call,

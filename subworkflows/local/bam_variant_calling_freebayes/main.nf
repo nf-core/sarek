@@ -42,10 +42,10 @@ workflow BAM_VARIANT_CALLING_FREEBAYES {
 
     // Mix output channels for "no intervals" and "with intervals" results
     vcf = Channel.empty().mix(
-    MERGE_FREEBAYES.out.vcf, bcftools_vcf_out.no_intervals).map{ meta, vcf ->
-        [ meta.subMap('id', 'normal_id', 'num_intervals', 'patient', 'sex', 'tumor_id') + [ variantcaller:meta."freebayes" ],
-        vcf ]
-    }
+        MERGE_FREEBAYES.out.vcf,
+        bcftools_vcf_out.no_intervals).map{ meta, vcf ->
+            [ meta.subMap('id', 'normal_id', 'num_intervals', 'patient', 'sex', 'tumor_id') + [ variantcaller:meta."freebayes" ], vcf ]
+        }
 
     versions = versions.mix(BCFTOOLS_SORT.out.versions)
     versions = versions.mix(MERGE_FREEBAYES.out.versions)

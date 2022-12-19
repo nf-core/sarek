@@ -19,17 +19,20 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     bwa                               // channel: [mandatory] bwa
     dbsnp                             // channel: [mandatory] dbsnp
     dbsnp_tbi                         // channel: [mandatory] dbsnp_tbi
+    dbsnp_vqsr
     dict                              // channel: [mandatory] dict
     fasta                             // channel: [mandatory] fasta
     fasta_fai                         // channel: [mandatory] fasta_fai
     intervals                         // channel: [mandatory] intervals/target regions
-    intervals_bed_gz_tbi              // channel: [mandatory] intervals/target regions index zipped and indexed
     intervals_bed_combined            // channel: [mandatory] intervals/target regions in one file unzipped
     intervals_bed_combined_haplotypec // channel: [mandatory] intervals/target regions in one file unzipped, no_intervals.bed if no_intervals
+    intervals_bed_gz_tbi              // channel: [mandatory] intervals/target regions index zipped and indexed
+    known_indels_vqsr
     known_sites_indels
     known_sites_indels_tbi
     known_sites_snps
     known_sites_snps_tbi
+    known_snps_vqsr
 
     main:
     versions = Channel.empty()
@@ -61,6 +64,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
                 cram, crai, (num_intervals == 0 ? [] : bed_tbi[0]), (num_intervals == 0 ? [] : bed_tbi[1])]
         }
 
+    // MPILEUP
     if (tools.split(',').contains('mpileup')) {
         // Input channel is remapped to match input of module/subworkflow
         BAM_VARIANT_CALLING_MPILEUP(
@@ -74,7 +78,6 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     }
 
     // CNVKIT
-
     if (tools.split(',').contains('cnvkit')) {
         // Input channel is remapped to match input of module/subworkflow
         BAM_VARIANT_CALLING_CNVKIT(
@@ -134,10 +137,13 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             dict,
             dbsnp,
             dbsnp_tbi,
+            dbsnp_vqsr,
             known_sites_indels,
             known_sites_indels_tbi,
+            known_indels_vqsr,
             known_sites_snps,
             known_sites_snps_tbi,
+            known_snps_vqsr,
             intervals_bed_combined_haplotypec,
             (skip_tools && skip_tools.split(',').contains('haplotypecaller_filter')))
 

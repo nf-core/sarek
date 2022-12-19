@@ -38,7 +38,7 @@ workflow BAM_MARKDUPLICATES_SPARK {
     reports = reports.mix(GATK4_ESTIMATELIBRARYCOMPLEXITY.out.metrics, CRAM_QC_MOSDEPTH_SAMTOOLS.out.qc)
 
     // Gather versions of all tools used
-    versions = versions.mix(GATK4_ESTIMATELIBRARYCOMPLEXITY.out.versions.first())
+    versions = versions.mix(GATK4_ESTIMATELIBRARYCOMPLEXITY.out.versions)
     versions = versions.mix(GATK4_MARKDUPLICATES_SPARK.out.versions)
     versions = versions.mix(INDEX_MARKDUPLICATES.out.versions)
     versions = versions.mix(CRAM_QC_MOSDEPTH_SAMTOOLS.out.versions)

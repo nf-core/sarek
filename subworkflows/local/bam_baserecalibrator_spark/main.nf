@@ -49,8 +49,7 @@ workflow BAM_BASERECALIBRATOR_SPARK {
     table_bqsr = table_to_merge.single.map{ meta, table -> [ meta, table[0] ] }
         .mix(GATK4_GATHERBQSRREPORTS.out.table).map{ meta, table ->
             // remove no longer necessary fields to make sure joining can be done correctly: num_intervals
-            [ meta.subMap('data_type', 'patient', 'sample', 'sex', 'status') + [ id: meta.sample ],
-                table ]
+            [ meta.subMap('data_type', 'patient', 'sample', 'sex', 'status') + [ id: meta.sample ], table ]
         }
 
     // Gather versions of all tools used

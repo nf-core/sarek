@@ -48,20 +48,18 @@ workflow BAM_VARIANT_CALLING_DEEPVARIANT {
         dict.map{ it -> [[id:it[0].baseName], it]})
 
     // Mix output channels for intervals and no_intervals results
-    gvcf = Channel.empty().mix(
-        MERGE_DEEPVARIANT_GVCF.out.vcf, gvcf_out.no_intervals).map{ meta, vcf ->
-            [ meta.subMap('num_intervals', 'patient', 'sample', 'sex', 'status')
-                + [ id: meta.sample, variantcaller:"deepvariant" ],
-                vcf]
-        }
+    gvcf = Channel.empty().mix(MERGE_DEEPVARIANT_GVCF.out.vcf, gvcf_out.no_intervals).map{ meta, vcf ->
+        [ meta.subMap('num_intervals', 'patient', 'sample', 'sex', 'status')
+            + [ id: meta.sample, variantcaller:"deepvariant" ],
+        vcf ]
+    }
 
     // Mix output channels for intervals and no_intervals results
-    vcf = Channel.empty().mix(
-        MERGE_DEEPVARIANT_VCF.out.vcf, vcf_out.no_intervals).map{ meta, vcf ->
-            [ meta.subMap('num_intervals', 'patient', 'sample', 'sex', 'status')
-                + [ id: meta.sample, variantcaller:"deepvariant" ],
-                vcf]
-        }
+    vcf = Channel.empty().mix(MERGE_DEEPVARIANT_VCF.out.vcf, vcf_out.no_intervals).map{ meta, vcf ->
+        [ meta.subMap('num_intervals', 'patient', 'sample', 'sex', 'status')
+            + [ id: meta.sample, variantcaller:"deepvariant" ],
+        vcf ]
+    }
 
     versions = versions.mix(MERGE_DEEPVARIANT_GVCF.out.versions)
     versions = versions.mix(MERGE_DEEPVARIANT_VCF.out.versions)

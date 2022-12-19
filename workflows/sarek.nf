@@ -164,6 +164,9 @@ pon                = params.pon                ? Channel.fromPath(params.pon).co
 
 // Initialize value channels based on params, defined in the params.genomes[params.genome] scope
 ascat_genome       = params.ascat_genome       ?: Channel.empty()
+dbsnp_vqsr         = params.dbsnp_vqsr         ?: Channel.empty()
+known_indels_vqsr  = params.known_indels_vqsr  ?: Channel.empty()
+known_snps_vqsr    = params.known_snps_vqsr    ?: Channel.empty()
 snpeff_db          = params.snpeff_db          ?: Channel.empty()
 vep_cache_version  = params.vep_cache_version  ?: Channel.empty()
 vep_genome         = params.vep_genome         ?: Channel.empty()
@@ -394,10 +397,10 @@ workflow SAREK {
     if (params.step == 'mapping') {
 
         // Figure out if input is bam or fastq
-        ch_input_sample.branch{
+        ch_input_sample_type = ch_input_sample.branch{
             bam:   it[0].data_type == "bam"
             fastq: it[0].data_type == "fastq"
-        }.set{ch_input_sample_type}
+        }
 
         // convert any bam input to fastq
         // Fasta are not needed when converting bam to fastq -> []
@@ -555,17 +558,17 @@ workflow SAREK {
         ch_cram_skip_markduplicates = Channel.empty()
 
         if (params.step == 'mapping') {
-            if(params.skip_tools && params.skip_tools.split(',').contains('markduplicates')) ch_cram_skip_markduplicates = BAM_TO_CRAM_MAPPING.out.alignment_index
+            if (params.skip_tools && params.skip_tools.split(',').contains('markduplicates')) ch_cram_skip_markduplicates = BAM_TO_CRAM_MAPPING.out.alignment_index
         }
         else {
-            ch_input_sample.branch{
+            ch_convert = ch_input_sample.branch{
                 bam:  it[0].data_type == "bam"
                 cram: it[0].data_type == "cram"
-            }.set{ch_convert}
+            }
 
             // Convert any input BAMs to CRAM
             BAM_TO_CRAM(ch_convert.bam, fasta, fasta_fai)
-            if(params.skip_tools && params.skip_tools.split(',').contains('markduplicates')) {
+            if (params.skip_tools && params.skip_tools.split(',').contains('markduplicates')) {
                 ch_cram_skip_markduplicates = Channel.empty().mix(ch_convert.cram, BAM_TO_CRAM.out.alignment_index)
             }
 
@@ -647,10 +650,10 @@ workflow SAREK {
         if (params.step == 'prepare_recalibration') {
 
             //Support if starting from BAM or CRAM files
-            ch_input_sample.branch{
+            ch_convert = ch_input_sample.branch{
                 bam: it[0].data_type == "bam"
                 cram: it[0].data_type == "cram"
-            }.set{ch_convert}
+            }
 
             //BAM files first must be converted to CRAM files since from this step on we base everything on CRAM format
             BAM_TO_CRAM(ch_convert.bam, fasta, fasta_fai)
@@ -742,10 +745,10 @@ workflow SAREK {
         if (params.step == 'recalibrate') {
 
             //Support if starting from BAM or CRAM files
-            ch_input_sample.branch{
+            ch_convert = ch_input_sample.branch{
                 bam: it[0].data_type == "bam"
                 cram: it[0].data_type == "cram"
-            }.set{ch_convert}
+            }
 
             //If BAM file, split up table and mapped file to convert BAM to CRAM
             ch_bam_table = ch_convert.bam.map{ meta, bam, bai, table -> [ meta, table ] }
@@ -922,17 +925,20 @@ workflow SAREK {
             [[id:"bwa"],[]], //bwa_index for tiddit; not used here
             dbsnp,
             dbsnp_tbi,
+            dbsnp_vqsr,
             dict,
             fasta,
             fasta_fai,
             intervals,
-            intervals_bed_gz_tbi,
             intervals_bed_combined, // [] if no_intervals, else interval_bed_combined.bed
             PREPARE_INTERVALS.out.intervals_bed_combined, // no_intervals.bed if no intervals, else interval_bed_combined.bed; Channel operations possible
+            intervals_bed_gz_tbi,
+            known_indels_vqsr,
             known_sites_indels,
             known_sites_indels_tbi,
             known_sites_snps,
-            known_sites_snps_tbi)
+            known_sites_snps_tbi,
+            known_snps_vqsr)
 
         // TUMOR ONLY VARIANT CALLING
         BAM_VARIANT_CALLING_TUMOR_ONLY_ALL(

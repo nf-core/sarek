@@ -37,16 +37,12 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
         [ meta.subMap('intervals_name', 'num_intervals')
             + [ id: 'joint_variant_calling' ],
             gvcf, tbi, intervals ]
-    }.groupTuple(by:[0, 3]).map{ meta, gvcf, tbi, intervals ->
-        [ meta, gvcf, tbi, intervals, [], [] ]
-    }
+    }.groupTuple(by:[0, 3]).map{ meta, gvcf, tbi, intervals -> [ meta, gvcf, tbi, intervals, [], [] ] }
 
     // Convert all sample vcfs into a genomicsdb workspace using genomicsdbimport
     GATK4_GENOMICSDBIMPORT ( gendb_input, false, false, false )
 
-    genotype_input = GATK4_GENOMICSDBIMPORT.out.genomicsdb.map{ meta, genomicsdb ->
-        [ meta, genomicsdb, [], [], [] ]
-    }
+    genotype_input = GATK4_GENOMICSDBIMPORT.out.genomicsdb.map{ meta, genomicsdb -> [ meta, genomicsdb, [], [], [] ] }
 
     // Joint genotyping performed using GenotypeGVCFs
     // Sort vcfs called by interval within each VCF
