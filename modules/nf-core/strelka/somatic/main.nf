@@ -2,7 +2,7 @@ process STRELKA_SOMATIC {
     tag "$meta.id"
     label 'process_medium'
 
-    conda (params.enable_conda ? "bioconda::strelka=2.9.10" : null)
+    conda "bioconda::strelka=2.9.10"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/strelka:2.9.10--h9ee0642_1' :
         'quay.io/biocontainers/strelka:2.9.10--h9ee0642_1' }"

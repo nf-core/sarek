@@ -6,7 +6,7 @@ keywords:
   - genome
   - reference
 tools:
-  - bwa:
+  - bwamem2:
       description: |
         BWA-mem2 is a software package for mapping DNA sequences against
         a large reference genome, such as the human genome.

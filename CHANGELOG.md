@@ -19,6 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#860](https://github.com/nf-core/sarek/pull/860) - Replace local subworkflow with nf-core version - vcf_annotate_snpeff
 - [#865](https://github.com/nf-core/sarek/pull/865) - Replace local subworkflow with nf-core version - vcf_annotate_ensemblvep
 - [#874](https://github.com/nf-core/sarek/pull/874) - Update all modules
+- [#890](https://github.com/nf-core/sarek/pull/890) - Sync `TEMPLATE` with `tools` `2.7.1`
+- [#898](https://github.com/nf-core/sarek/pull/898) - Sync `TEMPLATE` with `tools` `2.7.2`
 
 ### Fixed
 
