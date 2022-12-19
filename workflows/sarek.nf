@@ -421,7 +421,7 @@ workflow SAREK {
         if (!(params.skip_tools && params.skip_tools.split(',').contains('fastqc'))) {
             FASTQC(ch_input_fastq)
 
-            ch_reports  = ch_reports.mix(FASTQC.out.zip.collect{meta, logs -> logs})
+            ch_reports  = ch_reports.mix(FASTQC.out.zip.collect{ meta, logs -> logs })
             ch_versions = ch_versions.mix(FASTQC.out.versions.first())
         }
 
@@ -434,13 +434,15 @@ workflow SAREK {
                 params.group_by_umi_strategy
             )
 
-            bamtofastq = FASTQ_CREATE_UMI_CONSENSUS_FGBIO.out.consensusbam.map{meta, bam -> [meta,bam,[]]}
+            bamtofastq = FASTQ_CREATE_UMI_CONSENSUS_FGBIO.out.consensusbam.map{ meta, bam -> [ meta, bam, [] ] }
 
             // convert back to fastq for further preprocessing
-            CONVERT_FASTQ_UMI(bamtofastq,
-                            [[id:"fasta"], []], // fasta
-                            [],                 // fasta_fai
-                            false)              // Currently don't allow interleaved input
+            CONVERT_FASTQ_UMI(
+                bamtofastq,
+                [ [id:"fasta"], [] ],   // fasta
+                [],                     // fasta_fai
+                false                   // Currently don't allow interleaved input
+            )
 
             ch_reads_fastp = CONVERT_FASTQ_UMI.out.reads
 
@@ -456,29 +458,31 @@ workflow SAREK {
 
             save_trimmed_fail = false
             save_merged = false
-            FASTP(ch_reads_fastp,
-                    [], // we are not using any adapter fastas at the moment
-                    save_trimmed_fail,
-                    save_merged)
+            FASTP(
+                ch_reads_fastp,
+                [], // we are not using any adapter fastas at the moment
+                save_trimmed_fail,
+                save_merged
+            )
 
             ch_reports = ch_reports.mix(
-                                    FASTP.out.json.collect{meta, json -> json},
-                                    FASTP.out.html.collect{meta, html -> html}
-                                    )
+                FASTP.out.json.collect{ meta, json -> json },
+                FASTP.out.html.collect{ meta, html -> html }
+            )
 
             if (params.split_fastq) {
                 ch_reads_to_map = FASTP.out.reads.map{ meta, reads ->
                     read_files = reads.sort{ a,b -> a.getName().tokenize('.')[0] <=> b.getName().tokenize('.')[0] }.collate(2)
-                    [
-                        meta.subMap('data_type', 'id', 'numLanes', 'patient', 'read_group', 'sample', 'sex', 'status')
-                        + [size:read_files.size()],
-                        read_files]
+                        [ meta.subMap('data_type', 'id', 'numLanes', 'patient', 'read_group', 'sample', 'sex', 'status')
+                            + [size:read_files.size()],
+                            read_files ]
                     }.transpose()
             } else {
                 ch_reads_to_map = FASTP.out.reads
             }
 
             ch_versions = ch_versions.mix(FASTP.out.versions)
+
         } else {
             ch_reads_to_map = ch_reads_fastp
         }
@@ -488,7 +492,7 @@ workflow SAREK {
         ch_reads_to_map = ch_reads_to_map.map{ meta, reads ->
             // Modify ID if no multiple lanes or splitted fastqs
             [ meta.subMap('data_type', 'numLanes', 'patient', 'read_group', 'sample', 'sex', 'size', 'status')
-                + [id:(meta.size * meta.numLanes == 1 ? meta.sample : meta.id)],
+                + [ id:(meta.size * meta.numLanes == 1 ? meta.sample : meta.id) ],
             reads ]
         }
 
@@ -508,9 +512,9 @@ workflow SAREK {
             // Use groupKey to make sure that the correct group can advance as soon as it is complete
             // and not stall the workflow until all reads from all channels are mapped
             [ groupKey(
-                    meta.subMap('id', 'patient', 'sample', 'sex','status' )
-                    + [data_type:"bam"],(meta.numLanes ?: 1) * (meta.size ?: 1)),
-                bam]
+                meta.subMap('id', 'patient', 'sample', 'sex','status' )
+                + [ data_type:"bam" ], (meta.numLanes ?: 1) * (meta.size ?: 1) ),
+            bam ]
         }.groupTuple()
 
         // gatk4 markduplicates can handle multiple bams as input, so no need to merge/index here
@@ -544,7 +548,7 @@ workflow SAREK {
 
         // ch_bam_for_markduplicates will countain bam mapped with FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP when step is mapping
         // Or bams that are specified in the samplesheet.csv when step is prepare_recalibration
-        ch_for_markduplicates = params.step == 'mapping'? ch_bam_mapped : ch_input_sample.map{ meta, input, index -> [meta, input] }
+        ch_for_markduplicates = params.step == 'mapping'? ch_bam_mapped : ch_input_sample.map{ meta, input, index -> [ meta, input ] }
 
         // if no MD is done, then run QC on mapped & converted CRAM files
         // or the input BAM (+converted) or CRAM files
@@ -580,7 +584,7 @@ workflow SAREK {
                 intervals_for_preprocessing)
 
             // Gather QC reports
-            ch_reports  = ch_reports.mix(CRAM_QC_NO_MD.out.qc.collect{meta, report -> report})
+            ch_reports  = ch_reports.mix(CRAM_QC_NO_MD.out.qc.collect{ meta, report -> report })
 
             // Gather used softwares versions
             ch_versions = ch_versions.mix(CRAM_QC_NO_MD.out.versions)
@@ -594,7 +598,7 @@ workflow SAREK {
             ch_cram_markduplicates_spark = BAM_MARKDUPLICATES_SPARK.out.cram
 
             // Gather QC reports
-            ch_reports  = ch_reports.mix(BAM_MARKDUPLICATES_SPARK.out.qc.collect{meta, report -> report})
+            ch_reports  = ch_reports.mix(BAM_MARKDUPLICATES_SPARK.out.qc.collect{ meta, report -> report })
 
             // Gather used softwares versions
             ch_versions = ch_versions.mix(BAM_MARKDUPLICATES_SPARK.out.versions)
@@ -608,7 +612,7 @@ workflow SAREK {
             ch_cram_markduplicates_no_spark = BAM_MARKDUPLICATES.out.cram
 
             // Gather QC reports
-            ch_reports  = ch_reports.mix(BAM_MARKDUPLICATES.out.qc.collect{meta, report -> report})
+            ch_reports  = ch_reports.mix(BAM_MARKDUPLICATES.out.qc.collect{ meta, report -> report })
 
             // Gather used softwares versions
             ch_versions = ch_versions.mix(BAM_MARKDUPLICATES.out.versions)
@@ -623,8 +627,8 @@ workflow SAREK {
             ch_cram_markduplicates_spark).map{ meta, cram, crai ->
                 //Make sure correct data types are carried through
                 [ meta.subMap('id', 'patient', 'sample', 'sex', 'status')
-                + [data_type: "cram"]
-                , cram, crai ]
+                    + [data_type: "cram"],
+                    cram, crai ]
             }
 
         //If params.save_output_as_bam, then convert CRAM files to BAM
@@ -652,11 +656,11 @@ workflow SAREK {
             BAM_TO_CRAM(ch_convert.bam, fasta, fasta_fai)
             ch_versions = ch_versions.mix(BAM_TO_CRAM.out.versions)
 
-            ch_cram_from_bam = BAM_TO_CRAM.out.alignment_index.map{meta, cram, crai ->
+            ch_cram_from_bam = BAM_TO_CRAM.out.alignment_index.map{ meta, cram, crai ->
                 //Make sure correct data types are carried through
                 [ meta.subMap('id', 'patient', 'sample', 'sex', 'status')
-                    + [data_type: "cram"]
-                    , cram, crai ]
+                    + [data_type: "cram"],
+                    cram, crai ]
             }
 
             ch_cram_for_bam_baserecalibrator = Channel.empty().mix(ch_cram_from_bam, ch_convert.cram)
@@ -673,8 +677,8 @@ workflow SAREK {
             ch_cram_for_bam_baserecalibrator = Channel.empty().mix(ch_md_cram_for_restart, ch_cram_skip_markduplicates ).map{ meta, cram, crai ->
                 //Make sure correct data types are carried through
                 [ meta.subMap('id', 'patient', 'sample', 'sex', 'status')
-                    + [data_type: "cram"]
-                    , cram, crai ]
+                    + [data_type: "cram"],
+                    cram, crai ]
             }
 
         }
@@ -722,7 +726,7 @@ workflow SAREK {
                 ch_table_bqsr_no_spark,
                 ch_table_bqsr_spark)
 
-            ch_reports  = ch_reports.mix(ch_table_bqsr.collect{ meta, table -> table})
+            ch_reports  = ch_reports.mix(ch_table_bqsr.collect{ meta, table -> table })
 
             ch_cram_applybqsr = ch_cram_for_bam_baserecalibrator.join(ch_table_bqsr)
 
@@ -744,8 +748,8 @@ workflow SAREK {
             }.set{ch_convert}
 
             //If BAM file, split up table and mapped file to convert BAM to CRAM
-            ch_bam_table = ch_convert.bam.map{ meta, bam, bai, table -> [meta, table]}
-            ch_bam_bam   = ch_convert.bam.map{ meta, bam, bai, table -> [meta, bam, bai]}
+            ch_bam_table = ch_convert.bam.map{ meta, bam, bai, table -> [ meta, table ] }
+            ch_bam_bam   = ch_convert.bam.map{ meta, bam, bai, table -> [ meta, bam, bai ] }
 
             //BAM files first must be converted to CRAM files since from this step on we base everything on CRAM format
             BAM_TO_CRAM(ch_bam_bam, fasta, fasta_fai)
@@ -800,7 +804,7 @@ workflow SAREK {
                 intervals_for_preprocessing)
 
             // Gather QC reports
-            ch_reports  = ch_reports.mix(CRAM_QC_RECAL.out.qc.collect{meta, report -> report})
+            ch_reports  = ch_reports.mix(CRAM_QC_RECAL.out.qc.collect{ meta, report -> report })
 
             // Gather used softwares versions
             ch_versions = ch_versions.mix(CRAM_QC_RECAL.out.versions)
@@ -823,7 +827,7 @@ workflow SAREK {
             // - input crams if started from step recal + skip BQSR
             ch_cram_variant_calling = Channel.empty().mix(
                 BAM_TO_CRAM.out.alignment_index,
-                ch_convert.cram.map{ meta, cram, crai, table -> [meta, cram, crai]})
+                ch_convert.cram.map{ meta, cram, crai, table -> [ meta, cram, crai ] })
         } else {
             // ch_cram_variant_calling contains either:
             // - crams from markduplicates = ch_cram_for_bam_baserecalibrator if skip BQSR but not started from step recalibration
@@ -859,37 +863,37 @@ workflow SAREK {
         }
 
         // All Germline samples
-        ch_cram_variant_calling_normal_to_cross = ch_cram_variant_calling_status.normal.map{ meta, cram, crai -> [meta.patient, meta, cram, crai] }
+        ch_cram_variant_calling_normal_to_cross = ch_cram_variant_calling_status.normal.map{ meta, cram, crai -> [ meta.patient, meta, cram, crai ] }
 
         // All tumor samples
-        ch_cram_variant_calling_pair_to_cross = ch_cram_variant_calling_status.tumor.map{ meta, cram, crai -> [meta.patient, meta, cram, crai] }
+        ch_cram_variant_calling_pair_to_cross = ch_cram_variant_calling_status.tumor.map{ meta, cram, crai -> [ meta.patient, meta, cram, crai ] }
 
         // Tumor only samples
-        // 1. Group together all tumor samples by patient ID [patient1, [meta1, meta2], [cram1,crai1, cram2, crai2]]
+        // 1. Group together all tumor samples by patient ID [ patient1, [ meta1, meta2 ], [ cram1, crai1, cram2, crai2 ] ]
 
         // Downside: this only works by waiting for all tumor samples to finish preprocessing, since no group size is provided
         ch_cram_variant_calling_tumor_grouped = ch_cram_variant_calling_pair_to_cross.groupTuple()
 
-        // 2. Join with normal samples, in each channel there is one key per patient now. Patients without matched normal end up with: [patient1, [meta1, meta2], [cram1,crai1, cram2, crai2], null]
+        // 2. Join with normal samples, in each channel there is one key per patient now. Patients without matched normal end up with: [ patient1, [ meta1, meta2 ], [ cram1, crai1, cram2, crai2 ], null ]
         ch_cram_variant_calling_tumor_joined = ch_cram_variant_calling_tumor_grouped.join(ch_cram_variant_calling_normal_to_cross, remainder: true)
 
         // 3. Filter out entries with last entry null
         ch_cram_variant_calling_tumor_filtered = ch_cram_variant_calling_tumor_joined.filter{ it ->  !(it.last()) }
 
-        // 4. Transpose [patient1, [meta1, meta2], [cram1,crai1, cram2, crai2]] back to [patient1, meta1, [cram1,crai1], null] [patient1, meta2, [cram2,crai2], null]
-        // and remove patient ID field & null value for further processing [meta1, [cram1,crai1]] [meta2, [cram2,crai2]]
+        // 4. Transpose [ patient1, [ meta1, meta2 ], [ cram1, crai1, cram2, crai2 ] ] back to [ patient1, meta1, [ cram1, crai1 ], null ] [ patient1, meta2, [ cram2, crai2 ], null ]
+        // and remove patient ID field & null value for further processing [ meta1, [ cram1, crai1 ] ] [ meta2, [ cram2, crai2 ] ]
         ch_cram_variant_calling_tumor_only = ch_cram_variant_calling_tumor_filtered.transpose().map{ it -> [it[1], it[2], it[3]] }
 
         if (params.only_paired_variant_calling) {
             // Normal only samples
 
-            // 1. Join with tumor samples, in each channel there is one key per patient now. Patients without matched tumor end up with: [patient1, [meta1], [cram1,crai1], null] as there is only one matched normal possible
+            // 1. Join with tumor samples, in each channel there is one key per patient now. Patients without matched tumor end up with: [ patient1, [ meta1 ], [ cram1, crai1 ], null ] as there is only one matched normal possible
             ch_cram_variant_calling_normal_joined = ch_cram_variant_calling_normal_to_cross.join(ch_cram_variant_calling_tumor_grouped, remainder: true)
 
             // 2. Filter out entries with last entry null
             ch_cram_variant_calling_normal_filtered = ch_cram_variant_calling_normal_joined.filter{ it ->  !(it.last()) }
 
-            // 3. Remove patient ID field & null value for further processing [meta1, [cram1,crai1]] [meta2, [cram2,crai2]] (no transposing needed since only one normal per patient ID)
+            // 3. Remove patient ID field & null value for further processing [ meta1, [ cram1, crai1 ] ] [ meta2, [ cram2, crai2 ] ] (no transposing needed since only one normal per patient ID)
             ch_cram_variant_calling_status_normal = ch_cram_variant_calling_normal_filtered.map{ it -> [it[1], it[2], it[3]] }
 
         } else {
@@ -905,9 +909,9 @@ workflow SAREK {
                 meta.normal_id  = normal[1].sample
                 meta.tumor_id   = tumor[1].sample
                 meta.sex        = normal[1].sex
-                meta.id         = "${meta.tumor_id}_vs_${meta.normal_id}".toString()
+                meta.id         = "${ meta.tumor_id}_vs_${ meta.normal_id}".toString()
 
-                [meta, normal[2], normal[3], tumor[2], tumor[3]]
+                [ meta, normal[2], normal[3], tumor[2], tumor[3] ]
             }
 
         // GERMLINE VARIANT CALLING
@@ -1060,10 +1064,10 @@ workflow SAREK {
         VCF_QC_BCFTOOLS_VCFTOOLS(vcf_to_annotate, intervals_bed_combined)
 
         ch_versions = ch_versions.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.versions)
-        ch_reports  = ch_reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.bcftools_stats.collect{meta, stats -> stats})
-        ch_reports  = ch_reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.vcftools_tstv_counts.collect{ meta, counts -> counts})
+        ch_reports  = ch_reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.bcftools_stats.collect{ meta, stats -> stats })
+        ch_reports  = ch_reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.vcftools_tstv_counts.collect{ meta, counts -> counts })
         ch_reports  = ch_reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.vcftools_tstv_qual.collect{ meta, qual -> qual })
-        ch_reports  = ch_reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.vcftools_filter_summary.collect{meta, summary -> summary})
+        ch_reports  = ch_reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.vcftools_filter_summary.collect{ meta, summary -> summary })
 
         CHANNEL_VARIANT_CALLING_CREATE_CSV(vcf_to_annotate)
 
@@ -1151,9 +1155,9 @@ def extract_csv(csv_file) {
 
     // check that the sample sheet is not 1 line or less, because it'll skip all subsequent checks if so.
     file(csv_file).withReader('UTF-8') { reader ->
-        def line, numberOfLinesInSampleSheet = 0;
-        while ((line = reader.readLine()) != null) {numberOfLinesInSampleSheet++}
-        if (numberOfLinesInSampleSheet < 2) {
+        def line, samplesheet_line_count = 0;
+        while ((line = reader.readLine()) != null) {samplesheet_line_count++}
+        if (samplesheet_line_count < 2) {
             log.error "Samplesheet had less than two lines. The sample sheet must be a csv file with a header, so at least two lines."
             System.exit(1)
         }
@@ -1162,7 +1166,7 @@ def extract_csv(csv_file) {
     // Additional check of sample sheet:
     // 1. If params.step == "mapping", then each row should specify a lane and the same combination of patient, sample and lane shouldn't be present in different rows.
     // 2. The same sample shouldn't be listed for different patients.
-    def patient_sample_lane_combinations_in_samplesheet = []
+    def patient_sample_lane_combinations = []
     def sample2patient = [:]
 
     Channel.from(csv_file).splitCsv(header: true)
@@ -1173,11 +1177,11 @@ def extract_csv(csv_file) {
                     System.exit(1)
                 }
                 def patient_sample_lane = [row.patient.toString(), row.sample.toString(), row.lane.toString()]
-                if (patient_sample_lane in patient_sample_lane_combinations_in_samplesheet) {
+                if (patient_sample_lane in patient_sample_lane_combinations) {
                     log.error('The patient-sample-lane combination "' + row.patient.toString() + '", "' + row.sample.toString() + '", and "' + row.lane.toString() + '" is present multiple times in the sample sheet.')
                     System.exit(1)
                 } else {
-                    patient_sample_lane_combinations_in_samplesheet.add(patient_sample_lane)
+                    patient_sample_lane_combinations.add(patient_sample_lane)
                 }
             }
             if (!sample2patient.containsKey(row.sample.toString())) {
@@ -1271,7 +1275,7 @@ def extract_csv(csv_file) {
 
             meta.size       = 1 // default number of splitted fastq
 
-            if (params.step == 'mapping') return [meta, [fastq_1, fastq_2]]
+            if (params.step == 'mapping') return [ meta, [fastq_1, fastq_2] ]
             else {
                 log.error "Samplesheet contains fastq files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
                 System.exit(1)
@@ -1294,7 +1298,7 @@ def extract_csv(csv_file) {
 
             meta.size       = 1 // default number of splitted fastq
 
-            if (params.step != 'annotate') return [meta, bam, bai]
+            if (params.step != 'annotate') return [ meta, bam, bai ]
             else {
                 log.error "Samplesheet contains bam files but step is `annotate`. The pipeline is expecting vcf files for the annotation. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
                 System.exit(1)
@@ -1309,7 +1313,7 @@ def extract_csv(csv_file) {
 
             meta.data_type  = 'cram'
 
-            if (!(params.step == 'mapping' || params.step == 'annotate')) return [meta, cram, crai, table]
+            if (!(params.step == 'mapping' || params.step == 'annotate')) return [ meta, cram, crai, table ]
             else {
                 log.error "Samplesheet contains cram files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
                 System.exit(1)
@@ -1324,7 +1328,7 @@ def extract_csv(csv_file) {
 
             meta.data_type  = 'bam'
 
-            if (!(params.step == 'mapping' || params.step == 'annotate')) return [meta, bam, bai, table]
+            if (!(params.step == 'mapping' || params.step == 'annotate')) return [ meta, bam, bai, table ]
             else {
                 log.error "Samplesheet contains bam files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
                 System.exit(1)
@@ -1338,7 +1342,7 @@ def extract_csv(csv_file) {
 
             meta.data_type  = 'cram'
 
-            if (!(params.step == 'mapping' || params.step == 'annotate')) return [meta, cram, crai]
+            if (!(params.step == 'mapping' || params.step == 'annotate')) return [ meta, cram, crai ]
             else {
                 log.error "Samplesheet contains cram files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
                 System.exit(1)
@@ -1352,7 +1356,7 @@ def extract_csv(csv_file) {
 
             meta.data_type  = 'bam'
 
-            if (!(params.step == 'mapping' || params.step == 'annotate')) return [meta, bam, bai]
+            if (!(params.step == 'mapping' || params.step == 'annotate')) return [ meta, bam, bai ]
             else {
                 log.error "Samplesheet contains bam files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
                 System.exit(1)
@@ -1366,7 +1370,7 @@ def extract_csv(csv_file) {
             meta.data_type     = 'vcf'
             meta.variantcaller = row.variantcaller ?: ''
 
-            if (params.step == 'annotate') return [meta, vcf]
+            if (params.step == 'annotate') return [ meta, vcf ]
             else {
                 log.error "Samplesheet contains vcf files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
                 System.exit(1)
