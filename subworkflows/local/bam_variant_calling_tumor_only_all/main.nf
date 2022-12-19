@@ -35,15 +35,14 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         panel_of_normals_tbi          // channel: [optional]  panel_of_normals_tbi
 
     main:
-
-    ch_versions         = Channel.empty()
+    versions = Channel.empty()
 
     //TODO: Temporary until the if's can be removed and printing to terminal is prevented with "when" in the modules.config
-    freebayes_vcf       = Channel.empty()
-    manta_vcf           = Channel.empty()
-    mutect2_vcf         = Channel.empty()
-    strelka_vcf         = Channel.empty()
-    tiddit_vcf          = Channel.empty()
+    vcf_freebayes   = Channel.empty()
+    vcf_manta       = Channel.empty()
+    vcf_mutect2     = Channel.empty()
+    vcf_strelka     = Channel.empty()
+    vcf_tiddit      = Channel.empty()
 
     // Remap channel with intervals
     cram_recalibrated_intervals = cram_recalibrated.combine(intervals)
@@ -94,7 +93,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
             dict
         )
 
-        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_MPILEUP.out.versions)
+        versions = versions.mix(BAM_VARIANT_CALLING_MPILEUP.out.versions)
     }
 
     if (tools.split(',').contains('controlfreec')){
@@ -115,7 +114,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
             intervals_bed_combined
         )
 
-        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_CONTROLFREEC.out.versions)
+        versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_CONTROLFREEC.out.versions)
     }
 
     if(tools.split(',').contains('cnvkit')){
@@ -132,7 +131,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
             cnvkit_reference
         )
 
-        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_CNVKIT.out.versions)
+        versions = versions.mix(BAM_VARIANT_CALLING_CNVKIT.out.versions)
     }
 
     if (tools.split(',').contains('freebayes')){
@@ -149,8 +148,8 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
             fasta_fai
         )
 
-        freebayes_vcf = BAM_VARIANT_CALLING_FREEBAYES.out.freebayes_vcf
-        ch_versions   = ch_versions.mix(BAM_VARIANT_CALLING_FREEBAYES.out.versions)
+        vcf_freebayes = BAM_VARIANT_CALLING_FREEBAYES.out.vcf
+        versions   = versions.mix(BAM_VARIANT_CALLING_FREEBAYES.out.versions)
     }
 
     if (tools.split(',').contains('mutect2')) {
@@ -165,8 +164,8 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
             panel_of_normals_tbi
         )
 
-        mutect2_vcf = BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2.out.filtered_vcf
-        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2.out.versions)
+        vcf_mutect2 = BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2.out.vcf_filtered
+        versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2.out.versions)
     }
 
     if (tools.split(',').contains('manta')){
@@ -178,8 +177,8 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
             fasta_fai
         )
 
-        manta_vcf   = BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA.out.manta_vcf
-        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA.out.versions)
+        vcf_manta   = BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA.out.vcf_manta
+        versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA.out.versions)
     }
 
     if (tools.split(',').contains('strelka')) {
@@ -191,8 +190,8 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
             fasta_fai
         )
 
-        strelka_vcf = BAM_VARIANT_CALLING_SINGLE_STRELKA.out.strelka_vcf
-        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_SINGLE_STRELKA.out.versions)
+        vcf_strelka = BAM_VARIANT_CALLING_SINGLE_STRELKA.out.vcf
+        versions = versions.mix(BAM_VARIANT_CALLING_SINGLE_STRELKA.out.versions)
     }
 
         //TIDDIT
@@ -204,17 +203,17 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
             bwa
         )
 
-        tiddit_vcf = BAM_VARIANT_CALLING_SINGLE_TIDDIT.out.tiddit_vcf
-        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_SINGLE_TIDDIT.out.versions)
+        vcf_tiddit = BAM_VARIANT_CALLING_SINGLE_TIDDIT.out.vcf
+        versions = versions.mix(BAM_VARIANT_CALLING_SINGLE_TIDDIT.out.versions)
     }
 
 
     emit:
-    freebayes_vcf
-    manta_vcf
-    mutect2_vcf
-    strelka_vcf
-    tiddit_vcf
+    vcf_freebayes
+    vcf_manta
+    vcf_mutect2
+    vcf_strelka
+    vcf_tiddit
 
-    versions = ch_versions
+    versions = versions
 }

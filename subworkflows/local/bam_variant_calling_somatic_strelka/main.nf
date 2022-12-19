@@ -10,24 +10,23 @@ workflow BAM_VARIANT_CALLING_SOMATIC_STRELKA {
     fasta_fai                // channel: [mandatory]
 
     main:
-
-    ch_versions = Channel.empty()
+    versions = Channel.empty()
 
     STRELKA_SOMATIC(cram, fasta, fasta_fai )
 
     // Figure out if using intervals or no_intervals
-    STRELKA_SOMATIC.out.vcf_snvs.branch{
-            intervals:    it[0].num_intervals > 1
-            no_intervals: it[0].num_intervals <= 1
-        }.set{strelka_vcf_snvs}
+    vcf_snvs = STRELKA_SOMATIC.out.vcf_snvs.branch{
+        intervals:    it[0].num_intervals > 1
+        no_intervals: it[0].num_intervals <= 1
+    }
 
-    STRELKA_SOMATIC.out.vcf_indels.branch{
-            intervals:    it[0].num_intervals > 1
-            no_intervals: it[0].num_intervals <= 1
-        }.set{strelka_vcf_indels}
+    vcf_indels = STRELKA_SOMATIC.out.vcf_indels.branch{
+        intervals:    it[0].num_intervals > 1
+        no_intervals: it[0].num_intervals <= 1
+    }
 
     // Only when using intervals
-    MERGE_STRELKA_SNVS(strelka_vcf_snvs.intervals.map{ meta, vcf ->
+    MERGE_STRELKA_SNVS(vcf_snvs.intervals.map{ meta, vcf ->
 
                 [groupKey([
                             id:             meta.tumor_id + "_vs_" + meta.normal_id,
@@ -43,7 +42,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_STRELKA {
             }.groupTuple(),
             dict.map{ it -> [[id:it[0].baseName], it]})
 
-    MERGE_STRELKA_INDELS(strelka_vcf_indels.intervals.map{ meta, vcf ->
+    MERGE_STRELKA_INDELS(vcf_indels.intervals.map{ meta, vcf ->
 
                 [groupKey([
                             id:             meta.tumor_id + "_vs_" + meta.normal_id,
@@ -59,11 +58,11 @@ workflow BAM_VARIANT_CALLING_SOMATIC_STRELKA {
             dict.map{ it -> [[id:it[0].baseName], it]})
 
     // Mix output channels for "no intervals" and "with intervals" results
-    strelka_vcf = Channel.empty().mix(
+    vcf = Channel.empty().mix(
                     MERGE_STRELKA_SNVS.out.vcf,
-                    strelka_vcf_snvs.no_intervals,
+                    vcf_snvs.no_intervals,
                     MERGE_STRELKA_INDELS.out.vcf,
-                    strelka_vcf_indels.no_intervals
+                    vcf_indels.no_intervals
                     )
                 .map{ meta, vcf ->
                     [[
@@ -78,11 +77,12 @@ workflow BAM_VARIANT_CALLING_SOMATIC_STRELKA {
                     vcf]
                 }
 
-    ch_versions = ch_versions.mix(MERGE_STRELKA_SNVS.out.versions)
-    ch_versions = ch_versions.mix(MERGE_STRELKA_INDELS.out.versions)
-    ch_versions = ch_versions.mix(STRELKA_SOMATIC.out.versions)
+    versions = versions.mix(MERGE_STRELKA_SNVS.out.versions)
+    versions = versions.mix(MERGE_STRELKA_INDELS.out.versions)
+    versions = versions.mix(STRELKA_SOMATIC.out.versions)
 
     emit:
-    strelka_vcf
-    versions = ch_versions
+    vcf
+
+    versions
 }

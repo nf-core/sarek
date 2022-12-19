@@ -16,41 +16,40 @@ include { MSISENSORPRO_MSI_SOMATIC                      } from '../../../modules
 
 workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     take:
-        tools                         // Mandatory, list of tools to apply
-        cram_pair                     // channel: [mandatory] cram
-        bwa                           // channel: [optional] bwa
-        cf_chrom_len                  // channel: [optional] controlfreec length file
-        chr_files
-        dbsnp                         // channel: [mandatory] dbsnp
-        dbsnp_tbi                     // channel: [mandatory] dbsnp_tbi
-        dict                          // channel: [mandatory] dict
-        fasta                         // channel: [mandatory] fasta
-        fasta_fai                     // channel: [mandatory] fasta_fai
-        germline_resource             // channel: [optional]  germline_resource
-        germline_resource_tbi         // channel: [optional]  germline_resource_tbi
-        intervals                     // channel: [mandatory] intervals/target regions
-        intervals_bed_gz_tbi          // channel: [mandatory] intervals/target regions index zipped and indexed
-        intervals_bed_combined        // channel: [mandatory] intervals/target regions in one file unzipped
-        mappability
-        msisensorpro_scan             // channel: [optional]  msisensorpro_scan
-        panel_of_normals              // channel: [optional]  panel_of_normals
-        panel_of_normals_tbi          // channel: [optional]  panel_of_normals_tbi
-        allele_files                  // channel: [optional]  ascat allele files
-        loci_files                    // channel: [optional]  ascat loci files
-        gc_file                       // channel: [optional]  ascat gc content file
-        rt_file                       // channel: [optional]  ascat rt file
+    tools                         // Mandatory, list of tools to apply
+    cram_pair                     // channel: [mandatory] cram
+    bwa                           // channel: [optional] bwa
+    cf_chrom_len                  // channel: [optional] controlfreec length file
+    chr_files
+    dbsnp                         // channel: [mandatory] dbsnp
+    dbsnp_tbi                     // channel: [mandatory] dbsnp_tbi
+    dict                          // channel: [mandatory] dict
+    fasta                         // channel: [mandatory] fasta
+    fasta_fai                     // channel: [mandatory] fasta_fai
+    germline_resource             // channel: [optional]  germline_resource
+    germline_resource_tbi         // channel: [optional]  germline_resource_tbi
+    intervals                     // channel: [mandatory] intervals/target regions
+    intervals_bed_gz_tbi          // channel: [mandatory] intervals/target regions index zipped and indexed
+    intervals_bed_combined        // channel: [mandatory] intervals/target regions in one file unzipped
+    mappability
+    msisensorpro_scan             // channel: [optional]  msisensorpro_scan
+    panel_of_normals              // channel: [optional]  panel_of_normals
+    panel_of_normals_tbi          // channel: [optional]  panel_of_normals_tbi
+    allele_files                  // channel: [optional]  ascat allele files
+    loci_files                    // channel: [optional]  ascat loci files
+    gc_file                       // channel: [optional]  ascat gc content file
+    rt_file                       // channel: [optional]  ascat rt file
 
     main:
-
-    ch_versions          = Channel.empty()
+    versions          = Channel.empty()
 
     //TODO: Temporary until the if's can be removed and printing to terminal is prevented with "when" in the modules.config
-    freebayes_vcf        = Channel.empty()
-    manta_vcf            = Channel.empty()
-    strelka_vcf          = Channel.empty()
-    msisensorpro_output  = Channel.empty()
-    mutect2_vcf          = Channel.empty()
-    tiddit_vcf           = Channel.empty()
+    vcf_freebayes       = Channel.empty()
+    vcf_manta           = Channel.empty()
+    vcf_strelka         = Channel.empty()
+    out_msisensorpro    = Channel.empty()
+    vcf_mutect2         = Channel.empty()
+    vcf_tiddit          = Channel.empty()
 
     // Remap channel with intervals
     cram_pair_intervals = cram_pair.combine(intervals)
@@ -101,7 +100,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             rt_file
         )
 
-        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_SOMATIC_ASCAT.out.versions)
+        versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_ASCAT.out.versions)
 
     }
 
@@ -148,14 +147,14 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             intervals_bed_combined
         )
 
-        ch_versions = ch_versions.mix(MPILEUP_NORMAL.out.versions)
-        ch_versions = ch_versions.mix(MPILEUP_TUMOR.out.versions)
-        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC.out.versions)
+        versions = versions.mix(MPILEUP_NORMAL.out.versions)
+        versions = versions.mix(MPILEUP_TUMOR.out.versions)
+        versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC.out.versions)
     }
 
     if (tools.split(',').contains('cnvkit')){
         cram_pair_cnvkit_somatic = cram_pair
-            .map{meta, normal_cram, normal_crai, tumor_cram, tumor_crai ->
+            .map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai ->
                 [meta, tumor_cram, normal_cram]
             }
 
@@ -167,7 +166,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             []
         )
 
-        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_CNVKIT.out.versions)
+        versions = versions.mix(BAM_VARIANT_CALLING_CNVKIT.out.versions)
     }
 
     if (tools.split(',').contains('freebayes')){
@@ -179,8 +178,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             fasta_fai
         )
 
-        freebayes_vcf = BAM_VARIANT_CALLING_FREEBAYES.out.freebayes_vcf
-        ch_versions   = ch_versions.mix(BAM_VARIANT_CALLING_FREEBAYES.out.versions)
+        vcf_freebayes = BAM_VARIANT_CALLING_FREEBAYES.out.vcf
+        versions   = versions.mix(BAM_VARIANT_CALLING_FREEBAYES.out.versions)
     }
 
     if (tools.split(',').contains('manta')) {
@@ -191,10 +190,10 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             fasta_fai
         )
 
-        manta_vcf                            = BAM_VARIANT_CALLING_SOMATIC_MANTA.out.manta_vcf
+        vcf_manta                            = BAM_VARIANT_CALLING_SOMATIC_MANTA.out.vcf
         manta_candidate_small_indels_vcf     = BAM_VARIANT_CALLING_SOMATIC_MANTA.out.manta_candidate_small_indels_vcf
         manta_candidate_small_indels_vcf_tbi = BAM_VARIANT_CALLING_SOMATIC_MANTA.out.manta_candidate_small_indels_vcf_tbi
-        ch_versions                          = ch_versions.mix(BAM_VARIANT_CALLING_SOMATIC_MANTA.out.versions)
+        versions                          = versions.mix(BAM_VARIANT_CALLING_SOMATIC_MANTA.out.versions)
     }
 
     if (tools.split(',').contains('strelka')) {
@@ -234,16 +233,16 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             fasta_fai
         )
 
-        strelka_vcf = Channel.empty().mix(BAM_VARIANT_CALLING_SOMATIC_STRELKA.out.strelka_vcf)
-        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_SOMATIC_STRELKA.out.versions)
+        vcf_strelka = Channel.empty().mix(BAM_VARIANT_CALLING_SOMATIC_STRELKA.out.vcf)
+        versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_STRELKA.out.versions)
     }
 
     if (tools.split(',').contains('msisensorpro')) {
 
         cram_pair_msisensor = cram_pair.combine(intervals_bed_combined)
         MSISENSORPRO_MSI_SOMATIC(cram_pair_msisensor, fasta, msisensorpro_scan)
-        ch_versions = ch_versions.mix(MSISENSORPRO_MSI_SOMATIC.out.versions)
-        msisensorpro_output = msisensorpro_output.mix(MSISENSORPRO_MSI_SOMATIC.out.output_report)
+        versions = versions.mix(MSISENSORPRO_MSI_SOMATIC.out.versions)
+        out_msisensorpro = out_msisensorpro.mix(MSISENSORPRO_MSI_SOMATIC.out.output_report)
     }
 
     if (tools.split(',').contains('mutect2')) {
@@ -262,31 +261,27 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             panel_of_normals_tbi
         )
 
-        mutect2_vcf = BAM_VARIANT_CALLING_SOMATIC_MUTECT2.out.filtered_vcf
-        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_SOMATIC_MUTECT2.out.versions)
+        vcf_mutect2 = BAM_VARIANT_CALLING_SOMATIC_MUTECT2.out.filtered_vcf
+        versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_MUTECT2.out.versions)
     }
 
     //TIDDIT
     if (tools.split(',').contains('tiddit')){
-        cram_normal = cram_pair.map{meta, normal_cram, normal_crai, tumor_cram, tumor_crai ->
-            [meta, normal_cram, normal_crai]
-        }
-        cram_tumor = cram_pair.map{meta, normal_cram, normal_crai, tumor_cram, tumor_crai ->
-            [meta, tumor_cram, tumor_crai]
-        }
-
-        BAM_VARIANT_CALLING_SOMATIC_TIDDIT(cram_normal, cram_tumor, fasta.map{ it -> [[id:it[0].baseName], it] }, bwa)
-        tiddit_vcf = BAM_VARIANT_CALLING_SOMATIC_TIDDIT.out.tiddit_vcf
-        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_SOMATIC_TIDDIT.out.versions)
+        BAM_VARIANT_CALLING_SOMATIC_TIDDIT(
+            cram_pair.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [ meta, normal_cram, normal_crai ] },
+            cram_pair.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [ meta, tumor_cram, tumor_crai ] },
+            fasta.map{ it -> [ [ id:it[0].baseName ], it ] }, bwa)
+        vcf_tiddit = BAM_VARIANT_CALLING_SOMATIC_TIDDIT.out.vcf
+        versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_TIDDIT.out.versions)
     }
 
     emit:
-    freebayes_vcf
-    manta_vcf
-    msisensorpro_output
-    mutect2_vcf
-    strelka_vcf
-    tiddit_vcf
+    out_msisensorpro
+    vcf_freebayes
+    vcf_manta
+    vcf_mutect2
+    vcf_strelka
+    vcf_tiddit
 
-    versions    = ch_versions
+    versions
 }

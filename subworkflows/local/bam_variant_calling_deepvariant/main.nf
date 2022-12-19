@@ -61,6 +61,7 @@ workflow BAM_VARIANT_CALLING_DEEPVARIANT {
             [ meta.subMap('num_intervals', 'patient', 'sample', 'sex', 'status')
                 + [ id: meta.sample, variantcaller:"deepvariant" ],
                 vcf]
+        }
 
     versions = versions.mix(MERGE_DEEPVARIANT_GVCF.out.versions)
     versions = versions.mix(MERGE_DEEPVARIANT_VCF.out.versions)
