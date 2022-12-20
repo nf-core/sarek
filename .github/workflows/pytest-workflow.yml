@@ -38,8 +38,6 @@ jobs:
           - "latest-everything"
         exclude:
           - profile: "conda"
-            NXF_VER: "latest-everything"
-          - profile: "conda"
             tags: umi
           - profile: "conda"
             tags: deepvariant
