@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#874](https://github.com/nf-core/sarek/pull/874) - Update all modules
 - [#890](https://github.com/nf-core/sarek/pull/890) - Sync `TEMPLATE` with `tools` `2.7.1`
 - [#898](https://github.com/nf-core/sarek/pull/898) - Sync `TEMPLATE` with `tools` `2.7.2`
+- [#898](https://github.com/nf-core/sarek/pull/898) - Nextflow minimal version is now `22.10.1`
 
 ### Fixed
 
@@ -33,6 +34,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Deprecated
 
 ### Removed
+
+- [#898](https://github.com/nf-core/sarek/pull/898) - Params `enable_conda` was removed
 
 ### Dependencies
 
