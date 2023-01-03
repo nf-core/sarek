@@ -10,33 +10,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - [#864](https://github.com/nf-core/sarek/pull/864) - Added possibilities to export assembled haplotypes and locally realigned reads
-- [#792](https://github.com/nf-core/sarek/pull/792) - Added the option `--concatenate_vcfs` for concatenating the germline vcf-files. Per default, the resulting vcf-files will be placed under `<outDir>/variant_calling/concat`.
+- [#792](https://github.com/nf-core/sarek/pull/792) - Added the option `--concatenate_vcfs` for concatenating the germline VCF files. Per default, the resulting vcf-files will be placed under `<outDir>/variant_calling/concat`
 - [#889](https://github.com/nf-core/sarek/pull/889) - Added possibilities to skip variant filtering after Haplotypecaller
 
 ### Changed
 
 - [#859](https://github.com/nf-core/sarek/pull/859) - Back to dev
-- [#860](https://github.com/nf-core/sarek/pull/860) - Replace local subworkflow with nf-core version - vcf_annotate_snpeff
-- [#865](https://github.com/nf-core/sarek/pull/865) - Replace local subworkflow with nf-core version - vcf_annotate_ensemblvep
+- [#860](https://github.com/nf-core/sarek/pull/860) - Replace local subworkflow with nf-core version - `vcf_annotate_snpeff`
+- [#865](https://github.com/nf-core/sarek/pull/865) - Replace local subworkflow with nf-core version - `vcf_annotate_ensemblvep`
 - [#874](https://github.com/nf-core/sarek/pull/874) - Update all modules
+- [#890](https://github.com/nf-core/sarek/pull/890) - Sync `TEMPLATE` with `tools` `2.7.1`
+- [#898](https://github.com/nf-core/sarek/pull/898) - Sync `TEMPLATE` with `tools` `2.7.2`
+- [#898](https://github.com/nf-core/sarek/pull/898) - Nextflow minimal version is now `22.10.1`
 
 ### Fixed
 
 - [#870](https://github.com/nf-core/sarek/pull/870) - Fix output for locally realigned reads from haplotypecaller
 - [#874](https://github.com/nf-core/sarek/pull/874) - Remove `CITATION.cff`
 - [#893](https://github.com/nf-core/sarek/pull/893) - Fix logic of when to execute tabix on dbsnp
-- [#894](https://github.com/nf-core/sarek/pull/894) - Add description to --cnvkit_reference
+- [#894](https://github.com/nf-core/sarek/pull/894) - Add description to `--cnvkit_reference`
 - [#894](https://github.com/nf-core/sarek/pull/894) - Remove methods description TODO prompt
 
 ### Deprecated
 
 ### Removed
 
+- [#898](https://github.com/nf-core/sarek/pull/898) - Params `enable_conda` was removed
+
 ### Dependencies
 
-| Dependency | Old version | New version |
-| ---------- | ----------- | ----------- |
-| `svdb`     | 2.6.1       | 2.8.1       |
+| Dependency    | Old version | New version |
+| ------------- | ----------- | ----------- |
+| `bcftools`    | 1.15.1      | 1.16        |
+| `ensembl-vep` | 106.1       | 108.2       |
+| `multiqc`     | 1.13a       | 1.13        |
+| `svdb`        | 2.6.1       | 2.8.1       |
 
 ## [3.1.1](https://github.com/nf-core/sarek/releases/tag/3.1.1) - Lilla Luleälven
 

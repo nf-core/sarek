@@ -15,8 +15,10 @@ workflow BAM_VARIANT_CALLING_CNVKIT {
     reference           // channel: [] cnn
 
     main:
-    CNVKIT_BATCH(cram_recalibrated, fasta, fasta_fai, targets, reference)
+    generate_pon = false
 
+    CNVKIT_BATCH(cram_recalibrated, fasta, fasta_fai, targets, reference, generate_pon)
+    
     versions = CNVKIT_BATCH.out.versions
 
     emit:

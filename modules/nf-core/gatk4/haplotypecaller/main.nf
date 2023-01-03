@@ -2,7 +2,7 @@ process GATK4_HAPLOTYPECALLER {
     tag "$meta.id"
     label 'process_medium'
 
-    conda (params.enable_conda ? "bioconda::gatk4=4.3.0.0" : null)
+    conda "bioconda::gatk4=4.3.0.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/gatk4:4.3.0.0--py36hdfd78af_0':
         'quay.io/biocontainers/gatk4:4.3.0.0--py36hdfd78af_0' }"
@@ -49,6 +49,23 @@ process GATK4_HAPLOTYPECALLER {
         $bamout_command \\
         --tmp-dir . \\
         $args
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        gatk4: \$(echo \$(gatk --version 2>&1) | sed 's/^.*(GATK) v//; s/ .*\$//')
+    END_VERSIONS
+    """
+
+    stub:
+    def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    def bamout_command = args.contains("--bam-writer-type") ? "--bam-output ${prefix.replaceAll('.g\\s*$', '')}.realigned.bam" : ""
+
+    def stub_realigned_bam = bamout_command ? "touch ${prefix.replaceAll('.g\\s*$', '')}.realigned.bam" : ""
+    """
+    touch ${prefix}.vcf.gz
+    touch ${prefix}.vcf.gz.tbi
+    ${stub_realigned_bam}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
