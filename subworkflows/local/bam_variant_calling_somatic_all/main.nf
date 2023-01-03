@@ -190,17 +190,17 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             fasta_fai
         )
 
-        vcf_manta                            = BAM_VARIANT_CALLING_SOMATIC_MANTA.out.vcf
-        manta_candidate_small_indels_vcf     = BAM_VARIANT_CALLING_SOMATIC_MANTA.out.manta_candidate_small_indels_vcf
-        manta_candidate_small_indels_vcf_tbi = BAM_VARIANT_CALLING_SOMATIC_MANTA.out.manta_candidate_small_indels_vcf_tbi
-        versions                          = versions.mix(BAM_VARIANT_CALLING_SOMATIC_MANTA.out.versions)
+        vcf_manta                      = BAM_VARIANT_CALLING_SOMATIC_MANTA.out.vcf
+        candidate_small_indels_vcf     = BAM_VARIANT_CALLING_SOMATIC_MANTA.out.candidate_small_indels_vcf
+        candidate_small_indels_vcf_tbi = BAM_VARIANT_CALLING_SOMATIC_MANTA.out.candidate_small_indels_vcf_tbi
+        versions                       = versions.mix(BAM_VARIANT_CALLING_SOMATIC_MANTA.out.versions)
     }
 
     if (tools.split(',').contains('strelka')) {
 
         if (tools.split(',').contains('manta')) {
-            cram_pair_strelka = cram_pair.join(manta_candidate_small_indels_vcf)
-                                        .join(manta_candidate_small_indels_vcf_tbi)
+            cram_pair_strelka = cram_pair.join(candidate_small_indels_vcf)
+                                        .join(candidate_small_indels_vcf_tbi)
                                         .combine(intervals_bed_gz_tbi)
                                         .map{
                                             meta, normal_cram, normal_crai, tumor_cram, tumor_crai, vcf, vcf_tbi, bed_tbi, num_intervals ->

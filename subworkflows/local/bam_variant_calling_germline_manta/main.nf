@@ -36,8 +36,8 @@ workflow BAM_VARIANT_CALLING_GERMLINE_MANTA {
     MERGE_MANTA_SMALL_INDELS(
         small_indels_vcf.intervals.map{ meta, vcf ->
             [ groupKey(
-                [ meta.subMap('num_intervals', 'patient', 'sample', 'sex', 'status')
-                    + [ id:meta.sample ] ],
+                meta.subMap('num_intervals', 'patient', 'sample', 'sex', 'status')
+                    + [ id:meta.sample ],
                         meta.num_intervals),
             vcf ]
         }.groupTuple(),
@@ -46,8 +46,8 @@ workflow BAM_VARIANT_CALLING_GERMLINE_MANTA {
     MERGE_MANTA_SV(
         sv_vcf.intervals.map{ meta, vcf ->
             [ groupKey(
-                [ meta.subMap('num_intervals', 'patient', 'sample', 'sex', 'status')
-                    + [ id:meta.sample ] ],
+                meta.subMap('num_intervals', 'patient', 'sample', 'sex', 'status')
+                    + [ id:meta.sample ],
                         meta.num_intervals),
             vcf ]
         }.groupTuple(),
@@ -56,8 +56,8 @@ workflow BAM_VARIANT_CALLING_GERMLINE_MANTA {
     MERGE_MANTA_DIPLOID(
         diploid_sv_vcf.intervals.map{ meta, vcf ->
             [ groupKey(
-                [ meta.subMap('num_intervals', 'patient', 'sample', 'sex', 'status')
-                    + [ id:meta.sample ] ],
+                meta.subMap('num_intervals', 'patient', 'sample', 'sex', 'status')
+                    + [ id:meta.sample ],
                         meta.num_intervals),
             vcf ]
         }.groupTuple(),
@@ -65,12 +65,11 @@ workflow BAM_VARIANT_CALLING_GERMLINE_MANTA {
 
     // Mix output channels for "no intervals" and "with intervals" results
     // Only diploid SV should get annotated
-    vcf = Channel.empty().mix(
-        MERGE_MANTA_DIPLOID.out.vcf,diploid_sv_vcf.no_intervals).map{ meta, vcf ->
-            [ meta.subMap('num_intervals', 'patient', 'sample', 'sex', 'status')
-                + [ id:meta.sample, variantcaller: 'manta' ],
-                vcf ]
-        }
+    vcf = Channel.empty().mix(MERGE_MANTA_DIPLOID.out.vcf, diploid_sv_vcf.no_intervals).map{ meta, vcf ->
+        [ meta.subMap('num_intervals', 'patient', 'sample', 'sex', 'status')
+            + [ id:meta.sample, variantcaller: 'manta' ],
+            vcf ]
+    }
 
     versions = versions.mix(MERGE_MANTA_DIPLOID.out.versions)
     versions = versions.mix(MERGE_MANTA_SMALL_INDELS.out.versions)

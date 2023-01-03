@@ -177,7 +177,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
             fasta_fai
         )
 
-        vcf_manta   = BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA.out.vcf_manta
+        vcf_manta = BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA.out.vcf
         versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA.out.versions)
     }
 

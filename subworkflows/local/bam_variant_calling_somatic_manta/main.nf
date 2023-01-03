@@ -13,171 +13,119 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MANTA {
 
     main:
 
-    ch_versions = Channel.empty()
+    versions = Channel.empty()
 
     MANTA_SOMATIC(cram, fasta, fasta_fai)
 
     // Figure out if using intervals or no_intervals
-    MANTA_SOMATIC.out.candidate_small_indels_vcf.branch{
-            intervals:    it[0].num_intervals > 1
-            no_intervals: it[0].num_intervals <= 1
-        }.set{manta_candidate_small_indels_vcf}
+    candidate_small_indels_vcf = MANTA_SOMATIC.out.candidate_small_indels_vcf.branch{
+        intervals:    it[0].num_intervals > 1
+        no_intervals: it[0].num_intervals <= 1
+    }
 
-    MANTA_SOMATIC.out.candidate_small_indels_vcf_tbi.branch{
-            intervals:    it[0].num_intervals > 1
-            no_intervals: it[0].num_intervals <= 1
-        }.set{manta_candidate_small_indels_vcf_tbi}
+    candidate_small_indels_vcf_tbi = MANTA_SOMATIC.out.candidate_small_indels_vcf_tbi.branch{
+        intervals:    it[0].num_intervals > 1
+        no_intervals: it[0].num_intervals <= 1
+    }
 
-    MANTA_SOMATIC.out.candidate_sv_vcf.branch{
-            intervals:    it[0].num_intervals > 1
-            no_intervals: it[0].num_intervals <= 1
-        }.set{manta_candidate_sv_vcf}
+    manta_candidate_sv_vcf = MANTA_SOMATIC.out.candidate_sv_vcf.branch{
+        intervals:    it[0].num_intervals > 1
+        no_intervals: it[0].num_intervals <= 1
+    }
 
-    MANTA_SOMATIC.out.diploid_sv_vcf.branch{
-            intervals:    it[0].num_intervals > 1
-            no_intervals: it[0].num_intervals <= 1
-        }.set{manta_diploid_sv_vcf}
+    manta_diploid_sv_vcf = MANTA_SOMATIC.out.diploid_sv_vcf.branch{
+        intervals:    it[0].num_intervals > 1
+        no_intervals: it[0].num_intervals <= 1
+    }
 
-    MANTA_SOMATIC.out.somatic_sv_vcf.branch{
-            intervals:    it[0].num_intervals > 1
-            no_intervals: it[0].num_intervals <= 1
-        }.set{manta_somatic_sv_vcf}
+    manta_somatic_sv_vcf = MANTA_SOMATIC.out.somatic_sv_vcf.branch{
+        intervals:    it[0].num_intervals > 1
+        no_intervals: it[0].num_intervals <= 1
+    }
 
     //Only when using intervals
     MERGE_MANTA_SV(
-        manta_candidate_small_indels_vcf.intervals.map{ meta, vcf ->
-
-                [groupKey([
-                            id:             meta.tumor_id + "_vs_" + meta.normal_id,
-                            normal_id:      meta.normal_id,
-                            num_intervals:  meta.num_intervals,
-                            patient:        meta.patient,
-                            sex:            meta.sex,
-                            tumor_id:       meta.tumor_id
-                        ],
+        candidate_small_indels_vcf.intervals.map{ meta, vcf ->
+            [ groupKey(
+                meta.subMap('normal_id', 'num_intervals', 'patient', 'sample', 'sex', 'tumor_id')
+                    + [ id:meta.tumor_id + "_vs_" + meta.normal_id ],
                         meta.num_intervals),
-                vcf]
-
-            }.groupTuple(),
-        dict.map{ it -> [[id:it[0].baseName], it]})
+            vcf ]
+        }.groupTuple(),
+        dict.map{ it -> [ [ id:it[0].baseName ], it ] })
 
     MERGE_MANTA_SMALL_INDELS(
         manta_candidate_sv_vcf.intervals.map{ meta, vcf ->
-
-                [groupKey([
-                            id:             meta.tumor_id + "_vs_" + meta.normal_id,
-                            normal_id:      meta.normal_id,
-                            num_intervals:  meta.num_intervals,
-                            patient:        meta.patient,
-                            sex:            meta.sex,
-                            tumor_id:       meta.tumor_id
-                        ],
+            [ groupKey(
+                meta.subMap('normal_id', 'num_intervals', 'patient', 'sample', 'sex', 'tumor_id')
+                    + [ id:meta.tumor_id + "_vs_" + meta.normal_id ],
                         meta.num_intervals),
-                vcf]
-
-            }.groupTuple(),
-        dict.map{ it -> [[id:it[0].baseName], it]})
+            vcf ]
+        }.groupTuple(),
+        dict.map{ it -> [ [ id:it[0].baseName ], it ] })
 
     MERGE_MANTA_DIPLOID(
         manta_diploid_sv_vcf.intervals.map{ meta, vcf ->
-                new_meta = [
-                            id:             meta.tumor_id + "_vs_" + meta.normal_id,
-                            normal_id:      meta.normal_id,
-                            num_intervals:  meta.num_intervals,
-                            patient:        meta.patient,
-                            sex:            meta.sex,
-                            tumor_id:       meta.tumor_id
-                        ]
-
-                [groupKey([
-                            id:             meta.tumor_id + "_vs_" + meta.normal_id,
-                            normal_id:      meta.normal_id,
-                            num_intervals:  meta.num_intervals,
-                            patient:        meta.patient,
-                            sex:            meta.sex,
-                            tumor_id:       meta.tumor_id
-                        ],
+            [ groupKey(
+                meta.subMap('normal_id', 'num_intervals', 'patient', 'sample', 'sex', 'tumor_id')
+                    + [ id:meta.tumor_id + "_vs_" + meta.normal_id ],
                         meta.num_intervals),
-                vcf]
-
-            }.groupTuple(),
-        dict.map{ it -> [[id:it[0].baseName], it]})
+            vcf ]
+        }.groupTuple(),
+        dict.map{ it -> [ [ id:it[0].baseName ], it ] })
 
     MERGE_MANTA_SOMATIC(
         manta_somatic_sv_vcf.intervals.map{ meta, vcf ->
-
-                [groupKey([
-                            id:             meta.tumor_id + "_vs_" + meta.normal_id,
-                            normal_id:      meta.normal_id,
-                            num_intervals:  meta.num_intervals,
-                            patient:        meta.patient,
-                            sex:            meta.sex,
-                            tumor_id:       meta.tumor_id
-                        ],
+            [ groupKey(
+                meta.subMap('normal_id', 'num_intervals', 'patient', 'sample', 'sex', 'tumor_id')
+                    + [ id:meta.tumor_id + "_vs_" + meta.normal_id ],
                         meta.num_intervals),
-                vcf]
-
-            }.groupTuple(),
-        dict.map{ it -> [[id:it[0].baseName], it]})
+            vcf ]
+        }.groupTuple(),
+        dict.map{ it -> [ [ id:it[0].baseName ], it ] })
 
     // Mix output channels for "no intervals" and "with intervals" results
-    manta_vcf = Channel.empty().mix(
+
+    vcf = Channel.empty().mix(
         MERGE_MANTA_DIPLOID.out.vcf,
         MERGE_MANTA_SOMATIC.out.vcf,
         manta_diploid_sv_vcf.no_intervals,
         manta_somatic_sv_vcf.no_intervals
     ).map{ meta, vcf ->
-        [[
-            id:             meta.tumor_id + "_vs_" + meta.normal_id,
-            num_intervals:  meta.num_intervals,
-            normal_id:      meta.normal_id,
-            patient:        meta.patient,
-            sex:            meta.sex,
-            tumor_id:       meta.tumor_id,
-            variantcaller:  "manta"
-        ],
-        vcf]
+            [ meta.subMap('normal_id', 'num_intervals', 'patient', 'sex', 'tumor_id')
+                + [ id:meta.tumor_id + "_vs_" + meta.normal_id, variantcaller: 'manta' ],
+                vcf ]
     }
 
     // Don't set variantcaller & num_intervals key. These files are not annotated, so they don't need it and joining with reads for StrelkaBP then fails
-    manta_candidate_small_indels_vcf = Channel.empty().mix(
+    candidate_small_indels_vcf = Channel.empty().mix(
         MERGE_MANTA_SMALL_INDELS.out.vcf,
-        manta_candidate_small_indels_vcf.no_intervals
+        candidate_small_indels_vcf.no_intervals
     ).map{ meta, vcf ->
-        [[
-            id:         meta.tumor_id + "_vs_" + meta.normal_id,
-            normal_id:  meta.normal_id,
-            patient:    meta.patient,
-            sex:        meta.sex,
-            tumor_id:   meta.tumor_id,
-        ],
-        vcf]
+            [ meta.subMap('normal_id', 'patient', 'sex', 'tumor_id')
+                + [ id:meta.tumor_id + "_vs_" + meta.normal_id ],
+                vcf ]
     }
 
-    manta_candidate_small_indels_vcf_tbi = Channel.empty().mix(
+    candidate_small_indels_vcf_tbi = Channel.empty().mix(
         MERGE_MANTA_SMALL_INDELS.out.tbi,
-        manta_candidate_small_indels_vcf_tbi.no_intervals
+        candidate_small_indels_vcf_tbi.no_intervals
     ).map{ meta, vcf ->
-        [[
-            id:         meta.tumor_id + "_vs_" + meta.normal_id,
-            normal_id:  meta.normal_id,
-            patient:    meta.patient,
-            sex:        meta.sex,
-            tumor_id:   meta.tumor_id
-        ],
-        vcf]
+            [ meta.subMap('normal_id', 'patient', 'sex', 'tumor_id')
+                + [ id:meta.tumor_id + "_vs_" + meta.normal_id ],
+                vcf ]
     }
 
-    ch_versions = ch_versions.mix(MERGE_MANTA_SV.out.versions)
-    ch_versions = ch_versions.mix(MERGE_MANTA_SMALL_INDELS.out.versions)
-    ch_versions = ch_versions.mix(MERGE_MANTA_DIPLOID.out.versions)
-    ch_versions = ch_versions.mix(MERGE_MANTA_SOMATIC.out.versions)
-    ch_versions = ch_versions.mix(MANTA_SOMATIC.out.versions)
+    versions = versions.mix(MERGE_MANTA_SV.out.versions)
+    versions = versions.mix(MERGE_MANTA_SMALL_INDELS.out.versions)
+    versions = versions.mix(MERGE_MANTA_DIPLOID.out.versions)
+    versions = versions.mix(MERGE_MANTA_SOMATIC.out.versions)
+    versions = versions.mix(MANTA_SOMATIC.out.versions)
 
     emit:
-    manta_vcf
-    manta_candidate_small_indels_vcf
-    manta_candidate_small_indels_vcf_tbi
-    versions = ch_versions
+    candidate_small_indels_vcf
+    candidate_small_indels_vcf_tbi
+    vcf
 
+    versions
 }

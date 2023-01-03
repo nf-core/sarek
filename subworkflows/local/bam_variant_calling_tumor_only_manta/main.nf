@@ -13,102 +13,75 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA {
 
     main:
 
-    ch_versions = Channel.empty()
+    versions = Channel.empty()
 
     MANTA_TUMORONLY(cram, fasta, fasta_fai)
 
     // Figure out if using intervals or no_intervals
-    MANTA_TUMORONLY.out.candidate_small_indels_vcf.branch{
-            intervals:    it[0].num_intervals > 1
-            no_intervals: it[0].num_intervals <= 1
-        }.set{manta_small_indels_vcf}
+    manta_small_indels_vcf = MANTA_TUMORONLY.out.candidate_small_indels_vcf.branch{
+        intervals:    it[0].num_intervals > 1
+        no_intervals: it[0].num_intervals <= 1
+    }
 
-    MANTA_TUMORONLY.out.candidate_sv_vcf.branch{
-            intervals:    it[0].num_intervals > 1
-            no_intervals: it[0].num_intervals <= 1
-        }.set{manta_candidate_sv_vcf}
+    manta_candidate_sv_vcf = MANTA_TUMORONLY.out.candidate_sv_vcf.branch{
+        intervals:    it[0].num_intervals > 1
+        no_intervals: it[0].num_intervals <= 1
+    }
 
-    MANTA_TUMORONLY.out.tumor_sv_vcf.branch{
-            intervals:    it[0].num_intervals > 1
-            no_intervals: it[0].num_intervals <= 1
-        }.set{manta_tumor_sv_vcf}
+    manta_tumor_sv_vcf = MANTA_TUMORONLY.out.tumor_sv_vcf.branch{
+        intervals:    it[0].num_intervals > 1
+        no_intervals: it[0].num_intervals <= 1
+    }
 
     //Only when using intervals
     MERGE_MANTA_SMALL_INDELS(
         manta_small_indels_vcf.intervals.map{ meta, vcf ->
-
-                [groupKey([
-                            id:             meta.sample,
-                            num_intervals:  meta.num_intervals,
-                            patient:        meta.patient,
-                            sample:         meta.sample,
-                            sex:            meta.sex,
-                            status:         meta.status,
-                        ],
+            [ groupKey(
+                meta.subMap('num_intervals', 'patient', 'sample', 'sex', 'status')
+                    + [ id:meta.sample ],
                         meta.num_intervals),
-                vcf]
-
-            }.groupTuple(),
-        dict.map{ it -> [[id:it[0].baseName], it]})
+            vcf ]
+        }.groupTuple(),
+        dict.map{ it -> [ [ id:it[0].baseName ], it ] })
 
     MERGE_MANTA_SV(
         manta_candidate_sv_vcf.intervals.map{ meta, vcf ->
-
-                [groupKey([
-                            id:             meta.sample,
-                            num_intervals:  meta.num_intervals,
-                            patient:        meta.patient,
-                            sample:         meta.sample,
-                            sex:            meta.sex,
-                            status:         meta.status
-                        ],
+            [ groupKey(
+                meta.subMap('num_intervals', 'patient', 'sample', 'sex', 'status')
+                    + [ id:meta.sample ],
                         meta.num_intervals),
-                vcf]
-
-            }.groupTuple(),
-        dict.map{ it -> [[id:it[0].baseName], it]})
+            vcf ]
+        }.groupTuple(),
+        dict.map{ it -> [ [ id:it[0].baseName ], it ] })
 
     MERGE_MANTA_TUMOR(
         manta_tumor_sv_vcf.intervals.map{ meta, vcf ->
-
-                [groupKey( [
-                            id:             meta.sample,
-                            num_intervals:  meta.num_intervals,
-                            patient:        meta.patient,
-                            sample:         meta.sample,
-                            sex:            meta.sex,
-                            status:         meta.status,
-                        ],
+            [ groupKey(
+                meta.subMap('num_intervals', 'patient', 'sample', 'sex', 'status')
+                    + [ id:meta.sample ],
                         meta.num_intervals),
-                vcf]
-
-            }.groupTuple(),
-        dict.map{ it -> [[id:it[0].baseName], it]})
+            vcf ]
+        }.groupTuple(),
+        dict.map{ it -> [ [ id:it[0].baseName ], it ] })
 
     // Mix output channels for "no intervals" and "with intervals" results
     // Only tumor sv should get annotated
-    manta_vcf = Channel.empty().mix(
+    vcf = Channel.empty().mix(
         MERGE_MANTA_TUMOR.out.vcf,
         manta_tumor_sv_vcf.no_intervals
     ).map{ meta, vcf ->
-        [[
-            id:             meta.sample,
-            num_intervals:  meta.num_intervals,
-            patient:        meta.patient,
-            sample:         meta.sample,
-            sex:            meta.sex,
-            status:         meta.status,
-            variantcaller:  "manta"
-        ],
-        vcf]
+            [ meta.subMap('num_intervals', 'patient', 'sample', 'sex', 'status')
+                + [ id:meta.sample, variantcaller: 'manta' ],
+                vcf ]
     }
 
-    ch_versions = ch_versions.mix(MERGE_MANTA_SV.out.versions)
-    ch_versions = ch_versions.mix(MERGE_MANTA_SMALL_INDELS.out.versions)
-    ch_versions = ch_versions.mix(MERGE_MANTA_TUMOR.out.versions)
-    ch_versions = ch_versions.mix(MANTA_TUMORONLY.out.versions)
+    versions = versions.mix(MERGE_MANTA_SV.out.versions)
+    versions = versions.mix(MERGE_MANTA_SMALL_INDELS.out.versions)
+    versions = versions.mix(MERGE_MANTA_TUMOR.out.versions)
+    versions = versions.mix(MANTA_TUMORONLY.out.versions)
 
     emit:
-    manta_vcf
-    versions = ch_versions
+    vcf
+
+    versions
 }
