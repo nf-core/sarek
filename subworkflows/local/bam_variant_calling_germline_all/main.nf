@@ -189,7 +189,18 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         versions = versions.mix(BAM_VARIANT_CALLING_SINGLE_TIDDIT.out.versions)
     }
 
+    vcf_all = Channel.empty().mix(
+        vcf_deepvariant,
+        vcf_freebayes,
+        vcf_haplotypecaller,
+        vcf_manta,
+        vcf_mpileup,
+        vcf_strelka,
+        vcf_tiddit
+    )
+
     emit:
+    vcf_all
     vcf_deepvariant
     vcf_freebayes
     vcf_haplotypecaller

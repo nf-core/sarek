@@ -275,8 +275,17 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_TIDDIT.out.versions)
     }
 
+    vcf_all = Channel.empty().mix(
+        vcf_freebayes,
+        vcf_manta,
+        vcf_mutect2,
+        vcf_strelka,
+        vcf_tiddit
+    )
+
     emit:
     out_msisensorpro
+    vcf_all
     vcf_freebayes
     vcf_manta
     vcf_mutect2
