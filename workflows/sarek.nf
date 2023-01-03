@@ -78,10 +78,6 @@ if (params.tools && params.tools.split(',').contains('ascat')) {
         log.error "No loci files were provided for running ASCAT. Please provide a zip folder with loci files."
         exit 1
     }
-    if (params.ascat_genome!="hg19" && params.ascat_genome!="hg38") {
-        log.error "Parameter ascat_genome must be either hg19 or hg38."
-        exit 1
-    }
     if (!params.ascat_loci_gc && !params.ascat_loci_rt) {
         log.warn("No LogRCorrection performed in ASCAT. For LogRCorrection to run, please provide either loci gc files or both loci gc files and loci rt files.")
     }
