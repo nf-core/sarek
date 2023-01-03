@@ -12,7 +12,7 @@
       # test_VEP.ann.summary.html changes md5sums on reruns.
       contains: ["test.vcf.gz</td></tr><tr><td>Output file</td><td>test_VEP.ann.vcf.gz</td></tr>"]
 - name: Run VEP with fasta
-  command: nextflow run main.nf -profile test,annotation --tools vep --vep_include_fasta --skip_tools multiqc
+  command: nextflow run main.nf -profile test,annotation --tools vep --vep_include_fasta --skip_tools multiqc --outdir results
   tags:
     - annotation
     - vep
