@@ -29,7 +29,8 @@ workflow BAM_MARKDUPLICATES {
     CRAM_QC_MOSDEPTH_SAMTOOLS(cram, fasta, fasta_fai, intervals_bed_combined)
 
     // Gather all reports generated
-    reports = reports.mix(GATK4_MARKDUPLICATES.out.metrics, CRAM_QC_MOSDEPTH_SAMTOOLS.out.qc)
+    reports = reports.mix(GATK4_MARKDUPLICATES.out.metrics)
+    reports = reports.mix(CRAM_QC_MOSDEPTH_SAMTOOLS.out.qc)
 
     // Gather versions of all tools used
     versions = versions.mix(GATK4_MARKDUPLICATES.out.versions)

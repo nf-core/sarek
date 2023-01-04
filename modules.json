@@ -300,7 +300,7 @@
                     },
                     "mosdepth": {
                         "branch": "master",
-                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
+                        "git_sha": "def5f182583df0c20f43ec3d4355e8ebd341aaa9",
                         "installed_by": ["modules"]
                     },
                     "msisensorpro/msi_somatic": {
