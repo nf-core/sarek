@@ -32,11 +32,15 @@ workflow BAM_VARIANT_CALLING_FREEBAYES {
     MERGE_FREEBAYES(
         bcftools_vcf_out.intervals
             .map{ meta, vcf ->
-                [ groupKey(
-                    ( meta.tumor_id ?
-                        [ meta.subMap('normal_id', 'num_intervals', 'patient', 'sex', 'tumor_id') + [ id:meta.tumor_id + "_vs_" + meta.normal_id ] ] :
-                        [ meta.subMap('num_intervals', 'patient', 'sex', 'status') + [ id:meta.sample ] ] ),
-                meta.num_intervals), vcf ]
+                if (meta.tumor_id) {
+                    [ groupKey(meta.subMap('normal_id', 'num_intervals', 'patient', 'sex', 'tumor_id')
+                        + [ id:meta.tumor_id + "_vs_" + meta.normal_id ],
+                        meta.num_intervals), vcf ]
+                } else {
+                    [ groupKey(meta.subMap('num_intervals', 'patient', 'sex', 'status')
+                        + [ id:meta.sample ],
+                        meta.num_intervals), vcf ]
+                }
             }.groupTuple(),
         dict.map{ it -> [ [ id:it[0].baseName ], it] })
 
