@@ -48,7 +48,7 @@ workflow BAM_VARIANT_CALLING_FREEBAYES {
     vcf = Channel.empty().mix(
         MERGE_FREEBAYES.out.vcf,
         bcftools_vcf_out.no_intervals).map{ meta, vcf ->
-            [ meta.subMap('id', 'normal_id', 'num_intervals', 'patient', 'sex', 'tumor_id') + [ variantcaller:meta."freebayes" ], vcf ]
+            [ meta.subMap('id', 'normal_id', 'num_intervals', 'patient', 'sex', 'tumor_id') + [ variantcaller:"freebayes" ], vcf ]
         }
 
     versions = versions.mix(BCFTOOLS_SORT.out.versions)
