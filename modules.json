@@ -67,7 +67,7 @@
                     },
                     "cnvkit/batch": {
                         "branch": "master",
-                        "git_sha": "8f2dbc4736bb43346642ab42b2264bad35d924fc",
+                        "git_sha": "8c7b23c1e7fea03374354995630af1f805900c6c",
                         "installed_by": ["modules"]
                     },
                     "cnvkit/reference": {
