@@ -74,14 +74,16 @@ jobs:
       - name: Install Python dependencies
         run: python -m pip install --upgrade pip pytest-workflow
 
-      - uses: actions/cache@v2
+      - name: Cache Nextflow installation
+        id: cache-software
+        uses: actions/cache@v3
         with:
-          path: /usr/local/bin/nextflow
-          key: ${{ runner.os }}
-          restore-keys: |
-            ${{ runner.os }}-nextflow-
+          path: |
+            /usr/local/bin/nextflow
+          key: sarek-${{ runner.os }}-${{ matrix.NXF_VER }}
 
-      - name: Install Nextflow ${{ matrix.NXF_VER }}
+      - name: Install Nextflow
+        if: steps.cache-software.outputs.cache-hit != 'true'
         uses: nf-core/setup-nextflow@v1
         with:
           version: "${{ matrix.NXF_VER }}"
