@@ -33,7 +33,7 @@ workflow BAM_APPLYBQSR {
 
     cram_recal = CRAM_MERGE_INDEX_SAMTOOLS.out.cram_crai.map{ meta, cram, crai ->
         // remove no longer necessary fields to make sure joining can be done correctly: num_intervals
-        [ meta.subMap('data_type', 'id', 'patient', 'sample', 'sex', 'status'), cram, crai ]
+        [ meta - meta.subMap('num_intervals'), cram, crai ]
     }
 
     // Gather versions of all tools used
