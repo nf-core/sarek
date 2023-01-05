@@ -22,10 +22,10 @@ workflow BAM_BASERECALIBRATOR {
 
     cram_intervals = cram.combine(intervals)
         .map{ meta, cram, crai, intervals, num_intervals ->
-        //If no interval file provided (0) then add empty list
-        [ meta.subMap('data_type', 'patient', 'sample', 'sex', 'status')
-            + [ id:meta.sample, num_intervals:num_intervals ],
-            cram, crai, (num_intervals == 0 ? [] : intervals) ]
+        [ meta - meta.subMap('id') + [ id:meta.sample, num_intervals:num_intervals ],
+            cram, crai,
+            // If no interval file provided (0) then add empty list
+            (num_intervals == 0 ? [] : intervals) ]
         }
 
     // Run Baserecalibrator
@@ -49,7 +49,7 @@ workflow BAM_BASERECALIBRATOR {
     table_bqsr = table_to_merge.single.map{ meta, table -> [ meta, table[0] ] }
         .mix(GATK4_GATHERBQSRREPORTS.out.table).map{ meta, table ->
             // remove no longer necessary fields to make sure joining can be done correctly: num_intervals
-            [ meta.subMap('data_type', 'patient', 'sample', 'sex', 'status') + [ id: meta.sample ], table ]
+            [ meta - meta.subMap('id', 'num_intervals') + [ id: meta.sample ], table ]
         }
 
     // Gather versions of all tools used
