@@ -18,8 +18,6 @@ workflow CRAM_QC_MOSDEPTH_SAMTOOLS {
     ch_versions = Channel.empty()
     qc_reports  = Channel.empty()
 
-    intervals_bed_combined = intervals_bed_combined.map{ it -> [[id:'intervals'], it]}
-
     // Reports run on cram
     SAMTOOLS_STATS(cram, fasta)
     MOSDEPTH(
