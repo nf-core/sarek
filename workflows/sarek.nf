@@ -1081,7 +1081,7 @@ workflow SAREK {
         ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'))
         ch_multiqc_files = ch_multiqc_files.mix(ch_reports.collect().ifEmpty([]))
 
-        ch_multiqc_configs = Channel.from(ch_multiqc_config).mix(ch_multiqc_custom_config).ifEmpty([])
+        ch_multiqc_configs = ch_multiqc_config.mix(ch_multiqc_custom_config).ifEmpty([])
 
         MULTIQC (
             ch_multiqc_files.collect(),
@@ -1134,7 +1134,7 @@ def extract_csv(csv_file) {
     def patient_sample_lane_combinations_in_samplesheet = []
     def sample2patient = [:]
 
-    Channel.from(csv_file).splitCsv(header: true)
+    Channel.of(csv_file).splitCsv(header: true)
         .map{ row ->
             if (params.step == "mapping") {
                 if ( !row.lane ) {  // This also handles the case where the lane is left as an empty string
@@ -1161,7 +1161,7 @@ def extract_csv(csv_file) {
     sample_count_normal = 0
     sample_count_tumor = 0
 
-    Channel.from(csv_file).splitCsv(header: true)
+    Channel.of(csv_file).splitCsv(header: true)
         //Retrieves number of lanes by grouping together by patient and sample and counting how many entries there are for this combination
         .map{ row ->
             sample_count_all++
