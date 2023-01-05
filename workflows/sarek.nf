@@ -1118,7 +1118,7 @@ def extract_csv(csv_file) {
     def patient_sample_lane_combinations = []
     def sample2patient = [:]
 
-    Channel.from(csv_file).splitCsv(header: true)
+    Channel.of(csv_file).splitCsv(header: true)
         .map{ row ->
             if (params.step == "mapping") {
                 if ( !row.lane ) {  // This also handles the case where the lane is left as an empty string
@@ -1145,7 +1145,7 @@ def extract_csv(csv_file) {
     sample_count_normal = 0
     sample_count_tumor = 0
 
-    Channel.from(csv_file).splitCsv(header: true)
+    Channel.of(csv_file).splitCsv(header: true)
         // Retrieves number of lanes by grouping together by patient and sample and counting how many entries there are for this combination
         .map{ row ->
             sample_count_all++
