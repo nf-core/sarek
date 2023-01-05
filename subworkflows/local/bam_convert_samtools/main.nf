@@ -13,8 +13,8 @@ include { CAT_FASTQ                                    } from '../../../modules/
 
 workflow BAM_CONVERT_SAMTOOLS {
     take:
-    input // channel: [meta, alignment (BAM or CRAM), index (optional)]
-    fasta // optional: reference file if CRAM format and reference not in header
+    input       // channel: [meta, alignment (BAM or CRAM), index (optional)]
+    fasta       // optional: reference file if CRAM format and reference not in header
     fasta_fai
     interleaved // value: true/false
 

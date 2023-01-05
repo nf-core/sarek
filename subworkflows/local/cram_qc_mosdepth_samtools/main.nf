@@ -15,27 +15,28 @@ workflow CRAM_QC_MOSDEPTH_SAMTOOLS {
         intervals_bed_combined
 
     main:
-    ch_versions = Channel.empty()
-    qc_reports  = Channel.empty()
+    versions = Channel.empty()
+    reports = Channel.empty()
 
     // Reports run on cram
     SAMTOOLS_STATS(cram, fasta)
     MOSDEPTH(
         cram,
         intervals_bed_combined,
-        fasta.map{ it -> [[id:it[0].baseName], it]})
+        fasta.map{ it -> [[id:it[0].baseName], it]}
+    )
 
     // Gather all reports generated
-    qc_reports = qc_reports.mix(SAMTOOLS_STATS.out.stats)
-    qc_reports = qc_reports.mix(MOSDEPTH.out.global_txt)
-    qc_reports = qc_reports.mix(MOSDEPTH.out.regions_txt)
+    reports = reports.mix(SAMTOOLS_STATS.out.stats)
+    reports = reports.mix(MOSDEPTH.out.global_txt)
+    reports = reports.mix(MOSDEPTH.out.regions_txt)
 
     // Gather versions of all tools used
-    ch_versions = ch_versions.mix(MOSDEPTH.out.versions)
-    ch_versions = ch_versions.mix(SAMTOOLS_STATS.out.versions.first())
+    versions = versions.mix(MOSDEPTH.out.versions)
+    versions = versions.mix(SAMTOOLS_STATS.out.versions.first())
 
     emit:
-        qc       = qc_reports
+        reports
 
-        versions = ch_versions // channel: [ versions.yml ]
+        versions // channel: [ versions.yml ]
 }

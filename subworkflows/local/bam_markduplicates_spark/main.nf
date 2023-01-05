@@ -21,21 +21,21 @@ workflow BAM_MARKDUPLICATES_SPARK {
     versions = Channel.empty()
     reports = Channel.empty()
 
-    // Run Markupduplicates spark
-    // When running bamqc and/or deeptools output is bam, else cram
+    // RUN MARKUPDUPLICATES SPARK
     GATK4_MARKDUPLICATES_SPARK(bam, fasta, fasta_fai, dict)
     INDEX_MARKDUPLICATES(GATK4_MARKDUPLICATES_SPARK.out.output)
 
     cram = GATK4_MARKDUPLICATES_SPARK.out.output.join(INDEX_MARKDUPLICATES.out.crai)
 
-    // Convert Markupduplicates spark bam output to cram when running bamqc and/or deeptools
+    // QC on CRAM
     CRAM_QC_MOSDEPTH_SAMTOOLS(cram, fasta, fasta_fai, intervals_bed_combined)
 
     // When running Marduplicates spark, and saving reports
     GATK4_ESTIMATELIBRARYCOMPLEXITY(bam, fasta, fasta_fai, dict)
 
     // Gather all reports generated
-    reports = reports.mix(GATK4_ESTIMATELIBRARYCOMPLEXITY.out.metrics, CRAM_QC_MOSDEPTH_SAMTOOLS.out.qc)
+    reports = reports.mix(GATK4_ESTIMATELIBRARYCOMPLEXITY.out.metrics)
+    reports = reports.mix(CRAM_QC_MOSDEPTH_SAMTOOLS.out.reports)
 
     // Gather versions of all tools used
     versions = versions.mix(GATK4_ESTIMATELIBRARYCOMPLEXITY.out.versions)
@@ -45,7 +45,7 @@ workflow BAM_MARKDUPLICATES_SPARK {
 
     emit:
     cram
-    qc       = reports
+    reports
 
     versions // channel: [ versions.yml ]
 }

@@ -363,11 +363,16 @@ workflow SAREK {
     intervals_bed_combined      = params.no_intervals ? Channel.value([])      : PREPARE_INTERVALS.out.intervals_bed_combined
     // For QC during preprocessing, we don't need any intervals (MOSDEPTH doesn't take them for WGS)
     intervals_for_preprocessing = params.wes ?
-        intervals_bed_combined.map{it -> [[id:it.baseName], it]}.collect() :
-        [[id:'null'], []]
+        intervals_bed_combined.map{it -> [ [ id:it.baseName ], it ]}.collect() :
+        [ [ id:'null' ], [] ]
 
     intervals                   = PREPARE_INTERVALS.out.intervals_bed        // [interval, num_intervals] multiple interval.bed files, divided by useful intervals for scatter/gather
     intervals_bed_gz_tbi        = PREPARE_INTERVALS.out.intervals_bed_gz_tbi // [interval_bed, tbi, num_intervals] multiple interval.bed.gz/.tbi files, divided by useful intervals for scatter/gather
+
+    intervals_and_num_intervals = intervals.map{ interval, num_intervals ->
+        if ( num_intervals <= 1 ) [ [], num_intervals ]
+        else [ interval, num_intervals ]
+    }
 
     // Gather used softwares versions
     versions = versions.mix(PREPARE_GENOME.out.versions)
@@ -389,16 +394,17 @@ workflow SAREK {
             fastq: it[0].data_type == "fastq"
         }
 
-        // convert any bam input to fastq
-        // Fasta are not needed when converting bam to fastq -> []
+        // Convert any bam input to fastq
+        // fasta are not needed when converting bam to fastq -> [ id:"fasta" ], []
+        // No need for fasta.fai -> []
         interleave_input = false // Currently don't allow interleaved input
         CONVERT_FASTQ_INPUT(
             input_sample_type.bam,
-            [[id:"fasta"], []], // fasta
-            [],                 // fasta_fai
+            [ [ id:"fasta" ], [] ], // fasta
+            [],                     // fasta_fai
             interleave_input)
 
-        // gather fastq (inputed or converted)
+        // Gather fastq (inputed or converted)
         // Theorically this could work on mixed input (fastq for one sample and bam for another)
         // But not sure how to handle that with the samplesheet
         // Or if we really want users to be able to do that
@@ -406,8 +412,8 @@ workflow SAREK {
 
         // STEP 0: QC & TRIM
         // `--skip_tools fastqc` to skip fastqc
-        // trim only with `--trim_fastq`
-        // additional options to be set up
+        // Trim only with `--trim_fastq`
+        // Additional options to be set up
 
         // QC
         if (!(params.skip_tools && params.skip_tools.split(',').contains('fastqc'))) {
@@ -427,7 +433,9 @@ workflow SAREK {
 
             bam_converted_from_fastq = FASTQ_CREATE_UMI_CONSENSUS_FGBIO.out.consensusbam.map{ meta, bam -> [ meta, bam, [] ] }
 
-            // convert back to fastq for further preprocessing
+            // Convert back to fastq for further preprocessing
+            // fasta are not needed when converting bam to fastq -> [ id:"fasta" ], []
+            // No need for fasta.fai -> []
             interleave_input = false // Currently don't allow interleaved input
             CONVERT_FASTQ_UMI(
                 bam_converted_from_fastq,
@@ -462,13 +470,9 @@ workflow SAREK {
             if (params.split_fastq) {
                 reads_for_alignment = FASTP.out.reads.map{ meta, reads ->
                     read_files = reads.sort{ a,b -> a.getName().tokenize('.')[0] <=> b.getName().tokenize('.')[0] }.collate(2)
-                        [ meta.subMap('data_type', 'id', 'numLanes', 'patient', 'read_group', 'sample', 'sex', 'status')
-                            + [size:read_files.size()],
-                            read_files ]
-                    }.transpose()
-            } else {
-                reads_for_alignment = FASTP.out.reads
-            }
+                    [ meta + [ size:read_files.size() ], read_files ]
+                }.transpose()
+            } else reads_for_alignment = FASTP.out.reads
 
             versions = versions.mix(FASTP.out.versions)
 
@@ -479,10 +483,9 @@ workflow SAREK {
         // STEP 1: MAPPING READS TO REFERENCE GENOME
         // reads will be sorted
         reads_for_alignment = reads_for_alignment.map{ meta, reads ->
-            // Modify ID if no multiple lanes or splitted fastqs
-            [ meta.subMap('data_type', 'numLanes', 'patient', 'read_group', 'sample', 'sex', 'size', 'status')
-                + [ id:(meta.size * meta.numLanes == 1 ? meta.sample : meta.id) ],
-            reads ]
+            // Update meta.id to meta.sample no multiple lanes or splitted fastqs
+            if (meta.size * meta.numLanes == 1) [ meta - meta.subMap('id') + [ id:meta.sample ], reads ]
+            else [ meta, reads ]
         }
 
         sort_bam = true
@@ -491,8 +494,8 @@ workflow SAREK {
         // Grouping the bams from the same samples not to stall the workflow
         bam_mapped = FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP.out.bam.map{ meta, bam ->
 
-            // Modify ID to be based on the sample name
-            // Update data_type
+            // Update meta.id to be meta.sample, ditching sample-lane that is not needed anymore
+            // Update meta.data_type
             // Remove no longer necessary fields:
             //   read_group: Now in the BAM header
             //     numLanes: only needed for mapping
@@ -500,10 +503,7 @@ workflow SAREK {
 
             // Use groupKey to make sure that the correct group can advance as soon as it is complete
             // and not stall the workflow until all reads from all channels are mapped
-            [ groupKey(
-                meta.subMap('id', 'patient', 'sample', 'sex','status' )
-                + [ data_type:'bam' ], (meta.numLanes ?: 1) * (meta.size ?: 1) ),
-            bam ]
+            [ groupKey( meta - meta.subMap('data_type', 'id', 'numLanes', 'read_group', 'size') + [ data_type:'bam', id:meta.sample ], (meta.numLanes ?: 1) * (meta.size ?: 1) ), bam ]
         }.groupTuple()
 
         // gatk4 markduplicates can handle multiple bams as input, so no need to merge/index here
@@ -569,7 +569,7 @@ workflow SAREK {
                 intervals_for_preprocessing)
 
             // Gather QC reports
-            reports = reports.mix(CRAM_QC_NO_MD.out.qc.collect{ meta, report -> report })
+            reports = reports.mix(CRAM_QC_NO_MD.out.reports.collect{ meta, report -> report })
 
             // Gather used softwares versions
             versions = versions.mix(CRAM_QC_NO_MD.out.versions)
@@ -583,7 +583,7 @@ workflow SAREK {
             cram_markduplicates_spark = BAM_MARKDUPLICATES_SPARK.out.cram
 
             // Gather QC reports
-            reports = reports.mix(BAM_MARKDUPLICATES_SPARK.out.qc.collect{ meta, report -> report })
+            reports = reports.mix(BAM_MARKDUPLICATES_SPARK.out.reports.collect{ meta, report -> report })
 
             // Gather used softwares versions
             versions = versions.mix(BAM_MARKDUPLICATES_SPARK.out.versions)
@@ -597,7 +597,7 @@ workflow SAREK {
             cram_markduplicates_no_spark = BAM_MARKDUPLICATES.out.cram
 
             // Gather QC reports
-            reports = reports.mix(BAM_MARKDUPLICATES.out.qc.collect{ meta, report -> report })
+            reports = reports.mix(BAM_MARKDUPLICATES.out.reports.collect{ meta, report -> report })
 
             // Gather used softwares versions
             versions = versions.mix(BAM_MARKDUPLICATES.out.versions)
@@ -678,7 +678,7 @@ workflow SAREK {
                 dict,
                 fasta,
                 fasta_fai,
-                intervals,
+                intervals_and_num_intervals,
                 known_sites_indels,
                 known_sites_indels_tbi)
 
@@ -693,7 +693,7 @@ workflow SAREK {
                 dict,
                 fasta,
                 fasta_fai,
-                intervals,
+                intervals_and_num_intervals,
                 known_sites_indels,
                 known_sites_indels_tbi)
 
@@ -727,7 +727,7 @@ workflow SAREK {
 
             // Support if starting from BAM or CRAM files
             input_recal_convert = input_sample.branch{
-                bam: it[0].data_type == "bam"
+                bam:  it[0].data_type == "bam"
                 cram: it[0].data_type == "cram"
             }
 
@@ -740,8 +740,8 @@ workflow SAREK {
             versions = versions.mix(BAM_TO_CRAM.out.versions)
 
             cram_applybqsr = Channel.empty().mix(
-                                    BAM_TO_CRAM.out.alignment_index.join(input_only_table),
-                                    input_recal_convert.cram) // Join together converted cram with input tables
+                BAM_TO_CRAM.out.alignment_index.join(input_only_table),
+                input_recal_convert.cram) // Join together converted cram with input tables
         }
 
         if (!(params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'))) {
@@ -755,7 +755,7 @@ workflow SAREK {
                     dict,
                     fasta,
                     fasta_fai,
-                    intervals)
+                    intervals_and_num_intervals)
 
                 cram_variant_calling_spark = BAM_APPLYBQSR_SPARK.out.cram
 
@@ -769,7 +769,7 @@ workflow SAREK {
                     dict,
                     fasta,
                     fasta_fai,
-                    intervals)
+                    intervals_and_num_intervals)
 
                 cram_variant_calling_no_spark = BAM_APPLYBQSR.out.cram
 
@@ -788,7 +788,7 @@ workflow SAREK {
                 intervals_for_preprocessing)
 
             // Gather QC reports
-            reports = reports.mix(CRAM_QC_RECAL.out.qc.collect{ meta, report -> report })
+            reports = reports.mix(CRAM_QC_RECAL.out.reports.collect{ meta, report -> report })
 
             // Gather used softwares versions
             versions = versions.mix(CRAM_QC_RECAL.out.versions)
@@ -821,8 +821,8 @@ workflow SAREK {
     if (params.step == 'variant_calling') {
 
         input_variant_calling_convert = input_sample.branch{
-                bam:  it[0].data_type == "bam"
-                cram: it[0].data_type == "cram"
+            bam:  it[0].data_type == "bam"
+            cram: it[0].data_type == "cram"
         }
 
         // BAM files first must be converted to CRAM files since from this step on we base everything on CRAM format
@@ -909,7 +909,7 @@ workflow SAREK {
             dict,
             fasta,
             fasta_fai,
-            intervals,
+            intervals_and_num_intervals,
             intervals_bed_combined, // [] if no_intervals, else interval_bed_combined.bed
             PREPARE_INTERVALS.out.intervals_bed_combined, // no_intervals.bed if no intervals, else interval_bed_combined.bed; Channel operations possible
             intervals_bed_gz_tbi,
@@ -918,7 +918,8 @@ workflow SAREK {
             known_sites_indels_tbi,
             known_sites_snps,
             known_sites_snps_tbi,
-            known_snps_vqsr)
+            known_snps_vqsr,
+            params.joint_germline)
 
         // TUMOR ONLY VARIANT CALLING
         BAM_VARIANT_CALLING_TUMOR_ONLY_ALL(

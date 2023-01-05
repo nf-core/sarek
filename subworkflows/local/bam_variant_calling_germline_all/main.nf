@@ -23,7 +23,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     dict                              // channel: [mandatory] dict
     fasta                             // channel: [mandatory] fasta
     fasta_fai                         // channel: [mandatory] fasta_fai
-    intervals                         // channel: [mandatory] intervals/target regions
+    intervals                         // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
     intervals_bed_combined            // channel: [mandatory] intervals/target regions in one file unzipped
     intervals_bed_combined_haplotypec // channel: [mandatory] intervals/target regions in one file unzipped, no_intervals.bed if no_intervals
     intervals_bed_gz_tbi              // channel: [mandatory] intervals/target regions index zipped and indexed
@@ -33,6 +33,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     known_sites_snps
     known_sites_snps_tbi
     known_snps_vqsr
+    joint_germline                    // boolean: [mandatory] [default: false] joint calling of germline variants
 
     main:
     versions = Channel.empty()
@@ -46,31 +47,21 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     vcf_strelka         = Channel.empty()
     vcf_tiddit          = Channel.empty()
 
-    // Remap channel with intervals
-    cram_intervals = cram
-        .combine(intervals).map{ meta, cram, crai, intervals, num_intervals ->
-            // If no interval file provided (0) then add empty list
-            [ meta.subMap('data_type', 'patient', 'sample', 'sex', 'status')
-                + [ id:meta.sample, num_intervals:num_intervals ],
-                cram, crai, (num_intervals == 0 ? [] : intervals) ]
-        }
-
     // Remap channel with gzipped intervals + indexes
     cram_intervals_gz_tbi = cram
         .combine(intervals_bed_gz_tbi).map{ meta, cram, crai, bed_tbi, num_intervals ->
             // If no interval file provided (0) then add empty list
-            [ meta.subMap('data_type', 'patient', 'sample', 'sex', 'status')
-                + [ id:meta.sample, num_intervals:num_intervals ],
-                cram, crai, (num_intervals == 0 ? [] : bed_tbi[0]), (num_intervals == 0 ? [] : bed_tbi[1])]
+            if ( num_intervals == 0 ) [ meta + [ num_intervals:num_intervals ], cram, crai, [], [] ]
+            else [ meta + [ num_intervals:num_intervals ], cram, crai, bed_tbi[0], bed_tbi[1] ]
         }
 
     // MPILEUP
     if (tools.split(',').contains('mpileup')) {
-        // Input channel is remapped to match input of module/subworkflow
         BAM_VARIANT_CALLING_MPILEUP(
-            cram_intervals.map{ meta, cram, crai, intervals -> [ meta, cram, intervals ] },
+            cram,
+            dict.map{ it -> [ [ id:it[0].baseName ], it ] },
             fasta,
-            dict
+            intervals
         )
 
         vcf_mpileup = BAM_VARIANT_CALLING_MPILEUP.out.vcf
@@ -94,10 +85,11 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     // DEEPVARIANT
     if (tools.split(',').contains('deepvariant')) {
         BAM_VARIANT_CALLING_DEEPVARIANT(
-            cram_intervals,
-            dict,
+            cram,
+            dict.map{ it -> [ [ id:it[0].baseName ], it ] },
             fasta,
-            fasta_fai
+            fasta_fai,
+            intervals
         )
 
         vcf_deepvariant = BAM_VARIANT_CALLING_DEEPVARIANT.out.vcf
@@ -108,10 +100,11 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     if (tools.split(',').contains('freebayes')) {
         // Input channel is remapped to match input of module/subworkflow
         BAM_VARIANT_CALLING_FREEBAYES(
-            cram_intervals.map{ meta, cram, crai, intervals -> [ meta, cram, crai, [], [], intervals ] },
-            dict,
+            cram,
+            dict.map{ it -> [ [ id:it[0].baseName ], it ] },
             fasta,
-            fasta_fai
+            fasta_fai,
+            intervals
         )
 
         vcf_freebayes = BAM_VARIANT_CALLING_FREEBAYES.out.vcf
@@ -123,11 +116,10 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         // Input channel is remapped to match input of module/subworkflow
         cram_intervals_haplotypecaller = cram_intervals
             .map{ meta, cram, crai, intervals ->
-                [ (params.joint_germline ?
-                    meta.subMap('data_type', 'num_intervals', 'patient', 'sample', 'sex', 'status')
-                        + [ id:meta.sample, intervals_name:(meta.num_intervals == 0 ? "no_interval" : intervals.simpleName) ] :
-                    meta),
-                cram, crai, intervals, [] ]
+                if (joint_germline) {
+                    if (meta.num_intervals == 0) [ meta + [ intervals_name:"no_interval" ], cram, crai, intervals, [] ]
+                    else [ meta + [ intervals_name:intervals.simpleName ], cram, crai, intervals, [] ]
+                } else [ meta, cram, crai, intervals, [] ]
         }
 
         BAM_VARIANT_CALLING_HAPLOTYPECALLER(
@@ -145,6 +137,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             known_sites_snps_tbi,
             known_snps_vqsr,
             intervals_bed_combined_haplotypec,
+            joint_germline,
             (skip_tools && skip_tools.split(',').contains('haplotypecaller_filter')))
 
         vcf_haplotypecaller = BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.vcf

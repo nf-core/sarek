@@ -5,51 +5,39 @@ include { TABIX_TABIX as TABIX_VC_FREEBAYES            } from '../../../modules/
 
 workflow BAM_VARIANT_CALLING_FREEBAYES {
     take:
-    cram                     // channel: [mandatory] [meta, cram, crai, [], [], interval]
-    dict
-    fasta                    // channel: [mandatory]
-    fasta_fai                // channel: [mandatory]
+    cram      // channel: [mandatory] [ meta, cram, crai ]
+    dict      // channel: [mandatory] [ meta, dict ]
+    fasta     // channel: [mandatory] [ fasta ]
+    fasta_fai // channel: [mandatory] [ fasta_fai ]
+    intervals // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
 
     main:
     versions = Channel.empty()
 
-    FREEBAYES(
-        cram,
-        fasta,
-        fasta_fai,
-        [], [], [])
+    cram_intervals = cram.combine(intervals)
+        // Move num_intervals to meta map and reorganize channel for FREEBAYES module
+        .map{ meta, cram, crai, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram, crai, [], [], intervals ]}
+
+    FREEBAYES(cram_intervals, fasta, fasta_fai, [], [], [])
 
     BCFTOOLS_SORT(FREEBAYES.out.vcf)
+
+    // Figuring out if there is one or more vcf(s) from the same sample
     bcftools_vcf_out = BCFTOOLS_SORT.out.vcf.branch{
         intervals:    it[0].num_intervals > 1
         no_intervals: it[0].num_intervals <= 1
     }
 
-    // Only when no intervals
+    // Only when using intervals
+    vcf_to_merge = bcftools_vcf_out.intervals.map{ meta, vcf -> [ groupKey(meta, meta.num_intervals), vcf ]}.groupTuple()
+    MERGE_FREEBAYES(vcf_to_merge, dict)
+
+    // Only when no_intervals
     TABIX_VC_FREEBAYES(bcftools_vcf_out.no_intervals)
 
-    // Only when using intervals
-    MERGE_FREEBAYES(
-        bcftools_vcf_out.intervals
-            .map{ meta, vcf ->
-                if (meta.tumor_id) {
-                    [ groupKey(meta.subMap('normal_id', 'num_intervals', 'patient', 'sex', 'tumor_id')
-                        + [ id:meta.tumor_id + "_vs_" + meta.normal_id ],
-                        meta.num_intervals), vcf ]
-                } else {
-                    [ groupKey(meta.subMap('num_intervals', 'patient', 'sex', 'status')
-                        + [ id:meta.sample ],
-                        meta.num_intervals), vcf ]
-                }
-            }.groupTuple(),
-        dict.map{ it -> [ [ id:it[0].baseName ], it] })
-
-    // Mix output channels for "no intervals" and "with intervals" results
-    vcf = Channel.empty().mix(
-        MERGE_FREEBAYES.out.vcf,
-        bcftools_vcf_out.no_intervals).map{ meta, vcf ->
-            [ meta.subMap('id', 'normal_id', 'num_intervals', 'patient', 'sex', 'tumor_id') + [ variantcaller:"freebayes" ], vcf ]
-        }
+    // Mix intervals and no_intervals channels together
+    vcf = MERGE_FREEBAYES.out.vcf.mix(bcftools_vcf_out.no_intervals)
+        .map{ meta, vcf -> [ meta + [ variantcaller:"freebayes" ], vcf ] }
 
     versions = versions.mix(BCFTOOLS_SORT.out.versions)
     versions = versions.mix(MERGE_FREEBAYES.out.versions)

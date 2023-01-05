@@ -24,18 +24,13 @@ workflow PREPARE_INTERVALS {
     ch_intervals_combined            = Channel.empty() // Bed file containing all intervals
 
     if (params.no_intervals) {
-        file("${params.outdir}/no_intervals.bed").text = "no_intervals\n"
-        file("${params.outdir}/no_intervals.bed.gz").text = "no_intervals\n"
+        file("${params.outdir}/no_intervals.bed").text        = "no_intervals\n"
+        file("${params.outdir}/no_intervals.bed.gz").text     = "no_intervals\n"
         file("${params.outdir}/no_intervals.bed.gz.tbi").text = "no_intervals\n"
 
-        ch_intervals = Channel.fromPath(file("${params.outdir}/no_intervals.bed"))
-                                            .map{ it -> [it, 0]}
-
-        ch_intervals_bed_gz_tbi = Channel.fromPath(file("${params.outdir}/no_intervals.bed.{gz,gz.tbi}"))
-                                            .collect().map{ it -> [it, 0]}
-
-        ch_intervals_combined = Channel.fromPath(file("${params.outdir}/no_intervals.bed"))
-                                            .map{ it -> [[id:it.simpleName], it]}
+        ch_intervals            = Channel.fromPath(file("${params.outdir}/no_intervals.bed")).map{ it -> [it, 0]}
+        ch_intervals_bed_gz_tbi = Channel.fromPath(file("${params.outdir}/no_intervals.bed.{gz,gz.tbi}")).collect().map{ it -> [it, 0]}
+        ch_intervals_combined   = Channel.fromPath(file("${params.outdir}/no_intervals.bed")).map{ it -> [[id:it.simpleName], it]}
 
     } else if (params.step != 'annotate' && params.step != 'controlfreec') {
 
@@ -104,8 +99,8 @@ workflow PREPARE_INTERVALS {
     }
 
     emit:
-        intervals_bed               = ch_intervals                                           // path: intervals.bed, num_intervals                        [intervals split for parallel execution]
-        intervals_bed_gz_tbi        = ch_intervals_bed_gz_tbi                                // path: target.bed.gz, target.bed.gz.tbi, num_intervals     [intervals split for parallel execution]
-        intervals_bed_combined      = ch_intervals_combined.map{meta, bed -> bed }.collect() // path: intervals.bed                        [all intervals in one file]
+        intervals_bed               = ch_intervals                                           // path: intervals.bed, num_intervals                    [intervals split for parallel execution]
+        intervals_bed_gz_tbi        = ch_intervals_bed_gz_tbi                                // path: target.bed.gz, target.bed.gz.tbi, num_intervals [intervals split for parallel execution]
+        intervals_bed_combined      = ch_intervals_combined.map{meta, bed -> bed }.collect() // path: intervals.bed                                   [all intervals in one file]
         versions                    = ch_versions                                            // channel: [ versions.yml ]
 }

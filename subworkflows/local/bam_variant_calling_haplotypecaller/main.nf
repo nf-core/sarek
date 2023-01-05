@@ -20,6 +20,7 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
     known_sites_snps_tbi
     known_snps_vqsr
     intervals_bed_combined          // channel: [mandatory] intervals/target regions in one file unzipped, no_intervals.bed if no_intervals
+    joint_germline                  // boolean: [mandatory] [default: false] joint calling of germline variants
     skip_haplotypecaller_filter
 
     main:
@@ -52,7 +53,7 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
             no_intervals: it[0].num_intervals <= 1
         }
 
-    if (params.joint_germline) {
+    if (joint_germline) {
         // merge vcf and tbis
         genotype_gvcf_to_call = Channel.empty().mix(
                 GATK4_HAPLOTYPECALLER.out.vcf

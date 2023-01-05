@@ -20,9 +20,9 @@ workflow FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP {
     ch_reports  = Channel.empty()
 
     // Only one of the following should be run
-    BWAMEM1_MEM(ch_reads,   ch_map_index.map{ it -> [[id:it[0].baseName], it] }, sort) // If aligner is bwa-mem
-    BWAMEM2_MEM(ch_reads,   ch_map_index.map{ it -> [[id:it[0].baseName], it] }, sort) // If aligner is bwa-mem2
-    DRAGMAP_ALIGN(ch_reads, ch_map_index.map{ it -> [[id:it[0].baseName], it] }, sort) // If aligner is dragmap
+    BWAMEM1_MEM(ch_reads,   ch_map_index.map{ it -> [ [ id:it[0].baseName ], it ] }, sort) // If aligner is bwa-mem
+    BWAMEM2_MEM(ch_reads,   ch_map_index.map{ it -> [ [ id:it[0].baseName ], it ] }, sort) // If aligner is bwa-mem2
+    DRAGMAP_ALIGN(ch_reads, ch_map_index.map{ it -> [ [ id:it[0].baseName ], it ] }, sort) // If aligner is dragmap
 
     // Get the bam files from the aligner
     // Only one aligner is run

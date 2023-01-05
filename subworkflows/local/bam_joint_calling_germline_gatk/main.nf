@@ -13,10 +13,10 @@ include { TABIX_TABIX as TABIX                                   } from '../../.
 
 workflow BAM_JOINT_CALLING_GERMLINE_GATK {
     take:
-    input            // channel: [ val(meta), [ input ], [ input_index ], interval, [], []]
-    fasta            // channel: /path/to/reference/fasta
-    fai              // channel: /path/to/reference/fasta/index
-    dict             // channel: /path/to/reference/fasta/dictionary
+    input                // channel: [ val(meta), [ input ], [ input_index ], interval, [], []]
+    fasta                // channel: /path/to/reference/fasta
+    fai                  // channel: /path/to/reference/fasta/index
+    dict                 // channel: /path/to/reference/fasta/dictionary
     dbsnp
     dbsnp_tbi
     dbsnp_vqsr
@@ -34,9 +34,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
     // Rename based on num_intervals, group all samples by their interval_name/interval_file and restructure for channel
     // Group by [0, 3] to avoid a list of metas and make sure that any intervals
     gendb_input = input.map{ meta, gvcf, tbi, intervals ->
-        [ meta.subMap('intervals_name', 'num_intervals')
-            + [ id: 'joint_variant_calling' ],
-            gvcf, tbi, intervals ]
+        [ meta.subMap('intervals_name', 'num_intervals') + [ id: 'joint_variant_calling' ], gvcf, tbi, intervals ]
     }.groupTuple(by:[0, 3]).map{ meta, gvcf, tbi, intervals -> [ meta, gvcf, tbi, intervals, [], [] ] }
 
     // Convert all sample vcfs into a genomicsdb workspace using genomicsdbimport
@@ -56,9 +54,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
     }
 
     vcfs_sorted_input_no_intervals =  vcfs_sorted_input.no_intervals.map{ meta, vcf ->
-        [ meta.subMap('num_intervals')
-            + [ id: 'joint_variant_calling', patient: 'all_samples', variantcaller: 'haplotypecaller' ],
-            vcf ]
+        [ meta.subMap('num_intervals') + [ id:'joint_variant_calling', patient:'all_samples', variantcaller:'haplotypecaller' ], vcf ]
     }
 
     // Index vcf files if no scatter/gather by intervals
@@ -68,9 +64,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
     // Rework meta for variantscalled.csv and annotation tools
     MERGE_GENOTYPEGVCFS(
         vcfs_sorted_input.intervals.map{ meta, vcf ->
-            [ meta.subMap('num_intervals')
-                + [ id: 'joint_variant_calling', patient: 'all_samples', variantcaller: 'haplotypecaller' ],
-                vcf ]
+            [ meta.subMap('num_intervals') + [ id:'joint_variant_calling', patient:'all_samples', variantcaller:'haplotypecaller' ], vcf ]
         }.groupTuple(),
         dict.map{ it -> [ [ id:it[0].baseName], it ] } )
 
@@ -110,9 +104,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
         .join(VARIANTRECALIBRATOR_SNP.out.idx)
         .join(VARIANTRECALIBRATOR_SNP.out.tranches)
         .map{ meta, vcf, tbi, recal, index, tranche ->
-            [ meta.subMap('num_intervals')
-                + [ id: 'recalibrated_joint_variant_calling', patient: 'all_samples', variantcaller: 'haplotypecaller' ],
-                vcf, tbi, recal, index, tranche ]
+            [ meta.subMap('num_intervals') + [ id:'recalibrated_joint_variant_calling', patient:'all_samples', variantcaller:'haplotypecaller' ], vcf, tbi, recal, index, tranche ]
         }
 
     // Join results of variant recalibration into a single channel tuple
@@ -121,9 +113,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
         .join(VARIANTRECALIBRATOR_INDEL.out.idx)
         .join(VARIANTRECALIBRATOR_INDEL.out.tranches)
         .map{ meta, vcf, tbi, recal, index, tranche ->
-            [ meta.subMap('num_intervals')
-                + [ id: 'recalibrated_joint_variant_calling', patient: 'all_samples', variantcaller: 'haplotypecaller' ],
-                vcf, tbi, recal, index, tranche ]
+            [ meta.subMap('num_intervals') + [ id:'recalibrated_joint_variant_calling', patient:'all_samples', variantcaller:'haplotypecaller' ], vcf, tbi, recal, index, tranche ]
         }
 
     GATK4_APPLYVQSR_SNP(

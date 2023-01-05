@@ -16,16 +16,20 @@ workflow BAM_MERGE_INDEX_SAMTOOLS {
 
     // Figuring out if there is one or more bam(s) from the same sample
     bam_to_merge = bam.branch{
-        //Here there actually is a list, so size() works
+        // Here there actually is a list, so size() works
         single:   it[1].size() == 1
         multiple: it[1].size() > 1
     }
 
+    // Only when using intervals
     MERGE_BAM(bam_to_merge.multiple, [], [])
-    INDEX_MERGE_BAM(bam_to_merge.single.mix(MERGE_BAM.out.bam))
 
-    bam_bai = bam_to_merge.single.map{ meta, bam -> [ meta, bam[0] ] }
-        .mix(MERGE_BAM.out.bam)
+    // Mix intervals and no_intervals channels together
+    INDEX_MERGE_BAM(MERGE_BAM.out.bam.mix(bam_to_merge.single))
+
+    // Mix intervals and no_intervals channels together
+    bam_bai = MERGE_BAM.out.bam.mix(bam_to_merge.single.map{ meta, bam -> [ meta, bam[0] ] })
+        // Join with the bai file
         .join(INDEX_MERGE_BAM.out.bai)
 
     // Gather versions of all tools used
