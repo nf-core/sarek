@@ -57,7 +57,7 @@ Lesser Lule River is English for Lilla Luleälven
 
 ### Fixed
 
-- [#905](https://github.com/nf-core/sarek/pull/905) - Remove usages of deprecated `Channel.from` method
+- [#906](https://github.com/nf-core/sarek/pull/906) - Remove usages of deprecated `Channel.from` method
 
 ### Deprecated
 
