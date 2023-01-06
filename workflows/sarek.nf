@@ -936,7 +936,7 @@ workflow SAREK {
             fasta_fai,
             germline_resource,
             germline_resource_tbi,
-            intervals,
+            intervals_and_num_intervals,
             intervals_bed_gz_tbi,
             intervals_bed_combined,
             mappability,
@@ -958,7 +958,7 @@ workflow SAREK {
             fasta_fai,
             germline_resource,
             germline_resource_tbi,
-            intervals,
+            intervals_and_num_intervals,
             intervals_bed_gz_tbi,
             intervals_bed_combined,
             mappability,
@@ -977,18 +977,7 @@ workflow SAREK {
             TABIX_EXT_VCF(ADD_INFO_TO_VCF.out.vcf)
 
             // Gather vcfs and vcf-tbis for concatenating germline-vcfs
-            germline_vcfs_with_tbis = TABIX_EXT_VCF.out.gz_tbi.map{
-                meta, vcf, tbi ->
-                    def new_meta = meta.clone()
-                    new_meta.remove('variantcaller')
-                    new_meta.remove('tumor_id')
-                    new_meta.remove('normal_id')
-                    new_meta.remove('sample')
-                    new_meta.remove('status')
-                    new_meta.remove('num_intervals')
-                    new_meta.remove('data_type')
-                    [new_meta, vcf, tbi]
-                }.groupTuple()
+            germline_vcfs_with_tbis = TABIX_EXT_VCF.out.gz_tbi.map{ meta, vcf, tbi -> [meta.submap('id'), vcf, tbi] }.groupTuple()
 
             GERMLINE_VCFS_CONCAT(germline_vcfs_with_tbis)
             GERMLINE_VCFS_CONCAT_SORT(GERMLINE_VCFS_CONCAT.out.vcf)

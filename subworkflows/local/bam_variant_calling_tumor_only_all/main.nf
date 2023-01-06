@@ -14,25 +14,25 @@ include { BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2      } from '../bam_variant_cal
 
 workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     take:
-        tools                         // Mandatory, list of tools to apply
-        cram                          // channel: [mandatory] cram
-        bwa                           // channel: [optional] bwa
-        cf_chrom_len                  // channel: [optional] controlfreec length file
-        chr_files
-        cnvkit_reference
-        dbsnp                         // channel: [mandatory] dbsnp
-        dbsnp_tbi                     // channel: [mandatory] dbsnp_tbi
-        dict                          // channel: [mandatory] dict
-        fasta                         // channel: [mandatory] fasta
-        fasta_fai                     // channel: [mandatory] fasta_fai
-        germline_resource             // channel: [optional]  germline_resource
-        germline_resource_tbi         // channel: [optional]  germline_resource_tbi
-        intervals                     // channel: [mandatory] intervals/target regions
-        intervals_bed_gz_tbi          // channel: [mandatory] intervals/target regions index zipped and indexed
-        intervals_bed_combined        // channel: [mandatory] intervals/target regions in one file unzipped
-        mappability
-        panel_of_normals              // channel: [optional]  panel_of_normals
-        panel_of_normals_tbi          // channel: [optional]  panel_of_normals_tbi
+    tools                         // Mandatory, list of tools to apply
+    cram                          // channel: [mandatory] cram
+    bwa                           // channel: [optional] bwa
+    cf_chrom_len                  // channel: [optional] controlfreec length file
+    chr_files
+    cnvkit_reference
+    dbsnp                         // channel: [mandatory] dbsnp
+    dbsnp_tbi                     // channel: [mandatory] dbsnp_tbi
+    dict                          // channel: [mandatory] dict
+    fasta                         // channel: [mandatory] fasta
+    fasta_fai                     // channel: [mandatory] fasta_fai
+    germline_resource             // channel: [optional]  germline_resource
+    germline_resource_tbi         // channel: [optional]  germline_resource_tbi
+    intervals                     // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
+    intervals_bed_gz_tbi          // channel: [mandatory] intervals/target regions index zipped and indexed
+    intervals_bed_combined        // channel: [mandatory] intervals/target regions in one file unzipped
+    mappability
+    panel_of_normals              // channel: [optional]  panel_of_normals
+    panel_of_normals_tbi          // channel: [optional]  panel_of_normals_tbi
 
     main:
     versions = Channel.empty()

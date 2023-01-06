@@ -17,7 +17,7 @@ include { MSISENSORPRO_MSI_SOMATIC                      } from '../../../modules
 workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     take:
     tools                         // Mandatory, list of tools to apply
-    cram                     // channel: [mandatory] cram
+    cram                          // channel: [mandatory] cram
     bwa                           // channel: [optional] bwa
     cf_chrom_len                  // channel: [optional] controlfreec length file
     chr_files
@@ -28,7 +28,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     fasta_fai                     // channel: [mandatory] fasta_fai
     germline_resource             // channel: [optional]  germline_resource
     germline_resource_tbi         // channel: [optional]  germline_resource_tbi
-    intervals                     // channel: [mandatory] intervals/target regions
+    intervals                     // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
     intervals_bed_gz_tbi          // channel: [mandatory] intervals/target regions index zipped and indexed
     intervals_bed_combined        // channel: [mandatory] intervals/target regions in one file unzipped
     mappability
@@ -105,26 +105,21 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     }
 
     if (tools.split(',').contains('controlfreec')){
-        cram_normal_intervals_no_index = cram_intervals
-                    .map {meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals ->
-                            [meta, normal_cram, intervals]
-                        }
-
-        cram_tumor_intervals_no_index = cram_intervals
-                    .map {meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals ->
-                            [meta, tumor_cram, intervals]
-                        }
+        cram_normal = cram.map { meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [ meta, normal_cram, normal_crai ] }
+        cram_tumor = cram.map { meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [ meta, tumor_cram, tumor_crai ] }
 
         MPILEUP_NORMAL(
-            cram_normal_intervals_no_index,
+            cram_normal,
             fasta,
-            dict
+            dict.map{ it -> [ [ id:it[0].baseName ], it ] },
+            intervals
         )
 
         MPILEUP_TUMOR(
-            cram_tumor_intervals_no_index,
+            cram_tumor,
             fasta,
-            dict
+            dict.map{ it -> [ [ id:it[0].baseName ], it ] },
+            intervals
         )
 
         mpileup_normal = MPILEUP_NORMAL.out.mpileup
