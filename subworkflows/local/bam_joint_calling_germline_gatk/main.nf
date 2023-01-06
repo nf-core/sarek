@@ -66,7 +66,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
         vcfs_sorted_input.intervals.map{ meta, vcf ->
             [ meta.subMap('num_intervals') + [ id:'joint_variant_calling', patient:'all_samples', variantcaller:'haplotypecaller' ], vcf ]
         }.groupTuple(),
-        dict.map{ it -> [ [ id:it[0].baseName], it ] } )
+        dict.map{ it -> [ [ id:'dict' ], it ] } )
 
     vqsr_input = Channel.empty().mix(
         MERGE_GENOTYPEGVCFS.out.vcf.join(MERGE_GENOTYPEGVCFS.out.tbi),
@@ -134,7 +134,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
     //Merge VQSR outputs into final VCF
     MERGE_VQSR(
         vqsr_snp_vcf.mix(vqsr_indel_vcf).groupTuple(),
-        dict.map{ it -> [ [ id:it[0].baseName ], it ] }
+        dict.map{ it -> [ [ id:'dict' ], it ] }
     )
 
     genotype_vcf   = Channel.empty().mix(vcfs_sorted_input_no_intervals, MERGE_GENOTYPEGVCFS.out.vcf, MERGE_VQSR.out.vcf)

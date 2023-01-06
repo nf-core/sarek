@@ -110,15 +110,15 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
         MPILEUP_NORMAL(
             cram_normal,
+            dict.map{ it -> [ [ id:'dict' ], it ] },
             fasta,
-            dict.map{ it -> [ [ id:it[0].baseName ], it ] },
             intervals
         )
 
         MPILEUP_TUMOR(
             cram_tumor,
+            dict.map{ it -> [ [ id:'dict' ], it ] },
             fasta,
-            dict.map{ it -> [ [ id:it[0].baseName ], it ] },
             intervals
         )
 
@@ -131,6 +131,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         }
 
         length_file = cf_chrom_len ?: fasta_fai
+
         BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC(
             controlfreec_input,
             fasta,
@@ -168,7 +169,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
         BAM_VARIANT_CALLING_FREEBAYES(
             cram,
-            dict.map{ it -> [ [ id:it[0].baseName ], it ] },
+            dict.map{ it -> [ [ id:'dict' ], it ] },
             fasta,
             fasta_fai,
             intervals
@@ -266,7 +267,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         BAM_VARIANT_CALLING_SOMATIC_TIDDIT(
             cram.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [ meta, normal_cram, normal_crai ] },
             cram.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [ meta, tumor_cram, tumor_crai ] },
-            fasta.map{ it -> [ [ id:it[0].baseName ], it ] }, bwa)
+            fasta.map{ it -> [ [ id:'fasta' ], it ] }, bwa)
         vcf_tiddit = BAM_VARIANT_CALLING_SOMATIC_TIDDIT.out.vcf
         versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_TIDDIT.out.versions)
     }

@@ -59,7 +59,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     if (tools.split(',').contains('mpileup')) {
         BAM_VARIANT_CALLING_MPILEUP(
             cram,
-            dict.map{ it -> [ [ id:it[0].baseName ], it ] },
+            dict.map{ it -> [ [ id:'dict' ], it ] },
             fasta,
             intervals
         )
@@ -86,7 +86,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     if (tools.split(',').contains('deepvariant')) {
         BAM_VARIANT_CALLING_DEEPVARIANT(
             cram,
-            dict.map{ it -> [ [ id:it[0].baseName ], it ] },
+            dict.map{ it -> [ [ id:'dict' ], it ] },
             fasta,
             fasta_fai,
             intervals
@@ -101,7 +101,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         // Input channel is remapped to match input of module/subworkflow
         BAM_VARIANT_CALLING_FREEBAYES(
             cram,
-            dict.map{ it -> [ [ id:it[0].baseName ], it ] },
+            dict.map{ it -> [ [ id:'dict' ], it ] },
             fasta,
             fasta_fai,
             intervals
@@ -166,7 +166,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     if (tools.split(',').contains('tiddit')) {
         BAM_VARIANT_CALLING_SINGLE_TIDDIT(
             cram,
-            fasta.map{ it -> [[id:it[0].baseName], it] },
+            fasta.map{ it -> [ [ id:'fasta' ], it ] },
             bwa
         )
 

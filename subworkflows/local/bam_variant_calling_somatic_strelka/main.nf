@@ -40,7 +40,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_STRELKA {
                 vcf]
 
             }.groupTuple(),
-            dict.map{ it -> [[id:it[0].baseName], it]})
+            dict.map{ it -> [ [ id:'dict' ], it ] })
 
     MERGE_STRELKA_INDELS(vcf_indels.intervals.map{ meta, vcf ->
 
@@ -55,7 +55,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_STRELKA {
                             meta.num_intervals),
                 vcf]
             }.groupTuple(),
-            dict.map{ it -> [[id:it[0].baseName], it]})
+            dict.map{ it -> [ [ id:'dict' ], it ] })
 
     // Mix output channels for "no intervals" and "with intervals" results
     vcf = Channel.empty().mix(

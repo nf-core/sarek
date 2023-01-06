@@ -23,7 +23,7 @@ workflow CRAM_QC_MOSDEPTH_SAMTOOLS {
     MOSDEPTH(
         cram,
         intervals_bed_combined,
-        fasta.map{ it -> [[id:it[0].baseName], it]}
+        fasta.map{ it -> [ [ id:'fasta' ], it ] }
     )
 
     // Gather all reports generated

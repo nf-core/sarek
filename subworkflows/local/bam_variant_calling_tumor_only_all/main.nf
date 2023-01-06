@@ -86,7 +86,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     if (tools.split(',').contains('mpileup') || tools.split(',').contains('controlfreec')){
         BAM_VARIANT_CALLING_MPILEUP(
             cram,
-            dict.map{ it -> [ [ id:it[0].baseName ], it ] },
+            dict.map{ it -> [ [ id:'dict' ], it ] },
             fasta,
             intervals
         )
@@ -135,7 +135,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     if (tools.split(',').contains('freebayes')){
         BAM_VARIANT_CALLING_FREEBAYES(
             cram,
-            dict.map{ it -> [ [ id:it[0].baseName ], it ] },
+            dict.map{ it -> [ [ id:'dict' ], it ] },
             fasta,
             fasta_fai,
             intervals

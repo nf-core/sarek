@@ -75,7 +75,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
 
             [groupKey(new_meta, meta.num_intervals), vcf]
         }.groupTuple(),
-        dict.map{ it -> [[id:it[0].baseName], it]})
+        dict.map{ it -> [ [ id:'dict' ], it ] })
 
     mutect2_vcf = Channel.empty().mix(
         MERGE_MUTECT2.out.vcf,
@@ -130,7 +130,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     //
     germline_resource_pileup = germline_resource_tbi ? germline_resource : Channel.empty()
     germline_resource_pileup_tbi = germline_resource_tbi ?: Channel.empty()
-    GETPILEUPSUMMARIES ( input , fasta, fai, dict, germline_resource_pileup , germline_resource_pileup_tbi )
+    GETPILEUPSUMMARIES(input , fasta, fai, dict, germline_resource_pileup , germline_resource_pileup_tbi)
 
     GETPILEUPSUMMARIES.out.table.branch{
             intervals:    it[0].num_intervals > 1
@@ -161,8 +161,8 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     //
     //Contamination and segmentation tables created using calculatecontamination on the pileup summary table.
     //
-    table_contamination = pileup_table.map{meta, table -> [meta, table, []]}
-    CALCULATECONTAMINATION ( table_contamination )
+    table_contamination = pileup_table.map{ meta, table -> [ meta, table, [] ] }
+    CALCULATECONTAMINATION(table_contamination)
 
     //
     //Mutect2 calls filtered by filtermutectcalls using the contamination and segmentation tables.
@@ -172,9 +172,9 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
                                     .join(LEARNREADORIENTATIONMODEL.out.artifactprior)
                                     .join(CALCULATECONTAMINATION.out.segmentation)
                                     .join(CALCULATECONTAMINATION.out.contamination)
-    ch_filtermutect_in = ch_filtermutect.map{ meta, vcf, tbi, stats, artifactprior, seg, cont -> [meta, vcf, tbi, stats, artifactprior, seg, cont, []] }
+    ch_filtermutect_in = ch_filtermutect.map{ meta, vcf, tbi, stats, artifactprior, seg, cont -> [ meta, vcf, tbi, stats, artifactprior, seg, cont, [] ] }
 
-    FILTERMUTECTCALLS ( ch_filtermutect_in, fasta, fai, dict )
+    FILTERMUTECTCALLS(ch_filtermutect_in, fasta, fai, dict)
 
     ch_versions = ch_versions.mix(MERGE_MUTECT2.out.versions)
     ch_versions = ch_versions.mix(CALCULATECONTAMINATION.out.versions)

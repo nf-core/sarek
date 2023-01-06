@@ -37,18 +37,18 @@ workflow PREPARE_INTERVALS {
         //If no interval/target file is provided, then intervals are generated from FASTA file
         if (!params.intervals) {
 
-            BUILD_INTERVALS(fasta_fai.map{it -> [[id:it.baseName], it]})
+            BUILD_INTERVALS(fasta_fai.map{it -> [ [ id:'intervals' ], it ] })
 
             ch_intervals_combined = BUILD_INTERVALS.out.bed
 
-            ch_intervals = CREATE_INTERVALS_BED(ch_intervals_combined.map{meta, path -> path}).bed
+            ch_intervals = CREATE_INTERVALS_BED(ch_intervals_combined.map{ meta, path -> path }).bed
 
             ch_versions = ch_versions.mix(BUILD_INTERVALS.out.versions)
             ch_versions = ch_versions.mix(CREATE_INTERVALS_BED.out.versions)
 
         } else {
 
-            ch_intervals_combined = Channel.fromPath(file(params.intervals)).map{it -> [[id:it.baseName], it] }
+            ch_intervals_combined = Channel.fromPath(file(params.intervals)).map{it -> [ [ id:'intervals' ], it ] }
 
             ch_intervals = CREATE_INTERVALS_BED(file(params.intervals)).bed
             ch_versions = ch_versions.mix(CREATE_INTERVALS_BED.out.versions)
@@ -88,12 +88,14 @@ workflow PREPARE_INTERVALS {
                 }.transpose()
 
         // 2. Create bed.gz and bed.gz.tbi for each interval file. They are split by region (see above)
-        tabix_in = ch_intervals.map{ file, num_intervals -> [[id:file.baseName], file] }
+        tabix_in = ch_intervals.map{ file, num_intervals -> [ [ id:file.baseName], file ] }
         TABIX_BGZIPTABIX_INTERVAL_SPLIT(tabix_in)
-        ch_intervals_bed_gz_tbi = TABIX_BGZIPTABIX_INTERVAL_SPLIT.out.gz_tbi.map{ meta, bed, tbi -> [bed, tbi ]}.toList().map{
-                                        it ->
-                                        [it, it.size()] // Adding number of intervals as elements
-                                    }.transpose()
+
+        ch_intervals_bed_gz_tbi = TABIX_BGZIPTABIX_INTERVAL_SPLIT.out.gz_tbi.map{ meta, bed, tbi -> [ bed, tbi ] }.toList()
+            // Adding number of intervals as elements
+            .map{ it ->[ it, it.size() ]}
+            .transpose()
+
         ch_versions = ch_versions.mix(TABIX_BGZIPTABIX_INTERVAL_SPLIT.out.versions)
 
     }

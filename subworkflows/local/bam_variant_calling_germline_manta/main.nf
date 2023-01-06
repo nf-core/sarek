@@ -41,7 +41,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_MANTA {
                         meta.num_intervals),
             vcf ]
         }.groupTuple(),
-        dict.map{ it -> [ [ id:it[0].baseName ], it ] })
+        dict.map{ it -> [ [ id:'dict' ], it ] })
 
     MERGE_MANTA_SV(
         sv_vcf.intervals.map{ meta, vcf ->
@@ -51,7 +51,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_MANTA {
                         meta.num_intervals),
             vcf ]
         }.groupTuple(),
-        dict.map{ it -> [ [ id:it[0].baseName ], it ] })
+        dict.map{ it -> [ [ id:'dict' ], it ] })
 
     MERGE_MANTA_DIPLOID(
         diploid_sv_vcf.intervals.map{ meta, vcf ->
@@ -61,7 +61,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_MANTA {
                         meta.num_intervals),
             vcf ]
         }.groupTuple(),
-        dict.map{ it -> [ [ id:it[0].baseName ], it ] })
+        dict.map{ it -> [ [ id:'dict' ], it ] })
 
     // Mix output channels for "no intervals" and "with intervals" results
     // Only diploid SV should get annotated
