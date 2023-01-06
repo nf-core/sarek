@@ -113,17 +113,8 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
 
     // HAPLOTYPECALLER
     if (tools.split(',').contains('haplotypecaller')) {
-        // Input channel is remapped to match input of module/subworkflow
-        cram_intervals_haplotypecaller = cram_intervals
-            .map{ meta, cram, crai, intervals ->
-                if (joint_germline) {
-                    if (meta.num_intervals == 0) [ meta + [ intervals_name:"no_interval" ], cram, crai, intervals, [] ]
-                    else [ meta + [ intervals_name:intervals.simpleName ], cram, crai, intervals, [] ]
-                } else [ meta, cram, crai, intervals, [] ]
-        }
-
         BAM_VARIANT_CALLING_HAPLOTYPECALLER(
-            cram_intervals_haplotypecaller,
+            cram,
             fasta,
             fasta_fai,
             dict,
@@ -136,6 +127,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             known_sites_snps,
             known_sites_snps_tbi,
             known_snps_vqsr,
+            intervals,
             intervals_bed_combined_haplotypec,
             joint_germline,
             (skip_tools && skip_tools.split(',').contains('haplotypecaller_filter')))

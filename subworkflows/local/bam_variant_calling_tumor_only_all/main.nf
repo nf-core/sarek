@@ -15,7 +15,7 @@ include { BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2      } from '../bam_variant_cal
 workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     take:
         tools                         // Mandatory, list of tools to apply
-        cram_recalibrated             // channel: [mandatory] cram
+        cram                          // channel: [mandatory] cram
         bwa                           // channel: [optional] bwa
         cf_chrom_len                  // channel: [optional] controlfreec length file
         chr_files
@@ -45,7 +45,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     vcf_tiddit      = Channel.empty()
 
     // Remap channel with intervals
-    cram_recalibrated_intervals = cram_recalibrated.combine(intervals)
+    cram_intervals = cram.combine(intervals)
         .map{ meta, cram, crai, intervals, num_intervals ->
 
             //If no interval file provided (0) then add empty list
@@ -64,7 +64,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         }
 
     // Remap channel with gzipped intervals + indexes
-    cram_recalibrated_intervals_gz_tbi = cram_recalibrated.combine(intervals_bed_gz_tbi)
+    cram_intervals_gz_tbi = cram.combine(intervals_bed_gz_tbi)
         .map{ meta, cram, crai, bed_tbi, num_intervals ->
 
             //If no interval file provided (0) then add empty list
@@ -84,13 +84,11 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         }
 
     if (tools.split(',').contains('mpileup') || tools.split(',').contains('controlfreec')){
-        cram_intervals_no_index = cram_recalibrated_intervals.map { meta, cram, crai, intervals ->
-                                                                    [meta, cram, intervals]
-                                                                    }
         BAM_VARIANT_CALLING_MPILEUP(
-            cram_intervals_no_index,
+            cram,
+            dict.map{ it -> [ [ id:it[0].baseName ], it ] },
             fasta,
-            dict
+            intervals
         )
 
         versions = versions.mix(BAM_VARIANT_CALLING_MPILEUP.out.versions)
@@ -118,13 +116,13 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     }
 
     if(tools.split(',').contains('cnvkit')){
-        cram_recalibrated_cnvkit_tumoronly = cram_recalibrated
+        cram_cnvkit_tumoronly = cram
             .map{ meta, cram, crai ->
                 [meta, cram, []]
             }
 
         BAM_VARIANT_CALLING_CNVKIT (
-            cram_recalibrated_cnvkit_tumoronly,
+            cram_cnvkit_tumoronly,
             fasta,
             fasta_fai,
             [],
@@ -135,26 +133,21 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     }
 
     if (tools.split(',').contains('freebayes')){
-        // Remap channel for Freebayes
-        cram_recalibrated_intervals_freebayes = cram_recalibrated_intervals
-            .map{ meta, cram, crai, intervals ->
-                [meta, cram, crai, [], [], intervals]
-            }
-
         BAM_VARIANT_CALLING_FREEBAYES(
-            cram_recalibrated_intervals_freebayes,
-            dict,
+            cram,
+            dict.map{ it -> [ [ id:it[0].baseName ], it ] },
             fasta,
-            fasta_fai
+            fasta_fai,
+            intervals
         )
 
         vcf_freebayes = BAM_VARIANT_CALLING_FREEBAYES.out.vcf
-        versions   = versions.mix(BAM_VARIANT_CALLING_FREEBAYES.out.versions)
+        versions = versions.mix(BAM_VARIANT_CALLING_FREEBAYES.out.versions)
     }
 
     if (tools.split(',').contains('mutect2')) {
         BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2(
-            cram_recalibrated_intervals,
+            cram_intervals,
             fasta,
             fasta_fai,
             dict,
@@ -171,7 +164,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     if (tools.split(',').contains('manta')){
 
         BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA(
-            cram_recalibrated_intervals_gz_tbi,
+            cram_intervals_gz_tbi,
             dict,
             fasta,
             fasta_fai
@@ -184,7 +177,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     if (tools.split(',').contains('strelka')) {
 
         BAM_VARIANT_CALLING_SINGLE_STRELKA(
-            cram_recalibrated_intervals_gz_tbi,
+            cram_intervals_gz_tbi,
             dict,
             fasta,
             fasta_fai
@@ -198,7 +191,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     if (tools.split(',').contains('tiddit')){
 
         BAM_VARIANT_CALLING_SINGLE_TIDDIT(
-            cram_recalibrated,
+            cram,
             fasta.map{ it -> [[id:it[0].baseName], it] },
             bwa
         )
