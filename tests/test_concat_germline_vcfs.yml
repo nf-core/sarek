@@ -4,7 +4,7 @@
     - concatenate_vcfs
   files:
     - path: results/variant_calling/concat/testN/testN.germline.vcf.gz
-    # binary changes md5sums on reruns
+      # binary changes md5sums on reruns
       contains:
         [
           "SOURCE=testN.deepvariant.vcf.gz",

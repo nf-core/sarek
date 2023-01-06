@@ -27,7 +27,14 @@
     - path: results/reference/dict/genome.dict
       md5sum: 2433fe2ba31257337bf4c4bd4cb8da15
     - path: results/reference/dragmap/hash_table.cfg
-      contains: [ "reference_sequences  = 1", "reference_len        = 368640", "reference_len_raw    = 40001", "reference_len_not_n  = 40001", "reference_alt_seed   = 204800" ]
+      contains:
+        [
+          "reference_sequences  = 1",
+          "reference_len        = 368640",
+          "reference_len_raw    = 40001",
+          "reference_len_not_n  = 40001",
+          "reference_alt_seed   = 204800",
+        ]
     - path: results/reference/dragmap/hash_table.cfg.bin
     # binary changes md5sums on reruns
     - path: results/reference/dragmap/hash_table.cmp

@@ -10,7 +10,16 @@
     - path: results/untar/chromosomes/chr21.fasta
       md5sum: 69bd44ef67566a76d6cbb8aa4a25ae35
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/config.txt
-      contains: [ "BedGraphOutput = TRUE", "minExpectedGC = 0", "maxThreads = 2", "noisyData = TRUE", "readCountThreshold = 1", "sex = XX", "window = 10" ]
+      contains:
+        [
+          "BedGraphOutput = TRUE",
+          "minExpectedGC = 0",
+          "maxThreads = 2",
+          "noisyData = TRUE",
+          "readCountThreshold = 1",
+          "sex = XX",
+          "window = 10",
+        ]
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.bed
       md5sum: 833920178e4f40a296d8eab029caf086
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.circos.txt

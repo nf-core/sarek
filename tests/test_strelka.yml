@@ -25,7 +25,13 @@
     - path: results/reports/vcftools/strelka/sample2/sample2.strelka.variants.TsTv.count
       md5sum: d7f54d09d38af01a574a4930af21cfc9
     - path: results/reports/vcftools/strelka/sample2/sample2.strelka.variants.TsTv.qual
-      contains: [ "19	453	47848	0.00946748	11	50	0.22", "56	456	47875	0.0095248	8	25	0.32", "72	458	47880	0.00956558	6	20	0.3", "314	463	47899	0.00966617	1	1	1" ]
+      contains:
+        [
+          "19	453	47848	0.00946748	11	50	0.22",
+          "56	456	47875	0.0095248	8	25	0.32",
+          "72	458	47880	0.00956558	6	20	0.3",
+          "314	463	47899	0.00966617	1	1	1",
+        ]
     - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.FILTER.summary
       md5sum: 3441628cd6550ed459ca1c3db989ceea
     - path: results/reports/vcftools/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_indels.TsTv.count
