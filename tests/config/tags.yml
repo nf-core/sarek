@@ -301,19 +301,28 @@ vep:
   - modules/nf-core/tabix/bgziptabix/main.nf
   - subworkflows/nf-core/vcf_annotate_ensemblvep/main.nf
 
+# postprocessing
+
 ## concatenate germline vcfs
 concatenate_vcfs:
   - conf/modules/post_variant_calling.config
-  - modules/nf-core/deepvariant/main.nf # deepvariant
-  - modules/nf-core/tabix/tabix/main.nf
-  - modules/nf-core/freebayes/main.nf # freebayes
-  - modules/nf-core/gatk4/haplotypecaller/main.nf # haplotypecaller
-  - modules/nf-core/manta/germline/main.nf # manta
-  - modules/nf-core/bcftools/mpileup/main.nf # mpileup/bcftools
-  - modules/nf-core/bcftools/sort/main.nf
-  - modules/nf-core/tabix/bgziptabix/main.nf
   - modules/nf-core/bcftools/concat/main.nf
+  - modules/nf-core/bcftools/mpileup/main.nf
+  - modules/nf-core/bcftools/sort/main.nf
+  - modules/nf-core/deepvariant/main.nf
+  - modules/nf-core/freebayes/main.nf
+  - modules/nf-core/gatk4/haplotypecaller/main.nf
+  - modules/nf-core/gatk4/mergevcfs/main.nf
+  - modules/nf-core/manta/germline/main.nf
   - modules/nf-core/samtools/mpileup/main.nf
-  - modules/nf-core/gatk4/mergevcfs/main.nf # gatk4/mergevcfs
-  - modules/nf-core/strelka/germline/main.nf # strelka
-  - modules/nf-core/tiddit/sv/main.nf # tiddit
+  - modules/nf-core/strelka/germline/main.nf
+  - modules/nf-core/tabix/bgziptabix/main.nf
+  - modules/nf-core/tabix/tabix/main.nf
+  - modules/nf-core/tiddit/sv/main.nf
+  - subworkflows/local/bam_variant_calling_deepvariant/main.nf
+  - subworkflows/local/bam_variant_calling_freebayes/main.nf
+  - subworkflows/local/bam_variant_calling_germline_manta/main.nf
+  - subworkflows/local/bam_variant_calling_haplotypecaller/main.nf
+  - subworkflows/local/bam_variant_calling_mpileup/main.nf
+  - subworkflows/local/bam_variant_calling_single_strelka/main.nf
+  - subworkflows/local/bam_variant_calling_single_tiddit/main.nf
