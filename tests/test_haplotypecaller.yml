@@ -9,9 +9,9 @@
       md5sum: d7d86e82902a4f57876b2414a4f812a4
     - path: results/multiqc
     - path: results/preprocessing/converted/test/test.converted.cram
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/converted/test/test.converted.cram.crai
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.cram
       should_exist: false
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
@@ -25,13 +25,13 @@
     - path: results/reports/vcftools/haplotypecaller/test/test.haplotypecaller.filtered.TsTv.qual
       md5sum: 1e34357e5848c318f8c2c7d3b041d229
     - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.filtered.vcf.gz
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.filtered.vcf.gz.tbi
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.vcf.gz
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.vcf.gz.tbi
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/haplotypecaller
       should_exist: false
 - name: Run variant calling on germline sample with haplotypecaller and skip filter
@@ -45,9 +45,9 @@
       md5sum: f1041cfc30cedb240f224dd8e3dbf9d2
     - path: results/multiqc
     - path: results/preprocessing/converted/test/test.converted.cram
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/converted/test/test.converted.cram.crai
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.cram
       should_exist: false
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
@@ -57,9 +57,9 @@
     - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.filtered.vcf.gz.tbi
       should_exist: false
     - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.vcf.gz
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.vcf.gz.tbi
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/haplotypecaller
       should_exist: false
 - name: Run variant calling on germline sample with haplotypecaller without intervals
@@ -80,9 +80,9 @@
     - path: results/no_intervals.bed.gz.tbi
       md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/preprocessing/converted/test/test.converted.cram
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/converted/test/test.converted.cram.crai
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.cram
       should_exist: false
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
@@ -96,13 +96,13 @@
     - path: results/reports/vcftools/haplotypecaller/test/test.haplotypecaller.filtered.TsTv.qual
       md5sum: 1e34357e5848c318f8c2c7d3b041d229
     - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.filtered.vcf.gz
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.filtered.vcf.gz.tbi
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.vcf.gz
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.vcf.gz.tbi
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/haplotypecaller
       should_exist: false
 - name: Run joint germline variant calling with haplotypecaller
@@ -128,8 +128,8 @@
     - path: results/reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline.TsTv.qual
       md5sum: 3b3a249fbc26c80ce0acbe91147291ea
     - path: results/variant_calling/haplotypecaller/joint_variant_calling/joint_germline.vcf.gz
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/haplotypecaller/joint_variant_calling/joint_germline.vcf.gz.tbi
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/haplotypecaller
       should_exist: false

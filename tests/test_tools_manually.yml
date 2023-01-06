@@ -69,23 +69,23 @@
     - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4.mutect2.pileupsummaries.table
       md5sum: fe35b6bc041f2df8bd1f23420af3ddf9
     - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.artifactprior.tar.gz
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.contamination.table
       md5sum: 46c708c943b453da89a3da08acfdb2a7
     - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.filtered.vcf.gz
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.filtered.vcf.gz.filteringStats.tsv
       md5sum: 9ae27fbd04af1a2ea574e2ff1c3a683b
     - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.filtered.vcf.gz.tbi
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.segmentation.table
       md5sum: f4643d9319bde4efbfbe516d6fb13052
     - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.vcf.gz
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.vcf.gz.stats
       md5sum: 17d2091015d04cbd4a26b7a67dc659e6
     - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.vcf.gz.tbi
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
 - name: Run variant calling on somatic sample with mutect2
   command: nextflow run main.nf -profile test,tools_somatic --tools mutect2 --outdir results
   tags:
@@ -114,20 +114,20 @@
     - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4.mutect2.pileupsummaries.table
       md5sum: 9afe42339f590937166edcf4746c22ec
     - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.artifactprior.tar.gz
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.contamination.table
       md5sum: 46c708c943b453da89a3da08acfdb2a7
     - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.filtered.vcf.gz
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.filtered.vcf.gz.filteringStats.tsv
       md5sum: 9ae27fbd04af1a2ea574e2ff1c3a683b
     - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.filtered.vcf.gz.tbi
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.segmentation.table
       md5sum: f4643d9319bde4efbfbe516d6fb13052
     - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.vcf.gz
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.vcf.gz.stats
       md5sum: c09dff3f145d77d4848992e244811c08
     - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.vcf.gz.tbi
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns

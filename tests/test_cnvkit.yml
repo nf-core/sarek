@@ -14,9 +14,9 @@
     - path: results/variant_calling/cnvkit/sample3/reference.cnn
       md5sum: a09ee4be5dda1cf0f68073bdb3aad8ec
     - path: results/variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted-diagram.pdf
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted-scatter.png
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted.antitargetcoverage.cnn
       md5sum: fe1248aa91fad7769303bb4c031d55ca
     - path: results/variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted.bintest.cns
@@ -40,9 +40,9 @@
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test.paired_end.recalibrated.sorted.targetcoverage.cnn
       md5sum: 79aae7e9c135fb8c65f8fbda12610faf
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted-diagram.pdf
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted-scatter.png
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.antitargetcoverage.cnn
       md5sum: 067115082c4af4b64d58c0dc3a3642e4
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.bintest.cns
@@ -71,9 +71,9 @@
     - path: results/variant_calling/cnvkit/sample2/cnvkit.reference.target-tmp.bed
       md5sum: 657b25dbda8516624efa8cb2cf3716ca
     - path: results/variant_calling/cnvkit/sample2/test2.paired_end.recalibrated.sorted-diagram.pdf
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/cnvkit/sample2/test2.paired_end.recalibrated.sorted-scatter.png
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/variant_calling/cnvkit/sample2/test2.paired_end.recalibrated.sorted.antitargetcoverage.cnn
       md5sum: 067115082c4af4b64d58c0dc3a3642e4
     - path: results/variant_calling/cnvkit/sample2/test2.paired_end.recalibrated.sorted.bintest.cns
@@ -104,9 +104,9 @@
     - path: results/variant_calling/cnvkit/sample1/reference.cnn
       md5sum: a09ee4be5dda1cf0f68073bdb3aad8ec
     - path: results/variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted-diagram.pdf
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted-scatter.png
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted.antitargetcoverage.cnn
       md5sum: fe1248aa91fad7769303bb4c031d55ca
     - path: results/variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted.bintest.cns
@@ -141,9 +141,9 @@
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test.paired_end.recalibrated.sorted.targetcoverage.cnn
       md5sum: 79aae7e9c135fb8c65f8fbda12610faf
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted-diagram.pdf
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted-scatter.png
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.antitargetcoverage.cnn
       md5sum: 067115082c4af4b64d58c0dc3a3642e4
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.bintest.cns
