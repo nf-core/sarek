@@ -28,16 +28,16 @@ workflow PREPARE_INTERVALS {
         file("${params.outdir}/no_intervals.bed.gz").text     = "no_intervals\n"
         file("${params.outdir}/no_intervals.bed.gz.tbi").text = "no_intervals\n"
 
-        ch_intervals            = Channel.fromPath(file("${params.outdir}/no_intervals.bed")).map{ it -> [it, 0]}
-        ch_intervals_bed_gz_tbi = Channel.fromPath(file("${params.outdir}/no_intervals.bed.{gz,gz.tbi}")).collect().map{ it -> [it, 0]}
-        ch_intervals_combined   = Channel.fromPath(file("${params.outdir}/no_intervals.bed")).map{ it -> [[id:it.simpleName], it]}
+        ch_intervals            = Channel.fromPath(file("${params.outdir}/no_intervals.bed")).map{ it -> [ it, 0 ] }
+        ch_intervals_bed_gz_tbi = Channel.fromPath(file("${params.outdir}/no_intervals.bed.{gz,gz.tbi}")).collect().map{ it -> [ it, 0 ] }
+        ch_intervals_combined   = Channel.fromPath(file("${params.outdir}/no_intervals.bed")).map{ it -> [ [ id:it.simpleName ], it ] }
 
     } else if (params.step != 'annotate' && params.step != 'controlfreec') {
 
         //If no interval/target file is provided, then intervals are generated from FASTA file
         if (!params.intervals) {
 
-            BUILD_INTERVALS(fasta_fai.map{it -> [ [ id:'intervals' ], it ] })
+            BUILD_INTERVALS(fasta_fai.map{it -> [ [ id:it.baseName ], it ] })
 
             ch_intervals_combined = BUILD_INTERVALS.out.bed
 
@@ -48,7 +48,7 @@ workflow PREPARE_INTERVALS {
 
         } else {
 
-            ch_intervals_combined = Channel.fromPath(file(params.intervals)).map{it -> [ [ id:'intervals' ], it ] }
+            ch_intervals_combined = Channel.fromPath(file(params.intervals)).map{it -> [ [ id:it.baseName ], it ] }
 
             ch_intervals = CREATE_INTERVALS_BED(file(params.intervals)).bed
             ch_versions = ch_versions.mix(CREATE_INTERVALS_BED.out.versions)
