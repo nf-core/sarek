@@ -15,9 +15,7 @@ workflow BAM_VARIANT_CALLING_SINGLE_TIDDIT {
     TABIX_BGZIP_TIDDIT_SV(TIDDIT_SV.out.vcf)
 
     ploidy = TIDDIT_SV.out.ploidy
-    vcf = TABIX_BGZIP_TIDDIT_SV.out.gz_tbi.map{ meta, gz, tbi ->
-        [ meta + [ variantcaller: 'tiddit'], gz ]
-    }
+    vcf = TABIX_BGZIP_TIDDIT_SV.out.gz_tbi.map{ meta, gz, tbi -> [ meta + [ variantcaller: 'tiddit'], gz ] }
 
     versions = versions.mix(TABIX_BGZIP_TIDDIT_SV.out.versions)
     versions = versions.mix(TIDDIT_SV.out.versions)
