@@ -888,11 +888,12 @@ workflow SAREK {
         cram_variant_calling_pair = cram_variant_calling_normal_to_cross.cross(cram_variant_calling_pair_to_cross)
             .map { normal, tumor ->
                 def meta = [:]
-                meta.patient    = normal[0]
+
+                meta.id         = "${tumor[1].sample}_vs_${normal[1].sample}".toString()
                 meta.normal_id  = normal[1].sample
-                meta.tumor_id   = tumor[1].sample
+                meta.patient    = normal[0]
                 meta.sex        = normal[1].sex
-                meta.id         = "${ meta.tumor_id}_vs_${ meta.normal_id}".toString()
+                meta.tumor_id   = tumor[1].sample
 
                 [ meta, normal[2], normal[3], tumor[2], tumor[3] ]
             }
