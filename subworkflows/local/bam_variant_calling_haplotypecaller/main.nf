@@ -91,7 +91,7 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
             known_sites_indels.concat(known_sites_snps).flatten().unique().collect(),
             known_sites_indels_tbi.concat(known_sites_snps_tbi).flatten().unique().collect())
 
-        vcf = VCF_VARIANT_FILTERING_GATK.out.filtered_vcf.map{ meta, vcf -> [ meta + [variantcaller:'haplotypecaller' ], vcf ] }
+        vcf = VCF_VARIANT_FILTERING_GATK.out.filtered_vcf
 
         versions = versions.mix(VCF_VARIANT_FILTERING_GATK.out.versions)
 
@@ -99,6 +99,8 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
 
     versions = versions.mix(GATK4_HAPLOTYPECALLER.out.versions)
     versions = versions.mix(MERGE_HAPLOTYPECALLER.out.versions)
+
+    vcf = vcf.map{ meta, vcf -> [ meta + [variantcaller:'haplotypecaller' ], vcf ] }
 
     emit:
     genotype = GATK4_HAPLOTYPECALLER.out.vcf.join(GATK4_HAPLOTYPECALLER.out.tbi)
