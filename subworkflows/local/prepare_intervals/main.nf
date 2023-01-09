@@ -76,11 +76,11 @@ workflow PREPARE_INTERVALS {
                         duration += (end - start) / params.nucleotides_per_second
                     }
                 }
-                [duration, intervalFile]
+                [ duration, intervalFile ]
             }.toSortedList({ a, b -> b[0] <=> a[0] })
             .flatten().collate(2).map{ duration, intervalFile -> intervalFile }.collect()
             // Adding number of intervals as elements
-            .map{ it -> [it, it.size() ] }
+            .map{ it -> [ it, it.size() ] }
             .transpose()
 
         // 2. Create bed.gz and bed.gz.tbi for each interval file. They are split by region (see above)
@@ -88,7 +88,7 @@ workflow PREPARE_INTERVALS {
 
         intervals_bed_gz_tbi = TABIX_BGZIPTABIX_INTERVAL_SPLIT.out.gz_tbi.map{ meta, bed, tbi -> [ bed, tbi ] }.toList()
             // Adding number of intervals as elements
-            .map{ it ->[ it, it.size() ]}
+            .map{ it -> [ it, it.size() ] }
             .transpose()
 
         versions = versions.mix(TABIX_BGZIPTABIX_INTERVAL_SPLIT.out.versions)
