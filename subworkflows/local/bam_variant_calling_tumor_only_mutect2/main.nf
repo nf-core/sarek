@@ -41,7 +41,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     MUTECT2.out.vcf.branch{
             intervals:    it[0].num_intervals > 1
             no_intervals: it[0].num_intervals <= 1
-        }.set{ mutect2_vcf_branch }
+        }.set{ vcf_branch }
 
     MUTECT2.out.tbi.branch{
             intervals:    it[0].num_intervals > 1
@@ -51,7 +51,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     MUTECT2.out.stats.branch{
             intervals:    it[0].num_intervals > 1
             no_intervals: it[0].num_intervals <= 1
-        }.set{ mutect2_stats_branch }
+        }.set{ stats_branch }
 
     MUTECT2.out.f1r2.branch{
             intervals:    it[0].num_intervals > 1
@@ -62,7 +62,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     //Merge Mutect2 VCF
 
     MERGE_MUTECT2(
-        mutect2_vcf_branch.intervals
+        vcf_branch.intervals
         .map{ meta, vcf ->
             new_meta = [
                         id:             meta.sample,
@@ -77,9 +77,9 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
         }.groupTuple(),
         dict.map{ it -> [ [ id:'dict' ], it ] })
 
-    mutect2_vcf = Channel.empty().mix(
+    vcf = Channel.empty().mix(
         MERGE_MUTECT2.out.vcf,
-        mutect2_vcf_branch.no_intervals)
+        vcf_branch.no_intervals)
 
     mutect2_tbi = Channel.empty().mix(
         MERGE_MUTECT2.out.tbi,
@@ -87,7 +87,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
 
     //Merge Mutect2 Stats
     MERGEMUTECTSTATS(
-        mutect2_stats_branch.intervals
+        stats_branch.intervals
         .map{ meta, stats ->
             new_meta = [
                         id:             meta.sample,
@@ -101,9 +101,9 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
             [groupKey(new_meta, meta.num_intervals), stats]
         }.groupTuple())
 
-    mutect2_stats = Channel.empty().mix(
+    stats = Channel.empty().mix(
         MERGEMUTECTSTATS.out.stats,
-        mutect2_stats_branch.no_intervals)
+        stats_branch.no_intervals)
 
     //
     //Generate artifactpriors using learnreadorientationmodel on the f1r2 output of mutect2.
@@ -167,14 +167,18 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     //
     //Mutect2 calls filtered by filtermutectcalls using the contamination and segmentation tables.
     //
-    ch_filtermutect    = mutect2_vcf.join(mutect2_tbi)
-                                    .join(mutect2_stats)
-                                    .join(LEARNREADORIENTATIONMODEL.out.artifactprior)
-                                    .join(CALCULATECONTAMINATION.out.segmentation)
-                                    .join(CALCULATECONTAMINATION.out.contamination)
-    ch_filtermutect_in = ch_filtermutect.map{ meta, vcf, tbi, stats, artifactprior, seg, cont -> [ meta, vcf, tbi, stats, artifactprior, seg, cont, [] ] }
+    filtermutect = vcf.join(mutect2_tbi)
+        .join(stats)
+        .join(LEARNREADORIENTATIONMODEL.out.artifactprior)
+        .join(CALCULATECONTAMINATION.out.segmentation)
+        .join(CALCULATECONTAMINATION.out.contamination)
+        .map{ meta, vcf, tbi, stats, artifactprior, seg, cont -> [ meta, vcf, tbi, stats, artifactprior, seg, cont, [] ] }
 
-    FILTERMUTECTCALLS(ch_filtermutect_in, fasta, fai, dict)
+    FILTERMUTECTCALLS(filtermutect, fasta, fai, dict)
+
+    vcf_filtered = FILTERMUTECTCALLS.out.vcf
+        // add variantcaller to meta map and remove no longer necessary field: num_intervals
+        .map{ meta, vcf -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'mutect2' ], vcf ] }
 
     ch_versions = ch_versions.mix(MERGE_MUTECT2.out.versions)
     ch_versions = ch_versions.mix(CALCULATECONTAMINATION.out.versions)
@@ -186,17 +190,17 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     ch_versions = ch_versions.mix(MUTECT2.out.versions)
 
     emit:
-    mutect2_vcf         = mutect2_vcf                               // channel: [ val(meta), [ vcf ] ]
-    mutect2_stats       = mutect2_stats                              // channel: [ val(meta), [ stats ] ]
+    vcf   // channel: [ val(meta), [ vcf ] ]
+    stats // channel: [ val(meta), [ stats ] ]
 
     artifact_priors     = LEARNREADORIENTATIONMODEL.out.artifactprior    // channel: [ val(meta), [ artifactprior ] ]
 
-    pileup_table        = pileup_table                              // channel: [ val(meta), [ table ] ]
+    pileup_table  // channel: [ val(meta), [ table ] ]
 
     contamination_table = CALCULATECONTAMINATION.out.contamination  // channel: [ val(meta), [ contamination ] ]
     segmentation_table  = CALCULATECONTAMINATION.out.segmentation   // channel: [ val(meta), [ segmentation ] ]
 
-    filtered_vcf        = FILTERMUTECTCALLS.out.vcf.map{ meta, vcf -> [[
+    vcf_filtered        = FILTERMUTECTCALLS.out.vcf.map{ meta, vcf -> [[
                                                                         id:             meta.sample,
                                                                         num_intervals:  meta.num_intervals,
                                                                         patient:        meta.patient,

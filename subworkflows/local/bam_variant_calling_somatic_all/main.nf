@@ -257,7 +257,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             panel_of_normals_tbi
         )
 
-        vcf_mutect2 = BAM_VARIANT_CALLING_SOMATIC_MUTECT2.out.filtered_vcf
+        vcf_mutect2 = BAM_VARIANT_CALLING_SOMATIC_MUTECT2.out.vcf_filtered
         versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_MUTECT2.out.versions)
     }
 
