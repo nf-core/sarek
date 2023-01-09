@@ -63,7 +63,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         )
 
         versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_ASCAT.out.versions)
-
     }
 
     if (tools.split(',').contains('controlfreec')) {
@@ -86,16 +85,12 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
         mpileup_normal = MPILEUP_NORMAL.out.mpileup
         mpileup_tumor = MPILEUP_TUMOR.out.mpileup
-
-        controlfreec_input = mpileup_normal.cross(mpileup_tumor)
-        .map{ normal, tumor ->
-            [normal[0], normal[1], tumor[1], [], [], [], []]
-        }
+        mpileup_pair = mpileup_normal.cross(mpileup_tumor).map{ normal, tumor -> [ normal[0], normal[1], tumor[1], [], [], [], [] ] }
 
         length_file = cf_chrom_len ?: fasta_fai
 
         BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC(
-            controlfreec_input,
+            mpileup_pair,
             fasta,
             length_file,
             dbsnp,
@@ -111,10 +106,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     }
 
     if (tools.split(',').contains('cnvkit')) {
-        cram_cnvkit_somatic = cram
-            .map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai ->
-                [meta, tumor_cram, normal_cram]
-            }
+        cram_cnvkit_somatic = cram.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [ meta, tumor_cram, normal_cram ] }
 
         BAM_VARIANT_CALLING_CNVKIT(
             cram_cnvkit_somatic,
@@ -154,35 +146,16 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     }
 
     if (tools.split(',').contains('strelka')) {
-
-        if (tools.split(',').contains('manta')) {
-            cram_strelka = cram.join(BAM_VARIANT_CALLING_SOMATIC_MANTA.out.candidate_small_indels_vcf)
-                                        .join(BAM_VARIANT_CALLING_SOMATIC_MANTA.out.candidate_small_indels_vcf_tbi)
-                                        .combine(intervals_bed_gz_tbi)
-                                        .map{
-                                            meta, normal_cram, normal_crai, tumor_cram, tumor_crai, vcf, vcf_tbi, bed_tbi, num_intervals ->
-                                            //If no interval file provided (0) then add empty list
-                                            bed_new = num_intervals == 0 ? [] : bed_tbi[0]
-                                            tbi_new = num_intervals == 0 ? [] : bed_tbi[1]
-
-                                            [[
-                                                id:             meta.tumor_id + "_vs_" + meta.normal_id,
-                                                normal_id:      meta.normal_id,
-                                                num_intervals:  num_intervals,
-                                                patient:        meta.patient,
-                                                sex:            meta.sex,
-                                                tumor_id:       meta.tumor_id,
-                                            ],
-                                            normal_cram, normal_crai, tumor_cram, tumor_crai, vcf, vcf_tbi, bed_new, tbi_new]
-                                        }
-
-        } else cram_strelka = cram.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, [], [] ] }
+        cram_strelka = (tools.split(',').contains('manta')) ?
+            cram.join(BAM_VARIANT_CALLING_SOMATIC_MANTA.out.candidate_small_indels_vcf).join(BAM_VARIANT_CALLING_SOMATIC_MANTA.out.candidate_small_indels_vcf_tbi) :
+            cram.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, [], [] ] }
 
         BAM_VARIANT_CALLING_SOMATIC_STRELKA(
             cram_strelka,
-            dict,
+            dict.map{ it -> [ [ id:'dict' ], it ] },
             fasta,
-            fasta_fai
+            fasta_fai,
+            intervals_bed_gz_tbi
         )
 
         vcf_strelka = Channel.empty().mix(BAM_VARIANT_CALLING_SOMATIC_STRELKA.out.vcf)

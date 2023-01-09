@@ -6,7 +6,7 @@ include { MANTA_SOMATIC                                    } from '../../../modu
 
 workflow BAM_VARIANT_CALLING_SOMATIC_MANTA {
     take:
-    cram          // channel: [mandatory] [ meta, cram, crai ]
+    cram          // channel: [mandatory] [ meta, cram1, crai1, cram2, crai2 ]
     dict          // channel: [optional]  [ meta, dict ]
     fasta         // channel: [mandatory] [ fasta ]
     fasta_fai     // channel: [mandatory] [ fasta_fai ]
@@ -17,7 +17,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MANTA {
 
     cram_intervals = cram.combine(intervals)
         // Move num_intervals to meta map
-        .map{ meta, cram, crai, intervals, intervals_index, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram, crai, intervals, intervals_index ]}
+        .map{ meta, cram1, crai1, cram2, crai2, intervals, intervals_index, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram1, crai1, cram2, crai2, intervals, intervals_index ] }
 
     MANTA_SOMATIC(cram_intervals, fasta, fasta_fai)
 
@@ -78,7 +78,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MANTA {
     // Only joining reads for StrelkaBP
     candidate_small_indels_vcf_tbi = Channel.empty().mix(MERGE_MANTA_SMALL_INDELS.out.tbi, candidate_small_indels_vcf_tbi.no_intervals)
         // remove no longer necessary field: num_intervals
-        .map{ meta, vcf, tbi -> [ meta - meta.subMap('num_intervals'), vcf, tbi ] }
+        .map{ meta, tbi -> [ meta - meta.subMap('num_intervals'), tbi ] }
 
     versions = versions.mix(MERGE_MANTA_SV.out.versions)
     versions = versions.mix(MERGE_MANTA_SMALL_INDELS.out.versions)

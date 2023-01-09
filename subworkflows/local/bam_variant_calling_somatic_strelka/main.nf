@@ -4,78 +4,44 @@ include { STRELKA_SOMATIC                         } from '../../../modules/nf-co
 
 workflow BAM_VARIANT_CALLING_SOMATIC_STRELKA {
     take:
-    cram                     // channel: [mandatory] [meta, normal_cram, normal_crai, tumor_cram, tumor_crai, manta_vcf, manta_tbi, interval.bed.gz, interval.bed.gz.tbi] manta* are optional
-    dict                     // channel: [optional]
-    fasta                    // channel: [mandatory]
-    fasta_fai                // channel: [mandatory]
+    cram          // channel: [mandatory] [ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, manta_vcf, manta_tbi ] manta* are optional
+    dict          // channel: [optional]  [ meta, dict ]
+    fasta         // channel: [mandatory] [ fasta ]
+    fasta_fai     // channel: [mandatory] [ fasta_fai ]
+    intervals     // channel: [mandatory] [ interval.bed.gz, interval.bed.gz.tbi, num_intervals ] or [ [], [], 0 ] if no intervals
 
     main:
     versions = Channel.empty()
 
-    STRELKA_SOMATIC(cram, fasta, fasta_fai )
+    cram_intervals = cram.combine(intervals)
+        // Move num_intervals to meta map
+        .map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, manta_vcf, manta_tbi, intervals, intervals_index, num_intervals -> [ meta + [ num_intervals:num_intervals ], normal_cram, normal_crai, tumor_cram, tumor_crai, manta_vcf, manta_tbi, intervals, intervals_index ] }
 
-    // Figure out if using intervals or no_intervals
-    vcf_snvs = STRELKA_SOMATIC.out.vcf_snvs.branch{
-        intervals:    it[0].num_intervals > 1
-        no_intervals: it[0].num_intervals <= 1
-    }
+    STRELKA_SOMATIC(cram_intervals, fasta, fasta_fai )
 
+    // Figuring out if there is one or more vcf(s) from the same sample
     vcf_indels = STRELKA_SOMATIC.out.vcf_indels.branch{
         intervals:    it[0].num_intervals > 1
         no_intervals: it[0].num_intervals <= 1
     }
 
+    // Figuring out if there is one or more vcf(s) from the same sample
+    vcf_snvs = STRELKA_SOMATIC.out.vcf_snvs.branch{
+        intervals:    it[0].num_intervals > 1
+        no_intervals: it[0].num_intervals <= 1
+    }
+
     // Only when using intervals
-    MERGE_STRELKA_SNVS(vcf_snvs.intervals.map{ meta, vcf ->
+    vcf_indels_to_merge = vcf_indels.intervals.map{ meta, vcf -> [ groupKey(meta, meta.num_intervals), vcf ]}.groupTuple()
+    vcf_snvs_to_merge = vcf_snvs.intervals.map{ meta, vcf -> [ groupKey(meta, meta.num_intervals), vcf ]}.groupTuple()
 
-                [groupKey([
-                            id:             meta.tumor_id + "_vs_" + meta.normal_id,
-                            normal_id:      meta.normal_id,
-                            num_intervals:  meta.num_intervals,
-                            patient:        meta.patient,
-                            sex:            meta.sex,
-                            tumor_id:       meta.tumor_id,
-                            ],
-                        meta.num_intervals),
-                vcf]
+    MERGE_STRELKA_INDELS(vcf_indels_to_merge, dict)
+    MERGE_STRELKA_SNVS(vcf_snvs_to_merge, dict)
 
-            }.groupTuple(),
-            dict.map{ it -> [ [ id:'dict' ], it ] })
-
-    MERGE_STRELKA_INDELS(vcf_indels.intervals.map{ meta, vcf ->
-
-                [groupKey([
-                            id:             meta.tumor_id + "_vs_" + meta.normal_id,
-                            normal_id:      meta.normal_id,
-                            num_intervals:  meta.num_intervals,
-                            patient:        meta.patient,
-                            sex:            meta.sex,
-                            tumor_id:       meta.tumor_id,
-                            ],
-                            meta.num_intervals),
-                vcf]
-            }.groupTuple(),
-            dict.map{ it -> [ [ id:'dict' ], it ] })
-
-    // Mix output channels for "no intervals" and "with intervals" results
-    vcf = Channel.empty().mix(
-                    MERGE_STRELKA_SNVS.out.vcf,
-                    vcf_snvs.no_intervals,
-                    MERGE_STRELKA_INDELS.out.vcf,
-                    vcf_indels.no_intervals
-                    )
-                .map{ meta, vcf ->
-                    [[
-                        id:             meta.tumor_id + "_vs_" + meta.normal_id,
-                        normal_id:      meta.normal_id,
-                        num_intervals:  meta.num_intervals,
-                        patient:        meta.patient,
-                        sex:            meta.sex,
-                        tumor_id:       meta.tumor_id,
-                        variantcaller:  "strelka"
-                        ],
-                    vcf]
-                }
+    // Mix intervals and no_intervals channels together
+    vcf = Channel.empty().mix(MERGE_STRELKA_INDELS.out.vcf, MERGE_STRELKA_SNVS.out.vcf, vcf_indels.no_intervals, vcf_snvs.no_intervals)
+        // add variantcaller to meta map and remove no longer necessary field: num_intervals
+        .map{ meta, vcf -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'strelka' ], vcf ] }
 
     versions = versions.mix(MERGE_STRELKA_SNVS.out.versions)
     versions = versions.mix(MERGE_STRELKA_INDELS.out.versions)
