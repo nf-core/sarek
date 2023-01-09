@@ -13,10 +13,10 @@ include { TABIX_TABIX as TABIX                                   } from '../../.
 
 workflow BAM_JOINT_CALLING_GERMLINE_GATK {
     take:
-    input                // channel: [ val(meta), [ input ], [ input_index ], interval, [], []]
-    fasta                // channel: /path/to/reference/fasta
-    fai                  // channel: /path/to/reference/fasta/index
-    dict                 // channel: /path/to/reference/fasta/dictionary
+    input                // channel: [ meta, [ input ], [ input_index ], intervals ]
+    fasta                // channel: [ fasta ]
+    fai                  // channel: [ fasta_fai ]
+    dict                 // channel: [ dict ]
     dbsnp
     dbsnp_tbi
     dbsnp_vqsr
@@ -30,35 +30,14 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
     main:
     versions = Channel.empty()
 
-
-    // merge vcf and tbis
-    genotype_gvcf_to_call = GATK4_HAPLOTYPECALLER.out.vcf
-        .join(GATK4_HAPLOTYPECALLER.out.tbi)
-        .join(cram_intervals)
-        .map{ meta, vcf, tbi, cram, crai, intervals, dragstr_model -> [ meta, vcf, tbi, intervals ] }
-
-        // BAM_JOINT_CALLING_GERMLINE_GATK(
-        //     genotype_gvcf_to_call,
-        //     fasta,
-        //     fasta_fai,
-        //     dict,
-        //     dbsnp,
-        //     dbsnp_tbi,
-        //     dbsnp_vqsr,
-        //     known_sites_indels,
-        //     known_sites_indels_tbi,
-        //     known_indels_vqsr,
-        //     known_sites_snps,
-        //     known_sites_snps_tbi,
-        //     known_snps_vqsr)
-
-
     // Map input for GenomicsDBImport
     // Rename based on num_intervals, group all samples by their interval_name/interval_file and restructure for channel
     // Group by [0, 3] to avoid a list of metas and make sure that any intervals
-    gendb_input = input.map{ meta, gvcf, tbi, intervals ->
-        [ meta.subMap('intervals_name', 'num_intervals') + [ id: 'joint_variant_calling' ], gvcf, tbi, intervals ]
-    }.groupTuple(by:[0, 3]).map{ meta, gvcf, tbi, intervals -> [ meta, gvcf, tbi, intervals, [], [] ] }
+
+    gendb_input = input
+        .map{ meta, gvcf, tbi, intervals -> [ [ intervals_name:intervals.simpleName, id:'joint_variant_calling', num_intervals:meta.num_intervals ], gvcf, tbi, intervals ]}
+        .groupTuple(by:[0, 3])
+        .map{ meta, gvcf, tbi, intervals -> [ meta, gvcf, tbi, intervals, [], [] ] }
 
     // Convert all sample vcfs into a genomicsdb workspace using genomicsdbimport
     GATK4_GENOMICSDBIMPORT ( gendb_input, false, false, false )
