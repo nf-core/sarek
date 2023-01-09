@@ -8,7 +8,7 @@ include { CNVKIT_BATCH } from '../../../modules/nf-core/cnvkit/batch/main'
 
 workflow BAM_VARIANT_CALLING_CNVKIT {
     take:
-    cram_recalibrated   // channel: [mandatory] cram
+    cram                // channel: [mandatory] cram
     fasta               // channel: [mandatory] fasta
     fasta_fai           // channel: [optional]  fasta_fai
     targets             // channel: [mandatory] bed
@@ -17,8 +17,8 @@ workflow BAM_VARIANT_CALLING_CNVKIT {
     main:
     generate_pon = false
 
-    CNVKIT_BATCH(cram_recalibrated, fasta, fasta_fai, targets, reference, generate_pon)
-    
+    CNVKIT_BATCH(cram, fasta, fasta_fai, targets, reference, generate_pon)
+
     versions = CNVKIT_BATCH.out.versions
 
     emit:

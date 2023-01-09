@@ -16,6 +16,7 @@ workflow BAM_VARIANT_CALLING_DEEPVARIANT {
     main:
     versions = Channel.empty()
 
+    // Combine cram and intervals for spread and gather strategy
     cram_intervals = cram.combine(intervals)
         // Move num_intervals to meta map
         .map{ meta, cram, crai, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram, crai, intervals ]}
@@ -24,12 +25,14 @@ workflow BAM_VARIANT_CALLING_DEEPVARIANT {
 
     // Figuring out if there is one or more vcf(s) from the same sample
     vcf_out = DEEPVARIANT.out.vcf.branch{
+        // Use meta.num_intervals to asses number of intervals
         intervals:    it[0].num_intervals > 1
         no_intervals: it[0].num_intervals <= 1
     }
 
     // Figuring out if there is one or more gvcf(s) from the same sample
     gvcf_out = DEEPVARIANT.out.gvcf.branch{
+        // Use meta.num_intervals to asses number of intervals
         intervals:    it[0].num_intervals > 1
         no_intervals: it[0].num_intervals <= 1
     }

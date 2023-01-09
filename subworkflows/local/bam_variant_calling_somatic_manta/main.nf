@@ -15,6 +15,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MANTA {
     main:
     versions = Channel.empty()
 
+    // Combine cram and intervals for spread and gather strategy
     cram_intervals = cram.combine(intervals)
         // Move num_intervals to meta map
         .map{ meta, cram1, crai1, cram2, crai2, intervals, intervals_index, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram1, crai1, cram2, crai2, intervals, intervals_index ] }
@@ -23,30 +24,35 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MANTA {
 
     // Figuring out if there is one or more vcf(s) from the same sample
     candidate_small_indels_vcf = MANTA_SOMATIC.out.candidate_small_indels_vcf.branch{
+        // Use meta.num_intervals to asses number of intervals
         intervals:    it[0].num_intervals > 1
         no_intervals: it[0].num_intervals <= 1
     }
 
     // Figuring out if there is one or more vcf(s) from the same sample
     candidate_small_indels_vcf_tbi = MANTA_SOMATIC.out.candidate_small_indels_vcf_tbi.branch{
+        // Use meta.num_intervals to asses number of intervals
         intervals:    it[0].num_intervals > 1
         no_intervals: it[0].num_intervals <= 1
     }
 
     // Figuring out if there is one or more vcf(s) from the same sample
     candidate_sv_vcf = MANTA_SOMATIC.out.candidate_sv_vcf.branch{
+        // Use meta.num_intervals to asses number of intervals
         intervals:    it[0].num_intervals > 1
         no_intervals: it[0].num_intervals <= 1
     }
 
     // Figuring out if there is one or more vcf(s) from the same sample
     diploid_sv_vcf = MANTA_SOMATIC.out.diploid_sv_vcf.branch{
+        // Use meta.num_intervals to asses number of intervals
         intervals:    it[0].num_intervals > 1
         no_intervals: it[0].num_intervals <= 1
     }
 
     // Figuring out if there is one or more vcf(s) from the same sample
     somatic_sv_vcf = MANTA_SOMATIC.out.somatic_sv_vcf.branch{
+        // Use meta.num_intervals to asses number of intervals
         intervals:    it[0].num_intervals > 1
         no_intervals: it[0].num_intervals <= 1
     }

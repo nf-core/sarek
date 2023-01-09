@@ -14,6 +14,7 @@ workflow BAM_VARIANT_CALLING_FREEBAYES {
     main:
     versions = Channel.empty()
 
+    // Combine cram and intervals for spread and gather strategy
     cram_intervals = cram.combine(intervals)
         // Move num_intervals to meta map and reorganize channel for FREEBAYES module
         .map{ meta, cram1, crai1, cram2, crai2, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram1, crai1, cram2, crai2, intervals ]}
@@ -24,6 +25,7 @@ workflow BAM_VARIANT_CALLING_FREEBAYES {
 
     // Figuring out if there is one or more vcf(s) from the same sample
     bcftools_vcf_out = BCFTOOLS_SORT.out.vcf.branch{
+        // Use meta.num_intervals to asses number of intervals
         intervals:    it[0].num_intervals > 1
         no_intervals: it[0].num_intervals <= 1
     }

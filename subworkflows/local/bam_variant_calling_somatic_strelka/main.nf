@@ -13,6 +13,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_STRELKA {
     main:
     versions = Channel.empty()
 
+    // Combine cram and intervals for spread and gather strategy
     cram_intervals = cram.combine(intervals)
         // Move num_intervals to meta map
         .map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, manta_vcf, manta_tbi, intervals, intervals_index, num_intervals -> [ meta + [ num_intervals:num_intervals ], normal_cram, normal_crai, tumor_cram, tumor_crai, manta_vcf, manta_tbi, intervals, intervals_index ] }
@@ -21,12 +22,14 @@ workflow BAM_VARIANT_CALLING_SOMATIC_STRELKA {
 
     // Figuring out if there is one or more vcf(s) from the same sample
     vcf_indels = STRELKA_SOMATIC.out.vcf_indels.branch{
+        // Use meta.num_intervals to asses number of intervals
         intervals:    it[0].num_intervals > 1
         no_intervals: it[0].num_intervals <= 1
     }
 
     // Figuring out if there is one or more vcf(s) from the same sample
     vcf_snvs = STRELKA_SOMATIC.out.vcf_snvs.branch{
+        // Use meta.num_intervals to asses number of intervals
         intervals:    it[0].num_intervals > 1
         no_intervals: it[0].num_intervals <= 1
     }

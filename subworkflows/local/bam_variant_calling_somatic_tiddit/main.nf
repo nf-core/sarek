@@ -16,9 +16,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_TIDDIT {
     TIDDIT_NORMAL(cram_normal, fasta, bwa)
     TIDDIT_TUMOR(cram_tumor, fasta, bwa)
 
-    SVDB_MERGE(TIDDIT_NORMAL.out.vcf.join(TIDDIT_TUMOR.out.vcf).map{meta, vcf_normal, vcf_tumor ->
-            [ meta, [vcf_normal, vcf_tumor] ]
-        }, false)
+    SVDB_MERGE(TIDDIT_NORMAL.out.vcf.join(TIDDIT_TUMOR.out.vcf).map{ meta, vcf_normal, vcf_tumor -> [ meta, [vcf_normal, vcf_tumor] ] }, false)
 
     vcf = SVDB_MERGE.out.vcf
 
