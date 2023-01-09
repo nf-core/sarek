@@ -5,7 +5,7 @@ include { TABIX_TABIX as TABIX_VC_FREEBAYES            } from '../../../modules/
 
 workflow BAM_VARIANT_CALLING_FREEBAYES {
     take:
-    cram      // channel: [mandatory] [ meta, cram, crai ]
+    cram      // channel: [mandatory] [ meta, cram1, crai1, cram2, crai2 ] or [ meta, cram, crai, [], [] ]
     dict      // channel: [mandatory] [ meta, dict ]
     fasta     // channel: [mandatory] [ fasta ]
     fasta_fai // channel: [mandatory] [ fasta_fai ]
@@ -16,7 +16,7 @@ workflow BAM_VARIANT_CALLING_FREEBAYES {
 
     cram_intervals = cram.combine(intervals)
         // Move num_intervals to meta map and reorganize channel for FREEBAYES module
-        .map{ meta, cram, crai, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram, crai, [], [], intervals ]}
+        .map{ meta, cram1, crai1, cram2, crai2, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram1, crai1, cram2, crai2, intervals ]}
 
     FREEBAYES(cram_intervals, fasta, fasta_fai, [], [], [])
 

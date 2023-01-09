@@ -88,7 +88,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
         }
 
-    if (tools.split(',').contains('ascat')){
+    if (tools.split(',').contains('ascat')) {
 
         BAM_VARIANT_CALLING_SOMATIC_ASCAT(
             cram,
@@ -104,7 +104,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
     }
 
-    if (tools.split(',').contains('controlfreec')){
+    if (tools.split(',').contains('controlfreec')) {
         cram_normal = cram.map { meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [ meta, normal_cram, normal_crai ] }
         cram_tumor = cram.map { meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [ meta, tumor_cram, tumor_crai ] }
 
@@ -148,7 +148,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC.out.versions)
     }
 
-    if (tools.split(',').contains('cnvkit')){
+    if (tools.split(',').contains('cnvkit')) {
         cram_cnvkit_somatic = cram
             .map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai ->
                 [meta, tumor_cram, normal_cram]
@@ -165,8 +165,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         versions = versions.mix(BAM_VARIANT_CALLING_CNVKIT.out.versions)
     }
 
-    if (tools.split(',').contains('freebayes')){
-
+    if (tools.split(',').contains('freebayes')) {
         BAM_VARIANT_CALLING_FREEBAYES(
             cram,
             dict.map{ it -> [ [ id:'dict' ], it ] },
@@ -263,7 +262,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     }
 
     //TIDDIT
-    if (tools.split(',').contains('tiddit')){
+    if (tools.split(',').contains('tiddit')) {
         BAM_VARIANT_CALLING_SOMATIC_TIDDIT(
             cram.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [ meta, normal_cram, normal_crai ] },
             cram.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [ meta, tumor_cram, tumor_crai ] },

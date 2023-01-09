@@ -101,7 +101,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     if (tools.split(',').contains('freebayes')) {
         // Input channel is remapped to match input of module/subworkflow
         BAM_VARIANT_CALLING_FREEBAYES(
-            cram,
+            cram.map{ meta, cram, crai -> [ meta, cram, crai, [], [] ] },
             dict.map{ it -> [ [ id:'dict' ], it ] },
             fasta,
             fasta_fai,
