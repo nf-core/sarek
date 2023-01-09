@@ -50,7 +50,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA {
 
     MERGE_MANTA_SV(candidate_sv_vcf_to_merge, dict)
     MERGE_MANTA_SMALL_INDELS(small_indels_vcf_to_merge, dict)
-    MERGE_MANTA_TUMOR(tumor_sv_vcf, dict)
+    MERGE_MANTA_TUMOR(tumor_sv_vcf_to_merge, dict)
 
     // Mix intervals and no_intervals channels together
     // Only tumor sv should get annotated
