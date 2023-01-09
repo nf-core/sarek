@@ -4,77 +4,45 @@ include { STRELKA_GERMLINE as STRELKA_SINGLE      } from '../../../modules/nf-co
 
 workflow BAM_VARIANT_CALLING_SINGLE_STRELKA {
     take:
-    cram                     // channel: [mandatory] [meta, cram, crai, interval.bed.gz, interval.bed.gz.tbi]
-    dict                     // channel: [optional]
-    fasta                    // channel: [mandatory]
-    fasta_fai                // channel: [mandatory]
+    cram          // channel: [mandatory] [ meta, cram, crai ]
+    dict          // channel: [optional]  [ meta, dict ]
+    fasta         // channel: [mandatory] [ fasta ]
+    fasta_fai     // channel: [mandatory] [ fasta_fai ]
+    intervals     // channel: [mandatory] [ interval.bed.gz, interval.bed.gz.tbi, num_intervals ] or [ [], [], 0 ] if no intervals
 
     main:
     versions = Channel.empty()
 
-    STRELKA_SINGLE(cram, fasta, fasta_fai)
+    cram_intervals = cram.combine(intervals)
+        // Move num_intervals to meta map
+        .map{ meta, cram, crai, intervals, intervals_index, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram, crai, intervals, intervals_index ] }
 
-    // Figure out if using intervals or no_intervals
-    vcf = STRELKA_SINGLE.out.vcf.branch{
-        intervals:    it[0].num_intervals > 1
-        no_intervals: it[0].num_intervals <= 1
-    }
+    STRELKA_SINGLE(cram_intervals, fasta, fasta_fai)
 
+    // Figuring out if there is one or more vcf(s) from the same sample
     genome_vcf = STRELKA_SINGLE.out.genome_vcf.branch{
         intervals:    it[0].num_intervals > 1
         no_intervals: it[0].num_intervals <= 1
     }
 
-    MERGE_STRELKA(
-        vcf.intervals
-            .map{ meta, vcf ->
-                new_meta = [
-                                id:             meta.sample,
-                                num_intervals:  meta.num_intervals,
-                                patient:        meta.patient,
-                                sample:         meta.sample,
-                                sex:            meta.sex,
-                                status:         meta.status
-                            ]
+    // Figuring out if there is one or more vcf(s) from the same sample
+    vcf = STRELKA_SINGLE.out.vcf.branch{
+        intervals:    it[0].num_intervals > 1
+        no_intervals: it[0].num_intervals <= 1
+    }
 
-                [groupKey(new_meta, meta.num_intervals), vcf]
-            }.groupTuple(),
-        dict.map{ it -> [ [ id:'dict' ], it ] })
+    // Only when using intervals
+    genome_vcf_to_merge = genome_vcf.intervals.map{ meta, vcf -> [ groupKey(meta, meta.num_intervals), vcf ]}.groupTuple()
+    vcf_to_merge = vcf.intervals.map{ meta, vcf -> [ groupKey(meta, meta.num_intervals), vcf ]}.groupTuple()
 
-    MERGE_STRELKA_GENOME(
-        genome_vcf.intervals
-            .map{ meta, vcf ->
+    MERGE_STRELKA(vcf_to_merge, dict)
+    MERGE_STRELKA_GENOME(genome_vcf_to_merge, dict)
 
-                [groupKey([
-                            id:             meta.sample,
-                            num_intervals:  meta.num_intervals,
-                            patient:        meta.patient,
-                            sample:         meta.sample,
-                            sex:            meta.sex,
-                            status:         meta.status,
-                        ],
-                        meta.num_intervals),
-                vcf]
-
-            }.groupTuple(),
-        dict.map{ it -> [ [ id:'dict' ], it ] })
-
-    // Mix output channels for "no intervals" and "with intervals" results
-    // Only strelka variant vcf should get annotated
-    vcf = Channel.empty().mix(
-                    MERGE_STRELKA.out.vcf,
-                    vcf.no_intervals)
-                .map{ meta, vcf ->
-                    [ [
-                        id:             meta.sample,
-                        num_intervals:  meta.num_intervals,
-                        patient:        meta.patient,
-                        sample:         meta.sample,
-                        sex:            meta.sex,
-                        status:         meta.status,
-                        variantcaller:  "strelka"
-                    ], vcf ]
-                }
+    // Mix intervals and no_intervals channels together
+    // Only strelka variant vcf SV should get annotated
+    vcf = Channel.empty().mix(MERGE_STRELKA.out.vcf, vcf.no_intervals)
+        // add variantcaller to meta map and remove no longer necessary field: num_intervals
+        .map{ meta, vcf -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'strelka' ], vcf ] }
 
     versions = versions.mix(MERGE_STRELKA.out.versions)
     versions = versions.mix(MERGE_STRELKA_GENOME.out.versions)

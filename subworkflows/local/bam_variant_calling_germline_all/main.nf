@@ -27,7 +27,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     intervals                         // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
     intervals_bed_combined            // channel: [mandatory] intervals/target regions in one file unzipped
     intervals_bed_combined_haplotypec // channel: [mandatory] intervals/target regions in one file unzipped, no_intervals.bed if no_intervals
-    intervals_bed_gz_tbi              // channel: [mandatory] intervals/target regions index zipped and indexed
+    intervals_bed_gz_tbi              // channel: [mandatory] [ interval.bed.gz, interval.bed.gz.tbi, num_intervals ] or [ [], [], 0 ] if no intervals
     known_indels_vqsr
     known_sites_indels
     known_sites_indels_tbi
@@ -48,14 +48,6 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     vcf_strelka         = Channel.empty()
     vcf_tiddit          = Channel.empty()
 
-    // Remap channel with gzipped intervals + indexes
-    cram_intervals_gz_tbi = cram
-        .combine(intervals_bed_gz_tbi).map{ meta, cram, crai, bed_tbi, num_intervals ->
-            // If no interval file provided (0) then add empty list
-            if ( num_intervals == 0 ) [ meta + [ num_intervals:num_intervals ], cram, crai, [], [] ]
-            else [ meta + [ num_intervals:num_intervals ], cram, crai, bed_tbi[0], bed_tbi[1] ]
-        }
-
     // MPILEUP
     if (tools.split(',').contains('mpileup')) {
         BAM_VARIANT_CALLING_MPILEUP(
@@ -64,22 +56,20 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             fasta,
             intervals
         )
-
         vcf_mpileup = BAM_VARIANT_CALLING_MPILEUP.out.vcf
         versions = versions.mix(BAM_VARIANT_CALLING_MPILEUP.out.versions)
     }
 
     // CNVKIT
     if (tools.split(',').contains('cnvkit')) {
-        // Input channel is remapped to match input of module/subworkflow
         BAM_VARIANT_CALLING_CNVKIT(
+            // Remap channel to match module/subworkflow
             cram.map{ meta, cram, crai -> [ meta, [], cram ] },
             fasta,
             fasta_fai,
             intervals_bed_combined,
             []
         )
-
         versions = versions.mix(BAM_VARIANT_CALLING_CNVKIT.out.versions)
     }
 
@@ -87,6 +77,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     if (tools.split(',').contains('deepvariant')) {
         BAM_VARIANT_CALLING_DEEPVARIANT(
             cram,
+            // Remap channel to match module/subworkflow
             dict.map{ it -> [ [ id:'dict' ], it ] },
             fasta,
             fasta_fai,
@@ -101,7 +92,9 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     if (tools.split(',').contains('freebayes')) {
         // Input channel is remapped to match input of module/subworkflow
         BAM_VARIANT_CALLING_FREEBAYES(
+            // Remap channel to match module/subworkflow
             cram.map{ meta, cram, crai -> [ meta, cram, crai, [], [] ] },
+            // Remap channel to match module/subworkflow
             dict.map{ it -> [ [ id:'dict' ], it ] },
             fasta,
             fasta_fai,
@@ -160,10 +153,12 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     // MANTA
     if (tools.split(',').contains('manta')) {
         BAM_VARIANT_CALLING_GERMLINE_MANTA (
-            cram_intervals_gz_tbi,
-            dict,
+            cram,
+            // Remap channel to match module/subworkflow
+            dict.map{ it -> [ [ id:'dict' ], it ] },
             fasta,
-            fasta_fai
+            fasta_fai,
+            intervals_bed_gz_tbi
         )
 
         vcf_manta = BAM_VARIANT_CALLING_GERMLINE_MANTA.out.vcf
@@ -173,10 +168,12 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     // STRELKA
     if (tools.split(',').contains('strelka')) {
         BAM_VARIANT_CALLING_SINGLE_STRELKA(
-            cram_intervals_gz_tbi,
-            dict,
+            cram,
+            // Remap channel to match module/subworkflow
+            dict.map{ it -> [ [ id:'dict' ], it ] },
             fasta,
-            fasta_fai
+            fasta_fai,
+            intervals_bed_gz_tbi
         )
 
         vcf_strelka = BAM_VARIANT_CALLING_SINGLE_STRELKA.out.vcf
@@ -187,6 +184,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     if (tools.split(',').contains('tiddit')) {
         BAM_VARIANT_CALLING_SINGLE_TIDDIT(
             cram,
+            // Remap channel to match module/subworkflow
             fasta.map{ it -> [ [ id:'fasta' ], it ] },
             bwa
         )

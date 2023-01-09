@@ -51,45 +51,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     vcf_mutect2         = Channel.empty()
     vcf_tiddit          = Channel.empty()
 
-    // Remap channel with intervals
-    cram_intervals = cram.combine(intervals)
-        .map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals, num_intervals ->
-            //If no interval file provided (0) then add empty list
-            intervals_new = num_intervals == 0 ? [] : intervals
-
-            [[
-                id:             meta.tumor_id + "_vs_" + meta.normal_id,
-                normal_id:      meta.normal_id,
-                num_intervals:  num_intervals,
-                patient:        meta.patient,
-                sex:            meta.sex,
-                tumor_id:       meta.tumor_id,
-            ],
-            normal_cram, normal_crai, tumor_cram, tumor_crai, intervals_new]
-        }
-
-    // Remap channel with gzipped intervals + indexes
-    cram_intervals_gz_tbi = cram.combine(intervals_bed_gz_tbi)
-        .map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, bed_tbi, num_intervals ->
-
-            //If no interval file provided (0) then add empty list
-            bed_new = num_intervals == 0 ? [] : bed_tbi[0]
-            tbi_new = num_intervals == 0 ? [] : bed_tbi[1]
-
-            [[
-                id:             meta.tumor_id + "_vs_" + meta.normal_id,
-                normal_id:      meta.normal_id,
-                num_intervals:  num_intervals,
-                patient:        meta.patient,
-                sex:            meta.sex,
-                tumor_id:       meta.tumor_id,
-            ],
-            normal_cram, normal_crai, tumor_cram, tumor_crai, bed_new, tbi_new]
-
-        }
-
     if (tools.split(',').contains('ascat')) {
-
         BAM_VARIANT_CALLING_SOMATIC_ASCAT(
             cram,
             allele_files,
@@ -180,23 +142,22 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
     if (tools.split(',').contains('manta')) {
         BAM_VARIANT_CALLING_SOMATIC_MANTA(
-            cram_intervals_gz_tbi,
-            dict,
+            cram,
+            dict.map{ it -> [ [ id:'dict' ], it ] },
             fasta,
-            fasta_fai
+            fasta_fai,
+            intervals_bed_gz_tbi
         )
 
-        vcf_manta                      = BAM_VARIANT_CALLING_SOMATIC_MANTA.out.vcf
-        candidate_small_indels_vcf     = BAM_VARIANT_CALLING_SOMATIC_MANTA.out.candidate_small_indels_vcf
-        candidate_small_indels_vcf_tbi = BAM_VARIANT_CALLING_SOMATIC_MANTA.out.candidate_small_indels_vcf_tbi
-        versions                       = versions.mix(BAM_VARIANT_CALLING_SOMATIC_MANTA.out.versions)
+        vcf_manta = BAM_VARIANT_CALLING_SOMATIC_MANTA.out.vcf
+        versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_MANTA.out.versions)
     }
 
     if (tools.split(',').contains('strelka')) {
 
         if (tools.split(',').contains('manta')) {
-            cram_strelka = cram.join(candidate_small_indels_vcf)
-                                        .join(candidate_small_indels_vcf_tbi)
+            cram_strelka = cram.join(BAM_VARIANT_CALLING_SOMATIC_MANTA.out.candidate_small_indels_vcf)
+                                        .join(BAM_VARIANT_CALLING_SOMATIC_MANTA.out.candidate_small_indels_vcf_tbi)
                                         .combine(intervals_bed_gz_tbi)
                                         .map{
                                             meta, normal_cram, normal_crai, tumor_cram, tumor_crai, vcf, vcf_tbi, bed_tbi, num_intervals ->
@@ -215,12 +176,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
                                             normal_cram, normal_crai, tumor_cram, tumor_crai, vcf, vcf_tbi, bed_new, tbi_new]
                                         }
 
-        } else {
-            cram_strelka = cram_intervals_gz_tbi.map{
-                    meta, normal_cram, normal_crai, tumor_cram, tumor_crai, bed, tbi ->
-                    [meta, normal_cram, normal_crai, tumor_cram, tumor_crai, [], [], bed, tbi]
-            }
-        }
+        } else cram_strelka = cram.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, [], [] ] }
 
         BAM_VARIANT_CALLING_SOMATIC_STRELKA(
             cram_strelka,

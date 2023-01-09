@@ -366,12 +366,17 @@ workflow SAREK {
         intervals_bed_combined.map{it -> [ [ id:it.baseName ], it ]}.collect() :
         [ [ id:'null' ], [] ]
 
-    intervals                   = PREPARE_INTERVALS.out.intervals_bed        // [interval, num_intervals] multiple interval.bed files, divided by useful intervals for scatter/gather
-    intervals_bed_gz_tbi        = PREPARE_INTERVALS.out.intervals_bed_gz_tbi // [interval_bed, tbi, num_intervals] multiple interval.bed.gz/.tbi files, divided by useful intervals for scatter/gather
+    intervals            = PREPARE_INTERVALS.out.intervals_bed        // [ interval, num_intervals ] multiple interval.bed files, divided by useful intervals for scatter/gather
+    intervals_bed_gz_tbi = PREPARE_INTERVALS.out.intervals_bed_gz_tbi // [ interval_bed, tbi, num_intervals ] multiple interval.bed.gz/.tbi files, divided by useful intervals for scatter/gather
 
     intervals_and_num_intervals = intervals.map{ interval, num_intervals ->
         if ( num_intervals <= 1 ) [ [], num_intervals ]
         else [ interval, num_intervals ]
+    }
+
+    intervals_bed_gz_tbi_and_num_intervals = intervals_bed_gz_tbi.map{ intervals, num_intervals ->
+        if ( num_intervals <= 1 ) [ [], [], num_intervals ]
+        else [ intervals[0], intervals[1], num_intervals ]
     }
 
     // Gather used softwares versions
@@ -913,7 +918,7 @@ workflow SAREK {
             intervals_and_num_intervals,
             intervals_bed_combined, // [] if no_intervals, else interval_bed_combined.bed
             PREPARE_INTERVALS.out.intervals_bed_combined, // no_intervals.bed if no intervals, else interval_bed_combined.bed; Channel operations possible
-            intervals_bed_gz_tbi,
+            intervals_bed_gz_tbi_and_num_intervals,
             known_indels_vqsr,
             known_sites_indels,
             known_sites_indels_tbi,
@@ -938,7 +943,7 @@ workflow SAREK {
             germline_resource,
             germline_resource_tbi,
             intervals_and_num_intervals,
-            intervals_bed_gz_tbi,
+            intervals_bed_gz_tbi_and_num_intervals,
             intervals_bed_combined,
             mappability,
             pon,
