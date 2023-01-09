@@ -13,7 +13,7 @@ include { GATK4_MUTECT2                   as MUTECT2                   } from '.
 
 workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     take:
-    input                     // channel: [ meta, [ input ], [ input_index ], [intervals], [] ]
+    input                     // channel: [ meta, [ input ], [ input_index ] ]
     fasta                     // channel: /path/to/reference/fasta
     fai                       // channel: /path/to/reference/fasta/index
     dict                      // channel: /path/to/reference/fasta/dictionary
@@ -31,18 +31,11 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
 
     // Combine input and intervals for spread and gather strategy
     input_intervals = input.combine(intervals)
-        // Move num_intervals to meta map and reorganize channel for FREEBAYES module
-        .map{ meta, input, index, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], input, index, intervals ]}
+        // Move num_intervals to meta map and reorganize channel for MUTECT2 module
+        .map{ meta, input, index, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], input, index, intervals ] }
 
     // Perform variant calling using mutect2 module in tumor single mode
-    MUTECT2(input_intervals,
-            fasta,
-            fai,
-            dict,
-            germline_resource,
-            germline_resource_tbi,
-            panel_of_normals,
-            panel_of_normals_tbi)
+    MUTECT2(input_intervals, fasta, fai, dict, germline_resource, germline_resource_tbi, panel_of_normals, panel_of_normals_tbi)
 
     // Figuring out if there is one or more vcf(s) from the same sample
     vcf_branch = MUTECT2.out.vcf.branch{
@@ -73,9 +66,9 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     }
 
     // Only when using intervals
-    vcf_to_merge = vcf_branch.intervals.map{ meta, vcf -> [ groupKey(meta, meta.num_intervals), vcf ]}.groupTuple()
-    stats_to_merge = stats_branch.intervals.map{ meta, stats -> [ groupKey(meta, meta.num_intervals), stats ]}.groupTuple()
-    f1r2_to_merge = f1r2_branch.intervals.map{ meta, f1r2 -> [ groupKey(meta, meta.num_intervals), f1r2 ]}.groupTuple()
+    vcf_to_merge = vcf_branch.intervals.map{ meta, vcf -> [ groupKey(meta, meta.num_intervals), vcf ] }.groupTuple()
+    stats_to_merge = stats_branch.intervals.map{ meta, stats -> [ groupKey(meta, meta.num_intervals), stats ] }.groupTuple()
+    f1r2_to_merge = f1r2_branch.intervals.map{ meta, f1r2 -> [ groupKey(meta, meta.num_intervals), f1r2 ] }.groupTuple()
 
     MERGE_MUTECT2(vcf_to_merge, dict.map{ it -> [ [ id:'dict' ], it ] })
     MERGEMUTECTSTATS(stats_to_merge)
@@ -100,7 +93,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     }
 
     // Only when using intervals
-    pileup_table_to_merge = pileup_table_branch.intervals.map{ meta, table -> [ groupKey(meta, meta.num_intervals), table ]}.groupTuple()
+    pileup_table_to_merge = pileup_table_branch.intervals.map{ meta, table -> [ groupKey(meta, meta.num_intervals), table ] }.groupTuple()
 
     GATHERPILEUPSUMMARIES(pileup_table_to_merge, dict)
 
@@ -130,19 +123,19 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     versions = versions.mix(MUTECT2.out.versions)
 
     emit:
-    vcf   // channel: [ val(meta), [ vcf ] ]
-    stats // channel: [ val(meta), [ stats ] ]
+    vcf   // channel: [ meta, vcf ]
+    stats // channel: [ meta, stats ]
 
-    vcf_filtered
-    index_filtered = FILTERMUTECTCALLS.out.tbi   // channel: [ val(meta), [ tbi ] ]
-    stats_filtered = FILTERMUTECTCALLS.out.stats // channel: [ val(meta), [ stats ] ]
+    vcf_filtered                                 // channel: [ meta, vcf ]
+    index_filtered = FILTERMUTECTCALLS.out.tbi   // channel: [ meta, tbi ]
+    stats_filtered = FILTERMUTECTCALLS.out.stats // channel: [ meta, stats ]
 
-    artifact_priors = LEARNREADORIENTATIONMODEL.out.artifactprior    // channel: [ val(meta), [ artifactprior ] ]
+    artifact_priors = LEARNREADORIENTATIONMODEL.out.artifactprior    // channel: [ meta, artifactprior ]
 
-    pileup_table  // channel: [ val(meta), [ table ] ]
+    pileup_table  // channel: [ meta, table ]
 
-    contamination_table = CALCULATECONTAMINATION.out.contamination  // channel: [ val(meta), [ contamination ] ]
-    segmentation_table  = CALCULATECONTAMINATION.out.segmentation   // channel: [ val(meta), [ segmentation ] ]
+    contamination_table = CALCULATECONTAMINATION.out.contamination  // channel: [ meta, contamination ]
+    segmentation_table  = CALCULATECONTAMINATION.out.segmentation   // channel: [ meta, segmentation ]
 
     versions // channel: [ versions.yml ]
 }

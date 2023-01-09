@@ -171,8 +171,10 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     }
 
     if (tools.split(',').contains('mutect2')) {
+        cram_pair = cram.map { meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [ meta, [ normal_cram, tumor_cram ], [ normal_crai, tumor_crai ] ] }
+
         BAM_VARIANT_CALLING_SOMATIC_MUTECT2(
-            cram,
+            cram_pair,
             fasta,
             fasta_fai,
             dict,
