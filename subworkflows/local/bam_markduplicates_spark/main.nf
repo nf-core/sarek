@@ -23,12 +23,15 @@ workflow BAM_MARKDUPLICATES_SPARK {
 
     // RUN MARKUPDUPLICATES SPARK
     GATK4_MARKDUPLICATES_SPARK(bam, fasta, fasta_fai, dict)
+
+    // Index cram
     INDEX_MARKDUPLICATES(GATK4_MARKDUPLICATES_SPARK.out.output)
 
+    // Join with the crai file
     cram = GATK4_MARKDUPLICATES_SPARK.out.output.join(INDEX_MARKDUPLICATES.out.crai)
 
     // QC on CRAM
-    CRAM_QC_MOSDEPTH_SAMTOOLS(cram, fasta, fasta_fai, intervals_bed_combined)
+    CRAM_QC_MOSDEPTH_SAMTOOLS(cram, fasta, intervals_bed_combined)
 
     // When running Marduplicates spark, and saving reports
     GATK4_ESTIMATELIBRARYCOMPLEXITY(bam, fasta, fasta_fai, dict)

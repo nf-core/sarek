@@ -20,6 +20,7 @@ workflow BAM_BASERECALIBRATOR_SPARK {
     main:
     versions = Channel.empty()
 
+    // Combine cram and intervals for spread and gather strategy
     cram_intervals = cram.combine(intervals)
         // Move num_intervals to meta map
         .map{ meta, cram, crai, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram, crai, intervals ] }
@@ -29,12 +30,12 @@ workflow BAM_BASERECALIBRATOR_SPARK {
 
     // Figuring out if there is one or more table(s) from the same sample
     table_to_merge = GATK4_BASERECALIBRATOR_SPARK.out.table.map{ meta, table -> [ groupKey(meta, meta.num_intervals), table ] }.groupTuple().branch{
-        //Warning: size() calculates file size not list length here, so use num_intervals instead
+        // Use meta.num_intervals to asses number of intervals
         single:   it[0].num_intervals <= 1
         multiple: it[0].num_intervals > 1
     }
 
-    // Merge the tables only when we have intervals
+    // Only when using intervals
     GATK4_GATHERBQSRREPORTS(table_to_merge.multiple)
 
     // Mix intervals and no_intervals channels together

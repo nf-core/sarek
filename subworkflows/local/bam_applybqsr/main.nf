@@ -18,6 +18,7 @@ workflow BAM_APPLYBQSR {
     main:
     versions = Channel.empty()
 
+    // Combine cram and intervals for spread and gather strategy
     cram_intervals = cram.combine(intervals)
         // Move num_intervals to meta map
         .map{ meta, cram, crai, recal, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram, crai, recal, intervals ] }
@@ -25,8 +26,11 @@ workflow BAM_APPLYBQSR {
     // RUN APPLYBQSR
     GATK4_APPLYBQSR(cram_intervals, fasta, fasta_fai, dict)
 
-    // MERGING AND INDEXING THE RECALIBRATED CRAM FILES
-    CRAM_MERGE_INDEX_SAMTOOLS(GATK4_APPLYBQSR.out.cram, fasta, fasta_fai)
+    // Gather the recalibrated cram files
+    cram_to_merge = GATK4_APPLYBQSR.out.cram.map{ meta, cram -> [ groupKey(meta, meta.num_intervals), cram ] }.groupTuple()
+
+    // Merge and index the recalibrated cram files
+    CRAM_MERGE_INDEX_SAMTOOLS(cram_to_merge, fasta, fasta_fai)
 
     cram_recal = CRAM_MERGE_INDEX_SAMTOOLS.out.cram_crai
         // Remove no longer necessary field: num_intervals

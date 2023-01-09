@@ -21,12 +21,15 @@ workflow BAM_MARKDUPLICATES {
 
     // RUN MARKUPDUPLICATES
     GATK4_MARKDUPLICATES(bam, fasta, fasta_fai)
+
+    // Index cram
     INDEX_MARKDUPLICATES(GATK4_MARKDUPLICATES.out.cram)
 
+    // Join with the crai file
     cram = GATK4_MARKDUPLICATES.out.cram.join(INDEX_MARKDUPLICATES.out.crai)
 
     // QC on CRAM
-    CRAM_QC_MOSDEPTH_SAMTOOLS(cram, fasta, fasta_fai, intervals_bed_combined)
+    CRAM_QC_MOSDEPTH_SAMTOOLS(cram, fasta, intervals_bed_combined)
 
     // Gather all reports generated
     reports = reports.mix(GATK4_MARKDUPLICATES.out.metrics)

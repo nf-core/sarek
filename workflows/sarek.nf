@@ -356,7 +356,7 @@ workflow SAREK {
     known_sites_snps_tbi = dbsnp_tbi.concat(known_snps_tbi).collect()
 
     // Build intervals if needed
-    PREPARE_INTERVALS(fasta_fai)
+    PREPARE_INTERVALS(fasta_fai, params.intervals, params.no_intervals)
 
     // Intervals for speed up preprocessing/variant calling by spread/gather
     // [interval.bed] all intervals in one file
@@ -570,7 +570,6 @@ workflow SAREK {
             CRAM_QC_NO_MD(
                 cram_skip_markduplicates,
                 fasta,
-                fasta_fai,
                 intervals_for_preprocessing)
 
             // Gather QC reports
@@ -789,7 +788,6 @@ workflow SAREK {
             CRAM_QC_RECAL(
                 cram_variant_calling,
                 fasta,
-                fasta_fai,
                 intervals_for_preprocessing)
 
             // Gather QC reports
