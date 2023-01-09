@@ -23,14 +23,18 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
     germline_resource_tbi     // channel: /path/to/germline/index
     panel_of_normals          // channel: /path/to/panel/of/normals
     panel_of_normals_tbi      // channel: /path/to/panel/of/normals/index
+    intervals                 // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
 
     main:
     ch_versions = Channel.empty()
 
-    //
-    //Perform variant calling using mutect2 module in tumor single mode.
-    //
-    MUTECT2_PAIRED(input,
+    // Combine input and intervals for spread and gather strategy
+    input_intervals = input.combine(intervals)
+        // Move num_intervals to meta map and reorganize channel for FREEBAYES module
+        .map{ meta, input, index, which_norm, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], input, index, which_norm, intervals ]}
+
+    // Perform variant calling using mutect2 module in tumor single mode
+    MUTECT2_PAIRED(input_intervals,
             fasta,
             fai,
             dict,
@@ -60,7 +64,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
             no_intervals: it[0].num_intervals <= 1
         }.set{ mutect2_f1r2_branch }
 
-    //Only when using intervals
+    // Only when using intervals
     MERGE_MUTECT2(
         mutect2_vcf_branch.intervals
         .map{ meta, vcf ->
@@ -86,7 +90,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
         MERGE_MUTECT2.out.tbi,
         mutect2_tbi_branch.no_intervals)
 
-    //Merge Mutect2 Stats
+    // Merge Mutect2 Stats
     MERGEMUTECTSTATS(
         mutect2_stats_branch.intervals
         .map{ meta, stats ->
@@ -107,9 +111,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
         MERGEMUTECTSTATS.out.stats,
         mutect2_stats_branch.no_intervals)
 
-    //
-    //Generate artifactpriors using learnreadorientationmodel on the f1r2 output of mutect2.
-    //
+    // Generate artifactpriors using learnreadorientationmodel on the f1r2 output of mutect2
     LEARNREADORIENTATIONMODEL(Channel.empty().mix(
         mutect2_f1r2_branch.intervals
             .map{ meta, f1r2 ->
@@ -128,9 +130,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
         mutect2_f1r2_branch.no_intervals)
     )
 
-    //
-    //Generate pileup summary tables using getepileupsummaries. tumor sample should always be passed in as the first input and input list entries of ch_mutect2_in,
-    //to ensure correct file order for calculatecontamination.
+    // Generate pileup summary tables using getepileupsummaries. tumor sample should always be passed in as the first input and input list entries of ch_mutect2_in,
+    // to ensure correct file order for calculatecontamination
     pileup = input.multiMap{  meta, input_list, input_index_list, intervals ->
         tumor: [ meta, input_list[1], input_index_list[1], intervals ]
         normal: [ meta, input_list[0], input_index_list[0], intervals ]
@@ -178,7 +179,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
             no_intervals: it[0].num_intervals <= 1
         }set{ pileup_table_tumor }
 
-    //Merge Pileup Summaries
+    // Merge Pileup Summaries
     GATHERPILEUPSUMMARIES_NORMAL(
         GETPILEUPSUMMARIES_NORMAL.out.table
         .map{ meta, table ->
@@ -242,14 +243,10 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
             [new_meta, table]
         }
 
-    //
-    //Contamination and segmentation tables created using calculatecontamination on the pileup summary table.
-    //
+    // Contamination and segmentation tables created using calculatecontamination on the pileup summary table
     CALCULATECONTAMINATION ( gather_table_tumor.join(gather_table_normal) )
 
-    //
-    //Mutect2 calls filtered by filtermutectcalls using the artifactpriors, contamination and segmentation tables.
-    //
+    // Mutect2 calls filtered by filtermutectcalls using the artifactpriors, contamination and segmentation tables
     ch_filtermutect    = mutect2_vcf.join(mutect2_tbi)
                                     .join(mutect2_stats)
                                     .join(LEARNREADORIENTATIONMODEL.out.artifactprior)

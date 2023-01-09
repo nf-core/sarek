@@ -28,7 +28,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     germline_resource             // channel: [optional]  germline_resource
     germline_resource_tbi         // channel: [optional]  germline_resource_tbi
     intervals                     // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
-    intervals_bed_gz_tbi          // channel: [mandatory] intervals/target regions index zipped and indexed
+    intervals_bed_gz_tbi          // channel: [mandatory] [ interval.bed.gz, interval.bed.gz.tbi, num_intervals ] or [ [], [], 0 ] if no intervals
     intervals_bed_combined        // channel: [mandatory] intervals/target regions in one file unzipped
     mappability
     panel_of_normals              // channel: [optional]  panel_of_normals
@@ -99,14 +99,15 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
 
     if (tools.split(',').contains('mutect2')) {
         BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2(
-            cram_intervals,
+            cram,
             fasta,
             fasta_fai,
             dict,
             germline_resource,
             germline_resource_tbi,
             panel_of_normals,
-            panel_of_normals_tbi
+            panel_of_normals_tbi,
+            intervals
         )
 
         vcf_mutect2 = BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2.out.vcf_filtered

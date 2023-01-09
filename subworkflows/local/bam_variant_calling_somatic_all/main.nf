@@ -171,19 +171,16 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     }
 
     if (tools.split(',').contains('mutect2')) {
-        cram_mutect2 = cram_intervals.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals ->
-                                [meta, [normal_cram, tumor_cram], [normal_crai, tumor_crai], intervals]
-                            }
-
         BAM_VARIANT_CALLING_SOMATIC_MUTECT2(
-            cram_mutect2,
+            cram,
             fasta,
             fasta_fai,
             dict,
             germline_resource,
             germline_resource_tbi,
             panel_of_normals,
-            panel_of_normals_tbi
+            panel_of_normals_tbi,
+            intervals
         )
 
         vcf_mutect2 = BAM_VARIANT_CALLING_SOMATIC_MUTECT2.out.vcf_filtered
