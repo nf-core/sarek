@@ -57,7 +57,7 @@
     # conda changes md5sums for test
     - path: results/reports/samtools/test/test.recal.cram.stats
     # conda changes md5sums for test
-- name: Run intervals false pipeline
+- name: Run pipeline with intervals false
   command: nextflow run main.nf -profile test --intervals false --save_reference --outdir results
   tags:
     - intervals

@@ -41,7 +41,7 @@ workflow PREPARE_INTERVALS {
 
             CREATE_INTERVALS_BED(intervals_combined.map{ meta, path -> path }).bed
 
-            intervals_bed = intervals_bed.out.bed
+            intervals_bed = CREATE_INTERVALS_BED.out.bed
 
             versions = versions.mix(BUILD_INTERVALS.out.versions)
             versions = versions.mix(CREATE_INTERVALS_BED.out.versions)
