@@ -28,7 +28,7 @@ workflow BAM_BASERECALIBRATOR_SPARK {
     GATK4_BASERECALIBRATOR_SPARK(cram_intervals, fasta, fasta_fai, dict, known_sites, known_sites_tbi)
 
     // Figuring out if there is one or more table(s) from the same sample
-    table_to_merge = GATK4_BASERECALIBRATOR_SPARK.out.table.map{ meta, table -> [ groupKey(meta, meta.num_intervals), table ]}.groupTuple().branch{
+    table_to_merge = GATK4_BASERECALIBRATOR_SPARK.out.table.map{ meta, table -> [ groupKey(meta, meta.num_intervals), table ] }.groupTuple().branch{
         //Warning: size() calculates file size not list length here, so use num_intervals instead
         single:   it[0].num_intervals <= 1
         multiple: it[0].num_intervals > 1

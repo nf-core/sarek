@@ -20,7 +20,7 @@ workflow BAM_APPLYBQSR {
 
     cram_intervals = cram.combine(intervals)
         // Move num_intervals to meta map
-        .map{ meta, cram, crai, recal, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram, crai, recal, intervals ]}
+        .map{ meta, cram, crai, recal, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram, crai, recal, intervals ] }
 
     // RUN APPLYBQSR
     GATK4_APPLYBQSR(cram_intervals, fasta, fasta_fai, dict)
