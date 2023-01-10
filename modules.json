@@ -224,7 +224,7 @@
                     },
                     "gatk4/genomicsdbimport": {
                         "branch": "master",
-                        "git_sha": "223432b834d7819707c162c48a83612b785c8796",
+                        "git_sha": "34c17664b54e3b45faf4e32b52bf4086ca249afe",
                         "installed_by": ["modules"]
                     },
                     "gatk4/genotypegvcfs": {
@@ -315,7 +315,7 @@
                     },
                     "multiqc": {
                         "branch": "master",
-                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
+                        "git_sha": "ee80d14721e76e2e079103b8dcd5d57129e584ba",
                         "installed_by": ["modules"]
                     },
                     "samblaster": {
