@@ -13,7 +13,7 @@ process GATK4_GATHERPILEUPSUMMARIES {
     path  dict
 
     output:
-    tuple val(meta), path("*.pileupsummaries.table"), emit: table
+    tuple val(meta), path("*.pileups.table"), emit: table
     path "versions.yml"                             , emit: versions
 
     when:
@@ -33,7 +33,7 @@ process GATK4_GATHERPILEUPSUMMARIES {
     """
     gatk --java-options "-Xmx${avail_mem}g" GatherPileupSummaries \\
         $input_list \\
-        --O ${prefix}.pileupsummaries.table \\
+        --O ${prefix}.pileups.table \\
         --sequence-dictionary $dict \\
         --tmp-dir . \\
         $args

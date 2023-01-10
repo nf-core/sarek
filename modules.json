@@ -219,7 +219,7 @@
                     },
                     "gatk4/gatherpileupsummaries": {
                         "branch": "master",
-                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
+                        "git_sha": "0dde9c00d859ed2cd09e91a97afded6031ba3589",
                         "installed_by": ["modules"]
                     },
                     "gatk4/genomicsdbimport": {

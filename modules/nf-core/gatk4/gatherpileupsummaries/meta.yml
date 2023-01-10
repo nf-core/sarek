@@ -31,7 +31,7 @@ output:
   - table:
       type: file
       description: pileup summaries table file
-      pattern: "*.pileupsummaries.table"
+      pattern: "*.pileups.table"
   - versions:
       type: file
       description: File containing software versions

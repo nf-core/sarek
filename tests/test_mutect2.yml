@@ -26,7 +26,7 @@
       md5sum: 9a8439d0bb5875f1e673cf592af85ffb
     - path: results/variant_calling/mutect2/sample2/sample2.mutect2.filtered.vcf.gz.tbi
     # binary changes md5sums on reruns
-    - path: results/variant_calling/mutect2/sample2/sample2.mutect2.pileupsummaries.table
+    - path: results/variant_calling/mutect2/sample2/sample2.mutect2.pileups.table
       md5sum: 9afe42339f590937166edcf4746c22ec
     - path: results/variant_calling/mutect2/sample2/sample2.mutect2.segmentation.table
       md5sum: f4643d9319bde4efbfbe516d6fb13052
@@ -73,7 +73,7 @@
       md5sum: e4eac0c602dd25aa61a6dc26a2b61844
     - path: results/variant_calling/mutect2/sample2/sample2.mutect2.filtered.vcf.gz.tbi
     # binary changes md5sums on reruns
-    - path: results/variant_calling/mutect2/sample2/sample2.mutect2.pileupsummaries.table
+    - path: results/variant_calling/mutect2/sample2/sample2.mutect2.pileups.table
       md5sum: fe35b6bc041f2df8bd1f23420af3ddf9
     - path: results/variant_calling/mutect2/sample2/sample2.mutect2.segmentation.table
       md5sum: f4643d9319bde4efbfbe516d6fb13052
