@@ -44,9 +44,11 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     vcf_strelka     = Channel.empty()
     vcf_tiddit      = Channel.empty()
 
+    // MPILEUP
     if (tools.split(',').contains('mpileup') || tools.split(',').contains('controlfreec')) {
         BAM_VARIANT_CALLING_MPILEUP(
             cram,
+            // Remap channel to match module/subworkflow
             dict.map{ it -> [ [ id:'dict' ], it ] },
             fasta,
             intervals
@@ -55,10 +57,12 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         versions = versions.mix(BAM_VARIANT_CALLING_MPILEUP.out.versions)
     }
 
+    // CONTROLFREEC (depends on MPILEUP)
     if (tools.split(',').contains('controlfreec')) {
         length_file = cf_chrom_len ?: fasta_fai
 
         BAM_VARIANT_CALLING_TUMOR_ONLY_CONTROLFREEC(
+            // Remap channel to match module/subworkflow
             BAM_VARIANT_CALLING_MPILEUP.out.mpileup.map{ meta, pileup_tumor -> [ meta, [], pileup_tumor, [], [], [], [] ] },
             fasta,
             length_file,
@@ -72,8 +76,10 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_CONTROLFREEC.out.versions)
     }
 
-    if(tools.split(',').contains('cnvkit')) {
+    // CNVKIT
+    if (tools.split(',').contains('cnvkit')) {
         BAM_VARIANT_CALLING_CNVKIT (
+            // Remap channel to match module/subworkflow
             cram.map{ meta, cram, crai -> [ meta, cram, [] ] },
             fasta,
             fasta_fai,
@@ -84,9 +90,11 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         versions = versions.mix(BAM_VARIANT_CALLING_CNVKIT.out.versions)
     }
 
+    // FREEBAYES
     if (tools.split(',').contains('freebayes')) {
         BAM_VARIANT_CALLING_FREEBAYES(
             cram,
+            // Remap channel to match module/subworkflow
             dict.map{ it -> [ [ id:'dict' ], it ] },
             fasta,
             fasta_fai,
@@ -97,6 +105,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         versions = versions.mix(BAM_VARIANT_CALLING_FREEBAYES.out.versions)
     }
 
+    // MUTECT2
     if (tools.split(',').contains('mutect2')) {
         BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2(
             cram,
@@ -114,10 +123,12 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2.out.versions)
     }
 
+    // MANTA
     if (tools.split(',').contains('manta')) {
         BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA(
             cram,
-            dict,
+            // Remap channel to match module/subworkflow
+            dict.map{ it -> [ [ id:'dict' ], it ] },
             fasta,
             fasta_fai,
             intervals_bed_gz_tbi
@@ -127,10 +138,12 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA.out.versions)
     }
 
+    // STRELKA
     if (tools.split(',').contains('strelka')) {
         BAM_VARIANT_CALLING_SINGLE_STRELKA(
             cram,
-            dict,
+            // Remap channel to match module/subworkflow
+            dict.map{ it -> [ [ id:'dict' ], it ] },
             fasta,
             fasta_fai,
             intervals_bed_gz_tbi
@@ -144,7 +157,8 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     if (tools.split(',').contains('tiddit')) {
         BAM_VARIANT_CALLING_SINGLE_TIDDIT(
             cram,
-            fasta.map{ it -> [[id:it[0].baseName], it] },
+            // Remap channel to match module/subworkflow
+            fasta.map{ it -> [ [ id:'fasta' ], it ] },
             bwa
         )
 
