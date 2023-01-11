@@ -60,6 +60,9 @@ jobs:
             echo "========================================"
           done;
 
+      - name: where are we
+        run: pwd
+
       - name: check content of test-datasets/
         run: ls -R test-datasets/
 
