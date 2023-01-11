@@ -76,7 +76,7 @@ jobs:
 
       - name: Replace remote paths in samplesheets
         run: |
-          for f in ./test-datasets/samplesheet/*csv; do
+          for f in ./tests/csv/3.0/*csv; do
             sed -i 's=https://raw.githubusercontent.com/nf-core/test-datasets/modules/=./test-datasets/=g' $f
             echo "========== $f ============"
             cat $f
