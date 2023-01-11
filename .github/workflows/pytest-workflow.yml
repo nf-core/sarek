@@ -63,7 +63,7 @@ jobs:
         id: cache-testdata
         uses: actions/cache@v3
         with:
-          path: ./test-datasets/
+          path: test-datasets/
           key: sarek3-test-data
 
       - name: Check out test data
@@ -72,16 +72,22 @@ jobs:
         with:
           repository: nf-core/test-datasets
           ref: sarek3
-          path: ./test-datasets/
+          path: test-datasets/
 
       - name: Replace remote paths in samplesheets
         run: |
           for f in ./tests/csv/3.0/*csv; do
-            sed -i 's=https://raw.githubusercontent.com/nf-core/test-datasets/modules/=./test-datasets/=g' $f
+            sed -i 's=https://raw.githubusercontent.com/nf-core/test-datasets/modules/=test-datasets/=g' $f
             echo "========== $f ============"
             cat $f
             echo "========================================"
           done;
+
+      - name: check content of test-datasets/
+        run: ls -R test-datasets/
+
+      - name: check files existence in samplesheets
+        run: for i in `cat tests/csv/3.0/* | awk -F',' '{ for( i=1; i<=NF; i++ ) print $i }' | grep data | sort -u`; do ls $i; done
 
       - name: Set up Python
         uses: actions/setup-python@v2

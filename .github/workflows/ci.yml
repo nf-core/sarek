@@ -49,9 +49,6 @@ jobs:
           ref: sarek3
           path: test-datasets/
 
-      - name: check content of test-datasets/
-        run: ls -R test-datasets/
-
       - name: Replace remote paths in samplesheets
         run: |
           for f in ./tests/csv/3.0/*csv; do
@@ -60,6 +57,12 @@ jobs:
             cat $f
             echo "========================================"
           done;
+
+      - name: check content of test-datasets/
+        run: ls -R test-datasets/
+
+      - name: check files existence in samplesheets
+        run: for i in `cat tests/csv/3.0/* | awk -F',' '{ for( i=1; i<=NF; i++ ) print $i }' | grep data | sort -u`; do ls $i; done
 
       - name: Set up Python
         uses: actions/setup-python@v2
