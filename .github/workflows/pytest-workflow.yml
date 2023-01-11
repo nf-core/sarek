@@ -57,6 +57,7 @@ jobs:
             tags: merge
     env:
       NXF_ANSI_LOG: false
+      TEST_DATA_BASE: "test-datasets/data"
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v3
@@ -84,12 +85,6 @@ jobs:
             cat $f
             echo "========================================"
           done;
-
-      - name: check content of test-datasets/
-        run: ls -R test-datasets/
-
-      - name: check files existence in samplesheets
-        run: for i in `cat tests/csv/3.0/* | awk -F',' '{ for( i=1; i<=NF; i++ ) print $i }' | grep data | sort -u`; do ls $i; done
 
       - name: Set up Python
         uses: actions/setup-python@v2
