@@ -33,6 +33,8 @@ jobs:
       matrix:
         tags: ["${{ fromJson(needs.changes.outputs.tags) }}"]
         profile: ["docker", "singularity", "conda"]
+        TEST_DATA_BASE:
+          - "local"
         NXF_VER:
           - "22.10.1"
           - "latest-everything"
@@ -76,7 +78,7 @@ jobs:
 
       - name: Replace remote paths in samplesheets
         run: |
-          for f in ./tests/csv/3.0/*csv; do
+          for f in tests/csv/3.0/*csv; do
             sed -i 's=https://raw.githubusercontent.com/nf-core/test-datasets/modules/=test-datasets/=g' $f
             echo "========== $f ============"
             cat $f
