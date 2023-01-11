@@ -49,6 +49,9 @@ jobs:
           ref: sarek3
           path: ./test-datasets/
 
+      - name: check content of ./test-datasets/
+        run: ls -R ./test-datasets/
+
       - name: Replace remote paths in samplesheets
         run: |
           for f in ./tests/csv/3.0/*csv; do
