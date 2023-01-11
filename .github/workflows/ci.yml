@@ -30,7 +30,7 @@ jobs:
         profile: ["docker", "singularity", "conda"]
     env:
       NXF_ANSI_LOG: false
-      TEST_DATA_BASE: "${PWD}/test-datasets/data"
+      TEST_DATA_BASE: $PWD"/test-datasets/data"
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v3
