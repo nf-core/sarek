@@ -34,7 +34,7 @@ jobs:
         tags: ["${{ fromJson(needs.changes.outputs.tags) }}"]
         profile: ["docker", "singularity", "conda"]
         TEST_DATA_BASE:
-          - "local"
+          - "test-datasets/data"
         NXF_VER:
           - "22.10.1"
           - "latest-everything"

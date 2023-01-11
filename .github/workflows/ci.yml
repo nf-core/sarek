@@ -23,7 +23,7 @@ jobs:
       fail-fast: false
       matrix:
         TEST_DATA_BASE:
-          - "local"
+          - "test-datasets/data"
         NXF_VER:
           - "22.10.1"
           - "latest-everything"
