@@ -30,7 +30,7 @@ jobs:
         profile: ["docker", "singularity", "conda"]
     env:
       NXF_ANSI_LOG: false
-      TEST_DATA_BASE: "test-datasets/data"
+      TEST_DATA_BASE: $GITHUB_WORKSPACE"/test-datasets/data"
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v3
@@ -53,7 +53,7 @@ jobs:
       - name: Replace remote paths in samplesheets
         run: |
           for f in tests/csv/3.0/*csv; do
-            sed -i "s=https://raw.githubusercontent.com/nf-core/test-datasets/modules/=$GITHUB_WORKSPACE}/test-datasets/=g" $f
+            sed -i "s=https://raw.githubusercontent.com/nf-core/test-datasets/modules/=${GITHUB_WORKSPACE}}/test-datasets/=g" $f
             echo "========== $f ============"
             cat $f
             echo "========================================"
