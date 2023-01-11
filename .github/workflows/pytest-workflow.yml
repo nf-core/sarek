@@ -57,7 +57,7 @@ jobs:
             tags: merge
     env:
       NXF_ANSI_LOG: false
-      TEST_DATA_BASE: "${{ github.workspace }}/test-datasets/data"
+      TEST_DATA_BASE: "${{ github.workspace }}/test-datasets"
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v3
