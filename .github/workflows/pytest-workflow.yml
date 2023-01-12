@@ -33,6 +33,8 @@ jobs:
       matrix:
         tags: ["${{ fromJson(needs.changes.outputs.tags) }}"]
         profile: ["docker", "singularity", "conda"]
+        TEST_DATA_BASE:
+          - "test-datasets/data"
         NXF_VER:
           - "22.10.1"
           - "latest-everything"
@@ -55,9 +57,34 @@ jobs:
             tags: merge
     env:
       NXF_ANSI_LOG: false
+      TEST_DATA_BASE: "${{ github.workspace }}/test-datasets"
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v3
+
+      - name: Cache test data
+        id: cache-testdata
+        uses: actions/cache@v3
+        with:
+          path: test-datasets/
+          key: sarek3-test-data
+
+      - name: Check out test data
+        if: steps.cache-testdata.outputs.cache-hit != 'true'
+        uses: actions/checkout@v3
+        with:
+          repository: nf-core/test-datasets
+          ref: sarek3
+          path: test-datasets/
+
+      - name: Replace remote paths in samplesheets
+        run: |
+          for f in tests/csv/3.0/*csv; do
+            sed -i "s=https://raw.githubusercontent.com/nf-core/test-datasets/modules/=${{ github.workspace }}/test-datasets/=g" $f
+            echo "========== $f ============"
+            cat $f
+            echo "========================================"
+          done;
 
       - name: Set up Python
         uses: actions/setup-python@v2
