@@ -2,7 +2,7 @@
   command: nextflow run main.nf -profile test,targeted --input ./tests/csv/3.0/mapped_joint_bam.csv --tools haplotypecaller --step variant_calling --joint_germline --skip_tools haplotypecaller_filter --outdir results
   tags:
     - germline
-    - haplotypecaller
+    - joint_germline
     - variant_calling
   files:
     - path: results/csv/variantcalled.csv
