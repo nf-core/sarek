@@ -19,16 +19,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_CONTROLFREEC {
 
     ch_versions = Channel.empty()
 
-    FREEC_TUMORONLY(controlfreec_input,
-                fasta,
-                fasta_fai,
-                [],
-                dbsnp,
-                dbsnp_tbi,
-                chr_files,
-                mappability,
-                intervals_bed,
-                [])
+    FREEC_TUMORONLY(controlfreec_input, fasta, fasta_fai, [], dbsnp, dbsnp_tbi, chr_files, mappability, intervals_bed, [])
 
     ASSESS_SIGNIFICANCE(FREEC_TUMORONLY.out.CNV.join(FREEC_TUMORONLY.out.ratio))
     FREEC2BED(FREEC_TUMORONLY.out.ratio)

@@ -3,9 +3,9 @@ include { TIDDIT_SV                                 } from '../../../modules/nf-
 
 workflow BAM_VARIANT_CALLING_SINGLE_TIDDIT {
     take:
-        cram
-        fasta
-        bwa
+    cram
+    fasta
+    bwa
 
     main:
     versions = Channel.empty()
