@@ -33,13 +33,7 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
         // Move num_intervals to meta map
         .map{ meta, cram, crai, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram, crai, intervals, [] ] }
 
-    GATK4_HAPLOTYPECALLER(
-        cram_intervals,
-        fasta,
-        fasta_fai,
-        dict,
-        dbsnp,
-        dbsnp_tbi)
+    GATK4_HAPLOTYPECALLER(cram_intervals, fasta, fasta_fai, dict, dbsnp, dbsnp_tbi)
 
     // For joint genotyping
     genotype_intervals = GATK4_HAPLOTYPECALLER.out.vcf.join(GATK4_HAPLOTYPECALLER.out.tbi)
@@ -109,12 +103,13 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
     versions = versions.mix(GATK4_HAPLOTYPECALLER.out.versions)
     versions = versions.mix(MERGE_HAPLOTYPECALLER.out.versions)
 
-    vcf = vcf.map{ meta, vcf -> [ meta + [ variantcaller:'haplotypecaller' ], vcf ] }
+    // add variantcaller to meta map and remove no longer necessary field: num_intervals
+    vcf = vcf.map{ meta, vcf -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'haplotypecaller' ], vcf ] }
 
     emit:
-    genotype_intervals
-    realigned_bam
-    vcf
+    genotype_intervals // For joint genotyping
+    realigned_bam      // Optionnal
+    vcf                // vcf filtered or not
 
     versions
 }
