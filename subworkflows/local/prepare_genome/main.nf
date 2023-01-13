@@ -55,13 +55,13 @@ workflow PREPARE_GENOME {
 
     // the following are flattened and mapped in case the user supplies more than one value for the param
     // written for KNOWN_INDELS, but preemptively applied to the rest
-    // [file1, file2] becomes [[meta1, file1],[meta2, file2]]
+    // [ file1, file2 ] becomes [ [ meta1, file1 ], [ meta2, file2 ] ]
     // outputs are collected to maintain a single channel for relevant TBI files
-    TABIX_DBSNP(dbsnp.flatten().map{ it -> [[id:it.baseName], it] })
-    TABIX_GERMLINE_RESOURCE(germline_resource.flatten().map{ it -> [[id:it.baseName], it] })
-    TABIX_KNOWN_SNPS( known_snps.flatten().map{ it -> [[id:it.baseName], it] } )
-    TABIX_KNOWN_INDELS( known_indels.flatten().map{ it -> [[id:it.baseName], it] } )
-    TABIX_PON(pon.flatten().map{ it -> [[id:it.baseName], it] })
+    TABIX_DBSNP(dbsnp.flatten().map{ it -> [ [ id:it.baseName ], it ] })
+    TABIX_GERMLINE_RESOURCE(germline_resource.flatten().map{ it -> [ [ id:it.baseName ], it ] })
+    TABIX_KNOWN_SNPS( known_snps.flatten().map{ it -> [ [ id:it.baseName ], it ] } )
+    TABIX_KNOWN_INDELS( known_indels.flatten().map{ it -> [ [ id:it.baseName ], it ] } )
+    TABIX_PON(pon.flatten().map{ it -> [ [ id:it.baseName ], it ] })
 
     // prepare ascat reference files
     allele_files = ascat_alleles
