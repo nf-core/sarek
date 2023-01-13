@@ -1,5 +1,5 @@
 //
-// PREPARE RECALIBRATION with SPARK
+// PREPARE RECALIBRATION SPARK
 //
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
@@ -9,13 +9,13 @@ include { GATK4_GATHERBQSRREPORTS      } from '../../../modules/nf-core/gatk4/ga
 
 workflow BAM_BASERECALIBRATOR_SPARK {
     take:
-    cram            // channel: [mandatory] meta, cram_markduplicates, crai
-    dict            // channel: [mandatory] dict
-    fasta           // channel: [mandatory] fasta
-    fasta_fai       // channel: [mandatory] fasta_fai
-    intervals       // channel: [mandatory] intervals, num_intervals (or [], 0 if no intervals)
-    known_sites     // channel: [optional]  known_sites
-    known_sites_tbi // channel: [optional]  known_sites_tbi
+    cram            // channel: [mandatory] [ meta, cram_markduplicates, crai ]
+    dict            // channel: [mandatory] [ dict ]
+    fasta           // channel: [mandatory] [ fasta ]
+    fasta_fai       // channel: [mandatory] [ fasta_fai ]
+    intervals       // channel: [mandatory] [ intervals, num_intervals ] (or [ [], 0 ] if no intervals)
+    known_sites     // channel: [optional]  [ known_sites ]
+    known_sites_tbi // channel: [optional]  [ known_sites_tbi ]
 
     main:
     versions = Channel.empty()
