@@ -21,8 +21,8 @@ include { TABIX_TABIX as TABIX_KNOWN_SNPS        } from '../../../modules/nf-cor
 include { TABIX_TABIX as TABIX_PON               } from '../../../modules/nf-core/tabix/tabix/main'
 include { UNTAR as UNTAR_CHR_DIR                 } from '../../../modules/nf-core/untar/main'
 include { UNZIP as UNZIP_ALLELES                 } from '../../../modules/nf-core/unzip/main'
-include { UNZIP as UNZIP_LOCI                    } from '../../../modules/nf-core/unzip/main'
 include { UNZIP as UNZIP_GC                      } from '../../../modules/nf-core/unzip/main'
+include { UNZIP as UNZIP_LOCI                    } from '../../../modules/nf-core/unzip/main'
 include { UNZIP as UNZIP_RT                      } from '../../../modules/nf-core/unzip/main'
 
 workflow PREPARE_GENOME {
@@ -37,7 +37,7 @@ workflow PREPARE_GENOME {
         fasta_fai               // channel: [optional]  fasta_fai
         germline_resource       // channel: [optional]  germline_resource
         known_indels            // channel: [optional]  known_indels
-        known_snps
+        known_snps              // channel: [optional]  known_snps
         pon                     // channel: [optional]  pon
 
 
@@ -59,8 +59,8 @@ workflow PREPARE_GENOME {
     // outputs are collected to maintain a single channel for relevant TBI files
     TABIX_DBSNP(dbsnp.flatten().map{ it -> [ [ id:it.baseName ], it ] })
     TABIX_GERMLINE_RESOURCE(germline_resource.flatten().map{ it -> [ [ id:it.baseName ], it ] })
-    TABIX_KNOWN_SNPS( known_snps.flatten().map{ it -> [ [ id:it.baseName ], it ] } )
-    TABIX_KNOWN_INDELS( known_indels.flatten().map{ it -> [ [ id:it.baseName ], it ] } )
+    TABIX_KNOWN_SNPS(known_snps.flatten().map{ it -> [ [ id:it.baseName ], it ] } )
+    TABIX_KNOWN_INDELS(known_indels.flatten().map{ it -> [ [ id:it.baseName ], it ] } )
     TABIX_PON(pon.flatten().map{ it -> [ [ id:it.baseName ], it ] })
 
     // prepare ascat reference files
@@ -123,10 +123,10 @@ workflow PREPARE_GENOME {
         known_indels_tbi                 = TABIX_KNOWN_INDELS.out.tbi.map{ meta, tbi -> [tbi] }.collect()        // path: {known_indels*}.vcf.gz.tbi
         msisensorpro_scan                = MSISENSORPRO_SCAN.out.list.map{ meta, list -> [list] }                // path: genome_msi.list
         pon_tbi                          = TABIX_PON.out.tbi.map{ meta, tbi -> [tbi] }.collect()                 // path: pon.vcf.gz.tbi
-        chr_files                        = chr_files
-        allele_files                     = allele_files
-        loci_files                       = loci_files
-        gc_file                          = gc_file
-        rt_file                          = rt_file
+        allele_files
+        chr_files
+        gc_file
+        loci_files
+        rt_file
         versions                         = ch_versions                                                         // channel: [ versions.yml ]
 }

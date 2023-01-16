@@ -108,7 +108,6 @@ if (!params.dbsnp && !params.known_indels) {
     }
     if (params.tools && params.tools.split(',').contains('haplotypecaller')) {
         log.warn "If Haplotypecaller is specified, without `--dbsnp` or `--known_indels no filtering will be done. For filtering, please provide at least one of `--dbsnp` or `--known_indels`.\nFor more information see FilterVariantTranches (single-sample, default): https://gatk.broadinstitute.org/hc/en-us/articles/5358928898971-FilterVariantTranches\nFor more information see VariantRecalibration (--joint_germline): https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator\nFor more information on GATK Best practice germline variant calling: https://gatk.broadinstitute.org/hc/en-us/articles/360035535932-Germline-short-variant-discovery-SNPs-Indels-"
-
     }
 }
 if (params.joint_germline && (!params.tools || !params.tools.split(',').contains('haplotypecaller'))) {
@@ -142,21 +141,21 @@ if (params.tools && (params.tools.split(',').contains('ascat') || params.tools.s
 */
 
 // Initialize file channels based on params, defined in the params.genomes[params.genome] scope
-ascat_alleles      = params.ascat_alleles      ? Channel.fromPath(params.ascat_alleles).collect()            : Channel.empty()
-ascat_loci         = params.ascat_loci         ? Channel.fromPath(params.ascat_loci).collect()               : Channel.empty()
-ascat_loci_gc      = params.ascat_loci_gc      ? Channel.fromPath(params.ascat_loci_gc).collect()            : Channel.value([])
-ascat_loci_rt      = params.ascat_loci_rt      ? Channel.fromPath(params.ascat_loci_rt).collect()            : Channel.value([])
-cf_chrom_len       = params.cf_chrom_len       ? Channel.fromPath(params.cf_chrom_len).collect()             : []
-chr_dir            = params.chr_dir            ? Channel.fromPath(params.chr_dir).collect()                  : Channel.value([])
-dbsnp              = params.dbsnp              ? Channel.fromPath(params.dbsnp).collect()                    : Channel.value([])
-known_snps         = params.known_snps         ? Channel.fromPath(params.known_snps).collect()               : Channel.value([])
-fasta              = params.fasta              ? Channel.fromPath(params.fasta).collect()                    : Channel.empty()
-fasta_fai          = params.fasta_fai          ? Channel.fromPath(params.fasta_fai).collect()                : Channel.empty()
-germline_resource  = params.germline_resource  ? Channel.fromPath(params.germline_resource).collect()        : Channel.value([]) // Mutec2 does not require a germline resource, so set to optional input
-known_indels       = params.known_indels       ? Channel.fromPath(params.known_indels).collect()             : Channel.value([])
-known_snps         = params.known_snps         ? Channel.fromPath(params.known_snps).collect()               : Channel.value([])
-mappability        = params.mappability        ? Channel.fromPath(params.mappability).collect()              : Channel.value([])
-pon                = params.pon                ? Channel.fromPath(params.pon).collect()                      : Channel.value([]) // PON is optional for Mutect2 (but highly recommended)
+ascat_alleles      = params.ascat_alleles      ? Channel.fromPath(params.ascat_alleles).collect()     : Channel.empty()
+ascat_loci         = params.ascat_loci         ? Channel.fromPath(params.ascat_loci).collect()        : Channel.empty()
+ascat_loci_gc      = params.ascat_loci_gc      ? Channel.fromPath(params.ascat_loci_gc).collect()     : Channel.value([])
+ascat_loci_rt      = params.ascat_loci_rt      ? Channel.fromPath(params.ascat_loci_rt).collect()     : Channel.value([])
+cf_chrom_len       = params.cf_chrom_len       ? Channel.fromPath(params.cf_chrom_len).collect()      : []
+chr_dir            = params.chr_dir            ? Channel.fromPath(params.chr_dir).collect()           : Channel.value([])
+dbsnp              = params.dbsnp              ? Channel.fromPath(params.dbsnp).collect()             : Channel.value([])
+fasta              = params.fasta              ? Channel.fromPath(params.fasta).collect()             : Channel.empty()
+fasta_fai          = params.fasta_fai          ? Channel.fromPath(params.fasta_fai).collect()         : Channel.empty()
+germline_resource  = params.germline_resource  ? Channel.fromPath(params.germline_resource).collect() : Channel.value([]) // Mutec2 does not require a germline resource, so set to optional input
+known_indels       = params.known_indels       ? Channel.fromPath(params.known_indels).collect()      : Channel.value([])
+known_snps         = params.known_snps         ? Channel.fromPath(params.known_snps).collect()        : Channel.value([])
+known_snps         = params.known_snps         ? Channel.fromPath(params.known_snps).collect()        : Channel.value([])
+mappability        = params.mappability        ? Channel.fromPath(params.mappability).collect()       : Channel.value([])
+pon                = params.pon                ? Channel.fromPath(params.pon).collect()               : Channel.value([]) // PON is optional for Mutect2 (but highly recommended)
 
 // Initialize value channels based on params, defined in the params.genomes[params.genome] scope
 ascat_genome       = params.ascat_genome       ?: Channel.empty()
@@ -169,8 +168,8 @@ vep_genome         = params.vep_genome         ?: Channel.empty()
 vep_species        = params.vep_species        ?: Channel.empty()
 
 // Initialize files channels based on params, not defined within the params.genomes[params.genome] scope
-snpeff_cache       = params.snpeff_cache       ? Channel.fromPath(params.snpeff_cache).collect()             : []
-vep_cache          = params.vep_cache          ? Channel.fromPath(params.vep_cache).collect()                : []
+snpeff_cache       = params.snpeff_cache       ? Channel.fromPath(params.snpeff_cache).collect()      : []
+vep_cache          = params.vep_cache          ? Channel.fromPath(params.vep_cache).collect()         : []
 
 vep_extra_files = []
 
@@ -237,8 +236,6 @@ include { SAMTOOLS_CONVERT as CRAM_TO_BAM_RECAL          } from '../modules/nf-c
 
 // Mark Duplicates (+QC)
 include { BAM_MARKDUPLICATES                             } from '../subworkflows/local/bam_markduplicates/main'
-
-// Mark Duplicates SPARK (+QC)
 include { BAM_MARKDUPLICATES_SPARK                       } from '../subworkflows/local/bam_markduplicates_spark/main'
 
 // QC on CRAM
@@ -247,14 +244,10 @@ include { CRAM_QC_MOSDEPTH_SAMTOOLS as CRAM_QC_RECAL     } from '../subworkflows
 
 // Create recalibration tables
 include { BAM_BASERECALIBRATOR                           } from '../subworkflows/local/bam_baserecalibrator/main'
-
-// Create recalibration tables SPARK
 include { BAM_BASERECALIBRATOR_SPARK                     } from '../subworkflows/local/bam_baserecalibrator_spark/main'
 
 // Create recalibrated cram files to use for variant calling (+QC)
 include { BAM_APPLYBQSR                                  } from '../subworkflows/local/bam_applybqsr/main'
-
-// Create recalibrated cram files to use for variant calling (+QC)
 include { BAM_APPLYBQSR_SPARK                            } from '../subworkflows/local/bam_applybqsr_spark/main'
 
 // Variant calling on a single normal sample
@@ -291,10 +284,10 @@ include { MULTIQC                                        } from '../modules/nf-c
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-ch_multiqc_config          = Channel.fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
-ch_multiqc_custom_config   = params.multiqc_config ? Channel.fromPath( params.multiqc_config, checkIfExists: true ) : Channel.empty()
-ch_multiqc_logo            = params.multiqc_logo   ? Channel.fromPath( params.multiqc_logo, checkIfExists: true ) : Channel.empty()
-ch_multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
+multiqc_config        = Channel.fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
+multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config, checkIfExists: true) : Channel.empty()
+multiqc_logo          = params.multiqc_logo   ? Channel.fromPath(params.multiqc_logo, checkIfExists: true) : Channel.empty()
+multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -325,27 +318,34 @@ workflow SAREK {
         pon)
 
     // Gather built indices or get them from the params
-    allele_files           = PREPARE_GENOME.out.allele_files
-    bwa                    = params.fasta                   ? params.bwa                        ? Channel.fromPath(params.bwa).collect()                   : PREPARE_GENOME.out.bwa                   : []
-    bwamem2                = params.fasta                   ? params.bwamem2                    ? Channel.fromPath(params.bwamem2).collect()               : PREPARE_GENOME.out.bwamem2               : []
-    chr_files              = PREPARE_GENOME.out.chr_files
-    dragmap                = params.fasta                   ? params.dragmap                    ? Channel.fromPath(params.dragmap).collect()               : PREPARE_GENOME.out.hashtable             : []
-    dict                   = params.fasta                   ? params.dict                       ? Channel.fromPath(params.dict).collect()                  : PREPARE_GENOME.out.dict                  : []
-    fasta_fai              = params.fasta                   ? params.fasta_fai                  ? Channel.fromPath(params.fasta_fai).collect()             : PREPARE_GENOME.out.fasta_fai             : []
-    dbsnp_tbi              = params.dbsnp                   ? params.dbsnp_tbi                  ? Channel.fromPath(params.dbsnp_tbi).collect()             : PREPARE_GENOME.out.dbsnp_tbi             : Channel.value([])
-    gc_file                = PREPARE_GENOME.out.gc_file
-    germline_resource_tbi  = params.germline_resource       ? params.germline_resource_tbi      ? Channel.fromPath(params.germline_resource_tbi).collect() : PREPARE_GENOME.out.germline_resource_tbi : []
-    known_indels_tbi       = params.known_indels            ? params.known_indels_tbi           ? Channel.fromPath(params.known_indels_tbi).collect()      : PREPARE_GENOME.out.known_indels_tbi      : Channel.value([])
-    known_snps_tbi         = params.known_snps              ? params.known_snps_tbi             ? Channel.fromPath(params.known_snps_tbi).collect()        : PREPARE_GENOME.out.known_snps_tbi        : Channel.value([])
-    loci_files             = PREPARE_GENOME.out.loci_files
-    pon_tbi                = params.pon                     ? params.pon_tbi                    ? Channel.fromPath(params.pon_tbi).collect()               : PREPARE_GENOME.out.pon_tbi               : []
-    msisensorpro_scan      = PREPARE_GENOME.out.msisensorpro_scan
-    rt_file                = PREPARE_GENOME.out.rt_file
+    // Built from the fasta file:
+    dict                   = params.dict                    ? Channel.fromPath(params.dict).collect()      : PREPARE_GENOME.out.dict
+    fasta_fai              = params.fasta_fai               ? Channel.fromPath(params.fasta_fai).collect() : PREPARE_GENOME.out.fasta_fai
 
+    bwa                    = params.bwa                     ? Channel.fromPath(params.bwa).collect()       : PREPARE_GENOME.out.bwa
+    bwamem2                = params.bwamem2                 ? Channel.fromPath(params.bwamem2).collect()   : PREPARE_GENOME.out.bwamem2
+    dragmap                = params.dragmap                 ? Channel.fromPath(params.dragmap).collect()   : PREPARE_GENOME.out.hashtable
     // Gather index for mapping given the chosen aligner
     index_alignement = params.aligner == "bwa-mem" ? bwa :
         params.aligner == "bwa-mem2" ? bwamem2 :
         dragmap
+
+    // TODO: add a params for msisensorpro_scan
+    msisensorpro_scan      = PREPARE_GENOME.out.msisensorpro_scan
+
+    // For ASCAT, extracted from zip or tar.gz files:
+    allele_files           = PREPARE_GENOME.out.allele_files
+    chr_files              = PREPARE_GENOME.out.chr_files
+    gc_file                = PREPARE_GENOME.out.gc_file
+    loci_files             = PREPARE_GENOME.out.loci_files
+    rt_file                = PREPARE_GENOME.out.rt_file
+
+    // Tabix indexed vcf files:
+    dbsnp_tbi              = params.dbsnp                   ? params.dbsnp_tbi             ? Channel.fromPath(params.dbsnp_tbi).collect()             : PREPARE_GENOME.out.dbsnp_tbi             : Channel.value([])
+    germline_resource_tbi  = params.germline_resource       ? params.germline_resource_tbi ? Channel.fromPath(params.germline_resource_tbi).collect() : PREPARE_GENOME.out.germline_resource_tbi : Channel.value([])
+    known_indels_tbi       = params.known_indels            ? params.known_indels_tbi      ? Channel.fromPath(params.known_indels_tbi).collect()      : PREPARE_GENOME.out.known_indels_tbi      : Channel.value([])
+    known_snps_tbi         = params.known_snps              ? params.known_snps_tbi        ? Channel.fromPath(params.known_snps_tbi).collect()        : PREPARE_GENOME.out.known_snps_tbi        : Channel.value([])
+    pon_tbi                = params.pon                     ? params.pon_tbi               ? Channel.fromPath(params.pon_tbi).collect()               : PREPARE_GENOME.out.pon_tbi               : Channel.value([])
 
     // known_sites is made by grouping both the dbsnp and the known snps/indels resources
     // Which can either or both be optional
@@ -379,15 +379,22 @@ workflow SAREK {
         else [ intervals[0], intervals[1], num_intervals ]
     }
 
+    if (params.tools && params.tools.split(',').contains('cnvkit')) {
+        if (params.cnvkit_reference) {
+            cnvkit_reference = Channel.fromPath(params.cnvkit_reference).collect()
+        } else {
+            PREPARE_REFERENCE_CNVKIT(fasta, intervals_bed_combined)
+            cnvkit_reference = PREPARE_REFERENCE_CNVKIT.out.cnvkit_reference
+
+            versions = versions.mix(PREPARE_REFERENCE_CNVKIT.out.versions)
+        }
+    } else {
+        cnvkit_reference = Channel.value([])
+    }
+
     // Gather used softwares versions
     versions = versions.mix(PREPARE_GENOME.out.versions)
     versions = versions.mix(PREPARE_INTERVALS.out.versions)
-
-    // Antitarget based reference for CNVKit
-    PREPARE_REFERENCE_CNVKIT(fasta, intervals_bed_combined)
-    cnvkit_reference = params.tools && params.tools.split(',').contains('cnvkit') ? params.cnvkit_reference ? Channel.fromPath(params.cnvkit_reference).collect() : PREPARE_REFERENCE_CNVKIT.out.cnvkit_reference : Channel.empty()
-
-    versions = versions.mix(PREPARE_REFERENCE_CNVKIT.out.versions)
 
     // PREPROCESSING
 
@@ -567,10 +574,7 @@ workflow SAREK {
                 cram_skip_markduplicates = Channel.empty().mix(input_markduplicates_convert.cram, BAM_TO_CRAM.out.alignment_index)
             }
 
-            CRAM_QC_NO_MD(
-                cram_skip_markduplicates,
-                fasta,
-                intervals_for_preprocessing)
+            CRAM_QC_NO_MD(cram_skip_markduplicates, fasta, intervals_for_preprocessing)
 
             // Gather QC reports
             reports = reports.mix(CRAM_QC_NO_MD.out.reports.collect{ meta, report -> report })
@@ -611,14 +615,9 @@ workflow SAREK {
         // - crams from markduplicates
         // - crams from markduplicates_spark
         // - crams from input step markduplicates --> from the converted ones only?
-        ch_md_cram_for_restart = Channel.empty().mix(
-            cram_markduplicates_no_spark,
-            cram_markduplicates_spark).map{ meta, cram, crai ->
-                // Make sure correct data types are carried through
-                [ meta.subMap('id', 'patient', 'sample', 'sex', 'status')
-                    + [data_type: "cram"],
-                    cram, crai ]
-            }
+        ch_md_cram_for_restart = Channel.empty().mix(cram_markduplicates_no_spark,cram_markduplicates_spark)
+            // Make sure correct data types are carried through
+            .map{ meta, cram, crai -> [ meta - meta.subMap('data_type') + [data_type: "cram"], cram, crai ] }
 
         // If params.save_output_as_bam, then convert CRAM files to BAM
         CRAM_TO_BAM(ch_md_cram_for_restart, fasta, fasta_fai)
@@ -1041,34 +1040,28 @@ workflow SAREK {
         }
     }
 
-    ch_version_yaml = Channel.empty()
+    version_yaml = Channel.empty()
     if (!(params.skip_tools && params.skip_tools.split(',').contains('versions'))) {
         CUSTOM_DUMPSOFTWAREVERSIONS(versions.unique().collectFile(name: 'collated_versions.yml'))
-        ch_version_yaml = CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect()
+        version_yaml = CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect()
     }
 
     if (!(params.skip_tools && params.skip_tools.split(',').contains('multiqc'))) {
-        workflow_summary    = WorkflowSarek.paramsSummaryMultiqc(workflow, summary_params)
-        ch_workflow_summary = Channel.value(workflow_summary)
-        methods_description    = WorkflowSarek.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description)
-        ch_methods_description = Channel.value(methods_description)
+        workflow_summary    = Channel.value(WorkflowSarek.paramsSummaryMultiqc(workflow, summary_params))
+        methods_description = Channel.value(WorkflowSarek.methodsDescriptionText(workflow, multiqc_custom_methods_description))
 
-        ch_multiqc_files = Channel.empty()
-        ch_multiqc_files = ch_multiqc_files.mix(ch_version_yaml)
-        ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
-        ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'))
-        ch_multiqc_files = ch_multiqc_files.mix(reports.collect().ifEmpty([]))
+        multiqc_files = Channel.empty()
+        multiqc_files = multiqc_files.mix(version_yaml)
+        multiqc_files = multiqc_files.mix(workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
+        multiqc_files = multiqc_files.mix(methods_description.collectFile(name: 'methods_description_mqc.yaml'))
+        multiqc_files = multiqc_files.mix(reports.collect().ifEmpty([]))
 
-        ch_multiqc_configs = ch_multiqc_config.mix(ch_multiqc_custom_config).ifEmpty([])
+        multiqc_configs = multiqc_config.mix(multiqc_custom_config).ifEmpty([])
 
-        MULTIQC (
-            ch_multiqc_files.collect(),
-            ch_multiqc_config.collect().ifEmpty([]),
-            ch_multiqc_custom_config.collect().ifEmpty([]),
-            ch_multiqc_logo.collect().ifEmpty([])
-        )
+        MULTIQC(multiqc_files.collect(), multiqc_config.collect().ifEmpty([]), multiqc_custom_config.collect().ifEmpty([]), multiqc_logo.collect().ifEmpty([]))
+
         multiqc_report = MULTIQC.out.report.toList()
-        versions    = versions.mix(MULTIQC.out.versions)
+        versions = versions.mix(MULTIQC.out.versions)
     }
 }
 
@@ -1079,13 +1072,9 @@ workflow SAREK {
 */
 
 workflow.onComplete {
-    if (params.email || params.email_on_fail) {
-        NfcoreTemplate.email(workflow, params, summary_params, projectDir, log, multiqc_report)
-    }
+    if (params.email || params.email_on_fail) NfcoreTemplate.email(workflow, params, summary_params, projectDir, log, multiqc_report)
     NfcoreTemplate.summary(workflow, params, log)
-    if (params.hook_url) {
-        NfcoreTemplate.IM_notification(workflow, params, summary_params, projectDir, log)
-    }
+    if (params.hook_url) NfcoreTemplate.IM_notification(workflow, params, summary_params, projectDir, log)
 }
 
 /*
@@ -1147,11 +1136,11 @@ def extract_csv(csv_file) {
                 log.error "Missing field in csv file header. The csv file must have fields named 'patient' and 'sample'."
                 System.exit(1)
             }
-            [[row.patient.toString(), row.sample.toString()], row]
+            [ [ row.patient.toString(), row.sample.toString() ], row ]
         }.groupTuple()
         .map{ meta, rows ->
             size = rows.size()
-            [rows, size]
+            [ rows, size ]
         }.transpose()
         .map{ row, numLanes -> // from here do the usual thing for csv parsing
 
@@ -1218,7 +1207,7 @@ def extract_csv(csv_file) {
 
             meta.size       = 1 // default number of splitted fastq
 
-            if (params.step == 'mapping') return [ meta, [fastq_1, fastq_2] ]
+            if (params.step == 'mapping') return [ meta, [ fastq_1, fastq_2 ] ]
             else {
                 log.error "Samplesheet contains fastq files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
                 System.exit(1)
