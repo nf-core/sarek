@@ -100,4 +100,39 @@ class WorkflowSarek {
                         exit 1, "Unknown step $params.step"
         }
     }
+
+    public static String getTMBdatabase(String annotation) {
+
+        String dbConfig = "";
+
+        switch (annotation) {
+            case 'snpeff': dbConfig = "/assets/tmb/snpeff.yml";
+                           break
+            case 'vep': dbConfig = "/assets/tmb/vep.yml";
+                           break
+            // default:    log.warn "Please provide a valid annotation tool"
+            //             exit 1, "Unknown tool ${annotation}"
+        }
+
+       return dbConfig
+    }
+
+    public static String getTMBvariantcaller(String variantcaller) {
+
+        String varConfig = "";
+
+        switch (variantcaller) {
+            case 'freebayes': varConfig = "/assets/tmb/freebayes.yml";
+                            break
+            case 'mutect2': varConfig = "/assets/tmb/mutect2.yml";
+                            break
+            case 'strelka': varConfig = "/assets/tmb/strelka.yml";
+                            break
+            // default:    log.warn "Please provide a valid variantcalling tool"
+            //             exit 1, "Unknown tool ${variantcaller}"
+        }
+
+       return varConfig
+
+    }
 }
