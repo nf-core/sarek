@@ -496,7 +496,7 @@ workflow SAREK {
         // reads will be sorted
         reads_for_alignment = reads_for_alignment.map{ meta, reads ->
             // Update meta.id to meta.sample no multiple lanes or splitted fastqs
-            if (meta.size * meta.numLanes == 1) [ meta - meta.subMap('id') + [ id:meta.sample ], reads ]
+            if (meta.size * meta.num_lanes == 1) [ meta - meta.subMap('id') + [ id:meta.sample ], reads ]
             else [ meta, reads ]
         }
 
@@ -510,12 +510,12 @@ workflow SAREK {
             // Update meta.data_type
             // Remove no longer necessary fields:
             //   read_group: Now in the BAM header
-            //     numLanes: only needed for mapping
+            //    num_lanes: only needed for mapping
             //         size: only needed for mapping
 
             // Use groupKey to make sure that the correct group can advance as soon as it is complete
             // and not stall the workflow until all reads from all channels are mapped
-            [ groupKey( meta - meta.subMap('data_type', 'id', 'numLanes', 'read_group', 'size') + [ data_type:'bam', id:meta.sample ], (meta.numLanes ?: 1) * (meta.size ?: 1) ), bam ]
+            [ groupKey( meta - meta.subMap('data_type', 'id', 'num_lanes', 'read_group', 'size') + [ data_type:'bam', id:meta.sample ], (meta.num_lanes ?: 1) * (meta.size ?: 1) ), bam ]
         }.groupTuple()
 
         // gatk4 markduplicates can handle multiple bams as input, so no need to merge/index here
@@ -1142,7 +1142,7 @@ def extract_csv(csv_file) {
             size = rows.size()
             [ rows, size ]
         }.transpose()
-        .map{ row, numLanes -> // from here do the usual thing for csv parsing
+        .map{ row, num_lanes -> // from here do the usual thing for csv parsing
 
         def meta = [:]
 
@@ -1201,7 +1201,7 @@ def extract_csv(csv_file) {
             // Don't use a random element for ID, it breaks resuming
             def read_group  = "\"@RG\\tID:${flowcell}.${row.sample}.${row.lane}\\t${CN}PU:${row.lane}\\tSM:${row.patient}_${row.sample}\\tLB:${row.sample}\\tDS:${params.fasta}\\tPL:${params.seq_platform}\""
 
-            meta.numLanes   = numLanes.toInteger()
+            meta.num_lanes  = num_lanes.toInteger()
             meta.read_group = read_group.toString()
             meta.data_type  = 'fastq'
 
@@ -1224,7 +1224,7 @@ def extract_csv(csv_file) {
             def CN          = params.seq_center ? "CN:${params.seq_center}\\t" : ''
             def read_group  = "\"@RG\\tID:${row.sample}_${row.lane}\\t${CN}PU:${row.lane}\\tSM:${row.patient}_${row.sample}\\tLB:${row.sample}\\tDS:${params.fasta}\\tPL:${params.seq_platform}\""
 
-            meta.numLanes   = numLanes.toInteger()
+            meta.num_lanes  = num_lanes.toInteger()
             meta.read_group = read_group.toString()
             meta.data_type  = 'bam'
 
