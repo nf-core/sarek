@@ -40,8 +40,7 @@ workflow BAM_VARIANT_CALLING_SINGLE_STRELKA {
 
                 [groupKey(new_meta, meta.num_intervals), vcf]
             }.groupTuple(),
-        dict
-    )
+        dict.map{ it -> [[id:it[0].baseName], it]})
 
     MERGE_STRELKA_GENOME(
         strelka_genome_vcf.intervals
@@ -59,8 +58,7 @@ workflow BAM_VARIANT_CALLING_SINGLE_STRELKA {
                 vcf]
 
             }.groupTuple(),
-        dict
-    )
+        dict.map{ it -> [[id:it[0].baseName], it]})
 
     // Mix output channels for "no intervals" and "with intervals" results
     // Only strelka variant vcf should get annotated
@@ -76,7 +74,7 @@ workflow BAM_VARIANT_CALLING_SINGLE_STRELKA {
                         sex:            meta.sex,
                         status:         meta.status,
                         variantcaller:  "strelka"
-                    ],vcf]
+                    ], vcf]
                 }
 
     ch_versions = ch_versions.mix(MERGE_STRELKA.out.versions)

@@ -34,11 +34,9 @@ jobs:
         tags: ["${{ fromJson(needs.changes.outputs.tags) }}"]
         profile: ["docker", "singularity", "conda"]
         NXF_VER:
-          - "21.10.3"
+          - "22.10.1"
           - "latest-everything"
         exclude:
-          - profile: "conda"
-            NXF_VER: "latest-everything"
           - profile: "conda"
             tags: umi
           - profile: "conda"
@@ -51,6 +49,8 @@ jobs:
             tags: snpeff
           - profile: "conda"
             tags: vep
+          - profile: "conda"
+            tags: concatenate_vcfs
           - profile: "singularity"
             tags: merge
     env:

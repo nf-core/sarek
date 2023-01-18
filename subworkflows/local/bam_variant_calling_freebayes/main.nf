@@ -52,8 +52,7 @@ workflow BAM_VARIANT_CALLING_FREEBAYES {
                                             ]
                 [groupKey(new_meta, meta.num_intervals), vcf]
             }.groupTuple(),
-        dict
-    )
+        dict.map{ it -> [[id:it[0].baseName], it]})
 
     // Mix output channels for "no intervals" and "with intervals" results
     freebayes_vcf = Channel.empty().mix(

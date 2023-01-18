@@ -1,12 +1,48 @@
 # default_extended
 
-default_extended:
-  - assets/**
-  - conf/**
-  - lib/**
+tumor_normal_pair:
+  - conf/modules/**
   - modules/**
   - subworkflows/**
   - workflows/**
+  - nextflow_schema.json
+  - nextflow.config
+  - main.nf
+
+save_mapped_only:
+  - conf/modules/**
+  - modules/**
+  - subworkflows/**
+  - workflows/**
+  - nextflow_schema.json
+  - nextflow.config
+  - main.nf
+
+save_output_as_bam_only:
+  - conf/modules/**
+  - modules/**
+  - subworkflows/**
+  - workflows/**
+  - nextflow_schema.json
+  - nextflow.config
+  - main.nf
+
+skip_all_qc:
+  - conf/modules/**
+  - modules/**
+  - subworkflows/**
+  - workflows/**
+  - nextflow_schema.json
+  - nextflow.config
+  - main.nf
+
+skip_markduplicates:
+  - conf/modules/**
+  - modules/**
+  - subworkflows/**
+  - workflows/**
+  - nextflow_schema.json
+  - nextflow.config
   - main.nf
   - modules.json
   - nextflow.config
@@ -168,8 +204,11 @@ haplotypecaller:
   - modules/nf-core/gatk4/haplotypecaller/main.nf
   - modules/nf-core/gatk4/mergevcfs/main.nf
   - modules/nf-core/gatk4/variantrecalibrator/main.nf
+  - modules/nf-core/samtools/index/main.nf
+  - modules/nf-core/samtools/merge/main.nf
   - modules/nf-core/tabix/tabix/main.nf
   - subworkflows/local/bam_joint_calling_germline_gatk/main.nf
+  - subworkflows/local/bam_merge_index_samtools/main.nf
   - subworkflows/local/bam_variant_calling_haplotypecaller/main.nf
   - subworkflows/local/vcf_variant_filtering_gatk/main.nf
 
@@ -248,19 +287,36 @@ merge:
   - modules/nf-core/snpeff/main.nf
   - modules/nf-core/tabix/bgziptabix/main.nf
   - subworkflows/local/vcf_annotate_all/main.nf
-  - subworkflows/local/vcf_annotate_ensemblvep/main.nf
-  - subworkflows/local/vcf_annotate_snpeff/main.nf
+  - subworkflows/nf-core/vcf_annotate_ensemblvep/main.nf
+  - subworkflows/nf-core/vcf_annotate_snpeff/main.nf
 
 ## snpeff
 snpeff:
   - conf/modules/annotate.config
   - modules/nf-core/snpeff/main.nf
   - modules/nf-core/tabix/bgziptabix/main.nf
-  - subworkflows/local/vcf_annotate_snpeff/main.nf
+  - subworkflows/nf-core/vcf_annotate_snpeff/main.nf
 
 ## vep
 vep:
   - conf/modules/annotate.config
   - modules/nf-core/ensemblvep/main.nf
   - modules/nf-core/tabix/bgziptabix/main.nf
-  - subworkflows/local/vcf_annotate_ensemblvep/main.nf
+  - subworkflows/nf-core/vcf_annotate_ensemblvep/main.nf
+
+## concatenate germline vcfs
+concatenate_vcfs:
+  - conf/modules/post_variant_calling.config
+  - modules/nf-core/deepvariant/main.nf # deepvariant
+  - modules/nf-core/tabix/tabix/main.nf
+  - modules/nf-core/freebayes/main.nf # freebayes
+  - modules/nf-core/gatk4/haplotypecaller/main.nf # haplotypecaller
+  - modules/nf-core/manta/germline/main.nf # manta
+  - modules/nf-core/bcftools/mpileup/main.nf # mpileup/bcftools
+  - modules/nf-core/bcftools/sort/main.nf
+  - modules/nf-core/tabix/bgziptabix/main.nf
+  - modules/nf-core/bcftools/concat/main.nf
+  - modules/nf-core/samtools/mpileup/main.nf
+  - modules/nf-core/gatk4/mergevcfs/main.nf # gatk4/mergevcfs
+  - modules/nf-core/strelka/germline/main.nf # strelka
+  - modules/nf-core/tiddit/sv/main.nf # tiddit

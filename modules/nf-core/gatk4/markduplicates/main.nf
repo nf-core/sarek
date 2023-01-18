@@ -2,7 +2,7 @@ process GATK4_MARKDUPLICATES {
     tag "$meta.id"
     label 'process_medium'
 
-    conda (params.enable_conda ? "bioconda::gatk4=4.3.0.0 bioconda::samtools=1.16.1" : null)
+    conda "bioconda::gatk4=4.3.0.0 bioconda::samtools=1.16.1"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/mulled-v2-d9e7bad0f7fbc8f4458d5c3ab7ffaaf0235b59fb:551156018e5580fb94d44632dfafbc9c27005a0e-0':
         'quay.io/biocontainers/mulled-v2-d9e7bad0f7fbc8f4458d5c3ab7ffaaf0235b59fb:551156018e5580fb94d44632dfafbc9c27005a0e-0' }"

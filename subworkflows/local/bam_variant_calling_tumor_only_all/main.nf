@@ -90,7 +90,8 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
                                                                     }
         BAM_VARIANT_CALLING_MPILEUP(
             cram_intervals_no_index,
-            fasta
+            fasta,
+            dict
         )
 
         ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_MPILEUP.out.versions)

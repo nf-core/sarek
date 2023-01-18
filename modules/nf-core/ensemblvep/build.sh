@@ -20,9 +20,11 @@ build_push() {
     docker push nfcore/vep:${VEP_VERSION}.${GENOME}
 }
 
-build_push "GRCh37"    "homo_sapiens"           "106" "106.1"
-build_push "GRCh38"    "homo_sapiens"           "106" "106.1"
-build_push "GRCm38"    "mus_musculus"           "102" "106.1"
-build_push "GRCm39"    "mus_musculus"           "106" "106.1"
-build_push "CanFam3.1" "canis_lupus_familiaris" "104" "106.1"
-build_push "WBcel235"  "caenorhabditis_elegans" "106" "106.1"
+build_push "CanFam3.1" "canis_lupus_familiaris"   "104" "108.2"
+build_push "GRCh37"    "homo_sapiens"             "108" "108.2"
+build_push "GRCh38"    "homo_sapiens"             "108" "108.2"
+build_push "GRCm38"    "mus_musculus"             "102" "108.2"
+build_push "GRCm39"    "mus_musculus"             "108" "108.2"
+build_push "R64-1-1"   "saccharomyces_cerevisiae" "108" "108.2"
+build_push "UMD3.1"    "bos_taurus"               "94"  "108.2"
+build_push "WBcel235"  "caenorhabditis_elegans"   "108" "108.2"

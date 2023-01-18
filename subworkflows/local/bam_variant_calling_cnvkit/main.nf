@@ -17,7 +17,8 @@ workflow BAM_VARIANT_CALLING_CNVKIT {
     main:
         ch_versions = Channel.empty()
 
-        CNVKIT_BATCH(cram_recalibrated, fasta, fasta_fai, targets, reference)
+        generate_pon = false
+        CNVKIT_BATCH(cram_recalibrated, fasta, fasta_fai, targets, reference, generate_pon)
 
         ch_versions = ch_versions.mix(CNVKIT_BATCH.out.versions)
 
