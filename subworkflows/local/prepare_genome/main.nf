@@ -45,13 +45,13 @@ workflow PREPARE_GENOME {
 
     ch_versions = Channel.empty()
 
-    BWAMEM1_INDEX(fasta.map{ it -> [ [ id:'fasta' ], it ] }) // If aligner is bwa-mem
-    BWAMEM2_INDEX(fasta.map{ it -> [ [ id:'fasta' ], it ] }) // If aligner is bwa-mem2
-    DRAGMAP_HASHTABLE(fasta.map{ it -> [ [ id:'fasta' ], it ] }) // If aligner is dragmap
+    BWAMEM1_INDEX(fasta.map{ it -> [ [ id:it.baseName ], it ] }) // If aligner is bwa-mem
+    BWAMEM2_INDEX(fasta.map{ it -> [ [ id:it.baseName ], it ] }) // If aligner is bwa-mem2
+    DRAGMAP_HASHTABLE(fasta.map{ it -> [ [ id:it.baseName ], it ] }) // If aligner is dragmap
 
     GATK4_CREATESEQUENCEDICTIONARY(fasta)
-    MSISENSORPRO_SCAN(fasta.map{ it -> [ [ id:'fasta' ], it ] })
-    SAMTOOLS_FAIDX(fasta.map{ it -> [ [ id:'fasta' ], it ] })
+    MSISENSORPRO_SCAN(fasta.map{ it -> [ [ id:it.baseName ], it ] })
+    SAMTOOLS_FAIDX(fasta.map{ it -> [ [ id:it.baseName ], it ] })
 
     // the following are flattened and mapped in case the user supplies more than one value for the param
     // written for KNOWN_INDELS, but preemptively applied to the rest
