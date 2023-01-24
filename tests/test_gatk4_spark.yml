@@ -12,15 +12,15 @@
       md5sum: 2d29d9e53894dcce96a1b5beb6ef3312
     - path: results/multiqc
     - path: results/preprocessing/markduplicates/test/test.md.cram
-      md5sum: b1338daf0d2f85c42fdc1bf12764bcae
+      md5sum: 5a0ba5e67e828ed0bcf29ade62a1b2db
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
-      md5sum: 4f249f7b2492c37fd2186b02f7e5b03c
+      md5sum: 2de7ae39dd18ae332f14d23d32549524
     - path: results/preprocessing/recal_table/test/test.recal.table
       md5sum: 5b6e5078b4a90f6cb982fa0f0df616c2
     - path: results/preprocessing/recalibrated/test/test.recal.cram
-      md5sum: f56bee4375f79298fbdcdc2b3a5f2013
+      md5sum: fa292026b4076705f7cc2d9fd7f4b450
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
-      md5sum: 1441e62e7cff530cb71df158693651c7
+      md5sum: 952ab9c5dedcf2105247bc20129b40ee
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.cram.metrics
     # text-based file changes md5sums on reruns
@@ -62,15 +62,15 @@
     - path: results/csv/recalibrated.csv
       md5sum: 2d29d9e53894dcce96a1b5beb6ef3312
     - path: results/preprocessing/markduplicates/test/test.md.cram
-      md5sum: b1338daf0d2f85c42fdc1bf12764bcae
+      md5sum: 5a0ba5e67e828ed0bcf29ade62a1b2db
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
-      md5sum: 4f249f7b2492c37fd2186b02f7e5b03c
+      md5sum: 2de7ae39dd18ae332f14d23d32549524
     - path: results/preprocessing/recal_table/test/test.recal.table
       md5sum: 5b6e5078b4a90f6cb982fa0f0df616c2
     - path: results/preprocessing/recalibrated/test/test.recal.cram
-      md5sum: f56bee4375f79298fbdcdc2b3a5f2013
+      md5sum: fa292026b4076705f7cc2d9fd7f4b450
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
-      md5sum: 1441e62e7cff530cb71df158693651c7
+      md5sum: 952ab9c5dedcf2105247bc20129b40ee
     - path: results/multiqc
       should_exist: false
     - path: results/reports/fastqc
