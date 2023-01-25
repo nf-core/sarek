@@ -67,9 +67,10 @@ process CNVKIT_BATCH {
     // generation of panel of normals
     def generate_pon = panel_of_normals ? true : false
 
-    if (generate_pon && !tumor_exists && normal_bam){
-        def pon_input = normal.collect("$it").join(' ')
+    if (generate_pon && !tumor_exists){
+        def pon_input = normal.join(' ')
         normal_args = "--normal $pon_input"
+        tumor_out = ""
     }
 
     def target_args = targets ? "--targets $targets" : ""

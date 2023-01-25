@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#865](https://github.com/nf-core/sarek/pull/865) - Replace local subworkflow with nf-core version - `vcf_annotate_ensemblvep`
 - [#874](https://github.com/nf-core/sarek/pull/874) - Update all modules
 - [#890](https://github.com/nf-core/sarek/pull/890) - Sync `TEMPLATE` with `tools` `2.7.1`
+- [#896](https://github.com/nf-core/sarek/pull/896) - Code refactoring
 - [#898](https://github.com/nf-core/sarek/pull/898) - Sync `TEMPLATE` with `tools` `2.7.2`
 - [#898](https://github.com/nf-core/sarek/pull/898) - Nextflow minimal version is now `22.10.1`
 - [#909](https://github.com/nf-core/sarek/pull/909) - Cache test data on GHA
@@ -44,8 +45,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | ------------- | ----------- | ----------- |
 | `bcftools`    | 1.15.1      | 1.16        |
 | `ensembl-vep` | 106.1       | 108.2       |
-| `multiqc`     | 1.13a       | 1.13        |
+| `multiqc`     | 1.13a       | 1.14        |
 | `svdb`        | 2.6.1       | 2.8.1       |
+
+## [3.1.2](https://github.com/nf-core/sarek/releases/tag/3.1.2) - Lesser Lule River
+
+Lesser Lule River is English for Lilla Luleälven
+
+### Added
+
+### Changed
+
+### Fixed
+
+- [#906](https://github.com/nf-core/sarek/pull/906) - Remove usages of deprecated `Channel.from` method
+
+### Deprecated
+
+### Removed
+
+### Dependencies
 
 ## [3.1.1](https://github.com/nf-core/sarek/releases/tag/3.1.1) - Lilla Luleälven
 

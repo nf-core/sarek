@@ -15,13 +15,13 @@
     - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.TsTv.qual
       md5sum: 9aa8f0b60b0beeda80f2203afe84da99
     - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.g.vcf.gz
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.g.vcf.gz.tbi
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.vcf.gz
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.vcf.gz.tbi
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/deepvariant
       should_exist: false
 - name: Run variant calling on germline sample with deepvariant without intervals
@@ -48,12 +48,12 @@
     - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.TsTv.qual
       md5sum: 099766a58050c7a709602e4519ec4705
     - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.g.vcf.gz
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.g.vcf.gz.tbi
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.vcf.gz
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.vcf.gz.tbi
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/deepvariant
       should_exist: false

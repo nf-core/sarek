@@ -67,7 +67,7 @@
                     },
                     "cnvkit/batch": {
                         "branch": "master",
-                        "git_sha": "8f2dbc4736bb43346642ab42b2264bad35d924fc",
+                        "git_sha": "8c7b23c1e7fea03374354995630af1f805900c6c",
                         "installed_by": ["modules"]
                     },
                     "cnvkit/reference": {
@@ -219,12 +219,12 @@
                     },
                     "gatk4/gatherpileupsummaries": {
                         "branch": "master",
-                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
+                        "git_sha": "0dde9c00d859ed2cd09e91a97afded6031ba3589",
                         "installed_by": ["modules"]
                     },
                     "gatk4/genomicsdbimport": {
                         "branch": "master",
-                        "git_sha": "223432b834d7819707c162c48a83612b785c8796",
+                        "git_sha": "34c17664b54e3b45faf4e32b52bf4086ca249afe",
                         "installed_by": ["modules"]
                     },
                     "gatk4/genotypegvcfs": {
@@ -300,7 +300,7 @@
                     },
                     "mosdepth": {
                         "branch": "master",
-                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
+                        "git_sha": "def5f182583df0c20f43ec3d4355e8ebd341aaa9",
                         "installed_by": ["modules"]
                     },
                     "msisensorpro/msi_somatic": {
@@ -315,7 +315,7 @@
                     },
                     "multiqc": {
                         "branch": "master",
-                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
+                        "git_sha": "ee80d14721e76e2e079103b8dcd5d57129e584ba",
                         "installed_by": ["modules"]
                     },
                     "samblaster": {

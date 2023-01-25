@@ -26,10 +26,20 @@ input:
       type: file
       description: Index for BAM/CRAM file
       pattern: "*.{bai,crai}"
+  - meta2:
+      type: map
+      description: |
+        Groovy Map containing bed information
+        e.g. [ id:'test' ]
   - bed:
       type: file
       description: BED file with intersected intervals
       pattern: "*.{bed}"
+  - meta3:
+      type: map
+      description: |
+        Groovy Map containing reference information
+        e.g. [ id:'test' ]
   - fasta:
       type: file
       description: Reference genome FASTA file

@@ -1,0 +1,28 @@
+- name: Run joint germline variant calling with haplotypecaller
+  command: nextflow run main.nf -profile test,targeted --input ./tests/csv/3.0/mapped_joint_bam.csv --tools haplotypecaller --step variant_calling --joint_germline --skip_tools haplotypecaller_filter --outdir results
+  tags:
+    - germline
+    - joint_germline
+    - variant_calling
+  files:
+    - path: results/csv/variantcalled.csv
+      md5sum: d2dffdbd2b4f1f26a06637592d24dab3
+    - path: results/multiqc
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+      should_exist: false
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+      should_exist: false
+    - path: results/reports/bcftools/haplotypecaller/joint_variant_calling/joint_germline.bcftools_stats.txt
+      md5sum: 86b04ea7a8c3c4b8d217a42e868a4f46
+    - path: results/reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline.FILTER.summary
+      md5sum: 2a4eb7abfb2e64e45d53fdda17530b7f
+    - path: results/reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline.TsTv.count
+      md5sum: 949fa16c755189c23a37f0ea8ecd1b26
+    - path: results/reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline.TsTv.qual
+      md5sum: 3b3a249fbc26c80ce0acbe91147291ea
+    - path: results/variant_calling/haplotypecaller/joint_variant_calling/joint_germline.vcf.gz
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/haplotypecaller/joint_variant_calling/joint_germline.vcf.gz.tbi
+    # binary changes md5sums on reruns
+    - path: results/haplotypecaller
+      should_exist: false

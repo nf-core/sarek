@@ -13,15 +13,15 @@
       md5sum: 2d29d9e53894dcce96a1b5beb6ef3312
     - path: results/multiqc
     - path: results/preprocessing/markduplicates/test/test.md.cram
-    # binary changing on reruns
+    # binary changes md5sums on reruns
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
-    # binary changing on reruns
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recal_table/test/test.recal.table
       md5sum: 4ac774bf5f1157e77426fd82f5ac0fbe
     - path: results/preprocessing/recalibrated/test/test.recal.cram
-    # binary changing on reruns
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
-    # binary changing on reruns
+    # binary changes md5sums on reruns
     - path: results/reference/bwamem2/genome.fasta.0123
       md5sum: d73300d44f733bcdb7c988fc3ff3e3e9
     - path: results/reference/bwamem2/genome.fasta.amb
@@ -33,7 +33,7 @@
     - path: results/reference/bwamem2/genome.fasta.pac
       md5sum: 8569fbdb2c98c6fb16dfa73d8eacb070
     - path: results/reference/dbsnp/dbsnp_146.hg38.vcf.gz.tbi
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/reference/dict/genome.dict
       md5sum: 2433fe2ba31257337bf4c4bd4cb8da15
     - path: results/reference/fai/genome.fasta.fai
@@ -45,7 +45,7 @@
     - path: results/reference/intervals/genome.bed
       md5sum: a87dc7d20ebca626f65cc16ff6c97a3e
     - path: results/reference/known_indels/mills_and_1000G.indels.vcf.gz.tbi
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.cram.metrics
       contains: ["test	8547	767	84	523391	3882	0	0	0.385081", "1.0	767	767"]
@@ -70,6 +70,6 @@
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
       md5sum: b1c2a861f64e20a94108a6de3b76c582
     - path: results/reports/samtools/test/test.md.cram.stats
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/reports/samtools/test/test.recal.cram.stats
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
