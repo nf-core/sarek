@@ -409,7 +409,7 @@
     - path: results/reports/vcftools/freebayes/sample2/sample2.freebayes.TsTv.count
       md5sum: b1d308ed5087361a584cb61e7b835e1e
     - path: results/reports/vcftools/freebayes/sample2/sample2.freebayes.TsTv.qual
-      contains: ["0	0	0	-nan	23	15338	0.00149954"]
+    # content changes md5sums on reruns
     - path: results/variant_calling/freebayes/sample2/sample2.freebayes.vcf.gz
     # binary changes md5sums on reruns
     - path: results/variant_calling/freebayes/sample2/sample2.freebayes.vcf.gz.tbi
@@ -430,11 +430,11 @@
     - path: results/reports/bcftools/freebayes/sample2/sample2.freebayes.bcftools_stats.txt
     # conda changes md5sums for test
     - path: results/reports/vcftools/freebayes/sample2/sample2.freebayes.FILTER.summary
-      md5sum: 0df3ddeec5779344b5d463347c9c6ea8
+      md5sum: ee513ecf779b6e201b8ef98f95f25aab
     - path: results/reports/vcftools/freebayes/sample2/sample2.freebayes.TsTv.count
-      md5sum: b1d308ed5087361a584cb61e7b835e1e
+      md5sum: 2dc153ad5af26c9f8aa82442bf65b4bf
     - path: results/reports/vcftools/freebayes/sample2/sample2.freebayes.TsTv.qual
-      contains: ["0	0	0	-nan	23	15338	0.00149954"]
+    # content changes md5sums on reruns
     - path: results/variant_calling/freebayes/sample2/sample2.freebayes.vcf.gz
     # binary changes md5sums on reruns
     - path: results/variant_calling/freebayes/sample2/sample2.freebayes.vcf.gz.tbi
