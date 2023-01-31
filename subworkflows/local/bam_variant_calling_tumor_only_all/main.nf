@@ -93,7 +93,8 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     // FREEBAYES
     if (tools.split(',').contains('freebayes')) {
         BAM_VARIANT_CALLING_FREEBAYES(
-            cram,
+            // Remap channel to match module/subworkflow
+            cram.map{ meta, cram, crai -> [ meta, cram, crai, [], [] ] },
             // Remap channel to match module/subworkflow
             dict.map{ it -> [ [ id:'dict' ], it ] },
             fasta,
