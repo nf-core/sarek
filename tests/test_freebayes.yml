@@ -392,22 +392,52 @@
     # binary changes md5sums on reruns
     - path: results/freebayes
       should_exist: false
-# - name: Run variant calling on tumor_only sample with freebayes
-#   command: nextflow run main.nf -profile test,tools_tumoronly --tools freebayes
-#   tags:
-#     - freebayes
-#     - tumor_only
-#     - variant_calling
-#   files:
-#     - path: results/variant_calling/freebayes/sample2/sample2.freebayes.vcf.gz
-#     - path: results/variant_calling/freebayes/sample2/sample2.freebayes.vcf.gz.tbi
-# - name: Run variant calling on tumor_only sample with freebayes without intervals
-#   command: nextflow run main.nf -profile test,tools_tumoronly --tools freebayes --no_intervals
-#   tags:
-#     - freebayes
-#     - no_intervals
-#     - tumor_only
-#     - variant_calling
-#   files:
-#     - path: results/variant_calling/freebayes/sample2/sample2.freebayes.vcf.gz
-#     - path: results/variant_calling/freebayes/sample2/sample2.freebayes.vcf.gz.tbi
+- name: Run variant calling on tumor_only sample with freebayes
+  command: nextflow run main.nf -profile test,tools_tumoronly --tools freebayes --outdir results
+  tags:
+    - freebayes
+    - tumor_only
+    - variant_calling
+  files:
+    - path: results/csv/variantcalled.csv
+      md5sum: b31f56256a1cfa839a2ea7f7ba6c1c45
+    - path: results/multiqc
+    - path: results/reports/bcftools/freebayes/sample2/sample2.freebayes.bcftools_stats.txt
+    # conda changes md5sums for test
+    - path: results/reports/vcftools/freebayes/sample2/sample2.freebayes.FILTER.summary
+      md5sum: 43d53e36cbb1091f915b2499e545b41e
+    - path: results/reports/vcftools/freebayes/sample2/sample2.freebayes.TsTv.count
+      md5sum: 650f3dc78c5aaaecfe8ffa3d499e812f
+    - path: results/reports/vcftools/freebayes/sample2/sample2.freebayes.TsTv.qual
+      contains: ["0	0	0	-nan	82	29	2.82759", "1.1	196	35	5.6	57	24	2.375", "3.16	205	38	5.39474	49	20	2.45"]
+    - path: results/variant_calling/freebayes/sample2/sample2.freebayes.vcf.gz
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/freebayes/sample2/sample2.freebayes.vcf.gz.tbi
+    # binary changes md5sums on reruns
+    - path: results/freebayes
+      should_exist: false
+- name: Run variant calling on tumor_only sample with freebayes without intervals
+  command: nextflow run main.nf -profile test,tools_tumoronly --tools freebayes --no_intervals --outdir results
+  tags:
+    - freebayes
+    - no_intervals
+    - tumor_only
+    - variant_calling
+  files:
+    - path: results/csv/variantcalled.csv
+      md5sum: b31f56256a1cfa839a2ea7f7ba6c1c45
+    - path: results/multiqc
+    - path: results/reports/bcftools/freebayes/sample2/sample2.freebayes.bcftools_stats.txt
+    # conda changes md5sums for test
+    - path: results/reports/vcftools/freebayes/sample2/sample2.freebayes.FILTER.summary
+      md5sum: 43d53e36cbb1091f915b2499e545b41e
+    - path: results/reports/vcftools/freebayes/sample2/sample2.freebayes.TsTv.count
+      md5sum: 650f3dc78c5aaaecfe8ffa3d499e812f
+    - path: results/reports/vcftools/freebayes/sample2/sample2.freebayes.TsTv.qual
+      contains: ["0	0	0	-nan	82	29	2.82759", "1.1	196	35	5.6	57	24	2.375", "3.16	205	38	5.39474	49	20	2.45"]
+    - path: results/variant_calling/freebayes/sample2/sample2.freebayes.vcf.gz
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/freebayes/sample2/sample2.freebayes.vcf.gz.tbi
+    # binary changes md5sums on reruns
+    - path: results/freebayes
+      should_exist: false
