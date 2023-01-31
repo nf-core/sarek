@@ -400,16 +400,16 @@
     - variant_calling
   files:
     - path: results/csv/variantcalled.csv
-      md5sum: b31f56256a1cfa839a2ea7f7ba6c1c45
+      md5sum: 5c5938a7bcc814cdaf5433c1120964c5
     - path: results/multiqc
     - path: results/reports/bcftools/freebayes/sample2/sample2.freebayes.bcftools_stats.txt
     # conda changes md5sums for test
     - path: results/reports/vcftools/freebayes/sample2/sample2.freebayes.FILTER.summary
-      md5sum: 43d53e36cbb1091f915b2499e545b41e
+      md5sum: 0df3ddeec5779344b5d463347c9c6ea8
     - path: results/reports/vcftools/freebayes/sample2/sample2.freebayes.TsTv.count
-      md5sum: 650f3dc78c5aaaecfe8ffa3d499e812f
+      md5sum: b1d308ed5087361a584cb61e7b835e1e
     - path: results/reports/vcftools/freebayes/sample2/sample2.freebayes.TsTv.qual
-      contains: ["0	0	0	-nan	82	29	2.82759", "1.1	196	35	5.6	57	24	2.375", "3.16	205	38	5.39474	49	20	2.45"]
+      contains: ["0	0	0	-nan	23	15338	0.00149954"]
     - path: results/variant_calling/freebayes/sample2/sample2.freebayes.vcf.gz
     # binary changes md5sums on reruns
     - path: results/variant_calling/freebayes/sample2/sample2.freebayes.vcf.gz.tbi
@@ -425,16 +425,16 @@
     - variant_calling
   files:
     - path: results/csv/variantcalled.csv
-      md5sum: b31f56256a1cfa839a2ea7f7ba6c1c45
+      md5sum: 5c5938a7bcc814cdaf5433c1120964c5
     - path: results/multiqc
     - path: results/reports/bcftools/freebayes/sample2/sample2.freebayes.bcftools_stats.txt
     # conda changes md5sums for test
     - path: results/reports/vcftools/freebayes/sample2/sample2.freebayes.FILTER.summary
-      md5sum: 43d53e36cbb1091f915b2499e545b41e
+      md5sum: 0df3ddeec5779344b5d463347c9c6ea8
     - path: results/reports/vcftools/freebayes/sample2/sample2.freebayes.TsTv.count
-      md5sum: 650f3dc78c5aaaecfe8ffa3d499e812f
+      md5sum: b1d308ed5087361a584cb61e7b835e1e
     - path: results/reports/vcftools/freebayes/sample2/sample2.freebayes.TsTv.qual
-      contains: ["0	0	0	-nan	82	29	2.82759", "1.1	196	35	5.6	57	24	2.375", "3.16	205	38	5.39474	49	20	2.45"]
+      contains: ["0	0	0	-nan	23	15338	0.00149954"]
     - path: results/variant_calling/freebayes/sample2/sample2.freebayes.vcf.gz
     # binary changes md5sums on reruns
     - path: results/variant_calling/freebayes/sample2/sample2.freebayes.vcf.gz.tbi
