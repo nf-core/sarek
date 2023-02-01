@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#898](https://github.com/nf-core/sarek/pull/898) - Sync `TEMPLATE` with `tools` `2.7.2`
 - [#898](https://github.com/nf-core/sarek/pull/898) - Nextflow minimal version is now `22.10.1`
 - [#909](https://github.com/nf-core/sarek/pull/909) - Cache test data on GHA
+- [#928](https://github.com/nf-core/sarek/pull/928) - No need for BAI when starting from uBAM
 
 ### Fixed
 
@@ -32,6 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#893](https://github.com/nf-core/sarek/pull/893) - Fix logic of when to execute tabix on dbsnp
 - [#894](https://github.com/nf-core/sarek/pull/894) - Add description to `--cnvkit_reference`
 - [#894](https://github.com/nf-core/sarek/pull/894) - Remove methods description TODO prompt
+- [#928](https://github.com/nf-core/sarek/pull/928) - Fix [#700](https://github.com/nf-core/sarek/issues/700)
 
 ### Deprecated
 
