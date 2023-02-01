@@ -1215,12 +1215,12 @@ def extract_csv(csv_file) {
 
         // start from BAM
         } else if (row.lane && row.bam) {
-            if (!row.bai) {
+            if (params.step != 'mapping' && !row.bai) {
                 log.error "BAM index (bai) should be provided."
             }
             meta.id         = "${row.sample}-${row.lane}".toString()
             def bam         = file(row.bam,   checkIfExists: true)
-            def bai         = file(row.bai,   checkIfExists: true)
+            def bai         = row.bai ? file(row.bai,   checkIfExists: true) : []
             def CN          = params.seq_center ? "CN:${params.seq_center}\\t" : ''
             def read_group  = "\"@RG\\tID:${row.sample}_${row.lane}\\t${CN}PU:${row.lane}\\tSM:${row.patient}_${row.sample}\\tLB:${row.sample}\\tDS:${params.fasta}\\tPL:${params.seq_platform}\""
 
@@ -1230,7 +1230,8 @@ def extract_csv(csv_file) {
 
             meta.size       = 1 // default number of splitted fastq
 
-            if (params.step != 'annotate') return [ meta, bam, bai ]
+            if (params.step == 'mapping') return [ meta, bam ]
+            else if (params.step != 'annotate') return [ meta, bam, bai ]
             else {
                 log.error "Samplesheet contains bam files but step is `annotate`. The pipeline is expecting vcf files for the annotation. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
                 System.exit(1)
