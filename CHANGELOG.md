@@ -32,6 +32,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#893](https://github.com/nf-core/sarek/pull/893) - Fix logic of when to execute tabix on dbsnp
 - [#894](https://github.com/nf-core/sarek/pull/894) - Add description to `--cnvkit_reference`
 - [#894](https://github.com/nf-core/sarek/pull/894) - Remove methods description TODO prompt
+- [#927](https://github.com/nf-core/sarek/pull/927) - Fix tumor only variant calling issues with freebayes following [#896](https://github.com/nf-core/sarek/pull/896)
+- [#929](https://github.com/nf-core/sarek/pull/929) - Fix somatic variant calling issues with msisensor following [#896](https://github.com/nf-core/sarek/pull/896)
 
 ### Deprecated
 
