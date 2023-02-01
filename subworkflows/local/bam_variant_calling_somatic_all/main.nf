@@ -176,7 +176,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
     // MSISENSOR
     if (tools.split(',').contains('msisensorpro')) {
-        MSISENSORPRO_MSI_SOMATIC(cram.combine(intervals_bed_combined), fasta, msisensorpro_scan, intervals_bed_combined)
+        MSISENSORPRO_MSI_SOMATIC(cram.combine(intervals_bed_combined), fasta, msisensorpro_scan)
 
         versions = versions.mix(MSISENSORPRO_MSI_SOMATIC.out.versions)
         out_msisensorpro = out_msisensorpro.mix(MSISENSORPRO_MSI_SOMATIC.out.output_report)
