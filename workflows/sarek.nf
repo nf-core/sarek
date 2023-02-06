@@ -56,7 +56,7 @@ def checkPathParamList = [
 for (param in checkPathParamList) if (param) file(param, checkIfExists: true)
 
 // Set input, can either be from --input or from automatic retrieval in WorkflowSarek.groovy
-input_sample = params.build_only_index ? [] : extract_csv(file(params.input, checkIfExists: true))
+input_sample = params.build_only_index ? Channel.empty() : extract_csv(file(params.input, checkIfExists: true))
 
 // Fails when wrongfull extension for intervals file
 if (params.wes && !params.step == 'annotate') {
@@ -398,648 +398,645 @@ workflow SAREK {
 
     // PREPROCESSING
 
-    if (!params.build_only_index) {
+    if (params.step == 'mapping') {
 
-        if (params.step == 'mapping') {
+        // Figure out if input is bam or fastq
+        input_sample_type = input_sample.branch{
+            bam:   it[0].data_type == "bam"
+            fastq: it[0].data_type == "fastq"
+        }
 
-            // Figure out if input is bam or fastq
-            input_sample_type = input_sample.branch{
-                bam:   it[0].data_type == "bam"
-                fastq: it[0].data_type == "fastq"
-            }
+        // Convert any bam input to fastq
+        // fasta are not needed when converting bam to fastq -> [ id:"fasta" ], []
+        // No need for fasta.fai -> []
+        interleave_input = false // Currently don't allow interleaved input
+        CONVERT_FASTQ_INPUT(
+            input_sample_type.bam,
+            [ [ id:"fasta" ], [] ], // fasta
+            [],                     // fasta_fai
+            interleave_input)
 
-            // Convert any bam input to fastq
+        // Gather fastq (inputed or converted)
+        // Theorically this could work on mixed input (fastq for one sample and bam for another)
+        // But not sure how to handle that with the samplesheet
+        // Or if we really want users to be able to do that
+        input_fastq = input_sample_type.fastq.mix(CONVERT_FASTQ_INPUT.out.reads)
+
+        // STEP 0: QC & TRIM
+        // `--skip_tools fastqc` to skip fastqc
+        // Trim only with `--trim_fastq`
+        // Additional options to be set up
+
+        // QC
+        if (!(params.skip_tools && params.skip_tools.split(',').contains('fastqc'))) {
+            FASTQC(input_fastq)
+
+            reports = reports.mix(FASTQC.out.zip.collect{ meta, logs -> logs })
+            versions = versions.mix(FASTQC.out.versions.first())
+        }
+
+        // UMI consensus calling
+        if (params.umi_read_structure) {
+            FASTQ_CREATE_UMI_CONSENSUS_FGBIO(
+                input_fastq,
+                fasta,
+                index_alignement,
+                params.group_by_umi_strategy)
+
+            bam_converted_from_fastq = FASTQ_CREATE_UMI_CONSENSUS_FGBIO.out.consensusbam.map{ meta, bam -> [ meta, bam, [] ] }
+
+            // Convert back to fastq for further preprocessing
             // fasta are not needed when converting bam to fastq -> [ id:"fasta" ], []
             // No need for fasta.fai -> []
             interleave_input = false // Currently don't allow interleaved input
-            CONVERT_FASTQ_INPUT(
-                input_sample_type.bam,
-                [ [ id:"fasta" ], [] ], // fasta
-                [],                     // fasta_fai
+            CONVERT_FASTQ_UMI(
+                bam_converted_from_fastq,
+                [ [id:"fasta"], [] ], // fasta
+                [],                   // fasta_fai
                 interleave_input)
 
-            // Gather fastq (inputed or converted)
-            // Theorically this could work on mixed input (fastq for one sample and bam for another)
-            // But not sure how to handle that with the samplesheet
-            // Or if we really want users to be able to do that
-            input_fastq = input_sample_type.fastq.mix(CONVERT_FASTQ_INPUT.out.reads)
-
-            // STEP 0: QC & TRIM
-            // `--skip_tools fastqc` to skip fastqc
-            // Trim only with `--trim_fastq`
-            // Additional options to be set up
-
-            // QC
-            if (!(params.skip_tools && params.skip_tools.split(',').contains('fastqc'))) {
-                FASTQC(input_fastq)
-
-                reports = reports.mix(FASTQC.out.zip.collect{ meta, logs -> logs })
-                versions = versions.mix(FASTQC.out.versions.first())
-            }
-
-            // UMI consensus calling
-            if (params.umi_read_structure) {
-                FASTQ_CREATE_UMI_CONSENSUS_FGBIO(
-                    input_fastq,
-                    fasta,
-                    index_alignement,
-                    params.group_by_umi_strategy)
-
-                bam_converted_from_fastq = FASTQ_CREATE_UMI_CONSENSUS_FGBIO.out.consensusbam.map{ meta, bam -> [ meta, bam, [] ] }
-
-                // Convert back to fastq for further preprocessing
-                // fasta are not needed when converting bam to fastq -> [ id:"fasta" ], []
-                // No need for fasta.fai -> []
-                interleave_input = false // Currently don't allow interleaved input
-                CONVERT_FASTQ_UMI(
-                    bam_converted_from_fastq,
-                    [ [id:"fasta"], [] ], // fasta
-                    [],                   // fasta_fai
-                    interleave_input)
-
-                reads_for_fastp = CONVERT_FASTQ_UMI.out.reads
-
-                // Gather used softwares versions
-                versions = versions.mix(CONVERT_FASTQ_UMI.out.versions)
-                versions = versions.mix(FASTQ_CREATE_UMI_CONSENSUS_FGBIO.out.versions)
-            } else {
-                reads_for_fastp = input_fastq
-            }
-
-            // Trimming and/or splitting
-            if (params.trim_fastq || params.split_fastq > 0) {
-
-                save_trimmed_fail = false
-                save_merged = false
-                FASTP(
-                    reads_for_fastp,
-                    [], // we are not using any adapter fastas at the moment
-                    save_trimmed_fail,
-                    save_merged
-                )
-
-                reports = reports.mix(FASTP.out.json.collect{ meta, json -> json })
-                reports = reports.mix(FASTP.out.html.collect{ meta, html -> html })
-
-                if (params.split_fastq) {
-                    reads_for_alignment = FASTP.out.reads.map{ meta, reads ->
-                        read_files = reads.sort{ a,b -> a.getName().tokenize('.')[0] <=> b.getName().tokenize('.')[0] }.collate(2)
-                        [ meta + [ size:read_files.size() ], read_files ]
-                    }.transpose()
-                } else reads_for_alignment = FASTP.out.reads
-
-                versions = versions.mix(FASTP.out.versions)
-
-            } else {
-                reads_for_alignment = reads_for_fastp
-            }
-
-            // STEP 1: MAPPING READS TO REFERENCE GENOME
-            // reads will be sorted
-            reads_for_alignment = reads_for_alignment.map{ meta, reads ->
-                // Update meta.id to meta.sample no multiple lanes or splitted fastqs
-                if (meta.size * meta.num_lanes == 1) [ meta - meta.subMap('id') + [ id:meta.sample ], reads ]
-                else [ meta, reads ]
-            }
-
-            sort_bam = true
-            FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP(reads_for_alignment, index_alignement, sort_bam)
-
-            // Grouping the bams from the same samples not to stall the workflow
-            bam_mapped = FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP.out.bam.map{ meta, bam ->
-
-                // Update meta.id to be meta.sample, ditching sample-lane that is not needed anymore
-                // Update meta.data_type
-                // Remove no longer necessary fields:
-                //   read_group: Now in the BAM header
-                //    num_lanes: only needed for mapping
-                //         size: only needed for mapping
-
-                // Use groupKey to make sure that the correct group can advance as soon as it is complete
-                // and not stall the workflow until all reads from all channels are mapped
-                [ groupKey( meta - meta.subMap('data_type', 'id', 'num_lanes', 'read_group', 'size') + [ data_type:'bam', id:meta.sample ], (meta.num_lanes ?: 1) * (meta.size ?: 1) ), bam ]
-            }.groupTuple()
-
-            // gatk4 markduplicates can handle multiple bams as input, so no need to merge/index here
-            // Except if and only if skipping markduplicates or saving mapped bams
-            if (params.save_mapped || (params.skip_tools && params.skip_tools.split(',').contains('markduplicates'))) {
-
-                // bams are merged (when multiple lanes from the same sample), indexed and then converted to cram
-                BAM_MERGE_INDEX_SAMTOOLS(bam_mapped)
-
-                BAM_TO_CRAM_MAPPING(BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai, fasta, fasta_fai)
-                // Create CSV to restart from this step
-                params.save_output_as_bam ? CHANNEL_ALIGN_CREATE_CSV(BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai) : CHANNEL_ALIGN_CREATE_CSV(BAM_TO_CRAM_MAPPING.out.alignment_index)
-
-                // Gather used softwares versions
-                versions = versions.mix(BAM_MERGE_INDEX_SAMTOOLS.out.versions)
-                versions = versions.mix(BAM_TO_CRAM_MAPPING.out.versions)
-            }
+            reads_for_fastp = CONVERT_FASTQ_UMI.out.reads
 
             // Gather used softwares versions
-            versions = versions.mix(CONVERT_FASTQ_INPUT.out.versions)
-            versions = versions.mix(FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP.out.versions)
+            versions = versions.mix(CONVERT_FASTQ_UMI.out.versions)
+            versions = versions.mix(FASTQ_CREATE_UMI_CONSENSUS_FGBIO.out.versions)
+        } else {
+            reads_for_fastp = input_fastq
         }
 
-        if (params.step in ['mapping', 'markduplicates']) {
+        // Trimming and/or splitting
+        if (params.trim_fastq || params.split_fastq > 0) {
 
-            // ch_cram_no_markduplicates_restart = Channel.empty()
-            cram_markduplicates_no_spark = Channel.empty()
-            cram_markduplicates_spark    = Channel.empty()
+            save_trimmed_fail = false
+            save_merged = false
+            FASTP(
+                reads_for_fastp,
+                [], // we are not using any adapter fastas at the moment
+                save_trimmed_fail,
+                save_merged
+            )
 
-            // STEP 2: markduplicates (+QC) + convert to CRAM
+            reports = reports.mix(FASTP.out.json.collect{ meta, json -> json })
+            reports = reports.mix(FASTP.out.html.collect{ meta, html -> html })
 
-            // ch_bam_for_markduplicates will countain bam mapped with FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP when step is mapping
-            // Or bams that are specified in the samplesheet.csv when step is prepare_recalibration
-            cram_for_markduplicates = params.step == 'mapping' ? bam_mapped : input_sample.map{ meta, input, index -> [ meta, input ] }
+            if (params.split_fastq) {
+                reads_for_alignment = FASTP.out.reads.map{ meta, reads ->
+                    read_files = reads.sort{ a,b -> a.getName().tokenize('.')[0] <=> b.getName().tokenize('.')[0] }.collate(2)
+                    [ meta + [ size:read_files.size() ], read_files ]
+                }.transpose()
+            } else reads_for_alignment = FASTP.out.reads
 
-            // if no MD is done, then run QC on mapped & converted CRAM files
-            // or the input BAM (+converted) or CRAM files
-            cram_skip_markduplicates = Channel.empty()
+            versions = versions.mix(FASTP.out.versions)
 
-            // Should it be possible to restart from converted crams?
-            // For now, conversion from bam to cram is only done when skipping markduplicates
+        } else {
+            reads_for_alignment = reads_for_fastp
+        }
 
-            if (params.skip_tools && params.skip_tools.split(',').contains('markduplicates')) {
-                if (params.step == 'mapping') {
-                    cram_skip_markduplicates = BAM_TO_CRAM_MAPPING.out.alignment_index
-                } else {
-                    input_markduplicates_convert = input_sample.branch{
-                        bam:  it[0].data_type == "bam"
-                        cram: it[0].data_type == "cram"
-                    }
+        // STEP 1: MAPPING READS TO REFERENCE GENOME
+        // reads will be sorted
+        reads_for_alignment = reads_for_alignment.map{ meta, reads ->
+            // Update meta.id to meta.sample no multiple lanes or splitted fastqs
+            if (meta.size * meta.num_lanes == 1) [ meta - meta.subMap('id') + [ id:meta.sample ], reads ]
+            else [ meta, reads ]
+        }
 
-                    // Convert any input BAMs to CRAM
-                    BAM_TO_CRAM(input_markduplicates_convert.bam, fasta, fasta_fai)
-                    versions = versions.mix(BAM_TO_CRAM.out.versions)
+        sort_bam = true
+        FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP(reads_for_alignment, index_alignement, sort_bam)
 
-                    cram_skip_markduplicates = Channel.empty().mix(input_markduplicates_convert.cram, BAM_TO_CRAM.out.alignment_index)
-                }
+        // Grouping the bams from the same samples not to stall the workflow
+        bam_mapped = FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP.out.bam.map{ meta, bam ->
 
-                CRAM_QC_NO_MD(cram_skip_markduplicates, fasta, intervals_for_preprocessing)
+            // Update meta.id to be meta.sample, ditching sample-lane that is not needed anymore
+            // Update meta.data_type
+            // Remove no longer necessary fields:
+            //   read_group: Now in the BAM header
+            //    num_lanes: only needed for mapping
+            //         size: only needed for mapping
 
-                // Gather QC reports
-                reports = reports.mix(CRAM_QC_NO_MD.out.reports.collect{ meta, report -> report })
+            // Use groupKey to make sure that the correct group can advance as soon as it is complete
+            // and not stall the workflow until all reads from all channels are mapped
+            [ groupKey( meta - meta.subMap('data_type', 'id', 'num_lanes', 'read_group', 'size') + [ data_type:'bam', id:meta.sample ], (meta.num_lanes ?: 1) * (meta.size ?: 1) ), bam ]
+        }.groupTuple()
 
-                // Gather used softwares versions
-                versions = versions.mix(CRAM_QC_NO_MD.out.versions)
-            } else if (params.use_gatk_spark && params.use_gatk_spark.contains('markduplicates')) {
-                BAM_MARKDUPLICATES_SPARK(
-                    cram_for_markduplicates,
-                    dict,
-                    fasta,
-                    fasta_fai,
-                    intervals_for_preprocessing)
-                cram_markduplicates_spark = BAM_MARKDUPLICATES_SPARK.out.cram
+        // gatk4 markduplicates can handle multiple bams as input, so no need to merge/index here
+        // Except if and only if skipping markduplicates or saving mapped bams
+        if (params.save_mapped || (params.skip_tools && params.skip_tools.split(',').contains('markduplicates'))) {
 
-                // Gather QC reports
-                reports = reports.mix(BAM_MARKDUPLICATES_SPARK.out.reports.collect{ meta, report -> report })
+            // bams are merged (when multiple lanes from the same sample), indexed and then converted to cram
+            BAM_MERGE_INDEX_SAMTOOLS(bam_mapped)
 
-                // Gather used softwares versions
-                versions = versions.mix(BAM_MARKDUPLICATES_SPARK.out.versions)
-            } else {
-                BAM_MARKDUPLICATES(
-                    cram_for_markduplicates,
-                    fasta,
-                    fasta_fai,
-                    intervals_for_preprocessing)
-
-                cram_markduplicates_no_spark = BAM_MARKDUPLICATES.out.cram
-
-                // Gather QC reports
-                reports = reports.mix(BAM_MARKDUPLICATES.out.reports.collect{ meta, report -> report })
-
-                // Gather used softwares versions
-                versions = versions.mix(BAM_MARKDUPLICATES.out.versions)
-            }
-
-            // ch_md_cram_for_restart contains either:
-            // - crams from markduplicates
-            // - crams from markduplicates_spark
-            // - crams from input step markduplicates --> from the converted ones only?
-            ch_md_cram_for_restart = Channel.empty().mix(cram_markduplicates_no_spark,cram_markduplicates_spark)
-                // Make sure correct data types are carried through
-                .map{ meta, cram, crai -> [ meta - meta.subMap('data_type') + [data_type: "cram"], cram, crai ] }
-
-            // If params.save_output_as_bam, then convert CRAM files to BAM
-            CRAM_TO_BAM(ch_md_cram_for_restart, fasta, fasta_fai)
-            versions = versions.mix(CRAM_TO_BAM.out.versions)
-
-            // CSV should be written for the file actually out, either CRAM or BAM
+            BAM_TO_CRAM_MAPPING(BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai, fasta, fasta_fai)
             // Create CSV to restart from this step
-            params.save_output_as_bam ? CHANNEL_MARKDUPLICATES_CREATE_CSV(CRAM_TO_BAM.out.alignment_index) : CHANNEL_MARKDUPLICATES_CREATE_CSV(ch_md_cram_for_restart)
+            params.save_output_as_bam ? CHANNEL_ALIGN_CREATE_CSV(BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai) : CHANNEL_ALIGN_CREATE_CSV(BAM_TO_CRAM_MAPPING.out.alignment_index)
+
+            // Gather used softwares versions
+            versions = versions.mix(BAM_MERGE_INDEX_SAMTOOLS.out.versions)
+            versions = versions.mix(BAM_TO_CRAM_MAPPING.out.versions)
         }
 
-        if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration']) {
+        // Gather used softwares versions
+        versions = versions.mix(CONVERT_FASTQ_INPUT.out.versions)
+        versions = versions.mix(FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP.out.versions)
+    }
 
-            // Run if starting from step "prepare_recalibration"
-            if (params.step == 'prepare_recalibration') {
+    if (params.step in ['mapping', 'markduplicates']) {
 
-                // Support if starting from BAM or CRAM files
-                input_prepare_recal_convert = input_sample.branch{
-                    bam: it[0].data_type == "bam"
-                    cram: it[0].data_type == "cram"
-                }
+        // ch_cram_no_markduplicates_restart = Channel.empty()
+        cram_markduplicates_no_spark = Channel.empty()
+        cram_markduplicates_spark    = Channel.empty()
 
-                // BAM files first must be converted to CRAM files since from this step on we base everything on CRAM format
-                BAM_TO_CRAM(input_prepare_recal_convert.bam, fasta, fasta_fai)
-                versions = versions.mix(BAM_TO_CRAM.out.versions)
+        // STEP 2: markduplicates (+QC) + convert to CRAM
 
-                ch_cram_from_bam = BAM_TO_CRAM.out.alignment_index.map{ meta, cram, crai ->
-                    // Make sure correct data types are carried through
-                    [ meta.subMap('id', 'patient', 'sample', 'sex', 'status')
-                        + [data_type: "cram"],
-                        cram, crai ]
-                }
+        // ch_bam_for_markduplicates will countain bam mapped with FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP when step is mapping
+        // Or bams that are specified in the samplesheet.csv when step is prepare_recalibration
+        cram_for_markduplicates = params.step == 'mapping' ? bam_mapped : input_sample.map{ meta, input, index -> [ meta, input ] }
 
-                ch_cram_for_bam_baserecalibrator = Channel.empty().mix(ch_cram_from_bam, input_prepare_recal_convert.cram)
-                ch_md_cram_for_restart = ch_cram_from_bam
+        // if no MD is done, then run QC on mapped & converted CRAM files
+        // or the input BAM (+converted) or CRAM files
+        cram_skip_markduplicates = Channel.empty()
 
+        // Should it be possible to restart from converted crams?
+        // For now, conversion from bam to cram is only done when skipping markduplicates
+
+        if (params.skip_tools && params.skip_tools.split(',').contains('markduplicates')) {
+            if (params.step == 'mapping') {
+                cram_skip_markduplicates = BAM_TO_CRAM_MAPPING.out.alignment_index
             } else {
-
-                // ch_cram_for_bam_baserecalibrator contains either:
-                // - crams from markduplicates
-                // - crams from markduplicates_spark
-                // - crams converted from bam mapped when skipping markduplicates
-                // - input cram files, when start from step markduplicates
-                // ch_md_cram_for_restart.view() // contains md.cram.crai
-                ch_cram_for_bam_baserecalibrator = Channel.empty().mix(ch_md_cram_for_restart, cram_skip_markduplicates ).map{ meta, cram, crai ->
-                    // Make sure correct data types are carried through
-                    [ meta.subMap('id', 'patient', 'sample', 'sex', 'status')
-                        + [data_type: "cram"],
-                        cram, crai ]
-                }
-
-            }
-
-            // STEP 3: Create recalibration tables
-            if (!(params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'))) {
-                ch_table_bqsr_no_spark = Channel.empty()
-                ch_table_bqsr_spark    = Channel.empty()
-
-                if (params.use_gatk_spark && params.use_gatk_spark.contains('baserecalibrator')) {
-                BAM_BASERECALIBRATOR_SPARK(
-                    ch_cram_for_bam_baserecalibrator,
-                    dict,
-                    fasta,
-                    fasta_fai,
-                    intervals_and_num_intervals,
-                    known_sites_indels,
-                    known_sites_indels_tbi)
-
-                    ch_table_bqsr_spark = BAM_BASERECALIBRATOR_SPARK.out.table_bqsr
-
-                    // Gather used softwares versions
-                    versions = versions.mix(BAM_BASERECALIBRATOR_SPARK.out.versions)
-                } else {
-
-                BAM_BASERECALIBRATOR(
-                    ch_cram_for_bam_baserecalibrator,
-                    dict,
-                    fasta,
-                    fasta_fai,
-                    intervals_and_num_intervals,
-                    known_sites_indels,
-                    known_sites_indels_tbi)
-
-                    ch_table_bqsr_no_spark = BAM_BASERECALIBRATOR.out.table_bqsr
-
-                    // Gather used softwares versions
-                    versions = versions.mix(BAM_BASERECALIBRATOR.out.versions)
-                }
-
-                // ch_table_bqsr contains either:
-                // - bqsr table from baserecalibrator
-                // - bqsr table from baserecalibrator_spark
-                ch_table_bqsr = Channel.empty().mix(
-                    ch_table_bqsr_no_spark,
-                    ch_table_bqsr_spark)
-
-                reports = reports.mix(ch_table_bqsr.collect{ meta, table -> table })
-
-                cram_applybqsr = ch_cram_for_bam_baserecalibrator.join(ch_table_bqsr)
-
-                // Create CSV to restart from this step
-                CHANNEL_BASERECALIBRATOR_CREATE_CSV(ch_md_cram_for_restart.join(ch_table_bqsr), params.skip_tools)
-            }
-        }
-
-        // STEP 4: RECALIBRATING
-        if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration', 'recalibrate']) {
-
-            // Run if starting from step "prepare_recalibration"
-            if (params.step == 'recalibrate') {
-
-                // Support if starting from BAM or CRAM files
-                input_recal_convert = input_sample.branch{
+                input_markduplicates_convert = input_sample.branch{
                     bam:  it[0].data_type == "bam"
                     cram: it[0].data_type == "cram"
                 }
 
-                // If BAM file, split up table and mapped file to convert BAM to CRAM
-                input_only_table = input_recal_convert.bam.map{ meta, bam, bai, table -> [ meta, table ] }
-                input_only_bam   = input_recal_convert.bam.map{ meta, bam, bai, table -> [ meta, bam, bai ] }
-
-                // BAM files first must be converted to CRAM files since from this step on we base everything on CRAM format
-                BAM_TO_CRAM(input_only_bam, fasta, fasta_fai)
+                // Convert any input BAMs to CRAM
+                BAM_TO_CRAM(input_markduplicates_convert.bam, fasta, fasta_fai)
                 versions = versions.mix(BAM_TO_CRAM.out.versions)
 
-                cram_applybqsr = Channel.empty().mix(
-                    BAM_TO_CRAM.out.alignment_index.join(input_only_table),
-                    input_recal_convert.cram) // Join together converted cram with input tables
+                cram_skip_markduplicates = Channel.empty().mix(input_markduplicates_convert.cram, BAM_TO_CRAM.out.alignment_index)
             }
 
-            if (!(params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'))) {
-                cram_variant_calling_no_spark = Channel.empty()
-                cram_variant_calling_spark    = Channel.empty()
+            CRAM_QC_NO_MD(cram_skip_markduplicates, fasta, intervals_for_preprocessing)
 
-                if (params.use_gatk_spark && params.use_gatk_spark.contains('baserecalibrator')) {
+            // Gather QC reports
+            reports = reports.mix(CRAM_QC_NO_MD.out.reports.collect{ meta, report -> report })
 
-                    BAM_APPLYBQSR_SPARK(
-                        cram_applybqsr,
-                        dict,
-                        fasta,
-                        fasta_fai,
-                        intervals_and_num_intervals)
+            // Gather used softwares versions
+            versions = versions.mix(CRAM_QC_NO_MD.out.versions)
+        } else if (params.use_gatk_spark && params.use_gatk_spark.contains('markduplicates')) {
+            BAM_MARKDUPLICATES_SPARK(
+                cram_for_markduplicates,
+                dict,
+                fasta,
+                fasta_fai,
+                intervals_for_preprocessing)
+            cram_markduplicates_spark = BAM_MARKDUPLICATES_SPARK.out.cram
 
-                    cram_variant_calling_spark = BAM_APPLYBQSR_SPARK.out.cram
+            // Gather QC reports
+            reports = reports.mix(BAM_MARKDUPLICATES_SPARK.out.reports.collect{ meta, report -> report })
 
-                    // Gather used softwares versions
-                    versions = versions.mix(BAM_APPLYBQSR_SPARK.out.versions)
+            // Gather used softwares versions
+            versions = versions.mix(BAM_MARKDUPLICATES_SPARK.out.versions)
+        } else {
+            BAM_MARKDUPLICATES(
+                cram_for_markduplicates,
+                fasta,
+                fasta_fai,
+                intervals_for_preprocessing)
 
-                } else {
+            cram_markduplicates_no_spark = BAM_MARKDUPLICATES.out.cram
 
-                    BAM_APPLYBQSR(
-                        cram_applybqsr,
-                        dict,
-                        fasta,
-                        fasta_fai,
-                        intervals_and_num_intervals)
+            // Gather QC reports
+            reports = reports.mix(BAM_MARKDUPLICATES.out.reports.collect{ meta, report -> report })
 
-                    cram_variant_calling_no_spark = BAM_APPLYBQSR.out.cram
-
-                    // Gather used softwares versions
-                    versions = versions.mix(BAM_APPLYBQSR.out.versions)
-                }
-
-                cram_variant_calling = Channel.empty().mix(
-                    cram_variant_calling_no_spark,
-                    cram_variant_calling_spark)
-
-                CRAM_QC_RECAL(
-                    cram_variant_calling,
-                    fasta,
-                    intervals_for_preprocessing)
-
-                // Gather QC reports
-                reports = reports.mix(CRAM_QC_RECAL.out.reports.collect{ meta, report -> report })
-
-                // Gather used softwares versions
-                versions = versions.mix(CRAM_QC_RECAL.out.versions)
-
-                // If params.save_output_as_bam, then convert CRAM files to BAM
-                CRAM_TO_BAM_RECAL(cram_variant_calling, fasta, fasta_fai)
-                versions = versions.mix(CRAM_TO_BAM_RECAL.out.versions)
-
-                // CSV should be written for the file actually out out, either CRAM or BAM
-                csv_recalibration = Channel.empty()
-                csv_recalibration = params.save_output_as_bam ?  CRAM_TO_BAM_RECAL.out.alignment_index : cram_variant_calling
-
-                // Create CSV to restart from this step
-                CHANNEL_APPLYBQSR_CREATE_CSV(csv_recalibration)
-
-            } else if (params.step == 'recalibrate') {
-                // cram_variant_calling contains either:
-                // - input bams converted to crams, if started from step recal + skip BQSR
-                // - input crams if started from step recal + skip BQSR
-                cram_variant_calling = Channel.empty().mix(
-                    BAM_TO_CRAM.out.alignment_index,
-                    input_recal_convert.cram.map{ meta, cram, crai, table -> [ meta, cram, crai ] })
-            } else {
-                // cram_variant_calling contains either:
-                // - crams from markduplicates = ch_cram_for_bam_baserecalibrator if skip BQSR but not started from step recalibration
-                cram_variant_calling = Channel.empty().mix(ch_cram_for_bam_baserecalibrator)
-            }
+            // Gather used softwares versions
+            versions = versions.mix(BAM_MARKDUPLICATES.out.versions)
         }
 
-        if (params.step == 'variant_calling') {
+        // ch_md_cram_for_restart contains either:
+        // - crams from markduplicates
+        // - crams from markduplicates_spark
+        // - crams from input step markduplicates --> from the converted ones only?
+        ch_md_cram_for_restart = Channel.empty().mix(cram_markduplicates_no_spark,cram_markduplicates_spark)
+            // Make sure correct data types are carried through
+            .map{ meta, cram, crai -> [ meta - meta.subMap('data_type') + [data_type: "cram"], cram, crai ] }
 
-            input_variant_calling_convert = input_sample.branch{
-                bam:  it[0].data_type == "bam"
+        // If params.save_output_as_bam, then convert CRAM files to BAM
+        CRAM_TO_BAM(ch_md_cram_for_restart, fasta, fasta_fai)
+        versions = versions.mix(CRAM_TO_BAM.out.versions)
+
+        // CSV should be written for the file actually out, either CRAM or BAM
+        // Create CSV to restart from this step
+        params.save_output_as_bam ? CHANNEL_MARKDUPLICATES_CREATE_CSV(CRAM_TO_BAM.out.alignment_index) : CHANNEL_MARKDUPLICATES_CREATE_CSV(ch_md_cram_for_restart)
+    }
+
+    if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration']) {
+
+        // Run if starting from step "prepare_recalibration"
+        if (params.step == 'prepare_recalibration') {
+
+            // Support if starting from BAM or CRAM files
+            input_prepare_recal_convert = input_sample.branch{
+                bam: it[0].data_type == "bam"
                 cram: it[0].data_type == "cram"
             }
 
             // BAM files first must be converted to CRAM files since from this step on we base everything on CRAM format
-            BAM_TO_CRAM(input_variant_calling_convert.bam, fasta, fasta_fai)
+            BAM_TO_CRAM(input_prepare_recal_convert.bam, fasta, fasta_fai)
             versions = versions.mix(BAM_TO_CRAM.out.versions)
 
-            cram_variant_calling = Channel.empty().mix(BAM_TO_CRAM.out.alignment_index, input_variant_calling_convert.cram)
+            ch_cram_from_bam = BAM_TO_CRAM.out.alignment_index.map{ meta, cram, crai ->
+                // Make sure correct data types are carried through
+                [ meta.subMap('id', 'patient', 'sample', 'sex', 'status')
+                    + [data_type: "cram"],
+                    cram, crai ]
+            }
+
+            ch_cram_for_bam_baserecalibrator = Channel.empty().mix(ch_cram_from_bam, input_prepare_recal_convert.cram)
+            ch_md_cram_for_restart = ch_cram_from_bam
+
+        } else {
+
+            // ch_cram_for_bam_baserecalibrator contains either:
+            // - crams from markduplicates
+            // - crams from markduplicates_spark
+            // - crams converted from bam mapped when skipping markduplicates
+            // - input cram files, when start from step markduplicates
+            // ch_md_cram_for_restart.view() // contains md.cram.crai
+            ch_cram_for_bam_baserecalibrator = Channel.empty().mix(ch_md_cram_for_restart, cram_skip_markduplicates ).map{ meta, cram, crai ->
+                // Make sure correct data types are carried through
+                [ meta.subMap('id', 'patient', 'sample', 'sex', 'status')
+                    + [data_type: "cram"],
+                    cram, crai ]
+            }
 
         }
 
-        if (params.tools) {
+        // STEP 3: Create recalibration tables
+        if (!(params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'))) {
+            ch_table_bqsr_no_spark = Channel.empty()
+            ch_table_bqsr_spark    = Channel.empty()
 
-            if (params.step == 'annotate') cram_variant_calling = Channel.empty()
-
-            //
-            // Logic to separate germline samples, tumor samples with no matched normal, and combine tumor-normal pairs
-            //
-            cram_variant_calling_status = cram_variant_calling.branch{
-                normal: it[0].status == 0
-                tumor:  it[0].status == 1
-            }
-
-            // All Germline samples
-            cram_variant_calling_normal_to_cross = cram_variant_calling_status.normal.map{ meta, cram, crai -> [ meta.patient, meta, cram, crai ] }
-
-            // All tumor samples
-            cram_variant_calling_pair_to_cross = cram_variant_calling_status.tumor.map{ meta, cram, crai -> [ meta.patient, meta, cram, crai ] }
-
-            // Tumor only samples
-            // 1. Group together all tumor samples by patient ID [ patient1, [ meta1, meta2 ], [ cram1, crai1, cram2, crai2 ] ]
-
-            // Downside: this only works by waiting for all tumor samples to finish preprocessing, since no group size is provided
-            cram_variant_calling_tumor_grouped = cram_variant_calling_pair_to_cross.groupTuple()
-
-            // 2. Join with normal samples, in each channel there is one key per patient now. Patients without matched normal end up with: [ patient1, [ meta1, meta2 ], [ cram1, crai1, cram2, crai2 ], null ]
-            cram_variant_calling_tumor_joined = cram_variant_calling_tumor_grouped.join(cram_variant_calling_normal_to_cross, remainder: true)
-
-            // 3. Filter out entries with last entry null
-            cram_variant_calling_tumor_filtered = cram_variant_calling_tumor_joined.filter{ it ->  !(it.last()) }
-
-            // 4. Transpose [ patient1, [ meta1, meta2 ], [ cram1, crai1, cram2, crai2 ] ] back to [ patient1, meta1, [ cram1, crai1 ], null ] [ patient1, meta2, [ cram2, crai2 ], null ]
-            // and remove patient ID field & null value for further processing [ meta1, [ cram1, crai1 ] ] [ meta2, [ cram2, crai2 ] ]
-            cram_variant_calling_tumor_only = cram_variant_calling_tumor_filtered.transpose().map{ it -> [it[1], it[2], it[3]] }
-
-            if (params.only_paired_variant_calling) {
-                // Normal only samples
-
-                // 1. Join with tumor samples, in each channel there is one key per patient now. Patients without matched tumor end up with: [ patient1, [ meta1 ], [ cram1, crai1 ], null ] as there is only one matched normal possible
-                cram_variant_calling_normal_joined = cram_variant_calling_normal_to_cross.join(cram_variant_calling_tumor_grouped, remainder: true)
-
-                // 2. Filter out entries with last entry null
-                cram_variant_calling_normal_filtered = cram_variant_calling_normal_joined.filter{ it ->  !(it.last()) }
-
-                // 3. Remove patient ID field & null value for further processing [ meta1, [ cram1, crai1 ] ] [ meta2, [ cram2, crai2 ] ] (no transposing needed since only one normal per patient ID)
-                cram_variant_calling_status_normal = cram_variant_calling_normal_filtered.map{ it -> [it[1], it[2], it[3]] }
-
-            } else {
-                cram_variant_calling_status_normal = cram_variant_calling_status.normal
-            }
-
-            // Tumor - normal pairs
-            // Use cross to combine normal with all tumor samples, i.e. multi tumor samples from recurrences
-            cram_variant_calling_pair = cram_variant_calling_normal_to_cross.cross(cram_variant_calling_pair_to_cross)
-                .map { normal, tumor ->
-                    def meta = [:]
-
-                    meta.id         = "${tumor[1].sample}_vs_${normal[1].sample}".toString()
-                    meta.normal_id  = normal[1].sample
-                    meta.patient    = normal[0]
-                    meta.sex        = normal[1].sex
-                    meta.tumor_id   = tumor[1].sample
-
-                    [ meta, normal[2], normal[3], tumor[2], tumor[3] ]
-                }
-
-            // GERMLINE VARIANT CALLING
-            BAM_VARIANT_CALLING_GERMLINE_ALL(
-                params.tools,
-                params.skip_tools,
-                cram_variant_calling_status_normal,
-                [ [ id:'bwa' ], [] ], // bwa_index for tiddit; not used here
-                dbsnp,
-                dbsnp_tbi,
-                dbsnp_vqsr,
+            if (params.use_gatk_spark && params.use_gatk_spark.contains('baserecalibrator')) {
+            BAM_BASERECALIBRATOR_SPARK(
+                ch_cram_for_bam_baserecalibrator,
                 dict,
                 fasta,
                 fasta_fai,
                 intervals_and_num_intervals,
-                intervals_bed_combined, // [] if no_intervals, else interval_bed_combined.bed
-                PREPARE_INTERVALS.out.intervals_bed_combined, // no_intervals.bed if no intervals, else interval_bed_combined.bed; Channel operations possible
-                intervals_bed_gz_tbi_and_num_intervals,
-                known_indels_vqsr,
                 known_sites_indels,
-                known_sites_indels_tbi,
-                known_sites_snps,
-                known_sites_snps_tbi,
-                known_snps_vqsr,
-                params.joint_germline)
+                known_sites_indels_tbi)
 
-            // TUMOR ONLY VARIANT CALLING
-            BAM_VARIANT_CALLING_TUMOR_ONLY_ALL(
-                params.tools,
-                cram_variant_calling_tumor_only,
-                [ [ id:'bwa' ], [] ], // bwa_index for tiddit; not used here
-                cf_chrom_len,
-                chr_files,
-                cnvkit_reference,
-                dbsnp,
-                dbsnp_tbi,
-                dict,
-                fasta,
-                fasta_fai,
-                germline_resource,
-                germline_resource_tbi,
-                intervals_and_num_intervals,
-                intervals_bed_gz_tbi_and_num_intervals,
-                intervals_bed_combined,
-                mappability,
-                pon,
-                pon_tbi
-            )
-
-            // PAIR VARIANT CALLING
-            BAM_VARIANT_CALLING_SOMATIC_ALL(
-                params.tools,
-                cram_variant_calling_pair,
-                [ [ id:'bwa' ], [] ], // bwa_index for tiddit; not used here
-                cf_chrom_len,
-                chr_files,
-                dbsnp,
-                dbsnp_tbi,
-                dict,
-                fasta,
-                fasta_fai,
-                germline_resource,
-                germline_resource_tbi,
-                intervals_and_num_intervals,
-                intervals_bed_gz_tbi_and_num_intervals,
-                intervals_bed_combined,
-                mappability,
-                msisensorpro_scan,
-                pon,
-                pon_tbi,
-                allele_files,
-                loci_files,
-                gc_file,
-                rt_file
-            )
-
-            if (params.concatenate_vcfs) {
-                // Concatenate vcf-files
-                ADD_INFO_TO_VCF(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_all)
-                TABIX_EXT_VCF(ADD_INFO_TO_VCF.out.vcf)
-
-                // Gather vcfs and vcf-tbis for concatenating germline-vcfs
-                germline_vcfs_with_tbis = TABIX_EXT_VCF.out.gz_tbi.map{ meta, vcf, tbi -> [ meta.subMap('id'), vcf, tbi ] }.groupTuple()
-
-                GERMLINE_VCFS_CONCAT(germline_vcfs_with_tbis)
-                GERMLINE_VCFS_CONCAT_SORT(GERMLINE_VCFS_CONCAT.out.vcf)
-                TABIX_GERMLINE_VCFS_CONCAT_SORT(GERMLINE_VCFS_CONCAT_SORT.out.vcf)
-            }
-
-            // Gather vcf files for annotation and QC
-            vcf_to_annotate = Channel.empty()
-            vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_deepvariant)
-            vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_freebayes)
-            vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_haplotypecaller)
-            vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_manta)
-            vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_strelka)
-            vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_tiddit)
-            // vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_mpileup) // Not annotated?
-            vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.vcf_all)
-            vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.vcf_all)
-
-            // Gather used softwares versions
-            versions = versions.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.versions)
-            versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.versions)
-            versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.versions)
-
-            // QC
-            VCF_QC_BCFTOOLS_VCFTOOLS(vcf_to_annotate, intervals_bed_combined)
-
-            versions = versions.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.versions)
-            reports = reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.bcftools_stats.collect{ meta, stats -> stats })
-            reports = reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.vcftools_tstv_counts.collect{ meta, counts -> counts })
-            reports = reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.vcftools_tstv_qual.collect{ meta, qual -> qual })
-            reports = reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.vcftools_filter_summary.collect{ meta, summary -> summary })
-
-            CHANNEL_VARIANT_CALLING_CREATE_CSV(vcf_to_annotate)
-
-            // ANNOTATE
-            if (params.step == 'annotate') vcf_to_annotate = input_sample
-
-            if (params.tools.split(',').contains('merge') || params.tools.split(',').contains('snpeff') || params.tools.split(',').contains('vep')) {
-
-                vep_fasta = (params.vep_include_fasta) ? fasta : []
-
-                VCF_ANNOTATE_ALL(
-                    vcf_to_annotate,
-                    vep_fasta,
-                    params.tools,
-                    snpeff_db,
-                    snpeff_cache,
-                    vep_genome,
-                    vep_species,
-                    vep_cache_version,
-                    vep_cache,
-                    vep_extra_files)
+                ch_table_bqsr_spark = BAM_BASERECALIBRATOR_SPARK.out.table_bqsr
 
                 // Gather used softwares versions
-                versions = versions.mix(VCF_ANNOTATE_ALL.out.versions)
-                reports = reports.mix(VCF_ANNOTATE_ALL.out.reports)
+                versions = versions.mix(BAM_BASERECALIBRATOR_SPARK.out.versions)
+            } else {
+
+            BAM_BASERECALIBRATOR(
+                ch_cram_for_bam_baserecalibrator,
+                dict,
+                fasta,
+                fasta_fai,
+                intervals_and_num_intervals,
+                known_sites_indels,
+                known_sites_indels_tbi)
+
+                ch_table_bqsr_no_spark = BAM_BASERECALIBRATOR.out.table_bqsr
+
+                // Gather used softwares versions
+                versions = versions.mix(BAM_BASERECALIBRATOR.out.versions)
             }
+
+            // ch_table_bqsr contains either:
+            // - bqsr table from baserecalibrator
+            // - bqsr table from baserecalibrator_spark
+            ch_table_bqsr = Channel.empty().mix(
+                ch_table_bqsr_no_spark,
+                ch_table_bqsr_spark)
+
+            reports = reports.mix(ch_table_bqsr.collect{ meta, table -> table })
+
+            cram_applybqsr = ch_cram_for_bam_baserecalibrator.join(ch_table_bqsr)
+
+            // Create CSV to restart from this step
+            CHANNEL_BASERECALIBRATOR_CREATE_CSV(ch_md_cram_for_restart.join(ch_table_bqsr), params.skip_tools)
+        }
+    }
+
+    // STEP 4: RECALIBRATING
+    if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration', 'recalibrate']) {
+
+        // Run if starting from step "prepare_recalibration"
+        if (params.step == 'recalibrate') {
+
+            // Support if starting from BAM or CRAM files
+            input_recal_convert = input_sample.branch{
+                bam:  it[0].data_type == "bam"
+                cram: it[0].data_type == "cram"
+            }
+
+            // If BAM file, split up table and mapped file to convert BAM to CRAM
+            input_only_table = input_recal_convert.bam.map{ meta, bam, bai, table -> [ meta, table ] }
+            input_only_bam   = input_recal_convert.bam.map{ meta, bam, bai, table -> [ meta, bam, bai ] }
+
+            // BAM files first must be converted to CRAM files since from this step on we base everything on CRAM format
+            BAM_TO_CRAM(input_only_bam, fasta, fasta_fai)
+            versions = versions.mix(BAM_TO_CRAM.out.versions)
+
+            cram_applybqsr = Channel.empty().mix(
+                BAM_TO_CRAM.out.alignment_index.join(input_only_table),
+                input_recal_convert.cram) // Join together converted cram with input tables
+        }
+
+        if (!(params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'))) {
+            cram_variant_calling_no_spark = Channel.empty()
+            cram_variant_calling_spark    = Channel.empty()
+
+            if (params.use_gatk_spark && params.use_gatk_spark.contains('baserecalibrator')) {
+
+                BAM_APPLYBQSR_SPARK(
+                    cram_applybqsr,
+                    dict,
+                    fasta,
+                    fasta_fai,
+                    intervals_and_num_intervals)
+
+                cram_variant_calling_spark = BAM_APPLYBQSR_SPARK.out.cram
+
+                // Gather used softwares versions
+                versions = versions.mix(BAM_APPLYBQSR_SPARK.out.versions)
+
+            } else {
+
+                BAM_APPLYBQSR(
+                    cram_applybqsr,
+                    dict,
+                    fasta,
+                    fasta_fai,
+                    intervals_and_num_intervals)
+
+                cram_variant_calling_no_spark = BAM_APPLYBQSR.out.cram
+
+                // Gather used softwares versions
+                versions = versions.mix(BAM_APPLYBQSR.out.versions)
+            }
+
+            cram_variant_calling = Channel.empty().mix(
+                cram_variant_calling_no_spark,
+                cram_variant_calling_spark)
+
+            CRAM_QC_RECAL(
+                cram_variant_calling,
+                fasta,
+                intervals_for_preprocessing)
+
+            // Gather QC reports
+            reports = reports.mix(CRAM_QC_RECAL.out.reports.collect{ meta, report -> report })
+
+            // Gather used softwares versions
+            versions = versions.mix(CRAM_QC_RECAL.out.versions)
+
+            // If params.save_output_as_bam, then convert CRAM files to BAM
+            CRAM_TO_BAM_RECAL(cram_variant_calling, fasta, fasta_fai)
+            versions = versions.mix(CRAM_TO_BAM_RECAL.out.versions)
+
+            // CSV should be written for the file actually out out, either CRAM or BAM
+            csv_recalibration = Channel.empty()
+            csv_recalibration = params.save_output_as_bam ?  CRAM_TO_BAM_RECAL.out.alignment_index : cram_variant_calling
+
+            // Create CSV to restart from this step
+            CHANNEL_APPLYBQSR_CREATE_CSV(csv_recalibration)
+
+        } else if (params.step == 'recalibrate') {
+            // cram_variant_calling contains either:
+            // - input bams converted to crams, if started from step recal + skip BQSR
+            // - input crams if started from step recal + skip BQSR
+            cram_variant_calling = Channel.empty().mix(
+                BAM_TO_CRAM.out.alignment_index,
+                input_recal_convert.cram.map{ meta, cram, crai, table -> [ meta, cram, crai ] })
+        } else {
+            // cram_variant_calling contains either:
+            // - crams from markduplicates = ch_cram_for_bam_baserecalibrator if skip BQSR but not started from step recalibration
+            cram_variant_calling = Channel.empty().mix(ch_cram_for_bam_baserecalibrator)
+        }
+    }
+
+    if (params.step == 'variant_calling') {
+
+        input_variant_calling_convert = input_sample.branch{
+            bam:  it[0].data_type == "bam"
+            cram: it[0].data_type == "cram"
+        }
+
+        // BAM files first must be converted to CRAM files since from this step on we base everything on CRAM format
+        BAM_TO_CRAM(input_variant_calling_convert.bam, fasta, fasta_fai)
+        versions = versions.mix(BAM_TO_CRAM.out.versions)
+
+        cram_variant_calling = Channel.empty().mix(BAM_TO_CRAM.out.alignment_index, input_variant_calling_convert.cram)
+
+    }
+
+    if (params.tools) {
+
+        if (params.step == 'annotate') cram_variant_calling = Channel.empty()
+
+        //
+        // Logic to separate germline samples, tumor samples with no matched normal, and combine tumor-normal pairs
+        //
+        cram_variant_calling_status = cram_variant_calling.branch{
+            normal: it[0].status == 0
+            tumor:  it[0].status == 1
+        }
+
+        // All Germline samples
+        cram_variant_calling_normal_to_cross = cram_variant_calling_status.normal.map{ meta, cram, crai -> [ meta.patient, meta, cram, crai ] }
+
+        // All tumor samples
+        cram_variant_calling_pair_to_cross = cram_variant_calling_status.tumor.map{ meta, cram, crai -> [ meta.patient, meta, cram, crai ] }
+
+        // Tumor only samples
+        // 1. Group together all tumor samples by patient ID [ patient1, [ meta1, meta2 ], [ cram1, crai1, cram2, crai2 ] ]
+
+        // Downside: this only works by waiting for all tumor samples to finish preprocessing, since no group size is provided
+        cram_variant_calling_tumor_grouped = cram_variant_calling_pair_to_cross.groupTuple()
+
+        // 2. Join with normal samples, in each channel there is one key per patient now. Patients without matched normal end up with: [ patient1, [ meta1, meta2 ], [ cram1, crai1, cram2, crai2 ], null ]
+        cram_variant_calling_tumor_joined = cram_variant_calling_tumor_grouped.join(cram_variant_calling_normal_to_cross, remainder: true)
+
+        // 3. Filter out entries with last entry null
+        cram_variant_calling_tumor_filtered = cram_variant_calling_tumor_joined.filter{ it ->  !(it.last()) }
+
+        // 4. Transpose [ patient1, [ meta1, meta2 ], [ cram1, crai1, cram2, crai2 ] ] back to [ patient1, meta1, [ cram1, crai1 ], null ] [ patient1, meta2, [ cram2, crai2 ], null ]
+        // and remove patient ID field & null value for further processing [ meta1, [ cram1, crai1 ] ] [ meta2, [ cram2, crai2 ] ]
+        cram_variant_calling_tumor_only = cram_variant_calling_tumor_filtered.transpose().map{ it -> [it[1], it[2], it[3]] }
+
+        if (params.only_paired_variant_calling) {
+            // Normal only samples
+
+            // 1. Join with tumor samples, in each channel there is one key per patient now. Patients without matched tumor end up with: [ patient1, [ meta1 ], [ cram1, crai1 ], null ] as there is only one matched normal possible
+            cram_variant_calling_normal_joined = cram_variant_calling_normal_to_cross.join(cram_variant_calling_tumor_grouped, remainder: true)
+
+            // 2. Filter out entries with last entry null
+            cram_variant_calling_normal_filtered = cram_variant_calling_normal_joined.filter{ it ->  !(it.last()) }
+
+            // 3. Remove patient ID field & null value for further processing [ meta1, [ cram1, crai1 ] ] [ meta2, [ cram2, crai2 ] ] (no transposing needed since only one normal per patient ID)
+            cram_variant_calling_status_normal = cram_variant_calling_normal_filtered.map{ it -> [it[1], it[2], it[3]] }
+
+        } else {
+            cram_variant_calling_status_normal = cram_variant_calling_status.normal
+        }
+
+        // Tumor - normal pairs
+        // Use cross to combine normal with all tumor samples, i.e. multi tumor samples from recurrences
+        cram_variant_calling_pair = cram_variant_calling_normal_to_cross.cross(cram_variant_calling_pair_to_cross)
+            .map { normal, tumor ->
+                def meta = [:]
+
+                meta.id         = "${tumor[1].sample}_vs_${normal[1].sample}".toString()
+                meta.normal_id  = normal[1].sample
+                meta.patient    = normal[0]
+                meta.sex        = normal[1].sex
+                meta.tumor_id   = tumor[1].sample
+
+                [ meta, normal[2], normal[3], tumor[2], tumor[3] ]
+            }
+
+        // GERMLINE VARIANT CALLING
+        BAM_VARIANT_CALLING_GERMLINE_ALL(
+            params.tools,
+            params.skip_tools,
+            cram_variant_calling_status_normal,
+            [ [ id:'bwa' ], [] ], // bwa_index for tiddit; not used here
+            dbsnp,
+            dbsnp_tbi,
+            dbsnp_vqsr,
+            dict,
+            fasta,
+            fasta_fai,
+            intervals_and_num_intervals,
+            intervals_bed_combined, // [] if no_intervals, else interval_bed_combined.bed
+            PREPARE_INTERVALS.out.intervals_bed_combined, // no_intervals.bed if no intervals, else interval_bed_combined.bed; Channel operations possible
+            intervals_bed_gz_tbi_and_num_intervals,
+            known_indels_vqsr,
+            known_sites_indels,
+            known_sites_indels_tbi,
+            known_sites_snps,
+            known_sites_snps_tbi,
+            known_snps_vqsr,
+            params.joint_germline)
+
+        // TUMOR ONLY VARIANT CALLING
+        BAM_VARIANT_CALLING_TUMOR_ONLY_ALL(
+            params.tools,
+            cram_variant_calling_tumor_only,
+            [ [ id:'bwa' ], [] ], // bwa_index for tiddit; not used here
+            cf_chrom_len,
+            chr_files,
+            cnvkit_reference,
+            dbsnp,
+            dbsnp_tbi,
+            dict,
+            fasta,
+            fasta_fai,
+            germline_resource,
+            germline_resource_tbi,
+            intervals_and_num_intervals,
+            intervals_bed_gz_tbi_and_num_intervals,
+            intervals_bed_combined,
+            mappability,
+            pon,
+            pon_tbi
+        )
+
+        // PAIR VARIANT CALLING
+        BAM_VARIANT_CALLING_SOMATIC_ALL(
+            params.tools,
+            cram_variant_calling_pair,
+            [ [ id:'bwa' ], [] ], // bwa_index for tiddit; not used here
+            cf_chrom_len,
+            chr_files,
+            dbsnp,
+            dbsnp_tbi,
+            dict,
+            fasta,
+            fasta_fai,
+            germline_resource,
+            germline_resource_tbi,
+            intervals_and_num_intervals,
+            intervals_bed_gz_tbi_and_num_intervals,
+            intervals_bed_combined,
+            mappability,
+            msisensorpro_scan,
+            pon,
+            pon_tbi,
+            allele_files,
+            loci_files,
+            gc_file,
+            rt_file
+        )
+
+        if (params.concatenate_vcfs) {
+            // Concatenate vcf-files
+            ADD_INFO_TO_VCF(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_all)
+            TABIX_EXT_VCF(ADD_INFO_TO_VCF.out.vcf)
+
+            // Gather vcfs and vcf-tbis for concatenating germline-vcfs
+            germline_vcfs_with_tbis = TABIX_EXT_VCF.out.gz_tbi.map{ meta, vcf, tbi -> [ meta.subMap('id'), vcf, tbi ] }.groupTuple()
+
+            GERMLINE_VCFS_CONCAT(germline_vcfs_with_tbis)
+            GERMLINE_VCFS_CONCAT_SORT(GERMLINE_VCFS_CONCAT.out.vcf)
+            TABIX_GERMLINE_VCFS_CONCAT_SORT(GERMLINE_VCFS_CONCAT_SORT.out.vcf)
+        }
+
+        // Gather vcf files for annotation and QC
+        vcf_to_annotate = Channel.empty()
+        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_deepvariant)
+        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_freebayes)
+        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_haplotypecaller)
+        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_manta)
+        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_strelka)
+        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_tiddit)
+        // vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_mpileup) // Not annotated?
+        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.vcf_all)
+        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.vcf_all)
+
+        // Gather used softwares versions
+        versions = versions.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.versions)
+        versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.versions)
+        versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.versions)
+
+        // QC
+        VCF_QC_BCFTOOLS_VCFTOOLS(vcf_to_annotate, intervals_bed_combined)
+
+        versions = versions.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.versions)
+        reports = reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.bcftools_stats.collect{ meta, stats -> stats })
+        reports = reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.vcftools_tstv_counts.collect{ meta, counts -> counts })
+        reports = reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.vcftools_tstv_qual.collect{ meta, qual -> qual })
+        reports = reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.vcftools_filter_summary.collect{ meta, summary -> summary })
+
+        CHANNEL_VARIANT_CALLING_CREATE_CSV(vcf_to_annotate)
+
+        // ANNOTATE
+        if (params.step == 'annotate') vcf_to_annotate = input_sample
+
+        if (params.tools.split(',').contains('merge') || params.tools.split(',').contains('snpeff') || params.tools.split(',').contains('vep')) {
+
+            vep_fasta = (params.vep_include_fasta) ? fasta : []
+
+            VCF_ANNOTATE_ALL(
+                vcf_to_annotate,
+                vep_fasta,
+                params.tools,
+                snpeff_db,
+                snpeff_cache,
+                vep_genome,
+                vep_species,
+                vep_cache_version,
+                vep_cache,
+                vep_extra_files)
+
+            // Gather used softwares versions
+            versions = versions.mix(VCF_ANNOTATE_ALL.out.versions)
+            reports = reports.mix(VCF_ANNOTATE_ALL.out.reports)
         }
     }
 
