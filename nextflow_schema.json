@@ -728,6 +728,12 @@
                     "description": "Save built references.",
                     "help_text": "Set this parameter, if you wish to save all computed reference files. This is useful to avoid re-computation on future runs."
                 },
+                "build_only_index": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-download",
+                    "description": "Only built references.",
+                    "help_text": "Set this parameter, if you wish to comput and save all computed reference files. This is useful to avoid re-computation on future runs."
+                },
                 "igenomes_base": {
                     "type": "string",
                     "format": "directory-path",
