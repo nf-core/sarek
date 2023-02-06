@@ -27,28 +27,29 @@ include { UNZIP as UNZIP_RT                      } from '../../../modules/nf-cor
 
 workflow PREPARE_GENOME {
     take:
-        ascat_alleles           // channel: [optional]  ascat allele files
-        ascat_loci              // channel: [optional]  ascat loci files
-        ascat_loci_gc           // channel: [optional]  ascat gc content file
-        ascat_loci_rt           // channel: [optional]  ascat replictiming file
-        chr_dir                 // channel: [optional]  chromosome files
-        dbsnp                   // channel: [optional]  dbsnp
-        fasta                   // channel: [mandatory] fasta
-        fasta_fai               // channel: [optional]  fasta_fai
-        germline_resource       // channel: [optional]  germline_resource
-        known_indels            // channel: [optional]  known_indels
-        known_snps              // channel: [optional]  known_snps
-        pon                     // channel: [optional]  pon
+    ascat_alleles     // channel: [optional]  ascat allele files
+    ascat_loci        // channel: [optional]  ascat loci files
+    ascat_loci_gc     // channel: [optional]  ascat gc content file
+    ascat_loci_rt     // channel: [optional]  ascat replictiming file
+    chr_dir           // channel: [optional]  chromosome files
+    dbsnp             // channel: [optional]  dbsnp
+    fasta             // channel: [mandatory] fasta
+    fasta_fai         // channel: [optional]  fasta_fai
+    germline_resource // channel: [optional]  germline_resource
+    known_indels      // channel: [optional]  known_indels
+    known_snps        // channel: [optional]  known_snps
+    pon               // channel: [optional]  pon
 
 
     main:
-    ch_versions = Channel.empty()
     fasta = fasta.map{ it -> [ [ id:it.baseName ], it ] }
+    versions = Channel.empty()
 
     BWAMEM1_INDEX(fasta)     // If aligner is bwa-mem
     BWAMEM2_INDEX(fasta)     // If aligner is bwa-mem2
     DRAGMAP_HASHTABLE(fasta) // If aligner is dragmap
 
+    // Remap channel to match module/subworkflow
     GATK4_CREATESEQUENCEDICTIONARY(fasta.map{ meta, fasta -> [ fasta ] })
     MSISENSORPRO_SCAN(fasta)
     SAMTOOLS_FAIDX(fasta)
@@ -68,26 +69,26 @@ workflow PREPARE_GENOME {
     if (params.ascat_alleles && params.ascat_alleles.endsWith('.zip')) {
         UNZIP_ALLELES(ascat_alleles.map{ it -> [ [ id:'ascat_alleles' ], it ] })
         allele_files = UNZIP_ALLELES.out.unzipped_archive.map{ it[1] }
-        ch_versions = ch_versions.mix(UNZIP_ALLELES.out.versions)
+        versions = versions.mix(UNZIP_ALLELES.out.versions)
     }
 
     loci_files = ascat_loci
     if (params.ascat_loci && params.ascat_loci.endsWith('.zip')) {
         UNZIP_LOCI(ascat_loci.map{ it -> [ [ id:'ascat_loci' ], it ] })
         loci_files = UNZIP_LOCI.out.unzipped_archive.map{ it[1] }
-        ch_versions = ch_versions.mix(UNZIP_LOCI.out.versions)
+        versions = versions.mix(UNZIP_LOCI.out.versions)
     }
     gc_file = ascat_loci_gc
     if (params.ascat_loci_gc && params.ascat_loci_gc.endsWith('.zip')) {
         UNZIP_GC(ascat_loci_gc.map{ it -> [ [ id:'ascat_loci_gc' ], it ] })
         gc_file = UNZIP_GC.out.unzipped_archive.map{ it[1] }
-        ch_versions = ch_versions.mix(UNZIP_GC.out.versions)
+        versions = versions.mix(UNZIP_GC.out.versions)
     }
     rt_file = ascat_loci_rt
     if (params.ascat_loci_rt && params.ascat_loci_rt.endsWith('.zip')) {
         UNZIP_RT(ascat_loci_rt.map{ it -> [ [ id:'ascat_loci_rt' ], it ] })
         rt_file = UNZIP_RT.out.unzipped_archive.map{ it[1] }
-        ch_versions = ch_versions.mix(UNZIP_RT.out.versions)
+        versions = versions.mix(UNZIP_RT.out.versions)
     }
 
 
@@ -95,38 +96,39 @@ workflow PREPARE_GENOME {
     if (params.chr_dir && params.chr_dir.endsWith('tar.gz')) {
         UNTAR_CHR_DIR(chr_dir.map{ it -> [ [ id:'chr_dir' ], it ] })
         chr_files = UNTAR_CHR_DIR.out.untar.map{ it[1] }
-        ch_versions = ch_versions.mix(UNTAR_CHR_DIR.out.versions)
+        versions = versions.mix(UNTAR_CHR_DIR.out.versions)
     }
 
     // Gather versions of all tools used
-    ch_versions = ch_versions.mix(SAMTOOLS_FAIDX.out.versions)
-    ch_versions = ch_versions.mix(BWAMEM1_INDEX.out.versions)
-    ch_versions = ch_versions.mix(BWAMEM2_INDEX.out.versions)
-    ch_versions = ch_versions.mix(DRAGMAP_HASHTABLE.out.versions)
-    ch_versions = ch_versions.mix(GATK4_CREATESEQUENCEDICTIONARY.out.versions)
-    ch_versions = ch_versions.mix(MSISENSORPRO_SCAN.out.versions)
-    ch_versions = ch_versions.mix(TABIX_DBSNP.out.versions)
-    ch_versions = ch_versions.mix(TABIX_GERMLINE_RESOURCE.out.versions)
-    ch_versions = ch_versions.mix(TABIX_KNOWN_SNPS.out.versions)
-    ch_versions = ch_versions.mix(TABIX_KNOWN_INDELS.out.versions)
-    ch_versions = ch_versions.mix(TABIX_PON.out.versions)
+    versions = versions.mix(SAMTOOLS_FAIDX.out.versions)
+    versions = versions.mix(BWAMEM1_INDEX.out.versions)
+    versions = versions.mix(BWAMEM2_INDEX.out.versions)
+    versions = versions.mix(DRAGMAP_HASHTABLE.out.versions)
+    versions = versions.mix(GATK4_CREATESEQUENCEDICTIONARY.out.versions)
+    versions = versions.mix(MSISENSORPRO_SCAN.out.versions)
+    versions = versions.mix(TABIX_DBSNP.out.versions)
+    versions = versions.mix(TABIX_GERMLINE_RESOURCE.out.versions)
+    versions = versions.mix(TABIX_KNOWN_SNPS.out.versions)
+    versions = versions.mix(TABIX_KNOWN_INDELS.out.versions)
+    versions = versions.mix(TABIX_PON.out.versions)
 
     emit:
-        bwa                              = BWAMEM1_INDEX.out.index.map{ meta, index -> [index] }.collect()       // path: bwa/*
-        bwamem2                          = BWAMEM2_INDEX.out.index.map{ meta, index -> [index] }.collect()       // path: bwamem2/*
-        hashtable                        = DRAGMAP_HASHTABLE.out.hashmap.map{ meta, index -> [index] }.collect() // path: dragmap/*
-        dbsnp_tbi                        = TABIX_DBSNP.out.tbi.map{ meta, tbi -> [tbi] }.collect()               // path: dbsnb.vcf.gz.tbi
-        dict                             = GATK4_CREATESEQUENCEDICTIONARY.out.dict                               // path: genome.fasta.dict
-        fasta_fai                        = SAMTOOLS_FAIDX.out.fai.map{ meta, fai -> [fai] }                      // path: genome.fasta.fai
-        germline_resource_tbi            = TABIX_GERMLINE_RESOURCE.out.tbi.map{ meta, tbi -> [tbi] }.collect()   // path: germline_resource.vcf.gz.tbi
-        known_snps_tbi                   = TABIX_KNOWN_SNPS.out.tbi.map{ meta, tbi -> [tbi] }.collect()          // path: {known_indels*}.vcf.gz.tbi
-        known_indels_tbi                 = TABIX_KNOWN_INDELS.out.tbi.map{ meta, tbi -> [tbi] }.collect()        // path: {known_indels*}.vcf.gz.tbi
-        msisensorpro_scan                = MSISENSORPRO_SCAN.out.list.map{ meta, list -> [list] }                // path: genome_msi.list
-        pon_tbi                          = TABIX_PON.out.tbi.map{ meta, tbi -> [tbi] }.collect()                 // path: pon.vcf.gz.tbi
-        allele_files
-        chr_files
-        gc_file
-        loci_files
-        rt_file
-        versions                         = ch_versions                                                         // channel: [ versions.yml ]
+    bwa                   = BWAMEM1_INDEX.out.index.map{ meta, index -> [index] }.collect()       // path: bwa/*
+    bwamem2               = BWAMEM2_INDEX.out.index.map{ meta, index -> [index] }.collect()       // path: bwamem2/*
+    hashtable             = DRAGMAP_HASHTABLE.out.hashmap.map{ meta, index -> [index] }.collect() // path: dragmap/*
+    dbsnp_tbi             = TABIX_DBSNP.out.tbi.map{ meta, tbi -> [tbi] }.collect()               // path: dbsnb.vcf.gz.tbi
+    dict                  = GATK4_CREATESEQUENCEDICTIONARY.out.dict                               // path: genome.fasta.dict
+    fasta_fai             = SAMTOOLS_FAIDX.out.fai.map{ meta, fai -> [fai] }                      // path: genome.fasta.fai
+    germline_resource_tbi = TABIX_GERMLINE_RESOURCE.out.tbi.map{ meta, tbi -> [tbi] }.collect()   // path: germline_resource.vcf.gz.tbi
+    known_snps_tbi        = TABIX_KNOWN_SNPS.out.tbi.map{ meta, tbi -> [tbi] }.collect()          // path: {known_indels*}.vcf.gz.tbi
+    known_indels_tbi      = TABIX_KNOWN_INDELS.out.tbi.map{ meta, tbi -> [tbi] }.collect()        // path: {known_indels*}.vcf.gz.tbi
+    msisensorpro_scan     = MSISENSORPRO_SCAN.out.list.map{ meta, list -> [list] }                // path: genome_msi.list
+    pon_tbi               = TABIX_PON.out.tbi.map{ meta, tbi -> [tbi] }.collect()                 // path: pon.vcf.gz.tbi
+    allele_files
+    chr_files
+    gc_file
+    loci_files
+    rt_file
+
+    versions // channel: [ versions.yml ]
 }
