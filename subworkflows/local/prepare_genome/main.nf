@@ -42,7 +42,7 @@ workflow PREPARE_GENOME {
 
 
     main:
-    fasta = fasta.map{ it -> [ [ id:it.baseName ], it ] }
+    fasta = fasta.map{ fasta -> [ [ id:fasta.baseName.toString() - "[" - "]" ], fasta ] }
     versions = Channel.empty()
 
     BWAMEM1_INDEX(fasta)     // If aligner is bwa-mem
