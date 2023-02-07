@@ -334,8 +334,8 @@ tiddit:
 ## merge
 merge:
   - conf/modules/annotate.config
-  - modules/nf-core/ensemblvep/main.nf
-  - modules/nf-core/snpeff/main.nf
+  - modules/nf-core/ensemblvep/vep/main.nf
+  - modules/nf-core/snpeff/snpeff/main.nf
   - modules/nf-core/tabix/bgziptabix/main.nf
   - subworkflows/local/vcf_annotate_all/main.nf
   - subworkflows/nf-core/vcf_annotate_ensemblvep/main.nf
@@ -345,7 +345,7 @@ merge:
 ## snpeff
 snpeff:
   - conf/modules/annotate.config
-  - modules/nf-core/snpeff/main.nf
+  - modules/nf-core/snpeff/snpeff/main.nf
   - modules/nf-core/tabix/bgziptabix/main.nf
   - subworkflows/nf-core/vcf_annotate_snpeff/main.nf
   - tests/test_annotation_snpeff.yml
@@ -353,7 +353,7 @@ snpeff:
 ## vep
 vep:
   - conf/modules/annotate.config
-  - modules/nf-core/ensemblvep/main.nf
+  - modules/nf-core/ensemblvep/vep/main.nf
   - modules/nf-core/tabix/bgziptabix/main.nf
   - subworkflows/nf-core/vcf_annotate_ensemblvep/main.nf
   - tests/test_annotation_vep.yml
