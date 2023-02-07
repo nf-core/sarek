@@ -1,4 +1,4 @@
-name: snpEff
+name: SNPEFF_DOWNLOAD
 description: Genetic variant annotation and functional effect prediction toolbox
 keywords:
   - annotation
@@ -24,28 +24,11 @@ input:
       type: value
       description: |
         which db to annotate with
+output:
   - cache:
       type: file
       description: |
-        path to snpEff cache (optional)
-output:
-  - vcf:
-      type: file
-      description: |
-        annotated vcf
-      pattern: "*.ann.vcf"
-  - report:
-      type: file
-      description: snpEff report csv file
-      pattern: "*.csv"
-  - summary_html:
-      type: file
-      description: snpEff summary statistics in html file
-      pattern: "*.html"
-  - genes_txt:
-      type: file
-      description: txt (tab separated) file having counts of the number of variants affecting each transcript and gene
-      pattern: "*.genes.txt"
+        snpEff cache
   - versions:
       type: file
       description: File containing software versions

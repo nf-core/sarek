@@ -1,4 +1,4 @@
-process SNPEFF {
+process SNPEFF_DOWNLOAD {
     tag "$meta.id"
     label 'process_medium'
 
@@ -8,16 +8,11 @@ process SNPEFF {
         'quay.io/biocontainers/snpeff:5.1--hdfd78af_2' }"
 
     input:
-    tuple val(meta), path(vcf)
-    val   db
-    path  cache
+    tuple val(meta), val(genome), val(cache_version)
 
     output:
-    tuple val(meta), path("*.ann.vcf"), emit: vcf
-    path "*.csv"                      , emit: report
-    path "*.html"                     , emit: summary_html
-    path "*.genes.txt"                , emit: genes_txt
-    path "versions.yml"               , emit: versions
+    tuple val(meta), path("${genome}.${cache_version}"), emit: cache
+    path "versions.yml"                                , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -30,17 +25,23 @@ process SNPEFF {
     } else {
         avail_mem = task.memory.giga
     }
-    def prefix = task.ext.prefix ?: "${meta.id}"
-    def cache_command = cache ? "-dataDir \${PWD}/${cache}" : ""
     """
     snpEff \\
         -Xmx${avail_mem}g \\
-        $db \\
-        $args \\
-        -csvStats ${prefix}.csv \\
-        $cache_command \\
-        $vcf \\
-        > ${prefix}.ann.vcf
+        download ${genome}.${cache_version} \\
+        -dataDir \${PWD} \\
+        ${args}
+
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        snpeff: \$(echo \$(snpEff -version 2>&1) | cut -f 2 -d ' ')
+    END_VERSIONS
+    """
+
+    stub:
+    """
+    mkdir ${genome}.${cache_version}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

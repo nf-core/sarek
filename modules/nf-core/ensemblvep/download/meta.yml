@@ -1,0 +1,41 @@
+name: ENSEMBLVEP_DOWNLOAD
+description: Ensembl Variant Effect Predictor (VEP). The cache downloading options are controlled through `task.ext.args`.
+keywords:
+  - annotation
+tools:
+  - ensemblvep:
+      description: |
+        VEP determines the effect of your variants (SNPs, insertions, deletions, CNVs
+        or structural variants) on genes, transcripts, and protein sequence, as well as regulatory regions.
+      homepage: https://www.ensembl.org/info/docs/tools/vep/index.html
+      documentation: https://www.ensembl.org/info/docs/tools/vep/script/index.html
+      licence: ["Apache-2.0"]
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - assembly:
+      type: value
+      description: |
+        Genome assembly
+  - species:
+      type: value
+      description: |
+        Specie
+  - cache_version:
+      type: value
+      description: |
+        cache version
+output:
+  - cache:
+      type: file
+      description: cache
+      pattern: "*"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@maxulysse"
