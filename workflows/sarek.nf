@@ -56,7 +56,7 @@ def checkPathParamList = [
 for (param in checkPathParamList) if (param) file(param, checkIfExists: true)
 
 // Set input, can either be from --input or from automatic retrieval in WorkflowSarek.groovy
-input_sample = extract_csv(file(params.input, checkIfExists: true))
+input_sample = params.build_only_index ? Channel.empty() : extract_csv(file(params.input, checkIfExists: true))
 
 // Fails when wrongfull extension for intervals file
 if (params.wes && !params.step == 'annotate') {
@@ -148,7 +148,7 @@ ascat_loci_rt      = params.ascat_loci_rt      ? Channel.fromPath(params.ascat_l
 cf_chrom_len       = params.cf_chrom_len       ? Channel.fromPath(params.cf_chrom_len).collect()      : []
 chr_dir            = params.chr_dir            ? Channel.fromPath(params.chr_dir).collect()           : Channel.value([])
 dbsnp              = params.dbsnp              ? Channel.fromPath(params.dbsnp).collect()             : Channel.value([])
-fasta              = params.fasta              ? Channel.fromPath(params.fasta).collect()             : Channel.empty()
+fasta              = params.fasta              ? Channel.fromPath(params.fasta).first()               : Channel.empty()
 fasta_fai          = params.fasta_fai          ? Channel.fromPath(params.fasta_fai).collect()         : Channel.empty()
 germline_resource  = params.germline_resource  ? Channel.fromPath(params.germline_resource).collect() : Channel.value([]) // Mutec2 does not require a germline resource, so set to optional input
 known_indels       = params.known_indels       ? Channel.fromPath(params.known_indels).collect()      : Channel.value([])
@@ -1168,7 +1168,7 @@ def extract_csv(csv_file) {
         // Two checks for ensuring that the pipeline stops with a meaningful error message if
         // 1. the sample-sheet only contains normal-samples, but some of the requested tools require tumor-samples, and
         // 2. the sample-sheet only contains tumor-samples, but some of the requested tools require normal-samples.
-        if ((sample_count_normal == sample_count_all) && params.tools) { // In this case, the sample-sheet contains no tumor-samples
+        if ((sample_count_normal == sample_count_all) && params.tools && !params.build_only_index) { // In this case, the sample-sheet contains no tumor-samples
             def tools_tumor = ['ascat', 'controlfreec', 'mutect2', 'msisensorpro']
             def tools_tumor_asked = []
             tools_tumor.each{ tool ->
