@@ -732,7 +732,7 @@
                     "type": "boolean",
                     "fa_icon": "fas fa-download",
                     "description": "Only built references.",
-                    "help_text": "Set this parameter, if you wish to comput and save all computed reference files. This is useful to avoid re-computation on future runs."
+                    "help_text": "Set this parameter, if you wish to compute and save all computed reference files. No alignment or any other downstream steps will be performed."
                 },
                 "igenomes_base": {
                     "type": "string",
