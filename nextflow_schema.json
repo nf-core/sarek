@@ -734,6 +734,12 @@
                     "description": "Only built references.",
                     "help_text": "Set this parameter, if you wish to compute and save all computed reference files. No alignment or any other downstream steps will be performed."
                 },
+                "download_cache": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-download",
+                    "description": "Download annotation cache.",
+                    "help_text": "Set this parameter, if you wish to download annotation cache."
+                },
                 "igenomes_base": {
                     "type": "string",
                     "format": "directory-path",

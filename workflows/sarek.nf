@@ -198,6 +198,9 @@ include { CHANNEL_BASERECALIBRATOR_CREATE_CSV            } from '../subworkflows
 include { CHANNEL_APPLYBQSR_CREATE_CSV                   } from '../subworkflows/local/channel_applybqsr_create_csv/main'
 include { CHANNEL_VARIANT_CALLING_CREATE_CSV             } from '../subworkflows/local/channel_variant_calling_create_csv/main'
 
+// Download annotation cache if needed
+include { PREPARE_CACHE                                  } from '../subworkflows/local/prepare_cache/main'
+
 // Build indices if needed
 include { PREPARE_GENOME                                 } from '../subworkflows/local/prepare_genome/main'
 
@@ -301,6 +304,19 @@ workflow SAREK {
     reports = Channel.empty()
     // To gather used softwares versions for MultiQC
     versions = Channel.empty()
+
+    // Download cache if needed
+    // Assuming that if the cache is provided, the user has already downloaded it
+    ensemblvep_info = params.vep_cache ? [] : Channel.of([ [ id:"${params.vep_genome}.${params.vep_cache_version}" ], params.vep_genome, params.vep_species, params.vep_cache_version ])
+    snpeff_info = params.snpeff_cache ? [] : Channel.of([ [ id:params.snpeff_db ], params.snpeff_genome, params.snpeff_db.minus("${params.snpeff_genome}.") ])
+
+    if (params.download_cache) {
+        PREPARE_CACHE(ensemblvep_info, snpeff_info)
+        snpeff_cache       = PREPARE_CACHE.out.snpeff_cache.map{ meta, cache -> [ cache ] }
+        vep_cache          = PREPARE_CACHE.out.ensemblvep_cache.map{ meta, cache -> [ cache ] }
+
+        versions = versions.mix(PREPARE_CACHE.out.versions)
+    }
 
     // Build indices if needed
     PREPARE_GENOME(
