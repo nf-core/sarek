@@ -375,7 +375,7 @@
                     },
                     "snpeff/download": {
                         "branch": "master",
-                        "git_sha": "03eae88f7c30fbad0152b941bbeba48ae8bc3d07",
+                        "git_sha": "aeefdd170be4583012816212f1345fbebb61ccd6",
                         "installed_by": ["modules"]
                     },
                     "snpeff/snpeff": {
