@@ -24,6 +24,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#898](https://github.com/nf-core/sarek/pull/898) - Sync `TEMPLATE` with `tools` `2.7.2`
 - [#898](https://github.com/nf-core/sarek/pull/898) - Nextflow minimal version is now `22.10.1`
 - [#909](https://github.com/nf-core/sarek/pull/909) - Cache test data on GHA
+- [#935](https://github.com/nf-core/sarek/pull/935) - Add params `build_only_index` to only build index
+- [#936](https://github.com/nf-core/sarek/pull/936) - Add params `donwload_cache` to download annotation cache
 
 ### Fixed
 
@@ -49,6 +51,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | `ensembl-vep` | 106.1       | 108.2       |
 | `multiqc`     | 1.13a       | 1.14        |
 | `svdb`        | 2.6.1       | 2.8.1       |
+
+### Modules / Subworkflows
+
+| script                | Old name     | New name              |
+| --------------------- | ------------ | --------------------- |
+| `ensemblvep/download` |              | 'ENSEMBLVEP_DOWNLOAD' |
+| `ensemblvep/vep`      | 'ENSEMBLVEP' | 'ENSEMBLVEP_VEP'      |
+| `snpeff/download`     |              | 'SNPEFF_DOWNLOAD'     |
+| `snpeff/snpeff`       | 'SNPEFF'     | 'SNPEFF_SNPEFF'       |
 
 ## [3.1.2](https://github.com/nf-core/sarek/releases/tag/3.1.2) - Lesser Lule River
 

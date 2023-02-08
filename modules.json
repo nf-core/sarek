@@ -122,10 +122,15 @@
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/dragmap/hashtable/dragmap-hashtable.diff"
                     },
-                    "ensemblvep": {
+                    "ensemblvep/download": {
                         "branch": "master",
-                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
-                        "installed_by": ["modules", "vcf_annotate_ensemblvep"]
+                        "git_sha": "bea3ca998816a7f812b1bbbcb27c3a9ffbac0706",
+                        "installed_by": ["modules"]
+                    },
+                    "ensemblvep/vep": {
+                        "branch": "master",
+                        "git_sha": "bea3ca998816a7f812b1bbbcb27c3a9ffbac0706",
+                        "installed_by": ["vcf_annotate_ensemblvep", "modules"]
                     },
                     "fastp": {
                         "branch": "master",
@@ -368,10 +373,15 @@
                         "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
                         "installed_by": ["modules"]
                     },
-                    "snpeff": {
+                    "snpeff/download": {
                         "branch": "master",
-                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
-                        "installed_by": ["modules", "vcf_annotate_snpeff"]
+                        "git_sha": "aeefdd170be4583012816212f1345fbebb61ccd6",
+                        "installed_by": ["modules"]
+                    },
+                    "snpeff/snpeff": {
+                        "branch": "master",
+                        "git_sha": "03eae88f7c30fbad0152b941bbeba48ae8bc3d07",
+                        "installed_by": ["vcf_annotate_snpeff", "modules"]
                     },
                     "strelka/germline": {
                         "branch": "master",
@@ -391,12 +401,12 @@
                     "tabix/bgziptabix": {
                         "branch": "master",
                         "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
-                        "installed_by": ["modules", "vcf_annotate_snpeff"]
+                        "installed_by": ["vcf_annotate_snpeff", "modules"]
                     },
                     "tabix/tabix": {
                         "branch": "master",
                         "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
-                        "installed_by": ["modules", "vcf_annotate_ensemblvep"]
+                        "installed_by": ["vcf_annotate_ensemblvep", "modules"]
                     },
                     "tiddit/sv": {
                         "branch": "master",
@@ -424,12 +434,12 @@
                 "nf-core": {
                     "vcf_annotate_ensemblvep": {
                         "branch": "master",
-                        "git_sha": "69f158610f25a3bff40b3eadfedd3ac67a3cfc23",
+                        "git_sha": "bea3ca998816a7f812b1bbbcb27c3a9ffbac0706",
                         "installed_by": ["subworkflows"]
                     },
                     "vcf_annotate_snpeff": {
                         "branch": "master",
-                        "git_sha": "8c343b3c8a0925949783dc547666007c245c235b",
+                        "git_sha": "03eae88f7c30fbad0152b941bbeba48ae8bc3d07",
                         "installed_by": ["subworkflows"]
                     }
                 }
