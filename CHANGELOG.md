@@ -24,6 +24,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#898](https://github.com/nf-core/sarek/pull/898) - Sync `TEMPLATE` with `tools` `2.7.2`
 - [#898](https://github.com/nf-core/sarek/pull/898) - Nextflow minimal version is now `22.10.1`
 - [#909](https://github.com/nf-core/sarek/pull/909) - Cache test data on GHA
+- [#935](https://github.com/nf-core/sarek/pull/935) - Add params `build_only_index` to only build index
+- [#936](https://github.com/nf-core/sarek/pull/936) - Add params `donwload_cache` to download annotation cache
 
 ### Fixed
 
