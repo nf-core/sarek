@@ -52,6 +52,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | `multiqc`     | 1.13a       | 1.14        |
 | `svdb`        | 2.6.1       | 2.8.1       |
 
+### Modules / Subworkflows
+
+| script                | Old name     | New name              |
+| --------------------- | ------------ | --------------------- |
+| `ensemblvep/download` |              | 'ENSEMBLVEP_DOWNLOAD' |
+| `ensemblvep/vep`      | 'ENSEMBLVEP' | 'ENSEMBLVEP_VEP'      |
+| `snpeff/download`     |              | 'SNPEFF_DOWNLOAD'     |
+| `snpeff/snpeff`       | 'SNPEFF'     | 'SNPEFF_SNPEFF'       |
+
 ## [3.1.2](https://github.com/nf-core/sarek/releases/tag/3.1.2) - Lesser Lule River
 
 Lesser Lule River is English for Lilla Luleälven
