@@ -332,6 +332,14 @@ tiddit:
 # annotate
 
 ## merge
+cache:
+  - conf/modules/prepare_cache.config
+  - modules/nf-core/ensemblvep/download/main.nf
+  - modules/nf-core/snpeff/download/main.nf
+  - subworkflows/local/prepare_cache/main.nf
+  - tests/test_annotation_cache.yml
+
+## merge
 merge:
   - conf/modules/annotate.config
   - modules/nf-core/ensemblvep/vep/main.nf

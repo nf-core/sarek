@@ -27,7 +27,7 @@
       should_exist: false
     - path: results/reports/EnsemblVEP/test/test_VEP.ann.summary.html
       should_exist: false
-- name: Run snpEff, VEP and both consecutively
+- name: Run VEP and snpEff followed by VEP
   command: nextflow run main.nf -profile test,annotation --tools merge,snpeff,vep --outdir results
   tags:
     - annotation
