@@ -36,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#894](https://github.com/nf-core/sarek/pull/894) - Remove methods description TODO prompt
 - [#927](https://github.com/nf-core/sarek/pull/927) - Fix tumor only variant calling issues with freebayes following [#896](https://github.com/nf-core/sarek/pull/896)
 - [#929](https://github.com/nf-core/sarek/pull/929) - Fix somatic variant calling issues with msisensor following [#896](https://github.com/nf-core/sarek/pull/896)
+- [#941](https://github.com/nf-core/sarek/pull/941) - Fix json validation for `tools`, `skip_tools` and `use_gatk_spark` [#892](https://github.com/nf-core/sarek/issues/892)
 
 ### Deprecated
 
