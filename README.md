@@ -83,6 +83,10 @@ The nf-core/sarek pipeline comes with documentation about the pipeline [usage](h
 Sarek was originally written by Maxime U Garcia and Szilveszter Juhos at the [National Genomics Infastructure](https://ngisweden.scilifelab.se) and [National Bioinformatics Infastructure Sweden](https://nbis.se) which are both platforms at [SciLifeLab](https://scilifelab.se), with the support of [The Swedish Childhood Tumor Biobank (Barntumörbanken)](https://ki.se/forskning/barntumorbanken).
 Friederike Hanssen and Gisela Gabernet at [QBiC](https://www.qbic.uni-tuebingen.de/) later joined and helped with further development.
 
+The Nextflow DSL2 conversion of the pipeline was lead by Friederike Hanssen and Maxime U Garcia.
+
+Maintenance is now lead by Friederike Hanssen and Maxime U Garcia (now at [Seqera Labs](https://seqera/io))
+
 Main developers:
 
 - [Maxime U Garcia](https://github.com/maxulysse)
