@@ -80,14 +80,13 @@ The nf-core/sarek pipeline comes with documentation about the pipeline [usage](h
 
 ## Credits
 
-Sarek was originally written by Maxime Garcia and Szilveszter Juhos at the [National Genomics Infastructure](https://ngisweden.scilifelab.se) and [National Bioinformatics Infastructure Sweden](https://nbis.se) which are both platforms at [SciLifeLab](https://scilifelab.se), with the support of [The Swedish Childhood Tumor Biobank (Barntumörbanken)](https://ki.se/forskning/barntumorbanken).
+Sarek was originally written by Maxime U Garcia and Szilveszter Juhos at the [National Genomics Infastructure](https://ngisweden.scilifelab.se) and [National Bioinformatics Infastructure Sweden](https://nbis.se) which are both platforms at [SciLifeLab](https://scilifelab.se), with the support of [The Swedish Childhood Tumor Biobank (Barntumörbanken)](https://ki.se/forskning/barntumorbanken).
 Friederike Hanssen and Gisela Gabernet at [QBiC](https://www.qbic.uni-tuebingen.de/) later joined and helped with further development.
 
-Main authors:
+Main developers:
 
-- [Maxime Garcia](https://github.com/maxulysse)
+- [Maxime U Garcia](https://github.com/maxulysse)
 - [Friederike Hanssen](https://github.com/FriederikeHanssen)
-- [Szilveszter Juhos](https://github.com/szilvajuhos)
 
 We thank the following people for their extensive assistance in the development of this pipeline:
 
@@ -120,6 +119,7 @@ We thank the following people for their extensive assistance in the development 
 - [Silvia Morini](https://github.com/silviamorins)
 - [Solenne Correard](https://github.com/scorreard)
 - [Susanne Jodoin](https://github.com/SusiJo)
+- [Szilveszter Juhos](https://github.com/szilvajuhos)
 - [Tobias Koch](https://github.com/KochTobi)
 - [Winni Kretzschmar](https://github.com/winni2k)
 - [arontommi](https://github.com/arontommi)
@@ -141,7 +141,7 @@ We thank the following people for their extensive assistance in the development 
 
 If you would like to contribute to this pipeline, please see the [contributing guidelines](.github/CONTRIBUTING.md).
 
-For further information or help, don't hesitate to get in touch on the [Slack `#sarek` channel](https://nfcore.slack.com/channels/sarek) (you can join with [this invite](https://nf-co.re/join/slack)), or contact us: [Gisela Gabernet](mailto:gisela.gabernet@qbic.uni-tuebingen.de?subject=[GitHub]%20nf-core/sarek), [Maxime Garcia](mailto:maxime.garcia@scilifelab.se?subject=[GitHub]%20nf-core/sarek), [Friederike Hanssen](mailto:friederike.hanssen@qbic.uni-tuebingen.de?subject=[GitHub]%20nf-core/sarek), [Szilvester Juhos](mailto:szilveszter.juhos@scilifelab.se?subject=[GitHub]%20nf-core/sarek)
+For further information or help, don't hesitate to get in touch on the [Slack `#sarek` channel](https://nfcore.slack.com/channels/sarek) (you can join with [this invite](https://nf-co.re/join/slack)), or contact us: [Gisela Gabernet](mailto:gisela.gabernet@qbic.uni-tuebingen.de?subject=[GitHub]%20nf-core/sarek), [Maxime U Garcia](mailto:maxime.garcia@seqera.io?subject=[GitHub]%20nf-core/sarek), [Friederike Hanssen](mailto:friederike.hanssen@qbic.uni-tuebingen.de?subject=[GitHub]%20nf-core/sarek)
 
 ## Citations
 
