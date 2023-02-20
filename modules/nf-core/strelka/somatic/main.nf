@@ -29,6 +29,8 @@ process STRELKA_SOMATIC {
     def options_manta = manta_candidate_small_indels ? "--indelCandidates ${manta_candidate_small_indels}" : ""
     """
 
+    sed -i s/"isEmail = isLocalSmtp()"/"isEmail = False"/g strelka/runWorkflow.py
+
     configureStrelkaSomaticWorkflow.py \\
         --tumor $input_tumor \\
         --normal $input_normal \\
