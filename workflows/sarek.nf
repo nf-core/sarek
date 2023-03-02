@@ -731,10 +731,10 @@ workflow SAREK {
 
             reports = reports.mix(ch_table_bqsr.collect{ meta, table -> table })
 
-            cram_applybqsr = ch_cram_for_bam_baserecalibrator.join(ch_table_bqsr)
+            cram_applybqsr = ch_cram_for_bam_baserecalibrator.join(ch_table_bqsr, failOnDuplicate: true, failOnMismatch: true)
 
             // Create CSV to restart from this step
-            CHANNEL_BASERECALIBRATOR_CREATE_CSV(ch_md_cram_for_restart.join(ch_table_bqsr), params.skip_tools)
+            CHANNEL_BASERECALIBRATOR_CREATE_CSV(ch_md_cram_for_restart.join(ch_table_bqsr, failOnDuplicate: true, failOnMismatch: true), params.skip_tools)
         }
     }
 
@@ -759,7 +759,7 @@ workflow SAREK {
             versions = versions.mix(BAM_TO_CRAM.out.versions)
 
             cram_applybqsr = Channel.empty().mix(
-                BAM_TO_CRAM.out.alignment_index.join(input_only_table),
+                BAM_TO_CRAM.out.alignment_index.join(input_only_table, failOnDuplicate: true, failOnMismatch: true),
                 input_recal_convert.cram) // Join together converted cram with input tables
         }
 
@@ -876,7 +876,7 @@ workflow SAREK {
         cram_variant_calling_tumor_grouped = cram_variant_calling_pair_to_cross.groupTuple()
 
         // 2. Join with normal samples, in each channel there is one key per patient now. Patients without matched normal end up with: [ patient1, [ meta1, meta2 ], [ cram1, crai1, cram2, crai2 ], null ]
-        cram_variant_calling_tumor_joined = cram_variant_calling_tumor_grouped.join(cram_variant_calling_normal_to_cross, remainder: true)
+        cram_variant_calling_tumor_joined = cram_variant_calling_tumor_grouped.join(cram_variant_calling_normal_to_cross, failOnDuplicate: true, remainder: true)
 
         // 3. Filter out entries with last entry null
         cram_variant_calling_tumor_filtered = cram_variant_calling_tumor_joined.filter{ it ->  !(it.last()) }
@@ -889,7 +889,7 @@ workflow SAREK {
             // Normal only samples
 
             // 1. Join with tumor samples, in each channel there is one key per patient now. Patients without matched tumor end up with: [ patient1, [ meta1 ], [ cram1, crai1 ], null ] as there is only one matched normal possible
-            cram_variant_calling_normal_joined = cram_variant_calling_normal_to_cross.join(cram_variant_calling_tumor_grouped, remainder: true)
+            cram_variant_calling_normal_joined = cram_variant_calling_normal_to_cross.join(cram_variant_calling_tumor_grouped, failOnDuplicate: true, remainder: true)
 
             // 2. Filter out entries with last entry null
             cram_variant_calling_normal_filtered = cram_variant_calling_normal_joined.filter{ it ->  !(it.last()) }
