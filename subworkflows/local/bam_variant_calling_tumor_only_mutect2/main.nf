@@ -104,7 +104,11 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     CALCULATECONTAMINATION(pileup_table.map{ meta, table -> [ meta, table, [] ] })
 
     // Mutect2 calls filtered by filtermutectcalls using the contamination and segmentation tables
-    vcf_to_filter = vcf.join(tbi).join(stats).join(LEARNREADORIENTATIONMODEL.out.artifactprior).join(CALCULATECONTAMINATION.out.segmentation).join(CALCULATECONTAMINATION.out.contamination)
+    vcf_to_filter = vcf.join(tbi, failOnDuplicate: true, failOnMismatch: true)
+        .join(stats, failOnDuplicate: true, failOnMismatch: true)
+        .join(LEARNREADORIENTATIONMODEL.out.artifactprior, failOnDuplicate: true, failOnMismatch: true)
+        .join(CALCULATECONTAMINATION.out.segmentation, failOnDuplicate: true, failOnMismatch: true)
+        .join(CALCULATECONTAMINATION.out.contamination, failOnDuplicate: true, failOnMismatch: true)
         .map{ meta, vcf, tbi, stats, artifactprior, seg, cont -> [ meta, vcf, tbi, stats, artifactprior, seg, cont, [] ] }
 
     FILTERMUTECTCALLS(vcf_to_filter, fasta, fai, dict)
