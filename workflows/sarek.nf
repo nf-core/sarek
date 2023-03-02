@@ -755,8 +755,9 @@ workflow SAREK {
 
             cram_applybqsr = Channel.empty().mix(
                 BAM_TO_CRAM.out.alignment_index.join(input_only_table, failOnDuplicate: true, failOnMismatch: true),
-                input_recal_convert.cram) // Join together converted cram with input tables
-                .map{ meta, cram, crai -> [ meta - meta.subMap('data_type') + [data_type: "cram"], cram, crai ]}
+                input_recal_convert.cram)
+                // Join together converted cram with input tables
+                .map{ meta, cram, crai, table -> [ meta - meta.subMap('data_type') + [data_type: "cram"], cram, crai, table ]}
         }
 
         if (!(params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'))) {
