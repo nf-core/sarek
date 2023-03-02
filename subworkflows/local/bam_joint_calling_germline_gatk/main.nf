@@ -55,7 +55,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
     // Rework meta for variantscalled.csv and annotation tools
     MERGE_GENOTYPEGVCFS(gvcf_to_merge, dict.map{ it -> [ [ id:'dict' ], it ] } )
 
-    vqsr_input = MERGE_GENOTYPEGVCFS.out.vcf.join(MERGE_GENOTYPEGVCFS.out.tbi, failOnDuplicate: true, failOnMismatch: true)
+    vqsr_input = MERGE_GENOTYPEGVCFS.out.vcf.join(MERGE_GENOTYPEGVCFS.out.tbi, failOnDuplicate: true)
     indels_resource_label = known_indels_vqsr.mix(dbsnp_vqsr).collect()
     snps_resource_label = known_snps_vqsr.mix(dbsnp_vqsr).collect()
 
@@ -82,16 +82,16 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
 
     // Join results of variant recalibration into a single channel tuple
     // Rework meta for variantscalled.csv and annotation tools
-    vqsr_input_snp = vqsr_input.join(VARIANTRECALIBRATOR_SNP.out.recal, failOnDuplicate: true, failOnMismatch: true)
-        .join(VARIANTRECALIBRATOR_SNP.out.idx, failOnDuplicate: true, failOnMismatch: true)
-        .join(VARIANTRECALIBRATOR_SNP.out.tranches, failOnDuplicate: true, failOnMismatch: true)
+    vqsr_input_snp = vqsr_input.join(VARIANTRECALIBRATOR_SNP.out.recal, failOnDuplicate: true)
+        .join(VARIANTRECALIBRATOR_SNP.out.idx, failOnDuplicate: true)
+        .join(VARIANTRECALIBRATOR_SNP.out.tranches, failOnDuplicate: true)
         .map{ meta, vcf, tbi, recal, index, tranche -> [ meta - meta.subMap('id') + [ id:'recalibrated_joint_variant_calling' ], vcf, tbi, recal, index, tranche ] }
 
     // Join results of variant recalibration into a single channel tuple
     // Rework meta for variantscalled.csv and annotation tools
-    vqsr_input_indel = vqsr_input.join(VARIANTRECALIBRATOR_INDEL.out.recal, failOnDuplicate: true, failOnMismatch: true)
-        .join(VARIANTRECALIBRATOR_INDEL.out.idx, failOnDuplicate: true, failOnMismatch: true)
-        .join(VARIANTRECALIBRATOR_INDEL.out.tranches, failOnDuplicate: true, failOnMismatch: true)
+    vqsr_input_indel = vqsr_input.join(VARIANTRECALIBRATOR_INDEL.out.recal, failOnDuplicate: true)
+        .join(VARIANTRECALIBRATOR_INDEL.out.idx, failOnDuplicate: true)
+        .join(VARIANTRECALIBRATOR_INDEL.out.tranches, failOnDuplicate: true)
         .map{ meta, vcf, tbi, recal, index, tranche -> [ meta - meta.subMap('id') + [ id:'recalibrated_joint_variant_calling' ], vcf, tbi, recal, index, tranche ] }
 
     GATK4_APPLYVQSR_SNP(
