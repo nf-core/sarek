@@ -631,7 +631,7 @@ workflow SAREK {
         // - crams from markduplicates
         // - crams from markduplicates_spark
         // - crams from input step markduplicates --> from the converted ones only?
-        ch_md_cram_for_restart = Channel.empty().mix(cram_markduplicates_no_spark,cram_markduplicates_spark)
+        ch_md_cram_for_restart = Channel.empty().mix(cram_markduplicates_no_spark, cram_markduplicates_spark)
             // Make sure correct data types are carried through
             .map{ meta, cram, crai -> [ meta - meta.subMap('data_type') + [data_type: "cram"], cram, crai ] }
 
@@ -659,12 +659,9 @@ workflow SAREK {
             BAM_TO_CRAM(input_prepare_recal_convert.bam, fasta, fasta_fai)
             versions = versions.mix(BAM_TO_CRAM.out.versions)
 
-            ch_cram_from_bam = BAM_TO_CRAM.out.alignment_index.map{ meta, cram, crai ->
+            ch_cram_from_bam = BAM_TO_CRAM.out.alignment_index
                 // Make sure correct data types are carried through
-                [ meta.subMap('id', 'patient', 'sample', 'sex', 'status')
-                    + [data_type: "cram"],
-                    cram, crai ]
-            }
+                .map{ meta, cram, crai -> [ meta - meta.subMap('data_type') + [data_type: "cram"], cram, crai ] }
 
             ch_cram_for_bam_baserecalibrator = Channel.empty().mix(ch_cram_from_bam, input_prepare_recal_convert.cram)
             ch_md_cram_for_restart = ch_cram_from_bam
@@ -677,17 +674,15 @@ workflow SAREK {
             // - crams converted from bam mapped when skipping markduplicates
             // - input cram files, when start from step markduplicates
             // ch_md_cram_for_restart.view() // contains md.cram.crai
-            ch_cram_for_bam_baserecalibrator = Channel.empty().mix(ch_md_cram_for_restart, cram_skip_markduplicates ).map{ meta, cram, crai ->
+            ch_cram_for_bam_baserecalibrator = Channel.empty().mix(ch_md_cram_for_restart, cram_skip_markduplicates )
                 // Make sure correct data types are carried through
-                [ meta.subMap('id', 'patient', 'sample', 'sex', 'status')
-                    + [data_type: "cram"],
-                    cram, crai ]
-            }
+                .map{ meta, cram, crai -> [ meta - meta.subMap('data_type') + [data_type: "cram"], cram, crai ] }
 
         }
 
         // STEP 3: Create recalibration tables
         if (!(params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'))) {
+
             ch_table_bqsr_no_spark = Channel.empty()
             ch_table_bqsr_spark    = Channel.empty()
 
@@ -734,7 +729,7 @@ workflow SAREK {
             cram_applybqsr = ch_cram_for_bam_baserecalibrator.join(ch_table_bqsr, failOnDuplicate: true, failOnMismatch: true)
 
             // Create CSV to restart from this step
-            CHANNEL_BASERECALIBRATOR_CREATE_CSV(ch_md_cram_for_restart.join(ch_table_bqsr, failOnDuplicate: true, failOnMismatch: true), params.skip_tools)
+            CHANNEL_BASERECALIBRATOR_CREATE_CSV(ch_md_cram_for_restart.join(ch_table_bqsr, failOnDuplicate: true), params.skip_tools)
         }
     }
 
@@ -761,6 +756,7 @@ workflow SAREK {
             cram_applybqsr = Channel.empty().mix(
                 BAM_TO_CRAM.out.alignment_index.join(input_only_table, failOnDuplicate: true, failOnMismatch: true),
                 input_recal_convert.cram) // Join together converted cram with input tables
+                .map{ meta, cram, crai -> [ meta - meta.subMap('data_type') + [data_type: "cram"], cram, crai ]}
         }
 
         if (!(params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'))) {
