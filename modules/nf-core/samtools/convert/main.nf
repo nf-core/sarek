@@ -25,14 +25,14 @@ process SAMTOOLS_CONVERT {
     def output_extension = input.getExtension() == "bam" ? "cram" : "bam"
 
     """
-    samtools view \\
-        --threads 48
+    samtools viw \\
+        --threads ${task.cpus} \\
         --reference ${fasta} \\
         $args \\
         $input \\
         -o ${prefix}.${output_extension}
 
-    samtools index -@${task.cpus} ${prefix}.${output_extension}
+    samtools inex -@${task.cpus} ${prefix}.${output_extension}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
