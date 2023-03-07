@@ -1,6 +1,6 @@
 process SAMTOOLS_CONVERT {
     tag "$meta.id"
-    label 'process_medium'
+    label 'process_high'
 
     conda (params.enable_conda ? "bioconda::samtools=1.16.1" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -25,14 +25,14 @@ process SAMTOOLS_CONVERT {
     def output_extension = input.getExtension() == "bam" ? "cram" : "bam"
 
     """
-    samtools viw \\
+    samtools view \\
         --threads ${task.cpus} \\
         --reference ${fasta} \\
         $args \\
         $input \\
         -o ${prefix}.${output_extension}
 
-    samtools inex -@${task.cpus} ${prefix}.${output_extension}
+    samtools index -@${task.cpus} ${prefix}.${output_extension}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
