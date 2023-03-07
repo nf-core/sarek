@@ -34,6 +34,8 @@ process SAMTOOLS_CONVERT {
 
     samtools index -@${task.cpus} ${prefix}.${output_extension}
 
+    samtools addreplacerg -r '@RG\tID:${prefix}\tSM:${prefix}' ${prefix}.${output_extension} -o ${prefix}.${output_extension}
+
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
