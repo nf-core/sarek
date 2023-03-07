@@ -26,7 +26,7 @@ process SAMTOOLS_CONVERT {
 
     """
     samtools view \\
-        --threads ${task.cpus} \\
+        --threads 48
         --reference ${fasta} \\
         $args \\
         $input \\
