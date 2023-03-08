@@ -36,6 +36,9 @@ process SAMTOOLS_CONVERT {
 
     samtools index -@${task.cpus} ${prefix}.${output_extension}
 
+    samtools faidx $fasta
+
+
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
