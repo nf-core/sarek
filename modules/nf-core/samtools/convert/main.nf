@@ -25,13 +25,13 @@ process SAMTOOLS_CONVERT {
     def output_extension = input.getExtension() == "bam" ? "cram" : "bam"
 
     """
-    samtools addreplacerg -r '@RG\tID:${input.baseName}\tSM:${input.baseName}' -@${task.cpus} $input -o $input
+    samtools addreplacerg -r "@RG\tID:!${input.baseName}\tPG:samtools addreplacerg\tSM:!${input.baseName}" !{bam} -O b -o !${input.baseName}_RG.bam
 
     samtools view \\
         --threads ${task.cpus} \\
         --reference ${fasta} \\
         $args \\
-        $input \\
+        ${input.baseName}_RG.bam \\
         -o ${prefix}.${output_extension}
 
     samtools index -@${task.cpus} ${prefix}.${output_extension}
