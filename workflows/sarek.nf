@@ -15,6 +15,7 @@ def checkPathParamList = [
     params.ascat_loci,
     params.ascat_loci_gc,
     params.ascat_loci_rt,
+    params.minimap2,
     params.bwa,
     params.bwamem2,
     params.cf_chrom_len,
@@ -338,7 +339,8 @@ workflow SAREK {
     rt_file                = PREPARE_GENOME.out.rt_file
 
     // Gather index for mapping given the chosen aligner
-    ch_map_index = params.aligner == "bwa-mem" ? bwa :
+    ch_map_index = params.aligner == "minimap2" ? minimap2 :
+        params.aligner == "bwa-mem" ? bwa :
         params.aligner == "bwa-mem2" ? bwamem2 :
         dragmap
 

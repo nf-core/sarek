@@ -45,6 +45,7 @@ workflow PREPARE_GENOME {
 
     ch_versions = Channel.empty()
 
+    MINIMAP2_INDEX(fasta.map{ it -> [[id:it[0].baseName], it] }) // If aligner is minimap2 (for ONT reads)
     BWAMEM1_INDEX(fasta.map{ it -> [[id:it[0].baseName], it] }) // If aligner is bwa-mem
     BWAMEM2_INDEX(fasta.map{ it -> [[id:it[0].baseName], it] }) // If aligner is bwa-mem2
     DRAGMAP_HASHTABLE(fasta.map{ it -> [[id:it[0].baseName], it] }) // If aligner is dragmap
