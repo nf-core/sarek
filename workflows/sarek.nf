@@ -1240,7 +1240,7 @@ def extract_csv(csv_file) {
 
             meta.size       = 1 // default number of splitted fastq
 
-            if (params.step == 'mapping') return [meta, [fastq_1, fastq_1]]
+            if (params.step == 'mapping') return [meta, [fastq_1]]
             else {
                 log.error "Samplesheet contains fastq files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
                 System.exit(1)
