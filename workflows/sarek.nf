@@ -1224,7 +1224,7 @@ def extract_csv(csv_file) {
         }
 
         // mapping with fastq
-        if (row.lane && row.fastq_2) {
+        if (row.lane && row.fastq_1) {
             meta.id         = "${row.sample}-${row.lane}".toString()
             def fastq_1     = file(row.fastq_1, checkIfExists: true)
             // def fastq_2     = file(row.fastq_2, checkIfExists: true)
