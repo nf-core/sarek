@@ -14,7 +14,7 @@ workflow MINIMAP2_ALIGN_BAM_SORT_INDEX {
     ch_align_sam = MINIMAP2_ALIGN.out.align_sam
     SAMTOOLS_VIEW_BAM  (ch_align_sam)
     SAMTOOLS_SORT_INDEX ( SAMTOOLS_VIEW_BAM.out.bam )
-    ch_sam
+    ch_align_sam
         .join( SAMTOOLS_SORT_INDEX.out.bam_bai )
         .map { it -> [ it[0], it[1], it[2], it[4], it[5] ] }
         .set { bam }
