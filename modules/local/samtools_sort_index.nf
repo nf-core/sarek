@@ -11,9 +11,12 @@ process SAMTOOLS_SORT_INDEX {
     tuple val(meta), path(bam)
 
     output:
-    tuple val(meta), path("*sorted.bam"), path("*.bai")  , optional:true, emit: bam_bai
-    tuple val(meta), path("*sorted.bam"), path("*.csi")  , optional:true, emit: bam_csi
+    tuple val(meta), path("*.bam"), emit: bam
     path  "versions.yml"          , emit: versions
+
+    // tuple val(meta), path("*sorted.bam"), path("*.bai")  , optional:true, emit: bam_bai
+    // tuple val(meta), path("*sorted.bam"), path("*.csi")  , optional:true, emit: bam_csi
+    // path  "versions.yml"          , emit: versions
 
     script:
     """
