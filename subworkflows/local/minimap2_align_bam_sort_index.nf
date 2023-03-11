@@ -1,6 +1,6 @@
 include { SAMTOOLS_SORT_INDEX } from '../../modules/local/samtools_sort_index'
 include { SAMTOOLS_VIEW_BAM  } from '../../modules/local/samtools_view_bam'
-include { MINIMAP2_ALIGN          } from '../../../modules/local/minimap2/minimap2_align'
+include { MINIMAP2_ALIGN          } from '../../modules/local/minimap2/minimap2_align'
 
 
 workflow MINIMAP2_ALIGN_BAM_SORT_INDEX {
