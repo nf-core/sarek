@@ -15,7 +15,7 @@ def checkPathParamList = [
     params.ascat_loci,
     params.ascat_loci_gc,
     params.ascat_loci_rt,
-    params.minimap2,
+    // params.minimap2,
     params.bwa,
     params.bwamem2,
     params.cf_chrom_len,
