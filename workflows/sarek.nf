@@ -597,7 +597,7 @@ workflow SAREK {
             ch_versions = ch_versions.mix(CRAM_QC_NO_MD.out.versions)
         } else if (params.use_gatk_spark && params.use_gatk_spark.contains('markduplicates')) {
             BAM_MARKDUPLICATES_SPARK(
-                ch_for_markduplicates,
+                ch_for_markduplicates.unique(),
                 dict,
                 fasta,
                 fasta_fai,
@@ -611,7 +611,7 @@ workflow SAREK {
             ch_versions = ch_versions.mix(BAM_MARKDUPLICATES_SPARK.out.versions)
         } else {
             BAM_MARKDUPLICATES(
-                ch_for_markduplicates,
+                ch_for_markduplicates.unique(),
                 fasta,
                 fasta_fai,
                 intervals_for_preprocessing)
