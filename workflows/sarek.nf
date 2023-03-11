@@ -394,7 +394,7 @@ workflow SAREK {
         // Theorically this could work on mixed input (fastq for one sample and bam for another)
         // But not sure how to handle that with the samplesheet
         // Or if we really want users to be able to do that
-        ch_input_fastq = ch_input_sample_type.fastq.mix(CONVERT_FASTQ_INPUT.out.reads).unique()
+        ch_input_fastq = ch_input_sample_type.fastq.mix(CONVERT_FASTQ_INPUT.out.reads)
 
         // STEP 0: QC & TRIM
         // `--skip_tools fastqc` to skip fastqc
@@ -1243,7 +1243,7 @@ def extract_csv(csv_file) {
 
             meta.size       = 1 // default number of splitted fastq
 
-            if (params.step == 'mapping') return [meta, [fastq_1, fastq_2]]
+            if (params.step == 'mapping') return [meta, [fastq_1]]
             else {
                 log.error "Samplesheet contains fastq files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
                 System.exit(1)
