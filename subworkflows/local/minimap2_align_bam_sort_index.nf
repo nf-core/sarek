@@ -9,9 +9,6 @@ workflow MINIMAP2_ALIGN_BAM_SORT_INDEX {
         ch_map_index // channel: [mandatory] mapping index
         sort         // boolean: [mandatory] true -> sort, false -> don't sort
 
-    when:
-    task.ext.when == null || task.ext.when
-
     main:
     MINIMAP2_ALIGN(ch_reads, ch_map_index.map{ it -> [[id:it[0].baseName], it] }, sort) // If aligner is minimap2
     ch_align_sam = MINIMAP2_ALIGN.out.ch_align_sam
