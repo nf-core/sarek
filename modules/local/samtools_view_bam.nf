@@ -8,7 +8,7 @@ process SAMTOOLS_VIEW_BAM {
         'quay.io/biocontainers/samtools:1.15.1--h1170115_0' }"
 
     input:
-    tuple val(meta), path(sizes), val(is_transcripts), path(sam)
+    tuple val(meta), path(sam)
 
     output:
     tuple val(meta), path("*.bam") ,emit: bam
