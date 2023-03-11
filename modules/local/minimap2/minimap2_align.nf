@@ -10,7 +10,6 @@ process MINIMAP2_ALIGN {
     input:
     tuple val(meta), path(reads)
     tuple val(meta2), path(index)
-    val   sort_bam
 
 
     output:
@@ -24,7 +23,6 @@ process MINIMAP2_ALIGN {
     def stranded  = ""
     def junctions = ""
     def md        = "--MD"
-    def samtools_command = sort_bam ? 'sort' : 'view'
     def prefix = task.ext.prefix ?: "${meta.id}"
 
     """

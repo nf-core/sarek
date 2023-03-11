@@ -541,8 +541,8 @@
                 "minimap2": {
                     "type": "string",
                     "fa_icon": "fas fa-copy",
-                    "description": "Path to minimap mem indices.",
-                    "help_text": "If you wish to recompute indices available on igenomes, set `--minimap false`.\n\n> **NB** If none provided, will be generated automatically from the FASTA reference. Combine with `--save_reference` to save for future runs.",
+                    "description": "Path to minimap2 mem indices.",
+                    "help_text": "If you wish to recompute indices available on igenomes, set `--minimap2 false`.\n\n> **NB** If none provided, will be generated automatically from the FASTA reference. Combine with `--save_reference` to save for future runs.",
                     "hidden": true
                 },
                 "bwa": {

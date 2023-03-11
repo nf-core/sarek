@@ -7,7 +7,7 @@
 include { BWAMEM2_MEM            } from '../../../modules/nf-core/bwamem2/mem/main'
 include { BWA_MEM as BWAMEM1_MEM } from '../../../modules/nf-core/bwa/mem/main'
 include { DRAGMAP_ALIGN          } from '../../../modules/nf-core/dragmap/align/main'
-include { MINIMAP2_ALIGN          } from '../../../modules/local/minimap2/minimap2_align'
+include { MINIMAP2_ALIGN_BAM_SORT_INDEX          } from '../../../modules/subworkflows/local/minimap2_align_bam_sort_index'
 
 
 workflow FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_MINIMAP2 {
@@ -25,14 +25,14 @@ workflow FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_MINIMAP2 {
     BWAMEM1_MEM(ch_reads,   ch_map_index.map{ it -> [[id:it[0].baseName], it] }, sort) // If aligner is bwa-mem
     BWAMEM2_MEM(ch_reads,   ch_map_index.map{ it -> [[id:it[0].baseName], it] }, sort) // If aligner is bwa-mem2
     DRAGMAP_ALIGN(ch_reads, ch_map_index.map{ it -> [[id:it[0].baseName], it] }, sort) // If aligner is dragmap
-    MINIMAP2_ALIGN(ch_reads, ch_map_index.map{ it -> [[id:it[0].baseName], it] }, sort) // If aligner is minimap2
-
+    MINIMAP2_ALIGN_BAM_SORT_INDEX(ch_reads, ch_map_index.map{ it -> [[id:it[0].baseName], it] }, sort) // If aligner is minimap2
     // Get the bam files from the aligner
     // Only one aligner is run
     ch_bam_mapped = Channel.empty()
     ch_bam_mapped = ch_bam_mapped.mix(BWAMEM1_MEM.out.bam)
     ch_bam_mapped = ch_bam_mapped.mix(BWAMEM2_MEM.out.bam)
     ch_bam_mapped = ch_bam_mapped.mix(DRAGMAP_ALIGN.out.bam)
+    ch_bam_mapped = ch_bam_mapped.mix(MINIMAP2_ALIGN_BAM_SORT_INDEX.out.bam)
 
     // Gather reports of all tools used
     ch_reports = ch_reports.mix(DRAGMAP_ALIGN.out.log)
@@ -41,6 +41,7 @@ workflow FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_MINIMAP2 {
     ch_versions = ch_versions.mix(BWAMEM1_MEM.out.versions.first())
     ch_versions = ch_versions.mix(BWAMEM2_MEM.out.versions.first())
     ch_versions = ch_versions.mix(DRAGMAP_ALIGN.out.versions.first())
+    ch_versions = ch_versions.mix(MINIMAP2_ALIGN_BAM_SORT_INDEX.out.versions.first())
 
     emit:
         bam      = ch_bam_mapped // channel: [ [meta], bam ]

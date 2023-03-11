@@ -224,7 +224,7 @@ include { FASTP                                          } from '../modules/nf-c
 include { FASTQ_CREATE_UMI_CONSENSUS_FGBIO               } from '../subworkflows/local/fastq_create_umi_consensus_fgbio/main'
 
 // Map input reads to reference genome
-include { FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP                } from '../subworkflows/local/fastq_align_bwamem_mem2_dragmap/main'
+include { FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_MINIMAP2                } from '../subworkflows/local/fastq_align_bwamem_mem2_dragmap/main'
 
 // Merge and index BAM files (optional)
 include { BAM_MERGE_INDEX_SAMTOOLS                       } from '../subworkflows/local/bam_merge_index_samtools/main'
@@ -496,10 +496,10 @@ workflow SAREK {
         }
 
         sort_bam = true
-        FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP(ch_reads_to_map, ch_map_index, sort_bam)
+        FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_MINIMAP2(ch_reads_to_map, ch_map_index, sort_bam)
 
         // Grouping the bams from the same samples not to stall the workflow
-        ch_bam_mapped = FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP.out.bam.map{ meta, bam ->
+        ch_bam_mapped = FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_MINIMAP2.out.bam.map{ meta, bam ->
             numLanes = meta.numLanes ?: 1
             size     = meta.size     ?: 1
 
@@ -541,7 +541,7 @@ workflow SAREK {
 
         // Gather used softwares versions
         ch_versions = ch_versions.mix(CONVERT_FASTQ_INPUT.out.versions)
-        ch_versions = ch_versions.mix(FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP.out.versions)
+        ch_versions = ch_versions.mix(FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_MINIMAP2.out.versions)
     }
 
     if (params.step in ['mapping', 'markduplicates']) {

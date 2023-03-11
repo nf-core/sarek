@@ -11,7 +11,6 @@ include { BAM_STATS_SAMTOOLS } from '../../subworkflows/nf-core/bam_stats_samtoo
 workflow BAM_SORT_INDEX_SAMTOOLS {
     take:
     ch_sam // channel: [ val(meta), [ bam ] ]
-    call_variants
     ch_fasta
 
     main:
@@ -19,23 +18,12 @@ workflow BAM_SORT_INDEX_SAMTOOLS {
      * Sam to bam conversion
      */
     SAMTOOLS_VIEW_BAM  ( ch_sam )
-    if ( call_variants ) {
-        SAMTOOLS_SORT_INDEX ( SAMTOOLS_VIEW_BAM.out.bam )
-        ch_sam
-            .join( SAMTOOLS_SORT_INDEX.out.bam_bai )
-            .map { it -> [ it[0], it[1], it[2], it[4], it[5] ] }
-            .set { sortbam }
-        BAM_STATS_SAMTOOLS ( SAMTOOLS_SORT_INDEX.out.bam_bai, ch_fasta )
-    } else {
-        SAMTOOLS_SORT      ( SAMTOOLS_VIEW_BAM.out.bam )
-        SAMTOOLS_INDEX     ( SAMTOOLS_SORT.out.bam )
-        ch_sam
-            .join( SAMTOOLS_SORT.out.bam )
-            .join( SAMTOOLS_INDEX.out.bai )
-            .map { it -> [ it[0], it[1], it[2], it[4], it[5] ] }
-            .set { sortbam }
-        BAM_STATS_SAMTOOLS ( SAMTOOLS_SORT.out.bam.join(SAMTOOLS_INDEX.out.bai, by: [0]), ch_fasta )
-    }
+    SAMTOOLS_SORT_INDEX ( SAMTOOLS_VIEW_BAM.out.bam )
+    ch_sam
+        .join( SAMTOOLS_SORT_INDEX.out.bam_bai )
+        .map { it -> [ it[0], it[1], it[2], it[4], it[5] ] }
+        .set { sortbam }
+    BAM_STATS_SAMTOOLS ( SAMTOOLS_SORT_INDEX.out.bam_bai, ch_fasta )
 
     /*
      * SUBWORKFLOW: Create stats using samtools

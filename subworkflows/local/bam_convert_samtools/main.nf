@@ -72,6 +72,6 @@ workflow BAM_CONVERT_SAMTOOLS {
     ch_versions = ch_versions.mix(SAMTOOLS_VIEW_UNMAP_UNMAP.out.versions)
 
     emit:
-    reads       = CAT_FASTQ.out.reads
+    reads       = CAT_FASTQ.out.reads.unique()
     versions    = ch_versions
 }
