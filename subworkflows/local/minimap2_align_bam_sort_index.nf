@@ -10,7 +10,7 @@ workflow MINIMAP2_ALIGN_BAM_SORT_INDEX {
         sort         // boolean: [mandatory] true -> sort, false -> don't sort
 
     main:
-    MINIMAP2_ALIGN(ch_reads, ch_map_index.map{ it -> [[id:it[0].baseName], it] }) // If aligner is minimap2
+    MINIMAP2_ALIGN(ch_reads, ch_map_index) // If aligner is minimap2
     ch_align_sam = MINIMAP2_ALIGN.out.align_sam
     SAMTOOLS_VIEW_BAM  (ch_align_sam)
     SAMTOOLS_SORT_INDEX ( SAMTOOLS_VIEW_BAM.out.bam )
