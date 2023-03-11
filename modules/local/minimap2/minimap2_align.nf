@@ -26,6 +26,8 @@ process MINIMAP2_ALIGN {
     def prefix = task.ext.prefix ?: "${meta.id}"
 
     """
+    INDEX=`find -L ./ -name "*.amb" | sed 's/.amb//'`
+
     minimap2 \\
         $preset \\
         $kmer \\
@@ -33,8 +35,8 @@ process MINIMAP2_ALIGN {
         $junctions \\
         $md \\
         -t $task.cpus \\
-        $index \\
-        $fastq > ${prefix}.sam
+        \$INDEX \\
+        $reads > ${prefix}.sam
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
