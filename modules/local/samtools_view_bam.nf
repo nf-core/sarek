@@ -16,7 +16,8 @@ process SAMTOOLS_VIEW_BAM {
 
     script:
     """
-    samtools view -b -h -O BAM -@ $task.cpus -o ${meta.id}.bam $sam
+    samtools view -b -h -O BAM -@ $task.cpus -o tmp $sam
+    samtools addreplacerg -r  '@RG\tID:${input.baseName}\tSM:${input.baseName}' tmp -o ${meta.id}.bam
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
