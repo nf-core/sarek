@@ -381,7 +381,7 @@ workflow SAREK {
         ch_input_sample.branch{
             bam:   it[0].data_type == "bam"
             fastq: it[0].data_type == "fastq"
-        }.unique().set{ch_input_sample_type}
+        }.set{ch_input_sample_type}
 
         // convert any bam input to fastq
         // Fasta are not needed when converting bam to fastq -> []
@@ -394,7 +394,7 @@ workflow SAREK {
         // Theorically this could work on mixed input (fastq for one sample and bam for another)
         // But not sure how to handle that with the samplesheet
         // Or if we really want users to be able to do that
-        ch_input_fastq = ch_input_sample_type.fastq.mix(CONVERT_FASTQ_INPUT.out.reads)
+        ch_input_fastq = ch_input_sample_type.fastq.mix(CONVERT_FASTQ_INPUT.out.reads).unique()
 
         // STEP 0: QC & TRIM
         // `--skip_tools fastqc` to skip fastqc
