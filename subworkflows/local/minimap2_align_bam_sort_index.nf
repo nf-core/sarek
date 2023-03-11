@@ -22,6 +22,6 @@ workflow MINIMAP2_ALIGN_BAM_SORT_INDEX {
     ch_versions = MINIMAP2_ALIGN.out.versions.first()
 
     emit:
-    bam
+    bam = SAMTOOLS_VIEW_BAM.out.bam
     versions = ch_versions
 }
