@@ -12,6 +12,7 @@ include { BWA_INDEX as BWAMEM1_INDEX             } from '../../../modules/nf-cor
 include { BWAMEM2_INDEX                          } from '../../../modules/nf-core/bwamem2/index/main'
 include { DRAGMAP_HASHTABLE                      } from '../../../modules/nf-core/dragmap/hashtable/main'
 include { GATK4_CREATESEQUENCEDICTIONARY         } from '../../../modules/nf-core/gatk4/createsequencedictionary/main'
+include { MINIMAP2_INDEX                         } from '../../../modules/local/minimap2/minimap2_index'
 include { MSISENSORPRO_SCAN                      } from '../../../modules/nf-core/msisensorpro/scan/main'
 include { SAMTOOLS_FAIDX                         } from '../../../modules/nf-core/samtools/faidx/main'
 include { TABIX_TABIX as TABIX_DBSNP             } from '../../../modules/nf-core/tabix/tabix/main'
