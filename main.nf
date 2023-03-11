@@ -31,6 +31,7 @@ params.ascat_genome          = WorkflowMain.getGenomeAttribute(params, 'ascat_ge
 params.ascat_loci            = WorkflowMain.getGenomeAttribute(params, 'ascat_loci')
 params.ascat_loci_gc         = WorkflowMain.getGenomeAttribute(params, 'ascat_loci_gc')
 params.ascat_loci_rt         = WorkflowMain.getGenomeAttribute(params, 'ascat_loci_rt')
+params.minimap2              = WorkflowMain.getGenomeAttribute(params, 'minimap2')
 params.bwa                   = WorkflowMain.getGenomeAttribute(params, 'bwa')
 params.bwamem2               = WorkflowMain.getGenomeAttribute(params, 'bwamem2')
 params.cf_chrom_len          = WorkflowMain.getGenomeAttribute(params, 'cf_chrom_len')

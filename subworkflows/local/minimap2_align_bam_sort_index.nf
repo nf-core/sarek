@@ -11,7 +11,7 @@ workflow MINIMAP2_ALIGN_BAM_SORT_INDEX {
 
     main:
     MINIMAP2_ALIGN(ch_reads, ch_map_index.map{ it -> [[id:it[0].baseName], it] }) // If aligner is minimap2
-    ch_align_sam = MINIMAP2_ALIGN.out.ch_align_sam
+    ch_align_sam = MINIMAP2_ALIGN.out.align_sam
     SAMTOOLS_VIEW_BAM  (ch_align_sam)
     SAMTOOLS_SORT_INDEX ( SAMTOOLS_VIEW_BAM.out.bam )
     ch_sam
