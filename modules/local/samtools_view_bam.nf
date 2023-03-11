@@ -16,7 +16,7 @@ process SAMTOOLS_VIEW_BAM {
 
     script:
     """
-    samtools addreplacerg -r  '@RG\tID:${sam.baseName}\tSM:${sam.baseName}' $sam -o tmp
+    samtools addreplacerg -r  ${meta.read_group} $sam -o tmp
 
     samtools view -b -h -O BAM -@ $task.cpus -o ${meta.id}.bam tmp
 
