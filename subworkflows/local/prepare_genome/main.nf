@@ -114,6 +114,7 @@ workflow PREPARE_GENOME {
     ch_versions = ch_versions.mix(TABIX_PON.out.versions)
 
     emit:
+        minimap2                         = MINIMAP2_INDEX.out.index.map{ meta, index -> [index] }.collect()       // path: minimap/*
         bwa                              = BWAMEM1_INDEX.out.index.map{ meta, index -> [index] }.collect()       // path: bwa/*
         bwamem2                          = BWAMEM2_INDEX.out.index.map{ meta, index -> [index] }.collect()       // path: bwamem2/*
         hashtable                        = DRAGMAP_HASHTABLE.out.hashmap.map{ meta, index -> [index] }.collect() // path: dragmap/*

@@ -15,7 +15,7 @@ def checkPathParamList = [
     params.ascat_loci,
     params.ascat_loci_gc,
     params.ascat_loci_rt,
-    // params.minimap2,
+    params.minimap2,
     params.bwa,
     params.bwamem2,
     params.cf_chrom_len,
@@ -323,6 +323,7 @@ workflow SAREK {
     // Gather built indices or get them from the params
     allele_files           = PREPARE_GENOME.out.allele_files
     bwa                    = params.fasta                   ? params.bwa                        ? Channel.fromPath(params.bwa).collect()                   : PREPARE_GENOME.out.bwa                   : []
+    minimap2               = params.fasta                   ? params.minimap2                   ? Channel.fromPath(params.minimap2).collect()              : PREPARE_GENOME.out.minimap2              : []
     bwamem2                = params.fasta                   ? params.bwamem2                    ? Channel.fromPath(params.bwamem2).collect()               : PREPARE_GENOME.out.bwamem2               : []
     chr_files              = PREPARE_GENOME.out.chr_files
     dragmap                = params.fasta                   ? params.dragmap                    ? Channel.fromPath(params.dragmap).collect()               : PREPARE_GENOME.out.hashtable             : []
