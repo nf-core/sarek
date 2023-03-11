@@ -7,8 +7,10 @@
 include { BWAMEM2_MEM            } from '../../../modules/nf-core/bwamem2/mem/main'
 include { BWA_MEM as BWAMEM1_MEM } from '../../../modules/nf-core/bwa/mem/main'
 include { DRAGMAP_ALIGN          } from '../../../modules/nf-core/dragmap/align/main'
+include { MINIMAP2_ALIGN          } from '../../../modules/local/minimap2/minimap2_align'
 
-workflow FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP {
+
+workflow FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_MINIMAP2 {
     take:
         ch_reads     // channel: [mandatory] meta, reads
         ch_map_index // channel: [mandatory] mapping index
@@ -23,6 +25,7 @@ workflow FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP {
     BWAMEM1_MEM(ch_reads,   ch_map_index.map{ it -> [[id:it[0].baseName], it] }, sort) // If aligner is bwa-mem
     BWAMEM2_MEM(ch_reads,   ch_map_index.map{ it -> [[id:it[0].baseName], it] }, sort) // If aligner is bwa-mem2
     DRAGMAP_ALIGN(ch_reads, ch_map_index.map{ it -> [[id:it[0].baseName], it] }, sort) // If aligner is dragmap
+    MINIMAP2_ALIGN(ch_reads, ch_map_index.map{ it -> [[id:it[0].baseName], it] }, sort) // If aligner is minimap2
 
     // Get the bam files from the aligner
     // Only one aligner is run
