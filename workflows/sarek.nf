@@ -381,7 +381,7 @@ workflow SAREK {
         ch_input_sample.branch{
             bam:   it[0].data_type == "bam"
             fastq: it[0].data_type == "fastq"
-        }.set{ch_input_sample_type}
+        }.unique().set{ch_input_sample_type}
 
         // convert any bam input to fastq
         // Fasta are not needed when converting bam to fastq -> []
