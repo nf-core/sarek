@@ -7,7 +7,7 @@
 include { BWAMEM2_MEM            } from '../../../modules/nf-core/bwamem2/mem/main'
 include { BWA_MEM as BWAMEM1_MEM } from '../../../modules/nf-core/bwa/mem/main'
 include { DRAGMAP_ALIGN          } from '../../../modules/nf-core/dragmap/align/main'
-include { MINIMAP2_ALIGN_BAM_SORT_INDEX          } from '../../../modules/subworkflows/local/minimap2_align_bam_sort_index'
+include { MINIMAP2_ALIGN_BAM_SORT_INDEX          } from '../../../subworkflows/local/minimap2_align_bam_sort_index'
 
 
 workflow FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_MINIMAP2 {
