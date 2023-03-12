@@ -22,8 +22,6 @@ process SAMTOOLS_SORT_INDEX {
     """
     samtools sort -@ $task.cpus -o ${meta.id}.sorted.bam -T $meta.id $bam
 
-    samtools index ${meta.id}.sorted.bam
-
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
