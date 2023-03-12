@@ -1,0 +1,2 @@
+patient,sex,status,sample,cram,crai
+HG002_20220916,NA,1,HG002_20220916,./preprocessing/markduplicates/HG002_20220916/HG002_20220916.md.cram,./preprocessing/markduplicates/HG002_20220916/HG002_20220916.md.cram.crai
