@@ -1,2 +1,0 @@
-patient,sex,status,sample,cram,crai
-HG002_20220916,NA,1,HG002_20220916,./preprocessing/mapped/HG002_20220916/HG002_20220916.sorted.cram,./preprocessing/mapped/HG002_20220916/HG002_20220916.sorted.cram.crai

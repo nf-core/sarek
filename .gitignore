@@ -3,6 +3,7 @@
 work/
 data/
 results/
+pipeline_info/
 .DS_Store
 testing/
 testing*
