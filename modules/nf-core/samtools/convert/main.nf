@@ -18,19 +18,19 @@ process SAMTOOLS_CONVERT {
 
     when:
     task.ext.when == null || task.ext.when
-
     script:
     def args = task.ext.args  ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     def output_extension = input.getExtension() == "bam" ? "cram" : "bam"
 
     """
-    samtools addreplacerg -r  '@RG\tID:${input.baseName}\tSM:${input.baseName}' $input -o tmp
+    samtools addreplacerg -r  ${meta.read_group} $input -o tmp
 
     samtools view \\
         --threads ${task.cpus} \\
         --reference ${fasta} \\
         $args \\
+        -F 2820 \\
         tmp \\
         -o ${prefix}.${output_extension}
 
