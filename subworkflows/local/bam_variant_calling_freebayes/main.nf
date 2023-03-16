@@ -20,7 +20,7 @@ workflow BAM_VARIANT_CALLING_FREEBAYES {
         fasta_fai,
         [], [], [])
 
-    BCFTOOLS_SORT(FREEBAYES.out.vcf.unique())
+    BCFTOOLS_SORT(FREEBAYES.out.vcf)
     BCFTOOLS_SORT.out.vcf.branch{
             intervals:    it[0].num_intervals > 1
             no_intervals: it[0].num_intervals <= 1
@@ -51,7 +51,7 @@ workflow BAM_VARIANT_CALLING_FREEBAYES {
                                                 status:         meta.status,
                                             ]
                 [groupKey(new_meta, meta.num_intervals), vcf]
-            }.groupTuple(),
+            }.groupTuple().unique(),
         dict
     )
 
