@@ -783,7 +783,7 @@ For GATK.GRCh38 the links for each reference file and the corresponding processe
 
 ### Using the nf-core containers with pre-downloaded cache
 
-All is already configured within the [igenomes.config](https://github.com/nf-core/sarek/blob/master/conf/igenomes.config) file, so nothing to be done there.
+For common genomes, it is already configured within the [igenomes.config](https://github.com/nf-core/sarek/blob/master/conf/igenomes.config) file, so nothing to be done there.
 
 Note: These containers are only created for some species and some cache/tools versions combinations (cf DockerHub tags for these containers [`nfcore/snpeff`](https://hub.docker.com/r/nfcore/snpeff/tags) and [`nfcore/vep`](https://hub.docker.com/r/nfcore/vep/tags).
 
