@@ -51,7 +51,7 @@ workflow BAM_VARIANT_CALLING_FREEBAYES {
                                                 status:         meta.status,
                                             ]
                 [groupKey(new_meta, meta.num_intervals), vcf]
-            }.groupTuple().unique(),
+            }.groupTuple(),
         dict
     )
 
