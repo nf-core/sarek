@@ -43,7 +43,7 @@ workflow BAM_VARIANT_CALLING_FREEBAYES {
                                                 tumor_id:       meta.tumor_id,
                                             ]
                                         :   [
-                                                id:             meta.sample,
+                                                id:             meta.id,
                                                 num_intervals:  meta.num_intervals,
                                                 patient:        meta.patient,
                                                 sample:         meta.sample,

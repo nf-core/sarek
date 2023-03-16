@@ -52,7 +52,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
 
             [[
                 data_type:      meta.data_type,
-                id:             meta.sample,
+                id:             meta.id,
                 num_intervals:  num_intervals,
                 patient:        meta.patient,
                 sample:         meta.sample,
