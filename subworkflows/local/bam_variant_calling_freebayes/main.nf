@@ -21,7 +21,7 @@ workflow BAM_VARIANT_CALLING_FREEBAYES {
         [], [], [])
 
     BCFTOOLS_SORT(FREEBAYES.out.vcf)
-    BCFTOOLS_SORT.out.vcf.unqiue().branch{
+    BCFTOOLS_SORT.out.vcf.branch{
             intervals:    it[0].num_intervals > 1
             no_intervals: it[0].num_intervals <= 1
         }.set{bcftools_vcf_out}
