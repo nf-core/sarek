@@ -1,13 +1,13 @@
 process DEEPVARIANT {
     tag "$meta.id"
-    label 'process_medium'
+    label 'process_low'
 
 
     if (params.enable_conda) {
         exit 1, "Conda environments cannot be used with DeepVariant at the moment. Please use Docker or Singularity containers."
     }
 
-    container "google/deepvariant:1.4.0"
+    container "google/deepvariant:1.5.0-gpu"
 
     input:
     tuple val(meta), path(input), path(index), path(intervals)
@@ -29,6 +29,7 @@ process DEEPVARIANT {
 
     """
     /opt/deepvariant/bin/run_deepvariant \\
+        --gpus 1 \\
         --ref=${fasta} \\
         --reads=${input} \\
         --output_vcf=${prefix}.vcf.gz \\
