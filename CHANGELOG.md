@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#889](https://github.com/nf-core/sarek/pull/889) - Added possibilities to skip variant filtering after Haplotypecaller
 - [#945](https://github.com/nf-core/sarek/pull/945) - Adding Adam Talbot to contributor list
 - [#954](https://github.com/nf-core/sarek/pull/954) - Adding keys for annotation with snpeff and ensemblvep for `hg19`, `hg38` and `mm10`
+- [#967](https://github.com/nf-core/sarek/pull/967) - Adding new `outdir_cache` params
 
 ### Changed
 
@@ -29,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#935](https://github.com/nf-core/sarek/pull/935) - Add params `build_only_index` to only build index
 - [#936](https://github.com/nf-core/sarek/pull/936) - Add params `donwload_cache` to download annotation cache
 - [#942](https://github.com/nf-core/sarek/pull/942) - Update `README.md`
+- [#967](https://github.com/nf-core/sarek/pull/967) - Update and detail extensively how to use annotation cache
 
 ### Fixed
 
