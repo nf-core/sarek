@@ -20,7 +20,7 @@ workflow BAM_VARIANT_CALLING_FREEBAYES {
         fasta_fai,
         [], [], [])
 
-    BCFTOOLS_SORT(FREEBAYES.out.vcf)
+    BCFTOOLS_SORT(FREEBAYES.out.vcf.unique())
     BCFTOOLS_SORT.out.vcf.branch{
             intervals:    it[0].num_intervals > 1
             no_intervals: it[0].num_intervals <= 1
