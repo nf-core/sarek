@@ -837,7 +837,7 @@ Explanation can be found for all params in the documentation:
 - [vep_species](https://nf-co.re/sarek/latest/parameters#vep_species)
 - [vep_cache_version](https://nf-co.re/sarek/latest/parameters#vep_cache_version)
 
-Whith the previous example of `GRCh38`, these are the values that were used for these params:
+With the previous example of `GRCh38`, these are the values that were used for these params:
 
 ```bash
 snpeff_db         = 'GRCh38.105'
