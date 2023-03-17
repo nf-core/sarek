@@ -4,14 +4,14 @@ keywords:
   - sort
 tools:
   - gatk4:
-    description: |
-      Developed in the Data Sciences Platform at the Broad Institute, the toolkit offers a wide variety of tools
-      with a primary focus on variant discovery and genotyping. Its powerful processing engine
-      and high-performance computing features make it capable of taking on projects of any size.
-    homepage: https://gatk.broadinstitute.org/hc/en-us
-    documentation: https://gatk.broadinstitute.org/hc/en-us/categories/360002369672s
-    doi: 10.1158/1538-7445.AM2017-3590
-    licence: ["Apache-2.0"]
+      description: |
+        Developed in the Data Sciences Platform at the Broad Institute, the toolkit offers a wide variety of tools
+        with a primary focus on variant discovery and genotyping. Its powerful processing engine
+        and high-performance computing features make it capable of taking on projects of any size.
+      homepage: https://gatk.broadinstitute.org/hc/en-us
+      documentation: https://gatk.broadinstitute.org/hc/en-us/categories/360002369672s
+      doi: 10.1158/1538-7445.AM2017-3590
+      licence: ["Apache-2.0"]
 
 input:
   - meta:

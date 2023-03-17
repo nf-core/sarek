@@ -28,10 +28,10 @@ process GATK4_GATHERPILEUPSUMMARIES {
     if (!task.memory) {
         log.info '[GATK GatherPileupSummaries] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this.'
     } else {
-        avail_mem = task.memory.giga
+        avail_mem = (task.memory.mega*0.8).intValue()
     }
     """
-    gatk --java-options "-Xmx${avail_mem}g" GatherPileupSummaries \\
+    gatk --java-options "-Xmx${avail_mem}M" GatherPileupSummaries \\
         $input_list \\
         --O ${prefix}.pileups.table \\
         --sequence-dictionary $dict \\

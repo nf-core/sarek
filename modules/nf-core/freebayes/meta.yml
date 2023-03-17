@@ -15,7 +15,7 @@ tools:
       homepage: https://github.com/freebayes/freebayes
       documentation: https://github.com/freebayes/freebayes
       tool_dev_url: https://github.com/freebayes/freebayes
-      doi: "arXiv:1207.3907"
+      doi: "10.48550/arXiv.1207.3907"
       licence: ["MIT"]
 
 input:

@@ -27,10 +27,10 @@ process GATK4_CALCULATECONTAMINATION {
     if (!task.memory) {
         log.info '[GATK CalculateContamination] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this.'
     } else {
-        avail_mem = task.memory.giga
+        avail_mem = (task.memory.mega*0.8).intValue()
     }
     """
-    gatk --java-options "-Xmx${avail_mem}g" CalculateContamination \\
+    gatk --java-options "-Xmx${avail_mem}M" CalculateContamination \\
         --input $pileup \\
         --output ${prefix}.contamination.table \\
         $matched_command \\

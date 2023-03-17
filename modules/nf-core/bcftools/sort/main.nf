@@ -11,19 +11,25 @@ process BCFTOOLS_SORT {
     tuple val(meta), path(vcf)
 
     output:
-    tuple val(meta), path("*.gz"), emit: vcf
-    path "versions.yml"           , emit: versions
+    tuple val(meta), path("*.{vcf,vcf.gz,bcf,bcf.gz}")  , emit: vcf
+    path "versions.yml"                                 , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
 
     script:
-    def args = task.ext.args ?: ''
+    def args = task.ext.args ?: '--output-type z'
     def prefix = task.ext.prefix ?: "${meta.id}"
+    def extension = args.contains("--output-type b") || args.contains("-Ob") ? "bcf.gz" :
+                    args.contains("--output-type u") || args.contains("-Ou") ? "bcf" :
+                    args.contains("--output-type z") || args.contains("-Oz") ? "vcf.gz" :
+                    args.contains("--output-type v") || args.contains("-Ov") ? "vcf" :
+                    "vcf"
+
     """
     bcftools \\
         sort \\
-        --output ${prefix}.vcf.gz \\
+        --output ${prefix}.${extension} \\
         $args \\
         $vcf
 
@@ -34,10 +40,17 @@ process BCFTOOLS_SORT {
     """
 
     stub:
+    def args = task.ext.args ?: '--output-type z'
     def prefix = task.ext.prefix ?: "${meta.id}"
 
+    def extension = args.contains("--output-type b") || args.contains("-Ob") ? "bcf.gz" :
+                    args.contains("--output-type u") || args.contains("-Ou") ? "bcf" :
+                    args.contains("--output-type z") || args.contains("-Oz") ? "vcf.gz" :
+                    args.contains("--output-type v") || args.contains("-Ov") ? "vcf" :
+                    "vcf"
+
     """
-    touch ${prefix}.vcf.gz
+    touch ${prefix}.${extension}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

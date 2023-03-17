@@ -34,10 +34,10 @@ process GATK4_GENOTYPEGVCFS {
     if (!task.memory) {
         log.info '[GATK GenotypeGVCFs] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this.'
     } else {
-        avail_mem = task.memory.giga
+        avail_mem = (task.memory.mega*0.8).intValue()
     }
     """
-    gatk --java-options "-Xmx${avail_mem}g" GenotypeGVCFs \\
+    gatk --java-options "-Xmx${avail_mem}M" GenotypeGVCFs \\
         --variant $gvcf_command \\
         --output ${prefix}.vcf.gz \\
         --reference $fasta \\

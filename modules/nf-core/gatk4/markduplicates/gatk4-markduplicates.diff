@@ -17,7 +17,7 @@ Changes in module 'nf-core/gatk4/markduplicates'
      tuple val(meta), path(bam)
 @@ -38,20 +38,20 @@
      """
-     gatk --java-options "-Xmx${avail_mem}g" MarkDuplicates \\
+     gatk --java-options "-Xmx${avail_mem}M" MarkDuplicates \\
          $input_list \\
 -        --OUTPUT ${prefix} \\
 +        --OUTPUT ${prefix}.bam \\
@@ -40,6 +40,6 @@ Changes in module 'nf-core/gatk4/markduplicates'
 +        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
      END_VERSIONS
      """
--}
-+}
+ }
+
 ************************************************************
