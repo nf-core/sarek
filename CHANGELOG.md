@@ -13,6 +13,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#792](https://github.com/nf-core/sarek/pull/792) - Added the option `--concatenate_vcfs` for concatenating the germline VCF files. Per default, the resulting vcf-files will be placed under `<outDir>/variant_calling/concat`
 - [#889](https://github.com/nf-core/sarek/pull/889) - Added possibilities to skip variant filtering after Haplotypecaller
 - [#930](https://github.com/nf-core/sarek/pull/930) - Add more manual tests
+- [#945](https://github.com/nf-core/sarek/pull/945) - Adding Adam Talbot to contributor list
+- [#954](https://github.com/nf-core/sarek/pull/954) - Adding keys for annotation with snpeff and ensemblvep for `hg19`, `hg38` and `mm10`
+- [#967](https://github.com/nf-core/sarek/pull/967) - Adding new `outdir_cache` params
 
 ### Changed
 
@@ -25,6 +28,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#898](https://github.com/nf-core/sarek/pull/898) - Sync `TEMPLATE` with `tools` `2.7.2`
 - [#898](https://github.com/nf-core/sarek/pull/898) - Nextflow minimal version is now `22.10.1`
 - [#909](https://github.com/nf-core/sarek/pull/909) - Cache test data on GHA
+- [#935](https://github.com/nf-core/sarek/pull/935) - Add params `build_only_index` to only build index
+- [#936](https://github.com/nf-core/sarek/pull/936) - Add params `donwload_cache` to download annotation cache
+- [#942](https://github.com/nf-core/sarek/pull/942) - Update `README.md`
+- [#967](https://github.com/nf-core/sarek/pull/967) - Update and detail extensively how to use annotation cache
 
 ### Fixed
 
@@ -35,6 +42,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#894](https://github.com/nf-core/sarek/pull/894) - Remove methods description TODO prompt
 - [#927](https://github.com/nf-core/sarek/pull/927) - Fix tumor only variant calling issues with freebayes following [#896](https://github.com/nf-core/sarek/pull/896)
 - [#929](https://github.com/nf-core/sarek/pull/929) - Fix somatic variant calling issues with msisensor following [#896](https://github.com/nf-core/sarek/pull/896)
+- [#941](https://github.com/nf-core/sarek/pull/941) - Fix json validation for `tools`, `skip_tools` and `use_gatk_spark` [#892](https://github.com/nf-core/sarek/issues/892)
+- [#954](https://github.com/nf-core/sarek/pull/954) - Fix missing annotation keys with snpeff and ensemblvep for `hg19`
+- [#957](https://github.com/nf-core/sarek/pull/957) - Add `failOnDuplicate` and `failOnMismatch` options to all `join()` operator where it was possible
 
 ### Deprecated
 
@@ -50,6 +60,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | `ensembl-vep` | 106.1       | 108.2       |
 | `multiqc`     | 1.13a       | 1.14        |
 | `svdb`        | 2.6.1       | 2.8.1       |
+
+### Modules / Subworkflows
+
+| script                | Old name     | New name              |
+| --------------------- | ------------ | --------------------- |
+| `ensemblvep/download` |              | 'ENSEMBLVEP_DOWNLOAD' |
+| `ensemblvep/vep`      | 'ENSEMBLVEP' | 'ENSEMBLVEP_VEP'      |
+| `snpeff/download`     |              | 'SNPEFF_DOWNLOAD'     |
+| `snpeff/snpeff`       | 'SNPEFF'     | 'SNPEFF_SNPEFF'       |
 
 ## [3.1.2](https://github.com/nf-core/sarek/releases/tag/3.1.2) - Lesser Lule River
 

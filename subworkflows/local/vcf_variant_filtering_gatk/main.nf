@@ -21,7 +21,7 @@ workflow VCF_VARIANT_FILTERING_GATK {
 
     CNNSCOREVARIANTS(cnn_in, fasta, fasta_fai, dict, [], [])
 
-    FILTERVARIANTTRANCHES(CNNSCOREVARIANTS.out.vcf.join(CNNSCOREVARIANTS.out.tbi).combine(intervals_bed_combined), known_sites, known_sites_tbi, fasta, fasta_fai, dict)
+    FILTERVARIANTTRANCHES(CNNSCOREVARIANTS.out.vcf.join(CNNSCOREVARIANTS.out.tbi, failOnDuplicate: true, failOnMismatch: true).combine(intervals_bed_combined), known_sites, known_sites_tbi, fasta, fasta_fai, dict)
 
     filtered_vcf = FILTERVARIANTTRANCHES.out.vcf
         // add variantcaller to meta map and remove no longer necessary field: num_intervals

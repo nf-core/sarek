@@ -28,7 +28,7 @@ workflow BAM_MARKDUPLICATES_SPARK {
     INDEX_MARKDUPLICATES(GATK4_MARKDUPLICATES_SPARK.out.output)
 
     // Join with the crai file
-    cram = GATK4_MARKDUPLICATES_SPARK.out.output.join(INDEX_MARKDUPLICATES.out.crai)
+    cram = GATK4_MARKDUPLICATES_SPARK.out.output.join(INDEX_MARKDUPLICATES.out.crai, failOnDuplicate: true, failOnMismatch: true)
 
     // QC on CRAM
     CRAM_QC_MOSDEPTH_SAMTOOLS(cram, fasta, intervals_bed_combined)

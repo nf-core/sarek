@@ -36,8 +36,9 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
     GATK4_HAPLOTYPECALLER(cram_intervals, fasta, fasta_fai, dict, dbsnp, dbsnp_tbi)
 
     // For joint genotyping
-    genotype_intervals = GATK4_HAPLOTYPECALLER.out.vcf.join(GATK4_HAPLOTYPECALLER.out.tbi)
-        .join(cram_intervals)
+    genotype_intervals = GATK4_HAPLOTYPECALLER.out.vcf
+        .join(GATK4_HAPLOTYPECALLER.out.tbi, failOnMismatch: true)
+        .join(cram_intervals, failOnMismatch: true)
         .map{ meta, gvcf, tbi, cram, crai, intervals, dragstr_model -> [ meta, gvcf, tbi, intervals ] }
 
     // Figuring out if there is one or more vcf(s) from the same sample
@@ -86,7 +87,7 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
     if (!skip_haplotypecaller_filter) {
 
         VCF_VARIANT_FILTERING_GATK(
-            haplotypecaller_vcf.join(haplotypecaller_tbi),
+            haplotypecaller_vcf.join(haplotypecaller_tbi, failOnDuplicate: true, failOnMismatch: true),
             fasta,
             fasta_fai,
             dict,

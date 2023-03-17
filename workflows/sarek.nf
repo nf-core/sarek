@@ -56,7 +56,7 @@ def checkPathParamList = [
 for (param in checkPathParamList) if (param) file(param, checkIfExists: true)
 
 // Set input, can either be from --input or from automatic retrieval in WorkflowSarek.groovy
-input_sample = extract_csv(file(params.input, checkIfExists: true))
+input_sample = params.build_only_index ? Channel.empty() : extract_csv(file(params.input, checkIfExists: true))
 
 // Fails when wrongfull extension for intervals file
 if (params.wes && !params.step == 'annotate') {
@@ -148,7 +148,7 @@ ascat_loci_rt      = params.ascat_loci_rt      ? Channel.fromPath(params.ascat_l
 cf_chrom_len       = params.cf_chrom_len       ? Channel.fromPath(params.cf_chrom_len).collect()      : []
 chr_dir            = params.chr_dir            ? Channel.fromPath(params.chr_dir).collect()           : Channel.value([])
 dbsnp              = params.dbsnp              ? Channel.fromPath(params.dbsnp).collect()             : Channel.value([])
-fasta              = params.fasta              ? Channel.fromPath(params.fasta).collect()             : Channel.empty()
+fasta              = params.fasta              ? Channel.fromPath(params.fasta).first()               : Channel.empty()
 fasta_fai          = params.fasta_fai          ? Channel.fromPath(params.fasta_fai).collect()         : Channel.empty()
 germline_resource  = params.germline_resource  ? Channel.fromPath(params.germline_resource).collect() : Channel.value([]) // Mutec2 does not require a germline resource, so set to optional input
 known_indels       = params.known_indels       ? Channel.fromPath(params.known_indels).collect()      : Channel.value([])
@@ -197,6 +197,9 @@ include { CHANNEL_MARKDUPLICATES_CREATE_CSV              } from '../subworkflows
 include { CHANNEL_BASERECALIBRATOR_CREATE_CSV            } from '../subworkflows/local/channel_baserecalibrator_create_csv/main'
 include { CHANNEL_APPLYBQSR_CREATE_CSV                   } from '../subworkflows/local/channel_applybqsr_create_csv/main'
 include { CHANNEL_VARIANT_CALLING_CREATE_CSV             } from '../subworkflows/local/channel_variant_calling_create_csv/main'
+
+// Download annotation cache if needed
+include { PREPARE_CACHE                                  } from '../subworkflows/local/prepare_cache/main'
 
 // Build indices if needed
 include { PREPARE_GENOME                                 } from '../subworkflows/local/prepare_genome/main'
@@ -301,6 +304,19 @@ workflow SAREK {
     reports = Channel.empty()
     // To gather used softwares versions for MultiQC
     versions = Channel.empty()
+
+    // Download cache if needed
+    // Assuming that if the cache is provided, the user has already downloaded it
+    ensemblvep_info = params.vep_cache ? [] : Channel.of([ [ id:"${params.vep_genome}.${params.vep_cache_version}" ], params.vep_genome, params.vep_species, params.vep_cache_version ])
+    snpeff_info = params.snpeff_cache ? [] : Channel.of([ [ id:params.snpeff_db ], params.snpeff_genome, params.snpeff_db.minus("${params.snpeff_genome}.") ])
+
+    if (params.download_cache) {
+        PREPARE_CACHE(ensemblvep_info, snpeff_info)
+        snpeff_cache       = PREPARE_CACHE.out.snpeff_cache.map{ meta, cache -> [ cache ] }
+        vep_cache          = PREPARE_CACHE.out.ensemblvep_cache.map{ meta, cache -> [ cache ] }
+
+        versions = versions.mix(PREPARE_CACHE.out.versions)
+    }
 
     // Build indices if needed
     PREPARE_GENOME(
@@ -615,7 +631,7 @@ workflow SAREK {
         // - crams from markduplicates
         // - crams from markduplicates_spark
         // - crams from input step markduplicates --> from the converted ones only?
-        ch_md_cram_for_restart = Channel.empty().mix(cram_markduplicates_no_spark,cram_markduplicates_spark)
+        ch_md_cram_for_restart = Channel.empty().mix(cram_markduplicates_no_spark, cram_markduplicates_spark)
             // Make sure correct data types are carried through
             .map{ meta, cram, crai -> [ meta - meta.subMap('data_type') + [data_type: "cram"], cram, crai ] }
 
@@ -643,12 +659,9 @@ workflow SAREK {
             BAM_TO_CRAM(input_prepare_recal_convert.bam, fasta, fasta_fai)
             versions = versions.mix(BAM_TO_CRAM.out.versions)
 
-            ch_cram_from_bam = BAM_TO_CRAM.out.alignment_index.map{ meta, cram, crai ->
+            ch_cram_from_bam = BAM_TO_CRAM.out.alignment_index
                 // Make sure correct data types are carried through
-                [ meta.subMap('id', 'patient', 'sample', 'sex', 'status')
-                    + [data_type: "cram"],
-                    cram, crai ]
-            }
+                .map{ meta, cram, crai -> [ meta - meta.subMap('data_type') + [data_type: "cram"], cram, crai ] }
 
             ch_cram_for_bam_baserecalibrator = Channel.empty().mix(ch_cram_from_bam, input_prepare_recal_convert.cram)
             ch_md_cram_for_restart = ch_cram_from_bam
@@ -661,17 +674,15 @@ workflow SAREK {
             // - crams converted from bam mapped when skipping markduplicates
             // - input cram files, when start from step markduplicates
             // ch_md_cram_for_restart.view() // contains md.cram.crai
-            ch_cram_for_bam_baserecalibrator = Channel.empty().mix(ch_md_cram_for_restart, cram_skip_markduplicates ).map{ meta, cram, crai ->
+            ch_cram_for_bam_baserecalibrator = Channel.empty().mix(ch_md_cram_for_restart, cram_skip_markduplicates )
                 // Make sure correct data types are carried through
-                [ meta.subMap('id', 'patient', 'sample', 'sex', 'status')
-                    + [data_type: "cram"],
-                    cram, crai ]
-            }
+                .map{ meta, cram, crai -> [ meta - meta.subMap('data_type') + [data_type: "cram"], cram, crai ] }
 
         }
 
         // STEP 3: Create recalibration tables
         if (!(params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'))) {
+
             ch_table_bqsr_no_spark = Channel.empty()
             ch_table_bqsr_spark    = Channel.empty()
 
@@ -715,10 +726,10 @@ workflow SAREK {
 
             reports = reports.mix(ch_table_bqsr.collect{ meta, table -> table })
 
-            cram_applybqsr = ch_cram_for_bam_baserecalibrator.join(ch_table_bqsr)
+            cram_applybqsr = ch_cram_for_bam_baserecalibrator.join(ch_table_bqsr, failOnDuplicate: true, failOnMismatch: true)
 
             // Create CSV to restart from this step
-            CHANNEL_BASERECALIBRATOR_CREATE_CSV(ch_md_cram_for_restart.join(ch_table_bqsr), params.skip_tools)
+            CHANNEL_BASERECALIBRATOR_CREATE_CSV(ch_md_cram_for_restart.join(ch_table_bqsr, failOnDuplicate: true), params.skip_tools)
         }
     }
 
@@ -743,8 +754,10 @@ workflow SAREK {
             versions = versions.mix(BAM_TO_CRAM.out.versions)
 
             cram_applybqsr = Channel.empty().mix(
-                BAM_TO_CRAM.out.alignment_index.join(input_only_table),
-                input_recal_convert.cram) // Join together converted cram with input tables
+                BAM_TO_CRAM.out.alignment_index.join(input_only_table, failOnDuplicate: true, failOnMismatch: true),
+                input_recal_convert.cram)
+                // Join together converted cram with input tables
+                .map{ meta, cram, crai, table -> [ meta - meta.subMap('data_type') + [data_type: "cram"], cram, crai, table ]}
         }
 
         if (!(params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'))) {
@@ -860,7 +873,7 @@ workflow SAREK {
         cram_variant_calling_tumor_grouped = cram_variant_calling_pair_to_cross.groupTuple()
 
         // 2. Join with normal samples, in each channel there is one key per patient now. Patients without matched normal end up with: [ patient1, [ meta1, meta2 ], [ cram1, crai1, cram2, crai2 ], null ]
-        cram_variant_calling_tumor_joined = cram_variant_calling_tumor_grouped.join(cram_variant_calling_normal_to_cross, remainder: true)
+        cram_variant_calling_tumor_joined = cram_variant_calling_tumor_grouped.join(cram_variant_calling_normal_to_cross, failOnDuplicate: true, remainder: true)
 
         // 3. Filter out entries with last entry null
         cram_variant_calling_tumor_filtered = cram_variant_calling_tumor_joined.filter{ it ->  !(it.last()) }
@@ -873,7 +886,7 @@ workflow SAREK {
             // Normal only samples
 
             // 1. Join with tumor samples, in each channel there is one key per patient now. Patients without matched tumor end up with: [ patient1, [ meta1 ], [ cram1, crai1 ], null ] as there is only one matched normal possible
-            cram_variant_calling_normal_joined = cram_variant_calling_normal_to_cross.join(cram_variant_calling_tumor_grouped, remainder: true)
+            cram_variant_calling_normal_joined = cram_variant_calling_normal_to_cross.join(cram_variant_calling_tumor_grouped, failOnDuplicate: true, remainder: true)
 
             // 2. Filter out entries with last entry null
             cram_variant_calling_normal_filtered = cram_variant_calling_normal_joined.filter{ it ->  !(it.last()) }
@@ -1168,7 +1181,7 @@ def extract_csv(csv_file) {
         // Two checks for ensuring that the pipeline stops with a meaningful error message if
         // 1. the sample-sheet only contains normal-samples, but some of the requested tools require tumor-samples, and
         // 2. the sample-sheet only contains tumor-samples, but some of the requested tools require normal-samples.
-        if ((sample_count_normal == sample_count_all) && params.tools) { // In this case, the sample-sheet contains no tumor-samples
+        if ((sample_count_normal == sample_count_all) && params.tools && !params.build_only_index) { // In this case, the sample-sheet contains no tumor-samples
             def tools_tumor = ['ascat', 'controlfreec', 'mutect2', 'msisensorpro']
             def tools_tumor_asked = []
             tools_tumor.each{ tool ->
