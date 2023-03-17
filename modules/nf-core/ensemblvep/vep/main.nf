@@ -1,4 +1,4 @@
-process ENSEMBLVEP {
+process ENSEMBLVEP_VEP {
     tag "$meta.id"
     label 'process_medium'
 

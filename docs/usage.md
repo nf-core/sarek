@@ -779,24 +779,116 @@ For GATK.GRCh38 the links for each reference file and the corresponding processe
 | pon                   | Mutect2                                                                                                                                                                                                                                                                                                                                                                                                                                              | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) | https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON- |
 | pon_tbi               | Mutect2                                                                                                                                                                                                                                                                                                                                                                                                                                              | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) | https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON- |
 
-## How to customise SnpEff and VEP annotation
+## How to customise snpeff and vep annotation
 
-Sarek uses nf-core provided containers for both snpEff and VEP for several reference genomes ('CanFam3', 'GRCh37', 'GRCh38', 'GRCm38' and 'WBcel235').
+### Using the nf-core containers with pre-downloaded cache
 
-### Using downloaded cache
+For common genomes, it is already configured within the [igenomes.config](https://github.com/nf-core/sarek/blob/master/conf/igenomes.config) file, so nothing to be done there.
 
-Both `snpEff` and `VEP` enable usage of cache, if no pre-build container is available.
-The cache needs to be made available on the machine where Sarek is run.
-You need to specify the cache directory using `--snpeff_cache` and `--vep_cache` in the command lines or within configuration files.
+Note: These containers are only created for some species and some cache/tools versions combinations (cf DockerHub tags for these containers [`nfcore/snpeff`](https://hub.docker.com/r/nfcore/snpeff/tags) and [`nfcore/vep`](https://hub.docker.com/r/nfcore/vep/tags).
 
-Example:
+These containers can be quite huge especially for human, it is recommended to use annotation cache on a path if possible
+
+### Create containers with pre-downloaded cache
+
+For each tool, an helper script `build.sh` can be found at the root of the tool folder in the nf-core module repo ([snpeff](https://github.com/nf-core/modules/tree/master/modules/nf-core/snpeff) and [ensemblvep](https://github.com/nf-core/modules/tree/master/modules/nf-core/ensemblvep)), and can be adapted for your usage.
+
+### Use Sarek to download cache and annotate in one go
+
+Use the params `--download_cache`, and specify with `--tools` for which annotation tool you need to download the cache (`snpeff` and or `vep`)
+
+Sarek will automatically download the cache, use the biocontainers container for said tools, and use it to annotate any vcfs produced.
+
+### Only download cache
+
+Using the params `--build_only_index` allow for only downloading the cache for the specified tools.
+
+### Location for the cache
+
+Cache can be downloaded in the specified `--outdir_cache` location.
+Else, it will be downloaded in `cache/` in the specified `--outdir` location.
+
+To download cache on a cloud infrastructure, an absolute path is needed.
+
+Params `--snpeff_cache` and `--vep_cache` are to used to specify the locations to the root of the annotation cache folder.
+
+For example this is what can be seen when cache has been downloaded for `GATK.GRCh38` and `WBcell235` for both tools using the default values in the [igenomes.config](https://github.com/nf-core/sarek/blob/master/conf/igenomes.config) file:
 
 ```bash
-nextflow run nf-core/sarek --tools snpEff --step annotate --sample <file.vcf.gz> --snpeff_cache </path/to/snpEff/cache>
-nextflow run nf-core/sarek --tools VEP --step annotate --sample <file.vcf.gz> --vep_cache </path/to/VEP/cache>
+ls /data/snpeff_cache /data/vep_cache/*
+/data/snpeff_cache:
+GRCh38.105
+WBcel235.105
+
+/data/vep_cache/caenorhabditis_elegans:
+106_WBcel235
+/data/vep_cache/homo_sapiens:
+106_GRCh38
 ```
 
-Similarly, when wanting to use a different cache than the one specified in the iGenomes config file, one can use `--snpeff_db`, `--snpeff_genome`, `--snpeff_version`, `--vep_cache_version`, `--vep_genome`, `--vep_species` and `--vep_version` to overwrite these default value related to the databases, genomes, versions and caches' versions used by these tools.
+### Change cache version and species
+
+By default all is specified in the [igenomes.config](https://github.com/nf-core/sarek/blob/master/conf/igenomes.config) file.
+Explanation can be found for all params in the documentation:
+
+- [snpeff_db](https://nf-co.re/sarek/latest/parameters#snpeff_db)
+- [snpeff_genome](https://nf-co.re/sarek/latest/parameters#snpeff_genome)
+- [vep_genome](https://nf-co.re/sarek/latest/parameters#vep_genome)
+- [vep_species](https://nf-co.re/sarek/latest/parameters#vep_species)
+- [vep_cache_version](https://nf-co.re/sarek/latest/parameters#vep_cache_version)
+
+With the previous example of `GRCh38`, these are the values that were used for these params:
+
+```bash
+snpeff_db         = 'GRCh38.105'
+snpeff_genome     = 'GRCh38'
+vep_genome        = 'GRCh38'
+vep_species       = 'homo_sapiens'
+vep_cache_version = '106'
+```
+
+### Usage recommendation with AWS iGenomes
+
+Annotation cache is a resource separated from AWS iGenomes, which as its own structure and a frequent update cycle.
+So it is not recommended to put any annotation cache in your local AWS iGenomes folder.
+
+A classical organisation could be:
+
+```bash
+/data/igenomes/
+/data/cache/ensemblvep
+/data/cache/snpeff
+```
+
+which can then be used this way in sarek:
+
+```bash
+nextflow run nf-core/sarek \\
+    --igenomes_base /data/igenomes/ \\
+    --snpeff_cache /data/cache/snpeff/ \\
+    --vep_cache /data/cache/ensemblvep/ \\
+    ...
+```
+
+Or similarly on the cloud:
+
+```bash
+s3://data/igenomes/
+s3://data/cache/ensemblvep
+s3://data/cache/snpeff
+```
+
+which can then be used this way in sarek:
+
+```bash
+nextflow run nf-core/sarek \\
+    --igenomes_base s3://data/igenomes/ \\
+    --snpeff_cache s3://data/cache/snpeff/ \\
+    --vep_cache s3://data/cache/ensemblvep/ \\
+    ...
+```
+
+These params can be specified in a config file or in a profile using the params scope, or even in a json or a yaml file using the `-params-file` nextflow option.
 
 ### Using VEP plugins
 
@@ -861,4 +953,4 @@ ERROR_CHROMOSOME_NOT_FOUND      17522411
 
 ## How to set up sarek to use sentieon
 
-Sarek 3.0.1 is currently not supporting sentieon. It is planned for the upcoming release 3.1. In the meantime, please revert to the last release 2.7.2.
+Sarek is currently not supporting sentieon. It is planned for the upcoming release 3.2. In the meantime, please revert to the last release 2.7.2.
