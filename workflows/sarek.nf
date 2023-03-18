@@ -497,7 +497,7 @@ workflow SAREK {
 
             if (params.split_fastq) {
                 reads_for_alignment = FASTP.out.reads.map{ meta, reads ->
-                    read_files = reads.sort{ a,b -> a.getName().tokenize('.')[0] <=> b.getName().tokenize('.')[0] }.collate(2)
+                    read_files = reads.sort(false) { a,b -> a.getName().tokenize('.')[0] <=> b.getName().tokenize('.')[0] }.collate(2)
                     [ meta + [ size:read_files.size() ], read_files ]
                 }.transpose()
             } else reads_for_alignment = FASTP.out.reads
