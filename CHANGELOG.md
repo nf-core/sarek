@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#945](https://github.com/nf-core/sarek/pull/945) - Adding Adam Talbot to contributor list
 - [#954](https://github.com/nf-core/sarek/pull/954) - Adding keys for annotation with snpeff and ensemblvep for `hg19`, `hg38` and `mm10`
 - [#967](https://github.com/nf-core/sarek/pull/967) - Adding new `outdir_cache` params
+- [#971](https://github.com/nf-core/sarek/pull/971) - Subtle bugfix to correct mutation of FASTP output channel objects.
 
 ### Changed
 
