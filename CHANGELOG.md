@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#967](https://github.com/nf-core/sarek/pull/967) - Adding new `outdir_cache` params
 - [#971](https://github.com/nf-core/sarek/pull/971) - Subtle bugfix to correct mutation of FASTP output channel objects.
 - [#978](https://github.com/nf-core/sarek/pull/978) - Validate that patient/sample does not contain spaces.
+- [#981](https://github.com/nf-core/sarek/pull/981) - Added documentation on generating ASCAT resources for exome and targeted sequencing.
 
 ### Changed
 
