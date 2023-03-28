@@ -50,6 +50,16 @@ skip_markduplicates:
   - tests/test_skip_markduplicates.yml
   - workflows/**
 
+validation_checks:
+  - conf/modules/**
+  - main.nf
+  - modules/**
+  - nextflow.config
+  - nextflow_schema.json
+  - subworkflows/**
+  - tests/test_skip_markduplicates.yml
+  - workflows/**
+
 # preprocessing
 
 ## alignment_to_fastq
