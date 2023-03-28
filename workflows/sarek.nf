@@ -1149,6 +1149,10 @@ def extract_csv(csv_file) {
                 log.error "Missing field in csv file header. The csv file must have fields named 'patient' and 'sample'."
                 System.exit(1)
             }
+            else if (row.patient.contains(" ") || row.sample.contains(" ")) {
+                log.error "Invalid value in csv file. Values for 'patient' and 'sample' can not contain space."
+                System.exit(1)
+            }
             [ [ row.patient.toString(), row.sample.toString() ], row ]
         }.groupTuple()
         .map{ meta, rows ->
