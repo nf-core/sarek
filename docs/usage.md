@@ -621,7 +621,7 @@ From 'Reference files' https://github.com/VanLoo-lab/ascat:
 
 ### How to generate ASCAT resources for exome or targeted sequencing
 
-1. Fetch the GC content correction and replication timing (RT) correction files from the (Dropbox links provided by the ASCAT developers)[https://github.com/VanLoo-lab/ascat/tree/master/ReferenceFiles/WGS] and intersect the SNP coordinates with the exome target coordinates. If the target file has 'chr' prefixes, make a copy with these removed first. Extract the GC and RT information for only the on target SNPs and zip the results.
+1. Fetch the GC content correction and replication timing (RT) correction files from the [Dropbox links provided by the ASCAT developers](https://github.com/VanLoo-lab/ascat/tree/master/ReferenceFiles/WGS) and intersect the SNP coordinates with the exome target coordinates. If the target file has 'chr' prefixes, make a copy with these removed first. Extract the GC and RT information for only the on target SNPs and zip the results.
 
 ```
 sed -e 's/chr//' targets_with_chr.bed > targets.bed
@@ -642,7 +642,7 @@ do
 done
 ```
 
-2. Download the Battenberg 1000G loci and alleles files. The steps below follow downloading from the (Battenberg repository at the Oxford University Research Archive)[https://ora.ox.ac.uk/objects/uuid:08e24957-7e76-438a-bd38-66c48008cf52]. The files are also available via Dropbox links from the same page as the GC and RT correction files above.
+2. Download the Battenberg 1000G loci and alleles files. The steps below follow downloading from the [Battenberg repository at the Oxford University Research Archive](https://ora.ox.ac.uk/objects/uuid:08e24957-7e76-438a-bd38-66c48008cf52). The files are also available via Dropbox links from the same page as the GC and RT correction files above.
 
 ```
 wget https://ora.ox.ac.uk/objects/uuid:08e24957-7e76-438a-bd38-66c48008cf52/files/rt435gd52w
