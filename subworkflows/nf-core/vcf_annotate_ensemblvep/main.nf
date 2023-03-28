@@ -21,7 +21,7 @@ workflow VCF_ANNOTATE_ENSEMBLVEP {
     ENSEMBLVEP_VEP(vcf, vep_genome, vep_species, vep_cache_version, vep_cache, fasta, vep_extra_files)
     TABIX_TABIX(ENSEMBLVEP_VEP.out.vcf)
 
-    ch_vcf_tbi = ENSEMBLVEP_VEP.out.vcf.join(TABIX_TABIX.out.tbi)
+    ch_vcf_tbi = ENSEMBLVEP_VEP.out.vcf.join(TABIX_TABIX.out.tbi, failOnDuplicate: true, failOnMismatch: true)
 
     // Gather versions of all tools used
     ch_versions = ch_versions.mix(ENSEMBLVEP_VEP.out.versions)

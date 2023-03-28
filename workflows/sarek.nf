@@ -497,7 +497,7 @@ workflow SAREK {
 
             if (params.split_fastq) {
                 reads_for_alignment = FASTP.out.reads.map{ meta, reads ->
-                    read_files = reads.sort{ a,b -> a.getName().tokenize('.')[0] <=> b.getName().tokenize('.')[0] }.collate(2)
+                    read_files = reads.sort(false) { a,b -> a.getName().tokenize('.')[0] <=> b.getName().tokenize('.')[0] }.collate(2)
                     [ meta + [ size:read_files.size() ], read_files ]
                 }.transpose()
             } else reads_for_alignment = FASTP.out.reads
@@ -631,7 +631,7 @@ workflow SAREK {
         // - crams from markduplicates
         // - crams from markduplicates_spark
         // - crams from input step markduplicates --> from the converted ones only?
-        ch_md_cram_for_restart = Channel.empty().mix(cram_markduplicates_no_spark,cram_markduplicates_spark)
+        ch_md_cram_for_restart = Channel.empty().mix(cram_markduplicates_no_spark, cram_markduplicates_spark)
             // Make sure correct data types are carried through
             .map{ meta, cram, crai -> [ meta - meta.subMap('data_type') + [data_type: "cram"], cram, crai ] }
 
@@ -659,12 +659,9 @@ workflow SAREK {
             BAM_TO_CRAM(input_prepare_recal_convert.bam, fasta, fasta_fai)
             versions = versions.mix(BAM_TO_CRAM.out.versions)
 
-            ch_cram_from_bam = BAM_TO_CRAM.out.alignment_index.map{ meta, cram, crai ->
+            ch_cram_from_bam = BAM_TO_CRAM.out.alignment_index
                 // Make sure correct data types are carried through
-                [ meta.subMap('id', 'patient', 'sample', 'sex', 'status')
-                    + [data_type: "cram"],
-                    cram, crai ]
-            }
+                .map{ meta, cram, crai -> [ meta - meta.subMap('data_type') + [data_type: "cram"], cram, crai ] }
 
             ch_cram_for_bam_baserecalibrator = Channel.empty().mix(ch_cram_from_bam, input_prepare_recal_convert.cram)
             ch_md_cram_for_restart = ch_cram_from_bam
@@ -677,17 +674,15 @@ workflow SAREK {
             // - crams converted from bam mapped when skipping markduplicates
             // - input cram files, when start from step markduplicates
             // ch_md_cram_for_restart.view() // contains md.cram.crai
-            ch_cram_for_bam_baserecalibrator = Channel.empty().mix(ch_md_cram_for_restart, cram_skip_markduplicates ).map{ meta, cram, crai ->
+            ch_cram_for_bam_baserecalibrator = Channel.empty().mix(ch_md_cram_for_restart, cram_skip_markduplicates )
                 // Make sure correct data types are carried through
-                [ meta.subMap('id', 'patient', 'sample', 'sex', 'status')
-                    + [data_type: "cram"],
-                    cram, crai ]
-            }
+                .map{ meta, cram, crai -> [ meta - meta.subMap('data_type') + [data_type: "cram"], cram, crai ] }
 
         }
 
         // STEP 3: Create recalibration tables
         if (!(params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'))) {
+
             ch_table_bqsr_no_spark = Channel.empty()
             ch_table_bqsr_spark    = Channel.empty()
 
@@ -731,10 +726,10 @@ workflow SAREK {
 
             reports = reports.mix(ch_table_bqsr.collect{ meta, table -> table })
 
-            cram_applybqsr = ch_cram_for_bam_baserecalibrator.join(ch_table_bqsr)
+            cram_applybqsr = ch_cram_for_bam_baserecalibrator.join(ch_table_bqsr, failOnDuplicate: true, failOnMismatch: true)
 
             // Create CSV to restart from this step
-            CHANNEL_BASERECALIBRATOR_CREATE_CSV(ch_md_cram_for_restart.join(ch_table_bqsr), params.skip_tools)
+            CHANNEL_BASERECALIBRATOR_CREATE_CSV(ch_md_cram_for_restart.join(ch_table_bqsr, failOnDuplicate: true), params.skip_tools)
         }
     }
 
@@ -759,8 +754,10 @@ workflow SAREK {
             versions = versions.mix(BAM_TO_CRAM.out.versions)
 
             cram_applybqsr = Channel.empty().mix(
-                BAM_TO_CRAM.out.alignment_index.join(input_only_table),
-                input_recal_convert.cram) // Join together converted cram with input tables
+                BAM_TO_CRAM.out.alignment_index.join(input_only_table, failOnDuplicate: true, failOnMismatch: true),
+                input_recal_convert.cram)
+                // Join together converted cram with input tables
+                .map{ meta, cram, crai, table -> [ meta - meta.subMap('data_type') + [data_type: "cram"], cram, crai, table ]}
         }
 
         if (!(params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'))) {
@@ -876,7 +873,7 @@ workflow SAREK {
         cram_variant_calling_tumor_grouped = cram_variant_calling_pair_to_cross.groupTuple()
 
         // 2. Join with normal samples, in each channel there is one key per patient now. Patients without matched normal end up with: [ patient1, [ meta1, meta2 ], [ cram1, crai1, cram2, crai2 ], null ]
-        cram_variant_calling_tumor_joined = cram_variant_calling_tumor_grouped.join(cram_variant_calling_normal_to_cross, remainder: true)
+        cram_variant_calling_tumor_joined = cram_variant_calling_tumor_grouped.join(cram_variant_calling_normal_to_cross, failOnDuplicate: true, remainder: true)
 
         // 3. Filter out entries with last entry null
         cram_variant_calling_tumor_filtered = cram_variant_calling_tumor_joined.filter{ it ->  !(it.last()) }
@@ -889,7 +886,7 @@ workflow SAREK {
             // Normal only samples
 
             // 1. Join with tumor samples, in each channel there is one key per patient now. Patients without matched tumor end up with: [ patient1, [ meta1 ], [ cram1, crai1 ], null ] as there is only one matched normal possible
-            cram_variant_calling_normal_joined = cram_variant_calling_normal_to_cross.join(cram_variant_calling_tumor_grouped, remainder: true)
+            cram_variant_calling_normal_joined = cram_variant_calling_normal_to_cross.join(cram_variant_calling_tumor_grouped, failOnDuplicate: true, remainder: true)
 
             // 2. Filter out entries with last entry null
             cram_variant_calling_normal_filtered = cram_variant_calling_normal_joined.filter{ it ->  !(it.last()) }

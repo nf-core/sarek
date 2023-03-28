@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#864](https://github.com/nf-core/sarek/pull/864) - Added possibilities to export assembled haplotypes and locally realigned reads
 - [#792](https://github.com/nf-core/sarek/pull/792) - Added the option `--concatenate_vcfs` for concatenating the germline VCF files. Per default, the resulting vcf-files will be placed under `<outDir>/variant_calling/concat`
 - [#889](https://github.com/nf-core/sarek/pull/889) - Added possibilities to skip variant filtering after Haplotypecaller
+- [#945](https://github.com/nf-core/sarek/pull/945) - Adding Adam Talbot to contributor list
+- [#954](https://github.com/nf-core/sarek/pull/954) - Adding keys for annotation with snpeff and ensemblvep for `hg19`, `hg38` and `mm10`
+- [#967](https://github.com/nf-core/sarek/pull/967) - Adding new `outdir_cache` params
+- [#971](https://github.com/nf-core/sarek/pull/971) - Subtle bugfix to correct mutation of FASTP output channel objects.
 
 ### Changed
 
@@ -27,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#935](https://github.com/nf-core/sarek/pull/935) - Add params `build_only_index` to only build index
 - [#936](https://github.com/nf-core/sarek/pull/936) - Add params `donwload_cache` to download annotation cache
 - [#942](https://github.com/nf-core/sarek/pull/942) - Update `README.md`
+- [#967](https://github.com/nf-core/sarek/pull/967) - Update and detail extensively how to use annotation cache
 
 ### Fixed
 
@@ -38,6 +43,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#927](https://github.com/nf-core/sarek/pull/927) - Fix tumor only variant calling issues with freebayes following [#896](https://github.com/nf-core/sarek/pull/896)
 - [#929](https://github.com/nf-core/sarek/pull/929) - Fix somatic variant calling issues with msisensor following [#896](https://github.com/nf-core/sarek/pull/896)
 - [#941](https://github.com/nf-core/sarek/pull/941) - Fix json validation for `tools`, `skip_tools` and `use_gatk_spark` [#892](https://github.com/nf-core/sarek/issues/892)
+- [#954](https://github.com/nf-core/sarek/pull/954) - Fix missing annotation keys with snpeff and ensemblvep for `hg19`
+- [#957](https://github.com/nf-core/sarek/pull/957) - Add `failOnDuplicate` and `failOnMismatch` options to all `join()` operator where it was possible
 
 ### Deprecated
 

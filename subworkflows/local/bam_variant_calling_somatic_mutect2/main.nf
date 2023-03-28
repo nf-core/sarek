@@ -121,10 +121,14 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
         .map{ meta, table -> [ meta - meta.subMap('id') + [ id:meta.tumor_id + "_vs_" + meta.normal_id ], table ] }
 
     // Contamination and segmentation tables created using calculatecontamination on the pileup summary table
-    CALCULATECONTAMINATION(pileup_table_tumor.join(pileup_table_normal))
+    CALCULATECONTAMINATION(pileup_table_tumor.join(pileup_table_normal, failOnDuplicate: true, failOnMismatch: true))
 
     // Mutect2 calls filtered by filtermutectcalls using the artifactpriors, contamination and segmentation tables
-    vcf_to_filter = vcf.join(tbi).join(stats).join(LEARNREADORIENTATIONMODEL.out.artifactprior).join(CALCULATECONTAMINATION.out.segmentation).join(CALCULATECONTAMINATION.out.contamination)
+    vcf_to_filter = vcf.join(tbi, failOnDuplicate: true, failOnMismatch: true)
+        .join(stats, failOnDuplicate: true, failOnMismatch: true)
+        .join(LEARNREADORIENTATIONMODEL.out.artifactprior, failOnDuplicate: true, failOnMismatch: true)
+        .join(CALCULATECONTAMINATION.out.segmentation, failOnDuplicate: true, failOnMismatch: true)
+        .join(CALCULATECONTAMINATION.out.contamination, failOnDuplicate: true, failOnMismatch: true)
         .map{ meta, vcf, tbi, stats, orientation, seg, cont -> [ meta, vcf, tbi, stats, orientation, seg, cont, [] ] }
 
     FILTERMUTECTCALLS(vcf_to_filter, fasta, fai, dict)
