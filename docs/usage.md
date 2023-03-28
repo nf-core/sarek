@@ -628,7 +628,7 @@ sed -e 's/chr//' targets_with_chr.bed > targets.bed
 
 for t in GC RT
 do
-    unzip ${t}_G1000_hg38.zip
+  unzip ${t}_G1000_hg38.zip
 
 	cut -f 1-3 ${t}_G1000_hg38.txt > ascat_${t}_snps_hg38.txt
 	tail -n +2 ascat_${t}_snps_hg38.txt | awk '{ print $2 "\t" $3-1 "\t" $3 "\t" $1 }' > ascat_${t}_snps_hg38.bed
@@ -649,7 +649,7 @@ wget https://ora.ox.ac.uk/objects/uuid:08e24957-7e76-438a-bd38-66c48008cf52/file
 mv rt345gd52w battenberg.zip
 jar xf battenberg.zip
 
-unzip 1000G_loci_hg38.zip
+unzip 1000G_loci_hg38_chr.zip
 cd 1000G_loci_hg38
 mkdir battenberg_alleles_on_target_hg38
 mv *allele* battenberg_alleles_on_target_hg38/
@@ -657,7 +657,7 @@ mkdir battenberg_loci_on_target_hg38
 mv *loci* battenberg_loci_on_target_hg38/
 ```
 
-3. Copy the `targets.bed` and `ascat_GC_snps_on_target_hg38.txt` files into the newly created `battenberg_loci_on_target_hg38` folder before running the next set of steps. ASCAT generates a list of GC correction loci with sufficient coverage in a sample, then intersects that with the list of all loci with tumour logR values in that sample. If the intersection is <10% the size of the latter, it will fail with an error. Because the Battenberg loci/allele sets are very dense, subsetting to on-target regions is still too many loci. This script ensures that all SNPs with GC correction information are included in the loci list, plus a random sample of another 30% of all on target loci. You may need to vary this proportion depending on your set of targets. A good rule of thumb is that the size of your GC correction loci list should be about 15% the size of your total loci list. This allows for a margin of error.
+3. Copy the `targets_with_chr.bed` and `GC_G1000_on_target_hg38.txt` files into the newly created `battenberg_loci_on_target_hg38` folder before running the next set of steps. ASCAT generates a list of GC correction loci with sufficient coverage in a sample, then intersects that with the list of all loci with tumour logR values in that sample. If the intersection is <10% the size of the latter, it will fail with an error. Because the Battenberg loci/allele sets are very dense, subsetting to on-target regions is still too many loci. This script ensures that all SNPs with GC correction information are included in the loci list, plus a random sample of another 30% of all on target loci. You may need to vary this proportion depending on your set of targets. A good rule of thumb is that the size of your GC correction loci list should be about 15% the size of your total loci list. This allows for a margin of error.
 
 ```
 cd battenberg_loci_on_target_hg38/
@@ -666,8 +666,8 @@ rm 1kg.phase3.v5a_GRCh38nounref_loci_chr23.txt
 for i in {1..22} X
 do
    awk '{ print $1 "\t" $2-1 "\t" $2 }' 1kg.phase3.v5a_GRCh38nounref_loci_chr${i}.txt > chr${i}.bed
-   grep "^${i}_" ascat_GC_snps_on_target_hg38.txt > chr${i}.txt
-   bedtools intersect -a chr${i}.bed -b targets.bed | awk '{ print $1 "_" $3 }' > chr${i}_on_target.txt
+   grep "^${i}_" GC_G1000_on_target_hg38.txt | awk '{ print "chr" $1 }' > chr${i}.txt
+   bedtools intersect -a chr${i}.bed -b targets_with_chr.bed | awk '{ print $1 "_" $3 }' > chr${i}_on_target.txt
    n=`wc -l chr${i}_on_target.txt | awk '{ print $1 }'`
    count=$((n * 3 / 10))
    grep -xf chr${i}.txt chr${i}_on_target.txt > chr${i}.temp
@@ -697,7 +697,7 @@ Rscript `intersect_ascat_alleles.R`
 
 args = commandArgs(trailingOnly=TRUE)
 
-loci = read.table(args[1], header=F, sep="_", stringsAsFactors=F)
+loci = read.table(args[1], header=F, sep="\t", stringsAsFactors=F)
 alleles = read.table(args[2], header=T, sep="\t", stringsAsFactors=F)
 
 i = intersect(loci$V2, alleles$position)
