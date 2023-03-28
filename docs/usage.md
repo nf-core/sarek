@@ -672,7 +672,7 @@ do
    count=$((n * 3 / 10))
    grep -xf chr${i}.txt chr${i}_on_target.txt > chr${i}.temp
    shuf -n $count chr${i}_on_target.txt >> chr${i}.temp
-   sort -n -k2 -t '_' chr${i}.temp | uniq >  battenberg_loci_on_target_hg38_chr${i}.txt
+   sort -n -k2 -t '_' chr${i}.temp | uniq | awk 'BEGIN { FS="_" } ; { print $1 "\t" $2 }' > battenberg_loci_on_target_hg38_chr${i}.txt
 done
 zip battenberg_loci_on_target_hg38.zip battenberg_loci_on_target_hg38_chr*.txt
 ```
