@@ -609,11 +609,12 @@ This list is by no means exhaustive and it will depend on the specific analysis 
 While the ASCAT implementation in sarek is capable of running with whole-exome sequencing data, the needed references are currently not provided with the igenomes.config. According to the [developers](https://github.com/VanLoo-lab/ascat/issues/97) of ASCAT, loci and allele files (one file per chromosome) can be downloaded directly from the [Battenberg repository](https://ora.ox.ac.uk/objects/uuid:08e24957-7e76-438a-bd38-66c48008cf52).
 
 Please note that:
-* Row names (for GC and RT correction files) should be `${chr}_${position}` (there is no SNP/probe ID for HTS data).
-* All row names in GC and RT correction files should also appear in the loci files
-* Loci and allele files must contain the same set of SNPs
-* ASCAT developers strongly recommend using a BED file for WES/TS data. This prevents considering SNPs covered by off-target reads that would add noise to log/BAF tracks.
-* The total number of GC correction loci in a sample must be at least 10% of the number of loci with logR values. If the number of GC correction loci is too small compared to the total number of loci, ASCAT will throw an error.
+
+- Row names (for GC and RT correction files) should be `${chr}_${position}` (there is no SNP/probe ID for HTS data).
+- All row names in GC and RT correction files should also appear in the loci files
+- Loci and allele files must contain the same set of SNPs
+- ASCAT developers strongly recommend using a BED file for WES/TS data. This prevents considering SNPs covered by off-target reads that would add noise to log/BAF tracks.
+- The total number of GC correction loci in a sample must be at least 10% of the number of loci with logR values. If the number of GC correction loci is too small compared to the total number of loci, ASCAT will throw an error.
 
 From 'Reference files' https://github.com/VanLoo-lab/ascat:
 
@@ -637,7 +638,7 @@ do
 	head -n 1 ${t}_G1000_hg38.txt > ${t}_G1000_on_target_hg38.txt
 	grep -f ascat_${t}_snps_on_target_hg38.txt ${t}_G1000_hg38.txt >> ${t}_G1000_on_target_hg38.txt
 	zip ${t}_G1000_on_target_hg38.zip ${t}_G1000_on_target_hg38.txt
-	
+
 	rm ${t}_G1000_hg38.zip
 done
 ```
