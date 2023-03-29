@@ -46,6 +46,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#954](https://github.com/nf-core/sarek/pull/954) - Fix missing annotation keys with snpeff and ensemblvep for `hg19`
 - [#957](https://github.com/nf-core/sarek/pull/957) - Add `failOnDuplicate` and `failOnMismatch` options to all `join()` operator where it was possible
 - [#980](https://github.com/nf-core/sarek/pull/941) - Fix allowing multiple ploidy values for plotting of controlfreec output ([#808](https://github.com/nf-core/sarek/issues/808))
+
 ### Deprecated
 
 ### Removed
