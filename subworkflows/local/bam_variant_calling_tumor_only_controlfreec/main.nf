@@ -14,7 +14,6 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_CONTROLFREEC {
     chr_files                // channel: [mandatory]
     mappability              // channel: [mandatory]
     intervals_bed            // channel: [optional]  Contains a bed file of all intervals combined provided with the cram input(s). Should be empty for WGS
-    ploidy                   // channel: [mandatory] list of ploidy values
 
     main:
 
@@ -26,7 +25,6 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_CONTROLFREEC {
     FREEC2BED(FREEC_TUMORONLY.out.ratio)
     FREEC2CIRCOS(FREEC_TUMORONLY.out.ratio)
     MAKEGRAPH(FREEC_TUMORONLY.out.ratio.join(FREEC_TUMORONLY.out.BAF, failOnDuplicate: true, failOnMismatch: true))
-
 
     ch_versions = ch_versions.mix(FREEC_TUMORONLY.out.versions)
     ch_versions = ch_versions.mix(ASSESS_SIGNIFICANCE.out.versions)
