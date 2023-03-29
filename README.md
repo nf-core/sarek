@@ -133,6 +133,7 @@ We thank the following people for their extensive assistance in the development 
 - [cgpu](https://github.com/cgpu)
 - [gulfshores](https://github.com/gulfshores)
 - [pallolason](https://github.com/pallolason)
+- [Alison Meynert](https://github.com/ameynert)
 
 ## Acknowledgements
 
