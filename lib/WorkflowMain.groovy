@@ -2,6 +2,8 @@
 // This file holds several functions specific to the main.nf workflow in the nf-core/sarek pipeline
 //
 
+import nextflow.Nextflow
+
 class WorkflowMain {
 
     //
