@@ -80,23 +80,23 @@ class WorkflowSarek {
             switch (params.step) {
                 case 'mapping':                 Nextflow.error("Can't start with step $params.step without samplesheet")
                                                 break
-                case 'markduplicates':          Nextflow.warn("Using file ${params.outdir}/csv/mapped.csv")
+                case 'markduplicates':          log.warn("Using file ${params.outdir}/csv/mapped.csv")
                                                 params.putIfAbsent("input","${params.outdir}/csv/mapped.csv");
                                                 break
-                case 'prepare_recalibration':   Nextflow.warn("Using file ${params.outdir}/csv/markduplicates_no_table.csv")
+                case 'prepare_recalibration':   log.warn("Using file ${params.outdir}/csv/markduplicates_no_table.csv")
                                                 params.putIfAbsent("input", "${params.outdir}/csv/markduplicates_no_table.csv");
                                                 break
-                case 'recalibrate':             Nextflow.warn("Using file ${params.outdir}/csv/markduplicates.csv")
+                case 'recalibrate':             log.warn("Using file ${params.outdir}/csv/markduplicates.csv")
                                                 params.putIfAbsent("input", "${params.outdir}/csv/markduplicates.csv");
                                                 break
-                case 'variant_calling':         Nextflow.warn("Using file ${params.outdir}/csv/recalibrated.csv")
+                case 'variant_calling':         log.warn("Using file ${params.outdir}/csv/recalibrated.csv")
                                                 params.putIfAbsent("input", "${params.outdir}/csv/recalibrated.csv");
                                                 break
                 // case 'controlfreec':         csv_file = file("${params.outdir}/variant_calling/csv/control-freec_mpileup.csv", checkIfExists: true); break
-                case 'annotate':                Nextflow.warn("Using file ${params.outdir}/csv/variantcalled.csv")
+                case 'annotate':                log.warn("Using file ${params.outdir}/csv/variantcalled.csv")
                                                 params.putIfAbsent("input","${params.outdir}/csv/variantcalled.csv");
                                                 break
-                default:                        Nextflow.warn("Please provide an input samplesheet to the pipeline e.g. '--input samplesheet.csv'")
+                default:                        log.warn("Please provide an input samplesheet to the pipeline e.g. '--input samplesheet.csv'")
                                                 Nextflow.error("Unknown step $params.step")
             }
         }
