@@ -18,7 +18,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#971](https://github.com/nf-core/sarek/pull/971) - Subtle bugfix to correct mutation of FASTP output channel objects
 - [#978](https://github.com/nf-core/sarek/pull/978) - Validate that patient/sample does not contain spaces
 - [#981](https://github.com/nf-core/sarek/pull/981) - Added documentation on generating ASCAT resources for exome and targeted sequencing
-- [#985](https://github.com/nf-core/sarek/pull/985) - Cache correctly identifies when it needs to be updated
 
 ### Changed
 
@@ -48,6 +47,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#941](https://github.com/nf-core/sarek/pull/941) - Fix json validation for `tools`, `skip_tools` and `use_gatk_spark` [#892](https://github.com/nf-core/sarek/issues/892)
 - [#954](https://github.com/nf-core/sarek/pull/954) - Fix missing annotation keys with snpeff and ensemblvep for `hg19`
 - [#957](https://github.com/nf-core/sarek/pull/957) - Add `failOnDuplicate` and `failOnMismatch` options to all `join()` operator where it was possible
+- [#985](https://github.com/nf-core/sarek/pull/985) - Cache correctly identifies when it needs to be updated
 
 ### Deprecated
 
