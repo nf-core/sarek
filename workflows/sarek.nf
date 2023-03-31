@@ -60,9 +60,9 @@ input_sample = params.build_only_index ? Channel.empty() : extract_csv(file(para
 
 // Fails when wrongfull extension for intervals file
 if (params.wes && !params.step == 'annotate') {
-    if (params.intervals && !params.intervals.endsWith("bed")) exit 1, "Target file specified with `--intervals` must be in BED format for targeted data"
+    if (params.intervals && !params.intervals.endsWith("bed"))  error("Target file specified with `--intervals` must be in BED format for targeted data")
     else log.warn("Intervals file was provided without parameter `--wes`: Pipeline will assume this is Whole-Genome-Sequencing data.")
-} else if (params.intervals && !params.intervals.endsWith("bed") && !params.intervals.endsWith("list")) exit 1, "Intervals file must end with .bed, .list, or .interval_list"
+} else if (params.intervals && !params.intervals.endsWith("bed") && !params.intervals.endsWith("list")) error("Intervals file must end with .bed, .list, or .interval_list")
 
 if (params.step == 'mapping' && params.aligner.contains("dragmap") && !(params.skip_tools && params.skip_tools.split(',').contains("baserecalibrator"))) {
     log.warn("DragMap was specified as aligner. Base recalibration is not contained in --skip_tools. It is recommended to skip baserecalibration when using DragMap\nhttps://gatk.broadinstitute.org/hc/en-us/articles/4407897446939--How-to-Run-germline-single-sample-short-variant-discovery-in-DRAGEN-mode")
@@ -71,12 +71,10 @@ if (params.step == 'mapping' && params.aligner.contains("dragmap") && !(params.s
 // Fails or warns when missing files or params for ascat
 if (params.tools && params.tools.split(',').contains('ascat')) {
     if (!params.ascat_alleles) {
-        log.error "No allele files were provided for running ASCAT. Please provide a zip folder with allele files."
-        exit 1
+        error("No allele files were provided for running ASCAT. Please provide a zip folder with allele files.")
     }
     if (!params.ascat_loci) {
-        log.error "No loci files were provided for running ASCAT. Please provide a zip folder with loci files."
-        exit 1
+        error("No loci files were provided for running ASCAT. Please provide a zip folder with loci files.")
     }
     if (!params.ascat_loci_gc && !params.ascat_loci_rt) {
         log.warn("No LogRCorrection performed in ASCAT. For LogRCorrection to run, please provide either loci gc files or both loci gc files and loci rt files.")
@@ -103,16 +101,14 @@ if (params.tools && params.tools.split(',').contains('mutect2')) {
 // Warns when missing resources for haplotypecaller
 if (!params.dbsnp && !params.known_indels) {
     if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration', 'recalibrate'] && (!params.skip_tools || (params.skip_tools && !params.skip_tools.split(',').contains('baserecalibrator')))) {
-        log.error "Base quality score recalibration requires at least one resource file. Please provide at least one of `--dbsnp` or `--known_indels`\nYou can skip this step in the workflow by adding `--skip_tools baserecalibrator` to the command."
-        exit 1
+        error("Base quality score recalibration requires at least one resource file. Please provide at least one of `--dbsnp` or `--known_indels`\nYou can skip this step in the workflow by adding `--skip_tools baserecalibrator` to the command.")
     }
     if (params.tools && params.tools.split(',').contains('haplotypecaller')) {
         log.warn "If Haplotypecaller is specified, without `--dbsnp` or `--known_indels no filtering will be done. For filtering, please provide at least one of `--dbsnp` or `--known_indels`.\nFor more information see FilterVariantTranches (single-sample, default): https://gatk.broadinstitute.org/hc/en-us/articles/5358928898971-FilterVariantTranches\nFor more information see VariantRecalibration (--joint_germline): https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator\nFor more information on GATK Best practice germline variant calling: https://gatk.broadinstitute.org/hc/en-us/articles/360035535932-Germline-short-variant-discovery-SNPs-Indels-"
     }
 }
 if (params.joint_germline && (!params.tools || !params.tools.split(',').contains('haplotypecaller'))) {
-    log.error "The Haplotypecaller should be specified as one of the tools when doing joint germline variant calling. (The Haplotypecaller could be specified by adding `--tools haplotypecaller` to the nextflow command.) "
-    exit 1
+    error("The Haplotypecaller should be specified as one of the tools when doing joint germline variant calling. (The Haplotypecaller could be specified by adding `--tools haplotypecaller` to the nextflow command.) ")
 }
 if (params.joint_germline && (!params.dbsnp || !params.known_indels || !params.known_snps || params.no_intervals)) {
     log.warn "If Haplotypecaller is specified, without `--dbsnp`, `--known_snps`, `--known_indels` or the associated resource labels (ie `known_snps_vqsr`), no variant recalibration will be done. For recalibration you must provide all of these resources.\nFor more information see VariantRecalibration: https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator \nJoint germline variant calling also requires intervals in order to genotype the samples. As a result, if `--no_intervals` is set to `true` the joint germline variant calling will not be performed."
@@ -120,16 +116,14 @@ if (params.joint_germline && (!params.dbsnp || !params.known_indels || !params.k
 
 // Fails when missing tools for variant_calling or annotate
 if ((params.step == 'variant_calling' || params.step == 'annotate') && !params.tools) {
-    log.error "Please specify at least one tool when using `--step ${params.step}`.\nhttps://nf-co.re/sarek/parameters#tools"
-    exit 1
+    error("Please specify at least one tool when using `--step ${params.step}`.\nhttps://nf-co.re/sarek/parameters#tools")
 }
 
 // Fails when missing sex information for CNV tools
 if (params.tools && (params.tools.split(',').contains('ascat') || params.tools.split(',').contains('controlfreec'))) {
     input_sample.map{
         if (it[0].sex == 'NA' ) {
-            log.error "Please specify sex information for each sample in your samplesheet when using '--tools' with 'ascat' or 'controlfreec'.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
-            exit 1
+            error("Please specify sex information for each sample in your samplesheet when using '--tools' with 'ascat' or 'controlfreec'.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
         }
     }
 }
@@ -1103,8 +1097,7 @@ def extract_csv(csv_file) {
         def line, samplesheet_line_count = 0;
         while ((line = reader.readLine()) != null) {samplesheet_line_count++}
         if (samplesheet_line_count < 2) {
-            log.error "Samplesheet had less than two lines. The sample sheet must be a csv file with a header, so at least two lines."
-            System.exit(1)
+           error("Samplesheet had less than two lines. The sample sheet must be a csv file with a header, so at least two lines.")
         }
     }
 
@@ -1118,13 +1111,11 @@ def extract_csv(csv_file) {
         .map{ row ->
             if (params.step == "mapping") {
                 if ( !row.lane ) {  // This also handles the case where the lane is left as an empty string
-                    log.error('The sample sheet should specify a lane for patient "' + row.patient.toString() + '" and sample "' + row.sample.toString() + '".')
-                    System.exit(1)
+                    error('The sample sheet should specify a lane for patient "' + row.patient.toString() + '" and sample "' + row.sample.toString() + '".')
                 }
                 def patient_sample_lane = [row.patient.toString(), row.sample.toString(), row.lane.toString()]
                 if (patient_sample_lane in patient_sample_lane_combinations) {
-                    log.error('The patient-sample-lane combination "' + row.patient.toString() + '", "' + row.sample.toString() + '", and "' + row.lane.toString() + '" is present multiple times in the sample sheet.')
-                    System.exit(1)
+                    error('The patient-sample-lane combination "' + row.patient.toString() + '", "' + row.sample.toString() + '", and "' + row.lane.toString() + '" is present multiple times in the sample sheet.')
                 } else {
                     patient_sample_lane_combinations.add(patient_sample_lane)
                 }
@@ -1132,8 +1123,7 @@ def extract_csv(csv_file) {
             if (!sample2patient.containsKey(row.sample.toString())) {
                 sample2patient[row.sample.toString()] = row.patient.toString()
             } else if (sample2patient[row.sample.toString()] != row.patient.toString()) {
-                log.error('The sample "' + row.sample.toString() + '" is registered for both patient "' + row.patient.toString() + '" and "' + sample2patient[row.sample.toString()] + '" in the sample sheet.')
-                System.exit(1)
+               error('The sample "' + row.sample.toString() + '" is registered for both patient "' + row.patient.toString() + '" and "' + sample2patient[row.sample.toString()] + '" in the sample sheet.')
             }
         }
 
@@ -1146,12 +1136,10 @@ def extract_csv(csv_file) {
         .map{ row ->
             sample_count_all++
             if (!(row.patient && row.sample)) {
-                log.error "Missing field in csv file header. The csv file must have fields named 'patient' and 'sample'."
-                System.exit(1)
+                error("Missing field in csv file header. The csv file must have fields named 'patient' and 'sample'.")
             }
             else if (row.patient.contains(" ") || row.sample.contains(" ")) {
-                log.error "Invalid value in csv file. Values for 'patient' and 'sample' can not contain space."
-                System.exit(1)
+                error("Invalid value in csv file. Values for 'patient' and 'sample' can not contain space.")
             }
             [ [ row.patient.toString(), row.sample.toString() ], row ]
         }.groupTuple()
@@ -1192,8 +1180,7 @@ def extract_csv(csv_file) {
                 if (params.tools.split(',').contains(tool)) tools_tumor_asked.add(tool)
             }
             if (!tools_tumor_asked.isEmpty()) {
-                log.error('The sample-sheet only contains normal-samples, but the following tools, which were requested with "--tools", expect at least one tumor-sample : ' + tools_tumor_asked.join(", "))
-                System.exit(1)
+                error('The sample-sheet only contains normal-samples, but the following tools, which were requested with "--tools", expect at least one tumor-sample : ' + tools_tumor_asked.join(", "))
             }
         } else if ((sample_count_tumor == sample_count_all) && params.tools) {  // In this case, the sample-sheet contains no normal/germline-samples
             def tools_requiring_normal_samples = ['ascat', 'deepvariant', 'haplotypecaller', 'msisensorpro']
@@ -1202,8 +1189,7 @@ def extract_csv(csv_file) {
                 if (params.tools.split(',').contains(tool_requiring_normal_samples)) requested_tools_requiring_normal_samples.add(tool_requiring_normal_samples)
             }
             if (!requested_tools_requiring_normal_samples.isEmpty()) {
-                log.error('The sample-sheet only contains tumor-samples, but the following tools, which were requested by the option "tools", expect at least one normal-sample : ' + requested_tools_requiring_normal_samples.join(", "))
-                System.exit(1)
+                error('The sample-sheet only contains tumor-samples, but the following tools, which were requested by the option "tools", expect at least one normal-sample : ' + requested_tools_requiring_normal_samples.join(", "))
             }
         }
 
@@ -1226,14 +1212,13 @@ def extract_csv(csv_file) {
 
             if (params.step == 'mapping') return [ meta, [ fastq_1, fastq_2 ] ]
             else {
-                log.error "Samplesheet contains fastq files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
-                System.exit(1)
+                error("Samplesheet contains fastq files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
             }
 
         // start from BAM
         } else if (row.lane && row.bam) {
             if (!row.bai) {
-                log.error "BAM index (bai) should be provided."
+                error("BAM index (bai) should be provided.")
             }
             meta.id         = "${row.sample}-${row.lane}".toString()
             def bam         = file(row.bam,   checkIfExists: true)
@@ -1249,8 +1234,7 @@ def extract_csv(csv_file) {
 
             if (params.step != 'annotate') return [ meta, bam, bai ]
             else {
-                log.error "Samplesheet contains bam files but step is `annotate`. The pipeline is expecting vcf files for the annotation. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
-                System.exit(1)
+                error("Samplesheet contains bam files but step is `annotate`. The pipeline is expecting vcf files for the annotation. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
             }
 
         // recalibration
@@ -1264,8 +1248,7 @@ def extract_csv(csv_file) {
 
             if (!(params.step == 'mapping' || params.step == 'annotate')) return [ meta, cram, crai, table ]
             else {
-                log.error "Samplesheet contains cram files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
-                System.exit(1)
+                error("Samplesheet contains cram files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
             }
 
         // recalibration when skipping MarkDuplicates
@@ -1279,8 +1262,7 @@ def extract_csv(csv_file) {
 
             if (!(params.step == 'mapping' || params.step == 'annotate')) return [ meta, bam, bai, table ]
             else {
-                log.error "Samplesheet contains bam files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
-                System.exit(1)
+                error("Samplesheet contains bam files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
             }
 
         // prepare_recalibration or variant_calling
@@ -1293,8 +1275,7 @@ def extract_csv(csv_file) {
 
             if (!(params.step == 'mapping' || params.step == 'annotate')) return [ meta, cram, crai ]
             else {
-                log.error "Samplesheet contains cram files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
-                System.exit(1)
+                error("Samplesheet contains cram files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
             }
 
         // prepare_recalibration when skipping MarkDuplicates or `--step markduplicates`
@@ -1307,8 +1288,7 @@ def extract_csv(csv_file) {
 
             if (!(params.step == 'mapping' || params.step == 'annotate')) return [ meta, bam, bai ]
             else {
-                log.error "Samplesheet contains bam files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
-                System.exit(1)
+                error("Samplesheet contains bam files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
             }
 
         // annotation
@@ -1321,12 +1301,10 @@ def extract_csv(csv_file) {
 
             if (params.step == 'annotate') return [ meta, vcf ]
             else {
-                log.error "Samplesheet contains vcf files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations"
-                System.exit(1)
+                error("Samplesheet contains vcf files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
             }
         } else {
-            log.error "Missing or unknown field in csv file header. Please check your samplesheet"
-            System.exit(1)
+            error("Missing or unknown field in csv file header. Please check your samplesheet")
         }
     }
 }
