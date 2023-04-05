@@ -49,6 +49,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#957](https://github.com/nf-core/sarek/pull/957) - Add `failOnDuplicate` and `failOnMismatch` options to all `join()` operator where it was possible
 - [#982](https://github.com/nf-core/sarek/pull/982) - Remove usage of exit statements, using `Nextflow.error` instead
 - [#985](https://github.com/nf-core/sarek/pull/985) - Cache correctly identifies when it needs to be updated
+- [#986](https://github.com/nf-core/sarek/pull/986) - Updated ascat module to fix seed for reproducibility
 
 ### Deprecated
 
