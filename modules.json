@@ -7,7 +7,7 @@
                 "nf-core": {
                     "ascat": {
                         "branch": "master",
-                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
+                        "git_sha": "1fda5ab75106682f329bde25d4226640d353c3d7",
                         "installed_by": ["modules"]
                     },
                     "bcftools/concat": {
