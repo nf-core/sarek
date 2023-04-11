@@ -606,16 +606,118 @@ This list is by no means exhaustive and it will depend on the specific analysis 
 
 ## How to run ASCAT with whole-exome sequencing data?
 
-While the ASCAT implementation in sarek is capable of running with whole-exome sequencing data, the needed references are currently not provided with the igenomes.config. According to the [developers](https://github.com/VanLoo-lab/ascat/issues/97) of ASCAT, loci and allele files (one file per chromosome) can be downloaded directly from the [Battenberg repository](https://ora.ox.ac.uk/objects/uuid:08e24957-7e76-438a-bd38-66c48008cf52).
-
-The GC correction file needs to be derived, so one has to concatenate all chromosomes into a single file and modify the header so it fits [this example](https://github.com/VanLoo-lab/ascat/tree/master/LogRcorrection#gc-correction-file-creation).
-
-The RT correction file is missing for hg38 but can be derived using [ASCAT scripts](https://github.com/VanLoo-lab/ascat/tree/master/LogRcorrection#replication-timing-correction-file-creation) for hg19. For hg38, one needs to lift-over hg38 to hg19, run the script on hg19 positions and set coordinates back to hg38.
+ASCAT runs out of the box on whole genome sequencing data using iGenomes resources. While the ASCAT implementation in sarek is capable of running with whole-exome sequencing data, the needed references are currently not provided with the igenomes.config. According to the [developers](https://github.com/VanLoo-lab/ascat/issues/97) of ASCAT, loci and allele files (one file per chromosome) can be downloaded directly from the [Battenberg repository](https://ora.ox.ac.uk/objects/uuid:08e24957-7e76-438a-bd38-66c48008cf52).
 
 Please note that:
 
-Row names (for GC and RT correction files) should be `${chr}_${position}` (there is no SNP/probe ID for HTS data).
-ASCAT developers strongly recommend using a BED file for WES/TS data. This prevents considering SNPs covered by off-targeted reads that would add noise to log/BAF tracks.
+- Row names (for GC and RT correction files) should be `${chr}_${position}` (there is no SNP/probe ID for HTS data).
+- All row names in GC and RT correction files should also appear in the loci files
+- Loci and allele files must contain the same set of SNPs
+- ASCAT developers strongly recommend using a BED file for WES/TS data. This prevents considering SNPs covered by off-target reads that would add noise to log/BAF tracks.
+- The total number of GC correction loci in a sample must be at least 10% of the number of loci with logR values. If the number of GC correction loci is too small compared to the total number of loci, ASCAT will throw an error.
+
+From 'Reference files' https://github.com/VanLoo-lab/ascat:
+
+> For WES and targeted sequencing, we recommend using the reference files (loci, allele and logR correction files) as part of the Battenberg package. Because they require a high-resolution input, our reference files for WGS are not suitable for WES and targeted sequencing. For WES, loci and allele files from the Battenberg package can be fed into ascat.prepareHTS. For targeted sequencing, allele files from the Battenberg package can be fed into ascat.prepareTargetedSeq, which will generate cleaned loci and allele files that can be fed into ascat.prepareHTS.
+
+### How to generate ASCAT resources for exome or targeted sequencing
+
+1. Fetch the GC content correction and replication timing (RT) correction files from the [Dropbox links provided by the ASCAT developers](https://github.com/VanLoo-lab/ascat/tree/master/ReferenceFiles/WGS) and intersect the SNP coordinates with the exome target coordinates. If the target file has 'chr' prefixes, make a copy with these removed first. Extract the GC and RT information for only the on target SNPs and zip the results.
+
+```
+sed -e 's/chr//' targets_with_chr.bed > targets.bed
+
+for t in GC RT
+do
+  unzip ${t}_G1000_hg38.zip
+
+	cut -f 1-3 ${t}_G1000_hg38.txt > ascat_${t}_snps_hg38.txt
+	tail -n +2 ascat_${t}_snps_hg38.txt | awk '{ print $2 "\t" $3-1 "\t" $3 "\t" $1 }' > ascat_${t}_snps_hg38.bed
+	bedtools intersect -a ascat_${t}_snps_hg38.bed -b targets.bed | awk '{ print $1 "_" $3 }' > ascat_${t}_snps_on_target_hg38.txt
+
+	head -n 1 ${t}_G1000_hg38.txt > ${t}_G1000_on_target_hg38.txt
+	grep -f ascat_${t}_snps_on_target_hg38.txt ${t}_G1000_hg38.txt >> ${t}_G1000_on_target_hg38.txt
+	zip ${t}_G1000_on_target_hg38.zip ${t}_G1000_on_target_hg38.txt
+
+	rm ${t}_G1000_hg38.zip
+done
+```
+
+2. Download the Battenberg 1000G loci and alleles files. The steps below follow downloading from the [Battenberg repository at the Oxford University Research Archive](https://ora.ox.ac.uk/objects/uuid:08e24957-7e76-438a-bd38-66c48008cf52). The files are also available via Dropbox links from the same page as the GC and RT correction files above.
+
+```
+wget https://ora.ox.ac.uk/objects/uuid:08e24957-7e76-438a-bd38-66c48008cf52/files/rt435gd52w
+mv rt345gd52w battenberg.zip
+jar xf battenberg.zip
+
+unzip 1000G_loci_hg38_chr.zip
+cd 1000G_loci_hg38
+mkdir battenberg_alleles_on_target_hg38
+mv *allele* battenberg_alleles_on_target_hg38/
+mkdir battenberg_loci_on_target_hg38
+mv *loci* battenberg_loci_on_target_hg38/
+```
+
+3. Copy the `targets_with_chr.bed` and `GC_G1000_on_target_hg38.txt` files into the newly created `battenberg_loci_on_target_hg38` folder before running the next set of steps. ASCAT generates a list of GC correction loci with sufficient coverage in a sample, then intersects that with the list of all loci with tumour logR values in that sample. If the intersection is <10% the size of the latter, it will fail with an error. Because the Battenberg loci/allele sets are very dense, subsetting to on-target regions is still too many loci. This script ensures that all SNPs with GC correction information are included in the loci list, plus a random sample of another 30% of all on target loci. You may need to vary this proportion depending on your set of targets. A good rule of thumb is that the size of your GC correction loci list should be about 15% the size of your total loci list. This allows for a margin of error.
+
+```
+cd battenberg_loci_on_target_hg38/
+rm *chrstring*
+rm 1kg.phase3.v5a_GRCh38nounref_loci_chr23.txt
+for i in {1..22} X
+do
+   awk '{ print $1 "\t" $2-1 "\t" $2 }' 1kg.phase3.v5a_GRCh38nounref_loci_chr${i}.txt > chr${i}.bed
+   grep "^${i}_" GC_G1000_on_target_hg38.txt | awk '{ print "chr" $1 }' > chr${i}.txt
+   bedtools intersect -a chr${i}.bed -b targets_with_chr.bed | awk '{ print $1 "_" $3 }' > chr${i}_on_target.txt
+   n=`wc -l chr${i}_on_target.txt | awk '{ print $1 }'`
+   count=$((n * 3 / 10))
+   grep -xf chr${i}.txt chr${i}_on_target.txt > chr${i}.temp
+   shuf -n $count chr${i}_on_target.txt >> chr${i}.temp
+   sort -n -k2 -t '_' chr${i}.temp | uniq | awk 'BEGIN { FS="_" } ; { print $1 "\t" $2 }' > battenberg_loci_on_target_hg38_chr${i}.txt
+done
+zip battenberg_loci_on_target_hg38.zip battenberg_loci_on_target_hg38_chr*.txt
+```
+
+4. Extract the alleles for the same set of SNPs. Uses a short R script defined below.
+
+```
+cd ../battenberg_alleles_on_target_hg38/
+rm 1kg.phase3.v5a_GRCh38nounref_allele_index_chr23.txt
+for i in {1..22} X
+do
+  Rscript intersect_ascat_alleles.R ../battenberg_loci_on_target_hg38/battenberg_loci_on_target_hg38_chr${i}.txt \
+    1kg.phase3.v5a_GRCh38nounref_allele_index_chr${i}.txt battenberg_alleles_on_target_hg38_chr${i}.txt
+done
+zip battenberg_alleles_on_target_hg38.zip battenberg_alleles_on_target_hg38_chr*.txt
+```
+
+Rscript `intersect_ascat_alleles.R`
+
+```
+#!/usr/bin/env Rscript
+
+args = commandArgs(trailingOnly=TRUE)
+
+loci = read.table(args[1], header=F, sep="\t", stringsAsFactors=F)
+alleles = read.table(args[2], header=T, sep="\t", stringsAsFactors=F)
+
+i = intersect(loci$V2, alleles$position)
+
+out = subset(alleles, alleles$position %in% i)
+write.table(out, args[3], col.names=T, row.names=F, quote=F, sep="\t")
+```
+
+5. Move or copy all of the zip files you've created to a suitable location. Specify these in your parameters, e.g.
+
+```
+{
+    "ascat_alleles": "/path/to/battenberg_alleles_on_target_hg38.zip",
+    "ascat_loci": "/path/to/battenberg_loci_on_target_hg38.zip",
+    "ascat_loci_gc": "/path/to/GC_G1000_on_target_hg38.zip",
+    "ascat_loci_rt": "/path/to/RT_G1000_on_target_hg38.zip"
+}
+
+```
 
 ## What are the bwa/bwa-mem2 parameters?
 
