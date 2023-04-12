@@ -1,0 +1,41 @@
+name: sentieon_bwaindex
+description: Create BWA index for reference genome
+keywords:
+  - index
+  - fasta
+  - genome
+  - reference
+  - sentieon
+tools:
+  - sentieon:
+      description: |
+        Sentieon® provides complete solutions for secondary DNA/RNA analysis for a variety of sequencing platforms, including short and long reads.
+        Our software improves upon BWA, STAR, Minimap2, GATK, HaplotypeCaller, Mutect, and Mutect2 based pipelines and is deployable on any generic-CPU-based computing system.
+      homepage: https://www.sentieon.com/
+      documentation: https://www.sentieon.com/
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing reference information.
+        e.g. [ id:'test', single_end:false ]
+  - fasta:
+      type: file
+      description: Input genome fasta file
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing reference information.
+        e.g. [ id:'test', single_end:false ]
+  - index:
+      type: file
+      description: BWA genome index files
+      pattern: "*.{amb,ann,bwt,pac,sa}"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@drpatelh"
+  - "@maxulysse"

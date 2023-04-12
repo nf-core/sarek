@@ -1,0 +1,107 @@
+- name: Run sentieon bwamem
+  command: nextflow run main.nf -profile test --aligner sentieon-bwamem --save_reference --outdir results
+  tags:
+    - aligner
+    - sentieon/bwamem
+    - preprocessing
+  files:
+    - path: results/csv/markduplicates.csv
+      md5sum: 0d6120bb99e92f6810343270711ca53e
+    - path: results/csv/markduplicates_no_table.csv
+      md5sum: 2a2d3d4842befd4def39156463859ee3
+    - path: results/csv/recalibrated.csv
+      md5sum: 2d29d9e53894dcce96a1b5beb6ef3312
+    - path: results/multiqc
+    - path: results/preprocessing/markduplicates/test/test.md.cram
+    # binary changes md5sums on reruns
+    - path: results/preprocessing/markduplicates/test/test.md.cram.crai
+    # binary changes md5sums on reruns
+    - path: results/preprocessing/recal_table/test/test.recal.table
+      md5sum: afc4b795d332c585d8289ef2d493a8c4
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+    # binary changes md5sums on reruns
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+    # binary changes md5sums on reruns
+    - path: results/reference/bwa/genome.amb
+      md5sum: 1891c1de381b3a96d4e72f590fde20c1
+    - path: results/reference/bwa/genome.ann
+      md5sum: 2df4aa2d7580639fa0fcdbcad5e2e969
+    - path: results/reference/bwa/genome.bwt
+      md5sum: 815eded87e4cb6b0f1daab5c4d6e30af
+    - path: results/reference/bwa/genome.pac
+      md5sum: 8569fbdb2c98c6fb16dfa73d8eacb070
+    - path: results/reference/bwa/genome.sa
+      md5sum: e7cff62b919448a3a3d0fe4aaf427594
+    - path: results/reference/dbsnp/dbsnp_146.hg38.vcf.gz.tbi
+    # conda changes md5sums for test
+    - path: results/reference/dict/genome.dict
+      md5sum: 2433fe2ba31257337bf4c4bd4cb8da15
+    - path: results/reference/fai/genome.fasta.fai
+      md5sum: 3520cd30e1b100e55f578db9c855f685
+    - path: results/reference/intervals/chr22_1-40001.bed
+      md5sum: 87a15eb9c2ff20ccd5cd8735a28708f7
+    - path: results/reference/intervals/chr22_1-40001.bed.gz
+      md5sum: d3341fa28986c40b24fcc10a079dbb80
+    - path: results/reference/intervals/genome.bed
+      md5sum: a87dc7d20ebca626f65cc16ff6c97a3e
+    - path: results/reference/known_indels/mills_and_1000G.indels.vcf.gz.tbi
+    # conda changes md5sums for test
+    - path: results/reports/fastqc/test-test_L1
+    - path: results/reports/markduplicates/test/test.md.cram.metrics
+      contains: ["sample	8601	721	82	523429	3876	0	0	0.38594", "1.0	721	721"]
+    - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
+      md5sum: a46bb1520c58ba3e000685b581b1b8fa
+    - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
+      md5sum: 493d2b47fbddb57e81fed6df4f1bb86d
+    - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
+      md5sum: a984808d4dbd52f1ae8f599e0a833222
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz
+      md5sum: 527236278bd10caa49c540d5cfc66b83
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz.csi
+      md5sum: 1b65ac38cd96783394e0cf9b7bdd5bc2
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+      md5sum: a46bb1520c58ba3e000685b581b1b8fa
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+      md5sum: 493d2b47fbddb57e81fed6df4f1bb86d
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+      md5sum: a984808d4dbd52f1ae8f599e0a833222
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
+      md5sum: 527236278bd10caa49c540d5cfc66b83
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
+      md5sum: 1b65ac38cd96783394e0cf9b7bdd5bc2
+    - path: results/reports/samtools/test/test.md.cram.stats
+    # conda changes md5sums for test
+    - path: results/reports/samtools/test/test.recal.cram.stats
+    # conda changes md5sums for test
+- name: Build only index with sentieon bwa
+  command: nextflow run main.nf -profile test --aligner sentieon-bwamem --build_only_index --input=false --outdir results
+  tags:
+    - aligner
+    - build_only_index
+    - sentieon/bwamem
+  files:
+    - path: results/multiqc
+    - path: results/reference/bwa/genome.amb
+      md5sum: 1891c1de381b3a96d4e72f590fde20c1
+    - path: results/reference/bwa/genome.ann
+      md5sum: 2df4aa2d7580639fa0fcdbcad5e2e969
+    - path: results/reference/bwa/genome.bwt
+      md5sum: 815eded87e4cb6b0f1daab5c4d6e30af
+    - path: results/reference/bwa/genome.pac
+      md5sum: 8569fbdb2c98c6fb16dfa73d8eacb070
+    - path: results/reference/bwa/genome.sa
+      md5sum: e7cff62b919448a3a3d0fe4aaf427594
+    - path: results/reference/dbsnp/dbsnp_146.hg38.vcf.gz.tbi
+    # conda changes md5sums for test
+    - path: results/reference/dict/genome.dict
+      md5sum: 2433fe2ba31257337bf4c4bd4cb8da15
+    - path: results/reference/fai/genome.fasta.fai
+      md5sum: 3520cd30e1b100e55f578db9c855f685
+    - path: results/reference/intervals/chr22_1-40001.bed
+      md5sum: 87a15eb9c2ff20ccd5cd8735a28708f7
+    - path: results/reference/intervals/chr22_1-40001.bed.gz
+      md5sum: d3341fa28986c40b24fcc10a079dbb80
+    - path: results/reference/intervals/genome.bed
+      md5sum: a87dc7d20ebca626f65cc16ff6c97a3e
+    - path: results/reference/known_indels/mills_and_1000G.indels.vcf.gz.tbi
+    # conda changes md5sums for test

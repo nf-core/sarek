@@ -10,6 +10,7 @@
 
 include { BWA_INDEX as BWAMEM1_INDEX             } from '../../../modules/nf-core/bwa/index/main'
 include { BWAMEM2_INDEX                          } from '../../../modules/nf-core/bwamem2/index/main'
+include { SENTIEON_BWAINDEX                      } from '../../../modules/nf-core/sentieon/bwaindex/main'
 include { DRAGMAP_HASHTABLE                      } from '../../../modules/nf-core/dragmap/hashtable/main'
 include { GATK4_CREATESEQUENCEDICTIONARY         } from '../../../modules/nf-core/gatk4/createsequencedictionary/main'
 include { MSISENSORPRO_SCAN                      } from '../../../modules/nf-core/msisensorpro/scan/main'
@@ -47,6 +48,7 @@ workflow PREPARE_GENOME {
 
     BWAMEM1_INDEX(fasta)     // If aligner is bwa-mem
     BWAMEM2_INDEX(fasta)     // If aligner is bwa-mem2
+    SENTIEON_BWAINDEX(fasta) // If aligner is sentieon-bwamem
     DRAGMAP_HASHTABLE(fasta) // If aligner is dragmap
 
     // Remap channel to match module/subworkflow
@@ -103,6 +105,7 @@ workflow PREPARE_GENOME {
     versions = versions.mix(SAMTOOLS_FAIDX.out.versions)
     versions = versions.mix(BWAMEM1_INDEX.out.versions)
     versions = versions.mix(BWAMEM2_INDEX.out.versions)
+    versions = versions.mix(SENTIEON_BWAINDEX.out.versions)
     versions = versions.mix(DRAGMAP_HASHTABLE.out.versions)
     versions = versions.mix(GATK4_CREATESEQUENCEDICTIONARY.out.versions)
     versions = versions.mix(MSISENSORPRO_SCAN.out.versions)
@@ -115,6 +118,7 @@ workflow PREPARE_GENOME {
     emit:
     bwa                   = BWAMEM1_INDEX.out.index.map{ meta, index -> [index] }.collect()       // path: bwa/*
     bwamem2               = BWAMEM2_INDEX.out.index.map{ meta, index -> [index] }.collect()       // path: bwamem2/*
+    sentieon_bwamem       = SENTIEON_BWAINDEX.out.index.map{ meta, index -> [index] }.collect()   // path: bwa/*
     hashtable             = DRAGMAP_HASHTABLE.out.hashmap.map{ meta, index -> [index] }.collect() // path: dragmap/*
     dbsnp_tbi             = TABIX_DBSNP.out.tbi.map{ meta, tbi -> [tbi] }.collect()               // path: dbsnb.vcf.gz.tbi
     dict                  = GATK4_CREATESEQUENCEDICTIONARY.out.dict                               // path: genome.fasta.dict
