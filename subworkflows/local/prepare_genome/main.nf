@@ -118,7 +118,7 @@ workflow PREPARE_GENOME {
     emit:
     bwa                   = BWAMEM1_INDEX.out.index.map{ meta, index -> [index] }.collect()       // path: bwa/*
     bwamem2               = BWAMEM2_INDEX.out.index.map{ meta, index -> [index] }.collect()       // path: bwamem2/*
-    sentieon_bwamem       = SENTIEON_BWAINDEX.out.index.map{ meta, index -> [index] }.collect()   // path: bwa/*
+    sentieon              = SENTIEON_BWAINDEX.out.index.map{ meta, index -> [index] }.collect()   // path: bwa/*
     hashtable             = DRAGMAP_HASHTABLE.out.hashmap.map{ meta, index -> [index] }.collect() // path: dragmap/*
     dbsnp_tbi             = TABIX_DBSNP.out.tbi.map{ meta, tbi -> [tbi] }.collect()               // path: dbsnb.vcf.gz.tbi
     dict                  = GATK4_CREATESEQUENCEDICTIONARY.out.dict                               // path: genome.fasta.dict

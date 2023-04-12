@@ -335,13 +335,13 @@ workflow SAREK {
     bwa                    = params.bwa                     ? Channel.fromPath(params.bwa).collect()       : PREPARE_GENOME.out.bwa
     bwamem2                = params.bwamem2                 ? Channel.fromPath(params.bwamem2).collect()   : PREPARE_GENOME.out.bwamem2
     dragmap                = params.dragmap                 ? Channel.fromPath(params.dragmap).collect()   : PREPARE_GENOME.out.hashtable
-    sentieon_bwamem        = params.sentieon_bwamem         ? Channel.fromPath(params.sentieon_bwamem).collect() : PREPARE_GENOME.out.sentieon_bwamem
+    sentieon               = params.sentieon                ? Channel.fromPath(params.sentieon).collect()  : PREPARE_GENOME.out.sentieon
 
     // Gather index for mapping given the chosen aligner
     index_alignement = params.aligner == "bwa-mem" ? bwa :
         params.aligner == "bwa-mem2" ? bwamem2 :
         params.aligner == "dragmap" ? dragmap :
-        sentieon_bwamem
+        sentieon
 
     // TODO: add a params for msisensorpro_scan
     msisensorpro_scan      = PREPARE_GENOME.out.msisensorpro_scan

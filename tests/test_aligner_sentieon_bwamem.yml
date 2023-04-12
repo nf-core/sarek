@@ -17,7 +17,7 @@
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
     # binary changes md5sums on reruns
     - path: results/preprocessing/recal_table/test/test.recal.table
-      md5sum: afc4b795d332c585d8289ef2d493a8c4
+      md5sum: 187268332b5791aa22ea3048995ef599
     - path: results/preprocessing/recalibrated/test/test.recal.cram
     # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
@@ -48,7 +48,7 @@
     # conda changes md5sums for test
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.cram.metrics
-      contains: ["sample	8601	721	82	523429	3876	0	0	0.38594", "1.0	721	721"]
+      contains: ["test	8601	721	82	523429	3876	0	0	0.38594", "1.0	721	721"]
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
       md5sum: a46bb1520c58ba3e000685b581b1b8fa
     - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
