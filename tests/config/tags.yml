@@ -129,6 +129,13 @@ markduplicates:
   - tests/test_markduplicates_from_bam.yml
   - tests/test_markduplicates_from_cram.yml
 
+### sentieon/bwamem
+sentieon/bwamem:
+  - conf/modules/aligner.config
+  - modules/nf-core/sentieon/bwamem/main.nf
+  - subworkflows/local/fastq_align_bwamem_mem2_dragmap_sentieon/main.nf
+  - tests/test_alignment_sentieon_bwamem.yml
+
 ## prepare_recalibration
 prepare_recalibration:
   - conf/modules/prepare_recalibration.config
