@@ -53,6 +53,8 @@ jobs:
             tags: vep
           - profile: "conda"
             tags: concatenate_vcfs
+          - profile: "conda"
+            tags: sentieon/bwamem
           - profile: "singularity"
             tags: merge
           - profile: "singularity"
@@ -62,6 +64,7 @@ jobs:
     env:
       NXF_ANSI_LOG: false
       TEST_DATA_BASE: "${{ github.workspace }}/test-datasets"
+      SENTIEON_LICENSE_BASE64: ${{ secrets.SENTIEON_LICENSE_BASE64 }}
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v3
@@ -108,7 +111,7 @@ jobs:
             ${{ runner.os }}-pip-
 
       - name: Install Python dependencies
-        run: python -m pip install --upgrade pip pytest-workflow
+        run: python -m pip install --upgrade pip pytest-workflow cryptography
 
       - uses: actions/cache@v3
         with:
@@ -135,6 +138,18 @@ jobs:
           auto-update-conda: true
           channels: conda-forge,bioconda,defaults
           python-version: ${{ matrix.python-version }}
+
+      # Set up secrets
+      - name: Set up nextflow secrets
+        if: env.SENTIEON_LICENSE_BASE64 != null
+        run: |
+          nextflow secrets set SENTIEON_LICENSE_BASE64 ${{ secrets.SENTIEON_LICENSE_BASE64 }}
+          nextflow secrets set SENTIEON_AUTH_MECH_BASE64 ${{ secrets.SENTIEON_AUTH_MECH_BASE64 }}
+          SENTIEON_ENCRYPTION_KEY=$(echo -n "${{ secrets.ENCRYPTION_KEY_BASE64 }}" | base64 -d)
+          SENTIEON_LICENSE_MESSAGE=$(echo -n "${{ secrets.LICENSE_MESSAGE_BASE64 }}" | base64 -d)
+          SENTIEON_AUTH_DATA=$(python bin/license_message.py encrypt --key "$SENTIEON_ENCRYPTION_KEY" --message "$SENTIEON_LICENSE_MESSAGE")
+          SENTIEON_AUTH_DATA_BASE64=$(echo -n "$SENTIEON_AUTH_DATA" | base64 -w 0)
+          nextflow secrets set SENTIEON_AUTH_DATA_BASE64 $SENTIEON_AUTH_DATA_BASE64
 
       - name: Conda clean
         if: matrix.profile == 'conda'

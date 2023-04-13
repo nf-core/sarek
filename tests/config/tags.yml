@@ -116,6 +116,13 @@ dragmap:
   - subworkflows/local/fastq_align_bwamem_mem2_dragmap/main.nf
   - tests/test_alignment_dragmap.yml
 
+### sentieon/bwamem
+sentieon/bwamem:
+  - conf/modules/aligner.config
+  - modules/nf-core/sentieon/bwamem/main.nf
+  - subworkflows/local/fastq_align_bwamem_mem2_dragmap_sentieon/main.nf
+  - tests/test_alignment_sentieon_bwamem.yml
+
 ## markduplicates
 markduplicates:
   - conf/modules/markduplicates.config

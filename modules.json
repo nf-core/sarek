@@ -373,6 +373,11 @@
                         "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
                         "installed_by": ["modules"]
                     },
+                    "sentieon/bwamem": {
+                        "branch": "master",
+                        "git_sha": "8c159ebb28cfa08890042a133bfab78de932eff7",
+                        "installed_by": ["modules"]
+                    },
                     "snpeff/download": {
                         "branch": "master",
                         "git_sha": "aeefdd170be4583012816212f1345fbebb61ccd6",
