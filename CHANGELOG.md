@@ -50,6 +50,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#982](https://github.com/nf-core/sarek/pull/982) - Remove usage of exit statements, using `Nextflow.error` instead
 - [#985](https://github.com/nf-core/sarek/pull/985) - Cache correctly identifies when it needs to be updated
 - [#988](https://github.com/nf-core/sarek/pull/988) - Updated ascat module to fix seed for reproducibility
+- [#998](https://github.com/nf-core/sarek/pull/998) - Remove parallelization within a sample for `Manta`
 
 ### Deprecated
 
