@@ -31,7 +31,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     intervals                     // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
     intervals_bed_gz_tbi          // channel: [mandatory] intervals/target regions index zipped and indexed
     intervals_bed_combined        // channel: [mandatory] intervals/target regions in one file unzipped
-    intervals_bed_gz_tbi_combined     // channel: [mandatory] intervals/target regions in one file zipped
+    intervals_bed_gz_tbi_combined // channel: [mandatory] intervals/target regions in one file zipped
     mappability
     msisensorpro_scan             // channel: [optional]  msisensorpro_scan
     panel_of_normals              // channel: [optional]  panel_of_normals
