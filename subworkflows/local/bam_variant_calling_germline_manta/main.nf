@@ -17,17 +17,10 @@ workflow BAM_VARIANT_CALLING_GERMLINE_MANTA {
 
     MANTA_GERMLINE(cram_intervals, fasta, fasta_fai)
 
-    // Figuring out if there is one or more vcf(s) from the same sample
     small_indels_vcf = MANTA_GERMLINE.out.candidate_small_indels_vcf
-
-    // Figuring out if there is one or more vcf(s) from the same sample
     sv_vcf = MANTA_GERMLINE.out.candidate_sv_vcf
-
-    // Figuring out if there is one or more vcf(s) from the same sample
     diploid_sv_vcf = MANTA_GERMLINE.out.diploid_sv_vcf
 
-
-    // Mix intervals and no_intervals channels together
     // Only diploid SV should get annotated
     vcf = diploid_sv_vcf.
         // add variantcaller to meta map
