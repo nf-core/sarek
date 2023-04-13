@@ -337,7 +337,7 @@ workflow SAREK {
     dragmap                = params.dragmap                 ? Channel.fromPath(params.dragmap).collect()   : PREPARE_GENOME.out.hashtable
 
     // Gather index for mapping given the chosen aligner
-    index_alignement = (params.aligner == "bwa-mem" || params.aligner == "sentieon") ? bwa :
+    index_alignement = (params.aligner == "bwa-mem" || params.aligner == "sentieon-bwamem") ? bwa :
         params.aligner == "bwa-mem2" ? bwamem2 :
         dragmap
 
