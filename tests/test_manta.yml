@@ -61,7 +61,7 @@
     - variant_calling
   files:
     - path: results/csv/variantcalled.csv
-      md5sum: f1051fe647abf202e6332f9a1789c05d
+      md5sum: 981280af86f69190fdf0639030a80249
     - path: results/multiqc
     - path: results/reports/bcftools/manta/sample2/sample2.manta.tumor_sv.bcftools_stats.txt
     # conda changes md5sums for test
@@ -74,7 +74,7 @@
     - path: results/variant_calling/manta/sample2/sample2.manta.tumor_sv.vcf.gz
     # binary changes md5sums on reruns
     - path: results/variant_calling/manta/sample2/sample2.manta.tumor_sv.vcf.gz.tbi
-      md5sum: e7ca7e9fe76ce12198fd54ec9a64fad4
+      md5sum: 4cb176febbc8c26d717a6c6e67b9c905
     - path: results/manta
       should_exist: false
 - name: Run variant calling on tumor_only sample with manta without intervals
@@ -86,7 +86,7 @@
     - variant_calling
   files:
     - path: results/csv/variantcalled.csv
-      md5sum: f1051fe647abf202e6332f9a1789c05d
+      md5sum: 981280af86f69190fdf0639030a80249
     - path: results/multiqc
     - path: results/no_intervals.bed
       md5sum: f3dac01ea66b95fe477446fde2d31489
@@ -116,7 +116,7 @@
     - variant_calling
   files:
     - path: results/csv/variantcalled.csv
-      md5sum: 3a8861808601994f89d5c55ce5c95dae
+      md5sum: 981280af86f69190fdf0639030a80249
     - path: results/multiqc
     - path: results/reports/bcftools/manta/sample3/sample3.manta.diploid_sv.bcftools_stats.txt
     # conda changes md5sums for test
@@ -145,15 +145,15 @@
     - path: results/variant_calling/manta/sample3/sample3.manta.diploid_sv.vcf.gz
     # binary changes md5sums on reruns
     - path: results/variant_calling/manta/sample3/sample3.manta.diploid_sv.vcf.gz.tbi
-      md5sum: e7ca7e9fe76ce12198fd54ec9a64fad4
+      md5sum: 4cb176febbc8c26d717a6c6e67b9c905
     - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.vcf.gz
     # binary changes md5sums on reruns
     - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.vcf.gz.tbi
-      md5sum: e7ca7e9fe76ce12198fd54ec9a64fad4
+      md5sum: 4cb176febbc8c26d717a6c6e67b9c905
     - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.vcf.gz
     # binary changes md5sums on reruns
     - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.vcf.gz.tbi
-      md5sum: e7ca7e9fe76ce12198fd54ec9a64fad4
+      md5sum: 4cb176febbc8c26d717a6c6e67b9c905
     - path: results/manta
       should_exist: false
 - name: Run variant calling on somatic sample with manta without intervals
@@ -165,7 +165,7 @@
     - variant_calling
   files:
     - path: results/csv/variantcalled.csv
-      md5sum: 3a8861808601994f89d5c55ce5c95dae
+      md5sum: 981280af86f69190fdf0639030a80249
     - path: results/multiqc
     - path: results/no_intervals.bed
       md5sum: f3dac01ea66b95fe477446fde2d31489
