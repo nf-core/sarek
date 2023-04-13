@@ -11,8 +11,13 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MANTA {
     main:
     versions = Channel.empty()
 
-    // Combine cram and intervals for spread and gather strategy
-    cram_intervals = cram.combine(intervals)
+    // Combine cram and intervals, account for 0 intervals
+    cram_intervals = cram.combine(intervals).map{ it ->
+        bed_gz = it.size() > 5 ? it[5] : []
+        bed_tbi = it.size() > 5 ? it[6] : []
+
+        [it[0], it[1], it[2], it[3], it[4], bed_gz, bed_tbi]
+    }
 
     MANTA_SOMATIC(cram_intervals, fasta, fasta_fai)
 
