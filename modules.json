@@ -373,11 +373,6 @@
                         "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
                         "installed_by": ["modules"]
                     },
-                    "sentieon/bwaindex": {
-                        "branch": "master",
-                        "git_sha": "61448300449d4d14ee437ad37bf1853ce6b91147",
-                        "installed_by": ["modules"]
-                    },
                     "sentieon/bwamem": {
                         "branch": "master",
                         "git_sha": "8c159ebb28cfa08890042a133bfab78de932eff7",
