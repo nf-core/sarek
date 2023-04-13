@@ -54,8 +54,6 @@ jobs:
           - profile: "conda"
             tags: concatenate_vcfs
           - profile: "conda"
-            tags: sentieon/bwaindex
-          - profile: "conda"
             tags: sentieon/bwamem
           - profile: "singularity"
             tags: merge
