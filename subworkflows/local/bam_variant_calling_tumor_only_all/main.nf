@@ -30,6 +30,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     intervals                     // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
     intervals_bed_gz_tbi          // channel: [mandatory] [ interval.bed.gz, interval.bed.gz.tbi, num_intervals ] or [ [], [], 0 ] if no intervals
     intervals_bed_combined        // channel: [mandatory] intervals/target regions in one file unzipped
+    intervals_bed_gz_tbi_combined // channel: [mandatory] intervals/target regions in one file zipped
     mappability
     panel_of_normals              // channel: [optional]  panel_of_normals
     panel_of_normals_tbi          // channel: [optional]  panel_of_normals_tbi
@@ -132,7 +133,8 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
             dict.map{ it -> [ [ id:'dict' ], it ] },
             fasta,
             fasta_fai,
-            intervals_bed_gz_tbi
+            intervals_bed_gz_tbi_combined
+
         )
 
         vcf_manta = BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA.out.vcf
