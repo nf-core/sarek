@@ -61,7 +61,7 @@
     - variant_calling
   files:
     - path: results/csv/variantcalled.csv
-      md5sum: 981280af86f69190fdf0639030a80249
+      md5sum: f1051fe647abf202e6332f9a1789c05d
     - path: results/multiqc
     - path: results/reports/bcftools/manta/sample2/sample2.manta.tumor_sv.bcftools_stats.txt
     # conda changes md5sums for test
@@ -86,7 +86,7 @@
     - variant_calling
   files:
     - path: results/csv/variantcalled.csv
-      md5sum: 981280af86f69190fdf0639030a80249
+      md5sum: f1051fe647abf202e6332f9a1789c05d
     - path: results/multiqc
     - path: results/no_intervals.bed
       md5sum: f3dac01ea66b95fe477446fde2d31489
@@ -116,7 +116,7 @@
     - variant_calling
   files:
     - path: results/csv/variantcalled.csv
-      md5sum: 981280af86f69190fdf0639030a80249
+      md5sum: 3a8861808601994f89d5c55ce5c95dae
     - path: results/multiqc
     - path: results/reports/bcftools/manta/sample3/sample3.manta.diploid_sv.bcftools_stats.txt
     # conda changes md5sums for test
@@ -165,7 +165,7 @@
     - variant_calling
   files:
     - path: results/csv/variantcalled.csv
-      md5sum: 981280af86f69190fdf0639030a80249
+      md5sum: 3a8861808601994f89d5c55ce5c95dae
     - path: results/multiqc
     - path: results/no_intervals.bed
       md5sum: f3dac01ea66b95fe477446fde2d31489
