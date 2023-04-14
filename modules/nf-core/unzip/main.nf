@@ -11,8 +11,8 @@ process UNZIP {
     tuple val(meta), path(archive)
 
     output:
-    tuple val(meta), path("${archive.baseName}/"), emit: unzipped_archive
-    path "versions.yml"                          , emit: versions
+    tuple val(meta), path("${prefix}/"), emit: unzipped_archive
+    path "versions.yml"                , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -20,10 +20,12 @@ process UNZIP {
     script:
     def args = task.ext.args ?: ''
     if ( archive instanceof List && archive.name.size > 1 ) { exit 1, "[UNZIP] error: 7za only accepts a single archive as input. Please check module input." }
+
+    prefix = task.ext.prefix ?: ( meta.id ? "${meta.id}" : archive.baseName)
     """
     7za \\
         x \\
-        -o"${archive.baseName}"/ \\
+        -o"${prefix}"/ \\
         $args \\
         $archive
 

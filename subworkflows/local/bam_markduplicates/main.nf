@@ -25,6 +25,9 @@ workflow BAM_MARKDUPLICATES {
     // Index cram
     INDEX_MARKDUPLICATES(GATK4_MARKDUPLICATES.out.cram)
 
+    GATK4_MARKDUPLICATES.out.cram.view()
+    INDEX_MARKDUPLICATES.out.crai.view()
+
     // Join with the crai file
     cram = GATK4_MARKDUPLICATES.out.cram.join(INDEX_MARKDUPLICATES.out.crai, failOnDuplicate: true, failOnMismatch: true)
 

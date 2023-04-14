@@ -8,33 +8,29 @@ modules:
   - snpeff
   - tabix/bgziptabix
 input:
-  - meta:
-      type: map
+  - ch_vcf:
       description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
-  - vcf:
-      type: file
-      description: vcf file
-      pattern: "*.{vcf}"
-  - snpeff_db:
-      type: value
+        vcf file
+        Structure: [ val(meta), path(vcf) ]
+  - val_snpeff_db:
+      type: string
       description: db version to use
-  - snpeff_cache:
-      type: file
-      description: path to root cache folder for snpEff (optional)
+  - ch_snpeff_cache:
+      description: |
+        path to root cache folder for snpEff (optional)
+        Structure: [ path(cache) ]
 output:
   - vcf_tbi:
-      type: file
-      description: Compressed vcf file + tabix index
-      pattern: "[ *{.vcf.gz,vcf.gz.tbi} ]"
+      description: |
+        Compressed vcf file + tabix index
+        Structure: [ val(meta), path(vcf), path(tbi) ]
   - reports:
-      type: file
-      description: html reports
-      pattern: "*.html"
+      description: |
+        html reports
+        Structure: [ path(html) ]
   - versions:
-      type: file
-      description: File containing software versions
-      pattern: "versions.yml"
+      description: |
+        Files containing software versions
+        Structure: [ path(versions.yml) ]
 authors:
   - "@maxulysse"

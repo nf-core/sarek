@@ -8,9 +8,8 @@ process MOSDEPTH {
         'quay.io/biocontainers/mosdepth:0.3.3--hdfd78af_1'}"
 
     input:
-    tuple val(meta),  path(bam), path(bai)
-    tuple val(meta2), path(bed)
-    tuple val(meta3), path(fasta)
+    tuple val(meta),  path(bam), path(bai), path(bed)
+    tuple val(meta2), path(fasta)
 
     output:
     tuple val(meta), path('*.global.dist.txt')      , emit: global_txt

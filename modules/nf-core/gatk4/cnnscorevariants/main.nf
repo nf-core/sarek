@@ -3,7 +3,7 @@ process GATK4_CNNSCOREVARIANTS {
     label 'process_low'
 
     //Conda is not supported at the moment: https://github.com/broadinstitute/gatk/issues/7811
-    container "broadinstitute/gatk:4.3.0.0" //Biocontainers is missing a package
+    container "broadinstitute/gatk:4.4.0.0" //Biocontainers is missing a package
 
     // Exit if running this module with -profile conda / -profile mamba
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
@@ -34,7 +34,7 @@ process GATK4_CNNSCOREVARIANTS {
     def architecture = architecture ? "--architecture $architecture" : ""
     def weights = weights ? "--weights $weights" : ""
 
-    def avail_mem = 3
+    def avail_mem = 3072
     if (!task.memory) {
         log.info '[GATK CnnScoreVariants] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this.'
     } else {

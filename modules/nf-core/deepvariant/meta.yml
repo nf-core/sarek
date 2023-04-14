@@ -38,6 +38,10 @@ input:
       type: file
       description: Index of reference fasta file
       pattern: "*.fai"
+  - gzi:
+      type: file
+      description: GZI index of reference fasta file
+      pattern: "*.gzi"
 
 output:
   - meta:
