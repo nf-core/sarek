@@ -27,9 +27,8 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA {
     tumor_sv_vcf = MANTA_TUMORONLY.out.tumor_sv_vcf
 
     // Only tumor sv should get annotated
-    vcf = tumor_sv_vcf
-        // add variantcaller to meta map
-        .map{ meta, vcf -> [ meta + [ variantcaller:'manta' ], vcf ] }
+    // add variantcaller to meta map
+    vcf = tumor_sv_vcf.map{ meta, vcf -> [ meta + [ variantcaller:'manta' ], vcf ] }
 
     versions = versions.mix(MANTA_TUMORONLY.out.versions)
 

@@ -27,9 +27,9 @@ workflow BAM_VARIANT_CALLING_GERMLINE_MANTA {
     diploid_sv_vcf = MANTA_GERMLINE.out.diploid_sv_vcf
 
     // Only diploid SV should get annotated
-    vcf = diploid_sv_vcf.
-        // add variantcaller to meta map
-        map{ meta, vcf -> [ meta + [ variantcaller:'manta' ], vcf ] }
+    // add variantcaller to meta map
+
+    vcf = diploid_sv_vcf.map{ meta, vcf -> [ meta + [ variantcaller:'manta' ], vcf ] }
 
     versions = versions.mix(MANTA_GERMLINE.out.versions)
 

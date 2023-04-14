@@ -28,9 +28,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MANTA {
     somatic_sv_vcf = MANTA_SOMATIC.out.somatic_sv_vcf
 
     // Only diploid and somatic SV should get annotated
-    vcf = Channel.empty().mix(diploid_sv_vcf, somatic_sv_vcf)
-        // add variantcaller to meta map
-        .map{ meta, vcf -> [ meta + [ variantcaller:'manta' ], vcf ] }
+    // add variantcaller to meta map
+    vcf = Channel.empty().mix(diploid_sv_vcf, somatic_sv_vcf).map{ meta, vcf -> [ meta + [ variantcaller:'manta' ], vcf ] }
 
     versions = versions.mix(MANTA_SOMATIC.out.versions)
 
