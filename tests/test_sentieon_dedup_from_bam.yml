@@ -1,0 +1,51 @@
+- name: Run sentieon dedup starting from BAM
+  command: nextflow run main.nf -profile test,sentieon_dedup_bam --outdir results
+  tags:
+    - input_bam
+    - markduplicates
+    - preprocessing
+    - sentieon/dedup
+  files:
+    - path: results/csv/markduplicates.csv
+      md5sum: 00272d06fc1bc6a5aceb3ff8cf1bcc00
+    - path: results/csv/markduplicates_no_table.csv
+      md5sum: 901ee046403f4e44ff592ee68b79afb3
+    - path: results/csv/recalibrated.csv
+      md5sum: 1888a924bc70bd80165a96ad641e22d6
+    - path: results/multiqc
+    - path: results/preprocessing/sentieon_dedup/test/test.md.cram
+    # binary changes md5sums on reruns
+    - path: results/preprocessing/sentieon_dedup/test/test.md.cram.crai
+    # binary changes md5sums on reruns
+    - path: results/preprocessing/recal_table/test/test.recal.table
+      md5sum: 9603b69fdc3b5090de2e0dd78bfcc4bf
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+    # binary changes md5sums on reruns
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+    # binary changes md5sums on reruns
+    - path: results/reports/sentieon_dedup/test/test.md.cram.metrics
+      contains: ["testN	0	2820	2	2	0	828	0	0.293617	3807", "1.0	0.999986", "100.0	1.911145"]
+    - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
+      md5sum: 8e875e20e3fb9cf288d68c1d223f6fd5
+    - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
+      md5sum: 75e1ce7e55af51f4985fa91654a5ea2d
+    - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
+      md5sum: b23cf96942b2ada3f41172a9349a1175
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz
+    # binary changes md5sums on reruns
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz.csi
+    # binary changes md5sums on reruns
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+      md5sum: 8e875e20e3fb9cf288d68c1d223f6fd5
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+      md5sum: 75e1ce7e55af51f4985fa91654a5ea2d
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+      md5sum: b23cf96942b2ada3f41172a9349a1175
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
+    # binary changes md5sums on reruns
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
+    # binary changes md5sums on reruns
+    - path: results/reports/samtools/test/test.md.cram.stats
+    # conda changes md5sums for test
+    - path: results/reports/samtools/test/test.recal.cram.stats
+    # conda changes md5sums for test
