@@ -556,7 +556,7 @@ workflow SAREK {
 
         // ch_cram_no_markduplicates_restart = Channel.empty()
         cram_markduplicates_no_spark = Channel.empty()
-        cram_sentieon_dedup_no_spark = Channel.empty()
+        cram_sentieon_dedup = Channel.empty()
         cram_markduplicates_spark    = Channel.empty()
 
         // STEP 2: markduplicates (+QC) + convert to CRAM
@@ -616,7 +616,7 @@ workflow SAREK {
                 fasta_fai,
                 intervals_for_preprocessing)
 
-            cram_sentieon_dedup_no_spark = BAM_SENTIEON_DEDUP.out.cram
+            cram_sentieon_dedup = BAM_SENTIEON_DEDUP.out.cram
 
             // Gather QC reports
             reports = reports.mix(BAM_SENTIEON_DEDUP.out.reports.collect{ meta, report -> report })
@@ -644,7 +644,7 @@ workflow SAREK {
         // - crams from sentieon_dedup
         // - crams from markduplicates_spark
         // - crams from input step markduplicates --> from the converted ones only?
-        ch_md_cram_for_restart = Channel.empty().mix(cram_markduplicates_no_spark, cram_markduplicates_spark, cram_sentieon_dedup_no_spark)
+        ch_md_cram_for_restart = Channel.empty().mix(cram_markduplicates_no_spark, cram_markduplicates_spark, cram_sentieon_dedup)
             // Make sure correct data types are carried through
             .map{ meta, cram, crai -> [ meta - meta.subMap('data_type') + [data_type: "cram"], cram, crai ] }
 
