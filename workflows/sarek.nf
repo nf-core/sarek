@@ -188,7 +188,6 @@ if (params.spliceai_snv && params.spliceai_snv_tbi && params.spliceai_indel && p
 // Create samplesheets to restart from different steps
 include { CHANNEL_ALIGN_CREATE_CSV                       } from '../subworkflows/local/channel_align_create_csv/main'
 include { CHANNEL_MARKDUPLICATES_CREATE_CSV              } from '../subworkflows/local/channel_markduplicates_create_csv/main'
-include { CHANNEL_SENTIEON_DEDUP_CREATE_CSV              } from '../subworkflows/local/channel_sentieon_dedup_create_csv/main'
 include { CHANNEL_BASERECALIBRATOR_CREATE_CSV            } from '../subworkflows/local/channel_baserecalibrator_create_csv/main'
 include { CHANNEL_APPLYBQSR_CREATE_CSV                   } from '../subworkflows/local/channel_applybqsr_create_csv/main'
 include { CHANNEL_VARIANT_CALLING_CREATE_CSV             } from '../subworkflows/local/channel_variant_calling_create_csv/main'
@@ -655,11 +654,15 @@ workflow SAREK {
         // CSV should be written for the file actually out, either CRAM or BAM
         // Create CSV to restart from this step
 
-        if (params.tools && params.tools.split(',').contains('sentieon_dedup')) {  // There may be a nicer way of doing this. The reason for introducing subworkflow CHANNEL_SENTIEON_DEDUP_CREATE_CSV is that the subworkflow CHANNEL_MARKDUPLICATES_CREATE_CSV contains the string "markduplicates" in a couple of places, where we in the sentieon-dedup flow would like to have the string "sentieon_dedup".
-            params.save_output_as_bam ? CHANNEL_SENTIEON_DEDUP_CREATE_CSV(CRAM_TO_BAM.out.alignment_index) : CHANNEL_SENTIEON_DEDUP_CREATE_CSV(ch_md_cram_for_restart)
+
+
+        if (params.tools && params.tools.split(',').contains('sentieon_dedup')) {
+            csv_subfolder = 'sentieon_dedup'
         } else {
-            params.save_output_as_bam ? CHANNEL_MARKDUPLICATES_CREATE_CSV(CRAM_TO_BAM.out.alignment_index) : CHANNEL_MARKDUPLICATES_CREATE_CSV(ch_md_cram_for_restart)
+            csv_subfolder = 'markduplicates'
         }
+
+        params.save_output_as_bam ? CHANNEL_MARKDUPLICATES_CREATE_CSV(CRAM_TO_BAM.out.alignment_index, csv_subfolder, params.outdir, params.save_output_as_bam) : CHANNEL_MARKDUPLICATES_CREATE_CSV(ch_md_cram_for_restart, csv_subfolder, params.outdir, params.save_output_as_bam)
 
     }
 
