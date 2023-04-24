@@ -234,6 +234,7 @@ include { SAMTOOLS_CONVERT as CRAM_TO_BAM_RECAL          } from '../modules/nf-c
 // Mark Duplicates (+QC)
 include { BAM_MARKDUPLICATES                             } from '../subworkflows/local/bam_markduplicates/main'
 include { BAM_MARKDUPLICATES_SPARK                       } from '../subworkflows/local/bam_markduplicates_spark/main'
+include { BAM_SENTIEON_DEDUP                             } from '../subworkflows/local/bam_sentieon_dedup/main'
 
 // QC on CRAM
 include { CRAM_QC_MOSDEPTH_SAMTOOLS as CRAM_QC_NO_MD     } from '../subworkflows/local/cram_qc_mosdepth_samtools/main'
@@ -554,6 +555,7 @@ workflow SAREK {
 
         // ch_cram_no_markduplicates_restart = Channel.empty()
         cram_markduplicates_no_spark = Channel.empty()
+        cram_sentieon_dedup = Channel.empty()
         cram_markduplicates_spark    = Channel.empty()
 
         // STEP 2: markduplicates (+QC) + convert to CRAM
@@ -606,6 +608,20 @@ workflow SAREK {
 
             // Gather used softwares versions
             versions = versions.mix(BAM_MARKDUPLICATES_SPARK.out.versions)
+        } else if (params.tools && params.tools.split(',').contains('sentieon_dedup')) {
+            BAM_SENTIEON_DEDUP(
+                cram_for_markduplicates,
+                fasta,
+                fasta_fai,
+                intervals_for_preprocessing)
+
+            cram_sentieon_dedup = BAM_SENTIEON_DEDUP.out.cram
+
+            // Gather QC reports
+            reports = reports.mix(BAM_SENTIEON_DEDUP.out.reports.collect{ meta, report -> report })
+
+            // Gather used softwares versions
+            versions = versions.mix(BAM_SENTIEON_DEDUP.out.versions)
         } else {
             BAM_MARKDUPLICATES(
                 cram_for_markduplicates,
@@ -624,9 +640,10 @@ workflow SAREK {
 
         // ch_md_cram_for_restart contains either:
         // - crams from markduplicates
+        // - crams from sentieon_dedup
         // - crams from markduplicates_spark
         // - crams from input step markduplicates --> from the converted ones only?
-        ch_md_cram_for_restart = Channel.empty().mix(cram_markduplicates_no_spark, cram_markduplicates_spark)
+        ch_md_cram_for_restart = Channel.empty().mix(cram_markduplicates_no_spark, cram_markduplicates_spark, cram_sentieon_dedup)
             // Make sure correct data types are carried through
             .map{ meta, cram, crai -> [ meta - meta.subMap('data_type') + [data_type: "cram"], cram, crai ] }
 
@@ -636,7 +653,17 @@ workflow SAREK {
 
         // CSV should be written for the file actually out, either CRAM or BAM
         // Create CSV to restart from this step
-        params.save_output_as_bam ? CHANNEL_MARKDUPLICATES_CREATE_CSV(CRAM_TO_BAM.out.alignment_index) : CHANNEL_MARKDUPLICATES_CREATE_CSV(ch_md_cram_for_restart)
+
+
+
+        if (params.tools && params.tools.split(',').contains('sentieon_dedup')) {
+            csv_subfolder = 'sentieon_dedup'
+        } else {
+            csv_subfolder = 'markduplicates'
+        }
+
+        params.save_output_as_bam ? CHANNEL_MARKDUPLICATES_CREATE_CSV(CRAM_TO_BAM.out.alignment_index, csv_subfolder, params.outdir, params.save_output_as_bam) : CHANNEL_MARKDUPLICATES_CREATE_CSV(ch_md_cram_for_restart, csv_subfolder, params.outdir, params.save_output_as_bam)
+
     }
 
     if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration']) {
@@ -668,7 +695,6 @@ workflow SAREK {
             // - crams from markduplicates_spark
             // - crams converted from bam mapped when skipping markduplicates
             // - input cram files, when start from step markduplicates
-            // ch_md_cram_for_restart.view() // contains md.cram.crai
             ch_cram_for_bam_baserecalibrator = Channel.empty().mix(ch_md_cram_for_restart, cram_skip_markduplicates )
                 // Make sure correct data types are carried through
                 .map{ meta, cram, crai -> [ meta - meta.subMap('data_type') + [data_type: "cram"], cram, crai ] }
@@ -724,7 +750,7 @@ workflow SAREK {
             cram_applybqsr = ch_cram_for_bam_baserecalibrator.join(ch_table_bqsr, failOnDuplicate: true, failOnMismatch: true)
 
             // Create CSV to restart from this step
-            CHANNEL_BASERECALIBRATOR_CREATE_CSV(ch_md_cram_for_restart.join(ch_table_bqsr, failOnDuplicate: true), params.skip_tools)
+            CHANNEL_BASERECALIBRATOR_CREATE_CSV(ch_md_cram_for_restart.join(ch_table_bqsr, failOnDuplicate: true), params.tools, params.skip_tools, params.save_output_as_bam, params.outdir)
         }
     }
 
