@@ -380,7 +380,7 @@
                     },
                     "sentieon/dedup": {
                         "branch": "master",
-                        "git_sha": "8c159ebb28cfa08890042a133bfab78de932eff7",
+                        "git_sha": "8c04ecc0c5d4ad102755b919b2525481f0380090",
                         "installed_by": ["modules"]
                     },
                     "snpeff/download": {
