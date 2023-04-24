@@ -23,7 +23,8 @@ workflow BAM_SENTIEON_DEDUP {
     reports  = Channel.empty()
 
     INDEX_INPUT(bam)
-    bam_bai = bam.join(INDEX_INPUT.out.bai.concat(INDEX_INPUT.out.crai)) // This is done since if the "bam" channel contains cram-files, then the index files will be in the channel INDEX_INPUT.out.crai and not in INDEX_INPUT.out.bai
+    bam_bai = bam.join(INDEX_INPUT.out.bai.concat(INDEX_INPUT.out.crai), failOnMismatch:true, failOnDuplicate:true)
+    // The concat operation is part of the above command since if the "bam" channel contains cram-files, then the index files will be in the channel INDEX_INPUT.out.crai and not in INDEX_INPUT.out.bai
     SENTIEON_DEDUP(bam_bai, fasta, fasta_fai)
 
     INDEX_DEDUPED(SENTIEON_DEDUP.out.cram)
