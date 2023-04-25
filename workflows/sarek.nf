@@ -1222,12 +1222,12 @@ def extract_csv(csv_file) {
 
         // start from BAM
         } else if (row.lane && row.bam) {
-            if (!row.bai) {
+            if (params.step != 'mapping' && !row.bai) {
                 error("BAM index (bai) should be provided.")
             }
             meta.id         = "${row.sample}-${row.lane}".toString()
             def bam         = file(row.bam,   checkIfExists: true)
-            def bai         = file(row.bai,   checkIfExists: true)
+            def bai         = row.bai ? file(row.bai,   checkIfExists: true) : []
             def CN          = params.seq_center ? "CN:${params.seq_center}\\t" : ''
             def read_group  = "\"@RG\\tID:${row.sample}_${row.lane}\\t${CN}PU:${row.lane}\\tSM:${row.patient}_${row.sample}\\tLB:${row.sample}\\tDS:${params.fasta}\\tPL:${params.seq_platform}\""
 
