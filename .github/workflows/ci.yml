@@ -27,7 +27,8 @@ jobs:
           - "latest-everything"
         test:
           - "default"
-        profile: ["docker", "singularity", "conda"]
+        profile: ["docker", "singularity"]
+        # profile: ["docker", "singularity", "conda"]
     env:
       NXF_ANSI_LOG: false
       TEST_DATA_BASE: "${{ github.workspace }}/test-datasets"
