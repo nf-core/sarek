@@ -295,12 +295,12 @@
                     },
                     "manta/somatic": {
                         "branch": "master",
-                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
+                        "git_sha": "f68f379dcdba4e8c132c6daa6cd8794527b81a04",
                         "installed_by": ["modules"]
                     },
                     "manta/tumoronly": {
                         "branch": "master",
-                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
+                        "git_sha": "f68f379dcdba4e8c132c6daa6cd8794527b81a04",
                         "installed_by": ["modules"]
                     },
                     "mosdepth": {

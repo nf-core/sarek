@@ -372,7 +372,9 @@ workflow SAREK {
 
     // Intervals for speed up preprocessing/variant calling by spread/gather
     // [interval.bed] all intervals in one file
-    intervals_bed_combined      = params.no_intervals ? Channel.value([])      : PREPARE_INTERVALS.out.intervals_bed_combined
+    intervals_bed_combined             = params.no_intervals ? Channel.value([])      : PREPARE_INTERVALS.out.intervals_bed_combined
+    intervals_bed_gz_tbi_combined      = params.no_intervals ? Channel.value([])      : PREPARE_INTERVALS.out.intervals_bed_gz_tbi_combined
+
     // For QC during preprocessing, we don't need any intervals (MOSDEPTH doesn't take them for WGS)
     intervals_for_preprocessing = params.wes ?
         intervals_bed_combined.map{it -> [ [ id:it.baseName ], it ]}.collect() :
@@ -947,7 +949,8 @@ workflow SAREK {
             fasta,
             fasta_fai,
             intervals_and_num_intervals,
-            intervals_bed_combined, // [] if no_intervals, else interval_bed_combined.bed
+            intervals_bed_combined, // [] if no_intervals, else interval_bed_combined.bed,
+            intervals_bed_gz_tbi_combined, // [] if no_intervals, else interval_bed_combined_gz, interval_bed_combined_gz_tbi
             PREPARE_INTERVALS.out.intervals_bed_combined, // no_intervals.bed if no intervals, else interval_bed_combined.bed; Channel operations possible
             intervals_bed_gz_tbi_and_num_intervals,
             known_indels_vqsr,
@@ -976,6 +979,7 @@ workflow SAREK {
             intervals_and_num_intervals,
             intervals_bed_gz_tbi_and_num_intervals,
             intervals_bed_combined,
+            intervals_bed_gz_tbi_combined, // [] if no_intervals, else interval_bed_combined_gz, interval_bed_combined_gz_tbi
             mappability,
             pon,
             pon_tbi
@@ -998,6 +1002,7 @@ workflow SAREK {
             intervals_and_num_intervals,
             intervals_bed_gz_tbi_and_num_intervals,
             intervals_bed_combined,
+            intervals_bed_gz_tbi_combined, // [] if no_intervals, else interval_bed_combined_gz, interval_bed_combined_gz_tbi
             mappability,
             msisensorpro_scan,
             pon,
