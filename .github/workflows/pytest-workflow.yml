@@ -55,6 +55,10 @@ jobs:
             tags: concatenate_vcfs
           - profile: "singularity"
             tags: merge
+          - profile: "singularity"
+            tags: validation_checks
+          - profile: "conda"
+            tags: validation_checks
     env:
       NXF_ANSI_LOG: false
       TEST_DATA_BASE: "${{ github.workspace }}/test-datasets"
@@ -62,12 +66,17 @@ jobs:
       - name: Check out pipeline code
         uses: actions/checkout@v3
 
+      - name: Hash Github Workspace
+        id: hash_workspace
+        run: |
+          echo "digest=$(echo sarek3_${{ github.workspace }} | md5sum | cut -c 1-25)" >> $GITHUB_OUTPUT
+
       - name: Cache test data
         id: cache-testdata
         uses: actions/cache@v3
         with:
           path: test-datasets/
-          key: sarek3-test-data
+          key: ${{ steps.hash_workspace.outputs.digest }}
 
       - name: Check out test data
         if: steps.cache-testdata.outputs.cache-hit != 'true'

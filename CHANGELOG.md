@@ -15,6 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#945](https://github.com/nf-core/sarek/pull/945) - Adding Adam Talbot to contributor list
 - [#954](https://github.com/nf-core/sarek/pull/954) - Adding keys for annotation with snpeff and ensemblvep for `hg19`, `hg38` and `mm10`
 - [#967](https://github.com/nf-core/sarek/pull/967) - Adding new `outdir_cache` params
+- [#971](https://github.com/nf-core/sarek/pull/971) - Subtle bugfix to correct mutation of FASTP output channel objects
+- [#978](https://github.com/nf-core/sarek/pull/978) - Validate that patient/sample does not contain spaces
+- [#981](https://github.com/nf-core/sarek/pull/981) - Added documentation on generating ASCAT resources for exome and targeted sequencing
 
 ### Changed
 
@@ -46,6 +49,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#941](https://github.com/nf-core/sarek/pull/941) - Fix json validation for `tools`, `skip_tools` and `use_gatk_spark` [#892](https://github.com/nf-core/sarek/issues/892)
 - [#954](https://github.com/nf-core/sarek/pull/954) - Fix missing annotation keys with snpeff and ensemblvep for `hg19`
 - [#957](https://github.com/nf-core/sarek/pull/957) - Add `failOnDuplicate` and `failOnMismatch` options to all `join()` operator where it was possible
+- [#982](https://github.com/nf-core/sarek/pull/982) - Remove usage of exit statements, using `Nextflow.error` instead
+- [#985](https://github.com/nf-core/sarek/pull/985) - Cache correctly identifies when it needs to be updated
+- [#988](https://github.com/nf-core/sarek/pull/988) - Updated ascat module to fix seed for reproducibility
+- [#998](https://github.com/nf-core/sarek/pull/998) - Remove parallelization within a sample for `Manta`
 
 ### Deprecated
 
