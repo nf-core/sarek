@@ -20,11 +20,7 @@ workflow CRAM_QC_MOSDEPTH_SAMTOOLS {
     // Reports run on cram
     SAMTOOLS_STATS(cram, fasta)
 
-    cram.view()
-
-    cram_intervals = cram.combine(intervals).map{ meta, cram, crai, intervals -> [ meta, cram, intervals ] }
-
-    cram_intervals.view()
+    cram_intervals = cram.combine(intervals.map{ meta, bed -> [ bed?:[] ] })
 
     MOSDEPTH(cram_intervals, fasta.map{ it -> [ [ id:'fasta' ], it ] })
 
