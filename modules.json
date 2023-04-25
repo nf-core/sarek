@@ -257,7 +257,7 @@
                     },
                     "gatk4/markduplicates": {
                         "branch": "master",
-                        "git_sha": "643756685546fa61f5c8fba439af746c090b9180",
+                        "git_sha": "938bbea1901d2f27a15390c3b14c081ee1df2e41",
                         "installed_by": ["modules"]
                     },
                     "gatk4/markduplicatesspark": {
@@ -327,47 +327,47 @@
                     },
                     "samtools/bam2fq": {
                         "branch": "master",
-                        "git_sha": "0f8a77ff00e65eaeebc509b8156eaa983192474b",
+                        "git_sha": "371eff7748d769c2ddc8bd593773523a364a52fe",
                         "installed_by": ["modules"]
                     },
                     "samtools/collatefastq": {
                         "branch": "master",
-                        "git_sha": "ad1b48cff38a49d62ed8e91d921790c03b0a9c92",
+                        "git_sha": "371eff7748d769c2ddc8bd593773523a364a52fe",
                         "installed_by": ["modules"]
                     },
                     "samtools/convert": {
                         "branch": "master",
-                        "git_sha": "0f8a77ff00e65eaeebc509b8156eaa983192474b",
+                        "git_sha": "371eff7748d769c2ddc8bd593773523a364a52fe",
                         "installed_by": ["modules"]
                     },
                     "samtools/faidx": {
                         "branch": "master",
-                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
+                        "git_sha": "371eff7748d769c2ddc8bd593773523a364a52fe",
                         "installed_by": ["modules"]
                     },
                     "samtools/index": {
                         "branch": "master",
-                        "git_sha": "0f8a77ff00e65eaeebc509b8156eaa983192474b",
+                        "git_sha": "371eff7748d769c2ddc8bd593773523a364a52fe",
                         "installed_by": ["modules"]
                     },
                     "samtools/merge": {
                         "branch": "master",
-                        "git_sha": "0f8a77ff00e65eaeebc509b8156eaa983192474b",
+                        "git_sha": "371eff7748d769c2ddc8bd593773523a364a52fe",
                         "installed_by": ["modules"]
                     },
                     "samtools/mpileup": {
                         "branch": "master",
-                        "git_sha": "0f8a77ff00e65eaeebc509b8156eaa983192474b",
+                        "git_sha": "371eff7748d769c2ddc8bd593773523a364a52fe",
                         "installed_by": ["modules"]
                     },
                     "samtools/stats": {
                         "branch": "master",
-                        "git_sha": "0f8a77ff00e65eaeebc509b8156eaa983192474b",
+                        "git_sha": "371eff7748d769c2ddc8bd593773523a364a52fe",
                         "installed_by": ["modules"]
                     },
                     "samtools/view": {
                         "branch": "master",
-                        "git_sha": "154bbe00ffd75ceeedd69a7c9358b759a5991e49",
+                        "git_sha": "371eff7748d769c2ddc8bd593773523a364a52fe",
                         "installed_by": ["modules"]
                     },
                     "snpeff/download": {
@@ -397,8 +397,8 @@
                     },
                     "tabix/bgziptabix": {
                         "branch": "master",
-                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
-                        "installed_by": ["vcf_annotate_snpeff", "modules"]
+                        "git_sha": "da53f7da4ff34b920bb3f186d151184bd440e3b5",
+                        "installed_by": ["modules", "vcf_annotate_snpeff"]
                     },
                     "tabix/tabix": {
                         "branch": "master",
@@ -436,7 +436,7 @@
                     },
                     "vcf_annotate_snpeff": {
                         "branch": "master",
-                        "git_sha": "fb0333ddf5a7c8437b36eea2c09209f317afa303",
+                        "git_sha": "ca2bf9212707e83717934ec6c5d4cab42b39ca69",
                         "installed_by": ["subworkflows"]
                     }
                 }

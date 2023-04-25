@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://github.com/nf-core/modules/tree/master/subworkflows/yaml-schema.json
 name: vcf_annotate_snpeff
 description: Perform annotation with snpEff and bgzip + tabix index the resulting VCF file
 keywords:
