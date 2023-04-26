@@ -432,7 +432,7 @@
                 "nf-core": {
                     "vcf_annotate_ensemblvep": {
                         "branch": "master",
-                        "git_sha": "ac924c4ba0be25f79248b51be0c9fbfa404b6030",
+                        "git_sha": "ca2bf9212707e83717934ec6c5d4cab42b39ca69",
                         "installed_by": ["subworkflows"]
                     },
                     "vcf_annotate_snpeff": {
