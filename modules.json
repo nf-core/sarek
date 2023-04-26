@@ -129,7 +129,7 @@
                     "ensemblvep/vep": {
                         "branch": "master",
                         "git_sha": "ac924c4ba0be25f79248b51be0c9fbfa404b6030",
-                        "installed_by": ["vcf_annotate_ensemblvep", "modules"]
+                        "installed_by": ["modules", "vcf_annotate_ensemblvep"]
                     },
                     "fastp": {
                         "branch": "master",
@@ -404,7 +404,7 @@
                     "tabix/tabix": {
                         "branch": "master",
                         "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
-                        "installed_by": ["vcf_annotate_ensemblvep", "modules"]
+                        "installed_by": ["modules", "vcf_annotate_ensemblvep"]
                     },
                     "tiddit/sv": {
                         "branch": "master",
@@ -418,7 +418,7 @@
                     },
                     "unzip": {
                         "branch": "master",
-                        "git_sha": "2498e243c8c30c7125661e62fc777917d8e343b9",
+                        "git_sha": "3b98293f1b7c77a594137e737ce80c8de05e7c10",
                         "installed_by": ["modules"]
                     },
                     "vcftools": {
