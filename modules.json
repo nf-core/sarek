@@ -12,22 +12,22 @@
                     },
                     "bcftools/concat": {
                         "branch": "master",
-                        "git_sha": "582ff1755bdd205c65e2ba4c31e0a008dae299ec",
+                        "git_sha": "fa12afdf5874c1d11e4a20efe81c97935e8eea24",
                         "installed_by": ["modules"]
                     },
                     "bcftools/mpileup": {
                         "branch": "master",
-                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
+                        "git_sha": "fa12afdf5874c1d11e4a20efe81c97935e8eea24",
                         "installed_by": ["modules"]
                     },
                     "bcftools/sort": {
                         "branch": "master",
-                        "git_sha": "4a21e4cca35e72ec059abd67f790e0b192ce5d81",
+                        "git_sha": "fa12afdf5874c1d11e4a20efe81c97935e8eea24",
                         "installed_by": ["modules"]
                     },
                     "bcftools/stats": {
                         "branch": "master",
-                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
+                        "git_sha": "fa12afdf5874c1d11e4a20efe81c97935e8eea24",
                         "installed_by": ["modules"]
                     },
                     "bwa/index": {
@@ -129,7 +129,7 @@
                     "ensemblvep/vep": {
                         "branch": "master",
                         "git_sha": "ac924c4ba0be25f79248b51be0c9fbfa404b6030",
-                        "installed_by": ["modules", "vcf_annotate_ensemblvep"]
+                        "installed_by": ["vcf_annotate_ensemblvep", "modules"]
                     },
                     "fastp": {
                         "branch": "master",
@@ -404,7 +404,7 @@
                     "tabix/tabix": {
                         "branch": "master",
                         "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
-                        "installed_by": ["modules", "vcf_annotate_ensemblvep"]
+                        "installed_by": ["vcf_annotate_ensemblvep", "modules"]
                     },
                     "tiddit/sv": {
                         "branch": "master",
