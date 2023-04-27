@@ -136,6 +136,19 @@ markduplicates:
   - tests/test_markduplicates_from_bam.yml
   - tests/test_markduplicates_from_cram.yml
 
+## sentieon/dedup
+sentieon/dedup:
+  - conf/modules/sentieon_dedup.config
+  - modules/nf-core/sentieon/bwamem/main.nf
+  - modules/nf-core/mosdepth/main.nf
+  - modules/nf-core/samtools/convert/main.nf
+  - modules/nf-core/samtools/index/main.nf
+  - modules/nf-core/samtools/stats/main.nf
+  - subworkflows/local/bam_sentieon_dedup/main.nf
+  - subworkflows/local/cram_qc_mosdepth_samtools/main.nf
+  - tests/test_sentieon_dedup_from_bam.yml
+  - tests/test_sentieon_dedup_from_cram.yml
+
 ## prepare_recalibration
 prepare_recalibration:
   - conf/modules/prepare_recalibration.config
