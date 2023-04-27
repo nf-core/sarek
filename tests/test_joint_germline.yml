@@ -13,13 +13,13 @@
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
       should_exist: false
     - path: results/reports/bcftools/haplotypecaller/joint_variant_calling/joint_germline.bcftools_stats.txt
-      md5sum: 86b04ea7a8c3c4b8d217a42e868a4f46
+      md5sum: 404d1208df301a6726f5543245625ef3
     - path: results/reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline.FILTER.summary
-      md5sum: 2a4eb7abfb2e64e45d53fdda17530b7f
+      md5sum: 87a84b5f8ac3d3cbeeef7d60afcdbfe7
     - path: results/reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline.TsTv.count
-      md5sum: 949fa16c755189c23a37f0ea8ecd1b26
+      md5sum: 974f6922981c87bb017b124aa009f654
     - path: results/reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline.TsTv.qual
-      md5sum: 3b3a249fbc26c80ce0acbe91147291ea
+      md5sum: 1e34357e5848c318f8c2c7d3b041d229
     - path: results/variant_calling/haplotypecaller/joint_variant_calling/joint_germline.vcf.gz
     # binary changes md5sums on reruns
     - path: results/variant_calling/haplotypecaller/joint_variant_calling/joint_germline.vcf.gz.tbi
