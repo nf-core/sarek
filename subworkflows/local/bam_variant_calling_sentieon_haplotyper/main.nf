@@ -30,7 +30,6 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
     main:
     versions = Channel.empty()
 
-    filtered_vcf = Channel.empty() // SENTIEON
     gvcf = Channel.empty()  // SENTIEON
 
     vcf = Channel.empty()
@@ -158,17 +157,24 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
             MERGE_SENTIEON_HAPLOTYPER_VCFS.out.tbi,
             haplotypecaller_vcf_tbi_branch.no_intervals)
 
-        VCF_VARIANT_FILTERING_GATK(haplotypecaller_vcf.join(haplotypecaller_tbi),
-                    fasta,
-                    fasta_fai,
-                    dict,
-                    intervals_bed_combined,
-                    known_sites_indels.concat(known_sites_snps).flatten().unique().collect(),
-                    known_sites_indels_tbi.concat(known_sites_snps_tbi).flatten().unique().collect())
+        if (!skip_haplotypecaller_filter) {
+            VCF_VARIANT_FILTERING_GATK(haplotypecaller_vcf.join(haplotypecaller_tbi),
+                        fasta,
+                        fasta_fai,
+                        dict,
+                        intervals_bed_combined,
+                        known_sites_indels.concat(known_sites_snps).flatten().unique().collect(),
+                        known_sites_indels_tbi.concat(known_sites_snps_tbi).flatten().unique().collect())
 
-        versions = versions.mix(VCF_VARIANT_FILTERING_GATK.out.versions)
+            vcf = VCF_VARIANT_FILTERING_GATK.out.filtered_vcf.map{ meta, vcf-> [[patient:meta.patient, sample:meta.sample, status:meta.status, sex:meta.sex, id:meta.sample, num_intervals:meta.num_intervals, variantcaller:"sentieon_haplotyper"], vcf]}
+            versions = versions.mix(VCF_VARIANT_FILTERING_GATK.out.versions)
 
-        filtered_vcf = VCF_VARIANT_FILTERING_GATK.out.filtered_vcf.map{ meta, vcf-> [[patient:meta.patient, sample:meta.sample, status:meta.status, sex:meta.sex, id:meta.sample, num_intervals:meta.num_intervals, variantcaller:"sentieon_haplotyper"], vcf]}
+        } else vcf = haplotypecaller_vcf
+
+
+        // add variantcaller to meta map and remove no longer necessary field: num_intervals
+        vcf = vcf.map{ meta, vcf -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'sentieon_haplotyper' ], vcf ] }
+
 
         // GVFs
         // Only when using intervals
@@ -291,7 +297,7 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
 */
     emit:
     versions
-    filtered_vcf
+    vcf
     gvcf
 
 }

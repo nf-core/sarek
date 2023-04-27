@@ -174,7 +174,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             intervals_bed_combined_haplotypec,
             (skip_tools && skip_tools.split(',').contains('haplotypecaller_filter')))  // TO-DO:  Should we introduce new skip-tools-option for sentieon-haplotyper, i.e. "haplotyper_filter"?
 
-        vcf_sentieon_haplotyper = BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER.out.filtered_vcf
+        vcf_sentieon_haplotyper = BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER.out.vcf
         versions = versions.mix(BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER.out.versions)
 
         // TO-DO: Should we do joint_germline with Sentieon-haplotyper??

@@ -32,6 +32,10 @@
     # binary changes md5sums on reruns
     - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.vcf.gz.tbi
     # binary changes md5sums on reruns
+    - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.filtered.vcf.gz
+      should_exist: false
+    - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.filtered.vcf.gz.tbi
+      should_exist: false
     - path: results/haplotypecaller
       should_exist: false
 - name: Run variant calling on germline sample with haplotypecaller without intervals and skip filter
@@ -71,9 +75,9 @@
     # binary changes md5sums on reruns
     - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.vcf.gz.tbi
     # binary changes md5sums on reruns
-    - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.vcf.gz
-    # binary changes md5sums on reruns
-    - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.vcf.gz.tbi
-    # binary changes md5sums on reruns
+    - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.filtered.vcf.gz
+      should_exist: false
+    - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.filtered.vcf.gz.tbi
+      should_exist: false
     - path: results/haplotypecaller
       should_exist: false
