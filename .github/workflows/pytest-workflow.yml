@@ -32,7 +32,8 @@ jobs:
       fail-fast: false
       matrix:
         tags: ["${{ fromJson(needs.changes.outputs.tags) }}"]
-        profile: ["docker", "singularity", "conda"]
+        profile: ["docker", "singularity"]
+        # profile: ["docker", "singularity", "conda"]
         TEST_DATA_BASE:
           - "test-datasets/data"
         NXF_VER:

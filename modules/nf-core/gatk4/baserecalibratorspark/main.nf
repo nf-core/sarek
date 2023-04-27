@@ -2,8 +2,8 @@ process GATK4_BASERECALIBRATOR_SPARK {
     tag "$meta.id"
     label 'process_low'
 
-    conda "bioconda::gatk4=4.3.0.0 conda-forge::openjdk=8.0.312"
-    container 'broadinstitute/gatk:4.3.0.0'
+    conda "bioconda::gatk4=4.4.0.0 conda-forge::openjdk=8.0.312"
+    container 'broadinstitute/gatk:4.4.0.0'
 
     input:
     tuple val(meta), path(input), path(input_index), path(intervals)
@@ -26,14 +26,14 @@ process GATK4_BASERECALIBRATOR_SPARK {
     def interval_command = intervals ? "--intervals $intervals" : ""
     def sites_command = known_sites.collect{"--known-sites $it"}.join(' ')
 
-    def avail_mem = 3
+    def avail_mem = 3072
     if (!task.memory) {
         log.info '[GATK BaseRecalibratorSpark] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this.'
     } else {
-        avail_mem = task.memory.giga
+        avail_mem = (task.memory.mega*0.8).intValue()
     }
     """
-    gatk --java-options "-Xmx${avail_mem}g" BaseRecalibratorSpark \\
+    gatk --java-options "-Xmx${avail_mem}M" BaseRecalibratorSpark \\
         --input $input \\
         --output ${prefix}.table \\
         --reference $fasta \\

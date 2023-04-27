@@ -17,7 +17,7 @@ tools:
         It can also optionally output discordant read pairs and/or split read mappings to separate SAM files,
         and/or unmapped/clipped reads to a separate FASTQ file.
         By default, samblaster reads SAM input from stdin and writes SAM to stdout.
-      homepage: None
+
       documentation: https://github.com/GregoryFaust/samblaster
       tool_dev_url: https://github.com/GregoryFaust/samblaster
       doi: "10.1093/bioinformatics/btu314"
