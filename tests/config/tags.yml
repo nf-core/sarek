@@ -128,7 +128,6 @@ markduplicates:
   - conf/modules/markduplicates.config
   - modules/nf-core/gatk4/markduplicates/main.nf
   - modules/nf-core/mosdepth/main.nf
-  - modules/nf-core/samtools/convert/main.nf
   - modules/nf-core/samtools/index/main.nf
   - modules/nf-core/samtools/stats/main.nf
   - subworkflows/local/bam_markduplicates/main.nf
@@ -141,7 +140,6 @@ sentieon/dedup:
   - conf/modules/sentieon_dedup.config
   - modules/nf-core/sentieon/bwamem/main.nf
   - modules/nf-core/mosdepth/main.nf
-  - modules/nf-core/samtools/convert/main.nf
   - modules/nf-core/samtools/index/main.nf
   - modules/nf-core/samtools/stats/main.nf
   - subworkflows/local/bam_sentieon_dedup/main.nf
@@ -265,6 +263,20 @@ haplotypecaller_skip_filter:
   - subworkflows/local/bam_merge_index_samtools/main.nf
   - subworkflows/local/bam_variant_calling_haplotypecaller/main.nf
   - tests/test_haplotypecaller_skip_filter.yml
+
+## sentieon/haplotyper
+sentieon/haplotyper:
+  - conf/modules/sentieon_haplotyper.config
+  - modules/nf-core/gatk4/cnnscorevariants/main.nf
+  - modules/nf-core/gatk4/filtervarianttranches/main.nf
+  - modules/nf-core/sentieon/haplotyper/main.nf
+  - modules/nf-core/gatk4/mergevcfs/main.nf
+  - modules/nf-core/samtools/index/main.nf
+  - modules/nf-core/samtools/merge/main.nf
+  - subworkflows/local/bam_merge_index_samtools/main.nf
+  - subworkflows/local/bam_variant_calling_sentieon_haplotyper/main.nf
+  - subworkflows/local/vcf_variant_filtering_gatk/main.nf
+  - tests/test_sentieon_haplotyper.yml
 
 ## joint_germline
 joint_germline:
