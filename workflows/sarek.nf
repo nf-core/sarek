@@ -376,7 +376,7 @@ workflow SAREK {
     // For QC during preprocessing, we don't need any intervals (MOSDEPTH doesn't take them for WGS)
     intervals_for_preprocessing = params.wes ?
         intervals_bed_combined.map{it -> [ [ id:it.baseName ], it ]}.collect() :
-        [ [ id:'null' ], [] ]
+        Channel.value([ [ id:'null' ], [] ])
 
     intervals            = PREPARE_INTERVALS.out.intervals_bed        // [ interval, num_intervals ] multiple interval.bed files, divided by useful intervals for scatter/gather
     intervals_bed_gz_tbi = PREPARE_INTERVALS.out.intervals_bed_gz_tbi // [ interval_bed, tbi, num_intervals ] multiple interval.bed.gz/.tbi files, divided by useful intervals for scatter/gather
@@ -1032,7 +1032,7 @@ workflow SAREK {
 
         if (params.tools.split(',').contains('merge') || params.tools.split(',').contains('snpeff') || params.tools.split(',').contains('vep')) {
 
-            vep_fasta = (params.vep_include_fasta) ? fasta : []
+            vep_fasta = (params.vep_include_fasta) ? fasta.map{ fasta -> [ [ id:fasta.baseName ], fasta ] } : [[], []]
 
             VCF_ANNOTATE_ALL(
                 vcf_to_annotate,
@@ -1102,7 +1102,7 @@ def extract_csv(csv_file) {
         def line, samplesheet_line_count = 0;
         while ((line = reader.readLine()) != null) {samplesheet_line_count++}
         if (samplesheet_line_count < 2) {
-           error("Samplesheet had less than two lines. The sample sheet must be a csv file with a header, so at least two lines.")
+            error("Samplesheet had less than two lines. The sample sheet must be a csv file with a header, so at least two lines.")
         }
     }
 
@@ -1128,7 +1128,7 @@ def extract_csv(csv_file) {
             if (!sample2patient.containsKey(row.sample.toString())) {
                 sample2patient[row.sample.toString()] = row.patient.toString()
             } else if (sample2patient[row.sample.toString()] != row.patient.toString()) {
-               error('The sample "' + row.sample.toString() + '" is registered for both patient "' + row.patient.toString() + '" and "' + sample2patient[row.sample.toString()] + '" in the sample sheet.')
+                error('The sample "' + row.sample.toString() + '" is registered for both patient "' + row.patient.toString() + '" and "' + sample2patient[row.sample.toString()] + '" in the sample sheet.')
             }
         }
 

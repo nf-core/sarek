@@ -35,6 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#936](https://github.com/nf-core/sarek/pull/936) - Add params `donwload_cache` to download annotation cache
 - [#942](https://github.com/nf-core/sarek/pull/942) - Update `README.md`
 - [#967](https://github.com/nf-core/sarek/pull/967) - Update and detail extensively how to use annotation cache
+- [#968](https://github.com/nf-core/sarek/pull/968) - Update all modules
 
 ### Fixed
 
@@ -64,9 +65,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Dependency    | Old version | New version |
 | ------------- | ----------- | ----------- |
-| `bcftools`    | 1.15.1      | 1.16        |
+| `ascat`       | 3.0.0       | 3.1.1       |
+| `bcftools`    | 1.15.1      | 1.17        |
 | `ensembl-vep` | 106.1       | 108.2       |
 | `multiqc`     | 1.13a       | 1.14        |
+| `samtools`    | 1.16        | 1.17        |
 | `svdb`        | 2.6.1       | 2.8.1       |
 
 ### Modules / Subworkflows

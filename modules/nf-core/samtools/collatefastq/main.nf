@@ -2,10 +2,10 @@ process SAMTOOLS_COLLATEFASTQ {
     tag "$meta.id"
     label 'process_low'
 
-    conda "bioconda::samtools=1.16.1"
+    conda "bioconda::samtools=1.17"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/samtools:1.16.1--h6899075_1' :
-        'quay.io/biocontainers/samtools:1.16.1--h6899075_1' }"
+        'https://depot.galaxyproject.org/singularity/samtools:1.17--h00cdaf9_0' :
+        'quay.io/biocontainers/samtools:1.17--h00cdaf9_0' }"
 
     input:
     tuple val(meta), path(input)
@@ -24,7 +24,7 @@ process SAMTOOLS_COLLATEFASTQ {
 
     script:
     def args = task.ext.args ?: ''
-    def args2 = task.ext.args ?: ''
+    def args2 = task.ext.args2 ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     def reference = fasta ? "--reference ${fasta}" : ""
     def output =    (interleave && ! meta.single_end) ? "> ${prefix}_interleaved.fq.gz"                     :

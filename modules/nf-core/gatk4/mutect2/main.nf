@@ -2,10 +2,10 @@ process GATK4_MUTECT2 {
     tag "$meta.id"
     label 'process_medium'
 
-    conda "bioconda::gatk4=4.3.0.0"
+    conda "bioconda::gatk4=4.4.0.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/gatk4:4.3.0.0--py36hdfd78af_0':
-        'quay.io/biocontainers/gatk4:4.3.0.0--py36hdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/gatk4:4.4.0.0--py36hdfd78af_0':
+        'quay.io/biocontainers/gatk4:4.4.0.0--py36hdfd78af_0' }"
 
     input:
     tuple val(meta), path(input), path(input_index), path(intervals)
@@ -35,14 +35,14 @@ process GATK4_MUTECT2 {
     def pon_command = panel_of_normals ? "--panel-of-normals $panel_of_normals" : ""
     def gr_command = germline_resource ? "--germline-resource $germline_resource" : ""
 
-    def avail_mem = 3
+    def avail_mem = 3072
     if (!task.memory) {
         log.info '[GATK Mutect2] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this.'
     } else {
-        avail_mem = task.memory.giga
+        avail_mem = (task.memory.mega*0.8).intValue()
     }
     """
-    gatk --java-options "-Xmx${avail_mem}g" Mutect2 \\
+    gatk --java-options "-Xmx${avail_mem}M" Mutect2 \\
         $inputs \\
         --output ${prefix}.vcf.gz \\
         --reference $fasta \\
