@@ -1,0 +1,79 @@
+name: sentieon_haplotyper
+description: Runs Sentieon's haplotyper for germline variant calling.
+keywords:
+  - sentieon
+  - haplotypecaller
+  - haplotype
+tools:
+  - sentieon:
+      description: |
+        Sentieon® provides complete solutions for secondary DNA/RNA analysis for a variety of sequencing platforms, including short and long reads.
+        Our software improves upon BWA, STAR, Minimap2, GATK, HaplotypeCaller, Mutect, and Mutect2 based pipelines and is deployable on any generic-CPU-based computing system.
+      homepage: https://www.sentieon.com/
+      documentation: https://www.sentieon.com/
+input:
+  - emit_mode:
+      type: string
+      description: |
+        Controls the output from the haplotyper.
+        If emit_mode is set to "gvcf" then the haplotyper will only emit a gvcf.
+        If emit_mode is set to "both" then the haplotyper will emit both a vcf and a gvcf.
+        Set emit_mode to anything else, and the haplotyper will only emit a vcf.
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing reference information.
+        e.g. [ id:'test', single_end:false ]
+  - input:
+      type: file
+      description: BAM/CRAM file from alignment
+      pattern: "*.{bam,cram}"
+  - input_index:
+      type: file
+      description: BAI/CRAI file from alignment
+      pattern: "*.{bai,crai}"
+  - intervals:
+      type: file
+      description: Bed file with the genomic regions included in the library (optional)
+  - fasta:
+      type: file
+      description: Genome fasta file
+      pattern: "*.{fa,fasta}"
+  - fai:
+      type: file
+      description: The index of the FASTA reference.
+      pattern: "*.fai"
+  - dbsnp:
+      type: file
+      description: VCF file containing known sites (optional)
+  - dbsnp_tbi:
+      type: file
+      description: VCF index of dbsnp (optional)
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing reference information.
+        e.g. [ id:'test', single_end:false ]
+  - vcf:
+      type: file
+      description: Compressed VCF file
+      pattern: "*.unfiltered.vcf.gz"
+  - vcf_tbi:
+      type: file
+      description: Index of VCF file
+      pattern: "*.unfiltered.vcf.gz.tbi"
+  - gvcf:
+      type: file
+      description: Compressed GVCF file
+      pattern: "*.g.vcf.gz"
+  - gvcf_tbi:
+      type: file
+      description: Index of GVCF file
+      pattern: "*.g.vcf.gz.tbi"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@asp8200"
