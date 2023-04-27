@@ -24,9 +24,10 @@ process FGBIO_CALLMOLECULARCONSENSUSREADS {
     fgbio \\
         --tmp-dir=. \\
         CallMolecularConsensusReads \\
-        -i $bam \\
+        --input $bam \\
+        --threads ${task.cpus} \\
         $args \\
-        -o ${prefix}.bam
+        --output ${prefix}.bam
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

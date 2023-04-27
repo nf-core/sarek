@@ -49,10 +49,14 @@ output:
       type: file
       description: File containing software versions
       pattern: "versions.yml"
-  - bam:
+  - output:
       type: file
-      description: Marked duplicates BAM file
-      pattern: "*.{bam}"
+      description: Marked duplicates BAM/CRAM file
+      pattern: "*.{bam,cram}"
+  - bam_index:
+      type: file
+      description: Optional BAM index file
+      pattern: "*.bai"
 
 authors:
   - "@ajodeh-juma"

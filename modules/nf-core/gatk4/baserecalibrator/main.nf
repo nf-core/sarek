@@ -2,10 +2,10 @@ process GATK4_BASERECALIBRATOR {
     tag "$meta.id"
     label 'process_low'
 
-    conda "bioconda::gatk4=4.3.0.0"
+    conda "bioconda::gatk4=4.4.0.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/gatk4:4.3.0.0--py36hdfd78af_0':
-        'quay.io/biocontainers/gatk4:4.3.0.0--py36hdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/gatk4:4.4.0.0--py36hdfd78af_0':
+        'quay.io/biocontainers/gatk4:4.4.0.0--py36hdfd78af_0' }"
 
     input:
     tuple val(meta), path(input), path(input_index), path(intervals)
@@ -28,14 +28,14 @@ process GATK4_BASERECALIBRATOR {
     def interval_command = intervals ? "--intervals $intervals" : ""
     def sites_command = known_sites.collect{"--known-sites $it"}.join(' ')
 
-    def avail_mem = 3
+    def avail_mem = 3072
     if (!task.memory) {
         log.info '[GATK BaseRecalibrator] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this.'
     } else {
-        avail_mem = task.memory.giga
+        avail_mem = (task.memory.mega*0.8).intValue()
     }
     """
-    gatk --java-options "-Xmx${avail_mem}g" BaseRecalibrator  \\
+    gatk --java-options "-Xmx${avail_mem}M" BaseRecalibrator  \\
         --input $input \\
         --output ${prefix}.table \\
         --reference $fasta \\

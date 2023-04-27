@@ -13,6 +13,7 @@ process DEEPVARIANT {
     tuple val(meta), path(input), path(index), path(intervals)
     path(fasta)
     path(fai)
+    path(gzi)
 
     output:
     tuple val(meta), path("${prefix}.vcf.gz") ,  emit: vcf

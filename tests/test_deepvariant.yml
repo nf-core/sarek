@@ -7,7 +7,7 @@
   files:
     - path: results/multiqc
     - path: results/reports/bcftools/deepvariant/sample1/sample1.deepvariant.bcftools_stats.txt
-      md5sum: b439cca4aa3ff9d28c9091e384128e54
+      md5sum: ed7bbd1a26cfefa485332f7c94923d39
     - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.FILTER.summary
       md5sum: 6830ef43decc97aee6a32ad4626ff0d7
     - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.TsTv.count
@@ -40,7 +40,7 @@
     - path: results/no_intervals.bed.gz.tbi
       md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/reports/bcftools/deepvariant/sample1/sample1.deepvariant.bcftools_stats.txt
-      md5sum: 0433be69ade0cd64b4adc1b51d8c3530
+      md5sum: 0eefa916a257ed1894b3b6a8ebc03fe6
     - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.FILTER.summary
       md5sum: a23f59a596d6c4715401730bb64a13d9
     - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.TsTv.count

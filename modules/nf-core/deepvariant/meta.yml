@@ -9,7 +9,7 @@ tools:
       homepage: https://github.com/google/deepvariant
       documentation: https://github.com/google/deepvariant
       tool_dev_url: https://github.com/google/deepvariant
-      doi: "https://doi.org/10.1038/nbt.4235"
+      doi: "10.1038/nbt.4235"
       licence: ["BSD-3-clause"]
 
 input:
@@ -38,6 +38,10 @@ input:
       type: file
       description: Index of reference fasta file
       pattern: "*.fai"
+  - gzi:
+      type: file
+      description: GZI index of reference fasta file
+      pattern: "*.gzi"
 
 output:
   - meta:

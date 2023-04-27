@@ -34,6 +34,8 @@ process STRELKA_GERMLINE {
         $args \\
         --runDir strelka
 
+    sed -i s/"isEmail = isLocalSmtp()"/"isEmail = False"/g strelka/runWorkflow.py
+
     python strelka/runWorkflow.py -m local -j $task.cpus
     mv strelka/results/variants/genome.*.vcf.gz     ${prefix}.genome.vcf.gz
     mv strelka/results/variants/genome.*.vcf.gz.tbi ${prefix}.genome.vcf.gz.tbi

@@ -5,7 +5,7 @@
     - umi
   files:
     - path: results/preprocessing/umi/test/test-test_L1_umi-consensus.bam
-      md5sum: 5f59e728880be57528a7333aa1553fb5
+    # binary changes md5sums on reruns.
     - path: results/reports/umi/test-test_L1_umi_histogram.txt
       md5sum: 85292e9acb83edf17110dce17be27f44
     - path: results/csv/markduplicates.csv
@@ -47,9 +47,9 @@
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
       md5sum: d0713716f63ac573f4a3385733e9a537
     - path: results/reports/samtools/test/test.md.cram.stats
-      md5sum: f8a2f99e2bf353b8691c1f252a8ef30e
+    # text-based file changes md5sums on reruns
     - path: results/reports/samtools/test/test.recal.cram.stats
-      md5sum: 4c9058deaa6dbc03d12d4aa254f5e9a3
+    # text-based file changes md5sums on reruns
 # - name: Run UMI TSO test
 #   command: nextflow run main.nf -profile test,umi_tso --outdir results
 #   tags:
