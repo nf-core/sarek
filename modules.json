@@ -129,7 +129,7 @@
                     "ensemblvep/vep": {
                         "branch": "master",
                         "git_sha": "ac924c4ba0be25f79248b51be0c9fbfa404b6030",
-                        "installed_by": ["vcf_annotate_ensemblvep", "modules"]
+                        "installed_by": ["modules", "vcf_annotate_ensemblvep"]
                     },
                     "fastp": {
                         "branch": "master",
@@ -404,7 +404,7 @@
                     "tabix/tabix": {
                         "branch": "master",
                         "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
-                        "installed_by": ["vcf_annotate_ensemblvep", "modules"]
+                        "installed_by": ["modules", "vcf_annotate_ensemblvep"]
                     },
                     "tiddit/sv": {
                         "branch": "master",
@@ -432,12 +432,12 @@
                 "nf-core": {
                     "vcf_annotate_ensemblvep": {
                         "branch": "master",
-                        "git_sha": "ca2bf9212707e83717934ec6c5d4cab42b39ca69",
+                        "git_sha": "a9784afdd5dcda23b84e64db75dc591065d64653",
                         "installed_by": ["subworkflows"]
                     },
                     "vcf_annotate_snpeff": {
                         "branch": "master",
-                        "git_sha": "ca2bf9212707e83717934ec6c5d4cab42b39ca69",
+                        "git_sha": "a9784afdd5dcda23b84e64db75dc591065d64653",
                         "installed_by": ["subworkflows"]
                     }
                 }
