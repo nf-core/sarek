@@ -76,22 +76,22 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
     SENTIEON_HAPLOTYPER.out.vcf.branch{
             intervals:    it[0].num_intervals > 1
             no_intervals: it[0].num_intervals <= 1
-        }.set{haplotypecaller_vcf_branch}
+        }.set{haplotyper_vcf_branch}
 
     SENTIEON_HAPLOTYPER.out.vcf_tbi.branch{
             intervals:    it[0].num_intervals > 1
             no_intervals: it[0].num_intervals <= 1
-        }.set{haplotypecaller_vcf_tbi_branch}
+        }.set{haplotyper_vcf_tbi_branch}
 
     SENTIEON_HAPLOTYPER.out.gvcf.branch{
             intervals:    it[0].num_intervals > 1
             no_intervals: it[0].num_intervals <= 1
-        }.set{haplotypecaller_gvcf_branch}
+        }.set{haplotyper_gvcf_branch}
 
     SENTIEON_HAPLOTYPER.out.gvcf_tbi.branch{
             intervals:    it[0].num_intervals > 1
             no_intervals: it[0].num_intervals <= 1
-        }.set{haplotypecaller_gvcf_tbi_branch}
+        }.set{haplotyper_gvcf_tbi_branch}
 
     if (params.joint_germline) {
         // TO-DO:  Test and fix the joint_germline-workflow
@@ -130,7 +130,7 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
         // VCFs
         // Only when using intervals
         MERGE_SENTIEON_HAPLOTYPER_VCFS(
-            haplotypecaller_vcf_branch.intervals
+            haplotyper_vcf_branch.intervals
             .map{ meta, vcf ->
 
                 new_meta = [
@@ -149,16 +149,16 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
 
         versions = versions.mix(MERGE_SENTIEON_HAPLOTYPER_VCFS.out.versions)
 
-        haplotypecaller_vcf = Channel.empty().mix(
+        haplotyper_vcf = Channel.empty().mix(
             MERGE_SENTIEON_HAPLOTYPER_VCFS.out.vcf,
-            haplotypecaller_vcf_branch.no_intervals)
+            haplotyper_vcf_branch.no_intervals)
 
-        haplotypecaller_tbi = Channel.empty().mix(
+        haplotyper_tbi = Channel.empty().mix(
             MERGE_SENTIEON_HAPLOTYPER_VCFS.out.tbi,
-            haplotypecaller_vcf_tbi_branch.no_intervals)
+            haplotyper_vcf_tbi_branch.no_intervals)
 
         if (!skip_haplotyper_filter) {
-            VCF_VARIANT_FILTERING_GATK(haplotypecaller_vcf.join(haplotypecaller_tbi),
+            VCF_VARIANT_FILTERING_GATK(haplotyper_vcf.join(haplotyper_tbi),
                         fasta,
                         fasta_fai,
                         dict,
@@ -169,7 +169,7 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
             vcf = VCF_VARIANT_FILTERING_GATK.out.filtered_vcf.map{ meta, vcf-> [[patient:meta.patient, sample:meta.sample, status:meta.status, sex:meta.sex, id:meta.sample, num_intervals:meta.num_intervals, variantcaller:"sentieon_haplotyper"], vcf]}
             versions = versions.mix(VCF_VARIANT_FILTERING_GATK.out.versions)
 
-        } else vcf = haplotypecaller_vcf
+        } else vcf = haplotyper_vcf
 
 
         // add variantcaller to meta map and remove no longer necessary field: num_intervals
@@ -179,7 +179,7 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
         // GVFs
         // Only when using intervals
         MERGE_SENTIEON_HAPLOTYPER_GVCFS(
-            haplotypecaller_gvcf_branch.intervals
+            haplotyper_gvcf_branch.intervals
             .map{ meta, gvcf ->
 
                 new_meta = [
@@ -200,7 +200,7 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
 
         gvcf = Channel.empty().mix(
             MERGE_SENTIEON_HAPLOTYPER_GVCFS.out.vcf,
-            haplotypecaller_gvcf_branch.no_intervals)
+            haplotyper_gvcf_branch.no_intervals)
 
 
     }
