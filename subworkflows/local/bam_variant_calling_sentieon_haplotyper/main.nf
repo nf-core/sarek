@@ -25,7 +25,7 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
     known_snps_vqsr              // channel: [optional]
     intervals                    // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
     intervals_bed_combined       // channel: [mandatory] intervals/target regions in one file unzipped, no_intervals.bed if no_intervals
-    skip_haplotypecaller_filter  // boolean: [mandatory] [default: false] skip haplotypecaller filter
+    skip_haplotyper_filter       // boolean: [mandatory] [default: false] skip haplotyper filter
 
     main:
     versions = Channel.empty()
@@ -157,7 +157,7 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
             MERGE_SENTIEON_HAPLOTYPER_VCFS.out.tbi,
             haplotypecaller_vcf_tbi_branch.no_intervals)
 
-        if (!skip_haplotypecaller_filter) {
+        if (!skip_haplotyper_filter) {
             VCF_VARIANT_FILTERING_GATK(haplotypecaller_vcf.join(haplotypecaller_tbi),
                         fasta,
                         fasta_fai,
