@@ -297,7 +297,7 @@ joint_germline:
   - subworkflows/local/bam_variant_calling_haplotypecaller/main.nf
   - subworkflows/local/vcf_variant_filtering_gatk/main.nf
   - tests/test_joint_germline.yml
-  - conf/modules/sentieon_haplotyper.config  # Added for joint-germline with Sentieon haplotyper
+  - conf/modules/sentieon_haplotyper.config # Added for joint-germline with Sentieon haplotyper
   - conf/modules/sentieon_joint_germline.config
   - conf/modules/prepare_genome.config
   - modules/nf-core/sentieon/haplotyper/main.nf
