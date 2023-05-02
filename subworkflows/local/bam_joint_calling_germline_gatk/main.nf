@@ -49,7 +49,12 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
     GATK4_GENOTYPEGVCFS(genotype_input, fasta, fai, dict, dbsnp, dbsnp_tbi)
 
     BCFTOOLS_SORT(GATK4_GENOTYPEGVCFS.out.vcf)
-    gvcf_to_merge = BCFTOOLS_SORT.out.vcf.map{ meta, vcf -> [ meta.subMap('num_intervals') + [ id:'joint_variant_calling', patient:'all_samples', variantcaller:'haplotypecaller' ], vcf ]}.groupTuple()
+
+    if (params.tools.split(',').contains('sentieon_haplotyper')) {   // TO-DO: Clean-up
+        gvcf_to_merge = BCFTOOLS_SORT.out.vcf.map{ meta, vcf -> [ meta.subMap('num_intervals') + [ id:'joint_variant_calling', patient:'all_samples', variantcaller:'sentieon_haplotyper' ], vcf ]}.groupTuple()
+    } else {
+        gvcf_to_merge = BCFTOOLS_SORT.out.vcf.map{ meta, vcf -> [ meta.subMap('num_intervals') + [ id:'joint_variant_calling', patient:'all_samples', variantcaller:'haplotypecaller' ], vcf ]}.groupTuple()
+    }
 
     // Merge scatter/gather vcfs & index
     // Rework meta for variantscalled.csv and annotation tools

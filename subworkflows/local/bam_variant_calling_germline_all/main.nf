@@ -3,6 +3,7 @@
 //
 
 include { BAM_JOINT_CALLING_GERMLINE_GATK         } from '../bam_joint_calling_germline_gatk/main'
+include { BAM_JOINT_CALLING_GERMLINE_GATK as BAM_JOINT_CALLING_GERMLINE_GATK_IN_SENTION_FLOW } from '../bam_joint_calling_germline_gatk/main'  // TO-DO: Clean-up
 include { BAM_VARIANT_CALLING_CNVKIT              } from '../bam_variant_calling_cnvkit/main'
 include { BAM_VARIANT_CALLING_DEEPVARIANT         } from '../bam_variant_calling_deepvariant/main'
 include { BAM_VARIANT_CALLING_FREEBAYES           } from '../bam_variant_calling_freebayes/main'
@@ -42,14 +43,15 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     versions = Channel.empty()
 
     //TODO: Temporary until the if's can be removed and printing to terminal is prevented with "when" in the modules.config
-    vcf_deepvariant         = Channel.empty()
-    vcf_freebayes           = Channel.empty()
-    vcf_haplotypecaller     = Channel.empty()
-    vcf_manta               = Channel.empty()
-    vcf_mpileup             = Channel.empty()
-    vcf_sentieon_haplotyper = Channel.empty()
-    vcf_strelka             = Channel.empty()
-    vcf_tiddit              = Channel.empty()
+    vcf_deepvariant          = Channel.empty()
+    vcf_freebayes            = Channel.empty()
+    vcf_haplotypecaller      = Channel.empty()
+    vcf_manta                = Channel.empty()
+    vcf_mpileup              = Channel.empty()
+    vcf_sentieon_haplotyper  = Channel.empty()
+    gvcf_sentieon_haplotyper = Channel.empty()
+    vcf_strelka              = Channel.empty()
+    vcf_tiddit               = Channel.empty()
 
     // MPILEUP
     if (tools.split(',').contains('mpileup')) {
@@ -174,10 +176,31 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             intervals_bed_combined_haplotypec,
             (skip_tools && skip_tools.split(',').contains('haplotyper_filter')))
 
-        vcf_sentieon_haplotyper = BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER.out.vcf
         versions = versions.mix(BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER.out.versions)
 
-        // TO-DO: Should we do joint_germline with Sentieon-haplotyper??
+        vcf_sentieon_haplotyper = BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER.out.vcf
+        gvcf_sentieon_haplotyper = BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER.out.gvcf
+
+        if (joint_germline) {  // TO-DO: Change this section so that it uses sentieon's Genotyper!
+            BAM_JOINT_CALLING_GERMLINE_GATK_IN_SENTION_FLOW(
+                BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER.out.genotype_intervals,
+                fasta,
+                fasta_fai,
+                dict,
+                dbsnp,
+                dbsnp_tbi,
+                dbsnp_vqsr,
+                known_sites_indels,
+                known_sites_indels_tbi,
+                known_indels_vqsr,
+                known_sites_snps,
+                known_sites_snps_tbi,
+                known_snps_vqsr)
+
+        vcf_haplotypecaller = BAM_JOINT_CALLING_GERMLINE_GATK_IN_SENTION_FLOW.out.genotype_vcf
+        versions = versions.mix(BAM_JOINT_CALLING_GERMLINE_GATK_IN_SENTION_FLOW.out.versions)
+        }
+
     }
 
     // MANTA
@@ -243,6 +266,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     vcf_mpileup
     vcf_strelka
     vcf_sentieon_haplotyper   // TO-DO: What about returning gvcf's from Sentieon-haplotyper?
+    gvcf_sentieon_haplotyper   // TO-DO: What about returning gvcf's from Sentieon-haplotyper?
     vcf_tiddit
 
     versions

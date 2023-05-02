@@ -107,9 +107,11 @@ if (!params.dbsnp && !params.known_indels) {
         log.warn "If Haplotypecaller is specified, without `--dbsnp` or `--known_indels no filtering will be done. For filtering, please provide at least one of `--dbsnp` or `--known_indels`.\nFor more information see FilterVariantTranches (single-sample, default): https://gatk.broadinstitute.org/hc/en-us/articles/5358928898971-FilterVariantTranches\nFor more information see VariantRecalibration (--joint_germline): https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator\nFor more information on GATK Best practice germline variant calling: https://gatk.broadinstitute.org/hc/en-us/articles/360035535932-Germline-short-variant-discovery-SNPs-Indels-"
     }
 }
-if (params.joint_germline && (!params.tools || !params.tools.split(',').contains('haplotypecaller'))) {
-    error("The Haplotypecaller should be specified as one of the tools when doing joint germline variant calling. (The Haplotypecaller could be specified by adding `--tools haplotypecaller` to the nextflow command.) ")
+if (params.joint_germline && (!params.tools || !(params.tools.split(',').contains('haplotypecaller') || params.tools.split(',').contains('sentieon_haplotyper')))) {
+    error("The GATK's haplotypecaller or Sentieon's haplotyper should be specified as one of the tools when doing joint germline variant calling.) ")
 }
+
+// TO-DO: Figure out if the following warning also applies to the sentieon-flow.
 if (params.joint_germline && (!params.dbsnp || !params.known_indels || !params.known_snps || params.no_intervals)) {
     log.warn "If Haplotypecaller is specified, without `--dbsnp`, `--known_snps`, `--known_indels` or the associated resource labels (ie `known_snps_vqsr`), no variant recalibration will be done. For recalibration you must provide all of these resources.\nFor more information see VariantRecalibration: https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator \nJoint germline variant calling also requires intervals in order to genotype the samples. As a result, if `--no_intervals` is set to `true` the joint germline variant calling will not be performed."
 }
@@ -960,7 +962,7 @@ workflow SAREK {
             known_sites_snps_tbi,
             known_snps_vqsr,
             params.joint_germline)
-
+            // params.joint_germline ? 'joint_germline' : (params.sentieon_joint_germline ? 'sentieon_joint_germline' : "")   // TO-DO: Clean-up
         // TUMOR ONLY VARIANT CALLING
         BAM_VARIANT_CALLING_TUMOR_ONLY_ALL(
             params.tools,
@@ -1052,6 +1054,9 @@ workflow SAREK {
         reports = reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.vcftools_tstv_counts.collect{ meta, counts -> counts })
         reports = reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.vcftools_tstv_qual.collect{ meta, qual -> qual })
         reports = reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.vcftools_filter_summary.collect{ meta, summary -> summary })
+
+        // vcf_to_csv = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.gvcf_sentieon_haplotyper)  // TO-DO:  Clean-up
+        // CHANNEL_VARIANT_CALLING_CREATE_CSV(vcf_to_csv)
 
         CHANNEL_VARIANT_CALLING_CREATE_CSV(vcf_to_annotate)
 
