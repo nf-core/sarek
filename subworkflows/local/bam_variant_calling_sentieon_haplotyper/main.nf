@@ -43,8 +43,6 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
         emit_mode = 'vcf'
     }
 
-    println("emit_mode : " + emit_mode)
-
     SENTIEON_HAPLOTYPER(
         emit_mode,
         cram_intervals_for_sentieon,
