@@ -1,4 +1,3 @@
-include { BAM_MERGE_INDEX_SAMTOOLS                 } from '../bam_merge_index_samtools/main'
 include { VCF_VARIANT_FILTERING_GATK               } from '../vcf_variant_filtering_gatk/main'
 include { SENTIEON_HAPLOTYPER                      } from '../../../modules/nf-core/sentieon/haplotyper/main'
 
