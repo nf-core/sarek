@@ -962,9 +962,8 @@ workflow SAREK {
             known_sites_snps_tbi,
             known_snps_vqsr,
             params.joint_germline,
-            Channel.value(params.sentieon_haplotyper_out_format))  // TO-DO: Find out whether params.sentieon_haplotyper_out_format actuallly needs to be wrapped in a value-channel.
+            params.sentieon_haplotyper_out_format)
 
-            // params.joint_germline ? 'joint_germline' : (params.sentieon_joint_germline ? 'sentieon_joint_germline' : "")   // TO-DO: Clean-up
         // TUMOR ONLY VARIANT CALLING
         BAM_VARIANT_CALLING_TUMOR_ONLY_ALL(
             params.tools,
