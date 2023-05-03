@@ -74,8 +74,6 @@ nextflow run nf-core/sarek \
 
 See [usage docs](https://nf-co.re/sarek/usage) for all of the available options when running the pipeline.
 
-See [usage docs](https://nf-co.re/sarek/usage) for all of the available options when running the pipeline.
-
 ## Documentation
 
 > **Warning:**
