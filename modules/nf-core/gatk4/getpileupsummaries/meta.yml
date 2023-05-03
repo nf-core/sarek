@@ -1,0 +1,70 @@
+name: gatk4_getpileupsummaries
+description: |
+  Summarizes counts of reads that support reference, alternate and other alleles for given sites. Results can be used with CalculateContamination. Requires a common germline variant sites file, such as from gnomAD.
+keywords:
+  - gatk4
+  - getpileupsumaries
+  - readcountssummary
+  - germlinevariantsites
+tools:
+  - gatk4:
+      description: |
+        Developed in the Data Sciences Platform at the Broad Institute, the toolkit offers a wide variety of tools
+        with a primary focus on variant discovery and genotyping. Its powerful processing engine
+        and high-performance computing features make it capable of taking on projects of any size.
+      homepage: https://gatk.broadinstitute.org/hc/en-us
+      documentation: https://gatk.broadinstitute.org/hc/en-us/categories/360002369672s
+      doi: 10.1158/1538-7445.AM2017-3590
+      licence: ["Apache-2.0"]
+
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test' ]
+  - input:
+      type: file
+      description: BAM/CRAM file to be summarised.
+      pattern: "*.{bam,cram}"
+  - input_index:
+      type: file
+      description: BAM/CRAM file index.
+      pattern: "*.{bai,crai}"
+  - intervals:
+      type: file
+      description: File containing specified sites to be used for the summary. If this option is not specified, variants file is used instead automatically.
+      pattern: "*.interval_list"
+  - fasta:
+      type: file
+      description: The reference fasta file
+      pattern: "*.fasta"
+  - fai:
+      type: file
+      description: Index of reference fasta file
+      pattern: "*.fasta.fai"
+  - dict:
+      type: file
+      description: GATK sequence dictionary
+      pattern: "*.dict"
+  - variants:
+      type: file
+      description: Population vcf of germline sequencing, containing allele fractions. Is also used as sites file if no separate sites file is specified.
+      pattern: "*.vcf.gz"
+  - variants_tbi:
+      type: file
+      description: Index file for the germline resource.
+      pattern: "*.vcf.gz.tbi"
+
+output:
+  - pileup:
+      type: file
+      description: File containing the pileup summary table.
+      pattern: "*.pileups.table"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+
+authors:
+  - "@GCJMackenzie"
