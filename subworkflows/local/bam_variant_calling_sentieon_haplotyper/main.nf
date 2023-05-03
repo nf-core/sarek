@@ -22,6 +22,8 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
     intervals                    // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
     intervals_bed_combined       // channel: [mandatory] intervals/target regions in one file unzipped, no_intervals.bed if no_intervals
     skip_haplotyper_filter       // boolean: [mandatory] [default: false] skip haplotyper filter
+    joint_germline               // boolean: [mandatory] [default: false] joint calling of germline variants
+    sentieon_haplotyper_out_format // channel: [mandatory] value channel with string
 
     main:
     versions = Channel.empty()
@@ -35,15 +37,8 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
         // Move num_intervals to meta map
         .map{ meta, cram, crai, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram, crai, intervals ] }
 
-    if (params.joint_germline) {  // TO-DO:  Try to also to implementemit_mode "both"
-        // TO-DO: emit_mode should also be set to `gvcf` when just requesting gvcf-files but not wanting joint-germline analysis.
-        emit_mode = 'gvcf'
-    } else {
-        emit_mode = 'vcf'
-    }
-
     SENTIEON_HAPLOTYPER(
-        emit_mode,
+        sentieon_haplotyper_out_format,
         cram_intervals_for_sentieon,
         fasta,
         fasta_fai,
