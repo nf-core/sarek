@@ -57,7 +57,7 @@
                     },
                     "cat/fastq": {
                         "branch": "master",
-                        "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
+                        "git_sha": "38b16706fa3a9d4ee2bf46fa5805e7397e275cdd",
                         "installed_by": ["modules"]
                     },
                     "cnvkit/antitarget": {
@@ -102,12 +102,12 @@
                     },
                     "custom/dumpsoftwareversions": {
                         "branch": "master",
-                        "git_sha": "7101db4432d3268b7fcb5b8f75fa0a022dc5561b",
+                        "git_sha": "76cc4938c1f6ea5c7d83fed1eeffc146787f9543",
                         "installed_by": ["modules"]
                     },
                     "deepvariant": {
                         "branch": "master",
-                        "git_sha": "58b5e78506e66f7ecd610fa825890ed9fb98b793",
+                        "git_sha": "b9829e1064382745d8dff7f1d74d2138d2864f71",
                         "installed_by": ["modules"]
                     },
                     "dragmap/align": {
@@ -129,7 +129,7 @@
                     "ensemblvep/vep": {
                         "branch": "master",
                         "git_sha": "ac924c4ba0be25f79248b51be0c9fbfa404b6030",
-                        "installed_by": ["modules", "vcf_annotate_ensemblvep"]
+                        "installed_by": ["vcf_annotate_ensemblvep", "modules"]
                     },
                     "fastp": {
                         "branch": "master",
@@ -168,7 +168,7 @@
                     },
                     "gatk4/applybqsrspark": {
                         "branch": "master",
-                        "git_sha": "643756685546fa61f5c8fba439af746c090b9180",
+                        "git_sha": "b9829e1064382745d8dff7f1d74d2138d2864f71",
                         "installed_by": ["modules"]
                     },
                     "gatk4/applyvqsr": {
@@ -183,7 +183,7 @@
                     },
                     "gatk4/baserecalibratorspark": {
                         "branch": "master",
-                        "git_sha": "643756685546fa61f5c8fba439af746c090b9180",
+                        "git_sha": "b9829e1064382745d8dff7f1d74d2138d2864f71",
                         "installed_by": ["modules"]
                     },
                     "gatk4/calculatecontamination": {
@@ -193,7 +193,7 @@
                     },
                     "gatk4/cnnscorevariants": {
                         "branch": "master",
-                        "git_sha": "643756685546fa61f5c8fba439af746c090b9180",
+                        "git_sha": "b9829e1064382745d8dff7f1d74d2138d2864f71",
                         "installed_by": ["modules"]
                     },
                     "gatk4/createsequencedictionary": {
@@ -263,7 +263,7 @@
                     },
                     "gatk4/markduplicatesspark": {
                         "branch": "master",
-                        "git_sha": "700486852c27d8d44bd750799c69f208bb624fed",
+                        "git_sha": "b9829e1064382745d8dff7f1d74d2138d2864f71",
                         "installed_by": ["modules"]
                     },
                     "gatk4/mergemutectstats": {
@@ -318,7 +318,7 @@
                     },
                     "multiqc": {
                         "branch": "master",
-                        "git_sha": "ee80d14721e76e2e079103b8dcd5d57129e584ba",
+                        "git_sha": "f2d63bd5b68925f98f572eed70993d205cc694b7",
                         "installed_by": ["modules"]
                     },
                     "samblaster": {
@@ -378,7 +378,7 @@
                     },
                     "snpeff/snpeff": {
                         "branch": "master",
-                        "git_sha": "75027bf77472b1f4fd2cdd7e46f83119dfb0f2c6",
+                        "git_sha": "b9829e1064382745d8dff7f1d74d2138d2864f71",
                         "installed_by": ["modules", "vcf_annotate_snpeff"]
                     },
                     "strelka/germline": {
@@ -404,7 +404,7 @@
                     "tabix/tabix": {
                         "branch": "master",
                         "git_sha": "c8e35eb2055c099720a75538d1b8adb3fb5a464c",
-                        "installed_by": ["modules", "vcf_annotate_ensemblvep"]
+                        "installed_by": ["vcf_annotate_ensemblvep", "modules"]
                     },
                     "tiddit/sv": {
                         "branch": "master",
@@ -413,7 +413,7 @@
                     },
                     "untar": {
                         "branch": "master",
-                        "git_sha": "cc1f997fab6d8fde5dc0e6e2a310814df5b53ce7",
+                        "git_sha": "38b16706fa3a9d4ee2bf46fa5805e7397e275cdd",
                         "installed_by": ["modules"]
                     },
                     "unzip": {
@@ -432,7 +432,7 @@
                 "nf-core": {
                     "vcf_annotate_ensemblvep": {
                         "branch": "master",
-                        "git_sha": "a9784afdd5dcda23b84e64db75dc591065d64653",
+                        "git_sha": "ca2bf9212707e83717934ec6c5d4cab42b39ca69",
                         "installed_by": ["subworkflows"]
                     },
                     "vcf_annotate_snpeff": {
