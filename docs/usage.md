@@ -654,12 +654,11 @@ write.table(out, args[3], col.names=T, row.names=F, quote=F, sep="\t")
 
 ```json
 {
-    "ascat_alleles": "/path/to/battenberg_alleles_on_target_hg38.zip",
-    "ascat_loci": "/path/to/battenberg_loci_on_target_hg38.zip",
-    "ascat_loci_gc": "/path/to/GC_G1000_on_target_hg38.zip",
-    "ascat_loci_rt": "/path/to/RT_G1000_on_target_hg38.zip"
+  "ascat_alleles": "/path/to/battenberg_alleles_on_target_hg38.zip",
+  "ascat_loci": "/path/to/battenberg_loci_on_target_hg38.zip",
+  "ascat_loci_gc": "/path/to/GC_G1000_on_target_hg38.zip",
+  "ascat_loci_rt": "/path/to/RT_G1000_on_target_hg38.zip"
 }
-
 ```
 
 ## What are the bwa/bwa-mem2 parameters?
