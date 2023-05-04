@@ -68,6 +68,10 @@ if (params.step == 'mapping' && params.aligner.contains("dragmap") && !(params.s
     log.warn("DragMap was specified as aligner. Base recalibration is not contained in --skip_tools. It is recommended to skip baserecalibration when using DragMap\nhttps://gatk.broadinstitute.org/hc/en-us/articles/4407897446939--How-to-Run-germline-single-sample-short-variant-discovery-in-DRAGEN-mode")
 }
 
+if (params.tools && params.tools.contains("sentieon_haplotyper") && params.joint_germline && (!params.sentieon_haplotyper_out_format || !(params.sentieon_haplotyper_out_format.contains('gvcf') || params.sentieon_haplotyper_out_format.contains('both')))) {
+    error("When setting the option `--joint_germline` and including `sentieon_haplotyper` among the requested tools, please set `--sentieon_haplotyper_out_format` to `gvcf` or `both`.")
+}
+
 // Fails or warns when missing files or params for ascat
 if (params.tools && params.tools.split(',').contains('ascat')) {
     if (!params.ascat_alleles) {
