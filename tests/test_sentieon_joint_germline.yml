@@ -1,5 +1,5 @@
 - name: Run joint germline variant calling with sentieon haplotyper
-  command: nextflow run main.nf -profile test,targeted --input ./tests/csv/3.0/mapped_joint_bam.csv --tools sentieon_haplotyper --step variant_calling --joint_germline --skip_tools haplotyper_filter --outdir results
+  command: nextflow run main.nf -profile test,targeted --input ./tests/csv/3.0/mapped_joint_bam.csv --tools sentieon_haplotyper --step variant_calling --joint_germline --skip_tools haplotyper_filter --outdir results --sentieon_haplotyper_out_format gvcf
   tags:
     - germline
     - joint_germline
@@ -25,5 +25,9 @@
     # binary changes md5sums on reruns
     - path: results/variant_calling/sentieon_haplotyper/joint_variant_calling/joint_germline.vcf.gz.tbi
     # binary changes md5sums on reruns
+    - path: results/variant_calling/sentieon_haplotyper/testN/testN.haplotyper.g.vcf.gz
+    - path: results/variant_calling/sentieon_haplotyper/testN/testN.haplotyper.g.vcf.gz.tbi
+    - path: results/variant_calling/sentieon_haplotyper/testT/testT.haplotyper.g.vcf.gz
+    - path: results/variant_calling/sentieon_haplotyper/testT/testT.haplotyper.g.vcf.gz.tbi
     - path: results/haplotyper
       should_exist: false
