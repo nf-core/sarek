@@ -302,7 +302,7 @@ workflow SAREK {
     // Download cache if needed
     // Assuming that if the cache is provided, the user has already downloaded it
     ensemblvep_info = params.vep_cache ? [] : Channel.of([ [ id:"${params.vep_genome}.${params.vep_cache_version}" ], params.vep_genome, params.vep_species, params.vep_cache_version ])
-    snpeff_info = params.snpeff_cache ? [] : Channel.of([ [ id:params.snpeff_db ], params.snpeff_genome, params.snpeff_db.minus("${params.snpeff_genome}.") ])
+    snpeff_info = params.snpeff_cache ? [] : Channel.of([ [ id:"${params.snpeff_genome}.${params.snpeff_db}" ], params.snpeff_genome, params.snpeff_db ])
 
     if (params.download_cache) {
         PREPARE_CACHE(ensemblvep_info, snpeff_info)
@@ -1038,7 +1038,7 @@ workflow SAREK {
                 vcf_to_annotate,
                 vep_fasta,
                 params.tools,
-                snpeff_db,
+                params.snpeff_genome ? "${params.snpeff_genome}.${params.snpeff_db}" : "${params.genome}.${params.snpeff_db}",
                 snpeff_cache,
                 vep_genome,
                 vep_species,

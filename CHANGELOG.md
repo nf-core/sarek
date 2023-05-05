@@ -36,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#942](https://github.com/nf-core/sarek/pull/942) - Update `README.md`
 - [#967](https://github.com/nf-core/sarek/pull/967) - Update and detail extensively how to use annotation cache
 - [#968](https://github.com/nf-core/sarek/pull/968) - Update all modules
+- [#1014](https://github.com/nf-core/sarek/pull/1014) - `snpeff_db` is now only the `db` version and not `genome.db`
 
 ### Fixed
 
@@ -48,12 +49,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#928](https://github.com/nf-core/sarek/pull/928) - Fix [#700](https://github.com/nf-core/sarek/issues/700)
 - [#929](https://github.com/nf-core/sarek/pull/929) - Fix somatic variant calling issues with msisensor following [#896](https://github.com/nf-core/sarek/pull/896)
 - [#941](https://github.com/nf-core/sarek/pull/941) - Fix json validation for `tools`, `skip_tools` and `use_gatk_spark` [#892](https://github.com/nf-core/sarek/issues/892)
-- [#954](https://github.com/nf-core/sarek/pull/954) - Fix missing annotation keys with snpeff and ensemblvep for `hg19`
+- [#954](https://github.com/nf-core/sarek/pull/954) - Fix missing annotation keys with `snpeff` and `ensemblvep` for `hg19`
 - [#957](https://github.com/nf-core/sarek/pull/957) - Add `failOnDuplicate` and `failOnMismatch` options to all `join()` operator where it was possible
 - [#982](https://github.com/nf-core/sarek/pull/982) - Remove usage of exit statements, using `Nextflow.error` instead
 - [#985](https://github.com/nf-core/sarek/pull/985) - Cache correctly identifies when it needs to be updated
 - [#988](https://github.com/nf-core/sarek/pull/988) - Updated ascat module to fix seed for reproducibility
 - [#998](https://github.com/nf-core/sarek/pull/998) - Remove parallelization within a sample for `Manta`
+- [#1014](https://github.com/nf-core/sarek/pull/1014) - Fix calls to `ensemblvep` and `snpeff` containers
 
 ### Deprecated
 
