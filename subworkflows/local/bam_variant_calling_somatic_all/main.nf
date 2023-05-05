@@ -10,6 +10,8 @@ include { BAM_VARIANT_CALLING_SOMATIC_ASCAT             } from '../bam_variant_c
 include { BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC      } from '../bam_variant_calling_somatic_controlfreec/main'
 include { BAM_VARIANT_CALLING_SOMATIC_MANTA             } from '../bam_variant_calling_somatic_manta/main'
 include { BAM_VARIANT_CALLING_SOMATIC_MUTECT2           } from '../bam_variant_calling_somatic_mutect2/main'
+// Variant calling for patients with multiple tumor samples 
+include { BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MS        } from '../bam_variant_calling_somatic_mutect2_ms/main'
 include { BAM_VARIANT_CALLING_SOMATIC_STRELKA           } from '../bam_variant_calling_somatic_strelka/main'
 include { BAM_VARIANT_CALLING_SOMATIC_TIDDIT            } from '../bam_variant_calling_somatic_tiddit/main'
 include { MSISENSORPRO_MSI_SOMATIC                      } from '../../../modules/nf-core/msisensorpro/msi_somatic/main'
@@ -50,6 +52,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     strelka_vcf          = Channel.empty()
     msisensorpro_output  = Channel.empty()
     mutect2_vcf          = Channel.empty()
+    mutect2_ms_vcf       = Channel.empty()
     tiddit_vcf           = Channel.empty()
 
     // Remap channel with intervals
@@ -264,6 +267,22 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_SOMATIC_MUTECT2.out.versions)
     }
 
+    // MUTECT2 MULTI-SAMPLE SOMATIC VARIANT CALLING
+    if(tools.split(',').contains('mutect2_multi_sample')){
+        BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MS(
+        cram_pair_intervals,
+        fasta,
+        fasta_fai,
+        dict,
+        germline_resource,
+        germline_resource_tbi,
+        panel_of_normals,
+        panel_of_normals_tbi
+        )
+        mutect2_ms_vcf = BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MS.out.mutect2_vcf
+        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MS.out.versions)
+    }
+
     //TIDDIT
     if (tools.split(',').contains('tiddit')){
         cram_normal = cram_pair.map{meta, normal_cram, normal_crai, tumor_cram, tumor_crai ->
@@ -283,6 +302,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     manta_vcf
     msisensorpro_output
     mutect2_vcf
+    mutect2_ms_vcf
     strelka_vcf
     tiddit_vcf
 

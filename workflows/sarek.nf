@@ -267,9 +267,6 @@ include { BAM_VARIANT_CALLING_TUMOR_ONLY_ALL             } from '../subworkflows
 // Variant calling on tumor/normal pair
 include { BAM_VARIANT_CALLING_SOMATIC_ALL                } from '../subworkflows/local/bam_variant_calling_somatic_all/main'
 
-// Variant calling for patients with multiple tumor samples 
-include { BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MS         } from '../subworkflows/local/bam_variant_calling_somatic_mutect2_ms/main'
-
 // QC on VCF files
 include { VCF_QC_BCFTOOLS_VCFTOOLS                       } from '../subworkflows/local/vcf_qc_bcftools_vcftools/main'
 
@@ -1003,23 +1000,6 @@ workflow SAREK {
             gc_file,
             rt_file
         )
-
-        // MUTECT2 MULTI-SAMPLE SOMATIC VARIANT CALLING
-        if(params.tools.split(',').contains('mutect2_multi_sample') && ch_cram_variant_calling_status.tumor.ifEmpty('empty') != ['empty']){
-            BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MS(
-            ch_cram_variant_calling,
-            fasta,
-            fasta_fai,
-            dict,
-            germline_resource,
-            germline_resource_tbi,
-            pon,
-            pon_tbi,
-            intervals,
-            intervals_bed_gz_tbi,
-            intervals_bed_combined
-        )
-        }
         
         // Gather vcf files for annotation and QC
         vcf_to_annotate = Channel.empty()
@@ -1036,6 +1016,7 @@ workflow SAREK {
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.tiddit_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.freebayes_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.mutect2_vcf)
+        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.mutect2_ms_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.manta_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.strelka_vcf)
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.tiddit_vcf)
