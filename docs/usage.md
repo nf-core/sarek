@@ -884,7 +884,7 @@ Explanation can be found for all params in the documentation:
 With the previous example of `GRCh38`, these are the values that were used for these params:
 
 ```bash
-snpeff_db         = 'GRCh38.105'
+snpeff_db         = '105'
 snpeff_genome     = 'GRCh38'
 vep_genome        = 'GRCh38'
 vep_species       = 'homo_sapiens'
