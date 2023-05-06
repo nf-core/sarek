@@ -37,7 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#967](https://github.com/nf-core/sarek/pull/967) - Update and detail extensively how to use annotation cache
 - [#968](https://github.com/nf-core/sarek/pull/968) - Update all modules
 - [#1014](https://github.com/nf-core/sarek/pull/1014) - `snpeff_db` is now only the `db` version and not `genome.db`
-- [#1015](https://github.com/nf-core/sarek/pull/1015) - Increase default value for `--nucleotides_per_second` to `200000`resulting in 21 groups for `GATK.GRCh38`
+- [#1015](https://github.com/nf-core/sarek/pull/1015) - Increase default value for `--nucleotides_per_second` to `200000` resulting in 21 groups for `GATK.GRCh38`
 
 ### Fixed
 
