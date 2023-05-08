@@ -77,3 +77,42 @@
     # binary changes md5sums on reruns
     - path: results/sentieon_haplotyper
       should_exist: false
+- name: Run variant calling on germline sample with sentieons haplotyper output gvcf
+  command: nextflow run main.nf -profile test,targeted --input ./tests/csv/3.0/mapped_single_bam.csv --tools sentieon_haplotyper --step variant_calling --outdir results --sentieon_haplotyper_out_format gvcf
+  tags:
+    - germline
+    - sentieon/haplotyper
+    - variant_calling
+    - foo
+  files:
+    - path: results/csv/variantcalled.csv
+      md5sum: b1d10b32d106b180a773782c7f3b127b
+    - path: results/multiqc
+    - path: results/preprocessing/converted/test/test.converted.cram
+    # binary changes md5sums on reruns
+    - path: results/preprocessing/converted/test/test.converted.cram.crai
+    # binary changes md5sums on reruns
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+      should_exist: false
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+      should_exist: false
+    - path: results/reports/bcftools/sentieon_haplotyper/test/test.haplotyper.filtered.bcftools_stats.txt
+      should_exist: false
+    - path: results/reports/vcftools/sentieon_haplotyper/test/test.haplotyper.filtered.FILTER.summary
+      should_exist: false
+    - path: results/reports/vcftools/sentieon_haplotyper/test/test.haplotyper.filtered.TsTv.count
+      should_exist: false
+    - path: results/reports/vcftools/sentieon_haplotyper/test/test.haplotyper.filtered.TsTv.qual
+      should_exist: false
+    - path: results/variant_calling/sentieon_haplotyper/test/test.haplotyper.g.vcf.gz
+    - path: results/variant_calling/sentieon_haplotyper/test/test.haplotyper.g.vcf.gz.tbi
+    - path: results/variant_calling/sentieon_haplotyper/test/test.haplotyper.filtered.vcf.gz
+      should_exist: false
+    - path: results/variant_calling/sentieon_haplotyper/test/test.haplotyper.filtered.vcf.gz.tbi
+      should_exist: false
+    - path: results/variant_calling/sentieon_haplotyper/test/test.haplotyper.unfiltered.vcf.gz
+      should_exist: false
+    - path: results/variant_calling/sentieon_haplotyper/test/test.haplotyper.unfiltered.vcf.gz.tbi
+      should_exist: false
+    - path: results/haplotyper
+      should_exist: false
