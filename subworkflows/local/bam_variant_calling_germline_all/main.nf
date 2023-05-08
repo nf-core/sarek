@@ -268,8 +268,8 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     vcf_manta
     vcf_mpileup
     vcf_strelka
-    vcf_sentieon_haplotyper   // TO-DO: What about returning gvcf's from Sentieon-haplotyper?
-    gvcf_sentieon_haplotyper   // TO-DO: What about returning gvcf's from Sentieon-haplotyper?
+    vcf_sentieon_haplotyper
+    gvcf_sentieon_haplotyper
     vcf_tiddit
 
     versions
