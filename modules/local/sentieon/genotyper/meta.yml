@@ -1,4 +1,4 @@
-name: gatk4_genotypegvcfs   # TO-DO: Write doc for Sentieon Genotyper
+name: gatk4_genotypegvcfs # TO-DO: Write doc for Sentieon Genotyper
 description: |
   Perform joint genotyping on one or more samples pre-called with HaplotypeCaller.
 keywords:
