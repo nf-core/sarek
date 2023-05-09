@@ -35,7 +35,7 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
     // Combine cram and intervals for spread and gather strategy
     cram_intervals_for_sentieon = cram.combine(intervals)
         // Move num_intervals to meta map
-        .map{ meta, cram, crai, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram, crai, intervals ] }
+        .map{ meta, cram, crai, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals, intervals_name:intervals.simpleName], cram, crai, intervals ] }
 
     SENTIEON_HAPLOTYPER(
         sentieon_haplotyper_out_format,
@@ -47,7 +47,7 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
 
     versions = versions.mix(SENTIEON_HAPLOTYPER.out.versions)
 
-    if (params.joint_germline) {
+    if (joint_germline) {
         genotype_intervals = SENTIEON_HAPLOTYPER.out.gvcf
             .join(SENTIEON_HAPLOTYPER.out.gvcf_tbi, failOnMismatch: true)
             .join(cram_intervals_for_sentieon, failOnMismatch: true)
