@@ -11,6 +11,7 @@ include { GATK4_GATHERPILEUPSUMMARIES     as GATHERPILEUPSUMMARIES_TUMOR } from 
 include { GATK4_GETPILEUPSUMMARIES        as GETPILEUPSUMMARIES_NORMAL   } from '../../../modules/nf-core/gatk4/getpileupsummaries/main'
 include { GATK4_GETPILEUPSUMMARIES        as GETPILEUPSUMMARIES_TUMOR    } from '../../../modules/nf-core/gatk4/getpileupsummaries/main'
 include { GATK4_CALCULATECONTAMINATION    as CALCULATECONTAMINATION      } from '../../../modules/nf-core/gatk4/calculatecontamination/main'
+include { GATK4_FILTERMUTECTCALLS         as FILTERMUTECTCALLS           } from '../../../modules/nf-core/gatk4/filtermutectcalls/main'
 
 
 workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MS {
@@ -257,8 +258,25 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MS {
     //Contamination and segmentation tables created using calculatecontamination on the pileup summary table.
     //
     CALCULATECONTAMINATION ( gather_table_tumor.join(gather_table_normal) )
-    CALCULATECONTAMINATION.out.contamination.view()
+
+    ch_contamination_out_seg = CALCULATECONTAMINATION.out.segmentation.map{ meta, seg -> [[id: meta.patient, patient: meta.patient, normal_id: meta.normal_id, sex: meta.sex, num_intervals: meta.num_intervals], seg]}.groupTuple()
+    ch_contamination_out_cont = CALCULATECONTAMINATION.out.contamination.map{ meta, cont -> [[id: meta.patient, patient: meta.patient, normal_id: meta.normal_id, sex: meta.sex, num_intervals: meta.num_intervals], cont]}.groupTuple()
     
+    //
+    //Mutect2 calls filtered by filtermutectcalls using the artifactpriors, contamination and segmentation tables.
+    //
+    ch_filtermutect    = mutect2_vcf.join(mutect2_tbi)
+                                    .join(mutect2_stats)
+                                    .join(LEARNREADORIENTATIONMODEL.out.artifactprior)
+                                    .join(ch_contamination_out_seg)
+                                    .join(ch_contamination_out_cont)
+    ch_filtermutect_in = ch_filtermutect.map{ meta, vcf, tbi, stats, orientation, seg, cont -> [meta, vcf, tbi, stats, orientation, seg, cont, []] }
+    FILTERMUTECTCALLS ( ch_filtermutect_in, fasta, fai, dict)
+
+    mutect2_vcf_filtered = FILTERMUTECTCALLS.out.vcf.map{ meta, vcf -> [[patient:meta.patient, normal_id:meta.normal_id, sex:meta.sex, num_intervals:meta.num_intervals, variantcaller:"mutect2_ms"], vcf]}
+    mutect2_vcf_filtered_tbi = FILTERMUTECTCALLS.out.tbi.map{ meta, tbi -> [[patient:meta.patient, normal_id:meta.normal_id, sex:meta.sex, num_intervals:meta.num_intervals, variantcaller:"mutect2_ms"], tbi]}
+    mutect2_vcf_filtered_stats = FILTERMUTECTCALLS.out.stats.map{ meta, stats -> [[patient:meta.patient, normal_id:meta.normal_id, sex:meta.sex, num_intervals:meta.num_intervals, variantcaller:"mutect2_ms"], stats]}
+
     ch_versions = ch_versions.mix(MUTECT2_MS.out.versions)
     ch_versions = ch_versions.mix(MERGE_MUTECT2.out.versions)
     ch_versions = ch_versions.mix(MERGEMUTECTSTATS.out.versions)
@@ -268,6 +286,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MS {
     ch_versions = ch_versions.mix(GATHERPILEUPSUMMARIES_NORMAL.out.versions)
     ch_versions = ch_versions.mix(GATHERPILEUPSUMMARIES_TUMOR.out.versions)
     ch_versions = ch_versions.mix(CALCULATECONTAMINATION.out.versions)
+    ch_versions = ch_versions.mix(FILTERMUTECTCALLS.out.versions)
 
     emit:
     mutect2_vcf            = mutect2_vcf                                    // channel: [ val(meta), [ vcf ] ]
@@ -280,6 +299,10 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MS {
 
     contamination_table    = CALCULATECONTAMINATION.out.contamination       // channel: [ val(meta), [ contamination ] ]
     segmentation_table     = CALCULATECONTAMINATION.out.segmentation        // channel: [ val(meta), [ segmentation ] ]
+
+    filtered_vcf           = mutect2_vcf_filtered                           // channel: [ val(meta), [ vcf ] ]
+    filtered_tbi           = mutect2_vcf_filtered_tbi                       // channel: [ val(meta), [ tbi ] ]
+    filtered_stats         = mutect2_vcf_filtered_stats                     // channel: [ val(meta), [ stats ] ]
 
     versions               = ch_versions                                    // channel: [ versions.yml ]
 }

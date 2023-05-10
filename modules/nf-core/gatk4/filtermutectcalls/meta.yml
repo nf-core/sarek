@@ -35,19 +35,19 @@ input:
       description: Stats file that pairs with output vcf file
       pattern: "*vcf.gz.stats"
   - orientationbias:
-      type: list
+      type: file
       description: files containing artifact priors for input vcf. Optional input.
       pattern: "*.artifact-prior.tar.gz"
   - segmentation:
-      type: list
+      type: file
       description: tables containing segmentation information for input vcf. Optional input.
       pattern: "*.segmentation.table"
   - table:
-      type: list
+      type: file
       description: table(s) containing contamination data for input vcf. Optional input, takes priority over estimate.
       pattern: "*.contamination.table"
   - estimate:
-      type: val
+      type: float
       description: estimation of contamination value as a double. Optional input, will only be used if table is not specified.
   - fasta:
       type: file
