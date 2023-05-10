@@ -89,8 +89,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
         normal: [ meta, input_list[0], input_index_list[0], intervals ]
     }
 
-    pileup_normal = pileup.normal.map{ meta, cram, crai, intervals -> [ meta - meta.subMap('id') + [ id:meta.normal_id ], cram, crai, intervals ] }
-    pileup_tumor = pileup.tumor.map{ meta, cram, crai, intervals -> [ meta - meta.subMap('id') + [ id:meta.tumor_id ], cram, crai, intervals ] }
+    pileup_normal = pileup.normal.map{ meta, cram, crai, intervals -> [ meta + [ id:meta.normal_id ], cram, crai, intervals ] }
+    pileup_tumor = pileup.tumor.map{ meta, cram, crai, intervals -> [ meta + [ id:meta.tumor_id ], cram, crai, intervals ] }
 
     // Generate pileup summary tables using getepileupsummaries. tumor sample should always be passed in as the first input and input list entries of vcf_to_filter,
     GETPILEUPSUMMARIES_NORMAL(pileup_normal, fasta, fai, dict, germline_resource_pileup, germline_resource_pileup_tbi)
@@ -115,10 +115,10 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
     GATHERPILEUPSUMMARIES_TUMOR(GETPILEUPSUMMARIES_TUMOR.out.table.map{ meta, table -> [ groupKey(meta, meta.num_intervals), table ] }.groupTuple(), dict)
 
     pileup_table_normal = Channel.empty().mix(GATHERPILEUPSUMMARIES_NORMAL.out.table, pileup_table_normal_branch.no_intervals)
-        .map{ meta, table -> [ meta - meta.subMap('id') + [ id:meta.tumor_id + "_vs_" + meta.normal_id ], table ] }
+        .map{ meta, table -> [ meta + [ id:meta.tumor_id + "_vs_" + meta.normal_id ], table ] }
 
     pileup_table_tumor = Channel.empty().mix(GATHERPILEUPSUMMARIES_TUMOR.out.table, pileup_table_tumor_branch.no_intervals)
-        .map{ meta, table -> [ meta - meta.subMap('id') + [ id:meta.tumor_id + "_vs_" + meta.normal_id ], table ] }
+        .map{ meta, table -> [ meta + [ id:meta.tumor_id + "_vs_" + meta.normal_id ], table ] }
 
     // Contamination and segmentation tables created using calculatecontamination on the pileup summary table
     CALCULATECONTAMINATION(pileup_table_tumor.join(pileup_table_normal, failOnDuplicate: true, failOnMismatch: true))

@@ -61,26 +61,26 @@ input_sample = params.build_only_index ? Channel.empty() : extract_csv(file(para
 // Fails when wrongfull extension for intervals file
 if (params.wes && !params.step == 'annotate') {
     if (params.intervals && !params.intervals.endsWith("bed"))  error("Target file specified with `--intervals` must be in BED format for targeted data")
-    else log.warn("Intervals file was provided without parameter `--wes`:\n  Pipeline will assume this is Whole-Genome-Sequencing data.")
+    else log.warn("Intervals file was provided without parameter `--wes`: Pipeline will assume this is Whole-Genome-Sequencing data.")
 } else if (params.intervals && !params.intervals.endsWith("bed") && !params.intervals.endsWith("list")) error("Intervals file must end with .bed, .list, or .interval_list")
 
 if (params.step == 'mapping' && params.aligner.contains("dragmap") && !(params.skip_tools && params.skip_tools.split(',').contains("baserecalibrator"))) {
-    log.warn("DragMap was specified as aligner.\n  Base recalibration is not contained in --skip_tools.\n  It is recommended to skip baserecalibration when using DragMap\nhttps://gatk.broadinstitute.org/hc/en-us/articles/4407897446939--How-to-Run-germline-single-sample-short-variant-discovery-in-DRAGEN-mode")
+    log.warn("DragMap was specified as aligner. Base recalibration is not contained in --skip_tools. It is recommended to skip baserecalibration when using DragMap\nhttps://gatk.broadinstitute.org/hc/en-us/articles/4407897446939--How-to-Run-germline-single-sample-short-variant-discovery-in-DRAGEN-mode")
 }
 
 // Fails or warns when missing files or params for ascat
 if (params.tools && params.tools.split(',').contains('ascat')) {
     if (!params.ascat_alleles) {
-        error("No allele files were provided for running ASCAT.\nPlease provide a zip folder with allele files.")
+        error("No allele files were provided for running ASCAT. Please provide a zip folder with allele files.")
     }
     if (!params.ascat_loci) {
-        error("No loci files were provided for running ASCAT.\nPlease provide a zip folder with loci files.")
+        error("No loci files were provided for running ASCAT. Please provide a zip folder with loci files.")
     }
     if (!params.ascat_loci_gc && !params.ascat_loci_rt) {
-        log.warn("No LogRCorrection performed in ASCAT.\nFor LogRCorrection to run, please provide either loci gc files or both loci gc files and loci rt files.")
+        log.warn("No LogRCorrection performed in ASCAT. For LogRCorrection to run, please provide either loci gc files or both loci gc files and loci rt files.")
     }
     if (params.wes) {
-        log.warn("Default reference files not suited for running ASCAT on WES data.\nIt is recommended to use the reference files provided here: https://github.com/Wedge-lab/battenberg#required-reference-files")
+        log.warn("Default reference files not suited for running ASCAT on WES data. It's recommended to use the reference files provided here: https://github.com/Wedge-lab/battenberg#required-reference-files")
     }
 }
 
@@ -101,14 +101,14 @@ if (params.tools && params.tools.split(',').contains('mutect2')) {
 // Warns when missing resources for haplotypecaller
 if (!params.dbsnp && !params.known_indels) {
     if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration', 'recalibrate'] && (!params.skip_tools || (params.skip_tools && !params.skip_tools.split(',').contains('baserecalibrator')))) {
-        error("Base quality score recalibration requires at least one resource file.\nPlease provide at least one of `--dbsnp` or `--known_indels`\nYou can skip this step in the workflow by adding `--skip_tools baserecalibrator` to the command.")
+        error("Base quality score recalibration requires at least one resource file. Please provide at least one of `--dbsnp` or `--known_indels`\nYou can skip this step in the workflow by adding `--skip_tools baserecalibrator` to the command.")
     }
     if (params.tools && params.tools.split(',').contains('haplotypecaller')) {
-        log.warn "If Haplotypecaller is specified, without `--dbsnp` or `--known_indels no filtering will be done.\nFor filtering, please provide at least one of `--dbsnp` or `--known_indels`.\nFor more information see FilterVariantTranches (single-sample, default): https://gatk.broadinstitute.org/hc/en-us/articles/5358928898971-FilterVariantTranches\nFor more information see VariantRecalibration (--joint_germline): https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator\nFor more information on GATK Best practice germline variant calling: https://gatk.broadinstitute.org/hc/en-us/articles/360035535932-Germline-short-variant-discovery-SNPs-Indels-"
+        log.warn "If Haplotypecaller is specified, without `--dbsnp` or `--known_indels no filtering will be done. For filtering, please provide at least one of `--dbsnp` or `--known_indels`.\nFor more information see FilterVariantTranches (single-sample, default): https://gatk.broadinstitute.org/hc/en-us/articles/5358928898971-FilterVariantTranches\nFor more information see VariantRecalibration (--joint_germline): https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator\nFor more information on GATK Best practice germline variant calling: https://gatk.broadinstitute.org/hc/en-us/articles/360035535932-Germline-short-variant-discovery-SNPs-Indels-"
     }
 }
 if (params.joint_germline && (!params.tools || !params.tools.split(',').contains('haplotypecaller'))) {
-    error("Haplotypecaller should be specified as one of the tools when doing joint germline variant calling.\nIt can be specified by adding `--tools haplotypecaller` to the nextflow command.")
+    error("The Haplotypecaller should be specified as one of the tools when doing joint germline variant calling. (The Haplotypecaller could be specified by adding `--tools haplotypecaller` to the nextflow command.) ")
 }
 if (params.joint_germline && (!params.dbsnp || !params.known_indels || !params.known_snps || params.no_intervals)) {
     log.warn "If Haplotypecaller is specified, without `--dbsnp`, `--known_snps`, `--known_indels` or the associated resource labels (ie `known_snps_vqsr`), no variant recalibration will be done. For recalibration you must provide all of these resources.\nFor more information see VariantRecalibration: https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator \nJoint germline variant calling also requires intervals in order to genotype the samples. As a result, if `--no_intervals` is set to `true` the joint germline variant calling will not be performed."
@@ -135,20 +135,21 @@ if (params.tools && (params.tools.split(',').contains('ascat') || params.tools.s
 */
 
 // Initialize file channels based on params, defined in the params.genomes[params.genome] scope
-ascat_alleles      = params.ascat_alleles      ? Channel.fromPath(params.ascat_alleles).first()     : Channel.empty()
-ascat_loci         = params.ascat_loci         ? Channel.fromPath(params.ascat_loci).first()        : Channel.empty()
-ascat_loci_gc      = params.ascat_loci_gc      ? Channel.fromPath(params.ascat_loci_gc).first()     : Channel.value([])
-ascat_loci_rt      = params.ascat_loci_rt      ? Channel.fromPath(params.ascat_loci_rt).first()     : Channel.value([])
-cf_chrom_len       = params.cf_chrom_len       ? Channel.fromPath(params.cf_chrom_len).first()      : []
-chr_dir            = params.chr_dir            ? Channel.fromPath(params.chr_dir).first()           : Channel.value([])
-dbsnp              = params.dbsnp              ? Channel.fromPath(params.dbsnp).collect()           : Channel.value([])
-fasta              = params.fasta              ? Channel.fromPath(params.fasta).first()             : Channel.empty()
-fasta_fai          = params.fasta_fai          ? Channel.fromPath(params.fasta_fai).first()         : Channel.empty()
-germline_resource  = params.germline_resource  ? Channel.fromPath(params.germline_resource).first() : Channel.value([]) // Mutec2 does not require a germline resource, so set to optional input
-known_indels       = params.known_indels       ? Channel.fromPath(params.known_indels).collect()    : Channel.value([])
-known_snps         = params.known_snps         ? Channel.fromPath(params.known_snps).collect()      : Channel.value([])
-mappability        = params.mappability        ? Channel.fromPath(params.mappability).first()       : Channel.value([])
-pon                = params.pon                ? Channel.fromPath(params.pon).first()               : Channel.value([]) // PON is optional for Mutect2 (but highly recommended)
+ascat_alleles      = params.ascat_alleles      ? Channel.fromPath(params.ascat_alleles).collect()     : Channel.empty()
+ascat_loci         = params.ascat_loci         ? Channel.fromPath(params.ascat_loci).collect()        : Channel.empty()
+ascat_loci_gc      = params.ascat_loci_gc      ? Channel.fromPath(params.ascat_loci_gc).collect()     : Channel.value([])
+ascat_loci_rt      = params.ascat_loci_rt      ? Channel.fromPath(params.ascat_loci_rt).collect()     : Channel.value([])
+cf_chrom_len       = params.cf_chrom_len       ? Channel.fromPath(params.cf_chrom_len).collect()      : []
+chr_dir            = params.chr_dir            ? Channel.fromPath(params.chr_dir).collect()           : Channel.value([])
+dbsnp              = params.dbsnp              ? Channel.fromPath(params.dbsnp).collect()             : Channel.value([])
+fasta              = params.fasta              ? Channel.fromPath(params.fasta).first()               : Channel.empty()
+fasta_fai          = params.fasta_fai          ? Channel.fromPath(params.fasta_fai).collect()         : Channel.empty()
+germline_resource  = params.germline_resource  ? Channel.fromPath(params.germline_resource).collect() : Channel.value([]) // Mutec2 does not require a germline resource, so set to optional input
+known_indels       = params.known_indels       ? Channel.fromPath(params.known_indels).collect()      : Channel.value([])
+known_snps         = params.known_snps         ? Channel.fromPath(params.known_snps).collect()        : Channel.value([])
+known_snps         = params.known_snps         ? Channel.fromPath(params.known_snps).collect()        : Channel.value([])
+mappability        = params.mappability        ? Channel.fromPath(params.mappability).collect()       : Channel.value([])
+pon                = params.pon                ? Channel.fromPath(params.pon).collect()               : Channel.value([]) // PON is optional for Mutect2 (but highly recommended)
 
 // Initialize value channels based on params, defined in the params.genomes[params.genome] scope
 ascat_genome       = params.ascat_genome       ?: Channel.empty()
@@ -161,8 +162,8 @@ vep_genome         = params.vep_genome         ?: Channel.empty()
 vep_species        = params.vep_species        ?: Channel.empty()
 
 // Initialize files channels based on params, not defined within the params.genomes[params.genome] scope
-snpeff_cache       = params.snpeff_cache       ? Channel.fromPath(params.snpeff_cache).first()      : []
-vep_cache          = params.vep_cache          ? Channel.fromPath(params.vep_cache).first()         : []
+snpeff_cache       = params.snpeff_cache       ? Channel.fromPath(params.snpeff_cache).collect()      : []
+vep_cache          = params.vep_cache          ? Channel.fromPath(params.vep_cache).collect()         : []
 
 vep_extra_files = []
 
@@ -301,7 +302,7 @@ workflow SAREK {
     // Download cache if needed
     // Assuming that if the cache is provided, the user has already downloaded it
     ensemblvep_info = params.vep_cache ? [] : Channel.of([ [ id:"${params.vep_genome}.${params.vep_cache_version}" ], params.vep_genome, params.vep_species, params.vep_cache_version ])
-    snpeff_info = params.snpeff_cache ? [] : Channel.of([ [ id:params.snpeff_db ], params.snpeff_genome, params.snpeff_db.minus("${params.snpeff_genome}.") ])
+    snpeff_info = params.snpeff_cache ? [] : Channel.of([ [ id:"${params.snpeff_genome}.${params.snpeff_db}" ], params.snpeff_genome, params.snpeff_db ])
 
     if (params.download_cache) {
         PREPARE_CACHE(ensemblvep_info, snpeff_info)
@@ -328,8 +329,8 @@ workflow SAREK {
 
     // Gather built indices or get them from the params
     // Built from the fasta file:
-    dict                   = params.dict                    ? Channel.fromPath(params.dict).first()        : PREPARE_GENOME.out.dict
-    fasta_fai              = params.fasta_fai               ? Channel.fromPath(params.fasta_fai).first()   : PREPARE_GENOME.out.fasta_fai
+    dict                   = params.dict                    ? Channel.fromPath(params.dict).collect()      : PREPARE_GENOME.out.dict
+    fasta_fai              = params.fasta_fai               ? Channel.fromPath(params.fasta_fai).collect() : PREPARE_GENOME.out.fasta_fai
 
     bwa                    = params.bwa                     ? Channel.fromPath(params.bwa).collect()       : PREPARE_GENOME.out.bwa
     bwamem2                = params.bwamem2                 ? Channel.fromPath(params.bwamem2).collect()   : PREPARE_GENOME.out.bwamem2
@@ -369,8 +370,8 @@ workflow SAREK {
 
     // Intervals for speed up preprocessing/variant calling by spread/gather
     // [interval.bed] all intervals in one file
-    intervals_bed_combined        = params.no_intervals ? Channel.value([]) : PREPARE_INTERVALS.out.intervals_bed_combined
-    intervals_bed_gz_tbi_combined = params.no_intervals ? Channel.value([]) : PREPARE_INTERVALS.out.intervals_bed_gz_tbi_combined
+    intervals_bed_combined             = params.no_intervals ? Channel.value([])      : PREPARE_INTERVALS.out.intervals_bed_combined
+    intervals_bed_gz_tbi_combined      = params.no_intervals ? Channel.value([])      : PREPARE_INTERVALS.out.intervals_bed_gz_tbi_combined
 
     // For QC during preprocessing, we don't need any intervals (MOSDEPTH doesn't take them for WGS)
     intervals_for_preprocessing = params.wes ?
@@ -507,7 +508,7 @@ workflow SAREK {
         // reads will be sorted
         reads_for_alignment = reads_for_alignment.map{ meta, reads ->
             // Update meta.id to meta.sample no multiple lanes or splitted fastqs
-            if (meta.size * meta.num_lanes == 1) [ meta - meta.subMap('id') + [ id:meta.sample ], reads ]
+            if (meta.size * meta.num_lanes == 1) [ meta + [ id:meta.sample ], reads ]
             else [ meta, reads ]
         }
 
@@ -526,7 +527,7 @@ workflow SAREK {
 
             // Use groupKey to make sure that the correct group can advance as soon as it is complete
             // and not stall the workflow until all reads from all channels are mapped
-            [ groupKey( meta - meta.subMap('data_type', 'id', 'num_lanes', 'read_group', 'size') + [ data_type:'bam', id:meta.sample ], (meta.num_lanes ?: 1) * (meta.size ?: 1) ), bam ]
+            [ groupKey( meta - meta.subMap('num_lanes', 'read_group', 'size') + [ data_type:'bam', id:meta.sample ], (meta.num_lanes ?: 1) * (meta.size ?: 1) ), bam ]
         }.groupTuple()
 
         // gatk4 markduplicates can handle multiple bams as input, so no need to merge/index here
@@ -628,7 +629,7 @@ workflow SAREK {
         // - crams from input step markduplicates --> from the converted ones only?
         ch_md_cram_for_restart = Channel.empty().mix(cram_markduplicates_no_spark, cram_markduplicates_spark)
             // Make sure correct data types are carried through
-            .map{ meta, cram, crai -> [ meta - meta.subMap('data_type') + [data_type: "cram"], cram, crai ] }
+            .map{ meta, cram, crai -> [ meta + [data_type: "cram"], cram, crai ] }
 
         // If params.save_output_as_bam, then convert CRAM files to BAM
         CRAM_TO_BAM(ch_md_cram_for_restart, fasta, fasta_fai)
@@ -656,7 +657,7 @@ workflow SAREK {
 
             ch_cram_from_bam = BAM_TO_CRAM.out.alignment_index
                 // Make sure correct data types are carried through
-                .map{ meta, cram, crai -> [ meta - meta.subMap('data_type') + [data_type: "cram"], cram, crai ] }
+                .map{ meta, cram, crai -> [ meta + [data_type: "cram"], cram, crai ] }
 
             ch_cram_for_bam_baserecalibrator = Channel.empty().mix(ch_cram_from_bam, input_prepare_recal_convert.cram)
             ch_md_cram_for_restart = ch_cram_from_bam
@@ -671,7 +672,7 @@ workflow SAREK {
             // ch_md_cram_for_restart.view() // contains md.cram.crai
             ch_cram_for_bam_baserecalibrator = Channel.empty().mix(ch_md_cram_for_restart, cram_skip_markduplicates )
                 // Make sure correct data types are carried through
-                .map{ meta, cram, crai -> [ meta - meta.subMap('data_type') + [data_type: "cram"], cram, crai ] }
+                .map{ meta, cram, crai -> [ meta + [data_type: "cram"], cram, crai ] }
 
         }
 
@@ -752,7 +753,7 @@ workflow SAREK {
                 BAM_TO_CRAM.out.alignment_index.join(input_only_table, failOnDuplicate: true, failOnMismatch: true),
                 input_recal_convert.cram)
                 // Join together converted cram with input tables
-                .map{ meta, cram, crai, table -> [ meta - meta.subMap('data_type') + [data_type: "cram"], cram, crai, table ]}
+                .map{ meta, cram, crai, table -> [ meta + [data_type: "cram"], cram, crai, table ]}
         }
 
         if (!(params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'))) {
@@ -1037,7 +1038,7 @@ workflow SAREK {
                 vcf_to_annotate,
                 vep_fasta,
                 params.tools,
-                snpeff_db,
+                params.snpeff_genome ? "${params.snpeff_genome}.${params.snpeff_db}" : "${params.genome}.${params.snpeff_db}",
                 snpeff_cache,
                 vep_genome,
                 vep_species,
