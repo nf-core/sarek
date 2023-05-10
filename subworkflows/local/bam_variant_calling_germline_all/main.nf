@@ -186,7 +186,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
 
         if (joint_germline) {  // TO-DO: Change this section so that it uses sentieon's Genotyper!
             BAM_JOINT_CALLING_GERMLINE_SENTIEON(
-                BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER.out.genotype_intervals,
+                BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER.out.genotype_intervals_and_crams,
                 fasta,
                 fasta_fai,
                 dict,
