@@ -6,11 +6,11 @@ include { GATK4_MUTECT2                   as MUTECT2_MS                  } from 
 include { GATK4_MERGEVCFS                 as MERGE_MUTECT2               } from '../../../modules/nf-core/gatk4/mergevcfs/main'
 include { GATK4_MERGEMUTECTSTATS          as MERGEMUTECTSTATS            } from '../../../modules/nf-core/gatk4/mergemutectstats/main'
 include { GATK4_LEARNREADORIENTATIONMODEL as LEARNREADORIENTATIONMODEL   } from '../../../modules/nf-core/gatk4/learnreadorientationmodel/main'
-include { GATK4_GATHERPILEUPSUMMARIES     as GATHERPILEUPSUMMARIES_NORMAL} from '../../../modules/nf-core/gatk4/gatherpileupsummaries/main'
-include { GATK4_GATHERPILEUPSUMMARIES     as GATHERPILEUPSUMMARIES_TUMOR } from '../../../modules/nf-core/gatk4/gatherpileupsummaries/main'
-include { GATK4_GETPILEUPSUMMARIES        as GETPILEUPSUMMARIES_NORMAL   } from '../../../modules/nf-core/gatk4/getpileupsummaries/main'
-include { GATK4_GETPILEUPSUMMARIES        as GETPILEUPSUMMARIES_TUMOR    } from '../../../modules/nf-core/gatk4/getpileupsummaries/main'
-include { GATK4_CALCULATECONTAMINATION    as CALCULATECONTAMINATION      } from '../../../modules/nf-core/gatk4/calculatecontamination/main'
+include { GATK4_GATHERPILEUPSUMMARIES     as GATHERPILEUPSUMMARIES_MS_NORMAL} from '../../../modules/nf-core/gatk4/gatherpileupsummaries/main'
+include { GATK4_GATHERPILEUPSUMMARIES     as GATHERPILEUPSUMMARIES_MS_TUMOR } from '../../../modules/nf-core/gatk4/gatherpileupsummaries/main'
+include { GATK4_GETPILEUPSUMMARIES        as GETPILEUPSUMMARIES_MS_NORMAL   } from '../../../modules/nf-core/gatk4/getpileupsummaries/main'
+include { GATK4_GETPILEUPSUMMARIES        as GETPILEUPSUMMARIES_MS_TUMOR    } from '../../../modules/nf-core/gatk4/getpileupsummaries/main'
+include { GATK4_CALCULATECONTAMINATION    as CALCULATECONTAMINATION_MS   } from '../../../modules/nf-core/gatk4/calculatecontamination/main'
 include { GATK4_FILTERMUTECTCALLS         as FILTERMUTECTCALLS           } from '../../../modules/nf-core/gatk4/filtermutectcalls/main'
 
 
@@ -102,7 +102,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MS {
     MERGEMUTECTSTATS(
         mutect2_stats_branch.intervals
         .map{ meta, stats ->
-
             new_meta = [id:meta.patient,
                         normal_id:      meta.normal_id,
                         num_intervals:  meta.num_intervals,
@@ -125,7 +124,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MS {
             .map{ meta, f1r2 ->
 
                 new_meta = [
-                            id:meta.patient,
+                            id:             meta.patient,
                             normal_id:      meta.normal_id,
                             num_intervals:  meta.num_intervals,
                             patient:        meta.patient,
@@ -138,8 +137,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MS {
     )
     
     //
-    //Generate pileup summary tables using getepileupsummaries. tumor sample should always be passed in as the first input and input list entries of ch_mutect2_in,
-    //to ensure correct file order for calculatecontamination.
+    // Generate pileup summary tables using getepileupsummaries. tumor sample should always be passed in as the first input and input list entries of ch_mutect2_in,
+    // to ensure correct file order for calculatecontamination.
     cram_pair_for_pileup = input.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals ->
                         [meta, [normal_cram, tumor_cram], [normal_crai, tumor_crai], intervals]
                     }
@@ -147,92 +146,37 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MS {
         tumor: [ meta, input_list[1], input_index_list[1], intervals ]
         normal: [ meta, input_list[0], input_index_list[0], intervals ]
     }
-
+    
     germline_resource_pileup = germline_resource_tbi ? germline_resource : Channel.empty()
     germline_resource_pileup_tbi = germline_resource_tbi ?: Channel.empty()
-    GETPILEUPSUMMARIES_TUMOR ( pileup.tumor.map{
-                                    meta, cram, crai, intervals ->
+    // Prepare input channel for tumor pileup summaries
+    ch_pileup_in_tumor = pileup.tumor.map{meta, cram, crai, intervals ->
+                                            [[
+                                                id:             meta.tumor_id,
+                                                num_intervals:  meta.num_intervals,
+                                                patient:        meta.patient,
+                                                sex:            meta.sex,
+                                                normal_id:      meta.normal_id
+                                            ],
+                                                cram, crai, intervals]
+                                        }.unique()
 
-                                    [[
-                                        id:             meta.tumor_id,
-                                        normal_id:      meta.normal_id,
-                                        num_intervals:  meta.num_intervals,
-                                        patient:        meta.patient,
-                                        sex:            meta.sex,
-                                        tumor_id:       meta.tumor_id,
-                                    ],
-                                        cram, crai, intervals]
-                                },
-                                fasta, fai, dict, germline_resource_pileup, germline_resource_pileup_tbi )
-
-    GETPILEUPSUMMARIES_NORMAL ( pileup.normal.map{
-                                    meta, cram, crai, intervals ->
-
-                                    [[
-                                        id:             meta.normal_id,
-                                        normal_id:      meta.normal_id,
-                                        num_intervals:  meta.num_intervals,
-                                        patient:        meta.patient,
-                                        sex:            meta.sex,
-                                        tumor_id:       meta.tumor_id,
-                                    ],
-                                        cram, crai, intervals]
-                                },
-                                fasta, fai, dict, germline_resource_pileup, germline_resource_pileup_tbi )
-
-    GETPILEUPSUMMARIES_NORMAL.out.table.branch{
-            intervals:    it[0].num_intervals > 1
-            no_intervals: it[0].num_intervals <= 1
-        }set{ pileup_table_normal }
-
-    GETPILEUPSUMMARIES_TUMOR.out.table.branch{
+    GETPILEUPSUMMARIES_MS_TUMOR ( ch_pileup_in_tumor, fasta, fai, dict, germline_resource_pileup, germline_resource_pileup_tbi )
+    
+    GETPILEUPSUMMARIES_MS_TUMOR.out.table.branch{
             intervals:    it[0].num_intervals > 1
             no_intervals: it[0].num_intervals <= 1
         }set{ pileup_table_tumor }
 
-    //Merge Pileup Summaries
-    GATHERPILEUPSUMMARIES_NORMAL(
-        GETPILEUPSUMMARIES_NORMAL.out.table
-        .map{ meta, table ->
-
-            new_meta = [
-                            id:             meta.normal_id,
-                            normal_id:      meta.normal_id,
-                            num_intervals:  meta.num_intervals,
-                            patient:        meta.patient,
-                            sex:            meta.sex,
-                            tumor_id:       meta.tumor_id,
-                        ]
-
-            [groupKey(new_meta, meta.num_intervals), table]
-        }.groupTuple(),
-        dict)
-
-    gather_table_normal = Channel.empty().mix(
-        GATHERPILEUPSUMMARIES_NORMAL.out.table,
-        pileup_table_normal.no_intervals).map{ meta, table ->
-
-            new_meta = [
-                            id:             meta.tumor_id + "_vs_" + meta.normal_id,
-                            normal_id:      meta.normal_id,
-                            num_intervals:  meta.num_intervals,
-                            patient:        meta.patient,
-                            sex:            meta.sex,
-                            tumor_id:       meta.tumor_id,
-                        ]
-            [new_meta, table]
-        }
-
-    GATHERPILEUPSUMMARIES_TUMOR(
-        GETPILEUPSUMMARIES_TUMOR.out.table
+    GATHERPILEUPSUMMARIES_MS_TUMOR(
+        GETPILEUPSUMMARIES_MS_TUMOR.out.table
         .map{ meta, table ->
             new_meta = [
-                            id:             meta.tumor_id,
-                            normal_id:      meta.normal_id,
+                            id:             meta.id,
                             num_intervals:  meta.num_intervals,
                             patient:        meta.patient,
                             sex:            meta.sex,
-                            tumor_id:       meta.tumor_id,
+                            normal_id:      meta.normal_id
                         ]
 
             [groupKey(new_meta, meta.num_intervals), table]
@@ -240,36 +184,95 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MS {
         dict)
 
     gather_table_tumor = Channel.empty().mix(
-        GATHERPILEUPSUMMARIES_TUMOR.out.table,
+        GATHERPILEUPSUMMARIES_MS_TUMOR.out.table,
         pileup_table_tumor.no_intervals).map{ meta, table ->
             new_meta = [
-                        id:             meta.tumor_id + "_vs_" + meta.normal_id,
-                        normal_id:      meta.normal_id,
+                        id:             meta.id,
                         num_intervals:  meta.num_intervals,
                         patient:        meta.patient,
                         sex:            meta.sex,
-                        tumor_id:       meta.tumor_id,
+                        normal_id:      meta.normal_id
                     ]
 
             [new_meta, table]
         }
 
-    //
-    //Contamination and segmentation tables created using calculatecontamination on the pileup summary table.
-    //
-    CALCULATECONTAMINATION ( gather_table_tumor.join(gather_table_normal) )
+    // Prepare input channel for normal pileup summaries.
+    // Remember, the input channel contains tumor-normal pairs, so there will be multiple copies of the normal sample for each tumor for a given patient.
+    // Therefore, we use unique function to generate normal pileup summaries once for each patient for better efficiency.
+    ch_pileup_in_normal = pileup.normal.map{
+                                    meta, cram, crai, intervals ->
 
-    ch_contamination_out_seg = CALCULATECONTAMINATION.out.segmentation.map{ meta, seg -> [[id: meta.patient, patient: meta.patient, normal_id: meta.normal_id, sex: meta.sex, num_intervals: meta.num_intervals], seg]}.groupTuple()
-    ch_contamination_out_cont = CALCULATECONTAMINATION.out.contamination.map{ meta, cont -> [[id: meta.patient, patient: meta.patient, normal_id: meta.normal_id, sex: meta.sex, num_intervals: meta.num_intervals], cont]}.groupTuple()
-    
+                                    [[
+                                        id:             meta.normal_id,
+                                        num_intervals:  meta.num_intervals,
+                                        patient:        meta.patient,
+                                        sex:            meta.sex,
+                                        normal_id:      meta.normal_id
+                                    ],
+                                        cram, crai, intervals]
+                                }.unique()
+
+    GETPILEUPSUMMARIES_MS_NORMAL ( ch_pileup_in_normal, fasta, fai, dict, germline_resource_pileup, germline_resource_pileup_tbi )
+
+    GETPILEUPSUMMARIES_MS_NORMAL.out.table.branch{
+            intervals:    it[0].num_intervals > 1
+            no_intervals: it[0].num_intervals <= 1
+        }set{ pileup_table_normal }
+
+    GATHERPILEUPSUMMARIES_MS_NORMAL(
+        GETPILEUPSUMMARIES_MS_NORMAL.out.table
+        .map{ meta, table ->
+
+            new_meta = [
+                            id:             meta.id,
+                            num_intervals:  meta.num_intervals,
+                            patient:        meta.patient,
+                            sex:            meta.sex,
+                            normal_id:      meta.normal_id
+                        ]
+
+            [groupKey(new_meta, meta.num_intervals), table]
+        }.groupTuple(),
+        dict)
+
+    gather_table_normal = Channel.empty().mix(
+        GATHERPILEUPSUMMARIES_MS_NORMAL.out.table,
+        pileup_table_normal.no_intervals).map{ meta, table ->
+
+            new_meta = [
+                            id:             meta.id,
+                            num_intervals:  meta.num_intervals,
+                            patient:        meta.patient,
+                            sex:            meta.sex,
+                            normal_id:      meta.normal_id
+                        ]
+            [new_meta, table]
+        }
+
+    //
+    // Contamination and segmentation tables created using calculatecontamination on the pileup summary table.
+    // Do some channel magic to generate tumor-normal pairs again.
+    // This is necessary because we generated one normal pileup summary for each patient but we need run calculate contamination for each tumor-normal pair.
+    ch_tumor_pileup_tables = gather_table_tumor.map{meta, table -> [[id: meta.patient, patient: meta.patient, normal_id: meta.normal_id, sex: meta.sex, num_intervals: meta.num_intervals], meta.id, table]}
+    ch_normal_pileup_tables = gather_table_normal.map{meta, table -> [[id: meta.patient, patient: meta.patient, normal_id: meta.normal_id, sex: meta.sex, num_intervals: meta.num_intervals], meta.id, table]}
+    ch_calculatecontamination_in_tables = ch_tumor_pileup_tables.combine(ch_normal_pileup_tables, by:0).map{meta, tumor_id, tumor_table, normal_id, normal_table -> 
+                                                                                                            new_meta = [ id: tumor_id + "_vs_" + normal_id, patient: meta.patient, normal_id: meta.normal_id, sex: meta.sex, num_intervals: meta.num_intervals] 
+                                                                                                            [new_meta, tumor_table, normal_table]}
+
+    CALCULATECONTAMINATION_MS( ch_calculatecontamination_in_tables)
+
+    ch_contamination_out_seg = CALCULATECONTAMINATION_MS.out.segmentation.map{ meta, seg -> [[id: meta.patient, normal_id: meta.normal_id, num_intervals: meta.num_intervals, patient: meta.patient, sex: meta.sex], seg]}.groupTuple()
+    ch_contamination_out_cont = CALCULATECONTAMINATION_MS.out.contamination.map{ meta, cont -> [[id: meta.patient, normal_id: meta.normal_id, num_intervals: meta.num_intervals, patient: meta.patient, sex: meta.sex], cont]}.groupTuple()
     //
     //Mutect2 calls filtered by filtermutectcalls using the artifactpriors, contamination and segmentation tables.
     //
     ch_filtermutect    = mutect2_vcf.join(mutect2_tbi)
                                     .join(mutect2_stats)
                                     .join(LEARNREADORIENTATIONMODEL.out.artifactprior)
-                                    .join(ch_contamination_out_seg)
-                                    .join(ch_contamination_out_cont)
+                                    .join(ch_contamination_out_seg, failOnMismatch:true)
+                                    .join(ch_contamination_out_cont, failOnMismatch:true)
+
     ch_filtermutect_in = ch_filtermutect.map{ meta, vcf, tbi, stats, orientation, seg, cont -> [meta, vcf, tbi, stats, orientation, seg, cont, []] }
     FILTERMUTECTCALLS ( ch_filtermutect_in, fasta, fai, dict)
 
@@ -281,11 +284,11 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MS {
     ch_versions = ch_versions.mix(MERGE_MUTECT2.out.versions)
     ch_versions = ch_versions.mix(MERGEMUTECTSTATS.out.versions)
     ch_versions = ch_versions.mix(LEARNREADORIENTATIONMODEL.out.versions)
-    ch_versions = ch_versions.mix(GETPILEUPSUMMARIES_NORMAL.out.versions)
-    ch_versions = ch_versions.mix(GETPILEUPSUMMARIES_TUMOR.out.versions)
-    ch_versions = ch_versions.mix(GATHERPILEUPSUMMARIES_NORMAL.out.versions)
-    ch_versions = ch_versions.mix(GATHERPILEUPSUMMARIES_TUMOR.out.versions)
-    ch_versions = ch_versions.mix(CALCULATECONTAMINATION.out.versions)
+    ch_versions = ch_versions.mix(GETPILEUPSUMMARIES_MS_NORMAL.out.versions)
+    ch_versions = ch_versions.mix(GETPILEUPSUMMARIES_MS_TUMOR.out.versions)
+    ch_versions = ch_versions.mix(GATHERPILEUPSUMMARIES_MS_NORMAL.out.versions)
+    ch_versions = ch_versions.mix(GATHERPILEUPSUMMARIES_MS_TUMOR.out.versions)
+    ch_versions = ch_versions.mix(CALCULATECONTAMINATION_MS.out.versions)
     ch_versions = ch_versions.mix(FILTERMUTECTCALLS.out.versions)
 
     emit:
@@ -297,8 +300,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MS {
     pileup_table_tumor     = gather_table_tumor                             // channel: [ val(meta), [ table_tumor ] ]
     pileup_table_normal    = gather_table_normal                            // channel: [ val(meta), [ table_normal ] ]
 
-    contamination_table    = CALCULATECONTAMINATION.out.contamination       // channel: [ val(meta), [ contamination ] ]
-    segmentation_table     = CALCULATECONTAMINATION.out.segmentation        // channel: [ val(meta), [ segmentation ] ]
+    contamination_table    = CALCULATECONTAMINATION_MS.out.contamination       // channel: [ val(meta), [ contamination ] ]
+    segmentation_table     = CALCULATECONTAMINATION_MS.out.segmentation        // channel: [ val(meta), [ segmentation ] ]
 
     filtered_vcf           = mutect2_vcf_filtered                           // channel: [ val(meta), [ vcf ] ]
     filtered_tbi           = mutect2_vcf_filtered_tbi                       // channel: [ val(meta), [ tbi ] ]
