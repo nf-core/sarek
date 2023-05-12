@@ -11,6 +11,8 @@ include { BAM_VARIANT_CALLING_SINGLE_TIDDIT           } from '../bam_variant_cal
 include { BAM_VARIANT_CALLING_TUMOR_ONLY_CONTROLFREEC } from '../bam_variant_calling_tumor_only_controlfreec/main'
 include { BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA        } from '../bam_variant_calling_tumor_only_manta/main'
 include { BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2      } from '../bam_variant_calling_tumor_only_mutect2/main'
+// Variant calling for patients with multiple tumor samples 
+include { BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2_MS   } from '../bam_variant_calling_tumor_only_mutect2_ms/main'
 
 workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     take:
@@ -42,6 +44,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     freebayes_vcf       = Channel.empty()
     manta_vcf           = Channel.empty()
     mutect2_vcf         = Channel.empty()
+    mutect2_ms_vcf      = Channel.empty()
     strelka_vcf         = Channel.empty()
     tiddit_vcf          = Channel.empty()
 
@@ -168,6 +171,21 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2.out.versions)
     }
 
+    if (tools.split(',').contains('mutect2_multi_sample')) {
+        BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2_MS(
+            cram_recalibrated_intervals,
+            fasta,
+            fasta_fai,
+            dict,
+            germline_resource,
+            germline_resource_tbi,
+            panel_of_normals,
+            panel_of_normals_tbi
+        )
+        mutect2_ms_vcf = BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2_MS.out.filtered_vcf
+        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2_MS.out.versions)
+    }
+
     if (tools.split(',').contains('manta')){
 
         BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA(
@@ -212,6 +230,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     freebayes_vcf
     manta_vcf
     mutect2_vcf
+    mutect2_ms_vcf
     strelka_vcf
     tiddit_vcf
 

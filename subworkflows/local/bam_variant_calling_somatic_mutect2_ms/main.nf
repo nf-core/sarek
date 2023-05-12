@@ -300,8 +300,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MS {
     pileup_table_tumor     = gather_table_tumor                             // channel: [ val(meta), [ table_tumor ] ]
     pileup_table_normal    = gather_table_normal                            // channel: [ val(meta), [ table_normal ] ]
 
-    contamination_table    = CALCULATECONTAMINATION_MS.out.contamination       // channel: [ val(meta), [ contamination ] ]
-    segmentation_table     = CALCULATECONTAMINATION_MS.out.segmentation        // channel: [ val(meta), [ segmentation ] ]
+    contamination_table    = CALCULATECONTAMINATION_MS.out.contamination    // channel: [ val(meta), [ contamination ] ]
+    segmentation_table     = CALCULATECONTAMINATION_MS.out.segmentation     // channel: [ val(meta), [ segmentation ] ]
 
     filtered_vcf           = mutect2_vcf_filtered                           // channel: [ val(meta), [ vcf ] ]
     filtered_tbi           = mutect2_vcf_filtered_tbi                       // channel: [ val(meta), [ tbi ] ]

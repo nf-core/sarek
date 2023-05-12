@@ -1,15 +1,13 @@
-name: bam_variant_calling_somatic_mutect2_ms
+name: bam_variant_calling_tumor_only_mutect2_ms
 description: |
-  Perform variant calling for patients with single/multiple tumor samples with matched normal sample using mutect2 multi sample mode.
-  f1r2 output of mutect2 is run through learnreadorientationmodel to get the artifact priors.
-  Run the input bam files through getpileupsummarries and then calculatecontamination to get the contamination and segmentation tables.
-  Filter the mutect2 output vcf using filtermutectcalls, artifact priors and the contamination & segmentation tables for additional filtering.
+  Perform variant calling for patients with single/multiple tumor samples without matched normal sample using mutect2 multi sample mode.
+  Run the input bam file through getpileupsummarries and then calculatecontaminationto get the contamination and segmentation tables.
+  Filter the mutect2 output vcf using filtermutectcalls and the contamination & segmentation tables for additional filtering.
 keywords:
   - gatk4
   - mutect2
   - mutect2_multi_sample
   - mutect2_multi_tumor
-  - learnreadorientationmodel
   - getpileupsummaries
   - calculatecontamination
   - filtermutectcalls
@@ -29,7 +27,7 @@ input:
   - input:
       type: list
       description: list containing the tumor and normal BAM/CRAM files, indices and intervals
-      pattern: "[ val(meta), normal_cram, normal_crai, tumor_cram, tumor_crai, intervals ]"
+      pattern: "[ val(meta), tumor_cram, tumor_crai, intervals ]"
   - fasta:
       type: file
       description: The reference fasta file
@@ -58,6 +56,10 @@ input:
       type: file
       description: Index for the panel of normals.
       pattern: "*.vcf.gz.tbi"
+  - interval_file:
+      type: file
+      description: File containing intervals.
+      pattern: "*.interval_list"
 output:
   - versions:
       type: file
@@ -75,34 +77,26 @@ output:
       type: file
       description: Stats files for the mutect2 vcf
       pattern: "[ *vcf.gz.stats ]"
-  - artifact_priors:
+  - pileup_table:
       type: file
-      description: file containing artifact-priors to be used by filtermutectcalls.
-      pattern: "*.tar.gz"
-  - pileup_table_tumor:
-      type: file
-      description: File containing the tumor pileup summary table, kept separate as calculatecontamination needs them individually specified.
-      pattern: "*_tumor.pileups.table"
-  - pileup_table_normal:
-      type: file
-      description: File containing the normal pileup summary table, kept separate as calculatecontamination needs them individually specified.
-      pattern: "*_normal.pileups.table"
+      description: File containing the pileup summary table.
+      pattern: "*.pileups.table"
   - contamination_table:
       type: file
-      description: File containing the contamination tables.
+      description: File containing the contamination table.
       pattern: "*.contamination.table"
   - segmentation_table:
       type: file
-      description: Output tables containing segmentation of tumor minor allele fractions.
+      description: Output table containing segmentation of tumor minor allele fractions.
       pattern: "*.segmentation.table"
   - filtered_vcf:
       type: file
       description: file containing filtered mutect2 calls.
-      pattern: "*.filtered.vcf.gz"
+      pattern: "*.vcf.gz"
   - filtered_tbi:
       type: file
       description: tbi file that pairs with filtered vcf.
-      pattern: "*.filtered.vcf.gz.tbi"
+      pattern: "*.vcf.gz.tbi"
   - filtered_stats:
       type: file
       description: file containing statistics of the filtermutectcalls run.
