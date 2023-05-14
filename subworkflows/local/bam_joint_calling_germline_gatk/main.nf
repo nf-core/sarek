@@ -56,8 +56,8 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
     MERGE_GENOTYPEGVCFS(gvcf_to_merge, dict.map{ it -> [ [ id:'dict' ], it ] } )
 
     vqsr_input = MERGE_GENOTYPEGVCFS.out.vcf.join(MERGE_GENOTYPEGVCFS.out.tbi, failOnDuplicate: true)
-    indels_resource_label = known_indels_vqsr.mix(dbsnp_vqsr).collect()
-    snps_resource_label = known_snps_vqsr.mix(dbsnp_vqsr).collect()
+    snps_resource_label = [known_snps_vqsr, dbsnp_vqsr]
+    indels_resource_label = [known_indels_vqsr, dbsnp_vqsr]
 
     // Recalibrate INDELs and SNPs separately
     VARIANTRECALIBRATOR_INDEL(
