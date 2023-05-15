@@ -2,16 +2,16 @@
 // Run GATK mutect2 in multi sample mode, getepileupsummaries, calculatecontamination, learnreadorientationmodel and filtermutectcalls
 //
 
-include { GATK4_MUTECT2                   as MUTECT2_MS                  } from '../../../modules/nf-core/gatk4/mutect2/main'
-include { GATK4_MERGEVCFS                 as MERGE_MUTECT2               } from '../../../modules/nf-core/gatk4/mergevcfs/main'
-include { GATK4_MERGEMUTECTSTATS          as MERGEMUTECTSTATS            } from '../../../modules/nf-core/gatk4/mergemutectstats/main'
-include { GATK4_LEARNREADORIENTATIONMODEL as LEARNREADORIENTATIONMODEL   } from '../../../modules/nf-core/gatk4/learnreadorientationmodel/main'
-include { GATK4_GATHERPILEUPSUMMARIES     as GATHERPILEUPSUMMARIES_MS_NORMAL} from '../../../modules/nf-core/gatk4/gatherpileupsummaries/main'
-include { GATK4_GATHERPILEUPSUMMARIES     as GATHERPILEUPSUMMARIES_MS_TUMOR } from '../../../modules/nf-core/gatk4/gatherpileupsummaries/main'
-include { GATK4_GETPILEUPSUMMARIES        as GETPILEUPSUMMARIES_MS_NORMAL   } from '../../../modules/nf-core/gatk4/getpileupsummaries/main'
-include { GATK4_GETPILEUPSUMMARIES        as GETPILEUPSUMMARIES_MS_TUMOR    } from '../../../modules/nf-core/gatk4/getpileupsummaries/main'
-include { GATK4_CALCULATECONTAMINATION    as CALCULATECONTAMINATION_MS   } from '../../../modules/nf-core/gatk4/calculatecontamination/main'
-include { GATK4_FILTERMUTECTCALLS         as FILTERMUTECTCALLS           } from '../../../modules/nf-core/gatk4/filtermutectcalls/main'
+include { GATK4_MUTECT2                   as MUTECT2_MS                       } from '../../../modules/nf-core/gatk4/mutect2/main'
+include { GATK4_MERGEVCFS                 as MERGE_MUTECT2                    } from '../../../modules/nf-core/gatk4/mergevcfs/main'
+include { GATK4_MERGEMUTECTSTATS          as MERGEMUTECTSTATS                 } from '../../../modules/nf-core/gatk4/mergemutectstats/main'
+include { GATK4_LEARNREADORIENTATIONMODEL as LEARNREADORIENTATIONMODEL        } from '../../../modules/nf-core/gatk4/learnreadorientationmodel/main'
+include { GATK4_GATHERPILEUPSUMMARIES     as GATHERPILEUPSUMMARIES_MS_NORMAL  } from '../../../modules/nf-core/gatk4/gatherpileupsummaries/main'
+include { GATK4_GATHERPILEUPSUMMARIES     as GATHERPILEUPSUMMARIES_MS_TUMOR   } from '../../../modules/nf-core/gatk4/gatherpileupsummaries/main'
+include { GATK4_GETPILEUPSUMMARIES        as GETPILEUPSUMMARIES_MS_NORMAL     } from '../../../modules/nf-core/gatk4/getpileupsummaries/main'
+include { GATK4_GETPILEUPSUMMARIES        as GETPILEUPSUMMARIES_MS_TUMOR      } from '../../../modules/nf-core/gatk4/getpileupsummaries/main'
+include { GATK4_CALCULATECONTAMINATION    as CALCULATECONTAMINATION_MS        } from '../../../modules/nf-core/gatk4/calculatecontamination/main'
+include { GATK4_FILTERMUTECTCALLS         as FILTERMUTECTCALLS                } from '../../../modules/nf-core/gatk4/filtermutectcalls/main'
 
 
 workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MS {
@@ -169,7 +169,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MS {
         }set{ pileup_table_tumor }
 
     GATHERPILEUPSUMMARIES_MS_TUMOR(
-        GETPILEUPSUMMARIES_MS_TUMOR.out.table
+        pileup_table_tumor.intervals
         .map{ meta, table ->
             new_meta = [
                             id:             meta.id,
@@ -221,7 +221,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MS {
         }set{ pileup_table_normal }
 
     GATHERPILEUPSUMMARIES_MS_NORMAL(
-        GETPILEUPSUMMARIES_MS_NORMAL.out.table
+        pileup_table_normal.intervals
         .map{ meta, table ->
 
             new_meta = [
@@ -274,6 +274,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MS {
                                     .join(ch_contamination_out_cont, failOnMismatch:true)
 
     ch_filtermutect_in = ch_filtermutect.map{ meta, vcf, tbi, stats, orientation, seg, cont -> [meta, vcf, tbi, stats, orientation, seg, cont, []] }
+
     FILTERMUTECTCALLS ( ch_filtermutect_in, fasta, fai, dict)
 
     mutect2_vcf_filtered = FILTERMUTECTCALLS.out.vcf.map{ meta, vcf -> [[patient:meta.patient, normal_id:meta.normal_id, sex:meta.sex, num_intervals:meta.num_intervals, variantcaller:"mutect2_ms"], vcf]}

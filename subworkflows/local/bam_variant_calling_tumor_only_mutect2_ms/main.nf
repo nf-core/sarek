@@ -121,7 +121,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2_MS {
 
     //Merge Pileup Summaries
     GATHERPILEUPSUMMARIES_MS(
-        GETPILEUPSUMMARIES_MS.out.table
+        pileup_table_branch.intervals
         .map{ meta, table ->
             new_meta = [
                         id:             meta.sample,
