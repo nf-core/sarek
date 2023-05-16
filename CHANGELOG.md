@@ -58,6 +58,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#988](https://github.com/nf-core/sarek/pull/988) - Updated ascat module to fix seed for reproducibility
 - [#998](https://github.com/nf-core/sarek/pull/998) - Remove parallelization within a sample for `Manta`
 - [#1014](https://github.com/nf-core/sarek/pull/1014) - Fix calls to `ensemblvep` and `snpeff` containers
+- [#1022](https://github.com/nf-core/sarek/pull/1022) - Fix call to variantrecalibrator. (Making sure that dbsnp_vqsr, known_indels_vqsr and known_snps_vqsr are channels, and not strings.)
 
 ### Deprecated
 

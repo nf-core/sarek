@@ -153,9 +153,9 @@ pon                = params.pon                ? Channel.fromPath(params.pon).co
 
 // Initialize value channels based on params, defined in the params.genomes[params.genome] scope
 ascat_genome       = params.ascat_genome       ?: Channel.empty()
-dbsnp_vqsr         = params.dbsnp_vqsr         ?: Channel.empty()
-known_indels_vqsr  = params.known_indels_vqsr  ?: Channel.empty()
-known_snps_vqsr    = params.known_snps_vqsr    ?: Channel.empty()
+dbsnp_vqsr         = params.dbsnp_vqsr         ? Channel.value(params.dbsnp_vqsr) : Channel.empty()
+known_indels_vqsr  = params.known_indels_vqsr  ? Channel.value(params.known_indels_vqsr) : Channel.empty()
+known_snps_vqsr    = params.known_snps_vqsr    ? Channel.value(params.known_snps_vqsr) : Channel.empty()
 snpeff_db          = params.snpeff_db          ?: Channel.empty()
 vep_cache_version  = params.vep_cache_version  ?: Channel.empty()
 vep_genome         = params.vep_genome         ?: Channel.empty()
