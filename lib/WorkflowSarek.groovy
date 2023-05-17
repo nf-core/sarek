@@ -13,9 +13,8 @@ class WorkflowSarek {
     public static void initialise(params, log) {
         genomeExistsError(params, log)
 
-
-        if (!params.fasta) {
-            Nextflow.error("Genome fasta file not specified with e.g. '--fasta genome.fa' or via a detectable config file.")
+        if (!params.fasta && params.step == 'annotate') {
+            Nextflow.error "Genome fasta file not specified with e.g. '--fasta genome.fa' or via a detectable config file."
         }
     }
 
@@ -61,7 +60,9 @@ class WorkflowSarek {
         def description_html = engine.createTemplate(methods_text).make(meta)
 
         return description_html
-    }//
+    }
+
+    //
     // Exit pipeline if incorrect --genome key provided
     //
     private static void genomeExistsError(params, log) {
