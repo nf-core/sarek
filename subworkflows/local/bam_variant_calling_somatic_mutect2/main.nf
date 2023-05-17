@@ -76,10 +76,10 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
     MERGEMUTECTSTATS(stats_to_merge)
 
     // Mix intervals and no_intervals channels together
-    vcf = Channel.empty().mix(MERGE_MUTECT2.out.vcf, vcf_branch.no_intervals)
-    tbi = Channel.empty().mix(MERGE_MUTECT2.out.tbi, tbi_branch.no_intervals)
-    stats = Channel.empty().mix(MERGEMUTECTSTATS.out.stats, stats_branch.no_intervals)
-    f1r2 = Channel.empty().mix(f1r2_to_merge, f1r2_branch.no_intervals)
+    vcf = Channel.empty().mix(MERGE_MUTECT2.out.vcf, vcf_branch.no_intervals).map{ meta, vcf -> [ meta - meta.subMap('num_intervals'), vcf ]}
+    tbi = Channel.empty().mix(MERGE_MUTECT2.out.tbi, tbi_branch.no_intervals).map{ meta, tbi -> [ meta - meta.subMap('num_intervals'), tbi ]}
+    stats = Channel.empty().mix(MERGEMUTECTSTATS.out.stats, stats_branch.no_intervals).map{ meta, stats -> [ meta - meta.subMap('num_intervals'), stats ]}
+    f1r2 = Channel.empty().mix(f1r2_to_merge, f1r2_branch.no_intervals).map{ meta, f1r2 -> [ meta - meta.subMap('num_intervals'), f1r2 ]}
 
     // Generate artifactpriors using learnreadorientationmodel on the f1r2 output of mutect2
     LEARNREADORIENTATIONMODEL(f1r2)
@@ -115,10 +115,10 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
     GATHERPILEUPSUMMARIES_TUMOR(GETPILEUPSUMMARIES_TUMOR.out.table.map{ meta, table -> [ groupKey(meta, meta.num_intervals), table ] }.groupTuple(), dict)
 
     pileup_table_normal = Channel.empty().mix(GATHERPILEUPSUMMARIES_NORMAL.out.table, pileup_table_normal_branch.no_intervals)
-        .map{ meta, table -> [ meta + [ id:meta.tumor_id + "_vs_" + meta.normal_id ], table ] }
+        .map{ meta, table -> [ meta - meta.subMap('num_intervals') + [ id:meta.tumor_id + "_vs_" + meta.normal_id ], table ] }
 
     pileup_table_tumor = Channel.empty().mix(GATHERPILEUPSUMMARIES_TUMOR.out.table, pileup_table_tumor_branch.no_intervals)
-        .map{ meta, table -> [ meta + [ id:meta.tumor_id + "_vs_" + meta.normal_id ], table ] }
+        .map{ meta, table -> [ meta - meta.subMap('num_intervals') + [ id:meta.tumor_id + "_vs_" + meta.normal_id ], table ] }
 
     // Contamination and segmentation tables created using calculatecontamination on the pileup summary table
     CALCULATECONTAMINATION(pileup_table_tumor.join(pileup_table_normal, failOnDuplicate: true, failOnMismatch: true))
