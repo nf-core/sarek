@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://github.com/nf-core/modules/tree/master/subworkflows/yaml-schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
 name: vcf_annotate_ensemblvep
 description: Perform annotation with ensemblvep and bgzip + tabix index the resulting VCF file
 keywords:
