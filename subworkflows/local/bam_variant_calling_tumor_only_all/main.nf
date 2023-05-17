@@ -156,34 +156,35 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     }
 
     if (tools.split(',').contains('mutect2')) {
-        BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2(
-            cram_recalibrated_intervals,
-            fasta,
-            fasta_fai,
-            dict,
-            germline_resource,
-            germline_resource_tbi,
-            panel_of_normals,
-            panel_of_normals_tbi
-        )
+        if (params.mutect2_multi_sample) {
+            BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2_MS(
+                cram_recalibrated_intervals,
+                fasta,
+                fasta_fai,
+                dict,
+                germline_resource,
+                germline_resource_tbi,
+                panel_of_normals,
+                panel_of_normals_tbi
+            )
+            mutect2_ms_vcf = BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2_MS.out.filtered_vcf
+            ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2_MS.out.versions)
+        }
+        else {
+            BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2(
+                cram_recalibrated_intervals,
+                fasta,
+                fasta_fai,
+                dict,
+                germline_resource,
+                germline_resource_tbi,
+                panel_of_normals,
+                panel_of_normals_tbi
+            )
 
-        mutect2_vcf = BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2.out.filtered_vcf
-        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2.out.versions)
-    }
-
-    if (tools.split(',').contains('mutect2_multi_sample')) {
-        BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2_MS(
-            cram_recalibrated_intervals,
-            fasta,
-            fasta_fai,
-            dict,
-            germline_resource,
-            germline_resource_tbi,
-            panel_of_normals,
-            panel_of_normals_tbi
-        )
-        mutect2_ms_vcf = BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2_MS.out.filtered_vcf
-        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2_MS.out.versions)
+            mutect2_vcf = BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2.out.filtered_vcf
+            ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2.out.versions)
+        }
     }
 
     if (tools.split(',').contains('manta')){

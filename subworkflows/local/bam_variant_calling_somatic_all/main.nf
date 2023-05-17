@@ -248,12 +248,10 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     }
 
     if (tools.split(',').contains('mutect2')) {
-        cram_pair_mutect2 = cram_pair_intervals.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals ->
-                                [meta, [normal_cram, tumor_cram], [normal_crai, tumor_crai], intervals]
-                            }
-
-        BAM_VARIANT_CALLING_SOMATIC_MUTECT2(
-            cram_pair_mutect2,
+        // MUTECT2 MULTI-SAMPLE SOMATIC VARIANT CALLING
+        if (params.mutect2_multi_sample) {
+            BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MS(
+            cram_pair_intervals,
             fasta,
             fasta_fai,
             dict,
@@ -261,26 +259,29 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             germline_resource_tbi,
             panel_of_normals,
             panel_of_normals_tbi
-        )
+            )
+            mutect2_ms_vcf = BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MS.out.filtered_vcf
+            ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MS.out.versions)
+        }
+        else {
+            cram_pair_mutect2 = cram_pair_intervals.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals ->
+                                    [meta, [normal_cram, tumor_cram], [normal_crai, tumor_crai], intervals]
+                                }
 
-        mutect2_vcf = BAM_VARIANT_CALLING_SOMATIC_MUTECT2.out.filtered_vcf
-        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_SOMATIC_MUTECT2.out.versions)
-    }
+            BAM_VARIANT_CALLING_SOMATIC_MUTECT2(
+                cram_pair_mutect2,
+                fasta,
+                fasta_fai,
+                dict,
+                germline_resource,
+                germline_resource_tbi,
+                panel_of_normals,
+                panel_of_normals_tbi
+            )
 
-    // MUTECT2 MULTI-SAMPLE SOMATIC VARIANT CALLING
-    if(tools.split(',').contains('mutect2_multi_sample')){
-        BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MS(
-        cram_pair_intervals,
-        fasta,
-        fasta_fai,
-        dict,
-        germline_resource,
-        germline_resource_tbi,
-        panel_of_normals,
-        panel_of_normals_tbi
-        )
-        mutect2_ms_vcf = BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MS.out.mutect2_vcf
-        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MS.out.versions)
+            mutect2_vcf = BAM_VARIANT_CALLING_SOMATIC_MUTECT2.out.filtered_vcf
+            ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_SOMATIC_MUTECT2.out.versions)
+        }
     }
 
     //TIDDIT
