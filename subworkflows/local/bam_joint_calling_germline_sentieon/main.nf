@@ -1,15 +1,13 @@
 //
 // merge samples with genomicsdbimport, perform joint genotyping with genotypeGVCFS
-include { BCFTOOLS_SORT                                          } from '../../../modules/nf-core/bcftools/sort/main'
-include { GATK4_APPLYVQSR as GATK4_APPLYVQSR_INDEL               } from '../../../modules/nf-core/gatk4/applyvqsr/main'
-include { GATK4_APPLYVQSR as GATK4_APPLYVQSR_SNP                 } from '../../../modules/nf-core/gatk4/applyvqsr/main'
-include { GATK4_GENOMICSDBIMPORT                                 } from '../../../modules/nf-core/gatk4/genomicsdbimport/main'
-include { GATK4_GENOTYPEGVCFS                                    } from '../../../modules/nf-core/gatk4/genotypegvcfs/main'
-include { SENTIEON_JOINT_GENOTYPING                              } from '../../../modules/local/sentieon/genotyper/main'
-include { GATK4_MERGEVCFS as MERGE_GENOTYPEGVCFS                 } from '../../../modules/nf-core/gatk4/mergevcfs/main'
-include { GATK4_MERGEVCFS as MERGE_VQSR                          } from '../../../modules/nf-core/gatk4/mergevcfs/main'
-include { GATK4_VARIANTRECALIBRATOR as VARIANTRECALIBRATOR_INDEL } from '../../../modules/nf-core/gatk4/variantrecalibrator/main'
-include { GATK4_VARIANTRECALIBRATOR as VARIANTRECALIBRATOR_SNP   } from '../../../modules/nf-core/gatk4/variantrecalibrator/main'
+include { BCFTOOLS_SORT                                                      } from '../../../modules/nf-core/bcftools/sort/main'
+include { SENTIEON_APPLYVQSR as SENTIEON_APPLYVQSR_INDEL                     } from '../../../modules/local/sentieon/applyvarcal/main'
+include { SENTIEON_APPLYVQSR as SENTIEON_APPLYVQSR_SNP                       } from '../../../modules/local/sentieon/applyvarcal/main'
+include { SENTIEON_JOINT_GENOTYPING                                          } from '../../../modules/local/sentieon/genotyper/main'
+include { GATK4_MERGEVCFS as MERGE_GENOTYPEGVCFS                             } from '../../../modules/nf-core/gatk4/mergevcfs/main'
+include { GATK4_MERGEVCFS as MERGE_VQSR                                      } from '../../../modules/nf-core/gatk4/mergevcfs/main'
+include { SENTIEON_VARIANTRECALIBRATOR as SENTIEON_VARIANTRECALIBRATOR_INDEL } from '../../../modules/local/sentieon/varcal/main'   // Temporary hack
+include { SENTIEON_VARIANTRECALIBRATOR as SENTIEON_VARIANTRECALIBRATOR_SNP   } from '../../../modules/local/sentieon/varcal/main'   // Temporary hack
 
 workflow BAM_JOINT_CALLING_GERMLINE_SENTIEON {
     take:
@@ -30,33 +28,11 @@ workflow BAM_JOINT_CALLING_GERMLINE_SENTIEON {
     main:
     versions = Channel.empty()
 
-    // Map input for GenomicsDBImport
-    // Rename based on num_intervals, group all samples by their interval_name/interval_file and restructure for channel
-    // Group by [0, 3] to avoid a list of metas and make sure that any intervals
-
-    /*
-    gendb_input = input
-        .map{ meta, gvcf, tbi, intervals -> [ [ id:'joint_variant_calling', intervals_name:intervals.simpleName, num_intervals:meta.num_intervals ], gvcf, tbi, intervals ] }
-        .groupTuple(by:[0, 3])
-        .map{ meta, gvcf, tbi, intervals -> [ meta, gvcf, tbi, intervals, [], [] ] }
-    */
-
     sentieon_input = input
         .map{ meta, gvcf, tbi, intervals -> [ [ id:'joint_variant_calling', intervals_name:intervals.simpleName, num_intervals:meta.num_intervals ], gvcf, tbi, intervals ] }
         .groupTuple(by:[0, 3])
 
     SENTIEON_JOINT_GENOTYPING(sentieon_input, fasta, fai)
-
-    // Convert all sample vcfs into a genomicsdb workspace using genomicsdbimport
-    // GATK4_GENOMICSDBIMPORT(gendb_input, false, false, false)    // TO-DO: Cleanup this section
-
-    // genotype_input = GATK4_GENOMICSDBIMPORT.out.genomicsdb.map{ meta, genomicsdb -> [ meta, genomicsdb, [], [], [] ] }
-
-    // Joint genotyping performed using GenotypeGVCFs
-    // Sort vcfs called by interval within each VCF
-
-    // GATK4_GENOTYPEGVCFS(genotype_input, fasta, fai, dict, dbsnp, dbsnp_tbi)
-    // BCFTOOLS_SORT(GATK4_GENOTYPEGVCFS.out.vcf)
 
     // TO-DO: Try to use a much functionality from Sentieon as possible. Sentieon should have a function for merging vfcs.
     BCFTOOLS_SORT(SENTIEON_JOINT_GENOTYPING.out.vcf_gz)
@@ -72,7 +48,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_SENTIEON {
     snps_resource_label = known_snps_vqsr.mix(dbsnp_vqsr).collect()
 
     // Recalibrate INDELs and SNPs separately
-    VARIANTRECALIBRATOR_INDEL(
+    SENTIEON_VARIANTRECALIBRATOR_INDEL(
         vqsr_input,
         resource_indels_vcf,
         resource_indels_tbi,
@@ -81,7 +57,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_SENTIEON {
         fai,
         dict)
 
-    VARIANTRECALIBRATOR_SNP(
+    SENTIEON_VARIANTRECALIBRATOR_SNP(
         vqsr_input,
         resource_snps_vcf,
         resource_snps_tbi,
@@ -94,32 +70,33 @@ workflow BAM_JOINT_CALLING_GERMLINE_SENTIEON {
 
     // Join results of variant recalibration into a single channel tuple
     // Rework meta for variantscalled.csv and annotation tools
-    vqsr_input_snp = vqsr_input.join(VARIANTRECALIBRATOR_SNP.out.recal, failOnDuplicate: true)
-        .join(VARIANTRECALIBRATOR_SNP.out.idx, failOnDuplicate: true)
-        .join(VARIANTRECALIBRATOR_SNP.out.tranches, failOnDuplicate: true)
+    temp_vqsr_input_snp = vqsr_input.join(SENTIEON_VARIANTRECALIBRATOR_SNP.out.recal, failOnDuplicate: true)
+        .join(SENTIEON_VARIANTRECALIBRATOR_SNP.out.idx, failOnDuplicate: true)
+        .join(SENTIEON_VARIANTRECALIBRATOR_SNP.out.tranches, failOnDuplicate: true)
         .map{ meta, vcf, tbi, recal, index, tranche -> [ meta - meta.subMap('id') + [ id:'recalibrated_joint_variant_calling' ], vcf, tbi, recal, index, tranche ] }
 
     // Join results of variant recalibration into a single channel tuple
     // Rework meta for variantscalled.csv and annotation tools
-    vqsr_input_indel = vqsr_input.join(VARIANTRECALIBRATOR_INDEL.out.recal, failOnDuplicate: true)
-        .join(VARIANTRECALIBRATOR_INDEL.out.idx, failOnDuplicate: true)
-        .join(VARIANTRECALIBRATOR_INDEL.out.tranches, failOnDuplicate: true)
+    temp_vqsr_input_indel = vqsr_input.join(SENTIEON_VARIANTRECALIBRATOR_INDEL.out.recal, failOnDuplicate: true)
+        .join(SENTIEON_VARIANTRECALIBRATOR_INDEL.out.idx, failOnDuplicate: true)
+        .join(SENTIEON_VARIANTRECALIBRATOR_INDEL.out.tranches, failOnDuplicate: true)
         .map{ meta, vcf, tbi, recal, index, tranche -> [ meta - meta.subMap('id') + [ id:'recalibrated_joint_variant_calling' ], vcf, tbi, recal, index, tranche ] }
 
-    GATK4_APPLYVQSR_SNP(
-        vqsr_input_snp,
+
+    SENTIEON_APPLYVQSR_SNP(
+        temp_vqsr_input_snp,
         fasta,
         fai,
         dict)
 
-    GATK4_APPLYVQSR_INDEL(
-        vqsr_input_indel,
+    SENTIEON_APPLYVQSR_INDEL(
+        temp_vqsr_input_indel,
         fasta,
         fai,
         dict)
 
-    vqsr_snp_vcf = GATK4_APPLYVQSR_SNP.out.vcf
-    vqsr_indel_vcf = GATK4_APPLYVQSR_INDEL.out.vcf
+    vqsr_snp_vcf = SENTIEON_APPLYVQSR_SNP.out.vcf
+    vqsr_indel_vcf = SENTIEON_APPLYVQSR_INDEL.out.vcf
 
     //Merge VQSR outputs into final VCF
     MERGE_VQSR(
@@ -130,11 +107,10 @@ workflow BAM_JOINT_CALLING_GERMLINE_SENTIEON {
     genotype_vcf   = MERGE_GENOTYPEGVCFS.out.vcf.mix(MERGE_VQSR.out.vcf)
     genotype_index = MERGE_GENOTYPEGVCFS.out.tbi.mix(MERGE_VQSR.out.tbi)
 
-    // versions = versions.mix(GATK4_GENOMICSDBIMPORT.out.versions)  // TO-DO: Cleanup
-    // versions = versions.mix(GATK4_GENOTYPEGVCFS.out.versions)
     versions = versions.mix(SENTIEON_JOINT_GENOTYPING.out.versions)
-    versions = versions.mix(VARIANTRECALIBRATOR_SNP.out.versions)
-    versions = versions.mix(GATK4_APPLYVQSR_SNP.out.versions)
+    versions = versions.mix(SENTIEON_VARIANTRECALIBRATOR_SNP.out.versions)
+    versions = versions.mix(SENTIEON_VARIANTRECALIBRATOR_INDEL.out.versions)
+    versions = versions.mix(SENTIEON_APPLYVQSR_INDEL.out.versions)
 
     emit:
     genotype_index  // channel: [ val(meta), [ tbi ] ]
