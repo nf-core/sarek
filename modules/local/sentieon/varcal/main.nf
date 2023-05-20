@@ -10,7 +10,7 @@ process SENTIEON_VARIANTRECALIBRATOR {
         exit 1, "Sentieon modules does not support Conda. Please use Docker / Singularity / Podman instead."
     }
 
-    container 'nfcore/sentieon:202112.06'
+    container 'docker.io/nfcore/sentieon:202112.06'
 
     input:
     tuple val(meta), path(vcf), path(tbi) // input vcf and tbi of variants to recalibrate
@@ -45,9 +45,9 @@ process SENTIEON_VARIANTRECALIBRATOR {
             // Here is an example of what the list items might look like:
             // ['dbsnp,known=false,training=true,truth=false,prior=2.0', 'dbsnp_146.hg38.vcf.gz']
             if (items.size() != 2) {
-			    error("Expected the list '${items}' to contain two elements.")
+                error("Expected the list '${items}' to contain two elements.")
             }
-		    labels_command +=  "--resource ${items[1]} --resource_param ${items[0]} "
+            labels_command +=  "--resource ${items[1]} --resource_param ${items[0]} "
         }
     }
 
