@@ -6,8 +6,8 @@ include { SENTIEON_APPLYVQSR as SENTIEON_APPLYVQSR_SNP                       } f
 include { SENTIEON_JOINT_GENOTYPING                                          } from '../../../modules/local/sentieon/genotyper/main'
 include { GATK4_MERGEVCFS as MERGE_GENOTYPEGVCFS                             } from '../../../modules/nf-core/gatk4/mergevcfs/main'
 include { GATK4_MERGEVCFS as MERGE_VQSR                                      } from '../../../modules/nf-core/gatk4/mergevcfs/main'
-include { SENTIEON_VARIANTRECALIBRATOR as SENTIEON_VARIANTRECALIBRATOR_INDEL } from '../../../modules/local/sentieon/varcal/main'   // Temporary hack
-include { SENTIEON_VARIANTRECALIBRATOR as SENTIEON_VARIANTRECALIBRATOR_SNP   } from '../../../modules/local/sentieon/varcal/main'   // Temporary hack
+include { SENTIEON_VARIANTRECALIBRATOR as SENTIEON_VARIANTRECALIBRATOR_INDEL } from '../../../modules/local/sentieon/varcal/main'
+include { SENTIEON_VARIANTRECALIBRATOR as SENTIEON_VARIANTRECALIBRATOR_SNP   } from '../../../modules/local/sentieon/varcal/main'
 
 workflow BAM_JOINT_CALLING_GERMLINE_SENTIEON {
     take:
