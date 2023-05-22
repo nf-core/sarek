@@ -21,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- [tbc] - Update pipeline summary
+- [#1031](https://github.com/nf-core/sarek/pull/1031) - Update pipeline summary
 - [#859](https://github.com/nf-core/sarek/pull/859) - Back to dev
 - [#860](https://github.com/nf-core/sarek/pull/860) - Replace local subworkflow with nf-core version - `vcf_annotate_snpeff`
 - [#865](https://github.com/nf-core/sarek/pull/865) - Replace local subworkflow with nf-core version - `vcf_annotate_ensemblvep`
