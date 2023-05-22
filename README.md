@@ -51,7 +51,7 @@ Depending on the options and samples provided, the pipeline can currently perfor
   - `Control-FREEC`
   - `CNVkit`
   - `MSIsensor-pro`
-- Variant filtering and annotation (`GATK CNNScoreVariants`, `GATK FilterMutectCalls`, `SnpEff`, `Ensembl VEP`)
+- Variant filtering and annotation (`SnpEff`, `Ensembl VEP`)
 - Summarise and represent QC (`MultiQC`)
 
 <p align="center">
