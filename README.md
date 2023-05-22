@@ -31,7 +31,7 @@ It's listed on [Elixir - Tools and Data Services Registry](https://bio.tools/nf-
 
 ## Pipeline summary
 
-By default, the pipeline currently performs the following:
+Depending on the options and samples provided, the pipeline can currently perform the following:
 
 - Form consensus reads from UMI sequences (`fgbio`)
 - Sequencing quality control and trimming (`FastQC`, `fastp`)
@@ -39,19 +39,19 @@ By default, the pipeline currently performs the following:
 - Process BAM file (`GATK MarkDuplicates`, `GATK BaseRecalibrator`, `GATK ApplyBQSR`)
 - Summarise alignment statistics (`samtools stats`, `mosdepth`)
 - Variant calling (enabled by `--tools`, see [compatibility](https://github.com/nf-core/sarek/blob/master/docs/usage.md#which-variant-calling-tool-is-implemented-for-which-data-type)):
-  - `haplotypecaller`
+  - `HaplotypeCaller`
   - `freebayes`
   - `mpileup`
-  - `strelka2`
-  - `deepvariant`
-  - `mutect2`
-  - `manta`
-  - `tiddit`
+  - `Strelka2`
+  - `DeepVariant`
+  - `Mutect2`
+  - `Manta`
+  - `TIDDIT`
   - `ASCAT`
   - `Control-FREEC`
   - `CNVkit`
   - `MSIsensor-pro`
-- Variant filtering and annotation (`GATK CNNScoreVariants`, `SnpEff`, `Ensembl VEP`)
+- Variant filtering and annotation (`GATK CNNScoreVariants`, `GATK FilterMutectCalls`, `SnpEff`, `Ensembl VEP`)
 - Summarise and represent QC (`MultiQC`)
 
 <p align="center">
