@@ -696,7 +696,7 @@ The amount of scatter/gathering can be customized by adjusting the parameter `--
 
 > **NB:** The _same_ intervals are processed regardless of the number of groups. The number of groups however determines over how many compute nodes the analysis is scattered on.
 
-The default value is `1000`, increasing this value will _reduce_ the number of groups that are processed in parallel.
+The default value is `200000`, increasing this value will _reduce_ the number of groups that are processed in parallel.
 Generally, smaller numbers of groups (each group has more regions), the slower the processing, and less storage space is consumed.
 In particular, in cloud computing setting it is often advisable to reduce the number of groups to be run in parallel to reduce data staging steps.
 
@@ -884,7 +884,7 @@ Explanation can be found for all params in the documentation:
 With the previous example of `GRCh38`, these are the values that were used for these params:
 
 ```bash
-snpeff_db         = 'GRCh38.105'
+snpeff_db         = '105'
 snpeff_genome     = 'GRCh38'
 vep_genome        = 'GRCh38'
 vep_species       = 'homo_sapiens'
