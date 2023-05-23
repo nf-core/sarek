@@ -49,8 +49,7 @@ workflow PREPARE_GENOME {
     BWAMEM2_INDEX(fasta)     // If aligner is bwa-mem2
     DRAGMAP_HASHTABLE(fasta) // If aligner is dragmap
 
-    // Remap channel to match module/subworkflow
-    GATK4_CREATESEQUENCEDICTIONARY(fasta.map{ meta, fasta -> fasta })
+    GATK4_CREATESEQUENCEDICTIONARY(fasta)
     MSISENSORPRO_SCAN(fasta)
     SAMTOOLS_FAIDX(fasta)
 
