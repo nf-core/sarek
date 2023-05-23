@@ -40,6 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1015](https://github.com/nf-core/sarek/pull/1015) - Increase default value for `--nucleotides_per_second` to `200000` resulting in 21 groups for `GATK.GRCh38`
 - [#1019](https://github.com/nf-core/sarek/pull/1019) - Set a default registry outside of profile scope
 - [#1031](https://github.com/nf-core/sarek/pull/1031) - Update pipeline summary
+- [#1032](https://github.com/nf-core/sarek/pull/1032) - Update all modules
 
 ### Fixed
 
@@ -73,7 +74,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | ------------- | ----------- | ----------- |
 | `ascat`       | 3.0.0       | 3.1.1       |
 | `bcftools`    | 1.15.1      | 1.17        |
+| `deepvariant` | 1.4.0       | 1.5.0       |
 | `ensembl-vep` | 106.1       | 108.2       |
+| `fastp`       | 0.23.2      | 0.23.3      |
 | `multiqc`     | 1.13a       | 1.14        |
 | `samtools`    | 1.16        | 1.17        |
 | `svdb`        | 2.6.1       | 2.8.1       |
