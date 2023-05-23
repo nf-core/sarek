@@ -425,7 +425,7 @@ workflow SAREK {
         CONVERT_FASTQ_INPUT(
             input_sample_type.bam,
             [ [ id:"fasta" ], [] ], // fasta
-            [],                     // fasta_fai
+            [ [ id:'null' ], [] ],  // fasta_fai
             interleave_input)
 
         // Gather fastq (inputed or converted)
@@ -463,8 +463,8 @@ workflow SAREK {
             interleave_input = false // Currently don't allow interleaved input
             CONVERT_FASTQ_UMI(
                 bam_converted_from_fastq,
-                [ [id:"fasta"], [] ], // fasta
-                [],                   // fasta_fai
+                [ [ id:"fasta" ], [] ], // fasta
+                [ [ id:'null' ], [] ],  // fasta_fai
                 interleave_input)
 
             reads_for_fastp = CONVERT_FASTQ_UMI.out.reads

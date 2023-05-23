@@ -24,16 +24,16 @@ workflow BAM_CONVERT_SAMTOOLS {
     // Index File if not PROVIDED -> this also requires updates to samtools view possibly URGH
 
     // MAP - MAP
-    SAMTOOLS_VIEW_MAP_MAP(input, fasta[1], [])
+    SAMTOOLS_VIEW_MAP_MAP(input, fasta, [])
 
     // UNMAP - UNMAP
-    SAMTOOLS_VIEW_UNMAP_UNMAP(input, fasta[1], [])
+    SAMTOOLS_VIEW_UNMAP_UNMAP(input, fasta, [])
 
     // UNMAP - MAP
-    SAMTOOLS_VIEW_UNMAP_MAP(input, fasta[1], [])
+    SAMTOOLS_VIEW_UNMAP_MAP(input, fasta, [])
 
     // MAP - UNMAP
-    SAMTOOLS_VIEW_MAP_UNMAP(input, fasta[1], [])
+    SAMTOOLS_VIEW_MAP_UNMAP(input, fasta, [])
 
     // Merge UNMAP
     all_unmapped_bam = SAMTOOLS_VIEW_UNMAP_UNMAP.out.bam
@@ -41,7 +41,7 @@ workflow BAM_CONVERT_SAMTOOLS {
         .join(SAMTOOLS_VIEW_MAP_UNMAP.out.bam, failOnDuplicate: true, remainder: true)
         .map{ meta, unmap_unmap, unmap_map, map_unmap -> [ meta, [ unmap_unmap, unmap_map, map_unmap ] ] }
 
-    SAMTOOLS_MERGE_UNMAP(all_unmapped_bam, fasta[1], fasta_fai)
+    SAMTOOLS_MERGE_UNMAP(all_unmapped_bam, fasta, fasta_fai)
 
     // Collate & convert unmapped
     COLLATE_FASTQ_UNMAP(SAMTOOLS_MERGE_UNMAP.out.bam, fasta, interleaved)
