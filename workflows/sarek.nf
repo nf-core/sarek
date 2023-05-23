@@ -508,7 +508,7 @@ workflow SAREK {
         // reads will be sorted
         reads_for_alignment = reads_for_alignment.map{ meta, reads ->
             // Update meta.id to meta.sample no multiple lanes or splitted fastqs
-            if (meta.size * meta.num_lanes == 1) [ meta - meta.subMap('id') + [ id:meta.sample ], reads ]
+            if (meta.size * meta.num_lanes == 1) [ meta + [ id:meta.sample ], reads ]
             else [ meta, reads ]
         }
 
@@ -527,7 +527,7 @@ workflow SAREK {
 
             // Use groupKey to make sure that the correct group can advance as soon as it is complete
             // and not stall the workflow until all reads from all channels are mapped
-            [ groupKey( meta - meta.subMap('data_type', 'id', 'num_lanes', 'read_group', 'size') + [ data_type:'bam', id:meta.sample ], (meta.num_lanes ?: 1) * (meta.size ?: 1) ), bam ]
+            [ groupKey( meta - meta.subMap('num_lanes', 'read_group', 'size') + [ data_type:'bam', id:meta.sample ], (meta.num_lanes ?: 1) * (meta.size ?: 1) ), bam ]
         }.groupTuple()
 
         // gatk4 markduplicates can handle multiple bams as input, so no need to merge/index here
@@ -629,7 +629,7 @@ workflow SAREK {
         // - crams from input step markduplicates --> from the converted ones only?
         ch_md_cram_for_restart = Channel.empty().mix(cram_markduplicates_no_spark, cram_markduplicates_spark)
             // Make sure correct data types are carried through
-            .map{ meta, cram, crai -> [ meta - meta.subMap('data_type') + [data_type: "cram"], cram, crai ] }
+            .map{ meta, cram, crai -> [ meta + [data_type: "cram"], cram, crai ] }
 
         // If params.save_output_as_bam, then convert CRAM files to BAM
         CRAM_TO_BAM(ch_md_cram_for_restart, fasta, fasta_fai)
@@ -657,7 +657,7 @@ workflow SAREK {
 
             ch_cram_from_bam = BAM_TO_CRAM.out.alignment_index
                 // Make sure correct data types are carried through
-                .map{ meta, cram, crai -> [ meta - meta.subMap('data_type') + [data_type: "cram"], cram, crai ] }
+                .map{ meta, cram, crai -> [ meta + [data_type: "cram"], cram, crai ] }
 
             ch_cram_for_bam_baserecalibrator = Channel.empty().mix(ch_cram_from_bam, input_prepare_recal_convert.cram)
             ch_md_cram_for_restart = ch_cram_from_bam
@@ -672,7 +672,7 @@ workflow SAREK {
             // ch_md_cram_for_restart.view() // contains md.cram.crai
             ch_cram_for_bam_baserecalibrator = Channel.empty().mix(ch_md_cram_for_restart, cram_skip_markduplicates )
                 // Make sure correct data types are carried through
-                .map{ meta, cram, crai -> [ meta - meta.subMap('data_type') + [data_type: "cram"], cram, crai ] }
+                .map{ meta, cram, crai -> [ meta + [data_type: "cram"], cram, crai ] }
 
         }
 
@@ -753,7 +753,7 @@ workflow SAREK {
                 BAM_TO_CRAM.out.alignment_index.join(input_only_table, failOnDuplicate: true, failOnMismatch: true),
                 input_recal_convert.cram)
                 // Join together converted cram with input tables
-                .map{ meta, cram, crai, table -> [ meta - meta.subMap('data_type') + [data_type: "cram"], cram, crai, table ]}
+                .map{ meta, cram, crai, table -> [ meta + [data_type: "cram"], cram, crai, table ]}
         }
 
         if (!(params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'))) {

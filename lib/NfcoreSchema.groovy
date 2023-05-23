@@ -327,6 +327,7 @@ class NfcoreSchema {
             }
         }
         output += "!! Only displaying parameters that differ from the pipeline defaults !!\n"
+        output += "Displaying all reference genome parameters\n"
         output += NfcoreTemplate.dashedLine(params.monochrome_logs)
         return output
     }
