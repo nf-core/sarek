@@ -27,8 +27,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#874](https://github.com/nf-core/sarek/pull/874) - Update all modules
 - [#890](https://github.com/nf-core/sarek/pull/890) - Sync `TEMPLATE` with `tools` `2.7.1`
 - [#896](https://github.com/nf-core/sarek/pull/896) - Code refactoring
-- [#898](https://github.com/nf-core/sarek/pull/898) - Sync `TEMPLATE` with `tools` `2.7.2`
 - [#898](https://github.com/nf-core/sarek/pull/898) - Nextflow minimal version is now `22.10.1`
+- [#898](https://github.com/nf-core/sarek/pull/898) - Sync `TEMPLATE` with `tools` `2.7.2`
 - [#909](https://github.com/nf-core/sarek/pull/909) - Cache test data on GHA
 - [#928](https://github.com/nf-core/sarek/pull/928) - No need for BAI when starting from uBAM
 - [#935](https://github.com/nf-core/sarek/pull/935) - Add params `build_only_index` to only build index
@@ -36,6 +36,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#942](https://github.com/nf-core/sarek/pull/942) - Update `README.md`
 - [#967](https://github.com/nf-core/sarek/pull/967) - Update and detail extensively how to use annotation cache
 - [#968](https://github.com/nf-core/sarek/pull/968) - Update all modules
+- [#1011](https://github.com/nf-core/sarek/pull/1011) - Sync `TEMPLATE` with `tools` `2.8`
+- [#1012](https://github.com/nf-core/sarek/pull/1012) - Better handling of meta maps in `bam_variant_calling_somatic_mutect2`
 - [#1014](https://github.com/nf-core/sarek/pull/1014) - `snpeff_db` is now only the `db` version and not `genome.db`
 - [#1015](https://github.com/nf-core/sarek/pull/1015) - Increase default value for `--nucleotides_per_second` to `200000` resulting in 21 groups for `GATK.GRCh38`
 - [#1019](https://github.com/nf-core/sarek/pull/1019) - Set a default registry outside of profile scope
