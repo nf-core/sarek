@@ -36,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#942](https://github.com/nf-core/sarek/pull/942) - Update `README.md`
 - [#967](https://github.com/nf-core/sarek/pull/967) - Update and detail extensively how to use annotation cache
 - [#968](https://github.com/nf-core/sarek/pull/968) - Update all modules
+- [#1012](https://github.com/nf-core/sarek/pull/1012) - Better handling of meta maps in `bam_variant_calling_somatic_mutect2`
 
 ### Fixed
 
