@@ -31,14 +31,29 @@ input:
       type: file
       description: Interval file for targeted regions
       pattern: "*.bed"
+  - meta2:
+      type: map
+      description: |
+        Groovy Map containing reference information
+        e.g. [ id:'genome' ]
   - fasta:
       type: file
       description: The reference fasta file
       pattern: "*.fasta"
+  - meta3:
+      type: map
+      description: |
+        Groovy Map containing reference information
+        e.g. [ id:'genome' ]
   - fai:
       type: file
       description: Index of reference fasta file
       pattern: "*.fai"
+  - meta4:
+      type: map
+      description: |
+        Groovy Map containing reference information
+        e.g. [ id:'genome' ]
   - gzi:
       type: file
       description: GZI index of reference fasta file
@@ -65,3 +80,4 @@ output:
 
 authors:
   - "@abhi18av"
+  - "@ramprasadn"

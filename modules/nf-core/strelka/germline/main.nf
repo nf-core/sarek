@@ -5,7 +5,7 @@ process STRELKA_GERMLINE {
     conda "bioconda::strelka=2.9.10"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/strelka:2.9.10--h9ee0642_1' :
-        'quay.io/biocontainers/strelka:2.9.10--h9ee0642_1' }"
+        'biocontainers/strelka:2.9.10--h9ee0642_1' }"
 
     input:
     tuple val(meta), path(input), path(input_index), path (target_bed), path (target_bed_tbi)

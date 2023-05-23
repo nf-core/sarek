@@ -2,6 +2,8 @@ name: svdb_merge
 description: The merge module merges structural variants within one or more vcf files.
 keywords:
   - structural variants
+  - vcf
+  - merge
 tools:
   - svdb:
       description: structural variant database software

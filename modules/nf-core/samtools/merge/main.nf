@@ -5,12 +5,12 @@ process SAMTOOLS_MERGE {
     conda "bioconda::samtools=1.17"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/samtools:1.17--h00cdaf9_0' :
-        'quay.io/biocontainers/samtools:1.17--h00cdaf9_0' }"
+        'biocontainers/samtools:1.17--h00cdaf9_0' }"
 
     input:
     tuple val(meta), path(input_files, stageAs: "?/*")
-    path fasta
-    path fai
+    tuple val(meta2), path(fasta)
+    tuple val(meta3), path(fai)
 
     output:
     tuple val(meta), path("${prefix}.bam") , optional:true, emit: bam

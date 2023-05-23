@@ -11,7 +11,8 @@ process TABIX_BGZIPTABIX {
     tuple val(meta), path(input)
 
     output:
-    tuple val(meta), path("*.gz"), path("*.tbi"), emit: gz_tbi
+    tuple val(meta), path("*.gz"), path("*.tbi"), optional: true, emit: gz_tbi
+    tuple val(meta), path("*.gz"), path("*.csi"), optional: true, emit: gz_csi
     path  "versions.yml" ,                        emit: versions
 
     when:
@@ -36,6 +37,7 @@ process TABIX_BGZIPTABIX {
     """
     touch ${prefix}.${input.getExtension()}.gz
     touch ${prefix}.${input.getExtension()}.gz.tbi
+    touch ${prefix}.${input.getExtension()}.gz.csi
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

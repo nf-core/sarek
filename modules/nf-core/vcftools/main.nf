@@ -5,7 +5,7 @@ process VCFTOOLS {
     conda "bioconda::vcftools=0.1.16"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/vcftools:0.1.16--he513fc3_4' :
-        'quay.io/biocontainers/vcftools:0.1.16--he513fc3_4' }"
+        'biocontainers/vcftools:0.1.16--he513fc3_4' }"
 
     input:
     // Owing to the nature of vcftools we here provide solutions to working with optional bed files and optional

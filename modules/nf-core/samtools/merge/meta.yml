@@ -25,13 +25,23 @@ input:
       type: file
       description: BAM/CRAM file
       pattern: "*.{bam,cram,sam}"
+  - meta2:
+      type: map
+      description: |
+        Groovy Map containing reference information
+        e.g. [ id:'genome' ]
   - fasta:
-      type: optional file
-      description: Reference file the CRAM was created with
+      type: file
+      description: Reference file the CRAM was created with (optional)
       pattern: "*.{fasta,fa}"
+  - meta3:
+      type: map
+      description: |
+        Groovy Map containing reference information
+        e.g. [ id:'genome' ]
   - fai:
-      type: optional file
-      description: Index of the reference file the CRAM was created with
+      type: file
+      description: Index of the reference file the CRAM was created with (optional)
       pattern: "*.fai"
 output:
   - meta:
@@ -60,3 +70,4 @@ authors:
   - "@yuukiiwa "
   - "@maxulysse"
   - "@FriederikeHanssen"
+  - "@ramprasadn"

@@ -5,7 +5,7 @@ process UNZIP {
     conda "conda-forge::p7zip=16.02"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/p7zip:16.02' :
-        'quay.io/biocontainers/p7zip:16.02' }"
+        'biocontainers/p7zip:16.02' }"
 
     input:
     tuple val(meta), path(archive)
