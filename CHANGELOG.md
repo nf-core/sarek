@@ -78,7 +78,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | `bcftools`    | 1.15.1      | 1.17        |
 | `deepvariant` | 1.4.0       | 1.5.0       |
 | `ensembl-vep` | 106.1       | 108.2       |
-| `fastp`       | 0.23.2      | 0.23.3      |
 | `multiqc`     | 1.13a       | 1.14        |
 | `samtools`    | 1.16        | 1.17        |
 | `svdb`        | 2.6.1       | 2.8.1       |
