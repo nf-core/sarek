@@ -72,7 +72,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
     stats_to_merge = stats_branch.intervals.map{ meta, stats -> [ groupKey(meta, meta.num_intervals), stats ] }.groupTuple()
     f1r2_to_merge = f1r2_branch.intervals.map{ meta, f1r2 -> [ groupKey(meta, meta.num_intervals), f1r2 ] }.groupTuple()
 
-    MERGE_MUTECT2(vcf_to_merge, dict.map{ it -> [ [ id:'dict' ], it ] })
+    MERGE_MUTECT2(vcf_to_merge, dict)
     MERGEMUTECTSTATS(stats_to_merge)
 
     // Mix intervals and no_intervals channels together and remove no longer necessary field: normal_id, tumor_id, num_intervals
@@ -111,8 +111,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
     }
 
     // Merge Pileup Summaries
-    GATHERPILEUPSUMMARIES_NORMAL(GETPILEUPSUMMARIES_NORMAL.out.table.map{ meta, table -> [ groupKey(meta, meta.num_intervals), table ] }.groupTuple(), dict)
-    GATHERPILEUPSUMMARIES_TUMOR(GETPILEUPSUMMARIES_TUMOR.out.table.map{ meta, table -> [ groupKey(meta, meta.num_intervals), table ] }.groupTuple(), dict)
+    GATHERPILEUPSUMMARIES_NORMAL(GETPILEUPSUMMARIES_NORMAL.out.table.map{ meta, table -> [ groupKey(meta, meta.num_intervals), table ] }.groupTuple(), dict.map{ meta, dict -> [ dict ] })
+    GATHERPILEUPSUMMARIES_TUMOR(GETPILEUPSUMMARIES_TUMOR.out.table.map{ meta, table -> [ groupKey(meta, meta.num_intervals), table ] }.groupTuple(), dict.map{ meta, dict -> [ dict ] })
 
     // remove no longer necessary field: normal_id, tumor_id, num_intervals
     pileup_table_normal = Channel.empty().mix(GATHERPILEUPSUMMARIES_NORMAL.out.table, pileup_table_normal_branch.no_intervals)

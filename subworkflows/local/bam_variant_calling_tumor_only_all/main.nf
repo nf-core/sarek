@@ -109,8 +109,10 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     if (tools.split(',').contains('mutect2')) {
         BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2(
             cram,
-            fasta,
-            fasta_fai,
+            // Remap channel to match module/subworkflow
+            fasta.map{ it -> [ [ id:'fasta' ], it ] },
+            // Remap channel to match module/subworkflow
+            fasta_fai.map{ it -> [ [ id:'fasta_fai' ], it ] },
             dict,
             germline_resource,
             germline_resource_tbi,

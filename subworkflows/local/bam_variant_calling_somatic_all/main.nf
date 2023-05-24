@@ -183,8 +183,10 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         BAM_VARIANT_CALLING_SOMATIC_MUTECT2(
             // Remap channel to match module/subworkflow
             cram.map { meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [ meta, [ normal_cram, tumor_cram ], [ normal_crai, tumor_crai ] ] },
-            fasta,
-            fasta_fai,
+            // Remap channel to match module/subworkflow
+            fasta.map{ it -> [ [ id:'fasta' ], it ] },
+            // Remap channel to match module/subworkflow
+            fasta_fai.map{ it -> [ [ id:'fasta_fai' ], it ] },
             dict,
             germline_resource,
             germline_resource_tbi,
