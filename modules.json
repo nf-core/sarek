@@ -371,6 +371,11 @@
                         "git_sha": "371eff7748d769c2ddc8bd593773523a364a52fe",
                         "installed_by": ["modules"]
                     },
+                    "sentieon/applyvarcal": {
+                        "branch": "master",
+                        "git_sha": "49a64392c75566394617a372d0fdd52caf754cfc",
+                        "installed_by": ["modules"]
+                    },
                     "sentieon/bwamem": {
                         "branch": "master",
                         "git_sha": "8c159ebb28cfa08890042a133bfab78de932eff7",

@@ -1,8 +1,8 @@
 //
 // merge samples with genomicsdbimport, perform joint genotyping with genotypeGVCFS
 include { BCFTOOLS_SORT                                                      } from '../../../modules/nf-core/bcftools/sort/main'
-include { SENTIEON_APPLYVQSR as SENTIEON_APPLYVQSR_INDEL                     } from '../../../modules/local/sentieon/applyvarcal/main'
-include { SENTIEON_APPLYVQSR as SENTIEON_APPLYVQSR_SNP                       } from '../../../modules/local/sentieon/applyvarcal/main'
+include { SENTIEON_APPLYVARCAL as SENTIEON_APPLYVARCAL_INDEL                 } from '../../../modules/nf-core/sentieon/applyvarcal/main'
+include { SENTIEON_APPLYVARCAL as SENTIEON_APPLYVARCAL_SNP                   } from '../../../modules/nf-core/sentieon/applyvarcal/main'
 include { SENTIEON_GVCFTYPER                                                 } from '../../../modules/nf-core/sentieon/gvcftyper/main'
 include { GATK4_MERGEVCFS as MERGE_GENOTYPEGVCFS                             } from '../../../modules/nf-core/gatk4/mergevcfs/main'
 include { GATK4_MERGEVCFS as MERGE_VQSR                                      } from '../../../modules/nf-core/gatk4/mergevcfs/main'
@@ -82,20 +82,18 @@ workflow BAM_JOINT_CALLING_GERMLINE_SENTIEON {
         .map{ meta, vcf, tbi, recal, index, tranche -> [ meta - meta.subMap('id') + [ id:'recalibrated_joint_variant_calling' ], vcf, tbi, recal, index, tranche ] }
 
 
-    SENTIEON_APPLYVQSR_SNP(
+    SENTIEON_APPLYVARCAL_SNP(
         vqsr_input_snp,
         fasta,
-        fai,
-        dict)
+        fai)
 
-    SENTIEON_APPLYVQSR_INDEL(
+    SENTIEON_APPLYVARCAL_INDEL(
         vqsr_input_indel,
         fasta,
-        fai,
-        dict)
+        fai)
 
-    vqsr_snp_vcf = SENTIEON_APPLYVQSR_SNP.out.vcf
-    vqsr_indel_vcf = SENTIEON_APPLYVQSR_INDEL.out.vcf
+    vqsr_snp_vcf = SENTIEON_APPLYVARCAL_SNP.out.vcf
+    vqsr_indel_vcf = SENTIEON_APPLYVARCAL_INDEL.out.vcf
 
     //Merge VQSR outputs into final VCF
     MERGE_VQSR(
@@ -109,7 +107,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_SENTIEON {
     versions = versions.mix(SENTIEON_GVCFTYPER.out.versions)
     versions = versions.mix(SENTIEON_VARCAL_SNP.out.versions)
     versions = versions.mix(SENTIEON_VARCAL_INDEL.out.versions)
-    versions = versions.mix(SENTIEON_APPLYVQSR_INDEL.out.versions)
+    versions = versions.mix(SENTIEON_APPLYVARCAL_INDEL.out.versions)
 
     emit:
     genotype_index  // channel: [ val(meta), [ tbi ] ]
