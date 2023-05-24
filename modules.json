@@ -391,6 +391,11 @@
                         "git_sha": "6edebae6cbfc01da3d01efe4dd19706e7427c5bf",
                         "installed_by": ["modules"]
                     },
+                    "sentieon/varcal": {
+                        "branch": "master",
+                        "git_sha": "641b422042e9d401d00f3e1a4f7ae59d53c9bfe0",
+                        "installed_by": ["modules"]
+                    },
                     "snpeff/download": {
                         "branch": "master",
                         "git_sha": "75027bf77472b1f4fd2cdd7e46f83119dfb0f2c6",

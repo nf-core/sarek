@@ -1,4 +1,4 @@
-process SENTIEON_VARIANTRECALIBRATOR {
+process SENTIEON_VARCAL {
     tag "$meta.id"
     label 'process_low'
     label 'sentieon'
@@ -19,7 +19,6 @@ process SENTIEON_VARIANTRECALIBRATOR {
     val labels          // string (or list of strings) containing dedicated resource labels already formatted with '--resource:' tag
     path  fasta
     path  fai
-    path  dict
 
     output:
     tuple val(meta), path("*.recal")   , emit: recal
@@ -73,7 +72,7 @@ process SENTIEON_VARIANTRECALIBRATOR {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        sentieon: \$(echo \$(sentieon driver --version 2>&1))
+        sentieon: \$(echo \$(sentieon driver --version 2>&1) | sed -e "s/sentieon-genomics-//g")
     END_VERSIONS
     """
 }

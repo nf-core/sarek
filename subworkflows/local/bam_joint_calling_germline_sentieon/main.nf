@@ -6,8 +6,9 @@ include { SENTIEON_APPLYVQSR as SENTIEON_APPLYVQSR_SNP                       } f
 include { SENTIEON_GVCFTYPER                                                 } from '../../../modules/nf-core/sentieon/gvcftyper/main'
 include { GATK4_MERGEVCFS as MERGE_GENOTYPEGVCFS                             } from '../../../modules/nf-core/gatk4/mergevcfs/main'
 include { GATK4_MERGEVCFS as MERGE_VQSR                                      } from '../../../modules/nf-core/gatk4/mergevcfs/main'
-include { SENTIEON_VARIANTRECALIBRATOR as SENTIEON_VARIANTRECALIBRATOR_INDEL } from '../../../modules/local/sentieon/varcal/main'
-include { SENTIEON_VARIANTRECALIBRATOR as SENTIEON_VARIANTRECALIBRATOR_SNP   } from '../../../modules/local/sentieon/varcal/main'
+include { SENTIEON_VARCAL as SENTIEON_VARCAL_INDEL } from '../../../modules/nf-core/sentieon/varcal/main'
+include { SENTIEON_VARCAL as SENTIEON_VARCAL_SNP } from '../../../modules/nf-core/sentieon/varcal/main'
+// include { SENTIEON_VARCAL as SENTIEON_VARCAL_SNP   } from '../../../modules/local/sentieon/varcal/main'
 
 workflow BAM_JOINT_CALLING_GERMLINE_SENTIEON {
     take:
@@ -48,7 +49,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_SENTIEON {
     snps_resource_label = known_snps_vqsr.mix(dbsnp_vqsr).collect()
 
     // Recalibrate INDELs and SNPs separately
-    SENTIEON_VARIANTRECALIBRATOR_INDEL(
+    SENTIEON_VARCAL_INDEL(
         vqsr_input,
         resource_indels_vcf,
         resource_indels_tbi,
@@ -57,7 +58,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_SENTIEON {
         fai,
         dict)
 
-    SENTIEON_VARIANTRECALIBRATOR_SNP(
+    SENTIEON_VARCAL_SNP(
         vqsr_input,
         resource_snps_vcf,
         resource_snps_tbi,
@@ -70,16 +71,16 @@ workflow BAM_JOINT_CALLING_GERMLINE_SENTIEON {
 
     // Join results of variant recalibration into a single channel tuple
     // Rework meta for variantscalled.csv and annotation tools
-    vqsr_input_snp = vqsr_input.join(SENTIEON_VARIANTRECALIBRATOR_SNP.out.recal, failOnDuplicate: true)
-        .join(SENTIEON_VARIANTRECALIBRATOR_SNP.out.idx, failOnDuplicate: true)
-        .join(SENTIEON_VARIANTRECALIBRATOR_SNP.out.tranches, failOnDuplicate: true)
+    vqsr_input_snp = vqsr_input.join(SENTIEON_VARCAL_SNP.out.recal, failOnDuplicate: true)
+        .join(SENTIEON_VARCAL_SNP.out.idx, failOnDuplicate: true)
+        .join(SENTIEON_VARCAL_SNP.out.tranches, failOnDuplicate: true)
         .map{ meta, vcf, tbi, recal, index, tranche -> [ meta - meta.subMap('id') + [ id:'recalibrated_joint_variant_calling' ], vcf, tbi, recal, index, tranche ] }
 
     // Join results of variant recalibration into a single channel tuple
     // Rework meta for variantscalled.csv and annotation tools
-    vqsr_input_indel = vqsr_input.join(SENTIEON_VARIANTRECALIBRATOR_INDEL.out.recal, failOnDuplicate: true)
-        .join(SENTIEON_VARIANTRECALIBRATOR_INDEL.out.idx, failOnDuplicate: true)
-        .join(SENTIEON_VARIANTRECALIBRATOR_INDEL.out.tranches, failOnDuplicate: true)
+    vqsr_input_indel = vqsr_input.join(SENTIEON_VARCAL_INDEL.out.recal, failOnDuplicate: true)
+        .join(SENTIEON_VARCAL_INDEL.out.idx, failOnDuplicate: true)
+        .join(SENTIEON_VARCAL_INDEL.out.tranches, failOnDuplicate: true)
         .map{ meta, vcf, tbi, recal, index, tranche -> [ meta - meta.subMap('id') + [ id:'recalibrated_joint_variant_calling' ], vcf, tbi, recal, index, tranche ] }
 
 
@@ -108,8 +109,8 @@ workflow BAM_JOINT_CALLING_GERMLINE_SENTIEON {
     genotype_index = MERGE_GENOTYPEGVCFS.out.tbi.mix(MERGE_VQSR.out.tbi)
 
     versions = versions.mix(SENTIEON_GVCFTYPER.out.versions)
-    versions = versions.mix(SENTIEON_VARIANTRECALIBRATOR_SNP.out.versions)
-    versions = versions.mix(SENTIEON_VARIANTRECALIBRATOR_INDEL.out.versions)
+    versions = versions.mix(SENTIEON_VARCAL_SNP.out.versions)
+    versions = versions.mix(SENTIEON_VARCAL_INDEL.out.versions)
     versions = versions.mix(SENTIEON_APPLYVQSR_INDEL.out.versions)
 
     emit:
