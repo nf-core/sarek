@@ -4,7 +4,6 @@ include { MANTA_GERMLINE                              } from '../../../modules/n
 workflow BAM_VARIANT_CALLING_GERMLINE_MANTA {
     take:
     cram          // channel: [mandatory] [ meta, cram, crai ]
-    dict          // channel: [optional]  [ meta, dict ]
     fasta         // channel: [mandatory] [ fasta ]
     fasta_fai     // channel: [mandatory] [ fasta_fai ]
     intervals     // channel: [mandatory] [ interval.bed.gz, interval.bed.gz.tbi] or [ [], []] if no intervals; intervals file contains all intervals
