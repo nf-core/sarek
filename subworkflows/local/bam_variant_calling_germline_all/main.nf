@@ -79,8 +79,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     if (tools.split(',').contains('deepvariant')) {
         BAM_VARIANT_CALLING_DEEPVARIANT(
             cram,
-            // Remap channel to match module/subworkflow
-            dict.map{ it -> [ [ id:'dict' ], it ] },
+            dict,
             fasta,
             fasta_fai,
             intervals
