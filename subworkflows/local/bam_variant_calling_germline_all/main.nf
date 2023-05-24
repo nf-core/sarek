@@ -184,7 +184,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         vcf_sentieon_haplotyper = BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER.out.vcf
         gvcf_sentieon_haplotyper = BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER.out.gvcf
 
-        if (joint_germline) {  // TO-DO: Change this section so that it uses sentieon's Genotyper!
+        if (joint_germline) {
             BAM_JOINT_CALLING_GERMLINE_SENTIEON(
                 BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER.out.genotype_intervals_and_crams,
                 fasta,
