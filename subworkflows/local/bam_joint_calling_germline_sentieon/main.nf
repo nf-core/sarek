@@ -55,8 +55,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_SENTIEON {
         resource_indels_tbi,
         indels_resource_label,
         fasta,
-        fai,
-        dict)
+        fai)
 
     SENTIEON_VARCAL_SNP(
         vqsr_input,
@@ -64,8 +63,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_SENTIEON {
         resource_snps_tbi,
         snps_resource_label,
         fasta,
-        fai,
-        dict)
+        fai)
 
     //Prepare INDELs and SNPs separately for ApplyVQSR
 
