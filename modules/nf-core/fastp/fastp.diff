@@ -1,0 +1,19 @@
+Changes in module 'nf-core/fastp'
+--- modules/nf-core/fastp/main.nf
++++ modules/nf-core/fastp/main.nf
+@@ -2,10 +2,10 @@
+     tag "$meta.id"
+     label 'process_medium'
+ 
+-    conda "bioconda::fastp=0.23.3"
++    conda "bioconda::fastp=0.23.2"
+     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+-        'https://depot.galaxyproject.org/singularity/fastp:0.23.3--h5f740d0_0' :
+-        'biocontainers/fastp:0.23.3--h5f740d0_0' }"
++        'https://depot.galaxyproject.org/singularity/fastp:0.23.2--h79da9fb_0' :
++        'biocontainers/fastp:0.23.2--h79da9fb_0' }"
+ 
+     input:
+     tuple val(meta), path(reads)
+
+************************************************************

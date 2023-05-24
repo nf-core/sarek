@@ -5,7 +5,7 @@ process CONTROLFREEC_FREEC2CIRCOS {
     conda "bioconda::control-freec=11.6"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/control-freec:11.6--h1b792b2_1':
-        'quay.io/biocontainers/control-freec:11.6--h1b792b2_1' }"
+        'biocontainers/control-freec:11.6--h1b792b2_1' }"
 
     input:
     tuple val(meta), path(ratio)

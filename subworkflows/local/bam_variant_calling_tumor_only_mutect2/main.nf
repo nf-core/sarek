@@ -70,7 +70,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     stats_to_merge = stats_branch.intervals.map{ meta, stats -> [ groupKey(meta, meta.num_intervals), stats ] }.groupTuple()
     f1r2_to_merge = f1r2_branch.intervals.map{ meta, f1r2 -> [ groupKey(meta, meta.num_intervals), f1r2 ] }.groupTuple()
 
-    MERGE_MUTECT2(vcf_to_merge, dict.map{ it -> [ [ id:'dict' ], it ] })
+    MERGE_MUTECT2(vcf_to_merge, dict)
     MERGEMUTECTSTATS(stats_to_merge)
 
     // Mix intervals and no_intervals channels together
@@ -95,7 +95,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     // Only when using intervals
     pileup_table_to_merge = pileup_table_branch.intervals.map{ meta, table -> [ groupKey(meta, meta.num_intervals), table ] }.groupTuple()
 
-    GATHERPILEUPSUMMARIES(pileup_table_to_merge, dict)
+    GATHERPILEUPSUMMARIES(pileup_table_to_merge, dict.map{ meta, dict -> [ dict ] })
 
     // Mix intervals and no_intervals channels together
     pileup_table = Channel.empty().mix(GATHERPILEUPSUMMARIES.out.table, pileup_table_branch.no_intervals)

@@ -5,17 +5,17 @@ process GATK4_MUTECT2 {
     conda "bioconda::gatk4=4.4.0.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/gatk4:4.4.0.0--py36hdfd78af_0':
-        'quay.io/biocontainers/gatk4:4.4.0.0--py36hdfd78af_0' }"
+        'biocontainers/gatk4:4.4.0.0--py36hdfd78af_0' }"
 
     input:
     tuple val(meta), path(input), path(input_index), path(intervals)
-    path fasta
-    path fai
-    path dict
-    path germline_resource
-    path germline_resource_tbi
-    path panel_of_normals
-    path panel_of_normals_tbi
+    tuple val(meta2), path(fasta)
+    tuple val(meta3), path(fai)
+    tuple val(meta4), path(dict)
+    path(germline_resource)
+    path(germline_resource_tbi)
+    path(panel_of_normals)
+    path(panel_of_normals_tbi)
 
     output:
     tuple val(meta), path("*.vcf.gz")     , emit: vcf

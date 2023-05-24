@@ -10,6 +10,8 @@ description: |
   options.args3 for the output bam file
 keywords:
   - sort
+  - duplicate marking
+  - bam
 tools:
   - samblaster:
       description: |

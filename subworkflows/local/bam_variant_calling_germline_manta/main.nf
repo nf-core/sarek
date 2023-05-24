@@ -4,7 +4,6 @@ include { MANTA_GERMLINE                              } from '../../../modules/n
 workflow BAM_VARIANT_CALLING_GERMLINE_MANTA {
     take:
     cram          // channel: [mandatory] [ meta, cram, crai ]
-    dict          // channel: [optional]  [ meta, dict ]
     fasta         // channel: [mandatory] [ fasta ]
     fasta_fai     // channel: [mandatory] [ fasta_fai ]
     intervals     // channel: [mandatory] [ interval.bed.gz, interval.bed.gz.tbi] or [ [], []] if no intervals; intervals file contains all intervals
@@ -20,7 +19,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_MANTA {
         [it[0], it[1], it[2], bed_gz, bed_tbi]
     }
 
-    MANTA_GERMLINE(cram_intervals, fasta, fasta_fai)
+    MANTA_GERMLINE(cram_intervals, fasta.map{ fasta -> [ [ id:fasta.baseName ], fasta ] }, fasta_fai.map{ fasta_fai -> [ [ id:fasta_fai.baseName ], fasta_fai ] })
 
     small_indels_vcf = MANTA_GERMLINE.out.candidate_small_indels_vcf
     sv_vcf = MANTA_GERMLINE.out.candidate_sv_vcf
