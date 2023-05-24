@@ -381,6 +381,11 @@
                         "git_sha": "8c04ecc0c5d4ad102755b919b2525481f0380090",
                         "installed_by": ["modules"]
                     },
+                    "sentieon/gvcftyper": {
+                        "branch": "master",
+                        "git_sha": "aa591ada04e79a771d242cd967648e6a1ae06ccf",
+                        "installed_by": ["modules"]
+                    },
                     "sentieon/haplotyper": {
                         "branch": "master",
                         "git_sha": "6edebae6cbfc01da3d01efe4dd19706e7427c5bf",
