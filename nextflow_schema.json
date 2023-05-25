@@ -496,6 +496,7 @@
                 },
                 "outdir_cache": {
                     "type": "string",
+                    "format": "directory-path",
                     "description": "The output directory where the cache will be saved. You have to use absolute paths to storage on Cloud infrastructure.",
                     "fa_icon": "fas fa-folder-open",
                     "hidden": true
