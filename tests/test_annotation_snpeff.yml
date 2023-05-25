@@ -1,5 +1,5 @@
 - name: Run snpEff
-  command: nextflow run main.nf -profile test,annotation --tools snpeff
+  command: nextflow run main.nf -profile test,annotation --tools snpeff --outdir results
   tags:
     - annotation
     - snpeff
@@ -10,10 +10,8 @@
       md5sum: 51e418d9be9bb33f1d4123493b15b6c9
     - path: results/multiqc
     - path: results/reports/snpeff/test/snpEff_summary.html
-      # snpEff_summary.html changes md5sums on reruns.
       contains: ["<b> Genome total length </b>", "<td> 100,286,402 </td>", "<td> MT192765.1 </td>"]
     - path: results/reports/snpeff/test/test_snpEff.csv
-      # test_snpEff.csv changes md5sums on reruns.
       contains:
         [
           "Values , 50,100",

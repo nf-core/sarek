@@ -1,5 +1,5 @@
 - name: Run default pipeline with skipping Markduplicates
-  command: nextflow run main.nf -profile test,skip_markduplicates
+  command: nextflow run main.nf -profile test,skip_markduplicates --outdir results
   tags:
     - default_extended
     - preprocessing
@@ -11,15 +11,15 @@
       md5sum: 2d29d9e53894dcce96a1b5beb6ef3312
     - path: results/multiqc
     - path: results/preprocessing/mapped/test/test.sorted.cram
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/mapped/test/test.sorted.cram.crai
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recal_table/test/test.recal.table
       md5sum: 8de213f4c00fac61a1102633760493df
     - path: results/preprocessing/recalibrated/test/test.recal.cram
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
       md5sum: 48aa760b024d7c0ddd5a66f89a1cb544
@@ -42,9 +42,9 @@
     - path: results/reports/mosdepth/test/test.sorted.regions.bed.gz.csi
       md5sum: e3235323f455414ee3acc7144e659caf
     - path: results/reports/samtools/test/test.recal.cram.stats
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/reports/samtools/test/test.sorted.cram.stats
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/csv/markduplicates.csv
       should_exist: false
     - path: results/csv/markduplicates_no_table.csv
@@ -54,7 +54,7 @@
     - path: results/preprocessing/mapped/test/test.sorted.bam
       should_exist: false
 - name: Run default pipeline with skipping Markduplicates with save_mapped
-  command: nextflow run main.nf -profile test,skip_markduplicates --save_mapped
+  command: nextflow run main.nf -profile test,skip_markduplicates --save_mapped --outdir results
   tags:
     - default_extended
     - preprocessing
@@ -67,15 +67,15 @@
       md5sum: 2d29d9e53894dcce96a1b5beb6ef3312
     - path: results/multiqc
     - path: results/preprocessing/mapped/test/test.sorted.cram
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/mapped/test/test.sorted.cram.crai
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recal_table/test/test.recal.table
       md5sum: 8de213f4c00fac61a1102633760493df
     - path: results/preprocessing/recalibrated/test/test.recal.cram
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
       md5sum: 48aa760b024d7c0ddd5a66f89a1cb544
@@ -98,9 +98,9 @@
     - path: results/reports/mosdepth/test/test.sorted.regions.bed.gz.csi
       md5sum: e3235323f455414ee3acc7144e659caf
     - path: results/reports/samtools/test/test.recal.cram.stats
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/reports/samtools/test/test.sorted.cram.stats
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/csv/markduplicates.csv
       should_exist: false
     - path: results/csv/markduplicates_no_table.csv
@@ -108,7 +108,7 @@
     - path: results/preprocessing/mapped/test/test.bam
       should_exist: false
 - name: Run default pipeline with skipping Markduplicates with save_mapped & save_output_as_bam
-  command: nextflow run main.nf -profile test,skip_markduplicates --save_mapped --save_output_as_bam
+  command: nextflow run main.nf -profile test,skip_markduplicates --save_mapped --save_output_as_bam --outdir results
   tags:
     - default_extended
     - preprocessing
@@ -121,15 +121,15 @@
       md5sum: 2dfbcaaeaaf4937c51c5c310f1c77614
     - path: results/multiqc
     - path: results/preprocessing/mapped/test/test.sorted.bam
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/mapped/test/test.sorted.bam.bai
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recal_table/test/test.recal.table
       md5sum: 8de213f4c00fac61a1102633760493df
     - path: results/preprocessing/recalibrated/test/test.recal.bam
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.bam.bai
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
       md5sum: 48aa760b024d7c0ddd5a66f89a1cb544
@@ -152,9 +152,9 @@
     - path: results/reports/mosdepth/test/test.sorted.regions.bed.gz.csi
       md5sum: e3235323f455414ee3acc7144e659caf
     - path: results/reports/samtools/test/test.recal.cram.stats
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/reports/samtools/test/test.sorted.cram.stats
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/csv/markduplicates.csv
       should_exist: false
     - path: results/csv/markduplicates_no_table.csv

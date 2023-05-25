@@ -1,5 +1,5 @@
 - name: Run save_output_as_bam
-  command: nextflow run main.nf -profile test --save_output_as_bam
+  command: nextflow run main.nf -profile test --save_output_as_bam --outdir results
   tags:
     - default_extended
     - preprocessing
@@ -15,15 +15,15 @@
       md5sum: 2dfbcaaeaaf4937c51c5c310f1c77614
     - path: results/multiqc
     - path: results/preprocessing/markduplicates/test/test.md.bam.bai
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/preprocessing/markduplicates/test/test.md.bam
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/preprocessing/recal_table/test/test.recal.table
       md5sum: 4ac774bf5f1157e77426fd82f5ac0fbe
     - path: results/preprocessing/recalibrated/test/test.recal.bam
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.bam.bai
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.cram.metrics
       contains: ["test	8547	767	84	523391	3882	0	0	0.385081", "1.0	767	767"]
@@ -48,11 +48,11 @@
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
       md5sum: b1c2a861f64e20a94108a6de3b76c582
     - path: results/reports/samtools/test/test.md.cram.stats
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/reports/samtools/test/test.recal.cram.stats
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/reports/bcftools/strelka/test/test.strelka.variants.bcftools_stats.txt
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/reports/vcftools/strelka/test/test.strelka.variants.FILTER.summary
       md5sum: dd87f507da7de20d5318841af312493b
     - path: results/reports/vcftools/strelka/test/test.strelka.variants.TsTv.count
@@ -60,11 +60,11 @@
     - path: results/reports/vcftools/strelka/test/test.strelka.variants.TsTv.qual
       md5sum: bc68ae4e688e9fb772b457069e604883
     - path: results/variant_calling/strelka/test/test.strelka.genome.vcf.gz
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/strelka/test/test.strelka.genome.vcf.gz.tbi
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/strelka/test/test.strelka.variants.vcf.gz
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/strelka/test/test.strelka.variants.vcf.gz.tbi
     - path: results/strelka
       should_exist: false

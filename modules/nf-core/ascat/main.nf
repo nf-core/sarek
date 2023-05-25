@@ -2,10 +2,10 @@ process ASCAT {
     tag "$meta.id"
     label 'process_medium'
 
-    conda (params.enable_conda ? "bioconda::ascat=3.0.0 bioconda::cancerit-allelecount=4.3.0" : null)
+    conda "bioconda::ascat=3.1.1 bioconda::cancerit-allelecount=4.3.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/mulled-v2-c278c7398beb73294d78639a864352abef2931ce:dfe5aaa885de434adb2b490b68972c5840c6d761-0':
-        'quay.io/biocontainers/mulled-v2-c278c7398beb73294d78639a864352abef2931ce:dfe5aaa885de434adb2b490b68972c5840c6d761-0' }"
+        'https://depot.galaxyproject.org/singularity/mulled-v2-c278c7398beb73294d78639a864352abef2931ce:ba3e6d2157eac2d38d22e62ec87675e12adb1010-0':
+        'biocontainers/mulled-v2-c278c7398beb73294d78639a864352abef2931ce:ba3e6d2157eac2d38d22e62ec87675e12adb1010-0' }"
 
     input:
     tuple val(meta), path(input_normal), path(index_normal), path(input_tumor), path(index_tumor)
@@ -81,7 +81,8 @@ process ASCAT {
         $min_map_qual_arg
         $fasta_arg
         $skip_allele_counting_tumour_arg
-        $skip_allele_counting_normal_arg
+        $skip_allele_counting_normal_arg,
+        seed = 42
     )
 
 
@@ -116,7 +117,7 @@ process ASCAT {
     }
 
     #Segment the data
-    ascat.bc = ascat.aspcf(ascat.bc)
+    ascat.bc = ascat.aspcf(ascat.bc, seed=42)
 
     #Plot the segmented data
     ascat.plotSegmentedData(ascat.bc)

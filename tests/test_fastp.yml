@@ -1,5 +1,5 @@
 - name: Run trimming pipeline
-  command: nextflow run main.nf -profile test,trimming --save_trimmed
+  command: nextflow run main.nf -profile test,trimming --save_trimmed --outdir results
   tags:
     - fastp
     - preprocessing
@@ -13,19 +13,19 @@
       md5sum: 2d29d9e53894dcce96a1b5beb6ef3312
     - path: results/multiqc
     - path: results/preprocessing/fastp/test/test-test_L1_1.fastp.fastq.gz
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/preprocessing/fastp/test/test-test_L1_2.fastp.fastq.gz
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/preprocessing/markduplicates/test/test.md.cram
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recal_table/test/test.recal.table
       md5sum: 766a4cd88d3d085c19d8e31540040ecd
     - path: results/preprocessing/recalibrated/test/test.recal.cram
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/reports/fastp/test
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.cram.metrics
@@ -51,11 +51,11 @@
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
       md5sum: a5ad8f917979f62eacfff1461529dbaa
     - path: results/reports/samtools/test/test.md.cram.stats
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/reports/samtools/test/test.recal.cram.stats
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
 - name: Run split fastq module
-  command: nextflow run main.nf -profile test,split_fastq
+  command: nextflow run main.nf -profile test,split_fastq --outdir results
   tags:
     - fastp
     - preprocessing
@@ -68,23 +68,23 @@
     - path: results/csv/recalibrated.csv
       md5sum: 2d29d9e53894dcce96a1b5beb6ef3312
     - path: results/preprocessing/fastp/test/0001.test-test_L1_1.fastp.fastq.gz
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/preprocessing/fastp/test/0001.test-test_L1_2.fastp.fastq.gz
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/preprocessing/fastp/test/0002.test-test_L1_1.fastp.fastq.gz
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/preprocessing/fastp/test/0002.test-test_L1_2.fastp.fastq.gz
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/preprocessing/markduplicates/test/test.md.cram
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recal_table/test/test.recal.table
       md5sum: 36b9cec9f69726d3acb0b42685100eb2
     - path: results/preprocessing/recalibrated/test/test.recal.cram
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/reports/fastp/test
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.cram.metrics
@@ -110,6 +110,6 @@
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
       md5sum: 1b65ac38cd96783394e0cf9b7bdd5bc2
     - path: results/reports/samtools/test/test.md.cram.stats
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/reports/samtools/test/test.recal.cram.stats
-    # conda changes md5sums for test.
+    # conda changes md5sums for test

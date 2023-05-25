@@ -37,9 +37,14 @@ output:
       type: file
       description: tabix index file
       pattern: "*.{gz.tbi}"
+  - csi:
+      type: file
+      description: tabix alternate index file
+      pattern: "*.{gz.csi}"
   - versions:
       type: file
       description: File containing software versions
       pattern: "versions.yml"
 authors:
   - "@maxulysse"
+  - "@DLBPointon"

@@ -6,71 +6,62 @@ include { GATK4_MERGEVCFS                } from '../../../modules/nf-core/gatk4/
 
 workflow BAM_VARIANT_CALLING_MPILEUP {
     take:
-        cram                    // channel: [mandatory] [meta, cram, interval]
-        fasta                   // channel: [mandatory]
-        dict
+    cram      // channel: [mandatory] [ meta, cram, crai ]
+    dict      // channel: [mandatory] [ meta, dict ]
+    fasta     // channel: [mandatory] [ fasta ]
+    intervals // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
 
     main:
+    versions = Channel.empty()
 
-    ch_versions = Channel.empty()
+    // Combine cram and intervals for spread and gather strategy
+    cram_intervals = cram.combine(intervals)
+        // Move num_intervals to meta map and reorganize channel for BCFTOOLS_MPILEUP/SAMTOOLS_MPILEUP modules
+        .map{ meta, cram, crai, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram, intervals ] }
 
     keep_bcftools_mpileup = false
-    BCFTOOLS_MPILEUP(cram, fasta, keep_bcftools_mpileup)
-    SAMTOOLS_MPILEUP(cram, fasta)
-    vcfs = BCFTOOLS_MPILEUP.out.vcf.branch{
-            intervals:    it[0].num_intervals > 1
-            no_intervals: it[0].num_intervals <= 1
-        }
-    mpileup = SAMTOOLS_MPILEUP.out.mpileup.branch{
-            intervals:    it[0].num_intervals > 1
-            no_intervals: it[0].num_intervals <= 1
-        }
+    BCFTOOLS_MPILEUP(cram_intervals, fasta, keep_bcftools_mpileup)
 
-    //Merge mpileup only when intervals and natural order sort them
-    CAT_MPILEUP(mpileup.intervals
-        .map{ meta, pileup ->
-            new_meta = meta.tumor_id ? [
-                                            id:             meta.tumor_id + "_vs_" + meta.normal_id,
-                                            normal_id:      meta.normal_id,
-                                            num_intervals:  meta.num_intervals,
-                                            patient:        meta.patient,
-                                            sex:            meta.sex,
-                                            tumor_id:       meta.tumor_id,
-                                        ] // not annotated, so no variantcaller necessary
-                                        : [
-                                            id:             meta.sample,
-                                            num_intervals:  meta.num_intervals,
-                                            patient:        meta.patient,
-                                            sample:         meta.sample,
-                                            sex:            meta.sex,
-                                            status:         meta.status
-                                        ]
-            [groupKey(new_meta, meta.num_intervals), pileup]
-            }
-        .groupTuple(sort:true))
+    SAMTOOLS_MPILEUP(cram_intervals, fasta)
 
-    GATK4_MERGEVCFS(vcfs.intervals
-        .map{ meta, vcf ->
-            new_meta = [
-                        id:             meta.sample,
-                        num_intervals:  meta.num_intervals,
-                        patient:        meta.patient,
-                        sample:         meta.sample,
-                        sex:            meta.sex,
-                        status:         meta.status
-                    ]
+    // Figuring out if there is one or more vcf(s) from the same sample
+    vcf_mpileup = BCFTOOLS_MPILEUP.out.vcf.branch{
+        // Use meta.num_intervals to asses number of intervals
+        intervals:    it[0].num_intervals > 1
+        no_intervals: it[0].num_intervals <= 1
+    }
 
-            [groupKey(new_meta, new_meta.num_intervals), vcf]
-        }.groupTuple(),
-    dict.map{ it -> [[id:it[0].baseName], it]})
+    // Figuring out if there is one or more mpileup(s) from the same sample
+    mpileup_samtools = SAMTOOLS_MPILEUP.out.mpileup.branch{
+        // Use meta.num_intervals to asses number of intervals
+        intervals:    it[0].num_intervals > 1
+        no_intervals: it[0].num_intervals <= 1
+    }
 
-    ch_versions = ch_versions.mix(SAMTOOLS_MPILEUP.out.versions)
-    ch_versions = ch_versions.mix(BCFTOOLS_MPILEUP.out.versions)
-    ch_versions = ch_versions.mix(CAT_MPILEUP.out.versions)
-    ch_versions = ch_versions.mix(GATK4_MERGEVCFS.out.versions)
+    // Merge mpileup and natural order sort them
+    mpileup_to_merge = mpileup_samtools.intervals.map{ meta, pileup -> [ groupKey(meta, meta.num_intervals), pileup ] }.groupTuple(sort:true)
+    CAT_MPILEUP(mpileup_to_merge)
+
+    // Merge VCF
+    vcf_to_merge = vcf_mpileup.intervals.map{ meta, vcf -> [ groupKey(meta, meta.num_intervals), vcf ] }.groupTuple()
+    GATK4_MERGEVCFS(vcf_to_merge, dict)
+
+    // Mix intervals and no_intervals channels together
+    mpileup = CAT_MPILEUP.out.file_out.mix(mpileup_samtools.no_intervals)
+        // add variantcaller to meta map and remove no longer necessary field: num_intervals
+        .map{ meta, mpileup -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'mpileup' ], mpileup ] }
+    vcf = GATK4_MERGEVCFS.out.vcf.mix(vcf_mpileup.no_intervals)
+        // add variantcaller to meta map and remove no longer necessary field: num_intervals
+        .map{ meta, vcf -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'mpileup' ], vcf ] }
+
+    versions = versions.mix(SAMTOOLS_MPILEUP.out.versions)
+    versions = versions.mix(BCFTOOLS_MPILEUP.out.versions)
+    versions = versions.mix(CAT_MPILEUP.out.versions)
+    versions = versions.mix(GATK4_MERGEVCFS.out.versions)
 
     emit:
-    versions = ch_versions
-    mpileup = Channel.empty().mix(CAT_MPILEUP.out.file_out, mpileup.no_intervals)
-    vcf = Channel.empty().mix(GATK4_MERGEVCFS.out.vcf,vcfs.no_intervals)
+    mpileup
+    vcf
+
+    versions
 }

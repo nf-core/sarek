@@ -1,7 +1,10 @@
-name: ENSEMBLVEP
+name: ENSEMBLVEP_VEP
 description: Ensembl Variant Effect Predictor (VEP). The output-file-format is controlled through `task.ext.args`.
 keywords:
   - annotation
+  - vcf
+  - json
+  - tab
 tools:
   - ensemblvep:
       description: |
@@ -20,29 +23,39 @@ input:
       type: file
       description: |
         vcf to annotate
+  - custom_extra_files:
+      type: file
+      description: |
+        extra sample-specific files to be used with the `--custom` flag to be configured with ext.args
+        (optional)
   - genome:
-      type: value
+      type: string
       description: |
         which genome to annotate with
   - species:
-      type: value
+      type: string
       description: |
         which species to annotate with
   - cache_version:
-      type: value
+      type: integer
       description: |
         which version of the cache to annotate with
   - cache:
       type: file
       description: |
         path to VEP cache (optional)
+  - meta2:
+      type: map
+      description: |
+        Groovy Map containing fasta reference information
+        e.g. [ id:'test' ]
   - fasta:
       type: file
       description: |
         reference FASTA file (optional)
       pattern: "*.{fasta,fa}"
   - extra_files:
-      type: tuple
+      type: file
       description: |
         path to file(s) needed for plugins  (optional)
 output:
@@ -72,3 +85,4 @@ output:
 authors:
   - "@maxulysse"
   - "@matthdsm"
+  - "@nvnieuwk"

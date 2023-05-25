@@ -1,5 +1,5 @@
 - name: Run variant calling on somatic samples with cnvkit
-  command: nextflow run main.nf -profile test,tools_somatic --tools cnvkit
+  command: nextflow run main.nf -profile test,tools_somatic --tools cnvkit --outdir results
   tags:
     - cnvkit
     - copy_number_calling
@@ -14,9 +14,9 @@
     - path: results/variant_calling/cnvkit/sample3/reference.cnn
       md5sum: a09ee4be5dda1cf0f68073bdb3aad8ec
     - path: results/variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted-diagram.pdf
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted-scatter.png
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted.antitargetcoverage.cnn
       md5sum: fe1248aa91fad7769303bb4c031d55ca
     - path: results/variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted.bintest.cns
@@ -40,9 +40,9 @@
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test.paired_end.recalibrated.sorted.targetcoverage.cnn
       md5sum: 79aae7e9c135fb8c65f8fbda12610faf
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted-diagram.pdf
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted-scatter.png
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.antitargetcoverage.cnn
       md5sum: 067115082c4af4b64d58c0dc3a3642e4
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.bintest.cns
@@ -58,7 +58,7 @@
     - path: results/cnvkit
       should_exist: false
 - name: Run variant calling on tumor_only sample with cnvkit
-  command: nextflow run main.nf -profile test,tools_tumoronly --tools cnvkit
+  command: nextflow run main.nf -profile test,tools_tumoronly --tools cnvkit --outdir results
   tags:
     - cnvkit
     - copy_number_calling
@@ -71,9 +71,9 @@
     - path: results/variant_calling/cnvkit/sample2/cnvkit.reference.target-tmp.bed
       md5sum: 657b25dbda8516624efa8cb2cf3716ca
     - path: results/variant_calling/cnvkit/sample2/test2.paired_end.recalibrated.sorted-diagram.pdf
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/cnvkit/sample2/test2.paired_end.recalibrated.sorted-scatter.png
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/variant_calling/cnvkit/sample2/test2.paired_end.recalibrated.sorted.antitargetcoverage.cnn
       md5sum: 067115082c4af4b64d58c0dc3a3642e4
     - path: results/variant_calling/cnvkit/sample2/test2.paired_end.recalibrated.sorted.bintest.cns
@@ -89,7 +89,7 @@
     - path: results/cnvkit
       should_exist: false
 - name: Run variant calling on germline sample with cnvkit
-  command: nextflow run main.nf -profile test,tools_germline --tools cnvkit
+  command: nextflow run main.nf -profile test,tools_germline --tools cnvkit --outdir results
   tags:
     - cnvkit
     - copy_number_calling
@@ -104,9 +104,9 @@
     - path: results/variant_calling/cnvkit/sample1/reference.cnn
       md5sum: a09ee4be5dda1cf0f68073bdb3aad8ec
     - path: results/variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted-diagram.pdf
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted-scatter.png
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted.antitargetcoverage.cnn
       md5sum: fe1248aa91fad7769303bb4c031d55ca
     - path: results/variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted.bintest.cns
@@ -122,7 +122,7 @@
     - path: results/cnvkit
       should_exist: false
 - name: Run variant calling on somatic samples with cnvkit and skip variant calling on matched normal
-  command: nextflow run main.nf -profile test,tools_somatic --tools cnvkit --only_paired_variant_calling
+  command: nextflow run main.nf -profile test,tools_somatic --tools cnvkit --only_paired_variant_calling --outdir results
   tags:
     - cnvkit
     - somatic
@@ -141,9 +141,9 @@
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test.paired_end.recalibrated.sorted.targetcoverage.cnn
       md5sum: 79aae7e9c135fb8c65f8fbda12610faf
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted-diagram.pdf
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted-scatter.png
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.antitargetcoverage.cnn
       md5sum: 067115082c4af4b64d58c0dc3a3642e4
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.bintest.cns

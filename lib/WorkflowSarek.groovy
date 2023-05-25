@@ -2,6 +2,7 @@
 // This file holds several functions specific to the workflow/sarek.nf in the nf-core/sarek pipeline
 //
 
+import nextflow.Nextflow
 import groovy.text.SimpleTemplateEngine
 
 class WorkflowSarek {
@@ -12,10 +13,8 @@ class WorkflowSarek {
     public static void initialise(params, log) {
         genomeExistsError(params, log)
 
-
-        if (!params.fasta) {
-            log.error "Genome fasta file not specified with e.g. '--fasta genome.fa' or via a detectable config file."
-            System.exit(1)
+        if (!params.fasta && params.step == 'annotate') {
+            Nextflow.error "Genome fasta file not specified with e.g. '--fasta genome.fa' or via a detectable config file."
         }
     }
 
@@ -61,43 +60,46 @@ class WorkflowSarek {
         def description_html = engine.createTemplate(methods_text).make(meta)
 
         return description_html
-    }//
+    }
+
+    //
     // Exit pipeline if incorrect --genome key provided
     //
     private static void genomeExistsError(params, log) {
         if (params.genomes && params.genome && !params.genomes.containsKey(params.genome)) {
-            log.error "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
+            def error_string = "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
                 "  Genome '${params.genome}' not found in any config files provided to the pipeline.\n" +
                 "  Currently, the available genome keys are:\n" +
                 "  ${params.genomes.keySet().join(", ")}\n" +
                 "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-            System.exit(1)
+            Nextflow.error(error_string)
         }
     }
 
     public static String retrieveInput(params, log){
-        switch (params.step) {
-            case 'mapping':                 log.warn "Can't start with step $params.step without samplesheet"
-                                            System.exit(1);
-                                            break
-            case 'markduplicates':          log.warn "Using file ${params.outdir}/csv/mapped.csv"
-                                            params.putIfAbsent("input","${params.outdir}/csv/mapped.csv");
-                                            break
-            case 'prepare_recalibration':   log.warn "Using file ${params.outdir}/csv/markduplicates_no_table.csv"
-                                            params.putIfAbsent("input", "${params.outdir}/csv/markduplicates_no_table.csv");
-                                            break
-            case 'recalibrate':             log.warn "Using file ${params.outdir}/csv/markduplicates.csv"
-                                            params.putIfAbsent("input", "${params.outdir}/csv/markduplicates.csv");
-                                            break
-            case 'variant_calling':         log.warn "Using file ${params.outdir}/csv/recalibrated.csv"
-                                            params.putIfAbsent("input", "${params.outdir}/csv/recalibrated.csv");
-                                            break
-            // case 'controlfreec':         csv_file = file("${params.outdir}/variant_calling/csv/control-freec_mpileup.csv", checkIfExists: true); break
-            case 'annotate':                log.warn "Using file ${params.outdir}/csv/variantcalled.csv"
-                                            params.putIfAbsent("input","${params.outdir}/csv/variantcalled.csv");
-                                            break
-            default:    log.warn "Please provide an input samplesheet to the pipeline e.g. '--input samplesheet.csv'"
-                        exit 1, "Unknown step $params.step"
+        if (!params.build_only_index) {
+            switch (params.step) {
+                case 'mapping':                 Nextflow.error("Can't start with step $params.step without samplesheet")
+                                                break
+                case 'markduplicates':          log.warn("Using file ${params.outdir}/csv/mapped.csv")
+                                                params.putIfAbsent("input","${params.outdir}/csv/mapped.csv");
+                                                break
+                case 'prepare_recalibration':   log.warn("Using file ${params.outdir}/csv/markduplicates_no_table.csv")
+                                                params.putIfAbsent("input", "${params.outdir}/csv/markduplicates_no_table.csv");
+                                                break
+                case 'recalibrate':             log.warn("Using file ${params.outdir}/csv/markduplicates.csv")
+                                                params.putIfAbsent("input", "${params.outdir}/csv/markduplicates.csv");
+                                                break
+                case 'variant_calling':         log.warn("Using file ${params.outdir}/csv/recalibrated.csv")
+                                                params.putIfAbsent("input", "${params.outdir}/csv/recalibrated.csv");
+                                                break
+                // case 'controlfreec':         csv_file = file("${params.outdir}/variant_calling/csv/control-freec_mpileup.csv", checkIfExists: true); break
+                case 'annotate':                log.warn("Using file ${params.outdir}/csv/variantcalled.csv")
+                                                params.putIfAbsent("input","${params.outdir}/csv/variantcalled.csv");
+                                                break
+                default:                        log.warn("Please provide an input samplesheet to the pipeline e.g. '--input samplesheet.csv'")
+                                                Nextflow.error("Unknown step $params.step")
+            }
         }
     }
 }

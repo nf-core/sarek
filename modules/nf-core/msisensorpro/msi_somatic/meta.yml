@@ -11,7 +11,7 @@ tools:
       homepage: https://github.com/xjtu-omics/msisensor-pro
       documentation: https://github.com/xjtu-omics/msisensor-pro/wiki
       tool_dev_url: https://github.com/xjtu-omics/msisensor-pro
-      doi: "doi.org/10.1016/j.gpb.2020.02.001"
+      doi: "10.1016/j.gpb.2020.02.001"
       licence: ["Custom Licence"]
 
 input:

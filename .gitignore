@@ -7,3 +7,4 @@ results/
 testing/
 testing*
 *.pyc
+test-datasets/

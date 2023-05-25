@@ -1,6 +1,7 @@
 name: cnvkit_batch
 description: Copy number variant detection from high-throughput sequencing data
 keywords:
+  - cnvkit
   - bam
   - fasta
   - copy number

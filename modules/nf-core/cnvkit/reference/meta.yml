@@ -1,8 +1,10 @@
 name: cnvkit_reference
-description:
+description: Compile a coverage reference from the given files (normal samples).
 keywords:
   - cnvkit
   - reference
+  - cnv
+  - copy number
 tools:
   - cnvkit:
       description: |

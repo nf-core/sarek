@@ -1,10 +1,10 @@
 process CREATE_INTERVALS_BED {
     tag "$intervals"
 
-    conda (params.enable_conda ? "anaconda::gawk=5.1.0" : null)
+    conda "anaconda::gawk=5.1.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/gawk:5.1.0' :
-        'quay.io/biocontainers/gawk:5.1.0' }"
+        'biocontainers/gawk:5.1.0' }"
 
     input:
     path(intervals)

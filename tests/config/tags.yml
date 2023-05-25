@@ -2,43 +2,63 @@
 
 tumor_normal_pair:
   - conf/modules/**
-  - modules/**
-  - subworkflows/**
-  - workflows/**
-  - nextflow.config
   - main.nf
+  - modules/**
+  - nextflow.config
+  - nextflow_schema.json
+  - subworkflows/**
+  - tests/test_tumor_normal_pair.yml
+  - workflows/**
 
 save_mapped_only:
   - conf/modules/**
-  - modules/**
-  - subworkflows/**
-  - workflows/**
-  - nextflow.config
   - main.nf
+  - modules/**
+  - nextflow.config
+  - nextflow_schema.json
+  - subworkflows/**
+  - tests/test_save_mapped.yml
+  - workflows/**
 
 save_output_as_bam_only:
   - conf/modules/**
-  - modules/**
-  - subworkflows/**
-  - workflows/**
-  - nextflow.config
   - main.nf
+  - modules/**
+  - nextflow.config
+  - nextflow_schema.json
+  - subworkflows/**
+  - tests/test_save_output_as_bam_only.yml
+  - workflows/**
 
 skip_all_qc:
   - conf/modules/**
-  - modules/**
-  - subworkflows/**
-  - workflows/**
-  - nextflow.config
   - main.nf
+  - modules/**
+  - nextflow.config
+  - nextflow_schema.json
+  - subworkflows/**
+  - tests/test_skip_all_qc.yml
+  - workflows/**
 
 skip_markduplicates:
   - conf/modules/**
-  - modules/**
-  - subworkflows/**
-  - workflows/**
-  - nextflow.config
   - main.nf
+  - modules/**
+  - nextflow.config
+  - nextflow_schema.json
+  - subworkflows/**
+  - tests/test_skip_markduplicates.yml
+  - workflows/**
+
+validation_checks:
+  - conf/modules/**
+  - main.nf
+  - modules/**
+  - nextflow.config
+  - nextflow_schema.json
+  - subworkflows/**
+  - tests/test_skip_markduplicates.yml
+  - workflows/**
 
 # preprocessing
 
@@ -50,6 +70,7 @@ alignment_to_fastq:
   - modules/nf-core/samtools/merge/main.nf
   - modules/nf-core/samtools/view/main.nf
   - subworkflows/local/bam_convert_samtools/main.nf
+  - tests/test_alignment_to_fastq.yml
 
 ## umi
 umi:
@@ -64,11 +85,13 @@ umi:
   - modules/nf-core/samtools/bam2fq/main.nf
   - subworkflows/local/fastq_align_bwamem_mem2_dragmap/main.nf
   - subworkflows/local/fastq_create_umi_consensus_fgbio/main.nf
+  - tests/test_umi.yml
 
 ## fastp
 fastp:
   - conf/modules/trimming.config
   - modules/nf-core/fastp/main.nf
+  - tests/test_fastp.yml
 
 ## aligner
 
@@ -77,18 +100,21 @@ bwamem:
   - conf/modules/aligner.config
   - modules/nf-core/bwa/mem/main.nf
   - subworkflows/local/fastq_align_bwamem_mem2_dragmap/main.nf
+  - tests/test_alignment_bwamem.yml
 
 ### bwamem2
 bwamem2:
   - conf/modules/aligner.config
   - modules/nf-core/bwamem2/mem/main.nf
   - subworkflows/local/fastq_align_bwamem_mem2_dragmap/main.nf
+  - tests/test_alignment_bwamem2.yml
 
 ### dragmap
 dragmap:
   - conf/modules/aligner.config
   - modules/nf-core/dragmap/align/main.nf
   - subworkflows/local/fastq_align_bwamem_mem2_dragmap/main.nf
+  - tests/test_alignment_dragmap.yml
 
 ## markduplicates
 markduplicates:
@@ -100,6 +126,8 @@ markduplicates:
   - modules/nf-core/samtools/stats/main.nf
   - subworkflows/local/bam_markduplicates/main.nf
   - subworkflows/local/cram_qc_mosdepth_samtools/main.nf
+  - tests/test_markduplicates_from_bam.yml
+  - tests/test_markduplicates_from_cram.yml
 
 ## prepare_recalibration
 prepare_recalibration:
@@ -108,6 +136,8 @@ prepare_recalibration:
   - modules/nf-core/gatk4/gatherbqsrreports/main.nf
   - modules/nf-core/samtools/convert/main.nf
   - subworkflows/local/bam_baserecalibrator/main.nf
+  - tests/test_prepare_recalibration_from_bam.yml
+  - tests/test_prepare_recalibration_from_cram.yml
 
 ## recalibrate
 recalibrate:
@@ -118,6 +148,8 @@ recalibrate:
   - modules/nf-core/samtools/merge/main.nf
   - subworkflows/local/bam_applybqsr/main.nf
   - subworkflows/local/cram_merge_index_samtools/main.nf
+  - tests/test_recalibrate_from_bam.yml
+  - tests/test_recalibrate_from_cram.yml
 
 ## intervals
 intervals:
@@ -127,6 +159,7 @@ intervals:
   - modules/nf-core/gatk4/intervallisttobed/main.nf
   - modules/nf-core/tabix/bgziptabix/main.nf
   - subworkflows/local/prepare_intervals/main.nf
+  - tests/test_intervals.yml
 
 ## gatk4_spark
 gatk4_spark:
@@ -140,6 +173,7 @@ gatk4_spark:
   - subworkflows/local/bam_applybqsr_spark/main.nf
   - subworkflows/local/bam_baserecalibrator_spark/main.nf
   - subworkflows/local/bam_markduplicates_spark/main.nf
+  - tests/test_gatk4_spark.yml
 
 # variant calling
 
@@ -151,6 +185,7 @@ cnvkit:
   - modules/nf-core/cnvkit/reference/main.nf
   - subworkflows/local/bam_variant_calling_cnvkit/main.nf
   - subworkflows/local/prepare_reference_cnvkit/main.nf
+  - tests/test_cnvkit.yml
 
 ## controlfreec
 controlfreec:
@@ -163,9 +198,10 @@ controlfreec:
   - modules/nf-core/controlfreec/freec2circos/main.nf
   - modules/nf-core/controlfreec/makegraph/main.nf
   - modules/nf-core/samtools/mpileup/main.nf
+  - subworkflows/local/bam_variant_calling_mpileup/main.nf
   - subworkflows/local/bam_variant_calling_somatic_controlfreec/main.nf
   - subworkflows/local/bam_variant_calling_tumor_only_controlfreec/main.nf
-  - subworkflows/local/bam_variant_calling_mpileup/main.nf
+  - tests/test_controlfreec.yml
 
 ## deepvariant
 deepvariant:
@@ -174,6 +210,7 @@ deepvariant:
   - modules/nf-core/gatk4/mergevcfs/main.nf
   - modules/nf-core/tabix/tabix/main.nf
   - subworkflows/local/bam_variant_calling_deepvariant/main.nf
+  - tests/test_deepvariant.yml
 
 ## freebayes
 freebayes:
@@ -183,9 +220,34 @@ freebayes:
   - modules/nf-core/gatk4/mergevcfs/main.nf
   - modules/nf-core/tabix/tabix/main.nf
   - subworkflows/local/bam_variant_calling_freebayes/main.nf
+  - tests/test_freebayes.yml
 
 ## haplotypecaller
 haplotypecaller:
+  - conf/modules/haplotypecaller.config
+  - modules/nf-core/gatk4/cnnscorevariants/main.nf
+  - modules/nf-core/gatk4/filtervarianttranches/main.nf
+  - modules/nf-core/gatk4/haplotypecaller/main.nf
+  - modules/nf-core/gatk4/mergevcfs/main.nf
+  - modules/nf-core/samtools/index/main.nf
+  - modules/nf-core/samtools/merge/main.nf
+  - subworkflows/local/bam_merge_index_samtools/main.nf
+  - subworkflows/local/bam_variant_calling_haplotypecaller/main.nf
+  - subworkflows/local/vcf_variant_filtering_gatk/main.nf
+  - tests/test_haplotypecaller.yml
+
+haplotypecaller_skip_filter:
+  - conf/modules/haplotypecaller.config
+  - modules/nf-core/gatk4/haplotypecaller/main.nf
+  - modules/nf-core/gatk4/mergevcfs/main.nf
+  - modules/nf-core/samtools/index/main.nf
+  - modules/nf-core/samtools/merge/main.nf
+  - subworkflows/local/bam_merge_index_samtools/main.nf
+  - subworkflows/local/bam_variant_calling_haplotypecaller/main.nf
+  - tests/test_haplotypecaller_skip_filter.yml
+
+## joint_germline
+joint_germline:
   - conf/modules/haplotypecaller.config
   - modules/nf-core/bcftools/sort/main.nf
   - modules/nf-core/gatk4/applyvqsr/main.nf
@@ -198,11 +260,11 @@ haplotypecaller:
   - modules/nf-core/gatk4/variantrecalibrator/main.nf
   - modules/nf-core/samtools/index/main.nf
   - modules/nf-core/samtools/merge/main.nf
-  - modules/nf-core/tabix/tabix/main.nf
   - subworkflows/local/bam_joint_calling_germline_gatk/main.nf
   - subworkflows/local/bam_merge_index_samtools/main.nf
   - subworkflows/local/bam_variant_calling_haplotypecaller/main.nf
   - subworkflows/local/vcf_variant_filtering_gatk/main.nf
+  - tests/test_joint_germline.yml
 
 ## manta
 manta:
@@ -214,6 +276,7 @@ manta:
   - subworkflows/local/bam_variant_calling_germline_manta/main.nf
   - subworkflows/local/bam_variant_calling_somatic_manta/main.nf
   - subworkflows/local/bam_variant_calling_tumor_only_manta/main.nf
+  - tests/test_manta.yml
 
 ## mpileup
 mpileup:
@@ -221,12 +284,14 @@ mpileup:
   - modules/nf-core/cat/cat/main.nf
   - modules/nf-core/samtools/mpileup/main.nf
   - subworkflows/local/bam_variant_calling_mpileup/main.nf
+  - tests/test_mpileup.yml
 
 ## msisensorpro
 msisensorpro:
   - conf/modules/msisensorpro.config
-  - modules/nf-core/msisensorpro/scan/main.nf
   - modules/nf-core/msisensorpro/msi_somatic/main.nf
+  - modules/nf-core/msisensorpro/scan/main.nf
+  - tests/test_msisensorpro.yml
 
 ## mutect2
 mutect2:
@@ -241,6 +306,7 @@ mutect2:
   - modules/nf-core/gatk4/mutect2/main.nf
   - subworkflows/local/bam_variant_calling_somatic_mutect2/main.nf
   - subworkflows/local/bam_variant_calling_tumor_only_mutect2/main.nf
+  - tests/test_mutect2.yml
 
 ## strelka
 strelka:
@@ -250,6 +316,7 @@ strelka:
   - modules/nf-core/strelka/somatic/main.nf
   - subworkflows/local/bam_variant_calling_single_strelka/main.nf
   - subworkflows/local/bam_variant_calling_somatic_strelka/main.nf
+  - tests/test_strelka.yml
 
 ## strelka_bp
 strelka_bp:
@@ -260,6 +327,7 @@ strelka_bp:
   - modules/nf-core/strelka/somatic/main.nf
   - subworkflows/local/bam_variant_calling_somatic_manta/main.nf
   - subworkflows/local/bam_variant_calling_somatic_strelka/main.nf
+  - tests/test_strelka_bp.yml
 
 ## tiddit
 tiddit:
@@ -269,29 +337,68 @@ tiddit:
   - modules/nf-core/tiddit/sv/main.nf
   - subworkflows/local/bam_variant_calling_single_tiddit/main.nf
   - subworkflows/local/bam_variant_calling_somatic_tiddit/main.nf
+  - tests/test_tiddit.yml
 
 # annotate
 
 ## merge
+cache:
+  - conf/modules/prepare_cache.config
+  - modules/nf-core/ensemblvep/download/main.nf
+  - modules/nf-core/snpeff/download/main.nf
+  - subworkflows/local/prepare_cache/main.nf
+  - tests/test_annotation_cache.yml
+
+## merge
 merge:
   - conf/modules/annotate.config
-  - modules/nf-core/ensemblvep/main.nf
-  - modules/nf-core/snpeff/main.nf
+  - modules/nf-core/ensemblvep/vep/main.nf
+  - modules/nf-core/snpeff/snpeff/main.nf
   - modules/nf-core/tabix/bgziptabix/main.nf
   - subworkflows/local/vcf_annotate_all/main.nf
   - subworkflows/nf-core/vcf_annotate_ensemblvep/main.nf
   - subworkflows/nf-core/vcf_annotate_snpeff/main.nf
+  - tests/test_annotation_merge.yml
 
 ## snpeff
 snpeff:
   - conf/modules/annotate.config
-  - modules/nf-core/snpeff/main.nf
+  - modules/nf-core/snpeff/snpeff/main.nf
   - modules/nf-core/tabix/bgziptabix/main.nf
   - subworkflows/nf-core/vcf_annotate_snpeff/main.nf
+  - tests/test_annotation_snpeff.yml
 
 ## vep
 vep:
   - conf/modules/annotate.config
-  - modules/nf-core/ensemblvep/main.nf
+  - modules/nf-core/ensemblvep/vep/main.nf
   - modules/nf-core/tabix/bgziptabix/main.nf
   - subworkflows/nf-core/vcf_annotate_ensemblvep/main.nf
+  - tests/test_annotation_vep.yml
+
+# postprocessing
+
+## concatenate germline vcfs
+concatenate_vcfs:
+  - conf/modules/post_variant_calling.config
+  - modules/nf-core/bcftools/concat/main.nf
+  - modules/nf-core/bcftools/mpileup/main.nf
+  - modules/nf-core/bcftools/sort/main.nf
+  - modules/nf-core/deepvariant/main.nf
+  - modules/nf-core/freebayes/main.nf
+  - modules/nf-core/gatk4/haplotypecaller/main.nf
+  - modules/nf-core/gatk4/mergevcfs/main.nf
+  - modules/nf-core/manta/germline/main.nf
+  - modules/nf-core/samtools/mpileup/main.nf
+  - modules/nf-core/strelka/germline/main.nf
+  - modules/nf-core/tabix/bgziptabix/main.nf
+  - modules/nf-core/tabix/tabix/main.nf
+  - modules/nf-core/tiddit/sv/main.nf
+  - subworkflows/local/bam_variant_calling_deepvariant/main.nf
+  - subworkflows/local/bam_variant_calling_freebayes/main.nf
+  - subworkflows/local/bam_variant_calling_germline_manta/main.nf
+  - subworkflows/local/bam_variant_calling_haplotypecaller/main.nf
+  - subworkflows/local/bam_variant_calling_mpileup/main.nf
+  - subworkflows/local/bam_variant_calling_single_strelka/main.nf
+  - subworkflows/local/bam_variant_calling_single_tiddit/main.nf
+  - tests/test_concat_germline_vcfs.yml

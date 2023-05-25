@@ -1,5 +1,5 @@
 - name: Run default pipeline with skipping all QC steps
-  command: nextflow run main.nf -profile test --skip_tools fastqc,markduplicates_report,mosdepth,multiqc,samtools
+  command: nextflow run main.nf -profile test --skip_tools fastqc,markduplicates_report,mosdepth,multiqc,samtools --outdir results
   tags:
     - default_extended
     - preprocessing
@@ -14,15 +14,15 @@
     - path: results/csv/recalibrated.csv
       md5sum: 2d29d9e53894dcce96a1b5beb6ef3312
     - path: results/preprocessing/markduplicates/test/test.md.cram
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recal_table/test/test.recal.table
       md5sum: 4ac774bf5f1157e77426fd82f5ac0fbe
     - path: results/preprocessing/recalibrated/test/test.recal.cram
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/multiqc
       should_exist: false
     - path: results/reports/fastqc
@@ -34,7 +34,7 @@
     - path: results/reports/samtools
       should_exist: false
     - path: results/reports/bcftools/strelka/test/test.strelka.variants.bcftools_stats.txt
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/reports/vcftools/strelka/test/test.strelka.variants.FILTER.summary
       md5sum: dd87f507da7de20d5318841af312493b
     - path: results/reports/vcftools/strelka/test/test.strelka.variants.TsTv.count
@@ -42,11 +42,11 @@
     - path: results/reports/vcftools/strelka/test/test.strelka.variants.TsTv.qual
       md5sum: bc68ae4e688e9fb772b457069e604883
     - path: results/variant_calling/strelka/test/test.strelka.genome.vcf.gz
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/strelka/test/test.strelka.genome.vcf.gz.tbi
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/strelka/test/test.strelka.variants.vcf.gz
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/strelka/test/test.strelka.variants.vcf.gz.tbi
     - path: results/strelka
       should_exist: false

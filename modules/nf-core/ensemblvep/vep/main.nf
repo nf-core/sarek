@@ -1,27 +1,27 @@
-process ENSEMBLVEP {
+process ENSEMBLVEP_VEP {
     tag "$meta.id"
     label 'process_medium'
 
-    conda (params.enable_conda ? "bioconda::ensembl-vep=108.2" : null)
+    conda "bioconda::ensembl-vep=108.2"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/ensembl-vep:108.2--pl5321h4a94de4_0' :
-        'quay.io/biocontainers/ensembl-vep:108.2--pl5321h4a94de4_0' }"
+        'biocontainers/ensembl-vep:108.2--pl5321h4a94de4_0' }"
 
     input:
-    tuple val(meta), path(vcf)
+    tuple val(meta), path(vcf), path(custom_extra_files)
     val   genome
     val   species
     val   cache_version
     path  cache
-    path  fasta
+    tuple val(meta2), path(fasta)
     path  extra_files
 
     output:
     tuple val(meta), path("*.vcf.gz")  , optional:true, emit: vcf
     tuple val(meta), path("*.tab.gz")  , optional:true, emit: tab
     tuple val(meta), path("*.json.gz") , optional:true, emit: json
-    path "*.summary.html"                  , emit: report
-    path "versions.yml"                    , emit: versions
+    path "*.summary.html"              , emit: report
+    path "versions.yml"                , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -33,7 +33,6 @@ process ENSEMBLVEP {
     def prefix = task.ext.prefix ?: "${meta.id}"
     def dir_cache = cache ? "\${PWD}/${cache}" : "/.vep"
     def reference = fasta ? "--fasta $fasta" : ""
-
     """
     vep \\
         -i $vcf \\
@@ -59,9 +58,9 @@ process ENSEMBLVEP {
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    touch ${prefix}.ann.vcf.gz
-    touch ${prefix}.ann.tab.gz
-    touch ${prefix}.ann.json.gz
+    touch ${prefix}.vcf.gz
+    touch ${prefix}.tab.gz
+    touch ${prefix}.json.gz
     touch ${prefix}.summary.html
 
     cat <<-END_VERSIONS > versions.yml

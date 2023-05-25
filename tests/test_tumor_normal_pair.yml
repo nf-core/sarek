@@ -1,5 +1,5 @@
 - name: Run default pipeline for tumor normal pair
-  command: nextflow run main.nf -profile test,pair
+  command: nextflow run main.nf -profile test,pair --outdir results
   tags:
     - default_extended
     - preprocessing
@@ -13,25 +13,25 @@
       md5sum: 008dff17e2a0d96ef9c1cae12fcab6ab
     - path: results/multiqc
     - path: results/preprocessing/markduplicates/test/test.md.cram
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recal_table/test/test.recal.table
       md5sum: 4ac774bf5f1157e77426fd82f5ac0fbe
     - path: results/preprocessing/recalibrated/test/test.recal.cram
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/markduplicates/test2/test2.md.cram
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/markduplicates/test2/test2.md.cram.crai
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recal_table/test2/test2.recal.table
       md5sum: 0626cd4337eab79b38b5bc5c95e0c003
     - path: results/preprocessing/recalibrated/test2/test2.recal.cram
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test2/test2.recal.cram.crai
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/fastqc/test2-test_L1
     - path: results/reports/markduplicates/test/test.md.cram.metrics
@@ -79,12 +79,12 @@
     - path: results/reports/mosdepth/test2/test2.recal.regions.bed.gz.csi
       md5sum: d5f1c9389ecf52ba839e834780a94549
     - path: results/reports/samtools/test/test.md.cram.stats
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/reports/samtools/test/test.recal.cram.stats
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/reports/samtools/test2/test2.md.cram.stats
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/reports/samtools/test2/test2.recal.cram.stats
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/preprocessing/mapped/
       should_exist: false
