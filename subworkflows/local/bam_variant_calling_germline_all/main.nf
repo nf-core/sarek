@@ -137,7 +137,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
 
         if (joint_germline) {
             BAM_JOINT_CALLING_GERMLINE_GATK(
-                BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.genotype_intervals_and_crams,
+                BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.genotype_intervals,
                 fasta,
                 fasta_fai,
                 dict,
@@ -186,7 +186,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
 
         if (joint_germline) {
             BAM_JOINT_CALLING_GERMLINE_SENTIEON(
-                BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER.out.genotype_intervals_and_crams,
+                BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER.out.genotype_intervals,
                 fasta,
                 fasta_fai,
                 dict,
