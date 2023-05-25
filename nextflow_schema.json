@@ -504,7 +504,6 @@
                 },
                 "vep_out_format": {
                     "type": "string",
-                    "fa_icon": "fas fa-file",
                     "default": "vcf",
                     "description": "VEP output-file format.",
                     "enum": ["json", "tab", "vcf"],
