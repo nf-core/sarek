@@ -377,7 +377,7 @@
                     "default": "vcf",
                     "description": "Option for selecting Sentieon Haplotyper output format.",
                     "enum": ["vcf", "gvcf", "both"],
-                    "help_text": "Sets the format of the output file or files from Sentieon's Haplotyper. Available formats: vcf, gvcf and vcf.",
+                    "help_text": "Sets the format of the output file or files from Sentieon's Haplotyper. Available formats: vcf, gvcf, or both",
                     "fa_icon": "fas fa-table",
                     "hidden": true
                 }
