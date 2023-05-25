@@ -62,6 +62,8 @@ jobs:
             tags: merge
           - profile: "singularity"
             tags: validation_checks
+          - profile: "conda"
+            tags: validation_checks
     env:
       NXF_ANSI_LOG: false
       TEST_DATA_BASE: "${{ github.workspace }}/test-datasets"
