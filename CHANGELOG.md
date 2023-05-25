@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#860](https://github.com/nf-core/sarek/pull/860) - Replace local subworkflow with nf-core version - `vcf_annotate_snpeff`
 - [#865](https://github.com/nf-core/sarek/pull/865) - Replace local subworkflow with nf-core version - `vcf_annotate_ensemblvep`
 - [#874](https://github.com/nf-core/sarek/pull/874) - Update all modules
+- [#882](https://github.com/nf-core/sarek/pull/882) - Adapt exit strategy for `Manta`/`Strelka`
 - [#890](https://github.com/nf-core/sarek/pull/890) - Sync `TEMPLATE` with `tools` `2.7.1`
 - [#896](https://github.com/nf-core/sarek/pull/896) - Code refactoring
 - [#898](https://github.com/nf-core/sarek/pull/898) - Nextflow minimal version is now `22.10.1`
