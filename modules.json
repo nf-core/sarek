@@ -378,12 +378,12 @@
                     },
                     "sentieon/bwamem": {
                         "branch": "master",
-                        "git_sha": "8c159ebb28cfa08890042a133bfab78de932eff7",
+                        "git_sha": "b9829e1064382745d8dff7f1d74d2138d2864f71",
                         "installed_by": ["modules"]
                     },
                     "sentieon/dedup": {
                         "branch": "master",
-                        "git_sha": "8c04ecc0c5d4ad102755b919b2525481f0380090",
+                        "git_sha": "b9829e1064382745d8dff7f1d74d2138d2864f71",
                         "installed_by": ["modules"]
                     },
                     "sentieon/gvcftyper": {
@@ -393,7 +393,7 @@
                     },
                     "sentieon/haplotyper": {
                         "branch": "master",
-                        "git_sha": "6edebae6cbfc01da3d01efe4dd19706e7427c5bf",
+                        "git_sha": "b9829e1064382745d8dff7f1d74d2138d2864f71",
                         "installed_by": ["modules"]
                     },
                     "sentieon/varcal": {
