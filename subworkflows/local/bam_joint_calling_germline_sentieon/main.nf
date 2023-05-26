@@ -70,14 +70,14 @@ workflow BAM_JOINT_CALLING_GERMLINE_SENTIEON {
     vqsr_input_snp = vqsr_input.join(SENTIEON_VARCAL_SNP.out.recal, failOnDuplicate: true)
         .join(SENTIEON_VARCAL_SNP.out.idx, failOnDuplicate: true)
         .join(SENTIEON_VARCAL_SNP.out.tranches, failOnDuplicate: true)
-        .map{ meta, vcf, tbi, recal, index, tranche -> [ meta - meta.subMap('id') + [ id:'recalibrated_joint_variant_calling' ], vcf, tbi, recal, index, tranche ] }
+        .map{ meta, vcf, tbi, recal, index, tranche -> [ meta + [ id:'recalibrated_joint_variant_calling' ], vcf, tbi, recal, index, tranche ] }
 
     // Join results of variant recalibration into a single channel tuple
     // Rework meta for variantscalled.csv and annotation tools
     vqsr_input_indel = vqsr_input.join(SENTIEON_VARCAL_INDEL.out.recal, failOnDuplicate: true)
         .join(SENTIEON_VARCAL_INDEL.out.idx, failOnDuplicate: true)
         .join(SENTIEON_VARCAL_INDEL.out.tranches, failOnDuplicate: true)
-        .map{ meta, vcf, tbi, recal, index, tranche -> [ meta - meta.subMap('id') + [ id:'recalibrated_joint_variant_calling' ], vcf, tbi, recal, index, tranche ] }
+        .map{ meta, vcf, tbi, recal, index, tranche -> [ meta + [ id:'recalibrated_joint_variant_calling' ], vcf, tbi, recal, index, tranche ] }
 
 
     SENTIEON_APPLYVARCAL_SNP(
