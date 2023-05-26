@@ -78,20 +78,7 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
 
     // VCFs
     // Only when using intervals
-    MERGE_SENTIEON_HAPLOTYPER_VCFS(
-        haplotyper_vcf_branch.intervals.map{ meta, vcf ->
-            new_meta = [
-                            id:             meta.sample,
-                            num_intervals:  meta.num_intervals,
-                            patient:        meta.patient,
-                            sample:         meta.sample,
-                            sex:            meta.sex,
-                            status:         meta.status,
-                            variantcaller:  "sentieon_haplotyper"
-                        ]
-            [groupKey(new_meta, new_meta.num_intervals), vcf] }
-            .groupTuple(),
-        dict)
+    MERGE_SENTIEON_HAPLOTYPER_VCFS(haplotyper_vcf_branch.intervals.map{ meta, vcf -> [ groupKey(meta, meta.num_intervals), vcf ] }.groupTuple(), dict)
 
     versions = versions.mix(MERGE_SENTIEON_HAPLOTYPER_VCFS.out.versions)
 
