@@ -33,7 +33,6 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
         // Move num_intervals to meta map
         .map{ meta, cram, crai, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram, crai, intervals, [] ] }
 
-
     GATK4_HAPLOTYPECALLER(cram_intervals, fasta, fasta_fai, dict, dbsnp, dbsnp_tbi)
 
     // For joint genotyping
