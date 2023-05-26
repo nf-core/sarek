@@ -128,6 +128,7 @@ markduplicates:
   - conf/modules/markduplicates.config
   - modules/nf-core/gatk4/markduplicates/main.nf
   - modules/nf-core/mosdepth/main.nf
+  - modules/nf-core/samtools/convert/main.nf
   - modules/nf-core/samtools/index/main.nf
   - modules/nf-core/samtools/stats/main.nf
   - subworkflows/local/bam_markduplicates/main.nf
