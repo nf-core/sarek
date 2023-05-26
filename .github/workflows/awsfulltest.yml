@@ -25,7 +25,7 @@ jobs:
             {
               "outdir": "s3://${{ secrets.AWS_S3_BUCKET }}/sarek/results-${{ github.sha }}/somatic_test"
             }
-          profiles: test_full,aws_tower
+          profiles: test_full,public_aws_tower
       - uses: actions/upload-artifact@v3
         with:
           name: Tower debug log file
