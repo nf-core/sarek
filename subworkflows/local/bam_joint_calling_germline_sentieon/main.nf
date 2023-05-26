@@ -40,7 +40,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_SENTIEON {
 
     // Merge scatter/gather vcfs & index
     // Rework meta for variantscalled.csv and annotation tools
-    MERGE_GENOTYPEGVCFS(gvcf_to_merge, dict.map{ it -> [ [ id:'dict' ], it ] } )
+    MERGE_GENOTYPEGVCFS(gvcf_to_merge, dict)
 
     vqsr_input = MERGE_GENOTYPEGVCFS.out.vcf.join(MERGE_GENOTYPEGVCFS.out.tbi, failOnDuplicate: true)
     indels_resource_label = known_indels_vqsr.mix(dbsnp_vqsr).collect()
@@ -96,7 +96,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_SENTIEON {
     //Merge VQSR outputs into final VCF
     MERGE_VQSR(
         vqsr_snp_vcf.mix(vqsr_indel_vcf).groupTuple(),
-        dict.map{ it -> [ [ id:'dict' ], it ] }
+        dict
     )
 
     genotype_vcf   = MERGE_GENOTYPEGVCFS.out.vcf.mix(MERGE_VQSR.out.vcf)

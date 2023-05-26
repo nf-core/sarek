@@ -91,7 +91,7 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
                         ]
             [groupKey(new_meta, new_meta.num_intervals), vcf] }
             .groupTuple(),
-        dict.map{it -> [ [ id:'dict' ], it ]})
+        dict)
 
     versions = versions.mix(MERGE_SENTIEON_HAPLOTYPER_VCFS.out.versions)
 
@@ -137,7 +137,7 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
 
                 [groupKey(new_meta, new_meta.num_intervals), gvcf]
             }.groupTuple(),
-        dict.map{it -> [ [ id:'dict' ], it ]})
+        dict)
 
     versions = versions.mix(MERGE_SENTIEON_HAPLOTYPER_GVCFS.out.versions)
 
