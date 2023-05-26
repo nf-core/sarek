@@ -1,6 +1,6 @@
-process SENTIEON_BWAMEM {
+process SENTIEON_APPLYVARCAL {
     tag "$meta.id"
-    label 'process_high'
+    label 'process_low'
     label 'sentieon'
 
     secret 'SENTIEON_LICENSE_BASE64'
@@ -13,14 +13,14 @@ process SENTIEON_BWAMEM {
     container 'docker.io/nfcore/sentieon:202112.06'
 
     input:
-    tuple val(meta), path(reads)
-    tuple val(meta2), path(index)
-    path(fasta)
-    path(fasta_fai)
+    tuple val(meta), path(vcf), path(vcf_tbi), path(recal), path(recal_index), path(tranches)
+    path  fasta
+    path  fai
 
     output:
-    tuple val(meta), path("*.bam"), path("*.bai"), emit: bam_and_bai
-    path  "versions.yml"          , emit: versions
+    tuple val(meta), path("*.vcf.gz"), emit: vcf
+    tuple val(meta), path("*.tbi")   , emit: tbi
+    path "versions.yml"              , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -41,32 +41,16 @@ process SENTIEON_BWAMEM {
         echo "Decoded and exported Sentieon test-license system environment variables"
     fi
 
-    INDEX=`find -L ./ -name "*.amb" | sed 's/.amb//'`
-
-    sentieon bwa mem \\
+    sentieon driver -r ${fasta}  --algo ApplyVarCal \\
+        -v $vcf \\
+        --recal $recal \\
+        --tranches_file $tranches \\
         $args \\
-        -t $task.cpus \\
-        \$INDEX \\
-        $reads \\
-        | sentieon util sort -r $fasta -t $task.cpus -o ${prefix}.bam --sam2bam -
+        ${prefix}.vcf.gz
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         sentieon: \$(echo \$(sentieon driver --version 2>&1) | sed -e "s/sentieon-genomics-//g")
-        bwa: \$(echo \$(sentieon bwa 2>&1) | sed 's/^.*Version: //; s/Contact:.*\$//')
-    END_VERSIONS
-    """
-
-    stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
-    """
-    touch ${prefix}.bam
-    touch ${prefix}.bam.bai
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        sentieon: \$(echo \$(sentieon driver --version 2>&1) | sed -e "s/sentieon-genomics-//g")
-        bwa: \$(echo \$(sentieon bwa 2>&1) | sed 's/^.*Version: //; s/Contact:.*\$//')
     END_VERSIONS
     """
 }

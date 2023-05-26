@@ -1,4 +1,4 @@
-process SENTIEON_BWAMEM {
+process SENTIEON_GVCFTYPER {
     tag "$meta.id"
     label 'process_high'
     label 'sentieon'
@@ -13,23 +13,26 @@ process SENTIEON_BWAMEM {
     container 'docker.io/nfcore/sentieon:202112.06'
 
     input:
-    tuple val(meta), path(reads)
-    tuple val(meta2), path(index)
-    path(fasta)
-    path(fasta_fai)
+    tuple val(meta), path(gvcfs), path(tbis), path(intervals)
+    path  fasta
+    path  fai
+    path  dbsnp
+    path  dbsnp_tbi
 
     output:
-    tuple val(meta), path("*.bam"), path("*.bai"), emit: bam_and_bai
-    path  "versions.yml"          , emit: versions
+    tuple val(meta), path("*.vcf.gz")    , emit: vcf_gz
+    tuple val(meta), path("*.vcf.gz.tbi"), emit: vcf_gz_tbi
+    path("versions.yml")                 , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
 
     script:
-    def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     def sentieon_auth_mech_base64 = task.ext.sentieon_auth_mech_base64 ?: ''
     def sentieon_auth_data_base64 = task.ext.sentieon_auth_data_base64 ?: ''
+    def gvcfs_input = '-v ' + gvcfs.join(' -v ')
+    def dbsnp_cmd = dbsnp ? "--dbsnp $dbsnp" : ""
 
     """
     export SENTIEON_LICENSE=\$(echo -n "\$SENTIEON_LICENSE_BASE64" | base64 -d)
@@ -41,32 +44,11 @@ process SENTIEON_BWAMEM {
         echo "Decoded and exported Sentieon test-license system environment variables"
     fi
 
-    INDEX=`find -L ./ -name "*.amb" | sed 's/.amb//'`
-
-    sentieon bwa mem \\
-        $args \\
-        -t $task.cpus \\
-        \$INDEX \\
-        $reads \\
-        | sentieon util sort -r $fasta -t $task.cpus -o ${prefix}.bam --sam2bam -
+    sentieon driver -r ${fasta} --algo GVCFtyper ${gvcfs_input} ${dbsnp_cmd} ${prefix}.vcf.gz
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         sentieon: \$(echo \$(sentieon driver --version 2>&1) | sed -e "s/sentieon-genomics-//g")
-        bwa: \$(echo \$(sentieon bwa 2>&1) | sed 's/^.*Version: //; s/Contact:.*\$//')
-    END_VERSIONS
-    """
-
-    stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
-    """
-    touch ${prefix}.bam
-    touch ${prefix}.bam.bai
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        sentieon: \$(echo \$(sentieon driver --version 2>&1) | sed -e "s/sentieon-genomics-//g")
-        bwa: \$(echo \$(sentieon bwa 2>&1) | sed 's/^.*Version: //; s/Contact:.*\$//')
     END_VERSIONS
     """
 }

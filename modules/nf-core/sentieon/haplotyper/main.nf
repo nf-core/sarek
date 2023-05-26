@@ -1,4 +1,4 @@
-process SENTIEON_DEDUP {
+process SENTIEON_HAPLOTYPER {
     tag "$meta.id"
     label 'process_medium'
     label 'sentieon'
@@ -13,33 +13,43 @@ process SENTIEON_DEDUP {
     container 'docker.io/nfcore/sentieon:202112.06'
 
     input:
-    tuple val(meta), path(bam), path(bai)
+    val(emit_mode)
+    tuple val(meta), path(input), path(input_index), path(intervals)
     path  fasta
-    path  fasta_fai
+    path  fai
+    path  dbsnp
+    path  dbsnp_tbi
 
     output:
-    tuple val(meta), path("*.cram"),    emit: cram, optional: true
-    tuple val(meta), path("*.crai"),    emit: crai  // Sentieon will generate a .crai AND a .bai no matter which output file type is chosen.
-    tuple val(meta), path("*.bam"),     emit: bam,  optional: true
-    tuple val(meta), path("*.bai"),     emit: bai
-    tuple val(meta), path("*.score"),   emit: score
-    tuple val(meta), path("*.metrics"), emit: metrics
-    path "versions.yml",                emit: versions
+    tuple val(meta), path("*.unfiltered.vcf.gz")    , optional:true, emit: vcf   // added the substring ".unfiltered" in the filename of the vcf-files since without that the g.vcf.gz-files were ending up in the vcf-channel
+    tuple val(meta), path("*.unfiltered.vcf.gz.tbi"), optional:true, emit: vcf_tbi
+    tuple val(meta), path("*.g.vcf.gz")             , optional:true, emit: gvcf   // these output-files have to have the extension ".vcf.gz", otherwise the subsequent GATK-MergeVCFs will fail.
+    tuple val(meta), path("*.g.vcf.gz.tbi")         , optional:true, emit: gvcf_tbi
+    path "versions.yml"                             , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
 
     script:
-    def args = task.ext.args ?: ''
-    def args2 = task.ext.args2 ?: ''
-    def args3 = task.ext.args3 ?: ''
-    def args4 = task.ext.args4 ?: ''
+    def args = task.ext.args ?: ''    // options for the driver
+    def args2 = task.ext.args2 ?: ''  // options for the vcf generation
+    def args3 = task.ext.args3 ?: ''  // options for the gvcf generation
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def suffix = task.ext.suffix ?: ".cram"   // The suffix should be either ".cram" or ".bam".
-    def metrics = task.ext.metrics ?: "${prefix}${suffix}.metrics"
+    def dbsnp_command = dbsnp ? "-d $dbsnp " : ""
+    def interval_command = intervals ? "--interval $intervals" : ""
     def sentieon_auth_mech_base64 = task.ext.sentieon_auth_mech_base64 ?: ''
     def sentieon_auth_data_base64 = task.ext.sentieon_auth_data_base64 ?: ''
-    def input_list = bam.collect{"-i $it"}.join(' ')
+    def vcf_cmd = ""
+    def gvcf_cmd = ""
+    def base_cmd = '--algo Haplotyper ' + dbsnp_command
+
+    if (emit_mode != 'gvcf') {
+        vcf_cmd = base_cmd + args2 + ' ' + prefix + '.unfiltered.vcf.gz'
+    }
+
+    if (emit_mode == 'gvcf' || emit_mode == 'both') {
+        gvcf_cmd = base_cmd + args3 + ' --emit_mode gvcf ' + prefix + '.g.vcf.gz'
+    }
 
     """
     export SENTIEON_LICENSE=\$(echo -n "\$SENTIEON_LICENSE_BASE64" | base64 -d)
@@ -51,8 +61,7 @@ process SENTIEON_DEDUP {
         echo "Decoded and exported Sentieon test-license system environment variables"
     fi
 
-    sentieon driver $args $input_list -r ${fasta} --algo LocusCollector $args2 --fun score_info ${prefix}.score
-    sentieon driver $args3 -t $task.cpus $input_list -r ${fasta} --algo Dedup $args4 --score_info ${prefix}.score --metrics ${metrics} ${prefix}${suffix}
+    sentieon driver $args -r $fasta -t $task.cpus -i $input $interval_command $vcf_cmd $gvcf_cmd
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -63,10 +72,10 @@ process SENTIEON_DEDUP {
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    touch ${prefix}.cram
-    touch ${prefix}.cram.crai
-    touch ${prefix}.metrics
-    touch ${prefix}.score
+    touch ${prefix}.unfiltered.vcf.gz
+    touch ${prefix}.unfiltered.vcf.gz.tbi
+    touch ${prefix}.g.vcf.gz
+    touch ${prefix}.g.vcf.gz.tbi
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

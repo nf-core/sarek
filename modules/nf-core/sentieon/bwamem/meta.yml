@@ -52,6 +52,7 @@ output:
       description: BAM file.
       pattern: "*.bam"
   - bai:
+      type: file
       description: BAI file
       pattern: "*.bai"
   - versions:
