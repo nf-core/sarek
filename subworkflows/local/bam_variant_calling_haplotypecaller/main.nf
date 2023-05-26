@@ -33,7 +33,7 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
         // Move num_intervals to meta map
         .map{ meta, cram, crai, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram, crai, intervals, [] ] }
 
-    GATK4_HAPLOTYPECALLER(cram_intervals, fasta, fasta_fai, dict, dbsnp, dbsnp_tbi)
+    GATK4_HAPLOTYPECALLER(cram_intervals, fasta, fasta_fai, dict.map{ meta, dict -> [ dict ] }, dbsnp, dbsnp_tbi)
 
     // For joint genotyping
     genotype_intervals = GATK4_HAPLOTYPECALLER.out.vcf
@@ -63,10 +63,7 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
         }
 
     // Only when using intervals
-    MERGE_HAPLOTYPECALLER(haplotypecaller_vcf.intervals
-        .map{ meta, vcf -> [ groupKey(meta, meta.num_intervals), vcf ] }
-        .groupTuple(),
-        dict.map{ it -> [ [ id:'dict' ], it ] })
+    MERGE_HAPLOTYPECALLER(haplotypecaller_vcf.intervals.map{ meta, vcf -> [ groupKey(meta, meta.num_intervals), vcf ] }.groupTuple(), dict)
 
     haplotypecaller_vcf = Channel.empty().mix(
             MERGE_HAPLOTYPECALLER.out.vcf,
@@ -90,7 +87,7 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
             haplotypecaller_vcf.join(haplotypecaller_tbi, failOnDuplicate: true, failOnMismatch: true),
             fasta,
             fasta_fai,
-            dict,
+            dict.map{ meta, dict -> [ dict ] },
             intervals_bed_combined,
             known_sites_indels.concat(known_sites_snps).flatten().unique().collect(),
             known_sites_indels_tbi.concat(known_sites_snps_tbi).flatten().unique().collect())

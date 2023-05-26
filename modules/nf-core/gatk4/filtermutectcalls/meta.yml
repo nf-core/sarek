@@ -35,28 +35,43 @@ input:
       description: Stats file that pairs with output vcf file
       pattern: "*vcf.gz.stats"
   - orientationbias:
-      type: list
+      type: file
       description: files containing artifact priors for input vcf. Optional input.
       pattern: "*.artifact-prior.tar.gz"
   - segmentation:
-      type: list
+      type: file
       description: tables containing segmentation information for input vcf. Optional input.
       pattern: "*.segmentation.table"
   - table:
-      type: list
+      type: file
       description: table(s) containing contamination data for input vcf. Optional input, takes priority over estimate.
       pattern: "*.contamination.table"
   - estimate:
-      type: val
+      type: float
       description: estimation of contamination value as a double. Optional input, will only be used if table is not specified.
+  - meta2:
+      type: map
+      description: |
+        Groovy Map containing reference information
+        e.g. [ id:'genome' ]
   - fasta:
       type: file
       description: The reference fasta file
       pattern: "*.fasta"
+  - meta3:
+      type: map
+      description: |
+        Groovy Map containing reference information
+        e.g. [ id:'genome' ]
   - fai:
       type: file
       description: Index of reference fasta file
       pattern: "*.fasta.fai"
+  - meta4:
+      type: map
+      description: |
+        Groovy Map containing reference information
+        e.g. [ id:'genome' ]
   - dict:
       type: file
       description: GATK sequence dictionary
@@ -83,3 +98,4 @@ output:
 authors:
   - "@GCJMackenzie"
   - "@maxulysse"
+  - "@ramprasadn"

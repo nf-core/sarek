@@ -74,16 +74,14 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
         MPILEUP_NORMAL(
             cram_normal,
-            // Remap channel to match module/subworkflow
-            dict.map{ it -> [ [ id:'dict' ], it ] },
+            dict,
             fasta,
             intervals
         )
 
         MPILEUP_TUMOR(
             cram_tumor,
-            // Remap channel to match module/subworkflow
-            dict.map{ it -> [ [ id:'dict' ], it ] },
+            dict,
             fasta,
             intervals
         )
@@ -129,8 +127,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     if (tools.split(',').contains('freebayes')) {
         BAM_VARIANT_CALLING_FREEBAYES(
             cram,
-            // Remap channel to match module/subworkflow
-            dict.map{ it -> [ [ id:'dict' ], it ] },
+            dict,
             fasta,
             fasta_fai,
             intervals
@@ -144,8 +141,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     if (tools.split(',').contains('manta')) {
         BAM_VARIANT_CALLING_SOMATIC_MANTA(
             cram,
-            // Remap channel to match module/subworkflow
-            dict.map{ it -> [ [ id:'dict' ], it ] },
             fasta,
             fasta_fai,
             intervals_bed_gz_tbi_combined
@@ -165,7 +160,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         BAM_VARIANT_CALLING_SOMATIC_STRELKA(
             cram_strelka,
             // Remap channel to match module/subworkflow
-            dict.map{ it -> [ [ id:'dict' ], it ] },
+            dict,
             fasta,
             fasta_fai,
             intervals_bed_gz_tbi
@@ -188,8 +183,10 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         BAM_VARIANT_CALLING_SOMATIC_MUTECT2(
             // Remap channel to match module/subworkflow
             cram.map { meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [ meta, [ normal_cram, tumor_cram ], [ normal_crai, tumor_crai ] ] },
-            fasta,
-            fasta_fai,
+            // Remap channel to match module/subworkflow
+            fasta.map{ it -> [ [ id:'fasta' ], it ] },
+            // Remap channel to match module/subworkflow
+            fasta_fai.map{ it -> [ [ id:'fasta_fai' ], it ] },
             dict,
             germline_resource,
             germline_resource_tbi,

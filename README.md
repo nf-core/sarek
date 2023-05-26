@@ -31,15 +31,28 @@ It's listed on [Elixir - Tools and Data Services Registry](https://bio.tools/nf-
 
 ## Pipeline summary
 
-By default, the pipeline currently performs the following:
+Depending on the options and samples provided, the pipeline can currently perform the following:
 
-- Sequencing quality control (`FastQC`)
-- Map Reads to Reference (`BWA mem`)
-- Mark Duplicates (`GATK MarkDuplicates`)
-- Base (Quality Score) Recalibration (`GATK BaseRecalibrator`, `GATK ApplyBQSR`)
-- Preprocessing quality control (`samtools stats`)
-- Preprocessing quality control (`mosdepth`)
-- Overall pipeline run summaries (`MultiQC`)
+- Form consensus reads from UMI sequences (`fgbio`)
+- Sequencing quality control and trimming (`FastQC`, `fastp`)
+- Map Reads to Reference (`BWA-mem` or `BWA-mem2` or `dragmap`)
+- Process BAM file (`GATK MarkDuplicates`, `GATK BaseRecalibrator`, `GATK ApplyBQSR`)
+- Summarise alignment statistics (`samtools stats`, `mosdepth`)
+- Variant calling (enabled by `--tools`, see [compatibility](https://github.com/nf-core/sarek/blob/master/docs/usage.md#which-variant-calling-tool-is-implemented-for-which-data-type)):
+  - `HaplotypeCaller`
+  - `freebayes`
+  - `mpileup`
+  - `Strelka2`
+  - `DeepVariant`
+  - `Mutect2`
+  - `Manta`
+  - `TIDDIT`
+  - `ASCAT`
+  - `Control-FREEC`
+  - `CNVkit`
+  - `MSIsensor-pro`
+- Variant filtering and annotation (`SnpEff`, `Ensembl VEP`)
+- Summarise and represent QC (`MultiQC`)
 
 <p align="center">
     <img title="Sarek Workflow" src="docs/images/sarek_subway.png" width=60%>

@@ -5,7 +5,7 @@ process TABIX_TABIX {
     conda "bioconda::tabix=1.11"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/tabix:1.11--hdfd78af_0' :
-        'quay.io/biocontainers/tabix:1.11--hdfd78af_0' }"
+        'biocontainers/tabix:1.11--hdfd78af_0' }"
 
     input:
     tuple val(meta), path(tab)

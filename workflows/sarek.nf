@@ -336,13 +336,17 @@ workflow SAREK {
 
     // Gather built indices or get them from the params
     // Built from the fasta file:
-    dict                   = params.dict                    ? Channel.fromPath(params.dict).collect()      : PREPARE_GENOME.out.dict
-    fasta_fai              = params.fasta_fai               ? Channel.fromPath(params.fasta_fai).collect() : PREPARE_GENOME.out.fasta_fai
+    dict                   = params.dict                    ? Channel.fromPath(params.dict).map{ it -> [ [id:'dict'], it ] }.collect()
+                                                            : PREPARE_GENOME.out.dict
+    fasta_fai              = params.fasta_fai               ? Channel.fromPath(params.fasta_fai).collect()
+                                                            : PREPARE_GENOME.out.fasta_fai
 
-    bwa                    = params.bwa                     ? Channel.fromPath(params.bwa).collect()       : PREPARE_GENOME.out.bwa
-    bwamem2                = params.bwamem2                 ? Channel.fromPath(params.bwamem2).collect()   : PREPARE_GENOME.out.bwamem2
-    dragmap                = params.dragmap                 ? Channel.fromPath(params.dragmap).collect()   : PREPARE_GENOME.out.hashtable
-
+    bwa                    = params.bwa                     ? Channel.fromPath(params.bwa).collect()
+                                                            : PREPARE_GENOME.out.bwa
+    bwamem2                = params.bwamem2                 ? Channel.fromPath(params.bwamem2).collect()
+                                                            : PREPARE_GENOME.out.bwamem2
+    dragmap                = params.dragmap                 ? Channel.fromPath(params.dragmap).collect()
+                                                            : PREPARE_GENOME.out.hashtable
     // Gather index for mapping given the chosen aligner
     index_alignement = (params.aligner == "bwa-mem" || params.aligner == "sentieon-bwamem") ? bwa :
         params.aligner == "bwa-mem2" ? bwamem2 :
@@ -433,7 +437,7 @@ workflow SAREK {
         CONVERT_FASTQ_INPUT(
             input_sample_type.bam,
             [ [ id:"fasta" ], [] ], // fasta
-            [],                     // fasta_fai
+            [ [ id:'null' ], [] ],  // fasta_fai
             interleave_input)
 
         // Gather fastq (inputed or converted)
@@ -471,8 +475,8 @@ workflow SAREK {
             interleave_input = false // Currently don't allow interleaved input
             CONVERT_FASTQ_UMI(
                 bam_converted_from_fastq,
-                [ [id:"fasta"], [] ], // fasta
-                [],                   // fasta_fai
+                [ [ id:"fasta" ], [] ], // fasta
+                [ [ id:'null' ], [] ],  // fasta_fai
                 interleave_input)
 
             reads_for_fastp = CONVERT_FASTQ_UMI.out.reads
@@ -516,7 +520,7 @@ workflow SAREK {
         // reads will be sorted
         reads_for_alignment = reads_for_alignment.map{ meta, reads ->
             // Update meta.id to meta.sample no multiple lanes or splitted fastqs
-            if (meta.size * meta.num_lanes == 1) [ meta - meta.subMap('id') + [ id:meta.sample ], reads ]
+            if (meta.size * meta.num_lanes == 1) [ meta + [ id:meta.sample ], reads ]
             else [ meta, reads ]
         }
 
@@ -535,7 +539,7 @@ workflow SAREK {
 
             // Use groupKey to make sure that the correct group can advance as soon as it is complete
             // and not stall the workflow until all reads from all channels are mapped
-            [ groupKey( meta - meta.subMap('data_type', 'id', 'num_lanes', 'read_group', 'size') + [ data_type:'bam', id:meta.sample ], (meta.num_lanes ?: 1) * (meta.size ?: 1) ), bam ]
+            [ groupKey( meta - meta.subMap('num_lanes', 'read_group', 'size') + [ data_type:'bam', id:meta.sample ], (meta.num_lanes ?: 1) * (meta.size ?: 1) ), bam ]
         }.groupTuple()
 
         // gatk4 markduplicates can handle multiple bams as input, so no need to merge/index here
@@ -605,7 +609,7 @@ workflow SAREK {
         } else if (params.use_gatk_spark && params.use_gatk_spark.contains('markduplicates')) {
             BAM_MARKDUPLICATES_SPARK(
                 cram_for_markduplicates,
-                dict,
+                dict.map{ meta, dict -> [ dict ] },
                 fasta,
                 fasta_fai,
                 intervals_for_preprocessing)
@@ -653,7 +657,7 @@ workflow SAREK {
         // - crams from input step markduplicates --> from the converted ones only?
         ch_md_cram_for_restart = Channel.empty().mix(cram_markduplicates_no_spark, cram_markduplicates_spark, cram_sentieon_dedup)
             // Make sure correct data types are carried through
-            .map{ meta, cram, crai -> [ meta - meta.subMap('data_type') + [data_type: "cram"], cram, crai ] }
+            .map{ meta, cram, crai -> [ meta + [data_type: "cram"], cram, crai ] }
 
         // If params.save_output_as_bam, then convert CRAM files to BAM
         CRAM_TO_BAM(ch_md_cram_for_restart, fasta, fasta_fai)
@@ -691,7 +695,7 @@ workflow SAREK {
 
             ch_cram_from_bam = BAM_TO_CRAM.out.alignment_index
                 // Make sure correct data types are carried through
-                .map{ meta, cram, crai -> [ meta - meta.subMap('data_type') + [data_type: "cram"], cram, crai ] }
+                .map{ meta, cram, crai -> [ meta + [data_type: "cram"], cram, crai ] }
 
             ch_cram_for_bam_baserecalibrator = Channel.empty().mix(ch_cram_from_bam, input_prepare_recal_convert.cram)
             ch_md_cram_for_restart = ch_cram_from_bam
@@ -705,7 +709,7 @@ workflow SAREK {
             // - input cram files, when start from step markduplicates
             ch_cram_for_bam_baserecalibrator = Channel.empty().mix(ch_md_cram_for_restart, cram_skip_markduplicates )
                 // Make sure correct data types are carried through
-                .map{ meta, cram, crai -> [ meta - meta.subMap('data_type') + [data_type: "cram"], cram, crai ] }
+                .map{ meta, cram, crai -> [ meta + [data_type: "cram"], cram, crai ] }
 
         }
 
@@ -786,7 +790,7 @@ workflow SAREK {
                 BAM_TO_CRAM.out.alignment_index.join(input_only_table, failOnDuplicate: true, failOnMismatch: true),
                 input_recal_convert.cram)
                 // Join together converted cram with input tables
-                .map{ meta, cram, crai, table -> [ meta - meta.subMap('data_type') + [data_type: "cram"], cram, crai, table ]}
+                .map{ meta, cram, crai, table -> [ meta + [data_type: "cram"], cram, crai, table ]}
         }
 
         if (!(params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'))) {

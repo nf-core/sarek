@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#971](https://github.com/nf-core/sarek/pull/971) - Subtle bugfix to correct mutation of FASTP output channel objects
 - [#978](https://github.com/nf-core/sarek/pull/978) - Validate that patient/sample does not contain spaces
 - [#981](https://github.com/nf-core/sarek/pull/981) - Added documentation on generating ASCAT resources for exome and targeted sequencing
+- [#1041](https://github.com/nf-core/sarek/pull/1041) - Add params `vep_custom_args` to let user specify custom params more easily for `VEP`
 
 ### Changed
 
@@ -27,8 +28,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#874](https://github.com/nf-core/sarek/pull/874) - Update all modules
 - [#890](https://github.com/nf-core/sarek/pull/890) - Sync `TEMPLATE` with `tools` `2.7.1`
 - [#896](https://github.com/nf-core/sarek/pull/896) - Code refactoring
-- [#898](https://github.com/nf-core/sarek/pull/898) - Sync `TEMPLATE` with `tools` `2.7.2`
 - [#898](https://github.com/nf-core/sarek/pull/898) - Nextflow minimal version is now `22.10.1`
+- [#898](https://github.com/nf-core/sarek/pull/898) - Sync `TEMPLATE` with `tools` `2.7.2`
 - [#909](https://github.com/nf-core/sarek/pull/909) - Cache test data on GHA
 - [#928](https://github.com/nf-core/sarek/pull/928) - No need for BAI when starting from uBAM
 - [#935](https://github.com/nf-core/sarek/pull/935) - Add params `build_only_index` to only build index
@@ -36,9 +37,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#942](https://github.com/nf-core/sarek/pull/942) - Update `README.md`
 - [#967](https://github.com/nf-core/sarek/pull/967) - Update and detail extensively how to use annotation cache
 - [#968](https://github.com/nf-core/sarek/pull/968) - Update all modules
+- [#1011](https://github.com/nf-core/sarek/pull/1011) - Sync `TEMPLATE` with `tools` `2.8`
+- [#1012](https://github.com/nf-core/sarek/pull/1012) - Better handling of meta maps in `bam_variant_calling_somatic_mutect2`
 - [#1014](https://github.com/nf-core/sarek/pull/1014) - `snpeff_db` is now only the `db` version and not `genome.db`
 - [#1015](https://github.com/nf-core/sarek/pull/1015) - Increase default value for `--nucleotides_per_second` to `200000` resulting in 21 groups for `GATK.GRCh38`
 - [#1019](https://github.com/nf-core/sarek/pull/1019) - Set a default registry outside of profile scope
+- [#1031](https://github.com/nf-core/sarek/pull/1031) - Update pipeline summary
+- [#1032](https://github.com/nf-core/sarek/pull/1032) - Update all modules
 
 ### Fixed
 
@@ -59,6 +64,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#998](https://github.com/nf-core/sarek/pull/998) - Remove parallelization within a sample for `Manta`
 - [#1014](https://github.com/nf-core/sarek/pull/1014) - Fix calls to `ensemblvep` and `snpeff` containers
 - [#1022](https://github.com/nf-core/sarek/pull/1022) - Fix call to variantrecalibrator. (Making sure that dbsnp_vqsr, known_indels_vqsr and known_snps_vqsr are channels, and not strings.)
+- [#1039](https://github.com/nf-core/sarek/pull/1039) - Remove concatenate_vcfs tests with singularity, as they are failing due to not enough space on GHA runners
+- [#1040](https://github.com/nf-core/sarek/pull/1040) - Fix dict channel issue due to [#1032](https://github.com/nf-core/sarek/pull/1032)
+- [#1043](https://github.com/nf-core/sarek/pull/1043) - Fix typo in the tags.yml files from [#978](https://github.com/nf-core/sarek/pull/978)
 
 ### Deprecated
 
@@ -72,6 +80,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | ------------- | ----------- | ----------- |
 | `ascat`       | 3.0.0       | 3.1.1       |
 | `bcftools`    | 1.15.1      | 1.17        |
+| `deepvariant` | 1.4.0       | 1.5.0       |
 | `ensembl-vep` | 106.1       | 108.2       |
 | `multiqc`     | 1.13a       | 1.14        |
 | `samtools`    | 1.16        | 1.17        |
