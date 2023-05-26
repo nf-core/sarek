@@ -99,21 +99,21 @@ fastp:
 bwamem:
   - conf/modules/aligner.config
   - modules/nf-core/bwa/mem/main.nf
-  - subworkflows/local/fastq_align_bwamem_mem2_dragmap/main.nf
+  - subworkflows/local/fastq_align_bwamem_mem2_dragmap_sentieon/main.nf
   - tests/test_alignment_bwamem.yml
 
 ### bwamem2
 bwamem2:
   - conf/modules/aligner.config
   - modules/nf-core/bwamem2/mem/main.nf
-  - subworkflows/local/fastq_align_bwamem_mem2_dragmap/main.nf
+  - subworkflows/local/fastq_align_bwamem_mem2_dragmap_sentieon/main.nf
   - tests/test_alignment_bwamem2.yml
 
 ### dragmap
 dragmap:
   - conf/modules/aligner.config
   - modules/nf-core/dragmap/align/main.nf
-  - subworkflows/local/fastq_align_bwamem_mem2_dragmap/main.nf
+  - subworkflows/local/fastq_align_bwamem_mem2_dragmap_sentieon/main.nf
   - tests/test_alignment_dragmap.yml
 
 ### sentieon/bwamem
