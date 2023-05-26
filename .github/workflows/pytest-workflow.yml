@@ -56,8 +56,8 @@ jobs:
           #   tags: validation_checks
           # - profile: "conda"
           #   tags: vep
-          - profile: "conda"
-            tags: sentieon/bwamem
+          # - profile: "conda"
+          #  tags: sentieon/bwamem
           - profile: "singularity"
             tags: concatenate_vcfs
           - profile: "singularity"

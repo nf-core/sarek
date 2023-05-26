@@ -665,17 +665,9 @@ workflow SAREK {
 
         // CSV should be written for the file actually out, either CRAM or BAM
         // Create CSV to restart from this step
-
-
-
-        if (params.tools && params.tools.split(',').contains('sentieon_dedup')) {
-            csv_subfolder = 'sentieon_dedup'
-        } else {
-            csv_subfolder = 'markduplicates'
-        }
+        csv_subfolder = (params.tools && params.tools.split(',').contains('sentieon_dedup')) ? 'sentieon_dedup' : 'markduplicates'
 
         params.save_output_as_bam ? CHANNEL_MARKDUPLICATES_CREATE_CSV(CRAM_TO_BAM.out.alignment_index, csv_subfolder, params.outdir, params.save_output_as_bam) : CHANNEL_MARKDUPLICATES_CREATE_CSV(ch_md_cram_for_restart, csv_subfolder, params.outdir, params.save_output_as_bam)
-
     }
 
     if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration']) {
