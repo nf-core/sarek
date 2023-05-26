@@ -112,7 +112,8 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
                     known_sites_indels.concat(known_sites_snps).flatten().unique().collect(),
                     known_sites_indels_tbi.concat(known_sites_snps_tbi).flatten().unique().collect())
 
-        vcf = VCF_VARIANT_FILTERING_GATK.out.filtered_vcf.map{ meta, vcf-> [[patient:meta.patient, sample:meta.sample, status:meta.status, sex:meta.sex, id:meta.sample, num_intervals:meta.num_intervals, variantcaller:"sentieon_haplotyper"], vcf]}
+        vcf = VCF_VARIANT_FILTERING_GATK.out.filtered_vcf..map{meta, vcf -> [[ meta + variantcaller:"sentieon_haplotyper"], vcf]}
+
         versions = versions.mix(VCF_VARIANT_FILTERING_GATK.out.versions)
 
     } else vcf = haplotyper_vcf
