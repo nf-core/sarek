@@ -13,12 +13,12 @@ process SENTIEON_HAPLOTYPER {
     container 'docker.io/nfcore/sentieon:202112.06'
 
     input:
-    val(emit_mode)
     tuple val(meta), path(input), path(input_index), path(intervals)
     path  fasta
     path  fai
     path  dbsnp
     path  dbsnp_tbi
+    val(emit_mode)
 
     output:
     tuple val(meta), path("*.unfiltered.vcf.gz")    , optional:true, emit: vcf   // added the substring ".unfiltered" in the filename of the vcf-files since without that the g.vcf.gz-files were ending up in the vcf-channel
