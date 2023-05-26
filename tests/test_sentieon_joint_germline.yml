@@ -2,7 +2,7 @@
   command: nextflow run main.nf -profile test,targeted --input ./tests/csv/3.0/mapped_joint_bam.csv --tools sentieon_haplotyper --step variant_calling --joint_germline --skip_tools haplotyper_filter --outdir results --sentieon_haplotyper_out_format gvcf
   tags:
     - germline
-    - joint_germline
+    - sention_joint_germline
     - variant_calling
     - sentieon/haplotyper
   files:
