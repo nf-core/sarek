@@ -473,6 +473,13 @@
                     "hidden": true,
                     "help_text": "For details, see [here](https://www.ensembl.org/info/docs/tools/vep/script/vep_plugins.html#spliceregion) and [here](https://www.ensembl.info/2018/10/26/cool-stuff-the-vep-can-do-splice-site-variant-annotation/)."
                 },
+                "vep_custom_args": {
+                    "type": "string",
+                    "fa_icon": "fas fa-toolbox",
+                    "description": "Add an extra custom argument to VEP.",
+                    "hidden": true,
+                    "help_text": "Using this params you can add custom args to VEP."
+                },
                 "snpeff_cache": {
                     "type": "string",
                     "fa_icon": "fas fa-file",
