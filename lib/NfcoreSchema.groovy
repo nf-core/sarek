@@ -2,6 +2,7 @@
 // This file holds several functions used to perform JSON parameter validation, help and summary rendering for the nf-core pipeline template.
 //
 
+import nextflow.Nextflow
 import org.everit.json.schema.Schema
 import org.everit.json.schema.loader.SchemaLoader
 import org.everit.json.schema.ValidationException
@@ -83,6 +84,7 @@ class NfcoreSchema {
             'stub-run',
             'test',
             'w',
+            'with-apptainer',
             'with-charliecloud',
             'with-conda',
             'with-dag',
@@ -177,7 +179,7 @@ class NfcoreSchema {
         }
 
         if (has_error) {
-            System.exit(1)
+            Nextflow.error('Exiting!')
         }
     }
 
@@ -325,6 +327,7 @@ class NfcoreSchema {
             }
         }
         output += "!! Only displaying parameters that differ from the pipeline defaults !!\n"
+        output += "Displaying all reference genome parameters\n"
         output += NfcoreTemplate.dashedLine(params.monochrome_logs)
         return output
     }

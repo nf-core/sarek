@@ -24,7 +24,7 @@ workflow BAM_APPLYBQSR_SPARK {
         .map{ meta, cram, crai, recal, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram, crai, recal, intervals ] }
 
     // RUN APPLYBQSR SPARK
-    GATK4_APPLYBQSR_SPARK(cram_intervals, fasta, fasta_fai, dict)
+    GATK4_APPLYBQSR_SPARK(cram_intervals, fasta, fasta_fai, dict.map{ meta, it -> [ it ] })
 
     // Gather the recalibrated cram files
     cram_to_merge = GATK4_APPLYBQSR_SPARK.out.cram.map{ meta, cram -> [ groupKey(meta, meta.num_intervals), cram ] }.groupTuple()

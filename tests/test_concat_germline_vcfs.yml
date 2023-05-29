@@ -12,7 +12,6 @@
           "SOURCE=testN.freebayes.vcf.gz",
           "SNVHPOL=7;MQ=60;",
           "SOURCE=testN.strelka.variants.vcf.gz",
-          "DP=2;SGB=-0.379885;FS=0;MQ0F=0;AC=2;AN=2;DP4=0,0,0,1;MQ=60;",
           "SOURCE=testN.bcftools.vcf.gz",
         ]
     - path: results/variant_calling/concat/testT/testT.germline.vcf.gz

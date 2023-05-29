@@ -72,14 +72,14 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
     stats_to_merge = stats_branch.intervals.map{ meta, stats -> [ groupKey(meta, meta.num_intervals), stats ] }.groupTuple()
     f1r2_to_merge = f1r2_branch.intervals.map{ meta, f1r2 -> [ groupKey(meta, meta.num_intervals), f1r2 ] }.groupTuple()
 
-    MERGE_MUTECT2(vcf_to_merge, dict.map{ it -> [ [ id:'dict' ], it ] })
+    MERGE_MUTECT2(vcf_to_merge, dict)
     MERGEMUTECTSTATS(stats_to_merge)
 
-    // Mix intervals and no_intervals channels together
-    vcf = Channel.empty().mix(MERGE_MUTECT2.out.vcf, vcf_branch.no_intervals)
-    tbi = Channel.empty().mix(MERGE_MUTECT2.out.tbi, tbi_branch.no_intervals)
-    stats = Channel.empty().mix(MERGEMUTECTSTATS.out.stats, stats_branch.no_intervals)
-    f1r2 = Channel.empty().mix(f1r2_to_merge, f1r2_branch.no_intervals)
+    // Mix intervals and no_intervals channels together and remove no longer necessary field: normal_id, tumor_id, num_intervals
+    vcf = Channel.empty().mix(MERGE_MUTECT2.out.vcf, vcf_branch.no_intervals).map{ meta, vcf -> [ meta - meta.subMap('normal_id', 'tumor_id', 'num_intervals'), vcf ]}
+    tbi = Channel.empty().mix(MERGE_MUTECT2.out.tbi, tbi_branch.no_intervals).map{ meta, tbi -> [ meta - meta.subMap('normal_id', 'tumor_id', 'num_intervals'), tbi ]}
+    stats = Channel.empty().mix(MERGEMUTECTSTATS.out.stats, stats_branch.no_intervals).map{ meta, stats -> [ meta - meta.subMap('normal_id', 'tumor_id', 'num_intervals'), stats ]}
+    f1r2 = Channel.empty().mix(f1r2_to_merge, f1r2_branch.no_intervals).map{ meta, f1r2 -> [ meta - meta.subMap('normal_id', 'tumor_id', 'num_intervals'), f1r2 ]}
 
     // Generate artifactpriors using learnreadorientationmodel on the f1r2 output of mutect2
     LEARNREADORIENTATIONMODEL(f1r2)
@@ -89,8 +89,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
         normal: [ meta, input_list[0], input_index_list[0], intervals ]
     }
 
-    pileup_normal = pileup.normal.map{ meta, cram, crai, intervals -> [ meta - meta.subMap('id') + [ id:meta.normal_id ], cram, crai, intervals ] }
-    pileup_tumor = pileup.tumor.map{ meta, cram, crai, intervals -> [ meta - meta.subMap('id') + [ id:meta.tumor_id ], cram, crai, intervals ] }
+    pileup_normal = pileup.normal.map{ meta, cram, crai, intervals -> [ meta + [ id:meta.normal_id ], cram, crai, intervals ] }
+    pileup_tumor = pileup.tumor.map{ meta, cram, crai, intervals -> [ meta + [ id:meta.tumor_id ], cram, crai, intervals ] }
 
     // Generate pileup summary tables using getepileupsummaries. tumor sample should always be passed in as the first input and input list entries of vcf_to_filter,
     GETPILEUPSUMMARIES_NORMAL(pileup_normal, fasta, fai, dict, germline_resource_pileup, germline_resource_pileup_tbi)
@@ -111,14 +111,16 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
     }
 
     // Merge Pileup Summaries
-    GATHERPILEUPSUMMARIES_NORMAL(GETPILEUPSUMMARIES_NORMAL.out.table.map{ meta, table -> [ groupKey(meta, meta.num_intervals), table ] }.groupTuple(), dict)
-    GATHERPILEUPSUMMARIES_TUMOR(GETPILEUPSUMMARIES_TUMOR.out.table.map{ meta, table -> [ groupKey(meta, meta.num_intervals), table ] }.groupTuple(), dict)
+    GATHERPILEUPSUMMARIES_NORMAL(GETPILEUPSUMMARIES_NORMAL.out.table.map{ meta, table -> [ groupKey(meta, meta.num_intervals), table ] }.groupTuple(), dict.map{ meta, dict -> [ dict ] })
+    GATHERPILEUPSUMMARIES_TUMOR(GETPILEUPSUMMARIES_TUMOR.out.table.map{ meta, table -> [ groupKey(meta, meta.num_intervals), table ] }.groupTuple(), dict.map{ meta, dict -> [ dict ] })
 
+    // remove no longer necessary field: normal_id, tumor_id, num_intervals
     pileup_table_normal = Channel.empty().mix(GATHERPILEUPSUMMARIES_NORMAL.out.table, pileup_table_normal_branch.no_intervals)
-        .map{ meta, table -> [ meta - meta.subMap('id') + [ id:meta.tumor_id + "_vs_" + meta.normal_id ], table ] }
+        .map{ meta, table -> [ meta - meta.subMap('normal_id', 'tumor_id', 'num_intervals') + [ id:meta.tumor_id + "_vs_" + meta.normal_id ], table ] }
 
+    // remove no longer necessary field: normal_id, tumor_id, num_intervals
     pileup_table_tumor = Channel.empty().mix(GATHERPILEUPSUMMARIES_TUMOR.out.table, pileup_table_tumor_branch.no_intervals)
-        .map{ meta, table -> [ meta - meta.subMap('id') + [ id:meta.tumor_id + "_vs_" + meta.normal_id ], table ] }
+        .map{ meta, table -> [ meta - meta.subMap('normal_id', 'tumor_id', 'num_intervals') + [ id:meta.tumor_id + "_vs_" + meta.normal_id ], table ] }
 
     // Contamination and segmentation tables created using calculatecontamination on the pileup summary table
     CALCULATECONTAMINATION(pileup_table_tumor.join(pileup_table_normal, failOnDuplicate: true, failOnMismatch: true))
@@ -134,8 +136,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
     FILTERMUTECTCALLS(vcf_to_filter, fasta, fai, dict)
 
     vcf_filtered = FILTERMUTECTCALLS.out.vcf
-        // add variantcaller to meta map and remove no longer necessary field: num_intervals
-        .map{ meta, vcf -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'mutect2' ], vcf ] }
+        // add variantcaller to meta map
+        .map{ meta, vcf -> [ meta + [ variantcaller:'mutect2' ], vcf ] }
 
     versions = versions.mix(MERGE_MUTECT2.out.versions)
     versions = versions.mix(CALCULATECONTAMINATION.out.versions)

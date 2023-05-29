@@ -5,7 +5,7 @@ process TIDDIT_SV {
     conda "bioconda::tiddit=3.3.2"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/tiddit:3.3.2--py310hc2b7f4b_0' :
-        'quay.io/biocontainers/tiddit:3.3.2--py310hc2b7f4b_0' }"
+        'biocontainers/tiddit:3.3.2--py310hc2b7f4b_0' }"
 
     input:
     tuple val(meta), path(input), path(input_index)
@@ -23,7 +23,7 @@ process TIDDIT_SV {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def bwa_command = bwa_index ? "[[ -d $bwa_index ]] && for i in $bwa_index/*; do [[ -f $fasta && ! \"\$i\" =~ .*\"$fasta\".* ]] && ln -s \$i ${fasta}.\${i##*.} || ln -s \$i .; done" : ""
+    def bwa_command = bwa_index ? "[[ -d $bwa_index ]] && for i in $bwa_index/*; do [[ -f $fasta && ! \"\$i\" =~ .*\"$fasta.\".* ]] && ln -s \$i ${fasta}.\${i##*.} || ln -s \$i .; done" : ""
 
     """
     $bwa_command

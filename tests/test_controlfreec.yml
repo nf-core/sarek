@@ -7,7 +7,7 @@
     - copy_number_calling
   files:
     - path: results/multiqc
-    - path: results/untar/chromosomes/chr21.fasta
+    - path: results/untar/chr_dir/chr21.fasta
       md5sum: 69bd44ef67566a76d6cbb8aa4a25ae35
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/config.txt
       contains:
@@ -68,7 +68,7 @@
       md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/no_intervals.bed.gz.tbi
       md5sum: f3dac01ea66b95fe477446fde2d31489
-    - path: results/untar/chromosomes
+    - path: results/untar/chr_dir
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/GC_profile.sample4_vs_sample3.cpn
       md5sum: d41d8cd98f00b204e9800998ecf8427e # This is the md5sum of an empty file. Are all these files suppose to be empty?
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/config.txt

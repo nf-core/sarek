@@ -30,6 +30,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     intervals                     // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
     intervals_bed_gz_tbi          // channel: [mandatory] [ interval.bed.gz, interval.bed.gz.tbi, num_intervals ] or [ [], [], 0 ] if no intervals
     intervals_bed_combined        // channel: [mandatory] intervals/target regions in one file unzipped
+    intervals_bed_gz_tbi_combined // channel: [mandatory] intervals/target regions in one file zipped
     mappability
     panel_of_normals              // channel: [optional]  panel_of_normals
     panel_of_normals_tbi          // channel: [optional]  panel_of_normals_tbi
@@ -48,8 +49,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     if (tools.split(',').contains('mpileup') || tools.split(',').contains('controlfreec')) {
         BAM_VARIANT_CALLING_MPILEUP(
             cram,
-            // Remap channel to match module/subworkflow
-            dict.map{ it -> [ [ id:'dict' ], it ] },
+            dict,
             fasta,
             intervals
         )
@@ -95,8 +95,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         BAM_VARIANT_CALLING_FREEBAYES(
             // Remap channel to match module/subworkflow
             cram.map{ meta, cram, crai -> [ meta, cram, crai, [], [] ] },
-            // Remap channel to match module/subworkflow
-            dict.map{ it -> [ [ id:'dict' ], it ] },
+            dict,
             fasta,
             fasta_fai,
             intervals
@@ -110,8 +109,10 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     if (tools.split(',').contains('mutect2')) {
         BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2(
             cram,
-            fasta,
-            fasta_fai,
+            // Remap channel to match module/subworkflow
+            fasta.map{ it -> [ [ id:'fasta' ], it ] },
+            // Remap channel to match module/subworkflow
+            fasta_fai.map{ it -> [ [ id:'fasta_fai' ], it ] },
             dict,
             germline_resource,
             germline_resource_tbi,
@@ -132,7 +133,8 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
             dict.map{ it -> [ [ id:'dict' ], it ] },
             fasta,
             fasta_fai,
-            intervals_bed_gz_tbi
+            intervals_bed_gz_tbi_combined
+
         )
 
         vcf_manta = BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA.out.vcf
@@ -143,8 +145,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     if (tools.split(',').contains('strelka')) {
         BAM_VARIANT_CALLING_SINGLE_STRELKA(
             cram,
-            // Remap channel to match module/subworkflow
-            dict.map{ it -> [ [ id:'dict' ], it ] },
+            dict,
             fasta,
             fasta_fai,
             intervals_bed_gz_tbi

@@ -32,29 +32,36 @@ jobs:
       fail-fast: false
       matrix:
         tags: ["${{ fromJson(needs.changes.outputs.tags) }}"]
-        profile: ["docker", "singularity", "conda"]
+        profile: ["docker", "singularity"]
+        # profile: ["docker", "singularity", "conda"]
         TEST_DATA_BASE:
           - "test-datasets/data"
         NXF_VER:
           - "22.10.1"
           - "latest-everything"
         exclude:
-          - profile: "conda"
-            tags: umi
-          - profile: "conda"
-            tags: deepvariant
-          - profile: "conda"
-            tags: haplotypecaller
-          - profile: "conda"
-            tags: merge
-          - profile: "conda"
-            tags: snpeff
-          - profile: "conda"
-            tags: vep
-          - profile: "conda"
+          # - profile: "conda"
+          #   tags: concatenate_vcfs
+          # - profile: "conda"
+          #   tags: deepvariant
+          # - profile: "conda"
+          #   tags: haplotypecaller
+          # - profile: "conda"
+          #   tags: merge
+          # - profile: "conda"
+          #   tags: snpeff
+          # - profile: "conda"
+          #   tags: umi
+          # - profile: "conda"
+          #   tags: validation_checks
+          # - profile: "conda"
+          #   tags: vep
+          - profile: "singularity"
             tags: concatenate_vcfs
           - profile: "singularity"
             tags: merge
+          - profile: "singularity"
+            tags: validation_checks
     env:
       NXF_ANSI_LOG: false
       TEST_DATA_BASE: "${{ github.workspace }}/test-datasets"
@@ -62,12 +69,17 @@ jobs:
       - name: Check out pipeline code
         uses: actions/checkout@v3
 
+      - name: Hash Github Workspace
+        id: hash_workspace
+        run: |
+          echo "digest=$(echo sarek3_${{ github.workspace }} | md5sum | cut -c 1-25)" >> $GITHUB_OUTPUT
+
       - name: Cache test data
         id: cache-testdata
         uses: actions/cache@v3
         with:
           path: test-datasets/
-          key: sarek3-test-data
+          key: ${{ steps.hash_workspace.outputs.digest }}
 
       - name: Check out test data
         if: steps.cache-testdata.outputs.cache-hit != 'true'

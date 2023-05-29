@@ -3,7 +3,7 @@ process GATK4_APPLYBQSR_SPARK {
     label 'process_low'
 
     conda "bioconda::gatk4=4.3.0.0 conda-forge::openjdk=8.0.312"
-    container 'broadinstitute/gatk:4.3.0.0'
+    container 'docker.io/broadinstitute/gatk:4.4.0.0'
 
     input:
     tuple val(meta), path(input), path(input_index), path(bqsr_table), path(intervals)
@@ -24,14 +24,14 @@ process GATK4_APPLYBQSR_SPARK {
     def prefix = task.ext.prefix ?: "${meta.id}"
     def interval_command = intervals ? "--intervals $intervals" : ""
 
-    def avail_mem = 3
+    def avail_mem = 3072
     if (!task.memory) {
         log.info '[GATK ApplyBQSRSpark] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this.'
     } else {
-        avail_mem = task.memory.giga
+        avail_mem = (task.memory.mega*0.8).intValue()
     }
     """
-    gatk --java-options "-Xmx${avail_mem}g" ApplyBQSRSpark \\
+    gatk --java-options "-Xmx${avail_mem}M" ApplyBQSRSpark \\
         --input $input \\
         --output ${prefix}.${input.getExtension()} \\
         --reference $fasta \\

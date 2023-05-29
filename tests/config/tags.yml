@@ -50,6 +50,16 @@ skip_markduplicates:
   - tests/test_skip_markduplicates.yml
   - workflows/**
 
+validation_checks:
+  - conf/modules/**
+  - main.nf
+  - modules/**
+  - nextflow.config
+  - nextflow_schema.json
+  - subworkflows/**
+  - tests/test_samplesheet_validation_spaces.yml
+  - workflows/**
+
 # preprocessing
 
 ## alignment_to_fastq
@@ -331,7 +341,7 @@ tiddit:
 
 # annotate
 
-## merge
+## cache
 cache:
   - conf/modules/prepare_cache.config
   - modules/nf-core/ensemblvep/download/main.nf

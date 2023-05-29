@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
 name: vcf_annotate_ensemblvep
 description: Perform annotation with ensemblvep and bgzip + tabix index the resulting VCF file
 keywords:
@@ -5,50 +6,47 @@ keywords:
   - annotation
   - ensemblvep
 modules:
-  - ensemblvep
-  - tabix/bgziptabix
+  - ensemblvep/vep
+  - tabix/tabix
 input:
-  - meta:
-      type: map
+  - ch_vcf:
       description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
-  - vcf:
-      type: file
-      description: vcf file
-      pattern: "*.{vcf}"
-  - fasta:
-      type: file
-      description: Reference genome fasta file (optional)
-      pattern: "*.{fa,fasta}"
-  - vep_genome:
-      type: value
+        vcf file to annotate
+        Structure: [ val(meta), path(vcf), [path(custom_file1), path(custom_file2)... (optionnal)] ]
+  - ch_fasta:
+      description: |
+        Reference genome fasta file (optional)
+        Structure: [ val(meta2), path(fasta) ]
+  - val_genome:
+      type: string
       description: genome to use
-  - vep_species:
-      type: value
+  - val_species:
+      type: string
       description: species to use
-  - vep_cache_version:
-      type: value
+  - val_cache_version:
+      type: integer
       description: cache version to use
-  - vep_cache:
-      type: file
-      description: path to root cache folder for ensemblvep (optional)
-  - vep_extra_files:
-      type: file
-      description: any extra files needed by plugins for ensemblvep (optional)
+  - ch_cache:
+      description: |
+        the root cache folder for ensemblvep (optional)
+        Structure: [ val(meta3), path(cache) ]
+  - ch_extra_files:
+      description: |
+        any extra files needed by plugins for ensemblvep (optional)
+        Structure: [ path(file1), path(file2)... ]
 output:
   - vcf_tbi:
-      type: file
-      description: Compressed vcf file + tabix index
-      pattern: "[ *{.vcf.gz,vcf.gz.tbi} ]"
+      description: |
+        Compressed vcf file + tabix index
+        Structure: [ val(meta), path(vcf), path(tbi) ]
   - json:
-      type: file
-      description: json file
-      pattern: "[ *{.json.gz} ]"
+      description: |
+        json file
+        Structure: [ val(meta), path(json) ]
   - tab:
-      type: file
-      description: tab file
-      pattern: "[ *{.tab.gz} ]"
+      description: |
+        tab file
+        Structure: [ val(meta), path(tab) ]
   - reports:
       type: file
       description: html reports
@@ -60,3 +58,4 @@ output:
 authors:
   - "@maxulysse"
   - "@matthdsm"
+  - "@nvnieuwk"
