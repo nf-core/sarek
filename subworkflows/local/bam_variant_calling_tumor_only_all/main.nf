@@ -60,6 +60,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     // CONTROLFREEC (depends on MPILEUP)
     if (tools.split(',').contains('controlfreec')) {
         length_file = cf_chrom_len ?: fasta_fai
+        ploidy = params.cf_ploidy && !params.cf_ploidy.toString().contains(",") ? [params.cf_ploidy] : params.cf_ploidy.split(',')
 
         BAM_VARIANT_CALLING_TUMOR_ONLY_CONTROLFREEC(
             // Remap channel to match module/subworkflow
@@ -70,7 +71,8 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
             dbsnp_tbi,
             chr_files,
             mappability,
-            intervals_bed_combined
+            intervals_bed_combined,
+            ploidy
         )
 
         versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_CONTROLFREEC.out.versions)

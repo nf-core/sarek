@@ -14,6 +14,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC {
     chr_files                // channel: [mandatory]
     mappability              // channel: [mandatory]
     intervals_bed            // channel: [optional]  Contains a bed file of all intervals combined provided with the cram input(s). Should be empty for WGS
+    ploidy                   // channel: [mandatory] list of ploidy values
 
     main:
 
@@ -24,7 +25,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC {
     ASSESS_SIGNIFICANCE(FREEC_SOMATIC.out.CNV.join(FREEC_SOMATIC.out.ratio, failOnDuplicate: true, failOnMismatch: true))
     FREEC2BED(FREEC_SOMATIC.out.ratio)
     FREEC2CIRCOS(FREEC_SOMATIC.out.ratio)
-    MAKEGRAPH(FREEC_SOMATIC.out.ratio.join(FREEC_SOMATIC.out.BAF, failOnDuplicate: true, failOnMismatch: true))
+    MAKEGRAPH(FREEC_SOMATIC.out.ratio.join(FREEC_SOMATIC.out.BAF, failOnDuplicate: true, failOnMismatch: true).combine(ploidy))
 
     ch_versions = ch_versions.mix(FREEC_SOMATIC.out.versions)
     ch_versions = ch_versions.mix(ASSESS_SIGNIFICANCE.out.versions)

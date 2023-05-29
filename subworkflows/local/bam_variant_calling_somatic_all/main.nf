@@ -92,6 +92,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         mpileup_pair = mpileup_normal.cross(mpileup_tumor).map{ normal, tumor -> [ normal[0], normal[1], tumor[1], [], [], [], [] ] }
 
         length_file = cf_chrom_len ?: fasta_fai
+        ploidy = params.cf_ploidy && !params.cf_ploidy.toString().contains(",") ? [params.cf_ploidy] : params.cf_ploidy.split(',')
 
         BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC(
             mpileup_pair,
@@ -101,7 +102,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             dbsnp_tbi,
             chr_files,
             mappability,
-            intervals_bed_combined
+            intervals_bed_combined,
+            ploidy
         )
 
         versions = versions.mix(MPILEUP_NORMAL.out.versions)
