@@ -1244,6 +1244,10 @@ def extract_csv(csv_file) {
 
             meta.size       = 1 // default number of splitted fastq
 
+            if(bam.getExtension != 'bam'){
+                error("A column with name 'bam' was specified, but it contains a file not ending on '.bam': " + bam.getName())
+            }
+
             if (params.step != 'annotate') return [ meta, bam, bai ]
             else {
                 error("Samplesheet contains bam files but step is `annotate`. The pipeline is expecting vcf files for the annotation. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
@@ -1257,6 +1261,10 @@ def extract_csv(csv_file) {
             def table = file(row.table, checkIfExists: true)
 
             meta.data_type  = 'cram'
+
+            if(cram.getExtension != 'cram'){
+                error("A column with name 'cram' was specified, but it contains a file not ending on '.cram': " + cram.getName())
+            }
 
             if (!(params.step == 'mapping' || params.step == 'annotate')) return [ meta, cram, crai, table ]
             else {
@@ -1272,6 +1280,10 @@ def extract_csv(csv_file) {
 
             meta.data_type  = 'bam'
 
+            if(bam.getExtension != 'bam'){
+                error("A column with name 'bam' was specified, but it contains a file not ending on '.bam': " + bam.getName())
+            }
+
             if (!(params.step == 'mapping' || params.step == 'annotate')) return [ meta, bam, bai, table ]
             else {
                 error("Samplesheet contains bam files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
@@ -1285,6 +1297,10 @@ def extract_csv(csv_file) {
 
             meta.data_type  = 'cram'
 
+            if(cram.getExtension != 'cram'){
+                error("A column with name 'cram' was specified, but it contains a file not ending on '.cram': " + cram.getName())
+            }
+
             if (!(params.step == 'mapping' || params.step == 'annotate')) return [ meta, cram, crai ]
             else {
                 error("Samplesheet contains cram files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
@@ -1297,6 +1313,10 @@ def extract_csv(csv_file) {
             def bai = file(row.bai, checkIfExists: true)
 
             meta.data_type  = 'bam'
+
+            if(bam.getExtension != 'bam'){
+                error("A column with name 'bam' was specified, but it contains a file not ending on '.bam': " + bam.getName())
+            }
 
             if (!(params.step == 'mapping' || params.step == 'annotate')) return [ meta, bam, bai ]
             else {
