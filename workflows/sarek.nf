@@ -1244,7 +1244,7 @@ def extract_csv(csv_file) {
 
             meta.size       = 1 // default number of splitted fastq
 
-            if(bam.getExtension != 'bam'){
+            if(bam.getExtension() != 'bam'){
                 error("A column with name 'bam' was specified, but it contains a file not ending on '.bam': " + bam.getName())
             }
 
@@ -1262,7 +1262,7 @@ def extract_csv(csv_file) {
 
             meta.data_type  = 'cram'
 
-            if(cram.getExtension != 'cram'){
+            if(cram.getExtension() != 'cram'){
                 error("A column with name 'cram' was specified, but it contains a file not ending on '.cram': " + cram.getName())
             }
 
@@ -1280,7 +1280,7 @@ def extract_csv(csv_file) {
 
             meta.data_type  = 'bam'
 
-            if(bam.getExtension != 'bam'){
+            if(bam.getExtension() != 'bam'){
                 error("A column with name 'bam' was specified, but it contains a file not ending on '.bam': " + bam.getName())
             }
 
@@ -1297,7 +1297,7 @@ def extract_csv(csv_file) {
 
             meta.data_type  = 'cram'
 
-            if(cram.getExtension != 'cram'){
+            if(cram.getExtension() != 'cram'){
                 error("A column with name 'cram' was specified, but it contains a file not ending on '.cram': " + cram.getName())
             }
 
@@ -1314,7 +1314,7 @@ def extract_csv(csv_file) {
 
             meta.data_type  = 'bam'
 
-            if(bam.getExtension != 'bam'){
+            if(bam.getExtension() != 'bam'){
                 error("A column with name 'bam' was specified, but it contains a file not ending on '.bam': " + bam.getName())
             }
 
