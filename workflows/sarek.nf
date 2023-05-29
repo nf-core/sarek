@@ -1177,14 +1177,14 @@ def extract_csv(csv_file) {
         if (row.status) meta.status = row.status.toInteger()
         else meta.status = 0
 
-        if (meta.status == 0) sample_count_normal++
-        else sample_count_tumor++
+        if (meta.status == 1) sample_count_tumor++
+        else sample_count_normal++
 
-        if (params.step != 'annotate') {
+        if (params.step != 'annotate' && params.tools) {
             // Two checks for ensuring that the pipeline stops with a meaningful error message if
             // 1. the sample-sheet only contains normal-samples, but some of the requested tools require tumor-samples, and
             // 2. the sample-sheet only contains tumor-samples, but some of the requested tools require normal-samples.
-            if ((sample_count_normal == sample_count_all) && params.tools && !params.build_only_index) { // In this case, the sample-sheet contains no tumor-samples
+            if ((sample_count_normal == sample_count_all) && !params.build_only_index) { // In this case, the sample-sheet contains no tumor-samples
                 def tools_tumor = ['ascat', 'controlfreec', 'mutect2', 'msisensorpro']
                 def tools_tumor_asked = []
                 tools_tumor.each{ tool ->
@@ -1193,7 +1193,7 @@ def extract_csv(csv_file) {
                 if (!tools_tumor_asked.isEmpty()) {
                     error('The sample-sheet only contains normal-samples, but the following tools, which were requested with "--tools", expect at least one tumor-sample : ' + tools_tumor_asked.join(", "))
                 }
-            } else if ((sample_count_tumor == sample_count_all) && params.tools) {  // In this case, the sample-sheet contains no normal/germline-samples
+            } else if ((sample_count_tumor == sample_count_all)) {  // In this case, the sample-sheet contains no normal/germline-samples
                 def tools_requiring_normal_samples = ['ascat', 'deepvariant', 'haplotypecaller', 'msisensorpro']
                 def requested_tools_requiring_normal_samples = []
                 tools_requiring_normal_samples.each{ tool_requiring_normal_samples ->
