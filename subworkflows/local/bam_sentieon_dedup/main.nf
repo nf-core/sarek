@@ -8,7 +8,6 @@ include { CRAM_QC_MOSDEPTH_SAMTOOLS              } from '../cram_qc_mosdepth_sam
 include { GATK4_MARKDUPLICATES                   } from '../../../modules/nf-core/gatk4/markduplicates/main'
 include { SENTIEON_DEDUP                         } from '../../../modules/nf-core/sentieon/dedup/main'
 include { SAMTOOLS_INDEX as INDEX_INPUT          } from '../../../modules/nf-core/samtools/index/main'
-include { SAMTOOLS_INDEX as INDEX_DEDUPED        } from '../../../modules/nf-core/samtools/index/main'
 include { SAMTOOLS_INDEX as INDEX_MARKDUPLICATES } from '../../../modules/nf-core/samtools/index/main'
 
 workflow BAM_SENTIEON_DEDUP {
@@ -27,10 +26,8 @@ workflow BAM_SENTIEON_DEDUP {
     // The concat operation is part of the above command since if the "bam" channel contains cram-files, then the index files will be in the channel INDEX_INPUT.out.crai and not in INDEX_INPUT.out.bai
     SENTIEON_DEDUP(bam_bai, fasta, fasta_fai)
 
-    INDEX_DEDUPED(SENTIEON_DEDUP.out.cram)
-
     // Join with the crai file
-    cram = SENTIEON_DEDUP.out.cram.join(INDEX_DEDUPED.out.crai, failOnDuplicate: true, failOnMismatch: true)
+    cram = SENTIEON_DEDUP.out.cram.join(SENTIEON_DEDUP.out.crai, failOnDuplicate: true, failOnMismatch: true)
 
     // QC on CRAM
     CRAM_QC_MOSDEPTH_SAMTOOLS(cram, fasta, intervals_bed_combined)
@@ -42,7 +39,6 @@ workflow BAM_SENTIEON_DEDUP {
 
     // Gather versions of all tools used
     versions = versions.mix(SENTIEON_DEDUP.out.versions)
-    versions = versions.mix(INDEX_DEDUPED.out.versions)
     versions = versions.mix(CRAM_QC_MOSDEPTH_SAMTOOLS.out.versions)
 
     emit:
