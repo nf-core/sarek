@@ -38,12 +38,12 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
         .map{ meta, cram, crai, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals, intervals_name:intervals.simpleName], cram, crai, intervals ] }
 
     SENTIEON_HAPLOTYPER(
-        sentieon_haplotyper_out_format,
         cram_intervals_for_sentieon,
         fasta,
         fasta_fai,
         dbsnp,
-        dbsnp_tbi)
+        dbsnp_tbi,
+        sentieon_haplotyper_out_format)
 
     versions = versions.mix(SENTIEON_HAPLOTYPER.out.versions)
 
