@@ -133,9 +133,8 @@
                     },
                     "fastp": {
                         "branch": "master",
-                        "git_sha": "37a98dd100d74d9188a272197663587de1331a0e",
-                        "installed_by": ["modules"],
-                        "patch": "modules/nf-core/fastp/fastp.diff"
+                        "git_sha": "d497a4868ace3302016ea8ed4b395072d5e833cd",
+                        "installed_by": ["modules"]
                     },
                     "fastqc": {
                         "branch": "master",
@@ -344,7 +343,7 @@
                     },
                     "samtools/faidx": {
                         "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "git_sha": "fd742419940e01ba1c5ecb172c3e32ec840662fe",
                         "installed_by": ["modules"]
                     },
                     "samtools/index": {
@@ -380,7 +379,7 @@
                     "snpeff/snpeff": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["vcf_annotate_snpeff", "modules"]
+                        "installed_by": ["modules", "vcf_annotate_snpeff"]
                     },
                     "strelka/germline": {
                         "branch": "master",
@@ -400,7 +399,7 @@
                     "tabix/bgziptabix": {
                         "branch": "master",
                         "git_sha": "01b3b2509d76625b6d6cd613b349fb4777712a15",
-                        "installed_by": ["vcf_annotate_snpeff", "modules"]
+                        "installed_by": ["modules", "vcf_annotate_snpeff"]
                     },
                     "tabix/tabix": {
                         "branch": "master",

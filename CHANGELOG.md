@@ -45,6 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1019](https://github.com/nf-core/sarek/pull/1019) - Set a default registry outside of profile scope
 - [#1031](https://github.com/nf-core/sarek/pull/1031) - Update pipeline summary
 - [#1032](https://github.com/nf-core/sarek/pull/1032) - Update all modules
+- [#1051](https://github.com/nf-core/sarek/pull/1051) - Update more modules
 
 ### Fixed
 
@@ -82,6 +83,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | `bcftools`    | 1.15.1      | 1.17        |
 | `deepvariant` | 1.4.0       | 1.5.0       |
 | `ensembl-vep` | 106.1       | 108.2       |
+| `fastp`       | 0.23.2      | 0.23.4      |
 | `multiqc`     | 1.13a       | 1.14        |
 | `samtools`    | 1.16        | 1.17        |
 | `svdb`        | 2.6.1       | 2.8.1       |
