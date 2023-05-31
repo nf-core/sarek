@@ -59,7 +59,6 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
         no_intervals: it[0].num_intervals <= 1
     }.set{haplotyper_vcf_branch}
 
-
     SENTIEON_HAPLOTYPER.out.vcf_tbi.branch{
         intervals:    it[0].num_intervals > 1
         no_intervals: it[0].num_intervals <= 1
@@ -75,11 +74,17 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
         no_intervals: it[0].num_intervals <= 1
     }.set{haplotyper_gvcf_tbi_branch}
 
+    vcfs_for_merging = haplotyper_vcf_branch.intervals.map{
+        meta, vcf -> [ groupKey(meta, meta.num_intervals), vcf ]}
+
+    vcfs_for_merging = vcfs_for_merging.map{
+        meta, vcf -> [
+            meta - meta.subMap('intervals_name') + [ variantcaller:'sentieon_haplotyper' ],
+            vcf]}.groupTuple()
+
     // VCFs
     // Only when using intervals
-    MERGE_SENTIEON_HAPLOTYPER_VCFS(haplotyper_vcf_branch.intervals.map{
-        meta, vcf -> [ groupKey(meta, meta.num_intervals), vcf ]
-    }.groupTuple(), dict)
+    MERGE_SENTIEON_HAPLOTYPER_VCFS(vcfs_for_merging, dict)
 
     versions = versions.mix(MERGE_SENTIEON_HAPLOTYPER_VCFS.out.versions)
 
@@ -93,10 +98,14 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
 
     if (!skip_haplotyper_filter) {
         VCF_VARIANT_FILTERING_GATK(
-            haplotyper_vcf.join(haplotyper_tbi),
+            haplotyper_vcf.join(
+                haplotyper_tbi,
+                failOnDuplicate: true,
+                failOnMismatch: true).map{
+                    meta, vcf, tbi -> [ meta + [ variantcaller:'sentieon_haplotyper' ], vcf, tbi ] },
             fasta,
             fasta_fai,
-            dict,
+            dict.map{ meta, dict -> [ dict ] },
             intervals_bed_combined,
             known_sites_indels.concat(known_sites_snps).flatten().unique().collect(),
             known_sites_indels_tbi.concat(known_sites_snps_tbi).flatten().unique().collect())
@@ -107,10 +116,19 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
 
     // add variantcaller to meta map and remove no longer necessary field: num_intervals
     vcf = vcf.map{ meta, vcf -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'sentieon_haplotyper' ], vcf ] }
+    // TO-DO: Figure out whether it really is necessary to add the variantcaller tag so many times in the same script?
 
     // GVFs
     // Only when using intervals
-    MERGE_SENTIEON_HAPLOTYPER_GVCFS(haplotyper_gvcf_branch.intervals.map{ meta, vcf -> [ groupKey(meta, meta.num_intervals), vcf ] }.groupTuple(), dict)
+    gvcfs_for_merging = haplotyper_gvcf_branch.intervals.map{
+        meta, vcf -> [groupKey(meta, meta.num_intervals), vcf]}
+
+    gvcfs_for_merging = gvcfs_for_merging.map{
+        meta, vcf -> [
+            meta - meta.subMap('intervals_name') + [ variantcaller:'sentieon_haplotyper' ],
+            vcf]}.groupTuple()
+
+    MERGE_SENTIEON_HAPLOTYPER_GVCFS(gvcfs_for_merging, dict)
 
     versions = versions.mix(MERGE_SENTIEON_HAPLOTYPER_GVCFS.out.versions)
 
