@@ -16,7 +16,7 @@ include { GATK4_FILTERMUTECTCALLS         as FILTERMUTECTCALLS             } fro
 
 workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MS {
     take:
-    input                     // channel: [ val(meta), normal_cram, normal_crai, tumor_cram, tumor_crai, intervals ]
+    input                     // channel: [ meta, [ input ], [ input_index ] ]
     fasta                     // channel: /path/to/reference/fasta
     fai                       // channel: /path/to/reference/fasta/index
     dict                      // channel: /path/to/reference/fasta/dictionary
@@ -24,21 +24,30 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MS {
     germline_resource_tbi     // channel: /path/to/germline/index
     panel_of_normals          // channel: /path/to/panel/of/normals
     panel_of_normals_tbi      // channel: /path/to/panel/of/normals/index
+    intervals                 // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
 
     main:
     ch_versions = Channel.empty()
+    germline_resource_pileup     = germline_resource_tbi ? germline_resource : Channel.empty()
+    germline_resource_pileup_tbi = germline_resource_tbi ?: Channel.empty()
+
+
+    // Combine input and intervals for spread and gather strategy
+    input_intervals = input.combine(intervals)
+        // Move num_intervals to meta map and reorganize channel for MUTECT2_PAIRED module
+        .map{ meta, n_cram, n_crai, t_cram, t_crai, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], n_cram, n_crai, t_cram, t_crai, intervals ] }
 
     // Prepare multi sample Mutect2 variant calling channels
     // Separate normal cram files
-    ch_normal_cram = input.map{meta, n_cram, n_crai, t_cram, t_crai, intervals -> [[id: meta.patient, patient: meta.patient, normal_id: meta.normal_id, sex: meta.sex, num_intervals: meta.num_intervals], n_cram, n_crai]}.unique().groupTuple()
+    ch_normal_cram = input_intervals.map{meta, n_cram, n_crai, t_cram, t_crai, intervals -> [[id: meta.patient, patient: meta.patient, normal_id: meta.normal_id, sex: meta.sex, num_intervals: meta.num_intervals], n_cram, n_crai]}.unique().groupTuple()
     // If there are multiple normal cram files, use the first one only
     ch_normal_cram_first = ch_normal_cram.map{it -> [it[0], it[1][0], it[2][0]]}
     // Separate tumor cram files
-    ch_tumor_cram = input.map{meta, n_cram, n_crai, t_cram, t_crai, intervals -> [[id: meta.patient, patient: meta.patient, normal_id: meta.normal_id, sex: meta.sex, num_intervals: meta.num_intervals], t_cram, t_crai]}.unique()
+    ch_tumor_cram = input_intervals.map{meta, n_cram, n_crai, t_cram, t_crai, intervals -> [[id: meta.patient, patient: meta.patient, normal_id: meta.normal_id, sex: meta.sex, num_intervals: meta.num_intervals], t_cram, t_crai]}.unique()
     // Merge normal and tumor samples by patient
     ch_tn_cram = ch_normal_cram_first.mix(ch_tumor_cram).groupTuple()
     // Add intervals back
-    ch_pt_intervals = input.map{meta, n_cram, n_crai, t_cram, t_crai, intervals -> [[id: meta.patient, patient: meta.patient, normal_id: meta.normal_id, sex: meta.sex, num_intervals: meta.num_intervals], intervals]}.unique().groupTuple()
+    ch_pt_intervals = input_intervals.map{meta, n_cram, n_crai, t_cram, t_crai, intervals -> [[id: meta.patient, patient: meta.patient, normal_id: meta.normal_id, sex: meta.sex, num_intervals: meta.num_intervals], intervals]}.unique().groupTuple()
     ch_tn_intervals = ch_tn_cram.join(ch_pt_intervals).transpose(by : [3])
  
     MUTECT2_PAIRED(
@@ -139,7 +148,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MS {
     //
     // Generate pileup summary tables using getepileupsummaries. tumor sample should always be passed in as the first input and input list entries of ch_mutect2_in,
     // to ensure correct file order for calculatecontamination.
-    cram_pair_for_pileup = input.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals ->
+    cram_pair_for_pileup = input_intervals.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals ->
                         [meta, [normal_cram, tumor_cram], [normal_crai, tumor_crai], intervals]
                     }
     pileup = cram_pair_for_pileup.multiMap{  meta, input_list, input_index_list, intervals ->
@@ -147,8 +156,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MS {
         normal: [ meta, input_list[0], input_index_list[0], intervals ]
     }
     
-    germline_resource_pileup = germline_resource_tbi ? germline_resource : Channel.empty()
-    germline_resource_pileup_tbi = germline_resource_tbi ?: Channel.empty()
     // Prepare input channel for tumor pileup summaries
     ch_pileup_in_tumor = pileup.tumor.map{meta, cram, crai, intervals ->
                                             [[
@@ -181,7 +188,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MS {
 
             [groupKey(new_meta, meta.num_intervals), table]
         }.groupTuple(),
-        dict)
+        dict.map{ meta, dict -> [ dict ] })
 
     gather_table_tumor = Channel.empty().mix(
         GATHERPILEUPSUMMARIES_TUMOR.out.table,
@@ -234,7 +241,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MS {
 
             [groupKey(new_meta, meta.num_intervals), table]
         }.groupTuple(),
-        dict)
+        dict.map{ meta, dict -> [ dict ]})
 
     gather_table_normal = Channel.empty().mix(
         GATHERPILEUPSUMMARIES_NORMAL.out.table,

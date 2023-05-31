@@ -13,7 +13,7 @@ include { GATK4_FILTERMUTECTCALLS         as FILTERMUTECTCALLS         } from '.
 
 workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2_MS {
     take:
-    input                     // channel: [ val(meta), [ input ], [ input_index ], [intervals] ]
+    input                     // channel: [ val(meta), [ input ], [ input_index ] ]
     fasta                     // channel: /path/to/reference/fasta
     fai                       // channel: /path/to/reference/fasta/index
     dict                      // channel: /path/to/reference/fasta/dictionary
@@ -21,13 +21,21 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2_MS {
     germline_resource_tbi     // channel: /path/to/germline/index
     panel_of_normals          // channel: /path/to/panel/of/normals
     panel_of_normals_tbi      // channel: /path/to/panel/of/normals/index
+    intervals                 // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
 
     main:
     ch_versions = Channel.empty()
+    germline_resource_pileup     = germline_resource_tbi ? germline_resource : Channel.empty()
+    germline_resource_pileup_tbi = germline_resource_tbi ?: Channel.empty()
+
+    // Combine input and intervals for spread and gather strategy
+    input_intervals = input.combine(intervals)
+        // Move num_intervals to meta map and reorganize channel for MUTECT2 module
+        .map{ meta, input, index, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], input, index, intervals ] }
     // Remove intervals, group tumor cram, crai files by patient.
-    ch_tumor_cram = input.map{meta, t_cram, t_crai, intervals -> [[id: meta.patient, patient: meta.patient, sex: meta.sex, num_intervals: meta.num_intervals], t_cram, t_crai]}.unique().groupTuple()
+    ch_tumor_cram = input_intervals.map{meta, t_cram, t_crai, intervals -> [[id: meta.patient, patient: meta.patient, sex: meta.sex, num_intervals: meta.num_intervals], t_cram, t_crai]}.unique().groupTuple()
     // Add intervals back
-    ch_pt_intervals = input.map{meta, t_cram, t_crai, intervals -> [[id: meta.patient, patient: meta.patient, sex: meta.sex, num_intervals: meta.num_intervals], intervals]}.unique().groupTuple()
+    ch_pt_intervals = input_intervals.map{meta, t_cram, t_crai, intervals -> [[id: meta.patient, patient: meta.patient, sex: meta.sex, num_intervals: meta.num_intervals], intervals]}.unique().groupTuple()
     ch_to_intervals = ch_tumor_cram.join(ch_pt_intervals).transpose(by : [3])
     //
     //Perform variant calling using mutect2 module in tumor single mode.
@@ -109,9 +117,8 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2_MS {
     //
     //Generate pileup summary table using getepileupsummaries.
     //
-    germline_resource_pileup = germline_resource_tbi ? germline_resource : Channel.empty()
-    germline_resource_pileup_tbi = germline_resource_tbi ?: Channel.empty()
-    GETPILEUPSUMMARIES ( input , fasta, fai, dict, germline_resource_pileup , germline_resource_pileup_tbi )
+    
+    GETPILEUPSUMMARIES ( input_intervals , fasta, fai, dict, germline_resource_pileup , germline_resource_pileup_tbi )
 
     GETPILEUPSUMMARIES.out.table.branch{
             intervals:    it[0].num_intervals > 1
@@ -133,7 +140,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2_MS {
 
             [groupKey(new_meta, meta.num_intervals), table]
         }.groupTuple(),
-        dict)
+        dict.map{ meta, dict -> [ dict ]})
 
     pileup_table = Channel.empty().mix(
         GATHERPILEUPSUMMARIES.out.table,

@@ -186,20 +186,23 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         // MUTECT2 MULTI-SAMPLE SOMATIC VARIANT CALLING
         if (params.mutect2_multi_sample) {
             BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MS(
-            cram_pair_intervals,
-            fasta,
-            fasta_fai,
-            dict,
-            germline_resource,
-            germline_resource_tbi,
-            panel_of_normals,
-            panel_of_normals_tbi
+                // Remap channel to match module/subworkflow
+                cram,
+                // Remap channel to match module/subworkflow
+                fasta.map{ it -> [ [ id:'fasta' ], it ] },
+                // Remap channel to match module/subworkflow
+                fasta_fai.map{ it -> [ [ id:'fasta_fai' ], it ] },
+                dict,
+                germline_resource,
+                germline_resource_tbi,
+                panel_of_normals,
+                panel_of_normals_tbi,
+                intervals
             )
             vcf_mutect2_ms = BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MS.out.filtered_vcf
-            ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MS.out.versions)
+            versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MS.out.versions)
         }
         else {
-
             BAM_VARIANT_CALLING_SOMATIC_MUTECT2(
                 // Remap channel to match module/subworkflow
                 cram.map { meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [ meta, [ normal_cram, tumor_cram ], [ normal_crai, tumor_crai ] ] },
