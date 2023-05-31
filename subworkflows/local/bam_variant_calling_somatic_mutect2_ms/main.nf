@@ -49,7 +49,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MS {
     // Add intervals back
     ch_pt_intervals = input_intervals.map{meta, n_cram, n_crai, t_cram, t_crai, intervals -> [[id: meta.patient, patient: meta.patient, normal_id: meta.normal_id, sex: meta.sex, num_intervals: meta.num_intervals], intervals]}.unique().groupTuple()
     ch_tn_intervals = ch_tn_cram.join(ch_pt_intervals).transpose(by : [3])
- 
+
     MUTECT2_PAIRED(
             ch_tn_intervals,
             fasta,
@@ -106,7 +106,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MS {
     mutect2_tbi = Channel.empty().mix(
         MERGE_MUTECT2.out.tbi,
         mutect2_tbi_branch.no_intervals)
-    
+
     //Merge Mutect2 Stats
     MERGEMUTECTSTATS(
         mutect2_stats_branch.intervals
@@ -144,7 +144,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MS {
             }.groupTuple(),
         mutect2_f1r2_branch.no_intervals)
     )
-    
+
     //
     // Generate pileup summary tables using getepileupsummaries. tumor sample should always be passed in as the first input and input list entries of ch_mutect2_in,
     // to ensure correct file order for calculatecontamination.
@@ -155,7 +155,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MS {
         tumor: [ meta, input_list[1], input_index_list[1], intervals ]
         normal: [ meta, input_list[0], input_index_list[0], intervals ]
     }
-    
+
     // Prepare input channel for tumor pileup summaries
     ch_pileup_in_tumor = pileup.tumor.map{meta, cram, crai, intervals ->
                                             [[
@@ -169,7 +169,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MS {
                                         }.unique()
 
     GETPILEUPSUMMARIES_TUMOR ( ch_pileup_in_tumor, fasta, fai, dict, germline_resource_pileup, germline_resource_pileup_tbi )
-    
+
     GETPILEUPSUMMARIES_TUMOR.out.table.branch{
             intervals:    it[0].num_intervals > 1
             no_intervals: it[0].num_intervals <= 1
@@ -263,8 +263,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MS {
     // This is necessary because we generated one normal pileup summary for each patient but we need run calculate contamination for each tumor-normal pair.
     ch_tumor_pileup_tables = gather_table_tumor.map{meta, table -> [[id: meta.patient, patient: meta.patient, normal_id: meta.normal_id, sex: meta.sex, num_intervals: meta.num_intervals], meta.id, table]}
     ch_normal_pileup_tables = gather_table_normal.map{meta, table -> [[id: meta.patient, patient: meta.patient, normal_id: meta.normal_id, sex: meta.sex, num_intervals: meta.num_intervals], meta.id, table]}
-    ch_calculatecontamination_in_tables = ch_tumor_pileup_tables.combine(ch_normal_pileup_tables, by:0).map{meta, tumor_id, tumor_table, normal_id, normal_table -> 
-                                                                                                            new_meta = [ id: tumor_id + "_vs_" + normal_id, patient: meta.patient, normal_id: meta.normal_id, sex: meta.sex, num_intervals: meta.num_intervals] 
+    ch_calculatecontamination_in_tables = ch_tumor_pileup_tables.combine(ch_normal_pileup_tables, by:0).map{meta, tumor_id, tumor_table, normal_id, normal_table ->
+                                                                                                            new_meta = [ id: tumor_id + "_vs_" + normal_id, patient: meta.patient, normal_id: meta.normal_id, sex: meta.sex, num_intervals: meta.num_intervals]
                                                                                                             [new_meta, tumor_table, normal_table]}
 
     CALCULATECONTAMINATION( ch_calculatecontamination_in_tables)
@@ -289,9 +289,9 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MS {
 
     FILTERMUTECTCALLS ( ch_filtermutect_in, fasta, fai, dict)
 
-    mutect2_vcf_filtered = FILTERMUTECTCALLS.out.vcf.map{ meta, vcf -> [[id:meta.id, variantcaller:"mutect2_ms"], vcf]}
-    mutect2_vcf_filtered_tbi = FILTERMUTECTCALLS.out.tbi.map{ meta, tbi -> [[id:meta.id, variantcaller:"mutect2_ms"], tbi]}
-    mutect2_vcf_filtered_stats = FILTERMUTECTCALLS.out.stats.map{ meta, stats -> [[id:meta.id, variantcaller:"mutect2_ms"], stats]}
+    mutect2_vcf_filtered = FILTERMUTECTCALLS.out.vcf.map{ meta, vcf -> [[id:meta.id, variantcaller:"mutect2"], vcf]}
+    mutect2_vcf_filtered_tbi = FILTERMUTECTCALLS.out.tbi.map{ meta, tbi -> [[id:meta.id, variantcaller:"mutect2"], tbi]}
+    mutect2_vcf_filtered_stats = FILTERMUTECTCALLS.out.stats.map{ meta, stats -> [[id:meta.id, variantcaller:"mutect2"], stats]}
 
     ch_versions = ch_versions.mix(MUTECT2_PAIRED.out.versions)
     ch_versions = ch_versions.mix(MERGE_MUTECT2.out.versions)

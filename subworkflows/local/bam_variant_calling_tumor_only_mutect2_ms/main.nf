@@ -117,7 +117,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2_MS {
     //
     //Generate pileup summary table using getepileupsummaries.
     //
-    
+
     GETPILEUPSUMMARIES ( input_intervals , fasta, fai, dict, germline_resource_pileup , germline_resource_pileup_tbi )
 
     GETPILEUPSUMMARIES.out.table.branch{
@@ -167,14 +167,14 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2_MS {
                                                     .join(ch_artifactpriors_to_filtermutectcalls, failOnMismatch: true)
                                                     .join(ch_seg_to_filtermutectcalls, failOnMismatch: true)
                                                     .join(ch_cont_to_filtermutectcalls, failOnMismatch: true)
-    
+
     ch_filtermutect_in = ch_filtermutect.map{ meta, vcf, tbi, stats, artifactprior, seg, cont -> [meta, vcf, tbi, stats, artifactprior, seg, cont, []] }
 
     FILTERMUTECTCALLS ( ch_filtermutect_in, fasta, fai, dict )
 
-    mutect2_vcf_filtered = FILTERMUTECTCALLS.out.vcf.map{ meta, vcf -> [[id:meta.id, variantcaller:"mutect2_ms"], vcf]}
-    mutect2_vcf_filtered_tbi = FILTERMUTECTCALLS.out.tbi.map{ meta, tbi -> [[id:meta.id, variantcaller:"mutect2_ms"], tbi]}
-    mutect2_vcf_filtered_stats = FILTERMUTECTCALLS.out.stats.map{ meta, stats -> [[id:meta.id, variantcaller:"mutect2_ms"], stats]}
+    mutect2_vcf_filtered = FILTERMUTECTCALLS.out.vcf.map{ meta, vcf -> [[id:meta.id, variantcaller:"mutect2"], vcf]}
+    mutect2_vcf_filtered_tbi = FILTERMUTECTCALLS.out.tbi.map{ meta, tbi -> [[id:meta.id, variantcaller:"mutect2"], tbi]}
+    mutect2_vcf_filtered_stats = FILTERMUTECTCALLS.out.stats.map{ meta, stats -> [[id:meta.id, variantcaller:"mutect2"], stats]}
 
     ch_versions = ch_versions.mix(MERGE_MUTECT2.out.versions)
     ch_versions = ch_versions.mix(CALCULATECONTAMINATION.out.versions)
