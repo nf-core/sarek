@@ -133,9 +133,8 @@
                     },
                     "fastp": {
                         "branch": "master",
-                        "git_sha": "37a98dd100d74d9188a272197663587de1331a0e",
-                        "installed_by": ["modules"],
-                        "patch": "modules/nf-core/fastp/fastp.diff"
+                        "git_sha": "d497a4868ace3302016ea8ed4b395072d5e833cd",
+                        "installed_by": ["modules"]
                     },
                     "fastqc": {
                         "branch": "master",
