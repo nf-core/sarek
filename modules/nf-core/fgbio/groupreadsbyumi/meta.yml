@@ -16,7 +16,7 @@ tools:
       homepage: http://fulcrumgenomics.github.io/fgbio/
       documentation: http://fulcrumgenomics.github.io/fgbio/tools/latest/
       tool_dev_url: https://github.com/fulcrumgenomics/fgbio
-      doi: ""
+
       licence: ["MIT"]
 
 input:

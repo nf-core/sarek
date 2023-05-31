@@ -7,15 +7,13 @@
 [![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/sarek/results)
 [![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.3476426-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.3476425)
 
-[![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A521.10.3-23aa62.svg)](https://www.nextflow.io/)
+[![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A522.10.1-23aa62.svg)](https://www.nextflow.io/)
 [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
 [![Launch on Nextflow Tower](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Nextflow%20Tower-%234256e7)](https://tower.nf/launch?pipeline=https://github.com/nf-core/sarek)
 
-[![Get help on Slack](http://img.shields.io/badge/slack-nf--core%20%23sarek-4A154B?labelColor=000000&logo=slack)](https://nfcore.slack.com/channels/sarek)
-[![Follow on Twitter](http://img.shields.io/badge/twitter-%40nf__core-1DA1F2?labelColor=000000&logo=twitter)](https://twitter.com/nf_core)
-[![Watch on YouTube](http://img.shields.io/badge/youtube-nf--core-FF0000?labelColor=000000&logo=youtube)](https://www.youtube.com/c/nf-core)
+[![Get help on Slack](http://img.shields.io/badge/slack-nf--core%20%23sarek-4A154B?labelColor=000000&logo=slack)](https://nfcore.slack.com/channels/sarek)[![Follow on Twitter](http://img.shields.io/badge/twitter-%40nf__core-1DA1F2?labelColor=000000&logo=twitter)](https://twitter.com/nf_core)[![Follow on Mastodon](https://img.shields.io/badge/mastodon-nf__core-6364ff?labelColor=FFFFFF&logo=mastodon)](https://mstdn.science/@nf_core)[![Watch on YouTube](http://img.shields.io/badge/youtube-nf--core-FF0000?labelColor=000000&logo=youtube)](https://www.youtube.com/c/nf-core)
 
 ## Introduction
 
@@ -33,65 +31,95 @@ It's listed on [Elixir - Tools and Data Services Registry](https://bio.tools/nf-
 
 ## Pipeline summary
 
-By default, the pipeline currently performs the following:
+Depending on the options and samples provided, the pipeline can currently perform the following:
 
-- Sequencing quality control (`FastQC`)
-- Map Reads to Reference (`BWA mem`)
-- Mark Duplicates (`GATK MarkDuplicates`)
-- Base (Quality Score) Recalibration (`GATK BaseRecalibrator`, `GATK ApplyBQSR`)
-- Preprocessing quality control (`samtools stats`)
-- Preprocessing quality control (`mosdepth`)
-- Overall pipeline run summaries (`MultiQC`)
+- Form consensus reads from UMI sequences (`fgbio`)
+- Sequencing quality control and trimming (`FastQC`, `fastp`)
+- Map Reads to Reference (`BWA-mem` or `BWA-mem2` or `dragmap`)
+- Process BAM file (`GATK MarkDuplicates`, `GATK BaseRecalibrator`, `GATK ApplyBQSR`)
+- Summarise alignment statistics (`samtools stats`, `mosdepth`)
+- Variant calling (enabled by `--tools`, see [compatibility](https://github.com/nf-core/sarek/blob/master/docs/usage.md#which-variant-calling-tool-is-implemented-for-which-data-type)):
+  - `HaplotypeCaller`
+  - `freebayes`
+  - `mpileup`
+  - `Strelka2`
+  - `DeepVariant`
+  - `Mutect2`
+  - `Manta`
+  - `TIDDIT`
+  - `ASCAT`
+  - `Control-FREEC`
+  - `CNVkit`
+  - `MSIsensor-pro`
+- Variant filtering and annotation (`SnpEff`, `Ensembl VEP`)
+- Summarise and represent QC (`MultiQC`)
 
 <p align="center">
     <img title="Sarek Workflow" src="docs/images/sarek_subway.png" width=60%>
 </p>
 
-## Quick Start
+## Usage
 
-1. Install [`Nextflow`](https://www.nextflow.io/docs/latest/getstarted.html#installation) (`>=21.10.3`)
+> **Note**
+> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how
+> to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline)
+> with `-profile test` before running the workflow on actual data.
 
-2. Install any of [`Docker`](https://docs.docker.com/engine/installation/), [`Singularity`](https://www.sylabs.io/guides/3.0/user-guide/) (you can follow [this tutorial](https://singularity-tutorial.github.io/01-installation/)), [`Podman`](https://podman.io/), [`Shifter`](https://nersc.gitlab.io/development/shifter/how-to-use/) or [`Charliecloud`](https://hpc.github.io/charliecloud/) for full pipeline reproducibility _(you can use [`Conda`](https://conda.io/miniconda.html) both to install Nextflow itself and also to manage software within pipelines. Please only use it within pipelines as a last resort; see [docs](https://nf-co.re/usage/configuration#basic-configuration-profiles))_.
+First, prepare a samplesheet with your input data that looks as follows:
 
-3. Download the pipeline and test it on a minimal dataset with a single command:
+`samplesheet.csv`:
 
-   ```bash
-   nextflow run nf-core/sarek -profile test,YOURPROFILE --outdir <OUTDIR>
-   ```
+```csv
+patient,sample,lane,fastq_1,fastq_2
+ID1,S1,L002,ID1_S1_L002_R1_001.fastq.gz,ID1_S1_L002_R2_001.fastq.gz
+```
 
-   Note that some form of configuration will be needed so that Nextflow knows how to fetch the required software. This is usually done in the form of a config profile (`YOURPROFILE` in the example command above). You can chain multiple config profiles in a comma-separated string.
+Each row represents a pair of fastq files (paired end).
 
-   > - The pipeline comes with config profiles called `docker`, `singularity`, `podman`, `shifter`, `charliecloud` and `conda` which instruct the pipeline to use the named tool for software management. For example, `-profile test,docker`.
-   > - Please check [nf-core/configs](https://github.com/nf-core/configs#documentation) to see if a custom config file to run nf-core pipelines already exists for your Institute. If so, you can simply use `-profile <institute>` in your command. This will enable either `docker` or `singularity` and set the appropriate execution settings for your local compute environment.
-   > - If you are using `singularity`, please use the [`nf-core download`](https://nf-co.re/tools/#downloading-pipelines-for-offline-use) command to download images first, before running the pipeline. Setting the [`NXF_SINGULARITY_CACHEDIR` or `singularity.cacheDir`](https://www.nextflow.io/docs/latest/singularity.html?#singularity-docker-hub) Nextflow options enables you to store and re-use the images from a central location for future pipeline runs.
-   > - If you are using `conda`, it is highly recommended to use the [`NXF_CONDA_CACHEDIR` or `conda.cacheDir`](https://www.nextflow.io/docs/latest/conda.html) settings to store the environments in a central location for future pipeline runs.
+Now, you can run the pipeline using:
 
-4. Start running your own analysis!
-
-   ```bash
-   nextflow run nf-core/sarek --input samplesheet.csv --outdir <OUTDIR> --genome GATK.GRCh38 -profile <docker/singularity/podman/shifter/charliecloud/conda/institute>
-   ```
+```bash
+nextflow run nf-core/sarek \
+   -profile <docker/singularity/.../institute> \
+   --input samplesheet.csv \
+   --outdir <OUTDIR>
+```
 
 See [usage docs](https://nf-co.re/sarek/usage) for all of the available options when running the pipeline.
 
 ## Documentation
 
-The nf-core/sarek pipeline comes with documentation about the pipeline [usage](https://nf-co.re/sarek/usage), [parameters](https://nf-co.re/sarek/parameters) and [output](https://nf-co.re/sarek/output).
+> **Warning:**
+> Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those
+> provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_;
+> see [docs](https://nf-co.re/usage/configuration#custom-configuration-files).
+
+For more details, please refer to the [usage documentation](https://nf-co.re/sarek/usage) and the [parameter documentation](https://nf-co.re/sarek/parameters).
+
+## Pipeline output
+
+To see the the results of a test run with a full size dataset refer to the [results](https://nf-co.re/sarek/results) tab on the nf-core website pipeline page.
+For more details about the output files and reports, please refer to the
+[output documentation](https://nf-co.re/sarek/output).
 
 ## Credits
 
-Sarek was originally written by Maxime Garcia and Szilveszter Juhos at the [National Genomics Infastructure](https://ngisweden.scilifelab.se) and [National Bioinformatics Infastructure Sweden](https://nbis.se) which are both platforms at [SciLifeLab](https://scilifelab.se), with the support of [The Swedish Childhood Tumor Biobank (Barntumörbanken)](https://ki.se/forskning/barntumorbanken).
+Sarek was originally written by Maxime U Garcia and Szilveszter Juhos at the [National Genomics Infastructure](https://ngisweden.scilifelab.se) and [National Bioinformatics Infastructure Sweden](https://nbis.se) which are both platforms at [SciLifeLab](https://scilifelab.se), with the support of [The Swedish Childhood Tumor Biobank (Barntumörbanken)](https://ki.se/forskning/barntumorbanken).
 Friederike Hanssen and Gisela Gabernet at [QBiC](https://www.qbic.uni-tuebingen.de/) later joined and helped with further development.
 
-Main authors:
+The Nextflow DSL2 conversion of the pipeline was lead by Friederike Hanssen and Maxime U Garcia.
 
-- [Maxime Garcia](https://github.com/maxulysse)
+Maintenance is now lead by Friederike Hanssen and Maxime U Garcia (now at [Seqera Labs](https://seqera/io))
+
+Main developers:
+
+- [Maxime U Garcia](https://github.com/maxulysse)
 - [Friederike Hanssen](https://github.com/FriederikeHanssen)
-- [Szilveszter Juhos](https://github.com/szilvajuhos)
 
 We thank the following people for their extensive assistance in the development of this pipeline:
 
 - [Abhinav Sharma](https://github.com/abhi18av)
+- [Adam Talbot](https://github.com/adamrtalbot)
 - [Adrian Lärkeryd](https://github.com/adrlar)
 - [Alexander Peltzer](https://github.com/apeltzer)
 - [Anders Sune Pedersen](https://github.com/asp8200)
@@ -121,6 +149,7 @@ We thank the following people for their extensive assistance in the development 
 - [Silvia Morini](https://github.com/silviamorins)
 - [Solenne Correard](https://github.com/scorreard)
 - [Susanne Jodoin](https://github.com/SusiJo)
+- [Szilveszter Juhos](https://github.com/szilvajuhos)
 - [Tobias Koch](https://github.com/KochTobi)
 - [Winni Kretzschmar](https://github.com/winni2k)
 - [arontommi](https://github.com/arontommi)
@@ -129,6 +158,7 @@ We thank the following people for their extensive assistance in the development 
 - [cgpu](https://github.com/cgpu)
 - [gulfshores](https://github.com/gulfshores)
 - [pallolason](https://github.com/pallolason)
+- [Alison Meynert](https://github.com/ameynert)
 
 ## Acknowledgements
 
@@ -142,7 +172,7 @@ We thank the following people for their extensive assistance in the development 
 
 If you would like to contribute to this pipeline, please see the [contributing guidelines](.github/CONTRIBUTING.md).
 
-For further information or help, don't hesitate to get in touch on the [Slack `#sarek` channel](https://nfcore.slack.com/channels/sarek) (you can join with [this invite](https://nf-co.re/join/slack)), or contact us: [Gisela Gabernet](mailto:gisela.gabernet@qbic.uni-tuebingen.de?subject=[GitHub]%20nf-core/sarek), [Maxime Garcia](mailto:maxime.garcia@scilifelab.se?subject=[GitHub]%20nf-core/sarek), [Friederike Hanssen](mailto:friederike.hanssen@qbic.uni-tuebingen.de?subject=[GitHub]%20nf-core/sarek), [Szilvester Juhos](mailto:szilveszter.juhos@scilifelab.se?subject=[GitHub]%20nf-core/sarek)
+For further information or help, don't hesitate to get in touch on the [Slack `#sarek` channel](https://nfcore.slack.com/channels/sarek) (you can join with [this invite](https://nf-co.re/join/slack)), or contact us: [Gisela Gabernet](mailto:gisela.gabernet@qbic.uni-tuebingen.de?subject=[GitHub]%20nf-core/sarek), [Maxime U Garcia](mailto:maxime.garcia@seqera.io?subject=[GitHub]%20nf-core/sarek), [Friederike Hanssen](mailto:friederike.hanssen@qbic.uni-tuebingen.de?subject=[GitHub]%20nf-core/sarek)
 
 ## Citations
 

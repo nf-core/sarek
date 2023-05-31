@@ -1,5 +1,5 @@
 - name: Run default pipeline with target bed
-  command: nextflow run main.nf -profile test,targeted
+  command: nextflow run main.nf -profile test,targeted --outdir results
   tags:
     - intervals
     - preprocessing
@@ -13,15 +13,15 @@
       md5sum: 2d29d9e53894dcce96a1b5beb6ef3312
     - path: results/multiqc
     - path: results/preprocessing/markduplicates/test/test.md.cram
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recal_table/test/test.recal.table
       md5sum: c990e4f1b7dbd5a3a623882a54ae2bf2
     - path: results/preprocessing/recalibrated/test/test.recal.cram
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.cram.metrics
       contains: ["test	8547	767	84	523391	3882	0	0	0.385081", "1.0	767	767"]
@@ -54,11 +54,11 @@
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
       md5sum: c6d1ac97ef4dfe43731c8368d8391cab
     - path: results/reports/samtools/test/test.md.cram.stats
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/reports/samtools/test/test.recal.cram.stats
-    # conda changes md5sums for test.
-- name: Run intervals false pipeline
-  command: nextflow run main.nf -profile test --intervals false --save_reference
+    # conda changes md5sums for test
+- name: Run pipeline with intervals false
+  command: nextflow run main.nf -profile test --intervals false --save_reference --outdir results
   tags:
     - intervals
     - intervals_false
@@ -72,15 +72,15 @@
       md5sum: 2d29d9e53894dcce96a1b5beb6ef3312
     - path: results/multiqc
     - path: results/preprocessing/markduplicates/test/test.md.cram
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recal_table/test/test.recal.table
       md5sum: 4ac774bf5f1157e77426fd82f5ac0fbe
     - path: results/preprocessing/recalibrated/test/test.recal.cram
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/reference/intervals/chr22_1-40001.bed
       md5sum: 87a15eb9c2ff20ccd5cd8735a28708f7
     - path: results/reference/intervals/chr22_1-40001.bed.gz
@@ -105,11 +105,11 @@
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
       md5sum: 38fe39894abe62e38f8ac214cba64f2b
     - path: results/reports/samtools/test/test.md.cram.stats
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/reports/samtools/test/test.recal.cram.stats
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
 - name: Run default pipeline without intervals
-  command: nextflow run main.nf -profile test,no_intervals
+  command: nextflow run main.nf -profile test,no_intervals --outdir results
   tags:
     - intervals
     - no_intervals
@@ -129,15 +129,15 @@
     - path: results/no_intervals.bed.gz.tbi
       md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/preprocessing/markduplicates/test/test.md.cram
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recal_table/test/test.recal.table
       md5sum: 4ac774bf5f1157e77426fd82f5ac0fbe
     - path: results/preprocessing/recalibrated/test/test.recal.cram
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/reference/intervals
       should_exist: false
     - path: results/reports/fastqc/test-test_L1
@@ -164,6 +164,6 @@
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
       md5sum: b1c2a861f64e20a94108a6de3b76c582
     - path: results/reports/samtools/test/test.md.cram.stats
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/reports/samtools/test/test.recal.cram.stats
-    # conda changes md5sums for test.
+    # conda changes md5sums for test

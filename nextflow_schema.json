@@ -71,7 +71,7 @@
                 "intervals": {
                     "type": "string",
                     "fa_icon": "fas fa-file-alt",
-                    "help_text": "To speed up preprocessing and variant calling processes, the execution is parallelized across a reference chopped into smaller pieces.\n\nParts of preprocessing and variant calling are done by these intervals, the different resulting files are then merged.\nThis can parallelize processes, and push down wall clock time significantly.\n\nWe are aligning to the whole genome, and then run Base Quality Score Recalibration and Variant Calling on the supplied regions.\n\n**Whole Genome Sequencing:**\n\nThe (provided) intervals are chromosomes cut at their centromeres (so each chromosome arm processed separately) also additional unassigned contigs.\n\nWe are ignoring the `hs37d5` contig that contains concatenated decoy sequences.\n\nThe calling intervals can be defined using a .list or a BED file.\nA .list file contains one interval per line in the format `chromosome:start-end` (1-based coordinates).\nA BED file must be a tab-separated text file with one interval per line.\nThere must be at least three columns: chromosome, start, and end (0-based coordinates).\nAdditionally, the score column of the BED file can be used to provide an estimate of how many seconds it will take to call variants on that interval.\nThe fourth column remains unused.\n\n```\n|chr1|10000|207666|NA|47.3|\n```\nThis indicates that variant calling on the interval chr1:10001-207666 takes approximately 47.3 seconds.\n\nThe runtime estimate is used in two different ways.\nFirst, when there are multiple consecutive intervals in the file that take little time to compute, they are processed as a single job, thus reducing the number of processes that needs to be spawned.\nSecond, the jobs with largest processing time are started first, which reduces wall-clock time.\nIf no runtime is given, a time of 1000 nucleotides per second is assumed. See `-nucleotides_per_second` on how to customize this.\nActual figures vary from 2 nucleotides/second to 30000 nucleotides/second.\nIf you prefer, you can specify the full path to your reference genome when you run the pipeline:\n\n> **NB** If none provided, will be generated automatically from the FASTA reference\n> **NB** Use --no_intervals to disable automatic generation.\n\n**Targeted Sequencing:**\n\nThe recommended flow for targeted sequencing data is to use the workflow as it is, but also provide a `BED` file containing targets for all steps using the `--intervals` option. In addition, the parameter `--wes` should be set.\nIt is advised to pad the variant calling regions (exons or target) to some extent before submitting to the workflow.\n\nThe procedure is similar to whole genome sequencing, except that only BED file are accepted. See above for formatting description.\nAdding every exon as an interval in case of `WES` can generate >200K processes or jobs, much more forks, and similar number of directories in the Nextflow work directory. These are appropriately  grouped together to reduce number of processes run in parallel (see above and `--nucleotides_per_second` for details). \nFurthermore, primers and/or baits are not 100% specific, (certainly not for MHC and KIR, etc.), quite likely there going to be reads mapping to multiple locations.\nIf you are certain that the target is unique for your genome (all the reads will certainly map to only one location), and aligning to the whole genome is an overkill, it is actually better to change the reference itself.",
+                    "help_text": "To speed up preprocessing and variant calling processes, the execution is parallelized across a reference chopped into smaller pieces.\n\nParts of preprocessing and variant calling are done by these intervals, the different resulting files are then merged.\nThis can parallelize processes, and push down wall clock time significantly.\n\nWe are aligning to the whole genome, and then run Base Quality Score Recalibration and Variant Calling on the supplied regions.\n\n**Whole Genome Sequencing:**\n\nThe (provided) intervals are chromosomes cut at their centromeres (so each chromosome arm processed separately) also additional unassigned contigs.\n\nWe are ignoring the `hs37d5` contig that contains concatenated decoy sequences.\n\nThe calling intervals can be defined using a .list or a BED file.\nA .list file contains one interval per line in the format `chromosome:start-end` (1-based coordinates).\nA BED file must be a tab-separated text file with one interval per line.\nThere must be at least three columns: chromosome, start, and end (0-based coordinates).\nAdditionally, the score column of the BED file can be used to provide an estimate of how many seconds it will take to call variants on that interval.\nThe fourth column remains unused.\n\n```\n|chr1|10000|207666|NA|47.3|\n```\nThis indicates that variant calling on the interval chr1:10001-207666 takes approximately 47.3 seconds.\n\nThe runtime estimate is used in two different ways.\nFirst, when there are multiple consecutive intervals in the file that take little time to compute, they are processed as a single job, thus reducing the number of processes that needs to be spawned.\nSecond, the jobs with largest processing time are started first, which reduces wall-clock time.\nIf no runtime is given, a time of 200000 nucleotides per second is assumed. See `--nucleotides_per_second` on how to customize this.\nActual figures vary from 2 nucleotides/second to 30000 nucleotides/second.\nIf you prefer, you can specify the full path to your reference genome when you run the pipeline:\n\n> **NB** If none provided, will be generated automatically from the FASTA reference\n> **NB** Use --no_intervals to disable automatic generation.\n\n**Targeted Sequencing:**\n\nThe recommended flow for targeted sequencing data is to use the workflow as it is, but also provide a `BED` file containing targets for all steps using the `--intervals` option. In addition, the parameter `--wes` should be set.\nIt is advised to pad the variant calling regions (exons or target) to some extent before submitting to the workflow.\n\nThe procedure is similar to whole genome sequencing, except that only BED file are accepted. See above for formatting description.\nAdding every exon as an interval in case of `WES` can generate >200K processes or jobs, much more forks, and similar number of directories in the Nextflow work directory. These are appropriately  grouped together to reduce number of processes run in parallel (see above and `--nucleotides_per_second` for details). \nFurthermore, primers and/or baits are not 100% specific, (certainly not for MHC and KIR, etc.), quite likely there going to be reads mapping to multiple locations.\nIf you are certain that the target is unique for your genome (all the reads will certainly map to only one location), and aligning to the whole genome is an overkill, it is actually better to change the reference itself.",
                     "description": "Path to target bed file in case of whole exome or targeted sequencing or intervals file."
                 },
                 "nucleotides_per_second": {
@@ -79,7 +79,7 @@
                     "fa_icon": "fas fa-clock",
                     "description": "Estimate interval size.",
                     "help_text": "Intervals are parts of the chopped up genome used to speed up preprocessing and variant calling. See `--intervals` for more info. \n\nChanging this parameter, changes the number of intervals that are grouped and processed together. Bed files from target sequencing can contain thousands or small intervals. Spinning up a new process for each can be quite resource intensive. Instead it can be desired to process small intervals together on larger nodes. \nIn order to make use of this parameter, no runtime estimate can be present in the bed file (column 5). ",
-                    "default": 1000
+                    "default": 200000
                 },
                 "no_intervals": {
                     "type": "boolean",
@@ -92,14 +92,14 @@
                     "fa_icon": "fas fa-toolbox",
                     "description": "Tools to use for variant calling and/or for annotation.",
                     "help_text": "Multiple tools separated with commas.\n\n**Variant Calling:**\n\nGermline variant calling can currently be performed with the following variant callers:\n- SNPs/Indels: DeepVariant, FreeBayes, HaplotypeCaller, mpileup, Strelka\n- Structural Variants: Manta, TIDDIT\n- Copy-number: CNVKit\n\nTumor-only somatic variant calling can currently be performed with the following variant callers:\n- SNPs/Indels: FreeBayes, mpileup, Mutect2, Strelka\n- Structural Variants: Manta, TIDDIT\n- Copy-number: CNVKit, ControlFREEC\n\nSomatic variant calling can currently only be performed with the following variant callers:\n- SNPs/Indels: FreeBayes, Mutect2, Strelka2\n- Structural variants: Manta, TIDDIT\n- Copy-Number: ASCAT, CNVKit, Control-FREEC\n- Microsatellite Instability: MSIsensorpro\n\n> **NB** Mutect2 for somatic variant calling cannot be combined with `--no_intervals`\n\n**Annotation:**\n \n- snpEff, VEP, merge (both consecutively).\n\n> **NB** As Sarek will use bgzip and tabix to compress and index VCF files annotated, it expects VCF files to be sorted when starting from `--step annotate`.",
-                    "pattern": "^((ascat|cnvkit|controlfreec|deepvariant|freebayes|haplotypecaller|manta|merge|mpileup|msisensorpro|mutect2|snpeff|strelka|tiddit|vep)?,?)*[^,]+$"
+                    "pattern": "^((ascat|cnvkit|controlfreec|deepvariant|freebayes|haplotypecaller|manta|merge|mpileup|msisensorpro|mutect2|snpeff|strelka|tiddit|vep)?,?)*(?<!,)$"
                 },
                 "skip_tools": {
                     "type": "string",
                     "fa_icon": "fas fa-forward",
                     "description": "Disable specified tools.",
                     "help_text": "Multiple tools can be specified, separated by commas.\n\n> **NB** `--skip_tools baserecalibrator_report` is actually just not saving the reports.\n> **NB** `--skip_tools markduplicates_report` does not skip `MarkDuplicates` but prevent the collection of duplicate metrics that slows down performance.",
-                    "pattern": "^((baserecalibrator|baserecalibrator_report|bcftools|documentation|fastqc|markduplicates|markduplicates_report|mosdepth|multiqc|samtools|vcftools|versions)?,?)*[^,]+$"
+                    "pattern": "^((baserecalibrator|baserecalibrator_report|bcftools|documentation|fastqc|haplotypecaller_filter|markduplicates|markduplicates_report|mosdepth|multiqc|samtools|vcftools|versions)?,?)*(?<!,)$"
                 }
             },
             "fa_icon": "fas fa-user-cog"
@@ -222,7 +222,7 @@
                     "fa_icon": "fas fa-forward",
                     "description": "Enable usage of GATK Spark implementation for duplicate marking and/or base quality score recalibration",
                     "help_text": "Multiple separated with commas.\n\n> The GATK4 Base Quality Score recalibration tools `Baserecalibrator` and `ApplyBQSR` are currently available as Beta release. Use with caution!",
-                    "pattern": "^((baserecalibrator|markduplicates)?,?)*[^,]+$"
+                    "pattern": "^((baserecalibrator|markduplicates)?,?)*(?<!,)$"
                 }
             }
         },
@@ -233,6 +233,12 @@
             "default": "",
             "fa_icon": "fas fa-toolbox",
             "properties": {
+                "concatenate_vcfs": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-merge",
+                    "description": "Option for concatenating germline vcf-files.",
+                    "help_text": "Concatenating the germline vcf-files from each applied variant-caller into one vcf-file using bfctools concat."
+                },
                 "only_paired_variant_calling": {
                     "type": "boolean",
                     "fa_icon": "fas fa-forward",
@@ -353,7 +359,9 @@
                     "type": "string",
                     "default": null,
                     "fa_icon": "fas fa-file",
-                    "help_text": "https://cnvkit.readthedocs.io/en/stable/pipeline.html?highlight=reference.cnn#batch"
+                    "help_text": "https://cnvkit.readthedocs.io/en/stable/pipeline.html?highlight=reference.cnn#batch",
+                    "description": "Copy-number reference for CNVkit",
+                    "hidden": true
                 },
                 "pon": {
                     "type": "string",
@@ -477,6 +485,13 @@
                     "hidden": true,
                     "help_text": "For details, see [here](https://www.ensembl.org/info/docs/tools/vep/script/vep_plugins.html#spliceregion) and [here](https://www.ensembl.info/2018/10/26/cool-stuff-the-vep-can-do-splice-site-variant-annotation/)."
                 },
+                "vep_custom_args": {
+                    "type": "string",
+                    "fa_icon": "fas fa-toolbox",
+                    "description": "Add an extra custom argument to VEP.",
+                    "hidden": true,
+                    "help_text": "Using this params you can add custom args to VEP."
+                },
                 "snpeff_cache": {
                     "type": "string",
                     "fa_icon": "fas fa-file",
@@ -489,6 +504,13 @@
                     "fa_icon": "fas fa-file",
                     "description": "Path to VEP cache.",
                     "help_text": "To be used with `--annotation_cache`.",
+                    "hidden": true
+                },
+                "outdir_cache": {
+                    "type": "string",
+                    "format": "directory-path",
+                    "description": "The output directory where the cache will be saved. You have to use absolute paths to storage on Cloud infrastructure.",
+                    "fa_icon": "fas fa-folder-open",
                     "hidden": true
                 },
                 "vep_out_format": {
@@ -522,8 +544,10 @@
                 "ascat_genome": {
                     "type": "string",
                     "fa_icon": "fa-solid fa-text",
+                    "default": null,
                     "description": "ASCAT genome.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately.\n\nMust be set to run ASCAT, either hg19 or hg38. If you use AWS iGenomes, this has already been set for you appropriately.",
+                    "enum": ["None", "hg19", "hg38"],
                     "hidden": true
                 },
                 "ascat_alleles": {
@@ -680,7 +704,7 @@
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
                 },
                 "snpeff_db": {
-                    "type": "string",
+                    "type": "number",
                     "fa_icon": "fas fa-database",
                     "description": "snpEff DB version.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately.\nThis is used to specify the database to be use to annotate with.\nAlternatively databases' names can be listed with the `snpEff databases`.",
@@ -733,6 +757,18 @@
                     "fa_icon": "fas fa-download",
                     "description": "Save built references.",
                     "help_text": "Set this parameter, if you wish to save all computed reference files. This is useful to avoid re-computation on future runs."
+                },
+                "build_only_index": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-download",
+                    "description": "Only built references.",
+                    "help_text": "Set this parameter, if you wish to compute and save all computed reference files. No alignment or any other downstream steps will be performed."
+                },
+                "download_cache": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-download",
+                    "description": "Download annotation cache.",
+                    "help_text": "Set this parameter, if you wish to download annotation cache."
                 },
                 "igenomes_base": {
                     "type": "string",
@@ -796,6 +832,13 @@
                     "hidden": true,
                     "fa_icon": "fas fa-users-cog"
                 },
+                "test_data_base": {
+                    "type": "string",
+                    "default": "https://raw.githubusercontent.com/nf-core/test-datasets/sarek3",
+                    "description": "Base path / URL for data used in the test profiles",
+                    "help_text": "Warning: The `-profile test` samplesheet file itself contains remote paths. Setting this parameter does not alter the contents of that file.",
+                    "hidden": true
+                },
                 "seq_center": {
                     "type": "string",
                     "fa_icon": "fas fa-university",
@@ -857,6 +900,12 @@
                 "help": {
                     "type": "boolean",
                     "description": "Display help text.",
+                    "fa_icon": "fas fa-question-circle",
+                    "hidden": true
+                },
+                "version": {
+                    "type": "boolean",
+                    "description": "Display version and exit.",
                     "fa_icon": "fas fa-question-circle",
                     "hidden": true
                 },
@@ -954,17 +1003,11 @@
                     "hidden": true,
                     "help_text": "By default, parameters set as _hidden_ in the schema are not shown on the command line when a user runs with `--help`. Specifying this option will tell the pipeline to show all parameters."
                 },
-                "enable_conda": {
-                    "type": "boolean",
-                    "description": "Run this workflow with Conda. You can also use '-profile conda' instead of providing this parameter.",
-                    "hidden": true,
-                    "fa_icon": "fas fa-bacon"
-                },
                 "hook_url": {
                     "type": "string",
                     "description": "Incoming hook URL for messaging service",
                     "fa_icon": "fas fa-people-group",
-                    "help_text": "Incoming hook URL for messaging service. Currently, only MS Teams is supported.",
+                    "help_text": "Incoming hook URL for messaging service. Currently, MS Teams and Slack are supported.",
                     "hidden": true
                 }
             }

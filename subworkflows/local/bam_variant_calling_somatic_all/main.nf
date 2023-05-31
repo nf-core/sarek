@@ -18,84 +18,46 @@ include { MSISENSORPRO_MSI_SOMATIC                      } from '../../../modules
 
 workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     take:
-        tools                         // Mandatory, list of tools to apply
-        cram_pair                     // channel: [mandatory] cram
-        bwa                           // channel: [optional] bwa
-        cf_chrom_len                  // channel: [optional] controlfreec length file
-        chr_files
-        dbsnp                         // channel: [mandatory] dbsnp
-        dbsnp_tbi                     // channel: [mandatory] dbsnp_tbi
-        dict                          // channel: [mandatory] dict
-        fasta                         // channel: [mandatory] fasta
-        fasta_fai                     // channel: [mandatory] fasta_fai
-        germline_resource             // channel: [optional]  germline_resource
-        germline_resource_tbi         // channel: [optional]  germline_resource_tbi
-        intervals                     // channel: [mandatory] intervals/target regions
-        intervals_bed_gz_tbi          // channel: [mandatory] intervals/target regions index zipped and indexed
-        intervals_bed_combined        // channel: [mandatory] intervals/target regions in one file unzipped
-        mappability
-        msisensorpro_scan             // channel: [optional]  msisensorpro_scan
-        panel_of_normals              // channel: [optional]  panel_of_normals
-        panel_of_normals_tbi          // channel: [optional]  panel_of_normals_tbi
-        allele_files                  // channel: [optional]  ascat allele files
-        loci_files                    // channel: [optional]  ascat loci files
-        gc_file                       // channel: [optional]  ascat gc content file
-        rt_file                       // channel: [optional]  ascat rt file
+    tools                         // Mandatory, list of tools to apply
+    cram                          // channel: [mandatory] cram
+    bwa                           // channel: [optional] bwa
+    cf_chrom_len                  // channel: [optional] controlfreec length file
+    chr_files
+    dbsnp                         // channel: [mandatory] dbsnp
+    dbsnp_tbi                     // channel: [mandatory] dbsnp_tbi
+    dict                          // channel: [mandatory] dict
+    fasta                         // channel: [mandatory] fasta
+    fasta_fai                     // channel: [mandatory] fasta_fai
+    germline_resource             // channel: [optional]  germline_resource
+    germline_resource_tbi         // channel: [optional]  germline_resource_tbi
+    intervals                     // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
+    intervals_bed_gz_tbi          // channel: [mandatory] intervals/target regions index zipped and indexed
+    intervals_bed_combined        // channel: [mandatory] intervals/target regions in one file unzipped
+    intervals_bed_gz_tbi_combined // channel: [mandatory] intervals/target regions in one file zipped
+    mappability
+    msisensorpro_scan             // channel: [optional]  msisensorpro_scan
+    panel_of_normals              // channel: [optional]  panel_of_normals
+    panel_of_normals_tbi          // channel: [optional]  panel_of_normals_tbi
+    allele_files                  // channel: [optional]  ascat allele files
+    loci_files                    // channel: [optional]  ascat loci files
+    gc_file                       // channel: [optional]  ascat gc content file
+    rt_file                       // channel: [optional]  ascat rt file
 
     main:
-
-    ch_versions          = Channel.empty()
+    versions          = Channel.empty()
 
     //TODO: Temporary until the if's can be removed and printing to terminal is prevented with "when" in the modules.config
-    freebayes_vcf        = Channel.empty()
-    manta_vcf            = Channel.empty()
-    strelka_vcf          = Channel.empty()
-    msisensorpro_output  = Channel.empty()
-    mutect2_vcf          = Channel.empty()
-    mutect2_ms_vcf       = Channel.empty()
-    tiddit_vcf           = Channel.empty()
+    vcf_freebayes       = Channel.empty()
+    vcf_manta           = Channel.empty()
+    vcf_strelka         = Channel.empty()
+    out_msisensorpro    = Channel.empty()
+    vcf_mutect2         = Channel.empty()
+    vcf_mutect2_ms      = Channel.empty()
+    vcf_tiddit          = Channel.empty()
 
-    // Remap channel with intervals
-    cram_pair_intervals = cram_pair.combine(intervals)
-        .map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals, num_intervals ->
-            //If no interval file provided (0) then add empty list
-            intervals_new = num_intervals == 0 ? [] : intervals
-
-            [[
-                id:             meta.tumor_id + "_vs_" + meta.normal_id,
-                normal_id:      meta.normal_id,
-                num_intervals:  num_intervals,
-                patient:        meta.patient,
-                sex:            meta.sex,
-                tumor_id:       meta.tumor_id,
-            ],
-            normal_cram, normal_crai, tumor_cram, tumor_crai, intervals_new]
-        }
-
-    // Remap channel with gzipped intervals + indexes
-    cram_pair_intervals_gz_tbi = cram_pair.combine(intervals_bed_gz_tbi)
-        .map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, bed_tbi, num_intervals ->
-
-            //If no interval file provided (0) then add empty list
-            bed_new = num_intervals == 0 ? [] : bed_tbi[0]
-            tbi_new = num_intervals == 0 ? [] : bed_tbi[1]
-
-            [[
-                id:             meta.tumor_id + "_vs_" + meta.normal_id,
-                normal_id:      meta.normal_id,
-                num_intervals:  num_intervals,
-                patient:        meta.patient,
-                sex:            meta.sex,
-                tumor_id:       meta.tumor_id,
-            ],
-            normal_cram, normal_crai, tumor_cram, tumor_crai, bed_new, tbi_new]
-
-        }
-
-    if (tools.split(',').contains('ascat')){
-
+    if (tools.split(',').contains('ascat')) {
         BAM_VARIANT_CALLING_SOMATIC_ASCAT(
-            cram_pair,
+            cram,
             allele_files,
             loci_files,
             intervals_bed_combined,
@@ -104,42 +66,38 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             rt_file
         )
 
-        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_SOMATIC_ASCAT.out.versions)
-
+        versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_ASCAT.out.versions)
     }
 
-    if (tools.split(',').contains('controlfreec')){
-        cram_normal_intervals_no_index = cram_pair_intervals
-                    .map {meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals ->
-                            [meta, normal_cram, intervals]
-                        }
-
-        cram_tumor_intervals_no_index = cram_pair_intervals
-                    .map {meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals ->
-                            [meta, tumor_cram, intervals]
-                        }
+    // CONTROLFREEC
+    if (tools.split(',').contains('controlfreec')) {
+        // Remap channels to match module/subworkflow
+        cram_normal = cram.map { meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [ meta, normal_cram, normal_crai ] }
+        cram_tumor = cram.map { meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [ meta, tumor_cram, tumor_crai ] }
 
         MPILEUP_NORMAL(
-            cram_normal_intervals_no_index,
-            fasta
+            cram_normal,
+            dict,
+            fasta,
+            intervals
         )
 
         MPILEUP_TUMOR(
-            cram_tumor_intervals_no_index,
-            fasta
+            cram_tumor,
+            dict,
+            fasta,
+            intervals
         )
 
         mpileup_normal = MPILEUP_NORMAL.out.mpileup
         mpileup_tumor = MPILEUP_TUMOR.out.mpileup
-
-        controlfreec_input = mpileup_normal.cross(mpileup_tumor)
-        .map{ normal, tumor ->
-            [normal[0], normal[1], tumor[1], [], [], [], []]
-        }
+            // Remap channel to match module/subworkflow
+        mpileup_pair = mpileup_normal.cross(mpileup_tumor).map{ normal, tumor -> [ normal[0], normal[1], tumor[1], [], [], [], [] ] }
 
         length_file = cf_chrom_len ?: fasta_fai
+
         BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC(
-            controlfreec_input,
+            mpileup_pair,
             fasta,
             length_file,
             dbsnp,
@@ -149,104 +107,81 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             intervals_bed_combined
         )
 
-        ch_versions = ch_versions.mix(MPILEUP_NORMAL.out.versions)
-        ch_versions = ch_versions.mix(MPILEUP_TUMOR.out.versions)
-        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC.out.versions)
+        versions = versions.mix(MPILEUP_NORMAL.out.versions)
+        versions = versions.mix(MPILEUP_TUMOR.out.versions)
+        versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC.out.versions)
     }
 
-    if (tools.split(',').contains('cnvkit')){
-        cram_pair_cnvkit_somatic = cram_pair
-            .map{meta, normal_cram, normal_crai, tumor_cram, tumor_crai ->
-                [meta, tumor_cram, normal_cram]
-            }
-
+    // CNVKIT
+    if (tools.split(',').contains('cnvkit')) {
         BAM_VARIANT_CALLING_CNVKIT(
-            cram_pair_cnvkit_somatic,
+            // Remap channel to match module/subworkflow
+            cram.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [ meta, tumor_cram, normal_cram ] },
             fasta,
             fasta_fai,
             intervals_bed_combined,
             []
         )
 
-        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_CNVKIT.out.versions)
+        versions = versions.mix(BAM_VARIANT_CALLING_CNVKIT.out.versions)
     }
 
-    if (tools.split(',').contains('freebayes')){
-
+    // FREEBAYES
+    if (tools.split(',').contains('freebayes')) {
         BAM_VARIANT_CALLING_FREEBAYES(
-            cram_pair_intervals,
+            cram,
             dict,
             fasta,
-            fasta_fai
+            fasta_fai,
+            intervals
         )
 
-        freebayes_vcf = BAM_VARIANT_CALLING_FREEBAYES.out.freebayes_vcf
-        ch_versions   = ch_versions.mix(BAM_VARIANT_CALLING_FREEBAYES.out.versions)
+        vcf_freebayes = BAM_VARIANT_CALLING_FREEBAYES.out.vcf
+        versions   = versions.mix(BAM_VARIANT_CALLING_FREEBAYES.out.versions)
     }
 
+    // MANTA
     if (tools.split(',').contains('manta')) {
         BAM_VARIANT_CALLING_SOMATIC_MANTA(
-            cram_pair_intervals_gz_tbi,
-            dict,
+            cram,
             fasta,
-            fasta_fai
+            fasta_fai,
+            intervals_bed_gz_tbi_combined
         )
 
-        manta_vcf                            = BAM_VARIANT_CALLING_SOMATIC_MANTA.out.manta_vcf
-        manta_candidate_small_indels_vcf     = BAM_VARIANT_CALLING_SOMATIC_MANTA.out.manta_candidate_small_indels_vcf
-        manta_candidate_small_indels_vcf_tbi = BAM_VARIANT_CALLING_SOMATIC_MANTA.out.manta_candidate_small_indels_vcf_tbi
-        ch_versions                          = ch_versions.mix(BAM_VARIANT_CALLING_SOMATIC_MANTA.out.versions)
+        vcf_manta = BAM_VARIANT_CALLING_SOMATIC_MANTA.out.vcf
+        versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_MANTA.out.versions)
     }
 
+    // STRELKA
     if (tools.split(',').contains('strelka')) {
-
-        if (tools.split(',').contains('manta')) {
-            cram_pair_strelka = cram_pair.join(manta_candidate_small_indels_vcf)
-                                        .join(manta_candidate_small_indels_vcf_tbi)
-                                        .combine(intervals_bed_gz_tbi)
-                                        .map{
-                                            meta, normal_cram, normal_crai, tumor_cram, tumor_crai, vcf, vcf_tbi, bed_tbi, num_intervals ->
-                                            //If no interval file provided (0) then add empty list
-                                            bed_new = num_intervals == 0 ? [] : bed_tbi[0]
-                                            tbi_new = num_intervals == 0 ? [] : bed_tbi[1]
-
-                                            [[
-                                                id:             meta.tumor_id + "_vs_" + meta.normal_id,
-                                                normal_id:      meta.normal_id,
-                                                num_intervals:  num_intervals,
-                                                patient:        meta.patient,
-                                                sex:            meta.sex,
-                                                tumor_id:       meta.tumor_id,
-                                            ],
-                                            normal_cram, normal_crai, tumor_cram, tumor_crai, vcf, vcf_tbi, bed_new, tbi_new]
-                                        }
-
-        } else {
-            cram_pair_strelka = cram_pair_intervals_gz_tbi.map{
-                    meta, normal_cram, normal_crai, tumor_cram, tumor_crai, bed, tbi ->
-                    [meta, normal_cram, normal_crai, tumor_cram, tumor_crai, [], [], bed, tbi]
-            }
-        }
+        // Remap channel to match module/subworkflow
+        cram_strelka = (tools.split(',').contains('manta')) ?
+            cram.join(BAM_VARIANT_CALLING_SOMATIC_MANTA.out.candidate_small_indels_vcf, failOnDuplicate: true, failOnMismatch: true).join(BAM_VARIANT_CALLING_SOMATIC_MANTA.out.candidate_small_indels_vcf_tbi, failOnDuplicate: true, failOnMismatch: true) :
+            cram.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, [], [] ] }
 
         BAM_VARIANT_CALLING_SOMATIC_STRELKA(
-            cram_pair_strelka,
+            cram_strelka,
+            // Remap channel to match module/subworkflow
             dict,
             fasta,
-            fasta_fai
+            fasta_fai,
+            intervals_bed_gz_tbi
         )
 
-        strelka_vcf = Channel.empty().mix(BAM_VARIANT_CALLING_SOMATIC_STRELKA.out.strelka_vcf)
-        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_SOMATIC_STRELKA.out.versions)
+        vcf_strelka = Channel.empty().mix(BAM_VARIANT_CALLING_SOMATIC_STRELKA.out.vcf)
+        versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_STRELKA.out.versions)
     }
 
+    // MSISENSOR
     if (tools.split(',').contains('msisensorpro')) {
+        MSISENSORPRO_MSI_SOMATIC(cram.combine(intervals_bed_combined), fasta, msisensorpro_scan)
 
-        cram_pair_msisensor = cram_pair.combine(intervals_bed_combined)
-        MSISENSORPRO_MSI_SOMATIC(cram_pair_msisensor, fasta, msisensorpro_scan)
-        ch_versions = ch_versions.mix(MSISENSORPRO_MSI_SOMATIC.out.versions)
-        msisensorpro_output = msisensorpro_output.mix(MSISENSORPRO_MSI_SOMATIC.out.output_report)
+        versions = versions.mix(MSISENSORPRO_MSI_SOMATIC.out.versions)
+        out_msisensorpro = out_msisensorpro.mix(MSISENSORPRO_MSI_SOMATIC.out.output_report)
     }
 
+    // MUTECT2
     if (tools.split(',').contains('mutect2')) {
         // MUTECT2 MULTI-SAMPLE SOMATIC VARIANT CALLING
         if (params.mutect2_multi_sample) {
@@ -260,52 +195,63 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             panel_of_normals,
             panel_of_normals_tbi
             )
-            mutect2_ms_vcf = BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MS.out.filtered_vcf
+            vcf_mutect2_ms = BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MS.out.filtered_vcf
             ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MS.out.versions)
         }
         else {
-            cram_pair_mutect2 = cram_pair_intervals.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals ->
-                                    [meta, [normal_cram, tumor_cram], [normal_crai, tumor_crai], intervals]
-                                }
 
             BAM_VARIANT_CALLING_SOMATIC_MUTECT2(
-                cram_pair_mutect2,
-                fasta,
-                fasta_fai,
+                // Remap channel to match module/subworkflow
+                cram.map { meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [ meta, [ normal_cram, tumor_cram ], [ normal_crai, tumor_crai ] ] },
+                // Remap channel to match module/subworkflow
+                fasta.map{ it -> [ [ id:'fasta' ], it ] },
+                // Remap channel to match module/subworkflow
+                fasta_fai.map{ it -> [ [ id:'fasta_fai' ], it ] },
                 dict,
                 germline_resource,
                 germline_resource_tbi,
                 panel_of_normals,
-                panel_of_normals_tbi
+                panel_of_normals_tbi,
+                intervals
             )
 
-            mutect2_vcf = BAM_VARIANT_CALLING_SOMATIC_MUTECT2.out.filtered_vcf
-            ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_SOMATIC_MUTECT2.out.versions)
+            vcf_mutect2 = BAM_VARIANT_CALLING_SOMATIC_MUTECT2.out.vcf_filtered
+            versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_MUTECT2.out.versions)
         }
     }
 
-    //TIDDIT
-    if (tools.split(',').contains('tiddit')){
-        cram_normal = cram_pair.map{meta, normal_cram, normal_crai, tumor_cram, tumor_crai ->
-            [meta, normal_cram, normal_crai]
-        }
-        cram_tumor = cram_pair.map{meta, normal_cram, normal_crai, tumor_cram, tumor_crai ->
-            [meta, tumor_cram, tumor_crai]
-        }
-
-        BAM_VARIANT_CALLING_SOMATIC_TIDDIT(cram_normal, cram_tumor, fasta.map{ it -> [[id:it[0].baseName], it] }, bwa)
-        tiddit_vcf = BAM_VARIANT_CALLING_SOMATIC_TIDDIT.out.tiddit_vcf
-        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_SOMATIC_TIDDIT.out.versions)
+    // TIDDIT
+    if (tools.split(',').contains('tiddit')) {
+        BAM_VARIANT_CALLING_SOMATIC_TIDDIT(
+            // Remap channel to match module/subworkflow
+            cram.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [ meta, normal_cram, normal_crai ] },
+            // Remap channel to match module/subworkflow
+            cram.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [ meta, tumor_cram, tumor_crai ] },
+            // Remap channel to match module/subworkflow
+            fasta.map{ it -> [ [ id:'fasta' ], it ] },
+            bwa)
+        vcf_tiddit = BAM_VARIANT_CALLING_SOMATIC_TIDDIT.out.vcf
+        versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_TIDDIT.out.versions)
     }
+
+    vcf_all = Channel.empty().mix(
+        vcf_freebayes,
+        vcf_manta,
+        vcf_mutect2,
+        vcf_mutect2_ms,
+        vcf_strelka,
+        vcf_tiddit
+    )
 
     emit:
-    freebayes_vcf
-    manta_vcf
-    msisensorpro_output
-    mutect2_vcf
-    mutect2_ms_vcf
-    strelka_vcf
-    tiddit_vcf
+    out_msisensorpro
+    vcf_all
+    vcf_freebayes
+    vcf_manta
+    vcf_mutect2
+    vcf_mutect2_ms
+    vcf_strelka
+    vcf_tiddit
 
-    versions    = ch_versions
+    versions
 }

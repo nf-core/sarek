@@ -9,83 +9,46 @@ include { GATK4_GATHERBQSRREPORTS } from '../../../modules/nf-core/gatk4/gatherb
 
 workflow BAM_BASERECALIBRATOR {
     take:
-        cram            // channel: [mandatory] meta, cram_markduplicates, crai
-        dict            // channel: [mandatory] dict
-        fasta           // channel: [mandatory] fasta
-        fasta_fai       // channel: [mandatory] fasta_fai
-        intervals       // channel: [mandatory] intervals, num_intervals
-        known_sites     // channel: [optional]  known_sites
-        known_sites_tbi // channel: [optional]  known_sites_tbi
+    cram            // channel: [mandatory] [ meta, cram_markduplicates, crai ]
+    dict            // channel: [mandatory] [ dict ]
+    fasta           // channel: [mandatory] [ fasta ]
+    fasta_fai       // channel: [mandatory] [ fasta_fai ]
+    intervals       // channel: [mandatory] [ intervals, num_intervals ] (or [ [], 0 ] if no intervals)
+    known_sites     // channel: [optional]  [ known_sites ]
+    known_sites_tbi // channel: [optional]  [ known_sites_tbi ]
 
     main:
-    ch_versions = Channel.empty()
+    versions = Channel.empty()
 
+    // Combine cram and intervals for spread and gather strategy
     cram_intervals = cram.combine(intervals)
-        .map{ meta, cram, crai, intervals, num_intervals ->
+        // Move num_intervals to meta map
+        .map{ meta, cram, crai, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram, crai, intervals ] }
 
-            //If no interval file provided (0) then add empty list
-            intervals_new = num_intervals == 0 ? [] : intervals
-
-            [[
-                data_type:      meta.data_type,
-                id:             meta.sample,
-                num_intervals:  num_intervals,
-                patient:        meta.patient,
-                sample:         meta.sample,
-                sex:            meta.sex,
-                status:         meta.status,
-            ],
-            cram, crai, intervals_new]
-        }
-
-    // Run Baserecalibrator
-    GATK4_BASERECALIBRATOR(cram_intervals, fasta, fasta_fai, dict, known_sites, known_sites_tbi)
+    // RUN BASERECALIBRATOR
+    GATK4_BASERECALIBRATOR(cram_intervals, fasta, fasta_fai, dict.map{ meta, it -> [ it ] }, known_sites, known_sites_tbi)
 
     // Figuring out if there is one or more table(s) from the same sample
-    table_to_merge = GATK4_BASERECALIBRATOR.out.table
-        .map{ meta, table ->
-
-                new_meta = [
-                                data_type:      meta.data_type,
-                                id:             meta.sample,
-                                num_intervals:  meta.num_intervals,
-                                patient:        meta.patient,
-                                sample:         meta.sample,
-                                sex:            meta.sex,
-                                status:         meta.status,
-                            ]
-
-                [groupKey(new_meta, meta.num_intervals), table]
-        }.groupTuple()
-    .branch{
-        //Warning: size() calculates file size not list length here, so use num_intervals instead
+    table_to_merge = GATK4_BASERECALIBRATOR.out.table.map{ meta, table -> [ groupKey(meta, meta.num_intervals), table ] }.groupTuple().branch{
+        // Use meta.num_intervals to asses number of intervals
         single:   it[0].num_intervals <= 1
         multiple: it[0].num_intervals > 1
     }
 
-    // STEP 3.5: MERGING RECALIBRATION TABLES
-
-    // Merge the tables only when we have intervals
+    // Only when using intervals
     GATK4_GATHERBQSRREPORTS(table_to_merge.multiple)
-    table_bqsr = table_to_merge.single.map{meta, table -> [meta, table[0]]}.mix(GATK4_GATHERBQSRREPORTS.out.table)
-                                        .map{ meta, table ->
-                                            // remove no longer necessary fields to make sure joining can be done correctly: num_intervals
-                                            [[
-                                                data_type:  meta.data_type,
-                                                id:         meta.sample,
-                                                patient:    meta.patient,
-                                                sample:     meta.sample,
-                                                sex:        meta.sex,
-                                                status:     meta.status,
-                                            ],
-                                            table]
-                                        }
+
+    // Mix intervals and no_intervals channels together
+    table_bqsr = GATK4_GATHERBQSRREPORTS.out.table.mix(table_to_merge.single.map{ meta, table -> [ meta, table[0] ] })
+        // Remove no longer necessary field: num_intervals
+        .map{ meta, table -> [ meta - meta.subMap('num_intervals'), table ] }
 
     // Gather versions of all tools used
-    ch_versions = ch_versions.mix(GATK4_BASERECALIBRATOR.out.versions)
-    ch_versions = ch_versions.mix(GATK4_GATHERBQSRREPORTS.out.versions)
+    versions = versions.mix(GATK4_BASERECALIBRATOR.out.versions)
+    versions = versions.mix(GATK4_GATHERBQSRREPORTS.out.versions)
 
     emit:
-        table_bqsr = table_bqsr
-        versions   = ch_versions // channel: [versions.yml]
+    table_bqsr // channel: [ meta, table ]
+
+    versions   // channel: [ versions.yml ]
 }

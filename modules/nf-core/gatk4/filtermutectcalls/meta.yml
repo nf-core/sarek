@@ -49,14 +49,29 @@ input:
   - estimate:
       type: float
       description: estimation of contamination value as a double. Optional input, will only be used if table is not specified.
+  - meta2:
+      type: map
+      description: |
+        Groovy Map containing reference information
+        e.g. [ id:'genome' ]
   - fasta:
       type: file
       description: The reference fasta file
       pattern: "*.fasta"
+  - meta3:
+      type: map
+      description: |
+        Groovy Map containing reference information
+        e.g. [ id:'genome' ]
   - fai:
       type: file
       description: Index of reference fasta file
       pattern: "*.fasta.fai"
+  - meta4:
+      type: map
+      description: |
+        Groovy Map containing reference information
+        e.g. [ id:'genome' ]
   - dict:
       type: file
       description: GATK sequence dictionary
@@ -83,3 +98,4 @@ output:
 authors:
   - "@GCJMackenzie"
   - "@maxulysse"
+  - "@ramprasadn"

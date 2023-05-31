@@ -19,21 +19,12 @@ workflow BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC {
 
     ch_versions = Channel.empty()
 
-    FREEC_SOMATIC(controlfreec_input,
-                fasta,
-                fasta_fai,
-                [],
-                dbsnp,
-                dbsnp_tbi,
-                chr_files,
-                mappability,
-                intervals_bed,
-                [])
+    FREEC_SOMATIC(controlfreec_input, fasta, fasta_fai, [], dbsnp, dbsnp_tbi, chr_files, mappability, intervals_bed, [])
 
-    ASSESS_SIGNIFICANCE(FREEC_SOMATIC.out.CNV.join(FREEC_SOMATIC.out.ratio))
+    ASSESS_SIGNIFICANCE(FREEC_SOMATIC.out.CNV.join(FREEC_SOMATIC.out.ratio, failOnDuplicate: true, failOnMismatch: true))
     FREEC2BED(FREEC_SOMATIC.out.ratio)
     FREEC2CIRCOS(FREEC_SOMATIC.out.ratio)
-    MAKEGRAPH(FREEC_SOMATIC.out.ratio.join(FREEC_SOMATIC.out.BAF))
+    MAKEGRAPH(FREEC_SOMATIC.out.ratio.join(FREEC_SOMATIC.out.BAF, failOnDuplicate: true, failOnMismatch: true))
 
     ch_versions = ch_versions.mix(FREEC_SOMATIC.out.versions)
     ch_versions = ch_versions.mix(ASSESS_SIGNIFICANCE.out.versions)

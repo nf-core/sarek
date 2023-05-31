@@ -9,30 +9,30 @@ include { MOSDEPTH           } from '../../../modules/nf-core/mosdepth/main'
 
 workflow CRAM_QC_MOSDEPTH_SAMTOOLS {
     take:
-        cram                          // channel: [mandatory] meta, cram, crai
-        fasta                         // channel: [mandatory] fasta
-        fasta_fai                     // channel: [mandatory] fasta_fai
-        intervals_bed_combined
+    cram                          // channel: [mandatory] [ meta, cram, crai ]
+    fasta                         // channel: [mandatory] [ fasta ]
+    intervals
 
     main:
-    ch_versions = Channel.empty()
-    qc_reports  = Channel.empty()
+    versions = Channel.empty()
+    reports = Channel.empty()
 
     // Reports run on cram
-    SAMTOOLS_STATS(cram, fasta)
-    MOSDEPTH(cram, intervals_bed_combined, fasta)
+    SAMTOOLS_STATS(cram, fasta.map{ it -> [ [ id:'fasta' ], it ] })
+
+    MOSDEPTH(cram.combine(intervals.map{ meta, bed -> [ bed?:[] ] }), fasta.map{ it -> [ [ id:'fasta' ], it ] })
 
     // Gather all reports generated
-    qc_reports = qc_reports.mix(SAMTOOLS_STATS.out.stats)
-    qc_reports = qc_reports.mix(MOSDEPTH.out.global_txt,
-                                MOSDEPTH.out.regions_txt)
+    reports = reports.mix(SAMTOOLS_STATS.out.stats)
+    reports = reports.mix(MOSDEPTH.out.global_txt)
+    reports = reports.mix(MOSDEPTH.out.regions_txt)
 
     // Gather versions of all tools used
-    ch_versions = ch_versions.mix(MOSDEPTH.out.versions)
-    ch_versions = ch_versions.mix(SAMTOOLS_STATS.out.versions.first())
+    versions = versions.mix(MOSDEPTH.out.versions)
+    versions = versions.mix(SAMTOOLS_STATS.out.versions.first())
 
     emit:
-        qc       = qc_reports
+    reports
 
-        versions = ch_versions // channel: [ versions.yml ]
+    versions // channel: [ versions.yml ]
 }
