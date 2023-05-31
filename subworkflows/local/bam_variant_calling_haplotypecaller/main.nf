@@ -84,6 +84,18 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
     if (!skip_haplotypecaller_filter) {
 
         VCF_VARIANT_FILTERING_GATK(
+            haplotypecaller_vcf.join(
+                haplotypecaller_tbi,
+                failOnDuplicate: true,
+                failOnMismatch: true).map{ meta, vcf, tbi -> [ meta + [ variantcaller:'haplotypecaller' ], vcf, tbi ] },
+            fasta,
+            fasta_fai,
+            dict.map{ meta, dict -> [ dict ] },
+            intervals_bed_combined,
+            known_sites_indels.concat(known_sites_snps).flatten().unique().collect(),
+            known_sites_indels_tbi.concat(known_sites_snps_tbi).flatten().unique().collect())
+        /*
+        VCF_VARIANT_FILTERING_GATK(
             haplotypecaller_vcf.join(haplotypecaller_tbi, failOnDuplicate: true, failOnMismatch: true),
             fasta,
             fasta_fai,
@@ -91,6 +103,8 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
             intervals_bed_combined,
             known_sites_indels.concat(known_sites_snps).flatten().unique().collect(),
             known_sites_indels_tbi.concat(known_sites_snps_tbi).flatten().unique().collect())
+        */
+
 
         vcf = VCF_VARIANT_FILTERING_GATK.out.filtered_vcf
 
@@ -103,6 +117,8 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
 
     // add variantcaller to meta map and remove no longer necessary field: num_intervals
     vcf = vcf.map{ meta, vcf -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'haplotypecaller' ], vcf ] }
+    // TO-DO: Figure out whether it might be sufficient to add the variantcaller tag in an "input" channel eariler in the script?
+
 
     emit:
     genotype_intervals // For joint genotyping
