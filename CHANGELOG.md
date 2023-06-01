@@ -5,7 +5,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [dev]
+## [3.2.0](https://github.com/nf-core/sarek/releases/tag/3.2.0) - Bierikjávrre
+
+Bierikjávrre is one of the largest lake in Sarek.
 
 ### Added
 
@@ -46,6 +48,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1031](https://github.com/nf-core/sarek/pull/1031) - Update pipeline summary
 - [#1032](https://github.com/nf-core/sarek/pull/1032) - Update all modules
 - [#1051](https://github.com/nf-core/sarek/pull/1051) - Update more modules
+- [#1056](https://github.com/nf-core/sarek/pull/1056) - Bump pipeline version to `3.2.0`
 
 ### Fixed
 
