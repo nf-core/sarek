@@ -31,7 +31,7 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
     // Combine cram and intervals for spread and gather strategy
     cram_intervals = cram.combine(intervals)
         // Move num_intervals to meta map
-        .map{ meta, cram, crai, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram, crai, intervals, [] ] }
+        .map{ meta, cram, crai, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals, variantcaller:'haplotypecaller' ], cram, crai, intervals, [] ] }
 
     GATK4_HAPLOTYPECALLER(cram_intervals, fasta, fasta_fai, dict.map{ meta, dict -> [ dict ] }, dbsnp, dbsnp_tbi)
 
@@ -84,10 +84,7 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
     if (!skip_haplotypecaller_filter) {
 
         VCF_VARIANT_FILTERING_GATK(
-            haplotypecaller_vcf.join(
-                haplotypecaller_tbi,
-                failOnDuplicate: true,
-                failOnMismatch: true).map{ meta, vcf, tbi -> [ meta + [ variantcaller:'haplotypecaller' ], vcf, tbi ] },
+            haplotypecaller_vcf.join(haplotypecaller_tbi, failOnDuplicate: true, failOnMismatch: true),
             fasta,
             fasta_fai,
             dict.map{ meta, dict -> [ dict ] },
@@ -104,14 +101,12 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
     versions = versions.mix(GATK4_HAPLOTYPECALLER.out.versions)
     versions = versions.mix(MERGE_HAPLOTYPECALLER.out.versions)
 
-    // add variantcaller to meta map and remove no longer necessary field: num_intervals
-    vcf = vcf.map{ meta, vcf -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'haplotypecaller' ], vcf ] }
-    // TO-DO: Figure out whether it might be sufficient to add the variantcaller tag in an "input" channel eariler in the script?
-
+    // Remove no longer necessary field: num_intervals
+    vcf = vcf.map{ meta, vcf -> [ meta - meta.subMap('num_intervals'), vcf ] }
 
     emit:
     genotype_intervals // For joint genotyping
-    realigned_bam      // Optionnal
+    realigned_bam      // Optional
     vcf                // vcf filtered or not
 
     versions
