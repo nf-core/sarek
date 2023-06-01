@@ -19,7 +19,7 @@ process SENTIEON_DEDUP {
 
     output:
     tuple val(meta), path("*.cram"),    emit: cram, optional: true
-    tuple val(meta), path("*.crai"),    emit: crai  // Sentieon will generate a .crai AND a .bai no matter which output file type is chosen.
+    tuple val(meta), path("*.crai"),    emit: crai, optional: true
     tuple val(meta), path("*.bam"),     emit: bam,  optional: true
     tuple val(meta), path("*.bai"),     emit: bai
     tuple val(meta), path("*.score"),   emit: score
