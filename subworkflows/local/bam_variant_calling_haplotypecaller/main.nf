@@ -94,17 +94,6 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
             intervals_bed_combined,
             known_sites_indels.concat(known_sites_snps).flatten().unique().collect(),
             known_sites_indels_tbi.concat(known_sites_snps_tbi).flatten().unique().collect())
-        /*
-        VCF_VARIANT_FILTERING_GATK(
-            haplotypecaller_vcf.join(haplotypecaller_tbi, failOnDuplicate: true, failOnMismatch: true),
-            fasta,
-            fasta_fai,
-            dict.map{ meta, dict -> [ dict ] },
-            intervals_bed_combined,
-            known_sites_indels.concat(known_sites_snps).flatten().unique().collect(),
-            known_sites_indels_tbi.concat(known_sites_snps_tbi).flatten().unique().collect())
-        */
-
 
         vcf = VCF_VARIANT_FILTERING_GATK.out.filtered_vcf
 
