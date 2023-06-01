@@ -329,12 +329,17 @@ workflow SAREK {
 
     // Gather built indices or get them from the params
     // Built from the fasta file:
-    dict                   = params.dict                    ? Channel.fromPath(params.dict).collect()      : PREPARE_GENOME.out.dict
-    fasta_fai              = params.fasta_fai               ? Channel.fromPath(params.fasta_fai).collect() : PREPARE_GENOME.out.fasta_fai
+    dict                   = params.dict                    ? Channel.fromPath(params.dict).map{ it -> [ [id:'dict'], it ] }.collect()
+                                                            : PREPARE_GENOME.out.dict
+    fasta_fai              = params.fasta_fai               ? Channel.fromPath(params.fasta_fai).collect()
+                                                            : PREPARE_GENOME.out.fasta_fai
 
-    bwa                    = params.bwa                     ? Channel.fromPath(params.bwa).collect()       : PREPARE_GENOME.out.bwa
-    bwamem2                = params.bwamem2                 ? Channel.fromPath(params.bwamem2).collect()   : PREPARE_GENOME.out.bwamem2
-    dragmap                = params.dragmap                 ? Channel.fromPath(params.dragmap).collect()   : PREPARE_GENOME.out.hashtable
+    bwa                    = params.bwa                     ? Channel.fromPath(params.bwa).collect()
+                                                            : PREPARE_GENOME.out.bwa
+    bwamem2                = params.bwamem2                 ? Channel.fromPath(params.bwamem2).collect()
+                                                            : PREPARE_GENOME.out.bwamem2
+    dragmap                = params.dragmap                 ? Channel.fromPath(params.dragmap).collect()
+                                                            : PREPARE_GENOME.out.hashtable
     // Gather index for mapping given the chosen aligner
     index_alignement = params.aligner == "bwa-mem" ? bwa :
         params.aligner == "bwa-mem2" ? bwamem2 :
@@ -1172,29 +1177,31 @@ def extract_csv(csv_file) {
         if (row.status) meta.status = row.status.toInteger()
         else meta.status = 0
 
-        if (meta.status == 0) sample_count_normal++
-        else sample_count_tumor++
+        if (meta.status == 1) sample_count_tumor++
+        else sample_count_normal++
 
-        // Two checks for ensuring that the pipeline stops with a meaningful error message if
-        // 1. the sample-sheet only contains normal-samples, but some of the requested tools require tumor-samples, and
-        // 2. the sample-sheet only contains tumor-samples, but some of the requested tools require normal-samples.
-        if ((sample_count_normal == sample_count_all) && params.tools && !params.build_only_index) { // In this case, the sample-sheet contains no tumor-samples
-            def tools_tumor = ['ascat', 'controlfreec', 'mutect2', 'msisensorpro']
-            def tools_tumor_asked = []
-            tools_tumor.each{ tool ->
-                if (params.tools.split(',').contains(tool)) tools_tumor_asked.add(tool)
-            }
-            if (!tools_tumor_asked.isEmpty()) {
-                error('The sample-sheet only contains normal-samples, but the following tools, which were requested with "--tools", expect at least one tumor-sample : ' + tools_tumor_asked.join(", "))
-            }
-        } else if ((sample_count_tumor == sample_count_all) && params.tools) {  // In this case, the sample-sheet contains no normal/germline-samples
-            def tools_requiring_normal_samples = ['ascat', 'deepvariant', 'haplotypecaller', 'msisensorpro']
-            def requested_tools_requiring_normal_samples = []
-            tools_requiring_normal_samples.each{ tool_requiring_normal_samples ->
-                if (params.tools.split(',').contains(tool_requiring_normal_samples)) requested_tools_requiring_normal_samples.add(tool_requiring_normal_samples)
-            }
-            if (!requested_tools_requiring_normal_samples.isEmpty()) {
-                error('The sample-sheet only contains tumor-samples, but the following tools, which were requested by the option "tools", expect at least one normal-sample : ' + requested_tools_requiring_normal_samples.join(", "))
+        if (params.step != 'annotate' && params.tools) {
+            // Two checks for ensuring that the pipeline stops with a meaningful error message if
+            // 1. the sample-sheet only contains normal-samples, but some of the requested tools require tumor-samples, and
+            // 2. the sample-sheet only contains tumor-samples, but some of the requested tools require normal-samples.
+            if ((sample_count_normal == sample_count_all) && !params.build_only_index) { // In this case, the sample-sheet contains no tumor-samples
+                def tools_tumor = ['ascat', 'controlfreec', 'mutect2', 'msisensorpro']
+                def tools_tumor_asked = []
+                tools_tumor.each{ tool ->
+                    if (params.tools.split(',').contains(tool)) tools_tumor_asked.add(tool)
+                }
+                if (!tools_tumor_asked.isEmpty()) {
+                    error('The sample-sheet only contains normal-samples, but the following tools, which were requested with "--tools", expect at least one tumor-sample : ' + tools_tumor_asked.join(", "))
+                }
+            } else if ((sample_count_tumor == sample_count_all)) {  // In this case, the sample-sheet contains no normal/germline-samples
+                def tools_requiring_normal_samples = ['ascat', 'deepvariant', 'haplotypecaller', 'msisensorpro']
+                def requested_tools_requiring_normal_samples = []
+                tools_requiring_normal_samples.each{ tool_requiring_normal_samples ->
+                    if (params.tools.split(',').contains(tool_requiring_normal_samples)) requested_tools_requiring_normal_samples.add(tool_requiring_normal_samples)
+                }
+                if (!requested_tools_requiring_normal_samples.isEmpty()) {
+                    error('The sample-sheet only contains tumor-samples, but the following tools, which were requested by the option "tools", expect at least one normal-sample : ' + requested_tools_requiring_normal_samples.join(", "))
+                }
             }
         }
 
@@ -1237,6 +1244,10 @@ def extract_csv(csv_file) {
 
             meta.size       = 1 // default number of splitted fastq
 
+            if(bam.getExtension() != 'bam'){
+                error("A column with name 'bam' was specified, but it contains a file not ending on '.bam': " + bam.getName())
+            }
+
             if (params.step != 'annotate') return [ meta, bam, bai ]
             else {
                 error("Samplesheet contains bam files but step is `annotate`. The pipeline is expecting vcf files for the annotation. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
@@ -1250,6 +1261,10 @@ def extract_csv(csv_file) {
             def table = file(row.table, checkIfExists: true)
 
             meta.data_type  = 'cram'
+
+            if(cram.getExtension() != 'cram'){
+                error("A column with name 'cram' was specified, but it contains a file not ending on '.cram': " + cram.getName())
+            }
 
             if (!(params.step == 'mapping' || params.step == 'annotate')) return [ meta, cram, crai, table ]
             else {
@@ -1265,6 +1280,10 @@ def extract_csv(csv_file) {
 
             meta.data_type  = 'bam'
 
+            if(bam.getExtension() != 'bam'){
+                error("A column with name 'bam' was specified, but it contains a file not ending on '.bam': " + bam.getName())
+            }
+
             if (!(params.step == 'mapping' || params.step == 'annotate')) return [ meta, bam, bai, table ]
             else {
                 error("Samplesheet contains bam files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
@@ -1278,6 +1297,10 @@ def extract_csv(csv_file) {
 
             meta.data_type  = 'cram'
 
+            if(cram.getExtension() != 'cram'){
+                error("A column with name 'cram' was specified, but it contains a file not ending on '.cram': " + cram.getName())
+            }
+
             if (!(params.step == 'mapping' || params.step == 'annotate')) return [ meta, cram, crai ]
             else {
                 error("Samplesheet contains cram files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
@@ -1290,6 +1313,10 @@ def extract_csv(csv_file) {
             def bai = file(row.bai, checkIfExists: true)
 
             meta.data_type  = 'bam'
+
+            if(bam.getExtension() != 'bam'){
+                error("A column with name 'bam' was specified, but it contains a file not ending on '.bam': " + bam.getName())
+            }
 
             if (!(params.step == 'mapping' || params.step == 'annotate')) return [ meta, bam, bai ]
             else {
