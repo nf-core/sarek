@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#978](https://github.com/nf-core/sarek/pull/978) - Validate that patient/sample does not contain spaces
 - [#981](https://github.com/nf-core/sarek/pull/981) - Added documentation on generating ASCAT resources for exome and targeted sequencing
 - [#1041](https://github.com/nf-core/sarek/pull/1041) - Add params `vep_custom_args` to let user specify custom params more easily for `VEP`
+- [#1045](https://github.com/nf-core/sarek/pull/1045) - Add `public_aws_ecr` for using ECR hosted containers.
 
 ### Changed
 
@@ -44,6 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1019](https://github.com/nf-core/sarek/pull/1019) - Set a default registry outside of profile scope
 - [#1031](https://github.com/nf-core/sarek/pull/1031) - Update pipeline summary
 - [#1032](https://github.com/nf-core/sarek/pull/1032) - Update all modules
+- [#1051](https://github.com/nf-core/sarek/pull/1051) - Update more modules
 
 ### Fixed
 
@@ -67,8 +69,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1039](https://github.com/nf-core/sarek/pull/1039) - Remove concatenate_vcfs tests with singularity, as they are failing due to not enough space on GHA runners
 - [#1040](https://github.com/nf-core/sarek/pull/1040) - Fix dict channel issue due to [#1032](https://github.com/nf-core/sarek/pull/1032)
 - [#1043](https://github.com/nf-core/sarek/pull/1043) - Fix typo in the tags.yml files from [#978](https://github.com/nf-core/sarek/pull/978)
-
-### Deprecated
+- [#1048](https://github.com/nf-core/sarek/pull/1048) - Skip tool validation on annotation to fix [#949](https://github.com/nf-core/sarek/issues/949), check that bam is bam and cram is cram [#895](https://github.com/nf-core/sarek/issues/895)
+- [#1050](https://github.com/nf-core/sarek/pull/1050) - Disable GATK VCF filters when joint calling to fix [#1025](https://github.com/nf-core/sarek/issues/1025)
 
 ### Removed
 
@@ -82,6 +84,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | `bcftools`    | 1.15.1      | 1.17        |
 | `deepvariant` | 1.4.0       | 1.5.0       |
 | `ensembl-vep` | 106.1       | 108.2       |
+| `fastp`       | 0.23.2      | 0.23.4      |
 | `multiqc`     | 1.13a       | 1.14        |
 | `samtools`    | 1.16        | 1.17        |
 | `svdb`        | 2.6.1       | 2.8.1       |
