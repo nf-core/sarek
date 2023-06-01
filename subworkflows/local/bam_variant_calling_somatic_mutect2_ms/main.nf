@@ -1,5 +1,5 @@
 //
-// Run GATK mutect2 in multi sample mode, getepileupsummaries, calculatecontamination, learnreadorientationmodel and filtermutectcalls
+// Run GATK mutect2 in multi sample mode, getpileupsummaries, calculatecontamination, learnreadorientationmodel and filtermutectcalls
 //
 
 include { GATK4_MUTECT2                   as MUTECT2_PAIRED                } from '../../../modules/nf-core/gatk4/mutect2/main'
