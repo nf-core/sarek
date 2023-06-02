@@ -22,7 +22,8 @@ workflow BAM_MERGE_INDEX_SAMTOOLS {
         multiple: bam.size() > 1
     }
 
-    bam_to_merge.multiple.view()
+    bam_to_merge.single.view()
+    //bam_to_merge.multiple.view("multiple")
     // Only when using intervals
     MERGE_BAM(bam_to_merge.multiple, [], [])
 
