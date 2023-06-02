@@ -533,14 +533,13 @@ workflow SAREK {
             // Use groupKey to make sure that the correct group can advance as soon as it is complete
             // and not stall the workflow until all reads from all channels are mapped
             [ groupKey( meta - meta.subMap('num_lanes', 'read_group', 'size') + [ data_type:'bam', id:meta.sample ], (meta.num_lanes ?: 1) * (meta.size ?: 1)), bam ]
-        }.dump(tag: "before grouping").groupTuple()
+        }.groupTuple()
 
         // gatk4 markduplicates can handle multiple bams as input, so no need to merge/index here
         // Except if and only if skipping markduplicates or saving mapped bams
         if (params.save_mapped || (params.skip_tools && params.skip_tools.split(',').contains('markduplicates'))) {
 
             // bams are merged (when multiple lanes from the same sample), indexed and then converted to cram
-            bam_mapped.dump(tag: "pre-sw", pretty:true)
             BAM_MERGE_INDEX_SAMTOOLS(bam_mapped)
 
             BAM_TO_CRAM_MAPPING(BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai, fasta, fasta_fai)
@@ -1038,7 +1037,7 @@ workflow SAREK {
 
         if (params.tools.split(',').contains('merge') || params.tools.split(',').contains('snpeff') || params.tools.split(',').contains('vep')) {
 
-            vep_fasta = (params.vep_include_fasta) ? fasta.map{ fasta -> [ [ id:fasta.baseName ], fasta ] } : [[], []]
+            vep_fasta = (params.vep_include_fasta) ? fasta.map{ fasta -> [ [ id:fasta.baseName ], fasta ] } : [[id: 'null'], []]
 
             VCF_ANNOTATE_ALL(
                 vcf_to_annotate,
