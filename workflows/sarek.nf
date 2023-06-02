@@ -540,6 +540,7 @@ workflow SAREK {
         if (params.save_mapped || (params.skip_tools && params.skip_tools.split(',').contains('markduplicates'))) {
 
             // bams are merged (when multiple lanes from the same sample), indexed and then converted to cram
+            bam_mapped.view()
             BAM_MERGE_INDEX_SAMTOOLS(bam_mapped)
 
             BAM_TO_CRAM_MAPPING(BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai, fasta, fasta_fai)
