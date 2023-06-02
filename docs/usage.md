@@ -997,4 +997,4 @@ ERROR_CHROMOSOME_NOT_FOUND      17522411
 
 ## How to set up sarek to use sentieon
 
-Sarek is currently not supporting sentieon. It is planned for the upcoming release 3.2. In the meantime, please revert to the last release 2.7.2.
+Sarek is currently not supporting sentieon. It is planned for the upcoming release 3.2. In the meantime, please revert to the last release 3.3
