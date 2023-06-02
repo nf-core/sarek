@@ -25,7 +25,7 @@ workflow BAM_MERGE_INDEX_SAMTOOLS {
     bam_to_merge.single.dump(tag: "single", pretty: true)
     bam_to_merge.multiple.dump(tag: "multiple", pretty: true)
     // Only when using intervals
-    MERGE_BAM(bam_to_merge.multiple, [], [])
+    MERGE_BAM(bam_to_merge.multiple, [[id:"id"], []], [[id:"id"], []])
 
     // Mix intervals and no_intervals channels together
     bam_all = MERGE_BAM.out.bam.mix(bam_to_merge.single)
