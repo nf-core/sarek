@@ -534,8 +534,8 @@ workflow SAREK {
             // and not stall the workflow until all reads from all channels are mapped
             num = (meta.num_lanes ?: 1) * (meta.size ?: 1)
             println("number of bams " + num)
-            new_meta = meta.subMap('num_lanes', 'read_group', 'size') + [ data_type:'bam', id:meta.sample ]
-            [ groupKey( new_meta , num), bam ]
+            new_meta = meta - meta.subMap('num_lanes', 'read_group', 'size') + [ data_type:'bam', id:meta.sample ]
+            [ groupKey( new_meta, num), bam ]
         }.groupTuple()
 
         // gatk4 markduplicates can handle multiple bams as input, so no need to merge/index here
