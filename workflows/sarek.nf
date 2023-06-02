@@ -536,8 +536,9 @@ workflow SAREK {
             println("number of bams " + num)
             new_meta = meta - meta.subMap('num_lanes', 'read_group', 'size') + [ data_type:'bam', id:meta.sample ]
             //[ groupKey( new_meta, num), bam ]
+
             [new_meta, bam]
-        }.groupTuple()
+        }.dump(tag: "before grouping").groupTuple()
 
         // gatk4 markduplicates can handle multiple bams as input, so no need to merge/index here
         // Except if and only if skipping markduplicates or saving mapped bams
