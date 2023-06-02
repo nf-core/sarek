@@ -38,6 +38,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
         .groupTuple(by:[0, 3])
         .map{ meta, gvcf, tbi, intervals -> [ meta, gvcf, tbi, intervals, [], [] ] }
 
+    gendb_input.dump(tag: "genomicsdbinput")
     // Convert all sample vcfs into a genomicsdb workspace using genomicsdbimport
     GATK4_GENOMICSDBIMPORT(gendb_input, false, false, false)
 
