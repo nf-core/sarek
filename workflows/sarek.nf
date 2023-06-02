@@ -56,7 +56,7 @@ def checkPathParamList = [
 for (param in checkPathParamList) if (param) file(param, checkIfExists: true)
 
 // Set input, can either be from --input or from automatic retrieval in WorkflowSarek.groovy
-input_sample = params.build_only_index ? Channel.empty() : extract_csv(file(params.input, checkIfExists: true))
+input_sample = params.build_only_index ? Channel.empty() : extract_csv(file(WorkflowSarek.retrieveInput(params, log), checkIfExists: true))
 
 // Fails when wrongfull extension for intervals file
 if (params.wes && !params.step == 'annotate') {
@@ -1040,7 +1040,7 @@ workflow SAREK {
             vep_fasta = (params.vep_include_fasta) ? fasta.map{ fasta -> [ [ id:fasta.baseName ], fasta ] } : [[id: 'null'], []]
 
             VCF_ANNOTATE_ALL(
-                vcf_to_annotate,
+                vcf_to_annotate.map{meta, vcf -> [ meta + [ file_name: vcf.baseName ], vcf ] },
                 vep_fasta,
                 params.tools,
                 params.snpeff_genome ? "${params.snpeff_genome}.${params.snpeff_db}" : "${params.genome}.${params.snpeff_db}",
