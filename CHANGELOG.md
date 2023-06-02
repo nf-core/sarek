@@ -78,6 +78,7 @@ Bierikjávrre is one of the largest lake in Sarek.
 - [#1055](https://github.com/nf-core/sarek/pull/1055) - Fix pattern for fasta file in the json schema
 - [#1058](https://github.com/nf-core/sarek/pull/1058) - Fix container declaration for VCFTOOLS as it has been updated in the registry
 - [#1062](https://github.com/nf-core/sarek/pull/1062) - Fix automatic restart from steps
+- [#1063](https://github.com/nf-core/sarek/pull/1063) - Fix join duplication for manta/strelka
 
 ### Removed
 
