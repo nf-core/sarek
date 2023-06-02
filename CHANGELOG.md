@@ -75,7 +75,7 @@ Bierikjávrre is one of the largest lake in Sarek.
 - [#1048](https://github.com/nf-core/sarek/pull/1048) - Skip tool validation on annotation to fix [#949](https://github.com/nf-core/sarek/issues/949), check that bam is bam and cram is cram [#895](https://github.com/nf-core/sarek/issues/895)
 - [#1050](https://github.com/nf-core/sarek/pull/1050) - Disable GATK VCF filters when joint calling to fix [#1025](https://github.com/nf-core/sarek/issues/1025)
 - [#1058](https://github.com/nf-core/sarek/pull/1058) - Fix container declaration for VCFTOOLS as it has been updated in the registry
-
+- [#1061](https://github.com/nf-core/sarek/pull/1061) - Fix GenomicsDB also works with one interval file, fix results publishing of GenomicsDB
 ### Removed
 
 - [#898](https://github.com/nf-core/sarek/pull/898) - Params `enable_conda` was removed
