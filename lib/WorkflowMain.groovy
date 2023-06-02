@@ -81,7 +81,7 @@ class WorkflowMain {
         // Check AWS batch settings
         NfcoreTemplate.awsBatch(workflow, params)
 
-        // Check input has been provided
+        // Warn that no input was provided
         if (!params.input && !params.build_only_index) {
             log.warn "No samplesheet specified, attempting to restart from csv files present in ${params.outdir}"
         }
