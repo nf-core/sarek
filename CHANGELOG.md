@@ -77,6 +77,7 @@ Bierikjávrre is one of the largest lake in Sarek.
 - [#1050](https://github.com/nf-core/sarek/pull/1050) - Disable GATK VCF filters when joint calling to fix [#1025](https://github.com/nf-core/sarek/issues/1025)
 - [#1055](https://github.com/nf-core/sarek/pull/1055) - Fix pattern for fasta file in the json schema
 - [#1058](https://github.com/nf-core/sarek/pull/1058) - Fix container declaration for VCFTOOLS as it has been updated in the registry
+- [#1062](https://github.com/nf-core/sarek/pull/1062) - Fix automatic restart from steps
 
 ### Removed
 
