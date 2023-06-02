@@ -1,6 +1,7 @@
 process STRELKA_SOMATIC {
     tag "$meta.id"
     label 'process_medium'
+    label 'error_retry'
 
     conda "bioconda::strelka=2.9.10"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
