@@ -34,7 +34,16 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
     // Combine cram and intervals for spread and gather strategy
     cram_intervals_for_sentieon = cram.combine(intervals)
         // Move num_intervals to meta map
-        .map{ meta, cram, crai, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals, intervals_name:intervals.simpleName], cram, crai, intervals ] }
+        .map{ meta, cram, crai, intervals, num_intervals -> [
+            meta + [
+                num_intervals:num_intervals,
+                intervals_name:intervals.simpleName,
+                variantcaller:'sentieon_haplotyper'],
+            cram,
+            crai,
+            intervals
+            ]
+        }
 
     SENTIEON_HAPLOTYPER(
         cram_intervals_for_sentieon,
@@ -79,7 +88,7 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
 
     vcfs_for_merging = vcfs_for_merging.map{
         meta, vcf -> [
-            meta - meta.subMap('intervals_name') + [ variantcaller:'sentieon_haplotyper' ],
+            meta - meta.subMap('intervals_name'),
             vcf]}.groupTuple()
 
     // VCFs
@@ -101,8 +110,7 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
             haplotyper_vcf.join(
                 haplotyper_tbi,
                 failOnDuplicate: true,
-                failOnMismatch: true).map{
-                    meta, vcf, tbi -> [ meta + [ variantcaller:'sentieon_haplotyper' ], vcf, tbi ] },
+                failOnMismatch: true),
             fasta,
             fasta_fai,
             dict.map{ meta, dict -> [ dict ] },
@@ -114,9 +122,8 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
         versions = versions.mix(VCF_VARIANT_FILTERING_GATK.out.versions)
     } else vcf = haplotyper_vcf
 
-    // add variantcaller to meta map and remove no longer necessary field: num_intervals
-    vcf = vcf.map{ meta, vcf -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'sentieon_haplotyper' ], vcf ] }
-    // TO-DO: Figure out whether it really is necessary to add the variantcaller tag so many times in the same script?
+    // Remove no longer necessary field: num_intervals
+    vcf = vcf.map{ meta, vcf -> [ meta - meta.subMap('num_intervals'), vcf ] }
 
     // GVFs
     // Only when using intervals
@@ -124,9 +131,8 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
         meta, vcf -> [groupKey(meta, meta.num_intervals), vcf]}
 
     gvcfs_for_merging = gvcfs_for_merging.map{
-        meta, vcf -> [
-            meta - meta.subMap('intervals_name') + [ variantcaller:'sentieon_haplotyper' ],
-            vcf]}.groupTuple()
+        meta, vcf -> [ meta - meta.subMap('intervals_name'), vcf ]
+    }.groupTuple()
 
     MERGE_SENTIEON_HAPLOTYPER_GVCFS(gvcfs_for_merging, dict)
 
