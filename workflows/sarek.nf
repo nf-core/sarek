@@ -387,12 +387,12 @@ workflow SAREK {
     intervals_bed_gz_tbi = PREPARE_INTERVALS.out.intervals_bed_gz_tbi // [ interval_bed, tbi, num_intervals ] multiple interval.bed.gz/.tbi files, divided by useful intervals for scatter/gather
 
     intervals_and_num_intervals = intervals.map{ interval, num_intervals ->
-        if ( num_intervals <= 1 ) [ [], num_intervals ]
+        if ( num_intervals < 1 ) [ [], num_intervals ]
         else [ interval, num_intervals ]
     }
 
     intervals_bed_gz_tbi_and_num_intervals = intervals_bed_gz_tbi.map{ intervals, num_intervals ->
-        if ( num_intervals <= 1 ) [ [], [], num_intervals ]
+        if ( num_intervals < 1 ) [ [], [], num_intervals ]
         else [ intervals[0], intervals[1], num_intervals ]
     }
 
@@ -532,7 +532,7 @@ workflow SAREK {
 
             // Use groupKey to make sure that the correct group can advance as soon as it is complete
             // and not stall the workflow until all reads from all channels are mapped
-            [ groupKey( meta - meta.subMap('num_lanes', 'read_group', 'size') + [ data_type:'bam', id:meta.sample ], (meta.num_lanes ?: 1) * (meta.size ?: 1) ), bam ]
+            [ groupKey( meta - meta.subMap('num_lanes', 'read_group', 'size') + [ data_type:'bam', id:meta.sample ], (meta.num_lanes ?: 1) * (meta.size ?: 1)), bam ]
         }.groupTuple()
 
         // gatk4 markduplicates can handle multiple bams as input, so no need to merge/index here
@@ -1037,7 +1037,7 @@ workflow SAREK {
 
         if (params.tools.split(',').contains('merge') || params.tools.split(',').contains('snpeff') || params.tools.split(',').contains('vep')) {
 
-            vep_fasta = (params.vep_include_fasta) ? fasta.map{ fasta -> [ [ id:fasta.baseName ], fasta ] } : [[], []]
+            vep_fasta = (params.vep_include_fasta) ? fasta.map{ fasta -> [ [ id:fasta.baseName ], fasta ] } : [[id: 'null'], []]
 
             VCF_ANNOTATE_ALL(
                 vcf_to_annotate.map{meta, vcf -> [ meta + [ file_name: vcf.baseName ], vcf ] },
