@@ -4,7 +4,12 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
+include { validateParameters; paramsHelp; paramsSummaryLog; paramsSummaryMap; fromSamplesheet } from 'plugin/nf-validation'
+
 def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
+
+// Validate input parameters
+validateParameters()
 
 // Validate input parameters
 WorkflowSarek.initialise(params, log)
@@ -48,6 +53,9 @@ def checkPathParamList = [
     params.vep_cache
 ]
 
+// Print summary of supplied parameters
+log.info paramsSummaryLog(workflow)
+
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     Check mandatory parameters
@@ -56,7 +64,7 @@ def checkPathParamList = [
 for (param in checkPathParamList) if (param) file(param, checkIfExists: true)
 
 // Set input, can either be from --input or from automatic retrieval in WorkflowSarek.groovy
-input_sample = params.build_only_index ? Channel.empty() : extract_csv(file(params.input, checkIfExists: true))
+input_sample = params.build_only_index ? Channel.empty() : Channel.fromSamplesheet("input")
 
 // Fails when wrongfull extension for intervals file
 if (params.wes && !params.step == 'annotate') {

@@ -31,7 +31,7 @@
                 ]
             },
             "status": {
-                "errorMessage": "Status can only be 0 or 1",
+                "errorMessage": "Status can only be 0 or 1. Defaults to 0, if none is supplied.",
                 "anyOf": [
                     {
                         "type": "string",
@@ -39,7 +39,8 @@
                     },
                     {
                         "type": "string",
-                        "maxLength": 0
+                        "maxLength": 0,
+                        "default": 0
                     }
                 ]
             },
@@ -48,7 +49,8 @@
                 "anyOf": [
                     {
                         "type": "string",
-                        "pattern": "^\\S+$"
+                        "pattern": "^\\S+$",
+                        "unique": ["patient", "sample"]
                     },
                     {
                         "type": "string",
