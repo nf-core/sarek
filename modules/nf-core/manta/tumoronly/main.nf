@@ -1,6 +1,7 @@
 process MANTA_TUMORONLY {
     tag "$meta.id"
     label 'process_medium'
+    label 'error_retry'
 
     conda "bioconda::manta=1.6.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?

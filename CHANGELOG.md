@@ -5,7 +5,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [dev]
+## [3.2.0](https://github.com/nf-core/sarek/releases/tag/3.2.0) - Bierikjávrre
+
+Bierikjávrre is one of the largest lake in Sarek.
 
 ### Added
 
@@ -27,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#860](https://github.com/nf-core/sarek/pull/860) - Replace local subworkflow with nf-core version - `vcf_annotate_snpeff`
 - [#865](https://github.com/nf-core/sarek/pull/865) - Replace local subworkflow with nf-core version - `vcf_annotate_ensemblvep`
 - [#874](https://github.com/nf-core/sarek/pull/874) - Update all modules
+- [#882](https://github.com/nf-core/sarek/pull/882) - Remove exit strategy for `Manta`/`Strelka`
 - [#890](https://github.com/nf-core/sarek/pull/890) - Sync `TEMPLATE` with `tools` `2.7.1`
 - [#896](https://github.com/nf-core/sarek/pull/896) - Code refactoring
 - [#898](https://github.com/nf-core/sarek/pull/898) - Nextflow minimal version is now `22.10.1`
@@ -46,6 +49,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1031](https://github.com/nf-core/sarek/pull/1031) - Update pipeline summary
 - [#1032](https://github.com/nf-core/sarek/pull/1032) - Update all modules
 - [#1051](https://github.com/nf-core/sarek/pull/1051) - Update more modules
+- [#1056](https://github.com/nf-core/sarek/pull/1056) - Bump pipeline version to `3.2.0`
 
 ### Fixed
 
@@ -71,6 +75,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1043](https://github.com/nf-core/sarek/pull/1043) - Fix typo in the tags.yml files from [#978](https://github.com/nf-core/sarek/pull/978)
 - [#1048](https://github.com/nf-core/sarek/pull/1048) - Skip tool validation on annotation to fix [#949](https://github.com/nf-core/sarek/issues/949), check that bam is bam and cram is cram [#895](https://github.com/nf-core/sarek/issues/895)
 - [#1050](https://github.com/nf-core/sarek/pull/1050) - Disable GATK VCF filters when joint calling to fix [#1025](https://github.com/nf-core/sarek/issues/1025)
+- [#1055](https://github.com/nf-core/sarek/pull/1055) - Fix pattern for fasta file in the json schema
+- [#1058](https://github.com/nf-core/sarek/pull/1058) - Fix container declaration for VCFTOOLS as it has been updated in the registry
+- [#1061](https://github.com/nf-core/sarek/pull/1061) - Fix GenomicsDB also works with one interval file, fix results publishing of GenomicsDB
+- [#1062](https://github.com/nf-core/sarek/pull/1062) - Fix automatic restart from steps
+- [#1063](https://github.com/nf-core/sarek/pull/1063) - Fix join duplication for manta/strelka
 
 ### Removed
 

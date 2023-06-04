@@ -288,17 +288,17 @@
                     },
                     "manta/germline": {
                         "branch": "master",
-                        "git_sha": "0460d316170f75f323111b4a2c0a2989f0c32013",
+                        "git_sha": "80dbd95c558a0ebb2123d95f50c093a7f714a0d7",
                         "installed_by": ["modules"]
                     },
                     "manta/somatic": {
                         "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "git_sha": "80dbd95c558a0ebb2123d95f50c093a7f714a0d7",
                         "installed_by": ["modules"]
                     },
                     "manta/tumoronly": {
                         "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "git_sha": "80dbd95c558a0ebb2123d95f50c093a7f714a0d7",
                         "installed_by": ["modules"]
                     },
                     "mosdepth": {
@@ -409,16 +409,16 @@
                     "snpeff/snpeff": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules", "vcf_annotate_snpeff"]
+                        "installed_by": ["vcf_annotate_snpeff", "modules"]
                     },
                     "strelka/germline": {
                         "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "git_sha": "80dbd95c558a0ebb2123d95f50c093a7f714a0d7",
                         "installed_by": ["modules"]
                     },
                     "strelka/somatic": {
                         "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "git_sha": "80dbd95c558a0ebb2123d95f50c093a7f714a0d7",
                         "installed_by": ["modules"]
                     },
                     "svdb/merge": {
@@ -429,7 +429,7 @@
                     "tabix/bgziptabix": {
                         "branch": "master",
                         "git_sha": "01b3b2509d76625b6d6cd613b349fb4777712a15",
-                        "installed_by": ["modules", "vcf_annotate_snpeff"]
+                        "installed_by": ["vcf_annotate_snpeff", "modules"]
                     },
                     "tabix/tabix": {
                         "branch": "master",
