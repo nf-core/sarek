@@ -82,7 +82,7 @@ Bierikjávrre is one of the largest lake in Sarek.
 ### Removed
 
 - [#898](https://github.com/nf-core/sarek/pull/898) - Params `enable_conda` was removed
-- [#1068](https://github.com/nf-core/sarek/pull/1068) - Remove Sarek version from workflow and subway map pictures
+- [#1070](https://github.com/nf-core/sarek/pull/1070) - Remove Sarek version from workflow and subway map pictures
 
 ### Dependencies
 
