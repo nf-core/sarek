@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- [#1071](https://github.com/nf-core/sarek/pull/1071) - Back to dev
+- [#1073](https://github.com/nf-core/sarek/pull/1073) - Back to dev
 
 ### Changed
 
