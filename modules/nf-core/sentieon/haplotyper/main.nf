@@ -18,13 +18,14 @@ process SENTIEON_HAPLOTYPER {
     path  fai
     path  dbsnp
     path  dbsnp_tbi
-    val(emit_mode)
+    val(emit_vcf)
+    val(emit_gvcf)
 
     output:
-    tuple val(meta), path("*.unfiltered.vcf.gz")    , optional:true, emit: vcf   // added the substring ".unfiltered" in the filename of the vcf-files since without that the g.vcf.gz-files were ending up in the vcf-channel
-    tuple val(meta), path("*.unfiltered.vcf.gz.tbi"), optional:true, emit: vcf_tbi
-    tuple val(meta), path("*.g.vcf.gz")             , optional:true, emit: gvcf   // these output-files have to have the extension ".vcf.gz", otherwise the subsequent GATK-MergeVCFs will fail.
-    tuple val(meta), path("*.g.vcf.gz.tbi")         , optional:true, emit: gvcf_tbi
+    tuple val(meta), path("*.sentieon.vcf.gz")          , optional:true, emit: vcf   // added the substring ".sentieon" in the filename of the vcf-files since without that the g.vcf.gz-files were ending up in the vcf-channel
+    tuple val(meta), path("*.sentieon.vcf.gz.tbi")      , optional:true, emit: vcf_tbi
+    tuple val(meta), path("*.sentieon.g.vcf.gz")        , optional:true, emit: gvcf   // these output-files have to have the extension ".vcf.gz", otherwise the subsequent GATK-MergeVCFs will fail.
+    tuple val(meta), path("*.sentieon.g.vcf.gz.tbi")    , optional:true, emit: gvcf_tbi
     path "versions.yml"                             , emit: versions
 
     when:
@@ -43,12 +44,12 @@ process SENTIEON_HAPLOTYPER {
     def gvcf_cmd = ""
     def base_cmd = '--algo Haplotyper ' + dbsnp_command
 
-    if (emit_mode != 'gvcf') {
-        vcf_cmd = base_cmd + args2 + ' ' + prefix + '.unfiltered.vcf.gz'
+    if (emit_vcf) {  // emit_vcf can be the empty string, 'variant', 'confident' or 'all' but NOT 'gvcf'
+        vcf_cmd = base_cmd + args2 + ' --emit_mode ' + emit_vcf + ' ' + prefix + '.sentieon.vcf.gz'
     }
 
-    if (emit_mode == 'gvcf' || emit_mode == 'both') {
-        gvcf_cmd = base_cmd + args3 + ' --emit_mode gvcf ' + prefix + '.g.vcf.gz'
+    if (emit_gvcf) { // emit_gvcf can be either true or false
+        gvcf_cmd = base_cmd + args3 + ' --emit_mode gvcf ' + prefix + '.sentieon.g.vcf.gz'
     }
 
     """
@@ -79,10 +80,10 @@ process SENTIEON_HAPLOTYPER {
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    touch ${prefix}.unfiltered.vcf.gz
-    touch ${prefix}.unfiltered.vcf.gz.tbi
-    touch ${prefix}.g.vcf.gz
-    touch ${prefix}.g.vcf.gz.tbi
+    touch ${prefix}.sentieon.vcf.gz
+    touch ${prefix}.sentieon.vcf.gz.tbi
+    touch ${prefix}.sentieon.g.vcf.gz
+    touch ${prefix}.sentieon.g.vcf.gz.tbi
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
