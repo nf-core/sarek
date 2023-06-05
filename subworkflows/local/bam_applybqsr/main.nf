@@ -9,57 +9,39 @@ include { CRAM_MERGE_INDEX_SAMTOOLS } from '../cram_merge_index_samtools/main'
 
 workflow BAM_APPLYBQSR {
     take:
-        cram          // channel: [mandatory] meta, cram, crai, recal
-        dict          // channel: [mandatory] dict
-        fasta         // channel: [mandatory] fasta
-        fasta_fai     // channel: [mandatory] fasta_fai
-        intervals     // channel: [mandatory] intervals, num_intervals
+    cram          // channel: [mandatory] [ meta, cram, crai, recal ]
+    dict          // channel: [mandatory] [ dict ]
+    fasta         // channel: [mandatory] [ fasta ]
+    fasta_fai     // channel: [mandatory] [ fasta_fai ]
+    intervals     // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
 
     main:
-    ch_versions = Channel.empty()
+    versions = Channel.empty()
 
+    // Combine cram and intervals for spread and gather strategy
     cram_intervals = cram.combine(intervals)
-        .map{ meta, cram, crai, recal, intervals, num_intervals ->
+        // Move num_intervals to meta map
+        .map{ meta, cram, crai, recal, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram, crai, recal, intervals ] }
 
-            //If no interval file provided (0) then add empty list
-            intervals_new = num_intervals == 0 ? [] : intervals
+    // RUN APPLYBQSR
+    GATK4_APPLYBQSR(cram_intervals, fasta, fasta_fai, dict.map{ meta, it -> [ it ] })
 
-            [[
-                data_type:      meta.data_type,
-                id:             meta.sample,
-                num_intervals:  num_intervals,
-                patient:        meta.patient,
-                sample:         meta.sample,
-                sex:            meta.sex,
-                status:         meta.status,
-            ],
-            cram, crai, recal, intervals_new]
-        }
+    // Gather the recalibrated cram files
+    cram_to_merge = GATK4_APPLYBQSR.out.cram.map{ meta, cram -> [ groupKey(meta, meta.num_intervals), cram ] }.groupTuple()
 
-    // Run Applybqsr
-    GATK4_APPLYBQSR(cram_intervals, fasta, fasta_fai, dict)
+    // Merge and index the recalibrated cram files
+    CRAM_MERGE_INDEX_SAMTOOLS(cram_to_merge, fasta, fasta_fai)
 
-    // STEP 4.5: MERGING AND INDEXING THE RECALIBRATED CRAM FILES
-    CRAM_MERGE_INDEX_SAMTOOLS(GATK4_APPLYBQSR.out.cram, fasta, fasta_fai)
-
-    ch_cram_recal_out = CRAM_MERGE_INDEX_SAMTOOLS.out.cram_crai.map{ meta, cram, crai ->
-                            // remove no longer necessary fields to make sure joining can be done correctly: num_intervals
-                            [[
-                                data_type:  meta.data_type,
-                                id:         meta.id,
-                                patient:    meta.patient,
-                                sample:     meta.sample,
-                                sex:        meta.sex,
-                                status:     meta.status,
-                            ],
-                            cram, crai]
-                        }
+    cram_recal = CRAM_MERGE_INDEX_SAMTOOLS.out.cram_crai
+        // Remove no longer necessary field: num_intervals
+        .map{ meta, cram, crai -> [ meta - meta.subMap('num_intervals'), cram, crai ] }
 
     // Gather versions of all tools used
-    ch_versions = ch_versions.mix(GATK4_APPLYBQSR.out.versions)
-    ch_versions = ch_versions.mix(CRAM_MERGE_INDEX_SAMTOOLS.out.versions)
+    versions = versions.mix(GATK4_APPLYBQSR.out.versions)
+    versions = versions.mix(CRAM_MERGE_INDEX_SAMTOOLS.out.versions)
 
     emit:
-        cram     = ch_cram_recal_out
-        versions = ch_versions // channel: [ versions.yml ]
+    cram = cram_recal // channel: [ meta, cram, crai ]
+
+    versions          // channel: [ versions.yml ]
 }

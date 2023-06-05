@@ -1,5 +1,5 @@
 - name: Run variant calling on germline sample with freebayes
-  command: nextflow run main.nf -profile test,targeted --tools freebayes
+  command: nextflow run main.nf -profile test,targeted --tools freebayes --outdir results
   tags:
     - freebayes
     - germline
@@ -15,17 +15,17 @@
       md5sum: 0cc6a67fedb2ef9ce97e463d310f9f30
     - path: results/multiqc
     - path: results/preprocessing/markduplicates/test/test.md.cram
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recal_table/test/test.recal.table
       md5sum: c990e4f1b7dbd5a3a623882a54ae2bf2
     - path: results/preprocessing/recalibrated/test/test.recal.cram
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/reports/bcftools/freebayes/test/test.freebayes.bcftools_stats.txt
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.cram.metrics
       contains: ["test	8547	767	84	523391	3882	0	0	0.385081", "1.0	767	767"]
@@ -58,9 +58,9 @@
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
       md5sum: c6d1ac97ef4dfe43731c8368d8391cab
     - path: results/reports/samtools/test/test.md.cram.stats
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/reports/samtools/test/test.recal.cram.stats
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/reports/vcftools/freebayes/test/test.freebayes.FILTER.summary
       md5sum: 43d53e36cbb1091f915b2499e545b41e
     - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.count
@@ -68,13 +68,13 @@
     - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.qual
       contains: ["0	0	0	-nan	82	29	2.82759", "1.1	196	35	5.6	57	24	2.375", "3.16	205	38	5.39474	49	20	2.45"]
     - path: results/variant_calling/freebayes/test/test.freebayes.vcf.gz
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/freebayes/test/test.freebayes.vcf.gz.tbi
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/freebayes
       should_exist: false
 - name: Run variant calling on germline sample with freebayes without intervals
-  command: nextflow run main.nf -profile test --tools freebayes --no_intervals
+  command: nextflow run main.nf -profile test --tools freebayes --no_intervals --outdir results
   tags:
     - freebayes
     - germline
@@ -97,17 +97,17 @@
     - path: results/no_intervals.bed.gz.tbi
       md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/preprocessing/markduplicates/test/test.md.cram
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recal_table/test/test.recal.table
       md5sum: 4ac774bf5f1157e77426fd82f5ac0fbe
     - path: results/preprocessing/recalibrated/test/test.recal.cram
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/reports/bcftools/freebayes/test/test.freebayes.bcftools_stats.txt
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.cram.metrics
       contains: ["test	8547	767	84	523391	3882	0	0	0.385081", "1.0	767	767"]
@@ -132,9 +132,9 @@
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
       md5sum: b1c2a861f64e20a94108a6de3b76c582
     - path: results/reports/samtools/test/test.md.cram.stats
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/reports/samtools/test/test.recal.cram.stats
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/reports/vcftools/freebayes/test/test.freebayes.FILTER.summary
       md5sum: 76c5919541536c12b5c8a6094d6d78d5
     - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.count
@@ -142,13 +142,13 @@
     - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.qual
       contains: ["0	0	0	-nan	325	86	3.77907", "27.5873	359	84	4.27381	39	13	3", "40.5188	368	87	4.22989	30	10	3"]
     - path: results/variant_calling/freebayes/test/test.freebayes.vcf.gz
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/freebayes/test/test.freebayes.vcf.gz.tbi
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/freebayes
       should_exist: false
 - name: Run variant calling on somatic sample with freebayes
-  command: nextflow run main.nf -profile test,pair,targeted --tools freebayes
+  command: nextflow run main.nf -profile test,pair,targeted --tools freebayes --outdir results
   tags:
     - freebayes
     - somatic
@@ -164,29 +164,29 @@
       md5sum: b31f56256a1cfa839a2ea7f7ba6c1c45
     - path: results/multiqc
     - path: results/preprocessing/markduplicates/test/test.md.cram
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/markduplicates/test2/test2.md.cram
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/markduplicates/test2/test2.md.cram.crai
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recal_table/test/test.recal.table
       md5sum: c990e4f1b7dbd5a3a623882a54ae2bf2
     - path: results/preprocessing/recal_table/test2/test2.recal.table
       md5sum: 00d6877d68d622d81e4d633c4e340e7e
     - path: results/preprocessing/recalibrated/test/test.recal.cram
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test2/test2.recal.cram
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test2/test2.recal.cram.crai
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/reports/bcftools/freebayes/test/test.freebayes.bcftools_stats.txt
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/reports/bcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.bcftools_stats.txt
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.cram.metrics
       contains: ["test	8547	767	84	523391	3882	0	0	0.385081", "1.0	767	767"]
@@ -249,13 +249,13 @@
     - path: results/reports/mosdepth/test2/test2.recal.regions.bed.gz.csi
       md5sum: c6d1ac97ef4dfe43731c8368d8391cab
     - path: results/reports/samtools/test/test.md.cram.stats
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/reports/samtools/test/test.recal.cram.stats
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/reports/samtools/test2/test2.md.cram.stats
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/reports/samtools/test2/test2.recal.cram.stats
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/reports/vcftools/freebayes/test/test.freebayes.FILTER.summary
       md5sum: 43d53e36cbb1091f915b2499e545b41e
     - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.count
@@ -269,17 +269,17 @@
     - path: results/reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.TsTv.qual
     # the text-based file test2_vs_test.freebayes.TsTv.qual seemingly changes content on reruns!
     - path: results/variant_calling/freebayes/test/test.freebayes.vcf.gz
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/freebayes/test/test.freebayes.vcf.gz.tbi
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/freebayes/test2_vs_test/test2_vs_test.freebayes.vcf.gz
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/freebayes/test2_vs_test/test2_vs_test.freebayes.vcf.gz.tbi
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/freebayes
       should_exist: false
 - name: Run variant calling on somatic sample with freebayes without intervals
-  command: nextflow run main.nf -profile test,pair,targeted --tools freebayes --no_intervals
+  command: nextflow run main.nf -profile test,pair,targeted --tools freebayes --no_intervals --outdir results
   tags:
     - freebayes
     - somatic
@@ -302,29 +302,29 @@
     - path: results/no_intervals.bed.gz.tbi
       md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/preprocessing/markduplicates/test/test.md.cram
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/markduplicates/test2/test2.md.cram
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/markduplicates/test2/test2.md.cram.crai
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recal_table/test/test.recal.table
       md5sum: 4ac774bf5f1157e77426fd82f5ac0fbe
     - path: results/preprocessing/recal_table/test2/test2.recal.table
       md5sum: 0626cd4337eab79b38b5bc5c95e0c003
     - path: results/preprocessing/recalibrated/test/test.recal.cram
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test2/test2.recal.cram
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test2/test2.recal.cram.crai
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/reports/bcftools/freebayes/test/test.freebayes.bcftools_stats.txt
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/reports/bcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.bcftools_stats.txt
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.cram.metrics
       contains: ["test	8547	767	84	523391	3882	0	0	0.385081", "1.0	767	767"]
@@ -363,13 +363,13 @@
     - path: results/reports/mosdepth/test2/test2.recal.per-base.bed.gz.csi
       md5sum: 4205a09ede17cdbdaad45e3553f73105
     - path: results/reports/samtools/test/test.md.cram.stats
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/reports/samtools/test/test.recal.cram.stats
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/reports/samtools/test2/test2.md.cram.stats
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/reports/samtools/test2/test2.recal.cram.stats
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/reports/vcftools/freebayes/test/test.freebayes.FILTER.summary
       md5sum: 76c5919541536c12b5c8a6094d6d78d5
     - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.count
@@ -383,31 +383,61 @@
     - path: results/reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.TsTv.qual
     # the text-based file test2_vs_test.freebayes.TsTv.qual seemingly changes content on reruns!
     - path: results/variant_calling/freebayes/test/test.freebayes.vcf.gz
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/freebayes/test/test.freebayes.vcf.gz.tbi
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/freebayes/test2_vs_test/test2_vs_test.freebayes.vcf.gz
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/freebayes/test2_vs_test/test2_vs_test.freebayes.vcf.gz.tbi
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/freebayes
       should_exist: false
-# - name: Run variant calling on tumor_only sample with freebayes
-#   command: nextflow run main.nf -profile test,tools_tumoronly --tools freebayes
-#   tags:
-#     - freebayes
-#     - tumor_only
-#     - variant_calling
-#   files:
-#     - path: results/variant_calling/freebayes/sample2/sample2.freebayes.vcf.gz
-#     - path: results/variant_calling/freebayes/sample2/sample2.freebayes.vcf.gz.tbi
-# - name: Run variant calling on tumor_only sample with freebayes without intervals
-#   command: nextflow run main.nf -profile test,tools_tumoronly --tools freebayes --no_intervals
-#   tags:
-#     - freebayes
-#     - no_intervals
-#     - tumor_only
-#     - variant_calling
-#   files:
-#     - path: results/variant_calling/freebayes/sample2/sample2.freebayes.vcf.gz
-#     - path: results/variant_calling/freebayes/sample2/sample2.freebayes.vcf.gz.tbi
+- name: Run variant calling on tumor_only sample with freebayes
+  command: nextflow run main.nf -profile test,tools_tumoronly --tools freebayes --outdir results
+  tags:
+    - freebayes
+    - tumor_only
+    - variant_calling
+  files:
+    - path: results/csv/variantcalled.csv
+      md5sum: 5c5938a7bcc814cdaf5433c1120964c5
+    - path: results/multiqc
+    - path: results/reports/bcftools/freebayes/sample2/sample2.freebayes.bcftools_stats.txt
+    # conda changes md5sums for test
+    - path: results/reports/vcftools/freebayes/sample2/sample2.freebayes.FILTER.summary
+      md5sum: 0df3ddeec5779344b5d463347c9c6ea8
+    - path: results/reports/vcftools/freebayes/sample2/sample2.freebayes.TsTv.count
+      md5sum: b1d308ed5087361a584cb61e7b835e1e
+    - path: results/reports/vcftools/freebayes/sample2/sample2.freebayes.TsTv.qual
+    # content changes md5sums on reruns
+    - path: results/variant_calling/freebayes/sample2/sample2.freebayes.vcf.gz
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/freebayes/sample2/sample2.freebayes.vcf.gz.tbi
+    # binary changes md5sums on reruns
+    - path: results/freebayes
+      should_exist: false
+- name: Run variant calling on tumor_only sample with freebayes without intervals
+  command: nextflow run main.nf -profile test,tools_tumoronly --tools freebayes --no_intervals --outdir results
+  tags:
+    - freebayes
+    - no_intervals
+    - tumor_only
+    - variant_calling
+  files:
+    - path: results/csv/variantcalled.csv
+      md5sum: 5c5938a7bcc814cdaf5433c1120964c5
+    - path: results/multiqc
+    - path: results/reports/bcftools/freebayes/sample2/sample2.freebayes.bcftools_stats.txt
+    # conda changes md5sums for test
+    - path: results/reports/vcftools/freebayes/sample2/sample2.freebayes.FILTER.summary
+      md5sum: ee513ecf779b6e201b8ef98f95f25aab
+    - path: results/reports/vcftools/freebayes/sample2/sample2.freebayes.TsTv.count
+      md5sum: 2dc153ad5af26c9f8aa82442bf65b4bf
+    - path: results/reports/vcftools/freebayes/sample2/sample2.freebayes.TsTv.qual
+    # content changes md5sums on reruns
+    - path: results/variant_calling/freebayes/sample2/sample2.freebayes.vcf.gz
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/freebayes/sample2/sample2.freebayes.vcf.gz.tbi
+    # binary changes md5sums on reruns
+    - path: results/freebayes
+      should_exist: false

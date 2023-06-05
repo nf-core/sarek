@@ -21,7 +21,7 @@ jobs:
       - uses: dorny/paths-filter@v2
         id: filter
         with:
-          filters: "tests/config/pytest_tags.yml"
+          filters: "tests/config/tags.yml"
 
   test:
     name: ${{ matrix.tags }} ${{ matrix.profile }} NF ${{ matrix.NXF_VER }}
@@ -32,39 +32,78 @@ jobs:
       fail-fast: false
       matrix:
         tags: ["${{ fromJson(needs.changes.outputs.tags) }}"]
-        profile: ["docker", "singularity", "conda"]
+        profile: ["docker", "singularity"]
+        # profile: ["docker", "singularity", "conda"]
+        TEST_DATA_BASE:
+          - "test-datasets/data"
         NXF_VER:
-          - "21.10.3"
+          - "22.10.1"
           - "latest-everything"
         exclude:
-          - profile: "conda"
-            NXF_VER: "latest-everything"
-          - profile: "conda"
-            tags: umi
-          - profile: "conda"
-            tags: deepvariant
-          - profile: "conda"
-            tags: haplotypecaller
-          - profile: "conda"
-            tags: merge
-          - profile: "conda"
-            tags: snpeff
-          - profile: "conda"
-            tags: vep
+          # - profile: "conda"
+          #   tags: concatenate_vcfs
+          # - profile: "conda"
+          #   tags: deepvariant
+          # - profile: "conda"
+          #   tags: haplotypecaller
+          # - profile: "conda"
+          #   tags: merge
+          # - profile: "conda"
+          #   tags: snpeff
+          # - profile: "conda"
+          #   tags: umi
+          # - profile: "conda"
+          #   tags: validation_checks
+          # - profile: "conda"
+          #   tags: vep
+          - profile: "singularity"
+            tags: concatenate_vcfs
           - profile: "singularity"
             tags: merge
+          - profile: "singularity"
+            tags: validation_checks
     env:
       NXF_ANSI_LOG: false
+      TEST_DATA_BASE: "${{ github.workspace }}/test-datasets"
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v3
+
+      - name: Hash Github Workspace
+        id: hash_workspace
+        run: |
+          echo "digest=$(echo sarek3_${{ github.workspace }} | md5sum | cut -c 1-25)" >> $GITHUB_OUTPUT
+
+      - name: Cache test data
+        id: cache-testdata
+        uses: actions/cache@v3
+        with:
+          path: test-datasets/
+          key: ${{ steps.hash_workspace.outputs.digest }}
+
+      - name: Check out test data
+        if: steps.cache-testdata.outputs.cache-hit != 'true'
+        uses: actions/checkout@v3
+        with:
+          repository: nf-core/test-datasets
+          ref: sarek3
+          path: test-datasets/
+
+      - name: Replace remote paths in samplesheets
+        run: |
+          for f in tests/csv/3.0/*csv; do
+            sed -i "s=https://raw.githubusercontent.com/nf-core/test-datasets/modules/=${{ github.workspace }}/test-datasets/=g" $f
+            echo "========== $f ============"
+            cat $f
+            echo "========================================"
+          done;
 
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
           python-version: "3.x"
 
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
@@ -74,7 +113,7 @@ jobs:
       - name: Install Python dependencies
         run: python -m pip install --upgrade pip pytest-workflow
 
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: /usr/local/bin/nextflow
           key: ${{ runner.os }}
@@ -82,7 +121,7 @@ jobs:
             ${{ runner.os }}-nextflow-
 
       - name: Install Nextflow ${{ matrix.NXF_VER }}
-        uses: nf-core/setup-nextflow@v1
+        uses: nf-core/setup-nextflow@v1.2.0
         with:
           version: "${{ matrix.NXF_VER }}"
 

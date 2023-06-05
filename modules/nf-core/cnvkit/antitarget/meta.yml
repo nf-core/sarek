@@ -1,8 +1,10 @@
 name: cnvkit_antitarget
-description:
+description: Derive off-target (“antitarget”) bins from target regions.
 keywords:
   - cvnkit
   - antitarget
+  - cnv
+  - copy number
 tools:
   - cnvkit:
       description: |

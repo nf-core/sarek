@@ -1,11 +1,12 @@
 process STRELKA_SOMATIC {
     tag "$meta.id"
     label 'process_medium'
+    label 'error_retry'
 
-    conda (params.enable_conda ? "bioconda::strelka=2.9.10" : null)
+    conda "bioconda::strelka=2.9.10"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/strelka:2.9.10--h9ee0642_1' :
-        'quay.io/biocontainers/strelka:2.9.10--h9ee0642_1' }"
+        'biocontainers/strelka:2.9.10--h9ee0642_1' }"
 
     input:
     tuple val(meta), path(input_normal), path(input_index_normal), path(input_tumor), path(input_index_tumor),  path(manta_candidate_small_indels), path(manta_candidate_small_indels_tbi), path(target_bed), path(target_bed_index)
@@ -38,8 +39,9 @@ process STRELKA_SOMATIC {
         $args \\
         --runDir strelka
 
-    python strelka/runWorkflow.py -m local -j $task.cpus
+    sed -i s/"isEmail = isLocalSmtp()"/"isEmail = False"/g strelka/runWorkflow.py
 
+    python strelka/runWorkflow.py -m local -j $task.cpus
     mv strelka/results/variants/somatic.indels.vcf.gz     ${prefix}.somatic_indels.vcf.gz
     mv strelka/results/variants/somatic.indels.vcf.gz.tbi ${prefix}.somatic_indels.vcf.gz.tbi
     mv strelka/results/variants/somatic.snvs.vcf.gz       ${prefix}.somatic_snvs.vcf.gz

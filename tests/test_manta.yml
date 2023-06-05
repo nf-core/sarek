@@ -1,5 +1,5 @@
 - name: Run variant calling on germline sample with manta
-  command: nextflow run main.nf -profile test,tools_germline --tools manta
+  command: nextflow run main.nf -profile test,tools_germline --tools manta --outdir results
   tags:
     - germline
     - manta
@@ -9,7 +9,7 @@
       md5sum: 981280af86f69190fdf0639030a80249
     - path: results/multiqc
     - path: results/reports/bcftools/manta/sample1/sample1.manta.diploid_sv.bcftools_stats.txt
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/reports/vcftools/manta/sample1/sample1.manta.diploid_sv.FILTER.summary
       md5sum: 1ce42d34e4ae919afb519efc99146423
     - path: results/reports/vcftools/manta/sample1/sample1.manta.diploid_sv.TsTv.count
@@ -17,13 +17,13 @@
     - path: results/reports/vcftools/manta/sample1/sample1.manta.diploid_sv.TsTv.qual
       md5sum: bc68ae4e688e9fb772b457069e604883
     - path: results/variant_calling/manta/sample1/sample1.manta.diploid_sv.vcf.gz
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/manta/sample1/sample1.manta.diploid_sv.vcf.gz.tbi
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/manta
       should_exist: false
 - name: Run variant calling on germline sample with manta without intervals
-  command: nextflow run main.nf -profile test,tools_germline --tools manta --no_intervals
+  command: nextflow run main.nf -profile test,tools_germline --tools manta --no_intervals --outdir results
   tags:
     - germline
     - manta
@@ -40,7 +40,7 @@
     - path: results/no_intervals.bed.gz.tbi
       md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/reports/bcftools/manta/sample1/sample1.manta.diploid_sv.bcftools_stats.txt
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/reports/vcftools/manta/sample1/sample1.manta.diploid_sv.FILTER.summary
       md5sum: 1ce42d34e4ae919afb519efc99146423
     - path: results/reports/vcftools/manta/sample1/sample1.manta.diploid_sv.TsTv.count
@@ -48,13 +48,13 @@
     - path: results/reports/vcftools/manta/sample1/sample1.manta.diploid_sv.TsTv.qual
       md5sum: bc68ae4e688e9fb772b457069e604883
     - path: results/variant_calling/manta/sample1/sample1.manta.diploid_sv.vcf.gz
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/manta/sample1/sample1.manta.diploid_sv.vcf.gz.tbi
       md5sum: 4cb176febbc8c26d717a6c6e67b9c905
     - path: results/manta
       should_exist: false
 - name: Run variant calling on tumor_only sample with manta
-  command: nextflow run main.nf -profile test,tools_tumoronly --tools manta
+  command: nextflow run main.nf -profile test,tools_tumoronly --tools manta --outdir results
   tags:
     - manta
     - tumor_only
@@ -64,7 +64,7 @@
       md5sum: f1051fe647abf202e6332f9a1789c05d
     - path: results/multiqc
     - path: results/reports/bcftools/manta/sample2/sample2.manta.tumor_sv.bcftools_stats.txt
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/reports/vcftools/manta/sample2/sample2.manta.tumor_sv.FILTER.summary
       md5sum: 1ce42d34e4ae919afb519efc99146423
     - path: results/reports/vcftools/manta/sample2/sample2.manta.tumor_sv.TsTv.count
@@ -72,13 +72,13 @@
     - path: results/reports/vcftools/manta/sample2/sample2.manta.tumor_sv.TsTv.qual
       md5sum: bc68ae4e688e9fb772b457069e604883
     - path: results/variant_calling/manta/sample2/sample2.manta.tumor_sv.vcf.gz
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/manta/sample2/sample2.manta.tumor_sv.vcf.gz.tbi
-      md5sum: e7ca7e9fe76ce12198fd54ec9a64fad4
+      md5sum: 4cb176febbc8c26d717a6c6e67b9c905
     - path: results/manta
       should_exist: false
 - name: Run variant calling on tumor_only sample with manta without intervals
-  command: nextflow run main.nf -profile test,tools_tumoronly --tools manta --no_intervals
+  command: nextflow run main.nf -profile test,tools_tumoronly --tools manta --no_intervals --outdir results
   tags:
     - manta
     - no_intervals
@@ -95,7 +95,7 @@
     - path: results/no_intervals.bed.gz.tbi
       md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/reports/bcftools/manta/sample2/sample2.manta.tumor_sv.bcftools_stats.txt
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/reports/vcftools/manta/sample2/sample2.manta.tumor_sv.FILTER.summary
       md5sum: 1ce42d34e4ae919afb519efc99146423
     - path: results/reports/vcftools/manta/sample2/sample2.manta.tumor_sv.TsTv.count
@@ -103,13 +103,13 @@
     - path: results/reports/vcftools/manta/sample2/sample2.manta.tumor_sv.TsTv.qual
       md5sum: bc68ae4e688e9fb772b457069e604883
     - path: results/variant_calling/manta/sample2/sample2.manta.tumor_sv.vcf.gz
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/manta/sample2/sample2.manta.tumor_sv.vcf.gz.tbi
       md5sum: 4cb176febbc8c26d717a6c6e67b9c905
     - path: results/manta
       should_exist: false
 - name: Run variant calling on somatic sample with manta
-  command: nextflow run main.nf -profile test,tools_somatic --tools manta
+  command: nextflow run main.nf -profile test,tools_somatic --tools manta --outdir results
   tags:
     - manta
     - somatic
@@ -119,11 +119,11 @@
       md5sum: 3a8861808601994f89d5c55ce5c95dae
     - path: results/multiqc
     - path: results/reports/bcftools/manta/sample3/sample3.manta.diploid_sv.bcftools_stats.txt
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/reports/bcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.bcftools_stats.txt
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/reports/bcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.bcftools_stats.txt
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/reports/vcftools/manta/sample3/sample3.manta.diploid_sv.FILTER.summary
       md5sum: 1ce42d34e4ae919afb519efc99146423
     - path: results/reports/vcftools/manta/sample3/sample3.manta.diploid_sv.TsTv.count
@@ -143,21 +143,21 @@
     - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.TsTv.qual
       md5sum: bc68ae4e688e9fb772b457069e604883
     - path: results/variant_calling/manta/sample3/sample3.manta.diploid_sv.vcf.gz
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/manta/sample3/sample3.manta.diploid_sv.vcf.gz.tbi
-      md5sum: e7ca7e9fe76ce12198fd54ec9a64fad4
+      md5sum: 4cb176febbc8c26d717a6c6e67b9c905
     - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.vcf.gz
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.vcf.gz.tbi
-      md5sum: e7ca7e9fe76ce12198fd54ec9a64fad4
+      md5sum: 4cb176febbc8c26d717a6c6e67b9c905
     - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.vcf.gz
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.vcf.gz.tbi
-      md5sum: e7ca7e9fe76ce12198fd54ec9a64fad4
+      md5sum: 4cb176febbc8c26d717a6c6e67b9c905
     - path: results/manta
       should_exist: false
 - name: Run variant calling on somatic sample with manta without intervals
-  command: nextflow run main.nf -profile test,tools_somatic --tools manta --no_intervals
+  command: nextflow run main.nf -profile test,tools_somatic --tools manta --no_intervals --outdir results
   tags:
     - manta
     - no_intervals
@@ -174,11 +174,11 @@
     - path: results/no_intervals.bed.gz.tbi
       md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/reports/bcftools/manta/sample3/sample3.manta.diploid_sv.bcftools_stats.txt
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/reports/bcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.bcftools_stats.txt
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/reports/bcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.bcftools_stats.txt
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/reports/vcftools/manta/sample3/sample3.manta.diploid_sv.FILTER.summary
       md5sum: 1ce42d34e4ae919afb519efc99146423
     - path: results/reports/vcftools/manta/sample3/sample3.manta.diploid_sv.TsTv.count
@@ -198,15 +198,15 @@
     - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.TsTv.qual
       md5sum: bc68ae4e688e9fb772b457069e604883
     - path: results/variant_calling/manta/sample3/sample3.manta.diploid_sv.vcf.gz
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/manta/sample3/sample3.manta.diploid_sv.vcf.gz.tbi
       md5sum: 4cb176febbc8c26d717a6c6e67b9c905
     - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.vcf.gz
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.vcf.gz.tbi
       md5sum: 4cb176febbc8c26d717a6c6e67b9c905
     - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.vcf.gz
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.vcf.gz.tbi
       md5sum: 4cb176febbc8c26d717a6c6e67b9c905
     - path: results/manta

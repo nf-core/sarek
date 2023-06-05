@@ -3,13 +3,14 @@ description: DeepVariant is an analysis pipeline that uses a deep neural network
 keywords:
   - variant calling
   - machine learning
+  - neural network
 tools:
   - deepvariant:
       description: DeepVariant is an analysis pipeline that uses a deep neural network to call genetic variants from next-generation DNA sequencing data
       homepage: https://github.com/google/deepvariant
       documentation: https://github.com/google/deepvariant
       tool_dev_url: https://github.com/google/deepvariant
-      doi: "https://doi.org/10.1038/nbt.4235"
+      doi: "10.1038/nbt.4235"
       licence: ["BSD-3-clause"]
 
 input:
@@ -30,14 +31,33 @@ input:
       type: file
       description: Interval file for targeted regions
       pattern: "*.bed"
+  - meta2:
+      type: map
+      description: |
+        Groovy Map containing reference information
+        e.g. [ id:'genome' ]
   - fasta:
       type: file
       description: The reference fasta file
       pattern: "*.fasta"
+  - meta3:
+      type: map
+      description: |
+        Groovy Map containing reference information
+        e.g. [ id:'genome' ]
   - fai:
       type: file
       description: Index of reference fasta file
       pattern: "*.fai"
+  - meta4:
+      type: map
+      description: |
+        Groovy Map containing reference information
+        e.g. [ id:'genome' ]
+  - gzi:
+      type: file
+      description: GZI index of reference fasta file
+      pattern: "*.gzi"
 
 output:
   - meta:
@@ -60,3 +80,4 @@ output:
 
 authors:
   - "@abhi18av"
+  - "@ramprasadn"

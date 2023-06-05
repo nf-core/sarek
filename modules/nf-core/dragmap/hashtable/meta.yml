@@ -11,7 +11,7 @@ tools:
       homepage: https://github.com/Illumina/dragmap
       documentation: https://github.com/Illumina/dragmap
       tool_dev_url: https://github.com/Illumina/dragmap#basic-command-line-usage
-      doi: ""
+
       licence: ["GPL v3"]
 input:
   - meta:

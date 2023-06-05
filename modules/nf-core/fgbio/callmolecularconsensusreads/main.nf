@@ -2,10 +2,10 @@ process FGBIO_CALLMOLECULARCONSENSUSREADS {
     tag "$meta.id"
     label 'process_medium'
 
-    conda (params.enable_conda ? "bioconda::fgbio=2.0.2" : null)
+    conda "bioconda::fgbio=2.0.2"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/fgbio:2.0.2--hdfd78af_0' :
-        'quay.io/biocontainers/fgbio:2.0.2--hdfd78af_0' }"
+        'biocontainers/fgbio:2.0.2--hdfd78af_0' }"
 
     input:
     tuple val(meta), path(bam)
@@ -24,9 +24,10 @@ process FGBIO_CALLMOLECULARCONSENSUSREADS {
     fgbio \\
         --tmp-dir=. \\
         CallMolecularConsensusReads \\
-        -i $bam \\
+        --input $bam \\
+        --threads ${task.cpus} \\
         $args \\
-        -o ${prefix}.bam
+        --output ${prefix}.bam
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

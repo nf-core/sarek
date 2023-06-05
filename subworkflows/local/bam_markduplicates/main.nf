@@ -10,37 +10,39 @@ include { SAMTOOLS_INDEX as INDEX_MARKDUPLICATES } from '../../../modules/nf-cor
 
 workflow BAM_MARKDUPLICATES {
     take:
-        bam                           // channel: [mandatory] meta, bam
-        fasta                         // channel: [mandatory] fasta
-        fasta_fai                     // channel: [mandatory] fasta_fai
-        intervals_bed_combined        // channel: [optional]  intervals_bed
+    bam                    // channel: [mandatory] [ meta, bam ]
+    fasta                  // channel: [mandatory] [ fasta ]
+    fasta_fai              // channel: [mandatory] [ fasta_fai ]
+    intervals_bed_combined // channel: [optional]  [ intervals_bed ]
 
     main:
-    ch_versions = Channel.empty()
-    qc_reports  = Channel.empty()
+    versions = Channel.empty()
+    reports  = Channel.empty()
 
-    // Run Markupduplicates
+    // RUN MARKUPDUPLICATES
     GATK4_MARKDUPLICATES(bam, fasta, fasta_fai)
+
+    // Index cram
     INDEX_MARKDUPLICATES(GATK4_MARKDUPLICATES.out.cram)
 
-    cram_markduplicates = GATK4_MARKDUPLICATES.out.cram
-        .join(INDEX_MARKDUPLICATES.out.crai)
+    // Join with the crai file
+    cram = GATK4_MARKDUPLICATES.out.cram.join(INDEX_MARKDUPLICATES.out.crai, failOnDuplicate: true, failOnMismatch: true)
 
-    // Convert output to cram
-    CRAM_QC_MOSDEPTH_SAMTOOLS(cram_markduplicates, fasta, fasta_fai, intervals_bed_combined)
+    // QC on CRAM
+    CRAM_QC_MOSDEPTH_SAMTOOLS(cram, fasta, intervals_bed_combined)
 
     // Gather all reports generated
-    qc_reports = qc_reports.mix(GATK4_MARKDUPLICATES.out.metrics,
-                                CRAM_QC_MOSDEPTH_SAMTOOLS.out.qc)
+    reports = reports.mix(GATK4_MARKDUPLICATES.out.metrics)
+    reports = reports.mix(CRAM_QC_MOSDEPTH_SAMTOOLS.out.reports)
 
     // Gather versions of all tools used
-    ch_versions = ch_versions.mix(GATK4_MARKDUPLICATES.out.versions)
-    ch_versions = ch_versions.mix(INDEX_MARKDUPLICATES.out.versions)
-    ch_versions = ch_versions.mix(CRAM_QC_MOSDEPTH_SAMTOOLS.out.versions)
+    versions = versions.mix(GATK4_MARKDUPLICATES.out.versions)
+    versions = versions.mix(INDEX_MARKDUPLICATES.out.versions)
+    versions = versions.mix(CRAM_QC_MOSDEPTH_SAMTOOLS.out.versions)
 
     emit:
-        cram     = cram_markduplicates
-        qc       = qc_reports
+    cram
+    reports
 
-        versions = ch_versions // channel: [ versions.yml ]
+    versions    // channel: [ versions.yml ]
 }

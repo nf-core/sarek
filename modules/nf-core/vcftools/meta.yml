@@ -1,14 +1,13 @@
 name: vcftools
 description: A set of tools written in Perl and C++ for working with VCF files
-keywords: VCF
+keywords:
+  - VCF
   - sort
 tools:
   - vcftools:
       description: A set of tools written in Perl and C++ for working with VCF files. This package only contains the C++ libraries whereas the package perl-vcftools-vcf contains the perl libraries
       homepage: http://vcftools.sourceforge.net/
       documentation: http://vcftools.sourceforge.net/man_latest.html
-      tool_dev_url: None
-      doi:
       licence: ["LGPL"]
 
 input:

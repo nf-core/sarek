@@ -1,5 +1,5 @@
 - name: Run alignment to fastq and then remap on bam files
-  command: nextflow run main.nf -profile test,alignment_to_fastq
+  command: nextflow run main.nf -profile test,alignment_to_fastq --outdir results
   tags:
     - alignment_to_fastq
     - input_bam
@@ -12,15 +12,15 @@
       md5sum: 2d29d9e53894dcce96a1b5beb6ef3312
     - path: results/multiqc
     - path: results/preprocessing/markduplicates/test/test.md.cram
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recal_table/test/test.recal.table
       md5sum: 9c0517ffdc5d30a5c73b9f7df1ff3060
     - path: results/preprocessing/recalibrated/test/test.recal.cram
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
-    # binary changes md5sums on reruns.
+    # binary changes md5sums on reruns
     - path: results/reports/fastqc/test-1
     - path: results/reports/markduplicates/test/test.md.cram.metrics
       contains: ["test	0	2820	2	2	0	828	0	0.293617	3807", "1.0	0.999986	1178	1178", "2.0	1.47674	800	800", "100.0	1.911145	0	0"]
@@ -45,8 +45,8 @@
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
       md5sum: d0713716f63ac573f4a3385733e9a537
     - path: results/reports/samtools/test/test.md.cram.stats
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/reports/samtools/test/test.recal.cram.stats
-    # conda changes md5sums for test.
+    # conda changes md5sums for test
     - path: results/preprocessing/mapped/
       should_exist: false

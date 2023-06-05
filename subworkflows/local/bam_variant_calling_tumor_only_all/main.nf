@@ -14,97 +14,56 @@ include { BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2      } from '../bam_variant_cal
 
 workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     take:
-        tools                         // Mandatory, list of tools to apply
-        cram_recalibrated             // channel: [mandatory] cram
-        bwa                           // channel: [optional] bwa
-        cf_chrom_len                  // channel: [optional] controlfreec length file
-        chr_files
-        cnvkit_reference
-        dbsnp                         // channel: [mandatory] dbsnp
-        dbsnp_tbi                     // channel: [mandatory] dbsnp_tbi
-        dict                          // channel: [mandatory] dict
-        fasta                         // channel: [mandatory] fasta
-        fasta_fai                     // channel: [mandatory] fasta_fai
-        germline_resource             // channel: [optional]  germline_resource
-        germline_resource_tbi         // channel: [optional]  germline_resource_tbi
-        intervals                     // channel: [mandatory] intervals/target regions
-        intervals_bed_gz_tbi          // channel: [mandatory] intervals/target regions index zipped and indexed
-        intervals_bed_combined        // channel: [mandatory] intervals/target regions in one file unzipped
-        mappability
-        panel_of_normals              // channel: [optional]  panel_of_normals
-        panel_of_normals_tbi          // channel: [optional]  panel_of_normals_tbi
+    tools                         // Mandatory, list of tools to apply
+    cram                          // channel: [mandatory] cram
+    bwa                           // channel: [optional] bwa
+    cf_chrom_len                  // channel: [optional] controlfreec length file
+    chr_files
+    cnvkit_reference
+    dbsnp                         // channel: [mandatory] dbsnp
+    dbsnp_tbi                     // channel: [mandatory] dbsnp_tbi
+    dict                          // channel: [mandatory] dict
+    fasta                         // channel: [mandatory] fasta
+    fasta_fai                     // channel: [mandatory] fasta_fai
+    germline_resource             // channel: [optional]  germline_resource
+    germline_resource_tbi         // channel: [optional]  germline_resource_tbi
+    intervals                     // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
+    intervals_bed_gz_tbi          // channel: [mandatory] [ interval.bed.gz, interval.bed.gz.tbi, num_intervals ] or [ [], [], 0 ] if no intervals
+    intervals_bed_combined        // channel: [mandatory] intervals/target regions in one file unzipped
+    intervals_bed_gz_tbi_combined // channel: [mandatory] intervals/target regions in one file zipped
+    mappability
+    panel_of_normals              // channel: [optional]  panel_of_normals
+    panel_of_normals_tbi          // channel: [optional]  panel_of_normals_tbi
 
     main:
-
-    ch_versions         = Channel.empty()
+    versions = Channel.empty()
 
     //TODO: Temporary until the if's can be removed and printing to terminal is prevented with "when" in the modules.config
-    freebayes_vcf       = Channel.empty()
-    manta_vcf           = Channel.empty()
-    mutect2_vcf         = Channel.empty()
-    strelka_vcf         = Channel.empty()
-    tiddit_vcf          = Channel.empty()
+    vcf_freebayes   = Channel.empty()
+    vcf_manta       = Channel.empty()
+    vcf_mutect2     = Channel.empty()
+    vcf_strelka     = Channel.empty()
+    vcf_tiddit      = Channel.empty()
 
-    // Remap channel with intervals
-    cram_recalibrated_intervals = cram_recalibrated.combine(intervals)
-        .map{ meta, cram, crai, intervals, num_intervals ->
-
-            //If no interval file provided (0) then add empty list
-            intervals_new = num_intervals == 0 ? [] : intervals
-
-            [[
-                data_type:      meta.data_type,
-                id:             meta.sample,
-                num_intervals:  num_intervals,
-                patient:        meta.patient,
-                sample:         meta.sample,
-                sex:            meta.sex,
-                status:         meta.status,
-            ],
-            cram, crai, intervals_new]
-        }
-
-    // Remap channel with gzipped intervals + indexes
-    cram_recalibrated_intervals_gz_tbi = cram_recalibrated.combine(intervals_bed_gz_tbi)
-        .map{ meta, cram, crai, bed_tbi, num_intervals ->
-
-            //If no interval file provided (0) then add empty list
-            bed_new = num_intervals == 0 ? [] : bed_tbi[0]
-            tbi_new = num_intervals == 0 ? [] : bed_tbi[1]
-
-            [[
-                data_type:      meta.data_type,
-                id:             meta.sample,
-                num_intervals:  num_intervals,
-                patient:        meta.patient,
-                sample:         meta.sample,
-                sex:            meta.sex,
-                status:         meta.status,
-            ],
-            cram, crai, bed_new, tbi_new]
-        }
-
-    if (tools.split(',').contains('mpileup') || tools.split(',').contains('controlfreec')){
-        cram_intervals_no_index = cram_recalibrated_intervals.map { meta, cram, crai, intervals ->
-                                                                    [meta, cram, intervals]
-                                                                    }
+    // MPILEUP
+    if (tools.split(',').contains('mpileup') || tools.split(',').contains('controlfreec')) {
         BAM_VARIANT_CALLING_MPILEUP(
-            cram_intervals_no_index,
-            fasta
+            cram,
+            dict,
+            fasta,
+            intervals
         )
 
-        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_MPILEUP.out.versions)
+        versions = versions.mix(BAM_VARIANT_CALLING_MPILEUP.out.versions)
     }
 
-    if (tools.split(',').contains('controlfreec')){
-        controlfreec_input = BAM_VARIANT_CALLING_MPILEUP.out.mpileup
-                                .map{ meta, pileup_tumor ->
-                                    [meta, [], pileup_tumor, [], [], [], []]
-                                }
-
+    // CONTROLFREEC (depends on MPILEUP)
+    if (tools.split(',').contains('controlfreec')) {
         length_file = cf_chrom_len ?: fasta_fai
+
         BAM_VARIANT_CALLING_TUMOR_ONLY_CONTROLFREEC(
-            controlfreec_input,
+            // Remap channel to match module/subworkflow
+            BAM_VARIANT_CALLING_MPILEUP.out.mpileup.map{ meta, pileup_tumor -> [ meta, [], pileup_tumor, [], [], [], [] ] },
             fasta,
             length_file,
             dbsnp,
@@ -114,106 +73,116 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
             intervals_bed_combined
         )
 
-        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_CONTROLFREEC.out.versions)
+        versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_CONTROLFREEC.out.versions)
     }
 
-    if(tools.split(',').contains('cnvkit')){
-        cram_recalibrated_cnvkit_tumoronly = cram_recalibrated
-            .map{ meta, cram, crai ->
-                [meta, cram, []]
-            }
-
+    // CNVKIT
+    if (tools.split(',').contains('cnvkit')) {
         BAM_VARIANT_CALLING_CNVKIT (
-            cram_recalibrated_cnvkit_tumoronly,
+            // Remap channel to match module/subworkflow
+            cram.map{ meta, cram, crai -> [ meta, cram, [] ] },
             fasta,
             fasta_fai,
             [],
             cnvkit_reference
         )
 
-        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_CNVKIT.out.versions)
+        versions = versions.mix(BAM_VARIANT_CALLING_CNVKIT.out.versions)
     }
 
-    if (tools.split(',').contains('freebayes')){
-        // Remap channel for Freebayes
-        cram_recalibrated_intervals_freebayes = cram_recalibrated_intervals
-            .map{ meta, cram, crai, intervals ->
-                [meta, cram, crai, [], [], intervals]
-            }
-
+    // FREEBAYES
+    if (tools.split(',').contains('freebayes')) {
         BAM_VARIANT_CALLING_FREEBAYES(
-            cram_recalibrated_intervals_freebayes,
+            // Remap channel to match module/subworkflow
+            cram.map{ meta, cram, crai -> [ meta, cram, crai, [], [] ] },
             dict,
             fasta,
-            fasta_fai
+            fasta_fai,
+            intervals
         )
 
-        freebayes_vcf = BAM_VARIANT_CALLING_FREEBAYES.out.freebayes_vcf
-        ch_versions   = ch_versions.mix(BAM_VARIANT_CALLING_FREEBAYES.out.versions)
+        vcf_freebayes = BAM_VARIANT_CALLING_FREEBAYES.out.vcf
+        versions = versions.mix(BAM_VARIANT_CALLING_FREEBAYES.out.versions)
     }
 
+    // MUTECT2
     if (tools.split(',').contains('mutect2')) {
         BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2(
-            cram_recalibrated_intervals,
-            fasta,
-            fasta_fai,
+            cram,
+            // Remap channel to match module/subworkflow
+            fasta.map{ it -> [ [ id:'fasta' ], it ] },
+            // Remap channel to match module/subworkflow
+            fasta_fai.map{ it -> [ [ id:'fasta_fai' ], it ] },
             dict,
             germline_resource,
             germline_resource_tbi,
             panel_of_normals,
-            panel_of_normals_tbi
+            panel_of_normals_tbi,
+            intervals
         )
 
-        mutect2_vcf = BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2.out.filtered_vcf
-        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2.out.versions)
+        vcf_mutect2 = BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2.out.vcf_filtered
+        versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2.out.versions)
     }
 
-    if (tools.split(',').contains('manta')){
-
+    // MANTA
+    if (tools.split(',').contains('manta')) {
         BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA(
-            cram_recalibrated_intervals_gz_tbi,
-            dict,
+            cram,
+            // Remap channel to match module/subworkflow
+            dict.map{ it -> [ [ id:'dict' ], it ] },
             fasta,
-            fasta_fai
+            fasta_fai,
+            intervals_bed_gz_tbi_combined
+
         )
 
-        manta_vcf   = BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA.out.manta_vcf
-        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA.out.versions)
+        vcf_manta = BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA.out.vcf
+        versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA.out.versions)
     }
 
+    // STRELKA
     if (tools.split(',').contains('strelka')) {
-
         BAM_VARIANT_CALLING_SINGLE_STRELKA(
-            cram_recalibrated_intervals_gz_tbi,
+            cram,
             dict,
             fasta,
-            fasta_fai
+            fasta_fai,
+            intervals_bed_gz_tbi
         )
 
-        strelka_vcf = BAM_VARIANT_CALLING_SINGLE_STRELKA.out.strelka_vcf
-        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_SINGLE_STRELKA.out.versions)
+        vcf_strelka = BAM_VARIANT_CALLING_SINGLE_STRELKA.out.vcf
+        versions = versions.mix(BAM_VARIANT_CALLING_SINGLE_STRELKA.out.versions)
     }
 
-        //TIDDIT
-    if (tools.split(',').contains('tiddit')){
-
+    // TIDDIT
+    if (tools.split(',').contains('tiddit')) {
         BAM_VARIANT_CALLING_SINGLE_TIDDIT(
-            cram_recalibrated,
-            fasta.map{ it -> [[id:it[0].baseName], it] },
+            cram,
+            // Remap channel to match module/subworkflow
+            fasta.map{ it -> [ [ id:'fasta' ], it ] },
             bwa
         )
 
-        tiddit_vcf = BAM_VARIANT_CALLING_SINGLE_TIDDIT.out.tiddit_vcf
-        ch_versions = ch_versions.mix(BAM_VARIANT_CALLING_SINGLE_TIDDIT.out.versions)
+        vcf_tiddit = BAM_VARIANT_CALLING_SINGLE_TIDDIT.out.vcf
+        versions = versions.mix(BAM_VARIANT_CALLING_SINGLE_TIDDIT.out.versions)
     }
 
+    vcf_all = Channel.empty().mix(
+        vcf_freebayes,
+        vcf_manta,
+        vcf_mutect2,
+        vcf_strelka,
+        vcf_tiddit
+    )
 
     emit:
-    freebayes_vcf
-    manta_vcf
-    mutect2_vcf
-    strelka_vcf
-    tiddit_vcf
+    vcf_all
+    vcf_freebayes
+    vcf_manta
+    vcf_mutect2
+    vcf_strelka
+    vcf_tiddit
 
-    versions = ch_versions
+    versions = versions
 }

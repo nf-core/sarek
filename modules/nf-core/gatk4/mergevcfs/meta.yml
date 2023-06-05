@@ -23,13 +23,16 @@ input:
       type: list
       description: Two or more VCF files
       pattern: "*.{vcf,vcf.gz}"
+  - meta2:
+      type: map
+      description: |
+        Groovy Map containing reference information
+        e.g. [ id:'genome']
   - ref_dict:
       type: file
       description: Optional Sequence Dictionary as input
       pattern: "*.dict"
-  - use_ref_dict:
-      type: boolean
-      description: Specify whether or not to use a given reference dictionary
+
 output:
   - vcf:
       type: file

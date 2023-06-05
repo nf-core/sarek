@@ -7,7 +7,7 @@
    viewBox="0 0 744.09448 524.40944"
    id="svg4924"
    version="1.1"
-   inkscape:version="1.2.1 (1:1.2.1+202210291243+9c6d41e410)"
+   inkscape:version="1.2.2 (1:1.2.2+202305151914+b0a8486541)"
    sodipodi:docname="sarek_indices_subway.svg"
    inkscape:export-filename="sarek_indices_subway.png"
    inkscape:export-xdpi="90"
@@ -2963,9 +2963,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
-     inkscape:zoom="3.4084784"
-     inkscape:cx="148.01326"
-     inkscape:cy="148.45334"
+     inkscape:zoom="0.8521196"
+     inkscape:cx="181.31258"
+     inkscape:cy="100.9248"
      inkscape:document-units="px"
      inkscape:current-layer="g2380"
      showgrid="false"
@@ -2975,8 +2975,8 @@
      fit-margin-bottom="0"
      units="mm"
      width="200mm"
-     inkscape:window-width="2560"
-     inkscape:window-height="1412"
+     inkscape:window-width="1920"
+     inkscape:window-height="1132"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
@@ -4759,24 +4759,7 @@
            id="g603"
            transform="matrix(0,-0.34467181,0.34467181,0,159.55621,35.486923)">
           <g
-             id="g2380">
-            <flowRoot
-               transform="matrix(1.9448497,0,0,1.9448497,-609.23694,205.47678)"
-               style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;display:inline;fill:#000000;fill-opacity:1;stroke:none"
-               id="flowRoot2353-8"
-               xml:space="preserve"
-               inkscape:export-filename="/Users/monarchy/Projects/Coding/sarek/docs/images/sarek_indices_subway.png"
-               inkscape:export-xdpi="90"
-               inkscape:export-ydpi="90"><flowRegion
-                 id="flowRegion2355-1"><rect
-                   y="-190.50024"
-                   x="472"
-                   height="103"
-                   width="150"
-                   id="rect2357-0" /></flowRegion><flowPara
-                 style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold'"
-                 id="flowPara2359-7">3.1.1</flowPara></flowRoot>
-          </g>
+             id="g2380" />
         </g>
         <g
            id="g557-5"
