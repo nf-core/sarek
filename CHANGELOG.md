@@ -84,6 +84,7 @@ Bierikjávrre is one of the largest lake in Sarek.
 ### Removed
 
 - [#898](https://github.com/nf-core/sarek/pull/898) - Params `enable_conda` was removed
+- [#1070](https://github.com/nf-core/sarek/pull/1070) - Remove Sarek version from workflow and subway map pictures
 
 ### Dependencies
 
@@ -147,10 +148,6 @@ Lilla Luleälven river's main affluent is Rapaätno.
 ### Removed
 
 ### Dependencies
-
-| Dependency   | Old version | New version |
-| ------------ | ----------- | ----------- |
-| `ensemblvep` | 106.1       | 108.2       |
 
 ## [3.1](https://github.com/nf-core/sarek/releases/tag/3.1) - Rapaätno
 
