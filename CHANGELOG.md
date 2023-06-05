@@ -148,10 +148,6 @@ Lilla Luleälven river's main affluent is Rapaätno.
 
 ### Dependencies
 
-| Dependency   | Old version | New version |
-| ------------ | ----------- | ----------- |
-| `ensemblvep` | 106.1       | 108.2       |
-
 ## [3.1](https://github.com/nf-core/sarek/releases/tag/3.1) - Rapaätno
 
 Rapaätno is the river you can see from the Skierfe mountain.
