@@ -22,7 +22,7 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
     intervals_bed_combined         // channel: [mandatory] intervals/target regions in one file unzipped, no_intervals.bed if no_intervals
     skip_haplotyper_filter         // boolean: [mandatory] [default: false] skip haplotyper filter
     joint_germline                 // boolean: [mandatory] [default: false] joint calling of germline variants
-    sentieon_haplotyper_out_format // channel: [mandatory] value channel with string
+    sentieon_haplotyper_emit_mode
 
     main:
     versions = Channel.empty()
@@ -45,13 +45,19 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
             ]
         }
 
+
+    emit_mode_items = sentieon_haplotyper_emit_mode.split(',')
+    lst = emit_mode_items - 'gvcf'
+    emit_vcf = lst.size() > 0 ? lst[0] : ''
+
     SENTIEON_HAPLOTYPER(
         cram_intervals_for_sentieon,
         fasta,
         fasta_fai,
         dbsnp,
         dbsnp_tbi,
-        sentieon_haplotyper_out_format)
+        emit_vcf,
+        emit_mode_items.contains('gvcf'))
 
     versions = versions.mix(SENTIEON_HAPLOTYPER.out.versions)
 
