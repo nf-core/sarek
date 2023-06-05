@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## dev
+
+### Added
+
+- [#1071](https://github.com/nf-core/sarek/pull/1071) - Back to dev
+
+### Changed
+
+### Fixed
+
+### Removed
+
 ## [3.2.0](https://github.com/nf-core/sarek/releases/tag/3.2.0) - Bierikjávrre
 
 Bierikjávrre is one of the largest lake in Sarek.
@@ -21,7 +33,7 @@ Bierikjávrre is one of the largest lake in Sarek.
 - [#978](https://github.com/nf-core/sarek/pull/978) - Validate that patient/sample does not contain spaces
 - [#981](https://github.com/nf-core/sarek/pull/981) - Added documentation on generating ASCAT resources for exome and targeted sequencing
 - [#1041](https://github.com/nf-core/sarek/pull/1041) - Add params `vep_custom_args` to let user specify custom params more easily for `VEP`
-- [#1045](https://github.com/nf-core/sarek/pull/1045) - Add `public_aws_ecr` for using ECR hosted containers.
+- [#1045](https://github.com/nf-core/sarek/pull/1045) - Add `public_aws_ecr` for using ECR hosted containers
 
 ### Changed
 
