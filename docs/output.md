@@ -374,8 +374,8 @@ Files created:
 - `{sample,tumorsample_vs_normalsample}.mutect2.segmentation.table`
   - table containing segmentation of the tumor by minor allele fraction
 - `{sample,tumorsample_vs_normalsample}.mutect2.artifactprior.tar.gz`
-  - prior probabilities ir read orientation artifacts
-- `{sample,tumorsample,normalsample}.mutect2.pileupsummaries.table`
+  - prior probabilities for read orientation artifacts
+- `{sample,tumorsample,normalsample}.mutect2.pileups.table`
   - tabulates pileup metrics for inferring contamination
 - `{sample,tumorsample_vs_normalsample}.mutect2.filtered.vcf.gz` and `{sample,tumorsample_vs_normalsample}.mutect2.filtered.vcf.gz.tbi`
   - filtered Mutect2 calls VCF with tabix index based on the probability that a variant is somatic
