@@ -22,10 +22,10 @@ process SENTIEON_HAPLOTYPER {
     val(emit_gvcf)
 
     output:
-    tuple val(meta), path("*.sentieon.vcf.gz")          , optional:true, emit: vcf   // added the substring ".sentieon" in the filename of the vcf-files since without that the g.vcf.gz-files were ending up in the vcf-channel
-    tuple val(meta), path("*.sentieon.vcf.gz.tbi")      , optional:true, emit: vcf_tbi
-    tuple val(meta), path("*.sentieon.g.vcf.gz")        , optional:true, emit: gvcf   // these output-files have to have the extension ".vcf.gz", otherwise the subsequent GATK-MergeVCFs will fail.
-    tuple val(meta), path("*.sentieon.g.vcf.gz.tbi")    , optional:true, emit: gvcf_tbi
+    tuple val(meta), path("*.unfiltered.vcf.gz")    , optional:true, emit: vcf   // added the substring ".unfiltered" in the filename of the vcf-files since without that the g.vcf.gz-files were ending up in the vcf-channel
+    tuple val(meta), path("*.unfiltered.vcf.gz.tbi"), optional:true, emit: vcf_tbi
+    tuple val(meta), path("*.g.vcf.gz")             , optional:true, emit: gvcf   // these output-files have to have the extension ".vcf.gz", otherwise the subsequent GATK-MergeVCFs will fail.
+    tuple val(meta), path("*.g.vcf.gz.tbi")         , optional:true, emit: gvcf_tbi
     path "versions.yml"                             , emit: versions
 
     when:
