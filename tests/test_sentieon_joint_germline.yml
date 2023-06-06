@@ -1,5 +1,5 @@
 - name: Run joint germline variant calling with sentieon haplotyper
-  command: nextflow run main.nf -profile test,targeted --input ./tests/csv/3.0/mapped_joint_bam.csv --tools sentieon_haplotyper --step variant_calling --joint_germline --skip_tools haplotyper_filter --outdir results --sentieon_haplotyper_out_format gvcf
+  command: nextflow run main.nf -profile test,targeted --input ./tests/csv/3.0/mapped_joint_bam.csv --tools sentieon_haplotyper --step variant_calling --joint_germline --skip_tools haplotyper_filter --outdir results --sentieon_haplotyper_emit_mode gvcf
   tags:
     - germline
     - sentieon_joint_germline
