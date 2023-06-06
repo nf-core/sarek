@@ -45,11 +45,11 @@ process SENTIEON_HAPLOTYPER {
     def base_cmd = '--algo Haplotyper ' + dbsnp_command
 
     if (emit_vcf) {  // emit_vcf can be the empty string, 'variant', 'confident' or 'all' but NOT 'gvcf'
-        vcf_cmd = base_cmd + args2 + ' --emit_mode ' + emit_vcf + ' ' + prefix + '.sentieon.vcf.gz'
+        vcf_cmd = base_cmd + args2 + ' --emit_mode ' + emit_vcf + ' ' + prefix + '.unfiltered.vcf.gz'
     }
 
     if (emit_gvcf) { // emit_gvcf can be either true or false
-        gvcf_cmd = base_cmd + args3 + ' --emit_mode gvcf ' + prefix + '.sentieon.g.vcf.gz'
+        gvcf_cmd = base_cmd + args3 + ' --emit_mode gvcf ' + prefix + '.g.vcf.gz'
     }
 
     """
