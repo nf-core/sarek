@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- [#1082](https://github.com/nf-core/sarek/pull/1082) - Bump minimal Nextflow version to 23.04.0
+
 ### Fixed
 
 - [#1078](https://github.com/nf-core/sarek/pull/1078) - Update tabix/bgziptabix module to fix typo
