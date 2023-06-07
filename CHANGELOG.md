@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1078](https://github.com/nf-core/sarek/pull/1078) - Update tabix/bgziptabix module to fix typo
 - [#1079](https://github.com/nf-core/sarek/pull/1079) - Fixed typo in profile name for tower aws megatests
 - [#1082](https://github.com/nf-core/sarek/pull/1082) - Patch more modules to use quay.io registry
+- [#1082](https://github.com/nf-core/sarek/pull/1082) - Update `public_aws_ecr` profile
 
 ### Removed
 
