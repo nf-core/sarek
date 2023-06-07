@@ -373,32 +373,32 @@
                     },
                     "sentieon/applyvarcal": {
                         "branch": "master",
-                        "git_sha": "49a64392c75566394617a372d0fdd52caf754cfc",
+                        "git_sha": "d000d0c1f62b2e3d2fd84c2e9caea73f131501fa",
                         "installed_by": ["modules"]
                     },
                     "sentieon/bwamem": {
                         "branch": "master",
-                        "git_sha": "b9829e1064382745d8dff7f1d74d2138d2864f71",
+                        "git_sha": "d000d0c1f62b2e3d2fd84c2e9caea73f131501fa",
                         "installed_by": ["modules"]
                     },
                     "sentieon/dedup": {
                         "branch": "master",
-                        "git_sha": "b9829e1064382745d8dff7f1d74d2138d2864f71",
+                        "git_sha": "d000d0c1f62b2e3d2fd84c2e9caea73f131501fa",
                         "installed_by": ["modules"]
                     },
                     "sentieon/gvcftyper": {
                         "branch": "master",
-                        "git_sha": "aa591ada04e79a771d242cd967648e6a1ae06ccf",
+                        "git_sha": "d000d0c1f62b2e3d2fd84c2e9caea73f131501fa",
                         "installed_by": ["modules"]
                     },
                     "sentieon/haplotyper": {
                         "branch": "master",
-                        "git_sha": "b9829e1064382745d8dff7f1d74d2138d2864f71",
+                        "git_sha": "d000d0c1f62b2e3d2fd84c2e9caea73f131501fa",
                         "installed_by": ["modules"]
                     },
                     "sentieon/varcal": {
                         "branch": "master",
-                        "git_sha": "641b422042e9d401d00f3e1a4f7ae59d53c9bfe0",
+                        "git_sha": "d000d0c1f62b2e3d2fd84c2e9caea73f131501fa",
                         "installed_by": ["modules"]
                     },
                     "snpeff/download": {

@@ -80,10 +80,10 @@ process SENTIEON_HAPLOTYPER {
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    touch ${prefix}.sentieon.vcf.gz
-    touch ${prefix}.sentieon.vcf.gz.tbi
-    touch ${prefix}.sentieon.g.vcf.gz
-    touch ${prefix}.sentieon.g.vcf.gz.tbi
+    touch ${prefix}.unfiltered.vcf.gz
+    touch ${prefix}.unfiltered.vcf.gz.tbi
+    touch ${prefix}.g.vcf.gz
+    touch ${prefix}.g.vcf.gz.tbi
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
