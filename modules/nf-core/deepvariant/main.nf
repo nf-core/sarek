@@ -2,7 +2,7 @@ process DEEPVARIANT {
     tag "$meta.id"
     label 'process_high'
 
-    container "docker.io/google/deepvariant:1.5.0"
+    container "nf-core/deepvariant:1.5.0"
 
     // Exit if running this module with -profile conda / -profile mamba
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {

@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- [#1082](https://github.com/nf-core/sarek/pull/1082) - Patch more modules to use quay.io registry
+
 ### Removed
 
 ## [3.2.0](https://github.com/nf-core/sarek/releases/tag/3.2.0) - Bierikjávrre
