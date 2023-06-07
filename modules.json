@@ -398,7 +398,7 @@
                     },
                     "tabix/bgziptabix": {
                         "branch": "master",
-                        "git_sha": "01b3b2509d76625b6d6cd613b349fb4777712a15",
+                        "git_sha": "591b71642820933dcb3c954c934b397bd00d8e5e",
                         "installed_by": ["vcf_annotate_snpeff", "modules"]
                     },
                     "tabix/tabix": {
