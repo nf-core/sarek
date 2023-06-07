@@ -372,14 +372,13 @@
                     "help_text": "use the `--dont-use-soft-clipped-bases` params with GATK Mutect2.",
                     "hidden": true
                 },
-                "sentieon_haplotyper_out_format": {
+                "sentieon_haplotyper_emit_mode": {
                     "type": "string",
-                    "default": "vcf",
-                    "description": "Option for selecting Sentieon Haplotyper output format.",
-                    "enum": ["vcf", "gvcf", "both"],
-                    "help_text": "Sets the format of the output file or files from Sentieon's Haplotyper. Available formats: vcf, gvcf, or both",
-                    "fa_icon": "fas fa-table",
-                    "hidden": true
+                    "default": "variant",
+                    "fa_icon": "fas fa-toolbox",
+                    "description": "Option for selecting output and emit-mode of Sentieon's Haplotyper.",
+                    "help_text": "The option `--sentieon_haplotyper_emit_mode` can be set to the same string values as the Haplotyper's `--emit_mode`. To output both a vcf and a gvcf, specify both a vcf-option (currently, `all`, `confident` and `variant`) and `gvcf`. For example, to obtain a vcf and gvcf one could set `--sentieon_haplotyper_emit_mode` to `variant, gvcf`.",
+                    "pattern": "^(all|confident|gvcf|variant|gvcf,all|gvcf,confident|gvcf,variant|all,gvcf|confident,gvcf|variant,gvcf)(?<!,)$"
                 }
             }
         },

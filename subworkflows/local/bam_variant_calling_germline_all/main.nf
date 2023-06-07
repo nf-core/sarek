@@ -38,7 +38,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     known_sites_snps_tbi
     known_snps_vqsr
     joint_germline                    // boolean: [mandatory] [default: false] joint calling of germline variants
-    sentieon_haplotyper_out_format    // channel: [mandatory] value channel with string
+    sentieon_haplotyper_emit_mode     // channel: [mandatory] value channel with string
 
     main:
     versions = Channel.empty()
@@ -174,7 +174,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             intervals_bed_combined_haplotypec,
             (skip_tools && skip_tools.split(',').contains('haplotyper_filter')),
             joint_germline,
-            sentieon_haplotyper_out_format)
+            sentieon_haplotyper_emit_mode)
 
         versions = versions.mix(BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER.out.versions)
 
