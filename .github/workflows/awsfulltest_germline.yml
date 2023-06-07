@@ -8,7 +8,7 @@ on:
     types: [published]
   workflow_dispatch:
 jobs:
-  run-tower-germline:
+  run-tower:
     name: Run AWS full tests
     if: github.repository == 'nf-core/sarek'
     runs-on: ubuntu-latest
@@ -25,7 +25,7 @@ jobs:
             {
               "outdir": "s3://${{ secrets.AWS_S3_BUCKET }}/sarek/results-${{ github.sha }}/germline_test"
             }
-          profiles: test_full_germline,aws_tower
+          profiles: test_full_germline,public_aws_ecr
       - uses: actions/upload-artifact@v3
         with:
           name: Tower debug log file
