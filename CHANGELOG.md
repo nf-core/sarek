@@ -5,14 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## dev
+## [3.2.1](https://github.com/nf-core/sarek/releases/tag/3.2.1) - Pierikjaure
 
-### Added
-
-- [#1073](https://github.com/nf-core/sarek/pull/1073) - Back to dev
+Pierikjaure is a previous spelling of Bierikjávrre.
 
 ### Changed
 
+- [#1073](https://github.com/nf-core/sarek/pull/1073) - Back to dev
+- [#1080](https://github.com/nf-core/sarek/pull/1080) - Prepare release `3.2.1`
 - [#1082](https://github.com/nf-core/sarek/pull/1082) - Bump minimal Nextflow version to 23.04.0
 
 ### Fixed
@@ -22,8 +22,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1082](https://github.com/nf-core/sarek/pull/1082) - Patch more modules to use quay.io registry
 - [#1082](https://github.com/nf-core/sarek/pull/1082) - Update `public_aws_ecr` profile
 - [#1082](https://github.com/nf-core/sarek/pull/1082) - Add quay.io as singularity default registry
-
-### Removed
 
 ## [3.2.0](https://github.com/nf-core/sarek/releases/tag/3.2.0) - Bierikjávrre
 
