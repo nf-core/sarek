@@ -15,6 +15,7 @@ Pierikjaure is a previous spelling of Bierikjávrre.
 - [#1080](https://github.com/nf-core/sarek/pull/1080) - Prepare release `3.2.1`
 
 ### Fixed
+
 - [#1078](https://github.com/nf-core/sarek/pull/1078) - Update tabix/bgziptabix module to fix typo
 - [#1079](https://github.com/nf-core/sarek/pull/1079) - Fixed typo in profile name for tower aws megatests
 
