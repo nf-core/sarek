@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- [#1078](https://github.com/nf-core/sarek/pull/1078) - Update tabix/bgziptabix module to fix typo
+
 ### Removed
 
 ## [3.2.0](https://github.com/nf-core/sarek/releases/tag/3.2.0) - Bierikjávrre
