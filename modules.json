@@ -107,7 +107,7 @@
                     },
                     "deepvariant": {
                         "branch": "master",
-                        "git_sha": "0460d316170f75f323111b4a2c0a2989f0c32013",
+                        "git_sha": "4b7d4863a5883b76e6bff13b6e52468fab090c5b",
                         "installed_by": ["modules"]
                     },
                     "dragmap/align": {
@@ -168,7 +168,7 @@
                     },
                     "gatk4/applybqsrspark": {
                         "branch": "master",
-                        "git_sha": "b9829e1064382745d8dff7f1d74d2138d2864f71",
+                        "git_sha": "4b7d4863a5883b76e6bff13b6e52468fab090c5b",
                         "installed_by": ["modules"]
                     },
                     "gatk4/applyvqsr": {
@@ -183,7 +183,7 @@
                     },
                     "gatk4/baserecalibratorspark": {
                         "branch": "master",
-                        "git_sha": "b9829e1064382745d8dff7f1d74d2138d2864f71",
+                        "git_sha": "4b7d4863a5883b76e6bff13b6e52468fab090c5b",
                         "installed_by": ["modules"]
                     },
                     "gatk4/calculatecontamination": {
@@ -193,7 +193,7 @@
                     },
                     "gatk4/cnnscorevariants": {
                         "branch": "master",
-                        "git_sha": "b9829e1064382745d8dff7f1d74d2138d2864f71",
+                        "git_sha": "4b7d4863a5883b76e6bff13b6e52468fab090c5b",
                         "installed_by": ["modules"]
                     },
                     "gatk4/createsequencedictionary": {
@@ -263,7 +263,7 @@
                     },
                     "gatk4/markduplicatesspark": {
                         "branch": "master",
-                        "git_sha": "b9829e1064382745d8dff7f1d74d2138d2864f71",
+                        "git_sha": "4b7d4863a5883b76e6bff13b6e52468fab090c5b",
                         "installed_by": ["modules"]
                     },
                     "gatk4/mergemutectstats": {
