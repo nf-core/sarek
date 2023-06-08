@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.2.1](https://github.com/nf-core/sarek/releases/tag/3.2.1) - Pierikjaure
+
+Pierikjaure is a previous spelling of Bierikjávrre.
+
+### Changed
+
+- [#1073](https://github.com/nf-core/sarek/pull/1073) - Back to dev
+- [#1080](https://github.com/nf-core/sarek/pull/1080) - Prepare release `3.2.1`
+- [#1082](https://github.com/nf-core/sarek/pull/1082) - Bump minimal Nextflow version to 23.04.0
+
+### Fixed
+
+- [#1078](https://github.com/nf-core/sarek/pull/1078) - Update tabix/bgziptabix module to fix typo
+- [#1079](https://github.com/nf-core/sarek/pull/1079) - Fixed typo in profile name for tower aws megatests
+- [#1082](https://github.com/nf-core/sarek/pull/1082) - Patch more modules to use quay.io registry
+- [#1082](https://github.com/nf-core/sarek/pull/1082) - Update `public_aws_ecr` profile
+- [#1082](https://github.com/nf-core/sarek/pull/1082) - Add quay.io as singularity default registry
+
 ## [3.2.0](https://github.com/nf-core/sarek/releases/tag/3.2.0) - Bierikjávrre
 
 Bierikjávrre is one of the largest lake in Sarek.
@@ -21,7 +39,7 @@ Bierikjávrre is one of the largest lake in Sarek.
 - [#978](https://github.com/nf-core/sarek/pull/978) - Validate that patient/sample does not contain spaces
 - [#981](https://github.com/nf-core/sarek/pull/981) - Added documentation on generating ASCAT resources for exome and targeted sequencing
 - [#1041](https://github.com/nf-core/sarek/pull/1041) - Add params `vep_custom_args` to let user specify custom params more easily for `VEP`
-- [#1045](https://github.com/nf-core/sarek/pull/1045) - Add `public_aws_ecr` for using ECR hosted containers.
+- [#1045](https://github.com/nf-core/sarek/pull/1045) - Add `public_aws_ecr` for using ECR hosted containers
 
 ### Changed
 
