@@ -1,9 +1,8 @@
-name: pytest-workflow
+name: pytest-workflow-release
 # This workflow runs the pipeline with the minimal test dataset to check that it completes without any syntax errors
 on:
   push:
     branches: [master]
-  pull_request:
   release:
     types: [published]
 
