@@ -1,8 +1,11 @@
 name: pytest-workflow
 # This workflow runs the pipeline with the minimal test dataset to check that it completes without any syntax errors
 on:
+  push:
+    branches: [master]
   pull_request:
-    branches: [dev]
+  release:
+    types: [published]
 
 # Cancel if a newer run is started
 concurrency:
@@ -32,30 +35,29 @@ jobs:
       fail-fast: false
       matrix:
         tags: ["${{ fromJson(needs.changes.outputs.tags) }}"]
-        profile: ["docker"]
-        # profile: ["docker", "singularity", "conda"]
+        profile: ["docker", "singularity", "conda"]
         TEST_DATA_BASE:
           - "test-datasets/data"
         NXF_VER:
           - "23.04.0"
           - "latest-everything"
         exclude:
-          # - profile: "conda"
-          #   tags: concatenate_vcfs
-          # - profile: "conda"
-          #   tags: deepvariant
-          # - profile: "conda"
-          #   tags: haplotypecaller
-          # - profile: "conda"
-          #   tags: merge
-          # - profile: "conda"
-          #   tags: snpeff
-          # - profile: "conda"
-          #   tags: umi
-          # - profile: "conda"
-          #   tags: validation_checks
-          # - profile: "conda"
-          #   tags: vep
+          - profile: "conda"
+            tags: concatenate_vcfs
+          - profile: "conda"
+            tags: deepvariant
+          - profile: "conda"
+            tags: haplotypecaller
+          - profile: "conda"
+            tags: merge
+          - profile: "conda"
+            tags: snpeff
+          - profile: "conda"
+            tags: umi
+          - profile: "conda"
+            tags: validation_checks
+          - profile: "conda"
+            tags: vep
           - profile: "singularity"
             tags: concatenate_vcfs
           - profile: "singularity"
