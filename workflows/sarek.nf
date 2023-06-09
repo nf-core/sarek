@@ -1,18 +1,14 @@
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    VALIDATE INPUTS
+    PRINT PARAMS SUMMARY
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { validateParameters; paramsHelp; paramsSummaryLog; paramsSummaryMap; fromSamplesheet } from 'plugin/nf-validation'
+include { paramsSummaryLog; paramsSummaryMap; fromSamplesheet } from 'plugin/nf-validation'
 
-def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
-
-// Validate input parameters
-validateParameters()
-
-// Validate input parameters
-WorkflowSarek.initialise(params, log)
+def logo = NfcoreTemplate.logo(workflow, params.monochrome_logs)
+def citation = '\n' + WorkflowMain.citation(workflow) + '\n'
+def summary_params = paramsSummaryMap(workflow)
 
 // Check input path parameters to see if they exist
 def checkPathParamList = [
@@ -54,7 +50,10 @@ def checkPathParamList = [
 ]
 
 // Print summary of supplied parameters
-log.info paramsSummaryLog(workflow)
+log.info logo + paramsSummaryLog(workflow) + citation
+
+// Validate input parameters
+WorkflowSarek.initialise(params, log)
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
