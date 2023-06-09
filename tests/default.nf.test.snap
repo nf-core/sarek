@@ -1,0 +1,8 @@
+{
+    "software_versions": {
+        "content": [
+            "{BCFTOOLS_STATS={bcftools=1.17}, BWAMEM1_INDEX={bwa=0.7.17-r1188}, BWAMEM1_MEM={bwa=0.7.17-r1188, samtools=1.16.1}, CREATE_INTERVALS_BED={gawk=5.1.0}, CUSTOM_DUMPSOFTWAREVERSIONS={python=3.11.0, yaml=6.0}, FASTQC={fastqc=0.11.9}, GATK4_APPLYBQSR={gatk4=4.4.0.0}, GATK4_BASERECALIBRATOR={gatk4=4.4.0.0}, GATK4_CREATESEQUENCEDICTIONARY={gatk4=4.4.0.0}, GATK4_INTERVALLISTTOBED={gatk4=4.4.0.0}, GATK4_MARKDUPLICATES={gatk4=4.4.0.0}, INDEX_CRAM={samtools=1.17}, INDEX_MARKDUPLICATES={samtools=1.17}, MOSDEPTH={mosdepth=0.3.3}, SAMTOOLS_FAIDX={samtools=1.17}, SAMTOOLS_STATS={samtools=1.17}, STRELKA_SINGLE={strelka=2.9.10}, TABIX_BGZIPTABIX_INTERVAL_COMBINED={tabix=1.12}, TABIX_BGZIPTABIX_INTERVAL_SPLIT={tabix=1.12}, TABIX_DBSNP={tabix=1.12}, TABIX_KNOWN_INDELS={tabix=1.12}, VCFTOOLS_TSTV_COUNT={vcftools=0.1.16}, Workflow={nf-core/sarek=3.3dev}}"
+        ],
+        "timestamp": "2023-06-09T13:55:42+0000"
+    }
+}

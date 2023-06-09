@@ -1,11 +1,19 @@
-name: nf-core CI
 # This workflow runs the pipeline with the minimal test dataset to check that it completes without any syntax errors
+name: nf-core CI
 on:
   push:
-    branches: [dev]
+    branches:
+      - dev
   pull_request:
+    branches:
+      - dev
+      - master
   release:
-    types: [published]
+    types:
+      - "published"
+env:
+  NXF_ANSI_LOG: false
+  NFTEST_VER: "0.7.3"
 
 # Cancel if a newer run is started
 concurrency:
@@ -13,25 +21,23 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  test:
-    name: Run pipeline with test data
-    # Only run on push if this is the nf-core dev branch (merged PRs)
-    if: "${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/sarek') }}"
+  test-dev:
+    # Only run if the pull request is against the dev branch or if the push is to the dev branch
+    if: (github.base_ref == 'dev' || (github.event_name == 'push'))
+    name: Run pipeline with test data on dev
     runs-on: ubuntu-latest
+    # Define the matrix of different Nextflow versions to test
     strategy:
-      # HACK Remove after DSL2 rewrite is done
-      fail-fast: false
       matrix:
         NXF_VER:
           - "23.04.0"
           - "latest-everything"
-        test:
-          - "default"
+        test: ["default"]
         profile: ["docker"]
-        # profile: ["docker", "singularity", "conda"]
+
     env:
-      NXF_ANSI_LOG: false
       TEST_DATA_BASE: "${{ github.workspace }}/test-datasets"
+
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v3
@@ -65,20 +71,95 @@ jobs:
             echo "========================================"
           done;
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: "3.x"
-
       - uses: actions/cache@v3
         with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          path: /usr/local/bin/nextflow
+          key: ${{ runner.os }}
           restore-keys: |
-            ${{ runner.os }}-pip-
+            ${{ runner.os }}-nextflow-
 
-      - name: Install Python dependencies
-        run: python -m pip install --upgrade pip pytest-workflow
+      - name: Install nf-test
+        run: |
+          wget -qO- https://code.askimed.com/install/nf-test | bash -s $NFTEST_VER
+          sudo mv nf-test /usr/local/bin/
+
+      - name: Install Nextflow ${{ matrix.NXF_VER }}
+        uses: nf-core/setup-nextflow@v1.2.0
+        with:
+          version: "${{ matrix.NXF_VER }}"
+
+      - name: Run nf-test
+        uses: Wandalen/wretry.action@v1.0.11
+        with:
+          command: nf-test test tests/${{ matrix.test }}.nf.test --profile "test_cache,${{ matrix.profile }}" --tap=test.tap
+          attempt_limit: 3
+
+      - name: Output log on failure
+        if: failure()
+        run: |
+          sudo apt install bat > /dev/null
+          batcat --decorations=always --color=always /home/runner/pytest_workflow_*/*/log.{out,err}
+
+      - name: Upload logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: logs-${{ matrix.profile }}
+          path: |
+            /home/runner/pytest_workflow_*/*/.nextflow.log
+            /home/runner/pytest_workflow_*/*/log.out
+            /home/runner/pytest_workflow_*/*/log.err
+            /home/runner/pytest_workflow_*/*/work
+
+  test-master:
+    # Only run on master branch or when a PR is opened against master
+    if: github.base_ref == 'master'
+    name: Run pipeline with test data on master
+    runs-on: ubuntu-latest
+    # Define the matrix of different Nextflow versions to test
+    strategy:
+      matrix:
+        NXF_VER:
+          - "23.04.0"
+          - "latest-everything"
+        test: ["default"]
+        profile: ["docker", "singularity", "conda"]
+
+    env:
+      TEST_DATA_BASE: "${{ github.workspace }}/test-datasets"
+
+    steps:
+      - name: Check out pipeline code
+        uses: actions/checkout@v3
+
+      - name: Hash Github Workspace
+        id: hash_workspace
+        run: |
+          echo "digest=$(echo sarek3_${{ github.workspace }} | md5sum | cut -c 1-25)" >> $GITHUB_OUTPUT
+
+      - name: Cache test data
+        id: cache-testdata
+        uses: actions/cache@v3
+        with:
+          path: test-datasets/
+          key: ${{ steps.hash_workspace.outputs.digest }}
+
+      - name: Check out test data
+        if: steps.cache-testdata.outputs.cache-hit != 'true'
+        uses: actions/checkout@v3
+        with:
+          repository: nf-core/test-datasets
+          ref: sarek3
+          path: test-datasets/
+
+      - name: Replace remote paths in samplesheets
+        run: |
+          for f in tests/csv/3.0/*csv; do
+            sed -i "s=https://raw.githubusercontent.com/nf-core/test-datasets/modules/=${{ github.workspace }}/test-datasets/=g" $f
+            echo "========== $f ============"
+            cat $f
+            echo "========================================"
+          done;
 
       - uses: actions/cache@v3
         with:
@@ -86,6 +167,11 @@ jobs:
           key: ${{ runner.os }}
           restore-keys: |
             ${{ runner.os }}-nextflow-
+
+      - name: Install nf-test
+        run: |
+          wget -qO- https://code.askimed.com/install/nf-test | bash -s $NFTEST_VER
+          sudo mv nf-test /usr/local/bin/
 
       - name: Install Nextflow ${{ matrix.NXF_VER }}
         uses: nf-core/setup-nextflow@v1.2.0
@@ -110,10 +196,10 @@ jobs:
         if: matrix.profile == 'conda'
         run: conda clean -a
 
-      - name: Run pipeline with tests settings
+      - name: Run nf-test
         uses: Wandalen/wretry.action@v1.0.11
         with:
-          command: TMPDIR=~ PROFILE=${{ matrix.profile }} pytest --tag ${{ matrix.test }} --symlink --kwdof --git-aware --color=yes
+          command: nf-test test tests/${{ matrix.test }}.nf.test --profile "test_cache,${{ matrix.profile }}" --tap=test.tap
           attempt_limit: 3
 
       - name: Output log on failure
