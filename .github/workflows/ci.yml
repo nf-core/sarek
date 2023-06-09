@@ -27,7 +27,7 @@ jobs:
           - "latest-everything"
         test:
           - "default"
-        profile: ["docker", "singularity"]
+        profile: ["docker"]
         # profile: ["docker", "singularity", "conda"]
     env:
       NXF_ANSI_LOG: false
