@@ -9,14 +9,34 @@ nextflow_pipeline {
 
         when {
             params {
-                outdir = "$outputDir"
+                outdir = "results"
             }
         }
 
         then {
             assertAll(
                 { assert workflow.success },
-                { assert snapshot(UTILS.removeNextflowVersion("$outputDir")).match("software_versions") }
+                { assert new File("results/multiqc/").exists() },
+                { assert new File("results/preprocessing/markduplicates/test/test.md.cram").exists() },
+                { assert new File("results/preprocessing/markduplicates/test/test.md.cram.crai").exists() },
+                { assert new File("results/preprocessing/recalibrated/test/test.recal.cram").exists() },
+                { assert new File("results/preprocessing/recalibrated/test/test.recal.cram.crai").exists() },
+                { assert new File("results/reports/fastqc/test-test_L1/").exists() },
+                { assert new File("results/reports/markduplicates/test/test.md.cram.metrics").exists() },
+                { assert new File("results/reports/samtools/test/test.md.cram.stats").exists() },
+                { assert new File("results/reports/samtools/test/test.recal.cram.stats").exists() },
+                { assert new File("results/variant_calling/strelka/test/test.strelka.genome.vcf.gz").exists() },
+                { assert new File("results/variant_calling/strelka/test/test.strelka.genome.vcf.gz.tbi").exists() },
+                { assert new File("results/variant_calling/strelka/test/test.strelka.variants.vcf.gz").exists() },
+                { assert new File("results/variant_calling/strelka/test/test.strelka.variants.vcf.gz.tbi").exists() },
+                { assert snapshot(UTILS.removeNextflowVersion("results")).match("software_versions") },
+                { assert snapshot(path("results/csv/").list()).match("csv") },
+                { assert snapshot(path("results/preprocessing/recal_table/test/test.recal.table")).match("table") },
+                { assert snapshot(path("results/reports/bcftools/strelka/test/test.strelka.variants.bcftools_stats.txt")) },
+                { assert snapshot(path("results/reports/mosdepth/").list()).match("mosdepth") },
+                { assert snapshot(path("results/reports/vcftools/strelka/test/").list()).match("vcftools") },
+                { assert !new File("results/strelka/").exists() },
+                { assert !new File("results/preprocessing/mapped/").exists() }
             )
         }
     }
