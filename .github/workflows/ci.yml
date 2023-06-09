@@ -35,7 +35,7 @@ jobs:
           filters: "tests/config/tags.yml"
 
   test-dev:
-    if: (github.base_ref == 'dev' || (github.event_name == 'push')) && needs.changes.outputs.tags != '[]'
+    if: (github.base_ref == 'dev' || (github.event_name == 'push'))
     name: ${{ matrix.tags }} ${{ matrix.profile }} NF ${{ matrix.NXF_VER }}
     runs-on: ubuntu-latest
     needs: changes
@@ -45,7 +45,8 @@ jobs:
         tags: ["${{ fromJson(needs.changes.outputs.tags) }}"]
         profile: ["docker"]
         NXF_VER: ["23.04.0"]
-
+        include:
+          - tags: default
     env:
       TEST_DATA_BASE: "${{ github.workspace }}/test-datasets"
 
@@ -102,7 +103,7 @@ jobs:
       - name: Run nf-test
         uses: Wandalen/wretry.action@v1.0.11
         with:
-          command: nf-test test tests/${{ matrix.tag }}.nf.test --profile "test_cache,${{ matrix.profile }}" --tap=test.tap
+          command: nf-test test tests/${{ matrix.tags }}.nf.test --profile "test_cache,${{ matrix.profile }}" --tap=test.tap
           attempt_limit: 3
 
       - name: Output log on failure
