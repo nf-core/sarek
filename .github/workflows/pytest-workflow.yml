@@ -21,7 +21,7 @@ jobs:
       - uses: dorny/paths-filter@v2
         id: filter
         with:
-          filters: "tests/config/tags.yml"
+          filters: "tests/config/tags-pytest.yml"
 
   test:
     name: ${{ matrix.tags }} ${{ matrix.profile }} NF ${{ matrix.NXF_VER }}
