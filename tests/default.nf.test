@@ -1,11 +1,12 @@
 nextflow_pipeline {
 
-    name "Test Workflow main.nf"
+    name "Test pipeline"
     script "main.nf"
-    tag "pipeline"
+    tag "preprocessing"
+    tag "variant_calling"
     tag "default"
 
-    test("Should run without failures") {
+    test("Run default test") {
 
         when {
             params {

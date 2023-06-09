@@ -1,0 +1,70 @@
+{
+    "intervals": {
+        "content": [
+            "chr22_1-40001.bed:md5,87a15eb9c2ff20ccd5cd8735a28708f7",
+            "chr22_1-40001.bed.gz:md5,d3341fa28986c40b24fcc10a079dbb80",
+            "genome.bed:md5,a87dc7d20ebca626f65cc16ff6c97a3e"
+        ],
+        "timestamp": "2023-06-09T16:37:10+0000"
+    },
+    "mosdepth": {
+        "content": [
+            [
+                "test.md.mosdepth.global.dist.txt:md5,76fa71922a3f748e507c2364c531dfcb",
+                "test.md.mosdepth.region.dist.txt:md5,abc5df85e302b79985627888870882da",
+                "test.md.mosdepth.summary.txt:md5,d536456436eb275159b8c6af83213d80",
+                "test.md.regions.bed.gz:md5,38fe39894abe62e38f8ac214cba64f2b",
+                "test.md.regions.bed.gz.csi:md5,b1c2a861f64e20a94108a6de3b76c582",
+                "test.recal.mosdepth.global.dist.txt:md5,76fa71922a3f748e507c2364c531dfcb",
+                "test.recal.mosdepth.region.dist.txt:md5,abc5df85e302b79985627888870882da",
+                "test.recal.mosdepth.summary.txt:md5,d536456436eb275159b8c6af83213d80",
+                "test.recal.regions.bed.gz:md5,38fe39894abe62e38f8ac214cba64f2b",
+                "test.recal.regions.bed.gz.csi:md5,b1c2a861f64e20a94108a6de3b76c582"
+            ]
+        ],
+        "timestamp": "2023-06-09T16:37:10+0000"
+    },
+    "software_versions": {
+        "content": [
+            "{BWAMEM1_INDEX={bwa=0.7.17-r1188}, CREATE_INTERVALS_BED={gawk=5.1.0}, CUSTOM_DUMPSOFTWAREVERSIONS={python=3.11.0, yaml=6.0}, GATK4_CREATESEQUENCEDICTIONARY={gatk4=4.4.0.0}, GATK4_INTERVALLISTTOBED={gatk4=4.4.0.0}, SAMTOOLS_FAIDX={samtools=1.17}, TABIX_BGZIPTABIX_INTERVAL_COMBINED={tabix=1.12}, TABIX_BGZIPTABIX_INTERVAL_SPLIT={tabix=1.12}, TABIX_DBSNP={tabix=1.12}, TABIX_KNOWN_INDELS={tabix=1.12}, Workflow={nf-core/sarek=3.3dev}}"
+        ],
+        "timestamp": "2023-06-09T16:37:10+0000"
+    },
+    "csv": {
+        "content": [
+            "markduplicates.csv:md5,0d6120bb99e92f6810343270711ca53e",
+            "markduplicates_no_table.csv:md5,2a2d3d4842befd4def39156463859ee3",
+            "recalibrated.csv:md5,2d29d9e53894dcce96a1b5beb6ef3312",
+            "variantcalled.csv:md5,4d0effd3d8dc2b814230a189e7ca9dba"
+        ],
+        "timestamp": "2023-06-09T16:37:10+0000"
+    },
+    "dict": {
+        "content": [
+            "genome.dict:md5,2433fe2ba31257337bf4c4bd4cb8da15"
+        ],
+        "timestamp": "2023-06-09T16:37:10+0000"
+    },
+    "bwa": {
+        "content": [
+            "genome.amb:md5,1891c1de381b3a96d4e72f590fde20c1",
+            "genome.ann:md5,2df4aa2d7580639fa0fcdbcad5e2e969",
+            "genome.bwt:md5,815eded87e4cb6b0f1daab5c4d6e30af",
+            "genome.pac:md5,8569fbdb2c98c6fb16dfa73d8eacb070",
+            "genome.sa:md5,e7cff62b919448a3a3d0fe4aaf427594"
+        ],
+        "timestamp": "2023-06-09T16:37:10+0000"
+    },
+    "table": {
+        "content": [
+            "test.recal.table:md5,4ac774bf5f1157e77426fd82f5ac0fbe"
+        ],
+        "timestamp": "2023-06-09T16:37:10+0000"
+    },
+    "fai": {
+        "content": [
+            "genome.fasta.fai:md5,3520cd30e1b100e55f578db9c855f685"
+        ],
+        "timestamp": "2023-06-09T16:37:10+0000"
+    }
+}

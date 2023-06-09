@@ -1,0 +1,80 @@
+nextflow_pipeline {
+
+    name "Test pipeline with bwamem"
+    script "main.nf"
+    tag "aligner"
+    tag "bwamem"
+    tag "preprocessing"
+
+    test("Run preprocessing with bwa-mem") {
+
+        when {
+            params {
+                aligner = "bwa-mem"
+                outdir = "results"
+                save_reference = true
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert new File("results/multiqc/").exists() },
+                { assert new File("results/preprocessing/markduplicates/test/test.md.cram").exists() },
+                { assert new File("results/preprocessing/markduplicates/test/test.md.cram.crai").exists() },
+                { assert new File("results/preprocessing/recalibrated/test/test.recal.cram").exists() },
+                { assert new File("results/preprocessing/recalibrated/test/test.recal.cram.crai").exists() },
+                { assert new File("results/reports/fastqc/test-test_L1/").exists() },
+                { assert new File("results/reports/markduplicates/test/test.md.cram.metrics").exists() },
+                { assert new File("results/reports/samtools/test/test.md.cram.stats").exists() },
+                { assert new File("results/reports/samtools/test/test.recal.cram.stats").exists() },
+                { assert new File("results/reference/dbsnp/dbsnp_146.hg38.vcf.gz.tbi").exists() },
+                { assert new File("results/reference/known_indels/mills_and_1000G.indels.vcf.gz.tbi").exists() },
+                { assert snapshot(UTILS.removeNextflowVersion("results")).match("software_versions") },
+                { assert snapshot(path("results/csv/").list()).match("csv") },
+                { assert snapshot(path("results/reference/bwa/").list()).match("bwa") },
+                { assert snapshot(path("results/reference/intervals/").list()).match("intervals") },
+                { assert snapshot(path("results/reference/dict/genome.dict")).match("dict") },
+                { assert snapshot(path("results/reference/fai/genome.fasta.fai")).match("fai") },
+                { assert snapshot(path("results/preprocessing/recal_table/test/test.recal.table")).match("table") },
+                { assert snapshot(path("results/reports/mosdepth/").list()).match("mosdepth") }
+            )
+        }
+    }
+
+    test("Only build index") {
+
+        when {
+            params {
+                aligner = "bwa-mem"
+                build_only_index = true
+                input = false
+                outdir = "$outputDir"
+                save_reference = true
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert new File("$outputDir/multiqc/").exists() },
+                { assert new File("$outputDir/reference/dbsnp/dbsnp_146.hg38.vcf.gz.tbi").exists() },
+                { assert new File("$outputDir/reference/known_indels/mills_and_1000G.indels.vcf.gz.tbi").exists() },
+                { assert snapshot(UTILS.removeNextflowVersion("$outputDir")).match("software_versions") },
+                { assert snapshot(path("$outputDir/reference/bwa/").list()).match("bwa") },
+                { assert snapshot(path("$outputDir/reference/intervals/").list()).match("intervals") },
+                { assert snapshot(path("$outputDir/reference/dict/genome.dict")).match("dict") },
+                { assert snapshot(path("$outputDir/reference/fai/genome.fasta.fai")).match("fai") },
+                { assert !new File("$outputDir/preprocessing/markduplicates/test/test.md.cram").exists() },
+                { assert !new File("$outputDir/preprocessing/markduplicates/test/test.md.cram.crai").exists() },
+                { assert !new File("$outputDir/preprocessing/recalibrated/test/test.recal.cram").exists() },
+                { assert !new File("$outputDir/preprocessing/recalibrated/test/test.recal.cram.crai").exists() },
+                { assert !new File("$outputDir/reports/fastqc/test-test_L1/").exists() },
+                { assert !new File("$outputDir/reports/markduplicates/test/test.md.cram.metrics").exists() },
+                { assert !new File("$outputDir/reports/samtools/test/test.md.cram.stats").exists() },
+                { assert !new File("$outputDir/reports/samtools/test/test.recal.cram.stats").exists() }
+            )
+        }
+    }
+
+}
