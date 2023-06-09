@@ -63,7 +63,7 @@ WorkflowSarek.initialise(params, log)
 for (param in checkPathParamList) if (param) file(param, checkIfExists: true)
 
 // Set input, can either be from --input or from automatic retrieval in WorkflowSarek.groovy
-input_sample = params.build_only_index ? Channel.empty() : Channel.fromSamplesheet("input")
+input_sample = params.build_only_index ? Channel.empty() : extract_csv(file(params.input, checkIfExists: true))
 
 // Fails when wrongfull extension for intervals file
 if (params.wes && !params.step == 'annotate') {
