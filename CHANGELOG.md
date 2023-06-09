@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#1087](https://github.com/nf-core/sarek/pull/1087) - Back to dev
 - [#1087](https://github.com/nf-core/sarek/pull/1087) - Minor modules update
+- [#1088](https://github.com/nf-core/sarek/pull/1088) - Replace profile `test` by `test_cache` and add a `test` profile without hidden files
 
 ### Fixed
 

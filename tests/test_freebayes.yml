@@ -1,5 +1,5 @@
 - name: Run variant calling on germline sample with freebayes
-  command: nextflow run main.nf -profile test,targeted --tools freebayes --outdir results
+  command: nextflow run main.nf -profile test_cache,targeted --tools freebayes --outdir results
   tags:
     - freebayes
     - germline
@@ -74,7 +74,7 @@
     - path: results/freebayes
       should_exist: false
 - name: Run variant calling on germline sample with freebayes without intervals
-  command: nextflow run main.nf -profile test --tools freebayes --no_intervals --outdir results
+  command: nextflow run main.nf -profile test_cache --tools freebayes --no_intervals --outdir results
   tags:
     - freebayes
     - germline
@@ -148,7 +148,7 @@
     - path: results/freebayes
       should_exist: false
 - name: Run variant calling on somatic sample with freebayes
-  command: nextflow run main.nf -profile test,pair,targeted --tools freebayes --outdir results
+  command: nextflow run main.nf -profile test_cache,pair,targeted --tools freebayes --outdir results
   tags:
     - freebayes
     - somatic
@@ -279,7 +279,7 @@
     - path: results/freebayes
       should_exist: false
 - name: Run variant calling on somatic sample with freebayes without intervals
-  command: nextflow run main.nf -profile test,pair,targeted --tools freebayes --no_intervals --outdir results
+  command: nextflow run main.nf -profile test_cache,pair,targeted --tools freebayes --no_intervals --outdir results
   tags:
     - freebayes
     - somatic
@@ -393,7 +393,7 @@
     - path: results/freebayes
       should_exist: false
 - name: Run variant calling on tumor_only sample with freebayes
-  command: nextflow run main.nf -profile test,tools_tumoronly --tools freebayes --outdir results
+  command: nextflow run main.nf -profile test_cache,tools_tumoronly --tools freebayes --outdir results
   tags:
     - freebayes
     - tumor_only
@@ -417,7 +417,7 @@
     - path: results/freebayes
       should_exist: false
 - name: Run variant calling on tumor_only sample with freebayes without intervals
-  command: nextflow run main.nf -profile test,tools_tumoronly --tools freebayes --no_intervals --outdir results
+  command: nextflow run main.nf -profile test_cache,tools_tumoronly --tools freebayes --no_intervals --outdir results
   tags:
     - freebayes
     - no_intervals

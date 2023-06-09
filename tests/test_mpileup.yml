@@ -1,5 +1,5 @@
 - name: Run variant calling on tumor_only sample to test mpileup
-  command: nextflow run main.nf -profile test,tools_tumoronly --tools mpileup --outdir results
+  command: nextflow run main.nf -profile test_cache,tools_tumoronly --tools mpileup --outdir results
   tags:
     - tumor_only
     - mpileup
@@ -10,7 +10,7 @@
     - path: results/mpileup
       should_exist: false
 - name: Run variant calling on tumor_only sample to test mpileup without intervals
-  command: nextflow run main.nf -profile test,tools_tumoronly --tools mpileup --no_intervals --outdir results
+  command: nextflow run main.nf -profile test_cache,tools_tumoronly --tools mpileup --no_intervals --outdir results
   tags:
     - tumor_only
     - mpileup
@@ -28,7 +28,7 @@
     - path: results/mpileup
       should_exist: false
 - name: Run variant calling on germline sample to test mpileup
-  command: nextflow run main.nf -profile test,tools_germline --tools mpileup --outdir results
+  command: nextflow run main.nf -profile test_cache,tools_germline --tools mpileup --outdir results
   tags:
     - germline
     - mpileup
@@ -39,7 +39,7 @@
     - path: results/mpileup
       should_exist: false
 - name: Run variant calling on germline sample to test mpileup without intervals
-  command: nextflow run main.nf -profile test,tools_germline --tools mpileup --no_intervals --outdir results
+  command: nextflow run main.nf -profile test_cache,tools_germline --tools mpileup --no_intervals --outdir results
   tags:
     - germline
     - mpileup
