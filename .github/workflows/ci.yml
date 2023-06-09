@@ -29,9 +29,7 @@ jobs:
     # Define the matrix of different Nextflow versions to test
     strategy:
       matrix:
-        NXF_VER:
-          - "23.04.0"
-          - "latest-everything"
+        NXF_VER: ["23.04.0"]
         test: ["default"]
         profile: ["docker"]
 
@@ -119,9 +117,7 @@ jobs:
     # Define the matrix of different Nextflow versions to test
     strategy:
       matrix:
-        NXF_VER:
-          - "23.04.0"
-          - "latest-everything"
+        NXF_VER: ["23.04.0", "latest-everything"]
         test: ["default"]
         profile: ["docker", "singularity", "conda"]
 

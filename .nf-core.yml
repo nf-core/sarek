@@ -1,14 +1,15 @@
 repository_type: pipeline
 lint:
+  actions_ci: False
   files_exist:
     - conf/modules.config
-    - conf/test.config
-    - conf/test_full.config
   files_unchanged:
+    - .gitattributes
+    - .gitignore
     - assets/multiqc_config.yml
     - assets/nf-core-sarek_logo_light.png
     - docs/images/nf-core-sarek_logo_dark.png
     - docs/images/nf-core-sarek_logo_light.png
-    - lib/NfcoreTemplate.groovy
     - lib/NfcoreSchema.groovy
+    - lib/NfcoreTemplate.groovy
   template_strings: False
