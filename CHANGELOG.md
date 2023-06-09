@@ -9,12 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- [#1086](https://github.com/nf-core/sarek/pull/1086) - Back to dev
-- [#1086](https://github.com/nf-core/sarek/pull/1086) - Minor modules update
+- [#1087](https://github.com/nf-core/sarek/pull/1087) - Back to dev
+- [#1087](https://github.com/nf-core/sarek/pull/1087) - Minor modules update
 
 ### Fixed
 
-- [#1086](https://github.com/nf-core/sarek/pull/1086) - Fix wrong default memory in GATK4_CREATESEQUENCEDICTIONARY [#1085](https://github.com/nf-core/sarek/pull/1085)
+- [#1087](https://github.com/nf-core/sarek/pull/1087) - Fix wrong default memory in GATK4_CREATESEQUENCEDICTIONARY [#1085](https://github.com/nf-core/sarek/pull/1085)
 
 ## [3.2.1](https://github.com/nf-core/sarek/releases/tag/3.2.1) - Pierikjaure
 
