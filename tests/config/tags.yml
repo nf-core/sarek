@@ -96,7 +96,7 @@
 # ## aligner
 
 ### bwamem
-bwamem:
+aligner_bwamem:
   - conf/modules/aligner.config
   - modules/nf-core/bwa/mem/main.nf
   - subworkflows/local/fastq_align_bwamem_mem2_dragmap/main.nf
