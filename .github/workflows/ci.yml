@@ -36,15 +36,19 @@ jobs:
 
   test-dev:
     if: (github.base_ref == 'dev' || (github.event_name == 'push'))
-    name: ${{ matrix.tags }} ${{ matrix.profile }} NF ${{ matrix.NXF_VER }}
+    name: ${{ matrix.tags }} ${{ matrix.profile }} NXF ${{ matrix.NXF_VER }}
     runs-on: ubuntu-latest
     needs: changes
     strategy:
       fail-fast: false
       matrix:
+        # Run tests based on changes in code
         tags: ["${{ fromJson(needs.changes.outputs.tags) }}"]
+        # Only run docker tests on dev branch
         profile: ["docker"]
+        # Only run minimal NXF version on dev branch
         NXF_VER: ["23.04.0"]
+        # Always run default test
         include:
           - tags: default
     env:
@@ -126,15 +130,21 @@ jobs:
   test-master:
     # Only run on master branch or when a PR is opened against master
     if: github.base_ref == 'master'
-    name: Run pipeline with test data on master
+    name: ${{ matrix.tags }} ${{ matrix.profile }} NXF ${{ matrix.NXF_VER }}
     runs-on: ubuntu-latest
+    needs: changes
     # Define the matrix of different Nextflow versions to test
     strategy:
       matrix:
+        # Run tests based on changes in code
+        tags: ["${{ fromJson(needs.changes.outputs.tags) }}"]
+        # Run minimal and latest NXF version on dev branch
         NXF_VER: ["23.04.0", "latest-everything"]
-        tag: ["default"]
+        # Only run docker, singularity and conda tests on dev branch
         profile: ["docker", "singularity", "conda"]
-
+        # Always run default test
+        include:
+          - tags: default
     env:
       TEST_DATA_BASE: "${{ github.workspace }}/test-datasets"
 
