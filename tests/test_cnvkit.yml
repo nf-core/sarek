@@ -1,5 +1,5 @@
 - name: Run variant calling on somatic samples with cnvkit
-  command: nextflow run main.nf -profile test,tools_somatic --tools cnvkit --outdir results
+  command: nextflow run main.nf -profile test_cache,tools_somatic --tools cnvkit --outdir results
   tags:
     - cnvkit
     - copy_number_calling
@@ -58,7 +58,7 @@
     - path: results/cnvkit
       should_exist: false
 - name: Run variant calling on tumor_only sample with cnvkit
-  command: nextflow run main.nf -profile test,tools_tumoronly --tools cnvkit --outdir results
+  command: nextflow run main.nf -profile test_cache,tools_tumoronly --tools cnvkit --outdir results
   tags:
     - cnvkit
     - copy_number_calling
@@ -89,7 +89,7 @@
     - path: results/cnvkit
       should_exist: false
 - name: Run variant calling on germline sample with cnvkit
-  command: nextflow run main.nf -profile test,tools_germline --tools cnvkit --outdir results
+  command: nextflow run main.nf -profile test_cache,tools_germline --tools cnvkit --outdir results
   tags:
     - cnvkit
     - copy_number_calling
@@ -122,7 +122,7 @@
     - path: results/cnvkit
       should_exist: false
 - name: Run variant calling on somatic samples with cnvkit and skip variant calling on matched normal
-  command: nextflow run main.nf -profile test,tools_somatic --tools cnvkit --only_paired_variant_calling --outdir results
+  command: nextflow run main.nf -profile test_cache,tools_somatic --tools cnvkit --only_paired_variant_calling --outdir results
   tags:
     - cnvkit
     - somatic

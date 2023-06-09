@@ -1,5 +1,5 @@
 - name: Run variant calling on somatic samples with controlfreec
-  command: nextflow run main.nf -profile test,tools_somatic --tools controlfreec --outdir results
+  command: nextflow run main.nf -profile test_cache,tools_somatic --tools controlfreec --outdir results
   tags:
     - controlfreec
     - somatic
@@ -53,7 +53,7 @@
     - path: results/cnvkit
       should_exist: false
 - name: Run variant calling on somatic samples with controlfreec without intervals
-  command: nextflow run main.nf -profile test,tools_somatic --tools controlfreec --no_intervals -stub-run --outdir results
+  command: nextflow run main.nf -profile test_cache,tools_somatic --tools controlfreec --no_intervals -stub-run --outdir results
   tags:
     - controlfreec
     - no_intervals
@@ -106,7 +106,7 @@
     - path: results/mpileup
       should_exist: false
 - name: Run variant calling on tumor_only sample with controlfreec
-  command: nextflow run main.nf -profile test,tools_tumoronly --tools controlfreec -stub-run --outdir results
+  command: nextflow run main.nf -profile test_cache,tools_tumoronly --tools controlfreec -stub-run --outdir results
   tags:
     - controlfreec
     - tumor_only
