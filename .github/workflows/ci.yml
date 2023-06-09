@@ -51,6 +51,8 @@ jobs:
         # Always run default test
         include:
           - tags: default
+          - profile: "docker"
+          - NXF_VER: "23.04.0"
     env:
       TEST_DATA_BASE: "${{ github.workspace }}/test-datasets"
 
