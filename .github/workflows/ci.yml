@@ -35,14 +35,14 @@ jobs:
           filters: "tests/config/tags.yml"
 
   test-dev:
-    if: (github.base_ref == 'dev' || (github.event_name == 'push'))
+    if: (github.base_ref == 'dev' || (github.event_name == 'push')) && needs.changes.outputs.tags != '[]'
     name: ${{ matrix.tags }} ${{ matrix.profile }} NF ${{ matrix.NXF_VER }}
     runs-on: ubuntu-latest
     needs: changes
     strategy:
       fail-fast: false
       matrix:
-        tags: ["default", "${{ fromJson(needs.changes.outputs.tags) }}"]
+        tags: ["${{ fromJson(needs.changes.outputs.tags) }}"]
         profile: ["docker"]
         NXF_VER: ["23.04.0"]
 
