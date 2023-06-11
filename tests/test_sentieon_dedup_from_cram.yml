@@ -1,5 +1,5 @@
 - name: Run sentieon dedup starting from CRAM
-  command: nextflow run main.nf -profile test,sentieon_dedup_cram --outdir results
+  command: nextflow run main.nf -profile test_cache,sentieon_dedup_cram --outdir results
   tags:
     - input_cram
     - markduplicates
