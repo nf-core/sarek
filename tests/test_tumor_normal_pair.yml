@@ -1,5 +1,5 @@
 - name: Run default pipeline for tumor normal pair
-  command: nextflow run main.nf -profile test,pair --outdir results
+  command: nextflow run main.nf -profile test_cache,pair --outdir results
   tags:
     - default_extended
     - preprocessing

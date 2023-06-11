@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## dev
+
+### Changed
+
+- [#1087](https://github.com/nf-core/sarek/pull/1087) - Back to dev
+- [#1087](https://github.com/nf-core/sarek/pull/1087) - Minor modules update
+- [#1088](https://github.com/nf-core/sarek/pull/1088) - Replace profile `test` by `test_cache` and add a `test` profile without hidden files
+
+### Fixed
+
+- [#1087](https://github.com/nf-core/sarek/pull/1087) - Fix wrong default memory in GATK4_CREATESEQUENCEDICTIONARY [#1085](https://github.com/nf-core/sarek/pull/1085)
+- [#1089](https://github.com/nf-core/sarek/pull/1089) - Remove duplicated code
+- [#1093](https://github.com/nf-core/sarek/pull/1093) - Fixing Ascat by reverting meta.id in channels allele_files, loci_files, gc_file and rt_file to baseName.
+
 ## [3.2.1](https://github.com/nf-core/sarek/releases/tag/3.2.1) - Pierikjaure
 
 Pierikjaure is a previous spelling of Bierikjávrre.

@@ -152,7 +152,6 @@ fasta_fai          = params.fasta_fai          ? Channel.fromPath(params.fasta_f
 germline_resource  = params.germline_resource  ? Channel.fromPath(params.germline_resource).collect() : Channel.value([]) // Mutec2 does not require a germline resource, so set to optional input
 known_indels       = params.known_indels       ? Channel.fromPath(params.known_indels).collect()      : Channel.value([])
 known_snps         = params.known_snps         ? Channel.fromPath(params.known_snps).collect()        : Channel.value([])
-known_snps         = params.known_snps         ? Channel.fromPath(params.known_snps).collect()        : Channel.value([])
 mappability        = params.mappability        ? Channel.fromPath(params.mappability).collect()       : Channel.value([])
 pon                = params.pon                ? Channel.fromPath(params.pon).collect()               : Channel.value([]) // PON is optional for Mutect2 (but highly recommended)
 

@@ -1,9 +1,8 @@
-name: nf-core CI
+name: pytest-workflow-release
 # This workflow runs the pipeline with the minimal test dataset to check that it completes without any syntax errors
 on:
   push:
-    branches: [dev]
-  pull_request:
+    branches: [master]
   release:
     types: [published]
 
@@ -13,22 +12,57 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  test:
-    name: Run pipeline with test data
-    # Only run on push if this is the nf-core dev branch (merged PRs)
-    if: "${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/sarek') }}"
+  changes:
+    name: Check for changes
     runs-on: ubuntu-latest
+    outputs:
+      # Expose matched filters as job 'tags' output variable
+      tags: ${{ steps.filter.outputs.changes }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: "tests/config/tags.yml"
+
+  test:
+    name: ${{ matrix.tags }} ${{ matrix.profile }} NF ${{ matrix.NXF_VER }}
+    runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.tags != '[]'
     strategy:
-      # HACK Remove after DSL2 rewrite is done
       fail-fast: false
       matrix:
+        tags: ["${{ fromJson(needs.changes.outputs.tags) }}"]
+        profile: ["docker", "singularity", "conda"]
+        TEST_DATA_BASE:
+          - "test-datasets/data"
         NXF_VER:
           - "23.04.0"
           - "latest-everything"
-        test:
-          - "default"
-        profile: ["docker"]
-        # profile: ["docker", "singularity", "conda"]
+        exclude:
+          - profile: "conda"
+            tags: concatenate_vcfs
+          - profile: "conda"
+            tags: deepvariant
+          - profile: "conda"
+            tags: haplotypecaller
+          - profile: "conda"
+            tags: merge
+          - profile: "conda"
+            tags: snpeff
+          - profile: "conda"
+            tags: umi
+          - profile: "conda"
+            tags: validation_checks
+          - profile: "conda"
+            tags: vep
+          - profile: "singularity"
+            tags: concatenate_vcfs
+          - profile: "singularity"
+            tags: merge
+          - profile: "singularity"
+            tags: validation_checks
     env:
       NXF_ANSI_LOG: false
       TEST_DATA_BASE: "${{ github.workspace }}/test-datasets"
@@ -110,10 +144,10 @@ jobs:
         if: matrix.profile == 'conda'
         run: conda clean -a
 
-      - name: Run pipeline with tests settings
+      - name: Run pytest-workflow
         uses: Wandalen/wretry.action@v1.0.11
         with:
-          command: TMPDIR=~ PROFILE=${{ matrix.profile }} pytest --tag ${{ matrix.test }} --symlink --kwdof --git-aware --color=yes
+          command: TMPDIR=~ PROFILE=${{ matrix.profile }} pytest --tag ${{ matrix.tags }} --symlink --kwdof --git-aware --color=yes
           attempt_limit: 3
 
       - name: Output log on failure
