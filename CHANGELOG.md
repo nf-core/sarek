@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Vuoinesluobbalah is a lake close to Bierikjávrre.
 
+### Added
+
+- [#1106](https://github.com/nf-core/sarek/pull/1106) - Add Slack integration to Megatests
+
 ### Changed
 
 - [#1087](https://github.com/nf-core/sarek/pull/1087) - Back to dev
