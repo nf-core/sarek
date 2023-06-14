@@ -31,7 +31,6 @@ Vuoinesluobbalah is a lake close to Bierikjávrre.
 - [#1101](https://github.com/nf-core/sarek/pull/1101) - Fix GATK4 version for GATK4 MarkduplicatesSpark [#1068](https://github.com/nf-core/sarek/issues/1068)
 - [#1105](https://github.com/nf-core/sarek/pull/1105) - Remove `params.tracedir`
 
-
 ## [3.2.1](https://github.com/nf-core/sarek/releases/tag/3.2.1) - Pierikjaure
 
 Pierikjaure is a previous spelling of Bierikjávrre.
