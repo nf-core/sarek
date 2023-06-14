@@ -12,6 +12,7 @@ Vuoinesluobbalah is a lake close to Bierikjávrre.
 ### Added
 
 - [#1106](https://github.com/nf-core/sarek/pull/1106) - Add Slack integration to Megatests
+- [#1107](https://github.com/nf-core/sarek/pull/1107) - Add `singularity.registry` to `public_aws_ecr`
 
 ### Changed
 
