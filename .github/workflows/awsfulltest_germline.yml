@@ -23,6 +23,7 @@ jobs:
           workdir: s3://${{ secrets.AWS_S3_BUCKET }}/work/sarek/work-${{ github.sha }}/germline_test
           parameters: |
             {
+              "hook_url": "${{ secrets.MEGATESTS_ALERTS_SLACK_HOOK_URL }}",
               "outdir": "s3://${{ secrets.AWS_S3_BUCKET }}/sarek/results-${{ github.sha }}/germline_test"
             }
           profiles: test_full_germline,public_aws_ecr
