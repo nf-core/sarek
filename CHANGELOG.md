@@ -31,6 +31,7 @@ Vuoinesluobbalah is a lake close to Bierikjávrre.
 - [#1101](https://github.com/nf-core/sarek/pull/1101) - Remove duplicate index computation for GATK4 Markduplicates & [#1065](https://github.com/nf-core/sarek/issues/1065)
 - [#1101](https://github.com/nf-core/sarek/pull/1101) - Fix GATK4 version for GATK4 MarkduplicatesSpark [#1068](https://github.com/nf-core/sarek/issues/1068)
 - [#1105](https://github.com/nf-core/sarek/pull/1105) - Remove `params.tracedir`
+- [#1108](https://github.com/nf-core/sarek/pull/1108) - Refactor bad prefix definition for vcf files [#938](https://github.com/nf-core/sarek/issues/938)
 
 ## [3.2.1](https://github.com/nf-core/sarek/releases/tag/3.2.1) - Pierikjaure
 
