@@ -1,4 +1,4 @@
-- name: Run default pipeline
+- name: Run public_aws_ecr pipeline
   command: nextflow run main.nf -profile test,public_aws_ecr --outdir results
   tags:
     - default
