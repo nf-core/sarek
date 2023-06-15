@@ -1,7 +1,7 @@
-include { CAT_CAT as CAT_MPILEUP         } from '../../../modules/nf-core/cat/cat/main'
-include { BCFTOOLS_MPILEUP               } from '../../../modules/nf-core/bcftools/mpileup/main'
-include { SAMTOOLS_MPILEUP               } from '../../../modules/nf-core/samtools/mpileup/main'
-include { GATK4_MERGEVCFS                } from '../../../modules/nf-core/gatk4/mergevcfs/main'
+include { CAT_CAT as CAT_MPILEUP                    } from '../../../modules/nf-core/cat/cat/main'
+include { BCFTOOLS_MPILEUP                          } from '../../../modules/nf-core/bcftools/mpileup/main'
+include { SAMTOOLS_MPILEUP                          } from '../../../modules/nf-core/samtools/mpileup/main'
+include { GATK4_MERGEVCFS as MERGE_BCFTOOLS_MPILEUP } from '../../../modules/nf-core/gatk4/mergevcfs/main'
 
 
 workflow BAM_VARIANT_CALLING_MPILEUP {
@@ -44,20 +44,20 @@ workflow BAM_VARIANT_CALLING_MPILEUP {
 
     // Merge VCF
     vcf_to_merge = vcf_mpileup.intervals.map{ meta, vcf -> [ groupKey(meta, meta.num_intervals), vcf ] }.groupTuple()
-    GATK4_MERGEVCFS(vcf_to_merge, dict)
+    MERGE_BCFTOOLS_MPILEUP(vcf_to_merge, dict)
 
     // Mix intervals and no_intervals channels together
     mpileup = CAT_MPILEUP.out.file_out.mix(mpileup_samtools.no_intervals)
         // add variantcaller to meta map and remove no longer necessary field: num_intervals
-        .map{ meta, mpileup -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'mpileup' ], mpileup ] }
-    vcf = GATK4_MERGEVCFS.out.vcf.mix(vcf_mpileup.no_intervals)
+        .map{ meta, mpileup -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'samtools' ], mpileup ] }
+    vcf = MERGE_BCFTOOLS_MPILEUP.out.vcf.mix(vcf_mpileup.no_intervals)
         // add variantcaller to meta map and remove no longer necessary field: num_intervals
-        .map{ meta, vcf -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'mpileup' ], vcf ] }
+        .map{ meta, vcf -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'bcftools' ], vcf ] }
 
     versions = versions.mix(SAMTOOLS_MPILEUP.out.versions)
     versions = versions.mix(BCFTOOLS_MPILEUP.out.versions)
     versions = versions.mix(CAT_MPILEUP.out.versions)
-    versions = versions.mix(GATK4_MERGEVCFS.out.versions)
+    versions = versions.mix(MERGE_BCFTOOLS_MPILEUP.out.versions)
 
     emit:
     mpileup
