@@ -6,9 +6,9 @@
   files:
     - path: results/multiqc
     - path: results/variant_calling/bcftools/sample2/sample2.bcftools.vcf.gz
-      md5sum: 07c3eb437131bfa5ec036e7da039ad2f
+    # binary changes md5sums on reruns
     - path: results/variant_calling/bcftools/sample2/sample2.bcftools.vcf.gz.tbi
-      md5sum: d828e532551df740c98e9b1c0582cf31
+    # binary changes md5sums on reruns
     - path: results/variant_calling/mpileup/sample2/sample2.tumor.mpileup.gz
       should_exist: false
     - path: results/mpileup
