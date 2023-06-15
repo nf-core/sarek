@@ -305,6 +305,36 @@ test,sample4_vs_sample3,manta,sample4_vs_sample3.diploid_sv.vcf.gz
 test,sample4_vs_sample3,manta,sample4_vs_sample3.somatic_sv.vcf.gz
 ```
 
+## Sentieon
+[Sentieon](https://www.sentieon.com/) is a commercial solution to process genomics data with high computing efficiency, fast turnaround time, exceptional high accuracy, and 100% consistency.
+
+In particular, Sentieon contains what may be view as speedup version of some standard GATK tools, like bwamem and haplotyper. Sarek now contains support for some of modules of functionality from Sentieon. In order to use the Sentieon modules of Sarek, the user will need to supply the Sarek pipeline with a license for Sentieon.
+
+### Setup of Sentieon license for Sarek
+
+Sentieon supply license in the form of a string-value (a url) or a file. It should be base64-encoded and stored in a nextflow secret named `SENTIEON_LICENSE_BASE64`. If a license string (url) is supplied, then the nextflow secret should be set like this:
+
+```bash
+nextflow secret set SENTIEON_LICENSE_BASE64 $(echo -n <sentieon_license_string> | base64 -w 0)
+```
+If a license file is supplied, then the nextflow secret should be set like this:
+
+```bash
+nextflow secrets set SENTIEON_LICENSE_BASE64 \$(cat <sentieon_license_file.lic> | base64 -w 0)
+```
+### Available Sentieon functions
+Sarek contains the following Sentieon functions [bwa mem](https://support.sentieon.com/manual/usages/general/#bwa-mem-syntax), [LocusCollector](https://support.sentieon.com/manual/usages/general/#locuscollector-algorithm) + [Dedup](https://support.sentieon.com/manual/usages/general/#dedup-algorithm), [Haplotyper](https://support.sentieon.com/manual/usages/general/#haplotyper-algorithm), [GVCFtyper](https://support.sentieon.com/manual/usages/general/#gvcftyper-algorithm) and [VarCal](https://support.sentieon.com/manual/usages/general/#varcal-algorithm), so the basic processing of alignment of fastq-files to vcf-files can be done using speedup Sentieon functions.
+
+### Basic usage of Sentieon functions in Sarek
+
+To use Sentieon's aligner `bwa mem`, set the aligner option `sentieon-bwamem`. (This can, for example, be done by adding `--aligner sentieon-bwamem` to the nextflow run command.)
+
+To use Sentieon's function `Dedup`, specify `sentieon_dedup` as one of the tools. (This can, for example, be done by adding `--tools sentieon_dedup` to the nextflow run command.)
+
+To use Sentieon's function `Haplotyper`, specify `sentieon_haplotyper` as one of the tools. (This can, for example, be done by adding `--tools sentieon_haplotyper` to the nextflow run command.) (In order to skip the GATK-based variant-filer one may add `--skip_tools haplotyper_filter` to the nextflow run command.) Sarek also provides the option `sentieon_haplotyper_emit_mode` which can be used to set the [emit-mode](https://support.sentieon.com/manual/usages/general/#haplotyper-algorithm) of Sentieon's haplotyper. Sentieon's haplotyper can output both a vcf-file and a gvcf-file in the same run; this is achieved by setting `sentieon_haplotyper_emit_mode` to `<vcf_emit_mode>,gvcf`, where `<vcf_emit_mode>` is `variant`, `confident` or `all`.
+
+To use Sentieon's function `GVCFtyper` along with Sention's version of VQSR (`VarCal` and `ApplyVarCal`) for joint-germline genotyping, specify `sentieon_haplotyper` as one of the tools, set the option `sentieon_haplotyper_emit_mode` to `gvcf`, and add the option `joint_germline`. This can, for example, be done by adding `--tools sentieon_haplotyper --joint_germline --sentieon_haplotyper_emit_mode gvcf` to the nextflow run command.)
+
 ## Updating the pipeline
 
 When you run the above command, Nextflow automatically pulls the pipeline code from GitHub and stores it as a cached version. When running the pipeline after this, it will always use the cached version if available - even if the pipeline has been updated since. To make sure that you're running the latest version of the pipeline, make sure that you regularly update the cached version of the pipeline:
@@ -1006,7 +1036,3 @@ ERRORS: Some errors were detected
 Error type      Number of errors
 ERROR_CHROMOSOME_NOT_FOUND      17522411
 ```
-
-## How to set up sarek to use sentieon
-
-Sarek is currently not supporting sentieon. It is planned for the upcoming release 3.3. In the meantime, please revert to the last release 2.7.2.
