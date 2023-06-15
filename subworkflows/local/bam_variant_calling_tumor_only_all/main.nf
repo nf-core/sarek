@@ -41,7 +41,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     //TODO: Temporary until the if's can be removed and printing to terminal is prevented with "when" in the modules.config
     vcf_freebayes   = Channel.empty()
     vcf_manta       = Channel.empty()
-    vcf_mpileup         = Channel.empty()
+    vcf_mpileup     = Channel.empty()
     vcf_mutect2     = Channel.empty()
     vcf_strelka     = Channel.empty()
     vcf_tiddit      = Channel.empty()
