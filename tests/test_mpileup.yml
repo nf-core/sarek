@@ -69,5 +69,6 @@
     - path: results/variant_calling/bcftools/sample1/sample1.bcftools.vcf.gz.tbi
       md5sum: 277b1f3c0f32e80ed736d0d927c94a62
     - path: results/variant_calling/mpileup/
+      should_exist: false
     - path: results/mpileup
       should_exist: false
