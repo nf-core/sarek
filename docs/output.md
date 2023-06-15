@@ -279,7 +279,7 @@ If some results from a variant caller do not appear here, please check out the `
 
 For single nucleotide variants (SNVs) and small indels, multiple tools are available for normal (germline), tumor-only, and tumor-normal (somatic) paired data. For a list of the appropriate tool(s) for the data and sequencing type at hand, please check [here](usage.md#which-tool).
 
-#### bcftools mpileup
+#### bcftools
 
 [bcftools mpileup](https://samtools.github.io/bcftools/bcftools.html#mpileup) generates pileup of a CRAM file, followed by [bcftools call](https://samtools.github.io/bcftools/bcftools.html#call) and filtered with `-i 'count(GT==\"RR\")==0`.
 For further reading and documentation see the [bcftools manual](https://samtools.github.io/bcftools/howtos/variant-calling.html).
