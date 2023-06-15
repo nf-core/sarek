@@ -60,6 +60,16 @@ validation_checks:
   - tests/test_samplesheet_validation_spaces.yml
   - workflows/**
 
+public_aws_ecr:
+  - conf/modules/**
+  - main.nf
+  - modules/**
+  - nextflow.config
+  - nextflow_schema.json
+  - subworkflows/**
+  - tests/test_default.yml
+  - workflows/**
+
 # preprocessing
 
 ## alignment_to_fastq
