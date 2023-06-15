@@ -1,5 +1,5 @@
 - name: Run variant calling on germline sample with manta
-  command: nextflow run main.nf -profile test,tools_germline --tools manta --outdir results
+  command: nextflow run main.nf -profile test_cache,tools_germline --tools manta --outdir results
   tags:
     - germline
     - manta
@@ -23,7 +23,7 @@
     - path: results/manta
       should_exist: false
 - name: Run variant calling on germline sample with manta without intervals
-  command: nextflow run main.nf -profile test,tools_germline --tools manta --no_intervals --outdir results
+  command: nextflow run main.nf -profile test_cache,tools_germline --tools manta --no_intervals --outdir results
   tags:
     - germline
     - manta
@@ -54,7 +54,7 @@
     - path: results/manta
       should_exist: false
 - name: Run variant calling on tumor_only sample with manta
-  command: nextflow run main.nf -profile test,tools_tumoronly --tools manta --outdir results
+  command: nextflow run main.nf -profile test_cache,tools_tumoronly --tools manta --outdir results
   tags:
     - manta
     - tumor_only
@@ -78,7 +78,7 @@
     - path: results/manta
       should_exist: false
 - name: Run variant calling on tumor_only sample with manta without intervals
-  command: nextflow run main.nf -profile test,tools_tumoronly --tools manta --no_intervals --outdir results
+  command: nextflow run main.nf -profile test_cache,tools_tumoronly --tools manta --no_intervals --outdir results
   tags:
     - manta
     - no_intervals
@@ -109,7 +109,7 @@
     - path: results/manta
       should_exist: false
 - name: Run variant calling on somatic sample with manta
-  command: nextflow run main.nf -profile test,tools_somatic --tools manta --outdir results
+  command: nextflow run main.nf -profile test_cache,tools_somatic --tools manta --outdir results
   tags:
     - manta
     - somatic
@@ -157,7 +157,7 @@
     - path: results/manta
       should_exist: false
 - name: Run variant calling on somatic sample with manta without intervals
-  command: nextflow run main.nf -profile test,tools_somatic --tools manta --no_intervals --outdir results
+  command: nextflow run main.nf -profile test_cache,tools_somatic --tools manta --no_intervals --outdir results
   tags:
     - manta
     - no_intervals

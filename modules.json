@@ -198,7 +198,7 @@
                     },
                     "gatk4/createsequencedictionary": {
                         "branch": "master",
-                        "git_sha": "2df2a11d5b12f2a73bca74f103691bc35d83c5fd",
+                        "git_sha": "541811d779026c5d395925895fa5ed35e7216cc0",
                         "installed_by": ["modules"]
                     },
                     "gatk4/estimatelibrarycomplexity": {
@@ -213,7 +213,7 @@
                     },
                     "gatk4/filtervarianttranches": {
                         "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "git_sha": "541811d779026c5d395925895fa5ed35e7216cc0",
                         "installed_by": ["modules"]
                     },
                     "gatk4/gatherbqsrreports": {
@@ -258,12 +258,12 @@
                     },
                     "gatk4/markduplicates": {
                         "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "git_sha": "0a261469640941da2488e1a5aa023b64db837c70",
                         "installed_by": ["modules"]
                     },
                     "gatk4/markduplicatesspark": {
                         "branch": "master",
-                        "git_sha": "4b7d4863a5883b76e6bff13b6e52468fab090c5b",
+                        "git_sha": "0a261469640941da2488e1a5aa023b64db837c70",
                         "installed_by": ["modules"]
                     },
                     "gatk4/mergemutectstats": {

@@ -1,8 +1,6 @@
 include { GATK4_MERGEVCFS as MERGE_DEEPVARIANT_GVCF } from '../../../modules/nf-core/gatk4/mergevcfs/main'
 include { GATK4_MERGEVCFS as MERGE_DEEPVARIANT_VCF  } from '../../../modules/nf-core/gatk4/mergevcfs/main'
 include { DEEPVARIANT                               } from '../../../modules/nf-core/deepvariant/main'
-include { TABIX_TABIX as TABIX_VC_DEEPVARIANT_GVCF  } from '../../../modules/nf-core/tabix/tabix/main'
-include { TABIX_TABIX as TABIX_VC_DEEPVARIANT_VCF   } from '../../../modules/nf-core/tabix/tabix/main'
 
 // Deepvariant: https://github.com/google/deepvariant/issues/510
 workflow BAM_VARIANT_CALLING_DEEPVARIANT {
@@ -44,10 +42,6 @@ workflow BAM_VARIANT_CALLING_DEEPVARIANT {
     MERGE_DEEPVARIANT_GVCF(gvcf_to_merge, dict)
     MERGE_DEEPVARIANT_VCF(vcf_to_merge, dict)
 
-    // Only when no_intervals
-    TABIX_VC_DEEPVARIANT_GVCF(gvcf_out.no_intervals)
-    TABIX_VC_DEEPVARIANT_VCF(vcf_out.no_intervals)
-
     // Mix intervals and no_intervals channels together
     gvcf = Channel.empty().mix(MERGE_DEEPVARIANT_GVCF.out.vcf, gvcf_out.no_intervals)
         // add variantcaller to meta map and remove no longer necessary field: num_intervals
@@ -61,8 +55,6 @@ workflow BAM_VARIANT_CALLING_DEEPVARIANT {
     versions = versions.mix(DEEPVARIANT.out.versions)
     versions = versions.mix(MERGE_DEEPVARIANT_GVCF.out.versions)
     versions = versions.mix(MERGE_DEEPVARIANT_VCF.out.versions)
-    versions = versions.mix(TABIX_VC_DEEPVARIANT_GVCF.out.versions)
-    versions = versions.mix(TABIX_VC_DEEPVARIANT_VCF.out.versions)
 
     emit:
     gvcf

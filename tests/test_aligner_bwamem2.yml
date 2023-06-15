@@ -1,5 +1,5 @@
 - name: Run bwamem2
-  command: nextflow run main.nf -profile test --aligner bwa-mem2 --save_reference --outdir results
+  command: nextflow run main.nf -profile test_cache --aligner bwa-mem2 --save_reference --outdir results
   tags:
     - aligner
     - bwamem2
@@ -74,7 +74,7 @@
     - path: results/reports/samtools/test/test.recal.cram.stats
     # conda changes md5sums for test
 - name: Build only index with bwa-mem2
-  command: nextflow run main.nf -profile test --build_only_index --aligner bwa-mem2 --input=false --outdir results
+  command: nextflow run main.nf -profile test_cache --build_only_index --aligner bwa-mem2 --input=false --outdir results
   tags:
     - aligner
     - build_only_index
