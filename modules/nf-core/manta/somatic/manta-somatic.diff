@@ -1,0 +1,14 @@
+Changes in module 'nf-core/manta/somatic'
+--- modules/nf-core/manta/somatic/main.nf
++++ modules/nf-core/manta/somatic/main.nf
+@@ -6,6 +6,8 @@
+     conda "bioconda::manta=1.6.0"
+     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+         'https://depot.galaxyproject.org/singularity/manta:1.6.0--h9ee0642_1' :
++        task.ext.container_full_uri ?
++        'quay.io/biocontainers/manta:1.6.0--h9ee0642_1' :
+         'biocontainers/manta:1.6.0--h9ee0642_1' }"
+ 
+     input:
+
+************************************************************

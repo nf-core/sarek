@@ -8,423 +8,678 @@
                     "ascat": {
                         "branch": "master",
                         "git_sha": "603ecbd9f45300c9788f197d2a15a005685b4220",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/ascat/ascat.diff"
                     },
                     "bcftools/concat": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/bcftools/concat/bcftools-concat.diff"
                     },
                     "bcftools/mpileup": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/bcftools/mpileup/bcftools-mpileup.diff"
                     },
                     "bcftools/sort": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/bcftools/sort/bcftools-sort.diff"
                     },
                     "bcftools/stats": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/bcftools/stats/bcftools-stats.diff"
                     },
                     "bwa/index": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/bwa/index/bwa-index.diff"
                     },
                     "bwa/mem": {
                         "branch": "master",
                         "git_sha": "603ecbd9f45300c9788f197d2a15a005685b4220",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/bwa/mem/bwa-mem.diff"
                     },
                     "bwamem2/index": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/bwamem2/index/bwamem2-index.diff"
                     },
                     "bwamem2/mem": {
                         "branch": "master",
                         "git_sha": "0460d316170f75f323111b4a2c0a2989f0c32013",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/bwamem2/mem/bwamem2-mem.diff"
                     },
                     "cat/cat": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/cat/cat/cat-cat.diff"
                     },
                     "cat/fastq": {
                         "branch": "master",
                         "git_sha": "5c460c5a4736974abde2843294f35307ee2b0e5e",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/cat/fastq/cat-fastq.diff"
                     },
                     "cnvkit/antitarget": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/cnvkit/antitarget/cnvkit-antitarget.diff"
                     },
                     "cnvkit/batch": {
                         "branch": "master",
                         "git_sha": "603ecbd9f45300c9788f197d2a15a005685b4220",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/cnvkit/batch/cnvkit-batch.diff"
                     },
                     "cnvkit/reference": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/cnvkit/reference/cnvkit-reference.diff"
                     },
                     "controlfreec/assesssignificance": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/controlfreec/assesssignificance/controlfreec-assesssignificance.diff"
                     },
                     "controlfreec/freec": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/controlfreec/freec/controlfreec-freec.diff"
                     },
                     "controlfreec/freec2bed": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/controlfreec/freec2bed/controlfreec-freec2bed.diff"
                     },
                     "controlfreec/freec2circos": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/controlfreec/freec2circos/controlfreec-freec2circos.diff"
                     },
                     "controlfreec/makegraph": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/controlfreec/makegraph/controlfreec-makegraph.diff"
                     },
                     "custom/dumpsoftwareversions": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/custom/dumpsoftwareversions/custom-dumpsoftwareversions.diff"
                     },
                     "deepvariant": {
                         "branch": "master",
                         "git_sha": "4b7d4863a5883b76e6bff13b6e52468fab090c5b",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/deepvariant/deepvariant.diff"
                     },
                     "dragmap/align": {
                         "branch": "master",
                         "git_sha": "603ecbd9f45300c9788f197d2a15a005685b4220",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/dragmap/align/dragmap-align.diff"
                     },
                     "dragmap/hashtable": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"],
+                        "installed_by": [
+                            "modules"
+                        ],
                         "patch": "modules/nf-core/dragmap/hashtable/dragmap-hashtable.diff"
                     },
                     "ensemblvep/download": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/ensemblvep/download/ensemblvep-download.diff"
                     },
                     "ensemblvep/vep": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["vcf_annotate_ensemblvep", "modules"]
+                        "installed_by": [
+                            "vcf_annotate_ensemblvep",
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/ensemblvep/vep/ensemblvep-vep.diff"
                     },
                     "fastp": {
                         "branch": "master",
                         "git_sha": "d497a4868ace3302016ea8ed4b395072d5e833cd",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/fastp/fastp.diff"
                     },
                     "fastqc": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/fastqc/fastqc.diff"
                     },
                     "fgbio/callmolecularconsensusreads": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/fgbio/callmolecularconsensusreads/fgbio-callmolecularconsensusreads.diff"
                     },
                     "fgbio/fastqtobam": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/fgbio/fastqtobam/fgbio-fastqtobam.diff"
                     },
                     "fgbio/groupreadsbyumi": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/fgbio/groupreadsbyumi/fgbio-groupreadsbyumi.diff"
                     },
                     "freebayes": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/freebayes/freebayes.diff"
                     },
                     "gatk4/applybqsr": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/gatk4/applybqsr/gatk4-applybqsr.diff"
                     },
                     "gatk4/applybqsrspark": {
                         "branch": "master",
                         "git_sha": "4b7d4863a5883b76e6bff13b6e52468fab090c5b",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/gatk4/applybqsrspark/gatk4-applybqsrspark.diff"
                     },
                     "gatk4/applyvqsr": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/gatk4/applyvqsr/gatk4-applyvqsr.diff"
                     },
                     "gatk4/baserecalibrator": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/gatk4/baserecalibrator/gatk4-baserecalibrator.diff"
                     },
                     "gatk4/baserecalibratorspark": {
                         "branch": "master",
                         "git_sha": "4b7d4863a5883b76e6bff13b6e52468fab090c5b",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/gatk4/baserecalibratorspark/gatk4-baserecalibratorspark.diff"
                     },
                     "gatk4/calculatecontamination": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/gatk4/calculatecontamination/gatk4-calculatecontamination.diff"
                     },
                     "gatk4/cnnscorevariants": {
                         "branch": "master",
                         "git_sha": "4b7d4863a5883b76e6bff13b6e52468fab090c5b",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/gatk4/cnnscorevariants/gatk4-cnnscorevariants.diff"
                     },
                     "gatk4/createsequencedictionary": {
                         "branch": "master",
                         "git_sha": "541811d779026c5d395925895fa5ed35e7216cc0",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/gatk4/createsequencedictionary/gatk4-createsequencedictionary.diff"
                     },
                     "gatk4/estimatelibrarycomplexity": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/gatk4/estimatelibrarycomplexity/gatk4-estimatelibrarycomplexity.diff"
                     },
                     "gatk4/filtermutectcalls": {
                         "branch": "master",
                         "git_sha": "2df2a11d5b12f2a73bca74f103691bc35d83c5fd",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/gatk4/filtermutectcalls/gatk4-filtermutectcalls.diff"
                     },
                     "gatk4/filtervarianttranches": {
                         "branch": "master",
                         "git_sha": "541811d779026c5d395925895fa5ed35e7216cc0",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/gatk4/filtervarianttranches/gatk4-filtervarianttranches.diff"
                     },
                     "gatk4/gatherbqsrreports": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/gatk4/gatherbqsrreports/gatk4-gatherbqsrreports.diff"
                     },
                     "gatk4/gatherpileupsummaries": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/gatk4/gatherpileupsummaries/gatk4-gatherpileupsummaries.diff"
                     },
                     "gatk4/genomicsdbimport": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/gatk4/genomicsdbimport/gatk4-genomicsdbimport.diff"
                     },
                     "gatk4/genotypegvcfs": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/gatk4/genotypegvcfs/gatk4-genotypegvcfs.diff"
                     },
                     "gatk4/getpileupsummaries": {
                         "branch": "master",
                         "git_sha": "2df2a11d5b12f2a73bca74f103691bc35d83c5fd",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/gatk4/getpileupsummaries/gatk4-getpileupsummaries.diff"
                     },
                     "gatk4/haplotypecaller": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/gatk4/haplotypecaller/gatk4-haplotypecaller.diff"
                     },
                     "gatk4/intervallisttobed": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/gatk4/intervallisttobed/gatk4-intervallisttobed.diff"
                     },
                     "gatk4/learnreadorientationmodel": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/gatk4/learnreadorientationmodel/gatk4-learnreadorientationmodel.diff"
                     },
                     "gatk4/markduplicates": {
                         "branch": "master",
                         "git_sha": "0a261469640941da2488e1a5aa023b64db837c70",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/gatk4/markduplicates/gatk4-markduplicates.diff"
                     },
                     "gatk4/markduplicatesspark": {
                         "branch": "master",
                         "git_sha": "0a261469640941da2488e1a5aa023b64db837c70",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/gatk4/markduplicatesspark/gatk4-markduplicatesspark.diff"
                     },
                     "gatk4/mergemutectstats": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/gatk4/mergemutectstats/gatk4-mergemutectstats.diff"
                     },
                     "gatk4/mergevcfs": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/gatk4/mergevcfs/gatk4-mergevcfs.diff"
                     },
                     "gatk4/mutect2": {
                         "branch": "master",
                         "git_sha": "2df2a11d5b12f2a73bca74f103691bc35d83c5fd",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/gatk4/mutect2/gatk4-mutect2.diff"
                     },
                     "gatk4/variantrecalibrator": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/gatk4/variantrecalibrator/gatk4-variantrecalibrator.diff"
                     },
                     "manta/germline": {
                         "branch": "master",
                         "git_sha": "80dbd95c558a0ebb2123d95f50c093a7f714a0d7",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/manta/germline/manta-germline.diff"
                     },
                     "manta/somatic": {
                         "branch": "master",
                         "git_sha": "80dbd95c558a0ebb2123d95f50c093a7f714a0d7",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/manta/somatic/manta-somatic.diff"
                     },
                     "manta/tumoronly": {
                         "branch": "master",
                         "git_sha": "80dbd95c558a0ebb2123d95f50c093a7f714a0d7",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/manta/tumoronly/manta-tumoronly.diff"
                     },
                     "mosdepth": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/mosdepth/mosdepth.diff"
                     },
                     "msisensorpro/msi_somatic": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/msisensorpro/msi_somatic/msisensorpro-msi_somatic.diff"
                     },
                     "msisensorpro/scan": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/msisensorpro/scan/msisensorpro-scan.diff"
                     },
                     "multiqc": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/multiqc/multiqc.diff"
                     },
                     "samblaster": {
                         "branch": "master",
                         "git_sha": "603ecbd9f45300c9788f197d2a15a005685b4220",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/samblaster/samblaster.diff"
                     },
                     "samtools/bam2fq": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/samtools/bam2fq/samtools-bam2fq.diff"
                     },
                     "samtools/collatefastq": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/samtools/collatefastq/samtools-collatefastq.diff"
                     },
                     "samtools/convert": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/samtools/convert/samtools-convert.diff"
                     },
                     "samtools/faidx": {
                         "branch": "master",
                         "git_sha": "fd742419940e01ba1c5ecb172c3e32ec840662fe",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/samtools/faidx/samtools-faidx.diff"
                     },
                     "samtools/index": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/samtools/index/samtools-index.diff"
                     },
                     "samtools/merge": {
                         "branch": "master",
                         "git_sha": "0460d316170f75f323111b4a2c0a2989f0c32013",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/samtools/merge/samtools-merge.diff"
                     },
                     "samtools/mpileup": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/samtools/mpileup/samtools-mpileup.diff"
                     },
                     "samtools/stats": {
                         "branch": "master",
                         "git_sha": "735e1e04e7e01751d2d6e97055bbdb6f70683cc1",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/samtools/stats/samtools-stats.diff"
                     },
                     "samtools/view": {
                         "branch": "master",
                         "git_sha": "3ffae3598260a99e8db3207dead9f73f87f90d1f",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/samtools/view/samtools-view.diff"
                     },
                     "snpeff/download": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/snpeff/download/snpeff-download.diff"
                     },
                     "snpeff/snpeff": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["vcf_annotate_snpeff", "modules"]
+                        "installed_by": [
+                            "vcf_annotate_snpeff",
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/snpeff/snpeff/snpeff-snpeff.diff"
                     },
                     "strelka/germline": {
                         "branch": "master",
                         "git_sha": "80dbd95c558a0ebb2123d95f50c093a7f714a0d7",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/strelka/germline/strelka-germline.diff"
                     },
                     "strelka/somatic": {
                         "branch": "master",
                         "git_sha": "80dbd95c558a0ebb2123d95f50c093a7f714a0d7",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/strelka/somatic/strelka-somatic.diff"
                     },
                     "svdb/merge": {
                         "branch": "master",
                         "git_sha": "603ecbd9f45300c9788f197d2a15a005685b4220",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/svdb/merge/svdb-merge.diff"
                     },
                     "tabix/bgziptabix": {
                         "branch": "master",
                         "git_sha": "591b71642820933dcb3c954c934b397bd00d8e5e",
-                        "installed_by": ["vcf_annotate_snpeff", "modules"]
+                        "installed_by": [
+                            "vcf_annotate_snpeff",
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/tabix/bgziptabix/tabix-bgziptabix.diff"
                     },
                     "tabix/tabix": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["vcf_annotate_ensemblvep", "modules"]
+                        "installed_by": [
+                            "vcf_annotate_ensemblvep",
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/tabix/tabix/tabix-tabix.diff"
                     },
                     "tiddit/sv": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/tiddit/sv/tiddit-sv.diff"
                     },
                     "untar": {
                         "branch": "master",
                         "git_sha": "5c460c5a4736974abde2843294f35307ee2b0e5e",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/untar/untar.diff"
                     },
                     "unzip": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/unzip/unzip.diff"
                     },
                     "vcftools": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": [
+                            "modules"
+                        ],
+                        "patch": "modules/nf-core/vcftools/vcftools.diff"
                     }
                 }
             },
@@ -433,12 +688,16 @@
                     "vcf_annotate_ensemblvep": {
                         "branch": "master",
                         "git_sha": "a9784afdd5dcda23b84e64db75dc591065d64653",
-                        "installed_by": ["subworkflows"]
+                        "installed_by": [
+                            "subworkflows"
+                        ]
                     },
                     "vcf_annotate_snpeff": {
                         "branch": "master",
                         "git_sha": "a9784afdd5dcda23b84e64db75dc591065d64653",
-                        "installed_by": ["subworkflows"]
+                        "installed_by": [
+                            "subworkflows"
+                        ]
                     }
                 }
             }

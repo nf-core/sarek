@@ -1,0 +1,14 @@
+Changes in module 'nf-core/snpeff/download'
+--- modules/nf-core/snpeff/download/main.nf
++++ modules/nf-core/snpeff/download/main.nf
+@@ -5,6 +5,8 @@
+     conda "bioconda::snpeff=5.1"
+     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+         'https://depot.galaxyproject.org/singularity/snpeff:5.1--hdfd78af_2' :
++        task.ext.container_full_uri ?
++        'quay.io/biocontainers/snpeff:5.1--hdfd78af_2' :
+         'biocontainers/snpeff:5.1--hdfd78af_2' }"
+ 
+     input:
+
+************************************************************

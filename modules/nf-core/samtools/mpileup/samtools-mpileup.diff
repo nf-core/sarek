@@ -1,0 +1,16 @@
+Changes in module 'nf-core/samtools/mpileup'
+--- modules/nf-core/samtools/mpileup/main.nf
++++ modules/nf-core/samtools/mpileup/main.nf
+@@ -5,7 +5,10 @@
+     conda "bioconda::samtools=1.17"
+     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+         'https://depot.galaxyproject.org/singularity/samtools:1.17--h00cdaf9_0' :
++        task.ext.container_full_uri ?
++        'quay.io/biocontainers/samtools:1.17--h00cdaf9_0' :
+         'biocontainers/samtools:1.17--h00cdaf9_0' }"
++
+     input:
+     tuple val(meta), path(input), path(intervals)
+     path  fasta
+
+************************************************************

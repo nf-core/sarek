@@ -1,0 +1,14 @@
+Changes in module 'nf-core/ensemblvep/vep'
+--- modules/nf-core/ensemblvep/vep/main.nf
++++ modules/nf-core/ensemblvep/vep/main.nf
+@@ -5,6 +5,8 @@
+     conda "bioconda::ensembl-vep=108.2"
+     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+         'https://depot.galaxyproject.org/singularity/ensembl-vep:108.2--pl5321h4a94de4_0' :
++        task.ext.container_full_uri ?
++        'quay.io/biocontainers/ensembl-vep:108.2--pl5321h4a94de4_0' :
+         'biocontainers/ensembl-vep:108.2--pl5321h4a94de4_0' }"
+ 
+     input:
+
+************************************************************

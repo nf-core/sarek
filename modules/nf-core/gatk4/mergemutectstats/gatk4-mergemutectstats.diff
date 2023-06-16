@@ -1,0 +1,14 @@
+Changes in module 'nf-core/gatk4/mergemutectstats'
+--- modules/nf-core/gatk4/mergemutectstats/main.nf
++++ modules/nf-core/gatk4/mergemutectstats/main.nf
+@@ -5,6 +5,8 @@
+     conda "bioconda::gatk4=4.4.0.0"
+     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+         'https://depot.galaxyproject.org/singularity/gatk4:4.4.0.0--py36hdfd78af_0':
++        task.ext.container_full_uri ?
++        'quay.io/biocontainers/gatk4:4.4.0.0--py36hdfd78af_0' :
+         'biocontainers/gatk4:4.4.0.0--py36hdfd78af_0' }"
+ 
+     input:
+
+************************************************************

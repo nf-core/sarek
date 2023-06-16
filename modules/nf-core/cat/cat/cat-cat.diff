@@ -1,0 +1,14 @@
+Changes in module 'nf-core/cat/cat'
+--- modules/nf-core/cat/cat/main.nf
++++ modules/nf-core/cat/cat/main.nf
+@@ -5,6 +5,8 @@
+     conda "conda-forge::pigz=2.3.4"
+     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+         'https://depot.galaxyproject.org/singularity/pigz:2.3.4' :
++        task.ext.container_full_uri ?
++        'quay.io/biocontainers/pigz:2.3.4' :
+         'biocontainers/pigz:2.3.4' }"
+ 
+     input:
+
+************************************************************

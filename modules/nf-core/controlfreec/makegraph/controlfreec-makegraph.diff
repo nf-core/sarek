@@ -1,0 +1,14 @@
+Changes in module 'nf-core/controlfreec/makegraph'
+--- modules/nf-core/controlfreec/makegraph/main.nf
++++ modules/nf-core/controlfreec/makegraph/main.nf
+@@ -5,6 +5,8 @@
+     conda "bioconda::control-freec=11.6"
+     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+         'https://depot.galaxyproject.org/singularity/control-freec:11.6--h1b792b2_1':
++        task.ext.container_full_uri ?
++        'quay.io/biocontainers/control-freec:11.6--h1b792b2_1' :
+         'biocontainers/control-freec:11.6--h1b792b2_1' }"
+ 
+     input:
+
+************************************************************
