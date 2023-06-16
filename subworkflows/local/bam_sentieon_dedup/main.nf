@@ -5,10 +5,8 @@
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
 include { CRAM_QC_MOSDEPTH_SAMTOOLS              } from '../cram_qc_mosdepth_samtools/main'
-include { GATK4_MARKDUPLICATES                   } from '../../../modules/nf-core/gatk4/markduplicates/main'
 include { SENTIEON_DEDUP                         } from '../../../modules/nf-core/sentieon/dedup/main'
 include { SAMTOOLS_INDEX as INDEX_INPUT          } from '../../../modules/nf-core/samtools/index/main'
-include { SAMTOOLS_INDEX as INDEX_MARKDUPLICATES } from '../../../modules/nf-core/samtools/index/main'
 
 workflow BAM_SENTIEON_DEDUP {
     take:
