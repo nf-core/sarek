@@ -5,6 +5,8 @@ process SAMTOOLS_STATS {
     conda "bioconda::samtools=1.17"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/samtools:1.17--h00cdaf9_0' :
+        task.ext.container_full_uri ?
+        'quay.io/biocontainers/samtools:1.17--h00cdaf9_0' :
         'biocontainers/samtools:1.17--h00cdaf9_0' }"
 
     input:

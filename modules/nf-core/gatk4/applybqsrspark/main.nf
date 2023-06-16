@@ -3,7 +3,9 @@ process GATK4_APPLYBQSR_SPARK {
     label 'process_low'
 
     conda "bioconda::gatk4=4.3.0.0 conda-forge::openjdk=8.0.312"
-    container "nf-core/gatk:4.4.0.0"
+    container "${ task.ext.container_full_uri ?
+        'quay.io/nf-core/gatk:4.4.0.0' :
+        'nf-core/gatk:4.4.0.0' }"
 
     input:
     tuple val(meta), path(input), path(input_index), path(bqsr_table), path(intervals)

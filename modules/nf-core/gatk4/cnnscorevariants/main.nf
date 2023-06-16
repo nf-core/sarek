@@ -3,7 +3,10 @@ process GATK4_CNNSCOREVARIANTS {
     label 'process_low'
 
     //Conda is not supported at the moment: https://github.com/broadinstitute/gatk/issues/7811
-    container "nf-core/gatk:4.4.0.0" //Biocontainers is missing a package
+    //Biocontainers is missing a package
+    container "${ task.ext.container_full_uri ?
+        'quay.io/nf-core/gatk:4.4.0.0' :
+        'nf-core/gatk:4.4.0.0' }"
 
     // Exit if running this module with -profile conda / -profile mamba
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {

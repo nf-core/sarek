@@ -5,6 +5,8 @@ process BCFTOOLS_STATS {
     conda "bioconda::bcftools=1.17"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/bcftools:1.17--haef29d1_0':
+        task.ext.container_full_uri ?
+        'quay.io/biocontainers/bcftools:1.17--haef29d1_0' :
         'biocontainers/bcftools:1.17--haef29d1_0' }"
 
     input:

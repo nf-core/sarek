@@ -5,6 +5,8 @@ process MSISENSORPRO_MSI_SOMATIC {
     conda "bioconda::msisensor-pro=1.2.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/msisensor-pro:1.2.0--hfc31af2_0' :
+        task.ext.container_full_uri ?
+        'quay.io/biocontainers/msisensor-pro:1.2.0--hfc31af2_0' :
         'biocontainers/msisensor-pro:1.2.0--hfc31af2_0' }"
 
     input:

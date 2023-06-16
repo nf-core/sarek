@@ -5,6 +5,8 @@ process SAMBLASTER {
     conda "bioconda::samblaster=0.1.26 bioconda::samtools=1.16.1"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/mulled-v2-19fa9f1a5c3966b63a24166365e81da35738c5ab:cee56b506ceb753d4bbef7e05b81e1bfc25d937f-0' :
+        task.ext.container_full_uri ?
+        'quay.io/biocontainers/mulled-v2-19fa9f1a5c3966b63a24166365e81da35738c5ab:cee56b506ceb753d4bbef7e05b81e1bfc25d937f-0' :
         'biocontainers/mulled-v2-19fa9f1a5c3966b63a24166365e81da35738c5ab:cee56b506ceb753d4bbef7e05b81e1bfc25d937f-0' }"
 
     input:

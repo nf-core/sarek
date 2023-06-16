@@ -6,6 +6,8 @@ process STRELKA_SOMATIC {
     conda "bioconda::strelka=2.9.10"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/strelka:2.9.10--h9ee0642_1' :
+        task.ext.container_full_uri ?
+        'quay.io/biocontainers/strelka:2.9.10--h9ee0642_1' :
         'biocontainers/strelka:2.9.10--h9ee0642_1' }"
 
     input:
