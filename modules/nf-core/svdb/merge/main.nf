@@ -2,11 +2,12 @@ process SVDB_MERGE {
     tag "$meta.id"
     label 'process_medium'
     conda "bioconda::svdb=2.8.1 bioconda::samtools=1.16.1"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/mulled-v2-c8daa8f9d69d3c5a1a4ff08283a166c18edb0000:af6f8534cd538a85ff43a2eae1b52b143e7abd05-0':
-        task.ext.container_full_uri ?
-        'quay.io/biocontainers/mulled-v2-c8daa8f9d69d3c5a1a4ff08283a166c18edb0000:af6f8534cd538a85ff43a2eae1b52b143e7abd05-0' :
-        'biocontainers/mulled-v2-c8daa8f9d69d3c5a1a4ff08283a166c18edb0000:af6f8534cd538a85ff43a2eae1b52b143e7abd05-0' }"
+    container { NfcoreTemplate.getContainer(
+        docker: 'biocontainers/mulled-v2-c8daa8f9d69d3c5a1a4ff08283a166c18edb0000:af6f8534cd538a85ff43a2eae1b52b143e7abd05-0',
+        singularity: 'https://depot.galaxyproject.org/singularity/mulled-v2-c8daa8f9d69d3c5a1a4ff08283a166c18edb0000:af6f8534cd538a85ff43a2eae1b52b143e7abd05-0',
+        registry: 'quay.io',
+        use_full_uri: task.ext.container_full_uri ?: false
+    )}
 
     input:
     tuple val(meta), path(vcfs)

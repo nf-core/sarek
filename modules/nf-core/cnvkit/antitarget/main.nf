@@ -3,11 +3,12 @@ process CNVKIT_ANTITARGET {
     label 'process_low'
 
     conda "bioconda::cnvkit=0.9.9 bioconda::samtools=1.16.1"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/cnvkit:0.9.9--pyhdfd78af_0':
-        task.ext.container_full_uri ?
-        'quay.io/cnvkit:0.9.9--pyhdfd78af_0' :
-        'biocontainers/cnvkit:0.9.9--pyhdfd78af_0' }"
+    container { NfcoreTemplate.getContainer(
+        docker: 'biocontainers/cnvkit:0.9.9--pyhdfd78af_0',
+        singularity: 'https://depot.galaxyproject.org/singularity/cnvkit:0.9.9--pyhdfd78af_0',
+        registry: 'quay.io',
+        use_full_uri: task.ext.container_full_uri ?: false
+    )}
 
     input:
     tuple val(meta), path(targets)

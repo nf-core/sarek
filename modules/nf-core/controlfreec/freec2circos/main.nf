@@ -3,11 +3,12 @@ process CONTROLFREEC_FREEC2CIRCOS {
     label 'process_low'
 
     conda "bioconda::control-freec=11.6"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/control-freec:11.6--h1b792b2_1':
-        task.ext.container_full_uri ?
-        'quay.io/biocontainers/control-freec:11.6--h1b792b2_1' :
-        'biocontainers/control-freec:11.6--h1b792b2_1' }"
+    container { NfcoreTemplate.getContainer(
+        docker: 'biocontainers/control-freec:11.6--h1b792b2_1',
+        singularity: 'https://depot.galaxyproject.org/singularity/control-freec:11.6--h1b792b2_1',
+        registry: 'quay.io',
+        use_full_uri: task.ext.container_full_uri ?: false
+    )}
 
     input:
     tuple val(meta), path(ratio)

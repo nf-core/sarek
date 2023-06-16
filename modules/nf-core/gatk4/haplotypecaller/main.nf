@@ -3,11 +3,12 @@ process GATK4_HAPLOTYPECALLER {
     label 'process_medium'
 
     conda "bioconda::gatk4=4.4.0.0"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/gatk4:4.4.0.0--py36hdfd78af_0':
-        task.ext.container_full_uri ?
-        'quay.io/biocontainers/gatk4:4.4.0.0--py36hdfd78af_0' :
-        'biocontainers/gatk4:4.4.0.0--py36hdfd78af_0' }"
+    container { NfcoreTemplate.getContainer(
+        docker: 'biocontainers/gatk4:4.4.0.0--py36hdfd78af_0',
+        singularity: 'https://depot.galaxyproject.org/singularity/gatk4:4.4.0.0--py36hdfd78af_0',
+        registry: 'quay.io',
+        use_full_uri: task.ext.container_full_uri ?: false
+    )}
 
     input:
     tuple val(meta), path(input), path(input_index), path(intervals), path(dragstr_model)

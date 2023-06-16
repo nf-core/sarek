@@ -3,11 +3,13 @@ process BWA_INDEX {
     label 'process_single'
 
     conda "bioconda::bwa=0.7.17"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/bwa:0.7.17--hed695b0_7' :
-        task.ext.container_full_uri ?
-        'quay.io/biocontainers/bwa:0.7.17--hed695b0_7' :
-        'biocontainers/bwa:0.7.17--hed695b0_7' }"
+    container { NfcoreTemplate.getContainer(
+        docker: 'biocontainers/bwa:0.7.17--hed695b0_7',
+        singularity: 'https://depot.galaxyproject.org/singularity/bwa:0.7.17--hed695b0_7',
+        registry: 'quay.io',
+        engine: workflow.containerEngine,
+        use_full_uri: task.ext.container_full_uri ?: false,
+    ) }
 
     input:
     tuple val(meta), path(fasta)

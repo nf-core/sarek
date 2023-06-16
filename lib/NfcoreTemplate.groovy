@@ -32,6 +32,21 @@ class NfcoreTemplate {
         }
     }
 
+    public static String getContainer(LinkedHashMap containerDetails) {
+
+        String container = ""
+
+        if ( containerDetails.engine == "singularity" && containerDetails.singularity ) {
+            container += containerDetails.singularity
+        } else if ( containerDetails.use_full_uri ) {
+            def full_uri = [containerDetails.registry, containerDetails.docker].join("/")
+            container += full_uri
+        } else {
+            container += containerDetails.docker
+        }
+        return container
+    }
+
     //
     // Generate version string
     //

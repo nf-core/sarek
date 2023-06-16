@@ -3,11 +3,12 @@ process DRAGMAP_HASHTABLE {
     label 'process_high'
 
     conda "bioconda::dragmap=1.2.1"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/dragmap:1.2.1--h72d16da_1':
-        task.ext.container_full_uri ?
-        'quay.io/biocontainers/dragmap:1.2.1--h72d16da_1' :
-        'biocontainers/dragmap:1.2.1--h72d16da_1' }"
+    container { NfcoreTemplate.getContainer(
+        docker: 'biocontainers/dragmap:1.2.1--h72d16da_1',
+        singularity: 'https://depot.galaxyproject.org/singularity/dragmap:1.2.1--h72d16da_1',
+        registry: 'quay.io',
+        use_full_uri: task.ext.container_full_uri ?: false
+    )}
 
     input:
     tuple val(meta), path(fasta)
