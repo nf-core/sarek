@@ -4,11 +4,12 @@ process MANTA_GERMLINE {
     label 'error_retry'
 
     conda "bioconda::manta=1.6.0"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/manta:1.6.0--h9ee0642_1' :
-        task.ext.container_full_uri ?
-        'quay.io/biocontainers/manta:1.6.0--h9ee0642_1' :
-        'biocontainers/manta:1.6.0--h9ee0642_1' }"
+    container { NfcoreTemplate.getContainer(
+        docker: 'biocontainers/manta:1.6.0--h9ee0642_1',
+        singularity: 'https://depot.galaxyproject.org/singularity/manta:1.6.0--h9ee0642_1',
+        registry: 'quay.io',
+        use_full_uri: task.ext.container_full_uri ?: false
+    )}
 
     input:
     //Matching the target bed with the input sample allows to parallelize the same sample run across different intervals or a single bed file

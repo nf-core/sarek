@@ -3,11 +3,12 @@ process CAT_CAT {
     label 'process_low'
 
     conda "conda-forge::pigz=2.3.4"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/pigz:2.3.4' :
-        task.ext.container_full_uri ?
-        'quay.io/biocontainers/pigz:2.3.4' :
-        'biocontainers/pigz:2.3.4' }"
+    container { NfcoreTemplate.getContainer(
+        docker: 'biocontainers/pigz:2.3.4',
+        singularity: 'https://depot.galaxyproject.org/singularity/pigz:2.3.4',
+        registry: 'quay.io',
+        use_full_uri: task.ext.container_full_uri ?: false
+    )}
 
     input:
     tuple val(meta), path(files_in)

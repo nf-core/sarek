@@ -3,11 +3,12 @@ process UNTAR {
     label 'process_single'
 
     conda "conda-forge::sed=4.7 bioconda::grep=3.4 conda-forge::tar=1.34"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/ubuntu:20.04' :
-        task.ext.container_full_uri ?
-        'quay.io/nf-core/ubuntu:20.04' :
-        'nf-core/ubuntu:20.04' }"
+    container { NfcoreTemplate.getContainer(
+        docker: 'nf-core/ubuntu:20.04',
+        singularity: 'https://depot.galaxyproject.org/singularity/ubuntu:20.04',
+        registry: 'quay.io',
+        use_full_uri: task.ext.container_full_uri ?: false
+    )}
 
     input:
     tuple val(meta), path(archive)

@@ -3,11 +3,12 @@ process CUSTOM_DUMPSOFTWAREVERSIONS {
 
     // Requires `pyyaml` which does not have a dedicated container but is in the MultiQC container
     conda "bioconda::multiqc=1.14"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/multiqc:1.14--pyhdfd78af_0' :
-        task.ext.container_full_uri ?
-        'quay.io/biocontainers/multiqc:1.14--pyhdfd78af_0' :
-        'biocontainers/multiqc:1.14--pyhdfd78af_0' }"
+    container { NfcoreTemplate.getContainer(
+        docker: 'biocontainers/multiqc:1.14--pyhdfd78af_0',
+        singularity: 'https://depot.galaxyproject.org/singularity/multiqc:1.14--pyhdfd78af_0',
+        registry: 'quay.io',
+        use_full_uri: task.ext.container_full_uri ?: false
+    )}
 
     input:
     path versions

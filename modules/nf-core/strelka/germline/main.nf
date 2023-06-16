@@ -4,11 +4,12 @@ process STRELKA_GERMLINE {
     label 'error_retry'
 
     conda "bioconda::strelka=2.9.10"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/strelka:2.9.10--h9ee0642_1' :
-        task.ext.container_full_uri ?
-        'quay.io/biocontainers/strelka:2.9.10--h9ee0642_1' :
-        'biocontainers/strelka:2.9.10--h9ee0642_1' }"
+    container { NfcoreTemplate.getContainer(
+        docker: 'biocontainers/strelka:2.9.10--h9ee0642_1',
+        singularity: 'https://depot.galaxyproject.org/singularity/strelka:2.9.10--h9ee0642_1',
+        registry: 'quay.io',
+        use_full_uri: task.ext.container_full_uri ?: false
+    )}
 
     input:
     tuple val(meta), path(input), path(input_index), path (target_bed), path (target_bed_tbi)

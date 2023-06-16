@@ -3,11 +3,12 @@ process SAMTOOLS_MPILEUP {
     label 'process_single'
 
     conda "bioconda::samtools=1.17"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/samtools:1.17--h00cdaf9_0' :
-        task.ext.container_full_uri ?
-        'quay.io/biocontainers/samtools:1.17--h00cdaf9_0' :
-        'biocontainers/samtools:1.17--h00cdaf9_0' }"
+    container { NfcoreTemplate.getContainer(
+        docker: 'biocontainers/samtools:1.17--h00cdaf9_0',
+        singularity: 'https://depot.galaxyproject.org/singularity/samtools:1.17--h00cdaf9_0',
+        registry: 'quay.io',
+        use_full_uri: task.ext.container_full_uri ?: false
+    )}
 
     input:
     tuple val(meta), path(input), path(intervals)

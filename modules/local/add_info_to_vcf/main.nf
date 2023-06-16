@@ -2,11 +2,12 @@ process ADD_INFO_TO_VCF {
     tag "$meta.id"
 
     conda "anaconda::gawk=5.1.0"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/gawk:5.1.0' :
-        task.ext.container_full_uri ?
-        'quay.io/biocontainers/gawk:5.1.0' :
-        'biocontainers/gawk:5.1.0' }"
+    container { NfcoreTemplate.getContainer(
+        docker: 'biocontainers/gawk:5.1.0',
+        singularity: 'https://depot.galaxyproject.org/singularity/gawk:5.1.0',
+        registry: 'quay.io',
+        use_full_uri: task.ext.container_full_uri ?: false
+    )}
 
     input:
     tuple val(meta), path(vcf_gz)

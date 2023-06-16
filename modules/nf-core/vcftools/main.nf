@@ -3,11 +3,12 @@ process VCFTOOLS {
     label 'process_single'
 
     conda "bioconda::vcftools=0.1.16"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/vcftools:0.1.16--he513fc3_4' :
-        task.ext.container_full_uri ?
-        'quay.io/biocontainers/vcftools:0.1.16--he513fc3_4' :
-        'biocontainers/vcftools:0.1.16--he513fc3_4' }"
+    container { NfcoreTemplate.getContainer(
+        docker: 'biocontainers/vcftools:0.1.16--he513fc3_4',
+        singularity: 'https://depot.galaxyproject.org/singularity/vcftools:0.1.16--he513fc3_4',
+        registry: 'quay.io',
+        use_full_uri: task.ext.container_full_uri ?: false
+    )}
 
     input:
     // Owing to the nature of vcftools we here provide solutions to working with optional bed files and optional

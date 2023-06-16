@@ -3,11 +3,12 @@ process TIDDIT_SV {
     label 'process_medium'
 
     conda "bioconda::tiddit=3.3.2"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/tiddit:3.3.2--py310hc2b7f4b_0' :
-        task.ext.container_full_uri ?
-        'quay.io/biocontainers/tiddit:3.3.2--py310hc2b7f4b_0' :
-        'biocontainers/tiddit:3.3.2--py310hc2b7f4b_0' }"
+    container { NfcoreTemplate.getContainer(
+        docker: 'biocontainers/tiddit:3.3.2--py310hc2b7f4b_0',
+        singularity: 'https://depot.galaxyproject.org/singularity/tiddit:3.3.2--py310hc2b7f4b_0',
+        registry: 'quay.io',
+        use_full_uri: task.ext.container_full_uri ?: false
+    )}
 
     input:
     tuple val(meta), path(input), path(input_index)

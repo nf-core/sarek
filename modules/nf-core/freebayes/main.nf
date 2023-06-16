@@ -3,11 +3,12 @@ process FREEBAYES {
     label 'process_single'
 
     conda "bioconda::freebayes=1.3.6"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/freebayes:1.3.6--hbfe0e7f_2' :
-        task.ext.container_full_uri ?
-        'quay.io/biocontainers/freebayes:1.3.6--hbfe0e7f_2' :
-        'biocontainers/freebayes:1.3.6--hbfe0e7f_2' }"
+    container { NfcoreTemplate.getContainer(
+        docker: 'biocontainers/freebayes:1.3.6--hbfe0e7f_2',
+        singularity: 'https://depot.galaxyproject.org/singularity/freebayes:1.3.6--hbfe0e7f_2',
+        registry: 'quay.io',
+        use_full_uri: task.ext.container_full_uri ?: false
+    )}
 
     input:
     tuple val(meta), path(input_1), path(input_1_index), path(input_2), path(input_2_index), path(target_bed)

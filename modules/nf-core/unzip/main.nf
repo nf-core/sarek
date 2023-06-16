@@ -3,11 +3,12 @@ process UNZIP {
     label 'process_single'
 
     conda "conda-forge::p7zip=16.02"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/p7zip:16.02' :
-        task.ext.container_full_uri ?
-        'quay.io/biocontainers/p7zip:16.02' :
-        'biocontainers/p7zip:16.02' }"
+    container { NfcoreTemplate.getContainer(
+        docker: 'biocontainers/p7zip:16.02',
+        singularity: 'https://depot.galaxyproject.org/singularity/p7zip:16.02',
+        registry: 'quay.io',
+        use_full_uri: task.ext.container_full_uri ?: false
+    )}
 
     input:
     tuple val(meta), path(archive)
