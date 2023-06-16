@@ -18,8 +18,10 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - [BWA](#bwa)
     - [BWA-mem2](#bwa-mem2)
     - [DragMap](#dragmap)
+    - [Sentieon bwa mem](#sentieon-bwa-mem)
   - [Duplicate Marking](#mark-duplicates)
     - [GATK MarkDuplicates (Spark)](#gatk-markduplicates-spark)
+    - [Sentieon LocusCollector and Dedup](#sentieon-locuscollector-dedup)
   - [Base Quality Score Recalibration](#base-quality-score-recalibration)
     - [GATK BaseRecalibrator (Spark)](#gatk-baserecalibrator-spark)
     - [GATK ApplyBQSR (Spark)](#gatk-applybqsr-spark)
@@ -29,6 +31,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - [DeepVariant](#deepvariant)
     - [FreeBayes](#freebayes)
     - [GATK HaplotypeCaller](#gatk-haplotypecaller)
+    - [Sentieon Haplotyper](#sentieon-haplotyper)
     - [GATK Mutect2](#gatk-mutect2)
     - [samtools mpileup](#samtools-mpileup)
     - [Strelka2](#strelka2)
@@ -150,13 +153,9 @@ These files are intermediate and by default not placed in the output-folder kept
 
 [BWA](https://github.com/lh3/bwa) is a software package for mapping low-divergent sequences against a large reference genome. The aligned reads are then coordinate-sorted (or name-sorted if [`GATK MarkDuplicatesSpark`](https://gatk.broadinstitute.org/hc/en-us/articles/5358833264411-MarkDuplicatesSpark) is used for duplicate marking) with [samtools](https://www.htslib.org/doc/samtools.html).
 
-These files are intermediate and by default not placed in the output-folder kept in the final files delivered to users. Set `--save_mapped` to enable publishing in CRAM format, furthermore add the flag `save_output_as_bam` for publishing in BAM format.
-
 #### BWA-mem2
 
 [BWA-mem2](https://github.com/bwa-mem2/bwa-mem2) is a software package for mapping low-divergent sequences against a large reference genome.The aligned reads are then coordinate-sorted (or name-sorted if [`GATK MarkDuplicatesSpark`](https://gatk.broadinstitute.org/hc/en-us/articles/5358833264411-MarkDuplicatesSpark) is used for duplicate marking) with [samtools](https://www.htslib.org/doc/samtools.html).
-
-These files are intermediate and by default not placed in the output-folder kept in the final files delivered to users. Set `--save_mapped` to enable publishing, furthermore add the flag `save_output_as_bam` for publishing in BAM format.
 
 #### DragMap
 
@@ -164,16 +163,25 @@ These files are intermediate and by default not placed in the output-folder kept
 
 These files are intermediate and by default not placed in the output-folder kept in the final files delivered to users. Set `--save_mapped` to enable publishing, furthermore add the flag `save_output_as_bam` for publishing in BAM format.
 
+#### Sentieon BWA mem
+
+Sentieon's [bwa mem](https://support.sentieon.com/manual/usages/general/#bwa-mem-syntax) is subroutine for mapping low-divergent sequences against a large reference genome. It is part of the proprietary software package [Sentieon](https://www.sentieon.com/).
+
+The aligned reads are then coordinate-sorted with `sentieon util sort`.
+
 <details markdown="1">
 <summary>Output files for all mappers and samples</summary>
 
+The alignment files (BAM or CRAM) produced by the chosen aligner are, by default, not published, that is, they are not placed in the output-folder (`outdir`), but by setting `--save_mapped` the alignment files are published in CRAM format or, by additional setting `--save_output_as_bam`, in BAM format.
+
+
 **Output directory: `{outdir}/preprocessing/mapped/<sample>/`**
 
-- if `--save_mapped`: `<sample>.cram` and `<sample>.cram.crai`
+- if `--save_mapped`: `<sample>.sorted.cram` and `<sample>.sorted.cram.crai`
 
   - CRAM file and index
 
-- if `--save_mapped --save_output_as_bam`: `<sample>.bam` and `<sample>.bam.bai`
+- if `--save_mapped --save_output_as_bam`: `<sample>.sorted.bam` and `<sample>.sorted.bam.bai`
   - BAM file and index
   </details>
 
