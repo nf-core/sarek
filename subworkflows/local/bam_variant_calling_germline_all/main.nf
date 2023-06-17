@@ -36,6 +36,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     known_sites_snps_tbi
     known_snps_vqsr
     joint_germline                    // boolean: [mandatory] [default: false] joint calling of germline variants
+    genomicsdb_workspace
 
     main:
     versions = Channel.empty()
@@ -141,7 +142,8 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
                 known_indels_vqsr,
                 known_sites_snps,
                 known_sites_snps_tbi,
-                known_snps_vqsr)
+                known_snps_vqsr,
+                genomicsdb_workspace)
 
             vcf_haplotypecaller = BAM_JOINT_CALLING_GERMLINE_GATK.out.genotype_vcf
             versions = versions.mix(BAM_JOINT_CALLING_GERMLINE_GATK.out.versions)
