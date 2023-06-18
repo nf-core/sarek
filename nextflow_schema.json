@@ -238,6 +238,12 @@
                     "description": "If true, skips germline variant calling for matched normal to tumor sample. Normal samples without matched tumor will still be processed through germline variant calling tools.",
                     "help_text": "This can speed up computation for somatic variant calling with matched normal samples. If false, all normal samples are processed as well through the germline variantcalling tools. If true, only somatic variant calling is done."
                 },
+                "genomicsdb_workspace": {
+                    "type": "string",
+                    "default": null,
+                    "fa_icon": "fas fa-database",
+                    "hidden": true
+                },
                 "joint_germline": {
                     "type": "boolean",
                     "fa_icon": "fas fa-toolbox",
@@ -345,7 +351,7 @@
                 },
                 "cnvkit_reference": {
                     "type": "string",
-                    "default": null,
+                    "default": "None",
                     "fa_icon": "fas fa-file",
                     "help_text": "https://cnvkit.readthedocs.io/en/stable/pipeline.html?highlight=reference.cnn#batch",
                     "description": "Copy-number reference for CNVkit",
@@ -528,7 +534,7 @@
                 "ascat_genome": {
                     "type": "string",
                     "fa_icon": "fa-solid fa-text",
-                    "default": null,
+                    "default": "None",
                     "description": "ASCAT genome.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately.\n\nMust be set to run ASCAT, either hg19 or hg38. If you use AWS iGenomes, this has already been set for you appropriately.",
                     "enum": ["None", "hg19", "hg38"],
