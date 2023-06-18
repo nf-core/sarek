@@ -25,6 +25,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
     resource_snps_vcf
     resource_snps_tbi
     known_snps_vqsr
+    genomicsdb_workspace
 
     main:
     versions = Channel.empty()
@@ -36,10 +37,12 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
     gendb_input = input
         .map{ meta, gvcf, tbi, intervals -> [ [ id:'joint_variant_calling', intervals_name:intervals.simpleName, num_intervals:meta.num_intervals ], gvcf, tbi, intervals ] }
         .groupTuple(by:[0, 3])
-        .map{ meta, gvcf, tbi, intervals -> [ meta, gvcf, tbi, intervals, [], [] ] }
+        .map{ meta, gvcf, tbi, intervals -> [ meta, gvcf, tbi, intervals, [] ] }
+        .combine(genomicsdb_workspace)
 
     // Convert all sample vcfs into a genomicsdb workspace using genomicsdbimport
-    GATK4_GENOMICSDBIMPORT(gendb_input, false, false, false)
+    // If genomicsdb_workspace, then the boolean will evaluate to true, hacky work-around for the module
+    GATK4_GENOMICSDBIMPORT(gendb_input, false, genomicsdb_workspace, false)
 
     genotype_input = GATK4_GENOMICSDBIMPORT.out.genomicsdb.map{ meta, genomicsdb -> [ meta, genomicsdb, [], [], [] ] }
 

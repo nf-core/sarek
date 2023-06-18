@@ -128,12 +128,6 @@ if (params.tools && (params.tools.split(',').contains('ascat') || params.tools.s
     }
 }
 
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    IMPORT LOCAL MODULES/SUBWORKFLOWS
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
 // Initialize file channels based on params, defined in the params.genomes[params.genome] scope
 ascat_alleles      = params.ascat_alleles      ? Channel.fromPath(params.ascat_alleles).collect()     : Channel.empty()
 ascat_loci         = params.ascat_loci         ? Channel.fromPath(params.ascat_loci).collect()        : Channel.empty()
@@ -161,8 +155,9 @@ vep_genome         = params.vep_genome         ?: Channel.empty()
 vep_species        = params.vep_species        ?: Channel.empty()
 
 // Initialize files channels based on params, not defined within the params.genomes[params.genome] scope
-snpeff_cache       = params.snpeff_cache       ? Channel.fromPath(params.snpeff_cache).collect()      : []
-vep_cache          = params.vep_cache          ? Channel.fromPath(params.vep_cache).collect()         : []
+genomicsdb_workspace = params.genomicsdb_workspace ? Channel.fromPath(params.genomicsdb_workspace).collect() : []
+snpeff_cache         = params.snpeff_cache         ? Channel.fromPath(params.snpeff_cache).collect()         : []
+vep_cache            = params.vep_cache            ? Channel.fromPath(params.vep_cache).collect()            : []
 
 vep_extra_files = []
 
@@ -936,7 +931,8 @@ workflow SAREK {
             known_sites_snps,
             known_sites_snps_tbi,
             known_snps_vqsr,
-            params.joint_germline)
+            params.joint_germline,
+            genomicsdb_workspace)
 
         // TUMOR ONLY VARIANT CALLING
         BAM_VARIANT_CALLING_TUMOR_ONLY_ALL(
