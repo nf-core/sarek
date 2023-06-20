@@ -129,7 +129,7 @@ if (params.tools && (params.tools.split(',').contains('ascat') || params.tools.s
 }
 
 if ((params.download_cache) && (params.snpeff_cache || params.vep_cache)) {
-    error("Please specify either `--download_cache` or `--snpeff_cache` and/or `--vep_cache`.\nhttps://nf-co.re/sarek/dev/usage#how-to-customise-snpeff-and-vep-annotation")
+    error("Please specify either `--download_cache` or `--snpeff_cache`, `--vep_cache`.\nhttps://nf-co.re/sarek/dev/usage#how-to-customise-snpeff-and-vep-annotation")
 }
 
 /*
