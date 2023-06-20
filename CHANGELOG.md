@@ -10,8 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - [#1112](https://github.com/nf-core/sarek/pull/1112) - Back to dev
+- [#1119](https://github.com/nf-core/sarek/pull/1119) - Added `help_text` for `input_output_options` group in schema
 
 ### Changed
+
+- [#1119](https://github.com/nf-core/sarek/pull/1119) - Remove `null` by default in schema
 
 ### Fixed
 

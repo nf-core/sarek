@@ -10,8 +10,19 @@
             "type": "object",
             "fa_icon": "fas fa-terminal",
             "description": "Define where the pipeline should find input data and save output data.",
+            "help_text": "Specify input samplesheet, step and output folder.",
             "required": ["step", "outdir"],
             "properties": {
+                "input": {
+                    "type": "string",
+                    "format": "file-path",
+                    "mimetype": "text/csv",
+                    "pattern": "^\\S+\\.csv$",
+                    "schema": "assets/schema_input.json",
+                    "description": "Path to comma-separated file containing information about the samples in the experiment.",
+                    "help_text": "A design file with information about the samples in your experiment. Use this parameter to specify the location of the input files. It has to be a comma-separated file with a header row. See [usage docs](https://nf-co.re/sarek/usage#input).\n\nIf no input file is specified, sarek will attempt to locate one in the `{outdir}` directory.",
+                    "fa_icon": "fas fa-file-csv"
+                },
                 "step": {
                     "type": "string",
                     "default": "mapping",
@@ -27,24 +38,13 @@
                         "annotate"
                     ]
                 },
-                "input": {
-                    "type": "string",
-                    "format": "file-path",
-                    "mimetype": "text/csv",
-                    "pattern": "^\\S+\\.csv$",
-                    "schema": "assets/schema_input.json",
-                    "description": "Path to comma-separated file containing information about the samples in the experiment.",
-                    "help_text": "A design file with information about the samples in your experiment. Use this parameter to specify the location of the input files. It has to be a comma-separated file with a header row. See [usage docs](https://nf-co.re/sarek/usage#input).\n\nIf no input file is specified, sarek will attempt to locate one in the `{outdir}` directory.",
-                    "fa_icon": "fas fa-file-csv"
-                },
                 "outdir": {
                     "type": "string",
                     "format": "directory-path",
                     "description": "The output directory where the results will be saved. You have to use absolute paths to storage on Cloud infrastructure.",
                     "fa_icon": "fas fa-folder-open"
                 }
-            },
-            "help_text": ""
+            }
         },
         "main_options": {
             "title": "Main options",
@@ -345,7 +345,6 @@
                 },
                 "cnvkit_reference": {
                     "type": "string",
-                    "default": null,
                     "fa_icon": "fas fa-file",
                     "help_text": "https://cnvkit.readthedocs.io/en/stable/pipeline.html?highlight=reference.cnn#batch",
                     "description": "Copy-number reference for CNVkit",
@@ -528,7 +527,6 @@
                 "ascat_genome": {
                     "type": "string",
                     "fa_icon": "fa-solid fa-text",
-                    "default": null,
                     "description": "ASCAT genome.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately.\n\nMust be set to run ASCAT, either hg19 or hg38. If you use AWS iGenomes, this has already been set for you appropriately.",
                     "enum": ["None", "hg19", "hg38"],
