@@ -482,6 +482,7 @@
                 "snpeff_cache": {
                     "type": "string",
                     "fa_icon": "fas fa-file",
+                    "default": "s3://annotation-cache/snpeff_cache/",
                     "description": "Path to snpEff cache.",
                     "help_text": "To be used with `--annotation_cache`.",
                     "hidden": true
@@ -489,6 +490,7 @@
                 "vep_cache": {
                     "type": "string",
                     "fa_icon": "fas fa-file",
+                    "default": "s3://annotation-cache/vep_cache/",
                     "description": "Path to VEP cache.",
                     "help_text": "To be used with `--annotation_cache`.",
                     "hidden": true
