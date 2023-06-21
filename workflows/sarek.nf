@@ -165,8 +165,8 @@ vep_genome         = params.vep_genome         ?: Channel.empty()
 vep_species        = params.vep_species        ?: Channel.empty()
 
 // Initialize files channels based on params, not defined within the params.genomes[params.genome] scope
-snpeff_cache       = params.snpeff_cache ? use_annotation_cache_keys ? Channel.fromPath("${params.snpeff_cache}/${params.snpeff_genome}.${params.snpeff_db}").collect()   : Channel.fromPath(params.snpeff_cache).collect() : []
-vep_cache          = params.vep_cache    ? use_annotation_cache_keys ? Channel.fromPath("${params.vep_cache}/${params.vep_cache_version}_${params.vep_genome}").collect() : Channel.fromPath(params.vep_cache).collect()    : []
+snpeff_cache       = params.snpeff_cache ? params.use_annotation_cache_keys ? Channel.fromPath("${params.snpeff_cache}/${params.snpeff_genome}.${params.snpeff_db}/").collect()   : Channel.fromPath("${params.snpeff_cache}/").collect() : []
+vep_cache          = params.vep_cache    ? params.use_annotation_cache_keys ? Channel.fromPath("${params.vep_cache}/${params.vep_cache_version}_${params.vep_genome}/").collect() : Channel.fromPath("${params.vep_cache}/").collect()    : []
 
 vep_extra_files = []
 
