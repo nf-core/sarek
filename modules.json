@@ -384,7 +384,8 @@
                     "sentieon/dedup": {
                         "branch": "master",
                         "git_sha": "2cb2012b268b3502ac74463e510e76be99e2cdbf",
-                        "installed_by": ["modules"]
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/sentieon/dedup/sentieon-dedup.diff"
                     },
                     "sentieon/gvcftyper": {
                         "branch": "master",

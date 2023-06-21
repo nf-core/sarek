@@ -66,7 +66,38 @@ sample_names_replace:
   "\\.[0-9]{4}$": ".md" # should match ".0001" but only at the end of strings for module Markduplicates/EstimateLibraryComplexity
   module: picard
 
+custom_data:
+    dedup_metrics:
+        id: 'dedup_metrics'
+        section_name: 'Sentieon Dedup Metrics'
+        plot_type: 'table'
+        pconfig:
+            id: 'dedup_metrics'
+            namespace: 'Sentieon Dedup Metrics'
+        headers:
+            LIBRARY:
+                description: 'LIBRARY'
+            UNPAIRED_READS_EXAMINED:
+                description: 'UNPAIRED_READS_EXAMINE'
+            READ_PAIRS_EXAMINED:
+                description: 'READ_PAIRS_EXAMINED'
+            SECONDARY_OR_SUPPLEMENTARY_RDS:
+                description: 'SECONDARY_OR_SUPPLEMENTARY_RDS'
+            UNMAPPED_READS:
+                description: 'UNMAPPED_READS'
+            UNPAIRED_READ_DUPLICATES:
+                description: 'UNPAIRED_READ_DUPLICATES'
+            READ_PAIR_DUPLICATES:
+                description: 'READ_PAIR_DUPLICATES'
+            READ_PAIR_OPTICAL_DUPLICATES:
+                description: 'READ_PAIR_OPTICAL_DUPLICATES'
+            PERCENT_DUPLICATION:
+                description: 'PERCENT_DUPLICATION'
+            ESTIMATED_LIBRARY_SIZE:
+                description: 'ESTIMATED_LIBRARY_SIZE'
 sp:
   snpeff:
     contents: "SnpEff_version"
     max_filesize: 5000000
+  dedup_metrics:
+    fn: "*.metrics.multiqc.tsv"
