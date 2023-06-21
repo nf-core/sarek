@@ -17,8 +17,7 @@
                 "type": "string",
                 "pattern": "^\\S+$",
                 "errorMessage": "Sample name must be provided and cannot contain spaces",
-                "meta": ["sample"],
-                "unique": ["patient"]
+                "meta": ["sample"]
             },
             "sex": {
                 "errorMessage": "Sex cannot contain spaces",
@@ -36,11 +35,12 @@
                 ]
             },
             "status": {
+                "type": "integer",
                 "errorMessage": "Status can only be 0 or 1. Defaults to 0, if none is supplied.",
                 "meta": ["status"],
-                "default": "0",
-                "type": "string",
-                "pattern": "^(0|1)*$"
+                "default": 0,
+                "minimum": 0,
+                "maximum": 1
             },
             "lane": {
                 "type": "string",
@@ -67,6 +67,84 @@
                     {
                         "type": "string",
                         "pattern": "^\\S+\\.f(ast)?q\\.gz$"
+                    },
+                    {
+                        "type": "string",
+                        "maxLength": 0
+                    }
+                ]
+            },
+            "table": {
+                "errorMessage": "Recalibration table cannot contain spaces and must have extension '.table'",
+                "anyOf": [
+                    {
+                        "type": "string",
+                        "pattern": "^\\S+\\.table$"
+                    },
+                    {
+                        "type": "string",
+                        "maxLength": 0
+                    }
+                ]
+            },
+            "cram": {
+                "errorMessage": "CRAM file cannot contain spaces and must have extension '.cram'",
+                "anyOf": [
+                    {
+                        "type": "string",
+                        "pattern": "^\\S+\\.cram$"
+                    },
+                    {
+                        "type": "string",
+                        "maxLength": 0
+                    }
+                ]
+            },
+            "crai": {
+                "errorMessage": "CRAM index file cannot contain spaces and must have extension '.crai'",
+                "anyOf": [
+                    {
+                        "type": "string",
+                        "pattern": "^\\S+\\.crai$"
+                    },
+                    {
+                        "type": "string",
+                        "maxLength": 0
+                    }
+                ]
+            },
+            "bam": {
+                "errorMessage": "BAM file cannot contain spaces and must have extension '.bam'",
+                "anyOf": [
+                    {
+                        "type": "string",
+                        "pattern": "^\\S+\\.bam$"
+                    },
+                    {
+                        "type": "string",
+                        "maxLength": 0
+                    }
+                ]
+            },
+            "bai": {
+                "errorMessage": "BAM index file cannot contain spaces and must have extension '.bai'",
+                "anyOf": [
+                    {
+                        "type": "string",
+                        "pattern": "^\\S+\\.bai$"
+                    },
+                    {
+                        "type": "string",
+                        "maxLength": 0
+                    }
+                ]
+            },
+            "vcf": {
+                "errorMessage": "VCF file for reads 1 cannot contain spaces and must have extension '.vcf' or '.vcf.gz'",
+                "anyOf": [
+                    {
+                        "type": "string",
+                        "pattern": "^\\S+\\.vcf(\\.gz)?$"
                     },
                     {
                         "type": "string",

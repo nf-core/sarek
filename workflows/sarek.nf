@@ -68,8 +68,51 @@ input_sample = params.build_only_index ? Channel.empty() : Channel.fromSampleshe
 
 input_sample.view()
 sample_count_all = input_sample.sum{ 1 } // count number of samples
-sample_count_normal = input_sample.sum{ meta, fastq1, fastq2 -> meta.status == '0' ? 1 : 0 } // count number of normal samples (status == 0)
-sample_count_tumor = input_sample.sum{ meta, fastq1, fastq2 -> meta.status == '1' ? 1 : 0 } // count number of tumor samples (status == 1)
+sample_count_normal = input_sample.sum{ it[0].status == 0 ? 1 : 0 } // count number of normal samples (status == 0)
+sample_count_tumor = input_sample.sum{ it[0].status == 1 ? 1 : 0 } // count number of tumor samples (status == 1)
+
+sample_count_all.view()
+sample_count_normal.view()
+sample_count_tumor.view()
+
+if (params.step != 'annotate' && params.tools) {
+    // Two checks for ensuring that the pipeline stops with a meaningful error message if
+    // 1. the sample-sheet only contains normal-samples, but some of the requested tools require tumor-samples, and
+    // 2. the sample-sheet only contains tumor-samples, but some of the requested tools require normal-samples.
+    if ((sample_count_normal == sample_count_all) && !params.build_only_index) { // In this case, the sample-sheet contains no tumor-samples
+        def tools_tumor = ['ascat', 'controlfreec', 'mutect2', 'msisensorpro']
+        def tools_tumor_asked = []
+        tools_tumor.each{ tool ->
+            if (params.tools.split(',').contains(tool)) tools_tumor_asked.add(tool)
+        }
+        if (!tools_tumor_asked.isEmpty()) {
+            error('The sample-sheet only contains normal-samples, but the following tools, which were requested with "--tools", expect at least one tumor-sample : ' + tools_tumor_asked.join(", "))
+        }
+    } else if ((sample_count_tumor == sample_count_all)) {  // In this case, the sample-sheet contains no normal/germline-samples
+        def tools_requiring_normal_samples = ['ascat', 'deepvariant', 'haplotypecaller', 'msisensorpro']
+        def requested_tools_requiring_normal_samples = []
+        tools_requiring_normal_samples.each{ tool_requiring_normal_samples ->
+            if (params.tools.split(',').contains(tool_requiring_normal_samples)) requested_tools_requiring_normal_samples.add(tool_requiring_normal_samples)
+        }
+        if (!requested_tools_requiring_normal_samples.isEmpty()) {
+            error('The sample-sheet only contains tumor-samples, but the following tools, which were requested by the option "tools", expect at least one normal-sample : ' + requested_tools_requiring_normal_samples.join(", "))
+        }
+    }
+}
+
+input_sample.map{ meta, fastq_1, fastq_2, table, cram, crai, bam, bai, vcf ->
+    if (meta.lane && fastq_2) {
+        meta = meta + [id: "${meta.sample}-${meta.lane}".toString()]
+        def CN = params.seq_center ? "CN:${params.seq_center}\\t" : ''
+
+        def flowcell    = flowcellLaneFromFastq(fastq_1)
+        // Don't use a random element for ID, it breaks resuming
+        def read_group  = "\"@RG\\tID:${flowcell}.${meta.sample}.${meta.lane}\\t${CN}PU:${meta.lane}\\tSM:${meta.patient}_${meta.sample}\\tLB:${meta.sample}\\tDS:${params.fasta}\\tPL:${params.seq_platform}\""
+
+        num_lanes = input_sample.filter{ it[0].patient + it[0].sample == meta.patient + meta.sample }.sum{ 1 } // count number of lanes (how many entries there are for this combination of patient and sample)
+        meta = meta + [num_lanes: num_lanes]
+    }
+}
 
 
 // Fails when wrongfull extension for intervals file
