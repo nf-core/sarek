@@ -479,6 +479,12 @@
                     "hidden": true,
                     "help_text": "Using this params you can add custom args to VEP."
                 },
+                "use_annotation_cache_keys": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-toolbox",
+                    "description": "Use annotation cache keys for snpeff_cache and vep_cache.",
+                    "hidden": true
+                },
                 "snpeff_cache": {
                     "type": "string",
                     "fa_icon": "fas fa-file",
