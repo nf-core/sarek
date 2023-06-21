@@ -1,5 +1,5 @@
 - name: Run markduplicates starting from BAM
-  command: nextflow run main.nf -profile test,markduplicates_bam --outdir results
+  command: nextflow run main.nf -profile test_cache,markduplicates_bam --outdir results
   tags:
     - input_bam
     - markduplicates
@@ -49,7 +49,7 @@
     - path: results/reports/samtools/test/test.recal.cram.stats
     # conda changes md5sums for test
 - name: Run skip markduplicates bam from step markduplicates
-  command: nextflow run main.nf -profile test,markduplicates_bam,skip_markduplicates --outdir results
+  command: nextflow run main.nf -profile test_cache,markduplicates_bam,skip_markduplicates --outdir results
   tags:
     - input_bam
     - markduplicates

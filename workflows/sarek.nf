@@ -63,7 +63,7 @@ WorkflowSarek.initialise(params, log)
 for (param in checkPathParamList) if (param) file(param, checkIfExists: true)
 
 // Set input, can either be from --input or from automatic retrieval in WorkflowSarek.groovy
-input_sample = params.build_only_index ? Channel.empty() : extract_csv(file(params.input, checkIfExists: true))
+input_sample = params.build_only_index ? Channel.empty() : extract_csv(file(WorkflowSarek.retrieveInput(params, log), checkIfExists: true))
 
 // Fails when wrongfull extension for intervals file
 if (params.wes && !params.step == 'annotate') {
@@ -153,7 +153,6 @@ fasta              = params.fasta              ? Channel.fromPath(params.fasta).
 fasta_fai          = params.fasta_fai          ? Channel.fromPath(params.fasta_fai).collect()         : Channel.empty()
 germline_resource  = params.germline_resource  ? Channel.fromPath(params.germline_resource).collect() : Channel.value([]) // Mutec2 does not require a germline resource, so set to optional input
 known_indels       = params.known_indels       ? Channel.fromPath(params.known_indels).collect()      : Channel.value([])
-known_snps         = params.known_snps         ? Channel.fromPath(params.known_snps).collect()        : Channel.value([])
 known_snps         = params.known_snps         ? Channel.fromPath(params.known_snps).collect()        : Channel.value([])
 mappability        = params.mappability        ? Channel.fromPath(params.mappability).collect()       : Channel.value([])
 pon                = params.pon                ? Channel.fromPath(params.pon).collect()               : Channel.value([]) // PON is optional for Mutect2 (but highly recommended)
@@ -394,12 +393,12 @@ workflow SAREK {
     intervals_bed_gz_tbi = PREPARE_INTERVALS.out.intervals_bed_gz_tbi // [ interval_bed, tbi, num_intervals ] multiple interval.bed.gz/.tbi files, divided by useful intervals for scatter/gather
 
     intervals_and_num_intervals = intervals.map{ interval, num_intervals ->
-        if ( num_intervals <= 1 ) [ [], num_intervals ]
+        if ( num_intervals < 1 ) [ [], num_intervals ]
         else [ interval, num_intervals ]
     }
 
     intervals_bed_gz_tbi_and_num_intervals = intervals_bed_gz_tbi.map{ intervals, num_intervals ->
-        if ( num_intervals <= 1 ) [ [], [], num_intervals ]
+        if ( num_intervals < 1 ) [ [], [], num_intervals ]
         else [ intervals[0], intervals[1], num_intervals ]
     }
 
@@ -539,7 +538,7 @@ workflow SAREK {
 
             // Use groupKey to make sure that the correct group can advance as soon as it is complete
             // and not stall the workflow until all reads from all channels are mapped
-            [ groupKey( meta - meta.subMap('num_lanes', 'read_group', 'size') + [ data_type:'bam', id:meta.sample ], (meta.num_lanes ?: 1) * (meta.size ?: 1) ), bam ]
+            [ groupKey( meta - meta.subMap('num_lanes', 'read_group', 'size') + [ data_type:'bam', id:meta.sample ], (meta.num_lanes ?: 1) * (meta.size ?: 1)), bam ]
         }.groupTuple()
 
         // gatk4 markduplicates can handle multiple bams as input, so no need to merge/index here
@@ -1019,7 +1018,7 @@ workflow SAREK {
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_manta)
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_strelka)
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_tiddit)
-        // vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_mpileup) // Not annotated?
+        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_mpileup)
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.vcf_all)
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.vcf_all)
 
@@ -1044,10 +1043,10 @@ workflow SAREK {
 
         if (params.tools.split(',').contains('merge') || params.tools.split(',').contains('snpeff') || params.tools.split(',').contains('vep')) {
 
-            vep_fasta = (params.vep_include_fasta) ? fasta.map{ fasta -> [ [ id:fasta.baseName ], fasta ] } : [[], []]
+            vep_fasta = (params.vep_include_fasta) ? fasta.map{ fasta -> [ [ id:fasta.baseName ], fasta ] } : [[id: 'null'], []]
 
             VCF_ANNOTATE_ALL(
-                vcf_to_annotate,
+                vcf_to_annotate.map{meta, vcf -> [ meta + [ file_name: vcf.baseName ], vcf ] },
                 vep_fasta,
                 params.tools,
                 params.snpeff_genome ? "${params.snpeff_genome}.${params.snpeff_db}" : "${params.genome}.${params.snpeff_db}",

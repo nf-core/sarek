@@ -104,10 +104,10 @@ workflow PREPARE_INTERVALS {
     emit:
     // Intervals split for parallel execution
     intervals_bed                 // [ intervals.bed, num_intervals ]
-    intervals_bed_gz_tbi          // [ target.bed.gz, target.bed.gz.tbi, num_intervals ]
+    intervals_bed_gz_tbi          // [ intervals.bed.gz, intervals.bed.gz.tbi, num_intervals ]
     // All intervals in one file
     intervals_bed_combined        // [ intervals.bed ]
-    intervals_bed_gz_tbi_combined //[intervals.bed.gz, intervals.bed.gz.tbi]
+    intervals_bed_gz_tbi_combined // [ intervals.bed.gz, intervals.bed.gz.tbi]
 
     versions               // [ versions.yml ]
 }

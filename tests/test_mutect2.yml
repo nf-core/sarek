@@ -1,5 +1,5 @@
 - name: Run variant calling on tumor only sample with mutect2
-  command: nextflow run main.nf -profile test,tools_tumoronly --tools mutect2 --outdir results
+  command: nextflow run main.nf -profile test_cache,tools_tumoronly --tools mutect2 --outdir results
   tags:
     - mutect2
     - tumor_only
@@ -39,7 +39,7 @@
     - path: results/mutect2
       should_exist: false
 - name: Run variant calling on tumor only sample with mutect2 without intervals
-  command: nextflow run main.nf -profile test,tools_tumoronly --tools mutect2 --no_intervals --outdir results
+  command: nextflow run main.nf -profile test_cache,tools_tumoronly --tools mutect2 --no_intervals --outdir results
   tags:
     - mutect2
     - no_intervals

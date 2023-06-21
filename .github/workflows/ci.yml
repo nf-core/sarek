@@ -23,11 +23,11 @@ jobs:
       fail-fast: false
       matrix:
         NXF_VER:
-          - "22.10.1"
+          - "23.04.0"
           - "latest-everything"
         test:
           - "default"
-        profile: ["docker", "singularity"]
+        profile: ["docker"]
         # profile: ["docker", "singularity", "conda"]
     env:
       NXF_ANSI_LOG: false

@@ -1,5 +1,5 @@
 - name: Run variant calling on somatic samples with controlfreec
-  command: nextflow run main.nf -profile test,tools_somatic --tools controlfreec --outdir results
+  command: nextflow run main.nf -profile test_cache,tools_somatic --tools controlfreec --outdir results
   tags:
     - controlfreec
     - somatic
@@ -47,13 +47,13 @@
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_ratio.png
     # binary changes md5sums on reruns
     - path: results/variant_calling/mpileup/sample4_vs_sample3/sample4_vs_sample3.normal.mpileup.gz
-    # binary changes md5sums on reruns
+      should_exist: false
     - path: results/variant_calling/mpileup/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz
-    # binary changes md5sums on reruns
+      should_exist: false
     - path: results/cnvkit
       should_exist: false
 - name: Run variant calling on somatic samples with controlfreec without intervals
-  command: nextflow run main.nf -profile test,tools_somatic --tools controlfreec --no_intervals -stub-run --outdir results
+  command: nextflow run main.nf -profile test_cache,tools_somatic --tools controlfreec --no_intervals -stub-run --outdir results
   tags:
     - controlfreec
     - no_intervals
@@ -98,15 +98,15 @@
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_sample.cpn
       md5sum: d41d8cd98f00b204e9800998ecf8427e
     - path: results/variant_calling/mpileup/sample4_vs_sample3/sample4_vs_sample3.normal.mpileup.gz
-    # binary changes md5sums on reruns
+      should_exist: false
     - path: results/variant_calling/mpileup/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz
-    # binary changes md5sums on reruns
+      should_exist: false
     - path: results/controlfreec
       should_exist: false
     - path: results/mpileup
       should_exist: false
 - name: Run variant calling on tumor_only sample with controlfreec
-  command: nextflow run main.nf -profile test,tools_tumoronly --tools controlfreec -stub-run --outdir results
+  command: nextflow run main.nf -profile test_cache,tools_tumoronly --tools controlfreec -stub-run --outdir results
   tags:
     - controlfreec
     - tumor_only
@@ -143,7 +143,7 @@
     - path: results/variant_calling/controlfreec/sample2/sample2_sample.cpn
       md5sum: d41d8cd98f00b204e9800998ecf8427e
     - path: results/variant_calling/mpileup/sample2/sample2.tumor.mpileup.gz
-    # binary changes md5sums on reruns
+      should_exist: false
     - path: results/controlfreec
       should_exist: false
     - path: results/mpileup
