@@ -24,6 +24,7 @@ process SENTIEON_DEDUP {
     tuple val(meta), path("*.bai"),     emit: bai
     tuple val(meta), path("*.score"),   emit: score
     tuple val(meta), path("*.metrics"), emit: metrics
+    tuple val(meta), path("*.metrics.multiqc.tsv"), emit: metrics_multiqc_tsv
     path "versions.yml",                emit: versions
 
     when:
@@ -60,6 +61,9 @@ process SENTIEON_DEDUP {
 
     sentieon driver $args $input_list -r ${fasta} --algo LocusCollector $args2 --fun score_info ${prefix}.score
     sentieon driver $args3 -t $task.cpus $input_list -r ${fasta} --algo Dedup $args4 --score_info ${prefix}.score --metrics ${metrics} ${prefix}${suffix}
+    # This following tsv-file is produced in order to get a proper tsv-file with Dedup-metrics for importing in MultiQC as "custom content".
+    # It should be removed once MultiQC has a module for displaying Dedup-metrics.
+    head -3 ${metrics} > ${metrics}.multiqc.tsv
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

@@ -13,6 +13,8 @@
     - path: results/csv/recalibrated.csv
       md5sum: 1888a924bc70bd80165a96ad641e22d6
     - path: results/multiqc
+    - path: results/multiqc/multiqc_report.html
+      contains: ["Sentieon Dedup Metrics", "PERCENT_DUPLICATION", "ESTIMATED_LIBRARY_SIZE"]
     - path: results/preprocessing/sentieon_dedup/test/test.md.cram
     # binary changes md5sums on reruns
     - path: results/preprocessing/sentieon_dedup/test/test.md.cram.crai

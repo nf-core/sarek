@@ -383,7 +383,7 @@
                     },
                     "sentieon/dedup": {
                         "branch": "master",
-                        "git_sha": "2cb2012b268b3502ac74463e510e76be99e2cdbf",
+                        "git_sha": "e311732e4d878d7e47872226bef5f8630dc81675",
                         "installed_by": ["modules"]
                     },
                     "sentieon/gvcftyper": {
