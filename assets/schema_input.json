@@ -38,18 +38,9 @@
             "status": {
                 "errorMessage": "Status can only be 0 or 1. Defaults to 0, if none is supplied.",
                 "meta": ["status"],
-                "default": 0,
-                "anyOf": [
-                    {
-                        "type": "string",
-                        "pattern": "^(0|1)*$"
-                    },
-                    {
-                        "type": "string",
-                        "maxLength": 0,
-                        "default": 0
-                    }
-                ]
+                "default": "0",
+                "type": "string",
+                "pattern": "^(0|1)*$"
             },
             "lane": {
                 "type": "string",

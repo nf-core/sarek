@@ -67,9 +67,9 @@ for (param in checkPathParamList) if (param) file(param, checkIfExists: true)
 input_sample = params.build_only_index ? Channel.empty() : Channel.fromSamplesheet("input")
 
 input_sample.view()
-sample_count_all = input_sample.sum{ 1 }.view() // count number of samples
-sample_count_normal = input_sample.sum{ meta, fastqs -> meta.status == 1 ? 1 : 0 }.view() // count number of tumor samples (status == 1)
-sample_count_tumor = input_sample.sum{ meta, fastqs -> meta.status == 0 ? 1 : 0 }.view() // count number of normal samples (status == 0)
+sample_count_all = input_sample.sum{ 1 } // count number of samples
+sample_count_normal = input_sample.sum{ meta, fastq1, fastq2 -> meta.status == '0' ? 1 : 0 } // count number of normal samples (status == 0)
+sample_count_tumor = input_sample.sum{ meta, fastq1, fastq2 -> meta.status == '1' ? 1 : 0 } // count number of tumor samples (status == 1)
 
 
 // Fails when wrongfull extension for intervals file
