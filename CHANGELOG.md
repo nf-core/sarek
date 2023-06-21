@@ -7,17 +7,47 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## dev
 
+### Added
+
+- [#1112](https://github.com/nf-core/sarek/pull/1112) - Back to dev
+- [#1119](https://github.com/nf-core/sarek/pull/1119) - Added `help_text` for `input_output_options` group in schema
+
+### Changed
+
+- [#1119](https://github.com/nf-core/sarek/pull/1119) - Remove `null` by default in schema
+
+### Fixed
+
+- [#1118](https://github.com/nf-core/sarek/pull/1118) - Remove `public_aws_ecr` profile
+
+## [3.2.2](https://github.com/nf-core/sarek/releases/tag/3.2.2) - Vuoinesluobbalah
+
+Vuoinesluobbalah is a lake close to Bierikjávrre.
+
+### Added
+
+- [#1106](https://github.com/nf-core/sarek/pull/1106) - Add Slack integration to Megatests
+- [#1107](https://github.com/nf-core/sarek/pull/1107) - Add `singularity.registry` to `public_aws_ecr`
+
 ### Changed
 
 - [#1087](https://github.com/nf-core/sarek/pull/1087) - Back to dev
 - [#1087](https://github.com/nf-core/sarek/pull/1087) - Minor modules update
 - [#1088](https://github.com/nf-core/sarek/pull/1088) - Replace profile `test` by `test_cache` and add a `test` profile without hidden files
+- [#1095](https://github.com/nf-core/sarek/pull/1095) - Prepare release `3.2.2`
 
 ### Fixed
 
 - [#1087](https://github.com/nf-core/sarek/pull/1087) - Fix wrong default memory in GATK4_CREATESEQUENCEDICTIONARY [#1085](https://github.com/nf-core/sarek/pull/1085)
 - [#1089](https://github.com/nf-core/sarek/pull/1089) - Remove duplicated code
 - [#1093](https://github.com/nf-core/sarek/pull/1093) - Fixing Ascat by reverting meta.id in channels allele_files, loci_files, gc_file and rt_file to baseName.
+- [#1098](https://github.com/nf-core/sarek/pull/1098) - Fix Channel issue in Mutect2 subworkflow [#1094](https://github.com/nf-core/sarek/pull/1094)
+- [#1100](https://github.com/nf-core/sarek/pull/1100) - Remove duplicate index with deepvariant when no_intervals [#1069](https://github.com/nf-core/sarek/pull/1069)
+- [#1101](https://github.com/nf-core/sarek/pull/1101) - Remove duplicate index computation for GATK4 Markduplicates & [#1065](https://github.com/nf-core/sarek/issues/1065)
+- [#1101](https://github.com/nf-core/sarek/pull/1101) - Fix GATK4 version for GATK4 MarkduplicatesSpark [#1068](https://github.com/nf-core/sarek/issues/1068)
+- [#1105](https://github.com/nf-core/sarek/pull/1105) - Remove `params.tracedir`
+- [#1108](https://github.com/nf-core/sarek/pull/1108) - Refactor bad prefix definition for vcf files [#938](https://github.com/nf-core/sarek/issues/938)
+- [#1109](https://github.com/nf-core/sarek/pull/1109) - Fix `mpileup` for variantcalling: only `bcftools` run and file publishing
 
 ## [3.2.1](https://github.com/nf-core/sarek/releases/tag/3.2.1) - Pierikjaure
 

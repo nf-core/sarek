@@ -5,8 +5,12 @@
     - mpileup
   files:
     - path: results/multiqc
-    - path: results/variant_calling/mpileup/sample2/sample2.tumor.mpileup.gz
+    - path: results/variant_calling/bcftools/sample2/sample2.bcftools.vcf.gz
     # binary changes md5sums on reruns
+    - path: results/variant_calling/bcftools/sample2/sample2.bcftools.vcf.gz.tbi
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/mpileup/sample2/sample2.tumor.mpileup.gz
+      should_exist: false
     - path: results/mpileup
       should_exist: false
 - name: Run variant calling on tumor_only sample to test mpileup without intervals
@@ -23,8 +27,12 @@
       md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/no_intervals.bed.gz.tbi
       md5sum: f3dac01ea66b95fe477446fde2d31489
-    - path: results/variant_calling/mpileup/sample2/sample2.tumor.mpileup.gz
-    # binary changes md5sums on reruns
+    - path: results/variant_calling/bcftools/sample2/sample2.bcftools.vcf.gz
+      # binary changes md5sums on reruns
+    - path: results/variant_calling/bcftools/sample2/sample2.bcftools.vcf.gz.tbi
+      # binary changes md5sums on reruns
+    - path: results/variant_calling/mpileup/
+      should_exist: false
     - path: results/mpileup
       should_exist: false
 - name: Run variant calling on germline sample to test mpileup
@@ -34,8 +42,12 @@
     - mpileup
   files:
     - path: results/multiqc
-    - path: results/variant_calling/mpileup/sample1/sample1.normal.mpileup.gz
-    # binary changes md5sums on reruns
+    - path: results/variant_calling/bcftools/sample1/sample1.bcftools.vcf.gz
+      # binary changes md5sums on reruns
+    - path: results/variant_calling/bcftools/sample1/sample1.bcftools.vcf.gz.tbi
+      # binary changes md5sums on reruns
+    - path: results/variant_calling/mpileup/
+      should_exist: false
     - path: results/mpileup
       should_exist: false
 - name: Run variant calling on germline sample to test mpileup without intervals
@@ -52,7 +64,11 @@
       md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/no_intervals.bed.gz.tbi
       md5sum: f3dac01ea66b95fe477446fde2d31489
-    - path: results/variant_calling/mpileup/sample1/sample1.normal.mpileup.gz
-    # binary changes md5sums on reruns
+    - path: results/variant_calling/bcftools/sample1/sample1.bcftools.vcf.gz
+      # binary changes md5sums on reruns
+    - path: results/variant_calling/bcftools/sample1/sample1.bcftools.vcf.gz.tbi
+      # binary changes md5sums on reruns
+    - path: results/variant_calling/mpileup/
+      should_exist: false
     - path: results/mpileup
       should_exist: false
