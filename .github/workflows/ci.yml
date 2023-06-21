@@ -40,6 +40,7 @@ jobs:
         id: hash_workspace
         run: |
           echo "digest=$(echo sarek3_${{ github.workspace }} | md5sum | cut -c 1-25)" >> $GITHUB_OUTPUT
+
       - name: Cache test data
         id: cache-testdata
         uses: actions/cache@v3
