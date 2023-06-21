@@ -304,7 +304,7 @@ workflow SAREK {
 
     // Download cache if needed
     // Assuming that if the cache is provided, the user has already downloaded it
-    ensemblvep_info = params.vep_cache ? [] : Channel.of([ [ id:"${params.vep_genome}.${params.vep_cache_version}" ], params.vep_genome, params.vep_species, params.vep_cache_version ])
+    ensemblvep_info = params.vep_cache ? [] : Channel.of([ [ id:"${params.vep_cache_version}_${params.vep_genome}" ], params.vep_genome, params.vep_species, params.vep_cache_version ])
     snpeff_info = params.snpeff_cache ? [] : Channel.of([ [ id:"${params.snpeff_genome}.${params.snpeff_db}" ], params.snpeff_genome, params.snpeff_db ])
 
     if (params.download_cache) {
