@@ -64,8 +64,12 @@ output:
       pattern: "*.score"
   - metrics:
       type: file
-      description: Output file containing the metrics data from Dedup.
+      description: Output file containing Dedup metrics incl. histogram data.
       pattern: "*.metrics"
+  - metrics_multiqc_tsv:
+      type: file
+      description: Output tsv-file containing Dedup metrics excl. histogram data.
+      pattern: "*.metrics.multiqc.tsv"
   - versions:
       type: file
       description: File containing software versions
