@@ -1,5 +1,5 @@
 - name: Run variant calling on somatic samples with ascat
-  command: nextflow run main.nf -profile test,tools_somatic_ascat --outdir results
+  command: nextflow run main.nf -profile test_cache,tools_somatic_ascat --outdir results
   tags:
     - ascat_manual
     - manual
@@ -35,7 +35,7 @@
     - path: results/variant_calling/ascat/sample4_vs_sample3/sample4_vs_sample3.tumour_normalLogR.txt
       md5sum: 05418a7d814db11808172a4f57d040a1
 - name: Run variant calling on somatic sample with mutect2 without intervals
-  command: nextflow run main.nf -profile test,tools_somatic --tools mutect2 --no_intervals --outdir results
+  command: nextflow run main.nf -profile test_cache,tools_somatic --tools mutect2 --no_intervals --outdir results
   tags:
     - mutect2_manual
     - manual
@@ -83,7 +83,7 @@
     - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.vcf.gz.tbi
     # binary changes md5sums on reruns
 - name: Run variant calling on somatic sample with mutect2
-  command: nextflow run main.nf -profile test,tools_somatic --tools mutect2 --outdir results
+  command: nextflow run main.nf -profile test_cache,tools_somatic --tools mutect2 --outdir results
   tags:
     - mutect2_manual
     - manual

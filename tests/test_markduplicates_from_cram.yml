@@ -1,5 +1,5 @@
 - name: Run markduplicates starting from CRAM
-  command: nextflow run main.nf -profile test,markduplicates_cram --outdir results
+  command: nextflow run main.nf -profile test_cache,markduplicates_cram --outdir results
   tags:
     - input_cram
     - markduplicates
@@ -51,7 +51,7 @@
     - path: results/preprocessing/mapped/
       should_exist: false
 - name: Run skip markduplicates cram from step markduplicates
-  command: nextflow run main.nf -profile test,markduplicates_cram,skip_markduplicates --outdir results
+  command: nextflow run main.nf -profile test_cache,markduplicates_cram,skip_markduplicates --outdir results
   tags:
     - input_cram
     - markduplicates

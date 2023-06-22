@@ -1,5 +1,5 @@
 - name: Run default pipeline with gatk4_spark
-  command: nextflow run main.nf -profile test,use_gatk_spark --outdir results
+  command: nextflow run main.nf -profile test_cache,use_gatk_spark --outdir results
   tags:
     - gatk4_spark
     - preprocessing
@@ -49,7 +49,7 @@
     - path: results/preprocessing/mapped/
       should_exist: false
 - name: Run default pipeline with gatk4_spark & skipping all QC steps
-  command: nextflow run main.nf -profile test,use_gatk_spark --skip_tools fastqc,markduplicates_report,mosdepth,multiqc,samtools --outdir results
+  command: nextflow run main.nf -profile test_cache,use_gatk_spark --skip_tools fastqc,markduplicates_report,mosdepth,multiqc,samtools --outdir results
   tags:
     - gatk4_spark
     - preprocessing
@@ -82,7 +82,7 @@
     - path: results/reports/samtools
       should_exist: false
 - name: Run save_output_as_bam with gatk4 spark
-  command: nextflow run main.nf -profile test,use_gatk_spark --save_output_as_bam --outdir results
+  command: nextflow run main.nf -profile test_cache,use_gatk_spark --save_output_as_bam --outdir results
   tags:
     - gatk4_spark
     - preprocessing

@@ -1,5 +1,5 @@
 - name: Run prepare_recalibration starting from bam
-  command: nextflow run main.nf -profile test,prepare_recalibration_bam --outdir results
+  command: nextflow run main.nf -profile test_cache,prepare_recalibration_bam --outdir results
   tags:
     - input_bam
     - prepare_recalibration
@@ -37,7 +37,7 @@
     - path: results/preprocessing/markduplicates/
       should_exist: false
 - name: Run prepare_recalibration starting from bam and skip baserecalibration
-  command: nextflow run main.nf -profile test,prepare_recalibration_bam,skip_bqsr --tools strelka --outdir results
+  command: nextflow run main.nf -profile test_cache,prepare_recalibration_bam,skip_bqsr --tools strelka --outdir results
   tags:
     - input_bam
     - prepare_recalibration

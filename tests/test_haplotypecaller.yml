@@ -1,5 +1,5 @@
 - name: Run variant calling on germline sample with haplotypecaller
-  command: nextflow run main.nf -profile test,targeted --input ./tests/csv/3.0/mapped_single_bam.csv --tools haplotypecaller --step variant_calling --outdir results
+  command: nextflow run main.nf -profile test_cache,targeted --input ./tests/csv/3.0/mapped_single_bam.csv --tools haplotypecaller --step variant_calling --outdir results
   tags:
     - germline
     - haplotypecaller
@@ -35,7 +35,7 @@
     - path: results/haplotypecaller
       should_exist: false
 - name: Run variant calling on germline sample with haplotypecaller without intervals
-  command: nextflow run main.nf -profile test,targeted --input ./tests/csv/3.0/mapped_single_bam.csv --tools haplotypecaller --step variant_calling --no_intervals --outdir results
+  command: nextflow run main.nf -profile test_cache,targeted --input ./tests/csv/3.0/mapped_single_bam.csv --tools haplotypecaller --step variant_calling --no_intervals --outdir results
   tags:
     - germline
     - haplotypecaller

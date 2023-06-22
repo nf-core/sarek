@@ -2,8 +2,8 @@ process GATK4_MARKDUPLICATES_SPARK {
     tag "$meta.id"
     label 'process_high'
 
-    conda "bioconda::gatk4=4.3.0.0 conda-forge::openjdk=8.0.312"
-    container 'docker.io/broadinstitute/gatk:4.4.0.0'
+    conda "bioconda::gatk4=4.4.0.0 conda-forge::openjdk=8.0.312"
+    container "nf-core/gatk:4.4.0.0"
 
     input:
     tuple val(meta), path(bam)
@@ -24,7 +24,6 @@ process GATK4_MARKDUPLICATES_SPARK {
     def args = task.ext.args ?: ''
     prefix = task.ext.prefix ?: "${meta.id}"
     def input_list = bam.collect{"--input $it"}.join(' ')
-
 
     def avail_mem = 3072
     if (!task.memory) {

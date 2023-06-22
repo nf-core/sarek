@@ -42,7 +42,7 @@ workflow BAM_VARIANT_CALLING_SINGLE_STRELKA {
     MERGE_STRELKA_GENOME(genome_vcf_to_merge, dict)
 
     // Mix intervals and no_intervals channels together
-    // Only strelka variant vcf SV should get annotated
+    // Only strelka variant vcf should get annotated
     vcf = Channel.empty().mix(MERGE_STRELKA.out.vcf, vcf.no_intervals)
         // add variantcaller to meta map and remove no longer necessary field: num_intervals
         .map{ meta, vcf -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'strelka' ], vcf ] }
