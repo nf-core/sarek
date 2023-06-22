@@ -11,8 +11,7 @@ include { BAM_VARIANT_CALLING_SINGLE_TIDDIT           } from '../bam_variant_cal
 include { BAM_VARIANT_CALLING_TUMOR_ONLY_CONTROLFREEC } from '../bam_variant_calling_tumor_only_controlfreec/main'
 include { BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA        } from '../bam_variant_calling_tumor_only_manta/main'
 include { BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2      } from '../bam_variant_calling_tumor_only_mutect2/main'
-// Variant calling for patients with multiple tumor samples 
-include { BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2_MS   } from '../bam_variant_calling_tumor_only_mutect2_ms/main'
+include { BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2_MULTI_SAMPLE   } from '../bam_variant_calling_tumor_only_mutect2_ms/main'
 
 workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     take:
@@ -111,7 +110,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     // MUTECT2
     if (tools.split(',').contains('mutect2')) {
         if (params.mutect2_multi_sample) {
-            BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2_MS(
+            BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2_MULTI_SAMPLE(
                 cram,
                 // Remap channel to match module/subworkflow
                 fasta.map{ it -> [ [ id:'fasta' ], it ] },
@@ -124,8 +123,8 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
                 panel_of_normals_tbi,
                 intervals
             )
-            vcf_mutect2_ms = BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2_MS.out.filtered_vcf
-            versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2_MS.out.versions)
+            vcf_mutect2_ms = BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2_MULTI_SAMPLE.out.filtered_vcf
+            versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2_MULTI_SAMPLE.out.versions)
         }
         else {
             BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2(

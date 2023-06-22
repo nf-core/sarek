@@ -11,7 +11,7 @@ include { GATK4_GATHERPILEUPSUMMARIES     as GATHERPILEUPSUMMARIES     } from '.
 include { GATK4_CALCULATECONTAMINATION    as CALCULATECONTAMINATION    } from '../../../modules/nf-core/gatk4/calculatecontamination/main'
 include { GATK4_FILTERMUTECTCALLS         as FILTERMUTECTCALLS         } from '../../../modules/nf-core/gatk4/filtermutectcalls/main'
 
-workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2_MS {
+workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2_MULTI_SAMPLE {
     take:
     input                     // channel: [ val(meta), [ input ], [ input_index ] ]
     fasta                     // channel: /path/to/reference/fasta

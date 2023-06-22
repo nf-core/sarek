@@ -14,7 +14,7 @@ include { GATK4_CALCULATECONTAMINATION    as CALCULATECONTAMINATION        } fro
 include { GATK4_FILTERMUTECTCALLS         as FILTERMUTECTCALLS             } from '../../../modules/nf-core/gatk4/filtermutectcalls/main'
 
 
-workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MS {
+workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MULTI_SAMPLE {
     take:
     input                     // channel: [ meta, [ input ], [ input_index ] ]
     fasta                     // channel: /path/to/reference/fasta

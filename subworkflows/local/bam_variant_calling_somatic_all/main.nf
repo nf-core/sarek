@@ -10,8 +10,7 @@ include { BAM_VARIANT_CALLING_SOMATIC_ASCAT             } from '../bam_variant_c
 include { BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC      } from '../bam_variant_calling_somatic_controlfreec/main'
 include { BAM_VARIANT_CALLING_SOMATIC_MANTA             } from '../bam_variant_calling_somatic_manta/main'
 include { BAM_VARIANT_CALLING_SOMATIC_MUTECT2           } from '../bam_variant_calling_somatic_mutect2/main'
-// Variant calling for patients with multiple tumor samples 
-include { BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MS        } from '../bam_variant_calling_somatic_mutect2_ms/main'
+include { BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MULTI_SAMPLE        } from '../bam_variant_calling_somatic_mutect2_ms/main'
 include { BAM_VARIANT_CALLING_SOMATIC_STRELKA           } from '../bam_variant_calling_somatic_strelka/main'
 include { BAM_VARIANT_CALLING_SOMATIC_TIDDIT            } from '../bam_variant_calling_somatic_tiddit/main'
 include { MSISENSORPRO_MSI_SOMATIC                      } from '../../../modules/nf-core/msisensorpro/msi_somatic/main'
@@ -185,7 +184,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     if (tools.split(',').contains('mutect2')) {
         // MUTECT2 MULTI-SAMPLE SOMATIC VARIANT CALLING
         if (params.mutect2_multi_sample) {
-            BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MS(
+            BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MULTI_SAMPLE(
                 // Remap channel to match module/subworkflow
                 cram,
                 // Remap channel to match module/subworkflow
@@ -199,8 +198,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
                 panel_of_normals_tbi,
                 intervals
             )
-            vcf_mutect2_ms = BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MS.out.filtered_vcf
-            versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MS.out.versions)
+            vcf_mutect2_ms = BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MULTI_SAMPLE.out.filtered_vcf
+            versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MULTI_SAMPLE.out.versions)
         }
         else {
             BAM_VARIANT_CALLING_SOMATIC_MUTECT2(
