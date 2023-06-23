@@ -3,14 +3,14 @@
 // Should be only run on patients without normal sample
 //
 
-include { BAM_VARIANT_CALLING_CNVKIT                  } from '../bam_variant_calling_cnvkit/main'
-include { BAM_VARIANT_CALLING_FREEBAYES               } from '../bam_variant_calling_freebayes/main'
-include { BAM_VARIANT_CALLING_MPILEUP                 } from '../bam_variant_calling_mpileup/main'
-include { BAM_VARIANT_CALLING_SINGLE_STRELKA          } from '../bam_variant_calling_single_strelka/main'
-include { BAM_VARIANT_CALLING_SINGLE_TIDDIT           } from '../bam_variant_calling_single_tiddit/main'
-include { BAM_VARIANT_CALLING_TUMOR_ONLY_CONTROLFREEC } from '../bam_variant_calling_tumor_only_controlfreec/main'
-include { BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA        } from '../bam_variant_calling_tumor_only_manta/main'
-include { BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2      } from '../bam_variant_calling_tumor_only_mutect2/main'
+include { BAM_VARIANT_CALLING_CNVKIT                            } from '../bam_variant_calling_cnvkit/main'
+include { BAM_VARIANT_CALLING_FREEBAYES                         } from '../bam_variant_calling_freebayes/main'
+include { BAM_VARIANT_CALLING_MPILEUP                           } from '../bam_variant_calling_mpileup/main'
+include { BAM_VARIANT_CALLING_SINGLE_STRELKA                    } from '../bam_variant_calling_single_strelka/main'
+include { BAM_VARIANT_CALLING_SINGLE_TIDDIT                     } from '../bam_variant_calling_single_tiddit/main'
+include { BAM_VARIANT_CALLING_TUMOR_ONLY_CONTROLFREEC           } from '../bam_variant_calling_tumor_only_controlfreec/main'
+include { BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA                  } from '../bam_variant_calling_tumor_only_manta/main'
+include { BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2                } from '../bam_variant_calling_tumor_only_mutect2/main'
 include { BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2_MULTI_SAMPLE   } from '../bam_variant_calling_tumor_only_mutect2_ms/main'
 
 workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
@@ -44,7 +44,6 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     vcf_manta       = Channel.empty()
     vcf_mpileup     = Channel.empty()
     vcf_mutect2     = Channel.empty()
-    vcf_mutect2_ms  = Channel.empty()
     vcf_strelka     = Channel.empty()
     vcf_tiddit      = Channel.empty()
 
@@ -124,7 +123,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
                 panel_of_normals_tbi,
                 intervals
             )
-            vcf_mutect2_ms = BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2_MULTI_SAMPLE.out.filtered_vcf
+            vcf_mutect2 = BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2_MULTI_SAMPLE.out.filtered_vcf
             versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2_MULTI_SAMPLE.out.versions)
         }
         else {
@@ -194,7 +193,6 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         vcf_freebayes,
         vcf_manta,
         vcf_mutect2,
-        vcf_mutect2_ms,
         vcf_mpileup,
         vcf_strelka,
         vcf_tiddit
@@ -206,7 +204,6 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     vcf_manta
     vcf_mpileup
     vcf_mutect2
-    vcf_mutect2_ms
     vcf_strelka
     vcf_tiddit
 

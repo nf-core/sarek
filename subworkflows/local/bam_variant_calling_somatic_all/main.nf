@@ -2,18 +2,18 @@
 // PAIRED VARIANT CALLING
 //
 
-include { BAM_VARIANT_CALLING_CNVKIT                    } from '../bam_variant_calling_cnvkit/main'
-include { BAM_VARIANT_CALLING_FREEBAYES                 } from '../bam_variant_calling_freebayes/main'
-include { BAM_VARIANT_CALLING_MPILEUP as MPILEUP_NORMAL } from '../bam_variant_calling_mpileup/main'
-include { BAM_VARIANT_CALLING_MPILEUP as MPILEUP_TUMOR  } from '../bam_variant_calling_mpileup/main'
-include { BAM_VARIANT_CALLING_SOMATIC_ASCAT             } from '../bam_variant_calling_somatic_ascat/main'
-include { BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC      } from '../bam_variant_calling_somatic_controlfreec/main'
-include { BAM_VARIANT_CALLING_SOMATIC_MANTA             } from '../bam_variant_calling_somatic_manta/main'
-include { BAM_VARIANT_CALLING_SOMATIC_MUTECT2           } from '../bam_variant_calling_somatic_mutect2/main'
+include { BAM_VARIANT_CALLING_CNVKIT                              } from '../bam_variant_calling_cnvkit/main'
+include { BAM_VARIANT_CALLING_FREEBAYES                           } from '../bam_variant_calling_freebayes/main'
+include { BAM_VARIANT_CALLING_MPILEUP as MPILEUP_NORMAL           } from '../bam_variant_calling_mpileup/main'
+include { BAM_VARIANT_CALLING_MPILEUP as MPILEUP_TUMOR            } from '../bam_variant_calling_mpileup/main'
+include { BAM_VARIANT_CALLING_SOMATIC_ASCAT                       } from '../bam_variant_calling_somatic_ascat/main'
+include { BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC                } from '../bam_variant_calling_somatic_controlfreec/main'
+include { BAM_VARIANT_CALLING_SOMATIC_MANTA                       } from '../bam_variant_calling_somatic_manta/main'
+include { BAM_VARIANT_CALLING_SOMATIC_MUTECT2                     } from '../bam_variant_calling_somatic_mutect2/main'
 include { BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MULTI_SAMPLE        } from '../bam_variant_calling_somatic_mutect2_ms/main'
-include { BAM_VARIANT_CALLING_SOMATIC_STRELKA           } from '../bam_variant_calling_somatic_strelka/main'
-include { BAM_VARIANT_CALLING_SOMATIC_TIDDIT            } from '../bam_variant_calling_somatic_tiddit/main'
-include { MSISENSORPRO_MSI_SOMATIC                      } from '../../../modules/nf-core/msisensorpro/msi_somatic/main'
+include { BAM_VARIANT_CALLING_SOMATIC_STRELKA                     } from '../bam_variant_calling_somatic_strelka/main'
+include { BAM_VARIANT_CALLING_SOMATIC_TIDDIT                      } from '../bam_variant_calling_somatic_tiddit/main'
+include { MSISENSORPRO_MSI_SOMATIC                                } from '../../../modules/nf-core/msisensorpro/msi_somatic/main'
 
 workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     take:
@@ -51,7 +51,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     vcf_strelka         = Channel.empty()
     out_msisensorpro    = Channel.empty()
     vcf_mutect2         = Channel.empty()
-    vcf_mutect2_ms      = Channel.empty()
     vcf_tiddit          = Channel.empty()
 
     if (tools.split(',').contains('ascat')) {
@@ -198,7 +197,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
                 panel_of_normals_tbi,
                 intervals
             )
-            vcf_mutect2_ms = BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MULTI_SAMPLE.out.filtered_vcf
+            vcf_mutect2 = BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MULTI_SAMPLE.out.filtered_vcf
             versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_MUTECT2_MULTI_SAMPLE.out.versions)
         }
         else {
@@ -240,7 +239,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         vcf_freebayes,
         vcf_manta,
         vcf_mutect2,
-        vcf_mutect2_ms,
         vcf_strelka,
         vcf_tiddit
     )
@@ -251,7 +249,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     vcf_freebayes
     vcf_manta
     vcf_mutect2
-    vcf_mutect2_ms
     vcf_strelka
     vcf_tiddit
 
