@@ -165,9 +165,9 @@ These files are intermediate and by default not placed in the output-folder kept
 
 #### Sentieon BWA mem
 
-Sentieon's [bwa mem](https://support.sentieon.com/manual/usages/general/#bwa-mem-syntax) is a subroutine for mapping low-divergent sequences against a large reference genome. It is part of the proprietary software package [Sentieon](https://www.sentieon.com/).
+Sentieon [bwa mem](https://support.sentieon.com/manual/usages/general/#bwa-mem-syntax) is a subroutine for mapping low-divergent sequences against a large reference genome. It is part of the proprietary software package [DNAseq](https://www.sentieon.com/detailed-description-of-pipelines/#dnaseq) from [Sentieon](https://www.sentieon.com/).
 
-The aligned reads are then coordinate-sorted with `sentieon util sort`.
+The aligned reads are coordinate-sorted with Sentieon.
 
 <details markdown="1">
 <summary>Output files for all mappers and samples</summary>
@@ -211,7 +211,7 @@ The resulting CRAM files are delivered to the users.
 
 </details>
 
-### Sentieon's LocusCollector and Dedup
+### Sentieon LocusCollector and Dedup
 
 The subroutines LocusCollector and Dedup are part of Sentieon DNAseq packages with speedup versions of the standard GATK tools, and together those two subroutines correspond to GATK's MarkDuplicates.
 
@@ -276,7 +276,7 @@ The resulting recalibrated CRAM files are delivered to the user. Recalibrated CR
 
 The CSV files are auto-generated and can be used by Sarek for further processing and/or variant calling.
 
-See the [`--input`](usage.md#--input) section in the usage documentation for further reading and documentation on how to make the most of them.
+See the [`input`](usage#input-sample-sheet-configurations) section in the usage documentation for further reading and documentation on how to make the most of them.
 
 <details markdown="1">
 <summary>Output files:</summary>
@@ -374,12 +374,20 @@ If the haplotype-called VCF files are not filtered, then Sarek should be run wit
 
 [GATK Joint germline Variant Calling](https://gatk.broadinstitute.org/hc/en-us/articles/360035535932-Germline-short-variant-discovery-SNPs-Indels-) uses Haplotypecaller per sample in `gvcf` mode. Next, the gVCFs are consolidated from multiple samples into a [GenomicsDB](https://gatk.broadinstitute.org/hc/en-us/articles/5358869876891-GenomicsDBImport) datastore. After joint [genotyping](https://gatk.broadinstitute.org/hc/en-us/articles/5358906861083-GenotypeGVCFs), [VQSR](https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator) is applied for filtering to produce the final multisample callset with the desired balance of precision and sensitivity.
 
+<details markdown="1">
+<summary>Output files from joint germline variant callling</summary>
+
 **Output directory: `{outdir}/variantcalling/haplotypecaller/<sample>/`**
+
+- `<sample>.haplotypecaller.g.vcf.gz` and `<sample>.haplotypecaller.g.vcf.gz.tbi`
+  - VCF with tabix index
+
+**Output directory: `{outdir}/variantcalling/sentieon_haplotyper/joint_variant_calling/`**
 
 - `joint_germline.vcf.gz` and `joint_germline.vcf.gz.tbi`
   - VCF with tabix index
 - `joint_germline_recalibrated.vcf.gz` and `joint_germline_recalibrated.vcf.gz.tbi`
-  - variant recalibrated VCF with tabix index
+  - variant recalibrated VCF with tabix index (if VQSR is applied)
 
 </details>
 
@@ -427,6 +435,57 @@ For further reading and documentation see the [samtools manual](https://www.htsl
 
 - `<sample>.pileup.gz`
   - The pileup format is a text-based format for summarizing the base calls of aligned reads to a reference sequence. Alignment records are grouped by sample (`SM`) identifiers in `@RG` header lines.
+
+</details>
+
+#### Sentieon Haplotyper
+
+[Sentieon Haplotyper](https://support.sentieon.com/manual/usages/general/#haplotyper-algorithm) is Sention's speedup version of GATK's Haplotypecaller (see above).
+
+<details markdown="1">
+<summary>Unfiltered VCF-files for normal samples</summary>
+
+**Output directory: `{outdir}/variantcalling/sentieon_haplotyper/<sample>/`**
+
+- `<sample>.haplotyper.unfiltered.vcf.gz` and `<sample>.haplotyper.unfiltered.vcf.gz.tbi`
+  - VCF with tabix index
+
+</details>
+
+The output from Sentieon's Haplotyper can be controlled through the option `--sentieon_haplotyper_emit_mode` for Sarek, see [Basic usage of Sentieon functions in Sarek](https://github.com/nf-core/sarek/blob/sentieon_docs/docs/usage.md#basic-usage-of-sentieon-functions-in-sarek).
+
+Unless `haplotyper_filter` is listed under `--skip_tools` in the nextflow command, GATK's CNNScoreVariants and FilterVariantTranches (see above) will applied to the unfiltered VCF-files obtained filtered vcf-files.
+
+<details markdown="1">
+<summary>Filtered VCF-files for normal samples</summary>
+
+**Output directory: `{outdir}/variantcalling/sentieon_haplotyper/<sample>/`**
+
+- `<sample>.haplotyper.filtered.vcf.gz` and `<sample>.haplotyper.filtered.vcf.gz.tbi`
+  - VCF with tabix index
+
+</details>
+
+##### Sentieon Joint Germline Variant Calling
+
+In Sentieon's package DNAseq, joint germline variant calling is done by first running Sentieon's Haplotyper in emit-mode `gvcf` for each sample, and then running Sentieon's [GVCFtyper](https://support.sentieon.com/manual/usages/general/#gvcftyper-algorithm) on the set of gVCF-files. See [Basic usage of Sentieon functions in Sarek](https://github.com/nf-core/sarek/blob/sentieon_docs/docs/usage.md#basic-usage-of-sentieon-functions-in-sarek) for information on how joint germline variant callling can be done in Sarek using Sentieon's DNAseq.
+
+Sarek's implementation of joint germline variant calling using DNAseq does not include the usage of [GenomicsDB](https://gatk.broadinstitute.org/hc/en-us/articles/5358869876891-GenomicsDBImport) datastore. After joint genotyping, Sentieon's version of VQSR ([VarCal](https://support.sentieon.com/manual/usages/general/#varcal-algorithm) and [ApplyVarCal](https://support.sentieon.com/manual/usages/general/#applyvarcal-algorithm)) is applied for filtering to produce the final multisample callset with the desired balance of precision and sensitivity.
+
+<details markdown="1">
+<summary>Output files from joint germline variant callling</summary>
+
+**Output directory: `{outdir}/variantcalling/sentieon_haplotyper/<sample>/`**
+
+- `<sample>.haplotypecaller.g.vcf.gz` and `<sample>.haplotypecaller.g.vcf.gz.tbi`
+  - VCF with tabix index
+
+**Output directory: `{outdir}/variantcalling/sentieon_haplotyper/joint_variant_calling/`**
+
+- `joint_germline.vcf.gz` and `joint_germline.vcf.gz.tbi`
+  - VCF with tabix index
+- `joint_germline_recalibrated.vcf.gz` and `joint_germline_recalibrated.vcf.gz.tbi`
+  - variant recalibrated VCF with tabix index (if VarCal is applied)
 
 </details>
 
