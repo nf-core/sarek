@@ -227,7 +227,7 @@ The subroutine [Dedup](https://support.sentieon.com/manual/usages/general/#dedup
 - `<sample>.dedup.cram` and `<sample>.dedup.cram.crai`
   - CRAM file and index
 - if `--save_output_as_bam`:
-  - `<sample>.md.bam` and `<sample>.dedup.bam.bai`
+  - `<sample>.dedup.bam` and `<sample>.dedup.bam.bai`
 
 </details>
 
@@ -924,7 +924,7 @@ The plot will show:
 
 #### Sentieon Dedup reports
 
-Sentieon's DNAseq-subroutine Dedup produces a metrics report much like the one produce by GATK's MarkDuplicates. The Dedup metrics are imported into MultiQC as custom content and displayed in a table.
+Sentieon's DNAseq subroutine Dedup produces a metrics report much like the one produce by GATK's MarkDuplicates. The Dedup metrics are imported into MultiQC as custom content and displayed in a table.
 
 <details markdown="1">
 <summary>Output files for all samples</summary>
