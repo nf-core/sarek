@@ -454,7 +454,7 @@ Files created:
 
 The output from Sentieon's Haplotyper can be controlled through the option `--sentieon_haplotyper_emit_mode` for Sarek, see [Basic usage of Sentieon functions in Sarek](https://github.com/nf-core/sarek/blob/sentieon_docs/docs/usage.md#basic-usage-of-sentieon-functions-in-sarek).
 
-Unless `haplotyper_filter` is listed under `--skip_tools` in the nextflow command, GATK's CNNScoreVariants and FilterVariantTranches (see above) will applied to the unfiltered VCF-files obtained filtered vcf-files.
+Unless `haplotyper_filter` is listed under `--skip_tools` in the nextflow command, GATK's CNNScoreVariants and FilterVariantTranches (see above) is applied to the unfiltered VCF-files in order to obtained filtered vcf-files.
 
 <details markdown="1">
 <summary>Filtered VCF-files for normal samples</summary>
@@ -919,6 +919,20 @@ The plot will show:
 
 - `<sample>.md.cram.metrics`
   - file used by [MultiQC](https://multiqc.info/)
+  </details>
+
+
+#### Sentieon Dedup reports
+
+Sentieon's DNAseq-subroutine Dedup produces a metrics report much like the one produce by GATK's MarkDuplicates. The Dedup metrics are imported into MultiQC as custom content and displayed in a table.
+
+<details markdown="1">
+<summary>Output files for all samples</summary>
+
+**Output directory: `{outdir}/reports/sentieon_dedup/<sample>`**
+
+- `<sample>.dedup.cram.metrics`
+  - file used by [MultiQC](https://multiqc.info/).
   </details>
 
 #### samtools stats
