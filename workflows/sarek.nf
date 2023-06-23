@@ -64,31 +64,119 @@ for (param in checkPathParamList) if (param) file(param, checkIfExists: true)
 
 // Set input, can either be from --input or from automatic retrieval in WorkflowSarek.groovy
 // input_sample = params.build_only_index ? Channel.empty() : extract_csv(file(WorkflowSarek.retrieveInput(params, log), checkIfExists: true))
-input_sample = params.build_only_index ? Channel.empty() : Channel.fromSamplesheet("input")
+ch_from_samplesheet = params.build_only_index ? Channel.empty() : Channel.fromSamplesheet("input")
+
+ch_from_samplesheet
+.map{ meta, fastq_1, fastq_2, table, cram, crai, bam, bai, vcf, variantcaller ->
+    [ meta.patient + meta.sample, [meta, fastq_1, fastq_2, table, cram, crai, bam, bai, vcf, variantcaller] ]
+}.tap{ ch_with_patient_sample }
+.groupTuple()
+.map { patient_sample, ch_items ->
+    [ patient_sample, ch_items.size() ]
+}.combine(ch_with_patient_sample, by: 0)
+.map { patient_sample, num_lanes, ch_items ->
+    (meta, fastq_1, fastq_2, table, cram, crai, bam, bai, vcf, variantcaller) = ch_items
+    if (meta.lane && fastq_2) {
+        meta           = meta + [id: "${meta.sample}-${meta.lane}".toString()]
+        def CN         = params.seq_center ? "CN:${params.seq_center}\\t" : ''
+
+        def flowcell   = flowcellLaneFromFastq(fastq_1)
+        // Don't use a random element for ID, it breaks resuming
+        def read_group = "\"@RG\\tID:${flowcell}.${meta.sample}.${meta.lane}\\t${CN}PU:${meta.lane}\\tSM:${meta.patient}_${meta.sample}\\tLB:${meta.sample}\\tDS:${params.fasta}\\tPL:${params.seq_platform}\""
+        println "Number of lanes: $num_lanes"
+
+        meta           = meta + [num_lanes: num_lanes.toInteger(), read_group: read_group.toString(), data_type: 'fastq', size: 1]
+
+        if (params.step == 'mapping') return [ meta - meta.subMap('lane'), [ fastq_1, fastq_2 ] ]
+        else {
+            error("Samplesheet contains fastq files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
+        }
+
+    // start from BAM
+    } else if (map.lane && bam) {
+        if (params.step != 'mapping' && !bai) {
+            error("BAM index (bai) should be provided.")
+        }
+        meta            = meta + [id: "${meta.sample}-${meta.lane}".toString()]
+        def CN          = params.seq_center ? "CN:${params.seq_center}\\t" : ''
+        def read_group  = "\"@RG\\tID:${meta.sample}_${meta.lane}\\t${CN}PU:${meta.lane}\\tSM:${meta.patient}_${meta.sample}\\tLB:${meta.sample}\\tDS:${params.fasta}\\tPL:${params.seq_platform}\""
+        println "Number of lanes: $num_lanes"
+
+        meta            = meta + [num_lanes: num_lanes.toInteger(), read_group: read_group.toString(), data_type: 'bam', size: 1]
+
+        if (params.step != 'annotate') return [ meta - meta.subMap('lane'), bam, bai ]
+        else {
+            error("Samplesheet contains bam files but step is `annotate`. The pipeline is expecting vcf files for the annotation. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
+        }
+
+    // recalibration
+    } else if (table && cram) {
+        meta = meta + [id: meta.sample, data_type: 'cram']
+
+        if (!(params.step == 'mapping' || params.step == 'annotate')) return [ meta - meta.subMap('lane'), cram, crai, table ]
+        else {
+            error("Samplesheet contains cram files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
+        }
+
+    // recalibration when skipping MarkDuplicates
+    } else if (table && bam) {
+        meta = meta + [id: meta.sample, data_type: 'bam']
+
+        if (!(params.step == 'mapping' || params.step == 'annotate')) return [ meta - meta.subMap('lane'), bam, bai, table ]
+        else {
+            error("Samplesheet contains bam files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
+        }
+
+    // prepare_recalibration or variant_calling
+    } else if (cram) {
+        meta = meta + [id: meta.sample, data_type: 'cram']
+
+        if (!(params.step == 'mapping' || params.step == 'annotate')) return [ meta - meta.subMap('lane'), cram, crai ]
+        else {
+            error("Samplesheet contains cram files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
+        }
+
+    // prepare_recalibration when skipping MarkDuplicates or `--step markduplicates`
+    } else if (bam) {
+        meta = meta + [id: meta.sample, data_type: 'bam']
+
+        if (!(params.step == 'mapping' || params.step == 'annotate')) return [ meta - meta.subMap('lane'), bam, bai ]
+        else {
+            error("Samplesheet contains bam files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
+        }
+
+    // annotation
+    } else if (vcf) {
+        meta = meta + [id: meta.sample, data_type: 'vcf', variantcaller: variantcaller ?: '']
+
+        if (params.step == 'annotate') return [ meta - meta.subMap('lane'), vcf ]
+        else {
+            error("Samplesheet contains vcf files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
+        }
+    } else {
+        error("Missing or unknown field in csv file header. Please check your samplesheet")
+    }
+}.set { input_sample }
 
 input_sample.view()
-sample_count_all = input_sample.sum{ 1 } // count number of samples
-sample_count_normal = input_sample.sum{ it[0].status == 0 ? 1 : 0 } // count number of normal samples (status == 0)
-sample_count_tumor = input_sample.sum{ it[0].status == 1 ? 1 : 0 } // count number of tumor samples (status == 1)
-
-sample_count_all.view()
-sample_count_normal.view()
-sample_count_tumor.view()
 
 if (params.step != 'annotate' && params.tools) {
     // Two checks for ensuring that the pipeline stops with a meaningful error message if
     // 1. the sample-sheet only contains normal-samples, but some of the requested tools require tumor-samples, and
     // 2. the sample-sheet only contains tumor-samples, but some of the requested tools require normal-samples.
-    if ((sample_count_normal == sample_count_all) && !params.build_only_index) { // In this case, the sample-sheet contains no tumor-samples
-        def tools_tumor = ['ascat', 'controlfreec', 'mutect2', 'msisensorpro']
-        def tools_tumor_asked = []
-        tools_tumor.each{ tool ->
-            if (params.tools.split(',').contains(tool)) tools_tumor_asked.add(tool)
+    ch_from_samplesheet.filter{ it[0].status == 1 }.ifEmpty{ // In this case, the sample-sheet contains no tumor-samples
+        if (!params.build_only_index) {
+            def tools_tumor = ['ascat', 'controlfreec', 'mutect2', 'msisensorpro']
+            def tools_tumor_asked = []
+            tools_tumor.each{ tool ->
+                if (params.tools.split(',').contains(tool)) tools_tumor_asked.add(tool)
+            }
+            if (!tools_tumor_asked.isEmpty()) {
+                error('The sample-sheet only contains normal-samples, but the following tools, which were requested with "--tools", expect at least one tumor-sample : ' + tools_tumor_asked.join(", "))
+            }
         }
-        if (!tools_tumor_asked.isEmpty()) {
-            error('The sample-sheet only contains normal-samples, but the following tools, which were requested with "--tools", expect at least one tumor-sample : ' + tools_tumor_asked.join(", "))
-        }
-    } else if ((sample_count_tumor == sample_count_all)) {  // In this case, the sample-sheet contains no normal/germline-samples
+    }
+    ch_from_samplesheet.filter{ it[0].status == 0 }.ifEmpty{ // In this case, the sample-sheet contains no normal/germline-samples
         def tools_requiring_normal_samples = ['ascat', 'deepvariant', 'haplotypecaller', 'msisensorpro']
         def requested_tools_requiring_normal_samples = []
         tools_requiring_normal_samples.each{ tool_requiring_normal_samples ->
@@ -99,21 +187,6 @@ if (params.step != 'annotate' && params.tools) {
         }
     }
 }
-
-input_sample.map{ meta, fastq_1, fastq_2, table, cram, crai, bam, bai, vcf ->
-    if (meta.lane && fastq_2) {
-        meta = meta + [id: "${meta.sample}-${meta.lane}".toString()]
-        def CN = params.seq_center ? "CN:${params.seq_center}\\t" : ''
-
-        def flowcell    = flowcellLaneFromFastq(fastq_1)
-        // Don't use a random element for ID, it breaks resuming
-        def read_group  = "\"@RG\\tID:${flowcell}.${meta.sample}.${meta.lane}\\t${CN}PU:${meta.lane}\\tSM:${meta.patient}_${meta.sample}\\tLB:${meta.sample}\\tDS:${params.fasta}\\tPL:${params.seq_platform}\""
-
-        num_lanes = input_sample.filter{ it[0].patient + it[0].sample == meta.patient + meta.sample }.sum{ 1 } // count number of lanes (how many entries there are for this combination of patient and sample)
-        meta = meta + [num_lanes: num_lanes]
-    }
-}
-
 
 // Fails when wrongfull extension for intervals file
 if (params.wes && !params.step == 'annotate') {

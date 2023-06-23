@@ -59,7 +59,9 @@
                         "type": "string",
                         "maxLength": 0
                     }
-                ]
+                ],
+                "format": "file-path",
+                "exists": true
             },
             "fastq_2": {
                 "errorMessage": "FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'",
@@ -72,7 +74,9 @@
                         "type": "string",
                         "maxLength": 0
                     }
-                ]
+                ],
+                "format": "file-path",
+                "exists": true
             },
             "table": {
                 "errorMessage": "Recalibration table cannot contain spaces and must have extension '.table'",
@@ -85,7 +89,9 @@
                         "type": "string",
                         "maxLength": 0
                     }
-                ]
+                ],
+                "format": "file-path",
+                "exists": true
             },
             "cram": {
                 "errorMessage": "CRAM file cannot contain spaces and must have extension '.cram'",
@@ -98,7 +104,9 @@
                         "type": "string",
                         "maxLength": 0
                     }
-                ]
+                ],
+                "format": "file-path",
+                "exists": true
             },
             "crai": {
                 "errorMessage": "CRAM index file cannot contain spaces and must have extension '.crai'",
@@ -111,7 +119,9 @@
                         "type": "string",
                         "maxLength": 0
                     }
-                ]
+                ],
+                "format": "file-path",
+                "exists": true
             },
             "bam": {
                 "errorMessage": "BAM file cannot contain spaces and must have extension '.bam'",
@@ -124,7 +134,9 @@
                         "type": "string",
                         "maxLength": 0
                     }
-                ]
+                ],
+                "format": "file-path",
+                "exists": true
             },
             "bai": {
                 "errorMessage": "BAM index file cannot contain spaces and must have extension '.bai'",
@@ -137,7 +149,9 @@
                         "type": "string",
                         "maxLength": 0
                     }
-                ]
+                ],
+                "format": "file-path",
+                "exists": true
             },
             "vcf": {
                 "errorMessage": "VCF file for reads 1 cannot contain spaces and must have extension '.vcf' or '.vcf.gz'",
@@ -150,7 +164,12 @@
                         "type": "string",
                         "maxLength": 0
                     }
-                ]
+                ],
+                "format": "file-path",
+                "exists": true
+            },
+            "variantcaller": {
+                "type": "string"
             }
         },
         "required": ["patient", "sample", "lane"]
