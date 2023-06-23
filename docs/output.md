@@ -52,6 +52,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - [FastQC](#fastqc)
     - [FastP](#fastp)
     - [GATK MarkDuplicates reports](#gatk-markduplicates-reports)
+    - [Sentieon Dedup reports](#sentieon-dedup-reports)
     - [mosdepth](#mosdepth)
     - [samtools stats](#samtools-stats)
     - [bcftools stats](#bcftools-stats)
