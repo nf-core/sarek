@@ -33,7 +33,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - [GATK HaplotypeCaller](#gatk-haplotypecaller)
     - [Sentieon Haplotyper](#sentieon-haplotyper)
     - [GATK Mutect2](#gatk-mutect2)
-    - [samtools mpileup](#samtools-mpileup)
+    - [bcftools](#bcftools)
     - [Strelka2](#strelka2)
   - [Structural Variants](#structural-variants)
     - [Manta](#manta)
@@ -310,6 +310,21 @@ If some results from a variant caller do not appear here, please check out the `
 
 For single nucleotide variants (SNVs) and small indels, multiple tools are available for normal (germline), tumor-only, and tumor-normal (somatic) paired data. For a list of the appropriate tool(s) for the data and sequencing type at hand, please check [here](usage.md#which-tool).
 
+#### bcftools
+
+[bcftools mpileup](https://samtools.github.io/bcftools/bcftools.html#mpileup) generates pileup of a CRAM file, followed by [bcftools call](https://samtools.github.io/bcftools/bcftools.html#call) and filtered with `-i 'count(GT==\"RR\")==0`.
+For further reading and documentation see the [bcftools manual](https://samtools.github.io/bcftools/howtos/variant-calling.html).
+
+<details markdown="1">
+<summary>Output files for all samples</summary>
+
+**Output directory: `{outdir}/variantcalling/bcftools/<sample>/`**
+
+- `<sample>.bcftools.vcf.gz` and `<sample>.bcftools.vcf.gz.tbi`
+  - VCF with tabix index
+
+</details>
+
 #### DeepVariant
 
 [DeepVariant](https://github.com/google/deepvariant) is a deep learning-based variant caller that takes aligned reads, produces pileup image tensors from them, classifies each tensor using a convolutional neural network and finally reports the results in a standard VCF or gVCF file. For further documentation take a look [here](https://github.com/google/deepvariant/tree/r1.4/docs).
@@ -421,22 +436,7 @@ Files created:
 - `{sample,tumorsample_vs_normalsample}.mutect2.filtered.vcf.gz.filteringStats.tsv`
   - a stats file generated during the filtering of Mutect2 called variants
 
-</details>
-
-#### samtools mpileup
-
-[samtools mpileup](https://www.htslib.org/doc/samtools-mpileup.html) generates pileup of a CRAM file.
-For further reading and documentation see the [samtools manual](https://www.htslib.org/doc/samtools-mpileup.html).
-
-<details markdown="1">
-<summary>Output files for all samples</summary>
-
-**Output directory: `{outdir}/variantcalling/mpileup/<sample>/`**
-
-- `<sample>.pileup.gz`
-  - The pileup format is a text-based format for summarizing the base calls of aligned reads to a reference sequence. Alignment records are grouped by sample (`SM`) identifiers in `@RG` header lines.
-
-</details>
+</details
 
 #### Sentieon Haplotyper
 

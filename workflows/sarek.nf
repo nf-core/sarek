@@ -541,9 +541,14 @@ workflow SAREK {
         }.groupTuple()
 
         // gatk4 markduplicates can handle multiple bams as input, so no need to merge/index here
-        // Except if and only if skipping markduplicates or saving mapped bams
-        if (params.save_mapped || (params.skip_tools && params.skip_tools.split(',').contains('markduplicates'))) {
-
+        // Except if and only if save_mapped or (skipping markduplicates and sentieon-dedup)
+        if (
+            params.save_mapped ||
+            (
+                (params.skip_tools && params.skip_tools.split(',').contains('markduplicates')) &&
+                !(params.tools && params.tools.split(',').contains('sentieon_dedup'))
+            )
+        ) {
             // bams are merged (when multiple lanes from the same sample), indexed and then converted to cram
             BAM_MERGE_INDEX_SAMTOOLS(bam_mapped)
 
@@ -581,7 +586,11 @@ workflow SAREK {
         // Should it be possible to restart from converted crams?
         // For now, conversion from bam to cram is only done when skipping markduplicates
 
-        if (params.skip_tools && params.skip_tools.split(',').contains('markduplicates')) {
+        if (
+            params.skip_tools &&
+            params.skip_tools.split(',').contains('markduplicates') &&
+            !(params.tools && params.tools.split(',').contains('sentieon_dedup'))
+        ) {
             if (params.step == 'mapping') {
                 cram_skip_markduplicates = BAM_TO_CRAM_MAPPING.out.alignment_index
             } else {
@@ -1036,7 +1045,7 @@ workflow SAREK {
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_sentieon_haplotyper)
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_strelka)
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_tiddit)
-        // vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_mpileup) // Not annotated?
+        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_mpileup)
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.vcf_all)
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.vcf_all)
 

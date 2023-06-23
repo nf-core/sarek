@@ -258,12 +258,12 @@
                     },
                     "gatk4/markduplicates": {
                         "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "git_sha": "0a261469640941da2488e1a5aa023b64db837c70",
                         "installed_by": ["modules"]
                     },
                     "gatk4/markduplicatesspark": {
                         "branch": "master",
-                        "git_sha": "541811d779026c5d395925895fa5ed35e7216cc0",
+                        "git_sha": "0a261469640941da2488e1a5aa023b64db837c70",
                         "installed_by": ["modules"]
                     },
                     "gatk4/mergemutectstats": {
@@ -383,7 +383,7 @@
                     },
                     "sentieon/dedup": {
                         "branch": "master",
-                        "git_sha": "2cb2012b268b3502ac74463e510e76be99e2cdbf",
+                        "git_sha": "e311732e4d878d7e47872226bef5f8630dc81675",
                         "installed_by": ["modules"]
                     },
                     "sentieon/gvcftyper": {

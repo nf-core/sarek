@@ -110,9 +110,13 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
         no_intervals: it[0].num_intervals <= 1
     }
 
+    // Only when using intervals
+    pileup_table_normal_to_merge = pileup_table_normal_branch.intervals.map{ meta, table -> [ groupKey(meta, meta.num_intervals), table ] }.groupTuple()
+    pileup_table_tumor_to_merge = pileup_table_tumor_branch.intervals.map{ meta, table -> [ groupKey(meta, meta.num_intervals), table ] }.groupTuple()
+
     // Merge Pileup Summaries
-    GATHERPILEUPSUMMARIES_NORMAL(GETPILEUPSUMMARIES_NORMAL.out.table.map{ meta, table -> [ groupKey(meta, meta.num_intervals), table ] }.groupTuple(), dict.map{ meta, dict -> [ dict ] })
-    GATHERPILEUPSUMMARIES_TUMOR(GETPILEUPSUMMARIES_TUMOR.out.table.map{ meta, table -> [ groupKey(meta, meta.num_intervals), table ] }.groupTuple(), dict.map{ meta, dict -> [ dict ] })
+    GATHERPILEUPSUMMARIES_NORMAL(pileup_table_normal_to_merge, dict.map{ meta, dict -> [ dict ] })
+    GATHERPILEUPSUMMARIES_TUMOR(pileup_table_tumor_to_merge, dict.map{ meta, dict -> [ dict ] })
 
     // remove no longer necessary field: normal_id, tumor_id, num_intervals
     pileup_table_normal = Channel.empty().mix(GATHERPILEUPSUMMARIES_NORMAL.out.table, pileup_table_normal_branch.no_intervals)

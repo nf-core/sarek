@@ -32,6 +32,7 @@ workflow BAM_SENTIEON_DEDUP {
 
     // Gather all reports generated
     reports = reports.mix(SENTIEON_DEDUP.out.metrics)
+    reports = reports.mix(SENTIEON_DEDUP.out.metrics_multiqc_tsv)
     reports = reports.mix(SENTIEON_DEDUP.out.score)
     reports = reports.mix(CRAM_QC_MOSDEPTH_SAMTOOLS.out.reports)
 
