@@ -165,7 +165,7 @@ These files are intermediate and by default not placed in the output-folder kept
 
 #### Sentieon BWA mem
 
-Sentieon's [bwa mem](https://support.sentieon.com/manual/usages/general/#bwa-mem-syntax) is subroutine for mapping low-divergent sequences against a large reference genome. It is part of the proprietary software package [Sentieon](https://www.sentieon.com/).
+Sentieon's [bwa mem](https://support.sentieon.com/manual/usages/general/#bwa-mem-syntax) is a subroutine for mapping low-divergent sequences against a large reference genome. It is part of the proprietary software package [Sentieon](https://www.sentieon.com/).
 
 The aligned reads are then coordinate-sorted with `sentieon util sort`.
 
@@ -208,6 +208,26 @@ The resulting CRAM files are delivered to the users.
   - CRAM file and index
 - if `--save_output_as_bam`:
   - `<sample>.md.bam` and `<sample>.md.bam.bai`
+
+</details>
+
+### Sentieon's LocusCollector and Dedup
+
+The subroutines LocusCollector and Dedup are part of Sentieon DNAseq packages with speedup versions of the standard GATK tools, and together those two subroutines correspond to GATK's MarkDuplicates.
+
+The subroutine [LocusCollector](https://support.sentieon.com/manual/usages/general/#driver-algorithm-syntax) collects read information that will be used for removing or marking of duplicate reads; its output is the score file indicating which reads are likely duplicates.
+
+The subroutine [Dedup](https://support.sentieon.com/manual/usages/general/#dedup-algorithm) marks or removes duplicate reads based no the score file supplied by LocusCollector, and produces a BAM or CRAM file.
+
+<details markdown="1">
+<summary>Output files for all samples</summary>
+
+**Output directory: `{outdir}/preprocessing/sentieon_dedup/<sample>/`**
+
+- `<sample>.dedup.cram` and `<sample>.dedup.cram.crai`
+  - CRAM file and index
+- if `--save_output_as_bam`:
+  - `<sample>.md.bam` and `<sample>.dedup.bam.bai`
 
 </details>
 
@@ -275,6 +295,9 @@ See the [`--input`](usage.md#--input) section in the usage documentation for fur
 - `variantcalled.csv`
   - CSV containing an entry for each sample with the columns `patient,sample,vcf`
   </details>
+
+#### Sentieon QualCal (BQSR)
+Currently, Sentieon's version of BQSR, QualCal, is not available in Sarek. Recent Illumina sequencers tend to provide well-calibrated BQs, so BQSR may not provide much benefit. By default Sarek runs GATK's BQSR; that can be skipped by adding the option `--skip_tools baserecalibrator`.
 
 ## Variant Calling
 
