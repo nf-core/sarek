@@ -174,7 +174,6 @@ The aligned reads are coordinate-sorted with Sentieon.
 
 The alignment files (BAM or CRAM) produced by the chosen aligner are, by default, not published, that is, they are not placed in the output-folder (`outdir`), but by setting `--save_mapped` the alignment files are published in CRAM format or, by additional setting `--save_output_as_bam`, in BAM format.
 
-
 **Output directory: `{outdir}/preprocessing/mapped/<sample>/`**
 
 - if `--save_mapped`: `<sample>.sorted.cram` and `<sample>.sorted.cram.crai`
@@ -297,6 +296,7 @@ See the [`input`](usage#input-sample-sheet-configurations) section in the usage 
   </details>
 
 #### Sentieon QualCal (BQSR)
+
 Currently, Sentieon's version of BQSR, QualCal, is not available in Sarek. Recent Illumina sequencers tend to provide well-calibrated BQs, so BQSR may not provide much benefit. By default Sarek runs GATK's BQSR; that can be skipped by adding the option `--skip_tools baserecalibrator`.
 
 ## Variant Calling
@@ -920,7 +920,6 @@ The plot will show:
 - `<sample>.md.cram.metrics`
   - file used by [MultiQC](https://multiqc.info/)
   </details>
-
 
 #### Sentieon Dedup reports
 
