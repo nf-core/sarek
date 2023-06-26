@@ -5,10 +5,7 @@
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
 include { CRAM_QC_MOSDEPTH_SAMTOOLS              } from '../cram_qc_mosdepth_samtools/main'
-include { GATK4_MARKDUPLICATES                   } from '../../../modules/nf-core/gatk4/markduplicates/main'
 include { SENTIEON_DEDUP                         } from '../../../modules/nf-core/sentieon/dedup/main'
-include { SAMTOOLS_INDEX as INDEX_INPUT          } from '../../../modules/nf-core/samtools/index/main'
-include { SAMTOOLS_INDEX as INDEX_MARKDUPLICATES } from '../../../modules/nf-core/samtools/index/main'
 
 workflow BAM_SENTIEON_DEDUP {
     take:
@@ -25,7 +22,6 @@ workflow BAM_SENTIEON_DEDUP {
     bam = bam.map{ meta, bam -> [ meta - meta.subMap('data_type'), bam ] }
     bai = bai.map{ meta, bai -> [ meta - meta.subMap('data_type'), bai ] }
     bam_bai = bam.join(bai, failOnMismatch:true, failOnDuplicate:true)
-    // The concat operation is part of the above command since if the "bam" channel contains cram-files, then the index files will be in the channel INDEX_INPUT.out.crai and not in INDEX_INPUT.out.bai
     SENTIEON_DEDUP(bam_bai, fasta, fasta_fai)
 
     // Join with the crai file
