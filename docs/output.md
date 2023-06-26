@@ -437,7 +437,7 @@ Files created:
 - `{sample,tumorsample_vs_normalsample}.mutect2.filtered.vcf.gz.filteringStats.tsv`
   - a stats file generated during the filtering of Mutect2 called variants
 
-</details
+</details>
 
 #### Sentieon Haplotyper
 
