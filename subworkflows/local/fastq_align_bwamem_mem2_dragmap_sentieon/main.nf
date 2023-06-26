@@ -36,6 +36,9 @@ workflow FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON {
     bam = bam.mix(DRAGMAP_ALIGN.out.bam)
     bam = bam.mix(SENTIEON_BWAMEM.out.bam_and_bai.map{ meta, bam, bai -> [ meta, bam ] })
 
+    bai = Channel.empty()
+    bai = bai.mix(SENTIEON_BWAMEM.out.bam_and_bai.map{ meta, bam, bai -> [ meta, bai ] })
+
     // Gather reports of all tools used
     reports = reports.mix(DRAGMAP_ALIGN.out.log)
 
@@ -47,6 +50,7 @@ workflow FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON {
 
     emit:
     bam      // channel: [ [meta], bam ]
+    bai      // channel: [ [meta], bai ]
     reports
     versions // channel: [ versions.yml ]
 }

@@ -13,6 +13,7 @@ include { SAMTOOLS_INDEX as INDEX_MARKDUPLICATES } from '../../../modules/nf-cor
 workflow BAM_SENTIEON_DEDUP {
     take:
     bam                    // channel: [mandatory] [ meta, bam ]  // Although the channel is named "bam", it may contain cram-files.
+    bai
     fasta                  // channel: [mandatory] [ fasta ]
     fasta_fai              // channel: [mandatory] [ fasta_fai ]
     intervals_bed_combined // channel: [optional]  [ intervals_bed ]
@@ -21,8 +22,9 @@ workflow BAM_SENTIEON_DEDUP {
     versions = Channel.empty()
     reports  = Channel.empty()
 
-    INDEX_INPUT(bam)
-    bam_bai = bam.join(INDEX_INPUT.out.bai.concat(INDEX_INPUT.out.crai), failOnMismatch:true, failOnDuplicate:true)
+    bam = bam.map{ meta, bam -> [ meta - meta.subMap('data_type'), bam ] }
+    bai = bai.map{ meta, bai -> [ meta - meta.subMap('data_type'), bai ] }
+    bam_bai = bam.join(bai, failOnMismatch:true, failOnDuplicate:true)
     // The concat operation is part of the above command since if the "bam" channel contains cram-files, then the index files will be in the channel INDEX_INPUT.out.crai and not in INDEX_INPUT.out.bai
     SENTIEON_DEDUP(bam_bai, fasta, fasta_fai)
 
