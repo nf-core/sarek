@@ -540,6 +540,10 @@ workflow SAREK {
             [ groupKey( meta - meta.subMap('num_lanes', 'read_group', 'size') + [ data_type:'bam', id:meta.sample ], (meta.num_lanes ?: 1) * (meta.size ?: 1)), bam ]
         }.groupTuple()
 
+        bai_mapped = FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON.out.bai.map{ meta, bai ->
+            [ groupKey( meta - meta.subMap('num_lanes', 'read_group', 'size') + [ data_type:'bai', id:meta.sample ], (meta.num_lanes ?: 1) * (meta.size ?: 1)), bai ]
+        }.groupTuple()
+
         // gatk4 markduplicates can handle multiple bams as input, so no need to merge/index here
         // Except if and only if save_mapped or (skipping markduplicates and sentieon-dedup)
         if (
@@ -578,7 +582,6 @@ workflow SAREK {
         // ch_bam_for_markduplicates will contain bam mapped with FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON when step is mapping
         // Or bams that are specified in the samplesheet.csv when step is prepare_recalibration
         cram_for_markduplicates = params.step == 'mapping' ? bam_mapped : input_sample.map{ meta, input, index -> [ meta, input ] }
-
         // if no MD is done, then run QC on mapped & converted CRAM files
         // or the input BAM (+converted) or CRAM files
         cram_skip_markduplicates = Channel.empty()
@@ -628,8 +631,10 @@ workflow SAREK {
             // Gather used softwares versions
             versions = versions.mix(BAM_MARKDUPLICATES_SPARK.out.versions)
         } else if (params.tools && params.tools.split(',').contains('sentieon_dedup')) {
+            crai_for_markduplicates = params.step == 'mapping' ? bai_mapped : input_sample.map{ meta, input, index -> [ meta, index ] }
             BAM_SENTIEON_DEDUP(
                 cram_for_markduplicates,
+                crai_for_markduplicates,
                 fasta,
                 fasta_fai,
                 intervals_for_preprocessing)
