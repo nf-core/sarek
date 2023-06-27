@@ -391,7 +391,7 @@ If the haplotype-called VCF files are not filtered, then Sarek should be run wit
 [GATK Joint germline Variant Calling](https://gatk.broadinstitute.org/hc/en-us/articles/360035535932-Germline-short-variant-discovery-SNPs-Indels-) uses Haplotypecaller per sample in `gvcf` mode. Next, the gVCFs are consolidated from multiple samples into a [GenomicsDB](https://gatk.broadinstitute.org/hc/en-us/articles/5358869876891-GenomicsDBImport) datastore. After joint [genotyping](https://gatk.broadinstitute.org/hc/en-us/articles/5358906861083-GenotypeGVCFs), [VQSR](https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator) is applied for filtering to produce the final multisample callset with the desired balance of precision and sensitivity.
 
 <details markdown="1">
-<summary>Output files from joint germline variant callling</summary>
+<summary>Output files from joint germline variant calling</summary>
 
 **Output directory: `{outdir}/variantcalling/haplotypecaller/<sample>/`**
 
