@@ -337,7 +337,7 @@ To use Sentieon's function `Dedup`, specify `sentieon_dedup` as one of the tools
 
 To use Sentieon's function `Haplotyper`, specify `sentieon_haplotyper` as one of the tools. This can, for example, be done by adding `--tools sentieon_haplotyper` to the nextflow run command. In order to skip the GATK-based variant-filter, one may add `--skip_tools haplotyper_filter` to the nextflow run command. Sarek also provides the option `sentieon_haplotyper_emit_mode` which can be used to set the [emit-mode](https://support.sentieon.com/manual/usages/general/#haplotyper-algorithm) of Sentieon's haplotyper. Sentieon's haplotyper can output both a vcf-file and a gvcf-file in the same run; this is achieved by setting `sentieon_haplotyper_emit_mode` to `<vcf_emit_mode>,gvcf`, where `<vcf_emit_mode>` is `variant`, `confident` or `all`.
 
-To use Sentieon's function `GVCFtyper` along with Sention's version of VQSR (`VarCal` and `ApplyVarCal`) for joint-germline genotyping, specify `sentieon_haplotyper` as one of the tools, set the option `sentieon_haplotyper_emit_mode` to `gvcf`, and add the option `joint_germline`. This can, for example, be done by adding `--tools sentieon_haplotyper --joint_germline --sentieon_haplotyper_emit_mode gvcf` to the nextflow run command.)
+To use Sentieon's function `GVCFtyper` along with Sention's version of VQSR (`VarCal` and `ApplyVarCal`) for joint-germline genotyping, specify `sentieon_haplotyper` as one of the tools, set the option `sentieon_haplotyper_emit_mode` to `gvcf`, and add the option `joint_germline`. This can, for example, be done by adding `--tools sentieon_haplotyper --joint_germline --sentieon_haplotyper_emit_mode gvcf` to the nextflow run command.
 
 ## Updating the pipeline
 
