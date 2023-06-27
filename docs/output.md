@@ -474,7 +474,7 @@ In Sentieon's package DNAseq, joint germline variant calling is done by first ru
 Sarek's implementation of joint germline variant calling using DNAseq does not include the usage of [GenomicsDB](https://gatk.broadinstitute.org/hc/en-us/articles/5358869876891-GenomicsDBImport) datastore. After joint genotyping, Sentieon's version of VQSR ([VarCal](https://support.sentieon.com/manual/usages/general/#varcal-algorithm) and [ApplyVarCal](https://support.sentieon.com/manual/usages/general/#applyvarcal-algorithm)) is applied for filtering to produce the final multisample callset with the desired balance of precision and sensitivity.
 
 <details markdown="1">
-<summary>Output files from joint germline variant callling</summary>
+<summary>Output files from joint germline variant calling</summary>
 
 **Output directory: `{outdir}/variantcalling/sentieon_haplotyper/<sample>/`**
 
