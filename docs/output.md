@@ -173,7 +173,7 @@ The aligned reads are coordinate-sorted with Sentieon.
 <details markdown="1">
 <summary>Output files for all mappers and samples</summary>
 
-The alignment files (BAM or CRAM) produced by the chosen aligner are, by default, not published, that is, they are not placed in the output-folder (`outdir`), but by setting `--save_mapped` the alignment files are published in CRAM format or, by additional setting `--save_output_as_bam`, in BAM format.
+The alignment files (BAM or CRAM) produced by the chosen aligner are not published by default. CRAM output files will not be saved in the output-folder (`outdir`), unless the flag `--save_mapped` is used. BAM output can be selected by setting the flag `--save_output_as_bam`.
 
 **Output directory: `{outdir}/preprocessing/mapped/<sample>/`**
 
