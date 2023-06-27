@@ -455,7 +455,7 @@ Files created:
 
 The output from Sentieon's Haplotyper can be controlled through the option `--sentieon_haplotyper_emit_mode` for Sarek, see [Basic usage of Sentieon functions in Sarek](https://github.com/nf-core/sarek/blob/sentieon_docs/docs/usage.md#basic-usage-of-sentieon-functions-in-sarek).
 
-Unless `haplotyper_filter` is listed under `--skip_tools` in the nextflow command, GATK's CNNScoreVariants and FilterVariantTranches (see above) is applied to the unfiltered VCF-files in order to obtained filtered vcf-files.
+Unless `haplotyper_filter` is listed under `--skip_tools` in the nextflow command, GATK's CNNScoreVariants and FilterVariantTranches (see above) is applied to the unfiltered VCF-files in order to obtain filtered VCF-files.
 
 <details markdown="1">
 <summary>Filtered VCF-files for normal samples</summary>
