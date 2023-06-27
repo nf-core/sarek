@@ -215,7 +215,7 @@ The resulting CRAM files are delivered to the users.
 
 The subroutines LocusCollector and Dedup are part of Sentieon DNAseq packages with speedup versions of the standard GATK tools, and together those two subroutines correspond to GATK's MarkDuplicates.
 
-The subroutine [LocusCollector](https://support.sentieon.com/manual/usages/general/#driver-algorithm-syntax) collects read information that will be used for removing or marking of duplicate reads; its output is the score file indicating which reads are likely duplicates.
+The subroutine [LocusCollector](https://support.sentieon.com/manual/usages/general/#driver-algorithm-syntax) collects read information that will be used for removing or tagging duplicate reads; its output is the score file indicating which reads are likely duplicates.
 
 The subroutine [Dedup](https://support.sentieon.com/manual/usages/general/#dedup-algorithm) marks or removes duplicate reads based on the score file supplied by LocusCollector, and produces a BAM or CRAM file.
 
