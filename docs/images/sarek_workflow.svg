@@ -2175,9 +2175,9 @@
      inkscape:window-height="1132"
      id="namedview4"
      showgrid="false"
-     inkscape:zoom="0.41470939"
-     inkscape:cx="596.80347"
-     inkscape:cy="795.73796"
+     inkscape:zoom="0.58648764"
+     inkscape:cx="497.02667"
+     inkscape:cy="695.66683"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
@@ -3066,7 +3066,7 @@
        x="1837.9415"
        y="-1922.8672"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;text-anchor:middle;stroke-width:1px"
-       id="tspan15304">optionnally accelerated with Sentieon</tspan></text><text
+       id="tspan15304">optionally accelerated with Sentieon</tspan></text><text
      transform="matrix(2.769692,0,0,-2.769692,949.33785,2280.3213)"
      id="text4883"
      clip-path="url(#clipPath2-60-2)"
@@ -3370,45 +3370,45 @@
    y="0"><tspan
      x="21.957031"
      y="846.21222"
-     id="tspan17884">Germline
+     id="tspan3887">Germline
 </tspan><tspan
      x="21.957031"
      y="877.41223"
-     id="tspan17890"><tspan
+     id="tspan3893"><tspan
        style="font-weight:normal;font-size:26.6667px"
-       id="tspan17886">•</tspan><tspan
+       id="tspan3889">•</tspan><tspan
        style="font-weight:normal;font-size:26.6667px"
-       id="tspan17888"> deepvariant, freebayes
+       id="tspan3891"> deepvariant, freebayes
 </tspan></tspan><tspan
      x="21.957031"
      y="908.61225"
-     id="tspan17894"><tspan
+     id="tspan3897"><tspan
        style="font-weight:normal;font-size:26.6667px"
-       id="tspan17892">   GATK haplotypecaller,
+       id="tspan3895">   GATK haplotypecaller,
 </tspan></tspan><tspan
      x="21.957031"
      y="939.81226"
-     id="tspan17898"><tspan
+     id="tspan3901"><tspan
        style="font-weight:normal;font-size:26.6667px"
-       id="tspan17896">   mpileup, strelka2
+       id="tspan3899">   mpileup, strelka2,
 </tspan></tspan><tspan
      x="21.957031"
      y="971.01227"
-     id="tspan17902"><tspan
+     id="tspan3905"><tspan
        style="font-weight:normal;font-size:26.6667px"
-       id="tspan17900">   Sentieon haplotyper
+       id="tspan3903">   Sentieon haplotyper
 </tspan></tspan><tspan
      x="21.957031"
      y="1002.2123"
-     id="tspan17906"><tspan
+     id="tspan3909"><tspan
        style="font-weight:normal;font-size:26.6667px"
-       id="tspan17904">• manta, tiddit
+       id="tspan3907">• manta, tiddit
 </tspan></tspan><tspan
      x="21.957031"
      y="1033.4123"
-     id="tspan17910"><tspan
+     id="tspan3913"><tspan
        style="font-weight:normal;font-size:26.6667px"
-       id="tspan17908">• cnvkit</tspan></tspan></text></g><g
+       id="tspan3911">• cnvkit</tspan></tspan></text></g><g
    transform="matrix(0.60699338,0,0,-0.60699338,1601.5501,2205.8332)"
    style="display:inline"
    inkscape:label="Sarek"
