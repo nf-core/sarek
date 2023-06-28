@@ -36,21 +36,22 @@ Depending on the options and samples provided, the pipeline can currently perfor
 - Form consensus reads from UMI sequences (`fgbio`)
 - Sequencing quality control and trimming (`FastQC`, `fastp`)
 - Map Reads to Reference (`BWA-mem` or `BWA-mem2` or `dragmap`)
-- Process BAM file (`GATK MarkDuplicates`, `GATK BaseRecalibrator`, `GATK ApplyBQSR`)
+- Process BAM file (`GATK MarkDuplicates`, `GATK BaseRecalibrator`, `GATK ApplyBQSR`, `Sentieon LocusCollector`, `Sentieon Dedup`)
 - Summarise alignment statistics (`samtools stats`, `mosdepth`)
 - Variant calling (enabled by `--tools`, see [compatibility](https://github.com/nf-core/sarek/blob/master/docs/usage.md#which-variant-calling-tool-is-implemented-for-which-data-type)):
-  - `HaplotypeCaller`
-  - `freebayes`
-  - `mpileup`
-  - `Strelka2`
-  - `DeepVariant`
-  - `Mutect2`
-  - `Manta`
-  - `TIDDIT`
   - `ASCAT`
-  - `Control-FREEC`
   - `CNVkit`
+  - `Control-FREEC`
+  - `DeepVariant`
+  - `freebayes`
+  - `GATK HaplotypeCaller`
+  - `Manta`
+  - `mpileup`
   - `MSIsensor-pro`
+  - `Mutect2`
+  - `Sentieon Haplotyper`
+  - `Strelka2`
+  - `TIDDIT`
 - Variant filtering and annotation (`SnpEff`, `Ensembl VEP`)
 - Summarise and represent QC (`MultiQC`)
 
