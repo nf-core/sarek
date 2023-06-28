@@ -11,7 +11,6 @@ include { BAM_VARIANT_CALLING_SINGLE_TIDDIT                     } from '../bam_v
 include { BAM_VARIANT_CALLING_TUMOR_ONLY_CONTROLFREEC           } from '../bam_variant_calling_tumor_only_controlfreec/main'
 include { BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA                  } from '../bam_variant_calling_tumor_only_manta/main'
 include { BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2                } from '../bam_variant_calling_tumor_only_mutect2/main'
-include { BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2_MULTI_SAMPLE   } from '../bam_variant_calling_tumor_only_mutect2_ms/main'
 
 workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     take:
@@ -107,44 +106,23 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         versions = versions.mix(BAM_VARIANT_CALLING_FREEBAYES.out.versions)
     }
 
-    // MUTECT2
-    if (tools.split(',').contains('mutect2')) {
-        if (params.mutect2_multi_sample) {
-            BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2_MULTI_SAMPLE(
-                cram,
-                // Remap channel to match module/subworkflow
-                fasta.map{ it -> [ [ id:'fasta' ], it ] },
-                // Remap channel to match module/subworkflow
-                fasta_fai.map{ it -> [ [ id:'fasta_fai' ], it ] },
-                dict,
-                germline_resource,
-                germline_resource_tbi,
-                panel_of_normals,
-                panel_of_normals_tbi,
-                intervals
-            )
-            vcf_mutect2 = BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2_MULTI_SAMPLE.out.filtered_vcf
-            versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2_MULTI_SAMPLE.out.versions)
-        }
-        else {
-            BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2(
-                cram,
-                // Remap channel to match module/subworkflow
-                fasta.map{ it -> [ [ id:'fasta' ], it ] },
-                // Remap channel to match module/subworkflow
-                fasta_fai.map{ it -> [ [ id:'fasta_fai' ], it ] },
-                dict,
-                germline_resource,
-                germline_resource_tbi,
-                panel_of_normals,
-                panel_of_normals_tbi,
-                intervals
-            )
 
-            vcf_mutect2 = BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2.out.vcf_filtered
-            versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2.out.versions)
-        }
-    }
+    BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2(
+        cram,
+        // Remap channel to match module/subworkflow
+        fasta.map{ it -> [ [ id:'fasta' ], it ] },
+        // Remap channel to match module/subworkflow
+        fasta_fai.map{ it -> [ [ id:'fasta_fai' ], it ] },
+        dict,
+        germline_resource,
+        germline_resource_tbi,
+        panel_of_normals,
+        panel_of_normals_tbi,
+        intervals
+    )
+
+    vcf_mutect2 = BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2.out.vcf_filtered
+    versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2.out.versions)
 
     // MANTA
     if (tools.split(',').contains('manta')) {
