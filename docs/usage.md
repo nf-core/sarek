@@ -603,7 +603,7 @@ done
 ```bash
 wget https://ora.ox.ac.uk/objects/uuid:08e24957-7e76-438a-bd38-66c48008cf52/files/rt435gd52w
 mv rt345gd52w battenberg.zip
-jar xf battenberg.zip
+tar xf battenberg.zip
 
 unzip 1000G_loci_hg38_chr.zip
 cd 1000G_loci_hg38
