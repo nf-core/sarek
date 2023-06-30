@@ -124,7 +124,7 @@
     - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.vcf.gz.tbi
     # binary changes md5sums on reruns
 - name: Run joint calling on somatic samples with mutect2
-  command: nextflow run main.nf -profile test,tools_somatic --input tests/csv/3.0/recalibrated_somatic_joint.csv --tools mutect2 --step variant_calling --mutect2_multi_sample --outdir results
+  command: nextflow run main.nf -profile test,tools_somatic --input tests/csv/3.0/recalibrated_somatic_joint.csv --tools mutect2 --step variant_calling --joint_mutect2 --outdir results
   tags:
     - mutect2_manual
     - manual
@@ -173,7 +173,7 @@
     - path: results/variant_calling/mutect2/test/test.mutect2.vcf.gz.tbi
     # binary changes md5sums on reruns
 - name: Run joint calling on tumor only samples with mutect2
-  command: nextflow run main.nf -profile test,tools_somatic --input tests/csv/3.0/recalibrated_tumoronly_joint.csv --tools mutect2 --step variant_calling --mutect2_multi_sample --outdir results
+  command: nextflow run main.nf -profile test,tools_somatic --input tests/csv/3.0/recalibrated_tumoronly_joint.csv --tools mutect2 --step variant_calling --joint_mutect2 --outdir results
   tags:
     - mutect2_manual
     - manual

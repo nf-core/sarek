@@ -36,7 +36,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
         // Move num_intervals to meta map and reorganize channel for MUTECT2_PAIRED module
         .map{ meta, input_list, input_index_list, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], input_list, input_index_list, intervals ] }
 
-    if (params.mutect2_multi_sample) {
+    if (params.joint_mutect2) {
         // Separate normal cram files and remove duplicates
         ch_normal_cram = input.map{ meta, cram, crai -> [ meta - meta.subMap('tumor_id') + [id:meta.patient], cram[0], crai[0] ] }.unique()
         // Extract tumor cram files
@@ -104,7 +104,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
         normal: [ meta, input_list[0], input_index_list[0], intervals ]
     }
 
-    if (params.mutect2_multi_sample) {
+    if (params.joint_mutect2) {
         // Prepare input channel for normal pileup summaries.
         // Remember, the input channel contains tumor-normal pairs, so there will be multiple copies of the normal sample for each tumor for a given patient.
         // Therefore, we use unique function to generate normal pileup summaries once for each patient for better efficiency.
@@ -141,7 +141,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
     GATHERPILEUPSUMMARIES_NORMAL(pileup_table_normal_to_merge, dict.map{ meta, dict -> [ dict ] })
     GATHERPILEUPSUMMARIES_TUMOR(pileup_table_tumor_to_merge, dict.map{ meta, dict -> [ dict ] })
 
-    if (params.mutect2_multi_sample) {
+    if (params.joint_mutect2) {
         // Do some channel magic to generate tumor-normal pairs again.
         // This is necessary because we generated one normal pileup summary for each patient but we need run calculate contamination for each tumor-normal pair.
         pileup_table_tumor = Channel.empty().mix(GATHERPILEUPSUMMARIES_TUMOR.out.table, pileup_table_tumor_branch.no_intervals).map{meta, table -> [ meta - meta.subMap('normal_id', 'tumor_id', 'num_intervals') + [id:meta.patient], meta.id, table ] }

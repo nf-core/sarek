@@ -34,7 +34,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
         // Move num_intervals to meta map and reorganize channel for MUTECT2 module
         .map{ meta, input, index, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], input, index, intervals ] }
 
-    if (params.mutect2_multi_sample) {
+    if (params.joint_mutect2) {
         // Perform variant calling using mutect2 module in tumor single mode
         // Group cram files by patient
         patient_crams = input.map{ meta, t_cram, t_crai -> [ meta - meta.subMap('sample') + [id:meta.patient], t_cram, t_crai ] }.groupTuple()
@@ -115,7 +115,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     // Contamination and segmentation tables created using calculatecontamination on the pileup summary table
     CALCULATECONTAMINATION(pileup_table.map{ meta, table -> [ meta, table, [] ] })
 
-    if (params.mutect2_multi_sample) {
+    if (params.joint_mutect2) {
         // Remove sample names and retain patient name as the main identifier
         calculatecontamination_out_seg = CALCULATECONTAMINATION.out.segmentation.map{ meta, seg -> [ meta - meta.subMap('sample') + [id:meta.patient], seg ] }.groupTuple()
         calculatecontamination_out_cont = CALCULATECONTAMINATION.out.contamination.map{ meta, cont -> [ meta - meta.subMap('sample') + [id:meta.patient], cont ] }.groupTuple()

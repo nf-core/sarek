@@ -121,10 +121,10 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
             panel_of_normals_tbi,
             intervals
         )
-    }
 
-    vcf_mutect2 = BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2.out.vcf_filtered
-    versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2.out.versions)
+        vcf_mutect2 = BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2.out.vcf_filtered
+        versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2.out.versions)
+    }
 
     // MANTA
     if (tools.split(',').contains('manta')) {

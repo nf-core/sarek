@@ -194,10 +194,10 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             panel_of_normals_tbi,
             intervals
         )
-    }
 
-    vcf_mutect2 = BAM_VARIANT_CALLING_SOMATIC_MUTECT2.out.vcf_filtered
-    versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_MUTECT2.out.versions)
+        vcf_mutect2 = BAM_VARIANT_CALLING_SOMATIC_MUTECT2.out.vcf_filtered
+        versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_MUTECT2.out.versions)
+    }
 
     // TIDDIT
     if (tools.split(',').contains('tiddit')) {
