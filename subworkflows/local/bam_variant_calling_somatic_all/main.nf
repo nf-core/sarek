@@ -178,20 +178,23 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         out_msisensorpro = out_msisensorpro.mix(MSISENSORPRO_MSI_SOMATIC.out.output_report)
     }
 
-    BAM_VARIANT_CALLING_SOMATIC_MUTECT2(
-        // Remap channel to match module/subworkflow
-        cram.map { meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [ meta, [ normal_cram, tumor_cram ], [ normal_crai, tumor_crai ] ] },
-        // Remap channel to match module/subworkflow
-        fasta.map{ it -> [ [ id:'fasta' ], it ] },
-        // Remap channel to match module/subworkflow
-        fasta_fai.map{ it -> [ [ id:'fasta_fai' ], it ] },
-        dict,
-        germline_resource,
-        germline_resource_tbi,
-        panel_of_normals,
-        panel_of_normals_tbi,
-        intervals
-    )
+    // MUTECT2
+    if (tools.split(',').contains('mutect2')) {
+        BAM_VARIANT_CALLING_SOMATIC_MUTECT2(
+            // Remap channel to match module/subworkflow
+            cram.map { meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [ meta, [ normal_cram, tumor_cram ], [ normal_crai, tumor_crai ] ] },
+            // Remap channel to match module/subworkflow
+            fasta.map{ it -> [ [ id:'fasta' ], it ] },
+            // Remap channel to match module/subworkflow
+            fasta_fai.map{ it -> [ [ id:'fasta_fai' ], it ] },
+            dict,
+            germline_resource,
+            germline_resource_tbi,
+            panel_of_normals,
+            panel_of_normals_tbi,
+            intervals
+        )
+    }
 
     vcf_mutect2 = BAM_VARIANT_CALLING_SOMATIC_MUTECT2.out.vcf_filtered
     versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_MUTECT2.out.versions)
