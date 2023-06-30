@@ -3,14 +3,14 @@
 // Should be only run on patients without normal sample
 //
 
-include { BAM_VARIANT_CALLING_CNVKIT                            } from '../bam_variant_calling_cnvkit/main'
-include { BAM_VARIANT_CALLING_FREEBAYES                         } from '../bam_variant_calling_freebayes/main'
-include { BAM_VARIANT_CALLING_MPILEUP                           } from '../bam_variant_calling_mpileup/main'
-include { BAM_VARIANT_CALLING_SINGLE_STRELKA                    } from '../bam_variant_calling_single_strelka/main'
-include { BAM_VARIANT_CALLING_SINGLE_TIDDIT                     } from '../bam_variant_calling_single_tiddit/main'
-include { BAM_VARIANT_CALLING_TUMOR_ONLY_CONTROLFREEC           } from '../bam_variant_calling_tumor_only_controlfreec/main'
-include { BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA                  } from '../bam_variant_calling_tumor_only_manta/main'
-include { BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2                } from '../bam_variant_calling_tumor_only_mutect2/main'
+include { BAM_VARIANT_CALLING_CNVKIT                  } from '../bam_variant_calling_cnvkit/main'
+include { BAM_VARIANT_CALLING_FREEBAYES               } from '../bam_variant_calling_freebayes/main'
+include { BAM_VARIANT_CALLING_MPILEUP                 } from '../bam_variant_calling_mpileup/main'
+include { BAM_VARIANT_CALLING_SINGLE_STRELKA          } from '../bam_variant_calling_single_strelka/main'
+include { BAM_VARIANT_CALLING_SINGLE_TIDDIT           } from '../bam_variant_calling_single_tiddit/main'
+include { BAM_VARIANT_CALLING_TUMOR_ONLY_CONTROLFREEC } from '../bam_variant_calling_tumor_only_controlfreec/main'
+include { BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA        } from '../bam_variant_calling_tumor_only_manta/main'
+include { BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2      } from '../bam_variant_calling_tumor_only_mutect2/main'
 
 workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     take:
