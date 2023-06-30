@@ -2,17 +2,17 @@
 // PAIRED VARIANT CALLING
 //
 
-include { BAM_VARIANT_CALLING_CNVKIT                              } from '../bam_variant_calling_cnvkit/main'
-include { BAM_VARIANT_CALLING_FREEBAYES                           } from '../bam_variant_calling_freebayes/main'
-include { BAM_VARIANT_CALLING_MPILEUP as MPILEUP_NORMAL           } from '../bam_variant_calling_mpileup/main'
-include { BAM_VARIANT_CALLING_MPILEUP as MPILEUP_TUMOR            } from '../bam_variant_calling_mpileup/main'
-include { BAM_VARIANT_CALLING_SOMATIC_ASCAT                       } from '../bam_variant_calling_somatic_ascat/main'
-include { BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC                } from '../bam_variant_calling_somatic_controlfreec/main'
-include { BAM_VARIANT_CALLING_SOMATIC_MANTA                       } from '../bam_variant_calling_somatic_manta/main'
-include { BAM_VARIANT_CALLING_SOMATIC_MUTECT2                     } from '../bam_variant_calling_somatic_mutect2/main'
-include { BAM_VARIANT_CALLING_SOMATIC_STRELKA                     } from '../bam_variant_calling_somatic_strelka/main'
-include { BAM_VARIANT_CALLING_SOMATIC_TIDDIT                      } from '../bam_variant_calling_somatic_tiddit/main'
-include { MSISENSORPRO_MSI_SOMATIC                                } from '../../../modules/nf-core/msisensorpro/msi_somatic/main'
+include { BAM_VARIANT_CALLING_CNVKIT                    } from '../bam_variant_calling_cnvkit/main'
+include { BAM_VARIANT_CALLING_FREEBAYES                 } from '../bam_variant_calling_freebayes/main'
+include { BAM_VARIANT_CALLING_MPILEUP as MPILEUP_NORMAL } from '../bam_variant_calling_mpileup/main'
+include { BAM_VARIANT_CALLING_MPILEUP as MPILEUP_TUMOR  } from '../bam_variant_calling_mpileup/main'
+include { BAM_VARIANT_CALLING_SOMATIC_ASCAT             } from '../bam_variant_calling_somatic_ascat/main'
+include { BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC      } from '../bam_variant_calling_somatic_controlfreec/main'
+include { BAM_VARIANT_CALLING_SOMATIC_MANTA             } from '../bam_variant_calling_somatic_manta/main'
+include { BAM_VARIANT_CALLING_SOMATIC_MUTECT2           } from '../bam_variant_calling_somatic_mutect2/main'
+include { BAM_VARIANT_CALLING_SOMATIC_STRELKA           } from '../bam_variant_calling_somatic_strelka/main'
+include { BAM_VARIANT_CALLING_SOMATIC_TIDDIT            } from '../bam_variant_calling_somatic_tiddit/main'
+include { MSISENSORPRO_MSI_SOMATIC                      } from '../../../modules/nf-core/msisensorpro/msi_somatic/main'
 
 workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     take:
