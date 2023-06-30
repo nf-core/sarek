@@ -247,7 +247,7 @@
                 "joint_mutect2": {
                     "type": "boolean",
                     "fa_icon": "fas fa-angle-double-right",
-                    "description": "Runs Mutect2 in multi-sample mode. Enabling this option will ensure concordance among variant calls on tumor samples from the same patient. Mutect2 outputs will be stored in a subfolder named with patient ID under `variant_calling/mutect2/` folder. Only a single normal sample per patient is allowed. Tumor-only mode is also supported."
+                    "description": "Runs Mutect2 in joint (multi-sample) mode for better concordance among variant calls of tumor samples from the same patient. Mutect2 outputs will be stored in a subfolder named with patient ID under `variant_calling/mutect2/` folder. Only a single normal sample per patient is allowed. Tumor-only mode is also supported."
                 },
                 "ascat_min_base_qual": {
                     "type": "number",
