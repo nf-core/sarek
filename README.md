@@ -35,7 +35,7 @@ Depending on the options and samples provided, the pipeline can currently perfor
 
 - Form consensus reads from UMI sequences (`fgbio`)
 - Sequencing quality control and trimming (`FastQC`, `fastp`)
-- Map Reads to Reference (`BWA-mem` or `BWA-mem2` or `dragmap`)
+- Map Reads to Reference (`BWA-mem`, `BWA-mem2`, `dragmap`, `Sentieon BWA-mem`)
 - Process BAM file (`GATK MarkDuplicates`, `GATK BaseRecalibrator`, `GATK ApplyBQSR`, `Sentieon LocusCollector`, `Sentieon Dedup`)
 - Summarise alignment statistics (`samtools stats`, `mosdepth`)
 - Variant calling (enabled by `--tools`, see [compatibility](https://github.com/nf-core/sarek/blob/master/docs/usage.md#which-variant-calling-tool-is-implemented-for-which-data-type)):
