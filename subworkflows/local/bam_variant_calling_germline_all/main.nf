@@ -153,7 +153,6 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         }
     }
 
-
     // SENTIEON HAPLOTYPER
     if (tools.split(',').contains('sentieon_haplotyper')) {
         BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER(
