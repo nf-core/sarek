@@ -574,7 +574,7 @@ workflow SAREK {
 
         // ch_cram_no_markduplicates_restart = Channel.empty()
         cram_markduplicates_no_spark = Channel.empty()
-        cram_sentieon_dedup = Channel.empty()
+        cram_sentieon_dedup          = Channel.empty()
         cram_markduplicates_spark    = Channel.empty()
 
         // STEP 2: markduplicates (+QC) + convert to CRAM
