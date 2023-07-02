@@ -1040,3 +1040,9 @@ ERRORS: Some errors were detected
 Error type      Number of errors
 ERROR_CHROMOSOME_NOT_FOUND      17522411
 ```
+
+## Sentieon
+
+### Sentieon QualCal (BQSR)
+
+Currently, Sentieon's version of BQSR, QualCal, is not available in Sarek. Recent Illumina sequencers tend to provide well-calibrated BQs, so BQSR may not provide much benefit. By default Sarek runs GATK's BQSR; that can be skipped by adding the option `--skip_tools baserecalibrator`.

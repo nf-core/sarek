@@ -296,10 +296,6 @@ See the [`input`](usage#input-sample-sheet-configurations) section in the usage 
   - CSV containing an entry for each sample with the columns `patient,sample,vcf`
   </details>
 
-#### Sentieon QualCal (BQSR)
-
-Currently, Sentieon's version of BQSR, QualCal, is not available in Sarek. Recent Illumina sequencers tend to provide well-calibrated BQs, so BQSR may not provide much benefit. By default Sarek runs GATK's BQSR; that can be skipped by adding the option `--skip_tools baserecalibrator`.
-
 ## Variant Calling
 
 The results regarding variant calling are collected in `{outdir}/variantcalling/`.
