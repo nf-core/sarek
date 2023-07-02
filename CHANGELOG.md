@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#1112](https://github.com/nf-core/sarek/pull/1112) - Back to dev
 - [#1119](https://github.com/nf-core/sarek/pull/1119) - Added `help_text` for `input_output_options` group in schema
-- [#1044](https://github.com/nf-core/sarek/pull/1044) - Adding support for several tools from Sentieon's DNAseq package. The standard fastq-to-vcf processing can now be done using Sentieon's DNAseq tools.
+- [#1044](https://github.com/nf-core/sarek/pull/1044) - Adding support for several tools from Sentieon's DNAseq package. The standard fastq-to-vcf processing can now be done using Sentieon's DNAseq tools `ApplyVarCal`, `bwa mem`, `Dedup`, `GVCFtyper`, `Haplotyper`, `LocusCollector` and `VarCal`.
 
 ### Changed
 
