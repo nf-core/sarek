@@ -311,7 +311,7 @@ test,sample4_vs_sample3,manta,sample4_vs_sample3.somatic_sv.vcf.gz
 
 In particular, Sentieon contains what may be view as speedup version of some standard GATK tools, like bwamem and haplotyper. Sarek contains support for some of the functions in Sentieon. In order to use those functions, the user will need to supply Sarek with a license for Sentieon.
 
-### Setup of Sentieon license for Sarek
+### Setup of Sentieon license
 
 Sentieon supply license in the form of a string-value (a url) or a file. It should be base64-encoded and stored in a nextflow secret named `SENTIEON_LICENSE_BASE64`. If a license string (url) is supplied, then the nextflow secret should be set like this:
 
