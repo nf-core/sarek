@@ -309,7 +309,7 @@ test,sample4_vs_sample3,manta,sample4_vs_sample3.somatic_sv.vcf.gz
 
 [Sentieon](https://www.sentieon.com/) is a commercial solution to process genomics data with high computing efficiency, fast turnaround time, exceptional high accuracy, and 100% consistency.
 
-In particular, Sentieon contains what may be view as speedup version of some standard GATK tools, like bwamem and haplotyper. Sarek now contains support for some of modules of functionality from Sentieon. In order to use the Sentieon modules of Sarek, the user will need to supply the Sarek pipeline with a license for Sentieon.
+In particular, Sentieon contains what may be view as speedup version of some standard GATK tools, like bwamem and haplotyper. Sarek contains support for some of modules of functionality from Sentieon. In order to use the Sentieon modules of Sarek, the user will need to supply the Sarek pipeline with a license for Sentieon.
 
 ### Setup of Sentieon license for Sarek
 
