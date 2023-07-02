@@ -329,7 +329,7 @@ nextflow secrets set SENTIEON_LICENSE_BASE64 \$(cat <sentieon_license_file.lic> 
 
 Sarek contains the following Sentieon functions [bwa mem](https://support.sentieon.com/manual/usages/general/#bwa-mem-syntax), [LocusCollector](https://support.sentieon.com/manual/usages/general/#locuscollector-algorithm) + [Dedup](https://support.sentieon.com/manual/usages/general/#dedup-algorithm), [Haplotyper](https://support.sentieon.com/manual/usages/general/#haplotyper-algorithm), [GVCFtyper](https://support.sentieon.com/manual/usages/general/#gvcftyper-algorithm) and [VarCal](https://support.sentieon.com/manual/usages/general/#varcal-algorithm) + [ApplyVarCal](https://support.sentieon.com/manual/usages/general/#applyvarcal-algorithm), so the basic processing of alignment of fastq-files to VCF-files can be done using speedup Sentieon functions.
 
-### Basic usage of Sentieon functions in Sarek
+### Basic usage of Sentieon functions
 
 To use Sentieon's aligner `bwa mem`, set the aligner option `sentieon-bwamem`. (This can, for example, be done by adding `--aligner sentieon-bwamem` to the nextflow run command.)
 
