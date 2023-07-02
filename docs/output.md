@@ -465,7 +465,7 @@ Unless `haplotyper_filter` is listed under `--skip_tools` in the nextflow comman
 
 ##### Sentieon Joint Germline Variant Calling
 
-In Sentieon's package DNAseq, joint germline variant calling is done by first running Sentieon's Haplotyper in emit-mode `gvcf` for each sample and then running Sentieon's [GVCFtyper](https://support.sentieon.com/manual/usages/general/#gvcftyper-algorithm) on the set of gVCF-files. See [Basic usage of Sentieon functions in Sarek](https://github.com/nf-core/sarek/blob/sentieon_docs/docs/usage.md#basic-usage-of-sentieon-functions-in-sarek) for information on how joint germline variant calling can be done in Sarek using Sentieon's DNAseq.
+In Sentieon's package DNAseq, joint germline variant calling is done by first running Sentieon's Haplotyper in emit-mode `gvcf` for each sample and then running Sentieon's [GVCFtyper](https://support.sentieon.com/manual/usages/general/#gvcftyper-algorithm) on the set of gVCF-files. See [Basic usage of Sentieon functions in Sarek](#basic-usage-of-sentieon-functions-in-sarek) for information on how joint germline variant calling can be done in Sarek using Sentieon's DNAseq.
 
 Sarek's implementation of joint germline variant calling using DNAseq does not include the usage of [GenomicsDB](https://gatk.broadinstitute.org/hc/en-us/articles/5358869876891-GenomicsDBImport) datastore. After joint genotyping, Sentieon's version of VQSR ([VarCal](https://support.sentieon.com/manual/usages/general/#varcal-algorithm) and [ApplyVarCal](https://support.sentieon.com/manual/usages/general/#applyvarcal-algorithm)) is applied for filtering to produce the final multisample callset with the desired balance of precision and sensitivity.
 

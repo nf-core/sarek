@@ -38,7 +38,7 @@ Depending on the options and samples provided, the pipeline can currently perfor
 - Map Reads to Reference (`BWA-mem`, `BWA-mem2`, `dragmap`, `Sentieon BWA-mem`)
 - Process BAM file (`GATK MarkDuplicates`, `GATK BaseRecalibrator`, `GATK ApplyBQSR`, `Sentieon LocusCollector`, `Sentieon Dedup`)
 - Summarise alignment statistics (`samtools stats`, `mosdepth`)
-- Variant calling (enabled by `--tools`, see [compatibility](https://github.com/nf-core/sarek/blob/master/docs/usage.md#which-variant-calling-tool-is-implemented-for-which-data-type)):
+- Variant calling (enabled by `--tools`, see [compatibility](#which-variant-calling-tool-is-implemented-for-which-data-type)):
   - `ASCAT`
   - `CNVkit`
   - `Control-FREEC`
