@@ -1,4 +1,3 @@
-//
 include { BCFTOOLS_SORT                                                      } from '../../../modules/nf-core/bcftools/sort/main'
 include { SENTIEON_APPLYVARCAL as SENTIEON_APPLYVARCAL_INDEL                 } from '../../../modules/nf-core/sentieon/applyvarcal/main'
 include { SENTIEON_APPLYVARCAL as SENTIEON_APPLYVARCAL_SNP                   } from '../../../modules/nf-core/sentieon/applyvarcal/main'
