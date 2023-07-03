@@ -78,7 +78,6 @@ workflow BAM_JOINT_CALLING_GERMLINE_SENTIEON {
         .join(SENTIEON_VARCAL_INDEL.out.tranches, failOnDuplicate: true)
         .map{ meta, vcf, tbi, recal, index, tranche -> [ meta + [ id:'recalibrated_joint_variant_calling' ], vcf, tbi, recal, index, tranche ] }
 
-
     SENTIEON_APPLYVARCAL_SNP(
         vqsr_input_snp,
         fasta,
