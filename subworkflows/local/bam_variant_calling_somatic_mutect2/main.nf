@@ -24,7 +24,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
     panel_of_normals          // channel: /path/to/panel/of/normals
     panel_of_normals_tbi      // channel: /path/to/panel/of/normals/index
     intervals                 // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
-    joint_mutect2                 // boolean: [mandatory] [default: false] run mutect2 in joint mode
+    joint_mutect2            // boolean: [mandatory] [default: false] run mutect2 in joint mode
 
     main:
     versions = Channel.empty()
