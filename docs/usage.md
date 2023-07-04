@@ -1043,6 +1043,9 @@ ERROR_CHROMOSOME_NOT_FOUND      17522411
 
 ## Sentieon
 
-### Sentieon QualCal (BQSR)
+### Joint germline variant calling
+Sentieon's [GVCFtyper](https://support.sentieon.com/manual/usages/general/#gvcftyper-algorithm) does not support the [GenomicsDB](https://gatk.broadinstitute.org/hc/en-us/articles/5358869876891-GenomicsDBImport) datastore format. This means that, in contrast to the GATK based joint germline variant calling subworkflow in Sarek, the Sentieon/DNAseq based joint germline variant calling subworkflow does not use the GenomicsDB datastore format.
+
+### QualCal (BQSR)
 
 Currently, Sentieon's version of BQSR, QualCal, is not available in Sarek. Recent Illumina sequencers tend to provide well-calibrated BQs, so BQSR may not provide much benefit. By default Sarek runs GATK's BQSR; that can be skipped by adding the option `--skip_tools baserecalibrator`.
