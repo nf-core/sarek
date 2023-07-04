@@ -292,7 +292,7 @@ workflow SAREK {
     multiqc_config        = Channel.fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
     multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config, checkIfExists: true) : Channel.empty()
     multiqc_logo          = params.multiqc_logo   ? Channel.fromPath(params.multiqc_logo, checkIfExists: true) : Channel.empty()
-    multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
+    ch_multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
     methods_description    = WorkflowSarek.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description, params)
     ch_methods_description = Channel.value(methods_description)
 
@@ -1067,7 +1067,7 @@ workflow SAREK {
 
     if (!(params.skip_tools && params.skip_tools.split(',').contains('multiqc'))) {
         workflow_summary    = Channel.value(WorkflowSarek.paramsSummaryMultiqc(workflow, summary_params))
-        methods_description = Channel.value(WorkflowSarek.methodsDescriptionText(workflow, multiqc_custom_methods_description))
+        methods_description = Channel.value(WorkflowSarek.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description))
 
         multiqc_files = Channel.empty()
         multiqc_files = multiqc_files.mix(version_yaml)
