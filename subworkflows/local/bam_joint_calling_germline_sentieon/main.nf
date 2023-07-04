@@ -32,7 +32,6 @@ workflow BAM_JOINT_CALLING_GERMLINE_SENTIEON {
 
     SENTIEON_GVCFTYPER(sentieon_input, fasta, fai, dbsnp, dbsnp_tbi)
 
-    // TO-DO: Try to use a much functionality from Sentieon as possible. Sentieon should have a function for merging vfcs.
     BCFTOOLS_SORT(SENTIEON_GVCFTYPER.out.vcf_gz)
 
     gvcf_to_merge = BCFTOOLS_SORT.out.vcf.map{ meta, vcf -> [ meta.subMap('num_intervals') + [ id:'joint_variant_calling', patient:'all_samples', variantcaller:'sentieon_haplotyper' ], vcf ]}.groupTuple()
