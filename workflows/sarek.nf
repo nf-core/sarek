@@ -13,7 +13,11 @@ def summary_params = paramsSummaryMap(workflow)
 // Print parameter summary log to screen
 log.info logo + paramsSummaryLog(workflow) + citation
 
-WorkflowSarek.initialise(params, log)
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    VALIDATE INPUTS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
 
 // Check input path parameters to see if they exist
 def checkPathParamList = [
@@ -59,7 +63,10 @@ def checkPathParamList = [
     Check mandatory parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
+
 for (param in checkPathParamList) if (param) file(param, checkIfExists: true)
+
+WorkflowSarek.initialise(params, log)
 
 // Set input, can either be from --input or from automatic retrieval in WorkflowSarek.groovy
 input_sample = params.build_only_index ? Channel.empty() : extract_csv(file(WorkflowSarek.retrieveInput(params, log), checkIfExists: true))
@@ -289,12 +296,10 @@ include { MULTIQC                                        } from '../modules/nf-c
 workflow SAREK {
 
     // MULTIQC
-    multiqc_config        = Channel.fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
-    multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config, checkIfExists: true) : Channel.empty()
-    multiqc_logo          = params.multiqc_logo   ? Channel.fromPath(params.multiqc_logo, checkIfExists: true) : Channel.empty()
+    ch_multiqc_config          = Channel.fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
+    ch_multiqc_custom_config   = params.multiqc_config ? Channel.fromPath( params.multiqc_config, checkIfExists: true ) : Channel.empty()
+    ch_multiqc_logo            = params.multiqc_logo   ? Channel.fromPath( params.multiqc_logo, checkIfExists: true ) : Channel.empty()
     ch_multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
-    methods_description    = WorkflowSarek.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description, params)
-    ch_methods_description = Channel.value(methods_description)
 
     // To gather all QC reports for MultiQC
     reports = Channel.empty()
@@ -1066,18 +1071,19 @@ workflow SAREK {
     }
 
     if (!(params.skip_tools && params.skip_tools.split(',').contains('multiqc'))) {
-        workflow_summary    = Channel.value(WorkflowSarek.paramsSummaryMultiqc(workflow, summary_params))
-        methods_description = Channel.value(WorkflowSarek.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description))
+        workflow_summary    = WorkflowSarek.paramsSummaryMultiqc(workflow, summary_params)
+        ch_workflow_summary = Channel.value(workflow_summary)
+
+        methods_description    = WorkflowSarek.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description, params)
+        ch_methods_description = Channel.value(methods_description)
 
         multiqc_files = Channel.empty()
         multiqc_files = multiqc_files.mix(version_yaml)
-        multiqc_files = multiqc_files.mix(workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
-        multiqc_files = multiqc_files.mix(methods_description.collectFile(name: 'methods_description_mqc.yaml'))
+        multiqc_files = multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
+        multiqc_files = multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'))
         multiqc_files = multiqc_files.mix(reports.collect().ifEmpty([]))
 
-        multiqc_configs = multiqc_config.mix(multiqc_custom_config).ifEmpty([])
-
-        MULTIQC(multiqc_files.collect(), multiqc_config.collect().ifEmpty([]), multiqc_custom_config.collect().ifEmpty([]), multiqc_logo.collect().ifEmpty([]))
+        MULTIQC(multiqc_files.collect(), ch_multiqc_config.collect().ifEmpty([]), ch_multiqc_custom_config.collect().ifEmpty([]), ch_multiqc_logo.collect().ifEmpty([]))
 
         multiqc_report = MULTIQC.out.report.toList()
         versions = versions.mix(MULTIQC.out.versions)

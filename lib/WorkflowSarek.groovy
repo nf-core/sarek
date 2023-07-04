@@ -96,7 +96,6 @@ class WorkflowSarek {
         //meta["tool_citations"] = toolCitationText(params).replaceAll(", \\.", ".").replaceAll("\\. \\.", ".").replaceAll(", \\.", ".")
         //meta["tool_bibliography"] = toolBibliographyText(params)
 
-
         def methods_text = mqc_methods_yaml.text
 
         def engine =  new SimpleTemplateEngine()
