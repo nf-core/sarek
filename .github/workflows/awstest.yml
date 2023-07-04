@@ -24,7 +24,6 @@ jobs:
               "outdir": "s3://${{ secrets.AWS_S3_BUCKET }}/sarek/results-test-${{ github.sha }}"
             }
           profiles: test
-
       - uses: actions/upload-artifact@v3
         with:
           name: Tower debug log file

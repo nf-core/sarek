@@ -1,0 +1,49 @@
+name: bcftools_concat
+description: Concatenate VCF files
+keywords:
+  - variant calling
+  - concat
+  - bcftools
+  - VCF
+
+tools:
+  - concat:
+      description: |
+        Concatenate VCF files.
+      homepage: http://samtools.github.io/bcftools/bcftools.html
+      documentation: http://www.htslib.org/doc/bcftools.html
+      doi: 10.1093/bioinformatics/btp352
+      licence: ["MIT"]
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - vcfs:
+      type: files
+      description: |
+        List containing 2 or more vcf files
+        e.g. [ 'file1.vcf', 'file2.vcf' ]
+  - tbi:
+      type: files
+      description: |
+        List containing 2 or more index files (optional)
+        e.g. [ 'file1.tbi', 'file2.tbi' ]
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - vcf:
+      type: file
+      description: VCF concatenated output file
+      pattern: "*.{vcf.gz}"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@abhi18av"
+  - "@nvnieuwk"

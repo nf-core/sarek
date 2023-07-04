@@ -1,3 +1,4 @@
+*.code-workspace
 .nextflow*
 work/
 data/
@@ -6,3 +7,4 @@ results/
 testing/
 testing*
 *.pyc
+test-datasets/

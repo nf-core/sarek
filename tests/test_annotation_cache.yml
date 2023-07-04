@@ -1,0 +1,37 @@
+- name: Only download annotation cache
+  command: nextflow run main.nf -profile test_cache,annotation --tools merge --download_cache --input=false --build_only_index --outdir results
+  tags:
+    - annotation
+    - cache
+  files:
+    - path: results/multiqc
+    - path: results/cache/snpeff_cache
+    - path: results/cache/vep_cache
+    - path: results/annotation
+      should_exist: false
+- name: Download annotation cache and annotate using snpEff and VEP
+  command: nextflow run main.nf -profile test_cache,annotation --tools snpeff,vep --download_cache --outdir results
+  tags:
+    - annotation
+    - cache
+  files:
+    - path: results/multiqc
+    - path: results/cache/snpeff_cache
+    - path: results/cache/vep_cache
+    - path: results/annotation/test/test_VEP.ann.vcf.gz
+    # conda changes md5sums for test
+    - path: results/annotation/test/test_VEP.ann.vcf.gz.tbi
+    # conda changes md5sums for test
+    - path: results/annotation/test/test_snpEff.ann.vcf.gz
+    # conda changes md5sums for test
+    - path: results/annotation/test/test_snpEff.ann.vcf.gz.tbi
+    # conda changes md5sums for test
+    - path: results/multiqc
+    - path: results/reports/EnsemblVEP/test/test_VEP.ann.summary.html
+    # text-based file changes md5sums on reruns
+    - path: results/reports/snpeff/test/snpEff_summary.html
+    # text-based file changes md5sums on reruns
+    - path: results/reports/snpeff/test/test_snpEff.csv
+    # text-based file changes md5sums on reruns
+    - path: results/reports/snpeff/test/test_snpEff.genes.txt
+      md5sum: 130536bf0237d7f3f746d32aaa32840a

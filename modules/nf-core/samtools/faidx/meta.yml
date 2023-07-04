@@ -1,0 +1,57 @@
+name: samtools_faidx
+description: Index FASTA file
+keywords:
+  - index
+  - fasta
+  - faidx
+tools:
+  - samtools:
+      description: |
+        SAMtools is a set of utilities for interacting with and post-processing
+        short DNA sequence read alignments in the SAM, BAM and CRAM formats, written by Heng Li.
+        These files are generated as output by short read aligners like BWA.
+      homepage: http://www.htslib.org/
+      documentation: http://www.htslib.org/doc/samtools.html
+      doi: 10.1093/bioinformatics/btp352
+      licence: ["MIT"]
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing reference information
+        e.g. [ id:'test' ]
+  - fasta:
+      type: file
+      description: FASTA file
+      pattern: "*.{fa,fasta}"
+  - meta2:
+      type: map
+      description: |
+        Groovy Map containing reference information
+        e.g. [ id:'test' ]
+  - fai:
+      type: file
+      description: FASTA index file
+      pattern: "*.{fai}"
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - fai:
+      type: file
+      description: FASTA index file
+      pattern: "*.{fai}"
+  - gzi:
+      type: file
+      description: Optional gzip index file for compressed inputs
+      pattern: "*.gzi"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@drpatelh"
+  - "@ewels"
+  - "@phue"
