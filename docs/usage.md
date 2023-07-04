@@ -707,7 +707,7 @@ write.table(out, args[3], col.names=T, row.names=F, quote=F, sep="\t")
 }
 ```
 
-## What are the bwa/bwa-mem2 parameters?
+## What are the bwa, bwa-mem2 and sentieon bwa mem parameters?
 
 For mapping, sarek follows the parameter suggestions provided in this [paper](https://www.nature.com/articles/s41467-018-06159-4):
 
