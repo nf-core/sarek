@@ -114,6 +114,11 @@ if (params.joint_germline && (!params.dbsnp || !params.known_indels || !params.k
     log.warn "If Haplotypecaller is specified, without `--dbsnp`, `--known_snps`, `--known_indels` or the associated resource labels (ie `known_snps_vqsr`), no variant recalibration will be done. For recalibration you must provide all of these resources.\nFor more information see VariantRecalibration: https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator \nJoint germline variant calling also requires intervals in order to genotype the samples. As a result, if `--no_intervals` is set to `true` the joint germline variant calling will not be performed."
 }
 
+// Fails when --joint_mutect2 is used without enabling mutect2
+if (params.joint_mutect2 && (!params.tools || !params.tools.split(',').contains('mutect2'))) {
+    error("The mutect2 should be specified as one of the tools when doing joint somatic variant calling with Mutect2. (The mutect2 could be specified by adding `--tools mutect2` to the nextflow command.)")
+}
+
 // Fails when missing tools for variant_calling or annotate
 if ((params.step == 'variant_calling' || params.step == 'annotate') && !params.tools) {
     error("Please specify at least one tool when using `--step ${params.step}`.\nhttps://nf-co.re/sarek/parameters#tools")
@@ -959,7 +964,8 @@ workflow SAREK {
             intervals_bed_gz_tbi_combined, // [] if no_intervals, else interval_bed_combined_gz, interval_bed_combined_gz_tbi
             mappability,
             pon,
-            pon_tbi
+            pon_tbi,
+            params.joint_mutect2
         )
 
         // PAIR VARIANT CALLING
@@ -987,7 +993,8 @@ workflow SAREK {
             allele_files,
             loci_files,
             gc_file,
-            rt_file
+            rt_file,
+            params.joint_mutect2
         )
 
         if (params.concatenate_vcfs) {

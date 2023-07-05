@@ -34,6 +34,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     mappability
     panel_of_normals              // channel: [optional]  panel_of_normals
     panel_of_normals_tbi          // channel: [optional]  panel_of_normals_tbi
+    joint_mutect2                 // boolean: [mandatory] [default: false] run mutect2 in joint mode
 
     main:
     versions = Channel.empty()
@@ -119,7 +120,8 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
             germline_resource_tbi,
             panel_of_normals,
             panel_of_normals_tbi,
-            intervals
+            intervals,
+            joint_mutect2
         )
 
         vcf_mutect2 = BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2.out.vcf_filtered
