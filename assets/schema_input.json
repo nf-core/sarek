@@ -10,7 +10,7 @@
             "patient": {
                 "type": "string",
                 "pattern": "^\\S+$",
-                "errorMessage": "ID name must be provided and cannot contain spaces",
+                "errorMessage": "Patient name must be provided and cannot contain spaces",
                 "meta": ["patient"]
             },
             "sample": {
