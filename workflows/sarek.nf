@@ -92,7 +92,7 @@ ch_from_samplesheet
         }
 
     // start from BAM
-    } else if (map.lane && bam) {
+    } else if (meta.lane && bam) {
         if (params.step != 'mapping' && !bai) {
             error("BAM index (bai) should be provided.")
         }
