@@ -9,12 +9,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- [#1130](https://github.com/nf-core/sarek/pull/1130) - Back to dev
+
+### Changed
+
+### Fixed
+
+## [3.2.3](https://github.com/nf-core/sarek/releases/tag/3.2.3) - Gällivare
+
+Gällivare is a small lake next to Pierikjaure.
+
+### Added
+
 - [#1112](https://github.com/nf-core/sarek/pull/1112) - Back to dev
 - [#1119](https://github.com/nf-core/sarek/pull/1119) - Added `help_text` for `input_output_options` group in schema
 
 ### Changed
 
 - [#1119](https://github.com/nf-core/sarek/pull/1119) - Remove `null` by default in schema
+- [#1128](https://github.com/nf-core/sarek/pull/1128) - Prepare release `3.2.3`
 
 ### Fixed
 
