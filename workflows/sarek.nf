@@ -1,13 +1,23 @@
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    VALIDATE INPUTS
+    PRINT PARAMS SUMMARY
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
+include { paramsSummaryLog; paramsSummaryMap } from 'plugin/nf-validation'
 
-// Validate input parameters
-WorkflowSarek.initialise(params, log)
+def logo = NfcoreTemplate.logo(workflow, params.monochrome_logs)
+def citation = '\n' + WorkflowMain.citation(workflow) + '\n'
+def summary_params = paramsSummaryMap(workflow)
+
+// Print parameter summary log to screen
+log.info logo + paramsSummaryLog(workflow) + citation
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    VALIDATE INPUTS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
 
 // Check input path parameters to see if they exist
 def checkPathParamList = [
@@ -53,7 +63,10 @@ def checkPathParamList = [
     Check mandatory parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
+
 for (param in checkPathParamList) if (param) file(param, checkIfExists: true)
+
+WorkflowSarek.initialise(params, log)
 
 // Set input, can either be from --input or from automatic retrieval in WorkflowSarek.groovy
 input_sample = params.build_only_index ? Channel.empty() : extract_csv(file(WorkflowSarek.retrieveInput(params, log), checkIfExists: true))
@@ -112,6 +125,11 @@ if (params.joint_germline && (!params.tools || !params.tools.split(',').contains
 }
 if (params.joint_germline && (!params.dbsnp || !params.known_indels || !params.known_snps || params.no_intervals)) {
     log.warn "If Haplotypecaller is specified, without `--dbsnp`, `--known_snps`, `--known_indels` or the associated resource labels (ie `known_snps_vqsr`), no variant recalibration will be done. For recalibration you must provide all of these resources.\nFor more information see VariantRecalibration: https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator \nJoint germline variant calling also requires intervals in order to genotype the samples. As a result, if `--no_intervals` is set to `true` the joint germline variant calling will not be performed."
+}
+
+// Fails when --joint_mutect2 is used without enabling mutect2
+if (params.joint_mutect2 && (!params.tools || !params.tools.split(',').contains('mutect2'))) {
+    error("The mutect2 should be specified as one of the tools when doing joint somatic variant calling with Mutect2. (The mutect2 could be specified by adding `--tools mutect2` to the nextflow command.)")
 }
 
 // Fails when missing tools for variant_calling or annotate
@@ -276,22 +294,17 @@ include { MULTIQC                                        } from '../modules/nf-c
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    CONFIG FILES
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-multiqc_config        = Channel.fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
-multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config, checkIfExists: true) : Channel.empty()
-multiqc_logo          = params.multiqc_logo   ? Channel.fromPath(params.multiqc_logo, checkIfExists: true) : Channel.empty()
-multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     RUN MAIN WORKFLOW
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
 workflow SAREK {
+
+    // MULTIQC
+    ch_multiqc_config          = Channel.fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
+    ch_multiqc_custom_config   = params.multiqc_config ? Channel.fromPath( params.multiqc_config, checkIfExists: true ) : Channel.empty()
+    ch_multiqc_logo            = params.multiqc_logo   ? Channel.fromPath( params.multiqc_logo, checkIfExists: true ) : Channel.empty()
+    ch_multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
 
     // To gather all QC reports for MultiQC
     reports = Channel.empty()
@@ -959,7 +972,8 @@ workflow SAREK {
             intervals_bed_gz_tbi_combined, // [] if no_intervals, else interval_bed_combined_gz, interval_bed_combined_gz_tbi
             mappability,
             pon,
-            pon_tbi
+            pon_tbi,
+            params.joint_mutect2
         )
 
         // PAIR VARIANT CALLING
@@ -987,7 +1001,8 @@ workflow SAREK {
             allele_files,
             loci_files,
             gc_file,
-            rt_file
+            rt_file,
+            params.joint_mutect2
         )
 
         if (params.concatenate_vcfs) {
@@ -1063,18 +1078,19 @@ workflow SAREK {
     }
 
     if (!(params.skip_tools && params.skip_tools.split(',').contains('multiqc'))) {
-        workflow_summary    = Channel.value(WorkflowSarek.paramsSummaryMultiqc(workflow, summary_params))
-        methods_description = Channel.value(WorkflowSarek.methodsDescriptionText(workflow, multiqc_custom_methods_description))
+        workflow_summary    = WorkflowSarek.paramsSummaryMultiqc(workflow, summary_params)
+        ch_workflow_summary = Channel.value(workflow_summary)
+
+        methods_description    = WorkflowSarek.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description, params)
+        ch_methods_description = Channel.value(methods_description)
 
         multiqc_files = Channel.empty()
         multiqc_files = multiqc_files.mix(version_yaml)
-        multiqc_files = multiqc_files.mix(workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
-        multiqc_files = multiqc_files.mix(methods_description.collectFile(name: 'methods_description_mqc.yaml'))
+        multiqc_files = multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
+        multiqc_files = multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'))
         multiqc_files = multiqc_files.mix(reports.collect().ifEmpty([]))
 
-        multiqc_configs = multiqc_config.mix(multiqc_custom_config).ifEmpty([])
-
-        MULTIQC(multiqc_files.collect(), multiqc_config.collect().ifEmpty([]), multiqc_custom_config.collect().ifEmpty([]), multiqc_logo.collect().ifEmpty([]))
+        MULTIQC(multiqc_files.collect(), ch_multiqc_config.collect().ifEmpty([]), ch_multiqc_custom_config.collect().ifEmpty([]), ch_multiqc_logo.collect().ifEmpty([]))
 
         multiqc_report = MULTIQC.out.report.toList()
         versions = versions.mix(MULTIQC.out.versions)
