@@ -692,7 +692,7 @@
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
                 },
                 "snpeff_db": {
-                    "type": "number",
+                    "type": "string",
                     "fa_icon": "fas fa-database",
                     "description": "snpEff DB version.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately.\nThis is used to specify the database to be use to annotate with.\nAlternatively databases' names can be listed with the `snpEff databases`.",
