@@ -36,7 +36,7 @@ Depending on the options and samples provided, the pipeline can currently perfor
 - Form consensus reads from UMI sequences (`fgbio`)
 - Sequencing quality control and trimming (`FastQC`, `fastp`)
 - Map Reads to Reference (`BWA-mem`, `BWA-mem2`, `dragmap` or `Sentieon BWA-mem`)
-- Process BAM file (`GATK MarkDuplicates`, `GATK BaseRecalibrator`, `GATK ApplyBQSR`, `Sentieon LocusCollector`, `Sentieon Dedup`)
+- Process BAM file (`GATK MarkDuplicates`, `GATK BaseRecalibrator` and `GATK ApplyBQSR` or `Sentieon LocusCollector` and `Sentieon Dedup`)
 - Summarise alignment statistics (`samtools stats`, `mosdepth`)
 - Variant calling (enabled by `--tools`, see [compatibility](#which-variant-calling-tool-is-implemented-for-which-data-type)):
   - `ASCAT`
