@@ -12,3 +12,4 @@ lint:
     - lib/NfcoreTemplate.groovy
     - lib/NfcoreSchema.groovy
   template_strings: False
+  schema_params: False
