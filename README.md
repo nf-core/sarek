@@ -94,11 +94,11 @@ See [usage docs](https://nf-co.re/sarek/usage) for all of the available options 
 > provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_;
 > see [docs](https://nf-co.re/usage/configuration#custom-configuration-files).
 
-For more details, please refer to the [usage documentation](https://nf-co.re/sarek/usage) and the [parameter documentation](https://nf-co.re/sarek/parameters).
+For more details and further functionality, please refer to the [usage documentation](https://nf-co.re/sarek/usage) and the [parameter documentation](https://nf-co.re/sarek/parameters).
 
 ## Pipeline output
 
-To see the the results of a test run with a full size dataset refer to the [results](https://nf-co.re/sarek/results) tab on the nf-core website pipeline page.
+To see the results of an example test run with a full size dataset refer to the [results](https://nf-co.re/sarek/results) tab on the nf-core website pipeline page.
 For more details about the output files and reports, please refer to the
 [output documentation](https://nf-co.re/sarek/output).
 
@@ -123,6 +123,7 @@ We thank the following people for their extensive assistance in the development 
 - [Adrian Lärkeryd](https://github.com/adrlar)
 - [Alexander Peltzer](https://github.com/apeltzer)
 - [Anders Sune Pedersen](https://github.com/asp8200)
+- [Bekir Ergüner](https://github.com/berguner)
 - [Chela James](https://github.com/chelauk)
 - [David Mas-Ponte](https://github.com/davidmasp)
 - [Francesco Lescai](https://github.com/lescai)
