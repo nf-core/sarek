@@ -70,7 +70,11 @@ WorkflowSarek.initialise(params, log)
 for (param in checkPathParamList) if (param) file(param, checkIfExists: true)
 
 // Set input, can either be from --input or from automatic retrieval in WorkflowSarek.groovy
-ch_from_samplesheet = params.build_only_index ? Channel.empty() : Channel.fromSamplesheet("input")
+if (params.input) {
+    ch_from_samplesheet = params.build_only_index ? Channel.empty() : Channel.fromSamplesheet("input")
+} else {
+    ch_from_samplesheet = params.build_only_index ? Channel.empty() : Channel.fromSamplesheet("input_restart")
+}
 
 ch_from_samplesheet
 .map{ meta, fastq_1, fastq_2, table, cram, crai, bam, bai, vcf, variantcaller ->

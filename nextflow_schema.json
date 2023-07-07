@@ -27,9 +27,19 @@
                             "pattern": "^\\S+\\.csv$"
                         },
                         {
-                            "type": "boolean"
+                            "type": "string",
+                            "maxLength": 0
                         }
                     ]
+                },
+                "input_restart": {
+                    "type": "string",
+                    "format": "file-path",
+                    "exists": true,
+                    "mimetype": "text/csv",
+                    "pattern": "^\\S+\\.csv$",
+                    "hidden": true,
+                    "schema": "assets/schema_input.json"
                 },
                 "step": {
                     "type": "string",
