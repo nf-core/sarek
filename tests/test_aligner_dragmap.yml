@@ -87,7 +87,7 @@
     - path: results/reports/samtools/test/test.recal.cram.stats
     # conda changes md5sums for test
 - name: Build only index with dragmap
-  command: nextflow run main.nf -profile test_cache --build_only_index --aligner dragmap --input=false --outdir results
+  command: nextflow run main.nf -profile test_cache --build_only_index --aligner dragmap --outdir results
   tags:
     - aligner
     - build_only_index
