@@ -105,7 +105,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
         normal: [ meta, input_list[0], input_index_list[0], intervals ]
     }
 
-
     // Prepare input channel for normal pileup summaries.
     // Remember, the input channel contains tumor-normal pairs, so there will be multiple copies of the normal sample for each tumor for a given patient.
     // Therefore, we use unique function to generate normal pileup summaries once for each patient for better efficiency.
@@ -114,18 +113,18 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
     pileup_tumor = pileup.tumor.map{ meta, cram, crai, intervals -> [ meta + [ id:meta.tumor_id ], cram, crai, intervals ] }
 
     // Generate pileup summary tables using getepileupsummaries. tumor sample should always be passed in as the first input and input list entries of vcf_to_filter,
-    GETPILEUPSUMMARIES_NORMAL(pileup_normal, fasta, fai, dict, germline_resource_pileup, germline_resource_pileup_tbi)
-    GETPILEUPSUMMARIES_TUMOR(pileup_tumor, fasta, fai, dict, germline_resource_pileup, germline_resource_pileup_tbi)
+    GATK4_GETPILEUPSUMMARIES_NORMAL(pileup_normal, fasta, fai, dict, germline_resource_pileup, germline_resource_pileup_tbi)
+    GATK4_GETPILEUPSUMMARIES_TUMOR(pileup_tumor, fasta, fai, dict, germline_resource_pileup, germline_resource_pileup_tbi)
 
     // Figuring out if there is one or more table(s) from the same sample
-    pileup_table_normal_branch = GETPILEUPSUMMARIES_NORMAL.out.table.branch{
+    pileup_table_normal_branch = GATK4_GETPILEUPSUMMARIES_NORMAL.out.table.branch{
         // Use meta.num_intervals to asses number of intervals
         intervals:    it[0].num_intervals > 1
         no_intervals: it[0].num_intervals <= 1
     }
 
     // Figuring out if there is one or more table(s) from the same sample
-    pileup_table_tumor_branch = GETPILEUPSUMMARIES_TUMOR.out.table.branch{
+    pileup_table_tumor_branch = GATK4_GETPILEUPSUMMARIES_TUMOR.out.table.branch{
         // Use meta.num_intervals to asses number of intervals
         intervals:    it[0].num_intervals > 1
         no_intervals: it[0].num_intervals <= 1
@@ -150,16 +149,9 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
 
     GATK4_CALCULATECONTAMINATION(ch_calculatecontamination_in_tables)
 
-    if (joint_mutect2) {
-        // Reduce the meta to only patient name
-        ch_seg_to_filtermutectcalls = GATK4_CALCULATECONTAMINATION.out.segmentation.map{ meta, seg -> [ meta - meta.subMap('tumor_id') + [id: meta.patient], seg]}.groupTuple()
-        ch_cont_to_filtermutectcalls = GATK4_CALCULATECONTAMINATION.out.contamination.map{ meta, cont -> [ meta - meta.subMap('tumor_id') + [id: meta.patient], cont]}.groupTuple()
-    }
-    else {
-        // Keep tumor_vs_normal ID
-        ch_seg_to_filtermutectcalls = GATK4_CALCULATECONTAMINATION.out.segmentation
-        ch_cont_to_filtermutectcalls = GATK4_CALCULATECONTAMINATION.out.contamination
-    }
+    // Reduce the meta to only patient name if joint_mutect2 otherwise keep regular ID
+    ch_seg_to_filtermutectcalls  = joint_mutect2 ? GATK4_CALCULATECONTAMINATION.out.segmentation.map{ meta, seg -> [ meta - meta.subMap('tumor_id') + [id: meta.patient], seg]}.groupTuple()    : GATK4_CALCULATECONTAMINATION.out.segmentation
+    ch_cont_to_filtermutectcalls = joint_mutect2 ? GATK4_CALCULATECONTAMINATION.out.contamination.map{ meta, cont -> [ meta - meta.subMap('tumor_id') + [id: meta.patient], cont]}.groupTuple() : GATK4_CALCULATECONTAMINATION.out.contamination
 
     // Mutect2 calls filtered by filtermutectcalls using the artifactpriors, contamination and segmentation tables
     vcf_to_filter = vcf.join(tbi, failOnDuplicate: true, failOnMismatch: true)
@@ -175,15 +167,15 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
         // add variantcaller to meta map
         .map{ meta, vcf -> [ meta + [ variantcaller:'mutect2' ], vcf ] }
 
-    versions = versions.mix(GATK4_MERGEVCFS.out.versions)
     versions = versions.mix(GATK4_CALCULATECONTAMINATION.out.versions)
     versions = versions.mix(GATK4_FILTERMUTECTCALLS.out.versions)
-    versions = versions.mix(GETPILEUPSUMMARIES_NORMAL.out.versions)
-    versions = versions.mix(GETPILEUPSUMMARIES_TUMOR.out.versions)
-    versions = versions.mix(GATHERPILEUPSUMMARIES_NORMAL.out.versions)
-    versions = versions.mix(GATHERPILEUPSUMMARIES_TUMOR.out.versions)
+    versions = versions.mix(GATK4_GATHERPILEUPSUMMARIES_NORMAL.out.versions)
+    versions = versions.mix(GATK4_GATHERPILEUPSUMMARIES_TUMOR.out.versions)
+    versions = versions.mix(GATK4_GETPILEUPSUMMARIES_NORMAL.out.versions)
+    versions = versions.mix(GATK4_GETPILEUPSUMMARIES_TUMOR.out.versions)
     versions = versions.mix(GATK4_LEARNREADORIENTATIONMODEL.out.versions)
     versions = versions.mix(GATK4_MERGEMUTECTSTATS.out.versions)
+    versions = versions.mix(GATK4_MERGEVCFS.out.versions)
     versions = versions.mix(GATK4_MUTECT2.out.versions)
 
     emit:
