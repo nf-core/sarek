@@ -135,13 +135,13 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
     pileup_table_tumor_to_merge = pileup_table_tumor_branch.intervals.map{ meta, table -> [ groupKey(meta, meta.num_intervals), table ] }.groupTuple()
 
     // Merge Pileup Summaries
-    GATHERPILEUPSUMMARIES_NORMAL(pileup_table_normal_to_merge, dict.map{ meta, dict -> [ dict ] })
-    GATHERPILEUPSUMMARIES_TUMOR(pileup_table_tumor_to_merge, dict.map{ meta, dict -> [ dict ] })
+    GATK4_GATHERPILEUPSUMMARIES_NORMAL(pileup_table_normal_to_merge, dict.map{ meta, dict -> [ dict ] })
+    GATK4_GATHERPILEUPSUMMARIES_TUMOR(pileup_table_tumor_to_merge, dict.map{ meta, dict -> [ dict ] })
 
     // Do some channel magic to generate tumor-normal pairs again.
     // This is necessary because we generated one normal pileup summary for each patient but we need run calculate contamination for each tumor-normal pair.
-    pileup_table_tumor = Channel.empty().mix(GATHERPILEUPSUMMARIES_TUMOR.out.table, pileup_table_tumor_branch.no_intervals).map{meta, table -> [ meta - meta.subMap('normal_id', 'tumor_id', 'num_intervals') + [id:meta.patient], meta.id, table ] }
-    pileup_table_normal= Channel.empty().mix(GATHERPILEUPSUMMARIES_NORMAL.out.table, pileup_table_normal_branch.no_intervals).map{meta, table -> [ meta - meta.subMap('normal_id', 'tumor_id', 'num_intervals') + [id:meta.patient], meta.id, table ] }
+    pileup_table_tumor = Channel.empty().mix(GATK4_GATHERPILEUPSUMMARIES_TUMOR.out.table, pileup_table_tumor_branch.no_intervals).map{meta, table -> [ meta - meta.subMap('normal_id', 'tumor_id', 'num_intervals') + [id:meta.patient], meta.id, table ] }
+    pileup_table_normal= Channel.empty().mix(GATK4_GATHERPILEUPSUMMARIES_NORMAL.out.table, pileup_table_normal_branch.no_intervals).map{meta, table -> [ meta - meta.subMap('normal_id', 'tumor_id', 'num_intervals') + [id:meta.patient], meta.id, table ] }
     ch_calculatecontamination_in_tables = pileup_table_tumor.combine(
         pileup_table_normal, by:0).map{
         meta, tumor_id, tumor_table, normal_id, normal_table -> [ meta + [ id: tumor_id + "_vs_" + normal_id ], tumor_table, normal_table]
@@ -150,15 +150,15 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
     GATK4_CALCULATECONTAMINATION(ch_calculatecontamination_in_tables)
 
     // Reduce the meta to only patient name if joint_mutect2 otherwise keep regular ID
-    ch_seg_to_filtermutectcalls  = joint_mutect2 ? GATK4_CALCULATECONTAMINATION.out.segmentation.map{ meta, seg -> [ meta - meta.subMap('tumor_id') + [id: meta.patient], seg]}.groupTuple()    : GATK4_CALCULATECONTAMINATION.out.segmentation
-    ch_cont_to_filtermutectcalls = joint_mutect2 ? GATK4_CALCULATECONTAMINATION.out.contamination.map{ meta, cont -> [ meta - meta.subMap('tumor_id') + [id: meta.patient], cont]}.groupTuple() : GATK4_CALCULATECONTAMINATION.out.contamination
+    contamination_table = joint_mutect2 ? GATK4_CALCULATECONTAMINATION.out.contamination.map{ meta, cont -> [ meta - meta.subMap('tumor_id') + [id: meta.patient], cont]}.groupTuple() : GATK4_CALCULATECONTAMINATION.out.contamination
+    segmentation_table  = joint_mutect2 ? GATK4_CALCULATECONTAMINATION.out.segmentation.map{  meta, seg  -> [ meta - meta.subMap('tumor_id') + [id: meta.patient], seg]}.groupTuple()  : GATK4_CALCULATECONTAMINATION.out.segmentation
 
     // Mutect2 calls filtered by filtermutectcalls using the artifactpriors, contamination and segmentation tables
     vcf_to_filter = vcf.join(tbi, failOnDuplicate: true, failOnMismatch: true)
         .join(stats, failOnDuplicate: true, failOnMismatch: true)
         .join(GATK4_LEARNREADORIENTATIONMODEL.out.artifactprior, failOnDuplicate: true, failOnMismatch: true)
-        .join(ch_seg_to_filtermutectcalls, failOnDuplicate: true, failOnMismatch: true)
-        .join(ch_cont_to_filtermutectcalls, failOnDuplicate: true, failOnMismatch: true)
+        .join(segmentation_table, failOnDuplicate: true, failOnMismatch: true)
+        .join(contamination_table, failOnDuplicate: true, failOnMismatch: true)
         .map{ meta, vcf, tbi, stats, orientation, seg, cont -> [ meta, vcf, tbi, stats, orientation, seg, cont, [] ] }
 
     GATK4_FILTERMUTECTCALLS(vcf_to_filter, fasta, fai, dict)
@@ -183,16 +183,16 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
     tbi   // channel: [ meta, tbi ]
     stats // channel: [ meta, stats ]
 
-    vcf_filtered                                                        // channel: [ meta, vcf ]
-    index_filtered  = GATK4_FILTERMUTECTCALLS.out.tbi                   // channel: [ meta, tbi ]
-    stats_filtered  = GATK4_FILTERMUTECTCALLS.out.stats                 // channel: [ meta, stats ]
+    vcf_filtered                                        // channel: [ meta, vcf ]
+    index_filtered  = GATK4_FILTERMUTECTCALLS.out.tbi   // channel: [ meta, tbi ]
+    stats_filtered  = GATK4_FILTERMUTECTCALLS.out.stats // channel: [ meta, stats ]
+
     artifact_priors = GATK4_LEARNREADORIENTATIONMODEL.out.artifactprior // channel: [ meta, artifactprior ]
 
+    contamination_table // channel: [ meta, contamination ]
     pileup_table_normal // channel: [ meta, table_normal ]
     pileup_table_tumor  // channel: [ meta, table_tumor ]
-
-    contamination_table = ch_cont_to_filtermutectcalls    // channel: [ meta, contamination ]
-    segmentation_table  = ch_seg_to_filtermutectcalls     // channel: [ meta, segmentation ]
+    segmentation_table  // channel: [ meta, segmentation ]
 
     versions // channel: [ versions.yml ]
 }

@@ -117,15 +117,15 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     GATK4_CALCULATECONTAMINATION(pileup_table.map{ meta, table -> [ meta, table, [] ] })
 
     // Reduce the meta to only patient name if joint_mutect2 otherwise keep regular ID
-    ch_seg_to_filtermutectcalls  = joint_mutect2 ? GATK4_CALCULATECONTAMINATION.out.segmentation.map{ meta, seg -> [ meta - meta.subMap('sample') + [id: meta.patient], seg]}.groupTuple()    : GATK4_CALCULATECONTAMINATION.out.segmentation
-    ch_cont_to_filtermutectcalls = joint_mutect2 ? GATK4_CALCULATECONTAMINATION.out.contamination.map{ meta, cont -> [ meta - meta.subMap('sample') + [id: meta.patient], cont]}.groupTuple() : GATK4_CALCULATECONTAMINATION.out.contamination
+    contamination_table = joint_mutect2 ? GATK4_CALCULATECONTAMINATION.out.contamination.map{ meta, cont -> [ meta - meta.subMap('sample') + [id: meta.patient], cont]}.groupTuple() : GATK4_CALCULATECONTAMINATION.out.contamination
+    segmentation_table  = joint_mutect2 ? GATK4_CALCULATECONTAMINATION.out.segmentation.map{  meta, seg  -> [ meta - meta.subMap('sample') + [id: meta.patient], seg]}.groupTuple()  : GATK4_CALCULATECONTAMINATION.out.segmentation
 
     // Mutect2 calls filtered by filtermutectcalls using the contamination and segmentation tables
     vcf_to_filter = vcf.join(tbi, failOnDuplicate: true, failOnMismatch: true)
         .join(stats, failOnDuplicate: true, failOnMismatch: true)
         .join(GATK4_LEARNREADORIENTATIONMODEL.out.artifactprior, failOnDuplicate: true, failOnMismatch: true)
-        .join(calculatecontamination_out_seg, failOnDuplicate: true, failOnMismatch: true)
-        .join(calculatecontamination_out_cont, failOnDuplicate: true, failOnMismatch: true)
+        .join(segmentation_table, failOnDuplicate: true, failOnMismatch: true)
+        .join(contamination_table, failOnDuplicate: true, failOnMismatch: true)
         .map{ meta, vcf, tbi, stats, artifactprior, seg, cont -> [ meta, vcf, tbi, stats, artifactprior, seg, cont, [] ] }
 
     GATK4_FILTERMUTECTCALLS(vcf_to_filter, fasta, fai, dict)
@@ -152,12 +152,11 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     index_filtered = GATK4_FILTERMUTECTCALLS.out.tbi   // channel: [ meta, tbi ]
     stats_filtered = GATK4_FILTERMUTECTCALLS.out.stats // channel: [ meta, stats ]
 
-    artifact_priors = GATK4_LEARNREADORIENTATIONMODEL.out.artifactprior    // channel: [ meta, artifactprior ]
+    artifact_priors = GATK4_LEARNREADORIENTATIONMODEL.out.artifactprior // channel: [ meta, artifactprior ]
 
-    pileup_table  // channel: [ meta, table ]
-
-    contamination_table = calculatecontamination_out_cont  // channel: [ meta, contamination ]
-    segmentation_table  = calculatecontamination_out_seg   // channel: [ meta, segmentation ]
+    contamination_table // channel: [ meta, contamination ]
+    pileup_table        // channel: [ meta, table ]
+    segmentation_table  // channel: [ meta, segmentation ]
 
     versions // channel: [ versions.yml ]
 }
