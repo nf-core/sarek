@@ -399,12 +399,12 @@ workflow SAREK {
     intervals_bed_gz_tbi = PREPARE_INTERVALS.out.intervals_bed_gz_tbi // [ interval_bed, tbi, num_intervals ] multiple interval.bed.gz/.tbi files, divided by useful intervals for scatter/gather
 
     intervals_and_num_intervals = intervals.map{ interval, num_intervals ->
-        if ( num_intervals < 1 ) [ [], num_intervals ]
+        if ( num_intervals < 1 ) [ [], 0 ]
         else [ interval, num_intervals ]
     }
 
     intervals_bed_gz_tbi_and_num_intervals = intervals_bed_gz_tbi.map{ intervals, num_intervals ->
-        if ( num_intervals < 1 ) [ [], [], num_intervals ]
+        if ( num_intervals < 1 ) [ [], [], 0 ]
         else [ intervals[0], intervals[1], num_intervals ]
     }
 
