@@ -122,9 +122,11 @@ We thank the following people for their extensive assistance in the development 
 - [Adam Talbot](https://github.com/adamrtalbot)
 - [Adrian Lärkeryd](https://github.com/adrlar)
 - [Alexander Peltzer](https://github.com/apeltzer)
+- [Alison Meynert](https://github.com/ameynert)
 - [Anders Sune Pedersen](https://github.com/asp8200)
 - [Bekir Ergüner](https://github.com/berguner)
 - [Chela James](https://github.com/chelauk)
+- [Christina Chatzipantsiou](https://github.com/cgpu)
 - [David Mas-Ponte](https://github.com/davidmasp)
 - [Francesco Lescai](https://github.com/lescai)
 - [Gavin Mackenzie](https://github.com/GCJMackenzie)
@@ -155,10 +157,8 @@ We thank the following people for their extensive assistance in the development 
 - [arontommi](https://github.com/arontommi)
 - [BarryDigby](https://github.com/BarryDigby)
 - [bjornnystedt](https://github.com/bjornnystedt)
-- [cgpu](https://github.com/cgpu)
 - [gulfshores](https://github.com/gulfshores)
 - [pallolason](https://github.com/pallolason)
-- [Alison Meynert](https://github.com/ameynert)
 
 ## Acknowledgements
 
