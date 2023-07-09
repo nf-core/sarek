@@ -16,6 +16,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- [#1143](https://github.com/nf-core/sarek/pull/1143) - `snpeff_db` is now a string
+- [#1145](https://github.com/nf-core/sarek/pull/1145) - Fixed Zenodo links in `README.md` and in `WorkflowMain.groovy`
+
 ## [3.2.3](https://github.com/nf-core/sarek/releases/tag/3.2.3) - Gällivare
 
 Gällivare is a small lake next to Pierikjaure.
@@ -1214,7 +1217,7 @@ Ruotes is one of the main massif in the Sarek National Park.
 - [#607](https://github.com/SciLifeLab/Sarek/pull/607) - Update to `GATK4`
 - [#608](https://github.com/SciLifeLab/Sarek/pull/608) - Update `Nextflow` required version
 - [#616](https://github.com/SciLifeLab/Sarek/pull/616) - Update `CHANGELOG`
-- [#617](https://github.com/SciLifeLab/Sarek/pull/617) - Replace deprecated ` Nextflow ``$name ` syntax with `withName`
+- [#617](https://github.com/SciLifeLab/Sarek/pull/617) - Replace deprecated `Nextflow ``$name` syntax with `withName`
 
 ### Fixed
 
