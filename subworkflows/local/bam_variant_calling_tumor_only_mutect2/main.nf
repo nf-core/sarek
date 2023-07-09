@@ -30,25 +30,15 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     germline_resource_pileup     = germline_resource_tbi ? germline_resource : Channel.empty()
     germline_resource_pileup_tbi = germline_resource_tbi ?: Channel.empty()
 
+    // Group cram files by patient
+    if (joint_mutect2) input = input.map{ meta, input, index -> [ meta - meta.subMap('sample') + [id:meta.patient], input, index ] }.groupTuple()
+
     // Combine input and intervals for spread and gather strategy
     input_intervals = input.combine(intervals)
-        // Move num_intervals to meta map and reorganize channel for GATK4_MUTECT2 module
-        .map{ meta, input, index, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], input, index, intervals ] }
-
-    if (joint_mutect2) {
-        // Perform variant calling using mutect2 module in tumor single mode
-        // Group cram files by patient
-        patient_crams = input.map{ meta, t_cram, t_crai -> [ meta - meta.subMap('sample') + [id:meta.patient], t_cram, t_crai ] }.groupTuple()
-        // Add intervals for scatter-gather scaling
-        patient_cram_intervals = patient_crams.combine(intervals)
-        // Move num_intervals to meta map and reorganize channel for GATK4_MUTECT2 module
-            .map{ meta, t_cram, t_crai, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], t_cram, t_crai, intervals ] }
-        GATK4_MUTECT2(patient_cram_intervals, fasta, fai, dict, germline_resource, germline_resource_tbi, panel_of_normals, panel_of_normals_tbi)
-    }
-    else {
-        // Perform variant calling using mutect2 module in tumor single mode
-        GATK4_MUTECT2(input_intervals, fasta, fai, dict, germline_resource, germline_resource_tbi, panel_of_normals, panel_of_normals_tbi)
-    }
+    // Move num_intervals to meta map and reorganize channel for GATK4_MUTECT2 module
+    .map{ meta, input, index, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], input, index, intervals ] }
+    // Perform variant calling using mutect2 module in tumor single mode
+    GATK4_MUTECT2(input_intervals, fasta, fai, dict, germline_resource, germline_resource_tbi, panel_of_normals, panel_of_normals_tbi)
 
     // Figuring out if there is one or more vcf(s) from the same sample
     vcf_branch = GATK4_MUTECT2.out.vcf.branch{
@@ -117,15 +107,15 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     GATK4_CALCULATECONTAMINATION(pileup_table.map{ meta, table -> [ meta, table, [] ] })
 
     // Reduce the meta to only patient name if joint_mutect2 otherwise keep regular ID
-    contamination_table = joint_mutect2 ? GATK4_CALCULATECONTAMINATION.out.contamination.map{ meta, cont -> [ meta - meta.subMap('sample') + [id: meta.patient], cont]}.groupTuple() : GATK4_CALCULATECONTAMINATION.out.contamination
-    segmentation_table  = joint_mutect2 ? GATK4_CALCULATECONTAMINATION.out.segmentation.map{  meta, seg  -> [ meta - meta.subMap('sample') + [id: meta.patient], seg]}.groupTuple()  : GATK4_CALCULATECONTAMINATION.out.segmentation
+    contamination_table = joint_mutect2 ? GATK4_CALCULATECONTAMINATION.out.contamination.map{ meta, contamination -> [ meta - meta.subMap('sample') + [id: meta.patient], contamination]}.groupTuple() : GATK4_CALCULATECONTAMINATION.out.contamination
+    segmentation_table  = joint_mutect2 ? GATK4_CALCULATECONTAMINATION.out.segmentation.map{  meta, segmentation  -> [ meta - meta.subMap('sample') + [id: meta.patient], segmentation]}.groupTuple()  : GATK4_CALCULATECONTAMINATION.out.segmentation
 
     // Mutect2 calls filtered by filtermutectcalls using the contamination and segmentation tables
     vcf_to_filter = vcf.join(tbi, failOnDuplicate: true, failOnMismatch: true)
         .join(stats, failOnDuplicate: true, failOnMismatch: true)
-        .join(GATK4_LEARNREADORIENTATIONMODEL.out.artifactprior, failOnDuplicate: true, failOnMismatch: true)
-        .join(segmentation_table, failOnDuplicate: true, failOnMismatch: true)
-        .join(contamination_table, failOnDuplicate: true, failOnMismatch: true)
+        .join(GATK4_LEARNREADORIENTATIONMODEL.out.artifactprior, failOnDuplicate: true)
+        .join(segmentation_table, failOnDuplicate: true)
+        .join(contamination_table, failOnDuplicate: true)
         .map{ meta, vcf, tbi, stats, artifactprior, seg, cont -> [ meta, vcf, tbi, stats, artifactprior, seg, cont, [] ] }
 
     GATK4_FILTERMUTECTCALLS(vcf_to_filter, fasta, fai, dict)
