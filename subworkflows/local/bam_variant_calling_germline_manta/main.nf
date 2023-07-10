@@ -1,4 +1,4 @@
-include { MANTA_GERMLINE                              } from '../../../modules/nf-core/manta/germline/main'
+include { MANTA_GERMLINE } from '../../../modules/nf-core/manta/germline/main'
 
 // Seems to be the consensus on upstream modules implementation too
 workflow BAM_VARIANT_CALLING_GERMLINE_MANTA {

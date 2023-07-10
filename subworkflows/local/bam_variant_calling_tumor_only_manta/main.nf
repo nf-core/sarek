@@ -1,4 +1,4 @@
-include { MANTA_TUMORONLY                                  } from '../../../modules/nf-core/manta/tumoronly/main'
+include { MANTA_TUMORONLY } from '../../../modules/nf-core/manta/tumoronly/main'
 
 // Seems to be the consensus on upstream modules implementation too
 workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA {
