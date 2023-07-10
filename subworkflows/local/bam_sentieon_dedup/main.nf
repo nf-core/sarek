@@ -4,8 +4,8 @@
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
-include { CRAM_QC_MOSDEPTH_SAMTOOLS              } from '../cram_qc_mosdepth_samtools/main'
-include { SENTIEON_DEDUP                         } from '../../../modules/nf-core/sentieon/dedup/main'
+include { CRAM_QC_MOSDEPTH_SAMTOOLS } from '../cram_qc_mosdepth_samtools/main'
+include { SENTIEON_DEDUP            } from '../../../modules/nf-core/sentieon/dedup/main'
 
 workflow BAM_SENTIEON_DEDUP {
     take:

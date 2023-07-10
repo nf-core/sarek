@@ -1,7 +1,14 @@
-include { CAT_CAT         as CAT_MPILEUP           } from '../../../modules/nf-core/cat/cat/main'
+//
+// MPILEUP variant calling: BCFTOOLS for variantcalling, SAMTools for controlfreec input
+//
+// For all modules here:
+// A when clause condition is defined in the conf/modules.config to determine if the module should be run
+
+include { CAT_CAT         as CAT_MPILEUP            } from '../../../modules/nf-core/cat/cat/main'
 include { BCFTOOLS_MPILEUP                          } from '../../../modules/nf-core/bcftools/mpileup/main'
 include { SAMTOOLS_MPILEUP                          } from '../../../modules/nf-core/samtools/mpileup/main'
 include { GATK4_MERGEVCFS as MERGE_BCFTOOLS_MPILEUP } from '../../../modules/nf-core/gatk4/mergevcfs/main'
+
 workflow BAM_VARIANT_CALLING_MPILEUP {
     take:
     cram      // channel: [mandatory] [ meta, cram, crai ]
@@ -17,9 +24,11 @@ workflow BAM_VARIANT_CALLING_MPILEUP {
         // Move num_intervals to meta map and reorganize channel for BCFTOOLS_MPILEUP/SAMTOOLS_MPILEUP modules
         .map{ meta, cram, crai, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram, intervals ] }
 
+    // Run, if --tools mpileup
     keep_bcftools_mpileup = false
     BCFTOOLS_MPILEUP(cram_intervals, fasta, keep_bcftools_mpileup)
 
+    //Only run, if --tools ControlFreec
     SAMTOOLS_MPILEUP(cram_intervals, fasta)
 
     // Figuring out if there is one or more vcf(s) from the same sample

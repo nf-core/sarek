@@ -1,8 +1,8 @@
 //
-// Run GATK mutect2 in tumor normal mode, getepileupsummaries, calculatecontamination, learnreadorientationmodel and filtermutectcalls
+//
+// MUTECT2: tumor-normal mode variantcalling: getpileupsummaries, calculatecontamination, learnreadorientationmodel and filtermutectcalls
 //
 
-include { GATK4_MERGEVCFS                 as MERGE_MUTECT2               } from '../../../modules/nf-core/gatk4/mergevcfs/main'
 include { GATK4_CALCULATECONTAMINATION    as CALCULATECONTAMINATION      } from '../../../modules/nf-core/gatk4/calculatecontamination/main'
 include { GATK4_FILTERMUTECTCALLS         as FILTERMUTECTCALLS           } from '../../../modules/nf-core/gatk4/filtermutectcalls/main'
 include { GATK4_GATHERPILEUPSUMMARIES     as GATHERPILEUPSUMMARIES_NORMAL} from '../../../modules/nf-core/gatk4/gatherpileupsummaries/main'
@@ -11,6 +11,7 @@ include { GATK4_GETPILEUPSUMMARIES        as GETPILEUPSUMMARIES_NORMAL   } from 
 include { GATK4_GETPILEUPSUMMARIES        as GETPILEUPSUMMARIES_TUMOR    } from '../../../modules/nf-core/gatk4/getpileupsummaries/main'
 include { GATK4_LEARNREADORIENTATIONMODEL as LEARNREADORIENTATIONMODEL   } from '../../../modules/nf-core/gatk4/learnreadorientationmodel/main'
 include { GATK4_MERGEMUTECTSTATS          as MERGEMUTECTSTATS            } from '../../../modules/nf-core/gatk4/mergemutectstats/main'
+include { GATK4_MERGEVCFS                 as MERGE_MUTECT2               } from '../../../modules/nf-core/gatk4/mergevcfs/main'
 include { GATK4_MUTECT2                   as MUTECT2_PAIRED              } from '../../../modules/nf-core/gatk4/mutect2/main'
 
 workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
@@ -104,7 +105,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
         tumor: [ meta, input_list[1], input_index_list[1], intervals ]
         normal: [ meta, input_list[0], input_index_list[0], intervals ]
     }
-
 
     // Prepare input channel for normal pileup summaries.
     // Remember, the input channel contains tumor-normal pairs, so there will be multiple copies of the normal sample for each tumor for a given patient.

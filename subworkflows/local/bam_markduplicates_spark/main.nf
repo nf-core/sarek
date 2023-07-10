@@ -1,13 +1,13 @@
 //
-// MARKDUPLICATES AND/OR QC after mapping
+// MARKDUPLICATES SPARK AND QC after mapping
 //
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
-include { CRAM_QC_MOSDEPTH_SAMTOOLS              } from '../cram_qc_mosdepth_samtools/main'
-include { GATK4_ESTIMATELIBRARYCOMPLEXITY        } from '../../../modules/nf-core/gatk4/estimatelibrarycomplexity/main'
-include { GATK4_MARKDUPLICATES_SPARK             } from '../../../modules/nf-core/gatk4/markduplicatesspark/main'
-include { SAMTOOLS_INDEX as INDEX_MARKDUPLICATES } from '../../../modules/nf-core/samtools/index/main'
+include { CRAM_QC_MOSDEPTH_SAMTOOLS                                 } from '../cram_qc_mosdepth_samtools/main'
+include { GATK4_ESTIMATELIBRARYCOMPLEXITY                           } from '../../../modules/nf-core/gatk4/estimatelibrarycomplexity/main'
+include { GATK4_MARKDUPLICATES_SPARK                                } from '../../../modules/nf-core/gatk4/markduplicatesspark/main'
+include { SAMTOOLS_INDEX                    as INDEX_MARKDUPLICATES } from '../../../modules/nf-core/samtools/index/main'
 
 workflow BAM_MARKDUPLICATES_SPARK {
     take:

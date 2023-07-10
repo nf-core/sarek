@@ -1,12 +1,16 @@
 //
-// merge samples with genomicsdbimport, perform joint genotyping with genotypeGVCFS
+// JOINT GERMLINE CALLING
+//
+// Merge samples with genomicsdbimport, perform joint genotyping with genotypeGVCFS
+//
+
 include { BCFTOOLS_SORT                                          } from '../../../modules/nf-core/bcftools/sort/main'
-include { GATK4_APPLYVQSR as GATK4_APPLYVQSR_INDEL               } from '../../../modules/nf-core/gatk4/applyvqsr/main'
-include { GATK4_APPLYVQSR as GATK4_APPLYVQSR_SNP                 } from '../../../modules/nf-core/gatk4/applyvqsr/main'
+include { GATK4_APPLYVQSR           as GATK4_APPLYVQSR_INDEL     } from '../../../modules/nf-core/gatk4/applyvqsr/main'
+include { GATK4_APPLYVQSR           as GATK4_APPLYVQSR_SNP       } from '../../../modules/nf-core/gatk4/applyvqsr/main'
 include { GATK4_GENOMICSDBIMPORT                                 } from '../../../modules/nf-core/gatk4/genomicsdbimport/main'
 include { GATK4_GENOTYPEGVCFS                                    } from '../../../modules/nf-core/gatk4/genotypegvcfs/main'
-include { GATK4_MERGEVCFS as MERGE_GENOTYPEGVCFS                 } from '../../../modules/nf-core/gatk4/mergevcfs/main'
-include { GATK4_MERGEVCFS as MERGE_VQSR                          } from '../../../modules/nf-core/gatk4/mergevcfs/main'
+include { GATK4_MERGEVCFS           as MERGE_GENOTYPEGVCFS       } from '../../../modules/nf-core/gatk4/mergevcfs/main'
+include { GATK4_MERGEVCFS           as MERGE_VQSR                } from '../../../modules/nf-core/gatk4/mergevcfs/main'
 include { GATK4_VARIANTRECALIBRATOR as VARIANTRECALIBRATOR_INDEL } from '../../../modules/nf-core/gatk4/variantrecalibrator/main'
 include { GATK4_VARIANTRECALIBRATOR as VARIANTRECALIBRATOR_SNP   } from '../../../modules/nf-core/gatk4/variantrecalibrator/main'
 

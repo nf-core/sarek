@@ -47,9 +47,9 @@ workflow VCF_ANNOTATE_ALL {
         vcf_for_vep = vcf.map{ meta, vcf -> [ meta, vcf, [] ] }
         VCF_ANNOTATE_ENSEMBLVEP(vcf_for_vep, fasta, vep_genome, vep_species, vep_cache_version, vep_cache, vep_extra_files)
 
-        reports = reports.mix(VCF_ANNOTATE_ENSEMBLVEP.out.reports)
-        vcf_ann = vcf_ann.mix(VCF_ANNOTATE_ENSEMBLVEP.out.vcf_tbi)
-        tab_ann = tab_ann.mix(VCF_ANNOTATE_ENSEMBLVEP.out.tab)
+        reports  = reports.mix(VCF_ANNOTATE_ENSEMBLVEP.out.reports)
+        vcf_ann  = vcf_ann.mix(VCF_ANNOTATE_ENSEMBLVEP.out.vcf_tbi)
+        tab_ann  = tab_ann.mix(VCF_ANNOTATE_ENSEMBLVEP.out.tab)
         json_ann = json_ann.mix(VCF_ANNOTATE_ENSEMBLVEP.out.json)
         versions = versions.mix(VCF_ANNOTATE_ENSEMBLVEP.out.versions)
     }

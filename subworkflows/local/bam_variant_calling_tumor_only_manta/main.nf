@@ -1,3 +1,9 @@
+//
+// MANTA single sample variant calling
+//
+// For all modules here:
+// A when clause condition is defined in the conf/modules.config to determine if the module should be run
+
 include { MANTA_TUMORONLY } from '../../../modules/nf-core/manta/tumoronly/main'
 
 // Seems to be the consensus on upstream modules implementation too
