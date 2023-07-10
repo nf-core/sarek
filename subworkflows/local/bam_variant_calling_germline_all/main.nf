@@ -209,8 +209,9 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
                 known_sites_snps_tbi,
                 known_snps_vqsr)
 
-        vcf_haplotypecaller = BAM_JOINT_CALLING_GERMLINE_SENTIEON.out.genotype_vcf
-        versions = versions.mix(BAM_JOINT_CALLING_GERMLINE_SENTIEON.out.versions)
+            vcf_haplotypecaller = BAM_JOINT_CALLING_GERMLINE_SENTIEON.out.genotype_vcf
+            versions = versions.mix(BAM_JOINT_CALLING_GERMLINE_SENTIEON.out.versions)
+
         }
 
     }
