@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- [#](https://github.com/nf-core/sarek/pull/) - Refactor codebase
+- [#1150](https://github.com/nf-core/sarek/pull/1150) - Refactor codebase
 
 ### Fixed
 

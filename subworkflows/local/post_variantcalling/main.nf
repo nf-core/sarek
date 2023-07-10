@@ -2,24 +2,27 @@
 // POST VARIANT CALLING: processes run on variantcalled but not annotated VCFs
 //
 
-include { CONCATENATE_VCFS                                     } from '../../../subworkflows/vcf_concatenate_germline/main'
+include { CONCATENATE_GERMLINE_VCFS } from '../vcf_concatenate_germline/main'
 
-workflow CONCATENATE_VCFS {
+workflow POST_VARIANTCALLING {
+
     take:
     vcfs
     concatenate_vcfs
 
     main:
     versions = Channel.empty()
+    vcfs     = Channel.empty()
 
-    if(concatenate_vcfs){
-        CONCATENATE_VCFS(vcfs)
-        versions = versions.mix(CONCATENATE_VCFS.out.versions)
-    }
+    //if(concatenate_vcfs){
+        CONCATENATE_GERMLINE_VCFS(vcfs)
 
+      //  vcfs = vcfs.mix(CONCATENATE_VCFS.out.vcfs)
+      //  versions = versions.mix(CONCATENATE_VCFS.out.versions)
+    //}
 
     emit:
-    vcfs = CONCATENATE_VCFS.out.vcfs // post processed vcfs
+    vcfs // post processed vcfs
 
     versions // channel: [ versions.yml ]
 }
