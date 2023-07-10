@@ -28,6 +28,7 @@ Gällivare is a small lake next to Pierikjaure.
 
 - [#1112](https://github.com/nf-core/sarek/pull/1112) - Back to dev
 - [#1119](https://github.com/nf-core/sarek/pull/1119) - Added `help_text` for `input_output_options` group in schema
+- [#1044](https://github.com/nf-core/sarek/pull/1044) - Adding support for several tools from Sentieon's DNAseq package. The standard fastq-to-vcf processing can now be done using Sentieon's DNAseq tools `ApplyVarCal`, `bwa mem`, `Dedup`, `GVCFtyper`, `Haplotyper`, `LocusCollector` and `VarCal`.
 
 ### Changed
 
