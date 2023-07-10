@@ -1,22 +1,29 @@
-name: gatk_tumor_only_somatic_variant_calling
+name: bam_variant_calling_tumor_only_mutect2
 description: |
   Perform variant calling on a single tumor sample using mutect2 tumor only mode.
-  Run the input bam file through getpileupsummarries and then calculatecontaminationto get the contamination and segmentation tables.
-  Filter the mutect2 output vcf using filtermutectcalls and the contamination & segmentation tables for additional filtering.
+  f1r2 output of mutect2 is run through learnreadorientationmodel to get the artifact priors.
+  Run the input bam files through getpileupsummarries and then calculatecontamination to get the contamination and segmentation tables.
+  Filter the mutect2 output vcf using filtermutectcalls, artifact priors and the contamination & segmentation tables for additional filtering.
+  Optional joint calling of multiple tumor.
 keywords:
-  - gatk4
-  - mutect2
-  - getpileupsummaries
   - calculatecontamination
-  - filtermutectcalls
-  - variant_calling
-  - tumor_only
   - filtered_vcf
+  - filtermutectcalls
+  - gatk4
+  - getpileupsummaries
+  - learnreadorientationmodel
+  - mutect2
+  - tumor_only
+  - variant_calling
 modules:
-  - gatk4/mutect2
-  - gatk4/getpileupsummaries
   - gatk4/calculatecontamination
   - gatk4/filtermutectcalls
+  - gatk4/gatherpileupsummaries
+  - gatk4/getpileupsummaries
+  - gatk4/learnreadorientationmodel
+  - gatk4/mergemutectstats
+  - gatk4/mergevcfs
+  - gatk4/mutect2
 input:
   - meta:
       type: map
@@ -25,11 +32,11 @@ input:
         e.g. [ id:'test' ]
   - input:
       type: list
-      description: list containing one BAM file, also able to take CRAM as an input
+      description: list containing Tumor BAM files, also able to take CRAM as an input
       pattern: "[ *.{bam/cram} ]"
   - input_index:
       type: list
-      description: list containing one BAM file indexe, also able to take CRAM index as an input
+      description: list containing Tumor BAM files indexes, also able to take CRAM index as an input
       pattern: "[ *.{bam.bai/cram.crai} ]"
   - fasta:
       type: file
@@ -63,26 +70,46 @@ input:
       type: file
       description: File containing intervals.
       pattern: "*.interval_list"
+  - joint_mutect2:
+      type: boolean
+      description: Boolean to indicate whether to run mutect2 in joint mode.
+      default: false
 output:
   - versions:
       type: file
       description: File containing software versions
       pattern: "versions.yml"
-  - mutect2_vcf:
+  - vcf:
       type: file
       description: Compressed vcf file to be used for variant_calling.
       pattern: "[ *.vcf.gz ]"
-  - mutect2_tbi:
+  - tbi:
       type: file
-      description: Indexes of the mutect2_vcf file
+      description: Indexes of the vcf file
       pattern: "[ *vcf.gz.tbi ]"
-  - mutect2_stats:
+  - stats:
       type: file
       description: Stats files for the mutect2 vcf
       pattern: "[ *vcf.gz.stats ]"
+  - vcf_filtered:
+      type: file
+      description: Compressed and filtered vcf file to be used for variant_calling.
+      pattern: "[ *.vcf.gz ]"
+  - index_filtered:
+      type: file
+      description: Indexes of the vcf_filtered file
+      pattern: "[ *vcf.gz.tbi ]"
+  - stats_filtered:
+      type: file
+      description: Stats files for the mutect2 vcf_filtered
+      pattern: "[ *vcf.gz.stats ]"
+  - artifact_priors:
+      type: file
+      description: file containing artifact-priors to be used by filtermutectcalls.
+      pattern: "*.tar.gz"
   - pileup_table:
       type: file
-      description: File containing the pileup summary table.
+      description: File containing the tumor pileup summary table, kept separate as calculatecontamination needs them individually specified.
       pattern: "*.pileups.table"
   - contamination_table:
       type: file
@@ -92,17 +119,6 @@ output:
       type: file
       description: Output table containing segmentation of tumor minor allele fractions.
       pattern: "*.segmentation.table"
-  - filtered_vcf:
-      type: file
-      description: file containing filtered mutect2 calls.
-      pattern: "*.vcf.gz"
-  - filtered_tbi:
-      type: file
-      description: tbi file that pairs with filtered vcf.
-      pattern: "*.vcf.gz.tbi"
-  - filtered_stats:
-      type: file
-      description: file containing statistics of the filtermutectcalls run.
-      pattern: "*.filteringStats.tsv"
 authors:
   - "@GCJMackenzie"
+  - "@maxulysse"
