@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- [#](https://github.com/nf-core/sarek/pull/) - Refactor codebase
+
 ### Fixed
 
 - [#1143](https://github.com/nf-core/sarek/pull/1143) - `snpeff_db` is now a string
