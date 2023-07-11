@@ -120,7 +120,7 @@ class WorkflowSarek {
 
     public static String retrieveInput(params, log){
         def input = null
-        if (!params.input) {
+        if (!params.input && !params.build_only_index) {
             switch (params.step) {
                 case 'mapping':                 Nextflow.error("Can't start with step $params.step without samplesheet")
                                                 break
