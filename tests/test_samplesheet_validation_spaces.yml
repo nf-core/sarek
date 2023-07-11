@@ -6,4 +6,4 @@
   exit_code: 1
   stderr:
     contains:
-      - "Sample name must be provided and cannot contain spaces"
+      - "Sample ID must be provided and cannot contain spaces"
