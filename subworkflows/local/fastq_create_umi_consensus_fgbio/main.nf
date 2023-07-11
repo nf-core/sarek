@@ -17,7 +17,7 @@ workflow FASTQ_CREATE_UMI_CONSENSUS_FGBIO {
     take:
     reads                     // channel: [mandatory] [ val(meta), [ reads ] ]
     fasta                     // channel: [mandatory] /path/to/reference/fasta
-    fai                       // channel: [optional] /path/to/reference/fasta_fau, needed for Sentieon
+    fai                       // channel: [optional] /path/to/reference/fasta_fai, needed for Sentieon
     map_index                 // channel: [mandatory] Pre-computed mapping index
     groupreadsbyumi_strategy  // string:  [mandatory] grouping strategy - default: "Adjacency"
 
