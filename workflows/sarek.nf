@@ -471,6 +471,7 @@ workflow SAREK {
             FASTQ_CREATE_UMI_CONSENSUS_FGBIO(
                 input_fastq,
                 fasta,
+                fasta_fai,
                 index_alignement,
                 params.group_by_umi_strategy)
 
@@ -1074,7 +1075,6 @@ workflow SAREK {
         versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.versions)
         versions = versions.mix(POST_VARIANTCALLING.out.versions)
         versions = versions.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.versions)
-
 
         // ANNOTATE
         if (params.step == 'annotate') vcf_to_annotate = input_sample
