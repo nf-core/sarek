@@ -17,8 +17,8 @@ workflow POST_VARIANTCALLING {
     if(concatenate_vcfs){
         CONCATENATE_GERMLINE_VCFS(vcfs)
 
-        vcfs = vcfs.mix(CONCATENATE_VCFS.out.vcfs)
-        versions = versions.mix(CONCATENATE_VCFS.out.versions)
+        vcfs = vcfs.mix(CONCATENATE_GERMLINE_VCFS.out.vcfs)
+        versions = versions.mix(CONCATENATE_GERMLINE_VCFS.out.versions)
     }
 
     emit:
