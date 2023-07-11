@@ -10,13 +10,13 @@
             "patient": {
                 "type": "string",
                 "pattern": "^\\S+$",
-                "errorMessage": "Patient name must be provided and cannot contain spaces",
+                "errorMessage": "Patient ID must be provided and cannot contain spaces",
                 "meta": ["patient"]
             },
             "sample": {
                 "type": "string",
                 "pattern": "^\\S+$",
-                "errorMessage": "Sample name must be provided and cannot contain spaces",
+                "errorMessage": "Sample ID must be provided and cannot contain spaces",
                 "meta": ["sample"]
             },
             "sex": {
