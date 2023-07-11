@@ -293,12 +293,12 @@
                     },
                     "manta/somatic": {
                         "branch": "master",
-                        "git_sha": "80dbd95c558a0ebb2123d95f50c093a7f714a0d7",
+                        "git_sha": "b178a8cc4b8d38b9dc2d0a1e6a9b63e6786ce263",
                         "installed_by": ["modules"]
                     },
                     "manta/tumoronly": {
                         "branch": "master",
-                        "git_sha": "80dbd95c558a0ebb2123d95f50c093a7f714a0d7",
+                        "git_sha": "b178a8cc4b8d38b9dc2d0a1e6a9b63e6786ce263",
                         "installed_by": ["modules"]
                     },
                     "mosdepth": {
@@ -369,6 +369,36 @@
                     "samtools/view": {
                         "branch": "master",
                         "git_sha": "3ffae3598260a99e8db3207dead9f73f87f90d1f",
+                        "installed_by": ["modules"]
+                    },
+                    "sentieon/applyvarcal": {
+                        "branch": "master",
+                        "git_sha": "2cb2012b268b3502ac74463e510e76be99e2cdbf",
+                        "installed_by": ["modules"]
+                    },
+                    "sentieon/bwamem": {
+                        "branch": "master",
+                        "git_sha": "2cb2012b268b3502ac74463e510e76be99e2cdbf",
+                        "installed_by": ["modules"]
+                    },
+                    "sentieon/dedup": {
+                        "branch": "master",
+                        "git_sha": "e311732e4d878d7e47872226bef5f8630dc81675",
+                        "installed_by": ["modules"]
+                    },
+                    "sentieon/gvcftyper": {
+                        "branch": "master",
+                        "git_sha": "2cb2012b268b3502ac74463e510e76be99e2cdbf",
+                        "installed_by": ["modules"]
+                    },
+                    "sentieon/haplotyper": {
+                        "branch": "master",
+                        "git_sha": "2cb2012b268b3502ac74463e510e76be99e2cdbf",
+                        "installed_by": ["modules"]
+                    },
+                    "sentieon/varcal": {
+                        "branch": "master",
+                        "git_sha": "2cb2012b268b3502ac74463e510e76be99e2cdbf",
                         "installed_by": ["modules"]
                     },
                     "snpeff/download": {

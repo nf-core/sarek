@@ -209,6 +209,10 @@ if (params.step == 'mapping' && params.aligner.contains("dragmap") && !(params.s
     log.warn("DragMap was specified as aligner. Base recalibration is not contained in --skip_tools. It is recommended to skip baserecalibration when using DragMap\nhttps://gatk.broadinstitute.org/hc/en-us/articles/4407897446939--How-to-Run-germline-single-sample-short-variant-discovery-in-DRAGEN-mode")
 }
 
+if (params.tools && params.tools.contains("sentieon_haplotyper") && params.joint_germline && (!params.sentieon_haplotyper_emit_mode || !(params.sentieon_haplotyper_emit_mode.contains('gvcf')))) {
+    error("When setting the option `--joint_germline` and including `sentieon_haplotyper` among the requested tools, please set `--sentieon_haplotyper_emit_mode` to include `gvcf`.")
+}
+
 // Fails or warns when missing files or params for ascat
 if (params.tools && params.tools.split(',').contains('ascat')) {
     if (!params.ascat_alleles) {
@@ -244,15 +248,16 @@ if (!params.dbsnp && !params.known_indels) {
     if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration', 'recalibrate'] && (!params.skip_tools || (params.skip_tools && !params.skip_tools.split(',').contains('baserecalibrator')))) {
         error("Base quality score recalibration requires at least one resource file. Please provide at least one of `--dbsnp` or `--known_indels`\nYou can skip this step in the workflow by adding `--skip_tools baserecalibrator` to the command.")
     }
-    if (params.tools && params.tools.split(',').contains('haplotypecaller')) {
-        log.warn "If Haplotypecaller is specified, without `--dbsnp` or `--known_indels no filtering will be done. For filtering, please provide at least one of `--dbsnp` or `--known_indels`.\nFor more information see FilterVariantTranches (single-sample, default): https://gatk.broadinstitute.org/hc/en-us/articles/5358928898971-FilterVariantTranches\nFor more information see VariantRecalibration (--joint_germline): https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator\nFor more information on GATK Best practice germline variant calling: https://gatk.broadinstitute.org/hc/en-us/articles/360035535932-Germline-short-variant-discovery-SNPs-Indels-"
+    if (params.tools && (params.tools.split(',').contains('haplotypecaller') || params.tools.split(',').contains('sentieon_haplotyper'))) {
+        log.warn "If GATK's Haplotypecaller or Sentieon's Haplotyper is specified, without `--dbsnp` or `--known_indels no filtering will be done. For filtering, please provide at least one of `--dbsnp` or `--known_indels`.\nFor more information see FilterVariantTranches (single-sample, default): https://gatk.broadinstitute.org/hc/en-us/articles/5358928898971-FilterVariantTranches\nFor more information see VariantRecalibration (--joint_germline): https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator\nFor more information on GATK Best practice germline variant calling: https://gatk.broadinstitute.org/hc/en-us/articles/360035535932-Germline-short-variant-discovery-SNPs-Indels-"
     }
 }
-if (params.joint_germline && (!params.tools || !params.tools.split(',').contains('haplotypecaller'))) {
-    error("The Haplotypecaller should be specified as one of the tools when doing joint germline variant calling. (The Haplotypecaller could be specified by adding `--tools haplotypecaller` to the nextflow command.) ")
+if (params.joint_germline && (!params.tools || !(params.tools.split(',').contains('haplotypecaller') || params.tools.split(',').contains('sentieon_haplotyper')))) {
+    error("The GATK's Haplotypecaller or Sentieon's Haplotyper should be specified as one of the tools when doing joint germline variant calling.) ")
 }
+
 if (params.joint_germline && (!params.dbsnp || !params.known_indels || !params.known_snps || params.no_intervals)) {
-    log.warn "If Haplotypecaller is specified, without `--dbsnp`, `--known_snps`, `--known_indels` or the associated resource labels (ie `known_snps_vqsr`), no variant recalibration will be done. For recalibration you must provide all of these resources.\nFor more information see VariantRecalibration: https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator \nJoint germline variant calling also requires intervals in order to genotype the samples. As a result, if `--no_intervals` is set to `true` the joint germline variant calling will not be performed."
+    log.warn "If GATK's Haplotypecaller or Sentieon's Haplotyper is specified, without `--dbsnp`, `--known_snps`, `--known_indels` or the associated resource labels (ie `known_snps_vqsr`), no variant recalibration will be done. For recalibration you must provide all of these resources.\nFor more information see VariantRecalibration: https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator \nJoint germline variant calling also requires intervals in order to genotype the samples. As a result, if `--no_intervals` is set to `true` the joint germline variant calling will not be performed."
 }
 
 // Fails when --joint_mutect2 is used without enabling mutect2
@@ -363,7 +368,7 @@ include { FASTP                                          } from '../modules/nf-c
 include { FASTQ_CREATE_UMI_CONSENSUS_FGBIO               } from '../subworkflows/local/fastq_create_umi_consensus_fgbio/main'
 
 // Map input reads to reference genome
-include { FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP                } from '../subworkflows/local/fastq_align_bwamem_mem2_dragmap/main'
+include { FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON       } from '../subworkflows/local/fastq_align_bwamem_mem2_dragmap_sentieon/main'
 
 // Merge and index BAM files (optional)
 include { BAM_MERGE_INDEX_SAMTOOLS                       } from '../subworkflows/local/bam_merge_index_samtools/main'
@@ -379,6 +384,7 @@ include { SAMTOOLS_CONVERT as CRAM_TO_BAM_RECAL          } from '../modules/nf-c
 // Mark Duplicates (+QC)
 include { BAM_MARKDUPLICATES                             } from '../subworkflows/local/bam_markduplicates/main'
 include { BAM_MARKDUPLICATES_SPARK                       } from '../subworkflows/local/bam_markduplicates_spark/main'
+include { BAM_SENTIEON_DEDUP                             } from '../subworkflows/local/bam_sentieon_dedup/main'
 
 // QC on CRAM
 include { CRAM_QC_MOSDEPTH_SAMTOOLS as CRAM_QC_NO_MD     } from '../subworkflows/local/cram_qc_mosdepth_samtools/main'
@@ -481,7 +487,7 @@ workflow SAREK {
     dragmap                = params.dragmap                 ? Channel.fromPath(params.dragmap).collect()
                                                             : PREPARE_GENOME.out.hashtable
     // Gather index for mapping given the chosen aligner
-    index_alignement = params.aligner == "bwa-mem" ? bwa :
+    index_alignement = (params.aligner == "bwa-mem" || params.aligner == "sentieon-bwamem") ? bwa :
         params.aligner == "bwa-mem2" ? bwamem2 :
         dragmap
 
@@ -658,10 +664,10 @@ workflow SAREK {
         }
 
         sort_bam = true
-        FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP(reads_for_alignment, index_alignement, sort_bam)
+        FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON(reads_for_alignment, index_alignement, sort_bam, fasta, fasta_fai)
 
         // Grouping the bams from the same samples not to stall the workflow
-        bam_mapped = FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP.out.bam.map{ meta, bam ->
+        bam_mapped = FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON.out.bam.map{ meta, bam ->
 
             // Update meta.id to be meta.sample, ditching sample-lane that is not needed anymore
             // Update meta.data_type
@@ -675,10 +681,19 @@ workflow SAREK {
             [ groupKey( meta - meta.subMap('num_lanes', 'read_group', 'size') + [ data_type:'bam', id:meta.sample ], (meta.num_lanes ?: 1) * (meta.size ?: 1)), bam ]
         }.groupTuple()
 
-        // gatk4 markduplicates can handle multiple bams as input, so no need to merge/index here
-        // Except if and only if skipping markduplicates or saving mapped bams
-        if (params.save_mapped || (params.skip_tools && params.skip_tools.split(',').contains('markduplicates'))) {
+        bai_mapped = FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON.out.bai.map{ meta, bai ->
+            [ groupKey( meta - meta.subMap('num_lanes', 'read_group', 'size') + [ data_type:'bai', id:meta.sample ], (meta.num_lanes ?: 1) * (meta.size ?: 1)), bai ]
+        }.groupTuple()
 
+        // gatk4 markduplicates can handle multiple bams as input, so no need to merge/index here
+        // Except if and only if save_mapped or (skipping markduplicates and sentieon-dedup)
+        if (
+            params.save_mapped ||
+            (
+                (params.skip_tools && params.skip_tools.split(',').contains('markduplicates')) &&
+                !(params.tools && params.tools.split(',').contains('sentieon_dedup'))
+            )
+        ) {
             // bams are merged (when multiple lanes from the same sample), indexed and then converted to cram
             BAM_MERGE_INDEX_SAMTOOLS(bam_mapped)
 
@@ -693,21 +708,21 @@ workflow SAREK {
 
         // Gather used softwares versions
         versions = versions.mix(CONVERT_FASTQ_INPUT.out.versions)
-        versions = versions.mix(FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP.out.versions)
+        versions = versions.mix(FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON.out.versions)
     }
 
     if (params.step in ['mapping', 'markduplicates']) {
 
         // ch_cram_no_markduplicates_restart = Channel.empty()
         cram_markduplicates_no_spark = Channel.empty()
+        cram_sentieon_dedup          = Channel.empty()
         cram_markduplicates_spark    = Channel.empty()
 
         // STEP 2: markduplicates (+QC) + convert to CRAM
 
-        // ch_bam_for_markduplicates will countain bam mapped with FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP when step is mapping
+        // ch_bam_for_markduplicates will contain bam mapped with FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON when step is mapping
         // Or bams that are specified in the samplesheet.csv when step is prepare_recalibration
         cram_for_markduplicates = params.step == 'mapping' ? bam_mapped : input_sample.map{ meta, input, index -> [ meta, input ] }
-
         // if no MD is done, then run QC on mapped & converted CRAM files
         // or the input BAM (+converted) or CRAM files
         cram_skip_markduplicates = Channel.empty()
@@ -715,7 +730,11 @@ workflow SAREK {
         // Should it be possible to restart from converted crams?
         // For now, conversion from bam to cram is only done when skipping markduplicates
 
-        if (params.skip_tools && params.skip_tools.split(',').contains('markduplicates')) {
+        if (
+            params.skip_tools &&
+            params.skip_tools.split(',').contains('markduplicates') &&
+            !(params.tools && params.tools.split(',').contains('sentieon_dedup'))
+        ) {
             if (params.step == 'mapping') {
                 cram_skip_markduplicates = BAM_TO_CRAM_MAPPING.out.alignment_index
             } else {
@@ -752,6 +771,22 @@ workflow SAREK {
 
             // Gather used softwares versions
             versions = versions.mix(BAM_MARKDUPLICATES_SPARK.out.versions)
+        } else if (params.tools && params.tools.split(',').contains('sentieon_dedup')) {
+            crai_for_markduplicates = params.step == 'mapping' ? bai_mapped : input_sample.map{ meta, input, index -> [ meta, index ] }
+            BAM_SENTIEON_DEDUP(
+                cram_for_markduplicates,
+                crai_for_markduplicates,
+                fasta,
+                fasta_fai,
+                intervals_for_preprocessing)
+
+            cram_sentieon_dedup = BAM_SENTIEON_DEDUP.out.cram
+
+            // Gather QC reports
+            reports = reports.mix(BAM_SENTIEON_DEDUP.out.reports.collect{ meta, report -> report })
+
+            // Gather used softwares versions
+            versions = versions.mix(BAM_SENTIEON_DEDUP.out.versions)
         } else {
             BAM_MARKDUPLICATES(
                 cram_for_markduplicates,
@@ -770,9 +805,10 @@ workflow SAREK {
 
         // ch_md_cram_for_restart contains either:
         // - crams from markduplicates
+        // - crams from sentieon_dedup
         // - crams from markduplicates_spark
         // - crams from input step markduplicates --> from the converted ones only?
-        ch_md_cram_for_restart = Channel.empty().mix(cram_markduplicates_no_spark, cram_markduplicates_spark)
+        ch_md_cram_for_restart = Channel.empty().mix(cram_markduplicates_no_spark, cram_markduplicates_spark, cram_sentieon_dedup)
             // Make sure correct data types are carried through
             .map{ meta, cram, crai -> [ meta + [data_type: "cram"], cram, crai ] }
 
@@ -782,7 +818,9 @@ workflow SAREK {
 
         // CSV should be written for the file actually out, either CRAM or BAM
         // Create CSV to restart from this step
-        params.save_output_as_bam ? CHANNEL_MARKDUPLICATES_CREATE_CSV(CRAM_TO_BAM.out.alignment_index) : CHANNEL_MARKDUPLICATES_CREATE_CSV(ch_md_cram_for_restart)
+        csv_subfolder = (params.tools && params.tools.split(',').contains('sentieon_dedup')) ? 'sentieon_dedup' : 'markduplicates'
+
+        params.save_output_as_bam ? CHANNEL_MARKDUPLICATES_CREATE_CSV(CRAM_TO_BAM.out.alignment_index, csv_subfolder, params.outdir, params.save_output_as_bam) : CHANNEL_MARKDUPLICATES_CREATE_CSV(ch_md_cram_for_restart, csv_subfolder, params.outdir, params.save_output_as_bam)
     }
 
     if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration']) {
@@ -814,7 +852,6 @@ workflow SAREK {
             // - crams from markduplicates_spark
             // - crams converted from bam mapped when skipping markduplicates
             // - input cram files, when start from step markduplicates
-            // ch_md_cram_for_restart.view() // contains md.cram.crai
             ch_cram_for_bam_baserecalibrator = Channel.empty().mix(ch_md_cram_for_restart, cram_skip_markduplicates )
                 // Make sure correct data types are carried through
                 .map{ meta, cram, crai -> [ meta + [data_type: "cram"], cram, crai ] }
@@ -870,7 +907,7 @@ workflow SAREK {
             cram_applybqsr = ch_cram_for_bam_baserecalibrator.join(ch_table_bqsr, failOnDuplicate: true, failOnMismatch: true)
 
             // Create CSV to restart from this step
-            CHANNEL_BASERECALIBRATOR_CREATE_CSV(ch_md_cram_for_restart.join(ch_table_bqsr, failOnDuplicate: true), params.skip_tools)
+            CHANNEL_BASERECALIBRATOR_CREATE_CSV(ch_md_cram_for_restart.join(ch_table_bqsr, failOnDuplicate: true), params.tools, params.skip_tools, params.save_output_as_bam, params.outdir)
         }
     }
 
@@ -1077,7 +1114,8 @@ workflow SAREK {
             known_sites_snps,
             known_sites_snps_tbi,
             known_snps_vqsr,
-            params.joint_germline)
+            params.joint_germline,
+            params.sentieon_haplotyper_emit_mode)
 
         // TUMOR ONLY VARIANT CALLING
         BAM_VARIANT_CALLING_TUMOR_ONLY_ALL(
@@ -1152,6 +1190,7 @@ workflow SAREK {
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_freebayes)
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_haplotypecaller)
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_manta)
+        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_sentieon_haplotyper)
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_strelka)
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_tiddit)
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_mpileup)
@@ -1172,7 +1211,8 @@ workflow SAREK {
         reports = reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.vcftools_tstv_qual.collect{ meta, qual -> qual })
         reports = reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.vcftools_filter_summary.collect{ meta, summary -> summary })
 
-        CHANNEL_VARIANT_CALLING_CREATE_CSV(vcf_to_annotate)
+        vcf_to_csv = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.gvcf_sentieon_haplotyper)
+        CHANNEL_VARIANT_CALLING_CREATE_CSV(vcf_to_csv)
 
         // ANNOTATE
         if (params.step == 'annotate') vcf_to_annotate = input_sample

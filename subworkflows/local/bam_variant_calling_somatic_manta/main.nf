@@ -1,4 +1,4 @@
-include { MANTA_SOMATIC                                    } from '../../../modules/nf-core/manta/somatic/main'
+include { MANTA_SOMATIC } from '../../../modules/nf-core/manta/somatic/main'
 
 workflow BAM_VARIANT_CALLING_SOMATIC_MANTA {
     take:
