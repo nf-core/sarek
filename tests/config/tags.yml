@@ -124,7 +124,7 @@ sentieon/bwamem:
   - tests/test_alignment_sentieon_bwamem.yml
 
 ## markduplicates
-markduplicates:
+gatk4/markduplicates:
   - conf/modules/markduplicates.config
   - modules/nf-core/gatk4/markduplicates/main.nf
   - modules/nf-core/mosdepth/main.nf
@@ -454,4 +454,6 @@ concatenate_vcfs:
   - subworkflows/local/bam_variant_calling_mpileup/main.nf
   - subworkflows/local/bam_variant_calling_single_strelka/main.nf
   - subworkflows/local/bam_variant_calling_single_tiddit/main.nf
+  - subworkflows/local/post_variantcalling/main.nf
+  - subworkflows/local/vcf_concatenate_germline/main.nf
   - tests/test_concat_germline_vcfs.yml

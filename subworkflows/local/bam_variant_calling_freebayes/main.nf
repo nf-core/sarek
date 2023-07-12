@@ -1,7 +1,13 @@
-include { BCFTOOLS_SORT                                } from '../../../modules/nf-core/bcftools/sort/main'
-include { GATK4_MERGEVCFS as MERGE_FREEBAYES           } from '../../../modules/nf-core/gatk4/mergevcfs/main'
-include { FREEBAYES                                    } from '../../../modules/nf-core/freebayes/main'
-include { TABIX_TABIX as TABIX_VC_FREEBAYES            } from '../../../modules/nf-core/tabix/tabix/main'
+//
+// FREEBAYES variant calling
+//
+// For all modules here:
+// A when clause condition is defined in the conf/modules.config to determine if the module should be run
+
+include { BCFTOOLS_SORT                         } from '../../../modules/nf-core/bcftools/sort/main'
+include { FREEBAYES                             } from '../../../modules/nf-core/freebayes/main'
+include { GATK4_MERGEVCFS as MERGE_FREEBAYES    } from '../../../modules/nf-core/gatk4/mergevcfs/main'
+include { TABIX_TABIX     as TABIX_VC_FREEBAYES } from '../../../modules/nf-core/tabix/tabix/main'
 
 workflow BAM_VARIANT_CALLING_FREEBAYES {
     take:

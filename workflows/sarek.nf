@@ -208,95 +208,91 @@ if (params.spliceai_snv && params.spliceai_snv_tbi && params.spliceai_indel && p
 */
 
 // Create samplesheets to restart from different steps
-include { CHANNEL_ALIGN_CREATE_CSV                       } from '../subworkflows/local/channel_align_create_csv/main'
-include { CHANNEL_MARKDUPLICATES_CREATE_CSV              } from '../subworkflows/local/channel_markduplicates_create_csv/main'
-include { CHANNEL_BASERECALIBRATOR_CREATE_CSV            } from '../subworkflows/local/channel_baserecalibrator_create_csv/main'
-include { CHANNEL_APPLYBQSR_CREATE_CSV                   } from '../subworkflows/local/channel_applybqsr_create_csv/main'
-include { CHANNEL_VARIANT_CALLING_CREATE_CSV             } from '../subworkflows/local/channel_variant_calling_create_csv/main'
+include { CHANNEL_ALIGN_CREATE_CSV                    } from '../subworkflows/local/channel_align_create_csv/main'
+include { CHANNEL_MARKDUPLICATES_CREATE_CSV           } from '../subworkflows/local/channel_markduplicates_create_csv/main'
+include { CHANNEL_BASERECALIBRATOR_CREATE_CSV         } from '../subworkflows/local/channel_baserecalibrator_create_csv/main'
+include { CHANNEL_APPLYBQSR_CREATE_CSV                } from '../subworkflows/local/channel_applybqsr_create_csv/main'
+include { CHANNEL_VARIANT_CALLING_CREATE_CSV          } from '../subworkflows/local/channel_variant_calling_create_csv/main'
 
 // Download annotation cache if needed
-include { PREPARE_CACHE                                  } from '../subworkflows/local/prepare_cache/main'
+include { PREPARE_CACHE                               } from '../subworkflows/local/prepare_cache/main'
 
 // Build indices if needed
-include { PREPARE_GENOME                                 } from '../subworkflows/local/prepare_genome/main'
+include { PREPARE_GENOME                              } from '../subworkflows/local/prepare_genome/main'
 
 // Build intervals if needed
-include { PREPARE_INTERVALS                              } from '../subworkflows/local/prepare_intervals/main'
+include { PREPARE_INTERVALS                           } from '../subworkflows/local/prepare_intervals/main'
 
 // Build CNVkit reference if needed
-include { PREPARE_REFERENCE_CNVKIT                       } from '../subworkflows/local/prepare_reference_cnvkit/main'
+include { PREPARE_REFERENCE_CNVKIT                    } from '../subworkflows/local/prepare_reference_cnvkit/main'
 
 // Convert BAM files to FASTQ files
-include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_INPUT    } from '../subworkflows/local/bam_convert_samtools/main'
-include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_UMI      } from '../subworkflows/local/bam_convert_samtools/main'
+include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_INPUT } from '../subworkflows/local/bam_convert_samtools/main'
+include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_UMI   } from '../subworkflows/local/bam_convert_samtools/main'
 
 // Run FASTQC
-include { FASTQC                                         } from '../modules/nf-core/fastqc/main'
+include { FASTQC                                      } from '../modules/nf-core/fastqc/main'
 
 // TRIM/SPLIT FASTQ Files
-include { FASTP                                          } from '../modules/nf-core/fastp/main'
+include { FASTP                                       } from '../modules/nf-core/fastp/main'
 
 // Create umi consensus bams from fastq
-include { FASTQ_CREATE_UMI_CONSENSUS_FGBIO               } from '../subworkflows/local/fastq_create_umi_consensus_fgbio/main'
+include { FASTQ_CREATE_UMI_CONSENSUS_FGBIO            } from '../subworkflows/local/fastq_create_umi_consensus_fgbio/main'
 
 // Map input reads to reference genome
-include { FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON       } from '../subworkflows/local/fastq_align_bwamem_mem2_dragmap_sentieon/main'
+include { FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON    } from '../subworkflows/local/fastq_align_bwamem_mem2_dragmap_sentieon/main'
 
 // Merge and index BAM files (optional)
-include { BAM_MERGE_INDEX_SAMTOOLS                       } from '../subworkflows/local/bam_merge_index_samtools/main'
+include { BAM_MERGE_INDEX_SAMTOOLS                    } from '../subworkflows/local/bam_merge_index_samtools/main'
 
 // Convert BAM files
-include { SAMTOOLS_CONVERT as BAM_TO_CRAM                } from '../modules/nf-core/samtools/convert/main'
-include { SAMTOOLS_CONVERT as BAM_TO_CRAM_MAPPING        } from '../modules/nf-core/samtools/convert/main'
+include { SAMTOOLS_CONVERT as BAM_TO_CRAM             } from '../modules/nf-core/samtools/convert/main'
+include { SAMTOOLS_CONVERT as BAM_TO_CRAM_MAPPING     } from '../modules/nf-core/samtools/convert/main'
 
 // Convert CRAM files (optional)
-include { SAMTOOLS_CONVERT as CRAM_TO_BAM                } from '../modules/nf-core/samtools/convert/main'
-include { SAMTOOLS_CONVERT as CRAM_TO_BAM_RECAL          } from '../modules/nf-core/samtools/convert/main'
+include { SAMTOOLS_CONVERT as CRAM_TO_BAM             } from '../modules/nf-core/samtools/convert/main'
+include { SAMTOOLS_CONVERT as CRAM_TO_BAM_RECAL       } from '../modules/nf-core/samtools/convert/main'
 
 // Mark Duplicates (+QC)
-include { BAM_MARKDUPLICATES                             } from '../subworkflows/local/bam_markduplicates/main'
-include { BAM_MARKDUPLICATES_SPARK                       } from '../subworkflows/local/bam_markduplicates_spark/main'
-include { BAM_SENTIEON_DEDUP                             } from '../subworkflows/local/bam_sentieon_dedup/main'
+include { BAM_MARKDUPLICATES                          } from '../subworkflows/local/bam_markduplicates/main'
+include { BAM_MARKDUPLICATES_SPARK                    } from '../subworkflows/local/bam_markduplicates_spark/main'
+include { BAM_SENTIEON_DEDUP                          } from '../subworkflows/local/bam_sentieon_dedup/main'
 
 // QC on CRAM
-include { CRAM_QC_MOSDEPTH_SAMTOOLS as CRAM_QC_NO_MD     } from '../subworkflows/local/cram_qc_mosdepth_samtools/main'
-include { CRAM_QC_MOSDEPTH_SAMTOOLS as CRAM_QC_RECAL     } from '../subworkflows/local/cram_qc_mosdepth_samtools/main'
+include { CRAM_QC_MOSDEPTH_SAMTOOLS as CRAM_QC_NO_MD  } from '../subworkflows/local/cram_qc_mosdepth_samtools/main'
+include { CRAM_QC_MOSDEPTH_SAMTOOLS as CRAM_QC_RECAL  } from '../subworkflows/local/cram_qc_mosdepth_samtools/main'
 
 // Create recalibration tables
-include { BAM_BASERECALIBRATOR                           } from '../subworkflows/local/bam_baserecalibrator/main'
-include { BAM_BASERECALIBRATOR_SPARK                     } from '../subworkflows/local/bam_baserecalibrator_spark/main'
+include { BAM_BASERECALIBRATOR                        } from '../subworkflows/local/bam_baserecalibrator/main'
+include { BAM_BASERECALIBRATOR_SPARK                  } from '../subworkflows/local/bam_baserecalibrator_spark/main'
 
 // Create recalibrated cram files to use for variant calling (+QC)
-include { BAM_APPLYBQSR                                  } from '../subworkflows/local/bam_applybqsr/main'
-include { BAM_APPLYBQSR_SPARK                            } from '../subworkflows/local/bam_applybqsr_spark/main'
+include { BAM_APPLYBQSR                               } from '../subworkflows/local/bam_applybqsr/main'
+include { BAM_APPLYBQSR_SPARK                         } from '../subworkflows/local/bam_applybqsr_spark/main'
 
 // Variant calling on a single normal sample
-include { BAM_VARIANT_CALLING_GERMLINE_ALL               } from '../subworkflows/local/bam_variant_calling_germline_all/main'
+include { BAM_VARIANT_CALLING_GERMLINE_ALL            } from '../subworkflows/local/bam_variant_calling_germline_all/main'
 
 // Variant calling on a single tumor sample
-include { BAM_VARIANT_CALLING_TUMOR_ONLY_ALL             } from '../subworkflows/local/bam_variant_calling_tumor_only_all/main'
+include { BAM_VARIANT_CALLING_TUMOR_ONLY_ALL          } from '../subworkflows/local/bam_variant_calling_tumor_only_all/main'
 
 // Variant calling on tumor/normal pair
-include { BAM_VARIANT_CALLING_SOMATIC_ALL                } from '../subworkflows/local/bam_variant_calling_somatic_all/main'
+include { BAM_VARIANT_CALLING_SOMATIC_ALL             } from '../subworkflows/local/bam_variant_calling_somatic_all/main'
 
-// Concatenation of germline vcf-files
-include { ADD_INFO_TO_VCF                                } from '../modules/local/add_info_to_vcf/main'
-include { TABIX_BGZIPTABIX as TABIX_EXT_VCF              } from '../modules/nf-core/tabix/bgziptabix/main'
-include { BCFTOOLS_CONCAT as GERMLINE_VCFS_CONCAT        } from '../modules/nf-core/bcftools/concat/main'
-include { BCFTOOLS_SORT as GERMLINE_VCFS_CONCAT_SORT     } from '../modules/nf-core/bcftools/sort/main'
-include { TABIX_TABIX as TABIX_GERMLINE_VCFS_CONCAT_SORT } from '../modules/nf-core/tabix/tabix/main'
+// POST VARIANTCALLING: e.g. merging
+include { POST_VARIANTCALLING                         } from '../subworkflows/local/post_variantcalling/main'
 
 // QC on VCF files
-include { VCF_QC_BCFTOOLS_VCFTOOLS                       } from '../subworkflows/local/vcf_qc_bcftools_vcftools/main'
+include { VCF_QC_BCFTOOLS_VCFTOOLS                    } from '../subworkflows/local/vcf_qc_bcftools_vcftools/main'
 
 // Annotation
-include { VCF_ANNOTATE_ALL                               } from '../subworkflows/local/vcf_annotate_all/main'
+include { VCF_ANNOTATE_ALL                            } from '../subworkflows/local/vcf_annotate_all/main'
 
 // REPORTING VERSIONS OF SOFTWARE USED
-include { CUSTOM_DUMPSOFTWAREVERSIONS                    } from '../modules/nf-core/custom/dumpsoftwareversions/main'
+include { CUSTOM_DUMPSOFTWAREVERSIONS                } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 
 // MULTIQC
-include { MULTIQC                                        } from '../modules/nf-core/multiqc/main'
+include { MULTIQC                                    } from '../modules/nf-core/multiqc/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -307,20 +303,20 @@ include { MULTIQC                                        } from '../modules/nf-c
 workflow SAREK {
 
     // MULTIQC
-    ch_multiqc_config          = Channel.fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
-    ch_multiqc_custom_config   = params.multiqc_config ? Channel.fromPath( params.multiqc_config, checkIfExists: true ) : Channel.empty()
-    ch_multiqc_logo            = params.multiqc_logo   ? Channel.fromPath( params.multiqc_logo, checkIfExists: true ) : Channel.empty()
+    ch_multiqc_config                     = Channel.fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
+    ch_multiqc_custom_config              = params.multiqc_config ? Channel.fromPath( params.multiqc_config, checkIfExists: true ) : Channel.empty()
+    ch_multiqc_logo                       = params.multiqc_logo   ? Channel.fromPath( params.multiqc_logo, checkIfExists: true ) : Channel.empty()
     ch_multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
 
     // To gather all QC reports for MultiQC
-    reports = Channel.empty()
+    reports  = Channel.empty()
     // To gather used softwares versions for MultiQC
     versions = Channel.empty()
 
     // Download cache if needed
     // Assuming that if the cache is provided, the user has already downloaded it
-    ensemblvep_info = params.vep_cache ? [] : Channel.of([ [ id:"${params.vep_genome}.${params.vep_cache_version}" ], params.vep_genome, params.vep_species, params.vep_cache_version ])
-    snpeff_info = params.snpeff_cache ? [] : Channel.of([ [ id:"${params.snpeff_genome}.${params.snpeff_db}" ], params.snpeff_genome, params.snpeff_db ])
+    ensemblvep_info = params.vep_cache    ? [] : Channel.of([ [ id:"${params.vep_genome}.${params.vep_cache_version}" ], params.vep_genome, params.vep_species, params.vep_cache_version ])
+    snpeff_info     = params.snpeff_cache ? [] : Channel.of([ [ id:"${params.snpeff_genome}.${params.snpeff_db}" ], params.snpeff_genome, params.snpeff_db ])
 
     if (params.download_cache) {
         PREPARE_CACHE(ensemblvep_info, snpeff_info)
@@ -385,16 +381,16 @@ workflow SAREK {
     known_sites_indels     = dbsnp.concat(known_indels).collect()
     known_sites_indels_tbi = dbsnp_tbi.concat(known_indels_tbi).collect()
 
-    known_sites_snps     = dbsnp.concat(known_snps).collect()
-    known_sites_snps_tbi = dbsnp_tbi.concat(known_snps_tbi).collect()
+    known_sites_snps       = dbsnp.concat(known_snps).collect()
+    known_sites_snps_tbi   = dbsnp_tbi.concat(known_snps_tbi).collect()
 
     // Build intervals if needed
     PREPARE_INTERVALS(fasta_fai, params.intervals, params.no_intervals)
 
     // Intervals for speed up preprocessing/variant calling by spread/gather
     // [interval.bed] all intervals in one file
-    intervals_bed_combined             = params.no_intervals ? Channel.value([])      : PREPARE_INTERVALS.out.intervals_bed_combined
-    intervals_bed_gz_tbi_combined      = params.no_intervals ? Channel.value([])      : PREPARE_INTERVALS.out.intervals_bed_gz_tbi_combined
+    intervals_bed_combined         = params.no_intervals ? Channel.value([])      : PREPARE_INTERVALS.out.intervals_bed_combined
+    intervals_bed_gz_tbi_combined  = params.no_intervals ? Channel.value([])      : PREPARE_INTERVALS.out.intervals_bed_gz_tbi_combined
 
     // For QC during preprocessing, we don't need any intervals (MOSDEPTH doesn't take them for WGS)
     intervals_for_preprocessing = params.wes ?
@@ -475,6 +471,7 @@ workflow SAREK {
             FASTQ_CREATE_UMI_CONSENSUS_FGBIO(
                 input_fastq,
                 fasta,
+                fasta_fai,
                 index_alignement,
                 params.group_by_umi_strategy)
 
@@ -1043,18 +1040,9 @@ workflow SAREK {
             params.joint_mutect2
         )
 
-        if (params.concatenate_vcfs) {
-            // Concatenate vcf-files
-            ADD_INFO_TO_VCF(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_all)
-            TABIX_EXT_VCF(ADD_INFO_TO_VCF.out.vcf)
-
-            // Gather vcfs and vcf-tbis for concatenating germline-vcfs
-            germline_vcfs_with_tbis = TABIX_EXT_VCF.out.gz_tbi.map{ meta, vcf, tbi -> [ meta.subMap('id'), vcf, tbi ] }.groupTuple()
-
-            GERMLINE_VCFS_CONCAT(germline_vcfs_with_tbis)
-            GERMLINE_VCFS_CONCAT_SORT(GERMLINE_VCFS_CONCAT.out.vcf)
-            TABIX_GERMLINE_VCFS_CONCAT_SORT(GERMLINE_VCFS_CONCAT_SORT.out.vcf)
-        }
+        // POST VARIANTCALLING
+        POST_VARIANTCALLING(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_all,
+                            params.concatenate_vcfs)
 
         // Gather vcf files for annotation and QC
         vcf_to_annotate = Channel.empty()
@@ -1069,22 +1057,22 @@ workflow SAREK {
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.vcf_all)
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.vcf_all)
 
-        // Gather used softwares versions
-        versions = versions.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.versions)
-        versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.versions)
-        versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.versions)
-
         // QC
         VCF_QC_BCFTOOLS_VCFTOOLS(vcf_to_annotate, intervals_bed_combined)
 
-        versions = versions.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.versions)
         reports = reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.bcftools_stats.collect{ meta, stats -> stats })
         reports = reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.vcftools_tstv_counts.collect{ meta, counts -> counts })
         reports = reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.vcftools_tstv_qual.collect{ meta, qual -> qual })
         reports = reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.vcftools_filter_summary.collect{ meta, summary -> summary })
 
-        vcf_to_csv = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.gvcf_sentieon_haplotyper)
-        CHANNEL_VARIANT_CALLING_CREATE_CSV(vcf_to_csv)
+        CHANNEL_VARIANT_CALLING_CREATE_CSV(vcf_to_annotate)
+
+        // Gather used variant calling softwares versions
+        versions = versions.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.versions)
+        versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.versions)
+        versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.versions)
+        versions = versions.mix(POST_VARIANTCALLING.out.versions)
+        versions = versions.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.versions)
 
         // ANNOTATE
         if (params.step == 'annotate') vcf_to_annotate = input_sample

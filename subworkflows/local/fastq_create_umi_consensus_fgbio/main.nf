@@ -6,17 +6,18 @@
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
-include { FGBIO_CALLMOLECULARCONSENSUSREADS as CALLUMICONSENSUS } from '../../../modules/nf-core/fgbio/callmolecularconsensusreads/main.nf'
-include { FGBIO_FASTQTOBAM                  as FASTQTOBAM       } from '../../../modules/nf-core/fgbio/fastqtobam/main'
-include { FGBIO_GROUPREADSBYUMI             as GROUPREADSBYUMI  } from '../../../modules/nf-core/fgbio/groupreadsbyumi/main'
-include { FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP   as ALIGN_UMI        } from '../fastq_align_bwamem_mem2_dragmap/main'
-include { SAMBLASTER                                            } from '../../../modules/nf-core/samblaster/main'
-include { SAMTOOLS_BAM2FQ                   as BAM2FASTQ        } from '../../../modules/nf-core/samtools/bam2fq/main.nf'
+include { FGBIO_CALLMOLECULARCONSENSUSREADS        as CALLUMICONSENSUS } from '../../../modules/nf-core/fgbio/callmolecularconsensusreads/main.nf'
+include { FGBIO_FASTQTOBAM                         as FASTQTOBAM       } from '../../../modules/nf-core/fgbio/fastqtobam/main'
+include { FGBIO_GROUPREADSBYUMI                    as GROUPREADSBYUMI  } from '../../../modules/nf-core/fgbio/groupreadsbyumi/main'
+include { FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON as ALIGN_UMI        } from '../fastq_align_bwamem_mem2_dragmap_sentieon/main'
+include { SAMBLASTER                                                   } from '../../../modules/nf-core/samblaster/main'
+include { SAMTOOLS_BAM2FQ                          as BAM2FASTQ        } from '../../../modules/nf-core/samtools/bam2fq/main.nf'
 
 workflow FASTQ_CREATE_UMI_CONSENSUS_FGBIO {
     take:
     reads                     // channel: [mandatory] [ val(meta), [ reads ] ]
     fasta                     // channel: [mandatory] /path/to/reference/fasta
+    fai                       // channel: [optional] /path/to/reference/fasta_fai, needed for Sentieon
     map_index                 // channel: [mandatory] Pre-computed mapping index
     groupreadsbyumi_strategy  // string:  [mandatory] grouping strategy - default: "Adjacency"
 
@@ -37,7 +38,7 @@ workflow FASTQ_CREATE_UMI_CONSENSUS_FGBIO {
     // appropriately tagged interleaved FASTQ reads are mapped to the reference
     // bams will not be sorted (hence, sort = false)
     sort = false
-    ALIGN_UMI(BAM2FASTQ.out.reads, map_index, sort)
+    ALIGN_UMI(BAM2FASTQ.out.reads, map_index, sort, fasta, fai)
 
     // samblaster is used in order to tag mates information in the BAM file
     // this is used in order to group reads by UMI

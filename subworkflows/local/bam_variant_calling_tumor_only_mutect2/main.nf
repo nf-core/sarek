@@ -1,6 +1,8 @@
 //
-// Run GATK mutect2 in tumor only mode, getepileupsummaries, calculatecontamination and filtermutectcalls
+// GATK MUTECT2 in tumor only mode: getepileupsummaries, calculatecontamination and filtermutectcalls
 //
+// For all modules here:
+// A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
 include { GATK4_MERGEVCFS                 as MERGE_MUTECT2             } from '../../../modules/nf-core/gatk4/mergevcfs/main'
 include { GATK4_CALCULATECONTAMINATION    as CALCULATECONTAMINATION    } from '../../../modules/nf-core/gatk4/calculatecontamination/main'
@@ -87,10 +89,10 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     MERGEMUTECTSTATS(stats_to_merge)
 
     // Mix intervals and no_intervals channels together
-    vcf = Channel.empty().mix(MERGE_MUTECT2.out.vcf, vcf_branch.no_intervals)
-    tbi = Channel.empty().mix(MERGE_MUTECT2.out.tbi, tbi_branch.no_intervals)
+    vcf   = Channel.empty().mix(MERGE_MUTECT2.out.vcf, vcf_branch.no_intervals)
+    tbi   = Channel.empty().mix(MERGE_MUTECT2.out.tbi, tbi_branch.no_intervals)
     stats = Channel.empty().mix(MERGEMUTECTSTATS.out.stats, stats_branch.no_intervals)
-    f1r2 = Channel.empty().mix(f1r2_to_merge, f1r2_branch.no_intervals)
+    f1r2  = Channel.empty().mix(f1r2_to_merge, f1r2_branch.no_intervals)
 
     // Generate artifactpriors using learnreadorientationmodel on the f1r2 output of mutect2
     LEARNREADORIENTATIONMODEL(f1r2)

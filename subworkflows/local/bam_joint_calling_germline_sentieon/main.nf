@@ -1,11 +1,17 @@
-include { BCFTOOLS_SORT                                                      } from '../../../modules/nf-core/bcftools/sort/main'
-include { SENTIEON_APPLYVARCAL as SENTIEON_APPLYVARCAL_INDEL                 } from '../../../modules/nf-core/sentieon/applyvarcal/main'
-include { SENTIEON_APPLYVARCAL as SENTIEON_APPLYVARCAL_SNP                   } from '../../../modules/nf-core/sentieon/applyvarcal/main'
-include { SENTIEON_GVCFTYPER                                                 } from '../../../modules/nf-core/sentieon/gvcftyper/main'
-include { GATK4_MERGEVCFS as MERGE_GENOTYPEGVCFS                             } from '../../../modules/nf-core/gatk4/mergevcfs/main'
-include { GATK4_MERGEVCFS as MERGE_VQSR                                      } from '../../../modules/nf-core/gatk4/mergevcfs/main'
-include { SENTIEON_VARCAL as SENTIEON_VARCAL_INDEL                           } from '../../../modules/nf-core/sentieon/varcal/main'
-include { SENTIEON_VARCAL as SENTIEON_VARCAL_SNP                             } from '../../../modules/nf-core/sentieon/varcal/main'
+//
+// JOINT GERMLINE CALLING
+//
+// Merge samples perform joint genotyping with SENTIEON_GVCFTYPER
+//
+
+include { BCFTOOLS_SORT                                      } from '../../../modules/nf-core/bcftools/sort/main'
+include { GATK4_MERGEVCFS      as MERGE_GENOTYPEGVCFS        } from '../../../modules/nf-core/gatk4/mergevcfs/main'
+include { GATK4_MERGEVCFS      as MERGE_VQSR                 } from '../../../modules/nf-core/gatk4/mergevcfs/main'
+include { SENTIEON_APPLYVARCAL as SENTIEON_APPLYVARCAL_INDEL } from '../../../modules/nf-core/sentieon/applyvarcal/main'
+include { SENTIEON_APPLYVARCAL as SENTIEON_APPLYVARCAL_SNP   } from '../../../modules/nf-core/sentieon/applyvarcal/main'
+include { SENTIEON_GVCFTYPER                                 } from '../../../modules/nf-core/sentieon/gvcftyper/main'
+include { SENTIEON_VARCAL      as SENTIEON_VARCAL_INDEL      } from '../../../modules/nf-core/sentieon/varcal/main'
+include { SENTIEON_VARCAL      as SENTIEON_VARCAL_SNP        } from '../../../modules/nf-core/sentieon/varcal/main'
 
 workflow BAM_JOINT_CALLING_GERMLINE_SENTIEON {
     take:
