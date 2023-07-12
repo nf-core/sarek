@@ -1,0 +1,81 @@
+name: "varlociraptor_preprocess"
+description: Obtains per-sample observations for the actual calling process with varlociraptor calls
+keywords:
+  - observations
+  - variants
+  - preprocessing
+tools:
+  - "varlociraptor":
+      description: "Flexible, uncertainty-aware variant calling with parameter free filtration via FDR control."
+      homepage: "https://varlociraptor.github.io/docs/estimating/"
+      documentation: "https://varlociraptor.github.io/docs/calling/"
+      tool_dev_url: "https://github.com/varlociraptor/varlociraptor"
+      doi: "10.1186/s13059-020-01993-6"
+      licence: "['GPL v3']"
+
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - bam:
+      type: file
+      description: Sorted BAM/CRAM/SAM file
+      pattern: "*.{bam,cram,sam}"
+  - candidates:
+      type: file
+      description: Sorted BCF/VCF file
+      pattern: "*.{bcf,vcf,vcf.gz}"
+  - alignment_json:
+      type: file
+      description: File containing alignment properties obtained with varlociraptor/estimatealignmentproperties
+      pattern: "*.json"
+  - meta2:
+      type: map
+      description: |
+        Groovy Map containing reference information
+        e.g. [ id:'test', single_end:false ]
+  - fasta:
+      type: file
+      description: Reference fasta file
+      pattern: "*.{fasta}"
+  - meta3:
+      type: map
+      description: |
+        Groovy Map containing reference index information
+        e.g. [ id:'test', single_end:false ]
+  - fai:
+      type: file
+      description: Index for reference fasta file (must be with samtools index)
+      pattern: "*.{fai}"
+
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+  - vcf_gz:
+      type: file
+      description: Compressed VCF file containing sample observations
+      pattern: "*.vcf.gz"
+  - bcf_gz:
+      type: file
+      description: BCF file containing sample observations
+      pattern: "*.bcf.gz"
+  - vcf:
+      type: file
+      description: VCF file containing sample observations
+      pattern: "*.vcf"
+  - bcf:
+      type: file
+      description: BCF file containing sample observations
+      pattern: "*.bcf"
+
+authors:
+  - "@FriederikeHanssen"

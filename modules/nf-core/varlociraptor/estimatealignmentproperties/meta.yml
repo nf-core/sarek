@@ -1,0 +1,62 @@
+name: "varlociraptor_estimatealignmentproperties"
+description: In order to judge about candidate indel and structural variants, Varlociraptor needs to know about certain properties of the underlying sequencing experiment in combination with the used read aligner.
+keywords:
+  - estimation
+  - alignment
+  - variants
+
+tools:
+  - "varlociraptor":
+      description: "Flexible, uncertainty-aware variant calling with parameter free filtration via FDR control."
+      homepage: "https://varlociraptor.github.io/docs/estimating/"
+      documentation: "https://varlociraptor.github.io/docs/estimating/"
+      tool_dev_url: "https://github.com/varlociraptor/varlociraptor"
+      doi: "10.1186/s13059-020-01993-6"
+      licence: "['GPL v3']"
+
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - bam:
+      type: file
+      description: Sorted BAM/CRAM/SAM file
+      pattern: "*.{bam,cram,sam}"
+  - meta2:
+      type: map
+      description: |
+        Groovy Map containing reference information
+        e.g. [ id:'test', single_end:false ]
+  - fasta:
+      type: file
+      description: Reference fasta file
+      pattern: "*.{fasta}"
+  - meta3:
+      type: map
+      description: |
+        Groovy Map containing reference index information
+        e.g. [ id:'test', single_end:false ]
+  - fai:
+      type: file
+      description: Index for reference fasta file (must be with samtools index)
+      pattern: "*.{fai}"
+
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - alignment_properties_json:
+      type: file
+      description: File containing alignment properties
+      pattern: "*.alignment-properties.json"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+
+authors:
+  - "@FriederikeHanssen"

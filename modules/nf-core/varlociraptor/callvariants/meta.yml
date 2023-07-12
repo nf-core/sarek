@@ -1,0 +1,66 @@
+name: "varlociraptor_callvariants"
+description: Call variants for a given scenario specified with the varlociraptor calling grammar, preprocessed by varlociraptor preprocessing
+keywords:
+  - observations
+  - variants
+  - calling
+tools:
+  - "varlociraptor":
+      description: "Flexible, uncertainty-aware variant calling with parameter free filtration via FDR control."
+      homepage: "https://varlociraptor.github.io/docs/estimating/"
+      documentation: "https://varlociraptor.github.io/docs/calling/"
+      tool_dev_url: "https://github.com/varlociraptor/varlociraptor"
+      doi: "10.1186/s13059-020-01993-6"
+      licence: "['GPL v3']"
+
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - normal_vcf:
+      type: file
+      description: Sorted VCF/BCF file (list)
+      pattern: "*.{bcf,vcf,vcf.gz}"
+  - tumor_vcf:
+      type: file
+      description: Sorted VCF/BCF file (optional)
+      pattern: "*.{bcf,bcf.gz,vcf,vcf.gz}"
+  - scenario:
+      type: file
+      description: Yaml file containing scenario information (optional)
+      pattern: "*.{yml,yaml}"
+  - scenario_sample:
+      type: string
+      description: (List of) sample name(s) to be processed as named in the scenario yml (optional)
+      pattern: "*.{bcf,vcf,vcf.gz}"
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+  - vcf_gz:
+      type: file
+      description: Compressed VCF file containing sample observations
+      pattern: "*.vcf.gz"
+  - bcf_gz:
+      type: file
+      description: BCF file containing sample observations
+      pattern: "*.bcf.gz"
+  - vcf:
+      type: file
+      description: VCF file containing sample observations
+      pattern: "*.vcf"
+  - bcf:
+      type: file
+      description: BCF file containing sample observations
+      pattern: "*.bcf"
+
+authors:
+  - "@FriederikeHanssen"
