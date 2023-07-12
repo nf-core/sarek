@@ -169,9 +169,7 @@ ch_from_samplesheet
     }
 }.set { input_sample }
 
-input_sample.view()
-
-if (params.step != 'annotate' && params.tools) {
+if (params.step != 'annotate' && params.tools && !params.build_only_index) {
     // Two checks for ensuring that the pipeline stops with a meaningful error message if
     // 1. the sample-sheet only contains normal-samples, but some of the requested tools require tumor-samples, and
     // 2. the sample-sheet only contains tumor-samples, but some of the requested tools require normal-samples.
