@@ -27,8 +27,8 @@
                             "pattern": "^\\S+\\.csv$"
                         },
                         {
-                            "type": "string",
-                            "maxLength": 0
+                            "type": "boolean",
+                            "enum": [ "false" ]
                         }
                     ]
                 },
