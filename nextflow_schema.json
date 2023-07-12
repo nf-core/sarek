@@ -28,7 +28,7 @@
                         },
                         {
                             "type": "boolean",
-                            "enum": [ "false" ]
+                            "enum": ["false"]
                         }
                     ]
                 },
