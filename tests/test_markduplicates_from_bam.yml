@@ -2,7 +2,7 @@
   command: nextflow run main.nf -profile test_cache,markduplicates_bam --outdir results
   tags:
     - input_bam
-    - markduplicates
+    - gatk4/markduplicates
     - preprocessing
   files:
     - path: results/csv/markduplicates.csv
@@ -48,6 +48,7 @@
     # conda changes md5sums for test
     - path: results/reports/samtools/test/test.recal.cram.stats
     # conda changes md5sums for test
+
 - name: Run skip markduplicates bam from step markduplicates
   command: nextflow run main.nf -profile test_cache,markduplicates_bam,skip_markduplicates --outdir results
   tags:

@@ -1,5 +1,5 @@
 - name: Only download annotation cache
-  command: nextflow run main.nf -profile test_cache,annotation --tools merge --download_cache --input=false --build_only_index --outdir results
+  command: nextflow run main.nf -profile test_cache,annotation --tools merge --download_cache --build_only_index --outdir results
   tags:
     - annotation
     - cache

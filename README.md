@@ -34,23 +34,24 @@ It's listed on [Elixir - Tools and Data Services Registry](https://bio.tools/nf-
 Depending on the options and samples provided, the pipeline can currently perform the following:
 
 - Form consensus reads from UMI sequences (`fgbio`)
-- Sequencing quality control and trimming (`FastQC`, `fastp`)
-- Map Reads to Reference (`BWA-mem` or `BWA-mem2` or `dragmap`)
-- Process BAM file (`GATK MarkDuplicates`, `GATK BaseRecalibrator`, `GATK ApplyBQSR`)
+- Sequencing quality control and trimming (enabled by `--trim_fastq`) (`FastQC`, `fastp`)
+- Map Reads to Reference (`BWA-mem`, `BWA-mem2`, `dragmap` or `Sentieon BWA-mem`)
+- Process BAM file (`GATK MarkDuplicates`, `GATK BaseRecalibrator` and `GATK ApplyBQSR` or `Sentieon LocusCollector` and `Sentieon Dedup`)
 - Summarise alignment statistics (`samtools stats`, `mosdepth`)
-- Variant calling (enabled by `--tools`, see [compatibility](https://github.com/nf-core/sarek/blob/master/docs/usage.md#which-variant-calling-tool-is-implemented-for-which-data-type)):
-  - `HaplotypeCaller`
-  - `freebayes`
-  - `mpileup`
-  - `Strelka2`
-  - `DeepVariant`
-  - `Mutect2`
-  - `Manta`
-  - `TIDDIT`
+- Variant calling (enabled by `--tools`, see [compatibility](#which-variant-calling-tool-is-implemented-for-which-data-type)):
   - `ASCAT`
-  - `Control-FREEC`
   - `CNVkit`
+  - `Control-FREEC`
+  - `DeepVariant`
+  - `freebayes`
+  - `GATK HaplotypeCaller`
+  - `Manta`
+  - `mpileup`
   - `MSIsensor-pro`
+  - `Mutect2`
+  - `Sentieon Haplotyper`
+  - `Strelka2`
+  - `TIDDIT`
 - Variant filtering and annotation (`SnpEff`, `Ensembl VEP`)
 - Summarise and represent QC (`MultiQC`)
 

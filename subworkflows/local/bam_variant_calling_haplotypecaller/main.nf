@@ -1,7 +1,13 @@
-include { BAM_MERGE_INDEX_SAMTOOLS                 } from '../bam_merge_index_samtools/main'
-include { VCF_VARIANT_FILTERING_GATK               } from '../vcf_variant_filtering_gatk/main'
-include { GATK4_HAPLOTYPECALLER                    } from '../../../modules/nf-core/gatk4/haplotypecaller/main'
-include { GATK4_MERGEVCFS as MERGE_HAPLOTYPECALLER } from '../../../modules/nf-core/gatk4/mergevcfs/main'
+//
+// GATK4 HAPLOTYPACALLER germline variant calling:
+//
+// For all modules here:
+// A when clause condition is defined in the conf/modules.config to determine if the module should be run
+
+include { BAM_MERGE_INDEX_SAMTOOLS                            } from '../bam_merge_index_samtools/main'
+include { VCF_VARIANT_FILTERING_GATK                          } from '../vcf_variant_filtering_gatk/main'
+include { GATK4_HAPLOTYPECALLER                               } from '../../../modules/nf-core/gatk4/haplotypecaller/main'
+include { GATK4_MERGEVCFS            as MERGE_HAPLOTYPECALLER } from '../../../modules/nf-core/gatk4/mergevcfs/main'
 
 workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
     take:
@@ -31,7 +37,7 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
     // Combine cram and intervals for spread and gather strategy
     cram_intervals = cram.combine(intervals)
         // Move num_intervals to meta map
-        .map{ meta, cram, crai, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram, crai, intervals, [] ] }
+        .map{ meta, cram, crai, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals, variantcaller:'haplotypecaller' ], cram, crai, intervals, [] ] }
 
     GATK4_HAPLOTYPECALLER(cram_intervals, fasta, fasta_fai, dict.map{ meta, dict -> [ dict ] }, dbsnp, dbsnp_tbi)
 
@@ -101,12 +107,12 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
     versions = versions.mix(GATK4_HAPLOTYPECALLER.out.versions)
     versions = versions.mix(MERGE_HAPLOTYPECALLER.out.versions)
 
-    // add variantcaller to meta map and remove no longer necessary field: num_intervals
-    vcf = vcf.map{ meta, vcf -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'haplotypecaller' ], vcf ] }
+    // Remove no longer necessary field: num_intervals
+    vcf = vcf.map{ meta, vcf -> [ meta - meta.subMap('num_intervals'), vcf ] }
 
     emit:
     genotype_intervals // For joint genotyping
-    realigned_bam      // Optionnal
+    realigned_bam      // Optional
     vcf                // vcf filtered or not
 
     versions

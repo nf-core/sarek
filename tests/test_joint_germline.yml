@@ -24,5 +24,9 @@
     # binary changes md5sums on reruns
     - path: results/variant_calling/haplotypecaller/joint_variant_calling/joint_germline.vcf.gz.tbi
     # binary changes md5sums on reruns
+    - path: results/variant_calling/haplotypecaller/testN/testN.haplotypecaller.g.vcf.gz
+    - path: results/variant_calling/haplotypecaller/testN/testN.haplotypecaller.g.vcf.gz.tbi
+    - path: results/variant_calling/haplotypecaller/testT/testT.haplotypecaller.g.vcf.gz
+    - path: results/variant_calling/haplotypecaller/testT/testT.haplotypecaller.g.vcf.gz.tbi
     - path: results/haplotypecaller
       should_exist: false

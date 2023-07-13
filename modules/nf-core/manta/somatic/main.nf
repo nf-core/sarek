@@ -37,8 +37,9 @@ process MANTA_SOMATIC {
         --tumorBam $input_tumor \
         --normalBam $input_normal \
         --reference $fasta \
+        --runDir manta \
         $options_manta \
-        --runDir manta
+        $args
 
     python manta/runWorkflow.py -m local -j $task.cpus
 
