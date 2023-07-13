@@ -94,11 +94,10 @@ ch_from_samplesheet
         def flowcell   = flowcellLaneFromFastq(fastq_1)
         // Don't use a random element for ID, it breaks resuming
         def read_group = "\"@RG\\tID:${flowcell}.${meta.sample}.${meta.lane}\\t${CN}PU:${meta.lane}\\tSM:${meta.patient}_${meta.sample}\\tLB:${meta.sample}\\tDS:${params.fasta}\\tPL:${params.seq_platform}\""
-        println "Number of lanes: $num_lanes"
 
         meta           = meta + [num_lanes: num_lanes.toInteger(), read_group: read_group.toString(), data_type: 'fastq', size: 1]
 
-        if (params.step == 'mapping') return [ meta - meta.subMap('lane'), [ fastq_1, fastq_2 ] ]
+        if (params.step == 'mapping') return [ meta, [ fastq_1, fastq_2 ] ]
         else {
             error("Samplesheet contains fastq files but step is `$params.step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
         }

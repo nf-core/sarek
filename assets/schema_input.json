@@ -36,7 +36,7 @@
             },
             "status": {
                 "type": "integer",
-                "errorMessage": "Status can only be 0 or 1. Defaults to 0, if none is supplied.",
+                "errorMessage": "Status can only be 0 (normal) or 1 (tumor). Defaults to 0, if none is supplied.",
                 "meta": ["status"],
                 "default": 0,
                 "minimum": 0,
