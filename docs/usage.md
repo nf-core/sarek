@@ -2,6 +2,8 @@
 
 ## :warning: Please read this documentation on the nf-core website: [https://nf-co.re/sarek/usage](https://nf-co.re/sarek/usage)
 
+> _Documentation of pipeline parameters is generated automatically from the pipeline schema and can no longer be found in markdown files._
+
 # Introduction
 
 Sarek is a workflow designed to detect germline and somatic variants on whole genome, whole exome, or targeted sequencing data.
