@@ -487,6 +487,7 @@
                 },
                 "vep_custom_args": {
                     "type": "string",
+                    "default": "--everything --filter_common --per_gene --total_length --offline --format vcf",
                     "fa_icon": "fas fa-toolbox",
                     "description": "Add an extra custom argument to VEP.",
                     "hidden": true,
