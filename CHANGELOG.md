@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#1151](https://github.com/nf-core/sarek/pull/1151) - Refactor codebase
 - [#1157](https://github.com/nf-core/sarek/pull/1157) - Move all vep args from `ext.args` to `params.vep_custom_args` to allow easier modifications
+- [#1160](https://github.com/nf-core/sarek/pull/1160) - Updating tiddit to v3.6.1
 
 ### Fixed
 
