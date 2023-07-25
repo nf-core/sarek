@@ -123,13 +123,13 @@
                     },
                     "ensemblvep/download": {
                         "branch": "master",
-                        "git_sha": "1b5ffd7aa6e3c21b702957c808cbd1c351dd1809",
+                        "git_sha": "9f9e1fc31cb35876922070c0e601ae05abae5cae",
                         "installed_by": ["modules"]
                     },
                     "ensemblvep/vep": {
                         "branch": "master",
-                        "git_sha": "1b5ffd7aa6e3c21b702957c808cbd1c351dd1809",
-                        "installed_by": ["vcf_annotate_ensemblvep", "modules"]
+                        "git_sha": "9f9e1fc31cb35876922070c0e601ae05abae5cae",
+                        "installed_by": ["modules", "vcf_annotate_ensemblvep"]
                     },
                     "fastp": {
                         "branch": "master",
@@ -403,12 +403,12 @@
                     },
                     "snpeff/download": {
                         "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "git_sha": "4d584d5cf6ed5f7363a51cdb4b3eb25398e9e537",
                         "installed_by": ["modules"]
                     },
                     "snpeff/snpeff": {
                         "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "git_sha": "4d584d5cf6ed5f7363a51cdb4b3eb25398e9e537",
                         "installed_by": ["vcf_annotate_snpeff", "modules"]
                     },
                     "strelka/germline": {

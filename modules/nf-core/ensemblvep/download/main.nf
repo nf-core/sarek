@@ -2,10 +2,10 @@ process ENSEMBLVEP_DOWNLOAD {
     tag "$meta.id"
     label 'process_medium'
 
-    conda "bioconda::ensembl-vep=109.3"
+    conda "bioconda::ensembl-vep=110.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/ensembl-vep:109.3--pl5321h2a3209d_1' :
-        'biocontainers/ensembl-vep:109.3--pl5321h2a3209d_1' }"
+        'https://depot.galaxyproject.org/singularity/ensembl-vep:110.0--pl5321h2a3209d_0' :
+        'biocontainers/ensembl-vep:110.0--pl5321h2a3209d_0' }"
 
     input:
     tuple val(meta), val(assembly), val(species), val(cache_version)

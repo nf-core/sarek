@@ -2,8 +2,10 @@ name: SNPEFF_SNPEFF
 description: Genetic variant annotation and functional effect prediction toolbox
 keywords:
   - annotation
-  - variant
   - effect prediction
+  - snpeff
+  - variant
+  - vcf
 tools:
   - snpeff:
       description: |
