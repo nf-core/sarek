@@ -394,7 +394,7 @@ If the haplotype-called VCF files are not filtered, then Sarek should be run wit
 - `<sample>.haplotypecaller.g.vcf.gz` and `<sample>.haplotypecaller.g.vcf.gz.tbi`
   - VCF with tabix index
 
-**Output directory: `{outdir}/variantcalling/sentieon_haplotyper/joint_variant_calling/`**
+**Output directory: `{outdir}/variantcalling/haplotypecaller/joint_variant_calling/`**
 
 - `joint_germline.vcf.gz` and `joint_germline.vcf.gz.tbi`
   - VCF with tabix index
