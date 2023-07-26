@@ -5,11 +5,6 @@ process SENTIEON_HAPLOTYPER {
 
     secret 'SENTIEON_LICENSE_BASE64'
 
-    // Exit if running this module with -profile conda / -profile mamba
-    if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
-        exit 1, "Sentieon modules does not support Conda. Please use Docker / Singularity / Podman instead."
-    }
-
     container 'nf-core/sentieon:202112.06'
 
     input:
@@ -32,6 +27,11 @@ process SENTIEON_HAPLOTYPER {
     task.ext.when == null || task.ext.when
 
     script:
+    // Exit if running this module with -profile conda / -profile mamba
+    if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
+        exit 1, "Sentieon modules does not support Conda. Please use Docker / Singularity / Podman instead."
+    }
+
     def args = task.ext.args ?: ''    // options for the driver
     def args2 = task.ext.args2 ?: ''  // options for the vcf generation
     def args3 = task.ext.args3 ?: ''  // options for the gvcf generation
