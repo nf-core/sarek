@@ -10,15 +10,19 @@
             "patient": {
                 "type": "string",
                 "pattern": "^\\S+$",
-                "errorMessage": "ID name must be provided and cannot contain spaces"
+                "errorMessage": "Patient ID must be provided and cannot contain spaces",
+                "meta": ["patient"]
             },
             "sample": {
                 "type": "string",
                 "pattern": "^\\S+$",
-                "errorMessage": "Sample name must be provided and cannot contain spaces"
+                "errorMessage": "Sample ID must be provided and cannot contain spaces",
+                "meta": ["sample"]
             },
             "sex": {
                 "errorMessage": "Sex cannot contain spaces",
+                "meta": ["sex"],
+                "default": "NA",
                 "anyOf": [
                     {
                         "type": "string",
@@ -31,30 +35,19 @@
                 ]
             },
             "status": {
-                "errorMessage": "Status can only be 0 or 1",
-                "anyOf": [
-                    {
-                        "type": "string",
-                        "pattern": "^(0|1)*$"
-                    },
-                    {
-                        "type": "string",
-                        "maxLength": 0
-                    }
-                ]
+                "type": "integer",
+                "errorMessage": "Status can only be 0 (normal) or 1 (tumor). Defaults to 0, if none is supplied.",
+                "meta": ["status"],
+                "default": 0,
+                "minimum": 0,
+                "maximum": 1
             },
             "lane": {
-                "errorMessage": "Lane cannot contain spaces",
-                "anyOf": [
-                    {
-                        "type": "string",
-                        "pattern": "^\\S+$"
-                    },
-                    {
-                        "type": "string",
-                        "maxLength": 0
-                    }
-                ]
+                "type": "string",
+                "pattern": "^\\S+$",
+                "unique": ["patient", "sample"],
+                "dependentRequired": ["fastq_1"],
+                "meta": ["lane"]
             },
             "fastq_1": {
                 "errorMessage": "FastQ file for reads 1 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'",
@@ -67,7 +60,9 @@
                         "type": "string",
                         "maxLength": 0
                     }
-                ]
+                ],
+                "format": "file-path",
+                "exists": true
             },
             "fastq_2": {
                 "errorMessage": "FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'",
@@ -80,7 +75,9 @@
                         "type": "string",
                         "maxLength": 0
                     }
-                ]
+                ],
+                "format": "file-path",
+                "exists": true
             },
             "table": {
                 "errorMessage": "Recalibration table cannot contain spaces and must have extension '.table'",
@@ -93,7 +90,9 @@
                         "type": "string",
                         "maxLength": 0
                     }
-                ]
+                ],
+                "format": "file-path",
+                "exists": true
             },
             "cram": {
                 "errorMessage": "CRAM file cannot contain spaces and must have extension '.cram'",
@@ -106,7 +105,9 @@
                         "type": "string",
                         "maxLength": 0
                     }
-                ]
+                ],
+                "format": "file-path",
+                "exists": true
             },
             "crai": {
                 "errorMessage": "CRAM index file cannot contain spaces and must have extension '.crai'",
@@ -119,7 +120,9 @@
                         "type": "string",
                         "maxLength": 0
                     }
-                ]
+                ],
+                "format": "file-path",
+                "exists": true
             },
             "bam": {
                 "errorMessage": "BAM file cannot contain spaces and must have extension '.bam'",
@@ -132,7 +135,9 @@
                         "type": "string",
                         "maxLength": 0
                     }
-                ]
+                ],
+                "format": "file-path",
+                "exists": true
             },
             "bai": {
                 "errorMessage": "BAM index file cannot contain spaces and must have extension '.bai'",
@@ -145,7 +150,9 @@
                         "type": "string",
                         "maxLength": 0
                     }
-                ]
+                ],
+                "format": "file-path",
+                "exists": true
             },
             "vcf": {
                 "errorMessage": "VCF file for reads 1 cannot contain spaces and must have extension '.vcf' or '.vcf.gz'",
@@ -158,7 +165,12 @@
                         "type": "string",
                         "maxLength": 0
                     }
-                ]
+                ],
+                "format": "file-path",
+                "exists": true
+            },
+            "variantcaller": {
+                "type": "string"
             }
         },
         "required": ["patient", "sample"]
