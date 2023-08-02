@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- [#1059](https://github.com/nf-core/sarek/pull/1059) - Add `nf-validation` for samplesheet validation
+
 ### Fixed
 
 - [#1143](https://github.com/nf-core/sarek/pull/1143) - `snpeff_db` is now a string
