@@ -7,7 +7,7 @@
     - sentieon/haplotyper
   files:
     - path: results/csv/variantcalled.csv
-      md5sum: e7b30e6034ecb5928c96a4f96b9be4da
+      md5sum: 6ec10f6455c2b5290c7f6fc687c529ca
     - path: results/multiqc
     - path: results/preprocessing/recalibrated/test/test.recal.cram
       should_exist: false

@@ -2,7 +2,7 @@
   command: nextflow run main.nf -profile test_cache,markduplicates_cram --outdir results
   tags:
     - input_cram
-    - markduplicates
+    - gatk4/markduplicates
     - preprocessing
   files:
     - path: results/csv/markduplicates.csv

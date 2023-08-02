@@ -11,16 +11,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#1130](https://github.com/nf-core/sarek/pull/1130) - Back to dev
 - [#1013](https://github.com/nf-core/sarek/pull/1013) - Mutect2 multi sample mode with `--joint_mutect2`
+- [#1153](https://github.com/nf-core/sarek/pull/1153) - Add input validation for Sentieon & FGBio UMI incompatibility
+- [#1158](https://github.com/nf-core/sarek/pull/1158) - Add preprint
+- [#1159](https://github.com/nf-core/sarek/pull/1159) - ISMB Poster
 
 ### Changed
 
+- [#1151](https://github.com/nf-core/sarek/pull/1151) - Refactor codebase
+- [#1157](https://github.com/nf-core/sarek/pull/1157) - Move all vep args from `ext.args` to `params.vep_custom_args` to allow easier modifications
 - [#1059](https://github.com/nf-core/sarek/pull/1059) - Add `nf-validation` for samplesheet validation
+- [#1160](https://github.com/nf-core/sarek/pull/1160) - Updating tiddit to v3.6.1
 
 ### Fixed
 
 - [#1143](https://github.com/nf-core/sarek/pull/1143) - `snpeff_db` is now a string
 - [#1145](https://github.com/nf-core/sarek/pull/1145) - Fixed Zenodo links in `README.md` and in `WorkflowMain.groovy`
 - [#1149](https://github.com/nf-core/sarek/pull/1149) - Update `Manta` modules and fix usage of `--exome` flag
+- [#1155](https://github.com/nf-core/sarek/pull/1155) - Restore proper rendering in `usage.md`
+- [#1163](https://github.com/nf-core/sarek/pull/1163) - Correcting location of output folder for joint variant calling with GATK's haplotypecaller
 
 ## [3.2.3](https://github.com/nf-core/sarek/releases/tag/3.2.3) - Gällivare
 

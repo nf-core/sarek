@@ -54,7 +54,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     vcf_strelka              = Channel.empty()
     vcf_tiddit               = Channel.empty()
 
-    // MPILEUP
+    // BCFTOOLS MPILEUP
     if (tools.split(',').contains('mpileup')) {
         BAM_VARIANT_CALLING_MPILEUP(
             cram,
@@ -153,6 +153,19 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         }
     }
 
+    // MANTA
+    if (tools.split(',').contains('manta')) {
+        BAM_VARIANT_CALLING_GERMLINE_MANTA (
+            cram,
+            fasta,
+            fasta_fai,
+            intervals_bed_gz_tbi_combined
+        )
+
+        vcf_manta = BAM_VARIANT_CALLING_GERMLINE_MANTA.out.vcf
+        versions = versions.mix(BAM_VARIANT_CALLING_GERMLINE_MANTA.out.versions)
+    }
+
     // SENTIEON HAPLOTYPER
     if (tools.split(',').contains('sentieon_haplotyper')) {
         BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER(
@@ -196,23 +209,11 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
                 known_sites_snps_tbi,
                 known_snps_vqsr)
 
-        vcf_haplotypecaller = BAM_JOINT_CALLING_GERMLINE_SENTIEON.out.genotype_vcf
-        versions = versions.mix(BAM_JOINT_CALLING_GERMLINE_SENTIEON.out.versions)
+            vcf_haplotypecaller = BAM_JOINT_CALLING_GERMLINE_SENTIEON.out.genotype_vcf
+            versions = versions.mix(BAM_JOINT_CALLING_GERMLINE_SENTIEON.out.versions)
+
         }
 
-    }
-
-    // MANTA
-    if (tools.split(',').contains('manta')) {
-        BAM_VARIANT_CALLING_GERMLINE_MANTA (
-            cram,
-            fasta,
-            fasta_fai,
-            intervals_bed_gz_tbi_combined
-        )
-
-        vcf_manta = BAM_VARIANT_CALLING_GERMLINE_MANTA.out.vcf
-        versions = versions.mix(BAM_VARIANT_CALLING_GERMLINE_MANTA.out.versions)
     }
 
     // STRELKA

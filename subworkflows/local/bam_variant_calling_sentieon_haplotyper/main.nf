@@ -1,7 +1,13 @@
-include { VCF_VARIANT_FILTERING_GATK                         } from '../vcf_variant_filtering_gatk/main'
-include { SENTIEON_HAPLOTYPER                                } from '../../../modules/nf-core/sentieon/haplotyper/main'
-include { GATK4_MERGEVCFS as MERGE_SENTIEON_HAPLOTYPER_VCFS  } from '../../../modules/nf-core/gatk4/mergevcfs/main'
-include { GATK4_MERGEVCFS as MERGE_SENTIEON_HAPLOTYPER_GVCFS } from '../../../modules/nf-core/gatk4/mergevcfs/main'
+//
+// SENTIEON HAPLOTYPER germline variant calling
+//
+// For all modules here:
+// A when clause condition is defined in the conf/modules.config to determine if the module should be run
+
+include { GATK4_MERGEVCFS            as MERGE_SENTIEON_HAPLOTYPER_GVCFS } from '../../../modules/nf-core/gatk4/mergevcfs/main'
+include { GATK4_MERGEVCFS            as MERGE_SENTIEON_HAPLOTYPER_VCFS  } from '../../../modules/nf-core/gatk4/mergevcfs/main'
+include { SENTIEON_HAPLOTYPER                                           } from '../../../modules/nf-core/sentieon/haplotyper/main'
+include { VCF_VARIANT_FILTERING_GATK                                    } from '../vcf_variant_filtering_gatk/main'
 
 workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
     take:
@@ -59,8 +65,6 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
         emit_vcf,
         emit_mode_items.contains('gvcf'))
 
-    versions = versions.mix(SENTIEON_HAPLOTYPER.out.versions)
-
     if (joint_germline) {
         genotype_intervals = SENTIEON_HAPLOTYPER.out.gvcf
             .join(SENTIEON_HAPLOTYPER.out.gvcf_tbi, failOnMismatch: true)
@@ -101,8 +105,6 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
     // Only when using intervals
     MERGE_SENTIEON_HAPLOTYPER_VCFS(vcfs_for_merging, dict)
 
-    versions = versions.mix(MERGE_SENTIEON_HAPLOTYPER_VCFS.out.versions)
-
     haplotyper_vcf = Channel.empty().mix(
         MERGE_SENTIEON_HAPLOTYPER_VCFS.out.vcf,
         haplotyper_vcf_branch.no_intervals)
@@ -142,11 +144,13 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
 
     MERGE_SENTIEON_HAPLOTYPER_GVCFS(gvcfs_for_merging, dict)
 
-    versions = versions.mix(MERGE_SENTIEON_HAPLOTYPER_GVCFS.out.versions)
-
     gvcf = Channel.empty().mix(
         MERGE_SENTIEON_HAPLOTYPER_GVCFS.out.vcf,
         haplotyper_gvcf_branch.no_intervals)
+
+    versions = versions.mix(SENTIEON_HAPLOTYPER.out.versions)
+    versions = versions.mix(MERGE_SENTIEON_HAPLOTYPER_VCFS.out.versions)
+    versions = versions.mix(MERGE_SENTIEON_HAPLOTYPER_GVCFS.out.versions)
 
     emit:
     versions

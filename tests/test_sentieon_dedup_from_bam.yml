@@ -2,7 +2,6 @@
   command: nextflow run main.nf -profile test_cache,sentieon_dedup_bam --outdir results
   tags:
     - input_bam
-    - markduplicates
     - preprocessing
     - sentieon/dedup
   files:
