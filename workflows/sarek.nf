@@ -110,7 +110,6 @@ ch_from_samplesheet
         meta            = meta + [id: "${meta.sample}-${meta.lane}".toString()]
         def CN          = params.seq_center ? "CN:${params.seq_center}\\t" : ''
         def read_group  = "\"@RG\\tID:${meta.sample}_${meta.lane}\\t${CN}PU:${meta.lane}\\tSM:${meta.patient}_${meta.sample}\\tLB:${meta.sample}\\tDS:${params.fasta}\\tPL:${params.seq_platform}\""
-        println "Number of lanes: $num_lanes"
 
         meta            = meta + [num_lanes: num_lanes.toInteger(), read_group: read_group.toString(), data_type: 'bam', size: 1]
 
