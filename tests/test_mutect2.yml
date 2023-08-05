@@ -95,7 +95,7 @@
     - joint_somatic
   files:
     - path: results/csv/variantcalled.csv
-      md5sum: 7aa65d5d625ce77cd8cabd58162bd71a
+      md5sum: f87290ce1c6ea523e08354ed6c258b0b
     - path: results/multiqc
     - path: results/reports/bcftools/mutect2/test/test.mutect2.filtered.bcftools_stats.txt
       md5sum: d75da410d57960944f54d02b2b5cdcac
