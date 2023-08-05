@@ -13,6 +13,7 @@ include { BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER } from '../bam_variant_calling
 include { BAM_VARIANT_CALLING_MPILEUP             } from '../bam_variant_calling_mpileup/main'
 include { BAM_VARIANT_CALLING_SINGLE_STRELKA      } from '../bam_variant_calling_single_strelka/main'
 include { BAM_VARIANT_CALLING_SINGLE_TIDDIT       } from '../bam_variant_calling_single_tiddit/main'
+include { VCF_VARIANT_FILTERING_GATK              } from '../vcf_variant_filtering_gatk/main'
 
 workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     take:
@@ -38,6 +39,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     known_sites_snps_tbi
     known_snps_vqsr
     joint_germline                    // boolean: [mandatory] [default: false] joint calling of germline variants
+    skip_haplotypecaller_filter       // boolean: [mandatory] [default: false] whether to filter haplotypecaller single sample vcfs
     sentieon_haplotyper_emit_mode     // channel: [mandatory] value channel with string
 
     main:
@@ -150,7 +152,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             if (!skip_haplotypecaller_filter) {
 
                 VCF_VARIANT_FILTERING_GATK(
-                    vcf_haplotypecaller.join(haplotypecaller_tbi, failOnDuplicate: true, failOnMismatch: true),
+                    vcf_haplotypecaller.join(tbi_haplotypecaller, failOnDuplicate: true, failOnMismatch: true),
                     fasta,
                     fasta_fai,
                     dict.map{ meta, dict -> [ dict ] },

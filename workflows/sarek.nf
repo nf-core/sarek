@@ -1112,6 +1112,7 @@ workflow SAREK {
             known_sites_snps_tbi,
             known_snps_vqsr,
             params.joint_germline,
+            params.skip_tools && params.skip_tools.split(',').contains('haplotypecaller_filter'), // true if filtering should be skipped
             params.sentieon_haplotyper_emit_mode)
 
         // TUMOR ONLY VARIANT CALLING
