@@ -85,7 +85,9 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
         fai,
         dict.map{ meta, dict -> [ dict ] })
 
-    //Prepare INDELs and SNPs separately for ApplyVQSR
+    //Prepare SNPs and INDELs for ApplyVQSR
+    // Step 1. : ApplyVQSR to SNPs
+    // Step 2. : Use ApplyVQSR_SNP output and run ApplyVQSR_INDEL. This avoids duplicate entries in the vcf as described here: https://hpc.nih.gov/training/gatk_tutorial/vqsr.html
 
     // Join results of variant recalibration into a single channel tuple
     // Rework meta for variantscalled.csv and annotation tools
@@ -94,18 +96,19 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
         .join(VARIANTRECALIBRATOR_SNP.out.tranches, failOnDuplicate: true)
         .map{ meta, vcf, tbi, recal, index, tranche -> [ meta - meta.subMap('id') + [ id:'recalibrated_joint_variant_calling' ], vcf, tbi, recal, index, tranche ] }
 
-    // Join results of variant recalibration into a single channel tuple
-    // Rework meta for variantscalled.csv and annotation tools
-    vqsr_input_indel = vqsr_input.join(VARIANTRECALIBRATOR_INDEL.out.recal, failOnDuplicate: true)
-        .join(VARIANTRECALIBRATOR_INDEL.out.idx, failOnDuplicate: true)
-        .join(VARIANTRECALIBRATOR_INDEL.out.tranches, failOnDuplicate: true)
-        .map{ meta, vcf, tbi, recal, index, tranche -> [ meta - meta.subMap('id') + [ id:'recalibrated_joint_variant_calling' ], vcf, tbi, recal, index, tranche ] }
-
     GATK4_APPLYVQSR_SNP(
         vqsr_input_snp,
         fasta,
         fai,
         dict.map{ meta, dict -> [ dict ] })
+
+    // Join results of ApplyVQSR_SNP and use as input for Indels to avoid duplicate entries in the result
+    // Rework meta for variantscalled.csv and annotation tools
+    vqsr_input_indel = GATK4_APPLYVQSR_SNP.out.vcf.join(GATK4_APPLYVQSR_SNP.out.tbi).map{ meta, vcf, tbi -> [ meta - meta.subMap('id') + [ id:'joint_variant_calling' ], vcf, tbi ]}
+        .join(VARIANTRECALIBRATOR_INDEL.out.recal, failOnDuplicate: true)
+        .join(VARIANTRECALIBRATOR_INDEL.out.idx, failOnDuplicate: true)
+        .join(VARIANTRECALIBRATOR_INDEL.out.tranches, failOnDuplicate: true)
+        .map{ meta, vcf, tbi, recal, index, tranche -> [ meta - meta.subMap('id') + [ id:'recalibrated_joint_variant_calling' ], vcf, tbi, recal, index, tranche ] }
 
     GATK4_APPLYVQSR_INDEL(
         vqsr_input_indel,
@@ -113,14 +116,8 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
         fai,
         dict.map{ meta, dict -> [ dict ] })
 
-    vqsr_snp_vcf = GATK4_APPLYVQSR_SNP.out.vcf
-    vqsr_indel_vcf = GATK4_APPLYVQSR_INDEL.out.vcf
-
-    //Merge VQSR outputs into final VCF
-    MERGE_VQSR(vqsr_snp_vcf.mix(vqsr_indel_vcf).groupTuple(), dict)
-
-    genotype_vcf   = MERGE_GENOTYPEGVCFS.out.vcf.mix(MERGE_VQSR.out.vcf)
-    genotype_index = MERGE_GENOTYPEGVCFS.out.tbi.mix(MERGE_VQSR.out.tbi)
+    genotype_vcf   = MERGE_GENOTYPEGVCFS.out.vcf.mix(GATK4_APPLYVQSR_INDEL.out.vcf)
+    genotype_index = MERGE_GENOTYPEGVCFS.out.tbi.mix(GATK4_APPLYVQSR_INDEL.out.tbi)
 
     versions = versions.mix(GATK4_GENOMICSDBIMPORT.out.versions)
     versions = versions.mix(GATK4_GENOTYPEGVCFS.out.versions)
