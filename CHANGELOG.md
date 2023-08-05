@@ -32,6 +32,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1163](https://github.com/nf-core/sarek/pull/1163) - Correcting location of output folder for joint variant calling with GATK's haplotypecaller
 - [#1169](https://github.com/nf-core/sarek/pull/1169) - Updating Sentieon-modules. (The conda-check in the Sentieon-modules was moved to the script-section. The version of Sentieon remain unchanged.)
 
+### Dependencies
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| `multiqc`  | 1.14        | 1.15        |
+| `tiddit`   | 3.3.2       | 3.6.1       |
+
 ## [3.2.3](https://github.com/nf-core/sarek/releases/tag/3.2.3) - Gällivare
 
 Gällivare is a small lake next to Pierikjaure.
