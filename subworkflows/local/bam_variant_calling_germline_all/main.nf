@@ -119,22 +119,16 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             dbsnp,
             dbsnp_tbi,
             dbsnp_vqsr,
-            known_sites_indels,
-            known_sites_indels_tbi,
-            known_indels_vqsr,
-            known_sites_snps,
-            known_sites_snps_tbi,
-            known_snps_vqsr,
-            intervals,
-            intervals_bed_combined_haplotypec,
-            ((skip_tools && skip_tools.split(',').contains('haplotypecaller_filter') || joint_germline)))
+            intervals)
 
         vcf_haplotypecaller = BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.vcf
+        tbi_haplotypecaller = BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.tbi
+
         versions = versions.mix(BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.versions)
 
         if (joint_germline) {
             BAM_JOINT_CALLING_GERMLINE_GATK(
-                BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.genotype_intervals,
+                BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.gvcf_tbi_intervals,
                 fasta,
                 fasta_fai,
                 dict,
@@ -150,6 +144,24 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
 
             vcf_haplotypecaller = BAM_JOINT_CALLING_GERMLINE_GATK.out.genotype_vcf
             versions = versions.mix(BAM_JOINT_CALLING_GERMLINE_GATK.out.versions)
+        } else {
+
+            // If single sample track, check if filtering should be done
+            if (!skip_haplotypecaller_filter) {
+
+                VCF_VARIANT_FILTERING_GATK(
+                    vcf_haplotypecaller.join(haplotypecaller_tbi, failOnDuplicate: true, failOnMismatch: true),
+                    fasta,
+                    fasta_fai,
+                    dict.map{ meta, dict -> [ dict ] },
+                    intervals_bed_combined_haplotypec,
+                    known_sites_indels.concat(known_sites_snps).flatten().unique().collect(),
+                    known_sites_indels_tbi.concat(known_sites_snps_tbi).flatten().unique().collect())
+
+                vcf_haplotypecaller = VCF_VARIANT_FILTERING_GATK.out.filtered_vcf
+
+                versions = versions.mix(VCF_VARIANT_FILTERING_GATK.out.versions)
+            }
         }
     }
 
