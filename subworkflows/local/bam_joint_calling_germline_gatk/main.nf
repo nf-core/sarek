@@ -39,8 +39,11 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
 
     gendb_input = input
         .map{ meta, gvcf, tbi, intervals -> [ [ id:'joint_variant_calling', intervals_name:intervals.simpleName, num_intervals:meta.num_intervals ], gvcf, tbi, intervals ] }
-        .groupTuple(by:[0, 3])
-        .map{ meta, gvcf, tbi, intervals -> [ meta, gvcf, tbi, intervals, [], [] ] }
+        .groupTuple(by:3) //join on interval file
+        .map{ meta_list, gvcf, tbi, intervals ->
+            // meta is now a list of [meta1, meta2] but they are all the same. So take the first element.
+            [ meta_list[0], gvcf, tbi, intervals, [], [] ]
+        }
 
     // Convert all sample vcfs into a genomicsdb workspace using genomicsdbimport
     GATK4_GENOMICSDBIMPORT(gendb_input, false, false, false)
