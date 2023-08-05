@@ -173,7 +173,7 @@
                     },
                     "gatk4/applyvqsr": {
                         "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "git_sha": "359dcb06bda60c43955752e356e25c91cfd38ae0",
                         "installed_by": ["modules"]
                     },
                     "gatk4/baserecalibrator": {
@@ -283,7 +283,7 @@
                     },
                     "gatk4/variantrecalibrator": {
                         "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "git_sha": "359dcb06bda60c43955752e356e25c91cfd38ae0",
                         "installed_by": ["modules"]
                     },
                     "manta/germline": {
