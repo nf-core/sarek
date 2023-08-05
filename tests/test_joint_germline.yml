@@ -30,7 +30,7 @@
     - path: results/variant_calling/haplotypecaller/testT/testT.haplotypecaller.g.vcf.gz.tbi
     - path: results/haplotypecaller
       should_exist: false
-- name: Run joint germline variant calling with haplotypecaller
+- name: Run joint germline variant calling with haplotypecaller with Stub for VQSR
   command: nextflow run main.nf -profile test_cache,targeted --input ./tests/csv/3.0/mapped_joint_bam.csv --tools haplotypecaller --step variant_calling --joint_germline --outdir results --stub_run
   tags:
     - germline
