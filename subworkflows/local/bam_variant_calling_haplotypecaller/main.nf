@@ -28,7 +28,7 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
     // Combine cram and intervals for spread and gather strategy
     cram_intervals = cram.combine(intervals)
         // Move num_intervals to meta map
-        .map{ meta, cram, crai, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals, variantcaller:'haplotypecaller' ], cram, crai, intervals, [] ] }
+        .map{ meta, cram, crai, intervals, num_intervals -> [ meta + [ interval_name:intervals.simpleName, num_intervals:num_intervals, variantcaller:'haplotypecaller' ], cram, crai, intervals, [] ] }
 
     GATK4_HAPLOTYPECALLER(cram_intervals, fasta, fasta_fai, dict.map{ meta, dict -> [ dict ] }, dbsnp, dbsnp_tbi)
 
@@ -39,21 +39,28 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
         .map{ meta, gvcf, tbi, cram, crai, intervals, dragstr_model -> [ meta, gvcf, tbi, intervals ] }
 
     // Figuring out if there is one or more vcf(s) from the same sample
-    haplotypecaller_vcf = GATK4_HAPLOTYPECALLER.out.vcf.branch{
+    haplotypecaller_vcf = GATK4_HAPLOTYPECALLER.out.vcf.map{
+            meta, vcf -> [ meta - meta.subMap('interval_name'), vcf]
+        }
+        .branch{
         // Use meta.num_intervals to asses number of intervals
             intervals:    it[0].num_intervals > 1
             no_intervals: it[0].num_intervals <= 1
         }
 
     // Figuring out if there is one or more tbi(s) from the same sample
-    haplotypecaller_tbi = GATK4_HAPLOTYPECALLER.out.tbi.branch{
+    haplotypecaller_tbi = GATK4_HAPLOTYPECALLER.out.tbi.map{
+            meta, tbi -> [ meta - meta.subMap('interval_name'), tbi]
+        }.branch{
         // Use meta.num_intervals to asses number of intervals
             intervals:    it[0].num_intervals > 1
             no_intervals: it[0].num_intervals <= 1
         }
 
     // Figuring out if there is one or more bam(s) from the same sample
-    haplotypecaller_bam = GATK4_HAPLOTYPECALLER.out.bam.branch{
+    haplotypecaller_bam = GATK4_HAPLOTYPECALLER.out.bam.map{
+            meta, bam -> [ meta - meta.subMap('interval_name'), bam]
+        }.branch{
         // Use meta.num_intervals to asses number of intervals
             intervals:    it[0].num_intervals > 1
             no_intervals: it[0].num_intervals <= 1

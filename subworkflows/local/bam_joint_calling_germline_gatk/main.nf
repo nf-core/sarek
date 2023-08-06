@@ -36,7 +36,6 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
     // Map input for GenomicsDBImport
     // Rename based on num_intervals, group all samples by their interval_name/interval_file and restructure for channel
     // Group by [0, 3] to avoid a list of metas and make sure that any intervals
-    input.view()
     gendb_input = input
         .map{ meta, gvcf, tbi, intervals -> [ [ id:'joint_variant_calling', intervals_name:intervals.simpleName, num_intervals:meta.num_intervals ], gvcf, tbi, intervals ] }
         .groupTuple(by:3) //join on interval file
