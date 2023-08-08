@@ -31,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1155](https://github.com/nf-core/sarek/pull/1155) - Restore proper rendering in `usage.md`
 - [#1163](https://github.com/nf-core/sarek/pull/1163) - Correcting location of output folder for joint variant calling with GATK's haplotypecaller
 - [#1169](https://github.com/nf-core/sarek/pull/1169) - Updating Sentieon-modules. (The conda-check in the Sentieon-modules was moved to the script-section. The version of Sentieon remain unchanged.)
+- [#1777](https://github.com/nf-core/sarek/pull/1777) - Fix status inference when using nf-validation plugin
 
 ### Dependencies
 
