@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1059](https://github.com/nf-core/sarek/pull/1059) - Add `nf-validation` for samplesheet validation
 - [#1160](https://github.com/nf-core/sarek/pull/1160) - Updating tiddit to v3.6.1
 - [#1174](https://github.com/nf-core/sarek/pull/1174) - Updating multiqc to v1.15
+- [#1178](https://github.com/nf-core/sarek/pull/1178) - Updating vep to v110
 
 ### Fixed
 
@@ -39,6 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | ---------- | ----------- | ----------- |
 | `multiqc`  | 1.14        | 1.15        |
 | `tiddit`   | 3.3.2       | 3.6.1       |
+| `vep`      | 108         | 110         |
 
 ## [3.2.3](https://github.com/nf-core/sarek/releases/tag/3.2.3) - Gällivare
 
