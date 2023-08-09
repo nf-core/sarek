@@ -128,8 +128,8 @@
                     },
                     "ensemblvep/vep": {
                         "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["vcf_annotate_ensemblvep", "modules"]
+                        "git_sha": "9f9e1fc31cb35876922070c0e601ae05abae5cae",
+                        "installed_by": ["modules", "vcf_annotate_ensemblvep"]
                     },
                     "fastp": {
                         "branch": "master",
@@ -462,7 +462,7 @@
                 "nf-core": {
                     "vcf_annotate_ensemblvep": {
                         "branch": "master",
-                        "git_sha": "a9784afdd5dcda23b84e64db75dc591065d64653",
+                        "git_sha": "dedc0e31087f3306101c38835d051bf49789445a",
                         "installed_by": ["subworkflows"]
                     },
                     "vcf_annotate_snpeff": {
