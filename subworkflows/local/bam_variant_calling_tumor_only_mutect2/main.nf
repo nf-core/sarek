@@ -89,9 +89,9 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     MERGEMUTECTSTATS(stats_to_merge)
 
     // Mix intervals and no_intervals channels together
-    vcf   = Channel.empty().mix(MERGE_MUTECT2.out.vcf, vcf_branch.no_intervals)
-    tbi   = Channel.empty().mix(MERGE_MUTECT2.out.tbi, tbi_branch.no_intervals)
-    stats = Channel.empty().mix(MERGEMUTECTSTATS.out.stats, stats_branch.no_intervals)
+    vcf   = Channel.empty().mix(MERGE_MUTECT2.out.vcf, vcf_branch.no_intervals).map{ meta, vcf -> [ meta - meta.subMap('sample', 'status', 'num_intervals', 'data_type'), vcf ]  }
+    tbi   = Channel.empty().mix(MERGE_MUTECT2.out.tbi, tbi_branch.no_intervals).map{ meta, tbi -> [ meta - meta.subMap('sample', 'status', 'num_intervals', 'data_type'), tbi ]  }
+    stats = Channel.empty().mix(MERGEMUTECTSTATS.out.stats, stats_branch.no_intervals).map{ meta, stats -> [ meta - meta.subMap('sample', 'status', 'num_intervals', 'data_type'), stats ]  }
     f1r2  = Channel.empty().mix(f1r2_to_merge, f1r2_branch.no_intervals)
 
     // Generate artifactpriors using learnreadorientationmodel on the f1r2 output of mutect2
@@ -120,21 +120,23 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
 
     if (joint_mutect2) {
         // Remove sample names and retain patient name as the main identifier
-        calculatecontamination_out_seg = CALCULATECONTAMINATION.out.segmentation.map{ meta, seg -> [ meta - meta.subMap('sample') + [id:meta.patient], seg ] }.groupTuple()
-        calculatecontamination_out_cont = CALCULATECONTAMINATION.out.contamination.map{ meta, cont -> [ meta - meta.subMap('sample') + [id:meta.patient], cont ] }.groupTuple()
+        calculatecontamination_out_seg = CALCULATECONTAMINATION.out.segmentation.map{ meta, seg -> [ meta - meta.subMap('sample', 'status', 'num_intervals', 'data_type') + [id:meta.patient], seg ] }.groupTuple()
+        calculatecontamination_out_cont = CALCULATECONTAMINATION.out.contamination.map{ meta, cont -> [ meta - meta.subMap('sample', 'status', 'num_intervals', 'data_type') + [id:meta.patient], cont ] }.groupTuple()
     }
     else {
         // Regular single sample mode
-        calculatecontamination_out_seg = CALCULATECONTAMINATION.out.segmentation
-        calculatecontamination_out_cont = CALCULATECONTAMINATION.out.contamination
+        calculatecontamination_out_seg = CALCULATECONTAMINATION.out.segmentation.map{ meta, seg -> [ meta - meta.subMap('sample', 'status', 'num_intervals', 'data_type'), seg ] }
+        calculatecontamination_out_cont = CALCULATECONTAMINATION.out.contamination.map{ meta, cont -> [ meta - meta.subMap('sample', 'status', 'num_intervals', 'data_type'), cont ] }
     }
 
+    prior_to_join = LEARNREADORIENTATIONMODEL.out.artifactprior.map{ meta, prior -> [ meta - meta.subMap('sample', 'status', 'num_intervals', 'data_type'), prior ]  }
+
     // Mutect2 calls filtered by filtermutectcalls using the contamination and segmentation tables
-    vcf_to_filter = vcf.join(tbi, failOnDuplicate: true, failOnMismatch: true)
-        .join(stats, failOnDuplicate: true, failOnMismatch: true)
-        .join(LEARNREADORIENTATIONMODEL.out.artifactprior, failOnDuplicate: true, failOnMismatch: true)
-        .join(calculatecontamination_out_seg, failOnDuplicate: true, failOnMismatch: true)
-        .join(calculatecontamination_out_cont, failOnDuplicate: true, failOnMismatch: true)
+    vcf_to_filter = vcf.join(tbi, failOnDuplicate: true, failOnMismatch: true, by: 0)
+        .join(stats, failOnDuplicate: true, failOnMismatch: true, by: 0)
+        .join(prior_to_join, failOnDuplicate: true, failOnMismatch: true, by: 0)
+        .join(calculatecontamination_out_seg, failOnDuplicate: true, failOnMismatch: true, by: 0)
+        .join(calculatecontamination_out_cont, failOnDuplicate: true, failOnMismatch: true, by: 0)
         .map{ meta, vcf, tbi, stats, artifactprior, seg, cont -> [ meta, vcf, tbi, stats, artifactprior, seg, cont, [] ] }
 
     FILTERMUTECTCALLS(vcf_to_filter, fasta, fai, dict)

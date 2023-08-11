@@ -161,6 +161,13 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
         ch_cont_to_filtermutectcalls = CALCULATECONTAMINATION.out.contamination
     }
 
+    // vcf.view(it -> ["vcfs", it])
+    // tbi.view(it -> ["tbis", it])
+    // stats.view(it -> ["stats", it])
+    // LEARNREADORIENTATIONMODEL.out.artifactprior.view(it -> ["priors", it])
+    // ch_seg_to_filtermutectcalls.view(it -> ["segs", it])
+    // ch_cont_to_filtermutectcalls.view(it -> ["conts", it])
+
     // Mutect2 calls filtered by filtermutectcalls using the artifactpriors, contamination and segmentation tables
     vcf_to_filter = vcf.join(tbi, failOnDuplicate: true, failOnMismatch: true)
         .join(stats, failOnDuplicate: true, failOnMismatch: true)
