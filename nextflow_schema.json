@@ -130,8 +130,7 @@
                     "type": "boolean",
                     "fa_icon": "fas fa-cut",
                     "description": "Run FastP for read trimming",
-                    "help_text": "Use this to perform adapter trimming. Adapter are detected automatically by using the FastP flag `--detect_adapter_for_pe`. For more info see [FastP](https://github.com/OpenGene/fastp) ",
-                    "hidden": true
+                    "help_text": "Use this to perform adapter trimming. Adapter are detected automatically by using the FastP flag `--detect_adapter_for_pe`. For more info see [FastP](https://github.com/OpenGene/fastp) "
                 },
                 "clip_r1": {
                     "type": "integer",
@@ -183,7 +182,6 @@
                     "type": "string",
                     "fa_icon": "fas fa-tape",
                     "description": "Specify UMI read structure",
-                    "hidden": true,
                     "help_text": "One structure if UMI is present on one end (i.e. '+T 2M11S+T'), or two structures separated by a blank space if UMIs a present on both ends (i.e. '2M11S+T 2M11S+T'); please note, this does not handle duplex-UMIs.\n\nFor more info on UMI usage in the pipeline, also check docs [here](./docs/usage.md/#how-to-handle-umis)."
                 },
                 "group_by_umi_strategy": {
@@ -214,8 +212,7 @@
                     "fa_icon": "fas fa-puzzle-piece",
                     "enum": ["bwa-mem", "bwa-mem2", "dragmap", "sentieon-bwamem"],
                     "description": "Specify aligner to be used to map reads to reference genome.",
-                    "help_text": "`Sarek` will build missing indices automatically if not provided. Set `--bwa false` if indices should be (re-)built.\nIf `DragMap` is selected as aligner, it is recommended to skip baserecalibration with `--skip_tools baserecalibrator`. See [here](https://gatk.broadinstitute.org/hc/en-us/articles/4407897446939--How-to-Run-germline-single-sample-short-variant-discovery-in-DRAGEN-mode) for more info.\n",
-                    "hidden": true
+                    "help_text": "`Sarek` will build missing indices automatically if not provided. Set `--bwa false` if indices should be (re-)built.\nIf `DragMap` is selected as aligner, it is recommended to skip baserecalibration with `--skip_tools baserecalibrator`. See [here](https://gatk.broadinstitute.org/hc/en-us/articles/4407897446939--How-to-Run-germline-single-sample-short-variant-discovery-in-DRAGEN-mode) for more info.\n"
                 },
                 "save_mapped": {
                     "type": "boolean",
