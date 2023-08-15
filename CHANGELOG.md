@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- [#930](https://github.com/nf-core/sarek/pull/930) - Add more manual tests
 - [#1130](https://github.com/nf-core/sarek/pull/1130) - Back to dev
 - [#1013](https://github.com/nf-core/sarek/pull/1013) - Mutect2 multi sample mode with `--joint_mutect2`
 - [#1153](https://github.com/nf-core/sarek/pull/1153) - Add input validation for Sentieon & FGBio UMI incompatibility
@@ -21,7 +22,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1157](https://github.com/nf-core/sarek/pull/1157) - Move all vep args from `ext.args` to `params.vep_custom_args` to allow easier modifications
 - [#1059](https://github.com/nf-core/sarek/pull/1059) - Add `nf-validation` for samplesheet validation
 - [#1160](https://github.com/nf-core/sarek/pull/1160) - Updating tiddit to v3.6.1
+- [#1166](https://github.com/nf-core/sarek/pull/1166) - More info about `--tools`
 - [#1174](https://github.com/nf-core/sarek/pull/1174) - Updating multiqc to v1.15
+- [#1179](https://github.com/nf-core/sarek/pull/1179) - Unhide params `trim_fastq`, `umi_read_structure`, and `aligner`
 
 ### Fixed
 
@@ -115,7 +118,6 @@ Bierikjávrre is one of the largest lake in Sarek.
 - [#864](https://github.com/nf-core/sarek/pull/864) - Added possibilities to export assembled haplotypes and locally realigned reads
 - [#792](https://github.com/nf-core/sarek/pull/792) - Added the option `--concatenate_vcfs` for concatenating the germline VCF files. Per default, the resulting vcf-files will be placed under `<outDir>/variant_calling/concat`
 - [#889](https://github.com/nf-core/sarek/pull/889) - Added possibilities to skip variant filtering after Haplotypecaller
-- [#930](https://github.com/nf-core/sarek/pull/930) - Add more manual tests
 - [#945](https://github.com/nf-core/sarek/pull/945) - Adding Adam Talbot to contributor list
 - [#954](https://github.com/nf-core/sarek/pull/954) - Adding keys for annotation with snpeff and ensemblvep for `hg19`, `hg38` and `mm10`
 - [#967](https://github.com/nf-core/sarek/pull/967) - Adding new `outdir_cache` params
