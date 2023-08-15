@@ -212,7 +212,7 @@
                     "fa_icon": "fas fa-puzzle-piece",
                     "enum": ["bwa-mem", "bwa-mem2", "dragmap", "sentieon-bwamem"],
                     "description": "Specify aligner to be used to map reads to reference genome.",
-                    "help_text": "`Sarek` will build missing indices automatically if not provided. Set `--bwa false` if indices should be (re-)built.\nIf `DragMap` is selected as aligner, it is recommended to skip baserecalibration with `--skip_tools baserecalibrator`. See [here](https://gatk.broadinstitute.org/hc/en-us/articles/4407897446939--How-to-Run-germline-single-sample-short-variant-discovery-in-DRAGEN-mode) for more info.\n"
+                    "help_text": "Sarek will build missing indices automatically if not provided. Set `--bwa false` if indices should be (re-)built.\nIf DragMap is selected as aligner, it is recommended to skip baserecalibration with `--skip_tools baserecalibrator`. See [here](https://gatk.broadinstitute.org/hc/en-us/articles/4407897446939--How-to-Run-germline-single-sample-short-variant-discovery-in-DRAGEN-mode) for more info.\n"
                 },
                 "save_mapped": {
                     "type": "boolean",
