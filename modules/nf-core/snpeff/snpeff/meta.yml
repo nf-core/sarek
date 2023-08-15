@@ -2,6 +2,8 @@ name: SNPEFF_SNPEFF
 description: Genetic variant annotation and functional effect prediction toolbox
 keywords:
   - annotation
+  - variant
+  - effect prediction
 tools:
   - snpeff:
       description: |
@@ -21,7 +23,7 @@ input:
       description: |
         vcf to annotate
   - db:
-      type: value
+      type: string
       description: |
         which db to annotate with
   - cache:

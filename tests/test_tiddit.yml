@@ -1,5 +1,5 @@
 - name: Run variant calling on somatic sample with tiddit
-  command: nextflow run main.nf -profile test,tools_somatic --tools tiddit --outdir results
+  command: nextflow run main.nf -profile test_cache,tools_somatic --tools tiddit --outdir results
   tags:
     - tiddit
     - somatic
@@ -45,7 +45,7 @@
     - path: results/tiddit
       should_exist: false
 - name: Run variant calling on germline sample with tiddit
-  command: nextflow run main.nf -profile test,tools_germline --tools tiddit --outdir results
+  command: nextflow run main.nf -profile test_cache,tools_germline --tools tiddit --outdir results
   tags:
     - tiddit
     - germline
@@ -71,7 +71,7 @@
     - path: results/tiddit
       should_exist: false
 - name: Run variant calling on tumor_only sample with tiddit
-  command: nextflow run main.nf -profile test,tools_tumoronly --tools tiddit --outdir results
+  command: nextflow run main.nf -profile test_cache,tools_tumoronly --tools tiddit --outdir results
   tags:
     - tiddit
     - tumor_only

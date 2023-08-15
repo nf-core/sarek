@@ -2,10 +2,10 @@ process GATK4_MARKDUPLICATES {
     tag "$meta.id"
     label 'process_medium'
 
-    conda "bioconda::gatk4=4.3.0.0 bioconda::samtools=1.16.1"
+    conda "bioconda::gatk4=4.4.0.0 bioconda::samtools=1.17"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/mulled-v2-d9e7bad0f7fbc8f4458d5c3ab7ffaaf0235b59fb:551156018e5580fb94d44632dfafbc9c27005a0e-0':
-        'quay.io/biocontainers/mulled-v2-d9e7bad0f7fbc8f4458d5c3ab7ffaaf0235b59fb:551156018e5580fb94d44632dfafbc9c27005a0e-0' }"
+        'https://depot.galaxyproject.org/singularity/mulled-v2-d9e7bad0f7fbc8f4458d5c3ab7ffaaf0235b59fb:f857e2d6cc88d35580d01cf39e0959a68b83c1d9-0':
+        'biocontainers/mulled-v2-d9e7bad0f7fbc8f4458d5c3ab7ffaaf0235b59fb:f857e2d6cc88d35580d01cf39e0959a68b83c1d9-0' }"
 
     input:
     tuple val(meta), path(bam)
@@ -25,28 +25,38 @@ process GATK4_MARKDUPLICATES {
 
     script:
     def args = task.ext.args ?: ''
-    prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}.bam"
+
+    // If the extension is CRAM, then change it to BAM
+    prefix_bam = prefix.tokenize('.')[-1] == 'cram' ? "${prefix.substring(0, prefix.lastIndexOf('.'))}.bam" : prefix
+
     def input_list = bam.collect{"--INPUT $it"}.join(' ')
     def reference = fasta ? "--REFERENCE_SEQUENCE ${fasta}" : ""
 
-    def avail_mem = 3
+    def avail_mem = 3072
     if (!task.memory) {
         log.info '[GATK MarkDuplicates] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this.'
     } else {
-        avail_mem = task.memory.giga
+        avail_mem = (task.memory.mega*0.8).intValue()
     }
+
+    // Using samtools and not Markduplicates to compress to CRAM speeds up computation:
+    // https://medium.com/@acarroll.dna/looking-at-trade-offs-in-compression-levels-for-genomics-tools-eec2834e8b94
     """
-    gatk --java-options "-Xmx${avail_mem}g" MarkDuplicates \\
+    gatk --java-options "-Xmx${avail_mem}M" MarkDuplicates \\
         $input_list \\
-        --OUTPUT ${prefix}.bam \\
+        --OUTPUT ${prefix_bam} \\
         --METRICS_FILE ${prefix}.metrics \\
         --TMP_DIR . \\
         ${reference} \\
         $args
 
-    samtools view -Ch -T ${fasta} -o ${prefix} ${prefix}.bam
-    rm ${prefix}.bam
-    samtools index ${prefix}
+    # If cram files are wished as output, the run samtools for conversion
+    if [[ ${prefix} == *.cram ]]; then
+        samtools view -Ch -T ${fasta} -o ${prefix} ${prefix_bam}
+        rm ${prefix_bam}
+        samtools index ${prefix}
+    fi
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

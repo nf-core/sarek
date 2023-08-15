@@ -2,6 +2,8 @@
 // This file holds several functions specific to the main.nf workflow in the nf-core/sarek pipeline
 //
 
+import nextflow.Nextflow
+
 class WorkflowMain {
 
     //
@@ -11,7 +13,7 @@ class WorkflowMain {
         return "If you use ${workflow.manifest.name} for your analysis please cite:\n\n" +
             "* The pipeline\n" +
             "  https://doi.org/10.12688/f1000research.16665.2\n" +
-            "  https://doi.org/10.5281/zenodo.4468605\n\n" +
+            "  https://doi.org/10.5281/zenodo.3476425\n\n" +
             "* The nf-core framework\n" +
             "  https://doi.org/10.1038/s41587-020-0439-x\n\n" +
             "* Software dependencies\n" +
@@ -19,53 +21,15 @@ class WorkflowMain {
     }
 
     //
-    // Generate help string
-    //
-    public static String help(workflow, params, log) {
-        def command = "nextflow run ${workflow.manifest.name} --input samplesheet.tsv --genome GRCh38 -profile docker"
-        def help_string = ''
-        help_string += NfcoreTemplate.logo(workflow, params.monochrome_logs)
-        help_string += NfcoreSchema.paramsHelp(workflow, params, command)
-        help_string += '\n' + citation(workflow) + '\n'
-        help_string += NfcoreTemplate.dashedLine(params.monochrome_logs)
-        return help_string
-    }
-
-    //
-    // Generate parameter summary log string
-    //
-    public static String paramsSummaryLog(workflow, params, log) {
-        def summary_log = ''
-        summary_log += NfcoreTemplate.logo(workflow, params.monochrome_logs)
-        summary_log += NfcoreSchema.paramsSummaryLog(workflow, params)
-        summary_log += '\n' + citation(workflow) + '\n'
-        summary_log += NfcoreTemplate.dashedLine(params.monochrome_logs)
-        return summary_log
-    }
-
-    //
     // Validate parameters and print summary to screen
     //
     public static void initialise(workflow, params, log) {
-        // Print help to screen if required
-        if (params.help) {
-            log.info help(workflow, params, log)
-            System.exit(0)
-        }
 
         // Print workflow version and exit on --version
         if (params.version) {
             String workflow_version = NfcoreTemplate.version(workflow)
             log.info "${workflow.manifest.name} ${workflow_version}"
             System.exit(0)
-        }
-
-        // Print parameter summary log to screen
-        log.info paramsSummaryLog(workflow, params, log)
-
-        // Validate workflow parameters via the JSON schema
-        if (params.validate_params) {
-            NfcoreSchema.validateParameters(workflow, params, log)
         }
 
         // Check that a -profile or Nextflow config has been provided to run the pipeline
@@ -79,10 +43,9 @@ class WorkflowMain {
         // Check AWS batch settings
         NfcoreTemplate.awsBatch(workflow, params)
 
-        // Check input has been provided
+        // Warn that no input was provided
         if (!params.input && !params.build_only_index) {
             log.warn "No samplesheet specified, attempting to restart from csv files present in ${params.outdir}"
-            WorkflowSarek.retrieveInput(params, log)
         }
     }
     //

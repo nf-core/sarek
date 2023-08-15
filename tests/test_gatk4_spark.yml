@@ -1,5 +1,5 @@
 - name: Run default pipeline with gatk4_spark
-  command: nextflow run main.nf -profile test,use_gatk_spark --outdir results
+  command: nextflow run main.nf -profile test_cache,use_gatk_spark --outdir results
   tags:
     - gatk4_spark
     - preprocessing
@@ -12,15 +12,15 @@
       md5sum: 2d29d9e53894dcce96a1b5beb6ef3312
     - path: results/multiqc
     - path: results/preprocessing/markduplicates/test/test.md.cram
-      md5sum: b1338daf0d2f85c42fdc1bf12764bcae
+    # binary file changes md5sums on reruns
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
-      md5sum: 4f249f7b2492c37fd2186b02f7e5b03c
+    # binary file changes md5sums on reruns
     - path: results/preprocessing/recal_table/test/test.recal.table
       md5sum: 5b6e5078b4a90f6cb982fa0f0df616c2
     - path: results/preprocessing/recalibrated/test/test.recal.cram
-      md5sum: b841ee6b350ff4e5e25ebe877794e837
+    # binary file changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
-      md5sum: 91b334df15cef7afc73e68bacef8029b
+    # binary file changes md5sums on reruns
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.cram.metrics
     # text-based file changes md5sums on reruns
@@ -49,7 +49,7 @@
     - path: results/preprocessing/mapped/
       should_exist: false
 - name: Run default pipeline with gatk4_spark & skipping all QC steps
-  command: nextflow run main.nf -profile test,use_gatk_spark --skip_tools fastqc,markduplicates_report,mosdepth,multiqc,samtools --outdir results
+  command: nextflow run main.nf -profile test_cache,use_gatk_spark --skip_tools fastqc,markduplicates_report,mosdepth,multiqc,samtools --outdir results
   tags:
     - gatk4_spark
     - preprocessing
@@ -62,15 +62,15 @@
     - path: results/csv/recalibrated.csv
       md5sum: 2d29d9e53894dcce96a1b5beb6ef3312
     - path: results/preprocessing/markduplicates/test/test.md.cram
-      md5sum: b1338daf0d2f85c42fdc1bf12764bcae
+    # binary file changes md5sums on reruns
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
-      md5sum: 4f249f7b2492c37fd2186b02f7e5b03c
+    # binary file changes md5sums on reruns
     - path: results/preprocessing/recal_table/test/test.recal.table
       md5sum: 5b6e5078b4a90f6cb982fa0f0df616c2
     - path: results/preprocessing/recalibrated/test/test.recal.cram
-      md5sum: b841ee6b350ff4e5e25ebe877794e837
+    # binary file changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
-      md5sum: 91b334df15cef7afc73e68bacef8029b
+    # binary file changes md5sums on reruns
     - path: results/multiqc
       should_exist: false
     - path: results/reports/fastqc
@@ -82,7 +82,7 @@
     - path: results/reports/samtools
       should_exist: false
 - name: Run save_output_as_bam with gatk4 spark
-  command: nextflow run main.nf -profile test,use_gatk_spark --save_output_as_bam --outdir results
+  command: nextflow run main.nf -profile test_cache,use_gatk_spark --save_output_as_bam --outdir results
   tags:
     - gatk4_spark
     - preprocessing

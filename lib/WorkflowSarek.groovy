@@ -2,6 +2,7 @@
 // This file holds several functions specific to the workflow/sarek.nf in the nf-core/sarek pipeline
 //
 
+import nextflow.Nextflow
 import groovy.text.SimpleTemplateEngine
 
 class WorkflowSarek {
@@ -10,12 +11,11 @@ class WorkflowSarek {
     // Check and validate parameters
     //
     public static void initialise(params, log) {
+
         genomeExistsError(params, log)
 
-
-        if (!params.fasta) {
-            log.error "Genome fasta file not specified with e.g. '--fasta genome.fa' or via a detectable config file."
-            System.exit(1)
+        if (!params.fasta && params.step == 'annotate') {
+            Nextflow.error "Genome fasta file not specified with e.g. '--fasta genome.fa' or via a detectable config file."
         }
     }
 
@@ -46,14 +46,55 @@ class WorkflowSarek {
         return yaml_file_text
     }
 
-    public static String methodsDescriptionText(run_workflow, mqc_methods_yaml) {
+    //
+    // Generate methods description for MultiQC
+    //
+
+    public static String toolCitationText(params) {
+
+        // TODO Optionally add in-text citation tools to this list.
+        // Can use ternary operators to dynamically construct based conditions, e.g. params["run_xyz"] ? "Tool (Foo et al. 2023)" : "",
+        // Uncomment function in methodsDescriptionText to render in MultiQC report
+        def citation_text = [
+                "Tools used in the workflow included:",
+                "FastQC (Andrews 2010),",
+                "MultiQC (Ewels et al. 2016)",
+                "."
+            ].join(' ').trim()
+
+        return citation_text
+    }
+
+    public static String toolBibliographyText(params) {
+
+        // TODO Optionally add bibliographic entries to this list.
+        // Can use ternary operators to dynamically construct based conditions, e.g. params["run_xyz"] ? "<li>Author (2023) Pub name, Journal, DOI</li>" : "",
+        // Uncomment function in methodsDescriptionText to render in MultiQC report
+        def reference_text = [
+                "<li>Andrews S, (2010) FastQC, URL: https://www.bioinformatics.babraham.ac.uk/projects/fastqc/).</li>",
+                "<li>Ewels, P., Magnusson, M., Lundin, S., & Käller, M. (2016). MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics , 32(19), 3047–3048. doi: /10.1093/bioinformatics/btw354</li>"
+            ].join(' ').trim()
+
+        return reference_text
+    }
+
+    public static String methodsDescriptionText(run_workflow, mqc_methods_yaml, params) {
         // Convert  to a named map so can be used as with familar NXF ${workflow} variable syntax in the MultiQC YML file
         def meta = [:]
         meta.workflow = run_workflow.toMap()
         meta["manifest_map"] = run_workflow.manifest.toMap()
 
+        // Pipeline DOI
         meta["doi_text"] = meta.manifest_map.doi ? "(doi: <a href=\'https://doi.org/${meta.manifest_map.doi}\'>${meta.manifest_map.doi}</a>)" : ""
         meta["nodoi_text"] = meta.manifest_map.doi ? "": "<li>If available, make sure to update the text to include the Zenodo DOI of version of the pipeline used. </li>"
+
+        // Tool references
+        meta["tool_citations"] = ""
+        meta["tool_bibliography"] = ""
+
+        // TODO Only uncomment below if logic in toolCitationText/toolBibliographyText has been filled!
+        //meta["tool_citations"] = toolCitationText(params).replaceAll(", \\.", ".").replaceAll("\\. \\.", ".").replaceAll(", \\.", ".")
+        //meta["tool_bibliography"] = toolBibliographyText(params)
 
         def methods_text = mqc_methods_yaml.text
 
@@ -61,45 +102,48 @@ class WorkflowSarek {
         def description_html = engine.createTemplate(methods_text).make(meta)
 
         return description_html
-    }//
+    }
+
+    //
     // Exit pipeline if incorrect --genome key provided
     //
     private static void genomeExistsError(params, log) {
         if (params.genomes && params.genome && !params.genomes.containsKey(params.genome)) {
-            log.error "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
+            def error_string = "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
                 "  Genome '${params.genome}' not found in any config files provided to the pipeline.\n" +
                 "  Currently, the available genome keys are:\n" +
                 "  ${params.genomes.keySet().join(", ")}\n" +
                 "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-            System.exit(1)
+            Nextflow.error(error_string)
         }
     }
 
     public static String retrieveInput(params, log){
-        if (!params.build_only_index) {
+        def input = null
+        if (!params.input && !params.build_only_index) {
             switch (params.step) {
-                case 'mapping':                 log.warn "Can't start with step $params.step without samplesheet"
-                                                System.exit(1);
+                case 'mapping':                 Nextflow.error("Can't start with step $params.step without samplesheet")
                                                 break
-                case 'markduplicates':          log.warn "Using file ${params.outdir}/csv/mapped.csv"
-                                                params.putIfAbsent("input","${params.outdir}/csv/mapped.csv");
+                case 'markduplicates':          log.warn("Using file ${params.outdir}/csv/mapped.csv");
+                                                input = params.outdir + "/csv/mapped.csv"
                                                 break
-                case 'prepare_recalibration':   log.warn "Using file ${params.outdir}/csv/markduplicates_no_table.csv"
-                                                params.putIfAbsent("input", "${params.outdir}/csv/markduplicates_no_table.csv");
+                case 'prepare_recalibration':   log.warn("Using file ${params.outdir}/csv/markduplicates_no_table.csv");
+                                                input = params.outdir + "/csv/markduplicates_no_table.csv"
                                                 break
-                case 'recalibrate':             log.warn "Using file ${params.outdir}/csv/markduplicates.csv"
-                                                params.putIfAbsent("input", "${params.outdir}/csv/markduplicates.csv");
+                case 'recalibrate':             log.warn("Using file ${params.outdir}/csv/markduplicates.csv");
+                                                input = params.outdir + "/csv/markduplicates.csv"
                                                 break
-                case 'variant_calling':         log.warn "Using file ${params.outdir}/csv/recalibrated.csv"
-                                                params.putIfAbsent("input", "${params.outdir}/csv/recalibrated.csv");
+                case 'variant_calling':         log.warn("Using file ${params.outdir}/csv/recalibrated.csv");
+                                                input = params.outdir + "/csv/recalibrated.csv"
                                                 break
                 // case 'controlfreec':         csv_file = file("${params.outdir}/variant_calling/csv/control-freec_mpileup.csv", checkIfExists: true); break
-                case 'annotate':                log.warn "Using file ${params.outdir}/csv/variantcalled.csv"
-                                                params.putIfAbsent("input","${params.outdir}/csv/variantcalled.csv");
+                case 'annotate':                log.warn("Using file ${params.outdir}/csv/variantcalled.csv");
+                                                input = params.outdir + "/csv/variantcalled.csv"
                                                 break
-                default:                        log.warn "Please provide an input samplesheet to the pipeline e.g. '--input samplesheet.csv'"
-                                                exit 1, "Unknown step $params.step"
+                default:                        log.warn("Please provide an input samplesheet to the pipeline e.g. '--input samplesheet.csv'")
+                                                Nextflow.error("Unknown step $params.step")
             }
         }
+        return input
     }
 }

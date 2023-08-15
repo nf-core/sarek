@@ -2,16 +2,16 @@ process GATK4_FILTERMUTECTCALLS {
     tag "$meta.id"
     label 'process_low'
 
-    conda "bioconda::gatk4=4.3.0.0"
+    conda "bioconda::gatk4=4.4.0.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/gatk4:4.3.0.0--py36hdfd78af_0':
-        'quay.io/biocontainers/gatk4:4.3.0.0--py36hdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/gatk4:4.4.0.0--py36hdfd78af_0':
+        'biocontainers/gatk4:4.4.0.0--py36hdfd78af_0' }"
 
     input:
     tuple val(meta), path(vcf), path(vcf_tbi), path(stats), path(orientationbias), path(segmentation), path(table), val(estimate)
-    path  fasta
-    path  fai
-    path  dict
+    tuple val(meta2), path(fasta)
+    tuple val(meta3), path(fai)
+    tuple val(meta4), path(dict)
 
     output:
     tuple val(meta), path("*.vcf.gz")            , emit: vcf
@@ -29,16 +29,16 @@ process GATK4_FILTERMUTECTCALLS {
     def orientationbias_command = orientationbias ? orientationbias.collect{"--orientation-bias-artifact-priors $it"}.join(' ') : ''
     def segmentation_command    = segmentation    ? segmentation.collect{"--tumor-segmentation $it"}.join(' ')                  : ''
     def estimate_command        = estimate        ? " --contamination-estimate ${estimate} "                                    : ''
-    def table_command           = table           ? " --contamination-table ${table} "                                          : ''
+    def table_command           = table           ? table.collect{"--contamination-table $it"}.join(' ')                        : ''
 
-    def avail_mem = 3
+    def avail_mem = 3072
     if (!task.memory) {
         log.info '[GATK FilterMutectCalls] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this.'
     } else {
-        avail_mem = task.memory.giga
+        avail_mem = (task.memory.mega*0.8).intValue()
     }
     """
-    gatk --java-options "-Xmx${avail_mem}g" FilterMutectCalls \\
+    gatk --java-options "-Xmx${avail_mem}M" FilterMutectCalls \\
         --variant $vcf \\
         --output ${prefix}.vcf.gz \\
         --reference $fasta \\

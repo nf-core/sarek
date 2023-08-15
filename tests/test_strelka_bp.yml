@@ -1,5 +1,5 @@
 - name: Run variant calling on somatic sample with Strelka BP
-  command: nextflow run main.nf -profile test,tools_somatic --tools strelka,manta --outdir results
+  command: nextflow run main.nf -profile test_cache,tools_somatic --tools strelka,manta --outdir results
   tags:
     - somatic
     - strelka_bp
@@ -59,15 +59,15 @@
     - path: results/variant_calling/manta/sample3/sample3.manta.diploid_sv.vcf.gz
     # binary changes md5sums on reruns
     - path: results/variant_calling/manta/sample3/sample3.manta.diploid_sv.vcf.gz.tbi
-      md5sum: e7ca7e9fe76ce12198fd54ec9a64fad4
+      md5sum: 4cb176febbc8c26d717a6c6e67b9c905
     - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.vcf.gz
     # binary changes md5sums on reruns
     - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.vcf.gz.tbi
-      md5sum: e7ca7e9fe76ce12198fd54ec9a64fad4
+      md5sum: 4cb176febbc8c26d717a6c6e67b9c905
     - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.vcf.gz
     # binary changes md5sums on reruns
     - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.vcf.gz.tbi
-      md5sum: e7ca7e9fe76ce12198fd54ec9a64fad4
+      md5sum: 4cb176febbc8c26d717a6c6e67b9c905
     - path: results/variant_calling/strelka/sample3/sample3.strelka.genome.vcf.gz
     # binary changes md5sums on reruns
     - path: results/variant_calling/strelka/sample3/sample3.strelka.genome.vcf.gz.tbi
@@ -89,7 +89,7 @@
     - path: results/strelka
       should_exist: false
 - name: Run variant calling on somatic sample with Strelka BP without intervals
-  command: nextflow run main.nf -profile test,tools_somatic --tools strelka,manta --no_intervals --outdir results
+  command: nextflow run main.nf -profile test_cache,tools_somatic --tools strelka,manta --no_intervals --outdir results
   tags:
     - no_intervals
     - somatic

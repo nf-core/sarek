@@ -1,3 +1,9 @@
+//
+// ASCAT variant calling
+//
+// For all modules here:
+// A when clause condition is defined in the conf/modules.config to determine if the module should be run
+
 include { ASCAT } from '../../../modules/nf-core/ascat/main'
 
 workflow BAM_VARIANT_CALLING_SOMATIC_ASCAT {

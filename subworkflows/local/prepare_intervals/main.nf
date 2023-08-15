@@ -6,10 +6,11 @@
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
-include { BUILD_INTERVALS                                     } from '../../../modules/local/build_intervals/main'
-include { CREATE_INTERVALS_BED                                } from '../../../modules/local/create_intervals_bed/main'
-include { GATK4_INTERVALLISTTOBED                             } from '../../../modules/nf-core/gatk4/intervallisttobed/main'
-include { TABIX_BGZIPTABIX as TABIX_BGZIPTABIX_INTERVAL_SPLIT } from '../../../modules/nf-core/tabix/bgziptabix/main'
+include { BUILD_INTERVALS                                        } from '../../../modules/local/build_intervals/main'
+include { CREATE_INTERVALS_BED                                   } from '../../../modules/local/create_intervals_bed/main'
+include { GATK4_INTERVALLISTTOBED                                } from '../../../modules/nf-core/gatk4/intervallisttobed/main'
+include { TABIX_BGZIPTABIX as TABIX_BGZIPTABIX_INTERVAL_SPLIT    } from '../../../modules/nf-core/tabix/bgziptabix/main'
+include { TABIX_BGZIPTABIX as TABIX_BGZIPTABIX_INTERVAL_COMBINED } from '../../../modules/nf-core/tabix/bgziptabix/main'
 
 workflow PREPARE_INTERVALS {
     take:
@@ -94,14 +95,19 @@ workflow PREPARE_INTERVALS {
         versions = versions.mix(TABIX_BGZIPTABIX_INTERVAL_SPLIT.out.versions)
     }
 
-    intervals_bed_combined = intervals_combined.map{meta, bed -> bed }.collect()
+    TABIX_BGZIPTABIX_INTERVAL_COMBINED(intervals_combined)
+    versions = versions.mix(TABIX_BGZIPTABIX_INTERVAL_COMBINED.out.versions)
+
+    intervals_bed_combined        = intervals_combined.map{meta, bed -> bed }.collect()
+    intervals_bed_gz_tbi_combined = TABIX_BGZIPTABIX_INTERVAL_COMBINED.out.gz_tbi.map{meta, gz, tbi -> [gz, tbi] }.collect()
 
     emit:
     // Intervals split for parallel execution
-    intervals_bed          // [ intervals.bed, num_intervals ]
-    intervals_bed_gz_tbi   // [ target.bed.gz, target.bed.gz.tbi, num_intervals ]
+    intervals_bed                 // [ intervals.bed, num_intervals ]
+    intervals_bed_gz_tbi          // [ intervals.bed.gz, intervals.bed.gz.tbi, num_intervals ]
     // All intervals in one file
-    intervals_bed_combined // [ intervals.bed ]
+    intervals_bed_combined        // [ intervals.bed ]
+    intervals_bed_gz_tbi_combined // [ intervals.bed.gz, intervals.bed.gz.tbi]
 
     versions               // [ versions.yml ]
 }

@@ -3,15 +3,17 @@ description: Apply tranche filtering
 keywords:
   - gatk4
   - filtervarianttranches
-
+  - tranche_filtering
 tools:
   - "gatk4":
-      description: Genome Analysis Toolkit (GATK4)
+      description: |
+        Developed in the Data Sciences Platform at the Broad Institute, the toolkit offers a wide variety of tools
+        with a primary focus on variant discovery and genotyping. Its powerful processing engine
+        and high-performance computing features make it capable of taking on projects of any size.
       homepage: https://gatk.broadinstitute.org/hc/en-us
-      documentation: https://gatk.broadinstitute.org/hc/en-us
-      tool_dev_url: https://github.com/broadinstitute/gatk
-      doi: "10.1158/1538-7445.AM2017-3590"
-      licence: ["BSD-3-clause"]
+      documentation: https://gatk.broadinstitute.org/hc/en-us/articles/360051308071-FilterVariantTranches
+      doi: 10.1158/1538-7445.AM2017-3590
+      licence: ["Apache-2.0"]
 
 input:
   - meta:
@@ -44,6 +46,9 @@ input:
       description: Index of reference fasta file
       pattern: "fasta.fai"
   - dict:
+      type: file
+      description: GATK sequence dictionary
+      pattern: ".dict"
 
 output:
   - meta:

@@ -1,7 +1,9 @@
 name: gatk4_intervallisttobed
+description: Converts an Picard IntervalList file to a BED file.
 keywords:
   - interval
   - bed
+  - conversion
 tools:
   - gatk4:
       description: Genome Analysis Toolkit (GATK4)

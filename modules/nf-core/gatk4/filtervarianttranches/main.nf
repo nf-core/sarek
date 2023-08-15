@@ -2,10 +2,10 @@ process GATK4_FILTERVARIANTTRANCHES {
     tag "$meta.id"
     label 'process_low'
 
-    conda "bioconda::gatk4=4.3.0.0"
+    conda "bioconda::gatk4=4.4.0.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/gatk4:4.3.0.0--py36hdfd78af_0':
-        'quay.io/biocontainers/gatk4:4.3.0.0--py36hdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/gatk4:4.4.0.0--py36hdfd78af_0':
+        'biocontainers/gatk4:4.4.0.0--py36hdfd78af_0' }"
 
     input:
     tuple val(meta), path(vcf), path(tbi), path(intervals)
@@ -27,16 +27,16 @@ process GATK4_FILTERVARIANTTRANCHES {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-
     def resources = resources.collect{"--resource $it"}.join(' ')
-    def avail_mem = 3
+
+    def avail_mem = 3072
     if (!task.memory) {
         log.info '[GATK FilterVariantTranches] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this.'
     } else {
-        avail_mem = task.memory.giga
+        avail_mem = (task.memory.mega*0.8).intValue()
     }
     """
-    gatk --java-options "-Xmx${avail_mem}g" FilterVariantTranches \\
+    gatk --java-options "-Xmx${avail_mem}M" FilterVariantTranches \\
         --variant $vcf \\
         $resources \\
         --output ${prefix}.filtered.vcf.gz \\

@@ -1,12 +1,16 @@
 //
-// merge samples with genomicsdbimport, perform joint genotyping with genotypeGVCFS
+// JOINT GERMLINE CALLING
+//
+// Merge samples with genomicsdbimport, perform joint genotyping with genotypeGVCFS
+//
+
 include { BCFTOOLS_SORT                                          } from '../../../modules/nf-core/bcftools/sort/main'
-include { GATK4_APPLYVQSR as GATK4_APPLYVQSR_INDEL               } from '../../../modules/nf-core/gatk4/applyvqsr/main'
-include { GATK4_APPLYVQSR as GATK4_APPLYVQSR_SNP                 } from '../../../modules/nf-core/gatk4/applyvqsr/main'
+include { GATK4_APPLYVQSR           as GATK4_APPLYVQSR_INDEL     } from '../../../modules/nf-core/gatk4/applyvqsr/main'
+include { GATK4_APPLYVQSR           as GATK4_APPLYVQSR_SNP       } from '../../../modules/nf-core/gatk4/applyvqsr/main'
 include { GATK4_GENOMICSDBIMPORT                                 } from '../../../modules/nf-core/gatk4/genomicsdbimport/main'
 include { GATK4_GENOTYPEGVCFS                                    } from '../../../modules/nf-core/gatk4/genotypegvcfs/main'
-include { GATK4_MERGEVCFS as MERGE_GENOTYPEGVCFS                 } from '../../../modules/nf-core/gatk4/mergevcfs/main'
-include { GATK4_MERGEVCFS as MERGE_VQSR                          } from '../../../modules/nf-core/gatk4/mergevcfs/main'
+include { GATK4_MERGEVCFS           as MERGE_GENOTYPEGVCFS       } from '../../../modules/nf-core/gatk4/mergevcfs/main'
+include { GATK4_MERGEVCFS           as MERGE_VQSR                } from '../../../modules/nf-core/gatk4/mergevcfs/main'
 include { GATK4_VARIANTRECALIBRATOR as VARIANTRECALIBRATOR_INDEL } from '../../../modules/nf-core/gatk4/variantrecalibrator/main'
 include { GATK4_VARIANTRECALIBRATOR as VARIANTRECALIBRATOR_SNP   } from '../../../modules/nf-core/gatk4/variantrecalibrator/main'
 
@@ -46,14 +50,14 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
     // Joint genotyping performed using GenotypeGVCFs
     // Sort vcfs called by interval within each VCF
 
-    GATK4_GENOTYPEGVCFS(genotype_input, fasta, fai, dict, dbsnp, dbsnp_tbi)
+    GATK4_GENOTYPEGVCFS(genotype_input, fasta, fai, dict.map{ meta, dict -> [ dict ] }, dbsnp, dbsnp_tbi)
 
     BCFTOOLS_SORT(GATK4_GENOTYPEGVCFS.out.vcf)
     gvcf_to_merge = BCFTOOLS_SORT.out.vcf.map{ meta, vcf -> [ meta.subMap('num_intervals') + [ id:'joint_variant_calling', patient:'all_samples', variantcaller:'haplotypecaller' ], vcf ]}.groupTuple()
 
     // Merge scatter/gather vcfs & index
     // Rework meta for variantscalled.csv and annotation tools
-    MERGE_GENOTYPEGVCFS(gvcf_to_merge, dict.map{ it -> [ [ id:'dict' ], it ] } )
+    MERGE_GENOTYPEGVCFS(gvcf_to_merge, dict)
 
     vqsr_input = MERGE_GENOTYPEGVCFS.out.vcf.join(MERGE_GENOTYPEGVCFS.out.tbi, failOnDuplicate: true)
     indels_resource_label = known_indels_vqsr.mix(dbsnp_vqsr).collect()
@@ -67,7 +71,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
         indels_resource_label,
         fasta,
         fai,
-        dict)
+        dict.map{ meta, dict -> [ dict ] })
 
     VARIANTRECALIBRATOR_SNP(
         vqsr_input,
@@ -76,7 +80,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
         snps_resource_label,
         fasta,
         fai,
-        dict)
+        dict.map{ meta, dict -> [ dict ] })
 
     //Prepare INDELs and SNPs separately for ApplyVQSR
 
@@ -98,22 +102,19 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
         vqsr_input_snp,
         fasta,
         fai,
-        dict)
+        dict.map{ meta, dict -> [ dict ] })
 
     GATK4_APPLYVQSR_INDEL(
         vqsr_input_indel,
         fasta,
         fai,
-        dict)
+        dict.map{ meta, dict -> [ dict ] })
 
     vqsr_snp_vcf = GATK4_APPLYVQSR_SNP.out.vcf
     vqsr_indel_vcf = GATK4_APPLYVQSR_INDEL.out.vcf
 
     //Merge VQSR outputs into final VCF
-    MERGE_VQSR(
-        vqsr_snp_vcf.mix(vqsr_indel_vcf).groupTuple(),
-        dict.map{ it -> [ [ id:'dict' ], it ] }
-    )
+    MERGE_VQSR(vqsr_snp_vcf.mix(vqsr_indel_vcf).groupTuple(), dict)
 
     genotype_vcf   = MERGE_GENOTYPEGVCFS.out.vcf.mix(MERGE_VQSR.out.vcf)
     genotype_index = MERGE_GENOTYPEGVCFS.out.tbi.mix(MERGE_VQSR.out.tbi)

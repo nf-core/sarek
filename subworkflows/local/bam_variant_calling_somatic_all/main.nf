@@ -31,6 +31,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     intervals                     // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
     intervals_bed_gz_tbi          // channel: [mandatory] intervals/target regions index zipped and indexed
     intervals_bed_combined        // channel: [mandatory] intervals/target regions in one file unzipped
+    intervals_bed_gz_tbi_combined // channel: [mandatory] intervals/target regions in one file zipped
     mappability
     msisensorpro_scan             // channel: [optional]  msisensorpro_scan
     panel_of_normals              // channel: [optional]  panel_of_normals
@@ -39,6 +40,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     loci_files                    // channel: [optional]  ascat loci files
     gc_file                       // channel: [optional]  ascat gc content file
     rt_file                       // channel: [optional]  ascat rt file
+    joint_mutect2                 // boolean: [mandatory] [default: false] run mutect2 in joint mode
 
     main:
     versions          = Channel.empty()
@@ -73,16 +75,14 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
         MPILEUP_NORMAL(
             cram_normal,
-            // Remap channel to match module/subworkflow
-            dict.map{ it -> [ [ id:'dict' ], it ] },
+            dict,
             fasta,
             intervals
         )
 
         MPILEUP_TUMOR(
             cram_tumor,
-            // Remap channel to match module/subworkflow
-            dict.map{ it -> [ [ id:'dict' ], it ] },
+            dict,
             fasta,
             intervals
         )
@@ -128,8 +128,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     if (tools.split(',').contains('freebayes')) {
         BAM_VARIANT_CALLING_FREEBAYES(
             cram,
-            // Remap channel to match module/subworkflow
-            dict.map{ it -> [ [ id:'dict' ], it ] },
+            dict,
             fasta,
             fasta_fai,
             intervals
@@ -143,11 +142,9 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     if (tools.split(',').contains('manta')) {
         BAM_VARIANT_CALLING_SOMATIC_MANTA(
             cram,
-            // Remap channel to match module/subworkflow
-            dict.map{ it -> [ [ id:'dict' ], it ] },
             fasta,
             fasta_fai,
-            intervals_bed_gz_tbi
+            intervals_bed_gz_tbi_combined
         )
 
         vcf_manta = BAM_VARIANT_CALLING_SOMATIC_MANTA.out.vcf
@@ -164,7 +161,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         BAM_VARIANT_CALLING_SOMATIC_STRELKA(
             cram_strelka,
             // Remap channel to match module/subworkflow
-            dict.map{ it -> [ [ id:'dict' ], it ] },
+            dict,
             fasta,
             fasta_fai,
             intervals_bed_gz_tbi
@@ -187,14 +184,17 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         BAM_VARIANT_CALLING_SOMATIC_MUTECT2(
             // Remap channel to match module/subworkflow
             cram.map { meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [ meta, [ normal_cram, tumor_cram ], [ normal_crai, tumor_crai ] ] },
-            fasta,
-            fasta_fai,
+            // Remap channel to match module/subworkflow
+            fasta.map{ it -> [ [ id:'fasta' ], it ] },
+            // Remap channel to match module/subworkflow
+            fasta_fai.map{ it -> [ [ id:'fasta_fai' ], it ] },
             dict,
             germline_resource,
             germline_resource_tbi,
             panel_of_normals,
             panel_of_normals_tbi,
-            intervals
+            intervals,
+            joint_mutect2
         )
 
         vcf_mutect2 = BAM_VARIANT_CALLING_SOMATIC_MUTECT2.out.vcf_filtered

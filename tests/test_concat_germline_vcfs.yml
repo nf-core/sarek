@@ -1,5 +1,5 @@
 - name: Run all germline variant callers and check for existence of concatenated vcf-files
-  command: nextflow run main.nf -profile test --input ./tests/csv/3.0/mapped_joint_bam.csv --concatenate_vcfs --tools deepvariant,freebayes,haplotypecaller,manta,mpileup,strelka,tiddit --step variant_calling --outdir results
+  command: nextflow run main.nf -profile test_cache --input ./tests/csv/3.0/mapped_joint_bam.csv --concatenate_vcfs --tools deepvariant,freebayes,haplotypecaller,manta,mpileup,strelka,tiddit --step variant_calling --outdir results
   tags:
     - concatenate_vcfs
   files:
@@ -12,7 +12,6 @@
           "SOURCE=testN.freebayes.vcf.gz",
           "SNVHPOL=7;MQ=60;",
           "SOURCE=testN.strelka.variants.vcf.gz",
-          "DP=2;SGB=-0.379885;FS=0;MQ0F=0;AC=2;AN=2;DP4=0,0,0,1;MQ=60;",
           "SOURCE=testN.bcftools.vcf.gz",
         ]
     - path: results/variant_calling/concat/testT/testT.germline.vcf.gz

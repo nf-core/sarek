@@ -1,6 +1,12 @@
-include { GATK4_MERGEVCFS as MERGE_STRELKA        } from '../../../modules/nf-core/gatk4/mergevcfs/main'
-include { GATK4_MERGEVCFS as MERGE_STRELKA_GENOME } from '../../../modules/nf-core/gatk4/mergevcfs/main'
-include { STRELKA_GERMLINE as STRELKA_SINGLE      } from '../../../modules/nf-core/strelka/germline/main'
+//
+// STRELKA2 single sample variant calling
+//
+// For all modules here:
+// A when clause condition is defined in the conf/modules.config to determine if the module should be run
+
+include { GATK4_MERGEVCFS  as MERGE_STRELKA        } from '../../../modules/nf-core/gatk4/mergevcfs/main'
+include { GATK4_MERGEVCFS  as MERGE_STRELKA_GENOME } from '../../../modules/nf-core/gatk4/mergevcfs/main'
+include { STRELKA_GERMLINE as STRELKA_SINGLE       } from '../../../modules/nf-core/strelka/germline/main'
 
 workflow BAM_VARIANT_CALLING_SINGLE_STRELKA {
     take:
@@ -36,13 +42,13 @@ workflow BAM_VARIANT_CALLING_SINGLE_STRELKA {
 
     // Only when using intervals
     genome_vcf_to_merge = genome_vcf.intervals.map{ meta, vcf -> [ groupKey(meta, meta.num_intervals), vcf ]}.groupTuple()
-    vcf_to_merge = vcf.intervals.map{ meta, vcf -> [ groupKey(meta, meta.num_intervals), vcf ]}.groupTuple()
+    vcf_to_merge        = vcf.intervals.map{ meta, vcf -> [ groupKey(meta, meta.num_intervals), vcf ]}.groupTuple()
 
     MERGE_STRELKA(vcf_to_merge, dict)
     MERGE_STRELKA_GENOME(genome_vcf_to_merge, dict)
 
     // Mix intervals and no_intervals channels together
-    // Only strelka variant vcf SV should get annotated
+    // Only strelka variant vcf should get annotated
     vcf = Channel.empty().mix(MERGE_STRELKA.out.vcf, vcf.no_intervals)
         // add variantcaller to meta map and remove no longer necessary field: num_intervals
         .map{ meta, vcf -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'strelka' ], vcf ] }
