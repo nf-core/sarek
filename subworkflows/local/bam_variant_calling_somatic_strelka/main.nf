@@ -1,3 +1,9 @@
+//
+// STRELKA2 tumor-normal variant calling
+//
+// For all modules here:
+// A when clause condition is defined in the conf/modules.config to determine if the module should be run
+
 include { GATK4_MERGEVCFS as MERGE_STRELKA_INDELS } from '../../../modules/nf-core/gatk4/mergevcfs/main'
 include { GATK4_MERGEVCFS as MERGE_STRELKA_SNVS   } from '../../../modules/nf-core/gatk4/mergevcfs/main'
 include { STRELKA_SOMATIC                         } from '../../../modules/nf-core/strelka/somatic/main'

@@ -5,6 +5,41 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 3.3dev
+
+### Added
+
+- [#1130](https://github.com/nf-core/sarek/pull/1130) - Back to dev
+- [#1013](https://github.com/nf-core/sarek/pull/1013) - Mutect2 multi sample mode with `--joint_mutect2`
+- [#1153](https://github.com/nf-core/sarek/pull/1153) - Add input validation for Sentieon & FGBio UMI incompatibility
+- [#1158](https://github.com/nf-core/sarek/pull/1158) - Add preprint
+- [#1159](https://github.com/nf-core/sarek/pull/1159) - ISMB Poster
+
+### Changed
+
+- [#1151](https://github.com/nf-core/sarek/pull/1151) - Refactor codebase
+- [#1157](https://github.com/nf-core/sarek/pull/1157) - Move all vep args from `ext.args` to `params.vep_custom_args` to allow easier modifications
+- [#1059](https://github.com/nf-core/sarek/pull/1059) - Add `nf-validation` for samplesheet validation
+- [#1160](https://github.com/nf-core/sarek/pull/1160) - Updating tiddit to v3.6.1
+- [#1174](https://github.com/nf-core/sarek/pull/1174) - Updating multiqc to v1.15
+
+### Fixed
+
+- [#1143](https://github.com/nf-core/sarek/pull/1143) - `snpeff_db` is now a string
+- [#1145](https://github.com/nf-core/sarek/pull/1145) - Fixed Zenodo links in `README.md` and in `WorkflowMain.groovy`
+- [#1149](https://github.com/nf-core/sarek/pull/1149) - Update `Manta` modules and fix usage of `--exome` flag
+- [#1155](https://github.com/nf-core/sarek/pull/1155) - Restore proper rendering in `usage.md`
+- [#1163](https://github.com/nf-core/sarek/pull/1163) - Correcting location of output folder for joint variant calling with GATK's haplotypecaller
+- [#1169](https://github.com/nf-core/sarek/pull/1169) - Updating Sentieon-modules. (The conda-check in the Sentieon-modules was moved to the script-section. The version of Sentieon remain unchanged.)
+- [#1172](https://github.com/nf-core/sarek/pull/1172) - Publish gvcf files when all intervals are processed at once ([#764](https://github.com/nf-core/sarek/issues/764))
+
+### Dependencies
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| `multiqc`  | 1.14        | 1.15        |
+| `tiddit`   | 3.3.2       | 3.6.1       |
+
 ## [3.2.3](https://github.com/nf-core/sarek/releases/tag/3.2.3) - Gällivare
 
 Gällivare is a small lake next to Pierikjaure.
@@ -13,6 +48,7 @@ Gällivare is a small lake next to Pierikjaure.
 
 - [#1112](https://github.com/nf-core/sarek/pull/1112) - Back to dev
 - [#1119](https://github.com/nf-core/sarek/pull/1119) - Added `help_text` for `input_output_options` group in schema
+- [#1044](https://github.com/nf-core/sarek/pull/1044) - Adding support for several tools from Sentieon's DNAseq package. The standard fastq-to-vcf processing can now be done using Sentieon's DNAseq tools `ApplyVarCal`, `bwa mem`, `Dedup`, `GVCFtyper`, `Haplotyper`, `LocusCollector` and `VarCal`.
 
 ### Changed
 
@@ -1203,7 +1239,7 @@ Ruotes is one of the main massif in the Sarek National Park.
 - [#607](https://github.com/SciLifeLab/Sarek/pull/607) - Update to `GATK4`
 - [#608](https://github.com/SciLifeLab/Sarek/pull/608) - Update `Nextflow` required version
 - [#616](https://github.com/SciLifeLab/Sarek/pull/616) - Update `CHANGELOG`
-- [#617](https://github.com/SciLifeLab/Sarek/pull/617) - Replace deprecated `Nextflow ``$name` syntax with `withName`
+- [#617](https://github.com/SciLifeLab/Sarek/pull/617) - Replace deprecated `Nextflow` `$name` syntax with `withName`
 
 ### Fixed
 

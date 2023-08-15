@@ -1,5 +1,5 @@
 //
-// CNVKit calling
+// CNVKIT calling
 //
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run

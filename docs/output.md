@@ -18,8 +18,10 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - [BWA](#bwa)
     - [BWA-mem2](#bwa-mem2)
     - [DragMap](#dragmap)
+    - [Sentieon bwa mem](#sentieon-bwa-mem)
   - [Duplicate Marking](#mark-duplicates)
     - [GATK MarkDuplicates (Spark)](#gatk-markduplicates-spark)
+    - [Sentieon LocusCollector and Dedup](#sentieon-locuscollector-dedup)
   - [Base Quality Score Recalibration](#base-quality-score-recalibration)
     - [GATK BaseRecalibrator (Spark)](#gatk-baserecalibrator-spark)
     - [GATK ApplyBQSR (Spark)](#gatk-applybqsr-spark)
@@ -29,6 +31,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - [DeepVariant](#deepvariant)
     - [FreeBayes](#freebayes)
     - [GATK HaplotypeCaller](#gatk-haplotypecaller)
+    - [Sentieon Haplotyper](#sentieon-haplotyper)
     - [GATK Mutect2](#gatk-mutect2)
     - [bcftools](#bcftools)
     - [Strelka2](#strelka2)
@@ -49,6 +52,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - [FastQC](#fastqc)
     - [FastP](#fastp)
     - [GATK MarkDuplicates reports](#gatk-markduplicates-reports)
+    - [Sentieon Dedup reports](#sentieon-dedup-reports)
     - [mosdepth](#mosdepth)
     - [samtools stats](#samtools-stats)
     - [bcftools stats](#bcftools-stats)
@@ -150,13 +154,9 @@ These files are intermediate and by default not placed in the output-folder kept
 
 [BWA](https://github.com/lh3/bwa) is a software package for mapping low-divergent sequences against a large reference genome. The aligned reads are then coordinate-sorted (or name-sorted if [`GATK MarkDuplicatesSpark`](https://gatk.broadinstitute.org/hc/en-us/articles/5358833264411-MarkDuplicatesSpark) is used for duplicate marking) with [samtools](https://www.htslib.org/doc/samtools.html).
 
-These files are intermediate and by default not placed in the output-folder kept in the final files delivered to users. Set `--save_mapped` to enable publishing in CRAM format, furthermore add the flag `save_output_as_bam` for publishing in BAM format.
-
 #### BWA-mem2
 
 [BWA-mem2](https://github.com/bwa-mem2/bwa-mem2) is a software package for mapping low-divergent sequences against a large reference genome.The aligned reads are then coordinate-sorted (or name-sorted if [`GATK MarkDuplicatesSpark`](https://gatk.broadinstitute.org/hc/en-us/articles/5358833264411-MarkDuplicatesSpark) is used for duplicate marking) with [samtools](https://www.htslib.org/doc/samtools.html).
-
-These files are intermediate and by default not placed in the output-folder kept in the final files delivered to users. Set `--save_mapped` to enable publishing, furthermore add the flag `save_output_as_bam` for publishing in BAM format.
 
 #### DragMap
 
@@ -164,16 +164,24 @@ These files are intermediate and by default not placed in the output-folder kept
 
 These files are intermediate and by default not placed in the output-folder kept in the final files delivered to users. Set `--save_mapped` to enable publishing, furthermore add the flag `save_output_as_bam` for publishing in BAM format.
 
+#### Sentieon BWA mem
+
+Sentieon [bwa mem](https://support.sentieon.com/manual/usages/general/#bwa-mem-syntax) is a subroutine for mapping low-divergent sequences against a large reference genome. It is part of the proprietary software package [DNAseq](https://www.sentieon.com/detailed-description-of-pipelines/#dnaseq) from [Sentieon](https://www.sentieon.com/).
+
+The aligned reads are coordinate-sorted with Sentieon.
+
 <details markdown="1">
 <summary>Output files for all mappers and samples</summary>
 
+The alignment files (BAM or CRAM) produced by the chosen aligner are not published by default. CRAM output files will not be saved in the output-folder (`outdir`), unless the flag `--save_mapped` is used. BAM output can be selected by setting the flag `--save_output_as_bam`.
+
 **Output directory: `{outdir}/preprocessing/mapped/<sample>/`**
 
-- if `--save_mapped`: `<sample>.cram` and `<sample>.cram.crai`
+- if `--save_mapped`: `<sample>.sorted.cram` and `<sample>.sorted.cram.crai`
 
   - CRAM file and index
 
-- if `--save_mapped --save_output_as_bam`: `<sample>.bam` and `<sample>.bam.bai`
+- if `--save_mapped --save_output_as_bam`: `<sample>.sorted.bam` and `<sample>.sorted.bam.bai`
   - BAM file and index
   </details>
 
@@ -200,6 +208,26 @@ The resulting CRAM files are delivered to the users.
   - CRAM file and index
 - if `--save_output_as_bam`:
   - `<sample>.md.bam` and `<sample>.md.bam.bai`
+
+</details>
+
+### Sentieon LocusCollector and Dedup
+
+The subroutines LocusCollector and Dedup are part of Sentieon DNAseq packages with speedup versions of the standard GATK tools, and together those two subroutines correspond to GATK's MarkDuplicates.
+
+The subroutine [LocusCollector](https://support.sentieon.com/manual/usages/general/#driver-algorithm-syntax) collects read information that will be used for removing or tagging duplicate reads; its output is the score file indicating which reads are likely duplicates.
+
+The subroutine [Dedup](https://support.sentieon.com/manual/usages/general/#dedup-algorithm) marks or removes duplicate reads based on the score file supplied by LocusCollector, and produces a BAM or CRAM file.
+
+<details markdown="1">
+<summary>Output files for all samples</summary>
+
+**Output directory: `{outdir}/preprocessing/sentieon_dedup/<sample>/`**
+
+- `<sample>.dedup.cram` and `<sample>.dedup.cram.crai`
+  - CRAM file and index
+- if `--save_output_as_bam`:
+  - `<sample>.dedup.bam` and `<sample>.dedup.bam.bai`
 
 </details>
 
@@ -248,7 +276,7 @@ The resulting recalibrated CRAM files are delivered to the user. Recalibrated CR
 
 The CSV files are auto-generated and can be used by Sarek for further processing and/or variant calling.
 
-See the [`--input`](usage.md#--input) section in the usage documentation for further reading and documentation on how to make the most of them.
+See the [`input`](usage#input-sample-sheet-configurations) section in the usage documentation for further reading and documentation on how to make the most of them.
 
 <details markdown="1">
 <summary>Output files:</summary>
@@ -358,44 +386,102 @@ If the haplotype-called VCF files are not filtered, then Sarek should be run wit
 
 [GATK Joint germline Variant Calling](https://gatk.broadinstitute.org/hc/en-us/articles/360035535932-Germline-short-variant-discovery-SNPs-Indels-) uses Haplotypecaller per sample in `gvcf` mode. Next, the gVCFs are consolidated from multiple samples into a [GenomicsDB](https://gatk.broadinstitute.org/hc/en-us/articles/5358869876891-GenomicsDBImport) datastore. After joint [genotyping](https://gatk.broadinstitute.org/hc/en-us/articles/5358906861083-GenotypeGVCFs), [VQSR](https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator) is applied for filtering to produce the final multisample callset with the desired balance of precision and sensitivity.
 
+<details markdown="1">
+<summary>Output files from joint germline variant calling</summary>
+
 **Output directory: `{outdir}/variantcalling/haplotypecaller/<sample>/`**
+
+- `<sample>.haplotypecaller.g.vcf.gz` and `<sample>.haplotypecaller.g.vcf.gz.tbi`
+  - gVCF with tabix index
+
+**Output directory: `{outdir}/variantcalling/haplotypecaller/joint_variant_calling/`**
 
 - `joint_germline.vcf.gz` and `joint_germline.vcf.gz.tbi`
   - VCF with tabix index
 - `joint_germline_recalibrated.vcf.gz` and `joint_germline_recalibrated.vcf.gz.tbi`
-  - variant recalibrated VCF with tabix index
+  - variant recalibrated VCF with tabix index (if VQSR is applied)
 
 </details>
 
 #### GATK Mutect2
 
 [GATK Mutect2](https://gatk.broadinstitute.org/hc/en-us/articles/5358911630107-Mutect2) calls somatic SNVs and indels via local assembly of haplotypes.
+When `--joint_mutect2` is used, Mutect2 subworkflow outputs will be saved in a subfolder named with the patient ID and `{patient}.mutect2.vcf.gz` file will contain variant calls from all of the normal and tumor samples of the patient.
 For further reading and documentation see the [Mutect2 manual](https://gatk.broadinstitute.org/hc/en-us/articles/360035531132).
 It is not required, but recommended to have a [panel of normals (PON)](https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON) using at least 40 normal samples to get filtered somatic calls. When using `--genome GATK.GRCh38`, a panel-of-normals file is available. However, it is _highly_ recommended to create one matching your tumor samples. Creating your own panel-of-normals is currently not natively supported by the pipeline. See [here](https://gatk.broadinstitute.org/hc/en-us/articles/360035531132) for how to create one manually.
 
 <details markdown="1">
 <summary>Output files for tumor-only and tumor/normal paired samples</summary>
 
-**Output directory: `{outdir}/variantcalling/mutect2/{sample,tumorsample_vs_normalsample}/`**
+**Output directory: `{outdir}/variantcalling/mutect2/{sample,tumorsample_vs_normalsample,patient}/`**
 
 Files created:
 
-- `{sample,tumorsample_vs_normalsample}.mutect2.vcf.gz` and `{sample,tumorsample_vs_normalsample}.mutect2.vcf.gz.tbi`
+- `{sample,tumorsample_vs_normalsample,patient}.mutect2.vcf.gz` and `{sample,tumorsample_vs_normalsample,patient}.mutect2.vcf.gz.tbi`
   - unfiltered (raw) Mutect2 calls VCF with tabix index
-- `{sample,tumorsample_vs_normalsample}.mutect2.vcf.gz.stats`
+- `{sample,tumorsample_vs_normalsample,patient}.mutect2.vcf.gz.stats`
   - a stats file generated during calling of raw variants (needed for filtering)
 - `{sample,tumorsample_vs_normalsample}.mutect2.contamination.table`
   - table calculating the fraction of reads coming from cross-sample contamination
 - `{sample,tumorsample_vs_normalsample}.mutect2.segmentation.table`
   - table containing segmentation of the tumor by minor allele fraction
-- `{sample,tumorsample_vs_normalsample}.mutect2.artifactprior.tar.gz`
+- `{sample,tumorsample_vs_normalsample,patient}.mutect2.artifactprior.tar.gz`
   - prior probabilities for read orientation artifacts
 - `{sample,tumorsample,normalsample}.mutect2.pileups.table`
   - tabulates pileup metrics for inferring contamination
-- `{sample,tumorsample_vs_normalsample}.mutect2.filtered.vcf.gz` and `{sample,tumorsample_vs_normalsample}.mutect2.filtered.vcf.gz.tbi`
+- `{sample,tumorsample_vs_normalsample,patient}.mutect2.filtered.vcf.gz` and `{sample,tumorsample_vs_normalsample,patient}.mutect2.filtered.vcf.gz.tbi`
   - filtered Mutect2 calls VCF with tabix index based on the probability that a variant is somatic
-- `{sample,tumorsample_vs_normalsample}.mutect2.filtered.vcf.gz.filteringStats.tsv`
+- `{sample,tumorsample_vs_normalsample,patient}.mutect2.filtered.vcf.gz.filteringStats.tsv`
   - a stats file generated during the filtering of Mutect2 called variants
+
+</details>
+
+#### Sentieon Haplotyper
+
+[Sentieon Haplotyper](https://support.sentieon.com/manual/usages/general/#haplotyper-algorithm) is Sention's speedup version of GATK's Haplotypecaller (see above).
+
+<details markdown="1">
+<summary>Unfiltered VCF-files for normal samples</summary>
+
+**Output directory: `{outdir}/variantcalling/sentieon_haplotyper/<sample>/`**
+
+- `<sample>.haplotyper.unfiltered.vcf.gz` and `<sample>.haplotyper.unfiltered.vcf.gz.tbi`
+  - VCF with tabix index
+
+</details>
+
+The output from Sentieon's Haplotyper can be controlled through the option `--sentieon_haplotyper_emit_mode` for Sarek, see [Basic usage of Sentieon functions in Sarek](#basic-usage-of-sentieon-functions-in-sarek).
+
+Unless `haplotyper_filter` is listed under `--skip_tools` in the nextflow command, GATK's CNNScoreVariants and FilterVariantTranches (see above) is applied to the unfiltered VCF-files in order to obtain filtered VCF-files.
+
+<details markdown="1">
+<summary>Filtered VCF-files for normal samples</summary>
+
+**Output directory: `{outdir}/variantcalling/sentieon_haplotyper/<sample>/`**
+
+- `<sample>.haplotyper.filtered.vcf.gz` and `<sample>.haplotyper.filtered.vcf.gz.tbi`
+  - VCF with tabix index
+
+</details>
+
+##### Sentieon Joint Germline Variant Calling
+
+In Sentieon's package DNAseq, joint germline variant calling is done by first running Sentieon's Haplotyper in emit-mode `gvcf` for each sample and then running Sentieon's [GVCFtyper](https://support.sentieon.com/manual/usages/general/#gvcftyper-algorithm) on the set of gVCF-files. See [Basic usage of Sentieon functions in Sarek](#basic-usage-of-sentieon-functions-in-sarek) for information on how joint germline variant calling can be done in Sarek using Sentieon's DNAseq. After joint genotyping, Sentieon's version of VQSR ([VarCal](https://support.sentieon.com/manual/usages/general/#varcal-algorithm) and [ApplyVarCal](https://support.sentieon.com/manual/usages/general/#applyvarcal-algorithm)) is applied for filtering to produce the final multisample callset with the desired balance of precision and sensitivity.
+
+<details markdown="1">
+<summary>Output files from joint germline variant calling</summary>
+
+**Output directory: `{outdir}/variantcalling/sentieon_haplotyper/<sample>/`**
+
+- `<sample>.haplotypecaller.g.vcf.gz` and `<sample>.haplotypecaller.g.vcf.gz.tbi`
+  - VCF with tabix index
+
+**Output directory: `{outdir}/variantcalling/sentieon_haplotyper/joint_variant_calling/`**
+
+- `joint_germline.vcf.gz` and `joint_germline.vcf.gz.tbi`
+  - VCF with tabix index
+- `joint_germline_recalibrated.vcf.gz` and `joint_germline_recalibrated.vcf.gz.tbi`
+  - variant recalibrated VCF with tabix index (if VarCal is applied)
 
 </details>
 
@@ -829,6 +915,19 @@ The plot will show:
 
 - `<sample>.md.cram.metrics`
   - file used by [MultiQC](https://multiqc.info/)
+  </details>
+
+#### Sentieon Dedup reports
+
+Sentieon's DNAseq subroutine Dedup produces a metrics report much like the one produced by GATK's MarkDuplicates. The Dedup metrics are imported into MultiQC as custom content and displayed in a table.
+
+<details markdown="1">
+<summary>Output files for all samples</summary>
+
+**Output directory: `{outdir}/reports/sentieon_dedup/<sample>`**
+
+- `<sample>.dedup.cram.metrics`
+  - file used by [MultiQC](https://multiqc.info/).
   </details>
 
 #### samtools stats

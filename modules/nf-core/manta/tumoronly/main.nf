@@ -33,8 +33,9 @@ process MANTA_TUMORONLY {
     configManta.py \
         --tumorBam $input \
         --reference $fasta \
+        --runDir manta \
         $options_manta \
-        --runDir manta
+        $args
 
     python manta/runWorkflow.py -m local -j $task.cpus
 

@@ -1,4 +1,10 @@
-include { MANTA_GERMLINE                              } from '../../../modules/nf-core/manta/germline/main'
+//
+// Manta germline variant calling
+//
+// For all modules here:
+// A when clause condition is defined in the conf/modules.config to determine if the module should be run
+
+include { MANTA_GERMLINE } from '../../../modules/nf-core/manta/germline/main'
 
 // Seems to be the consensus on upstream modules implementation too
 workflow BAM_VARIANT_CALLING_GERMLINE_MANTA {
