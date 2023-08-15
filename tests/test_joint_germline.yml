@@ -65,7 +65,7 @@
       should_exist: false
 
 - name: Run joint germline variant calling with haplotypecaller with Stub for VQSR
-  command: nextflow run main.nf -profile test_cache,tools_germline,docker --input ./tests/csv/3.0/mapped_joint_bam.csv --tools haplotypecaller --step variant_calling --joint_germline --outdir results -stub-run
+  command: nextflow run main.nf -profile test_cache,tools_germline --input ./tests/csv/3.0/mapped_joint_bam.csv --tools haplotypecaller --step variant_calling --joint_germline --outdir results -stub-run
   tags:
     - germline
     - joint_germline
