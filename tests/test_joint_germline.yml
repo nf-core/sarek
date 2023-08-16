@@ -73,7 +73,7 @@
     - vqsr
   files:
     - path: results/csv/variantcalled.csv
-      md5sum: d2dffdbd2b4f1f26a06637592d24dab3
+      md5sum: 1a7e405250ac5f253197ebf4672b1f98
     - path: results/multiqc
     - path: results/preprocessing/recalibrated/test/test.recal.cram
       should_exist: false
