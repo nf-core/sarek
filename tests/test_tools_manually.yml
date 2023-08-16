@@ -219,3 +219,24 @@
       md5sum: 22e58aef3b14b335fa487d40b590ffeb
     - path: results/variant_calling/mutect2/test/test.mutect2.vcf.gz.tbi
     # binary changes md5sums on reruns
+- name: Run full pipeline on tumoronly with most tools
+  command: nextflow run . -profile test --input tests/csv/3.0/fastq_tumor_only.csv --tools cnvkit,freebayes,merge,mpileup,mutect2,snpeff,strelka,tiddit,vep --outdir results
+  tags:
+    - full_pipeline_manual
+    - manual
+    - tumor_only
+    - variant_calling
+- name: Run full pipeline on somatic with most tools
+  command: nextflow run . -profile test --input tests/csv/3.0/fastq_pair.csv --tools cnvkit,deepvariant,freebayes,merge,mpileup,msisensorpro,snpeff,strelka,tiddit,vep --outdir results
+  tags:
+    - full_pipeline_manual
+    - manual
+    - somatic
+    - variant_calling
+- name: Run full pipeline on germline with most tools
+  command: nextflow run . -profile test --input tests/csv/3.0/fastq_single.csv --tools cnvkit,deepvariant,freebayes,merge,mpileup,snpeff,strelka,tiddit,vep --outdir results
+  tags:
+    - full_pipeline_manual
+    - manual
+    - germline
+    - variant_calling
