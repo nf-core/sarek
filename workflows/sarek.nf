@@ -323,13 +323,13 @@ workflow SAREK {
 
     // Download cache if needed
     // Assuming that if the cache is provided, the user has already downloaded it
-    ensemblvep_info = params.vep_cache ? [] : Channel.of([ [ id:"${params.vep_cache_version}_${params.vep_genome}" ], params.vep_genome, params.vep_species, params.vep_cache_version ])
-    snpeff_info = params.snpeff_cache ? [] : Channel.of([ [ id:"${params.snpeff_genome}.${params.snpeff_db}" ], params.snpeff_genome, params.snpeff_db ])
+    ensemblvep_info = params.vep_cache    ? [] : Channel.of([ [ id:"${params.vep_cache_version}_${params.vep_genome}" ], params.vep_genome, params.vep_species, params.vep_cache_version ])
+    snpeff_info     = params.snpeff_cache ? [] : Channel.of([ [ id:"${params.snpeff_genome}.${params.snpeff_db}" ], params.snpeff_genome, params.snpeff_db ])
 
     if (params.download_cache) {
         PREPARE_CACHE(ensemblvep_info, snpeff_info)
-        snpeff_cache       = PREPARE_CACHE.out.snpeff_cache.first()
-        vep_cache          = PREPARE_CACHE.out.ensemblvep_cache.first()
+        snpeff_cache = PREPARE_CACHE.out.snpeff_cache
+        vep_cache    = PREPARE_CACHE.out.ensemblvep_cache.map{meta, it-> [it]}
 
         versions = versions.mix(PREPARE_CACHE.out.versions)
     }
@@ -351,17 +351,17 @@ workflow SAREK {
 
     // Gather built indices or get them from the params
     // Built from the fasta file:
-    dict                   = params.dict                    ? Channel.fromPath(params.dict).map{ it -> [ [id:'dict'], it ] }.collect()
-                                                            : PREPARE_GENOME.out.dict
-    fasta_fai              = params.fasta_fai               ? Channel.fromPath(params.fasta_fai).collect()
-                                                            : PREPARE_GENOME.out.fasta_fai
+    dict       = params.dict        ? Channel.fromPath(params.dict).map{ it -> [ [id:'dict'], it ] }.collect()
+                                    : PREPARE_GENOME.out.dict
+    fasta_fai  = params.fasta_fai   ? Channel.fromPath(params.fasta_fai).collect()
+                                    : PREPARE_GENOME.out.fasta_fai
+    bwa        = params.bwa         ? Channel.fromPath(params.bwa).collect()
+                                    : PREPARE_GENOME.out.bwa
+    bwamem2    = params.bwamem2     ? Channel.fromPath(params.bwamem2).collect()
+                                    : PREPARE_GENOME.out.bwamem2
+    dragmap    = params.dragmap     ? Channel.fromPath(params.dragmap).collect()
+                                    : PREPARE_GENOME.out.hashtable
 
-    bwa                    = params.bwa                     ? Channel.fromPath(params.bwa).collect()
-                                                            : PREPARE_GENOME.out.bwa
-    bwamem2                = params.bwamem2                 ? Channel.fromPath(params.bwamem2).collect()
-                                                            : PREPARE_GENOME.out.bwamem2
-    dragmap                = params.dragmap                 ? Channel.fromPath(params.dragmap).collect()
-                                                            : PREPARE_GENOME.out.hashtable
     // Gather index for mapping given the chosen aligner
     index_alignement = (params.aligner == "bwa-mem" || params.aligner == "sentieon-bwamem") ? bwa :
         params.aligner == "bwa-mem2" ? bwamem2 :
