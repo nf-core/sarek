@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- [#930](https://github.com/nf-core/sarek/pull/930) - Add more manual tests
 - [#1130](https://github.com/nf-core/sarek/pull/1130) - Back to dev
 - [#1013](https://github.com/nf-core/sarek/pull/1013) - Mutect2 multi sample mode with `--joint_mutect2`
 - [#1153](https://github.com/nf-core/sarek/pull/1153) - Add input validation for Sentieon & FGBio UMI incompatibility
@@ -21,7 +22,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1157](https://github.com/nf-core/sarek/pull/1157) - Move all vep args from `ext.args` to `params.vep_custom_args` to allow easier modifications
 - [#1059](https://github.com/nf-core/sarek/pull/1059) - Add `nf-validation` for samplesheet validation
 - [#1160](https://github.com/nf-core/sarek/pull/1160) - Updating tiddit to v3.6.1
+- [#1166](https://github.com/nf-core/sarek/pull/1166) - More info about `--tools`
 - [#1174](https://github.com/nf-core/sarek/pull/1174) - Updating multiqc to v1.15
+- [#1179](https://github.com/nf-core/sarek/pull/1179) - Unhide params `trim_fastq`, `umi_read_structure`, and `aligner`
 
 ### Fixed
 
@@ -33,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1169](https://github.com/nf-core/sarek/pull/1169) - Updating Sentieon-modules. (The conda-check in the Sentieon-modules was moved to the script-section. The version of Sentieon remain unchanged.)
 - [#1171](https://github.com/nf-core/sarek/pull/1171) - Fix channel logic for germline resource to skip GetPileupSummary if not provided
 - [#1172](https://github.com/nf-core/sarek/pull/1172) - Publish gvcf files when all intervals are processed at once ([#764](https://github.com/nf-core/sarek/issues/764))
+- [#1177](https://github.com/nf-core/sarek/pull/1177) - Fix status inference when using nf-validation plugin
 
 ### Dependencies
 
