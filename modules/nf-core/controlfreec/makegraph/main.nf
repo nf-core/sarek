@@ -8,7 +8,7 @@ process CONTROLFREEC_MAKEGRAPH {
         'biocontainers/control-freec:11.6--h1b792b2_1' }"
 
     input:
-    tuple val(meta), path(ratio), path(baf), val(ploidy)
+    tuple val(meta), path(ratio), path(baf)
 
     output:
     tuple val(meta), path("*_BAF.png")       , emit: png_baf
