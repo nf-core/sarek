@@ -448,7 +448,7 @@ workflow SAREK {
 
     if (params.download_cache) {
         PREPARE_CACHE(ensemblvep_info, snpeff_info)
-        snpeff_cache       = PREPARE_CACHE.out.snpeff_cache.map{ meta, cache -> [ cache ] }
+        snpeff_cache       = PREPARE_CACHE.out.snpeff_cache
         vep_cache          = PREPARE_CACHE.out.ensemblvep_cache.map{ meta, cache -> [ cache ] }
 
         versions = versions.mix(PREPARE_CACHE.out.versions)
