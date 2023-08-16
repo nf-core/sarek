@@ -101,4 +101,3 @@
     - path: results/variant_calling/haplotypecaller/testT/testT.haplotypecaller.g.vcf.gz.tbi
     - path: results/haplotypecaller
       should_exist: false
-
