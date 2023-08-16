@@ -25,7 +25,7 @@ process CONTROLFREEC_MAKEGRAPH {
     def prefix = task.ext.prefix ?: "${meta.id}"
     def baf = baf ?: ""
     """
-    cat \$(which makeGraph.R) | R --slave --args ${ploidy} ${args} ${ratio} ${baf}
+    cat \$(which makeGraph.R) | R --slave --args ${args} ${ratio} ${baf}
 
     mv *_BAF.txt.png ${prefix}_BAF.png
     mv *_ratio.txt.log2.png ${prefix}_ratio.log2.png
