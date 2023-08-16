@@ -147,8 +147,6 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
         [[id:"joint_variant_calling", patient:"all_samples", variantcaller:"haplotypecaller"], tbi_out]
     }
 
-    genotype_vcf.view()
-
     versions = versions.mix(GATK4_GENOMICSDBIMPORT.out.versions)
     versions = versions.mix(GATK4_GENOTYPEGVCFS.out.versions)
     versions = versions.mix(VARIANTRECALIBRATOR_SNP.out.versions)
