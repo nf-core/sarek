@@ -79,13 +79,13 @@
       should_exist: false
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
       should_exist: false
-    - path: results/reports/bcftools/haplotypecaller/joint_variant_calling/joint_germline.bcftools_stats.txt
+    - path: results/reports/bcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.bcftools_stats.txt
     # Not stable enough
-    - path: results/reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline.FILTER.summary
+    - path: results/reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.FILTER.summary
     # Not stable enough
-    - path: results/reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline.TsTv.count
+    - path: results/reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.TsTv.count
     # Not stable enough
-    - path: results/reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline.TsTv.qual
+    - path: results/reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.TsTv.qual
     # Not stable enough
     - path: results/variant_calling/haplotypecaller/joint_variant_calling/joint_germline.vcf.gz
     # binary changes md5sums on reruns
