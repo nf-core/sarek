@@ -120,6 +120,9 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
     // When MERGE_GENOTYPEGVCFS and GATK4_APPLYVQSR are run, then use output from APPLYVQSR
     // When MERGE_GENOTYPEGVCFS and NOT GATK4_APPLYVQSR , then use the output from MERGE_GENOTYPEGVCFS
 
+    merge_vcf_for_join = MERGE_GENOTYPEGVCFS.out.vcf.map{meta, vcf -> [[id: 'joint_variant_calling'] , vcf]}
+    merge_tbi_for_join = MERGE_GENOTYPEGVCFS.out.tbi.map{meta, tbi -> [[id: 'joint_variant_calling'] , tbi]}
+
     // Remap for both to have the same key, if ApplyBQSR is not run, the channel is empty --> populate with empty elements
     vqsr_vcf_for_join = GATK4_APPLYVQSR_INDEL.out.vcf.ifEmpty([[:], []]).map{meta, vcf -> [[id: 'joint_variant_calling'] , vcf]}
     vqsr_tbi_for_join = GATK4_APPLYVQSR_INDEL.out.tbi.ifEmpty([[:], []]).map{meta, tbi -> [[id: 'joint_variant_calling'] , tbi]}
@@ -143,6 +146,8 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
 
         [[id:"joint_variant_calling", patient:"all_samples", variantcaller:"haplotypecaller"], tbi_out]
     }
+
+    genotype_vcf.view()
 
     versions = versions.mix(GATK4_GENOMICSDBIMPORT.out.versions)
     versions = versions.mix(GATK4_GENOTYPEGVCFS.out.versions)
