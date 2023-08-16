@@ -37,7 +37,7 @@
     - germline
     - joint_germline
     - variant_calling
-   files:
+  files:
     - path: results/csv/variantcalled.csv
       md5sum: d2dffdbd2b4f1f26a06637592d24dab3
     - path: results/multiqc

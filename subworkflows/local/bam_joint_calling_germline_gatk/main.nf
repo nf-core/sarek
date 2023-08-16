@@ -115,8 +115,47 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
         fai,
         dict.map{ meta, dict -> [ dict ] })
 
-    genotype_vcf   = MERGE_GENOTYPEGVCFS.out.vcf.mix(GATK4_APPLYVQSR_INDEL.out.vcf)
-    genotype_index = MERGE_GENOTYPEGVCFS.out.tbi.mix(GATK4_APPLYVQSR_INDEL.out.tbi)
+
+    // The following is an ugly monster to achieve the following:
+    // When MERGE_GENOTYPEGVCFS and GATK4_APPLYVQSR are run, then use output from APPLYVQSR
+    // When MERGE_GENOTYPEGVCFS and NOT GATK4_APPLYVQSR , then use the output from MERGE_GENOTYPEGVCFS
+
+    // Remap both to have the same key, if ApplyBQSR is not run, the channel is empty --> populate with empty elements
+    merge_vcf_for_join = MERGE_GENOTYPEGVCFS.out.vcf.map{meta, vcf -> [[id: 'recalibrated_joint_variant_calling'] , vcf]}
+    merge_tbi_for_join = MERGE_GENOTYPEGVCFS.out.tbi.map{meta, tbi -> [[id: 'recalibrated_joint_variant_calling'] , tbi]}
+
+    vqsr_vcf_for_join = GATK4_APPLYVQSR_INDEL.out.vcf.ifEmpty([[:], []]).map{meta, vcf -> [[id: 'recalibrated_joint_variant_calling'] , vcf]}
+    vqsr_tbi_for_join = GATK4_APPLYVQSR_INDEL.out.tbi.ifEmpty([[:], []]).map{meta, tbi -> [[id: 'recalibrated_joint_variant_calling'] , tbi]}
+
+    // Join on metamap
+    // If both --> meta, vcf_merged, vcf_bqsr
+    // If not VQSR --> meta, vcf_merged, []
+    // if the second is empty, use the first
+    genotype_vcf = merge_vcf_for_join.join(vqsr_vcf_for_join, remainder: true).map{
+        meta, joint_vcf, recal_vcf ->
+
+        new_id = "joint_variant_calling"
+        vcf_out = joint_vcf
+        if(recal_vcf){
+            new_id = "recalibrated_joint_variant_calling"
+            vcf_out = recal_vcf
+        }
+
+        [[id:new_id, patient:"all_samples", variantcaller:"haplotypecaller"], vcf_out]
+    }
+
+    genotype_index = merge_tbi_for_join.join(vqsr_tbi_for_join, remainder: true).map{
+        meta, joint_tbi, recal_tbi ->
+
+        new_id = "joint_variant_calling"
+        tbi_out = joint_tbi
+        if(recal_tbi){
+            new_id = "recalibrated_joint_variant_calling"
+            tbi_out = recal_tbi
+        }
+
+        [[id:new_id], tbi_out]
+    }
 
     versions = versions.mix(GATK4_GENOMICSDBIMPORT.out.versions)
     versions = versions.mix(GATK4_GENOTYPEGVCFS.out.versions)
