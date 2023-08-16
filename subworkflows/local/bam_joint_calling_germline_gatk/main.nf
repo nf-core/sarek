@@ -154,7 +154,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
             tbi_out = recal_tbi
         }
 
-        [[id:new_id], tbi_out]
+        [[id:new_id, patient:"all_samples", variantcaller:"haplotypecaller"], tbi_out]
     }
 
     versions = versions.mix(GATK4_GENOMICSDBIMPORT.out.versions)
