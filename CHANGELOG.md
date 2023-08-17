@@ -37,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1155](https://github.com/nf-core/sarek/pull/1155) - Restore proper rendering in `usage.md`
 - [#1163](https://github.com/nf-core/sarek/pull/1163) - Correcting location of output folder for joint variant calling with GATK's haplotypecaller
 - [#1169](https://github.com/nf-core/sarek/pull/1169) - Updating Sentieon-modules. (The conda-check in the Sentieon-modules was moved to the script-section. The version of Sentieon remain unchanged.)
+- [#1171](https://github.com/nf-core/sarek/pull/1171) - Fix channel logic for germline resource to skip GetPileupSummary if not provided
 - [#1172](https://github.com/nf-core/sarek/pull/1172) - Publish gvcf files when all intervals are processed at once ([#764](https://github.com/nf-core/sarek/issues/764))
 - [#1173](https://github.com/nf-core/sarek/pull/1173) - Fixed duplicated entries in joint germline recalibrated VCF ([#966](https://github.com/nf-core/sarek/pull/966), [#1102](https://github.com/nf-core/sarek/pull/1102)),
   fixed grouping joint germline recalibrated VCF ([#1137](https://github.com/nf-core/sarek/pull/1137))

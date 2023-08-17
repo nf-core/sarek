@@ -30,6 +30,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
     main:
     versions = Channel.empty()
 
+    //If no germline resource is provided, then create an empty channel to avoid GetPileupsummaries from being run
     germline_resource_pileup     = germline_resource_tbi ? germline_resource : Channel.empty()
     germline_resource_pileup_tbi = germline_resource_tbi ?: Channel.empty()
 
@@ -143,12 +144,17 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
     // This is necessary because we generated one normal pileup summary for each patient but we need run calculate contamination for each tumor-normal pair.
     pileup_table_tumor = Channel.empty().mix(GATHERPILEUPSUMMARIES_TUMOR.out.table, pileup_table_tumor_branch.no_intervals).map{meta, table -> [ meta - meta.subMap('normal_id', 'tumor_id', 'num_intervals') + [id:meta.patient], meta.id, table ] }
     pileup_table_normal= Channel.empty().mix(GATHERPILEUPSUMMARIES_NORMAL.out.table, pileup_table_normal_branch.no_intervals).map{meta, table -> [ meta - meta.subMap('normal_id', 'tumor_id', 'num_intervals') + [id:meta.patient], meta.id, table ] }
+
     ch_calculatecontamination_in_tables = pileup_table_tumor.combine(
         pileup_table_normal, by:0).map{
         meta, tumor_id, tumor_table, normal_id, normal_table -> [ meta + [ id: tumor_id + "_vs_" + normal_id ], tumor_table, normal_table]
         }
 
     CALCULATECONTAMINATION(ch_calculatecontamination_in_tables)
+
+    // Initialize empty channel: Contamination calculation is run on pileup table, pileup is not run if germline resource is not provided
+    ch_seg_to_filtermutectcalls = Channel.empty()
+    ch_cont_to_filtermutectcalls = Channel.empty()
 
     if (joint_mutect2) {
         // Reduce the meta to only patient name
@@ -163,11 +169,11 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
 
     // Mutect2 calls filtered by filtermutectcalls using the artifactpriors, contamination and segmentation tables
     vcf_to_filter = vcf.join(tbi, failOnDuplicate: true, failOnMismatch: true)
-        .join(stats, failOnDuplicate: true, failOnMismatch: true)
-        .join(LEARNREADORIENTATIONMODEL.out.artifactprior, failOnDuplicate: true, failOnMismatch: true)
-        .join(ch_seg_to_filtermutectcalls, failOnDuplicate: true, failOnMismatch: true)
-        .join(ch_cont_to_filtermutectcalls, failOnDuplicate: true, failOnMismatch: true)
-        .map{ meta, vcf, tbi, stats, orientation, seg, cont -> [ meta, vcf, tbi, stats, orientation, seg, cont, [] ] }
+                        .join(stats, failOnDuplicate: true, failOnMismatch: true)
+                        .join(LEARNREADORIENTATIONMODEL.out.artifactprior, failOnDuplicate: true, failOnMismatch: true)
+                        .join(ch_seg_to_filtermutectcalls)
+                        .join(ch_cont_to_filtermutectcalls)
+                    .map{ meta, vcf, tbi, stats, orientation, seg, cont -> [ meta, vcf, tbi, stats, orientation, seg, cont, [] ] }
 
     FILTERMUTECTCALLS(vcf_to_filter, fasta, fai, dict)
 
