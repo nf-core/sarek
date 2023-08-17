@@ -4,6 +4,6 @@
     - sample_with_space
     - validation_checks
   exit_code: 1
-  stdout:
+  stderr:
     contains:
-      - "Invalid value in csv file. Values for 'patient' and 'sample' can not contain space"
+      - "Sample ID must be provided and cannot contain spaces"

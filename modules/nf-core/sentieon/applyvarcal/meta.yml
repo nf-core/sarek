@@ -44,10 +44,20 @@ input:
       type: file
       description: Tranches file produced when the input vcf was run through VariantRecalibrator in stage 1.
       pattern: ".tranches"
+  - meta2:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test']
   - fasta:
       type: file
       description: The reference fasta file
       pattern: "*.fasta"
+  - meta3:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test']
   - fai:
       type: file
       description: Index of reference fasta file

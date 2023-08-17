@@ -77,10 +77,12 @@ output:
       description: File containing software versions
       pattern: "versions.yml"
 authors:
-  - "@kaurravneet4123"
-  - "@KevinMenden"
-  - "@MaxUlysse"
+  - "@adamrtalbot"
   - "@drpatelh"
   - "@fbdtemme"
+  - "@kaurravneet4123"
+  - "@KevinMenden"
   - "@lassefolkersen"
+  - "@MaxUlysse"
+  - "@priesgo"
   - "@SusiJo"

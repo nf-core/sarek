@@ -123,18 +123,25 @@ We thank the following people for their extensive assistance in the development 
 - [Adam Talbot](https://github.com/adamrtalbot)
 - [Adrian Lärkeryd](https://github.com/adrlar)
 - [Alexander Peltzer](https://github.com/apeltzer)
+- [Alison Meynert](https://github.com/ameynert)
 - [Anders Sune Pedersen](https://github.com/asp8200)
+- [arontommi](https://github.com/arontommi)
+- [BarryDigby](https://github.com/BarryDigby)
 - [Bekir Ergüner](https://github.com/berguner)
+- [bjornnystedt](https://github.com/bjornnystedt)
+- [cgpu](https://github.com/cgpu)
 - [Chela James](https://github.com/chelauk)
 - [David Mas-Ponte](https://github.com/davidmasp)
 - [Francesco Lescai](https://github.com/lescai)
 - [Gavin Mackenzie](https://github.com/GCJMackenzie)
 - [Gisela Gabernet](https://github.com/ggabernet)
+- [gulfshores](https://github.com/gulfshores)
 - [Harshil Patel](https://github.com/drpatelh)
 - [James A. Fellows Yates](https://github.com/jfy133)
 - [Jesper Eisfeldt](https://github.com/J35P312)
 - [Johannes Alneberg](https://github.com/alneberg)
 - [José Fernández Navarro](https://github.com/jfnavarro)
+- [Júlia Mir Pedrol](https://github.com/mirpedrol)
 - [Lasse Westergaard Folkersen](https://github.com/lassefolkersen)
 - [Lucia Conde](https://github.com/lconde-ucl)
 - [Malin Larsson](https://github.com/malinlarsson)
@@ -143,6 +150,7 @@ We thank the following people for their extensive assistance in the development 
 - [Nilesh Tawari](https://github.com/nilesh-tawari)
 - [Olga Botvinnik](https://github.com/olgabot)
 - [Oskar Wacker](https://github.com/WackerO)
+- [pallolason](https://github.com/pallolason)
 - [Paul Cantalupo](https://github.com/pcantalupo)
 - [Phil Ewels](https://github.com/ewels)
 - [Sabrina Krakau](https://github.com/skrakau)
@@ -153,13 +161,6 @@ We thank the following people for their extensive assistance in the development 
 - [Szilveszter Juhos](https://github.com/szilvajuhos)
 - [Tobias Koch](https://github.com/KochTobi)
 - [Winni Kretzschmar](https://github.com/winni2k)
-- [arontommi](https://github.com/arontommi)
-- [BarryDigby](https://github.com/BarryDigby)
-- [bjornnystedt](https://github.com/bjornnystedt)
-- [cgpu](https://github.com/cgpu)
-- [gulfshores](https://github.com/gulfshores)
-- [pallolason](https://github.com/pallolason)
-- [Alison Meynert](https://github.com/ameynert)
 
 ## Acknowledgements
 
@@ -178,6 +179,8 @@ For further information or help, don't hesitate to get in touch on the [Slack `#
 ## Citations
 
 If you use `nf-core/sarek` for your analysis, please cite the `Sarek` article as follows:
+
+> Friederike Hanssen, Maxime U Garcia, Lasse Folkersen, Anders Sune Pedersen, Francesco Lescai, Susanne Jodoin, Edmund Miller, Oskar Wacker, Nicholas Smith, nf-core community, Gisela Gabernet, Sven Nahnsen **Scalable and efficient DNA sequencing analysis on different compute infrastructures aiding variant discovery** _bioRxiv_ [doi: 10.1101/2023.07.19.549462](https://doi.org/10.1101/2023.07.19.549462).
 
 > Garcia M, Juhos S, Larsson M et al. **Sarek: A portable workflow for whole-genome sequencing analysis of germline and somatic variants [version 2; peer review: 2 approved]** _F1000Research_ 2020, 9:63 [doi: 10.12688/f1000research.16665.2](http://dx.doi.org/10.12688/f1000research.16665.2).
 

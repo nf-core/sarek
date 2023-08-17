@@ -13,7 +13,7 @@
     - path: results/msisensorpro
       should_exist: false
 - name: Build only index with msisensorpro
-  command: nextflow run main.nf -profile test_cache --build_only_index --tools msisensorpro --outdir results
+  command: nextflow run main.nf -profile test_cache --build_only_index --tools msisensorpro --input false --outdir results
   tags:
     - build_only_index
     - msisensorpro

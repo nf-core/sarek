@@ -2,10 +2,10 @@ process CNVKIT_REFERENCE {
     tag "$fasta"
     label 'process_low'
 
-    conda "bioconda::cnvkit=0.9.9 bioconda::samtools=1.16.1"
+    conda "bioconda::cnvkit=0.9.10 bioconda::samtools=1.17"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/cnvkit:0.9.9--pyhdfd78af_0':
-        'biocontainers/cnvkit:0.9.9--pyhdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/cnvkit:0.9.10--pyhdfd78af_0':
+        'biocontainers/cnvkit:0.9.10--pyhdfd78af_0' }"
 
     input:
     path fasta

@@ -5,18 +5,13 @@ process SENTIEON_BWAMEM {
 
     secret 'SENTIEON_LICENSE_BASE64'
 
-    // Exit if running this module with -profile conda / -profile mamba
-    if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
-        exit 1, "Sentieon modules does not support Conda. Please use Docker / Singularity / Podman instead."
-    }
-
     container 'nf-core/sentieon:202112.06'
 
     input:
     tuple val(meta), path(reads)
     tuple val(meta2), path(index)
-    path(fasta)
-    path(fasta_fai)
+    tuple val(meta3), path(fasta)
+    tuple val(meta4), path(fasta_fai)
 
     output:
     tuple val(meta), path("*.bam"), path("*.bai"), emit: bam_and_bai
@@ -26,6 +21,10 @@ process SENTIEON_BWAMEM {
     task.ext.when == null || task.ext.when
 
     script:
+    // Exit if running this module with -profile conda / -profile mamba
+    if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
+        error "Sentieon modules do not support Conda. Please use Docker / Singularity / Podman instead."
+    }
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     def sentieon_auth_mech_base64 = task.ext.sentieon_auth_mech_base64 ?: ''
