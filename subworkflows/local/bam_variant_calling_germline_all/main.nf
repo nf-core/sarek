@@ -224,7 +224,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         } else {
 
             // If single sample track, check if filtering should be done
-            if (!skip_haplotyper_filter) {
+            if (!(skip_tools && skip_tools.split(',').contains('haplotyper_filter'))) {
 
                 VCF_VARIANT_FILTERING_GATK(
                     vcf_sentieon_haplotyper.join(vcf_tbi_sentieon_haplotyper, failOnDuplicate: true, failOnMismatch: true),
