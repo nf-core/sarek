@@ -115,14 +115,14 @@ workflow BAM_JOINT_CALLING_GERMLINE_SENTIEON {
 
         vcf_out = recal_vcf ?: joint_vcf
 
-        [[id:"joint_variant_calling", patient:"all_samples", variantcaller:"haplotypecaller"], vcf_out]
+        [[id:"joint_variant_calling", patient:"all_samples", variantcaller:"sentieon_haplotyper"], vcf_out]
     }
 
     genotype_index = merge_tbi_for_join.join(vqsr_tbi_for_join, remainder: true).map{
         meta, joint_tbi, recal_tbi ->
 
         tbi_out = recal_tbi ?: joint_tbi
-        [[id:"joint_variant_calling", patient:"all_samples", variantcaller:"haplotypecaller"], tbi_out]
+        [[id:"joint_variant_calling", patient:"all_samples", variantcaller:"sentieon_haplotyper"], tbi_out]
     }
 
     versions = versions.mix(SENTIEON_GVCFTYPER.out.versions)
