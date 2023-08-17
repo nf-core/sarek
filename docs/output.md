@@ -764,7 +764,6 @@ It requires a normal sample for each tumour to differentiate the somatic and ger
 
 Germline VCFs from `DeepVariant`, `FreeBayes`, `HaplotypeCaller`, `Haplotyper`, `Manta`, `bcftools mpileup`, `Strelka2`, or `Tiddit` are concatenated with `bcftools concat`. The field `SOURCE` is added to the VCF header to report the variant caller.
 
-
 <details markdown="1">
 <summary>Concatenated VCF-files for normal samples</summary>
 
