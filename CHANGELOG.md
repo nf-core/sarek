@@ -25,7 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1166](https://github.com/nf-core/sarek/pull/1166) - More info about `--tools`
 - [#1174](https://github.com/nf-core/sarek/pull/1174) - Updating multiqc to v1.15
 - [#1179](https://github.com/nf-core/sarek/pull/1179) - Unhide params `trim_fastq`, `umi_read_structure`, and `aligner`
-- [#1180](https://github.com/nf-core/sarek/pull/1180) - Updating the nf-core modules used by Sarek
+- [#1180](https://github.com/nf-core/sarek/pull/1180) - Updating the nf-core modules
 
 ### Fixed
 
