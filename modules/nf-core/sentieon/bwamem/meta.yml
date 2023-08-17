@@ -33,10 +33,20 @@ input:
       type: file
       description: BWA genome index files
       pattern: "*.{amb,ann,bwt,pac,sa}"
+  - meta3:
+      type: map
+      description: |
+        Groovy Map containing reference information.
+        e.g. [ id:'test', single_end:false ]
   - fasta:
       type: file
       description: Genome fasta file
       pattern: "*.{fa,fasta}"
+  - meta4:
+      type: map
+      description: |
+        Groovy Map containing reference information.
+        e.g. [ id:'test', single_end:false ]
   - fasta_fai:
       type: file
       description: The index of the FASTA reference.

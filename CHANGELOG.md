@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1173](https://github.com/nf-core/sarek/pull/1173) - Refactor single sample filtering of Haplotypecaller generated VCFs ([#1053](https://github.com/nf-core/sarek/pull/1053))
 - [#1174](https://github.com/nf-core/sarek/pull/1174) - Updating multiqc to v1.15
 - [#1179](https://github.com/nf-core/sarek/pull/1179) - Unhide params `trim_fastq`, `umi_read_structure`, and `aligner`
+- [#1180](https://github.com/nf-core/sarek/pull/1180) - Updating the nf-core modules
 
 ### Fixed
 
@@ -43,10 +44,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Dependencies
 
-| Dependency | Old version | New version |
-| ---------- | ----------- | ----------- |
-| `multiqc`  | 1.14        | 1.15        |
-| `tiddit`   | 3.3.2       | 3.6.1       |
+| Dependency    | Old version               | New version              |
+| ------------- | ------------------------- | ------------------------ |
+| `cnvkit`      | 0.9.9 (`samtools` 1.16.1) | 0.9.10 (`samtools` 1.17) |
+| `ensembl-vep` | 108                       | 110                      |
+| `grep`        | 3.4                       | 3.11                     |
+| `multiqc`     | 1.14                      | 1.15                     |
+| `tiddit`      | 3.3.2                     | 3.6.1                    |
 
 ## [3.2.3](https://github.com/nf-core/sarek/releases/tag/3.2.3) - Gällivare
 
