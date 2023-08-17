@@ -217,9 +217,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
                 known_sites_snps_tbi,
                 known_snps_vqsr)
 
-            // TO-DO: Should this VCF from the sentieon haploTYPER really be put into a variable called vcf_haploTYPECALLER
-            // The vcf_haplotypecaller is just being sent to annotation in sarek.nf
-            vcf_haplotypecaller = BAM_JOINT_CALLING_GERMLINE_SENTIEON.out.genotype_vcf
+            vcf_sentieon_haplotyper = BAM_JOINT_CALLING_GERMLINE_SENTIEON.out.genotype_vcf
             versions = versions.mix(BAM_JOINT_CALLING_GERMLINE_SENTIEON.out.versions)
         } else {
 
@@ -235,7 +233,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
                     known_sites_indels.concat(known_sites_snps).flatten().unique().collect(),
                     known_sites_indels_tbi.concat(known_sites_snps_tbi).flatten().unique().collect())
 
-                vcf_haplotypecaller = VCF_VARIANT_FILTERING_GATK.out.filtered_vcf
+                vcf_sentieon_haplotyper = VCF_VARIANT_FILTERING_GATK.out.filtered_vcf
 
                 versions = versions.mix(VCF_VARIANT_FILTERING_GATK.out.versions)
             }
