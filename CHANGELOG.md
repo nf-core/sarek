@@ -39,13 +39,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Dependencies
 
-| Dependency               | Old version               | New version              |
-| ------------------------ | ------------------------- | ------------------------ |
-| `cnvkit`                 | 0.9.9 (`samtools` 1.16.1) | 0.9.10 (`samtools` 1.17) |
-| `ensembl-vep`            | 108                       | 110                      |
-| `grep`                   | 3.4                       | 3.11                     |
-| `multiqc`                | 1.14                      | 1.15                     |
-| `tiddit`                 | 3.3.2                     | 3.6.1                    |
+| Dependency    | Old version               | New version              |
+| ------------- | ------------------------- | ------------------------ |
+| `cnvkit`      | 0.9.9 (`samtools` 1.16.1) | 0.9.10 (`samtools` 1.17) |
+| `ensembl-vep` | 108                       | 110                      |
+| `grep`        | 3.4                       | 3.11                     |
+| `multiqc`     | 1.14                      | 1.15                     |
+| `tiddit`      | 3.3.2                     | 3.6.1                    |
 
 ## [3.2.3](https://github.com/nf-core/sarek/releases/tag/3.2.3) - Gällivare
 
