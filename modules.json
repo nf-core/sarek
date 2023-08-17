@@ -306,11 +306,6 @@
                         "git_sha": "ebb27711cd5f4de921244bfa81c676504072d31c",
                         "installed_by": ["modules"]
                     },
-                    "msisensorpro/msi_somatic": {
-                        "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
-                    },
                     "msisensorpro/msisomatic": {
                         "branch": "master",
                         "git_sha": "5b5d7fba9e08624def34f40e3f4b9268f2eeabbc",
