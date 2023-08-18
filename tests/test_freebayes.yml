@@ -393,7 +393,7 @@
     - path: results/freebayes
       should_exist: false
 - name: Run variant calling on tumor_only sample with freebayes
-  command: nextflow run main.nf -profile test_cache,tools_tumoronly --tools freebayes --outdir results
+  command: nextflow run main.nf -profile test_cache,tools_tumoronly --tools Freebayes --outdir results
   tags:
     - freebayes
     - tumor_only

@@ -1,5 +1,5 @@
 - name: Run variant calling on somatic sample with msisensor-pro
-  command: nextflow run main.nf -profile test_cache,tools_somatic --tools msisensorpro --outdir results
+  command: nextflow run main.nf -profile test_cache,tools_somatic --tools Msisensorpro --outdir results
   tags:
     - msisensorpro
     - somatic
