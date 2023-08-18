@@ -206,7 +206,7 @@ if (params.wes && !params.step == 'annotate') {
     else log.warn("Intervals file was provided without parameter `--wes`: Pipeline will assume this is Whole-Genome-Sequencing data.")
 } else if (params.intervals && !params.intervals.endsWith("bed") && !params.intervals.endsWith("list")) error("Intervals file must end with .bed, .list, or .interval_list")
 
-if (params.step == 'mapping' && params.aligner.contains("dragmap") && !(params.skip_tools && params.skip_tools.split(',').contains("baserecalibrator"))) {
+if (params.step == 'mapping' && params.aligner.contains("dragmap") && !(params.skip_tools && params.skip_tools.split(',').toLowerCase().contains("baserecalibrator"))) {
     log.warn("DragMap was specified as aligner. Base recalibration is not contained in --skip_tools. It is recommended to skip baserecalibration when using DragMap\nhttps://gatk.broadinstitute.org/hc/en-us/articles/4407897446939--How-to-Run-germline-single-sample-short-variant-discovery-in-DRAGEN-mode")
 }
 
@@ -250,7 +250,7 @@ if (params.tools && params.tools.split(',').contains('mutect2')) {
 // Fails when missing resources for baserecalibrator
 // Warns when missing resources for haplotypecaller
 if (!params.dbsnp && !params.known_indels) {
-    if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration', 'recalibrate'] && (!params.skip_tools || (params.skip_tools && !params.skip_tools.split(',').contains('baserecalibrator')))) {
+    if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration', 'recalibrate'] && (!params.skip_tools || (params.skip_tools && !params.skip_tools.split(',').toLowerCase().contains('baserecalibrator')))) {
         error("Base quality score recalibration requires at least one resource file. Please provide at least one of `--dbsnp` or `--known_indels`\nYou can skip this step in the workflow by adding `--skip_tools baserecalibrator` to the command.")
     }
     if (params.tools && (params.tools.split(',').contains('haplotypecaller') || params.tools.split(',').contains('sentieon_haplotyper'))) {
@@ -596,7 +596,7 @@ workflow SAREK {
         // Additional options to be set up
 
         // QC
-        if (!(params.skip_tools && params.skip_tools.split(',').contains('fastqc'))) {
+        if (!(params.skip_tools && params.skip_tools.split(',').toLowerCase().contains('fastqc'))) {
             FASTQC(input_fastq)
 
             reports = reports.mix(FASTQC.out.zip.collect{ meta, logs -> logs })
@@ -696,7 +696,7 @@ workflow SAREK {
         if (
             params.save_mapped ||
             (
-                (params.skip_tools && params.skip_tools.split(',').contains('markduplicates')) &&
+                (params.skip_tools && params.skip_tools.split(',').toLowerCase().contains('markduplicates')) &&
                 !(params.tools && params.tools.split(',').contains('sentieon_dedup'))
             )
         ) {
@@ -738,7 +738,7 @@ workflow SAREK {
 
         if (
             params.skip_tools &&
-            params.skip_tools.split(',').contains('markduplicates') &&
+            params.skip_tools.split(',').toLowerCase().contains('markduplicates') &&
             !(params.tools && params.tools.split(',').contains('sentieon_dedup'))
         ) {
             if (params.step == 'mapping') {
@@ -865,7 +865,7 @@ workflow SAREK {
         }
 
         // STEP 3: Create recalibration tables
-        if (!(params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'))) {
+        if (!(params.skip_tools && params.skip_tools.split(',').toLowerCase().contains('baserecalibrator'))) {
 
             ch_table_bqsr_no_spark = Channel.empty()
             ch_table_bqsr_spark    = Channel.empty()
@@ -944,7 +944,7 @@ workflow SAREK {
                 .map{ meta, cram, crai, table -> [ meta + [data_type: "cram"], cram, crai, table ]}
         }
 
-        if (!(params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'))) {
+        if (!(params.skip_tools && params.skip_tools.split(',').toLowerCase().contains('baserecalibrator'))) {
             cram_variant_calling_no_spark = Channel.empty()
             cram_variant_calling_spark    = Channel.empty()
 
@@ -1121,7 +1121,7 @@ workflow SAREK {
             known_sites_snps_tbi,
             known_snps_vqsr,
             params.joint_germline,
-            params.skip_tools && params.skip_tools.split(',').contains('haplotypecaller_filter'), // true if filtering should be skipped
+            params.skip_tools && params.skip_tools.split(',').toLowerCase().contains('haplotypecaller_filter'), // true if filtering should be skipped
             params.sentieon_haplotyper_emit_mode)
 
         // TUMOR ONLY VARIANT CALLING
@@ -1238,12 +1238,12 @@ workflow SAREK {
     }
 
     version_yaml = Channel.empty()
-    if (!(params.skip_tools && params.skip_tools.split(',').contains('versions'))) {
+    if (!(params.skip_tools && params.skip_tools.split(',').toLowerCase().contains('versions'))) {
         CUSTOM_DUMPSOFTWAREVERSIONS(versions.unique().collectFile(name: 'collated_versions.yml'))
         version_yaml = CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect()
     }
 
-    if (!(params.skip_tools && params.skip_tools.split(',').contains('multiqc'))) {
+    if (!(params.skip_tools && params.skip_tools.split(',').toLowerCase().contains('multiqc'))) {
         workflow_summary    = WorkflowSarek.paramsSummaryMultiqc(workflow, summary_params)
         ch_workflow_summary = Channel.value(workflow_summary)
 
