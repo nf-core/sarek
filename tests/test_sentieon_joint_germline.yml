@@ -65,7 +65,7 @@
     - vqsr
   files:
     - path: results/csv/variantcalled.csv
-      md5sum: b9d926c0bbb9c31d7659051ce98196d2
+      md5sum: 44415aaccc30c837943aea406c2f8d9d
     - path: results/multiqc
     - path: results/preprocessing/recalibrated/test/test.recal.cram
       should_exist: false
@@ -75,10 +75,6 @@
     - path: results/reports/vcftools/sentieon_haplotyper/joint_variant_calling/joint_germline_recalibrated.FILTER.summary
     - path: results/reports/vcftools/sentieon_haplotyper/joint_variant_calling/joint_germline_recalibrated.TsTv.count
     - path: results/reports/vcftools/sentieon_haplotyper/joint_variant_calling/joint_germline_recalibrated.TsTv.qual
-    - path: results/reports/bcftools/sentieon_haplotyper/recalibrated_joint_variant_calling/joint_germline_recalibrated.bcftools_stats.txt
-    - path: results/reports/vcftools/sentieon_haplotyper/recalibrated_joint_variant_calling/joint_germline_recalibrated.FILTER.summary
-    - path: results/reports/vcftools/sentieon_haplotyper/recalibrated_joint_variant_calling/joint_germline_recalibrated.TsTv.count
-    - path: results/reports/vcftools/sentieon_haplotyper/recalibrated_joint_variant_calling/joint_germline_recalibrated.TsTv.qual
     - path: results/variant_calling/sentieon_haplotyper/joint_variant_calling/joint_germline.vcf.gz
     - path: results/variant_calling/sentieon_haplotyper/joint_variant_calling/joint_germline.vcf.gz.tbi
     - path: results/variant_calling/sentieon_haplotyper/joint_variant_calling/joint_germline_recalibrated.vcf.gz
