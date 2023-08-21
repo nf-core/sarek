@@ -5,18 +5,103 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## dev
+## 3.3dev
+
+### Added
+
+- [#930](https://github.com/nf-core/sarek/pull/930) - Add more manual tests
+- [#1130](https://github.com/nf-core/sarek/pull/1130) - Back to dev
+- [#1013](https://github.com/nf-core/sarek/pull/1013) - Mutect2 multi sample mode with `--joint_mutect2`
+- [#1153](https://github.com/nf-core/sarek/pull/1153) - Add input validation for Sentieon & FGBio UMI incompatibility
+- [#1158](https://github.com/nf-core/sarek/pull/1158) - Add preprint
+- [#1159](https://github.com/nf-core/sarek/pull/1159) - ISMB Poster
+- [#1173](https://github.com/nf-core/sarek/pull/1173) - CI tests for VQSR track with stub runs
+- [#1122](https://github.com/nf-core/sarek/pull/1122) - Add `annotation cache` functionality
+
+### Changed
+
+- [#1151](https://github.com/nf-core/sarek/pull/1151) - Refactor codebase
+- [#1157](https://github.com/nf-core/sarek/pull/1157) - Move all vep args from `ext.args` to `params.vep_custom_args` to allow easier modifications
+- [#1059](https://github.com/nf-core/sarek/pull/1059) - Add `nf-validation` for samplesheet validation
+- [#1160](https://github.com/nf-core/sarek/pull/1160) - Updating tiddit to v3.6.1
+- [#1166](https://github.com/nf-core/sarek/pull/1166) - More info about `--tools`
+- [#1173](https://github.com/nf-core/sarek/pull/1173) - Refactor single sample filtering of Haplotypecaller generated VCFs ([#1053](https://github.com/nf-core/sarek/pull/1053))
+- [#1174](https://github.com/nf-core/sarek/pull/1174) - Updating multiqc to v1.15
+- [#1179](https://github.com/nf-core/sarek/pull/1179) - Unhide params `trim_fastq`, `umi_read_structure`, and `aligner`
+- [#1180](https://github.com/nf-core/sarek/pull/1180) - Updating the nf-core modules
+
+### Fixed
+
+- [#1143](https://github.com/nf-core/sarek/pull/1143) - `snpeff_db` is now a string
+- [#1145](https://github.com/nf-core/sarek/pull/1145) - Fixed Zenodo links in `README.md` and in `WorkflowMain.groovy`
+- [#1149](https://github.com/nf-core/sarek/pull/1149) - Update `Manta` modules and fix usage of `--exome` flag
+- [#1155](https://github.com/nf-core/sarek/pull/1155) - Restore proper rendering in `usage.md`
+- [#1163](https://github.com/nf-core/sarek/pull/1163) - Correcting location of output folder for joint variant calling with GATK's haplotypecaller
+- [#1169](https://github.com/nf-core/sarek/pull/1169) - Updating Sentieon-modules. (The conda-check in the Sentieon-modules was moved to the script-section. The version of Sentieon remain unchanged.)
+- [#1171](https://github.com/nf-core/sarek/pull/1171) - Fix channel logic for germline resource to skip GetPileupSummary if not provided
+- [#1172](https://github.com/nf-core/sarek/pull/1172) - Publish gvcf files when all intervals are processed at once ([#764](https://github.com/nf-core/sarek/issues/764))
+- [#1173](https://github.com/nf-core/sarek/pull/1173) - Fixed duplicated entries in joint germline recalibrated VCF ([#966](https://github.com/nf-core/sarek/pull/966), [#1102](https://github.com/nf-core/sarek/pull/1102)),
+  fixed grouping joint germline recalibrated VCF ([#1137](https://github.com/nf-core/sarek/pull/1137))
+- [#1177](https://github.com/nf-core/sarek/pull/1177) - Fix status inference when using nf-validation plugin
+- [#1183](https://github.com/nf-core/sarek/pull/1183) - Add docs for concatentated germline variants
+
+### Dependencies
+
+| Dependency    | Old version               | New version              |
+| ------------- | ------------------------- | ------------------------ |
+| `cnvkit`      | 0.9.9 (`samtools` 1.16.1) | 0.9.10 (`samtools` 1.17) |
+| `ensembl-vep` | 108                       | 110                      |
+| `grep`        | 3.4                       | 3.11                     |
+| `multiqc`     | 1.14                      | 1.15                     |
+| `tiddit`      | 3.3.2                     | 3.6.1                    |
+
+## [3.2.3](https://github.com/nf-core/sarek/releases/tag/3.2.3) - Gällivare
+
+Gällivare is a small lake next to Pierikjaure.
+
+### Added
+
+- [#1112](https://github.com/nf-core/sarek/pull/1112) - Back to dev
+- [#1119](https://github.com/nf-core/sarek/pull/1119) - Added `help_text` for `input_output_options` group in schema
+- [#1044](https://github.com/nf-core/sarek/pull/1044) - Adding support for several tools from Sentieon's DNAseq package. The standard fastq-to-vcf processing can now be done using Sentieon's DNAseq tools `ApplyVarCal`, `bwa mem`, `Dedup`, `GVCFtyper`, `Haplotyper`, `LocusCollector` and `VarCal`.
+
+### Changed
+
+- [#1119](https://github.com/nf-core/sarek/pull/1119) - Remove `null` by default in schema
+- [#1128](https://github.com/nf-core/sarek/pull/1128) - Prepare release `3.2.3`
+
+### Fixed
+
+- [#1118](https://github.com/nf-core/sarek/pull/1118) - Remove `public_aws_ecr` profile
+
+## [3.2.2](https://github.com/nf-core/sarek/releases/tag/3.2.2) - Vuoinesluobbalah
+
+Vuoinesluobbalah is a lake close to Bierikjávrre.
+
+### Added
+
+- [#1106](https://github.com/nf-core/sarek/pull/1106) - Add Slack integration to Megatests
+- [#1107](https://github.com/nf-core/sarek/pull/1107) - Add `singularity.registry` to `public_aws_ecr`
 
 ### Changed
 
 - [#1087](https://github.com/nf-core/sarek/pull/1087) - Back to dev
 - [#1087](https://github.com/nf-core/sarek/pull/1087) - Minor modules update
 - [#1088](https://github.com/nf-core/sarek/pull/1088) - Replace profile `test` by `test_cache` and add a `test` profile without hidden files
+- [#1095](https://github.com/nf-core/sarek/pull/1095) - Prepare release `3.2.2`
 
 ### Fixed
 
 - [#1087](https://github.com/nf-core/sarek/pull/1087) - Fix wrong default memory in GATK4_CREATESEQUENCEDICTIONARY [#1085](https://github.com/nf-core/sarek/pull/1085)
 - [#1089](https://github.com/nf-core/sarek/pull/1089) - Remove duplicated code
+- [#1093](https://github.com/nf-core/sarek/pull/1093) - Fixing Ascat by reverting meta.id in channels allele_files, loci_files, gc_file and rt_file to baseName.
+- [#1098](https://github.com/nf-core/sarek/pull/1098) - Fix Channel issue in Mutect2 subworkflow [#1094](https://github.com/nf-core/sarek/pull/1094)
+- [#1100](https://github.com/nf-core/sarek/pull/1100) - Remove duplicate index with deepvariant when no_intervals [#1069](https://github.com/nf-core/sarek/pull/1069)
+- [#1101](https://github.com/nf-core/sarek/pull/1101) - Remove duplicate index computation for GATK4 Markduplicates & [#1065](https://github.com/nf-core/sarek/issues/1065)
+- [#1101](https://github.com/nf-core/sarek/pull/1101) - Fix GATK4 version for GATK4 MarkduplicatesSpark [#1068](https://github.com/nf-core/sarek/issues/1068)
+- [#1105](https://github.com/nf-core/sarek/pull/1105) - Remove `params.tracedir`
+- [#1108](https://github.com/nf-core/sarek/pull/1108) - Refactor bad prefix definition for vcf files [#938](https://github.com/nf-core/sarek/issues/938)
+- [#1109](https://github.com/nf-core/sarek/pull/1109) - Fix `mpileup` for variantcalling: only `bcftools` run and file publishing
 
 ## [3.2.1](https://github.com/nf-core/sarek/releases/tag/3.2.1) - Pierikjaure
 
@@ -1169,7 +1254,7 @@ Ruotes is one of the main massif in the Sarek National Park.
 - [#607](https://github.com/SciLifeLab/Sarek/pull/607) - Update to `GATK4`
 - [#608](https://github.com/SciLifeLab/Sarek/pull/608) - Update `Nextflow` required version
 - [#616](https://github.com/SciLifeLab/Sarek/pull/616) - Update `CHANGELOG`
-- [#617](https://github.com/SciLifeLab/Sarek/pull/617) - Replace deprecated ` Nextflow ``$name ` syntax with `withName`
+- [#617](https://github.com/SciLifeLab/Sarek/pull/617) - Replace deprecated `Nextflow` `$name` syntax with `withName`
 
 ### Fixed
 

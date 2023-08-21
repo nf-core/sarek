@@ -1,4 +1,4 @@
-name: msisensorpro_msi_somatic
+name: msisensorpro_msisomatic
 description: MSIsensor-pro evaluates Microsatellite Instability (MSI) for cancer patients with next generation sequencing data. It accepts the whole genome sequencing, whole exome sequencing and target region (panel) sequencing data as input
 keywords:
   - micro-satellite-scan

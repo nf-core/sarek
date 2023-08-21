@@ -2,6 +2,8 @@
 
 ## :warning: Please read this documentation on the nf-core website: [https://nf-co.re/sarek/usage](https://nf-co.re/sarek/usage)
 
+> _Documentation of pipeline parameters is generated automatically from the pipeline schema and can no longer be found in markdown files._
+
 # Introduction
 
 Sarek is a workflow designed to detect germline and somatic variants on whole genome, whole exome, or targeted sequencing data.
@@ -16,10 +18,11 @@ Sarek is designed to handle single samples, such as single-normal or single-tumo
 The typical command for running the pipeline is as follows:
 
 ```bash
-nextflow run nf-core/sarek --input samplesheet.csv --outdir <OUTDIR> --genome GATK.GRCh38 -profile docker
+nextflow run nf-core/sarek --input ./samplesheet.csv --outdir ./results --genome GATK.GRCh38 --tools <TOOLS> -profile docker
 ```
 
-This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.
+This will launch the pipeline and perform variant calling with the tools specified in `--tools`, see the [parameter section](https://nf-co.re/sarek/3.2.3/parameters#tools) for details on variant calling tools.
+In the above example the pipeline runs with the `docker` configuration profile. See below for more information about profiles.
 
 Note that the pipeline will create the following files in your working directory:
 
@@ -35,7 +38,8 @@ If you wish to repeatedly use the same parameters for multiple runs, rather than
 Pipeline settings can be provided in a `yaml` or `json` file via `-params-file <file>`.
 
 > ⚠️ Do not use `-c <file>` to specify parameters as this will result in errors. Custom config files specified with `-c` must only be used for [tuning process resource specifications](https://nf-co.re/docs/usage/configuration#tuning-workflow-resources), other infrastructural tweaks (such as output directories), or module arguments (args).
-> The above pipeline run specified with a params file in yaml format:
+
+The above pipeline run specified with a params file in yaml format:
 
 ```bash
 nextflow run nf-core/sarek -profile docker -params-file params.yaml
@@ -47,7 +51,6 @@ with `params.yaml` containing:
 input: './samplesheet.csv'
 outdir: './results/'
 genome: 'GRCh37'
-input: 'data'
 <...>
 ```
 
@@ -307,7 +310,7 @@ test,sample4_vs_sample3,manta,sample4_vs_sample3.somatic_sv.vcf.gz
 
 ## Updating the pipeline
 
-When you run the above command, Nextflow automatically pulls the pipeline code from GitHub and stores it as a cached version. When running the pipeline after this, it will always use the cached version if available - even if the pipeline has been updated since. To make sure that you're running the latest version of the pipeline, make sure that you regularly update the cached version of the pipeline:
+When you launch a pipeline from the command-line with `nextflow run nf-core/sarek -profile docker -params-file params.yaml`, Nextflow will automatically pull the pipeline code from GitHub and store it as a cached version. When running the pipeline after this, it will always use the cached version if available - even if the pipeline has been updated since. To make sure that you're running the latest version of the pipeline, make sure that you regularly update the cached version of the pipeline:
 
 ```bash
 nextflow pull nf-core/sarek
@@ -603,7 +606,7 @@ done
 ```bash
 wget https://ora.ox.ac.uk/objects/uuid:08e24957-7e76-438a-bd38-66c48008cf52/files/rt435gd52w
 mv rt345gd52w battenberg.zip
-jar xf battenberg.zip
+tar xf battenberg.zip
 
 unzip 1000G_loci_hg38_chr.zip
 cd 1000G_loci_hg38
@@ -673,7 +676,7 @@ write.table(out, args[3], col.names=T, row.names=F, quote=F, sep="\t")
 }
 ```
 
-## What are the bwa/bwa-mem2 parameters?
+## What are the bwa, bwa-mem2 and sentieon bwa mem parameters?
 
 For mapping, sarek follows the parameter suggestions provided in this [paper](https://www.nature.com/articles/s41467-018-06159-4):
 
@@ -989,11 +992,6 @@ Enable with `--vep_spliceregion`.
 
 For more details, see [here](https://www.ensembl.org/info/docs/tools/vep/script/vep_plugins.html#spliceregion) and [here](https://www.ensembl.info/2018/10/26/cool-stuff-the-vep-can-do-splice-site-variant-annotation/)."
 
-## Requested resources for the tools
-
-Resource requests are difficult to generalize and are often dependent on input data size. Currently, the number of cpus and memory requested by default were adapted from tests on 5 ICGC paired whole-genome sequencing samples with approximately 40X and 80X depth.
-For targeted data analysis, this is overshooting by a lot. In this case resources for each process can be limited by either setting `--max_memory` and `-max_cpus` or tailoring the request by process name as described [here](#resource-requests). If you are using sarek for a certain data type regulary, and would like to make these requests available to others on your system, an institution-specific, pipeline-specific config file can be added [here](https://github.com/nf-core/configs/tree/master/conf/pipeline/sarek).
-
 ## MultiQC related issues
 
 ### Plots for SnpEff are missing
@@ -1007,6 +1005,49 @@ Error type      Number of errors
 ERROR_CHROMOSOME_NOT_FOUND      17522411
 ```
 
-## How to set up sarek to use sentieon
+## Sentieon
 
-Sarek is currently not supporting sentieon. It is planned for the upcoming release 3.3. In the meantime, please revert to the last release 2.7.2.
+[Sentieon](https://www.sentieon.com/) is a commercial solution to process genomics data with high computing efficiency, fast turnaround time, exceptional high accuracy, and 100% consistency.
+
+In particular, Sentieon contains what may be view as speedup version of some standard GATK tools, like bwamem and haplotyper. Sarek contains support for some of the functions in Sentieon. In order to use those functions, the user will need to supply Sarek with a license for Sentieon.
+
+### Setup of Sentieon license
+
+Sentieon supply license in the form of a string-value (a url) or a file. It should be base64-encoded and stored in a nextflow secret named `SENTIEON_LICENSE_BASE64`. If a license string (url) is supplied, then the nextflow secret should be set like this:
+
+```bash
+nextflow secret set SENTIEON_LICENSE_BASE64 $(echo -n <sentieon_license_string> | base64 -w 0)
+```
+
+If a license file is supplied, then the nextflow secret should be set like this:
+
+```bash
+nextflow secrets set SENTIEON_LICENSE_BASE64 \$(cat <sentieon_license_file.lic> | base64 -w 0)
+```
+
+### Available Sentieon functions
+
+Sarek contains the following Sentieon functions [bwa mem](https://support.sentieon.com/manual/usages/general/#bwa-mem-syntax), [LocusCollector](https://support.sentieon.com/manual/usages/general/#locuscollector-algorithm) + [Dedup](https://support.sentieon.com/manual/usages/general/#dedup-algorithm), [Haplotyper](https://support.sentieon.com/manual/usages/general/#haplotyper-algorithm), [GVCFtyper](https://support.sentieon.com/manual/usages/general/#gvcftyper-algorithm) and [VarCal](https://support.sentieon.com/manual/usages/general/#varcal-algorithm) + [ApplyVarCal](https://support.sentieon.com/manual/usages/general/#applyvarcal-algorithm), so the basic processing of alignment of fastq-files to VCF-files can be done using speedup Sentieon functions.
+
+### Basic usage of Sentieon functions
+
+To use Sentieon's aligner `bwa mem`, set the aligner option `sentieon-bwamem`. (This can, for example, be done by adding `--aligner sentieon-bwamem` to the nextflow run command.)
+
+To use Sentieon's function `Dedup`, specify `sentieon_dedup` as one of the tools. (This can, for example, be done by adding `--tools sentieon_dedup` to the nextflow run command.)
+
+To use Sentieon's function `Haplotyper`, specify `sentieon_haplotyper` as one of the tools. This can, for example, be done by adding `--tools sentieon_haplotyper` to the nextflow run command. In order to skip the GATK-based variant-filter, one may add `--skip_tools haplotyper_filter` to the nextflow run command. Sarek also provides the option `sentieon_haplotyper_emit_mode` which can be used to set the [emit-mode](https://support.sentieon.com/manual/usages/general/#haplotyper-algorithm) of Sentieon's haplotyper. Sentieon's haplotyper can output both a vcf-file and a gvcf-file in the same run; this is achieved by setting `sentieon_haplotyper_emit_mode` to `<vcf_emit_mode>,gvcf`, where `<vcf_emit_mode>` is `variant`, `confident` or `all`.
+
+To use Sentieon's function `GVCFtyper` along with Sention's version of VQSR (`VarCal` and `ApplyVarCal`) for joint-germline genotyping, specify `sentieon_haplotyper` as one of the tools, set the option `sentieon_haplotyper_emit_mode` to `gvcf`, and add the option `joint_germline`. This can, for example, be done by adding `--tools sentieon_haplotyper --joint_germline --sentieon_haplotyper_emit_mode gvcf` to the nextflow run command.
+
+### Joint germline variant calling
+
+Sentieon's [GVCFtyper](https://support.sentieon.com/manual/usages/general/#gvcftyper-algorithm) does not support the [GenomicsDB](https://gatk.broadinstitute.org/hc/en-us/articles/5358869876891-GenomicsDBImport) datastore format. This means that, in contrast to the GATK based joint germline variant calling subworkflow in Sarek, the Sentieon/DNAseq based joint germline variant calling subworkflow does not use the GenomicsDB datastore format.
+
+### QualCal (BQSR)
+
+Currently, Sentieon's version of BQSR, QualCal, is not available in Sarek. Recent Illumina sequencers tend to provide well-calibrated BQs, so BQSR may not provide much benefit. By default Sarek runs GATK's BQSR; that can be skipped by adding the option `--skip_tools baserecalibrator`.
+
+## Requested resources for the tools
+
+Resource requests are difficult to generalize and are often dependent on input data size. Currently, the number of cpus and memory requested by default were adapted from tests on 5 ICGC paired whole-genome sequencing samples with approximately 40X and 80X depth.
+For targeted data analysis, this is overshooting by a lot. In this case resources for each process can be limited by either setting `--max_memory` and `-max_cpus` or tailoring the request by process name as described [here](#resource-requests). If you are using sarek for a certain data type regulary, and would like to make these requests available to others on your system, an institution-specific, pipeline-specific config file can be added [here](https://github.com/nf-core/configs/tree/master/conf/pipeline/sarek).

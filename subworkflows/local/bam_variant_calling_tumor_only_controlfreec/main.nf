@@ -1,3 +1,9 @@
+//
+// CONTROLFREEC tumor-only variant calling
+//
+// For all modules here:
+// A when clause condition is defined in the conf/modules.config to determine if the module should be run
+
 include { CONTROLFREEC_FREEC as FREEC_TUMORONLY                  } from '../../../modules/nf-core/controlfreec/freec/main'
 include { CONTROLFREEC_ASSESSSIGNIFICANCE as ASSESS_SIGNIFICANCE } from '../../../modules/nf-core/controlfreec/assesssignificance/main'
 include { CONTROLFREEC_FREEC2BED as FREEC2BED                    } from '../../../modules/nf-core/controlfreec/freec2bed/main'

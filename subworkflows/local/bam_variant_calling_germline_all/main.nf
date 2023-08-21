@@ -2,15 +2,18 @@
 // GERMLINE VARIANT CALLING
 //
 
-include { BAM_JOINT_CALLING_GERMLINE_GATK     } from '../bam_joint_calling_germline_gatk/main'
-include { BAM_VARIANT_CALLING_CNVKIT          } from '../bam_variant_calling_cnvkit/main'
-include { BAM_VARIANT_CALLING_DEEPVARIANT     } from '../bam_variant_calling_deepvariant/main'
-include { BAM_VARIANT_CALLING_FREEBAYES       } from '../bam_variant_calling_freebayes/main'
-include { BAM_VARIANT_CALLING_GERMLINE_MANTA  } from '../bam_variant_calling_germline_manta/main'
-include { BAM_VARIANT_CALLING_HAPLOTYPECALLER } from '../bam_variant_calling_haplotypecaller/main'
-include { BAM_VARIANT_CALLING_MPILEUP         } from '../bam_variant_calling_mpileup/main'
-include { BAM_VARIANT_CALLING_SINGLE_STRELKA  } from '../bam_variant_calling_single_strelka/main'
-include { BAM_VARIANT_CALLING_SINGLE_TIDDIT   } from '../bam_variant_calling_single_tiddit/main'
+include { BAM_JOINT_CALLING_GERMLINE_GATK         } from '../bam_joint_calling_germline_gatk/main'
+include { BAM_JOINT_CALLING_GERMLINE_SENTIEON     } from '../bam_joint_calling_germline_sentieon/main'
+include { BAM_VARIANT_CALLING_CNVKIT              } from '../bam_variant_calling_cnvkit/main'
+include { BAM_VARIANT_CALLING_DEEPVARIANT         } from '../bam_variant_calling_deepvariant/main'
+include { BAM_VARIANT_CALLING_FREEBAYES           } from '../bam_variant_calling_freebayes/main'
+include { BAM_VARIANT_CALLING_GERMLINE_MANTA      } from '../bam_variant_calling_germline_manta/main'
+include { BAM_VARIANT_CALLING_HAPLOTYPECALLER     } from '../bam_variant_calling_haplotypecaller/main'
+include { BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER } from '../bam_variant_calling_sentieon_haplotyper/main'
+include { BAM_VARIANT_CALLING_MPILEUP             } from '../bam_variant_calling_mpileup/main'
+include { BAM_VARIANT_CALLING_SINGLE_STRELKA      } from '../bam_variant_calling_single_strelka/main'
+include { BAM_VARIANT_CALLING_SINGLE_TIDDIT       } from '../bam_variant_calling_single_tiddit/main'
+include { VCF_VARIANT_FILTERING_GATK              } from '../vcf_variant_filtering_gatk/main'
 
 workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     take:
@@ -36,20 +39,24 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     known_sites_snps_tbi
     known_snps_vqsr
     joint_germline                    // boolean: [mandatory] [default: false] joint calling of germline variants
+    skip_haplotypecaller_filter       // boolean: [mandatory] [default: false] whether to filter haplotypecaller single sample vcfs
+    sentieon_haplotyper_emit_mode     // channel: [mandatory] value channel with string
 
     main:
     versions = Channel.empty()
 
     //TODO: Temporary until the if's can be removed and printing to terminal is prevented with "when" in the modules.config
-    vcf_deepvariant     = Channel.empty()
-    vcf_freebayes       = Channel.empty()
-    vcf_haplotypecaller = Channel.empty()
-    vcf_manta           = Channel.empty()
-    vcf_mpileup         = Channel.empty()
-    vcf_strelka         = Channel.empty()
-    vcf_tiddit          = Channel.empty()
+    vcf_deepvariant          = Channel.empty()
+    vcf_freebayes            = Channel.empty()
+    vcf_haplotypecaller      = Channel.empty()
+    vcf_manta                = Channel.empty()
+    vcf_mpileup              = Channel.empty()
+    vcf_sentieon_haplotyper  = Channel.empty()
+    gvcf_sentieon_haplotyper = Channel.empty()
+    vcf_strelka              = Channel.empty()
+    vcf_tiddit               = Channel.empty()
 
-    // MPILEUP
+    // BCFTOOLS MPILEUP
     if (tools.split(',').contains('mpileup')) {
         BAM_VARIANT_CALLING_MPILEUP(
             cram,
@@ -114,22 +121,16 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             dbsnp,
             dbsnp_tbi,
             dbsnp_vqsr,
-            known_sites_indels,
-            known_sites_indels_tbi,
-            known_indels_vqsr,
-            known_sites_snps,
-            known_sites_snps_tbi,
-            known_snps_vqsr,
-            intervals,
-            intervals_bed_combined_haplotypec,
-            ((skip_tools && skip_tools.split(',').contains('haplotypecaller_filter') || joint_germline)))
+            intervals)
 
         vcf_haplotypecaller = BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.vcf
+        tbi_haplotypecaller = BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.tbi
+
         versions = versions.mix(BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.versions)
 
         if (joint_germline) {
             BAM_JOINT_CALLING_GERMLINE_GATK(
-                BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.genotype_intervals,
+                BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.gvcf_tbi_intervals,
                 fasta,
                 fasta_fai,
                 dict,
@@ -145,8 +146,25 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
 
             vcf_haplotypecaller = BAM_JOINT_CALLING_GERMLINE_GATK.out.genotype_vcf
             versions = versions.mix(BAM_JOINT_CALLING_GERMLINE_GATK.out.versions)
-        }
+        } else {
 
+            // If single sample track, check if filtering should be done
+            if (!skip_haplotypecaller_filter) {
+
+                VCF_VARIANT_FILTERING_GATK(
+                    vcf_haplotypecaller.join(tbi_haplotypecaller, failOnDuplicate: true, failOnMismatch: true),
+                    fasta,
+                    fasta_fai,
+                    dict.map{ meta, dict -> [ dict ] },
+                    intervals_bed_combined_haplotypec,
+                    known_sites_indels.concat(known_sites_snps).flatten().unique().collect(),
+                    known_sites_indels_tbi.concat(known_sites_snps_tbi).flatten().unique().collect())
+
+                vcf_haplotypecaller = VCF_VARIANT_FILTERING_GATK.out.filtered_vcf
+
+                versions = versions.mix(VCF_VARIANT_FILTERING_GATK.out.versions)
+            }
+        }
     }
 
     // MANTA
@@ -160,6 +178,56 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
 
         vcf_manta = BAM_VARIANT_CALLING_GERMLINE_MANTA.out.vcf
         versions = versions.mix(BAM_VARIANT_CALLING_GERMLINE_MANTA.out.versions)
+    }
+
+    // SENTIEON HAPLOTYPER
+    if (tools.split(',').contains('sentieon_haplotyper')) {
+        BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER(
+            cram,
+            fasta,
+            fasta_fai,
+            dict,
+            dbsnp,
+            dbsnp_tbi,
+            dbsnp_vqsr,
+            known_sites_indels,
+            known_sites_indels_tbi,
+            known_indels_vqsr,
+            known_sites_snps,
+            known_sites_snps_tbi,
+            known_snps_vqsr,
+            intervals,
+            intervals_bed_combined_haplotypec,
+            (skip_tools && skip_tools.split(',').contains('haplotyper_filter')),
+            joint_germline,
+            sentieon_haplotyper_emit_mode)
+
+        versions = versions.mix(BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER.out.versions)
+
+        vcf_sentieon_haplotyper = BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER.out.vcf
+        gvcf_sentieon_haplotyper = BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER.out.gvcf
+
+        if (joint_germline) {
+            BAM_JOINT_CALLING_GERMLINE_SENTIEON(
+                BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER.out.genotype_intervals,
+                fasta,
+                fasta_fai,
+                dict,
+                dbsnp,
+                dbsnp_tbi,
+                dbsnp_vqsr,
+                known_sites_indels,
+                known_sites_indels_tbi,
+                known_indels_vqsr,
+                known_sites_snps,
+                known_sites_snps_tbi,
+                known_snps_vqsr)
+
+            vcf_haplotypecaller = BAM_JOINT_CALLING_GERMLINE_SENTIEON.out.genotype_vcf
+            versions = versions.mix(BAM_JOINT_CALLING_GERMLINE_SENTIEON.out.versions)
+
+        }
+
     }
 
     // STRELKA
@@ -195,6 +263,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         vcf_haplotypecaller,
         vcf_manta,
         vcf_mpileup,
+        vcf_sentieon_haplotyper,
         vcf_strelka,
         vcf_tiddit
     )
@@ -207,6 +276,8 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     vcf_manta
     vcf_mpileup
     vcf_strelka
+    vcf_sentieon_haplotyper
+    gvcf_sentieon_haplotyper
     vcf_tiddit
 
     versions

@@ -1,8 +1,13 @@
-include { CAT_CAT as CAT_MPILEUP         } from '../../../modules/nf-core/cat/cat/main'
-include { BCFTOOLS_MPILEUP               } from '../../../modules/nf-core/bcftools/mpileup/main'
-include { SAMTOOLS_MPILEUP               } from '../../../modules/nf-core/samtools/mpileup/main'
-include { GATK4_MERGEVCFS                } from '../../../modules/nf-core/gatk4/mergevcfs/main'
+//
+// MPILEUP variant calling: BCFTOOLS for variantcalling, SAMTools for controlfreec input
+//
+// For all modules here:
+// A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
+include { CAT_CAT         as CAT_MPILEUP            } from '../../../modules/nf-core/cat/cat/main'
+include { BCFTOOLS_MPILEUP                          } from '../../../modules/nf-core/bcftools/mpileup/main'
+include { SAMTOOLS_MPILEUP                          } from '../../../modules/nf-core/samtools/mpileup/main'
+include { GATK4_MERGEVCFS as MERGE_BCFTOOLS_MPILEUP } from '../../../modules/nf-core/gatk4/mergevcfs/main'
 
 workflow BAM_VARIANT_CALLING_MPILEUP {
     take:
@@ -19,9 +24,11 @@ workflow BAM_VARIANT_CALLING_MPILEUP {
         // Move num_intervals to meta map and reorganize channel for BCFTOOLS_MPILEUP/SAMTOOLS_MPILEUP modules
         .map{ meta, cram, crai, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram, intervals ] }
 
+    // Run, if --tools mpileup
     keep_bcftools_mpileup = false
     BCFTOOLS_MPILEUP(cram_intervals, fasta, keep_bcftools_mpileup)
 
+    //Only run, if --tools ControlFreec
     SAMTOOLS_MPILEUP(cram_intervals, fasta)
 
     // Figuring out if there is one or more vcf(s) from the same sample
@@ -44,20 +51,20 @@ workflow BAM_VARIANT_CALLING_MPILEUP {
 
     // Merge VCF
     vcf_to_merge = vcf_mpileup.intervals.map{ meta, vcf -> [ groupKey(meta, meta.num_intervals), vcf ] }.groupTuple()
-    GATK4_MERGEVCFS(vcf_to_merge, dict)
+    MERGE_BCFTOOLS_MPILEUP(vcf_to_merge, dict)
 
     // Mix intervals and no_intervals channels together
     mpileup = CAT_MPILEUP.out.file_out.mix(mpileup_samtools.no_intervals)
         // add variantcaller to meta map and remove no longer necessary field: num_intervals
-        .map{ meta, mpileup -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'mpileup' ], mpileup ] }
-    vcf = GATK4_MERGEVCFS.out.vcf.mix(vcf_mpileup.no_intervals)
+        .map{ meta, mpileup -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'samtools' ], mpileup ] }
+    vcf = MERGE_BCFTOOLS_MPILEUP.out.vcf.mix(vcf_mpileup.no_intervals)
         // add variantcaller to meta map and remove no longer necessary field: num_intervals
-        .map{ meta, vcf -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'mpileup' ], vcf ] }
+        .map{ meta, vcf -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'bcftools' ], vcf ] }
 
     versions = versions.mix(SAMTOOLS_MPILEUP.out.versions)
     versions = versions.mix(BCFTOOLS_MPILEUP.out.versions)
     versions = versions.mix(CAT_MPILEUP.out.versions)
-    versions = versions.mix(GATK4_MERGEVCFS.out.versions)
+    versions = versions.mix(MERGE_BCFTOOLS_MPILEUP.out.versions)
 
     emit:
     mpileup

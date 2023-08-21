@@ -12,4 +12,5 @@ lint:
     - docs/images/nf-core-sarek_logo_light.png
     - lib/NfcoreSchema.groovy
     - lib/NfcoreTemplate.groovy
+  schema_params: False
   template_strings: False

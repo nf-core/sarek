@@ -10,8 +10,37 @@
             "type": "object",
             "fa_icon": "fas fa-terminal",
             "description": "Define where the pipeline should find input data and save output data.",
+            "help_text": "Specify input samplesheet, step and output folder.",
             "required": ["step", "outdir"],
             "properties": {
+                "input": {
+                    "description": "Path to comma-separated file containing information about the samples in the experiment.",
+                    "help_text": "A design file with information about the samples in your experiment. Use this parameter to specify the location of the input files. It has to be a comma-separated file with a header row. See [usage docs](https://nf-co.re/sarek/usage#input).\n\nIf no input file is specified, sarek will attempt to locate one in the `{outdir}` directory. If no input should be supplied, i.e. when --step is supplied or --build_from_index, then set --input false",
+                    "fa_icon": "fas fa-file-csv",
+                    "schema": "assets/schema_input.json",
+                    "anyOf": [
+                        {
+                            "type": "string",
+                            "format": "file-path",
+                            "exists": true,
+                            "mimetype": "text/csv",
+                            "pattern": "^\\S+\\.csv$"
+                        },
+                        {
+                            "type": "boolean",
+                            "enum": ["false"]
+                        }
+                    ]
+                },
+                "input_restart": {
+                    "type": "string",
+                    "format": "file-path",
+                    "exists": true,
+                    "mimetype": "text/csv",
+                    "pattern": "^\\S+\\.csv$",
+                    "hidden": true,
+                    "schema": "assets/schema_input.json"
+                },
                 "step": {
                     "type": "string",
                     "default": "mapping",
@@ -27,24 +56,13 @@
                         "annotate"
                     ]
                 },
-                "input": {
-                    "type": "string",
-                    "format": "file-path",
-                    "mimetype": "text/csv",
-                    "pattern": "^\\S+\\.csv$",
-                    "schema": "assets/schema_input.json",
-                    "description": "Path to comma-separated file containing information about the samples in the experiment.",
-                    "help_text": "A design file with information about the samples in your experiment. Use this parameter to specify the location of the input files. It has to be a comma-separated file with a header row. See [usage docs](https://nf-co.re/sarek/usage#input).\n\nIf no input file is specified, sarek will attempt to locate one in the `{outdir}` directory.",
-                    "fa_icon": "fas fa-file-csv"
-                },
                 "outdir": {
                     "type": "string",
                     "format": "directory-path",
                     "description": "The output directory where the results will be saved. You have to use absolute paths to storage on Cloud infrastructure.",
                     "fa_icon": "fas fa-folder-open"
                 }
-            },
-            "help_text": ""
+            }
         },
         "main_options": {
             "title": "Main options",
@@ -87,16 +105,16 @@
                 "tools": {
                     "type": "string",
                     "fa_icon": "fas fa-toolbox",
-                    "description": "Tools to use for variant calling and/or for annotation.",
-                    "help_text": "Multiple tools separated with commas.\n\n**Variant Calling:**\n\nGermline variant calling can currently be performed with the following variant callers:\n- SNPs/Indels: DeepVariant, FreeBayes, HaplotypeCaller, mpileup, Strelka\n- Structural Variants: Manta, TIDDIT\n- Copy-number: CNVKit\n\nTumor-only somatic variant calling can currently be performed with the following variant callers:\n- SNPs/Indels: FreeBayes, mpileup, Mutect2, Strelka\n- Structural Variants: Manta, TIDDIT\n- Copy-number: CNVKit, ControlFREEC\n\nSomatic variant calling can currently only be performed with the following variant callers:\n- SNPs/Indels: FreeBayes, Mutect2, Strelka2\n- Structural variants: Manta, TIDDIT\n- Copy-Number: ASCAT, CNVKit, Control-FREEC\n- Microsatellite Instability: MSIsensorpro\n\n> **NB** Mutect2 for somatic variant calling cannot be combined with `--no_intervals`\n\n**Annotation:**\n \n- snpEff, VEP, merge (both consecutively).\n\n> **NB** As Sarek will use bgzip and tabix to compress and index VCF files annotated, it expects VCF files to be sorted when starting from `--step annotate`.",
-                    "pattern": "^((ascat|cnvkit|controlfreec|deepvariant|freebayes|haplotypecaller|manta|merge|mpileup|msisensorpro|mutect2|snpeff|strelka|tiddit|vep)?,?)*(?<!,)$"
+                    "description": "Tools to use for duplicate marking, variant calling and/or for annotation.",
+                    "help_text": "Multiple tools separated with commas.\n\n**Variant Calling:**\n\nGermline variant calling can currently be performed with the following variant callers:\n- SNPs/Indels: DeepVariant, FreeBayes, GATK HaplotypeCaller, mpileup, Sentieon Haplotyper, Strelka\n- Structural Variants: Manta, TIDDIT\n- Copy-number: CNVKit\n\nTumor-only somatic variant calling can currently be performed with the following variant callers:\n- SNPs/Indels: FreeBayes, mpileup, Mutect2, Strelka\n- Structural Variants: Manta, TIDDIT\n- Copy-number: CNVKit, ControlFREEC\n\nSomatic variant calling can currently only be performed with the following variant callers:\n- SNPs/Indels: FreeBayes, Mutect2, Strelka2\n- Structural variants: Manta, TIDDIT\n- Copy-Number: ASCAT, CNVKit, Control-FREEC\n- Microsatellite Instability: MSIsensorpro\n\n> **NB** Mutect2 for somatic variant calling cannot be combined with `--no_intervals`\n\n**Annotation:**\n \n- snpEff, VEP, merge (both consecutively).\n\n> **NB** As Sarek will use bgzip and tabix to compress and index VCF files annotated, it expects VCF files to be sorted when starting from `--step annotate`.",
+                    "pattern": "^((ascat|cnvkit|controlfreec|deepvariant|freebayes|haplotypecaller|sentieon_haplotyper|manta|merge|mpileup|msisensorpro|mutect2|sentieon_dedup|snpeff|strelka|tiddit|vep)?,?)*(?<!,)$"
                 },
                 "skip_tools": {
                     "type": "string",
                     "fa_icon": "fas fa-forward",
                     "description": "Disable specified tools.",
                     "help_text": "Multiple tools can be specified, separated by commas.\n\n> **NB** `--skip_tools baserecalibrator_report` is actually just not saving the reports.\n> **NB** `--skip_tools markduplicates_report` does not skip `MarkDuplicates` but prevent the collection of duplicate metrics that slows down performance.",
-                    "pattern": "^((baserecalibrator|baserecalibrator_report|bcftools|documentation|fastqc|haplotypecaller_filter|markduplicates|markduplicates_report|mosdepth|multiqc|samtools|vcftools|versions)?,?)*(?<!,)$"
+                    "pattern": "^((baserecalibrator|baserecalibrator_report|bcftools|documentation|fastqc|haplotypecaller_filter|haplotyper_filter|markduplicates|markduplicates_report|mosdepth|multiqc|samtools|vcftools|versions)?,?)*(?<!,)$"
                 }
             },
             "fa_icon": "fas fa-user-cog"
@@ -112,8 +130,7 @@
                     "type": "boolean",
                     "fa_icon": "fas fa-cut",
                     "description": "Run FastP for read trimming",
-                    "help_text": "Use this to perform adapter trimming. Adapter are detected automatically by using the FastP flag `--detect_adapter_for_pe`. For more info see [FastP](https://github.com/OpenGene/fastp) ",
-                    "hidden": true
+                    "help_text": "Use this to perform adapter trimming. Adapter are detected automatically by using the FastP flag `--detect_adapter_for_pe`. For more info see [FastP](https://github.com/OpenGene/fastp)."
                 },
                 "clip_r1": {
                     "type": "integer",
@@ -165,7 +182,6 @@
                     "type": "string",
                     "fa_icon": "fas fa-tape",
                     "description": "Specify UMI read structure",
-                    "hidden": true,
                     "help_text": "One structure if UMI is present on one end (i.e. '+T 2M11S+T'), or two structures separated by a blank space if UMIs a present on both ends (i.e. '2M11S+T 2M11S+T'); please note, this does not handle duplex-UMIs.\n\nFor more info on UMI usage in the pipeline, also check docs [here](./docs/usage.md/#how-to-handle-umis)."
                 },
                 "group_by_umi_strategy": {
@@ -194,10 +210,9 @@
                     "type": "string",
                     "default": "bwa-mem",
                     "fa_icon": "fas fa-puzzle-piece",
-                    "enum": ["bwa-mem", "bwa-mem2", "dragmap"],
+                    "enum": ["bwa-mem", "bwa-mem2", "dragmap", "sentieon-bwamem"],
                     "description": "Specify aligner to be used to map reads to reference genome.",
-                    "help_text": "`Sarek` will build missing indices automatically if not provided. Set `--bwa false` if indices should be (re-)built.\nIf `DragMap` is selected as aligner, it is recommended to skip baserecalibration with `--skip_tools baserecalibrator`. See [here](https://gatk.broadinstitute.org/hc/en-us/articles/4407897446939--How-to-Run-germline-single-sample-short-variant-discovery-in-DRAGEN-mode) for more info.\n",
-                    "hidden": true
+                    "help_text": "Sarek will build missing indices automatically if not provided. Set `--bwa false` if indices should be (re-)built.\nIf DragMap is selected as aligner, it is recommended to skip baserecalibration with `--skip_tools baserecalibrator`. For more info see [here](https://gatk.broadinstitute.org/hc/en-us/articles/4407897446939--How-to-Run-germline-single-sample-short-variant-discovery-in-DRAGEN-mode)."
                 },
                 "save_mapped": {
                     "type": "boolean",
@@ -244,6 +259,11 @@
                     "description": "Turn on the joint germline variant calling for GATK haplotypecaller",
                     "help_text": "Uses all normal germline samples (as designated by `status` in the input csv) in the joint germline variant calling process."
                 },
+                "joint_mutect2": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-angle-double-right",
+                    "description": "Runs Mutect2 in joint (multi-sample) mode for better concordance among variant calls of tumor samples from the same patient. Mutect2 outputs will be stored in a subfolder named with patient ID under `variant_calling/mutect2/` folder. Only a single normal sample per patient is allowed. Tumor-only mode is also supported."
+                },
                 "ascat_min_base_qual": {
                     "type": "number",
                     "default": 20,
@@ -271,7 +291,7 @@
                 "ascat_ploidy": {
                     "type": "number",
                     "fa_icon": "fas fa-bacon",
-                    "help_text": "ASCAT: optional argument to override ASCAT optimization and supply psi parameter (expert parameter, don\u2019t adapt unless you know what you\u2019re doing). See [here](https://raw.githubusercontent.com/VanLoo-lab/ascat/master/man/ASCAT-manual.pdf)",
+                    "help_text": "ASCAT: optional argument to override ASCAT optimization and supply psi parameter (expert parameter, do not adapt unless you know what you are doing). See [here](https://raw.githubusercontent.com/VanLoo-lab/ascat/master/man/ASCAT-manual.pdf)",
                     "hidden": true,
                     "description": "Overwrite ASCAT ploidy."
                 },
@@ -345,7 +365,6 @@
                 },
                 "cnvkit_reference": {
                     "type": "string",
-                    "default": null,
                     "fa_icon": "fas fa-file",
                     "help_text": "https://cnvkit.readthedocs.io/en/stable/pipeline.html?highlight=reference.cnn#batch",
                     "description": "Copy-number reference for CNVkit",
@@ -371,6 +390,14 @@
                     "description": "Do not analyze soft clipped bases in the reads for GATK Mutect2.",
                     "help_text": "use the `--dont-use-soft-clipped-bases` params with GATK Mutect2.",
                     "hidden": true
+                },
+                "sentieon_haplotyper_emit_mode": {
+                    "type": "string",
+                    "default": "variant",
+                    "fa_icon": "fas fa-toolbox",
+                    "description": "Option for selecting output and emit-mode of Sentieon's Haplotyper.",
+                    "help_text": "The option `--sentieon_haplotyper_emit_mode` can be set to the same string values as the Haplotyper's `--emit_mode`. To output both a vcf and a gvcf, specify both a vcf-option (currently, `all`, `confident` and `variant`) and `gvcf`. For example, to obtain a vcf and gvcf one could set `--sentieon_haplotyper_emit_mode` to `variant, gvcf`.",
+                    "pattern": "^(all|confident|gvcf|variant|gvcf,all|gvcf,confident|gvcf,variant|all,gvcf|confident,gvcf|variant,gvcf)(?<!,)$"
                 }
             }
         },
@@ -475,14 +502,22 @@
                 },
                 "vep_custom_args": {
                     "type": "string",
+                    "default": "--everything --filter_common --per_gene --total_length --offline --format vcf",
                     "fa_icon": "fas fa-toolbox",
                     "description": "Add an extra custom argument to VEP.",
                     "hidden": true,
                     "help_text": "Using this params you can add custom args to VEP."
                 },
+                "use_annotation_cache_keys": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-toolbox",
+                    "description": "Use annotation cache keys for snpeff_cache and vep_cache.",
+                    "hidden": true
+                },
                 "snpeff_cache": {
                     "type": "string",
                     "fa_icon": "fas fa-file",
+                    "default": "s3://annotation-cache/snpeff_cache/",
                     "description": "Path to snpEff cache.",
                     "help_text": "To be used with `--annotation_cache`.",
                     "hidden": true
@@ -490,6 +525,7 @@
                 "vep_cache": {
                     "type": "string",
                     "fa_icon": "fas fa-file",
+                    "default": "s3://annotation-cache/vep_cache/",
                     "description": "Path to VEP cache.",
                     "help_text": "To be used with `--annotation_cache`.",
                     "hidden": true
@@ -528,7 +564,6 @@
                 "ascat_genome": {
                     "type": "string",
                     "fa_icon": "fa-solid fa-text",
-                    "default": null,
                     "description": "ASCAT genome.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately.\n\nMust be set to run ASCAT, either hg19 or hg38. If you use AWS iGenomes, this has already been set for you appropriately.",
                     "enum": ["None", "hg19", "hg38"],
@@ -619,6 +654,7 @@
                 "fasta": {
                     "type": "string",
                     "format": "file-path",
+                    "exists": true,
                     "mimetype": "text/plain",
                     "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
                     "description": "Path to FASTA genome file.",
@@ -688,7 +724,7 @@
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
                 },
                 "snpeff_db": {
-                    "type": "number",
+                    "type": "string",
                     "fa_icon": "fas fa-database",
                     "description": "snpEff DB version.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately.\nThis is used to specify the database to be use to annotate with.\nAlternatively databases' names can be listed with the `snpEff databases`.",
@@ -699,13 +735,6 @@
                     "fa_icon": "fas fa-microscope",
                     "description": "snpEff genome.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately.\nThis is used to specify the genome when using the container with pre-downloaded cache.",
-                    "hidden": true
-                },
-                "snpeff_version": {
-                    "type": "string",
-                    "fa_icon": "fas fa-tag",
-                    "description": "snpEff version.",
-                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately.\nThis is used to specify the snpeff version when using the container with pre-downloaded cache.",
                     "hidden": true
                 },
                 "vep_genome": {
@@ -727,13 +756,6 @@
                     "fa_icon": "fas fa-tag",
                     "description": "VEP cache version.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately.\nAlternatively cache version can be use to specify the correct Ensembl Genomes version number as these differ from the concurrent Ensembl/VEP version numbers",
-                    "hidden": true
-                },
-                "vep_version": {
-                    "type": "string",
-                    "fa_icon": "fas fa-tag",
-                    "description": "VEP version.",
-                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately.\nThis is used to specify the VEP version when using the container with pre-downloaded cache.",
                     "hidden": true
                 },
                 "save_reference": {
@@ -868,7 +890,7 @@
                     "description": "Maximum amount of time that can be requested for any single job.",
                     "default": "240.h",
                     "fa_icon": "far fa-clock",
-                    "pattern": "^(\\d+\\.?\\s*(s|m|h|day)\\s*)+$",
+                    "pattern": "^(\\d+\\.?\\s*(s|m|h|d|day)\\s*)+$",
                     "hidden": true,
                     "help_text": "Use to set an upper-limit for the time requirement for each process. Should be a string in the format integer-unit e.g. `--max_time '2.h'`."
                 }
@@ -944,6 +966,7 @@
                 },
                 "multiqc_config": {
                     "type": "string",
+                    "format": "file-path",
                     "description": "Custom config file to supply to MultiQC.",
                     "fa_icon": "fas fa-cog",
                     "hidden": true
@@ -959,13 +982,6 @@
                     "description": "Custom MultiQC yaml file containing HTML including a methods description.",
                     "fa_icon": "fas fa-cog"
                 },
-                "tracedir": {
-                    "type": "string",
-                    "description": "Directory to keep pipeline Nextflow logs and reports.",
-                    "default": "${params.outdir}/pipeline_info",
-                    "fa_icon": "fas fa-cogs",
-                    "hidden": true
-                },
                 "validate_params": {
                     "type": "boolean",
                     "description": "Boolean whether to validate parameters against the schema at runtime",
@@ -973,12 +989,26 @@
                     "fa_icon": "fas fa-check-square",
                     "hidden": true
                 },
-                "show_hidden_params": {
+                "validationShowHiddenParams": {
                     "type": "boolean",
                     "fa_icon": "far fa-eye-slash",
                     "description": "Show all params when using `--help`",
                     "hidden": true,
                     "help_text": "By default, parameters set as _hidden_ in the schema are not shown on the command line when a user runs with `--help`. Specifying this option will tell the pipeline to show all parameters."
+                },
+                "validationFailUnrecognisedParams": {
+                    "type": "boolean",
+                    "fa_icon": "far fa-check-circle",
+                    "description": "Validation of parameters fails when an unrecognised parameter is found.",
+                    "hidden": true,
+                    "help_text": "By default, when an unrecognised parameter is found, it returns a warinig."
+                },
+                "validationLenientMode": {
+                    "type": "boolean",
+                    "fa_icon": "far fa-check-circle",
+                    "description": "Validation of parameters in lenient more.",
+                    "hidden": true,
+                    "help_text": "Allows string values that are parseable as numbers or booleans. For further information see [JSONSchema docs](https://github.com/everit-org/json-schema#lenient-mode)."
                 },
                 "hook_url": {
                     "type": "string",
