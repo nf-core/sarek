@@ -12,12 +12,13 @@ jobs:
     steps:
       # Launch workflow using Tower CLI tool action
       - name: Launch workflow via tower
-        uses: seqeralabs/action-tower-launch@v1
+        uses: seqeralabs/action-tower-launch@v2
         with:
           workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
           compute_env: ${{ secrets.TOWER_COMPUTE_ENV }}
           workdir: s3://${{ secrets.AWS_S3_BUCKET }}/work/sarek/work-${{ github.sha }}
+          revision: ${{ github.sha }}
           parameters: |
             {
               "outdir": "s3://${{ secrets.AWS_S3_BUCKET }}/sarek/results-test-${{ github.sha }}"
