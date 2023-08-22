@@ -1,3 +1,9 @@
+//
+// TIDDIT single sample variant calling
+//
+// For all modules here:
+// A when clause condition is defined in the conf/modules.config to determine if the module should be run
+
 include { BAM_VARIANT_CALLING_SINGLE_TIDDIT as TIDDIT_NORMAL } from '../bam_variant_calling_single_tiddit/main.nf'
 include { BAM_VARIANT_CALLING_SINGLE_TIDDIT as TIDDIT_TUMOR  } from '../bam_variant_calling_single_tiddit/main.nf'
 include { SVDB_MERGE                                         } from '../../../modules/nf-core/svdb/merge/main.nf'

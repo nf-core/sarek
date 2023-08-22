@@ -43,4 +43,6 @@ output:
       pattern: "versions.yml"
 
 authors:
+  - "@adamrtalbot"
+  - "@priesgo"
   - "@SusiJo"

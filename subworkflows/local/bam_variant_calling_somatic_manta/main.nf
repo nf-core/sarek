@@ -1,4 +1,10 @@
-include { MANTA_SOMATIC                                    } from '../../../modules/nf-core/manta/somatic/main'
+//
+// MANTA somatic variant calling
+//
+// For all modules here:
+// A when clause condition is defined in the conf/modules.config to determine if the module should be run
+
+include { MANTA_SOMATIC } from '../../../modules/nf-core/manta/somatic/main'
 
 workflow BAM_VARIANT_CALLING_SOMATIC_MANTA {
     take:

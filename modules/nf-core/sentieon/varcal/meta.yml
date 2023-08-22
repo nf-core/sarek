@@ -1,0 +1,72 @@
+name: sentieon_varcal
+description: |
+  Module for Sentieons VarCal. The VarCal algorithm calculates the Variant Quality Score Recalibration (VQSR).
+  VarCal builds a recalibration model for scoring variant quality.
+  https://support.sentieon.com/manual/usages/general/#varcal-algorithm
+keywords:
+  - sentieon
+  - varcal
+  - variant recalibration
+tools:
+  - sentieon:
+      description: |
+        Sentieon® provides complete solutions for secondary DNA/RNA analysis for a variety of sequencing platforms, including short and long reads.
+        Our software improves upon BWA, STAR, Minimap2, GATK, HaplotypeCaller, Mutect, and Mutect2 based pipelines and is deployable on any generic-CPU-based computing system.
+      homepage: https://www.sentieon.com/
+      documentation: https://www.sentieon.com/
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test' ]
+  - vcf:
+      type: file
+      description: input vcf file containing the variants to be recalibrated
+      pattern: "*.vcf.gz"
+  - tbi:
+      type: file
+      description: tbi file matching with -vcf
+      pattern: "*.vcf.gz.tbi"
+  - resource_vcf:
+      type: file
+      description: all resource vcf files that are used with the corresponding '--resource' label
+      pattern: "*.vcf.gz"
+  - resource_tbi:
+      type: file
+      description: all resource tbi files that are used with the corresponding '--resource' label
+      pattern: "*.vcf.gz.tbi"
+  - labels:
+      type: string
+      description: necessary arguments for Sentieon's VarCal. Specified to directly match the resources provided. More information can be found at https://support.sentieon.com/manual/usages/general/#varcal-algorithm
+  - fasta:
+      type: file
+      description: The reference fasta file
+      pattern: "*.fasta"
+  - fai:
+      type: file
+      description: Index of reference fasta file
+      pattern: "fasta.fai"
+output:
+  - recal:
+      type: file
+      description: Output recal file used by ApplyVQSR
+      pattern: "*.recal"
+  - idx:
+      type: file
+      description: Index file for the recal output file
+      pattern: "*.idx"
+  - tranches:
+      type: file
+      description: Output tranches file used by ApplyVQSR
+      pattern: "*.tranches"
+  - plots:
+      type: file
+      description: Optional output rscript file to aid in visualization of the input data and learned model.
+      pattern: "*plots.R"
+  - version:
+      type: file
+      description: File containing software versions
+      pattern: "*.versions.yml"
+authors:
+  - "@asp8200"

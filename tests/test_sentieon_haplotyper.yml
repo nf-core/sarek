@@ -1,0 +1,147 @@
+- name: Run variant calling on germline sample with sentieons haplotyper
+  command: nextflow run main.nf -profile test_cache,targeted --input ./tests/csv/3.0/mapped_single_bam.csv --tools sentieon_haplotyper --step variant_calling --outdir results
+  tags:
+    - germline
+    - sentieon/haplotyper
+    - variant_calling
+  files:
+    - path: results/csv/variantcalled.csv
+      md5sum: 4d3dd4f6dcb34a91a949641f2b1ac202
+    - path: results/multiqc
+    - path: results/preprocessing/converted/test/test.converted.cram
+    # binary changes md5sums on reruns
+    - path: results/preprocessing/converted/test/test.converted.cram.crai
+    # binary changes md5sums on reruns
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+      should_exist: false
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+      should_exist: false
+    - path: results/reports/bcftools/sentieon_haplotyper/test/test.haplotyper.filtered.bcftools_stats.txt
+      md5sum: 66be03d4e6535175514f54a1a031d49f
+    - path: results/reports/vcftools/sentieon_haplotyper/test/test.haplotyper.filtered.FILTER.summary
+      md5sum: d501a93356f3c91c743f51104e24514a
+    - path: results/reports/vcftools/sentieon_haplotyper/test/test.haplotyper.filtered.TsTv.count
+      md5sum: 89562fef808b5c3db629682d36fd86fc
+    - path: results/reports/vcftools/sentieon_haplotyper/test/test.haplotyper.filtered.TsTv.qual
+      # changes md5sum on reruns. This is somewhat unexpected, but might to tiny variation in very small numbers in the qual-files.
+    - path: results/variant_calling/sentieon_haplotyper/test/test.haplotyper.filtered.vcf.gz
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/sentieon_haplotyper/test/test.haplotyper.filtered.vcf.gz.tbi
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/sentieon_haplotyper/test/test.haplotyper.unfiltered.vcf.gz
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/sentieon_haplotyper/test/test.haplotyper.unfiltered.vcf.gz.tbi
+    # binary changes md5sums on reruns
+    - path: results/haplotyper
+      should_exist: false
+- name: Run variant calling on germline sample with sentieons haplotyper without intervals
+  command: nextflow run main.nf -profile test_cache,targeted --input ./tests/csv/3.0/mapped_single_bam.csv --tools sentieon_haplotyper --step variant_calling --no_intervals --outdir results
+  tags:
+    - germline
+    - sentieon/haplotyper
+    - no_intervals
+    - variant_calling
+  files:
+    - path: results/csv/variantcalled.csv
+      md5sum: 4d3dd4f6dcb34a91a949641f2b1ac202
+    - path: results/multiqc
+    - path: results/no_intervals.bed
+      md5sum: f3dac01ea66b95fe477446fde2d31489
+    - path: results/no_intervals.bed.gz
+      md5sum: f3dac01ea66b95fe477446fde2d31489
+    - path: results/no_intervals.bed.gz.tbi
+      md5sum: f3dac01ea66b95fe477446fde2d31489
+    - path: results/preprocessing/converted/test/test.converted.cram
+    # binary changes md5sums on reruns
+    - path: results/preprocessing/converted/test/test.converted.cram.crai
+    # binary changes md5sums on reruns
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+      should_exist: false
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+      should_exist: false
+    - path: results/reports/bcftools/sentieon_haplotyper/test/test.haplotyper.filtered.bcftools_stats.txt
+      md5sum: 66be03d4e6535175514f54a1a031d49f
+    - path: results/reports/vcftools/sentieon_haplotyper/test/test.haplotyper.filtered.FILTER.summary
+      md5sum: d501a93356f3c91c743f51104e24514a
+    - path: results/reports/vcftools/sentieon_haplotyper/test/test.haplotyper.filtered.TsTv.count
+      md5sum: 89562fef808b5c3db629682d36fd86fc
+    - path: results/reports/vcftools/sentieon_haplotyper/test/test.haplotyper.filtered.TsTv.qual
+      # changes md5sum on reruns. This is somewhat unexpected, but might to tiny variation in very small numbers in the qual-files.
+    - path: results/variant_calling/sentieon_haplotyper/test/test.haplotyper.filtered.vcf.gz
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/sentieon_haplotyper/test/test.haplotyper.filtered.vcf.gz.tbi
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/sentieon_haplotyper/test/test.haplotyper.unfiltered.vcf.gz
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/sentieon_haplotyper/test/test.haplotyper.unfiltered.vcf.gz.tbi
+    # binary changes md5sums on reruns
+    - path: results/sentieon_haplotyper
+      should_exist: false
+- name: Run variant calling on germline sample with sentieons haplotyper output gvcf
+  command: nextflow run main.nf -profile test_cache,targeted --input ./tests/csv/3.0/mapped_single_bam.csv --tools sentieon_haplotyper --step variant_calling --outdir results --sentieon_haplotyper_emit_mode gvcf
+  tags:
+    - germline
+    - sentieon/haplotyper
+    - variant_calling
+  files:
+    - path: results/csv/variantcalled.csv
+      should_exist: false
+    - path: results/multiqc
+    - path: results/preprocessing/converted/test/test.converted.cram
+    # binary changes md5sums on reruns
+    - path: results/preprocessing/converted/test/test.converted.cram.crai
+    # binary changes md5sums on reruns
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+      should_exist: false
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+      should_exist: false
+    - path: results/reports/bcftools/sentieon_haplotyper/test/test.haplotyper.filtered.bcftools_stats.txt
+      should_exist: false
+    - path: results/reports/vcftools/sentieon_haplotyper/test/test.haplotyper.filtered.FILTER.summary
+      should_exist: false
+    - path: results/reports/vcftools/sentieon_haplotyper/test/test.haplotyper.filtered.TsTv.count
+      should_exist: false
+    - path: results/reports/vcftools/sentieon_haplotyper/test/test.haplotyper.filtered.TsTv.qual
+      should_exist: false
+    - path: results/variant_calling/sentieon_haplotyper/test/test.haplotyper.g.vcf.gz
+    - path: results/variant_calling/sentieon_haplotyper/test/test.haplotyper.g.vcf.gz.tbi
+    - path: results/variant_calling/sentieon_haplotyper/test/test.haplotyper.filtered.vcf.gz
+      should_exist: false
+    - path: results/variant_calling/sentieon_haplotyper/test/test.haplotyper.filtered.vcf.gz.tbi
+      should_exist: false
+    - path: results/variant_calling/sentieon_haplotyper/test/test.haplotyper.unfiltered.vcf.gz
+      should_exist: false
+    - path: results/variant_calling/sentieon_haplotyper/test/test.haplotyper.unfiltered.vcf.gz.tbi
+      should_exist: false
+    - path: results/haplotyper
+      should_exist: false
+- name: Run variant calling on germline sample with sentieons haplotyper output both gvcf and vcf
+  command: nextflow run main.nf -profile test_cache,targeted --input ./tests/csv/3.0/mapped_single_bam.csv --tools sentieon_haplotyper --step variant_calling --outdir results --sentieon_haplotyper_emit_mode variant,gvcf
+  tags:
+    - germline
+    - sentieon/haplotyper
+    - variant_calling
+  files:
+    - path: results/csv/variantcalled.csv
+      md5sum: 4d3dd4f6dcb34a91a949641f2b1ac202
+    - path: results/multiqc
+    - path: results/preprocessing/converted/test/test.converted.cram
+    # binary changes md5sums on reruns
+    - path: results/preprocessing/converted/test/test.converted.cram.crai
+    # binary changes md5sums on reruns
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+      should_exist: false
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+      should_exist: false
+    - path: results/reports/bcftools/sentieon_haplotyper/test/test.haplotyper.filtered.bcftools_stats.txt
+    - path: results/reports/vcftools/sentieon_haplotyper/test/test.haplotyper.filtered.FILTER.summary
+    - path: results/reports/vcftools/sentieon_haplotyper/test/test.haplotyper.filtered.TsTv.count
+    - path: results/reports/vcftools/sentieon_haplotyper/test/test.haplotyper.filtered.TsTv.qual
+    - path: results/variant_calling/sentieon_haplotyper/test/test.haplotyper.g.vcf.gz
+    - path: results/variant_calling/sentieon_haplotyper/test/test.haplotyper.g.vcf.gz.tbi
+    - path: results/variant_calling/sentieon_haplotyper/test/test.haplotyper.filtered.vcf.gz
+    - path: results/variant_calling/sentieon_haplotyper/test/test.haplotyper.filtered.vcf.gz.tbi
+    - path: results/variant_calling/sentieon_haplotyper/test/test.haplotyper.unfiltered.vcf.gz
+    - path: results/variant_calling/sentieon_haplotyper/test/test.haplotyper.unfiltered.vcf.gz.tbi
+    - path: results/haplotyper
+      should_exist: false

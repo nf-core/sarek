@@ -12,7 +12,7 @@ include { BAM_VARIANT_CALLING_SOMATIC_MANTA             } from '../bam_variant_c
 include { BAM_VARIANT_CALLING_SOMATIC_MUTECT2           } from '../bam_variant_calling_somatic_mutect2/main'
 include { BAM_VARIANT_CALLING_SOMATIC_STRELKA           } from '../bam_variant_calling_somatic_strelka/main'
 include { BAM_VARIANT_CALLING_SOMATIC_TIDDIT            } from '../bam_variant_calling_somatic_tiddit/main'
-include { MSISENSORPRO_MSI_SOMATIC                      } from '../../../modules/nf-core/msisensorpro/msi_somatic/main'
+include { MSISENSORPRO_MSISOMATIC                       } from '../../../modules/nf-core/msisensorpro/msisomatic/main'
 
 workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     take:
@@ -40,6 +40,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     loci_files                    // channel: [optional]  ascat loci files
     gc_file                       // channel: [optional]  ascat gc content file
     rt_file                       // channel: [optional]  ascat rt file
+    joint_mutect2                 // boolean: [mandatory] [default: false] run mutect2 in joint mode
 
     main:
     versions          = Channel.empty()
@@ -172,10 +173,10 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
     // MSISENSOR
     if (tools.split(',').contains('msisensorpro')) {
-        MSISENSORPRO_MSI_SOMATIC(cram.combine(intervals_bed_combined), fasta, msisensorpro_scan)
+        MSISENSORPRO_MSISOMATIC(cram.combine(intervals_bed_combined), fasta, msisensorpro_scan)
 
-        versions = versions.mix(MSISENSORPRO_MSI_SOMATIC.out.versions)
-        out_msisensorpro = out_msisensorpro.mix(MSISENSORPRO_MSI_SOMATIC.out.output_report)
+        versions = versions.mix(MSISENSORPRO_MSISOMATIC.out.versions)
+        out_msisensorpro = out_msisensorpro.mix(MSISENSORPRO_MSISOMATIC.out.output_report)
     }
 
     // MUTECT2
@@ -192,7 +193,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             germline_resource_tbi,
             panel_of_normals,
             panel_of_normals_tbi,
-            intervals
+            intervals,
+            joint_mutect2
         )
 
         vcf_mutect2 = BAM_VARIANT_CALLING_SOMATIC_MUTECT2.out.vcf_filtered
