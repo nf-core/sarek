@@ -28,8 +28,8 @@ def checkPathParamList = [
     params.bwa,
     params.bwamem2,
     params.cf_chrom_len,
-    params.cnvkit_reference,
     params.chr_dir,
+    params.cnvkit_reference,
     params.dbnsfp,
     params.dbnsfp_tbi,
     params.dbsnp,
@@ -42,10 +42,10 @@ def checkPathParamList = [
     params.germline_resource_tbi,
     params.input,
     params.intervals,
-    params.known_snps,
-    params.known_snps_tbi,
     params.known_indels,
     params.known_indels_tbi,
+    params.known_snps,
+    params.known_snps_tbi,
     params.mappability,
     params.multiqc_config,
     params.pon,
@@ -284,6 +284,10 @@ if (params.tools && (params.tools.split(',').contains('ascat') || params.tools.s
     }
 }
 
+if ((params.download_cache) && (params.snpeff_cache || params.vep_cache)) {
+    error("Please specify either `--download_cache` or `--snpeff_cache`, `--vep_cache`.\nhttps://nf-co.re/sarek/dev/usage#how-to-customise-snpeff-and-vep-annotation")
+}
+
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     IMPORT LOCAL MODULES/SUBWORKFLOWS
@@ -300,7 +304,7 @@ chr_dir            = params.chr_dir            ? Channel.fromPath(params.chr_dir
 dbsnp              = params.dbsnp              ? Channel.fromPath(params.dbsnp).collect()             : Channel.value([])
 fasta              = params.fasta              ? Channel.fromPath(params.fasta).first()               : Channel.empty()
 fasta_fai          = params.fasta_fai          ? Channel.fromPath(params.fasta_fai).collect()         : Channel.empty()
-germline_resource  = params.germline_resource  ? Channel.fromPath(params.germline_resource).collect() : Channel.value([]) // Mutec2 does not require a germline resource, so set to optional input
+germline_resource  = params.germline_resource  ? Channel.fromPath(params.germline_resource).collect() : Channel.value([]) // Mutect2 does not require a germline resource, so set to optional input
 known_indels       = params.known_indels       ? Channel.fromPath(params.known_indels).collect()      : Channel.value([])
 known_snps         = params.known_snps         ? Channel.fromPath(params.known_snps).collect()        : Channel.value([])
 mappability        = params.mappability        ? Channel.fromPath(params.mappability).collect()       : Channel.value([])
@@ -317,8 +321,8 @@ vep_genome         = params.vep_genome         ?: Channel.empty()
 vep_species        = params.vep_species        ?: Channel.empty()
 
 // Initialize files channels based on params, not defined within the params.genomes[params.genome] scope
-snpeff_cache       = params.snpeff_cache       ? Channel.fromPath(params.snpeff_cache).collect()      : []
-vep_cache          = params.vep_cache          ? Channel.fromPath(params.vep_cache).collect()         : []
+snpeff_cache       = params.snpeff_cache ? params.use_annotation_cache_keys ? Channel.fromPath("${params.snpeff_cache}/${params.snpeff_genome}.${params.snpeff_db}").collect()   : Channel.fromPath(params.snpeff_cache).collect() : []
+vep_cache          = params.vep_cache    ? params.use_annotation_cache_keys ? Channel.fromPath("${params.vep_cache}/${params.vep_cache_version}_${params.vep_genome}").collect() : Channel.fromPath(params.vep_cache).collect()    : []
 
 vep_extra_files = []
 
@@ -422,10 +426,10 @@ include { VCF_QC_BCFTOOLS_VCFTOOLS                    } from '../subworkflows/lo
 include { VCF_ANNOTATE_ALL                            } from '../subworkflows/local/vcf_annotate_all/main'
 
 // REPORTING VERSIONS OF SOFTWARE USED
-include { CUSTOM_DUMPSOFTWAREVERSIONS                } from '../modules/nf-core/custom/dumpsoftwareversions/main'
+include { CUSTOM_DUMPSOFTWAREVERSIONS                 } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 
 // MULTIQC
-include { MULTIQC                                    } from '../modules/nf-core/multiqc/main'
+include { MULTIQC                                     } from '../modules/nf-core/multiqc/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -448,13 +452,13 @@ workflow SAREK {
 
     // Download cache if needed
     // Assuming that if the cache is provided, the user has already downloaded it
-    ensemblvep_info = params.vep_cache    ? [] : Channel.of([ [ id:"${params.vep_genome}.${params.vep_cache_version}" ], params.vep_genome, params.vep_species, params.vep_cache_version ])
+    ensemblvep_info = params.vep_cache    ? [] : Channel.of([ [ id:"${params.vep_cache_version}_${params.vep_genome}" ], params.vep_genome, params.vep_species, params.vep_cache_version ])
     snpeff_info     = params.snpeff_cache ? [] : Channel.of([ [ id:"${params.snpeff_genome}.${params.snpeff_db}" ], params.snpeff_genome, params.snpeff_db ])
 
     if (params.download_cache) {
         PREPARE_CACHE(ensemblvep_info, snpeff_info)
-        snpeff_cache       = PREPARE_CACHE.out.snpeff_cache.map{ meta, cache -> [ cache ] }
-        vep_cache          = PREPARE_CACHE.out.ensemblvep_cache.map{ meta, cache -> [ cache ] }
+        snpeff_cache = PREPARE_CACHE.out.snpeff_cache
+        vep_cache    = PREPARE_CACHE.out.ensemblvep_cache.map{ meta, cache -> [ cache ] }
 
         versions = versions.mix(PREPARE_CACHE.out.versions)
     }
@@ -476,17 +480,17 @@ workflow SAREK {
 
     // Gather built indices or get them from the params
     // Built from the fasta file:
-    dict                   = params.dict                    ? Channel.fromPath(params.dict).map{ it -> [ [id:'dict'], it ] }.collect()
-                                                            : PREPARE_GENOME.out.dict
-    fasta_fai              = params.fasta_fai               ? Channel.fromPath(params.fasta_fai).collect()
-                                                            : PREPARE_GENOME.out.fasta_fai
+    dict       = params.dict        ? Channel.fromPath(params.dict).map{ it -> [ [id:'dict'], it ] }.collect()
+                                    : PREPARE_GENOME.out.dict
+    fasta_fai  = params.fasta_fai   ? Channel.fromPath(params.fasta_fai).collect()
+                                    : PREPARE_GENOME.out.fasta_fai
+    bwa        = params.bwa         ? Channel.fromPath(params.bwa).collect()
+                                    : PREPARE_GENOME.out.bwa
+    bwamem2    = params.bwamem2     ? Channel.fromPath(params.bwamem2).collect()
+                                    : PREPARE_GENOME.out.bwamem2
+    dragmap    = params.dragmap     ? Channel.fromPath(params.dragmap).collect()
+                                    : PREPARE_GENOME.out.hashtable
 
-    bwa                    = params.bwa                     ? Channel.fromPath(params.bwa).collect()
-                                                            : PREPARE_GENOME.out.bwa
-    bwamem2                = params.bwamem2                 ? Channel.fromPath(params.bwamem2).collect()
-                                                            : PREPARE_GENOME.out.bwamem2
-    dragmap                = params.dragmap                 ? Channel.fromPath(params.dragmap).collect()
-                                                            : PREPARE_GENOME.out.hashtable
     // Gather index for mapping given the chosen aligner
     index_alignement = (params.aligner == "bwa-mem" || params.aligner == "sentieon-bwamem") ? bwa :
         params.aligner == "bwa-mem2" ? bwamem2 :
@@ -504,7 +508,7 @@ workflow SAREK {
 
     // Tabix indexed vcf files:
     dbsnp_tbi              = params.dbsnp                   ? params.dbsnp_tbi             ? Channel.fromPath(params.dbsnp_tbi).collect()             : PREPARE_GENOME.out.dbsnp_tbi             : Channel.value([])
-    germline_resource_tbi  = params.germline_resource       ? params.germline_resource_tbi ? Channel.fromPath(params.germline_resource_tbi).collect() : PREPARE_GENOME.out.germline_resource_tbi : Channel.value([])
+    germline_resource_tbi  = params.germline_resource       ? params.germline_resource_tbi ? Channel.fromPath(params.germline_resource_tbi).collect() : PREPARE_GENOME.out.germline_resource_tbi : [] //do not change to Channel.value([]), the check for its existence then fails for Getpileupsumamries
     known_indels_tbi       = params.known_indels            ? params.known_indels_tbi      ? Channel.fromPath(params.known_indels_tbi).collect()      : PREPARE_GENOME.out.known_indels_tbi      : Channel.value([])
     known_snps_tbi         = params.known_snps              ? params.known_snps_tbi        ? Channel.fromPath(params.known_snps_tbi).collect()        : PREPARE_GENOME.out.known_snps_tbi        : Channel.value([])
     pon_tbi                = params.pon                     ? params.pon_tbi               ? Channel.fromPath(params.pon_tbi).collect()               : PREPARE_GENOME.out.pon_tbi               : Channel.value([])

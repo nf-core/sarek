@@ -29,6 +29,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     main:
     versions = Channel.empty()
 
+    //If no germline resource is provided, then create an empty channel to avoid GetPileupsummaries from being run
     germline_resource_pileup     = germline_resource_tbi ? germline_resource : Channel.empty()
     germline_resource_pileup_tbi = germline_resource_tbi ?: Channel.empty()
 
@@ -118,6 +119,10 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     // Contamination and segmentation tables created using calculatecontamination on the pileup summary table
     CALCULATECONTAMINATION(pileup_table.map{ meta, table -> [ meta, table, [] ] })
 
+    // Initialize empty channel: Contamination calculation is run on pileup table, pileup is not run if germline resource is not provided
+    calculatecontamination_out_seg = Channel.empty()
+    calculatecontamination_out_cont = Channel.empty()
+
     if (joint_mutect2) {
         // Remove sample names and retain patient name as the main identifier
         calculatecontamination_out_seg = CALCULATECONTAMINATION.out.segmentation.map{ meta, seg -> [ meta - meta.subMap('sample') + [id:meta.patient], seg ] }.groupTuple()
@@ -133,8 +138,8 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     vcf_to_filter = vcf.join(tbi, failOnDuplicate: true, failOnMismatch: true)
         .join(stats, failOnDuplicate: true, failOnMismatch: true)
         .join(LEARNREADORIENTATIONMODEL.out.artifactprior, failOnDuplicate: true, failOnMismatch: true)
-        .join(calculatecontamination_out_seg, failOnDuplicate: true, failOnMismatch: true)
-        .join(calculatecontamination_out_cont, failOnDuplicate: true, failOnMismatch: true)
+        .join(calculatecontamination_out_seg)
+        .join(calculatecontamination_out_cont)
         .map{ meta, vcf, tbi, stats, artifactprior, seg, cont -> [ meta, vcf, tbi, stats, artifactprior, seg, cont, [] ] }
 
     FILTERMUTECTCALLS(vcf_to_filter, fasta, fai, dict)

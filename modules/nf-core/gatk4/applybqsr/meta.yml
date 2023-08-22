@@ -3,6 +3,7 @@ description: Apply base quality score recalibration (BQSR) to a bam file
 keywords:
   - bqsr
   - bam
+  - base quality score recalibration
 tools:
   - gatk4:
       description: |

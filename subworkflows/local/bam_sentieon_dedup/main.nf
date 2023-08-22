@@ -22,7 +22,7 @@ workflow BAM_SENTIEON_DEDUP {
     bam = bam.map{ meta, bam -> [ meta - meta.subMap('data_type'), bam ] }
     bai = bai.map{ meta, bai -> [ meta - meta.subMap('data_type'), bai ] }
     bam_bai = bam.join(bai, failOnMismatch:true, failOnDuplicate:true)
-    SENTIEON_DEDUP(bam_bai, fasta, fasta_fai)
+    SENTIEON_DEDUP(bam_bai, fasta.map{fa -> [[:], fa]}, fasta_fai.map{fai -> [[:], fai]})
 
     // Join with the crai file
     cram = SENTIEON_DEDUP.out.cram.join(SENTIEON_DEDUP.out.crai, failOnDuplicate: true, failOnMismatch: true)
