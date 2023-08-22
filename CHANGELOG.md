@@ -1203,7 +1203,7 @@ Ruotes is one of the main massif in the Sarek National Park.
 - [#607](https://github.com/SciLifeLab/Sarek/pull/607) - Update to `GATK4`
 - [#608](https://github.com/SciLifeLab/Sarek/pull/608) - Update `Nextflow` required version
 - [#616](https://github.com/SciLifeLab/Sarek/pull/616) - Update `CHANGELOG`
-- [#617](https://github.com/SciLifeLab/Sarek/pull/617) - Replace deprecated ` Nextflow ``$name ` syntax with `withName`
+- [#617](https://github.com/SciLifeLab/Sarek/pull/617) - Replace deprecated `Nextflow ``$name` syntax with `withName`
 
 ### Fixed
 
