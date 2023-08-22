@@ -79,8 +79,8 @@ workflow BAM_JOINT_CALLING_GERMLINE_SENTIEON {
 
     SENTIEON_APPLYVARCAL_SNP(
         vqsr_input_snp,
-        fasta,
-        fai)
+        fasta.map{ fasta -> [ [ id:fasta.baseName ], fasta ] },
+        fai.map{ fai -> [ [ id:fai.baseName ], fai ] })
 
     // Join results of SENTIEON_APPLYVARCAL_SNP and use as input for SENTIEON_APPLYVARCAL_INDEL to avoid duplicate entries in the result
     // Rework meta for variantscalled.csv and annotation tools
@@ -92,8 +92,8 @@ workflow BAM_JOINT_CALLING_GERMLINE_SENTIEON {
 
     SENTIEON_APPLYVARCAL_INDEL(
         vqsr_input_indel,
-        fasta,
-        fai)
+        fasta.map{ fasta -> [ [ id:fasta.baseName ], fasta ] },
+        fai.map{ fai -> [ [ id:fai.baseName ], fai ] })
 
     // The following is an ugly monster to achieve the following:
     // When MERGE_GENOTYPEGVCFS and SENTIEON_APPLYVARCAL are run, then use output from SENTIEON_APPLYVARCAL

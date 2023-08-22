@@ -87,7 +87,7 @@ process SENTIEON_VARCAL {
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
         error "Sentieon modules do not support Conda. Please use Docker / Singularity / Podman instead."
     }
-    prefix   = task.ext.prefix ?: "${meta.id}"
+    def prefix   = task.ext.prefix ?: "${meta.id}"
     """
     touch ${prefix}.recal
     touch ${prefix}.idx
