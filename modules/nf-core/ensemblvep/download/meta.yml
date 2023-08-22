@@ -2,6 +2,8 @@ name: ENSEMBLVEP_DOWNLOAD
 description: Ensembl Variant Effect Predictor (VEP). The cache downloading options are controlled through `task.ext.args`.
 keywords:
   - annotation
+  - cache
+  - download
 tools:
   - ensemblvep:
       description: |
@@ -17,15 +19,15 @@ input:
         Groovy Map containing sample information
         e.g. [ id:'test', single_end:false ]
   - assembly:
-      type: value
+      type: string
       description: |
         Genome assembly
   - species:
-      type: value
+      type: string
       description: |
         Specie
   - cache_version:
-      type: value
+      type: string
       description: |
         cache version
 output:

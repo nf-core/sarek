@@ -44,6 +44,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - [Control-FREEC](#control-freec)
   - [MSI status](#msi-status)
     - [MSIsensorPro](#msisensorpro)
+  - [Concatenation](#concatentation)
 - [Variant annotation](#variant-annotation)
   - [snpEff](#snpeff)
   - [VEP](#vep)
@@ -392,9 +393,9 @@ If the haplotype-called VCF files are not filtered, then Sarek should be run wit
 **Output directory: `{outdir}/variantcalling/haplotypecaller/<sample>/`**
 
 - `<sample>.haplotypecaller.g.vcf.gz` and `<sample>.haplotypecaller.g.vcf.gz.tbi`
-  - VCF with tabix index
+  - gVCF with tabix index
 
-**Output directory: `{outdir}/variantcalling/sentieon_haplotyper/joint_variant_calling/`**
+**Output directory: `{outdir}/variantcalling/haplotypecaller/joint_variant_calling/`**
 
 - `joint_germline.vcf.gz` and `joint_germline.vcf.gz.tbi`
   - VCF with tabix index
@@ -758,6 +759,20 @@ It requires a normal sample for each tumour to differentiate the somatic and ger
 - `<tumorsample_vs_normalsample>_somatic`
   - Germline sites detected.
   </details>
+
+### Concatentation
+
+Germline VCFs from `DeepVariant`, `FreeBayes`, `HaplotypeCaller`, `Haplotyper`, `Manta`, `bcftools mpileup`, `Strelka2`, or `Tiddit` are concatenated with `bcftools concat`. The field `SOURCE` is added to the VCF header to report the variant caller.
+
+<details markdown="1">
+<summary>Concatenated VCF-files for normal samples</summary>
+
+**Output directory: `{outdir}/variantcalling/concat/<sample>/`**
+
+- `<sample>.germline.vcf.gz` and `<sample>.germline.vcf.gz.tbi`
+  - VCF with tabix index
+
+</details>
 
 ## Variant annotation
 

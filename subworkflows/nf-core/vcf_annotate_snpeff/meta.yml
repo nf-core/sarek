@@ -5,8 +5,9 @@ keywords:
   - vcf
   - annotation
   - snpeff
-modules:
+components:
   - snpeff
+  - snpeff/snpeff
   - tabix/bgziptabix
 input:
   - ch_vcf:

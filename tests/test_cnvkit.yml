@@ -20,7 +20,7 @@
     - path: results/variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted.antitargetcoverage.cnn
       md5sum: fe1248aa91fad7769303bb4c031d55ca
     - path: results/variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted.bintest.cns
-      md5sum: e55667a75d7d8eaec2efd3b611f15379
+      md5sum: d8c43bead209cdf4c480284c64542693
     - path: results/variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted.call.cns
       md5sum: 9968e02ef2f11ed22e2789c053f7159c
     - path: results/variant_calling/cnvkit/sample3/test.paired_end.recalibrated.sorted.cnr
@@ -46,13 +46,13 @@
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.antitargetcoverage.cnn
       md5sum: 067115082c4af4b64d58c0dc3a3642e4
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.bintest.cns
-      md5sum: e9a260b81a34d8bc75330435d2a5e8da
+      md5sum: 3950153843b43230c5d0fdf832740b5d
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.call.cns
-      md5sum: c7d7fd87b27e103f73988ae307450e82
+      md5sum: ac3d073de1db84fa19077d8eda01b616
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.cnr
-      md5sum: 26c506866198d46610c71fa6c0f9e381
+      md5sum: d7d437ae406ca2f00a6362277fe334ba
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.cns
-      md5sum: 83510b274c24a2671a962477a1ceb436
+      md5sum: d15bf5061d90c8edbcba04d2bd2a270c
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.targetcoverage.cnn
       md5sum: b4a49faf170e436ec32dcc21ccc3ce8f
     - path: results/cnvkit
@@ -77,7 +77,7 @@
     - path: results/variant_calling/cnvkit/sample2/test2.paired_end.recalibrated.sorted.antitargetcoverage.cnn
       md5sum: 067115082c4af4b64d58c0dc3a3642e4
     - path: results/variant_calling/cnvkit/sample2/test2.paired_end.recalibrated.sorted.bintest.cns
-      md5sum: f6adc75a0a86b7a921eca1b79a394cb0
+      md5sum: 7a66b5f63acb05e6dfb0784c215851ec
     - path: results/variant_calling/cnvkit/sample2/test2.paired_end.recalibrated.sorted.call.cns
       md5sum: f7caeca04aba28b125ce26b511f42afb
     - path: results/variant_calling/cnvkit/sample2/test2.paired_end.recalibrated.sorted.cnr
@@ -110,7 +110,7 @@
     - path: results/variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted.antitargetcoverage.cnn
       md5sum: fe1248aa91fad7769303bb4c031d55ca
     - path: results/variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted.bintest.cns
-      md5sum: e55667a75d7d8eaec2efd3b611f15379
+      md5sum: d8c43bead209cdf4c480284c64542693
     - path: results/variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted.call.cns
       md5sum: 9968e02ef2f11ed22e2789c053f7159c
     - path: results/variant_calling/cnvkit/sample1/test.paired_end.recalibrated.sorted.cnr
@@ -147,12 +147,12 @@
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.antitargetcoverage.cnn
       md5sum: 067115082c4af4b64d58c0dc3a3642e4
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.bintest.cns
-      md5sum: e9a260b81a34d8bc75330435d2a5e8da
+      md5sum: 3950153843b43230c5d0fdf832740b5d
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.call.cns
-      md5sum: c7d7fd87b27e103f73988ae307450e82
+      md5sum: ac3d073de1db84fa19077d8eda01b616
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.cnr
-      md5sum: 26c506866198d46610c71fa6c0f9e381
+      md5sum: d7d437ae406ca2f00a6362277fe334ba
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.cns
-      md5sum: 83510b274c24a2671a962477a1ceb436
+      md5sum: d15bf5061d90c8edbcba04d2bd2a270c
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.targetcoverage.cnn
       md5sum: b4a49faf170e436ec32dcc21ccc3ce8f

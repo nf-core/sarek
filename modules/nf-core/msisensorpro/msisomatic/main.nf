@@ -1,4 +1,4 @@
-process MSISENSORPRO_MSI_SOMATIC {
+process MSISENSORPRO_MSISOMATIC {
     tag "$meta.id"
     label 'process_low'
 

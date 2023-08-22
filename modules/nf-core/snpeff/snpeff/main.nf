@@ -10,7 +10,7 @@ process SNPEFF_SNPEFF {
     input:
     tuple val(meta), path(vcf)
     val   db
-    path  cache
+    tuple val(meta2), path(cache)
 
     output:
     tuple val(meta), path("*.ann.vcf"), emit: vcf
