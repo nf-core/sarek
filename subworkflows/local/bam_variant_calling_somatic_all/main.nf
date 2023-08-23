@@ -53,7 +53,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     vcf_mutect2         = Channel.empty()
     vcf_tiddit          = Channel.empty()
 
-    if (checkTools(params.tools, 'ascat')) {
+    if (checkInParam(params.tools, 'ascat')) {
         BAM_VARIANT_CALLING_SOMATIC_ASCAT(
             cram,
             allele_files,
@@ -68,7 +68,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     }
 
     // CONTROLFREEC
-    if (checkTools(params.tools, 'controlfreec')) {
+    if (checkInParam(params.tools, 'controlfreec')) {
         // Remap channels to match module/subworkflow
         cram_normal = cram.map { meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [ meta, normal_cram, normal_crai ] }
         cram_tumor = cram.map { meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [ meta, tumor_cram, tumor_crai ] }
@@ -111,7 +111,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     }
 
     // CNVKIT
-    if (checkTools(params.tools, 'cnvkit')) {
+    if (checkInParam(params.tools, 'cnvkit')) {
         BAM_VARIANT_CALLING_CNVKIT(
             // Remap channel to match module/subworkflow
             cram.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [ meta, tumor_cram, normal_cram ] },
@@ -125,7 +125,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     }
 
     // FREEBAYES
-    if (checkTools(params.tools, 'freebayes')) {
+    if (checkInParam(params.tools, 'freebayes')) {
         BAM_VARIANT_CALLING_FREEBAYES(
             cram,
             dict,
@@ -139,7 +139,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     }
 
     // MANTA
-    if (checkTools(params.tools, 'manta')) {
+    if (checkInParam(params.tools, 'manta')) {
         BAM_VARIANT_CALLING_SOMATIC_MANTA(
             cram,
             fasta,
@@ -152,9 +152,9 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     }
 
     // STRELKA
-    if (checkTools(params.tools, 'strelka')) {
+    if (checkInParam(params.tools, 'strelka')) {
         // Remap channel to match module/subworkflow
-        cram_strelka = (checkTools(params.tools, 'manta')) ?
+        cram_strelka = (checkInParam(params.tools, 'manta')) ?
             cram.join(BAM_VARIANT_CALLING_SOMATIC_MANTA.out.candidate_small_indels_vcf, failOnDuplicate: true, failOnMismatch: true).join(BAM_VARIANT_CALLING_SOMATIC_MANTA.out.candidate_small_indels_vcf_tbi, failOnDuplicate: true, failOnMismatch: true) :
             cram.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, [], [] ] }
 
@@ -172,7 +172,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     }
 
     // MSISENSOR
-    if (checkTools(params.tools, 'msisensorpro')) {
+    if (checkInParam(params.tools, 'msisensorpro')) {
         MSISENSORPRO_MSISOMATIC(cram.combine(intervals_bed_combined), fasta, msisensorpro_scan)
 
         versions = versions.mix(MSISENSORPRO_MSISOMATIC.out.versions)
@@ -180,7 +180,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     }
 
     // MUTECT2
-    if (checkTools(params.tools, 'mutect2')) {
+    if (checkInParam(params.tools, 'mutect2')) {
         BAM_VARIANT_CALLING_SOMATIC_MUTECT2(
             // Remap channel to match module/subworkflow
             cram.map { meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [ meta, [ normal_cram, tumor_cram ], [ normal_crai, tumor_crai ] ] },
@@ -202,7 +202,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     }
 
     // TIDDIT
-    if (checkTools(params.tools, 'tiddit')) {
+    if (checkInParam(params.tools, 'tiddit')) {
         BAM_VARIANT_CALLING_SOMATIC_TIDDIT(
             // Remap channel to match module/subworkflow
             cram.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [ meta, normal_cram, normal_crai ] },
