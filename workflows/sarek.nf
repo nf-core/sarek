@@ -1311,7 +1311,7 @@ def flowcellLaneFromFastq(path) {
 // Check the parameters tools or skip_tools, then compare it against the provided tool
 // Returns true/false based on whether 'tool' is found in 'parameter'
 def checkTools(parameter, tool) {
-    parameter.split(',').any{ it.toLowerCase().contains(tool) }
+    parameter.split(',').any{ it.toLowerCase().equals(tool) }
 }
 
 
