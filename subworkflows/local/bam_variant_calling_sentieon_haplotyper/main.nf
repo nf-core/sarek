@@ -7,7 +7,6 @@
 include { GATK4_MERGEVCFS            as MERGE_SENTIEON_HAPLOTYPER_GVCFS } from '../../../modules/nf-core/gatk4/mergevcfs/main'
 include { GATK4_MERGEVCFS            as MERGE_SENTIEON_HAPLOTYPER_VCFS  } from '../../../modules/nf-core/gatk4/mergevcfs/main'
 include { SENTIEON_HAPLOTYPER                                           } from '../../../modules/nf-core/sentieon/haplotyper/main'
-include { VCF_VARIANT_FILTERING_GATK                                    } from '../vcf_variant_filtering_gatk/main'
 
 workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
     take:
@@ -18,23 +17,15 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
     dbsnp                          // channel: [optional]
     dbsnp_tbi                      // channel: [optional]
     dbsnp_vqsr                     // channel: [optional]
-    known_sites_indels             // channel: [optional]
-    known_sites_indels_tbi         // channel: [optional]
-    known_indels_vqsr              // channel: [optional]
-    known_sites_snps               // channel: [optional]
-    known_sites_snps_tbi           // channel: [optional]
-    known_snps_vqsr                // channel: [optional]
     intervals                      // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
-    intervals_bed_combined         // channel: [mandatory] intervals/target regions in one file unzipped, no_intervals.bed if no_intervals
-    skip_haplotyper_filter         // boolean: [mandatory] [default: false] skip haplotyper filter
     joint_germline                 // boolean: [mandatory] [default: false] joint calling of germline variants
     sentieon_haplotyper_emit_mode
 
     main:
     versions = Channel.empty()
 
-    gvcf = Channel.empty()
-    vcf = Channel.empty()
+    gvcf               = Channel.empty()
+    vcf                = Channel.empty()
     genotype_intervals = Channel.empty()
 
     // Combine cram and intervals for spread and gather strategy
@@ -73,25 +64,37 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
     }
 
     // Figure out if using intervals or no_intervals
-    SENTIEON_HAPLOTYPER.out.vcf.branch{
-        intervals:    it[0].num_intervals > 1
-        no_intervals: it[0].num_intervals <= 1
-    }.set{haplotyper_vcf_branch}
+    haplotyper_vcf_branch = SENTIEON_HAPLOTYPER.out.vcf.map{
+            meta, vcf -> [ meta - meta.subMap('interval_name'), vcf]
+        }
+        .branch{
+            intervals:    it[0].num_intervals > 1
+            no_intervals: it[0].num_intervals <= 1
+        }
 
-    SENTIEON_HAPLOTYPER.out.vcf_tbi.branch{
-        intervals:    it[0].num_intervals > 1
-        no_intervals: it[0].num_intervals <= 1
-    }.set{haplotyper_vcf_tbi_branch}
+    haplotyper_vcf_tbi_branch = SENTIEON_HAPLOTYPER.out.vcf_tbi.map{
+            meta, vcf_tbi -> [ meta - meta.subMap('interval_name'), vcf_tbi]
+        }
+        .branch{
+            intervals:    it[0].num_intervals > 1
+            no_intervals: it[0].num_intervals <= 1
+        }
 
-    SENTIEON_HAPLOTYPER.out.gvcf.branch{
-        intervals:    it[0].num_intervals > 1
-        no_intervals: it[0].num_intervals <= 1
-    }.set{haplotyper_gvcf_branch}
+    haplotyper_gvcf_branch = SENTIEON_HAPLOTYPER.out.gvcf.map{
+            meta, gvcf -> [ meta - meta.subMap('interval_name'), gvcf]
+        }
+        .branch{
+            intervals:    it[0].num_intervals > 1
+            no_intervals: it[0].num_intervals <= 1
+        }
 
-    SENTIEON_HAPLOTYPER.out.gvcf_tbi.branch{
-        intervals:    it[0].num_intervals > 1
-        no_intervals: it[0].num_intervals <= 1
-    }.set{haplotyper_gvcf_tbi_branch}
+    haplotyper_gvcf_tbi_branch = SENTIEON_HAPLOTYPER.out.gvcf_tbi.map{
+            meta, gvcf_tbi -> [ meta - meta.subMap('interval_name'), gvcf_tbi]
+        }
+        .branch{
+            intervals:    it[0].num_intervals > 1
+            no_intervals: it[0].num_intervals <= 1
+        }
 
     vcfs_for_merging = haplotyper_vcf_branch.intervals.map{
         meta, vcf -> [ groupKey(meta, meta.num_intervals), vcf ]}
@@ -113,25 +116,9 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
         MERGE_SENTIEON_HAPLOTYPER_VCFS.out.tbi,
         haplotyper_vcf_tbi_branch.no_intervals)
 
-    if (!skip_haplotyper_filter) {
-        VCF_VARIANT_FILTERING_GATK(
-            haplotyper_vcf.join(
-                haplotyper_tbi,
-                failOnDuplicate: true,
-                failOnMismatch: true),
-            fasta,
-            fasta_fai,
-            dict.map{ meta, dict -> [ dict ] },
-            intervals_bed_combined,
-            known_sites_indels.concat(known_sites_snps).flatten().unique().collect(),
-            known_sites_indels_tbi.concat(known_sites_snps_tbi).flatten().unique().collect())
-
-        vcf = VCF_VARIANT_FILTERING_GATK.out.filtered_vcf.map{meta, vcf -> [meta + [variantcaller:"sentieon_haplotyper"], vcf]}
-        versions = versions.mix(VCF_VARIANT_FILTERING_GATK.out.versions)
-    } else vcf = haplotyper_vcf
-
     // Remove no longer necessary field: num_intervals
-    vcf = vcf.map{ meta, vcf -> [ meta - meta.subMap('num_intervals'), vcf ] }
+    vcf = haplotyper_vcf.map{ meta, vcf -> [ meta - meta.subMap('num_intervals'), vcf ] }
+    vcf_tbi = haplotyper_tbi.map{ meta, tbi -> [ meta - meta.subMap('num_intervals'), tbi ] }
 
     // GVFs
     // Only when using intervals
@@ -148,6 +135,10 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
         MERGE_SENTIEON_HAPLOTYPER_GVCFS.out.vcf,
         haplotyper_gvcf_branch.no_intervals)
 
+    gvcf_tbi = Channel.empty().mix(
+        MERGE_SENTIEON_HAPLOTYPER_GVCFS.out.tbi,
+        haplotyper_gvcf_tbi_branch.no_intervals)
+
     versions = versions.mix(SENTIEON_HAPLOTYPER.out.versions)
     versions = versions.mix(MERGE_SENTIEON_HAPLOTYPER_VCFS.out.versions)
     versions = versions.mix(MERGE_SENTIEON_HAPLOTYPER_GVCFS.out.versions)
@@ -155,7 +146,9 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
     emit:
     versions
     vcf
+    vcf_tbi
     gvcf
+    gvcf_tbi
     genotype_intervals // For joint genotyping
 
 }

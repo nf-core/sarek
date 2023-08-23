@@ -373,7 +373,7 @@
                     },
                     "sentieon/applyvarcal": {
                         "branch": "master",
-                        "git_sha": "0ff77bd14d74332f4f0aaecfb302c51a9b24231a",
+                        "git_sha": "6c9c11ee96796e53a01b4719286acce6af14bc3a",
                         "installed_by": ["modules"]
                     },
                     "sentieon/bwamem": {
@@ -388,7 +388,7 @@
                     },
                     "sentieon/gvcftyper": {
                         "branch": "master",
-                        "git_sha": "b9172e8c26a3db5009f7872654c44587e254f094",
+                        "git_sha": "6c9c11ee96796e53a01b4719286acce6af14bc3a",
                         "installed_by": ["modules"]
                     },
                     "sentieon/haplotyper": {
@@ -398,7 +398,7 @@
                     },
                     "sentieon/varcal": {
                         "branch": "master",
-                        "git_sha": "b9172e8c26a3db5009f7872654c44587e254f094",
+                        "git_sha": "6c9c11ee96796e53a01b4719286acce6af14bc3a",
                         "installed_by": ["modules"]
                     },
                     "snpeff/download": {

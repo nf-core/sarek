@@ -81,4 +81,22 @@ process SENTIEON_VARCAL {
         sentieon: \$(echo \$(sentieon driver --version 2>&1) | sed -e "s/sentieon-genomics-//g")
     END_VERSIONS
     """
+
+    stub:
+    // Exit if running this module with -profile conda / -profile mamba
+    if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
+        error "Sentieon modules do not support Conda. Please use Docker / Singularity / Podman instead."
+    }
+    def prefix   = task.ext.prefix ?: "${meta.id}"
+    """
+    touch ${prefix}.recal
+    touch ${prefix}.idx
+    touch ${prefix}.tranches
+    touch ${prefix}plots.R
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        sentieon: \$(echo \$(sentieon driver --version 2>&1) | sed -e "s/sentieon-genomics-//g")
+    END_VERSIONS
+    """
 }

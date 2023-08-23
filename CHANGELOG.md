@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1159](https://github.com/nf-core/sarek/pull/1159) - ISMB Poster
 - [#1173](https://github.com/nf-core/sarek/pull/1173) - CI tests for VQSR track with stub runs
 - [#1122](https://github.com/nf-core/sarek/pull/1122) - Add `annotation cache` functionality
+- [#1184](https://github.com/nf-core/sarek/pull/1184) - Stub-based CI-test of Sentieon joint-germline variant-calling with VQSR
 - [#1188](https://github.com/nf-core/sarek/pull/1188) - `--tools` is now case insensitive
 
 ### Changed
@@ -45,6 +46,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   fixed grouping joint germline recalibrated VCF ([#1137](https://github.com/nf-core/sarek/pull/1137))
 - [#1177](https://github.com/nf-core/sarek/pull/1177) - Fix status inference when using nf-validation plugin
 - [#1183](https://github.com/nf-core/sarek/pull/1183) - Add docs for concatentated germline variants
+- [#1184](https://github.com/nf-core/sarek/pull/1184) - Fix issue with duplicated variants in VCF from Sentieon-based joint-germline variant-calling with VQSR. (Corresponding to [#966](https://github.com/nf-core/sarek/issues/966) for GATK.)
 
 ### Dependencies
 
