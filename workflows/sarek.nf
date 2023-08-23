@@ -181,7 +181,7 @@ if (params.step != 'annotate' && params.tools && !params.build_only_index) {
             def tools_tumor = ['ascat', 'controlfreec', 'mutect2', 'msisensorpro']
             def tools_tumor_asked = []
             tools_tumor.each{ tool ->
-                if (params.tools.split(',').any{ it.toLowerCase().contains(tool) } ) tools_tumor_asked.add(tool)
+                if ( checkTools(params.tools, tool) ) tools_tumor_asked.add(tool)
             }
             if (!tools_tumor_asked.isEmpty()) {
                 error('The sample-sheet only contains normal-samples, but the following tools, which were requested with "--tools", expect at least one tumor-sample : ' + tools_tumor_asked.join(", "))
@@ -192,7 +192,7 @@ if (params.step != 'annotate' && params.tools && !params.build_only_index) {
         def tools_requiring_normal_samples = ['ascat', 'deepvariant', 'haplotypecaller', 'msisensorpro']
         def requested_tools_requiring_normal_samples = []
         tools_requiring_normal_samples.each{ tool_requiring_normal_samples ->
-            if (params.tools.split(',').any{ it.toLowerCase().contains(tool_requiring_normal_samples) } ) requested_tools_requiring_normal_samples.add(tool_requiring_normal_samples)
+            if ( checkTools(params.tools, tool_requiring_normal_samples) ) requested_tools_requiring_normal_samples.add(tool_requiring_normal_samples)
         }
         if (!requested_tools_requiring_normal_samples.isEmpty()) {
             error('The sample-sheet only contains tumor-samples, but the following tools, which were requested by the option "tools", expect at least one normal-sample : ' + requested_tools_requiring_normal_samples.join(", "))
@@ -206,7 +206,7 @@ if (params.wes && !params.step == 'annotate') {
     else log.warn("Intervals file was provided without parameter `--wes`: Pipeline will assume this is Whole-Genome-Sequencing data.")
 } else if (params.intervals && !params.intervals.endsWith("bed") && !params.intervals.endsWith("list")) error("Intervals file must end with .bed, .list, or .interval_list")
 
-if (params.step == 'mapping' && params.aligner.contains("dragmap") && !(params.skip_tools && params.skip_tools.split(',').any{ toLowerCase().contains("baserecalibrator") } )) {
+if (params.step == 'mapping' && params.aligner.contains("dragmap") && !(params.skip_tools && checkTools(params.skip_tools, "baserecalibrator") )) {
     log.warn("DragMap was specified as aligner. Base recalibration is not contained in --skip_tools. It is recommended to skip baserecalibration when using DragMap\nhttps://gatk.broadinstitute.org/hc/en-us/articles/4407897446939--How-to-Run-germline-single-sample-short-variant-discovery-in-DRAGEN-mode")
 }
 
@@ -214,7 +214,7 @@ if (params.step == 'mapping' && params.aligner.contains("sentieon-bwamem") && pa
     error("Sentieon BWA is currently not compatible with FGBio UMI handeling. Please choose a different aligner.")
 }
 
-if (params.tools && params.tools.contains("sentieon_haplotyper") && params.joint_germline && (!params.sentieon_haplotyper_emit_mode || !(params.sentieon_haplotyper_emit_mode.contains('gvcf')))) {
+if (params.tools && params.checkTools(params.tools, "sentieon_haplotyper") && params.joint_germline && (!params.sentieon_haplotyper_emit_mode || !(params.sentieon_haplotyper_emit_mode.contains('gvcf')))) {
     error("When setting the option `--joint_germline` and including `sentieon_haplotyper` among the requested tools, please set `--sentieon_haplotyper_emit_mode` to include `gvcf`.")
 }
 

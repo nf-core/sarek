@@ -48,7 +48,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     vcf_tiddit      = Channel.empty()
 
     // MPILEUP
-    if (tools.split(',').contains('mpileup') || tools.split(',').contains('controlfreec')) {
+    if (checkTools(params.tools, 'mpileup') || checkTools(params.tools, 'controlfreec')) {
         BAM_VARIANT_CALLING_MPILEUP(
             cram,
             dict,
@@ -60,7 +60,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     }
 
     // CONTROLFREEC (depends on MPILEUP)
-    if (tools.split(',').contains('controlfreec')) {
+    if (checkTools(params.tools, 'controlfreec')) {
         length_file = cf_chrom_len ?: fasta_fai
 
         BAM_VARIANT_CALLING_TUMOR_ONLY_CONTROLFREEC(
@@ -79,7 +79,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     }
 
     // CNVKIT
-    if (tools.split(',').contains('cnvkit')) {
+    if (checkTools(params.tools, 'cnvkit')) {
         BAM_VARIANT_CALLING_CNVKIT (
             // Remap channel to match module/subworkflow
             cram.map{ meta, cram, crai -> [ meta, cram, [] ] },
@@ -93,7 +93,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     }
 
     // FREEBAYES
-    if (tools.split(',').contains('freebayes')) {
+    if (checkTools(params.tools, 'freebayes')) {
         BAM_VARIANT_CALLING_FREEBAYES(
             // Remap channel to match module/subworkflow
             cram.map{ meta, cram, crai -> [ meta, cram, crai, [], [] ] },
@@ -108,7 +108,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     }
 
     // MUTECT2
-    if (tools.split(',').contains('mutect2')) {
+    if (checkTools(params.tools, 'mutect2')) {
         BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2(
             cram,
             // Remap channel to match module/subworkflow
@@ -129,7 +129,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     }
 
     // MANTA
-    if (tools.split(',').contains('manta')) {
+    if (checkTools(params.tools, 'manta')) {
         BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA(
             cram,
             // Remap channel to match module/subworkflow
@@ -145,7 +145,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     }
 
     // STRELKA
-    if (tools.split(',').contains('strelka')) {
+    if (checkTools(params.tools, 'strelka')) {
         BAM_VARIANT_CALLING_SINGLE_STRELKA(
             cram,
             dict,
@@ -159,7 +159,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     }
 
     // TIDDIT
-    if (tools.split(',').contains('tiddit')) {
+    if (checkTools(params.tools, 'tiddit')) {
         BAM_VARIANT_CALLING_SINGLE_TIDDIT(
             cram,
             // Remap channel to match module/subworkflow
