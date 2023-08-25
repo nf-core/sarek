@@ -46,6 +46,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1177](https://github.com/nf-core/sarek/pull/1177) - Fix status inference when using nf-validation plugin
 - [#1183](https://github.com/nf-core/sarek/pull/1183) - Add docs for concatentated germline variants
 - [#1184](https://github.com/nf-core/sarek/pull/1184) - Fix issue with duplicated variants in VCF from Sentieon-based joint-germline variant-calling with VQSR. (Corresponding to [#966](https://github.com/nf-core/sarek/issues/966) for GATK.)
+- [#1192](https://github.com/nf-core/sarek/pull/1192) - Add `ASCATprofile.png` to ASCAT output docs
 
 ### Dependencies
 
