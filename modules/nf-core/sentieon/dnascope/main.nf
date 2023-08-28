@@ -23,7 +23,7 @@ process SENTIEON_DNASCOPE {
     tuple val(meta), path("*.unfiltered.vcf.gz.tbi"), optional:true, emit: vcf_tbi
     tuple val(meta), path("*.g.vcf.gz")             , optional:true, emit: gvcf   // these output-files have to have the extension ".vcf.gz", otherwise the subsequent GATK-MergeVCFs will fail.
     tuple val(meta), path("*.g.vcf.gz.tbi")         , optional:true, emit: gvcf_tbi
-    path "versions.yml"                        , emit: versions
+    path "versions.yml"                             , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
