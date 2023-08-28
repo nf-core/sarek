@@ -50,6 +50,7 @@ def checkPathParamList = [
     params.multiqc_config,
     params.pon,
     params.pon_tbi,
+    params.sentieon_dnascope_model,
     params.snpeff_cache,
     params.spliceai_indel,
     params.spliceai_indel_tbi,
@@ -295,20 +296,21 @@ if ((params.download_cache) && (params.snpeff_cache || params.vep_cache)) {
 */
 
 // Initialize file channels based on params, defined in the params.genomes[params.genome] scope
-ascat_alleles      = params.ascat_alleles      ? Channel.fromPath(params.ascat_alleles).collect()     : Channel.empty()
-ascat_loci         = params.ascat_loci         ? Channel.fromPath(params.ascat_loci).collect()        : Channel.empty()
-ascat_loci_gc      = params.ascat_loci_gc      ? Channel.fromPath(params.ascat_loci_gc).collect()     : Channel.value([])
-ascat_loci_rt      = params.ascat_loci_rt      ? Channel.fromPath(params.ascat_loci_rt).collect()     : Channel.value([])
-cf_chrom_len       = params.cf_chrom_len       ? Channel.fromPath(params.cf_chrom_len).collect()      : []
-chr_dir            = params.chr_dir            ? Channel.fromPath(params.chr_dir).collect()           : Channel.value([])
-dbsnp              = params.dbsnp              ? Channel.fromPath(params.dbsnp).collect()             : Channel.value([])
-fasta              = params.fasta              ? Channel.fromPath(params.fasta).first()               : Channel.empty()
-fasta_fai          = params.fasta_fai          ? Channel.fromPath(params.fasta_fai).collect()         : Channel.empty()
-germline_resource  = params.germline_resource  ? Channel.fromPath(params.germline_resource).collect() : Channel.value([]) // Mutect2 does not require a germline resource, so set to optional input
-known_indels       = params.known_indels       ? Channel.fromPath(params.known_indels).collect()      : Channel.value([])
-known_snps         = params.known_snps         ? Channel.fromPath(params.known_snps).collect()        : Channel.value([])
-mappability        = params.mappability        ? Channel.fromPath(params.mappability).collect()       : Channel.value([])
-pon                = params.pon                ? Channel.fromPath(params.pon).collect()               : Channel.value([]) // PON is optional for Mutect2 (but highly recommended)
+ascat_alleles           = params.ascat_alleles           ? Channel.fromPath(params.ascat_alleles).collect()           : Channel.empty()
+ascat_loci              = params.ascat_loci              ? Channel.fromPath(params.ascat_loci).collect()              : Channel.empty()
+ascat_loci_gc           = params.ascat_loci_gc           ? Channel.fromPath(params.ascat_loci_gc).collect()           : Channel.value([])
+ascat_loci_rt           = params.ascat_loci_rt           ? Channel.fromPath(params.ascat_loci_rt).collect()           : Channel.value([])
+cf_chrom_len            = params.cf_chrom_len            ? Channel.fromPath(params.cf_chrom_len).collect()            : []
+chr_dir                 = params.chr_dir                 ? Channel.fromPath(params.chr_dir).collect()                 : Channel.value([])
+dbsnp                   = params.dbsnp                   ? Channel.fromPath(params.dbsnp).collect()                   : Channel.value([])
+fasta                   = params.fasta                   ? Channel.fromPath(params.fasta).first()                     : Channel.empty()
+fasta_fai               = params.fasta_fai               ? Channel.fromPath(params.fasta_fai).collect()               : Channel.empty()
+germline_resource       = params.germline_resource       ? Channel.fromPath(params.germline_resource).collect()       : Channel.value([]) // Mutect2 does not require a germline resource, so set to optional input
+known_indels            = params.known_indels            ? Channel.fromPath(params.known_indels).collect()            : Channel.value([])
+known_snps              = params.known_snps              ? Channel.fromPath(params.known_snps).collect()              : Channel.value([])
+mappability             = params.mappability             ? Channel.fromPath(params.mappability).collect()             : Channel.value([])
+pon                     = params.pon                     ? Channel.fromPath(params.pon).collect()                     : Channel.value([]) // PON is optional for Mutect2 (but highly recommended)
+sentieon_dnascope_model = params.sentieon_dnascope_model ? Channel.fromPath(params.sentieon_dnascope_model).collect() : Channel.value([])
 
 // Initialize value channels based on params, defined in the params.genomes[params.genome] scope
 ascat_genome       = params.ascat_genome       ?: Channel.empty()
@@ -1125,7 +1127,7 @@ workflow SAREK {
             params.sentieon_haplotyper_emit_mode,
             params.sentieon_dnascope_emit_mode,
             params.sentieon_dnascope_pcr_based,
-            params.sentieon_dnascope_model)
+            sentieon_dnascope_model)
 
         // TUMOR ONLY VARIANT CALLING
         BAM_VARIANT_CALLING_TUMOR_ONLY_ALL(

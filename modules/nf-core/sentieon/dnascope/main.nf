@@ -14,9 +14,9 @@ process SENTIEON_DNASCOPE {
     path(dbsnp)
     path(dbsnp_tbi)
     path(ml_model)
+    val(pcr_based)
     val(emit_vcf)
     val(emit_gvcf)
-    val(sentieon_dnascope_pcr_based)
 
     output:
     tuple val(meta), path("*.unfiltered.vcf.gz")    , optional:true, emit: vcf   // added the substring ".unfiltered" in the filename of the vcf-files since without that the g.vcf.gz-files were ending up in the vcf-channel
@@ -38,8 +38,8 @@ process SENTIEON_DNASCOPE {
     def args3                     = task.ext.args3                     ?: ''  // options for the gvcf generation
     def interval                  = intervals                          ? "--interval ${intervals}"               : ''
     def dbsnp_str                 = dbsnp                              ? "-d ${dbsnp}"                           : ''
-    def model                     = ml_model                           ? " --model ${ml_model}"                  : ''
-    def pcr_indel_model           = sentieon_dnascope_pcr_based        ? ''                                      : " --pcr_indel_model NONE"
+    def model_cmd                 = ml_model                           ? " --model ${ml_model}"                  : ''
+    def pcr_indel_model_cmd       = pcr_based                          ? ''                                      : " --pcr_indel_model NONE"
     def prefix                    = task.ext.prefix                    ?: "${meta.id}"
     def sentieon_auth_mech_base64 = task.ext.sentieon_auth_mech_base64 ?: ''
     def sentieon_auth_data_base64 = task.ext.sentieon_auth_data_base64 ?: ''
@@ -48,11 +48,11 @@ process SENTIEON_DNASCOPE {
     def base_cmd                  = '--algo DNAscope ' + dbsnp_str
 
     if (emit_vcf) {  // emit_vcf can be the empty string, 'variant', 'confident' or 'all' but NOT 'gvcf'
-        vcf_cmd = base_cmd + args2 + model + pcr_indel_model + ' --emit_mode ' + emit_vcf + ' ' + prefix + '.unfiltered.vcf.gz'
+        vcf_cmd = base_cmd + args2 + model_cmd + pcr_indel_model_cmd + ' --emit_mode ' + emit_vcf + ' ' + prefix + '.unfiltered.vcf.gz'
     }
 
     if (emit_gvcf) { // emit_gvcf can be either true or false
-        gvcf_cmd = base_cmd + args3 + model + pcr_indel_model_str + ' --emit_mode gvcf ' + prefix + '.g.vcf.gz'
+        gvcf_cmd = base_cmd + args3 + model_cmd + pcr_indel_model_cmd + ' --emit_mode gvcf ' + prefix + '.g.vcf.gz'
     }
 
     """

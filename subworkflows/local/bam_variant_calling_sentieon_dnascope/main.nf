@@ -19,9 +19,9 @@ workflow BAM_VARIANT_CALLING_SENTIEON_DNASCOPE {
     dbsnp_vqsr                     // channel: [optional]
     intervals                      // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
     joint_germline                 // boolean: [mandatory] [default: false] joint calling of germline variants
-    sentieon_dnascope_emit_mode
-    sentieon_dnascope_pcr_based
-    sentieon_dnascope_model
+    sentieon_dnascope_emit_mode    // string
+    sentieon_dnascope_pcr_based    // boolean
+    sentieon_dnascope_model        // channel
 
     main:
     versions = Channel.empty()
@@ -55,9 +55,9 @@ workflow BAM_VARIANT_CALLING_SENTIEON_DNASCOPE {
         dbsnp,
         dbsnp_tbi,
         sentieon_dnascope_model,
+        sentieon_dnascope_pcr_based,
         emit_vcf,
-        emit_mode_items.any{ it.equals('gvcf') },
-        sentieon_dnascope_pcr_based)
+        emit_mode_items.any{ it.equals('gvcf') })
 
     if (joint_germline) {
         genotype_intervals = SENTIEON_DNASCOPE.out.gvcf
