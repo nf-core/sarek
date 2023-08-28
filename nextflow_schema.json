@@ -107,7 +107,7 @@
                     "fa_icon": "fas fa-toolbox",
                     "description": "Tools to use for duplicate marking, variant calling and/or for annotation.",
                     "help_text": "Multiple tools separated with commas.\n\n**Variant Calling:**\n\nGermline variant calling can currently be performed with the following variant callers:\n- SNPs/Indels: DeepVariant, FreeBayes, GATK HaplotypeCaller, mpileup, Sentieon Haplotyper, Strelka\n- Structural Variants: Manta, TIDDIT\n- Copy-number: CNVKit\n\nTumor-only somatic variant calling can currently be performed with the following variant callers:\n- SNPs/Indels: FreeBayes, mpileup, Mutect2, Strelka\n- Structural Variants: Manta, TIDDIT\n- Copy-number: CNVKit, ControlFREEC\n\nSomatic variant calling can currently only be performed with the following variant callers:\n- SNPs/Indels: FreeBayes, Mutect2, Strelka2\n- Structural variants: Manta, TIDDIT\n- Copy-Number: ASCAT, CNVKit, Control-FREEC\n- Microsatellite Instability: MSIsensorpro\n\n> **NB** Mutect2 for somatic variant calling cannot be combined with `--no_intervals`\n\n**Annotation:**\n \n- snpEff, VEP, merge (both consecutively).\n\n> **NB** As Sarek will use bgzip and tabix to compress and index VCF files annotated, it expects VCF files to be sorted when starting from `--step annotate`.",
-                    "pattern": "^((ascat|cnvkit|controlfreec|deepvariant|freebayes|haplotypecaller|sentieon_haplotyper|manta|merge|mpileup|msisensorpro|mutect2|sentieon_dedup|snpeff|strelka|tiddit|vep)?,?)*(?<!,)$"
+                    "pattern": "^((ascat|cnvkit|controlfreec|deepvariant|freebayes|haplotypecaller|sentieon_dnascope|sentieon_haplotyper|manta|merge|mpileup|msisensorpro|mutect2|sentieon_dedup|snpeff|strelka|tiddit|vep)?,?)*(?<!,)$"
                 },
                 "skip_tools": {
                     "type": "string",
@@ -398,6 +398,27 @@
                     "description": "Option for selecting output and emit-mode of Sentieon's Haplotyper.",
                     "help_text": "The option `--sentieon_haplotyper_emit_mode` can be set to the same string values as the Haplotyper's `--emit_mode`. To output both a vcf and a gvcf, specify both a vcf-option (currently, `all`, `confident` and `variant`) and `gvcf`. For example, to obtain a vcf and gvcf one could set `--sentieon_haplotyper_emit_mode` to `variant, gvcf`.",
                     "pattern": "^(all|confident|gvcf|variant|gvcf,all|gvcf,confident|gvcf,variant|all,gvcf|confident,gvcf|variant,gvcf)(?<!,)$"
+                },
+                "sentieon_dnascope_emit_mode": {
+                    "type": "string",
+                    "default": "variant",
+                    "fa_icon": "fas fa-toolbox",
+                    "description": "Option for selecting output and emit-mode of Sentieon's Dnascope.",
+                    "help_text": "The option `--sentieon_dnascope_emit_mode` can be set to the same string values as the Dnascope's `--emit_mode`. To output both a vcf and a gvcf, specify both a vcf-option (currently, `all`, `confident` and `variant`) and `gvcf`. For example, to obtain a vcf and gvcf one could set `--sentieon_dnascope_emit_mode` to `variant, gvcf`.",
+                    "pattern": "^(all|confident|gvcf|variant|gvcf,all|gvcf,confident|gvcf,variant|all,gvcf|confident,gvcf|variant,gvcf)(?<!,)$"
+                },
+               "sentieon_dnascope_pcr_based": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-bacon",
+                    "description": "Option for indicating whether input data for Sentieon Dnascope is PCR-based.",
+                    "hidden": true,
+                    "help_text": "If the option `--sentieon_dnascope_pcr_based` for Sarek is set to `false`, then Dnascope's option `--pcr_indel_model` id set to `NONE`. If the option `--sentieon_dnascope_pcr_based` for Sarek is set to `true`, then the option `--pcr_indel_model` is not supplied to Dnascopeid set to `NONE`. Depending on whether PCR is involved, DNAscope uses different priors for finding significant INDEL variants, which could be controlled by the `--pcr_indel_model` option.",
+                },
+                "sentieon_dnascope_model": {
+                    "type": "string",
+                    "fa_icon": "fas fa-database",
+                    "description": "Machine learning model for Sentieon Dnascope.",
+                    "help_text": " It is recommended to use DNAscope with a machine learning model to perform variant calling with higher accuracy by improving the candidate detection and filtering. Sentieon can provide you with a model trained using a subset of the data from the GiAB truth-set found in https://github.com/genome-in-a-bottle. In addition, Sentieon can assist you in the creation of models using your own data, which will calibrate the specifics of your sequencing and bio-informatics processing."
                 }
             }
         },

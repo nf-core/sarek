@@ -9,6 +9,7 @@ include { BAM_VARIANT_CALLING_DEEPVARIANT         } from '../bam_variant_calling
 include { BAM_VARIANT_CALLING_FREEBAYES           } from '../bam_variant_calling_freebayes/main'
 include { BAM_VARIANT_CALLING_GERMLINE_MANTA      } from '../bam_variant_calling_germline_manta/main'
 include { BAM_VARIANT_CALLING_HAPLOTYPECALLER     } from '../bam_variant_calling_haplotypecaller/main'
+include { BAM_VARIANT_CALLING_SENTIEON_DNASCOPE   } from '../bam_variant_calling_sentieon_dnascope/main'
 include { BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER } from '../bam_variant_calling_sentieon_haplotyper/main'
 include { BAM_VARIANT_CALLING_MPILEUP             } from '../bam_variant_calling_mpileup/main'
 include { BAM_VARIANT_CALLING_SINGLE_STRELKA      } from '../bam_variant_calling_single_strelka/main'
@@ -41,6 +42,9 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     joint_germline                    // boolean: [mandatory] [default: false] joint calling of germline variants
     skip_haplotypecaller_filter       // boolean: [mandatory] [default: false] whether to filter haplotypecaller single sample vcfs
     sentieon_haplotyper_emit_mode     // channel: [mandatory] value channel with string
+    sentieon_dnascope_emit_mode       // channel: [mandatory] value channel with string
+    sentieon_dnascope_pcr_based       // channel: [mandatory] value channel with boolean
+    sentieon_dnascope_model           // channel: [mandatory] value channel with string
 
     main:
     versions = Channel.empty()
@@ -51,6 +55,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     vcf_haplotypecaller      = Channel.empty()
     vcf_manta                = Channel.empty()
     vcf_mpileup              = Channel.empty()
+    vcf_sentieon_dnascope    = Channel.empty()
     vcf_sentieon_haplotyper  = Channel.empty()
     gvcf_sentieon_haplotyper = Channel.empty()
     vcf_strelka              = Channel.empty()
@@ -180,6 +185,32 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         versions = versions.mix(BAM_VARIANT_CALLING_GERMLINE_MANTA.out.versions)
     }
 
+    // SENTIEON DNASCOPE
+    if (tools.split(',').contains('sentieon_dnascope')) {
+        BAM_VARIANT_CALLING_SENTIEON_DNASCOPE(
+            cram,
+            fasta,
+            fasta_fai,
+            dict,
+            dbsnp,
+            dbsnp_tbi,
+            dbsnp_vqsr,
+            intervals,
+            joint_germline,
+            sentieon_dnascope_emit_mode,
+            sentieon_dnascope_pcr_based,
+            sentieon_dnascope_model)
+
+        versions = versions.mix(BAM_VARIANT_CALLING_SENTIEON_DNASCOPE.out.versions)
+
+        vcf_sentieon_dnascope      = BAM_VARIANT_CALLING_SENTIEON_DNASCOPE.out.vcf
+        vcf_tbi_sentieon_dnascope  = BAM_VARIANT_CALLING_SENTIEON_DNASCOPE.out.vcf_tbi
+        gvcf_sentieon_dnascope     = BAM_VARIANT_CALLING_SENTIEON_DNASCOPE.out.gvcf
+        gvcf_tbi_sentieon_dnascope = BAM_VARIANT_CALLING_SENTIEON_DNASCOPE.out.gvcf_tbi
+
+        // TO-DO: Implement joint_germline and VCF_VARIANT_FILTERING_GATK like, for instance, in the sentieon-haplotyper call below.
+    }
+
     // SENTIEON HAPLOTYPER
     if (tools.split(',').contains('sentieon_haplotyper')) {
         BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER(
@@ -270,6 +301,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     vcf_all = Channel.empty().mix(
         vcf_deepvariant,
         vcf_freebayes,
+        vcf_sentieon_dnascope,
         vcf_haplotypecaller,
         vcf_manta,
         vcf_mpileup,
@@ -282,6 +314,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     vcf_all
     vcf_deepvariant
     vcf_freebayes
+    vcf_sentieon_dnascope
     vcf_haplotypecaller
     vcf_manta
     vcf_mpileup

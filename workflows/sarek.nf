@@ -1122,7 +1122,10 @@ workflow SAREK {
             known_snps_vqsr,
             params.joint_germline,
             params.skip_tools && params.skip_tools.split(',').contains('haplotypecaller_filter'), // true if filtering should be skipped
-            params.sentieon_haplotyper_emit_mode)
+            params.sentieon_haplotyper_emit_mode,
+            params.sentieon_dnascope_emit_mode,
+            params.sentieon_dnascope_pcr_based,
+            params.sentieon_dnascope_model)
 
         // TUMOR ONLY VARIANT CALLING
         BAM_VARIANT_CALLING_TUMOR_ONLY_ALL(
