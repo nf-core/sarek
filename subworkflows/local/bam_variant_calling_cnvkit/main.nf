@@ -6,6 +6,8 @@
 
 include { CNVKIT_BATCH } from '../../../modules/nf-core/cnvkit/batch/main'
 
+include { checkInParam } from "${projectDir}/checkInParam"
+
 workflow BAM_VARIANT_CALLING_CNVKIT {
     take:
     cram                // channel: [mandatory] cram

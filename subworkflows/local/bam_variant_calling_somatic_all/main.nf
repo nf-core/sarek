@@ -14,6 +14,8 @@ include { BAM_VARIANT_CALLING_SOMATIC_STRELKA           } from '../bam_variant_c
 include { BAM_VARIANT_CALLING_SOMATIC_TIDDIT            } from '../bam_variant_calling_somatic_tiddit/main'
 include { MSISENSORPRO_MSISOMATIC                       } from '../../../modules/nf-core/msisensorpro/msisomatic/main'
 
+include { checkInParam } from "${projectDir}/checkInParam"
+
 workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     take:
     tools                         // Mandatory, list of tools to apply

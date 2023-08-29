@@ -7,6 +7,8 @@
 include { SAMTOOLS_STATS     } from '../../../modules/nf-core/samtools/stats/main'
 include { MOSDEPTH           } from '../../../modules/nf-core/mosdepth/main'
 
+include { checkInParam } from "${projectDir}/checkInParam"
+
 workflow CRAM_QC_MOSDEPTH_SAMTOOLS {
     take:
     cram                          // channel: [mandatory] [ meta, cram, crai ]

@@ -5,6 +5,8 @@
 include { ENSEMBLVEP_VEP } from '../../../modules/nf-core/ensemblvep/vep/main'
 include { TABIX_TABIX    } from '../../../modules/nf-core/tabix/tabix/main'
 
+include { checkInParam } from "${projectDir}/checkInParam"
+
 workflow VCF_ANNOTATE_ENSEMBLVEP {
     take:
     ch_vcf                      // channel: [ val(meta), path(vcf), [path(custom_file1), path(custom_file2)... (optionnal)]]

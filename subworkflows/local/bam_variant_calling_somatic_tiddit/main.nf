@@ -8,6 +8,8 @@ include { BAM_VARIANT_CALLING_SINGLE_TIDDIT as TIDDIT_NORMAL } from '../bam_vari
 include { BAM_VARIANT_CALLING_SINGLE_TIDDIT as TIDDIT_TUMOR  } from '../bam_variant_calling_single_tiddit/main.nf'
 include { SVDB_MERGE                                         } from '../../../modules/nf-core/svdb/merge/main.nf'
 
+include { checkInParam } from "${projectDir}/checkInParam"
+
 workflow BAM_VARIANT_CALLING_SOMATIC_TIDDIT {
     take:
         cram_normal

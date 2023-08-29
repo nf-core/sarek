@@ -2,6 +2,8 @@
 // CHANNEL_BASERECALIBRATOR_CREATE_CSV
 //
 
+include { checkInParam } from "${projectDir}/checkInParam"
+
 workflow CHANNEL_BASERECALIBRATOR_CREATE_CSV {
     take:
         cram_table_bqsr // channel: [mandatory] meta, cram, crai, table

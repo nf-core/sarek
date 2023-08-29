@@ -13,6 +13,8 @@ include { GATK4_LEARNREADORIENTATIONMODEL as LEARNREADORIENTATIONMODEL } from '.
 include { GATK4_MERGEMUTECTSTATS          as MERGEMUTECTSTATS          } from '../../../modules/nf-core/gatk4/mergemutectstats/main'
 include { GATK4_MUTECT2                   as MUTECT2                   } from '../../../modules/nf-core/gatk4/mutect2/main'
 
+include { checkInParam } from "${projectDir}/checkInParam"
+
 workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     take:
     input                     // channel: [ meta, [ input ], [ input_index ] ]

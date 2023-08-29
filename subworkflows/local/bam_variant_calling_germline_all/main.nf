@@ -15,6 +15,8 @@ include { BAM_VARIANT_CALLING_SINGLE_STRELKA      } from '../bam_variant_calling
 include { BAM_VARIANT_CALLING_SINGLE_TIDDIT       } from '../bam_variant_calling_single_tiddit/main'
 include { VCF_VARIANT_FILTERING_GATK              } from '../vcf_variant_filtering_gatk/main'
 
+include { checkInParam } from "${projectDir}/checkInParam"
+
 workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     take:
     tools                             // Mandatory, list of tools to apply

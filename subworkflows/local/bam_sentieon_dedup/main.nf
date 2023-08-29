@@ -7,6 +7,8 @@
 include { CRAM_QC_MOSDEPTH_SAMTOOLS } from '../cram_qc_mosdepth_samtools/main'
 include { SENTIEON_DEDUP            } from '../../../modules/nf-core/sentieon/dedup/main'
 
+include { checkInParam } from "${projectDir}/checkInParam"
+
 workflow BAM_SENTIEON_DEDUP {
     take:
     bam                    // channel: [mandatory] [ meta, bam ]  // Although the channel is named "bam", it may contain cram-files.

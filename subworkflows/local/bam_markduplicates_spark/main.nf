@@ -9,6 +9,8 @@ include { GATK4_ESTIMATELIBRARYCOMPLEXITY                           } from '../.
 include { GATK4_MARKDUPLICATES_SPARK                                } from '../../../modules/nf-core/gatk4/markduplicatesspark/main'
 include { SAMTOOLS_INDEX                    as INDEX_MARKDUPLICATES } from '../../../modules/nf-core/samtools/index/main'
 
+include { checkInParam } from "${projectDir}/checkInParam"
+
 workflow BAM_MARKDUPLICATES_SPARK {
     take:
     bam                           // channel: [mandatory] meta, bam

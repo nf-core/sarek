@@ -7,6 +7,8 @@
 include { SAMTOOLS_INDEX as INDEX_CRAM } from '../../../modules/nf-core/samtools/index/main'
 include { SAMTOOLS_MERGE as MERGE_CRAM } from '../../../modules/nf-core/samtools/merge/main'
 
+include { checkInParam } from "${projectDir}/checkInParam"
+
 workflow CRAM_MERGE_INDEX_SAMTOOLS {
     take:
     cram      // channel: [mandatory] meta, cram

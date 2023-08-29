@@ -9,6 +9,8 @@ include { FREEBAYES                             } from '../../../modules/nf-core
 include { GATK4_MERGEVCFS as MERGE_FREEBAYES    } from '../../../modules/nf-core/gatk4/mergevcfs/main'
 include { TABIX_TABIX     as TABIX_VC_FREEBAYES } from '../../../modules/nf-core/tabix/tabix/main'
 
+include { checkInParam } from "${projectDir}/checkInParam"
+
 workflow BAM_VARIANT_CALLING_FREEBAYES {
     take:
     cram      // channel: [mandatory] [ meta, cram1, crai1, cram2, crai2 ] or [ meta, cram, crai, [], [] ]

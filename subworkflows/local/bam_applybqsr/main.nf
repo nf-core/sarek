@@ -7,6 +7,8 @@
 include { GATK4_APPLYBQSR           } from '../../../modules/nf-core/gatk4/applybqsr/main'
 include { CRAM_MERGE_INDEX_SAMTOOLS } from '../cram_merge_index_samtools/main'
 
+include { checkInParam } from "${projectDir}/checkInParam"
+
 workflow BAM_APPLYBQSR {
     take:
     cram          // channel: [mandatory] [ meta, cram, crai, recal ]

@@ -6,6 +6,8 @@
 
 include { MANTA_SOMATIC } from '../../../modules/nf-core/manta/somatic/main'
 
+include { checkInParam } from "${projectDir}/checkInParam"
+
 workflow BAM_VARIANT_CALLING_SOMATIC_MANTA {
     take:
     cram          // channel: [mandatory] [ meta, cram1, crai1, cram2, crai2 ]

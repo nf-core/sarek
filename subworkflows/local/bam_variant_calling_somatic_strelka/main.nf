@@ -8,6 +8,8 @@ include { GATK4_MERGEVCFS as MERGE_STRELKA_INDELS } from '../../../modules/nf-co
 include { GATK4_MERGEVCFS as MERGE_STRELKA_SNVS   } from '../../../modules/nf-core/gatk4/mergevcfs/main'
 include { STRELKA_SOMATIC                         } from '../../../modules/nf-core/strelka/somatic/main'
 
+include { checkInParam } from "${projectDir}/checkInParam"
+
 workflow BAM_VARIANT_CALLING_SOMATIC_STRELKA {
     take:
     cram          // channel: [mandatory] [ meta, normal_cram, normal_crai, tumor_cram, tumor_crai, manta_vcf, manta_tbi ] manta* are optional

@@ -7,6 +7,8 @@
 include { MANTA_TUMORONLY } from '../../../modules/nf-core/manta/tumoronly/main'
 
 // Seems to be the consensus on upstream modules implementation too
+include { checkInParam } from "${projectDir}/checkInParam"
+
 workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA {
     take:
     cram          // channel: [mandatory] [ meta, cram, crai ]

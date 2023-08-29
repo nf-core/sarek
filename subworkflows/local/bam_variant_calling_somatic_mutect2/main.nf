@@ -14,6 +14,8 @@ include { GATK4_MERGEMUTECTSTATS          as MERGEMUTECTSTATS             } from
 include { GATK4_MERGEVCFS                 as MERGE_MUTECT2                } from '../../../modules/nf-core/gatk4/mergevcfs/main'
 include { GATK4_MUTECT2                   as MUTECT2_PAIRED               } from '../../../modules/nf-core/gatk4/mutect2/main'
 
+include { checkInParam } from "${projectDir}/checkInParam"
+
 workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
     take:
     input                     // channel: [ meta, [ input ], [ input_index ] ]

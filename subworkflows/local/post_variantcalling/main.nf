@@ -4,6 +4,8 @@
 
 include { CONCATENATE_GERMLINE_VCFS } from '../vcf_concatenate_germline/main'
 
+include { checkInParam } from "${projectDir}/checkInParam"
+
 workflow POST_VARIANTCALLING {
 
     take:

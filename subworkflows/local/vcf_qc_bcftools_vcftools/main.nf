@@ -3,6 +3,8 @@ include { VCFTOOLS as VCFTOOLS_SUMMARY    } from '../../../modules/nf-core/vcfto
 include { VCFTOOLS as VCFTOOLS_TSTV_COUNT } from '../../../modules/nf-core/vcftools/main'
 include { VCFTOOLS as VCFTOOLS_TSTV_QUAL  } from '../../../modules/nf-core/vcftools/main'
 
+include { checkInParam } from "${projectDir}/checkInParam"
+
 workflow VCF_QC_BCFTOOLS_VCFTOOLS {
     take:
     vcf

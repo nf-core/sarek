@@ -2,6 +2,8 @@
 // CHANNEL_APPLYBQSR_CREATE_CSV
 //
 
+include { checkInParam } from "${projectDir}/checkInParam"
+
 workflow CHANNEL_APPLYBQSR_CREATE_CSV {
     take:
         cram_recalibrated_index // channel: [mandatory] meta, cram, crai

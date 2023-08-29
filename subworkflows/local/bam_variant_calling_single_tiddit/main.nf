@@ -7,6 +7,8 @@
 include { TABIX_BGZIPTABIX as TABIX_BGZIP_TIDDIT_SV } from '../../../modules/nf-core/tabix/bgziptabix/main'
 include { TIDDIT_SV                                 } from '../../../modules/nf-core/tiddit/sv/main'
 
+include { checkInParam } from "${projectDir}/checkInParam"
+
 workflow BAM_VARIANT_CALLING_SINGLE_TIDDIT {
     take:
     cram

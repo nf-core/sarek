@@ -14,6 +14,8 @@ include { GATK4_MERGEVCFS           as MERGE_VQSR                } from '../../.
 include { GATK4_VARIANTRECALIBRATOR as VARIANTRECALIBRATOR_INDEL } from '../../../modules/nf-core/gatk4/variantrecalibrator/main'
 include { GATK4_VARIANTRECALIBRATOR as VARIANTRECALIBRATOR_SNP   } from '../../../modules/nf-core/gatk4/variantrecalibrator/main'
 
+include { checkInParam } from "${projectDir}/checkInParam"
+
 workflow BAM_JOINT_CALLING_GERMLINE_GATK {
     take:
     input                // channel: [ meta, [ input ], [ input_index ], intervals ]
