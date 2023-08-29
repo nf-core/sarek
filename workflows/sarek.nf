@@ -207,7 +207,7 @@ if (params.wes && !params.step == 'annotate') {
     else log.warn("Intervals file was provided without parameter `--wes`: Pipeline will assume this is Whole-Genome-Sequencing data.")
 } else if (params.intervals && !params.intervals.endsWith("bed") && !params.intervals.endsWith("list")) error("Intervals file must end with .bed, .list, or .interval_list")
 
-if (params.step == 'mapping' && params.aligner.contains("dragmap") && !(params.skip_tools && checkInParam(params.skip_tools, "baserecalibrator") )) {
+if (params.step == 'mapping' && params.aligner.contains("dragmap") && !(checkInParam(params.skip_tools, "baserecalibrator") )) {
     log.warn("DragMap was specified as aligner. Base recalibration is not contained in --skip_tools. It is recommended to skip baserecalibration when using DragMap\nhttps://gatk.broadinstitute.org/hc/en-us/articles/4407897446939--How-to-Run-germline-single-sample-short-variant-discovery-in-DRAGEN-mode")
 }
 
@@ -215,12 +215,12 @@ if (params.step == 'mapping' && params.aligner.contains("sentieon-bwamem") && pa
     error("Sentieon BWA is currently not compatible with FGBio UMI handeling. Please choose a different aligner.")
 }
 
-if (params.tools && checkInParam(params.tools, "sentieon_haplotyper") && params.joint_germline && (!params.sentieon_haplotyper_emit_mode || !(params.sentieon_haplotyper_emit_mode.contains('gvcf')))) {
+if (checkInParam(params.tools, "sentieon_haplotyper") && params.joint_germline && (!params.sentieon_haplotyper_emit_mode || !(params.sentieon_haplotyper_emit_mode.contains('gvcf')))) {
     error("When setting the option `--joint_germline` and including `sentieon_haplotyper` among the requested tools, please set `--sentieon_haplotyper_emit_mode` to include `gvcf`.")
 }
 
 // Fails or warns when missing files or params for ascat
-if (params.tools && checkInParam(params.tools, 'ascat')) {
+if (checkInParam(params.tools, 'ascat')) {
     if (!params.ascat_alleles) {
         error("No allele files were provided for running ASCAT. Please provide a zip folder with allele files.")
     }
@@ -236,7 +236,7 @@ if (params.tools && checkInParam(params.tools, 'ascat')) {
 }
 
 // Warns when missing files or params for mutect2
-if (params.tools && checkInParam(params.tools, 'mutect2')) {
+if (checkInParam(params.tools, 'mutect2')) {
     if (!params.pon) {
         log.warn("No Panel-of-normal was specified for Mutect2.\nIt is highly recommended to use one: https://gatk.broadinstitute.org/hc/en-us/articles/5358911630107-Mutect2\nFor more information on how to create one: https://gatk.broadinstitute.org/hc/en-us/articles/5358921041947-CreateSomaticPanelOfNormals-BETA-")
     }
@@ -550,7 +550,7 @@ workflow SAREK {
         else [ intervals[0], intervals[1], num_intervals ]
     }
 
-    if (params.tools && checkInParam(params.tools, 'cnvkit')) {
+    if (checkInParam(params.tools, 'cnvkit')) {
         if (params.cnvkit_reference) {
             cnvkit_reference = Channel.fromPath(params.cnvkit_reference).collect()
         } else {
@@ -599,7 +599,7 @@ workflow SAREK {
         // Additional options to be set up
 
         // QC
-        if (!(params.skip_tools && checkInParam(params.skip_tools, 'fastqc'))) {
+        if (!(checkInParam(params.skip_tools, 'fastqc'))) {
             FASTQC(input_fastq)
 
             reports = reports.mix(FASTQC.out.zip.collect{ meta, logs -> logs })
@@ -699,8 +699,8 @@ workflow SAREK {
         if (
             params.save_mapped ||
             (
-                (params.skip_tools && checkInParam(params.skip_tools, 'markduplicates')) &&
-                !(params.tools && checkInParam(params.tools, 'sentieon_dedup'))
+                (checkInParam(params.skip_tools, 'markduplicates')) &&
+                !(checkInParam(params.tools, 'sentieon_dedup'))
             )
         ) {
             // bams are merged (when multiple lanes from the same sample), indexed and then converted to cram
@@ -742,7 +742,7 @@ workflow SAREK {
         if (
             params.skip_tools &&
             checkInParam(params.skip_tools, 'markduplicates') &&
-            !(params.tools && checkInParam(params.tools, 'sentieon_dedup'))
+            !(checkInParam(params.tools, 'sentieon_dedup'))
         ) {
             if (params.step == 'mapping') {
                 cram_skip_markduplicates = BAM_TO_CRAM_MAPPING.out.alignment_index
@@ -780,7 +780,7 @@ workflow SAREK {
 
             // Gather used softwares versions
             versions = versions.mix(BAM_MARKDUPLICATES_SPARK.out.versions)
-        } else if (params.tools && checkInParam(params.tools, 'sentieon_dedup')) {
+        } else if (checkInParam(params.tools, 'sentieon_dedup')) {
             crai_for_markduplicates = params.step == 'mapping' ? bai_mapped : input_sample.map{ meta, input, index -> [ meta, index ] }
             BAM_SENTIEON_DEDUP(
                 cram_for_markduplicates,
@@ -827,7 +827,7 @@ workflow SAREK {
 
         // CSV should be written for the file actually out, either CRAM or BAM
         // Create CSV to restart from this step
-        csv_subfolder = (params.tools && checkInParam(params.tools, 'sentieon_dedup')) ? 'sentieon_dedup' : 'markduplicates'
+        csv_subfolder = (checkInParam(params.tools, 'sentieon_dedup')) ? 'sentieon_dedup' : 'markduplicates'
 
         params.save_output_as_bam ? CHANNEL_MARKDUPLICATES_CREATE_CSV(CRAM_TO_BAM.out.alignment_index, csv_subfolder, params.outdir, params.save_output_as_bam) : CHANNEL_MARKDUPLICATES_CREATE_CSV(ch_md_cram_for_restart, csv_subfolder, params.outdir, params.save_output_as_bam)
     }
@@ -868,7 +868,7 @@ workflow SAREK {
         }
 
         // STEP 3: Create recalibration tables
-        if (!(params.skip_tools && checkInParam(params.skip_tools, 'baserecalibrator'))) {
+        if (!(checkInParam(params.skip_tools, 'baserecalibrator'))) {
 
             ch_table_bqsr_no_spark = Channel.empty()
             ch_table_bqsr_spark    = Channel.empty()
@@ -947,7 +947,7 @@ workflow SAREK {
                 .map{ meta, cram, crai, table -> [ meta + [data_type: "cram"], cram, crai, table ]}
         }
 
-        if (!(params.skip_tools && checkInParam(params.skip_tools, 'baserecalibrator'))) {
+        if (!(checkInParam(params.skip_tools, 'baserecalibrator'))) {
             cram_variant_calling_no_spark = Channel.empty()
             cram_variant_calling_spark    = Channel.empty()
 
@@ -1124,7 +1124,7 @@ workflow SAREK {
             known_sites_snps_tbi,
             known_snps_vqsr,
             params.joint_germline,
-            params.skip_tools && checkInParam(params.skip_tools, 'haplotypecaller_filter'), // true if filtering should be skipped
+            checkInParam(params.skip_tools, 'haplotypecaller_filter'), // true if filtering should be skipped
             params.sentieon_haplotyper_emit_mode)
 
         // TUMOR ONLY VARIANT CALLING
@@ -1241,12 +1241,12 @@ workflow SAREK {
     }
 
     version_yaml = Channel.empty()
-    if (!(params.skip_tools && checkInParam(params.skip_tools, 'versions'))) {
+    if (!(checkInParam(params.skip_tools, 'versions'))) {
         CUSTOM_DUMPSOFTWAREVERSIONS(versions.unique().collectFile(name: 'collated_versions.yml'))
         version_yaml = CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect()
     }
 
-    if (!(params.skip_tools && checkInParam(params.skip_tools, 'multiqc'))) {
+    if (!(checkInParam(params.skip_tools, 'multiqc'))) {
         workflow_summary    = WorkflowSarek.paramsSummaryMultiqc(workflow, summary_params)
         ch_workflow_summary = Channel.value(workflow_summary)
 
