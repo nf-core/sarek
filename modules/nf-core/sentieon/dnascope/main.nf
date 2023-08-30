@@ -9,11 +9,11 @@ process SENTIEON_DNASCOPE {
 
     input:
     tuple val(meta), path(bam), path(bai), path(intervals)
-    path(fasta)
-    path(fai)
-    path(dbsnp)
-    path(dbsnp_tbi)
-    path(ml_model)
+    tuple val(meta2), path(fasta)
+    tuple val(meta3), path(fai)
+    tuple val(meta4), path(dbsnp)
+    tuple val(meta5), path(dbsnp_tbi)
+    tuple val(meta6), path(ml_model)
     val(pcr_indel_model)
     val(emit_vcf)
     val(emit_gvcf)

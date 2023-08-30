@@ -50,11 +50,11 @@ workflow BAM_VARIANT_CALLING_SENTIEON_DNASCOPE {
 
     SENTIEON_DNASCOPE(
         cram_intervals_for_sentieon,
-        fasta,
-        fasta_fai,
-        dbsnp,
-        dbsnp_tbi,
-        sentieon_dnascope_model,
+        fasta.map{it -> [[:], it]},
+        fasta_fai.map{it -> [[:], it]},
+        dbsnp.map{it -> [[:], it]},
+        dbsnp_tbi.map{it -> [[:], it]},
+        sentieon_dnascope_model.map{it -> [[:], it]},
         sentieon_dnascope_pcr_indel_model,
         emit_vcf,
         emit_mode_items.any{ it.equals('gvcf') })
