@@ -6,7 +6,7 @@ reports:
   "**/reports/fastp/*/*_fastp.html":
     display: "FASTP report"
   "**/reports/mosdepth/*/*.mosdepth.summary.txt":
-  display: "All samples summary of mean depths per chromosome and within specified regions per chromosome"
+    display: "All samples summary of mean depths per chromosome and within specified regions per chromosome"
   "**/reports/markduplicates/**.md.cram.metrics":
     display: "All samples GATK4/Markduplicates metrics"
   "**/reports/samtools/**.samtools.stats.out":
