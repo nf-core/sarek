@@ -32,7 +32,7 @@ Rapaselet is a delta formed by the Rapaätno river between the Bielloriehppe mas
 - [#1174](https://github.com/nf-core/sarek/pull/1174) - Updating multiqc to v1.15
 - [#1179](https://github.com/nf-core/sarek/pull/1179) - Unhide params `trim_fastq`, `umi_read_structure`, and `aligner`
 - [#1180](https://github.com/nf-core/sarek/pull/1180) - Updating the nf-core modules
-- [#1198](https://github.com/nf-core/sarek/pull/1198) - Prepare release `3.3`
+- [#1198](https://github.com/nf-core/sarek/pull/1198) - Prepare release `3.3.0`
 
 ### Fixed
 
