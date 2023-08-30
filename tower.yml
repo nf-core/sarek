@@ -7,11 +7,7 @@ reports:
     display: "FASTP report"
   "**/reports/mosdepth/*/*.mosdepth.summary.txt":
     display: "All samples summary of mean depths per chromosome and within specified regions per chromosome"
-  "**/reports/markduplicates/**.md.cram.metrics":
-    display: "All samples GATK4/Markduplicates metrics"
-  "**/reports/samtools/**.samtools.stats.out":
-    display: "All samples raw statistics"
-  "**/preprocessing/csv/*.csv":
+  "**/csv/*.csv":
     display: "All CSV files to restart nf-core/sarek at a different step"
   "**/variantcalling/ascat/*/*.tumour.ASPCF.png":
     display: "ASCAT: All allele-specific copy number segmentation images"
@@ -55,12 +51,6 @@ reports:
     display: "Control-FREEC: parsable file with information about FREEC run"
   "**/reports/bcftools/*.bcftools_stats.txt":
     display: "All samples raw statistics"
-  "**/reports/vcftools/*.FILTER.summary":
-    display: "All samples summary of the number of SNPs and Ts/Tv ratio for each FILTER category"
-  "**/reports/vcftools/*.TsTv.count":
-    display: "All samples Transition / Transversion ratio as a function of alternative allele count - only uses bi-allelic SNPs"
-  "**/reports/vcftools/*.TsTv.qual":
-    display: "All samples Transition / Transversion ratio as a function of SNP quality threshold - only uses bi-allelic SNPs"
   "**/reports/SnpEff/*/*/*_snpEff.html":
     display: "Statistics and plots for the SnpEff run"
   "**/reports/SnpEff/*/*/*_snpEff.genes.txt":
