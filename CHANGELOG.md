@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1158](https://github.com/nf-core/sarek/pull/1158) - Add preprint
 - [#1159](https://github.com/nf-core/sarek/pull/1159) - ISMB Poster
 - [#1173](https://github.com/nf-core/sarek/pull/1173) - CI tests for VQSR track with stub runs
-- [#1122](https://github.com/nf-core/sarek/pull/1122) - Add `annotation cache` functionality
+- [#1122](https://github.com/nf-core/sarek/pull/1122), [#1196](https://github.com/nf-core/sarek/pull/1196) - Add `annotation cache` functionality
 - [#1184](https://github.com/nf-core/sarek/pull/1184) - Stub-based CI-test of Sentieon joint-germline variant-calling with VQSR
 
 ### Changed
