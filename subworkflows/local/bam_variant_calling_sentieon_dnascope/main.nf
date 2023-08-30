@@ -10,18 +10,18 @@ include { SENTIEON_DNASCOPE                                           } from '..
 
 workflow BAM_VARIANT_CALLING_SENTIEON_DNASCOPE {
     take:
-    cram                           // channel: [mandatory] [ meta, cram, crai, interval.bed ]
-    fasta                          // channel: [mandatory]
-    fasta_fai                      // channel: [mandatory]
-    dict                           // channel: [mandatory]
-    dbsnp                          // channel: [optional]
-    dbsnp_tbi                      // channel: [optional]
-    dbsnp_vqsr                     // channel: [optional]
-    intervals                      // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
-    joint_germline                 // boolean: [mandatory] [default: false] joint calling of germline variants
-    sentieon_dnascope_emit_mode    // string
-    sentieon_dnascope_pcr_based    // boolean
-    sentieon_dnascope_model        // channel
+    cram                              // channel: [mandatory] [ meta, cram, crai, interval.bed ]
+    fasta                             // channel: [mandatory]
+    fasta_fai                         // channel: [mandatory]
+    dict                              // channel: [mandatory]
+    dbsnp                             // channel: [optional]
+    dbsnp_tbi                         // channel: [optional]
+    dbsnp_vqsr                        // channel: [optional]
+    intervals                         // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
+    joint_germline                    // boolean: [mandatory] [default: false] joint calling of germline variants
+    sentieon_dnascope_emit_mode       // string
+    sentieon_dnascope_pcr_indel_model // string
+    sentieon_dnascope_model           // channel
 
     main:
     versions = Channel.empty()
@@ -55,7 +55,7 @@ workflow BAM_VARIANT_CALLING_SENTIEON_DNASCOPE {
         dbsnp,
         dbsnp_tbi,
         sentieon_dnascope_model,
-        sentieon_dnascope_pcr_based,
+        sentieon_dnascope_pcr_indel_model,
         emit_vcf,
         emit_mode_items.any{ it.equals('gvcf') })
 

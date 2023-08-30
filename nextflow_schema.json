@@ -407,12 +407,13 @@
                     "help_text": "The option `--sentieon_dnascope_emit_mode` can be set to the same string values as the Dnascope's `--emit_mode`. To output both a vcf and a gvcf, specify both a vcf-option (currently, `all`, `confident` and `variant`) and `gvcf`. For example, to obtain a vcf and gvcf one could set `--sentieon_dnascope_emit_mode` to `variant, gvcf`.",
                     "pattern": "^(all|confident|gvcf|variant|gvcf,all|gvcf,confident|gvcf,variant|all,gvcf|confident,gvcf|variant,gvcf)(?<!,)$"
                 },
-               "sentieon_dnascope_pcr_based": {
-                    "type": "boolean",
+                "sentieon_dnascope_pcr_indel_model": {
+                    "type": "string",
+                    "default": "CONSERVATIVE",
                     "fa_icon": "fas fa-bacon",
-                    "description": "Option for indicating whether input data for Sentieon Dnascope is PCR-based.",
-                    "hidden": true,
-                    "help_text": "If the option `--sentieon_dnascope_pcr_based` for Sarek is set to `false`, then Dnascope's option `--pcr_indel_model` id set to `NONE`. If the option `--sentieon_dnascope_pcr_based` for Sarek is set to `true`, then the option `--pcr_indel_model` is not supplied to Dnascopeid set to `NONE`. Depending on whether PCR is involved, DNAscope uses different priors for finding significant INDEL variants, which could be controlled by the `--pcr_indel_model` option.",
+                    "description": "Option for selecting the PCR indel model used by Sentieon Dnascope.",
+                    "help_text": "PCR indel model used to weed out false positive indels more or less aggressively. The possible MODELs are: NONE (used for PCR free samples), and HOSTILE, AGGRESSIVE and CONSERVATIVE, in order of decreasing aggressiveness. The default value is CONSERVATIVE.",
+                    "pattern": "^(NONE|HOSTILE|AGGRESSIVE|CONSERVATIVE)(?<!,)$"
                 },
                 "sentieon_dnascope_model": {
                     "type": "string",

@@ -14,7 +14,7 @@ process SENTIEON_DNASCOPE {
     path(dbsnp)
     path(dbsnp_tbi)
     path(ml_model)
-    val(pcr_based)
+    val(pcr_indel_model)
     val(emit_vcf)
     val(emit_gvcf)
 
@@ -39,7 +39,7 @@ process SENTIEON_DNASCOPE {
     def interval                  = intervals                          ? "--interval ${intervals}"               : ''
     def dbsnp_str                 = dbsnp                              ? "-d ${dbsnp}"                           : ''
     def model_cmd                 = ml_model                           ? " --model ${ml_model}"                  : ''
-    def pcr_indel_model_cmd       = pcr_based                          ? ''                                      : " --pcr_indel_model NONE"
+    def pcr_indel_model_cmd       = pcr_indel_model                    ? " --pcr_indel_model ${pcr_indel_model}" : ''
     def prefix                    = task.ext.prefix                    ?: "${meta.id}"
     def sentieon_auth_mech_base64 = task.ext.sentieon_auth_mech_base64 ?: ''
     def sentieon_auth_data_base64 = task.ext.sentieon_auth_data_base64 ?: ''

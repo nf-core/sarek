@@ -1126,7 +1126,7 @@ workflow SAREK {
             params.skip_tools && params.skip_tools.split(',').contains('haplotypecaller_filter'), // true if filtering should be skipped
             params.sentieon_haplotyper_emit_mode,
             params.sentieon_dnascope_emit_mode,
-            params.sentieon_dnascope_pcr_based,
+            params.sentieon_dnascope_pcr_indel_model,
             sentieon_dnascope_model)
 
         // TUMOR ONLY VARIANT CALLING

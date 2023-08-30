@@ -43,7 +43,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     skip_haplotypecaller_filter       // boolean: [mandatory] [default: false] whether to filter haplotypecaller single sample vcfs
     sentieon_haplotyper_emit_mode     // channel: [mandatory] value channel with string
     sentieon_dnascope_emit_mode       // channel: [mandatory] value channel with string
-    sentieon_dnascope_pcr_based       // channel: [mandatory] value channel with boolean
+    sentieon_dnascope_pcr_indel_model // channel: [mandatory] value channel with string
     sentieon_dnascope_model           // channel: [mandatory] value channel with string
 
     main:
@@ -198,7 +198,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             intervals,
             joint_germline,
             sentieon_dnascope_emit_mode,
-            sentieon_dnascope_pcr_based,
+            sentieon_dnascope_pcr_indel_model,
             sentieon_dnascope_model)
 
         versions = versions.mix(BAM_VARIANT_CALLING_SENTIEON_DNASCOPE.out.versions)
