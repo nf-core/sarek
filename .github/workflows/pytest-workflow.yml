@@ -32,7 +32,6 @@ jobs:
         id: filter
         with:
           filters: "tests/config/tags.yml"
-          token: ""
 
   test:
     name: ${{ matrix.tags }} ${{ matrix.profile }} NF ${{ matrix.NXF_VER }}
