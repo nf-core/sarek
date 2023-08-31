@@ -183,6 +183,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     if (tools.split(',').contains('mutect2')) {
         BAM_VARIANT_CALLING_SOMATIC_MUTECT2(
             // Remap channel to match module/subworkflow
+            // Adjust meta.map to simplify joining channels
+            // joint_mutect2 mode needs different meta.map than regular mode
             cram.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai ->
                 joint_mutect2 ?
                 [ meta + [ id:meta.patient ] - meta.subMap('patient', 'tumor_id'), [ normal_cram, tumor_cram ], [ normal_crai, tumor_crai ] ] :
