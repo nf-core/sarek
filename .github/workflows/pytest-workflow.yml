@@ -8,6 +8,11 @@ on:
   release:
     types:
       - published
+  merge_group:
+    types:
+      - checks_requested
+    branches:
+      - master
 
 # Cancel if a newer run is started
 concurrency:
