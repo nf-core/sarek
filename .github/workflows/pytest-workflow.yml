@@ -125,7 +125,7 @@ jobs:
           path: /usr/local/bin/nextflow
           key: ${{ runner.os }}
           restore-keys: |
-            ${{ runner.os }}-nextflow-${{ github.event.repository.name }}
+            ${{ runner.os }}-nextflow-${{ matrix.NXF_VER }}-${{ github.event.repository.name }}
 
       - name: Install Nextflow ${{ matrix.NXF_VER }}
         if: steps.nextflow-cache-setup.outputs.cache-hit != 'true'
