@@ -106,3 +106,14 @@ jobs:
             lint_log.txt
             lint_results.md
             PR_number.txt
+
+      - name: Get PR number
+        id: pr_number
+        run: echo "pr_number=$(cat PR_number.txt)" >> $GITHUB_OUTPUT
+
+      - name: Post PR comment
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          number: ${{ steps.pr_number.outputs.pr_number }}
+          path: lint_results.md
