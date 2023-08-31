@@ -98,13 +98,15 @@ jobs:
           python-version: "3.x"
 
       - uses: actions/cache@v3
+        id: python-cache-setup
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
           restore-keys: |
-            ${{ runner.os }}-pip-
+            ${{ runner.os }}-pip
 
       - name: Install Python dependencies
+        if: steps.python-cache-setup.outputs.cache-hit != 'true'
         run: python -m pip install --upgrade pip pytest-workflow cryptography
 
       - name: Install Nextflow ${{ matrix.NXF_VER }}
