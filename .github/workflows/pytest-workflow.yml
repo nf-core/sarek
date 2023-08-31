@@ -6,7 +6,7 @@ on:
       - master
       - dev
   release:
-    types: 
+    types:
       - published
 
 # Cancel if a newer run is started

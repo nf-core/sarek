@@ -6,15 +6,15 @@ on:
   workflow_dispatch:
     inputs:
       profiletest:
-        description: 'Trigger profile tests (smaller) on AWS'
+        description: "Trigger profile tests (smaller) on AWS"
         type: boolean
         default: true
       somatic:
-        description: 'Trigger somatic full test on AWS'
+        description: "Trigger somatic full test on AWS"
         type: boolean
         default: false
       germline:
-        description: 'Trigger germline full test on AWS'
+        description: "Trigger germline full test on AWS"
         type: boolean
         default: false
 
