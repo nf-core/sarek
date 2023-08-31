@@ -53,8 +53,6 @@ Rapaselet is a delta formed by the Rapaätno river between the Bielloriehppe mas
 - [#1192](https://github.com/nf-core/sarek/pull/1192) - Add `ASCATprofile.png` to ASCAT output docs
 - [#1197](https://github.com/nf-core/sarek/pull/1197) - Improve `tower.yml` file to display reports in `Tower` ([#1190](https://github.com/nf-core/sarek/issues/1190))
 
-
-
 ### Dependencies
 
 | Dependency    | Old version               | New version              |
