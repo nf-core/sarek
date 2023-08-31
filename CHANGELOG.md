@@ -51,8 +51,9 @@ Rapaselet is a delta formed by the Rapaätno river between the Bielloriehppe mas
 - [#1183](https://github.com/nf-core/sarek/pull/1183) - Add docs for concatentated germline variants
 - [#1184](https://github.com/nf-core/sarek/pull/1184) - Fix issue with duplicated variants in VCF from Sentieon-based joint-germline variant-calling with VQSR. (Corresponding to [#966](https://github.com/nf-core/sarek/issues/966) for GATK.)
 - [#1192](https://github.com/nf-core/sarek/pull/1192) - Add `ASCATprofile.png` to ASCAT output docs
-- [#1197](https://github.com/nf-core/sarek/pull/1197) - Improve `tower.yml` file to display reports in `Tower` ([#1190](https://github.com/nf-core/sarek/issues/1190))
-- [#1202](https://github.com/nf-core/sarek/pull/1202) - Remove GitHub action step that caches Nextflow. Also bump other out of date actions.
+- [#1197](https://github.com/nf-core/sarek/pull/1197) - Improve `tower.yml` file to display reports in Tower ([#1190](https://github.com/nf-core/sarek/issues/1190))
+- [#1202](https://github.com/nf-core/sarek/pull/1202) - Remove GitHub action step that caches Nextflow and bump other out of date actions
+- [#1203](https://github.com/nf-core/sarek/pull/1203) - Fix issue with Singularity containers on test profiles
 
 ### Dependencies
 
