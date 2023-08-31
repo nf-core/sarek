@@ -41,9 +41,9 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
 
     if (joint_mutect2) {
         // Separate normal cram files and remove duplicates
-        ch_normal_cram = input.map{ meta, cram, crai -> [ meta - meta.subMap('tumor_id') + [id:meta.patient], cram[0], crai[0] ] }.unique()
+        ch_normal_cram = input.map{ meta, cram, crai -> [ meta, cram[0], crai[0] ] }.unique()
         // Extract tumor cram files
-        ch_tumor_cram = input.map{ meta, cram, crai -> [ meta - meta.subMap('tumor_id') + [id:meta.patient], cram[1], crai[1] ] }
+        ch_tumor_cram = input.map{ meta, cram, crai -> [ meta, cram[1], crai[1] ] }
         // Merge normal and tumor crams by patient
         ch_tn_cram = ch_normal_cram.mix(ch_tumor_cram).groupTuple()
         // Combine input and intervals for scatter and gather strategy
