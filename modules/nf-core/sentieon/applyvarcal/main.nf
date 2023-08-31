@@ -9,8 +9,8 @@ process SENTIEON_APPLYVARCAL {
 
     input:
     tuple val(meta), path(vcf), path(vcf_tbi), path(recal), path(recal_index), path(tranches)
-    path  fasta
-    path  fai
+    tuple val(meta2), path(fasta)
+    tuple val(meta3), path(fai)
 
     output:
     tuple val(meta), path("*.vcf.gz"), emit: vcf
@@ -53,6 +53,22 @@ process SENTIEON_APPLYVARCAL {
         --tranches_file $tranches \\
         $args \\
         ${prefix}.vcf.gz
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        sentieon: \$(echo \$(sentieon driver --version 2>&1) | sed -e "s/sentieon-genomics-//g")
+    END_VERSIONS
+    """
+
+    stub:
+    // Exit if running this module with -profile conda / -profile mamba
+    if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
+        error "Sentieon modules do not support Conda. Please use Docker / Singularity / Podman instead."
+    }
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    """
+    touch ${prefix}.vcf.gz
+    touch ${prefix}.vcf.gz.tbi
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

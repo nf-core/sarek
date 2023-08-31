@@ -5,7 +5,7 @@ keywords:
   - vcf
   - annotation
   - ensemblvep
-modules:
+components:
   - ensemblvep/vep
   - tabix/tabix
 input:

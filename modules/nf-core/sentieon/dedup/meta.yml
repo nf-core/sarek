@@ -28,10 +28,20 @@ input:
       type: file
       description: BAI file
       pattern: "*.bai"
+  - meta2:
+      type: map
+      description: |
+        Groovy Map containing reference information.
+        e.g. [ id:'test', single_end:false ]
   - fasta:
       type: file
       description: Genome fasta file
       pattern: "*.{fa,fasta}"
+  - meta3:
+      type: map
+      description: |
+        Groovy Map containing reference information.
+        e.g. [ id:'test', single_end:false ]
   - fasta_fai:
       type: file
       description: The index of the FASTA reference.

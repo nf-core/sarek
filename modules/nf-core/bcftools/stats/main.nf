@@ -8,10 +8,12 @@ process BCFTOOLS_STATS {
         'biocontainers/bcftools:1.17--haef29d1_0' }"
 
     input:
-    tuple val(meta), path(vcf), path(tbi)
-    path regions
-    path targets
-    path samples
+    tuple val(meta),  path(vcf), path(tbi)
+    tuple val(meta2), path(regions)
+    tuple val(meta3), path(targets)
+    tuple val(meta4), path(samples)
+    tuple val(meta5), path(exons)
+    tuple val(meta6), path(fasta)
 
     output:
     tuple val(meta), path("*stats.txt"), emit: stats
@@ -26,12 +28,16 @@ process BCFTOOLS_STATS {
     def regions_file = regions ? "--regions-file ${regions}" : ""
     def targets_file = targets ? "--targets-file ${targets}" : ""
     def samples_file =  samples ? "--samples-file ${samples}" : ""
+    def reference_fasta = fasta ? "--fasta-ref ${fasta}" : ""
+    def exons_file = exons      ? "--exons ${exons}" : ""
     """
     bcftools stats \\
         $args \\
         $regions_file \\
         $targets_file \\
         $samples_file \\
+        $reference_fasta \\
+        $exons_file \\
         $vcf > ${prefix}.bcftools_stats.txt
 
     cat <<-END_VERSIONS > versions.yml

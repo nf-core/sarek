@@ -1,5 +1,5 @@
 - name: Run joint germline variant calling with sentieon haplotyper
-  command: nextflow run main.nf -profile test_cache,targeted --input ./tests/csv/3.0/mapped_joint_bam.csv --tools sentieon_haplotyper --step variant_calling --joint_germline --skip_tools haplotyper_filter --outdir results --sentieon_haplotyper_emit_mode gvcf
+  command: nextflow run main.nf -profile test_cache,targeted --input ./tests/csv/3.0/mapped_joint_bam.csv --tools sentieon_haplotyper --step variant_calling --joint_germline --outdir results --sentieon_haplotyper_emit_mode gvcf
   tags:
     - germline
     - sentieon_joint_germline
@@ -14,17 +14,69 @@
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
       should_exist: false
     - path: results/reports/bcftools/sentieon_haplotyper/joint_variant_calling/joint_germline.bcftools_stats.txt
-      # md5sum: 404d1208df301a6726f5543245625ef3
     - path: results/reports/vcftools/sentieon_haplotyper/joint_variant_calling/joint_germline.FILTER.summary
-      # md5sum: 87a84b5f8ac3d3cbeeef7d60afcdbfe7
     - path: results/reports/vcftools/sentieon_haplotyper/joint_variant_calling/joint_germline.TsTv.count
-      # md5sum: 974f6922981c87bb017b124aa009f654
     - path: results/reports/vcftools/sentieon_haplotyper/joint_variant_calling/joint_germline.TsTv.qual
-      # md5sum: 1e34357e5848c318f8c2c7d3b041d229
     - path: results/variant_calling/sentieon_haplotyper/joint_variant_calling/joint_germline.vcf.gz
     # binary changes md5sums on reruns
     - path: results/variant_calling/sentieon_haplotyper/joint_variant_calling/joint_germline.vcf.gz.tbi
     # binary changes md5sums on reruns
+    - path: results/variant_calling/sentieon_haplotyper/testN/testN.haplotyper.g.vcf.gz
+    - path: results/variant_calling/sentieon_haplotyper/testN/testN.haplotyper.g.vcf.gz.tbi
+    - path: results/variant_calling/sentieon_haplotyper/testT/testT.haplotyper.g.vcf.gz
+    - path: results/variant_calling/sentieon_haplotyper/testT/testT.haplotyper.g.vcf.gz.tbi
+    - path: results/haplotyper
+      should_exist: false
+- name: Run joint germline variant calling with sentieon haplotyper all intervals at once
+  command: nextflow run main.nf -profile test_cache,targeted --input ./tests/csv/3.0/mapped_joint_bam.csv --tools sentieon_haplotyper --step variant_calling --joint_germline --outdir results --sentieon_haplotyper_emit_mode gvcf --nucleotides_per_second 100
+  tags:
+    - germline
+    - sentieon_joint_germline
+    - variant_calling
+    - sentieon/haplotyper
+  files:
+    - path: results/csv/variantcalled.csv
+      md5sum: 6ec10f6455c2b5290c7f6fc687c529ca
+    - path: results/multiqc
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+      should_exist: false
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+      should_exist: false
+    - path: results/reports/bcftools/sentieon_haplotyper/joint_variant_calling/joint_germline.bcftools_stats.txt
+    - path: results/reports/vcftools/sentieon_haplotyper/joint_variant_calling/joint_germline.FILTER.summary
+    - path: results/reports/vcftools/sentieon_haplotyper/joint_variant_calling/joint_germline.TsTv.count
+    - path: results/reports/vcftools/sentieon_haplotyper/joint_variant_calling/joint_germline.TsTv.qual
+    - path: results/variant_calling/sentieon_haplotyper/joint_variant_calling/joint_germline.vcf.gz
+    - path: results/variant_calling/sentieon_haplotyper/joint_variant_calling/joint_germline.vcf.gz.tbi
+    - path: results/variant_calling/sentieon_haplotyper/testN/testN.haplotyper.g.vcf.gz
+    - path: results/variant_calling/sentieon_haplotyper/testN/testN.haplotyper.g.vcf.gz.tbi
+    - path: results/variant_calling/sentieon_haplotyper/testT/testT.haplotyper.g.vcf.gz
+    - path: results/variant_calling/sentieon_haplotyper/testT/testT.haplotyper.g.vcf.gz.tbi
+    - path: results/haplotyper
+      should_exist: false
+- name: Run joint germline variant calling with sentieon haplotyper with stub for VQSR
+  command: nextflow run main.nf -profile test_cache,tools_germline --input ./tests/csv/3.0/mapped_joint_bam.csv --tools sentieon_haplotyper --step variant_calling --joint_germline --outdir results --sentieon_haplotyper_emit_mode gvcf -stub-run
+  tags:
+    - germline
+    - sentieon_joint_germline
+    - variant_calling
+    - vqsr
+  files:
+    - path: results/csv/variantcalled.csv
+      md5sum: 44415aaccc30c837943aea406c2f8d9d
+    - path: results/multiqc
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+      should_exist: false
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+      should_exist: false
+    - path: results/reports/bcftools/sentieon_haplotyper/joint_variant_calling/joint_germline_recalibrated.bcftools_stats.txt
+    - path: results/reports/vcftools/sentieon_haplotyper/joint_variant_calling/joint_germline_recalibrated.FILTER.summary
+    - path: results/reports/vcftools/sentieon_haplotyper/joint_variant_calling/joint_germline_recalibrated.TsTv.count
+    - path: results/reports/vcftools/sentieon_haplotyper/joint_variant_calling/joint_germline_recalibrated.TsTv.qual
+    - path: results/variant_calling/sentieon_haplotyper/joint_variant_calling/joint_germline.vcf.gz
+    - path: results/variant_calling/sentieon_haplotyper/joint_variant_calling/joint_germline.vcf.gz.tbi
+    - path: results/variant_calling/sentieon_haplotyper/joint_variant_calling/joint_germline_recalibrated.vcf.gz
+    - path: results/variant_calling/sentieon_haplotyper/joint_variant_calling/joint_germline_recalibrated.vcf.gz.tbi
     - path: results/variant_calling/sentieon_haplotyper/testN/testN.haplotyper.g.vcf.gz
     - path: results/variant_calling/sentieon_haplotyper/testN/testN.haplotyper.g.vcf.gz.tbi
     - path: results/variant_calling/sentieon_haplotyper/testT/testT.haplotyper.g.vcf.gz

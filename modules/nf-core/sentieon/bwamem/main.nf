@@ -10,8 +10,8 @@ process SENTIEON_BWAMEM {
     input:
     tuple val(meta), path(reads)
     tuple val(meta2), path(index)
-    path(fasta)
-    path(fasta_fai)
+    tuple val(meta3), path(fasta)
+    tuple val(meta4), path(fasta_fai)
 
     output:
     tuple val(meta), path("*.bam"), path("*.bai"), emit: bam_and_bai
