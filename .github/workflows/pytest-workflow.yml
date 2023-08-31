@@ -152,7 +152,7 @@ jobs:
         run: conda clean -a
 
       - name: Run pytest-workflow
-        uses: Wandalen/wretry.action@v1.0.11
+        uses: Wandalen/wretry.action@v1
         with:
           command: TMPDIR=~ PROFILE=${{ matrix.profile }} pytest --tag ${{ matrix.tags }} --symlink --kwdof --git-aware --color=yes
           attempt_limit: 3
