@@ -70,8 +70,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     // CONTROLFREEC
     if (tools.split(',').contains('controlfreec')) {
         // Remap channels to match module/subworkflow
-        cram_normal = cram.map { meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [ meta, normal_cram, normal_crai ] }
-        cram_tumor = cram.map { meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [ meta, tumor_cram, tumor_crai ] }
+        cram_normal = cram.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [ meta, normal_cram, normal_crai ] }
+        cram_tumor = cram.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [ meta, tumor_cram, tumor_crai ] }
 
         MPILEUP_NORMAL(
             cram_normal,
@@ -183,7 +183,13 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     if (tools.split(',').contains('mutect2')) {
         BAM_VARIANT_CALLING_SOMATIC_MUTECT2(
             // Remap channel to match module/subworkflow
-            cram.map { meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [ meta, [ normal_cram, tumor_cram ], [ normal_crai, tumor_crai ] ] },
+            // Adjust meta.map to simplify joining channels
+            // joint_mutect2 mode needs different meta.map than regular mode
+            cram.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai ->
+                joint_mutect2 ?
+                [ meta + [ id:meta.patient ] - meta.subMap('patient', 'tumor_id'), [ normal_cram, tumor_cram ], [ normal_crai, tumor_crai ] ] :
+                [ meta, [ normal_cram, tumor_cram ], [ normal_crai, tumor_crai ] ]
+            },
             // Remap channel to match module/subworkflow
             fasta.map{ it -> [ [ id:'fasta' ], it ] },
             // Remap channel to match module/subworkflow

@@ -47,6 +47,7 @@ Rapaselet is a delta formed by the Rapaätno river between the Bielloriehppe mas
 - [#1173](https://github.com/nf-core/sarek/pull/1173) - Fixed duplicated entries in joint germline recalibrated VCF ([#966](https://github.com/nf-core/sarek/pull/966), [#1102](https://github.com/nf-core/sarek/pull/1102)),
   fixed grouping joint germline recalibrated VCF ([#1137](https://github.com/nf-core/sarek/pull/1137))
 - [#1177](https://github.com/nf-core/sarek/pull/1177) - Fix status inference when using nf-validation plugin
+- [#1181](https://github.com/nf-core/sarek/pull/1181) - Fix join mismatch error in Mutect2 tumor only subworkflow
 - [#1183](https://github.com/nf-core/sarek/pull/1183) - Add docs for concatentated germline variants
 - [#1184](https://github.com/nf-core/sarek/pull/1184) - Fix issue with duplicated variants in VCF from Sentieon-based joint-germline variant-calling with VQSR. (Corresponding to [#966](https://github.com/nf-core/sarek/issues/966) for GATK.)
 - [#1192](https://github.com/nf-core/sarek/pull/1192) - Add `ASCATprofile.png` to ASCAT output docs
