@@ -1,3 +1,7 @@
+# default
+default:
+  - "**"
+
 # default_extended
 
 tumor_normal_pair:
