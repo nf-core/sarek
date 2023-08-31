@@ -53,6 +53,7 @@ jobs:
     env:
       NXF_ANSI_LOG: false
       TEST_DATA_BASE: "${{ github.workspace }}/test-datasets"
+      SENTIEON_LICENSE_BASE64: ${{ secrets.SENTIEON_LICENSE_BASE64 }}
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v3
