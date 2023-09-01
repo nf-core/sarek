@@ -101,7 +101,7 @@ jobs:
         id: python-cache-setup
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('tests/requirements.txt') }}
 
       - name: Install Python dependencies
         if: steps.python-cache-setup.outputs.cache-hit != 'true'
