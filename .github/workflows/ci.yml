@@ -68,30 +68,6 @@ jobs:
         run: |
           echo "digest=$(echo sarek3_${{ github.workspace }} | md5sum | cut -c 1-25)" >> $GITHUB_OUTPUT
 
-      - name: Cache test data
-        id: cache-testdata
-        uses: actions/cache@v3
-        with:
-          path: test-datasets/
-          key: ${{ steps.hash_workspace.outputs.digest }}
-
-      - name: Check out test data
-        if: steps.cache-testdata.outputs.cache-hit != 'true'
-        uses: actions/checkout@v3
-        with:
-          repository: nf-core/test-datasets
-          ref: sarek3
-          path: test-datasets/
-
-      - name: Replace remote paths in samplesheets
-        run: |
-          for f in tests/csv/3.0/*csv; do
-            sed -i "s=https://raw.githubusercontent.com/nf-core/test-datasets/modules/=${{ github.workspace }}/test-datasets/=g" $f
-            echo "========== $f ============"
-            cat $f
-            echo "========================================"
-          done;
-
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -121,6 +97,30 @@ jobs:
           auto-update-conda: true
           channels: conda-forge,bioconda,defaults
           python-version: ${{ matrix.python-version }}
+
+      - name: Cache test data
+        id: cache-testdata
+        uses: actions/cache@v3
+        with:
+          path: test-datasets/
+          key: ${{ steps.hash_workspace.outputs.digest }}
+
+      - name: Check out test data
+        if: steps.cache-testdata.outputs.cache-hit != 'true'
+        uses: actions/checkout@v3
+        with:
+          repository: nf-core/test-datasets
+          ref: sarek3
+          path: test-datasets/
+
+      - name: Replace remote paths in samplesheets
+        run: |
+          for f in tests/csv/3.0/*csv; do
+            sed -i "s=https://raw.githubusercontent.com/nf-core/test-datasets/modules/=${{ github.workspace }}/test-datasets/=g" $f
+            echo "========== $f ============"
+            cat $f
+            echo "========================================"
+          done;
 
       # Set up secrets
       - name: Set up nextflow secrets
