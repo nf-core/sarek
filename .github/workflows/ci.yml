@@ -97,9 +97,11 @@ jobs:
         with:
           python-version: "3.x"
           cache: "pip"
+          cache-dependency-path: |
+            **/requirements.txt
 
       - name: Install Python dependencies
-        run: pip install --upgrade -r tests/requirements.txt
+        run: pip install -e . -r tests/requirements.txt
 
       - name: Install Nextflow ${{ matrix.NXF_VER }}
         uses: nf-core/setup-nextflow@v1
