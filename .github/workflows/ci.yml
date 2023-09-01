@@ -101,7 +101,7 @@ jobs:
             **/requirements.txt
 
       - name: Install Python dependencies
-        run: pip install -e . -r tests/requirements.txt
+        run: pip install --upgrade -r tests/requirements.txt
 
       - name: Install Nextflow ${{ matrix.NXF_VER }}
         uses: nf-core/setup-nextflow@v1
