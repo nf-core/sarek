@@ -21,7 +21,7 @@ on:
 jobs:
   trigger-profile-test:
     name: Run AWS tests
-    if: ( github.repository == 'nf-core/sarek' ) && ( github.event_name != 'workflow_dispatch' || inputs.profiletest )
+    if: ( github.repository == 'nf-core/sarek' ) && ( inputs.profiletest || true )
     runs-on: ubuntu-latest
     steps:
       # Launch workflow using Tower CLI tool action
@@ -47,7 +47,7 @@ jobs:
 
   trigger-full-test-somatic:
     name: Run AWS full tests
-    if: ${{ ( github.repository == 'nf-core/sarek' && github.event_name == 'release' ) || ( github.event_name != 'workflow_dispatch' && inputs.somatic ) }}
+    if: ${{ ( github.repository == 'nf-core/sarek' && github.event_name == 'release' ) || ( inputs.somatic || true ) }}
     runs-on: ubuntu-latest
     steps:
       # Launch workflow using Tower CLI tool action
@@ -75,7 +75,7 @@ jobs:
 
   trigger-full-test-germline:
     name: Run AWS full tests
-    if: ${{ ( github.repository == 'nf-core/sarek' && github.event_name == 'release' ) || ( github.event_name != 'workflow_dispatch' && inputs.germline ) }}
+    if: ${{ ( github.repository == 'nf-core/sarek' && github.event_name == 'release' ) || ( inputs.germline || true ) }}
     runs-on: ubuntu-latest
     steps:
       # Launch workflow using Tower CLI tool action
