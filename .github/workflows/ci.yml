@@ -1,18 +1,18 @@
 name: test
 # This workflow runs the pipeline with the minimal test dataset to check that it completes without any syntax errors
 on:
-  pull_request:
+  push:
     branches:
-      - master
       - dev
+  pull_request:
   release:
-    types:
-      - published
+    types: [published]
   merge_group:
     types:
       - checks_requested
     branches:
       - master
+      - dev
 
 # Cancel if a newer run is started
 concurrency:
