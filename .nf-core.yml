@@ -1,9 +1,9 @@
 repository_type: pipeline
 lint:
+  actions_ci: False
   files_exist:
     - conf/modules.config
   files_unchanged:
-    - .github/workflows/ci.yml
     - assets/nf-core-sarek_logo_light.png
     - docs/images/nf-core-sarek_logo_dark.png
     - docs/images/nf-core-sarek_logo_light.png
