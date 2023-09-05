@@ -56,6 +56,7 @@ Rapaselet is a delta formed by the Rapaätno river between the Bielloriehppe mas
 - [#1202](https://github.com/nf-core/sarek/pull/1202) - Remove GHA step that caches Nextflow and bump other out of date actions
 - [#1203](https://github.com/nf-core/sarek/pull/1203) - Fix issue with Singularity containers on test profiles
 - [#1204](https://github.com/nf-core/sarek/pull/1204) - Fix issue with nf-validation: lane can be a requirement of bam too now
+- [#1205](https://github.com/nf-core/sarek/pull/1205) - Less tests triggered
 
 ### Dependencies
 
