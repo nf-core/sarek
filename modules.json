@@ -388,7 +388,7 @@
                     },
                     "sentieon/dnascope": {
                         "branch": "master",
-                        "git_sha": "127edadc279e19da093fdd513926c6cdee82c306",
+                        "git_sha": "4fb6fdc8046ec09cd30f92a2a252e9a0ba4a6309",
                         "installed_by": ["modules"]
                     },
                     "sentieon/gvcftyper": {
