@@ -208,7 +208,29 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         gvcf_sentieon_dnascope     = BAM_VARIANT_CALLING_SENTIEON_DNASCOPE.out.gvcf
         gvcf_tbi_sentieon_dnascope = BAM_VARIANT_CALLING_SENTIEON_DNASCOPE.out.gvcf_tbi
 
-        // TO-DO: Implement joint_germline and VCF_VARIANT_FILTERING_GATK like, for instance, in the sentieon-haplotyper call below.
+        if (joint_germline) {
+            // TO-DO: Implement this like below for sentieon-haplotyper
+            error("Joint-germline with Sentieon-DNASCOPE has not yet been implemented.")
+        } else {
+
+            // If single sample track, check if filtering should be done
+            if (!(skip_tools && skip_tools.split(',').contains('dnascope_filter'))) {
+
+                VCF_VARIANT_FILTERING_GATK(
+                    vcf_sentieon_dnascope.join(vcf_tbi_sentieon_dnascope, failOnDuplicate: true, failOnMismatch: true),
+                    fasta,
+                    fasta_fai,
+                    dict.map{ meta, dict -> [ dict ] },
+                    intervals_bed_combined_haplotypec,
+                    known_sites_indels.concat(known_sites_snps).flatten().unique().collect(),
+                    known_sites_indels_tbi.concat(known_sites_snps_tbi).flatten().unique().collect())
+
+                vcf_sentieon_dnascope = VCF_VARIANT_FILTERING_GATK.out.filtered_vcf
+
+                versions = versions.mix(VCF_VARIANT_FILTERING_GATK.out.versions)
+            }
+
+        }
     }
 
     // SENTIEON HAPLOTYPER
