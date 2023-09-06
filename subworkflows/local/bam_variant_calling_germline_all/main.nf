@@ -209,8 +209,23 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         gvcf_tbi_sentieon_dnascope = BAM_VARIANT_CALLING_SENTIEON_DNASCOPE.out.gvcf_tbi
 
         if (joint_germline) {
-            // TO-DO: Implement this like below for sentieon-haplotyper
-            error("Joint-germline with Sentieon-DNASCOPE has not yet been implemented.")
+            BAM_JOINT_CALLING_GERMLINE_SENTIEON(   // TO-DO: Check that subworkflow is okay for Dnascope as well. Email sent to Don.
+                BAM_VARIANT_CALLING_SENTIEON_DNASCOPE.out.genotype_intervals,
+                fasta,
+                fasta_fai,
+                dict,
+                dbsnp,
+                dbsnp_tbi,
+                dbsnp_vqsr,
+                known_sites_indels,
+                known_sites_indels_tbi,
+                known_indels_vqsr,
+                known_sites_snps,
+                known_sites_snps_tbi,
+                known_snps_vqsr)
+
+            vcf_sentieon_dnascope = BAM_JOINT_CALLING_GERMLINE_SENTIEON.out.genotype_vcf
+            versions = versions.mix(BAM_JOINT_CALLING_GERMLINE_SENTIEON.out.versions)
         } else {
 
             // If single sample track, check if filtering should be done
