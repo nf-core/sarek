@@ -48,7 +48,7 @@ jobs:
           parameters: |
             {
               "hook_url": "${{ secrets.MEGATESTS_ALERTS_SLACK_HOOK_URL }}",
-              "outdir": "s3://${{ secrets.AWS_S3_BUCKET }}/sarek/results-test-${{ github.sha }}"/${{ matrix.profile }}"
+              "outdir": "s3://${{ secrets.AWS_S3_BUCKET }}/sarek/results-test-${{ github.sha }}/${{ matrix.profile }}"
             }
           profiles: ${{ matrix.profile }}
 
