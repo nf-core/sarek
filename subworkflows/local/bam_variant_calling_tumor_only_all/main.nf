@@ -35,6 +35,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     panel_of_normals              // channel: [optional]  panel_of_normals
     panel_of_normals_tbi          // channel: [optional]  panel_of_normals_tbi
     joint_mutect2                 // boolean: [mandatory] [default: false] run mutect2 in joint mode
+    wes                           // boolean: [mandatory] [default: false] whether targeted data is processed
 
     main:
     versions = Channel.empty()
