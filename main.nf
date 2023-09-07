@@ -101,6 +101,8 @@ WorkflowMain.initialise(workflow, params, log)
 include { SAREK } from './workflows/sarek'
 
 // WORKFLOW: Run main nf-core/sarek analysis pipeline
+include { checkInParam } from "${projectDir}/checkInParam"
+
 workflow NFCORE_SAREK {
     SAREK ()
 }

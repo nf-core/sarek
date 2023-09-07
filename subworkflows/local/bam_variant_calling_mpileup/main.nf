@@ -9,6 +9,8 @@ include { BCFTOOLS_MPILEUP                          } from '../../../modules/nf-
 include { SAMTOOLS_MPILEUP                          } from '../../../modules/nf-core/samtools/mpileup/main'
 include { GATK4_MERGEVCFS as MERGE_BCFTOOLS_MPILEUP } from '../../../modules/nf-core/gatk4/mergevcfs/main'
 
+include { checkInParam } from "${projectDir}/checkInParam"
+
 workflow BAM_VARIANT_CALLING_MPILEUP {
     take:
     cram      // channel: [mandatory] [ meta, cram, crai ]

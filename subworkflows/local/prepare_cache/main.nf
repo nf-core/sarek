@@ -11,6 +11,8 @@
 include { ENSEMBLVEP_DOWNLOAD } from '../../../modules/nf-core/ensemblvep/download/main'
 include { SNPEFF_DOWNLOAD     } from '../../../modules/nf-core/snpeff/download/main'
 
+include { checkInParam } from "${projectDir}/checkInParam"
+
 workflow PREPARE_CACHE {
     take:
     ensemblvep_info

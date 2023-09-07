@@ -9,6 +9,8 @@
 include { CNVKIT_ANTITARGET } from '../../../modules/nf-core/cnvkit/antitarget/main'
 include { CNVKIT_REFERENCE  } from '../../../modules/nf-core/cnvkit/reference/main'
 
+include { checkInParam } from "${projectDir}/checkInParam"
+
 workflow PREPARE_REFERENCE_CNVKIT {
     take:
     fasta                    // channel: [mandatory] fasta

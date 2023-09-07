@@ -12,6 +12,8 @@ include { SENTIEON_GVCFTYPER                                 } from '../../../mo
 include { SENTIEON_VARCAL      as SENTIEON_VARCAL_INDEL      } from '../../../modules/nf-core/sentieon/varcal/main'
 include { SENTIEON_VARCAL      as SENTIEON_VARCAL_SNP        } from '../../../modules/nf-core/sentieon/varcal/main'
 
+include { checkInParam } from "${projectDir}/checkInParam"
+
 workflow BAM_JOINT_CALLING_GERMLINE_SENTIEON {
     take:
     input                // channel: [ meta, [ input ], [ input_index ], intervals ]

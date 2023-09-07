@@ -13,6 +13,8 @@ include { FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON as ALIGN_UMI        } from '.
 include { SAMBLASTER                                                   } from '../../../modules/nf-core/samblaster/main'
 include { SAMTOOLS_BAM2FQ                          as BAM2FASTQ        } from '../../../modules/nf-core/samtools/bam2fq/main.nf'
 
+include { checkInParam } from "${projectDir}/checkInParam"
+
 workflow FASTQ_CREATE_UMI_CONSENSUS_FGBIO {
     take:
     reads                     // channel: [mandatory] [ val(meta), [ reads ] ]

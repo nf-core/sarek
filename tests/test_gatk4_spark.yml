@@ -49,7 +49,7 @@
     - path: results/preprocessing/mapped/
       should_exist: false
 - name: Run default pipeline with gatk4_spark & skipping all QC steps
-  command: nextflow run main.nf -profile test_cache,use_gatk_spark --skip_tools fastqc,markduplicates_report,mosdepth,multiqc,samtools --outdir results
+  command: nextflow run main.nf -profile test_cache,use_gatk_spark --skip_tools Fastqc,markduplicates_report,mosdepth,multiqc,samtools --outdir results
   tags:
     - gatk4_spark
     - preprocessing

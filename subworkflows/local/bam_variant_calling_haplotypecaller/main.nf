@@ -8,6 +8,8 @@ include { BAM_MERGE_INDEX_SAMTOOLS                            } from '../bam_mer
 include { GATK4_HAPLOTYPECALLER                               } from '../../../modules/nf-core/gatk4/haplotypecaller/main'
 include { GATK4_MERGEVCFS            as MERGE_HAPLOTYPECALLER } from '../../../modules/nf-core/gatk4/mergevcfs/main'
 
+include { checkInParam } from "${projectDir}/checkInParam"
+
 workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
     take:
     cram                         // channel: [mandatory] [ meta, cram, crai, interval.bed ]

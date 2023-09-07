@@ -9,6 +9,8 @@ include { GATK4_MERGEVCFS as MERGE_DEEPVARIANT_GVCF } from '../../../modules/nf-
 include { GATK4_MERGEVCFS as MERGE_DEEPVARIANT_VCF  } from '../../../modules/nf-core/gatk4/mergevcfs/main'
 
 // Deepvariant: https://github.com/google/deepvariant/issues/510
+include { checkInParam } from "${projectDir}/checkInParam"
+
 workflow BAM_VARIANT_CALLING_DEEPVARIANT {
     take:
     cram          // channel: [mandatory] [ meta, cram, crai ]

@@ -7,6 +7,8 @@
 include { MANTA_GERMLINE } from '../../../modules/nf-core/manta/germline/main'
 
 // Seems to be the consensus on upstream modules implementation too
+include { checkInParam } from "${projectDir}/checkInParam"
+
 workflow BAM_VARIANT_CALLING_GERMLINE_MANTA {
     take:
     cram          // channel: [mandatory] [ meta, cram, crai ]

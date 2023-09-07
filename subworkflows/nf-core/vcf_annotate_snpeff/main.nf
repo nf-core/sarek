@@ -5,6 +5,8 @@
 include { SNPEFF_SNPEFF    } from '../../../modules/nf-core/snpeff/snpeff/main.nf'
 include { TABIX_BGZIPTABIX } from '../../../modules/nf-core/tabix/bgziptabix/main.nf'
 
+include { checkInParam } from "${projectDir}/checkInParam"
+
 workflow VCF_ANNOTATE_SNPEFF {
     take:
     ch_vcf          // channel: [ val(meta), path(vcf) ]

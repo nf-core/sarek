@@ -2,6 +2,8 @@
 // CHANNEL_MARKDUPLICATES_CREATE_CSV
 //
 
+include { checkInParam } from "${projectDir}/checkInParam"
+
 workflow CHANNEL_MARKDUPLICATES_CREATE_CSV {
     take:
         cram_markduplicates // channel: [mandatory] meta, cram, crai

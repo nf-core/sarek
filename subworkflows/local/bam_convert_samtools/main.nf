@@ -11,6 +11,8 @@ include { SAMTOOLS_COLLATEFASTQ as COLLATE_FASTQ_UNMAP       } from '../../../mo
 include { SAMTOOLS_COLLATEFASTQ as COLLATE_FASTQ_MAP         } from '../../../modules/nf-core/samtools/collatefastq/main'
 include { CAT_FASTQ                                          } from '../../../modules/nf-core/cat/fastq/main'
 
+include { checkInParam } from "${projectDir}/checkInParam"
+
 workflow BAM_CONVERT_SAMTOOLS {
     take:
     input       // channel: [meta, alignment (BAM or CRAM), index (optional)]

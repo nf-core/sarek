@@ -1,5 +1,5 @@
 - name: Run variant calling on germline sample with sentieon haplotyper and skip filter
-  command: nextflow run main.nf -profile test_cache,targeted --input ./tests/csv/3.0/mapped_single_bam.csv --tools sentieon_haplotyper --step variant_calling --skip_tools haplotyper_filter --outdir results
+  command: nextflow run main.nf -profile test_cache,targeted --input ./tests/csv/3.0/mapped_single_bam.csv --tools sentieon_Haplotyper --step variant_calling --skip_tools haplotyper_filter --outdir results
   tags:
     - germline
     - sentieon_haplotyper_skip_filter

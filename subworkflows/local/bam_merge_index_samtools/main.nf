@@ -7,6 +7,8 @@
 include { SAMTOOLS_INDEX as INDEX_MERGE_BAM } from '../../../modules/nf-core/samtools/index/main'
 include { SAMTOOLS_MERGE as MERGE_BAM       } from '../../../modules/nf-core/samtools/merge/main'
 
+include { checkInParam } from "${projectDir}/checkInParam"
+
 workflow BAM_MERGE_INDEX_SAMTOOLS {
     take:
     bam // channel: [mandatory] meta, bam

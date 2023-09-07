@@ -2,6 +2,8 @@
 // CHANNEL_VARIANT_CALLING_CREATE_CSV
 //
 
+include { checkInParam } from "${projectDir}/checkInParam"
+
 workflow CHANNEL_VARIANT_CALLING_CREATE_CSV {
     take:
         vcf_to_annotate // channel: [mandatory] meta, vcf

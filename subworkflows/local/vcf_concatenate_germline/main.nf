@@ -9,6 +9,8 @@ include { BCFTOOLS_CONCAT  as GERMLINE_VCFS_CONCAT            } from '../../../m
 include { BCFTOOLS_SORT    as GERMLINE_VCFS_CONCAT_SORT       } from '../../../modules/nf-core/bcftools/sort/main'
 include { TABIX_TABIX      as TABIX_GERMLINE_VCFS_CONCAT_SORT } from '../../../modules/nf-core/tabix/tabix/main'
 
+include { checkInParam } from "${projectDir}/checkInParam"
+
 workflow CONCATENATE_GERMLINE_VCFS {
 
     take:

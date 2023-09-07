@@ -25,6 +25,8 @@ include { UNZIP as UNZIP_GC                      } from '../../../modules/nf-cor
 include { UNZIP as UNZIP_LOCI                    } from '../../../modules/nf-core/unzip/main'
 include { UNZIP as UNZIP_RT                      } from '../../../modules/nf-core/unzip/main'
 
+include { checkInParam } from "${projectDir}/checkInParam"
+
 workflow PREPARE_GENOME {
     take:
     ascat_alleles     // channel: [optional]  ascat allele files

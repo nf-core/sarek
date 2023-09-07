@@ -2,6 +2,8 @@
 // CHANNEL_ALIGN_CREATE_CSV
 //
 
+include { checkInParam } from "${projectDir}/checkInParam"
+
 workflow CHANNEL_ALIGN_CREATE_CSV {
     take:
         bam_indexed         // channel: [mandatory] meta, bam, bai

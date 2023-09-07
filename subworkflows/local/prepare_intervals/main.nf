@@ -12,6 +12,8 @@ include { GATK4_INTERVALLISTTOBED                                } from '../../.
 include { TABIX_BGZIPTABIX as TABIX_BGZIPTABIX_INTERVAL_SPLIT    } from '../../../modules/nf-core/tabix/bgziptabix/main'
 include { TABIX_BGZIPTABIX as TABIX_BGZIPTABIX_INTERVAL_COMBINED } from '../../../modules/nf-core/tabix/bgziptabix/main'
 
+include { checkInParam } from "${projectDir}/checkInParam"
+
 workflow PREPARE_INTERVALS {
     take:
     fasta_fai    // mandatory [ fasta_fai ]

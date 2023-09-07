@@ -15,6 +15,8 @@ include { BAM_VARIANT_CALLING_SINGLE_STRELKA      } from '../bam_variant_calling
 include { BAM_VARIANT_CALLING_SINGLE_TIDDIT       } from '../bam_variant_calling_single_tiddit/main'
 include { VCF_VARIANT_FILTERING_GATK              } from '../vcf_variant_filtering_gatk/main'
 
+include { checkInParam } from "${projectDir}/checkInParam"
+
 workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     take:
     tools                             // Mandatory, list of tools to apply
@@ -57,7 +59,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     vcf_tiddit               = Channel.empty()
 
     // BCFTOOLS MPILEUP
-    if (tools.split(',').contains('mpileup')) {
+    if (checkInParam(params.tools, 'mpileup')) {
         BAM_VARIANT_CALLING_MPILEUP(
             cram,
             dict,
@@ -69,7 +71,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     }
 
     // CNVKIT
-    if (tools.split(',').contains('cnvkit')) {
+    if (checkInParam(params.tools, 'cnvkit')) {
         BAM_VARIANT_CALLING_CNVKIT(
             // Remap channel to match module/subworkflow
             cram.map{ meta, cram, crai -> [ meta, [], cram ] },
@@ -82,7 +84,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     }
 
     // DEEPVARIANT
-    if (tools.split(',').contains('deepvariant')) {
+    if (checkInParam(params.tools, 'deepvariant')) {
         BAM_VARIANT_CALLING_DEEPVARIANT(
             cram,
             dict,
@@ -96,7 +98,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     }
 
     // FREEBAYES
-    if (tools.split(',').contains('freebayes')) {
+    if (checkInParam(params.tools, 'freebayes')) {
         // Input channel is remapped to match input of module/subworkflow
         BAM_VARIANT_CALLING_FREEBAYES(
             // Remap channel to match module/subworkflow
@@ -112,7 +114,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     }
 
     // HAPLOTYPECALLER
-    if (tools.split(',').contains('haplotypecaller')) {
+    if (checkInParam(params.tools, 'haplotypecaller')) {
         BAM_VARIANT_CALLING_HAPLOTYPECALLER(
             cram,
             fasta,
@@ -168,7 +170,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     }
 
     // MANTA
-    if (tools.split(',').contains('manta')) {
+    if (checkInParam(params.tools, 'manta')) {
         BAM_VARIANT_CALLING_GERMLINE_MANTA (
             cram,
             fasta,
@@ -181,7 +183,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     }
 
     // SENTIEON HAPLOTYPER
-    if (tools.split(',').contains('sentieon_haplotyper')) {
+    if (checkInParam(params.tools, 'sentieon_haplotyper')) {
         BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER(
             cram,
             fasta,
@@ -241,7 +243,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     }
 
     // STRELKA
-    if (tools.split(',').contains('strelka')) {
+    if (checkInParam(params.tools, 'strelka')) {
         BAM_VARIANT_CALLING_SINGLE_STRELKA(
             cram,
             dict,
@@ -255,7 +257,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     }
 
     // TIDDIT
-    if (tools.split(',').contains('tiddit')) {
+    if (checkInParam(params.tools, 'tiddit')) {
         BAM_VARIANT_CALLING_SINGLE_TIDDIT(
             cram,
             // Remap channel to match module/subworkflow

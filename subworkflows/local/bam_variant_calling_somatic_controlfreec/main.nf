@@ -10,6 +10,8 @@ include { CONTROLFREEC_FREEC2BED          as FREEC2BED           } from '../../.
 include { CONTROLFREEC_FREEC2CIRCOS       as FREEC2CIRCOS        } from '../../../modules/nf-core/controlfreec/freec2circos/main'
 include { CONTROLFREEC_MAKEGRAPH          as MAKEGRAPH           } from '../../../modules/nf-core/controlfreec/makegraph/main'
 
+include { checkInParam } from "${projectDir}/checkInParam"
+
 workflow BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC {
     take:
     controlfreec_input       // channel: [mandatory] [meta, pileup_normal, pileup_tumor, [], [], [], []]

@@ -1,6 +1,8 @@
 include { GATK4_CNNSCOREVARIANTS      as CNNSCOREVARIANTS               } from '../../../modules/nf-core/gatk4/cnnscorevariants/main'
 include { GATK4_FILTERVARIANTTRANCHES as FILTERVARIANTTRANCHES          } from '../../../modules/nf-core/gatk4/filtervarianttranches/main'
 
+include { checkInParam } from "${projectDir}/checkInParam"
+
 workflow VCF_VARIANT_FILTERING_GATK {
 
     take:

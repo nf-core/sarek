@@ -12,6 +12,8 @@ include { BAM_VARIANT_CALLING_TUMOR_ONLY_CONTROLFREEC } from '../bam_variant_cal
 include { BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA        } from '../bam_variant_calling_tumor_only_manta/main'
 include { BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2      } from '../bam_variant_calling_tumor_only_mutect2/main'
 
+include { checkInParam } from "${projectDir}/checkInParam"
+
 workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     take:
     tools                         // Mandatory, list of tools to apply
@@ -48,7 +50,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     vcf_tiddit      = Channel.empty()
 
     // MPILEUP
-    if (tools.split(',').contains('mpileup') || tools.split(',').contains('controlfreec')) {
+    if (checkInParam(params.tools, 'mpileup') || checkInParam(params.tools, 'controlfreec')) {
         BAM_VARIANT_CALLING_MPILEUP(
             cram,
             dict,
@@ -60,7 +62,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     }
 
     // CONTROLFREEC (depends on MPILEUP)
-    if (tools.split(',').contains('controlfreec')) {
+    if (checkInParam(params.tools, 'controlfreec')) {
         length_file = cf_chrom_len ?: fasta_fai
 
         BAM_VARIANT_CALLING_TUMOR_ONLY_CONTROLFREEC(
@@ -79,7 +81,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     }
 
     // CNVKIT
-    if (tools.split(',').contains('cnvkit')) {
+    if (checkInParam(params.tools, 'cnvkit')) {
         BAM_VARIANT_CALLING_CNVKIT (
             // Remap channel to match module/subworkflow
             cram.map{ meta, cram, crai -> [ meta, cram, [] ] },
@@ -93,7 +95,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     }
 
     // FREEBAYES
-    if (tools.split(',').contains('freebayes')) {
+    if (checkInParam(params.tools, 'freebayes')) {
         BAM_VARIANT_CALLING_FREEBAYES(
             // Remap channel to match module/subworkflow
             cram.map{ meta, cram, crai -> [ meta, cram, crai, [], [] ] },
@@ -108,7 +110,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     }
 
     // MUTECT2
-    if (tools.split(',').contains('mutect2')) {
+    if (checkInParam(params.tools, 'mutect2')) {
         BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2(
             // Adjust meta.map to simplify joining channels
             // joint_mutect2 mode needs different meta.map than regular mode
@@ -135,7 +137,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     }
 
     // MANTA
-    if (tools.split(',').contains('manta')) {
+    if (checkInParam(params.tools, 'manta')) {
         BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA(
             cram,
             // Remap channel to match module/subworkflow
@@ -151,7 +153,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     }
 
     // STRELKA
-    if (tools.split(',').contains('strelka')) {
+    if (checkInParam(params.tools, 'strelka')) {
         BAM_VARIANT_CALLING_SINGLE_STRELKA(
             cram,
             dict,
@@ -165,7 +167,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     }
 
     // TIDDIT
-    if (tools.split(',').contains('tiddit')) {
+    if (checkInParam(params.tools, 'tiddit')) {
         BAM_VARIANT_CALLING_SINGLE_TIDDIT(
             cram,
             // Remap channel to match module/subworkflow

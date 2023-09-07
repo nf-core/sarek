@@ -9,6 +9,8 @@ include { BWA_MEM as BWAMEM1_MEM } from '../../../modules/nf-core/bwa/mem/main'
 include { DRAGMAP_ALIGN          } from '../../../modules/nf-core/dragmap/align/main'
 include { SENTIEON_BWAMEM        } from '../../../modules/nf-core/sentieon/bwamem/main'
 
+include { checkInParam } from "${projectDir}/checkInParam"
+
 workflow FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON {
     take:
     reads // channel: [mandatory] meta, reads

@@ -7,6 +7,8 @@
 include { GATK4_BASERECALIBRATOR_SPARK } from '../../../modules/nf-core/gatk4/baserecalibratorspark/main'
 include { GATK4_GATHERBQSRREPORTS      } from '../../../modules/nf-core/gatk4/gatherbqsrreports/main'
 
+include { checkInParam } from "${projectDir}/checkInParam"
+
 workflow BAM_BASERECALIBRATOR_SPARK {
     take:
     cram            // channel: [mandatory] [ meta, cram_markduplicates, crai ]

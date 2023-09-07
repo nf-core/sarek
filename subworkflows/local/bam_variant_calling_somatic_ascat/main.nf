@@ -6,6 +6,8 @@
 
 include { ASCAT } from '../../../modules/nf-core/ascat/main'
 
+include { checkInParam } from "${projectDir}/checkInParam"
+
 workflow BAM_VARIANT_CALLING_SOMATIC_ASCAT {
 
     take:

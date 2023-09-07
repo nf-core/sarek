@@ -8,6 +8,8 @@ include { GATK4_MERGEVCFS  as MERGE_STRELKA        } from '../../../modules/nf-c
 include { GATK4_MERGEVCFS  as MERGE_STRELKA_GENOME } from '../../../modules/nf-core/gatk4/mergevcfs/main'
 include { STRELKA_GERMLINE as STRELKA_SINGLE       } from '../../../modules/nf-core/strelka/germline/main'
 
+include { checkInParam } from "${projectDir}/checkInParam"
+
 workflow BAM_VARIANT_CALLING_SINGLE_STRELKA {
     take:
     cram          // channel: [mandatory] [ meta, cram, crai ]
