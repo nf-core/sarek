@@ -222,7 +222,8 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
                 known_indels_vqsr,
                 known_sites_snps,
                 known_sites_snps_tbi,
-                known_snps_vqsr)
+                known_snps_vqsr,
+                'sentieon_dnascope')
 
             vcf_sentieon_dnascope = BAM_JOINT_CALLING_GERMLINE_SENTIEON.out.genotype_vcf
             versions = versions.mix(BAM_JOINT_CALLING_GERMLINE_SENTIEON.out.versions)
@@ -283,7 +284,8 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
                 known_indels_vqsr,
                 known_sites_snps,
                 known_sites_snps_tbi,
-                known_snps_vqsr)
+                known_snps_vqsr,
+                'sentieon_haplotyper')
 
             vcf_sentieon_haplotyper = BAM_JOINT_CALLING_GERMLINE_SENTIEON.out.genotype_vcf
             versions = versions.mix(BAM_JOINT_CALLING_GERMLINE_SENTIEON.out.versions)
