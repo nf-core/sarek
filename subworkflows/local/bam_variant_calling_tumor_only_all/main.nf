@@ -115,7 +115,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
             cram.map{ meta, cram, crai ->
                 joint_mutect2 ?
                 [ meta + [ id:meta.patient ] - meta.subMap('sample', 'status', 'num_intervals', 'data_type', 'patient') , cram, crai ] :
-                [ meta - meta.subMap('sample', 'status', 'num_intervals', 'data_type'), cram, crai ]
+                [ meta + [ id:meta.sample ]- meta.subMap('sample', 'status', 'num_intervals', 'data_type'), cram, crai ]
             },
             // Remap channel to match module/subworkflow
             fasta.map{ it -> [ [ id:'fasta' ], it ] },
