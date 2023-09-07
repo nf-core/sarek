@@ -46,7 +46,14 @@
                 "type": "string",
                 "pattern": "^\\S+$",
                 "unique": ["patient", "sample"],
-                "dependentRequired": ["fastq_1"],
+                "anyOf": [
+                    {
+                        "dependentRequired": ["fastq_1"]
+                    },
+                    {
+                        "dependentRequired": ["bam"]
+                    }
+                ],
                 "meta": ["lane"]
             },
             "fastq_1": {
@@ -66,6 +73,7 @@
             },
             "fastq_2": {
                 "errorMessage": "FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'",
+                "dependentRequired": ["fastq_1"],
                 "anyOf": [
                     {
                         "type": "string",

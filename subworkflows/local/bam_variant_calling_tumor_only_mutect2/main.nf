@@ -41,7 +41,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     if (joint_mutect2) {
         // Perform variant calling using mutect2 module in tumor single mode
         // Group cram files by patient
-        patient_crams = input.map{ meta, t_cram, t_crai -> [ meta - meta.subMap('sample') + [id:meta.patient], t_cram, t_crai ] }.groupTuple()
+        patient_crams = input.groupTuple()
         // Add intervals for scatter-gather scaling
         patient_cram_intervals = patient_crams.combine(intervals)
         // Move num_intervals to meta map and reorganize channel for MUTECT2 module
@@ -90,10 +90,11 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     MERGEMUTECTSTATS(stats_to_merge)
 
     // Mix intervals and no_intervals channels together
-    vcf   = Channel.empty().mix(MERGE_MUTECT2.out.vcf, vcf_branch.no_intervals)
-    tbi   = Channel.empty().mix(MERGE_MUTECT2.out.tbi, tbi_branch.no_intervals)
-    stats = Channel.empty().mix(MERGEMUTECTSTATS.out.stats, stats_branch.no_intervals)
-    f1r2  = Channel.empty().mix(f1r2_to_merge, f1r2_branch.no_intervals)
+    // Remove unnecessary metadata
+    vcf   = Channel.empty().mix(MERGE_MUTECT2.out.vcf, vcf_branch.no_intervals).map{ meta, vcf -> [ meta - meta.subMap('num_intervals'), vcf ] }
+    tbi   = Channel.empty().mix(MERGE_MUTECT2.out.tbi, tbi_branch.no_intervals).map{ meta, tbi -> [ meta - meta.subMap('num_intervals'), tbi ] }
+    stats = Channel.empty().mix(MERGEMUTECTSTATS.out.stats, stats_branch.no_intervals).map{ meta, stats -> [ meta - meta.subMap('num_intervals'), stats ] }
+    f1r2  = Channel.empty().mix(f1r2_to_merge, f1r2_branch.no_intervals).map{ meta, f1r2 -> [ meta - meta.subMap('num_intervals'), f1r2 ] }
 
     // Generate artifactpriors using learnreadorientationmodel on the f1r2 output of mutect2
     LEARNREADORIENTATIONMODEL(f1r2)
@@ -124,14 +125,13 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     calculatecontamination_out_cont = Channel.empty()
 
     if (joint_mutect2) {
-        // Remove sample names and retain patient name as the main identifier
-        calculatecontamination_out_seg = CALCULATECONTAMINATION.out.segmentation.map{ meta, seg -> [ meta - meta.subMap('sample') + [id:meta.patient], seg ] }.groupTuple()
-        calculatecontamination_out_cont = CALCULATECONTAMINATION.out.contamination.map{ meta, cont -> [ meta - meta.subMap('sample') + [id:meta.patient], cont ] }.groupTuple()
-    }
-    else {
+        // Group tables by samples
+        calculatecontamination_out_seg = CALCULATECONTAMINATION.out.segmentation.map{ meta, seg -> [ meta - meta.subMap('num_intervals'), seg ] }.groupTuple()
+        calculatecontamination_out_cont = CALCULATECONTAMINATION.out.contamination.map{ meta, cont -> [ meta - meta.subMap('num_intervals'), cont ] }.groupTuple()
+    } else {
         // Regular single sample mode
-        calculatecontamination_out_seg = CALCULATECONTAMINATION.out.segmentation
-        calculatecontamination_out_cont = CALCULATECONTAMINATION.out.contamination
+        calculatecontamination_out_seg = CALCULATECONTAMINATION.out.segmentation.map{ meta, seg -> [ meta - meta.subMap('num_intervals'), seg ] }
+        calculatecontamination_out_cont = CALCULATECONTAMINATION.out.contamination.map{ meta, cont -> [ meta - meta.subMap('num_intervals'), cont ] }
     }
 
     // Mutect2 calls filtered by filtermutectcalls using the contamination and segmentation tables
@@ -146,7 +146,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
 
     vcf_filtered = FILTERMUTECTCALLS.out.vcf
         // add variantcaller to meta map and remove no longer necessary field: num_intervals
-        .map{ meta, vcf -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'mutect2' ], vcf ] }
+        .map{ meta, vcf -> [ meta + [ variantcaller:'mutect2' ], vcf ] }
 
     versions = versions.mix(MERGE_MUTECT2.out.versions)
     versions = versions.mix(CALCULATECONTAMINATION.out.versions)
