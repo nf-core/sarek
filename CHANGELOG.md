@@ -59,6 +59,7 @@ Rapaselet is a delta formed by the Rapaätno river between the Bielloriehppe mas
 - [#1204](https://github.com/nf-core/sarek/pull/1204) - Fix issue with nf-validation: lane can be a requirement of bam too now
 - [#1205](https://github.com/nf-core/sarek/pull/1205) - Less tests triggered
 - [#1214](https://github.com/nf-core/sarek/pull/1214) - Don't pass in intervals file to ControlFREEC for WGS analysis
+- [#1215](https://github.com/nf-core/sarek/pull/1215) - Fix `meta.id` for mutect2 tumor_only subworkflows
 
 ### Dependencies
 
