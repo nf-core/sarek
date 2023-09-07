@@ -8,7 +8,7 @@ process CONTROLFREEC_MAKEGRAPH {
         'biocontainers/control-freec:11.6--h1b792b2_1' }"
 
     input:
-    tuple val(meta), path(ratio), path(baf)
+    tuple val(meta), path(ratio), path(baf), val(ploidy)
 
     output:
     tuple val(meta), path("*_BAF.png")       , emit: png_baf
@@ -25,7 +25,7 @@ process CONTROLFREEC_MAKEGRAPH {
     def prefix = task.ext.prefix ?: "${meta.id}"
     def baf = baf ?: ""
     """
-    cat \$(which makeGraph.R) | R --slave --args ${args} ${ratio} ${baf}
+    cat \$(which makeGraph.R) | R --slave --args ${ploidy} ${args} ${ratio} ${baf}
 
     mv *_BAF.txt.png ${prefix}_BAF.png
     mv *_ratio.txt.log2.png ${prefix}_ratio.log2.png

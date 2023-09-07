@@ -195,6 +195,7 @@ Bierikjávrre is one of the largest lake in Sarek.
 - [#941](https://github.com/nf-core/sarek/pull/941) - Fix json validation for `tools`, `skip_tools` and `use_gatk_spark` [#892](https://github.com/nf-core/sarek/issues/892)
 - [#954](https://github.com/nf-core/sarek/pull/954) - Fix missing annotation keys with `snpeff` and `ensemblvep` for `hg19`
 - [#957](https://github.com/nf-core/sarek/pull/957) - Add `failOnDuplicate` and `failOnMismatch` options to all `join()` operator where it was possible
+- [#980](https://github.com/nf-core/sarek/pull/941) - Fix allowing multiple ploidy values for plotting of controlfreec output ([#808](https://github.com/nf-core/sarek/issues/808))
 - [#982](https://github.com/nf-core/sarek/pull/982) - Remove usage of exit statements, using `Nextflow.error` instead
 - [#985](https://github.com/nf-core/sarek/pull/985) - Cache correctly identifies when it needs to be updated
 - [#988](https://github.com/nf-core/sarek/pull/988) - Updated ascat module to fix seed for reproducibility
