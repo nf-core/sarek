@@ -190,22 +190,16 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             dbsnp,
             dbsnp_tbi,
             dbsnp_vqsr,
-            known_sites_indels,
-            known_sites_indels_tbi,
-            known_indels_vqsr,
-            known_sites_snps,
-            known_sites_snps_tbi,
-            known_snps_vqsr,
             intervals,
-            intervals_bed_combined_haplotypec,
-            (skip_tools && skip_tools.split(',').contains('haplotyper_filter')),
             joint_germline,
             sentieon_haplotyper_emit_mode)
 
         versions = versions.mix(BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER.out.versions)
 
-        vcf_sentieon_haplotyper = BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER.out.vcf
-        gvcf_sentieon_haplotyper = BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER.out.gvcf
+        vcf_sentieon_haplotyper      = BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER.out.vcf
+        vcf_tbi_sentieon_haplotyper  = BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER.out.vcf_tbi
+        gvcf_sentieon_haplotyper     = BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER.out.gvcf
+        gvcf_tbi_sentieon_haplotyper = BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER.out.gvcf_tbi
 
         if (joint_germline) {
             BAM_JOINT_CALLING_GERMLINE_SENTIEON(
@@ -223,11 +217,27 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
                 known_sites_snps_tbi,
                 known_snps_vqsr)
 
-            vcf_haplotypecaller = BAM_JOINT_CALLING_GERMLINE_SENTIEON.out.genotype_vcf
+            vcf_sentieon_haplotyper = BAM_JOINT_CALLING_GERMLINE_SENTIEON.out.genotype_vcf
             versions = versions.mix(BAM_JOINT_CALLING_GERMLINE_SENTIEON.out.versions)
+        } else {
 
+            // If single sample track, check if filtering should be done
+            if (!(skip_tools && skip_tools.split(',').contains('haplotyper_filter'))) {
+
+                VCF_VARIANT_FILTERING_GATK(
+                    vcf_sentieon_haplotyper.join(vcf_tbi_sentieon_haplotyper, failOnDuplicate: true, failOnMismatch: true),
+                    fasta,
+                    fasta_fai,
+                    dict.map{ meta, dict -> [ dict ] },
+                    intervals_bed_combined_haplotypec,
+                    known_sites_indels.concat(known_sites_snps).flatten().unique().collect(),
+                    known_sites_indels_tbi.concat(known_sites_snps_tbi).flatten().unique().collect())
+
+                vcf_sentieon_haplotyper = VCF_VARIANT_FILTERING_GATK.out.filtered_vcf
+
+                versions = versions.mix(VCF_VARIANT_FILTERING_GATK.out.versions)
+            }
         }
-
     }
 
     // STRELKA

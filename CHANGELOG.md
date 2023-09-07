@@ -5,7 +5,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 3.3dev
+## [3.3.0](https://github.com/nf-core/sarek/releases/tag/3.3.0) - Rapaselet
+
+Rapaselet is a delta formed by the Rapaätno river between the Bielloriehppe massif (formerly written Piellorieppe) and the Skårki massif.
 
 ### Added
 
@@ -16,7 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1158](https://github.com/nf-core/sarek/pull/1158) - Add preprint
 - [#1159](https://github.com/nf-core/sarek/pull/1159) - ISMB Poster
 - [#1173](https://github.com/nf-core/sarek/pull/1173) - CI tests for VQSR track with stub runs
-- [#1122](https://github.com/nf-core/sarek/pull/1122) - Add `annotation cache` functionality
+- [#1122](https://github.com/nf-core/sarek/pull/1122), [#1196](https://github.com/nf-core/sarek/pull/1196) - Add `annotation cache` functionality
+- [#1184](https://github.com/nf-core/sarek/pull/1184) - Stub-based CI-test of Sentieon joint-germline variant-calling with VQSR
 
 ### Changed
 
@@ -29,6 +32,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1174](https://github.com/nf-core/sarek/pull/1174) - Updating multiqc to v1.15
 - [#1179](https://github.com/nf-core/sarek/pull/1179) - Unhide params `trim_fastq`, `umi_read_structure`, and `aligner`
 - [#1180](https://github.com/nf-core/sarek/pull/1180) - Updating the nf-core modules
+- [#1198](https://github.com/nf-core/sarek/pull/1198) - Prepare release `3.3.0`
+- [#1200](https://github.com/nf-core/sarek/pull/1200) - Streamline Github Actions workflows
+- [#1212](https://github.com/nf-core/sarek/pull/1212) - Use matrix for AWS megatests
 
 ### Fixed
 
@@ -43,7 +49,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1173](https://github.com/nf-core/sarek/pull/1173) - Fixed duplicated entries in joint germline recalibrated VCF ([#966](https://github.com/nf-core/sarek/pull/966), [#1102](https://github.com/nf-core/sarek/pull/1102)),
   fixed grouping joint germline recalibrated VCF ([#1137](https://github.com/nf-core/sarek/pull/1137))
 - [#1177](https://github.com/nf-core/sarek/pull/1177) - Fix status inference when using nf-validation plugin
+- [#1181](https://github.com/nf-core/sarek/pull/1181) - Fix join mismatch error in Mutect2 tumor only subworkflow
 - [#1183](https://github.com/nf-core/sarek/pull/1183) - Add docs for concatentated germline variants
+- [#1184](https://github.com/nf-core/sarek/pull/1184) - Fix issue with duplicated variants in VCF from Sentieon-based joint-germline variant-calling with VQSR. (Corresponding to [#966](https://github.com/nf-core/sarek/issues/966) for GATK.)
+- [#1192](https://github.com/nf-core/sarek/pull/1192) - Add `ASCATprofile.png` to ASCAT output docs
+- [#1197](https://github.com/nf-core/sarek/pull/1197) - Improve `tower.yml` file to display reports in Tower ([#1190](https://github.com/nf-core/sarek/issues/1190))
+- [#1202](https://github.com/nf-core/sarek/pull/1202) - Remove GHA step that caches Nextflow and bump other out of date actions
+- [#1203](https://github.com/nf-core/sarek/pull/1203) - Fix issue with Singularity containers on test profiles
+- [#1204](https://github.com/nf-core/sarek/pull/1204) - Fix issue with nf-validation: lane can be a requirement of bam too now
+- [#1205](https://github.com/nf-core/sarek/pull/1205) - Less tests triggered
+- [#1215](https://github.com/nf-core/sarek/pull/1215) - Fix `meta.id` for mutect2 tumor_only subworkflows
 
 ### Dependencies
 

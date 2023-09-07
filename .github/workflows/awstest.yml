@@ -3,30 +3,59 @@ name: nf-core AWS test
 # It runs the -profile 'test' on AWS batch
 
 on:
+  release:
+    types: [created]
   workflow_dispatch:
+    inputs:
+      profiletest:
+        description: "Trigger profile tests (smaller) on AWS"
+        type: boolean
+        default: true
+      somatic:
+        description: "Trigger somatic full test on AWS"
+        type: boolean
+        default: false
+      germline:
+        description: "Trigger germline full test on AWS"
+        type: boolean
+        default: false
+
 jobs:
-  run-tower:
+  trigger-profile-test:
     name: Run AWS tests
-    if: github.repository == 'nf-core/sarek'
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - profile: test
+            enabled: ${{ ( github.repository == 'nf-core/sarek' ) && ( github.event_name != 'workflow_dispatch' || inputs.profiletest ) }}
+          - profile: test_full
+            enabled: ${{ ( github.repository == 'nf-core/sarek' ) && ( github.event_name != 'workflow_dispatch' || inputs.somatic ) }}
+          - profile: test_full_germline
+            enabled: ${{ ( github.repository == 'nf-core/sarek' ) && ( github.event_name != 'workflow_dispatch' || inputs.germline ) }}
     steps:
       # Launch workflow using Tower CLI tool action
       - name: Launch workflow via tower
         uses: seqeralabs/action-tower-launch@v2
+        if: ${{ matrix.enabled }}
         with:
           workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
           compute_env: ${{ secrets.TOWER_COMPUTE_ENV }}
           revision: ${{ github.sha }}
-          workdir: s3://${{ secrets.AWS_S3_BUCKET }}/work/sarek/work-${{ github.sha }}
+          workdir: s3://${{ secrets.AWS_S3_BUCKET }}/work/sarek/work-${{ github.sha }}/${{ matrix.profile }}
           parameters: |
             {
-              "outdir": "s3://${{ secrets.AWS_S3_BUCKET }}/sarek/results-test-${{ github.sha }}"
+              "hook_url": "${{ secrets.MEGATESTS_ALERTS_SLACK_HOOK_URL }}",
+              "outdir": "s3://${{ secrets.AWS_S3_BUCKET }}/sarek/results-test-${{ github.sha }}/${{ matrix.profile }}"
             }
-          profiles: test
+          profiles: ${{ matrix.profile }}
+
       - uses: actions/upload-artifact@v3
+        if: ${{ matrix.enabled }}
         with:
-          name: Tower debug log file
+          name: tower-${{ matrix.profile }}-log
           path: |
             tower_action_*.log
             tower_action_*.json
