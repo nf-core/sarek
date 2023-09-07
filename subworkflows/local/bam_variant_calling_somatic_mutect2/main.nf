@@ -43,9 +43,9 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
 
     if (joint_mutect2) {
         // Separate normal cram files and remove duplicates
-        ch_normal_cram = input.map{ meta, cram, crai -> [ meta - meta.subMap('tumor_id') + [id:meta.patient], cram[0], crai[0] ] }.unique()
+        ch_normal_cram = input.map{ meta, cram, crai -> [ meta, cram[0], crai[0] ] }.unique()
         // Extract tumor cram files
-        ch_tumor_cram = input.map{ meta, cram, crai -> [ meta - meta.subMap('tumor_id') + [id:meta.patient], cram[1], crai[1] ] }
+        ch_tumor_cram = input.map{ meta, cram, crai -> [ meta, cram[1], crai[1] ] }
         // Merge normal and tumor crams by patient
         ch_tn_cram = ch_normal_cram.mix(ch_tumor_cram).groupTuple()
         // Combine input and intervals for scatter and gather strategy
@@ -155,27 +155,27 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
     CALCULATECONTAMINATION(ch_calculatecontamination_in_tables)
 
     // Initialize empty channel: Contamination calculation is run on pileup table, pileup is not run if germline resource is not provided
-    ch_seg_to_filtermutectcalls = Channel.empty()
-    ch_cont_to_filtermutectcalls = Channel.empty()
+    calculatecontamination_out_seg = Channel.empty()
+    calculatecontamination_out_cont = Channel.empty()
 
     if (joint_mutect2) {
         // Reduce the meta to only patient name
-        ch_seg_to_filtermutectcalls = CALCULATECONTAMINATION.out.segmentation.map{ meta, seg -> [ meta - meta.subMap('tumor_id') + [id: meta.patient], seg]}.groupTuple()
-        ch_cont_to_filtermutectcalls = CALCULATECONTAMINATION.out.contamination.map{ meta, cont -> [ meta - meta.subMap('tumor_id') + [id: meta.patient], cont]}.groupTuple()
+        calculatecontamination_out_seg = CALCULATECONTAMINATION.out.segmentation.map{ meta, seg -> [ meta - meta.subMap('tumor_id') + [id: meta.patient], seg]}.groupTuple()
+        calculatecontamination_out_cont = CALCULATECONTAMINATION.out.contamination.map{ meta, cont -> [ meta - meta.subMap('tumor_id') + [id: meta.patient], cont]}.groupTuple()
     }
     else {
         // Keep tumor_vs_normal ID
-        ch_seg_to_filtermutectcalls = CALCULATECONTAMINATION.out.segmentation
-        ch_cont_to_filtermutectcalls = CALCULATECONTAMINATION.out.contamination
+        calculatecontamination_out_seg = CALCULATECONTAMINATION.out.segmentation
+        calculatecontamination_out_cont = CALCULATECONTAMINATION.out.contamination
     }
 
     // Mutect2 calls filtered by filtermutectcalls using the artifactpriors, contamination and segmentation tables
     vcf_to_filter = vcf.join(tbi, failOnDuplicate: true, failOnMismatch: true)
-                        .join(stats, failOnDuplicate: true, failOnMismatch: true)
-                        .join(LEARNREADORIENTATIONMODEL.out.artifactprior, failOnDuplicate: true, failOnMismatch: true)
-                        .join(ch_seg_to_filtermutectcalls)
-                        .join(ch_cont_to_filtermutectcalls)
-                    .map{ meta, vcf, tbi, stats, orientation, seg, cont -> [ meta, vcf, tbi, stats, orientation, seg, cont, [] ] }
+        .join(stats, failOnDuplicate: true, failOnMismatch: true)
+        .join(LEARNREADORIENTATIONMODEL.out.artifactprior, failOnDuplicate: true, failOnMismatch: true)
+        .join(calculatecontamination_out_seg)
+        .join(calculatecontamination_out_cont)
+        .map{ meta, vcf, tbi, stats, orientation, seg, cont -> [ meta, vcf, tbi, stats, orientation, seg, cont, [] ] }
 
     FILTERMUTECTCALLS(vcf_to_filter, fasta, fai, dict)
 
@@ -207,8 +207,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
     pileup_table_normal // channel: [ meta, table_normal ]
     pileup_table_tumor  // channel: [ meta, table_tumor ]
 
-    contamination_table    = ch_cont_to_filtermutectcalls    // channel: [ meta, contamination ]
-    segmentation_table     = ch_seg_to_filtermutectcalls     // channel: [ meta, segmentation ]
+    contamination_table    = calculatecontamination_out_cont    // channel: [ meta, contamination ]
+    segmentation_table     = calculatecontamination_out_seg     // channel: [ meta, segmentation ]
 
     versions // channel: [ versions.yml ]
 }

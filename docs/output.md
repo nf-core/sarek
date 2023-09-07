@@ -598,6 +598,8 @@ This is done internally using the software [AlleleCount](https://github.com/canc
 
 **Output directory: `{outdir}/variantcalling/ascat/<tumorsample_vs_normalsample>/`**
 
+- `<tumorsample_vs_normalsample>.tumour.ASCATprofile.png`
+  - image with information about allele-specific copy number profile
 - `<tumorsample_vs_normalsample>.tumour.ASPCF.png`
   - image with information about allele-specific copy number segmentation
 - `<tumorsample_vs_normalsample>.before_correction_Tumour.<tumorsample_vs_normalsample>.tumour.png`
