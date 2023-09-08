@@ -1,5 +1,5 @@
 //
-// TUMOR VARIANT CALLING
+// TUMOR ONLY VARIANT CALLING
 // Should be only run on patients without normal sample
 //
 

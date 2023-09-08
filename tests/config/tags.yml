@@ -207,6 +207,9 @@ cnvkit:
   - modules/nf-core/cnvkit/batch/main.nf
   - modules/nf-core/cnvkit/reference/main.nf
   - subworkflows/local/bam_variant_calling_cnvkit/main.nf
+  - subworkflows/local/bam_variant_calling_germline_all/main.nf
+  - subworkflows/local/bam_variant_calling_somatic_all/main.nf
+  - subworkflows/local/bam_variant_calling_tumor_only_all/main.nf
   - subworkflows/local/prepare_reference_cnvkit/main.nf
   - tests/test_cnvkit.yml
 
@@ -222,7 +225,9 @@ controlfreec:
   - modules/nf-core/controlfreec/makegraph/main.nf
   - modules/nf-core/samtools/mpileup/main.nf
   - subworkflows/local/bam_variant_calling_mpileup/main.nf
+  - subworkflows/local/bam_variant_calling_somatic_all/main.nf
   - subworkflows/local/bam_variant_calling_somatic_controlfreec/main.nf
+  - subworkflows/local/bam_variant_calling_tumor_only_all/main.nf
   - subworkflows/local/bam_variant_calling_tumor_only_controlfreec/main.nf
   - tests/test_controlfreec.yml
 
@@ -233,6 +238,7 @@ deepvariant:
   - modules/nf-core/gatk4/mergevcfs/main.nf
   - modules/nf-core/tabix/tabix/main.nf
   - subworkflows/local/bam_variant_calling_deepvariant/main.nf
+  - subworkflows/local/bam_variant_calling_germline_all/main.nf
   - tests/test_deepvariant.yml
 
 ## freebayes
@@ -243,6 +249,9 @@ freebayes:
   - modules/nf-core/gatk4/mergevcfs/main.nf
   - modules/nf-core/tabix/tabix/main.nf
   - subworkflows/local/bam_variant_calling_freebayes/main.nf
+  - subworkflows/local/bam_variant_calling_germline_all/main.nf
+  - subworkflows/local/bam_variant_calling_somatic_all/main.nf
+  - subworkflows/local/bam_variant_calling_tumor_only_all/main.nf
   - tests/test_freebayes.yml
 
 ## haplotypecaller
@@ -255,6 +264,7 @@ haplotypecaller:
   - modules/nf-core/samtools/index/main.nf
   - modules/nf-core/samtools/merge/main.nf
   - subworkflows/local/bam_merge_index_samtools/main.nf
+  - subworkflows/local/bam_variant_calling_germline_all/main.nf
   - subworkflows/local/bam_variant_calling_haplotypecaller/main.nf
   - subworkflows/local/vcf_variant_filtering_gatk/main.nf
   - tests/test_haplotypecaller.yml
@@ -266,6 +276,7 @@ haplotypecaller_skip_filter:
   - modules/nf-core/samtools/index/main.nf
   - modules/nf-core/samtools/merge/main.nf
   - subworkflows/local/bam_merge_index_samtools/main.nf
+  - subworkflows/local/bam_variant_calling_germline_all/main.nf
   - subworkflows/local/bam_variant_calling_haplotypecaller/main.nf
   - tests/test_haplotypecaller_skip_filter.yml
 
@@ -279,6 +290,7 @@ sentieon/haplotyper:
   - modules/nf-core/samtools/index/main.nf
   - modules/nf-core/samtools/merge/main.nf
   - subworkflows/local/bam_merge_index_samtools/main.nf
+  - subworkflows/local/bam_variant_calling_germline_all/main.nf
   - subworkflows/local/bam_variant_calling_sentieon_haplotyper/main.nf
   - subworkflows/local/vcf_variant_filtering_gatk/main.nf
   - tests/test_sentieon_haplotyper.yml
@@ -290,6 +302,7 @@ sentieon_haplotyper_skip_filter:
   - modules/nf-core/samtools/index/main.nf
   - modules/nf-core/samtools/merge/main.nf
   - subworkflows/local/bam_merge_index_samtools/main.nf
+  - subworkflows/local/bam_variant_calling_germline_all/main.nf
   - subworkflows/local/bam_variant_calling_sentieon_haplotyper/main.nf
   - tests/test_sentieon_haplotyper_skip_filter.yml
 
@@ -309,6 +322,7 @@ joint_germline:
   - modules/nf-core/samtools/merge/main.nf
   - subworkflows/local/bam_joint_calling_germline_gatk/main.nf
   - subworkflows/local/bam_merge_index_samtools/main.nf
+  - subworkflows/local/bam_variant_calling_germline_all/main.nf
   - subworkflows/local/bam_variant_calling_haplotypecaller/main.nf
   - subworkflows/local/vcf_variant_filtering_gatk/main.nf
   - tests/test_joint_germline.yml
@@ -330,8 +344,11 @@ manta:
   - modules/nf-core/manta/germline/main.nf
   - modules/nf-core/manta/somatic/main.nf
   - modules/nf-core/manta/tumoronly/main.nf
+  - subworkflows/local/bam_variant_calling_germline_all/main.nf
   - subworkflows/local/bam_variant_calling_germline_manta/main.nf
+  - subworkflows/local/bam_variant_calling_somatic_all/main.nf
   - subworkflows/local/bam_variant_calling_somatic_manta/main.nf
+  - subworkflows/local/bam_variant_calling_tumor_only_all/main.nf
   - subworkflows/local/bam_variant_calling_tumor_only_manta/main.nf
   - tests/test_manta.yml
 
@@ -340,7 +357,10 @@ mpileup:
   - conf/modules/mpileup.config
   - modules/nf-core/cat/cat/main.nf
   - modules/nf-core/samtools/mpileup/main.nf
+  - subworkflows/local/bam_variant_calling_germline_all/main.nf
   - subworkflows/local/bam_variant_calling_mpileup/main.nf
+  - subworkflows/local/bam_variant_calling_somatic_all/main.nf
+  - subworkflows/local/bam_variant_calling_tumor_only_all/main.nf
   - tests/test_mpileup.yml
 
 ## msisensorpro
@@ -348,6 +368,7 @@ msisensorpro:
   - conf/modules/msisensorpro.config
   - modules/nf-core/msisensorpro/msi_somatic/main.nf
   - modules/nf-core/msisensorpro/scan/main.nf
+  - subworkflows/local/bam_variant_calling_somatic_all/main.nf
   - tests/test_msisensorpro.yml
 
 ## mutect2
@@ -361,7 +382,9 @@ mutect2:
   - modules/nf-core/gatk4/mergemutectstats/main.nf
   - modules/nf-core/gatk4/mergevcfs/main.nf
   - modules/nf-core/gatk4/mutect2/main.nf
+  - subworkflows/local/bam_variant_calling_somatic_all/main.nf
   - subworkflows/local/bam_variant_calling_somatic_mutect2/main.nf
+  - subworkflows/local/bam_variant_calling_tumor_only_all/main.nf
   - subworkflows/local/bam_variant_calling_tumor_only_mutect2/main.nf
   - tests/test_mutect2.yml
 
@@ -371,8 +394,11 @@ strelka:
   - modules/nf-core/gatk4/mergevcfs/main.nf
   - modules/nf-core/strelka/germline/main.nf
   - modules/nf-core/strelka/somatic/main.nf
+  - subworkflows/local/bam_variant_calling_germline_all/main.nf
   - subworkflows/local/bam_variant_calling_single_strelka/main.nf
+  - subworkflows/local/bam_variant_calling_somatic_all/main.nf
   - subworkflows/local/bam_variant_calling_somatic_strelka/main.nf
+  - subworkflows/local/bam_variant_calling_tumor_only_all/main.nf
   - tests/test_strelka.yml
 
 ## strelka_bp
@@ -382,8 +408,11 @@ strelka_bp:
   - modules/nf-core/gatk4/mergevcfs/main.nf
   - modules/nf-core/manta/somatic/main.nf
   - modules/nf-core/strelka/somatic/main.nf
+  - subworkflows/local/bam_variant_calling_germline_all/main.nf
+  - subworkflows/local/bam_variant_calling_somatic_all/main.nf
   - subworkflows/local/bam_variant_calling_somatic_manta/main.nf
   - subworkflows/local/bam_variant_calling_somatic_strelka/main.nf
+  - subworkflows/local/bam_variant_calling_tumor_only_all/main.nf
   - tests/test_strelka_bp.yml
 
 ## tiddit
@@ -392,8 +421,11 @@ tiddit:
   - modules/nf-core/svdb/merge/main.nf.nf
   - modules/nf-core/tabix/bgziptabix/main.nf
   - modules/nf-core/tiddit/sv/main.nf
+  - subworkflows/local/bam_variant_calling_germline_all/main.nf
   - subworkflows/local/bam_variant_calling_single_tiddit/main.nf
+  - subworkflows/local/bam_variant_calling_somatic_all/main.nf
   - subworkflows/local/bam_variant_calling_somatic_tiddit/main.nf
+  - subworkflows/local/bam_variant_calling_tumor_only_all/main.nf
   - tests/test_tiddit.yml
 
 # annotate
@@ -453,11 +485,14 @@ concatenate_vcfs:
   - modules/nf-core/tiddit/sv/main.nf
   - subworkflows/local/bam_variant_calling_deepvariant/main.nf
   - subworkflows/local/bam_variant_calling_freebayes/main.nf
+  - subworkflows/local/bam_variant_calling_germline_all/main.nf
   - subworkflows/local/bam_variant_calling_germline_manta/main.nf
   - subworkflows/local/bam_variant_calling_haplotypecaller/main.nf
   - subworkflows/local/bam_variant_calling_mpileup/main.nf
   - subworkflows/local/bam_variant_calling_single_strelka/main.nf
   - subworkflows/local/bam_variant_calling_single_tiddit/main.nf
+  - subworkflows/local/bam_variant_calling_somatic_all/main.nf
+  - subworkflows/local/bam_variant_calling_tumor_only_all/main.nf
   - subworkflows/local/post_variantcalling/main.nf
   - subworkflows/local/vcf_concatenate_germline/main.nf
   - tests/test_concat_germline_vcfs.yml
