@@ -35,6 +35,7 @@ Rapaselet is a delta formed by the Rapaätno river between the Bielloriehppe mas
 - [#1198](https://github.com/nf-core/sarek/pull/1198) - Prepare release `3.3.0`
 - [#1200](https://github.com/nf-core/sarek/pull/1200) - Streamline Github Actions workflows
 - [#1212](https://github.com/nf-core/sarek/pull/1212) - Use matrix for AWS megatests
+- [#1218](https://github.com/nf-core/sarek/pull/1218) - Remove Singularity tests for GHA
 
 ### Fixed
 
