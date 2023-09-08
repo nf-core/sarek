@@ -1146,7 +1146,8 @@ workflow SAREK {
             mappability,
             pon,
             pon_tbi,
-            params.joint_mutect2
+            params.joint_mutect2,
+            params.wes
         )
 
         // PAIR VARIANT CALLING
@@ -1175,7 +1176,8 @@ workflow SAREK {
             loci_files,
             gc_file,
             rt_file,
-            params.joint_mutect2
+            params.joint_mutect2,
+            params.wes
         )
 
         // POST VARIANTCALLING

@@ -35,6 +35,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     panel_of_normals              // channel: [optional]  panel_of_normals
     panel_of_normals_tbi          // channel: [optional]  panel_of_normals_tbi
     joint_mutect2                 // boolean: [mandatory] [default: false] run mutect2 in joint mode
+    wes                           // boolean: [mandatory] [default: false] whether targeted data is processed
 
     main:
     versions = Channel.empty()
@@ -61,7 +62,8 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
 
     // CONTROLFREEC (depends on MPILEUP)
     if (tools.split(',').contains('controlfreec')) {
-        length_file = cf_chrom_len ?: fasta_fai
+        length_file            = cf_chrom_len ?: fasta_fai
+        intervals_controlfreec = wes ? intervals_bed_combined : []
 
         BAM_VARIANT_CALLING_TUMOR_ONLY_CONTROLFREEC(
             // Remap channel to match module/subworkflow
@@ -72,7 +74,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
             dbsnp_tbi,
             chr_files,
             mappability,
-            intervals_bed_combined
+            intervals_controlfreec
         )
 
         versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_CONTROLFREEC.out.versions)
