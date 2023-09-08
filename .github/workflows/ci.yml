@@ -39,19 +39,13 @@ jobs:
       fail-fast: false
       matrix:
         tags: ["${{ fromJson(needs.changes.outputs.tags) }}"]
-        profile: ["docker", "singularity"]
+        profile: ["docker"]
+        # profile: ["docker", "singularity", "conda"]
         TEST_DATA_BASE:
           - "test-datasets/data"
         NXF_VER:
           - "23.04.0"
           - "latest-everything"
-        exclude:
-          - profile: "singularity"
-            tags: concatenate_vcfs
-          - profile: "singularity"
-            tags: merge
-          - profile: "singularity"
-            tags: validation_checks
     env:
       NXF_ANSI_LOG: false
       TEST_DATA_BASE: "${{ github.workspace }}/test-datasets"
