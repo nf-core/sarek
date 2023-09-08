@@ -24,7 +24,7 @@ workflow POST_VARIANTCALLING {
         versions = versions.mix(CONCATENATE_GERMLINE_VCFS.out.versions)
     }
 
-    VARLOCIRAPTOR_CALLS(cram, fasta, fasta_fai)
+    VARLOCIRAPTOR_CALLS(vcfs, cram, fasta, fasta_fai)
     versions = versions.mix(VARLOCIRAPTOR_CALLS.out.versions)
 
     emit:

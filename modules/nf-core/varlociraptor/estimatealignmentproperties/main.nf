@@ -7,7 +7,7 @@ process VARLOCIRAPTOR_ESTIMATEALIGNMENTPROPERTIES {
         'biocontainers/varlociraptor:8.1.1--hc349b7f_0' }"
 
     input:
-    tuple val(meta), path(bam)
+    tuple val(meta), path(bam), path(bai)
     tuple val(meta2), path(fasta)
     tuple val(meta3), path(fai)
 
