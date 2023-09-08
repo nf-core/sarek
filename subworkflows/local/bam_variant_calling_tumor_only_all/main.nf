@@ -1,5 +1,5 @@
 //
-// TUMOR VARIANT CALLING
+// TUMOR ONLY VARIANT CALLING
 // Should be only run on patients without normal sample
 //
 
@@ -113,12 +113,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     if (tools.split(',').contains('mutect2')) {
         BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2(
             // Adjust meta.map to simplify joining channels
-            // joint_mutect2 mode needs different meta.map than regular mode
-            cram.map{ meta, cram, crai ->
-                joint_mutect2 ?
-                [ meta + [ id:meta.patient ] - meta.subMap('sample', 'status', 'data_type', 'patient') , cram, crai ] :
-                [ meta + [ id:meta.sample ] - meta.subMap('sample', 'status', 'data_type'), cram, crai ]
-            },
+            cram.map{ meta, cram, crai -> [ meta + [ id:meta.sample ] - meta.subMap('sample', 'status', 'data_type'), cram, crai ] },
             // Remap channel to match module/subworkflow
             fasta.map{ it -> [ [ id:'fasta' ], it ] },
             // Remap channel to match module/subworkflow
