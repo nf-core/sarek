@@ -41,12 +41,15 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     if (joint_mutect2) {
         // Perform variant calling using mutect2 module in tumor single mode
         // Group cram files by patient
-        patient_crams = input.groupTuple()
+        input_joint = input
+            .map{ meta, input, index -> [ meta + [ id:meta.patient ], input, index ] }
+            .groupTuple()
+
         // Add intervals for scatter-gather scaling
-        patient_cram_intervals = patient_crams.combine(intervals)
+        input_joint_intervals = input_joint.combine(intervals)
         // Move num_intervals to meta map and reorganize channel for MUTECT2 module
-            .map{ meta, t_cram, t_crai, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], t_cram, t_crai, intervals ] }
-        MUTECT2(patient_cram_intervals, fasta, fai, dict, germline_resource, germline_resource_tbi, panel_of_normals, panel_of_normals_tbi)
+            .map{ meta, cram, crai, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram, crai, intervals ] }
+        MUTECT2(input_joint_intervals, fasta, fai, dict, germline_resource, germline_resource_tbi, panel_of_normals, panel_of_normals_tbi)
     }
     else {
         // Perform variant calling using mutect2 module in tumor single mode
