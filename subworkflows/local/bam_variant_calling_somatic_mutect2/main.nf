@@ -54,6 +54,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
         // Combine input and intervals for scatter and gather strategy
         ch_tn_intervals = ch_tn_cram.combine(intervals)
             // Move num_intervals to meta map and reorganize channel for MUTECT2_PAIRED module
+            // meta: [id:patient_id, num_intervals, patient, sex]
             .map{ meta, cram, crai, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram, crai, intervals ] }
 
         MUTECT2_PAIRED( ch_tn_intervals, fasta, fai, dict, germline_resource, germline_resource_tbi, panel_of_normals, panel_of_normals_tbi)
@@ -61,6 +62,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
     else {
 
         // Perform variant calling using mutect2 module pair mode
+        // meta: [id:tumor_id_vs_normal_id, normal_id, num_intervals, patient, sex, tumor_id]
         MUTECT2_PAIRED( input_intervals, fasta, fai, dict, germline_resource, germline_resource_tbi, panel_of_normals, panel_of_normals_tbi)
     }
 
@@ -149,12 +151,18 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
 
     // Do some channel magic to generate tumor-normal pairs again.
     // This is necessary because we generated one normal pileup summary for each patient but we need run calculate contamination for each tumor-normal pair.
-    pileup_table_tumor = Channel.empty().mix(GATHERPILEUPSUMMARIES_TUMOR.out.table, pileup_table_tumor_branch.no_intervals).map{meta, table -> [ meta - meta.subMap('normal_id', 'tumor_id', 'num_intervals') + [id:meta.patient], meta.id, table ] }
-    pileup_table_normal= Channel.empty().mix(GATHERPILEUPSUMMARIES_NORMAL.out.table, pileup_table_normal_branch.no_intervals).map{meta, table -> [ meta - meta.subMap('normal_id', 'tumor_id', 'num_intervals') + [id:meta.patient], meta.id, table ] }
+    pileup_table_tumor  = Channel.empty().mix(GATHERPILEUPSUMMARIES_TUMOR.out.table, pileup_table_tumor_branch.no_intervals).map{meta, table -> [ meta - meta.subMap('normal_id', 'tumor_id', 'num_intervals') + [id:meta.patient], meta.id, table ] }
+    pileup_table_normal = Channel.empty().mix(GATHERPILEUPSUMMARIES_NORMAL.out.table, pileup_table_normal_branch.no_intervals).map{meta, table -> [ meta - meta.subMap('normal_id', 'tumor_id', 'num_intervals') + [id:meta.patient], meta.id, table ] }
 
     ch_calculatecontamination_in_tables = pileup_table_tumor.combine(
         pileup_table_normal, by:0).map{
-        meta, tumor_id, tumor_table, normal_id, normal_table -> [ meta + [ id: tumor_id + "_vs_" + normal_id ], tumor_table, normal_table]
+        meta, tumor_id, tumor_table, normal_id, normal_table ->
+            if(joint_mutect2){
+                [ meta + [ id: tumor_id + "_vs_" + normal_id ], tumor_table, normal_table]
+            }else{
+                // we need tumor and normal ID for further post processing
+                [ meta + [ id: tumor_id + "_vs_" + normal_id, normal_id:normal_id, tumor_id:tumor_id ], tumor_table, normal_table]
+            }
         }
 
     CALCULATECONTAMINATION(ch_calculatecontamination_in_tables)
@@ -174,10 +182,9 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
         calculatecontamination_out_cont = CALCULATECONTAMINATION.out.contamination
     }
 
-    calculatecontamination_out_seg.view()
-    calculatecontamination_out_cont.view()
-    vcf.view()
     // Mutect2 calls filtered by filtermutectcalls using the artifactpriors, contamination and segmentation tables
+    // meta joint calling:  [id:patient_id, patient, sex]
+    // meta paired calling: [id:tumorID_vs_normalID, normal_ID, patient, sex, tumorID]
     vcf_to_filter = vcf.join(tbi, failOnDuplicate: true, failOnMismatch: true)
         .join(stats, failOnDuplicate: true, failOnMismatch: true)
         .join(LEARNREADORIENTATIONMODEL.out.artifactprior, failOnDuplicate: true, failOnMismatch: true)
