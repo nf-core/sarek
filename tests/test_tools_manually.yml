@@ -44,7 +44,7 @@
     - variant_calling
   files:
     - path: results/csv/variantcalled.csv
-      md5sum: f87290ce1c6ea523e08354ed6c258b0b
+      md5sum: d3c9f0559d48696c54f3c463b1606586
     - path: results/multiqc
     - path: results/no_intervals.bed
       md5sum: f3dac01ea66b95fe477446fde2d31489
@@ -189,7 +189,7 @@
     - path: results/reports/vcftools/mutect2/test/test.mutect2.filtered.TsTv.count
       md5sum: aa51bde6080c015c6aa6c8254977dd11
     - path: results/reports/vcftools/mutect2/test/test.mutect2.filtered.TsTv.qual
-      md5sum: 262f843f68d072c457ca28b56da3ede8
+      md5sum: 262f843f68d072c457ca28b56da3ede8gi
     - path: results/variant_calling/mutect2/sample1/sample1.mutect2.pileups.table
       md5sum: 16077fdb885a8afe64c7669477471354
     - path: results/variant_calling/mutect2/sample2/sample2.mutect2.pileups.table
