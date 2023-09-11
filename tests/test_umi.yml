@@ -3,6 +3,7 @@
   tags:
     - preprocessing
     - umi
+    - change
   files:
     - path: results/preprocessing/umi/test/test-test_L1_umi-consensus.bam
     # binary changes md5sums on reruns.

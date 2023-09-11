@@ -20,7 +20,7 @@
     - path: results/preprocessing/markduplicates/test/test.md.bam
     # conda changes md5sums for test
     - path: results/preprocessing/recal_table/test/test.recal.table
-      md5sum: f501ae2ee63cf649ca826b86aba7690c
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.bam
     # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.bam.bai

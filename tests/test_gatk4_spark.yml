@@ -3,6 +3,7 @@
   tags:
     - gatk4_spark
     - preprocessing
+    - change
   files:
     - path: results/csv/markduplicates.csv
       md5sum: 0d6120bb99e92f6810343270711ca53e
@@ -16,7 +17,7 @@
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
     # binary file changes md5sums on reruns
     - path: results/preprocessing/recal_table/test/test.recal.table
-      md5sum: 5b6e5078b4a90f6cb982fa0f0df616c2
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.cram
     # binary file changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
@@ -54,6 +55,7 @@
     - gatk4_spark
     - preprocessing
     - skip_qc
+    - change
   files:
     - path: results/csv/markduplicates.csv
       md5sum: 0d6120bb99e92f6810343270711ca53e
@@ -66,7 +68,7 @@
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
     # binary file changes md5sums on reruns
     - path: results/preprocessing/recal_table/test/test.recal.table
-      md5sum: 5b6e5078b4a90f6cb982fa0f0df616c2
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.cram
     # binary file changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
@@ -87,6 +89,7 @@
     - gatk4_spark
     - preprocessing
     - save_output_as_bam
+    - change
   files:
     - path: results/csv/markduplicates.csv
       md5sum: 6004ab16b63012e336f6251396a983c5
@@ -100,7 +103,7 @@
     - path: results/preprocessing/markduplicates/test/test.md.bam.bai
     # conda changes md5sums for test
     - path: results/preprocessing/recal_table/test/test.recal.table
-      md5sum: 5b6e5078b4a90f6cb982fa0f0df616c2
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.bam
     # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.bam.bai

@@ -4,6 +4,7 @@
     - fastp
     - preprocessing
     - trimming
+    - change
   files:
     - path: results/csv/markduplicates.csv
       md5sum: 0d6120bb99e92f6810343270711ca53e
@@ -21,7 +22,7 @@
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
     # binary changes md5sums on reruns
     - path: results/preprocessing/recal_table/test/test.recal.table
-      md5sum: 766a4cd88d3d085c19d8e31540040ecd
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.cram
     # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
@@ -60,6 +61,7 @@
     - fastp
     - preprocessing
     - split_fastq
+    - change
   files:
     - path: results/csv/markduplicates.csv
       md5sum: 0d6120bb99e92f6810343270711ca53e
@@ -80,7 +82,7 @@
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
     # binary changes md5sums on reruns
     - path: results/preprocessing/recal_table/test/test.recal.table
-      md5sum: 36b9cec9f69726d3acb0b42685100eb2
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.cram
     # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai

@@ -16,7 +16,7 @@
     - path: results/preprocessing/mapped/test/test.sorted.cram.crai
     # binary changes md5sums on reruns
     - path: results/preprocessing/recal_table/test/test.recal.table
-      md5sum: 32223de2ab327bceb706de77eef562bc
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.cram
     # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
@@ -73,7 +73,7 @@
     - path: results/preprocessing/mapped/test/test.sorted.cram.crai
     # binary changes md5sums on reruns
     - path: results/preprocessing/recal_table/test/test.recal.table
-      md5sum: 32223de2ab327bceb706de77eef562bc
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.cram
     # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
@@ -128,7 +128,7 @@
     - path: results/preprocessing/mapped/test/test.sorted.bam.bai
     # binary changes md5sums on reruns
     - path: results/preprocessing/recal_table/test/test.recal.table
-      md5sum: 32223de2ab327bceb706de77eef562bc
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.bam
     # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.bam.bai

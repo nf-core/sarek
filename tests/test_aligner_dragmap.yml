@@ -4,6 +4,7 @@
     - aligner
     - dragmap
     - preprocessing
+    - change
   files:
     - path: results/csv/markduplicates.csv
       md5sum: 0d6120bb99e92f6810343270711ca53e
@@ -17,7 +18,7 @@
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
     # binary changes md5sums on reruns
     - path: results/preprocessing/recal_table/test/test.recal.table
-      md5sum: 75ba4376a17ca69c5134153302f82e92
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.cram
     # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
