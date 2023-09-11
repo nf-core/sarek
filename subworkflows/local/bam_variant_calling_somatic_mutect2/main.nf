@@ -41,16 +41,15 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
 
     if (joint_mutect2) {
 
-        // Separate normal cram files and remove duplicates
+        // Separate normal cram files
         // Extract tumor cram files
         ch_cram = input.multiMap{ meta, cram, crai ->
                 normal: [ meta - meta.subMap('normal_id', 'tumor_id') , cram[0], crai[0] ]
                 tumor:  [ meta - meta.subMap('normal_id', 'tumor_id') , cram[1], crai[1] ]
             }
-        ch_cram_normal = ch_cram.normal.unique()
 
-        // Merge normal and tumor crams by patient
-        ch_tn_cram = ch_cram_normal.mix(ch_cram.tumor).groupTuple()
+        // Remove duplicates from normal channel and merge normal and tumor crams by patient
+        ch_tn_cram =  ch_cram.normal.unique().mix(ch_cram.tumor).groupTuple()
         // Combine input and intervals for scatter and gather strategy
         ch_tn_intervals = ch_tn_cram.combine(intervals)
             // Move num_intervals to meta map and reorganize channel for MUTECT2_PAIRED module
@@ -158,7 +157,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
         pileup_table_normal, by:0).map{
         meta, tumor_id, tumor_table, normal_id, normal_table ->
             if(joint_mutect2){
-                [ meta + [ id: tumor_id + "_vs_" + normal_id ], tumor_table, normal_table]
+                [ meta + [ id: tumor_id + "_vs_" + normal_id], tumor_table, normal_table]
             }else{
                 // we need tumor and normal ID for further post processing
                 [ meta + [ id: tumor_id + "_vs_" + normal_id, normal_id:normal_id, tumor_id:tumor_id ], tumor_table, normal_table]
