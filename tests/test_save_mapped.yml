@@ -6,7 +6,6 @@
     - save_mapped
     - save_mapped_only
     - variant_calling
-    - change
   files:
     - path: results/csv/mapped.csv
       md5sum: 3bee45ccf65e301ce09ee4eed8f26933

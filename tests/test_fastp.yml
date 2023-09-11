@@ -4,7 +4,6 @@
     - fastp
     - preprocessing
     - trimming
-    - change
   files:
     - path: results/csv/markduplicates.csv
       md5sum: 0d6120bb99e92f6810343270711ca53e
@@ -61,7 +60,6 @@
     - fastp
     - preprocessing
     - split_fastq
-    - change
   files:
     - path: results/csv/markduplicates.csv
       md5sum: 0d6120bb99e92f6810343270711ca53e

@@ -4,7 +4,6 @@
     - aligner
     - dragmap
     - preprocessing
-    - change
   files:
     - path: results/csv/markduplicates.csv
       md5sum: 0d6120bb99e92f6810343270711ca53e

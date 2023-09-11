@@ -4,7 +4,6 @@
     - intervals
     - preprocessing
     - targeted
-    - change
   files:
     - path: results/csv/markduplicates.csv
       md5sum: 0d6120bb99e92f6810343270711ca53e
@@ -64,7 +63,6 @@
     - intervals
     - intervals_false
     - preprocessing
-    - change
   files:
     - path: results/csv/markduplicates.csv
       md5sum: 0d6120bb99e92f6810343270711ca53e
@@ -116,7 +114,6 @@
     - intervals
     - no_intervals
     - preprocessing
-    - change
   files:
     - path: results/csv/markduplicates.csv
       md5sum: 0d6120bb99e92f6810343270711ca53e

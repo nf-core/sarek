@@ -6,7 +6,6 @@
     - save_output_as_bam
     - save_output_as_bam_only
     - variant_calling
-    - change
   files:
     - path: results/csv/markduplicates.csv
       md5sum: 6004ab16b63012e336f6251396a983c5

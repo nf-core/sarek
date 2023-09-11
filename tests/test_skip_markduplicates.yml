@@ -4,7 +4,6 @@
     - default_extended
     - preprocessing
     - skip_markduplicates
-    - change
   files:
     - path: results/csv/mapped.csv
       md5sum: 3bee45ccf65e301ce09ee4eed8f26933
@@ -61,7 +60,6 @@
     - preprocessing
     - save_mapped
     - skip_markduplicates
-    - change
   files:
     - path: results/csv/mapped.csv
       md5sum: 3bee45ccf65e301ce09ee4eed8f26933
@@ -116,7 +114,6 @@
     - preprocessing
     - save_output_as_bam
     - skip_markduplicates
-    - change
   files:
     - path: results/csv/mapped.csv
       md5sum: 7f21bf40d3fbc248ee2ea3fdf0f7cdb2
