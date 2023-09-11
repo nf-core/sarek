@@ -6,6 +6,7 @@
     - skip_all_qc
     - skip_qc
     - variant_calling
+    - change
   files:
     - path: results/csv/markduplicates.csv
       md5sum: 0d6120bb99e92f6810343270711ca53e
@@ -18,7 +19,7 @@
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
     # binary changes md5sums on reruns
     - path: results/preprocessing/recal_table/test/test.recal.table
-      md5sum: 4ac774bf5f1157e77426fd82f5ac0fbe
+      md5sum: f501ae2ee63cf649ca826b86aba7690c
     - path: results/preprocessing/recalibrated/test/test.recal.cram
     # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
@@ -36,7 +37,7 @@
     - path: results/reports/bcftools/strelka/test/test.strelka.variants.bcftools_stats.txt
     # conda changes md5sums for test
     - path: results/reports/vcftools/strelka/test/test.strelka.variants.FILTER.summary
-      md5sum: dd87f507da7de20d5318841af312493b
+      md5sum: ad417bc96d31223f61170987975d8128
     - path: results/reports/vcftools/strelka/test/test.strelka.variants.TsTv.count
       md5sum: fa27f678965b7cba6a92efcd039f802a
     - path: results/reports/vcftools/strelka/test/test.strelka.variants.TsTv.qual
