@@ -3,7 +3,6 @@
   tags:
     - gatk4_spark
     - preprocessing
-    - change
   files:
     - path: results/csv/markduplicates.csv
       md5sum: 0d6120bb99e92f6810343270711ca53e
@@ -55,7 +54,6 @@
     - gatk4_spark
     - preprocessing
     - skip_qc
-    - change
   files:
     - path: results/csv/markduplicates.csv
       md5sum: 0d6120bb99e92f6810343270711ca53e
@@ -89,7 +87,6 @@
     - gatk4_spark
     - preprocessing
     - save_output_as_bam
-    - change
   files:
     - path: results/csv/markduplicates.csv
       md5sum: 6004ab16b63012e336f6251396a983c5
