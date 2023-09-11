@@ -838,13 +838,13 @@ For GATK.GRCh38 the links for each reference file and the corresponding processe
 | pon                   | Mutect2                                                                                                                                                                                                                                                                                                                                                                                                                                              | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) | https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON- |
 | pon_tbi               | Mutect2                                                                                                                                                                                                                                                                                                                                                                                                                                              | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) | https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON- |
 
-## How to customise snpeff and vep annotation
+## How to customise snpEff and VEP annotation
 
 SNPeff and VEP require a large resource of files known as a cache. These are folders composed of multiple gigabytes of files which need to be available for the software to properly function. To use these, supply the parameters `--vep_cache` and/or `--snpeff_cache` to the relevant folders.
 
 ### Specify the cache location
 
-Params `--snpeff_cache` and `--vep_cache` are to used to specify the locations to the root of the annotation cache folder. The cache will be located within a subfolder with the path `${vep_species}/${vep_genome}_${vep_version}` for VEP and `${snpeff_species}.${snpeff_version}` for snpeff. If this directory is missing, Sarek will raise an error.
+Params `--snpeff_cache` and `--vep_cache` are to used to specify the locations to the root of the annotation cache folder. The cache will be located within a subfolder with the path `${vep_species}/${vep_genome}_${vep_version}` for VEP and `${snpeff_species}.${snpeff_version}` for snpEff. If this directory is missing, Sarek will raise an error.
 
 For example this is a typical folder structure for GRCh38 and WBCel235, with SNPeff version 105 and VEP version 106:
 
@@ -972,7 +972,7 @@ To download cache on a cloud infrastructure, an absolute path is needed.
 
 ### Using the nf-core containers with pre-downloaded cache
 
-For common genomes, the VEP and snpeff parameters are pre-populated in the [igenomes.config](https://github.com/nf-core/sarek/blob/master/conf/igenomes.config) file and as such the cache files are included with the specified iGenome. However, these are infrequently updated and therefore using a pre-populated cache is preferable.
+For common genomes, the VEP and snpEff parameters are pre-populated in the [igenomes.config](https://github.com/nf-core/sarek/blob/master/conf/igenomes.config) file and as such the cache files are included with the specified iGenome. However, these are infrequently updated and therefore using a pre-populated cache is preferable.
 
 An associated Docker container for some caches is available which includes the cache and can be used. However, these are very large and can cause frequent problems so should be avoided and are preserved here for legacy reasons. The containers are only created for some species and some cache/tools versions combinations and match the tags of the Docker containers (cf DockerHub tags for these containers [`nfcore/snpeff`](https://hub.docker.com/r/nfcore/snpeff/tags) and [`nfcore/vep`](https://hub.docker.com/r/nfcore/vep/tags).
 
