@@ -840,50 +840,27 @@ For GATK.GRCh38 the links for each reference file and the corresponding processe
 
 ## How to customise snpeff and vep annotation
 
-### Using the nf-core containers with pre-downloaded cache
+SNPeff and VEP require a large resource of files known as a cache. These are folders composed of multiple gigabytes of files which need to be available for the software to properly function. To use these, supply the parameters `--vep_cache` and/or `--snpeff_cache` to the relevant folders.
 
-For common genomes, it is already configured within the [igenomes.config](https://github.com/nf-core/sarek/blob/master/conf/igenomes.config) file, so nothing to be done there.
+### Specify the cache location
 
-Note: These containers are only created for some species and some cache/tools versions combinations (cf DockerHub tags for these containers [`nfcore/snpeff`](https://hub.docker.com/r/nfcore/snpeff/tags) and [`nfcore/vep`](https://hub.docker.com/r/nfcore/vep/tags).
+Params `--snpeff_cache` and `--vep_cache` are to used to specify the locations to the root of the annotation cache folder. The cache will be located within a subfolder with the path `${vep_species}/${vep_genome}_${vep_version}` for VEP and `${snpeff_species}.${snpeff_version}` for snpeff. If this directory is missing, Sarek will raise an error.
 
-These containers can be quite huge especially for human, it is recommended to use annotation cache on a path if possible
+For example this is a typical folder structure for GRCh38 and WBCel235, with SNPeff version 105 and VEP version 106:
 
-### Create containers with pre-downloaded cache
-
-For each tool, an helper script `build.sh` can be found at the root of the tool folder in the nf-core module repo ([snpeff](https://github.com/nf-core/modules/tree/master/modules/nf-core/snpeff) and [ensemblvep](https://github.com/nf-core/modules/tree/master/modules/nf-core/ensemblvep)), and can be adapted for your usage.
-
-### Use Sarek to download cache and annotate in one go
-
-Use the params `--download_cache`, and specify with `--tools` for which annotation tool you need to download the cache (`snpeff` and or `vep`)
-
-Sarek will automatically download the cache, use the biocontainers container for said tools, and use it to annotate any vcfs produced.
-
-### Only download cache
-
-Using the params `--build_only_index` allow for only downloading the cache for the specified tools.
-
-### Location for the cache
-
-Cache can be downloaded in the specified `--outdir_cache` location.
-Else, it will be downloaded in `cache/` in the specified `--outdir` location.
-
-To download cache on a cloud infrastructure, an absolute path is needed.
-
-Params `--snpeff_cache` and `--vep_cache` are to used to specify the locations to the root of the annotation cache folder.
-
-For example this is what can be seen when cache has been downloaded for `GATK.GRCh38` and `WBcell235` for both tools using the default values in the [igenomes.config](https://github.com/nf-core/sarek/blob/master/conf/igenomes.config) file:
-
-```bash
-ls /data/snpeff_cache /data/vep_cache/*
-/data/snpeff_cache:
-GRCh38.105
-WBcel235.105
-
-/data/vep_cache/caenorhabditis_elegans:
-106_WBcel235
-/data/vep_cache/homo_sapiens:
-106_GRCh38
 ```
+data/
+├─ snpeff_cache/
+│  ├─ GRCh38.105/
+│  ├─ WBcel235.105/
+├─ vep_cache/
+│  ├─ caenorhabditis_elegans/
+│  │  ├─ 110_WBCel235/
+│  ├─ homo_sapiens/
+│  │  ├─ 110_GRCh38/
+```
+
+For this example, the parameters `--snpeff_cache data/snpeff_cache` and `--vep_cache data/vep_cache` would be used.
 
 ### Change cache version and species
 
@@ -903,15 +880,14 @@ snpeff_db         = '105'
 snpeff_genome     = 'GRCh38'
 vep_genome        = 'GRCh38'
 vep_species       = 'homo_sapiens'
-vep_cache_version = '106'
+vep_cache_version = '110'
 ```
 
 ### Usage recommendation with AWS iGenomes
 
-Annotation cache is a resource separated from AWS iGenomes, which as its own structure and a frequent update cycle.
-So it is not recommended to put any annotation cache in your local AWS iGenomes folder.
+Annotation cache is a resource separated from AWS iGenomes, which as its own structure and a frequent update cycle, so it is not recommended to put any annotation cache in your local AWS iGenomes folder.
 
-A classical organisation could be:
+A classical organisation on a shared storage area might be:
 
 ```bash
 /data/igenomes/
@@ -919,35 +895,90 @@ A classical organisation could be:
 /data/cache/snpeff
 ```
 
-which can then be used this way in sarek:
+which can then be used this way in Sarek:
 
 ```bash
-nextflow run nf-core/sarek \\
-    --igenomes_base /data/igenomes/ \\
-    --snpeff_cache /data/cache/snpeff/ \\
-    --vep_cache /data/cache/ensemblvep/ \\
+nextflow run nf-core/sarek \
+    --igenomes_base /data/igenomes/ \
+    --snpeff_cache /data/cache/snpeff/ \
+    --vep_cache /data/cache/ensemblvep/ \
     ...
 ```
 
-Or similarly on the cloud:
+Alternatively the data may be stored on AWS S3 storage, therefore the parameters might be:
 
 ```bash
-s3://data/igenomes/
-s3://data/cache/ensemblvep
-s3://data/cache/snpeff
+s3://my-reference-data/igenomes/
+s3://my-reference-data/cache/ensemblvep/
+s3://my-reference-data/cache/snpeff/
 ```
 
 which can then be used this way in sarek:
 
 ```bash
-nextflow run nf-core/sarek \\
-    --igenomes_base s3://data/igenomes/ \\
-    --snpeff_cache s3://data/cache/snpeff/ \\
-    --vep_cache s3://data/cache/ensemblvep/ \\
+nextflow run nf-core/sarek \
+    --igenomes_base s3://my-reference-data/igenomes/ \
+    --snpeff_cache s3://my-reference-data/cache/ensemblvep/ \
+    --vep_cache s3://my-reference-data/cache/snpeff/ \
     ...
 ```
 
 These params can be specified in a config file or in a profile using the params scope, or even in a json or a yaml file using the `-params-file` nextflow option.
+
+### Use pre-populated cache for SNPeff and VEP
+
+Sarek stores a mirror of some cache files on AWS S3 which are set as the default parameters. They contain some genome builds which can be found by checking the contents of the S3 bucket.
+
+```bash
+vep_cache = s3://annotation-cache/vep_cache/
+```
+
+The contents of the VEP cache can be listed with the following command using the S3 CLI:
+
+```bash
+aws s3 --no-sign-request ls s3://annotation-cache/vep_cache/
+```
+
+Simialrly, the SNPeff cache is stored at the following location on S3:
+
+```bash
+snpeff_cache = s3://annotation-cache/snpeff_cache/
+```
+
+The contents can be listed as follows:
+
+```bash
+aws s3 --no-sign-request ls s3://annotation-cache/snpeff_cache
+```
+
+Be sure the specified species, genome and build matches the directory structure within the cache!
+
+### Use Sarek to download cache and annotate in one go
+
+Use the params `--download_cache`, and specify with `--tools` for which annotation tool you need to download the cache (`snpeff` and or `vep`)
+
+Sarek will automatically download the cache, use the biocontainers container for said tools, and use it to annotate any vcfs produced.
+
+### Only download cache
+
+Using the params `--build_only_index` allow for only downloading the cache for the specified tools.
+
+### Location for the cache
+
+Cache can be downloaded in the specified `--outdir_cache` location.
+Else, it will be downloaded in `cache/` in the specified `--outdir` location.
+
+To download cache on a cloud infrastructure, an absolute path is needed.
+
+### Using the nf-core containers with pre-downloaded cache
+
+For common genomes, the VEP and snpeff parameters are pre-populated in the [igenomes.config](https://github.com/nf-core/sarek/blob/master/conf/igenomes.config) file and as such the cache files are included with the specified iGenome. However, these are infrequently updated and therefore using a pre-populated cache is preferable.
+
+An associated Docker container for some caches is available which includes the cache and can be used. However, these are very large and can cause frequent problems so should be avoided and are preserved here for legacy reasons. The containers are only created for some species and some cache/tools versions combinations and match the tags of the Docker containers (cf DockerHub tags for these containers [`nfcore/snpeff`](https://hub.docker.com/r/nfcore/snpeff/tags) and [`nfcore/vep`](https://hub.docker.com/r/nfcore/vep/tags).
+
+### Create containers with pre-downloaded cache
+
+For each tool, an helper script `build.sh` can be found at the root of the tool folder in the nf-core module repo ([snpeff](https://github.com/nf-core/modules/tree/master/modules/nf-core/snpeff) and [ensemblvep](https://github.com/nf-core/modules/tree/master/modules/nf-core/ensemblvep)), and can be adapted for your usage.
 
 ### Using VEP plugins
 
