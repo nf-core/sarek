@@ -288,6 +288,19 @@ if ((params.download_cache) && (params.snpeff_cache || params.vep_cache)) {
     error("Please specify either `--download_cache` or `--snpeff_cache`, `--vep_cache`.\nhttps://nf-co.re/sarek/dev/usage#how-to-customise-snpeff-and-vep-annotation")
 }
 
+if ( params.vep_cache ) {
+    def vep_cache_dir = file("$params.vep_cache", type: 'dir') / "${params.vep_cache_version}_${params.vep_genome}"
+    if ( !vep_cache_dir.exists() || !vep_cache_dir.isDirectory() ) {
+        error("Files within --vep_cache invalid. Make sure there is a directory named ${params.vep_cache_version}_${params.vep_genome} in ${params.vep_cache}.\nhttps://nf-co.re/sarek/dev/usage#how-to-customise-snpeff-and-vep-annotation")
+    }
+}
+
+if ( params.snpeff_cache ) {
+    def snpeff_cache_dir = file("$params.snpeff_cache", type: 'dir') / "${params.snpeff_genome}.${params.snpeff_db}"
+    if ( !snpeff_cache_dir.exists() || !snpeff_cache_dir.isDirectory() ) {
+        error("Files within --snpeff_cache invalid. Make sure there is a directory named ${params.snpeff_genome}.${params.snpeff_db} in ${params.snpeff_cache}.\nhttps://nf-co.re/sarek/dev/usage#how-to-customise-snpeff-and-vep-annotation")
+    }
+}
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     IMPORT LOCAL MODULES/SUBWORKFLOWS
@@ -321,8 +334,8 @@ vep_genome         = params.vep_genome         ?: Channel.empty()
 vep_species        = params.vep_species        ?: Channel.empty()
 
 // Initialize files channels based on params, not defined within the params.genomes[params.genome] scope
-snpeff_cache       = params.snpeff_cache ? params.use_annotation_cache_keys ? Channel.fromPath("${params.snpeff_cache}/${params.snpeff_genome}.${params.snpeff_db}").collect()   : Channel.fromPath(params.snpeff_cache).collect() : []
-vep_cache          = params.vep_cache    ? params.use_annotation_cache_keys ? Channel.fromPath("${params.vep_cache}/${params.vep_cache_version}_${params.vep_genome}").collect() : Channel.fromPath(params.vep_cache).collect()    : []
+snpeff_cache       = params.snpeff_cache ? params.use_annotation_cache_keys ? Channel.fromPath("${params.snpeff_cache}/${params.snpeff_genome}.${params.snpeff_db}", checkIfExists: true).collect()   : Channel.fromPath(params.snpeff_cache).collect() : []
+vep_cache          = params.vep_cache    ? params.use_annotation_cache_keys ? Channel.fromPath("${params.vep_cache}/${params.vep_cache_version}_${params.vep_genome}", checkIfExists: true).collect() : Channel.fromPath(params.vep_cache).collect()    : []
 
 vep_extra_files = []
 
