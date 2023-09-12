@@ -890,7 +890,7 @@ vep_cache_version = '110'
 
 ### Usage recommendation with AWS iGenomes
 
-Annotation cache is a resource separated from AWS iGenomes, which has its own structure and a frequent update cycle, so it is not recommended to put any annotation cache in your local AWS iGenomes folder.
+Cache for each of this annotation tools are a resource separated from AWS iGenomes, which has its own structure and a frequent update cycle, so it is not recommended to put any cache for each of this annotation tools in your local AWS iGenomes folder.
 
 A classical organisation on a shared storage area might be:
 
@@ -900,7 +900,7 @@ A classical organisation on a shared storage area might be:
 /data/cache/vep_cache
 ```
 
-which can then be used this way in Sarek:
+Which can then be used this way in Sarek:
 
 ```bash
 nextflow run nf-core/sarek \
@@ -918,7 +918,7 @@ s3://my-reference-data/cache/snpeff_cache/
 s3://my-reference-data/cache/vep_cache/
 ```
 
-which can then be used this way in sarek:
+Which can then be used this way in Sarek:
 
 ```bash
 nextflow run nf-core/sarek \
@@ -930,9 +930,11 @@ nextflow run nf-core/sarek \
 
 These params can be specified in a config file or in a profile using the params scope, or even in a json or a yaml file using the `-params-file` nextflow option.
 
+Note: we only recommend to store annotation data on S3 if you only store a specific version of the cache for a species, and not the whole cache.
+
 ### Use annotation-cache for SnpEff and VEP
 
-[Annotation-cache](https://github.com/annotation-cache) is an open AWS registry resource that stores a mirror of some cache files on AWS S3 which are set as the default parameters in Sarek.
+[Annotation-cache](https://github.com/annotation-cache) is an open AWS registry resource that stores a mirror of some cache files on AWS S3 which can be used with Sarek.
 It contains some genome builds which can be found by checking the contents of the S3 bucket.
 
 SNPeff and VEP cache are stored at the following location on S3:
