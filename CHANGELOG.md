@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.2.4](https://github.com/nf-core/sarek/releases/tag/3.2.4) - Gällivare
+
+Gällivare is a small lake next to Pierikjaure.
+
+### Added
+
+- [#1113](https://github.com/nf-core/sarek/pull/1113) - Adding genemetrics module
+
+
 ## [3.2.3](https://github.com/nf-core/sarek/releases/tag/3.2.3) - Gällivare
 
 Gällivare is a small lake next to Pierikjaure.

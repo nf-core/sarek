@@ -574,7 +574,8 @@ The file `<tumorsample_vs_normalsample>.cnvs.txt` contains all segments predicte
   - file containing copy number segment information
 - `<sample>.call.cns`
   - file containing copy number segment information
-
+- `<sample>.genemetrics.tsv`
+  - file containing per gene copy number information (if input files are annotated)
 </details>
 
 <details markdown="1">
@@ -602,6 +603,8 @@ The file `<tumorsample_vs_normalsample>.cnvs.txt` contains all segments predicte
   - file containing copy number segment information
 - `<tumorsample>.call.cns`
   - file containing copy number segment information
+- `<tumorsample>.genemetrics.tsv`
+  - file containing per gene copy number information (if input files are annotated)
   </details>
 
 #### Control-FREEC
