@@ -11,7 +11,7 @@ Gällivare is a small lake next to Pierikjaure.
 
 ### Added
 
-- [#1113](https://github.com/nf-core/sarek/pull/1113) - Adding genemetrics module
+- [#1113](https://github.com/nf-core/sarek/pull/1113) - Adding CNVkit genemetrics module
 
 
 ## [3.2.3](https://github.com/nf-core/sarek/releases/tag/3.2.3) - Gällivare
