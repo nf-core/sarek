@@ -34,6 +34,7 @@
                 },
                 "input_restart": {
                     "type": "string",
+                    "description": "Automatic retrieval for restart",
                     "format": "file-path",
                     "exists": true,
                     "mimetype": "text/csv",
