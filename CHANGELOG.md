@@ -64,6 +64,7 @@ Rapaselet is a delta formed by the Rapaätno river between the Bielloriehppe mas
 - [#1216](https://github.com/nf-core/sarek/pull/1216) - Better test coverage for variant calling `*_all` subworkflows
 - [#1217](https://github.com/nf-core/sarek/pull/1217) - Fix `groupTuple` statement for mutect2 tumor_only subworkflows
 - [#1220](https://github.com/nf-core/sarek/pull/1220) - Fix channel and meta logic for `joint_mutect2` feature
+- [#1224](https://github.com/nf-core/sarek/pull/1224) - New version of BCFTOOLS_SORT-module with `--temp-dir .` added as option for `bcftools sort`. The tool itself was not updated. The addition of the option was required in order to run the module with Singularity.
 
 ### Dependencies
 
