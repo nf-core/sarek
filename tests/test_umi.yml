@@ -50,6 +50,16 @@
     # text-based file changes md5sums on reruns
     - path: results/reports/samtools/test/test.recal.cram.stats
     # text-based file changes md5sums on reruns
+
+- name: Run Sentieon-FGBio UMI combination test
+  command: nextflow run main.nf -profile test_cache,umi --outdir results --aligner "sentieon-bwamem"
+  tags:
+    - preprocessing
+    - umi
+  exit_code: 1
+  stdout:
+    contains:
+      - "Sentieon BWA is currently not compatible with FGBio UMI handeling. Please choose a different aligner."
 # - name: Run UMI TSO test
 #   command: nextflow run main.nf -profile test_cache,umi_tso --outdir results
 #   tags:

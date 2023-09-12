@@ -5,11 +5,6 @@ process GATK4_CNNSCOREVARIANTS {
     //Conda is not supported at the moment: https://github.com/broadinstitute/gatk/issues/7811
     container "nf-core/gatk:4.4.0.0" //Biocontainers is missing a package
 
-    // Exit if running this module with -profile conda / -profile mamba
-    if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
-        exit 1, "GATK4_CNNSCOREVARIANTS module does not support Conda. Please use Docker / Singularity / Podman instead."
-    }
-
     input:
     tuple val(meta), path(vcf), path(tbi), path(aligned_input), path(intervals)
     path fasta
@@ -27,6 +22,10 @@ process GATK4_CNNSCOREVARIANTS {
     task.ext.when == null || task.ext.when
 
     script:
+    // Exit if running this module with -profile conda / -profile mamba
+    if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
+        error "GATK4_CNNSCOREVARIANTS module does not support Conda. Please use Docker / Singularity / Podman instead."
+    }
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     def aligned_input = aligned_input ? "--input $aligned_input" : ""

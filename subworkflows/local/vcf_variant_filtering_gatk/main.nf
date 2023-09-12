@@ -24,8 +24,8 @@ workflow VCF_VARIANT_FILTERING_GATK {
     FILTERVARIANTTRANCHES(CNNSCOREVARIANTS.out.vcf.join(CNNSCOREVARIANTS.out.tbi, failOnDuplicate: true, failOnMismatch: true).combine(intervals_bed_combined), known_sites, known_sites_tbi, fasta, fasta_fai, dict)
 
     filtered_vcf = FILTERVARIANTTRANCHES.out.vcf
-        // add variantcaller to meta map and remove no longer necessary field: num_intervals
-        .map{ meta, vcf -> [ meta - meta.subMap('num_intervals') + [ variantcaller:'haplotypecaller' ], vcf ] }
+        // remove no longer necessary field: num_intervals
+        .map{ meta, vcf -> [ meta - meta.subMap('num_intervals'), vcf ] }
 
     versions = versions.mix(CNNSCOREVARIANTS.out.versions)
     versions = versions.mix(FILTERVARIANTTRANCHES.out.versions)

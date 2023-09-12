@@ -1,5 +1,5 @@
 - name: Run snpEff
-  command: nextflow run main.nf -profile test_cache,annotation --tools snpeff --outdir results
+  command: nextflow run main.nf -profile test_cache,annotation --tools snpeff --outdir results --download_cache
   tags:
     - annotation
     - snpeff

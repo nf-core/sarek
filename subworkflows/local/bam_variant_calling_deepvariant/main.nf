@@ -1,6 +1,12 @@
+//
+// DEEPVARIANT germline calling
+//
+// For all modules here:
+// A when clause condition is defined in the conf/modules.config to determine if the module should be run
+
+include { DEEPVARIANT                               } from '../../../modules/nf-core/deepvariant/main'
 include { GATK4_MERGEVCFS as MERGE_DEEPVARIANT_GVCF } from '../../../modules/nf-core/gatk4/mergevcfs/main'
 include { GATK4_MERGEVCFS as MERGE_DEEPVARIANT_VCF  } from '../../../modules/nf-core/gatk4/mergevcfs/main'
-include { DEEPVARIANT                               } from '../../../modules/nf-core/deepvariant/main'
 
 // Deepvariant: https://github.com/google/deepvariant/issues/510
 workflow BAM_VARIANT_CALLING_DEEPVARIANT {

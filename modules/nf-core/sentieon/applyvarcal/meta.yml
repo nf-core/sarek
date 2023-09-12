@@ -1,0 +1,84 @@
+name: sentieon_applyvarcal
+description: |
+  Apply a score cutoff to filter variants based on a recalibration table.
+  Sentieon's Aplyvarcal performs the second pass in a two-stage process called Variant Quality Score Recalibration (VQSR).
+  Specifically, it applies filtering to the input variants based on the recalibration table produced
+  in the previous step VarCal and a target sensitivity value.
+  https://support.sentieon.com/manual/usages/general/#applyvarcal-algorithm
+keywords:
+  - sentieon
+  - applyvarcal
+  - varcal
+  - VQSR
+tools:
+  - sentieon:
+      description: |
+        Sentieon® provides complete solutions for secondary DNA/RNA analysis for a variety of sequencing platforms, including short and long reads.
+        Our software improves upon BWA, STAR, Minimap2, GATK, HaplotypeCaller, Mutect, and Mutect2 based pipelines and is deployable on any generic-CPU-based computing system.
+      homepage: https://www.sentieon.com/
+      documentation: https://www.sentieon.com/
+
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test']
+  - vcf:
+      type: file
+      description: VCF file to be recalibrated, this should be the same file as used for the first stage VariantRecalibrator.
+      pattern: "*.vcf"
+  - vcf_tbi:
+      type: file
+      description: tabix index for the input vcf file.
+      pattern: "*.vcf.tbi"
+  - recal:
+      type: file
+      description: Recalibration file produced when the input vcf was run through VariantRecalibrator in stage 1.
+      pattern: "*.recal"
+  - recal_index:
+      type: file
+      description: Index file for the recalibration file.
+      pattern: ".recal.idx"
+  - tranches:
+      type: file
+      description: Tranches file produced when the input vcf was run through VariantRecalibrator in stage 1.
+      pattern: ".tranches"
+  - meta2:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test']
+  - fasta:
+      type: file
+      description: The reference fasta file
+      pattern: "*.fasta"
+  - meta3:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test']
+  - fai:
+      type: file
+      description: Index of reference fasta file
+      pattern: "*.fasta.fai"
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test']
+  - vcf:
+      type: file
+      description: compressed vcf file containing the recalibrated variants.
+      pattern: "*.vcf.gz"
+  - tbi:
+      type: file
+      description: Index of recalibrated vcf file.
+      pattern: "*vcf.gz.tbi"
+  - versions:
+      type: file
+      description: File containing software versions.
+      pattern: "versions.yml"
+authors:
+  - "@assp8200"
