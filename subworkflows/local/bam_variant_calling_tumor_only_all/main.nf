@@ -113,7 +113,12 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     if (tools.split(',').contains('mutect2')) {
         BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2(
             // Adjust meta.map to simplify joining channels
-            cram.map{ meta, cram, crai -> [ meta + [ id:meta.sample ] - meta.subMap('sample', 'status', 'data_type'), cram, crai ] },
+            cram.map{ meta, cram, crai ->
+                joint_mutect2 ?
+                //we need to keep all fields and then remove on a per-tool-basis to ensure proper joining at the filtering step
+                [ meta - meta.subMap('data_type', 'status') + [ id:meta.patient ], cram, crai ] :
+                [ meta - meta.subMap('data_type', 'status'), cram, crai ]
+            },
             // Remap channel to match module/subworkflow
             fasta.map{ it -> [ [ id:'fasta' ], it ] },
             // Remap channel to match module/subworkflow

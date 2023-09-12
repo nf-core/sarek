@@ -190,7 +190,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             // joint_mutect2 mode needs different meta.map than regular mode
             cram.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai ->
                 joint_mutect2 ?
-                [ meta + [ id:meta.patient ] - meta.subMap('patient', 'tumor_id'), [ normal_cram, tumor_cram ], [ normal_crai, tumor_crai ] ] :
+                //we need to keep all fields and then remove on a per-tool-basis to ensure proper joining at the filtering step
+                [ meta + [ id:meta.patient ], [ normal_cram, tumor_cram ], [ normal_crai, tumor_crai ] ] :
                 [ meta, [ normal_cram, tumor_cram ], [ normal_crai, tumor_crai ] ]
             },
             // Remap channel to match module/subworkflow
