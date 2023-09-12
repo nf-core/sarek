@@ -890,7 +890,7 @@ vep_cache_version = '110'
 
 ### Usage recommendation with AWS iGenomes
 
-Cache for each of this annotation tools are a resource separated from AWS iGenomes, which has its own structure and a frequent update cycle, so it is not recommended to put any cache for each of this annotation tools in your local AWS iGenomes folder.
+The cache for each of these annotation tools has its own structure and is frequently updated, therefore it is kept separate from AWS iGenomes. It is not recommended to put any cache for each of this annotation tools in your local AWS iGenomes folder.
 
 A classical organisation on a shared storage area might be:
 
@@ -988,7 +988,7 @@ nextflow run nf-core/sarek -r 3.3.0 --outdir results --vep_cache /path_to/my-own
 
 ### Create containers with pre-downloaded cache
 
-nf-core is no longer maintaining containers with pre-downloaded cache.
+nf-core is no longer maintaining containers with pre-downloaded cache. Hosting the cache within the container is not recommended as it can cause a number of problems. Instead we recommned using an external cache. The following is left for legacy reasons.
 
 But for each of these tools, an helper script `build.sh` can be found at the root of the tool folder in the nf-core module repo ([snpeff](https://github.com/nf-core/modules/tree/master/modules/nf-core/snpeff) and [ensemblvep](https://github.com/nf-core/modules/tree/master/modules/nf-core/ensemblvep)), and can be adapted for your usage.
 
