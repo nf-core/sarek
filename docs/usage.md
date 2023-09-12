@@ -951,13 +951,13 @@ aws s3 --no-sign-request ls s3://annotation-cache/vep_cache/
 
 Since both Snpeff and VEP are internally figuring the path towards the specific cache version / species, `annotation-cache` is using an extra set of keys to specify the species and genome build.
 
-So if you're using this resource, please either use the `--use_annotation_cache_keys`, or point towards the specific species, genome and build matches the directory structure within the cache.
+So if you are using this resource, please either use the `--use_annotation_cache_keys`, or point towards the specific species, genome and build matches the directory structure within the cache.
 
 ### Use Sarek to download cache and annotate in one go
 
-Use the params `--download_cache`, and specify with `--tools` for which annotation tool you need to download the cache (`snpeff` and or `vep`)
+Both VEP and snpEff come with built-in download functionality to download the cache prior to use. Sarek includes these as optional processes. Use the params `--download_cache`, and specify the tool with `--tools` and Sarek will download the relevant cache (`snpeff` and/or `vep`) using their respective download functions. It is recommended to save the cache somewhere highly accessible for subsequent runs of Sarek, so the cache does not have to be re-downloaded.
 
-Sarek will automatically download the cache, use the biocontainers container for said tools, and use it to annotate any vcfs produced.
+Sarek will automatically download the cache from the AWS S3 bucket to your work directory. It will use the quay.io hosted biocontainer and subsequently perform the annotation of the VCF.
 
 ### Only download cache
 
@@ -965,10 +965,7 @@ Using the params `--build_only_index` allow for only downloading the cache for t
 
 ### Location for the cache
 
-Cache can be downloaded in the specified `--outdir_cache` location.
-Else, it will be downloaded in `cache/` in the specified `--outdir` location.
-
-To download cache on a cloud infrastructure, an absolute path is needed.
+Cache can be downloaded in the specified `--outdir_cache` location. Else, it will be downloaded in `cache/` in the specified `--outdir` location.
 
 This command could be used to download the cache for both tools in the specified `--outdir_cache` location:
 
