@@ -44,7 +44,7 @@
     - variant_calling
   files:
     - path: results/csv/variantcalled.csv
-      md5sum: f87290ce1c6ea523e08354ed6c258b0b
+      md5sum: d3c9f0559d48696c54f3c463b1606586
     - path: results/multiqc
     - path: results/no_intervals.bed
       md5sum: f3dac01ea66b95fe477446fde2d31489
@@ -91,7 +91,7 @@
     - variant_calling
   files:
     - path: results/csv/variantcalled.csv
-      md5sum: f87290ce1c6ea523e08354ed6c258b0b
+      md5sum: d3c9f0559d48696c54f3c463b1606586
     - path: results/multiqc
     - path: results/reports/bcftools/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.filtered.bcftools_stats.txt
       md5sum: 9876607145d11c6b8492264936d7a82c
