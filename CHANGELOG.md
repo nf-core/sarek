@@ -36,6 +36,7 @@ Rapaselet is a delta formed by the Rapaätno river between the Bielloriehppe mas
 - [#1200](https://github.com/nf-core/sarek/pull/1200) - Streamline Github Actions workflows
 - [#1212](https://github.com/nf-core/sarek/pull/1212) - Use matrix for AWS megatests
 - [#1218](https://github.com/nf-core/sarek/pull/1218) - Remove Singularity tests for GHA
+- [#1227](https://github.com/nf-core/sarek/pull/1227) - Update modules
 
 ### Fixed
 
@@ -63,7 +64,12 @@ Rapaselet is a delta formed by the Rapaätno river between the Bielloriehppe mas
 - [#1215](https://github.com/nf-core/sarek/pull/1215) - Fix `meta.id` for mutect2 tumor_only subworkflows
 - [#1216](https://github.com/nf-core/sarek/pull/1216) - Better test coverage for variant calling `*_all` subworkflows
 - [#1217](https://github.com/nf-core/sarek/pull/1217) - Fix `groupTuple` statement for mutect2 tumor_only subworkflows
+- [#1220](https://github.com/nf-core/sarek/pull/1220) - Fix channel and meta logic for `joint_mutect2` feature
 - [#1221](https://github.com/nf-core/sarek/pull/1221) - Remove `lane` meta field after samplesheet validation to ensure proper merging after mapping
+- [#1222](https://github.com/nf-core/sarek/pull/1222) - Better documentation for annotation cache
+- [#1224](https://github.com/nf-core/sarek/pull/1224) - Update BCFTOOLS_SORT module with `--temp-dir .` added as option, which was required for Singularity
+- [#1225](https://github.com/nf-core/sarek/pull/1225) - Better test coverage for all tests
+- [#1227](https://github.com/nf-core/sarek/pull/1227) - Lint warning fix
 
 ### Dependencies
 

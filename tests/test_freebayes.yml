@@ -140,7 +140,7 @@
     - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.count
       md5sum: 4e6935b1e1906e57be1b54c0dffe7169
     - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.qual
-      contains: ["0	0	0	-nan	322	103	3.12621", "28.5878	359	96	3.73958	41	19	2.15789", "683.33	400	115	3.47826	1.66846e-320	3.41108e-319	0.048913"]
+      contains: ["0	0	0	-nan	322	103	3.12621", "28.5878	359	96	3.73958	41	19	2.15789", "683.33	400	115	3.47826	0	0	-nan"]
     - path: results/variant_calling/freebayes/test/test.freebayes.vcf.gz
     # binary changes md5sums on reruns
     - path: results/variant_calling/freebayes/test/test.freebayes.vcf.gz.tbi

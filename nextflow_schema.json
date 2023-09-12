@@ -34,6 +34,7 @@
                 },
                 "input_restart": {
                     "type": "string",
+                    "description": "Automatic retrieval for restart",
                     "format": "file-path",
                     "exists": true,
                     "mimetype": "text/csv",
@@ -408,6 +409,22 @@
             "default": "",
             "fa_icon": "fas fa-toolbox",
             "properties": {
+                "vep_cache": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file",
+                    "default": "s3://annotation-cache/vep_cache/",
+                    "description": "Path to VEP cache.",
+                    "help_text": "Path to VEP cache which should contain the relevant species, genome and build directories at the path ${vep_species}/${vep_genome}_${vep_cache_version}",
+                    "hidden": true
+                },
+                "snpeff_cache": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file",
+                    "default": "s3://annotation-cache/snpeff_cache/",
+                    "description": "Path to snpEff cache.",
+                    "help_text": "Path to snpEff cache which should contain the relevant genome and build directory in the path ${snpeff_species}.${snpeff_version}",
+                    "hidden": true
+                },
                 "vep_include_fasta": {
                     "type": "boolean",
                     "fa_icon": "fas fa-file",
@@ -512,22 +529,6 @@
                     "type": "boolean",
                     "fa_icon": "fas fa-toolbox",
                     "description": "Use annotation cache keys for snpeff_cache and vep_cache.",
-                    "hidden": true
-                },
-                "snpeff_cache": {
-                    "type": "string",
-                    "fa_icon": "fas fa-file",
-                    "default": "s3://annotation-cache/snpeff_cache/",
-                    "description": "Path to snpEff cache.",
-                    "help_text": "To be used with `--annotation_cache`.",
-                    "hidden": true
-                },
-                "vep_cache": {
-                    "type": "string",
-                    "fa_icon": "fas fa-file",
-                    "default": "s3://annotation-cache/vep_cache/",
-                    "description": "Path to VEP cache.",
-                    "help_text": "To be used with `--annotation_cache`.",
                     "hidden": true
                 },
                 "outdir_cache": {
