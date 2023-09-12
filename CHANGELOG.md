@@ -74,7 +74,6 @@ Rapaselet is a delta formed by the Rapaätno river between the Bielloriehppe mas
 | `grep`        | 3.4                       | 3.11                     |
 | `multiqc`     | 1.14                      | 1.15                     |
 | `tiddit`      | 3.3.2                     | 3.6.1                    |
->>>>>>> 871acbc8a011c7af1172126a15fa6bd0bae0dd58
 
 ## [3.2.3](https://github.com/nf-core/sarek/releases/tag/3.2.3) - Gällivare
 
