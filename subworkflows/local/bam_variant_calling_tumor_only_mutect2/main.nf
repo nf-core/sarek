@@ -120,7 +120,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     GATHERPILEUPSUMMARIES(pileup_table_to_merge, dict.map{ meta, dict -> [ dict ] })
 
     // Mix intervals and no_intervals channels together
-    pileup_table = Channel.empty().mix(GATHERPILEUPSUMMARIES.out.table, pileup_table_branch.no_intervals).map{meta, table -> [ meta - meta.subMap('sample', 'num_intervals') + [id:meta.sample], table ] }
+    pileup_table = Channel.empty().mix(GATHERPILEUPSUMMARIES.out.table, pileup_table_branch.no_intervals).map{meta, table -> [ meta - meta.subMap('num_intervals') + [id:meta.sample], table ] }
 
     // Contamination and segmentation tables created using calculatecontamination on the pileup summary table
     CALCULATECONTAMINATION(pileup_table.map{ meta, table -> [ meta, table, [] ] })
