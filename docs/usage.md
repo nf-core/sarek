@@ -930,7 +930,8 @@ nextflow run nf-core/sarek \
 
 These params can be specified in a config file or in a profile using the params scope, or even in a json or a yaml file using the `-params-file` nextflow option.
 
-Note: we only recommend to store annotation data on S3 if you only store a specific version of the cache for a species, and not the whole cache.
+Note: we recommend storing each annotation cache in a separate directory so each cache version is handled differently.
+This may mean you have many similar directories but will dramatically reduce the storage burden on machines running the VEP or snpEff process.
 
 ### Use annotation-cache for SnpEff and VEP
 
