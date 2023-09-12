@@ -957,9 +957,13 @@ So if you are using this resource, please either use the `--use_annotation_cache
 
 ### Use Sarek to download cache and annotate in one go
 
-Both VEP and snpEff come with built-in download functionality to download the cache prior to use. Sarek includes these as optional processes. Use the params `--download_cache`, and specify the tool with `--tools` and Sarek will download the relevant cache (`snpeff` and/or `vep`) using their respective download functions. It is recommended to save the cache somewhere highly accessible for subsequent runs of Sarek, so the cache does not have to be re-downloaded.
+Both VEP and snpEff come with built-in download functionality to download the cache prior to use.
+Sarek includes these as optional processes.
+Use the params `--download_cache`, and specify the tool with `--tools` and Sarek will download the relevant cache (`snpeff` and/or `vep`) using their respective download functions.
+It is recommended to save the cache somewhere highly accessible for subsequent runs of Sarek, so the cache does not have to be re-downloaded.
 
-Sarek will automatically download the cache from the AWS S3 bucket to your work directory. It will use the quay.io hosted biocontainer and subsequently perform the annotation of the VCF.
+Sarek will automatically download the cache using each tools (SnpEff and/or VEP) to your work directory.
+And subsequently perform the annotation of VCF files specified as an input in a samplesheet or produced by Sarek.
 
 ### Only download cache
 
@@ -967,7 +971,8 @@ Using the params `--build_only_index` allow for only downloading the cache for t
 
 ### Location for the cache
 
-Cache can be downloaded in the specified `--outdir_cache` location. Else, it will be downloaded in `cache/` in the specified `--outdir` location.
+Cache can be downloaded in the specified `--outdir_cache` location.
+Else, it will be downloaded in `cache/` in the specified `--outdir` location.
 
 This command could be used to download the cache for both tools in the specified `--outdir_cache` location:
 
