@@ -30,6 +30,7 @@ process BCFTOOLS_SORT {
     bcftools \\
         sort \\
         --output ${prefix}.${extension} \\
+        --temp-dir . \\
         $args \\
         $vcf
 
