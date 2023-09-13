@@ -22,7 +22,7 @@
                     },
                     "bcftools/sort": {
                         "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "git_sha": "d6d112a1af2ee8c97fc1932df008183341e7d8fe",
                         "installed_by": ["modules"]
                     },
                     "bcftools/stats": {
@@ -32,7 +32,7 @@
                     },
                     "bwa/index": {
                         "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "git_sha": "bfed129da5134b4439b1821c917972570d44d39c",
                         "installed_by": ["modules"]
                     },
                     "bwa/mem": {
@@ -42,7 +42,7 @@
                     },
                     "bwamem2/index": {
                         "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "git_sha": "bfed129da5134b4439b1821c917972570d44d39c",
                         "installed_by": ["modules"]
                     },
                     "bwamem2/mem": {
@@ -102,7 +102,7 @@
                     },
                     "custom/dumpsoftwareversions": {
                         "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "git_sha": "05c280924b6c768d484c7c443dad5e605c4ff4b4",
                         "installed_by": ["modules"]
                     },
                     "deepvariant": {

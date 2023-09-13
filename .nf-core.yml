@@ -2,6 +2,7 @@ repository_type: pipeline
 lint:
   actions_ci: False
   files_exist:
+    - .github/workflows/awsfulltest.yml
     - conf/modules.config
   files_unchanged:
     - assets/nf-core-sarek_logo_light.png

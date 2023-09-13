@@ -166,7 +166,7 @@
 
 - [Docker](https://dl.acm.org/doi/10.5555/2600239.2600241)
 
-  > Merkel, D. (2014). Docker: lightweight linux containers for consistent development and deployment. Linux Journal, 2014(239), 2. doi: 10.5555/2600239.2600241.
+  > Merkel, D. 2014. Docker: lightweight linux containers for consistent development and deployment. Linux Journal, 2014(239), 2. doi: 10.5555/2600239.2600241.
 
 - [Singularity](https://pubmed.ncbi.nlm.nih.gov/28494014/)
 

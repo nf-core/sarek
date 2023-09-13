@@ -35,6 +35,8 @@ Rapaselet is a delta formed by the Rapaätno river between the Bielloriehppe mas
 - [#1198](https://github.com/nf-core/sarek/pull/1198) - Prepare release `3.3.0`
 - [#1200](https://github.com/nf-core/sarek/pull/1200) - Streamline Github Actions workflows
 - [#1212](https://github.com/nf-core/sarek/pull/1212) - Use matrix for AWS megatests
+- [#1218](https://github.com/nf-core/sarek/pull/1218) - Remove Singularity tests for GHA
+- [#1227](https://github.com/nf-core/sarek/pull/1227) - Update modules
 
 ### Fixed
 
@@ -58,6 +60,18 @@ Rapaselet is a delta formed by the Rapaätno river between the Bielloriehppe mas
 - [#1203](https://github.com/nf-core/sarek/pull/1203) - Fix issue with Singularity containers on test profiles
 - [#1204](https://github.com/nf-core/sarek/pull/1204) - Fix issue with nf-validation: lane can be a requirement of bam too now
 - [#1205](https://github.com/nf-core/sarek/pull/1205) - Less tests triggered
+- [#1214](https://github.com/nf-core/sarek/pull/1214) - Don't pass in intervals file to ControlFREEC for WGS analysis
+- [#1215](https://github.com/nf-core/sarek/pull/1215) - Fix `meta.id` for mutect2 tumor_only subworkflows
+- [#1216](https://github.com/nf-core/sarek/pull/1216) - Better test coverage for variant calling `*_all` subworkflows
+- [#1217](https://github.com/nf-core/sarek/pull/1217) - Fix `groupTuple` statement for mutect2 tumor_only subworkflows
+- [#1220](https://github.com/nf-core/sarek/pull/1220) - Fix channel and meta logic for `joint_mutect2` feature
+- [#1221](https://github.com/nf-core/sarek/pull/1221) - Remove `lane` meta field after samplesheet validation to ensure proper merging after mapping
+- [#1222](https://github.com/nf-core/sarek/pull/1222) - Better documentation for annotation cache
+- [#1224](https://github.com/nf-core/sarek/pull/1224) - Update BCFTOOLS_SORT module with `--temp-dir .` added as option, which was required for Singularity
+- [#1225](https://github.com/nf-core/sarek/pull/1225) - Better test coverage for all tests
+- [#1227](https://github.com/nf-core/sarek/pull/1227) - Lint warning fix
+- [#1229](https://github.com/nf-core/sarek/pull/1229) - Fix md5sum for gatk4_spark tests
+- [#1230](https://github.com/nf-core/sarek/pull/1230) - Fix md5sum for sentieon aligner tests
 
 ### Dependencies
 

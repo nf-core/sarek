@@ -825,8 +825,8 @@ For GATK.GRCh38 the links for each reference file and the corresponding processe
 | dbsnp                 | Baserecalibrator, ControlFREEC, GenotypeGVCF, HaplotypeCaller                                                                                                                                                                                                                                                                                                                                                                                        | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) | https://gatk.broadinstitute.org/hc/en-us/articles/360035890811-Resource-bundle       |
 | dbsnp_tbi             | Baserecalibrator, ControlFREEC, GenotypeGVCF, HaplotypeCaller                                                                                                                                                                                                                                                                                                                                                                                        | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) |                                                                                      |
 | dict                  | Baserecalibrator(Spark), CNNScoreVariant, EstimateLibraryComplexity, FilterMutectCalls, FilterVariantTranches, GatherPileupSummaries,GenotypeGVCF, GetPileupSummaries, HaplotypeCaller, MarkDulpicates(Spark), MergeVCFs, Mutect2, Variantrecalibrator                                                                                                                                                                                               | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) | https://gatk.broadinstitute.org/hc/en-us/articles/360035890811-Resource-bundle       |
-| fasta                 | ApplyBQSR(Spark), ApplyVQSR, ASCAT, Baserecalibrator(Spark), BWA, BWAMem2, CNNScoreVariant, CNVKit, ControlFREEC, DragMap, DEEPVariant, EnsemblVEP, EstimateLibraryComplexity, FilterMutectCalls, FilterVariantTranches, FreeBayes, GatherPileupSummaries,GenotypeGVCF, GetPileupSummaries, HaplotypeCaller, interval building, Manta, MarkDuplicates(Spark),MergeVCFs,MSISensorPro, Mutect2, Samtools, snpEff, Strelka, Tiddit, Variantrecalibrator | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) | https://gatk.broadinstitute.org/hc/en-us/articles/360035890811-Resource-bundle       |
-| fasta_fai             | ApplyBQSR(Spark), ApplyVQSR, ASCAT, Baserecalibrator(Spark), BWA, BWAMem2, CNNScoreVariant, CNVKit, ControlFREEC, DragMap, DEEPVariant, EnsemblVEP, EstimateLibraryComplexity, FilterMutectCalls, FilterVariantTranches, FreeBayes, GatherPileupSummaries,GenotypeGVCF, GetPileupSummaries, HaplotypeCaller, interval building, Manta, MarkDuplicates(Spark),MergeVCFs,MSISensorPro, Mutect2, Samtools, snpEff, Strelka, Tiddit, Variantrecalibrator | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) | https://gatk.broadinstitute.org/hc/en-us/articles/360035890811-Resource-bundle       |
+| fasta                 | ApplyBQSR(Spark), ApplyVQSR, ASCAT, Baserecalibrator(Spark), BWA, BWAMem2, CNNScoreVariant, CNVKit, ControlFREEC, DragMap, DEEPVariant, EnsemblVEP, EstimateLibraryComplexity, FilterMutectCalls, FilterVariantTranches, FreeBayes, GatherPileupSummaries,GenotypeGVCF, GetPileupSummaries, HaplotypeCaller, interval building, Manta, MarkDuplicates(Spark),MergeVCFs,MSISensorPro, Mutect2, Samtools, SnpEff, Strelka, Tiddit, Variantrecalibrator | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) | https://gatk.broadinstitute.org/hc/en-us/articles/360035890811-Resource-bundle       |
+| fasta_fai             | ApplyBQSR(Spark), ApplyVQSR, ASCAT, Baserecalibrator(Spark), BWA, BWAMem2, CNNScoreVariant, CNVKit, ControlFREEC, DragMap, DEEPVariant, EnsemblVEP, EstimateLibraryComplexity, FilterMutectCalls, FilterVariantTranches, FreeBayes, GatherPileupSummaries,GenotypeGVCF, GetPileupSummaries, HaplotypeCaller, interval building, Manta, MarkDuplicates(Spark),MergeVCFs,MSISensorPro, Mutect2, Samtools, SnpEff, Strelka, Tiddit, Variantrecalibrator | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) | https://gatk.broadinstitute.org/hc/en-us/articles/360035890811-Resource-bundle       |
 | germline_resource     | GetPileupsummaries,Mutect2                                                                                                                                                                                                                                                                                                                                                                                                                           | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) |                                                                                      |
 | germline_resource_tbi | GetPileupsummaries,Mutect2                                                                                                                                                                                                                                                                                                                                                                                                                           | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) |                                                                                      |
 | intervals             | ApplyBQSR(Spark), ASCAT, Baserecalibrator(Spark), BCFTools, CNNScoreVariants, ControlFREEC, Deepvariant, FilterVariantTranches, FreeBayes, GenotypeGVCF, GetPileupSummaries, HaplotypeCaller, Strelka, mpileup, MSISensorPro, Mutect2, VCFTools                                                                                                                                                                                                      | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) |                                                                                      |
@@ -838,52 +838,34 @@ For GATK.GRCh38 the links for each reference file and the corresponding processe
 | pon                   | Mutect2                                                                                                                                                                                                                                                                                                                                                                                                                                              | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) | https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON- |
 | pon_tbi               | Mutect2                                                                                                                                                                                                                                                                                                                                                                                                                                              | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) | https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON- |
 
-## How to customise snpeff and vep annotation
+## How to customise SnpEff and VEP annotation
 
-### Using the nf-core containers with pre-downloaded cache
+SNPeff and VEP require a large resource of files known as a cache.
+These are folders composed of multiple gigabytes of files which need to be available for the software to properly function.
+To use these, supply the parameters `--vep_cache` and/or `--snpeff_cache` with the locations to the root of the annotation cache folder for each tool.
 
-For common genomes, it is already configured within the [igenomes.config](https://github.com/nf-core/sarek/blob/master/conf/igenomes.config) file, so nothing to be done there.
+### Specify the cache location
 
-Note: These containers are only created for some species and some cache/tools versions combinations (cf DockerHub tags for these containers [`nfcore/snpeff`](https://hub.docker.com/r/nfcore/snpeff/tags) and [`nfcore/vep`](https://hub.docker.com/r/nfcore/vep/tags).
+Params `--snpeff_cache` and `--vep_cache` are used to specify the locations to the root of the annotation cache folder.
+The cache will be located within a subfolder with the path `${vep_species}/${vep_genome}_${vep_cache_version}` for VEP and `${snpeff_species}.${snpeff_version}` for SnpEff.
+If this directory is missing, Sarek will raise an error.
 
-These containers can be quite huge especially for human, it is recommended to use annotation cache on a path if possible
+For example this is a typical folder structure for GRCh38 and WBCel235, with SNPeff cache version 105 and VEP cache version 110:
 
-### Create containers with pre-downloaded cache
-
-For each tool, an helper script `build.sh` can be found at the root of the tool folder in the nf-core module repo ([snpeff](https://github.com/nf-core/modules/tree/master/modules/nf-core/snpeff) and [ensemblvep](https://github.com/nf-core/modules/tree/master/modules/nf-core/ensemblvep)), and can be adapted for your usage.
-
-### Use Sarek to download cache and annotate in one go
-
-Use the params `--download_cache`, and specify with `--tools` for which annotation tool you need to download the cache (`snpeff` and or `vep`)
-
-Sarek will automatically download the cache, use the biocontainers container for said tools, and use it to annotate any vcfs produced.
-
-### Only download cache
-
-Using the params `--build_only_index` allow for only downloading the cache for the specified tools.
-
-### Location for the cache
-
-Cache can be downloaded in the specified `--outdir_cache` location.
-Else, it will be downloaded in `cache/` in the specified `--outdir` location.
-
-To download cache on a cloud infrastructure, an absolute path is needed.
-
-Params `--snpeff_cache` and `--vep_cache` are to used to specify the locations to the root of the annotation cache folder.
-
-For example this is what can be seen when cache has been downloaded for `GATK.GRCh38` and `WBcell235` for both tools using the default values in the [igenomes.config](https://github.com/nf-core/sarek/blob/master/conf/igenomes.config) file:
-
-```bash
-ls /data/snpeff_cache /data/vep_cache/*
-/data/snpeff_cache:
-GRCh38.105
-WBcel235.105
-
-/data/vep_cache/caenorhabditis_elegans:
-106_WBcel235
-/data/vep_cache/homo_sapiens:
-106_GRCh38
+```text
+/data/
+├─ snpeff_cache/
+│  ├─ GRCh38.105/
+│  ├─ WBcel235.105/
+├─ vep_cache/
+│  ├─ caenorhabditis_elegans/
+│  │  ├─ 110_WBCel235/
+│  ├─ homo_sapiens/
+│  │  ├─ 110_GRCh38/
 ```
+
+For this example, the parameters `--snpeff_cache /data/snpeff_cache` and `--vep_cache /data/vep_cache` would be used.
+Both SnpEff and VEP will figure out internally the path towards the specific cache version / species the annotation should be performed given the parameters specified to Sarek.
 
 ### Change cache version and species
 
@@ -903,51 +885,115 @@ snpeff_db         = '105'
 snpeff_genome     = 'GRCh38'
 vep_genome        = 'GRCh38'
 vep_species       = 'homo_sapiens'
-vep_cache_version = '106'
+vep_cache_version = '110'
 ```
 
 ### Usage recommendation with AWS iGenomes
 
-Annotation cache is a resource separated from AWS iGenomes, which as its own structure and a frequent update cycle.
-So it is not recommended to put any annotation cache in your local AWS iGenomes folder.
+The cache for each of these annotation tools has its own structure and is frequently updated, therefore it is kept separate from AWS iGenomes. It is not recommended to put any cache for each of this annotation tools in your local AWS iGenomes folder.
 
-A classical organisation could be:
+A classical organisation on a shared storage area might be:
 
 ```bash
 /data/igenomes/
-/data/cache/ensemblvep
-/data/cache/snpeff
+/data/cache/snpeff_cache
+/data/cache/vep_cache
 ```
 
-which can then be used this way in sarek:
+Which can then be used this way in Sarek:
 
 ```bash
-nextflow run nf-core/sarek \\
-    --igenomes_base /data/igenomes/ \\
-    --snpeff_cache /data/cache/snpeff/ \\
-    --vep_cache /data/cache/ensemblvep/ \\
+nextflow run nf-core/sarek \
+    --igenomes_base /data/igenomes/ \
+    --snpeff_cache /data/cache/snpeff_cache/ \
+    --vep_cache /data/cache/vep_cache/ \
     ...
 ```
 
-Or similarly on the cloud:
+Alternatively the data may be stored on AWS S3 storage, therefore the parameters might be:
 
 ```bash
-s3://data/igenomes/
-s3://data/cache/ensemblvep
-s3://data/cache/snpeff
+s3://my-reference-data/igenomes/
+s3://my-reference-data/cache/snpeff_cache/
+s3://my-reference-data/cache/vep_cache/
 ```
 
-which can then be used this way in sarek:
+Which can then be used this way in Sarek:
 
 ```bash
-nextflow run nf-core/sarek \\
-    --igenomes_base s3://data/igenomes/ \\
-    --snpeff_cache s3://data/cache/snpeff/ \\
-    --vep_cache s3://data/cache/ensemblvep/ \\
+nextflow run nf-core/sarek \
+    --igenomes_base s3://my-reference-data/igenomes/ \
+    --snpeff_cache s3://my-reference-data/cache/ensemblvep/ \
+    --vep_cache s3://my-reference-data/cache/snpeff/ \
     ...
 ```
 
 These params can be specified in a config file or in a profile using the params scope, or even in a json or a yaml file using the `-params-file` nextflow option.
+
+Note: we recommend storing each annotation cache in a separate directory so each cache version is handled differently.
+This may mean you have many similar directories but will dramatically reduce the storage burden on machines running the VEP or snpEff process.
+
+### Use annotation-cache for SnpEff and VEP
+
+[Annotation-cache](https://github.com/annotation-cache) is an open AWS registry resource that stores a mirror of some cache files on AWS S3 which can be used with Sarek.
+It contains some genome builds which can be found by checking the contents of the S3 bucket.
+
+SNPeff and VEP cache are stored at the following location on S3:
+
+```bash
+snpeff_cache = s3://annotation-cache/snpeff_cache/
+vep_cache = s3://annotation-cache/vep_cache/
+```
+
+The contents of said cache can be listed with the following command using the S3 CLI:
+
+```bash
+aws s3 --no-sign-request ls s3://annotation-cache/snpeff_cache
+aws s3 --no-sign-request ls s3://annotation-cache/vep_cache/
+```
+
+Since both Snpeff and VEP are internally figuring the path towards the specific cache version / species, `annotation-cache` is using an extra set of keys to specify the species and genome build.
+
+So if you are using this resource, please either use the `--use_annotation_cache_keys`, or point towards the specific species, genome and build matches the directory structure within the cache.
+
+### Use Sarek to download cache and annotate in one go
+
+Both VEP and snpEff come with built-in download functionality to download the cache prior to use.
+Sarek includes these as optional processes.
+Use the params `--download_cache`, and specify the tool with `--tools` and Sarek will download the relevant cache (`snpeff` and/or `vep`) using their respective download functions.
+It is recommended to save the cache somewhere highly accessible for subsequent runs of Sarek, so the cache does not have to be re-downloaded.
+
+Sarek will automatically download the cache using each tools (SnpEff and/or VEP) to your work directory.
+And subsequently perform the annotation of VCF files specified as an input in a samplesheet or produced by Sarek.
+
+### Only download cache
+
+Using the params `--build_only_index` allow for only downloading the cache for the specified tools.
+
+### Location for the cache
+
+Cache can be downloaded in the specified `--outdir_cache` location.
+Else, it will be downloaded in `cache/` in the specified `--outdir` location.
+
+This command could be used to download the cache for both tools in the specified `--outdir_cache` location:
+
+```bash
+nextflow run nf-core/sarek -r 3.3.0 --outdir results --outdir_cache /path_to/my-own-cache --tools vep,snpeff --download_cache --build_only_index --input false
+```
+
+This command could be used to point to the recently downloaded cache and run SnpEff and VEP:
+
+```bash
+nextflow run nf-core/sarek -r 3.3.0 --outdir results --vep_cache /path_to/my-own-cache/vep_cache --snpeff_cache /path_to/my-own-cache/snpeff_cache --tools vep,snpeff --input samplesheet_vcf.csv
+```
+
+### Create containers with pre-downloaded cache
+
+nf-core is no longer maintaining containers with pre-downloaded cache. Hosting the cache within the container is not recommended as it can cause a number of problems. Instead we recommned using an external cache. The following is left for legacy reasons.
+
+But for each of these tools, an helper script `build.sh` can be found at the root of the tool folder in the nf-core module repo ([snpeff](https://github.com/nf-core/modules/tree/master/modules/nf-core/snpeff) and [ensemblvep](https://github.com/nf-core/modules/tree/master/modules/nf-core/ensemblvep)), and can be adapted for your usage.
+
+Overwritting the container declaration is then possible to accomodate for the new container.
 
 ### Using VEP plugins
 

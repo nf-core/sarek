@@ -41,12 +41,15 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     if (joint_mutect2) {
         // Perform variant calling using mutect2 module in tumor single mode
         // Group cram files by patient
-        patient_crams = input.groupTuple()
+        input_joint = input
+            .map{ meta, input, index -> [ meta - meta.subMap('sample') + [ id:meta.patient ], input, index ] }
+            .groupTuple()
+
         // Add intervals for scatter-gather scaling
-        patient_cram_intervals = patient_crams.combine(intervals)
+        input_joint_intervals = input_joint.combine(intervals)
         // Move num_intervals to meta map and reorganize channel for MUTECT2 module
-            .map{ meta, t_cram, t_crai, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], t_cram, t_crai, intervals ] }
-        MUTECT2(patient_cram_intervals, fasta, fai, dict, germline_resource, germline_resource_tbi, panel_of_normals, panel_of_normals_tbi)
+            .map{ meta, cram, crai, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram, crai, intervals ] }
+        MUTECT2(input_joint_intervals, fasta, fai, dict, germline_resource, germline_resource_tbi, panel_of_normals, panel_of_normals_tbi)
     }
     else {
         // Perform variant calling using mutect2 module in tumor single mode
@@ -99,8 +102,10 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     // Generate artifactpriors using learnreadorientationmodel on the f1r2 output of mutect2
     LEARNREADORIENTATIONMODEL(f1r2)
 
+    pileup_input = input_intervals.map{ meta, cram, crai, intervals -> [ meta + [ id:meta.sample ], cram, crai, intervals] }.unique()
+
     // Generate pileup summary table using getepileupsummaries
-    GETPILEUPSUMMARIES(input_intervals, fasta, fai, dict, germline_resource_pileup, germline_resource_pileup_tbi)
+    GETPILEUPSUMMARIES(pileup_input, fasta, fai, dict, germline_resource_pileup, germline_resource_pileup_tbi)
 
     // Figuring out if there is one or more table(s) from the same sample
     pileup_table_branch = GETPILEUPSUMMARIES.out.table.branch{
@@ -115,7 +120,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
     GATHERPILEUPSUMMARIES(pileup_table_to_merge, dict.map{ meta, dict -> [ dict ] })
 
     // Mix intervals and no_intervals channels together
-    pileup_table = Channel.empty().mix(GATHERPILEUPSUMMARIES.out.table, pileup_table_branch.no_intervals)
+    pileup_table = Channel.empty().mix(GATHERPILEUPSUMMARIES.out.table, pileup_table_branch.no_intervals).map{meta, table -> [ meta - meta.subMap('num_intervals') + [id:meta.sample], table ] }
 
     // Contamination and segmentation tables created using calculatecontamination on the pileup summary table
     CALCULATECONTAMINATION(pileup_table.map{ meta, table -> [ meta, table, [] ] })
@@ -126,8 +131,8 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2 {
 
     if (joint_mutect2) {
         // Group tables by samples
-        calculatecontamination_out_seg = CALCULATECONTAMINATION.out.segmentation.map{ meta, seg -> [ meta - meta.subMap('num_intervals'), seg ] }.groupTuple()
-        calculatecontamination_out_cont = CALCULATECONTAMINATION.out.contamination.map{ meta, cont -> [ meta - meta.subMap('num_intervals'), cont ] }.groupTuple()
+        calculatecontamination_out_seg = CALCULATECONTAMINATION.out.segmentation.map{ meta, seg -> [ meta - meta.subMap('sample', 'num_intervals') + [id:meta.patient], seg ] }.groupTuple()
+        calculatecontamination_out_cont = CALCULATECONTAMINATION.out.contamination.map{ meta, cont -> [ meta - meta.subMap('sample', 'num_intervals') + [id:meta.patient], cont ] }.groupTuple()
     } else {
         // Regular single sample mode
         calculatecontamination_out_seg = CALCULATECONTAMINATION.out.segmentation.map{ meta, seg -> [ meta - meta.subMap('num_intervals'), seg ] }

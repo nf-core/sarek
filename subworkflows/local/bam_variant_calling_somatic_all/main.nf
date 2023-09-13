@@ -41,6 +41,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     gc_file                       // channel: [optional]  ascat gc content file
     rt_file                       // channel: [optional]  ascat rt file
     joint_mutect2                 // boolean: [mandatory] [default: false] run mutect2 in joint mode
+    wes                           // boolean: [mandatory] [default: false] whether targeted data is processed
 
     main:
     versions          = Channel.empty()
@@ -94,6 +95,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
         length_file = cf_chrom_len ?: fasta_fai
 
+        intervals_controlfreec = wes ? intervals_bed_combined : []
+
         BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC(
             mpileup_pair,
             fasta,
@@ -102,7 +105,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             dbsnp_tbi,
             chr_files,
             mappability,
-            intervals_bed_combined
+            intervals_controlfreec
         )
 
         versions = versions.mix(MPILEUP_NORMAL.out.versions)
@@ -187,7 +190,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             // joint_mutect2 mode needs different meta.map than regular mode
             cram.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai ->
                 joint_mutect2 ?
-                [ meta + [ id:meta.patient ] - meta.subMap('patient', 'tumor_id'), [ normal_cram, tumor_cram ], [ normal_crai, tumor_crai ] ] :
+                //we need to keep all fields and then remove on a per-tool-basis to ensure proper joining at the filtering step
+                [ meta + [ id:meta.patient ], [ normal_cram, tumor_cram ], [ normal_crai, tumor_crai ] ] :
                 [ meta, [ normal_cram, tumor_cram ], [ normal_crai, tumor_crai ] ]
             },
             // Remap channel to match module/subworkflow
