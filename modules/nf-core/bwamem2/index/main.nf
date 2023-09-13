@@ -18,13 +18,14 @@ process BWAMEM2_INDEX {
     task.ext.when == null || task.ext.when
 
     script:
+    def prefix = task.ext.prefix ?: "${fasta}"
     def args = task.ext.args ?: ''
     """
     mkdir bwamem2
     bwa-mem2 \\
         index \\
         $args \\
-        $fasta -p bwamem2/${fasta}
+        $fasta -p bwamem2/${prefix}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -33,13 +34,15 @@ process BWAMEM2_INDEX {
     """
 
     stub:
+    def prefix = task.ext.prefix ?: "${fasta}"
+
     """
     mkdir bwamem2
-    touch bwamem2/${fasta}.0123
-    touch bwamem2/${fasta}.ann
-    touch bwamem2/${fasta}.pac
-    touch bwamem2/${fasta}.amb
-    touch bwamem2/${fasta}.bwt.2bit.64
+    touch bwamem2/${prefix}.0123
+    touch bwamem2/${prefix}.ann
+    touch bwamem2/${prefix}.pac
+    touch bwamem2/${prefix}.amb
+    touch bwamem2/${prefix}.bwt.2bit.64
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

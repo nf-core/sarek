@@ -53,16 +53,16 @@
     - path: results/no_intervals.bed.gz.tbi
       md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/reports/bcftools/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.filtered.bcftools_stats.txt
-      md5sum: d83942d74fbbf1c3770b3c04bf622c63
+      md5sum: 9876607145d11c6b8492264936d7a82c
     - path: results/reports/vcftools/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.filtered.FILTER.summary
       md5sum: b25d4d2a64f9590d0ffb119fd3adb06e
     - path: results/reports/vcftools/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.filtered.TsTv.count
       md5sum: 3739f24da2d2019cc4bc2821e30658eb
     - path: results/reports/vcftools/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.filtered.TsTv.qual
       md5sum: 05c0cbb017d9232bc728d48f9d0c7afd
-    - path: results/variant_calling/mutect2/sample4_vs_sample3/sample3.mutect2.pileups.table
+    - path: results/variant_calling/mutect2/sample3/sample3.mutect2.pileups.table
       md5sum: 8e0ca6f66e112bd2f7ec1d31a2d62469
-    - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4.mutect2.pileups.table
+    - path: results/variant_calling/mutect2/sample4/sample4.mutect2.pileups.table
       md5sum: fe35b6bc041f2df8bd1f23420af3ddf9
     - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.artifactprior.tar.gz
     # binary changes md5sums on reruns
@@ -94,16 +94,16 @@
       md5sum: d3c9f0559d48696c54f3c463b1606586
     - path: results/multiqc
     - path: results/reports/bcftools/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.filtered.bcftools_stats.txt
-      md5sum: d83942d74fbbf1c3770b3c04bf622c63
+      md5sum: 9876607145d11c6b8492264936d7a82c
     - path: results/reports/vcftools/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.filtered.FILTER.summary
       md5sum: b25d4d2a64f9590d0ffb119fd3adb06e
     - path: results/reports/vcftools/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.filtered.TsTv.count
       md5sum: 3739f24da2d2019cc4bc2821e30658eb
     - path: results/reports/vcftools/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.filtered.TsTv.qual
       md5sum: 05c0cbb017d9232bc728d48f9d0c7afd
-    - path: results/variant_calling/mutect2/sample4_vs_sample3/sample3.mutect2.pileups.table
+    - path: results/variant_calling/mutect2/sample3/sample3.mutect2.pileups.table
       md5sum: 16077fdb885a8afe64c7669477471354
-    - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4.mutect2.pileups.table
+    - path: results/variant_calling/mutect2/sample4/sample4.mutect2.pileups.table
       md5sum: 9afe42339f590937166edcf4746c22ec
     - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.artifactprior.tar.gz
     # binary changes md5sums on reruns
@@ -123,3 +123,119 @@
       md5sum: c09dff3f145d77d4848992e244811c08
     - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.vcf.gz.tbi
     # binary changes md5sums on reruns
+- name: Run joint calling on tumor only samples with mutect2
+  command: nextflow run main.nf -profile test_cache,tools_tumoronly --input tests/csv/3.0/recalibrated_tumoronly_joint.csv --tools mutect2 --joint_mutect2 --outdir results
+  tags:
+    - mutect2_manual
+    - manual
+    - tumor_only
+    - variant_calling
+    - multi_sample
+    - joint_tumoronly
+  files:
+    - path: results/csv/variantcalled.csv
+      md5sum: f87290ce1c6ea523e08354ed6c258b0b
+    - path: results/multiqc
+    - path: results/reports/bcftools/mutect2/test/test.mutect2.filtered.bcftools_stats.txt
+      md5sum: a0cdc26fb7d8c446dd0283fed71a24d5
+    - path: results/reports/vcftools/mutect2/test/test.mutect2.filtered.FILTER.summary
+      md5sum: e1e42b6f65cbdba116cff72a56e40c4b
+    - path: results/reports/vcftools/mutect2/test/test.mutect2.filtered.TsTv.count
+      md5sum: c00e1639a41deb107099487676a6cf37
+    - path: results/reports/vcftools/mutect2/test/test.mutect2.filtered.TsTv.qual
+      md5sum: a21016aa99e5cbf32eeae1b405ca6d8d
+    - path: results/variant_calling/mutect2/test/sample2.mutect2.contamination.table
+      md5sum: 46c708c943b453da89a3da08acfdb2a7
+    - path: results/variant_calling/mutect2/sample2/sample2.mutect2.pileups.table
+      md5sum: 9afe42339f590937166edcf4746c22ec
+    - path: results/variant_calling/mutect2/test/sample2.mutect2.segmentation.table
+      md5sum: f4643d9319bde4efbfbe516d6fb13052
+    - path: results/variant_calling/mutect2/test/sample3.mutect2.contamination.table
+      md5sum: 11440fe64b5b953d7efb9cf47e330364
+    - path: results/variant_calling/mutect2/sample3/sample3.mutect2.pileups.table
+      md5sum: fd0c1f7819717b7f94e52f6611f4b2e0
+    - path: results/variant_calling/mutect2/test/sample3.mutect2.segmentation.table
+      md5sum: 38f83e2f98b206640644dd93d5e96f4e
+    - path: results/variant_calling/mutect2/test/test.mutect2.artifactprior.tar.gz
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/mutect2/test/test.mutect2.filtered.vcf.gz
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/mutect2/test/test.mutect2.filtered.vcf.gz.filteringStats.tsv
+      md5sum: f237666ae325fde0c06b8bc62d2846fc
+    - path: results/variant_calling/mutect2/test/test.mutect2.filtered.vcf.gz.tbi
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/mutect2/test/test.mutect2.vcf.gz
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/mutect2/test/test.mutect2.vcf.gz.stats
+      md5sum: 22e58aef3b14b335fa487d40b590ffeb
+    - path: results/variant_calling/mutect2/test/test.mutect2.vcf.gz.tbi
+    # binary changes md5sums on reruns
+- name: Run joint calling on somatic samples with mutect2
+  command: nextflow run main.nf -profile test_cache,tools_somatic --input tests/csv/3.0/recalibrated_somatic_joint.csv --tools mutect2 --joint_mutect2 --outdir results
+  tags:
+    - mutect2_manual
+    - somatic
+    - variant_calling
+    - multi_sample
+    - joint_somatic
+  files:
+    - path: results/csv/variantcalled.csv
+      md5sum: f87290ce1c6ea523e08354ed6c258b0b
+    - path: results/multiqc
+    - path: results/reports/bcftools/mutect2/test/test.mutect2.filtered.bcftools_stats.txt
+      md5sum: d75da410d57960944f54d02b2b5cdcac
+    - path: results/reports/vcftools/mutect2/test/test.mutect2.filtered.FILTER.summary
+      md5sum: e0eb3e34fc15f3b452bfc43f032cc8be
+    - path: results/reports/vcftools/mutect2/test/test.mutect2.filtered.TsTv.count
+      md5sum: aa51bde6080c015c6aa6c8254977dd11
+    - path: results/reports/vcftools/mutect2/test/test.mutect2.filtered.TsTv.qual
+      md5sum: 262f843f68d072c457ca28b56da3ede8
+    - path: results/variant_calling/mutect2/sample1/sample1.mutect2.pileups.table
+      md5sum: 16077fdb885a8afe64c7669477471354
+    - path: results/variant_calling/mutect2/sample2/sample2.mutect2.pileups.table
+      md5sum: 9afe42339f590937166edcf4746c22ec
+    - path: results/variant_calling/mutect2/sample3/sample3.mutect2.pileups.table
+      md5sum: fd0c1f7819717b7f94e52f6611f4b2e0
+    - path: results/variant_calling/mutect2/test/sample2_vs_sample1.mutect2.contamination.table
+      md5sum: 46c708c943b453da89a3da08acfdb2a7
+    - path: results/variant_calling/mutect2/test/sample3_vs_sample1.mutect2.contamination.table
+      md5sum: 11440fe64b5b953d7efb9cf47e330364
+    - path: results/variant_calling/mutect2/test/sample2_vs_sample1.mutect2.segmentation.table
+      md5sum: f4643d9319bde4efbfbe516d6fb13052
+    - path: results/variant_calling/mutect2/test/sample3_vs_sample1.mutect2.segmentation.table
+      md5sum: 38f83e2f98b206640644dd93d5e96f4e
+    - path: results/variant_calling/mutect2/test/test.mutect2.artifactprior.tar.gz
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/mutect2/test/test.mutect2.filtered.vcf.gz
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/mutect2/test/test.mutect2.filtered.vcf.gz.filteringStats.tsv
+      md5sum: dee72b4c5c9bbda01d44fd3e00f1b404
+    - path: results/variant_calling/mutect2/test/test.mutect2.filtered.vcf.gz.tbi
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/mutect2/test/test.mutect2.vcf.gz
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/mutect2/test/test.mutect2.vcf.gz.stats
+      md5sum: 094cb75b0bda28e92b6718ff33d136e2
+    - path: results/variant_calling/mutect2/test/test.mutect2.vcf.gz.tbi
+    # binary changes md5sums on reruns
+- name: Run full pipeline on tumoronly with most tools
+  command: nextflow run . -profile test --input tests/csv/3.0/fastq_tumor_only.csv --tools cnvkit,freebayes,merge,mpileup,mutect2,snpeff,strelka,tiddit,vep --outdir results
+  tags:
+    - full_pipeline_manual
+    - manual
+    - tumor_only
+    - variant_calling
+- name: Run full pipeline on somatic with most tools
+  command: nextflow run . -profile test --input tests/csv/3.0/fastq_pair.csv --tools cnvkit,deepvariant,freebayes,merge,mpileup,msisensorpro,snpeff,strelka,tiddit,vep --outdir results
+  tags:
+    - full_pipeline_manual
+    - manual
+    - somatic
+    - variant_calling
+- name: Run full pipeline on germline with most tools
+  command: nextflow run . -profile test --input tests/csv/3.0/fastq_single.csv --tools cnvkit,deepvariant,freebayes,merge,mpileup,snpeff,strelka,tiddit,vep --outdir results
+  tags:
+    - full_pipeline_manual
+    - manual
+    - germline
+    - variant_calling

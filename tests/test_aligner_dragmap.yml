@@ -17,7 +17,7 @@
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
     # binary changes md5sums on reruns
     - path: results/preprocessing/recal_table/test/test.recal.table
-      md5sum: 75ba4376a17ca69c5134153302f82e92
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.cram
     # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
@@ -61,33 +61,33 @@
     # conda changes md5sums for test
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.cram.metrics
-      contains: ["LB0	13607	543	161	518779	6410	0	0	0.436262"]
+      contains: ["LB0	27214	1086	322	1037558	20017	100	0	0.687981"]
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
-      md5sum: be1a800868fc1ce26711654525224e59
+      md5sum: b0d7d5de1e00132bb5b47e1b3d90d944
     - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
-      md5sum: 2a3f0fab66518ef0786235470f1f28d0
+      md5sum: 02b88d7ec0ca8ff23ba688c35939fa05
     - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
-      md5sum: d38ab9b0e0e551dc22919304929dd71c
+      md5sum: 1792d98676f597f755749f4286c5102d
     - path: results/reports/mosdepth/test/test.md.regions.bed.gz
-      md5sum: 0d92f4c698a6476ccaf798aa31a557bc
+      md5sum: 590119568d091ce3a88f7fe4f43f24ff
     - path: results/reports/mosdepth/test/test.md.regions.bed.gz.csi
-      md5sum: d5f1c9389ecf52ba839e834780a94549
+      md5sum: 2e7fe057ead0622e6a2a6b0ed1832315
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
-      md5sum: be1a800868fc1ce26711654525224e59
+      md5sum: b0d7d5de1e00132bb5b47e1b3d90d944
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
-      md5sum: 2a3f0fab66518ef0786235470f1f28d0
+      md5sum: 02b88d7ec0ca8ff23ba688c35939fa05
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
-      md5sum: d38ab9b0e0e551dc22919304929dd71c
+      md5sum: 1792d98676f597f755749f4286c5102d
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
-      md5sum: 0d92f4c698a6476ccaf798aa31a557bc
+      md5sum: 590119568d091ce3a88f7fe4f43f24ff
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
-      md5sum: d5f1c9389ecf52ba839e834780a94549
+      md5sum: 2e7fe057ead0622e6a2a6b0ed1832315
     - path: results/reports/samtools/test/test.md.cram.stats
     # conda changes md5sums for test
     - path: results/reports/samtools/test/test.recal.cram.stats
     # conda changes md5sums for test
 - name: Build only index with dragmap
-  command: nextflow run main.nf -profile test_cache --build_only_index --aligner dragmap --input=false --outdir results
+  command: nextflow run main.nf -profile test_cache --build_only_index --aligner dragmap --input false --outdir results
   tags:
     - aligner
     - build_only_index

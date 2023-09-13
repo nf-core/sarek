@@ -5,46 +5,46 @@
     - preprocessing
   files:
     - path: results/csv/markduplicates.csv
-      md5sum: 0d6120bb99e92f6810343270711ca53e
+      md5sum: 0dec46c4dc83acc263efc234805e9349
     - path: results/csv/markduplicates_no_table.csv
-      md5sum: 2a2d3d4842befd4def39156463859ee3
+      md5sum: f274df0cba98b2641fdc2a9becb23f78
     - path: results/csv/recalibrated.csv
-      md5sum: 2d29d9e53894dcce96a1b5beb6ef3312
+      md5sum: f6ab55df6c87f44c2d8651a2be0b959f
     - path: results/multiqc
-    - path: results/preprocessing/markduplicates/test/test.md.cram
+    - path: results/preprocessing/markduplicates/test2/test2.md.cram
     # binary file changes md5sums on reruns
-    - path: results/preprocessing/markduplicates/test/test.md.cram.crai
+    - path: results/preprocessing/markduplicates/test2/test2.md.cram.crai
     # binary file changes md5sums on reruns
-    - path: results/preprocessing/recal_table/test/test.recal.table
-      md5sum: 5b6e5078b4a90f6cb982fa0f0df616c2
-    - path: results/preprocessing/recalibrated/test/test.recal.cram
+    - path: results/preprocessing/recal_table/test2/test2.recal.table
+    # binary changes md5sums on reruns
+    - path: results/preprocessing/recalibrated/test2/test2.recal.cram
     # binary file changes md5sums on reruns
-    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+    - path: results/preprocessing/recalibrated/test2/test2.recal.cram.crai
     # binary file changes md5sums on reruns
-    - path: results/reports/fastqc/test-test_L1
-    - path: results/reports/markduplicates/test/test.md.cram.metrics
+    - path: results/reports/fastqc/test2-test_L1
+    - path: results/reports/markduplicates/test2/test2.md.cram.metrics
     # text-based file changes md5sums on reruns
-    - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
-      md5sum: 9269e959d5eec5273307693c6274f53e
-    - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
-      md5sum: deb2df4f3ca19f441f0a22f04dea8723
-    - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
-      md5sum: 96acf3439477a1448b7e1b43c020c7d0
-    - path: results/reports/mosdepth/test/test.md.regions.bed.gz
-      md5sum: c259a9fd73f576626c3a29841c2dc019
-    - path: results/reports/mosdepth/test/test.md.regions.bed.gz.csi
-      md5sum: cf85ba4692f016af70db2a594d9effdf
-    - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
-      md5sum: 9269e959d5eec5273307693c6274f53e
-    - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
-      md5sum: deb2df4f3ca19f441f0a22f04dea8723
-    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
-      md5sum: 96acf3439477a1448b7e1b43c020c7d0
-    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
-      md5sum: c259a9fd73f576626c3a29841c2dc019
-    - path: results/reports/samtools/test/test.md.cram.stats
+    - path: results/reports/mosdepth/test2/test2.md.mosdepth.global.dist.txt
+      md5sum: 85d38a74ce189b9110c57cd94bc26757
+    - path: results/reports/mosdepth/test2/test2.md.mosdepth.region.dist.txt
+      md5sum: 286d57b7d9b3a95ef18ab2eb7f913d81
+    - path: results/reports/mosdepth/test2/test2.md.mosdepth.summary.txt
+      md5sum: 04b69ef7f00199dcea7822a79d2c7bd7
+    - path: results/reports/mosdepth/test2/test2.md.regions.bed.gz
+      md5sum: 4e6c360aea7f05d801b2ea5685fe154a
+    - path: results/reports/mosdepth/test2/test2.md.regions.bed.gz.csi
+      md5sum: 5bf5fc178e4faf2462427502c3666004
+    - path: results/reports/mosdepth/test2/test2.recal.mosdepth.global.dist.txt
+      md5sum: 85d38a74ce189b9110c57cd94bc26757
+    - path: results/reports/mosdepth/test2/test2.recal.mosdepth.region.dist.txt
+      md5sum: 286d57b7d9b3a95ef18ab2eb7f913d81
+    - path: results/reports/mosdepth/test2/test2.recal.mosdepth.summary.txt
+      md5sum: 04b69ef7f00199dcea7822a79d2c7bd7
+    - path: results/reports/mosdepth/test2/test2.recal.regions.bed.gz
+      md5sum: 4e6c360aea7f05d801b2ea5685fe154a
+    - path: results/reports/samtools/test2/test2.md.cram.stats
     # conda changes md5sums for test
-    - path: results/reports/samtools/test/test.recal.cram.stats
+    - path: results/reports/samtools/test2/test2.recal.cram.stats
     # conda changes md5sums for test
     - path: results/preprocessing/mapped/
       should_exist: false
@@ -56,20 +56,20 @@
     - skip_qc
   files:
     - path: results/csv/markduplicates.csv
-      md5sum: 0d6120bb99e92f6810343270711ca53e
+      md5sum: 0dec46c4dc83acc263efc234805e9349
     - path: results/csv/markduplicates_no_table.csv
-      md5sum: 2a2d3d4842befd4def39156463859ee3
+      md5sum: f274df0cba98b2641fdc2a9becb23f78
     - path: results/csv/recalibrated.csv
-      md5sum: 2d29d9e53894dcce96a1b5beb6ef3312
-    - path: results/preprocessing/markduplicates/test/test.md.cram
+      md5sum: f6ab55df6c87f44c2d8651a2be0b959f
+    - path: results/preprocessing/markduplicates/test2/test2.md.cram
     # binary file changes md5sums on reruns
-    - path: results/preprocessing/markduplicates/test/test.md.cram.crai
+    - path: results/preprocessing/markduplicates/test2/test2.md.cram.crai
     # binary file changes md5sums on reruns
-    - path: results/preprocessing/recal_table/test/test.recal.table
-      md5sum: 5b6e5078b4a90f6cb982fa0f0df616c2
-    - path: results/preprocessing/recalibrated/test/test.recal.cram
+    - path: results/preprocessing/recal_table/test2/test2.recal.table
+    # binary changes md5sums on reruns
+    - path: results/preprocessing/recalibrated/test2/test2.recal.cram
     # binary file changes md5sums on reruns
-    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+    - path: results/preprocessing/recalibrated/test2/test2.recal.cram.crai
     # binary file changes md5sums on reruns
     - path: results/multiqc
       should_exist: false
@@ -89,46 +89,46 @@
     - save_output_as_bam
   files:
     - path: results/csv/markduplicates.csv
-      md5sum: 6004ab16b63012e336f6251396a983c5
+      md5sum: 974a2375ca62c56078076e40768b6367
     - path: results/csv/markduplicates_no_table.csv
-      md5sum: 8a145eca178cfd02403d60122b9d3960
+      md5sum: d508740377e048822c9e2f11f048a56d
     - path: results/csv/recalibrated.csv
-      md5sum: 2dfbcaaeaaf4937c51c5c310f1c77614
+      md5sum: e5f9c71eb6746324a68a0ef989c50a28
     - path: results/multiqc
-    - path: results/preprocessing/markduplicates/test/test.md.bam
+    - path: results/preprocessing/markduplicates/test2/test2.md.bam
     # conda changes md5sums for test
-    - path: results/preprocessing/markduplicates/test/test.md.bam.bai
+    - path: results/preprocessing/markduplicates/test2/test2.md.bam.bai
     # conda changes md5sums for test
-    - path: results/preprocessing/recal_table/test/test.recal.table
-      md5sum: 5b6e5078b4a90f6cb982fa0f0df616c2
-    - path: results/preprocessing/recalibrated/test/test.recal.bam
+    - path: results/preprocessing/recal_table/test2/test2.recal.table
     # binary changes md5sums on reruns
-    - path: results/preprocessing/recalibrated/test/test.recal.bam.bai
+    - path: results/preprocessing/recalibrated/test2/test2.recal.bam
     # binary changes md5sums on reruns
-    - path: results/reports/fastqc/test-test_L1
-    - path: results/reports/markduplicates/test/test.md.cram.metrics
+    - path: results/preprocessing/recalibrated/test2/test2.recal.bam.bai
+    # binary changes md5sums on reruns
+    - path: results/reports/fastqc/test2-test_L1
+    - path: results/reports/markduplicates/test2/test2.md.cram.metrics
     # text-based file changes md5sums on reruns
-    - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
-      md5sum: 9269e959d5eec5273307693c6274f53e
-    - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
-      md5sum: deb2df4f3ca19f441f0a22f04dea8723
-    - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
-      md5sum: 96acf3439477a1448b7e1b43c020c7d0
-    - path: results/reports/mosdepth/test/test.md.regions.bed.gz
-      md5sum: c259a9fd73f576626c3a29841c2dc019
-    - path: results/reports/mosdepth/test/test.md.regions.bed.gz.csi
-      md5sum: cf85ba4692f016af70db2a594d9effdf
-    - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
-      md5sum: 9269e959d5eec5273307693c6274f53e
-    - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
-      md5sum: deb2df4f3ca19f441f0a22f04dea8723
-    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
-      md5sum: 96acf3439477a1448b7e1b43c020c7d0
-    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
-      md5sum: c259a9fd73f576626c3a29841c2dc019
-    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
-      md5sum: cf85ba4692f016af70db2a594d9effdf
-    - path: results/reports/samtools/test/test.md.cram.stats
+    - path: results/reports/mosdepth/test2/test2.md.mosdepth.global.dist.txt
+      md5sum: 85d38a74ce189b9110c57cd94bc26757
+    - path: results/reports/mosdepth/test2/test2.md.mosdepth.region.dist.txt
+      md5sum: 286d57b7d9b3a95ef18ab2eb7f913d81
+    - path: results/reports/mosdepth/test2/test2.md.mosdepth.summary.txt
+      md5sum: 04b69ef7f00199dcea7822a79d2c7bd7
+    - path: results/reports/mosdepth/test2/test2.md.regions.bed.gz
+      md5sum: 4e6c360aea7f05d801b2ea5685fe154a
+    - path: results/reports/mosdepth/test2/test2.md.regions.bed.gz.csi
+      md5sum: 5bf5fc178e4faf2462427502c3666004
+    - path: results/reports/mosdepth/test2/test2.recal.mosdepth.global.dist.txt
+      md5sum: 85d38a74ce189b9110c57cd94bc26757
+    - path: results/reports/mosdepth/test2/test2.recal.mosdepth.region.dist.txt
+      md5sum: 286d57b7d9b3a95ef18ab2eb7f913d81
+    - path: results/reports/mosdepth/test2/test2.recal.mosdepth.summary.txt
+      md5sum: 04b69ef7f00199dcea7822a79d2c7bd7
+    - path: results/reports/mosdepth/test2/test2.recal.regions.bed.gz
+      md5sum: 4e6c360aea7f05d801b2ea5685fe154a
+    - path: results/reports/mosdepth/test2/test2.recal.regions.bed.gz.csi
+      md5sum: 5bf5fc178e4faf2462427502c3666004
+    - path: results/reports/samtools/test2/test2.md.cram.stats
     # conda changes md5sums for test
-    - path: results/reports/samtools/test/test.recal.cram.stats
+    - path: results/reports/samtools/test2/test2.recal.cram.stats
     # conda changes md5sums for test

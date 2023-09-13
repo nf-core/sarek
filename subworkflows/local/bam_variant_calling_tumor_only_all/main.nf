@@ -1,5 +1,5 @@
 //
-// TUMOR VARIANT CALLING
+// TUMOR ONLY VARIANT CALLING
 // Should be only run on patients without normal sample
 //
 
@@ -34,6 +34,8 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     mappability
     panel_of_normals              // channel: [optional]  panel_of_normals
     panel_of_normals_tbi          // channel: [optional]  panel_of_normals_tbi
+    joint_mutect2                 // boolean: [mandatory] [default: false] run mutect2 in joint mode
+    wes                           // boolean: [mandatory] [default: false] whether targeted data is processed
 
     main:
     versions = Channel.empty()
@@ -60,7 +62,8 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
 
     // CONTROLFREEC (depends on MPILEUP)
     if (tools.split(',').contains('controlfreec')) {
-        length_file = cf_chrom_len ?: fasta_fai
+        length_file            = cf_chrom_len ?: fasta_fai
+        intervals_controlfreec = wes ? intervals_bed_combined : []
 
         BAM_VARIANT_CALLING_TUMOR_ONLY_CONTROLFREEC(
             // Remap channel to match module/subworkflow
@@ -71,7 +74,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
             dbsnp_tbi,
             chr_files,
             mappability,
-            intervals_bed_combined
+            intervals_controlfreec
         )
 
         versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_CONTROLFREEC.out.versions)
@@ -109,7 +112,13 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     // MUTECT2
     if (tools.split(',').contains('mutect2')) {
         BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2(
-            cram,
+            // Adjust meta.map to simplify joining channels
+            cram.map{ meta, cram, crai ->
+                joint_mutect2 ?
+                //we need to keep all fields and then remove on a per-tool-basis to ensure proper joining at the filtering step
+                [ meta - meta.subMap('data_type', 'status') + [ id:meta.patient ], cram, crai ] :
+                [ meta - meta.subMap('data_type', 'status'), cram, crai ]
+            },
             // Remap channel to match module/subworkflow
             fasta.map{ it -> [ [ id:'fasta' ], it ] },
             // Remap channel to match module/subworkflow
@@ -119,7 +128,8 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
             germline_resource_tbi,
             panel_of_normals,
             panel_of_normals_tbi,
-            intervals
+            intervals,
+            joint_mutect2
         )
 
         vcf_mutect2 = BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2.out.vcf_filtered

@@ -1,8 +1,14 @@
-include { CONTROLFREEC_FREEC as FREEC_SOMATIC                    } from '../../../modules/nf-core/controlfreec/freec/main'
+//
+// CONTROLFREEC somatc variant calling
+//
+// For all modules here:
+// A when clause condition is defined in the conf/modules.config to determine if the module should be run
+
+include { CONTROLFREEC_FREEC              as FREEC_SOMATIC       } from '../../../modules/nf-core/controlfreec/freec/main'
 include { CONTROLFREEC_ASSESSSIGNIFICANCE as ASSESS_SIGNIFICANCE } from '../../../modules/nf-core/controlfreec/assesssignificance/main'
-include { CONTROLFREEC_FREEC2BED as FREEC2BED                    } from '../../../modules/nf-core/controlfreec/freec2bed/main'
-include { CONTROLFREEC_FREEC2CIRCOS as FREEC2CIRCOS              } from '../../../modules/nf-core/controlfreec/freec2circos/main'
-include { CONTROLFREEC_MAKEGRAPH as MAKEGRAPH                    } from '../../../modules/nf-core/controlfreec/makegraph/main'
+include { CONTROLFREEC_FREEC2BED          as FREEC2BED           } from '../../../modules/nf-core/controlfreec/freec2bed/main'
+include { CONTROLFREEC_FREEC2CIRCOS       as FREEC2CIRCOS        } from '../../../modules/nf-core/controlfreec/freec2circos/main'
+include { CONTROLFREEC_MAKEGRAPH          as MAKEGRAPH           } from '../../../modules/nf-core/controlfreec/makegraph/main'
 
 workflow BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC {
     take:

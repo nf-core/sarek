@@ -2,6 +2,8 @@
 
 ## :warning: Please read this documentation on the nf-core website: [https://nf-co.re/sarek/usage](https://nf-co.re/sarek/usage)
 
+> _Documentation of pipeline parameters is generated automatically from the pipeline schema and can no longer be found in markdown files._
+
 # Introduction
 
 Sarek is a workflow designed to detect germline and somatic variants on whole genome, whole exome, or targeted sequencing data.
@@ -16,10 +18,11 @@ Sarek is designed to handle single samples, such as single-normal or single-tumo
 The typical command for running the pipeline is as follows:
 
 ```bash
-nextflow run nf-core/sarek --input samplesheet.csv --outdir <OUTDIR> --genome GATK.GRCh38 -profile docker
+nextflow run nf-core/sarek --input ./samplesheet.csv --outdir ./results --genome GATK.GRCh38 --tools <TOOLS> -profile docker
 ```
 
-This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.
+This will launch the pipeline and perform variant calling with the tools specified in `--tools`, see the [parameter section](https://nf-co.re/sarek/3.2.3/parameters#tools) for details on variant calling tools.
+In the above example the pipeline runs with the `docker` configuration profile. See below for more information about profiles.
 
 Note that the pipeline will create the following files in your working directory:
 
@@ -35,7 +38,8 @@ If you wish to repeatedly use the same parameters for multiple runs, rather than
 Pipeline settings can be provided in a `yaml` or `json` file via `-params-file <file>`.
 
 > ⚠️ Do not use `-c <file>` to specify parameters as this will result in errors. Custom config files specified with `-c` must only be used for [tuning process resource specifications](https://nf-co.re/docs/usage/configuration#tuning-workflow-resources), other infrastructural tweaks (such as output directories), or module arguments (args).
-> The above pipeline run specified with a params file in yaml format:
+
+The above pipeline run specified with a params file in yaml format:
 
 ```bash
 nextflow run nf-core/sarek -profile docker -params-file params.yaml
@@ -47,7 +51,6 @@ with `params.yaml` containing:
 input: './samplesheet.csv'
 outdir: './results/'
 genome: 'GRCh37'
-input: 'data'
 <...>
 ```
 
@@ -307,7 +310,7 @@ test,sample4_vs_sample3,manta,sample4_vs_sample3.somatic_sv.vcf.gz
 
 ## Updating the pipeline
 
-When you run the above command, Nextflow automatically pulls the pipeline code from GitHub and stores it as a cached version. When running the pipeline after this, it will always use the cached version if available - even if the pipeline has been updated since. To make sure that you're running the latest version of the pipeline, make sure that you regularly update the cached version of the pipeline:
+When you launch a pipeline from the command-line with `nextflow run nf-core/sarek -profile docker -params-file params.yaml`, Nextflow will automatically pull the pipeline code from GitHub and store it as a cached version. When running the pipeline after this, it will always use the cached version if available - even if the pipeline has been updated since. To make sure that you're running the latest version of the pipeline, make sure that you regularly update the cached version of the pipeline:
 
 ```bash
 nextflow pull nf-core/sarek
@@ -603,7 +606,7 @@ done
 ```bash
 wget https://ora.ox.ac.uk/objects/uuid:08e24957-7e76-438a-bd38-66c48008cf52/files/rt435gd52w
 mv rt345gd52w battenberg.zip
-jar xf battenberg.zip
+tar xf battenberg.zip
 
 unzip 1000G_loci_hg38_chr.zip
 cd 1000G_loci_hg38
@@ -673,7 +676,7 @@ write.table(out, args[3], col.names=T, row.names=F, quote=F, sep="\t")
 }
 ```
 
-## What are the bwa/bwa-mem2 parameters?
+## What are the bwa, bwa-mem2 and sentieon bwa mem parameters?
 
 For mapping, sarek follows the parameter suggestions provided in this [paper](https://www.nature.com/articles/s41467-018-06159-4):
 
@@ -822,8 +825,8 @@ For GATK.GRCh38 the links for each reference file and the corresponding processe
 | dbsnp                 | Baserecalibrator, ControlFREEC, GenotypeGVCF, HaplotypeCaller                                                                                                                                                                                                                                                                                                                                                                                        | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) | https://gatk.broadinstitute.org/hc/en-us/articles/360035890811-Resource-bundle       |
 | dbsnp_tbi             | Baserecalibrator, ControlFREEC, GenotypeGVCF, HaplotypeCaller                                                                                                                                                                                                                                                                                                                                                                                        | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) |                                                                                      |
 | dict                  | Baserecalibrator(Spark), CNNScoreVariant, EstimateLibraryComplexity, FilterMutectCalls, FilterVariantTranches, GatherPileupSummaries,GenotypeGVCF, GetPileupSummaries, HaplotypeCaller, MarkDulpicates(Spark), MergeVCFs, Mutect2, Variantrecalibrator                                                                                                                                                                                               | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) | https://gatk.broadinstitute.org/hc/en-us/articles/360035890811-Resource-bundle       |
-| fasta                 | ApplyBQSR(Spark), ApplyVQSR, ASCAT, Baserecalibrator(Spark), BWA, BWAMem2, CNNScoreVariant, CNVKit, ControlFREEC, DragMap, DEEPVariant, EnsemblVEP, EstimateLibraryComplexity, FilterMutectCalls, FilterVariantTranches, FreeBayes, GatherPileupSummaries,GenotypeGVCF, GetPileupSummaries, HaplotypeCaller, interval building, Manta, MarkDuplicates(Spark),MergeVCFs,MSISensorPro, Mutect2, Samtools, snpEff, Strelka, Tiddit, Variantrecalibrator | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) | https://gatk.broadinstitute.org/hc/en-us/articles/360035890811-Resource-bundle       |
-| fasta_fai             | ApplyBQSR(Spark), ApplyVQSR, ASCAT, Baserecalibrator(Spark), BWA, BWAMem2, CNNScoreVariant, CNVKit, ControlFREEC, DragMap, DEEPVariant, EnsemblVEP, EstimateLibraryComplexity, FilterMutectCalls, FilterVariantTranches, FreeBayes, GatherPileupSummaries,GenotypeGVCF, GetPileupSummaries, HaplotypeCaller, interval building, Manta, MarkDuplicates(Spark),MergeVCFs,MSISensorPro, Mutect2, Samtools, snpEff, Strelka, Tiddit, Variantrecalibrator | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) | https://gatk.broadinstitute.org/hc/en-us/articles/360035890811-Resource-bundle       |
+| fasta                 | ApplyBQSR(Spark), ApplyVQSR, ASCAT, Baserecalibrator(Spark), BWA, BWAMem2, CNNScoreVariant, CNVKit, ControlFREEC, DragMap, DEEPVariant, EnsemblVEP, EstimateLibraryComplexity, FilterMutectCalls, FilterVariantTranches, FreeBayes, GatherPileupSummaries,GenotypeGVCF, GetPileupSummaries, HaplotypeCaller, interval building, Manta, MarkDuplicates(Spark),MergeVCFs,MSISensorPro, Mutect2, Samtools, SnpEff, Strelka, Tiddit, Variantrecalibrator | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) | https://gatk.broadinstitute.org/hc/en-us/articles/360035890811-Resource-bundle       |
+| fasta_fai             | ApplyBQSR(Spark), ApplyVQSR, ASCAT, Baserecalibrator(Spark), BWA, BWAMem2, CNNScoreVariant, CNVKit, ControlFREEC, DragMap, DEEPVariant, EnsemblVEP, EstimateLibraryComplexity, FilterMutectCalls, FilterVariantTranches, FreeBayes, GatherPileupSummaries,GenotypeGVCF, GetPileupSummaries, HaplotypeCaller, interval building, Manta, MarkDuplicates(Spark),MergeVCFs,MSISensorPro, Mutect2, Samtools, SnpEff, Strelka, Tiddit, Variantrecalibrator | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) | https://gatk.broadinstitute.org/hc/en-us/articles/360035890811-Resource-bundle       |
 | germline_resource     | GetPileupsummaries,Mutect2                                                                                                                                                                                                                                                                                                                                                                                                                           | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) |                                                                                      |
 | germline_resource_tbi | GetPileupsummaries,Mutect2                                                                                                                                                                                                                                                                                                                                                                                                                           | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) |                                                                                      |
 | intervals             | ApplyBQSR(Spark), ASCAT, Baserecalibrator(Spark), BCFTools, CNNScoreVariants, ControlFREEC, Deepvariant, FilterVariantTranches, FreeBayes, GenotypeGVCF, GetPileupSummaries, HaplotypeCaller, Strelka, mpileup, MSISensorPro, Mutect2, VCFTools                                                                                                                                                                                                      | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) |                                                                                      |
@@ -835,52 +838,34 @@ For GATK.GRCh38 the links for each reference file and the corresponding processe
 | pon                   | Mutect2                                                                                                                                                                                                                                                                                                                                                                                                                                              | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) | https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON- |
 | pon_tbi               | Mutect2                                                                                                                                                                                                                                                                                                                                                                                                                                              | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) | https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON- |
 
-## How to customise snpeff and vep annotation
+## How to customise SnpEff and VEP annotation
 
-### Using the nf-core containers with pre-downloaded cache
+SNPeff and VEP require a large resource of files known as a cache.
+These are folders composed of multiple gigabytes of files which need to be available for the software to properly function.
+To use these, supply the parameters `--vep_cache` and/or `--snpeff_cache` with the locations to the root of the annotation cache folder for each tool.
 
-For common genomes, it is already configured within the [igenomes.config](https://github.com/nf-core/sarek/blob/master/conf/igenomes.config) file, so nothing to be done there.
+### Specify the cache location
 
-Note: These containers are only created for some species and some cache/tools versions combinations (cf DockerHub tags for these containers [`nfcore/snpeff`](https://hub.docker.com/r/nfcore/snpeff/tags) and [`nfcore/vep`](https://hub.docker.com/r/nfcore/vep/tags).
+Params `--snpeff_cache` and `--vep_cache` are used to specify the locations to the root of the annotation cache folder.
+The cache will be located within a subfolder with the path `${vep_species}/${vep_genome}_${vep_cache_version}` for VEP and `${snpeff_species}.${snpeff_version}` for SnpEff.
+If this directory is missing, Sarek will raise an error.
 
-These containers can be quite huge especially for human, it is recommended to use annotation cache on a path if possible
+For example this is a typical folder structure for GRCh38 and WBCel235, with SNPeff cache version 105 and VEP cache version 110:
 
-### Create containers with pre-downloaded cache
-
-For each tool, an helper script `build.sh` can be found at the root of the tool folder in the nf-core module repo ([snpeff](https://github.com/nf-core/modules/tree/master/modules/nf-core/snpeff) and [ensemblvep](https://github.com/nf-core/modules/tree/master/modules/nf-core/ensemblvep)), and can be adapted for your usage.
-
-### Use Sarek to download cache and annotate in one go
-
-Use the params `--download_cache`, and specify with `--tools` for which annotation tool you need to download the cache (`snpeff` and or `vep`)
-
-Sarek will automatically download the cache, use the biocontainers container for said tools, and use it to annotate any vcfs produced.
-
-### Only download cache
-
-Using the params `--build_only_index` allow for only downloading the cache for the specified tools.
-
-### Location for the cache
-
-Cache can be downloaded in the specified `--outdir_cache` location.
-Else, it will be downloaded in `cache/` in the specified `--outdir` location.
-
-To download cache on a cloud infrastructure, an absolute path is needed.
-
-Params `--snpeff_cache` and `--vep_cache` are to used to specify the locations to the root of the annotation cache folder.
-
-For example this is what can be seen when cache has been downloaded for `GATK.GRCh38` and `WBcell235` for both tools using the default values in the [igenomes.config](https://github.com/nf-core/sarek/blob/master/conf/igenomes.config) file:
-
-```bash
-ls /data/snpeff_cache /data/vep_cache/*
-/data/snpeff_cache:
-GRCh38.105
-WBcel235.105
-
-/data/vep_cache/caenorhabditis_elegans:
-106_WBcel235
-/data/vep_cache/homo_sapiens:
-106_GRCh38
+```text
+/data/
+├─ snpeff_cache/
+│  ├─ GRCh38.105/
+│  ├─ WBcel235.105/
+├─ vep_cache/
+│  ├─ caenorhabditis_elegans/
+│  │  ├─ 110_WBCel235/
+│  ├─ homo_sapiens/
+│  │  ├─ 110_GRCh38/
 ```
+
+For this example, the parameters `--snpeff_cache /data/snpeff_cache` and `--vep_cache /data/vep_cache` would be used.
+Both SnpEff and VEP will figure out internally the path towards the specific cache version / species the annotation should be performed given the parameters specified to Sarek.
 
 ### Change cache version and species
 
@@ -900,51 +885,115 @@ snpeff_db         = '105'
 snpeff_genome     = 'GRCh38'
 vep_genome        = 'GRCh38'
 vep_species       = 'homo_sapiens'
-vep_cache_version = '106'
+vep_cache_version = '110'
 ```
 
 ### Usage recommendation with AWS iGenomes
 
-Annotation cache is a resource separated from AWS iGenomes, which as its own structure and a frequent update cycle.
-So it is not recommended to put any annotation cache in your local AWS iGenomes folder.
+The cache for each of these annotation tools has its own structure and is frequently updated, therefore it is kept separate from AWS iGenomes. It is not recommended to put any cache for each of this annotation tools in your local AWS iGenomes folder.
 
-A classical organisation could be:
+A classical organisation on a shared storage area might be:
 
 ```bash
 /data/igenomes/
-/data/cache/ensemblvep
-/data/cache/snpeff
+/data/cache/snpeff_cache
+/data/cache/vep_cache
 ```
 
-which can then be used this way in sarek:
+Which can then be used this way in Sarek:
 
 ```bash
-nextflow run nf-core/sarek \\
-    --igenomes_base /data/igenomes/ \\
-    --snpeff_cache /data/cache/snpeff/ \\
-    --vep_cache /data/cache/ensemblvep/ \\
+nextflow run nf-core/sarek \
+    --igenomes_base /data/igenomes/ \
+    --snpeff_cache /data/cache/snpeff_cache/ \
+    --vep_cache /data/cache/vep_cache/ \
     ...
 ```
 
-Or similarly on the cloud:
+Alternatively the data may be stored on AWS S3 storage, therefore the parameters might be:
 
 ```bash
-s3://data/igenomes/
-s3://data/cache/ensemblvep
-s3://data/cache/snpeff
+s3://my-reference-data/igenomes/
+s3://my-reference-data/cache/snpeff_cache/
+s3://my-reference-data/cache/vep_cache/
 ```
 
-which can then be used this way in sarek:
+Which can then be used this way in Sarek:
 
 ```bash
-nextflow run nf-core/sarek \\
-    --igenomes_base s3://data/igenomes/ \\
-    --snpeff_cache s3://data/cache/snpeff/ \\
-    --vep_cache s3://data/cache/ensemblvep/ \\
+nextflow run nf-core/sarek \
+    --igenomes_base s3://my-reference-data/igenomes/ \
+    --snpeff_cache s3://my-reference-data/cache/ensemblvep/ \
+    --vep_cache s3://my-reference-data/cache/snpeff/ \
     ...
 ```
 
 These params can be specified in a config file or in a profile using the params scope, or even in a json or a yaml file using the `-params-file` nextflow option.
+
+Note: we recommend storing each annotation cache in a separate directory so each cache version is handled differently.
+This may mean you have many similar directories but will dramatically reduce the storage burden on machines running the VEP or snpEff process.
+
+### Use annotation-cache for SnpEff and VEP
+
+[Annotation-cache](https://github.com/annotation-cache) is an open AWS registry resource that stores a mirror of some cache files on AWS S3 which can be used with Sarek.
+It contains some genome builds which can be found by checking the contents of the S3 bucket.
+
+SNPeff and VEP cache are stored at the following location on S3:
+
+```bash
+snpeff_cache = s3://annotation-cache/snpeff_cache/
+vep_cache = s3://annotation-cache/vep_cache/
+```
+
+The contents of said cache can be listed with the following command using the S3 CLI:
+
+```bash
+aws s3 --no-sign-request ls s3://annotation-cache/snpeff_cache
+aws s3 --no-sign-request ls s3://annotation-cache/vep_cache/
+```
+
+Since both Snpeff and VEP are internally figuring the path towards the specific cache version / species, `annotation-cache` is using an extra set of keys to specify the species and genome build.
+
+So if you are using this resource, please either use the `--use_annotation_cache_keys`, or point towards the specific species, genome and build matches the directory structure within the cache.
+
+### Use Sarek to download cache and annotate in one go
+
+Both VEP and snpEff come with built-in download functionality to download the cache prior to use.
+Sarek includes these as optional processes.
+Use the params `--download_cache`, and specify the tool with `--tools` and Sarek will download the relevant cache (`snpeff` and/or `vep`) using their respective download functions.
+It is recommended to save the cache somewhere highly accessible for subsequent runs of Sarek, so the cache does not have to be re-downloaded.
+
+Sarek will automatically download the cache using each tools (SnpEff and/or VEP) to your work directory.
+And subsequently perform the annotation of VCF files specified as an input in a samplesheet or produced by Sarek.
+
+### Only download cache
+
+Using the params `--build_only_index` allow for only downloading the cache for the specified tools.
+
+### Location for the cache
+
+Cache can be downloaded in the specified `--outdir_cache` location.
+Else, it will be downloaded in `cache/` in the specified `--outdir` location.
+
+This command could be used to download the cache for both tools in the specified `--outdir_cache` location:
+
+```bash
+nextflow run nf-core/sarek -r 3.3.0 --outdir results --outdir_cache /path_to/my-own-cache --tools vep,snpeff --download_cache --build_only_index --input false
+```
+
+This command could be used to point to the recently downloaded cache and run SnpEff and VEP:
+
+```bash
+nextflow run nf-core/sarek -r 3.3.0 --outdir results --vep_cache /path_to/my-own-cache/vep_cache --snpeff_cache /path_to/my-own-cache/snpeff_cache --tools vep,snpeff --input samplesheet_vcf.csv
+```
+
+### Create containers with pre-downloaded cache
+
+nf-core is no longer maintaining containers with pre-downloaded cache. Hosting the cache within the container is not recommended as it can cause a number of problems. Instead we recommned using an external cache. The following is left for legacy reasons.
+
+But for each of these tools, an helper script `build.sh` can be found at the root of the tool folder in the nf-core module repo ([snpeff](https://github.com/nf-core/modules/tree/master/modules/nf-core/snpeff) and [ensemblvep](https://github.com/nf-core/modules/tree/master/modules/nf-core/ensemblvep)), and can be adapted for your usage.
+
+Overwritting the container declaration is then possible to accomodate for the new container.
 
 ### Using VEP plugins
 
@@ -989,11 +1038,6 @@ Enable with `--vep_spliceregion`.
 
 For more details, see [here](https://www.ensembl.org/info/docs/tools/vep/script/vep_plugins.html#spliceregion) and [here](https://www.ensembl.info/2018/10/26/cool-stuff-the-vep-can-do-splice-site-variant-annotation/)."
 
-## Requested resources for the tools
-
-Resource requests are difficult to generalize and are often dependent on input data size. Currently, the number of cpus and memory requested by default were adapted from tests on 5 ICGC paired whole-genome sequencing samples with approximately 40X and 80X depth.
-For targeted data analysis, this is overshooting by a lot. In this case resources for each process can be limited by either setting `--max_memory` and `-max_cpus` or tailoring the request by process name as described [here](#resource-requests). If you are using sarek for a certain data type regulary, and would like to make these requests available to others on your system, an institution-specific, pipeline-specific config file can be added [here](https://github.com/nf-core/configs/tree/master/conf/pipeline/sarek).
-
 ## MultiQC related issues
 
 ### Plots for SnpEff are missing
@@ -1007,6 +1051,49 @@ Error type      Number of errors
 ERROR_CHROMOSOME_NOT_FOUND      17522411
 ```
 
-## How to set up sarek to use sentieon
+## Sentieon
 
-Sarek is currently not supporting sentieon. It is planned for the upcoming release 3.3. In the meantime, please revert to the last release 2.7.2.
+[Sentieon](https://www.sentieon.com/) is a commercial solution to process genomics data with high computing efficiency, fast turnaround time, exceptional high accuracy, and 100% consistency.
+
+In particular, Sentieon contains what may be view as speedup version of some standard GATK tools, like bwamem and haplotyper. Sarek contains support for some of the functions in Sentieon. In order to use those functions, the user will need to supply Sarek with a license for Sentieon.
+
+### Setup of Sentieon license
+
+Sentieon supply license in the form of a string-value (a url) or a file. It should be base64-encoded and stored in a nextflow secret named `SENTIEON_LICENSE_BASE64`. If a license string (url) is supplied, then the nextflow secret should be set like this:
+
+```bash
+nextflow secret set SENTIEON_LICENSE_BASE64 $(echo -n <sentieon_license_string> | base64 -w 0)
+```
+
+If a license file is supplied, then the nextflow secret should be set like this:
+
+```bash
+nextflow secrets set SENTIEON_LICENSE_BASE64 \$(cat <sentieon_license_file.lic> | base64 -w 0)
+```
+
+### Available Sentieon functions
+
+Sarek contains the following Sentieon functions [bwa mem](https://support.sentieon.com/manual/usages/general/#bwa-mem-syntax), [LocusCollector](https://support.sentieon.com/manual/usages/general/#locuscollector-algorithm) + [Dedup](https://support.sentieon.com/manual/usages/general/#dedup-algorithm), [Haplotyper](https://support.sentieon.com/manual/usages/general/#haplotyper-algorithm), [GVCFtyper](https://support.sentieon.com/manual/usages/general/#gvcftyper-algorithm) and [VarCal](https://support.sentieon.com/manual/usages/general/#varcal-algorithm) + [ApplyVarCal](https://support.sentieon.com/manual/usages/general/#applyvarcal-algorithm), so the basic processing of alignment of fastq-files to VCF-files can be done using speedup Sentieon functions.
+
+### Basic usage of Sentieon functions
+
+To use Sentieon's aligner `bwa mem`, set the aligner option `sentieon-bwamem`. (This can, for example, be done by adding `--aligner sentieon-bwamem` to the nextflow run command.)
+
+To use Sentieon's function `Dedup`, specify `sentieon_dedup` as one of the tools. (This can, for example, be done by adding `--tools sentieon_dedup` to the nextflow run command.)
+
+To use Sentieon's function `Haplotyper`, specify `sentieon_haplotyper` as one of the tools. This can, for example, be done by adding `--tools sentieon_haplotyper` to the nextflow run command. In order to skip the GATK-based variant-filter, one may add `--skip_tools haplotyper_filter` to the nextflow run command. Sarek also provides the option `sentieon_haplotyper_emit_mode` which can be used to set the [emit-mode](https://support.sentieon.com/manual/usages/general/#haplotyper-algorithm) of Sentieon's haplotyper. Sentieon's haplotyper can output both a vcf-file and a gvcf-file in the same run; this is achieved by setting `sentieon_haplotyper_emit_mode` to `<vcf_emit_mode>,gvcf`, where `<vcf_emit_mode>` is `variant`, `confident` or `all`.
+
+To use Sentieon's function `GVCFtyper` along with Sention's version of VQSR (`VarCal` and `ApplyVarCal`) for joint-germline genotyping, specify `sentieon_haplotyper` as one of the tools, set the option `sentieon_haplotyper_emit_mode` to `gvcf`, and add the option `joint_germline`. This can, for example, be done by adding `--tools sentieon_haplotyper --joint_germline --sentieon_haplotyper_emit_mode gvcf` to the nextflow run command.
+
+### Joint germline variant calling
+
+Sentieon's [GVCFtyper](https://support.sentieon.com/manual/usages/general/#gvcftyper-algorithm) does not support the [GenomicsDB](https://gatk.broadinstitute.org/hc/en-us/articles/5358869876891-GenomicsDBImport) datastore format. This means that, in contrast to the GATK based joint germline variant calling subworkflow in Sarek, the Sentieon/DNAseq based joint germline variant calling subworkflow does not use the GenomicsDB datastore format.
+
+### QualCal (BQSR)
+
+Currently, Sentieon's version of BQSR, QualCal, is not available in Sarek. Recent Illumina sequencers tend to provide well-calibrated BQs, so BQSR may not provide much benefit. By default Sarek runs GATK's BQSR; that can be skipped by adding the option `--skip_tools baserecalibrator`.
+
+## Requested resources for the tools
+
+Resource requests are difficult to generalize and are often dependent on input data size. Currently, the number of cpus and memory requested by default were adapted from tests on 5 ICGC paired whole-genome sequencing samples with approximately 40X and 80X depth.
+For targeted data analysis, this is overshooting by a lot. In this case resources for each process can be limited by either setting `--max_memory` and `-max_cpus` or tailoring the request by process name as described [here](#resource-requests). If you are using sarek for a certain data type regulary, and would like to make these requests available to others on your system, an institution-specific, pipeline-specific config file can be added [here](https://github.com/nf-core/configs/tree/master/conf/pipeline/sarek).
