@@ -100,7 +100,7 @@ input_sample = ch_from_samplesheet
                 // Don't use a random element for ID, it breaks resuming
                 def read_group = "\"@RG\\tID:${flowcell}.${meta.sample}.${meta.lane}\\t${CN}PU:${meta.lane}\\tSM:${meta.patient}_${meta.sample}\\tLB:${meta.sample}\\tDS:${params.fasta}\\tPL:${params.seq_platform}\""
 
-                meta           = meta + [num_lanes: num_lanes.toInteger(), read_group: read_group.toString(), data_type: 'fastq', size: 1]
+                meta           = meta - meta.subMap('lane') + [num_lanes: num_lanes.toInteger(), read_group: read_group.toString(), data_type: 'fastq', size: 1]
 
                 if (params.step == 'mapping') return [ meta, [ fastq_1, fastq_2 ] ]
                 else {
@@ -116,7 +116,7 @@ input_sample = ch_from_samplesheet
                 def CN          = params.seq_center ? "CN:${params.seq_center}\\t" : ''
                 def read_group  = "\"@RG\\tID:${meta.sample}_${meta.lane}\\t${CN}PU:${meta.lane}\\tSM:${meta.patient}_${meta.sample}\\tLB:${meta.sample}\\tDS:${params.fasta}\\tPL:${params.seq_platform}\""
 
-                meta            = meta + [num_lanes: num_lanes.toInteger(), read_group: read_group.toString(), data_type: 'bam', size: 1]
+                meta            = meta - meta.subMap('lane') + [num_lanes: num_lanes.toInteger(), read_group: read_group.toString(), data_type: 'bam', size: 1]
 
                 if (params.step != 'annotate') return [ meta - meta.subMap('lane'), bam, bai ]
                 else {
