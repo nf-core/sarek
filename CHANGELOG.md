@@ -70,6 +70,7 @@ Rapaselet is a delta formed by the Rapaätno river between the Bielloriehppe mas
 - [#1224](https://github.com/nf-core/sarek/pull/1224) - Update BCFTOOLS_SORT module with `--temp-dir .` added as option, which was required for Singularity
 - [#1225](https://github.com/nf-core/sarek/pull/1225) - Better test coverage for all tests
 - [#1227](https://github.com/nf-core/sarek/pull/1227) - Lint warning fix
+- [#1229](https://github.com/nf-core/sarek/pull/1229) - Fix md5sum for gatk4_spark tests
 
 ### Dependencies
 
