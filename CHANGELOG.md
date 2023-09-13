@@ -71,6 +71,7 @@ Rapaselet is a delta formed by the Rapaätno river between the Bielloriehppe mas
 - [#1225](https://github.com/nf-core/sarek/pull/1225) - Better test coverage for all tests
 - [#1227](https://github.com/nf-core/sarek/pull/1227) - Lint warning fix
 - [#1229](https://github.com/nf-core/sarek/pull/1229) - Fix md5sum for gatk4_spark tests
+- [#1230](https://github.com/nf-core/sarek/pull/1230) - Fix md5sum for sentieon aligner tests
 
 ### Dependencies
 
