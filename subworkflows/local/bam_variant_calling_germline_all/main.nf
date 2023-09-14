@@ -349,6 +349,8 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     )
 
     emit:
+    gvcf_sentieon_dnascope
+    gvcf_sentieon_haplotyper
     vcf_all
     vcf_deepvariant
     vcf_freebayes
@@ -358,7 +360,6 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     vcf_strelka
     vcf_sentieon_dnascope
     vcf_sentieon_haplotyper
-    gvcf_sentieon_haplotyper
     vcf_tiddit
 
     versions
