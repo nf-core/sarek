@@ -281,9 +281,32 @@ if (
 but without `--dbsnp`, `--known_snps`, `--known_indels` or the associated resource labels (ie `known_snps_vqsr`), \
 no variant recalibration will be done. For recalibration you must provide all of these resources.\nFor more information \
 see VariantRecalibration: https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator \n\
-Joint germline variant calling also requires intervals in order to genotype the samples.\
+Joint germline variant calling also requires intervals in order to genotype the samples. \
 As a result, if `--no_intervals` is set to `true` the joint germline variant calling will not be performed.""")
 }
+
+if (params.tools &&
+    params.tools.split(',').contains('sentieon_dnascope') &&
+    params.joint_germline &&
+    (
+        !params.sentieon_dnascope_emit_mode ||
+        !params.sentieon_dnascope_emit_mode.split(',').contains('gvcf')
+    )
+    ) {
+    error("When using Sentieon Dnascope for joint-germline variant-calling the option `--sentieon_dnascope_emit_mode` has to include `gvcf`.")
+}
+
+if (params.tools &&
+    params.tools.split(',').contains('sentieon_haplotyper') &&
+    params.joint_germline &&
+    (
+        !params.sentieon_haplotyper_emit_mode ||
+        !params.sentieon_haplotyper_emit_mode.split(',').contains('gvcf')
+    )
+    ) {
+    error("When using Sentieon Haplotyper for joint-germline variant-calling the option `--sentieon_haplotyper_emit_mode` has to include `gvcf`.")
+}
+
 
 // Fails when --joint_mutect2 is used without enabling mutect2
 if (params.joint_mutect2 && (!params.tools || !params.tools.split(',').contains('mutect2'))) {
