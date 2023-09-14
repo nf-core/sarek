@@ -51,8 +51,12 @@ workflow BAM_JOINT_CALLING_GERMLINE_SENTIEON {
 
     if (variant_caller == 'sentieon_dnascope') {
         // As advised by Don Freed (Sentieon), VQSR is skipped for DnaScope
-        genotype_index = merged_tbi
-        genotype_vcf   = merged_vcf
+        genotype_vcf   = merged_vcf.map{
+            meta, vcf -> [ meta + [ patient:"all_samples", variantcaller:'sentieon_dnascope'], vcf ]
+        }
+        genotype_index = merged_tbi.map{
+            meta, tbi -> [ meta + [ patient:"all_samples", variantcaller:'sentieon_dnascope'], tbi ]
+        }
     } else {
         vqsr_input = MERGE_GENOTYPEGVCFS.out.vcf.join(MERGE_GENOTYPEGVCFS.out.tbi, failOnDuplicate: true)
         indels_resource_label = known_indels_vqsr.mix(dbsnp_vqsr).collect()
