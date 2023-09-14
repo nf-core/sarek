@@ -373,7 +373,7 @@ sentieon_joint_germline:
   - subworkflows/local/bam_variant_calling_germline_all/main.nf
   - subworkflows/local/bam_variant_calling_sentieon_haplotyper/main.nf
   - tests/csv/3.0/mapped_joint_bam.csv
-  - tests/test_sentieon_joint_germline.yml
+  - tests/test_sentieon_haplotyper_joint_germline.yml
 
 ## manta
 manta:
