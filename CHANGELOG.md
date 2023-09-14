@@ -18,7 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Dependencies
 
 | Dependency | Old version | New version |
-| -----------| ------------| ----------- |
+| ---------- | ----------- | ----------- |
+
 ## [3.3.0](https://github.com/nf-core/sarek/releases/tag/3.3.0) - Rapaselet
 
 Rapaselet is a delta formed by the Rapaätno river between the Bielloriehppe massif (formerly written Piellorieppe) and the Skårki massif.
