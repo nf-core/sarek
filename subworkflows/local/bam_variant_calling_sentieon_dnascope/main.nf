@@ -37,7 +37,7 @@ workflow BAM_VARIANT_CALLING_SENTIEON_DNASCOPE {
             meta + [
                 num_intervals:num_intervals,
                 intervals_name:intervals.simpleName,
-                variantcaller:'SENTIEON_DNASCOPE'],
+                variantcaller:'sentieon_dnascope'],
             cram,
             crai,
             intervals
@@ -67,7 +67,7 @@ workflow BAM_VARIANT_CALLING_SENTIEON_DNASCOPE {
     }
 
     // Figure out if using intervals or no_intervals
-    haplotyper_vcf_branch = SENTIEON_DNASCOPE.out.vcf.map{
+    dnascope_vcf_branch = SENTIEON_DNASCOPE.out.vcf.map{
             meta, vcf -> [ meta - meta.subMap('interval_name'), vcf]
         }
         .branch{
@@ -75,7 +75,7 @@ workflow BAM_VARIANT_CALLING_SENTIEON_DNASCOPE {
             no_intervals: it[0].num_intervals <= 1
         }
 
-    haplotyper_vcf_tbi_branch = SENTIEON_DNASCOPE.out.vcf_tbi.map{
+    dnascope_vcf_tbi_branch = SENTIEON_DNASCOPE.out.vcf_tbi.map{
             meta, vcf_tbi -> [ meta - meta.subMap('interval_name'), vcf_tbi]
         }
         .branch{
@@ -99,7 +99,7 @@ workflow BAM_VARIANT_CALLING_SENTIEON_DNASCOPE {
             no_intervals: it[0].num_intervals <= 1
         }
 
-    vcfs_for_merging = haplotyper_vcf_branch.intervals.map{
+    vcfs_for_merging = dnascope_vcf_branch.intervals.map{
         meta, vcf -> [ groupKey(meta, meta.num_intervals), vcf ]}
 
     vcfs_for_merging = vcfs_for_merging.map{
@@ -111,16 +111,16 @@ workflow BAM_VARIANT_CALLING_SENTIEON_DNASCOPE {
     // Only when using intervals
     MERGE_SENTIEON_DNASCOPE_VCFS(vcfs_for_merging, dict)
 
-    haplotyper_vcf = Channel.empty().mix(
+    dnascope_vcf = Channel.empty().mix(
         MERGE_SENTIEON_DNASCOPE_VCFS.out.vcf,
-        haplotyper_vcf_branch.no_intervals)
+        dnascope_vcf_branch.no_intervals)
 
     haplotyper_tbi = Channel.empty().mix(
         MERGE_SENTIEON_DNASCOPE_VCFS.out.tbi,
-        haplotyper_vcf_tbi_branch.no_intervals)
+        dnascope_vcf_tbi_branch.no_intervals)
 
     // Remove no longer necessary field: num_intervals
-    vcf = haplotyper_vcf.map{ meta, vcf -> [ meta - meta.subMap('num_intervals'), vcf ] }
+    vcf = dnascope_vcf.map{ meta, vcf -> [ meta - meta.subMap('num_intervals'), vcf ] }
     vcf_tbi = haplotyper_tbi.map{ meta, tbi -> [ meta - meta.subMap('num_intervals'), tbi ] }
 
     // GVFs

@@ -209,7 +209,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         gvcf_tbi_sentieon_dnascope = BAM_VARIANT_CALLING_SENTIEON_DNASCOPE.out.gvcf_tbi
 
         if (joint_germline) {
-            BAM_JOINT_CALLING_GERMLINE_SENTIEON(   // TO-DO: Check that subworkflow is okay for Dnascope as well. Email sent to Don.
+            BAM_JOINT_CALLING_GERMLINE_SENTIEON(
                 BAM_VARIANT_CALLING_SENTIEON_DNASCOPE.out.genotype_intervals,
                 fasta,
                 fasta_fai,
@@ -228,7 +228,6 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             vcf_sentieon_dnascope = BAM_JOINT_CALLING_GERMLINE_SENTIEON.out.genotype_vcf
             versions = versions.mix(BAM_JOINT_CALLING_GERMLINE_SENTIEON.out.versions)
         } else {
-
             // If single sample track, check if filtering should be done
             if (!(skip_tools && skip_tools.split(',').contains('dnascope_filter'))) {
 
@@ -353,11 +352,11 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     vcf_all
     vcf_deepvariant
     vcf_freebayes
-    vcf_sentieon_dnascope
     vcf_haplotypecaller
     vcf_manta
     vcf_mpileup
     vcf_strelka
+    vcf_sentieon_dnascope
     vcf_sentieon_haplotyper
     gvcf_sentieon_haplotyper
     vcf_tiddit

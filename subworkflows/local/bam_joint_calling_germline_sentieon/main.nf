@@ -50,6 +50,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_SENTIEON {
     merged_tbi = MERGE_GENOTYPEGVCFS.out.tbi.map{meta, tbi -> [[id: 'joint_variant_calling'] , tbi]}
 
     if (variant_caller == 'sentieon_dnascope') {
+        // As advised by Don Freed (Sentieon), VQSR is skipped for DnaScope
         genotype_index = merged_vcf
         genotype_vcf   = merged_tbi
     } else {
