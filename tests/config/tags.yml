@@ -433,7 +433,6 @@ mutect2:
   - tests/csv/3.0/recalibrated_tumoronly.csv
   - tests/test_mutect2.yml
 
-
 ## Sentieon
 sentieon:
   - conf/modules/aligner.config
@@ -457,7 +456,6 @@ sentieon:
   - tests/test_sentieon_haplotyper_skip_filter.yml
   - tests/test_sentieon_joint_germline.yml
   - tests/tests_*sentieon*.yml
-
 
 ## strelka
 strelka:
