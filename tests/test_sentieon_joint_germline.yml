@@ -32,6 +32,7 @@
   command: nextflow run main.nf -profile test_cache,targeted --input ./tests/csv/3.0/mapped_joint_bam.csv --tools sentieon_haplotyper --step variant_calling --joint_germline --outdir results --sentieon_haplotyper_emit_mode gvcf --nucleotides_per_second 100
   tags:
     - germline
+    - sentieon
     - sentieon_joint_germline
     - variant_calling
     - sentieon/haplotyper
@@ -59,6 +60,7 @@
   command: nextflow run main.nf -profile test_cache,tools_germline --input ./tests/csv/3.0/mapped_joint_bam.csv --tools sentieon_haplotyper --step variant_calling --joint_germline --outdir results --sentieon_haplotyper_emit_mode gvcf -stub-run
   tags:
     - germline
+    - sentieon
     - sentieon_joint_germline
     - variant_calling
     - vqsr

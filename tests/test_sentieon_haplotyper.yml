@@ -39,6 +39,7 @@
   command: nextflow run main.nf -profile test_cache,targeted --input ./tests/csv/3.0/mapped_single_bam.csv --tools sentieon_haplotyper --step variant_calling --no_intervals --outdir results
   tags:
     - germline
+    - sentieon
     - sentieon/haplotyper
     - no_intervals
     - variant_calling
@@ -82,6 +83,7 @@
   command: nextflow run main.nf -profile test_cache,targeted --input ./tests/csv/3.0/mapped_single_bam.csv --tools sentieon_haplotyper --step variant_calling --outdir results --sentieon_haplotyper_emit_mode gvcf
   tags:
     - germline
+    - sentieon
     - sentieon/haplotyper
     - variant_calling
   files:
@@ -120,6 +122,7 @@
   command: nextflow run main.nf -profile test_cache,targeted --input ./tests/csv/3.0/mapped_single_bam.csv --tools sentieon_haplotyper --step variant_calling --outdir results --sentieon_haplotyper_emit_mode variant,gvcf
   tags:
     - germline
+    - sentieon
     - sentieon/haplotyper
     - variant_calling
   files:

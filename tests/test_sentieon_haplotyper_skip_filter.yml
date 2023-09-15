@@ -43,6 +43,7 @@
     - sentieon_haplotyper_skip_filter
     - no_intervals
     - variant_calling
+    - sentieon
     - sentieon/haplotyper
   files:
     - path: results/csv/variantcalled.csv
