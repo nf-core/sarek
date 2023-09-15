@@ -289,14 +289,18 @@ if ((params.download_cache) && (params.snpeff_cache || params.vep_cache)) {
 }
 
 if (params.snpeff_cache && params.tools && params.tools.contains("snpeff")) {
-    def snpeff_cache_dir = file("$params.snpeff_cache", type: 'dir') / "${params.snpeff_genome}.${params.snpeff_db}"
+    def snpeff_cache_dir = params.use_annotation_cache_keys ?
+        file("$params.snpeff_cache", type: 'dir') + "/${params.snpeff_genome}.${params.snpeff_db}/${params.snpeff_genome}.${params.snpeff_db}" :
+        file("$params.snpeff_cache", type: 'dir') + "/${params.snpeff_genome}.${params.snpeff_db}"
     if ( !snpeff_cache_dir.exists() || !snpeff_cache_dir.isDirectory() ) {
         error("Files within --snpeff_cache invalid. Make sure there is a directory named ${params.snpeff_genome}.${params.snpeff_db} in ${params.snpeff_cache}.\nhttps://nf-co.re/sarek/dev/usage#how-to-customise-snpeff-and-vep-annotation")
     }
 }
 
 if (params.vep_cache && params.tools && params.tools.contains("vep")) {
-    def vep_cache_dir = file("$params.vep_cache", type: 'dir') / "${params.vep_cache_version}_${params.vep_genome}"
+    def vep_cache_dir = params.use_annotation_cache_keys ?
+        file("$params.vep_cache", type: 'dir') + "/${params.vep_cache_version}_${params.vep_genome}/${params.vep_species}/${params.vep_cache_version}_${params.vep_genome}" :
+        file("$params.vep_cache", type: 'dir') + "/${params.vep_species}/${params.vep_cache_version}_${params.vep_genome}"
     if ( !vep_cache_dir.exists() || !vep_cache_dir.isDirectory() ) {
         error("Files within --vep_cache invalid. Make sure there is a directory named ${params.vep_cache_version}_${params.vep_genome} in ${params.vep_cache}.\nhttps://nf-co.re/sarek/dev/usage#how-to-customise-snpeff-and-vep-annotation")
     }
@@ -337,6 +341,9 @@ vep_species        = params.vep_species        ?: Channel.empty()
 // Initialize files channels based on params, not defined within the params.genomes[params.genome] scope
 snpeff_cache       = params.snpeff_cache ? params.use_annotation_cache_keys ? Channel.fromPath("${params.snpeff_cache}/${params.snpeff_genome}.${params.snpeff_db}", checkIfExists: true).collect()   : Channel.fromPath(params.snpeff_cache).collect() : []
 vep_cache          = params.vep_cache    ? params.use_annotation_cache_keys ? Channel.fromPath("${params.vep_cache}/${params.vep_cache_version}_${params.vep_genome}", checkIfExists: true).collect() : Channel.fromPath(params.vep_cache).collect()    : []
+
+// Add meta map to channel
+snpeff_cache       = snpeff_cache.map{ cache -> [[id:"${params.snpeff_genome}.${params.snpeff_db}"], cache]}
 
 vep_extra_files = []
 
