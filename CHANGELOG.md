@@ -10,13 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - [#1231](https://github.com/nf-core/sarek/pull/1231) - Back to dev
+- [#1237](https://github.com/nf-core/sarek/pull/1237) - Add parameter for handling of Sentieon license server extension
 
 ### Changed
 
 ### Fixed
 
 - [#1232](https://github.com/nf-core/sarek/pull/1232) - Fix Zenodo IDs in manifest
-- [#1237](https://github.com/nf-core/sarek/pull/1237) - Sentieon license parsing handled outside of -profile test
 
 ### Dependencies
 
