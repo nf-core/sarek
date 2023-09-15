@@ -50,13 +50,15 @@ def checkPathParamList = [
     params.multiqc_config,
     params.pon,
     params.pon_tbi,
-    params.snpeff_cache,
     params.spliceai_indel,
     params.spliceai_indel_tbi,
     params.spliceai_snv,
-    params.spliceai_snv_tbi,
-    params.vep_cache
+    params.spliceai_snv_tbi
 ]
+
+// only check if we are using the tools
+if (params.tools && params.tools.contains("snpeff")) checkPathParamList.add(params.snpeff_cache)
+if (params.tools && params.tools.contains("vep"))    checkPathParamList.add(params.vep_cache)
 
 // Validate input parameters
 WorkflowSarek.initialise(params, log)
