@@ -433,6 +433,32 @@ mutect2:
   - tests/csv/3.0/recalibrated_tumoronly.csv
   - tests/test_mutect2.yml
 
+
+## Sentieon
+sentieon:
+  - conf/modules/aligner.config
+  - conf/modules/prepare_genome.config
+  - conf/modules/sentieon.config
+  - conf/modules/sentieon_dedup.config
+  - conf/modules/sentieon_haplotyper.config
+  - conf/modules/sentieon_joint_germline.config
+  - modules/nf-core/sentieon/bwamem/main.nf
+  - modules/nf-core/sentieon/haplotyper/main.nf
+  - subworkflows/local/bam_sentieon_dedup/main.nf
+  - subworkflows/local/bam_variant_calling_sentieon_haplotyper/main.nf
+  - subworkflows/local/fastq_align_bwamem_mem2_dragmap_sentieon/main.nf
+  - tests/csv/3.0/fastq_single.csv
+  - tests/csv/3.0/mapped_joint_bam.csv
+  - tests/csv/3.0/mapped_single_bam.csv
+  - tests/csv/3.0/mapped_single_cram.csv
+  - tests/test_aligner_sentieon_bwamem.yml
+  - tests/test_sentieon_dedup_from_bam.yml
+  - tests/test_sentieon_haplotyper.yml
+  - tests/test_sentieon_haplotyper_skip_filter.yml
+  - tests/test_sentieon_joint_germline.yml
+  - tests/tests_*sentieon*.yml
+
+
 ## strelka
 strelka:
   - conf/modules/strelka.config

@@ -3,6 +3,7 @@
   tags:
     - input_cram
     - preprocessing
+    - sentieon
     - sentieon/dedup
   files:
     - path: results/csv/markduplicates.csv

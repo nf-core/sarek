@@ -2,6 +2,7 @@
   command: nextflow run main.nf -profile test_cache --aligner sentieon-bwamem --save_reference --outdir results
   tags:
     - aligner
+    - sentieon
     - sentieon/bwamem
     - preprocessing
   files:

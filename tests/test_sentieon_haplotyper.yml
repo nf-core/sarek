@@ -2,6 +2,7 @@
   command: nextflow run main.nf -profile test_cache,targeted --input ./tests/csv/3.0/mapped_single_bam.csv --tools sentieon_haplotyper --step variant_calling --outdir results
   tags:
     - germline
+    - sentieon
     - sentieon/haplotyper
     - variant_calling
   files:

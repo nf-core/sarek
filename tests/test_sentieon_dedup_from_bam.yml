@@ -3,6 +3,7 @@
   tags:
     - input_bam
     - preprocessing
+    - sentieon
     - sentieon/dedup
   files:
     - path: results/csv/markduplicates.csv

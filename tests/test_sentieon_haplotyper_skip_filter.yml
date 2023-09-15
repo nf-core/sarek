@@ -4,6 +4,7 @@
     - germline
     - sentieon_haplotyper_skip_filter
     - variant_calling
+    - sentieon
     - sentieon/haplotyper
   files:
     - path: results/csv/variantcalled.csv

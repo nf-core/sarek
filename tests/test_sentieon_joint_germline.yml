@@ -2,9 +2,10 @@
   command: nextflow run main.nf -profile test_cache,targeted --input ./tests/csv/3.0/mapped_joint_bam.csv --tools sentieon_haplotyper --step variant_calling --joint_germline --outdir results --sentieon_haplotyper_emit_mode gvcf
   tags:
     - germline
+    - sentieon
     - sentieon_joint_germline
-    - variant_calling
     - sentieon/haplotyper
+    - variant_calling
   files:
     - path: results/csv/variantcalled.csv
       md5sum: 6ec10f6455c2b5290c7f6fc687c529ca
