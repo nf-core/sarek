@@ -290,19 +290,21 @@ if ((params.download_cache) && (params.snpeff_cache || params.vep_cache)) {
 
 if (params.snpeff_cache && params.tools && params.tools.contains("snpeff")) {
     def snpeff_cache_dir = params.use_annotation_cache_keys ?
-        file("$params.snpeff_cache", type: 'dir') + "/${params.snpeff_genome}.${params.snpeff_db}/${params.snpeff_genome}.${params.snpeff_db}" :
-        file("$params.snpeff_cache", type: 'dir') + "/${params.snpeff_genome}.${params.snpeff_db}"
-    if ( !snpeff_cache_dir.exists() || !snpeff_cache_dir.isDirectory() ) {
-        error("Files within --snpeff_cache invalid. Make sure there is a directory named ${params.snpeff_genome}.${params.snpeff_db} in ${params.snpeff_cache}.\nhttps://nf-co.re/sarek/dev/usage#how-to-customise-snpeff-and-vep-annotation")
+        "${params.snpeff_genome}.${params.snpeff_db}/${params.snpeff_genome}.${params.snpeff_db}" :
+        "${params.snpeff_genome}.${params.snpeff_db}"
+    def snpeff_cache_path_full = file("$params.snpeff_cache", type: 'dir') / snpeff_cache_dir
+    if ( !snpeff_cache_path_full.exists() || !snpeff_cache_path_full.isDirectory() ) {
+        error("Files within --snpeff_cache invalid. Make sure there is a directory named ${snpeff_cache_dir} in ${params.snpeff_cache}.\nhttps://nf-co.re/sarek/dev/usage#how-to-customise-snpeff-and-vep-annotation")
     }
 }
 
 if (params.vep_cache && params.tools && params.tools.contains("vep")) {
     def vep_cache_dir = params.use_annotation_cache_keys ?
-        file("$params.vep_cache", type: 'dir') + "/${params.vep_cache_version}_${params.vep_genome}/${params.vep_species}/${params.vep_cache_version}_${params.vep_genome}" :
-        file("$params.vep_cache", type: 'dir') + "/${params.vep_species}/${params.vep_cache_version}_${params.vep_genome}"
-    if ( !vep_cache_dir.exists() || !vep_cache_dir.isDirectory() ) {
-        error("Files within --vep_cache invalid. Make sure there is a directory named ${params.vep_cache_version}_${params.vep_genome} in ${params.vep_cache}.\nhttps://nf-co.re/sarek/dev/usage#how-to-customise-snpeff-and-vep-annotation")
+        "${params.vep_cache_version}_${params.vep_genome}/${params.vep_species}/${params.vep_cache_version}_${params.vep_genome}" :
+        "${params.vep_species}/${params.vep_cache_version}_${params.vep_genome}"
+    def vep_cache_path_full = file("$params.vep_cache", type: 'dir') / vep_cache_dir
+    if ( !vep_cache_path_full.exists() || !vep_cache_path_full.isDirectory() ) {
+        error("Files within --vep_cache invalid. Make sure there is a directory named ${vep_cache_dir} in ${params.vep_cache}.\nhttps://nf-co.re/sarek/dev/usage#how-to-customise-snpeff-and-vep-annotation")
     }
 }
 
