@@ -52,7 +52,7 @@
     # text-based file changes md5sums on reruns
 
 - name: Run Sentieon-FGBio UMI combination test
-  command: nextflow run main.nf -profile test_cache,umi --outdir results --aligner "sentieon-bwamem"
+  command: nextflow run main.nf -profile test_cache,sentieon_test_licence,umi --outdir results --aligner "sentieon-bwamem"
   tags:
     - preprocessing
     - umi

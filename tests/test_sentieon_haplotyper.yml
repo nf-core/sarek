@@ -1,5 +1,5 @@
 - name: Run variant calling on germline sample with sentieons haplotyper
-  command: nextflow run main.nf -profile test_cache,targeted --input ./tests/csv/3.0/mapped_single_bam.csv --tools sentieon_haplotyper --step variant_calling --outdir results
+  command: nextflow run main.nf -profile test_cache,targeted,sentieon_test_licence --input ./tests/csv/3.0/mapped_single_bam.csv --tools sentieon_haplotyper --step variant_calling --outdir results
   tags:
     - germline
     - sentieon/haplotyper
@@ -35,7 +35,7 @@
     - path: results/haplotyper
       should_exist: false
 - name: Run variant calling on germline sample with sentieons haplotyper without intervals
-  command: nextflow run main.nf -profile test_cache,targeted --input ./tests/csv/3.0/mapped_single_bam.csv --tools sentieon_haplotyper --step variant_calling --no_intervals --outdir results
+  command: nextflow run main.nf -profile test_cache,targeted,sentieon_test_licence --input ./tests/csv/3.0/mapped_single_bam.csv --tools sentieon_haplotyper --step variant_calling --no_intervals --outdir results
   tags:
     - germline
     - sentieon/haplotyper
@@ -78,7 +78,7 @@
     - path: results/sentieon_haplotyper
       should_exist: false
 - name: Run variant calling on germline sample with sentieons haplotyper output gvcf
-  command: nextflow run main.nf -profile test_cache,targeted --input ./tests/csv/3.0/mapped_single_bam.csv --tools sentieon_haplotyper --step variant_calling --outdir results --sentieon_haplotyper_emit_mode gvcf
+  command: nextflow run main.nf -profile test_cache,targeted,sentieon_test_licence --input ./tests/csv/3.0/mapped_single_bam.csv --tools sentieon_haplotyper --step variant_calling --outdir results --sentieon_haplotyper_emit_mode gvcf
   tags:
     - germline
     - sentieon/haplotyper
@@ -116,7 +116,7 @@
     - path: results/haplotyper
       should_exist: false
 - name: Run variant calling on germline sample with sentieons haplotyper output both gvcf and vcf
-  command: nextflow run main.nf -profile test_cache,targeted --input ./tests/csv/3.0/mapped_single_bam.csv --tools sentieon_haplotyper --step variant_calling --outdir results --sentieon_haplotyper_emit_mode variant,gvcf
+  command: nextflow run main.nf -profile test_cache,targeted,sentieon_test_licence --input ./tests/csv/3.0/mapped_single_bam.csv --tools sentieon_haplotyper --step variant_calling --outdir results --sentieon_haplotyper_emit_mode variant,gvcf
   tags:
     - germline
     - sentieon/haplotyper
