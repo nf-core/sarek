@@ -5,6 +5,19 @@
     "description": "An open-source analysis pipeline to detect germline or somatic variants from whole genome or targeted sequencing",
     "type": "object",
     "definitions": {
+        "sentieon": {
+            "title": "Sentieon",
+            "type": "object",
+            "description": "Sentieon specific options such as those relating to authentication and licensing",
+            "default": "",
+            "properties": {
+                "sentieon_license_extension": {
+                    "type": "boolean",
+                    "description": "Use Sentieon License Server extension options.",
+                    "help_text": "Whether to use the Sentieon License server extension parameters. If this is enabled, you must supply the secrets SENTIEON_AUTH_MECH_BASE64 and SENTIEON_AUTH_DATA_BASE64, which correspond with the SENTIEON_AUTH_MECH and SENTIEON_AUTH_DATA base64 encoded, respectively. Make sure to set these as Nextflow secrets or authentication against the Sentieon license server will fail. This is only necessary when using the license server extension, this is not needed for typical Sentieon usage."
+                }
+            }
+        },
         "input_output_options": {
             "title": "Input/output options",
             "type": "object",
@@ -1022,6 +1035,9 @@
         }
     },
     "allOf": [
+        {
+            "$ref": "#/definitions/sentieon"
+        },
         {
             "$ref": "#/definitions/input_output_options"
         },
