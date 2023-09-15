@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - [#1232](https://github.com/nf-core/sarek/pull/1232) - Fix Zenodo IDs in manifest
+- [#1236](https://github.com/nf-core/sarek/pull/1236) - Fix annotation cache folder verification when no annotation
 
 ### Dependencies
 
