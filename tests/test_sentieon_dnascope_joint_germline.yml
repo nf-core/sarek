@@ -2,7 +2,7 @@
   command: nextflow run main.nf -profile test_cache,targeted --input ./tests/csv/3.0/mapped_joint_bam.csv --tools sentieon_dnascope --step variant_calling --joint_germline --outdir results --sentieon_dnascope_emit_mode gvcf
   tags:
     - germline
-    - sentieon_joint_germline
+    - sentieon_dnascope_joint_germline
     - variant_calling
     - sentieon/dnascope
   files:
@@ -31,7 +31,7 @@
   command: nextflow run main.nf -profile test_cache,targeted --input ./tests/csv/3.0/mapped_joint_bam.csv --tools sentieon_dnascope --step variant_calling --joint_germline --outdir results --sentieon_dnascope_emit_mode gvcf --nucleotides_per_second 100
   tags:
     - germline
-    - sentieon_joint_germline
+    - sentieon_dnascope_joint_germline
     - variant_calling
     - sentieon/dnascope
   files:
