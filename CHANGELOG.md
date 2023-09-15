@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - [#1232](https://github.com/nf-core/sarek/pull/1232) - Fix Zenodo IDs in manifest
+- [#1237](https://github.com/nf-core/sarek/pull/1237) - Sentieon license parsing handled outside of -profile test
 
 ### Dependencies
 
