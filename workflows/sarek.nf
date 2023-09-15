@@ -326,21 +326,22 @@ vep_species        = params.vep_species        ?: Channel.empty()
 if (params.snpeff_cache && params.tools && params.tools.contains("snpeff")) {
     def snpeff_annotation_cache_key = params.use_annotation_cache_keys ? "${params.snpeff_genome}.${params.snpeff_db}/" : ""
     def snpeff_cache_dir =  "${snpeff_annotation_cache_key}${params.snpeff_genome}.${params.snpeff_db}"
-    def snpeff_cache_path_full = file("$params.snpeff_cache", type: 'dir') / snpeff_cache_dir
+    def snpeff_cache_path_full = file("$params.snpeff_cache/$snpeff_cache_dir", type: 'dir')
     if ( !snpeff_cache_path_full.exists() || !snpeff_cache_path_full.isDirectory() ) {
         error("Files within --snpeff_cache invalid. Make sure there is a directory named ${snpeff_cache_dir} in ${params.snpeff_cache}.\nhttps://nf-co.re/sarek/dev/usage#how-to-customise-snpeff-and-vep-annotation")
     }
-    snpeff_cache = Channel.fromPath("${params.snpeff_cache}/${snpeff_annotation_cache_key}", checkIfExists: true).collect().map{ cache -> [[id:"${params.snpeff_genome}.${params.snpeff_db}"], cache]}
+    snpeff_cache = Channel.fromPath(file("${params.snpeff_cache}/${snpeff_annotation_cache_key}"), checkIfExists: true).collect()
+        .map{ cache -> [ [ id:"${params.snpeff_genome}.${params.snpeff_db}" ], cache ] }
 } else snpeff_cache = []
 
 if (params.vep_cache && params.tools && params.tools.contains("vep")) {
     def vep_annotation_cache_key = params.use_annotation_cache_keys ? "${params.vep_cache_version}_${params.vep_genome}/" : ""
     def vep_cache_dir = "${vep_annotation_cache_key}${params.vep_species}/${params.vep_cache_version}_${params.vep_genome}"
-    def vep_cache_path_full = file("$params.vep_cache", type: 'dir') / vep_cache_dir
+    def vep_cache_path_full = file("$params.vep_cache/$vep_cache_dir", type: 'dir')
     if ( !vep_cache_path_full.exists() || !vep_cache_path_full.isDirectory() ) {
         error("Files within --vep_cache invalid. Make sure there is a directory named ${vep_cache_dir} in ${params.vep_cache}.\nhttps://nf-co.re/sarek/dev/usage#how-to-customise-snpeff-and-vep-annotation")
     }
-    vep_cache = Channel.fromPath("${params.vep_cache}/${vep_annotation_cache_key}", checkIfExists: true).collect()
+    vep_cache = Channel.fromPath(file("${params.vep_cache}/${vep_annotation_cache_key}"), checkIfExists: true).collect()
 } else vep_cache = []
 
 vep_extra_files = []
