@@ -380,6 +380,17 @@ joint_germline:
   - tests/csv/3.0/mapped_joint_bam.csv
   - tests/test_joint_germline.yml
 
+## sentieon_dnascope_joint_germline
+sentieon_dnascope_joint_germline:
+  - conf/modules/prepare_genome.config
+  - conf/modules/sentieon_dnascope.config
+  - conf/modules/sentieon_dnascope_joint_germline.config
+  - modules/nf-core/sentieon/dnascope/main.nf
+  - subworkflows/local/bam_variant_calling_germline_all/main.nf
+  - subworkflows/local/bam_variant_calling_sentieon_dnascope/main.nf
+  - tests/csv/3.0/mapped_joint_bam.csv
+  - tests/test_sentieon_dnascop_joint_germline.yml
+
 ## sentieon_haplotyper_joint_germline
 sentieon_haplotyper_joint_germline:
   - conf/modules/prepare_genome.config
