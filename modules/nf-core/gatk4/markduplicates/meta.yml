@@ -1,8 +1,9 @@
 name: gatk4_markduplicates
 description: This tool locates and tags duplicate reads in a BAM or SAM file, where duplicate reads are defined as originating from a single fragment of DNA.
 keywords:
-  - markduplicates
   - bam
+  - gatk4
+  - markduplicates
   - sort
 tools:
   - gatk4:

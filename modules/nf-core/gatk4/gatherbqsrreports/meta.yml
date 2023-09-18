@@ -1,9 +1,10 @@
 name: gatk4_gatherbqsrreports
 description: Gathers scattered BQSR recalibration reports into a single file
 keywords:
+  - base quality score recalibration
+  - bqsr
+  - gatherbqsrreports
   - gatk4
-  - gatk4_gatherbqsrreports
-  - base_recalibration
 tools:
   - gatk4:
       description: Genome Analysis Toolkit (GATK4)

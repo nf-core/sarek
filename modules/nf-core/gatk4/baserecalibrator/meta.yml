@@ -1,6 +1,10 @@
 name: gatk4_baserecalibrator
 description: Generate recalibration table for Base Quality Score Recalibration (BQSR)
 keywords:
+  - base quality score recalibration
+  - table
+  - bqsr
+  - gatk4
   - sort
 tools:
   - gatk4:

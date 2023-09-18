@@ -1,9 +1,10 @@
 name: gatk4_createsequencedictionary
 description: Creates a sequence dictionary for a reference sequence
 keywords:
+  - createsequencedictionary
   - dictionary
   - fasta
-  - createsequencedictionary
+  - gatk4
 tools:
   - gatk:
       description: |
