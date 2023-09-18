@@ -1073,7 +1073,9 @@ nextflow secrets set SENTIEON_LICENSE_BASE64 \$(cat <sentieon_license_file.lic> 
 
 ### Available Sentieon functions
 
-Sarek contains the following Sentieon functions [bwa mem](https://support.sentieon.com/manual/usages/general/#bwa-mem-syntax), [LocusCollector](https://support.sentieon.com/manual/usages/general/#locuscollector-algorithm) + [Dedup](https://support.sentieon.com/manual/usages/general/#dedup-algorithm), [Haplotyper](https://support.sentieon.com/manual/usages/general/#haplotyper-algorithm), [GVCFtyper](https://support.sentieon.com/manual/usages/general/#gvcftyper-algorithm) and [VarCal](https://support.sentieon.com/manual/usages/general/#varcal-algorithm) + [ApplyVarCal](https://support.sentieon.com/manual/usages/general/#applyvarcal-algorithm), so the basic processing of alignment of fastq-files to VCF-files can be done using speedup Sentieon functions.
+Sarek contains the following Sentieon functions from [DnaSeq](https://support.sentieon.com/manual/DNAseq_usage/dnaseq/) : [bwa mem](https://support.sentieon.com/manual/usages/general/#bwa-mem-syntax), [LocusCollector](https://support.sentieon.com/manual/usages/general/#locuscollector-algorithm) + [Dedup](https://support.sentieon.com/manual/usages/general/#dedup-algorithm), [Haplotyper](https://support.sentieon.com/manual/usages/general/#haplotyper-algorithm), [GVCFtyper](https://support.sentieon.com/manual/usages/general/#gvcftyper-algorithm) and [VarCal](https://support.sentieon.com/manual/usages/general/#varcal-algorithm) + [ApplyVarCal](https://support.sentieon.com/manual/usages/general/#applyvarcal-algorithm), so the basic processing of alignment of fastq-files to VCF-files can be done using speedup Sentieon functions.
+
+Sarek also contains the Sentieon functions [DnaScope](https://support.sentieon.com/manual/usages/general/?highlight=dnamodelapply#dnascope-algorithm) and [DNAModelApply](https://support.sentieon.com/manual/usages/general/?highlight=dnamodelapply#dnamodelapply-algorithm).
 
 ### Basic usage of Sentieon functions
 
