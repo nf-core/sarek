@@ -2,11 +2,10 @@ process CONTROLFREEC_MAKEGRAPH {
     tag "$meta.id"
     label 'process_low'
 
-    conda "bioconda::control-freec=11.6"
+    conda "bioconda::control-freec=11.6b"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/control-freec:11.6--h1b792b2_1':
-        'biocontainers/control-freec:11.6--h1b792b2_1' }"
-
+        'https://depot.galaxyproject.org/singularity/control-freec:11.6b--hdbdd923_0 ':
+        'biocontainers/control-freec:11.6b--hdbdd923_0 ' }"
     input:
     tuple val(meta), path(ratio), path(baf)
 
