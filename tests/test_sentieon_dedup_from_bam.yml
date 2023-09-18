@@ -1,5 +1,5 @@
 - name: Run sentieon dedup starting from BAM
-  command: nextflow run main.nf -profile test_cache,sentieon_dedup_bam --outdir results
+  command: nextflow run main.nf -profile test_cache,sentieon_test_licence,sentieon_dedup_bam --outdir results
   tags:
     - input_bam
     - preprocessing
