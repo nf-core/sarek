@@ -6,9 +6,9 @@ description: |
   tool to produce optimal results. For example, 30 samples for exome data. For more details see
   https://gatk.broadinstitute.org/hc/en-us/articles/4402736812443-Which-training-sets-arguments-should-I-use-for-running-VQSR-
 keywords:
-  - VariantRecalibrator
   - gatk4
-  - recalibration_model
+  - recalibration model
+  - variantrecalibrator
 tools:
   - gatk4:
       description: |

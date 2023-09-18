@@ -1,8 +1,10 @@
 name: gatk4_mergemutectstats
 description: Merges mutect2 stats generated on different intervals/regions
 keywords:
-  - mutectstats
+  - gatk4
   - merge
+  - mutect2
+  - mutectstats
 tools:
   - gatk4:
       description: Genome Analysis Toolkit (GATK4)
@@ -19,7 +21,7 @@ input:
         Groovy Map containing sample information
         e.g. [ id:'test', single_end:false ]
   - stats:
-      type: (list of) file(s)
+      type: file
       description: Stats file
       pattern: "*.{stats}"
 

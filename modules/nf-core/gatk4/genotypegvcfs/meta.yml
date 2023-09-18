@@ -2,9 +2,10 @@ name: gatk4_genotypegvcfs
 description: |
   Perform joint genotyping on one or more samples pre-called with HaplotypeCaller.
 keywords:
-  - joint genotyping
+  - gatk4
   - genotype
   - gvcf
+  - joint genotyping
 tools:
   - gatk4:
       description: Genome Analysis Toolkit (GATK4)

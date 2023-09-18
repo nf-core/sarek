@@ -1,8 +1,9 @@
 name: gatk4_mergevcfs
 description: Merges several vcf files
 keywords:
-  - vcf
+  - gatk4
   - merge
+  - vcf
 tools:
   - gatk4:
       description: |

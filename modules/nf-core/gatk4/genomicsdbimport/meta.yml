@@ -2,10 +2,10 @@ name: gatk4_genomicsdbimport
 description: merge GVCFs from multiple samples. For use in joint genotyping or somatic panel of normal creation.
 keywords:
   - gatk4
-  - genomicsdbimport
   - genomicsdb
-  - panelofnormalscreation
+  - genomicsdbimport
   - jointgenotyping
+  - panelofnormalscreation
 tools:
   - gatk4:
       description: |
@@ -33,7 +33,7 @@ input:
       pattern: "*.vcf.gz_tbi"
 
   - wspace:
-      type: path
+      type: file
       description: path to an existing genomicsdb to be used in update db mode or get intervals mode. This WILL NOT specify name of a new genomicsdb in create db mode.
       pattern: "/path/to/existing/gendb"
 
