@@ -138,7 +138,7 @@ sentieon/bwamem:
   - modules/nf-core/sentieon/bwamem/main.nf
   - subworkflows/local/fastq_align_bwamem_mem2_dragmap_sentieon/main.nf
   - tests/csv/3.0/fastq_single.csv
-  - tests/test_aligner_sentieon_bwamem.yml
+  - tests/test_sentieon_aligner_bwamem.yml
 
 ## markduplicates
 gatk4/markduplicates:
