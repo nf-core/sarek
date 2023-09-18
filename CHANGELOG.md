@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- [#1243](https://github.com/nf-core/sarek/pull/1243) - Improve json schema usage for input
+
 ### Fixed
 
 - [#1232](https://github.com/nf-core/sarek/pull/1232) - Fix Zenodo IDs in manifest
