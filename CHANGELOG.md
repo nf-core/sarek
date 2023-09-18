@@ -17,11 +17,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#1232](https://github.com/nf-core/sarek/pull/1232) - Fix Zenodo IDs in manifest
 - [#1236](https://github.com/nf-core/sarek/pull/1236) - Fix annotation cache folder verification when no annotation
+- [#1241](https://github.com/nf-core/sarek/pull/1241) - Fix axis text of controlfreec plots closing [#921](https://github.com/nf-core/sarek/issues/921)
 
 ### Dependencies
 
-| Dependency | Old version | New version |
-| ---------- | ----------- | ----------- |
+| Dependency    | Old version | New version |
+| ------------- | ----------- | ----------- |
+| Control-FREEC | 11.6        | 11.6b       |
 
 ## [3.3.0](https://github.com/nf-core/sarek/releases/tag/3.3.0) - Rapaselet
 

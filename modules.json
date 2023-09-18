@@ -77,28 +77,29 @@
                     },
                     "controlfreec/assesssignificance": {
                         "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "git_sha": "053564d29a20d45323547973c4023914923823df",
                         "installed_by": ["modules"]
                     },
                     "controlfreec/freec": {
                         "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "git_sha": "053564d29a20d45323547973c4023914923823df",
                         "installed_by": ["modules"]
                     },
                     "controlfreec/freec2bed": {
                         "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "git_sha": "053564d29a20d45323547973c4023914923823df",
                         "installed_by": ["modules"]
                     },
                     "controlfreec/freec2circos": {
                         "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "git_sha": "053564d29a20d45323547973c4023914923823df",
                         "installed_by": ["modules"]
                     },
                     "controlfreec/makegraph": {
                         "branch": "master",
-                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "git_sha": "053564d29a20d45323547973c4023914923823df",
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/controlfreec/makegraph/controlfreec-makegraph.diff"
                     },
                     "custom/dumpsoftwareversions": {
                         "branch": "master",
