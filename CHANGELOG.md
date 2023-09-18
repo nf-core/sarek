@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- [#1242](https://github.com/nf-core/sarek/pull/1242) - Simplify sentieon nf-core test lisence usage
+
 ### Fixed
 
 - [#1232](https://github.com/nf-core/sarek/pull/1232) - Fix Zenodo IDs in manifest
