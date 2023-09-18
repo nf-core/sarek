@@ -32,7 +32,7 @@ process GATK4_APPLYBQSR_SPARK {
     }
     """
     gatk \\
-        --java-options "-Xmx${avail_mem}M" \\
+        --java-options "-Xmx${avail_mem}M -XX:-UsePerfData" \\
         ApplyBQSRSpark \\
         --input $input \\
         --output ${prefix}.${input.getExtension()} \\

@@ -1,7 +1,7 @@
 name: "gatk4_cnnscorevariants"
 description: Apply a Convolutional Neural Net to filter annotated variants
 keywords:
-  - gatk4_cnnscorevariants
+  - cnnscorevariants
   - gatk4
   - variants
 tools:

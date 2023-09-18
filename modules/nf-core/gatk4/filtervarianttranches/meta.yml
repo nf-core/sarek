@@ -1,9 +1,9 @@
 name: "gatk4_filtervarianttranches"
 description: Apply tranche filtering
 keywords:
-  - gatk4
   - filtervarianttranches
-  - tranche_filtering
+  - gatk4
+  - tranche filtering
 tools:
   - "gatk4":
       description: |
