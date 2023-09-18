@@ -32,7 +32,8 @@ process GATK4_MARKDUPLICATES_SPARK {
         avail_mem = (task.memory.mega*0.8).intValue()
     }
     """
-    gatk --java-options "-Xmx${avail_mem}M" MarkDuplicatesSpark \\
+    gatk --java-options "-Xmx${avail_mem}M -XX:-UsePerfData" \\
+        MarkDuplicatesSpark \\
         $input_list \\
         --output $prefix \\
         --reference $fasta \\

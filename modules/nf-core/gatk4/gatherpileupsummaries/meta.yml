@@ -1,6 +1,8 @@
 name: gatk4_gatherpileupsummaries
 description: write your description here
 keywords:
+  - gatk4
+  - mpileup
   - sort
 tools:
   - gatk4:
@@ -18,7 +20,7 @@ input:
         Groovy Map containing sample information
         e.g. [ id:'test', single_end:false ]
   - pileup:
-      type: (list of) file(s)
+      type: file
       description: Pileup files from gatk4/getpileupsummaries
       pattern: "*.pileups.table"
 

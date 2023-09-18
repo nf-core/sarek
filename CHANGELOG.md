@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#1232](https://github.com/nf-core/sarek/pull/1232) - Fix Zenodo IDs in manifest
 - [#1236](https://github.com/nf-core/sarek/pull/1236) - Fix annotation cache folder verification when no annotation
+- [#1240](https://github.com/nf-core/sarek/pull/1240) - Disable JVM Hotspot in all modules/gatk4 ([#1030](https://github.com/nf-core/sarek/issues/1030))
 - [#1241](https://github.com/nf-core/sarek/pull/1241) - Fix axis text of controlfreec plots closing [#921](https://github.com/nf-core/sarek/issues/921)
 
 ### Dependencies
