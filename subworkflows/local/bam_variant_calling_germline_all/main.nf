@@ -14,7 +14,10 @@ include { BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER } from '../bam_variant_calling
 include { BAM_VARIANT_CALLING_MPILEUP             } from '../bam_variant_calling_mpileup/main'
 include { BAM_VARIANT_CALLING_SINGLE_STRELKA      } from '../bam_variant_calling_single_strelka/main'
 include { BAM_VARIANT_CALLING_SINGLE_TIDDIT       } from '../bam_variant_calling_single_tiddit/main'
+include { SENTIEON_DNAMODELAPPLY                  } from '../../../modules/nf-core/sentieon/dnamodelapply/main'
 include { VCF_VARIANT_FILTERING_GATK              } from '../vcf_variant_filtering_gatk/main'
+
+
 
 workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     take:
@@ -233,18 +236,27 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             // If single sample track, check if filtering should be done
             if (!(skip_tools && skip_tools.split(',').contains('dnascope_filter'))) {
 
-                VCF_VARIANT_FILTERING_GATK(
+                SENTIEON_DNAMODELAPPLY(
                     vcf_sentieon_dnascope.join(vcf_tbi_sentieon_dnascope, failOnDuplicate: true, failOnMismatch: true),
-                    fasta,
-                    fasta_fai,
-                    dict.map{ meta, dict -> [ dict ] },
-                    intervals_bed_combined_haplotypec,
-                    known_sites_indels.concat(known_sites_snps).flatten().unique().collect(),
-                    known_sites_indels_tbi.concat(known_sites_snps_tbi).flatten().unique().collect())
+                    fasta.map{ fasta -> [ [ id:fasta.baseName ], fasta ] },
+                    fasta_fai.map{ fai -> [ [ id:fai.baseName ], fai ] },
+                    sentieon_dnascope_model.map{ model -> [ [ id:model.baseName ], model ] })
 
-                vcf_sentieon_dnascope = VCF_VARIANT_FILTERING_GATK.out.filtered_vcf
+                vcf_sentieon_dnascope = SENTIEON_DNAMODELAPPLY.out.vcf
+                versions = versions.mix(SENTIEON_DNAMODELAPPLY.out.versions)
 
-                versions = versions.mix(VCF_VARIANT_FILTERING_GATK.out.versions)
+                // TO-DO: Figure out whether it should be possible to also run VCF_VARIANT_FILTERING_GATK here.
+                // VCF_VARIANT_FILTERING_GATK(
+                //     vcf_sentieon_dnascope.join(vcf_tbi_sentieon_dnascope, failOnDuplicate: true, failOnMismatch: true),
+                //     fasta,
+                //     fasta_fai,
+                //     dict.map{ meta, dict -> [ dict ] },
+                //     intervals_bed_combined_haplotypec,
+                //     known_sites_indels.concat(known_sites_snps).flatten().unique().collect(),
+                //     known_sites_indels_tbi.concat(known_sites_snps_tbi).flatten().unique().collect())
+
+                // vcf_sentieon_dnascope = VCF_VARIANT_FILTERING_GATK.out.filtered_vcf
+                // versions = versions.mix(VCF_VARIANT_FILTERING_GATK.out.versions)
             }
 
         }
