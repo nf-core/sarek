@@ -5,6 +5,49 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## dev
+
+- [#1246](https://github.com/nf-core/sarek/pull/1246) - Back to dev
+
+### Added
+
+### Changed
+
+### Fixed
+
+- [#1247](https://github.com/nf-core/sarek/pull/1247) - FIX: Result paths for full size test to be correctly displayed on the website
+
+### Dependencies
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+
+## [3.3.1](https://github.com/nf-core/sarek/releases/tag/3.3.1) - Biellorippjávrre
+
+A lake near the Rapaselet delta.
+
+### Added
+
+- [#1231](https://github.com/nf-core/sarek/pull/1231) - Back to dev
+
+### Changed
+
+- [#1242](https://github.com/nf-core/sarek/pull/1242) - Simplify sentieon nf-core test license usage
+- [#1243](https://github.com/nf-core/sarek/pull/1243) - Improve json schema usage for input
+
+### Fixed
+
+- [#1232](https://github.com/nf-core/sarek/pull/1232) - Fix Zenodo IDs in manifest
+- [#1236](https://github.com/nf-core/sarek/pull/1236) - Fix annotation cache folder verification when no annotation
+- [#1240](https://github.com/nf-core/sarek/pull/1240) - Disable JVM Hotspot in all modules/gatk4 ([#1030](https://github.com/nf-core/sarek/issues/1030))
+- [#1241](https://github.com/nf-core/sarek/pull/1241) - Fix axis text of controlfreec plots closing [#921](https://github.com/nf-core/sarek/issues/921)
+
+### Dependencies
+
+| Dependency    | Old version | New version |
+| ------------- | ----------- | ----------- |
+| Control-FREEC | 11.6        | 11.6b       |
+
 ## [3.3.0](https://github.com/nf-core/sarek/releases/tag/3.3.0) - Rapaselet
 
 Rapaselet is a delta formed by the Rapaätno river between the Bielloriehppe massif (formerly written Piellorieppe) and the Skårki massif.
@@ -37,6 +80,7 @@ Rapaselet is a delta formed by the Rapaätno river between the Bielloriehppe mas
 - [#1200](https://github.com/nf-core/sarek/pull/1200) - Streamline Github Actions workflows
 - [#1212](https://github.com/nf-core/sarek/pull/1212) - Use matrix for AWS megatests
 - [#1218](https://github.com/nf-core/sarek/pull/1218) - Remove Singularity tests for GHA
+- [#1227](https://github.com/nf-core/sarek/pull/1227) - Update modules
 
 ### Fixed
 
@@ -64,6 +108,14 @@ Rapaselet is a delta formed by the Rapaätno river between the Bielloriehppe mas
 - [#1215](https://github.com/nf-core/sarek/pull/1215) - Fix `meta.id` for mutect2 tumor_only subworkflows
 - [#1216](https://github.com/nf-core/sarek/pull/1216) - Better test coverage for variant calling `*_all` subworkflows
 - [#1217](https://github.com/nf-core/sarek/pull/1217) - Fix `groupTuple` statement for mutect2 tumor_only subworkflows
+- [#1220](https://github.com/nf-core/sarek/pull/1220) - Fix channel and meta logic for `joint_mutect2` feature
+- [#1221](https://github.com/nf-core/sarek/pull/1221) - Remove `lane` meta field after samplesheet validation to ensure proper merging after mapping
+- [#1222](https://github.com/nf-core/sarek/pull/1222) - Better documentation for annotation cache
+- [#1224](https://github.com/nf-core/sarek/pull/1224) - Update BCFTOOLS_SORT module with `--temp-dir .` added as option, which was required for Singularity
+- [#1225](https://github.com/nf-core/sarek/pull/1225) - Better test coverage for all tests
+- [#1227](https://github.com/nf-core/sarek/pull/1227) - Lint warning fix
+- [#1229](https://github.com/nf-core/sarek/pull/1229) - Fix md5sum for gatk4_spark tests
+- [#1230](https://github.com/nf-core/sarek/pull/1230) - Fix md5sum for sentieon aligner tests
 
 ### Dependencies
 

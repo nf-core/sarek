@@ -42,7 +42,6 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
             ]
         }
 
-
     emit_mode_items = sentieon_haplotyper_emit_mode.split(',')
     lst = emit_mode_items - 'gvcf'
     emit_vcf = lst.size() > 0 ? lst[0] : ''

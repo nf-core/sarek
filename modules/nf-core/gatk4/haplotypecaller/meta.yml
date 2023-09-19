@@ -2,8 +2,8 @@ name: gatk4_haplotypecaller
 description: Call germline SNPs and indels via local re-assembly of haplotypes
 keywords:
   - gatk4
-  - haplotypecaller
   - haplotype
+  - haplotypecaller
 tools:
   - gatk4:
       description: |

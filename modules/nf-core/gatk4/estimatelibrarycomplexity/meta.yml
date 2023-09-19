@@ -1,9 +1,9 @@
 name: gatk4_estimatelibrarycomplexity
 description: Estimates the numbers of unique molecules in a sequencing library.
 keywords:
+  - duplication metrics
+  - estimatelibrarycomplexity
   - gatk4
-  - gatk4_estimatelibrarycomplexity
-  - duplication_metrics
   - reporting
 tools:
   - gatk4:

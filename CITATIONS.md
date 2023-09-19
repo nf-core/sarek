@@ -1,5 +1,9 @@
 # nf-core/sarek: Citations
 
+## [nf-core/sarek 3](https://www.biorxiv.org/content/10.1101/2023.07.19.549462v2)
+
+> Hanssen F, Garcia MU, Folkersen L, Pedersen AS, Lescai F, Jodoin S, Miller E, Wacker O, Smith N, nf-core community, Gabernet G, Nahnsen S. Scalable and efficient DNA sequencing analysis on different compute infrastructures aiding variant discovery. bioRxiv. 2023 Jul 19:2023-07.
+
 ## [nf-core/sarek](https://pubmed.ncbi.nlm.nih.gov/32269765/)
 
 > Garcia MU, Juhos S, Larsson M, Olason PI, Martin M, Eisfeldt J, DiLorenzo S, Sandgren J, Díaz De Ståhl T, Ewels PA, Wirta V, Nistér M, Käller M, Nystedt B. Sarek: A portable workflow for whole-genome sequencing analysis of germline and somatic variants. F1000Res. 2020 Jan 29;9:63. eCollection 2020. doi: 10.12688/f1000research.16665.2. PubMed PMID: 32269765.
@@ -74,6 +78,8 @@
 
   > McKenna A, Hanna M, Banks E, et al.: The Genome Analysis Toolkit: a MapReduce framework for analyzing next-generation DNA sequencing data. Genome Res. 2010 Sep;20(9):1297-303. doi: 10.1101/gr.107524.110. Epub 2010 Jul 19. PubMed PMID: 20644199; PubMed Central PMCID: PMC2928508.
 
+- [GNU sed](http://www.gnu.org/software/sed/)
+
 - [HaplotypeCaller Joint Germline](https://www.biorxiv.org/content/10.1101/201178v3)
 
   > Poplin R. et al, Scaling accurate genetic variant discovery to tens of thousands of samples, bioRxiv 2018. doi: 10.1101/201178
@@ -109,8 +115,6 @@
 - [SAMtools](https://pubmed.ncbi.nlm.nih.gov/19505943/)
 
   > Li H, Handsaker B, Wysoker A, Fennell T, Ruan J, Homer N, Marth G, Abecasis G, Durbin R; 1000 Genome Project Data Processing Subgroup. The Sequence Alignment/Map format and SAMtools. Bioinformatics. 2009 Aug 15;25(16):2078-9. doi: 10.1093/bioinformatics/btp352. Epub 2009 Jun 8. PubMed PMID: 19505943; PubMed Central PMCID: PMC2723002.
-
-- [GNU sed](http://www.gnu.org/software/sed/)
 
 - [snpEff](https://pubmed.ncbi.nlm.nih.gov/22728672/)
 
@@ -166,7 +170,7 @@
 
 - [Docker](https://dl.acm.org/doi/10.5555/2600239.2600241)
 
-  > Merkel, D. (2014). Docker: lightweight linux containers for consistent development and deployment. Linux Journal, 2014(239), 2. doi: 10.5555/2600239.2600241.
+  > Merkel, D. 2014. Docker: lightweight linux containers for consistent development and deployment. Linux Journal, 2014(239), 2. doi: 10.5555/2600239.2600241.
 
 - [Singularity](https://pubmed.ncbi.nlm.nih.gov/28494014/)
 

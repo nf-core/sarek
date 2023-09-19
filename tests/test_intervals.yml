@@ -17,40 +17,40 @@
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
     # binary changes md5sums on reruns
     - path: results/preprocessing/recal_table/test/test.recal.table
-      md5sum: c990e4f1b7dbd5a3a623882a54ae2bf2
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.cram
     # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
     # binary changes md5sums on reruns
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.cram.metrics
-      contains: ["test	8547	767	84	523391	3882	0	0	0.385081", "1.0	767	767"]
+      contains: ["test	17094	1534	168	1046782	12429	197	0	0.635998", "1.0	0.999991	1171"]
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
-      md5sum: 5a0679057c530e5945c9c5a3a17312dc
+      md5sum: e4ce28ba1c331dc08bc53a0189908f77
     - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
-      md5sum: 835fdc6fa52cc33e6fb76c0c20a8a6c3
+      md5sum: 04d9f20dc5306990eec982a3c5a7d107
     - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
-      md5sum: dcc9ab2bf3248903e02d8da87e678977
+      md5sum: 70b4bbe29bd5e7c4ea39b6caf3316096
     - path: results/reports/mosdepth/test/test.md.per-base.bed.gz
-      md5sum: 5724f1c6b6a0e63e25ec8a0f38edfda6
+      md5sum: 2a0c38fb19d6a1f81ca2018e59e7bfcf
     - path: results/reports/mosdepth/test/test.md.per-base.bed.gz.csi
-      md5sum: b0ab630c3241fbd7581b7a38d944ff8b
+      md5sum: 0714f8c677277168b9f95d3a43ea5237
     - path: results/reports/mosdepth/test/test.md.regions.bed.gz
-      md5sum: 91e0d531f1bab64711ecefe52bfc8255
+      md5sum: eb0bc92c253326a109e73af98c9a7d4b
     - path: results/reports/mosdepth/test/test.md.regions.bed.gz.csi
       md5sum: c6d1ac97ef4dfe43731c8368d8391cab
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
-      md5sum: 0b3162def977123809598639f7698121
+      md5sum: 9c1d90e0fed14b710098b7724b602aea
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
-      md5sum: 835fdc6fa52cc33e6fb76c0c20a8a6c3
+      md5sum: 04d9f20dc5306990eec982a3c5a7d107
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
-      md5sum: a8455eb2947de529abfa62b303986e0f
+      md5sum: 17dfb78b147488eb8fd450294de4a35e
     - path: results/reports/mosdepth/test/test.recal.per-base.bed.gz
-      md5sum: d9fa560ff78ae106cfee9db2c90801b5
+      md5sum: fb6804911f9d437d0251869fe112a528
     - path: results/reports/mosdepth/test/test.recal.per-base.bed.gz.csi
-      md5sum: 4816eeb9af254ca40177b08cf11b98d2
+      md5sum: 033032cdbb3a2b74dd41dac89628112c
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
-      md5sum: 91e0d531f1bab64711ecefe52bfc8255
+      md5sum: eb0bc92c253326a109e73af98c9a7d4b
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
       md5sum: c6d1ac97ef4dfe43731c8368d8391cab
     - path: results/reports/samtools/test/test.md.cram.stats
@@ -76,7 +76,7 @@
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
     # binary changes md5sums on reruns
     - path: results/preprocessing/recal_table/test/test.recal.table
-      md5sum: 4ac774bf5f1157e77426fd82f5ac0fbe
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.cram
     # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
@@ -87,23 +87,23 @@
       md5sum: d3341fa28986c40b24fcc10a079dbb80
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.cram.metrics
-      contains: ["test	8547	767	84	523391	3882	0	0	0.385081", "1.0	767	767"]
+      contains: ["test	17094	1534	168	1046782	12429	197	0	0.635998", "1.0	0.999991	1171"]
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
-      md5sum: 76fa71922a3f748e507c2364c531dfcb
+      md5sum: b61e1acee11a6ddf7ce3232a5948a6a0
     - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
-      md5sum: abc5df85e302b79985627888870882da
+      md5sum: 1a382f98d488d2ae3df83a0d87caafc1
     - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
-      md5sum: d536456436eb275159b8c6af83213d80
+      md5sum: 839108358878ada89e1eaddf6e0541ba
     - path: results/reports/mosdepth/test/test.md.regions.bed.gz
-      md5sum: 38fe39894abe62e38f8ac214cba64f2b
+      md5sum: 0aaee6da65050bedcd40b9fbf0622873
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
-      md5sum: 76fa71922a3f748e507c2364c531dfcb
+      md5sum: b61e1acee11a6ddf7ce3232a5948a6a0
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
-      md5sum: abc5df85e302b79985627888870882da
+      md5sum: 1a382f98d488d2ae3df83a0d87caafc1
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
-      md5sum: d536456436eb275159b8c6af83213d80
+      md5sum: 839108358878ada89e1eaddf6e0541ba
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
-      md5sum: 38fe39894abe62e38f8ac214cba64f2b
+      md5sum: 0aaee6da65050bedcd40b9fbf0622873
     - path: results/reports/samtools/test/test.md.cram.stats
     # conda changes md5sums for test
     - path: results/reports/samtools/test/test.recal.cram.stats
@@ -133,7 +133,7 @@
     - path: results/preprocessing/markduplicates/test/test.md.cram.crai
     # binary changes md5sums on reruns
     - path: results/preprocessing/recal_table/test/test.recal.table
-      md5sum: 4ac774bf5f1157e77426fd82f5ac0fbe
+    # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.cram
     # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
@@ -142,27 +142,27 @@
       should_exist: false
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.cram.metrics
-      contains: ["test	8547	767	84	523391	3882	0	0	0.385081", "1.0	767	767"]
+      contains: ["test	17094	1534	168	1046782	12429	197	0	0.635998", "1.0	0.999991	1171"]
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
-      md5sum: 76fa71922a3f748e507c2364c531dfcb
+      md5sum: b61e1acee11a6ddf7ce3232a5948a6a0
     - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
-      md5sum: abc5df85e302b79985627888870882da
+      md5sum: 1a382f98d488d2ae3df83a0d87caafc1
     - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
-      md5sum: d536456436eb275159b8c6af83213d80
+      md5sum: 839108358878ada89e1eaddf6e0541ba
     - path: results/reports/mosdepth/test/test.md.regions.bed.gz
-      md5sum: 38fe39894abe62e38f8ac214cba64f2b
+      md5sum: 0aaee6da65050bedcd40b9fbf0622873
     - path: results/reports/mosdepth/test/test.md.regions.bed.gz.csi
-      md5sum: b1c2a861f64e20a94108a6de3b76c582
+      md5sum: 544e02fcca548749a0af758d0a2df352
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
-      md5sum: 76fa71922a3f748e507c2364c531dfcb
+      md5sum: b61e1acee11a6ddf7ce3232a5948a6a0
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
-      md5sum: abc5df85e302b79985627888870882da
+      md5sum: 1a382f98d488d2ae3df83a0d87caafc1
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
-      md5sum: d536456436eb275159b8c6af83213d80
+      md5sum: 839108358878ada89e1eaddf6e0541ba
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
-      md5sum: 38fe39894abe62e38f8ac214cba64f2b
+      md5sum: 0aaee6da65050bedcd40b9fbf0622873
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
-      md5sum: b1c2a861f64e20a94108a6de3b76c582
+      md5sum: 544e02fcca548749a0af758d0a2df352
     - path: results/reports/samtools/test/test.md.cram.stats
     # conda changes md5sums for test
     - path: results/reports/samtools/test/test.recal.cram.stats

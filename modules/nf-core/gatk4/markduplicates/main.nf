@@ -43,7 +43,8 @@ process GATK4_MARKDUPLICATES {
     // Using samtools and not Markduplicates to compress to CRAM speeds up computation:
     // https://medium.com/@acarroll.dna/looking-at-trade-offs-in-compression-levels-for-genomics-tools-eec2834e8b94
     """
-    gatk --java-options "-Xmx${avail_mem}M" MarkDuplicates \\
+    gatk --java-options "-Xmx${avail_mem}M -XX:-UsePerfData" \\
+        MarkDuplicates \\
         $input_list \\
         --OUTPUT ${prefix_bam} \\
         --METRICS_FILE ${prefix}.metrics \\
