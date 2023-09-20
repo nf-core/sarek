@@ -1,4 +1,4 @@
-- name: Run variant calling on germline sample with sentieon dnascope and skip filter
+- name: Run variant calling on germline sample with sentieon dnascope and skip filter foo
   command: nextflow run main.nf -profile test_cache,targeted --input ./tests/csv/3.0/mapped_single_bam.csv --tools sentieon_dnascope --step variant_calling --skip_tools dnascope_filter --outdir results
   tags:
     - germline
