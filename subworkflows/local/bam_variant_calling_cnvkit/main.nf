@@ -21,7 +21,8 @@ workflow BAM_VARIANT_CALLING_CNVKIT {
     CNVKIT_BATCH(cram, fasta, fasta_fai, targets, reference, generate_pon)
     CNVKIT_GENEMETRICS(CNVKIT_BATCH.out.cnr, CNVKIT_BATCH.out.cns)
 
-    versions = CNVKIT_BATCH.out.versions
+    versions = versions.mix(CNVKIT_BATCH.out.versions)
+    versions = versions.mix(CNVKIT_GENEMETRICS.out.versions)
 
     emit:
     versions // channel: [ versions.yml ]
