@@ -245,18 +245,6 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
                 vcf_sentieon_dnascope = SENTIEON_DNAMODELAPPLY.out.vcf
                 versions = versions.mix(SENTIEON_DNAMODELAPPLY.out.versions)
 
-                // TO-DO: Figure out whether it should be possible to also run VCF_VARIANT_FILTERING_GATK here.
-                // VCF_VARIANT_FILTERING_GATK(
-                //     vcf_sentieon_dnascope.join(vcf_tbi_sentieon_dnascope, failOnDuplicate: true, failOnMismatch: true),
-                //     fasta,
-                //     fasta_fai,
-                //     dict.map{ meta, dict -> [ dict ] },
-                //     intervals_bed_combined_haplotypec,
-                //     known_sites_indels.concat(known_sites_snps).flatten().unique().collect(),
-                //     known_sites_indels_tbi.concat(known_sites_snps_tbi).flatten().unique().collect())
-
-                // vcf_sentieon_dnascope = VCF_VARIANT_FILTERING_GATK.out.filtered_vcf
-                // versions = versions.mix(VCF_VARIANT_FILTERING_GATK.out.versions)
             }
 
         }
