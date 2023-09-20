@@ -19,7 +19,7 @@
     - path: results/reports/bcftools/sentieon_dnascope/test/test.dnascope.filtered.bcftools_stats.txt
       md5sum: 912c7d5b31784c50e0a75b4fcfa4997b
     - path: results/reports/vcftools/sentieon_dnascope/test/test.dnascope.filtered.FILTER.summary
-      md5sum: ce2769af8f853b93d9e16b6493fc7e0d
+      md5sum: e67b24d296810a075378e5864bcea0fa
     - path: results/reports/vcftools/sentieon_dnascope/test/test.dnascope.filtered.TsTv.count
       md5sum: b77c120ee5cc0423267200c67d60c663
     - path: results/reports/vcftools/sentieon_dnascope/test/test.dnascope.filtered.TsTv.qual
@@ -62,7 +62,7 @@
     - path: results/reports/bcftools/sentieon_dnascope/test/test.dnascope.filtered.bcftools_stats.txt
       md5sum: 912c7d5b31784c50e0a75b4fcfa4997b
     - path: results/reports/vcftools/sentieon_dnascope/test/test.dnascope.filtered.FILTER.summary
-      md5sum: ce2769af8f853b93d9e16b6493fc7e0d
+      md5sum: e67b24d296810a075378e5864bcea0fa
     - path: results/reports/vcftools/sentieon_dnascope/test/test.dnascope.filtered.TsTv.count
       md5sum: b77c120ee5cc0423267200c67d60c663
     - path: results/reports/vcftools/sentieon_dnascope/test/test.dnascope.filtered.TsTv.qual
