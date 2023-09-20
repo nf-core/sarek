@@ -1,5 +1,5 @@
-- name: Run variant calling on germline sample with sentieon dnascope and skip filter foo
-  command: nextflow run main.nf -profile test_cache,targeted --input ./tests/csv/3.0/mapped_single_bam.csv --tools sentieon_dnascope --step variant_calling --skip_tools dnascope_filter --outdir results
+- name: Run variant calling on germline sample with sentieon dnascope and skip filter
+  command: nextflow run main.nf -profile test_cache,targeted,software_license --sentieon_extension --input ./tests/csv/3.0/mapped_single_bam.csv --tools sentieon_dnascope --step variant_calling --skip_tools dnascope_filter --outdir results
   tags:
     - germline
     - sentieon_dnascope_skip_filter
@@ -36,7 +36,7 @@
     - path: results/sentieon_dnascope
       should_exist: false
 - name: Run variant calling on germline sample with sentieon dnascope without intervals and skip filter
-  command: nextflow run main.nf -profile test_cache,targeted --input ./tests/csv/3.0/mapped_single_bam.csv --tools sentieon_dnascope --step variant_calling --skip_tools dnascope_filter --no_intervals --outdir results
+  command: nextflow run main.nf -profile test_cache,targeted,software_license --sentieon_extension --input ./tests/csv/3.0/mapped_single_bam.csv --tools sentieon_dnascope --step variant_calling --skip_tools dnascope_filter --no_intervals --outdir results
   tags:
     - germline
     - sentieon_dnascope_skip_filter
