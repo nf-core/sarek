@@ -1,5 +1,5 @@
 - name: Run sentieon bwamem
-  command: nextflow run main.nf -profile test_cache --aligner sentieon-bwamem --save_reference --outdir results
+  command: nextflow run main.nf -profile test_cache,software_license --sentieon_extension --aligner sentieon-bwamem --save_reference --outdir results
   tags:
     - aligner
     - sentieon/bwamem
@@ -74,7 +74,7 @@
     - path: results/reports/samtools/test/test.recal.cram.stats
     # conda changes md5sums for test
 - name: Build only index with sentieon bwa
-  command: nextflow run main.nf -profile test_cache --aligner sentieon-bwamem --build_only_index --outdir results
+  command: nextflow run main.nf -profile test_cache,software_license --sentieon_extension --aligner sentieon-bwamem --build_only_index --outdir results
   tags:
     - aligner
     - build_only_index
@@ -106,7 +106,7 @@
     - path: results/reference/known_indels/mills_and_1000G.indels.vcf.gz.tbi
     # conda changes md5sums for test
 - name: Run sentieon bwamem save bam
-  command: nextflow run main.nf -profile test_cache --aligner sentieon-bwamem --save_mapped --save_output_as_bam --outdir results
+  command: nextflow run main.nf -profile test_cache,software_license --sentieon_extension --aligner sentieon-bwamem --save_mapped --save_output_as_bam --outdir results
   tags:
     - aligner
     - sentieon/bwamem
@@ -160,7 +160,7 @@
     - path: results/reports/samtools/test/test.recal.cram.stats
     # conda changes md5sums for test
 - name: Run sentieon bwamem save cram
-  command: nextflow run main.nf -profile test_cache --aligner sentieon-bwamem --save_mapped --outdir results
+  command: nextflow run main.nf -profile test_cache,software_license --sentieon_extension --aligner sentieon-bwamem --save_mapped --outdir results
   tags:
     - aligner
     - sentieon/bwamem

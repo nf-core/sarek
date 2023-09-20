@@ -3,9 +3,9 @@ description: |
   Summarizes counts of reads that support reference, alternate and other alleles for given sites. Results can be used with CalculateContamination. Requires a common germline variant sites file, such as from gnomAD.
 keywords:
   - gatk4
+  - germlinevariantsites
   - getpileupsumaries
   - readcountssummary
-  - germlinevariantsites
 tools:
   - gatk4:
       description: |

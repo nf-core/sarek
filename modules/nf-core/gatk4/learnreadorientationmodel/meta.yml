@@ -4,8 +4,8 @@ description: |
 keywords:
   - gatk4
   - learnreadorientationmodel
-  - readorientationartifacts
   - mutect2
+  - readorientationartifacts
 tools:
   - gatk4:
       description: |

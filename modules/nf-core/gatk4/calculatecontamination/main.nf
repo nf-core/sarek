@@ -30,7 +30,8 @@ process GATK4_CALCULATECONTAMINATION {
         avail_mem = (task.memory.mega*0.8).intValue()
     }
     """
-    gatk --java-options "-Xmx${avail_mem}M" CalculateContamination \\
+    gatk --java-options "-Xmx${avail_mem}M -XX:-UsePerfData" \\
+        CalculateContamination \\
         --input $pileup \\
         --output ${prefix}.contamination.table \\
         $matched_command \\

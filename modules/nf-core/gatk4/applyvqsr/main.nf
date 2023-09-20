@@ -33,7 +33,8 @@ process GATK4_APPLYVQSR {
         avail_mem = (task.memory.mega*0.8).intValue()
     }
     """
-    gatk --java-options "-Xmx${avail_mem}M" ApplyVQSR \\
+    gatk --java-options "-Xmx${avail_mem}M -XX:-UsePerfData" \\
+        ApplyVQSR \\
         --variant ${vcf} \\
         --output ${prefix}.vcf.gz \\
         $reference_command \\

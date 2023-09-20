@@ -6,8 +6,9 @@ description: |
   in the first step by VariantRecalibrator and a target sensitivity value.
 keywords:
   - gatk4
-  - applyvqsr
-  - VQSR
+  - variant quality score recalibration
+  - vcf
+  - vqsr
 tools:
   - gatk4:
       description: |
