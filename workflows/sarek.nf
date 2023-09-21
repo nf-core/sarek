@@ -333,7 +333,7 @@ if (params.snpeff_cache && params.tools && params.tools.contains("snpeff")) {
     def snpeff_cache_path_full = file("$params.snpeff_cache/$snpeff_cache_dir", type: 'dir')
     if ( !snpeff_cache_path_full.exists() || !snpeff_cache_path_full.isDirectory() ) {
         if (params.snpeff_cache == "s3://annotation-cache/snpeff_cache") {
-            error("This path is not available within annotation-cache. Please check WEBSITE to create a request for it.")
+            error("This path is not available within annotation-cache. Please check https://annotation-cache.github.io/ to create a request for it.")
         } else {
             error("Files within --snpeff_cache invalid. Make sure there is a directory named ${snpeff_cache_dir} in ${params.snpeff_cache}.\nhttps://nf-co.re/sarek/dev/usage#how-to-customise-snpeff-and-vep-annotation")
         }
@@ -352,7 +352,7 @@ if (params.vep_cache && params.tools && params.tools.contains("vep")) {
     def vep_cache_path_full = file("$params.vep_cache/$vep_cache_dir", type: 'dir')
     if ( !vep_cache_path_full.exists() || !vep_cache_path_full.isDirectory() ) {
         if (params.vep_cache == "s3://annotation-cache/vep_cache") {
-            error("This path is not available within annotation-cache. Please check WEBSITE to create a request for it.")
+            error("This path is not available within annotation-cache. Please check https://annotation-cache.github.io/ to create a request for it.")
         } else {
             error("Files within --vep_cache invalid. Make sure there is a directory named ${vep_cache_dir} in ${params.vep_cache}.\nhttps://nf-co.re/sarek/dev/usage#how-to-customise-snpeff-and-vep-annotation")
         }
