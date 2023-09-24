@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- [] Added NGSCheckMate tool for checking that samples come from the same individual
+
 ### Changed
 
 ### Fixed
