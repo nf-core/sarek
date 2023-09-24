@@ -716,6 +716,12 @@
                     "hidden": true,
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
                 },
+                "ngscheckmate_bed": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file",
+                    "description": "Path to SNP bed file for sample checking with NGSCheckMate",
+                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
+                },
                 "snpeff_db": {
                     "type": "string",
                     "fa_icon": "fas fa-database",
