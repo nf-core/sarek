@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - [#1247](https://github.com/nf-core/sarek/pull/1247) - FIX: Result paths for full size test to be correctly displayed on the website
+- [#1256](https://github.com/nf-core/sarek/pull/1256) - Fix issue with controlfreec container declaration
 
 ### Dependencies
 
