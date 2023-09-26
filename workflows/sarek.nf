@@ -1292,7 +1292,10 @@ workflow SAREK {
 */
 
 workflow.onComplete {
-    if (params.email || params.email_on_fail) NfcoreTemplate.email(workflow, params, summary_params, projectDir, log, multiqc_report)
+    if (params.email || params.email_on_fail) {
+        NfcoreTemplate.email(workflow, params, summary_params, projectDir, log, multiqc_report)
+    }
+    NfcoreTemplate.dump_parameters(workflow, params)
     NfcoreTemplate.summary(workflow, params, log)
     if (params.hook_url) NfcoreTemplate.IM_notification(workflow, params, summary_params, projectDir, log)
 }
