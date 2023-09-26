@@ -1,7 +1,9 @@
 # ![nf-core/sarek](docs/images/nf-core-sarek_logo_light.png#gh-light-mode-only) ![nf-core/sarek](docs/images/nf-core-sarek_logo_dark.png#gh-dark-mode-only)
 
 [![GitHub Actions CI Status](https://github.com/nf-core/sarek/workflows/nf-core%20CI/badge.svg)](https://github.com/nf-core/sarek/actions?query=workflow%3A%22nf-core+CI%22)
-[![GitHub Actions Linting Status](https://github.com/nf-core/sarek/workflows/nf-core%20linting/badge.svg)](https://github.com/nf-core/sarek/actions?query=workflow%3A%22nf-core+linting%22)[![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/sarek/results)[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.XXXXXXX-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.XXXXXXX)
+[![GitHub Actions Linting Status](https://github.com/nf-core/sarek/workflows/nf-core%20linting/badge.svg)](https://github.com/nf-core/sarek/actions?query=workflow%3A%22nf-core+linting%22)
+[![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/sarek/results)
+[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.3476425-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.3476425)
 
 [![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A523.04.0-23aa62.svg)](https://www.nextflow.io/)
 [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
@@ -13,20 +15,47 @@
 
 ## Introduction
 
-**nf-core/sarek** is a bioinformatics pipeline that ...
+**nf-core/sarek** is a workflow designed to detect variants on whole genome or targeted sequencing data. Initially designed for Human, and Mouse, it can work on any species with a reference genome. Sarek can also handle tumour / normal pairs and could include additional relapses.
 
-<!-- TODO nf-core:
-   Complete this sentence with a 2-3 sentence summary of what types of data the pipeline ingests, a brief overview of the
-   major pipeline sections and the types of output it produces. You're giving an overview to someone new
-   to nf-core here, in 15-20 seconds. For an example, see https://github.com/nf-core/rnaseq/blob/master/README.md#introduction
--->
+The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It uses Docker/Singularity containers making installation trivial and results highly reproducible. The [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) implementation of this pipeline uses one container per process which makes it much easier to maintain and update software dependencies. Where possible, these processes have been submitted to and installed from [nf-core/modules](https://github.com/nf-core/modules) in order to make them available to all nf-core pipelines, and to everyone within the Nextflow community!
 
-<!-- TODO nf-core: Include a figure that guides the user through the major workflow steps. Many nf-core
-     workflows use the "tube map" design for that. See https://nf-co.re/docs/contributing/design_guidelines#examples for examples.   -->
-<!-- TODO nf-core: Fill in short bullet-pointed list of the default steps in the pipeline -->
+On release, automated continuous integration tests run the pipeline on a full-sized dataset on the AWS cloud infrastructure. This ensures that the pipeline runs on AWS, has sensible resource allocation defaults set to run on real-world datasets, and permits the persistent storage of results to benchmark between pipeline releases and other analysis sources. The results obtained from the full-sized test can be viewed on the [nf-core website](https://nf-co.re/sarek/results).
 
-1. Read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
-2. Present QC for raw reads ([`MultiQC`](http://multiqc.info/))
+It's listed on [Elixir - Tools and Data Services Registry](https://bio.tools/nf-core-sarek) and [Dockstore](https://dockstore.org/workflows/github.com/nf-core/sarek).
+
+<p align="center">
+    <img title="Sarek Workflow" src="docs/images/sarek_workflow.png" width=30%>
+</p>
+
+## Pipeline summary
+
+Depending on the options and samples provided, the pipeline can currently perform the following:
+
+- Form consensus reads from UMI sequences (`fgbio`)
+- Sequencing quality control and trimming (enabled by `--trim_fastq`) (`FastQC`, `fastp`)
+- Map Reads to Reference (`BWA-mem`, `BWA-mem2`, `dragmap` or `Sentieon BWA-mem`)
+- Process BAM file (`GATK MarkDuplicates`, `GATK BaseRecalibrator` and `GATK ApplyBQSR` or `Sentieon LocusCollector` and `Sentieon Dedup`)
+- Summarise alignment statistics (`samtools stats`, `mosdepth`)
+- Variant calling (enabled by `--tools`, see [compatibility](#which-variant-calling-tool-is-implemented-for-which-data-type)):
+  - `ASCAT`
+  - `CNVkit`
+  - `Control-FREEC`
+  - `DeepVariant`
+  - `freebayes`
+  - `GATK HaplotypeCaller`
+  - `Manta`
+  - `mpileup`
+  - `MSIsensor-pro`
+  - `Mutect2`
+  - `Sentieon Haplotyper`
+  - `Strelka2`
+  - `TIDDIT`
+- Variant filtering and annotation (`SnpEff`, `Ensembl VEP`)
+- Summarise and represent QC (`MultiQC`)
+
+<p align="center">
+    <img title="Sarek Workflow" src="docs/images/sarek_subway.png" width=60%>
+</p>
 
 ## Usage
 
@@ -36,25 +65,18 @@ to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/i
 with `-profile test` before running the workflow on actual data.
 :::
 
-<!-- TODO nf-core: Describe the minimum required steps to execute the pipeline, e.g. how to prepare samplesheets.
-     Explain what rows and columns represent. For instance (please edit as appropriate):
-
 First, prepare a samplesheet with your input data that looks as follows:
 
 `samplesheet.csv`:
 
 ```csv
-sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
+patient,sample,lane,fastq_1,fastq_2
+ID1,S1,L002,ID1_S1_L002_R1_001.fastq.gz,ID1_S1_L002_R2_001.fastq.gz
 ```
 
-Each row represents a fastq file (single-end) or a pair of fastq files (paired end).
-
--->
+Each row represents a pair of fastq files (paired end).
 
 Now, you can run the pipeline using:
-
-<!-- TODO nf-core: update the following command to include all required parameters for a minimal example -->
 
 ```bash
 nextflow run nf-core/sarek \
@@ -63,11 +85,23 @@ nextflow run nf-core/sarek \
    --outdir <OUTDIR>
 ```
 
+<<<<<<< HEAD
 :::warning
 Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those
 provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_;
 see [docs](https://nf-co.re/usage/configuration#custom-configuration-files).
 :::
+=======
+See [usage docs](https://nf-co.re/sarek/usage) for all of the available options when running the pipeline.
+
+## Documentation
+
+> **Warning:**
+> Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those
+> provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_;
+> see [docs](https://nf-co.re/usage/configuration#custom-configuration-files).
+>
+> > > > > > > dev
 
 For more details and further functionality, please refer to the [usage documentation](https://nf-co.re/sarek/usage) and the [parameter documentation](https://nf-co.re/sarek/parameters).
 
@@ -79,24 +113,86 @@ For more details about the output files and reports, please refer to the
 
 ## Credits
 
-nf-core/sarek was originally written by Maxime Garcia, Szilveszter Juhos, Friederike Hanssen.
+Sarek was originally written by Maxime U Garcia and Szilveszter Juhos at the [National Genomics Infastructure](https://ngisweden.scilifelab.se) and [National Bioinformatics Infastructure Sweden](https://nbis.se) which are both platforms at [SciLifeLab](https://scilifelab.se), with the support of [The Swedish Childhood Tumor Biobank (Barntumörbanken)](https://ki.se/forskning/barntumorbanken).
+Friederike Hanssen and Gisela Gabernet at [QBiC](https://www.qbic.uni-tuebingen.de/) later joined and helped with further development.
+
+The Nextflow DSL2 conversion of the pipeline was lead by Friederike Hanssen and Maxime U Garcia.
+
+Maintenance is now lead by Friederike Hanssen and Maxime U Garcia (now at [Seqera Labs](https://seqera/io))
+
+Main developers:
+
+- [Maxime U Garcia](https://github.com/maxulysse)
+- [Friederike Hanssen](https://github.com/FriederikeHanssen)
 
 We thank the following people for their extensive assistance in the development of this pipeline:
 
-<!-- TODO nf-core: If applicable, make list of people who have also contributed -->
+- [Abhinav Sharma](https://github.com/abhi18av)
+- [Adam Talbot](https://github.com/adamrtalbot)
+- [Adrian Lärkeryd](https://github.com/adrlar)
+- [Alexander Peltzer](https://github.com/apeltzer)
+- [Alison Meynert](https://github.com/ameynert)
+- [Anders Sune Pedersen](https://github.com/asp8200)
+- [arontommi](https://github.com/arontommi)
+- [BarryDigby](https://github.com/BarryDigby)
+- [Bekir Ergüner](https://github.com/berguner)
+- [bjornnystedt](https://github.com/bjornnystedt)
+- [cgpu](https://github.com/cgpu)
+- [Chela James](https://github.com/chelauk)
+- [David Mas-Ponte](https://github.com/davidmasp)
+- [Francesco Lescai](https://github.com/lescai)
+- [Gavin Mackenzie](https://github.com/GCJMackenzie)
+- [Gisela Gabernet](https://github.com/ggabernet)
+- [gulfshores](https://github.com/gulfshores)
+- [Harshil Patel](https://github.com/drpatelh)
+- [James A. Fellows Yates](https://github.com/jfy133)
+- [Jesper Eisfeldt](https://github.com/J35P312)
+- [Johannes Alneberg](https://github.com/alneberg)
+- [José Fernández Navarro](https://github.com/jfnavarro)
+- [Júlia Mir Pedrol](https://github.com/mirpedrol)
+- [Lasse Westergaard Folkersen](https://github.com/lassefolkersen)
+- [Lucia Conde](https://github.com/lconde-ucl)
+- [Malin Larsson](https://github.com/malinlarsson)
+- [Marcel Martin](https://github.com/marcelm)
+- [Nick Smith](https://github.com/nickhsmith)
+- [Nilesh Tawari](https://github.com/nilesh-tawari)
+- [Olga Botvinnik](https://github.com/olgabot)
+- [Oskar Wacker](https://github.com/WackerO)
+- [pallolason](https://github.com/pallolason)
+- [Paul Cantalupo](https://github.com/pcantalupo)
+- [Phil Ewels](https://github.com/ewels)
+- [Sabrina Krakau](https://github.com/skrakau)
+- [Sebastian-D](https://github.com/Sebastian-D)
+- [Silvia Morini](https://github.com/silviamorins)
+- [Solenne Correard](https://github.com/scorreard)
+- [Susanne Jodoin](https://github.com/SusiJo)
+- [Szilveszter Juhos](https://github.com/szilvajuhos)
+- [Tobias Koch](https://github.com/KochTobi)
+- [Winni Kretzschmar](https://github.com/winni2k)
 
-## Contributions and Support
+## Acknowledgements
+
+|      [![Barntumörbanken](docs/images/BTB_logo.png)](https://ki.se/forskning/barntumorbanken)      |            [![SciLifeLab](docs/images/SciLifeLab_logo.png)](https://scilifelab.se)             |
+| :-----------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------: |
+| [![National Genomics Infrastructure](docs/images/NGI_logo.png)](https://ngisweden.scilifelab.se/) | [![National Bioinformatics Infrastructure Sweden](docs/images/NBIS_logo.png)](https://nbis.se) |
+|              [![QBiC](docs/images/QBiC_logo.png)](https://www.qbic.uni-tuebingen.de)              |                   [![GHGA](docs/images/GHGA_logo.png)](https://www.ghga.de/)                   |
+|                     [![DNGC](docs/images/DNGC_logo.png)](https://eng.ngc.dk/)                     |                                                                                                |
+
+## Contributions & Support
 
 If you would like to contribute to this pipeline, please see the [contributing guidelines](.github/CONTRIBUTING.md).
 
-For further information or help, don't hesitate to get in touch on the [Slack `#sarek` channel](https://nfcore.slack.com/channels/sarek) (you can join with [this invite](https://nf-co.re/join/slack)).
+For further information or help, don't hesitate to get in touch on the [Slack `#sarek` channel](https://nfcore.slack.com/channels/sarek) (you can join with [this invite](https://nf-co.re/join/slack)), or contact us: [Maxime U Garcia](mailto:maxime.garcia@seqera.io?subject=[GitHub]%20nf-core/sarek), [Friederike Hanssen](mailto:friederike.hanssen@qbic.uni-tuebingen.de?subject=[GitHub]%20nf-core/sarek)
 
 ## Citations
 
-<!-- TODO nf-core: Add citation for pipeline after first release. Uncomment lines below and update Zenodo doi and badge at the top of this file. -->
-<!-- If you use  nf-core/sarek for your analysis, please cite it using the following doi: [10.5281/zenodo.XXXXXX](https://doi.org/10.5281/zenodo.XXXXXX) -->
+If you use `nf-core/sarek` for your analysis, please cite the `Sarek` article as follows:
 
-<!-- TODO nf-core: Add bibliography of tools and data used in your pipeline -->
+> Friederike Hanssen, Maxime U Garcia, Lasse Folkersen, Anders Sune Pedersen, Francesco Lescai, Susanne Jodoin, Edmund Miller, Oskar Wacker, Nicholas Smith, nf-core community, Gisela Gabernet, Sven Nahnsen **Scalable and efficient DNA sequencing analysis on different compute infrastructures aiding variant discovery** _bioRxiv_ [doi: 10.1101/2023.07.19.549462](https://doi.org/10.1101/2023.07.19.549462).
+
+> Garcia M, Juhos S, Larsson M et al. **Sarek: A portable workflow for whole-genome sequencing analysis of germline and somatic variants [version 2; peer review: 2 approved]** _F1000Research_ 2020, 9:63 [doi: 10.12688/f1000research.16665.2](http://dx.doi.org/10.12688/f1000research.16665.2).
+
+You can cite the sarek zenodo record for a specific version using the following [doi: 10.5281/zenodo.3476425](https://doi.org/10.5281/zenodo.3476425)
 
 An extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.
 
@@ -107,3 +203,7 @@ You can cite the `nf-core` publication as follows:
 > Philip Ewels, Alexander Peltzer, Sven Fillinger, Harshil Patel, Johannes Alneberg, Andreas Wilm, Maxime Ulysse Garcia, Paolo Di Tommaso & Sven Nahnsen.
 >
 > _Nat Biotechnol._ 2020 Feb 13. doi: [10.1038/s41587-020-0439-x](https://dx.doi.org/10.1038/s41587-020-0439-x).
+
+## CHANGELOG
+
+- [CHANGELOG](CHANGELOG.md)

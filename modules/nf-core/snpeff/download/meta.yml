@@ -1,0 +1,41 @@
+name: SNPEFF_DOWNLOAD
+description: Genetic variant annotation and functional effect prediction toolbox
+keywords:
+  - annotation
+  - effect prediction
+  - snpeff
+  - variant
+  - vcf
+tools:
+  - snpeff:
+      description: |
+        SnpEff is a variant annotation and effect prediction tool.
+        It annotates and predicts the effects of genetic variants on genes and proteins (such as amino acid changes).
+      homepage: https://pcingola.github.io/SnpEff/
+      documentation: https://pcingola.github.io/SnpEff/se_introduction/
+      licence: ["MIT"]
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - vcf:
+      type: file
+      description: |
+        vcf to annotate
+  - db:
+      type: string
+      description: |
+        which db to annotate with
+output:
+  - cache:
+      type: file
+      description: |
+        snpEff cache
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@maxulysse"

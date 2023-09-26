@@ -1,0 +1,52 @@
+name: gatk4_calculatecontamination
+description: |
+  Calculates the fraction of reads from cross-sample contamination based on summary tables from getpileupsummaries. Output to be used with filtermutectcalls.
+keywords:
+  - gatk4
+  - calculatecontamination
+  - cross-samplecontamination
+  - getpileupsummaries
+  - filtermutectcalls
+tools:
+  - gatk4:
+      description: |
+        Developed in the Data Sciences Platform at the Broad Institute, the toolkit offers a wide variety of tools
+        with a primary focus on variant discovery and genotyping. Its powerful processing engine
+        and high-performance computing features make it capable of taking on projects of any size.
+      homepage: https://gatk.broadinstitute.org/hc/en-us
+      documentation: https://gatk.broadinstitute.org/hc/en-us/categories/360002369672s
+      doi: 10.1158/1538-7445.AM2017-3590
+      licence: ["Apache-2.0"]
+
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test' ]
+  - pileup:
+      type: file
+      description: File containing the pileups summary table of a tumor sample to be used to calculate contamination.
+      pattern: "*.pileups.table"
+  - matched:
+      type: file
+      description: File containing the pileups summary table of a normal sample that matches with the tumor sample specified in pileup argument. This is an optional input.
+      pattern: "*.pileups.table"
+
+output:
+  - contamination:
+      type: file
+      description: File containing the contamination table.
+      pattern: "*.contamination.table"
+  - segmentation:
+      type: file
+      description: output table containing segmentation of tumor minor allele fractions (optional)
+      pattern: "*.segmentation.table"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+
+authors:
+  - "@GCJMackenzie"
+  - "@maxulysse"

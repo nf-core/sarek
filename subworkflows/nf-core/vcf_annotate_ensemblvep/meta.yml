@@ -1,0 +1,61 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: vcf_annotate_ensemblvep
+description: Perform annotation with ensemblvep and bgzip + tabix index the resulting VCF file
+keywords:
+  - vcf
+  - annotation
+  - ensemblvep
+components:
+  - ensemblvep/vep
+  - tabix/tabix
+input:
+  - ch_vcf:
+      description: |
+        vcf file to annotate
+        Structure: [ val(meta), path(vcf), [path(custom_file1), path(custom_file2)... (optionnal)] ]
+  - ch_fasta:
+      description: |
+        Reference genome fasta file (optional)
+        Structure: [ val(meta2), path(fasta) ]
+  - val_genome:
+      type: string
+      description: genome to use
+  - val_species:
+      type: string
+      description: species to use
+  - val_cache_version:
+      type: integer
+      description: cache version to use
+  - ch_cache:
+      description: |
+        the root cache folder for ensemblvep (optional)
+        Structure: [ val(meta3), path(cache) ]
+  - ch_extra_files:
+      description: |
+        any extra files needed by plugins for ensemblvep (optional)
+        Structure: [ path(file1), path(file2)... ]
+output:
+  - vcf_tbi:
+      description: |
+        Compressed vcf file + tabix index
+        Structure: [ val(meta), path(vcf), path(tbi) ]
+  - json:
+      description: |
+        json file
+        Structure: [ val(meta), path(json) ]
+  - tab:
+      description: |
+        tab file
+        Structure: [ val(meta), path(tab) ]
+  - reports:
+      type: file
+      description: html reports
+      pattern: "*.html"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@maxulysse"
+  - "@matthdsm"
+  - "@nvnieuwk"

@@ -1,0 +1,63 @@
+name: strelka_germline
+description: Strelka2 is a fast and accurate small variant caller optimized for analysis of germline variation
+keywords:
+  - variantcalling
+  - germline
+  - wgs
+  - vcf
+  - variants
+tools:
+  - strelka:
+      description: Strelka calls somatic and germline small variants from mapped sequencing reads
+      homepage: https://github.com/Illumina/strelka
+      documentation: https://github.com/Illumina/strelka/blob/v2.9.x/docs/userGuide/README.md
+      tool_dev_url: https://github.com/Illumina/strelka
+      doi: 10.1038/s41592-018-0051-x
+      licence: ["GPL v3"]
+
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test']
+  - input:
+      type: file
+      description: BAM/CRAM file
+      pattern: "*.{bam,cram}"
+  - input_index:
+      type: file
+      description: BAM/CRAI index file
+      pattern: "*.{bai,crai}"
+  - target_bed:
+      type: file
+      description: An optional bed file
+      pattern: "*.{bed}"
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test']
+  - vcf:
+      type: file
+      description: gzipped germline variant file
+      pattern: "*.{vcf.gz}"
+  - vcf_tbi:
+      type: file
+      description: index file for the vcf file
+      pattern: "*.vcf.gz.tbi"
+  - genome_vcf:
+      type: file
+      description: variant records and compressed non-variant blocks
+      pattern: "*_genome.vcf.gz"
+  - genome_vcf_tbi:
+      type: file
+      description: index file for the genome_vcf file
+      pattern: "*_genome.vcf.gz.tbi"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@arontommi"

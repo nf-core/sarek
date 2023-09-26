@@ -1,0 +1,72 @@
+name: bcftools_stats
+description: Generates stats from VCF files
+keywords:
+  - variant calling
+  - stats
+  - VCF
+tools:
+  - stats:
+      description: |
+        Parses VCF or BCF and produces text file stats which is suitable for
+        machine processing and can be plotted using plot-vcfstats.
+      homepage: http://samtools.github.io/bcftools/bcftools.html
+      documentation: http://www.htslib.org/doc/bcftools.html
+      doi: 10.1093/bioinformatics/btp352
+      licence: ["MIT"]
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - vcf:
+      type: file
+      description: VCF input file
+      pattern: "*.{vcf}"
+  - tbi:
+      type: file
+      description: |
+        The tab index for the VCF file to be inspected. Optional: only required when parameter regions is chosen.
+      pattern: "*.tbi"
+  - regions:
+      type: file
+      description: |
+        Optionally, restrict the operation to regions listed in this file. (VCF, BED or tab-delimited)
+  - targets:
+      type: file
+      description: |
+        Optionally, restrict the operation to regions listed in this file (doesn't rely upon tbi index files)
+  - samples:
+      type: file
+      description: |
+        Optional, file of sample names to be included or excluded.
+        e.g. 'file.tsv'
+  - exons:
+      type: file
+      description: |
+        Tab-delimited file with exons for indel frameshifts (chr,beg,end; 1-based, inclusive, optionally bgzip compressed).
+        e.g. 'exons.tsv.gz'
+  - fasta:
+      type: file
+      description: |
+        Faidx indexed reference sequence file to determine INDEL context.
+        e.g. 'reference.fa'
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - stats:
+      type: file
+      description: Text output file containing stats
+      pattern: "*_{stats.txt}"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@joseespinosa"
+  - "@drpatelh"
+  - "@SusiJo"
+  - "@TCLamnidis"
