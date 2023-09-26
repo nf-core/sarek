@@ -49,7 +49,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - [Control-FREEC](#control-freec)
   - [Microsatellite instability (MSI)](#microsatellite-instability-msi)
     - [MSIsensorPro](#msisensorpro)
-  - [Concatentation](#concatentation)
+  - [Concatenation](#concatenation)
 - [Variant annotation](#variant-annotation)
   - [snpEff](#snpeff)
   - [VEP](#vep)
@@ -767,7 +767,7 @@ It requires a normal sample for each tumour to differentiate the somatic and ger
   - Germline sites detected.
   </details>
 
-### Concatentation
+### Concatenation
 
 Germline VCFs from `DeepVariant`, `FreeBayes`, `HaplotypeCaller`, `Haplotyper`, `Manta`, `bcftools mpileup`, `Strelka2`, or `Tiddit` are concatenated with `bcftools concat`. The field `SOURCE` is added to the VCF header to report the variant caller.
 
