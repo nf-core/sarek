@@ -935,7 +935,7 @@ This may mean you have many similar directories but will dramatically reduce the
 
 ### Use annotation-cache for SnpEff and VEP
 
-[Annotation-cache](https://github.com/annotation-cache) is an open AWS registry resource that stores a mirror of some cache files on AWS S3 which can be used with Sarek.
+[Annotation-cache](https://annotation-cache.github.io) is an open AWS registry resource that stores a mirror of some cache files on AWS S3 which can be used with Sarek.
 It contains some genome builds which can be found by checking the contents of the S3 bucket.
 
 SNPeff and VEP cache are stored at the following location on S3:
@@ -955,6 +955,8 @@ aws s3 --no-sign-request ls s3://annotation-cache/vep_cache/
 Since both Snpeff and VEP are internally figuring the path towards the specific cache version / species, `annotation-cache` is using an extra set of keys to specify the species and genome build.
 
 So if you are using this resource, please either use the `--use_annotation_cache_keys`, or point towards the specific species, genome and build matches the directory structure within the cache.
+
+Please refer to the [annotation-cache documentation](https://annotation-cache.github.io) for more details.
 
 ### Use Sarek to download cache and annotate in one go
 
