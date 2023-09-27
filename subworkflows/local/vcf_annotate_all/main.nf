@@ -5,6 +5,7 @@
 include { VCF_ANNOTATE_ENSEMBLVEP                       } from '../../nf-core/vcf_annotate_ensemblvep/main'
 include { VCF_ANNOTATE_ENSEMBLVEP as VCF_ANNOTATE_MERGE } from '../../nf-core/vcf_annotate_ensemblvep/main'
 include { VCF_ANNOTATE_SNPEFF                           } from '../../nf-core/vcf_annotate_snpeff/main'
+include { BCFTOOLS_ANNOTATE                             } from '../../local/vcf_annotate_bcftools/main.nf'
 
 workflow VCF_ANNOTATE_ALL {
     take:
@@ -18,6 +19,9 @@ workflow VCF_ANNOTATE_ALL {
     vep_cache_version
     vep_cache
     vep_extra_files
+    annotations
+    annotations_index
+    header_lines
 
     main:
     reports = Channel.empty()
@@ -25,6 +29,15 @@ workflow VCF_ANNOTATE_ALL {
     tab_ann = Channel.empty()
     json_ann = Channel.empty()
     versions = Channel.empty()
+
+    vcf_ann.view()
+    if (tools.split(',').contains('bcfann')) {
+        VCF_ANNOTATE_BCFTOOLS(vcf, annotations, annotations_index, header_lines)
+
+        vcf_ann = vcf_ann.mix(VCF_ANNOTATE_BCFTOOLS.out.vcf_tbi)
+        versions = versions.mix(VCF_ANNOTATE_BCFTOOLS.out.versions)
+    }
+
 
     if (tools.split(',').contains('merge') || tools.split(',').contains('snpeff')) {
         VCF_ANNOTATE_SNPEFF(vcf, snpeff_db, snpeff_cache)

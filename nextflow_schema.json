@@ -538,6 +538,9 @@
                     "help_text": "Sets the format of the output-file from VEP. Available formats: json, tab and vcf.",
                     "fa_icon": "fas fa-table",
                     "hidden": true
+                },
+                "annotations": {
+                    "type": "string"
                 }
             }
         },
@@ -1009,6 +1012,12 @@
                     "fa_icon": "fas fa-people-group",
                     "help_text": "Incoming hook URL for messaging service. Currently, MS Teams and Slack are supported.",
                     "hidden": true
+                },
+                "annotations_index": {
+                    "type": "string"
+                },
+                "header_lines": {
+                    "type": "string"
                 }
             }
         }
@@ -1044,5 +1053,11 @@
         {
             "$ref": "#/definitions/generic_options"
         }
-    ]
+    ],
+    "properties": {
+        "validationSchemaIgnoreParams": {
+            "type": "string",
+            "default": "cf_ploidy,genomes,igenomes_base"
+        }
+    }
 }
