@@ -340,7 +340,9 @@ if (params.snpeff_cache && params.tools && params.tools.contains("snpeff")) {
     }
     snpeff_cache = Channel.fromPath(file("${params.snpeff_cache}/${snpeff_annotation_cache_key}"), checkIfExists: true).collect()
         .map{ cache -> [ [ id:"${params.snpeff_genome}.${params.snpeff_db}" ], cache ] }
-} else snpeff_cache = []
+    } else if (!params.download_cache) {
+        error("No cache for SnpEff or automatic download of said cache has been detected.\nPlease refer to https://nf-co.re/sarek/docs/usage/#how-to-customise-snpeff-and-vep-annotation for more information.")
+    } else snpeff_cache = []
 
 if (params.vep_cache && params.tools && params.tools.contains("vep")) {
     if (params.vep_cache == "s3://annotation-cache/vep_cache") {
@@ -358,7 +360,9 @@ if (params.vep_cache && params.tools && params.tools.contains("vep")) {
         }
     }
     vep_cache = Channel.fromPath(file("${params.vep_cache}/${vep_annotation_cache_key}"), checkIfExists: true).collect()
-} else vep_cache = []
+    } else if (!params.download_cache) {
+        error("No cache for VEP or automatic download of said cache has been detected.\nPlease refer to https://nf-co.re/sarek/docs/usage/#how-to-customise-snpeff-and-vep-annotation for more information.")
+    } else vep_cache = []
 
 vep_extra_files = []
 
