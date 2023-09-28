@@ -287,7 +287,7 @@ if (params.tools && (params.tools.split(',').contains('ascat') || params.tools.s
 }
 
 if ((params.download_cache) && (params.snpeff_cache || params.vep_cache)) {
-    error("Please specify either `--download_cache` or `--snpeff_cache`, `--vep_cache`.\nhttps://nf-co.re/sarek/dev/usage#how-to-customise-snpeff-and-vep-annotation")
+    error("Please specify either `--download_cache` or `--snpeff_cache`, `--vep_cache`.\nhttps://nf-co.re/sarek/usage#how-to-customise-snpeff-and-vep-annotation")
 }
 
 /*
@@ -335,7 +335,7 @@ if (params.snpeff_cache && params.tools && params.tools.contains("snpeff")) {
         if (params.snpeff_cache == "s3://annotation-cache/snpeff_cache") {
             error("This path is not available within annotation-cache. Please check https://annotation-cache.github.io/ to create a request for it.")
         } else {
-            error("Files within --snpeff_cache invalid. Make sure there is a directory named ${snpeff_cache_dir} in ${params.snpeff_cache}.\nhttps://nf-co.re/sarek/dev/usage#how-to-customise-snpeff-and-vep-annotation")
+            error("Files within --snpeff_cache invalid. Make sure there is a directory named ${snpeff_cache_dir} in ${params.snpeff_cache}.\nhttps://nf-co.re/sarek/usage#how-to-customise-snpeff-and-vep-annotation")
         }
     }
     snpeff_cache = Channel.fromPath(file("${params.snpeff_cache}/${snpeff_annotation_cache_key}"), checkIfExists: true).collect()
@@ -356,7 +356,7 @@ if (params.vep_cache && params.tools && params.tools.contains("vep")) {
         if (params.vep_cache == "s3://annotation-cache/vep_cache") {
             error("This path is not available within annotation-cache. Please check https://annotation-cache.github.io/ to create a request for it.")
         } else {
-            error("Files within --vep_cache invalid. Make sure there is a directory named ${vep_cache_dir} in ${params.vep_cache}.\nhttps://nf-co.re/sarek/dev/usage#how-to-customise-snpeff-and-vep-annotation")
+            error("Files within --vep_cache invalid. Make sure there is a directory named ${vep_cache_dir} in ${params.vep_cache}.\nhttps://nf-co.re/sarek/usage#how-to-customise-snpeff-and-vep-annotation")
         }
     }
     vep_cache = Channel.fromPath(file("${params.vep_cache}/${vep_annotation_cache_key}"), checkIfExists: true).collect()
