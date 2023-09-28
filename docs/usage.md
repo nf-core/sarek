@@ -954,7 +954,7 @@ aws s3 --no-sign-request ls s3://annotation-cache/vep_cache/
 
 Since both Snpeff and VEP are internally figuring the path towards the specific cache version / species, `annotation-cache` is using an extra set of keys to specify the species and genome build.
 
-So if you are using this resource, please either use the `--use_annotation_cache_keys`, or point towards the specific species, genome and build matches the directory structure within the cache.
+So if you are using this resource, please either set `--use_annotation_cache` to use the AWS annotation cache, or point towards the specific species, genome and build matches the directory structure within your own cache folder structure.
 
 Please refer to the [annotation-cache documentation](https://annotation-cache.github.io) for more details.
 
