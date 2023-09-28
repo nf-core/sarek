@@ -17,6 +17,7 @@ A lake near the Rapaselet delta.
 
 - [#1242](https://github.com/nf-core/sarek/pull/1242) - Simplify sentieon nf-core test license usage
 - [#1243](https://github.com/nf-core/sarek/pull/1243) - Improve json schema usage for input
+- [#1258](https://github.com/nf-core/sarek/pull/1258) - fastqc docker image updated to last stable version
 
 ### Fixed
 
