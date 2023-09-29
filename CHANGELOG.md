@@ -422,7 +422,7 @@ Lájtávrre is a lake you can see from the Skierfe mountain, formed by the Rapa�
 
 - [#679](https://github.com/nf-core/sarek/pull/679) - Back to `dev`
 - [#685](https://github.com/nf-core/sarek/pull/685) - Updating the nf-core modules used by Sarek
-- [#691](https://github.com/nf-core/sarek/pull/691) - To run the same spelling of  pytest as before locally, use `PROFILE=docker`
+- [#691](https://github.com/nf-core/sarek/pull/691) - To run the same spelling of pytest as before locally, use `PROFILE=docker`
 - [#692](https://github.com/nf-core/sarek/pull/692) - Use `params.tools=strelka` in profile `test`
 - [#696](https://github.com/nf-core/sarek/pull/696) - Adding check of md5-sums in CI-tests
 - [#719](https://github.com/nf-core/sarek/pull/719) - Added boxes to subway map
@@ -1107,7 +1107,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 - [#14](https://github.com/nf-core/sarek/pull/14) - Fix output name for vcf files
 - [#16](https://github.com/nf-core/sarek/pull/16) - Fix path to `Rscript`
 - [#18](https://github.com/nf-core/sarek/pull/18) - Improve cpu usage
-- [#18](https://github.com/nf-core/sarek/pull/18) - Use same spelling of  font for `nf-core` and `sarek` in ascii art
+- [#18](https://github.com/nf-core/sarek/pull/18) - Use same spelling of font for `nf-core` and `sarek` in ascii art
 - [#20](https://github.com/nf-core/sarek/pull/20) - Use new logo in README
 - [#20](https://github.com/nf-core/sarek/pull/20) - Fix path to references genomes
 - [#22](https://github.com/nf-core/sarek/pull/22) - Fix `--singleCPUMem` issue
@@ -1223,7 +1223,7 @@ Initial release of `nf-core/sarek`, created with the [nf-core](http://nf-co.re/)
 
 ### Fixed
 
-- [#665](https://github.com/SciLifeLab/Sarek/pull/665) - Input bam file now has always the same spelling of  name (whether it is from a single fastq pair or multiple) in the `MarkDuplicates` process, so metrics too
+- [#665](https://github.com/SciLifeLab/Sarek/pull/665) - Input bam file now has always the same spelling of name (whether it is from a single fastq pair or multiple) in the `MarkDuplicates` process, so metrics too
 - [#672](https://github.com/SciLifeLab/Sarek/pull/672) - Process `PullSingularityContainers` from `buildContainers.nf` now expect a file with the correct `.simg` extension for singularity images, and no longer the `.img` one
 - [#679](https://github.com/SciLifeLab/Sarek/pull/679) - Add `publishDirMode` for `germlineVC.nf`
 - [#700](https://github.com/SciLifeLab/Sarek/pull/700) - Fix [#699](https://github.com/SciLifeLab/Sarek/issues/699) missing DP in the FORMAT column VCFs for Mutect2
