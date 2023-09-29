@@ -406,16 +406,14 @@
                     "fa_icon": "fas fa-file",
                     "default": "s3://annotation-cache/vep_cache/",
                     "description": "Path to VEP cache.",
-                    "help_text": "Path to VEP cache which should contain the relevant species, genome and build directories at the path ${vep_species}/${vep_genome}_${vep_cache_version}",
-                    "hidden": true
+                    "help_text": "Path to VEP cache which should contain the relevant species, genome and build directories at the path ${vep_species}/${vep_genome}_${vep_cache_version}"
                 },
                 "snpeff_cache": {
                     "type": "string",
                     "fa_icon": "fas fa-file",
                     "default": "s3://annotation-cache/snpeff_cache/",
                     "description": "Path to snpEff cache.",
-                    "help_text": "Path to snpEff cache which should contain the relevant genome and build directory in the path ${snpeff_species}.${snpeff_version}",
-                    "hidden": true
+                    "help_text": "Path to snpEff cache which should contain the relevant genome and build directory in the path ${snpeff_species}.${snpeff_version}"
                 },
                 "vep_include_fasta": {
                     "type": "boolean",
@@ -514,13 +512,12 @@
                     "default": "--everything --filter_common --per_gene --total_length --offline --format vcf",
                     "fa_icon": "fas fa-toolbox",
                     "description": "Add an extra custom argument to VEP.",
-                    "hidden": true,
                     "help_text": "Using this params you can add custom args to VEP."
                 },
                 "use_annotation_cache_keys": {
                     "type": "boolean",
                     "fa_icon": "fas fa-toolbox",
-                    "description": "Use annotation cache keys for snpeff_cache and vep_cache.",
+                    "description": "Use annotation cache keys for snpeff_cache and vep_cache.\nOnly when using annotation-cache or a similar structure.\nSee [here](https://annotation-cache.github.io/) for more information.",
                     "hidden": true
                 },
                 "outdir_cache": {
@@ -726,36 +723,31 @@
                     "type": "string",
                     "fa_icon": "fas fa-database",
                     "description": "snpEff DB version.",
-                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately.\nThis is used to specify the database to be use to annotate with.\nAlternatively databases' names can be listed with the `snpEff databases`.",
-                    "hidden": true
+                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately.\nThis is used to specify the database to be use to annotate with.\nAlternatively databases' names can be listed with the `snpEff databases`."
                 },
                 "snpeff_genome": {
                     "type": "string",
                     "fa_icon": "fas fa-microscope",
                     "description": "snpEff genome.",
-                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately.\nThis is used to specify the genome when using the container with pre-downloaded cache.",
-                    "hidden": true
+                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately.\nThis is used to specify the genome when using the container with pre-downloaded cache."
                 },
                 "vep_genome": {
                     "type": "string",
                     "fa_icon": "fas fa-microscope",
                     "description": "VEP genome.",
-                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately.\nThis is used to specify the genome when using the container with pre-downloaded cache.",
-                    "hidden": true
+                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately.\nThis is used to specify the genome when using the container with pre-downloaded cache."
                 },
                 "vep_species": {
                     "type": "string",
                     "fa_icon": "fas fa-microscope",
                     "description": "VEP species.",
-                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately.\nAlternatively species listed in Ensembl Genomes caches can be used.",
-                    "hidden": true
+                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately.\nAlternatively species listed in Ensembl Genomes caches can be used."
                 },
                 "vep_cache_version": {
                     "type": "number",
                     "fa_icon": "fas fa-tag",
                     "description": "VEP cache version.",
-                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately.\nAlternatively cache version can be use to specify the correct Ensembl Genomes version number as these differ from the concurrent Ensembl/VEP version numbers",
-                    "hidden": true
+                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately.\nAlternatively cache version can be use to specify the correct Ensembl Genomes version number as these differ from the concurrent Ensembl/VEP version numbers"
                 },
                 "save_reference": {
                     "type": "boolean",

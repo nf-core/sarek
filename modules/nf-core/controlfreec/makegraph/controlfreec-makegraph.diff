@@ -1,16 +1,16 @@
 Changes in module 'nf-core/controlfreec/makegraph'
 --- modules/nf-core/controlfreec/makegraph/main.nf
 +++ modules/nf-core/controlfreec/makegraph/main.nf
-@@ -7,7 +7,7 @@
-         'https://depot.galaxyproject.org/singularity/control-freec:11.6b--hdbdd923_0 ':
-         'biocontainers/control-freec:11.6b--hdbdd923_0 ' }"
+@@ -8,7 +8,7 @@
+         'biocontainers/control-freec:11.6b--hdbdd923_0' }"
+ 
      input:
 -    tuple val(meta), path(ratio), path(baf), val(ploidy)
 +    tuple val(meta), path(ratio), path(baf)
  
      output:
      tuple val(meta), path("*_BAF.png")       , emit: png_baf
-@@ -24,7 +24,7 @@
+@@ -25,7 +25,7 @@
      def prefix = task.ext.prefix ?: "${meta.id}"
      def baf = baf ?: ""
      """
