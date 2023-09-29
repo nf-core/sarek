@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - [#1248](https://github.com/nf-core/sarek/pull/1248) - Improve annotation-cache docs
+- [#1261](https://github.com/nf-core/sarek/pull/1261) - Enable cache for annotation generation when using 'merge'
 
 ### Fixed
 
