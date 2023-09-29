@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - [#1246](https://github.com/nf-core/sarek/pull/1246) - Back to dev
+- [#1259](https://github.com/nf-core/sarek/pull/1259) - nf-prov plugin
 
 ### Changed
 
