@@ -1,0 +1,15 @@
+- name: Skip variant calling on matched normal
+  command: nextflow run main.nf -profile test_cache,tools_germline --tools ngscheckmate --outdir results --outdir results
+  tags:
+    - ngscheckmate
+    - germline
+  files:
+    - path: results/multiqc
+    - path: results/ngscheckmate/ngscheckmate_all.txt
+    - path: results/ngscheckmate/ngscheckmate_matched.txt
+    - path: results/ngscheckmate/ngscheckmate_output_corr_matrix.txt
+    - path: results/ngscheckmate/ngscheckmate.pdf
+    - path: results/ngscheckmate/vcfs/sample1.ngscheckmate.vcf.gz
+    - path: results/ngscheckmate/vcfs/sample2.ngscheckmate.vcf.gz
+    - path: results/ngscheckmate/vcfs/sample3.ngscheckmate.vcf.gz
+    - path: results/ngscheckmate/vcfs/sample4.ngscheckmate.vcf.gz
