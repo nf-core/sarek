@@ -1,8 +1,8 @@
-- name: Check NGSCheckMate is working
-  command: nextflow run main.nf -profile test_cache,tools_germline --tools ngscheckmate --outdir results --outdir results
+- name: Check ngscheckmate is working
+  command: nextflow run main.nf -profile test_cache,tools --tools ngscheckmate --outdir results
   tags:
     - ngscheckmate
-    - germline
+    - tools
   files:
     - path: results/multiqc
     - path: results/ngscheckmate/ngscheckmate_all.txt

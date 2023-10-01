@@ -558,7 +558,7 @@ concatenate_vcfs:
 
 ## ngscheckmate
 ngscheckmate:
-  - conf/modules/post_variant_calling.config
+  - conf/modules/ngscheckmate.config
   - modules/nf-core/bcftools/mpileup/main.nf
   - modules/nf-core/ngscheckmate/ncm/main.nf
   - subworkflows/local/cram_samplqc/main.nf
