@@ -10,31 +10,37 @@ The directories listed below will be created in the results directory after the 
 
 The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:
 
+- [Directory Structure](#directory-structure)
 - [Preprocessing](#preprocessing)
-  - [Prepare input files](#preparation-of-input-files-fastq-or-ubam)
+  - [Preparation of input files (FastQ or (u)BAM)](#preparation-of-input-files-fastq-or-ubam)
     - [Trim adapters](#trim-adapters)
     - [Split FastQ files](#split-fastq-files)
+    - [UMI consensus](#umi-consensus)
   - [Map to Reference](#map-to-reference)
     - [BWA](#bwa)
     - [BWA-mem2](#bwa-mem2)
     - [DragMap](#dragmap)
-    - [Sentieon bwa mem](#sentieon-bwa-mem)
-  - [Duplicate Marking](#mark-duplicates)
+    - [Sentieon BWA mem](#sentieon-bwa-mem)
+  - [Mark Duplicates](#mark-duplicates)
     - [GATK MarkDuplicates (Spark)](#gatk-markduplicates-spark)
-    - [Sentieon LocusCollector and Dedup](#sentieon-locuscollector-dedup)
+  - [Sentieon LocusCollector and Dedup](#sentieon-locuscollector-and-dedup)
   - [Base Quality Score Recalibration](#base-quality-score-recalibration)
     - [GATK BaseRecalibrator (Spark)](#gatk-baserecalibrator-spark)
     - [GATK ApplyBQSR (Spark)](#gatk-applybqsr-spark)
   - [CSV files](#csv-files)
 - [Variant Calling](#variant-calling)
   - [SNVs and small indels](#snvs-and-small-indels)
+    - [bcftools](#bcftools)
     - [DeepVariant](#deepvariant)
     - [FreeBayes](#freebayes)
     - [GATK HaplotypeCaller](#gatk-haplotypecaller)
-    - [Sentieon DNAscope](#sentieon-dnascope)
-    - [Sentieon Haplotyper](#sentieon-haplotyper)
+      - [GATK Germline Single Sample Variant Calling](#gatk-germline-single-sample-variant-calling)
+      - [GATK Joint Germline Variant Calling](#gatk-joint-germline-variant-calling)
     - [GATK Mutect2](#gatk-mutect2)
-    - [bcftools](#bcftools)
+    - [Sentieon DNAscope](#sentieon-dnascope)
+      - [Sentieon DNAscope joint germline variant calling](#sentieon-dnascope-joint-germline-variant-calling)
+    - [Sentieon Haplotyper](#sentieon-haplotyper)
+      - [Sentieon Haplotyper joint germline variant calling](#sentieon-haplotyper-joint-germline-variant-calling)
     - [Strelka2](#strelka2)
   - [Structural Variants](#structural-variants)
     - [Manta](#manta)
@@ -43,22 +49,22 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - [ASCAT](#ascat)
     - [CNVKit](#cnvkit)
     - [Control-FREEC](#control-freec)
-  - [MSI status](#msi-status)
+  - [Microsatellite instability (MSI)](#microsatellite-instability-msi)
     - [MSIsensorPro](#msisensorpro)
-  - [Concatenation](#concatentation)
+  - [Concatenation](#concatenation)
 - [Variant annotation](#variant-annotation)
   - [snpEff](#snpeff)
   - [VEP](#vep)
-- [Quality control and reporting](#qc-and-reporting)
+- [Quality control and reporting](#quality-control-and-reporting)
   - [Quality control](#quality-control)
     - [FastQC](#fastqc)
     - [FastP](#fastp)
+    - [Mosdepth](#mosdepth)
     - [GATK MarkDuplicates reports](#gatk-markduplicates-reports)
     - [Sentieon Dedup reports](#sentieon-dedup-reports)
-    - [mosdepth](#mosdepth)
     - [samtools stats](#samtools-stats)
     - [bcftools stats](#bcftools-stats)
-    - [vcftools](#vcftools)
+    - [VCFtools](#vcftools)
     - [snpEff reports](#snpeff-reports)
     - [VEP reports](#vep-reports)
   - [Reporting](#reporting)
@@ -466,7 +472,26 @@ Unless `dnascope_filter` is listed under `--skip_tools` in the nextflow command,
 
 </details>
 
-#### Sentieon Haplotyper
+##### Sentieon DNAscope joint germline variant calling
+
+In Sentieon's package DNAscope, joint germline variant calling is done by first running Sentieon's Dnacope in emit-mode `gvcf` for each sample and then running Sentieon's [GVCFtyper](https://support.sentieon.com/manual/usages/general/#gvcftyper-algorithm) on the set of gVCF-files. See [Basic usage of Sentieon functions](#basic-usage-of-sentieon-functions) for information on how joint germline variant calling can be done in Sarek using Sentieon's DNAscope.
+
+<details markdown="1">
+<summary>Output files from joint germline variant calling</summary>
+
+**Output directory: `{outdir}/variantcalling/sentieon_dnascope/<sample>/`**
+
+- `<sample>.dnascope.g.vcf.gz` and `<sample>.dnascope.g.vcf.gz.tbi`
+  - VCF with tabix index
+
+**Output directory: `{outdir}/variantcalling/sentieon_dnascope/joint_variant_calling/`**
+
+- `joint_germline.vcf.gz` and `joint_germline.vcf.gz.tbi`
+  - VCF with tabix index
+
+</details>
+
+##### Sentieon Haplotyper joint germline variant calling
 
 [Sentieon Haplotyper](https://support.sentieon.com/manual/usages/general/#haplotyper-algorithm) is Sention's speedup version of GATK's Haplotypecaller (see above).
 
@@ -490,25 +515,6 @@ Unless `haplotyper_filter` is listed under `--skip_tools` in the nextflow comman
 **Output directory: `{outdir}/variantcalling/sentieon_haplotyper/<sample>/`**
 
 - `<sample>.haplotyper.filtered.vcf.gz` and `<sample>.haplotyper.filtered.vcf.gz.tbi`
-  - VCF with tabix index
-
-</details>
-
-##### Joint Germline Variant Calling with Sentieon's DNAscope
-
-In Sentieon's package DNAscope, joint germline variant calling is done by first running Sentieon's Dnacope in emit-mode `gvcf` for each sample and then running Sentieon's [GVCFtyper](https://support.sentieon.com/manual/usages/general/#gvcftyper-algorithm) on the set of gVCF-files. See [Basic usage of Sentieon functions](#basic-usage-of-sentieon-functions) for information on how joint germline variant calling can be done in Sarek using Sentieon's DNAscope.
-
-<details markdown="1">
-<summary>Output files from joint germline variant calling</summary>
-
-**Output directory: `{outdir}/variantcalling/sentieon_dnascope/<sample>/`**
-
-- `<sample>.dnascope.g.vcf.gz` and `<sample>.dnascope.g.vcf.gz.tbi`
-  - VCF with tabix index
-
-**Output directory: `{outdir}/variantcalling/sentieon_dnascope/joint_variant_calling/`**
-
-- `joint_germline.vcf.gz` and `joint_germline.vcf.gz.tbi`
   - VCF with tabix index
 
 </details>
@@ -810,7 +816,7 @@ It requires a normal sample for each tumour to differentiate the somatic and ger
   - Germline sites detected.
   </details>
 
-### Concatentation
+### Concatenation
 
 Germline VCFs from `DeepVariant`, `FreeBayes`, `HaplotypeCaller`, `Haplotyper`, `Manta`, `bcftools mpileup`, `Strelka2`, or `Tiddit` are concatenated with `bcftools concat`. The field `SOURCE` is added to the VCF header to report the variant caller.
 
@@ -901,6 +907,9 @@ The plots display:
 <details markdown="1">
 <summary>Output files for all samples</summary>
 
+:::note
+The FastQC plots displayed in the MultiQC report shows _untrimmed_ reads. They may contain adapter sequence and potentially regions with low quality.
+:::
 **Output directory: `{outdir}/reports/fastqc/<sample-lane>`**
 
 - `<sample-lane_1>_fastqc.html` and `<sample-lane_2>_fastqc.html`
@@ -1120,6 +1129,7 @@ Results generated by MultiQC collect pipeline QC from supported tools e.g. FastQ
   - Reports generated by Nextflow: `execution_report.html`, `execution_timeline.html`, `execution_trace.txt` and `pipeline_dag.dot`/`pipeline_dag.svg`.
   - Reports generated by the pipeline: `pipeline_report.html`, `pipeline_report.txt` and `software_versions.yml`. The `pipeline_report*` files will only be present if the `--email` / `--email_on_fail` parameter's are used when running the pipeline.
   - Reformatted samplesheet files used as input to the pipeline: `samplesheet.valid.csv`.
+  - Parameters used by the pipeline run: `params.json`.
 
 </details>
 

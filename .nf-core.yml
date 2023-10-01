@@ -11,4 +11,3 @@ lint:
     - lib/NfcoreTemplate.groovy
     - lib/NfcoreSchema.groovy
   template_strings: False
-  multiqc_config: False
