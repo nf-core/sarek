@@ -58,8 +58,8 @@ def checkPathParamList = [
 ]
 
 // only check if we are using the tools
-if (params.tools && params.tools.contains("snpeff")) checkPathParamList.add(params.snpeff_cache)
-if (params.tools && params.tools.contains("vep"))    checkPathParamList.add(params.vep_cache)
+if (params.tools && (params.tools.split(',').contains('snpeff') || params.tools.split(',').contains('merge'))) checkPathParamList.add(params.snpeff_cache)
+if (params.tools && (params.tools.split(',').contains('vep')    || params.tools.split(',').contains('merge'))) checkPathParamList.add(params.vep_cache)
 
 // Validate input parameters
 WorkflowSarek.initialise(params, log)
@@ -217,7 +217,7 @@ if (params.step == 'mapping' && params.aligner.contains("sentieon-bwamem") && pa
     error("Sentieon BWA is currently not compatible with FGBio UMI handeling. Please choose a different aligner.")
 }
 
-if (params.tools && params.tools.contains("sentieon_haplotyper") && params.joint_germline && (!params.sentieon_haplotyper_emit_mode || !(params.sentieon_haplotyper_emit_mode.contains('gvcf')))) {
+if (params.tools && params.tools.split(',').contains("sentieon_haplotyper") && params.joint_germline && (!params.sentieon_haplotyper_emit_mode || !(params.sentieon_haplotyper_emit_mode.contains('gvcf')))) {
     error("When setting the option `--joint_germline` and including `sentieon_haplotyper` among the requested tools, please set `--sentieon_haplotyper_emit_mode` to include `gvcf`.")
 }
 
@@ -325,7 +325,7 @@ vep_genome         = params.vep_genome         ?: Channel.empty()
 vep_species        = params.vep_species        ?: Channel.empty()
 
 // Initialize files channels based on params, not defined within the params.genomes[params.genome] scope
-if (params.snpeff_cache && params.tools && params.tools.contains("snpeff")) {
+if (params.snpeff_cache && params.tools && (params.tools.split(',').contains("snpeff") || params.tools.split(',').contains('merge'))) {
     if (params.snpeff_cache == "s3://annotation-cache/snpeff_cache") {
         def snpeff_annotation_cache_key = "${params.snpeff_genome}.${params.snpeff_db}/"
     } else {
@@ -342,11 +342,11 @@ if (params.snpeff_cache && params.tools && params.tools.contains("snpeff")) {
     }
     snpeff_cache = Channel.fromPath(file("${params.snpeff_cache}/${snpeff_annotation_cache_key}"), checkIfExists: true).collect()
         .map{ cache -> [ [ id:"${params.snpeff_genome}.${params.snpeff_db}" ], cache ] }
-    } else if (params.tools && params.tools.contains("snpeff") && !params.download_cache) {
+    } else if (params.tools && (params.tools.split(',').contains("snpeff") || params.tools.split(',').contains('merge')) && !params.download_cache) {
         error("No cache for SnpEff or automatic download of said cache has been detected.\nPlease refer to https://nf-co.re/sarek/docs/usage/#how-to-customise-snpeff-and-vep-annotation for more information.")
     } else snpeff_cache = []
 
-if (params.vep_cache && params.tools && params.tools.contains("vep")) {
+if (params.vep_cache && params.tools && (params.tools.split(',').contains("vep") || params.tools.split(',').contains('merge'))) {
     if (params.vep_cache == "s3://annotation-cache/vep_cache") {
         def vep_annotation_cache_key = "${params.vep_cache_version}_${params.vep_genome}/"
     } else {
@@ -362,7 +362,7 @@ if (params.vep_cache && params.tools && params.tools.contains("vep")) {
         }
     }
     vep_cache = Channel.fromPath(file("${params.vep_cache}/${vep_annotation_cache_key}"), checkIfExists: true).collect()
-    } else if (params.tools && params.tools.contains("vep") && !params.download_cache) {
+    } else if (params.tools && (params.tools.split(',').contains("vep") || params.tools.split(',').contains('merge')) && !params.download_cache) {
         error("No cache for VEP or automatic download of said cache has been detected.\nPlease refer to https://nf-co.re/sarek/docs/usage/#how-to-customise-snpeff-and-vep-annotation for more information.")
     } else vep_cache = []
 
