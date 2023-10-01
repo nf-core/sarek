@@ -1,4 +1,4 @@
-- name: Skip variant calling on matched normal
+- name: Check NGSCheckMate is working
   command: nextflow run main.nf -profile test_cache,tools_germline --tools ngscheckmate --outdir results --outdir results
   tags:
     - ngscheckmate
