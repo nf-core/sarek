@@ -324,10 +324,11 @@ vep_species        = params.vep_species        ?: Channel.empty()
 
 // Initialize files channels based on params, not defined within the params.genomes[params.genome] scope
 if (params.snpeff_cache && params.tools && (params.tools.split(',').contains("snpeff") || params.tools.split(',').contains('merge'))) {
+    def snpeff_annotation_cache_key = ''
     if (params.snpeff_cache == "s3://annotation-cache/snpeff_cache") {
-        def snpeff_annotation_cache_key = "${params.snpeff_genome}.${params.snpeff_db}/"
+        snpeff_annotation_cache_key = "${params.snpeff_genome}.${params.snpeff_db}/"
     } else {
-        def snpeff_annotation_cache_key = params.use_annotation_cache_keys ? "${params.snpeff_genome}.${params.snpeff_db}/" : ""
+        snpeff_annotation_cache_key = params.use_annotation_cache_keys ? "${params.snpeff_genome}.${params.snpeff_db}/" : ""
     }
     def snpeff_cache_dir =  "${snpeff_annotation_cache_key}${params.snpeff_genome}.${params.snpeff_db}"
     def snpeff_cache_path_full = file("$params.snpeff_cache/$snpeff_cache_dir", type: 'dir')
@@ -345,10 +346,11 @@ if (params.snpeff_cache && params.tools && (params.tools.split(',').contains("sn
     } else snpeff_cache = []
 
 if (params.vep_cache && params.tools && (params.tools.split(',').contains("vep") || params.tools.split(',').contains('merge'))) {
+    def vep_annotation_cache_key = ''
     if (params.vep_cache == "s3://annotation-cache/vep_cache") {
-        def vep_annotation_cache_key = "${params.vep_cache_version}_${params.vep_genome}/"
+        vep_annotation_cache_key = "${params.vep_cache_version}_${params.vep_genome}/"
     } else {
-        def vep_annotation_cache_key = params.use_annotation_cache_keys ? "${params.vep_cache_version}_${params.vep_genome}/" : ""
+        vep_annotation_cache_key = params.use_annotation_cache_keys ? "${params.vep_cache_version}_${params.vep_genome}/" : ""
     }
     def vep_cache_dir = "${vep_annotation_cache_key}${params.vep_species}/${params.vep_cache_version}_${params.vep_genome}"
     def vep_cache_path_full = file("$params.vep_cache/$vep_cache_dir", type: 'dir')
