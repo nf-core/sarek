@@ -1046,6 +1046,13 @@ Enable with `--vep_spliceregion`.
 
 For more details, see [here](https://www.ensembl.org/info/docs/tools/vep/script/vep_plugins.html#spliceregion) and [here](https://www.ensembl.info/2018/10/26/cool-stuff-the-vep-can-do-splice-site-variant-annotation/)."
 
+### BCFTOOLS Annotate
+
+It is possible to annotate a VCF file with a custom annotation file using [BCFTOOLS Annotate](https://samtools.github.io/bcftools/bcftools.html#annotate). This can be done by setting adding bcfann to the tools list and setting the following parameters:
+- annotations: path to vcf annotation file
+- annotations_index: path to vcf annotation index file
+- header_lines: path to header lines file
+
 ## MultiQC related issues
 
 ### Plots for SnpEff are missing

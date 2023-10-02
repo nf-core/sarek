@@ -834,6 +834,19 @@ plus any additional filed selected via the plugins: [dbNSFP](https://sites.googl
 
 </details>
 
+### BCFtools annotate
+
+[BCFtools annotate](https://samtools.github.io/bcftools/bcftools.html#annotate) is used to add annotations to VCF files. The annotations are added to the INFO column of the VCF file. The annotations are added to the VCF header and the VCF header is updated with the new annotations. For further reading and documentation see the [BCFtools annotate manual](https://samtools.github.io/bcftools/bcftools.html#annotate).
+
+<details markdown="1">
+<summary>Output files for all samples</summary>
+
+- `{sample,tumorsample_vs_normalsample}.<variantcaller>_bcf.ann.vcf.gz` and `{sample,tumorsample_vs_normalsample}.<variantcaller>_bcf.ann.vcf.gz.tbi`
+  - VCF with tabix index
+
+</details>
+
+
 ## Quality control and reporting
 
 ### Quality control
