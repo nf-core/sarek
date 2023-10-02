@@ -1,0 +1,43 @@
+name: NCBench Zenodo Upload
+# This workflow can be triggered manually with the GitHub actions workflow dispatch button.
+# It runs the -profile 'test' on AWS batch
+
+on:
+  # upload can only be triggered manually for now
+  workflow_dispatch:
+      inputs:
+        germline_wes:
+          description: "Trigger NCBench upload"
+          type: boolean
+          default: true
+
+jobs:
+  ncbench-upload:
+    name: Move files to Zenodo
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - profile: germline_wes
+            enabled: ${{ ( github.repository == 'nf-core/sarek' ) && ( github.event_name != 'workflow_dispatch' || inputs.germline_wes ) }}
+    steps:
+      - name: Download files from AWS
+        uses: keithweaver/aws-s3-github-action@v1.0.0
+        if: ${{ matrix.enabled }}
+        with:
+          revision: ${{ github.sha }}
+          source:  s3://${{ secrets.AWS_S3_BUCKET }}/sarek/results-${{ github.sha }}/${{ matrix.profile }}/variant_calling/
+          command: sync
+          destination: ./variant_calling
+          flags: --no-sign-request --include ".vcf.gz" --exclude "g.vcf.gz"
+      - name: Upload file to Zenodo
+        uses: popperized/zenodo/upload@master
+        with:
+          secrets: ${{ secrets.ZENODO_API_TOKEN }}
+          parameters: |
+            {
+              ZENODO_DEPOSIT_ID = ""
+              ZENODO_UPLOAD_PATH = "./variant_calling"
+            }
+
