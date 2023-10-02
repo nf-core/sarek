@@ -491,7 +491,7 @@ In Sentieon's package DNAscope, joint germline variant calling is done by first 
 
 </details>
 
-##### Sentieon Haplotyper joint germline variant calling
+#### Sentieon Haplotyper
 
 [Sentieon Haplotyper](https://support.sentieon.com/manual/usages/general/#haplotyper-algorithm) is Sention's speedup version of GATK's Haplotypecaller (see above).
 
@@ -519,7 +519,7 @@ Unless `haplotyper_filter` is listed under `--skip_tools` in the nextflow comman
 
 </details>
 
-##### Joint Germline Variant Calling with Sentieon's DNAseq
+##### Sentieon Haplotyper joint germline variant calling
 
 In Sentieon's package DNAseq, joint germline variant calling is done by first running Sentieon's Haplotyper in emit-mode `gvcf` for each sample and then running Sentieon's [GVCFtyper](https://support.sentieon.com/manual/usages/general/#gvcftyper-algorithm) on the set of gVCF-files. See [Basic usage of Sentieon functions](#basic-usage-of-sentieon-functions) for information on how joint germline variant calling can be done in Sarek using Sentieon's DNAseq. After joint genotyping, Sentieon's version of VQSR ([VarCal](https://support.sentieon.com/manual/usages/general/#varcal-algorithm) and [ApplyVarCal](https://support.sentieon.com/manual/usages/general/#applyvarcal-algorithm)) is applied for filtering to produce the final multisample callset with the desired balance of precision and sensitivity.
 
