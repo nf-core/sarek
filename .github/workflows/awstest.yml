@@ -15,8 +15,12 @@ on:
         description: "Trigger somatic full test on AWS"
         type: boolean
         default: false
-      germline:
-        description: "Trigger germline full test on AWS"
+      germline_wgs:
+        description: "Trigger germline full test (WGS) on AWS"
+        type: boolean
+        default: false
+      germline_wes:
+        description: "Trigger germline full test (WES) on AWS"
         type: boolean
         default: false
 
@@ -32,8 +36,11 @@ jobs:
             enabled: ${{ ( github.repository == 'nf-core/sarek' ) && ( github.event_name != 'workflow_dispatch' || inputs.profiletest ) }}
           - profile: test_full
             enabled: ${{ ( github.repository == 'nf-core/sarek' ) && ( github.event_name != 'workflow_dispatch' || inputs.somatic ) }}
-          - profile: test_full_germline
-            enabled: ${{ ( github.repository == 'nf-core/sarek' ) && ( github.event_name != 'workflow_dispatch' || inputs.germline ) }}
+          - profile: test_full_germline_wgs
+            enabled: ${{ ( github.repository == 'nf-core/sarek' ) && ( github.event_name != 'workflow_dispatch' || inputs.germline_wgs ) }}
+          - profile: test_full_germline_wes
+            enabled: ${{ ( github.repository == 'nf-core/sarek' ) && ( github.event_name != 'workflow_dispatch' || inputs.germline_wes ) }}
+
     steps:
       # Launch workflow using Tower CLI tool action
       - name: Launch workflow via tower
