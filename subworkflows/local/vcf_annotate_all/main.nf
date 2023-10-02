@@ -5,7 +5,7 @@
 include { VCF_ANNOTATE_ENSEMBLVEP                       } from '../../nf-core/vcf_annotate_ensemblvep/main'
 include { VCF_ANNOTATE_ENSEMBLVEP as VCF_ANNOTATE_MERGE } from '../../nf-core/vcf_annotate_ensemblvep/main'
 include { VCF_ANNOTATE_SNPEFF                           } from '../../nf-core/vcf_annotate_snpeff/main'
-include { BCFTOOLS_ANNOTATE                             } from '../../local/vcf_annotate_bcftools/main.nf'
+include { VCF_ANNOTATE_BCFTOOLS                         } from '../../nf-core/vcf_annotate_bcftools/main'
 
 workflow VCF_ANNOTATE_ALL {
     take:
