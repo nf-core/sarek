@@ -232,6 +232,14 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         vcf_tiddit
     )
 
+    if(tools.split(',').contains('varlociraptor')) {
+        // TODO: CONCAT the vcfs
+        VARLOCIRAPTOR_CALLS(vcf_all, cram, fasta, fasta_fai, varlociraptor_scenario)
+        vcfs = VARLOCIRAPTOR_CALLS.out.vcfs
+        versions = versions.mix(VARLOCIRAPTOR_CALLS.out.versions)
+    }
+
+
     emit:
     out_msisensorpro
     vcf_all

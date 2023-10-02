@@ -295,20 +295,21 @@ if ((params.download_cache) && (params.snpeff_cache || params.vep_cache)) {
 */
 
 // Initialize file channels based on params, defined in the params.genomes[params.genome] scope
-ascat_alleles      = params.ascat_alleles      ? Channel.fromPath(params.ascat_alleles).collect()     : Channel.empty()
-ascat_loci         = params.ascat_loci         ? Channel.fromPath(params.ascat_loci).collect()        : Channel.empty()
-ascat_loci_gc      = params.ascat_loci_gc      ? Channel.fromPath(params.ascat_loci_gc).collect()     : Channel.value([])
-ascat_loci_rt      = params.ascat_loci_rt      ? Channel.fromPath(params.ascat_loci_rt).collect()     : Channel.value([])
-cf_chrom_len       = params.cf_chrom_len       ? Channel.fromPath(params.cf_chrom_len).collect()      : []
-chr_dir            = params.chr_dir            ? Channel.fromPath(params.chr_dir).collect()           : Channel.value([])
-dbsnp              = params.dbsnp              ? Channel.fromPath(params.dbsnp).collect()             : Channel.value([])
-fasta              = params.fasta              ? Channel.fromPath(params.fasta).first()               : Channel.empty()
-fasta_fai          = params.fasta_fai          ? Channel.fromPath(params.fasta_fai).collect()         : Channel.empty()
-germline_resource  = params.germline_resource  ? Channel.fromPath(params.germline_resource).collect() : Channel.value([]) // Mutect2 does not require a germline resource, so set to optional input
-known_indels       = params.known_indels       ? Channel.fromPath(params.known_indels).collect()      : Channel.value([])
-known_snps         = params.known_snps         ? Channel.fromPath(params.known_snps).collect()        : Channel.value([])
-mappability        = params.mappability        ? Channel.fromPath(params.mappability).collect()       : Channel.value([])
-pon                = params.pon                ? Channel.fromPath(params.pon).collect()               : Channel.value([]) // PON is optional for Mutect2 (but highly recommended)
+ascat_alleles          = params.ascat_alleles          ? Channel.fromPath(params.ascat_alleles).collect()          : Channel.empty()
+ascat_loci             = params.ascat_loci             ? Channel.fromPath(params.ascat_loci).collect()             : Channel.empty()
+ascat_loci_gc          = params.ascat_loci_gc          ? Channel.fromPath(params.ascat_loci_gc).collect()          : Channel.value([])
+ascat_loci_rt          = params.ascat_loci_rt          ? Channel.fromPath(params.ascat_loci_rt).collect()          : Channel.value([])
+cf_chrom_len           = params.cf_chrom_len           ? Channel.fromPath(params.cf_chrom_len).collect()           : []
+chr_dir                = params.chr_dir                ? Channel.fromPath(params.chr_dir).collect()                : Channel.value([])
+dbsnp                  = params.dbsnp                  ? Channel.fromPath(params.dbsnp).collect()                  : Channel.value([])
+fasta                  = params.fasta                  ? Channel.fromPath(params.fasta).first()                    : Channel.empty()
+fasta_fai              = params.fasta_fai              ? Channel.fromPath(params.fasta_fai).collect()              : Channel.empty()
+germline_resource      = params.germline_resource      ? Channel.fromPath(params.germline_resource).collect()      : Channel.value([]) // Mutect2 does not require a germline resource, so set to optional input
+known_indels           = params.known_indels           ? Channel.fromPath(params.known_indels).collect()           : Channel.value([])
+known_snps             = params.known_snps             ? Channel.fromPath(params.known_snps).collect()             : Channel.value([])
+mappability            = params.mappability            ? Channel.fromPath(params.mappability).collect()            : Channel.value([])
+pon                    = params.pon                    ? Channel.fromPath(params.pon).collect()                    : Channel.value([]) // PON is optional for Mutect2 (but highly recommended)
+varlociraptor_scenario = params.varlociraptor_scenario ? Channel.fromPath(params.varlociraptor_scenario).collect() : Channel.value([]) // Scenario file for varlociraptor, optional
 
 // Initialize value channels based on params, defined in the params.genomes[params.genome] scope
 ascat_genome       = params.ascat_genome       ?: Channel.empty()
@@ -1181,11 +1182,13 @@ workflow SAREK {
         )
 
         // POST VARIANTCALLING
-        POST_VARIANTCALLING(cram_variant_calling_status_normal,
+        POST_VARIANTCALLING(params.tools,
+                            cram_variant_calling_status_normal,
                             fasta,
                             fasta_fai,
                             BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_all,
-                            params.concatenate_vcfs)
+                            params.concatenate_vcfs,
+                            varlociraptor_scenario)
 
         // Gather vcf files for annotation and QC
         vcf_to_annotate = Channel.empty()

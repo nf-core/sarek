@@ -8,11 +8,13 @@ include { VARLOCIRAPTOR_CALLS       } from '../vcf_varlociraptor_calls/main'
 workflow POST_VARIANTCALLING {
 
     take:
+    tools
     cram
     fasta
     fasta_fai
     vcfs
     concatenate_vcfs
+    varlociraptor_scenario
 
     main:
     versions = Channel.empty()
@@ -24,9 +26,11 @@ workflow POST_VARIANTCALLING {
         versions = versions.mix(CONCATENATE_GERMLINE_VCFS.out.versions)
     }
 
-    VARLOCIRAPTOR_CALLS(vcfs, cram, fasta, fasta_fai)
-    versions = versions.mix(VARLOCIRAPTOR_CALLS.out.versions)
-
+    if(tools.split(',').contains('varlociraptor')) {
+        VARLOCIRAPTOR_CALLS(vcfs, cram, fasta, fasta_fai, varlociraptor_scenario)
+        vcfs = VARLOCIRAPTOR_CALLS.out.vcfs
+        versions = versions.mix(VARLOCIRAPTOR_CALLS.out.versions)
+    }
     emit:
     vcfs // post processed vcfs
 
