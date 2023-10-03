@@ -23,7 +23,9 @@ jobs:
             enabled: ${{ ( github.repository == 'nf-core/sarek' ) && ( github.event_name != 'workflow_dispatch' || inputs.germline_wes ) }}
     env:
       pipeline_version: 3.2.3
+
     steps:
+
       - name: Download files from AWS
         uses: keithweaver/aws-s3-github-action@v1.0.0
         if: ${{ matrix.enabled }}
@@ -33,29 +35,46 @@ jobs:
           command: sync
           destination: ./variant_calling
           flags: --no-sign-request --include ".vcf.gz" --exclude "g.vcf.gz"
-      - name: Upload file to Zenodo
-        uses: popperized/zenodo/upload@master
-        with:
-          secrets: ${{ secrets.ZENODO_API_TOKEN }}
-          # parameters: |
-          #   {
-          #     ZENODO_DEPOSIT_ID = ""
-          #     ZENODO_UPLOAD_PATH = "./nf-core-sarek-$pipeline_version"
-          #   }
-      - name: Install jq
-        uses: sergeysova/jq-action@v2
-      - name: NCBench set config
+
+      - name: Download metadata file for Zenodo
         uses: actions/checkout@v4
         with:
-          repository: FriederikeHanssen/ncbench
-          path: ncbench
-          ref: main
-          token: ${{ github.token }}
           sparse-checkout: |
-            config/config.yaml
+            assets/zenodo_ncbench.json
           sparse-checkout-cone-mode: false
           run: |
             jq --help >> config.yaml
+
+      - name: Create new Zenodo entry
+        uses: popperized/zenodo/create@master
+        env:
+          ZENODO_METADATA_PATH: ./metadata.json
+        with:
+          secrets: ${{ secrets.ZENODO_API_TOKEN }}
+
+      - name: Upload file to Zenodo
+        uses: popperized/zenodo/upload@master
+        env:
+          ZENODO_DEPOSIT_ID:  ./variant_calling
+          ZENODO_UPLOAD_PATH: ./variant_calling_v$pipeline_version
+          ZENODO_USE_SANDBOX: true
+        with:
+          secrets: ${{ secrets.ZENODO_API_TOKEN }}
+
+      # - name: Install jq
+      #   uses: sergeysova/jq-action@v2
+      # - name: NCBench set config
+      #   uses: actions/checkout@v4
+      #   with:
+      #     repository: FriederikeHanssen/ncbench
+      #     path: ncbench
+      #     ref: main
+      #     token: ${{ github.token }}
+      #     sparse-checkout: |
+      #       config/config.yaml
+      #     sparse-checkout-cone-mode: false
+      #     run: |
+      #       jq --help >> config.yaml
 
 
 
