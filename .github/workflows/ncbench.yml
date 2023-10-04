@@ -37,6 +37,8 @@ jobs:
       - name: Download metadata file for Zenodo
         uses: actions/checkout@v4
         with:
+          repository: FriederikeHanssen/sarek
+          ref: ncbench
           sparse-checkout: |
             assets/zenodo_ncbench.json
           sparse-checkout-cone-mode: false
