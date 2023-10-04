@@ -1,6 +1,5 @@
 name: NCBench Zenodo Upload
 # This workflow can be triggered manually with the GitHub actions workflow dispatch button.
-# It runs the -profile 'test' on AWS batch
 
 on:
   # upload can only be triggered manually for now
@@ -10,10 +9,10 @@ on:
           description: "Trigger NCBench upload"
           type: boolean
           default: true
+  pull_request:
 
 jobs:
   ncbench-upload:
-    name: Move files to Zenodo
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -42,20 +41,18 @@ jobs:
           sparse-checkout: |
             assets/zenodo_ncbench.json
           sparse-checkout-cone-mode: false
-          run: |
-            jq --help >> config.yaml
 
       - name: Create new Zenodo entry
         uses: popperized/zenodo/create@master
         env:
-          ZENODO_METADATA_PATH: ./metadata.json
+          ZENODO_METADATA_PATH: assets/zenodo_ncbench.json
         with:
           secrets: ${{ secrets.ZENODO_API_TOKEN }}
 
       - name: Upload file to Zenodo
         uses: popperized/zenodo/upload@master
         env:
-          ZENODO_DEPOSIT_ID:  ./variant_calling
+          ZENODO_DEPOSIT_ID:  #TODO get the dposit ID from the previous step
           ZENODO_UPLOAD_PATH: ./variant_calling_v$pipeline_version
           ZENODO_USE_SANDBOX: true
         with:
