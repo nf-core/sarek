@@ -39,5 +39,4 @@ jobs:
         with:
           repository: FriederikeHanssen/sarek
           ref: ncbench
-          sparse-checkout: |
-            assets/zenodo_ncbench.json
+          path: sarek-ncbench/
