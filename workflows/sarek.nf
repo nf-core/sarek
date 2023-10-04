@@ -50,6 +50,8 @@ def checkPathParamList = [
     params.multiqc_config,
     params.pon,
     params.pon_tbi,
+    params.sentieon_dnascope_model,
+    params.snpeff_cache,
     params.spliceai_indel,
     params.spliceai_indel_tbi,
     params.spliceai_snv,
@@ -255,17 +257,59 @@ if (!params.dbsnp && !params.known_indels) {
     if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration', 'recalibrate'] && (!params.skip_tools || (params.skip_tools && !params.skip_tools.split(',').contains('baserecalibrator')))) {
         error("Base quality score recalibration requires at least one resource file. Please provide at least one of `--dbsnp` or `--known_indels`\nYou can skip this step in the workflow by adding `--skip_tools baserecalibrator` to the command.")
     }
-    if (params.tools && (params.tools.split(',').contains('haplotypecaller') || params.tools.split(',').contains('sentieon_haplotyper'))) {
-        log.warn "If GATK's Haplotypecaller or Sentieon's Haplotyper is specified, without `--dbsnp` or `--known_indels no filtering will be done. For filtering, please provide at least one of `--dbsnp` or `--known_indels`.\nFor more information see FilterVariantTranches (single-sample, default): https://gatk.broadinstitute.org/hc/en-us/articles/5358928898971-FilterVariantTranches\nFor more information see VariantRecalibration (--joint_germline): https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator\nFor more information on GATK Best practice germline variant calling: https://gatk.broadinstitute.org/hc/en-us/articles/360035535932-Germline-short-variant-discovery-SNPs-Indels-"
+    if (params.tools && (params.tools.split(',').contains('haplotypecaller') || params.tools.split(',').contains('sentieon_haplotyper') || params.tools.split(',').contains('sentieon_dnascope'))) {
+        log.warn "If GATK's Haplotypecaller, Sentieon's Dnascpe or Sentieon's Haplotyper is specified, without `--dbsnp` or `--known_indels no filtering will be done. For filtering, please provide at least one of `--dbsnp` or `--known_indels`.\nFor more information see FilterVariantTranches (single-sample, default): https://gatk.broadinstitute.org/hc/en-us/articles/5358928898971-FilterVariantTranches\nFor more information see VariantRecalibration (--joint_germline): https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator\nFor more information on GATK Best practice germline variant calling: https://gatk.broadinstitute.org/hc/en-us/articles/360035535932-Germline-short-variant-discovery-SNPs-Indels-"
     }
 }
-if (params.joint_germline && (!params.tools || !(params.tools.split(',').contains('haplotypecaller') || params.tools.split(',').contains('sentieon_haplotyper')))) {
-    error("The GATK's Haplotypecaller or Sentieon's Haplotyper should be specified as one of the tools when doing joint germline variant calling.) ")
+if (params.joint_germline && (!params.tools || !(params.tools.split(',').contains('haplotypecaller') || params.tools.split(',').contains('sentieon_haplotyper') || params.tools.split(',').contains('sentieon_dnascope')))) {
+    error("The GATK's Haplotypecaller, Sentieon's Dnascope or Sentieon's Haplotyper should be specified as one of the tools when doing joint germline variant calling.) ")
 }
 
-if (params.joint_germline && (!params.dbsnp || !params.known_indels || !params.known_snps || params.no_intervals)) {
-    log.warn "If GATK's Haplotypecaller or Sentieon's Haplotyper is specified, without `--dbsnp`, `--known_snps`, `--known_indels` or the associated resource labels (ie `known_snps_vqsr`), no variant recalibration will be done. For recalibration you must provide all of these resources.\nFor more information see VariantRecalibration: https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator \nJoint germline variant calling also requires intervals in order to genotype the samples. As a result, if `--no_intervals` is set to `true` the joint germline variant calling will not be performed."
+if (
+    params.tools &&
+    (
+        params.tools.split(',').contains('haplotypecaller') ||
+        params.tools.split(',').contains('sentieon_haplotyper') ||
+        params.tools.split(',').contains('sentieon_dnascope')
+    ) &&
+    params.joint_germline &&
+    (
+        !params.dbsnp ||
+        !params.known_indels ||
+        !params.known_snps ||
+        params.no_intervals
+    )
+    ) {
+    log.warn("""If GATK's Haplotypecaller, Sentieon's Dnascope and/or Sentieon's Haplotyper is specified, \
+but without `--dbsnp`, `--known_snps`, `--known_indels` or the associated resource labels (ie `known_snps_vqsr`), \
+no variant recalibration will be done. For recalibration you must provide all of these resources.\nFor more information \
+see VariantRecalibration: https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator \n\
+Joint germline variant calling also requires intervals in order to genotype the samples. \
+As a result, if `--no_intervals` is set to `true` the joint germline variant calling will not be performed.""")
 }
+
+if (params.tools &&
+    params.tools.split(',').contains('sentieon_dnascope') &&
+    params.joint_germline &&
+    (
+        !params.sentieon_dnascope_emit_mode ||
+        !params.sentieon_dnascope_emit_mode.split(',').contains('gvcf')
+    )
+    ) {
+    error("When using Sentieon Dnascope for joint-germline variant-calling the option `--sentieon_dnascope_emit_mode` has to include `gvcf`.")
+}
+
+if (params.tools &&
+    params.tools.split(',').contains('sentieon_haplotyper') &&
+    params.joint_germline &&
+    (
+        !params.sentieon_haplotyper_emit_mode ||
+        !params.sentieon_haplotyper_emit_mode.split(',').contains('gvcf')
+    )
+    ) {
+    error("When using Sentieon Haplotyper for joint-germline variant-calling the option `--sentieon_haplotyper_emit_mode` has to include `gvcf`.")
+}
+
 
 // Fails when --joint_mutect2 is used without enabling mutect2
 if (params.joint_mutect2 && (!params.tools || !params.tools.split(',').contains('mutect2'))) {
@@ -297,20 +341,21 @@ if ((params.download_cache) && (params.snpeff_cache || params.vep_cache)) {
 */
 
 // Initialize file channels based on params, defined in the params.genomes[params.genome] scope
-ascat_alleles      = params.ascat_alleles      ? Channel.fromPath(params.ascat_alleles).collect()     : Channel.empty()
-ascat_loci         = params.ascat_loci         ? Channel.fromPath(params.ascat_loci).collect()        : Channel.empty()
-ascat_loci_gc      = params.ascat_loci_gc      ? Channel.fromPath(params.ascat_loci_gc).collect()     : Channel.value([])
-ascat_loci_rt      = params.ascat_loci_rt      ? Channel.fromPath(params.ascat_loci_rt).collect()     : Channel.value([])
-cf_chrom_len       = params.cf_chrom_len       ? Channel.fromPath(params.cf_chrom_len).collect()      : []
-chr_dir            = params.chr_dir            ? Channel.fromPath(params.chr_dir).collect()           : Channel.value([])
-dbsnp              = params.dbsnp              ? Channel.fromPath(params.dbsnp).collect()             : Channel.value([])
-fasta              = params.fasta              ? Channel.fromPath(params.fasta).first()               : Channel.empty()
-fasta_fai          = params.fasta_fai          ? Channel.fromPath(params.fasta_fai).collect()         : Channel.empty()
-germline_resource  = params.germline_resource  ? Channel.fromPath(params.germline_resource).collect() : Channel.value([]) // Mutect2 does not require a germline resource, so set to optional input
-known_indels       = params.known_indels       ? Channel.fromPath(params.known_indels).collect()      : Channel.value([])
-known_snps         = params.known_snps         ? Channel.fromPath(params.known_snps).collect()        : Channel.value([])
-mappability        = params.mappability        ? Channel.fromPath(params.mappability).collect()       : Channel.value([])
-pon                = params.pon                ? Channel.fromPath(params.pon).collect()               : Channel.value([]) // PON is optional for Mutect2 (but highly recommended)
+ascat_alleles           = params.ascat_alleles           ? Channel.fromPath(params.ascat_alleles).collect()           : Channel.empty()
+ascat_loci              = params.ascat_loci              ? Channel.fromPath(params.ascat_loci).collect()              : Channel.empty()
+ascat_loci_gc           = params.ascat_loci_gc           ? Channel.fromPath(params.ascat_loci_gc).collect()           : Channel.value([])
+ascat_loci_rt           = params.ascat_loci_rt           ? Channel.fromPath(params.ascat_loci_rt).collect()           : Channel.value([])
+cf_chrom_len            = params.cf_chrom_len            ? Channel.fromPath(params.cf_chrom_len).collect()            : []
+chr_dir                 = params.chr_dir                 ? Channel.fromPath(params.chr_dir).collect()                 : Channel.value([])
+dbsnp                   = params.dbsnp                   ? Channel.fromPath(params.dbsnp).collect()                   : Channel.value([])
+fasta                   = params.fasta                   ? Channel.fromPath(params.fasta).first()                     : Channel.empty()
+fasta_fai               = params.fasta_fai               ? Channel.fromPath(params.fasta_fai).collect()               : Channel.empty()
+germline_resource       = params.germline_resource       ? Channel.fromPath(params.germline_resource).collect()       : Channel.value([]) // Mutect2 does not require a germline resource, so set to optional input
+known_indels            = params.known_indels            ? Channel.fromPath(params.known_indels).collect()            : Channel.value([])
+known_snps              = params.known_snps              ? Channel.fromPath(params.known_snps).collect()              : Channel.value([])
+mappability             = params.mappability             ? Channel.fromPath(params.mappability).collect()             : Channel.value([])
+pon                     = params.pon                     ? Channel.fromPath(params.pon).collect()                     : Channel.value([]) // PON is optional for Mutect2 (but highly recommended)
+sentieon_dnascope_model = params.sentieon_dnascope_model ? Channel.fromPath(params.sentieon_dnascope_model).collect() : Channel.value([])
 
 // Initialize value channels based on params, defined in the params.genomes[params.genome] scope
 ascat_genome       = params.ascat_genome       ?: Channel.empty()
@@ -1164,7 +1209,10 @@ workflow SAREK {
             known_snps_vqsr,
             params.joint_germline,
             params.skip_tools && params.skip_tools.split(',').contains('haplotypecaller_filter'), // true if filtering should be skipped
-            params.sentieon_haplotyper_emit_mode)
+            params.sentieon_haplotyper_emit_mode,
+            params.sentieon_dnascope_emit_mode,
+            params.sentieon_dnascope_pcr_indel_model,
+            sentieon_dnascope_model)
 
         // TUMOR ONLY VARIANT CALLING
         BAM_VARIANT_CALLING_TUMOR_ONLY_ALL(
@@ -1232,6 +1280,7 @@ workflow SAREK {
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_freebayes)
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_haplotypecaller)
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_manta)
+        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_sentieon_dnascope)
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_sentieon_haplotyper)
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_strelka)
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_tiddit)

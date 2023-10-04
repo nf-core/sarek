@@ -388,6 +388,16 @@
                         "git_sha": "915a0b16ba3e40ef59e7b44843b3118e17a9c906",
                         "installed_by": ["modules"]
                     },
+                    "sentieon/dnamodelapply": {
+                        "branch": "master",
+                        "git_sha": "43ef68091a1188fd8dc4c03f9341b556803c7514",
+                        "installed_by": ["modules"]
+                    },
+                    "sentieon/dnascope": {
+                        "branch": "master",
+                        "git_sha": "4fb6fdc8046ec09cd30f92a2a252e9a0ba4a6309",
+                        "installed_by": ["modules"]
+                    },
                     "sentieon/gvcftyper": {
                         "branch": "master",
                         "git_sha": "6c9c11ee96796e53a01b4719286acce6af14bc3a",

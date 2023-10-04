@@ -1,0 +1,119 @@
+name: sentieon_dnascope
+description: DNAscope algorithm performs an improved version of Haplotype variant calling.
+keywords:
+  - dnascope
+  - sentieon
+  - variant_calling
+tools:
+  - sentieon:
+      description: |
+        Sentieon® provides complete solutions for secondary DNA/RNA analysis for a variety of sequencing platforms, including short and long reads.
+        Our software improves upon BWA, STAR, Minimap2, GATK, HaplotypeCaller, Mutect, and Mutect2 based pipelines and is deployable on any generic-CPU-based computing system.
+      homepage: https://www.sentieon.com/
+      documentation: https://www.sentieon.com/
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information.
+        e.g. [ id:'test', single_end:false ]
+  - bam:
+      type: file
+      description: BAM file.
+      pattern: "*.bam"
+  - bai:
+      type: file
+      description: BAI file
+      pattern: "*.bai"
+  - intervals:
+      type: file
+      description: bed or interval_list file containing interval in the reference that will be used in the analysis
+      pattern: "*.{bed,interval_list}"
+  - meta2:
+      type: map
+      description: |
+        Groovy Map containing meta information for fasta.
+  - fasta:
+      type: file
+      description: Genome fasta file
+      pattern: "*.{fa,fasta}"
+  - meta3:
+      type: map
+      description: |
+        Groovy Map containing meta information for fasta index.
+  - fai:
+      type: file
+      description: Index of the genome fasta file
+      pattern: "*.fai"
+  - meta4:
+      type: map
+      description: |
+        Groovy Map containing meta information for dbsnp.
+  - dbsnp:
+      type: file
+      description: Single Nucleotide Polymorphism database (dbSNP) file
+      pattern: "*.vcf.gz"
+  - meta5:
+      type: map
+      description: |
+        Groovy Map containing meta information for dbsnp_tbi.
+  - dbsnp_tbi:
+      type: file
+      description: Index of the Single Nucleotide Polymorphism database (dbSNP) file
+      pattern: "*.vcf.gz.tbi"
+  - meta6:
+      type: map
+      description: |
+        Groovy Map containing meta information for machine learning model for Dnascope.
+  - ml_model:
+      type: file
+      description: machine learning model file
+      pattern: "*.model"
+  - ml_model:
+      type: file
+      description: machine learning model file
+      pattern: "*.model"
+  - pcr_indel_model:
+      type: string
+      description: |
+        Controls the option pcr_indel_model for Dnascope.
+        The possible options are "NONE" (used for PCR free samples), and "HOSTILE", "AGGRESSIVE" and "CONSERVATIVE".
+        See Sentieons documentation for further explanation.
+  - emit_vcf:
+      type: string
+      description: |
+        Controls the vcf output from Dnascope.
+        Possible options are "all", "confident" and "variant".
+        See Sentieons documentation for further explanation.
+  - emit_gvcf:
+      type: boolean
+      description: If true, the haplotyper will output a gvcf
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing reference information.
+        e.g. [ id:'test', single_end:false ]
+  - vcf:
+      type: file
+      description: Compressed VCF file
+      pattern: "*.unfiltered.vcf.gz"
+  - vcf_tbi:
+      type: file
+      description: Index of VCF file
+      pattern: "*.unfiltered.vcf.gz.tbi"
+  - gvcf:
+      type: file
+      description: Compressed GVCF file
+      pattern: "*.g.vcf.gz"
+  - gvcf_tbi:
+      type: file
+      description: Index of GVCF file
+      pattern: "*.g.vcf.gz.tbi"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+
+authors:
+  - "@ramprasadn"
