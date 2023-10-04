@@ -59,11 +59,14 @@ jobs:
       #    secrets: ${{ secrets.ZENODO_API_TOKEN }}
       - name: Install jq
         uses: sergeysova/jq-action@v2
+
       - name: NCBench set config
         uses: actions/checkout@v4
         with:
           repository: FriederikeHanssen/ncbench-workflow
           path: ncbench-workflow/
           ref: main
-          run: |
-            jq --help
+
+      - name: Add entries to config
+        run: |
+          jq --help
