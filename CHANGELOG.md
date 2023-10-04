@@ -27,8 +27,9 @@ Ráhpajávvre is the Lule Sámi spelling of Rapaselet.
 
 ### Dependencies
 
-| Dependency | Old version | New version |
-| ---------- | ----------- | ----------- |
+| Dependency                       | Old version | New version |
+| -------------------------------- | ----------- | ----------- |
+| Control-FREEC/assesssignificance | 11.6b       | 11.6        |
 
 ## [3.3.1](https://github.com/nf-core/sarek/releases/tag/3.3.1) - Biellorippjávrre
 
