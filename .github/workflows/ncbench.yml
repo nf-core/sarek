@@ -24,13 +24,12 @@ jobs:
       pipeline_version: 3.2.3
 
     steps:
-
       - name: Download files from AWS
         uses: keithweaver/aws-s3-github-action@v1.0.0
         if: ${{ matrix.enabled }}
         with:
           revision: ${{ github.sha }}
-          source:  s3://${{ secrets.AWS_S3_BUCKET }}/sarek/results-${{ github.sha }}/${{ matrix.profile }}/variant_calling/
+          source:  s3://${{ secrets.AWS_S3_BUCKET }}/sarek/results-test-59026dc07633edb83aab3bfb2f65f79db38437a1/test_full/variant_calling/strelka/
           command: sync
           destination: ./variant_calling
           flags: --no-sign-request --include ".vcf.gz" --exclude "g.vcf.gz"
