@@ -23,11 +23,13 @@ Ráhpajávvre is the Lule Sámi spelling of Rapaselet.
 
 - [#1247](https://github.com/nf-core/sarek/pull/1247) - FIX: Result paths for full size test to be correctly displayed on the website
 - [#1256](https://github.com/nf-core/sarek/pull/1256) - Fix issue with controlfreec container declaration
+- [#1270](https://github.com/nf-core/sarek/pull/1270) - Revert controlfreec/assesssignificance module to 11.6
 
 ### Dependencies
 
-| Dependency | Old version | New version |
-| ---------- | ----------- | ----------- |
+| Dependency                       | Old version | New version |
+| -------------------------------- | ----------- | ----------- |
+| Control-FREEC/assesssignificance | 11.6b       | 11.6        |
 
 ## [3.3.1](https://github.com/nf-core/sarek/releases/tag/3.3.1) - Biellorippjávrre
 
