@@ -33,3 +33,10 @@ jobs:
           aws_region: eu-west-1
           destination: ./variant_calling
           flags: --no-sign-request --include ".vcf.gz" --exclude "g.vcf.gz"
+
+      - name: Download metadata file for Zenodo
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            assets/zenodo_ncbench.json
+          sparse-checkout-cone-mode: false
