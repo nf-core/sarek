@@ -63,7 +63,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: FriederikeHanssen/ncbench
-          path: ncbench
-          ref: main
+          path: ncbench/
           run: |
             jq --help
