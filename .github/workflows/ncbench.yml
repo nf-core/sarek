@@ -57,8 +57,6 @@ jobs:
       #    ZENODO_USE_SANDBOX: true
       #  with:
       #    secrets: ${{ secrets.ZENODO_API_TOKEN }}
-      - name: Install jq
-        uses: sergeysova/jq-action@v2
 
       - name: NCBench set config
         uses: actions/checkout@v4
@@ -68,5 +66,6 @@ jobs:
           ref: main
 
       - name: Add entries to config
+        uses: sergeysova/jq-action@v2
         run: |
           jq --help
