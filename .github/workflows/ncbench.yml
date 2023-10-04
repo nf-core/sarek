@@ -62,8 +62,8 @@ jobs:
       - name: NCBench set config
         uses: actions/checkout@v4
         with:
-          repository: FriederikeHanssen/ncbench
-          path: ncbench/
+          repository: FriederikeHanssen/ncbench-workflow
+          path: ncbench-workflow/
           ref: main
           run: |
             jq --help
