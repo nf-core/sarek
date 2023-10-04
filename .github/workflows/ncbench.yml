@@ -57,15 +57,13 @@ jobs:
       #    ZENODO_USE_SANDBOX: true
       #  with:
       #    secrets: ${{ secrets.ZENODO_API_TOKEN }}
-
       - name: NCBench set config
         uses: actions/checkout@v4
         with:
           repository: FriederikeHanssen/ncbench-workflow
           path: ncbench-workflow/
           ref: main
-
-      - name: Add entries to config
+      - name: Add entry to config
         uses: sergeysova/jq-action@v2
         run: |
           jq --help
