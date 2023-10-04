@@ -40,3 +40,11 @@ jobs:
           repository: FriederikeHanssen/sarek
           ref: ncbench
           path: sarek-ncbench/
+
+      - name: Create new Zenodo entry
+        uses: popperized/zenodo/create@master
+        env:
+          ZENODO_METADATA_PATH: sarek-ncbench/assets/zenodo_ncbench.json
+          ZENODO_USE_SANDBOX: true
+        with:
+          secrets: ${{ secrets.ZENODO_API_TOKEN }}
