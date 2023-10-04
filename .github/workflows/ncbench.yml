@@ -41,4 +41,3 @@ jobs:
           ref: ncbench
           sparse-checkout: |
             assets/zenodo_ncbench.json
-          sparse-checkout-cone-mode: false
