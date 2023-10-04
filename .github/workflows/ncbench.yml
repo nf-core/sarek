@@ -64,5 +64,6 @@ jobs:
         with:
           repository: FriederikeHanssen/ncbench
           path: ncbench/
+          ref: main
           run: |
             jq --help
