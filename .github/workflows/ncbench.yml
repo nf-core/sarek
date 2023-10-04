@@ -1,0 +1,233 @@
+name: NCBench Zenodo Upload
+# This workflow can be triggered manually with the GitHub actions workflow dispatch button.
+
+on:
+  # upload can only be triggered manually for now
+  workflow_dispatch:
+      inputs:
+        germline_wes:
+          description: "Trigger NCBench upload"
+          type: boolean
+          default: true
+  pull_request:
+
+jobs:
+  ncbench-upload:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - profile: germline_wes
+            enabled: ${{ ( github.repository == 'nf-core/sarek' ) && ( github.event_name != 'workflow_dispatch' || inputs.germline_wes ) }}
+    env:
+      pipeline_version: 3.2.3
+
+    steps:
+      - name: Download files from AWS
+        uses: keithweaver/aws-s3-github-action@v1.0.0
+        if: ${{ matrix.enabled }}
+        with:
+          revision: ${{ github.sha }}
+          source:  s3://nf-core-awsmegatests/sarek/results-test-59026dc07633edb83aab3bfb2f65f79db38437a1/test_full/variant_calling/strelka/
+          command: sync
+          destination: ./variant_calling
+          flags: --no-sign-request --include ".vcf.gz" --exclude "g.vcf.gz"
+
+      - name: Download metadata file for Zenodo
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            assets/zenodo_ncbench.json
+          sparse-checkout-cone-mode: false
+
+      - name: Create new Zenodo entry
+        uses: popperized/zenodo/create@master
+        env:
+          ZENODO_METADATA_PATH: assets/zenodo_ncbench.json
+        with:
+          secrets: ${{ secrets.ZENODO_API_TOKEN }}
+
+      - name: Upload file to Zenodo
+        uses: popperized/zenodo/upload@master
+        env:
+          ZENODO_DEPOSIT_ID:  #TODO get the dposit ID from the previous step
+          ZENODO_UPLOAD_PATH: ./variant_calling_v$pipeline_version
+          ZENODO_USE_SANDBOX: true
+        with:
+          secrets: ${{ secrets.ZENODO_API_TOKEN }}
+
+      # - name: Install jq
+      #   uses: sergeysova/jq-action@v2
+      # - name: NCBench set config
+      #   uses: actions/checkout@v4
+      #   with:
+      #     repository: FriederikeHanssen/ncbench
+      #     path: ncbench
+      #     ref: main
+      #     token: ${{ github.token }}
+      #     sparse-checkout: |
+      #       config/config.yaml
+      #     sparse-checkout-cone-mode: false
+      #     run: |
+      #       jq --help >> config.yaml
+
+
+
+
+        # with:
+        #   repository: github.com/FriederikeHanssen/ncbench
+        #   path: ncbench
+        #   ref: main
+        # TODO: how to retrieve the pipeline and tool versions
+        # TODO: how to get the zenodo id
+        #run: |
+        #  jq --version
+
+
+# git checkout -b ${{ github.sha }}
+# echo "    nf-core-sarek-$pipeline_version-deepvariants-agilent-200M:" >> config.yaml
+# echo "      labels:" >> config.yaml
+# echo "        site: nf-core" >> config.yaml
+# echo "        pipeline: nf-core/sarek v$" >> config.yaml
+# echo "        trimming: Fastp v0.23." >> config.yaml
+# echo "        read-mapping: bwa mem v0.7." >> config.yaml
+# echo "        base-quality-recalibration: gatk4 v4.4.0." >> config.yaml
+# echo "        realignment: " >> config.yaml
+# echo "        variant-detection: deepvariant v1.5." >> config.yaml
+# echo "        genotyping: " >> config.yaml
+# echo "        reads: " >> config.yaml
+# echo "      subcategory: NA12878-agilent" >> config.yaml
+# echo "      zenodo:" >> config.yaml
+# echo "        deposition: ?" >> config.yaml
+# echo "        filename: nf-core-sarek-$pipeline_version/deepvariant/NA12878_200M/NA12878_200M.deepvariant.vcf." >> config.yaml
+# echo "      benchmark: giab-NA12878-agilent-" >> config.yaml
+# echo "      rename-contigs: resources/rename-contigs/ucsc-to-ensembl.txt" >> config.yaml
+# git config user.name github-actions
+# git config user.email github-actions@github.com
+# git add .
+# git commit -m "Benchmarking ${{ github.sha }}"
+# git push origin ${{ github.sha }}
+
+
+
+# TB-sarek311-freebayes-agilent-200M:
+#   labels:
+#     site: TB QBiC
+#     pipeline: nf-core/sarek v3.1.1
+#     trimming: Fastp v0.23.2
+#     read-mapping: bwa mem v0.7.17
+#     base-quality-recalibration: gatk4 v4.3.0.0
+#     realignment: none
+#     variant-detection: freebayes v1.3.6
+#     genotyping: none
+#     reads: 200M
+#   subcategory: NA12878-agilent
+#   zenodo:
+#     deposition: 7376244
+#     filename: WES_agilent_high_cov_sarek311_NA12878_freebayes.vcf.gz
+#   benchmark: giab-NA12878-agilent-200M
+#   rename-contigs: resources/rename-contigs/ucsc-to-ensemb
+
+# TB-sarek311-haplotypecaller-agilent-200M:
+#   labels:
+#     site: TB QBiC
+#     pipeline: nf-core/sarek v3.1.1
+#     trimming: Fastp v0.23.2
+#     read-mapping: bwa mem v0.7.17
+#     base-quality-recalibration: gatk4 v4.3.0.0
+#     realignment: none
+#     variant-detection: gatk-haplotypecaller v4.3.0.0
+#     genotyping: none
+#     reads: 200M
+#   subcategory: NA12878-agilent
+#   zenodo:
+#     deposition: 7376244
+#     filename: WES_agilent_high_cov_sarek311_NA12878_haplotypecaller.vcf.gz
+#   benchmark: giab-NA12878-agilent-200M
+#   rename-contigs: resources/rename-contigs/ucsc-to-ensemb
+# TB-sarek311-strelka-agilent-200M:
+#   labels:
+#     site: TB QBiC
+#     pipeline: nf-core/sarek v3.1.1
+#     trimming: Fastp v0.23.2
+#     read-mapping: bwa mem v0.7.17
+#     base-quality-recalibration: gatk4 v4.3.0.0
+#     realignment: none
+#     variant-detection: strelka2 v2.9.10
+#     genotyping: none
+#     reads: 200M
+#   subcategory: NA12878-agilent
+#   zenodo:
+#     deposition: 7376244
+#     filename: WES_agilent_high_cov_sarek311_NA12878_strelka.vcf.gz
+#   benchmark: giab-NA12878-agilent-200M
+#   rename-contigs: resources/rename-contigs/ucsc-to-ensemb
+# TB-sarek311-deepvariants-agilent-75M:
+#   labels:
+#     site: TB QBiC
+#     pipeline: nf-core/sarek v3.1.1
+#     trimming: Fastp v0.23.2
+#     read-mapping: bwa mem v0.7.17
+#     base-quality-recalibration: gatk4 v4.3.0.0
+#     realignment: none
+#     variant-detection: DeepVariant v1.3.6
+#     genotyping: none
+#     reads: 75M
+#   subcategory: NA12878-agilent
+#   zenodo:
+#     deposition: 7376244
+#     filename: WES_agilent_low_cov_sarek311_NA12878_freebayes.vcf.gz
+#   benchmark: giab-NA12878-agilent-75M
+#   rename-contigs: resources/rename-contigs/ucsc-to-ensemb
+# TB-sarek311-freebayes-agilent-75M:
+#   labels:
+#     site: TB QBiC
+#     pipeline: nf-core/sarek v3.1.1
+#     trimming: Fastp v0.23.2
+#     read-mapping: bwa mem v0.7.17
+#     base-quality-recalibration: gatk4 v4.3.0.0
+#     realignment: none
+#     variant-detection: freebayes v1.3.6
+#     genotyping: none
+#     reads: 75M
+#   subcategory: NA12878-agilent
+#   zenodo:
+#     deposition: 7376244
+#     filename: WES_agilent_low_cov_sarek311_NA12878_freebayes.vcf.gz
+#   benchmark: giab-NA12878-agilent-75M
+#   rename-contigs: resources/rename-contigs/ucsc-to-ensemb
+# nfcore-sarek-${{ github.sha }}-haplotypecaller-agilent-75M:
+#   labels:
+#     site: nf-core
+#     pipeline: nf-core/sarek v
+#     trimming: Fastp v0.23.2
+#     read-mapping: bwa mem v0.7.17
+#     base-quality-recalibration: gatk4 v4.3.0.0
+#     realignment: none
+#     variant-detection: gatk-haplotypecaller v4.3.0.0
+#     genotyping: none
+#     reads: 75M
+#   subcategory: NA12878-agilent
+#   zenodo:
+#     deposition:
+#     filename: WES_agilent_low_cov_sarek311_NA12878_haplotypecaller.vcf.gz
+#   benchmark: giab-NA12878-agilent-75M
+#   rename-contigs: resources/rename-contigs/ucsc-to-ensemb
+# TB-sarek311-strelka-agilent-75M:
+#   labels:
+#     site: TB QBiC
+#     pipeline: nf-core/sarek v3.1.1
+#     trimming: Fastp v0.23.2
+#     read-mapping: bwa mem v0.7.17
+#     base-quality-recalibration: gatk4 v4.3.0.0
+#     realignment: none
+#     variant-detection: strelka2 v2.9.10
+#     genotyping: none
+#     reads: 75M
+#   subcategory: NA12878-agilent
+#   zenodo:
+#     deposition: 7376244
+#     filename: WES_agilent_low_cov_sarek311_NA12878_strelka.vcf.gz
+#   benchmark: giab-NA12878-agilent-75M
+#   rename-contigs: resources/rename-contigs/ucsc-to-ensemb
