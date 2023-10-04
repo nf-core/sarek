@@ -29,7 +29,7 @@ jobs:
         if: ${{ matrix.enabled }}
         with:
           revision: ${{ github.sha }}
-          source:  s3://${{ secrets.AWS_S3_BUCKET }}/sarek/results-test-59026dc07633edb83aab3bfb2f65f79db38437a1/test_full/variant_calling/strelka/
+          source:  s3://nf-core-awsmegatests/sarek/results-test-59026dc07633edb83aab3bfb2f65f79db38437a1/test_full/variant_calling/strelka/
           command: sync
           destination: ./variant_calling
           flags: --no-sign-request --include ".vcf.gz" --exclude "g.vcf.gz"
