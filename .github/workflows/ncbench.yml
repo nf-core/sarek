@@ -89,7 +89,7 @@ jobs:
             ' ncbench-workflow/config/config.yaml
       - name: Commit files
         env:
-          PAT_TOKEN: ${{ secrets.NCBENCH_CI_TEST }}
+          GITHUB_TOKEN: ${{ secrets.NCBENCH_CI_TOKEN }}
         run: |
           cd ncbench-workflow
           git config --global user.email "friederike.hanssen@qbic.uni-tuebingen.de"
