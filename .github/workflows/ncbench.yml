@@ -89,10 +89,13 @@ jobs:
             ' ncbench-workflow/config/config.yaml
       - name: Commit files
         run: |
-          cd ncbench-workflow
           git config --global user.email "friederike.hanssen@qbic.uni-tuebingen.de"
           git config --global user.name "FriederikeHanssen"
           git checkout -b test
           git add config/config.yaml
           git commit -a -m "Add changes"
-          git push origin test
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.NCBENCH_CI_TEST }}
+          repository: FriederikeHanssen/ncbench-workflow
