@@ -95,7 +95,7 @@ jobs:
           cd ncbench-workflow
           git config --global user.email "friederike.hanssen@qbic.uni-tuebingen.de"
           git config --global user.name "FriederikeHanssen"
-          git checkout -b test3
+          git checkout -b test4
           git add config/config.yaml
           git commit -a -m "Add changes"
-          git push origin test3
+          git push origin test4
