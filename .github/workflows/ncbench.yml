@@ -60,6 +60,7 @@ jobs:
       - name: NCBench set config
         uses: actions/checkout@v4
         with:
+          token: ${{ secrets.NCBENCH_CI_TOKEN }}
           repository: FriederikeHanssen/ncbench-workflow
           path: ncbench-workflow/
           ref: main
@@ -88,8 +89,6 @@ jobs:
             . = "resources/rename-contigs/ucsc-to-ensembl.txt" )
             ' ncbench-workflow/config/config.yaml
       - name: Commit files
-        env:
-          GITHUB_TOKEN: ${{ secrets.NCBENCH_CI_TOKEN }}
         run: |
           cd ncbench-workflow
           git config --global user.email "friederike.hanssen@qbic.uni-tuebingen.de"
