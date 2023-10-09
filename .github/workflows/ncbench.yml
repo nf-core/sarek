@@ -89,6 +89,7 @@ jobs:
             ' ncbench-workflow/config/config.yaml
       - name: Commit files
         run: |
+          cd FriederikeHanssen/ncbench-workflow
           git config --global user.email "friederike.hanssen@qbic.uni-tuebingen.de"
           git config --global user.name "FriederikeHanssen"
           git checkout -b test
