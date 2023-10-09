@@ -95,6 +95,7 @@ jobs:
           git checkout -b test
           git add config/config.yaml
           git commit -a -m "Add changes"
+          cd ..
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
