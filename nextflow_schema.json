@@ -388,6 +388,7 @@
                     "type": "string",
                     "default": "variant",
                     "fa_icon": "fas fa-toolbox",
+                    "hidden": true,
                     "description": "Option for selecting output and emit-mode of Sentieon's Haplotyper.",
                     "help_text": "The option `--sentieon_haplotyper_emit_mode` can be set to the same string values as the Haplotyper's `--emit_mode`. To output both a vcf and a gvcf, specify both a vcf-option (currently, `all`, `confident` and `variant`) and `gvcf`. For example, to obtain a vcf and gvcf one could set `--sentieon_haplotyper_emit_mode` to `variant, gvcf`.",
                     "pattern": "^(all|confident|gvcf|variant|gvcf,all|gvcf,confident|gvcf,variant|all,gvcf|confident,gvcf|variant,gvcf)(?<!,)$"
@@ -396,6 +397,7 @@
                     "type": "string",
                     "default": "variant",
                     "fa_icon": "fas fa-toolbox",
+                    "hidden": true,
                     "description": "Option for selecting output and emit-mode of Sentieon's Dnascope.",
                     "help_text": "The option `--sentieon_dnascope_emit_mode` can be set to the same string values as the Dnascope's `--emit_mode`. To output both a vcf and a gvcf, specify both a vcf-option (currently, `all`, `confident` and `variant`) and `gvcf`. For example, to obtain a vcf and gvcf one could set `--sentieon_dnascope_emit_mode` to `variant, gvcf`.",
                     "pattern": "^(all|confident|gvcf|variant|gvcf,all|gvcf,confident|gvcf,variant|all,gvcf|confident,gvcf|variant,gvcf)(?<!,)$"
@@ -404,6 +406,7 @@
                     "type": "string",
                     "default": "CONSERVATIVE",
                     "fa_icon": "fas fa-bacon",
+                    "hidden": true,
                     "description": "Option for selecting the PCR indel model used by Sentieon Dnascope.",
                     "help_text": "PCR indel model used to weed out false positive indels more or less aggressively. The possible MODELs are: NONE (used for PCR free samples), and HOSTILE, AGGRESSIVE and CONSERVATIVE, in order of decreasing aggressiveness. The default value is CONSERVATIVE.",
                     "pattern": "^(NONE|HOSTILE|AGGRESSIVE|CONSERVATIVE)(?<!,)$"
@@ -411,6 +414,7 @@
                 "sentieon_dnascope_model": {
                     "type": "string",
                     "fa_icon": "fas fa-database",
+                    "hidden": true,
                     "description": "Machine learning model for Sentieon Dnascope.",
                     "help_text": " It is recommended to use DNAscope with a machine learning model to perform variant calling with higher accuracy by improving the candidate detection and filtering. Sentieon can provide you with a model trained using a subset of the data from the GiAB truth-set found in https://github.com/genome-in-a-bottle. In addition, Sentieon can assist you in the creation of models using your own data, which will calibrate the specifics of your sequencing and bio-informatics processing."
                 }
