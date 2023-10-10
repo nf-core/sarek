@@ -1,0 +1,147 @@
+- name: Run variant calling on germline sample with sentieons dnascope
+  command: nextflow run main.nf -profile test_cache,targeted,software_license --sentieon_extension --input ./tests/csv/3.0/mapped_single_bam.csv --tools sentieon_dnascope --step variant_calling --outdir results
+  tags:
+    - germline
+    - sentieon/dnascope
+    - variant_calling
+  files:
+    - path: results/csv/variantcalled.csv
+      md5sum: b2144d21a0ebfd807a8646f1751d0ddc
+    - path: results/multiqc
+    - path: results/preprocessing/converted/test/test.converted.cram
+    # binary changes md5sums on reruns
+    - path: results/preprocessing/converted/test/test.converted.cram.crai
+    # binary changes md5sums on reruns
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+      should_exist: false
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+      should_exist: false
+    - path: results/reports/bcftools/sentieon_dnascope/test/test.dnascope.filtered.bcftools_stats.txt
+      md5sum: 912c7d5b31784c50e0a75b4fcfa4997b
+    - path: results/reports/vcftools/sentieon_dnascope/test/test.dnascope.filtered.FILTER.summary
+      md5sum: e67b24d296810a075378e5864bcea0fa
+    - path: results/reports/vcftools/sentieon_dnascope/test/test.dnascope.filtered.TsTv.count
+      md5sum: b77c120ee5cc0423267200c67d60c663
+    - path: results/reports/vcftools/sentieon_dnascope/test/test.dnascope.filtered.TsTv.qual
+      # changes md5sum on reruns. This is somewhat unexpected, but might to tiny variation in very small numbers in the qual-files.
+    - path: results/variant_calling/sentieon_dnascope/test/test.dnascope.filtered.vcf.gz
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/sentieon_dnascope/test/test.dnascope.filtered.vcf.gz.tbi
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/sentieon_dnascope/test/test.dnascope.unfiltered.vcf.gz
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/sentieon_dnascope/test/test.dnascope.unfiltered.vcf.gz.tbi
+    # binary changes md5sums on reruns
+    - path: results/dnascope
+      should_exist: false
+- name: Run variant calling on germline sample with sentieons dnascope without intervals
+  command: nextflow run main.nf -profile test_cache,targeted,software_license --sentieon_extension --input ./tests/csv/3.0/mapped_single_bam.csv --tools sentieon_dnascope --step variant_calling --no_intervals --outdir results
+  tags:
+    - germline
+    - sentieon/dnascope
+    - no_intervals
+    - variant_calling
+  files:
+    - path: results/csv/variantcalled.csv
+      md5sum: b2144d21a0ebfd807a8646f1751d0ddc
+    - path: results/multiqc
+    - path: results/no_intervals.bed
+      md5sum: f3dac01ea66b95fe477446fde2d31489
+    - path: results/no_intervals.bed.gz
+      md5sum: f3dac01ea66b95fe477446fde2d31489
+    - path: results/no_intervals.bed.gz.tbi
+      md5sum: f3dac01ea66b95fe477446fde2d31489
+    - path: results/preprocessing/converted/test/test.converted.cram
+    # binary changes md5sums on reruns
+    - path: results/preprocessing/converted/test/test.converted.cram.crai
+    # binary changes md5sums on reruns
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+      should_exist: false
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+      should_exist: false
+    - path: results/reports/bcftools/sentieon_dnascope/test/test.dnascope.filtered.bcftools_stats.txt
+      md5sum: 912c7d5b31784c50e0a75b4fcfa4997b
+    - path: results/reports/vcftools/sentieon_dnascope/test/test.dnascope.filtered.FILTER.summary
+      md5sum: e67b24d296810a075378e5864bcea0fa
+    - path: results/reports/vcftools/sentieon_dnascope/test/test.dnascope.filtered.TsTv.count
+      md5sum: b77c120ee5cc0423267200c67d60c663
+    - path: results/reports/vcftools/sentieon_dnascope/test/test.dnascope.filtered.TsTv.qual
+      # changes md5sum on reruns. This is somewhat unexpected, but might to tiny variation in very small numbers in the qual-files.
+    - path: results/variant_calling/sentieon_dnascope/test/test.dnascope.filtered.vcf.gz
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/sentieon_dnascope/test/test.dnascope.filtered.vcf.gz.tbi
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/sentieon_dnascope/test/test.dnascope.unfiltered.vcf.gz
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/sentieon_dnascope/test/test.dnascope.unfiltered.vcf.gz.tbi
+    # binary changes md5sums on reruns
+    - path: results/sentieon_dnascope
+      should_exist: false
+- name: Run variant calling on germline sample with sentieons dnascope output gvcf
+  command: nextflow run main.nf -profile test_cache,targeted,software_license --sentieon_extension --input ./tests/csv/3.0/mapped_single_bam.csv --tools sentieon_dnascope --step variant_calling --outdir results --sentieon_dnascope_emit_mode gvcf
+  tags:
+    - germline
+    - sentieon/dnascope
+    - variant_calling
+  files:
+    - path: results/csv/variantcalled.csv
+      should_exist: false
+    - path: results/multiqc
+    - path: results/preprocessing/converted/test/test.converted.cram
+    # binary changes md5sums on reruns
+    - path: results/preprocessing/converted/test/test.converted.cram.crai
+    # binary changes md5sums on reruns
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+      should_exist: false
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+      should_exist: false
+    - path: results/reports/bcftools/sentieon_dnascope/test/test.dnascope.filtered.bcftools_stats.txt
+      should_exist: false
+    - path: results/reports/vcftools/sentieon_dnascope/test/test.dnascope.filtered.FILTER.summary
+      should_exist: false
+    - path: results/reports/vcftools/sentieon_dnascope/test/test.dnascope.filtered.TsTv.count
+      should_exist: false
+    - path: results/reports/vcftools/sentieon_dnascope/test/test.dnascope.filtered.TsTv.qual
+      should_exist: false
+    - path: results/variant_calling/sentieon_dnascope/test/test.dnascope.g.vcf.gz
+    - path: results/variant_calling/sentieon_dnascope/test/test.dnascope.g.vcf.gz.tbi
+    - path: results/variant_calling/sentieon_dnascope/test/test.dnascope.filtered.vcf.gz
+      should_exist: false
+    - path: results/variant_calling/sentieon_dnascope/test/test.dnascope.filtered.vcf.gz.tbi
+      should_exist: false
+    - path: results/variant_calling/sentieon_dnascope/test/test.dnascope.unfiltered.vcf.gz
+      should_exist: false
+    - path: results/variant_calling/sentieon_dnascope/test/test.dnascope.unfiltered.vcf.gz.tbi
+      should_exist: false
+    - path: results/dnascope
+      should_exist: false
+- name: Run variant calling on germline sample with sentieons dnascope output both gvcf and vcf
+  command: nextflow run main.nf -profile test_cache,targeted,software_license --sentieon_extension --input ./tests/csv/3.0/mapped_single_bam.csv --tools sentieon_dnascope --step variant_calling --outdir results --sentieon_dnascope_emit_mode variant,gvcf
+  tags:
+    - germline
+    - sentieon/dnascope
+    - variant_calling
+  files:
+    - path: results/csv/variantcalled.csv
+      md5sum: b2144d21a0ebfd807a8646f1751d0ddc
+    - path: results/multiqc
+    - path: results/preprocessing/converted/test/test.converted.cram
+    # binary changes md5sums on reruns
+    - path: results/preprocessing/converted/test/test.converted.cram.crai
+    # binary changes md5sums on reruns
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+      should_exist: false
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+      should_exist: false
+    - path: results/reports/bcftools/sentieon_dnascope/test/test.dnascope.filtered.bcftools_stats.txt
+    - path: results/reports/vcftools/sentieon_dnascope/test/test.dnascope.filtered.FILTER.summary
+    - path: results/reports/vcftools/sentieon_dnascope/test/test.dnascope.filtered.TsTv.count
+    - path: results/reports/vcftools/sentieon_dnascope/test/test.dnascope.filtered.TsTv.qual
+    - path: results/variant_calling/sentieon_dnascope/test/test.dnascope.g.vcf.gz
+    - path: results/variant_calling/sentieon_dnascope/test/test.dnascope.g.vcf.gz.tbi
+    - path: results/variant_calling/sentieon_dnascope/test/test.dnascope.filtered.vcf.gz
+    - path: results/variant_calling/sentieon_dnascope/test/test.dnascope.filtered.vcf.gz.tbi
+    - path: results/variant_calling/sentieon_dnascope/test/test.dnascope.unfiltered.vcf.gz
+    - path: results/variant_calling/sentieon_dnascope/test/test.dnascope.unfiltered.vcf.gz.tbi
+    - path: results/dnascope
+      should_exist: false

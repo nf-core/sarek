@@ -12,16 +12,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- [#1193](https://github.com/nf-core/sarek/pull/1193) - Adding support for Sentieon's DnaScope for germline variant-calling including joint-germline.
+- [#1271](https://github.com/nf-core/sarek/pull/1271) - Back to dev
+
 ### Changed
 
 ### Fixed
-
-- [#1247](https://github.com/nf-core/sarek/pull/1247) - FIX: Result paths for full size test to be correctly displayed on the website
 
 ### Dependencies
 
 | Dependency | Old version | New version |
 | ---------- | ----------- | ----------- |
+
+## [3.3.2](https://github.com/nf-core/sarek/releases/tag/3.3.2) - Ráhpajávvre
+
+Ráhpajávvre is the Lule Sámi spelling of Rapaselet.
+
+### Added
+
+- [#1246](https://github.com/nf-core/sarek/pull/1246) - Back to dev
+- [#1259](https://github.com/nf-core/sarek/pull/1259) - nf-prov plugin
+
+### Changed
+
+- [#1248](https://github.com/nf-core/sarek/pull/1248) - Improve annotation-cache docs
+- [#1261](https://github.com/nf-core/sarek/pull/1261) - Enable cache for annotation generation when using 'merge'
+
+### Fixed
+
+- [#1247](https://github.com/nf-core/sarek/pull/1247) - FIX: Result paths for full size test to be correctly displayed on the website
+- [#1256](https://github.com/nf-core/sarek/pull/1256) - Fix issue with controlfreec container declaration
+- [#1270](https://github.com/nf-core/sarek/pull/1270) - Revert controlfreec/assesssignificance module to 11.6
+
+### Dependencies
+
+| Dependency                       | Old version | New version |
+| -------------------------------- | ----------- | ----------- |
+| Control-FREEC/assesssignificance | 11.6b       | 11.6        |
 
 ## [3.3.1](https://github.com/nf-core/sarek/releases/tag/3.3.1) - Biellorippjávrre
 
