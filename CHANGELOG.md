@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- [#1277](https://github.com/nf-core/sarek/pull/1277) - Fix null value issue for joint calling with Mutect2
+
 ### Dependencies
 
 | Dependency | Old version | New version |
