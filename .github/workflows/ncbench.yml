@@ -41,22 +41,22 @@ jobs:
           ref: ncbench
           path: sarek-ncbench/
 
-      #- name: Create new Zenodo entry
-      #  uses: popperized/zenodo/create@master
-      #  env:
-      #    ZENODO_METADATA_PATH: sarek-ncbench/assets/zenodo_ncbench.json
-      #    ZENODO_USE_SANDBOX: true
-      #  with:
-      #    secrets: ${{ secrets.ZENODO_API_TOKEN }}
+      - name: Create new Zenodo entry
+        uses: popperized/zenodo/create@master
+        env:
+          ZENODO_METADATA_PATH: sarek-ncbench/assets/zenodo_ncbench.json
+          ZENODO_USE_SANDBOX: true
+        with:
+          secrets: ${{ secrets.ZENODO_DEPOSIT }}
 
-      #- name: Upload file to Zenodo
-      #  uses: popperized/zenodo/upload@master
-      #  env:
-      #    ZENODO_DEPOSIT_ID:  #TODO get the dposit ID from the previous step
-      #    ZENODO_UPLOAD_PATH: ./variant_calling_v$pipeline_version
-      #    ZENODO_USE_SANDBOX: true
-      #  with:
-      #    secrets: ${{ secrets.ZENODO_API_TOKEN }}
+      - name: Upload file to Zenodo
+        uses: popperized/zenodo/upload@master
+        env:
+          ZENODO_UPLOAD_PATH: ./variant_calling
+          ZENODO_USE_SANDBOX: true
+        with:
+          secrets: ${{ secrets.ZENODO_DEPOSIT }}
+
       - name: NCBench set config
         uses: actions/checkout@v4
         with:
