@@ -314,6 +314,31 @@ haplotypecaller_skip_filter:
   - tests/csv/3.0/mapped_single_bam.csv
   - tests/test_haplotypecaller_skip_filter.yml
 
+## sentieon/dnascope
+sentieon/dnascope:
+  - conf/modules/sentieon_dnascope.config
+  - modules/nf-core/sentieon/dnascope/main.nf
+  - modules/nf-core/gatk4/mergevcfs/main.nf
+  - modules/nf-core/samtools/index/main.nf
+  - modules/nf-core/samtools/merge/main.nf
+  - subworkflows/local/bam_merge_index_samtools/main.nf
+  - subworkflows/local/bam_variant_calling_germline_all/main.nf
+  - subworkflows/local/bam_variant_calling_sentieon_dnascope/main.nf
+  - tests/csv/3.0/mapped_single_bam.csv
+  - tests/test_sentieon_dnascope.yml
+
+sentieon_dnascope_skip_filter:
+  - conf/modules/sentieon_dnascope.config
+  - modules/nf-core/sentieon/dnascope/main.nf
+  - modules/nf-core/gatk4/mergevcfs/main.nf
+  - modules/nf-core/samtools/index/main.nf
+  - modules/nf-core/samtools/merge/main.nf
+  - subworkflows/local/bam_merge_index_samtools/main.nf
+  - subworkflows/local/bam_variant_calling_germline_all/main.nf
+  - subworkflows/local/bam_variant_calling_sentieon_dnascope/main.nf
+  - tests/csv/3.0/mapped_single_bam.csv
+  - tests/test_sentieon_dnascope_skip_filter.yml
+
 ## sentieon/haplotyper
 sentieon/haplotyper:
   - conf/modules/sentieon_haplotyper.config
@@ -364,16 +389,27 @@ joint_germline:
   - tests/csv/3.0/mapped_joint_bam.csv
   - tests/test_joint_germline.yml
 
-## sentieon_joint_germline
-sentieon_joint_germline:
+## sentieon_dnascope_joint_germline
+sentieon_dnascope_joint_germline:
+  - conf/modules/prepare_genome.config
+  - conf/modules/sentieon_dnascope.config
+  - conf/modules/sentieon_dnascope_joint_germline.config
+  - modules/nf-core/sentieon/dnascope/main.nf
+  - subworkflows/local/bam_variant_calling_germline_all/main.nf
+  - subworkflows/local/bam_variant_calling_sentieon_dnascope/main.nf
+  - tests/csv/3.0/mapped_joint_bam.csv
+  - tests/test_sentieon_dnascop_joint_germline.yml
+
+## sentieon_haplotyper_joint_germline
+sentieon_haplotyper_joint_germline:
   - conf/modules/prepare_genome.config
   - conf/modules/sentieon_haplotyper.config
-  - conf/modules/sentieon_joint_germline.config
+  - conf/modules/sentieon_haplotyper_joint_germline.config
   - modules/nf-core/sentieon/haplotyper/main.nf
   - subworkflows/local/bam_variant_calling_germline_all/main.nf
   - subworkflows/local/bam_variant_calling_sentieon_haplotyper/main.nf
   - tests/csv/3.0/mapped_joint_bam.csv
-  - tests/test_sentieon_joint_germline.yml
+  - tests/test_sentieon_haplotyper_joint_germline.yml
 
 ## manta
 manta:
