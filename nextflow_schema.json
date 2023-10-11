@@ -387,10 +387,10 @@
                 "sentieon_haplotyper_emit_mode": {
                     "type": "string",
                     "default": "variant",
-                    "fa_icon": "fas fa-toolbox",
-                    "hidden": true,
                     "description": "Option for selecting output and emit-mode of Sentieon's Haplotyper.",
+                    "fa_icon": "fas fa-toolbox",
                     "help_text": "The option `--sentieon_haplotyper_emit_mode` can be set to the same string values as the Haplotyper's `--emit_mode`. To output both a vcf and a gvcf, specify both a vcf-option (currently, `all`, `confident` and `variant`) and `gvcf`. For example, to obtain a vcf and gvcf one could set `--sentieon_haplotyper_emit_mode` to `variant, gvcf`.",
+                    "hidden": true,
                     "pattern": "^(all|confident|gvcf|variant|gvcf,all|gvcf,confident|gvcf,variant|all,gvcf|confident,gvcf|variant,gvcf)(?<!,)$"
                 },
                 "sentieon_dnascope_emit_mode": {
