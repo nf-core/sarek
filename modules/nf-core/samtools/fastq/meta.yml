@@ -1,0 +1,62 @@
+name: samtools_fastq
+description: Converts a SAM/BAM/CRAM file to FASTQ
+keywords:
+  - bam
+  - sam
+  - cram
+  - fastq
+tools:
+  - samtools:
+      description: |
+        SAMtools is a set of utilities for interacting with and post-processing
+        short DNA sequence read alignments in the SAM, BAM and CRAM formats, written by Heng Li.
+        These files are generated as output by short read aligners like BWA.
+      homepage: http://www.htslib.org/
+      documentation: http://www.htslib.org/doc/samtools.html
+      doi: 10.1093/bioinformatics/btp352
+      licence: ["MIT"]
+
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - input:
+      type: file
+      description: BAM/CRAM/SAM file
+      pattern: "*.{bam,cram,sam}"
+  - interleave:
+      type: boolean
+      description: Set true for interleaved fastq file
+
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+  - fastq:
+      type: file
+      description: Compressed FASTQ file(s) with reads with either the READ1 or READ2 flag set in separate files.
+      pattern: "*_{1,2}.fastq.gz"
+  - interleaved:
+      type: file
+      description: Compressed FASTQ file with reads with either the READ1 or READ2 flag set in a combined file. Needs collated input file.
+      pattern: "*_interleaved.fastq.gz"
+  - singleton:
+      type: file
+      description: Compressed FASTQ file with singleton reads
+      pattern: "*_singleton.fastq.gz"
+  - other:
+      type: file
+      description: Compressed FASTQ file with reads with either both READ1 and READ2 flags set or unset
+      pattern: "*_other.fastq.gz"
+
+authors:
+  - "@priyanka-surana"
+  - "@suzannejin"

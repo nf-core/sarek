@@ -33,22 +33,22 @@
                     "bwa/index": {
                         "branch": "master",
                         "git_sha": "bfed129da5134b4439b1821c917972570d44d39c",
-                        "installed_by": ["modules"]
+                        "installed_by": ["fastq_create_umi_consensus_fgbio", "modules"]
                     },
                     "bwa/mem": {
                         "branch": "master",
                         "git_sha": "3dc300ddcaa563c1e3503477557c0e0def6df2ce",
-                        "installed_by": ["modules"]
+                        "installed_by": ["fastq_create_umi_consensus_fgbio", "modules"]
                     },
                     "bwamem2/index": {
                         "branch": "master",
                         "git_sha": "bfed129da5134b4439b1821c917972570d44d39c",
-                        "installed_by": ["modules"]
+                        "installed_by": ["fastq_create_umi_consensus_fgbio", "modules"]
                     },
                     "bwamem2/mem": {
                         "branch": "master",
                         "git_sha": "0460d316170f75f323111b4a2c0a2989f0c32013",
-                        "installed_by": ["modules"]
+                        "installed_by": ["fastq_create_umi_consensus_fgbio", "modules"]
                     },
                     "cat/cat": {
                         "branch": "master",
@@ -143,20 +143,35 @@
                         "git_sha": "bd8092b67b5103bdd52e300f75889442275c3117",
                         "installed_by": ["modules"]
                     },
+                    "fgbio/callduplexconsensusreads": {
+                        "branch": "master",
+                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "installed_by": ["fastq_create_umi_consensus_fgbio"]
+                    },
                     "fgbio/callmolecularconsensusreads": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": ["fastq_create_umi_consensus_fgbio", "modules"]
                     },
                     "fgbio/fastqtobam": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": ["fastq_create_umi_consensus_fgbio", "modules"]
+                    },
+                    "fgbio/filterconsensusreads": {
+                        "branch": "master",
+                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "installed_by": ["fastq_create_umi_consensus_fgbio"]
                     },
                     "fgbio/groupreadsbyumi": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": ["fastq_create_umi_consensus_fgbio", "modules"]
+                    },
+                    "fgbio/zipperbams": {
+                        "branch": "master",
+                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "installed_by": ["fastq_create_umi_consensus_fgbio"]
                     },
                     "freebayes": {
                         "branch": "master",
@@ -348,10 +363,15 @@
                         "git_sha": "fd742419940e01ba1c5ecb172c3e32ec840662fe",
                         "installed_by": ["modules"]
                     },
+                    "samtools/fastq": {
+                        "branch": "master",
+                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "installed_by": ["fastq_create_umi_consensus_fgbio"]
+                    },
                     "samtools/index": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
-                        "installed_by": ["modules"]
+                        "installed_by": ["fastq_create_umi_consensus_fgbio", "modules"]
                     },
                     "samtools/merge": {
                         "branch": "master",
@@ -363,6 +383,11 @@
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
                         "installed_by": ["modules"]
                     },
+                    "samtools/sort": {
+                        "branch": "master",
+                        "git_sha": "a0f7be95788366c1923171e358da7d049eb440f9",
+                        "installed_by": ["fastq_create_umi_consensus_fgbio"]
+                    },
                     "samtools/stats": {
                         "branch": "master",
                         "git_sha": "735e1e04e7e01751d2d6e97055bbdb6f70683cc1",
@@ -371,7 +396,7 @@
                     "samtools/view": {
                         "branch": "master",
                         "git_sha": "3ffae3598260a99e8db3207dead9f73f87f90d1f",
-                        "installed_by": ["modules"]
+                        "installed_by": ["fastq_create_umi_consensus_fgbio", "modules"]
                     },
                     "sentieon/applyvarcal": {
                         "branch": "master",
@@ -472,6 +497,11 @@
             },
             "subworkflows": {
                 "nf-core": {
+                    "fastq_create_umi_consensus_fgbio": {
+                        "branch": "master",
+                        "git_sha": "dedc0e31087f3306101c38835d051bf49789445a",
+                        "installed_by": ["subworkflows"]
+                    },
                     "vcf_annotate_ensemblvep": {
                         "branch": "master",
                         "git_sha": "dedc0e31087f3306101c38835d051bf49789445a",

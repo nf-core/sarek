@@ -1,0 +1,46 @@
+name: "fgbio_zipperbams"
+description: FGBIO tool to zip together an unmapped and mapped BAM to transfer metadata into the output BAM
+keywords:
+  - fgbio
+  - zipperbams
+tools:
+  - fgbio:
+      description: A set of tools for working with genomic and high throughput sequencing data, including UMIs
+      homepage: http://fulcrumgenomics.github.io/fgbio/
+      documentation: http://fulcrumgenomics.github.io/fgbio/tools/latest/
+      tool_dev_url: https://github.com/fulcrumgenomics/fgbio
+
+      licence: ["MIT"]
+
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - mbam:
+      type: file
+      description: mapped BAM/SAM file
+      pattern: "*.{bam,sam}"
+  - ubam:
+      type: file
+      description: unmapped BAM file
+      pattern: "*.bam"
+
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+  - bam:
+      type: file
+      description: Sorted BAM/CRAM/SAM file
+      pattern: "*.{bam,cram,sam}"
+
+authors:
+  - "@lescai"

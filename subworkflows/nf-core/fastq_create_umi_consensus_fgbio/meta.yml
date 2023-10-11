@@ -1,0 +1,81 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: fastq_create_umi_consensus_fgbio
+description: |
+  This workflow uses the suite FGBIO to identify and remove UMI tags from FASTQ reads
+  convert them to unmapped BAM file, map them to the reference genome,
+  and finally use the mapped information to group UMIs and generate consensus reads in each group
+keywords:
+  - fgbio
+  - umi
+  - samblaster
+  - samtools
+  - bwa
+components:
+  - bwa/index
+  - bwa/mem
+  - bwamem2/mem
+  - bwamem2/index
+  - fgbio/fastqtobam
+  - fgbio/groupreadsbyumi
+  - fgbio/callmolecularconsensusreads
+  - fgbio/callduplexconsensusreads
+  - fgbio/filterconsensusreads
+  - samblaster
+  - samtools/bam2fq
+  - samtools/view
+  - samtools/sort
+  - samtools/index
+  - samtools/fastq
+  - fgbio/zipperbams
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test' ]
+  - reads:
+      type: list
+      description: list umi-tagged reads
+      pattern: "[ *.{fastq.gz/fq.gz} ]"
+  - fasta:
+      type: file
+      description: The reference fasta file
+      pattern: "*.fasta"
+  - read_structure:
+      type: string
+      description: |
+        A read structure should always be provided for each of the fastq files.
+        If single end, the string will contain only one structure (i.e. "2M11S+T"), if paired-end the string
+        will contain two structures separated by a blank space (i.e. "2M11S+T 2M11S+T").
+        If the read does not contain any UMI, the structure will be +T (i.e. only template of any length).
+        https://github.com/fulcrumgenomics/fgbio/wiki/Read-Structures
+  - groupreadsbyumi_strategy:
+      type: string
+      description: |
+      Reguired argument: defines the UMI assignment strategy.
+      enum:
+        - Identity
+        - Edit
+        - Adjacency
+        - Paired
+output:
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+  - ubam:
+      type: file
+      description: unmapped bam file
+      pattern: "*.bam"
+  - groupbam:
+      type: file
+      description: mapped bam file, where reads are grouped by UMI tag
+      pattern: "*.bam"
+  - consensusbam:
+      type: file
+      description: |
+        mapped bam file, where reads are created as consensus of those
+        belonging to the same UMI group
+      pattern: "*.bam"
+authors:
+  - "@lescai"

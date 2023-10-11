@@ -1,0 +1,45 @@
+name: "fgbio_callduplexconsensusreads"
+description: Uses FGBIO CallDuplexConsensusReads to call duplex consensus sequences from reads generated from the same double-stranded source molecule.
+keywords:
+  - umi
+  - duplex
+  - fgbio
+tools:
+  - "fgbio":
+      description: "A set of tools for working with genomic and high throughput sequencing data, including UMIs"
+      homepage: http://fulcrumgenomics.github.io/fgbio/
+      documentation: http://fulcrumgenomics.github.io/fgbio/tools/latest/CallDuplexConsensusReads.html
+      tool_dev_url: https://github.com/fulcrumgenomics/fgbio
+
+      licence: "['MIT']"
+
+input:
+  # Only when we have meta
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - bam:
+      type: file
+      description: BAM/SAM file
+      pattern: "*.{bam,sam}"
+
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  #
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+  - bam:
+      type: file
+      description: consensus BAM file
+      pattern: "*.bam"
+
+authors:
+  - "@lescai"

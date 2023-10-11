@@ -462,6 +462,7 @@ include { FASTP                                       } from '../modules/nf-core
 
 // Create umi consensus bams from fastq
 include { FASTQ_CREATE_UMI_CONSENSUS_FGBIO            } from '../subworkflows/local/fastq_create_umi_consensus_fgbio/main'
+include { FASTQ_CREATE_UMI_CONSENSUS_FGBIO            } from '../subworkflows/nf-core/fastq_create_umi_consensus_fgbio/main'
 
 // Map input reads to reference genome
 include { FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON    } from '../subworkflows/local/fastq_align_bwamem_mem2_dragmap_sentieon/main'
