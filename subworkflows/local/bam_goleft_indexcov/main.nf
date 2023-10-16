@@ -4,7 +4,7 @@
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
-include { SAMTOOLS_INDEX_FOR_INDEXCOV               } from '../../../modules/local/bcftools/mpileup/main'
+include { SAMTOOLS_INDEX_FOR_INDEXCOV               } from '../../../modules/local/samtools_index_for_indexcov/main'
 
 
 workflow BAM_GOLEFT_INDEXCOV {
