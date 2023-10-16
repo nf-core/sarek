@@ -30,7 +30,6 @@ workflow VCF_ANNOTATE_ALL {
     json_ann = Channel.empty()
     versions = Channel.empty()
 
-    vcf_ann.view()
     if (tools.split(',').contains('bcfann')) {
         VCF_ANNOTATE_BCFTOOLS(vcf, annotations, annotations_index, header_lines)
 
