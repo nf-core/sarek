@@ -4,12 +4,11 @@ process CNVKIT_GENEMETRICS {
 
     conda "bioconda::cnvkit=0.9.10 bioconda::samtools=1.17"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/cnvkit:0.9.9--pyhdfd78af_0':
-        'quay.io/biocontainers/cnvkit:0.9.9--pyhdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/cnvkit:0.9.10--pyhdfd78af_0':
+        'biocontainers/cnvkit:0.9.10--pyhdfd78af_0' }"
 
     input:
-    tuple val(meta), path(cnr)
-    tuple val (meta), path(cns)
+    tuple val(meta), path(cnr), path(cns)
 
     output:
     tuple val(meta), path("*.tsv"), emit: tsv
@@ -21,15 +20,15 @@ process CNVKIT_GENEMETRICS {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: cnr.BaseName
-    def segments = cns ? "--segment ${cns[2]}" : ""
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    def segments = cns ? "--segment ${cns}" : ""
 
     """
     cnvkit.py \\
         genemetrics \\
         $cnr \\
         $segments \\
-        --output ${prefix}.genemetrics.tsv \\
+        --output ${prefix}.tsv \\
         $args
 
     cat <<-END_VERSIONS > versions.yml

@@ -2,7 +2,9 @@ name: cnvkit_genemetrics
 description: Copy number variant detection from high-throughput sequencing data
 keywords:
   - cnvkit
-  - genemetrics
+  - bam
+  - fasta
+  - copy number
 tools:
   - cnvkit:
       description: |
@@ -40,4 +42,6 @@ output:
       pattern: "versions.yml"
 
 authors:
+  - "@adamrtalbot"
   - "@marrip"
+  - "@priesgo"

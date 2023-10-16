@@ -20,7 +20,9 @@ workflow BAM_VARIANT_CALLING_CNVKIT {
     generate_pon = false
 
     CNVKIT_BATCH(cram, fasta, fasta_fai, targets, reference, generate_pon)
-    CNVKIT_GENEMETRICS(CNVKIT_BATCH.out.cnr, CNVKIT_BATCH.out.cns)
+
+    ch_genemetrics = CNVKIT_BATCH.out.cnr.join(CNVKIT_BATCH.out.cns).map{ meta, cnr, cns -> [meta, cnr, cns[2]]}
+    CNVKIT_GENEMETRICS(ch_genemetrics)
 
     versions = versions.mix(CNVKIT_BATCH.out.versions)
     versions = versions.mix(CNVKIT_GENEMETRICS.out.versions)
