@@ -543,11 +543,11 @@
                     "type": "string",
                     "fa_icon": "fas fa-file"
                 },
-                "annotations_index": {
+                "bcftools_annotations_index": {
                     "type": "string",
                     "fa_icon": "fas fa-file"
                 },
-                "header_lines": {
+                "bcftools_header_lines": {
                     "type": "string",
                     "fa_icon": "fas fa-align-center"
                 }

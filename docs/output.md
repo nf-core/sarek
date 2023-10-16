@@ -846,7 +846,6 @@ plus any additional filed selected via the plugins: [dbNSFP](https://sites.googl
 
 </details>
 
-
 ## Quality control and reporting
 
 ### Quality control

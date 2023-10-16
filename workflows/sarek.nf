@@ -54,9 +54,9 @@ def checkPathParamList = [
     params.spliceai_indel_tbi,
     params.spliceai_snv,
     params.spliceai_snv_tbi,
-    params.annotations,
-    params.annotations_index,
-    params.header_lines
+    params.bcftools_annotations,
+    params.bcftools_annotations_index,
+    params.bcftools_header_lines
 ]
 
 // only check if we are using the tools
@@ -324,9 +324,9 @@ snpeff_db          = params.snpeff_db          ?: Channel.empty()
 vep_cache_version  = params.vep_cache_version  ?: Channel.empty()
 vep_genome         = params.vep_genome         ?: Channel.empty()
 vep_species        = params.vep_species        ?: Channel.empty()
-annotations        = params.annotations        ?: Channel.empty()
-annotations_index  = params.annotations_index  ?: Channel.empty()
-header_lines       = params.header_lines       ?: Channel.empty()
+bcftools_annotations        = params.bcftools_annotations        ?: Channel.empty()
+bcftools_annotations_index  = params.bcftools_annotations_index  ?: Channel.empty()
+bcftools_header_lines       = params.bcftools_header_lines       ?: Channel.empty()
 
 // Initialize files channels based on params, not defined within the params.genomes[params.genome] scope
 if (params.snpeff_cache && params.tools && params.tools.contains("snpeff")) {
@@ -1258,9 +1258,9 @@ workflow SAREK {
                 vep_cache_version,
                 vep_cache,
                 vep_extra_files,
-                annotations,
-                annotations_index,
-                header_lines)
+                bcftools_annotations,
+                bcftools_annotations_index,
+                bcftools_header_lines)
 
             // Gather used softwares versions
             versions = versions.mix(VCF_ANNOTATE_ALL.out.versions)

@@ -26,13 +26,13 @@ input:
   - index:
       type: file
       description: Index of the query VCF or BCF file
-  - annotations:
+  - bcftools_annotations:
       type: file
       description: Bgzip-compressed file with annotations
-  - annotations_index:
+  - bcftools_annotations_index:
       type: file
       description: Index of the annotations file
-  - header_lines:
+  - bcftools_header_lines:
       type: file
       description: Contains lines to append to the output VCF header
 

@@ -9,9 +9,9 @@ process BCFTOOLS_ANNOTATE {
 
     input:
     tuple val(meta), path(vcf)
-    path    annotations
-    path    annotations_index 
-    path    header_lines
+    path    bcftools_annotations
+    path    bcftools_annotations_index 
+    path    bcftools_header_lines
 
     output:
     tuple val(meta), path("*.vcf.gz"), emit: vcf
@@ -23,8 +23,8 @@ process BCFTOOLS_ANNOTATE {
     script:
     def args    = task.ext.args ?: ''
     def prefix  = task.ext.prefix ?: "${meta.id}"
-    def header_file = header_lines ? "--header-lines ${header_lines}" : ''
-    def annotations_file = annotations ? "--annotations ${annotations}" : ''
+    def header_file = bcftools_header_lines ? "--header-lines ${bcftools_header_lines}" : ''
+    def annotations_file = bcftools_annotations ? "--annotations ${bcftools_annotations}" : ''
     def extension = args.contains("--output-type b") || args.contains("-Ob") ? "bcf.gz" :
                     args.contains("--output-type u") || args.contains("-Ou") ? "bcf" :
                     args.contains("--output-type z") || args.contains("-Oz") ? "vcf.gz" :

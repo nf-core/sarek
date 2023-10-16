@@ -19,9 +19,9 @@ workflow VCF_ANNOTATE_ALL {
     vep_cache_version
     vep_cache
     vep_extra_files
-    annotations
-    annotations_index
-    header_lines
+    bcftools_annotations
+    bcftools_annotations_index
+    bcftools_header_lines
 
     main:
     reports = Channel.empty()
@@ -31,7 +31,7 @@ workflow VCF_ANNOTATE_ALL {
     versions = Channel.empty()
 
     if (tools.split(',').contains('bcfann')) {
-        VCF_ANNOTATE_BCFTOOLS(vcf, annotations, annotations_index, header_lines)
+        VCF_ANNOTATE_BCFTOOLS(vcf, bcftools_annotations, bcftools_annotations_index, bcftools_header_lines)
 
         vcf_ann = vcf_ann.mix(VCF_ANNOTATE_BCFTOOLS.out.vcf_tbi)
         versions = versions.mix(VCF_ANNOTATE_BCFTOOLS.out.versions)
