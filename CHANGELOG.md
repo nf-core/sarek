@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - [#1277](https://github.com/nf-core/sarek/pull/1277) - Fix null value issue for Mutect2 joint calling
+- [#1287](https://github.com/nf-core/sarek/pull/1287) - Adding label `process_low` to local modules.
 
 ### Dependencies
 
