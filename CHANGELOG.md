@@ -7,21 +7,49 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## dev
 
-- [#1246](https://github.com/nf-core/sarek/pull/1246) - Back to dev
-
 ### Added
+
+- [#1193](https://github.com/nf-core/sarek/pull/1193) - Adding support for Sentieon's DnaScope for germline variant-calling including joint-germline
+- [#1271](https://github.com/nf-core/sarek/pull/1271) - Back to dev
 
 ### Changed
 
+- [#1280](https://github.com/nf-core/sarek/pull/1280) - Replacing link to `SentieonDNAscopeModel1.1.model` in Sentieon's S3 with link to same file in igenomes' S3
+
 ### Fixed
 
-- [#1247](https://github.com/nf-core/sarek/pull/1247) - FIX: Result paths for full size test to be correctly displayed on the website
-- [#1256](https://github.com/nf-core/sarek/pull/1256) - Fix issue with controlfreec container declaration
+- [#1277](https://github.com/nf-core/sarek/pull/1277) - Fix null value issue for Mutect2 joint calling
 
 ### Dependencies
 
 | Dependency | Old version | New version |
 | ---------- | ----------- | ----------- |
+
+## [3.3.2](https://github.com/nf-core/sarek/releases/tag/3.3.2) - Ráhpajávvre
+
+Ráhpajávvre is the Lule Sámi spelling of Rapaselet.
+
+### Added
+
+- [#1246](https://github.com/nf-core/sarek/pull/1246) - Back to dev
+- [#1259](https://github.com/nf-core/sarek/pull/1259) - nf-prov plugin
+
+### Changed
+
+- [#1248](https://github.com/nf-core/sarek/pull/1248) - Improve annotation-cache docs
+- [#1261](https://github.com/nf-core/sarek/pull/1261) - Enable cache for annotation generation when using 'merge'
+
+### Fixed
+
+- [#1247](https://github.com/nf-core/sarek/pull/1247) - FIX: Result paths for full size test to be correctly displayed on the website
+- [#1256](https://github.com/nf-core/sarek/pull/1256) - Fix issue with controlfreec container declaration
+- [#1270](https://github.com/nf-core/sarek/pull/1270) - Revert controlfreec/assesssignificance module to 11.6
+
+### Dependencies
+
+| Dependency                       | Old version | New version |
+| -------------------------------- | ----------- | ----------- |
+| Control-FREEC/assesssignificance | 11.6b       | 11.6        |
 
 ## [3.3.1](https://github.com/nf-core/sarek/releases/tag/3.3.1) - Biellorippjávrre
 

@@ -848,17 +848,17 @@ For GATK.GRCh38 the links for each reference file and the corresponding processe
 
 ## How to customise SnpEff and VEP annotation
 
-SNPeff and VEP require a large resource of files known as a cache.
+SNPeff and VEP both require a large resource of files known as a cache.
 These are folders composed of multiple gigabytes of files which need to be available for the software to properly function.
 To use these, supply the parameters `--vep_cache` and/or `--snpeff_cache` with the locations to the root of the annotation cache folder for each tool.
 
 ### Specify the cache location
 
 Params `--snpeff_cache` and `--vep_cache` are used to specify the locations to the root of the annotation cache folder.
-The cache will be located within a subfolder with the path `${vep_species}/${vep_genome}_${vep_cache_version}` for VEP and `${snpeff_species}.${snpeff_version}` for SnpEff.
+The cache will be located within a subfolder with the path `${snpeff_species}.${snpeff_version}` for SnpEff and `${vep_species}/${vep_genome}_${vep_cache_version}` for VEP.
 If this directory is missing, Sarek will raise an error.
 
-For example this is a typical folder structure for GRCh38 and WBCel235, with SNPeff cache version 105 and VEP cache version 110:
+For example this is a typical folder structure for `GRCh38` and `WBCel235`, with SNPeff cache version 105 and VEP cache version 110:
 
 ```text
 /data/
@@ -880,20 +880,20 @@ Both SnpEff and VEP will figure out internally the path towards the specific cac
 By default all is specified in the [igenomes.config](https://github.com/nf-core/sarek/blob/master/conf/igenomes.config) file.
 Explanation can be found for all params in the documentation:
 
-- [snpeff_db](https://nf-co.re/sarek/latest/parameters#snpeff_db)
-- [snpeff_genome](https://nf-co.re/sarek/latest/parameters#snpeff_genome)
-- [vep_genome](https://nf-co.re/sarek/latest/parameters#vep_genome)
-- [vep_species](https://nf-co.re/sarek/latest/parameters#vep_species)
-- [vep_cache_version](https://nf-co.re/sarek/latest/parameters#vep_cache_version)
+- [snpeff_db](https://nf-co.re/sarek/parameters#snpeff_db)
+- [snpeff_genome](https://nf-co.re/sarek/parameters#snpeff_genome)
+- [vep_genome](https://nf-co.re/sarek/parameters#vep_genome)
+- [vep_species](https://nf-co.re/sarek/parameters#vep_species)
+- [vep_cache_version](https://nf-co.re/sarek/parameters#vep_cache_version)
 
 With the previous example of `GRCh38`, these are the values that were used for these params:
 
 ```bash
 snpeff_db         = '105'
 snpeff_genome     = 'GRCh38'
+vep_cache_version = '110'
 vep_genome        = 'GRCh38'
 vep_species       = 'homo_sapiens'
-vep_cache_version = '110'
 ```
 
 ### Usage recommendation with AWS iGenomes
@@ -939,11 +939,11 @@ nextflow run nf-core/sarek \
 These params can be specified in a config file or in a profile using the params scope, or even in a json or a yaml file using the `-params-file` nextflow option.
 
 Note: we recommend storing each annotation cache in a separate directory so each cache version is handled differently.
-This may mean you have many similar directories but will dramatically reduce the storage burden on machines running the VEP or snpEff process.
+This may mean you have many similar directories but will dramatically reduce the storage burden on machines running the SnpEff or VEP process.
 
 ### Use annotation-cache for SnpEff and VEP
 
-[Annotation-cache](https://github.com/annotation-cache) is an open AWS registry resource that stores a mirror of some cache files on AWS S3 which can be used with Sarek.
+[Annotation-cache](https://annotation-cache.github.io) is an open AWS registry resource that stores a mirror of some cache files on AWS S3 which can be used with Sarek.
 It contains some genome builds which can be found by checking the contents of the S3 bucket.
 
 SNPeff and VEP cache are stored at the following location on S3:
@@ -962,7 +962,9 @@ aws s3 --no-sign-request ls s3://annotation-cache/vep_cache/
 
 Since both Snpeff and VEP are internally figuring the path towards the specific cache version / species, `annotation-cache` is using an extra set of keys to specify the species and genome build.
 
-So if you are using this resource, please either use the `--use_annotation_cache_keys`, or point towards the specific species, genome and build matches the directory structure within the cache.
+So if you are using this resource, please either set `--use_annotation_cache_keys` to use the AWS annotation cache, or point towards your own cache folder structure matching the expected structure.
+
+Please refer to the [annotation-cache documentation](https://annotation-cache.github.io) for more details.
 
 ### Use Sarek to download cache and annotate in one go
 
@@ -1089,7 +1091,9 @@ nextflow secrets set SENTIEON_LICENSE_BASE64 \$(cat <sentieon_license_file.lic> 
 
 ### Available Sentieon functions
 
-Sarek contains the following Sentieon functions [bwa mem](https://support.sentieon.com/manual/usages/general/#bwa-mem-syntax), [LocusCollector](https://support.sentieon.com/manual/usages/general/#locuscollector-algorithm) + [Dedup](https://support.sentieon.com/manual/usages/general/#dedup-algorithm), [Haplotyper](https://support.sentieon.com/manual/usages/general/#haplotyper-algorithm), [GVCFtyper](https://support.sentieon.com/manual/usages/general/#gvcftyper-algorithm) and [VarCal](https://support.sentieon.com/manual/usages/general/#varcal-algorithm) + [ApplyVarCal](https://support.sentieon.com/manual/usages/general/#applyvarcal-algorithm), so the basic processing of alignment of fastq-files to VCF-files can be done using speedup Sentieon functions.
+Sarek contains the following Sentieon functions from [DnaSeq](https://support.sentieon.com/manual/DNAseq_usage/dnaseq/) : [bwa mem](https://support.sentieon.com/manual/usages/general/#bwa-mem-syntax), [LocusCollector](https://support.sentieon.com/manual/usages/general/#locuscollector-algorithm) + [Dedup](https://support.sentieon.com/manual/usages/general/#dedup-algorithm), [Haplotyper](https://support.sentieon.com/manual/usages/general/#haplotyper-algorithm), [GVCFtyper](https://support.sentieon.com/manual/usages/general/#gvcftyper-algorithm) and [VarCal](https://support.sentieon.com/manual/usages/general/#varcal-algorithm) + [ApplyVarCal](https://support.sentieon.com/manual/usages/general/#applyvarcal-algorithm), so the basic processing of alignment of fastq-files to VCF-files can be done using speedup Sentieon functions.
+
+Sarek also contains the Sentieon functions [DnaScope](https://support.sentieon.com/manual/usages/general/?highlight=dnamodelapply#dnascope-algorithm) and [DNAModelApply](https://support.sentieon.com/manual/usages/general/?highlight=dnamodelapply#dnamodelapply-algorithm).
 
 ### Basic usage of Sentieon functions
 
@@ -1097,9 +1101,11 @@ To use Sentieon's aligner `bwa mem`, set the aligner option `sentieon-bwamem`. (
 
 To use Sentieon's function `Dedup`, specify `sentieon_dedup` as one of the tools. (This can, for example, be done by adding `--tools sentieon_dedup` to the nextflow run command.)
 
-To use Sentieon's function `Haplotyper`, specify `sentieon_haplotyper` as one of the tools. This can, for example, be done by adding `--tools sentieon_haplotyper` to the nextflow run command. In order to skip the GATK-based variant-filter, one may add `--skip_tools haplotyper_filter` to the nextflow run command. Sarek also provides the option `sentieon_haplotyper_emit_mode` which can be used to set the [emit-mode](https://support.sentieon.com/manual/usages/general/#haplotyper-algorithm) of Sentieon's haplotyper. Sentieon's haplotyper can output both a vcf-file and a gvcf-file in the same run; this is achieved by setting `sentieon_haplotyper_emit_mode` to `<vcf_emit_mode>,gvcf`, where `<vcf_emit_mode>` is `variant`, `confident` or `all`.
+To use Sentieon's function `DNAscope`, specify `sentieon_dnascope` as one of the tools. This can, for example, be done by adding `--tools sentieon_dnascope` to the nextflow run command. In order to skip Sentieon's variant-filter `DNAModelApply`, one may add `--skip_tools dnascope_filter` to the nextflow run command. Sarek also provides the option `sentieon_dnascope_emit_mode` which can be used to set the [emit-mode](https://support.sentieon.com/manual/usages/general/#dnascope-algorithm) of Sentieon's dnascope. Sentieon's dnascope can output both a vcf-file and a gvcf-file in the same run; this is achieved by setting `sentieon_dnascope_emit_mode` to `<vcf_emit_mode>,gvcf`, where `<vcf_emit_mode>` is `variant`, `confident` or `all`.
 
-To use Sentieon's function `GVCFtyper` along with Sention's version of VQSR (`VarCal` and `ApplyVarCal`) for joint-germline genotyping, specify `sentieon_haplotyper` as one of the tools, set the option `sentieon_haplotyper_emit_mode` to `gvcf`, and add the option `joint_germline`. This can, for example, be done by adding `--tools sentieon_haplotyper --joint_germline --sentieon_haplotyper_emit_mode gvcf` to the nextflow run command.
+Sentieon's function `Haplotyper` is used in much the same way as `DNAscope`. To use Sentieon's function `Haplotyper`, specify `sentieon_haplotyper` as one of the tools. This can, for example, be done by adding `--tools sentieon_haplotyper` to the nextflow run command. In order to skip the GATK-based variant-filter, one may add `--skip_tools haplotyper_filter` to the nextflow run command. Sarek also provides the option `sentieon_haplotyper_emit_mode` which can be used to set the [emit-mode](https://support.sentieon.com/manual/usages/general/#haplotyper-algorithm) of Sentieon's haplotyper. Sentieon's haplotyper can output both a vcf-file and a gvcf-file in the same run; this is achieved by setting `sentieon_haplotyper_emit_mode` to `<vcf_emit_mode>,gvcf`, where `<vcf_emit_mode>` is `variant`, `confident` or `all`.
+
+To use Sentieon's function `GVCFtyper` along with Sention's version of VQSR (`VarCal` and `ApplyVarCal`) for joint-germline genotyping, specify `sentieon_haplotyper` as one of the tools, set the option `sentieon_haplotyper_emit_mode` to `gvcf`, and add the option `joint_germline`. This can, for example, be done by adding `--tools sentieon_haplotyper --joint_germline --sentieon_haplotyper_emit_mode gvcf` to the nextflow run command. If `sentieon_dnascope` is chosen instead of `sentieon_haplotyper`, then Sention's version of VQSR is skipped, as recommended by Sentieon.
 
 ### Joint germline variant calling
 

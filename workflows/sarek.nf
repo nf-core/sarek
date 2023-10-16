@@ -50,6 +50,8 @@ def checkPathParamList = [
     params.multiqc_config,
     params.pon,
     params.pon_tbi,
+    params.sentieon_dnascope_model,
+    params.snpeff_cache,
     params.spliceai_indel,
     params.spliceai_indel_tbi,
     params.spliceai_snv,
@@ -60,8 +62,8 @@ def checkPathParamList = [
 ]
 
 // only check if we are using the tools
-if (params.tools && params.tools.contains("snpeff")) checkPathParamList.add(params.snpeff_cache)
-if (params.tools && params.tools.contains("vep"))    checkPathParamList.add(params.vep_cache)
+if (params.tools && (params.tools.split(',').contains('snpeff') || params.tools.split(',').contains('merge'))) checkPathParamList.add(params.snpeff_cache)
+if (params.tools && (params.tools.split(',').contains('vep')    || params.tools.split(',').contains('merge'))) checkPathParamList.add(params.vep_cache)
 
 // Validate input parameters
 WorkflowSarek.initialise(params, log)
@@ -219,7 +221,7 @@ if (params.step == 'mapping' && params.aligner.contains("sentieon-bwamem") && pa
     error("Sentieon BWA is currently not compatible with FGBio UMI handeling. Please choose a different aligner.")
 }
 
-if (params.tools && params.tools.contains("sentieon_haplotyper") && params.joint_germline && (!params.sentieon_haplotyper_emit_mode || !(params.sentieon_haplotyper_emit_mode.contains('gvcf')))) {
+if (params.tools && params.tools.split(',').contains("sentieon_haplotyper") && params.joint_germline && (!params.sentieon_haplotyper_emit_mode || !(params.sentieon_haplotyper_emit_mode.contains('gvcf')))) {
     error("When setting the option `--joint_germline` and including `sentieon_haplotyper` among the requested tools, please set `--sentieon_haplotyper_emit_mode` to include `gvcf`.")
 }
 
@@ -258,17 +260,59 @@ if (!params.dbsnp && !params.known_indels) {
     if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration', 'recalibrate'] && (!params.skip_tools || (params.skip_tools && !params.skip_tools.split(',').contains('baserecalibrator')))) {
         error("Base quality score recalibration requires at least one resource file. Please provide at least one of `--dbsnp` or `--known_indels`\nYou can skip this step in the workflow by adding `--skip_tools baserecalibrator` to the command.")
     }
-    if (params.tools && (params.tools.split(',').contains('haplotypecaller') || params.tools.split(',').contains('sentieon_haplotyper'))) {
-        log.warn "If GATK's Haplotypecaller or Sentieon's Haplotyper is specified, without `--dbsnp` or `--known_indels no filtering will be done. For filtering, please provide at least one of `--dbsnp` or `--known_indels`.\nFor more information see FilterVariantTranches (single-sample, default): https://gatk.broadinstitute.org/hc/en-us/articles/5358928898971-FilterVariantTranches\nFor more information see VariantRecalibration (--joint_germline): https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator\nFor more information on GATK Best practice germline variant calling: https://gatk.broadinstitute.org/hc/en-us/articles/360035535932-Germline-short-variant-discovery-SNPs-Indels-"
+    if (params.tools && (params.tools.split(',').contains('haplotypecaller') || params.tools.split(',').contains('sentieon_haplotyper') || params.tools.split(',').contains('sentieon_dnascope'))) {
+        log.warn "If GATK's Haplotypecaller, Sentieon's Dnascpe or Sentieon's Haplotyper is specified, without `--dbsnp` or `--known_indels no filtering will be done. For filtering, please provide at least one of `--dbsnp` or `--known_indels`.\nFor more information see FilterVariantTranches (single-sample, default): https://gatk.broadinstitute.org/hc/en-us/articles/5358928898971-FilterVariantTranches\nFor more information see VariantRecalibration (--joint_germline): https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator\nFor more information on GATK Best practice germline variant calling: https://gatk.broadinstitute.org/hc/en-us/articles/360035535932-Germline-short-variant-discovery-SNPs-Indels-"
     }
 }
-if (params.joint_germline && (!params.tools || !(params.tools.split(',').contains('haplotypecaller') || params.tools.split(',').contains('sentieon_haplotyper')))) {
-    error("The GATK's Haplotypecaller or Sentieon's Haplotyper should be specified as one of the tools when doing joint germline variant calling.) ")
+if (params.joint_germline && (!params.tools || !(params.tools.split(',').contains('haplotypecaller') || params.tools.split(',').contains('sentieon_haplotyper') || params.tools.split(',').contains('sentieon_dnascope')))) {
+    error("The GATK's Haplotypecaller, Sentieon's Dnascope or Sentieon's Haplotyper should be specified as one of the tools when doing joint germline variant calling.) ")
 }
 
-if (params.joint_germline && (!params.dbsnp || !params.known_indels || !params.known_snps || params.no_intervals)) {
-    log.warn "If GATK's Haplotypecaller or Sentieon's Haplotyper is specified, without `--dbsnp`, `--known_snps`, `--known_indels` or the associated resource labels (ie `known_snps_vqsr`), no variant recalibration will be done. For recalibration you must provide all of these resources.\nFor more information see VariantRecalibration: https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator \nJoint germline variant calling also requires intervals in order to genotype the samples. As a result, if `--no_intervals` is set to `true` the joint germline variant calling will not be performed."
+if (
+    params.tools &&
+    (
+        params.tools.split(',').contains('haplotypecaller') ||
+        params.tools.split(',').contains('sentieon_haplotyper') ||
+        params.tools.split(',').contains('sentieon_dnascope')
+    ) &&
+    params.joint_germline &&
+    (
+        !params.dbsnp ||
+        !params.known_indels ||
+        !params.known_snps ||
+        params.no_intervals
+    )
+    ) {
+    log.warn("""If GATK's Haplotypecaller, Sentieon's Dnascope and/or Sentieon's Haplotyper is specified, \
+but without `--dbsnp`, `--known_snps`, `--known_indels` or the associated resource labels (ie `known_snps_vqsr`), \
+no variant recalibration will be done. For recalibration you must provide all of these resources.\nFor more information \
+see VariantRecalibration: https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator \n\
+Joint germline variant calling also requires intervals in order to genotype the samples. \
+As a result, if `--no_intervals` is set to `true` the joint germline variant calling will not be performed.""")
 }
+
+if (params.tools &&
+    params.tools.split(',').contains('sentieon_dnascope') &&
+    params.joint_germline &&
+    (
+        !params.sentieon_dnascope_emit_mode ||
+        !params.sentieon_dnascope_emit_mode.split(',').contains('gvcf')
+    )
+    ) {
+    error("When using Sentieon Dnascope for joint-germline variant-calling the option `--sentieon_dnascope_emit_mode` has to include `gvcf`.")
+}
+
+if (params.tools &&
+    params.tools.split(',').contains('sentieon_haplotyper') &&
+    params.joint_germline &&
+    (
+        !params.sentieon_haplotyper_emit_mode ||
+        !params.sentieon_haplotyper_emit_mode.split(',').contains('gvcf')
+    )
+    ) {
+    error("When using Sentieon Haplotyper for joint-germline variant-calling the option `--sentieon_haplotyper_emit_mode` has to include `gvcf`.")
+}
+
 
 // Fails when --joint_mutect2 is used without enabling mutect2
 if (params.joint_mutect2 && (!params.tools || !params.tools.split(',').contains('mutect2'))) {
@@ -290,7 +334,7 @@ if (params.tools && (params.tools.split(',').contains('ascat') || params.tools.s
 }
 
 if ((params.download_cache) && (params.snpeff_cache || params.vep_cache)) {
-    error("Please specify either `--download_cache` or `--snpeff_cache`, `--vep_cache`.\nhttps://nf-co.re/sarek/dev/usage#how-to-customise-snpeff-and-vep-annotation")
+    error("Please specify either `--download_cache` or `--snpeff_cache`, `--vep_cache`.\nhttps://nf-co.re/sarek/usage#how-to-customise-snpeff-and-vep-annotation")
 }
 
 /*
@@ -300,20 +344,21 @@ if ((params.download_cache) && (params.snpeff_cache || params.vep_cache)) {
 */
 
 // Initialize file channels based on params, defined in the params.genomes[params.genome] scope
-ascat_alleles      = params.ascat_alleles      ? Channel.fromPath(params.ascat_alleles).collect()     : Channel.empty()
-ascat_loci         = params.ascat_loci         ? Channel.fromPath(params.ascat_loci).collect()        : Channel.empty()
-ascat_loci_gc      = params.ascat_loci_gc      ? Channel.fromPath(params.ascat_loci_gc).collect()     : Channel.value([])
-ascat_loci_rt      = params.ascat_loci_rt      ? Channel.fromPath(params.ascat_loci_rt).collect()     : Channel.value([])
-cf_chrom_len       = params.cf_chrom_len       ? Channel.fromPath(params.cf_chrom_len).collect()      : []
-chr_dir            = params.chr_dir            ? Channel.fromPath(params.chr_dir).collect()           : Channel.value([])
-dbsnp              = params.dbsnp              ? Channel.fromPath(params.dbsnp).collect()             : Channel.value([])
-fasta              = params.fasta              ? Channel.fromPath(params.fasta).first()               : Channel.empty()
-fasta_fai          = params.fasta_fai          ? Channel.fromPath(params.fasta_fai).collect()         : Channel.empty()
-germline_resource  = params.germline_resource  ? Channel.fromPath(params.germline_resource).collect() : Channel.value([]) // Mutect2 does not require a germline resource, so set to optional input
-known_indels       = params.known_indels       ? Channel.fromPath(params.known_indels).collect()      : Channel.value([])
-known_snps         = params.known_snps         ? Channel.fromPath(params.known_snps).collect()        : Channel.value([])
-mappability        = params.mappability        ? Channel.fromPath(params.mappability).collect()       : Channel.value([])
-pon                = params.pon                ? Channel.fromPath(params.pon).collect()               : Channel.value([]) // PON is optional for Mutect2 (but highly recommended)
+ascat_alleles           = params.ascat_alleles           ? Channel.fromPath(params.ascat_alleles).collect()           : Channel.empty()
+ascat_loci              = params.ascat_loci              ? Channel.fromPath(params.ascat_loci).collect()              : Channel.empty()
+ascat_loci_gc           = params.ascat_loci_gc           ? Channel.fromPath(params.ascat_loci_gc).collect()           : Channel.value([])
+ascat_loci_rt           = params.ascat_loci_rt           ? Channel.fromPath(params.ascat_loci_rt).collect()           : Channel.value([])
+cf_chrom_len            = params.cf_chrom_len            ? Channel.fromPath(params.cf_chrom_len).collect()            : []
+chr_dir                 = params.chr_dir                 ? Channel.fromPath(params.chr_dir).collect()                 : Channel.value([])
+dbsnp                   = params.dbsnp                   ? Channel.fromPath(params.dbsnp).collect()                   : Channel.value([])
+fasta                   = params.fasta                   ? Channel.fromPath(params.fasta).first()                     : Channel.empty()
+fasta_fai               = params.fasta_fai               ? Channel.fromPath(params.fasta_fai).collect()               : Channel.empty()
+germline_resource       = params.germline_resource       ? Channel.fromPath(params.germline_resource).collect()       : Channel.value([]) // Mutect2 does not require a germline resource, so set to optional input
+known_indels            = params.known_indels            ? Channel.fromPath(params.known_indels).collect()            : Channel.value([])
+known_snps              = params.known_snps              ? Channel.fromPath(params.known_snps).collect()              : Channel.value([])
+mappability             = params.mappability             ? Channel.fromPath(params.mappability).collect()             : Channel.value([])
+pon                     = params.pon                     ? Channel.fromPath(params.pon).collect()                     : Channel.value([]) // PON is optional for Mutect2 (but highly recommended)
+sentieon_dnascope_model = params.sentieon_dnascope_model ? Channel.fromPath(params.sentieon_dnascope_model).collect() : Channel.value([])
 
 // Initialize value channels based on params, defined in the params.genomes[params.genome] scope
 ascat_genome       = params.ascat_genome       ?: Channel.empty()
@@ -329,26 +374,48 @@ bcftools_annotations_index  = params.bcftools_annotations_index  ?: Channel.empt
 bcftools_header_lines       = params.bcftools_header_lines       ?: Channel.empty()
 
 // Initialize files channels based on params, not defined within the params.genomes[params.genome] scope
-if (params.snpeff_cache && params.tools && params.tools.contains("snpeff")) {
-    def snpeff_annotation_cache_key = params.use_annotation_cache_keys ? "${params.snpeff_genome}.${params.snpeff_db}/" : ""
+if (params.snpeff_cache && params.tools && (params.tools.split(',').contains("snpeff") || params.tools.split(',').contains('merge'))) {
+    def snpeff_annotation_cache_key = ''
+    if (params.snpeff_cache == "s3://annotation-cache/snpeff_cache") {
+        snpeff_annotation_cache_key = "${params.snpeff_genome}.${params.snpeff_db}/"
+    } else {
+        snpeff_annotation_cache_key = params.use_annotation_cache_keys ? "${params.snpeff_genome}.${params.snpeff_db}/" : ""
+    }
     def snpeff_cache_dir =  "${snpeff_annotation_cache_key}${params.snpeff_genome}.${params.snpeff_db}"
     def snpeff_cache_path_full = file("$params.snpeff_cache/$snpeff_cache_dir", type: 'dir')
     if ( !snpeff_cache_path_full.exists() || !snpeff_cache_path_full.isDirectory() ) {
-        error("Files within --snpeff_cache invalid. Make sure there is a directory named ${snpeff_cache_dir} in ${params.snpeff_cache}.\nhttps://nf-co.re/sarek/dev/usage#how-to-customise-snpeff-and-vep-annotation")
+        if (params.snpeff_cache == "s3://annotation-cache/snpeff_cache") {
+            error("This path is not available within annotation-cache. Please check https://annotation-cache.github.io/ to create a request for it.")
+        } else {
+            error("Files within --snpeff_cache invalid. Make sure there is a directory named ${snpeff_cache_dir} in ${params.snpeff_cache}.\nhttps://nf-co.re/sarek/usage#how-to-customise-snpeff-and-vep-annotation")
+        }
     }
     snpeff_cache = Channel.fromPath(file("${params.snpeff_cache}/${snpeff_annotation_cache_key}"), checkIfExists: true).collect()
         .map{ cache -> [ [ id:"${params.snpeff_genome}.${params.snpeff_db}" ], cache ] }
-} else snpeff_cache = []
+    } else if (params.tools && (params.tools.split(',').contains("snpeff") || params.tools.split(',').contains('merge')) && !params.download_cache) {
+        error("No cache for SnpEff or automatic download of said cache has been detected.\nPlease refer to https://nf-co.re/sarek/docs/usage/#how-to-customise-snpeff-and-vep-annotation for more information.")
+    } else snpeff_cache = []
 
-if (params.vep_cache && params.tools && params.tools.contains("vep")) {
-    def vep_annotation_cache_key = params.use_annotation_cache_keys ? "${params.vep_cache_version}_${params.vep_genome}/" : ""
+if (params.vep_cache && params.tools && (params.tools.split(',').contains("vep") || params.tools.split(',').contains('merge'))) {
+    def vep_annotation_cache_key = ''
+    if (params.vep_cache == "s3://annotation-cache/vep_cache") {
+        vep_annotation_cache_key = "${params.vep_cache_version}_${params.vep_genome}/"
+    } else {
+        vep_annotation_cache_key = params.use_annotation_cache_keys ? "${params.vep_cache_version}_${params.vep_genome}/" : ""
+    }
     def vep_cache_dir = "${vep_annotation_cache_key}${params.vep_species}/${params.vep_cache_version}_${params.vep_genome}"
     def vep_cache_path_full = file("$params.vep_cache/$vep_cache_dir", type: 'dir')
     if ( !vep_cache_path_full.exists() || !vep_cache_path_full.isDirectory() ) {
-        error("Files within --vep_cache invalid. Make sure there is a directory named ${vep_cache_dir} in ${params.vep_cache}.\nhttps://nf-co.re/sarek/dev/usage#how-to-customise-snpeff-and-vep-annotation")
+        if (params.vep_cache == "s3://annotation-cache/vep_cache") {
+            error("This path is not available within annotation-cache. Please check https://annotation-cache.github.io/ to create a request for it.")
+        } else {
+            error("Files within --vep_cache invalid. Make sure there is a directory named ${vep_cache_dir} in ${params.vep_cache}.\nhttps://nf-co.re/sarek/usage#how-to-customise-snpeff-and-vep-annotation")
+        }
     }
     vep_cache = Channel.fromPath(file("${params.vep_cache}/${vep_annotation_cache_key}"), checkIfExists: true).collect()
-} else vep_cache = []
+    } else if (params.tools && (params.tools.split(',').contains("vep") || params.tools.split(',').contains('merge')) && !params.download_cache) {
+        error("No cache for VEP or automatic download of said cache has been detected.\nPlease refer to https://nf-co.re/sarek/docs/usage/#how-to-customise-snpeff-and-vep-annotation for more information.")
+    } else vep_cache = []
 
 vep_extra_files = []
 
@@ -1148,7 +1215,10 @@ workflow SAREK {
             known_snps_vqsr,
             params.joint_germline,
             params.skip_tools && params.skip_tools.split(',').contains('haplotypecaller_filter'), // true if filtering should be skipped
-            params.sentieon_haplotyper_emit_mode)
+            params.sentieon_haplotyper_emit_mode,
+            params.sentieon_dnascope_emit_mode,
+            params.sentieon_dnascope_pcr_indel_model,
+            sentieon_dnascope_model)
 
         // TUMOR ONLY VARIANT CALLING
         BAM_VARIANT_CALLING_TUMOR_ONLY_ALL(
@@ -1216,6 +1286,7 @@ workflow SAREK {
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_freebayes)
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_haplotypecaller)
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_manta)
+        vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_sentieon_dnascope)
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_sentieon_haplotyper)
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_strelka)
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_tiddit)

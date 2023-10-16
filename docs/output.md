@@ -37,8 +37,10 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
       - [GATK Germline Single Sample Variant Calling](#gatk-germline-single-sample-variant-calling)
       - [GATK Joint Germline Variant Calling](#gatk-joint-germline-variant-calling)
     - [GATK Mutect2](#gatk-mutect2)
+    - [Sentieon DNAscope](#sentieon-dnascope)
+      - [Sentieon DNAscope joint germline variant calling](#sentieon-dnascope-joint-germline-variant-calling)
     - [Sentieon Haplotyper](#sentieon-haplotyper)
-      - [Sentieon Joint Germline Variant Calling](#sentieon-joint-germline-variant-calling)
+      - [Sentieon Haplotyper joint germline variant calling](#sentieon-haplotyper-joint-germline-variant-calling)
     - [Strelka2](#strelka2)
   - [Structural Variants](#structural-variants)
     - [Manta](#manta)
@@ -442,6 +444,53 @@ Files created:
 
 </details>
 
+#### Sentieon DNAscope
+
+[Sentieon DNAscope](https://support.sentieon.com/appnotes/dnascope_ml/#dnascope-germline-variant-calling-with-a-machine-learning-model) is a variant-caller which aims at outperforming GATK's Haplotypecaller in terms of both speed and accuracy. DNAscope allows you to use a machine learning model to perform variant calling with higher accuracy by improving the candidate detection and filtering.
+
+<details markdown="1">
+<summary>Unfiltered VCF-files for normal samples</summary>
+
+**Output directory: `{outdir}/variantcalling/sentieon_dnascope/<sample>/`**
+
+- `<sample>.dnascope.unfiltered.vcf.gz` and `<sample>.dnascope.unfiltered.vcf.gz.tbi`
+  - VCF with tabix index
+
+</details>
+
+The output from Sentieon's DNAscope can be controlled through the option `--sentieon_dnascope_emit_mode` for Sarek, see [Basic usage of Sentieon functions](#basic-usage-of-sentieon-functions).
+
+Unless `dnascope_filter` is listed under `--skip_tools` in the nextflow command, Sentieon's [DNAModelApply](https://support.sentieon.com/manual/usages/general/#dnamodelapply-algorithm) is applied to the unfiltered VCF-files in order to obtain filtered VCF-files.
+
+<details markdown="1">
+<summary>Filtered VCF-files for normal samples</summary>
+
+**Output directory: `{outdir}/variantcalling/sentieon_dnascope/<sample>/`**
+
+- `<sample>.dnascope.filtered.vcf.gz` and `<sample>.dnascope.filtered.vcf.gz.tbi`
+  - VCF with tabix index
+
+</details>
+
+##### Sentieon DNAscope joint germline variant calling
+
+In Sentieon's package DNAscope, joint germline variant calling is done by first running Sentieon's Dnacope in emit-mode `gvcf` for each sample and then running Sentieon's [GVCFtyper](https://support.sentieon.com/manual/usages/general/#gvcftyper-algorithm) on the set of gVCF-files. See [Basic usage of Sentieon functions](#basic-usage-of-sentieon-functions) for information on how joint germline variant calling can be done in Sarek using Sentieon's DNAscope.
+
+<details markdown="1">
+<summary>Output files from joint germline variant calling</summary>
+
+**Output directory: `{outdir}/variantcalling/sentieon_dnascope/<sample>/`**
+
+- `<sample>.dnascope.g.vcf.gz` and `<sample>.dnascope.g.vcf.gz.tbi`
+  - VCF with tabix index
+
+**Output directory: `{outdir}/variantcalling/sentieon_dnascope/joint_variant_calling/`**
+
+- `joint_germline.vcf.gz` and `joint_germline.vcf.gz.tbi`
+  - VCF with tabix index
+
+</details>
+
 #### Sentieon Haplotyper
 
 [Sentieon Haplotyper](https://support.sentieon.com/manual/usages/general/#haplotyper-algorithm) is Sention's speedup version of GATK's Haplotypecaller (see above).
@@ -456,7 +505,7 @@ Files created:
 
 </details>
 
-The output from Sentieon's Haplotyper can be controlled through the option `--sentieon_haplotyper_emit_mode` for Sarek, see [Basic usage of Sentieon functions in Sarek](#basic-usage-of-sentieon-functions-in-sarek).
+The output from Sentieon's Haplotyper can be controlled through the option `--sentieon_haplotyper_emit_mode` for Sarek, see [Basic usage of Sentieon functions](#basic-usage-of-sentieon-functions).
 
 Unless `haplotyper_filter` is listed under `--skip_tools` in the nextflow command, GATK's CNNScoreVariants and FilterVariantTranches (see above) is applied to the unfiltered VCF-files in order to obtain filtered VCF-files.
 
@@ -470,16 +519,16 @@ Unless `haplotyper_filter` is listed under `--skip_tools` in the nextflow comman
 
 </details>
 
-##### Sentieon Joint Germline Variant Calling
+##### Sentieon Haplotyper joint germline variant calling
 
-In Sentieon's package DNAseq, joint germline variant calling is done by first running Sentieon's Haplotyper in emit-mode `gvcf` for each sample and then running Sentieon's [GVCFtyper](https://support.sentieon.com/manual/usages/general/#gvcftyper-algorithm) on the set of gVCF-files. See [Basic usage of Sentieon functions in Sarek](#basic-usage-of-sentieon-functions-in-sarek) for information on how joint germline variant calling can be done in Sarek using Sentieon's DNAseq. After joint genotyping, Sentieon's version of VQSR ([VarCal](https://support.sentieon.com/manual/usages/general/#varcal-algorithm) and [ApplyVarCal](https://support.sentieon.com/manual/usages/general/#applyvarcal-algorithm)) is applied for filtering to produce the final multisample callset with the desired balance of precision and sensitivity.
+In Sentieon's package DNAseq, joint germline variant calling is done by first running Sentieon's Haplotyper in emit-mode `gvcf` for each sample and then running Sentieon's [GVCFtyper](https://support.sentieon.com/manual/usages/general/#gvcftyper-algorithm) on the set of gVCF-files. See [Basic usage of Sentieon functions](#basic-usage-of-sentieon-functions) for information on how joint germline variant calling can be done in Sarek using Sentieon's DNAseq. After joint genotyping, Sentieon's version of VQSR ([VarCal](https://support.sentieon.com/manual/usages/general/#varcal-algorithm) and [ApplyVarCal](https://support.sentieon.com/manual/usages/general/#applyvarcal-algorithm)) is applied for filtering to produce the final multisample callset with the desired balance of precision and sensitivity.
 
 <details markdown="1">
 <summary>Output files from joint germline variant calling</summary>
 
 **Output directory: `{outdir}/variantcalling/sentieon_haplotyper/<sample>/`**
 
-- `<sample>.haplotypecaller.g.vcf.gz` and `<sample>.haplotypecaller.g.vcf.gz.tbi`
+- `<sample>.haplotyper.g.vcf.gz` and `<sample>.haplotyper.g.vcf.gz.tbi`
   - VCF with tabix index
 
 **Output directory: `{outdir}/variantcalling/sentieon_haplotyper/joint_variant_calling/`**
