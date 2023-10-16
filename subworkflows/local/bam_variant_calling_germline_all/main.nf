@@ -14,6 +14,7 @@ include { BAM_VARIANT_CALLING_MPILEUP             } from '../bam_variant_calling
 include { BAM_VARIANT_CALLING_SINGLE_STRELKA      } from '../bam_variant_calling_single_strelka/main'
 include { BAM_VARIANT_CALLING_SINGLE_TIDDIT       } from '../bam_variant_calling_single_tiddit/main'
 include { VCF_VARIANT_FILTERING_GATK              } from '../vcf_variant_filtering_gatk/main'
+include { BAM_GOLEFT_INDEXCOV                     } from '../bam_goleft_indexcov/main'
 
 workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     take:
