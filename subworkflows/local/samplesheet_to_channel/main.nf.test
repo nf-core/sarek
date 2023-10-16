@@ -1,0 +1,34 @@
+nextflow_workflow {
+
+    name "Test Workflow SAMPLESHEET_TO_CHANNEL"
+    script "subworkflows/local/samplesheet_to_channel/main.nf"
+    workflow "SAMPLESHEET_TO_CHANNEL"
+
+    test("Should run without failures") {
+
+        when {
+            params {
+                // define parameters here. Example:
+                skip_tools = 'baserecalibrator'
+
+            }
+            workflow {
+                """
+                // define inputs of the workflow here. Example:
+                input[0] = Channel.of([['patient':'test', 'sample':'test',
+                                        'sex':'XX', 'status':0, 'lane':'test_L1'],
+                                        file('https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz'),
+                                        file('https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz'),
+                                        [], [], [], [], [], [], []])
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert snapshot(workflow.out).match()
+        }
+
+    }
+
+}

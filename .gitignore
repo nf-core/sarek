@@ -8,3 +8,4 @@ testing/
 testing*
 *.pyc
 test-datasets/
+.nf-test*
