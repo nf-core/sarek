@@ -7,8 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## dev
 
-- [#1246](https://github.com/nf-core/sarek/pull/1246) - Back to dev
 - [#1113](https://github.com/nf-core/sarek/pull/1113) - Adding CNVkit genemetrics module
+- [#1246](https://github.com/nf-core/sarek/pull/1246) - Back to dev
 
 ### Added
 
