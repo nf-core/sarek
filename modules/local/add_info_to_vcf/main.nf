@@ -1,6 +1,6 @@
 process ADD_INFO_TO_VCF {
     tag "$meta.id"
-    label 'process_low'
+    label 'process_single'
 
     conda "anaconda::gawk=5.1.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
