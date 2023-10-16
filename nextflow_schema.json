@@ -1070,11 +1070,5 @@
         {
             "$ref": "#/definitions/generic_options"
         }
-    ],
-    "properties": {
-        "validationSchemaIgnoreParams": {
-            "type": "string",
-            "default": "cf_ploidy,genomes,igenomes_base"
-        }
-    }
+    ]
 }
