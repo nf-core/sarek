@@ -539,7 +539,7 @@
                     "fa_icon": "fas fa-table",
                     "hidden": true
                 },
-                "annotations": {
+                "bcftools_annotations": {
                     "type": "string",
                     "fa_icon": "fas fa-file"
                 },
