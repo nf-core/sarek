@@ -180,6 +180,18 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         versions = versions.mix(BAM_VARIANT_CALLING_GERMLINE_MANTA.out.versions)
     }
 
+    // INDEXCOV
+    if (tools.split(',').contains('indexcov')) {
+        BAM_GOLEFT_INDEXCOV (
+            cram,
+            fasta,
+            fasta_fai
+        )
+        versions = versions.mix(BAM_VARIANT_CALLING_GERMLINE_MANTA.out.versions)
+    }
+   
+
+
     // SENTIEON HAPLOTYPER
     if (tools.split(',').contains('sentieon_haplotyper')) {
         BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER(
