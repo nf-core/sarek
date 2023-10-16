@@ -39,7 +39,7 @@ jobs:
   pytest:
     name: ${{ matrix.tags }} ${{ matrix.profile }} NF ${{ matrix.NXF_VER }}
     runs-on: ubuntu-latest
-    needs: changes
+    needs: pytest-changes
     if: needs.pytest-changes.outputs.tags != '[]'
     strategy:
       fail-fast: false
@@ -183,7 +183,7 @@ jobs:
   nftest:
     name: ${{ matrix.tags }} ${{ matrix.profile }} NF ${{ matrix.NXF_VER }}
     runs-on: ubuntu-latest
-    needs: changes
+    needs: nftest-changes
     if: needs.nftest-changes.outputs.tags != '[]'
     strategy:
       fail-fast: false
