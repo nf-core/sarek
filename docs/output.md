@@ -719,7 +719,7 @@ The file `<tumorsample_vs_normalsample>.cnvs.txt` contains all segments predicte
   - file containing copy number segment information
 - `<sample>.genemetrics.tsv`
   - file containing per gene copy number information (if input files are annotated)
-  </details>
+</details>
 
 <details markdown="1">
 <summary>Output files for tumor/normal samples</summary>
