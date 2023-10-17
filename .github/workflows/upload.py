@@ -2,22 +2,14 @@ import requests
 import os
 
 headers = {"Content-Type": "application/json"}
-params = {'access_token': os.environ["ACCESS_TOKEN"]}
 
-r = requests.post('https://sandbox.zenodo.org/api/deposit/depositions',
-                params=params,
-                json={},
-                headers=headers)
-r.status_code
-# 201
-println(r.json())
-bucket_url = r.json()["links"]["bucket"]
+url = f"https://zenodo.org/api/deposit/depositions?access_token=${os.environ["ACCESS_TOKEN"]}"
 
 filename = "*.vcf.gz"
 path = "./variant_calling/%s" % filename
 
 with open(path, "rb") as fp:
-    r = requests.put(
+    r = requests.post(
         "%s/%s" % (bucket_url, filename),
         data=fp,
         params=params,
@@ -33,10 +25,7 @@ data = {
                     'affiliation': 'Zenodo'}]
     }
 }
-r = requests.put('https://sandbox.zenodo.org/api/deposit/depositions%s' % deposition_id,
-                params={'access_token': ACCESS_TOKEN}, data=json.dumps(data),
-                headers=headers)
+
+r = requests.post(url, data=json.dumps(data), headers=headers)
 r.status_code
 # 200
-
-
