@@ -9,12 +9,13 @@ nextflow_pipeline {
 
         when {
             params {
-                outdir     = "results"
-                max_cpus   = 2
-                max_memory = '6.GB'
-                max_time   = '6.h'
-                input      = "$projectDir/tests/csv/3.0/fastq_pair.csv"
-                validationSchemaIgnoreParams = 'test_data_base,test_data'
+                outdir                       = "results"
+                max_cpus                     = 2
+                max_memory                   = '6.GB'
+                max_time                     = '6.h'
+                input                        = "$projectDir/tests/csv/3.0/fastq_pair.csv"
+                validationSchemaIgnoreParams = 'test_data_base,test_data,genomes'
+                use_gatk_spark               = false
             }
         }
 
