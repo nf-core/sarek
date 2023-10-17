@@ -54,7 +54,7 @@ jobs:
 
       - name: Upload to zenodo
         env:
-          ZENODO_DEPOSIT: ${{ secrets.ZENODO_DEPOSIT }}
+          ACCESS_TOKEN: ${{ secrets.ZENODO_DEPOSIT }}
         run: |
           ls -lha
           python .github/workflows/upload.py

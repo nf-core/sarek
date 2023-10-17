@@ -1,7 +1,7 @@
 import requests
 
 headers = {"Content-Type": "application/json"}
-params = {'access_token': ZENODO_DEPOSIT}
+params = {'access_token': ACCESS_TOKEN}
 
 r = requests.post('https://sandbox.zenodo.org/api/deposit/depositions',
                 params=params,
@@ -32,7 +32,7 @@ data = {
     }
 }
 r = requests.put('https://sandbox.zenodo.org/api/deposit/depositions%s' % deposition_id,
-                params={'access_token': ZENODO_DEPOSIT}, data=json.dumps(data),
+                params={'access_token': ACCESS_TOKEN}, data=json.dumps(data),
                 headers=headers)
 r.status_code
 # 200
