@@ -41,19 +41,25 @@ jobs:
           ref: ncbench
           path: sarek-ncbench/
 
-      - name: Create new Zenodo entry
-        uses: popperized/zenodo/create@master
-        env:
-          ZENODO_METADATA_PATH: sarek-ncbench/assets/zenodo_ncbench.json
-        with:
-          secrets: ${{ secrets.ZENODO_DEPOSIT }}
+      #- name: Create new Zenodo entry
+      #  uses: popperized/zenodo/create@master
+      #  env:
+      #    ZENODO_METADATA_PATH: sarek-ncbench/assets/zenodo_ncbench.json
+      #  entrypoint:
+      #    secrets: ${{ secrets.ZENODO_DEPOSIT }}
+      #
+      #- name: Upload file to Zenodo
+      #  uses: popperized/zenodo/upload@master
+      #  env:
+      #    ZENODO_UPLOAD_PATH: ./variant_calling
 
-      - name: Upload file to Zenodo
-        uses: popperized/zenodo/upload@master
+      - name: Install requests
+        run: pip install requests
+
+      - name: Upload to zenodo
         env:
-          ZENODO_UPLOAD_PATH: ./variant_calling
-        with:
-          secrets: ${{ secrets.ZENODO_DEPOSIT }}
+          ZENODO_DEPOSIT: ${{ secrets.ZENODO_DEPOSIT }}
+        run: python upload.py
 
       - name: NCBench set config
         uses: actions/checkout@v4
