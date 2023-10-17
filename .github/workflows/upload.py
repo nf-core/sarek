@@ -7,7 +7,7 @@ access_token = os.environ["ACCESS_TOKEN"]
 url = f"https://zenodo.org/api/deposit/depositions?access_token={access_token}"
 
 filename = "*.vcf.gz"
-path = "./variant_calling/%s" % filename
+path = "../../variant_calling/%s" % filename
 
 with open(path, "rb") as fp:
     r = requests.post(
