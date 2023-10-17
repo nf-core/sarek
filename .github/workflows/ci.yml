@@ -33,7 +33,7 @@ jobs:
       - uses: frouioui/paths-filter@main
         id: filter
         with:
-          filters: ".github/tags.yml"
+          filters: "tests/config/tags.yml"
           token: ""
 
   pytest:
