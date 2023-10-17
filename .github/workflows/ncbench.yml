@@ -59,7 +59,7 @@ jobs:
       - name: Upload to zenodo
         env:
           ZENODO_DEPOSIT: ${{ secrets.ZENODO_DEPOSIT }}
-        run: python upload.py
+        run: python .github/workflows/upload.py
 
       - name: NCBench set config
         uses: actions/checkout@v4
@@ -99,7 +99,7 @@ jobs:
           cd ncbench-workflow
           git config --global user.email "friederike.hanssen@qbic.uni-tuebingen.de"
           git config --global user.name "FriederikeHanssen"
-          git checkout -b test5
+          git checkout -b test6
           git add config/config.yaml
           git commit -a -m "Add changes"
-          git push origin test5
+          git push origin test6
