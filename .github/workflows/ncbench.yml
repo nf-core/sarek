@@ -57,7 +57,7 @@ jobs:
           ZENODO_DEPOSIT: ${{ secrets.ZENODO_DEPOSIT }}
         run: |
           ls -lha
-          python sarek/.github/workflows/upload.py
+          python .github/workflows/upload.py
 
       - name: NCBench set config
         uses: actions/checkout@v4
