@@ -94,6 +94,7 @@ Rapaselet is a delta formed by the Rapaätno river between the Bielloriehppe mas
 - [#1173](https://github.com/nf-core/sarek/pull/1173) - CI tests for VQSR track with stub runs
 - [#1122](https://github.com/nf-core/sarek/pull/1122), [#1196](https://github.com/nf-core/sarek/pull/1196) - Add `annotation cache` functionality
 - [#1184](https://github.com/nf-core/sarek/pull/1184) - Stub-based CI-test of Sentieon joint-germline variant-calling with VQSR
+- [#1288](https://github.com/nf-core/sarek/pull/1288) - Add nf-test continuous integration.
 
 ### Changed
 
