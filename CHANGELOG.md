@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - [#1277](https://github.com/nf-core/sarek/pull/1277) - Fix null value issue for Mutect2 joint calling
+- [#1287](https://github.com/nf-core/sarek/pull/1287) - Adding label `process_single` to local modules.
 
 ### Dependencies
 
@@ -94,6 +95,7 @@ Rapaselet is a delta formed by the Rapaätno river between the Bielloriehppe mas
 - [#1173](https://github.com/nf-core/sarek/pull/1173) - CI tests for VQSR track with stub runs
 - [#1122](https://github.com/nf-core/sarek/pull/1122), [#1196](https://github.com/nf-core/sarek/pull/1196) - Add `annotation cache` functionality
 - [#1184](https://github.com/nf-core/sarek/pull/1184) - Stub-based CI-test of Sentieon joint-germline variant-calling with VQSR
+- [#1288](https://github.com/nf-core/sarek/pull/1288) - Add nf-test continuous integration.
 
 ### Changed
 
