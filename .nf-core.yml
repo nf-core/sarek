@@ -4,6 +4,7 @@ lint:
   files_exist:
     - conf/modules.config
   files_unchanged:
+    - .gitignore
     - assets/nf-core-sarek_logo_light.png
     - docs/images/nf-core-sarek_logo_dark.png
     - docs/images/nf-core-sarek_logo_light.png
