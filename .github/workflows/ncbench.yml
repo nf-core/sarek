@@ -36,10 +36,10 @@ jobs:
 
       - name: Download metadata file for Zenodo
         uses: actions/checkout@v4
-        with:
-          repository: FriederikeHanssen/sarek
-          ref: ncbench
-          path: sarek-ncbench/
+        # with:
+        #   repository: FriederikeHanssen/sarek
+        #   ref: ncbench
+        #   path: sarek-ncbench/
 
       #- name: Create new Zenodo entry
       #  uses: popperized/zenodo/create@master
@@ -59,7 +59,9 @@ jobs:
       - name: Upload to zenodo
         env:
           ZENODO_DEPOSIT: ${{ secrets.ZENODO_DEPOSIT }}
-        run: python .github/workflows/upload.py
+        run: |
+          ls -lha
+          python sarek/.github/workflows/upload.py
 
       - name: NCBench set config
         uses: actions/checkout@v4
