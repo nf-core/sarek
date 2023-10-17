@@ -24,6 +24,9 @@ jobs:
       pipeline_version: 3.1.1test
 
     steps:
+      - name: Download pipeline
+        uses: actions/checkout@v4
+
       - name: Download files from AWS
         uses: keithweaver/aws-s3-github-action@v1.0.0
         if: ${{ matrix.enabled }}
@@ -33,13 +36,6 @@ jobs:
           aws_region: eu-west-1
           destination: ./variant_calling
           flags: --no-sign-request --include ".vcf.gz" --exclude "g.vcf.gz"
-
-      - name: Download metadata file for Zenodo
-        uses: actions/checkout@v4
-        # with:
-        #   repository: FriederikeHanssen/sarek
-        #   ref: ncbench
-        #   path: sarek-ncbench/
 
       #- name: Create new Zenodo entry
       #  uses: popperized/zenodo/create@master
