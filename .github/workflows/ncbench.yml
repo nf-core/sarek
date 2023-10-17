@@ -56,7 +56,6 @@ jobs:
         env:
           ACCESS_TOKEN: ${{ secrets.ZENODO_DEPOSIT }}
         run: |
-          ls -lha
           python .github/workflows/upload.py
 
       - name: NCBench set config

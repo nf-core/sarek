@@ -10,6 +10,7 @@ r = requests.post('https://sandbox.zenodo.org/api/deposit/depositions',
                 headers=headers)
 r.status_code
 # 201
+println(r.json())
 bucket_url = r.json()["links"]["bucket"]
 
 filename = "*.vcf.gz"
