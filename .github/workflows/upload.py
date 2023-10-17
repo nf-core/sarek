@@ -6,25 +6,14 @@ params = {'access_token': ZENODO_DEPOSIT}
 r = requests.post('https://sandbox.zenodo.org/api/deposit/depositions',
                 params=params,
                 json={},
-                '''
-                Headers are not necessary here since "requests" automatically
-                adds "Content-Type: application/json", because we're using
-                the "json=" keyword argument
-                headers=headers,
-                '''
                 headers=headers)
 r.status_code
 # 201
 bucket_url = r.json()["links"]["bucket"]
 
-''' New API '''
 filename = "*.vcf.gz"
 path = "./variant_calling/%s" % filename
 
-'''
-The target URL is a combination of the bucket link with the desired filename
-seperated by a slash.
-'''
 with open(path, "rb") as fp:
     r = requests.put(
         "%s/%s" % (bucket_url, filename),
