@@ -169,7 +169,7 @@ jobs:
     steps:
       - name: Combine all tags.yml files
         id: get_username
-        run: find . -name "tags.yml" -not -path "./.github/*" -exec cat {} + > .github/tags.yml
+        run: 'find . -name "tags.yml" -not -path "./.github/*" -exec cat {} + > .github/tags.yml'
 
       - name: debug
         run: cat .github/tags.yml
