@@ -1,7 +1,8 @@
 import requests
+import os
 
 headers = {"Content-Type": "application/json"}
-params = {'access_token': ACCESS_TOKEN}
+params = {'access_token': os.environ["ACCESS_TOKEN"]}
 
 r = requests.post('https://sandbox.zenodo.org/api/deposit/depositions',
                 params=params,
