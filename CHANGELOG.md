@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1113](https://github.com/nf-core/sarek/pull/1113) - Adding CNVkit genemetrics module
 - [#1193](https://github.com/nf-core/sarek/pull/1193) - Adding support for Sentieon's DnaScope for germline variant-calling including joint-germline
 - [#1271](https://github.com/nf-core/sarek/pull/1271) - Back to dev
+- [###]() - Add nf-test for whole pipeline.
 
 ### Changed
 
