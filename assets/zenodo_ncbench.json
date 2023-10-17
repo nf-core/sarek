@@ -1,6 +1,6 @@
 {
     "metadata": {
-        "title": "nf-core/sarek v3.1.1 NCBench vcf files",
+        "title": "nf-core/sarek Test NCBench vcf files",
         "upload_type": "dataset",
         "description": "Agilent datasets for NCBench",
         "creators": [
