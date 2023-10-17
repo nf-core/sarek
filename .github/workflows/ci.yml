@@ -166,10 +166,13 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       tags: ${{ steps.filter.outputs.changes }}
+
     steps:
+      - uses: actions/checkout@v3
+
       - name: Combine all tags.yml files
-        id: get_username
-        run: 'find . -name "tags.yml" -not -path "./.github/*" -exec cat {} + > .github/tags.yml'
+        id: get_tags
+        run: find . -name "tags.yml" -not -path "./.github/*" -exec cat {} + > .github/tags.yml
 
       - name: debug
         run: cat .github/tags.yml
