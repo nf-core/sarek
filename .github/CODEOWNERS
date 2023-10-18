@@ -1,1 +1,3 @@
-*   @FriederikeHanssen @maxulysse
+* @FriederikeHanssen @maxulysse
+*.nf.test* @nf-core/nf-test
+.github/workflows/ @nf-core/a-team
