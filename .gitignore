@@ -2,7 +2,7 @@
 *.pyc
 .nextflow*
 .DS_Store
-.nf-test.log
+.nf-test*
 .nf-test/
 data/
 testing*
