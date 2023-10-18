@@ -76,6 +76,11 @@
                         "git_sha": "3b63e1df297ef474b0070aa5fabb30d732173671",
                         "installed_by": ["modules"]
                     },
+                    "cnvkit/genemetrics": {
+                        "branch": "master",
+                        "git_sha": "3b63e1df297ef474b0070aa5fabb30d732173671",
+                        "installed_by": ["modules"]
+                    },
                     "cnvkit/reference": {
                         "branch": "master",
                         "git_sha": "3b63e1df297ef474b0070aa5fabb30d732173671",
