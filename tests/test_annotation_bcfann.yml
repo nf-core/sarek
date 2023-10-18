@@ -7,4 +7,4 @@
     - path: results/annotation/test/test_BCF.ann.vcf.gz
     # binary changes md5sums on reruns
     - path: results/annotation/test/test_BCF.ann.vcf.gz.tbi
-      md5sum: e3d0164d119e0fe6e94c67c5287a082d
+      md5sum: 2b6be791a106e60539892ddfc03eb47f
