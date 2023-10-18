@@ -1,5 +1,5 @@
 - name: Run bcfann
-  command: nextflow run main.nf -profile test_cache,annotation --tools bcfann --outdir results --download_cache
+  command: nextflow run main.nf -profile test,test_cache,annotation --tools bcfann --outdir results --download_cache
   tags:
     - annotation
     - bcfann
