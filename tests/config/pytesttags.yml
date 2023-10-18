@@ -557,6 +557,15 @@ vep:
   - tests/csv/3.0/vcf_single.csv
   - tests/test_annotation_vep.yml
 
+## bcfann
+bcfann:
+  - conf/modules/annotate.config
+  - modules/nf-core/bcftools/annotate/main.nf
+  - modules/nf-core/tabix/bgziptabix/main.nf
+  - subworkflows/nf-core/vcf_annotate_bcftools/main.nf
+  - tests/csv/3.0/vcf_single.csv
+  - tests/test_annotation_bcfann.yml
+
 # postprocessing
 
 ## concatenate germline vcfs

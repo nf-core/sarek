@@ -1,0 +1,10 @@
+- name: Run bcfann
+  command: nextflow run main.nf -profile test,test_cache,annotation --tools bcfann --outdir results --download_cache
+  tags:
+    - annotation
+    - bcfann
+  files:
+    - path: results/annotation/test/test_BCF.ann.vcf.gz
+    # binary changes md5sums on reruns
+    - path: results/annotation/test/test_BCF.ann.vcf.gz.tbi
+      md5sum: 2b6be791a106e60539892ddfc03eb47f

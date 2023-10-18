@@ -62,6 +62,7 @@ A lake near the Rapaselet delta.
 ### Added
 
 - [#1231](https://github.com/nf-core/sarek/pull/1231) - Back to dev
+- [#1244](https://github.com/nf-core/sarek/pull/1244) - Add bcf annotate module
 
 ### Changed
 

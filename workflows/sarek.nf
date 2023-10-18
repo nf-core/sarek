@@ -55,7 +55,10 @@ def checkPathParamList = [
     params.spliceai_indel,
     params.spliceai_indel_tbi,
     params.spliceai_snv,
-    params.spliceai_snv_tbi
+    params.spliceai_snv_tbi,
+    params.bcftools_annotations,
+    params.bcftools_annotations_index,
+    params.bcftools_header_lines
 ]
 
 // only check if we are using the tools
@@ -105,6 +108,9 @@ snpeff_db          = params.snpeff_db          ?: Channel.empty()
 vep_cache_version  = params.vep_cache_version  ?: Channel.empty()
 vep_genome         = params.vep_genome         ?: Channel.empty()
 vep_species        = params.vep_species        ?: Channel.empty()
+bcftools_annotations        = params.bcftools_annotations        ?: Channel.empty()
+bcftools_annotations_index  = params.bcftools_annotations_index  ?: Channel.empty()
+bcftools_header_lines       = params.bcftools_header_lines       ?: Channel.empty()
 
 // Initialize files channels based on params, not defined within the params.genomes[params.genome] scope
 if (params.snpeff_cache && params.tools && (params.tools.split(',').contains("snpeff") || params.tools.split(',').contains('merge'))) {
@@ -1059,7 +1065,7 @@ workflow SAREK {
         // ANNOTATE
         if (params.step == 'annotate') vcf_to_annotate = input_sample
 
-        if (params.tools.split(',').contains('merge') || params.tools.split(',').contains('snpeff') || params.tools.split(',').contains('vep')) {
+        if (params.tools.split(',').contains('merge') || params.tools.split(',').contains('snpeff') || params.tools.split(',').contains('vep')|| params.tools.split(',').contains('bcfann')) {
 
             vep_fasta = (params.vep_include_fasta) ? fasta.map{ fasta -> [ [ id:fasta.baseName ], fasta ] } : [[id: 'null'], []]
 
@@ -1073,7 +1079,10 @@ workflow SAREK {
                 vep_species,
                 vep_cache_version,
                 vep_cache,
-                vep_extra_files)
+                vep_extra_files,
+                bcftools_annotations,
+                bcftools_annotations_index,
+                bcftools_header_lines)
 
             // Gather used softwares versions
             versions = versions.mix(VCF_ANNOTATE_ALL.out.versions)
