@@ -369,16 +369,11 @@ vep_species        = params.vep_species        ?: Channel.empty()
 
 // Initialize files channels based on params, not defined within the params.genomes[params.genome] scope
 if (params.snpeff_cache && params.tools && (params.tools.split(',').contains("snpeff") || params.tools.split(',').contains('merge'))) {
-    def snpeff_annotation_cache_key = ''
-    if (params.snpeff_cache == "s3://annotation-cache/snpeff_cache") {
-        snpeff_annotation_cache_key = "${params.snpeff_genome}.${params.snpeff_db}/"
-    } else {
-        snpeff_annotation_cache_key = params.use_annotation_cache_keys ? "${params.snpeff_genome}.${params.snpeff_db}/" : ""
-    }
+    def snpeff_annotation_cache_key = (params.snpeff_cache == "s3://annotation-cache/snpeff_cache/") ? "${params.snpeff_genome}.${params.snpeff_db}/" : ""
     def snpeff_cache_dir =  "${snpeff_annotation_cache_key}${params.snpeff_genome}.${params.snpeff_db}"
     def snpeff_cache_path_full = file("$params.snpeff_cache/$snpeff_cache_dir", type: 'dir')
     if ( !snpeff_cache_path_full.exists() || !snpeff_cache_path_full.isDirectory() ) {
-        if (params.snpeff_cache == "s3://annotation-cache/snpeff_cache") {
+        if (params.snpeff_cache == "s3://annotation-cache/snpeff_cache/") {
             error("This path is not available within annotation-cache. Please check https://annotation-cache.github.io/ to create a request for it.")
         } else {
             error("Files within --snpeff_cache invalid. Make sure there is a directory named ${snpeff_cache_dir} in ${params.snpeff_cache}.\nhttps://nf-co.re/sarek/usage#how-to-customise-snpeff-and-vep-annotation")
@@ -391,16 +386,11 @@ if (params.snpeff_cache && params.tools && (params.tools.split(',').contains("sn
     } else snpeff_cache = []
 
 if (params.vep_cache && params.tools && (params.tools.split(',').contains("vep") || params.tools.split(',').contains('merge'))) {
-    def vep_annotation_cache_key = ''
-    if (params.vep_cache == "s3://annotation-cache/vep_cache") {
-        vep_annotation_cache_key = "${params.vep_cache_version}_${params.vep_genome}/"
-    } else {
-        vep_annotation_cache_key = params.use_annotation_cache_keys ? "${params.vep_cache_version}_${params.vep_genome}/" : ""
-    }
+    def vep_annotation_cache_key = (params.vep_cache == "s3://annotation-cache/vep_cache/") ? "${params.vep_cache_version}_${params.vep_genome}/" : ""
     def vep_cache_dir = "${vep_annotation_cache_key}${params.vep_species}/${params.vep_cache_version}_${params.vep_genome}"
     def vep_cache_path_full = file("$params.vep_cache/$vep_cache_dir", type: 'dir')
     if ( !vep_cache_path_full.exists() || !vep_cache_path_full.isDirectory() ) {
-        if (params.vep_cache == "s3://annotation-cache/vep_cache") {
+        if (params.vep_cache == "s3://annotation-cache/vep_cache/") {
             error("This path is not available within annotation-cache. Please check https://annotation-cache.github.io/ to create a request for it.")
         } else {
             error("Files within --vep_cache invalid. Make sure there is a directory named ${vep_cache_dir} in ${params.vep_cache}.\nhttps://nf-co.re/sarek/usage#how-to-customise-snpeff-and-vep-annotation")

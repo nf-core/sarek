@@ -536,12 +536,6 @@
                     "description": "Add an extra custom argument to VEP.",
                     "help_text": "Using this params you can add custom args to VEP."
                 },
-                "use_annotation_cache_keys": {
-                    "type": "boolean",
-                    "fa_icon": "fas fa-toolbox",
-                    "description": "Use annotation cache keys for snpeff_cache and vep_cache.\nOnly when using annotation-cache or a similar structure.\nSee [here](https://annotation-cache.github.io/) for more information.",
-                    "hidden": true
-                },
                 "outdir_cache": {
                     "type": "string",
                     "format": "directory-path",
