@@ -962,7 +962,7 @@ aws s3 --no-sign-request ls s3://annotation-cache/vep_cache/
 
 Since both Snpeff and VEP are internally figuring the path towards the specific cache version / species, `annotation-cache` is using an extra set of keys to specify the species and genome build.
 
-Which handled internally by Sarek.
+Which is handled internally by Sarek.
 
 Please refer to the [annotation-cache documentation](https://annotation-cache.github.io) for more details.
 
