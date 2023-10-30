@@ -30,13 +30,13 @@ workflow INITIALIZE_ANNOTATION_CACHE {
             if (snpeff_cache == "s3://annotation-cache/snpeff_cache/") {
                 error("This path is not available within annotation-cache.\nPlease check https://annotation-cache.github.io/ to create a request for it.")
             } else {
-                error("Path provided with snpeff cache is invalid.\nMake sure there is a directory named ${snpeff_cache_dir} in ${snpeff_cache}.")
+                error("Path provided with snpeff cache is invalid.\nMake sure there is a directory named ${snpeff_cache_dir} in ${snpeff_cache}./n${help_message}")
             }
         }
         snpeff_cache = Channel.fromPath(file("${snpeff_cache}/${snpeff_annotation_cache_key}"), checkIfExists: true).collect()
             .map{ cache -> [ [ id:"${snpeff_genome}.${snpeff_db}" ], cache ] }
         } else if (tools && (tools.split(',').contains("snpeff") || tools.split(',').contains('merge')) && !download_cache) {
-            error("No cache for SnpEff has been detected.\n")
+            error("No cache for SnpEff has been detected./n${help_message}")
         } else snpeff_cache = []
 
     if (vep_enabled) {
@@ -47,12 +47,12 @@ workflow INITIALIZE_ANNOTATION_CACHE {
             if (vep_cache == "s3://annotation-cache/vep_cache/") {
                 error("This path is not available within annotation-cache.\nPlease check https://annotation-cache.github.io/ to create a request for it.")
             } else {
-                error("Path provided with vep cache is invalid.\nMake sure there is a directory named ${vep_cache_dir} in ${vep_cache}.")
+                error("Path provided with vep cache is invalid.\nMake sure there is a directory named ${vep_cache_dir} in ${vep_cache}./n${help_message}")
             }
         }
         ensemblvep_cache = Channel.fromPath(file("${vep_cache}/${vep_annotation_cache_key}"), checkIfExists: true).collect()
         } else if (tools && (tools.split(',').contains("vep") || tools.split(',').contains('merge')) && !download_cache) {
-            error("No cache for VEP has been detected.\n")
+            error("No cache for VEP has been detected./n${help_message}")
         } else ensemblvep_cache = []
 
     emit:
