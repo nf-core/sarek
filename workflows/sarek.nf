@@ -330,8 +330,13 @@ if (params.tools && (params.tools.split(',').contains('ascat') || params.tools.s
     }
 }
 
-if ((params.download_cache) && (params.snpeff_cache || params.vep_cache)) {
-    error("Please specify either `--download_cache` or `--snpeff_cache`, `--vep_cache`.\nhttps://nf-co.re/sarek/usage#how-to-customise-snpeff-and-vep-annotation")
+if (params.download_cache) {
+    if (params.snpeff_cache && params.tools && (params.tools.split(',').contains("snpeff") || params.tools.split(',').contains('merge'))) {
+        error("Please specify either `--download_cache` or `--snpeff_cache`.\nhttps://nf-co.re/sarek/usage#how-to-customise-snpeff-and-vep-annotation")
+    }
+    if (params.vep_cache && params.tools && (params.tools.split(',').contains("vep") || params.tools.split(',').contains('merge'))) {
+        error("Please specify either `--download_cache` or `--vep_cache`.\nhttps://nf-co.re/sarek/usage#how-to-customise-snpeff-and-vep-annotation")
+    }
 }
 
 /*
