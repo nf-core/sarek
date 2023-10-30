@@ -37,6 +37,7 @@ Ráhpajávvre is the Lule Sámi spelling of Rapaselet.
 
 - [#1246](https://github.com/nf-core/sarek/pull/1246) - Back to dev
 - [#1259](https://github.com/nf-core/sarek/pull/1259) - nf-prov plugin
+- [#1302](https://github.com/nf-core/sarek/pull/1302) - Pinned the version of the nf-plugins used by Sarek. (nf-prov to v1.2.1 and nf-validation to v1.1.1.)
 
 ### Changed
 
