@@ -35,9 +35,7 @@ workflow INITIALIZE_ANNOTATION_CACHE {
         }
         snpeff_cache = Channel.fromPath(file("${snpeff_cache}/${snpeff_annotation_cache_key}"), checkIfExists: true).collect()
             .map{ cache -> [ [ id:"${snpeff_genome}.${snpeff_db}" ], cache ] }
-        } else if (tools && (tools.split(',').contains("snpeff") || tools.split(',').contains('merge')) && !download_cache) {
-            error("No cache for SnpEff has been detected./n${help_message}")
-        } else snpeff_cache = []
+    } else snpeff_cache = []
 
     if (vep_enabled) {
         def vep_annotation_cache_key = (vep_cache == "s3://annotation-cache/vep_cache/") ? "${vep_cache_version}_${vep_genome}/" : ""
@@ -51,9 +49,7 @@ workflow INITIALIZE_ANNOTATION_CACHE {
             }
         }
         ensemblvep_cache = Channel.fromPath(file("${vep_cache}/${vep_annotation_cache_key}"), checkIfExists: true).collect()
-        } else if (tools && (tools.split(',').contains("vep") || tools.split(',').contains('merge')) && !download_cache) {
-            error("No cache for VEP has been detected./n${help_message}")
-        } else ensemblvep_cache = []
+    } else ensemblvep_cache = []
 
     emit:
     ensemblvep_cache // channel: [ meta, cache ]
