@@ -1,5 +1,5 @@
 //
-// PREPARE CACHE
+// DOWNLOAD CACHE SNPEFF VEP
 //
 
 // Initialize channels based on params or indices that were just built
@@ -11,7 +11,7 @@
 include { ENSEMBLVEP_DOWNLOAD } from '../../../modules/nf-core/ensemblvep/download/main'
 include { SNPEFF_DOWNLOAD     } from '../../../modules/nf-core/snpeff/download/main'
 
-workflow PREPARE_CACHE {
+workflow DOWNLOAD_CACHE_SNPEFF_VEP {
     take:
     ensemblvep_info
     snpeff_info
