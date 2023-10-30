@@ -717,8 +717,9 @@ The file `<tumorsample_vs_normalsample>.cnvs.txt` contains all segments predicte
   - file containing copy number segment information
 - `<sample>.call.cns`
   - file containing copy number segment information
-
-</details>
+- `<sample>.genemetrics.tsv`
+  - file containing per gene copy number information (if input files are annotated)
+  </details>
 
 <details markdown="1">
 <summary>Output files for tumor/normal samples</summary>
@@ -745,6 +746,8 @@ The file `<tumorsample_vs_normalsample>.cnvs.txt` contains all segments predicte
   - file containing copy number segment information
 - `<tumorsample>.call.cns`
   - file containing copy number segment information
+- `<tumorsample>.genemetrics.tsv`
+  - file containing per gene copy number information (if input files are annotated)
   </details>
 
 #### Control-FREEC
@@ -879,6 +882,18 @@ plus any additional filed selected via the plugins: [dbNSFP](https://sites.googl
 **Output directory: `{outdir}/annotation/{sample,tumorsample_vs_normalsample}`**
 
 - `{sample,tumorsample_vs_normalsample}.<variantcaller>_VEP.ann.vcf.gz` and `{sample,tumorsample_vs_normalsample}.<variantcaller>_VEP.ann.vcf.gz.tbi`
+  - VCF with tabix index
+
+</details>
+
+### BCFtools annotate
+
+[BCFtools annotate](https://samtools.github.io/bcftools/bcftools.html#annotate) is used to add annotations to VCF files. The annotations are added to the INFO column of the VCF file. The annotations are added to the VCF header and the VCF header is updated with the new annotations. For further reading and documentation see the [BCFtools annotate manual](https://samtools.github.io/bcftools/bcftools.html#annotate).
+
+<details markdown="1">
+<summary>Output files for all samples</summary>
+
+- `{sample,tumorsample_vs_normalsample}.<variantcaller>_bcf.ann.vcf.gz` and `{sample,tumorsample_vs_normalsample}.<variantcaller>_bcf.ann.vcf.gz.tbi`
   - VCF with tabix index
 
 </details>

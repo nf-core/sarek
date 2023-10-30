@@ -10,6 +10,12 @@
                         "git_sha": "603ecbd9f45300c9788f197d2a15a005685b4220",
                         "installed_by": ["modules"]
                     },
+                    "bcftools/annotate": {
+                        "branch": "master",
+                        "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/bcftools/annotate/bcftools-annotate.diff"
+                    },
                     "bcftools/concat": {
                         "branch": "master",
                         "git_sha": "911696ea0b62df80e900ef244d7867d177971f73",
@@ -66,6 +72,11 @@
                         "installed_by": ["modules"]
                     },
                     "cnvkit/batch": {
+                        "branch": "master",
+                        "git_sha": "3b63e1df297ef474b0070aa5fabb30d732173671",
+                        "installed_by": ["modules"]
+                    },
+                    "cnvkit/genemetrics": {
                         "branch": "master",
                         "git_sha": "3b63e1df297ef474b0070aa5fabb30d732173671",
                         "installed_by": ["modules"]
