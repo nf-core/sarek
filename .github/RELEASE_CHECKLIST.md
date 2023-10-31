@@ -3,6 +3,7 @@
 > This checklist is for our own reference, to help us prepare a new release
 
 1. Check that everything is ready to go
+   - Check whether newer versions of the nf-plugins used in Sarek are available, and, if so, consider updating them in Sarek. (If updated, retest everything on dev)
    - Desired [PRs](https://github.com/nf-core/sarek/pulls) are merged
    - [GHA CI](https://github.com/nf-core/sarek/actions/workflows/ci.yml) are passing on `dev`
    - [GHA linting](https://github.com/nf-core/sarek/actions/workflows/linting.yml) are passing on `dev`
