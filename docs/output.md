@@ -308,7 +308,7 @@ See the [`input`](usage#input-sample-sheet-configurations) section in the usage 
 ## Variant Calling
 
 The results regarding variant calling are collected in `{outdir}/variantcalling/`.
-If some results from a variant caller do not appear here, please check out the `--tools` section in the parameter [documentation](https://nf-co.re/sarek/3.0.1/parameters).
+If some results from a variant caller do not appear here, please check out the `--tools` section in the parameter [documentation](https://nf-co.re/sarek/latest/parameters).
 
 (Recalibrated) CRAM files can used as an input to start the variant calling.
 
