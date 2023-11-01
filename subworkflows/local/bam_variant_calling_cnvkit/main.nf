@@ -9,11 +9,11 @@ include { CNVKIT_GENEMETRICS } from '../../../modules/nf-core/cnvkit/genemetrics
 
 workflow BAM_VARIANT_CALLING_CNVKIT {
     take:
-    cram                // channel: [mandatory] cram
-    fasta               // channel: [mandatory] fasta
-    fasta_fai           // channel: [optional]  fasta_fai
-    targets             // channel: [mandatory] bed
-    reference           // channel: [] cnn
+    cram                // channel: [mandatory] meta, cram
+    fasta               // channel: [mandatory] meta, fasta
+    fasta_fai           // channel: [optional]  meta, fasta_fai
+    targets             // channel: [mandatory] meta, bed
+    reference           // channel: [optional]  meta, cnn
 
     main:
     versions = Channel.empty()

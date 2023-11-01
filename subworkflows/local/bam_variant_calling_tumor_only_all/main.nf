@@ -85,10 +85,10 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         BAM_VARIANT_CALLING_CNVKIT (
             // Remap channel to match module/subworkflow
             cram.map{ meta, cram, crai -> [ meta, cram, [] ] },
-            fasta,
-            fasta_fai,
-            [],
-            cnvkit_reference
+            fasta.map{ it -> [[id:it[0].baseName], it] },
+            fasta_fai.map{ it -> [[id:it[0].baseName], it] },
+            [[id:"null"], []],
+            cnvkit_reference.map{ it -> [[id:it[0].baseName], it] }
         )
 
         versions = versions.mix(BAM_VARIANT_CALLING_CNVKIT.out.versions)
