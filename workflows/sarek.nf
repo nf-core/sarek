@@ -112,50 +112,6 @@ bcftools_annotations        = params.bcftools_annotations        ?: Channel.empt
 bcftools_annotations_index  = params.bcftools_annotations_index  ?: Channel.empty()
 bcftools_header_lines       = params.bcftools_header_lines       ?: Channel.empty()
 
-// Initialize files channels based on params, not defined within the params.genomes[params.genome] scope
-if (params.snpeff_cache && params.tools && (params.tools.split(',').contains("snpeff") || params.tools.split(',').contains('merge'))) {
-    def snpeff_annotation_cache_key = ''
-    if (params.snpeff_cache == "s3://annotation-cache/snpeff_cache") {
-        snpeff_annotation_cache_key = "${params.snpeff_genome}.${params.snpeff_db}/"
-    } else {
-        snpeff_annotation_cache_key = params.use_annotation_cache_keys ? "${params.snpeff_genome}.${params.snpeff_db}/" : ""
-    }
-    def snpeff_cache_dir =  "${snpeff_annotation_cache_key}${params.snpeff_genome}.${params.snpeff_db}"
-    def snpeff_cache_path_full = file("$params.snpeff_cache/$snpeff_cache_dir", type: 'dir')
-    if ( !snpeff_cache_path_full.exists() || !snpeff_cache_path_full.isDirectory() ) {
-        if (params.snpeff_cache == "s3://annotation-cache/snpeff_cache") {
-            error("This path is not available within annotation-cache. Please check https://annotation-cache.github.io/ to create a request for it.")
-        } else {
-            error("Files within --snpeff_cache invalid. Make sure there is a directory named ${snpeff_cache_dir} in ${params.snpeff_cache}.\nhttps://nf-co.re/sarek/usage#how-to-customise-snpeff-and-vep-annotation")
-        }
-    }
-    snpeff_cache = Channel.fromPath(file("${params.snpeff_cache}/${snpeff_annotation_cache_key}"), checkIfExists: true).collect()
-        .map{ cache -> [ [ id:"${params.snpeff_genome}.${params.snpeff_db}" ], cache ] }
-    } else if (params.tools && (params.tools.split(',').contains("snpeff") || params.tools.split(',').contains('merge')) && !params.download_cache) {
-        error("No cache for SnpEff or automatic download of said cache has been detected.\nPlease refer to https://nf-co.re/sarek/docs/usage/#how-to-customise-snpeff-and-vep-annotation for more information.")
-    } else snpeff_cache = []
-
-if (params.vep_cache && params.tools && (params.tools.split(',').contains("vep") || params.tools.split(',').contains('merge'))) {
-    def vep_annotation_cache_key = ''
-    if (params.vep_cache == "s3://annotation-cache/vep_cache") {
-        vep_annotation_cache_key = "${params.vep_cache_version}_${params.vep_genome}/"
-    } else {
-        vep_annotation_cache_key = params.use_annotation_cache_keys ? "${params.vep_cache_version}_${params.vep_genome}/" : ""
-    }
-    def vep_cache_dir = "${vep_annotation_cache_key}${params.vep_species}/${params.vep_cache_version}_${params.vep_genome}"
-    def vep_cache_path_full = file("$params.vep_cache/$vep_cache_dir", type: 'dir')
-    if ( !vep_cache_path_full.exists() || !vep_cache_path_full.isDirectory() ) {
-        if (params.vep_cache == "s3://annotation-cache/vep_cache") {
-            error("This path is not available within annotation-cache. Please check https://annotation-cache.github.io/ to create a request for it.")
-        } else {
-            error("Files within --vep_cache invalid. Make sure there is a directory named ${vep_cache_dir} in ${params.vep_cache}.\nhttps://nf-co.re/sarek/usage#how-to-customise-snpeff-and-vep-annotation")
-        }
-    }
-    vep_cache = Channel.fromPath(file("${params.vep_cache}/${vep_annotation_cache_key}"), checkIfExists: true).collect()
-    } else if (params.tools && (params.tools.split(',').contains("vep") || params.tools.split(',').contains('merge')) && !params.download_cache) {
-        error("No cache for VEP or automatic download of said cache has been detected.\nPlease refer to https://nf-co.re/sarek/docs/usage/#how-to-customise-snpeff-and-vep-annotation for more information.")
-    } else vep_cache = []
-
 vep_extra_files = []
 
 if (params.dbnsfp && params.dbnsfp_tbi) {
@@ -184,8 +140,11 @@ include { CHANNEL_BASERECALIBRATOR_CREATE_CSV         } from '../subworkflows/lo
 include { CHANNEL_APPLYBQSR_CREATE_CSV                } from '../subworkflows/local/channel_applybqsr_create_csv/main'
 include { CHANNEL_VARIANT_CALLING_CREATE_CSV          } from '../subworkflows/local/channel_variant_calling_create_csv/main'
 
-// Download annotation cache if needed
-include { PREPARE_CACHE                               } from '../subworkflows/local/prepare_cache/main'
+// Download cache for SnpEff/VEP if needed
+include { DOWNLOAD_CACHE_SNPEFF_VEP                   } from '../subworkflows/local/download_cache_snpeff_vep/main'
+
+// Initialize annotation cache
+include { INITIALIZE_ANNOTATION_CACHE                 } from '../subworkflows/local/initialize_annotation_cache/main'
 
 // Build indices if needed
 include { PREPARE_GENOME                              } from '../subworkflows/local/prepare_genome/main'
@@ -275,9 +234,9 @@ workflow SAREK {
 	// Parse samplesheet
 	// Set input, can either be from --input or from automatic retrieval in WorkflowSarek.groovy
 	if (params.input) {
-	    ch_from_samplesheet = params.build_only_index ? Channel.empty() : Channel.fromSamplesheet("input")
+        ch_from_samplesheet = params.build_only_index ? Channel.empty() : Channel.fromSamplesheet("input")
 	} else {
-	    ch_from_samplesheet = params.build_only_index ? Channel.empty() : Channel.fromSamplesheet("input_restart")
+        ch_from_samplesheet = params.build_only_index ? Channel.empty() : Channel.fromSamplesheet("input_restart")
 	}
 	SAMPLESHEET_TO_CHANNEL(ch_from_samplesheet)
 
@@ -294,17 +253,32 @@ workflow SAREK {
     // To gather used softwares versions for MultiQC
     versions = Channel.empty()
 
-    // Download cache if needed
-    // Assuming that if the cache is provided, the user has already downloaded it
-    ensemblvep_info = params.vep_cache    ? [] : Channel.of([ [ id:"${params.vep_cache_version}_${params.vep_genome}" ], params.vep_genome, params.vep_species, params.vep_cache_version ])
-    snpeff_info     = params.snpeff_cache ? [] : Channel.of([ [ id:"${params.snpeff_genome}.${params.snpeff_db}" ], params.snpeff_genome, params.snpeff_db ])
-
+    // Download cache
     if (params.download_cache) {
-        PREPARE_CACHE(ensemblvep_info, snpeff_info)
-        snpeff_cache = PREPARE_CACHE.out.snpeff_cache
-        vep_cache    = PREPARE_CACHE.out.ensemblvep_cache.map{ meta, cache -> [ cache ] }
+        // Assuming that even if the cache is provided, if the user specify download_cache, sarek will download the cache
+        ensemblvep_info = Channel.of([ [ id:"${params.vep_cache_version}_${params.vep_genome}" ], params.vep_genome, params.vep_species, params.vep_cache_version ])
+        snpeff_info     = Channel.of([ [ id:"${params.snpeff_genome}.${params.snpeff_db}" ], params.snpeff_genome, params.snpeff_db ])
+        DOWNLOAD_CACHE_SNPEFF_VEP(ensemblvep_info, snpeff_info)
+        snpeff_cache = DOWNLOAD_CACHE_SNPEFF_VEP.out.snpeff_cache
+        vep_cache    = DOWNLOAD_CACHE_SNPEFF_VEP.out.ensemblvep_cache.map{ meta, cache -> [ cache ] }
 
-        versions = versions.mix(PREPARE_CACHE.out.versions)
+        versions = versions.mix(DOWNLOAD_CACHE_SNPEFF_VEP.out.versions)
+    } else {
+        // Looks for cache information either locally or on the cloud
+        INITIALIZE_ANNOTATION_CACHE(
+            (params.snpeff_cache && params.tools && (params.tools.split(',').contains("snpeff") || params.tools.split(',').contains('merge'))),
+            params.snpeff_cache,
+            params.snpeff_genome,
+            params.snpeff_db,
+            (params.vep_cache && params.tools && (params.tools.split(',').contains("vep") || params.tools.split(',').contains('merge'))),
+            params.vep_cache,
+            params.vep_species,
+            params.vep_cache_version,
+            params.vep_genome,
+            "Please refer to https://nf-co.re/sarek/docs/usage/#how-to-customise-snpeff-and-vep-annotation for more information.")
+
+            snpeff_cache = INITIALIZE_ANNOTATION_CACHE.out.snpeff_cache
+            vep_cache    = INITIALIZE_ANNOTATION_CACHE.out.ensemblvep_cache
     }
 
     // Build indices if needed

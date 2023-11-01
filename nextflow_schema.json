@@ -547,12 +547,6 @@
                     "description": "Should reflect the VEP version used in the container.",
                     "help_text": "Used by the loftee plugin that need the full path."
                 },
-                "use_annotation_cache_keys": {
-                    "type": "boolean",
-                    "fa_icon": "fas fa-toolbox",
-                    "description": "Use annotation cache keys for snpeff_cache and vep_cache.\nOnly when using annotation-cache or a similar structure.\nSee [here](https://annotation-cache.github.io/) for more information.",
-                    "hidden": true
-                },
                 "outdir_cache": {
                     "type": "string",
                     "format": "directory-path",
@@ -768,13 +762,13 @@
                     "type": "string",
                     "fa_icon": "fas fa-microscope",
                     "description": "snpEff genome.",
-                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately.\nThis is used to specify the genome when using the container with pre-downloaded cache."
+                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately.\nThis is used to specify the genome when looking for local cache, or cloud based cache."
                 },
                 "vep_genome": {
                     "type": "string",
                     "fa_icon": "fas fa-microscope",
                     "description": "VEP genome.",
-                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately.\nThis is used to specify the genome when using the container with pre-downloaded cache."
+                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately.\nThis is used to specify the genome when looking for local cache, or cloud based cache."
                 },
                 "vep_species": {
                     "type": "string",
@@ -804,7 +798,7 @@
                     "type": "boolean",
                     "fa_icon": "fas fa-download",
                     "description": "Download annotation cache.",
-                    "help_text": "Set this parameter, if you wish to download annotation cache."
+                    "help_text": "Set this parameter, if you wish to download annotation cache.\nUsing this parameter will download cache even if --snpeff_cache and --vep_cache are provided."
                 },
                 "igenomes_base": {
                     "type": "string",

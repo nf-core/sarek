@@ -24,7 +24,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#1277](https://github.com/nf-core/sarek/pull/1277) - Fix null value issue for Mutect2 joint calling
 - [#1287](https://github.com/nf-core/sarek/pull/1287) - Adding label `process_single` to local modules
+- [#1298](https://github.com/nf-core/sarek/pull/1298) - Fix annotation cache usage
 - [#1301](https://github.com/nf-core/sarek/pull/1301) - Fix nf-prov usage
+
+### Removed
+
+- [#1298](https://github.com/nf-core/sarek/pull/1298) - Remove `--use_annotation_cache_keys` params
 
 ### Dependencies
 

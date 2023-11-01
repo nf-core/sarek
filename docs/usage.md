@@ -18,10 +18,16 @@ Sarek is designed to handle single samples, such as single-normal or single-tumo
 The typical command for running the pipeline is as follows:
 
 ```bash
-nextflow run nf-core/sarek --input ./samplesheet.csv --outdir ./results --genome GATK.GRCh38 --tools <TOOLS> -profile docker
+nextflow run nf-core/sarek -r <VERSION> -profile <PROFILE> --input ./samplesheet.csv --outdir ./results --genome GATK.GRCh38 --tools <TOOLS>
 ```
 
-This will launch the pipeline and perform variant calling with the tools specified in `--tools`, see the [parameter section](https://nf-co.re/sarek/3.2.3/parameters#tools) for details on variant calling tools.
+`-r <VERSION>` is optional but strongly recommended for reproducibility and should match the latest version.
+
+`-profile <PROFILE>` is mandatory and should reflect either your own institutional profile or any pipeline profile specified in the [profile section](##-profile).
+
+This documentation imply that any `nextflow run nf-core/sarek` command is run with the appropriate `-r` and `-profile` commands.
+
+This will launch the pipeline and perform variant calling with the tools specified in `--tools`, see the [parameter section](https://nf-co.re/sarek/latest/parameters#tools) for details on variant calling tools.
 In the above example the pipeline runs with the `docker` configuration profile. See below for more information about profiles.
 
 Note that the pipeline will create the following files in your working directory:
@@ -44,7 +50,7 @@ Do not use `-c <file>` to specify parameters as this will result in errors. Cust
 The above pipeline run specified with a params file in yaml format:
 
 ```bash
-nextflow run nf-core/sarek -profile docker -params-file params.yaml
+nextflow run nf-core/sarek -params-file params.yaml
 ```
 
 with `params.yaml` containing:
@@ -312,7 +318,7 @@ test,sample4_vs_sample3,manta,sample4_vs_sample3.somatic_sv.vcf.gz
 
 ## Updating the pipeline
 
-When you launch a pipeline from the command-line with `nextflow run nf-core/sarek -profile docker -params-file params.yaml`, Nextflow will automatically pull the pipeline code from GitHub and store it as a cached version. When running the pipeline after this, it will always use the cached version if available - even if the pipeline has been updated since. To make sure that you're running the latest version of the pipeline, make sure that you regularly update the cached version of the pipeline:
+When you launch a pipeline from the command-line with `nextflow run nf-core/sarek -params-file params.yaml`, Nextflow will automatically pull the pipeline code from GitHub and store it as a cached version. When running the pipeline after this, it will always use the cached version if available - even if the pipeline has been updated since. To make sure that you're running the latest version of the pipeline, make sure that you regularly update the cached version of the pipeline:
 
 ```bash
 nextflow pull nf-core/sarek
@@ -322,8 +328,8 @@ nextflow pull nf-core/sarek
 
 It is a good idea to specify a pipeline version when running the pipeline on your data. This ensures that a specific version of the pipeline code and software are used when you run your pipeline. If you keep using the same tag, you'll be running the same version of the pipeline, even if there have been changes to the code since.
 
-First, go to the [nf-core/sarek releases page](https://github.com/nf-core/sarek/releases) and find the latest version number - numeric only (eg. `3.1.1`).
-Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 3.1.1`. Of course, you can switch to another version by changing the number after the `-r` flag.
+First, go to the [nf-core/sarek releases page](https://github.com/nf-core/sarek/releases) and find the latest version number - numeric only (eg. `3.3.2`).
+Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 3.3.2`. Of course, you can switch to another version by changing the number after the `-r` flag.
 
 This version number will be logged in reports when you run the pipeline, so that you'll know what you used when you look back in the future. For example, at the bottom of the MultiQC reports.
 
@@ -448,7 +454,7 @@ When using default parameters only, sarek runs preprocessing and `Strelka2`.
 This is reflected in the default test profile:
 
 ```bash
-nextflow run nf-core/sarek -r 3.2.1 -profile test,<container/institute> --outdir results
+nextflow run nf-core/sarek -profile test,<container/institute> --outdir results
 ```
 
 Expected run output:
@@ -525,7 +531,7 @@ For more extensive testing purpose, we have the `test_cache` profile that contai
 Annotation is generally tested separately from the remaining workflow, since we use references for `C.elegans`, while the remaining tests are run on downsampled human data.
 
 ```bash
-nextflow run nf-core/sarek -r 3.2.1 -profile test_cache,<container/institute> --outdir results --tools snpeff --step annotation
+nextflow run nf-core/sarek -profile test_cache,<container/institute> --outdir results --tools snpeff --step annotation
 ```
 
 If you are interested in any of the other tests that are run on every code change or would like to run them yourself, you can take a look at `tests/<filename>.yml`.
@@ -962,7 +968,7 @@ aws s3 --no-sign-request ls s3://annotation-cache/vep_cache/
 
 Since both Snpeff and VEP are internally figuring the path towards the specific cache version / species, `annotation-cache` is using an extra set of keys to specify the species and genome build.
 
-So if you are using this resource, please either set `--use_annotation_cache_keys` to use the AWS annotation cache, or point towards your own cache folder structure matching the expected structure.
+Which is handled internally by Sarek.
 
 Please refer to the [annotation-cache documentation](https://annotation-cache.github.io) for more details.
 
@@ -988,13 +994,13 @@ Else, it will be downloaded in `cache/` in the specified `--outdir` location.
 This command could be used to download the cache for both tools in the specified `--outdir_cache` location:
 
 ```bash
-nextflow run nf-core/sarek -r 3.3.0 --outdir results --outdir_cache /path_to/my-own-cache --tools vep,snpeff --download_cache --build_only_index --input false
+nextflow run nf-core/sarek --outdir results --outdir_cache /path_to/my-own-cache --tools vep,snpeff --download_cache --build_only_index --input false
 ```
 
 This command could be used to point to the recently downloaded cache and run SnpEff and VEP:
 
 ```bash
-nextflow run nf-core/sarek -r 3.3.0 --outdir results --vep_cache /path_to/my-own-cache/vep_cache --snpeff_cache /path_to/my-own-cache/snpeff_cache --tools vep,snpeff --input samplesheet_vcf.csv
+nextflow run nf-core/sarek --outdir results --vep_cache /path_to/my-own-cache/vep_cache --snpeff_cache /path_to/my-own-cache/snpeff_cache --tools vep,snpeff --input samplesheet_vcf.csv
 ```
 
 ### Create containers with pre-downloaded cache
@@ -1097,15 +1103,28 @@ Sarek also contains the Sentieon functions [DnaScope](https://support.sentieon.c
 
 ### Basic usage of Sentieon functions
 
-To use Sentieon's aligner `bwa mem`, set the aligner option `sentieon-bwamem`. (This can, for example, be done by adding `--aligner sentieon-bwamem` to the nextflow run command.)
+To use Sentieon's aligner `bwa mem`, set the aligner option `sentieon-bwamem`.
+(This can, for example, be done by adding `--aligner sentieon-bwamem` to the `nextflow run` command.)
 
-To use Sentieon's function `Dedup`, specify `sentieon_dedup` as one of the tools. (This can, for example, be done by adding `--tools sentieon_dedup` to the nextflow run command.)
+To use Sentieon's function `Dedup`, specify `sentieon_dedup` as one of the tools.
+(This can, for example, be done by adding `--tools sentieon_dedup` to the `nextflow run` command.)
 
-To use Sentieon's function `DNAscope`, specify `sentieon_dnascope` as one of the tools. This can, for example, be done by adding `--tools sentieon_dnascope` to the nextflow run command. In order to skip Sentieon's variant-filter `DNAModelApply`, one may add `--skip_tools dnascope_filter` to the nextflow run command. Sarek also provides the option `sentieon_dnascope_emit_mode` which can be used to set the [emit-mode](https://support.sentieon.com/manual/usages/general/#dnascope-algorithm) of Sentieon's dnascope. Sentieon's dnascope can output both a vcf-file and a gvcf-file in the same run; this is achieved by setting `sentieon_dnascope_emit_mode` to `<vcf_emit_mode>,gvcf`, where `<vcf_emit_mode>` is `variant`, `confident` or `all`.
+To use Sentieon's function `DNAscope`, specify `sentieon_dnascope` as one of the tools.
+This can, for example, be done by adding `--tools sentieon_dnascope` to the `nextflow run` command.
+In order to skip Sentieon's variant-filter `DNAModelApply`, one may add `--skip_tools dnascope_filter` to the `nextflow run` command.
+Sarek also provides the option `sentieon_dnascope_emit_mode` which can be used to set the [emit-mode](https://support.sentieon.com/manual/usages/general/#dnascope-algorithm) of Sentieon's dnascope.
+Sentieon's dnascope can output both a vcf-file and a gvcf-file in the same run; this is achieved by setting `sentieon_dnascope_emit_mode` to `<vcf_emit_mode>,gvcf`, where `<vcf_emit_mode>` is `variant`, `confident` or `all`.
 
-Sentieon's function `Haplotyper` is used in much the same way as `DNAscope`. To use Sentieon's function `Haplotyper`, specify `sentieon_haplotyper` as one of the tools. This can, for example, be done by adding `--tools sentieon_haplotyper` to the nextflow run command. In order to skip the GATK-based variant-filter, one may add `--skip_tools haplotyper_filter` to the nextflow run command. Sarek also provides the option `sentieon_haplotyper_emit_mode` which can be used to set the [emit-mode](https://support.sentieon.com/manual/usages/general/#haplotyper-algorithm) of Sentieon's haplotyper. Sentieon's haplotyper can output both a vcf-file and a gvcf-file in the same run; this is achieved by setting `sentieon_haplotyper_emit_mode` to `<vcf_emit_mode>,gvcf`, where `<vcf_emit_mode>` is `variant`, `confident` or `all`.
+Sentieon's function `Haplotyper` is used in much the same way as `DNAscope`.
+To use Sentieon's function `Haplotyper`, specify `sentieon_haplotyper` as one of the tools.
+This can, for example, be done by adding `--tools sentieon_haplotyper` to the `nextflow run` command.
+In order to skip the GATK-based variant-filter, one may add `--skip_tools haplotyper_filter` to the `nextflow run` command.
+Sarek also provides the option `sentieon_haplotyper_emit_mode` which can be used to set the [emit-mode](https://support.sentieon.com/manual/usages/general/#haplotyper-algorithm) of Sentieon's haplotyper.
+Sentieon's haplotyper can output both a vcf-file and a gvcf-file in the same run; this is achieved by setting `sentieon_haplotyper_emit_mode` to `<vcf_emit_mode>,gvcf`, where `<vcf_emit_mode>` is `variant`, `confident` or `all`.
 
-To use Sentieon's function `GVCFtyper` along with Sention's version of VQSR (`VarCal` and `ApplyVarCal`) for joint-germline genotyping, specify `sentieon_haplotyper` as one of the tools, set the option `sentieon_haplotyper_emit_mode` to `gvcf`, and add the option `joint_germline`. This can, for example, be done by adding `--tools sentieon_haplotyper --joint_germline --sentieon_haplotyper_emit_mode gvcf` to the nextflow run command. If `sentieon_dnascope` is chosen instead of `sentieon_haplotyper`, then Sention's version of VQSR is skipped, as recommended by Sentieon.
+To use Sentieon's function `GVCFtyper` along with Sention's version of VQSR (`VarCal` and `ApplyVarCal`) for joint-germline genotyping, specify `sentieon_haplotyper` as one of the tools, set the option `sentieon_haplotyper_emit_mode` to `gvcf`, and add the option `joint_germline`.
+This can, for example, be done by adding `--tools sentieon_haplotyper --joint_germline --sentieon_haplotyper_emit_mode gvcf` to the `nextflow run` command.
+If `sentieon_dnascope` is chosen instead of `sentieon_haplotyper`, then Sention's version of VQSR is skipped, as recommended by Sentieon.
 
 ### Joint germline variant calling
 
