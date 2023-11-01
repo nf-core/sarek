@@ -540,6 +540,13 @@
                     "description": "Add an extra custom argument to VEP.",
                     "help_text": "Using this params you can add custom args to VEP."
                 },
+                "vep_version": {
+                    "type": "string",
+                    "default": "110.0-0",
+                    "fa_icon": "fas fa-toolbox",
+                    "description": "Should reflect the VEP version used in the container.",
+                    "help_text": "Used by the loftee plugin that need the full path."
+                },
                 "outdir_cache": {
                     "type": "string",
                     "format": "directory-path",
