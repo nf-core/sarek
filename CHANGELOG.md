@@ -37,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | Dependency | Old version | New version |
 | ---------- | ----------- | ----------- |
 | fastqc     | 0.11.9      | 0.12.1      |
+| multiqc    | 1.15        | 1.17        |
 
 ## [3.3.2](https://github.com/nf-core/sarek/releases/tag/3.3.2) - Ráhpajávvre
 
