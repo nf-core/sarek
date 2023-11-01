@@ -17,7 +17,6 @@ tools:
       documentation: https://gatk.broadinstitute.org/hc/en-us/categories/360002369672s
       doi: 10.1158/1538-7445.AM2017-3590
       licence: ["Apache-2.0"]
-
 input:
   - meta:
       type: map
@@ -50,7 +49,6 @@ input:
       type: file
       description: GATK sequence dictionary
       pattern: "*.dict"
-
 output:
   - meta:
       type: map
@@ -69,8 +67,11 @@ output:
       type: file
       description: Recalibrated CRAM file
       pattern: "*.{cram}"
-
 authors:
+  - "@yocra3"
+  - "@FriederikeHanssen"
+  - "@maxulysse"
+maintainers:
   - "@yocra3"
   - "@FriederikeHanssen"
   - "@maxulysse"

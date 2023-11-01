@@ -16,7 +16,6 @@ tools:
       homepage: https://gatk.broadinstitute.org/hc/en-us
       documentation: https://gatk.broadinstitute.org/hc/en-us/categories/360002369672s
       doi: 10.1158/1538-7445.AM2017-3590
-
 input:
   - meta:
       type: map
@@ -77,7 +76,6 @@ input:
       type: file
       description: GATK sequence dictionary
       pattern: "*.dict"
-
 output:
   - vcf:
       type: file
@@ -95,8 +93,11 @@ output:
       type: file
       description: File containing software versions
       pattern: "versions.yml"
-
 authors:
+  - "@GCJMackenzie"
+  - "@maxulysse"
+  - "@ramprasadn"
+maintainers:
   - "@GCJMackenzie"
   - "@maxulysse"
   - "@ramprasadn"

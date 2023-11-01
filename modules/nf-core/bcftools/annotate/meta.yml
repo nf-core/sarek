@@ -13,7 +13,6 @@ tools:
       documentation: https://samtools.github.io/bcftools/bcftools.html#annotate
       doi: 10.1093/bioinformatics/btp352
       licence: ["MIT"]
-
 input:
   - meta:
       type: map
@@ -26,16 +25,15 @@ input:
   - index:
       type: file
       description: Index of the query VCF or BCF file
-  - bcftools_annotations:
+  - annotations:
       type: file
       description: Bgzip-compressed file with annotations
-  - bcftools_annotations_index:
+  - annotations_index:
       type: file
       description: Index of the annotations file
-  - bcftools_header_lines:
+  - header_lines:
       type: file
       description: Contains lines to append to the output VCF header
-
 output:
   - meta:
       type: map
@@ -50,7 +48,9 @@ output:
       type: file
       description: Compressed annotated VCF file
       pattern: "*{vcf,vcf.gz,bcf,bcf.gz}"
-
 authors:
+  - "@projectoriented"
+  - "@ramprasadn"
+maintainers:
   - "@projectoriented"
   - "@ramprasadn"

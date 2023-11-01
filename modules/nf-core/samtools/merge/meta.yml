@@ -65,7 +65,17 @@ output:
       type: file
       description: BAM index file (optional)
       pattern: "*.csi"
+  - crai:
+      type: file
+      description: CRAM index file (optional)
+      pattern: "*.crai"
 authors:
+  - "@drpatelh"
+  - "@yuukiiwa "
+  - "@maxulysse"
+  - "@FriederikeHanssen"
+  - "@ramprasadn"
+maintainers:
   - "@drpatelh"
   - "@yuukiiwa "
   - "@maxulysse"

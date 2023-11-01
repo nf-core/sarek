@@ -1,0 +1,78 @@
+{
+    "test_cat_fastq_single_end": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.merged.fastq.gz:md5,f9cf5e375f7de81a406144a2c70cc64d"
+                ]
+            ]
+        ],
+        "timestamp": "2023-10-17T23:19:12.990284837"
+    },
+    "test_cat_fastq_single_end_same_name": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.merged.fastq.gz:md5,63f817db7a29a03eb538104495556f66"
+                ]
+            ]
+        ],
+        "timestamp": "2023-10-17T23:19:31.554568147"
+    },
+    "test_cat_fastq_single_end_single_file": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.merged.fastq.gz:md5,e325ef7deb4023447a1f074e285761af"
+                ]
+            ]
+        ],
+        "timestamp": "2023-10-17T23:19:49.629360033"
+    },
+    "test_cat_fastq_paired_end_same_name": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    [
+                        "test_1.merged.fastq.gz:md5,63f817db7a29a03eb538104495556f66",
+                        "test_2.merged.fastq.gz:md5,fe9f266f43a6fc3dcab690a18419a56e"
+                    ]
+                ]
+            ]
+        ],
+        "timestamp": "2023-10-17T23:19:40.711617539"
+    },
+    "test_cat_fastq_paired_end": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    [
+                        "test_1.merged.fastq.gz:md5,f9cf5e375f7de81a406144a2c70cc64d",
+                        "test_2.merged.fastq.gz:md5,77c8e966e130d8c6b6ec9be52fcb2bda"
+                    ]
+                ]
+            ]
+        ],
+        "timestamp": "2023-10-18T07:53:20.923560211"
+    }
+}

@@ -1,0 +1,7 @@
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - bioconda::svdb=2.8.1
+  - bioconda::samtools=1.16.1

@@ -12,7 +12,6 @@ tools:
       tool_dev_url: https://github.com/google/deepvariant
       doi: "10.1038/nbt.4235"
       licence: ["BSD-3-clause"]
-
 input:
   - meta:
       type: map
@@ -58,7 +57,6 @@ input:
       type: file
       description: GZI index of reference fasta file
       pattern: "*.gzi"
-
 output:
   - meta:
       type: map
@@ -77,7 +75,9 @@ output:
       type: file
       description: File containing software version
       pattern: "*.{version.txt}"
-
 authors:
+  - "@abhi18av"
+  - "@ramprasadn"
+maintainers:
   - "@abhi18av"
   - "@ramprasadn"
