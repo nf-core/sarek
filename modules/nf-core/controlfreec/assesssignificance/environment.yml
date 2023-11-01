@@ -3,4 +3,4 @@ channels:
   - bioconda
   - defaults
 dependencies:
-  - bioconda::control-freec=11.6b
+  - bioconda::control-freec=11.6
