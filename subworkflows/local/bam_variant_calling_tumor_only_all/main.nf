@@ -141,9 +141,8 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA(
             cram,
             // Remap channel to match module/subworkflow
-            dict.map{ it -> [ [ id:'dict' ], it ] },
-            fasta,
-            fasta_fai,
+            fasta.map{ it -> [ [ id:'fasta' ], it ] },
+            fasta_fai.map{ it -> [ [ id:'fasta_fai' ], it ] },
             intervals_bed_gz_tbi_combined
 
         )

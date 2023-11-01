@@ -145,8 +145,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     if (tools.split(',').contains('manta')) {
         BAM_VARIANT_CALLING_SOMATIC_MANTA(
             cram,
-            fasta,
-            fasta_fai,
+            fasta.map{ it -> [ [ id:'fasta' ], it ] },
+            fasta_fai.map{ it -> [ [ id:'fasta_fai' ], it ] },
             intervals_bed_gz_tbi_combined
         )
 
