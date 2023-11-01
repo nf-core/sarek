@@ -1,89 +1,17 @@
 Changes in module 'nf-core/bcftools/annotate'
 --- modules/nf-core/bcftools/annotate/main.nf
 +++ modules/nf-core/bcftools/annotate/main.nf
-@@ -5,14 +5,17 @@
-     conda "bioconda::bcftools=1.17"
-     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-         'https://depot.galaxyproject.org/singularity/bcftools:1.17--haef29d1_0':
--        'biocontainers/bcftools:1.17--haef29d1_0' }"
-+        'quay.io/biocontainers/bcftools:1.17--haef29d1_0' }"
+@@ -8,7 +8,10 @@
+         'biocontainers/bcftools:1.17--haef29d1_0' }"
  
      input:
 -    tuple val(meta), path(input), path(index), path(annotations), path(annotations_index), path(header_lines)
-+    tuple val(meta), path(vcf)
-+    path    bcftools_annotations
-+    path    bcftools_annotations_index 
-+    path    bcftools_header_lines
++    tuple val(meta), path(input)
++    path annotations
++    path annotations_index 
++    path header_lines
  
      output:
--    tuple val(meta), path("*.{vcf,vcf.gz,bcf,bcf.gz}"), emit: vcf
--    path "versions.yml"                               , emit: versions
-+    tuple val(meta), path("*.vcf.gz"), emit: vcf
-+    path "versions.yml"              , emit: versions
- 
-     when:
-     task.ext.when == null || task.ext.when
-@@ -20,15 +23,19 @@
-     script:
-     def args    = task.ext.args ?: ''
-     def prefix  = task.ext.prefix ?: "${meta.id}"
--    def header_file = header_lines ? "--header-lines ${header_lines}" : ''
--    def annotations_file = annotations ? "--annotations ${annotations}" : ''
-+    def header_file = bcftools_header_lines ? "--header-lines ${bcftools_header_lines}" : ''
-+    def annotations_file = bcftools_annotations ? "--annotations ${bcftools_annotations}" : ''
-     def extension = args.contains("--output-type b") || args.contains("-Ob") ? "bcf.gz" :
-                     args.contains("--output-type u") || args.contains("-Ou") ? "bcf" :
-                     args.contains("--output-type z") || args.contains("-Oz") ? "vcf.gz" :
-                     args.contains("--output-type v") || args.contains("-Ov") ? "vcf" :
-                     "vcf"
--    if ("$input" == "${prefix}.${extension}") error "Input and output names are the same, set prefix in module configuration to disambiguate!"
-+    if ("$vcf" == "${prefix}.${extension}") error "Input and output names are the same, set prefix in module configuration to disambiguate!"
-     """
-+    bcftools \\
-+        index \\
-+        $vcf
-+    
-     bcftools \\
-         annotate \\
-         $args \\
-@@ -36,7 +43,7 @@
-         $header_file \\
-         --output ${prefix}.${extension} \\
-         --threads $task.cpus \\
--        $input
-+        $vcf
- 
-     cat <<-END_VERSIONS > versions.yml
-     "${task.process}":
-@@ -60,4 +67,4 @@
-         bcftools: \$( bcftools --version |& sed '1!d; s/^.*bcftools //' )
-     END_VERSIONS
-     """
--}
-+}
---- modules/nf-core/bcftools/annotate/meta.yml
-+++ modules/nf-core/bcftools/annotate/meta.yml
-@@ -26,13 +26,13 @@
-   - index:
-       type: file
-       description: Index of the query VCF or BCF file
--  - annotations:
-+  - bcftools_annotations:
-       type: file
-       description: Bgzip-compressed file with annotations
--  - annotations_index:
-+  - bcftools_annotations_index:
-       type: file
-       description: Index of the annotations file
--  - header_lines:
-+  - bcftools_header_lines:
-       type: file
-       description: Contains lines to append to the output VCF header
- 
-@@ -53,4 +53,4 @@
- 
- authors:
-   - "@projectoriented"
--  - "@ramprasadn"
-+  - "@ramprasadn"
+     tuple val(meta), path("*.{vcf,vcf.gz,bcf,bcf.gz}"), emit: vcf
+
 ************************************************************
