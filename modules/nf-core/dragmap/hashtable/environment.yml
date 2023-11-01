@@ -3,4 +3,4 @@ channels:
   - bioconda
   - defaults
 dependencies:
-  - bioconda::dragmap=1.3.0
+  - bioconda::dragmap=1.2.1
