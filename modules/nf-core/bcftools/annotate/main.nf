@@ -33,6 +33,10 @@ process BCFTOOLS_ANNOTATE {
     if ("$input" == "${prefix}.${extension}") error "Input and output names are the same, set prefix in module configuration to disambiguate!"
     """
     bcftools \\
+        index \\
+        $input
+
+    bcftools \\
         annotate \\
         $args \\
         $annotations_file \\
