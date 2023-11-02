@@ -188,7 +188,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             fasta,
             fasta_fai
         )
-        versions = versions.mix(BAM_VARIANT_CALLING_GERMLINE_MANTA.out.versions)
+     	versions = versions.mix(BAM_GOLEFT_INDEXCOV.out.versions)
     }
    
 

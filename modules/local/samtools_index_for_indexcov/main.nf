@@ -8,38 +8,34 @@ process SAMTOOLS_INDEX_FOR_INDEXCOV {
         'biocontainers/samtools:1.17--h00cdaf9_0' }"
 
     input:
-    tuple val(meta), path(input)
-    tuple val(meta2), path(fasta)
-    tuple val(meta3), path(fai)
-    output:
-    tuple val(meta), path("*.bam"),  emit: bam
-    tuple val(meta), path("*.bai") , emit: bai
-    path  "versions.yml"           , emit: versions
+    tuple val(meta), path(input), path(bai)
+    path(fasta)
+    path(fai)
 
-    when:
-    def args = task.ext.args ?: ''
+    output:
+    tuple path("${meta.id}.indexcov.bam"),path("${meta.id}.indexcov.bam.bai"), emit: output
+    path  "versions.yml"                 , emit: versions
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
-    def reference = fasta ? "--reference ${fasta}" : ""
 
     """
     # write BAM header only
     samtools view --header-only -O BAM  \
         --threads ${task.cpus} \
-        -o "${prefix}.bam" \
-        ${reference} \
+        -o "${meta.id}.indexcov.bam" \
+        --reference "${fasta}" \
 		"${input}"
 
     # create index without writing BAM (redirecting to /dev/null)
-	samtools view ${args} --uncompressed \
+    samtools view ${args} --uncompressed \
 		--threads ${task.cpus} \
-		-o "/dev/null##idx##${prefix}.bam.bai" \
+		-o "/dev/null##idx##${meta.id}.indexcov.bam.bai" \
 		--write-index \
 		-O BAM  \
-		${reference} \
+	        --reference "${fasta}" \
 		"${input}"
+
 
 
     cat <<-END_VERSIONS > versions.yml
@@ -50,8 +46,8 @@ process SAMTOOLS_INDEX_FOR_INDEXCOV {
 
     stub:
     """
-    touch "${prefix}.bam"
-    touch "${prefix}.bai"
+    touch "${meta.id}.indexcov.bam"
+    touch "${meta.id}.indexcov.bam.bai"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
