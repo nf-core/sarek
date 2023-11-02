@@ -1,9 +1,11 @@
-process GATK4_MARKDUPLICATES_SPARK {
+process GATK4SPARK_MARKDUPLICATES {
     tag "$meta.id"
     label 'process_high'
 
     conda "${moduleDir}/environment.yml"
-    container "nf-core/gatk:4.4.0.0"
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/gatk4-spark:4.4.0.0--hdfd78af_0':
+        'biocontainers/gatk4-spark:4.4.0.0--hdfd78af_0' }"
 
     input:
     tuple val(meta), path(bam)

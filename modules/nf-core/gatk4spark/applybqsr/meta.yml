@@ -1,12 +1,11 @@
-name: gatk4_applybqsr_spark
+name: gatk4spark_applybqsr
 description: Apply base quality score recalibration (BQSR) to a bam file
 keywords:
   - bam
   - base quality score recalibration
   - bqsr
   - cram
-  - gatk4
-  - spark
+  - gatk4spark
 tools:
   - gatk4:
       description: |

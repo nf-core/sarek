@@ -1,12 +1,11 @@
-name: gatk4_baserecalibrator_spark
+name: gatk4spark_baserecalibrator
 description: Generate recalibration table for Base Quality Score Recalibration (BQSR)
 keywords:
   - base quality score recalibration
   - table
   - bqsr
-  - gatk4
+  - gatk4spark
   - sort
-  - spark
 tools:
   - gatk4:
       description: |

@@ -1,11 +1,10 @@
-name: gatk4_markduplicates_spark
+name: gatk4spark_markduplicates
 description: This tool locates and tags duplicate reads in a BAM or SAM file, where duplicate reads are defined as originating from a single fragment of DNA.
 keywords:
   - bam
-  - gatk4
+  - gatk4spark
   - markduplicates
   - sort
-  - spark
 tools:
   - gatk4:
       description: Developed in the Data Sciences Platform at the Broad Institute, the toolkit offers a wide variety of tools with a primary focus on variant discovery and genotyping. Its powerful processing engine and high-performance computing features make it capable of taking on projects of any size.
