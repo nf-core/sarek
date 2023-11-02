@@ -1,7 +1,7 @@
-- name: Run default pipeline with gatk4_spark
+- name: Run default pipeline with gatk4spark
   command: nextflow run main.nf -profile test_cache,use_gatk_spark --outdir results
   tags:
-    - gatk4_spark
+    - gatk4spark
     - preprocessing
   files:
     - path: results/csv/markduplicates.csv
@@ -48,10 +48,10 @@
     # conda changes md5sums for test
     - path: results/preprocessing/mapped/
       should_exist: false
-- name: Run default pipeline with gatk4_spark and skipping all QC steps
+- name: Run default pipeline with gatk4spark and skipping all QC steps
   command: nextflow run main.nf -profile test_cache,use_gatk_spark --skip_tools fastqc,markduplicates_report,mosdepth,multiqc,samtools --outdir results
   tags:
-    - gatk4_spark
+    - gatk4spark
     - preprocessing
     - skip_qc
   files:
@@ -84,7 +84,7 @@
 - name: Run save_output_as_bam with gatk4 spark
   command: nextflow run main.nf -profile test_cache,use_gatk_spark --save_output_as_bam --outdir results
   tags:
-    - gatk4_spark
+    - gatk4spark
     - preprocessing
     - save_output_as_bam
   files:

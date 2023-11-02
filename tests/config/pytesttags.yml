@@ -206,20 +206,20 @@ intervals:
   - tests/csv/3.0/fastq_single.csv
   - tests/test_intervals.yml
 
-## gatk4_spark
-gatk4_spark:
+## gatk4spark
+gatk4spark:
   - conf/modules/markduplicates.config
   - conf/modules/prepare_recalibration.config
   - conf/modules/recalibrate.config
-  - modules/nf-core/gatk4/applybqsrspark/main.nf
-  - modules/nf-core/gatk4/baserecalibratorspark/main.nf
+  - modules/nf-core/gatk4spark/applybqsr/main.nf
+  - modules/nf-core/gatk4spark/baserecalibrator/main.nf
   - modules/nf-core/gatk4/estimatelibrarycomplexity/main.nf
-  - modules/nf-core/gatk4/markduplicatesspark/main.nf
+  - modules/nf-core/gatk4spark/markduplicates/main.nf
   - subworkflows/local/bam_applybqsr_spark/main.nf
   - subworkflows/local/bam_baserecalibrator_spark/main.nf
   - subworkflows/local/bam_markduplicates_spark/main.nf
   - tests/csv/3.0/fastq_single.csv
-  - tests/test_gatk4_spark.yml
+  - tests/test_gatk4spark.yml
 
 # variant calling
 
