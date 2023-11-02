@@ -39,6 +39,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | fastqc     | 0.11.9      | 0.12.1      |
 | multiqc    | 1.15        | 1.17        |
 
+### Modules / Subworkflows
+
+| script                        | Old name                      | New name                      |
+| ----------------------------- | ----------------------------- | ----------------------------- |
+| `gatk4spark/applybqsr`        | `GATK4_APPLYBQSRSPARK`        | 'GATK4SPARK_APPLYBQSR'        |
+| `gatk4spark/baserecalibrator` | `GATK4_BASERECALIBRATORSPARK` | 'GATK4SPARK_BASERECALIBRATOR' |
+| `gatk4spark/markduplicates`   | `GATK4_MARKDUPLICATESSPARK`   | 'GATK4SPARK_MARKDUPLICATES'   |
+
 ## [3.3.2](https://github.com/nf-core/sarek/releases/tag/3.3.2) - Ráhpajávvre
 
 Ráhpajávvre is the Lule Sámi spelling of Rapaselet.
