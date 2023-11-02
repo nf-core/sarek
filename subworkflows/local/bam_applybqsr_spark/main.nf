@@ -4,7 +4,7 @@
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
-include { GATK4SPARK_APPLYBQSR      } from '../../../modules/nf-core/gatk4spark/applybqsrs/main'
+include { GATK4SPARK_APPLYBQSR      } from '../../../modules/nf-core/gatk4spark/applybqsr/main'
 include { CRAM_MERGE_INDEX_SAMTOOLS } from '../cram_merge_index_samtools/main'
 
 workflow BAM_APPLYBQSR_SPARK {
