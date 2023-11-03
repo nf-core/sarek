@@ -31,7 +31,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
     versions = Channel.empty()
 
     //If no germline resource is provided, then create an empty channel to avoid GetPileupsummaries from being run
-    germline_resource_pileup     = germline_resource_tbi ? germline_resource : Channel.empty()
+    germline_resource_pileup     = germline_resource_tbi ? germline_resource ?: Channel.empty()
     germline_resource_pileup_tbi = germline_resource_tbi ?: Channel.empty()
 
     // Combine input and intervals for spread and gather strategy
