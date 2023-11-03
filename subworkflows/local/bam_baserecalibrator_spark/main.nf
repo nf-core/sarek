@@ -4,8 +4,8 @@
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
-include { GATK4_BASERECALIBRATOR_SPARK } from '../../../modules/nf-core/gatk4/baserecalibratorspark/main'
-include { GATK4_GATHERBQSRREPORTS      } from '../../../modules/nf-core/gatk4/gatherbqsrreports/main'
+include { GATK4SPARK_BASERECALIBRATOR } from '../../../modules/nf-core/gatk4spark/baserecalibrator/main'
+include { GATK4_GATHERBQSRREPORTS     } from '../../../modules/nf-core/gatk4/gatherbqsrreports/main'
 
 workflow BAM_BASERECALIBRATOR_SPARK {
     take:
@@ -26,10 +26,10 @@ workflow BAM_BASERECALIBRATOR_SPARK {
         .map{ meta, cram, crai, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram, crai, intervals ] }
 
     // RUN BASERECALIBRATOR SPARK
-    GATK4_BASERECALIBRATOR_SPARK(cram_intervals, fasta, fasta_fai, dict.map{ meta, it -> [ it ] }, known_sites, known_sites_tbi)
+    GATK4SPARK_BASERECALIBRATOR(cram_intervals, fasta, fasta_fai, dict.map{ meta, it -> [ it ] }, known_sites, known_sites_tbi)
 
     // Figuring out if there is one or more table(s) from the same sample
-    table_to_merge = GATK4_BASERECALIBRATOR_SPARK.out.table.map{ meta, table -> [ groupKey(meta, meta.num_intervals), table ] }.groupTuple().branch{
+    table_to_merge = GATK4SPARK_BASERECALIBRATOR.out.table.map{ meta, table -> [ groupKey(meta, meta.num_intervals), table ] }.groupTuple().branch{
         // Use meta.num_intervals to asses number of intervals
         single:   it[0].num_intervals <= 1
         multiple: it[0].num_intervals > 1
@@ -44,7 +44,7 @@ workflow BAM_BASERECALIBRATOR_SPARK {
         .map{ meta, table -> [ meta - meta.subMap('num_intervals'), table ] }
 
     // Gather versions of all tools used
-    versions = versions.mix(GATK4_BASERECALIBRATOR_SPARK.out.versions)
+    versions = versions.mix(GATK4SPARK_BASERECALIBRATOR.out.versions)
     versions = versions.mix(GATK4_GATHERBQSRREPORTS.out.versions)
 
     emit:

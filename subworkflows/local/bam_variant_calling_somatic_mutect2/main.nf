@@ -44,8 +44,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
         // Separate normal cram files
         // Extract tumor cram files
         ch_cram = input.multiMap{ meta, cram, crai ->
-                normal: [ meta - meta.subMap('normal_id', 'tumor_id') , cram[0], crai[0] ]
-                tumor:  [ meta - meta.subMap('normal_id', 'tumor_id') , cram[1], crai[1] ]
+                normal: [ meta - meta.subMap('tumor_id') , cram[0], crai[0] ]
+                tumor:  [ meta - meta.subMap('tumor_id') , cram[1], crai[1] ]
             }
 
         // Remove duplicates from normal channel and merge normal and tumor crams by patient
@@ -102,10 +102,18 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUTECT2 {
     MERGEMUTECTSTATS(stats_to_merge)
 
     // Mix intervals and no_intervals channels together and remove no longer necessary field: normal_id, tumor_id, num_intervals
-    vcf = Channel.empty().mix(MERGE_MUTECT2.out.vcf, vcf_branch.no_intervals).map{ meta, vcf -> [ meta - meta.subMap('num_intervals'), vcf ]}
-    tbi = Channel.empty().mix(MERGE_MUTECT2.out.tbi, tbi_branch.no_intervals).map{ meta, tbi -> [ meta - meta.subMap('num_intervals'), tbi ]}
-    stats = Channel.empty().mix(MERGEMUTECTSTATS.out.stats, stats_branch.no_intervals).map{ meta, stats -> [ meta - meta.subMap('num_intervals'), stats ]}
-    f1r2 = Channel.empty().mix(f1r2_to_merge, f1r2_branch.no_intervals).map{ meta, f1r2 -> [ meta - meta.subMap('num_intervals'), f1r2 ]}
+    vcf = Channel.empty().mix(MERGE_MUTECT2.out.vcf, vcf_branch.no_intervals).map{ meta, vcf ->
+            [ joint_mutect2 ? meta - meta.subMap('normal_id', 'num_intervals') :  meta - meta.subMap('num_intervals') , vcf ]
+    }
+    tbi = Channel.empty().mix(MERGE_MUTECT2.out.tbi, tbi_branch.no_intervals).map{ meta, tbi->
+            [ joint_mutect2 ? meta - meta.subMap('normal_id', 'num_intervals') :  meta - meta.subMap('num_intervals'), tbi ]
+    }
+    stats = Channel.empty().mix(MERGEMUTECTSTATS.out.stats, stats_branch.no_intervals).map{ meta, stats ->
+            [ joint_mutect2 ? meta - meta.subMap('normal_id', 'num_intervals') :  meta - meta.subMap('num_intervals'), stats ]
+            }
+    f1r2 = Channel.empty().mix(f1r2_to_merge, f1r2_branch.no_intervals).map{ meta, f1r2->
+            [ joint_mutect2 ? meta - meta.subMap('normal_id', 'num_intervals') :  meta - meta.subMap('num_intervals') , f1r2 ]
+    }
 
     // Generate artifactpriors using learnreadorientationmodel on the f1r2 output of mutect2
     LEARNREADORIENTATIONMODEL(f1r2)

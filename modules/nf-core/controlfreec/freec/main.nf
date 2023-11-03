@@ -2,7 +2,7 @@ process CONTROLFREEC_FREEC {
     tag "$meta.id"
     label 'process_low'
 
-    conda "bioconda::control-freec=11.6b"
+    conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/control-freec:11.6b--hdbdd923_0' :
         'biocontainers/control-freec:11.6b--hdbdd923_0' }"

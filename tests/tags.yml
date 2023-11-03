@@ -1,0 +1,5 @@
+pipeline_sarek:
+  - "**.nf"
+  - "**.config"
+  - "**.nf.test"
+  - "**.json"

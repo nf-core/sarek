@@ -70,3 +70,5 @@ output:
       pattern: "*.versions.yml"
 authors:
   - "@asp8200"
+maintainers:
+  - "@asp8200"
