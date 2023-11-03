@@ -43,9 +43,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | script                        | Old name                      | New name                      |
 | ----------------------------- | ----------------------------- | ----------------------------- |
-| `gatk4spark/applybqsr`        | `GATK4_APPLYBQSRSPARK`        | 'GATK4SPARK_APPLYBQSR'        |
-| `gatk4spark/baserecalibrator` | `GATK4_BASERECALIBRATORSPARK` | 'GATK4SPARK_BASERECALIBRATOR' |
-| `gatk4spark/markduplicates`   | `GATK4_MARKDUPLICATESSPARK`   | 'GATK4SPARK_MARKDUPLICATES'   |
+| `gatk4spark/applybqsr`        | `GATK4_APPLYBQSRSPARK`        | `GATK4SPARK_APPLYBQSR`        |
+| `gatk4spark/baserecalibrator` | `GATK4_BASERECALIBRATORSPARK` | `GATK4SPARK_BASERECALIBRATOR` |
+| `gatk4spark/markduplicates`   | `GATK4_MARKDUPLICATESSPARK`   | `GATK4SPARK_MARKDUPLICATES`   |
 
 ## [3.3.2](https://github.com/nf-core/sarek/releases/tag/3.3.2) - Ráhpajávvre
 
