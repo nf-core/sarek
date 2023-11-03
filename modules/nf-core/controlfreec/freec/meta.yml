@@ -14,7 +14,6 @@ tools:
       tool_dev_url: https://github.com/BoevaLab/FREEC/
       doi: "10.1093/bioinformatics/btq635"
       licence: ["GPL >=2"]
-
 input:
   - args:
       type: map
@@ -68,7 +67,6 @@ input:
           ]
         }
         ```
-
   - meta:
       type: map
       description: |
@@ -130,7 +128,6 @@ input:
       type: file
       description: Sorted bed file containing capture regions (optional)
       pattern: "*.bed"
-
 output:
   - meta:
       type: map
@@ -177,6 +174,7 @@ output:
       type: file
       description: Config file used to run Control-FREEC
       pattern: "config.txt"
-
 authors:
+  - "@FriederikeHanssen"
+maintainers:
   - "@FriederikeHanssen"

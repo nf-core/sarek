@@ -199,6 +199,15 @@ jobs:
         NXF_VER:
           - "23.04.0"
           - "latest-everything"
+        exclude:
+          - tags: "bwa/index"
+          - tags: "bwa/mem"
+          - tags: "cat/cat"
+          - tags: "cat/fastq"
+          - tags: "custom/dumpsoftwareversions"
+          - tags: "fastp"
+          - tags: "fastqc"
+          - tags: "samtools/stats"
     env:
       NXF_ANSI_LOG: false
       TEST_DATA_BASE: "${{ github.workspace }}/test-datasets"

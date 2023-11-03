@@ -12,7 +12,6 @@ tools:
       tool_dev_url: https://github.com/samtools/bcftools
       doi: "10.1093/bioinformatics/btp352"
       licence: ["MIT"]
-
 input:
   - meta:
       type: map
@@ -23,7 +22,6 @@ input:
       type: file
       description: The VCF/BCF file to be sorted
       pattern: "*.{vcf.gz,vcf,bcf}"
-
 output:
   - meta:
       type: map
@@ -38,6 +36,7 @@ output:
       type: file
       description: Sorted VCF file
       pattern: "*.{vcf.gz}"
-
 authors:
+  - "@Gwennid"
+maintainers:
   - "@Gwennid"

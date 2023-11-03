@@ -16,9 +16,7 @@ tools:
       homepage: http://fulcrumgenomics.github.io/fgbio/
       documentation: http://fulcrumgenomics.github.io/fgbio/tools/latest/
       tool_dev_url: https://github.com/fulcrumgenomics/fgbio
-
       licence: ["MIT"]
-
 input:
   - meta:
       type: map
@@ -35,7 +33,6 @@ input:
       description: |
         Reguired argument: defines the UMI assignment strategy.
         Must be chosen among: Identity, Edit, Adjacency, Paired.
-
 output:
   - meta:
       type: map
@@ -54,6 +51,7 @@ output:
       type: file
       description: A text file containing the tag family size counts
       pattern: "*.txt"
-
 authors:
+  - "@lescai"
+maintainers:
   - "@lescai"

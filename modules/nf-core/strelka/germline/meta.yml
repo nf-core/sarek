@@ -14,7 +14,6 @@ tools:
       tool_dev_url: https://github.com/Illumina/strelka
       doi: 10.1038/s41592-018-0051-x
       licence: ["GPL v3"]
-
 input:
   - meta:
       type: map
@@ -60,4 +59,6 @@ output:
       description: File containing software versions
       pattern: "versions.yml"
 authors:
+  - "@arontommi"
+maintainers:
   - "@arontommi"

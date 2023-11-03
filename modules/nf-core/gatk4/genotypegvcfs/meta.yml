@@ -14,7 +14,6 @@ tools:
       tool_dev_url: https://github.com/broadinstitute/gatk
       doi: "10.1158/1538-7445.AM2017-3590"
       licence: ["BSD-3-clause"]
-
 input:
   - meta:
       type: map
@@ -57,7 +56,6 @@ input:
       type: file
       description: dbSNP VCF index file
       pattern: "*.tbi"
-
 output:
   - meta:
       type: map
@@ -76,7 +74,9 @@ output:
       type: file
       description: File containing software versions
       pattern: "versions.yml"
-
 authors:
+  - "@santiagorevale"
+  - "@maxulysse"
+maintainers:
   - "@santiagorevale"
   - "@maxulysse"

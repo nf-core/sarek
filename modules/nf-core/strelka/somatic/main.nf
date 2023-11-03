@@ -3,7 +3,7 @@ process STRELKA_SOMATIC {
     label 'process_medium'
     label 'error_retry'
 
-    conda "bioconda::strelka=2.9.10"
+    conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/strelka:2.9.10--h9ee0642_1' :
         'biocontainers/strelka:2.9.10--h9ee0642_1' }"

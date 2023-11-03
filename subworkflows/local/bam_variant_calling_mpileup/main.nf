@@ -4,10 +4,10 @@
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
-include { CAT_CAT         as CAT_MPILEUP            } from '../../../modules/nf-core/cat/cat/main'
-include { BCFTOOLS_MPILEUP                          } from '../../../modules/nf-core/bcftools/mpileup/main'
-include { SAMTOOLS_MPILEUP                          } from '../../../modules/nf-core/samtools/mpileup/main'
-include { GATK4_MERGEVCFS as MERGE_BCFTOOLS_MPILEUP } from '../../../modules/nf-core/gatk4/mergevcfs/main'
+include { BCFTOOLS_MPILEUP                           } from '../../../modules/nf-core/bcftools/mpileup/main'
+include { CAT_CAT          as CAT_MPILEUP            } from '../../../modules/nf-core/cat/cat/main'
+include { GATK4_MERGEVCFS  as MERGE_BCFTOOLS_MPILEUP } from '../../../modules/nf-core/gatk4/mergevcfs/main'
+include { SAMTOOLS_MPILEUP                           } from '../../../modules/nf-core/samtools/mpileup/main'
 
 workflow BAM_VARIANT_CALLING_MPILEUP {
     take:
@@ -26,7 +26,7 @@ workflow BAM_VARIANT_CALLING_MPILEUP {
 
     // Run, if --tools mpileup
     keep_bcftools_mpileup = false
-    BCFTOOLS_MPILEUP(cram_intervals, fasta, keep_bcftools_mpileup)
+    BCFTOOLS_MPILEUP(cram_intervals, fasta.map{ it -> [[id:it[0].baseName], it] }, keep_bcftools_mpileup)
 
     //Only run, if --tools ControlFreec
     SAMTOOLS_MPILEUP(cram_intervals, fasta)
