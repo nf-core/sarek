@@ -4,7 +4,7 @@
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
-include { GATK4_APPLYBQSR_SPARK     } from '../../../modules/nf-core/gatk4/applybqsrspark/main'
+include { GATK4SPARK_APPLYBQSR      } from '../../../modules/nf-core/gatk4spark/applybqsr/main'
 include { CRAM_MERGE_INDEX_SAMTOOLS } from '../cram_merge_index_samtools/main'
 
 workflow BAM_APPLYBQSR_SPARK {
@@ -24,10 +24,10 @@ workflow BAM_APPLYBQSR_SPARK {
         .map{ meta, cram, crai, recal, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram, crai, recal, intervals ] }
 
     // RUN APPLYBQSR SPARK
-    GATK4_APPLYBQSR_SPARK(cram_intervals, fasta, fasta_fai, dict.map{ meta, it -> [ it ] })
+    GATK4SPARK_APPLYBQSR(cram_intervals, fasta, fasta_fai, dict.map{ meta, it -> [ it ] })
 
     // Gather the recalibrated cram files
-    cram_to_merge = GATK4_APPLYBQSR_SPARK.out.cram.map{ meta, cram -> [ groupKey(meta, meta.num_intervals), cram ] }.groupTuple()
+    cram_to_merge = GATK4SPARK_APPLYBQSR.out.cram.map{ meta, cram -> [ groupKey(meta, meta.num_intervals), cram ] }.groupTuple()
 
     // Merge and index the recalibrated cram files
     CRAM_MERGE_INDEX_SAMTOOLS(cram_to_merge, fasta, fasta_fai)
@@ -37,7 +37,7 @@ workflow BAM_APPLYBQSR_SPARK {
         .map{ meta, cram, crai -> [ meta - meta.subMap('num_intervals'), cram, crai ] }
 
     // Gather versions of all tools used
-    versions = versions.mix(GATK4_APPLYBQSR_SPARK.out.versions)
+    versions = versions.mix(GATK4SPARK_APPLYBQSR.out.versions)
     versions = versions.mix(CRAM_MERGE_INDEX_SAMTOOLS.out.versions)
 
     emit:

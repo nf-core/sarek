@@ -13,6 +13,7 @@ workflow VCF_ANNOTATE_SNPEFF {
 
     main:
     ch_versions = Channel.empty()
+
     SNPEFF_SNPEFF(ch_vcf, val_snpeff_db, ch_snpeff_cache)
     TABIX_BGZIPTABIX(SNPEFF_SNPEFF.out.vcf)
 

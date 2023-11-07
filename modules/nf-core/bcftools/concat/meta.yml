@@ -5,7 +5,6 @@ keywords:
   - concat
   - bcftools
   - VCF
-
 tools:
   - concat:
       description: |
@@ -45,5 +44,8 @@ output:
       description: File containing software versions
       pattern: "versions.yml"
 authors:
+  - "@abhi18av"
+  - "@nvnieuwk"
+maintainers:
   - "@abhi18av"
   - "@nvnieuwk"

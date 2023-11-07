@@ -26,18 +26,38 @@ input:
       type: file
       description: |
         Input normal sample bam file (or cram)
+  - meta2:
+      type: map
+      description: |
+        Groovy Map containing reference information
+        e.g. [ id:'test' ]
   - fasta:
       type: file
       description: |
         Input reference genome fasta file (only needed for cram_input and/or when normal_samples are provided)
+  - meta3:
+      type: map
+      description: |
+        Groovy Map containing reference information
+        e.g. [ id:'test' ]
   - fasta_fai:
       type: file
       description: |
         Input reference genome fasta index (optional, but recommended for cram_input)
+  - meta4:
+      type: map
+      description: |
+        Groovy Map containing information about target file
+        e.g. [ id:'test' ]
   - targetfile:
       type: file
       description: |
         Input target bed file
+  - meta5:
+      type: map
+      description: |
+        Groovy Map containing information about reference file
+        e.g. [ id:'test' ]
   - reference:
       type: file
       description: |
@@ -77,6 +97,16 @@ output:
       description: File containing software versions
       pattern: "versions.yml"
 authors:
+  - "@adamrtalbot"
+  - "@drpatelh"
+  - "@fbdtemme"
+  - "@kaurravneet4123"
+  - "@KevinMenden"
+  - "@lassefolkersen"
+  - "@MaxUlysse"
+  - "@priesgo"
+  - "@SusiJo"
+maintainers:
   - "@adamrtalbot"
   - "@drpatelh"
   - "@fbdtemme"

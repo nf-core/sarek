@@ -13,7 +13,6 @@ tools:
       tool_dev_url: https://github.com/broadinstitute/gatk
       doi: "10.1158/1538-7445.AM2017-3590"
       licence: ["Apache-2.0"]
-
 input:
   - meta:
       type: map
@@ -36,7 +35,6 @@ input:
       type: file
       description: GATK sequence dictionary
       pattern: "*.dict"
-
 output:
   - meta:
       type: map
@@ -51,7 +49,9 @@ output:
       type: file
       description: File containing metrics on the input files
       pattern: "*.{metrics}"
-
 authors:
+  - "@FriederikeHanssen"
+  - "@maxulysse"
+maintainers:
   - "@FriederikeHanssen"
   - "@maxulysse"
