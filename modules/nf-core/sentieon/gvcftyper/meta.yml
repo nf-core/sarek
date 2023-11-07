@@ -47,7 +47,6 @@ input:
       type: file
       description: dbSNP VCF index file
       pattern: "*.tbi"
-
 output:
   - meta:
       type: map
@@ -67,4 +66,6 @@ output:
       description: File containing software versions
       pattern: "versions.yml"
 authors:
+  - "@asp8200"
+maintainers:
   - "@asp8200"

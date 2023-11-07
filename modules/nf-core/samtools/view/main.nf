@@ -2,7 +2,7 @@ process SAMTOOLS_VIEW {
     tag "$meta.id"
     label 'process_low'
 
-    conda "bioconda::samtools=1.17"
+    conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/samtools:1.17--h00cdaf9_0' :
         'biocontainers/samtools:1.17--h00cdaf9_0' }"

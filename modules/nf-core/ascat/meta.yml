@@ -7,12 +7,10 @@ keywords:
 tools:
   - ascat:
       description: ASCAT is a method to derive copy number profiles of tumour cells, accounting for normal cell admixture and tumour aneuploidy. ASCAT infers tumour purity (the fraction of tumour cells) and ploidy (the amount of DNA per tumour cell), expressed as multiples of haploid genomes from SNP array or massively parallel sequencing data, and calculates whole-genome allele-specific copy number profiles (the number of copies of both parental alleles for all SNP loci across the genome).
-
       documentation: https://github.com/VanLoo-lab/ascat/tree/master/man
       tool_dev_url: https://github.com/VanLoo-lab/ascat
       doi: "10.1093/bioinformatics/btaa538"
       licence: ["GPL v3"]
-
 input:
   - args:
       type: map
@@ -38,7 +36,6 @@ input:
           ]
         }
         ```
-
   - meta:
       type: map
       description: |
@@ -46,8 +43,7 @@ input:
         e.g. [ id:'test', single_end:false ]
   - input_normal:
       type: file
-      description: BAM/CRAM file, must adhere to chr1, chr2, ...chrX notation
-        For modifying chromosome notation in bam files please follow https://josephcckuo.wordpress.com/2016/11/17/modify-chromosome-notation-in-bam-file/.
+      description: BAM/CRAM file, must adhere to chr1, chr2, ...chrX notation For modifying chromosome notation in bam files please follow https://josephcckuo.wordpress.com/2016/11/17/modify-chromosome-notation-in-bam-file/.
       pattern: "*.{bam,cram}"
   - index_normal:
       type: file
@@ -66,10 +62,7 @@ input:
       description: allele files for ASCAT WGS. Can be downloaded here https://github.com/VanLoo-lab/ascat/tree/master/ReferenceFiles/WGS
   - loci_files:
       type: file
-      description:
-        loci files for ASCAT WGS. Loci files without chromosome notation can be downloaded here https://github.com/VanLoo-lab/ascat/tree/master/ReferenceFiles/WGS
-        Make sure the chromosome notation matches the bam/cram input files. To add the chromosome notation to loci files (hg19/hg38) if necessary, you can run this command
-        `if [[ $(samtools view <your_bam_file.bam> | head -n1 | cut -f3)\" == *\"chr\"* ]]; then for i in {1..22} X; do sed -i 's/^/chr/' G1000_loci_hg19_chr_${i}.txt; done; fi`
+      description: loci files for ASCAT WGS. Loci files without chromosome notation can be downloaded here https://github.com/VanLoo-lab/ascat/tree/master/ReferenceFiles/WGS Make sure the chromosome notation matches the bam/cram input files. To add the chromosome notation to loci files (hg19/hg38) if necessary, you can run this command `if [[ $(samtools view <your_bam_file.bam> | head -n1 | cut -f3)\" == *\"chr\"* ]]; then for i in {1..22} X; do sed -i 's/^/chr/' G1000_loci_hg19_chr_${i}.txt; done; fi`
   - bed_file:
       type: file
       description: Bed file for ASCAT WES (optional, but recommended for WES)
@@ -113,6 +106,12 @@ output:
       description: File containing software versions
       pattern: "versions.yml"
 authors:
+  - "@aasNGC"
+  - "@lassefolkersen"
+  - "@FriederikeHanssen"
+  - "@maxulysse"
+  - "@SusiJo"
+maintainers:
   - "@aasNGC"
   - "@lassefolkersen"
   - "@FriederikeHanssen"
