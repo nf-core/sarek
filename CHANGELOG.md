@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - [#1280](https://github.com/nf-core/sarek/pull/1280) - Replacing link to `SentieonDNAscopeModel1.1.model` in Sentieon's S3 with link to same file in igenomes' S3
+- [#1317](https://github.com/nf-core/sarek/pull/1317) - Add new tools to subway map
 
 ### Fixed
 
