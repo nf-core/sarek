@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - [#1277](https://github.com/nf-core/sarek/pull/1277) - Fix null value issue for Mutect2 joint calling
+- [#1318](https://github.com/nf-core/sarek/pull/1218) - Fix writing of params.json on S3
 
 ### Dependencies
 
