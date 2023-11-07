@@ -61,6 +61,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - [FastQC](#fastqc)
     - [FastP](#fastp)
     - [Mosdepth](#mosdepth)
+    - [NGSCheckMate](#ngscheckmate)
     - [GATK MarkDuplicates reports](#gatk-markduplicates-reports)
     - [Sentieon Dedup reports](#sentieon-dedup-reports)
     - [samtools stats](#samtools-stats)
@@ -985,6 +986,25 @@ Plots will show:
   - CSI index for per-base depth for targeted data, per-window (500bp) depth of WGS
   </details>
 
+#### NGSCheckMate
+
+[NGSCheckMate](https://github.com/parklab/NGSCheckMate) is a tool for determining whether samples come from the same genetic individual, using a set of commonly heterozygous SNPs. This enables for the detecting of sample mislabelling events. The output includes a text file indicating whether samples have matched or not according to the algorithm, as well as a dendrogram visualising these results.
+
+<details markdown="1">
+<summary>Output files for all samples</summary>
+
+**Output directory: `{outdir}/reports/ngscheckmate/`**
+
+- `ngscheckmate_all.txt`
+  - Tab delimited text file listing all the comparisons made, whether they were considered as a match, with the correlation and a normalised depth.
+- `ngscheckmate_matched.txt`
+  - Tab delimited text file listing only the comparison that were considered to match, with the correlation and a normalised depth.
+- `ngscheckmate_output_corr_matrix.txt`
+  - Tab delimited text file containing a matrix of all correlations for all comparisons made.
+- `vcfs/<sample>.vcf.gz`
+  - Set of vcf files for each sample. Contains calls for the set of SNP positions used to calculate sample relatedness.
+  </details>
+
 #### GATK MarkDuplicates reports
 
 More information in the [GATK MarkDuplicates section](#gatk-markduplicates)
@@ -1117,25 +1137,6 @@ The plots will show:
 
 - `<sample>.<variantcaller>_VEP.summary.html`
   - Summary of the VEP run to be visualised with a web browser
-  </details>
-
-#### NGSCheckMate
-
-[NGSCheckMate](https://github.com/parklab/NGSCheckMate) is a tool for determining whether samples come from the same genetic individual, using a set of commonly heterozygous SNPs. This enables for the detecting of sample mislabelling events. The output includes a text file indicating whether samples have matched or not according to the algorithm, as well as a dendrogram visualising these results.
-
-<details markdown="1">
-<summary>Output files for all samples</summary>
-
-**Output directory: `{outdir}/reports/ngscheckmate/`**
-
-- `ngscheckmate_all.txt`
-  - Tab delimited text file listing all the comparisons made, whether they were considered as a match, with the correlation and a normalised depth.
-- `ngscheckmate_matched.txt`
-  - Tab delimited text file listing only the comparison that were considered to match, with the correlation and a normalised depth.
-- `ngscheckmate_output_corr_matrix.txt`
-  - Tab delimited text file containing a matrix of all correlations for all comparisons made.
-- `vcfs/<sample>.vcf.gz`
-  - Set of vcf files for each sample. Contains calls for the set of SNP positions used to calculate sample relatedness.
   </details>
 
 ### Reporting
