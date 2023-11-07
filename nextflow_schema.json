@@ -100,7 +100,7 @@
                     "fa_icon": "fas fa-toolbox",
                     "description": "Tools to use for duplicate marking, variant calling and/or for annotation.",
                     "help_text": "Multiple tools separated with commas.\n\n**Variant Calling:**\n\nGermline variant calling can currently be performed with the following variant callers:\n- SNPs/Indels: DeepVariant, FreeBayes, GATK HaplotypeCaller, mpileup, Sentieon Haplotyper, Strelka\n- Structural Variants: Manta, TIDDIT\n- Copy-number: CNVKit\n\nTumor-only somatic variant calling can currently be performed with the following variant callers:\n- SNPs/Indels: FreeBayes, mpileup, Mutect2, Strelka\n- Structural Variants: Manta, TIDDIT\n- Copy-number: CNVKit, ControlFREEC\n\nSomatic variant calling can currently only be performed with the following variant callers:\n- SNPs/Indels: FreeBayes, Mutect2, Strelka2\n- Structural variants: Manta, TIDDIT\n- Copy-Number: ASCAT, CNVKit, Control-FREEC\n- Microsatellite Instability: MSIsensorpro\n\n> **NB** Mutect2 for somatic variant calling cannot be combined with `--no_intervals`\n\n**Annotation:**\n \n- snpEff, VEP, merge (both consecutively).\n\n> **NB** As Sarek will use bgzip and tabix to compress and index VCF files annotated, it expects VCF files to be sorted when starting from `--step annotate`.",
-                    "pattern": "^((ascat|cnvkit|controlfreec|deepvariant|freebayes|haplotypecaller|sentieon_dnascope|sentieon_haplotyper|manta|merge|mpileup|msisensorpro|mutect2|sentieon_dedup|snpeff|strelka|tiddit|vep)?,?)*(?<!,)$"
+                    "pattern": "^((ascat|bcfann|cnvkit|controlfreec|deepvariant|freebayes|haplotypecaller|sentieon_dnascope|sentieon_haplotyper|manta|merge|mpileup|msisensorpro|mutect2|sentieon_dedup|snpeff|strelka|tiddit|vep)?,?)*(?<!,)$"
                 },
                 "skip_tools": {
                     "type": "string",
@@ -387,15 +387,17 @@
                 "sentieon_haplotyper_emit_mode": {
                     "type": "string",
                     "default": "variant",
-                    "fa_icon": "fas fa-toolbox",
                     "description": "Option for selecting output and emit-mode of Sentieon's Haplotyper.",
+                    "fa_icon": "fas fa-toolbox",
                     "help_text": "The option `--sentieon_haplotyper_emit_mode` can be set to the same string values as the Haplotyper's `--emit_mode`. To output both a vcf and a gvcf, specify both a vcf-option (currently, `all`, `confident` and `variant`) and `gvcf`. For example, to obtain a vcf and gvcf one could set `--sentieon_haplotyper_emit_mode` to `variant, gvcf`.",
+                    "hidden": true,
                     "pattern": "^(all|confident|gvcf|variant|gvcf,all|gvcf,confident|gvcf,variant|all,gvcf|confident,gvcf|variant,gvcf)(?<!,)$"
                 },
                 "sentieon_dnascope_emit_mode": {
                     "type": "string",
                     "default": "variant",
                     "fa_icon": "fas fa-toolbox",
+                    "hidden": true,
                     "description": "Option for selecting output and emit-mode of Sentieon's Dnascope.",
                     "help_text": "The option `--sentieon_dnascope_emit_mode` can be set to the same string values as the Dnascope's `--emit_mode`. To output both a vcf and a gvcf, specify both a vcf-option (currently, `all`, `confident` and `variant`) and `gvcf`. For example, to obtain a vcf and gvcf one could set `--sentieon_dnascope_emit_mode` to `variant, gvcf`.",
                     "pattern": "^(all|confident|gvcf|variant|gvcf,all|gvcf,confident|gvcf,variant|all,gvcf|confident,gvcf|variant,gvcf)(?<!,)$"
@@ -404,6 +406,7 @@
                     "type": "string",
                     "default": "CONSERVATIVE",
                     "fa_icon": "fas fa-bacon",
+                    "hidden": true,
                     "description": "Option for selecting the PCR indel model used by Sentieon Dnascope.",
                     "help_text": "PCR indel model used to weed out false positive indels more or less aggressively. The possible MODELs are: NONE (used for PCR free samples), and HOSTILE, AGGRESSIVE and CONSERVATIVE, in order of decreasing aggressiveness. The default value is CONSERVATIVE.",
                     "pattern": "^(NONE|HOSTILE|AGGRESSIVE|CONSERVATIVE)(?<!,)$"
@@ -411,6 +414,7 @@
                 "sentieon_dnascope_model": {
                     "type": "string",
                     "fa_icon": "fas fa-database",
+                    "hidden": true,
                     "description": "Machine learning model for Sentieon Dnascope.",
                     "help_text": " It is recommended to use DNAscope with a machine learning model to perform variant calling with higher accuracy by improving the candidate detection and filtering. Sentieon can provide you with a model trained using a subset of the data from the GiAB truth-set found in https://github.com/genome-in-a-bottle. In addition, Sentieon can assist you in the creation of models using your own data, which will calibrate the specifics of your sequencing and bio-informatics processing."
                 }
@@ -536,11 +540,12 @@
                     "description": "Add an extra custom argument to VEP.",
                     "help_text": "Using this params you can add custom args to VEP."
                 },
-                "use_annotation_cache_keys": {
-                    "type": "boolean",
+                "vep_version": {
+                    "type": "string",
+                    "default": "110.0-0",
                     "fa_icon": "fas fa-toolbox",
-                    "description": "Use annotation cache keys for snpeff_cache and vep_cache.\nOnly when using annotation-cache or a similar structure.\nSee [here](https://annotation-cache.github.io/) for more information.",
-                    "hidden": true
+                    "description": "Should reflect the VEP version used in the container.",
+                    "help_text": "Used by the loftee plugin that need the full path."
                 },
                 "outdir_cache": {
                     "type": "string",
@@ -557,6 +562,18 @@
                     "help_text": "Sets the format of the output-file from VEP. Available formats: json, tab and vcf.",
                     "fa_icon": "fas fa-table",
                     "hidden": true
+                },
+                "bcftools_annotations": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file"
+                },
+                "bcftools_annotations_index": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file"
+                },
+                "bcftools_header_lines": {
+                    "type": "string",
+                    "fa_icon": "fas fa-align-center"
                 }
             }
         },
@@ -745,13 +762,13 @@
                     "type": "string",
                     "fa_icon": "fas fa-microscope",
                     "description": "snpEff genome.",
-                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately.\nThis is used to specify the genome when using the container with pre-downloaded cache."
+                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately.\nThis is used to specify the genome when looking for local cache, or cloud based cache."
                 },
                 "vep_genome": {
                     "type": "string",
                     "fa_icon": "fas fa-microscope",
                     "description": "VEP genome.",
-                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately.\nThis is used to specify the genome when using the container with pre-downloaded cache."
+                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately.\nThis is used to specify the genome when looking for local cache, or cloud based cache."
                 },
                 "vep_species": {
                     "type": "string",
@@ -781,7 +798,7 @@
                     "type": "boolean",
                     "fa_icon": "fas fa-download",
                     "description": "Download annotation cache.",
-                    "help_text": "Set this parameter, if you wish to download annotation cache."
+                    "help_text": "Set this parameter, if you wish to download annotation cache.\nUsing this parameter will download cache even if --snpeff_cache and --vep_cache are provided."
                 },
                 "igenomes_base": {
                     "type": "string",

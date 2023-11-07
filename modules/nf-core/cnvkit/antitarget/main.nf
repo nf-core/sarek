@@ -2,7 +2,7 @@ process CNVKIT_ANTITARGET {
     tag "$meta.id"
     label 'process_low'
 
-    conda "bioconda::cnvkit=0.9.10 bioconda::samtools=1.17"
+    conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/cnvkit:0.9.10--pyhdfd78af_0':
         'biocontainers/cnvkit:0.9.10--pyhdfd78af_0' }"

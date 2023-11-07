@@ -145,3 +145,47 @@
     - path: results/variant_calling/sentieon_haplotyper/test/test.haplotyper.unfiltered.vcf.gz.tbi
     - path: results/haplotyper
       should_exist: false
+- name: Run variant calling on germline sample with sentieons haplotyper and gatk haplotypecaller
+  command: nextflow run main.nf -profile test_cache,software_license,targeted --sentieon_extension --input ./tests/csv/3.0/mapped_single_bam.csv --tools haplotypecaller,sentieon_haplotyper --step variant_calling --outdir results
+  tags:
+    - germline
+    - sentieon/haplotyper
+    - variant_calling
+  files:
+    - path: results/csv/variantcalled.csv
+      md5sum: caa9932235cf993fca208943d2e58041
+    - path: results/multiqc
+    - path: results/preprocessing/converted/test/test.converted.cram
+    # binary changes md5sums on reruns
+    - path: results/preprocessing/converted/test/test.converted.cram.crai
+    # binary changes md5sums on reruns
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+      should_exist: false
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+      should_exist: false
+    - path: results/reports/bcftools/sentieon_haplotyper/test/test.haplotyper.filtered.bcftools_stats.txt
+      md5sum: 66be03d4e6535175514f54a1a031d49f
+    - path: results/reports/vcftools/sentieon_haplotyper/test/test.haplotyper.filtered.FILTER.summary
+      md5sum: d501a93356f3c91c743f51104e24514a
+    - path: results/reports/vcftools/sentieon_haplotyper/test/test.haplotyper.filtered.TsTv.count
+      md5sum: 89562fef808b5c3db629682d36fd86fc
+    - path: results/reports/vcftools/sentieon_haplotyper/test/test.haplotyper.filtered.TsTv.qual
+      # changes md5sum on reruns. This is somewhat unexpected, but might to tiny variation in very small numbers in the qual-files.
+    - path: results/variant_calling/sentieon_haplotyper/test/test.haplotyper.filtered.vcf.gz
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/sentieon_haplotyper/test/test.haplotyper.filtered.vcf.gz.tbi
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/sentieon_haplotyper/test/test.haplotyper.unfiltered.vcf.gz
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/sentieon_haplotyper/test/test.haplotyper.unfiltered.vcf.gz.tbi
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.filtered.vcf.gz
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.filtered.vcf.gz.tbi
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.vcf.gz
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.vcf.gz.tbi
+    # binary changes md5sums on reruns
+    - path: results/haplotyper
+      should_exist: false

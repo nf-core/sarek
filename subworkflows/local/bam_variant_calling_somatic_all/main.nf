@@ -118,10 +118,10 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         BAM_VARIANT_CALLING_CNVKIT(
             // Remap channel to match module/subworkflow
             cram.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [ meta, tumor_cram, normal_cram ] },
-            fasta,
-            fasta_fai,
-            intervals_bed_combined,
-            []
+            fasta.map{ it -> [[id:it[0].baseName], it] },
+            fasta_fai.map{ it -> [[id:it[0].baseName], it] },
+            intervals_bed_combined.map{ it -> [[id:it[0].baseName], it] },
+            [[id:"null"], []]
         )
 
         versions = versions.mix(BAM_VARIANT_CALLING_CNVKIT.out.versions)
@@ -145,8 +145,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     if (tools.split(',').contains('manta')) {
         BAM_VARIANT_CALLING_SOMATIC_MANTA(
             cram,
-            fasta,
-            fasta_fai,
+            fasta.map{ it -> [ [ id:'fasta' ], it ] },
+            fasta_fai.map{ it -> [ [ id:'fasta_fai' ], it ] },
             intervals_bed_gz_tbi_combined
         )
 
