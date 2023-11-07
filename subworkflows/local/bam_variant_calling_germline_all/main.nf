@@ -2,20 +2,21 @@
 // GERMLINE VARIANT CALLING
 //
 
-include { BAM_JOINT_CALLING_GERMLINE_GATK         } from '../bam_joint_calling_germline_gatk/main'
-include { BAM_JOINT_CALLING_GERMLINE_SENTIEON     } from '../bam_joint_calling_germline_sentieon/main'
-include { BAM_VARIANT_CALLING_CNVKIT              } from '../bam_variant_calling_cnvkit/main'
-include { BAM_VARIANT_CALLING_DEEPVARIANT         } from '../bam_variant_calling_deepvariant/main'
-include { BAM_VARIANT_CALLING_FREEBAYES           } from '../bam_variant_calling_freebayes/main'
-include { BAM_VARIANT_CALLING_GERMLINE_MANTA      } from '../bam_variant_calling_germline_manta/main'
-include { BAM_VARIANT_CALLING_HAPLOTYPECALLER     } from '../bam_variant_calling_haplotypecaller/main'
-include { BAM_VARIANT_CALLING_SENTIEON_DNASCOPE   } from '../bam_variant_calling_sentieon_dnascope/main'
-include { BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER } from '../bam_variant_calling_sentieon_haplotyper/main'
-include { BAM_VARIANT_CALLING_MPILEUP             } from '../bam_variant_calling_mpileup/main'
-include { BAM_VARIANT_CALLING_SINGLE_STRELKA      } from '../bam_variant_calling_single_strelka/main'
-include { BAM_VARIANT_CALLING_SINGLE_TIDDIT       } from '../bam_variant_calling_single_tiddit/main'
-include { SENTIEON_DNAMODELAPPLY                  } from '../../../modules/nf-core/sentieon/dnamodelapply/main'
-include { VCF_VARIANT_FILTERING_GATK              } from '../vcf_variant_filtering_gatk/main'
+include { BAM_JOINT_CALLING_GERMLINE_GATK                                              } from '../bam_joint_calling_germline_gatk/main'
+include { BAM_JOINT_CALLING_GERMLINE_SENTIEON                                          } from '../bam_joint_calling_germline_sentieon/main'
+include { BAM_VARIANT_CALLING_CNVKIT                                                   } from '../bam_variant_calling_cnvkit/main'
+include { BAM_VARIANT_CALLING_DEEPVARIANT                                              } from '../bam_variant_calling_deepvariant/main'
+include { BAM_VARIANT_CALLING_FREEBAYES                                                } from '../bam_variant_calling_freebayes/main'
+include { BAM_VARIANT_CALLING_GERMLINE_MANTA                                           } from '../bam_variant_calling_germline_manta/main'
+include { BAM_VARIANT_CALLING_HAPLOTYPECALLER                                          } from '../bam_variant_calling_haplotypecaller/main'
+include { BAM_VARIANT_CALLING_SENTIEON_DNASCOPE                                        } from '../bam_variant_calling_sentieon_dnascope/main'
+include { BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER                                      } from '../bam_variant_calling_sentieon_haplotyper/main'
+include { BAM_VARIANT_CALLING_MPILEUP                                                  } from '../bam_variant_calling_mpileup/main'
+include { BAM_VARIANT_CALLING_SINGLE_STRELKA                                           } from '../bam_variant_calling_single_strelka/main'
+include { BAM_VARIANT_CALLING_SINGLE_TIDDIT                                            } from '../bam_variant_calling_single_tiddit/main'
+include { SENTIEON_DNAMODELAPPLY                                                       } from '../../../modules/nf-core/sentieon/dnamodelapply/main'
+include { VCF_VARIANT_FILTERING_GATK                                                   } from '../vcf_variant_filtering_gatk/main'
+include { VCF_VARIANT_FILTERING_GATK as SENTIEON_HAPLOTYPER_VCF_VARIANT_FILTERING_GATK } from '../vcf_variant_filtering_gatk/main'
 
 
 
@@ -295,7 +296,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             // If single sample track, check if filtering should be done
             if (!(skip_tools && skip_tools.split(',').contains('haplotyper_filter'))) {
 
-                VCF_VARIANT_FILTERING_GATK(
+                SENTIEON_HAPLOTYPER_VCF_VARIANT_FILTERING_GATK(
                     vcf_sentieon_haplotyper.join(vcf_tbi_sentieon_haplotyper, failOnDuplicate: true, failOnMismatch: true),
                     fasta,
                     fasta_fai,
@@ -304,9 +305,9 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
                     known_sites_indels.concat(known_sites_snps).flatten().unique().collect(),
                     known_sites_indels_tbi.concat(known_sites_snps_tbi).flatten().unique().collect())
 
-                vcf_sentieon_haplotyper = VCF_VARIANT_FILTERING_GATK.out.filtered_vcf
+                vcf_sentieon_haplotyper = SENTIEON_HAPLOTYPER_VCF_VARIANT_FILTERING_GATK.out.filtered_vcf
 
-                versions = versions.mix(VCF_VARIANT_FILTERING_GATK.out.versions)
+                versions = versions.mix(SENTIEON_HAPLOTYPER_VCF_VARIANT_FILTERING_GATK.out.versions)
             }
         }
     }
