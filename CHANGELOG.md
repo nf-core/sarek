@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [3.4](https://github.com/nf-core/sarek/releases/tag/3.4) - Pårtetjåkko
 
-Pårtetjåkko is a mountain in the south of the park and the Lule Sámi spelling of Bårddetjåhkkå.
+Pårtetjåkko is a mountain in the south of the park.
 
 ### Added
 
