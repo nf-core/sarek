@@ -52,7 +52,6 @@ def checkPathParamList = [
     params.pon,
     params.pon_tbi,
     params.sentieon_dnascope_model,
-    params.snpeff_cache,
     params.spliceai_indel,
     params.spliceai_indel_tbi,
     params.spliceai_snv,
