@@ -31,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1298](https://github.com/nf-core/sarek/pull/1298) - Fix annotation cache usage
 - [#1301](https://github.com/nf-core/sarek/pull/1301) - Fix nf-prov usage
 - [#1315](https://github.com/nf-core/sarek/pull/1315) - Avoid clash of configs of `FILTERVARIANTTRANCHES` in the Sentieon-Haplotyper and GATK-Haplotypecaller subworkflows
+- [#1318](https://github.com/nf-core/sarek/pull/1218) - Fix writing of params.json on S3
 
 ### Removed
 
