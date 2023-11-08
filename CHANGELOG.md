@@ -5,7 +5,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## dev
+## [3.4](https://github.com/nf-core/sarek/releases/tag/3.4) - Ráhpaädno
+
+Ráhpaädno is the Lule Sámi spelling of Rapaälven.
 
 ### Added
 
@@ -52,9 +54,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | `gatk4spark/baserecalibrator` | `GATK4_BASERECALIBRATORSPARK` | `GATK4SPARK_BASERECALIBRATOR` |
 | `gatk4spark/markduplicates`   | `GATK4_MARKDUPLICATESSPARK`   | `GATK4SPARK_MARKDUPLICATES`   |
 
-## [3.3.2](https://github.com/nf-core/sarek/releases/tag/3.3.2) - Ráhpajávvre
+## [3.3.2](https://github.com/nf-core/sarek/releases/tag/3.3.2) - Pårtetjåkkå
 
-Ráhpajávvre is the Lule Sámi spelling of Rapaselet.
+Pårtetjåkkå is mountain in the south of the park.
 
 ### Added
 
