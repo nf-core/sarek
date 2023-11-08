@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#1113](https://github.com/nf-core/sarek/pull/1113) - Adding CNVkit genemetrics module
 - [#1193](https://github.com/nf-core/sarek/pull/1193) - Adding support for Sentieon's DnaScope for germline variant-calling including joint-germline
+- [#1244](https://github.com/nf-core/sarek/pull/1244) - Add bcf annotate module
 - [#1252](https://github.com/nf-core/sarek/pull/1252) - Added NGSCheckMate tool for checking that samples come from the same individual
 - [#1271](https://github.com/nf-core/sarek/pull/1271) - Back to dev
 - [#1290](https://github.com/nf-core/sarek/pull/1290) - Add nf-test for whole pipeline.
@@ -60,6 +61,7 @@ Ráhpajávvre is the Lule Sámi spelling of Rapaselet.
 
 - [#1246](https://github.com/nf-core/sarek/pull/1246) - Back to dev
 - [#1259](https://github.com/nf-core/sarek/pull/1259) - nf-prov plugin
+- [#1288](https://github.com/nf-core/sarek/pull/1288) - Add nf-test continuous integration.
 
 ### Changed
 
@@ -85,7 +87,6 @@ A lake near the Rapaselet delta.
 ### Added
 
 - [#1231](https://github.com/nf-core/sarek/pull/1231) - Back to dev
-- [#1244](https://github.com/nf-core/sarek/pull/1244) - Add bcf annotate module
 
 ### Changed
 
@@ -120,7 +121,6 @@ Rapaselet is a delta formed by the Rapaätno river between the Bielloriehppe mas
 - [#1173](https://github.com/nf-core/sarek/pull/1173) - CI tests for VQSR track with stub runs
 - [#1122](https://github.com/nf-core/sarek/pull/1122), [#1196](https://github.com/nf-core/sarek/pull/1196) - Add `annotation cache` functionality
 - [#1184](https://github.com/nf-core/sarek/pull/1184) - Stub-based CI-test of Sentieon joint-germline variant-calling with VQSR
-- [#1288](https://github.com/nf-core/sarek/pull/1288) - Add nf-test continuous integration.
 
 ### Changed
 
