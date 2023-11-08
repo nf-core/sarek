@@ -48,6 +48,7 @@ def checkPathParamList = [
     params.known_snps_tbi,
     params.mappability,
     params.multiqc_config,
+    params.ngscheckmate_bed,
     params.pon,
     params.pon_tbi,
     params.sentieon_dnascope_model,
@@ -104,6 +105,7 @@ ascat_genome       = params.ascat_genome       ?: Channel.empty()
 dbsnp_vqsr         = params.dbsnp_vqsr         ? Channel.value(params.dbsnp_vqsr) : Channel.empty()
 known_indels_vqsr  = params.known_indels_vqsr  ? Channel.value(params.known_indels_vqsr) : Channel.empty()
 known_snps_vqsr    = params.known_snps_vqsr    ? Channel.value(params.known_snps_vqsr) : Channel.empty()
+ngscheckmate_bed   = params.ngscheckmate_bed   ? Channel.value(params.ngscheckmate_bed) : Channel.empty()
 snpeff_db          = params.snpeff_db          ?: Channel.empty()
 vep_cache_version  = params.vep_cache_version  ?: Channel.empty()
 vep_genome         = params.vep_genome         ?: Channel.empty()
@@ -213,6 +215,9 @@ include { POST_VARIANTCALLING                         } from '../subworkflows/lo
 
 // QC on VCF files
 include { VCF_QC_BCFTOOLS_VCFTOOLS                    } from '../subworkflows/local/vcf_qc_bcftools_vcftools/main'
+
+// Sample QC on CRAM files
+include { CRAM_SAMPLEQC                                } from '../subworkflows/local/cram_sampleqc/main'
 
 // Annotation
 include { VCF_ANNOTATE_ALL                            } from '../subworkflows/local/vcf_annotate_all/main'
@@ -853,6 +858,8 @@ workflow SAREK {
     if (params.tools) {
 
         if (params.step == 'annotate') cram_variant_calling = Channel.empty()
+
+        CRAM_SAMPLEQC(cram_variant_calling, ngscheckmate_bed, fasta)
 
         //
         // Logic to separate germline samples, tumor samples with no matched normal, and combine tumor-normal pairs

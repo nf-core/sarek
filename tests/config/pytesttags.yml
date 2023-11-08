@@ -598,3 +598,14 @@ concatenate_vcfs:
   - subworkflows/local/vcf_concatenate_germline/main.nf
   - tests/csv/3.0/mapped_joint_bam.csv
   - tests/test_concat_germline_vcfs.yml
+
+# sampleqc
+
+## ngscheckmate
+ngscheckmate:
+  - conf/modules/ngscheckmate.config
+  - modules/nf-core/bcftools/mpileup/main.nf
+  - modules/nf-core/ngscheckmate/ncm/main.nf
+  - subworkflows/local/cram_sampleqc/main.nf
+  - subworkflows/nf-core/bam_ngscheckmate/main.nf
+  - tests/test_ngscheckmate.yml
