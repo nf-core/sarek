@@ -234,11 +234,7 @@ workflow SAREK {
 
 	// Parse samplesheet
 	// Set input, can either be from --input or from automatic retrieval in WorkflowSarek.groovy
-	if (params.input) {
-        ch_from_samplesheet = params.build_only_index ? Channel.empty() : Channel.fromSamplesheet("input")
-	} else {
-        ch_from_samplesheet = params.build_only_index ? Channel.empty() : Channel.fromSamplesheet("input_restart")
-	}
+    ch_from_samplesheet = params.build_only_index ? Channel.empty() : params.input ? Channel.fromSamplesheet("input") : Channel.fromSamplesheet("input_restart")
 	SAMPLESHEET_TO_CHANNEL(ch_from_samplesheet)
 
 	input_sample = SAMPLESHEET_TO_CHANNEL.out.input_sample
