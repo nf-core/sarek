@@ -37,7 +37,6 @@ input:
       type: file
       description: fasta file for the genome
       pattern: "*.{fasta}"
-
 output:
   - pdf:
       type: file
@@ -64,4 +63,6 @@ output:
       description: File containing software versions
       pattern: "versions.yml"
 authors:
+  - "@SPPearce"
+maintainers:
   - "@SPPearce"
