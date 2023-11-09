@@ -33,7 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1301](https://github.com/nf-core/sarek/pull/1301) - Fix nf-prov usage
 - [#1315](https://github.com/nf-core/sarek/pull/1315) - Avoid clash of configs of `FILTERVARIANTTRANCHES` in the Sentieon-Haplotyper and GATK-Haplotypecaller subworkflows
 - [#1318](https://github.com/nf-core/sarek/pull/1218) - Fix writing of params.json on S3
-- [#1324](https://github.com/nf-core/sarek/pull/1324) - Fix bcftools annotate reference file handling & testing, fix various typos & code formatting
+- [#1324](https://github.com/nf-core/sarek/pull/1324) - Fix various typos & code formatting
 
 ### Removed
 
