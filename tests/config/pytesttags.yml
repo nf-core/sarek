@@ -603,9 +603,8 @@ concatenate_vcfs:
 
 ## ngscheckmate
 ngscheckmate:
-  - conf/modules/ngscheckmate.config
   - modules/nf-core/bcftools/mpileup/main.nf
   - modules/nf-core/ngscheckmate/ncm/main.nf
   - subworkflows/local/cram_sampleqc/main.nf
-  - subworkflows/nf-core/bam_ngscheckmate/main.nf
+  - subworkflows/nf-core/bam_ngscheckmate/**
   - tests/test_ngscheckmate.yml
