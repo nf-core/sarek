@@ -26,6 +26,8 @@ Pårtetjåkko is a mountain in the south of the park.
 - [#1304](https://github.com/nf-core/sarek/pull/1304) - Update modules
 - [#1311](https://github.com/nf-core/sarek/pull/1311) - Update local modules with an `environment.yml` file
 - [#1317](https://github.com/nf-core/sarek/pull/1317) - Add new tools to subway map
+- [#1325](https://github.com/nf-core/sarek/pull/1325) - Move `sentieon_dnascope_model` params into `igenomes.config`
+- [#1325](https://github.com/nf-core/sarek/pull/1325) - Refactor config files
 
 ### Fixed
 
@@ -36,6 +38,7 @@ Pårtetjåkko is a mountain in the south of the park.
 - [#1315](https://github.com/nf-core/sarek/pull/1315) - Avoid clash of configs of `FILTERVARIANTTRANCHES` in the Sentieon-Haplotyper and GATK-Haplotypecaller subworkflows
 - [#1318](https://github.com/nf-core/sarek/pull/1218) - Fix writing of params.json on S3
 - [#1324](https://github.com/nf-core/sarek/pull/1324) - Fix various typos & code formatting
+- [#1325](https://github.com/nf-core/sarek/pull/1325) - Update bcfannotate tests and related config files
 
 ### Removed
 
