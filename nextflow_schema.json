@@ -364,20 +364,6 @@
                     "description": "Copy-number reference for CNVkit",
                     "hidden": true
                 },
-                "pon": {
-                    "type": "string",
-                    "fa_icon": "fas fa-file",
-                    "description": "Panel-of-normals VCF (bgzipped) for GATK Mutect2",
-                    "help_text": "Without PON, there will be no calls with PASS in the INFO field, only an unfiltered VCF is written.\nIt is highly recommended to make your own PON, as it depends on sequencer and library preparation.\n\nThe pipeline is shipped with a panel-of-normals for `--genome GATK.GRCh38` provided by [GATK](https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON-). \n\nSee [PON documentation](https://gatk.broadinstitute.org/hc/en-us/articles/360042479112-CreateSomaticPanelOfNormals-BETA)\n> **NB** PON file should be bgzipped.",
-                    "hidden": true
-                },
-                "pon_tbi": {
-                    "type": "string",
-                    "fa_icon": "fas fa-file",
-                    "description": "Index of PON panel-of-normals VCF.",
-                    "help_text": "If none provided, will be generated automatically from the PON bgzipped VCF file.",
-                    "hidden": true
-                },
                 "ignore_soft_clipped_bases": {
                     "type": "boolean",
                     "fa_icon": "fas fa-ban",
@@ -411,13 +397,6 @@
                     "description": "Option for selecting the PCR indel model used by Sentieon Dnascope.",
                     "help_text": "PCR indel model used to weed out false positive indels more or less aggressively. The possible MODELs are: NONE (used for PCR free samples), and HOSTILE, AGGRESSIVE and CONSERVATIVE, in order of decreasing aggressiveness. The default value is CONSERVATIVE.",
                     "pattern": "^(NONE|HOSTILE|AGGRESSIVE|CONSERVATIVE)(?<!,)$"
-                },
-                "sentieon_dnascope_model": {
-                    "type": "string",
-                    "fa_icon": "fas fa-database",
-                    "hidden": true,
-                    "description": "Machine learning model for Sentieon Dnascope.",
-                    "help_text": " It is recommended to use DNAscope with a machine learning model to perform variant calling with higher accuracy by improving the candidate detection and filtering. Sentieon can provide you with a model trained using a subset of the data from the GiAB truth-set found in https://github.com/genome-in-a-bottle. In addition, Sentieon can assist you in the creation of models using your own data, which will calibrate the specifics of your sequencing and bio-informatics processing."
                 }
             }
         },
@@ -428,20 +407,6 @@
             "default": "",
             "fa_icon": "fas fa-toolbox",
             "properties": {
-                "vep_cache": {
-                    "type": "string",
-                    "fa_icon": "fas fa-file",
-                    "default": "s3://annotation-cache/vep_cache/",
-                    "description": "Path to VEP cache.",
-                    "help_text": "Path to VEP cache which should contain the relevant species, genome and build directories at the path ${vep_species}/${vep_genome}_${vep_cache_version}"
-                },
-                "snpeff_cache": {
-                    "type": "string",
-                    "fa_icon": "fas fa-file",
-                    "default": "s3://annotation-cache/snpeff_cache/",
-                    "description": "Path to snpEff cache.",
-                    "help_text": "Path to snpEff cache which should contain the relevant genome and build directory in the path ${snpeff_species}.${snpeff_version}"
-                },
                 "vep_include_fasta": {
                     "type": "boolean",
                     "fa_icon": "fas fa-file",
@@ -759,6 +724,27 @@
                     "description": "Path to SNP bed file for sample checking with NGSCheckMate",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
                 },
+                "pon": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file",
+                    "description": "Panel-of-normals VCF (bgzipped) for GATK Mutect2",
+                    "help_text": "Without PON, there will be no calls with PASS in the INFO field, only an unfiltered VCF is written.\nIt is highly recommended to make your own PON, as it depends on sequencer and library preparation.\n\nThe pipeline is shipped with a panel-of-normals for `--genome GATK.GRCh38` provided by [GATK](https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON-). \n\nSee [PON documentation](https://gatk.broadinstitute.org/hc/en-us/articles/360042479112-CreateSomaticPanelOfNormals-BETA)\n> **NB** PON file should be bgzipped.",
+                    "hidden": true
+                },
+                "pon_tbi": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file",
+                    "description": "Index of PON panel-of-normals VCF.",
+                    "help_text": "If none provided, will be generated automatically from the PON bgzipped VCF file.",
+                    "hidden": true
+                },
+                "sentieon_dnascope_model": {
+                    "type": "string",
+                    "fa_icon": "fas fa-database",
+                    "hidden": true,
+                    "description": "Machine learning model for Sentieon Dnascope.",
+                    "help_text": " It is recommended to use DNAscope with a machine learning model to perform variant calling with higher accuracy by improving the candidate detection and filtering. Sentieon can provide you with a model trained using a subset of the data from the GiAB truth-set found in https://github.com/genome-in-a-bottle. In addition, Sentieon can assist you in the creation of models using your own data, which will calibrate the specifics of your sequencing and bio-informatics processing."
+                },
                 "snpeff_db": {
                     "type": "string",
                     "fa_icon": "fas fa-database",
@@ -819,6 +805,22 @@
                     "description": "Do not load the iGenomes reference config.",
                     "fa_icon": "fas fa-ban",
                     "help_text": "Do not load `igenomes.config` when running the pipeline.\nYou may choose this option if you observe clashes between custom parameters and those supplied in `igenomes.config`.\n\n> **NB** You can then run `Sarek` by specifying at least a FASTA genome file."
+                },
+                "vep_cache": {
+                    "type": "string",
+                    "format": "directory-path",
+                    "fa_icon": "fas fa-cloud-download-alt",
+                    "default": "s3://annotation-cache/vep_cache/",
+                    "description": "Path to VEP cache.",
+                    "help_text": "Path to VEP cache which should contain the relevant species, genome and build directories at the path ${vep_species}/${vep_genome}_${vep_cache_version}"
+                },
+                "snpeff_cache": {
+                    "type": "string",
+                    "format": "directory-path",
+                    "fa_icon": "fas fa-cloud-download-alt",
+                    "default": "s3://annotation-cache/snpeff_cache/",
+                    "description": "Path to snpEff cache.",
+                    "help_text": "Path to snpEff cache which should contain the relevant genome and build directory in the path ${snpeff_species}.${snpeff_version}"
                 }
             },
             "help_text": "The pipeline config files come bundled with paths to the Illumina iGenomes reference index files.\nThe configuration is set up to use the AWS-iGenomes resource\ncf https://ewels.github.io/AWS-iGenomes/."
