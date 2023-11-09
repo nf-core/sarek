@@ -27,6 +27,9 @@ def checkPathParamList = [
     params.ascat_loci_rt,
     params.bwa,
     params.bwamem2,
+    params.bcftools_annotations,
+    params.bcftools_annotations_index,
+    params.bcftools_header_lines,
     params.cf_chrom_len,
     params.chr_dir,
     params.cnvkit_reference,
@@ -52,14 +55,10 @@ def checkPathParamList = [
     params.pon,
     params.pon_tbi,
     params.sentieon_dnascope_model,
-    params.snpeff_cache,
     params.spliceai_indel,
     params.spliceai_indel_tbi,
     params.spliceai_snv,
-    params.spliceai_snv_tbi,
-    params.bcftools_annotations,
-    params.bcftools_annotations_index,
-    params.bcftools_header_lines
+    params.spliceai_snv_tbi
 ]
 
 // only check if we are using the tools
@@ -101,15 +100,15 @@ pon                     = params.pon                     ? Channel.fromPath(para
 sentieon_dnascope_model = params.sentieon_dnascope_model ? Channel.fromPath(params.sentieon_dnascope_model).collect() : Channel.value([])
 
 // Initialize value channels based on params, defined in the params.genomes[params.genome] scope
-ascat_genome       = params.ascat_genome       ?: Channel.empty()
-dbsnp_vqsr         = params.dbsnp_vqsr         ? Channel.value(params.dbsnp_vqsr) : Channel.empty()
-known_indels_vqsr  = params.known_indels_vqsr  ? Channel.value(params.known_indels_vqsr) : Channel.empty()
-known_snps_vqsr    = params.known_snps_vqsr    ? Channel.value(params.known_snps_vqsr) : Channel.empty()
-ngscheckmate_bed   = params.ngscheckmate_bed   ? Channel.value(params.ngscheckmate_bed) : Channel.empty()
-snpeff_db          = params.snpeff_db          ?: Channel.empty()
-vep_cache_version  = params.vep_cache_version  ?: Channel.empty()
-vep_genome         = params.vep_genome         ?: Channel.empty()
-vep_species        = params.vep_species        ?: Channel.empty()
+ascat_genome                = params.ascat_genome                ?: Channel.empty()
+dbsnp_vqsr                  = params.dbsnp_vqsr                  ? Channel.value(params.dbsnp_vqsr) : Channel.empty()
+known_indels_vqsr           = params.known_indels_vqsr           ? Channel.value(params.known_indels_vqsr) : Channel.empty()
+known_snps_vqsr             = params.known_snps_vqsr             ? Channel.value(params.known_snps_vqsr) : Channel.empty()
+ngscheckmate_bed            = params.ngscheckmate_bed            ? Channel.value(params.ngscheckmate_bed) : Channel.empty()
+snpeff_db                   = params.snpeff_db                   ?: Channel.empty()
+vep_cache_version           = params.vep_cache_version           ?: Channel.empty()
+vep_genome                  = params.vep_genome                  ?: Channel.empty()
+vep_species                 = params.vep_species                 ?: Channel.empty()
 bcftools_annotations        = params.bcftools_annotations        ?: Channel.empty()
 bcftools_annotations_index  = params.bcftools_annotations_index  ?: Channel.empty()
 bcftools_header_lines       = params.bcftools_header_lines       ?: Channel.empty()
@@ -238,11 +237,7 @@ workflow SAREK {
 
 	// Parse samplesheet
 	// Set input, can either be from --input or from automatic retrieval in WorkflowSarek.groovy
-	if (params.input) {
-        ch_from_samplesheet = params.build_only_index ? Channel.empty() : Channel.fromSamplesheet("input")
-	} else {
-        ch_from_samplesheet = params.build_only_index ? Channel.empty() : Channel.fromSamplesheet("input_restart")
-	}
+    ch_from_samplesheet = params.build_only_index ? Channel.empty() : params.input ? Channel.fromSamplesheet("input") : Channel.fromSamplesheet("input_restart")
 	SAMPLESHEET_TO_CHANNEL(ch_from_samplesheet)
 
 	input_sample = SAMPLESHEET_TO_CHANNEL.out.input_sample
