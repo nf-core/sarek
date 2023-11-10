@@ -24,7 +24,7 @@
                     "bcftools/mpileup": {
                         "branch": "master",
                         "git_sha": "8fc1d24c710ebe1d5de0f2447ec9439fd3d9d66a",
-                        "installed_by": ["bam_ngscheckmate", "modules"]
+                        "installed_by": ["bam_ngscheckmate"]
                     },
                     "bcftools/sort": {
                         "branch": "master",
@@ -115,7 +115,7 @@
                     },
                     "custom/dumpsoftwareversions": {
                         "branch": "master",
-                        "git_sha": "8fc1d24c710ebe1d5de0f2447ec9439fd3d9d66a",
+                        "git_sha": "fc6caedab1c71113aa440900e5989dd1c03ec58f",
                         "installed_by": ["modules"]
                     },
                     "deepvariant": {
@@ -336,7 +336,7 @@
                     },
                     "ngscheckmate/ncm": {
                         "branch": "master",
-                        "git_sha": "32d6725f584ebf460de39b7c1c53a29d5384d697",
+                        "git_sha": "8fc1d24c710ebe1d5de0f2447ec9439fd3d9d66a",
                         "installed_by": ["bam_ngscheckmate"]
                     },
                     "samblaster": {
@@ -490,7 +490,7 @@
                 "nf-core": {
                     "bam_ngscheckmate": {
                         "branch": "master",
-                        "git_sha": "32d6725f584ebf460de39b7c1c53a29d5384d697",
+                        "git_sha": "cfd937a668919d948f6fcbf4218e79de50c2f36f",
                         "installed_by": ["subworkflows"]
                     },
                     "vcf_annotate_ensemblvep": {

@@ -18,7 +18,7 @@ workflow BAM_NGSCHECKMATE {
                             [input_meta, input_file, bed_file]
                         }
 
-    BCFTOOLS_MPILEUP (ch_input_bed, ch_fasta, false)
+    BCFTOOLS_MPILEUP (ch_input_bed, ch_fasta.collect(), false)
     ch_versions = ch_versions.mix(BCFTOOLS_MPILEUP.out.versions)
 
     BCFTOOLS_MPILEUP

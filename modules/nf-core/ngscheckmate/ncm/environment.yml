@@ -3,4 +3,4 @@ channels:
   - bioconda
   - defaults
 dependencies:
-  - bioconda::multiqc=1.17
+  - bioconda::ngscheckmate=1.0.1
