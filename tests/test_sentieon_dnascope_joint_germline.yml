@@ -4,7 +4,6 @@
     - germline
     - sentieon_dnascope_joint_germline
     - variant_calling
-    - sentieon/dnascope
   files:
     - path: results/csv/variantcalled.csv
       md5sum: 62d70060aad96337254efe2d7a1df170
@@ -45,7 +44,6 @@
     - germline
     - sentieon_dnascope_joint_germline
     - variant_calling
-    - sentieon/dnascope
   files:
     - path: results/csv/variantcalled.csv
       md5sum: 62d70060aad96337254efe2d7a1df170
