@@ -208,6 +208,7 @@ jobs:
           - tags: "fastp"
           - tags: "fastqc"
           - tags: "samtools/stats"
+          - tags: "untar"
     env:
       NXF_ANSI_LOG: false
       TEST_DATA_BASE: "${{ github.workspace }}/test-datasets"
