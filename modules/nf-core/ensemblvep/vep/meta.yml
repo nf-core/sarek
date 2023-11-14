@@ -1,4 +1,4 @@
-name: ENSEMBLVEP_VEP
+name: ensemblvep_vep
 description: Ensembl Variant Effect Predictor (VEP). The output-file-format is controlled through `task.ext.args`.
 keywords:
   - annotation
