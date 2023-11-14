@@ -1,3 +1,4 @@
+name: ascat
 channels:
   - conda-forge
   - bioconda

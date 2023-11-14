@@ -1,3 +1,4 @@
+name: gatk4_createsequencedictionary
 channels:
   - conda-forge
   - bioconda

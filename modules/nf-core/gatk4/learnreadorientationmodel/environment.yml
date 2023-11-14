@@ -1,3 +1,4 @@
+name: gatk4_learnreadorientationmodel
 channels:
   - conda-forge
   - bioconda

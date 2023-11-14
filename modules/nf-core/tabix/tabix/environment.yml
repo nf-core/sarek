@@ -1,3 +1,4 @@
+name: tabix_tabix
 channels:
   - conda-forge
   - bioconda

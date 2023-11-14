@@ -1,3 +1,4 @@
+name: SENTIEON_GVCFTYPER
 channels:
   - conda-forge
   - bioconda

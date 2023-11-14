@@ -1,3 +1,4 @@
+name: bcftools_mpileup
 channels:
   - conda-forge
   - bioconda

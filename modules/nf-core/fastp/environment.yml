@@ -1,3 +1,4 @@
+name: fastp
 channels:
   - conda-forge
   - bioconda

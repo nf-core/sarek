@@ -1,3 +1,4 @@
+name: gatk4_applyvqsr
 channels:
   - conda-forge
   - bioconda

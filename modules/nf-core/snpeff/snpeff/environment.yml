@@ -1,3 +1,4 @@
+name: SNPEFF_SNPEFF
 channels:
   - conda-forge
   - bioconda

@@ -1,8 +1,10 @@
+name: dragmap_align
 channels:
   - conda-forge
   - bioconda
   - defaults
 dependencies:
-  - bioconda::dragmap=1.2.1
-  - bioconda::samtools=1.15.1
-  - conda-forge::pigz=2.3.4
+  - dragmap=1.2.1
+  # renovate: datasource=conda depName=bioconda/samtools
+  - samtools=1.15.1
+  - pigz=2.3.4

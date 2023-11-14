@@ -1,3 +1,4 @@
+name: controlfreec_freec2circos
 channels:
   - conda-forge
   - bioconda

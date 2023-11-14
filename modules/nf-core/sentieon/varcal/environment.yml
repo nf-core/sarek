@@ -1,3 +1,4 @@
+name: sentieon_varcal
 channels:
   - conda-forge
   - bioconda

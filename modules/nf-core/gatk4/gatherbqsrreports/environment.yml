@@ -1,3 +1,4 @@
+name: gatk4_gatherbqsrreports
 channels:
   - conda-forge
   - bioconda

@@ -1,3 +1,4 @@
+name: sentieon_dnamodelapply
 channels:
   - conda-forge
   - bioconda

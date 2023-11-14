@@ -1,3 +1,4 @@
+name: SNPEFF_DOWNLOAD
 channels:
   - conda-forge
   - bioconda
