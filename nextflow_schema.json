@@ -27,6 +27,7 @@
                 "input_restart": {
                     "type": "string",
                     "description": "Automatic retrieval for restart",
+                    "fa_icon": "fas fa-file-csv",
                     "format": "file-path",
                     "exists": true,
                     "mimetype": "text/csv",
@@ -176,11 +177,12 @@
                     "type": "string",
                     "fa_icon": "fas fa-tape",
                     "description": "Specify UMI read structure",
-                    "help_text": "One structure if UMI is present on one end (i.e. '+T 2M11S+T'), or two structures separated by a blank space if UMIs a present on both ends (i.e. '2M11S+T 2M11S+T'); please note, this does not handle duplex-UMIs.\n\nFor more info on UMI usage in the pipeline, also check docs [here](./docs/usage.md/#how-to-handle-umis)."
+                    "help_text": "One structure if UMI is present on one end (i.e. '+T 2M11S+T'), or two structures separated by a blank space if UMIs a present on both ends (i.e. '2M11S+T 2M11S+T'); please note, this does not handle duplex-UMIs.\n\nFor more info on UMI usage in the pipeline, also check docs [here](./docs/usage/#how-to-handle-umis)."
                 },
                 "group_by_umi_strategy": {
                     "type": "string",
                     "default": "Adjacency",
+                    "fa_icon": "fas fa-tape",
                     "description": "Default strategy with UMI",
                     "hidden": true,
                     "help_text": "Available values: Identity, Edit, Adjacency, Paired"
