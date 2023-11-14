@@ -6,7 +6,7 @@ default:
 
 tumor_normal_pair:
   - conf/modules/**
-  - **
+  - main.nf
   - modules/**
   - nextflow.config
   - nextflow_schema.json
@@ -39,7 +39,7 @@ save_output_as_bam_only:
 
 skip_all_qc:
   - conf/modules/**
-  - **
+  - main.nf
   - modules/**
   - nextflow.config
   - nextflow_schema.json
@@ -50,7 +50,7 @@ skip_all_qc:
 
 skip_markduplicates:
   - conf/modules/**
-  - **
+  - main.nf
   - modules/**
   - nextflow.config
   - nextflow_schema.json
@@ -61,7 +61,7 @@ skip_markduplicates:
 
 validation_checks:
   - conf/modules/**
-  - **
+  - main.nf
   - modules/**
   - nextflow.config
   - nextflow_schema.json

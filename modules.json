@@ -115,7 +115,7 @@
                     },
                     "custom/dumpsoftwareversions": {
                         "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "git_sha": "bba7e362e4afead70653f84d8700588ea28d0f9e",
                         "installed_by": ["modules"]
                     },
                     "deepvariant": {
@@ -136,12 +136,12 @@
                     },
                     "ensemblvep/download": {
                         "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "git_sha": "214d575774c172062924ad3564b4f66655600730",
                         "installed_by": ["modules"]
                     },
                     "ensemblvep/vep": {
                         "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "git_sha": "214d575774c172062924ad3564b4f66655600730",
                         "installed_by": ["vcf_annotate_ensemblvep", "modules"]
                     },
                     "fastp": {
@@ -331,7 +331,7 @@
                     },
                     "multiqc": {
                         "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "git_sha": "214d575774c172062924ad3564b4f66655600730",
                         "installed_by": ["modules"]
                     },
                     "ngscheckmate/ncm": {
@@ -406,7 +406,7 @@
                     },
                     "sentieon/dnamodelapply": {
                         "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "git_sha": "214d575774c172062924ad3564b4f66655600730",
                         "installed_by": ["modules"]
                     },
                     "sentieon/dnascope": {
@@ -416,7 +416,7 @@
                     },
                     "sentieon/gvcftyper": {
                         "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "git_sha": "214d575774c172062924ad3564b4f66655600730",
                         "installed_by": ["modules"]
                     },
                     "sentieon/haplotyper": {
@@ -431,12 +431,12 @@
                     },
                     "snpeff/download": {
                         "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "git_sha": "214d575774c172062924ad3564b4f66655600730",
                         "installed_by": ["modules"]
                     },
                     "snpeff/snpeff": {
                         "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "git_sha": "214d575774c172062924ad3564b4f66655600730",
                         "installed_by": ["modules", "vcf_annotate_snpeff"]
                     },
                     "strelka/germline": {
