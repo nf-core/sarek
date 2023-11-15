@@ -1,3 +1,4 @@
+name: bcftools_annotate
 channels:
   - conda-forge
   - bioconda

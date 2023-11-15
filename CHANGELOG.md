@@ -28,6 +28,7 @@ Pårtetjåkko is a mountain in the south of the park.
 - [#1317](https://github.com/nf-core/sarek/pull/1317) - Add new tools to subway map
 - [#1325](https://github.com/nf-core/sarek/pull/1325) - Move `sentieon_dnascope_model` params into `igenomes.config`
 - [#1325](https://github.com/nf-core/sarek/pull/1325) - Refactor config files
+- [#1327](https://github.com/nf-core/sarek/pull/1327) - Update modules to have an conda environment name
 
 ### Fixed
 

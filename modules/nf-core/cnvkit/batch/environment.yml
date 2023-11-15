@@ -1,3 +1,4 @@
+name: cnvkit_batch
 channels:
   - conda-forge
   - bioconda

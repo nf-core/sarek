@@ -1,3 +1,4 @@
+name: tiddit_sv
 channels:
   - conda-forge
   - bioconda

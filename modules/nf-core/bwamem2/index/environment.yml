@@ -1,3 +1,4 @@
+name: bwamem2_index
 channels:
   - conda-forge
   - bioconda

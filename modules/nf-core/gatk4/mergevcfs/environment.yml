@@ -1,3 +1,4 @@
+name: gatk4_mergevcfs
 channels:
   - conda-forge
   - bioconda

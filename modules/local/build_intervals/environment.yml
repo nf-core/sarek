@@ -1,3 +1,4 @@
+name: gawk
 channels:
   - conda-forge
   - bioconda

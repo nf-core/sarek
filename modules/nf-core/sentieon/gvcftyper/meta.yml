@@ -1,4 +1,4 @@
-name: SENTIEON_GVCFTYPER
+name: sentieon_gvcftyper
 description: |
   Perform joint genotyping on one or more samples pre-called with Sentieon's Haplotyper.
 keywords:

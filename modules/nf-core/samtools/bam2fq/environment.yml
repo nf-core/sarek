@@ -1,3 +1,4 @@
+name: samtools_bam2fq
 channels:
   - conda-forge
   - bioconda

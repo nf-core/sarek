@@ -1,3 +1,4 @@
+name: ensemblvep_download
 channels:
   - conda-forge
   - bioconda

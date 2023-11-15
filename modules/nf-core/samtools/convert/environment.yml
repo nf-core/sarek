@@ -1,3 +1,4 @@
+name: samtools_convert
 channels:
   - conda-forge
   - bioconda

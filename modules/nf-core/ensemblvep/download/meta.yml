@@ -1,4 +1,4 @@
-name: ENSEMBLVEP_DOWNLOAD
+name: ensemblvep_download
 description: Ensembl Variant Effect Predictor (VEP). The cache downloading options are controlled through `task.ext.args`.
 keywords:
   - annotation

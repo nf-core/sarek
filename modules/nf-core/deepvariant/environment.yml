@@ -1,3 +1,4 @@
+name: deepvariant
 channels:
   - conda-forge
   - bioconda
