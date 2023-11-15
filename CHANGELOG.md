@@ -16,7 +16,8 @@ Pårtetjåkko is a mountain in the south of the park.
 - [#1244](https://github.com/nf-core/sarek/pull/1244) - Add bcf annotate module
 - [#1252](https://github.com/nf-core/sarek/pull/1252) - Added NGSCheckMate tool for checking that samples come from the same individual
 - [#1271](https://github.com/nf-core/sarek/pull/1271) - Back to dev
-- [#1290](https://github.com/nf-core/sarek/pull/1290) - Add nf-test for whole pipeline.
+- [#1288](https://github.com/nf-core/sarek/pull/1288) - Add nf-test continuous integration (but no tests)
+- [#1290](https://github.com/nf-core/sarek/pull/1290) - Add nf-test for whole pipeline
 
 ### Changed
 
