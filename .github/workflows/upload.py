@@ -30,3 +30,10 @@ data = {
 r = requests.post(url, data=json.dumps(data), headers=headers)
 r.status_code
 # 200
+
+# TODO add publication step
+#r = requests.post('https://zenodo.org/api/deposit/depositions/%s/actions/publish' % deposition_id,
+#                      params={'access_token': ACCESS_TOKEN} )
+#r.status_code
+# 202
+

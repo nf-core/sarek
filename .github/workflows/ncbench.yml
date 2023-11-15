@@ -5,11 +5,12 @@ on:
   # upload can only be triggered manually for now
   workflow_dispatch:
     inputs:
+      # TODO: add in other test profiles
       germline_wes:
         description: "Trigger NCBench upload"
         type: boolean
         default: true
-  pull_request:
+  pull_request: # TODO: remove once it works
 
 jobs:
   ncbench-upload:
@@ -18,9 +19,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          # TODO: Add in other test profiles
           - profile: germline_wes
             enabled: ${{ ( github.repository == 'nf-core/sarek' ) && ( github.event_name != 'workflow_dispatch' || inputs.germline_wes ) }}
     env:
+      # TODO: parse this out somehow
       pipeline_version: 3.1.1test
 
     steps:
@@ -31,12 +34,14 @@ jobs:
         uses: keithweaver/aws-s3-github-action@v1.0.0
         if: ${{ matrix.enabled }}
         with:
+          # TODO: download all vcfs
           source: s3://nf-core-awsmegatests/sarek/results-test-59026dc07633edb83aab3bfb2f65f79db38437a1/test_full/variant_calling/strelka
           command: sync
           aws_region: eu-west-1
           destination: ./variant_calling
           flags: --no-sign-request --include ".vcf.gz" --exclude "g.vcf.gz"
 
+      # TOD remove this, it is probably not needed anymore, we are using python now
       #- name: Create new Zenodo entry
       #  uses: popperized/zenodo/create@master
       #  env:
@@ -50,7 +55,7 @@ jobs:
       #    ZENODO_UPLOAD_PATH: ./variant_calling
 
       - name: Install requests
-        run: pip install requests
+        run: pip install requests # version pinning?
 
       - name: Upload to zenodo
         env:
@@ -58,6 +63,7 @@ jobs:
         run: |
           python .github/workflows/upload.py
 
+      # update ncbench config yml
       - name: NCBench set config
         uses: actions/checkout@v4
         with:
@@ -69,6 +75,8 @@ jobs:
       - name: Add entry to config
         uses: mikefarah/yq@master
         with:
+          # TODO: add in values for all callers, ensure proper extension for the datasets are used. Parse out tool versions somehow
+          # TODO: need to retrieve new zenodo id
           cmd: yq --inplace '
             with(.variant-calls.nf-core-sarek-321-strelka-agilent-75M.labels;
             .site = "nf-core" |
@@ -91,6 +99,7 @@ jobs:
             . = "resources/rename-contigs/ucsc-to-ensembl.txt" )
             ' ncbench-workflow/config/config.yaml
 
+      # TODO: enable using secrets here
       - name: Commit files
         run: |
           cd ncbench-workflow
