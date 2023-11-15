@@ -43,6 +43,7 @@ Pårtetjåkko is a mountain in the south of the park.
 - [#1325](https://github.com/nf-core/sarek/pull/1325) - Update bcfannotate tests and related config files
 - [#1328](https://github.com/nf-core/sarek/pull/1328) - Fix links to docs in `nextflow_schema.json` and `docs/output.md`
 - [#1328](https://github.com/nf-core/sarek/pull/1328) - Add missing icons in `nextflow_schema.json`
+- [#1330](https://github.com/nf-core/sarek/pull/1330) - Add SnpEff to full sized tests
 
 ### Removed
 
