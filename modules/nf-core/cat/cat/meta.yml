@@ -7,9 +7,7 @@ keywords:
 tools:
   - cat:
       description: Just concatenation
-
       documentation: https://man7.org/linux/man-pages/man1/cat.1.html
-
       licence: ["GPL-3.0-or-later"]
 input:
   - meta:
@@ -21,7 +19,6 @@ input:
       type: file
       description: List of compressed / uncompressed files
       pattern: "*"
-
 output:
   - versions:
       type: file
@@ -31,7 +28,9 @@ output:
       type: file
       description: Concatenated file. Will be gzipped if file_out ends with ".gz"
       pattern: "${file_out}"
-
 authors:
+  - "@erikrikarddaniel"
+  - "@FriederikeHanssen"
+maintainers:
   - "@erikrikarddaniel"
   - "@FriederikeHanssen"

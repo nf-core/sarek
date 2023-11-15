@@ -1,0 +1,5 @@
+name: sentieon_applyvarcal
+channels:
+  - conda-forge
+  - bioconda
+  - defaults

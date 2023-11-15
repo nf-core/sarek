@@ -1,0 +1,121 @@
+{
+    "test_cat_unzipped_zipped_size": {
+        "content": [
+            375
+        ],
+        "timestamp": "2023-10-16T14:33:08.049445686"
+    },
+    "test_cat_unzipped_unzipped": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.fasta:md5,f44b33a0e441ad58b2d3700270e2dbe2"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,115ed6177ebcff24eb99d503fa5ef894"
+                ],
+                "file_out": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.fasta:md5,f44b33a0e441ad58b2d3700270e2dbe2"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,115ed6177ebcff24eb99d503fa5ef894"
+                ]
+            }
+        ],
+        "timestamp": "2023-10-16T14:32:18.500464399"
+    },
+    "test_cat_zipped_unzipped": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "cat.txt:md5,c439d3b60e7bc03e8802a451a0d9a5d9"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,115ed6177ebcff24eb99d503fa5ef894"
+                ],
+                "file_out": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "cat.txt:md5,c439d3b60e7bc03e8802a451a0d9a5d9"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,115ed6177ebcff24eb99d503fa5ef894"
+                ]
+            }
+        ],
+        "timestamp": "2023-10-16T14:32:49.642741302"
+    },
+    "test_cat_zipped_zipped_lines": {
+        "content": [
+            [
+                "MT192765.1\tGenbank\ttranscript\t259\t29667\t.\t+\t.\tID=unknown_transcript_1;geneID=orf1ab;gene_name=orf1ab",
+                "MT192765.1\tGenbank\tgene\t259\t21548\t.\t+\t.\tParent=unknown_transcript_1",
+                "MT192765.1\tGenbank\tCDS\t259\t13461\t.\t+\t0\tParent=unknown_transcript_1;exception=\"ribosomal slippage\";gbkey=CDS;gene=orf1ab;note=\"pp1ab;translated=by -1 ribosomal frameshift\";product=\"orf1ab polyprotein\";protein_id=QIK50426.1",
+                "MT192765.1\tGenbank\tCDS\t13461\t21548\t.\t+\t0\tParent=unknown_transcript_1;exception=\"ribosomal slippage\";gbkey=CDS;gene=orf1ab;note=\"pp1ab;translated=by -1 ribosomal frameshift\";product=\"orf1ab polyprotein\";protein_id=QIK50426.1",
+                "MT192765.1\tGenbank\tCDS\t21556\t25377\t.\t+\t0\tParent=unknown_transcript_1;gbkey=CDS;gene=S;note=\"structural protein\";product=\"surface glycoprotein\";protein_id=QIK50427.1",
+                "MT192765.1\tGenbank\tgene\t21556\t25377\t.\t+\t.\tParent=unknown_transcript_1"
+            ]
+        ],
+        "timestamp": "2023-10-16T14:32:33.629048645"
+    },
+    "test_cat_unzipped_zipped_lines": {
+        "content": [
+            [
+                ">MT192765.1 Severe acute respiratory syndrome coronavirus 2 isolate SARS-CoV-2/human/USA/PC00101P/2020, complete genome",
+                "GTTTATACCTTCCCAGGTAACAAACCAACCAACTTTCGATCTCTTGTAGATCTGTTCTCTAAACGAACTTTAAAATCTGT",
+                "GTGGCTGTCACTCGGCTGCATGCTTAGTGCACTCACGCAGTATAATTAATAACTAATTACTGTCGTTGACAGGACACGAG",
+                "TAACTCGTCTATCTTCTGCAGGCTGCTTACGGTTTCGTCCGTGTTGCAGCCGATCATCAGCACATCTAGGTTTTGTCCGG",
+                "GTGTGACCGAAAGGTAAGATGGAGAGCCTTGTCCCTGGTTTCAACGAGAAAACACACGTCCAACTCAGTTTGCCTGTTTT",
+                "ACAGGTTCGCGACGTGCTCGTACGTGGCTTTGGAGACTCCGTGGAGGAGGTCTTATCAGAGGCACGTCAACATCTTAAAG"
+            ]
+        ],
+        "timestamp": "2023-10-16T14:33:08.038830506"
+    },
+    "test_cat_one_file_unzipped_zipped_lines": {
+        "content": [
+            [
+                ">MT192765.1 Severe acute respiratory syndrome coronavirus 2 isolate SARS-CoV-2/human/USA/PC00101P/2020, complete genome",
+                "GTTTATACCTTCCCAGGTAACAAACCAACCAACTTTCGATCTCTTGTAGATCTGTTCTCTAAACGAACTTTAAAATCTGT",
+                "GTGGCTGTCACTCGGCTGCATGCTTAGTGCACTCACGCAGTATAATTAATAACTAATTACTGTCGTTGACAGGACACGAG",
+                "TAACTCGTCTATCTTCTGCAGGCTGCTTACGGTTTCGTCCGTGTTGCAGCCGATCATCAGCACATCTAGGTTTTGTCCGG",
+                "GTGTGACCGAAAGGTAAGATGGAGAGCCTTGTCCCTGGTTTCAACGAGAAAACACACGTCCAACTCAGTTTGCCTGTTTT",
+                "ACAGGTTCGCGACGTGCTCGTACGTGGCTTTGGAGACTCCGTGGAGGAGGTCTTATCAGAGGCACGTCAACATCTTAAAG"
+            ]
+        ],
+        "timestamp": "2023-10-16T14:33:21.39642399"
+    },
+    "test_cat_zipped_zipped_size": {
+        "content": [
+            78
+        ],
+        "timestamp": "2023-10-16T14:32:33.641869244"
+    },
+    "test_cat_one_file_unzipped_zipped_size": {
+        "content": [
+            374
+        ],
+        "timestamp": "2023-10-16T14:33:21.4094373"
+    }
+}

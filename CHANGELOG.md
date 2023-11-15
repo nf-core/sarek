@@ -5,6 +5,65 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.4.0](https://github.com/nf-core/sarek/releases/tag/3.4.0) - Pårtetjåkko
+
+Pårtetjåkko is a mountain in the south of the park.
+
+### Added
+
+- [#1113](https://github.com/nf-core/sarek/pull/1113) - Adding CNVkit genemetrics module
+- [#1193](https://github.com/nf-core/sarek/pull/1193) - Adding support for Sentieon's DnaScope for germline variant-calling including joint-germline
+- [#1244](https://github.com/nf-core/sarek/pull/1244) - Add bcf annotate module
+- [#1252](https://github.com/nf-core/sarek/pull/1252) - Added NGSCheckMate tool for checking that samples come from the same individual
+- [#1271](https://github.com/nf-core/sarek/pull/1271) - Back to dev
+- [#1288](https://github.com/nf-core/sarek/pull/1288) - Add nf-test continuous integration (but no tests)
+- [#1290](https://github.com/nf-core/sarek/pull/1290) - Add nf-test for whole pipeline
+
+### Changed
+
+- [#1278](https://github.com/nf-core/sarek/pull/1278) - Hide sentieon parameters similar to other variant callers
+- [#1280](https://github.com/nf-core/sarek/pull/1280) - Replacing link to `SentieonDNAscopeModel1.1.model` in Sentieon's S3 with link to same file in igenomes' S3
+- [#1303](https://github.com/nf-core/sarek/pull/1303) - Ressurect vep_version params and changed its scope to pipeline to enable usage for vep loftee plugin
+- [#1304](https://github.com/nf-core/sarek/pull/1304) - Update modules
+- [#1311](https://github.com/nf-core/sarek/pull/1311) - Update local modules with an `environment.yml` file
+- [#1317](https://github.com/nf-core/sarek/pull/1317) - Add new tools to subway map
+- [#1325](https://github.com/nf-core/sarek/pull/1325) - Move `sentieon_dnascope_model` params into `igenomes.config`
+- [#1325](https://github.com/nf-core/sarek/pull/1325) - Refactor config files
+- [#1327](https://github.com/nf-core/sarek/pull/1327) - Update modules to have an conda environment name
+
+### Fixed
+
+- [#1277](https://github.com/nf-core/sarek/pull/1277) - Fix null value issue for Mutect2 joint calling
+- [#1287](https://github.com/nf-core/sarek/pull/1287) - Adding label `process_single` to local modules
+- [#1298](https://github.com/nf-core/sarek/pull/1298) - Fix annotation cache usage
+- [#1301](https://github.com/nf-core/sarek/pull/1301) - Fix nf-prov usage
+- [#1315](https://github.com/nf-core/sarek/pull/1315) - Avoid clash of configs of `FILTERVARIANTTRANCHES` in the Sentieon-Haplotyper and GATK-Haplotypecaller subworkflows
+- [#1318](https://github.com/nf-core/sarek/pull/1218) - Fix writing of params.json on S3
+- [#1324](https://github.com/nf-core/sarek/pull/1324) - Fix various typos & code formatting
+- [#1325](https://github.com/nf-core/sarek/pull/1325) - Update bcfannotate tests and related config files
+- [#1328](https://github.com/nf-core/sarek/pull/1328) - Fix links to docs in `nextflow_schema.json` and `docs/output.md`
+- [#1328](https://github.com/nf-core/sarek/pull/1328) - Add missing icons in `nextflow_schema.json`
+- [#1330](https://github.com/nf-core/sarek/pull/1330) - Add SnpEff to full sized tests
+
+### Removed
+
+- [#1298](https://github.com/nf-core/sarek/pull/1298) - Remove `--use_annotation_cache_keys` params
+
+### Dependencies
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| fastqc     | 0.11.9      | 0.12.1      |
+| multiqc    | 1.15        | 1.17        |
+
+### Modules / Subworkflows
+
+| script                        | Old name                      | New name                      |
+| ----------------------------- | ----------------------------- | ----------------------------- |
+| `gatk4spark/applybqsr`        | `GATK4_APPLYBQSRSPARK`        | `GATK4SPARK_APPLYBQSR`        |
+| `gatk4spark/baserecalibrator` | `GATK4_BASERECALIBRATORSPARK` | `GATK4SPARK_BASERECALIBRATOR` |
+| `gatk4spark/markduplicates`   | `GATK4_MARKDUPLICATESSPARK`   | `GATK4SPARK_MARKDUPLICATES`   |
+
 ## [3.3.2](https://github.com/nf-core/sarek/releases/tag/3.3.2) - Ráhpajávvre
 
 Ráhpajávvre is the Lule Sámi spelling of Rapaselet.
@@ -13,6 +72,7 @@ Ráhpajávvre is the Lule Sámi spelling of Rapaselet.
 
 - [#1246](https://github.com/nf-core/sarek/pull/1246) - Back to dev
 - [#1259](https://github.com/nf-core/sarek/pull/1259) - nf-prov plugin
+- [#1288](https://github.com/nf-core/sarek/pull/1288) - Add nf-test continuous integration.
 
 ### Changed
 

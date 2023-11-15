@@ -1,0 +1,5 @@
+name: sentieon_dnascope
+channels:
+  - conda-forge
+  - bioconda
+  - defaults

@@ -42,7 +42,8 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
             ]
         }
 
-    emit_mode_items = sentieon_haplotyper_emit_mode.split(',')
+
+    emit_mode_items = sentieon_haplotyper_emit_mode.split(',').each{ it -> it.toLowerCase().trim() }
     lst = emit_mode_items - 'gvcf'
     emit_vcf = lst.size() > 0 ? lst[0] : ''
 
@@ -53,7 +54,7 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
         dbsnp,
         dbsnp_tbi,
         emit_vcf,
-        emit_mode_items.contains('gvcf'))
+        emit_mode_items.any{ it.equals('gvcf') })
 
     if (joint_germline) {
         genotype_intervals = SENTIEON_HAPLOTYPER.out.gvcf

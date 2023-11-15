@@ -16,7 +16,6 @@ tools:
       documentation: https://gatk.broadinstitute.org/hc/en-us/categories/360002369672s
       doi: 10.1158/1538-7445.AM2017-3590
       licence: ["Apache-2.0"]
-
 input:
   - meta:
       type: map
@@ -27,7 +26,6 @@ input:
       type: list
       description: list of f1r2 files to be used as input.
       pattern: "*.f1r2.tar.gz"
-
 output:
   - artifactprior:
       type: file
@@ -37,6 +35,7 @@ output:
       type: file
       description: File containing software versions
       pattern: "versions.yml"
-
 authors:
+  - "@GCJMackenzie"
+maintainers:
   - "@GCJMackenzie"
