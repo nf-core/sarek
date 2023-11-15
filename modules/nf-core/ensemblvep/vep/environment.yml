@@ -1,3 +1,4 @@
+name: ensemblvep_vep
 channels:
   - conda-forge
   - bioconda

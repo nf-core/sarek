@@ -1,3 +1,4 @@
+name: bcftools_sort
 channels:
   - conda-forge
   - bioconda

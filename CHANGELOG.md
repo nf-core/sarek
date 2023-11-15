@@ -16,7 +16,8 @@ Pårtetjåkko is a mountain in the south of the park.
 - [#1244](https://github.com/nf-core/sarek/pull/1244) - Add bcf annotate module
 - [#1252](https://github.com/nf-core/sarek/pull/1252) - Added NGSCheckMate tool for checking that samples come from the same individual
 - [#1271](https://github.com/nf-core/sarek/pull/1271) - Back to dev
-- [#1290](https://github.com/nf-core/sarek/pull/1290) - Add nf-test for whole pipeline.
+- [#1288](https://github.com/nf-core/sarek/pull/1288) - Add nf-test continuous integration (but no tests)
+- [#1290](https://github.com/nf-core/sarek/pull/1290) - Add nf-test for whole pipeline
 
 ### Changed
 
@@ -28,6 +29,7 @@ Pårtetjåkko is a mountain in the south of the park.
 - [#1317](https://github.com/nf-core/sarek/pull/1317) - Add new tools to subway map
 - [#1325](https://github.com/nf-core/sarek/pull/1325) - Move `sentieon_dnascope_model` params into `igenomes.config`
 - [#1325](https://github.com/nf-core/sarek/pull/1325) - Refactor config files
+- [#1327](https://github.com/nf-core/sarek/pull/1327) - Update modules to have an conda environment name
 
 ### Fixed
 
@@ -39,6 +41,8 @@ Pårtetjåkko is a mountain in the south of the park.
 - [#1318](https://github.com/nf-core/sarek/pull/1218) - Fix writing of params.json on S3
 - [#1324](https://github.com/nf-core/sarek/pull/1324) - Fix various typos & code formatting
 - [#1325](https://github.com/nf-core/sarek/pull/1325) - Update bcfannotate tests and related config files
+- [#1328](https://github.com/nf-core/sarek/pull/1328) - Fix links to docs in `nextflow_schema.json` and `docs/output.md`
+- [#1328](https://github.com/nf-core/sarek/pull/1328) - Add missing icons in `nextflow_schema.json`
 - [#1330](https://github.com/nf-core/sarek/pull/1330) - Add SnpEff to full sized tests
 
 ### Removed

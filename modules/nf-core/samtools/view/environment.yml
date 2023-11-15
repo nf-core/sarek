@@ -1,3 +1,4 @@
+name: samtools_view
 channels:
   - conda-forge
   - bioconda

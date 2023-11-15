@@ -1,3 +1,4 @@
+name: sentieon_bwamem
 channels:
   - conda-forge
   - bioconda

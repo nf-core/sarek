@@ -1,4 +1,13 @@
 Changes in module 'nf-core/controlfreec/assesssignificance'
+--- modules/nf-core/controlfreec/assesssignificance/environment.yml
++++ modules/nf-core/controlfreec/assesssignificance/environment.yml
+@@ -4,4 +4,4 @@
+   - bioconda
+   - defaults
+ dependencies:
+-  - bioconda::control-freec=11.6b
++  - bioconda::control-freec=11.6
+
 --- modules/nf-core/controlfreec/assesssignificance/main.nf
 +++ modules/nf-core/controlfreec/assesssignificance/main.nf
 @@ -4,8 +4,8 @@
@@ -12,14 +21,5 @@ Changes in module 'nf-core/controlfreec/assesssignificance'
  
      input:
      tuple val(meta), path(cnvs), path(ratio)
-
---- modules/nf-core/controlfreec/assesssignificance/environment.yml
-+++ modules/nf-core/controlfreec/assesssignificance/environment.yml
-@@ -3,4 +3,4 @@
-   - bioconda
-   - defaults
- dependencies:
--  - bioconda::control-freec=11.6b
-+  - bioconda::control-freec=11.6
 
 ************************************************************

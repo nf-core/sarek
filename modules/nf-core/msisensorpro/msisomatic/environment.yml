@@ -1,3 +1,4 @@
+name: msisensorpro_msisomatic
 channels:
   - conda-forge
   - bioconda

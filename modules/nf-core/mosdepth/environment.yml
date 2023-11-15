@@ -1,6 +1,8 @@
+name: mosdepth
 channels:
   - conda-forge
   - bioconda
   - defaults
 dependencies:
-  - bioconda::mosdepth=0.3.3
+  # renovate: datasource=conda depName=bioconda/mosdepth
+  - mosdepth=0.3.3

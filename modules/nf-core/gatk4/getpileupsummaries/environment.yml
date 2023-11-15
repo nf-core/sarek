@@ -1,3 +1,4 @@
+name: gatk4_getpileupsummaries
 channels:
   - conda-forge
   - bioconda

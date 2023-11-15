@@ -1,7 +1,9 @@
+name: bwamem2_mem
 channels:
   - conda-forge
   - bioconda
   - defaults
 dependencies:
-  - bioconda::bwa-mem2=2.2.1
-  - bioconda::samtools=1.16.1
+  - bwa-mem2=2.2.1
+  # renovate: datasource=conda depName=bioconda/samtools
+  - samtools=1.16.1
