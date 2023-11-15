@@ -24,8 +24,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Modules / Subworkflows
 
-| script                        | Old name                      | New name                      |
-| ----------------------------- | ----------------------------- | ----------------------------- |
+| script | Old name | New name |
+| ------ | -------- | -------- |
 
 ## [3.4.0](https://github.com/nf-core/sarek/releases/tag/3.4.0) - Pårtetjåkko
 
