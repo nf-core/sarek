@@ -112,6 +112,7 @@ workflow  SAMPLESHEET_TO_CHANNEL{
             }
         }
     }
+
     input_sample.filter{ it[0].status == 0 }.ifEmpty{ // In this case, the sample-sheet contains no normal/germline-samples
         def tools_requiring_normal_samples = ['ascat', 'deepvariant', 'haplotypecaller', 'msisensorpro']
         def requested_tools_requiring_normal_samples = []
@@ -126,8 +127,8 @@ workflow  SAMPLESHEET_TO_CHANNEL{
 
     // Fails when wrongfull extension for intervals file
     if (params.wes && !params.step == 'annotate') {
-    if (params.intervals && !params.intervals.endsWith("bed"))  error("Target file specified with `--intervals` must be in BED format for targeted data")
-    else log.warn("Intervals file was provided without parameter `--wes`: Pipeline will assume this is Whole-Genome-Sequencing data.")
+        if (params.intervals && !params.intervals.endsWith("bed"))  error("Target file specified with `--intervals` must be in BED format for targeted data")
+        else log.warn("Intervals file was provided without parameter `--wes`: Pipeline will assume this is Whole-Genome-Sequencing data.")
     } else if (params.intervals && !params.intervals.endsWith("bed") && !params.intervals.endsWith("list")) error("Intervals file must end with .bed, .list, or .interval_list")
 
     if (params.step == 'mapping' && params.aligner.contains("dragmap") && !(params.skip_tools && params.skip_tools.split(',').contains("baserecalibrator"))) {
@@ -248,6 +249,11 @@ workflow  SAMPLESHEET_TO_CHANNEL{
                 error("Please specify sex information for each sample in your samplesheet when using '--tools' with 'ascat' or 'controlfreec'.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
             }
         }
+    }
+
+    // Fails when bcftools annotate is used but no files are supplied
+    if (params.tools && (params.tools.split(',').contains('bcfann') && !(params.bcftools_annotations && params.bcftools_annotations_index && params.bcftools_header_lines)) {
+        error("Please specify --bcftools_annotations, --bcftools_annotations_index, and --bcftools_header_lines, when using BCFTools annotations")
     }
 
     emit:
