@@ -41,7 +41,7 @@ jobs:
           destination: ./variant_calling
           flags: --no-sign-request --include ".vcf.gz" --exclude "g.vcf.gz"
 
-      # TOD remove this, it is probably not needed anymore, we are using python now
+      # TODO remove this, it is probably not needed anymore, we are using python now
       #- name: Create new Zenodo entry
       #  uses: popperized/zenodo/create@master
       #  env:
@@ -91,7 +91,7 @@ jobs:
             with(.variant-calls.nf-core-sarek-321-strelka-agilent-75M.subcategory;
             . = "NA12878-agilent" ) |
             with(.variant-calls.nf-core-sarek-321-strelka-agilent-75M.zenodo;
-            .deposition = "get here proper zenodo ID"  |
+            .deposition = $DEPOSITION_ID  |
             .filename = "get here proper file names" ) |
             with(.variant-calls.nf-core-sarek-321-strelka-agilent-75M.benchmark;
             . = "giab-NA12878-agilent-75M" ) |
@@ -105,7 +105,7 @@ jobs:
           cd ncbench-workflow
           git config --global user.email "friederike.hanssen@qbic.uni-tuebingen.de"
           git config --global user.name "FriederikeHanssen"
-          git checkout -b test6
+          git checkout -b test7
           git add config/config.yaml
           git commit -a -m "Add changes"
-          git push origin test6
+          git push origin test7
