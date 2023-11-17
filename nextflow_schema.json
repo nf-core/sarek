@@ -533,9 +533,9 @@
                 "bcftools_annotations": {
                     "type": "string",
                     "fa_icon": "fas fa-file",
-                    "description": "A vcf file containing custom annotations to be used with bcftools annotate"
+                    "description": "A vcf file containing custom annotations to be used with bcftools annotate. Needs to be bgzipped."
                 },
-                "bcftools_annotations_index": {
+                "bcftools_annotations_tbi": {
                     "type": "string",
                     "fa_icon": "fas fa-file",
                     "description": "Index file for `bcftools_annotations`"

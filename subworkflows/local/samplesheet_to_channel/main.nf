@@ -252,8 +252,8 @@ workflow  SAMPLESHEET_TO_CHANNEL{
     }
 
     // Fails when bcftools annotate is used but no files are supplied
-    if (params.tools && params.tools.split(',').contains('bcfann') && !(params.bcftools_annotations && params.bcftools_annotations_index && params.bcftools_header_lines)) {
-        error("Please specify --bcftools_annotations, --bcftools_annotations_index, and --bcftools_header_lines, when using BCFTools annotations")
+    if (params.tools && params.tools.split(',').contains('bcfann') && !(params.bcftools_annotations && params.bcftools_annotations_tbi && params.bcftools_header_lines)) {
+        error("Please specify --bcftools_annotations, --bcftools_annotations_tbi, and --bcftools_header_lines, when using BCFTools annotations")
     }
 
     emit:
