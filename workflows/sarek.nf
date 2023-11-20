@@ -28,7 +28,7 @@ def checkPathParamList = [
     params.bwa,
     params.bwamem2,
     params.bcftools_annotations,
-    params.bcftools_annotations_index,
+    params.bcftools_annotations_tbi,
     params.bcftools_header_lines,
     params.cf_chrom_len,
     params.chr_dir,
@@ -87,6 +87,8 @@ ascat_alleles           = params.ascat_alleles           ? Channel.fromPath(para
 ascat_loci              = params.ascat_loci              ? Channel.fromPath(params.ascat_loci).collect()              : Channel.empty()
 ascat_loci_gc           = params.ascat_loci_gc           ? Channel.fromPath(params.ascat_loci_gc).collect()           : Channel.value([])
 ascat_loci_rt           = params.ascat_loci_rt           ? Channel.fromPath(params.ascat_loci_rt).collect()           : Channel.value([])
+bcftools_annotations    = params.bcftools_annotations    ? Channel.fromPath(params.bcftools_annotations).collect()    : Channel.empty()
+bcftools_header_lines   = params.bcftools_header_lines   ? Channel.fromPath(params.bcftools_header_lines).collect()   : Channel.empty()
 cf_chrom_len            = params.cf_chrom_len            ? Channel.fromPath(params.cf_chrom_len).collect()            : []
 chr_dir                 = params.chr_dir                 ? Channel.fromPath(params.chr_dir).collect()                 : Channel.value([])
 dbsnp                   = params.dbsnp                   ? Channel.fromPath(params.dbsnp).collect()                   : Channel.value([])
@@ -100,18 +102,16 @@ pon                     = params.pon                     ? Channel.fromPath(para
 sentieon_dnascope_model = params.sentieon_dnascope_model ? Channel.fromPath(params.sentieon_dnascope_model).collect() : Channel.value([])
 
 // Initialize value channels based on params, defined in the params.genomes[params.genome] scope
-ascat_genome                = params.ascat_genome                ?: Channel.empty()
-dbsnp_vqsr                  = params.dbsnp_vqsr                  ? Channel.value(params.dbsnp_vqsr) : Channel.empty()
-known_indels_vqsr           = params.known_indels_vqsr           ? Channel.value(params.known_indels_vqsr) : Channel.empty()
-known_snps_vqsr             = params.known_snps_vqsr             ? Channel.value(params.known_snps_vqsr) : Channel.empty()
-ngscheckmate_bed            = params.ngscheckmate_bed            ? Channel.value(params.ngscheckmate_bed) : Channel.empty()
-snpeff_db                   = params.snpeff_db                   ?: Channel.empty()
-vep_cache_version           = params.vep_cache_version           ?: Channel.empty()
-vep_genome                  = params.vep_genome                  ?: Channel.empty()
-vep_species                 = params.vep_species                 ?: Channel.empty()
-bcftools_annotations        = params.bcftools_annotations        ?: Channel.empty()
-bcftools_annotations_index  = params.bcftools_annotations_index  ?: Channel.empty()
-bcftools_header_lines       = params.bcftools_header_lines       ?: Channel.empty()
+ascat_genome                = params.ascat_genome             ?: Channel.empty()
+dbsnp_vqsr                  = params.dbsnp_vqsr               ? Channel.value(params.dbsnp_vqsr) : Channel.empty()
+known_indels_vqsr           = params.known_indels_vqsr        ? Channel.value(params.known_indels_vqsr) : Channel.empty()
+known_snps_vqsr             = params.known_snps_vqsr          ? Channel.value(params.known_snps_vqsr) : Channel.empty()
+ngscheckmate_bed            = params.ngscheckmate_bed         ? Channel.value(params.ngscheckmate_bed) : Channel.empty()
+snpeff_db                   = params.snpeff_db                ?: Channel.empty()
+vep_cache_version           = params.vep_cache_version        ?: Channel.empty()
+vep_genome                  = params.vep_genome               ?: Channel.empty()
+vep_species                 = params.vep_species              ?: Channel.empty()
+
 
 vep_extra_files = []
 
@@ -287,6 +287,7 @@ workflow SAREK {
         ascat_loci,
         ascat_loci_gc,
         ascat_loci_rt,
+        bcftools_annotations,
         chr_dir,
         dbsnp,
         fasta,
@@ -325,11 +326,12 @@ workflow SAREK {
     rt_file                = PREPARE_GENOME.out.rt_file
 
     // Tabix indexed vcf files:
-    dbsnp_tbi              = params.dbsnp                   ? params.dbsnp_tbi             ? Channel.fromPath(params.dbsnp_tbi).collect()             : PREPARE_GENOME.out.dbsnp_tbi             : Channel.value([])
-    germline_resource_tbi  = params.germline_resource       ? params.germline_resource_tbi ? Channel.fromPath(params.germline_resource_tbi).collect() : PREPARE_GENOME.out.germline_resource_tbi : [] //do not change to Channel.value([]), the check for its existence then fails for Getpileupsumamries
-    known_indels_tbi       = params.known_indels            ? params.known_indels_tbi      ? Channel.fromPath(params.known_indels_tbi).collect()      : PREPARE_GENOME.out.known_indels_tbi      : Channel.value([])
-    known_snps_tbi         = params.known_snps              ? params.known_snps_tbi        ? Channel.fromPath(params.known_snps_tbi).collect()        : PREPARE_GENOME.out.known_snps_tbi        : Channel.value([])
-    pon_tbi                = params.pon                     ? params.pon_tbi               ? Channel.fromPath(params.pon_tbi).collect()               : PREPARE_GENOME.out.pon_tbi               : Channel.value([])
+    bcftools_annotations_tbi  = params.bcftools_annotations    ? params.bcftools_annotations_tbi ? Channel.fromPath(params.bcftools_annotations_tbi).collect() : PREPARE_GENOME.out.bcftools_annotations_tbi : Channel.empty([])
+    dbsnp_tbi                 = params.dbsnp                   ? params.dbsnp_tbi                ? Channel.fromPath(params.dbsnp_tbi).collect()                : PREPARE_GENOME.out.dbsnp_tbi                : Channel.value([])
+    germline_resource_tbi     = params.germline_resource       ? params.germline_resource_tbi    ? Channel.fromPath(params.germline_resource_tbi).collect()    : PREPARE_GENOME.out.germline_resource_tbi    : [] //do not change to Channel.value([]), the check for its existence then fails for Getpileupsumamries
+    known_indels_tbi          = params.known_indels            ? params.known_indels_tbi         ? Channel.fromPath(params.known_indels_tbi).collect()         : PREPARE_GENOME.out.known_indels_tbi         : Channel.value([])
+    known_snps_tbi            = params.known_snps              ? params.known_snps_tbi           ? Channel.fromPath(params.known_snps_tbi).collect()           : PREPARE_GENOME.out.known_snps_tbi           : Channel.value([])
+    pon_tbi                   = params.pon                     ? params.pon_tbi                  ? Channel.fromPath(params.pon_tbi).collect()                  : PREPARE_GENOME.out.pon_tbi                  : Channel.value([])
 
     // known_sites is made by grouping both the dbsnp and the known snps/indels resources
     // Which can either or both be optional
@@ -1057,7 +1059,7 @@ workflow SAREK {
                 vep_cache,
                 vep_extra_files,
                 bcftools_annotations,
-                bcftools_annotations_index,
+                bcftools_annotations_tbi,
                 bcftools_header_lines)
 
             // Gather used softwares versions
