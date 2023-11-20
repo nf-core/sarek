@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - [#1333](https://github.com/nf-core/sarek/pull/1333) - Back to dev
+- [#1335](https://github.com/nf-core/sarek/pull/1335) - Add index computation of `bcftools_annotations`, if not provided
 
 ### Changed
 
