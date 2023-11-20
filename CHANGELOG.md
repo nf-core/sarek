@@ -33,9 +33,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Parameter
 
-| Old name                   | New name                |
-| -------------------------- | ----------------------- |
-| bcftools_annotations_index | bcftools_annotations_tbi|
+| Old name                   | New name                 |
+| -------------------------- | ------------------------ |
+| bcftools_annotations_index | bcftools_annotations_tbi |
 
 ## [3.4.0](https://github.com/nf-core/sarek/releases/tag/3.4.0) - Pårtetjåkko
 
