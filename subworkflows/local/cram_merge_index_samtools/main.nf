@@ -28,7 +28,7 @@ workflow CRAM_MERGE_INDEX_SAMTOOLS {
     // Mix intervals and no_intervals channels together
     cram_crai_merged = MERGE_CRAM.out.cram.join(MERGE_CRAM.out.index, failOnDuplicate: true, failOnMismatch: true)
 
-    // Index cram
+    // Index cram, multiple ones are indexed on the fly
     INDEX_CRAM(cram_to_merge.single)
     cram_crai_single = cram_to_merge.single.join(INDEX_CRAM.out.index, failOnDuplicate: true, failOnMismatch: true)
 
