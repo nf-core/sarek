@@ -39,3 +39,5 @@ output:
       pattern: "*_sv_merge.vcf.gz"
 authors:
   - "@ramprasadn"
+maintainers:
+  - "@ramprasadn"

@@ -50,7 +50,7 @@ Depending on the options and samples provided, the pipeline can currently perfor
   - `Sentieon Haplotyper`
   - `Strelka2`
   - `TIDDIT`
-- Variant filtering and annotation (`SnpEff`, `Ensembl VEP`)
+- Variant filtering and annotation (`SnpEff`, `Ensembl VEP`, `BCFtools annotate`)
 - Summarise and represent QC (`MultiQC`)
 
 <p align="center">
@@ -131,6 +131,7 @@ We thank the following people for their extensive assistance in the development 
 - [Francesco Lescai](https://github.com/lescai)
 - [Gavin Mackenzie](https://github.com/GCJMackenzie)
 - [Gisela Gabernet](https://github.com/ggabernet)
+- [Grant Neilson](https://github.com/grantn5)
 - [gulfshores](https://github.com/gulfshores)
 - [Harshil Patel](https://github.com/drpatelh)
 - [James A. Fellows Yates](https://github.com/jfy133)

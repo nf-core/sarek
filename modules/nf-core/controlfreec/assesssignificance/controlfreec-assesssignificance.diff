@@ -1,12 +1,18 @@
 Changes in module 'nf-core/controlfreec/assesssignificance'
+--- modules/nf-core/controlfreec/assesssignificance/environment.yml
++++ modules/nf-core/controlfreec/assesssignificance/environment.yml
+@@ -4,4 +4,4 @@
+   - bioconda
+   - defaults
+ dependencies:
+-  - bioconda::control-freec=11.6b
++  - bioconda::control-freec=11.6
+
 --- modules/nf-core/controlfreec/assesssignificance/main.nf
 +++ modules/nf-core/controlfreec/assesssignificance/main.nf
-@@ -2,10 +2,10 @@
-     tag "$meta.id"
-     label 'process_low'
+@@ -4,8 +4,8 @@
  
--    conda "bioconda::control-freec=11.6b"
-+    conda "bioconda::control-freec=11.6"
+     conda "${moduleDir}/environment.yml"
      container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
 -        'https://depot.galaxyproject.org/singularity/control-freec:11.6b--hdbdd923_0' :
 -        'biocontainers/control-freec:11.6b--hdbdd923_0' }"

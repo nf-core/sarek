@@ -10,15 +10,12 @@ tools:
       homepage: http://fulcrumgenomics.github.io/fgbio/
       documentation: http://fulcrumgenomics.github.io/fgbio/tools/latest/
       tool_dev_url: https://github.com/fulcrumgenomics/fgbio
-
       licence: ["MIT"]
-
 input:
   - reads:
       type: file
       description: pair of reads to be converted into BAM file
       pattern: "*.{fastq.gz}"
-
 output:
   - meta:
       type: map
@@ -37,7 +34,9 @@ output:
       type: file
       description: Unaligned, unsorted CRAM file
       pattern: "*.{cram}"
-
 authors:
+  - "@lescai"
+  - "@matthdsm"
+maintainers:
   - "@lescai"
   - "@matthdsm"

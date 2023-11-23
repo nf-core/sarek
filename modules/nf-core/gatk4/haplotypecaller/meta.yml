@@ -14,7 +14,6 @@ tools:
       documentation: https://gatk.broadinstitute.org/hc/en-us/categories/360002369672s
       doi: 10.1158/1538-7445.AM2017-3590
       licence: ["Apache-2.0"]
-
 input:
   - meta:
       type: map
@@ -54,7 +53,6 @@ input:
   - dbsnp_tbi:
       type: file
       description: VCF index of dbsnp (optional)
-
 output:
   - meta:
       type: map
@@ -77,7 +75,9 @@ output:
       type: file
       description: Assembled haplotypes and locally realigned reads
       pattern: "*.realigned.bam"
-
 authors:
+  - "@suzannejin"
+  - "@FriederikeHanssen"
+maintainers:
   - "@suzannejin"
   - "@FriederikeHanssen"

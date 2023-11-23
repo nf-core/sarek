@@ -55,11 +55,13 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 - [Variant annotation](#variant-annotation)
   - [snpEff](#snpeff)
   - [VEP](#vep)
+  - [BCFtools annotate](#bcftools-annotate)
 - [Quality control and reporting](#quality-control-and-reporting)
   - [Quality control](#quality-control)
     - [FastQC](#fastqc)
     - [FastP](#fastp)
     - [Mosdepth](#mosdepth)
+    - [NGSCheckMate](#ngscheckmate)
     - [GATK MarkDuplicates reports](#gatk-markduplicates-reports)
     - [Sentieon Dedup reports](#sentieon-dedup-reports)
     - [samtools stats](#samtools-stats)
@@ -307,13 +309,13 @@ See the [`input`](usage#input-sample-sheet-configurations) section in the usage 
 ## Variant Calling
 
 The results regarding variant calling are collected in `{outdir}/variantcalling/`.
-If some results from a variant caller do not appear here, please check out the `--tools` section in the parameter [documentation](https://nf-co.re/sarek/3.0.1/parameters).
+If some results from a variant caller do not appear here, please check out the `--tools` section in the parameter [documentation](https://nf-co.re/sarek/latest/parameters).
 
 (Recalibrated) CRAM files can used as an input to start the variant calling.
 
 ### SNVs and small indels
 
-For single nucleotide variants (SNVs) and small indels, multiple tools are available for normal (germline), tumor-only, and tumor-normal (somatic) paired data. For a list of the appropriate tool(s) for the data and sequencing type at hand, please check [here](usage.md#which-tool).
+For single nucleotide variants (SNVs) and small indels, multiple tools are available for normal (germline), tumor-only, and tumor-normal (somatic) paired data. For a list of the appropriate tool(s) for the data and sequencing type at hand, please check [here](usage#which-tool).
 
 #### bcftools
 
@@ -717,8 +719,9 @@ The file `<tumorsample_vs_normalsample>.cnvs.txt` contains all segments predicte
   - file containing copy number segment information
 - `<sample>.call.cns`
   - file containing copy number segment information
-
-</details>
+- `<sample>.genemetrics.tsv`
+  - file containing per gene copy number information (if input files are annotated)
+  </details>
 
 <details markdown="1">
 <summary>Output files for tumor/normal samples</summary>
@@ -745,6 +748,8 @@ The file `<tumorsample_vs_normalsample>.cnvs.txt` contains all segments predicte
   - file containing copy number segment information
 - `<tumorsample>.call.cns`
   - file containing copy number segment information
+- `<tumorsample>.genemetrics.tsv`
+  - file containing per gene copy number information (if input files are annotated)
   </details>
 
 #### Control-FREEC
@@ -883,6 +888,18 @@ plus any additional filed selected via the plugins: [dbNSFP](https://sites.googl
 
 </details>
 
+### BCFtools annotate
+
+[BCFtools annotate](https://samtools.github.io/bcftools/bcftools.html#annotate) is used to add annotations to VCF files. The annotations are added to the INFO column of the VCF file. The annotations are added to the VCF header and the VCF header is updated with the new annotations. For further reading and documentation see the [BCFtools annotate manual](https://samtools.github.io/bcftools/bcftools.html#annotate).
+
+<details markdown="1">
+<summary>Output files for all samples</summary>
+
+- `{sample,tumorsample_vs_normalsample}.<variantcaller>_bcf.ann.vcf.gz` and `{sample,tumorsample_vs_normalsample}.<variantcaller>_bcf.ann.vcf.gz.tbi`
+  - VCF with tabix index
+
+</details>
+
 ## Quality control and reporting
 
 ### Quality control
@@ -967,6 +984,25 @@ Plots will show:
   - per-base depth for targeted data, per-window (500bp) depth of WGS
 - `<sample>.{sorted,md,recal}.regions.bed.gz.csi`
   - CSI index for per-base depth for targeted data, per-window (500bp) depth of WGS
+  </details>
+
+#### NGSCheckMate
+
+[NGSCheckMate](https://github.com/parklab/NGSCheckMate) is a tool for determining whether samples come from the same genetic individual, using a set of commonly heterozygous SNPs. This enables for the detecting of sample mislabelling events. The output includes a text file indicating whether samples have matched or not according to the algorithm, as well as a dendrogram visualising these results.
+
+<details markdown="1">
+<summary>Output files for all samples</summary>
+
+**Output directory: `{outdir}/reports/ngscheckmate/`**
+
+- `ngscheckmate_all.txt`
+  - Tab delimited text file listing all the comparisons made, whether they were considered as a match, with the correlation and a normalised depth.
+- `ngscheckmate_matched.txt`
+  - Tab delimited text file listing only the comparison that were considered to match, with the correlation and a normalised depth.
+- `ngscheckmate_output_corr_matrix.txt`
+  - Tab delimited text file containing a matrix of all correlations for all comparisons made.
+- `vcfs/<sample>.vcf.gz`
+  - Set of vcf files for each sample. Contains calls for the set of SNP positions used to calculate sample relatedness.
   </details>
 
 #### GATK MarkDuplicates reports
@@ -1126,10 +1162,9 @@ Results generated by MultiQC collect pipeline QC from supported tools e.g. FastQ
 <summary>Output files</summary>
 
 - `pipeline_info/`
-  - Reports generated by Nextflow: `execution_report.html`, `execution_timeline.html`, `execution_trace.txt` and `pipeline_dag.dot`/`pipeline_dag.svg`.
+  - Reports generated by Nextflow: `execution_report_<timestamp>.html`, `execution_timeline_<timestamp>.html`, `execution_trace_<timestamp>.txt`, `pipeline_dag_<timestamp>.dot`/`pipeline_dag_<timestamp>.svg` and `manifest_<timestamp>.bco.json`.
   - Reports generated by the pipeline: `pipeline_report.html`, `pipeline_report.txt` and `software_versions.yml`. The `pipeline_report*` files will only be present if the `--email` / `--email_on_fail` parameter's are used when running the pipeline.
-  - Reformatted samplesheet files used as input to the pipeline: `samplesheet.valid.csv`.
-  - Parameters used by the pipeline run: `params.json`.
+  - Parameters used by the pipeline run: `params_<timestamp>.json`.
 
 </details>
 

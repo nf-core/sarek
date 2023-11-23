@@ -1,0 +1,5 @@
+name: gatk4_cnnscorevariants
+channels:
+  - conda-forge
+  - bioconda
+  - defaults

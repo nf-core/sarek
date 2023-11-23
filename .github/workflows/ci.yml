@@ -11,34 +11,40 @@ on:
       - master
       - dev
 
+env:
+  NXF_ANSI_LOG: false
+  NFTEST_VER: "0.8.1"
+
 # Cancel if a newer run is started
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
-  changes:
-    name: Check for changes
+  pytest-changes:
+    name: Check for changes (pytest)
     runs-on: ubuntu-latest
     outputs:
       # Expose matched filters as job 'tags' output variable
       tags: ${{ steps.filter.outputs.changes }}
     steps:
       - uses: actions/checkout@v3
-      - uses: dorny/paths-filter@v2
+
+      - uses: frouioui/paths-filter@main
         id: filter
         with:
-          filters: "tests/config/tags.yml"
+          filters: "tests/config/pytesttags.yml"
+          token: ""
 
-  test:
+  pytest:
     name: ${{ matrix.tags }} ${{ matrix.profile }} NF ${{ matrix.NXF_VER }}
     runs-on: ubuntu-latest
-    needs: changes
-    if: needs.changes.outputs.tags != '[]'
+    needs: pytest-changes
+    if: needs.pytest-changes.outputs.tags != '[]'
     strategy:
       fail-fast: false
       matrix:
-        tags: ["${{ fromJson(needs.changes.outputs.tags) }}"]
+        tags: ["${{ fromJson(needs.pytest-changes.outputs.tags) }}"]
         profile: ["docker"]
         # profile: ["docker", "singularity", "conda"]
         TEST_DATA_BASE:
@@ -50,6 +56,7 @@ jobs:
       NXF_ANSI_LOG: false
       TEST_DATA_BASE: "${{ github.workspace }}/test-datasets"
       SENTIEON_LICENSE_BASE64: ${{ secrets.SENTIEON_LICENSE_BASE64 }}
+
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v3
@@ -154,10 +161,136 @@ jobs:
             !/home/runner/pytest_workflow_*/*/work/conda
             !/home/runner/pytest_workflow_*/*/work/singularity
 
+  nftest-changes:
+    name: Check for changes (nf-test)
+    runs-on: ubuntu-latest
+    outputs:
+      tags: ${{ steps.filter.outputs.changes }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Combine all tags.yml files
+        id: get_tags
+        run: find . -name "tags.yml" -not -path "./.github/*" -exec cat {} + > .github/tags.yml
+
+      - name: debug
+        run: cat .github/tags.yml
+
+      - uses: frouioui/paths-filter@main
+        id: filter
+        with:
+          filters: ".github/tags.yml"
+          token: ""
+
+  nftest:
+    name: ${{ matrix.tags }} ${{ matrix.profile }} NF ${{ matrix.NXF_VER }}
+    runs-on: ubuntu-latest
+    needs: nftest-changes
+    if: needs.nftest-changes.outputs.tags != '[]'
+    strategy:
+      fail-fast: false
+      matrix:
+        tags: ["${{ fromJson(needs.nftest-changes.outputs.tags) }}"]
+        profile: ["docker"]
+        # profile: ["docker", "singularity", "conda"]
+        TEST_DATA_BASE:
+          - "test-datasets/data"
+        NXF_VER:
+          - "23.04.0"
+          - "latest-everything"
+        exclude:
+          - tags: "bwa/index"
+          - tags: "bwa/mem"
+          - tags: "cat/cat"
+          - tags: "cat/fastq"
+          - tags: "custom/dumpsoftwareversions"
+          - tags: "fastp"
+          - tags: "fastqc"
+          - tags: "samtools/stats"
+          - tags: "untar"
+    env:
+      NXF_ANSI_LOG: false
+      TEST_DATA_BASE: "${{ github.workspace }}/test-datasets"
+      SENTIEON_LICENSE_BASE64: ${{ secrets.SENTIEON_LICENSE_BASE64 }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-java@v3
+        with:
+          distribution: "temurin"
+          java-version: "17"
+      - name: Setup Nextflow
+        uses: nf-core/setup-nextflow@v1
+
+      - name: Cache nf-test installation
+        id: cache-software
+        uses: actions/cache@v3
+        with:
+          path: |
+            /usr/local/bin/nf-test
+            /home/runner/.nf-test/nf-test.jar
+          key: ${{ runner.os }}-${{ env.NFTEST_VER }}-nftest
+
+      - name: Install nf-test
+        if: steps.cache-software.outputs.cache-hit != 'true'
+        run: |
+          wget -qO- https://code.askimed.com/install/nf-test | bash
+          sudo mv nf-test /usr/local/bin/
+
+      - name: Setup apptainer
+        if: matrix.profile == 'singularity'
+        uses: eWaterCycle/setup-apptainer@main
+
+      - name: Set up Singularity
+        if: matrix.profile == 'singularity'
+        run: |
+          mkdir -p $NXF_SINGULARITY_CACHEDIR
+          mkdir -p $NXF_SINGULARITY_LIBRARYDIR
+
+      - name: Set up miniconda
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          miniconda-version: "latest"
+          auto-update-conda: true
+          channels: conda-forge,bioconda,defaults
+          python-version: ${{ matrix.python-version }}
+
+      - name: Conda setup
+        run: |
+          conda clean -a
+          conda install -n base conda-libmamba-solver
+          conda config --set solver libmamba
+          echo $(realpath $CONDA)/condabin >> $GITHUB_PATH
+          echo $(realpath python) >> $GITHUB_PATH
+
+      # Set up secrets
+      - name: Set up nextflow secrets
+        if: env.SENTIEON_LICENSE_BASE64 != null
+        run: |
+          nextflow secrets set SENTIEON_LICENSE_BASE64 ${{ secrets.SENTIEON_LICENSE_BASE64 }}
+          nextflow secrets set SENTIEON_AUTH_MECH_BASE64 ${{ secrets.SENTIEON_AUTH_MECH_BASE64 }}
+          SENTIEON_ENCRYPTION_KEY=$(echo -n "${{ secrets.ENCRYPTION_KEY_BASE64 }}" | base64 -d)
+          SENTIEON_LICENSE_MESSAGE=$(echo -n "${{ secrets.LICENSE_MESSAGE_BASE64 }}" | base64 -d)
+          SENTIEON_AUTH_DATA=$(python3 bin/license_message.py encrypt --key "$SENTIEON_ENCRYPTION_KEY" --message "$SENTIEON_LICENSE_MESSAGE")
+          SENTIEON_AUTH_DATA_BASE64=$(echo -n "$SENTIEON_AUTH_DATA" | base64 -w 0)
+          nextflow secrets set SENTIEON_AUTH_DATA_BASE64 $SENTIEON_AUTH_DATA_BASE64
+
+      # Test the module
+      - name: Run nf-test
+        run: |
+          nf-test test \
+            --profile=${{ matrix.profile }} \
+            --tag ${{ matrix.tags }} \
+            --tap=test.tap \
+            --verbose
+
   confirm-pass:
     runs-on: ubuntu-latest
     needs:
-      - test
+      - pytest
+      - nftest
     if: always()
     steps:
       - name: All tests ok

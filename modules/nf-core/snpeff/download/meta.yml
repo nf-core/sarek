@@ -1,4 +1,4 @@
-name: SNPEFF_DOWNLOAD
+name: snpeff_download
 description: Genetic variant annotation and functional effect prediction toolbox
 keywords:
   - annotation
@@ -38,4 +38,6 @@ output:
       description: File containing software versions
       pattern: "versions.yml"
 authors:
+  - "@maxulysse"
+maintainers:
   - "@maxulysse"

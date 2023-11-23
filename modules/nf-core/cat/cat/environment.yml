@@ -1,0 +1,7 @@
+name: cat_cat
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - conda-forge::pigz=2.3.4

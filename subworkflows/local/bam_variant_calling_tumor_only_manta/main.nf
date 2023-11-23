@@ -10,9 +10,8 @@ include { MANTA_TUMORONLY } from '../../../modules/nf-core/manta/tumoronly/main'
 workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA {
     take:
     cram          // channel: [mandatory] [ meta, cram, crai ]
-    dict          // channel: [optional]  [ meta, dict ]
-    fasta         // channel: [mandatory] [ fasta ]
-    fasta_fai     // channel: [mandatory] [ fasta_fai ]
+    fasta         // channel: [mandatory] [ meta, fasta ]
+    fasta_fai     // channel: [mandatory] [ meta, fasta_fai ]
     intervals     // channel: [mandatory] [ interval.bed.gz, interval.bed.gz.tbi ] or [ [], [] ] if no intervals
 
     main:
@@ -26,7 +25,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA {
         [it[0], it[1], it[2], bed_gz, bed_tbi]
     }
 
-    MANTA_TUMORONLY(cram_intervals, fasta, fasta_fai)
+    MANTA_TUMORONLY(cram_intervals, fasta, fasta_fai, [])
 
     small_indels_vcf = MANTA_TUMORONLY.out.candidate_small_indels_vcf
     candidate_sv_vcf = MANTA_TUMORONLY.out.candidate_sv_vcf

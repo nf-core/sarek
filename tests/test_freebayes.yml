@@ -66,7 +66,6 @@
     - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.count
       md5sum: 3c198f7ec7fe2f5d365218ba0ff64197
     - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.qual
-      contains: ["0	0	0	-nan	87	35	2.48571", "1.18	205	46	4.45652	58	29	2", "682.7	263	76	3.46053	0	0	-nan"]
     - path: results/variant_calling/freebayes/test/test.freebayes.vcf.gz
     # binary changes md5sums on reruns
     - path: results/variant_calling/freebayes/test/test.freebayes.vcf.gz.tbi
@@ -140,7 +139,6 @@
     - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.count
       md5sum: 4e6935b1e1906e57be1b54c0dffe7169
     - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.qual
-      contains: ["0	0	0	-nan	322	103	3.12621", "28.5878	359	96	3.73958	41	19	2.15789", "683.33	400	115	3.47826	0	0	-nan"]
     - path: results/variant_calling/freebayes/test/test.freebayes.vcf.gz
     # binary changes md5sums on reruns
     - path: results/variant_calling/freebayes/test/test.freebayes.vcf.gz.tbi
@@ -261,7 +259,6 @@
     - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.count
       md5sum: 650f3dc78c5aaaecfe8ffa3d499e812f
     - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.qual
-      contains: ["0	0	0	-nan	82	29	2.82759", "1.1	196	35	5.6	57	24	2.375", "3.16	205	38	5.39474	49	20	2.45"]
     - path: results/reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.FILTER.summary
       md5sum: 84039d55edf0981d6b9b81252aff6741
     - path: results/reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.TsTv.count
@@ -375,7 +372,6 @@
     - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.count
       md5sum: 0a0464beef110bc0f3c5a35d022b528e
     - path: results/reports/vcftools/freebayes/test/test.freebayes.TsTv.qual
-      contains: ["0	0	0	-nan	325	86	3.77907", "68.8262	377	88	4.28409	20	10	2", "321.335	393	96	4.09375	4	2	2"]
     - path: results/reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.FILTER.summary
       md5sum: d2d717fef7c18ef9b40bbbc5c5bbf101
     - path: results/reports/vcftools/freebayes/test2_vs_test/test2_vs_test.freebayes.TsTv.count

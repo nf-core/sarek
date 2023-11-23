@@ -14,7 +14,6 @@ tools:
       documentation: https://gatk.broadinstitute.org/hc/en-us/articles/360051308071-FilterVariantTranches
       doi: 10.1158/1538-7445.AM2017-3590
       licence: ["Apache-2.0"]
-
 input:
   - meta:
       type: map
@@ -49,7 +48,6 @@ input:
       type: file
       description: GATK sequence dictionary
       pattern: ".dict"
-
 output:
   - meta:
       type: map
@@ -68,6 +66,7 @@ output:
       type: file
       description: VCF index file
       pattern: "*.vcf.gz.tbi"
-
 authors:
+  - "@FriederikeHanssen"
+maintainers:
   - "@FriederikeHanssen"
