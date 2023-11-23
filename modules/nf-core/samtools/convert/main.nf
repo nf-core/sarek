@@ -25,16 +25,17 @@ process SAMTOOLS_CONVERT {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     def output_extension = input.getExtension() == "bam" ? "cram" : "bam"
+    // samtools view --write-index defaults to .csi for BAM; force the legacy .bai extension via the ##idx## naming trick to match the `bai` output channel
+    def index_extension = output_extension == "bam" ? "bai" : "crai"
 
     """
     samtools view \\
         --threads ${task.cpus} \\
         --reference ${fasta} \\
+        --write-index \\
         ${args} \\
         ${input} \\
-        -o ${prefix}.${output_extension}
-
-    samtools index -@${task.cpus} ${prefix}.${output_extension}
+        -o ${prefix}.${output_extension}##idx##${prefix}.${output_extension}.${index_extension}
     """
 
     stub:
