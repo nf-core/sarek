@@ -28,11 +28,10 @@ process SAMTOOLS_CONVERT {
     samtools view \\
         --threads ${task.cpus} \\
         --reference ${fasta} \\
+        --write-index \\
         $args \\
         $input \\
         -o ${prefix}.${output_extension}
-
-    samtools index -@${task.cpus} ${prefix}.${output_extension}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
