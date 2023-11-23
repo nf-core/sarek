@@ -1,0 +1,85 @@
+name: sentieon_tnfilter
+description: |
+  Filters the raw output of sentieon/tnhaplotyper2.
+keywords:
+  - tnfilter
+  - filter
+  - sentieon
+  - tnhaplotyper2
+  - vcf
+tools:
+  - sentieon:
+      description: |
+        Sentieon® provides complete solutions for secondary DNA/RNA analysis for a variety of sequencing platforms, including short and long reads.
+        Our software improves upon BWA, STAR, Minimap2, GATK, HaplotypeCaller, Mutect, and Mutect2 based pipelines and is deployable on any generic-CPU-based computing system.
+      homepage: https://www.sentieon.com/
+      documentation: https://www.sentieon.com/
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test' ]
+  - meta2:
+      type: map
+      description: |
+        Groovy Map containing reference information.
+        e.g. [ id:'test' ]
+  - meta3:
+      type: map
+      description: |
+        Groovy Map containing reference information.
+        e.g. [ id:'test' ]
+  - vcf:
+      type: file
+      description: compressed vcf file from tnhaplotyper2
+      pattern: "*.vcf.gz"
+  - vcf_tbi:
+      type: file
+      description: Tabix index of vcf file
+      pattern: "*vcf.gz.tbi"
+  - stats:
+      type: file
+      description: Stats file that pairs with output vcf file
+      pattern: "*vcf.gz.stats"
+  - contamination:
+      type: file
+      description: the location and file name of the file containing the contamination information produced by ContaminationModel.
+      pattern: "*.contamination_data.tsv"
+  - segments:
+      type: file
+      description: the location and file name of the file containing the tumor segments information produced by ContaminationModel.
+      pattern: "*.segments"
+  - orientation_priors:
+      type: file
+      description: the location and file name of the file containing the orientation bias information produced by OrientationBias.
+      pattern: "*.orientation_data.tsv"
+  - fasta:
+      type: file
+      description: The reference fasta file
+      pattern: "*.fasta"
+  - fai:
+      type: file
+      description: Index of reference fasta file
+      pattern: "*.fasta.fai"
+
+output:
+  - vcf:
+      type: file
+      description: file containing filtered tnhaplotyper2 calls.
+      pattern: "*.vcf.gz"
+  - vcf_tbi:
+      type: file
+      description: tbi file that pairs with vcf.
+      pattern: "*.vcf.gz.tbi"
+  - stats:
+      type: file
+      description: file containing statistics of the tnfilter run.
+      pattern: "*.stats"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+
+authors:
+  - "@asp8200"

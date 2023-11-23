@@ -310,12 +310,13 @@ if (params.tools &&
     error("When using Sentieon Haplotyper for joint-germline variant-calling the option `--sentieon_haplotyper_emit_mode` has to include `gvcf`.")
 }
 
-
+/* INFO: Temporarily disabled
+    TO-DO: Clean this up!
 // Fails when --joint_mutect2 is used without enabling mutect2
 if (params.joint_mutect2 && (!params.tools || !params.tools.split(',').contains('mutect2'))) {
     error("The mutect2 should be specified as one of the tools when doing joint somatic variant calling with Mutect2. (The mutect2 could be specified by adding `--tools mutect2` to the nextflow command.)")
 }
-
+*/
 // Fails when missing tools for variant_calling or annotate
 if ((params.step == 'variant_calling' || params.step == 'annotate') && !params.tools) {
     error("Please specify at least one tool when using `--step ${params.step}`.\nhttps://nf-co.re/sarek/parameters#tools")
