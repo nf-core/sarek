@@ -22,7 +22,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_SENTIEON_TNHAPLOTYPER2 {
     panel_of_normals          // channel: /path/to/panel/of/normals
     panel_of_normals_tbi      // channel: /path/to/panel/of/normals/index
     intervals                 // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
-    joint_mutect2             // boolean: [mandatory] [default: false] run mutect2 in joint mode
+    joint_tnhaplotyper2       // boolean: [mandatory] [default: false] run mutect2 in joint mode
 
     main:
     versions = Channel.empty()
@@ -36,9 +36,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_SENTIEON_TNHAPLOTYPER2 {
         // Move num_intervals to meta map and reorganize channel for SENTIEON_TNHAPLOTYPER2 module
         .map{ meta, input_list, input_index_list, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], input_list, input_index_list, intervals ] }
 
-    // TO-DO: Figure out if the variable joint_mutect2 should be (re)used for the tnhaplotyper2-subworkflow
-    // or perhaps we should introduce joint_tnhaplotyper2
-    if (joint_mutect2) {
+    if (joint_tnhaplotyper2) {
         // Separate normal cram files
         // Extract tumor cram files
         ch_cram = input.multiMap{ meta, cram, crai ->

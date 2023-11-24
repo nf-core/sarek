@@ -42,6 +42,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     gc_file                       // channel: [optional]  ascat gc content file
     rt_file                       // channel: [optional]  ascat rt file
     joint_mutect2                 // boolean: [mandatory] [default: false] run mutect2 in joint mode
+    joint_tnhaplotyper2           // boolean: [mandatory] [default: false] run tnhaplotyper2 in joint mode
     wes                           // boolean: [mandatory] [default: false] whether targeted data is processed
 
     main:
@@ -148,9 +149,9 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         BAM_VARIANT_CALLING_SOMATIC_SENTIEON_TNHAPLOTYPER2(
             // Remap channel to match module/subworkflow
             // Adjust meta.map to simplify joining channels
-            // joint_mutect2 mode needs different meta.map than regular mode
+            // joint_tnhaplotyper2 mode needs different meta.map than regular mode
             cram.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai ->
-                joint_mutect2 ?
+                joint_tnhaplotyper2 ?
                 //we need to keep all fields and then remove on a per-tool-basis to ensure proper joining at the filtering step
                 [ meta + [ id:meta.patient ], [ normal_cram, tumor_cram ], [ normal_crai, tumor_crai ] ] :
                 [ meta, [ normal_cram, tumor_cram ], [ normal_crai, tumor_crai ] ]
@@ -165,7 +166,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             panel_of_normals,
             panel_of_normals_tbi,
             intervals,
-            joint_mutect2
+            joint_tnhaplotyper2
         )
 
         vcf_sentieon_tnhaplotyper2 = BAM_VARIANT_CALLING_SOMATIC_SENTIEON_TNHAPLOTYPER2.out.vcf_filtered
