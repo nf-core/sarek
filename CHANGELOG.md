@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1335](https://github.com/nf-core/sarek/pull/1335) - Add index computation of `bcftools_annotations`, if not provided
 
 ### Changed
+- [#1339](https://github.com/nf-core/sarek/pull/1339) - Update sentieon-modules
 
 ### Fixed
 
