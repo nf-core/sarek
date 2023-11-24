@@ -25,7 +25,7 @@ workflow BAM_MERGE_INDEX_SAMTOOLS {
     MERGE_BAM(bam_to_merge.multiple.map { meta, bams -> [ meta, bams, [] ] }, [ [ id:'null' ], [], [], [] ])
 
     // Mix intervals and no_intervals channels together
-    bam_bai_merged = MERGE_BAM.out.bam.join(MERGE_BAM.out.index, failOnDuplicate: true, failOnMismatch: true)
+    bam_bai_merged = MERGE_BAM.out.bam.join(MERGE_BAM.out.index)
 
     // Index single bams, merged ones are indexed on the fly
     INDEX_MERGE_BAM(bam_to_merge.single)

@@ -26,11 +26,11 @@ workflow CRAM_MERGE_INDEX_SAMTOOLS {
     MERGE_CRAM(cram_to_merge.multiple.map { meta, crams -> [ meta, crams, [] ] }, fasta.combine(fasta_fai).map { meta, fasta_, _meta_fai, fai -> [ meta, fasta_, fai, [] ] }.collect())
 
     // Mix intervals and no_intervals channels together
-    cram_crai_merged = MERGE_CRAM.out.cram.join(MERGE_CRAM.out.index, failOnDuplicate: true, failOnMismatch: true)
+    cram_crai_merged = MERGE_CRAM.out.cram.join(MERGE_CRAM.out.index)
 
     // Index cram, multiple ones are indexed on the fly
     INDEX_CRAM(cram_to_merge.single)
-    cram_crai_single = cram_to_merge.single.join(INDEX_CRAM.out.index, failOnDuplicate: true, failOnMismatch: true)
+    cram_crai_single = cram_to_merge.single.join(INDEX_CRAM.out.index)
 
     // Mix intervals and no_intervals channels together
     cram_crai = cram_crai_merged.mix(cram_crai_single)
