@@ -26,7 +26,7 @@ workflow BAM_MERGE_INDEX_SAMTOOLS {
     MERGE_BAM(bam_to_merge.multiple, [ [ id:'null' ], []], [ [ id:'null' ], []])
 
     // Join with the bai file
-    bam_bai_merged = MERGE_BAM.out.bam.join(MERGE_BAM.out.bai, failOnDuplicate: true, failOnMismatch: true)
+    bam_bai_merged = MERGE_BAM.out.bam.join(MERGE_BAM.out.bai)
 
     // Index single bams, merged ones are indexed on the fly
     INDEX_MERGE_BAM(bam_to_merge.single)
