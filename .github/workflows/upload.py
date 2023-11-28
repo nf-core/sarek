@@ -13,7 +13,7 @@ path = "./variant_calling/strelka/HCC1395N/%s" % filename
 print(os.listdir('../../'))
 print(os.listdir('../../../'))
 print(os.listdir('../'))
-print(os.listdir('.'))
+print(os.listdir('./variant_calling/'))
 
 with open(path, "rb") as fp:
     r = requests.post(
