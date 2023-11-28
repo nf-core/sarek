@@ -6,7 +6,7 @@ access_token = os.environ["ACCESS_TOKEN"]
 workspace_directory = os.environ["GITHUB_WORKSPACE"]
 
 # TODO: replace sandbox link https://zenodo.org/api/deposit/depositions
-url = f"https://sandbox.zenodo.org/api/deposit/depositions?access_token={access_token}"
+url = f"https://zenodo.org/api/deposit/depositions?access_token={access_token}"
 
 filename = "*.vcf.gz"
 path = "../../../variant_calling/%s" % filename

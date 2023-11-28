@@ -41,18 +41,10 @@ jobs:
           destination: ./variant_calling
           flags: --no-sign-request --include ".vcf.gz" --exclude "g.vcf.gz"
 
-      # TODO remove this, it is probably not needed anymore, we are using python now
-      #- name: Create new Zenodo entry
-      #  uses: popperized/zenodo/create@master
-      #  env:
-      #    ZENODO_METADATA_PATH: sarek-ncbench/assets/zenodo_ncbench.json
-      #  entrypoint:
-      #    secrets: ${{ secrets.ZENODO_DEPOSIT }}
-      #
-      #- name: Upload file to Zenodo
-      #  uses: popperized/zenodo/upload@master
-      #  env:
-      #    ZENODO_UPLOAD_PATH: ./variant_calling
+      - name: list files
+        run: |
+          ls
+          ls ../
 
       - name: Install requests
         run: pip install requests # version pinning?
