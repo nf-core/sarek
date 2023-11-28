@@ -8,7 +8,7 @@ workspace_directory = os.environ["GITHUB_WORKSPACE"]
 # TODO: replace sandbox link https://zenodo.org/api/deposit/depositions
 url = f"https://zenodo.org/api/deposit/depositions?access_token={access_token}"
 
-filename = "*.genome.vcf.gz"
+filename = "HCC1395N.strelka.genome.vcf.gz"
 path = "./variant_calling/strelka/HCC1395N/%s" % filename
 print(os.listdir('../../'))
 print(os.listdir('../../../'))
