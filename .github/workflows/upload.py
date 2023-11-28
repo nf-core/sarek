@@ -10,8 +10,8 @@ url = f"https://zenodo.org/api/deposit/depositions?access_token={access_token}"
 
 filename = "*.vcf.gz"
 path = "../../variant_calling/strelka/HCC1395N/%s" % filename
-println(os.listdir('../../'))
-println(os.listdir('../../../'))
+print(os.listdir('../../'))
+print(os.listdir('../../../'))
 
 with open(path, "rb") as fp:
     r = requests.post(
