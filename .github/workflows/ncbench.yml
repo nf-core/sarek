@@ -35,7 +35,7 @@ jobs:
         if: ${{ matrix.enabled }}
         with:
           # TODO: download all vcfs
-          source: s3://nf-core-awsmegatests/sarek/results-test-59026dc07633edb83aab3bfb2f65f79db38437a1/test_full/variant_calling/strelka
+          source: s3://nf-core-awsmegatests/sarek/results-test-59026dc07633edb83aab3bfb2f65f79db38437a1/test_full/variant_calling
           command: sync
           aws_region: eu-west-1
           destination: ./variant_calling
@@ -43,7 +43,7 @@ jobs:
 
       - name: list files
         run: |
-          ls variant_calling/
+          ls variant_calling/strelka/HCC1395N/
 
       - name: Install requests
         run: pip install requests # version pinning?
