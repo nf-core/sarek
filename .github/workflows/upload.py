@@ -12,6 +12,8 @@ filename = "*.vcf.gz"
 path = "../../variant_calling/strelka/HCC1395N/%s" % filename
 print(os.listdir('../../'))
 print(os.listdir('../../../'))
+print(os.listdir('../'))
+print(os.listdir('.'))
 
 with open(path, "rb") as fp:
     r = requests.post(
