@@ -43,7 +43,7 @@ jobs:
 
       - name: list files
         run: |
-          ls ../../
+          ls variant_calling/
 
       - name: Install requests
         run: pip install requests # version pinning?
