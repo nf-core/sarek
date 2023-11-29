@@ -6,22 +6,27 @@ access_token = os.environ["ACCESS_TOKEN"]
 workspace_directory = os.environ["GITHUB_WORKSPACE"]
 
 # TODO: replace sandbox link https://zenodo.org/api/deposit/depositions
-url = f"https://zenodo.org/api/deposit/depositions?access_token={access_token}"
+url = f"https://sandbox.zenodo.org/api/deposit/depositions?access_token={access_token}"
 
-filename = "HCC1395N.strelka.genome.vcf.gz"
-path = "./variant_calling/strelka/HCC1395N/%s" % filename
-print(os.listdir('../../'))
-print(os.listdir('../../../'))
-print(os.listdir('../'))
-print(os.listdir('./variant_calling/strelka/HCC1395N/'))
+# Create empty upload
 
-with open(path, "rb") as fp:
-    r = requests.post(
-        "%s/%s" % (bucket_url, filename),
-        data=fp,
-        params=params,
-    )
-r.json()
+
+
+# filename = "HCC1395N.strelka.genome.vcf.gz"
+# path = "./variant_calling/strelka/HCC1395N/%s" % filename
+# print(os.listdir('../../'))
+# print(os.listdir('../../../'))
+# print(os.listdir('../'))
+# print(os.listdir('./variant_calling/strelka/HCC1395N/'))
+
+# bucket_url = "https://zenodo.org/api/deposit/depositions"
+# with open(path, "rb") as fp:
+#     r = requests.post(
+#         "%s/%s" % (bucket_url, filename),
+#         data=fp,
+#         params=params,
+#     )
+# r.json()
 
 data = {
     'metadata': {
