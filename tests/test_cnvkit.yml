@@ -98,7 +98,7 @@
     - path: results/reports/mosdepth/sample4/sample4.recal.regions.bed.gz
       md5sum: 0aaee6da65050bedcd40b9fbf0622873
     - path: results/reports/mosdepth/sample4/sample4.recal.regions.bed.gz.csi
-      md5sum: 544e02fcca548749a0af758d0a2df35
+      md5sum: 544e02fcca548749a0af758d0a2df352
     - path: results/reports/samtools/sample4/sample4.recal.cram.stats
     # conda changes md5sums for test
 - name: Run variant calling on tumor_only sample with cnvkit
