@@ -76,7 +76,7 @@
     - path: results/reports/mosdepth/sample3/sample3.recal.regions.bed.gz
       md5sum: 0aaee6da65050bedcd40b9fbf0622873
     - path: results/reports/mosdepth/sample3/sample3.recal.regions.bed.gz.csi
-      md5sum: 544e02fcca548749a0af758d0a2df35
+      md5sum: 544e02fcca548749a0af758d0a2df352
     - path: results/reports/samtools/sample3/sample3.recal.cram.stats
     # conda changes md5sums for test
     - path: results/reports/mosdepth/sample4/sample4.md.mosdepth.global.dist.txt
