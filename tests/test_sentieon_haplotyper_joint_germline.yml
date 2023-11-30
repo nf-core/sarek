@@ -27,6 +27,7 @@
     - path: results/variant_calling/sentieon_haplotyper/testT/testT.haplotyper.g.vcf.gz.tbi
     - path: results/haplotyper
       should_exist: false
+      #TODO
 - name: Run joint germline variant calling with sentieon haplotyper all intervals at once
   command: nextflow run main.nf -profile test_cache,software_license,targeted --sentieon_extension --input ./tests/csv/3.0/mapped_joint_bam.csv --tools sentieon_haplotyper --step variant_calling --joint_germline --outdir results --sentieon_haplotyper_emit_mode gvcf --nucleotides_per_second 100
   tags:
@@ -54,6 +55,7 @@
     - path: results/variant_calling/sentieon_haplotyper/testT/testT.haplotyper.g.vcf.gz.tbi
     - path: results/haplotyper
       should_exist: false
+    #TODO
 - name: Run joint germline variant calling with sentieon haplotyper with stub for VQSR
   command: nextflow run main.nf -profile test_cache,software_license,tools_germline --sentieon_extension --input ./tests/csv/3.0/mapped_joint_bam.csv --tools sentieon_haplotyper --step variant_calling --joint_germline --outdir results --sentieon_haplotyper_emit_mode gvcf -stub-run
   tags:
@@ -83,3 +85,4 @@
     - path: results/variant_calling/sentieon_haplotyper/testT/testT.haplotyper.g.vcf.gz.tbi
     - path: results/haplotyper
       should_exist: false
+      #TODO
