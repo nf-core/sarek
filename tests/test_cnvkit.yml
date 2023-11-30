@@ -58,7 +58,7 @@
     - path: results/cnvkit
       should_exist: false
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
-      md5sum: b61e1acee11a6ddf7ce3232a5948a6a0
+      md5sum: b61e1acee11a6ddf7ce
     - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
       md5sum: 1a382f98d488d2ae3df83a0d87caafc1
     - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
