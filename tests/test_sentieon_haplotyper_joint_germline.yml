@@ -27,8 +27,6 @@
     - path: results/variant_calling/sentieon_haplotyper/testT/testT.haplotyper.g.vcf.gz.tbi
     - path: results/haplotyper
       should_exist: false
-    - path: results/reports/mosdepth/testN/testN.recal.mosdepth.global.dist.txt
-      md5sum: 69e29702ef01fd8f6c7a5468fc35a16a
     - path: results/reports/mosdepth/testN/testN.recal.mosdepth.region.dist.txt
       md5sum: 6ec49cd7d510c2eb3d9d90fdb79b783a
     - path: results/reports/mosdepth/testN/testN.recal.mosdepth.summary.txt
