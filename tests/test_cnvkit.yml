@@ -123,7 +123,6 @@
     - path: results/reports/mosdepth/sample2/sample2.recal.regions.bed.gz.csi
       md5sum: 393c2749068304d8545b501b9d4658e4
     - path: results/reports/samtools/sample2/sample2.recal.cram.stats
-    # conda changes md5sums for test
 - name: Run variant calling on germline sample with cnvkit
   command: nextflow run main.nf -profile test_cache,tools_germline --tools cnvkit --outdir results
   tags:
