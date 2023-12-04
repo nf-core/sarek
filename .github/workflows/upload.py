@@ -16,6 +16,9 @@ r = requests.post(url,
                     json={},
                     headers=headers)
 
+
+print(r.json())
+
 # Upload a new file
 bucket_url = r.json()["links"]["bucket"]
 
