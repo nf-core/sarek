@@ -13,7 +13,7 @@ url = f"https://sandbox.zenodo.org/api/deposit/depositions"
 
 # Test if GET works
 
-r = requests.get('https://zenodo.org/api/deposit/depositions',
+r = requests.get('https://sandbox.zenodo.org/api/deposit/depositions',
                     params=params)
 print(r.status_code)
 # 200
