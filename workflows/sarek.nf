@@ -801,17 +801,6 @@ workflow SAREK {
                 cram_variant_calling_no_spark,
                 cram_variant_calling_spark)
 
-            CRAM_QC_RECAL(
-                cram_variant_calling,
-                fasta,
-                intervals_for_preprocessing)
-
-            // Gather QC reports
-            reports = reports.mix(CRAM_QC_RECAL.out.reports.collect{ meta, report -> report })
-
-            // Gather used softwares versions
-            versions = versions.mix(CRAM_QC_RECAL.out.versions)
-
             // If params.save_output_as_bam, then convert CRAM files to BAM
             CRAM_TO_BAM_RECAL(cram_variant_calling, fasta, fasta_fai)
             versions = versions.mix(CRAM_TO_BAM_RECAL.out.versions)
@@ -852,11 +841,16 @@ workflow SAREK {
 
     }
 
+    if (params.step == 'annotate') cram_variant_calling = Channel.empty()
+
+    // RUN CRAM QC on the recalibrated CRAM files or when starting from step variant calling. NGSCheckmate should be run also on non-recalibrated CRAM files
+    CRAM_SAMPLEQC(cram_variant_calling,
+                    ngscheckmate_bed,
+                    fasta,
+                    params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'),
+                    intervals_for_preprocessing)
+
     if (params.tools) {
-
-        if (params.step == 'annotate') cram_variant_calling = Channel.empty()
-
-        CRAM_SAMPLEQC(cram_variant_calling, ngscheckmate_bed, fasta)
 
         //
         // Logic to separate germline samples, tumor samples with no matched normal, and combine tumor-normal pairs
