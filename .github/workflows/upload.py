@@ -52,6 +52,8 @@ data = {
 # print(os.listdir('../'))
 # print(os.listdir('./variant_calling/strelka/HCC1395N/'))
 
+print(r.json())
+
 os.environ['DEPOSITION_ID'] = r.json()["metadata"]["recid"]
 # TODO add publication step
 #r = requests.post('https://zenodo.org/api/deposit/depositions/%s/actions/publish' % deposition_id,
