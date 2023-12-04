@@ -3,20 +3,29 @@ import os
 
 headers = {"Content-Type": "application/json"}
 access_token = os.environ["ACCESS_TOKEN"]
+params = {'access_token': access_token}
 workspace_directory = os.environ["GITHUB_WORKSPACE"]
 
 # TODO: replace sandbox link https://zenodo.org/api/deposit/depositions
 # https://sandbox.zenodo.org/api/deposit/depositions?access_token={access_token}
-url = f"https://sandbox.zenodo.org/api/deposit/depositions/"
+url = f"https://sandbox.zenodo.org/api/deposit/depositions"
+
+
+# Test if GET works
+
+r = requests.get('https://zenodo.org/api/deposit/depositions',
+                    params=params)
+print(r.status_code)
+# 200
+
 
 # Create empty upload
-params = {'access_token': access_token}
 
 r = requests.post(url,
                     params=params,
                     json={},
                     headers=headers)
-
+print(r.status_code)
 print(r.json())
 
 # Upload a new file
