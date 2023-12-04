@@ -10,48 +10,34 @@ workspace_directory = os.environ["GITHUB_WORKSPACE"]
 # https://sandbox.zenodo.org/api/deposit/depositions?access_token={access_token}
 url = f"https://sandbox.zenodo.org/api/deposit/depositions"
 
-
-# Test if GET works
-
-r = requests.get('https://sandbox.zenodo.org/api/deposit/depositions',
-                    params=params)
-print(r.status_code)
-# 200
-
-
 # Create empty upload
-
 r = requests.post(url,
                     params=params,
                     json={},
                     headers=headers)
-print(r.status_code)
-print(r.json())
 
 # Upload a new file
 bucket_url = r.json()["links"]["bucket"]
 
-#filename = "HCC1395N.strelka.genome.vcf.gz"
-#path = "./variant_calling/strelka/HCC1395N/%s" % filename
-#with open(path, "rb") as fp:
-#    r = requests.put(
-#        "%s/%s" % (bucket_url, filename),
-#        data=fp,
-#        params=params,
-#    )
-#r.json()
+filename = "HCC1395N.strelka.genome.vcf.gz"
+path = "./variant_calling/strelka/HCC1395N/%s" % filename
+with open(path, "rb") as fp:
+    r = requests.put(
+        "%s/%s" % (bucket_url, filename),
+        data=fp,
+        params=params,
+    )
 
 # Add metadata to uploaded file
-
-#data = {
-#    'metadata': {
-#        'title': 'My first upload',
-#        'upload_type': 'poster',
-#        'description': 'This is my first upload',
-#        'creators': [{'name': 'Doe, John',
-#                    'affiliation': 'Zenodo'}]
-#    }
-#}
+data = {
+    'metadata': {
+        'title': 'My first upload',
+        'upload_type': 'poster',
+        'description': 'This is my first upload',
+        'creators': [{'name': 'Doe, John',
+                    'affiliation': 'Zenodo'}]
+    }
+}
 
 #r = requests.put('https://sandbox.zenodo.org/api/deposit/depositions/%s' % deposition_id,
 #                params=params, data=json.dumps(data),
@@ -66,7 +52,7 @@ bucket_url = r.json()["links"]["bucket"]
 # print(os.listdir('../'))
 # print(os.listdir('./variant_calling/strelka/HCC1395N/'))
 
-#os.environ['DEPOSITION_ID'] = r.json()["metadata"]["recid"]
+os.environ['DEPOSITION_ID'] = r.json()["metadata"]["recid"]
 # TODO add publication step
 #r = requests.post('https://zenodo.org/api/deposit/depositions/%s/actions/publish' % deposition_id,
 #                      params={'access_token': ACCESS_TOKEN} )
