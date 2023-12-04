@@ -91,7 +91,7 @@
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
       md5sum: e82e90c7d508a135b5a8a7cd6933452e
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
-      md5sum: 4f0d231060cbde4efdd673863bd2fb59
+      md5sum: 615c5c5019d88045a9ff5bbe6e63d270
     - path: results/reports/mosdepth/test/test.recal.per-base.bed.gz
       md5sum: bc1df47d46f818fee5275975925d769a
     - path: results/reports/mosdepth/test/test.recal.per-base.bed.gz.csi
