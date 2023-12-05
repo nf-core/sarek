@@ -12,12 +12,17 @@ url = f"https://sandbox.zenodo.org/api/deposit/depositions"
 
 # Create empty upload
 r = requests.post(url,
-                    params=params,
-                    json={},
-                    headers=headers)
+                params=params,
+                json={},
+                headers=headers)
 
+os.environ['DEPOSITION_ID'] = r.json()["metadata"]["recid"]
+deposition_id = r.json()["metadata"]["recid"]
 
+print("Create empty upload:\n")
 print(r.json())
+print(deposition_id)
+print()
 
 # Upload a new file
 bucket_url = r.json()["links"]["bucket"]
@@ -42,11 +47,14 @@ data = {
     }
 }
 
-#r = requests.put('https://sandbox.zenodo.org/api/deposit/depositions/%s' % deposition_id,
-#                params=params, data=json.dumps(data),
-#                headers=headers)
-#r.status_code
-
+r = requests.put('https://sandbox.zenodo.org/api/deposit/depositions/%s' % deposition_id,
+                params=params,
+                data=json.dumps(data),
+                headers=headers)
+print("Add metadata: ")
+print(r.status_code)
+print(r.json())
+print()
 
 # filename = "HCC1395N.strelka.genome.vcf.gz"
 # path = "./variant_calling/strelka/HCC1395N/%s" % filename
@@ -55,12 +63,11 @@ data = {
 # print(os.listdir('../'))
 # print(os.listdir('./variant_calling/strelka/HCC1395N/'))
 
-print(r.json())
 
-os.environ['DEPOSITION_ID'] = r.json()["metadata"]["recid"]
 # TODO add publication step
-#r = requests.post('https://zenodo.org/api/deposit/depositions/%s/actions/publish' % deposition_id,
-#                      params={'access_token': ACCESS_TOKEN} )
-#r.status_code
-# 202
+r = requests.post('https://sandbox.zenodo.org/api/deposit/depositions/%s/actions/publish' % deposition_id,
+                    params=params )
+
+print("Publish data: ")
+print(r.status_code)
 
