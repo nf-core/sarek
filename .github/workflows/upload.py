@@ -17,7 +17,7 @@ r = requests.post(url,
                 json={},
                 headers=headers)
 
-#os.environ['DEPOSITION_ID'] = r.json()["id"]
+os.environ['DEPOSITION_ID'] = str(r.json()["id"])
 deposition_id = r.json()["id"]
 
 print("Create empty upload:\n")
@@ -28,23 +28,32 @@ print()
 # Upload a new file
 bucket_url = r.json()["links"]["bucket"]
 
-filename = "HCC1395N.strelka.genome.vcf.gz"
-path = "./variant_calling/strelka/HCC1395N/%s" % filename
-with open(path, "rb") as fp:
-    r = requests.put(
-        "%s/%s" % (bucket_url, filename),
-        data=fp,
-        params=params,
-    )
+filenames = ["deepvariant/HCC1395N/HCC1395N.deepvariant.vcf.gz",
+                "freebayes/HCC1395N/HCC1395N.freebayes.vcf.gz",
+                "haplotypecaller/HCC1395N/HCC1395N.haplotypecaller.filtered.vcf.gz",
+                "haplotypecaller/HCC1395N/HCC1395N.freebayes.vcf.gz",
+                "strelka/HCC1395N/HCC1395N.strelka.genome.vcf.gz"]
+
+for file in filenames:
+    path = "./variant_calling/%s" % file
+    with open(path, "rb") as fp:
+        r = requests.put(
+            "%s/%s" % (bucket_url, file),
+            data=fp,
+            params=params,
+        )
 
 # Add metadata to uploaded file
+#TODO Fix pipeline version
 data = {
     'metadata': {
-        'title': 'My first upload',
-        'upload_type': 'poster',
-        'description': 'This is my first upload',
-        'creators': [{'name': 'Doe, John',
-                    'affiliation': 'Zenodo'}]
+        'title': 'WES benchmark results nf-core/sarek v3.1',
+        'upload_type': 'data',
+        'description': 'Variant calling results on benchmarking datasets produced with the nf-core/sarek v3.1.1 pipeline.',
+        'creators': [{'name': 'Garcia, Maxime Ulysse',
+                    'affiliation': 'Seqera, Barcelona'},
+                    {'name': 'Hanssen, Friederike',
+                    'affiliation': 'Quantitative Biology Center, Tuebingen'}]
     }
 }
 
@@ -52,6 +61,7 @@ r = requests.put('https://sandbox.zenodo.org/api/deposit/depositions/%s' % depos
                 params=params,
                 data=json.dumps(data),
                 headers=headers)
+
 print("Add metadata: ")
 print(r.status_code)
 print(r.json())
@@ -64,11 +74,9 @@ print()
 # print(os.listdir('../'))
 # print(os.listdir('./variant_calling/strelka/HCC1395N/'))
 
-
-# TODO add publication step
 r = requests.post('https://sandbox.zenodo.org/api/deposit/depositions/%s/actions/publish' % deposition_id,
                     params=params )
 
-print("Publish data: ")
+print("Publish data status code: ")
 print(r.status_code)
 
