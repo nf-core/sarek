@@ -16,7 +16,7 @@ r = requests.post(url,
                 json={},
                 headers=headers)
 
-os.environ['DEPOSITION_ID'] = r.json()["id"]
+#os.environ['DEPOSITION_ID'] = r.json()["id"]
 deposition_id = r.json()["id"]
 
 print("Create empty upload:\n")
