@@ -5,6 +5,41 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [dev]
+
+### Added
+
+- [#1333](https://github.com/nf-core/sarek/pull/1333) - Back to dev
+- [#1335](https://github.com/nf-core/sarek/pull/1335) - Add index computation of `bcftools_annotations`, if not provided
+
+### Changed
+
+- [#1339](https://github.com/nf-core/sarek/pull/1339) - Update sentieon-modules
+- [#1344](https://github.com/nf-core/sarek/pull/1344) - Enable CRAM QC, when starting from variantcalling
+
+### Fixed
+
+- [#1334](https://github.com/nf-core/sarek/pull/1334) - Remove extra v, when reporting tower runs on slack
+- [#1335](https://github.com/nf-core/sarek/pull/1335) - Add docs and validation for bcftools annotation parameters
+
+### Removed
+
+### Dependencies
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+
+### Modules / Subworkflows
+
+| script | Old name | New name |
+| ------ | -------- | -------- |
+
+### Parameter
+
+| Old name                   | New name                 |
+| -------------------------- | ------------------------ |
+| bcftools_annotations_index | bcftools_annotations_tbi |
+
 ## [3.4.0](https://github.com/nf-core/sarek/releases/tag/3.4.0) - Pårtetjåkko
 
 Pårtetjåkko is a mountain in the south of the park.
