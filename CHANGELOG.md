@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Dependency | Old version | New version |
 | ---------- | ----------- | ----------- |
+| dragmap    | 1.2.1       | 1.3.0       |
 | sentieon   | 202112.06   | 202308.01   |
 
 ### Modules / Subworkflows
