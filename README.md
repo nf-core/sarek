@@ -151,6 +151,7 @@ We thank the following people for their extensive assistance in the development 
 - [Paul Cantalupo](https://github.com/pcantalupo)
 - [Phil Ewels](https://github.com/ewels)
 - [Sabrina Krakau](https://github.com/skrakau)
+- [Sam Minot](https://github.com/sminot)
 - [Sebastian-D](https://github.com/Sebastian-D)
 - [Silvia Morini](https://github.com/silviamorins)
 - [Solenne Correard](https://github.com/scorreard)
