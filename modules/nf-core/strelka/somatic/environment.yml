@@ -1,3 +1,4 @@
+name: strelka_somatic
 channels:
   - conda-forge
   - bioconda

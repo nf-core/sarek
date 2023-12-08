@@ -1,3 +1,4 @@
+name: manta_tumoronly
 channels:
   - conda-forge
   - bioconda

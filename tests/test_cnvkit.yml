@@ -57,6 +57,30 @@
       md5sum: b4a49faf170e436ec32dcc21ccc3ce8f
     - path: results/cnvkit
       should_exist: false
+    - path: results/reports/mosdepth/sample3/sample3.recal.mosdepth.global.dist.txt
+      md5sum: 69e29702ef01fd8f6c7a5468fc35a16a
+    - path: results/reports/mosdepth/sample3/sample3.recal.mosdepth.region.dist.txt
+      md5sum: 6ec49cd7d510c2eb3d9d90fdb79b783a
+    - path: results/reports/mosdepth/sample3/sample3.recal.mosdepth.summary.txt
+      md5sum: 103098d0bf76ed82d2b87d5f242b099a
+    - path: results/reports/mosdepth/sample3/sample3.recal.regions.bed.gz
+      md5sum: b5888cf7395c57d39879a5faa6159eb3
+    - path: results/reports/mosdepth/sample3/sample3.recal.regions.bed.gz.csi
+      md5sum: 9cb0ad7039a3b703d16ca7d5b835c0ee
+    - path: results/reports/samtools/sample3/sample3.recal.cram.stats
+    # conda changes md5sums for test
+    - path: results/reports/mosdepth/sample4/sample4.recal.mosdepth.global.dist.txt
+      md5sum: f2dcd00a64947c49e8e4b93c2f4fbf27
+    - path: results/reports/mosdepth/sample4/sample4.recal.mosdepth.region.dist.txt
+      md5sum: 39005ffaac22871ffaaf19656fe69c5b
+    - path: results/reports/mosdepth/sample4/sample4.recal.mosdepth.summary.txt
+      md5sum: 68d4b98f17361fddf73052ead34fa370
+    - path: results/reports/mosdepth/sample4/sample4.recal.regions.bed.gz
+      md5sum: 2819e995eafded35f53328c4ec19ba58
+    - path: results/reports/mosdepth/sample4/sample4.recal.regions.bed.gz.csi
+      md5sum: 393c2749068304d8545b501b9d4658e4
+    - path: results/reports/samtools/sample4/sample4.recal.cram.stats
+    # conda changes md5sums for test
 - name: Run variant calling on tumor_only sample with cnvkit
   command: nextflow run main.nf -profile test_cache,tools_tumoronly --tools cnvkit --outdir results
   tags:
@@ -88,6 +112,17 @@
       md5sum: e6d0190c1c37ce6e41f76ca5b24ccca3
     - path: results/cnvkit
       should_exist: false
+    - path: results/reports/mosdepth/sample2/sample2.recal.mosdepth.global.dist.txt
+      md5sum: f2dcd00a64947c49e8e4b93c2f4fbf27
+    - path: results/reports/mosdepth/sample2/sample2.recal.mosdepth.region.dist.txt
+      md5sum: 39005ffaac22871ffaaf19656fe69c5b
+    - path: results/reports/mosdepth/sample2/sample2.recal.mosdepth.summary.txt
+      md5sum: 68d4b98f17361fddf73052ead34fa370
+    - path: results/reports/mosdepth/sample2/sample2.recal.regions.bed.gz
+      md5sum: 2819e995eafded35f53328c4ec19ba58
+    - path: results/reports/mosdepth/sample2/sample2.recal.regions.bed.gz.csi
+      md5sum: 393c2749068304d8545b501b9d4658e4
+    - path: results/reports/samtools/sample2/sample2.recal.cram.stats
 - name: Run variant calling on germline sample with cnvkit
   command: nextflow run main.nf -profile test_cache,tools_germline --tools cnvkit --outdir results
   tags:
@@ -121,6 +156,17 @@
       md5sum: 79aae7e9c135fb8c65f8fbda12610faf
     - path: results/cnvkit
       should_exist: false
+    - path: results/reports/mosdepth/sample1/sample1.recal.mosdepth.global.dist.txt
+      md5sum: 69e29702ef01fd8f6c7a5468fc35a16a
+    - path: results/reports/mosdepth/sample1/sample1.recal.mosdepth.region.dist.txt
+      md5sum: 6ec49cd7d510c2eb3d9d90fdb79b783a
+    - path: results/reports/mosdepth/sample1/sample1.recal.mosdepth.summary.txt
+      md5sum: 103098d0bf76ed82d2b87d5f242b099a
+    - path: results/reports/mosdepth/sample1/sample1.recal.regions.bed.gz
+      md5sum: b5888cf7395c57d39879a5faa6159eb3
+    - path: results/reports/mosdepth/sample1/sample1.recal.regions.bed.gz.csi
+      md5sum: 9cb0ad7039a3b703d16ca7d5b835c0ee
+    - path: results/reports/samtools/sample1/sample1.recal.cram.stats
 - name: Run variant calling on somatic samples with cnvkit and skip variant calling on matched normal
   command: nextflow run main.nf -profile test_cache,tools_somatic --tools cnvkit --only_paired_variant_calling --outdir results
   tags:
@@ -156,3 +202,27 @@
       md5sum: d15bf5061d90c8edbcba04d2bd2a270c
     - path: results/variant_calling/cnvkit/sample4_vs_sample3/test2.paired_end.recalibrated.sorted.targetcoverage.cnn
       md5sum: b4a49faf170e436ec32dcc21ccc3ce8f
+    - path: results/reports/mosdepth/sample3/sample3.recal.mosdepth.global.dist.txt
+      md5sum: 69e29702ef01fd8f6c7a5468fc35a16a
+    - path: results/reports/mosdepth/sample3/sample3.recal.mosdepth.region.dist.txt
+      md5sum: 6ec49cd7d510c2eb3d9d90fdb79b783a
+    - path: results/reports/mosdepth/sample3/sample3.recal.mosdepth.summary.txt
+      md5sum: 103098d0bf76ed82d2b87d5f242b099a
+    - path: results/reports/mosdepth/sample3/sample3.recal.regions.bed.gz
+      md5sum: b5888cf7395c57d39879a5faa6159eb3
+    - path: results/reports/mosdepth/sample3/sample3.recal.regions.bed.gz.csi
+      md5sum: 9cb0ad7039a3b703d16ca7d5b835c0ee
+    - path: results/reports/samtools/sample3/sample3.recal.cram.stats
+    # conda changes md5sums for test
+    - path: results/reports/mosdepth/sample4/sample4.recal.mosdepth.global.dist.txt
+      md5sum: f2dcd00a64947c49e8e4b93c2f4fbf27
+    - path: results/reports/mosdepth/sample4/sample4.recal.mosdepth.region.dist.txt
+      md5sum: 39005ffaac22871ffaaf19656fe69c5b
+    - path: results/reports/mosdepth/sample4/sample4.recal.mosdepth.summary.txt
+      md5sum: 68d4b98f17361fddf73052ead34fa370
+    - path: results/reports/mosdepth/sample4/sample4.recal.regions.bed.gz
+      md5sum: 2819e995eafded35f53328c4ec19ba58
+    - path: results/reports/mosdepth/sample4/sample4.recal.regions.bed.gz.csi
+      md5sum: 393c2749068304d8545b501b9d4658e4
+    - path: results/reports/samtools/sample4/sample4.recal.cram.stats
+    # conda changes md5sums for test

@@ -1,4 +1,4 @@
-name: "sentieon_dnamodelapply"
+name: sentieon_dnamodelapply
 description: modifies the input VCF file by adding the MLrejected FILTER to the variants
 keywords:
   - dnamodelapply

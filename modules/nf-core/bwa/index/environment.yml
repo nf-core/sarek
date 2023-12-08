@@ -1,3 +1,4 @@
+name: bwa_index
 channels:
   - conda-forge
   - bioconda

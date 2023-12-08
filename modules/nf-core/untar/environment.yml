@@ -1,3 +1,4 @@
+name: untar
 channels:
   - conda-forge
   - bioconda

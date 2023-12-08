@@ -5,14 +5,54 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## dev
+## [dev]
+
+### Added
+
+- [#1333](https://github.com/nf-core/sarek/pull/1333) - Back to dev
+- [#1335](https://github.com/nf-core/sarek/pull/1335) - Add index computation of `bcftools_annotations`, if not provided
+
+### Changed
+
+- [#1339](https://github.com/nf-core/sarek/pull/1339) - Update sentieon-modules
+- [#1344](https://github.com/nf-core/sarek/pull/1344) - Enable CRAM QC, when starting from variantcalling
+
+### Fixed
+
+- [#1334](https://github.com/nf-core/sarek/pull/1334) - Remove extra v, when reporting tower runs on slack
+- [#1335](https://github.com/nf-core/sarek/pull/1335) - Add docs and validation for bcftools annotation parameters
+
+### Removed
+
+### Dependencies
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+
+### Modules / Subworkflows
+
+| script | Old name | New name |
+| ------ | -------- | -------- |
+
+### Parameter
+
+| Old name                   | New name                 |
+| -------------------------- | ------------------------ |
+| bcftools_annotations_index | bcftools_annotations_tbi |
+
+## [3.4.0](https://github.com/nf-core/sarek/releases/tag/3.4.0) - Pårtetjåkko
+
+Pårtetjåkko is a mountain in the south of the park.
 
 ### Added
 
 - [#1113](https://github.com/nf-core/sarek/pull/1113) - Adding CNVkit genemetrics module
 - [#1193](https://github.com/nf-core/sarek/pull/1193) - Adding support for Sentieon's DnaScope for germline variant-calling including joint-germline
+- [#1244](https://github.com/nf-core/sarek/pull/1244) - Add bcf annotate module
+- [#1252](https://github.com/nf-core/sarek/pull/1252) - Added NGSCheckMate tool for checking that samples come from the same individual
 - [#1271](https://github.com/nf-core/sarek/pull/1271) - Back to dev
-- [#1290](https://github.com/nf-core/sarek/pull/1290) - Add nf-test for whole pipeline.
+- [#1288](https://github.com/nf-core/sarek/pull/1288) - Add nf-test continuous integration (but no tests)
+- [#1290](https://github.com/nf-core/sarek/pull/1290) - Add nf-test for whole pipeline
 
 ### Changed
 
@@ -20,6 +60,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1280](https://github.com/nf-core/sarek/pull/1280) - Replacing link to `SentieonDNAscopeModel1.1.model` in Sentieon's S3 with link to same file in igenomes' S3
 - [#1303](https://github.com/nf-core/sarek/pull/1303) - Ressurect vep_version params and changed its scope to pipeline to enable usage for vep loftee plugin
 - [#1304](https://github.com/nf-core/sarek/pull/1304) - Update modules
+- [#1311](https://github.com/nf-core/sarek/pull/1311) - Update local modules with an `environment.yml` file
+- [#1317](https://github.com/nf-core/sarek/pull/1317) - Add new tools to subway map
+- [#1325](https://github.com/nf-core/sarek/pull/1325) - Move `sentieon_dnascope_model` params into `igenomes.config`
+- [#1325](https://github.com/nf-core/sarek/pull/1325) - Refactor config files
+- [#1327](https://github.com/nf-core/sarek/pull/1327) - Update modules to have an conda environment name
 
 ### Fixed
 
@@ -27,6 +72,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1287](https://github.com/nf-core/sarek/pull/1287) - Adding label `process_single` to local modules
 - [#1298](https://github.com/nf-core/sarek/pull/1298) - Fix annotation cache usage
 - [#1301](https://github.com/nf-core/sarek/pull/1301) - Fix nf-prov usage
+- [#1315](https://github.com/nf-core/sarek/pull/1315) - Avoid clash of configs of `FILTERVARIANTTRANCHES` in the Sentieon-Haplotyper and GATK-Haplotypecaller subworkflows
+- [#1318](https://github.com/nf-core/sarek/pull/1218) - Fix writing of params.json on S3
+- [#1324](https://github.com/nf-core/sarek/pull/1324) - Fix various typos & code formatting
+- [#1325](https://github.com/nf-core/sarek/pull/1325) - Update bcfannotate tests and related config files
+- [#1328](https://github.com/nf-core/sarek/pull/1328) - Fix links to docs in `nextflow_schema.json` and `docs/output.md`
+- [#1328](https://github.com/nf-core/sarek/pull/1328) - Add missing icons in `nextflow_schema.json`
+- [#1330](https://github.com/nf-core/sarek/pull/1330) - Add SnpEff to full sized tests
 
 ### Removed
 
@@ -55,6 +107,7 @@ Ráhpajávvre is the Lule Sámi spelling of Rapaselet.
 
 - [#1246](https://github.com/nf-core/sarek/pull/1246) - Back to dev
 - [#1259](https://github.com/nf-core/sarek/pull/1259) - nf-prov plugin
+- [#1288](https://github.com/nf-core/sarek/pull/1288) - Add nf-test continuous integration.
 
 ### Changed
 
@@ -80,7 +133,6 @@ A lake near the Rapaselet delta.
 ### Added
 
 - [#1231](https://github.com/nf-core/sarek/pull/1231) - Back to dev
-- [#1244](https://github.com/nf-core/sarek/pull/1244) - Add bcf annotate module
 
 ### Changed
 
@@ -115,7 +167,6 @@ Rapaselet is a delta formed by the Rapaätno river between the Bielloriehppe mas
 - [#1173](https://github.com/nf-core/sarek/pull/1173) - CI tests for VQSR track with stub runs
 - [#1122](https://github.com/nf-core/sarek/pull/1122), [#1196](https://github.com/nf-core/sarek/pull/1196) - Add `annotation cache` functionality
 - [#1184](https://github.com/nf-core/sarek/pull/1184) - Stub-based CI-test of Sentieon joint-germline variant-calling with VQSR
-- [#1288](https://github.com/nf-core/sarek/pull/1288) - Add nf-test continuous integration.
 
 ### Changed
 

@@ -1,3 +1,4 @@
+name: samtools_merge
 channels:
   - conda-forge
   - bioconda

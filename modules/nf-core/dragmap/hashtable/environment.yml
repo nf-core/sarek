@@ -1,3 +1,4 @@
+name: dragmap_hashtable
 channels:
   - conda-forge
   - bioconda

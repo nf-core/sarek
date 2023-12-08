@@ -1,3 +1,4 @@
+name: samtools_faidx
 channels:
   - conda-forge
   - bioconda

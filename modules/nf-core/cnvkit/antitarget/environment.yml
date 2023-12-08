@@ -1,3 +1,4 @@
+name: cnvkit_antitarget
 channels:
   - conda-forge
   - bioconda

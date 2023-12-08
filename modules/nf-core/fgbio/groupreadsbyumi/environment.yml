@@ -1,3 +1,4 @@
+name: fgbio_groupreadsbyumi
 channels:
   - conda-forge
   - bioconda

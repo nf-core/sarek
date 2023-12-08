@@ -1,3 +1,4 @@
+name: cnvkit_genemetrics
 channels:
   - conda-forge
   - bioconda

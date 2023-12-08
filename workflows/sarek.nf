@@ -27,6 +27,9 @@ def checkPathParamList = [
     params.ascat_loci_rt,
     params.bwa,
     params.bwamem2,
+    params.bcftools_annotations,
+    params.bcftools_annotations_tbi,
+    params.bcftools_header_lines,
     params.cf_chrom_len,
     params.chr_dir,
     params.cnvkit_reference,
@@ -48,17 +51,14 @@ def checkPathParamList = [
     params.known_snps_tbi,
     params.mappability,
     params.multiqc_config,
+    params.ngscheckmate_bed,
     params.pon,
     params.pon_tbi,
     params.sentieon_dnascope_model,
-    params.snpeff_cache,
     params.spliceai_indel,
     params.spliceai_indel_tbi,
     params.spliceai_snv,
-    params.spliceai_snv_tbi,
-    params.bcftools_annotations,
-    params.bcftools_annotations_index,
-    params.bcftools_header_lines
+    params.spliceai_snv_tbi
 ]
 
 // only check if we are using the tools
@@ -87,6 +87,8 @@ ascat_alleles           = params.ascat_alleles           ? Channel.fromPath(para
 ascat_loci              = params.ascat_loci              ? Channel.fromPath(params.ascat_loci).collect()              : Channel.empty()
 ascat_loci_gc           = params.ascat_loci_gc           ? Channel.fromPath(params.ascat_loci_gc).collect()           : Channel.value([])
 ascat_loci_rt           = params.ascat_loci_rt           ? Channel.fromPath(params.ascat_loci_rt).collect()           : Channel.value([])
+bcftools_annotations    = params.bcftools_annotations    ? Channel.fromPath(params.bcftools_annotations).collect()    : Channel.empty()
+bcftools_header_lines   = params.bcftools_header_lines   ? Channel.fromPath(params.bcftools_header_lines).collect()   : Channel.empty()
 cf_chrom_len            = params.cf_chrom_len            ? Channel.fromPath(params.cf_chrom_len).collect()            : []
 chr_dir                 = params.chr_dir                 ? Channel.fromPath(params.chr_dir).collect()                 : Channel.value([])
 dbsnp                   = params.dbsnp                   ? Channel.fromPath(params.dbsnp).collect()                   : Channel.value([])
@@ -100,17 +102,16 @@ pon                     = params.pon                     ? Channel.fromPath(para
 sentieon_dnascope_model = params.sentieon_dnascope_model ? Channel.fromPath(params.sentieon_dnascope_model).collect() : Channel.value([])
 
 // Initialize value channels based on params, defined in the params.genomes[params.genome] scope
-ascat_genome       = params.ascat_genome       ?: Channel.empty()
-dbsnp_vqsr         = params.dbsnp_vqsr         ? Channel.value(params.dbsnp_vqsr) : Channel.empty()
-known_indels_vqsr  = params.known_indels_vqsr  ? Channel.value(params.known_indels_vqsr) : Channel.empty()
-known_snps_vqsr    = params.known_snps_vqsr    ? Channel.value(params.known_snps_vqsr) : Channel.empty()
-snpeff_db          = params.snpeff_db          ?: Channel.empty()
-vep_cache_version  = params.vep_cache_version  ?: Channel.empty()
-vep_genome         = params.vep_genome         ?: Channel.empty()
-vep_species        = params.vep_species        ?: Channel.empty()
-bcftools_annotations        = params.bcftools_annotations        ?: Channel.empty()
-bcftools_annotations_index  = params.bcftools_annotations_index  ?: Channel.empty()
-bcftools_header_lines       = params.bcftools_header_lines       ?: Channel.empty()
+ascat_genome                = params.ascat_genome             ?: Channel.empty()
+dbsnp_vqsr                  = params.dbsnp_vqsr               ? Channel.value(params.dbsnp_vqsr) : Channel.empty()
+known_indels_vqsr           = params.known_indels_vqsr        ? Channel.value(params.known_indels_vqsr) : Channel.empty()
+known_snps_vqsr             = params.known_snps_vqsr          ? Channel.value(params.known_snps_vqsr) : Channel.empty()
+ngscheckmate_bed            = params.ngscheckmate_bed         ? Channel.value(params.ngscheckmate_bed) : Channel.empty()
+snpeff_db                   = params.snpeff_db                ?: Channel.empty()
+vep_cache_version           = params.vep_cache_version        ?: Channel.empty()
+vep_genome                  = params.vep_genome               ?: Channel.empty()
+vep_species                 = params.vep_species              ?: Channel.empty()
+
 
 vep_extra_files = []
 
@@ -214,6 +215,9 @@ include { POST_VARIANTCALLING                         } from '../subworkflows/lo
 // QC on VCF files
 include { VCF_QC_BCFTOOLS_VCFTOOLS                    } from '../subworkflows/local/vcf_qc_bcftools_vcftools/main'
 
+// Sample QC on CRAM files
+include { CRAM_SAMPLEQC                                } from '../subworkflows/local/cram_sampleqc/main'
+
 // Annotation
 include { VCF_ANNOTATE_ALL                            } from '../subworkflows/local/vcf_annotate_all/main'
 
@@ -233,11 +237,7 @@ workflow SAREK {
 
 	// Parse samplesheet
 	// Set input, can either be from --input or from automatic retrieval in WorkflowSarek.groovy
-	if (params.input) {
-        ch_from_samplesheet = params.build_only_index ? Channel.empty() : Channel.fromSamplesheet("input")
-	} else {
-        ch_from_samplesheet = params.build_only_index ? Channel.empty() : Channel.fromSamplesheet("input_restart")
-	}
+    ch_from_samplesheet = params.build_only_index ? Channel.empty() : params.input ? Channel.fromSamplesheet("input") : Channel.fromSamplesheet("input_restart")
 	SAMPLESHEET_TO_CHANNEL(ch_from_samplesheet)
 
 	input_sample = SAMPLESHEET_TO_CHANNEL.out.input_sample
@@ -287,6 +287,7 @@ workflow SAREK {
         ascat_loci,
         ascat_loci_gc,
         ascat_loci_rt,
+        bcftools_annotations,
         chr_dir,
         dbsnp,
         fasta,
@@ -325,11 +326,12 @@ workflow SAREK {
     rt_file                = PREPARE_GENOME.out.rt_file
 
     // Tabix indexed vcf files:
-    dbsnp_tbi              = params.dbsnp                   ? params.dbsnp_tbi             ? Channel.fromPath(params.dbsnp_tbi).collect()             : PREPARE_GENOME.out.dbsnp_tbi             : Channel.value([])
-    germline_resource_tbi  = params.germline_resource       ? params.germline_resource_tbi ? Channel.fromPath(params.germline_resource_tbi).collect() : PREPARE_GENOME.out.germline_resource_tbi : [] //do not change to Channel.value([]), the check for its existence then fails for Getpileupsumamries
-    known_indels_tbi       = params.known_indels            ? params.known_indels_tbi      ? Channel.fromPath(params.known_indels_tbi).collect()      : PREPARE_GENOME.out.known_indels_tbi      : Channel.value([])
-    known_snps_tbi         = params.known_snps              ? params.known_snps_tbi        ? Channel.fromPath(params.known_snps_tbi).collect()        : PREPARE_GENOME.out.known_snps_tbi        : Channel.value([])
-    pon_tbi                = params.pon                     ? params.pon_tbi               ? Channel.fromPath(params.pon_tbi).collect()               : PREPARE_GENOME.out.pon_tbi               : Channel.value([])
+    bcftools_annotations_tbi  = params.bcftools_annotations    ? params.bcftools_annotations_tbi ? Channel.fromPath(params.bcftools_annotations_tbi).collect() : PREPARE_GENOME.out.bcftools_annotations_tbi : Channel.empty([])
+    dbsnp_tbi                 = params.dbsnp                   ? params.dbsnp_tbi                ? Channel.fromPath(params.dbsnp_tbi).collect()                : PREPARE_GENOME.out.dbsnp_tbi                : Channel.value([])
+    germline_resource_tbi     = params.germline_resource       ? params.germline_resource_tbi    ? Channel.fromPath(params.germline_resource_tbi).collect()    : PREPARE_GENOME.out.germline_resource_tbi    : [] //do not change to Channel.value([]), the check for its existence then fails for Getpileupsumamries
+    known_indels_tbi          = params.known_indels            ? params.known_indels_tbi         ? Channel.fromPath(params.known_indels_tbi).collect()         : PREPARE_GENOME.out.known_indels_tbi         : Channel.value([])
+    known_snps_tbi            = params.known_snps              ? params.known_snps_tbi           ? Channel.fromPath(params.known_snps_tbi).collect()           : PREPARE_GENOME.out.known_snps_tbi           : Channel.value([])
+    pon_tbi                   = params.pon                     ? params.pon_tbi                  ? Channel.fromPath(params.pon_tbi).collect()                  : PREPARE_GENOME.out.pon_tbi                  : Channel.value([])
 
     // known_sites is made by grouping both the dbsnp and the known snps/indels resources
     // Which can either or both be optional
@@ -799,17 +801,6 @@ workflow SAREK {
                 cram_variant_calling_no_spark,
                 cram_variant_calling_spark)
 
-            CRAM_QC_RECAL(
-                cram_variant_calling,
-                fasta,
-                intervals_for_preprocessing)
-
-            // Gather QC reports
-            reports = reports.mix(CRAM_QC_RECAL.out.reports.collect{ meta, report -> report })
-
-            // Gather used softwares versions
-            versions = versions.mix(CRAM_QC_RECAL.out.versions)
-
             // If params.save_output_as_bam, then convert CRAM files to BAM
             CRAM_TO_BAM_RECAL(cram_variant_calling, fasta, fasta_fai)
             versions = versions.mix(CRAM_TO_BAM_RECAL.out.versions)
@@ -850,9 +841,16 @@ workflow SAREK {
 
     }
 
-    if (params.tools) {
+    if (params.step == 'annotate') cram_variant_calling = Channel.empty()
 
-        if (params.step == 'annotate') cram_variant_calling = Channel.empty()
+    // RUN CRAM QC on the recalibrated CRAM files or when starting from step variant calling. NGSCheckmate should be run also on non-recalibrated CRAM files
+    CRAM_SAMPLEQC(cram_variant_calling,
+                    ngscheckmate_bed,
+                    fasta,
+                    params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'),
+                    intervals_for_preprocessing)
+
+    if (params.tools) {
 
         //
         // Logic to separate germline samples, tumor samples with no matched normal, and combine tumor-normal pairs
@@ -1055,7 +1053,7 @@ workflow SAREK {
                 vep_cache,
                 vep_extra_files,
                 bcftools_annotations,
-                bcftools_annotations_index,
+                bcftools_annotations_tbi,
                 bcftools_header_lines)
 
             // Gather used softwares versions
