@@ -126,14 +126,12 @@
                     "dragmap/align": {
                         "branch": "master",
                         "git_sha": "3c77ca9aac783e76c3614a06db3bfe4fef619bde",
-                        "installed_by": ["modules"],
-                        "patch": "modules/nf-core/dragmap/align/dragmap-align.diff"
+                        "installed_by": ["modules"]
                     },
                     "dragmap/hashtable": {
                         "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
-                        "installed_by": ["modules"],
-                        "patch": "modules/nf-core/dragmap/hashtable/dragmap-hashtable.diff"
+                        "git_sha": "8f0bec87abcd34d0da6e5d65b84fd28fa3ef4446",
+                        "installed_by": ["modules"]
                     },
                     "ensemblvep/download": {
                         "branch": "master",

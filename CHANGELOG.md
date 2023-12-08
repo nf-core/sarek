@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#1339](https://github.com/nf-core/sarek/pull/1339) - Update sentieon-modules
 - [#1344](https://github.com/nf-core/sarek/pull/1344) - Enable CRAM QC, when starting from variantcalling
+- [#1350](https://github.com/nf-core/sarek/pull/1350) - Update dragmap modules
 
 ### Fixed
 
@@ -29,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Dependency | Old version | New version |
 | ---------- | ----------- | ----------- |
+| sentieon   | 202112.06   | 202308.01   |
 
 ### Modules / Subworkflows
 

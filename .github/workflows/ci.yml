@@ -206,6 +206,7 @@ jobs:
           - tags: "cat/fastq"
           - tags: "custom/dumpsoftwareversions"
           - tags: "dragmap/align"
+          - tags: "dragmap/hashtable"
           - tags: "fastp"
           - tags: "fastqc"
           - tags: "samtools/stats"
