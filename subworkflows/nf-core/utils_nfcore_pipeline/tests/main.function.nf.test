@@ -1,0 +1,124 @@
+
+nextflow_function {
+
+    name "Test Functions"
+    script "../main.nf"
+    config "subworkflows/nf-core/utils_nfcore_pipeline/tests/nextflow.config"
+    tag "subworkflows"
+    tag "subworkflows_nfcore"
+    tag "utils_nfcore_pipeline"
+    tag "subworkflows/utils_nfcore_pipeline"
+
+    test("Test Function checkConfigProvided") {
+
+        function "checkConfigProvided"
+
+        when {
+            function {
+                """
+                // define inputs of the function here. Example:
+                // input[0] = 1
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert function.success                  },
+                { assert snapshot(function.result).match() }
+            )
+        }
+
+    }
+
+    test("Test Function workflowCitation") {
+
+        function "workflowCitation"
+
+        when {
+            function {
+                """
+                // define inputs of the function here. Example:
+                // input[0] = 1
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert function.success                  },
+                { assert snapshot(function.result).match() }
+            )
+        }
+
+    }
+
+    test("Test Function nfCoreLogo") {
+
+        function "nfCoreLogo"
+
+        when {
+            function {
+                """
+                input[0] = "9.9.9"
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert function.success                  },
+                { assert snapshot(function.result).match() }
+            )
+        }
+
+    }
+
+
+
+    test("Test Function dashedLine") {
+
+        function "dashedLine"
+
+        when {
+            function {
+                """
+                // define inputs of the function here. Example:
+                // input[0] = 1
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert function.success                  },
+                { assert snapshot(function.result).match() }
+            )
+        }
+
+    }
+
+
+
+    test("Test Function logColours") {
+
+        function "logColours"
+
+        when {
+            function {
+                """
+                // define inputs of the function here. Example:
+                // input[0] = 1
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert function.success                  },
+                { assert snapshot(function.result).match() }
+            )
+        }
+
+    }
+}

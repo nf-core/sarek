@@ -1,0 +1,2 @@
+samplesheet_to_channel:
+  - subworkflows/local/samplesheet_to_channel/**

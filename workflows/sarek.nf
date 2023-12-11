@@ -6,13 +6,6 @@
 
 include { paramsSummaryLog; paramsSummaryMap; fromSamplesheet } from 'plugin/nf-validation'
 
-def logo = NfcoreTemplate.logo(workflow, params.monochrome_logs)
-def citation = '\n' + WorkflowMain.citation(workflow) + '\n'
-def summary_params = paramsSummaryMap(workflow)
-
-// Print parameter summary log to screen
-log.info logo + paramsSummaryLog(workflow) + citation
-
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     VALIDATE INPUTS
@@ -64,9 +57,6 @@ def checkPathParamList = [
 // only check if we are using the tools
 if (params.tools && (params.tools.split(',').contains('snpeff') || params.tools.split(',').contains('merge'))) checkPathParamList.add(params.snpeff_cache)
 if (params.tools && (params.tools.split(',').contains('vep')    || params.tools.split(',').contains('merge'))) checkPathParamList.add(params.vep_cache)
-
-// Validate input parameters
-WorkflowSarek.initialise(params, log)
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1069,16 +1059,16 @@ workflow SAREK {
     }
 
     if (!(params.skip_tools && params.skip_tools.split(',').contains('multiqc'))) {
-        workflow_summary    = WorkflowSarek.paramsSummaryMultiqc(workflow, summary_params)
-        ch_workflow_summary = Channel.value(workflow_summary)
+        // workflow_summary    = WorkflowSarek.paramsSummaryMultiqc(workflow, summary_params)
+        // ch_workflow_summary = Channel.value(workflow_summary)
 
-        methods_description    = WorkflowSarek.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description, params)
-        ch_methods_description = Channel.value(methods_description)
+        // methods_description    = WorkflowSarek.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description, params)
+        // ch_methods_description = Channel.value(methods_description)
 
         multiqc_files = Channel.empty()
         multiqc_files = multiqc_files.mix(version_yaml)
-        multiqc_files = multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
-        multiqc_files = multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'))
+        // multiqc_files = multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
+        // multiqc_files = multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'))
         multiqc_files = multiqc_files.mix(reports.collect().ifEmpty([]))
 
         MULTIQC(multiqc_files.collect(), ch_multiqc_config.collect().ifEmpty([]), ch_multiqc_custom_config.collect().ifEmpty([]), ch_multiqc_logo.collect().ifEmpty([]))

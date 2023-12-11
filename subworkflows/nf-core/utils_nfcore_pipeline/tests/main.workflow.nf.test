@@ -1,0 +1,33 @@
+nextflow_workflow {
+
+    name "Test Workflow UTILS_NFCORE_PIPELINE"
+    script "../main.nf"
+    config "subworkflows/nf-core/utils_nfcore_pipeline/tests/nextflow.config"
+    workflow "UTILS_NFCORE_PIPELINE"
+    tag "subworkflows"
+    tag "subworkflows_nfcore"
+    tag "utils_nfcore_pipeline"
+    tag "subworkflows/utils_nfcore_pipeline"
+
+    test("Should run without failures") {
+
+        when {
+            params {
+                // define parameters here. Example:
+                // outdir = "tests/results"
+            }
+            workflow {
+                """
+                // define inputs of the workflow here. Example:
+                // input[0] = file("test-file.txt")
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+        }
+
+    }
+
+}

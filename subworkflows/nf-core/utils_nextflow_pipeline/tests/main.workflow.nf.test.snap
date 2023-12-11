@@ -1,0 +1,44 @@
+{
+    "Should not create params JSON if no output directory": {
+        "content": [
+            {
+                "0": [
+                    true
+                ],
+                "out": [
+                    true
+                ]
+            },
+            [
+                
+            ]
+        ],
+        "timestamp": "2023-10-13T11:55:54.576748"
+    },
+    "Should dump params": {
+        "content": [
+            {
+                "0": [
+                    true
+                ],
+                "out": [
+                    true
+                ]
+            }
+        ],
+        "timestamp": "2023-10-13T11:55:52.711329"
+    },
+    "Should run no inputs": {
+        "content": [
+            {
+                "0": [
+                    true
+                ],
+                "out": [
+                    true
+                ]
+            }
+        ],
+        "timestamp": "2023-10-13T11:55:49.048315"
+    }
+}

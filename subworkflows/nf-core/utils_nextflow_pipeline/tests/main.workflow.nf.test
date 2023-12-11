@@ -1,0 +1,104 @@
+nextflow_workflow {
+
+    name "Test Workflow UTILS_NEXTFLOW_PIPELINE"
+    script "../main.nf"
+    config "subworkflows/nf-core/utils_nextflow_pipeline/tests/nextflow.config"
+    workflow "UTILS_NEXTFLOW_PIPELINE"
+    tag 'subworkflows'
+    tag 'utils_nextflow_pipeline'
+    tag 'subworkflows/utils_nextflow_pipeline'
+
+    test("Should run no inputs") {
+
+        when {
+            params {
+                outdir = "tests/results"
+            }
+            workflow {
+                """
+                input[0] = false
+                input[1] = false
+                input[2] = null
+                input[3] = false
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert snapshot(workflow.out).match()
+        }
+
+    }
+
+    test("Should print version") {
+
+        when {
+            params {
+                outdir = "tests/results"
+            }
+            workflow {
+                """
+                input[0] = true
+                input[1] = false
+                input[2] = null
+                input[3] = false
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert workflow.stdout.contains("nextflow_workflow v9.9.9")
+        }
+
+    }
+
+
+    test("Should dump params") {
+
+        when {
+            params {
+                outdir = "$outputDir"
+            }
+            workflow {
+                """
+                input[0] = false
+                input[1] = true
+                input[2] = params.outdir
+                input[3] = false
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert snapshot(workflow.out).match()
+        }
+
+    }
+
+    test("Should not create params JSON if no output directory") {
+
+        when {
+            params {
+                outdir = "$outputDir"
+            }
+            workflow {
+                """
+                input[0] = false
+                input[1] = true
+                input[2] = null
+                input[3] = false
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert snapshot(workflow.out, path(params.outdir).list()).match()
+        }
+
+    }
+
+}
