@@ -10,7 +10,7 @@
 
 include { BWA_INDEX as BWAMEM1_INDEX                } from '../../../modules/nf-core/bwa/index/main'
 include { BWAMEM2_INDEX                             } from '../../../modules/nf-core/bwamem2/index/main'
-include { DRAGMAP_HASHTABLE                         } from '../../../modules/nf-core/dragmap/hashtable/main'
+include { NARFMAP_HASHTABLE                         } from '../../../modules/nf-core/narfmap/hashtable/main'
 include { GATK4_CREATESEQUENCEDICTIONARY            } from '../../../modules/nf-core/gatk4/createsequencedictionary/main'
 include { MSISENSORPRO_SCAN                         } from '../../../modules/nf-core/msisensorpro/scan/main'
 include { SAMTOOLS_FAIDX                            } from '../../../modules/nf-core/samtools/faidx/main'
@@ -47,7 +47,7 @@ workflow PREPARE_GENOME {
 
     BWAMEM1_INDEX(fasta)     // If aligner is bwa-mem
     BWAMEM2_INDEX(fasta)     // If aligner is bwa-mem2
-    DRAGMAP_HASHTABLE(fasta) // If aligner is dragmap
+    NARFMAP_HASHTABLE(fasta) // If aligner is dragmap
 
     GATK4_CREATESEQUENCEDICTIONARY(fasta)
     MSISENSORPRO_SCAN(fasta)
@@ -103,7 +103,7 @@ workflow PREPARE_GENOME {
     // Gather versions of all tools used
     versions = versions.mix(BWAMEM1_INDEX.out.versions)
     versions = versions.mix(BWAMEM2_INDEX.out.versions)
-    versions = versions.mix(DRAGMAP_HASHTABLE.out.versions)
+    versions = versions.mix(NARFMAP_HASHTABLE.out.versions)
     versions = versions.mix(GATK4_CREATESEQUENCEDICTIONARY.out.versions)
     versions = versions.mix(MSISENSORPRO_SCAN.out.versions)
     versions = versions.mix(SAMTOOLS_FAIDX.out.versions)
@@ -118,7 +118,7 @@ workflow PREPARE_GENOME {
     bcftools_annotations_tbi = TABIX_BCFTOOLS_ANNOTATIONS.out.tbi.map{ meta, tbi -> [tbi] }.collect()   // path: bcftools_annotations.vcf.gz.tbi
     bwa                      = BWAMEM1_INDEX.out.index.collect()                                        // path: bwa/*
     bwamem2                  = BWAMEM2_INDEX.out.index.collect()                                        // path: bwamem2/*
-    hashtable                = DRAGMAP_HASHTABLE.out.hashmap.collect()                                  // path: dragmap/*
+    hashtable                = NARFMAP_HASHTABLE.out.hashmap.collect()                                  // path: dragmap/*
     dbsnp_tbi                = TABIX_DBSNP.out.tbi.map{ meta, tbi -> [tbi] }.collect()                  // path: dbsnb.vcf.gz.tbi
     dict                     = GATK4_CREATESEQUENCEDICTIONARY.out.dict.collect()                        // path: genome.fasta.dict
     fasta_fai                = SAMTOOLS_FAIDX.out.fai.collect()                                         // path: genome.fasta.fai
