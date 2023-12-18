@@ -1,18 +1,17 @@
 nextflow_process {
 
-    name "Test Process DRAGMAP_ALIGN"
+    name "Test Process NARFMAP_ALIGN"
     script "../main.nf"
-    process "DRAGMAP_ALIGN"
+    process "NARFMAP_ALIGN"
     tag "modules"
     tag "modules_nfcore"
-    tag "dragmap"
-    tag "dragmap/align"
-    tag "dragmap/hashtable"
+    tag "narfmap"
+    tag "narfmap/align"
 
     test("sarscov2 - fastq, hashtable, fasta, false") {
 
         setup {
-            run("DRAGMAP_HASHTABLE") {
+            run("NARFMAP_HASHTABLE") {
                 script "../../hashtable/main.nf"
                 process {
                     """
@@ -32,9 +31,8 @@ nextflow_process {
                     [ id:'test', single_end:true ], // meta map
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)
                 ]
-                input[1] = DRAGMAP_HASHTABLE.out.hashmap
-                input[2] = [[id:'test'],file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)]
-                input[3] = false //sort
+                input[1] = NARFMAP_HASHTABLE.out.hashmap
+                input[2] = false //sort
                 """
             }
         }
@@ -55,7 +53,7 @@ nextflow_process {
     test("sarscov2 - fastq, hashtable, fasta, true") {
 
         setup {
-            run("DRAGMAP_HASHTABLE") {
+            run("NARFMAP_HASHTABLE") {
                 script "../../hashtable/main.nf"
                 process {
                     """
@@ -75,9 +73,8 @@ nextflow_process {
                     [ id:'test', single_end:true ], // meta map
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)
                 ]
-                input[1] = DRAGMAP_HASHTABLE.out.hashmap
-                input[2] = [[id:'test'],file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)]
-                input[3] = true //sort
+                input[1] = NARFMAP_HASHTABLE.out.hashmap
+                input[2] = true //sort
                 """
             }
         }
@@ -98,7 +95,7 @@ nextflow_process {
     test("sarscov2 - [fastq1, fastq2], hashtable, fasta, false") {
 
         setup {
-            run("DRAGMAP_HASHTABLE") {
+            run("NARFMAP_HASHTABLE") {
                 script "../../hashtable/main.nf"
                 process {
                     """
@@ -121,9 +118,8 @@ nextflow_process {
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
                     ]
                 ]
-                input[1] = DRAGMAP_HASHTABLE.out.hashmap
-                input[2] = [[id:'test'],file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)]
-                input[3] = false //sort
+                input[1] = NARFMAP_HASHTABLE.out.hashmap
+                input[2] = false //sort
                 """
             }
         }
@@ -144,7 +140,7 @@ nextflow_process {
     test("sarscov2 - [fastq1, fastq2], hashtable, fasta, true") {
 
         setup {
-            run("DRAGMAP_HASHTABLE") {
+            run("NARFMAP_HASHTABLE") {
                 script "../../hashtable/main.nf"
                 process {
                     """
@@ -167,9 +163,8 @@ nextflow_process {
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
                     ]
                 ]
-                input[1] = DRAGMAP_HASHTABLE.out.hashmap
-                input[2] = [[id:'test'],file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)]
-                input[3] = true //sort
+                input[1] = NARFMAP_HASHTABLE.out.hashmap
+                input[2] = true //sort
                 """
             }
         }
@@ -190,7 +185,7 @@ nextflow_process {
     test("homo_sapiens - [fastq1, fastq2], hashtable, fasta, true") {
 
         setup {
-            run("DRAGMAP_HASHTABLE") {
+            run("NARFMAP_HASHTABLE") {
                 script "../../hashtable/main.nf"
                 process {
                     """
@@ -213,9 +208,8 @@ nextflow_process {
                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
                     ]
                 ]
-                input[1] = DRAGMAP_HASHTABLE.out.hashmap
-                input[2] = [[id:'test'],file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)]
-                input[3] = true //sort
+                input[1] = NARFMAP_HASHTABLE.out.hashmap
+                input[2] = true //sort
                 """
             }
         }
@@ -237,7 +231,7 @@ nextflow_process {
 
         options "-stub"
         setup {
-            run("DRAGMAP_HASHTABLE") {
+            run("NARFMAP_HASHTABLE") {
                 script "../../hashtable/main.nf"
                 process {
                     """
@@ -260,9 +254,8 @@ nextflow_process {
                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
                     ]
                 ]
-                input[1] = DRAGMAP_HASHTABLE.out.hashmap
-                input[2] = [[id:'test'],file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)]
-                input[3] = true //sort
+                input[1] = NARFMAP_HASHTABLE.out.hashmap
+                input[2] = true //sort
                 """
             }
         }
