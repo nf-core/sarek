@@ -59,7 +59,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             cram,
             allele_files,
             loci_files,
-            intervals_bed_combined,
+            (wes ? intervals_bed_combined : []), // No intervals needed if not WES
             fasta,
             gc_file,
             rt_file
