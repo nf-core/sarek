@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#1339](https://github.com/nf-core/sarek/pull/1339) - Update sentieon-modules
 - [#1344](https://github.com/nf-core/sarek/pull/1344) - Enable CRAM QC, when starting from variantcalling
+- [#1359](https://github.com/nf-core/sarek/pull/1359) - Removing params usage from local modules
+- [#1359](https://github.com/nf-core/sarek/pull/1359) - Removing params usage from local subworkflows
 
 ### Fixed
 
