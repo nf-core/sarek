@@ -4,10 +4,10 @@
 
 workflow CHANNEL_MARKDUPLICATES_CREATE_CSV {
     take:
-        cram_markduplicates // channel: [mandatory] meta, cram, crai
-        csv_subfolder
-        outdir
-        save_output_as_bam
+        cram_markduplicates     // channel: [mandatory] meta, cram, crai
+        csv_subfolder           //
+        outdir                  //
+        save_output_as_bam      //
 
     main:
         // Creating csv files to restart from this step
