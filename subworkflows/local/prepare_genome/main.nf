@@ -68,26 +68,26 @@ workflow PREPARE_GENOME {
 
     // prepare ascat reference files
     allele_files = ascat_alleles
-    if (params.ascat_alleles && params.ascat_alleles.endsWith('.zip')) {
+    if (ascat_alleles && ascat_alleles.endsWith('.zip')) {
         UNZIP_ALLELES(ascat_alleles.map{ it -> [[id:it[0].baseName], it]})
         allele_files = UNZIP_ALLELES.out.unzipped_archive.map{ it[1] }
         versions = versions.mix(UNZIP_ALLELES.out.versions)
     }
 
     loci_files = ascat_loci
-    if (params.ascat_loci && params.ascat_loci.endsWith('.zip')) {
+    if (ascat_loci && ascat_loci.endsWith('.zip')) {
         UNZIP_LOCI(ascat_loci.map{ it -> [[id:it[0].baseName], it]})
         loci_files = UNZIP_LOCI.out.unzipped_archive.map{ it[1] }
         versions = versions.mix(UNZIP_LOCI.out.versions)
     }
     gc_file = ascat_loci_gc
-    if (params.ascat_loci_gc && params.ascat_loci_gc.endsWith('.zip')) {
+    if (ascat_loci_gc && ascat_loci_gc.endsWith('.zip')) {
         UNZIP_GC(ascat_loci_gc.map{ it -> [[id:it[0].baseName], it]})
         gc_file = UNZIP_GC.out.unzipped_archive.map{ it[1] }
         versions = versions.mix(UNZIP_GC.out.versions)
     }
     rt_file = ascat_loci_rt
-    if (params.ascat_loci_rt && params.ascat_loci_rt.endsWith('.zip')) {
+    if (ascat_loci_rt && ascat_loci_rt.endsWith('.zip')) {
         UNZIP_RT(ascat_loci_rt.map{ it -> [[id:it[0].baseName], it]})
         rt_file = UNZIP_RT.out.unzipped_archive.map{ it[1] }
         versions = versions.mix(UNZIP_RT.out.versions)
@@ -95,7 +95,7 @@ workflow PREPARE_GENOME {
 
 
     chr_files = chr_dir
-    if (params.chr_dir && params.chr_dir.endsWith('tar.gz')) {
+    if (chr_dir && chr_dir.endsWith('tar.gz')) {
         UNTAR_CHR_DIR(chr_dir.map{ it -> [ [ id:'chr_dir' ], it ] })
         chr_files = UNTAR_CHR_DIR.out.untar.map{ it[1] }
         versions = versions.mix(UNTAR_CHR_DIR.out.versions)
