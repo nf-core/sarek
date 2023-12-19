@@ -43,7 +43,7 @@ workflow PREPARE_INTERVALS {
 
             intervals_combined = BUILD_INTERVALS.out.bed
 
-            CREATE_INTERVALS_BED(intervals_combined.map{ meta, path -> path }).bed
+            CREATE_INTERVALS_BED(intervals_combined.map{ meta, path -> path }, nucleotides_per_second)
 
             intervals_bed = CREATE_INTERVALS_BED.out.bed
 
@@ -51,7 +51,9 @@ workflow PREPARE_INTERVALS {
             versions = versions.mix(CREATE_INTERVALS_BED.out.versions)
         } else {
             intervals_combined = Channel.fromPath(file(intervals)).map{it -> [ [ id:it.baseName ], it ] }
-            intervals_bed = CREATE_INTERVALS_BED(file(intervals)).bed
+            CREATE_INTERVALS_BED(file(intervals), nucleotides_per_second)
+
+            intervals_bed = CREATE_INTERVALS_BED.out.bed
 
             versions = versions.mix(CREATE_INTERVALS_BED.out.versions)
 
