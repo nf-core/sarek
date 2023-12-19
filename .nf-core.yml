@@ -14,6 +14,4 @@ lint:
     - assets/nf-core-sarek_logo_light.png
     - docs/images/nf-core-sarek_logo_dark.png
     - docs/images/nf-core-sarek_logo_light.png
-    - lib/NfcoreTemplate.groovy
-    - lib/NfcoreSchema.groovy
   template_strings: False
