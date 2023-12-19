@@ -238,7 +238,35 @@ workflow SAREK {
 	// Parse samplesheet
 	// Set input, can either be from --input or from automatic retrieval in WorkflowSarek.groovy
     ch_from_samplesheet = params.build_only_index ? Channel.empty() : params.input ? Channel.fromSamplesheet("input") : Channel.fromSamplesheet("input_restart")
-	SAMPLESHEET_TO_CHANNEL(ch_from_samplesheet)
+	SAMPLESHEET_TO_CHANNEL(
+        ch_from_samplesheet,
+        params.aligner,
+        params.ascat_alleles,
+        params.ascat_loci,
+        params.ascat_loci_rt,
+        params.bcftools_annotations,
+        params.bcftools_annotations_tbi,
+        params.bcftools_header_lines,
+        params.build_only_index,
+        params.dbsnp,
+        params.fasta,
+        params.germline_resource,
+        params.intervals,
+        params.joint_germline,
+        params.joint_mutect2,
+        params.known_indels,
+        params.known_snps,
+        params.no_intervals,
+        params.pon,
+        params.sentieon_dnascope_emit_mode,
+        params.sentieon_haplotyper_emit_mode,
+        params.seq_center,
+        params.seq_platform,
+        params.skip_tools,
+        params.step,
+        params.tools,
+        params.umi_read_structure,
+        params.wes)
 
 	input_sample = SAMPLESHEET_TO_CHANNEL.out.input_sample
 
