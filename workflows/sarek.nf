@@ -83,14 +83,9 @@ for (param in checkPathParamList) if (param) file(param, checkIfExists: true)
 */
 
 // Initialize file channels based on params, defined in the params.genomes[params.genome] scope
-ascat_alleles           = params.ascat_alleles           ? Channel.fromPath(params.ascat_alleles).collect()           : Channel.empty()
-ascat_loci              = params.ascat_loci              ? Channel.fromPath(params.ascat_loci).collect()              : Channel.empty()
-ascat_loci_gc           = params.ascat_loci_gc           ? Channel.fromPath(params.ascat_loci_gc).collect()           : Channel.value([])
-ascat_loci_rt           = params.ascat_loci_rt           ? Channel.fromPath(params.ascat_loci_rt).collect()           : Channel.value([])
 bcftools_annotations    = params.bcftools_annotations    ? Channel.fromPath(params.bcftools_annotations).collect()    : Channel.empty()
 bcftools_header_lines   = params.bcftools_header_lines   ? Channel.fromPath(params.bcftools_header_lines).collect()   : Channel.empty()
 cf_chrom_len            = params.cf_chrom_len            ? Channel.fromPath(params.cf_chrom_len).collect()            : []
-chr_dir                 = params.chr_dir                 ? Channel.fromPath(params.chr_dir).collect()                 : Channel.value([])
 dbsnp                   = params.dbsnp                   ? Channel.fromPath(params.dbsnp).collect()                   : Channel.value([])
 fasta                   = params.fasta                   ? Channel.fromPath(params.fasta).first()                     : Channel.empty()
 fasta_fai               = params.fasta_fai               ? Channel.fromPath(params.fasta_fai).collect()               : Channel.empty()
@@ -311,12 +306,12 @@ workflow SAREK {
 
     // Build indices if needed
     PREPARE_GENOME(
-        ascat_alleles,
-        ascat_loci,
-        ascat_loci_gc,
-        ascat_loci_rt,
+        params.ascat_alleles,
+        params.ascat_loci,
+        params.ascat_loci_gc,
+        params.ascat_loci_rt,
         bcftools_annotations,
-        chr_dir,
+        params.chr_dir,
         dbsnp,
         fasta,
         fasta_fai,

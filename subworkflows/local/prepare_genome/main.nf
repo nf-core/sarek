@@ -66,35 +66,37 @@ workflow PREPARE_GENOME {
     TABIX_KNOWN_INDELS(known_indels.flatten().map{ it -> [ [ id:it.baseName ], it ] } )
     TABIX_PON(pon.flatten().map{ it -> [ [ id:it.baseName ], it ] })
 
-    // prepare ascat reference files
-    allele_files = ascat_alleles
+    // prepare ascat and controlfreec reference files
+    allele_files = ascat_alleles ? Channel.fromPath(ascat_alleles).collect() : Channel.empty()
+    loci_files   = ascat_loci    ? Channel.fromPath(ascat_loci).collect()    : Channel.empty()
+    gc_file      = ascat_loci_gc ? Channel.fromPath(ascat_loci_gc).collect() : Channel.value([])
+    rt_file      = ascat_loci_rt ? Channel.fromPath(ascat_loci_rt).collect() : Channel.value([])
+    chr_files    = chr_dir       ? Channel.fromPath(chr_dir).collect()       : Channel.value([])
+
     if (ascat_alleles && ascat_alleles.endsWith('.zip')) {
         UNZIP_ALLELES(ascat_alleles.map{ it -> [[id:it[0].baseName], it]})
         allele_files = UNZIP_ALLELES.out.unzipped_archive.map{ it[1] }
         versions = versions.mix(UNZIP_ALLELES.out.versions)
     }
 
-    loci_files = ascat_loci
     if (ascat_loci && ascat_loci.endsWith('.zip')) {
         UNZIP_LOCI(ascat_loci.map{ it -> [[id:it[0].baseName], it]})
         loci_files = UNZIP_LOCI.out.unzipped_archive.map{ it[1] }
         versions = versions.mix(UNZIP_LOCI.out.versions)
     }
-    gc_file = ascat_loci_gc
+
     if (ascat_loci_gc && ascat_loci_gc.endsWith('.zip')) {
         UNZIP_GC(ascat_loci_gc.map{ it -> [[id:it[0].baseName], it]})
         gc_file = UNZIP_GC.out.unzipped_archive.map{ it[1] }
         versions = versions.mix(UNZIP_GC.out.versions)
     }
-    rt_file = ascat_loci_rt
+
     if (ascat_loci_rt && ascat_loci_rt.endsWith('.zip')) {
         UNZIP_RT(ascat_loci_rt.map{ it -> [[id:it[0].baseName], it]})
         rt_file = UNZIP_RT.out.unzipped_archive.map{ it[1] }
         versions = versions.mix(UNZIP_RT.out.versions)
     }
 
-
-    chr_files = chr_dir
     if (chr_dir && chr_dir.endsWith('tar.gz')) {
         UNTAR_CHR_DIR(chr_dir.map{ it -> [ [ id:'chr_dir' ], it ] })
         chr_files = UNTAR_CHR_DIR.out.untar.map{ it[1] }
