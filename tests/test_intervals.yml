@@ -138,8 +138,6 @@
     # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
     # binary changes md5sums on reruns
-    - path: results/reference/intervals
-      should_exist: false
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.cram.metrics
       contains: ["test	17094	1534	168	1046782	12429	197	0	0.635998", "1.0	0.999991	1171"]
