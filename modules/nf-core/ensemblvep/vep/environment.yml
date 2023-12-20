@@ -1,0 +1,7 @@
+name: ensemblvep_vep
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - bioconda::ensembl-vep=110.0
