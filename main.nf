@@ -23,8 +23,6 @@ nextflow.enable.dsl = 2
 
 include { getGenomeAttribute } from './subworkflows/local/utils_sarek'
 include { retrieveInput      } from './subworkflows/local/utils_sarek'
-include { paramsHelp         } from 'plugin/nf-validation'
-include { validateParameters } from 'plugin/nf-validation'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -88,10 +86,13 @@ params.input_restart = retrieveInput(params, log)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { SAREK } from './workflows/sarek'
+include { SAREK                   } from './workflows/sarek'
+include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_sarek'
+include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_sarek'
 
 // WORKFLOW: Run main nf-core/sarek analysis pipeline
 workflow NFCORE_SAREK {
+
     SAREK ()
 }
 
@@ -104,7 +105,12 @@ workflow NFCORE_SAREK {
 // WORKFLOW: Execute a single named workflow for the pipeline
 // See: https://github.com/nf-core/rnaseq/issues/619
 workflow {
+
+    PIPELINE_INITIALISATION()
+
     NFCORE_SAREK ()
+
+    // PIPELINE_COMPLETION()
 }
 
 /*

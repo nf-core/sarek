@@ -10,13 +10,14 @@
 
 include { UTILS_NEXTFLOW_PIPELINE    } from '../../nf-core/utils_nextflow_pipeline'
 include { UTILS_NFCORE_PIPELINE      } from '../../nf-core/utils_nfcore_pipeline'
+include { UTILS_NFVALIDATION_PLUGIN  } from '../../nf-core/utils_nfvalidation_plugin'
 include { completionEmail            } from '../../nf-core/utils_nfcore_pipeline'
 include { completionSummary          } from '../../nf-core/utils_nfcore_pipeline'
 include { dashedLine                 } from '../../nf-core/utils_nfcore_pipeline'
+include { getWorkflowVersion         } from '../../nf-core/utils_nextflow_pipeline'
 include { imNotification             } from '../../nf-core/utils_nfcore_pipeline'
-include { nfCoreLogo                 } from '../../nf-core/utils_nfcore_pipeline'
+include { logColours                 } from '../../nf-core/utils_nfcore_pipeline'
 include { workflowCitation           } from '../../nf-core/utils_nfcore_pipeline'
-include { UTILS_NFVALIDATION_PLUGIN  } from '../../nf-core/utils_nfvalidation_plugin'
 
 /*
 ========================================================================================
@@ -44,7 +45,7 @@ workflow PIPELINE_INITIALISATION {
     def pre_help_text = nfCoreLogo(getWorkflowVersion())
     def post_help_text = '\n' + workflowCitation() + '\n' + dashedLine()
     def String workflow_command = "nextflow run ${workflow.manifest.name} -profile <docker/singularity/.../institute> --input samplesheet.csv --outdir <OUTDIR>"
-    NF_VALIDATION_PLUGIN_UTILS (
+    UTILS_NFVALIDATION_PLUGIN (
         params.help,
         workflow_command,
         pre_help_text,
@@ -59,7 +60,7 @@ workflow PIPELINE_INITIALISATION {
     UTILS_NFCORE_PIPELINE ()
 
     emit:
-    summary_params = NF_VALIDATION_PLUGIN_UTILS.out.summary_params
+    summary_params = UTILS_NFVALIDATION_PLUGIN.out.summary_params
 }
 
 /*
@@ -110,6 +111,29 @@ def getGenomeAttribute(params, attribute) {
     }
     return null
 }
+
+def nfCoreLogo(workflow_version) {
+    Map colors = logColours()
+    String.format(
+        """\n
+        ${dashedLine()}
+                                                ${colors.green},--.${colors.black}/${colors.green},-.${colors.reset}
+        ${colors.blue}        ___     __   __   __   ___     ${colors.green}/,-._.--~\'${colors.reset}
+        ${colors.blue}  |\\ | |__  __ /  ` /  \\ |__) |__         ${colors.yellow}}  {${colors.reset}
+        ${colors.blue}  | \\| |       \\__, \\__/ |  \\ |___     ${colors.green}\\`-._,-`-,${colors.reset}
+                                                ${colors.green}`._,._,\'${colors.reset}
+        ${colors.white}      ____${colors.reset}
+        ${colors.white}    .´ _  `.${colors.reset}
+        ${colors.white}   /  ${colors.green}|\\${colors.reset}`-_ \\${colors.reset}     ${colors.blue} __        __   ___     ${colors.reset}
+        ${colors.white}  |   ${colors.green}| \\${colors.reset}  `-|${colors.reset}    ${colors.blue}|__`  /\\  |__) |__  |__/${colors.reset}
+        ${colors.white}   \\ ${colors.green}|   \\${colors.reset}  /${colors.reset}     ${colors.blue}.__| /¯¯\\ |  \\ |___ |  \\${colors.reset}
+        ${colors.white}    `${colors.green}|${colors.reset}____${colors.green}\\${colors.reset}´${colors.reset}
+        ${colors.purple}  ${workflow.manifest.name} ${workflow_version}${colors.reset}
+        ${dashedLine()}
+        """.stripIndent()
+    )
+}
+
 
 def retrieveInput(params, log){
     def input = null
