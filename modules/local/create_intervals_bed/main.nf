@@ -9,7 +9,7 @@ process CREATE_INTERVALS_BED {
 
     input:
     path(intervals)
-    value(nucleotides_per_second)
+    val(nucleotides_per_second)
 
     output:
     path("*.bed")       , emit: bed
