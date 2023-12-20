@@ -28,12 +28,12 @@ include { UNZIP as UNZIP_RT                         } from '../../../modules/nf-
 
 workflow PREPARE_GENOME {
     take:
-    ascat_alleles        // channel: [optional]  ascat allele files
-    ascat_loci           // channel: [optional]  ascat loci files
-    ascat_loci_gc        // channel: [optional]  ascat gc content file
-    ascat_loci_rt        // channel: [optional]  ascat replictiming file
+    ascat_alleles        // params.ascat_alleles
+    ascat_loci           // params.ascat_loci
+    ascat_loci_gc        // params.ascat_loci_gc
+    ascat_loci_rt        // params.ascat_loci_rt
     bcftools_annotations // channel: [optional] bcftools annotations file
-    chr_dir              // channel: [optional]  chromosome files
+    chr_dir              // params.chr_dir
     dbsnp                // channel: [optional]  dbsnp
     fasta                // channel: [mandatory] fasta
     fasta_fai            // channel: [optional]  fasta_fai
@@ -53,7 +53,7 @@ workflow PREPARE_GENOME {
 
     GATK4_CREATESEQUENCEDICTIONARY(fasta)
     MSISENSORPRO_SCAN(fasta)
-    SAMTOOLS_FAIDX(fasta, [['id':null], []])
+    SAMTOOLS_FAIDX(fasta, [ [ id:fasta.baseName ], [] ] )
 
     // the following are flattened and mapped in case the user supplies more than one value for the param
     // written for KNOWN_INDELS, but preemptively applied to the rest
@@ -67,41 +67,40 @@ workflow PREPARE_GENOME {
     TABIX_PON(pon.flatten().map{ it -> [ [ id:it.baseName ], it ] })
 
     // prepare ascat and controlfreec reference files
-    allele_files = ascat_alleles ? Channel.fromPath(ascat_alleles).collect() : Channel.empty()
-    loci_files   = ascat_loci    ? Channel.fromPath(ascat_loci).collect()    : Channel.empty()
-    gc_file      = ascat_loci_gc ? Channel.fromPath(ascat_loci_gc).collect() : Channel.value([])
-    rt_file      = ascat_loci_rt ? Channel.fromPath(ascat_loci_rt).collect() : Channel.value([])
-    chr_files    = chr_dir       ? Channel.fromPath(chr_dir).collect()       : Channel.value([])
-
-    if (ascat_alleles && ascat_alleles.endsWith('.zip')) {
-        UNZIP_ALLELES(ascat_alleles.map{ it -> [[id:it[0].baseName], it]})
+    if (!ascat_alleles) allele_files = Channel.empty()
+    else if (ascat_alleles.endsWith(".zip")) {
+        UNZIP_ALLELES(Channel.fromPath(file(ascat_alleles)).collect().map{ it -> [ [ id:it[0].baseName ], it ] })
         allele_files = UNZIP_ALLELES.out.unzipped_archive.map{ it[1] }
         versions = versions.mix(UNZIP_ALLELES.out.versions)
-    }
+    } else allele_files = Channel.fromPath(ascat_alleles)
 
-    if (ascat_loci && ascat_loci.endsWith('.zip')) {
-        UNZIP_LOCI(ascat_loci.map{ it -> [[id:it[0].baseName], it]})
+    if (!ascat_loci) loci_files = Channel.empty()
+    else if (ascat_loci.endsWith(".zip")) {
+        UNZIP_LOCI(Channel.fromPath(file(ascat_loci)).collect().map{ it -> [ [ id:it[0].baseName ], it ] })
         loci_files = UNZIP_LOCI.out.unzipped_archive.map{ it[1] }
         versions = versions.mix(UNZIP_LOCI.out.versions)
-    }
+    } else loci_files = Channel.fromPath(ascat_loci)
 
-    if (ascat_loci_gc && ascat_loci_gc.endsWith('.zip')) {
-        UNZIP_GC(ascat_loci_gc.map{ it -> [[id:it[0].baseName], it]})
+    if (!ascat_loci_gc) gc_file = Channel.value([])
+    else if (ascat_loci_gc.endsWith(".zip")) {
+        UNZIP_GC(Channel.fromPath(file(ascat_loci_gc)).collect().map{ it -> [ [ id:it[0].baseName ], it ] })
         gc_file = UNZIP_GC.out.unzipped_archive.map{ it[1] }
         versions = versions.mix(UNZIP_GC.out.versions)
-    }
+    } else gc_file = Channel.fromPath(ascat_loci_gc)
 
-    if (ascat_loci_rt && ascat_loci_rt.endsWith('.zip')) {
-        UNZIP_RT(ascat_loci_rt.map{ it -> [[id:it[0].baseName], it]})
+    if (!ascat_loci_rt) rt_file = Channel.value([])
+    else if (ascat_loci_rt.endsWith(".zip")) {
+        UNZIP_RT(Channel.fromPath(file(ascat_loci_rt)).collect().map{ it -> [ [ id:it[0].baseName ], it ] })
         rt_file = UNZIP_RT.out.unzipped_archive.map{ it[1] }
         versions = versions.mix(UNZIP_RT.out.versions)
-    }
+    } else rt_file = Channel.fromPath(ascat_loci_rt)
 
-    if (chr_dir && chr_dir.endsWith('tar.gz')) {
-        UNTAR_CHR_DIR(chr_dir.map{ it -> [ [ id:'chr_dir' ], it ] })
+    if (!chr_dir) chr_files = Channel.value([])
+    else if (chr_dir.endsWith(".tar.gz")) {
+        UNTAR_CHR_DIR(Channel.fromPath(file(chr_dir)).collect().map{ it -> [ [ id:it[0].baseName ], it ] })
         chr_files = UNTAR_CHR_DIR.out.untar.map{ it[1] }
         versions = versions.mix(UNTAR_CHR_DIR.out.versions)
-    }
+    } else chr_files = Channel.fromPath(chr_dir)
 
     // Gather versions of all tools used
     versions = versions.mix(SAMTOOLS_FAIDX.out.versions)
@@ -118,7 +117,7 @@ workflow PREPARE_GENOME {
     versions = versions.mix(TABIX_PON.out.versions)
 
     emit:
-    bcftools_annotations_tbi = TABIX_BCFTOOLS_ANNOTATIONS.out.tbi.map{ meta, tbi -> [tbi] }.collect() // bcftools_annotations.vcf.gz.tbi
+    bcftools_annotations_tbi = TABIX_BCFTOOLS_ANNOTATIONS.out.tbi.map{ meta, tbi -> [tbi] }.collect() // path: bcftools_annotations.vcf.gz.tbi
     bwa                      = BWAMEM1_INDEX.out.index.map{ meta, index -> [index] }.collect()        // path: bwa/*
     bwamem2                  = BWAMEM2_INDEX.out.index.map{ meta, index -> [index] }.collect()        // path: bwamem2/*
     hashtable                = DRAGMAP_HASHTABLE.out.hashmap.map{ meta, index -> [index] }.collect()  // path: dragmap/*
@@ -130,11 +129,12 @@ workflow PREPARE_GENOME {
     known_indels_tbi         = TABIX_KNOWN_INDELS.out.tbi.map{ meta, tbi -> [tbi] }.collect()         // path: {known_indels*}.vcf.gz.tbi
     msisensorpro_scan        = MSISENSORPRO_SCAN.out.list.map{ meta, list -> [list] }                 // path: genome_msi.list
     pon_tbi                  = TABIX_PON.out.tbi.map{ meta, tbi -> [tbi] }.collect()                  // path: pon.vcf.gz.tbi
-    allele_files
-    chr_files
-    gc_file
-    loci_files
-    rt_file
 
-    versions // channel: [ versions.yml ]
+    allele_files    // path: allele_files
+    chr_files       // path: chr_files
+    gc_file         // path: gc_file
+    loci_files      // path: loci_files
+    rt_file         // path: rt_file
+
+    versions        // channel: [ versions.yml ]
 }
