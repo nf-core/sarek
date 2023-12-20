@@ -208,6 +208,7 @@ jobs:
           - tags: "dragmap/align"
           - tags: "fastp"
           - tags: "fastqc"
+          - tags: "multiqc"
           - tags: "samtools/stats"
           - tags: "untar"
     env:
