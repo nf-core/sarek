@@ -72,35 +72,35 @@ workflow PREPARE_GENOME {
         UNZIP_ALLELES(Channel.fromPath(file(ascat_alleles)).collect().map{ it -> [ [ id:it[0].baseName ], it ] })
         allele_files = UNZIP_ALLELES.out.unzipped_archive.map{ it[1] }
         versions = versions.mix(UNZIP_ALLELES.out.versions)
-    } else allele_files = Channel.fromPath(ascat_alleles)
+    } else allele_files = Channel.fromPath(ascat_alleles).collect()
 
     if (!ascat_loci) loci_files = Channel.empty()
     else if (ascat_loci.endsWith(".zip")) {
         UNZIP_LOCI(Channel.fromPath(file(ascat_loci)).collect().map{ it -> [ [ id:it[0].baseName ], it ] })
         loci_files = UNZIP_LOCI.out.unzipped_archive.map{ it[1] }
         versions = versions.mix(UNZIP_LOCI.out.versions)
-    } else loci_files = Channel.fromPath(ascat_loci)
+    } else loci_files = Channel.fromPath(ascat_loci).collect()
 
     if (!ascat_loci_gc) gc_file = Channel.value([])
     else if (ascat_loci_gc.endsWith(".zip")) {
         UNZIP_GC(Channel.fromPath(file(ascat_loci_gc)).collect().map{ it -> [ [ id:it[0].baseName ], it ] })
         gc_file = UNZIP_GC.out.unzipped_archive.map{ it[1] }
         versions = versions.mix(UNZIP_GC.out.versions)
-    } else gc_file = Channel.fromPath(ascat_loci_gc)
+    } else gc_file = Channel.fromPath(ascat_loci_gc).collect()
 
     if (!ascat_loci_rt) rt_file = Channel.value([])
     else if (ascat_loci_rt.endsWith(".zip")) {
         UNZIP_RT(Channel.fromPath(file(ascat_loci_rt)).collect().map{ it -> [ [ id:it[0].baseName ], it ] })
         rt_file = UNZIP_RT.out.unzipped_archive.map{ it[1] }
         versions = versions.mix(UNZIP_RT.out.versions)
-    } else rt_file = Channel.fromPath(ascat_loci_rt)
+    } else rt_file = Channel.fromPath(ascat_loci_rt).collect()
 
     if (!chr_dir) chr_files = Channel.value([])
     else if (chr_dir.endsWith(".tar.gz")) {
         UNTAR_CHR_DIR(Channel.fromPath(file(chr_dir)).collect().map{ it -> [ [ id:it[0].baseName ], it ] })
         chr_files = UNTAR_CHR_DIR.out.untar.map{ it[1] }
         versions = versions.mix(UNTAR_CHR_DIR.out.versions)
-    } else chr_files = Channel.fromPath(chr_dir)
+    } else chr_files = Channel.fromPath(chr_dir).collect()
 
     // Gather versions of all tools used
     versions = versions.mix(SAMTOOLS_FAIDX.out.versions)
