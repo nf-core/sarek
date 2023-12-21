@@ -494,8 +494,6 @@ workflow SAREK {
             }
             .set { reads_grouping_key }
 
-        reads_grouping_key.view()
-
         // reads will be sorted
         sort_bam = true
         FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON(reads_for_alignment, index_alignement, sort_bam, fasta, fasta_fai)
