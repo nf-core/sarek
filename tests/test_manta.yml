@@ -1,0 +1,297 @@
+- name: Run variant calling on germline sample with manta
+  command: nextflow run main.nf -profile test_cache,tools_germline --tools manta --outdir results
+  tags:
+    - germline
+    - manta
+    - variant_calling
+  files:
+    - path: results/csv/variantcalled.csv
+      md5sum: 981280af86f69190fdf0639030a80249
+    - path: results/multiqc
+    - path: results/reports/bcftools/manta/sample1/sample1.manta.diploid_sv.bcftools_stats.txt
+    # conda changes md5sums for test
+    - path: results/reports/vcftools/manta/sample1/sample1.manta.diploid_sv.FILTER.summary
+      md5sum: 1ce42d34e4ae919afb519efc99146423
+    - path: results/reports/vcftools/manta/sample1/sample1.manta.diploid_sv.TsTv.count
+      md5sum: fa27f678965b7cba6a92efcd039f802a
+    - path: results/reports/vcftools/manta/sample1/sample1.manta.diploid_sv.TsTv.qual
+      md5sum: bc68ae4e688e9fb772b457069e604883
+    - path: results/variant_calling/manta/sample1/sample1.manta.diploid_sv.vcf.gz
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/manta/sample1/sample1.manta.diploid_sv.vcf.gz.tbi
+    # binary changes md5sums on reruns
+    - path: results/manta
+      should_exist: false
+    - path: results/reports/mosdepth/sample1/sample1.recal.mosdepth.global.dist.txt
+      md5sum: 69e29702ef01fd8f6c7a5468fc35a16a
+    - path: results/reports/mosdepth/sample1/sample1.recal.mosdepth.region.dist.txt
+      md5sum: 6ec49cd7d510c2eb3d9d90fdb79b783a
+    - path: results/reports/mosdepth/sample1/sample1.recal.mosdepth.summary.txt
+      md5sum: 103098d0bf76ed82d2b87d5f242b099a
+    - path: results/reports/mosdepth/sample1/sample1.recal.regions.bed.gz
+      md5sum: b5888cf7395c57d39879a5faa6159eb3
+    - path: results/reports/mosdepth/sample1/sample1.recal.regions.bed.gz.csi
+      md5sum: 9cb0ad7039a3b703d16ca7d5b835c0ee
+    - path: results/reports/samtools/sample1/sample1.recal.cram.stats
+- name: Run variant calling on germline sample with manta without intervals
+  command: nextflow run main.nf -profile test_cache,tools_germline --tools manta --no_intervals --outdir results
+  tags:
+    - germline
+    - manta
+    - no_intervals
+    - variant_calling
+  files:
+    - path: results/csv/variantcalled.csv
+      md5sum: 981280af86f69190fdf0639030a80249
+    - path: results/multiqc
+    - path: results/no_intervals.bed
+      md5sum: f3dac01ea66b95fe477446fde2d31489
+    - path: results/no_intervals.bed.gz
+      md5sum: f3dac01ea66b95fe477446fde2d31489
+    - path: results/no_intervals.bed.gz.tbi
+      md5sum: f3dac01ea66b95fe477446fde2d31489
+    - path: results/reports/bcftools/manta/sample1/sample1.manta.diploid_sv.bcftools_stats.txt
+    # conda changes md5sums for test
+    - path: results/reports/vcftools/manta/sample1/sample1.manta.diploid_sv.FILTER.summary
+      md5sum: 1ce42d34e4ae919afb519efc99146423
+    - path: results/reports/vcftools/manta/sample1/sample1.manta.diploid_sv.TsTv.count
+      md5sum: fa27f678965b7cba6a92efcd039f802a
+    - path: results/reports/vcftools/manta/sample1/sample1.manta.diploid_sv.TsTv.qual
+      md5sum: bc68ae4e688e9fb772b457069e604883
+    - path: results/variant_calling/manta/sample1/sample1.manta.diploid_sv.vcf.gz
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/manta/sample1/sample1.manta.diploid_sv.vcf.gz.tbi
+      md5sum: 4cb176febbc8c26d717a6c6e67b9c905
+    - path: results/manta
+      should_exist: false
+    - path: results/reports/mosdepth/sample1/sample1.recal.mosdepth.global.dist.txt
+      md5sum: 69e29702ef01fd8f6c7a5468fc35a16a
+    - path: results/reports/mosdepth/sample1/sample1.recal.mosdepth.summary.txt
+      md5sum: d2775eb102acc5950f7f53883dcb503d
+    - path: results/reports/mosdepth/sample1/sample1.recal.per-base.bed.gz
+      md5sum: 54431f155c9538809e8caf99d1a75ec7
+    - path: results/reports/mosdepth/sample1/sample1.recal.per-base.bed.gz.csi
+      md5sum: c67dcd711b096eb42f43784d5eadbc0d
+    - path: results/reports/samtools/sample1/sample1.recal.cram.stats
+- name: Run variant calling on tumor_only sample with manta
+  command: nextflow run main.nf -profile test_cache,tools_tumoronly --tools manta --outdir results
+  tags:
+    - manta
+    - tumor_only
+    - variant_calling
+  files:
+    - path: results/csv/variantcalled.csv
+      md5sum: f1051fe647abf202e6332f9a1789c05d
+    - path: results/multiqc
+    - path: results/reports/bcftools/manta/sample2/sample2.manta.tumor_sv.bcftools_stats.txt
+    # conda changes md5sums for test
+    - path: results/reports/vcftools/manta/sample2/sample2.manta.tumor_sv.FILTER.summary
+      md5sum: 1ce42d34e4ae919afb519efc99146423
+    - path: results/reports/vcftools/manta/sample2/sample2.manta.tumor_sv.TsTv.count
+      md5sum: fa27f678965b7cba6a92efcd039f802a
+    - path: results/reports/vcftools/manta/sample2/sample2.manta.tumor_sv.TsTv.qual
+      md5sum: bc68ae4e688e9fb772b457069e604883
+    - path: results/variant_calling/manta/sample2/sample2.manta.tumor_sv.vcf.gz
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/manta/sample2/sample2.manta.tumor_sv.vcf.gz.tbi
+      md5sum: 4cb176febbc8c26d717a6c6e67b9c905
+    - path: results/manta
+      should_exist: false
+    - path: results/reports/mosdepth/sample2/sample2.recal.mosdepth.global.dist.txt
+      md5sum: f2dcd00a64947c49e8e4b93c2f4fbf27
+    - path: results/reports/mosdepth/sample2/sample2.recal.mosdepth.region.dist.txt
+      md5sum: 39005ffaac22871ffaaf19656fe69c5b
+    - path: results/reports/mosdepth/sample2/sample2.recal.mosdepth.summary.txt
+      md5sum: 68d4b98f17361fddf73052ead34fa370
+    - path: results/reports/mosdepth/sample2/sample2.recal.regions.bed.gz
+      md5sum: 2819e995eafded35f53328c4ec19ba58
+    - path: results/reports/mosdepth/sample2/sample2.recal.regions.bed.gz.csi
+      md5sum: 393c2749068304d8545b501b9d4658e4
+    - path: results/reports/samtools/sample2/sample2.recal.cram.stats
+- name: Run variant calling on tumor_only sample with manta without intervals
+  command: nextflow run main.nf -profile test_cache,tools_tumoronly --tools manta --no_intervals --outdir results
+  tags:
+    - manta
+    - no_intervals
+    - tumor_only
+    - variant_calling
+  files:
+    - path: results/csv/variantcalled.csv
+      md5sum: f1051fe647abf202e6332f9a1789c05d
+    - path: results/multiqc
+    - path: results/no_intervals.bed
+      md5sum: f3dac01ea66b95fe477446fde2d31489
+    - path: results/no_intervals.bed.gz
+      md5sum: f3dac01ea66b95fe477446fde2d31489
+    - path: results/no_intervals.bed.gz.tbi
+      md5sum: f3dac01ea66b95fe477446fde2d31489
+    - path: results/reports/bcftools/manta/sample2/sample2.manta.tumor_sv.bcftools_stats.txt
+    # conda changes md5sums for test
+    - path: results/reports/vcftools/manta/sample2/sample2.manta.tumor_sv.FILTER.summary
+      md5sum: 1ce42d34e4ae919afb519efc99146423
+    - path: results/reports/vcftools/manta/sample2/sample2.manta.tumor_sv.TsTv.count
+      md5sum: fa27f678965b7cba6a92efcd039f802a
+    - path: results/reports/vcftools/manta/sample2/sample2.manta.tumor_sv.TsTv.qual
+      md5sum: bc68ae4e688e9fb772b457069e604883
+    - path: results/variant_calling/manta/sample2/sample2.manta.tumor_sv.vcf.gz
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/manta/sample2/sample2.manta.tumor_sv.vcf.gz.tbi
+      md5sum: 4cb176febbc8c26d717a6c6e67b9c905
+    - path: results/manta
+      should_exist: false
+    - path: results/reports/mosdepth/sample2/sample2.recal.mosdepth.global.dist.txt
+      md5sum: f2dcd00a64947c49e8e4b93c2f4fbf27
+    - path: results/reports/mosdepth/sample2/sample2.recal.mosdepth.summary.txt
+      md5sum: 0a7300e56eda6fba7c7564f00aa000f0
+    - path: results/reports/mosdepth/sample2/sample2.recal.per-base.bed.gz
+      md5sum: 3de4a9f4da2f2b4909ef192452a8d211
+    - path: results/reports/mosdepth/sample2/sample2.recal.per-base.bed.gz.csi
+      md5sum: cfb07b0ba46e8468b4342edb243536f3
+    - path: results/reports/samtools/sample2/sample2.recal.cram.stats
+- name: Run variant calling on somatic sample with manta
+  command: nextflow run main.nf -profile test_cache,tools_somatic --tools manta --outdir results
+  tags:
+    - manta
+    - somatic
+    - variant_calling
+  files:
+    - path: results/csv/variantcalled.csv
+      md5sum: 3a8861808601994f89d5c55ce5c95dae
+    - path: results/multiqc
+    - path: results/reports/bcftools/manta/sample3/sample3.manta.diploid_sv.bcftools_stats.txt
+    # conda changes md5sums for test
+    - path: results/reports/bcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.bcftools_stats.txt
+    # conda changes md5sums for test
+    - path: results/reports/bcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.bcftools_stats.txt
+    # conda changes md5sums for test
+    - path: results/reports/vcftools/manta/sample3/sample3.manta.diploid_sv.FILTER.summary
+      md5sum: 1ce42d34e4ae919afb519efc99146423
+    - path: results/reports/vcftools/manta/sample3/sample3.manta.diploid_sv.TsTv.count
+      md5sum: fa27f678965b7cba6a92efcd039f802a
+    - path: results/reports/vcftools/manta/sample3/sample3.manta.diploid_sv.TsTv.qual
+      md5sum: bc68ae4e688e9fb772b457069e604883
+    - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.FILTER.summary
+      md5sum: 1ce42d34e4ae919afb519efc99146423
+    - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.TsTv.count
+      md5sum: fa27f678965b7cba6a92efcd039f802a
+    - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.TsTv.qual
+      md5sum: bc68ae4e688e9fb772b457069e604883
+    - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.FILTER.summary
+      md5sum: 1ce42d34e4ae919afb519efc99146423
+    - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.TsTv.count
+      md5sum: 8dcfdbcaac118df1d5ad407dd2af699f
+    - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.TsTv.qual
+      md5sum: bc68ae4e688e9fb772b457069e604883
+    - path: results/variant_calling/manta/sample3/sample3.manta.diploid_sv.vcf.gz
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/manta/sample3/sample3.manta.diploid_sv.vcf.gz.tbi
+      md5sum: 4cb176febbc8c26d717a6c6e67b9c905
+    - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.vcf.gz
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.vcf.gz.tbi
+      md5sum: 4cb176febbc8c26d717a6c6e67b9c905
+    - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.vcf.gz
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.vcf.gz.tbi
+      md5sum: 4cb176febbc8c26d717a6c6e67b9c905
+    - path: results/manta
+      should_exist: false
+    - path: results/reports/mosdepth/sample3/sample3.recal.mosdepth.global.dist.txt
+      md5sum: 69e29702ef01fd8f6c7a5468fc35a16a
+    - path: results/reports/mosdepth/sample3/sample3.recal.mosdepth.region.dist.txt
+      md5sum: 6ec49cd7d510c2eb3d9d90fdb79b783a
+    - path: results/reports/mosdepth/sample3/sample3.recal.mosdepth.summary.txt
+      md5sum: 103098d0bf76ed82d2b87d5f242b099a
+    - path: results/reports/mosdepth/sample3/sample3.recal.regions.bed.gz
+      md5sum: b5888cf7395c57d39879a5faa6159eb3
+    - path: results/reports/mosdepth/sample3/sample3.recal.regions.bed.gz.csi
+      md5sum: 9cb0ad7039a3b703d16ca7d5b835c0ee
+    - path: results/reports/samtools/sample3/sample3.recal.cram.stats
+    # conda changes md5sums for test
+    - path: results/reports/mosdepth/sample4/sample4.recal.mosdepth.global.dist.txt
+      md5sum: f2dcd00a64947c49e8e4b93c2f4fbf27
+    - path: results/reports/mosdepth/sample4/sample4.recal.mosdepth.region.dist.txt
+      md5sum: 39005ffaac22871ffaaf19656fe69c5b
+    - path: results/reports/mosdepth/sample4/sample4.recal.mosdepth.summary.txt
+      md5sum: 68d4b98f17361fddf73052ead34fa370
+    - path: results/reports/mosdepth/sample4/sample4.recal.regions.bed.gz
+      md5sum: 2819e995eafded35f53328c4ec19ba58
+    - path: results/reports/mosdepth/sample4/sample4.recal.regions.bed.gz.csi
+      md5sum: 393c2749068304d8545b501b9d4658e4
+    - path: results/reports/samtools/sample4/sample4.recal.cram.stats
+    # conda changes md5sums for test
+- name: Run variant calling on somatic sample with manta without intervals
+  command: nextflow run main.nf -profile test_cache,tools_somatic --tools manta --no_intervals --outdir results
+  tags:
+    - manta
+    - no_intervals
+    - somatic
+    - variant_calling
+  files:
+    - path: results/csv/variantcalled.csv
+      md5sum: 3a8861808601994f89d5c55ce5c95dae
+    - path: results/multiqc
+    - path: results/no_intervals.bed
+      md5sum: f3dac01ea66b95fe477446fde2d31489
+    - path: results/no_intervals.bed.gz
+      md5sum: f3dac01ea66b95fe477446fde2d31489
+    - path: results/no_intervals.bed.gz.tbi
+      md5sum: f3dac01ea66b95fe477446fde2d31489
+    - path: results/reports/bcftools/manta/sample3/sample3.manta.diploid_sv.bcftools_stats.txt
+    # conda changes md5sums for test
+    - path: results/reports/bcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.bcftools_stats.txt
+    # conda changes md5sums for test
+    - path: results/reports/bcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.bcftools_stats.txt
+    # conda changes md5sums for test
+    - path: results/reports/vcftools/manta/sample3/sample3.manta.diploid_sv.FILTER.summary
+      md5sum: 1ce42d34e4ae919afb519efc99146423
+    - path: results/reports/vcftools/manta/sample3/sample3.manta.diploid_sv.TsTv.count
+      md5sum: fa27f678965b7cba6a92efcd039f802a
+    - path: results/reports/vcftools/manta/sample3/sample3.manta.diploid_sv.TsTv.qual
+      md5sum: bc68ae4e688e9fb772b457069e604883
+    - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.FILTER.summary
+      md5sum: 1ce42d34e4ae919afb519efc99146423
+    - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.TsTv.count
+      md5sum: fa27f678965b7cba6a92efcd039f802a
+    - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.TsTv.qual
+      md5sum: bc68ae4e688e9fb772b457069e604883
+    - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.FILTER.summary
+      md5sum: 1ce42d34e4ae919afb519efc99146423
+    - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.TsTv.count
+      md5sum: 8dcfdbcaac118df1d5ad407dd2af699f
+    - path: results/reports/vcftools/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.TsTv.qual
+      md5sum: bc68ae4e688e9fb772b457069e604883
+    - path: results/variant_calling/manta/sample3/sample3.manta.diploid_sv.vcf.gz
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/manta/sample3/sample3.manta.diploid_sv.vcf.gz.tbi
+      md5sum: 4cb176febbc8c26d717a6c6e67b9c905
+    - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.vcf.gz
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.diploid_sv.vcf.gz.tbi
+      md5sum: 4cb176febbc8c26d717a6c6e67b9c905
+    - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.vcf.gz
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/manta/sample4_vs_sample3/sample4_vs_sample3.manta.somatic_sv.vcf.gz.tbi
+      md5sum: 4cb176febbc8c26d717a6c6e67b9c905
+    - path: results/manta
+      should_exist: false
+    - path: results/reports/mosdepth/sample3/sample3.recal.mosdepth.global.dist.txt
+      md5sum: 69e29702ef01fd8f6c7a5468fc35a16a
+    - path: results/reports/mosdepth/sample3/sample3.recal.mosdepth.summary.txt
+      md5sum: d2775eb102acc5950f7f53883dcb503d
+    - path: results/reports/mosdepth/sample3/sample3.recal.per-base.bed.gz
+      md5sum: 54431f155c9538809e8caf99d1a75ec7
+    - path: results/reports/mosdepth/sample3/sample3.recal.per-base.bed.gz.csi
+      md5sum: c67dcd711b096eb42f43784d5eadbc0d
+    - path: results/reports/samtools/sample3/sample3.recal.cram.stats
+    # conda changes md5sums for test
+    - path: results/reports/mosdepth/sample4/sample4.recal.mosdepth.global.dist.txt
+      md5sum: f2dcd00a64947c49e8e4b93c2f4fbf27
+    - path: results/reports/mosdepth/sample4/sample4.recal.mosdepth.summary.txt
+      md5sum: 0a7300e56eda6fba7c7564f00aa000f0
+    - path: results/reports/mosdepth/sample4/sample4.recal.per-base.bed.gz
+      md5sum: 3de4a9f4da2f2b4909ef192452a8d211
+    - path: results/reports/mosdepth/sample4/sample4.recal.per-base.bed.gz.csi
+      md5sum: cfb07b0ba46e8468b4342edb243536f3
+    - path: results/reports/samtools/sample4/sample4.recal.cram.stats
+    # conda changes md5sums for test

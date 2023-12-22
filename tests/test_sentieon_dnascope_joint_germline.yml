@@ -1,0 +1,110 @@
+- name: Run joint germline variant calling with sentieon dnascope
+  command: nextflow run main.nf -profile test_cache,targeted,software_license --sentieon_extension --input ./tests/csv/3.0/mapped_joint_bam.csv --tools sentieon_dnascope --step variant_calling --joint_germline --outdir results --sentieon_dnascope_emit_mode gvcf
+  tags:
+    - germline
+    - sentieon_dnascope_joint_germline
+    - variant_calling
+  files:
+    - path: results/csv/variantcalled.csv
+      md5sum: 62d70060aad96337254efe2d7a1df170
+    - path: results/multiqc
+    - path: results/reports/bcftools/sentieon_dnascope/joint_variant_calling/joint_germline.bcftools_stats.txt
+    - path: results/reports/vcftools/sentieon_dnascope/joint_variant_calling/joint_germline.FILTER.summary
+    - path: results/reports/vcftools/sentieon_dnascope/joint_variant_calling/joint_germline.TsTv.count
+    - path: results/reports/vcftools/sentieon_dnascope/joint_variant_calling/joint_germline.TsTv.qual
+    - path: results/variant_calling/sentieon_dnascope/joint_variant_calling/joint_germline.vcf.gz
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/sentieon_dnascope/joint_variant_calling/joint_germline.vcf.gz.tbi
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/sentieon_dnascope/testN/testN.dnascope.g.vcf.gz
+    - path: results/variant_calling/sentieon_dnascope/testN/testN.dnascope.g.vcf.gz.tbi
+    - path: results/variant_calling/sentieon_dnascope/testT/testT.dnascope.g.vcf.gz
+    - path: results/variant_calling/sentieon_dnascope/testT/testT.dnascope.g.vcf.gz.tbi
+    - path: results/dnascope
+      should_exist: false
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+      should_exist: false
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+      should_exist: false
+    - path: results/reports/bcftools/sentieon_dnascope/joint_variant_calling/joint_germline_recalibrated.bcftools_stats.txt
+      should_exist: false
+    - path: results/reports/vcftools/sentieon_dnascope/joint_variant_calling/joint_germline_recalibrated.FILTER.summary
+      should_exist: false
+    - path: results/reports/vcftools/sentieon_dnascope/joint_variant_calling/joint_germline_recalibrated.TsTv.count
+      should_exist: false
+    - path: results/reports/vcftools/sentieon_dnascope/joint_variant_calling/joint_germline_recalibrated.TsTv.qual
+      should_exist: false
+    - path: results/variant_calling/sentieon_dnascope/joint_variant_calling/joint_germline_recalibrated.vcf.gz
+      should_exist: false
+    - path: results/variant_calling/sentieon_dnascope/joint_variant_calling/joint_germline_recalibrated.vcf.gz.tbi
+      should_exist: false
+    - path: results/reports/mosdepth/testN/testN.recal.mosdepth.global.dist.txt
+      md5sum: 69e29702ef01fd8f6c7a5468fc35a16a
+    - path: results/reports/mosdepth/testN/testN.recal.mosdepth.region.dist.txt
+      md5sum: 6ec49cd7d510c2eb3d9d90fdb79b783a
+    - path: results/reports/mosdepth/testN/testN.recal.mosdepth.summary.txt
+      md5sum: 103098d0bf76ed82d2b87d5f242b099a
+    - path: results/reports/mosdepth/testN/testN.recal.regions.bed.gz
+      md5sum: b5888cf7395c57d39879a5faa6159eb3
+    - path: results/reports/mosdepth/testN/testN.recal.regions.bed.gz.csi
+      md5sum: 9cb0ad7039a3b703d16ca7d5b835c0ee
+    - path: results/reports/samtools/testN/testN.recal.cram.stats
+    - path: results/reports/mosdepth/testT/testT.recal.mosdepth.global.dist.txt
+      md5sum: 69e29702ef01fd8f6c7a5468fc35a16a
+    - path: results/reports/mosdepth/testT/testT.recal.mosdepth.region.dist.txt
+      md5sum: 6ec49cd7d510c2eb3d9d90fdb79b783a
+    - path: results/reports/mosdepth/testT/testT.recal.mosdepth.summary.txt
+      md5sum: 103098d0bf76ed82d2b87d5f242b099a
+    - path: results/reports/mosdepth/testT/testT.recal.regions.bed.gz
+      md5sum: b5888cf7395c57d39879a5faa6159eb3
+    - path: results/reports/mosdepth/testT/testT.recal.regions.bed.gz.csi
+      md5sum: 9cb0ad7039a3b703d16ca7d5b835c0ee
+    - path: results/reports/samtools/testT/testT.recal.cram.stats
+- name: Run joint germline variant calling with sentieon dnascope all intervals at once
+  command: nextflow run main.nf -profile test_cache,targeted,software_license --sentieon_extension --input ./tests/csv/3.0/mapped_joint_bam.csv --tools sentieon_dnascope --step variant_calling --joint_germline --outdir results --sentieon_dnascope_emit_mode gvcf --nucleotides_per_second 100
+  tags:
+    - germline
+    - sentieon_dnascope_joint_germline
+    - variant_calling
+  files:
+    - path: results/csv/variantcalled.csv
+      md5sum: 62d70060aad96337254efe2d7a1df170
+    - path: results/multiqc
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+      should_exist: false
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+      should_exist: false
+    - path: results/reports/bcftools/sentieon_dnascope/joint_variant_calling/joint_germline.bcftools_stats.txt
+    - path: results/reports/vcftools/sentieon_dnascope/joint_variant_calling/joint_germline.FILTER.summary
+    - path: results/reports/vcftools/sentieon_dnascope/joint_variant_calling/joint_germline.TsTv.count
+    - path: results/reports/vcftools/sentieon_dnascope/joint_variant_calling/joint_germline.TsTv.qual
+    - path: results/variant_calling/sentieon_dnascope/joint_variant_calling/joint_germline.vcf.gz
+    - path: results/variant_calling/sentieon_dnascope/joint_variant_calling/joint_germline.vcf.gz.tbi
+    - path: results/variant_calling/sentieon_dnascope/testN/testN.dnascope.g.vcf.gz
+    - path: results/variant_calling/sentieon_dnascope/testN/testN.dnascope.g.vcf.gz.tbi
+    - path: results/variant_calling/sentieon_dnascope/testT/testT.dnascope.g.vcf.gz
+    - path: results/variant_calling/sentieon_dnascope/testT/testT.dnascope.g.vcf.gz.tbi
+    - path: results/dnascope
+      should_exist: false
+    - path: results/reports/mosdepth/testN/testN.recal.mosdepth.global.dist.txt
+      md5sum: 69e29702ef01fd8f6c7a5468fc35a16a
+    - path: results/reports/mosdepth/testN/testN.recal.mosdepth.region.dist.txt
+      md5sum: 6ec49cd7d510c2eb3d9d90fdb79b783a
+    - path: results/reports/mosdepth/testN/testN.recal.mosdepth.summary.txt
+      md5sum: 103098d0bf76ed82d2b87d5f242b099a
+    - path: results/reports/mosdepth/testN/testN.recal.regions.bed.gz
+      md5sum: b5888cf7395c57d39879a5faa6159eb3
+    - path: results/reports/mosdepth/testN/testN.recal.regions.bed.gz.csi
+      md5sum: 9cb0ad7039a3b703d16ca7d5b835c0ee
+    - path: results/reports/samtools/testN/testN.recal.cram.stats
+    - path: results/reports/mosdepth/testT/testT.recal.mosdepth.global.dist.txt
+      md5sum: 69e29702ef01fd8f6c7a5468fc35a16a
+    - path: results/reports/mosdepth/testT/testT.recal.mosdepth.region.dist.txt
+      md5sum: 6ec49cd7d510c2eb3d9d90fdb79b783a
+    - path: results/reports/mosdepth/testT/testT.recal.mosdepth.summary.txt
+      md5sum: 103098d0bf76ed82d2b87d5f242b099a
+    - path: results/reports/mosdepth/testT/testT.recal.regions.bed.gz
+      md5sum: b5888cf7395c57d39879a5faa6159eb3
+    - path: results/reports/mosdepth/testT/testT.recal.regions.bed.gz.csi
+      md5sum: 9cb0ad7039a3b703d16ca7d5b835c0ee
+    - path: results/reports/samtools/testT/testT.recal.cram.stats
