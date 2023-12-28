@@ -5,9 +5,9 @@
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
 include { CRAM_QC_MOSDEPTH_SAMTOOLS } from '../cram_qc_mosdepth_samtools/main'
-include { SAMBAMBA_MARKDUPLICATES      } from '../../../modules/nf-core/sambamba/markdup/main'
+include { SAMBAMBA_MARKDUP      } from '../../../modules/nf-core/sambamba/markdup/main'
 
-workflow BAM_MARKDUPLICATES {
+workflow BAM_MARKDUPLICATES_SAMBAMBA {
     take:
     bam                    // channel: [mandatory] [ meta, bam ]
     fasta                  // channel: [mandatory] [ fasta ]
@@ -19,10 +19,10 @@ workflow BAM_MARKDUPLICATES {
     reports  = Channel.empty()
 
     // RUN MARKUPDUPLICATES
-    SAMBAMBA_MARKDUPLICATES(bam, fasta, fasta_fai)
+    SAMBAMBA_MARKDUP(bam)
 
     // Join with the crai file
-    cram = SAMBAMBA_MARKDUPLICATES.out.cram.join(SAMBAMBA_MARKDUPLICATES.out.crai, failOnDuplicate: true, failOnMismatch: true)
+    cram = SAMBAMBA_MARKDUP.out.cram.join(SAMBAMBA_MARKDUPLICATES.out.crai, failOnDuplicate: true, failOnMismatch: true)
 
     // QC on CRAM
     CRAM_QC_MOSDEPTH_SAMTOOLS(cram, fasta, intervals_bed_combined)

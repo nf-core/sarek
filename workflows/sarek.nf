@@ -185,6 +185,7 @@ include { SAMTOOLS_CONVERT as CRAM_TO_BAM_RECAL       } from '../modules/nf-core
 
 // Mark Duplicates (+QC)
 include { BAM_MARKDUPLICATES                          } from '../subworkflows/local/bam_markduplicates/main'
+include { BAM_MARKDUPLICATES_SAMBAMBA                    } from '../subworkflows/local/bam_markduplicates_sambamba/main'
 include { BAM_MARKDUPLICATES_SPARK                    } from '../subworkflows/local/bam_markduplicates_spark/main'
 include { BAM_SENTIEON_DEDUP                          } from '../subworkflows/local/bam_sentieon_dedup/main'
 
@@ -611,7 +612,24 @@ workflow SAREK {
 
             // Gather used softwares versions
             versions = versions.mix(BAM_SENTIEON_DEDUP.out.versions)
-        } else {
+        } else if (params.sambamba_dedup) {
+            BAM_MARKDUPLICATES_SAMBAMBA(
+                cram_for_markduplicates,
+                fasta,
+                fasta_fai,
+                intervals_for_preprocessing)
+
+            cram_markduplicates_no_spark = BAM_MARKDUPLICATES.out.cram
+
+            // Gather QC reports
+            reports = reports.mix(BAM_MARKDUPLICATES.out.reports.collect{ meta, report -> report })
+
+            // Gather used softwares versions
+            versions = versions.mix(BAM_MARKDUPLICATES.out.versions)
+        }
+        
+        
+         else {
             BAM_MARKDUPLICATES(
                 cram_for_markduplicates,
                 fasta,
