@@ -7,6 +7,7 @@ process SAMBAMBA_MARKDUP {
         'https://depot.galaxyproject.org/singularity//sambamba:1.0--h98b6b92_0':
         'biocontainers/sambamba:1.0--h98b6b92_0' }"
 
+    // [[patient:test, sample:test, sex:XX, status:0, id:test, data_type:bam], /workspace/nextflow_dir/work/5f/bd451fdce7965b839d600fcc122530/test.bam]
     input:
     tuple val(meta), path(bam)
 

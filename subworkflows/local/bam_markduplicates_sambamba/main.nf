@@ -19,21 +19,26 @@ workflow BAM_MARKDUPLICATES_SAMBAMBA {
     reports  = Channel.empty()
 
     // RUN MARKUPDUPLICATES
+    bam.view()
     SAMBAMBA_MARKDUP(bam)
 
+    // bam = SAMBAMBA_MARKDUP.out.bam
+    // bam.view()
+
+    cram = bam
     // Join with the crai file
-    cram = SAMBAMBA_MARKDUP.out.cram.join(SAMBAMBA_MARKDUPLICATES.out.crai, failOnDuplicate: true, failOnMismatch: true)
+    // bam = SAMBAMBA_MARKDUP.out.bam.join(SAMBAMBA_MARKDUPLICATES.out.bai, failOnDuplicate: true, failOnMismatch: true)
 
     // QC on CRAM
-    CRAM_QC_MOSDEPTH_SAMTOOLS(cram, fasta, intervals_bed_combined)
+    // CRAM_QC_MOSDEPTH_SAMTOOLS(bam, fasta, intervals_bed_combined)
 
     // Gather all reports generated
-    reports = reports.mix(SAMBAMBA_MARKDUPLICATES.out.metrics)
-    reports = reports.mix(CRAM_QC_MOSDEPTH_SAMTOOLS.out.reports)
+    // reports = reports.mix(SAMBAMBA_MARKDUP.out.metrics)
+    // reports = reports.mix(CRAM_QC_MOSDEPTH_SAMTOOLS.out.reports)
 
     // Gather versions of all tools used
-    versions = versions.mix(SAMBAMBA_MARKDUPLICATES.out.versions)
-    versions = versions.mix(CRAM_QC_MOSDEPTH_SAMTOOLS.out.versions)
+    versions = versions.mix(SAMBAMBA_MARKDUP.out.versions)
+    // versions = versions.mix(CRAM_QC_MOSDEPTH_SAMTOOLS.out.versions)
 
     emit:
     cram

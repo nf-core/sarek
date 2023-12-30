@@ -619,16 +619,16 @@ workflow SAREK {
                 fasta_fai,
                 intervals_for_preprocessing)
 
-            cram_markduplicates_no_spark = BAM_MARKDUPLICATES.out.cram
+            cram_markduplicates_no_spark = BAM_MARKDUPLICATES_SAMBAMBA.out.cram
 
             // Gather QC reports
-            reports = reports.mix(BAM_MARKDUPLICATES.out.reports.collect{ meta, report -> report })
+            reports = reports.mix(BAM_MARKDUPLICATES_SAMBAMBA.out.reports.collect{ meta, report -> report })
 
             // Gather used softwares versions
-            versions = versions.mix(BAM_MARKDUPLICATES.out.versions)
+            versions = versions.mix(BAM_MARKDUPLICATES_SAMBAMBA.out.versions)
         }
-        
-        
+
+
          else {
             BAM_MARKDUPLICATES(
                 cram_for_markduplicates,
