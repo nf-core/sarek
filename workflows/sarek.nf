@@ -83,14 +83,9 @@ for (param in checkPathParamList) if (param) file(param, checkIfExists: true)
 */
 
 // Initialize file channels based on params, defined in the params.genomes[params.genome] scope
-ascat_alleles           = params.ascat_alleles           ? Channel.fromPath(params.ascat_alleles).collect()           : Channel.empty()
-ascat_loci              = params.ascat_loci              ? Channel.fromPath(params.ascat_loci).collect()              : Channel.empty()
-ascat_loci_gc           = params.ascat_loci_gc           ? Channel.fromPath(params.ascat_loci_gc).collect()           : Channel.value([])
-ascat_loci_rt           = params.ascat_loci_rt           ? Channel.fromPath(params.ascat_loci_rt).collect()           : Channel.value([])
 bcftools_annotations    = params.bcftools_annotations    ? Channel.fromPath(params.bcftools_annotations).collect()    : Channel.empty()
 bcftools_header_lines   = params.bcftools_header_lines   ? Channel.fromPath(params.bcftools_header_lines).collect()   : Channel.empty()
 cf_chrom_len            = params.cf_chrom_len            ? Channel.fromPath(params.cf_chrom_len).collect()            : []
-chr_dir                 = params.chr_dir                 ? Channel.fromPath(params.chr_dir).collect()                 : Channel.value([])
 dbsnp                   = params.dbsnp                   ? Channel.fromPath(params.dbsnp).collect()                   : Channel.value([])
 fasta                   = params.fasta                   ? Channel.fromPath(params.fasta).first()                     : Channel.empty()
 fasta_fai               = params.fasta_fai               ? Channel.fromPath(params.fasta_fai).collect()               : Channel.empty()
@@ -238,7 +233,35 @@ workflow SAREK {
 	// Parse samplesheet
 	// Set input, can either be from --input or from automatic retrieval in WorkflowSarek.groovy
     ch_from_samplesheet = params.build_only_index ? Channel.empty() : params.input ? Channel.fromSamplesheet("input") : Channel.fromSamplesheet("input_restart")
-	SAMPLESHEET_TO_CHANNEL(ch_from_samplesheet)
+	SAMPLESHEET_TO_CHANNEL(
+        ch_from_samplesheet,
+        params.aligner,
+        params.ascat_alleles,
+        params.ascat_loci,
+        params.ascat_loci_rt,
+        params.bcftools_annotations,
+        params.bcftools_annotations_tbi,
+        params.bcftools_header_lines,
+        params.build_only_index,
+        params.dbsnp,
+        params.fasta,
+        params.germline_resource,
+        params.intervals,
+        params.joint_germline,
+        params.joint_mutect2,
+        params.known_indels,
+        params.known_snps,
+        params.no_intervals,
+        params.pon,
+        params.sentieon_dnascope_emit_mode,
+        params.sentieon_haplotyper_emit_mode,
+        params.seq_center,
+        params.seq_platform,
+        params.skip_tools,
+        params.step,
+        params.tools,
+        params.umi_read_structure,
+        params.wes)
 
 	input_sample = SAMPLESHEET_TO_CHANNEL.out.input_sample
 
@@ -283,12 +306,12 @@ workflow SAREK {
 
     // Build indices if needed
     PREPARE_GENOME(
-        ascat_alleles,
-        ascat_loci,
-        ascat_loci_gc,
-        ascat_loci_rt,
+        params.ascat_alleles,
+        params.ascat_loci,
+        params.ascat_loci_gc,
+        params.ascat_loci_rt,
         bcftools_annotations,
-        chr_dir,
+        params.chr_dir,
         dbsnp,
         fasta,
         fasta_fai,
@@ -342,7 +365,7 @@ workflow SAREK {
     known_sites_snps_tbi   = dbsnp_tbi.concat(known_snps_tbi).collect()
 
     // Build intervals if needed
-    PREPARE_INTERVALS(fasta_fai, params.intervals, params.no_intervals)
+    PREPARE_INTERVALS(fasta_fai, params.intervals, params.no_intervals, params.nucleotides_per_second, params.outdir, params.step)
 
     // Intervals for speed up preprocessing/variant calling by spread/gather
     // [interval.bed] all intervals in one file
@@ -552,7 +575,8 @@ workflow SAREK {
 
             BAM_TO_CRAM_MAPPING(BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai, fasta, fasta_fai)
             // Create CSV to restart from this step
-            params.save_output_as_bam ? CHANNEL_ALIGN_CREATE_CSV(BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai) : CHANNEL_ALIGN_CREATE_CSV(BAM_TO_CRAM_MAPPING.out.alignment_index)
+            if (params.save_output_as_bam) CHANNEL_ALIGN_CREATE_CSV(BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai, params.outdir, params.save_output_as_bam)
+            else CHANNEL_ALIGN_CREATE_CSV(BAM_TO_CRAM_MAPPING.out.alignment_index, params.outdir, params.save_output_as_bam)
 
             // Gather used softwares versions
             versions = versions.mix(BAM_MERGE_INDEX_SAMTOOLS.out.versions)
@@ -673,7 +697,8 @@ workflow SAREK {
         // Create CSV to restart from this step
         csv_subfolder = (params.tools && params.tools.split(',').contains('sentieon_dedup')) ? 'sentieon_dedup' : 'markduplicates'
 
-        params.save_output_as_bam ? CHANNEL_MARKDUPLICATES_CREATE_CSV(CRAM_TO_BAM.out.alignment_index, csv_subfolder, params.outdir, params.save_output_as_bam) : CHANNEL_MARKDUPLICATES_CREATE_CSV(ch_md_cram_for_restart, csv_subfolder, params.outdir, params.save_output_as_bam)
+        if (params.save_output_as_bam) CHANNEL_MARKDUPLICATES_CREATE_CSV(CRAM_TO_BAM.out.alignment_index, csv_subfolder, params.outdir, params.save_output_as_bam)
+        else CHANNEL_MARKDUPLICATES_CREATE_CSV(ch_md_cram_for_restart, csv_subfolder, params.outdir, params.save_output_as_bam)
     }
 
     if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration']) {
@@ -760,7 +785,7 @@ workflow SAREK {
             cram_applybqsr = ch_cram_for_bam_baserecalibrator.join(ch_table_bqsr, failOnDuplicate: true, failOnMismatch: true)
 
             // Create CSV to restart from this step
-            CHANNEL_BASERECALIBRATOR_CREATE_CSV(ch_md_cram_for_restart.join(ch_table_bqsr, failOnDuplicate: true), params.tools, params.skip_tools, params.save_output_as_bam, params.outdir)
+            CHANNEL_BASERECALIBRATOR_CREATE_CSV(ch_md_cram_for_restart.join(ch_table_bqsr, failOnDuplicate: true), params.tools, params.skip_tools, params.outdir, params.save_output_as_bam)
         }
     }
 
@@ -837,7 +862,7 @@ workflow SAREK {
             csv_recalibration = params.save_output_as_bam ?  CRAM_TO_BAM_RECAL.out.alignment_index : cram_variant_calling
 
             // Create CSV to restart from this step
-            CHANNEL_APPLYBQSR_CREATE_CSV(csv_recalibration)
+            CHANNEL_APPLYBQSR_CREATE_CSV(csv_recalibration, params.outdir, params.save_output_as_bam)
 
         } else if (params.step == 'recalibrate') {
             // cram_variant_calling contains either:
@@ -1052,7 +1077,7 @@ workflow SAREK {
         reports = reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.vcftools_tstv_qual.collect{ meta, qual -> qual })
         reports = reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.vcftools_filter_summary.collect{ meta, summary -> summary })
 
-        CHANNEL_VARIANT_CALLING_CREATE_CSV(vcf_to_annotate)
+        CHANNEL_VARIANT_CALLING_CREATE_CSV(vcf_to_annotate, params.outdir)
 
         // Gather used variant calling softwares versions
         versions = versions.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.versions)
