@@ -81,8 +81,8 @@ jobs:
       - name: Add entry to config
         uses: mikefarah/yq@master
         env:
-          PIPELINE_VERSION: ${{ env.PIPELINE_VERSION }}
           FASTP_VERSION: ${{ env.FASTP_VERSION }}
+          PIPELINE_VERSION: ${{ env.PIPELINE_VERSION }}
           BWA_VERSION: ${{ env.BWA_VERSION }}
           GATK_VERSION: ${{ env.GATK_VERSION }}
           STRELKA_VERSION: ${{ env.STRELKA_VERSION }}
