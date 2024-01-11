@@ -93,7 +93,13 @@ jobs:
         with:
           # TODO: add in values for all callers, ensure proper extension for the datasets are used.
           # TODO check if trimming should be enabled actually
-          cmd: sh .github/workflows/set_ncbench_config.sh
+          #sh .github/workflows/set_ncbench_config.sh
+          cmd: yq --inplace "
+            with(.variant-calls.nf-core-sarek-PIPELINE_VERSION-strelka-agilent-READSM.labels;
+            .site = "nf-core" |
+            .pipeline = "nf-core/sarek vPIPELINE_VERSION" |
+            .genotyping = "none" |
+            .reads = "READSM" )" ncbench-workflow/config/config.yaml
 
       # TODO: enable using secrets here
       - name: Commit files
