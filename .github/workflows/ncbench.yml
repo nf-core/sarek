@@ -86,6 +86,7 @@ jobs:
           BWA_VERSION: ${{ env.BWA_VERSION }}
           GATK_VERSION: ${{ env.GATK_VERSION }}
           STRELKA_VERSION: ${{ env.STRELKA_VERSION }}
+          DEPOSITION_ID: ${{ env.DEPOSITION_ID }}
         with:
           # TODO: add in values for all callers, ensure proper extension for the datasets are used.
           # TODO check if trimming should be enabled actually

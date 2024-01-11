@@ -7,18 +7,18 @@
 #        .genotyping = "none" |
 for READS in 75 200; do
     yq --inplace "
-        with(.variant-calls.nf-core-sarek-$PIPELINE_VERSION-strelka-agilent-$READSM.labels;
+        with(.variant-calls.nf-core-sarek-$PIPELINE_VERSION-strelka-agilent-${READS}M.labels;
         .site = "nf-core" |
         .pipeline = "nf-core/sarek v$PIPELINE_VERSION" |
-        .reads = "$READSM" ) |
-        with(.variant-calls.nf-core-sarek-$PIPELINE_VERSION-strelka-agilent-$READSM.subcategory;
+        .reads = "${READS}M" ) |
+        with(.variant-calls.nf-core-sarek-$PIPELINE_VERSION-strelka-agilent-${READS}M.subcategory;
         . = "NA12878-agilent" ) |
-        with(.variant-calls.nf-core-sarek-$PIPELINE_VERSION-strelka-agilent-$READSM.zenodo;
+        with(.variant-calls.nf-core-sarek-$PIPELINE_VERSION-strelka-agilent-${READS}M.zenodo;
         .deposition = $DEPOSITION_ID  |
         .filename = "TODO get here proper file names" ) |
-        with(.variant-calls.nf-core-sarek-$PIPELINE_VERSION-strelka-agilent-$READSM.benchmark;
-        . = "giab-NA12878-agilent-$READSM" ) |
-        with(.variant-calls.nf-core-sarek-$PIPELINE_VERSION-strelka-agilent-$READSM.rename-contigs;
+        with(.variant-calls.nf-core-sarek-$PIPELINE_VERSION-strelka-agilent-${READS}M.benchmark;
+        . = "giab-NA12878-agilent-${READS}M" ) |
+        with(.variant-calls.nf-core-sarek-$PIPELINE_VERSION-strelka-agilent-${READS}M.rename-contigs;
         . = "resources/rename-contigs/ucsc-to-ensembl.txt" )
         " ncbench-workflow/config/config.yaml
 done
