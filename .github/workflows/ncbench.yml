@@ -65,9 +65,11 @@ jobs:
       - name: Upload to zenodo
         env:
           ACCESS_TOKEN: ${{ secrets.NCBENCH_CI_TOKEN_SANDBOX }} # TODO ${{ secrets.ZENODO_DEPOSIT }}
+          PIPELINE_VERSION: ${{ env.PIPELINE_VERSION }}
         run: |
           python .github/workflows/upload.py
-          echo "DEPOSITION_ID=${DEPOSITION_ID}" >> $GITHUB_ENV
+          echo DEPOSITION_ID=$DEPOSITION_ID >> $GITHUB_ENV
+          echo $DEPOSITION_ID
 
       # update ncbench config yml
       - name: NCBench set config
@@ -81,14 +83,15 @@ jobs:
       - name: Add entry to config
         uses: mikefarah/yq@master
         env:
-          PIPELINE_VERSION: ${{ env.PIPELINE_VERSION }}
           FASTP_VERSION: ${{ env.FASTP_VERSION }}
+          PIPELINE_VERSION: ${{ env.PIPELINE_VERSION }}
           BWA_VERSION: ${{ env.BWA_VERSION }}
           GATK_VERSION: ${{ env.GATK_VERSION }}
           STRELKA_VERSION: ${{ env.STRELKA_VERSION }}
           DEPOSITION_ID: ${{ env.DEPOSITION_ID }}
         with:
           # TODO: add in values for all callers, ensure proper extension for the datasets are used.
+          # TODO check if trimming should be enabled actually
           cmd: sh .github/workflows/set_ncbench_config.sh
 
       # TODO: enable using secrets here
