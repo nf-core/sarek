@@ -17,6 +17,10 @@ on:
         description: "Germline full test"
         type: boolean
         default: false
+      germline_ncbench_agilent:
+        description: "Germline Agilent NCBench test"
+        type: boolean
+        default: false
       aws:
         description: "AWS Batch"
         type: boolean
@@ -46,6 +50,8 @@ jobs:
             enabled: ${{ ( github.repository == 'nf-core/sarek' ) && ( github.event_name != 'workflow_dispatch' || ( inputs.germline && inputs.aws ) ) }}
           - profile: test_full_germline_azure
             enabled: ${{ ( github.repository == 'nf-core/sarek' ) && ( github.event_name != 'workflow_dispatch' || ( inputs.germline && inputs.azure ) ) }}
+          - profile: test_full_germline_ncbench_agilent_aws
+            enabled: ${{ ( github.repository == 'nf-core/sarek' ) && ( github.event_name != 'workflow_dispatch' || ( inputs.germline_ncbench_agilent && inputs.aws ) ) }}
 
     steps:
       # Launch workflow on AWS Batch
