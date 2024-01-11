@@ -17,6 +17,9 @@
 
         #with(.variant-calls.nf-core-sarek-$PIPELINE_VERSION-strelka-agilent-${READS}M.rename-contigs;
         #. = "resources/rename-contigs/ucsc-to-ensembl.txt" )
+
+ls ncbench-workflow
+
 for READS in 75 200; do
     yq --inplace "
         with(.variant-calls.nf-core-sarek-$PIPELINE_VERSION-strelka-agilent-${READS}M.labels;
