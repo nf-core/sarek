@@ -22,42 +22,53 @@ jobs:
           # TODO: Add in other test profiles
           - profile: germline_default_agilent
             enabled: ${{ ( github.repository == 'nf-core/sarek' ) && ( github.event_name != 'workflow_dispatch' || inputs.germline_default_agilent ) }}
-
     steps:
       - name: Download pipeline
         uses: actions/checkout@v4
 
-      - name: Extract Version
-        id: extract_version
+      - name: Extract Versions
+        id: extract_versions
         run: |
           PIPELINE_VERSION=$(awk -F"'" '/manifest {/,/version/ {if(/version/) print $2}' nextflow.config)
           echo "PIPELINE_VERSION=${PIPELINE_VERSION}" >> $GITHUB_ENV
 
-      - name: Display Version
-        run: |
-          echo "Version: ${{ env.PIPELINE_VERSION }}"
+          FASTP_VERSION=$(awk '/- bioconda::fastp=/ {gsub(/.*=/, "", $NF); gsub(/'\''/, "", $NF); print $NF}' modules/nf-core/fastp/environment.yml)
+          echo "FASTP_VERSION=${FASTP_VERSION}" >> $GITHUB_ENV
 
+          BWA_VERSION=$(awk '/- bioconda::bwa=/ {gsub(/.*=/, "", $NF); gsub(/'\''/, "", $NF); print $NF}' modules/nf-core/bwa/mem/environment.yml)
+          echo "BWA_VERSION=${BWA_VERSION}" >> $GITHUB_ENV
+
+          GATK_VERSION=$(awk '/- bioconda::gatk4=/ {gsub(/.*=/, "", $NF); gsub(/'\''/, "", $NF); print $NF}' modules/nf-core/gatk4/baserecalibrator/environment.yml)
+          echo "GATK_VERSION=${GATK_VERSION}" >> $GITHUB_ENV
+
+          STRELKA_VERSION=$(awk '/- bioconda::strelka=/ {gsub(/.*=/, "", $NF); gsub(/'\''/, "", $NF); print $NF}' modules/nf-core/strelka/germline/environment.yml)
+          echo "STRELKA_VERSION=${STRELKA_VERSION}" >> $GITHUB_ENV
+
+      #      - name: Display Version
+      #        run: |
+      #          echo "Version: ${{ env.VERSION }}"
+      #
       - name: Download files from AWS
         uses: keithweaver/aws-s3-github-action@v1.0.0
         if: ${{ matrix.enabled }}
         with:
-          # TODO: download all vcfs
+          # TODO: fix path to agilent test path
           source: s3://nf-core-awsmegatests/sarek/results-test-59026dc07633edb83aab3bfb2f65f79db38437a1/test_full/variant_calling
           command: sync
           aws_region: eu-west-1
           destination: ./variant_calling
           flags: --no-sign-request --include ".vcf.gz" --exclude "g.vcf.gz"
-
-      - name: list files
-        run: |
-          ls variant_calling/strelka/HCC1395N/
-
+      #
+      #      - name: list files
+      #        run: |
+      #          ls variant_calling/strelka/HCC1395N/
+      #
       - name: Install requests
         run: pip install requests # version pinning?
 
       - name: Upload to zenodo
         env:
-          ACCESS_TOKEN: ${{ secrets.NCBENCH_CI_TOKEN_SANDBOX }} # ${{ secrets.ZENODO_DEPOSIT }}
+          ACCESS_TOKEN: ${{ secrets.NCBENCH_CI_TOKEN_SANDBOX }} # TODO ${{ secrets.ZENODO_DEPOSIT }}
         run: |
           python .github/workflows/upload.py
           echo $DEPOSITION_ID
@@ -74,27 +85,27 @@ jobs:
       - name: Add entry to config
         uses: mikefarah/yq@master
         with:
-          # TODO: add in values for all callers, ensure proper extension for the datasets are used. Parse out tool versions somehow
-          # TODO: need to retrieve new zenodo id
+          # TODO: add in values for all callers, ensure proper extension for the datasets are used.
+          # TODO check if trimming should be enabled actually
           cmd: yq --inplace '
-            with(.variant-calls.nf-core-sarek-321-strelka-agilent-75M.labels;
+            with(.variant-calls.nf-core-sarek-${{ env.PIPELINE_VERSION }}-strelka-agilent-75M.labels;
             .site = "nf-core" |
-            .pipeline = "nf-core/sarek ${{ env.PIPELINE_VERSION }}" |
-            .trimming = "FastP v0.23.2" |
-            .read-mapping = "bwa mem v0.7.17" |
-            .base-quality-recalibration = "gatk4 v4.4.0.0" |
+            .pipeline = "nf-core/sarek v${{ env.PIPELINE_VERSION }}" |
+            .trimming = "FastP v${{ env.FASTP_VERSION }}" |
+            .read-mapping = "bwa mem v${{ env.BWA_VERSION }}" |
+            .base-quality-recalibration = "gatk4 v${{ env.GATK_VERSION }}" |
             .realignment = "none" |
-            .variant-detection  = "strelka2 v2.9.10" |
+            .variant-detection  = "strelka2 v${{ env.STRELKA_VERSION }}" |
             .genotyping = "none" |
             .reads = "75M" ) |
-            with(.variant-calls.nf-core-sarek-321-strelka-agilent-75M.subcategory;
+            with(.variant-calls.nf-core-sarek-${{ env.PIPELINE_VERSION }}-strelka-agilent-75M.subcategory;
             . = "NA12878-agilent" ) |
-            with(.variant-calls.nf-core-sarek-321-strelka-agilent-75M.zenodo;
+            with(.variant-calls.nf-core-sarek-${{ env.PIPELINE_VERSION }}-strelka-agilent-75M.zenodo;
             .deposition = $DEPOSITION_ID  |
-            .filename = "get here proper file names" ) |
-            with(.variant-calls.nf-core-sarek-321-strelka-agilent-75M.benchmark;
+            .filename = "TODO get here proper file names" ) |
+            with(.variant-calls.nf-core-sarek-${{ env.PIPELINE_VERSION }}-strelka-agilent-75M.benchmark;
             . = "giab-NA12878-agilent-75M" ) |
-            with(.variant-calls.nf-core-sarek-321-strelka-agilent-75M.rename-contigs;
+            with(.variant-calls.nf-core-sarek-${{ env.PIPELINE_VERSION }}-strelka-agilent-75M.rename-contigs;
             . = "resources/rename-contigs/ucsc-to-ensembl.txt" )
             ' ncbench-workflow/config/config.yaml
 
@@ -104,7 +115,7 @@ jobs:
           cd ncbench-workflow
           git config --global user.email "friederike.hanssen@qbic.uni-tuebingen.de"
           git config --global user.name "FriederikeHanssen"
-          git checkout -b sarek_${{ env.VERSION }}
+          git checkout -b sarek_${{ env.PIPELINE_VERSION }}
           git add config/config.yaml
-          git commit -a -m "Add benchmarking vcfs for nf-core/sarek ${{ env.VERSION }}"
-          git push origin sarek_${{ env.VERSION }}
+          git commit -a -m "Add changes"
+          git push origin sarek_${{ env.PIPELINE_VERSION }}
