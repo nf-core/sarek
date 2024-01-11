@@ -31,13 +31,20 @@ print(deposition_id )
 # Upload a new file
 # bucket_url = r.json()["links"]["bucket"]
 
-# print(os.listdir('./variant_calling/strelka/HCC1395N/'))
-# filenames = [ #"deepvariant/HCC1395N/HCC1395N.deepvariant.vcf.gz",
-#                 #"freebayes/HCC1395N/HCC1395N.freebayes.vcf.gz",
-#                 #"haplotypecaller/HCC1395N/HCC1395N.haplotypecaller.filtered.vcf.gz",
-#                 #"haplotypecaller/HCC1395N/HCC1395N.freebayes.vcf.gz",
-#                 "strelka/HCC1395N/HCC1395N.strelka.variants.vcf.gz",
-#                 "strelka/HCC1395N/HCC1395N.strelka.genome.vcf.gz"]
+print(os.listdir('./variant_calling/strelka/HCC1395N/'))
+# filenames = [ "deepvariant/NA12878_75M/NA12878_75M.deepvariant.vcf.gz",
+#               "freebayes/NA12878_75M/NA12878_75M.freebayes.vcf.gz",
+#               "haplotypecaller/NA12878_75M/NA12878_75M.haplotypecaller.filtered.vcf.gz",
+#               "haplotypecaller/NA12878_75M/NA12878_75M.freebayes.vcf.gz",
+#               "strelka/NA12878_75M/NA12878_75M.strelka.variants.vcf.gz",
+#               "strelka/NA12878_75M/NA12878_75M.strelka.genome.vcf.gz",
+
+#               "deepvariant/NA12878_200M/NA12878_200M.deepvariant.vcf.gz",
+#               "freebayes/NA12878_200M/NA12878_200M.freebayes.vcf.gz",
+#               "haplotypecaller/NA12878_200M/NA12878_200M.haplotypecaller.filtered.vcf.gz",
+#               "haplotypecaller/NA12878_200M/NA12878_200M.freebayes.vcf.gz",
+#               "strelka/NA12878_200M/NA12878_200M.strelka.variants.vcf.gz",
+#               "strelka/NA12878_200M/NA12878_200M.strelka.genome.vcf.gz"]
 
 # for file in filenames:
 #     path = "./variant_calling/%s" % file
@@ -77,12 +84,7 @@ print(r.status_code)
 print(r.json())
 print()
 
-# filename = "HCC1395N.strelka.genome.vcf.gz"
-# path = "./variant_calling/strelka/HCC1395N/%s" % filename
-# print(os.listdir('../../'))
-# print(os.listdir('../../../'))
-# print(os.listdir('../'))
-# print(os.listdir('./variant_calling/strelka/HCC1395N/'))
+# Publish this
 
 # r = requests.post('https://sandbox.zenodo.org/api/deposit/depositions/%s/actions/publish' % deposition_id,
 #                     params=params )
