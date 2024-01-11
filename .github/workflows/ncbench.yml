@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       # TODO: add in other test profiles
-      germline_wes:
+      germline_default_agilent:
         description: "Trigger NCBench upload"
         type: boolean
         default: true
@@ -20,8 +20,8 @@ jobs:
       matrix:
         include:
           # TODO: Add in other test profiles
-          - profile: germline_wes
-            enabled: ${{ ( github.repository == 'nf-core/sarek' ) && ( github.event_name != 'workflow_dispatch' || inputs.germline_wes ) }}
+          - profile: germline_default_agilent
+            enabled: ${{ ( github.repository == 'nf-core/sarek' ) && ( github.event_name != 'workflow_dispatch' || inputs.germline_default_agilent ) }}
     env:
       # TODO: parse this out somehow
       pipeline_version: 3.1.1test
@@ -29,6 +29,14 @@ jobs:
     steps:
       - name: Download pipeline
         uses: actions/checkout@v4
+
+      - name: Extract Version
+        id: extract_version
+        run: echo "VERSION=$(awk -F"'" '/version/ {print $2}' nextflow.config)" >> $GITHUB_ENV
+
+      - name: Display Version
+        run: |
+          echo "Version: ${{ env.VERSION }}"
 
       - name: Download files from AWS
         uses: keithweaver/aws-s3-github-action@v1.0.0
