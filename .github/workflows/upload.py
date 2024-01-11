@@ -47,7 +47,6 @@ for file in filenames:
 
 
 print("Upload new files")
-print(r.json()["links"]["bucket"])
 print(r.status_code)
 
 # Add metadata to uploaded file
