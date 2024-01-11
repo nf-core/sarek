@@ -14,15 +14,16 @@
         #. = "NA12878-agilent" ) |
         #with(.variant-calls.nf-core-sarek-$PIPELINE_VERSION-strelka-agilent-${READS}M.benchmark;
         #. = "giab-NA12878-agilent-${READS}M" ) |
+
+        #with(.variant-calls.nf-core-sarek-$PIPELINE_VERSION-strelka-agilent-${READS}M.rename-contigs;
+        #. = "resources/rename-contigs/ucsc-to-ensembl.txt" )
 for READS in 75 200; do
     yq --inplace "
         with(.variant-calls.nf-core-sarek-$PIPELINE_VERSION-strelka-agilent-${READS}M.labels;
         .site = "nf-core" |
         .pipeline = "nf-core/sarek v$PIPELINE_VERSION" |
         .genotyping = "none" |
-        .reads = "${READS}M" ) |
-        with(.variant-calls.nf-core-sarek-$PIPELINE_VERSION-strelka-agilent-${READS}M.rename-contigs;
-        . = "resources/rename-contigs/ucsc-to-ensembl.txt" )
+        .reads = "${READS}M" )
         " ncbench-workflow/config/config.yaml
 done
 
