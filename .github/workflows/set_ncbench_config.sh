@@ -2,7 +2,6 @@
 #!/bin/bash
 
 echo "$PIPELINE_VERSION"
-echo "${PIPELINE_VERSION}"
 
 # for reads in 75 200; do
 #     yq --inplace '
