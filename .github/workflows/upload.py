@@ -24,8 +24,8 @@ deposition_id = r.json()["id"]
 
 print("Create empty upload:\n")
 print(r.json())
-print("Deposition id: " + deposition_id)
-print()
+print("Deposition id: ")
+print(deposition_id )
 
 # Upload a new file
 bucket_url = r.json()["links"]["bucket"]
@@ -63,7 +63,8 @@ r = requests.put('https://sandbox.zenodo.org/api/deposit/depositions/%s' % depos
                 data=json.dumps(data),
                 headers=headers)
 
-print("Add metadata: " + r.status_code)
+print("Add metadata: ")
+print(r.status_code)
 print(r.json())
 print()
 
@@ -77,5 +78,6 @@ print()
 r = requests.post('https://sandbox.zenodo.org/api/deposit/depositions/%s/actions/publish' % deposition_id,
                     params=params )
 
-print("Publish data status code: " + r.status_code)
+print("Publish data status code: ")
+print(r.status_code)
 
