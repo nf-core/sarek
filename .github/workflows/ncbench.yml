@@ -63,13 +63,12 @@ jobs:
         run: pip install requests # version pinning?
 
       - name: Upload to zenodo
+        id: upload_zenodo
         env:
           ACCESS_TOKEN: ${{ secrets.NCBENCH_CI_TOKEN_SANDBOX }} # TODO ${{ secrets.ZENODO_DEPOSIT }}
           PIPELINE_VERSION: ${{ env.PIPELINE_VERSION }}
         run: |
           python .github/workflows/upload.py
-          echo DEPOSITION_ID=$DEPOSITION_ID >> $GITHUB_ENV
-          echo $DEPOSITION_ID
 
       # update ncbench config yml
       - name: NCBench set config
@@ -88,7 +87,7 @@ jobs:
           BWA_VERSION: ${{ env.BWA_VERSION }}
           GATK_VERSION: ${{ env.GATK_VERSION }}
           STRELKA_VERSION: ${{ env.STRELKA_VERSION }}
-          DEPOSITION_ID: ${{ env.DEPOSITION_ID }}
+          DEPOSITION_ID: ${{ needs.upload_zenodo.outputs.deposition_id }}
         with:
           # TODO: add in values for all callers, ensure proper extension for the datasets are used.
           # TODO check if trimming should be enabled actually

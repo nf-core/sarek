@@ -22,6 +22,8 @@ r = requests.post(url,
 
 os.environ['DEPOSITION_ID'] = str(r.json()["id"])
 deposition_id = r.json()["id"]
+# Print DEPOSITION_ID to make it available for the workflow
+print(f"::set-output name=deposition_id::{deposition_id}")
 
 print("Create empty upload:\n")
 print(r.json())
