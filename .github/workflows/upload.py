@@ -6,6 +6,7 @@ headers = {"Content-Type": "application/json"}
 access_token = os.environ["ACCESS_TOKEN"]
 params = {'access_token': access_token}
 workspace_directory = os.environ["GITHUB_WORKSPACE"]
+pipeline_version = os.environ["PIPELINE_VERSION"]
 
 # TODO: replace sandbox link https://zenodo.org/api/deposit/depositions
 # https://sandbox.zenodo.org/api/deposit/depositions?access_token={access_token}
@@ -28,10 +29,10 @@ print()
 # Upload a new file
 bucket_url = r.json()["links"]["bucket"]
 
-filenames = ["deepvariant/HCC1395N/HCC1395N.deepvariant.vcf.gz",
-                "freebayes/HCC1395N/HCC1395N.freebayes.vcf.gz",
-                "haplotypecaller/HCC1395N/HCC1395N.haplotypecaller.filtered.vcf.gz",
-                "haplotypecaller/HCC1395N/HCC1395N.freebayes.vcf.gz",
+filenames = [ #"deepvariant/HCC1395N/HCC1395N.deepvariant.vcf.gz",
+                #"freebayes/HCC1395N/HCC1395N.freebayes.vcf.gz",
+                #"haplotypecaller/HCC1395N/HCC1395N.haplotypecaller.filtered.vcf.gz",
+                #"haplotypecaller/HCC1395N/HCC1395N.freebayes.vcf.gz",
                 "strelka/HCC1395N/HCC1395N.strelka.genome.vcf.gz"]
 
 for file in filenames:
@@ -44,12 +45,11 @@ for file in filenames:
         )
 
 # Add metadata to uploaded file
-#TODO Fix pipeline version
 data = {
     'metadata': {
-        'title': 'WES benchmark results nf-core/sarek v3.1',
+        'title': f'WES benchmark results nf-core/sarek v{pipeline_version}',
         'upload_type': 'data',
-        'description': 'Variant calling results on benchmarking datasets produced with the nf-core/sarek v3.1.1 pipeline.',
+        'description': f'Variant calling results on benchmarking datasets produced with the nf-core/sarek v{pipeline_version}.',
         'creators': [{'name': 'Garcia, Maxime Ulysse',
                     'affiliation': 'Seqera, Barcelona'},
                     {'name': 'Hanssen, Friederike',

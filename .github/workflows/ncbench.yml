@@ -22,9 +22,6 @@ jobs:
           # TODO: Add in other test profiles
           - profile: germline_default_agilent
             enabled: ${{ ( github.repository == 'nf-core/sarek' ) && ( github.event_name != 'workflow_dispatch' || inputs.germline_default_agilent ) }}
-    env:
-      # TODO: parse this out somehow
-      pipeline_version: 3.1.1test
 
     steps:
       - name: Download pipeline
@@ -33,12 +30,12 @@ jobs:
       - name: Extract Version
         id: extract_version
         run: |
-          VERSION=$(awk -F"'" '/manifest {/,/version/ {if(/version/) print $2}' nextflow.config)
-          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+          PIPELINE_VERSION=$(awk -F"'" '/manifest {/,/version/ {if(/version/) print $2}' nextflow.config)
+          echo "PIPELINE_VERSION=${PIPELINE_VERSION}" >> $GITHUB_ENV
 
       - name: Display Version
         run: |
-          echo "Version: ${{ env.VERSION }}"
+          echo "Version: ${{ env.PIPELINE_VERSION }}"
 
       - name: Download files from AWS
         uses: keithweaver/aws-s3-github-action@v1.0.0
@@ -82,7 +79,7 @@ jobs:
           cmd: yq --inplace '
             with(.variant-calls.nf-core-sarek-321-strelka-agilent-75M.labels;
             .site = "nf-core" |
-            .pipeline = "nf-core/sarek v3.2.1" |
+            .pipeline = "nf-core/sarek ${{ env.PIPELINE_VERSION }}" |
             .trimming = "FastP v0.23.2" |
             .read-mapping = "bwa mem v0.7.17" |
             .base-quality-recalibration = "gatk4 v4.4.0.0" |
@@ -107,7 +104,7 @@ jobs:
           cd ncbench-workflow
           git config --global user.email "friederike.hanssen@qbic.uni-tuebingen.de"
           git config --global user.name "FriederikeHanssen"
-          git checkout -b test7
+          git checkout -b sarek_${{ env.VERSION }}
           git add config/config.yaml
-          git commit -a -m "Add changes"
-          git push origin test7
+          git commit -a -m "Add benchmarking vcfs for nf-core/sarek ${{ env.VERSION }}"
+          git push origin sarek_${{ env.VERSION }}
