@@ -29,30 +29,30 @@ print("Deposition id: ")
 print(deposition_id )
 
 # Upload a new file
-bucket_url = r.json()["links"]["bucket"]
+# bucket_url = r.json()["links"]["bucket"]
 
-print(os.listdir('./variant_calling/strelka/HCC1395N/'))
-filenames = [ #"deepvariant/HCC1395N/HCC1395N.deepvariant.vcf.gz",
-                #"freebayes/HCC1395N/HCC1395N.freebayes.vcf.gz",
-                #"haplotypecaller/HCC1395N/HCC1395N.haplotypecaller.filtered.vcf.gz",
-                #"haplotypecaller/HCC1395N/HCC1395N.freebayes.vcf.gz",
-                "strelka/HCC1395N/HCC1395N.strelka.variants.vcf.gz",
-                "strelka/HCC1395N/HCC1395N.strelka.genome.vcf.gz"]
+# print(os.listdir('./variant_calling/strelka/HCC1395N/'))
+# filenames = [ #"deepvariant/HCC1395N/HCC1395N.deepvariant.vcf.gz",
+#                 #"freebayes/HCC1395N/HCC1395N.freebayes.vcf.gz",
+#                 #"haplotypecaller/HCC1395N/HCC1395N.haplotypecaller.filtered.vcf.gz",
+#                 #"haplotypecaller/HCC1395N/HCC1395N.freebayes.vcf.gz",
+#                 "strelka/HCC1395N/HCC1395N.strelka.variants.vcf.gz",
+#                 "strelka/HCC1395N/HCC1395N.strelka.genome.vcf.gz"]
 
-for file in filenames:
-    path = "./variant_calling/%s" % file
-    with open(path, "rb") as fp:
-        r = requests.put(
-            "%s/%s" % (bucket_url, file),
-            data=fp,
-            params=params,
-        )
-        print("%s/%s" % (bucket_url, file))
-        print(r.json())
+# for file in filenames:
+#     path = "./variant_calling/%s" % file
+#     with open(path, "rb") as fp:
+#         r = requests.put(
+#             "%s/%s" % (bucket_url, file),
+#             data=fp,
+#             params=params,
+#         )
+#         print("%s/%s" % (bucket_url, file))
+#         print(r.json())
 
 
-print("Upload new files")
-print(r.json())
+# print("Upload new files")
+# print(r.json())
 
 # Add metadata to uploaded file
 
@@ -84,9 +84,9 @@ print()
 # print(os.listdir('../'))
 # print(os.listdir('./variant_calling/strelka/HCC1395N/'))
 
-r = requests.post('https://sandbox.zenodo.org/api/deposit/depositions/%s/actions/publish' % deposition_id,
-                    params=params )
+# r = requests.post('https://sandbox.zenodo.org/api/deposit/depositions/%s/actions/publish' % deposition_id,
+#                     params=params )
 
-print("Publish data status code: ")
-print(r.status_code)
+# print("Publish data status code: ")
+# print(r.status_code)
 
