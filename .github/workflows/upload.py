@@ -45,19 +45,21 @@ for file in filenames:
             params=params,
         )
 
+
+print("Upload new files")
+print(r.json()["links"]["bucket"])
+print(r.status_code)
+
 # Add metadata to uploaded file
 
 title = 'WES benchmark results nf-core/sarek v{}'.format(pipeline_version)
-print(title)
 data = {
     'metadata': {
         'title': title,
         'upload_type': 'data',
-        'description': 'Variant calling results on benchmarking datasets produced with the nf-core/sarek',
-        'creators': [{'name': 'Garcia, Maxime Ulysse',
-                    'affiliation': 'Seqera, Barcelona'},
-                    {'name': 'Hanssen, Friederike',
-                    'affiliation': 'Quantitative Biology Center, Tuebingen'}]
+        'description': 'Variant calling results on benchmarking datasets produced with nf-core/sarek',
+        'creators': [{'name': 'Garcia, Maxime Ulysse', 'affiliation': 'Seqera, Barcelona'},
+                    {'name': 'Hanssen, Friederike', 'affiliation': 'Quantitative Biology Center, Tuebingen'}]
     }
 }
 
