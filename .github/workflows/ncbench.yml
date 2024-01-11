@@ -32,7 +32,9 @@ jobs:
 
       - name: Extract Version
         id: extract_version
-        run: echo "VERSION=$(awk -F"'" '/version/ {print $2}' nextflow.config)" >> $GITHUB_ENV
+        run: |
+          VERSION=$(awk -F"'" '/manifest {/,/version/ {if(/version/) print $2}' nextflow.config)
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV0
 
       - name: Display Version
         run: |
