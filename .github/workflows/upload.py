@@ -48,9 +48,9 @@ for file in filenames:
 # Add metadata to uploaded file
 data = {
     'metadata': {
-        'title': f'WES benchmark results nf-core/sarek v{pipeline_version}',
+        'title': 'WES benchmark results nf-core/sarek v{}'.format(version),
         'upload_type': 'data',
-        'description': f'Variant calling results on benchmarking datasets produced with the nf-core/sarek v{pipeline_version}.',
+        'description': 'Variant calling results on benchmarking datasets produced with the nf-core/sarek v{}.'.format(version),
         'creators': [{'name': 'Garcia, Maxime Ulysse',
                     'affiliation': 'Seqera, Barcelona'},
                     {'name': 'Hanssen, Friederike',
