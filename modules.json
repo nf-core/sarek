@@ -125,8 +125,9 @@
                     },
                     "dragmap/align": {
                         "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
-                        "installed_by": ["modules"]
+                        "git_sha": "3c77ca9aac783e76c3614a06db3bfe4fef619bde",
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/dragmap/align/dragmap-align.diff"
                     },
                     "dragmap/hashtable": {
                         "branch": "master",
@@ -146,12 +147,12 @@
                     },
                     "fastp": {
                         "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "git_sha": "3c77ca9aac783e76c3614a06db3bfe4fef619bde",
                         "installed_by": ["modules"]
                     },
                     "fastqc": {
                         "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "git_sha": "65ad3e0b9a4099592e1102e92e10455dc661cf53",
                         "installed_by": ["modules"]
                     },
                     "fgbio/callmolecularconsensusreads": {
@@ -331,7 +332,7 @@
                     },
                     "multiqc": {
                         "branch": "master",
-                        "git_sha": "214d575774c172062924ad3564b4f66655600730",
+                        "git_sha": "4ab13872435962dadc239979554d13709e20bf29",
                         "installed_by": ["modules"]
                     },
                     "ngscheckmate/ncm": {
@@ -391,42 +392,42 @@
                     },
                     "sentieon/applyvarcal": {
                         "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "git_sha": "89b6873f15dd31ed17f4d10ede2fa623e2a128ff",
                         "installed_by": ["modules"]
                     },
                     "sentieon/bwamem": {
                         "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "git_sha": "89b6873f15dd31ed17f4d10ede2fa623e2a128ff",
                         "installed_by": ["modules"]
                     },
                     "sentieon/dedup": {
                         "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "git_sha": "89b6873f15dd31ed17f4d10ede2fa623e2a128ff",
                         "installed_by": ["modules"]
                     },
                     "sentieon/dnamodelapply": {
                         "branch": "master",
-                        "git_sha": "214d575774c172062924ad3564b4f66655600730",
+                        "git_sha": "89b6873f15dd31ed17f4d10ede2fa623e2a128ff",
                         "installed_by": ["modules"]
                     },
                     "sentieon/dnascope": {
                         "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "git_sha": "89b6873f15dd31ed17f4d10ede2fa623e2a128ff",
                         "installed_by": ["modules"]
                     },
                     "sentieon/gvcftyper": {
                         "branch": "master",
-                        "git_sha": "214d575774c172062924ad3564b4f66655600730",
+                        "git_sha": "89b6873f15dd31ed17f4d10ede2fa623e2a128ff",
                         "installed_by": ["modules"]
                     },
                     "sentieon/haplotyper": {
                         "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "git_sha": "89b6873f15dd31ed17f4d10ede2fa623e2a128ff",
                         "installed_by": ["modules"]
                     },
                     "sentieon/varcal": {
                         "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "git_sha": "89b6873f15dd31ed17f4d10ede2fa623e2a128ff",
                         "installed_by": ["modules"]
                     },
                     "snpeff/download": {

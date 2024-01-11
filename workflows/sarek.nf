@@ -28,7 +28,7 @@ def checkPathParamList = [
     params.bwa,
     params.bwamem2,
     params.bcftools_annotations,
-    params.bcftools_annotations_index,
+    params.bcftools_annotations_tbi,
     params.bcftools_header_lines,
     params.cf_chrom_len,
     params.chr_dir,
@@ -83,12 +83,9 @@ for (param in checkPathParamList) if (param) file(param, checkIfExists: true)
 */
 
 // Initialize file channels based on params, defined in the params.genomes[params.genome] scope
-ascat_alleles           = params.ascat_alleles           ? Channel.fromPath(params.ascat_alleles).collect()           : Channel.empty()
-ascat_loci              = params.ascat_loci              ? Channel.fromPath(params.ascat_loci).collect()              : Channel.empty()
-ascat_loci_gc           = params.ascat_loci_gc           ? Channel.fromPath(params.ascat_loci_gc).collect()           : Channel.value([])
-ascat_loci_rt           = params.ascat_loci_rt           ? Channel.fromPath(params.ascat_loci_rt).collect()           : Channel.value([])
+bcftools_annotations    = params.bcftools_annotations    ? Channel.fromPath(params.bcftools_annotations).collect()    : Channel.empty()
+bcftools_header_lines   = params.bcftools_header_lines   ? Channel.fromPath(params.bcftools_header_lines).collect()   : Channel.empty()
 cf_chrom_len            = params.cf_chrom_len            ? Channel.fromPath(params.cf_chrom_len).collect()            : []
-chr_dir                 = params.chr_dir                 ? Channel.fromPath(params.chr_dir).collect()                 : Channel.value([])
 dbsnp                   = params.dbsnp                   ? Channel.fromPath(params.dbsnp).collect()                   : Channel.value([])
 fasta                   = params.fasta                   ? Channel.fromPath(params.fasta).first()                     : Channel.empty()
 fasta_fai               = params.fasta_fai               ? Channel.fromPath(params.fasta_fai).collect()               : Channel.empty()
@@ -100,18 +97,16 @@ pon                     = params.pon                     ? Channel.fromPath(para
 sentieon_dnascope_model = params.sentieon_dnascope_model ? Channel.fromPath(params.sentieon_dnascope_model).collect() : Channel.value([])
 
 // Initialize value channels based on params, defined in the params.genomes[params.genome] scope
-ascat_genome                = params.ascat_genome                ?: Channel.empty()
-dbsnp_vqsr                  = params.dbsnp_vqsr                  ? Channel.value(params.dbsnp_vqsr) : Channel.empty()
-known_indels_vqsr           = params.known_indels_vqsr           ? Channel.value(params.known_indels_vqsr) : Channel.empty()
-known_snps_vqsr             = params.known_snps_vqsr             ? Channel.value(params.known_snps_vqsr) : Channel.empty()
-ngscheckmate_bed            = params.ngscheckmate_bed            ? Channel.value(params.ngscheckmate_bed) : Channel.empty()
-snpeff_db                   = params.snpeff_db                   ?: Channel.empty()
-vep_cache_version           = params.vep_cache_version           ?: Channel.empty()
-vep_genome                  = params.vep_genome                  ?: Channel.empty()
-vep_species                 = params.vep_species                 ?: Channel.empty()
-bcftools_annotations        = params.bcftools_annotations        ?: Channel.empty()
-bcftools_annotations_index  = params.bcftools_annotations_index  ?: Channel.empty()
-bcftools_header_lines       = params.bcftools_header_lines       ?: Channel.empty()
+ascat_genome                = params.ascat_genome             ?: Channel.empty()
+dbsnp_vqsr                  = params.dbsnp_vqsr               ? Channel.value(params.dbsnp_vqsr) : Channel.empty()
+known_indels_vqsr           = params.known_indels_vqsr        ? Channel.value(params.known_indels_vqsr) : Channel.empty()
+known_snps_vqsr             = params.known_snps_vqsr          ? Channel.value(params.known_snps_vqsr) : Channel.empty()
+ngscheckmate_bed            = params.ngscheckmate_bed         ? Channel.value(params.ngscheckmate_bed) : Channel.empty()
+snpeff_db                   = params.snpeff_db                ?: Channel.empty()
+vep_cache_version           = params.vep_cache_version        ?: Channel.empty()
+vep_genome                  = params.vep_genome               ?: Channel.empty()
+vep_species                 = params.vep_species              ?: Channel.empty()
+
 
 vep_extra_files = []
 
@@ -238,7 +233,35 @@ workflow SAREK {
 	// Parse samplesheet
 	// Set input, can either be from --input or from automatic retrieval in WorkflowSarek.groovy
     ch_from_samplesheet = params.build_only_index ? Channel.empty() : params.input ? Channel.fromSamplesheet("input") : Channel.fromSamplesheet("input_restart")
-	SAMPLESHEET_TO_CHANNEL(ch_from_samplesheet)
+	SAMPLESHEET_TO_CHANNEL(
+        ch_from_samplesheet,
+        params.aligner,
+        params.ascat_alleles,
+        params.ascat_loci,
+        params.ascat_loci_rt,
+        params.bcftools_annotations,
+        params.bcftools_annotations_tbi,
+        params.bcftools_header_lines,
+        params.build_only_index,
+        params.dbsnp,
+        params.fasta,
+        params.germline_resource,
+        params.intervals,
+        params.joint_germline,
+        params.joint_mutect2,
+        params.known_indels,
+        params.known_snps,
+        params.no_intervals,
+        params.pon,
+        params.sentieon_dnascope_emit_mode,
+        params.sentieon_haplotyper_emit_mode,
+        params.seq_center,
+        params.seq_platform,
+        params.skip_tools,
+        params.step,
+        params.tools,
+        params.umi_read_structure,
+        params.wes)
 
 	input_sample = SAMPLESHEET_TO_CHANNEL.out.input_sample
 
@@ -283,11 +306,12 @@ workflow SAREK {
 
     // Build indices if needed
     PREPARE_GENOME(
-        ascat_alleles,
-        ascat_loci,
-        ascat_loci_gc,
-        ascat_loci_rt,
-        chr_dir,
+        params.ascat_alleles,
+        params.ascat_loci,
+        params.ascat_loci_gc,
+        params.ascat_loci_rt,
+        bcftools_annotations,
+        params.chr_dir,
         dbsnp,
         fasta,
         fasta_fai,
@@ -325,11 +349,12 @@ workflow SAREK {
     rt_file                = PREPARE_GENOME.out.rt_file
 
     // Tabix indexed vcf files:
-    dbsnp_tbi              = params.dbsnp                   ? params.dbsnp_tbi             ? Channel.fromPath(params.dbsnp_tbi).collect()             : PREPARE_GENOME.out.dbsnp_tbi             : Channel.value([])
-    germline_resource_tbi  = params.germline_resource       ? params.germline_resource_tbi ? Channel.fromPath(params.germline_resource_tbi).collect() : PREPARE_GENOME.out.germline_resource_tbi : [] //do not change to Channel.value([]), the check for its existence then fails for Getpileupsumamries
-    known_indels_tbi       = params.known_indels            ? params.known_indels_tbi      ? Channel.fromPath(params.known_indels_tbi).collect()      : PREPARE_GENOME.out.known_indels_tbi      : Channel.value([])
-    known_snps_tbi         = params.known_snps              ? params.known_snps_tbi        ? Channel.fromPath(params.known_snps_tbi).collect()        : PREPARE_GENOME.out.known_snps_tbi        : Channel.value([])
-    pon_tbi                = params.pon                     ? params.pon_tbi               ? Channel.fromPath(params.pon_tbi).collect()               : PREPARE_GENOME.out.pon_tbi               : Channel.value([])
+    bcftools_annotations_tbi  = params.bcftools_annotations    ? params.bcftools_annotations_tbi ? Channel.fromPath(params.bcftools_annotations_tbi).collect() : PREPARE_GENOME.out.bcftools_annotations_tbi : Channel.empty([])
+    dbsnp_tbi                 = params.dbsnp                   ? params.dbsnp_tbi                ? Channel.fromPath(params.dbsnp_tbi).collect()                : PREPARE_GENOME.out.dbsnp_tbi                : Channel.value([])
+    germline_resource_tbi     = params.germline_resource       ? params.germline_resource_tbi    ? Channel.fromPath(params.germline_resource_tbi).collect()    : PREPARE_GENOME.out.germline_resource_tbi    : [] //do not change to Channel.value([]), the check for its existence then fails for Getpileupsumamries
+    known_indels_tbi          = params.known_indels            ? params.known_indels_tbi         ? Channel.fromPath(params.known_indels_tbi).collect()         : PREPARE_GENOME.out.known_indels_tbi         : Channel.value([])
+    known_snps_tbi            = params.known_snps              ? params.known_snps_tbi           ? Channel.fromPath(params.known_snps_tbi).collect()           : PREPARE_GENOME.out.known_snps_tbi           : Channel.value([])
+    pon_tbi                   = params.pon                     ? params.pon_tbi                  ? Channel.fromPath(params.pon_tbi).collect()                  : PREPARE_GENOME.out.pon_tbi                  : Channel.value([])
 
     // known_sites is made by grouping both the dbsnp and the known snps/indels resources
     // Which can either or both be optional
@@ -340,7 +365,7 @@ workflow SAREK {
     known_sites_snps_tbi   = dbsnp_tbi.concat(known_snps_tbi).collect()
 
     // Build intervals if needed
-    PREPARE_INTERVALS(fasta_fai, params.intervals, params.no_intervals)
+    PREPARE_INTERVALS(fasta_fai, params.intervals, params.no_intervals, params.nucleotides_per_second, params.outdir, params.step)
 
     // Intervals for speed up preprocessing/variant calling by spread/gather
     // [interval.bed] all intervals in one file
@@ -469,7 +494,7 @@ workflow SAREK {
             if (params.split_fastq) {
                 reads_for_alignment = FASTP.out.reads.map{ meta, reads ->
                     read_files = reads.sort(false) { a,b -> a.getName().tokenize('.')[0] <=> b.getName().tokenize('.')[0] }.collate(2)
-                    [ meta + [ size:read_files.size() ], read_files ]
+                    [ meta + [ n_fastq: read_files.size() ], read_files ]
                 }.transpose()
             } else reads_for_alignment = FASTP.out.reads
 
@@ -480,34 +505,61 @@ workflow SAREK {
         }
 
         // STEP 1: MAPPING READS TO REFERENCE GENOME
-        // reads will be sorted
-        reads_for_alignment = reads_for_alignment.map{ meta, reads ->
-            // Update meta.id to meta.sample no multiple lanes or splitted fastqs
-            if (meta.size * meta.num_lanes == 1) [ meta + [ id:meta.sample ], reads ]
-            else [ meta, reads ]
-        }
+        // First, we must calculate number of lanes for each sample (meta.n_fastq)
+        // This is needed to group reads from the same sample together using groupKey to avoid stalling the workflow 
+        // when reads from different samples are mixed together
+        reads_for_alignment.map { meta, reads -> 
+                [ meta.subMap('patient', 'sample', 'sex', 'status'), reads ]   
+            }
+            .groupTuple()
+            .map { meta, reads -> 
+                meta + [ n_fastq: reads.size() ] // We can drop the FASTQ files now that we know how many there are
+            }
+            .set { reads_grouping_key }
 
+        // reads will be sorted
         sort_bam = true
         FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON(reads_for_alignment, index_alignement, sort_bam, fasta, fasta_fai)
 
         // Grouping the bams from the same samples not to stall the workflow
-        bam_mapped = FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON.out.bam.map{ meta, bam ->
+        // Use groupKey to make sure that the correct group can advance as soon as it is complete
+        // and not stall the workflow until all reads from all channels are mapped
+        bam_mapped = FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON.out.bam
+            .combine(reads_grouping_key) // Creates a tuple of [ meta, bam, reads_grouping_key ]
+            .filter { meta1, bam, meta2 -> meta1.sample == meta2.sample }
+            // Add n_fastq and other variables to meta
+            .map { meta1, bam, meta2 ->
+                [ meta1 + meta2, bam ]
+            }
+            // Manipulate meta map to remove old fields and add new ones
+            .map { meta, bam ->
+                [ meta - meta.subMap('id', 'read_group', 'data_type', 'num_lanes', 'read_group', 'size') + [ data_type: 'bam', id: meta.sample ], bam ]
+            }
+            // Create groupKey from meta map
+            .map { meta, bam ->
+                [ groupKey( meta, meta.n_fastq), bam ]
+            }
+            // Group
+            .groupTuple()
 
-            // Update meta.id to be meta.sample, ditching sample-lane that is not needed anymore
-            // Update meta.data_type
-            // Remove no longer necessary fields:
-            //   read_group: Now in the BAM header
-            //    num_lanes: only needed for mapping
-            //         size: only needed for mapping
+        bai_mapped = FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON.out.bai
+            .combine(reads_grouping_key) // Creates a tuple of [ meta, bai, reads_grouping_key ]
+            .filter { meta1, bai, meta2 -> meta1.sample == meta2.sample }
+            // Add n_fastq and other variables to meta
+            .map { meta1, bai, meta2 ->
+                [ meta1 + meta2, bai ]
+            }
+            // Manipulate meta map to remove old fields and add new ones
+            .map { meta, bai ->
+                [ meta - meta.subMap('id', 'read_group', 'data_type', 'num_lanes', 'read_group', 'size') + [ data_type: 'bai', id: meta.sample ], bai ]
+            }
+            // Create groupKey from meta map
+            .map { meta, bai ->
+                [ groupKey( meta, meta.n_fastq), bai ]
+            }
+            // Group
+            .groupTuple()
 
-            // Use groupKey to make sure that the correct group can advance as soon as it is complete
-            // and not stall the workflow until all reads from all channels are mapped
-            [ groupKey( meta - meta.subMap('num_lanes', 'read_group', 'size') + [ data_type:'bam', id:meta.sample ], (meta.num_lanes ?: 1) * (meta.size ?: 1)), bam ]
-        }.groupTuple()
-
-        bai_mapped = FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON.out.bai.map{ meta, bai ->
-            [ groupKey( meta - meta.subMap('num_lanes', 'read_group', 'size') + [ data_type:'bai', id:meta.sample ], (meta.num_lanes ?: 1) * (meta.size ?: 1)), bai ]
-        }.groupTuple()
 
         // gatk4 markduplicates can handle multiple bams as input, so no need to merge/index here
         // Except if and only if save_mapped or (skipping markduplicates and sentieon-dedup)
@@ -523,7 +575,8 @@ workflow SAREK {
 
             BAM_TO_CRAM_MAPPING(BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai, fasta, fasta_fai)
             // Create CSV to restart from this step
-            params.save_output_as_bam ? CHANNEL_ALIGN_CREATE_CSV(BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai) : CHANNEL_ALIGN_CREATE_CSV(BAM_TO_CRAM_MAPPING.out.alignment_index)
+            if (params.save_output_as_bam) CHANNEL_ALIGN_CREATE_CSV(BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai, params.outdir, params.save_output_as_bam)
+            else CHANNEL_ALIGN_CREATE_CSV(BAM_TO_CRAM_MAPPING.out.alignment_index, params.outdir, params.save_output_as_bam)
 
             // Gather used softwares versions
             versions = versions.mix(BAM_MERGE_INDEX_SAMTOOLS.out.versions)
@@ -644,7 +697,8 @@ workflow SAREK {
         // Create CSV to restart from this step
         csv_subfolder = (params.tools && params.tools.split(',').contains('sentieon_dedup')) ? 'sentieon_dedup' : 'markduplicates'
 
-        params.save_output_as_bam ? CHANNEL_MARKDUPLICATES_CREATE_CSV(CRAM_TO_BAM.out.alignment_index, csv_subfolder, params.outdir, params.save_output_as_bam) : CHANNEL_MARKDUPLICATES_CREATE_CSV(ch_md_cram_for_restart, csv_subfolder, params.outdir, params.save_output_as_bam)
+        if (params.save_output_as_bam) CHANNEL_MARKDUPLICATES_CREATE_CSV(CRAM_TO_BAM.out.alignment_index, csv_subfolder, params.outdir, params.save_output_as_bam)
+        else CHANNEL_MARKDUPLICATES_CREATE_CSV(ch_md_cram_for_restart, csv_subfolder, params.outdir, params.save_output_as_bam)
     }
 
     if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration']) {
@@ -731,7 +785,7 @@ workflow SAREK {
             cram_applybqsr = ch_cram_for_bam_baserecalibrator.join(ch_table_bqsr, failOnDuplicate: true, failOnMismatch: true)
 
             // Create CSV to restart from this step
-            CHANNEL_BASERECALIBRATOR_CREATE_CSV(ch_md_cram_for_restart.join(ch_table_bqsr, failOnDuplicate: true), params.tools, params.skip_tools, params.save_output_as_bam, params.outdir)
+            CHANNEL_BASERECALIBRATOR_CREATE_CSV(ch_md_cram_for_restart.join(ch_table_bqsr, failOnDuplicate: true), params.tools, params.skip_tools, params.outdir, params.save_output_as_bam)
         }
     }
 
@@ -799,17 +853,6 @@ workflow SAREK {
                 cram_variant_calling_no_spark,
                 cram_variant_calling_spark)
 
-            CRAM_QC_RECAL(
-                cram_variant_calling,
-                fasta,
-                intervals_for_preprocessing)
-
-            // Gather QC reports
-            reports = reports.mix(CRAM_QC_RECAL.out.reports.collect{ meta, report -> report })
-
-            // Gather used softwares versions
-            versions = versions.mix(CRAM_QC_RECAL.out.versions)
-
             // If params.save_output_as_bam, then convert CRAM files to BAM
             CRAM_TO_BAM_RECAL(cram_variant_calling, fasta, fasta_fai)
             versions = versions.mix(CRAM_TO_BAM_RECAL.out.versions)
@@ -819,7 +862,7 @@ workflow SAREK {
             csv_recalibration = params.save_output_as_bam ?  CRAM_TO_BAM_RECAL.out.alignment_index : cram_variant_calling
 
             // Create CSV to restart from this step
-            CHANNEL_APPLYBQSR_CREATE_CSV(csv_recalibration)
+            CHANNEL_APPLYBQSR_CREATE_CSV(csv_recalibration, params.outdir, params.save_output_as_bam)
 
         } else if (params.step == 'recalibrate') {
             // cram_variant_calling contains either:
@@ -850,11 +893,16 @@ workflow SAREK {
 
     }
 
+    if (params.step == 'annotate') cram_variant_calling = Channel.empty()
+
+    // RUN CRAM QC on the recalibrated CRAM files or when starting from step variant calling. NGSCheckmate should be run also on non-recalibrated CRAM files
+    CRAM_SAMPLEQC(cram_variant_calling,
+                    ngscheckmate_bed,
+                    fasta,
+                    params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'),
+                    intervals_for_preprocessing)
+
     if (params.tools) {
-
-        if (params.step == 'annotate') cram_variant_calling = Channel.empty()
-
-        CRAM_SAMPLEQC(cram_variant_calling, ngscheckmate_bed, fasta)
 
         //
         // Logic to separate germline samples, tumor samples with no matched normal, and combine tumor-normal pairs
@@ -1029,7 +1077,7 @@ workflow SAREK {
         reports = reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.vcftools_tstv_qual.collect{ meta, qual -> qual })
         reports = reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.vcftools_filter_summary.collect{ meta, summary -> summary })
 
-        CHANNEL_VARIANT_CALLING_CREATE_CSV(vcf_to_annotate)
+        CHANNEL_VARIANT_CALLING_CREATE_CSV(vcf_to_annotate, params.outdir)
 
         // Gather used variant calling softwares versions
         versions = versions.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.versions)
@@ -1057,7 +1105,7 @@ workflow SAREK {
                 vep_cache,
                 vep_extra_files,
                 bcftools_annotations,
-                bcftools_annotations_index,
+                bcftools_annotations_tbi,
                 bcftools_header_lines)
 
             // Gather used softwares versions

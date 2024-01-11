@@ -5,6 +5,49 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [dev]
+
+### Added
+
+- [#1333](https://github.com/nf-core/sarek/pull/1333) - Back to dev
+- [#1335](https://github.com/nf-core/sarek/pull/1335) - Add index computation of `bcftools_annotations`, if not provided
+- [#1340](https://github.com/nf-core/sarek/pull/1340) - Adds Azure test profiles and megatests.
+
+### Changed
+
+- [#1339](https://github.com/nf-core/sarek/pull/1339) - Update sentieon-modules
+- [#1344](https://github.com/nf-core/sarek/pull/1344) - Enable CRAM QC, when starting from variantcalling
+- [#1359](https://github.com/nf-core/sarek/pull/1359) - Removing params usage from local modules
+- [#1359](https://github.com/nf-core/sarek/pull/1359) - Removing params usage from local subworkflows
+- [#1360](https://github.com/nf-core/sarek/pull/1360) - Sync `TEMPLATE` with `tools` `2.11`
+
+### Fixed
+
+- [#1334](https://github.com/nf-core/sarek/pull/1334) - Remove extra v, when reporting tower runs on slack
+- [#1335](https://github.com/nf-core/sarek/pull/1335) - Add docs and validation for bcftools annotation parameters
+- [#1345](https://github.com/nf-core/sarek/pull/1345) - Preserve STDERR for easier debugging
+- [#1351](https://github.com/nf-core/sarek/pull/1351) - Fix params name for test profiles (`bcftools_annotations`)
+- [#1357](https://github.com/nf-core/sarek/pull/1364) - Fixed bug where samples were dropped while reconstituting BAM files
+
+### Removed
+
+### Dependencies
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| multiqc    | 1.17        | 1.18        |
+
+### Modules / Subworkflows
+
+| script | Old name | New name |
+| ------ | -------- | -------- |
+
+### Parameter
+
+| Old name                   | New name                 |
+| -------------------------- | ------------------------ |
+| bcftools_annotations_index | bcftools_annotations_tbi |
+
 ## [3.4.0](https://github.com/nf-core/sarek/releases/tag/3.4.0) - Pårtetjåkko
 
 Pårtetjåkko is a mountain in the south of the park.

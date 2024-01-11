@@ -33,8 +33,22 @@ process DRAGMAP_ALIGN {
         $args \\
         --num-threads $task.cpus \\
         $reads_command \\
-        2> ${prefix}.dragmap.log \\
+        2> >(tee ${prefix}.dragmap.log >&2) \\
         | samtools $samtools_command $args2 --threads $task.cpus -o ${prefix}.bam -
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        dragmap: \$(echo \$(dragen-os --version 2>&1))
+        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
+        pigz: \$( pigz --version 2>&1 | sed 's/pigz //g' )
+    END_VERSIONS
+    """
+
+    stub:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    """
+    touch ${prefix}.bam
+    touch ${prefix}.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

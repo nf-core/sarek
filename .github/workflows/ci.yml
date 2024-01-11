@@ -28,7 +28,7 @@ jobs:
       # Expose matched filters as job 'tags' output variable
       tags: ${{ steps.filter.outputs.changes }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - uses: frouioui/paths-filter@main
         id: filter
@@ -59,7 +59,7 @@ jobs:
 
     steps:
       - name: Check out pipeline code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Hash Github Workspace
         id: hash_workspace
@@ -105,7 +105,7 @@ jobs:
 
       - name: Check out test data
         if: steps.cache-testdata.outputs.cache-hit != 'true'
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: nf-core/test-datasets
           ref: sarek3
@@ -168,7 +168,7 @@ jobs:
       tags: ${{ steps.filter.outputs.changes }}
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Combine all tags.yml files
         id: get_tags
@@ -205,8 +205,10 @@ jobs:
           - tags: "cat/cat"
           - tags: "cat/fastq"
           - tags: "custom/dumpsoftwareversions"
+          - tags: "dragmap/align"
           - tags: "fastp"
           - tags: "fastqc"
+          - tags: "multiqc"
           - tags: "samtools/stats"
           - tags: "untar"
     env:
@@ -215,7 +217,7 @@ jobs:
       SENTIEON_LICENSE_BASE64: ${{ secrets.SENTIEON_LICENSE_BASE64 }}
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - uses: actions/setup-java@v3
         with:
