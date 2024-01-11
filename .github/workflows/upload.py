@@ -7,6 +7,7 @@ access_token = os.environ["ACCESS_TOKEN"]
 params = {'access_token': access_token}
 workspace_directory = os.environ["GITHUB_WORKSPACE"]
 pipeline_version = os.environ["PIPELINE_VERSION"]
+print("pipeline_version:" + pipeline_version)
 
 # TODO: replace sandbox link https://zenodo.org/api/deposit/depositions
 # https://sandbox.zenodo.org/api/deposit/depositions?access_token={access_token}
@@ -23,7 +24,7 @@ deposition_id = r.json()["id"]
 
 print("Create empty upload:\n")
 print(r.json())
-print(deposition_id)
+print("Deposition id: " + deposition_id)
 print()
 
 # Upload a new file
@@ -62,8 +63,7 @@ r = requests.put('https://sandbox.zenodo.org/api/deposit/depositions/%s' % depos
                 data=json.dumps(data),
                 headers=headers)
 
-print("Add metadata: ")
-print(r.status_code)
+print("Add metadata: " + r.status_code)
 print(r.json())
 print()
 
@@ -77,6 +77,5 @@ print()
 r = requests.post('https://sandbox.zenodo.org/api/deposit/depositions/%s/actions/publish' % deposition_id,
                     params=params )
 
-print("Publish data status code: ")
-print(r.status_code)
+print("Publish data status code: " + r.status_code)
 
