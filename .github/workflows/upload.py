@@ -44,10 +44,13 @@ for file in filenames:
             data=fp,
             params=params,
         )
+        print("%s/%s" % (bucket_url, file))
+        print(r.json())
+
 
 
 print("Upload new files")
-print(r.status_code)
+print(r.json())
 
 # Add metadata to uploaded file
 
