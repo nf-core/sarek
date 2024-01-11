@@ -35,7 +35,7 @@ jobs:
           FASTP_VERSION=$(awk '/- bioconda::fastp=/ {gsub(/.*=/, "", $NF); gsub(/'\''/, "", $NF); print $NF}' modules/nf-core/fastp/environment.yml)
           echo "FASTP_VERSION=${FASTP_VERSION}" >> $GITHUB_ENV
 
-          BWA_VERSION=$(awk '/- bioconda::bwa=/ {gsub(/.*=/, "", $NF); gsub(/'\''/, "", $NF); print $NF}' modules/nf-core/bwa/mem/environment.yml)
+          BWA_VERSION=$(awk '/- bwa=/ {gsub(/.*=/, "", $NF); gsub(/'\''/, "", $NF); print $NF}' modules/nf-core/bwa/mem/environment.yml)
           echo "BWA_VERSION=${BWA_VERSION}" >> $GITHUB_ENV
 
           GATK_VERSION=$(awk '/- bioconda::gatk4=/ {gsub(/.*=/, "", $NF); gsub(/'\''/, "", $NF); print $NF}' modules/nf-core/gatk4/baserecalibrator/environment.yml)
@@ -44,10 +44,6 @@ jobs:
           STRELKA_VERSION=$(awk '/- bioconda::strelka=/ {gsub(/.*=/, "", $NF); gsub(/'\''/, "", $NF); print $NF}' modules/nf-core/strelka/germline/environment.yml)
           echo "STRELKA_VERSION=${STRELKA_VERSION}" >> $GITHUB_ENV
 
-      #      - name: Display Version
-      #        run: |
-      #          echo "Version: ${{ env.VERSION }}"
-      #
       - name: Download files from AWS
         uses: keithweaver/aws-s3-github-action@v1.0.0
         if: ${{ matrix.enabled }}
@@ -87,8 +83,9 @@ jobs:
         with:
           # TODO: add in values for all callers, ensure proper extension for the datasets are used.
           # TODO check if trimming should be enabled actually
-          cmd: yq --inplace '
-            with(.variant-calls.nf-core-sarek-${{ env.PIPELINE_VERSION }}-strelka-agilent-75M.labels;
+          cmd: for reads in 75 200; do
+            yq --inplace '
+            with(.variant-calls.nf-core-sarek-${{ env.PIPELINE_VERSION }}-strelka-agilent-${reads}M.labels;
             .site = "nf-core" |
             .pipeline = "nf-core/sarek v${{ env.PIPELINE_VERSION }}" |
             .trimming = "FastP v${{ env.FASTP_VERSION }}" |
@@ -97,17 +94,18 @@ jobs:
             .realignment = "none" |
             .variant-detection  = "strelka2 v${{ env.STRELKA_VERSION }}" |
             .genotyping = "none" |
-            .reads = "75M" ) |
-            with(.variant-calls.nf-core-sarek-${{ env.PIPELINE_VERSION }}-strelka-agilent-75M.subcategory;
+            .reads = "${reads}M" ) |
+            with(.variant-calls.nf-core-sarek-${{ env.PIPELINE_VERSION }}-strelka-agilent-${reads}M.subcategory;
             . = "NA12878-agilent" ) |
-            with(.variant-calls.nf-core-sarek-${{ env.PIPELINE_VERSION }}-strelka-agilent-75M.zenodo;
+            with(.variant-calls.nf-core-sarek-${{ env.PIPELINE_VERSION }}-strelka-agilent-${reads}M.zenodo;
             .deposition = $DEPOSITION_ID  |
             .filename = "TODO get here proper file names" ) |
-            with(.variant-calls.nf-core-sarek-${{ env.PIPELINE_VERSION }}-strelka-agilent-75M.benchmark;
-            . = "giab-NA12878-agilent-75M" ) |
-            with(.variant-calls.nf-core-sarek-${{ env.PIPELINE_VERSION }}-strelka-agilent-75M.rename-contigs;
+            with(.variant-calls.nf-core-sarek-${{ env.PIPELINE_VERSION }}-strelka-agilent-${reads}M.benchmark;
+            . = "giab-NA12878-agilent-${reads}M" ) |
+            with(.variant-calls.nf-core-sarek-${{ env.PIPELINE_VERSION }}-strelka-agilent-${reads}M.rename-contigs;
             . = "resources/rename-contigs/ucsc-to-ensembl.txt" )
             ' ncbench-workflow/config/config.yaml
+            done
 
       # TODO: enable using secrets here
       - name: Commit files
