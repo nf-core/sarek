@@ -83,7 +83,7 @@ jobs:
         with:
           # TODO: add in values for all callers, ensure proper extension for the datasets are used.
           # TODO check if trimming should be enabled actually
-          cmd: for reads in 75 200; do set_ncbench_config.sh $reads done
+          cmd: for reads in 75 200; do set_ncbench_config.sh $reads; done
 
       # TODO: enable using secrets here
       - name: Commit files
