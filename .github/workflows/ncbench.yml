@@ -69,6 +69,8 @@ jobs:
           PIPELINE_VERSION: ${{ env.PIPELINE_VERSION }}
         run: |
           python .github/workflows/upload.py
+          # echo DEPOSITION_ID=$DEPOSITION_ID >> $GITHUB_ENV
+          # echo $DEPOSITION_ID
 
       # update ncbench config yml
       - name: NCBench set config
