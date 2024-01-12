@@ -7,6 +7,13 @@ declare -A variant_callers=(
     ["haplotypecaller"]="haplotypecaller/NA12878_75M/NA12878_75M.haplotypecaller.filtered.vcf.gz"
 )
 
+declare -A variant_versions=(
+    ["strelka2"]="${STRELKA_VERSION}"
+    ["deepvariant"]="${DEEPVARIANT_VERSION}"
+    ["freebayes"]="${FREEBAYES_VERSION}"
+    ["haplotypecaller"]="${HAPLOTYPECALLER_VERSION}"
+)
+
 for READS in 75 200; do
     for variant_caller in "${!variant_callers[@]}"; do
         yq --inplace '
@@ -17,7 +24,7 @@ for READS in 75 200; do
             .read-mapping = "bwa mem v'"${BWA_VERSION}"'" |
             .base-quality-recalibration = "gatk4 v'"${GATK_VERSION}"'" |
             .realignment = "none" |
-            .variant-detection  = "'${variant_caller}' v'"${!variant_caller^^}_VERSION"'" |
+            .variant-detection  = "'${variant_caller}' v'"${variant_versions[$variant_caller]}"'" |
             .genotyping = "none" |
             .reads = "'"${READS}"'M" ) |
             with(.variant-calls.nf-core-sarek-'"${PIPELINE_VERSION_NO_DOTS}"'-strelka-agilent-'"${READS}"'M.subcategory;
