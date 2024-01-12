@@ -21,7 +21,7 @@ for READS in 75 200; do
             . = "giab-NA12878-agilent-75M" ) |
             with(.variant-calls.nf-core-sarek- 123-strelka-agilent-75M.rename-contigs;
             . = "resources/rename-contigs/ucsc-to-ensembl.txt" )
-            '  ncbench-workflow/config/config.yaml
+            ' $1
 done
 
 
