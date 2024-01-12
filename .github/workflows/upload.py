@@ -79,9 +79,9 @@ r = requests.put('https://sandbox.zenodo.org/api/deposit/depositions/%s' % depos
                 data=json.dumps(data),
                 headers=headers)
 
-#print("Add metadata: ")
-#print(r.status_code)
-#print(r.json())
+print("Add metadata: ")
+print(r.status_code)
+print(r.json())
 #print()
 
 # Publish this

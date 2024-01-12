@@ -71,9 +71,6 @@ jobs:
           PIPELINE_VERSION: ${{ env.PIPELINE_VERSION }}
         run: |
           echo "DEPOSITION_ID=$(python .github/workflows/upload.py 2>&1 >/dev/null)" >> $GITHUB_ENV
-        # python .github/workflows/upload.py
-        # echo $DEPOSITION_ID
-        # echo DEPOSITION_ID=$DEPOSITION_ID >> $GITHUB_ENV
 
       # update ncbench config yml
       - name: NCBench set config
@@ -110,7 +107,7 @@ jobs:
             with(.variant-calls.nf-core-sarek-${{ env.PIPELINE_VERSION_NO_DOTS }}-strelka-agilent-75M.subcategory;
             . = "NA12878-agilent" ) |
             with(.variant-calls.nf-core-sarek-${{ env.PIPELINE_VERSION_NO_DOTS }}-strelka-agilent-75M.zenodo;
-            .deposition = 123  |
+            .deposition = ${{ env.DEPOSITION_ID }}  |
             .filename = "get here proper file names" ) |
             with(.variant-calls.nf-core-sarek-${{ env.PIPELINE_VERSION_NO_DOTS }}-strelka-agilent-75M.benchmark;
             . = "giab-NA12878-agilent-75M" ) |
