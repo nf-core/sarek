@@ -5,8 +5,8 @@
             with(.variant-calls.nf-core-sarek-'"${PIPELINE_VERSION_NO_DOTS}"'-strelka-agilent-'"${READS}"'M.labels;
             .site = "nf-core" |
             .pipeline = "nf-core/sarek v'"${PIPELINE_VERSION}"'" |
-            .trimming = "FastP v123" |
-            .read-mapping = "bwa mem v123" |
+            .trimming = "FastP v'"${FASTP_VERSION}"'" |
+            .read-mapping = "bwa mem v'"${BWA_VERSION}"'" |
             .base-quality-recalibration = "gatk4 v123" |
             .realignment = "none" |
             .variant-detection  = "strelka2 v123" |
