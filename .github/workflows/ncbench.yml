@@ -69,8 +69,11 @@ jobs:
         env:
           ACCESS_TOKEN: ${{ secrets.NCBENCH_CI_TOKEN_SANDBOX }} # TODO ${{ secrets.ZENODO_DEPOSIT }}
           PIPELINE_VERSION: ${{ env.PIPELINE_VERSION }}
+        run: python .github/workflows/upload.py
+
+      - name: Store Zenodo deposition ID
         run: |
-          echo "DEPOSITION_ID=$(python .github/workflows/upload.py 2>&1 >/dev/null)" >> $GITHUB_ENV
+          echo "DEPOSITION_ID=$(cat deposition_id.txt)" >> $GITHUB_ENV
 
       # update ncbench config yml
       - name: NCBench set config

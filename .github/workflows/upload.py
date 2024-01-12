@@ -1,7 +1,6 @@
 import requests
 import os
 import json
-import sys
 
 headers = {"Content-Type": "application/json"}
 access_token = os.environ["ACCESS_TOKEN"]
@@ -28,7 +27,9 @@ deposition_id = r.json()["id"]
 #print("Deposition id: ")
 
 ## Print deposition ID to stderr to allow multiple print statement but capture the right one for later use
-print(str(r.json()["id"]), file=sys.stderr)
+#print(str(r.json()["id"]), file=sys.stderr)
+with open('deposition_id.txt', 'w') as f:
+    f.write(str(r.json()["id"]))
 
 # Upload a new file
 bucket_url = r.json()["links"]["bucket"]
