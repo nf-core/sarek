@@ -8,8 +8,6 @@ params = {'access_token': access_token}
 workspace_directory = os.environ["GITHUB_WORKSPACE"]
 pipeline_version = os.environ["PIPELINE_VERSION"]
 
-print("pipeline_version:" + pipeline_version)
-
 # TODO: replace sandbox link https://zenodo.org/api/deposit/depositions
 # https://sandbox.zenodo.org/api/deposit/depositions?access_token={access_token}
 url = f"https://sandbox.zenodo.org/api/deposit/depositions"
@@ -30,7 +28,7 @@ deposition_id = r.json()["id"]
 print(str(r.json()["id"]) )
 
 # Upload a new file
-# bucket_url = r.json()["links"]["bucket"]
+bucket_url = r.json()["links"]["bucket"]
 
 #print(os.listdir('./variant_calling/strelka/HCC1395N/'))
 filenames = [ "strelka/HCC1395N/HCC1395N.strelka.genome.vcf.gz"]

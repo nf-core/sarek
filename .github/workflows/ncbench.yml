@@ -69,11 +69,9 @@ jobs:
         env:
           ACCESS_TOKEN: ${{ secrets.NCBENCH_CI_TOKEN_SANDBOX }} # TODO ${{ secrets.ZENODO_DEPOSIT }}
           PIPELINE_VERSION: ${{ env.PIPELINE_VERSION }}
-        run: echo "::set-output name=deposition_id::$(python .github/workflows/upload.py)"
-      - name: Store Deposition ID
         run: |
-          echo ${{ steps.run_script.outputs.deposition_id }}
-          echo "DEPOSITION_ID=${{ steps.run_script.outputs.deposition_id }}" >> $GITHUB_ENV
+          echo "DEPOSITION_ID=$(python .github/workflows/upload.py)" >> $GITHUB_ENV
+
         # python .github/workflows/upload.py
         # echo $DEPOSITION_ID
         # echo DEPOSITION_ID=$DEPOSITION_ID >> $GITHUB_ENV
