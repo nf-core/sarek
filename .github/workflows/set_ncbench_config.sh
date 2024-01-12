@@ -7,7 +7,6 @@ declare -A variant_callers=(
     ["strelka2"]="strelka/NA12878_%sM/NA12878_%sM.strelka.variants.vcf.gz"
 )
 
-
 declare -A variant_versions=(
     ["deepvariant"]="${DEEPVARIANT_VERSION}"
     ["freebayes"]="${FREEBAYES_VERSION}"

@@ -60,14 +60,14 @@ jobs:
         if: ${{ matrix.enabled }}
         with:
           # TODO: fix path to agilent test path
-          source: s3://nf-core-awsmegatests/sarek/results-test-59026dc07633edb83aab3bfb2f65f79db38437a1/test_full/variant_calling
+          source: "s3://${{ secrets.AWS_S3_BUCKET }}/sarek/results-${{ github.sha }}/test_full_germline_ncbench_agilent/variant_calling"
           command: sync
           aws_region: eu-west-1
           destination: ./variant_calling
           flags: --no-sign-request --include ".vcf.gz" --exclude "g.vcf.gz"
 
       - name: Install requests
-        run: pip install requests # version pinning?
+        run: pip install requests
 
       - name: Upload to zenodo
         id: upload_zenodo
