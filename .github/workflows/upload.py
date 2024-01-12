@@ -20,6 +20,7 @@ r = requests.post(url,
                 json={},
                 headers=headers)
 
+# Add DEPOSITION ID to environment variables and make it available there
 os.environ['DEPOSITION_ID'] = str(r.json()["id"])
 deposition_id = r.json()["id"]
 # Print DEPOSITION_ID to make it available for the workflow

@@ -69,8 +69,8 @@ jobs:
           PIPELINE_VERSION: ${{ env.PIPELINE_VERSION }}
         run: |
           python .github/workflows/upload.py
-          # echo DEPOSITION_ID=$DEPOSITION_ID >> $GITHUB_ENV
-          # echo $DEPOSITION_ID
+          echo $DEPOSITION_ID
+          echo DEPOSITION_ID=$DEPOSITION_ID >> $GITHUB_ENV
 
       # update ncbench config yml
       - name: NCBench set config
@@ -95,24 +95,24 @@ jobs:
           # TODO check if trimming should be enabled actually
           #sh .github/workflows/set_ncbench_config.sh
           cmd: yq --inplace '
-            with(.variant-calls.nf-core-sarek-${{ env.PIPELINE_VERSION }}-strelka-agilent-75M.labels;
+            with(.variant-calls.nf-core-sarek-"${{ env.PIPELINE_VERSION }}"-strelka-agilent-75M.labels;
             .site = "nf-core" |
-            .pipeline = "nf-core/sarek v$PIPELINE_VERSION" |
+            .pipeline = "nf-core/sarek v${{ env.PIPELINE_VERSION }}" |
             .trimming = "FastP v${{ env.FASTP_VERSION }}" |
             .read-mapping = "bwa mem v$BWA_VERSION" |
-            .base-quality-recalibration = "gatk4 v4.4.0.0" |
+            .base-quality-recalibration = "gatk4 v${{ env.GATK_VERSION }}" |
             .realignment = "none" |
-            .variant-detection  = "strelka2 v2.9.10" |
+            .variant-detection  = "strelka2 v${{ env.STRELKA_VERSION }}" |
             .genotyping = "none" |
             .reads = "75M" ) |
-            with(.variant-calls.nf-core-sarek-321-strelka-agilent-75M.subcategory;
+            with(.variant-calls.nf-core-sarek-"${{ env.PIPELINE_VERSION }}"-strelka-agilent-75M.subcategory;
             . = "NA12878-agilent" ) |
-            with(.variant-calls.nf-core-sarek-321-strelka-agilent-75M.zenodo;
-            .deposition = $DEPOSITION_ID  |
+            with(.variant-calls.nf-core-sarek-"${{ env.PIPELINE_VERSION }}"-strelka-agilent-75M.zenodo;
+            .deposition = ${{ env.DEPOSITION_ID }}  |
             .filename = "get here proper file names" ) |
-            with(.variant-calls.nf-core-sarek-321-strelka-agilent-75M.benchmark;
+            with(.variant-calls.nf-core-sarek-"${{ env.PIPELINE_VERSION }}"-strelka-agilent-75M.benchmark;
             . = "giab-NA12878-agilent-75M" ) |
-            with(.variant-calls.nf-core-sarek-321-strelka-agilent-75M.rename-contigs;
+            with(.variant-calls.nf-core-sarek-"${{ env.PIPELINE_VERSION }}"-strelka-agilent-75M.rename-contigs;
             . = "resources/rename-contigs/ucsc-to-ensembl.txt" )
             ' ncbench-workflow/config/config.yaml
 
