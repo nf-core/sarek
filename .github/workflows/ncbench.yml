@@ -89,13 +89,13 @@ jobs:
           BWA_VERSION: ${{ env.BWA_VERSION }}
           GATK_VERSION: ${{ env.GATK_VERSION }}
           STRELKA_VERSION: ${{ env.STRELKA_VERSION }}
-          DEPOSITION_ID: ${{ needs.upload_zenodo.outputs.deposition_id }}
+          DEPOSITION_ID: ${{ env.DEPOSITION_ID }}
         with:
           # TODO: add in values for all callers, ensure proper extension for the datasets are used.
           # TODO check if trimming should be enabled actually
           #sh .github/workflows/set_ncbench_config.sh
           cmd: yq --inplace '
-            with(.variant-calls.nf-core-sarek-"${{ env.PIPELINE_VERSION }}"-strelka-agilent-75M.labels;
+            with(.variant-calls.nf-core-sarek-${{ env.PIPELINE_VERSION }}-strelka-agilent-75M.labels;
             .site = "nf-core" |
             .pipeline = "nf-core/sarek v${{ env.PIPELINE_VERSION }}" |
             .trimming = "FastP v${{ env.FASTP_VERSION }}" |
@@ -105,14 +105,14 @@ jobs:
             .variant-detection  = "strelka2 v${{ env.STRELKA_VERSION }}" |
             .genotyping = "none" |
             .reads = "75M" ) |
-            with(.variant-calls.nf-core-sarek-"${{ env.PIPELINE_VERSION }}"-strelka-agilent-75M.subcategory;
+            with(.variant-calls.nf-core-sarek-${{ env.PIPELINE_VERSION }}-strelka-agilent-75M.subcategory;
             . = "NA12878-agilent" ) |
-            with(.variant-calls.nf-core-sarek-"${{ env.PIPELINE_VERSION }}"-strelka-agilent-75M.zenodo;
+            with(.variant-calls.nf-core-sarek-${{ env.PIPELINE_VERSION }}-strelka-agilent-75M.zenodo;
             .deposition = ${{ env.DEPOSITION_ID }}  |
             .filename = "get here proper file names" ) |
-            with(.variant-calls.nf-core-sarek-"${{ env.PIPELINE_VERSION }}"-strelka-agilent-75M.benchmark;
+            with(.variant-calls.nf-core-sarek-${{ env.PIPELINE_VERSION }}-strelka-agilent-75M.benchmark;
             . = "giab-NA12878-agilent-75M" ) |
-            with(.variant-calls.nf-core-sarek-"${{ env.PIPELINE_VERSION }}"-strelka-agilent-75M.rename-contigs;
+            with(.variant-calls.nf-core-sarek-${{ env.PIPELINE_VERSION }}-strelka-agilent-75M.rename-contigs;
             . = "resources/rename-contigs/ucsc-to-ensembl.txt" )
             ' ncbench-workflow/config/config.yaml
 
