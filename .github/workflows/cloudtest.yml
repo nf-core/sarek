@@ -32,7 +32,7 @@ on:
 
 jobs:
   trigger-profile-test:
-    name: Run AWS tests
+    name: launch
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
