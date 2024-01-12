@@ -100,11 +100,11 @@ jobs:
             with(.variant-calls.nf-core-sarek-${{ env.PIPELINE_VERSION_NO_DOTS }}-strelka-agilent-75M.labels;
             .site = "nf-core" |
             .pipeline = "nf-core/sarek v${{ env.PIPELINE_VERSION }}" |
-            .trimming = "FastP v123" |
-            .read-mapping = "bwa mem v123" |
-            .base-quality-recalibration = "gatk4 v123" |
+            .trimming = "FastP v${{ env.FASTP_VERSION }}" |
+            .read-mapping = "bwa mem v${{ env.BWA_VERSION }}" |
+            .base-quality-recalibration = "gatk4 v{{ env.GATK_VERSION }}" |
             .realignment = "none" |
-            .variant-detection  = "strelka2 v123" |
+            .variant-detection  = "strelka2 v${{ env.STRELKA_VERSION }}" |
             .genotyping = "none" |
             .reads = "75M" ) |
             with(.variant-calls.nf-core-sarek-${{ env.PIPELINE_VERSION_NO_DOTS }}-strelka-agilent-75M.subcategory;
