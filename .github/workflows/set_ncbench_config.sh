@@ -21,7 +21,7 @@
                 . = "giab-NA12878-agilent-75M" ) |
                 with(.variant-calls.nf-core-sarek- 123-strelka-agilent-75M.rename-contigs;
                 . = "resources/rename-contigs/ucsc-to-ensembl.txt" )
-                ' $1
+                ' ncbench-workflow/config/config.yaml
     done
 
 
