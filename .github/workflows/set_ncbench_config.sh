@@ -7,9 +7,9 @@
             .pipeline = "nf-core/sarek v'"${PIPELINE_VERSION}"'" |
             .trimming = "FastP v'"${FASTP_VERSION}"'" |
             .read-mapping = "bwa mem v'"${BWA_VERSION}"'" |
-            .base-quality-recalibration = "gatk4 v123" |
+            .base-quality-recalibration = "gatk4 v'"${GATK_VERSION}"'" |
             .realignment = "none" |
-            .variant-detection  = "strelka2 v123" |
+            .variant-detection  = "strelka2 v'"${STRELKA_VERSION}"'" |
             .genotyping = "none" |
             .reads = "'"${READS}"'M" ) |
             with(.variant-calls.nf-core-sarek-'"${PIPELINE_VERSION_NO_DOTS}"'-strelka-agilent-'"${READS}"'M.subcategory;
