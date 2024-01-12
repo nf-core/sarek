@@ -21,20 +21,20 @@ r = requests.post(url,
                 headers=headers)
 
 # Add DEPOSITION ID to environment variables and make it available there
-os.environ['DEPOSITION_ID'] = str(r.json()["id"])
+#os.environ["DEPOSITION_ID"] = str(r.json()["id"])
 deposition_id = r.json()["id"]
-# Print DEPOSITION_ID to make it available for the workflow
-print(f"::set-output name=deposition_id::{deposition_id}")
 
-print("Create empty upload:\n")
-print(r.json())
-print("Deposition id: ")
-print(deposition_id )
+#print("Create empty upload:\n")
+#print(r.json())
+#print("Deposition id: ")
+print(str(r.json()["id"]) )
 
 # Upload a new file
 # bucket_url = r.json()["links"]["bucket"]
 
-print(os.listdir('./variant_calling/strelka/HCC1395N/'))
+#print(os.listdir('./variant_calling/strelka/HCC1395N/'))
+filenames = [ "strelka/HCC1395N/HCC1395N.strelka.genome.vcf.gz"]
+
 # filenames = [ "deepvariant/NA12878_75M/NA12878_75M.deepvariant.vcf.gz",
 #               "freebayes/NA12878_75M/NA12878_75M.freebayes.vcf.gz",
 #               "haplotypecaller/NA12878_75M/NA12878_75M.haplotypecaller.filtered.vcf.gz",
@@ -49,20 +49,16 @@ print(os.listdir('./variant_calling/strelka/HCC1395N/'))
 #               "strelka/NA12878_200M/NA12878_200M.strelka.variants.vcf.gz",
 #               "strelka/NA12878_200M/NA12878_200M.strelka.genome.vcf.gz"]
 
-# for file in filenames:
-#     path = "./variant_calling/%s" % file
-#     with open(path, "rb") as fp:
-#         r = requests.put(
-#             "%s/%s" % (bucket_url, file),
-#             data=fp,
-#             params=params,
-#         )
-#         print("%s/%s" % (bucket_url, file))
-#         print(r.json())
-
-
-# print("Upload new files")
-# print(r.json())
+for file in filenames:
+    path = "./variant_calling/%s" % file
+    with open(path, "rb") as fp:
+        r = requests.put(
+            "%s/%s" % (bucket_url, file),
+            data=fp,
+            params=params,
+        )
+#print("Upload new files")
+#print(r.json())
 
 # Add metadata to uploaded file
 
@@ -82,10 +78,10 @@ r = requests.put('https://sandbox.zenodo.org/api/deposit/depositions/%s' % depos
                 data=json.dumps(data),
                 headers=headers)
 
-print("Add metadata: ")
-print(r.status_code)
-print(r.json())
-print()
+#print("Add metadata: ")
+#print(r.status_code)
+#print(r.json())
+#print()
 
 # Publish this
 

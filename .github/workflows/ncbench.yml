@@ -69,10 +69,14 @@ jobs:
         env:
           ACCESS_TOKEN: ${{ secrets.NCBENCH_CI_TOKEN_SANDBOX }} # TODO ${{ secrets.ZENODO_DEPOSIT }}
           PIPELINE_VERSION: ${{ env.PIPELINE_VERSION }}
+        run: echo "::set-output name=deposition_id::$(python .github/workflows/upload.py)"
+      - name: Store Deposition ID
         run: |
-          python .github/workflows/upload.py
-          echo $DEPOSITION_ID
-          echo DEPOSITION_ID=$DEPOSITION_ID >> $GITHUB_ENV
+          echo ${{ steps.run_script.outputs.deposition_id }}
+          echo "DEPOSITION_ID=${{ steps.run_script.outputs.deposition_id }}" >> $GITHUB_ENV
+        # python .github/workflows/upload.py
+        # echo $DEPOSITION_ID
+        # echo DEPOSITION_ID=$DEPOSITION_ID >> $GITHUB_ENV
 
       # update ncbench config yml
       - name: NCBench set config
@@ -94,7 +98,6 @@ jobs:
           DEPOSITION_ID: ${{ env.DEPOSITION_ID }}
         with:
           # TODO: add in values for all callers, ensure proper extension for the datasets are used.
-          # TODO check if trimming should be enabled actually
           #sh .github/workflows/set_ncbench_config.sh
           cmd: yq --inplace '
             with(.variant-calls.nf-core-sarek-${{ env.PIPELINE_VERSION_NO_DOTS }}-strelka-agilent-75M.labels;
@@ -102,7 +105,7 @@ jobs:
             .pipeline = "nf-core/sarek v${{ env.PIPELINE_VERSION }}" |
             .trimming = "FastP v${{ env.FASTP_VERSION }}" |
             .read-mapping = "bwa mem v${{ env.BWA_VERSION }}" |
-            .base-quality-recalibration = "gatk4 v{{ env.GATK_VERSION }}" |
+            .base-quality-recalibration = "gatk4 v${{ env.GATK_VERSION }}" |
             .realignment = "none" |
             .variant-detection  = "strelka2 v${{ env.STRELKA_VERSION }}" |
             .genotyping = "none" |
@@ -118,7 +121,6 @@ jobs:
             . = "resources/rename-contigs/ucsc-to-ensembl.txt" )
             '  ncbench-workflow/config/config.yaml
 
-      # TODO: enable using secrets here
       - name: Commit files
         run: |
           cd ncbench-workflow

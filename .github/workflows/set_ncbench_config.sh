@@ -20,12 +20,7 @@
 
 
 for READS in 75 200; do
-    yq --inplace "
-        with(.variant-calls.nf-core-sarek-PIPELINE_VERSION-strelka-agilent-READSM.labels;
-        .site = "nf-core" |
-        .pipeline = "nf-core/sarek vPIPELINE_VERSION" |
-        .genotyping = "none" |
-        .reads = "READSM" )" ncbench-workflow/config/config.yaml
+
 done
 
 
