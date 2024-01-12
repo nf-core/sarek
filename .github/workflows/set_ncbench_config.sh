@@ -17,7 +17,7 @@ declare -A variant_versions=(
 for READS in 75 200; do
     for variant_caller in "${!variant_callers[@]}"; do
         yq --inplace '
-            with(.variant-calls.nf-core-sarek-'"${PIPELINE_VERSION_NO_DOTS}"'-strelka-agilent-'"${READS}"'M.labels;
+            with(.variant-calls.nf-core-sarek-'"${PIPELINE_VERSION_NO_DOTS}"'-'"${variant_caller}"'-agilent-'"${READS}"'M.labels;
             .site = "nf-core" |
             .pipeline = "nf-core/sarek v'"${PIPELINE_VERSION}"'" |
             .trimming = "FastP v'"${FASTP_VERSION}"'" |
@@ -27,14 +27,14 @@ for READS in 75 200; do
             .variant-detection  = "'${variant_caller}' v'"${variant_versions[$variant_caller]}"'" |
             .genotyping = "none" |
             .reads = "'"${READS}"'M" ) |
-            with(.variant-calls.nf-core-sarek-'"${PIPELINE_VERSION_NO_DOTS}"'-strelka-agilent-'"${READS}"'M.subcategory;
+            with(.variant-calls.nf-core-sarek-'"${PIPELINE_VERSION_NO_DOTS}"'-'"${variant_caller}"'-agilent-'"${READS}"'M.subcategory;
             . = "NA12878-agilent" ) |
-            with(.variant-calls.nf-core-sarek-'"${PIPELINE_VERSION_NO_DOTS}"'-strelka-agilent-'"${READS}"'M.zenodo;
+            with(.variant-calls.nf-core-sarek-'"${PIPELINE_VERSION_NO_DOTS}"'-'"${variant_caller}"'-agilent-'"${READS}"'M.zenodo;
             .deposition = '"${DEPOSITION_ID}"'  |
             .filename = "'"${variant_callers[$variant_caller]}"'" ) |
-            with(.variant-calls.nf-core-sarek-'"${PIPELINE_VERSION_NO_DOTS}"'-strelka-agilent-'"${READS}"'M.benchmark;
+            with(.variant-calls.nf-core-sarek-'"${PIPELINE_VERSION_NO_DOTS}"'-'"${variant_caller}"'-agilent-'"${READS}"'M.benchmark;
             . = "giab-NA12878-agilent-'"${READS}"'M" ) |
-            with(.variant-calls.nf-core-sarek-'"${PIPELINE_VERSION_NO_DOTS}"'-strelka-agilent-'"${READS}"'M.rename-contigs;
+            with(.variant-calls.nf-core-sarek-'"${PIPELINE_VERSION_NO_DOTS}"'-'"${variant_caller}"'-agilent-'"${READS}"'M.rename-contigs;
             . = "resources/rename-contigs/ucsc-to-ensembl.txt" )
             '  ncbench-workflow/config/config.yaml
     done

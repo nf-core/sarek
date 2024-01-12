@@ -43,6 +43,15 @@ jobs:
           GATK_VERSION=$(awk '/- bioconda::gatk4=/ {gsub(/.*=/, "", $NF); gsub(/'\''/, "", $NF); print $NF}' modules/nf-core/gatk4/baserecalibrator/environment.yml)
           echo "GATK_VERSION=${GATK_VERSION}" >> $GITHUB_ENV
 
+          DEEPVARIANT_VERSION=$(awk -F':' '/container/ {gsub(/"/, "", $2); print $2}' modules/nf-core/deepvariant/main.nf)
+          echo "DEEPVARIANT_VERSION=${DEEPVARIANT_VERSION}" >> $GITHUB_ENV
+
+          FREEBAYES_VERSION=$(awk '/- bioconda::freebayes=/ {gsub(/.*=/, "", $NF); gsub(/'\''/, "", $NF); print $NF}' modules/nf-core/freebayes/environment.yml)
+          echo "FREEBAYES_VERSION=${FREEBAYES_VERSION}" >> $GITHUB_ENV
+
+          HAPLOTYPECALLER_VERSION=$(awk '/- bioconda::gatk4=/ {gsub(/.*=/, "", $NF); gsub(/'\''/, "", $NF); print $NF}' modules/nf-core/gatk4/haplotypecaller/environment.yml)
+          echo "HAPLOTYPECALLER_VERSION=${HAPLOTYPECALLER_VERSION}" >> $GITHUB_ENV
+
           STRELKA_VERSION=$(awk '/- bioconda::strelka=/ {gsub(/.*=/, "", $NF); gsub(/'\''/, "", $NF); print $NF}' modules/nf-core/strelka/germline/environment.yml)
           echo "STRELKA_VERSION=${STRELKA_VERSION}" >> $GITHUB_ENV
 
@@ -56,11 +65,7 @@ jobs:
           aws_region: eu-west-1
           destination: ./variant_calling
           flags: --no-sign-request --include ".vcf.gz" --exclude "g.vcf.gz"
-      #
-      #      - name: list files
-      #        run: |
-      #          ls variant_calling/strelka/HCC1395N/
-      #
+
       - name: Install requests
         run: pip install requests # version pinning?
 
@@ -94,33 +99,12 @@ jobs:
           FASTP_VERSION: ${{ env.FASTP_VERSION }}
           BWA_VERSION: ${{ env.BWA_VERSION }}
           GATK_VERSION: ${{ env.GATK_VERSION }}
+          DEEPVARIANT_VERSION: ${{ env.DEEPVARIANT_VERSION }}
+          FREEBAYES_VERSION: ${{ env.FREEBAYES_VERSION }}
+          HAPLOTYPECALLER_VERSION: ${{ env.HAPLOTYPECALLER_VERSION }}
           STRELKA_VERSION: ${{ env.STRELKA_VERSION }}
           DEPOSITION_ID: ${{ env.DEPOSITION_ID }}
-        # TODO: add in values for all callers, ensure proper extension for the datasets are used.
-        #
         run: bash .github/workflows/set_ncbench_config.sh
-
-        # yq --inplace '
-        #   with(.variant-calls.nf-core-sarek-${{ env.PIPELINE_VERSION_NO_DOTS }}-strelka-agilent-75M.labels;
-        #   .site = "nf-core" |
-        #   .pipeline = "nf-core/sarek v${{ env.PIPELINE_VERSION }}" |
-        #   .trimming = "FastP v${{ env.FASTP_VERSION }}" |
-        #   .read-mapping = "bwa mem v${{ env.BWA_VERSION }}" |
-        #   .base-quality-recalibration = "gatk4 v${{ env.GATK_VERSION }}" |
-        #   .realignment = "none" |
-        #   .variant-detection  = "strelka2 v${{ env.STRELKA_VERSION }}" |
-        #   .genotyping = "none" |
-        #   .reads = "75M" ) |
-        #   with(.variant-calls.nf-core-sarek-${{ env.PIPELINE_VERSION_NO_DOTS }}-strelka-agilent-75M.subcategory;
-        #   . = "NA12878-agilent" ) |
-        #   with(.variant-calls.nf-core-sarek-${{ env.PIPELINE_VERSION_NO_DOTS }}-strelka-agilent-75M.zenodo;
-        #   .deposition = ${{ env.DEPOSITION_ID }}  |
-        #   .filename = "get here proper file names" ) |
-        #   with(.variant-calls.nf-core-sarek-${{ env.PIPELINE_VERSION_NO_DOTS }}-strelka-agilent-75M.benchmark;
-        #   . = "giab-NA12878-agilent-75M" ) |
-        #   with(.variant-calls.nf-core-sarek-${{ env.PIPELINE_VERSION_NO_DOTS }}-strelka-agilent-75M.rename-contigs;
-        #   . = "resources/rename-contigs/ucsc-to-ensembl.txt" )
-        #   '  ncbench-workflow/config/config.yaml
 
       - name: Commit files
         run: |
