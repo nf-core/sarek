@@ -33,7 +33,7 @@ for READS in 75 200; do
             . = "NA12878-agilent" ) |
             with(.variant-calls.nf-core-sarek-'"${PIPELINE_VERSION_NO_DOTS}"'-'"${variant_caller}"'-agilent-'"${READS}"'M.zenodo;
             .deposition = '"${DEPOSITION_ID}"'  |
-            filename= "'"${filename}"'" ) |
+            .filename= "'"${filename}"'" ) |
             with(.variant-calls.nf-core-sarek-'"${PIPELINE_VERSION_NO_DOTS}"'-'"${variant_caller}"'-agilent-'"${READS}"'M.benchmark;
             . = "giab-NA12878-agilent-'"${READS}"'M" ) |
             with(.variant-calls.nf-core-sarek-'"${PIPELINE_VERSION_NO_DOTS}"'-'"${variant_caller}"'-agilent-'"${READS}"'M.rename-contigs;
