@@ -40,8 +40,8 @@ jobs:
           BWA_VERSION=$(awk '/- bwa=/ {gsub(/.*=/, "", $NF); gsub(/'\''/, "", $NF); print $NF}' modules/nf-core/bwa/mem/environment.yml)
           echo "BWA_VERSION=${BWA_VERSION}" >> $GITHUB_ENV
 
-          GATK_VERSION=$(awk '/- bioconda::gatk4=/ {gsub(/.*=/, "", $NF); gsub(/'\''/, "", $NF); print $NF}' modules/nf-core/gatk4/baserecalibrator/environment.yml)
-          echo "GATK_VERSION=${GATK_VERSION}" >> $GITHUB_ENV
+          BQSR_VERSION=$(awk '/- bioconda::gatk4=/ {gsub(/.*=/, "", $NF); gsub(/'\''/, "", $NF); print $NF}' modules/nf-core/gatk4/baserecalibrator/environment.yml)
+          echo "BQSR_VERSION=${BQSR_VERSION}" >> $GITHUB_ENV
 
           DEEPVARIANT_VERSION=$(awk -F':' '/container/ {gsub(/"/, "", $2); print $2}' modules/nf-core/deepvariant/main.nf)
           echo "DEEPVARIANT_VERSION=${DEEPVARIANT_VERSION}" >> $GITHUB_ENV
@@ -98,7 +98,7 @@ jobs:
           PIPELINE_VERSION: ${{ env.PIPELINE_VERSION }}
           FASTP_VERSION: ${{ env.FASTP_VERSION }}
           BWA_VERSION: ${{ env.BWA_VERSION }}
-          GATK_VERSION: ${{ env.GATK_VERSION }}
+          BQSR_VERSION: ${{ env.BQSR_VERSION }}
           DEEPVARIANT_VERSION: ${{ env.DEEPVARIANT_VERSION }}
           FREEBAYES_VERSION: ${{ env.FREEBAYES_VERSION }}
           HAPLOTYPECALLER_VERSION: ${{ env.HAPLOTYPECALLER_VERSION }}
