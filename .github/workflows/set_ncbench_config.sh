@@ -17,6 +17,7 @@ declare -A variant_versions=(
 
 for READS in 75 200; do
     for variant_caller in "${!variant_callers[@]}"; do
+        filename=$(printf "${variant_callers[$variant_caller]}" $READS $READS)
         yq --inplace '
             with(.variant-calls.nf-core-sarek-'"${PIPELINE_VERSION_NO_DOTS}"'-'"${variant_caller}"'-agilent-'"${READS}"'M.labels;
             .site = "nf-core" |
@@ -32,7 +33,7 @@ for READS in 75 200; do
             . = "NA12878-agilent" ) |
             with(.variant-calls.nf-core-sarek-'"${PIPELINE_VERSION_NO_DOTS}"'-'"${variant_caller}"'-agilent-'"${READS}"'M.zenodo;
             .deposition = '"${DEPOSITION_ID}"'  |
-            filename=$(printf "${variant_callers[$variant_caller]}" '"${READS}"' '"${READS}"') |
+            filename= "'"${filename}"'" ) |
             with(.variant-calls.nf-core-sarek-'"${PIPELINE_VERSION_NO_DOTS}"'-'"${variant_caller}"'-agilent-'"${READS}"'M.benchmark;
             . = "giab-NA12878-agilent-'"${READS}"'M" ) |
             with(.variant-calls.nf-core-sarek-'"${PIPELINE_VERSION_NO_DOTS}"'-'"${variant_caller}"'-agilent-'"${READS}"'M.rename-contigs;
