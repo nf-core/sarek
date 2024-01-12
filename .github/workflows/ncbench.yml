@@ -98,7 +98,7 @@ jobs:
           DEPOSITION_ID: ${{ env.DEPOSITION_ID }}
         # TODO: add in values for all callers, ensure proper extension for the datasets are used.
         #
-        run: sh .github/workflows/set_ncbench_config.sh
+        run: bash .github/workflows/set_ncbench_config.sh
 
         # yq --inplace '
         #   with(.variant-calls.nf-core-sarek-${{ env.PIPELINE_VERSION_NO_DOTS }}-strelka-agilent-75M.labels;
