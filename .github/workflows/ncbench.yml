@@ -9,7 +9,6 @@ on:
         description: "Trigger NCBench upload"
         type: boolean
         default: true
-  pull_request: # TODO: remove once it works
 
 jobs:
   ncbench-upload:
@@ -62,8 +61,7 @@ jobs:
         uses: keithweaver/aws-s3-github-action@v1.0.0
         if: ${{ matrix.enabled }}
         with:
-          # TODO: fix path to agilent test path
-          source: "s3://nf-core-awsmegatests/sarek/results-4bfb25049fdd2bf31c751bafcb6a18eddebcc1d5/test_full_germline_ncbench_agilent/variant_calling" #"s3://${{ secrets.AWS_S3_BUCKET }}/sarek/results-${{ github.sha }}/test_full_germline_ncbench_agilent/variant_calling"
+          source: "s3://${{ secrets.AWS_S3_BUCKET }}/sarek/results-${{ github.sha }}/test_full_germline_ncbench_agilent/variant_calling"
           command: sync
           aws_region: eu-west-1
           destination: ./variant_calling
@@ -75,8 +73,8 @@ jobs:
       - name: Upload to zenodo
         id: upload_zenodo
         env:
-          # ATTENTION: Use SANDBOX TOKEN during development: ${{ secrets.NCBENCH_CI_TOKEN_SANDBOX }}
-          ACCESS_TOKEN: ${{ secrets.NCBENCH_CI_TOKEN_SANDBOX }} # ${{ secrets.ZENODO_DEPOSIT }}
+          # TODO ATTENTION: Use SANDBOX TOKEN during development: ${{ secrets.NCBENCH_CI_TOKEN_SANDBOX }}
+          ACCESS_TOKEN: ${{ secrets.ZENODO_DEPOSIT }}
           PIPELINE_VERSION: ${{ env.PIPELINE_VERSION }}
         run: python .github/workflows/upload.py
 

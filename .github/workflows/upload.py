@@ -20,8 +20,8 @@ params = {"access_token": access_token}
 workspace_directory = os.environ["GITHUB_WORKSPACE"]
 pipeline_version = os.environ["PIPELINE_VERSION"]
 
-# TODO: replace sandbox link f"https://zenodo.org/api/deposit/depositions"
-url = f"https://sandbox.zenodo.org/api/deposit/depositions"
+# TODO: replace sandbox link f"https://sandbox.zenodo.org/api/deposit/depositions"
+url = f"https://zenodo.org/api/deposit/depositions"
 
 # Create empty upload
 try:
@@ -78,9 +78,9 @@ data = {
     }
 }
 
-# TODO replace sandbox link https://zenodo.org/api/deposit/depositions/
+# TODO replace sandbox link https://sandbox.zenodo.org/api/deposit/depositions/ https://zenodo.org/api/deposit/depositions/
 r = requests.put(
-    "https://sandbox.zenodo.org/api/deposit/depositions/%s" % deposition_id,
+    "https://zenodo.org/api/deposit/depositions/%s" % deposition_id,
     params=params,
     data=json.dumps(data),
     headers=headers,
@@ -90,11 +90,11 @@ logging.info("Add metadata: ")
 logging.info(r.status_code)
 logging.info(r.json())
 
-# TODO only uncomment once everything works, replace sandbox link
+# TODO only uncomment once everything works, replace sandbox link: "https://sandbox.zenodo.org/api/deposit/depositions/%s/actions/publish"
 # Publish this
 try:
     r = requests.post(
-        "https://sandbox.zenodo.org/api/deposit/depositions/%s/actions/publish" % deposition_id, params=params
+        "https://zenodo.org/api/deposit/depositions/%s/actions/publish" % deposition_id, params=params
     )
     r.raise_for_status()
 except requests.exceptions.RequestException as e:
