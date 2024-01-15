@@ -82,4 +82,3 @@ r = requests.post(
 
 print("Publish data status code: ")
 print(r.status_code)
-
