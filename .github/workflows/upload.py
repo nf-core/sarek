@@ -2,6 +2,17 @@ import requests
 import os
 import json
 
+'''
+This scripts collects all variant calling files and uploads them to Zenodo.
+1. A new Zenodo entry is created
+2. All files are uploaded
+3. Meta data is added: Pipeline version, authors
+4. Entry is published.
+
+ATTENTION: Use sandbox links during development! They are set in each affected line as comment.
+            If you need to use the production Zenodo links, turn off publishing (see bottom).
+'''
+
 headers = {"Content-Type": "application/json"}
 access_token = os.environ["ACCESS_TOKEN"]
 params = {"access_token": access_token}

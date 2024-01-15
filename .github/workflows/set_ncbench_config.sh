@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# This script updates the config.yml in the NCBench repository.
+# The config file is needed to trigger the subsequent benchmarking workflow.
+# For each variant caller and each input file a new entry needs to be created.
+
 declare -A variant_callers=(
     ["deepvariant"]="NA12878_%sM.deepvariant.vcf.gz"
     ["freebayes"]="NA12878_%sM.freebayes.vcf.gz"
