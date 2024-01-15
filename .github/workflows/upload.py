@@ -1,3 +1,4 @@
+import logging
 import requests
 import os
 import json
@@ -25,10 +26,15 @@ url = f"https://sandbox.zenodo.org/api/deposit/depositions"
 # Create empty upload
 r = requests.post(url, params=params, json={}, headers=headers)
 
-print("Create empty upload:\n")
-print(r.json())
-print(r.status_code)
+if not r.ok:
+    except requests.exceptions.RequestException as e:
+        raise SystemExit(e)
 
+logging.info("Create empty upload:\n")
+logging.info(r.json())
+logging.info(r.status_code)
+
+print("Create empty upload:\n
 deposition_id = r.json()["id"]
 
 ## Store deposition ID
@@ -57,7 +63,7 @@ for file in filenames:
             data=fp,
             params=params,
         )
-        print(r.json())
+        logging.info(r.json())
 
 # Add metadata to uploaded file
 title = "WES benchmark results nf-core/sarek v{}".format(pipeline_version)
@@ -81,9 +87,9 @@ r = requests.put(
     headers=headers,
 )
 
-print("Add metadata: ")
-print(r.status_code)
-print(r.json())
+logging.info("Add metadata: ")
+logging.info(r.status_code)
+logging.info(r.json())
 
 # TODO only uncomment once everything works, replace sandbox link
 # Publish this
@@ -91,5 +97,9 @@ r = requests.post(
     "https://sandbox.zenodo.org/api/deposit/depositions/%s/actions/publish" % deposition_id, params=params
 )
 
-print("Publish data status code: ")
-print(r.status_code)
+if not r.ok:
+    except requests.exceptions.RequestException as e:
+        raise SystemExit(e)
+
+logging.info("Publish data status code: ")
+logging.info(r.status_code)
