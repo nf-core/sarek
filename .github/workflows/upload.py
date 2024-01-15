@@ -8,8 +8,8 @@ params = {'access_token': access_token}
 workspace_directory = os.environ["GITHUB_WORKSPACE"]
 pipeline_version = os.environ["PIPELINE_VERSION"]
 
-# TODO: replace sandbox link
-url = f"https://zenodo.org/api/deposit/depositions" # f"https://sandbox.zenodo.org/api/deposit/depositions"
+# TODO: replace sandbox link f"https://zenodo.org/api/deposit/depositions"
+url =  f"https://sandbox.zenodo.org/api/deposit/depositions"
 
 # Create empty upload
 r = requests.post(url,
@@ -32,12 +32,10 @@ bucket_url = r.json()["links"]["bucket"]
 filenames = [ "deepvariant/NA12878_75M/NA12878_75M.deepvariant.vcf.gz",
             "freebayes/NA12878_75M/NA12878_75M.freebayes.vcf.gz",
             "haplotypecaller/NA12878_75M/NA12878_75M.haplotypecaller.filtered.vcf.gz",
-            "haplotypecaller/NA12878_75M/NA12878_75M.freebayes.vcf.gz",
             "strelka/NA12878_75M/NA12878_75M.strelka.variants.vcf.gz",
             "deepvariant/NA12878_200M/NA12878_200M.deepvariant.vcf.gz",
             "freebayes/NA12878_200M/NA12878_200M.freebayes.vcf.gz",
             "haplotypecaller/NA12878_200M/NA12878_200M.haplotypecaller.filtered.vcf.gz",
-            "haplotypecaller/NA12878_200M/NA12878_200M.freebayes.vcf.gz",
             "strelka/NA12878_200M/NA12878_200M.strelka.variants.vcf.gz"]
 
 for file in filenames:
@@ -72,10 +70,9 @@ print(r.json())
 
 # TODO only uncomment once everything works, replace sandbox link
 # Publish this
+r = requests.post('https://sandbox.zenodo.org/api/deposit/depositions/%s/actions/publish' % deposition_id,
+                    params=params )
 
-# r = requests.post('https://sandbox.zenodo.org/api/deposit/depositions/%s/actions/publish' % deposition_id,
-#                     params=params )
-
-# print("Publish data status code: ")
-# print(r.status_code)
+print("Publish data status code: ")
+print(r.status_code)
 
