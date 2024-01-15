@@ -109,7 +109,8 @@ jobs:
       - name: Commit files
         uses: EndBug/add-and-commit@v7
         with:
+          cwd: "./ncbench-workflow"
           author: "FriederikeHanssen <friederike.hanssen@qbic.uni-tuebingen.de>"
-          branch: "sarek_${{ env.PIPELINE_VERSION }}"
+          new_branch: "sarek_${{ env.PIPELINE_VERSION }}"
           message: "Add changes"
           add: "ncbench-workflow/config/config.yaml"
