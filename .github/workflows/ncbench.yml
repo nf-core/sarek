@@ -43,7 +43,7 @@ jobs:
           BWA_VERSION=$(jq -r '.processes[] | select(.name == "NFCORE_SAREK:SAREK:PREPARE_GENOME:BWAMEM1_INDEX") | .container' inspect.json | awk -F':' '{print $NF}'  | cut -d "-" -f 1)
           echo "BWA_VERSION=${BWA_VERSION}" >> $GITHUB_ENV
 
-          BQSR_VERSION=$(jq -r '.processes[] | select(.name == "NFCORE_SAREK:SAREK:BAM_BASERECALIBRATOR:GATK4_BASERECALIBRATO") | .container' inspect.json | awk -F':' '{print $NF}'  | cut -d "-" -f 1)
+          BQSR_VERSION=$(jq -r '.processes[] | select(.name == "NFCORE_SAREK:SAREK:BAM_BASERECALIBRATOR:GATK4_BASERECALIBRATOR") | .container' inspect.json | awk -F':' '{print $NF}'  | cut -d "-" -f 1)
           echo "BQSR_VERSION=${BQSR_VERSION}" >> $GITHUB_ENV
 
           DEEPVARIANT_VERSION=$(jq -r '.processes[] | select(.name == "NFCORE_SAREK:SAREK:BAM_VARIANT_CALLING_GERMLINE_ALL:BAM_VARIANT_CALLING_DEEPVARIANT:DEEPVARIANT") | .container' inspect.json | awk -F':' '{print $NF}'  | cut -d "-" -f 1)
