@@ -86,7 +86,7 @@ jobs:
           token: ${{ secrets.NCBENCH_CI_TOKEN }}
           repository: FriederikeHanssen/ncbench-workflow
           path: ncbench-workflow/
-          ref: main
+          ref: main_noactions
 
       - name: Install yq
         uses: mikefarah/yq@master
