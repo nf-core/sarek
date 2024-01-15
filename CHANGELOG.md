@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- [#1272](https://github.com/nf-core/sarek/pull/1372) - Add integration with NCBench: Automatic submission of latest benchmarking runs
 - [#1333](https://github.com/nf-core/sarek/pull/1333) - Back to dev
 - [#1335](https://github.com/nf-core/sarek/pull/1335) - Add index computation of `bcftools_annotations`, if not provided
 - [#1340](https://github.com/nf-core/sarek/pull/1340) - Adds Azure test profiles and megatests.
