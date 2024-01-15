@@ -58,8 +58,8 @@ data = {
                     {'name': 'Hanssen, Friederike', 'affiliation': 'Quantitative Biology Center, Tuebingen'}]
     }
 }
-
-r = requests.put('https://zenodo.org/api/deposit/depositions/%s' % deposition_id,
+# TODO replace sandbox link https://zenodo.org/api/deposit/depositions/
+r = requests.put('https://sandbox.zenodo.org/api/deposit/depositions%s' % deposition_id,
                 params=params,
                 data=json.dumps(data),
                 headers=headers)

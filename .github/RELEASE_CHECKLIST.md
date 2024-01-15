@@ -13,8 +13,6 @@
 5. Bump version:
    - `nf-core bump-version . <VERSION>`
    - edit `CHANGELOG`
-   - edit multiqc yaml
-   - edit ncbench.yml
 6. Make a PR to `master`
 7. Wait for reviews
 8. Merge said PR
