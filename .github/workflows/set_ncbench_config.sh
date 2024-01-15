@@ -1,10 +1,10 @@
 #!/bin/bash
 
 declare -A variant_callers=(
-    ["deepvariant"]="deepvariant/NA12878_%sM/NA12878_%sM.deepvariant.vcf.gz"
-    ["freebayes"]="freebayes/NA12878_%sM/NA12878_%sM.freebayes.vcf.gz"
-    ["haplotypecaller"]="haplotypecaller/NA12878_%sM/NA12878_%sM.haplotypecaller.filtered.vcf.gz"
-    ["strelka2"]="strelka/NA12878_%sM/NA12878_%sM.strelka.variants.vcf.gz"
+    ["deepvariant"]="NA12878_%sM.deepvariant.vcf.gz"
+    ["freebayes"]="NA12878_%sM.freebayes.vcf.gz"
+    ["haplotypecaller"]="NA12878_%sM.haplotypecaller.filtered.vcf.gz"
+    ["strelka2"]="NA12878_%sM.strelka.variants.vcf.gz"
 )
 
 declare -A variant_versions=(
