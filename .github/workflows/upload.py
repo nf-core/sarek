@@ -70,6 +70,7 @@ print("Add metadata: ")
 print(r.status_code)
 print(r.json())
 
+# TODO only uncomment once everything works, replace sandbox link
 # Publish this
 
 # r = requests.post('https://sandbox.zenodo.org/api/deposit/depositions/%s/actions/publish' % deposition_id,

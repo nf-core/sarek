@@ -5,7 +5,6 @@ on:
   # upload can only be triggered manually for now
   workflow_dispatch:
     inputs:
-      # TODO: add in other test profiles
       germline_default_agilent:
         description: "Trigger NCBench upload"
         type: boolean
@@ -60,7 +59,7 @@ jobs:
         if: ${{ matrix.enabled }}
         with:
           # TODO: fix path to agilent test path
-          source: "s3://${{ secrets.AWS_S3_BUCKET }}/sarek/results-${{ github.sha }}/test_full_germline_ncbench_agilent/variant_calling"
+          source: "s3://nf-core-awsmegatests/sarek/results-4bfb25049fdd2bf31c751bafcb6a18eddebcc1d5/test_full_germline_ncbench_agilent/variant_calling" #"s3://${{ secrets.AWS_S3_BUCKET }}/sarek/results-${{ github.sha }}/test_full_germline_ncbench_agilent/variant_calling"
           command: sync
           aws_region: eu-west-1
           destination: ./variant_calling
@@ -72,7 +71,7 @@ jobs:
       - name: Upload to zenodo
         id: upload_zenodo
         env:
-          ACCESS_TOKEN: ${{ secrets.NCBENCH_CI_TOKEN_SANDBOX }} # TODO ${{ secrets.ZENODO_DEPOSIT }}
+          ACCESS_TOKEN: ${{ secrets.ZENODO_DEPOSIT }} # ${{ secrets.NCBENCH_CI_TOKEN_SANDBOX }}
           PIPELINE_VERSION: ${{ env.PIPELINE_VERSION }}
         run: python .github/workflows/upload.py
 
