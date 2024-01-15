@@ -71,7 +71,7 @@ jobs:
       - name: Upload to zenodo
         id: upload_zenodo
         env:
-          ACCESS_TOKEN: ${{ secrets.NCBENCH_CI_TOKEN_SANDBOX }} # ${{ secrets.ZENODO_DEPOSIT }} #
+          ACCESS_TOKEN: ${{ secrets.NCBENCH_CI_TOKEN_SANDBOX }} # ${{ secrets.ZENODO_DEPOSIT }}
           PIPELINE_VERSION: ${{ env.PIPELINE_VERSION }}
         run: python .github/workflows/upload.py
 
