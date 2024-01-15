@@ -12,12 +12,6 @@
 4. Sync `dev` and checkout a new branch for the release
 5. Bump version:
    - `nf-core bump-version . <VERSION>`
-   - edit `docs/images/sarek_indices_subway.svg`
-   - generate a new `docs/images/sarek_indices_subway.png`
-   - edit `docs/images/sarek_subway.svg`
-   - generate a new `docs/images/sarek_subway.png`
-   - edit `docs/images/sarek_workflow.svg`
-   - generate a new `docs/images/sarek_workflow.png`
    - edit `CHANGELOG`
 6. Make a PR to `master`
 7. Wait for reviews
