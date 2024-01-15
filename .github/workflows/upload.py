@@ -93,9 +93,7 @@ logging.info(r.json())
 # TODO only uncomment once everything works, replace sandbox link: "https://sandbox.zenodo.org/api/deposit/depositions/%s/actions/publish"
 # Publish this
 try:
-    r = requests.post(
-        "https://zenodo.org/api/deposit/depositions/%s/actions/publish" % deposition_id, params=params
-    )
+    r = requests.post("https://zenodo.org/api/deposit/depositions/%s/actions/publish" % deposition_id, params=params)
     r.raise_for_status()
 except requests.exceptions.RequestException as e:
     raise SystemExit(e)
