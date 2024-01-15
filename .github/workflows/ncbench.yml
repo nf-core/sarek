@@ -25,33 +25,37 @@ jobs:
       - name: Download pipeline
         uses: actions/checkout@v4
 
+      - name: Install Nextflow
+        uses: nf-core/setup-nextflow@v1
+
       - name: Extract Versions
         id: extract_versions
         run: |
           PIPELINE_VERSION=$(awk -F"'" '/manifest {/,/version/ {if(/version/) print $2}' nextflow.config)
           echo "PIPELINE_VERSION=${PIPELINE_VERSION}" >> $GITHUB_ENV
-
           echo "PIPELINE_VERSION_NO_DOTS=$(echo $PIPELINE_VERSION | tr -d '.')" >> $GITHUB_ENV
 
-          FASTP_VERSION=$(awk '/- bioconda::fastp=/ {gsub(/.*=/, "", $NF); gsub(/'\''/, "", $NF); print $NF}' modules/nf-core/fastp/environment.yml)
+          nextflow inspect -profile test_full_germline_ncbench_agilent . --outdir ./inspect >> inspect.json
+
+          FASTP_VERSION=$(jq -r '.processes[] | select(.name == "NFCORE_SAREK:SAREK:FASTP") | .container' inspect.json | awk -F':' '{print $NF}'  | cut -d "-" -f 1)
           echo "FASTP_VERSION=${FASTP_VERSION}" >> $GITHUB_ENV
 
-          BWA_VERSION=$(awk '/- bwa=/ {gsub(/.*=/, "", $NF); gsub(/'\''/, "", $NF); print $NF}' modules/nf-core/bwa/mem/environment.yml)
+          BWA_VERSION=$(jq -r '.processes[] | select(.name == "NFCORE_SAREK:SAREK:PREPARE_GENOME:BWAMEM1_INDEX") | .container' inspect.json | awk -F':' '{print $NF}'  | cut -d "-" -f 1)
           echo "BWA_VERSION=${BWA_VERSION}" >> $GITHUB_ENV
 
-          BQSR_VERSION=$(awk '/- bioconda::gatk4=/ {gsub(/.*=/, "", $NF); gsub(/'\''/, "", $NF); print $NF}' modules/nf-core/gatk4/baserecalibrator/environment.yml)
+          BQSR_VERSION=$(jq -r '.processes[] | select(.name == "NFCORE_SAREK:SAREK:BAM_BASERECALIBRATOR:GATK4_BASERECALIBRATO") | .container' inspect.json | awk -F':' '{print $NF}'  | cut -d "-" -f 1)
           echo "BQSR_VERSION=${BQSR_VERSION}" >> $GITHUB_ENV
 
-          DEEPVARIANT_VERSION=$(awk -F':' '/container/ {gsub(/"/, "", $2); print $2}' modules/nf-core/deepvariant/main.nf)
+          DEEPVARIANT_VERSION=$(jq -r '.processes[] | select(.name == "NFCORE_SAREK:SAREK:BAM_VARIANT_CALLING_GERMLINE_ALL:BAM_VARIANT_CALLING_DEEPVARIANT:DEEPVARIANT") | .container' inspect.json | awk -F':' '{print $NF}'  | cut -d "-" -f 1)
           echo "DEEPVARIANT_VERSION=${DEEPVARIANT_VERSION}" >> $GITHUB_ENV
 
-          FREEBAYES_VERSION=$(awk '/- bioconda::freebayes=/ {gsub(/.*=/, "", $NF); gsub(/'\''/, "", $NF); print $NF}' modules/nf-core/freebayes/environment.yml)
+          FREEBAYES_VERSION=$(jq -r '.processes[] | select(.name == "NFCORE_SAREK:SAREK:BAM_VARIANT_CALLING_SOMATIC_ALL:BAM_VARIANT_CALLING_FREEBAYES:FREEBAYES") | .container' inspect.json | awk -F':' '{print $NF}'  | cut -d "-" -f 1)
           echo "FREEBAYES_VERSION=${FREEBAYES_VERSION}" >> $GITHUB_ENV
 
-          HAPLOTYPECALLER_VERSION=$(awk '/- bioconda::gatk4=/ {gsub(/.*=/, "", $NF); gsub(/'\''/, "", $NF); print $NF}' modules/nf-core/gatk4/haplotypecaller/environment.yml)
+          HAPLOTYPECALLER_VERSION=$(jq -r '.processes[] | select(.name == "NFCORE_SAREK:SAREK:BAM_VARIANT_CALLING_GERMLINE_ALL:BAM_VARIANT_CALLING_HAPLOTYPECALLER:GATK4_HAPLOTYPECALLER") | .container' inspect.json | awk -F':' '{print $NF}'  | cut -d "-" -f 1)
           echo "HAPLOTYPECALLER_VERSION=${HAPLOTYPECALLER_VERSION}" >> $GITHUB_ENV
 
-          STRELKA_VERSION=$(awk '/- bioconda::strelka=/ {gsub(/.*=/, "", $NF); gsub(/'\''/, "", $NF); print $NF}' modules/nf-core/strelka/germline/environment.yml)
+          STRELKA_VERSION=$(jq -r '.processes[] | select(.name == "NFCORE_SAREK:SAREK:BAM_VARIANT_CALLING_GERMLINE_ALL:BAM_VARIANT_CALLING_SINGLE_STRELKA:STRELKA_SINGLE") | .container' inspect.json | awk -F':' '{print $NF}'  | cut -d "-" -f 1)
           echo "STRELKA_VERSION=${STRELKA_VERSION}" >> $GITHUB_ENV
 
       - name: Download files from AWS
