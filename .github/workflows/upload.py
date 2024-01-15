@@ -3,7 +3,7 @@ import requests
 import os
 import json
 
-'''
+"""
 This scripts collects all variant calling files and uploads them to Zenodo.
 1. A new Zenodo entry is created
 2. All files are uploaded
@@ -12,7 +12,7 @@ This scripts collects all variant calling files and uploads them to Zenodo.
 
 ATTENTION: Use sandbox links during development! They are set in each affected line as comment.
             If you need to use the production Zenodo links, turn off publishing (see bottom).
-'''
+"""
 
 headers = {"Content-Type": "application/json"}
 access_token = os.environ["ACCESS_TOKEN"]
@@ -24,11 +24,11 @@ pipeline_version = os.environ["PIPELINE_VERSION"]
 url = f"https://sandbox.zenodo.org/api/deposit/depositions"
 
 # Create empty upload
-r = requests.post(url, params=params, json={}, headers=headers)
-
-if not r.ok:
-    except requests.exceptions.RequestException as e:
-        raise SystemExit(e)
+try:
+    r = requests.post(url, params=params, json={}, headers=headers)
+    r.raise_for_status()
+except requests.exceptions.RequestException as e:
+    raise SystemExit(e)
 
 logging.info("Create empty upload:\n")
 logging.info(r.json())
@@ -92,13 +92,12 @@ logging.info(r.json())
 
 # TODO only uncomment once everything works, replace sandbox link
 # Publish this
-r = requests.post(
-    "https://sandbox.zenodo.org/api/deposit/depositions/%s/actions/publish" % deposition_id, params=params
-)
-
-if not r.ok:
-    except requests.exceptions.RequestException as e:
-        raise SystemExit(e)
-
+try:
+    r = requests.post(
+        "https://sandbox.zenodo.org/api/deposit/depositions/%s/actions/publish" % deposition_id, params=params
+    )
+    r.raise_for_status()
+except requests.exceptions.RequestException as e:
+    raise SystemExit(e)
 logging.info("Publish data status code: ")
 logging.info(r.status_code)
