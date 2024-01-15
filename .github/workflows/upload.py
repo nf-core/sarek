@@ -14,7 +14,7 @@ url =  f"https://sandbox.zenodo.org/api/deposit/depositions"
 # Create empty upload
 r = requests.post(url, params=params, json={}, headers=headers)
 
-print("Create empty upload:\n")
+print("Create empty upload:\n" )
 print(r.json())
 print(r.status_code)
 
@@ -28,22 +28,21 @@ with open("deposition_id.txt", 'w') as f:
 bucket_url = r.json()["links"]["bucket"]
 
 filenames = [
-    "NA12878_75M.deepvariant.vcf.gz",
-    #"freebayes/NA12878_75M/NA12878_75M.freebayes.vcf.gz",
-    #"haplotypecaller/NA12878_75M/NA12878_75M.haplotypecaller.filtered.vcf.gz",
-    #"strelka/NA12878_75M/NA12878_75M.strelka.variants.vcf.gz",
-    #"deepvariant/NA12878_200M/NA12878_200M.deepvariant.vcf.gz",
-    #"freebayes/NA12878_200M/NA12878_200M.freebayes.vcf.gz",
-    #"haplotypecaller/NA12878_200M/NA12878_200M.haplotypecaller.filtered.vcf.gz",
-    #"strelka/NA12878_200M/NA12878_200M.strelka.variants.vcf.gz",
+    "deepvariant/NA12878_75M/NA12878_75M.deepvariant.vcf.gz",
+    "freebayes/NA12878_75M/NA12878_75M.freebayes.vcf.gz",
+    "haplotypecaller/NA12878_75M/NA12878_75M.haplotypecaller.filtered.vcf.gz",
+    "strelka/NA12878_75M/NA12878_75M.strelka.variants.vcf.gz",
+    "deepvariant/NA12878_200M/NA12878_200M.deepvariant.vcf.gz",
+    "freebayes/NA12878_200M/NA12878_200M.freebayes.vcf.gz",
+    "haplotypecaller/NA12878_200M/NA12878_200M.haplotypecaller.filtered.vcf.gz",
+    "strelka/NA12878_200M/NA12878_200M.strelka.variants.vcf.gz",
 ]
 
 for file in filenames:
-    path = "./variant_calling/deepvariant/NA12878_75M/%s" % file
+    path = "./variant_calling/%s" % file
     with open(path, "rb") as fp:
-        print("%s/%s" % (bucket_url, file))
         r = requests.put(
-            "%s/%s" % (bucket_url, file),
+            "%s/%s" % (bucket_url, os.path.basename(file)),
             data=fp,
             params=params,
         )
@@ -54,7 +53,7 @@ title = 'WES benchmark results nf-core/sarek v{}'.format(pipeline_version)
 data = {
     "metadata": {
         "title": title,
-        "upload_type": "data",
+        "upload_type": "dataset",
         "description": "Variant calling results on benchmarking datasets produced with nf-core/sarek",
         "creators": [
             {"name": "Garcia, Maxime Ulysse", "affiliation": "Seqera, Barcelona"},
