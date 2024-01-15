@@ -28,19 +28,20 @@ with open("deposition_id.txt", 'w') as f:
 bucket_url = r.json()["links"]["bucket"]
 
 filenames = [
-    "deepvariant/NA12878_75M/NA12878_75M.deepvariant.vcf.gz",
-    "freebayes/NA12878_75M/NA12878_75M.freebayes.vcf.gz",
-    "haplotypecaller/NA12878_75M/NA12878_75M.haplotypecaller.filtered.vcf.gz",
-    "strelka/NA12878_75M/NA12878_75M.strelka.variants.vcf.gz",
-    "deepvariant/NA12878_200M/NA12878_200M.deepvariant.vcf.gz",
-    "freebayes/NA12878_200M/NA12878_200M.freebayes.vcf.gz",
-    "haplotypecaller/NA12878_200M/NA12878_200M.haplotypecaller.filtered.vcf.gz",
-    "strelka/NA12878_200M/NA12878_200M.strelka.variants.vcf.gz",
+    "NA12878_75M.deepvariant.vcf.gz",
+    #"freebayes/NA12878_75M/NA12878_75M.freebayes.vcf.gz",
+    #"haplotypecaller/NA12878_75M/NA12878_75M.haplotypecaller.filtered.vcf.gz",
+    #"strelka/NA12878_75M/NA12878_75M.strelka.variants.vcf.gz",
+    #"deepvariant/NA12878_200M/NA12878_200M.deepvariant.vcf.gz",
+    #"freebayes/NA12878_200M/NA12878_200M.freebayes.vcf.gz",
+    #"haplotypecaller/NA12878_200M/NA12878_200M.haplotypecaller.filtered.vcf.gz",
+    #"strelka/NA12878_200M/NA12878_200M.strelka.variants.vcf.gz",
 ]
 
 for file in filenames:
-    path = "./variant_calling/%s" % file
+    path = "./variant_calling/deepvariant/NA12878_75M/%s" % file
     with open(path, "rb") as fp:
+        print("%s/%s" % (bucket_url, file))
         r = requests.put(
             "%s/%s" % (bucket_url, file),
             data=fp,
