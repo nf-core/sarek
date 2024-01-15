@@ -34,7 +34,6 @@ logging.info("Create empty upload:\n")
 logging.info(r.json())
 logging.info(r.status_code)
 
-print("Create empty upload:\n
 deposition_id = r.json()["id"]
 
 ## Store deposition ID
