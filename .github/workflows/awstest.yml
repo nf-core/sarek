@@ -34,36 +34,44 @@ jobs:
   trigger-test:
     name: launch
     runs-on: ubuntu-latest
+    if: ${{ github.repository == 'nf-core/sarek' }}
     strategy:
       fail-fast: false
       matrix:
         include:
           - profile: test_aws
-            enabled: ${{ ( github.event_name != 'workflow_dispatch' || ( inputs.test && inputs.aws ) ) }}
+            test: test
+            cloud: aws
             compute_env: TOWER_COMPUTE_ENV
             workdir: TOWER_BUCKET_AWS
           - profile: test_azure
-            enabled: ${{ ( github.event_name != 'workflow_dispatch' || ( inputs.test && inputs.azure ) ) }}
+            test: test
+            cloud: azure
             compute_env: TOWER_CE_AZURE_CPU
             workdir: TOWER_BUCKET_AZURE
           - profile: test_full_aws
-            enabled: ${{ ( github.event_name != 'workflow_dispatch' || ( inputs.somatic && inputs.aws ) ) }}
+            test: somatic
+            cloud: aws
             compute_env: TOWER_COMPUTE_ENV
             workdir: TOWER_BUCKET_AWS
           - profile: test_full_azure
-            enabled: ${{ ( inputs.somatic && inputs.azure ) }}
+            test: somatic
+            cloud: azure
             compute_env: TOWER_CE_AZURE_CPU
             workdir: TOWER_BUCKET_AZURE
           - profile: test_full_germline_aws
-            enabled: ${{ ( inputs.germline && inputs.aws ) }}
+            test: germline
+            cloud: aws
             compute_env: TOWER_COMPUTE_ENV
             workdir: TOWER_BUCKET_AWS
           - profile: test_full_germline_azure
-            enabled: ${{ ( inputs.germline && inputs.azure ) }}
+            test: germline
+            cloud: azure
             compute_env: TOWER_CE_AZURE_CPU
             workdir: TOWER_BUCKET_AZURE
           - profile: test_full_germline_ncbench_agilent
-            enabled: ${{ ( inputs.germline_ncbench_agilent && inputs.aws ) }}
+            test: germline_ncbench_agilent
+            cloud: aws
             compute_env: TOWER_COMPUTE_ENV
             workdir: TOWER_BUCKET_AWS
 
@@ -72,7 +80,7 @@ jobs:
       - name: Launch
         uses: seqeralabs/action-tower-launch@v2
         # If workflow_dispatch AND matrix.enabled, plus repository protection
-        if: ( github.event_name != 'workflow_dispatch' || ${{ matrix.enabled }} ) && ${{ github.repository == 'nf-core/sarek' }}
+        if: ( !contains(inputs[matrix.test], 'false') && !contains(inputs[matrix.cloud], 'false') )
         with:
           run_name: sarek_${{ matrix.profile }}
           workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
