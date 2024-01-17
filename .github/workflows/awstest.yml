@@ -39,71 +39,58 @@ jobs:
       matrix:
         include:
           - profile: test_aws
-            enabled: ${{ ( github.repository == 'nf-core/sarek' ) && ( github.event_name != 'workflow_dispatch' || ( inputs.test && inputs.aws ) ) }}
+            enabled: ${{ ( github.event_name != 'workflow_dispatch' || ( inputs.test && inputs.aws ) ) }}
+            compute_env: TOWER_COMPUTE_ENV
+            workdir: TOWER_BUCKET_AWS
           - profile: test_azure
-            enabled: ${{ ( github.repository == 'nf-core/sarek' ) && ( github.event_name != 'workflow_dispatch' || ( inputs.test && inputs.azure ) ) }}
+            enabled: ${{ ( github.event_name != 'workflow_dispatch' || ( inputs.test && inputs.azure ) ) }}
+            compute_env: TOWER_CE_AZURE_CPU
+            workdir: TOWER_BUCKET_AZURE
           - profile: test_full_aws
-            enabled: ${{ ( github.repository == 'nf-core/sarek' ) && ( github.event_name != 'workflow_dispatch' || ( inputs.somatic && inputs.aws ) ) }}
+            enabled: ${{ ( github.event_name != 'workflow_dispatch' || ( inputs.somatic && inputs.aws ) ) }}
+            compute_env: TOWER_COMPUTE_ENV
+            workdir: TOWER_BUCKET_AWS
           - profile: test_full_azure
-            enabled: ${{ ( github.repository == 'nf-core/sarek' ) && ( github.event_name != 'workflow_dispatch' || ( inputs.somatic && inputs.azure ) ) }}
+            enabled: ${{ ( github.event_name != 'workflow_dispatch' || ( inputs.somatic && inputs.azure ) ) }}
+            compute_env: TOWER_CE_AZURE_CPU
+            workdir: TOWER_BUCKET_AZURE
           - profile: test_full_germline_aws
-            enabled: ${{ ( github.repository == 'nf-core/sarek' ) && ( github.event_name != 'workflow_dispatch' || ( inputs.germline && inputs.aws ) ) }}
+            enabled: ${{ ( github.event_name != 'workflow_dispatch' || ( inputs.germline && inputs.aws ) ) }}
+            compute_env: TOWER_COMPUTE_ENV
+            workdir: TOWER_BUCKET_AWS
           - profile: test_full_germline_azure
-            enabled: ${{ ( github.repository == 'nf-core/sarek' ) && ( github.event_name != 'workflow_dispatch' || ( inputs.germline && inputs.azure ) ) }}
-          - profile: test_full_germline_ncbench_agilent_aws
-            enabled: ${{ ( github.repository == 'nf-core/sarek' ) && ( github.event_name != 'workflow_dispatch' || ( inputs.germline_ncbench_agilent && inputs.aws ) ) }}
+            enabled: ${{ ( github.event_name != 'workflow_dispatch' || ( inputs.germline && inputs.azure ) ) }}
+            compute_env: TOWER_CE_AZURE_CPU
+            workdir: TOWER_BUCKET_AZURE
+          - profile: test_full_germline_ncbench_agilent
+            enabled: ${{ ( github.event_name != 'workflow_dispatch' || ( inputs.germline_ncbench_agilent && inputs.aws ) ) }}
+            compute_env: TOWER_COMPUTE_ENV
+            workdir: TOWER_BUCKET_AWS
 
     steps:
       # Launch workflow on AWS Batch
-      - name: AWS Launch
+      - name: Launch
         uses: seqeralabs/action-tower-launch@v2
-        if: ${{ matrix.enabled && ( github.event_name != 'workflow_dispatch' || inputs.aws ) }}
+        if: ${{ matrix.enabled }}
         with:
           run_name: sarek_${{ matrix.profile }}
           workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
-          compute_env: ${{ secrets.TOWER_COMPUTE_ENV }}
+          compute_env: ${{ secrets[matrix.compute_env] }}
           revision: ${{ github.sha }}
-          workdir: s3://${{ secrets.AWS_S3_BUCKET }}/work/sarek/work-${{ github.sha }}/${{ matrix.profile }}
+          workdir: ${{ secrets[matrix.workdir] }}/work/sarek/work-${{ github.sha }}/${{ matrix.profile }}
           parameters: |
             {
               "hook_url": "${{ secrets.MEGATESTS_ALERTS_SLACK_HOOK_URL }}",
-              "outdir": "s3://${{ secrets.AWS_S3_BUCKET }}/sarek/results-${{ github.sha }}/${{ matrix.profile }}/"
+              "outdir": "${{ secrets[matrix.workdir] }}/sarek/results-${{ github.sha }}/${{ matrix.profile }}/"
             }
           profiles: ${{ matrix.profile }}
 
       - uses: actions/upload-artifact@v3
-        name: Save AWS Logs
+        name: Save Logs
         if: success() || failure()
         with:
-          name: tower-aws-${{ matrix.profile }}-log
-          path: |
-            tower_action_*.log
-            tower_action_*.json
-
-      # Launch workflow using Tower CLI tool action
-      - name: Azure Launch
-        uses: seqeralabs/action-tower-launch@v2
-        if: ${{ matrix.enabled && ( github.event_name != 'workflow_dispatch' || inputs.azure ) }}
-        with:
-          run_name: sarek_${{ matrix.profile }}
-          workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
-          access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
-          compute_env: ${{ secrets.TOWER_CE_AZURE_CPU }}
-          revision: ${{ github.sha }}
-          workdir: ${{ secrets.TOWER_BUCKET_AZURE}}/sarek/work-${{ github.sha }}/${{ matrix.profile }}
-          parameters: |
-            {
-              "hook_url": "${{ secrets.MEGATESTS_ALERTS_SLACK_HOOK_URL }}",
-              "outdir": "${{ secrets.TOWER_BUCKET_AZURE }}/sarek/results-${{ github.sha }}/${{ matrix.profile }}/"
-            }
-          profiles: ${{ matrix.profile }}
-
-      - uses: actions/upload-artifact@v3
-        name: Save Azure Logs
-        if: success() || failure()
-        with:
-          name: tower-azure-${{ matrix.profile }}-log
+          name: tower-${{ matrix.profile }}-log
           path: |
             tower_action_*.log
             tower_action_*.json
