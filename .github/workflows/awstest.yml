@@ -71,7 +71,7 @@ jobs:
       # Launch workflow on AWS Batch
       - name: Launch
         uses: seqeralabs/action-tower-launch@v2
-        if: ${{ matrix.enabled }}
+        if: ${{ matrix.enabled }} && ${{ github.repository == 'nf-core/sarek'}}
         with:
           run_name: sarek_${{ matrix.profile }}
           workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
