@@ -1,0 +1,106 @@
+name: nf-core cloud test
+
+on:
+  release:
+    types: [created]
+  workflow_dispatch:
+    inputs:
+      test:
+        description: "-profile test (smaller)"
+        type: boolean
+        default: true
+      somatic:
+        description: "Somatic full test"
+        type: boolean
+        default: false
+      germline:
+        description: "Germline full test"
+        type: boolean
+        default: false
+      germline_ncbench_agilent:
+        description: "Germline Agilent NCBench test"
+        type: boolean
+        default: false
+      aws:
+        description: "AWS Batch"
+        type: boolean
+        default: true
+      azure:
+        description: "Azure Batch"
+        type: boolean
+        default: true
+
+jobs:
+  trigger-test:
+    name: launch
+    runs-on: ubuntu-latest
+    if: ${{ github.repository == 'nf-core/sarek' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - profile: test_aws
+            test: test
+            cloud: aws
+            compute_env: TOWER_COMPUTE_ENV
+            workdir: TOWER_BUCKET_AWS
+          - profile: test_azure
+            test: test
+            cloud: azure
+            compute_env: TOWER_CE_AZURE_CPU
+            workdir: TOWER_BUCKET_AZURE
+          - profile: test_full_aws
+            test: somatic
+            cloud: aws
+            compute_env: TOWER_COMPUTE_ENV
+            workdir: TOWER_BUCKET_AWS
+          - profile: test_full_azure
+            test: somatic
+            cloud: azure
+            compute_env: TOWER_CE_AZURE_CPU
+            workdir: TOWER_BUCKET_AZURE
+          - profile: test_full_germline_aws
+            test: germline
+            cloud: aws
+            compute_env: TOWER_COMPUTE_ENV
+            workdir: TOWER_BUCKET_AWS
+          - profile: test_full_germline_azure
+            test: germline
+            cloud: azure
+            compute_env: TOWER_CE_AZURE_CPU
+            workdir: TOWER_BUCKET_AZURE
+          - profile: test_full_germline_ncbench_agilent
+            test: germline_ncbench_agilent
+            cloud: aws
+            compute_env: TOWER_COMPUTE_ENV
+            workdir: TOWER_BUCKET_AWS
+
+    steps:
+      # Launch workflow on AWS Batch
+      - name: Launch
+        uses: seqeralabs/action-tower-launch@v2
+        # If inputs item exists (i.e. workflow_dispatch), then we find matrix.test and check it is false
+        # If is false, we negate and run the job
+        if: ( !contains(inputs[matrix.test], 'false') && !contains(inputs[matrix.cloud], 'false') )
+        with:
+          run_name: sarek_${{ matrix.profile }}
+          workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
+          access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
+          compute_env: ${{ secrets[matrix.compute_env] }}
+          revision: ${{ github.sha }}
+          workdir: ${{ secrets[matrix.workdir] }}/work/sarek/work-${{ github.sha }}/${{ matrix.profile }}
+          parameters: |
+            {
+              "hook_url": "${{ secrets.MEGATESTS_ALERTS_SLACK_HOOK_URL }}",
+              "outdir": "${{ secrets[matrix.workdir] }}/sarek/results-${{ github.sha }}/${{ matrix.profile }}/"
+            }
+          profiles: ${{ matrix.profile }}
+
+      - uses: actions/upload-artifact@v3
+        name: Save Logs
+        if: success() || failure()
+        with:
+          name: tower-${{ matrix.profile }}-log
+          path: |
+            tower_action_*.log
+            tower_action_*.json
