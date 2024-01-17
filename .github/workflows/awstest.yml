@@ -31,8 +31,8 @@ on:
         default: true
 
 jobs:
-  trigger-profile-test:
-    name: Run AWS tests
+  trigger-test:
+    name: launch
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
