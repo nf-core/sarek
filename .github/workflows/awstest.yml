@@ -79,7 +79,8 @@ jobs:
       # Launch workflow on AWS Batch
       - name: Launch
         uses: seqeralabs/action-tower-launch@v2
-        # If workflow_dispatch AND matrix.enabled, plus repository protection
+        # If inputs item exists (i.e. workflow_dispatch), then we find matrix.test and check it is false
+        # If is false, we negate and run the job
         if: ( !contains(inputs[matrix.test], 'false') && !contains(inputs[matrix.cloud], 'false') )
         with:
           run_name: sarek_${{ matrix.profile }}
