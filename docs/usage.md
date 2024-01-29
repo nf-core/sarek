@@ -364,23 +364,23 @@ They are loaded in sequence, so later profiles can overwrite earlier profiles.
 
 If `-profile` is not specified, the pipeline will run locally and expect all software to be installed and available on the `PATH`. This is _not_ recommended, since it can lead to different results on different machines dependent on the computer enviroment.
 
-- `test`
-  - A profile with a complete configuration for automated testing
-  - Includes links to test data so needs no other parameters
-- `docker`
-  - A generic configuration profile to be used with [Docker](https://docker.com/)
-- `singularity`
-  - A generic configuration profile to be used with [Singularity](https://sylabs.io/docs/)
-- `podman`
-  - A generic configuration profile to be used with [Podman](https://podman.io/)
-- `shifter`
-  - A generic configuration profile to be used with [Shifter](https://nersc.gitlab.io/development/shifter/how-to-use/)
-- `charliecloud`
-  - A generic configuration profile to be used with [Charliecloud](https://hpc.github.io/charliecloud/)
-- `apptainer`
-  - A generic configuration profile to be used with [Apptainer](https://apptainer.org/)
-- `conda`
-  - A generic configuration profile to be used with [Conda](https://conda.io/docs/). Please only use Conda as a last resort i.e. when it's not possible to run the pipeline with Docker, Singularity, Podman, Shifter, Charliecloud, or Apptainer.
+-   `test`
+    -   A profile with a complete configuration for automated testing
+    -   Includes links to test data so needs no other parameters
+-   `docker`
+    -   A generic configuration profile to be used with [Docker](https://docker.com/)
+-   `singularity`
+    -   A generic configuration profile to be used with [Singularity](https://sylabs.io/docs/)
+-   `podman`
+    -   A generic configuration profile to be used with [Podman](https://podman.io/)
+-   `shifter`
+    -   A generic configuration profile to be used with [Shifter](https://nersc.gitlab.io/development/shifter/how-to-use/)
+-   `charliecloud`
+    -   A generic configuration profile to be used with [Charliecloud](https://hpc.github.io/charliecloud/)
+-   `apptainer`
+    -   A generic configuration profile to be used with [Apptainer](https://apptainer.org/)
+-   `conda`
+    -   A generic configuration profile to be used with [Conda](https://conda.io/docs/). Please only use Conda as a last resort i.e. when it's not possible to run the pipeline with Docker, Singularity, Podman, Shifter, Charliecloud, or Apptainer.
 
 ## `-resume`
 
@@ -582,11 +582,11 @@ ASCAT runs out of the box on whole genome sequencing data using iGenomes resourc
 
 Please note that:
 
-- Row names (for GC and RT correction files) should be `${chr}_${position}` (there is no SNP/probe ID for HTS data).
-- All row names in GC and RT correction files should also appear in the loci files
-- Loci and allele files must contain the same set of SNPs
-- ASCAT developers strongly recommend using a BED file for WES/TS data. This prevents considering SNPs covered by off-target reads that would add noise to log/BAF tracks.
-- The total number of GC correction loci in a sample must be at least 10% of the number of loci with logR values. If the number of GC correction loci is too small compared to the total number of loci, ASCAT will throw an error.
+-   Row names (for GC and RT correction files) should be `${chr}_${position}` (there is no SNP/probe ID for HTS data).
+-   All row names in GC and RT correction files should also appear in the loci files
+-   Loci and allele files must contain the same set of SNPs
+-   ASCAT developers strongly recommend using a BED file for WES/TS data. This prevents considering SNPs covered by off-target reads that would add noise to log/BAF tracks.
+-   The total number of GC correction loci in a sample must be at least 10% of the number of loci with logR values. If the number of GC correction loci is too small compared to the total number of loci, ASCAT will throw an error.
 
 From 'Reference files' https://github.com/VanLoo-lab/ascat:
 
@@ -683,10 +683,10 @@ write.table(out, args[3], col.names=T, row.names=F, quote=F, sep="\t")
 
 ```json
 {
-  "ascat_alleles": "/path/to/battenberg_alleles_on_target_hg38.zip",
-  "ascat_loci": "/path/to/battenberg_loci_on_target_hg38.zip",
-  "ascat_loci_gc": "/path/to/GC_G1000_on_target_hg38.zip",
-  "ascat_loci_rt": "/path/to/RT_G1000_on_target_hg38.zip"
+    "ascat_alleles": "/path/to/battenberg_alleles_on_target_hg38.zip",
+    "ascat_loci": "/path/to/battenberg_loci_on_target_hg38.zip",
+    "ascat_loci_gc": "/path/to/GC_G1000_on_target_hg38.zip",
+    "ascat_loci_rt": "/path/to/RT_G1000_on_target_hg38.zip"
 }
 ```
 
@@ -886,11 +886,11 @@ Both SnpEff and VEP will figure out internally the path towards the specific cac
 By default all is specified in the [igenomes.config](https://github.com/nf-core/sarek/blob/master/conf/igenomes.config) file.
 Explanation can be found for all params in the documentation:
 
-- [snpeff_db](https://nf-co.re/sarek/parameters#snpeff_db)
-- [snpeff_genome](https://nf-co.re/sarek/parameters#snpeff_genome)
-- [vep_genome](https://nf-co.re/sarek/parameters#vep_genome)
-- [vep_species](https://nf-co.re/sarek/parameters#vep_species)
-- [vep_cache_version](https://nf-co.re/sarek/parameters#vep_cache_version)
+-   [snpeff_db](https://nf-co.re/sarek/parameters#snpeff_db)
+-   [snpeff_genome](https://nf-co.re/sarek/parameters#snpeff_genome)
+-   [vep_genome](https://nf-co.re/sarek/parameters#vep_genome)
+-   [vep_species](https://nf-co.re/sarek/parameters#vep_species)
+-   [vep_cache_version](https://nf-co.re/sarek/parameters#vep_cache_version)
 
 With the previous example of `GRCh38`, these are the values that were used for these params:
 
@@ -1017,17 +1017,17 @@ Overwritting the container declaration is then possible to accomodate for the ne
 
 Enable with `--vep_dbnsfp`. The following parameters are mandatory:
 
-- `--dbnsfp`, to specify the path to the dbNSFP processed file.
-- `--dbnsfp_tbi`, to specify the path to the dbNSFP tabix indexed file.
+-   `--dbnsfp`, to specify the path to the dbNSFP processed file.
+-   `--dbnsfp_tbi`, to specify the path to the dbNSFP tabix indexed file.
 
 The following parameters are optionnal:
 
-- `--dbnsfp_consequence`, to filter/limit outputs to a specific effect of the variant.
-  - The set of consequence terms is defined by the Sequence Ontology and an overview of those used in VEP can be found [here](https://www.ensembl.org/info/genome/variation/prediction/predicted_data.html).
-  - If one wants to filter using several consequences, then separate those by using '&' (i.e. `--dbnsfp_consequence '3_prime_UTR_variant&intron_variant'`.",
-- `--dbnsfp_fields`, to retrieve individual values from the dbNSFP file.
-  - The values correspond to the name of the columns in the dbNSFP file and are separated by comma.
-  - The column names might differ between the different dbNSFP versions. Please check the Readme.txt file, which is provided with the dbNSFP file, to obtain the correct column names. The Readme file contains also a short description of the provided values and the version of the tools used to generate them.
+-   `--dbnsfp_consequence`, to filter/limit outputs to a specific effect of the variant.
+    -   The set of consequence terms is defined by the Sequence Ontology and an overview of those used in VEP can be found [here](https://www.ensembl.org/info/genome/variation/prediction/predicted_data.html).
+    -   If one wants to filter using several consequences, then separate those by using '&' (i.e. `--dbnsfp_consequence '3_prime_UTR_variant&intron_variant'`.",
+-   `--dbnsfp_fields`, to retrieve individual values from the dbNSFP file.
+    -   The values correspond to the name of the columns in the dbNSFP file and are separated by comma.
+    -   The column names might differ between the different dbNSFP versions. Please check the Readme.txt file, which is provided with the dbNSFP file, to obtain the correct column names. The Readme file contains also a short description of the provided values and the version of the tools used to generate them.
 
 For more details, see [here](https://www.ensembl.org/info/docs/tools/vep/script/vep_plugins.html#dbnsfp).
 
@@ -1041,10 +1041,10 @@ For more details, see [here](https://github.com/konradjk/loftee).
 
 Enable with `--vep_spliceai`. The following parameters are mandatory:
 
-- `--spliceai_snv`, to specify the path to SpliceAI raw scores snv file.
-- `--spliceai_snv_tbi`, to specify the path to SpliceAI raw scores snv tabix indexed file.
-- `--spliceai_indel`, to specify the path to SpliceAI raw scores indel file.
-- `--spliceai_indel_tbi`, to specify the path to SpliceAI raw scores indel tabix indexed file.
+-   `--spliceai_snv`, to specify the path to SpliceAI raw scores snv file.
+-   `--spliceai_snv_tbi`, to specify the path to SpliceAI raw scores snv tabix indexed file.
+-   `--spliceai_indel`, to specify the path to SpliceAI raw scores indel file.
+-   `--spliceai_indel_tbi`, to specify the path to SpliceAI raw scores indel tabix indexed file.
 
 For more details, see [here](https://www.ensembl.org/info/docs/tools/vep/script/vep_plugins.html#spliceai).
 
@@ -1058,9 +1058,9 @@ For more details, see [here](https://www.ensembl.org/info/docs/tools/vep/script/
 
 It is possible to annotate a VCF file with a custom annotation file using [BCFTOOLS Annotate](https://samtools.github.io/bcftools/bcftools.html#annotate). This can be done by setting adding bcfann to the tools list and setting the following parameters:
 
-- annotations: path to vcf annotation file
-- annotations_index: path to vcf annotation index file
-- header_lines: path to header lines file
+-   annotations: path to vcf annotation file
+-   annotations_index: path to vcf annotation index file
+-   header_lines: path to header lines file
 
 ## MultiQC related issues
 
