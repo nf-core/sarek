@@ -14,8 +14,7 @@ class WorkflowSarek {
 
         genomeExistsError(params, log)
 
-
-        if (!params.fasta) {
+        if (!params.fasta && params.step == 'annotate') {
             Nextflow.error "Genome fasta file not specified with e.g. '--fasta genome.fa' or via a detectable config file."
         }
     }
@@ -97,7 +96,6 @@ class WorkflowSarek {
         //meta["tool_citations"] = toolCitationText(params).replaceAll(", \\.", ".").replaceAll("\\. \\.", ".").replaceAll(", \\.", ".")
         //meta["tool_bibliography"] = toolBibliographyText(params)
 
-
         def methods_text = mqc_methods_yaml.text
 
         def engine =  new SimpleTemplateEngine()
@@ -118,5 +116,34 @@ class WorkflowSarek {
                 "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
             Nextflow.error(error_string)
         }
+    }
+
+    public static String retrieveInput(params, log){
+        def input = null
+        if (!params.input && !params.build_only_index) {
+            switch (params.step) {
+                case 'mapping':                 Nextflow.error("Can't start with step $params.step without samplesheet")
+                                                break
+                case 'markduplicates':          log.warn("Using file ${params.outdir}/csv/mapped.csv");
+                                                input = params.outdir + "/csv/mapped.csv"
+                                                break
+                case 'prepare_recalibration':   log.warn("Using file ${params.outdir}/csv/markduplicates_no_table.csv");
+                                                input = params.outdir + "/csv/markduplicates_no_table.csv"
+                                                break
+                case 'recalibrate':             log.warn("Using file ${params.outdir}/csv/markduplicates.csv");
+                                                input = params.outdir + "/csv/markduplicates.csv"
+                                                break
+                case 'variant_calling':         log.warn("Using file ${params.outdir}/csv/recalibrated.csv");
+                                                input = params.outdir + "/csv/recalibrated.csv"
+                                                break
+                // case 'controlfreec':         csv_file = file("${params.outdir}/variant_calling/csv/control-freec_mpileup.csv", checkIfExists: true); break
+                case 'annotate':                log.warn("Using file ${params.outdir}/csv/variantcalled.csv");
+                                                input = params.outdir + "/csv/variantcalled.csv"
+                                                break
+                default:                        log.warn("Please provide an input samplesheet to the pipeline e.g. '--input samplesheet.csv'")
+                                                Nextflow.error("Unknown step $params.step")
+            }
+        }
+        return input
     }
 }
