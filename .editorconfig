@@ -8,7 +8,7 @@ trim_trailing_whitespace = true
 indent_size = 4
 indent_style = space
 
-[*.{md,yml,yaml,html,css,scss,js}]
+[*.{yml,yaml,html,css,scss,js}]
 indent_size = 2
 
 # These files are edited and tested upstream in nf-core/modules
@@ -27,6 +27,6 @@ indent_size = unset
 [README.md]
 indent_style = unset
 
-# ignore python
-[*.{py}]
+# ignore python and markdown (is taken care off by prettier)
+[*.{py,md}]
 indent_style = unset
