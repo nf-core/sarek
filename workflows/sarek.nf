@@ -506,13 +506,13 @@ workflow SAREK {
 
         // STEP 1: MAPPING READS TO REFERENCE GENOME
         // First, we must calculate number of lanes for each sample (meta.n_fastq)
-        // This is needed to group reads from the same sample together using groupKey to avoid stalling the workflow 
+        // This is needed to group reads from the same sample together using groupKey to avoid stalling the workflow
         // when reads from different samples are mixed together
-        reads_for_alignment.map { meta, reads -> 
-                [ meta.subMap('patient', 'sample', 'sex', 'status'), reads ]   
+        reads_for_alignment.map { meta, reads ->
+                [ meta.subMap('patient', 'sample', 'sex', 'status'), reads ]
             }
             .groupTuple()
-            .map { meta, reads -> 
+            .map { meta, reads ->
                 meta + [ n_fastq: reads.size() ] // We can drop the FASTQ files now that we know how many there are
             }
             .set { reads_grouping_key }
@@ -1155,6 +1155,12 @@ workflow.onComplete {
     if (params.hook_url) NfcoreTemplate.IM_notification(workflow, params, summary_params, projectDir, log)
 }
 
+workflow.onError {
+    if (workflow.errorReport.contains("Process requirement exceeds available memory")) {
+        println("🛑 Default resources exceed availability 🛑 ")
+        println("💡 See here on how to configure pipeline: https://nf-co.re/docs/usage/configuration#tuning-workflow-resources 💡")
+    }
+}
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
