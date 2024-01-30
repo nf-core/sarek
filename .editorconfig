@@ -28,5 +28,5 @@ indent_size = unset
 indent_style = unset
 
 # ignore python
-[*.{py}]
+[*.{py,md}]
 indent_style = unset

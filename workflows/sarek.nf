@@ -230,10 +230,10 @@ include { MULTIQC                                     } from '../modules/nf-core
 
 workflow SAREK {
 
-	// Parse samplesheet
-	// Set input, can either be from --input or from automatic retrieval in WorkflowSarek.groovy
+    // Parse samplesheet
+    // Set input, can either be from --input or from automatic retrieval in WorkflowSarek.groovy
     ch_from_samplesheet = params.build_only_index ? Channel.empty() : params.input ? Channel.fromSamplesheet("input") : Channel.fromSamplesheet("input_restart")
-	SAMPLESHEET_TO_CHANNEL(
+    SAMPLESHEET_TO_CHANNEL(
         ch_from_samplesheet,
         params.aligner,
         params.ascat_alleles,
@@ -263,7 +263,7 @@ workflow SAREK {
         params.umi_read_structure,
         params.wes)
 
-	input_sample = SAMPLESHEET_TO_CHANNEL.out.input_sample
+    input_sample = SAMPLESHEET_TO_CHANNEL.out.input_sample
 
     // MULTIQC
     ch_multiqc_config                     = Channel.fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
