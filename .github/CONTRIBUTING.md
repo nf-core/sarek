@@ -53,9 +53,9 @@ These tests are run both with the latest available version of `Nextflow` and als
 
 :warning: Only in the unlikely and regretful event of a release happening with a bug.
 
-- On your own fork, make a new branch `patch` based on `upstream/master`.
-- Fix the bug, and bump version (X.Y.Z+1).
-- A PR should be made on `master` from patch to directly this particular bug.
+-   On your own fork, make a new branch `patch` based on `upstream/master`.
+-   Fix the bug, and bump version (X.Y.Z+1).
+-   A PR should be made on `master` from patch to directly this particular bug.
 
 ## Getting help
 
@@ -96,8 +96,8 @@ The process resources can be passed on to the tool dynamically within the proces
 
 Please use the following naming schemes, to make it easy to understand what is going where.
 
-- initial process channel: `ch_output_from_<process>`
-- intermediate and terminal channels: `ch_<previousprocess>_for_<nextprocess>`
+-   initial process channel: `ch_output_from_<process>`
+-   intermediate and terminal channels: `ch_<previousprocess>_for_<nextprocess>`
 
 ### Nextflow version bumping
 
@@ -113,11 +113,11 @@ This repo includes a devcontainer configuration which will create a GitHub Codes
 
 To get started:
 
-- Open the repo in [Codespaces](https://github.com/nf-core/sarek/codespaces)
-- Tools installed
-  - nf-core
-  - Nextflow
+-   Open the repo in [Codespaces](https://github.com/nf-core/sarek/codespaces)
+-   Tools installed
+    -   nf-core
+    -   Nextflow
 
 Devcontainer specs:
 
-- [DevContainer config](.devcontainer/devcontainer.json)
+-   [DevContainer config](.devcontainer/devcontainer.json)
