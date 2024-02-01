@@ -35,27 +35,27 @@ It's listed on [Elixir - Tools and Data Services Registry](https://bio.tools/nf-
 
 Depending on the options and samples provided, the pipeline can currently perform the following:
 
--   Form consensus reads from UMI sequences (`fgbio`)
--   Sequencing quality control and trimming (enabled by `--trim_fastq`) (`FastQC`, `fastp`)
--   Map Reads to Reference (`BWA-mem`, `BWA-mem2`, `dragmap` or `Sentieon BWA-mem`)
--   Process BAM file (`GATK MarkDuplicates`, `GATK BaseRecalibrator` and `GATK ApplyBQSR` or `Sentieon LocusCollector` and `Sentieon Dedup`)
--   Summarise alignment statistics (`samtools stats`, `mosdepth`)
--   Variant calling (enabled by `--tools`, see [compatibility](#which-variant-calling-tool-is-implemented-for-which-data-type)):
-    -   `ASCAT`
-    -   `CNVkit`
-    -   `Control-FREEC`
-    -   `DeepVariant`
-    -   `freebayes`
-    -   `GATK HaplotypeCaller`
-    -   `Manta`
-    -   `mpileup`
-    -   `MSIsensor-pro`
-    -   `Mutect2`
-    -   `Sentieon Haplotyper`
-    -   `Strelka2`
-    -   `TIDDIT`
--   Variant filtering and annotation (`SnpEff`, `Ensembl VEP`, `BCFtools annotate`)
--   Summarise and represent QC (`MultiQC`)
+- Form consensus reads from UMI sequences (`fgbio`)
+- Sequencing quality control and trimming (enabled by `--trim_fastq`) (`FastQC`, `fastp`)
+- Map Reads to Reference (`BWA-mem`, `BWA-mem2`, `dragmap` or `Sentieon BWA-mem`)
+- Process BAM file (`GATK MarkDuplicates`, `GATK BaseRecalibrator` and `GATK ApplyBQSR` or `Sentieon LocusCollector` and `Sentieon Dedup`)
+- Summarise alignment statistics (`samtools stats`, `mosdepth`)
+- Variant calling (enabled by `--tools`, see [compatibility](#which-variant-calling-tool-is-implemented-for-which-data-type)):
+  - `ASCAT`
+  - `CNVkit`
+  - `Control-FREEC`
+  - `DeepVariant`
+  - `freebayes`
+  - `GATK HaplotypeCaller`
+  - `Manta`
+  - `mpileup`
+  - `MSIsensor-pro`
+  - `Mutect2`
+  - `Sentieon Haplotyper`
+  - `Strelka2`
+  - `TIDDIT`
+- Variant filtering and annotation (`SnpEff`, `Ensembl VEP`, `BCFtools annotate`)
+- Summarise and represent QC (`MultiQC`)
 
 <p align="center">
     <img title="Sarek Workflow" src="docs/images/sarek_subway.png" width=60%>
@@ -102,9 +102,9 @@ For more details about the output files and reports, please refer to the
 
 On each release, the pipeline is run on 3 full size tests:
 
--   `test_full` runs tumor-normal data for one patient from the SEQ2C consortium
--   `test_full_germline` runs a WGS 30X Genome-in-a-Bottle(NA12878) dataset
--   `test_full_germline_ncbench_agilent` runs two WES samples with 75M and 200M reads (data available [here](https://github.com/ncbench/ncbench-workflow#contributing-callsets)). The results are uploaded to Zenodo, evaluated against a truth dataset, and results are made available via the [NCBench dashboard](https://ncbench.github.io/report/report.html#).
+- `test_full` runs tumor-normal data for one patient from the SEQ2C consortium
+- `test_full_germline` runs a WGS 30X Genome-in-a-Bottle(NA12878) dataset
+- `test_full_germline_ncbench_agilent` runs two WES samples with 75M and 200M reads (data available [here](https://github.com/ncbench/ncbench-workflow#contributing-callsets)). The results are uploaded to Zenodo, evaluated against a truth dataset, and results are made available via the [NCBench dashboard](https://ncbench.github.io/report/report.html#).
 
 ## Credits
 
@@ -117,55 +117,55 @@ Maintenance is now lead by Friederike Hanssen and Maxime U Garcia (now at [Seqer
 
 Main developers:
 
--   [Maxime U Garcia](https://github.com/maxulysse)
--   [Friederike Hanssen](https://github.com/FriederikeHanssen)
+- [Maxime U Garcia](https://github.com/maxulysse)
+- [Friederike Hanssen](https://github.com/FriederikeHanssen)
 
 We thank the following people for their extensive assistance in the development of this pipeline:
 
--   [Abhinav Sharma](https://github.com/abhi18av)
--   [Adam Talbot](https://github.com/adamrtalbot)
--   [Adrian Lärkeryd](https://github.com/adrlar)
--   [Alexander Peltzer](https://github.com/apeltzer)
--   [Alison Meynert](https://github.com/ameynert)
--   [Anders Sune Pedersen](https://github.com/asp8200)
--   [arontommi](https://github.com/arontommi)
--   [BarryDigby](https://github.com/BarryDigby)
--   [Bekir Ergüner](https://github.com/berguner)
--   [bjornnystedt](https://github.com/bjornnystedt)
--   [cgpu](https://github.com/cgpu)
--   [Chela James](https://github.com/chelauk)
--   [David Mas-Ponte](https://github.com/davidmasp)
--   [Francesco Lescai](https://github.com/lescai)
--   [Gavin Mackenzie](https://github.com/GCJMackenzie)
--   [Gisela Gabernet](https://github.com/ggabernet)
--   [Grant Neilson](https://github.com/grantn5)
--   [gulfshores](https://github.com/gulfshores)
--   [Harshil Patel](https://github.com/drpatelh)
--   [James A. Fellows Yates](https://github.com/jfy133)
--   [Jesper Eisfeldt](https://github.com/J35P312)
--   [Johannes Alneberg](https://github.com/alneberg)
--   [José Fernández Navarro](https://github.com/jfnavarro)
--   [Júlia Mir Pedrol](https://github.com/mirpedrol)
--   [Lasse Westergaard Folkersen](https://github.com/lassefolkersen)
--   [Lucia Conde](https://github.com/lconde-ucl)
--   [Malin Larsson](https://github.com/malinlarsson)
--   [Marcel Martin](https://github.com/marcelm)
--   [Nick Smith](https://github.com/nickhsmith)
--   [Nilesh Tawari](https://github.com/nilesh-tawari)
--   [Olga Botvinnik](https://github.com/olgabot)
--   [Oskar Wacker](https://github.com/WackerO)
--   [pallolason](https://github.com/pallolason)
--   [Paul Cantalupo](https://github.com/pcantalupo)
--   [Phil Ewels](https://github.com/ewels)
--   [Sabrina Krakau](https://github.com/skrakau)
--   [Sam Minot](https://github.com/sminot)
--   [Sebastian-D](https://github.com/Sebastian-D)
--   [Silvia Morini](https://github.com/silviamorins)
--   [Solenne Correard](https://github.com/scorreard)
--   [Susanne Jodoin](https://github.com/SusiJo)
--   [Szilveszter Juhos](https://github.com/szilvajuhos)
--   [Tobias Koch](https://github.com/KochTobi)
--   [Winni Kretzschmar](https://github.com/winni2k)
+- [Abhinav Sharma](https://github.com/abhi18av)
+- [Adam Talbot](https://github.com/adamrtalbot)
+- [Adrian Lärkeryd](https://github.com/adrlar)
+- [Alexander Peltzer](https://github.com/apeltzer)
+- [Alison Meynert](https://github.com/ameynert)
+- [Anders Sune Pedersen](https://github.com/asp8200)
+- [arontommi](https://github.com/arontommi)
+- [BarryDigby](https://github.com/BarryDigby)
+- [Bekir Ergüner](https://github.com/berguner)
+- [bjornnystedt](https://github.com/bjornnystedt)
+- [cgpu](https://github.com/cgpu)
+- [Chela James](https://github.com/chelauk)
+- [David Mas-Ponte](https://github.com/davidmasp)
+- [Francesco Lescai](https://github.com/lescai)
+- [Gavin Mackenzie](https://github.com/GCJMackenzie)
+- [Gisela Gabernet](https://github.com/ggabernet)
+- [Grant Neilson](https://github.com/grantn5)
+- [gulfshores](https://github.com/gulfshores)
+- [Harshil Patel](https://github.com/drpatelh)
+- [James A. Fellows Yates](https://github.com/jfy133)
+- [Jesper Eisfeldt](https://github.com/J35P312)
+- [Johannes Alneberg](https://github.com/alneberg)
+- [José Fernández Navarro](https://github.com/jfnavarro)
+- [Júlia Mir Pedrol](https://github.com/mirpedrol)
+- [Lasse Westergaard Folkersen](https://github.com/lassefolkersen)
+- [Lucia Conde](https://github.com/lconde-ucl)
+- [Malin Larsson](https://github.com/malinlarsson)
+- [Marcel Martin](https://github.com/marcelm)
+- [Nick Smith](https://github.com/nickhsmith)
+- [Nilesh Tawari](https://github.com/nilesh-tawari)
+- [Olga Botvinnik](https://github.com/olgabot)
+- [Oskar Wacker](https://github.com/WackerO)
+- [pallolason](https://github.com/pallolason)
+- [Paul Cantalupo](https://github.com/pcantalupo)
+- [Phil Ewels](https://github.com/ewels)
+- [Sabrina Krakau](https://github.com/skrakau)
+- [Sam Minot](https://github.com/sminot)
+- [Sebastian-D](https://github.com/Sebastian-D)
+- [Silvia Morini](https://github.com/silviamorins)
+- [Solenne Correard](https://github.com/scorreard)
+- [Susanne Jodoin](https://github.com/SusiJo)
+- [Szilveszter Juhos](https://github.com/szilvajuhos)
+- [Tobias Koch](https://github.com/KochTobi)
+- [Winni Kretzschmar](https://github.com/winni2k)
 
 ## Acknowledgements
 
@@ -203,4 +203,4 @@ You can cite the `nf-core` publication as follows:
 
 ## CHANGELOG
 
--   [CHANGELOG](CHANGELOG.md)
+- [CHANGELOG](CHANGELOG.md)
