@@ -33,6 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1373](https://github.com/nf-core/sarek/pull/1373) - Add `chr` prefix to NCBench bed file & enable trimming
 - [#1381](https://github.com/nf-core/sarek/pull/1381) - Swap NGSCheckMate bed file for GATK.GRCh37 to one without the `chr` prefix
 - [#1383](https://github.com/nf-core/sarek/pull/1383) - Fix `--three_prime_clip_r{1,2}` parameter documentation
+- [#1390](https://github.com/nf-core/sarek/pull/1390) - Fix badges in README
 
 ### Removed
 
