@@ -34,38 +34,24 @@ workflow BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC {
     cnv_files = FREEC_SOMATIC.out.CNV
     .multiMap{ meta, cnv ->
         def meta_clone_tumor = meta.clone()
-        def meta_clone_normal = meta.clone()
-        meta_clone_tumor.id = meta.id + "_tumor" //updating meta id so that the p.value file is named differently
-        meta_clone_normal.id = meta.id + "_normal" //updating meta id so that the p.value file is named differently
-
         def tumor_file = cnv instanceof List ? cnv.find { it.toString().endsWith("gz_CNVs") } : cnv //only find if its a list, else it returns only the filename without the path
-        def normal_file = cnv instanceof List ? cnv.find { it.toString().endsWith("gz_normal_CNVs") } : null //only find if its a list, else it returns only the filename without the path
 
-        normal: normal_file == null ? [] : [meta_clone_normal,normal_file] //only fill channel if file was found, else leave it empty
         tumor: tumor_file == null ? [] : [meta_clone_tumor,tumor_file] //only fill channel if file was found, else leave it empty
     }
 
     ratio_files = FREEC_SOMATIC.out.ratio
     .multiMap{ meta, ratio ->
         def meta_clone_tumor = meta.clone()
-        def meta_clone_normal = meta.clone()
-        meta_clone_tumor.id = meta.id + "_tumor" //updating meta id so that the p.value file is named differently
-        meta_clone_normal.id = meta.id + "_normal" //updating meta id so that the p.value file is named differently
-
         def tumor_file = ratio instanceof List ? ratio.find { it.toString().endsWith("gz_ratio.txt") } : ratio //same here as cnv
-        def normal_file = ratio instanceof List ? ratio.find { it.toString().endsWith("gz_normal_ratio.txt") } : null //same here as cnv
 
-        normal: normal_file == null ? [] : [meta_clone_normal,normal_file] //same here as ratio
         tumor: tumor_file == null ? [] : [meta_clone_tumor,tumor_file] //same here as ratio
     }
 
     //Join the pairs
-    normal_files = cnv_files.normal.join(ratio_files.normal, failOnDuplicate: true, failOnMismatch: true)
     tumor_files = cnv_files.tumor.join(ratio_files.tumor, failOnDuplicate: true, failOnMismatch: true)
 
     //Mix all the pairs into input channel
     assess_significance_input = assess_significance_input.mix(tumor_files)
-    assess_significance_input = assess_significance_input.mix(normal_files)
 
     ASSESS_SIGNIFICANCE(assess_significance_input)
     FREEC2BED(FREEC_SOMATIC.out.ratio)
