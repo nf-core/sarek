@@ -29,7 +29,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC {
 
     FREEC_SOMATIC(controlfreec_input, fasta, fasta_fai, [], dbsnp, dbsnp_tbi, chr_files, mappability, intervals_bed, [])
 
-    //Filter the files that come out of freec somatic as ASSESS_SIGNIFICANCE only takes one cnv and one ratio file, there should be one normal and one non normal pair?
+    //Filter the files that come out of freec somatic as ASSESS_SIGNIFICANCE only takes one cnv and one ratio file
     //Creates empty channel if file is missing
     cnv_files = FREEC_SOMATIC.out.CNV
     .multiMap{ meta, cnv ->
