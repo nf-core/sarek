@@ -29,7 +29,7 @@ process SENTIEON_GVCFTYPER {
     // The following code sets LD_LIBRARY_PATH in the script-section when the module is run by Singularity.
     // That turned out to be one way of overcoming the following issue with the Singularity-Sentieon-containers from galaxy, Sentieon (LD_LIBRARY_PATH) and the way Nextflow runs Singularity-containers.
     // The galaxy container uses a runscript which is responsible for setting LD_PRELOAD properly. Nextflow executes singularity containers using `singularity exec`, which avoids the run script, leading to the LD_LIBRARY_PATH/libstdc++.so.6 error.
-    if (workflow.containerEngine == 'singularity') {
+    if (workflow.containerEngine in ['singularity','apptainer']) {
         fix_ld_library_path = 'LD_LIBRARY_PATH=/usr/local/lib/:\$LD_LIBRARY_PATH;export LD_LIBRARY_PATH'
     } else {
         fix_ld_library_path = ''
@@ -72,7 +72,7 @@ process SENTIEON_GVCFTYPER {
     // The following code sets LD_LIBRARY_PATH in the script-section when the module is run by Singularity.
     // That turned out to be one way of overcoming the following issue with the Singularity-Sentieon-containers from galaxy, Sentieon (LD_LIBRARY_PATH) and the way Nextflow runs Singularity-containers.
     // The galaxy container uses a runscript which is responsible for setting LD_PRELOAD properly. Nextflow executes singularity containers using `singularity exec`, which avoids the run script, leading to the LD_LIBRARY_PATH/libstdc++.so.6 error.
-    if (workflow.containerEngine == 'singularity') {
+    if (workflow.containerEngine in ['singularity','apptainer']) {
         fix_ld_library_path = 'LD_LIBRARY_PATH=/usr/local/lib/:\$LD_LIBRARY_PATH;export LD_LIBRARY_PATH'
     } else {
         fix_ld_library_path = ''
