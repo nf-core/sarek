@@ -2,6 +2,7 @@
 // GERMLINE VARIANT CALLING
 //
 
+include { BAM_GOLEFT_INDEXCOV                                                          } from '../bam_goleft_indexcov/main'
 include { BAM_JOINT_CALLING_GERMLINE_GATK                                              } from '../bam_joint_calling_germline_gatk/main'
 include { BAM_JOINT_CALLING_GERMLINE_SENTIEON                                          } from '../bam_joint_calling_germline_sentieon/main'
 include { BAM_VARIANT_CALLING_CNVKIT                                                   } from '../bam_variant_calling_cnvkit/main'
@@ -17,8 +18,6 @@ include { BAM_VARIANT_CALLING_SINGLE_TIDDIT                                     
 include { SENTIEON_DNAMODELAPPLY                                                       } from '../../../modules/nf-core/sentieon/dnamodelapply/main'
 include { VCF_VARIANT_FILTERING_GATK                                                   } from '../vcf_variant_filtering_gatk/main'
 include { VCF_VARIANT_FILTERING_GATK as SENTIEON_HAPLOTYPER_VCF_VARIANT_FILTERING_GATK } from '../vcf_variant_filtering_gatk/main'
-
-
 
 workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     take:
@@ -190,6 +189,17 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         vcf_manta = BAM_VARIANT_CALLING_GERMLINE_MANTA.out.vcf
         versions = versions.mix(BAM_VARIANT_CALLING_GERMLINE_MANTA.out.versions)
     }
+
+    // INDEXCOV
+    if (tools.split(',').contains('indexcov')) {
+        BAM_GOLEFT_INDEXCOV (
+            cram,
+            fasta,
+            fasta_fai
+        )
+     	versions = versions.mix(BAM_GOLEFT_INDEXCOV.out.versions)
+    }
+   
 
     // SENTIEON DNASCOPE
     if (tools.split(',').contains('sentieon_dnascope')) {
