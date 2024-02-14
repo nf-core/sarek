@@ -37,7 +37,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
     // Rename based on num_intervals, group all samples by their interval_name/interval_file and restructure for channel
     // Group by [0, 3] to avoid a list of metas and make sure that any intervals
     gendb_input = input
-        .map{ meta, gvcf, tbi, intervals -> [ [ id:'joint_variant_calling', intervals_name:intervals.simpleName, num_intervals:meta.num_intervals ], gvcf, tbi, intervals ] }
+        .map{ meta, gvcf, tbi, intervals -> [ [ id:'joint_variant_calling', intervals_name:intervals.baseName, num_intervals:meta.num_intervals ], gvcf, tbi, intervals ] }
         .groupTuple(by:3) //join on interval file
         .map{ meta_list, gvcf, tbi, intervals ->
             // meta is now a list of [meta1, meta2] but they are all the same. So take the first element.
