@@ -1,0 +1,2 @@
+narfmap/hashtable:
+  - modules/nf-core/narfmap/hashtable/**

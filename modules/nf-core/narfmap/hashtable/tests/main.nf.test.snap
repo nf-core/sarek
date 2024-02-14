@@ -1,0 +1,16 @@
+{
+    "sarscov2 - fasta - stub": {
+        "content": [
+            "narfmap",
+            "versions.yml"
+        ],
+        "timestamp": "2023-12-15T17:42:36.677592114"
+    },
+    "sarscov2 - fasta": {
+        "content": [
+            "narfmap",
+            "versions.yml"
+        ],
+        "timestamp": "2023-12-15T17:42:32.074476297"
+    }
+}

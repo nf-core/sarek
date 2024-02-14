@@ -1,17 +1,17 @@
 nextflow_process {
 
-    name "Test Process DRAGMAP_ALIGN"
+    name "Test Process NARFMAP_ALIGN"
     script "../main.nf"
-    process "DRAGMAP_ALIGN"
+    process "NARFMAP_ALIGN"
     tag "modules"
     tag "modules_nfcore"
-    tag "dragmap"
-    tag "dragmap/align"
+    tag "narfmap"
+    tag "narfmap/align"
 
     test("sarscov2 - fastq, hashtable, false") {
 
         setup {
-            run("DRAGMAP_HASHTABLE") {
+            run("NARFMAP_HASHTABLE") {
                 script "../../hashtable/main.nf"
                 process {
                     """
@@ -31,7 +31,7 @@ nextflow_process {
                     [ id:'test', single_end:true ], // meta map
                     file(params.test_data['sarscov2']['illumina']['test_1_fastq_gz'], checkIfExists: true)
                 ]
-                input[1] = DRAGMAP_HASHTABLE.out.hashmap
+                input[1] = NARFMAP_HASHTABLE.out.hashmap
                 input[2] = false //sort
                 """
             }
@@ -53,7 +53,7 @@ nextflow_process {
     test("sarscov2 - fastq, hashtable, true") {
 
         setup {
-            run("DRAGMAP_HASHTABLE") {
+            run("NARFMAP_HASHTABLE") {
                 script "../../hashtable/main.nf"
                 process {
                     """
@@ -73,7 +73,7 @@ nextflow_process {
                     [ id:'test', single_end:true ], // meta map
                     file(params.test_data['sarscov2']['illumina']['test_1_fastq_gz'], checkIfExists: true)
                 ]
-                input[1] = DRAGMAP_HASHTABLE.out.hashmap
+                input[1] = NARFMAP_HASHTABLE.out.hashmap
                 input[2] = true //sort
                 """
             }
@@ -95,7 +95,7 @@ nextflow_process {
     test("sarscov2 - [fastq1, fastq2], hashtable, false") {
 
         setup {
-            run("DRAGMAP_HASHTABLE") {
+            run("NARFMAP_HASHTABLE") {
                 script "../../hashtable/main.nf"
                 process {
                     """
@@ -118,7 +118,7 @@ nextflow_process {
                         file(params.test_data['sarscov2']['illumina']['test_2_fastq_gz'], checkIfExists: true)
                     ]
                 ]
-                input[1] = DRAGMAP_HASHTABLE.out.hashmap
+                input[1] = NARFMAP_HASHTABLE.out.hashmap
                 input[2] = false //sort
                 """
             }
@@ -140,7 +140,7 @@ nextflow_process {
     test("sarscov2 - [fastq1, fastq2], hashtable, true") {
 
         setup {
-            run("DRAGMAP_HASHTABLE") {
+            run("NARFMAP_HASHTABLE") {
                 script "../../hashtable/main.nf"
                 process {
                     """
@@ -163,7 +163,7 @@ nextflow_process {
                         file(params.test_data['sarscov2']['illumina']['test_2_fastq_gz'], checkIfExists: true)
                     ]
                 ]
-                input[1] = DRAGMAP_HASHTABLE.out.hashmap
+                input[1] = NARFMAP_HASHTABLE.out.hashmap
                 input[2] = true //sort
                 """
             }
@@ -185,7 +185,7 @@ nextflow_process {
     test("homo_sapiens - [fastq1, fastq2], hashtable, true") {
 
         setup {
-            run("DRAGMAP_HASHTABLE") {
+            run("NARFMAP_HASHTABLE") {
                 script "../../hashtable/main.nf"
                 process {
                     """
@@ -208,7 +208,7 @@ nextflow_process {
                         file(params.test_data['homo_sapiens']['illumina']['test_2_fastq_gz'], checkIfExists: true)
                     ]
                 ]
-                input[1] = DRAGMAP_HASHTABLE.out.hashmap
+                input[1] = NARFMAP_HASHTABLE.out.hashmap
                 input[2] = true //sort
                 """
             }
@@ -231,7 +231,7 @@ nextflow_process {
 
         options "-stub"
         setup {
-            run("DRAGMAP_HASHTABLE") {
+            run("NARFMAP_HASHTABLE") {
                 script "../../hashtable/main.nf"
                 process {
                     """
@@ -254,7 +254,7 @@ nextflow_process {
                         file(params.test_data['sarscov2']['illumina']['test_2_fastq_gz'], checkIfExists: true)
                     ]
                 ]
-                input[1] = DRAGMAP_HASHTABLE.out.hashmap
+                input[1] = NARFMAP_HASHTABLE.out.hashmap
                 input[2] = true //sort
                 """
             }
