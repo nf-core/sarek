@@ -1,0 +1,2 @@
+samtools/merge:
+  - "modules/nf-core/samtools/merge/**"
