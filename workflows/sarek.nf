@@ -324,7 +324,7 @@ workflow SAREK {
     // Built from the fasta file:
     dict       = params.dict        ? Channel.fromPath(params.dict).map{ it -> [ [id:'dict'], it ] }.collect()
                                     : PREPARE_GENOME.out.dict
-    fasta_fai  = params.fasta_fai   ? Channel.fromPath(params.fasta_fai).collect()
+    fasta_fai  = params.fasta_fai   ? Channel.fromPath(params.fasta_fai).first()
                                     : PREPARE_GENOME.out.fasta_fai
     bwa        = params.bwa         ? Channel.fromPath(params.bwa).collect()
                                     : PREPARE_GENOME.out.bwa
