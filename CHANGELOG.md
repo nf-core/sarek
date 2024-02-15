@@ -30,7 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- [#1391](https://github.com/nf-core/sarek/pull/1391) - Fixed input channel for ASSESS_SIGNIFICANCE module, updated makegraph to makegraph2.
+- [#1400](https://github.com/nf-core/sarek/pull/1400) - Fixed input channel for ASSESS_SIGNIFICANCE module, updated makegraph to makegraph2.
 - [#1334](https://github.com/nf-core/sarek/pull/1334) - Remove extra v, when reporting tower runs on slack
 - [#1335](https://github.com/nf-core/sarek/pull/1335) - Add docs and validation for bcftools annotation parameters
 - [#1345](https://github.com/nf-core/sarek/pull/1345) - Preserve STDERR for easier debugging

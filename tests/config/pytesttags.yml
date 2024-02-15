@@ -256,7 +256,7 @@ controlfreec:
   - modules/nf-core/controlfreec/freec/**
   - modules/nf-core/controlfreec/freec2bed/**
   - modules/nf-core/controlfreec/freec2circos/**
-  - modules/nf-core/controlfreec/makegraph/**
+  - modules/nf-core/controlfreec/makegraph2/**
   - modules/nf-core/samtools/mpileup/**
   - subworkflows/local/bam_variant_calling_mpileup/**
   - subworkflows/local/bam_variant_calling_somatic_all/**
