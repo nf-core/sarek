@@ -56,9 +56,10 @@ jobs:
           - tags: "sentieon/bwamem"
           - tags: "sentieon/dedup"
           - tags: "sentieon/dnascope"
-          - tags: "sentieon/dnascope_skip_filter"
           - tags: "sentieon/dnascope_joint_germline"
+          - tags: "sentieon/dnascope_skip_filter"
           - tags: "sentieon/haplotyper"
+          - tags: "sentieon/haplotyper_joint_germline"
           - tags: "sentieon/haplotyper_skip_filter"
     env:
       NXF_ANSI_LOG: false
