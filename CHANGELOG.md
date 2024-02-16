@@ -26,7 +26,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1408](https://github.com/nf-core/sarek/pull/1408) - Updating samtools to v1.19.2 in "pure" samtools-modules, that is, samtools in mulled containers have NOT yet been updated.
 - [#1411](https://github.com/nf-core/sarek/pull/1411) - Temporally disable sentieon related tests
 
-
 ### Fixed
 
 - [#1334](https://github.com/nf-core/sarek/pull/1334) - Remove extra v, when reporting tower runs on slack
