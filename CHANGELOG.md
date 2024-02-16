@@ -23,7 +23,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1359](https://github.com/nf-core/sarek/pull/1359) - Removing params usage from local modules
 - [#1359](https://github.com/nf-core/sarek/pull/1359) - Removing params usage from local subworkflows
 - [#1360](https://github.com/nf-core/sarek/pull/1360) - Sync `TEMPLATE` with `tools` `2.11`
+- [#1408](https://github.com/nf-core/sarek/pull/1408) - Updating samtools to v1.19.2 in "pure" samtools-modules, that is, samtools in mulled containers have NOT yet been updated.
 - [#1411](https://github.com/nf-core/sarek/pull/1411) - Temporally disable sentieon related tests
+
 
 ### Fixed
 
