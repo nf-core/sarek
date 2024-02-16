@@ -2,7 +2,7 @@
   command: nextflow run main.nf -profile test_cache,targeted,software_license --sentieon_extension --input ./tests/csv/3.0/mapped_single_bam.csv --tools sentieon_dnascope --step variant_calling --skip_tools dnascope_filter --outdir results
   tags:
     - germline
-    - sentieon_dnascope_skip_filter
+    - sentieon/dnascope_skip_filter
     - variant_calling
   files:
     - path: results/csv/variantcalled.csv
@@ -46,7 +46,7 @@
   command: nextflow run main.nf -profile test_cache,targeted,software_license --sentieon_extension --input ./tests/csv/3.0/mapped_single_bam.csv --tools sentieon_dnascope --step variant_calling --skip_tools dnascope_filter --no_intervals --outdir results
   tags:
     - germline
-    - sentieon_dnascope_skip_filter
+    - sentieon/dnascope_skip_filter
     - no_intervals
     - variant_calling
   files:

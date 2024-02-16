@@ -335,7 +335,7 @@ sentieon/dnascope:
   - tests/csv/3.0/mapped_single_bam.csv
   - tests/test_sentieon_dnascope.yml
 
-sentieon_dnascope_skip_filter:
+sentieon/dnascope_skip_filter:
   - conf/modules/sentieon_dnascope.config
   - modules/nf-core/sentieon/dnascope/**
   - modules/nf-core/gatk4/mergevcfs/**
@@ -363,7 +363,7 @@ sentieon/haplotyper:
   - tests/csv/3.0/mapped_single_bam.csv
   - tests/test_sentieon_haplotyper.yml
 
-sentieon_haplotyper_skip_filter:
+sentieon/haplotyper_skip_filter:
   - conf/modules/sentieon_haplotyper.config
   - modules/nf-core/sentieon/haplotyper/**
   - modules/nf-core/gatk4/mergevcfs/**
@@ -398,7 +398,7 @@ joint_germline:
   - tests/test_joint_germline.yml
 
 ## sentieon_dnascope_joint_germline
-sentieon_dnascope_joint_germline:
+sentieon/dnascope_joint_germline:
   - conf/modules/prepare_genome.config
   - conf/modules/sentieon_dnascope.config
   - conf/modules/sentieon_dnascope_joint_germline.config
@@ -409,7 +409,7 @@ sentieon_dnascope_joint_germline:
   - tests/test_sentieon_dnascop_joint_germline.yml
 
 ## sentieon_haplotyper_joint_germline
-sentieon_haplotyper_joint_germline:
+sentieon/haplotyper_joint_germline:
   - conf/modules/prepare_genome.config
   - conf/modules/sentieon_haplotyper.config
   - conf/modules/sentieon_haplotyper_joint_germline.config

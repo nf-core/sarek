@@ -2,9 +2,8 @@
   command: nextflow run main.nf -profile test_cache,software_license,targeted --sentieon_extension --input ./tests/csv/3.0/mapped_single_bam.csv --tools sentieon_haplotyper --step variant_calling --skip_tools haplotyper_filter --outdir results
   tags:
     - germline
-    - sentieon_haplotyper_skip_filter
+    - sentieon/haplotyper_skip_filter
     - variant_calling
-    - sentieon/haplotyper
   files:
     - path: results/csv/variantcalled.csv
       md5sum: e08d6aa77d914bc2c933e70696b74cdd
@@ -48,10 +47,9 @@
   command: nextflow run main.nf -profile test_cache,software_license,targeted --sentieon_extension --input ./tests/csv/3.0/mapped_single_bam.csv --tools sentieon_haplotyper --step variant_calling --skip_tools haplotyper_filter --no_intervals --outdir results
   tags:
     - germline
-    - sentieon_haplotyper_skip_filter
+    - sentieon/haplotyper_skip_filter
     - no_intervals
     - variant_calling
-    - sentieon/haplotyper
   files:
     - path: results/csv/variantcalled.csv
       md5sum: e08d6aa77d914bc2c933e70696b74cdd
