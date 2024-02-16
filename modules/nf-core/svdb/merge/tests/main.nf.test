@@ -16,7 +16,7 @@ nextflow_process {
                 input[0] = Channel.of([
                     [ id:'test' ], // meta map
                     [file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf', checkIfExists: true),
-                    file(.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test2.vcf', checkIfExists: true) ]
+                    file(params..modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test2.vcf', checkIfExists: true) ]
                 ])
                 input[1] = [ 'tiddit', 'cnvnator']
                 """
