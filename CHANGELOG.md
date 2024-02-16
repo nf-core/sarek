@@ -14,14 +14,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1335](https://github.com/nf-core/sarek/pull/1335) - Add index computation of `bcftools_annotations`, if not provided
 - [#1340](https://github.com/nf-core/sarek/pull/1340) - Adds Azure test profiles and megatests.
 - [#1372](https://github.com/nf-core/sarek/pull/1372) - Add NCBench test profile for Agilent datasets
+- [#1409](https://github.com/nf-core/sarek/pull/1409) - Add params `modules_testdata_base_path` to test profile
 
 ### Changed
 
-- [#1339](https://github.com/nf-core/sarek/pull/1339) - Update sentieon-modules
+- [#1339](https://githu.com/nf-core/sarek/pull/1339), [#1401](https://github.com/nf-core/sarek/pull/1401) - Update sentieon-modules to Sentieon `202308.01` and adding support for running Sentieon with Conda and Apptainer
 - [#1344](https://github.com/nf-core/sarek/pull/1344) - Enable CRAM QC, when starting from variantcalling
 - [#1359](https://github.com/nf-core/sarek/pull/1359) - Removing params usage from local modules
 - [#1359](https://github.com/nf-core/sarek/pull/1359) - Removing params usage from local subworkflows
 - [#1360](https://github.com/nf-core/sarek/pull/1360) - Sync `TEMPLATE` with `tools` `2.11`
+- [#1411](https://github.com/nf-core/sarek/pull/1411) - Temporally disable sentieon related tests
 
 ### Fixed
 
@@ -32,7 +34,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1351](https://github.com/nf-core/sarek/pull/1351) - Fix params name for test profiles (`bcftools_annotations`)
 - [#1357](https://github.com/nf-core/sarek/pull/1364) - Fixed bug where samples were dropped while reconstituting BAM files
 - [#1373](https://github.com/nf-core/sarek/pull/1373) - Add `chr` prefix to NCBench bed file & enable trimming
-- [#1373](https://github.com/nf-core/sarek/pull/1381) - Swap NGSCheckMate bed file for GATK.GRCh37 to one without the `chr` prefix
+- [#1381](https://github.com/nf-core/sarek/pull/1381) - Swap NGSCheckMate bed file for GATK.GRCh37 to one without the `chr` prefix
+- [#1383](https://github.com/nf-core/sarek/pull/1383) - Fix `--three_prime_clip_r{1,2}` parameter documentation
+- [#1390](https://github.com/nf-core/sarek/pull/1390) - Fix badges in README
+- [#1403](https://github.com/nf-core/sarek/pull/1403) - Fix intervals usage with dot in chromosome names
 
 ### Removed
 
