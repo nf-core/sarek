@@ -1,0 +1,75 @@
+{
+    "bam_reads": {
+        "content": [
+            [
+                "@922332/1\tRX:Z:ATTTCAG-TATTATT",
+                "GAGAGGATCTCGTGTAGAAATTGCTTTGAGCTGTTCTTTGTCATTTTCCCTTAATTCATTGTCTCTAGCTAGTCTGTTACTCTGTAAAATAAAATAATAAGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTTAAGGTCAGTG",
+                "+",
+                "EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEAEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE<EEEEEEEEEEEAEAEE6AAEEEEE/EAAAA<AEEEEAAEEAAAA<EEE/",
+                "@922332/2\tRX:Z:ATTTCAG-TATTATT",
+                "TATTTTACAGAGTAACAGACTAGCTAGAGACAATGAATTAAGGGAAAATGACAAAGAACAGCTCAAAGCAATTTCTACACGAGATCCTCTCTCTGAAATAGATCGGAAGAGCACACGTCTGAACTCCAGTCACGAACCGCGAT",
+                "+"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-02T16:31:45.253104"
+    },
+    "bam_split_reads": {
+        "content": [
+            [
+                [
+                    "@922332\tRX:Z:ATTTCAG-TATTATT",
+                    "GAGAGGATCTCGTGTAGAAATTGCTTTGAGCTGTTCTTTGTCATTTTCCCTTAATTCATTGTCTCTAGCTAGTCTGTTACTCTGTAAAATAAAATAATAAGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTTAAGGTCAGTG",
+                    "+",
+                    "EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEAEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE<EEEEEEEEEEEAEAEE6AAEEEEE/EAAAA<AEEEEAAEEAAAA<EEE/",
+                    "@928177\tRX:Z:ACATAAA-TGAGATT",
+                    "AAAAGTATATAAGTAATACATATTTATAAATCTATTAAGAAAGCAAGTAATATGTACCTTAAGAATTTAATGGGAAAATAATTAGACTTACTTTAAATGCCAAAAGAAAAAGTGCCCAATCCTTTGATTAGTCAATGCTTTCT",
+                    "+"
+                ],
+                [
+                    "@922332\tRX:Z:ATTTCAG-TATTATT",
+                    "TATTTTACAGAGTAACAGACTAGCTAGAGACAATGAATTAAGGGAAAATGACAAAGAACAGCTCAAAGCAATTTCTACACGAGATCCTCTCTCTGAAATAGATCGGAAGAGCACACGTCTGAACTCCAGTCACGAACCGCGAT",
+                    "+",
+                    "EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEAEA<AEEE<<<<AAEEEEEEEEEEA<EEEAEAE//A<AAE<6",
+                    "@928177\tRX:Z:ACATAAA-TGAGATT",
+                    "TTACTGAAGAAAGCATTGACTAATCAAAGGATTGGGCACTTTTTCTTTTGGCATTTAAAGTAAGTCTAATTATTTTCCCATTAAATTCTTAAGGTACATATTACTTGCTTTCTTAATAGATTTATAAATATGTATTACTTATA",
+                    "+"
+                ],
+                "test_other.fq.gz",
+                "test_singleton.fq.gz"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-02T16:31:52.011467"
+    },
+    "bam_versions": {
+        "content": [
+            [
+                "versions.yml:md5,04115f386f1c3cb2e25edc02821da2fc"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-13T16:13:56.124383258"
+    },
+    "bam_split_versions": {
+        "content": [
+            [
+                "versions.yml:md5,04115f386f1c3cb2e25edc02821da2fc"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-13T16:14:03.828077257"
+    }
+}

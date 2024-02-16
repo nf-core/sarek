@@ -573,7 +573,7 @@ workflow SAREK {
             // bams are merged (when multiple lanes from the same sample), indexed and then converted to cram
             BAM_MERGE_INDEX_SAMTOOLS(bam_mapped)
 
-            BAM_TO_CRAM_MAPPING(BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai, fasta, fasta_fai)
+            BAM_TO_CRAM_MAPPING(BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai, fasta.map{ it -> [[:], it] }, fasta_fai.map{ it -> [[:], it] })
             // Create CSV to restart from this step
             if (params.save_output_as_bam) CHANNEL_ALIGN_CREATE_CSV(BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai, params.outdir, params.save_output_as_bam)
             else CHANNEL_ALIGN_CREATE_CSV(BAM_TO_CRAM_MAPPING.out.alignment_index, params.outdir, params.save_output_as_bam)
@@ -621,7 +621,7 @@ workflow SAREK {
                 }
 
                 // Convert any input BAMs to CRAM
-                BAM_TO_CRAM(input_markduplicates_convert.bam, fasta, fasta_fai)
+                BAM_TO_CRAM(input_markduplicates_convert.bam, fasta.map{ it -> [[:], it] }, fasta_fai.map{ it -> [[:], it] })
                 versions = versions.mix(BAM_TO_CRAM.out.versions)
 
                 cram_skip_markduplicates = Channel.empty().mix(input_markduplicates_convert.cram, BAM_TO_CRAM.out.alignment_index)
@@ -690,7 +690,7 @@ workflow SAREK {
             .map{ meta, cram, crai -> [ meta + [data_type: "cram"], cram, crai ] }
 
         // If params.save_output_as_bam, then convert CRAM files to BAM
-        CRAM_TO_BAM(ch_md_cram_for_restart, fasta, fasta_fai)
+        CRAM_TO_BAM(ch_md_cram_for_restart, fasta.map{ it -> [[:], it] }, fasta_fai.map{ it -> [[:], it] })
         versions = versions.mix(CRAM_TO_BAM.out.versions)
 
         // CSV should be written for the file actually out, either CRAM or BAM
@@ -713,7 +713,7 @@ workflow SAREK {
             }
 
             // BAM files first must be converted to CRAM files since from this step on we base everything on CRAM format
-            BAM_TO_CRAM(input_prepare_recal_convert.bam, fasta, fasta_fai)
+            BAM_TO_CRAM(input_prepare_recal_convert.bam, fasta.map{ it -> [[:], it] }, fasta_fai.map{ it -> [[:], it] })
             versions = versions.mix(BAM_TO_CRAM.out.versions)
 
             ch_cram_from_bam = BAM_TO_CRAM.out.alignment_index
@@ -806,7 +806,7 @@ workflow SAREK {
             input_only_bam   = input_recal_convert.bam.map{ meta, bam, bai, table -> [ meta, bam, bai ] }
 
             // BAM files first must be converted to CRAM files since from this step on we base everything on CRAM format
-            BAM_TO_CRAM(input_only_bam, fasta, fasta_fai)
+            BAM_TO_CRAM(input_only_bam, fasta.map{ it -> [[:], it] }, fasta_fai.map{ it -> [[:], it] })
             versions = versions.mix(BAM_TO_CRAM.out.versions)
 
             cram_applybqsr = Channel.empty().mix(
@@ -854,7 +854,7 @@ workflow SAREK {
                 cram_variant_calling_spark)
 
             // If params.save_output_as_bam, then convert CRAM files to BAM
-            CRAM_TO_BAM_RECAL(cram_variant_calling, fasta, fasta_fai)
+            CRAM_TO_BAM_RECAL(cram_variant_calling, fasta.map{ it -> [[:], it] }, fasta_fai.map{ it -> [[:], it] })
             versions = versions.mix(CRAM_TO_BAM_RECAL.out.versions)
 
             // CSV should be written for the file actually out out, either CRAM or BAM
@@ -886,7 +886,7 @@ workflow SAREK {
         }
 
         // BAM files first must be converted to CRAM files since from this step on we base everything on CRAM format
-        BAM_TO_CRAM(input_variant_calling_convert.bam, fasta, fasta_fai)
+        BAM_TO_CRAM(input_variant_calling_convert.bam, fasta.map{ it -> [[:], it] }, fasta_fai.map{ it -> [[:], it] })
         versions = versions.mix(BAM_TO_CRAM.out.versions)
 
         cram_variant_calling = Channel.empty().mix(BAM_TO_CRAM.out.alignment_index, input_variant_calling_convert.cram)

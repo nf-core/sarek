@@ -218,6 +218,7 @@ jobs:
           - tags: "fastp"
           - tags: "fastqc"
           - tags: "multiqc"
+          - tags: "samtools/mpileup"
           - tags: "samtools/stats"
           - tags: "untar"
     env:
