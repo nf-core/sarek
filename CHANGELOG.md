@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1335](https://github.com/nf-core/sarek/pull/1335) - Add index computation of `bcftools_annotations`, if not provided
 - [#1340](https://github.com/nf-core/sarek/pull/1340) - Adds Azure test profiles and megatests.
 - [#1372](https://github.com/nf-core/sarek/pull/1372) - Add NCBench test profile for Agilent datasets
+- [#1409](https://github.com/nf-core/sarek/pull/1409) - Add params `modules_testdata_base_path` to test profile
 
 ### Changed
 
@@ -22,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1359](https://github.com/nf-core/sarek/pull/1359) - Removing params usage from local modules
 - [#1359](https://github.com/nf-core/sarek/pull/1359) - Removing params usage from local subworkflows
 - [#1360](https://github.com/nf-core/sarek/pull/1360) - Sync `TEMPLATE` with `tools` `2.11`
+- [#1411](https://github.com/nf-core/sarek/pull/1411) - Temporally disable sentieon related tests
 
 ### Fixed
 
