@@ -107,12 +107,6 @@
                         "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
                         "installed_by": ["modules"]
                     },
-                    "controlfreec/makegraph": {
-                        "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
-                        "installed_by": ["modules"],
-                        "patch": "modules/nf-core/controlfreec/makegraph/controlfreec-makegraph.diff"
-                    },
                     "controlfreec/makegraph2": {
                         "branch": "master",
                         "git_sha": "a7bae48d8bccfae99e3b862fa07bbd50a8df6b82",
