@@ -136,6 +136,7 @@ We thank the following people for their extensive assistance in the development 
 - [cgpu](https://github.com/cgpu)
 - [Chela James](https://github.com/chelauk)
 - [David Mas-Ponte](https://github.com/davidmasp)
+- [Edmund Miller](https://github.com/edmundmiller)
 - [Francesco Lescai](https://github.com/lescai)
 - [Gavin Mackenzie](https://github.com/GCJMackenzie)
 - [Gisela Gabernet](https://github.com/ggabernet)
