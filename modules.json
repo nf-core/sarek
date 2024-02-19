@@ -53,7 +53,7 @@
                     },
                     "bwamem2/mem": {
                         "branch": "master",
-                        "git_sha": "1cd8c0ff594770705899e517e5d357e75b416aff",
+                        "git_sha": "74363e1acc38eaedeede8d429477397c1a6f9e18",
                         "installed_by": ["modules"]
                     },
                     "cat/cat": {
