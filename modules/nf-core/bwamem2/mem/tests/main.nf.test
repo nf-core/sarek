@@ -17,7 +17,10 @@ nextflow_process {
                 script "../../index/main.nf"
                 process {
                     """
-                    input[0] = [ [:], file(params.test_data['sarscov2']['genome']['genome_fasta'], checkIfExists: true) ]
+                    input[0] = Channel.of([
+                        [:], // meta map
+                        [file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)]
+                    ])
                     """
                 }
             }
@@ -26,10 +29,10 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [
+                input[0] = Channel.of([
                     [ id:'test', single_end:true ], // meta map
-                    file(params.test_data['sarscov2']['illumina']['test_1_fastq_gz'], checkIfExists: true)
-                ]
+                        [file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)]
+                ])
                 input[1] = BWAMEM2_INDEX.out.index
                 input[2] = false
                 """
