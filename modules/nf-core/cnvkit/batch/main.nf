@@ -4,8 +4,8 @@ process CNVKIT_BATCH {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/mulled-v2-780d630a9bb6a0ff2e7b6f730906fd703e40e98f:c94363856059151a2974dc501fb07a0360cc60a3-0' :
-        'biocontainers/mulled-v2-780d630a9bb6a0ff2e7b6f730906fd703e40e98f:c94363856059151a2974dc501fb07a0360cc60a3-0' }"
+        'https://depot.galaxyproject.org/singularity/mulled-v2-780d630a9bb6a0ff2e7b6f730906fd703e40e98f:a9e32be812f4aa6b7691c4f43d2bad41e56fc246-0' :
+        'biocontainers/mulled-v2-780d630a9bb6a0ff2e7b6f730906fd703e40e98f:a9e32be812f4aa6b7691c4f43d2bad41e56fc246-0' }"
 
     input:
     tuple val(meta), path(tumor), path(normal)
