@@ -5,4 +5,3 @@ channels:
   - defaults
 dependencies:
   - bioconda::cnvkit=0.9.10
-  - bioconda::samtools=1.17
