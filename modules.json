@@ -43,7 +43,7 @@
                     },
                     "bwa/mem": {
                         "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "git_sha": "ba3f3df395d2719dcef5c67189042a1dc555c701",
                         "installed_by": ["modules"]
                     },
                     "bwamem2/index": {
@@ -53,7 +53,7 @@
                     },
                     "bwamem2/mem": {
                         "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "git_sha": "74363e1acc38eaedeede8d429477397c1a6f9e18",
                         "installed_by": ["modules"]
                     },
                     "cat/cat": {
@@ -68,22 +68,22 @@
                     },
                     "cnvkit/antitarget": {
                         "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "git_sha": "a64788f5ad388f1d2ac5bd5f1f3f8fc81476148c",
                         "installed_by": ["modules"]
                     },
                     "cnvkit/batch": {
                         "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "git_sha": "76c858e2589c7762c68d7d14191d78f6db98a445",
                         "installed_by": ["modules"]
                     },
                     "cnvkit/genemetrics": {
                         "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "git_sha": "a64788f5ad388f1d2ac5bd5f1f3f8fc81476148c",
                         "installed_by": ["modules"]
                     },
                     "cnvkit/reference": {
                         "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "git_sha": "a64788f5ad388f1d2ac5bd5f1f3f8fc81476148c",
                         "installed_by": ["modules"]
                     },
                     "controlfreec/assesssignificance": {
@@ -125,7 +125,7 @@
                     },
                     "dragmap/align": {
                         "branch": "master",
-                        "git_sha": "3c77ca9aac783e76c3614a06db3bfe4fef619bde",
+                        "git_sha": "575e1bc54b083fb15e7dd8b5fcc40bea60e8ce83",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/dragmap/align/dragmap-align.diff"
                     },
@@ -342,7 +342,7 @@
                     },
                     "samblaster": {
                         "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "git_sha": "8ad1f37288c6f5a36871c169aa85614832152fd1",
                         "installed_by": ["modules"]
                     },
                     "samtools/bam2fq": {
@@ -452,7 +452,7 @@
                     },
                     "svdb/merge": {
                         "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "git_sha": "8c498400bfa0f0e5c1750fab21496a27bc8d9ad0",
                         "installed_by": ["modules"]
                     },
                     "tabix/bgziptabix": {

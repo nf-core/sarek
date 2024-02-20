@@ -5,6 +5,7 @@ nextflow_process {
     tag "modules"
     tag "bwa"
     tag "bwa/mem"
+    tag "bwa/index"
     script "../main.nf"
     process "BWA_MEM"
 
