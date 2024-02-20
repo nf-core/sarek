@@ -211,6 +211,7 @@ jobs:
         exclude:
           - tags: "bwa/index"
           - tags: "bwa/mem"
+          - tags: "bwamem2/mem"
           - tags: "cat/cat"
           - tags: "cat/fastq"
           - tags: "custom/dumpsoftwareversions"
