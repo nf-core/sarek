@@ -23,44 +23,57 @@ nextflow.enable.dsl = 2
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    IMPORT FUNCTIONS / MODULES / SUBWORKFLOWS / WORKFLOWS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+
+include { SAREK                   } from './workflows/sarek'
+include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_sarek_pipeline'
+include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_sarek_pipeline'
+include { getGenomeAttribute      } from './subworkflows/local/utils_nfcore_sarek_pipeline'
+include { paramsHelp              } from 'plugin/nf-validation'
+include { validateParameters      } from 'plugin/nf-validation'
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     GENOME PARAMETER VALUES
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-params.ascat_alleles           = WorkflowMain.getGenomeAttribute(params, 'ascat_alleles')
-params.ascat_genome            = WorkflowMain.getGenomeAttribute(params, 'ascat_genome')
-params.ascat_loci              = WorkflowMain.getGenomeAttribute(params, 'ascat_loci')
-params.ascat_loci_gc           = WorkflowMain.getGenomeAttribute(params, 'ascat_loci_gc')
-params.ascat_loci_rt           = WorkflowMain.getGenomeAttribute(params, 'ascat_loci_rt')
-params.bwa                     = WorkflowMain.getGenomeAttribute(params, 'bwa')
-params.bwamem2                 = WorkflowMain.getGenomeAttribute(params, 'bwamem2')
-params.cf_chrom_len            = WorkflowMain.getGenomeAttribute(params, 'cf_chrom_len')
-params.chr_dir                 = WorkflowMain.getGenomeAttribute(params, 'chr_dir')
-params.dbsnp                   = WorkflowMain.getGenomeAttribute(params, 'dbsnp')
-params.dbsnp_tbi               = WorkflowMain.getGenomeAttribute(params, 'dbsnp_tbi')
-params.dbsnp_vqsr              = WorkflowMain.getGenomeAttribute(params, 'dbsnp_vqsr')
-params.dict                    = WorkflowMain.getGenomeAttribute(params, 'dict')
-params.dragmap                 = WorkflowMain.getGenomeAttribute(params, 'dragmap')
-params.fasta                   = WorkflowMain.getGenomeAttribute(params, 'fasta')
-params.fasta_fai               = WorkflowMain.getGenomeAttribute(params, 'fasta_fai')
-params.germline_resource       = WorkflowMain.getGenomeAttribute(params, 'germline_resource')
-params.germline_resource_tbi   = WorkflowMain.getGenomeAttribute(params, 'germline_resource_tbi')
-params.intervals               = WorkflowMain.getGenomeAttribute(params, 'intervals')
-params.known_indels            = WorkflowMain.getGenomeAttribute(params, 'known_indels')
-params.known_indels_tbi        = WorkflowMain.getGenomeAttribute(params, 'known_indels_tbi')
-params.known_indels_vqsr       = WorkflowMain.getGenomeAttribute(params, 'known_indels_vqsr')
-params.known_snps              = WorkflowMain.getGenomeAttribute(params, 'known_snps')
-params.known_snps_tbi          = WorkflowMain.getGenomeAttribute(params, 'known_snps_tbi')
-params.known_snps_vqsr         = WorkflowMain.getGenomeAttribute(params, 'known_snps_vqsr')
-params.mappability             = WorkflowMain.getGenomeAttribute(params, 'mappability')
-params.ngscheckmate_bed        = WorkflowMain.getGenomeAttribute(params, 'ngscheckmate_bed')
-params.pon                     = WorkflowMain.getGenomeAttribute(params, 'pon')
-params.pon_tbi                 = WorkflowMain.getGenomeAttribute(params, 'pon_tbi')
-params.sentieon_dnascope_model = WorkflowMain.getGenomeAttribute(params, 'sentieon_dnascope_model')
-params.snpeff_db               = WorkflowMain.getGenomeAttribute(params, 'snpeff_db')
-params.snpeff_genome           = WorkflowMain.getGenomeAttribute(params, 'snpeff_genome')
-params.vep_cache_version       = WorkflowMain.getGenomeAttribute(params, 'vep_cache_version')
-params.vep_genome              = WorkflowMain.getGenomeAttribute(params, 'vep_genome')
-params.vep_species             = WorkflowMain.getGenomeAttribute(params, 'vep_species')
+params.ascat_alleles           = getGenomeAttribute('ascat_alleles')
+params.ascat_genome            = getGenomeAttribute('ascat_genome')
+params.ascat_loci              = getGenomeAttribute('ascat_loci')
+params.ascat_loci_gc           = getGenomeAttribute('ascat_loci_gc')
+params.ascat_loci_rt           = getGenomeAttribute('ascat_loci_rt')
+params.bwa                     = getGenomeAttribute('bwa')
+params.bwamem2                 = getGenomeAttribute('bwamem2')
+params.cf_chrom_len            = getGenomeAttribute('cf_chrom_len')
+params.chr_dir                 = getGenomeAttribute('chr_dir')
+params.dbsnp                   = getGenomeAttribute('dbsnp')
+params.dbsnp_tbi               = getGenomeAttribute('dbsnp_tbi')
+params.dbsnp_vqsr              = getGenomeAttribute('dbsnp_vqsr')
+params.dict                    = getGenomeAttribute('dict')
+params.dragmap                 = getGenomeAttribute('dragmap')
+params.fasta                   = getGenomeAttribute('fasta')
+params.fasta_fai               = getGenomeAttribute('fasta_fai')
+params.germline_resource       = getGenomeAttribute('germline_resource')
+params.germline_resource_tbi   = getGenomeAttribute('germline_resource_tbi')
+params.intervals               = getGenomeAttribute('intervals')
+params.known_indels            = getGenomeAttribute('known_indels')
+params.known_indels_tbi        = getGenomeAttribute('known_indels_tbi')
+params.known_indels_vqsr       = getGenomeAttribute('known_indels_vqsr')
+params.known_snps              = getGenomeAttribute('known_snps')
+params.known_snps_tbi          = getGenomeAttribute('known_snps_tbi')
+params.known_snps_vqsr         = getGenomeAttribute('known_snps_vqsr')
+params.mappability             = getGenomeAttribute('mappability')
+params.ngscheckmate_bed        = getGenomeAttribute('ngscheckmate_bed')
+params.pon                     = getGenomeAttribute('pon')
+params.pon_tbi                 = getGenomeAttribute('pon_tbi')
+params.sentieon_dnascope_model = getGenomeAttribute('sentieon_dnascope_model')
+params.snpeff_db               = getGenomeAttribute('snpeff_db')
+params.snpeff_genome           = getGenomeAttribute('snpeff_genome')
+params.vep_cache_version       = getGenomeAttribute('vep_cache_version')
+params.vep_genome              = getGenomeAttribute('vep_genome')
+params.vep_species             = getGenomeAttribute('vep_species')
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -72,11 +85,10 @@ params.input_restart = WorkflowSarek.retrieveInput(params, log)
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    VALIDATE & PRINT PARAMETER SUMMARY
+    NAMED WORKFLOWS FOR PIPELINE
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { validateParameters; paramsHelp } from 'plugin/nf-validation'
 
 // Print help message if needed
 if (params.help) {
@@ -100,23 +112,58 @@ WorkflowMain.initialise(workflow, params, log, args)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { SAREK } from './workflows/sarek'
-
 // WORKFLOW: Run main nf-core/sarek analysis pipeline
 workflow NFCORE_SAREK {
-    SAREK ()
-}
+    main:
 
+    //
+    // WORKFLOW: Run pipeline
+    //
+    SAREK()
+
+    emit:
+    multiqc_report = SAREK.out.multiqc_report // channel: /path/to/multiqc_report.html
+}
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    RUN ALL WORKFLOWS
+    RUN MAIN WORKFLOW
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-// WORKFLOW: Execute a single named workflow for the pipeline
-// See: https://github.com/nf-core/rnaseq/issues/619
 workflow {
-    NFCORE_SAREK ()
+
+    main:
+
+    //
+    // SUBWORKFLOW: Run initialisation tasks
+    //
+    PIPELINE_INITIALISATION(
+        params.version,
+        params.help,
+        params.validate_params,
+        params.monochrome_logs,
+        args,
+        params.outdir,
+        params.input
+    )
+
+    //
+    // WORKFLOW: Run main workflow
+    //
+    NFCORE_SAREK()
+
+    //
+    // SUBWORKFLOW: Run completion tasks
+    //
+    PIPELINE_COMPLETION(
+        params.email,
+        params.email_on_fail,
+        params.plaintext_email,
+        params.outdir,
+        params.monochrome_logs,
+        params.hook_url,
+        NFCORE_SAREK.out.multiqc_report
+    )
 }
 
 /*

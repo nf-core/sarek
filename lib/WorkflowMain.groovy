@@ -37,11 +37,6 @@ class WorkflowMain {
         // Check that the profile doesn't contain spaces and doesn't end with a trailing comma
         checkProfile(workflow.profile, args, log)
 
-        // Check that conda channels are set-up correctly
-        if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
-            Utils.checkCondaChannels(log)
-        }
-
         // Check AWS batch settings
         NfcoreTemplate.awsBatch(workflow, params)
 

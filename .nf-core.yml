@@ -3,7 +3,11 @@ lint:
   actions_ci: False
   files_exist:
     - .github/workflows/awsfulltest.yml
+    - .github/workflows/awstest.yml
     - conf/modules.config
+    - lib/WorkflowMain.groovy
+    - lib/NfcoreTemplate.groovy
+    - lib/WorkflowSarek.groovy
   files_unchanged:
     - .gitignore
     - assets/nf-core-sarek_logo_light.png
