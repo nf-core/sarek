@@ -1,0 +1,357 @@
+- name: Run variant calling on somatic samples with ascat
+  command: nextflow run main.nf -profile test_cache,tools_somatic_ascat --outdir results
+  tags:
+    - ascat_manual
+    - manual
+    - somatic
+    - variant_calling
+  files:
+    - path: results/variant_calling/ascat/sample4_vs_sample3/sample4_vs_sample3.tumour_normalBAF.txt
+      md5sum: b73a38fd183143b1e8aed9f261a9c5f0
+    - path: results/variant_calling/ascat/sample4_vs_sample3/sample4_vs_sample3.tumour_tumourLogR.txt
+      md5sum: 29f29092c19274aa3d5fd4f9e3828cbb
+    - path: results/variant_calling/ascat/sample4_vs_sample3/sample4_vs_sample3.after_correction_gc_rt.sample4_vs_sample3.tumour.tumour.png
+      md5sum: df246ef9c2c4dc868901afe17366e116
+    - path: results/variant_calling/ascat/sample4_vs_sample3/sample4_vs_sample3.before_correction.sample4_vs_sample3.tumour.tumour.png
+      md5sum: 7629826e2e02ab99bedbab75b0c022a5
+    - path: results/variant_calling/ascat/sample4_vs_sample3/sample4_vs_sample3.cnvs.txt
+      md5sum: 68b329da9893e34099c7d8ad5cb9c940
+    - path: results/variant_calling/ascat/sample4_vs_sample3/sample4_vs_sample3.tumour_tumourBAF.txt
+      md5sum: 5235f69624ab91f395ebf30b90c02e9e
+    - path: results/variant_calling/ascat/sample4_vs_sample3/sample4_vs_sample3.tumour.ASPCF.png
+      md5sum: 883075c53513dea8bbcb85ad564cb641
+    - path: results/variant_calling/ascat/sample4_vs_sample3/sample4_vs_sample3.after_correction_gc_rt.sample4_vs_sample3.tumour.germline.png
+      md5sum: 1a47cc241548fa89f914c2f5bfee6bee
+    - path: results/variant_calling/ascat/sample4_vs_sample3/sample4_vs_sample3.metrics.txt
+      md5sum: f7e486e5eed6166dedf9306235f537ec
+    - path: results/variant_calling/ascat/sample4_vs_sample3/sample4_vs_sample3.before_correction.sample4_vs_sample3.tumour.germline.png
+      md5sum: 1a47cc241548fa89f914c2f5bfee6bee
+    - path: results/variant_calling/ascat/sample4_vs_sample3/sample4_vs_sample3.purityploidy.txt
+      md5sum: f1484c2b120834d3db8774ad02a038b9
+    - path: results/variant_calling/ascat/sample4_vs_sample3/sample4_vs_sample3.tumour.sunrise.png
+      md5sum: a2bf4b04176983a87b85843c789eaab8
+    - path: results/variant_calling/ascat/sample4_vs_sample3/sample4_vs_sample3.segments.txt
+      md5sum: 68b329da9893e34099c7d8ad5cb9c940
+    - path: results/variant_calling/ascat/sample4_vs_sample3/sample4_vs_sample3.tumour_normalLogR.txt
+      md5sum: 05418a7d814db11808172a4f57d040a1
+    - path: results/reports/mosdepth/sample3/sample3.recal.mosdepth.global.dist.txt
+      md5sum: 69e29702ef01fd8f6c7a5468fc35a16a
+    - path: results/reports/mosdepth/sample3/sample3.recal.mosdepth.region.dist.txt
+      md5sum: 6ec49cd7d510c2eb3d9d90fdb79b783a
+    - path: results/reports/mosdepth/sample3/sample3.recal.mosdepth.summary.txt
+      md5sum: 103098d0bf76ed82d2b87d5f242b099a
+    - path: results/reports/mosdepth/sample3/sample3.recal.regions.bed.gz
+      md5sum: b5888cf7395c57d39879a5faa6159eb3
+    - path: results/reports/mosdepth/sample3/sample3.recal.regions.bed.gz.csi
+      md5sum: 9cb0ad7039a3b703d16ca7d5b835c0ee
+    - path: results/reports/samtools/sample3/sample3.recal.cram.stats
+    # conda changes md5sums for test
+    - path: results/reports/mosdepth/sample4/sample4.recal.mosdepth.global.dist.txt
+      md5sum: f2dcd00a64947c49e8e4b93c2f4fbf27
+    - path: results/reports/mosdepth/sample4/sample4.recal.mosdepth.region.dist.txt
+      md5sum: 39005ffaac22871ffaaf19656fe69c5b
+    - path: results/reports/mosdepth/sample4/sample4.recal.mosdepth.summary.txt
+      md5sum: 68d4b98f17361fddf73052ead34fa370
+    - path: results/reports/mosdepth/sample4/sample4.recal.regions.bed.gz
+      md5sum: 2819e995eafded35f53328c4ec19ba58
+    - path: results/reports/mosdepth/sample4/sample4.recal.regions.bed.gz.csi
+      md5sum: 393c2749068304d8545b501b9d4658e4
+    - path: results/reports/samtools/sample4/sample4.recal.cram.stats
+    # conda changes md5sums for test
+- name: Run variant calling on somatic sample with mutect2 without intervals
+  command: nextflow run main.nf -profile test_cache,tools_somatic --tools mutect2 --no_intervals --outdir results
+  tags:
+    - mutect2_manual
+    - manual
+    - no_intervals
+    - somatic
+    - variant_calling
+  files:
+    - path: results/csv/variantcalled.csv
+      md5sum: d3c9f0559d48696c54f3c463b1606586
+    - path: results/multiqc
+    - path: results/no_intervals.bed
+      md5sum: f3dac01ea66b95fe477446fde2d31489
+    - path: results/no_intervals.bed.gz
+      md5sum: f3dac01ea66b95fe477446fde2d31489
+    - path: results/no_intervals.bed.gz.tbi
+      md5sum: f3dac01ea66b95fe477446fde2d31489
+    - path: results/reports/bcftools/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.filtered.bcftools_stats.txt
+      md5sum: 9876607145d11c6b8492264936d7a82c
+    - path: results/reports/vcftools/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.filtered.FILTER.summary
+      md5sum: b25d4d2a64f9590d0ffb119fd3adb06e
+    - path: results/reports/vcftools/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.filtered.TsTv.count
+      md5sum: 3739f24da2d2019cc4bc2821e30658eb
+    - path: results/reports/vcftools/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.filtered.TsTv.qual
+      md5sum: 05c0cbb017d9232bc728d48f9d0c7afd
+    - path: results/variant_calling/mutect2/sample3/sample3.mutect2.pileups.table
+      md5sum: 8e0ca6f66e112bd2f7ec1d31a2d62469
+    - path: results/variant_calling/mutect2/sample4/sample4.mutect2.pileups.table
+      md5sum: fe35b6bc041f2df8bd1f23420af3ddf9
+    - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.artifactprior.tar.gz
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.contamination.table
+      md5sum: 46c708c943b453da89a3da08acfdb2a7
+    - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.filtered.vcf.gz
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.filtered.vcf.gz.filteringStats.tsv
+      md5sum: 9ae27fbd04af1a2ea574e2ff1c3a683b
+    - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.filtered.vcf.gz.tbi
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.segmentation.table
+      md5sum: f4643d9319bde4efbfbe516d6fb13052
+    - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.vcf.gz
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.vcf.gz.stats
+      md5sum: 17d2091015d04cbd4a26b7a67dc659e6
+    - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.vcf.gz.tbi
+    # binary changes md5sums on reruns
+    - path: results/reports/mosdepth/sample3/sample3.recal.mosdepth.global.dist.txt
+      md5sum: 69e29702ef01fd8f6c7a5468fc35a16a
+    - path: results/reports/mosdepth/sample3/sample3.recal.mosdepth.summary.txt
+      md5sum: d2775eb102acc5950f7f53883dcb503d
+    - path: results/reports/mosdepth/sample3/sample3.recal.per-base.bed.gz
+      md5sum: 54431f155c9538809e8caf99d1a75ec7
+    - path: results/reports/mosdepth/sample3/sample3.recal.per-base.bed.gz.csi
+      md5sum: c67dcd711b096eb42f43784d5eadbc0d
+    - path: results/reports/samtools/sample3/sample3.recal.cram.stats
+    # conda changes md5sums for test
+    - path: results/reports/mosdepth/sample4/sample4.recal.mosdepth.global.dist.txt
+      md5sum: f2dcd00a64947c49e8e4b93c2f4fbf27
+    - path: results/reports/mosdepth/sample4/sample4.recal.mosdepth.summary.txt
+      md5sum: 0a7300e56eda6fba7c7564f00aa000f0
+    - path: results/reports/mosdepth/sample4/sample4.recal.per-base.bed.gz
+      md5sum: 3de4a9f4da2f2b4909ef192452a8d211
+    - path: results/reports/mosdepth/sample4/sample4.recal.per-base.bed.gz.csi
+      md5sum: cfb07b0ba46e8468b4342edb243536f3
+    - path: results/reports/samtools/sample4/sample4.recal.cram.stats
+    # conda changes md5sums for test
+- name: Run variant calling on somatic sample with mutect2
+  command: nextflow run main.nf -profile test_cache,tools_somatic --tools mutect2 --outdir results
+  tags:
+    - mutect2_manual
+    - manual
+    - somatic
+    - variant_calling
+  files:
+    - path: results/csv/variantcalled.csv
+      md5sum: d3c9f0559d48696c54f3c463b1606586
+    - path: results/multiqc
+    - path: results/reports/bcftools/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.filtered.bcftools_stats.txt
+      md5sum: 9876607145d11c6b8492264936d7a82c
+    - path: results/reports/vcftools/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.filtered.FILTER.summary
+      md5sum: b25d4d2a64f9590d0ffb119fd3adb06e
+    - path: results/reports/vcftools/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.filtered.TsTv.count
+      md5sum: 3739f24da2d2019cc4bc2821e30658eb
+    - path: results/reports/vcftools/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.filtered.TsTv.qual
+      md5sum: 05c0cbb017d9232bc728d48f9d0c7afd
+    - path: results/variant_calling/mutect2/sample3/sample3.mutect2.pileups.table
+      md5sum: 16077fdb885a8afe64c7669477471354
+    - path: results/variant_calling/mutect2/sample4/sample4.mutect2.pileups.table
+      md5sum: 9afe42339f590937166edcf4746c22ec
+    - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.artifactprior.tar.gz
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.contamination.table
+      md5sum: 46c708c943b453da89a3da08acfdb2a7
+    - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.filtered.vcf.gz
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.filtered.vcf.gz.filteringStats.tsv
+      md5sum: 9ae27fbd04af1a2ea574e2ff1c3a683b
+    - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.filtered.vcf.gz.tbi
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.segmentation.table
+      md5sum: f4643d9319bde4efbfbe516d6fb13052
+    - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.vcf.gz
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.vcf.gz.stats
+      md5sum: c09dff3f145d77d4848992e244811c08
+    - path: results/variant_calling/mutect2/sample4_vs_sample3/sample4_vs_sample3.mutect2.vcf.gz.tbi
+    # binary changes md5sums on reruns
+    - path: results/reports/mosdepth/sample3/sample3.recal.mosdepth.global.dist.txt
+      md5sum: 69e29702ef01fd8f6c7a5468fc35a16a
+    - path: results/reports/mosdepth/sample3/sample3.recal.mosdepth.region.dist.txt
+      md5sum: 6ec49cd7d510c2eb3d9d90fdb79b783a
+    - path: results/reports/mosdepth/sample3/sample3.recal.mosdepth.summary.txt
+      md5sum: 103098d0bf76ed82d2b87d5f242b099a
+    - path: results/reports/mosdepth/sample3/sample3.recal.regions.bed.gz
+      md5sum: b5888cf7395c57d39879a5faa6159eb3
+    - path: results/reports/mosdepth/sample3/sample3.recal.regions.bed.gz.csi
+      md5sum: 9cb0ad7039a3b703d16ca7d5b835c0ee
+    - path: results/reports/samtools/sample3/sample3.recal.cram.stats
+    # conda changes md5sums for test
+    - path: results/reports/mosdepth/sample4/sample4.recal.mosdepth.global.dist.txt
+      md5sum: f2dcd00a64947c49e8e4b93c2f4fbf27
+    - path: results/reports/mosdepth/sample4/sample4.recal.mosdepth.region.dist.txt
+      md5sum: 39005ffaac22871ffaaf19656fe69c5b
+    - path: results/reports/mosdepth/sample4/sample4.recal.mosdepth.summary.txt
+      md5sum: 68d4b98f17361fddf73052ead34fa370
+    - path: results/reports/mosdepth/sample4/sample4.recal.regions.bed.gz
+      md5sum: 2819e995eafded35f53328c4ec19ba58
+    - path: results/reports/mosdepth/sample4/sample4.recal.regions.bed.gz.csi
+      md5sum: 393c2749068304d8545b501b9d4658e4
+    - path: results/reports/samtools/sample4/sample4.recal.cram.stats
+    # conda changes md5sums for test
+- name: Run joint calling on tumor only samples with mutect2
+  command: nextflow run main.nf -profile test_cache,tools_tumoronly --input tests/csv/3.0/recalibrated_tumoronly_joint.csv --tools mutect2 --joint_mutect2 --outdir results
+  tags:
+    - mutect2_manual
+    - manual
+    - tumor_only
+    - variant_calling
+    - multi_sample
+    - joint_tumoronly
+  files:
+    - path: results/csv/variantcalled.csv
+      md5sum: f87290ce1c6ea523e08354ed6c258b0b
+    - path: results/multiqc
+    - path: results/reports/bcftools/mutect2/test/test.mutect2.filtered.bcftools_stats.txt
+      md5sum: a0cdc26fb7d8c446dd0283fed71a24d5
+    - path: results/reports/vcftools/mutect2/test/test.mutect2.filtered.FILTER.summary
+      md5sum: e1e42b6f65cbdba116cff72a56e40c4b
+    - path: results/reports/vcftools/mutect2/test/test.mutect2.filtered.TsTv.count
+      md5sum: c00e1639a41deb107099487676a6cf37
+    - path: results/reports/vcftools/mutect2/test/test.mutect2.filtered.TsTv.qual
+      md5sum: a21016aa99e5cbf32eeae1b405ca6d8d
+    - path: results/variant_calling/mutect2/test/sample2.mutect2.contamination.table
+      md5sum: 46c708c943b453da89a3da08acfdb2a7
+    - path: results/variant_calling/mutect2/sample2/sample2.mutect2.pileups.table
+      md5sum: 9afe42339f590937166edcf4746c22ec
+    - path: results/variant_calling/mutect2/test/sample2.mutect2.segmentation.table
+      md5sum: f4643d9319bde4efbfbe516d6fb13052
+    - path: results/variant_calling/mutect2/test/sample3.mutect2.contamination.table
+      md5sum: 11440fe64b5b953d7efb9cf47e330364
+    - path: results/variant_calling/mutect2/sample3/sample3.mutect2.pileups.table
+      md5sum: fd0c1f7819717b7f94e52f6611f4b2e0
+    - path: results/variant_calling/mutect2/test/sample3.mutect2.segmentation.table
+      md5sum: 38f83e2f98b206640644dd93d5e96f4e
+    - path: results/variant_calling/mutect2/test/test.mutect2.artifactprior.tar.gz
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/mutect2/test/test.mutect2.filtered.vcf.gz
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/mutect2/test/test.mutect2.filtered.vcf.gz.filteringStats.tsv
+      md5sum: f237666ae325fde0c06b8bc62d2846fc
+    - path: results/variant_calling/mutect2/test/test.mutect2.filtered.vcf.gz.tbi
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/mutect2/test/test.mutect2.vcf.gz
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/mutect2/test/test.mutect2.vcf.gz.stats
+      md5sum: 22e58aef3b14b335fa487d40b590ffeb
+    - path: results/variant_calling/mutect2/test/test.mutect2.vcf.gz.tbi
+    # binary changes md5sums on reruns
+    - path: results/reports/mosdepth/sample3/sample3.recal.mosdepth.global.dist.txt
+      md5sum: f2dcd00a64947c49e8e4b93c2f4fbf27
+    - path: results/reports/mosdepth/sample3/sample3.recal.mosdepth.region.dist.txt
+      md5sum: 39005ffaac22871ffaaf19656fe69c5b
+    - path: results/reports/mosdepth/sample3/sample3.recal.mosdepth.summary.txt
+      md5sum: 68d4b98f17361fddf73052ead34fa370
+    - path: results/reports/mosdepth/sample3/sample3.recal.regions.bed.gz
+      md5sum: 2819e995eafded35f53328c4ec19ba58
+    - path: results/reports/mosdepth/sample3/sample3.recal.regions.bed.gz.csi
+      md5sum: 393c2749068304d8545b501b9d4658e4
+    - path: results/reports/samtools/sample3/sample3.recal.cram.stats
+    # conda changes md5sums for test
+- name: Run joint calling on somatic samples with mutect2
+  command: nextflow run main.nf -profile test_cache,tools_somatic --input tests/csv/3.0/recalibrated_somatic_joint.csv --tools mutect2 --joint_mutect2 --outdir results
+  tags:
+    - mutect2_manual
+    - somatic
+    - variant_calling
+    - multi_sample
+    - joint_somatic
+  files:
+    - path: results/csv/variantcalled.csv
+      md5sum: f87290ce1c6ea523e08354ed6c258b0b
+    - path: results/multiqc
+    - path: results/reports/bcftools/mutect2/test/test.mutect2.filtered.bcftools_stats.txt
+      md5sum: d75da410d57960944f54d02b2b5cdcac
+    - path: results/reports/vcftools/mutect2/test/test.mutect2.filtered.FILTER.summary
+      md5sum: e0eb3e34fc15f3b452bfc43f032cc8be
+    - path: results/reports/vcftools/mutect2/test/test.mutect2.filtered.TsTv.count
+      md5sum: aa51bde6080c015c6aa6c8254977dd11
+    - path: results/reports/vcftools/mutect2/test/test.mutect2.filtered.TsTv.qual
+      md5sum: 262f843f68d072c457ca28b56da3ede8
+    - path: results/variant_calling/mutect2/sample1/sample1.mutect2.pileups.table
+      md5sum: 16077fdb885a8afe64c7669477471354
+    - path: results/variant_calling/mutect2/sample2/sample2.mutect2.pileups.table
+      md5sum: 9afe42339f590937166edcf4746c22ec
+    - path: results/variant_calling/mutect2/sample3/sample3.mutect2.pileups.table
+      md5sum: fd0c1f7819717b7f94e52f6611f4b2e0
+    - path: results/variant_calling/mutect2/test/sample2_vs_sample1.mutect2.contamination.table
+      md5sum: 46c708c943b453da89a3da08acfdb2a7
+    - path: results/variant_calling/mutect2/test/sample3_vs_sample1.mutect2.contamination.table
+      md5sum: 11440fe64b5b953d7efb9cf47e330364
+    - path: results/variant_calling/mutect2/test/sample2_vs_sample1.mutect2.segmentation.table
+      md5sum: f4643d9319bde4efbfbe516d6fb13052
+    - path: results/variant_calling/mutect2/test/sample3_vs_sample1.mutect2.segmentation.table
+      md5sum: 38f83e2f98b206640644dd93d5e96f4e
+    - path: results/variant_calling/mutect2/test/test.mutect2.artifactprior.tar.gz
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/mutect2/test/test.mutect2.filtered.vcf.gz
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/mutect2/test/test.mutect2.filtered.vcf.gz.filteringStats.tsv
+      md5sum: dee72b4c5c9bbda01d44fd3e00f1b404
+    - path: results/variant_calling/mutect2/test/test.mutect2.filtered.vcf.gz.tbi
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/mutect2/test/test.mutect2.vcf.gz
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/mutect2/test/test.mutect2.vcf.gz.stats
+      md5sum: 094cb75b0bda28e92b6718ff33d136e2
+    - path: results/variant_calling/mutect2/test/test.mutect2.vcf.gz.tbi
+    # binary changes md5sums on reruns
+    - path: results/reports/mosdepth/sample1/sample1.recal.mosdepth.global.dist.txt
+      md5sum: 69e29702ef01fd8f6c7a5468fc35a16a
+    - path: results/reports/mosdepth/sample1/sample1.recal.mosdepth.region.dist.txt
+      md5sum: 6ec49cd7d510c2eb3d9d90fdb79b783a
+    - path: results/reports/mosdepth/sample1/sample1.recal.mosdepth.summary.txt
+      md5sum: 103098d0bf76ed82d2b87d5f242b099a
+    - path: results/reports/mosdepth/sample1/sample1.recal.regions.bed.gz
+      md5sum: b5888cf7395c57d39879a5faa6159eb3
+    - path: results/reports/mosdepth/sample1/sample1.recal.regions.bed.gz.csi
+      md5sum: 9cb0ad7039a3b703d16ca7d5b835c0ee
+    - path: results/reports/samtools/sample1/sample1.recal.cram.stats
+    # conda changes md5sums for test
+    - path: results/reports/mosdepth/sample2/sample2.recal.mosdepth.global.dist.txt
+      md5sum: f2dcd00a64947c49e8e4b93c2f4fbf27
+    - path: results/reports/mosdepth/sample2/sample2.recal.mosdepth.region.dist.txt
+      md5sum: 39005ffaac22871ffaaf19656fe69c5b
+    - path: results/reports/mosdepth/sample2/sample2.recal.mosdepth.summary.txt
+      md5sum: 68d4b98f17361fddf73052ead34fa370
+    - path: results/reports/mosdepth/sample2/sample2.recal.regions.bed.gz
+      md5sum: 2819e995eafded35f53328c4ec19ba58
+    - path: results/reports/mosdepth/sample2/sample2.recal.regions.bed.gz.csi
+      md5sum: 393c2749068304d8545b501b9d4658e4
+    - path: results/reports/samtools/sample2/sample2.recal.cram.stats
+    # conda changes md5sums for test
+    - path: results/reports/mosdepth/sample3/sample3.recal.mosdepth.global.dist.txt
+      md5sum: f2dcd00a64947c49e8e4b93c2f4fbf27
+    - path: results/reports/mosdepth/sample3/sample3.recal.mosdepth.region.dist.txt
+      md5sum: 39005ffaac22871ffaaf19656fe69c5b
+    - path: results/reports/mosdepth/sample3/sample3.recal.mosdepth.summary.txt
+      md5sum: 68d4b98f17361fddf73052ead34fa370
+    - path: results/reports/mosdepth/sample3/sample3.recal.regions.bed.gz
+      md5sum: 2819e995eafded35f53328c4ec19ba58
+    - path: results/reports/mosdepth/sample3/sample3.recal.regions.bed.gz.csi
+      md5sum: 393c2749068304d8545b501b9d4658e4
+    - path: results/reports/samtools/sample3/sample3.recal.cram.stats
+    # conda changes md5sums for test
+- name: Run full pipeline on tumoronly with most tools
+  command: nextflow run . -profile test --input tests/csv/3.0/fastq_tumor_only.csv --tools cnvkit,freebayes,merge,mpileup,mutect2,snpeff,strelka,tiddit,vep --outdir results
+  tags:
+    - full_pipeline_manual
+    - manual
+    - tumor_only
+    - variant_calling
+- name: Run full pipeline on somatic with most tools
+  command: nextflow run . -profile test --input tests/csv/3.0/fastq_pair.csv --tools cnvkit,deepvariant,freebayes,merge,mpileup,msisensorpro,snpeff,strelka,tiddit,vep --outdir results
+  tags:
+    - full_pipeline_manual
+    - manual
+    - somatic
+    - variant_calling
+- name: Run full pipeline on germline with most tools
+  command: nextflow run . -profile test --input tests/csv/3.0/fastq_single.csv --tools cnvkit,deepvariant,freebayes,merge,mpileup,snpeff,strelka,tiddit,vep --outdir results
+  tags:
+    - full_pipeline_manual
+    - manual
+    - germline
+    - variant_calling

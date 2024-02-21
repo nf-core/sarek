@@ -1,0 +1,25 @@
+Changes in module 'nf-core/controlfreec/assesssignificance'
+--- modules/nf-core/controlfreec/assesssignificance/environment.yml
++++ modules/nf-core/controlfreec/assesssignificance/environment.yml
+@@ -4,4 +4,4 @@
+   - bioconda
+   - defaults
+ dependencies:
+-  - bioconda::control-freec=11.6b
++  - bioconda::control-freec=11.6
+
+--- modules/nf-core/controlfreec/assesssignificance/main.nf
++++ modules/nf-core/controlfreec/assesssignificance/main.nf
+@@ -4,8 +4,8 @@
+ 
+     conda "${moduleDir}/environment.yml"
+     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+-        'https://depot.galaxyproject.org/singularity/control-freec:11.6b--hdbdd923_0' :
+-        'biocontainers/control-freec:11.6b--hdbdd923_0' }"
++        'https://depot.galaxyproject.org/singularity/control-freec:11.6--h1b792b2_1' :
++        'biocontainers/control-freec:11.6--h1b792b2_1' }"
+ 
+     input:
+     tuple val(meta), path(cnvs), path(ratio)
+
+************************************************************
