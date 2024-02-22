@@ -237,7 +237,7 @@
                     },
                     "gatk4/genotypegvcfs": {
                         "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "git_sha": "d742e3143f2ccb8853c29b35cfcf50b5e5026980",
                         "installed_by": ["modules"]
                     },
                     "gatk4/getpileupsummaries": {
