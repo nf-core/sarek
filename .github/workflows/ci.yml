@@ -220,6 +220,7 @@ jobs:
           - tags: "fastqc"
           - tags: "gatk4/applybqsr"
           - tags: "gatk4/baserecalibrator"
+          - tags: "gatk4/genomicsdbimport"
           - tags: "gatk4/haplotypecaller"
           - tags: "multiqc"
           - tags: "samtools/mpileup"
