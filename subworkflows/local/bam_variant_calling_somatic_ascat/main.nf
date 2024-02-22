@@ -21,7 +21,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ASCAT {
 
     ch_versions = Channel.empty()
 
-    if (!params.wes) intervals_bed = [] // No intervals needed if not WES
     ASCAT(cram_pair, allele_files, loci_files, intervals_bed, fasta, gc_file, rt_file)
 
     ch_versions = ch_versions.mix(ASCAT.out.versions)

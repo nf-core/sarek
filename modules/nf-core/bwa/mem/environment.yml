@@ -6,4 +6,5 @@ channels:
 dependencies:
   - bwa=0.7.17
   # renovate: datasource=conda depName=bioconda/samtools
-  - samtools=1.16.1
+  - samtools=1.19.2
+  - htslib=1.19.1

@@ -5,4 +5,4 @@ channels:
   - defaults
 dependencies:
   - bioconda::samblaster=0.1.26
-  - bioconda::samtools=1.16.1
+  - bioconda::samtools=1.19.2
