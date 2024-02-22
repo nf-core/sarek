@@ -29,7 +29,7 @@ input:
       description: |
         Groovy Map containing reference information
         e.g. [ id:'genome']
-  - ref_dict:
+  - dict:
       type: file
       description: Optional Sequence Dictionary as input
       pattern: "*.dict"
