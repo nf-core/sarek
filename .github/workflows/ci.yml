@@ -218,6 +218,7 @@ jobs:
           - tags: "dragmap/align"
           - tags: "fastp"
           - tags: "fastqc"
+          - tags: "gatk4/applybqsr"
           - tags: "gatk4/haplotypecaller"
           - tags: "multiqc"
           - tags: "samtools/mpileup"
