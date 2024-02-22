@@ -222,6 +222,7 @@ jobs:
           - tags: "gatk4/baserecalibrator"
           - tags: "gatk4/genomicsdbimport"
           - tags: "gatk4/haplotypecaller"
+          - tags: "gatk4/markduplicates"
           - tags: "multiqc"
           - tags: "samtools/mpileup"
           - tags: "samtools/stats"
