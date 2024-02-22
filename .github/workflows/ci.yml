@@ -221,7 +221,7 @@ jobs:
           - tags: "dragmap/align"
           - tags: "fastp"
           - tags: "fastqc"
-          - tags: "gatk/haplotypecaller"
+          - tags: "gatk4/haplotypecaller"
           - tags: "multiqc"
           - tags: "samtools/mpileup"
           - tags: "samtools/stats"
