@@ -16,7 +16,6 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
     dict                         // channel: [mandatory]
     dbsnp                        // channel: [optional]
     dbsnp_tbi                    // channel: [optional]
-    dbsnp_vqsr                   // channel: [optional]
     intervals                    // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
 
     main:

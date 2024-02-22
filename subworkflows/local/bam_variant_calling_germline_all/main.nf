@@ -131,7 +131,6 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             dict,
             dbsnp,
             dbsnp_tbi,
-            dbsnp_vqsr,
             intervals)
 
         vcf_haplotypecaller = BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.vcf
