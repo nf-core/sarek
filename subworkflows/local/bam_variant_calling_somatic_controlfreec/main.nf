@@ -25,35 +25,32 @@ workflow BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC {
 
     ch_versions = Channel.empty()
 
-    assess_significance_input = Channel.empty()
-
     FREEC_SOMATIC(controlfreec_input, fasta, fasta_fai, [], dbsnp, dbsnp_tbi, chr_files, mappability, intervals_bed, [])
 
     //Filter the files that come out of freec somatic as ASSESS_SIGNIFICANCE only takes one cnv and one ratio file
     //Creates empty channel if file is missing
     cnv_files = FREEC_SOMATIC.out.CNV
-    .multiMap{ meta, cnv ->
+    .map{ meta, cnv ->
         def meta_clone_tumor = meta.clone()
         def tumor_file = cnv instanceof List ? cnv.find { it.toString().endsWith("gz_CNVs") } : cnv //only find if its a list, else it returns only the filename without the path
+        def tumor = tumor_file == null ? [] : [meta_clone_tumor,tumor_file] //only fill channel if file was found, else leave it empty
 
-        tumor: tumor_file == null ? [] : [meta_clone_tumor,tumor_file] //only fill channel if file was found, else leave it empty
+        tumor
     }
 
     ratio_files = FREEC_SOMATIC.out.ratio
-    .multiMap{ meta, ratio ->
+    .map{ meta, ratio ->
         def meta_clone_tumor = meta.clone()
         def tumor_file = ratio instanceof List ? ratio.find { it.toString().endsWith("gz_ratio.txt") } : ratio //same here as cnv
+        def tumor = tumor_file == null ? [] : [meta_clone_tumor,tumor_file] //same here as ratio
 
-        tumor: tumor_file == null ? [] : [meta_clone_tumor,tumor_file] //same here as ratio
+        tumor
     }
 
     //Join the pairs
-    tumor_files = cnv_files.tumor.join(ratio_files.tumor, failOnDuplicate: true, failOnMismatch: true)
+    tumor_files = cnv_files.join(ratio_files, failOnDuplicate: true, failOnMismatch: true)
 
-    //Mix all the pairs into input channel
-    assess_significance_input = assess_significance_input.mix(tumor_files)
-
-    ASSESS_SIGNIFICANCE(assess_significance_input)
+    ASSESS_SIGNIFICANCE(tumor_files)
     FREEC2BED(FREEC_SOMATIC.out.ratio)
     FREEC2CIRCOS(FREEC_SOMATIC.out.ratio)
     MAKEGRAPH2(FREEC_SOMATIC.out.ratio.join(FREEC_SOMATIC.out.BAF, failOnDuplicate: true, failOnMismatch: true))
