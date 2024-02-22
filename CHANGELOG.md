@@ -25,7 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1360](https://github.com/nf-core/sarek/pull/1360) - Sync `TEMPLATE` with `tools` `2.11`
 - [#1408](https://github.com/nf-core/sarek/pull/1408), [#1412](https://github.com/nf-core/sarek/pull/1412) - Updating samtools to v1.19.2 - except in GATK/markduplicates. (Temporarily disabled nf-test for bwamem2/mem.)
 - [#1411](https://github.com/nf-core/sarek/pull/1411) - Temporarily disable sentieon related tests
-- [#1419](https://github.com/nf-core/sarek/pull/1419) - Updating GATK to v4.5.
+- [#1419](https://github.com/nf-core/sarek/pull/1419) - Updating GATK to v4.5, and updating samtools to v1.19.2 in GATK/markduplicates.
 
 ### Fixed
 
