@@ -1,0 +1,95 @@
+nextflow_process {
+
+    name "Test Process GATK4_APPLYBQSR"
+    script "../main.nf"
+    process "GATK4_APPLYBQSR"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "gatk4"
+    tag "gatk4/applybqsr"
+
+    test("sarscov2 - bam") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ],
+                    file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true),
+                    file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam_bai'], checkIfExists: true),
+                    file(params.test_data['sarscov2']['illumina']['test_baserecalibrator_table'], checkIfExists: true),
+                    []
+                ]
+                input[1] = file(params.test_data['sarscov2']['genome']['genome_fasta'], checkIfExists: true)
+                input[2] = file(params.test_data['sarscov2']['genome']['genome_fasta_fai'], checkIfExists: true)
+                input[3] = file(params.test_data['sarscov2']['genome']['genome_dict'], checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+
+    }
+
+    test("sarscov2 - bam - intervals") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ],
+                    file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true),
+                    file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam_bai'], checkIfExists: true),
+                    file(params.test_data['sarscov2']['illumina']['test_baserecalibrator_table'], checkIfExists: true),
+                    file(params.test_data['sarscov2']['genome']['test_bed'], checkIfExists: true)
+                ]
+                input[1] = file(params.test_data['sarscov2']['genome']['genome_fasta'], checkIfExists: true)
+                input[2] = file(params.test_data['sarscov2']['genome']['genome_fasta_fai'], checkIfExists: true)
+                input[3] = file(params.test_data['sarscov2']['genome']['genome_dict'], checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+
+    test("sarscov2 - cram") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ],
+                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_cram'], checkIfExists: true),
+                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_cram_crai'], checkIfExists: true),
+                    file(params.test_data['homo_sapiens']['illumina']['test_baserecalibrator_table'], checkIfExists: true),
+                    file(params.test_data['homo_sapiens']['genome']['genome_bed'], checkIfExists: true)
+                ]
+                input[1] = file(params.test_data['homo_sapiens']['genome']['genome_fasta'], checkIfExists: true)
+                input[2] = file(params.test_data['homo_sapiens']['genome']['genome_fasta_fai'], checkIfExists: true)
+                input[3] = file(params.test_data['homo_sapiens']['genome']['genome_dict'], checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out.versions).match() },
+                { assert snapshot(file(process.out.cram[0][1]).name).match("test.cram") }
+            )
+        }
+    }
+
+}
