@@ -32,11 +32,11 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
 
     GATK4_HAPLOTYPECALLER(
         cram_intervals,
-        fasta.map{ it -> [[:], it] },
-        fasta_fai.map{ it -> [[:], it] },
+        fasta,
+        fasta_fai,
         dict,
-        dbsnp.map{ it -> [[:], it] },
-        dbsnp_tbi.map{ it -> [[:], it] })
+        dbsnp,
+        dbsnp_tbi)
 
     // For joint genotyping
     gvcf_tbi_intervals = GATK4_HAPLOTYPECALLER.out.vcf
