@@ -61,6 +61,8 @@ jobs:
           - tags: "sentieon/haplotyper"
           - tags: "sentieon/haplotyper_joint_germline"
           - tags: "sentieon/haplotyper_skip_filter"
+          - NXF_VER: "latest-everything"
+            tags: "joint_germline"
     env:
       NXF_ANSI_LOG: false
       TEST_DATA_BASE: "${{ github.workspace }}/test-datasets"
