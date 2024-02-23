@@ -1,0 +1,87 @@
+nextflow_process {
+
+    name "Test Process GATK4_MERGEVCFS"
+    script "../main.nf"
+    process "GATK4_MERGEVCFS"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "gatk4"
+    tag "gatk4/mergevcfs"
+
+    test("test_gatk4_mergevcfs") {
+        when {
+            process {
+                """
+                input[0] = [ [ id:'test' ], [ file(params.test_data['homo_sapiens']['genome']['dbsnp_146_hg38_vcf_gz'], checkIfExists: true), file(params.test_data['homo_sapiens']['genome']['gnomad_r2_1_1_vcf_gz'], checkIfExists: true) ]]
+                input[1] = [ [], file(params.test_data['homo_sapiens']['genome']['genome_dict'], checkIfExists: true)]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                {
+                    assert snapshot(
+                        file(process.out.vcf.get(0).get(1)).name,
+                        file(process.out.tbi.get(0).get(1)).name
+                    ).match("test_gatk4_mergevcfs")
+                },
+            )
+        }
+
+    }
+
+    test("test_gatk4_mergevcfs_no_dict") {
+        when {
+            process {
+                """
+                input[0] = [ [ id:'test' ], [ file(params.test_data['homo_sapiens']['genome']['dbsnp_146_hg38_vcf_gz'], checkIfExists: true), file(params.test_data['homo_sapiens']['genome']['gnomad_r2_1_1_vcf_gz'], checkIfExists: true) ]]
+                input[1] = [ [],[]]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                {
+                    assert snapshot(
+                        file(process.out.vcf.get(0).get(1)).name,
+                        file(process.out.tbi.get(0).get(1)).name
+                    ).match("test_gatk4_mergevcfs_no_dict")
+                },
+            )
+        }
+
+    }
+
+    test("test_gatk4_mergevcfs_no_dict_stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [ [ id:'test' ], [ file(params.test_data['homo_sapiens']['genome']['dbsnp_146_hg38_vcf_gz'], checkIfExists: true), file(params.test_data['homo_sapiens']['genome']['gnomad_r2_1_1_vcf_gz'], checkIfExists: true) ]]
+                input[1] = [ [],[]]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                {
+                    assert snapshot(
+                        file(process.out.vcf.get(0).get(1)).name,
+                        file(process.out.tbi.get(0).get(1)).name
+                    ).match("test_gatk4_mergevcfs_no_dict_stub")
+                },
+            )
+        }
+
+    }
+
+}
