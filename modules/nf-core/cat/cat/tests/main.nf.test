@@ -19,8 +19,8 @@ nextflow_process {
                     [
                         [ id:'test', single_end:true ],
                         [
-                            file(params.test_data['sarscov2']['genome']['genome_fasta'], checkIfExists: true),
-                            file(params.test_data['sarscov2']['genome']['genome_sizes'], checkIfExists: true)
+                            file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true),
+                            file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.sizes', checkIfExists: true)
                         ]
                     ]
                 """
@@ -46,8 +46,8 @@ nextflow_process {
                     [
                         [ id:'test', single_end:true ],
                         [
-                            file(params.test_data['sarscov2']['genome']['genome_gff3_gz'], checkIfExists: true),
-                            file(params.test_data['sarscov2']['genome']['contigs_genome_maf_gz'], checkIfExists: true)
+                            file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.gff3.gz', checkIfExists: true),
+                            file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/alignment/last/contigs.genome.maf.gz', checkIfExists: true)
                         ]
                     ]
                 """
@@ -76,8 +76,8 @@ nextflow_process {
                     [
                         [ id:'test', single_end:true ],
                         [
-                            file(params.test_data['sarscov2']['genome']['genome_gff3_gz'], checkIfExists: true),
-                            file(params.test_data['sarscov2']['genome']['contigs_genome_maf_gz'], checkIfExists: true)
+                            file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.gff3.gz', checkIfExists: true),
+                            file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/alignment/last/contigs.genome.maf.gz', checkIfExists: true)
                         ]
                     ]
                 """
@@ -105,8 +105,8 @@ nextflow_process {
                     [
                         [ id:'test', single_end:true ],
                         [
-                            file(params.test_data['sarscov2']['genome']['genome_fasta'], checkIfExists: true),
-                            file(params.test_data['sarscov2']['genome']['genome_sizes'], checkIfExists: true)
+                            file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true),
+                            file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.sizes', checkIfExists: true)
                         ]
                     ]
                 """
@@ -134,7 +134,7 @@ nextflow_process {
                     [
                         [ id:'test', single_end:true ],
                         [
-                            file(params.test_data['sarscov2']['genome']['genome_fasta'], checkIfExists: true)
+                            file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
                         ]
                     ]
                 """
@@ -150,4 +150,3 @@ nextflow_process {
         }
     }
 }
-
