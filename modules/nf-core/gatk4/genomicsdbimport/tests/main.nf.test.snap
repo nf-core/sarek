@@ -1,0 +1,30 @@
+{
+    "test_gatk4_genomicsdbimport_create_genomicsdb": {
+        "content": [
+            "__tiledb_workspace.tdb",
+            "callset.json",
+            "chr22$1$40001",
+            "vcfheader.vcf",
+            "vidmap.json"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-14T11:22:10.11423157"
+    },
+    "test_gatk4_genomicsdbimport_update_genomicsdb": {
+        "content": [
+            "__tiledb_workspace.tdb",
+            "callset.json",
+            "chr22$1$40001",
+            "vcfheader.vcf",
+            "vidmap.json"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-14T12:46:42.403794676"
+    }
+}
