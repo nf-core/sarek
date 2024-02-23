@@ -31,24 +31,22 @@ workflow BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC {
     //Creates empty channel if file is missing
     cnv_files = FREEC_SOMATIC.out.CNV
     .map{ meta, cnv ->
-        def meta_clone_tumor = meta.clone()
         def tumor_file = cnv instanceof List ? cnv.find { it.toString().endsWith("gz_CNVs") } : cnv //only find if its a list, else it returns only the filename without the path
-        def tumor = tumor_file == null ? [] : [meta_clone_tumor,tumor_file] //only fill channel if file was found, else leave it empty
+        def tumor = tumor_file == null ? [] : [meta,tumor_file] //only fill channel if file was found, else leave it empty
 
         tumor
     }
 
     ratio_files = FREEC_SOMATIC.out.ratio
     .map{ meta, ratio ->
-        def meta_clone_tumor = meta.clone()
         def tumor_file = ratio instanceof List ? ratio.find { it.toString().endsWith("gz_ratio.txt") } : ratio //same here as cnv
-        def tumor = tumor_file == null ? [] : [meta_clone_tumor,tumor_file] //same here as ratio
+        def tumor = tumor_file == null ? [] : [meta,tumor_file] //same here as ratio
 
         tumor
     }
 
     //Join the pairs
-    tumor_files = cnv_files.join(ratio_files, failOnDuplicate: true, failOnMismatch: true)
+    assess_significance_input = cnv_files.join(ratio_files, failOnDuplicate: true, failOnMismatch: true)
 
     ASSESS_SIGNIFICANCE(tumor_files)
     FREEC2BED(FREEC_SOMATIC.out.ratio)
