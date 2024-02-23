@@ -41,6 +41,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+- [#1405](https://github.com/nf-core/sarek/pull/1405) - Removing docker.userEmulation
+
 ### Dependencies
 
 | Dependency | Old version | New version |
