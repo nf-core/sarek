@@ -219,7 +219,6 @@ jobs:
           - tags: "bwamem2/mem"
           - tags: "cat/cat"
           - tags: "cat/fastq"
-          - tags: "custom/dumpsoftwareversions"
           - tags: "dragmap/align"
           - tags: "fastp"
           - tags: "fastqc"
@@ -232,8 +231,8 @@ jobs:
           - tags: "multiqc"
           - tags: "samtools/mpileup"
           - tags: "samtools/stats"
-          - tags: "untar"
           - tags: "subworkflows/utils_nfvalidation_plugin"
+          - tags: "untar"
     env:
       NXF_ANSI_LOG: false
       TEST_DATA_BASE: "${{ github.workspace }}/test-datasets"
