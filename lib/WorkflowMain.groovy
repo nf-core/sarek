@@ -21,31 +21,6 @@ class WorkflowMain {
     }
 
     //
-    // Validate parameters and print summary to screen
-    //
-    public static void initialise(workflow, params, log, args) {
-
-        // Print workflow version and exit on --version
-        if (params.version) {
-            String workflow_version = NfcoreTemplate.version(workflow)
-            log.info "${workflow.manifest.name} ${workflow_version}"
-            System.exit(0)
-        }
-
-        // Check that a -profile or Nextflow config has been provided to run the pipeline
-        NfcoreTemplate.checkConfigProvided(workflow, log)
-        // Check that the profile doesn't contain spaces and doesn't end with a trailing comma
-        checkProfile(workflow.profile, args, log)
-
-        // Check AWS batch settings
-        NfcoreTemplate.awsBatch(workflow, params)
-
-        // Warn that no input was provided
-        if (!params.input && !params.build_only_index) {
-            log.warn "No samplesheet specified, attempting to restart from csv files present in ${params.outdir}"
-        }
-    }
-    //
     // Get attribute from genome config file e.g. fasta
     //
     public static Object getGenomeAttribute(params, attribute) {
