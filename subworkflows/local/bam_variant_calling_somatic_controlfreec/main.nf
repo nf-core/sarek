@@ -42,7 +42,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC {
     .map{ meta, ratio ->
         def tumor_file = ratio instanceof List ? ratio.find { it.toString().endsWith("gz_ratio.txt") } : ratio //same here as cnv
         if (!tumor_file){
-            error ("Ratio tumor file not found for sample $meta.id")
+            error("Ratio tumor file not found for sample $meta.id")
         }
         [meta,tumor_file]
     }
