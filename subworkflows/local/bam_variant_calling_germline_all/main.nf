@@ -126,11 +126,11 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     if (tools.split(',').contains('haplotypecaller')) {
         BAM_VARIANT_CALLING_HAPLOTYPECALLER(
             cram,
-            fasta,
-            fasta_fai,
+            fasta.map{ it -> [[id:it[0].baseName], it] },
+            fasta_fai.map{ it -> [[id:it[0].baseName], it] },
             dict,
-            dbsnp,
-            dbsnp_tbi,
+            dbsnp.map{ it -> [[id:it[0].baseName], it] },
+            dbsnp_tbi.map{ it -> [[id:it[0].baseName], it] },
             intervals)
 
         vcf_haplotypecaller = BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.vcf
