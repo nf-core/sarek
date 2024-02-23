@@ -213,7 +213,6 @@ jobs:
           - "latest-everything"
         exclude:
           - tags: "bwamem2/mem"
-          - tags: "cat/cat"
           - tags: "cat/fastq"
           - tags: "custom/dumpsoftwareversions"
           - tags: "dragmap/align"
