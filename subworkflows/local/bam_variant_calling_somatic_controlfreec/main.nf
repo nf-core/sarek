@@ -33,7 +33,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC {
     .map{ meta, cnv ->
         def tumor_file = cnv instanceof List ? cnv.find { it.toString().endsWith("gz_CNVs") } : cnv //only find if its a list, else it returns only the filename without the path
         if (!tumor_file){
-            log.error "CNVs tumor file not found for sample $meta.id"
+            error("CNVs tumor file not found for sample $meta.id")
         }
         [meta,tumor_file]
     }
