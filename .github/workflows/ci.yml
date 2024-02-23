@@ -212,7 +212,7 @@ jobs:
           - "23.04.0"
           - "latest-everything"
         exclude:
-          - tags: "bwa/index
+          - tags: "bwa/index"
           - tags: "bwamem2/mem"
           - tags: "cat/cat"
           - tags: "cat/fastq"
