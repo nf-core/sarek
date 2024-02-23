@@ -214,7 +214,6 @@ jobs:
         exclude:
           - tags: "bwamem2/mem"
           - tags: "custom/dumpsoftwareversions"
-          - tags: "dragmap/align"
           - tags: "fastp"
           - tags: "fastqc"
           - tags: "gatk4/applybqsr"
