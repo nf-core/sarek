@@ -48,7 +48,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC {
     //Join the pairs
     assess_significance_input = cnv_files.join(ratio_files, failOnDuplicate: true, failOnMismatch: true)
 
-    ASSESS_SIGNIFICANCE(tumor_files)
+    ASSESS_SIGNIFICANCE(assess_significance_input)
     FREEC2BED(FREEC_SOMATIC.out.ratio)
     FREEC2CIRCOS(FREEC_SOMATIC.out.ratio)
     MAKEGRAPH2(FREEC_SOMATIC.out.ratio.join(FREEC_SOMATIC.out.BAF, failOnDuplicate: true, failOnMismatch: true))
