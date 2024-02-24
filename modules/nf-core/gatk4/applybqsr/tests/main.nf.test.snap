@@ -7,7 +7,7 @@
                         {
                             "id": "test"
                         },
-                        "test.bam:md5,096d269e17f4ae53f765013479240db8"
+                        "test.recal.bam:md5,2dcc50c3dd8bfbb5dc02bd362d9ddca3"
                     ]
                 ],
                 "1": [
@@ -21,7 +21,7 @@
                         {
                             "id": "test"
                         },
-                        "test.bam:md5,096d269e17f4ae53f765013479240db8"
+                        "test.recal.bam:md5,2dcc50c3dd8bfbb5dc02bd362d9ddca3"
                     ]
                 ],
                 "cram": [
@@ -34,9 +34,9 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.0"
+            "nextflow": "24.01.0"
         },
-        "timestamp": "2024-02-13T16:21:48.144461"
+        "timestamp": "2024-02-24T21:46:13.440473512"
     },
     "sarscov2 - cram": {
         "content": [
@@ -52,13 +52,13 @@
     },
     "test.cram": {
         "content": [
-            "test.cram"
+            "test.recal.cram"
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.0"
+            "nextflow": "24.01.0"
         },
-        "timestamp": "2023-12-09T03:10:46.70859771"
+        "timestamp": "2024-02-24T21:46:28.711851595"
     },
     "sarscov2 - bam": {
         "content": [
@@ -68,7 +68,7 @@
                         {
                             "id": "test"
                         },
-                        "test.bam:md5,022271b9ce0a07579282a2a5c1186513"
+                        "test.recal.bam:md5,93fee40ff233e2d22e3379e253c423cf"
                     ]
                 ],
                 "1": [
@@ -82,7 +82,7 @@
                         {
                             "id": "test"
                         },
-                        "test.bam:md5,022271b9ce0a07579282a2a5c1186513"
+                        "test.recal.bam:md5,93fee40ff233e2d22e3379e253c423cf"
                     ]
                 ],
                 "cram": [
@@ -95,8 +95,8 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.0"
+            "nextflow": "24.01.0"
         },
-        "timestamp": "2024-02-13T16:21:28.719225"
+        "timestamp": "2024-02-24T21:45:58.992053831"
     }
 }
