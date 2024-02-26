@@ -31,6 +31,7 @@ include { SAREK                   } from './workflows/sarek'
 include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_sarek_pipeline'
 include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_sarek_pipeline'
 include { getGenomeAttribute      } from './subworkflows/local/utils_nfcore_sarek_pipeline'
+include { retrieveInput           } from './subworkflows/local/utils_nfcore_sarek_pipeline'
 include { paramsHelp              } from 'plugin/nf-validation'
 include { validateParameters      } from 'plugin/nf-validation'
 
@@ -81,7 +82,7 @@ params.vep_species             = getGenomeAttribute('vep_species')
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-params.input_restart = WorkflowSarek.retrieveInput(params, log)
+params.input_restart = retrieveInput(params, log)
 
 // Validate input parameters
 
