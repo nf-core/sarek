@@ -259,13 +259,6 @@ workflow SAREK {
 
     input_sample = SAMPLESHEET_TO_CHANNEL.out.input_sample
 
-    // MULTIQC
-    ch_multiqc_config                     = Channel.fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
-    ch_multiqc_custom_config              = params.multiqc_config ? Channel.fromPath( params.multiqc_config, checkIfExists: true ) : Channel.empty()
-    ch_multiqc_logo                       = params.multiqc_logo   ? Channel.fromPath( params.multiqc_logo, checkIfExists: true ) : Channel.empty()
-    ch_multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
-
-
     // Download cache
     if (params.download_cache) {
         // Assuming that even if the cache is provided, if the user specify download_cache, sarek will download the cache
