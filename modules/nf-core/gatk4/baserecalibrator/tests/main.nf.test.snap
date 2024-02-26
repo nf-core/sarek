@@ -7,7 +7,7 @@
                         {
                             "id": "test"
                         },
-                        "test.table:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.recal.table:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "1": [
@@ -18,7 +18,7 @@
                         {
                             "id": "test"
                         },
-                        "test.table:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "test.recal.table:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "versions": [
@@ -28,9 +28,9 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.0"
+            "nextflow": "24.01.0"
         },
-        "timestamp": "2024-02-13T16:16:00.04396"
+        "timestamp": "2024-02-26T07:59:09.802474612"
     },
     "sarscov2 - bam - intervals": {
         "content": [
@@ -40,7 +40,7 @@
                         {
                             "id": "test"
                         },
-                        "test.table:md5,9ecb5f00a2229291705addc09c0ec231"
+                        "test.recal.table:md5,9ecb5f00a2229291705addc09c0ec231"
                     ]
                 ],
                 "1": [
@@ -51,7 +51,7 @@
                         {
                             "id": "test"
                         },
-                        "test.table:md5,9ecb5f00a2229291705addc09c0ec231"
+                        "test.recal.table:md5,9ecb5f00a2229291705addc09c0ec231"
                     ]
                 ],
                 "versions": [
@@ -61,9 +61,9 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.0"
+            "nextflow": "24.01.0"
         },
-        "timestamp": "2024-02-13T16:15:17.899391"
+        "timestamp": "2024-02-26T07:58:46.088383653"
     },
     "sarscov2 - bam - multiple sites": {
         "content": [
@@ -73,7 +73,7 @@
                         {
                             "id": "test"
                         },
-                        "test.table:md5,e2e43abdc0c943c1a54dae816d0b9ea7"
+                        "test.recal.table:md5,e2e43abdc0c943c1a54dae816d0b9ea7"
                     ]
                 ],
                 "1": [
@@ -84,7 +84,7 @@
                         {
                             "id": "test"
                         },
-                        "test.table:md5,e2e43abdc0c943c1a54dae816d0b9ea7"
+                        "test.recal.table:md5,e2e43abdc0c943c1a54dae816d0b9ea7"
                     ]
                 ],
                 "versions": [
@@ -94,9 +94,9 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.0"
+            "nextflow": "24.01.0"
         },
-        "timestamp": "2024-02-13T16:15:47.770383"
+        "timestamp": "2024-02-26T07:59:00.753963509"
     },
     "homo_sapiens - cram ": {
         "content": [
@@ -106,7 +106,7 @@
                         {
                             "id": "test"
                         },
-                        "test.table:md5,35d89a3811aa31711fc9815b6b80e6ec"
+                        "test.recal.table:md5,35d89a3811aa31711fc9815b6b80e6ec"
                     ]
                 ],
                 "1": [
@@ -117,7 +117,7 @@
                         {
                             "id": "test"
                         },
-                        "test.table:md5,35d89a3811aa31711fc9815b6b80e6ec"
+                        "test.recal.table:md5,35d89a3811aa31711fc9815b6b80e6ec"
                     ]
                 ],
                 "versions": [
@@ -127,9 +127,9 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.0"
+            "nextflow": "24.01.0"
         },
-        "timestamp": "2024-02-13T16:16:42.135898"
+        "timestamp": "2024-02-26T07:59:25.266531501"
     },
     "sarscov2 - bam": {
         "content": [
@@ -139,7 +139,7 @@
                         {
                             "id": "test"
                         },
-                        "test.table:md5,e2e43abdc0c943c1a54dae816d0b9ea7"
+                        "test.recal.table:md5,e2e43abdc0c943c1a54dae816d0b9ea7"
                     ]
                 ],
                 "1": [
@@ -150,7 +150,7 @@
                         {
                             "id": "test"
                         },
-                        "test.table:md5,e2e43abdc0c943c1a54dae816d0b9ea7"
+                        "test.recal.table:md5,e2e43abdc0c943c1a54dae816d0b9ea7"
                     ]
                 ],
                 "versions": [
@@ -160,8 +160,8 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.0"
+            "nextflow": "24.01.0"
         },
-        "timestamp": "2024-02-13T16:14:57.629443"
+        "timestamp": "2024-02-26T07:58:31.908467001"
     }
 }
