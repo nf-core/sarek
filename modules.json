@@ -125,7 +125,7 @@
                     },
                     "dragmap/align": {
                         "branch": "master",
-                        "git_sha": "575e1bc54b083fb15e7dd8b5fcc40bea60e8ce83",
+                        "git_sha": "9a7efcec9b21baf1c67342faa6b8d905c972207f",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/dragmap/align/dragmap-align.diff"
                     },
