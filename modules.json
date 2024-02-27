@@ -187,7 +187,7 @@
                     },
                     "gatk4/baserecalibrator": {
                         "branch": "master",
-                        "git_sha": "d742e3143f2ccb8853c29b35cfcf50b5e5026980",
+                        "git_sha": "8a223e11d4e6deb36484e01891eae9c1cacb5f5d",
                         "installed_by": ["modules"]
                     },
                     "gatk4/calculatecontamination": {
