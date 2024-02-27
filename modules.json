@@ -257,7 +257,7 @@
                     },
                     "gatk4/markduplicates": {
                         "branch": "master",
-                        "git_sha": "d742e3143f2ccb8853c29b35cfcf50b5e5026980",
+                        "git_sha": "194fca815cf594646e638fa5476acbcc296f1850",
                         "installed_by": ["modules"]
                     },
                     "gatk4/mergemutectstats": {
