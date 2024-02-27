@@ -17,9 +17,9 @@ nextflow_process {
                 """
                 // [meta, vcf, tbi, interval, interval_value, workspace ]
                 input[0] = [ [ id:'test'],
-                       file(params.test_data['homo_sapiens']['illumina']['test_genome_vcf_gz'], checkIfExists: true) ,
-                       file(params.test_data['homo_sapiens']['illumina']['test_genome_vcf_gz_tbi'], checkIfExists: true) ,
-                       file(params.test_data['homo_sapiens']['genome']['genome_interval_list'], checkIfExists: true) ,
+                       file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/gvcf/test.genome.vcf.gz', checkIfExists: true) ,
+                       file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/gvcf/test.genome.vcf.gz.tbi', checkIfExists: true) ,
+                       file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.interval_list', checkIfExists: true) ,
                        [] ,
                        [] ]
                 // run_intlist
@@ -51,7 +51,7 @@ nextflow_process {
                 script "../../../untar/main.nf"
                 process {
                     """
-                    input[0] = Channel.of([ [], file(params.test_data['homo_sapiens']['illumina']['test_genomicsdb_tar_gz'], checkIfExists: true) ])
+                    input[0] = Channel.of([ [], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/gatk/test_genomicsdb.tar.gz', checkIfExists: true) ])
                     """
                 }
             }
@@ -89,7 +89,7 @@ nextflow_process {
                 script "../../../untar/main.nf"
                 process {
                     """
-                    input[0] = Channel.of([ [], file(params.test_data['homo_sapiens']['illumina']['test_genomicsdb_tar_gz'], checkIfExists: true) ])
+                    input[0] = Channel.of([ [], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/gatk/test_genomicsdb.tar.gz', checkIfExists: true) ])
                     """
                 }
             }
@@ -98,7 +98,7 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([ [id:"test"], file( params.test_data['homo_sapiens']['illumina']['test2_genome_vcf_gz'] , checkIfExists: true), file( params.test_data['homo_sapiens']['illumina']['test2_genome_vcf_gz_tbi'] , checkIfExists: true), [], []]).combine(UNTAR.out.untar.map{ it[1] })
+                input[0] = Channel.of([ [id:"test"], file( params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/gvcf/test2.genome.vcf.gz' , checkIfExists: true), file( params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/gvcf/test2.genome.vcf.gz.tbi' , checkIfExists: true), [], []]).combine(UNTAR.out.untar.map{ it[1] })
                 // run_intlist
                 input[1] = false
                 // run_updatewspace
@@ -129,9 +129,9 @@ nextflow_process {
                 """
                 // [meta, vcf, tbi, interval, interval_value, workspace ]
                 input[0] = [ [ id:'test'],
-                       file(params.test_data['homo_sapiens']['illumina']['test_genome_vcf_gz'], checkIfExists: true) ,
-                       file(params.test_data['homo_sapiens']['illumina']['test_genome_vcf_gz_tbi'], checkIfExists: true) ,
-                       file(params.test_data['homo_sapiens']['genome']['genome_interval_list'], checkIfExists: true) ,
+                       file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/gvcf/test.genome.vcf.gz', checkIfExists: true) ,
+                       file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/gvcf/test.genome.vcf.gz.tbi', checkIfExists: true) ,
+                       file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.interval_list', checkIfExists: true) ,
                        [] ,
                        [] ]
                 // run_intlist
