@@ -177,7 +177,7 @@
                     },
                     "gatk4/applybqsr": {
                         "branch": "master",
-                        "git_sha": "d742e3143f2ccb8853c29b35cfcf50b5e5026980",
+                        "git_sha": "af273ea6618c50e82c372abe18b0a225e84fe6f7",
                         "installed_by": ["modules"]
                     },
                     "gatk4/applyvqsr": {
