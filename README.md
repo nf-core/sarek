@@ -157,6 +157,7 @@ We thank the following people for their extensive assistance in the development 
 - [Malin Larsson](https://github.com/malinlarsson)
 - [Marcel Martin](https://github.com/marcelm)
 - [Nick Smith](https://github.com/nickhsmith)
+- [Nicolas Schcolnicov](https://github.com/nschcolnicov)
 - [Nilesh Tawari](https://github.com/nilesh-tawari)
 - [Olga Botvinnik](https://github.com/olgabot)
 - [Oskar Wacker](https://github.com/WackerO)

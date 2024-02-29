@@ -1,10 +1,10 @@
-process CONTROLFREEC_MAKEGRAPH {
+process CONTROLFREEC_MAKEGRAPH2 {
     tag "$meta.id"
     label 'process_low'
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/control-freec:11.6b--hdbdd923_0' :
+        'https://depot.galaxyproject.org/singularity/control-freec:11.6b--hdbdd923_0':
         'biocontainers/control-freec:11.6b--hdbdd923_0' }"
 
     input:
@@ -24,8 +24,9 @@ process CONTROLFREEC_MAKEGRAPH {
     def args = task.ext.args ?: ""
     def prefix = task.ext.prefix ?: "${meta.id}"
     def baf = baf ?: ""
+    def VERSION = '11.6b' // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
     """
-    cat \$(which makeGraph.R) | R --slave --args ${args} ${ratio} ${baf}
+    cat \$(which makeGraph2.0.R) | R --slave --args ${args} ${ratio} ${baf}
 
     mv *_BAF.txt.png ${prefix}_BAF.png
     mv *_ratio.txt.log2.png ${prefix}_ratio.log2.png
@@ -33,12 +34,13 @@ process CONTROLFREEC_MAKEGRAPH {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        controlfreec: \$(echo \$(freec -version 2>&1) | sed 's/^.*Control-FREEC  //; s/:.*\$//' | sed -e "s/Control-FREEC v//g" )
+        controlfreec: $VERSION
     END_VERSIONS
     """
 
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
+    def VERSION = '11.6b' // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
     """
     touch ${prefix}_BAF.png
     touch ${prefix}_ratio.log2.png
@@ -46,7 +48,7 @@ process CONTROLFREEC_MAKEGRAPH {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        controlfreec: \$(echo \$(freec -version 2>&1) | sed 's/^.*Control-FREEC  //; s/:.*\$//' | sed -e "s/Control-FREEC v//g" )
+        controlfreec: $VERSION
     END_VERSIONS
     """
 }
