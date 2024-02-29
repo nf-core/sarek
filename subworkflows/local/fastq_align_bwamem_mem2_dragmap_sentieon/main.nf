@@ -8,6 +8,7 @@ include { BWAMEM2_MEM            } from '../../../modules/nf-core/bwamem2/mem/ma
 include { BWA_MEM as BWAMEM1_MEM } from '../../../modules/nf-core/bwa/mem/main'
 include { DRAGMAP_ALIGN          } from '../../../modules/nf-core/dragmap/align/main'
 include { SENTIEON_BWAMEM        } from '../../../modules/nf-core/sentieon/bwamem/main'
+include { PARABRICKS_FQ2BAM      } from '../modules/nf-core/parabricks/fq2bam/main'
 
 workflow FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON {
     take:
