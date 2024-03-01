@@ -8,7 +8,7 @@ include { CONTROLFREEC_FREEC              as FREEC_SOMATIC       } from '../../.
 include { CONTROLFREEC_ASSESSSIGNIFICANCE as ASSESS_SIGNIFICANCE } from '../../../modules/nf-core/controlfreec/assesssignificance/main'
 include { CONTROLFREEC_FREEC2BED          as FREEC2BED           } from '../../../modules/nf-core/controlfreec/freec2bed/main'
 include { CONTROLFREEC_FREEC2CIRCOS       as FREEC2CIRCOS        } from '../../../modules/nf-core/controlfreec/freec2circos/main'
-include { CONTROLFREEC_MAKEGRAPH          as MAKEGRAPH           } from '../../../modules/nf-core/controlfreec/makegraph/main'
+include { CONTROLFREEC_MAKEGRAPH2         as MAKEGRAPH2           } from '../../../modules/nf-core/controlfreec/makegraph2/main'
 
 workflow BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC {
     take:
@@ -27,16 +27,39 @@ workflow BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC {
 
     FREEC_SOMATIC(controlfreec_input, fasta, fasta_fai, [], dbsnp, dbsnp_tbi, chr_files, mappability, intervals_bed, [])
 
-    ASSESS_SIGNIFICANCE(FREEC_SOMATIC.out.CNV.join(FREEC_SOMATIC.out.ratio, failOnDuplicate: true, failOnMismatch: true))
+    //Filter the files that come out of freec somatic as ASSESS_SIGNIFICANCE only takes one cnv and one ratio file
+    //Creates empty channel if file is missing
+    cnv_files = FREEC_SOMATIC.out.CNV
+    .map{ meta, cnv ->
+        def tumor_file = cnv instanceof List ? cnv.find { it.toString().endsWith("gz_CNVs") } : cnv //only find if its a list, else it returns only the filename without the path
+        if (!tumor_file){
+            error("CNVs tumor file not found for sample $meta.id")
+        }
+        [meta,tumor_file]
+    }
+
+    ratio_files = FREEC_SOMATIC.out.ratio
+    .map{ meta, ratio ->
+        def tumor_file = ratio instanceof List ? ratio.find { it.toString().endsWith("gz_ratio.txt") } : ratio //same here as cnv
+        if (!tumor_file){
+            error("Ratio tumor file not found for sample $meta.id")
+        }
+        [meta,tumor_file]
+    }
+
+    //Join the pairs
+    assess_significance_input = cnv_files.join(ratio_files, failOnDuplicate: true, failOnMismatch: true)
+
+    ASSESS_SIGNIFICANCE(assess_significance_input)
     FREEC2BED(FREEC_SOMATIC.out.ratio)
     FREEC2CIRCOS(FREEC_SOMATIC.out.ratio)
-    MAKEGRAPH(FREEC_SOMATIC.out.ratio.join(FREEC_SOMATIC.out.BAF, failOnDuplicate: true, failOnMismatch: true))
+    MAKEGRAPH2(FREEC_SOMATIC.out.ratio.join(FREEC_SOMATIC.out.BAF, failOnDuplicate: true, failOnMismatch: true))
 
     ch_versions = ch_versions.mix(FREEC_SOMATIC.out.versions)
     ch_versions = ch_versions.mix(ASSESS_SIGNIFICANCE.out.versions)
     ch_versions = ch_versions.mix(FREEC2BED.out.versions)
     ch_versions = ch_versions.mix(FREEC2CIRCOS.out.versions)
-    ch_versions = ch_versions.mix(MAKEGRAPH.out.versions)
+    ch_versions = ch_versions.mix(MAKEGRAPH2.out.versions)
 
     emit:
     versions = ch_versions
