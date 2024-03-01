@@ -38,12 +38,12 @@
                     },
                     "bwa/index": {
                         "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "git_sha": "6278bf9afd4a4b2d00fa6052250e73da3d91546f",
                         "installed_by": ["modules"]
                     },
                     "bwa/mem": {
                         "branch": "master",
-                        "git_sha": "ba3f3df395d2719dcef5c67189042a1dc555c701",
+                        "git_sha": "5908e575322666ccc33911a28b06e3f82260fe54",
                         "installed_by": ["modules"]
                     },
                     "bwamem2/index": {
@@ -58,12 +58,12 @@
                     },
                     "cat/cat": {
                         "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "git_sha": "9437e6053dccf4aafa022bfd6e7e9de67e625af8",
                         "installed_by": ["modules"]
                     },
                     "cat/fastq": {
                         "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "git_sha": "0997b47c93c06b49aa7b3fefda87e728312cf2ca",
                         "installed_by": ["modules"]
                     },
                     "cnvkit/antitarget": {
@@ -119,7 +119,7 @@
                     },
                     "dragmap/align": {
                         "branch": "master",
-                        "git_sha": "575e1bc54b083fb15e7dd8b5fcc40bea60e8ce83",
+                        "git_sha": "9a7efcec9b21baf1c67342faa6b8d905c972207f",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/dragmap/align/dragmap-align.diff"
                     },
@@ -171,7 +171,7 @@
                     },
                     "gatk4/applybqsr": {
                         "branch": "master",
-                        "git_sha": "d742e3143f2ccb8853c29b35cfcf50b5e5026980",
+                        "git_sha": "af273ea6618c50e82c372abe18b0a225e84fe6f7",
                         "installed_by": ["modules"]
                     },
                     "gatk4/applyvqsr": {
@@ -181,7 +181,7 @@
                     },
                     "gatk4/baserecalibrator": {
                         "branch": "master",
-                        "git_sha": "d742e3143f2ccb8853c29b35cfcf50b5e5026980",
+                        "git_sha": "8a223e11d4e6deb36484e01891eae9c1cacb5f5d",
                         "installed_by": ["modules"]
                     },
                     "gatk4/calculatecontamination": {
@@ -226,7 +226,7 @@
                     },
                     "gatk4/genomicsdbimport": {
                         "branch": "master",
-                        "git_sha": "d742e3143f2ccb8853c29b35cfcf50b5e5026980",
+                        "git_sha": "194fca815cf594646e638fa5476acbcc296f1850",
                         "installed_by": ["modules"]
                     },
                     "gatk4/genotypegvcfs": {
@@ -256,7 +256,7 @@
                     },
                     "gatk4/markduplicates": {
                         "branch": "master",
-                        "git_sha": "d742e3143f2ccb8853c29b35cfcf50b5e5026980",
+                        "git_sha": "194fca815cf594646e638fa5476acbcc296f1850",
                         "installed_by": ["modules"]
                     },
                     "gatk4/mergemutectstats": {
@@ -266,7 +266,7 @@
                     },
                     "gatk4/mergevcfs": {
                         "branch": "master",
-                        "git_sha": "d742e3143f2ccb8853c29b35cfcf50b5e5026980",
+                        "git_sha": "194fca815cf594646e638fa5476acbcc296f1850",
                         "installed_by": ["modules"]
                     },
                     "gatk4/mutect2": {
@@ -466,7 +466,7 @@
                     },
                     "untar": {
                         "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "git_sha": "e719354ba77df0a1bd310836aa2039b45c29d620",
                         "installed_by": ["modules"]
                     },
                     "unzip": {
