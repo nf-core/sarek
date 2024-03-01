@@ -3,7 +3,6 @@
   tags:
     - gatk4spark
     - preprocessing
-    - foo
   files:
     - path: results/csv/markduplicates.csv
       md5sum: 0dec46c4dc83acc263efc234805e9349
