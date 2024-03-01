@@ -6,3 +6,7 @@ results/
 testing/
 testing*
 *.pyc
+*.code-workspace
+.nf-test*
+.nf-test/
+test-datasets/

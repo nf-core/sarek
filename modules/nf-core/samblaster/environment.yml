@@ -1,0 +1,8 @@
+name: samblaster
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - bioconda::samblaster=0.1.26
+  - bioconda::samtools=1.19.2
