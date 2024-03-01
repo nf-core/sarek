@@ -13,6 +13,8 @@ include { PARABRICKS_FQ2BAM      } from '../modules/nf-core/parabricks/fq2bam/ma
 workflow FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON {
     take:
     reads // channel: [mandatory] meta, reads
+    interval_file // intervals_bed_combined [optional] for parabricks
+    known_sites // known_sites_indels [optional] for parabricks
     index // channel: [mandatory] index
     sort  // boolean: [mandatory] true -> sort, false -> don't sort
     fasta
@@ -29,6 +31,9 @@ workflow FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON {
     DRAGMAP_ALIGN(reads, index.map{ it -> [ [ id:'index' ], it ] }, sort) // If aligner is dragmap
     // The sentieon-bwamem-module does sorting as part of the conversion from sam to bam.
     SENTIEON_BWAMEM(reads, index.map{ it -> [ [ id:'index' ], it ] }, fasta.map{fa -> [[:], fa]}, fasta_fai.map{fai -> [[:], fai]}) // If aligner is sentieon-bwamem
+    // The parabricks-fq2bam module performs alignment and sorting as part of the conversion from fastq to bam.
+    // Additionally, it can perform mark duplicates and generate a bqsr table (input for parabricks-applybqsr module)
+    PARABRICKS_FQ2BAM(reads, fasta.map{fa -> [[:], fa]}, index.map{ it -> [[ id:'index' ], it ] }, known_sites)
 
     // Get the bam files from the aligner
     // Only one aligner is run
