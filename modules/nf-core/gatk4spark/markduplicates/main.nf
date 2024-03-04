@@ -7,6 +7,10 @@ process GATK4SPARK_MARKDUPLICATES {
         'https://depot.galaxyproject.org/singularity/gatk4-spark:4.4.0.0--hdfd78af_0':
         'biocontainers/gatk4-spark:4.4.0.0--hdfd78af_0' }"
 
+    if (workflow.containerEngine == 'docker') {
+        containerOptions = '-u $(id -u):$(id -g) -v /etc/passwd:/etc/passwd:ro'
+    }
+
     input:
     tuple val(meta), path(bam)
     path  fasta
