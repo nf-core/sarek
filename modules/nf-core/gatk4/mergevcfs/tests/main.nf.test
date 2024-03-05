@@ -13,8 +13,8 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [ [ id:'test' ], [ file(params.test_data['homo_sapiens']['genome']['dbsnp_146_hg38_vcf_gz'], checkIfExists: true), file(params.test_data['homo_sapiens']['genome']['gnomad_r2_1_1_vcf_gz'], checkIfExists: true) ]]
-                input[1] = [ [], file(params.test_data['homo_sapiens']['genome']['genome_dict'], checkIfExists: true)]
+                input[0] = [ [ id:'test' ], [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/vcf/dbsnp_146.hg38.vcf.gz', checkIfExists: true), file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/vcf/gnomAD.r2.1.1.vcf.gz', checkIfExists: true) ]]
+                input[1] = [ [], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.dict', checkIfExists: true)]
                 """
             }
         }
@@ -37,7 +37,7 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [ [ id:'test' ], [ file(params.test_data['homo_sapiens']['genome']['dbsnp_146_hg38_vcf_gz'], checkIfExists: true), file(params.test_data['homo_sapiens']['genome']['gnomad_r2_1_1_vcf_gz'], checkIfExists: true) ]]
+                input[0] = [ [ id:'test' ], [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/vcf/dbsnp_146.hg38.vcf.gz', checkIfExists: true), file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/vcf/gnomAD.r2.1.1.vcf.gz', checkIfExists: true) ]]
                 input[1] = [ [],[]]
                 """
             }
@@ -64,7 +64,7 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [ [ id:'test' ], [ file(params.test_data['homo_sapiens']['genome']['dbsnp_146_hg38_vcf_gz'], checkIfExists: true), file(params.test_data['homo_sapiens']['genome']['gnomad_r2_1_1_vcf_gz'], checkIfExists: true) ]]
+                input[0] = [ [ id:'test' ], [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/vcf/dbsnp_146.hg38.vcf.gz', checkIfExists: true), file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/vcf/gnomAD.r2.1.1.vcf.gz', checkIfExists: true) ]]
                 input[1] = [ [],[]]
                 """
             }

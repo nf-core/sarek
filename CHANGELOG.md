@@ -26,6 +26,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1408](https://github.com/nf-core/sarek/pull/1408), [#1412](https://github.com/nf-core/sarek/pull/1412) - Updating samtools to v1.19.2 - except in GATK/markduplicates. (Temporarily disabled nf-test for bwamem2/mem.)
 - [#1411](https://github.com/nf-core/sarek/pull/1411) - Temporarily disable sentieon related tests
 - [#1419](https://github.com/nf-core/sarek/pull/1419) - Updating GATK to v4.5, and updating samtools to v1.19.2 in GATK/markduplicates.
+- [#1426](https://github.com/nf-core/sarek/pull/1426) - Updating certain modules in order to fix the testdata-path in the nf-tests of those modules. Setting Docker runOptions for params.use_gatk_spark.
+- [#1428](https://github.com/nf-core/sarek/pull/1428) - Sync `TEMPLATE` with `tools` `2.13.1`
 
 ### Fixed
 
@@ -38,6 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1381](https://github.com/nf-core/sarek/pull/1381) - Swap NGSCheckMate bed file for GATK.GRCh37 to one without the `chr` prefix
 - [#1383](https://github.com/nf-core/sarek/pull/1383) - Fix `--three_prime_clip_r{1,2}` parameter documentation
 - [#1390](https://github.com/nf-core/sarek/pull/1390) - Fix badges in README
+- [#1400](https://github.com/nf-core/sarek/pull/1400) - Fixed input channel for ASSESS_SIGNIFICANCE module, updated makegraph to makegraph2.
 - [#1403](https://github.com/nf-core/sarek/pull/1403) - Fix intervals usage with dot in chromosome names
 
 ### Removed

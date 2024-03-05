@@ -70,7 +70,7 @@ jobs:
 
     steps:
       - name: Check out pipeline code
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+        uses: actions/checkout@v4
 
       - name: Hash Github Workspace
         id: hash_workspace
@@ -89,7 +89,7 @@ jobs:
         run: pip install --upgrade -r tests/requirements.txt
 
       - name: Install Nextflow ${{ matrix.NXF_VER }}
-        uses: nf-core/setup-nextflow@b9f764e8ba5c76b712ace14ecbfcef0e40ae2dd8 # v1
+        uses: nf-core/setup-nextflow@v1
         with:
           version: "${{ matrix.NXF_VER }}"
 
@@ -148,7 +148,7 @@ jobs:
         run: conda clean -a
 
       - name: Disk space cleanup
-        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
+        uses: jlumbroso/free-disk-space@v1.3.1
 
       - name: Run pytest-workflow
         uses: Wandalen/wretry.action@v1
@@ -247,7 +247,7 @@ jobs:
           java-version: "17"
 
       - name: Install Nextflow ${{ matrix.NXF_VER }}
-        uses: nf-core/setup-nextflow@b9f764e8ba5c76b712ace14ecbfcef0e40ae2dd8 # v1
+        uses: nf-core/setup-nextflow@v1
         with:
           version: "${{ matrix.NXF_VER }}"
 
@@ -305,7 +305,7 @@ jobs:
           nextflow secrets set SENTIEON_AUTH_DATA_BASE64 $SENTIEON_AUTH_DATA_BASE64
 
       - name: Disk space cleanup
-        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
+        uses: jlumbroso/free-disk-space@v1.3.1
 
       # Test the module
       - name: Run nf-test

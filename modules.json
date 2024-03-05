@@ -38,12 +38,12 @@
                     },
                     "bwa/index": {
                         "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "git_sha": "6278bf9afd4a4b2d00fa6052250e73da3d91546f",
                         "installed_by": ["modules"]
                     },
                     "bwa/mem": {
                         "branch": "master",
-                        "git_sha": "ba3f3df395d2719dcef5c67189042a1dc555c701",
+                        "git_sha": "5908e575322666ccc33911a28b06e3f82260fe54",
                         "installed_by": ["modules"]
                     },
                     "bwamem2/index": {
@@ -58,12 +58,12 @@
                     },
                     "cat/cat": {
                         "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "git_sha": "9437e6053dccf4aafa022bfd6e7e9de67e625af8",
                         "installed_by": ["modules"]
                     },
                     "cat/fastq": {
                         "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "git_sha": "0997b47c93c06b49aa7b3fefda87e728312cf2ca",
                         "installed_by": ["modules"]
                     },
                     "cnvkit/antitarget": {
@@ -107,11 +107,10 @@
                         "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
                         "installed_by": ["modules"]
                     },
-                    "controlfreec/makegraph": {
+                    "controlfreec/makegraph2": {
                         "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
-                        "installed_by": ["modules"],
-                        "patch": "modules/nf-core/controlfreec/makegraph/controlfreec-makegraph.diff"
+                        "git_sha": "a7bae48d8bccfae99e3b862fa07bbd50a8df6b82",
+                        "installed_by": ["modules"]
                     },
                     "deepvariant": {
                         "branch": "master",
@@ -120,7 +119,7 @@
                     },
                     "dragmap/align": {
                         "branch": "master",
-                        "git_sha": "575e1bc54b083fb15e7dd8b5fcc40bea60e8ce83",
+                        "git_sha": "9a7efcec9b21baf1c67342faa6b8d905c972207f",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/dragmap/align/dragmap-align.diff"
                     },
@@ -172,7 +171,7 @@
                     },
                     "gatk4/applybqsr": {
                         "branch": "master",
-                        "git_sha": "d742e3143f2ccb8853c29b35cfcf50b5e5026980",
+                        "git_sha": "af273ea6618c50e82c372abe18b0a225e84fe6f7",
                         "installed_by": ["modules"]
                     },
                     "gatk4/applyvqsr": {
@@ -182,7 +181,7 @@
                     },
                     "gatk4/baserecalibrator": {
                         "branch": "master",
-                        "git_sha": "d742e3143f2ccb8853c29b35cfcf50b5e5026980",
+                        "git_sha": "8a223e11d4e6deb36484e01891eae9c1cacb5f5d",
                         "installed_by": ["modules"]
                     },
                     "gatk4/calculatecontamination": {
@@ -227,7 +226,7 @@
                     },
                     "gatk4/genomicsdbimport": {
                         "branch": "master",
-                        "git_sha": "d742e3143f2ccb8853c29b35cfcf50b5e5026980",
+                        "git_sha": "194fca815cf594646e638fa5476acbcc296f1850",
                         "installed_by": ["modules"]
                     },
                     "gatk4/genotypegvcfs": {
@@ -257,7 +256,7 @@
                     },
                     "gatk4/markduplicates": {
                         "branch": "master",
-                        "git_sha": "d742e3143f2ccb8853c29b35cfcf50b5e5026980",
+                        "git_sha": "194fca815cf594646e638fa5476acbcc296f1850",
                         "installed_by": ["modules"]
                     },
                     "gatk4/mergemutectstats": {
@@ -267,7 +266,7 @@
                     },
                     "gatk4/mergevcfs": {
                         "branch": "master",
-                        "git_sha": "d742e3143f2ccb8853c29b35cfcf50b5e5026980",
+                        "git_sha": "194fca815cf594646e638fa5476acbcc296f1850",
                         "installed_by": ["modules"]
                     },
                     "gatk4/mutect2": {
@@ -327,7 +326,7 @@
                     },
                     "multiqc": {
                         "branch": "master",
-                        "git_sha": "ccacf6f5de6df3bc6d73b665c1fd2933d8bbc290",
+                        "git_sha": "b7ebe95761cd389603f9cc0e0dc384c0f663815a",
                         "installed_by": ["modules"]
                     },
                     "ngscheckmate/ncm": {
@@ -467,7 +466,7 @@
                     },
                     "untar": {
                         "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "git_sha": "e719354ba77df0a1bd310836aa2039b45c29d620",
                         "installed_by": ["modules"]
                     },
                     "unzip": {
@@ -491,17 +490,17 @@
                     },
                     "utils_nextflow_pipeline": {
                         "branch": "master",
-                        "git_sha": "cd08c91373cd00a73255081340e4914485846ba1",
+                        "git_sha": "5caf7640a9ef1d18d765d55339be751bb0969dfa",
                         "installed_by": ["subworkflows"]
                     },
                     "utils_nfcore_pipeline": {
                         "branch": "master",
-                        "git_sha": "262b17ed2aad591039f914951659177e6c39a8d8",
+                        "git_sha": "5caf7640a9ef1d18d765d55339be751bb0969dfa",
                         "installed_by": ["subworkflows"]
                     },
                     "utils_nfvalidation_plugin": {
                         "branch": "master",
-                        "git_sha": "cd08c91373cd00a73255081340e4914485846ba1",
+                        "git_sha": "5caf7640a9ef1d18d765d55339be751bb0969dfa",
                         "installed_by": ["subworkflows"]
                     },
                     "vcf_annotate_ensemblvep": {
