@@ -52,6 +52,7 @@ params.known_snps              = WorkflowMain.getGenomeAttribute(params, 'known_
 params.known_snps_tbi          = WorkflowMain.getGenomeAttribute(params, 'known_snps_tbi')
 params.known_snps_vqsr         = WorkflowMain.getGenomeAttribute(params, 'known_snps_vqsr')
 params.mappability             = WorkflowMain.getGenomeAttribute(params, 'mappability')
+params.minimap2                = WorkflowMain.getGenomeAttribute(params, 'minimap2')
 params.ngscheckmate_bed        = WorkflowMain.getGenomeAttribute(params, 'ngscheckmate_bed')
 params.pon                     = WorkflowMain.getGenomeAttribute(params, 'pon')
 params.pon_tbi                 = WorkflowMain.getGenomeAttribute(params, 'pon_tbi')

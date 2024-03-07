@@ -50,6 +50,7 @@ def checkPathParamList = [
     params.known_snps,
     params.known_snps_tbi,
     params.mappability,
+    params.minimap2,
     params.multiqc_config,
     params.ngscheckmate_bed,
     params.pon,
@@ -129,98 +130,98 @@ if (params.spliceai_snv && params.spliceai_snv_tbi && params.spliceai_indel && p
 */
 
 // Create samplesheets to restart from different steps
-include { SAMPLESHEET_TO_CHANNEL                      } from '../subworkflows/local/samplesheet_to_channel/main'
-include { CHANNEL_ALIGN_CREATE_CSV                    } from '../subworkflows/local/channel_align_create_csv/main'
-include { CHANNEL_MARKDUPLICATES_CREATE_CSV           } from '../subworkflows/local/channel_markduplicates_create_csv/main'
-include { CHANNEL_BASERECALIBRATOR_CREATE_CSV         } from '../subworkflows/local/channel_baserecalibrator_create_csv/main'
-include { CHANNEL_APPLYBQSR_CREATE_CSV                } from '../subworkflows/local/channel_applybqsr_create_csv/main'
-include { CHANNEL_VARIANT_CALLING_CREATE_CSV          } from '../subworkflows/local/channel_variant_calling_create_csv/main'
+include { SAMPLESHEET_TO_CHANNEL                            } from '../subworkflows/local/samplesheet_to_channel/main'
+include { CHANNEL_ALIGN_CREATE_CSV                          } from '../subworkflows/local/channel_align_create_csv/main'
+include { CHANNEL_MARKDUPLICATES_CREATE_CSV                 } from '../subworkflows/local/channel_markduplicates_create_csv/main'
+include { CHANNEL_BASERECALIBRATOR_CREATE_CSV               } from '../subworkflows/local/channel_baserecalibrator_create_csv/main'
+include { CHANNEL_APPLYBQSR_CREATE_CSV                      } from '../subworkflows/local/channel_applybqsr_create_csv/main'
+include { CHANNEL_VARIANT_CALLING_CREATE_CSV                } from '../subworkflows/local/channel_variant_calling_create_csv/main'
 
 // Download cache for SnpEff/VEP if needed
-include { DOWNLOAD_CACHE_SNPEFF_VEP                   } from '../subworkflows/local/download_cache_snpeff_vep/main'
+include { DOWNLOAD_CACHE_SNPEFF_VEP                         } from '../subworkflows/local/download_cache_snpeff_vep/main'
 
 // Initialize annotation cache
-include { INITIALIZE_ANNOTATION_CACHE                 } from '../subworkflows/local/initialize_annotation_cache/main'
+include { INITIALIZE_ANNOTATION_CACHE                       } from '../subworkflows/local/initialize_annotation_cache/main'
 
 // Build indices if needed
-include { PREPARE_GENOME                              } from '../subworkflows/local/prepare_genome/main'
+include { PREPARE_GENOME                                    } from '../subworkflows/local/prepare_genome/main'
 
 // Build intervals if needed
-include { PREPARE_INTERVALS                           } from '../subworkflows/local/prepare_intervals/main'
+include { PREPARE_INTERVALS                                 } from '../subworkflows/local/prepare_intervals/main'
 
 // Build CNVkit reference if needed
-include { PREPARE_REFERENCE_CNVKIT                    } from '../subworkflows/local/prepare_reference_cnvkit/main'
+include { PREPARE_REFERENCE_CNVKIT                          } from '../subworkflows/local/prepare_reference_cnvkit/main'
 
 // Convert BAM files to FASTQ files
-include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_INPUT } from '../subworkflows/local/bam_convert_samtools/main'
-include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_UMI   } from '../subworkflows/local/bam_convert_samtools/main'
+include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_INPUT       } from '../subworkflows/local/bam_convert_samtools/main'
+include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_UMI         } from '../subworkflows/local/bam_convert_samtools/main'
 
 // Run FASTQC
-include { FASTQC                                      } from '../modules/nf-core/fastqc/main'
+include { FASTQC                                            } from '../modules/nf-core/fastqc/main'
 
 // TRIM/SPLIT FASTQ Files
-include { FASTP                                       } from '../modules/nf-core/fastp/main'
+include { FASTP                                             } from '../modules/nf-core/fastp/main'
 
 // Create umi consensus bams from fastq
-include { FASTQ_CREATE_UMI_CONSENSUS_FGBIO            } from '../subworkflows/local/fastq_create_umi_consensus_fgbio/main'
+include { FASTQ_CREATE_UMI_CONSENSUS_FGBIO                  } from '../subworkflows/local/fastq_create_umi_consensus_fgbio/main'
 
 // Map input reads to reference genome
-include { FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON    } from '../subworkflows/local/fastq_align_bwamem_mem2_dragmap_sentieon/main'
+include { FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_MINIMAP2_SENTIEON } from '../subworkflows/local/fastq_align_bwamem_mem2_dragmap_minimap2_sentieon/main'
 
 // Merge and index BAM files (optional)
-include { BAM_MERGE_INDEX_SAMTOOLS                    } from '../subworkflows/local/bam_merge_index_samtools/main'
+include { BAM_MERGE_INDEX_SAMTOOLS                          } from '../subworkflows/local/bam_merge_index_samtools/main'
 
 // Convert BAM files
-include { SAMTOOLS_CONVERT as BAM_TO_CRAM             } from '../modules/nf-core/samtools/convert/main'
-include { SAMTOOLS_CONVERT as BAM_TO_CRAM_MAPPING     } from '../modules/nf-core/samtools/convert/main'
+include { SAMTOOLS_CONVERT as BAM_TO_CRAM                   } from '../modules/nf-core/samtools/convert/main'
+include { SAMTOOLS_CONVERT as BAM_TO_CRAM_MAPPING           } from '../modules/nf-core/samtools/convert/main'
 
 // Convert CRAM files (optional)
-include { SAMTOOLS_CONVERT as CRAM_TO_BAM             } from '../modules/nf-core/samtools/convert/main'
-include { SAMTOOLS_CONVERT as CRAM_TO_BAM_RECAL       } from '../modules/nf-core/samtools/convert/main'
+include { SAMTOOLS_CONVERT as CRAM_TO_BAM                   } from '../modules/nf-core/samtools/convert/main'
+include { SAMTOOLS_CONVERT as CRAM_TO_BAM_RECAL             } from '../modules/nf-core/samtools/convert/main'
 
 // Mark Duplicates (+QC)
-include { BAM_MARKDUPLICATES                          } from '../subworkflows/local/bam_markduplicates/main'
-include { BAM_MARKDUPLICATES_SPARK                    } from '../subworkflows/local/bam_markduplicates_spark/main'
-include { BAM_SENTIEON_DEDUP                          } from '../subworkflows/local/bam_sentieon_dedup/main'
+include { BAM_MARKDUPLICATES                                } from '../subworkflows/local/bam_markduplicates/main'
+include { BAM_MARKDUPLICATES_SPARK                          } from '../subworkflows/local/bam_markduplicates_spark/main'
+include { BAM_SENTIEON_DEDUP                                } from '../subworkflows/local/bam_sentieon_dedup/main'
 
 // QC on CRAM
-include { CRAM_QC_MOSDEPTH_SAMTOOLS as CRAM_QC_NO_MD  } from '../subworkflows/local/cram_qc_mosdepth_samtools/main'
-include { CRAM_QC_MOSDEPTH_SAMTOOLS as CRAM_QC_RECAL  } from '../subworkflows/local/cram_qc_mosdepth_samtools/main'
+include { CRAM_QC_MOSDEPTH_SAMTOOLS as CRAM_QC_NO_MD        } from '../subworkflows/local/cram_qc_mosdepth_samtools/main'
+include { CRAM_QC_MOSDEPTH_SAMTOOLS as CRAM_QC_RECAL        } from '../subworkflows/local/cram_qc_mosdepth_samtools/main'
 
 // Create recalibration tables
-include { BAM_BASERECALIBRATOR                        } from '../subworkflows/local/bam_baserecalibrator/main'
-include { BAM_BASERECALIBRATOR_SPARK                  } from '../subworkflows/local/bam_baserecalibrator_spark/main'
+include { BAM_BASERECALIBRATOR                              } from '../subworkflows/local/bam_baserecalibrator/main'
+include { BAM_BASERECALIBRATOR_SPARK                        } from '../subworkflows/local/bam_baserecalibrator_spark/main'
 
 // Create recalibrated cram files to use for variant calling (+QC)
-include { BAM_APPLYBQSR                               } from '../subworkflows/local/bam_applybqsr/main'
-include { BAM_APPLYBQSR_SPARK                         } from '../subworkflows/local/bam_applybqsr_spark/main'
+include { BAM_APPLYBQSR                                     } from '../subworkflows/local/bam_applybqsr/main'
+include { BAM_APPLYBQSR_SPARK                               } from '../subworkflows/local/bam_applybqsr_spark/main'
 
 // Variant calling on a single normal sample
-include { BAM_VARIANT_CALLING_GERMLINE_ALL            } from '../subworkflows/local/bam_variant_calling_germline_all/main'
+include { BAM_VARIANT_CALLING_GERMLINE_ALL                  } from '../subworkflows/local/bam_variant_calling_germline_all/main'
 
 // Variant calling on a single tumor sample
-include { BAM_VARIANT_CALLING_TUMOR_ONLY_ALL          } from '../subworkflows/local/bam_variant_calling_tumor_only_all/main'
+include { BAM_VARIANT_CALLING_TUMOR_ONLY_ALL                } from '../subworkflows/local/bam_variant_calling_tumor_only_all/main'
 
 // Variant calling on tumor/normal pair
-include { BAM_VARIANT_CALLING_SOMATIC_ALL             } from '../subworkflows/local/bam_variant_calling_somatic_all/main'
+include { BAM_VARIANT_CALLING_SOMATIC_ALL                   } from '../subworkflows/local/bam_variant_calling_somatic_all/main'
 
 // POST VARIANTCALLING: e.g. merging
-include { POST_VARIANTCALLING                         } from '../subworkflows/local/post_variantcalling/main'
+include { POST_VARIANTCALLING                               } from '../subworkflows/local/post_variantcalling/main'
 
 // QC on VCF files
-include { VCF_QC_BCFTOOLS_VCFTOOLS                    } from '../subworkflows/local/vcf_qc_bcftools_vcftools/main'
+include { VCF_QC_BCFTOOLS_VCFTOOLS                          } from '../subworkflows/local/vcf_qc_bcftools_vcftools/main'
 
 // Sample QC on CRAM files
-include { CRAM_SAMPLEQC                                } from '../subworkflows/local/cram_sampleqc/main'
+include { CRAM_SAMPLEQC                                      } from '../subworkflows/local/cram_sampleqc/main'
 
 // Annotation
-include { VCF_ANNOTATE_ALL                            } from '../subworkflows/local/vcf_annotate_all/main'
+include { VCF_ANNOTATE_ALL                                  } from '../subworkflows/local/vcf_annotate_all/main'
 
 // REPORTING VERSIONS OF SOFTWARE USED
-include { CUSTOM_DUMPSOFTWAREVERSIONS                 } from '../modules/nf-core/custom/dumpsoftwareversions/main'
+include { CUSTOM_DUMPSOFTWAREVERSIONS                       } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 
 // MULTIQC
-include { MULTIQC                                     } from '../modules/nf-core/multiqc/main'
+include { MULTIQC                                           } from '../modules/nf-core/multiqc/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -332,11 +333,12 @@ workflow SAREK {
                                     : PREPARE_GENOME.out.bwamem2
     dragmap    = params.dragmap     ? Channel.fromPath(params.dragmap).collect()
                                     : PREPARE_GENOME.out.hashtable
+    minimap2   = params.minimap2    ? Channel.fromPath(params.minimap2).collect()
+                                    : PREPARE_GENOME.out.minimap2
 
     // Gather index for mapping given the chosen aligner
     index_alignement = (params.aligner == "bwa-mem" || params.aligner == "sentieon-bwamem") ? bwa :
-        params.aligner == "bwa-mem2" ? bwamem2 :
-        dragmap
+        params.aligner == "bwa-mem2" ? bwamem2 : params.aligner == "dragmap" ? dragmap : minimap2
 
     // TODO: add a params for msisensorpro_scan
     msisensorpro_scan      = PREPARE_GENOME.out.msisensorpro_scan
@@ -519,12 +521,12 @@ workflow SAREK {
 
         // reads will be sorted
         sort_bam = true
-        FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON(reads_for_alignment, index_alignement, sort_bam, fasta, fasta_fai)
+        FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_MINIMAP2_SENTIEON(reads_for_alignment, index_alignement, sort_bam, fasta, fasta_fai)
 
         // Grouping the bams from the same samples not to stall the workflow
         // Use groupKey to make sure that the correct group can advance as soon as it is complete
         // and not stall the workflow until all reads from all channels are mapped
-        bam_mapped = FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON.out.bam
+        bam_mapped = FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_MINIMAP2_SENTIEON.out.bam
             .combine(reads_grouping_key) // Creates a tuple of [ meta, bam, reads_grouping_key ]
             .filter { meta1, bam, meta2 -> meta1.sample == meta2.sample }
             // Add n_fastq and other variables to meta
@@ -542,7 +544,7 @@ workflow SAREK {
             // Group
             .groupTuple()
 
-        bai_mapped = FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON.out.bai
+        bai_mapped = FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_MINIMAP2_SENTIEON.out.bai
             .combine(reads_grouping_key) // Creates a tuple of [ meta, bai, reads_grouping_key ]
             .filter { meta1, bai, meta2 -> meta1.sample == meta2.sample }
             // Add n_fastq and other variables to meta
@@ -585,7 +587,7 @@ workflow SAREK {
 
         // Gather used softwares versions
         versions = versions.mix(CONVERT_FASTQ_INPUT.out.versions)
-        versions = versions.mix(FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON.out.versions)
+        versions = versions.mix(FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_MINIMAP2_SENTIEON.out.versions)
     }
 
     if (params.step in ['mapping', 'markduplicates']) {
@@ -597,7 +599,7 @@ workflow SAREK {
 
         // STEP 2: markduplicates (+QC) + convert to CRAM
 
-        // ch_bam_for_markduplicates will contain bam mapped with FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON when step is mapping
+        // ch_bam_for_markduplicates will contain bam mapped with FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_MINIMAP2_SENTIEON when step is mapping
         // Or bams that are specified in the samplesheet.csv when step is prepare_recalibration
         cram_for_markduplicates = params.step == 'mapping' ? bam_mapped : input_sample.map{ meta, input, index -> [ meta, input ] }
         // if no MD is done, then run QC on mapped & converted CRAM files

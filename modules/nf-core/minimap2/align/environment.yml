@@ -1,0 +1,9 @@
+name: minimap2_align
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - bioconda::minimap2=2.24
+  - bioconda::samtools=1.18
+  - bioconda::htslib=1.18
