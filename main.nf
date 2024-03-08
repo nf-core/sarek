@@ -27,13 +27,15 @@ nextflow.enable.dsl = 2
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { SAREK                    } from './workflows/sarek'
-include { PIPELINE_INITIALISATION  } from './subworkflows/local/utils_nfcore_sarek_pipeline'
-include { PREPARE_GENOME           } from './subworkflows/local/prepare_genome'
-include { PREPARE_INTERVALS        } from './subworkflows/local/prepare_intervals'
-include { PREPARE_REFERENCE_CNVKIT } from './subworkflows/local/prepare_reference_cnvkit'
-include { PIPELINE_COMPLETION      } from './subworkflows/local/utils_nfcore_sarek_pipeline'
-include { getGenomeAttribute       } from './subworkflows/local/utils_nfcore_sarek_pipeline'
+include { SAREK                        } from './workflows/sarek'
+include { PIPELINE_INITIALISATION      } from './subworkflows/local/utils_nfcore_sarek_pipeline'
+include { INITIALIZE_ANNOTATION_CACHE  } from './subworkflows/local/initialize_annotation_cache'
+include { DOWNLOAD_CACHE_SNPEFF_VEP    } from './subworkflows/local/download_cache_snpeff_vep'
+include { PREPARE_GENOME               } from './subworkflows/local/prepare_genome'
+include { PREPARE_INTERVALS            } from './subworkflows/local/prepare_intervals'
+include { PREPARE_REFERENCE_CNVKIT     } from './subworkflows/local/prepare_reference_cnvkit'
+include { PIPELINE_COMPLETION          } from './subworkflows/local/utils_nfcore_sarek_pipeline'
+include { getGenomeAttribute           } from './subworkflows/local/utils_nfcore_sarek_pipeline'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -221,11 +223,44 @@ workflow NFCORE_SAREK {
     versions = versions.mix(PREPARE_GENOME.out.versions)
     versions = versions.mix(PREPARE_INTERVALS.out.versions)
 
+    vep_fasta = (params.vep_include_fasta) ? fasta.map{ fasta -> [ [ id:fasta.baseName ], fasta ] } : [[id: 'null'], []]
+
+    // Download cache
+    if (params.download_cache) {
+        // Assuming that even if the cache is provided, if the user specify download_cache, sarek will download the cache
+        ensemblvep_info = Channel.of([ [ id:"${params.vep_cache_version}_${params.vep_genome}" ], params.vep_genome, params.vep_species, params.vep_cache_version ])
+        snpeff_info     = Channel.of([ [ id:"${params.snpeff_genome}.${params.snpeff_db}" ], params.snpeff_genome, params.snpeff_db ])
+        DOWNLOAD_CACHE_SNPEFF_VEP(ensemblvep_info, snpeff_info)
+        snpeff_cache = DOWNLOAD_CACHE_SNPEFF_VEP.out.snpeff_cache
+        vep_cache    = DOWNLOAD_CACHE_SNPEFF_VEP.out.ensemblvep_cache.map{ meta, cache -> [ cache ] }
+
+        versions = versions.mix(DOWNLOAD_CACHE_SNPEFF_VEP.out.versions)
+    } else {
+        // Looks for cache information either locally or on the cloud
+        INITIALIZE_ANNOTATION_CACHE(
+            (params.snpeff_cache && params.tools && (params.tools.split(',').contains("snpeff") || params.tools.split(',').contains('merge'))),
+            params.snpeff_cache,
+            params.snpeff_genome,
+            params.snpeff_db,
+            (params.vep_cache && params.tools && (params.tools.split(',').contains("vep") || params.tools.split(',').contains('merge'))),
+            params.vep_cache,
+            params.vep_species,
+            params.vep_cache_version,
+            params.vep_genome,
+            "Please refer to https://nf-co.re/sarek/docs/usage/#how-to-customise-snpeff-and-vep-annotation for more information.")
+
+            snpeff_cache = INITIALIZE_ANNOTATION_CACHE.out.snpeff_cache
+            vep_cache    = INITIALIZE_ANNOTATION_CACHE.out.ensemblvep_cache
+    }
+
     //
     // WORKFLOW: Run pipeline
     //
     SAREK(samplesheet,
         allele_files,
+        bcftools_annotations,
+        bcftools_annotations_tbi,
+        bcftools_header_lines,
         cf_chrom_len,
         chr_files,
         cnvkit_reference,
@@ -258,7 +293,14 @@ workflow NFCORE_SAREK {
         pon,
         pon_tbi,
         rt_file,
-        sentieon_dnascope_model
+        sentieon_dnascope_model,
+        snpeff_cache,
+        vep_cache,
+        vep_cache_version,
+        vep_extra_files,
+        vep_fasta,
+        vep_genome,
+        vep_species
     )
 
     emit:
