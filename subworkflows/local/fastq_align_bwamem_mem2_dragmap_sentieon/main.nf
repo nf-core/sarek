@@ -33,7 +33,12 @@ workflow FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON {
     SENTIEON_BWAMEM(reads, index.map{ it -> [ [ id:'index' ], it ] }, fasta.map{fa -> [[:], fa]}, fasta_fai.map{fai -> [[:], fai]}) // If aligner is sentieon-bwamem
     // The parabricks-fq2bam module performs alignment and sorting as part of the conversion from fastq to bam.
     // Additionally, it can perform mark duplicates and generate a bqsr table (input for parabricks-applybqsr module)
-    PARABRICKS_FQ2BAM(reads, fasta.map{fa -> [[:], fa]}, index.map{ it -> [[ id:'index' ], it ] }, known_sites)
+    PARABRICKS_FQ2BAM(
+                    reads, 
+                    [], 
+                    fasta.map{fa -> [[:], fa]}, index.map{ it -> [[ id:'index' ], it ] }, 
+                    []
+                    )
 
     // Get the bam files from the aligner
     // Only one aligner is run
@@ -42,8 +47,10 @@ workflow FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON {
     bam = bam.mix(BWAMEM2_MEM.out.bam)
     bam = bam.mix(DRAGMAP_ALIGN.out.bam)
     bam = bam.mix(SENTIEON_BWAMEM.out.bam_and_bai.map{ meta, bam, bai -> [ meta, bam ] })
+    bam = bam.mix(PARABRICKS_FQ2BAM.out.bam)
 
     bai = SENTIEON_BWAMEM.out.bam_and_bai.map{ meta, bam, bai -> [ meta, bai ] }
+    bai = bai.mix(PARABRICKS_FQ2BAM.out.bai)
 
     // Gather reports of all tools used
     reports = reports.mix(DRAGMAP_ALIGN.out.log)
@@ -53,6 +60,7 @@ workflow FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON {
     versions = versions.mix(BWAMEM2_MEM.out.versions)
     versions = versions.mix(DRAGMAP_ALIGN.out.versions)
     versions = versions.mix(SENTIEON_BWAMEM.out.versions)
+    versions = versions.mix(PARABRICKS_FQ2BAM.out.versions)
 
     emit:
     bam      // channel: [ [meta], bam ]
