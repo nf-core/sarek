@@ -20,23 +20,6 @@
 */
 
 nextflow.enable.dsl = 2
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    IMPORT FUNCTIONS / MODULES / SUBWORKFLOWS / WORKFLOWS
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-include { SAREK                            } from './workflows/sarek'
-include { ANNOTATION_CACHE_INITIALISATION  } from './subworkflows/local/annotation_cache_initialisation'
-include { DOWNLOAD_CACHE_SNPEFF_VEP        } from './subworkflows/local/download_cache_snpeff_vep'
-include { PIPELINE_COMPLETION              } from './subworkflows/local/utils_nfcore_sarek_pipeline'
-include { PIPELINE_INITIALISATION          } from './subworkflows/local/utils_nfcore_sarek_pipeline'
-include { PREPARE_GENOME                   } from './subworkflows/local/prepare_genome'
-include { PREPARE_INTERVALS                } from './subworkflows/local/prepare_intervals'
-include { PREPARE_REFERENCE_CNVKIT         } from './subworkflows/local/prepare_reference_cnvkit'
-include { getGenomeAttribute               } from './subworkflows/local/utils_nfcore_sarek_pipeline'
-
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     GENOME PARAMETER VALUES
@@ -77,6 +60,21 @@ params.snpeff_genome           = getGenomeAttribute('snpeff_genome')
 params.vep_cache_version       = getGenomeAttribute('vep_cache_version')
 params.vep_genome              = getGenomeAttribute('vep_genome')
 params.vep_species             = getGenomeAttribute('vep_species')
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    IMPORT FUNCTIONS / MODULES / SUBWORKFLOWS / WORKFLOWS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+
+include { SAREK                            } from './workflows/sarek'
+include { ANNOTATION_CACHE_INITIALISATION  } from './subworkflows/local/annotation_cache_initialisation'
+include { DOWNLOAD_CACHE_SNPEFF_VEP        } from './subworkflows/local/download_cache_snpeff_vep'
+include { PIPELINE_COMPLETION              } from './subworkflows/local/utils_nfcore_sarek_pipeline'
+include { PIPELINE_INITIALISATION          } from './subworkflows/local/utils_nfcore_sarek_pipeline'
+include { PREPARE_GENOME                   } from './subworkflows/local/prepare_genome'
+include { PREPARE_INTERVALS                } from './subworkflows/local/prepare_intervals'
+include { PREPARE_REFERENCE_CNVKIT         } from './subworkflows/local/prepare_reference_cnvkit'
 
 // Initialize file channels based on params, defined in the params.genomes[params.genome] scope
 bcftools_annotations    = params.bcftools_annotations    ? Channel.fromPath(params.bcftools_annotations).collect()  : Channel.empty()
@@ -352,6 +350,25 @@ workflow {
         params.hook_url,
         NFCORE_SAREK.out.multiqc_report
     )
+}
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    FUNCTIONS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+
+//
+// Get attribute from genome config file e.g. fasta
+//
+
+def getGenomeAttribute(attribute) {
+    if (params.genomes && params.genome && params.genomes.containsKey(params.genome)) {
+        if (params.genomes[ params.genome ].containsKey(attribute)) {
+            return params.genomes[ params.genome ][ attribute ]
+        }
+    }
+    return null
 }
 
 /*
