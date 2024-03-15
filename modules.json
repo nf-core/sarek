@@ -334,6 +334,11 @@
                         "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
                         "installed_by": ["bam_ngscheckmate"]
                     },
+                    "sambamba/markdup": {
+                        "branch": "master",
+                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "installed_by": ["modules"]
+                    },
                     "samblaster": {
                         "branch": "master",
                         "git_sha": "8ad1f37288c6f5a36871c169aa85614832152fd1",

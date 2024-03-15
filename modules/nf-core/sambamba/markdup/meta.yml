@@ -1,0 +1,41 @@
+name: "sambamba_markdup"
+description: find and mark duplicate reads in BAM file
+keywords:
+  - markduplicates
+  - duplicates
+  - bam
+tools:
+  - "sambamba":
+      description: "process your BAM data faster!"
+      homepage: "https://lomereiter.github.io/sambamba/docs/sambamba-view.html"
+      documentation: "https://lomereiter.github.io/sambamba/docs/sambamba-view.html"
+      tool_dev_url: "https://github.com/biod/sambamba"
+      licence: "['GPL v2']"
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - bam:
+      type: file
+      description: BAM/CRAM/SAM file
+      pattern: "*.{bam,cram,sam}"
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+  - bam:
+      type: file
+      description: Sorted BAM/CRAM/SAM file
+      pattern: "*.{bam,cram,sam}"
+authors:
+  - "@BioInf2305"
+maintainers:
+  - "@BioInf2305"
