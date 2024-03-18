@@ -29,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1426](https://github.com/nf-core/sarek/pull/1426) - Updating certain modules in order to fix the testdata-path in the nf-tests of those modules. Setting Docker runOptions for params.use_gatk_spark.
 - [#1428](https://github.com/nf-core/sarek/pull/1428) - Sync `TEMPLATE` with `tools` `2.13.1`
 - [#1431](https://github.com/nf-core/sarek/pull/1431) - Using docker.containerOptions instead of docker.runOptions. Clearing containerOptions for SPARK modules for any kind of supported container engine.
+- [#1439](https://github.com/nf-core/sarek/pull/1439) - Replacing the local module `BUILD_INTERVALS` with the nf-core module `GAWK`
 
 ### Fixed
 
