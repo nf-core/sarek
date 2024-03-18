@@ -1,0 +1,29 @@
+nextflow_workflow {
+
+    name "Test Workflow FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON"
+    script "subworkflows/local/fastq_align_bwamem_mem2_dragmap_sentieon/main.nf"
+    workflow "FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON"
+
+    test("Should run without failures") {
+
+        when {
+            params {
+                // define parameters here. Example:
+                // outdir = "tests/results"
+            }
+            workflow {
+                """
+                // define inputs of the workflow here. Example:
+                // input[0] = file("test-file.txt")
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert snapshot(workflow.out).match()
+        }
+
+    }
+
+}

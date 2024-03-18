@@ -13,17 +13,18 @@ include { PARABRICKS_FQ2BAM      } from '../modules/nf-core/parabricks/fq2bam/ma
 workflow FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON {
     take:
     reads // channel: [mandatory] meta, reads
-    interval_file // intervals_bed_combined [optional] for parabricks
-    known_sites // known_sites_indels [optional] for parabricks
     index // channel: [mandatory] index
     sort  // boolean: [mandatory] true -> sort, false -> don't sort
     fasta
     fasta_fai
+    interval_file // path: [optional] intervals_bed_combined for parabricks
+    known_sites // path: [optional] known_sites_indels for parabricks
 
     main:
 
     versions = Channel.empty()
     reports = Channel.empty()
+    optional_parabricks = Channel.empty()
 
     // Only one of the following should be run
     BWAMEM1_MEM(reads, index.map{ it -> [ [ id:'index' ], it ] }, sort) // If aligner is bwa-mem
@@ -34,9 +35,9 @@ workflow FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON {
     // The parabricks-fq2bam module performs alignment and sorting as part of the conversion from fastq to bam.
     // Additionally, it can perform mark duplicates and generate a bqsr table (input for parabricks-applybqsr module)
     PARABRICKS_FQ2BAM(
-                    reads, 
-                    [], 
-                    fasta.map{fa -> [[:], fa]}, index.map{ it -> [[ id:'index' ], it ] }, 
+                    reads,
+                    [],
+                    fasta.map{fa -> [[:], fa]}, index.map{ it -> [[ id:'index' ], it ] },
                     []
                     )
 
@@ -51,6 +52,11 @@ workflow FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON {
 
     bai = SENTIEON_BWAMEM.out.bam_and_bai.map{ meta, bam, bai -> [ meta, bai ] }
     bai = bai.mix(PARABRICKS_FQ2BAM.out.bai)
+
+    // Gather optional outputs for parabricks
+    qc_metrics = optional_parabricks.mix(PARABRICKS_FQ2BAM.out.qc_metrics)
+    bqsr_table = optional_parabricks.mix(PARABRICKS_FQ2BAM.out.bqsr_table)
+    duplicate_metrics = optional_parabricks.mix(PARABRICKS_FQ2BAM.out.duplicate_metrics)
 
     // Gather reports of all tools used
     reports = reports.mix(DRAGMAP_ALIGN.out.log)
@@ -67,4 +73,5 @@ workflow FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON {
     bai      // channel: [ [meta], bai ]
     reports
     versions // channel: [ versions.yml ]
+    optional_parabricks // channel [ optional_parabricks ]
 }

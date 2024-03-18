@@ -588,7 +588,7 @@ workflow SAREK {
         versions = versions.mix(FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON.out.versions)
     }
 
-    if (params.step in ['mapping', 'markduplicates']) {
+    if (params.step in ['mapping', 'markduplicates'] && !params.step in ['parabricks']) {
 
         // ch_cram_no_markduplicates_restart = Channel.empty()
         cram_markduplicates_no_spark = Channel.empty()
@@ -701,7 +701,7 @@ workflow SAREK {
         else CHANNEL_MARKDUPLICATES_CREATE_CSV(ch_md_cram_for_restart, csv_subfolder, params.outdir, params.save_output_as_bam)
     }
 
-    if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration']) {
+    if (params.step in ['mapping', 'markduplicates', 'prepare_recalibration'] && !params.step in ['parabricks']) {
 
         // Run if starting from step "prepare_recalibration"
         if (params.step == 'prepare_recalibration') {
@@ -737,7 +737,7 @@ workflow SAREK {
         }
 
         // STEP 3: Create recalibration tables
-        if (!(params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'))) {
+        if (!(params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator')) && !params.step in ['parabricks']) {
 
             ch_table_bqsr_no_spark = Channel.empty()
             ch_table_bqsr_spark    = Channel.empty()
