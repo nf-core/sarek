@@ -4,8 +4,8 @@ process VARLOCIRAPTOR_PREPROCESS {
 
     conda "bioconda::varlociraptor=8.1.1"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/varlociraptor:8.1.1--hc349b7f_0':
-        'biocontainers/varlociraptor:8.1.1--hc349b7f_0' }"
+        'https://depot.galaxyproject.org/singularity/varlociraptor:8.4.5--h769f52f_0':
+        'biocontainers/varlociraptor:8.4.5--h769f52f_0' }"
 
     input:
     tuple val(meta), path(bam), path(bai), path(candidates), path(alignment_json)
