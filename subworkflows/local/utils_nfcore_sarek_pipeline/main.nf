@@ -136,6 +136,7 @@ if (params.tools && (params.tools.split(',').contains('vep')    || params.tools.
         params.aligner,
         params.ascat_alleles,
         params.ascat_loci,
+        params.ascat_loci_gc,
         params.ascat_loci_rt,
         params.bcftools_annotations,
         params.bcftools_annotations_tbi,
