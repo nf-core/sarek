@@ -1,14 +1,14 @@
 //
-// INITIALIZE ANNOTATION CACHE
+// ANNOTATION CACHE INITIALISATION
 //
 
-// Initialize channels based on params or indices that were just built
+// Initialise channels based on params or indices that were just built
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 // Condition is based on params.step and params.tools
 // If and extra condition exists, it's specified in comments
 
-workflow INITIALIZE_ANNOTATION_CACHE {
+workflow ANNOTATION_CACHE_INITIALISATION {
     take:
     snpeff_enabled
     snpeff_cache

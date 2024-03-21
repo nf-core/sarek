@@ -5,6 +5,7 @@ workflow  SAMPLESHEET_TO_CHANNEL{
     aligner                         //
     ascat_alleles                   //
     ascat_loci                      //
+    ascat_loci_gc                   //
     ascat_loci_rt                   //
     bcftools_annotations            //
     bcftools_annotations_tbi        //
@@ -306,5 +307,3 @@ def flowcellLaneFromFastq(path) {
     }
     return fcid
 }
-
-
