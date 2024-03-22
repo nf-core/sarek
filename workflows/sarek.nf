@@ -217,10 +217,13 @@ include { POST_VARIANTCALLING                         } from '../subworkflows/lo
 include { VCF_QC_BCFTOOLS_VCFTOOLS                    } from '../subworkflows/local/vcf_qc_bcftools_vcftools/main'
 
 // Sample QC on CRAM files
-include { CRAM_SAMPLEQC                                } from '../subworkflows/local/cram_sampleqc/main'
+include { CRAM_SAMPLEQC                               } from '../subworkflows/local/cram_sampleqc/main'
 
 // Annotation
 include { VCF_ANNOTATE_ALL                            } from '../subworkflows/local/vcf_annotate_all/main'
+
+// Validation (experimental)
+include { VCF_VALIDATE_SMALL_VARIANTS                 } from '../subworkflows/nf-core/vcf_eval/main'
 
 // MULTIQC
 include { MULTIQC                                     } from '../modules/nf-core/multiqc/main'
@@ -1076,6 +1079,10 @@ workflow SAREK {
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_mpileup)
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.vcf_all)
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.vcf_all)
+
+        if(params.benchmark) {
+            VCF_VALIDATE_SMALL_VARIANTS(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_all)
+        }
 
         // QC
         VCF_QC_BCFTOOLS_VCFTOOLS(vcf_to_annotate, intervals_bed_combined)
