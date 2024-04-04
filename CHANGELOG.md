@@ -25,9 +25,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1360](https://github.com/nf-core/sarek/pull/1360) - Sync `TEMPLATE` with `tools` `2.11`
 - [#1408](https://github.com/nf-core/sarek/pull/1408), [#1412](https://github.com/nf-core/sarek/pull/1412) - Updating samtools to v1.19.2 - except in GATK/markduplicates. (Temporarily disabled nf-test for bwamem2/mem.)
 - [#1411](https://github.com/nf-core/sarek/pull/1411) - Temporarily disable sentieon related tests
+- [#1414](https://github.com/nf-core/sarek/pull/1414) - Sync `TEMPLATE` with `tools` `2.13`
 - [#1419](https://github.com/nf-core/sarek/pull/1419) - Updating GATK to v4.5, and updating samtools to v1.19.2 in GATK/markduplicates.
 - [#1426](https://github.com/nf-core/sarek/pull/1426) - Updating certain modules in order to fix the testdata-path in the nf-tests of those modules. Setting Docker runOptions for params.use_gatk_spark.
 - [#1428](https://github.com/nf-core/sarek/pull/1428) - Sync `TEMPLATE` with `tools` `2.13.1`
+- [#1422](https://github.com/nf-core/sarek/pull/1422) - Refactoring following `TEMPLATE` sync with `tools` `2.13`
 - [#1431](https://github.com/nf-core/sarek/pull/1431) - Using docker.containerOptions instead of docker.runOptions. Clearing containerOptions for SPARK modules for any kind of supported container engine.
 - [#1439](https://github.com/nf-core/sarek/pull/1439) - Replacing the local module `BUILD_INTERVALS` with the nf-core module `GAWK`
 
@@ -44,6 +46,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1390](https://github.com/nf-core/sarek/pull/1390) - Fix badges in README
 - [#1400](https://github.com/nf-core/sarek/pull/1400) - Fixed input channel for ASSESS_SIGNIFICANCE module, updated makegraph to makegraph2.
 - [#1403](https://github.com/nf-core/sarek/pull/1403) - Fix intervals usage with dot in chromosome names
+- [#1407](https://github.com/nf-core/sarek/pull/1407) - Fix CI tests name
+- [#1420](https://github.com/nf-core/sarek/pull/1420) - Make `-a` a default argument for `bcftools` concat
+- [#1422](https://github.com/nf-core/sarek/pull/1422) - Fix `Cannot serialize context map` warning
 
 ### Removed
 
