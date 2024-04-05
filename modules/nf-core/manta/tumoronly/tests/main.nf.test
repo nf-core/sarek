@@ -1,0 +1,121 @@
+nextflow_process {
+
+    name "Test Process MANTA_TUMORONLY"
+    script "../main.nf"
+    process "MANTA_TUMORONLY"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "manta"
+    tag "manta/tumoronly"
+
+    test("human - cram") {
+
+        when {
+            process {
+                """
+                input[0] = [ [ id:'test' ], // meta map
+                            file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test2.paired_end.recalibrated.sorted.cram', checkIfExists: true),
+                            file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test2.paired_end.recalibrated.sorted.cram.crai', checkIfExists: true),
+                            [], []
+                        ]
+                // fasta
+                input[1] = [ [id:'genome'],
+                            file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta', checkIfExists: true)
+                        ]
+                // fai
+                input[2] = [ [id:'genome'],
+                            file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai', checkIfExists: true)
+                        ]
+                // config
+                input[3] = Channel.of("[manta]", "enableRemoteReadRetrievalForInsertionsInGermlineCallingModes = 0")
+                            .collectFile(name:"manta_options.ini", newLine:true)
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert path(process.out.candidate_small_indels_vcf.get(0).get(1)).linesGzip.contains("##fileformat=VCFv4.1") },
+                { assert path(process.out.candidate_sv_vcf.get(0).get(1)).linesGzip.contains("##fileformat=VCFv4.1") },
+                { assert path(process.out.tumor_sv_vcf.get(0).get(1)).linesGzip.contains("##fileformat=VCFv4.1") },
+                { assert snapshot(process.out.version).match("version") }
+            )
+        }
+
+    }
+
+    test("human - cram - bed") {
+
+        when {
+            process {
+                """
+                input[0] = [ [ id:'bed_test' ], // meta map
+                            file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test2.paired_end.recalibrated.sorted.cram', checkIfExists: true),
+                            file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test2.paired_end.recalibrated.sorted.cram.crai', checkIfExists: true),
+                            file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed.gz', checkIfExists: true),
+                            file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed.gz.tbi', checkIfExists: true)
+                        ]
+                // fasta
+                input[1] = [ [id:'genome'],
+                            file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta', checkIfExists: true)
+                        ]
+                // fai
+                input[2] = [ [id:'genome'],
+                            file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai', checkIfExists: true)
+                        ]
+                // config
+                input[3] = []
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert path(process.out.candidate_small_indels_vcf.get(0).get(1)).linesGzip.contains("##fileformat=VCFv4.1") },
+                { assert path(process.out.candidate_sv_vcf.get(0).get(1)).linesGzip.contains("##fileformat=VCFv4.1") },
+                { assert path(process.out.tumor_sv_vcf.get(0).get(1)).linesGzip.contains("##fileformat=VCFv4.1") },
+                { assert snapshot(process.out.version).match("bed_version") }
+            )
+        }
+
+    }
+
+    test("human - cram - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [ [ id:'test' ], // meta map
+                            file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test2.paired_end.recalibrated.sorted.cram', checkIfExists: true),
+                            file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test2.paired_end.recalibrated.sorted.cram.crai', checkIfExists: true),
+                            [], []
+                        ]
+                // fasta
+                input[1] = [ [id:'genome'],
+                            file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta', checkIfExists: true)
+                        ]
+                // fai
+                input[2] = [ [id:'genome'],
+                            file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai', checkIfExists: true)
+                        ]
+                // config
+                input[3] = []
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+
+    }
+
+}

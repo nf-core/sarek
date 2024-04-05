@@ -1,0 +1,43 @@
+{
+    "sarscov2 - [[vcf1, vcf2], []]": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test3"
+                    },
+                    "test3.vcf.gz:md5,4bcd0afd89f56c5d433f6b6abc44d0a6"
+                ]
+            ],
+            [
+                "versions.yml:md5,24ae05eb858733b40fbd3f89743a6d09"
+            ]
+        ],
+        "timestamp": "2023-11-29T13:52:27.03724666"
+    },
+    "sarscov2 - [[vcf1, vcf2], [tbi1, tbi2]]": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test3"
+                    },
+                    "test3.vcf.gz:md5,4bcd0afd89f56c5d433f6b6abc44d0a6"
+                ]
+            ],
+            [
+                "versions.yml:md5,24ae05eb858733b40fbd3f89743a6d09"
+            ]
+        ],
+        "timestamp": "2023-11-29T13:52:21.468988293"
+    },
+    "sarscov2 - [[vcf1, vcf2], [tbi1, tbi2]] - stub": {
+        "content": [
+            "test3.vcf.gz",
+            [
+                "versions.yml:md5,24ae05eb858733b40fbd3f89743a6d09"
+            ]
+        ],
+        "timestamp": "2023-11-29T13:41:04.716017811"
+    }
+}

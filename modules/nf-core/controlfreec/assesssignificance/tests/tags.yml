@@ -1,0 +1,2 @@
+controlfreec/assesssignificance:
+  - "modules/nf-core/controlfreec/assesssignificance/**"

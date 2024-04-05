@@ -1,0 +1,2 @@
+controlfreec/freec2circos:
+  - "modules/nf-core/controlfreec/freec2circos/**"

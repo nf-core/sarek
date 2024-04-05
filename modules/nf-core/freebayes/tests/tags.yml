@@ -1,0 +1,2 @@
+freebayes:
+  - "modules/nf-core/freebayes/**"

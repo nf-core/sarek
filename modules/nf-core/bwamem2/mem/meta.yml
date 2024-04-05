@@ -37,6 +37,15 @@ input:
       type: file
       description: BWA genome index files
       pattern: "Directory containing BWA index *.{0132,amb,ann,bwt.2bit.64,pac}"
+  - meta3:
+      type: map
+      description: |
+        Groovy Map containing reference information
+        e.g. [ id:'genome' ]
+  - fasta:
+      type: file
+      description: Reference genome in FASTA format
+      pattern: "*.{fa,fasta,fna}"
   - sort_bam:
       type: boolean
       description: use samtools sort (true) or samtools view (false)
@@ -47,15 +56,33 @@ output:
       description: |
         Groovy Map containing sample information
         e.g. [ id:'test', single_end:false ]
+  - sam:
+      type: file
+      description: Output SAM file containing read alignments
+      pattern: "*.{sam}"
   - bam:
       type: file
       description: Output BAM file containing read alignments
       pattern: "*.{bam}"
+  - cram:
+      type: file
+      description: Output CRAM file containing read alignments
+      pattern: "*.{cram}"
+  - crai:
+      type: file
+      description: Index file for CRAM file
+      pattern: "*.{crai}"
+  - csi:
+      type: file
+      description: Index file for BAM file
+      pattern: "*.{csi}"
   - versions:
       type: file
       description: File containing software versions
       pattern: "versions.yml"
 authors:
   - "@maxulysse"
+  - "@matthdsm"
 maintainers:
   - "@maxulysse"
+  - "@matthdsm"

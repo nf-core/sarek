@@ -1,4 +1,14 @@
 {
+    "test_gatk4_genomicsdbimport_get_intervalslist": {
+        "content": [
+            "test.interval_list:md5,4c85812ac15fc1cd29711a851d23c0bf"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.01.0"
+        },
+        "timestamp": "2024-02-28T17:55:03.846241"
+    },
     "test_gatk4_genomicsdbimport_create_genomicsdb": {
         "content": [
             "__tiledb_workspace.tdb",

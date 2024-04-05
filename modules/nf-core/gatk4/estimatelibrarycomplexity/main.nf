@@ -24,6 +24,7 @@ process GATK4_ESTIMATELIBRARYCOMPLEXITY {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     def input_list = input.collect(){"--INPUT $it"}.join(" ")
+    def reference = fasta ? "--REFERENCE_SEQUENCE ${fasta}" : ""
 
     def avail_mem = 3072
     if (!task.memory) {
@@ -36,7 +37,7 @@ process GATK4_ESTIMATELIBRARYCOMPLEXITY {
         EstimateLibraryComplexity \\
         $input_list \\
         --OUTPUT ${prefix}.metrics \\
-        --REFERENCE_SEQUENCE ${fasta} \\
+        $reference \\
         --TMP_DIR . \\
         $args
 

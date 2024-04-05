@@ -1,9 +1,11 @@
 name: cnvkit_batch
+
 channels:
   - conda-forge
   - bioconda
   - defaults
+
 dependencies:
   - bioconda::cnvkit=0.9.10
-  - bioconda::samtools=1.19.2
   - bioconda::htslib=1.19.1
+  - bioconda::samtools=1.19.2
