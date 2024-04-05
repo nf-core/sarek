@@ -125,7 +125,7 @@
                     },
                     "dragmap/hashtable": {
                         "branch": "master",
-                        "git_sha": "575e1bc54b083fb15e7dd8b5fcc40bea60e8ce83",
+                        "git_sha": "ae9e01cb5e77faada314047e78423b22b4f5bbc5",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/dragmap/hashtable/dragmap-hashtable.diff"
                     },
