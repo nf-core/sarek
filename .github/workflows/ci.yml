@@ -219,6 +219,7 @@ jobs:
           - tags: "dragmap/align"
           - tags: "fastp"
           - tags: "fastqc"
+          - tags: "fgbio/fastqtobam"
           - tags: "gatk4/applybqsr"
           - tags: "gatk4/baserecalibrator"
           - tags: "gatk4/genomicsdbimport"
