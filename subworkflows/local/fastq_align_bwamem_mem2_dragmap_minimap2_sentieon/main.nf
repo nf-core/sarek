@@ -27,7 +27,7 @@ workflow FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_MINIMAP2_SENTIEON {
     cigar_bam = false
 
     // Only one of the following should be run
-    BWAMEM1_MEM(reads, index.map{ it -> [ [ id:'index' ], it ] }, sort) // If aligner is bwa-mem
+    BWAMEM1_MEM(reads, index.map{ it -> [ [ id:'index' ], it ] }, [[id:'no_fasta'], []], sort) // If aligner is bwa-mem
     BWAMEM2_MEM(reads, index.map{ it -> [ [ id:'index' ], it ] }, sort) // If aligner is bwa-mem2
     DRAGMAP_ALIGN(reads, index.map{ it -> [ [ id:'index' ], it ] }, sort) // If aligner is dragmap
     MINIMAP2_ALIGN(reads, index.map{ it -> [ [ id:'index' ], it ] }, sort, cigar_paf_format, cigar_bam) // If aligner is minimap2
