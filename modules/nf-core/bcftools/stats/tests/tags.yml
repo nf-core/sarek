@@ -1,0 +1,2 @@
+bcftools/stats:
+  - "modules/nf-core/bcftools/stats/**"

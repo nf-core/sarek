@@ -13,8 +13,11 @@ process SAMTOOLS_CONVERT {
     tuple val(meta3), path(fai)
 
     output:
-    tuple val(meta), path("*.{cram,bam}"), path("*.{crai,bai}") , emit: alignment_index
-    path  "versions.yml"                                        , emit: versions
+    tuple val(meta), path("*.bam")  , emit: bam ,   optional: true
+    tuple val(meta), path("*.cram") , emit: cram,   optional: true
+    tuple val(meta), path("*.bai")  , emit: bai ,   optional: true
+    tuple val(meta), path("*.crai") , emit: crai,   optional: true
+    path  "versions.yml"            , emit: versions
 
     when:
     task.ext.when == null || task.ext.when

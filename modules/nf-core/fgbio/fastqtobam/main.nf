@@ -2,10 +2,12 @@ process FGBIO_FASTQTOBAM {
     tag "$meta.id"
     label 'process_low'
 
+    // WARN: Version information not provided by tool on CLI. Please update version string below when bumping container versions.
+    // --version argument gives the wrong version
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/fgbio:2.0.2--hdfd78af_0' :
-        'biocontainers/fgbio:2.0.2--hdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/fgbio:2.1.0--hdfd78af_0' :
+        'biocontainers/fgbio:2.1.0--hdfd78af_0' }"
 
     input:
     tuple val(meta), path(reads)
@@ -21,9 +23,11 @@ process FGBIO_FASTQTOBAM {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
+    def suffix = task.ext.suffix ?: "bam"
     def sample_name = args.contains("--sample") ? "" : "--sample ${prefix}"
     def library_name = args.contains("--library") ? "" : "--library ${prefix}"
-    def output = prefix =~ /\.(bam|cram)$/ ? prefix : "${prefix}.bam"
+
+    def VERSION = '2.1.0' // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
     """
 
     fgbio \\
@@ -31,13 +35,29 @@ process FGBIO_FASTQTOBAM {
         FastqToBam \\
         ${args} \\
         --input ${reads} \\
-        --output ${output} \\
+        --output ${prefix}.${suffix} \\
         ${sample_name} \\
         ${library_name}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        fgbio: \$( echo \$(fgbio --version 2>&1 | tr -d '[:cntrl:]' ) | sed -e 's/^.*Version: //;s/\\[.*\$//')
+        fgbio: $VERSION
+    END_VERSIONS
+    """
+
+    stub:
+    def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    def suffix = task.ext.suffix ?: "bam"
+
+    def VERSION = '2.1.0' // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
+
+    """
+    touch ${prefix}.${suffix}
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        fgbio: $VERSION
     END_VERSIONS
     """
 }

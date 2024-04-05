@@ -91,10 +91,14 @@ process VCFTOOLS {
 
     def bed_arg  = (args.contains('--bed')) ? "--bed ${bed}" :
         (args.contains('--exclude-bed')) ? "--exclude-bed ${bed}" :
-        (args.contains('--hapcount')) ? "--hapcount ${bed}" : ''
+        (args.contains('--hapcount')) ? "--hapcount ${bed}" :
+        (args.contains('--positions')) ? "--positions ${bed}" :
+        (args.contains('--exclude-positions')) ? "--exclude-positions ${bed}"  : ''
     args_list.removeIf { it.contains('--bed') }
     args_list.removeIf { it.contains('--exclude-bed') }
     args_list.removeIf { it.contains('--hapcount') }
+    args_list.removeIf { it.contains('--positions') }
+    args_list.removeIf { it.contains('--exclude-positions') }
 
     def diff_variant_arg = (args.contains('--diff')) ? "--diff ${diff_variant_file}" :
         (args.contains('--gzdiff')) ? "--gzdiff ${diff_variant_file}" :
@@ -115,6 +119,14 @@ process VCFTOOLS {
         $bed_arg \\
         $diff_variant_arg
 
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        vcftools: \$(echo \$(vcftools --version 2>&1) | sed 's/^.*VCFtools (//;s/).*//')
+    END_VERSIONS
+    """
+
+    stub:
+    """
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         vcftools: \$(echo \$(vcftools --version 2>&1) | sed 's/^.*VCFtools (//;s/).*//')

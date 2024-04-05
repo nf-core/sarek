@@ -1,0 +1,2 @@
+controlfreec/freec2bed:
+  - "modules/nf-core/controlfreec/freec2bed/**"

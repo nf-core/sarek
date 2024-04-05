@@ -9,7 +9,7 @@ nextflow_process {
     tag "dragmap/align"
     tag "dragmap/hashtable"
 
-    test("sarscov2 - fastq, hashtable, false") {
+    test("sarscov2 - fastq, hashtable, fasta, false") {
 
         setup {
             run("DRAGMAP_HASHTABLE") {
@@ -33,7 +33,8 @@ nextflow_process {
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)
                 ]
                 input[1] = DRAGMAP_HASHTABLE.out.hashmap
-                input[2] = false //sort
+                input[2] = [[id:'test'],file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)]
+                input[3] = false //sort
                 """
             }
         }
@@ -51,7 +52,7 @@ nextflow_process {
 
     }
 
-    test("sarscov2 - fastq, hashtable, true") {
+    test("sarscov2 - fastq, hashtable, fasta, true") {
 
         setup {
             run("DRAGMAP_HASHTABLE") {
@@ -75,7 +76,8 @@ nextflow_process {
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)
                 ]
                 input[1] = DRAGMAP_HASHTABLE.out.hashmap
-                input[2] = true //sort
+                input[2] = [[id:'test'],file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)]
+                input[3] = true //sort
                 """
             }
         }
@@ -93,7 +95,7 @@ nextflow_process {
 
     }
 
-    test("sarscov2 - [fastq1, fastq2], hashtable, false") {
+    test("sarscov2 - [fastq1, fastq2], hashtable, fasta, false") {
 
         setup {
             run("DRAGMAP_HASHTABLE") {
@@ -120,7 +122,8 @@ nextflow_process {
                     ]
                 ]
                 input[1] = DRAGMAP_HASHTABLE.out.hashmap
-                input[2] = false //sort
+                input[2] = [[id:'test'],file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)]
+                input[3] = false //sort
                 """
             }
         }
@@ -138,7 +141,7 @@ nextflow_process {
 
     }
 
-    test("sarscov2 - [fastq1, fastq2], hashtable, true") {
+    test("sarscov2 - [fastq1, fastq2], hashtable, fasta, true") {
 
         setup {
             run("DRAGMAP_HASHTABLE") {
@@ -165,7 +168,8 @@ nextflow_process {
                     ]
                 ]
                 input[1] = DRAGMAP_HASHTABLE.out.hashmap
-                input[2] = true //sort
+                input[2] = [[id:'test'],file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)]
+                input[3] = true //sort
                 """
             }
         }
@@ -183,7 +187,7 @@ nextflow_process {
 
     }
 
-    test("homo_sapiens - [fastq1, fastq2], hashtable, true") {
+    test("homo_sapiens - [fastq1, fastq2], hashtable, fasta, true") {
 
         setup {
             run("DRAGMAP_HASHTABLE") {
@@ -210,7 +214,8 @@ nextflow_process {
                     ]
                 ]
                 input[1] = DRAGMAP_HASHTABLE.out.hashmap
-                input[2] = true //sort
+                input[2] = [[id:'test'],file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)]
+                input[3] = true //sort
                 """
             }
         }
@@ -228,7 +233,7 @@ nextflow_process {
 
     }
 
-    test("sarscov2 - [fastq1, fastq2], hashtable, true - stub") {
+    test("sarscov2 - [fastq1, fastq2], hashtable, fasta, true - stub") {
 
         options "-stub"
         setup {
@@ -256,7 +261,8 @@ nextflow_process {
                     ]
                 ]
                 input[1] = DRAGMAP_HASHTABLE.out.hashmap
-                input[2] = true //sort
+                input[2] = [[id:'test'],file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)]
+                input[3] = true //sort
                 """
             }
         }

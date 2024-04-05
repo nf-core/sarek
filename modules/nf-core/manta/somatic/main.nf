@@ -71,13 +71,13 @@ process MANTA_SOMATIC {
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    touch ${prefix}.candidate_small_indels.vcf.gz
+    echo "" | gzip > ${prefix}.candidate_small_indels.vcf.gz
     touch ${prefix}.candidate_small_indels.vcf.gz.tbi
-    touch ${prefix}.candidate_sv.vcf.gz
+    echo "" | gzip > ${prefix}.candidate_sv.vcf.gz
     touch ${prefix}.candidate_sv.vcf.gz.tbi
-    touch ${prefix}.diploid_sv.vcf.gz
+    echo "" | gzip > ${prefix}.diploid_sv.vcf.gz
     touch ${prefix}.diploid_sv.vcf.gz.tbi
-    touch ${prefix}.somatic_sv.vcf.gz
+    echo "" | gzip > ${prefix}.somatic_sv.vcf.gz
     touch ${prefix}.somatic_sv.vcf.gz.tbi
 
     cat <<-END_VERSIONS > versions.yml

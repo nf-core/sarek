@@ -34,9 +34,9 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(file(process.out.alignment_index[0][1]).name).match("bam_alignment_index_1") },
-                { assert snapshot(file(process.out.alignment_index[0][2]).name).match("bam_alignment_index_2") },
-                { assert snapshot(process.out.versions).match("bam_versions") }
+                { assert snapshot(file(process.out.cram[0][1]).name).match("bam_to_cram_alignment") },
+                { assert snapshot(file(process.out.crai[0][1]).name).match("bam_to_cram_index") },
+                { assert snapshot(process.out.versions).match("bam_to_cram_versions") }
             )
         }
     }
@@ -66,9 +66,9 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(file(process.out.alignment_index[0][1]).name).match("cram_alignment_index_1") },
-                { assert snapshot(file(process.out.alignment_index[0][2]).name).match("cram_alignment_index_2") },
-                { assert snapshot(process.out.versions).match("cram_versions") }
+                { assert snapshot(file(process.out.bam[0][1]).name).match("cram_to_bam_alignment") },
+                { assert snapshot(file(process.out.bai[0][1]).name).match("cram_to_bam_alignment_index") },
+                { assert snapshot(process.out.versions).match("cram_to_bam_versions") }
             )
         }
     }

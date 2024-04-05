@@ -4,14 +4,11 @@ process BCFTOOLS_ANNOTATE {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/bcftools:1.17--haef29d1_0':
-        'biocontainers/bcftools:1.17--haef29d1_0' }"
+        'https://depot.galaxyproject.org/singularity/bcftools:1.18--h8b25389_0':
+        'biocontainers/bcftools:1.18--h8b25389_0' }"
 
     input:
-    tuple val(meta), path(input)
-    path annotations
-    path annotations_index 
-    path header_lines
+    tuple val(meta), path(input), path(index), path(annotations), path(annotations_index), path(header_lines)
 
     output:
     tuple val(meta), path("*.{vcf,vcf.gz,bcf,bcf.gz}"), emit: vcf
@@ -32,10 +29,6 @@ process BCFTOOLS_ANNOTATE {
                     "vcf"
     if ("$input" == "${prefix}.${extension}") error "Input and output names are the same, set prefix in module configuration to disambiguate!"
     """
-    bcftools \\
-        index \\
-        $input
-
     bcftools \\
         annotate \\
         $args \\
