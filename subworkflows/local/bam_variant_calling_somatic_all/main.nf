@@ -131,10 +131,10 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     if (tools.split(',').contains('freebayes')) {
         BAM_VARIANT_CALLING_FREEBAYES(
             cram,
-            dict,
-            fasta,
-            fasta_fai,
-            intervals
+            dict.map{ it -> [[id:it[0].baseName], it] },
+            fasta.map{ it -> [[id:it[0].baseName], it] },
+            fasta_fai.map{ it -> [[id:it[0].baseName], it] },
+            intervals.map{ it -> [[id:it[0].baseName], it] }
         )
 
         vcf_freebayes = BAM_VARIANT_CALLING_FREEBAYES.out.vcf
