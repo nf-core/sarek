@@ -99,10 +99,10 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         BAM_VARIANT_CALLING_FREEBAYES(
             // Remap channel to match module/subworkflow
             cram.map{ meta, cram, crai -> [ meta, cram, crai, [], [] ] },
-            dict,
-            fasta,
-            fasta_fai,
-            intervals
+            dict.map{ it -> [[id:it[0].baseName], it] },
+            fasta.map{ it -> [[id:it[0].baseName], it] },
+            fasta_fai.map{ it -> [[id:it[0].baseName], it] },
+            intervals.map{ it -> [[id:it[0].baseName], it] }
         )
 
         vcf_freebayes = BAM_VARIANT_CALLING_FREEBAYES.out.vcf
