@@ -23,7 +23,7 @@ workflow FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON {
     reports = Channel.empty()
 
     // Only one of the following should be run
-    BWAMEM1_MEM(reads, index.map{ it -> [ [ id:'index' ], it ] }, sort) // If aligner is bwa-mem
+    BWAMEM1_MEM(reads, index.map{ it -> [ [ id:'index' ], it ] }, [[id:'no_fasta'], []], sort) // If aligner is bwa-mem
     BWAMEM2_MEM(reads, index.map{ it -> [ [ id:'index' ], it ] }, sort) // If aligner is bwa-mem2
     DRAGMAP_ALIGN(reads, index.map{ it -> [ [ id:'index' ], it ] }, sort) // If aligner is dragmap
     // The sentieon-bwamem-module does sorting as part of the conversion from sam to bam.
