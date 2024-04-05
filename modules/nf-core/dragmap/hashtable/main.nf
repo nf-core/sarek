@@ -4,8 +4,8 @@ process DRAGMAP_HASHTABLE {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/dragmap:1.3.0--h91baf5a_3':
-        'biocontainers/dragmap:1.3.0--h91baf5a_3' }"
+        'https://depot.galaxyproject.org/singularity/dragmap:1.2.1--h72d16da_1':
+        'biocontainers/dragmap:1.2.1--h72d16da_1' }"
 
     input:
     tuple val(meta), path(fasta)
