@@ -60,6 +60,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | Dependency | Old version | New version |
 | ---------- | ----------- | ----------- |
 | bcftools   | 1.17        | 1.18        |
+| fgbio      | 2.0.2       | 2.1.0       |
 | gatk       | 4.4.0.0     | 4.5.0.0     |
 | multiqc    | 1.17        | 1.18        |
 | samtools   | 1.17        | 1.19.2      |
