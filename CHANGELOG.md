@@ -57,6 +57,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | bcftools   | 1.17        | 1.18        |
 | fgbio      | 2.0.2       | 2.1.0       |
 | gatk       | 4.4.0.0     | 4.5.0.0     |
+| gatk-spark | 4.4.0.0     | 4.5.0.0     |
+| mosdepth   | 0.3.3       | 0.3.6       |
 | multiqc    | 1.17        | 1.18        |
 | samtools   | 1.17        | 1.19.2      |
 
