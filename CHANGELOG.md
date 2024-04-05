@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1272](https://github.com/nf-core/sarek/pull/1372) - Add integration with NCBench: Automatic submission of latest benchmarking runs
 - [#1333](https://github.com/nf-core/sarek/pull/1333) - Back to dev
 - [#1335](https://github.com/nf-core/sarek/pull/1335) - Add index computation of `bcftools_annotations`, if not provided
-- [#1340](https://github.com/nf-core/sarek/pull/1340) - Adds Azure test profiles and megatests.
+- [#1340](https://github.com/nf-core/sarek/pull/1340) - Adds Azure test profiles and megatests
 - [#1372](https://github.com/nf-core/sarek/pull/1372) - Add NCBench test profile for Agilent datasets
 - [#1409](https://github.com/nf-core/sarek/pull/1409) - Add params `modules_testdata_base_path` to test profile
 
@@ -26,12 +26,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1408](https://github.com/nf-core/sarek/pull/1408), [#1412](https://github.com/nf-core/sarek/pull/1412) - Updating samtools to v1.19.2 - except in GATK/markduplicates. (Temporarily disabled nf-test for bwamem2/mem.)
 - [#1411](https://github.com/nf-core/sarek/pull/1411) - Temporarily disable sentieon related tests
 - [#1414](https://github.com/nf-core/sarek/pull/1414) - Sync `TEMPLATE` with `tools` `2.13`
-- [#1419](https://github.com/nf-core/sarek/pull/1419) - Updating GATK to v4.5, and updating samtools to v1.19.2 in GATK/markduplicates.
-- [#1426](https://github.com/nf-core/sarek/pull/1426) - Updating certain modules in order to fix the testdata-path in the nf-tests of those modules. Setting Docker runOptions for params.use_gatk_spark.
+- [#1419](https://github.com/nf-core/sarek/pull/1419) - Updating GATK to v4.5, and updating samtools to v1.19.2 in GATK/markduplicates
+- [#1426](https://github.com/nf-core/sarek/pull/1426) - Updating certain modules in order to fix the testdata-path in the nf-tests of those modules. Setting Docker runOptions for params.use_gatk_spark
 - [#1428](https://github.com/nf-core/sarek/pull/1428) - Sync `TEMPLATE` with `tools` `2.13.1`
 - [#1422](https://github.com/nf-core/sarek/pull/1422) - Refactoring following `TEMPLATE` sync with `tools` `2.13`
-- [#1431](https://github.com/nf-core/sarek/pull/1431) - Using docker.containerOptions instead of docker.runOptions. Clearing containerOptions for SPARK modules for any kind of supported container engine.
+- [#1431](https://github.com/nf-core/sarek/pull/1431) - Using docker.containerOptions instead of docker.runOptions. Clearing containerOptions for SPARK modules for any kind of supported container engine
 - [#1439](https://github.com/nf-core/sarek/pull/1439) - Replacing the local module `BUILD_INTERVALS` with the nf-core module `GAWK`
+- [#1456](https://github.com/nf-core/sarek/pull/1456) - Revert usage of docker.runOptions. Add an empty docker.runOptions when using the new `spark` profile
 
 ### Fixed
 
@@ -44,7 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1381](https://github.com/nf-core/sarek/pull/1381) - Swap NGSCheckMate bed file for GATK.GRCh37 to one without the `chr` prefix
 - [#1383](https://github.com/nf-core/sarek/pull/1383) - Fix `--three_prime_clip_r{1,2}` parameter documentation
 - [#1390](https://github.com/nf-core/sarek/pull/1390) - Fix badges in README
-- [#1400](https://github.com/nf-core/sarek/pull/1400) - Fixed input channel for ASSESS_SIGNIFICANCE module, updated makegraph to makegraph2.
+- [#1400](https://github.com/nf-core/sarek/pull/1400) - Fixed input channel for ASSESS_SIGNIFICANCE module, updated makegraph to makegraph2
 - [#1403](https://github.com/nf-core/sarek/pull/1403) - Fix intervals usage with dot in chromosome names
 - [#1407](https://github.com/nf-core/sarek/pull/1407) - Fix CI tests name
 - [#1420](https://github.com/nf-core/sarek/pull/1420) - Make `-a` a default argument for `bcftools` concat
@@ -140,7 +141,7 @@ Ráhpajávvre is the Lule Sámi spelling of Rapaselet.
 
 - [#1246](https://github.com/nf-core/sarek/pull/1246) - Back to dev
 - [#1259](https://github.com/nf-core/sarek/pull/1259) - nf-prov plugin
-- [#1288](https://github.com/nf-core/sarek/pull/1288) - Add nf-test continuous integration.
+- [#1288](https://github.com/nf-core/sarek/pull/1288) - Add nf-test continuous integration
 
 ### Changed
 
@@ -271,7 +272,7 @@ Gällivare is a small lake next to Pierikjaure.
 
 - [#1112](https://github.com/nf-core/sarek/pull/1112) - Back to dev
 - [#1119](https://github.com/nf-core/sarek/pull/1119) - Added `help_text` for `input_output_options` group in schema
-- [#1044](https://github.com/nf-core/sarek/pull/1044) - Adding support for several tools from Sentieon's DNAseq package. The standard fastq-to-vcf processing can now be done using Sentieon's DNAseq tools `ApplyVarCal`, `bwa mem`, `Dedup`, `GVCFtyper`, `Haplotyper`, `LocusCollector` and `VarCal`.
+- [#1044](https://github.com/nf-core/sarek/pull/1044) - Adding support for several tools from Sentieon's DNAseq package. The standard fastq-to-vcf processing can now be done using Sentieon's DNAseq tools `ApplyVarCal`, `bwa mem`, `Dedup`, `GVCFtyper`, `Haplotyper`, `LocusCollector` and `VarCal`
 
 ### Changed
 
@@ -302,7 +303,7 @@ Vuoinesluobbalah is a lake close to Bierikjávrre.
 
 - [#1087](https://github.com/nf-core/sarek/pull/1087) - Fix wrong default memory in GATK4_CREATESEQUENCEDICTIONARY [#1085](https://github.com/nf-core/sarek/pull/1085)
 - [#1089](https://github.com/nf-core/sarek/pull/1089) - Remove duplicated code
-- [#1093](https://github.com/nf-core/sarek/pull/1093) - Fixing Ascat by reverting meta.id in channels allele_files, loci_files, gc_file and rt_file to baseName.
+- [#1093](https://github.com/nf-core/sarek/pull/1093) - Fixing Ascat by reverting meta.id in channels allele_files, loci_files, gc_file and rt_file to baseName
 - [#1098](https://github.com/nf-core/sarek/pull/1098) - Fix Channel issue in Mutect2 subworkflow [#1094](https://github.com/nf-core/sarek/pull/1094)
 - [#1100](https://github.com/nf-core/sarek/pull/1100) - Remove duplicate index with deepvariant when no_intervals [#1069](https://github.com/nf-core/sarek/pull/1069)
 - [#1101](https://github.com/nf-core/sarek/pull/1101) - Remove duplicate index computation for GATK4 Markduplicates & [#1065](https://github.com/nf-core/sarek/issues/1065)
