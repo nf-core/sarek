@@ -26,10 +26,10 @@ workflow BAM_VARIANT_CALLING_MPILEUP {
 
     // Run, if --tools mpileup
     keep_bcftools_mpileup = false
-    BCFTOOLS_MPILEUP(cram_intervals, fasta.map{ it -> [[id:it[0].baseName], it] }, keep_bcftools_mpileup)
+    BCFTOOLS_MPILEUP(cram_intervals, fasta, keep_bcftools_mpileup)
 
     //Only run, if --tools ControlFreec
-    SAMTOOLS_MPILEUP(cram_intervals, fasta)
+    SAMTOOLS_MPILEUP(cram_intervals, fasta.map{ meta, fasta -> [ fasta ] })
 
     // Figuring out if there is one or more vcf(s) from the same sample
     vcf_mpileup = BCFTOOLS_MPILEUP.out.vcf.branch{
