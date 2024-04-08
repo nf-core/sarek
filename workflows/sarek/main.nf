@@ -50,7 +50,7 @@ include { BAM_SENTIEON_DEDUP                          } from '../../subworkflows
 
 // QC on CRAM
 include { CRAM_QC_MOSDEPTH_SAMTOOLS as CRAM_QC_NO_MD  } from '../../subworkflows/local/cram_qc_mosdepth_samtools/main'
-include { CRAM_QC_MOSDEPTH_SAMTOOLS as CRAM_QC_RECAL  } from '../../subworkflows/local/cram_qc_mosdepth_samtools/main'
+include { CRAM_SAMPLEQC                               } from '../../subworkflows/local/cram_sampleqc/main'
 
 // Create recalibration tables
 include { BAM_BASERECALIBRATOR                        } from '../../subworkflows/local/bam_baserecalibrator/main'
@@ -74,9 +74,6 @@ include { POST_VARIANTCALLING                         } from '../../subworkflows
 
 // QC on VCF files
 include { VCF_QC_BCFTOOLS_VCFTOOLS                    } from '../../subworkflows/local/vcf_qc_bcftools_vcftools/main'
-
-// Sample QC on CRAM files
-include { CRAM_SAMPLEQC                               } from '../../subworkflows/local/cram_sampleqc/main'
 
 // Annotation
 include { VCF_ANNOTATE_ALL                            } from '../../subworkflows/local/vcf_annotate_all/main'
@@ -312,7 +309,7 @@ workflow SAREK {
             // bams are merged (when multiple lanes from the same sample), indexed and then converted to cram
             BAM_MERGE_INDEX_SAMTOOLS(bam_mapped)
 
-            BAM_TO_CRAM_MAPPING(BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai, fasta.map{ it -> [[:], it] }, fasta_fai.map{ it -> [[:], it] })
+            BAM_TO_CRAM_MAPPING(BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai, fasta, fasta_fai)
             // Create CSV to restart from this step
             if (params.save_output_as_bam) CHANNEL_ALIGN_CREATE_CSV(BAM_MERGE_INDEX_SAMTOOLS.out.bam_bai, params.outdir, params.save_output_as_bam)
             else CHANNEL_ALIGN_CREATE_CSV(BAM_TO_CRAM_MAPPING.out.cram.join(BAM_TO_CRAM_MAPPING.out.crai, failOnDuplicate: true, failOnMismatch: true), params.outdir, params.save_output_as_bam)
@@ -360,7 +357,7 @@ workflow SAREK {
                 }
 
                 // Convert any input BAMs to CRAM
-                BAM_TO_CRAM(input_markduplicates_convert.bam, fasta.map{ it -> [[:], it] }, fasta_fai.map{ it -> [[:], it] })
+                BAM_TO_CRAM(input_markduplicates_convert.bam, fasta, fasta_fai)
                 versions = versions.mix(BAM_TO_CRAM.out.versions)
 
                 cram_skip_markduplicates = Channel.empty().mix(input_markduplicates_convert.cram, BAM_TO_CRAM_MAPPING.out.cram.join(BAM_TO_CRAM_MAPPING.out.crai, failOnDuplicate: true, failOnMismatch: true))
@@ -429,7 +426,7 @@ workflow SAREK {
             .map{ meta, cram, crai -> [ meta + [data_type: "cram"], cram, crai ] }
 
         // If params.save_output_as_bam, then convert CRAM files to BAM
-        CRAM_TO_BAM(ch_md_cram_for_restart, fasta.map{ it -> [[:], it] }, fasta_fai.map{ it -> [[:], it] })
+        CRAM_TO_BAM(ch_md_cram_for_restart, fasta, fasta_fai)
         versions = versions.mix(CRAM_TO_BAM.out.versions)
 
         // CSV should be written for the file actually out, either CRAM or BAM
@@ -452,7 +449,7 @@ workflow SAREK {
             }
 
             // BAM files first must be converted to CRAM files since from this step on we base everything on CRAM format
-            BAM_TO_CRAM(input_prepare_recal_convert.bam, fasta.map{ it -> [[:], it] }, fasta_fai.map{ it -> [[:], it] })
+            BAM_TO_CRAM(input_prepare_recal_convert.bam, fasta, fasta_fai)
             versions = versions.mix(BAM_TO_CRAM.out.versions)
 
             ch_cram_from_bam = BAM_TO_CRAM.out.cram.join(BAM_TO_CRAM.out.crai, failOnDuplicate: true, failOnMismatch: true)
@@ -545,7 +542,7 @@ workflow SAREK {
             input_only_bam   = input_recal_convert.bam.map{ meta, bam, bai, table -> [ meta, bam, bai ] }
 
             // BAM files first must be converted to CRAM files since from this step on we base everything on CRAM format
-            BAM_TO_CRAM(input_only_bam, fasta.map{ it -> [[:], it] }, fasta_fai.map{ it -> [[:], it] })
+            BAM_TO_CRAM(input_only_bam, fasta, fasta_fai)
             versions = versions.mix(BAM_TO_CRAM.out.versions)
 
             cram_applybqsr = Channel.empty().mix(
@@ -593,7 +590,7 @@ workflow SAREK {
                 cram_variant_calling_spark)
 
             // If params.save_output_as_bam, then convert CRAM files to BAM
-            CRAM_TO_BAM_RECAL(cram_variant_calling, fasta.map{ it -> [[:], it] }, fasta_fai.map{ it -> [[:], it] })
+            CRAM_TO_BAM_RECAL(cram_variant_calling, fasta, fasta_fai)
             versions = versions.mix(CRAM_TO_BAM_RECAL.out.versions)
 
             // CSV should be written for the file actually out out, either CRAM or BAM
@@ -625,7 +622,7 @@ workflow SAREK {
         }
 
         // BAM files first must be converted to CRAM files since from this step on we base everything on CRAM format
-        BAM_TO_CRAM(input_variant_calling_convert.bam, fasta.map{ it -> [[:], it] }, fasta_fai.map{ it -> [[:], it] })
+        BAM_TO_CRAM(input_variant_calling_convert.bam, fasta, fasta_fai)
         versions = versions.mix(BAM_TO_CRAM.out.versions)
 
         cram_variant_calling = Channel.empty().mix(
@@ -639,10 +636,10 @@ workflow SAREK {
 
         // RUN CRAM QC on the recalibrated CRAM files or when starting from step variant calling. NGSCheckmate should be run also on non-recalibrated CRAM files
         CRAM_SAMPLEQC(cram_variant_calling,
-                        ngscheckmate_bed,
-                        fasta,
-                        params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'),
-                        intervals_for_preprocessing)
+            ngscheckmate_bed,
+            fasta.map{ meta, fasta -> [ fasta ] },
+            params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'),
+            intervals_for_preprocessing)
 
     if (params.tools) {
 
@@ -833,7 +830,7 @@ workflow SAREK {
 
         if (params.tools.split(',').contains('merge') || params.tools.split(',').contains('snpeff') || params.tools.split(',').contains('vep')|| params.tools.split(',').contains('bcfann')) {
 
-            vep_fasta = (params.vep_include_fasta) ? fasta.map{ fasta -> [ [ id:fasta.baseName ], fasta ] } : [[id: 'null'], []]
+            vep_fasta = (params.vep_include_fasta) ? fasta : [[id: 'null'], []]
 
             VCF_ANNOTATE_ALL(
                 vcf_to_annotate.map{meta, vcf -> [ meta + [ file_name: vcf.baseName ], vcf ] },
