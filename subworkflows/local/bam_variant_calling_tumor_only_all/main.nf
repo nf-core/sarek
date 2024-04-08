@@ -102,7 +102,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
             dict.map{ it -> [[id:it[0].baseName], it] },
             fasta.map{ it -> [[id:it[0].baseName], it] },
             fasta_fai.map{ it -> [[id:it[0].baseName], it] },
-            intervals.map{ it -> [[id:it[0].baseName], it] }
+            intervals
         )
 
         vcf_freebayes = BAM_VARIANT_CALLING_FREEBAYES.out.vcf
