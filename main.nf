@@ -78,12 +78,14 @@ include { PREPARE_GENOME                   } from './subworkflows/local/prepare_
 include { PREPARE_INTERVALS                } from './subworkflows/local/prepare_intervals'
 include { PREPARE_REFERENCE_CNVKIT         } from './subworkflows/local/prepare_reference_cnvkit'
 
+// Initialize fasta file with meta map:
+fasta = params.fasta ? Channel.fromPath(params.fasta).map{ it -> [ [id:it.baseName], it ] } : Channel.empty()
+
 // Initialize file channels based on params, defined in the params.genomes[params.genome] scope
 bcftools_annotations    = params.bcftools_annotations    ? Channel.fromPath(params.bcftools_annotations).collect()  : Channel.empty()
 bcftools_header_lines   = params.bcftools_header_lines   ? Channel.fromPath(params.bcftools_header_lines).collect() : Channel.empty()
 cf_chrom_len            = params.cf_chrom_len            ? Channel.fromPath(params.cf_chrom_len)                    : []
 dbsnp                   = params.dbsnp                   ? Channel.fromPath(params.dbsnp).collect()                 : Channel.value([])
-fasta                   = params.fasta                   ? Channel.fromPath(params.fasta).collect()                 : Channel.empty()
 fasta_fai               = params.fasta_fai               ? Channel.fromPath(params.fasta_fai).collect()             : Channel.empty()
 germline_resource       = params.germline_resource       ? Channel.fromPath(params.germline_resource)               : Channel.value([]) // Mutect2 does not require a germline resource, so set to optional input
 known_indels            = params.known_indels            ? Channel.fromPath(params.known_indels).collect()          : Channel.value([])
@@ -102,7 +104,6 @@ snpeff_db                   = params.snpeff_db                ?: Channel.empty()
 vep_cache_version           = params.vep_cache_version        ?: Channel.empty()
 vep_genome                  = params.vep_genome               ?: Channel.empty()
 vep_species                 = params.vep_species              ?: Channel.empty()
-
 
 vep_extra_files = []
 
@@ -142,7 +143,6 @@ workflow NFCORE_SAREK {
         params.chr_dir,
         dbsnp,
         fasta,
-        fasta_fai,
         germline_resource,
         known_indels,
         known_snps,
@@ -150,15 +150,15 @@ workflow NFCORE_SAREK {
 
     // Gather built indices or get them from the params
     // Built from the fasta file:
-    dict       = params.dict        ? Channel.fromPath(params.dict).map{ it -> [ [id:'dict'], it ] }.collect()
+    dict        = params.dict       ? Channel.fromPath(params.dict).map{ it -> [ [id:'dict'], it ] }.collect()
                                     : PREPARE_GENOME.out.dict
-    fasta_fai  = params.fasta_fai   ? Channel.fromPath(params.fasta_fai).collect()
+    fasta_fai   = params.fasta_fai  ? Channel.fromPath(params.fasta_fai).map{ it -> [ [id:'fai'], it ] }.collect()
                                     : PREPARE_GENOME.out.fasta_fai
-    bwa        = params.bwa         ? Channel.fromPath(params.bwa).collect()
+    bwa         = params.bwa        ? Channel.fromPath(params.bwa).map{ it -> [ [id:'bwa'], it ] }.collect()
                                     : PREPARE_GENOME.out.bwa
-    bwamem2    = params.bwamem2     ? Channel.fromPath(params.bwamem2).collect()
+    bwamem2     = params.bwamem2    ? Channel.fromPath(params.bwamem2).map{ it -> [ [id:'bwamem2'], it ] }.collect()
                                     : PREPARE_GENOME.out.bwamem2
-    dragmap    = params.dragmap     ? Channel.fromPath(params.dragmap).collect()
+    dragmap     = params.dragmap    ? Channel.fromPath(params.dragmap).map{ it -> [ [id:'dragmap'], it ] }.collect()
                                     : PREPARE_GENOME.out.hashtable
 
     // Gather index for mapping given the chosen aligner
