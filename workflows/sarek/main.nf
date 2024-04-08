@@ -637,7 +637,7 @@ workflow SAREK {
         // RUN CRAM QC on the recalibrated CRAM files or when starting from step variant calling. NGSCheckmate should be run also on non-recalibrated CRAM files
         CRAM_SAMPLEQC(cram_variant_calling,
             ngscheckmate_bed,
-            fasta.map{ meta, fasta -> [ fasta ] },
+            fasta,
             params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'),
             intervals_for_preprocessing)
 

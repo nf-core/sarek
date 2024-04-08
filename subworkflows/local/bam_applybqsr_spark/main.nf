@@ -24,13 +24,13 @@ workflow BAM_APPLYBQSR_SPARK {
         .map{ meta, cram, crai, recal, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram, crai, recal, intervals ] }
 
     // RUN APPLYBQSR SPARK
-    GATK4SPARK_APPLYBQSR(cram_intervals, fasta, fasta_fai, dict.map{ meta, it -> [ it ] })
+    GATK4SPARK_APPLYBQSR(cram_intervals, fasta.map{ meta, it -> [ it ] }, fasta_fai.map{ meta, it -> [ it ] }, dict.map{ meta, it -> [ it ] })
 
     // Gather the recalibrated cram files
     cram_to_merge = GATK4SPARK_APPLYBQSR.out.cram.map{ meta, cram -> [ groupKey(meta, meta.num_intervals), cram ] }.groupTuple()
 
     // Merge and index the recalibrated cram files
-    CRAM_MERGE_INDEX_SAMTOOLS(cram_to_merge, fasta, fasta_fai)
+    CRAM_MERGE_INDEX_SAMTOOLS(cram_to_merge, fasta.map{ meta, it -> [ it ] }, fasta_fai.map{ meta, it -> [ it ] })
 
     cram_recal = CRAM_MERGE_INDEX_SAMTOOLS.out.cram_crai
         // Remove no longer necessary field: num_intervals

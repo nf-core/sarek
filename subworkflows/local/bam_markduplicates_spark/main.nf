@@ -22,7 +22,7 @@ workflow BAM_MARKDUPLICATES_SPARK {
     reports = Channel.empty()
 
     // RUN MARKUPDUPLICATES SPARK
-    GATK4SPARK_MARKDUPLICATES(bam, fasta, fasta_fai, dict)
+    GATK4SPARK_MARKDUPLICATES(bam, fasta.map{ meta, fasta -> [ fasta ] }, fasta_fai.map{ meta, fasta_fai -> [ fasta_fai ] }, dict.map{ meta, dict -> [ dict ] })
 
     // Index cram
     INDEX_MARKDUPLICATES(GATK4SPARK_MARKDUPLICATES.out.output)
