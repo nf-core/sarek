@@ -24,14 +24,14 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     take:
     tools                             // Mandatory, list of tools to apply
     skip_tools                        // Mandatory, list of tools to skip
-    cram                              // channel: [mandatory] cram
-    bwa                               // channel: [mandatory] bwa
-    dbsnp                             // channel: [mandatory] dbsnp
+    cram                              // channel: [mandatory] meta, cram
+    bwa                               // channel: [mandatory] meta, bwa
+    dbsnp                             // channel: [mandatory] meta, dbsnp
     dbsnp_tbi                         // channel: [mandatory] dbsnp_tbi
     dbsnp_vqsr
-    dict                              // channel: [mandatory] dict
-    fasta                             // channel: [mandatory] fasta
-    fasta_fai                         // channel: [mandatory] fasta_fai
+    dict                              // channel: [mandatory] meta, dict
+    fasta                             // channel: [mandatory] meta, fasta
+    fasta_fai                         // channel: [mandatory] meta, fasta_fai
     intervals                         // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
     intervals_bed_combined            // channel: [mandatory] intervals/target regions in one file unzipped
     intervals_bed_gz_tbi_combined     // channel: [mandatory] intervals/target regions in one file zipped
@@ -84,8 +84,8 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         BAM_VARIANT_CALLING_CNVKIT(
             // Remap channel to match module/subworkflow
             cram.map{ meta, cram, crai -> [ meta, [], cram ] },
-            fasta.map{ it -> [[id:it[0].baseName], it] },
-            fasta_fai.map{ it -> [[id:it[0].baseName], it] },
+            fasta,
+            fasta_fai,
             intervals_bed_combined.map{ it -> [[id:it[0].baseName], it] },
             [[id:"null"], []]
         )
@@ -112,9 +112,9 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         BAM_VARIANT_CALLING_FREEBAYES(
             // Remap channel to match module/subworkflow
             cram.map{ meta, cram, crai -> [ meta, cram, crai, [], [] ] },
-            dict.map{ it -> [[id:it[0].baseName], it] },
-            fasta.map{ it -> [[id:it[0].baseName], it] },
-            fasta_fai.map{ it -> [[id:it[0].baseName], it] },
+            dict,
+            fasta,
+            fasta_fai,
             intervals
         )
 
@@ -126,8 +126,8 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     if (tools.split(',').contains('haplotypecaller')) {
         BAM_VARIANT_CALLING_HAPLOTYPECALLER(
             cram,
-            fasta.map{ it -> [[id:it[0].baseName], it] },
-            fasta_fai.map{ it -> [[id:it[0].baseName], it] },
+            fasta,
+            fasta_fai,
             dict,
             dbsnp.map{ it -> [[id:it[0].baseName], it] },
             dbsnp_tbi.map{ it -> [[id:it[0].baseName], it] },
@@ -163,8 +163,8 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
 
                 VCF_VARIANT_FILTERING_GATK(
                     vcf_haplotypecaller.join(tbi_haplotypecaller, failOnDuplicate: true, failOnMismatch: true),
-                    fasta,
-                    fasta_fai,
+                    fasta.map{ meta, fasta -> [ fasta ] },
+                    fasta_fai.map{ meta, fasta_fai -> [ fasta_fai ] },
                     dict.map{ meta, dict -> [ dict ] },
                     intervals_bed_combined_haplotypec,
                     known_sites_indels.concat(known_sites_snps).flatten().unique().collect(),
@@ -181,8 +181,8 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     if (tools.split(',').contains('manta')) {
         BAM_VARIANT_CALLING_GERMLINE_MANTA (
             cram,
-            fasta.map{ it -> [ [ id:'fasta' ], it ] },
-            fasta_fai.map{ it -> [ [ id:'fasta_fai' ], it ] },
+            fasta,
+            fasta_fai,
             intervals_bed_gz_tbi_combined
         )
 
@@ -238,7 +238,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
 
                 SENTIEON_DNAMODELAPPLY(
                     vcf_sentieon_dnascope.join(vcf_tbi_sentieon_dnascope, failOnDuplicate: true, failOnMismatch: true),
-                    fasta.map{ fasta -> [ [ id:fasta.baseName ], fasta ] },
+                    fasta,
                     fasta_fai.map{ fai -> [ [ id:fai.baseName ], fai ] },
                     sentieon_dnascope_model.map{ model -> [ [ id:model.baseName ], model ] })
 
@@ -312,12 +312,14 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     }
 
     // STRELKA
+
     if (tools.split(',').contains('strelka')) {
+
         BAM_VARIANT_CALLING_SINGLE_STRELKA(
             cram,
             dict,
-            fasta,
-            fasta_fai,
+            fasta.map{ meta, fasta -> [ fasta ] },
+            fasta_fai.map{ meta, fasta_fai -> [ fasta_fai ] },
             intervals_bed_gz_tbi
         )
 
@@ -330,7 +332,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         BAM_VARIANT_CALLING_SINGLE_TIDDIT(
             cram,
             // Remap channel to match module/subworkflow
-            fasta.map{ it -> [ [ id:'fasta' ], it ] },
+            fasta,
             bwa
         )
 

@@ -85,8 +85,8 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         BAM_VARIANT_CALLING_CNVKIT (
             // Remap channel to match module/subworkflow
             cram.map{ meta, cram, crai -> [ meta, cram, [] ] },
-            fasta.map{ it -> [[id:it[0].baseName], it] },
-            fasta_fai.map{ it -> [[id:it[0].baseName], it] },
+            fasta,
+            fasta_fai,
             [[id:"null"], []],
             cnvkit_reference.map{ it -> [[id:it[0].baseName], it] }
         )
@@ -99,9 +99,9 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         BAM_VARIANT_CALLING_FREEBAYES(
             // Remap channel to match module/subworkflow
             cram.map{ meta, cram, crai -> [ meta, cram, crai, [], [] ] },
-            dict.map{ it -> [[id:it[0].baseName], it] },
-            fasta.map{ it -> [[id:it[0].baseName], it] },
-            fasta_fai.map{ it -> [[id:it[0].baseName], it] },
+            dict,
+            fasta,
+            fasta_fai,
             intervals
         )
 
@@ -141,8 +141,8 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA(
             cram,
             // Remap channel to match module/subworkflow
-            fasta.map{ it -> [ [ id:'fasta' ], it ] },
-            fasta_fai.map{ it -> [ [ id:'fasta_fai' ], it ] },
+            fasta,
+            fasta_fai,
             intervals_bed_gz_tbi_combined
 
         )
@@ -156,8 +156,8 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         BAM_VARIANT_CALLING_SINGLE_STRELKA(
             cram,
             dict,
-            fasta,
-            fasta_fai,
+            fasta.map{ meta, fasta -> [ fasta ] },
+            fasta_fai.map{ meta, fasta_fai -> [ fasta_fai ] },
             intervals_bed_gz_tbi
         )
 
