@@ -546,7 +546,9 @@ workflow SAREK {
             versions = versions.mix(BAM_TO_CRAM.out.versions)
 
             cram_applybqsr = Channel.empty().mix(
-                BAM_TO_CRAM.out.cram.join(BAM_TO_CRAM.out.crai, failOnDuplicate: true, failOnMismatch: true).join(input_only_table, failOnDuplicate: true, failOnMismatch: true),
+                BAM_TO_CRAM.out.cram.join(BAM_TO_CRAM.out.crai, failOnDuplicate: true, failOnMismatch: true)
+                    .join(input_only_table, failOnDuplicate: true, failOnMismatch: true),
+
                 input_recal_convert.cram)
                 // Join together converted cram with input tables
                 .map{ meta, cram, crai, table -> [ meta + [data_type: "cram"], cram, crai, table ]}
