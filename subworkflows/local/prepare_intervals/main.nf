@@ -39,7 +39,7 @@ workflow PREPARE_INTERVALS {
     } else if (step != 'annotate' && step != 'controlfreec') {
         // If no interval/target file is provided, then generated intervals from FASTA file
         if (!intervals) {
-            BUILD_INTERVALS(fasta_fai.map{it -> [ [ id:it.baseName ], it ] }, [])
+            BUILD_INTERVALS(fasta_fai, [])
 
             intervals_combined = BUILD_INTERVALS.out.output
 
