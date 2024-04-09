@@ -79,7 +79,7 @@ include { PREPARE_INTERVALS                } from './subworkflows/local/prepare_
 include { PREPARE_REFERENCE_CNVKIT         } from './subworkflows/local/prepare_reference_cnvkit'
 
 // Initialize fasta file with meta map:
-fasta = params.fasta ? Channel.fromPath(params.fasta).map{ it -> [ [id:it.baseName], it ] } : Channel.empty()
+fasta = params.fasta ? Channel.fromPath(params.fasta).map{ it -> [ [id:it.baseName], it ] }.collect() : Channel.empty()
 
 // Initialize file channels based on params, defined in the params.genomes[params.genome] scope
 bcftools_annotations    = params.bcftools_annotations    ? Channel.fromPath(params.bcftools_annotations).collect()  : Channel.empty()

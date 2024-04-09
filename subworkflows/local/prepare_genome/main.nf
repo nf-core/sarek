@@ -120,8 +120,8 @@ workflow PREPARE_GENOME {
     bwamem2                  = BWAMEM2_INDEX.out.index.collect()                                        // path: bwamem2/*
     hashtable                = DRAGMAP_HASHTABLE.out.hashmap.collect()                                  // path: dragmap/*
     dbsnp_tbi                = TABIX_DBSNP.out.tbi.map{ meta, tbi -> [tbi] }.collect()                  // path: dbsnb.vcf.gz.tbi
-    dict                     = GATK4_CREATESEQUENCEDICTIONARY.out.dict                                  // path: genome.fasta.dict
-    fasta_fai                = SAMTOOLS_FAIDX.out.fai                                                   // path: genome.fasta.fai
+    dict                     = GATK4_CREATESEQUENCEDICTIONARY.out.dict.collect()                        // path: genome.fasta.dict
+    fasta_fai                = SAMTOOLS_FAIDX.out.fai.collect()                                         // path: genome.fasta.fai
     germline_resource_tbi    = TABIX_GERMLINE_RESOURCE.out.tbi.map{ meta, tbi -> [tbi] }.collect()      // path: germline_resource.vcf.gz.tbi
     known_snps_tbi           = TABIX_KNOWN_SNPS.out.tbi.map{ meta, tbi -> [tbi] }.collect()             // path: {known_indels*}.vcf.gz.tbi
     known_indels_tbi         = TABIX_KNOWN_INDELS.out.tbi.map{ meta, tbi -> [tbi] }.collect()           // path: {known_indels*}.vcf.gz.tbi
