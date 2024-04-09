@@ -656,7 +656,7 @@ workflow SAREK {
                 BAM_TO_CRAM(input_markduplicates_convert.bam, fasta, fasta_fai)
                 versions = versions.mix(BAM_TO_CRAM.out.versions)
 
-                cram_skip_markduplicates = Channel.empty().mix(input_markduplicates_convert.cram, BAM_TO_CRAM_MAPPING.out.cram.join(BAM_TO_CRAM_MAPPING.out.crai, failOnDuplicate: true, failOnMismatch: true))
+                cram_skip_markduplicates = Channel.empty().mix(input_markduplicates_convert.cram, BAM_TO_CRAM.out.cram.join(BAM_TO_CRAM.out.crai, failOnDuplicate: true, failOnMismatch: true))
             }
 
             CRAM_QC_NO_MD(cram_skip_markduplicates, fasta, intervals_for_preprocessing)
