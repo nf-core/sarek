@@ -167,10 +167,8 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     if (tools.split(',').contains('tiddit')) {
         BAM_VARIANT_CALLING_SINGLE_TIDDIT(
             cram,
-            // Remap channel to match module/subworkflow
-            fasta.map{ it -> [ [ id:'fasta' ], it ] },
-            bwa
-        )
+            fasta,
+            bwa)
 
         vcf_tiddit = BAM_VARIANT_CALLING_SINGLE_TIDDIT.out.vcf
         versions = versions.mix(BAM_VARIANT_CALLING_SINGLE_TIDDIT.out.versions)

@@ -216,9 +216,9 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             cram.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [ meta, normal_cram, normal_crai ] },
             // Remap channel to match module/subworkflow
             cram.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [ meta, tumor_cram, tumor_crai ] },
-            // Remap channel to match module/subworkflow
-            fasta.map{ it -> [ [ id:'fasta' ], it ] },
+            fasta,
             bwa)
+
         vcf_tiddit = BAM_VARIANT_CALLING_SOMATIC_TIDDIT.out.vcf
         versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_TIDDIT.out.versions)
     }
