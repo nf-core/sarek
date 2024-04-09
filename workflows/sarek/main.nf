@@ -373,7 +373,7 @@ workflow SAREK {
         } else if (params.use_gatk_spark && params.use_gatk_spark.contains('markduplicates')) {
             BAM_MARKDUPLICATES_SPARK(
                 cram_for_markduplicates,
-                dict.map{ meta, dict -> [ dict ] },
+                dict,
                 fasta,
                 fasta_fai,
                 intervals_for_preprocessing)
