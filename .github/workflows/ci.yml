@@ -237,6 +237,7 @@ jobs:
           - tags: "gatk4/haplotypecaller"
           - tags: "gatk4/markduplicates"
           - tags: "gatk4/mergevcfs"
+          - tags: "gatk4/mutect2"
           - tags: "gatk4spark/applybqsr"
           - tags: "gatk4spark/markduplicates"
           - tags: "mosdepth"
