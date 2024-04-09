@@ -271,7 +271,7 @@
                     },
                     "gatk4/mutect2": {
                         "branch": "master",
-                        "git_sha": "d742e3143f2ccb8853c29b35cfcf50b5e5026980",
+                        "git_sha": "5fd04feb37b58caa6a54d41e38c80066bdf71056",
                         "installed_by": ["modules"]
                     },
                     "gatk4/variantrecalibrator": {
