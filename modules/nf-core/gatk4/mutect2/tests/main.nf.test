@@ -1,0 +1,360 @@
+nextflow_process {
+
+    name "Test Process GATK4_MUTECT2"
+    script "../main.nf"
+    process "GATK4_MUTECT2"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "gatk4"
+    tag "gatk4/mutect2"
+
+    test("tumor_normal_pair") {
+        config "./pair.config"
+        when {
+            process {
+            """
+            input[0] = [
+                [
+                    id:'test',
+                    normal_id:'normal',
+                    tumor_id:'tumour'
+                ],
+                [
+                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_recalibrated_sorted_bam'], checkIfExists: true),
+                    file(params.test_data['homo_sapiens']['illumina']['test2_paired_end_recalibrated_sorted_bam'], checkIfExists: true)
+                ],
+                [
+                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_recalibrated_sorted_bam_bai'], checkIfExists: true),
+                    file(params.test_data['homo_sapiens']['illumina']['test2_paired_end_recalibrated_sorted_bam_bai'], checkIfExists: true)
+                ],
+                []
+            ]
+            input[1] = [
+                [ id:'genome' ],
+                file(params.test_data['homo_sapiens']['genome']['genome_21_fasta'], checkIfExists: true)
+            ]
+            input[2] = [
+                [ id:'genome' ],
+                file(params.test_data['homo_sapiens']['genome']['genome_21_fasta_fai'], checkIfExists: true)
+            ]
+            input[3] = [
+                [ id:'genome' ],
+                file(params.test_data['homo_sapiens']['genome']['genome_21_dict'], checkIfExists: true)
+            ]
+            input[4] = file(params.test_data['homo_sapiens']['genome']['gnomad_r2_1_1_21_vcf_gz'], checkIfExists: true)
+            input[5] = file(params.test_data['homo_sapiens']['genome']['gnomad_r2_1_1_21_vcf_gz_tbi'], checkIfExists: true)
+            input[6] = file(params.test_data['homo_sapiens']['genome']['mills_and_1000g_indels_21_vcf_gz'], checkIfExists: true)
+            input[7] = file(params.test_data['homo_sapiens']['genome']['mills_and_1000g_indels_21_vcf_gz_tbi'], checkIfExists: true)
+            """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                {
+                    assert snapshot(
+                        process.out.vcf.collect { file(it[1]).getName() },
+                        process.out.tbi.collect { file(it[1]).getName() },
+                        process.out.stats,
+                        process.out.f1r2,
+                        process.out.versions,
+                    ).match()
+                }
+            )
+        }
+    }
+
+    test("tumor_normal_pair_f1r2") {
+        config "./f1r2.config"
+        when {
+            process {
+            """
+            input[0] = [
+                [
+                    id:'test',
+                    normal_id:'normal',
+                    tumor_id:'tumour'
+                ],
+                [
+                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_recalibrated_sorted_bam'], checkIfExists: true),
+                    file(params.test_data['homo_sapiens']['illumina']['test2_paired_end_recalibrated_sorted_bam'], checkIfExists: true)
+                ],
+                [
+                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_recalibrated_sorted_bam_bai'], checkIfExists: true),
+                    file(params.test_data['homo_sapiens']['illumina']['test2_paired_end_recalibrated_sorted_bam_bai'], checkIfExists: true)
+                ],
+                []
+            ]
+            input[1] = [
+                [ id:'genome' ],
+                file(params.test_data['homo_sapiens']['genome']['genome_21_fasta'], checkIfExists: true)
+            ]
+            input[2] = [
+                [ id:'genome' ],
+                file(params.test_data['homo_sapiens']['genome']['genome_21_fasta_fai'], checkIfExists: true)
+            ]
+            input[3] = [
+                [ id:'genome' ],
+                file(params.test_data['homo_sapiens']['genome']['genome_21_dict'], checkIfExists: true)
+            ]
+            input[4] = file(params.test_data['homo_sapiens']['genome']['gnomad_r2_1_1_21_vcf_gz'], checkIfExists: true)
+            input[5] = file(params.test_data['homo_sapiens']['genome']['gnomad_r2_1_1_21_vcf_gz_tbi'], checkIfExists: true)
+            input[6] = file(params.test_data['homo_sapiens']['genome']['mills_and_1000g_indels_21_vcf_gz'], checkIfExists: true)
+            input[7] = file(params.test_data['homo_sapiens']['genome']['mills_and_1000g_indels_21_vcf_gz_tbi'], checkIfExists: true)
+            """
+            }
+        }
+        then {
+            assertAll(
+                { assert process.success },
+                {
+                    assert snapshot(
+                        process.out.vcf.collect { file(it[1]).getName() },
+                        process.out.tbi.collect { file(it[1]).getName() },
+                        process.out.stats,
+                        process.out.f1r2.collect { file(it[1]).getName() },
+                        process.out.versions
+                    ).match()
+                }
+            )
+        }
+    }
+    test("tumor_single"){
+        when {
+            process {
+            """
+            input[0] = [
+                [ id:'test'],
+                [ file(params.test_data['homo_sapiens']['illumina']['test2_paired_end_recalibrated_sorted_bam'], checkIfExists: true)],
+                [ file(params.test_data['homo_sapiens']['illumina']['test2_paired_end_recalibrated_sorted_bam_bai'], checkIfExists: true)],
+                []
+            ]
+            input[1] = [
+                [ id:'genome' ],
+                file(params.test_data['homo_sapiens']['genome']['genome_21_fasta'], checkIfExists: true)
+            ]
+            input[2] = [
+                [ id:'genome' ],
+                file(params.test_data['homo_sapiens']['genome']['genome_21_fasta_fai'], checkIfExists: true)
+            ]
+            input[3] = [
+                [ id:'genome' ],
+                file(params.test_data['homo_sapiens']['genome']['genome_21_dict'], checkIfExists: true)
+            ]
+            input[4] = file(params.test_data['homo_sapiens']['genome']['gnomad_r2_1_1_21_vcf_gz'], checkIfExists: true)
+            input[5] = file(params.test_data['homo_sapiens']['genome']['gnomad_r2_1_1_21_vcf_gz_tbi'], checkIfExists: true)
+            input[6] = file(params.test_data['homo_sapiens']['genome']['mills_and_1000g_indels_21_vcf_gz'], checkIfExists: true)
+            input[7] = file(params.test_data['homo_sapiens']['genome']['mills_and_1000g_indels_21_vcf_gz_tbi'], checkIfExists: true)
+            """
+            }
+        }
+        then {
+            assertAll(
+                { assert process.success },
+                {
+                    assert snapshot(
+                        process.out.vcf.collect { file(it[1]).getName() },
+                        process.out.tbi.collect { file(it[1]).getName() },
+                        process.out.stats,
+                        process.out.f1r2,
+                        process.out.versions
+                    ).match()
+                }
+            )
+        }
+    }
+    test("cram_input"){
+        when {
+            process{
+            """
+            input[0] = [
+                [ id:'test'],
+                [ file(params.test_data['homo_sapiens']['illumina']['test2_paired_end_recalibrated_sorted_cram'], checkIfExists: true)],
+                [ file(params.test_data['homo_sapiens']['illumina']['test2_paired_end_recalibrated_sorted_cram_crai'], checkIfExists: true)],
+                []
+            ]
+            input[1] = [
+                [ id:'genome' ],
+                file(params.test_data['homo_sapiens']['genome']['genome_21_fasta'], checkIfExists: true)
+            ]
+            input[2] = [
+                [ id:'genome' ],
+                file(params.test_data['homo_sapiens']['genome']['genome_21_fasta_fai'], checkIfExists: true)
+            ]
+            input[3] = [
+                [ id:'genome' ],
+                file(params.test_data['homo_sapiens']['genome']['genome_21_dict'], checkIfExists: true)
+            ]
+            input[4] = file(params.test_data['homo_sapiens']['genome']['gnomad_r2_1_1_21_vcf_gz'], checkIfExists: true)
+            input[5] = file(params.test_data['homo_sapiens']['genome']['gnomad_r2_1_1_21_vcf_gz_tbi'], checkIfExists: true)
+            input[6] = file(params.test_data['homo_sapiens']['genome']['mills_and_1000g_indels_21_vcf_gz'], checkIfExists: true)
+            input[7] = file(params.test_data['homo_sapiens']['genome']['mills_and_1000g_indels_21_vcf_gz_tbi'], checkIfExists: true)
+            """
+            }
+        }
+        then {
+            assertAll(
+                { assert process.success },
+                {
+                    assert snapshot(
+                        process.out.vcf.collect { file(it[1]).getName() },
+                        process.out.tbi.collect { file(it[1]).getName() },
+                        process.out.stats,
+                        process.out.f1r2,
+                        process.out.versions
+                    ).match()
+                }
+            )
+        }
+    }
+
+    test("generate_pon") {
+        when {
+            process {
+            """
+            input[0] = [
+                [ id:'test'],
+                [ file(params.test_data['homo_sapiens']['illumina']['test_paired_end_recalibrated_sorted_bam'], checkIfExists: true)],
+                [ file(params.test_data['homo_sapiens']['illumina']['test_paired_end_recalibrated_sorted_bam_bai'], checkIfExists: true)],
+                []
+            ]
+            input[1] = [
+                [ id:'genome' ],
+                file(params.test_data['homo_sapiens']['genome']['genome_21_fasta'], checkIfExists: true)
+            ]
+            input[2] = [
+                [ id:'genome' ],
+                file(params.test_data['homo_sapiens']['genome']['genome_21_fasta_fai'], checkIfExists: true)
+            ]
+            input[3] = [
+                [ id:'genome' ],
+                file(params.test_data['homo_sapiens']['genome']['genome_21_dict'], checkIfExists: true)
+            ]
+            input[4] = []
+            input[5] = []
+            input[6] = []
+            input[7] = []
+            """
+            }
+        }
+        then {
+            assertAll(
+                { assert process.success },
+                {
+                    assert snapshot(
+                        process.out.vcf.collect { file(it[1]).getName() },
+                        process.out.tbi.collect { file(it[1]).getName() },
+                        process.out.stats,
+                        process.out.f1r2,
+                        process.out.versions
+                    ).match()
+                }
+            )
+        }
+    }
+
+    test("mitochondria"){
+        when {
+            process {
+            """
+            input[0] = [
+                [ id:'test'],
+                [ file(params.test_data['homo_sapiens']['illumina']['mitochon_standin_recalibrated_sorted_bam'], checkIfExists: true)],
+                [ file(params.test_data['homo_sapiens']['illumina']['mitochon_standin_recalibrated_sorted_bam_bai'], checkIfExists: true)],
+                [ file(params.test_data['homo_sapiens']['genome']['genome_bed'], checkIfExists: true)]
+            ]
+            input[1] = [
+                [ id:'genome' ],
+                file(params.test_data['homo_sapiens']['genome']['genome_fasta'], checkIfExists: true)
+            ]
+            input[2] = [
+                [ id:'genome' ],
+                file(params.test_data['homo_sapiens']['genome']['genome_fasta_fai'], checkIfExists: true)
+            ]
+            input[3] = [
+                [ id:'genome' ],
+                file(params.test_data['homo_sapiens']['genome']['genome_dict'], checkIfExists: true)
+            ]
+            input[4] = []
+            input[5] = []
+            input[6] = []
+            input[7] = []
+            """
+            }
+        }
+        then {
+            assertAll(
+                { assert process.success },
+                {
+                    assert snapshot(
+                        process.out.vcf.collect { file(it[1]).getName() },
+                        process.out.tbi.collect { file(it[1]).getName() },
+                        process.out.stats,
+                        process.out.f1r2,
+                        process.out.versions
+                    ).match()
+                }
+            )
+        }
+    }
+
+    test("tumor_normal_pair_f1r2_stubs"){
+        options "-stub-run"
+        when {
+            process {
+            """
+            input[0] = [
+                [
+                    id:'test',
+                    normal_id:'normal',
+                    tumor_id:'tumour'
+                ],
+                [
+                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_recalibrated_sorted_bam'], checkIfExists: true),
+                    file(params.test_data['homo_sapiens']['illumina']['test2_paired_end_recalibrated_sorted_bam'], checkIfExists: true)
+                ],
+                [
+                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_recalibrated_sorted_bam_bai'], checkIfExists: true),
+                    file(params.test_data['homo_sapiens']['illumina']['test2_paired_end_recalibrated_sorted_bam_bai'], checkIfExists: true)
+                ],
+                []
+            ]
+            input[1] = [
+                [ id:'genome' ],
+                file(params.test_data['homo_sapiens']['genome']['genome_21_fasta'], checkIfExists: true)
+            ]
+            input[2] = [
+                [ id:'genome' ],
+                file(params.test_data['homo_sapiens']['genome']['genome_21_fasta_fai'], checkIfExists: true)
+            ]
+            input[3] = [
+                [ id:'genome' ],
+                file(params.test_data['homo_sapiens']['genome']['genome_21_dict'], checkIfExists: true)
+            ]
+            input[4] = file(params.test_data['homo_sapiens']['genome']['gnomad_r2_1_1_21_vcf_gz'], checkIfExists: true)
+            input[5] = file(params.test_data['homo_sapiens']['genome']['gnomad_r2_1_1_21_vcf_gz_tbi'], checkIfExists: true)
+            input[6] = file(params.test_data['homo_sapiens']['genome']['mills_and_1000g_indels_21_vcf_gz'], checkIfExists: true)
+            input[7] = file(params.test_data['homo_sapiens']['genome']['mills_and_1000g_indels_21_vcf_gz_tbi'], checkIfExists: true)
+            """
+            }
+        }
+        then {
+            assertAll(
+                { assert process.success },
+                {
+                    assert snapshot(
+                        process.out.vcf.collect { file(it[1]).getName() },
+                        process.out.tbi.collect { file(it[1]).getName() },
+                        process.out.stats.collect { file(it[1]).getName() },
+                        process.out.f1r2.collect { file(it[1]).getName() },
+                        process.out.versions.collect { file(it[1]).getName() }
+                    ).match()
+                }
+            )
+        }
+
+    }
+
+}
