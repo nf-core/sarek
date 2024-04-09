@@ -62,13 +62,13 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
 
     // CONTROLFREEC (depends on MPILEUP)
     if (tools.split(',').contains('controlfreec')) {
-        length_file            = cf_chrom_len ?: fasta_fai
+        length_file            = cf_chrom_len ?: fasta_fai.map{ meta, fasta_fai -> [ fasta_fai ] }
         intervals_controlfreec = wes ? intervals_bed_combined : []
 
         BAM_VARIANT_CALLING_TUMOR_ONLY_CONTROLFREEC(
             // Remap channel to match module/subworkflow
             BAM_VARIANT_CALLING_MPILEUP.out.mpileup.map{ meta, pileup_tumor -> [ meta, [], pileup_tumor, [], [], [], [] ] },
-            fasta,
+            fasta.map{ meta, fasta -> [ fasta ] },
             length_file,
             dbsnp,
             dbsnp_tbi,
@@ -119,10 +119,8 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
                 [ meta - meta.subMap('data_type', 'status') + [ id:meta.patient ], cram, crai ] :
                 [ meta - meta.subMap('data_type', 'status'), cram, crai ]
             },
-            // Remap channel to match module/subworkflow
-            fasta.map{ it -> [ [ id:'fasta' ], it ] },
-            // Remap channel to match module/subworkflow
-            fasta_fai.map{ it -> [ [ id:'fasta_fai' ], it ] },
+            fasta,
+            fasta_fai,
             dict,
             germline_resource,
             germline_resource_tbi,
