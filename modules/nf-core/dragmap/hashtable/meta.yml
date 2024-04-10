@@ -36,6 +36,6 @@ output:
       description: File containing software versions
       pattern: "versions.yml"
 authors:
-  - "@Emiller88"
+  - "@edmundmiller"
 maintainers:
-  - "@Emiller88"
+  - "@edmundmiller"

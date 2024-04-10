@@ -1,0 +1,179 @@
+nextflow_process {
+
+    name "Test Process FREEBAYES"
+    script "../main.nf"
+    process "FREEBAYES"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "freebayes"
+
+    test("sarscov2 - [ bam, bai ] - fasta - fai") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:false ], // meta map
+                    file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true),
+                    file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam_bai'], checkIfExists: true),
+                    [],
+                    [],
+                    []
+                ]
+                input[1] = [ [ id: 'test_fasta' ], file(params.test_data['sarscov2']['genome']['genome_fasta'], checkIfExists: true) ]
+                input[2] = [ [ id: 'test_fai' ],   file(params.test_data['sarscov2']['genome']['genome_fasta_fai'], checkIfExists: true) ]
+                input[3] = [ [], [] ]
+                input[4] = [ [], [] ]
+                input[5] = [ [], [] ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                // { assert snapshot(process.out).match() }, // Output VCF includes a timestamp, so snapshot not consistent past a day.
+                { assert snapshot(file(process.out.vcf.get(0).get(1)).name).match("test.vcf.gz") },
+                { assert path(process.out.vcf.get(0).get(1)).linesGzip.toString().contains('MT192765.1\t10214\t.\tATTTAC\tATTAC\t29.8242') },
+                { assert snapshot(process.out.versions).match() },
+            )
+        }
+
+    }
+
+    test("sarscov2 - [ bam, bai, bed ] - fasta - fai") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:false ], // meta map
+                    file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true),
+                    file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam_bai'], checkIfExists: true),
+                    [],
+                    [],
+                    file(params.test_data['sarscov2']['genome']['test_bed'], checkIfExists: true),
+                    ]
+                input[1] = [ [ id: 'fasta' ], file(params.test_data['sarscov2']['genome']['genome_fasta'], checkIfExists: true) ]
+                input[2] = [ [ id: 'fai' ],   file(params.test_data['sarscov2']['genome']['genome_fasta_fai'], checkIfExists: true) ]
+                input[3] = [ [], [] ]
+                input[4] = [ [], [] ]
+                input[5] = [ [], [] ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                // { assert snapshot(process.out).match() }, // Output VCF includes a timestamp, so snapshot not consistent past a day.
+                { assert snapshot(file(process.out.vcf.get(0).get(1)).name).match("test.vcf.gz") },
+                { assert snapshot(process.out.versions).match() },
+            )
+        }
+
+    }
+
+    test("sarscov2 - [ cram, crai ] - fasta - fai") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:false ], // meta map
+                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_cram'], checkIfExists: true),
+                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_cram_crai'], checkIfExists: true),
+                    [],
+                    [],
+                    [],
+                    ]
+                input[1] = [ [ id: 'fasta' ], file(params.test_data['homo_sapiens']['genome']['genome_fasta'], checkIfExists: true) ]
+                input[2] = [ [ id: 'fai' ],   file(params.test_data['homo_sapiens']['genome']['genome_fasta_fai'], checkIfExists: true) ]
+                input[3] = [ [], [] ]
+                input[4] = [ [], [] ]
+                input[5] = [ [], [] ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                // { assert snapshot(process.out).match() }, // Output VCF includes a timestamp, so snapshot not consistent past a day.
+                { assert snapshot(file(process.out.vcf.get(0).get(1)).name).match("test.vcf.gz") },
+                { assert path(process.out.vcf.get(0).get(1)).linesGzip.toString().contains("chr22\t1982\t.\tA\tG\t459.724") },
+                { assert snapshot(process.out.versions).match() },
+            )
+        }
+
+    }
+
+    test("sarscov2 - [ bam, bai, bam, bai ] - fasta - fai") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:false ], // meta map
+                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true),
+                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_bam_bai'], checkIfExists: true),
+                    file(params.test_data['homo_sapiens']['illumina']['test2_paired_end_sorted_bam'], checkIfExists: true),
+                    file(params.test_data['homo_sapiens']['illumina']['test2_paired_end_sorted_bam_bai'], checkIfExists: true),
+                    [],
+                    ]
+                input[1] = [ [ id: 'fasta' ], file(params.test_data['homo_sapiens']['genome']['genome_fasta'], checkIfExists: true) ]
+                input[2] = [ [ id: 'fai' ],   file(params.test_data['homo_sapiens']['genome']['genome_fasta_fai'], checkIfExists: true) ]
+                input[3] = [ [], [] ]
+                input[4] = [ [], [] ]
+                input[5] = [ [], [] ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                // { assert snapshot(process.out).match() }, // Output VCF includes a timestamp, so snapshot not consistent past a day.
+                { assert snapshot(file(process.out.vcf.get(0).get(1)).name).match("test.vcf.gz") },
+                { assert path(process.out.vcf.get(0).get(1)).linesGzip.toString().contains("chr22\t1982\t.\tA\tG\t670.615") },
+                { assert snapshot(process.out.versions).match() },
+            )
+        }
+
+    }
+
+    test("sarscov2 - [ cram, crai, cram, crai, bed ] - fasta - fai") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:false ], // meta map
+                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_cram'], checkIfExists: true),
+                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_cram_crai'], checkIfExists: true),
+                    file(params.test_data['homo_sapiens']['illumina']['test2_paired_end_sorted_cram'], checkIfExists: true),
+                    file(params.test_data['homo_sapiens']['illumina']['test2_paired_end_sorted_cram_crai'], checkIfExists: true),
+                    file(params.test_data['homo_sapiens']['genome']['genome_bed'], checkIfExists: true),
+                    ]
+                input[1] = [ [ id: 'fasta' ], file(params.test_data['homo_sapiens']['genome']['genome_fasta'], checkIfExists: true) ]
+                input[2] = [ [ id: 'fai' ],   file(params.test_data['homo_sapiens']['genome']['genome_fasta_fai'], checkIfExists: true) ]
+                input[3] = [ [], [] ]
+                input[4] = [ [], [] ]
+                input[5] = [ [], [] ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                // { assert snapshot(process.out).match() }, // Output VCF includes a timestamp, so snapshot not consistent past a day.
+                { assert snapshot(file(process.out.vcf.get(0).get(1)).name).match("test.vcf.gz") },
+                { assert path(process.out.vcf.get(0).get(1)).linesGzip.toString().contains("chr22\t1982\t.\tA\tG\t670.615") },
+                { assert snapshot(process.out.versions).match() },
+            )
+        }
+
+    }
+}

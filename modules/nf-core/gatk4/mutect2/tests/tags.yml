@@ -1,0 +1,2 @@
+gatk4/mutect2:
+  - "modules/nf-core/gatk4/mutect2/**"

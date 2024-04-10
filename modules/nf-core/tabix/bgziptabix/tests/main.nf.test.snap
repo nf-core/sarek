@@ -1,0 +1,143 @@
+{
+    "sarscov2_bed_tbi": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "tbi_test"
+                        },
+                        "tbi_test.bed.gz:md5,fe4053cf4de3aebbdfc3be2efb125a74",
+                        "tbi_test.bed.gz.tbi:md5,24908545311cf2b7c803c41d716872c4"
+                    ]
+                ],
+                "1": [
+                    
+                ],
+                "2": [
+                    "versions.yml:md5,b4765e4d896ce4a4cdd6c896d12555fc"
+                ],
+                "gz_csi": [
+                    
+                ],
+                "gz_tbi": [
+                    [
+                        {
+                            "id": "tbi_test"
+                        },
+                        "tbi_test.bed.gz:md5,fe4053cf4de3aebbdfc3be2efb125a74",
+                        "tbi_test.bed.gz.tbi:md5,24908545311cf2b7c803c41d716872c4"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,b4765e4d896ce4a4cdd6c896d12555fc"
+                ]
+            }
+        ],
+        "timestamp": "2024-02-19T14:50:51.513838"
+    },
+    "sarscov2_bed_csi": {
+        "content": [
+            {
+                "0": [
+                    
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "csi_test"
+                        },
+                        "csi_test.bed.gz:md5,fe4053cf4de3aebbdfc3be2efb125a74",
+                        "csi_test.bed.gz.csi:md5,e06165ddd34640783728cb07f2558b43"
+                    ]
+                ],
+                "2": [
+                    "versions.yml:md5,b4765e4d896ce4a4cdd6c896d12555fc"
+                ],
+                "gz_csi": [
+                    [
+                        {
+                            "id": "csi_test"
+                        },
+                        "csi_test.bed.gz:md5,fe4053cf4de3aebbdfc3be2efb125a74",
+                        "csi_test.bed.gz.csi:md5,e06165ddd34640783728cb07f2558b43"
+                    ]
+                ],
+                "gz_tbi": [
+                    
+                ],
+                "versions": [
+                    "versions.yml:md5,b4765e4d896ce4a4cdd6c896d12555fc"
+                ]
+            }
+        ],
+        "timestamp": "2024-02-19T14:51:00.513777"
+    },
+    "csi_test": {
+        "content": [
+            "csi_test.bed.gz"
+        ],
+        "timestamp": "2024-02-19T14:51:00.548801"
+    },
+    "csi_stub": {
+        "content": [
+            "test.bed.gz"
+        ],
+        "timestamp": "2024-02-19T14:51:09.218454"
+    },
+    "tbi_test": {
+        "content": [
+            "tbi_test.bed.gz"
+        ],
+        "timestamp": "2024-02-19T14:50:51.579654"
+    },
+    "sarscov2_bed_csi_stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                        "test.bed.gz.tbi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                        "test.bed.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    "versions.yml:md5,b4765e4d896ce4a4cdd6c896d12555fc"
+                ],
+                "gz_csi": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                        "test.bed.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "gz_tbi": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                        "test.bed.gz.tbi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,b4765e4d896ce4a4cdd6c896d12555fc"
+                ]
+            }
+        ],
+        "timestamp": "2024-02-19T14:51:09.164254"
+    }
+}

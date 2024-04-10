@@ -1,5 +1,5 @@
 {
-    "sarscov2 - [fastq1, fastq2], index, true": {
+    "sarscov2 - [fastq1, fastq2], index, fasta, false": {
         "content": [
             "test.bam",
             [
@@ -8,11 +8,11 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "24.01.0"
+            "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-19T13:30:22.691288603"
+        "timestamp": "2024-03-19T13:13:18.890289958"
     },
-    "sarscov2 - [fastq1, fastq2], index, false": {
+    "sarscov2 - [fastq1, fastq2], index, fasta, true - stub": {
         "content": [
             "test.bam",
             [
@@ -21,11 +21,11 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "24.01.0"
+            "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-19T13:30:11.276168706"
+        "timestamp": "2024-03-19T13:45:51.821633029"
     },
-    "sarscov2 - [fastq1, fastq2], index, true - stub": {
+    "sarscov2 - [fastq1, fastq2], index, fasta, true": {
         "content": [
             "test.bam",
             [
@@ -34,11 +34,11 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "24.01.0"
+            "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-19T13:30:32.07431961"
+        "timestamp": "2024-03-19T13:13:36.458291078"
     },
-    "sarscov2 - fastq, index, false": {
+    "sarscov2 - fastq, index, fasta, false": {
         "content": [
             "test.bam",
             [
@@ -47,11 +47,11 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "24.01.0"
+            "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-19T13:29:48.586760544"
+        "timestamp": "2024-03-19T13:12:44.084654507"
     },
-    "sarscov2 - fastq, index, true": {
+    "sarscov2 - fastq, index, fasta, true": {
         "content": [
             "test.bam",
             [
@@ -60,8 +60,8 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "24.01.0"
+            "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-19T13:29:59.846686393"
+        "timestamp": "2024-03-19T13:13:01.763341681"
     }
 }

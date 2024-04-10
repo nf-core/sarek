@@ -52,4 +52,18 @@ process STRELKA_SOMATIC {
         strelka: \$( configureStrelkaSomaticWorkflow.py --version )
     END_VERSIONS
     """
+
+    stub:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    """
+    echo "" | gzip > ${prefix}.somatic_indels.vcf.gz
+    touch ${prefix}.somatic_indels.vcf.gz.tbi
+    echo "" | gzip > ${prefix}.somatic_snvs.vcf.gz
+    touch ${prefix}.somatic_snvs.vcf.gz.tbi
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        strelka: \$( configureStrelkaSomaticWorkflow.py --version )
+    END_VERSIONS
+    """
 }

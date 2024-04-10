@@ -1,0 +1,2 @@
+samtools/faidx:
+  - modules/nf-core/samtools/faidx/**

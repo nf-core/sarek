@@ -21,14 +21,24 @@ input:
       type: file
       description: BAM/CRAM file
       pattern: "*.{bam,cram}"
-  - index:
+  - input_index:
       type: file
       description: BAM/CRAM index file
       pattern: "*.{bai,crai}"
+  - meta2:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. `[ id:'test_fasta']`
   - fasta:
       type: file
       description: Input FASTA file
       pattern: "*.{fasta,fa}"
+  - meta3:
+      type: map
+      description: |
+        Groovy Map containing sample information from bwa index
+        e.g. `[ id:'test_bwa-index' ]`
   - bwa_index:
       type: file
       description: BWA genome index files

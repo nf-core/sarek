@@ -20,7 +20,7 @@ process ENSEMBLVEP_VEP {
     tuple val(meta), path("*.vcf.gz")  , optional:true, emit: vcf
     tuple val(meta), path("*.tab.gz")  , optional:true, emit: tab
     tuple val(meta), path("*.json.gz") , optional:true, emit: json
-    path "*.summary.html"              , emit: report
+    path "*.summary.html"              , optional:true, emit: report
     path "versions.yml"                , emit: versions
 
     when:
@@ -45,8 +45,7 @@ process ENSEMBLVEP_VEP {
         --cache \\
         --cache_version $cache_version \\
         --dir_cache $dir_cache \\
-        --fork $task.cpus \\
-        --stats_file ${prefix}.summary.html \\
+        --fork $task.cpus
 
 
     cat <<-END_VERSIONS > versions.yml

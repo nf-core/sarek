@@ -1,0 +1,86 @@
+{
+    "homo_sapiens - [fastq1, fastq2] - cram": {
+        "content": [
+            [
+                
+            ],
+            "test.cram",
+            [
+                "versions.yml:md5,f4e3de8480e34bd985000ee28a1f2405"
+            ]
+        ],
+        "timestamp": "2023-11-27T14:13:21.972159804"
+    },
+    "homo_sapiens - fastq1": {
+        "content": [
+            "test.bam",
+            [
+                
+            ],
+            [
+                "versions.yml:md5,f4e3de8480e34bd985000ee28a1f2405"
+            ]
+        ],
+        "timestamp": "2023-11-27T14:13:42.872247708"
+    },
+    "homo_sapiens - [fastq1, fastq2] - default": {
+        "content": [
+            "test.bam",
+            [
+                
+            ],
+            [
+                "versions.yml:md5,f4e3de8480e34bd985000ee28a1f2405"
+            ]
+        ],
+        "timestamp": "2023-11-27T14:13:10.377114559"
+    },
+    "homo_sapiens - [fastq1, fastq2] - umi": {
+        "content": [
+            "test.bam",
+            [
+                
+            ],
+            [
+                "versions.yml:md5,f4e3de8480e34bd985000ee28a1f2405"
+            ]
+        ],
+        "timestamp": "2023-11-27T14:13:53.4971996"
+    },
+    "homo_sapiens - [fastq1, fastq2] - bam": {
+        "content": [
+            "test.bam",
+            [
+                
+            ],
+            [
+                "versions.yml:md5,f4e3de8480e34bd985000ee28a1f2405"
+            ]
+        ],
+        "timestamp": "2023-11-27T14:13:32.920615998"
+    },
+    "homo_sapiens - [fastq1, fastq2] - custom sample": {
+        "content": [
+            "test.bam",
+            [
+                
+            ],
+            [
+                "versions.yml:md5,f4e3de8480e34bd985000ee28a1f2405"
+            ]
+        ],
+        "timestamp": "2023-11-27T14:14:03.897969056"
+    },
+    "homo_sapiens - [fastq1, fastq2] - stub": {
+        "content": [
+            "test.bam",
+            [
+                
+            ],
+            [
+                "versions.yml:md5,f4e3de8480e34bd985000ee28a1f2405"
+            ]
+        ],
+        "timestamp": "2023-11-27T14:14:11.765938243"
+    }
+}

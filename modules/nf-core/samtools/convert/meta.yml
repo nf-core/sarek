@@ -39,10 +39,22 @@ output:
       description: |
         Groovy Map containing sample information
         e.g. [ id:'test', single_end:false ]
-  - alignment_index:
+  - bam:
       type: file
-      description: filtered/converted BAM/CRAM file + index
-      pattern: "*{.bam/cram,.bai/crai}"
+      description: filtered/converted BAM file
+      pattern: "*{.bam}"
+  - cram:
+      type: file
+      description: filtered/converted CRAM file
+      pattern: "*{cram}"
+  - bai:
+      type: file
+      description: filtered/converted BAM index
+      pattern: "*{.bai}"
+  - crai:
+      type: file
+      description: filtered/converted CRAM index
+      pattern: "*{.crai}"
   - version:
       type: file
       description: File containing software version
@@ -53,3 +65,4 @@ authors:
 maintainers:
   - "@FriederikeHanssen"
   - "@maxulysse"
+  - "@matthdsm"

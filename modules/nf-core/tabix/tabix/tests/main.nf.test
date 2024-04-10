@@ -1,0 +1,142 @@
+nextflow_process {
+
+    name "Test Process TABIX_TABIX"
+    script "modules/nf-core/tabix/tabix/main.nf"
+    process "TABIX_TABIX"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "tabix"
+    tag "tabix/tabix"
+
+    test("sarscov2_bedgz_tbi") {
+        config "./tabix_bed.config"
+        when {
+            process {
+                """
+                input[0] = [
+                                [ id:'tbi_bed' ],
+                                [ file(params.test_data['sarscov2']['genome']['test_bed_gz'], checkIfExists: true) ]
+                            ]
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert snapshot(process.out).match() },
+                { assert snapshot(
+                            file(process.out.tbi[0][1]).name
+                                ).match("tbi_bed")
+                }
+            )
+        }
+    }
+
+    test("sarscov2_gff_tbi") {
+        config "./tabix_gff.config"
+        when {
+            process {
+                """
+                input[0] = [
+                                [ id:'tbi_gff' ],
+                                [ file(params.test_data['sarscov2']['genome']['genome_gff3_gz'], checkIfExists: true) ]
+                            ]
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert snapshot(process.out).match() },
+                { assert snapshot(
+                            file(process.out.tbi[0][1]).name
+                                ).match("tbi_gff")
+                }
+            )
+        }
+
+    }
+
+    test("sarscov2_vcf_tbi") {
+        config "./tabix_vcf_tbi.config"
+        when {
+            process {
+                """
+                input[0] =  [
+                                [ id:'tbi_vcf' ],
+                                [ file(params.test_data['sarscov2']['illumina']['test_vcf_gz'], checkIfExists: true) ]
+                            ]
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert snapshot(process.out).match() },
+                { assert snapshot(
+                            file(process.out.tbi[0][1]).name
+                                ).match("tbi_vcf")
+                }
+            )
+        }
+
+    }
+
+    test("sarscov2_vcf_csi") {
+        config "./tabix_vcf_csi.config"
+        when {
+            process {
+                """
+                input[0] =  [
+                                [ id:'vcf_csi' ],
+                                [ file(params.test_data['sarscov2']['illumina']['test_vcf_gz'], checkIfExists: true) ]
+                            ]
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert snapshot(process.out).match() },
+                { assert snapshot(
+                            file(process.out.csi[0][1]).name
+                                ).match("vcf_csi")
+                }
+            )
+        }
+
+    }
+
+    test("sarscov2_vcf_csi_stub") {
+        config "./tabix_vcf_csi.config"
+        options "-stub"
+        when {
+            process {
+                """
+                input[0] =  [
+                                [ id:'vcf_csi_stub' ],
+                                [ file(params.test_data['sarscov2']['illumina']['test_vcf_gz'], checkIfExists: true) ]
+                            ]
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert snapshot(process.out).match() },
+                { assert snapshot(
+                            file(process.out.csi[0][1]).name
+                                ).match("vcf_csi_stub")
+                }
+            )
+        }
+
+    }
+
+}

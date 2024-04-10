@@ -1,0 +1,68 @@
+{
+    "convert fasta to bed with program file": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bed:md5,87a15eb9c2ff20ccd5cd8735a28708f7"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,4c320d8c98ca80690afd7651da1ba520"
+                ],
+                "output": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bed:md5,87a15eb9c2ff20ccd5cd8735a28708f7"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,4c320d8c98ca80690afd7651da1ba520"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.02.0"
+        },
+        "timestamp": "2024-04-05T11:00:28.097563"
+    },
+    "convert fasta to bed": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bed:md5,87a15eb9c2ff20ccd5cd8735a28708f7"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,4c320d8c98ca80690afd7651da1ba520"
+                ],
+                "output": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bed:md5,87a15eb9c2ff20ccd5cd8735a28708f7"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,4c320d8c98ca80690afd7651da1ba520"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.02.0"
+        },
+        "timestamp": "2024-04-05T10:28:15.625869"
+    }
+}

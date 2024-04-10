@@ -34,6 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1431](https://github.com/nf-core/sarek/pull/1431) - Using docker.containerOptions instead of docker.runOptions. Clearing containerOptions for SPARK modules for any kind of supported container engine
 - [#1439](https://github.com/nf-core/sarek/pull/1439) - Replacing the local module `BUILD_INTERVALS` with the nf-core module `GAWK`
 - [#1456](https://github.com/nf-core/sarek/pull/1456) - Revert usage of docker.runOptions. Add an empty docker.runOptions when using the new `spark` profile
+- [#1457](https://github.com/nf-core/sarek/pull/1457) - Update all modules
 
 ### Fixed
 
@@ -60,7 +61,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Dependency | Old version | New version |
 | ---------- | ----------- | ----------- |
+| bcftools   | 1.17        | 1.18        |
+| fgbio      | 2.0.2       | 2.1.0       |
 | gatk       | 4.4.0.0     | 4.5.0.0     |
+| gatk-spark | 4.4.0.0     | 4.5.0.0     |
+| mosdepth   | 0.3.3       | 0.3.6       |
 | multiqc    | 1.17        | 1.18        |
 | samtools   | 1.17        | 1.19.2      |
 

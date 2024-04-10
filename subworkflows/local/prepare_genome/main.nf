@@ -36,7 +36,6 @@ workflow PREPARE_GENOME {
     chr_dir              // params.chr_dir
     dbsnp                // channel: [optional]  dbsnp
     fasta                // channel: [mandatory] fasta
-    fasta_fai            // channel: [optional]  fasta_fai
     germline_resource    // channel: [optional]  germline_resource
     known_indels         // channel: [optional]  known_indels
     known_snps           // channel: [optional]  known_snps
@@ -44,7 +43,6 @@ workflow PREPARE_GENOME {
 
 
     main:
-    fasta = fasta.map{ fasta -> [ [ id:fasta.baseName ], fasta ] }
     versions = Channel.empty()
 
     BWAMEM1_INDEX(fasta)     // If aligner is bwa-mem
@@ -53,7 +51,7 @@ workflow PREPARE_GENOME {
 
     GATK4_CREATESEQUENCEDICTIONARY(fasta)
     MSISENSORPRO_SCAN(fasta)
-    SAMTOOLS_FAIDX(fasta, [ [ id:'fasta' ], [] ] )
+    SAMTOOLS_FAIDX(fasta, [ [ id:'no_fai' ], [] ] )
 
     // the following are flattened and mapped in case the user supplies more than one value for the param
     // written for KNOWN_INDELS, but preemptively applied to the rest
@@ -103,32 +101,32 @@ workflow PREPARE_GENOME {
     } else chr_files = Channel.fromPath(chr_dir).collect()
 
     // Gather versions of all tools used
-    versions = versions.mix(SAMTOOLS_FAIDX.out.versions)
     versions = versions.mix(BWAMEM1_INDEX.out.versions)
     versions = versions.mix(BWAMEM2_INDEX.out.versions)
     versions = versions.mix(DRAGMAP_HASHTABLE.out.versions)
     versions = versions.mix(GATK4_CREATESEQUENCEDICTIONARY.out.versions)
     versions = versions.mix(MSISENSORPRO_SCAN.out.versions)
+    versions = versions.mix(SAMTOOLS_FAIDX.out.versions)
     versions = versions.mix(TABIX_BCFTOOLS_ANNOTATIONS.out.versions)
     versions = versions.mix(TABIX_DBSNP.out.versions)
     versions = versions.mix(TABIX_GERMLINE_RESOURCE.out.versions)
-    versions = versions.mix(TABIX_KNOWN_SNPS.out.versions)
     versions = versions.mix(TABIX_KNOWN_INDELS.out.versions)
+    versions = versions.mix(TABIX_KNOWN_SNPS.out.versions)
     versions = versions.mix(TABIX_PON.out.versions)
 
     emit:
-    bcftools_annotations_tbi = TABIX_BCFTOOLS_ANNOTATIONS.out.tbi.map{ meta, tbi -> [tbi] }.collect() // path: bcftools_annotations.vcf.gz.tbi
-    bwa                      = BWAMEM1_INDEX.out.index.map{ meta, index -> [index] }.collect()        // path: bwa/*
-    bwamem2                  = BWAMEM2_INDEX.out.index.map{ meta, index -> [index] }.collect()        // path: bwamem2/*
-    hashtable                = DRAGMAP_HASHTABLE.out.hashmap.map{ meta, index -> [index] }.collect()  // path: dragmap/*
-    dbsnp_tbi                = TABIX_DBSNP.out.tbi.map{ meta, tbi -> [tbi] }.collect()                // path: dbsnb.vcf.gz.tbi
-    dict                     = GATK4_CREATESEQUENCEDICTIONARY.out.dict                                // path: genome.fasta.dict
-    fasta_fai                = SAMTOOLS_FAIDX.out.fai.map{ meta, fai -> [fai] }.flatten().first()     // path: genome.fasta.fai
-    germline_resource_tbi    = TABIX_GERMLINE_RESOURCE.out.tbi.map{ meta, tbi -> [tbi] }.collect()    // path: germline_resource.vcf.gz.tbi
-    known_snps_tbi           = TABIX_KNOWN_SNPS.out.tbi.map{ meta, tbi -> [tbi] }.collect()           // path: {known_indels*}.vcf.gz.tbi
-    known_indels_tbi         = TABIX_KNOWN_INDELS.out.tbi.map{ meta, tbi -> [tbi] }.collect()         // path: {known_indels*}.vcf.gz.tbi
-    msisensorpro_scan        = MSISENSORPRO_SCAN.out.list.map{ meta, list -> [list] }                 // path: genome_msi.list
-    pon_tbi                  = TABIX_PON.out.tbi.map{ meta, tbi -> [tbi] }.collect()                  // path: pon.vcf.gz.tbi
+    bcftools_annotations_tbi = TABIX_BCFTOOLS_ANNOTATIONS.out.tbi.map{ meta, tbi -> [tbi] }.collect()   // path: bcftools_annotations.vcf.gz.tbi
+    bwa                      = BWAMEM1_INDEX.out.index.collect()                                        // path: bwa/*
+    bwamem2                  = BWAMEM2_INDEX.out.index.collect()                                        // path: bwamem2/*
+    hashtable                = DRAGMAP_HASHTABLE.out.hashmap.collect()                                  // path: dragmap/*
+    dbsnp_tbi                = TABIX_DBSNP.out.tbi.map{ meta, tbi -> [tbi] }.collect()                  // path: dbsnb.vcf.gz.tbi
+    dict                     = GATK4_CREATESEQUENCEDICTIONARY.out.dict.collect()                        // path: genome.fasta.dict
+    fasta_fai                = SAMTOOLS_FAIDX.out.fai.collect()                                         // path: genome.fasta.fai
+    germline_resource_tbi    = TABIX_GERMLINE_RESOURCE.out.tbi.map{ meta, tbi -> [tbi] }.collect()      // path: germline_resource.vcf.gz.tbi
+    known_snps_tbi           = TABIX_KNOWN_SNPS.out.tbi.map{ meta, tbi -> [tbi] }.collect()             // path: {known_indels*}.vcf.gz.tbi
+    known_indels_tbi         = TABIX_KNOWN_INDELS.out.tbi.map{ meta, tbi -> [tbi] }.collect()           // path: {known_indels*}.vcf.gz.tbi
+    msisensorpro_scan        = MSISENSORPRO_SCAN.out.list.map{ meta, list -> [list] }                   // path: genome_msi.list
+    pon_tbi                  = TABIX_PON.out.tbi.map{ meta, tbi -> [tbi] }.collect()                    // path: pon.vcf.gz.tbi
 
     allele_files    // path: allele_files
     chr_files       // path: chr_files

@@ -131,7 +131,7 @@
     - path: results/reports/mosdepth/sample3/sample3.recal.summary.txt
       md5sum: d41d8cd98f00b204e9800998ecf8427e
     - path: results/reports/mosdepth/sample3/sample3.recal.per-base.bed.gz
-      md5sum: d41d8cd98f00b204e9800998ecf8427e
+      md5sum: 1a60c330fb42841e8dcf3cd507a70bfc
     - path: results/reports/mosdepth/sample3/sample3.recal.per-base.bed.gz.csi
       md5sum: d41d8cd98f00b204e9800998ecf8427e
     - path: results/reports/samtools/sample3/sample3.recal.cram.stats
@@ -141,7 +141,7 @@
     - path: results/reports/mosdepth/sample4/sample4.recal.summary.txt
       md5sum: d41d8cd98f00b204e9800998ecf8427e
     - path: results/reports/mosdepth/sample4/sample4.recal.per-base.bed.gz
-      md5sum: d41d8cd98f00b204e9800998ecf8427e
+      md5sum: 1a60c330fb42841e8dcf3cd507a70bfc
     - path: results/reports/mosdepth/sample4/sample4.recal.per-base.bed.gz.csi
       md5sum: d41d8cd98f00b204e9800998ecf8427e
     - path: results/reports/samtools/sample4/sample4.recal.cram.stats
@@ -196,7 +196,7 @@
     - path: results/reports/mosdepth/sample2/sample2.recal.summary.txt
       md5sum: d41d8cd98f00b204e9800998ecf8427e
     - path: results/reports/mosdepth/sample2/sample2.recal.regions.bed.gz
-      md5sum: d41d8cd98f00b204e9800998ecf8427e
+      md5sum: 1a60c330fb42841e8dcf3cd507a70bfc
     - path: results/reports/mosdepth/sample2/sample2.recal.regions.bed.gz.csi
       md5sum: d41d8cd98f00b204e9800998ecf8427e
     - path: results/reports/samtools/sample2/sample2.recal.cram.stats

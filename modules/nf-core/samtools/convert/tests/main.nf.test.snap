@@ -1,45 +1,25 @@
 {
-    "cram_alignment_index_1": {
+    "cram_to_bam_alignment": {
         "content": [
             "test.bam"
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.04.3"
+            "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-02T17:04:16.431159"
+        "timestamp": "2024-03-06T11:14:51.300147176"
     },
-    "cram_alignment_index_2": {
-        "content": [
-            "test.bam.bai"
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.04.3"
-        },
-        "timestamp": "2024-02-02T17:04:16.43428"
-    },
-    "bam_alignment_index_2": {
-        "content": [
-            "test.cram.crai"
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.04.3"
-        },
-        "timestamp": "2024-02-02T17:00:29.669534"
-    },
-    "bam_alignment_index_1": {
+    "bam_to_cram_alignment": {
         "content": [
             "test.cram"
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.04.3"
+            "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-02T17:00:29.666821"
+        "timestamp": "2024-03-06T11:14:36.625470184"
     },
-    "cram_versions": {
+    "cram_to_bam_versions": {
         "content": [
             [
                 "versions.yml:md5,dd0aaf61f39c9ce91c74090f3c7ce1d0"
@@ -47,11 +27,11 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "24.01.0"
+            "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-13T16:14:38.224641326"
+        "timestamp": "2024-03-06T11:14:51.308885706"
     },
-    "bam_versions": {
+    "bam_to_cram_versions": {
         "content": [
             [
                 "versions.yml:md5,dd0aaf61f39c9ce91c74090f3c7ce1d0"
@@ -59,8 +39,28 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "24.01.0"
+            "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-13T16:14:29.852388191"
+        "timestamp": "2024-03-06T11:14:36.643960504"
+    },
+    "bam_to_cram_index": {
+        "content": [
+            "test.cram.crai"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-06T11:14:36.640009334"
+    },
+    "cram_to_bam_alignment_index": {
+        "content": [
+            "test.bam.bai"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-06T11:14:51.304477426"
     }
 }

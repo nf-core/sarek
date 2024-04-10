@@ -1,0 +1,86 @@
+{
+    "cnvkit batch tumouronly mode - bam": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-20T14:30:55.150317561"
+    },
+    "cnvkit batch tumouronly mode - cram": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-20T14:31:31.039652656"
+    },
+    "cnvkit batch - bam - stub": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    [
+                        "baits.antitarget.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "baits.target.bed:md5,26d25ff2d6c45b6d92169b3559c6acdb"
+                    ]
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-20T14:33:25.790391941"
+    },
+    "cnvkit batch wgs - bam": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-20T14:30:10.677690173"
+    },
+    "cnvkit batch germline hybrid mode - bam": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-20T14:32:50.217076532"
+    },
+    "cnvkit batch hybrid mode - bam": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-20T13:54:41.69602289"
+    },
+    "cnvkit batch wgs - cram": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-20T14:30:27.271060826"
+    },
+    "cnvkit batch pon mode - bam": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-20T14:33:06.391306794"
+    },
+    "cnvkit batch germline mode - cram": {
+        "content": null,
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-20T14:32:23.38326412"
+    }
+}
