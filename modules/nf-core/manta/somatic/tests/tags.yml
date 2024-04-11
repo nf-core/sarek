@@ -1,0 +1,2 @@
+manta/somatic:
+  - "modules/nf-core/manta/somatic/**"

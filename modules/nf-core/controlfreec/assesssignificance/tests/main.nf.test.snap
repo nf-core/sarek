@@ -1,0 +1,51 @@
+{
+    "human - freec_ratio - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "sex": "XX"
+                        },
+                        "test.p.value.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,0a11399a3318a7c75460c4eb71d58766"
+                ],
+                "p_value_txt": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "sex": "XX"
+                        },
+                        "test.p.value.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,0a11399a3318a7c75460c4eb71d58766"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.02.0"
+        },
+        "timestamp": "2024-04-05T16:15:36.357267"
+    },
+    "version": {
+        "content": [
+            [
+                "versions.yml:md5,0a11399a3318a7c75460c4eb71d58766"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.02.0"
+        },
+        "timestamp": "2024-04-05T16:14:54.943475"
+    }
+}

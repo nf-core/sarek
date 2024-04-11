@@ -5,3 +5,4 @@ channels:
   - defaults
 dependencies:
   - bioconda::tabix=1.11
+  - bioconda::htslib=1.19.1

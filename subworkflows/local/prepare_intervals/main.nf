@@ -6,9 +6,9 @@
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
-include { BUILD_INTERVALS                                        } from '../../../modules/local/build_intervals/main'
 include { CREATE_INTERVALS_BED                                   } from '../../../modules/local/create_intervals_bed/main'
 include { GATK4_INTERVALLISTTOBED                                } from '../../../modules/nf-core/gatk4/intervallisttobed/main'
+include { GAWK as BUILD_INTERVALS                                } from '../../../modules/nf-core/gawk/main'
 include { TABIX_BGZIPTABIX as TABIX_BGZIPTABIX_INTERVAL_SPLIT    } from '../../../modules/nf-core/tabix/bgziptabix/main'
 include { TABIX_BGZIPTABIX as TABIX_BGZIPTABIX_INTERVAL_COMBINED } from '../../../modules/nf-core/tabix/bgziptabix/main'
 
@@ -39,9 +39,9 @@ workflow PREPARE_INTERVALS {
     } else if (step != 'annotate' && step != 'controlfreec') {
         // If no interval/target file is provided, then generated intervals from FASTA file
         if (!intervals) {
-            BUILD_INTERVALS(fasta_fai.map{it -> [ [ id:it.baseName ], it ] })
+            BUILD_INTERVALS(fasta_fai, [])
 
-            intervals_combined = BUILD_INTERVALS.out.bed
+            intervals_combined = BUILD_INTERVALS.out.output
 
             CREATE_INTERVALS_BED(intervals_combined.map{ meta, path -> path }, nucleotides_per_second)
 

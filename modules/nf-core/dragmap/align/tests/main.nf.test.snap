@@ -1,5 +1,5 @@
 {
-    "homo_sapiens - [fastq1, fastq2], hashtable, true": {
+    "sarscov2 - [fastq1, fastq2], hashtable, fasta, false": {
         "content": [
             "test.bam",
             [
@@ -12,17 +12,82 @@
             ],
             "versions.yml"
         ],
-        "timestamp": "2023-11-23T10:12:03.844836279"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-20T10:46:54.961203552"
     },
-    "sarscov2 - [fastq1, fastq2], hashtable, true - stub": {
+    "homo_sapiens - [fastq1, fastq2], hashtable, fasta, true": {
+        "content": [
+            "test.bam",
+            [
+                "decompHashTableCtxInit...",
+                "decompHashTableHeader...",
+                "decompHashTableLiterals...",
+                "decompHashTableExtIndex...",
+                "decompHashTableAutoHits...",
+                "decompHashTableSetFlags..."
+            ],
+            "versions.yml"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-20T10:47:24.495131137"
+    },
+    "sarscov2 - fastq, hashtable, fasta, true": {
+        "content": [
+            "test.bam",
+            [
+                "decompHashTableCtxInit...",
+                "decompHashTableHeader...",
+                "decompHashTableLiterals...",
+                "decompHashTableExtIndex...",
+                "decompHashTableAutoHits...",
+                "decompHashTableSetFlags..."
+            ],
+            "versions.yml"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-20T10:46:42.57679755"
+    },
+    "sarscov2 - [fastq1, fastq2], hashtable, fasta, true": {
+        "content": [
+            "test.bam",
+            [
+                "decompHashTableCtxInit...",
+                "decompHashTableHeader...",
+                "decompHashTableLiterals...",
+                "decompHashTableExtIndex...",
+                "decompHashTableAutoHits...",
+                "decompHashTableSetFlags..."
+            ],
+            "versions.yml"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-20T10:47:08.943445149"
+    },
+    "sarscov2 - [fastq1, fastq2], hashtable, fasta, true - stub": {
         "content": [
             "test.bam",
             "test.log",
             "versions.yml"
         ],
-        "timestamp": "2023-11-22T13:41:18.016853266"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-20T10:47:38.346392133"
     },
-    "sarscov2 - fastq, hashtable, false": {
+    "sarscov2 - fastq, hashtable, fasta, false": {
         "content": [
             "test.bam",
             [
@@ -35,51 +100,10 @@
             ],
             "versions.yml"
         ],
-        "timestamp": "2023-11-23T10:11:33.956661024"
-    },
-    "sarscov2 - fastq, hashtable, true": {
-        "content": [
-            "test.bam",
-            [
-                "decompHashTableCtxInit...",
-                "decompHashTableHeader...",
-                "decompHashTableLiterals...",
-                "decompHashTableExtIndex...",
-                "decompHashTableAutoHits...",
-                "decompHashTableSetFlags..."
-            ],
-            "versions.yml"
-        ],
-        "timestamp": "2023-11-23T10:11:40.270598375"
-    },
-    "sarscov2 - [fastq1, fastq2], hashtable, false": {
-        "content": [
-            "test.bam",
-            [
-                "decompHashTableCtxInit...",
-                "decompHashTableHeader...",
-                "decompHashTableLiterals...",
-                "decompHashTableExtIndex...",
-                "decompHashTableAutoHits...",
-                "decompHashTableSetFlags..."
-            ],
-            "versions.yml"
-        ],
-        "timestamp": "2023-11-23T10:11:46.928978876"
-    },
-    "sarscov2 - [fastq1, fastq2], hashtable, true": {
-        "content": [
-            "test.bam",
-            [
-                "decompHashTableCtxInit...",
-                "decompHashTableHeader...",
-                "decompHashTableLiterals...",
-                "decompHashTableExtIndex...",
-                "decompHashTableAutoHits...",
-                "decompHashTableSetFlags..."
-            ],
-            "versions.yml"
-        ],
-        "timestamp": "2023-11-23T10:11:53.506727278"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-20T10:46:28.406548681"
     }
 }

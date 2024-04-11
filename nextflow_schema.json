@@ -17,10 +17,10 @@
                     "description": "Path to comma-separated file containing information about the samples in the experiment.",
                     "help_text": "A design file with information about the samples in your experiment. Use this parameter to specify the location of the input files. It has to be a comma-separated file with a header row. See [usage docs](https://nf-co.re/sarek/usage#input).\n\nIf no input file is specified, sarek will attempt to locate one in the `{outdir}` directory. If no input should be supplied, i.e. when --step is supplied or --build_from_index, then set --input false",
                     "fa_icon": "fas fa-file-csv",
-                    "schema": "assets/schema_input.json",
                     "type": "string",
                     "format": "file-path",
                     "exists": true,
+                    "schema": "assets/schema_input.json",
                     "mimetype": "text/csv",
                     "pattern": "^\\S+\\.csv$"
                 },
@@ -158,7 +158,7 @@
                     "default": 0,
                     "fa_icon": "fas fa-cut",
                     "description": "Remove bp from the 3' end of read 1",
-                    "help_text": "This may remove some unwanted bias from the 3'.  Corresponds to the FastP flag `--three_prime_clip_r1`.",
+                    "help_text": "This may remove some unwanted bias from the 3'.  Corresponds to the FastP flag `--trim_tail1`.",
                     "hidden": true
                 },
                 "three_prime_clip_r2": {
@@ -166,7 +166,7 @@
                     "default": 0,
                     "fa_icon": "fas fa-cut",
                     "description": "Remove bp from the 3' end of read 2",
-                    "help_text": "This may remove some unwanted bias from the 3' end. Corresponds to the FastP flag `--three_prime_clip_r2`.",
+                    "help_text": "This may remove some unwanted bias from the 3' end. Corresponds to the FastP flag `--trim_tail2`.",
                     "hidden": true
                 },
                 "trim_nextseq": {
@@ -891,6 +891,11 @@
                     "default": "https://raw.githubusercontent.com/nf-core/test-datasets/sarek3",
                     "description": "Base path / URL for data used in the test profiles",
                     "help_text": "Warning: The `-profile test` samplesheet file itself contains remote paths. Setting this parameter does not alter the contents of that file.",
+                    "hidden": true
+                },
+                "modules_testdata_base_path": {
+                    "type": "string",
+                    "description": "Base path / URL for data used in the modules",
                     "hidden": true
                 },
                 "seq_center": {

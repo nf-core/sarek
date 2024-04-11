@@ -1,0 +1,116 @@
+nextflow_process {
+
+    name "Test Process BCFTOOLS_MPILEUP"
+    script "../main.nf"
+    process "BCFTOOLS_MPILEUP"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "bcftools"
+    tag "bcftools/mpileup"
+
+    config "./nextflow.config"
+
+    test("sarscov2 - [bam, []], fasta, false") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ], // meta map
+                    file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true),
+                    []
+                ]
+                input[1] = [
+                    [ id:'sarscov2' ], // meta map
+                    file(params.test_data['sarscov2']['genome']['genome_fasta'], checkIfExists: true)
+                ]
+                input[2] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    process.out.vcf,
+                    process.out.tbi,
+                    process.out.stats,
+                    process.out.mpileup,
+                    process.out.versions
+                ).match() }
+            )
+        }
+
+    }
+
+    test("sarscov2 - [bam, []], fasta, true") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ], // meta map
+                    file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true),
+                    []
+                ]
+                input[1] = [
+                    [ id:'sarscov2' ], // meta map
+                    file(params.test_data['sarscov2']['genome']['genome_fasta'], checkIfExists: true)
+                ]
+                input[2] = true
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    process.out.vcf,
+                    process.out.tbi,
+                    process.out.stats,
+                    process.out.mpileup,
+                    process.out.versions
+                ).match() }
+            )
+        }
+
+    }
+
+    test("sarscov2 - [bam, bed], fasta, false") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ], // meta map
+                    file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true),
+                    file(params.test_data['sarscov2']['genome']['test_bed'], checkIfExists: true)
+                ]
+                input[1] = [
+                    [ id:'sarscov2' ], // meta map
+                    file(params.test_data['sarscov2']['genome']['genome_fasta'], checkIfExists: true)
+                ]
+                input[2] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    process.out.vcf,
+                    process.out.tbi,
+                    process.out.stats,
+                    process.out.mpileup,
+                    process.out.versions
+                ).match() }
+            )
+        }
+
+    }
+
+}

@@ -93,13 +93,13 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             // Remap channel to match module/subworkflow
         mpileup_pair = mpileup_normal.cross(mpileup_tumor).map{ normal, tumor -> [ normal[0], normal[1], tumor[1], [], [], [], [] ] }
 
-        length_file = cf_chrom_len ?: fasta_fai
+        length_file  = cf_chrom_len ?: fasta_fai.map{ meta, fasta_fai -> [ fasta_fai ] }
 
         intervals_controlfreec = wes ? intervals_bed_combined : []
 
         BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC(
             mpileup_pair,
-            fasta,
+            fasta.map{ meta, fasta -> [ fasta ] },
             length_file,
             dbsnp,
             dbsnp_tbi,
@@ -118,8 +118,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         BAM_VARIANT_CALLING_CNVKIT(
             // Remap channel to match module/subworkflow
             cram.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [ meta, tumor_cram, normal_cram ] },
-            fasta.map{ it -> [[id:it[0].baseName], it] },
-            fasta_fai.map{ it -> [[id:it[0].baseName], it] },
+            fasta,
+            fasta_fai,
             intervals_bed_combined.map{ it -> [[id:it[0].baseName], it] },
             [[id:"null"], []]
         )
@@ -145,8 +145,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     if (tools.split(',').contains('manta')) {
         BAM_VARIANT_CALLING_SOMATIC_MANTA(
             cram,
-            fasta.map{ it -> [ [ id:'fasta' ], it ] },
-            fasta_fai.map{ it -> [ [ id:'fasta_fai' ], it ] },
+            fasta,
+            fasta_fai,
             intervals_bed_gz_tbi_combined
         )
 
@@ -165,8 +165,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             cram_strelka,
             // Remap channel to match module/subworkflow
             dict,
-            fasta,
-            fasta_fai,
+            fasta.map{ meta, fasta -> [ fasta ] },
+            fasta_fai.map{ meta, fasta_fai -> [ fasta_fai ] },
             intervals_bed_gz_tbi
         )
 
@@ -176,7 +176,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
     // MSISENSOR
     if (tools.split(',').contains('msisensorpro')) {
-        MSISENSORPRO_MSISOMATIC(cram.combine(intervals_bed_combined), fasta, msisensorpro_scan)
+        MSISENSORPRO_MSISOMATIC(cram.combine(intervals_bed_combined), fasta.map{ meta, fasta -> [ fasta ] }, msisensorpro_scan)
 
         versions = versions.mix(MSISENSORPRO_MSISOMATIC.out.versions)
         out_msisensorpro = out_msisensorpro.mix(MSISENSORPRO_MSISOMATIC.out.output_report)
@@ -194,10 +194,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
                 [ meta + [ id:meta.patient ], [ normal_cram, tumor_cram ], [ normal_crai, tumor_crai ] ] :
                 [ meta, [ normal_cram, tumor_cram ], [ normal_crai, tumor_crai ] ]
             },
-            // Remap channel to match module/subworkflow
-            fasta.map{ it -> [ [ id:'fasta' ], it ] },
-            // Remap channel to match module/subworkflow
-            fasta_fai.map{ it -> [ [ id:'fasta_fai' ], it ] },
+            fasta,
+            fasta_fai,
             dict,
             germline_resource,
             germline_resource_tbi,
@@ -218,9 +216,9 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             cram.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [ meta, normal_cram, normal_crai ] },
             // Remap channel to match module/subworkflow
             cram.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [ meta, tumor_cram, tumor_crai ] },
-            // Remap channel to match module/subworkflow
-            fasta.map{ it -> [ [ id:'fasta' ], it ] },
+            fasta,
             bwa)
+
         vcf_tiddit = BAM_VARIANT_CALLING_SOMATIC_TIDDIT.out.vcf
         versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_TIDDIT.out.versions)
     }

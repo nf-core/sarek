@@ -1,0 +1,2 @@
+vcftools:
+  - "modules/nf-core/vcftools/**"

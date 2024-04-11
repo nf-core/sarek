@@ -16,6 +16,8 @@ report_section_order:
 
 export_plots: true
 
+disable_version_detection: true
+
 # Run only these modules
 run_modules:
   - custom_content

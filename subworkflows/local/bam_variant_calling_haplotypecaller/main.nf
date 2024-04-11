@@ -16,7 +16,6 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
     dict                         // channel: [mandatory]
     dbsnp                        // channel: [optional]
     dbsnp_tbi                    // channel: [optional]
-    dbsnp_vqsr                   // channel: [optional]
     intervals                    // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
 
     main:
@@ -29,9 +28,15 @@ workflow BAM_VARIANT_CALLING_HAPLOTYPECALLER {
     cram_intervals = cram.combine(intervals)
         // Move num_intervals to meta map
         // Add interval_name to allow correct merging with interval files
-        .map{ meta, cram, crai, intervals, num_intervals -> [ meta + [ interval_name:intervals.simpleName, num_intervals:num_intervals, variantcaller:'haplotypecaller' ], cram, crai, intervals, [] ] }
+        .map{ meta, cram, crai, intervals, num_intervals -> [ meta + [ interval_name:intervals.baseName, num_intervals:num_intervals, variantcaller:'haplotypecaller' ], cram, crai, intervals, [] ] }
 
-    GATK4_HAPLOTYPECALLER(cram_intervals, fasta, fasta_fai, dict.map{ meta, dict -> [ dict ] }, dbsnp, dbsnp_tbi)
+    GATK4_HAPLOTYPECALLER(
+        cram_intervals,
+        fasta,
+        fasta_fai,
+        dict,
+        dbsnp,
+        dbsnp_tbi)
 
     // For joint genotyping
     gvcf_tbi_intervals = GATK4_HAPLOTYPECALLER.out.vcf

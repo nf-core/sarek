@@ -638,14 +638,14 @@ rm *chrstring*
 rm 1kg.phase3.v5a_GRCh38nounref_loci_chr23.txt
 for i in {1..22} X
 do
-   awk '{ print $1 "\t" $2-1 "\t" $2 }' 1kg.phase3.v5a_GRCh38nounref_loci_chr${i}.txt > chr${i}.bed
-   grep "^${i}_" GC_G1000_on_target_hg38.txt | awk '{ print "chr" $1 }' > chr${i}.txt
-   bedtools intersect -a chr${i}.bed -b targets_with_chr.bed | awk '{ print $1 "_" $3 }' > chr${i}_on_target.txt
-   n=`wc -l chr${i}_on_target.txt | awk '{ print $1 }'`
-   count=$((n * 3 / 10))
-   grep -xf chr${i}.txt chr${i}_on_target.txt > chr${i}.temp
-   shuf -n $count chr${i}_on_target.txt >> chr${i}.temp
-   sort -n -k2 -t '_' chr${i}.temp | uniq | awk 'BEGIN { FS="_" } ; { print $1 "\t" $2 }' > battenberg_loci_on_target_hg38_chr${i}.txt
+  awk '{ print $1 "\t" $2-1 "\t" $2 }' 1kg.phase3.v5a_GRCh38nounref_loci_chr${i}.txt > chr${i}.bed
+  grep "^${i}_" GC_G1000_on_target_hg38.txt | awk '{ print "chr" $1 }' > chr${i}.txt
+  bedtools intersect -a chr${i}.bed -b targets_with_chr.bed | awk '{ print $1 "_" $3 }' > chr${i}_on_target.txt
+  n=`wc -l chr${i}_on_target.txt | awk '{ print $1 }'`
+  count=$((n * 3 / 10))
+  grep -xf chr${i}.txt chr${i}_on_target.txt > chr${i}.temp
+  shuf -n $count chr${i}_on_target.txt >> chr${i}.temp
+  sort -n -k2 -t '_' chr${i}.temp | uniq | awk 'BEGIN { FS="_" } ; { print $1 "\t" $2 }' > battenberg_loci_on_target_hg38_chr${i}.txt
 done
 zip battenberg_loci_on_target_hg38.zip battenberg_loci_on_target_hg38_chr*.txt
 ```
@@ -768,10 +768,6 @@ OPTIONS=”—default-ulimit nofile=65535:65535"
 Re-start your session.
 
 Note that the way to increase the open file limit in your system may be slightly different or require additional steps.
-
-### Cannot delete work folder when using docker + Spark
-
-Currently, when running spark-based tools in combination with docker, it is required to set `docker.userEmulation = false`. This can unfortunately causes permission issues when `work/` is being written with root permissions. In case this happens, you might need to configure docker to run without `userEmulation` (see [here](https://github.com/Midnighter/nf-core-adr/blob/main/docs/adr/0008-refrain-from-using-docker-useremulation-in-nextflow.md)).
 
 ## How to handle UMIs
 

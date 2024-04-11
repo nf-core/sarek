@@ -1,0 +1,35 @@
+{
+    "SarsCov2 VCF": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.vcf.gz:md5,8e722884ffb75155212a3fc053918766"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,622bd32d4ff0fac3360cd534ae0f0168"
+                ],
+                "vcf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.vcf.gz:md5,8e722884ffb75155212a3fc053918766"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,622bd32d4ff0fac3360cd534ae0f0168"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.2"
+        },
+        "timestamp": "2024-03-18T12:50:10.340362246"
+    }
+}

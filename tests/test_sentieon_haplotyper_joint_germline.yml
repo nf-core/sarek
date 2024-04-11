@@ -2,9 +2,8 @@
   command: nextflow run main.nf -profile test_cache,software_license,targeted --sentieon_extension --input ./tests/csv/3.0/mapped_joint_bam.csv --tools sentieon_haplotyper --step variant_calling --joint_germline --outdir results --sentieon_haplotyper_emit_mode gvcf
   tags:
     - germline
-    - sentieon_haplotyper_joint_germline
+    - sentieon/haplotyper_joint_germline
     - variant_calling
-    - sentieon/haplotyper
   files:
     - path: results/csv/variantcalled.csv
       md5sum: 6ec10f6455c2b5290c7f6fc687c529ca
@@ -53,9 +52,8 @@
   command: nextflow run main.nf -profile test_cache,software_license,targeted --sentieon_extension --input ./tests/csv/3.0/mapped_joint_bam.csv --tools sentieon_haplotyper --step variant_calling --joint_germline --outdir results --sentieon_haplotyper_emit_mode gvcf --nucleotides_per_second 100
   tags:
     - germline
-    - sentieon_haplotyper_joint_germline
+    - sentieon/haplotyper_joint_germline
     - variant_calling
-    - sentieon/haplotyper
   files:
     - path: results/csv/variantcalled.csv
       md5sum: 6ec10f6455c2b5290c7f6fc687c529ca
@@ -102,7 +100,7 @@
   command: nextflow run main.nf -profile test_cache,software_license,tools_germline --sentieon_extension --input ./tests/csv/3.0/mapped_joint_bam.csv --tools sentieon_haplotyper --step variant_calling --joint_germline --outdir results --sentieon_haplotyper_emit_mode gvcf -stub-run
   tags:
     - germline
-    - sentieon_haplotyper_joint_germline
+    - sentieon/haplotyper_joint_germline
     - variant_calling
     - vqsr
   files:

@@ -1,9 +1,10 @@
 include { BAM_NGSCHECKMATE                           } from '../../../subworkflows/nf-core/bam_ngscheckmate/main'
 include { CRAM_QC_MOSDEPTH_SAMTOOLS as CRAM_QC_RECAL } from '../../../subworkflows/local/cram_qc_mosdepth_samtools/main'
+
 workflow CRAM_SAMPLEQC {
 
     take:
-    ch_cram                     // channel: [ val(meta), cram, crai ]
+    cram                        // channel: [ val(meta), cram, crai ]
     ngscheckmate_bed            // channel: [ ngscheckmate_bed ]
     fasta                       // channel: [ fasta ]
     skip_baserecalibration      // boolean:
@@ -11,13 +12,13 @@ workflow CRAM_SAMPLEQC {
 
     main:
 
-    ch_versions = Channel.empty()
-    reports     = Channel.empty()
+    versions = Channel.empty()
+    reports  = Channel.empty()
 
-    if(!skip_baserecalibration){
+    if (!skip_baserecalibration) {
 
         CRAM_QC_RECAL(
-            ch_cram,
+            cram,
             fasta,
             intervals_for_preprocessing)
 
@@ -25,15 +26,11 @@ workflow CRAM_SAMPLEQC {
         reports = CRAM_QC_RECAL.out.reports.collect{ meta, report -> report }
 
         // Gather used softwares versions
-        ch_versions = ch_versions.mix(CRAM_QC_RECAL.out.versions)
+        versions = versions.mix(CRAM_QC_RECAL.out.versions)
     }
 
-    ch_ngscheckmate_bed = ngscheckmate_bed.map{bed -> [[id: "ngscheckmate"], bed]}
-
-    ch_fasta            = fasta.map{fasta -> [[id: "genome"], fasta]}
-
-    BAM_NGSCHECKMATE ( ch_cram.map{meta, cram, crai -> [meta, cram]}, ch_ngscheckmate_bed, ch_fasta)
-    ch_versions = ch_versions.mix(BAM_NGSCHECKMATE.out.versions.first())
+    BAM_NGSCHECKMATE(cram.map{meta, cram, crai -> [meta, cram]}, ngscheckmate_bed.map{bed -> [[id: "ngscheckmate"], bed]}, fasta)
+    versions = versions.mix(BAM_NGSCHECKMATE.out.versions.first())
 
     emit:
     corr_matrix  = BAM_NGSCHECKMATE.out.corr_matrix  // channel: [ meta, corr_matrix ]
@@ -43,6 +40,6 @@ workflow CRAM_SAMPLEQC {
     pdf          = BAM_NGSCHECKMATE.out.pdf          // channel: [ meta, pdf ]
     reports
 
-    versions = ch_versions                     // channel: [ versions.yml ]
+    versions // channel: [ versions.yml ]
 }
 

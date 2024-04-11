@@ -13,8 +13,8 @@ workflow BAM_VARIANT_CALLING_FREEBAYES {
     take:
     cram      // channel: [mandatory] [ meta, cram1, crai1, cram2, crai2 ] or [ meta, cram, crai, [], [] ]
     dict      // channel: [mandatory] [ meta, dict ]
-    fasta     // channel: [mandatory] [ fasta ]
-    fasta_fai // channel: [mandatory] [ fasta_fai ]
+    fasta     // channel: [mandatory] [ meta, fasta ]
+    fasta_fai // channel: [mandatory] [ meta, fasta_fai ]
     intervals // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
 
     main:
@@ -25,7 +25,7 @@ workflow BAM_VARIANT_CALLING_FREEBAYES {
         // Move num_intervals to meta map and reorganize channel for FREEBAYES module
         .map{ meta, cram1, crai1, cram2, crai2, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram1, crai1, cram2, crai2, intervals ]}
 
-    FREEBAYES(cram_intervals, fasta, fasta_fai, [], [], [])
+    FREEBAYES(cram_intervals, fasta, fasta_fai, [[id:'null'], []], [[id:'null'], []], [[id:'null'], []])
 
     BCFTOOLS_SORT(FREEBAYES.out.vcf)
 
