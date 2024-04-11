@@ -32,7 +32,7 @@ workflow FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON {
     SENTIEON_BWAMEM(reads, index, fasta, fasta_fai) // If aligner is sentieon-bwamem
     // The parabricks-fq2bam module performs alignment and sorting as part of the conversion from fastq to bam.
     // Additionally, it can perform mark duplicates and generate a bqsr table (input for parabricks-applybqsr module)
-    PARABRICKS_FQ2BAM(reads, [[id:'null'], []], fasta, index, [[id:'null'], []],)
+    PARABRICKS_FQ2BAM(reads.map{meta, reads -> [meta, reads, []] } , fasta, index, [])
 
     // Get the bam files from the aligner
     // Only one aligner is run
