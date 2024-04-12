@@ -54,6 +54,7 @@ Balgattjåhkkå is the other top peak (over 2k m) in the Pårte massif, the othe
 - [#1407](https://github.com/nf-core/sarek/pull/1407) - Fix CI tests name
 - [#1420](https://github.com/nf-core/sarek/pull/1420) - Make `-a` a default argument for `bcftools` concat
 - [#1422](https://github.com/nf-core/sarek/pull/1422) - Fix `Cannot serialize context map` warning
+- [#1462](https://github.com/nf-core/sarek/pull/1462) - Fix ascat input channels
 
 ### Removed
 
