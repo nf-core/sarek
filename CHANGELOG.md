@@ -37,6 +37,7 @@ Balgattjåhkkå is the other top peak (over 2k m) in the Pårte massif, the othe
 - [#1439](https://github.com/nf-core/sarek/pull/1439) - Replacing the local module `BUILD_INTERVALS` with the nf-core module `GAWK`
 - [#1456](https://github.com/nf-core/sarek/pull/1456) - Revert usage of docker.runOptions. Add an empty docker.runOptions when using the new `spark` profile
 - [#1457](https://github.com/nf-core/sarek/pull/1457) - Update all modules
+- [#1466](https://github.com/nf-core/sarek/pull/1466) - Update `VEP`
 
 ### Fixed
 
@@ -67,6 +68,7 @@ Balgattjåhkkå is the other top peak (over 2k m) in the Pårte massif, the othe
 | Dependency | Old version | New version |
 | ---------- | ----------- | ----------- |
 | bcftools   | 1.17        | 1.18        |
+| ensemblvep | 110.0       | 111.0       |
 | fgbio      | 2.0.2       | 2.1.0       |
 | gatk       | 4.4.0.0     | 4.5.0.0     |
 | gatk-spark | 4.4.0.0     | 4.5.0.0     |
