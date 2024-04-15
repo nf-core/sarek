@@ -17,7 +17,7 @@ nextflow_process {
             params {
                 vep_species = "caenorhabditis_elegans"
                 vep_genome = "WBcel235"
-                vep_cache_version = "110"
+                vep_cache_version = "111"
             }
 
             process {
@@ -48,7 +48,7 @@ nextflow_process {
             params {
                 vep_species = "caenorhabditis_elegans"
                 vep_genome = "WBcel235"
-                vep_cache_version = "110"
+                vep_cache_version = "111"
             }
 
             process {
