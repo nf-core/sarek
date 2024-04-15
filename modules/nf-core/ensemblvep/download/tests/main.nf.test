@@ -3,6 +3,7 @@ nextflow_process {
     name "Test Process ENSEMBLVEP_DOWNLOAD"
     script "../main.nf"
     process "ENSEMBLVEP_DOWNLOAD"
+    config "./nextflow.config"
 
     tag "modules"
     tag "modules_nfcore"
@@ -11,22 +12,15 @@ nextflow_process {
 
     test("celegans - download") {
 
-        config "./nextflow.config"
-
         when {
-            params {
-                vep_species = "caenorhabditis_elegans"
-                vep_genome = "WBcel235"
-                vep_cache_version = "110"
-            }
-
             process {
                 """
-                input[0] = [ [id:"${params.vep_cache_version}_${params.vep_genome}"],
-                        params.vep_genome,
-                        params.vep_species,
-                        params.vep_cache_version
-                        ]
+                input[0] = Channel.of([
+                    [id:"111_WBcel235"],
+                    params.vep_genome,
+                    params.vep_species,
+                    params.vep_cache_version
+                ])
                 """
             }
         }
@@ -37,7 +31,6 @@ nextflow_process {
                 { assert snapshot(process.out).match() }
             )
         }
-
     }
 
     test("celegans - download - stub") {
@@ -45,19 +38,14 @@ nextflow_process {
         options "-stub"
 
         when {
-            params {
-                vep_species = "caenorhabditis_elegans"
-                vep_genome = "WBcel235"
-                vep_cache_version = "110"
-            }
-
             process {
                 """
-                input[0] = [ [id:"${params.vep_cache_version}_${params.vep_genome}"],
-                        params.vep_genome,
-                        params.vep_species,
-                        params.vep_cache_version
-                        ]
+                input[0] = Channel.of([
+                    [id:"111_WBcel235"],
+                    params.vep_genome,
+                    params.vep_species,
+                    params.vep_cache_version
+                ])
                 """
             }
         }
@@ -68,7 +56,5 @@ nextflow_process {
                 { assert snapshot(process.out).match() }
             )
         }
-
     }
-
 }
