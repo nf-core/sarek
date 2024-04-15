@@ -1,26 +1,31 @@
 nextflow_process {
 
     name "Test Process ENSEMBLVEP_VEP"
-    script "modules/nf-core/ensemblvep/vep/main.nf"
+    script "../main.nf"
     process "ENSEMBLVEP_VEP"
     config "./nextflow.config"
+
     tag "modules"
     tag "modules_nfcore"
     tag "ensemblvep"
     tag "ensemblvep/vep"
     tag "ensemblvep/download"
 
-
     test("test_ensemblvep_vep_fasta_vcf") {
-
         config "./vcf.config"
 
         setup {
             run("ENSEMBLVEP_DOWNLOAD") {
                 script "../../download/main.nf"
+
                 process {
                     """
-                    input[0] = Channel.of([[id:"${params.vep_cache_version}_${params.vep_genome}"], params.vep_genome, params.vep_species, params.vep_cache_version])
+                    input[0] = Channel.of([
+                        [id:"111_WBcel235"],
+                        params.vep_genome,
+                        params.vep_species,
+                        params.vep_cache_version
+                    ])
                     """
                 }
             }
@@ -49,23 +54,29 @@ nextflow_process {
 
         then {
             assertAll(
-            {assert process.success},
-            {assert path(process.out.vcf.get(0).get(1)).linesGzip.contains("##fileformat=VCFv4.2")}
+                { assert process.success },
+                { assert snapshot(process.out.versions).match() },
+                { assert path(process.out.vcf.get(0).get(1)).linesGzip.contains("##fileformat=VCFv4.2") }
             )
         }
 
     }
 
     test("test_ensemblvep_vep_fasta_tab_gz") {
-
         config "./tab.gz.config"
 
         setup {
             run("ENSEMBLVEP_DOWNLOAD") {
                 script "../../download/main.nf"
+
                 process {
                     """
-                    input[0] = Channel.of([[id:"${params.vep_cache_version}_${params.vep_genome}"], params.vep_genome, params.vep_species, params.vep_cache_version])
+                    input[0] = Channel.of([
+                        [id:"111_WBcel235"],
+                        params.vep_genome,
+                        params.vep_species,
+                        params.vep_cache_version
+                    ])
                     """
                 }
             }
@@ -94,8 +105,9 @@ nextflow_process {
 
         then {
             assertAll(
-            {assert process.success},
-            {assert path(process.out.tab.get(0).get(1)).linesGzip.contains("## ENSEMBL VARIANT EFFECT PREDICTOR v110.0")}
+                { assert process.success },
+                { assert snapshot(process.out.versions).match() },
+                { assert path(process.out.tab.get(0).get(1)).linesGzip.contains("## ENSEMBL VARIANT EFFECT PREDICTOR v111.0") }
             )
         }
     }
