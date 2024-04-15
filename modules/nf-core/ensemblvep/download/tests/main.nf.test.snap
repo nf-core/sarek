@@ -278,9 +278,9 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "24.02.0"
+            "nextflow": "24.03.0"
         },
-        "timestamp": "2024-04-15T14:54:47.049524"
+        "timestamp": "2024-04-15T17:20:01.921038"
     },
     "celegans - download - stub": {
         "content": [
@@ -315,8 +315,8 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "24.02.0"
+            "nextflow": "24.03.0"
         },
-        "timestamp": "2024-04-15T14:55:02.857705"
+        "timestamp": "2024-04-15T18:09:54.909036"
     }
 }

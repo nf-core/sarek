@@ -1,0 +1,26 @@
+{
+    "test_ensemblvep_vep_fasta_tab_gz": {
+        "content": [
+            [
+                "versions.yml:md5,bd2ba1b4741a7d0a224160b50859f4ba"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.03.0"
+        },
+        "timestamp": "2024-04-15T17:35:20.694114"
+    },
+    "test_ensemblvep_vep_fasta_vcf": {
+        "content": [
+            [
+                "versions.yml:md5,bd2ba1b4741a7d0a224160b50859f4ba"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.03.0"
+        },
+        "timestamp": "2024-04-15T17:34:41.093843"
+    }
+}
