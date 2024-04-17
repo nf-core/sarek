@@ -224,12 +224,8 @@ workflow  SAMPLESHEET_TO_CHANNEL{
         joint_germline &&
             ( !dbsnp || !known_indels || !known_snps || no_intervals )
     ) {
-        log.warn("""If GATK's Haplotypecaller, Sentieon's Dnascope and/or Sentieon's Haplotyper is specified, \
-    but without `--dbsnp`, `--known_snps`, `--known_indels` or the associated resource labels (ie `known_snps_vqsr`), \
-    no variant recalibration will be done. For recalibration you must provide all of these resources.\nFor more information \
-    see VariantRecalibration: https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator \n\
-    Joint germline variant calling also requires intervals in order to genotype the samples. \
-    As a result, if `--no_intervals` is set to `true` the joint germline variant calling will not be performed.""")
+        log.warn("""If GATK's Haplotypecaller, Sentieon's Dnascope and/or Sentieon's Haplotyper is specified, but without `--dbsnp`, `--known_snps`, `--known_indels` or the associated resource labels (ie `known_snps_vqsr`), no variant recalibration will be done. For recalibration you must provide all of these resources.\nFor more information see VariantRecalibration: https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator \n\
+Joint germline variant calling also requires intervals in order to genotype the samples. As a result, if `--no_intervals` is set to `true` the joint germline variant calling will not be performed.""")
     }
 
     if (tools &&

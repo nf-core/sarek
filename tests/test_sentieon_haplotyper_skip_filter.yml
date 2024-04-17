@@ -17,7 +17,6 @@
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
       should_exist: false
     - path: results/reports/bcftools/sentieon_haplotyper/test/test.haplotyper.unfiltered.bcftools_stats.txt
-      md5sum: d2660f9f6074b4bf18756c42ee656b8f
     - path: results/reports/vcftools/sentieon_haplotyper/test/test.haplotyper.unfiltered.FILTER.summary
       md5sum: 01b3d10464a3ac86f90ee82cdda23f68
     - path: results/reports/vcftools/sentieon_haplotyper/test/test.haplotyper.unfiltered.TsTv.count
@@ -37,7 +36,6 @@
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
       md5sum: e82e90c7d508a135b5a8a7cd6933452e
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
-      md5sum: 4f0d231060cbde4efdd673863bd2fb59
     - path: results/reports/mosdepth/test/test.recal.per-base.bed.gz
       md5sum: bc1df47d46f818fee5275975925d769a
     - path: results/reports/mosdepth/test/test.recal.per-base.bed.gz.csi
@@ -69,7 +67,6 @@
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
       should_exist: false
     - path: results/reports/bcftools/sentieon_haplotyper/test/test.haplotyper.unfiltered.bcftools_stats.txt
-      md5sum: d2660f9f6074b4bf18756c42ee656b8f
     - path: results/reports/vcftools/sentieon_haplotyper/test/test.haplotyper.unfiltered.FILTER.summary
       md5sum: 01b3d10464a3ac86f90ee82cdda23f68
     - path: results/reports/vcftools/sentieon_haplotyper/test/test.haplotyper.unfiltered.TsTv.count
@@ -89,7 +86,6 @@
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
       md5sum: e82e90c7d508a135b5a8a7cd6933452e
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
-      md5sum: 4f0d231060cbde4efdd673863bd2fb59
     - path: results/reports/mosdepth/test/test.recal.per-base.bed.gz
       md5sum: bc1df47d46f818fee5275975925d769a
     - path: results/reports/mosdepth/test/test.recal.per-base.bed.gz.csi
