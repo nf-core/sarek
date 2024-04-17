@@ -49,8 +49,8 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
 
     SENTIEON_HAPLOTYPER(
         cram_intervals_for_sentieon,
-        fasta,
-        fasta_fai,
+        fasta.map{ meta, it -> it },
+        fasta_fai.map{ meta, it ->  it },
         dbsnp,
         dbsnp_tbi,
         emit_vcf,
