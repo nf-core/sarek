@@ -878,6 +878,7 @@ workflow SAREK {
         ch_methods_description                = Channel.value(methodsDescriptionText(ch_multiqc_custom_methods_description))
         ch_multiqc_files                      = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
         ch_multiqc_files                      = ch_multiqc_files.mix(version_yaml)
+        ch_multiqc_files                      = ch_multiqc_files.mix(reports)
         ch_multiqc_files                      = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml', sort: false))
 
         MULTIQC (
