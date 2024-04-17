@@ -239,7 +239,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
                 SENTIEON_DNAMODELAPPLY(
                     vcf_sentieon_dnascope.join(vcf_tbi_sentieon_dnascope, failOnDuplicate: true, failOnMismatch: true),
                     fasta,
-                    fasta_fai.map{ fai -> [ [ id:fai.baseName ], fai ] },
+                    fasta_fai,
                     sentieon_dnascope_model.map{ model -> [ [ id:model.baseName ], model ] })
 
                 vcf_sentieon_dnascope = SENTIEON_DNAMODELAPPLY.out.vcf
@@ -297,8 +297,8 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
 
                 SENTIEON_HAPLOTYPER_VCF_VARIANT_FILTERING_GATK(
                     vcf_sentieon_haplotyper.join(vcf_tbi_sentieon_haplotyper, failOnDuplicate: true, failOnMismatch: true),
-                    fasta,
-                    fasta_fai,
+                    fasta.map{ meta, it -> [ it ] },
+                    fasta_fai.map{ meta, it -> [ it ] },
                     dict.map{ meta, dict -> [ dict ] },
                     intervals_bed_combined_haplotypec,
                     known_sites_indels.concat(known_sites_snps).flatten().unique().collect(),

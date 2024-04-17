@@ -36,7 +36,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_SENTIEON {
         .map{ meta, gvcf, tbi, intervals -> [ [ id:'joint_variant_calling', intervals_name:intervals.baseName, num_intervals:meta.num_intervals ], gvcf, tbi, intervals ] }
         .groupTuple(by:[0, 3])
 
-    SENTIEON_GVCFTYPER(sentieon_input, fasta, fai, dbsnp, dbsnp_tbi)
+    SENTIEON_GVCFTYPER(sentieon_input, fasta.map{meta, it -> [ it ]}, fai.map{meta, it -> [ it ]}, dbsnp, dbsnp_tbi)
 
     BCFTOOLS_SORT(SENTIEON_GVCFTYPER.out.vcf_gz)
 
@@ -68,16 +68,16 @@ workflow BAM_JOINT_CALLING_GERMLINE_SENTIEON {
             resource_indels_vcf,
             resource_indels_tbi,
             indels_resource_label,
-            fasta,
-            fai)
+            fasta.map{meta, it -> [ it ]},
+            fai.map{meta, it -> [ it ]})
 
         SENTIEON_VARCAL_SNP(
             vqsr_input,
             resource_snps_vcf,
             resource_snps_tbi,
             snps_resource_label,
-            fasta,
-            fai)
+            fasta.map{meta, it -> [ it ]},
+            fai.map{meta, it -> [ it ]})
 
         //Prepare SNPs and INDELs for Sentieon's applyvarcal
         // Step 1. : applyvarcal to SNPs
@@ -90,10 +90,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_SENTIEON {
             .join(SENTIEON_VARCAL_SNP.out.tranches, failOnDuplicate: true)
             .map{ meta, vcf, tbi, recal, index, tranche -> [ meta + [ id:'recalibrated_joint_variant_calling' ], vcf, tbi, recal, index, tranche ] }
 
-        SENTIEON_APPLYVARCAL_SNP(
-            vqsr_input_snp,
-            fasta.map{ fasta -> [ [ id:fasta.baseName ], fasta ] },
-            fai.map{ fai -> [ [ id:fai.baseName ], fai ] })
+        SENTIEON_APPLYVARCAL_SNP(vqsr_input_snp, fasta, fai)
 
         // Join results of SENTIEON_APPLYVARCAL_SNP and use as input for SENTIEON_APPLYVARCAL_INDEL to avoid duplicate entries in the result
         // Rework meta for variantscalled.csv and annotation tools
@@ -103,10 +100,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_SENTIEON {
             .join(SENTIEON_VARCAL_INDEL.out.tranches, failOnDuplicate: true)
             .map{ meta, vcf, tbi, recal, index, tranche -> [ meta + [ id:'recalibrated_joint_variant_calling' ], vcf, tbi, recal, index, tranche ] }
 
-        SENTIEON_APPLYVARCAL_INDEL(
-            vqsr_input_indel,
-            fasta.map{ fasta -> [ [ id:fasta.baseName ], fasta ] },
-            fai.map{ fai -> [ [ id:fai.baseName ], fai ] })
+        SENTIEON_APPLYVARCAL_INDEL(vqsr_input_indel, fasta, fai)
 
         // The following is an ugly monster to achieve the following:
         // When MERGE_GENOTYPEGVCFS and SENTIEON_APPLYVARCAL are run, then use output from SENTIEON_APPLYVARCAL
