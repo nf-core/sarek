@@ -366,7 +366,7 @@ workflow SAREK {
             CRAM_QC_NO_MD(cram_skip_markduplicates, fasta, intervals_for_preprocessing)
 
             // Gather QC reports
-            reports = reports.mix(CRAM_QC_NO_MD.out.reports.collect{ meta, report -> report })
+            reports = reports.mix(CRAM_QC_NO_MD.out.reports.collect{ meta, report -> [ report ] })
 
             // Gather used softwares versions
             versions = versions.mix(CRAM_QC_NO_MD.out.versions)
@@ -380,7 +380,7 @@ workflow SAREK {
             cram_markduplicates_spark = BAM_MARKDUPLICATES_SPARK.out.cram
 
             // Gather QC reports
-            reports = reports.mix(BAM_MARKDUPLICATES_SPARK.out.reports.collect{ meta, report -> report })
+            reports = reports.mix(BAM_MARKDUPLICATES_SPARK.out.reports.collect{ meta, report -> [ report ] })
 
             // Gather used softwares versions
             versions = versions.mix(BAM_MARKDUPLICATES_SPARK.out.versions)
@@ -396,7 +396,7 @@ workflow SAREK {
             cram_sentieon_dedup = BAM_SENTIEON_DEDUP.out.cram
 
             // Gather QC reports
-            reports = reports.mix(BAM_SENTIEON_DEDUP.out.reports.collect{ meta, report -> report })
+            reports = reports.mix(BAM_SENTIEON_DEDUP.out.reports.collect{ meta, report -> [ report ] })
 
             // Gather used softwares versions
             versions = versions.mix(BAM_SENTIEON_DEDUP.out.versions)
@@ -410,7 +410,7 @@ workflow SAREK {
             cram_markduplicates_no_spark = BAM_MARKDUPLICATES.out.cram
 
             // Gather QC reports
-            reports = reports.mix(BAM_MARKDUPLICATES.out.reports.collect{ meta, report -> report })
+            reports = reports.mix(BAM_MARKDUPLICATES.out.reports.collect{ meta, report -> [ report ] })
 
             // Gather used softwares versions
             versions = versions.mix(BAM_MARKDUPLICATES.out.versions)
@@ -516,7 +516,7 @@ workflow SAREK {
                 ch_table_bqsr_no_spark,
                 ch_table_bqsr_spark)
 
-            reports = reports.mix(ch_table_bqsr.collect{ meta, table -> table })
+            reports = reports.mix(ch_table_bqsr.collect{ meta, table -> [ table ] })
 
             cram_applybqsr = ch_cram_for_bam_baserecalibrator.join(ch_table_bqsr, failOnDuplicate: true, failOnMismatch: true)
 
@@ -851,7 +851,7 @@ workflow SAREK {
 
             // Gather used softwares versions
             versions = versions.mix(VCF_ANNOTATE_ALL.out.versions)
-            reports = reports.mix(VCF_ANNOTATE_ALL.out.reports.collect{ meta, reports -> [ reports ] })
+            reports = reports.mix(VCF_ANNOTATE_ALL.out.reports)
         }
     }
 
