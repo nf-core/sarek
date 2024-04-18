@@ -59,6 +59,9 @@ Balgattjåhkkå is the other top peak (over 2k m) in the Pårte massif, the othe
 - [#1463](https://github.com/nf-core/sarek/pull/1463) - Add `spark` profile to all gatk4spark tests
 - [#1465](https://github.com/nf-core/sarek/pull/1465), [#1469](https://github.com/nf-core/sarek/pull/1469) - Fix input channels and tests of Sentieon workflows
 - [#1470](https://github.com/nf-core/sarek/pull/1470) - Fix channels for `MultiQC`
+- [#1471](https://github.com/nf-core/sarek/pull/1471) - Add `snpeff_db` params to `validationSchemaIgnoreParams` to fix issues with Seqera Platform
+- [#1471](https://github.com/nf-core/sarek/pull/1471) - Add `vep_cache_version` params to `validationSchemaIgnoreParams` to fix [#1454](https://github.com/nf-core/sarek/issues/1454)
+- [#1471](https://github.com/nf-core/sarek/pull/1471) - Update `vep_version` params match the actual tool version
 
 ### Removed
 
