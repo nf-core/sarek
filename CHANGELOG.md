@@ -58,6 +58,7 @@ Balgattjåhkkå is the other top peak (over 2k m) in the Pårte massif, the othe
 - [#1462](https://github.com/nf-core/sarek/pull/1462) - Fix ascat input channels
 - [#1463](https://github.com/nf-core/sarek/pull/1463) - Add `spark` profile to all gatk4spark tests
 - [#1465](https://github.com/nf-core/sarek/pull/1465), [#1469](https://github.com/nf-core/sarek/pull/1469) - Fix input channels and tests of Sentieon workflows
+- [#1470](https://github.com/nf-core/sarek/pull/1470) - Fix channels for `MultiQC`
 
 ### Removed
 
