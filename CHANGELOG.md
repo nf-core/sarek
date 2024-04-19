@@ -35,7 +35,7 @@ Balgattjåhkkå is the other top peak (over 2k m) in the Pårte massif, the othe
 - [#1422](https://github.com/nf-core/sarek/pull/1422) - Refactoring following `TEMPLATE` sync with `tools` `2.13`
 - [#1431](https://github.com/nf-core/sarek/pull/1431) - Using docker.containerOptions instead of docker.runOptions. Clearing containerOptions for SPARK modules for any kind of supported container engine
 - [#1439](https://github.com/nf-core/sarek/pull/1439) - Replacing the local module `BUILD_INTERVALS` with the nf-core module `GAWK`
-- [#1456](https://github.com/nf-core/sarek/pull/1456) - Revert usage of docker.runOptions. Add an empty docker.runOptions when using the new `spark` profile
+- [#1456](https://github.com/nf-core/sarek/pull/1456), [#1472](https://github.com/nf-core/sarek/pull/1472) - Revert usage of docker.runOptions. Add an empty docker.runOptions when using the new `spark` profile
 - [#1457](https://github.com/nf-core/sarek/pull/1457) - Update all modules
 - [#1466](https://github.com/nf-core/sarek/pull/1466) - Update `VEP`
 
@@ -62,6 +62,7 @@ Balgattjåhkkå is the other top peak (over 2k m) in the Pårte massif, the othe
 - [#1471](https://github.com/nf-core/sarek/pull/1471) - Add `snpeff_db` params to `validationSchemaIgnoreParams` to fix issues with Seqera Platform
 - [#1471](https://github.com/nf-core/sarek/pull/1471) - Add `vep_cache_version` params to `validationSchemaIgnoreParams` to fix [#1454](https://github.com/nf-core/sarek/issues/1454)
 - [#1471](https://github.com/nf-core/sarek/pull/1471) - Update `vep_version` params match the actual tool version
+- [#1472](https://github.com/nf-core/sarek/pull/1472) - Cast `snpeff_db` params as a string to fix issues with Seqera Platform, as [#1471](https://github.com/nf-core/sarek/pull/1471) was not working as expected
 
 ### Removed
 
