@@ -172,7 +172,6 @@
                 "type": "string"
             }
         },
-        "uniqueEntries": ["patient", "sample"],
         "dependentRequired":{
             "anyOf": [
                 {
@@ -184,5 +183,6 @@
             ]
         },
         "required": ["patient", "sample"]
-    }
+    },
+    "uniqueEntries": ["patient", "sample"]
 }
