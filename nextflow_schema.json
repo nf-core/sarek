@@ -1,10 +1,10 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://raw.githubusercontent.com/nf-core/sarek/master/nextflow_schema.json",
     "title": "nf-core/sarek pipeline parameters",
     "description": "An open-source analysis pipeline to detect germline or somatic variants from whole genome or targeted sequencing",
     "type": "object",
-    "definitions": {
+    "defs": {
         "input_output_options": {
             "title": "Input/output options",
             "type": "object",
@@ -1075,34 +1075,34 @@
     },
     "allOf": [
         {
-            "$ref": "#/definitions/input_output_options"
+            "$ref": "#/defs/input_output_options"
         },
         {
-            "$ref": "#/definitions/main_options"
+            "$ref": "#/defs/main_options"
         },
         {
-            "$ref": "#/definitions/fastq_preprocessing"
+            "$ref": "#/defs/fastq_preprocessing"
         },
         {
-            "$ref": "#/definitions/preprocessing"
+            "$ref": "#/defs/preprocessing"
         },
         {
-            "$ref": "#/definitions/variant_calling"
+            "$ref": "#/defs/variant_calling"
         },
         {
-            "$ref": "#/definitions/annotation"
+            "$ref": "#/defs/annotation"
         },
         {
-            "$ref": "#/definitions/reference_genome_options"
+            "$ref": "#/defs/reference_genome_options"
         },
         {
-            "$ref": "#/definitions/institutional_config_options"
+            "$ref": "#/defs/institutional_config_options"
         },
         {
-            "$ref": "#/definitions/max_job_request_options"
+            "$ref": "#/defs/max_job_request_options"
         },
         {
-            "$ref": "#/definitions/generic_options"
+            "$ref": "#/defs/generic_options"
         }
     ]
 }
