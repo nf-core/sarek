@@ -48,7 +48,6 @@
             },
             "fastq_2": {
                 "errorMessage": "FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'",
-                "dependentRequired": ["fastq_1"],
                 "type": "string",
                 "pattern": "^\\S+\\.f(ast)?q\\.gz$",
                 "format": "file-path",
@@ -100,17 +99,22 @@
                 "type": "string"
             }
         },
-        "dependentRequired":{
-            "anyOf": [
-                {
+        "anyOf": [
+            {
+                "dependentRequired":{
                     "lane": ["fastq_1"]
-                },
-                {
+                }
+            },
+            {
+                "dependentRequired":{
                     "lane": ["bam"]
                 }
-            ]
+            }
+        ],
+        "dependentRequired": {
+            "fastq_2": ["fastq_1"]
         },
-        "required": ["patient", "sample"]
-    },
-    "uniqueEntries": ["lane", "patient", "sample"]
+        "required": ["patient", "sample"],
+        "uniqueEntries": ["lane", "patient", "sample"]
+    }
 }
