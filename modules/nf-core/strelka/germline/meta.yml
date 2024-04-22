@@ -28,10 +28,22 @@ input:
       type: file
       description: BAM/CRAI index file
       pattern: "*.{bai,crai}"
+  - fasta:
+      type: file
+      description: Genome reference FASTA file
+      pattern: "*.{fa,fasta}"
+  - fai:
+      type: file
+      description: Genome reference FASTA index file
+      pattern: "*.{fa.fai,fasta.fai}"
   - target_bed:
       type: file
-      description: An optional bed file
+      description: BED file containing target regions for variant calling
       pattern: "*.{bed}"
+  - target_bed_index:
+      type: file
+      description: Index for BED file containing target regions for variant calling
+      pattern: "*.{bed.tbi}"
 output:
   - meta:
       type: map

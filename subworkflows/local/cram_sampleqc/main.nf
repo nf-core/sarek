@@ -1,22 +1,36 @@
-include { BAM_NGSCHECKMATE } from '../../../subworkflows/nf-core/bam_ngscheckmate/main'
+include { BAM_NGSCHECKMATE                           } from '../../../subworkflows/nf-core/bam_ngscheckmate/main'
+include { CRAM_QC_MOSDEPTH_SAMTOOLS as CRAM_QC_RECAL } from '../../../subworkflows/local/cram_qc_mosdepth_samtools/main'
 
 workflow CRAM_SAMPLEQC {
 
     take:
-    ch_cram             // channel: [ val(meta), cram, crai ]
-    ngscheckmate_bed    // channel: [ ngscheckmate_bed ]
-    fasta               // channel: [ fasta ]
+    cram                        // channel: [ val(meta), cram, crai ]
+    ngscheckmate_bed            // channel: [ ngscheckmate_bed ]
+    fasta                       // channel: [ fasta ]
+    skip_baserecalibration      // boolean:
+    intervals_for_preprocessing // channel:
 
     main:
 
-    ch_versions = Channel.empty()
+    versions = Channel.empty()
+    reports  = Channel.empty()
 
-    ch_ngscheckmate_bed = ngscheckmate_bed.map{bed -> [[id: "ngscheckmate"], bed]}
+    if (!skip_baserecalibration) {
 
-    ch_fasta            = fasta.map{fasta -> [[id: "genome"], fasta]}
+        CRAM_QC_RECAL(
+            cram,
+            fasta,
+            intervals_for_preprocessing)
 
-    BAM_NGSCHECKMATE ( ch_cram.map{meta, cram, crai -> [meta, cram]}, ch_ngscheckmate_bed, ch_fasta)
-    ch_versions = ch_versions.mix(BAM_NGSCHECKMATE.out.versions.first())
+        // Gather QC reports
+        reports = CRAM_QC_RECAL.out.reports.collect{ meta, report -> report }
+
+        // Gather used softwares versions
+        versions = versions.mix(CRAM_QC_RECAL.out.versions)
+    }
+
+    BAM_NGSCHECKMATE(cram.map{meta, cram, crai -> [meta, cram]}, ngscheckmate_bed.map{bed -> [[id: "ngscheckmate"], bed]}, fasta)
+    versions = versions.mix(BAM_NGSCHECKMATE.out.versions.first())
 
     emit:
     corr_matrix  = BAM_NGSCHECKMATE.out.corr_matrix  // channel: [ meta, corr_matrix ]
@@ -24,7 +38,8 @@ workflow CRAM_SAMPLEQC {
     all          = BAM_NGSCHECKMATE.out.all          // channel: [ meta, all ]
     vcf          = BAM_NGSCHECKMATE.out.vcf          // channel: [ meta, vcf ]
     pdf          = BAM_NGSCHECKMATE.out.pdf          // channel: [ meta, pdf ]
+    reports
 
-    versions = ch_versions                     // channel: [ versions.yml ]
+    versions // channel: [ versions.yml ]
 }
 

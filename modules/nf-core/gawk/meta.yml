@@ -1,0 +1,50 @@
+name: "gawk"
+description: |
+  If you are like many computer users, you would frequently like to make changes in various text files
+  wherever certain patterns appear, or extract data from parts of certain lines while discarding the rest.
+  The job is easy with awk, especially the GNU implementation gawk.
+keywords:
+  - gawk
+  - awk
+  - txt
+  - text
+  - file parsing
+tools:
+  - "gawk":
+      description: "GNU awk"
+      homepage: "https://www.gnu.org/software/gawk/"
+      documentation: "https://www.gnu.org/software/gawk/manual/"
+      tool_dev_url: "https://www.gnu.org/prep/ftp.html"
+      licence: ["GPL v3"]
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - input:
+      type: file
+      description: The input file - Specify the logic that needs to be executed on this file on the `ext.args2` or in the program file
+      pattern: "*"
+  - program_file:
+      type: file
+      description: Optional file containing logic for awk to execute. If you don't wish to use a file, you can use `ext.args2` to specify the logic.
+      pattern: "*"
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+  - output:
+      type: file
+      description: The output file - specify the name of this file using `ext.prefix` and the extension using `ext.suffix`
+      pattern: "*"
+authors:
+  - "@nvnieuwk"
+maintainers:
+  - "@nvnieuwk"

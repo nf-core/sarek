@@ -20,12 +20,12 @@ input:
         Groovy Map containing sample information
         e.g. [ id:'test', single_end:false ]
   - vcfs:
-      type: files
+      type: list
       description: |
         List containing 2 or more vcf files
         e.g. [ 'file1.vcf', 'file2.vcf' ]
   - tbi:
-      type: files
+      type: list
       description: |
         List containing 2 or more index files (optional)
         e.g. [ 'file1.tbi', 'file2.tbi' ]

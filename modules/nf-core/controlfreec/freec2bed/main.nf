@@ -20,23 +20,25 @@ process CONTROLFREEC_FREEC2BED {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
+    def VERSION = '11.6b' // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
     """
     freec2bed.pl -f ${ratio} ${args} > ${prefix}.bed
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        controlfreec: \$(echo \$(freec -version 2>&1) | sed 's/^.*Control-FREEC  //; s/:.*\$//' | sed -e "s/Control-FREEC v//g" )
+        controlfreec: $VERSION
     END_VERSIONS
     """
 
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
+    def VERSION = '11.6b' // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
     """
     touch ${prefix}.bed
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        controlfreec: \$(echo \$(freec -version 2>&1) | sed 's/^.*Control-FREEC  //; s/:.*\$//' | sed -e "s/Control-FREEC v//g" )
+        controlfreec: $VERSION
     END_VERSIONS
     """
 }

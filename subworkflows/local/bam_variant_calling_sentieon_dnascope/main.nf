@@ -50,8 +50,8 @@ workflow BAM_VARIANT_CALLING_SENTIEON_DNASCOPE {
 
     SENTIEON_DNASCOPE(
         cram_intervals_for_sentieon,
-        fasta.map{it -> [[:], it]},
-        fasta_fai.map{it -> [[:], it]},
+        fasta,
+        fasta_fai,
         dbsnp.map{it -> [[:], it]},
         dbsnp_tbi.map{it -> [[:], it]},
         sentieon_dnascope_model.map{it -> [[:], it]},

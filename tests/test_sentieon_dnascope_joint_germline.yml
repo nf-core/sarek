@@ -2,7 +2,7 @@
   command: nextflow run main.nf -profile test_cache,targeted,software_license --sentieon_extension --input ./tests/csv/3.0/mapped_joint_bam.csv --tools sentieon_dnascope --step variant_calling --joint_germline --outdir results --sentieon_dnascope_emit_mode gvcf
   tags:
     - germline
-    - sentieon_dnascope_joint_germline
+    - sentieon/dnascope_joint_germline
     - variant_calling
   files:
     - path: results/csv/variantcalled.csv
@@ -38,11 +38,23 @@
       should_exist: false
     - path: results/variant_calling/sentieon_dnascope/joint_variant_calling/joint_germline_recalibrated.vcf.gz.tbi
       should_exist: false
+    - path: results/reports/mosdepth/testN/testN.recal.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/testN/testN.recal.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/testN/testN.recal.mosdepth.summary.txt
+    - path: results/reports/mosdepth/testN/testN.recal.regions.bed.gz
+    - path: results/reports/mosdepth/testN/testN.recal.regions.bed.gz.csi
+    - path: results/reports/samtools/testN/testN.recal.cram.stats
+    - path: results/reports/mosdepth/testT/testT.recal.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/testT/testT.recal.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/testT/testT.recal.mosdepth.summary.txt
+    - path: results/reports/mosdepth/testT/testT.recal.regions.bed.gz
+    - path: results/reports/mosdepth/testT/testT.recal.regions.bed.gz.csi
+    - path: results/reports/samtools/testT/testT.recal.cram.stats
 - name: Run joint germline variant calling with sentieon dnascope all intervals at once
   command: nextflow run main.nf -profile test_cache,targeted,software_license --sentieon_extension --input ./tests/csv/3.0/mapped_joint_bam.csv --tools sentieon_dnascope --step variant_calling --joint_germline --outdir results --sentieon_dnascope_emit_mode gvcf --nucleotides_per_second 100
   tags:
     - germline
-    - sentieon_dnascope_joint_germline
+    - sentieon/dnascope_joint_germline
     - variant_calling
   files:
     - path: results/csv/variantcalled.csv
@@ -64,3 +76,15 @@
     - path: results/variant_calling/sentieon_dnascope/testT/testT.dnascope.g.vcf.gz.tbi
     - path: results/dnascope
       should_exist: false
+    - path: results/reports/mosdepth/testN/testN.recal.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/testN/testN.recal.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/testN/testN.recal.mosdepth.summary.txt
+    - path: results/reports/mosdepth/testN/testN.recal.regions.bed.gz
+    - path: results/reports/mosdepth/testN/testN.recal.regions.bed.gz.csi
+    - path: results/reports/samtools/testN/testN.recal.cram.stats
+    - path: results/reports/mosdepth/testT/testT.recal.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/testT/testT.recal.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/testT/testT.recal.mosdepth.summary.txt
+    - path: results/reports/mosdepth/testT/testT.recal.regions.bed.gz
+    - path: results/reports/mosdepth/testT/testT.recal.regions.bed.gz.csi
+    - path: results/reports/samtools/testT/testT.recal.cram.stats

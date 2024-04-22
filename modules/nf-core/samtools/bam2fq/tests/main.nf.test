@@ -1,0 +1,67 @@
+nextflow_process {
+
+    name "Test Process SAMTOOLS_BAM2FQ"
+    script "../main.nf"
+    process "SAMTOOLS_BAM2FQ"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "samtools"
+    tag "samtools/bam2fq"
+
+    config "./nextflow.config"
+
+    test("bam") {
+
+        when {
+            process {
+                """
+                split = false
+
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/umi/test.paired_end.umi_converted.bam', checkIfExists: true)
+                ])
+                input[1] = split
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(path(process.out.reads[0][1]).linesGzip[0..6]).match("bam_reads") },
+                { assert snapshot(process.out.versions).match("bam_versions") }
+            )
+        }
+
+    }
+
+    test("bam_split") {
+
+        when {
+            process {
+                """
+                split = true
+
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/umi/test.paired_end.umi_converted.bam', checkIfExists: true)
+                ])
+                input[1] = split
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out.reads[0][1].collect{
+                    if (it ==~ /.*(other|singleton)\.fq\.gz$/) return file(it).name
+                    return path(it).linesGzip[0..6]
+                }).match("bam_split_reads") },
+                { assert snapshot(process.out.versions).match("bam_split_versions") }
+            )
+        }
+    }
+}

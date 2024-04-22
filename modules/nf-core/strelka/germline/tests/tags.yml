@@ -1,0 +1,2 @@
+strelka/germline:
+  - "modules/nf-core/strelka/germline/**"

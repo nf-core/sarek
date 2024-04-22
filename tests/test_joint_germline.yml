@@ -30,7 +30,28 @@
     - path: results/variant_calling/haplotypecaller/testT/testT.haplotypecaller.g.vcf.gz.tbi
     - path: results/haplotypecaller
       should_exist: false
-
+    - path: results/reports/mosdepth/testN/testN.recal.mosdepth.global.dist.txt
+      md5sum: e82e90c7d508a135b5a8a7cd6933452e
+    - path: results/reports/mosdepth/testN/testN.recal.mosdepth.region.dist.txt
+      md5sum: 3a2030e5e8af7bc12720c3a5592bf921
+    - path: results/reports/mosdepth/testN/testN.recal.mosdepth.summary.txt
+      md5sum: 615c5c5019d88045a9ff5bbe6e63d270
+    - path: results/reports/mosdepth/testN/testN.recal.regions.bed.gz
+      md5sum: 9f1ea20e7461db948ba21f70c4d1b3ba
+    - path: results/reports/mosdepth/testN/testN.recal.regions.bed.gz.csi
+      md5sum: 5c00a1d457c387d6e71848a6d897e309
+    - path: results/reports/samtools/testN/testN.recal.cram.stats
+    - path: results/reports/mosdepth/testT/testT.recal.mosdepth.global.dist.txt
+      md5sum: ba97ed85645f77da6f3adad138b3cdb4
+    - path: results/reports/mosdepth/testT/testT.recal.mosdepth.region.dist.txt
+      md5sum: a7eb835371dd0aaf347ccca7ebe1eb3b
+    - path: results/reports/mosdepth/testT/testT.recal.mosdepth.summary.txt
+      md5sum: a937108cbf24c1430b79c861234ce22b
+    - path: results/reports/mosdepth/testT/testT.recal.regions.bed.gz
+      md5sum: d2b579a74bf8d858f82869f073056252
+    - path: results/reports/mosdepth/testT/testT.recal.regions.bed.gz.csi
+      md5sum: 5c00a1d457c387d6e71848a6d897e309
+    - path: results/reports/samtools/testT/testT.recal.cram.stats
 - name: Run joint germline variant calling with haplotypecaller all intervals at once
   command: nextflow run main.nf -profile test_cache,targeted --input ./tests/csv/3.0/mapped_joint_bam.csv --tools haplotypecaller --step variant_calling --joint_germline --outdir results --nucleotides_per_second 100
   tags:
@@ -63,7 +84,28 @@
     - path: results/variant_calling/haplotypecaller/testT/testT.haplotypecaller.g.vcf.gz.tbi
     - path: results/haplotypecaller
       should_exist: false
-
+    - path: results/reports/mosdepth/testN/testN.recal.mosdepth.global.dist.txt
+      md5sum: e82e90c7d508a135b5a8a7cd6933452e
+    - path: results/reports/mosdepth/testN/testN.recal.mosdepth.region.dist.txt
+      md5sum: 3a2030e5e8af7bc12720c3a5592bf921
+    - path: results/reports/mosdepth/testN/testN.recal.mosdepth.summary.txt
+      md5sum: 615c5c5019d88045a9ff5bbe6e63d270
+    - path: results/reports/mosdepth/testN/testN.recal.regions.bed.gz
+      md5sum: 9f1ea20e7461db948ba21f70c4d1b3ba
+    - path: results/reports/mosdepth/testN/testN.recal.regions.bed.gz.csi
+      md5sum: 5c00a1d457c387d6e71848a6d897e309
+    - path: results/reports/samtools/testN/testN.recal.cram.stats
+    - path: results/reports/mosdepth/testT/testT.recal.mosdepth.global.dist.txt
+      md5sum: ba97ed85645f77da6f3adad138b3cdb4
+    - path: results/reports/mosdepth/testT/testT.recal.mosdepth.region.dist.txt
+      md5sum: a7eb835371dd0aaf347ccca7ebe1eb3b
+    - path: results/reports/mosdepth/testT/testT.recal.mosdepth.summary.txt
+      md5sum: a937108cbf24c1430b79c861234ce22b
+    - path: results/reports/mosdepth/testT/testT.recal.regions.bed.gz
+      md5sum: d2b579a74bf8d858f82869f073056252
+    - path: results/reports/mosdepth/testT/testT.recal.regions.bed.gz.csi
+      md5sum: 5c00a1d457c387d6e71848a6d897e309
+    - path: results/reports/samtools/testT/testT.recal.cram.stats
 - name: Run joint germline variant calling with haplotypecaller with Stub for VQSR
   command: nextflow run main.nf -profile test_cache,tools_germline --input ./tests/csv/3.0/mapped_joint_bam.csv --tools haplotypecaller --step variant_calling --joint_germline --outdir results -stub-run
   tags:
@@ -81,12 +123,12 @@
       should_exist: false
     - path: results/reports/bcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.bcftools_stats.txt
     # Not stable enough
-    - path: results/reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.FILTER.summary
-    # Not stable enough
-    - path: results/reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.TsTv.count
-    # Not stable enough
-    - path: results/reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.TsTv.qual
-    # Not stable enough
+    # - path: results/reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.FILTER.summary
+    # No longer created with stub (not in the vcf tools module)
+    # - path: results/reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.TsTv.count
+    # No longer created with stub (not in the vcf tools module)
+    # - path: results/reports/vcftools/haplotypecaller/joint_variant_calling/joint_germline_recalibrated.TsTv.qual
+    # No longer created with stub (not in the vcf tools module)
     - path: results/variant_calling/haplotypecaller/joint_variant_calling/joint_germline.vcf.gz
     # binary changes md5sums on reruns
     - path: results/variant_calling/haplotypecaller/joint_variant_calling/joint_germline.vcf.gz.tbi
@@ -101,3 +143,25 @@
     - path: results/variant_calling/haplotypecaller/testT/testT.haplotypecaller.g.vcf.gz.tbi
     - path: results/haplotypecaller
       should_exist: false
+    - path: results/reports/mosdepth/testN/testN.recal.global.dist.txt
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
+    - path: results/reports/mosdepth/testN/testN.recal.region.dist.txt
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
+    - path: results/reports/mosdepth/testN/testN.recal.summary.txt
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
+    - path: results/reports/mosdepth/testN/testN.recal.regions.bed.gz
+      md5sum: 1a60c330fb42841e8dcf3cd507a70bfc
+    - path: results/reports/mosdepth/testN/testN.recal.regions.bed.gz.csi
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
+    - path: results/reports/samtools/testN/testN.recal.cram.stats
+    - path: results/reports/mosdepth/testT/testT.recal.global.dist.txt
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
+    - path: results/reports/mosdepth/testT/testT.recal.region.dist.txt
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
+    - path: results/reports/mosdepth/testT/testT.recal.summary.txt
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
+    - path: results/reports/mosdepth/testT/testT.recal.regions.bed.gz
+      md5sum: 1a60c330fb42841e8dcf3cd507a70bfc
+    - path: results/reports/mosdepth/testT/testT.recal.regions.bed.gz.csi
+      md5sum: d41d8cd98f00b204e9800998ecf8427e
+    - path: results/reports/samtools/testT/testT.recal.cram.stats

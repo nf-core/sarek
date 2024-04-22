@@ -1,0 +1,47 @@
+{
+    "BWAMEM2 index": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "genome.fasta.0123:md5,b02870de80106104abcb03cd9463e7d8",
+                            "genome.fasta.amb:md5,3a68b8b2287e07dd3f5f95f4344ba76e",
+                            "genome.fasta.ann:md5,c32e11f6c859f166c7525a9c1d583567",
+                            "genome.fasta.bwt.2bit.64:md5,d097a1b82dee375d41a1ea69895a9216",
+                            "genome.fasta.pac:md5,983e3d2cd6f36e2546e6d25a0da78d66"
+                        ]
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,9ffd13d12e7108ed15c58566bc4717d6"
+                ],
+                "index": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "genome.fasta.0123:md5,b02870de80106104abcb03cd9463e7d8",
+                            "genome.fasta.amb:md5,3a68b8b2287e07dd3f5f95f4344ba76e",
+                            "genome.fasta.ann:md5,c32e11f6c859f166c7525a9c1d583567",
+                            "genome.fasta.bwt.2bit.64:md5,d097a1b82dee375d41a1ea69895a9216",
+                            "genome.fasta.pac:md5,983e3d2cd6f36e2546e6d25a0da78d66"
+                        ]
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,9ffd13d12e7108ed15c58566bc4717d6"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.02.0"
+        },
+        "timestamp": "2024-03-18T12:59:39.132616"
+    }
+}

@@ -6,9 +6,9 @@
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
-include { BUILD_INTERVALS                                        } from '../../../modules/local/build_intervals/main'
 include { CREATE_INTERVALS_BED                                   } from '../../../modules/local/create_intervals_bed/main'
 include { GATK4_INTERVALLISTTOBED                                } from '../../../modules/nf-core/gatk4/intervallisttobed/main'
+include { GAWK as BUILD_INTERVALS                                } from '../../../modules/nf-core/gawk/main'
 include { TABIX_BGZIPTABIX as TABIX_BGZIPTABIX_INTERVAL_SPLIT    } from '../../../modules/nf-core/tabix/bgziptabix/main'
 include { TABIX_BGZIPTABIX as TABIX_BGZIPTABIX_INTERVAL_COMBINED } from '../../../modules/nf-core/tabix/bgziptabix/main'
 
@@ -17,6 +17,9 @@ workflow PREPARE_INTERVALS {
     fasta_fai    // mandatory [ fasta_fai ]
     intervals    // [ params.intervals ]
     no_intervals // [ params.no_intervals ]
+    nucleotides_per_second
+    outdir
+    step
 
     main:
     versions = Channel.empty()
@@ -26,21 +29,21 @@ workflow PREPARE_INTERVALS {
     intervals_combined   = Channel.empty() // Single bed file containing all intervals
 
     if (no_intervals) {
-        file("${params.outdir}/no_intervals.bed").text        = "no_intervals\n"
-        file("${params.outdir}/no_intervals.bed.gz").text     = "no_intervals\n"
-        file("${params.outdir}/no_intervals.bed.gz.tbi").text = "no_intervals\n"
+        file("${outdir}/no_intervals.bed").text        = "no_intervals\n"
+        file("${outdir}/no_intervals.bed.gz").text     = "no_intervals\n"
+        file("${outdir}/no_intervals.bed.gz.tbi").text = "no_intervals\n"
 
-        intervals_bed        = Channel.fromPath(file("${params.outdir}/no_intervals.bed")).map{ it -> [ it, 0 ] }
-        intervals_bed_gz_tbi = Channel.fromPath(file("${params.outdir}/no_intervals.bed.{gz,gz.tbi}")).collect().map{ it -> [ it, 0 ] }
-        intervals_combined   = Channel.fromPath(file("${params.outdir}/no_intervals.bed")).map{ it -> [ [ id:it.simpleName ], it ] }
-    } else if (params.step != 'annotate' && params.step != 'controlfreec') {
+        intervals_bed        = Channel.fromPath(file("${outdir}/no_intervals.bed")).map{ it -> [ it, 0 ] }
+        intervals_bed_gz_tbi = Channel.fromPath(file("${outdir}/no_intervals.bed.{gz,gz.tbi}")).collect().map{ it -> [ it, 0 ] }
+        intervals_combined   = Channel.fromPath(file("${outdir}/no_intervals.bed")).map{ it -> [ [ id:it.simpleName ], it ] }
+    } else if (step != 'annotate' && step != 'controlfreec') {
         // If no interval/target file is provided, then generated intervals from FASTA file
         if (!intervals) {
-            BUILD_INTERVALS(fasta_fai.map{it -> [ [ id:it.baseName ], it ] })
+            BUILD_INTERVALS(fasta_fai, [])
 
-            intervals_combined = BUILD_INTERVALS.out.bed
+            intervals_combined = BUILD_INTERVALS.out.output
 
-            CREATE_INTERVALS_BED(intervals_combined.map{ meta, path -> path }).bed
+            CREATE_INTERVALS_BED(intervals_combined.map{ meta, path -> path }, nucleotides_per_second)
 
             intervals_bed = CREATE_INTERVALS_BED.out.bed
 
@@ -48,7 +51,9 @@ workflow PREPARE_INTERVALS {
             versions = versions.mix(CREATE_INTERVALS_BED.out.versions)
         } else {
             intervals_combined = Channel.fromPath(file(intervals)).map{it -> [ [ id:it.baseName ], it ] }
-            intervals_bed = CREATE_INTERVALS_BED(file(intervals)).bed
+            CREATE_INTERVALS_BED(file(intervals), nucleotides_per_second)
+
+            intervals_bed = CREATE_INTERVALS_BED.out.bed
 
             versions = versions.mix(CREATE_INTERVALS_BED.out.versions)
 
@@ -74,7 +79,7 @@ workflow PREPARE_INTERVALS {
                     else {
                         start = fields[1].toInteger()
                         end = fields[2].toInteger()
-                        duration += (end - start) / params.nucleotides_per_second
+                        duration += (end - start) / nucleotides_per_second
                     }
                 }
                 [ duration, intervalFile ]

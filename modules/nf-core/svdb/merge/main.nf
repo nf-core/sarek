@@ -3,15 +3,15 @@ process SVDB_MERGE {
     label 'process_medium'
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/mulled-v2-c8daa8f9d69d3c5a1a4ff08283a166c18edb0000:af6f8534cd538a85ff43a2eae1b52b143e7abd05-0':
-        'biocontainers/mulled-v2-c8daa8f9d69d3c5a1a4ff08283a166c18edb0000:af6f8534cd538a85ff43a2eae1b52b143e7abd05-0' }"
+        'https://depot.galaxyproject.org/singularity/mulled-v2-c8daa8f9d69d3c5a1a4ff08283a166c18edb0000:511069f65a53621c5503e5cfee319aa3c735abfa-0':
+        'biocontainers/mulled-v2-c8daa8f9d69d3c5a1a4ff08283a166c18edb0000:511069f65a53621c5503e5cfee319aa3c735abfa-0' }"
 
     input:
     tuple val(meta), path(vcfs)
     val (priority)
 
     output:
-    tuple val(meta), path("*_sv_merge.vcf.gz"), emit: vcf
+    tuple val(meta), path("*.vcf.gz"), emit: vcf
     path "versions.yml"           , emit: versions
 
     when:
@@ -35,8 +35,8 @@ process SVDB_MERGE {
         $args \\
         $prio \\
         --vcf $input \\
-        > ${prefix}_sv_merge.vcf
-    bgzip ${prefix}_sv_merge.vcf
+        > ${prefix}.vcf
+    bgzip ${prefix}.vcf
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -48,7 +48,7 @@ process SVDB_MERGE {
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    touch ${prefix}_sv_merge.vcf.gz
+    touch ${prefix}.vcf.gz
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
