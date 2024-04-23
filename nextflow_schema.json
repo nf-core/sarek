@@ -122,7 +122,17 @@
                     "pattern": "^((baserecalibrator|baserecalibrator_report|bcftools|dnascope_filter|documentation|fastqc|haplotypecaller_filter|haplotyper_filter|markduplicates|markduplicates_report|mosdepth|multiqc|samtools|vcftools|versions)?,?)*(?<!,)$"
                 }
             },
-            "fa_icon": "fas fa-user-cog"
+            "fa_icon": "fas fa-user-cog",
+            "if": {
+                "properties": {
+                  "tools": { "pattern": ".*sentieon_dedup.*" }
+                }
+            },
+            "then": {
+                "properties": {
+                  "aligner": { "const": "sentieon-bwamem" }
+                }
+            }
         },
         "fastq_preprocessing": {
             "title": "FASTQ Preprocessing",
