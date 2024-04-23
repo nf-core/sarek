@@ -1056,6 +1056,13 @@
                     "hidden": true,
                     "help_text": "By default, when an unrecognised parameter is found, it returns a warinig."
                 },
+                "cache_cleanup": {
+                    "type": "boolean",
+                    "fa_icon": "far fa-check-circle",
+                    "description": "Enable deletion of intermediate files.",
+                    "hidden": true,
+                    "help_text": "This is an experimental feature which will disable Nextflow resume possibility. For further information see [nf-boost](https://github.com/bentsherman/nf-boost)."
+                },
                 "validationLenientMode": {
                     "type": "boolean",
                     "fa_icon": "far fa-check-circle",

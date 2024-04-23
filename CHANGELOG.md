@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- [#1479](https://github.com/nf-core/sarek/pull/1479) - Add nf-boost plugin to allow auto-deletion of intermediate files
+
 ### Changed
 
 - [#1477](https://github.com/nf-core/sarek/pull/1477) - Back to dev
@@ -21,7 +23,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Modules / Subworkflows
 
-### Parameters
+### Parameter
+
+| Old name | New name      |
+| -------- | ------------- |
+|          | cache_cleanup |
 
 ## [3.4.1](https://github.com/nf-core/sarek/releases/tag/3.4.1) - Balgattjåhkkå
 
