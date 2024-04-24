@@ -25,9 +25,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Parameter
 
-| Old name | New name      |
-| -------- | ------------- |
-|          | cache_cleanup |
+| Old name | New name             |
+| -------- | -------------------- |
+|          | intermediate_cleanup |
 
 ## [3.4.1](https://github.com/nf-core/sarek/releases/tag/3.4.1) - Balgattjåhkkå
 

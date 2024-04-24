@@ -1056,7 +1056,7 @@
                     "hidden": true,
                     "help_text": "By default, when an unrecognised parameter is found, it returns a warinig."
                 },
-                "cache_cleanup": {
+                "intermediate_cleanup": {
                     "type": "boolean",
                     "fa_icon": "far fa-check-circle",
                     "description": "Enable deletion of intermediate files.",
