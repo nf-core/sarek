@@ -23,6 +23,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Parameters
 
+| Old name                         | New name |
+| -------------------------------- | -------- |
+| validationFailUnrecognisedParams |          |
+| validationLenientMode            |          |
+| validationSchemaIgnoreParams     |          |
+| validationShowHiddenParams       |          |
+
 ## [3.4.1](https://github.com/nf-core/sarek/releases/tag/3.4.1) - Balgattjåhkkå
 
 Balgattjåhkkå is the other top peak (over 2k m) in the Pårte massif, the other one being Pårtetjåkko (Bårddetjåhkkå).
@@ -105,7 +112,7 @@ Balgattjåhkkå is the other top peak (over 2k m) in the Pårte massif, the othe
 | script | Old name | New name |
 | ------ | -------- | -------- |
 
-### Parameter
+### Parameters
 
 | Old name                   | New name                 |
 | -------------------------- | ------------------------ |

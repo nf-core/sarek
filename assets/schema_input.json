@@ -101,12 +101,12 @@
         },
         "anyOf": [
             {
-                "dependentRequired":{
+                "dependentRequired": {
                     "lane": ["fastq_1"]
                 }
             },
             {
-                "dependentRequired":{
+                "dependentRequired": {
                     "lane": ["bam"]
                 }
             }
