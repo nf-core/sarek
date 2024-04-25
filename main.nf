@@ -76,18 +76,18 @@ params.vep_genome              = WorkflowMain.getGenomeAttribute(params, 'vep_ge
 params.vep_species             = WorkflowMain.getGenomeAttribute(params, 'vep_species')
 
 // Initialize file channels based on params, defined in the params.genomes[params.genome] scope
-bcftools_annotations    = params.bcftools_annotations    ? Channel.fromPath(params.bcftools_annotations).collect()    : Channel.empty()
-bcftools_header_lines   = params.bcftools_header_lines   ? Channel.fromPath(params.bcftools_header_lines).collect()   : Channel.empty()
-cf_chrom_len            = params.cf_chrom_len            ? Channel.fromPath(params.cf_chrom_len).collect()            : []
-dbsnp                   = params.dbsnp                   ? Channel.fromPath(params.dbsnp).collect()                   : Channel.value([])
-fasta                   = params.fasta                   ? Channel.fromPath(params.fasta).first()                     : Channel.empty()
-fasta_fai               = params.fasta_fai               ? Channel.fromPath(params.fasta_fai).collect()               : Channel.empty()
-germline_resource       = params.germline_resource       ? Channel.fromPath(params.germline_resource).collect()       : Channel.value([]) // Mutect2 does not require a germline resource, so set to optional input
-known_indels            = params.known_indels            ? Channel.fromPath(params.known_indels).collect()            : Channel.value([])
-known_snps              = params.known_snps              ? Channel.fromPath(params.known_snps).collect()              : Channel.value([])
-mappability             = params.mappability             ? Channel.fromPath(params.mappability).collect()             : Channel.value([])
-pon                     = params.pon                     ? Channel.fromPath(params.pon).collect()                     : Channel.value([]) // PON is optional for Mutect2 (but highly recommended)
-sentieon_dnascope_model = params.sentieon_dnascope_model ? Channel.fromPath(params.sentieon_dnascope_model).collect() : Channel.value([])
+bcftools_annotations    = params.bcftools_annotations    ? Channel.fromPath(params.bcftools_annotations).collect()  : Channel.empty()
+bcftools_header_lines   = params.bcftools_header_lines   ? Channel.fromPath(params.bcftools_header_lines).collect() : Channel.empty()
+cf_chrom_len            = params.cf_chrom_len            ? Channel.fromPath(params.cf_chrom_len)                    : []
+dbsnp                   = params.dbsnp                   ? Channel.fromPath(params.dbsnp).collect()                 : Channel.value([])
+fasta                   = params.fasta                   ? Channel.fromPath(params.fasta)                           : Channel.empty()
+fasta_fai               = params.fasta_fai               ? Channel.fromPath(params.fasta_fai)                       : Channel.empty()
+germline_resource       = params.germline_resource       ? Channel.fromPath(params.germline_resource)               : Channel.value([]) // Mutect2 does not require a germline resource, so set to optional input
+known_indels            = params.known_indels            ? Channel.fromPath(params.known_indels).collect()          : Channel.value([])
+known_snps              = params.known_snps              ? Channel.fromPath(params.known_snps).collect()            : Channel.value([])
+mappability             = params.mappability             ? Channel.fromPath(params.mappability)                     : Channel.value([])
+pon                     = params.pon                     ? Channel.fromPath(params.pon)                             : Channel.value([]) // PON is optional for Mutect2 (but highly recommended)
+sentieon_dnascope_model = params.sentieon_dnascope_model ? Channel.fromPath(params.sentieon_dnascope_model)         : Channel.value([])
 
 // Initialize value channels based on params, defined in the params.genomes[params.genome] scope
 ascat_genome                = params.ascat_genome             ?: Channel.empty()
@@ -168,9 +168,9 @@ workflow NFCORE_SAREK {
 
     // Gather built indices or get them from the params
     // Built from the fasta file:
-    dict       = params.dict        ? Channel.fromPath(params.dict).map{ it -> [ [id:'dict'], it ] }.collect()
+    dict       = params.dict        ? Channel.fromPath(params.dict).map{ it -> [ [id:'dict'], it ] }
                                     : PREPARE_GENOME.out.dict
-    fasta_fai  = params.fasta_fai   ? Channel.fromPath(params.fasta_fai).first()
+    fasta_fai  = params.fasta_fai   ? Channel.fromPath(params.fasta_fai)
                                     : PREPARE_GENOME.out.fasta_fai
     bwa        = params.bwa         ? Channel.fromPath(params.bwa).collect()
                                     : PREPARE_GENOME.out.bwa
@@ -187,32 +187,38 @@ workflow NFCORE_SAREK {
 
     // TODO: add a params for msisensorpro_scan
     msisensorpro_scan      = PREPARE_GENOME.out.msisensorpro_scan
-    // For ASCAT, extracted from zip or tar.gz files:
+
+    // For ASCAT, extracted from zip or tar.gz files
     allele_files           = PREPARE_GENOME.out.allele_files
     chr_files              = PREPARE_GENOME.out.chr_files
     gc_file                = PREPARE_GENOME.out.gc_file
     loci_files             = PREPARE_GENOME.out.loci_files
     rt_file                = PREPARE_GENOME.out.rt_file
-    // Tabix indexed vcf files:
-    bcftools_annotations_tbi  = params.bcftools_annotations    ? params.bcftools_annotations_tbi ? Channel.fromPath(params.bcftools_annotations_tbi).collect() : PREPARE_GENOME.out.bcftools_annotations_tbi : Channel.empty([])
-    dbsnp_tbi                 = params.dbsnp                   ? params.dbsnp_tbi                ? Channel.fromPath(params.dbsnp_tbi).collect()                : PREPARE_GENOME.out.dbsnp_tbi                : Channel.value([])
-    germline_resource_tbi     = params.germline_resource       ? params.germline_resource_tbi    ? Channel.fromPath(params.germline_resource_tbi).collect()    : PREPARE_GENOME.out.germline_resource_tbi    : [] //do not change to Channel.value([]), the check for its existence then fails for Getpileupsumamries
-    known_indels_tbi          = params.known_indels            ? params.known_indels_tbi         ? Channel.fromPath(params.known_indels_tbi).collect()         : PREPARE_GENOME.out.known_indels_tbi         : Channel.value([])
-    known_snps_tbi            = params.known_snps              ? params.known_snps_tbi           ? Channel.fromPath(params.known_snps_tbi).collect()           : PREPARE_GENOME.out.known_snps_tbi           : Channel.value([])
-    pon_tbi                   = params.pon                     ? params.pon_tbi                  ? Channel.fromPath(params.pon_tbi).collect()                  : PREPARE_GENOME.out.pon_tbi                  : Channel.value([])
+
+    // Tabix indexed vcf files
+    bcftools_annotations_tbi  = params.bcftools_annotations    ? params.bcftools_annotations_tbi ? Channel.fromPath(params.bcftools_annotations_tbi)   : PREPARE_GENOME.out.bcftools_annotations_tbi : Channel.empty([])
+    dbsnp_tbi                 = params.dbsnp                   ? params.dbsnp_tbi                ? Channel.fromPath(params.dbsnp_tbi)                  : PREPARE_GENOME.out.dbsnp_tbi                : Channel.value([])
+    germline_resource_tbi     = params.germline_resource       ? params.germline_resource_tbi    ? Channel.fromPath(params.germline_resource_tbi)      : PREPARE_GENOME.out.germline_resource_tbi    : [] //do not change to Channel.value([]), the check for its existence then fails for Getpileupsumamries
+    known_indels_tbi          = params.known_indels            ? params.known_indels_tbi         ? Channel.fromPath(params.known_indels_tbi).collect() : PREPARE_GENOME.out.known_indels_tbi         : Channel.value([])
+    known_snps_tbi            = params.known_snps              ? params.known_snps_tbi           ? Channel.fromPath(params.known_snps_tbi)             : PREPARE_GENOME.out.known_snps_tbi           : Channel.value([])
+    pon_tbi                   = params.pon                     ? params.pon_tbi                  ? Channel.fromPath(params.pon_tbi)                    : PREPARE_GENOME.out.pon_tbi                  : Channel.value([])
+
     // known_sites is made by grouping both the dbsnp and the known snps/indels resources
     // Which can either or both be optional
     known_sites_indels     = dbsnp.concat(known_indels).collect()
     known_sites_indels_tbi = dbsnp_tbi.concat(known_indels_tbi).collect()
     known_sites_snps       = dbsnp.concat(known_snps).collect()
     known_sites_snps_tbi   = dbsnp_tbi.concat(known_snps_tbi).collect()
+
     // Build intervals if needed
     PREPARE_INTERVALS(fasta_fai, params.intervals, params.no_intervals, params.nucleotides_per_second, params.outdir, params.step)
+
     // Intervals for speed up preprocessing/variant calling by spread/gather
     // [interval.bed] all intervals in one file
-    intervals_bed_combined         = params.no_intervals ? Channel.value([])      : PREPARE_INTERVALS.out.intervals_bed_combined
-    intervals_bed_gz_tbi_combined  = params.no_intervals ? Channel.value([])      : PREPARE_INTERVALS.out.intervals_bed_gz_tbi_combined
+    intervals_bed_combined         = params.no_intervals ? Channel.value([]) : PREPARE_INTERVALS.out.intervals_bed_combined
+    intervals_bed_gz_tbi_combined  = params.no_intervals ? Channel.value([]) : PREPARE_INTERVALS.out.intervals_bed_gz_tbi_combined
     intervals_bed_combined_for_variant_calling = PREPARE_INTERVALS.out.intervals_bed_combined
+
     // For QC during preprocessing, we don't need any intervals (MOSDEPTH doesn't take them for WGS)
     intervals_for_preprocessing = params.wes ?
         intervals_bed_combined.map{it -> [ [ id:it.baseName ], it ]}.collect() :
@@ -256,7 +262,7 @@ workflow NFCORE_SAREK {
         versions = versions.mix(DOWNLOAD_CACHE_SNPEFF_VEP.out.versions)
     } else {
         // Looks for cache information either locally or on the cloud
-        INITIALIZE_ANNOTATION_CACHE(
+        ANNOTATION_CACHE_INITIALISATION(
             (params.snpeff_cache && params.tools && (params.tools.split(',').contains("snpeff") || params.tools.split(',').contains('merge'))),
             params.snpeff_cache,
             params.snpeff_genome,
@@ -268,8 +274,8 @@ workflow NFCORE_SAREK {
             params.vep_genome,
             "Please refer to https://nf-co.re/sarek/docs/usage/#how-to-customise-snpeff-and-vep-annotation for more information.")
 
-            snpeff_cache = INITIALIZE_ANNOTATION_CACHE.out.snpeff_cache
-            vep_cache    = INITIALIZE_ANNOTATION_CACHE.out.ensemblvep_cache
+            snpeff_cache = ANNOTATION_CACHE_INITIALISATION.out.snpeff_cache
+            vep_cache    = ANNOTATION_CACHE_INITIALISATION.out.ensemblvep_cache
     }
 
     //

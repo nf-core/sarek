@@ -55,7 +55,7 @@ workflow PREPARE_GENOME {
 
     GATK4_CREATESEQUENCEDICTIONARY(fasta)
     MSISENSORPRO_SCAN(fasta)
-    SAMTOOLS_FAIDX(fasta, [ [ id:fasta.baseName ], [] ] )
+    SAMTOOLS_FAIDX(fasta, [ [ id:'fasta' ], [] ] )
 
     // the following are flattened and mapped in case the user supplies more than one value for the param
     // written for KNOWN_INDELS, but preemptively applied to the rest
