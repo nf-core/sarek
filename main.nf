@@ -119,25 +119,6 @@ vep_cache_version           = params.vep_cache_version  ?:  Channel.empty()
 vep_genome                  = params.vep_genome         ?:  Channel.empty()
 vep_species                 = params.vep_species        ?:  Channel.empty()
 
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    NAMED WORKFLOWS FOR PIPELINE
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-include { validateParameters; paramsHelp } from 'plugin/nf-validation'
-
-// Print help message if needed
-if (params.help) {
-    def logo = NfcoreTemplate.logo(workflow, params.monochrome_logs)
-    def citation = '\n' + WorkflowMain.citation(workflow) + '\n'
-    def String command = "nextflow run ${workflow.manifest.name} --input samplesheet.csv --genome GATK.GRCh38 -profile docker --outdir results"
-    log.info logo + paramsHelp(command) + citation + NfcoreTemplate.dashedLine(params.monochrome_logs)
-    System.exit(0)
-}
-
-// Validate input parameters
-
 vep_extra_files = []
 
 if (params.dbnsfp && params.dbnsfp_tbi) {
@@ -158,13 +139,10 @@ if (params.spliceai_snv && params.spliceai_snv_tbi && params.spliceai_indel && p
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { SAREK } from './workflows/sarek'
-
 // WORKFLOW: Run main nf-core/sarek analysis pipeline
 workflow NFCORE_SAREK {
-
     take:
-    samplesheet // channel: samplesheet read in from --input
+    samplesheet
 
     main:
     versions = Channel.empty()
@@ -299,13 +277,55 @@ workflow NFCORE_SAREK {
     //
     // WORKFLOW: Run pipeline
     //
-    SAREK (
-        samplesheet
+    SAREK(samplesheet,
+        allele_files,
+        bcftools_annotations,
+        bcftools_annotations_tbi,
+        bcftools_header_lines,
+        cf_chrom_len,
+        chr_files,
+        cnvkit_reference,
+        dbsnp,
+        dbsnp_tbi,
+        dbsnp_vqsr,
+        dict,
+        fasta,
+        fasta_fai,
+        gc_file,
+        germline_resource,
+        germline_resource_tbi,
+        index_alignement,
+        intervals_and_num_intervals,
+        intervals_bed_combined,
+        intervals_bed_combined_for_variant_calling,
+        intervals_bed_gz_tbi_and_num_intervals,
+        intervals_bed_gz_tbi_combined,
+        intervals_for_preprocessing,
+        known_indels_vqsr,
+        known_sites_indels,
+        known_sites_indels_tbi,
+        known_sites_snps,
+        known_sites_snps_tbi,
+        known_snps_vqsr,
+        loci_files,
+        mappability,
+        msisensorpro_scan,
+        ngscheckmate_bed,
+        pon,
+        pon_tbi,
+        rt_file,
+        sentieon_dnascope_model,
+        snpeff_cache,
+        vep_cache,
+        vep_cache_version,
+        vep_extra_files,
+        vep_fasta,
+        vep_genome,
+        vep_species
     )
 
     emit:
     multiqc_report = SAREK.out.multiqc_report // channel: /path/to/multiqc_report.html
-
 }
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -313,8 +333,6 @@ workflow NFCORE_SAREK {
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-// WORKFLOW: Execute a single named workflow for the pipeline
-// See: https://github.com/nf-core/rnaseq/issues/619
 workflow {
 
     main:
@@ -322,7 +340,7 @@ workflow {
     //
     // SUBWORKFLOW: Run initialisation tasks
     //
-    PIPELINE_INITIALISATION (
+    PIPELINE_INITIALISATION(
         params.version,
         params.help,
         params.validate_params,
@@ -335,14 +353,12 @@ workflow {
     //
     // WORKFLOW: Run main workflow
     //
-    NFCORE_SAREK (
-        PIPELINE_INITIALISATION.out.samplesheet
-    )
+    NFCORE_SAREK(PIPELINE_INITIALISATION.out.samplesheet)
 
     //
     // SUBWORKFLOW: Run completion tasks
     //
-    PIPELINE_COMPLETION (
+    PIPELINE_COMPLETION(
         params.email,
         params.email_on_fail,
         params.plaintext_email,
