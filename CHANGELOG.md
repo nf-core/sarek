@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - [#1477](https://github.com/nf-core/sarek/pull/1477) - Back to dev
+- [#1482](https://github.com/nf-core/sarek/pull/1482) - Pin `nf-prov` plugin to `1.2.2`
 
 ### Fixed
 
