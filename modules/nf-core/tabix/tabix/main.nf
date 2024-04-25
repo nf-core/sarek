@@ -4,8 +4,8 @@ process TABIX_TABIX {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/tabix:1.11--hdfd78af_0' :
-        'biocontainers/tabix:1.11--hdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/htslib:1.19.1--h81da01d_1' :
+        'biocontainers/htslib:1.19.1--h81da01d_1' }"
 
     input:
     tuple val(meta), path(tab)
@@ -30,9 +30,9 @@ process TABIX_TABIX {
     """
 
     stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
     """
     touch ${tab}.tbi
+    touch ${tab}.csi
     cat <<-END_VERSIONS > versions.yml
 
     "${task.process}":

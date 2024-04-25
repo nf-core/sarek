@@ -1,0 +1,2 @@
+gatk4spark/markduplicates:
+  - "modules/nf-core/gatk4spark/markduplicates/**"

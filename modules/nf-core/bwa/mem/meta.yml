@@ -37,6 +37,10 @@ input:
       type: file
       description: BWA genome index files
       pattern: "Directory containing BWA index *.{amb,ann,bwt,pac,sa}"
+  - fasta:
+      type: file
+      description: Reference genome in FASTA format
+      pattern: "*.{fasta,fa}"
   - sort_bam:
       type: boolean
       description: use samtools sort (true) or samtools view (false)
@@ -46,6 +50,18 @@ output:
       type: file
       description: Output BAM file containing read alignments
       pattern: "*.{bam}"
+  - cram:
+      type: file
+      description: Output CRAM file containing read alignments
+      pattern: "*.{cram}"
+  - csi:
+      type: file
+      description: Optional index file for BAM file
+      pattern: "*.{csi}"
+  - crai:
+      type: file
+      description: Optional index file for CRAM file
+      pattern: "*.{crai}"
   - versions:
       type: file
       description: File containing software versions
@@ -53,6 +69,8 @@ output:
 authors:
   - "@drpatelh"
   - "@jeremy1805"
+  - "@matthdsm"
 maintainers:
   - "@drpatelh"
   - "@jeremy1805"
+  - "@matthdsm"

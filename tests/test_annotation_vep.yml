@@ -7,7 +7,7 @@
     - path: results/annotation/test/test_VEP.ann.vcf.gz
     # binary changes md5sums on reruns
     - path: results/annotation/test/test_VEP.ann.vcf.gz.tbi
-      md5sum: 4cb176febbc8c26d717a6c6e67b9c905
+    # binary changes md5sums on reruns
     - path: results/multiqc
     - path: results/reports/EnsemblVEP/test/test_VEP.ann.summary.html
       contains: ["test.vcf.gz</td></tr><tr><td>Output file</td><td>test_VEP.ann.vcf.gz</td></tr>"]
@@ -20,7 +20,7 @@
     - path: results/annotation/test/test_VEP.ann.vcf.gz
     # binary changes md5sums on reruns
     - path: results/annotation/test/test_VEP.ann.vcf.gz.tbi
-      md5sum: 4cb176febbc8c26d717a6c6e67b9c905
+    # binary changes md5sums on reruns
     - path: results/multiqc
     - path: results/reports/EnsemblVEP/test/test_VEP.ann.summary.html
       # text-based file changes md5sums on reruns

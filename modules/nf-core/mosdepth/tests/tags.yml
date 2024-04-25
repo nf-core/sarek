@@ -1,0 +1,2 @@
+mosdepth:
+  - "modules/nf-core/mosdepth/**"

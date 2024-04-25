@@ -1,0 +1,2 @@
+gatk4/applybqsr:
+  - "modules/nf-core/gatk4/applybqsr/**"

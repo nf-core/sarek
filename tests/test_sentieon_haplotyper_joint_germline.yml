@@ -2,9 +2,8 @@
   command: nextflow run main.nf -profile test_cache,software_license,targeted --sentieon_extension --input ./tests/csv/3.0/mapped_joint_bam.csv --tools sentieon_haplotyper --step variant_calling --joint_germline --outdir results --sentieon_haplotyper_emit_mode gvcf
   tags:
     - germline
-    - sentieon_haplotyper_joint_germline
+    - sentieon/haplotyper_joint_germline
     - variant_calling
-    - sentieon/haplotyper
   files:
     - path: results/csv/variantcalled.csv
       md5sum: 6ec10f6455c2b5290c7f6fc687c529ca
@@ -53,9 +52,8 @@
   command: nextflow run main.nf -profile test_cache,software_license,targeted --sentieon_extension --input ./tests/csv/3.0/mapped_joint_bam.csv --tools sentieon_haplotyper --step variant_calling --joint_germline --outdir results --sentieon_haplotyper_emit_mode gvcf --nucleotides_per_second 100
   tags:
     - germline
-    - sentieon_haplotyper_joint_germline
+    - sentieon/haplotyper_joint_germline
     - variant_calling
-    - sentieon/haplotyper
   files:
     - path: results/csv/variantcalled.csv
       md5sum: 6ec10f6455c2b5290c7f6fc687c529ca
@@ -102,7 +100,7 @@
   command: nextflow run main.nf -profile test_cache,software_license,tools_germline --sentieon_extension --input ./tests/csv/3.0/mapped_joint_bam.csv --tools sentieon_haplotyper --step variant_calling --joint_germline --outdir results --sentieon_haplotyper_emit_mode gvcf -stub-run
   tags:
     - germline
-    - sentieon_haplotyper_joint_germline
+    - sentieon/haplotyper_joint_germline
     - variant_calling
     - vqsr
   files:
@@ -114,9 +112,6 @@
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
       should_exist: false
     - path: results/reports/bcftools/sentieon_haplotyper/joint_variant_calling/joint_germline_recalibrated.bcftools_stats.txt
-    - path: results/reports/vcftools/sentieon_haplotyper/joint_variant_calling/joint_germline_recalibrated.FILTER.summary
-    - path: results/reports/vcftools/sentieon_haplotyper/joint_variant_calling/joint_germline_recalibrated.TsTv.count
-    - path: results/reports/vcftools/sentieon_haplotyper/joint_variant_calling/joint_germline_recalibrated.TsTv.qual
     - path: results/variant_calling/sentieon_haplotyper/joint_variant_calling/joint_germline.vcf.gz
     - path: results/variant_calling/sentieon_haplotyper/joint_variant_calling/joint_germline.vcf.gz.tbi
     - path: results/variant_calling/sentieon_haplotyper/joint_variant_calling/joint_germline_recalibrated.vcf.gz
@@ -134,7 +129,7 @@
     - path: results/reports/mosdepth/testN/testN.recal.summary.txt
       md5sum: d41d8cd98f00b204e9800998ecf8427e
     - path: results/reports/mosdepth/testN/testN.recal.regions.bed.gz
-      md5sum: d41d8cd98f00b204e9800998ecf8427e
+      md5sum: 1a60c330fb42841e8dcf3cd507a70bfc
     - path: results/reports/mosdepth/testN/testN.recal.regions.bed.gz.csi
       md5sum: d41d8cd98f00b204e9800998ecf8427e
     - path: results/reports/samtools/testN/testN.recal.cram.stats
@@ -145,7 +140,7 @@
     - path: results/reports/mosdepth/testT/testT.recal.summary.txt
       md5sum: d41d8cd98f00b204e9800998ecf8427e
     - path: results/reports/mosdepth/testT/testT.recal.regions.bed.gz
-      md5sum: d41d8cd98f00b204e9800998ecf8427e
+      md5sum: 1a60c330fb42841e8dcf3cd507a70bfc
     - path: results/reports/mosdepth/testT/testT.recal.regions.bed.gz.csi
       md5sum: d41d8cd98f00b204e9800998ecf8427e
     - path: results/reports/samtools/testT/testT.recal.cram.stats

@@ -23,7 +23,7 @@
     - path: results/variant_calling/mutect2/sample2/sample2.mutect2.filtered.vcf.gz
     # binary changes md5sums on reruns
     - path: results/variant_calling/mutect2/sample2/sample2.mutect2.filtered.vcf.gz.filteringStats.tsv
-      md5sum: 9a8439d0bb5875f1e673cf592af85ffb
+      md5sum: e898b7cea663e7558980d28f403d552b
     - path: results/variant_calling/mutect2/sample2/sample2.mutect2.filtered.vcf.gz.tbi
     # binary changes md5sums on reruns
     - path: results/variant_calling/mutect2/sample2/sample2.mutect2.pileups.table

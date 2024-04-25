@@ -33,6 +33,15 @@ input:
       type: file
       description: DRAGMAP hash table
       pattern: "Directory containing DRAGMAP hash table *.{cmp,.bin,.txt}"
+  - meta3:
+      type: map
+      description: |
+        Groovy Map containing reference information
+        e.g. [ id:'genome']
+  - fasta:
+      type: file
+      description: Genome fasta reference files
+      pattern: "*.{fa,fasta,fna}"
 output:
   - bam:
       type: file
@@ -43,6 +52,6 @@ output:
       description: File containing software versions
       pattern: "versions.yml"
 authors:
-  - "@Emiller88"
+  - "@edmundmiller"
 maintainers:
-  - "@Emiller88"
+  - "@edmundmiller"
