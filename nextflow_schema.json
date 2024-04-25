@@ -730,7 +730,7 @@
                 "mappability": {
                     "type": "string",
                     "fa_icon": "fas fa-file",
-                    "description": "Path to Control-FREEC mappability.",
+                    "description": "Path to Control-FREEC mappability file.",
                     "hidden": true,
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
                 },
