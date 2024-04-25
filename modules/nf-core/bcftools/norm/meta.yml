@@ -1,0 +1,61 @@
+name: bcftools_norm
+description: Normalize VCF file
+keywords:
+  - normalize
+  - norm
+  - variant calling
+  - VCF
+tools:
+  - norm:
+      description: |
+        Normalize VCF files.
+      homepage: http://samtools.github.io/bcftools/bcftools.html
+      documentation: http://www.htslib.org/doc/bcftools.html
+      doi: 10.1093/bioinformatics/btp352
+      licence: ["MIT"]
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - vcf:
+      type: file
+      description: |
+        The vcf file to be normalized
+        e.g. 'file1.vcf'
+      pattern: "*.{vcf,vcf.gz}"
+  - tbi:
+      type: file
+      description: |
+        An optional index of the VCF file (for when the VCF is compressed)
+      pattern: "*.vcf.gz.tbi"
+  - meta2:
+      type: map
+      description: |
+        Groovy Map containing reference information
+        e.g. [ id:'genome' ]
+  - fasta:
+      type: file
+      description: FASTA reference file
+      pattern: "*.{fasta,fa}"
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - vcf:
+      type: file
+      description: One of uncompressed VCF (.vcf), compressed VCF (.vcf.gz), compressed BCF (.bcf.gz) or uncompressed BCF (.bcf) normalized output file
+      pattern: "*.{vcf,vcf.gz,bcf,bcf.gz}"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@abhi18av"
+  - "@ramprasadn"
+maintainers:
+  - "@abhi18av"
+  - "@ramprasadn"
