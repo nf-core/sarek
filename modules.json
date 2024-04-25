@@ -314,6 +314,16 @@
                         "git_sha": "8731a6221dd10fd9039e18518b390b43e14ef9ae",
                         "installed_by": ["modules"]
                     },
+                    "minimap2/align": {
+                        "branch": "master",
+                        "git_sha": "72e277acfd9e61a9f1368eafb4a9e83f5bcaa9f5",
+                        "installed_by": ["modules"]
+                    },
+                    "minimap2/index": {
+                        "branch": "master",
+                        "git_sha": "72e277acfd9e61a9f1368eafb4a9e83f5bcaa9f5",
+                        "installed_by": ["modules"]
+                    },
                     "mosdepth": {
                         "branch": "master",
                         "git_sha": "30d3ca4346ae38f0de821c57a9c517b8b0b135d6",

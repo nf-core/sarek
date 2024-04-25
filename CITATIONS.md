@@ -92,6 +92,10 @@
 
   > Chen X, Schulz-Trieglaff O, Shaw R, et al.: Manta: rapid detection of structural variants and indels for germline and cancer sequencing applications. Bioinformatics. 2016 Apr 15;32(8):1220-2. doi: 10.1093/bioinformatics/btv710. PubMed PMID: 26647377.
 
+- [Minimap2](https://github.com/lh3/minimap2)
+
+  > Li, H. Minimap2: pairwise alignment for nucleotide sequences. Bioinformatics. 2018 May 10;34:3094-3100. doi:10.1093/bioinformatics/bty191. PubMed PMID: 29750242; PubMed Central PMCID: PMC6137996.
+
 - [Mosdepth](https://academic.oup.com/bioinformatics/article/34/5/867/4583630)
 
   > Brent S Pedersen, Aaron R Quinlan, Mosdepth: quick coverage calculation for genomes and exomes, Bioinformatics, Volume 34, Issue 5, 01 March 2018, Pages 867–868. doi: 10.1093/bioinformatics/btx699. PubMed PMID: 29096012. PubMed Central PMCID: PMC6030888.

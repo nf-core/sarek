@@ -20,6 +20,19 @@
 */
 
 nextflow.enable.dsl = 2
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    IMPORT FUNCTIONS / MODULES / SUBWORKFLOWS / WORKFLOWS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+
+include { SAREK  } from './workflows/sarek'
+include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_sarek_pipeline'
+include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_sarek_pipeline'
+
+include { getGenomeAttribute      } from './subworkflows/local/utils_nfcore_sarek_pipeline'
+
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     GENOME PARAMETER VALUES
@@ -51,6 +64,7 @@ params.known_snps              = getGenomeAttribute('known_snps')
 params.known_snps_tbi          = getGenomeAttribute('known_snps_tbi')
 params.known_snps_vqsr         = getGenomeAttribute('known_snps_vqsr')
 params.mappability             = getGenomeAttribute('mappability')
+params.minimap2                = getGenomeAttribute('minimap2')
 params.ngscheckmate_bed        = getGenomeAttribute('ngscheckmate_bed')
 params.pon                     = getGenomeAttribute('pon')
 params.pon_tbi                 = getGenomeAttribute('pon_tbi')
@@ -105,6 +119,25 @@ vep_cache_version           = params.vep_cache_version  ?:  Channel.empty()
 vep_genome                  = params.vep_genome         ?:  Channel.empty()
 vep_species                 = params.vep_species        ?:  Channel.empty()
 
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    NAMED WORKFLOWS FOR PIPELINE
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+
+include { validateParameters; paramsHelp } from 'plugin/nf-validation'
+
+// Print help message if needed
+if (params.help) {
+    def logo = NfcoreTemplate.logo(workflow, params.monochrome_logs)
+    def citation = '\n' + WorkflowMain.citation(workflow) + '\n'
+    def String command = "nextflow run ${workflow.manifest.name} --input samplesheet.csv --genome GATK.GRCh38 -profile docker --outdir results"
+    log.info logo + paramsHelp(command) + citation + NfcoreTemplate.dashedLine(params.monochrome_logs)
+    System.exit(0)
+}
+
+// Validate input parameters
+
 vep_extra_files = []
 
 if (params.dbnsfp && params.dbnsfp_tbi) {
@@ -125,10 +158,13 @@ if (params.spliceai_snv && params.spliceai_snv_tbi && params.spliceai_indel && p
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
+include { SAREK } from './workflows/sarek'
+
 // WORKFLOW: Run main nf-core/sarek analysis pipeline
 workflow NFCORE_SAREK {
+
     take:
-    samplesheet
+    samplesheet // channel: samplesheet read in from --input
 
     main:
     versions = Channel.empty()
@@ -160,11 +196,12 @@ workflow NFCORE_SAREK {
                                     : PREPARE_GENOME.out.bwamem2
     dragmap     = params.dragmap    ? Channel.fromPath(params.dragmap).map{ it -> [ [id:'dragmap'], it ] }.collect()
                                     : PREPARE_GENOME.out.hashtable
+    minimap2   = params.dragmap     ? Channel.fromPath(params.minimap2).collect()
+                                    : PREPARE_GENOME.out.minimap2
 
     // Gather index for mapping given the chosen aligner
-    index_alignement = (aligner == "bwa-mem" || aligner == "sentieon-bwamem") ? bwa :
-        aligner == "bwa-mem2" ? bwamem2 :
-        dragmap
+    index_alignement = (params.aligner == "bwa-mem" || params.aligner == "sentieon-bwamem") ? bwa :
+        params.aligner == "bwa-mem2" ? bwamem2 : params.aligner == "dragmap" ? dragmap : minimap2
 
     // TODO: add a params for msisensorpro_scan
     msisensorpro_scan      = PREPARE_GENOME.out.msisensorpro_scan
@@ -262,55 +299,13 @@ workflow NFCORE_SAREK {
     //
     // WORKFLOW: Run pipeline
     //
-    SAREK(samplesheet,
-        allele_files,
-        bcftools_annotations,
-        bcftools_annotations_tbi,
-        bcftools_header_lines,
-        cf_chrom_len,
-        chr_files,
-        cnvkit_reference,
-        dbsnp,
-        dbsnp_tbi,
-        dbsnp_vqsr,
-        dict,
-        fasta,
-        fasta_fai,
-        gc_file,
-        germline_resource,
-        germline_resource_tbi,
-        index_alignement,
-        intervals_and_num_intervals,
-        intervals_bed_combined,
-        intervals_bed_combined_for_variant_calling,
-        intervals_bed_gz_tbi_and_num_intervals,
-        intervals_bed_gz_tbi_combined,
-        intervals_for_preprocessing,
-        known_indels_vqsr,
-        known_sites_indels,
-        known_sites_indels_tbi,
-        known_sites_snps,
-        known_sites_snps_tbi,
-        known_snps_vqsr,
-        loci_files,
-        mappability,
-        msisensorpro_scan,
-        ngscheckmate_bed,
-        pon,
-        pon_tbi,
-        rt_file,
-        sentieon_dnascope_model,
-        snpeff_cache,
-        vep_cache,
-        vep_cache_version,
-        vep_extra_files,
-        vep_fasta,
-        vep_genome,
-        vep_species
+    SAREK (
+        samplesheet
     )
 
     emit:
     multiqc_report = SAREK.out.multiqc_report // channel: /path/to/multiqc_report.html
+
 }
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -318,6 +313,8 @@ workflow NFCORE_SAREK {
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
+// WORKFLOW: Execute a single named workflow for the pipeline
+// See: https://github.com/nf-core/rnaseq/issues/619
 workflow {
 
     main:
@@ -325,7 +322,7 @@ workflow {
     //
     // SUBWORKFLOW: Run initialisation tasks
     //
-    PIPELINE_INITIALISATION(
+    PIPELINE_INITIALISATION (
         params.version,
         params.help,
         params.validate_params,
@@ -338,12 +335,14 @@ workflow {
     //
     // WORKFLOW: Run main workflow
     //
-    NFCORE_SAREK(PIPELINE_INITIALISATION.out.samplesheet)
+    NFCORE_SAREK (
+        PIPELINE_INITIALISATION.out.samplesheet
+    )
 
     //
     // SUBWORKFLOW: Run completion tasks
     //
-    PIPELINE_COMPLETION(
+    PIPELINE_COMPLETION (
         params.email,
         params.email_on_fail,
         params.plaintext_email,

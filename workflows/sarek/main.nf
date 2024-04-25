@@ -4,82 +4,206 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { paramsSummaryMap                            } from 'plugin/nf-validation'
-include { paramsSummaryMultiqc                        } from '../../subworkflows/nf-core/utils_nfcore_pipeline'
-include { softwareVersionsToYAML                      } from '../../subworkflows/nf-core/utils_nfcore_pipeline'
-include { methodsDescriptionText                      } from '../../subworkflows/local/utils_nfcore_sarek_pipeline'
+include { paramsSummaryLog; paramsSummaryMap; fromSamplesheet } from 'plugin/nf-validation'
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    VALIDATE INPUTS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+
+// Check input path parameters to see if they exist
+def checkPathParamList = [
+    params.ascat_alleles,
+    params.ascat_loci,
+    params.ascat_loci_gc,
+    params.ascat_loci_rt,
+    params.bwa,
+    params.bwamem2,
+    params.bcftools_annotations,
+    params.bcftools_annotations_tbi,
+    params.bcftools_header_lines,
+    params.cf_chrom_len,
+    params.chr_dir,
+    params.cnvkit_reference,
+    params.dbnsfp,
+    params.dbnsfp_tbi,
+    params.dbsnp,
+    params.dbsnp_tbi,
+    params.dict,
+    params.dragmap,
+    params.fasta,
+    params.fasta_fai,
+    params.germline_resource,
+    params.germline_resource_tbi,
+    params.input,
+    params.intervals,
+    params.known_indels,
+    params.known_indels_tbi,
+    params.known_snps,
+    params.known_snps_tbi,
+    params.mappability,
+    params.minimap2,
+    params.multiqc_config,
+    params.ngscheckmate_bed,
+    params.pon,
+    params.pon_tbi,
+    params.sentieon_dnascope_model,
+    params.spliceai_indel,
+    params.spliceai_indel_tbi,
+    params.spliceai_snv,
+    params.spliceai_snv_tbi
+]
+
+// only check if we are using the tools
+if (params.tools && (params.tools.split(',').contains('snpeff') || params.tools.split(',').contains('merge'))) checkPathParamList.add(params.snpeff_cache)
+if (params.tools && (params.tools.split(',').contains('vep')    || params.tools.split(',').contains('merge'))) checkPathParamList.add(params.vep_cache)
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    IMPORT LOCAL MODULES/SUBWORKFLOWS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+
+// Initialize file channels based on params, defined in the params.genomes[params.genome] scope
+bcftools_annotations    = params.bcftools_annotations    ? Channel.fromPath(params.bcftools_annotations).collect()    : Channel.empty()
+bcftools_header_lines   = params.bcftools_header_lines   ? Channel.fromPath(params.bcftools_header_lines).collect()   : Channel.empty()
+cf_chrom_len            = params.cf_chrom_len            ? Channel.fromPath(params.cf_chrom_len).collect()            : []
+dbsnp                   = params.dbsnp                   ? Channel.fromPath(params.dbsnp).collect()                   : Channel.value([])
+fasta                   = params.fasta                   ? Channel.fromPath(params.fasta).first()                     : Channel.empty()
+fasta_fai               = params.fasta_fai               ? Channel.fromPath(params.fasta_fai).collect()               : Channel.empty()
+germline_resource       = params.germline_resource       ? Channel.fromPath(params.germline_resource).collect()       : Channel.value([]) // Mutect2 does not require a germline resource, so set to optional input
+known_indels            = params.known_indels            ? Channel.fromPath(params.known_indels).collect()            : Channel.value([])
+known_snps              = params.known_snps              ? Channel.fromPath(params.known_snps).collect()              : Channel.value([])
+mappability             = params.mappability             ? Channel.fromPath(params.mappability).collect()             : Channel.value([])
+pon                     = params.pon                     ? Channel.fromPath(params.pon).collect()                     : Channel.value([]) // PON is optional for Mutect2 (but highly recommended)
+sentieon_dnascope_model = params.sentieon_dnascope_model ? Channel.fromPath(params.sentieon_dnascope_model).collect() : Channel.value([])
+
+// Initialize value channels based on params, defined in the params.genomes[params.genome] scope
+ascat_genome                = params.ascat_genome             ?: Channel.empty()
+dbsnp_vqsr                  = params.dbsnp_vqsr               ? Channel.value(params.dbsnp_vqsr) : Channel.empty()
+known_indels_vqsr           = params.known_indels_vqsr        ? Channel.value(params.known_indels_vqsr) : Channel.empty()
+known_snps_vqsr             = params.known_snps_vqsr          ? Channel.value(params.known_snps_vqsr) : Channel.empty()
+ngscheckmate_bed            = params.ngscheckmate_bed         ? Channel.value(params.ngscheckmate_bed) : Channel.empty()
+snpeff_db                   = params.snpeff_db                ?: Channel.empty()
+vep_cache_version           = params.vep_cache_version        ?: Channel.empty()
+vep_genome                  = params.vep_genome               ?: Channel.empty()
+vep_species                 = params.vep_species              ?: Channel.empty()
+
+
+vep_extra_files = []
+
+if (params.dbnsfp && params.dbnsfp_tbi) {
+    vep_extra_files.add(file(params.dbnsfp, checkIfExists: true))
+    vep_extra_files.add(file(params.dbnsfp_tbi, checkIfExists: true))
+}
+
+if (params.spliceai_snv && params.spliceai_snv_tbi && params.spliceai_indel && params.spliceai_indel_tbi) {
+    vep_extra_files.add(file(params.spliceai_indel, checkIfExists: true))
+    vep_extra_files.add(file(params.spliceai_indel_tbi, checkIfExists: true))
+    vep_extra_files.add(file(params.spliceai_snv, checkIfExists: true))
+    vep_extra_files.add(file(params.spliceai_snv_tbi, checkIfExists: true))
+}
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    IMPORT LOCAL/NF-CORE MODULES/SUBWORKFLOWS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
 
 // Create samplesheets to restart from different steps
-include { CHANNEL_ALIGN_CREATE_CSV                    } from '../../subworkflows/local/channel_align_create_csv/main'
-include { CHANNEL_MARKDUPLICATES_CREATE_CSV           } from '../../subworkflows/local/channel_markduplicates_create_csv/main'
-include { CHANNEL_BASERECALIBRATOR_CREATE_CSV         } from '../../subworkflows/local/channel_baserecalibrator_create_csv/main'
-include { CHANNEL_APPLYBQSR_CREATE_CSV                } from '../../subworkflows/local/channel_applybqsr_create_csv/main'
-include { CHANNEL_VARIANT_CALLING_CREATE_CSV          } from '../../subworkflows/local/channel_variant_calling_create_csv/main'
+include { SAMPLESHEET_TO_CHANNEL                            } from '../subworkflows/local/samplesheet_to_channel/main'
+include { CHANNEL_ALIGN_CREATE_CSV                          } from '../subworkflows/local/channel_align_create_csv/main'
+include { CHANNEL_MARKDUPLICATES_CREATE_CSV                 } from '../subworkflows/local/channel_markduplicates_create_csv/main'
+include { CHANNEL_BASERECALIBRATOR_CREATE_CSV               } from '../subworkflows/local/channel_baserecalibrator_create_csv/main'
+include { CHANNEL_APPLYBQSR_CREATE_CSV                      } from '../subworkflows/local/channel_applybqsr_create_csv/main'
+include { CHANNEL_VARIANT_CALLING_CREATE_CSV                } from '../subworkflows/local/channel_variant_calling_create_csv/main'
+
+// Download cache for SnpEff/VEP if needed
+include { DOWNLOAD_CACHE_SNPEFF_VEP                         } from '../subworkflows/local/download_cache_snpeff_vep/main'
+
+// Initialize annotation cache
+include { INITIALIZE_ANNOTATION_CACHE                       } from '../subworkflows/local/initialize_annotation_cache/main'
+
+// Build indices if needed
+include { PREPARE_GENOME                                    } from '../subworkflows/local/prepare_genome/main'
+
+// Build intervals if needed
+include { PREPARE_INTERVALS                                 } from '../subworkflows/local/prepare_intervals/main'
+
+// Build CNVkit reference if needed
+include { PREPARE_REFERENCE_CNVKIT                          } from '../subworkflows/local/prepare_reference_cnvkit/main'
 
 // Convert BAM files to FASTQ files
-include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_INPUT } from '../../subworkflows/local/bam_convert_samtools/main'
-include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_UMI   } from '../../subworkflows/local/bam_convert_samtools/main'
+include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_INPUT       } from '../subworkflows/local/bam_convert_samtools/main'
+include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_UMI         } from '../subworkflows/local/bam_convert_samtools/main'
 
 // Run FASTQC
-include { FASTQC                                      } from '../../modules/nf-core/fastqc/main'
+include { FASTQC                                            } from '../modules/nf-core/fastqc/main'
 
 // TRIM/SPLIT FASTQ Files
-include { FASTP                                       } from '../../modules/nf-core/fastp/main'
+include { FASTP                                             } from '../modules/nf-core/fastp/main'
 
 // Create umi consensus bams from fastq
-include { FASTQ_CREATE_UMI_CONSENSUS_FGBIO            } from '../../subworkflows/local/fastq_create_umi_consensus_fgbio/main'
+include { FASTQ_CREATE_UMI_CONSENSUS_FGBIO                  } from '../subworkflows/local/fastq_create_umi_consensus_fgbio/main'
 
 // Map input reads to reference genome
-include { FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON    } from '../../subworkflows/local/fastq_align_bwamem_mem2_dragmap_sentieon/main'
+include { FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_MINIMAP2_SENTIEON } from '../subworkflows/local/fastq_align_bwamem_mem2_dragmap_minimap2_sentieon/main'
 
 // Merge and index BAM files (optional)
-include { BAM_MERGE_INDEX_SAMTOOLS                    } from '../../subworkflows/local/bam_merge_index_samtools/main'
+include { BAM_MERGE_INDEX_SAMTOOLS                          } from '../subworkflows/local/bam_merge_index_samtools/main'
 
 // Convert BAM files
-include { SAMTOOLS_CONVERT as BAM_TO_CRAM             } from '../../modules/nf-core/samtools/convert/main'
-include { SAMTOOLS_CONVERT as BAM_TO_CRAM_MAPPING     } from '../../modules/nf-core/samtools/convert/main'
+include { SAMTOOLS_CONVERT as BAM_TO_CRAM                   } from '../modules/nf-core/samtools/convert/main'
+include { SAMTOOLS_CONVERT as BAM_TO_CRAM_MAPPING           } from '../modules/nf-core/samtools/convert/main'
 
 // Convert CRAM files (optional)
-include { SAMTOOLS_CONVERT as CRAM_TO_BAM             } from '../../modules/nf-core/samtools/convert/main'
-include { SAMTOOLS_CONVERT as CRAM_TO_BAM_RECAL       } from '../../modules/nf-core/samtools/convert/main'
+include { SAMTOOLS_CONVERT as CRAM_TO_BAM                   } from '../modules/nf-core/samtools/convert/main'
+include { SAMTOOLS_CONVERT as CRAM_TO_BAM_RECAL             } from '../modules/nf-core/samtools/convert/main'
 
 // Mark Duplicates (+QC)
-include { BAM_MARKDUPLICATES                          } from '../../subworkflows/local/bam_markduplicates/main'
-include { BAM_MARKDUPLICATES_SPARK                    } from '../../subworkflows/local/bam_markduplicates_spark/main'
-include { BAM_SENTIEON_DEDUP                          } from '../../subworkflows/local/bam_sentieon_dedup/main'
+include { BAM_MARKDUPLICATES                                } from '../subworkflows/local/bam_markduplicates/main'
+include { BAM_MARKDUPLICATES_SPARK                          } from '../subworkflows/local/bam_markduplicates_spark/main'
+include { BAM_SENTIEON_DEDUP                                } from '../subworkflows/local/bam_sentieon_dedup/main'
 
 // QC on CRAM
-include { CRAM_QC_MOSDEPTH_SAMTOOLS as CRAM_QC_NO_MD  } from '../../subworkflows/local/cram_qc_mosdepth_samtools/main'
-include { CRAM_SAMPLEQC                               } from '../../subworkflows/local/cram_sampleqc/main'
+include { CRAM_QC_MOSDEPTH_SAMTOOLS as CRAM_QC_NO_MD        } from '../subworkflows/local/cram_qc_mosdepth_samtools/main'
+include { CRAM_QC_MOSDEPTH_SAMTOOLS as CRAM_QC_RECAL        } from '../subworkflows/local/cram_qc_mosdepth_samtools/main'
 
 // Create recalibration tables
-include { BAM_BASERECALIBRATOR                        } from '../../subworkflows/local/bam_baserecalibrator/main'
-include { BAM_BASERECALIBRATOR_SPARK                  } from '../../subworkflows/local/bam_baserecalibrator_spark/main'
+include { BAM_BASERECALIBRATOR                              } from '../subworkflows/local/bam_baserecalibrator/main'
+include { BAM_BASERECALIBRATOR_SPARK                        } from '../subworkflows/local/bam_baserecalibrator_spark/main'
 
 // Create recalibrated cram files to use for variant calling (+QC)
-include { BAM_APPLYBQSR                               } from '../../subworkflows/local/bam_applybqsr/main'
-include { BAM_APPLYBQSR_SPARK                         } from '../../subworkflows/local/bam_applybqsr_spark/main'
+include { BAM_APPLYBQSR                                     } from '../subworkflows/local/bam_applybqsr/main'
+include { BAM_APPLYBQSR_SPARK                               } from '../subworkflows/local/bam_applybqsr_spark/main'
 
 // Variant calling on a single normal sample
-include { BAM_VARIANT_CALLING_GERMLINE_ALL            } from '../../subworkflows/local/bam_variant_calling_germline_all/main'
+include { BAM_VARIANT_CALLING_GERMLINE_ALL                  } from '../subworkflows/local/bam_variant_calling_germline_all/main'
 
 // Variant calling on a single tumor sample
-include { BAM_VARIANT_CALLING_TUMOR_ONLY_ALL          } from '../../subworkflows/local/bam_variant_calling_tumor_only_all/main'
+include { BAM_VARIANT_CALLING_TUMOR_ONLY_ALL                } from '../subworkflows/local/bam_variant_calling_tumor_only_all/main'
 
 // Variant calling on tumor/normal pair
-include { BAM_VARIANT_CALLING_SOMATIC_ALL             } from '../../subworkflows/local/bam_variant_calling_somatic_all/main'
+include { BAM_VARIANT_CALLING_SOMATIC_ALL                   } from '../subworkflows/local/bam_variant_calling_somatic_all/main'
 
 // POST VARIANTCALLING: e.g. merging
-include { POST_VARIANTCALLING                         } from '../../subworkflows/local/post_variantcalling/main'
+include { POST_VARIANTCALLING                               } from '../subworkflows/local/post_variantcalling/main'
 
 // QC on VCF files
-include { VCF_QC_BCFTOOLS_VCFTOOLS                    } from '../../subworkflows/local/vcf_qc_bcftools_vcftools/main'
+include { VCF_QC_BCFTOOLS_VCFTOOLS                          } from '../subworkflows/local/vcf_qc_bcftools_vcftools/main'
+
+// Sample QC on CRAM files
+include { CRAM_SAMPLEQC                                      } from '../subworkflows/local/cram_sampleqc/main'
 
 // Annotation
-include { VCF_ANNOTATE_ALL                            } from '../../subworkflows/local/vcf_annotate_all/main'
+include { VCF_ANNOTATE_ALL                                  } from '../subworkflows/local/vcf_annotate_all/main'
+
+// REPORTING VERSIONS OF SOFTWARE USED
+include { CUSTOM_DUMPSOFTWAREVERSIONS                       } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 
 // MULTIQC
-include { MULTIQC                                     } from '../../modules/nf-core/multiqc/main'
+include { MULTIQC                                           } from '../modules/nf-core/multiqc/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -137,11 +261,183 @@ workflow SAREK {
 
     main:
 
+    // Parse samplesheet
+    // Set input, can either be from --input or from automatic retrieval in WorkflowSarek.groovy
+    ch_from_samplesheet = params.build_only_index ? Channel.empty() : params.input ? Channel.fromSamplesheet("input") : Channel.fromSamplesheet("input_restart")
+    SAMPLESHEET_TO_CHANNEL(
+        ch_from_samplesheet,
+        params.aligner,
+        params.ascat_alleles,
+        params.ascat_loci,
+        params.ascat_loci_rt,
+        params.bcftools_annotations,
+        params.bcftools_annotations_tbi,
+        params.bcftools_header_lines,
+        params.build_only_index,
+        params.dbsnp,
+        params.fasta,
+        params.germline_resource,
+        params.intervals,
+        params.joint_germline,
+        params.joint_mutect2,
+        params.known_indels,
+        params.known_snps,
+        params.no_intervals,
+        params.pon,
+        params.sentieon_dnascope_emit_mode,
+        params.sentieon_haplotyper_emit_mode,
+        params.seq_center,
+        params.seq_platform,
+        params.skip_tools,
+        params.step,
+        params.tools,
+        params.umi_read_structure,
+        params.wes)
+
+    input_sample = SAMPLESHEET_TO_CHANNEL.out.input_sample
+
+    // MULTIQC
+    ch_multiqc_config                     = Channel.fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
+    ch_multiqc_custom_config              = params.multiqc_config ? Channel.fromPath( params.multiqc_config, checkIfExists: true ) : Channel.empty()
+    ch_multiqc_logo                       = params.multiqc_logo   ? Channel.fromPath( params.multiqc_logo, checkIfExists: true ) : Channel.empty()
+    ch_multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
+
     // To gather all QC reports for MultiQC
-    ch_multiqc_files = Channel.empty()
-    multiqc_report   = Channel.empty()
-    reports          = Channel.empty()
-    versions         = Channel.empty()
+    reports  = Channel.empty()
+    // To gather used softwares versions for MultiQC
+    versions = Channel.empty()
+
+    // Download cache
+    if (params.download_cache) {
+        // Assuming that even if the cache is provided, if the user specify download_cache, sarek will download the cache
+        ensemblvep_info = Channel.of([ [ id:"${params.vep_cache_version}_${params.vep_genome}" ], params.vep_genome, params.vep_species, params.vep_cache_version ])
+        snpeff_info     = Channel.of([ [ id:"${params.snpeff_genome}.${params.snpeff_db}" ], params.snpeff_genome, params.snpeff_db ])
+        DOWNLOAD_CACHE_SNPEFF_VEP(ensemblvep_info, snpeff_info)
+        snpeff_cache = DOWNLOAD_CACHE_SNPEFF_VEP.out.snpeff_cache
+        vep_cache    = DOWNLOAD_CACHE_SNPEFF_VEP.out.ensemblvep_cache.map{ meta, cache -> [ cache ] }
+
+        versions = versions.mix(DOWNLOAD_CACHE_SNPEFF_VEP.out.versions)
+    } else {
+        // Looks for cache information either locally or on the cloud
+        INITIALIZE_ANNOTATION_CACHE(
+            (params.snpeff_cache && params.tools && (params.tools.split(',').contains("snpeff") || params.tools.split(',').contains('merge'))),
+            params.snpeff_cache,
+            params.snpeff_genome,
+            params.snpeff_db,
+            (params.vep_cache && params.tools && (params.tools.split(',').contains("vep") || params.tools.split(',').contains('merge'))),
+            params.vep_cache,
+            params.vep_species,
+            params.vep_cache_version,
+            params.vep_genome,
+            "Please refer to https://nf-co.re/sarek/docs/usage/#how-to-customise-snpeff-and-vep-annotation for more information.")
+
+            snpeff_cache = INITIALIZE_ANNOTATION_CACHE.out.snpeff_cache
+            vep_cache    = INITIALIZE_ANNOTATION_CACHE.out.ensemblvep_cache
+    }
+
+    // Build indices if needed
+    PREPARE_GENOME(
+        params.ascat_alleles,
+        params.ascat_loci,
+        params.ascat_loci_gc,
+        params.ascat_loci_rt,
+        bcftools_annotations,
+        params.chr_dir,
+        dbsnp,
+        fasta,
+        fasta_fai,
+        germline_resource,
+        known_indels,
+        known_snps,
+        pon)
+
+    // Gather built indices or get them from the params
+    // Built from the fasta file:
+    dict       = params.dict        ? Channel.fromPath(params.dict).map{ it -> [ [id:'dict'], it ] }.collect()
+                                    : PREPARE_GENOME.out.dict
+    fasta_fai  = params.fasta_fai   ? Channel.fromPath(params.fasta_fai).first()
+                                    : PREPARE_GENOME.out.fasta_fai
+    bwa        = params.bwa         ? Channel.fromPath(params.bwa).collect()
+                                    : PREPARE_GENOME.out.bwa
+    bwamem2    = params.bwamem2     ? Channel.fromPath(params.bwamem2).collect()
+                                    : PREPARE_GENOME.out.bwamem2
+    dragmap    = params.dragmap     ? Channel.fromPath(params.dragmap).collect()
+                                    : PREPARE_GENOME.out.hashtable
+    minimap2   = params.minimap2    ? Channel.fromPath(params.minimap2).collect()
+                                    : PREPARE_GENOME.out.minimap2
+
+    // Gather index for mapping given the chosen aligner
+    index_alignement = (params.aligner == "bwa-mem" || params.aligner == "sentieon-bwamem") ? bwa :
+        params.aligner == "bwa-mem2" ? bwamem2 : params.aligner == "dragmap" ? dragmap : minimap2
+
+    // TODO: add a params for msisensorpro_scan
+    msisensorpro_scan      = PREPARE_GENOME.out.msisensorpro_scan
+
+    // For ASCAT, extracted from zip or tar.gz files:
+    allele_files           = PREPARE_GENOME.out.allele_files
+    chr_files              = PREPARE_GENOME.out.chr_files
+    gc_file                = PREPARE_GENOME.out.gc_file
+    loci_files             = PREPARE_GENOME.out.loci_files
+    rt_file                = PREPARE_GENOME.out.rt_file
+
+    // Tabix indexed vcf files:
+    bcftools_annotations_tbi  = params.bcftools_annotations    ? params.bcftools_annotations_tbi ? Channel.fromPath(params.bcftools_annotations_tbi).collect() : PREPARE_GENOME.out.bcftools_annotations_tbi : Channel.empty([])
+    dbsnp_tbi                 = params.dbsnp                   ? params.dbsnp_tbi                ? Channel.fromPath(params.dbsnp_tbi).collect()                : PREPARE_GENOME.out.dbsnp_tbi                : Channel.value([])
+    germline_resource_tbi     = params.germline_resource       ? params.germline_resource_tbi    ? Channel.fromPath(params.germline_resource_tbi).collect()    : PREPARE_GENOME.out.germline_resource_tbi    : [] //do not change to Channel.value([]), the check for its existence then fails for Getpileupsumamries
+    known_indels_tbi          = params.known_indels            ? params.known_indels_tbi         ? Channel.fromPath(params.known_indels_tbi).collect()         : PREPARE_GENOME.out.known_indels_tbi         : Channel.value([])
+    known_snps_tbi            = params.known_snps              ? params.known_snps_tbi           ? Channel.fromPath(params.known_snps_tbi).collect()           : PREPARE_GENOME.out.known_snps_tbi           : Channel.value([])
+    pon_tbi                   = params.pon                     ? params.pon_tbi                  ? Channel.fromPath(params.pon_tbi).collect()                  : PREPARE_GENOME.out.pon_tbi                  : Channel.value([])
+
+    // known_sites is made by grouping both the dbsnp and the known snps/indels resources
+    // Which can either or both be optional
+    known_sites_indels     = dbsnp.concat(known_indels).collect()
+    known_sites_indels_tbi = dbsnp_tbi.concat(known_indels_tbi).collect()
+
+    known_sites_snps       = dbsnp.concat(known_snps).collect()
+    known_sites_snps_tbi   = dbsnp_tbi.concat(known_snps_tbi).collect()
+
+    // Build intervals if needed
+    PREPARE_INTERVALS(fasta_fai, params.intervals, params.no_intervals, params.nucleotides_per_second, params.outdir, params.step)
+
+    // Intervals for speed up preprocessing/variant calling by spread/gather
+    // [interval.bed] all intervals in one file
+    intervals_bed_combined         = params.no_intervals ? Channel.value([])      : PREPARE_INTERVALS.out.intervals_bed_combined
+    intervals_bed_gz_tbi_combined  = params.no_intervals ? Channel.value([])      : PREPARE_INTERVALS.out.intervals_bed_gz_tbi_combined
+
+    // For QC during preprocessing, we don't need any intervals (MOSDEPTH doesn't take them for WGS)
+    intervals_for_preprocessing = params.wes ?
+        intervals_bed_combined.map{it -> [ [ id:it.baseName ], it ]}.collect() :
+        Channel.value([ [ id:'null' ], [] ])
+
+    intervals            = PREPARE_INTERVALS.out.intervals_bed        // [ interval, num_intervals ] multiple interval.bed files, divided by useful intervals for scatter/gather
+    intervals_bed_gz_tbi = PREPARE_INTERVALS.out.intervals_bed_gz_tbi // [ interval_bed, tbi, num_intervals ] multiple interval.bed.gz/.tbi files, divided by useful intervals for scatter/gather
+
+    intervals_and_num_intervals = intervals.map{ interval, num_intervals ->
+        if ( num_intervals < 1 ) [ [], num_intervals ]
+        else [ interval, num_intervals ]
+    }
+
+    intervals_bed_gz_tbi_and_num_intervals = intervals_bed_gz_tbi.map{ intervals, num_intervals ->
+        if ( num_intervals < 1 ) [ [], [], num_intervals ]
+        else [ intervals[0], intervals[1], num_intervals ]
+    }
+
+    if (params.tools && params.tools.split(',').contains('cnvkit')) {
+        if (params.cnvkit_reference) {
+            cnvkit_reference = Channel.fromPath(params.cnvkit_reference).collect()
+        } else {
+            PREPARE_REFERENCE_CNVKIT(fasta, intervals_bed_combined)
+            cnvkit_reference = PREPARE_REFERENCE_CNVKIT.out.cnvkit_reference
+
+            versions = versions.mix(PREPARE_REFERENCE_CNVKIT.out.versions)
+        }
+    } else {
+        cnvkit_reference = Channel.value([])
+    }
+
+    // Gather used softwares versions
+    versions = versions.mix(PREPARE_GENOME.out.versions)
+    versions = versions.mix(PREPARE_INTERVALS.out.versions)
 
     // PREPROCESSING
 
@@ -255,12 +551,12 @@ workflow SAREK {
 
         // reads will be sorted
         sort_bam = true
-        FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON(reads_for_alignment, index_alignement, sort_bam, fasta, fasta_fai)
+        FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_MINIMAP2_SENTIEON(reads_for_alignment, index_alignement, sort_bam, fasta, fasta_fai)
 
         // Grouping the bams from the same samples not to stall the workflow
         // Use groupKey to make sure that the correct group can advance as soon as it is complete
         // and not stall the workflow until all reads from all channels are mapped
-        bam_mapped = FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON.out.bam
+        bam_mapped = FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_MINIMAP2_SENTIEON.out.bam
             .combine(reads_grouping_key) // Creates a tuple of [ meta, bam, reads_grouping_key ]
             .filter { meta1, bam, meta2 -> meta1.sample == meta2.sample }
             // Add n_fastq and other variables to meta
@@ -278,7 +574,7 @@ workflow SAREK {
             // Group
             .groupTuple()
 
-        bai_mapped = FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON.out.bai
+        bai_mapped = FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_MINIMAP2_SENTIEON.out.bai
             .combine(reads_grouping_key) // Creates a tuple of [ meta, bai, reads_grouping_key ]
             .filter { meta1, bai, meta2 -> meta1.sample == meta2.sample }
             // Add n_fastq and other variables to meta
@@ -321,7 +617,7 @@ workflow SAREK {
 
         // Gather used softwares versions
         versions = versions.mix(CONVERT_FASTQ_INPUT.out.versions)
-        versions = versions.mix(FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON.out.versions)
+        versions = versions.mix(FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_MINIMAP2_SENTIEON.out.versions)
     }
 
     if (params.step in ['mapping', 'markduplicates']) {
@@ -333,7 +629,7 @@ workflow SAREK {
 
         // STEP 2: markduplicates (+QC) + convert to CRAM
 
-        // ch_bam_for_markduplicates will contain bam mapped with FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON when step is mapping
+        // ch_bam_for_markduplicates will contain bam mapped with FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_MINIMAP2_SENTIEON when step is mapping
         // Or bams that are specified in the samplesheet.csv when step is prepare_recalibration
         cram_for_markduplicates = params.step == 'mapping' ? bam_mapped : input_sample.map{ meta, input, index -> [ meta, input ] }
         // if no MD is done, then run QC on mapped & converted CRAM files
@@ -855,45 +1151,52 @@ workflow SAREK {
         }
     }
 
-    //
-    // Collate and save software versions
-    //
     version_yaml = Channel.empty()
     if (!(params.skip_tools && params.skip_tools.split(',').contains('versions'))) {
-        version_yaml = softwareVersionsToYAML(versions)
-            .collectFile(storeDir: "${params.outdir}/pipeline_info", name: 'nf_core_sarek_software_mqc_versions.yml', sort: true, newLine: true)
+        CUSTOM_DUMPSOFTWAREVERSIONS(versions.unique().collectFile(name: 'collated_versions.yml'))
+        version_yaml = CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect()
     }
 
-    //
-    // MODULE: MultiQC
-    //
     if (!(params.skip_tools && params.skip_tools.split(',').contains('multiqc'))) {
+        workflow_summary    = WorkflowSarek.paramsSummaryMultiqc(workflow, summary_params)
+        ch_workflow_summary = Channel.value(workflow_summary)
 
-        ch_multiqc_config                     = Channel.fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
-        ch_multiqc_custom_config              = params.multiqc_config ? Channel.fromPath(params.multiqc_config, checkIfExists: true) : Channel.empty()
-        ch_multiqc_logo                       = params.multiqc_logo ? Channel.fromPath(params.multiqc_logo, checkIfExists: true) : Channel.empty()
-        summary_params                        = paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
-        ch_workflow_summary                   = Channel.value(paramsSummaryMultiqc(summary_params))
-        ch_multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
-        ch_methods_description                = Channel.value(methodsDescriptionText(ch_multiqc_custom_methods_description))
-        ch_multiqc_files                      = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
-        ch_multiqc_files                      = ch_multiqc_files.mix(version_yaml)
-        ch_multiqc_files                      = ch_multiqc_files.mix(reports)
-        ch_multiqc_files                      = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml', sort: false))
+        methods_description    = WorkflowSarek.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description, params)
+        ch_methods_description = Channel.value(methods_description)
 
-        MULTIQC (
-            ch_multiqc_files.collect(),
-            ch_multiqc_config.toList(),
-            ch_multiqc_custom_config.toList(),
-            ch_multiqc_logo.toList()
-        )
+        multiqc_files = Channel.empty()
+        multiqc_files = multiqc_files.mix(version_yaml)
+        multiqc_files = multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
+        multiqc_files = multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'))
+        multiqc_files = multiqc_files.mix(reports.collect().ifEmpty([]))
+
+        MULTIQC(multiqc_files.collect(), ch_multiqc_config.collect().ifEmpty([]), ch_multiqc_custom_config.collect().ifEmpty([]), ch_multiqc_logo.collect().ifEmpty([]))
+
         multiqc_report = MULTIQC.out.report.toList()
-
+        versions = versions.mix(MULTIQC.out.versions)
     }
+}
 
-    emit:
-    multiqc_report // channel: /path/to/multiqc_report.html
-    versions       // channel: [ path(versions.yml) ]
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    COMPLETION EMAIL AND SUMMARY
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+
+workflow.onComplete {
+    if (params.email || params.email_on_fail) {
+        NfcoreTemplate.email(workflow, params, summary_params, projectDir, log, multiqc_report)
+    }
+    NfcoreTemplate.dump_parameters(workflow, params)
+    NfcoreTemplate.summary(workflow, params, log)
+    if (params.hook_url) NfcoreTemplate.IM_notification(workflow, params, summary_params, projectDir, log)
+}
+
+workflow.onError {
+    if (workflow.errorReport.contains("Process requirement exceeds available memory")) {
+        println("🛑 Default resources exceed availability 🛑 ")
+        println("💡 See here on how to configure pipeline: https://nf-co.re/docs/usage/configuration#tuning-workflow-resources 💡")
+    }
 }
 
 /*

@@ -20,6 +20,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - [BWA](#bwa)
     - [BWA-mem2](#bwa-mem2)
     - [DragMap](#dragmap)
+    - [Minimap2](#minimap2)
     - [Sentieon BWA mem](#sentieon-bwa-mem)
   - [Mark Duplicates](#mark-duplicates)
     - [GATK MarkDuplicates (Spark)](#gatk-markduplicates-spark)
@@ -173,6 +174,10 @@ These files are intermediate and by default not placed in the output-folder kept
 [DragMap](https://github.com/Illumina/dragmap) is an open-source software implementation of the DRAGEN mapper, which the Illumina team created so that we would have an open-source way to produce the same results as their proprietary DRAGEN hardware. The aligned reads are then coordinate-sorted (or name-sorted if [`GATK MarkDuplicatesSpark`](https://gatk.broadinstitute.org/hc/en-us/articles/5358833264411-MarkDuplicatesSpark) is used for duplicate marking) with [samtools](https://www.htslib.org/doc/samtools.html).
 
 These files are intermediate and by default not placed in the output-folder kept in the final files delivered to users. Set `--save_mapped` to enable publishing, furthermore add the flag `save_output_as_bam` for publishing in BAM format.
+
+### Minimap2
+
+[Minimap2](https://github.com/lh3/minimap2) is a versatile pairwise aligner for genomic and spliced nucleotide sequences. The aligned reads are then coordinate-sorted (or name-sorted if [`GATK MarkDuplicatesSpark`](https://gatk.broadinstitute.org/hc/en-us/articles/5358833264411-MarkDuplicatesSpark) is used for duplicate marking) with [samtools](https://www.htslib.org/doc/samtools.html).
 
 #### Sentieon BWA mem
 
