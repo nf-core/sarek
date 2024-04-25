@@ -14,12 +14,13 @@ workflow CONCATENATE_GERMLINE_VCFS {
 
     take:
     vcfs
+    fasta
 
     main:
     versions = Channel.empty()
 
     // Normalize vcf-files (added by jcdelmas 240415)
-    GERMLINE_VCFS_NORM(vcfs)
+    GERMLINE_VCFS_NORM(germline_vcfs_with_tbis, fasta)
 
     // Concatenate vcf-files
     ADD_INFO_TO_VCF(vcfs)
