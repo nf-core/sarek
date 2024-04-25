@@ -8,6 +8,7 @@ workflow POST_VARIANTCALLING {
 
     take:
     vcfs
+    fasta
     concatenate_vcfs
 
     main:
