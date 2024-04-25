@@ -1,5 +1,5 @@
 - name: Run default pipeline with gatk4spark
-  command: nextflow run main.nf -profile test_cache,use_gatk_spark --outdir results
+  command: nextflow run main.nf -profile test_cache,use_gatk_spark,spark --outdir results
   tags:
     - gatk4spark
     - preprocessing
