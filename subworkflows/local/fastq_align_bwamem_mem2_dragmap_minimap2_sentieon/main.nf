@@ -27,12 +27,12 @@ workflow FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_MINIMAP2_SENTIEON {
     cigar_bam = false
 
     // Only one of the following should be run
-    BWAMEM1_MEM(reads, index.map{ it -> [ [ id:'index' ], it ] }, [[id:'no_fasta'], []], sort) // If aligner is bwa-mem
-    BWAMEM2_MEM(reads, index.map{ it -> [ [ id:'index' ], it ] }, [[id:'no_fasta'], []], sort) // If aligner is bwa-mem2
-    DRAGMAP_ALIGN(reads, index.map{ it -> [ [ id:'index' ], it ] }, [[id:'no_fasta'], []], sort) // If aligner is dragmap
-    MINIMAP2_ALIGN(reads, index.map{ it -> [ [ id:'index' ], it ] }, [[id:'no_fasta'], []], sort, cigar_paf_format, cigar_bam) // If aligner is minimap2
+    BWAMEM1_MEM(reads, index, [[id:'no_fasta'], []], sort) // If aligner is bwa-mem
+    BWAMEM2_MEM(reads, index, [[id:'no_fasta'], []], sort) // If aligner is bwa-mem2
+    DRAGMAP_ALIGN(reads, index, [[id:'no_fasta'], []], sort) // If aligner is dragmap
+    MINIMAP2_ALIGN(reads, index, [[id:'no_fasta'], []], sort, cigar_paf_format, cigar_bam) // If aligner is minimap2
     // The sentieon-bwamem-module does sorting as part of the conversion from sam to bam.
-    SENTIEON_BWAMEM(reads, index.map{ it -> [ [ id:'index' ], it ] }, fasta.map{fa -> [[:], fa]}, fasta_fai.map{fai -> [[:], fai]}) // If aligner is sentieon-bwamem
+    SENTIEON_BWAMEM(reads, index, fasta, fasta_fai) // If aligner is sentieon-bwamem
 
     // Get the bam files from the aligner
     // Only one aligner is run
