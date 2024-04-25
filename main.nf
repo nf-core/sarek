@@ -75,6 +75,8 @@ params.vep_cache_version       = WorkflowMain.getGenomeAttribute(params, 'vep_ca
 params.vep_genome              = WorkflowMain.getGenomeAttribute(params, 'vep_genome')
 params.vep_species             = WorkflowMain.getGenomeAttribute(params, 'vep_species')
 
+aligner = params.aligner
+
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     IMPORT FUNCTIONS / MODULES / SUBWORKFLOWS / WORKFLOWS
