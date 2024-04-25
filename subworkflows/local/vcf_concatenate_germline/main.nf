@@ -5,6 +5,7 @@
 // Concatenation of germline vcf-files
 include { ADD_INFO_TO_VCF                                     } from '../../../modules/local/add_info_to_vcf/main'
 include { TABIX_BGZIPTABIX as TABIX_EXT_VCF                   } from '../../../modules/nf-core/tabix/bgziptabix/main'
+include { BCFTOOLS_NORM    as GERMLINE_VCFS_NORM              } from '../../../modules/nf-core/bcftools/norm/main'
 include { BCFTOOLS_CONCAT  as GERMLINE_VCFS_CONCAT            } from '../../../modules/nf-core/bcftools/concat/main'
 include { BCFTOOLS_SORT    as GERMLINE_VCFS_CONCAT_SORT       } from '../../../modules/nf-core/bcftools/sort/main'
 include { TABIX_TABIX      as TABIX_GERMLINE_VCFS_CONCAT_SORT } from '../../../modules/nf-core/tabix/tabix/main'
@@ -16,6 +17,9 @@ workflow CONCATENATE_GERMLINE_VCFS {
 
     main:
     versions = Channel.empty()
+
+    // Normalize vcf-files (added by jcdelmas 240415)
+    GERMLINE_VCFS_NORM(vcfs)
 
     // Concatenate vcf-files
     ADD_INFO_TO_VCF(vcfs)
@@ -31,6 +35,7 @@ workflow CONCATENATE_GERMLINE_VCFS {
     // Gather versions of all tools used
     versions = versions.mix(ADD_INFO_TO_VCF.out.versions)
     versions = versions.mix(TABIX_EXT_VCF.out.versions)
+    versions = versions.mix(GERMLINE_VCFS_NORM.out.versions)
     versions = versions.mix(GERMLINE_VCFS_CONCAT.out.versions)
     versions = versions.mix(GERMLINE_VCFS_CONCAT.out.versions)
     versions = versions.mix(TABIX_GERMLINE_VCFS_CONCAT_SORT.out.versions)
