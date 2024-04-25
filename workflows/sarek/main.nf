@@ -212,6 +212,45 @@ include { MULTIQC                                           } from '../modules/n
 */
 
 workflow SAREK {
+    take:
+        input_sample
+        allele_files
+        cf_chrom_len
+        chr_files
+        cnvkit_reference
+        dbsnp
+        dbsnp_tbi
+        dbsnp_vqsr
+        dict
+        fasta
+        fasta_fai
+        gc_file
+        germline_resource
+        germline_resource_tbi
+        index_alignement
+        intervals_and_num_intervals
+        intervals_bed_combined
+        intervals_bed_combined_for_variant_calling
+        intervals_bed_gz_tbi_and_num_intervals
+        intervals_bed_gz_tbi_combined
+        intervals_for_preprocessing
+        known_indels_vqsr
+        known_sites_indels
+        known_sites_indels_tbi
+        known_sites_snps
+        known_sites_snps_tbi
+        known_snps_vqsr
+        loci_files
+        mappability
+        msisensorpro_scan
+        ngscheckmate_bed
+        pon
+        pon_tbi
+        rt_file
+        sentieon_dnascope_model
+
+
+    main:
 
     // Parse samplesheet
     // Set input, can either be from --input or from automatic retrieval in WorkflowSarek.groovy
@@ -879,12 +918,12 @@ workflow SAREK {
 
     if (params.step == 'annotate') cram_variant_calling = Channel.empty()
 
-    // RUN CRAM QC on the recalibrated CRAM files or when starting from step variant calling. NGSCheckmate should be run also on non-recalibrated CRAM files
-    CRAM_SAMPLEQC(cram_variant_calling,
-                    ngscheckmate_bed,
-                    fasta,
-                    params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'),
-                    intervals_for_preprocessing)
+        // RUN CRAM QC on the recalibrated CRAM files or when starting from step variant calling. NGSCheckmate should be run also on non-recalibrated CRAM files
+        CRAM_SAMPLEQC(cram_variant_calling,
+                        ngscheckmate_bed,
+                        fasta,
+                        params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'),
+                        intervals_for_preprocessing)
 
     if (params.tools) {
 
@@ -964,7 +1003,7 @@ workflow SAREK {
             intervals_and_num_intervals,
             intervals_bed_combined, // [] if no_intervals, else interval_bed_combined.bed,
             intervals_bed_gz_tbi_combined, // [] if no_intervals, else interval_bed_combined_gz, interval_bed_combined_gz_tbi
-            PREPARE_INTERVALS.out.intervals_bed_combined, // no_intervals.bed if no intervals, else interval_bed_combined.bed; Channel operations possible
+            intervals_bed_combined_for_variant_calling, // no_intervals.bed if no intervals, else interval_bed_combined.bed; Channel operations possible
             intervals_bed_gz_tbi_and_num_intervals,
             known_indels_vqsr,
             known_sites_indels,
