@@ -40,7 +40,7 @@ workflow PIPELINE_INITIALISATION {
 
     main:
 
-    ch_versions = Channel.empty()
+    versions = Channel.empty()
 
     //
     // Print version and exit if required and dump pipeline parameters to JSON file
@@ -70,9 +70,8 @@ workflow PIPELINE_INITIALISATION {
     //
     // Check config provided to the pipeline
     //
-    UTILS_NFCORE_PIPELINE (
-        nextflow_cli_args
-    )
+    UTILS_NFCORE_PIPELINE(nextflow_cli_args)
+
     //
     // Custom validation for pipeline parameters
     //
@@ -275,4 +274,33 @@ def nfCoreLogo(monochrome_logs=true) {
         ${dashedLine(monochrome_logs)}
         """.stripIndent()
     )
+}
+
+def retrieveInput(params, log){
+    def input = null
+    if (!params.input && !params.build_only_index) {
+        switch (params.step) {
+            case 'mapping':                 Nextflow.error("Can't start with step $params.step without samplesheet")
+                                            break
+            case 'markduplicates':          log.warn("Using file ${params.outdir}/csv/mapped.csv");
+                                            input = params.outdir + "/csv/mapped.csv"
+                                            break
+            case 'prepare_recalibration':   log.warn("Using file ${params.outdir}/csv/markduplicates_no_table.csv");
+                                            input = params.outdir + "/csv/markduplicates_no_table.csv"
+                                            break
+            case 'recalibrate':             log.warn("Using file ${params.outdir}/csv/markduplicates.csv");
+                                            input = params.outdir + "/csv/markduplicates.csv"
+                                            break
+            case 'variant_calling':         log.warn("Using file ${params.outdir}/csv/recalibrated.csv");
+                                            input = params.outdir + "/csv/recalibrated.csv"
+                                            break
+            // case 'controlfreec':         csv_file = file("${params.outdir}/variant_calling/csv/control-freec_mpileup.csv", checkIfExists: true); break
+            case 'annotate':                log.warn("Using file ${params.outdir}/csv/variantcalled.csv");
+                                            input = params.outdir + "/csv/variantcalled.csv"
+                                            break
+            default:                        log.warn("Please provide an input samplesheet to the pipeline e.g. '--input samplesheet.csv'")
+                                            Nextflow.error("Unknown step $params.step")
+        }
+    }
+    return input
 }
