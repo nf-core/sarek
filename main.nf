@@ -178,11 +178,12 @@ workflow NFCORE_SAREK {
                                     : PREPARE_GENOME.out.bwamem2
     dragmap    = params.dragmap     ? Channel.fromPath(params.dragmap).collect()
                                     : PREPARE_GENOME.out.hashtable
+    minimap2   = params.dragmap     ? Channel.fromPath(params.minimap2).collect()
+                                    : PREPARE_GENOME.out.hashtable
 
     // Gather index for mapping given the chosen aligner
     index_alignement = (params.aligner == "bwa-mem" || params.aligner == "sentieon-bwamem") ? bwa :
-        params.aligner == "bwa-mem2" ? bwamem2 :
-        dragmap
+        params.aligner == "bwa-mem2" ? bwamem2 : params.aligner == "dragmap" ? dragmap : minimap2
 
     // TODO: add a params for msisensorpro_scan
     msisensorpro_scan      = PREPARE_GENOME.out.msisensorpro_scan
@@ -240,6 +241,36 @@ workflow NFCORE_SAREK {
     // Gather used softwares versions
     versions = versions.mix(PREPARE_GENOME.out.versions)
     versions = versions.mix(PREPARE_INTERVALS.out.versions)
+
+    vep_fasta = (params.vep_include_fasta) ? fasta.map{ fasta -> [ [ id:fasta.baseName ], fasta ] } : [[id: 'null'], []]
+
+    // Download cache
+    if (params.download_cache) {
+        // Assuming that even if the cache is provided, if the user specify download_cache, sarek will download the cache
+        ensemblvep_info = Channel.of([ [ id:"${params.vep_cache_version}_${params.vep_genome}" ], params.vep_genome, params.vep_species, params.vep_cache_version ])
+        snpeff_info     = Channel.of([ [ id:"${params.snpeff_genome}.${params.snpeff_db}" ], params.snpeff_genome, params.snpeff_db ])
+        DOWNLOAD_CACHE_SNPEFF_VEP(ensemblvep_info, snpeff_info)
+        snpeff_cache = DOWNLOAD_CACHE_SNPEFF_VEP.out.snpeff_cache
+        vep_cache    = DOWNLOAD_CACHE_SNPEFF_VEP.out.ensemblvep_cache.map{ meta, cache -> [ cache ] }
+
+        versions = versions.mix(DOWNLOAD_CACHE_SNPEFF_VEP.out.versions)
+    } else {
+        // Looks for cache information either locally or on the cloud
+        INITIALIZE_ANNOTATION_CACHE(
+            (params.snpeff_cache && params.tools && (params.tools.split(',').contains("snpeff") || params.tools.split(',').contains('merge'))),
+            params.snpeff_cache,
+            params.snpeff_genome,
+            params.snpeff_db,
+            (params.vep_cache && params.tools && (params.tools.split(',').contains("vep") || params.tools.split(',').contains('merge'))),
+            params.vep_cache,
+            params.vep_species,
+            params.vep_cache_version,
+            params.vep_genome,
+            "Please refer to https://nf-co.re/sarek/docs/usage/#how-to-customise-snpeff-and-vep-annotation for more information.")
+
+            snpeff_cache = INITIALIZE_ANNOTATION_CACHE.out.snpeff_cache
+            vep_cache    = INITIALIZE_ANNOTATION_CACHE.out.ensemblvep_cache
+    }
 
     //
     // WORKFLOW: Run pipeline
