@@ -196,7 +196,7 @@ workflow NFCORE_SAREK {
     dragmap    = params.dragmap     ? Channel.fromPath(params.dragmap).collect()
                                     : PREPARE_GENOME.out.hashtable
     minimap2   = params.dragmap     ? Channel.fromPath(params.minimap2).collect()
-                                    : PREPARE_GENOME.out.hashtable
+                                    : PREPARE_GENOME.out.minimap2
 
     // Gather index for mapping given the chosen aligner
     index_alignement = (params.aligner == "bwa-mem" || params.aligner == "sentieon-bwamem") ? bwa :
