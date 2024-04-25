@@ -9,7 +9,7 @@
 include { FGBIO_CALLMOLECULARCONSENSUSREADS        as CALLUMICONSENSUS } from '../../../modules/nf-core/fgbio/callmolecularconsensusreads/main.nf'
 include { FGBIO_FASTQTOBAM                         as FASTQTOBAM       } from '../../../modules/nf-core/fgbio/fastqtobam/main'
 include { FGBIO_GROUPREADSBYUMI                    as GROUPREADSBYUMI  } from '../../../modules/nf-core/fgbio/groupreadsbyumi/main'
-include { FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON as ALIGN_UMI        } from '../fastq_align_bwamem_mem2_dragmap_sentieon/main'
+include { FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON as ALIGN_UMI        } from '../fastq_align_bwamem_mem2_dragmap_minimap2_sentieon/main'
 include { SAMBLASTER                                                   } from '../../../modules/nf-core/samblaster/main'
 include { SAMTOOLS_BAM2FQ                          as BAM2FASTQ        } from '../../../modules/nf-core/samtools/bam2fq/main.nf'
 
