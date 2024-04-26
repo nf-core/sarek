@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1477](https://github.com/nf-core/sarek/pull/1477) - Back to dev
 - [#1482](https://github.com/nf-core/sarek/pull/1482) - Pin `nf-prov` plugin to `1.2.2`
 - [#1485](https://github.com/nf-core/sarek/pull/1485) - Update citation for publication
+- [#1487](https://github.com/nf-core/sarek/pull/1487) - Update sentieon-modules to Sentieon `202308.02`
 
 ### Fixed
 
@@ -22,6 +23,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 ### Dependencies
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| sentieon   | 202308.01   | 202308.02   |
 
 ### Modules / Subworkflows
 
