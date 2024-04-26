@@ -26,7 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Dependency | Old version | New version |
 | ---------- | ----------- | ----------- |
-| sentieon   | 202308.01   | 202308.02   |
+| `sentieon` | 202308.01   | 202308.02   |
 
 ### Modules / Subworkflows
 
@@ -98,16 +98,16 @@ Balgattjåhkkå is the other top peak (over 2k m) in the Pårte massif, the othe
 
 ### Dependencies
 
-| Dependency | Old version | New version |
-| ---------- | ----------- | ----------- |
-| bcftools   | 1.17        | 1.18        |
-| ensemblvep | 110.0       | 111.0       |
-| fgbio      | 2.0.2       | 2.1.0       |
-| gatk       | 4.4.0.0     | 4.5.0.0     |
-| gatk-spark | 4.4.0.0     | 4.5.0.0     |
-| mosdepth   | 0.3.3       | 0.3.6       |
-| multiqc    | 1.17        | 1.18        |
-| samtools   | 1.17        | 1.19.2      |
+| Dependency   | Old version | New version |
+| ------------ | ----------- | ----------- |
+| `bcftools`   | 1.17        | 1.18        |
+| `ensemblvep` | 110.0       | 111.0       |
+| `fgbio`      | 2.0.2       | 2.1.0       |
+| `gatk`       | 4.4.0.0     | 4.5.0.0     |
+| `gatk-spark` | 4.4.0.0     | 4.5.0.0     |
+| `mosdepth`   | 0.3.3       | 0.3.6       |
+| `multiqc`    | 1.17        | 1.18        |
+| `samtools`   | 1.17        | 1.19.2      |
 
 ### Modules / Subworkflows
 
@@ -116,9 +116,9 @@ Balgattjåhkkå is the other top peak (over 2k m) in the Pårte massif, the othe
 
 ### Parameter
 
-| Old name                   | New name                 |
-| -------------------------- | ------------------------ |
-| bcftools_annotations_index | bcftools_annotations_tbi |
+| Old name                     | New name                   |
+| ---------------------------- | -------------------------- |
+| `bcftools_annotations_index` | `bcftools_annotations_tbi` |
 
 ## [3.4.0](https://github.com/nf-core/sarek/releases/tag/3.4.0) - Pårtetjåkko
 
@@ -168,8 +168,8 @@ Pårtetjåkko is a mountain in the south of the park.
 
 | Dependency | Old version | New version |
 | ---------- | ----------- | ----------- |
-| fastqc     | 0.11.9      | 0.12.1      |
-| multiqc    | 1.15        | 1.17        |
+| `fastqc`   | 0.11.9      | 0.12.1      |
+| `multiqc`  | 1.15        | 1.17        |
 
 ### Modules / Subworkflows
 
@@ -202,9 +202,9 @@ Ráhpajávvre is the Lule Sámi spelling of Rapaselet.
 
 ### Dependencies
 
-| Dependency                       | Old version | New version |
-| -------------------------------- | ----------- | ----------- |
-| Control-FREEC/assesssignificance | 11.6b       | 11.6        |
+| Dependency                         | Old version | New version |
+| ---------------------------------- | ----------- | ----------- |
+| `Control-FREEC/assesssignificance` | 11.6b       | 11.6        |
 
 ## [3.3.1](https://github.com/nf-core/sarek/releases/tag/3.3.1) - Biellorippjávrre
 
@@ -228,9 +228,9 @@ A lake near the Rapaselet delta.
 
 ### Dependencies
 
-| Dependency    | Old version | New version |
-| ------------- | ----------- | ----------- |
-| Control-FREEC | 11.6        | 11.6b       |
+| Dependency      | Old version | New version |
+| --------------- | ----------- | ----------- |
+| `Control-FREEC` | 11.6        | 11.6b       |
 
 ## [3.3.0](https://github.com/nf-core/sarek/releases/tag/3.3.0) - Rapaselet
 
