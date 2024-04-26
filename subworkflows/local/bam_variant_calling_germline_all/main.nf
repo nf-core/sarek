@@ -26,6 +26,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     skip_tools                        // Mandatory, list of tools to skip
     cram                              // channel: [mandatory] meta, cram
     bwa                               // channel: [mandatory] meta, bwa
+    cnvkit_reference                  // channel: [optional] cnvkit reference
     dbsnp                             // channel: [mandatory] meta, dbsnp
     dbsnp_tbi                         // channel: [mandatory] dbsnp_tbi
     dbsnp_vqsr
