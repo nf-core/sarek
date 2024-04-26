@@ -24,10 +24,10 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     take:
     tools                             // Mandatory, list of tools to apply
     skip_tools                        // Mandatory, list of tools to skip
-    cram                              // channel: [mandatory] meta, cram
-    bwa                               // channel: [mandatory] meta, bwa
+    cram                              // channel: [mandatory] cram
+    bwa                               // channel: [mandatory] bwa
     cnvkit_reference                  // channel: [optional] cnvkit reference
-    dbsnp                             // channel: [mandatory] meta, dbsnp
+    dbsnp                             // channel: [mandatory] dbsnp
     dbsnp_tbi                         // channel: [mandatory] dbsnp_tbi
     dbsnp_vqsr
     dict                              // channel: [mandatory] meta, dict
