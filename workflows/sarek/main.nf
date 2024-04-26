@@ -712,6 +712,7 @@ workflow SAREK {
             params.skip_tools,
             cram_variant_calling_status_normal,
             [ [ id:'bwa' ], [] ], // bwa_index for tiddit; not used here
+            cnvkit_reference,
             dbsnp,
             dbsnp_tbi,
             dbsnp_vqsr,
