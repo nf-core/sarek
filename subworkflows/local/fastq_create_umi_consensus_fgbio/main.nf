@@ -37,6 +37,7 @@ workflow FASTQ_CREATE_UMI_CONSENSUS_FGBIO {
 
     // appropriately tagged interleaved FASTQ reads are mapped to the reference
     // bams will not be sorted (hence, sort = false)
+    // TODO minimap2 in current implementation wouldn't work correctly
     sort = false
     ALIGN_UMI(BAM2FASTQ.out.reads, map_index, sort, fasta, fai)
 

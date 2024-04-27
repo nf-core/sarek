@@ -243,6 +243,8 @@ jobs:
           - tags: "gatk4/mutect2"
           - tags: "gatk4spark/applybqsr"
           - tags: "gatk4spark/markduplicates"
+          - tags: "minimap2/index"
+          - tags: "minimap2/align"
           - tags: "mosdepth"
           - tags: "multiqc"
           - tags: "samblaster"
