@@ -4,4 +4,4 @@ channels:
   - bioconda
   - defaults
 dependencies:
-  - bioconda::sentieon=202308.01
+  - bioconda::sentieon=202308.02
