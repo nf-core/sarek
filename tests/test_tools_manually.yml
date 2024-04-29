@@ -1,5 +1,5 @@
 - name: Run variant calling on somatic samples with ascat
-  command: nextflow run main.nf -profile test_cache,tools_somatic_ascat --outdir results
+  command: nextflow run main.nf -profile test,tools_somatic_ascat --outdir results
   tags:
     - ascat_manual
     - manual
@@ -59,7 +59,7 @@
     - path: results/reports/samtools/sample4/sample4.recal.cram.stats
     # conda changes md5sums for test
 - name: Run variant calling on somatic sample with mutect2 without intervals
-  command: nextflow run main.nf -profile test_cache,tools_somatic --tools mutect2 --no_intervals --outdir results
+  command: nextflow run main.nf -profile test,tools_somatic --tools mutect2 --no_intervals --outdir results
   tags:
     - mutect2_manual
     - manual
@@ -127,7 +127,7 @@
     - path: results/reports/samtools/sample4/sample4.recal.cram.stats
     # conda changes md5sums for test
 - name: Run variant calling on somatic sample with mutect2
-  command: nextflow run main.nf -profile test_cache,tools_somatic --tools mutect2 --outdir results
+  command: nextflow run main.nf -profile test,tools_somatic --tools mutect2 --outdir results
   tags:
     - mutect2_manual
     - manual
@@ -192,7 +192,7 @@
     - path: results/reports/samtools/sample4/sample4.recal.cram.stats
     # conda changes md5sums for test
 - name: Run joint calling on tumor only samples with mutect2
-  command: nextflow run main.nf -profile test_cache,tools_tumoronly --input tests/csv/3.0/recalibrated_tumoronly_joint.csv --tools mutect2 --joint_mutect2 --outdir results
+  command: nextflow run main.nf -profile test,tools_tumoronly --input tests/csv/3.0/recalibrated_tumoronly_joint.csv --tools mutect2 --joint_mutect2 --outdir results
   tags:
     - mutect2_manual
     - manual
@@ -251,7 +251,7 @@
     - path: results/reports/samtools/sample3/sample3.recal.cram.stats
     # conda changes md5sums for test
 - name: Run joint calling on somatic samples with mutect2
-  command: nextflow run main.nf -profile test_cache,tools_somatic --input tests/csv/3.0/recalibrated_somatic_joint.csv --tools mutect2 --joint_mutect2 --outdir results
+  command: nextflow run main.nf -profile test,tools_somatic --input tests/csv/3.0/recalibrated_somatic_joint.csv --tools mutect2 --joint_mutect2 --outdir results
   tags:
     - mutect2_manual
     - somatic

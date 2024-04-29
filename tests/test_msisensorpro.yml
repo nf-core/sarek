@@ -1,5 +1,5 @@
 - name: Run variant calling on somatic sample with msisensor-pro
-  command: nextflow run main.nf -profile test_cache,tools_somatic --tools msisensorpro --outdir results
+  command: nextflow run main.nf -profile test,tools_somatic --tools msisensorpro --outdir results
   tags:
     - msisensorpro
     - somatic
@@ -37,7 +37,7 @@
     - path: results/reports/samtools/sample4/sample4.recal.cram.stats
     # conda changes md5sums for test
 - name: Build only index with msisensorpro
-  command: nextflow run main.nf -profile test_cache --build_only_index --tools msisensorpro --input false --outdir results
+  command: nextflow run main.nf -profile test --build_only_index --tools msisensorpro --input false --outdir results
   tags:
     - build_only_index
     - msisensorpro

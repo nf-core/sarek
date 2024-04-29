@@ -1,5 +1,5 @@
 - name: Run variant calling on somatic samples with cnvkit
-  command: nextflow run main.nf -profile test_cache,tools_somatic --tools cnvkit --outdir results
+  command: nextflow run main.nf -profile test,tools_somatic --tools cnvkit --outdir results
   tags:
     - cnvkit
     - copy_number_calling
@@ -82,7 +82,7 @@
     - path: results/reports/samtools/sample4/sample4.recal.cram.stats
     # conda changes md5sums for test
 - name: Run variant calling on tumor_only sample with cnvkit
-  command: nextflow run main.nf -profile test_cache,tools_tumoronly --tools cnvkit --outdir results
+  command: nextflow run main.nf -profile test,tools_tumoronly --tools cnvkit --outdir results
   tags:
     - cnvkit
     - copy_number_calling
@@ -124,7 +124,7 @@
       md5sum: 393c2749068304d8545b501b9d4658e4
     - path: results/reports/samtools/sample2/sample2.recal.cram.stats
 - name: Run variant calling on germline sample with cnvkit
-  command: nextflow run main.nf -profile test_cache,tools_germline --tools cnvkit --outdir results
+  command: nextflow run main.nf -profile test,tools_germline --tools cnvkit --outdir results
   tags:
     - cnvkit
     - copy_number_calling
@@ -168,7 +168,7 @@
       md5sum: 9cb0ad7039a3b703d16ca7d5b835c0ee
     - path: results/reports/samtools/sample1/sample1.recal.cram.stats
 - name: Run variant calling on somatic samples with cnvkit and skip variant calling on matched normal
-  command: nextflow run main.nf -profile test_cache,tools_somatic --tools cnvkit --only_paired_variant_calling --outdir results
+  command: nextflow run main.nf -profile test,tools_somatic --tools cnvkit --only_paired_variant_calling --outdir results
   tags:
     - cnvkit
     - somatic

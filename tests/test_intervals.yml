@@ -1,5 +1,5 @@
 - name: Run default pipeline with target bed
-  command: nextflow run main.nf -profile test_cache,targeted --outdir results
+  command: nextflow run main.nf -profile test,targeted --outdir results
   tags:
     - intervals
     - preprocessing
@@ -58,7 +58,7 @@
     - path: results/reports/samtools/test/test.recal.cram.stats
     # conda changes md5sums for test
 - name: Run pipeline with intervals false
-  command: nextflow run main.nf -profile test_cache --intervals false --save_reference --outdir results
+  command: nextflow run main.nf -profile test --intervals false --save_reference --outdir results
   tags:
     - intervals
     - intervals_false
@@ -109,7 +109,7 @@
     - path: results/reports/samtools/test/test.recal.cram.stats
     # conda changes md5sums for test
 - name: Run default pipeline without intervals
-  command: nextflow run main.nf -profile test_cache,no_intervals --outdir results
+  command: nextflow run main.nf -profile test,no_intervals --outdir results
   tags:
     - intervals
     - no_intervals

@@ -1,5 +1,5 @@
 - name: Run snpEff followed by VEP
-  command: nextflow run main.nf -profile test_cache,annotation --tools merge --outdir results --download_cache
+  command: nextflow run main.nf -profile test,annotation --tools merge --outdir results --download_cache
   tags:
     - annotation
     - merge
@@ -28,7 +28,7 @@
     - path: results/reports/EnsemblVEP/test/test_VEP.ann.summary.html
       should_exist: false
 - name: Run VEP and snpEff followed by VEP
-  command: nextflow run main.nf -profile test_cache,annotation --tools merge,snpeff,vep --outdir results --download_cache
+  command: nextflow run main.nf -profile test,annotation --tools merge,snpeff,vep --outdir results --download_cache
   tags:
     - annotation
     - merge

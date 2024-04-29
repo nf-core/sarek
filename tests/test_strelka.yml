@@ -1,5 +1,5 @@
 - name: Skip variant calling on matched normal
-  command: nextflow run main.nf -profile test_cache,variantcalling_channels --tools strelka --only_paired_variant_calling --outdir results
+  command: nextflow run main.nf -profile test,variantcalling_channels --tools strelka --only_paired_variant_calling --outdir results
   tags:
     - somatic
     - strelka
@@ -123,7 +123,7 @@
     - path: results/reports/samtools/sample4/sample4.recal.cram.stats
     # conda changes md5sums for test
 - name: Run variant calling on germline sample with strelka
-  command: nextflow run main.nf -profile test_cache,tools_germline --tools strelka --outdir results
+  command: nextflow run main.nf -profile test,tools_germline --tools strelka --outdir results
   tags:
     - germline
     - strelka
@@ -162,7 +162,7 @@
       md5sum: 9cb0ad7039a3b703d16ca7d5b835c0ee
     - path: results/reports/samtools/sample1/sample1.recal.cram.stats
 - name: Run variant calling on germline sample with strelka without intervals
-  command: nextflow run main.nf -profile test_cache,tools_germline --tools strelka --no_intervals --outdir results
+  command: nextflow run main.nf -profile test,tools_germline --tools strelka --no_intervals --outdir results
   tags:
     - germline
     - strelka
@@ -206,7 +206,7 @@
       md5sum: c67dcd711b096eb42f43784d5eadbc0d
     - path: results/reports/samtools/sample1/sample1.recal.cram.stats
 - name: Run variant calling on tumor only sample with strelka
-  command: nextflow run main.nf -profile test_cache,tools_tumoronly --tools strelka --outdir results
+  command: nextflow run main.nf -profile test,tools_tumoronly --tools strelka --outdir results
   tags:
     - strelka
     - tumor_only
@@ -245,7 +245,7 @@
       md5sum: 393c2749068304d8545b501b9d4658e4
     - path: results/reports/samtools/sample2/sample2.recal.cram.stats
 - name: Run variant calling on tumor only sample with strelka without intervals
-  command: nextflow run main.nf -profile test_cache,tools_tumoronly --tools strelka --no_intervals --outdir results
+  command: nextflow run main.nf -profile test,tools_tumoronly --tools strelka --no_intervals --outdir results
   tags:
     - no_intervals
     - strelka
@@ -289,7 +289,7 @@
       md5sum: cfb07b0ba46e8468b4342edb243536f3
     - path: results/reports/samtools/sample2/sample2.recal.cram.stats
 - name: Run variant calling on somatic sample with strelka
-  command: nextflow run main.nf -profile test_cache,tools_somatic --tools strelka --outdir results
+  command: nextflow run main.nf -profile test,tools_somatic --tools strelka --outdir results
   tags:
     - somatic
     - strelka
@@ -365,7 +365,7 @@
     - path: results/reports/samtools/sample4/sample4.recal.cram.stats
     # conda changes md5sums for test
 - name: Run variant calling on somatic sample with strelka without intervals
-  command: nextflow run main.nf -profile test_cache,tools_somatic --tools strelka --no_intervals --outdir results
+  command: nextflow run main.nf -profile test,tools_somatic --tools strelka --no_intervals --outdir results
   tags:
     - no_intervals
     - somatic

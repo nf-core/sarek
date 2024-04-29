@@ -1,5 +1,5 @@
 - name: Run variant calling on tumor only sample with mutect2
-  command: nextflow run main.nf -profile test_cache,tools_tumoronly --tools mutect2 --outdir results
+  command: nextflow run main.nf -profile test,tools_tumoronly --tools mutect2 --outdir results
   tags:
     - mutect2
     - tumor_only
@@ -50,7 +50,7 @@
       md5sum: 393c2749068304d8545b501b9d4658e4
     - path: results/reports/samtools/sample2/sample2.recal.cram.stats
 - name: Run variant calling on tumor only sample with mutect2 without intervals
-  command: nextflow run main.nf -profile test_cache,tools_tumoronly --tools mutect2 --no_intervals --outdir results
+  command: nextflow run main.nf -profile test,tools_tumoronly --tools mutect2 --no_intervals --outdir results
   tags:
     - mutect2
     - no_intervals

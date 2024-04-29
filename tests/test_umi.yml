@@ -1,5 +1,5 @@
 - name: Run UMI test
-  command: nextflow run main.nf -profile test_cache,umi --outdir results
+  command: nextflow run main.nf -profile test,umi --outdir results
   tags:
     - preprocessing
     - umi
@@ -52,7 +52,7 @@
     # text-based file changes md5sums on reruns
 
 - name: Run Sentieon-FGBio UMI combination test
-  command: nextflow run main.nf -profile test_cache,software_license,umi --sentieon_extension --outdir results --aligner "sentieon-bwamem"
+  command: nextflow run main.nf -profile test,software_license,umi --sentieon_extension --outdir results --aligner "sentieon-bwamem"
   tags:
     - preprocessing
     - umi
@@ -61,7 +61,7 @@
     contains:
       - "Sentieon BWA is currently not compatible with FGBio UMI handeling. Please choose a different aligner."
 # - name: Run UMI TSO test
-#   command: nextflow run main.nf -profile test_cache,umi_tso --outdir results
+#   command: nextflow run main.nf -profile test,umi_tso --outdir results
 #   tags:
 #     - umi_tso
 #     - umi

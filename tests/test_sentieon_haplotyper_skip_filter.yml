@@ -1,5 +1,5 @@
 - name: Run variant calling on germline sample with sentieon haplotyper and skip filter
-  command: nextflow run main.nf -profile test_cache,software_license,targeted --sentieon_extension --input ./tests/csv/3.0/mapped_single_bam.csv --tools sentieon_haplotyper --step variant_calling --skip_tools haplotyper_filter --outdir results
+  command: nextflow run main.nf -profile test,software_license,targeted --sentieon_extension --input ./tests/csv/3.0/mapped_single_bam.csv --tools sentieon_haplotyper --step variant_calling --skip_tools haplotyper_filter --outdir results
   tags:
     - germline
     - sentieon/haplotyper_skip_filter
@@ -42,7 +42,7 @@
       md5sum: 9e649ac749ff6c6073bef5ab63e8aaa4
     - path: results/reports/samtools/test/test.recal.cram.stats
 - name: Run variant calling on germline sample with sentieon haplotyper without intervals and skip filter
-  command: nextflow run main.nf -profile test_cache,software_license,targeted --sentieon_extension --input ./tests/csv/3.0/mapped_single_bam.csv --tools sentieon_haplotyper --step variant_calling --skip_tools haplotyper_filter --no_intervals --outdir results
+  command: nextflow run main.nf -profile test,software_license,targeted --sentieon_extension --input ./tests/csv/3.0/mapped_single_bam.csv --tools sentieon_haplotyper --step variant_calling --skip_tools haplotyper_filter --no_intervals --outdir results
   tags:
     - germline
     - sentieon/haplotyper_skip_filter
