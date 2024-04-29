@@ -8,8 +8,8 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { paramsSummaryMap          } from 'plugin/nf-validation'
-include { fromSamplesheet           } from 'plugin/nf-validation'
+include { paramsSummaryMap          } from 'plugin/nf-schema'
+include { samplesheetToList         } from 'plugin/nf-schema'
 include { UTILS_NEXTFLOW_PIPELINE   } from '../../nf-core/utils_nextflow_pipeline'
 include { UTILS_NFVALIDATION_PLUGIN } from '../../nf-core/utils_nfvalidation_plugin'
 include { UTILS_NFCORE_PIPELINE     } from '../../nf-core/utils_nfcore_pipeline'
@@ -128,7 +128,9 @@ if (params.tools && (params.tools.split(',').contains('vep')    || params.tools.
 
     params.input_restart = retrieveInput((!params.build_only_index && !params.input), params.step, params.outdir)
 
-    ch_from_samplesheet = params.build_only_index ? Channel.empty() : params.input ? Channel.fromSamplesheet("input") : Channel.fromSamplesheet("input_restart")
+    ch_from_samplesheet = params.build_only_index ? Channel.empty() : params.input ?
+        Channel.fromList(samplesheetToList(params.input, "$projectDir/assets/schema_input.json")) :
+        Channel.fromList(samplesheetToList(params.input_restart, "$projectDir/assets/schema_input.json"))
 
     SAMPLESHEET_TO_CHANNEL(
         ch_from_samplesheet,
