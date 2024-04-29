@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - [#1378](https://github.com/nf-core/sarek/pull/1378) - Improve cloud tests launch workflow to use matrix
+- [#1488](https://github.com/nf-core/sarek/pull/1488) - Fixing call to `GATK4_HAPLOTYPECALLER` and thereby also the test-profile `test_full_germline`
 
 ### Removed
 
