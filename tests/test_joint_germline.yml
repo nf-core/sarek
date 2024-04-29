@@ -1,5 +1,5 @@
 - name: Run joint germline variant calling with haplotypecaller
-  command: nextflow run main.nf -profile test,targeted --input ./tests/csv/3.0/mapped_joint_bam.csv --tools haplotypecaller --step variant_calling --joint_germline --outdir results --dbsnp_vqsr false --known_snps_vqsr false --known_indels_vqsr false
+  command: nextflow run main.nf -profile test,targeted --input ./tests/csv/3.0/mapped_joint_bam.csv --tools haplotypecaller --step variant_calling --joint_germline --dbsnp_vqsr false --known_snps_vqsr false --known_indels_vqsr false --outdir results
   tags:
     - germline
     - joint_germline
@@ -53,7 +53,7 @@
       md5sum: 5c00a1d457c387d6e71848a6d897e309
     - path: results/reports/samtools/testT/testT.recal.cram.stats
 - name: Run joint germline variant calling with haplotypecaller all intervals at once
-  command: nextflow run main.nf -profile test,targeted --input ./tests/csv/3.0/mapped_joint_bam.csv --tools haplotypecaller --step variant_calling --joint_germline --outdir results --nucleotides_per_second 100
+  command: nextflow run main.nf -profile test,targeted --input ./tests/csv/3.0/mapped_joint_bam.csv --tools haplotypecaller --step variant_calling --joint_germline --dbsnp_vqsr false --known_snps_vqsr false --known_indels_vqsr false --nucleotides_per_second 100 --outdir results
   tags:
     - germline
     - joint_germline
