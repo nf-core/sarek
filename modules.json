@@ -316,7 +316,7 @@
                     },
                     "mosdepth": {
                         "branch": "master",
-                        "git_sha": "30d3ca4346ae38f0de821c57a9c517b8b0b135d6",
+                        "git_sha": "e0616fba0919adb190bfe070d17fb12d76ba3a26",
                         "installed_by": ["modules"]
                     },
                     "msisensorpro/msisomatic": {
