@@ -256,6 +256,10 @@ jobs:
           - tags: "tabix/tabix"
           - tags: "tiddit/sv"
           - tags: "untar"
+          - tags: "pipeline_sarek"
+        include:
+          - tags: "pipeline_sarek"
+            profile: "test,docker"
     env:
       NXF_ANSI_LOG: false
       TEST_DATA_BASE: "${{ github.workspace }}/test-datasets"

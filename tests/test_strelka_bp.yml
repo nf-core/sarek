@@ -1,5 +1,5 @@
 - name: Run variant calling on somatic sample with Strelka BP
-  command: nextflow run main.nf -profile test_cache,tools_somatic --tools strelka,manta --outdir results
+  command: nextflow run main.nf -profile test,tools_somatic --tools strelka,manta --outdir results
   tags:
     - somatic
     - strelka_bp
@@ -113,7 +113,7 @@
     - path: results/reports/samtools/sample4/sample4.recal.cram.stats
     # conda changes md5sums for test
 - name: Run variant calling on somatic sample with Strelka BP without intervals
-  command: nextflow run main.nf -profile test_cache,tools_somatic --tools strelka,manta --no_intervals --outdir results
+  command: nextflow run main.nf -profile test,tools_somatic --tools strelka,manta --no_intervals --outdir results
   tags:
     - no_intervals
     - somatic

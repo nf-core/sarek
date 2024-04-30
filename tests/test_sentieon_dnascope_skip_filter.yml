@@ -1,5 +1,5 @@
 - name: Run variant calling on germline sample with sentieon dnascope and skip filter
-  command: nextflow run main.nf -profile test_cache,targeted,software_license --sentieon_extension --input ./tests/csv/3.0/mapped_single_bam.csv --tools sentieon_dnascope --step variant_calling --skip_tools dnascope_filter --outdir results
+  command: nextflow run main.nf -profile test,targeted,software_license --sentieon_extension --input ./tests/csv/3.0/mapped_single_bam.csv --tools sentieon_dnascope --step variant_calling --skip_tools dnascope_filter --outdir results
   tags:
     - germline
     - sentieon/dnascope_skip_filter
@@ -43,7 +43,7 @@
       md5sum: 5c00a1d457c387d6e71848a6d897e309
     - path: results/reports/samtools/test/test.recal.cram.stats
 - name: Run variant calling on germline sample with sentieon dnascope without intervals and skip filter
-  command: nextflow run main.nf -profile test_cache,targeted,software_license --sentieon_extension --input ./tests/csv/3.0/mapped_single_bam.csv --tools sentieon_dnascope --step variant_calling --skip_tools dnascope_filter --no_intervals --outdir results
+  command: nextflow run main.nf -profile test,targeted,software_license --sentieon_extension --input ./tests/csv/3.0/mapped_single_bam.csv --tools sentieon_dnascope --step variant_calling --skip_tools dnascope_filter --no_intervals --outdir results
   tags:
     - germline
     - sentieon/dnascope_skip_filter

@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- [#1489](https://github.com/nf-core/sarek/pull/1489) - Added a `testdata.nf-core.sarek` key in `conf/igenomes.config` for small reference
+
 ### Changed
 
 - [#1477](https://github.com/nf-core/sarek/pull/1477) - Back to dev
@@ -22,6 +24,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1488](https://github.com/nf-core/sarek/pull/1488) - Fixing call to `GATK4_HAPLOTYPECALLER` and thereby also the test-profile `test_full_germline`
 
 ### Removed
+
+- [#1489](https://github.com/nf-core/sarek/pull/1489) - Remove `test_cache` profile
 
 ### Dependencies
 

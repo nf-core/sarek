@@ -1,5 +1,5 @@
 - name: Run sentieon dedup starting from CRAM
-  command: nextflow run main.nf -profile test_cache,software_license,sentieon_dedup_cram --sentieon_extension --outdir results
+  command: nextflow run main.nf -profile test,software_license,sentieon_dedup_cram --sentieon_extension --outdir results
   tags:
     - input_cram
     - preprocessing

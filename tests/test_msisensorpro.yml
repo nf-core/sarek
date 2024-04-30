@@ -1,5 +1,5 @@
 - name: Run variant calling on somatic sample with msisensor-pro
-  command: nextflow run main.nf -profile test_cache,tools_somatic --tools msisensorpro --outdir results
+  command: nextflow run main.nf -profile test,tools_somatic --tools msisensorpro --outdir results
   tags:
     - msisensorpro
     - somatic
@@ -37,7 +37,7 @@
     - path: results/reports/samtools/sample4/sample4.recal.cram.stats
     # conda changes md5sums for test
 - name: Build only index with msisensorpro
-  command: nextflow run main.nf -profile test_cache --build_only_index --tools msisensorpro --input false --outdir results
+  command: nextflow run main.nf -profile test --build_only_index --tools msisensorpro --input false --outdir results
   tags:
     - build_only_index
     - msisensorpro
@@ -53,19 +53,11 @@
       md5sum: 8569fbdb2c98c6fb16dfa73d8eacb070
     - path: results/reference/bwa/genome.sa
       md5sum: e7cff62b919448a3a3d0fe4aaf427594
-    - path: results/reference/dbsnp/dbsnp_146.hg38.vcf.gz.tbi
-    # conda changes md5sums for test
-    - path: results/reference/dict/genome.dict
-      md5sum: 2433fe2ba31257337bf4c4bd4cb8da15
-    - path: results/reference/fai/genome.fasta.fai
-      md5sum: 3520cd30e1b100e55f578db9c855f685
     - path: results/reference/intervals/chr22_1-40001.bed
       md5sum: 87a15eb9c2ff20ccd5cd8735a28708f7
     - path: results/reference/intervals/chr22_1-40001.bed.gz
       md5sum: d3341fa28986c40b24fcc10a079dbb80
     - path: results/reference/intervals/genome.bed
       md5sum: a87dc7d20ebca626f65cc16ff6c97a3e
-    - path: results/reference/known_indels/mills_and_1000G.indels.vcf.gz.tbi
-    # conda changes md5sums for test
     - path: results/reference/msi/genome.msisensor_scan.list
       md5sum: a7886e7a56a1d7e3be6b4496753fd743

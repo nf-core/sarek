@@ -1,5 +1,5 @@
 - name: Run save_mapped
-  command: nextflow run main.nf -profile test_cache --save_mapped --outdir results
+  command: nextflow run main.nf -profile test --save_mapped --outdir results
   tags:
     - default_extended
     - preprocessing

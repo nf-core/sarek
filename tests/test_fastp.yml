@@ -1,5 +1,5 @@
 - name: Run trimming pipeline
-  command: nextflow run main.nf -profile test_cache,trimming --save_trimmed --outdir results
+  command: nextflow run main.nf -profile test,trimming --save_trimmed --outdir results
   tags:
     - fastp
     - preprocessing
@@ -55,7 +55,7 @@
     - path: results/reports/samtools/test/test.recal.cram.stats
     # conda changes md5sums for test
 - name: Run split fastq module
-  command: nextflow run main.nf -profile test_cache,split_fastq --outdir results
+  command: nextflow run main.nf -profile test,split_fastq --outdir results
   tags:
     - fastp
     - preprocessing

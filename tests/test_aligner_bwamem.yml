@@ -1,5 +1,5 @@
 - name: Run bwamem
-  command: nextflow run main.nf -profile test_cache --aligner bwa-mem --save_reference --outdir results
+  command: nextflow run main.nf -profile test --aligner bwa-mem --save_reference --outdir results
   tags:
     - aligner
     - bwamem
@@ -32,20 +32,12 @@
       md5sum: 8569fbdb2c98c6fb16dfa73d8eacb070
     - path: results/reference/bwa/genome.sa
       md5sum: e7cff62b919448a3a3d0fe4aaf427594
-    - path: results/reference/dbsnp/dbsnp_146.hg38.vcf.gz.tbi
-    # conda changes md5sums for test
-    - path: results/reference/dict/genome.dict
-      md5sum: 2433fe2ba31257337bf4c4bd4cb8da15
-    - path: results/reference/fai/genome.fasta.fai
-      md5sum: 3520cd30e1b100e55f578db9c855f685
     - path: results/reference/intervals/chr22_1-40001.bed
       md5sum: 87a15eb9c2ff20ccd5cd8735a28708f7
     - path: results/reference/intervals/chr22_1-40001.bed.gz
       md5sum: d3341fa28986c40b24fcc10a079dbb80
     - path: results/reference/intervals/genome.bed
       md5sum: a87dc7d20ebca626f65cc16ff6c97a3e
-    - path: results/reference/known_indels/mills_and_1000G.indels.vcf.gz.tbi
-    # conda changes md5sums for test
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.cram.metrics
       contains: ["test	17094	1534	168	1046782	12429	197	0	0.635998", "1.0	0.999991	1171"]
@@ -74,7 +66,7 @@
     - path: results/reports/samtools/test/test.recal.cram.stats
     # conda changes md5sums for test
 - name: Build only index with bwa
-  command: nextflow run main.nf -profile test_cache --build_only_index --input false --outdir results
+  command: nextflow run main.nf -profile test --build_only_index --input false --outdir results
   tags:
     - aligner
     - build_only_index
@@ -91,17 +83,9 @@
       md5sum: 8569fbdb2c98c6fb16dfa73d8eacb070
     - path: results/reference/bwa/genome.sa
       md5sum: e7cff62b919448a3a3d0fe4aaf427594
-    - path: results/reference/dbsnp/dbsnp_146.hg38.vcf.gz.tbi
-    # conda changes md5sums for test
-    - path: results/reference/dict/genome.dict
-      md5sum: 2433fe2ba31257337bf4c4bd4cb8da15
-    - path: results/reference/fai/genome.fasta.fai
-      md5sum: 3520cd30e1b100e55f578db9c855f685
     - path: results/reference/intervals/chr22_1-40001.bed
       md5sum: 87a15eb9c2ff20ccd5cd8735a28708f7
     - path: results/reference/intervals/chr22_1-40001.bed.gz
       md5sum: d3341fa28986c40b24fcc10a079dbb80
     - path: results/reference/intervals/genome.bed
       md5sum: a87dc7d20ebca626f65cc16ff6c97a3e
-    - path: results/reference/known_indels/mills_and_1000G.indels.vcf.gz.tbi
-    # conda changes md5sums for test

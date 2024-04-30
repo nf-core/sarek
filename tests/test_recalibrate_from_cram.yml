@@ -1,5 +1,5 @@
 - name: Run Recalibration starting from cram
-  command: nextflow run main.nf -profile test_cache,recalibrate_cram --outdir results
+  command: nextflow run main.nf -profile test,recalibrate_cram --outdir results
   tags:
     - input_cram
     - recalibrate
@@ -29,7 +29,7 @@
     - path: results/preprocessing/markduplicates/
       should_exist: false
 - name: Run Recalibration starting from cram and skip baserecalibration
-  command: nextflow run main.nf -profile test_cache,recalibrate_cram,skip_bqsr --tools strelka --outdir results
+  command: nextflow run main.nf -profile test,recalibrate_cram,skip_bqsr --tools strelka --outdir results
   tags:
     - input_cram
     - recalibrate

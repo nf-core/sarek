@@ -1,5 +1,5 @@
 - name: Run variant calling on germline sample with haplotypecaller and skip filter
-  command: nextflow run main.nf -profile test_cache,targeted --input ./tests/csv/3.0/mapped_single_bam.csv --tools haplotypecaller --step variant_calling --skip_tools haplotypecaller_filter --outdir results
+  command: nextflow run main.nf -profile test,targeted --input ./tests/csv/3.0/mapped_single_bam.csv --tools haplotypecaller --step variant_calling --skip_tools haplotypecaller_filter --outdir results
   tags:
     - germline
     - haplotypecaller_skip_filter
@@ -50,7 +50,7 @@
       md5sum: 5c00a1d457c387d6e71848a6d897e309
     - path: results/reports/samtools/test/test.recal.cram.stats
 - name: Run variant calling on germline sample with haplotypecaller without intervals and skip filter
-  command: nextflow run main.nf -profile test_cache,targeted --input ./tests/csv/3.0/mapped_single_bam.csv --tools haplotypecaller --step variant_calling --skip_tools haplotypecaller_filter --no_intervals --outdir results
+  command: nextflow run main.nf -profile test,targeted --input ./tests/csv/3.0/mapped_single_bam.csv --tools haplotypecaller --step variant_calling --skip_tools haplotypecaller_filter --no_intervals --outdir results
   tags:
     - germline
     - haplotypecaller_skip_filter

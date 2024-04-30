@@ -1,5 +1,5 @@
 - name: Run save_output_as_bam
-  command: nextflow run main.nf -profile test_cache --save_output_as_bam --outdir results
+  command: nextflow run main.nf -profile test --save_output_as_bam --outdir results
   tags:
     - default_extended
     - preprocessing
