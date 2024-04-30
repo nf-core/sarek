@@ -19,20 +19,20 @@ workflow CONCATENATE_GERMLINE_VCFS {
     main:
     versions = Channel.empty()
 
-    // Normalize vcf-files (added by jcdelmas 240415)
-    GERMLINE_VCFS_NORM(germline_vcfs_with_tbis, fasta)
-
     // Concatenate vcf-files
     ADD_INFO_TO_VCF(vcfs)
     TABIX_EXT_VCF(ADD_INFO_TO_VCF.out.vcf)
 
     // Gather vcfs and vcf-tbis for concatenating germline-vcfs
     germline_vcfs_with_tbis = TABIX_EXT_VCF.out.gz_tbi.map{ meta, vcf, tbi -> [ meta.subMap('id'), vcf, tbi ] }.groupTuple()
-
-    GERMLINE_VCFS_CONCAT(germline_vcfs_with_tbis)
+    
+    // Normalize vcf-files and concat
+    GERMLINE_VCFS_NORM(germline_vcfs_with_tbis, fasta)
+    GERMLINE_VCFS_CONCAT(GERMLINE_VCFS_NORM.out.vcf)
     GERMLINE_VCFS_CONCAT_SORT(GERMLINE_VCFS_CONCAT.out.vcf)
     TABIX_GERMLINE_VCFS_CONCAT_SORT(GERMLINE_VCFS_CONCAT_SORT.out.vcf)
-
+    
+    
     // Gather versions of all tools used
     versions = versions.mix(ADD_INFO_TO_VCF.out.versions)
     versions = versions.mix(TABIX_EXT_VCF.out.versions)
