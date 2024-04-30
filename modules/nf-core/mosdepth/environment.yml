@@ -5,4 +5,4 @@ channels:
   - defaults
 dependencies:
   # renovate: datasource=conda depName=bioconda/mosdepth
-  - mosdepth=0.3.6
+  - mosdepth=0.3.8
