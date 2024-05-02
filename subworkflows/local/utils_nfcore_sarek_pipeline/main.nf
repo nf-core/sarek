@@ -285,9 +285,9 @@ def methodsDescriptionText(mqc_methods_yaml) {
         String[] manifest_doi = meta.manifest_map.doi.split(",")
         for (String doi_ref: manifest_doi) temp_doi_ref += "(doi: <a href=\'https://doi.org/${doi_ref}\'>${doi_ref}</a>), "
         meta["doi_text"] = temp_doi_ref.substring(0, temp_doi_ref.length()-2)
+    } else {
+        meta["nodoi_text"] = "<li>If available, make sure to update the text to include the Zenodo DOI of version of the pipeline used. </li>"
     }
-
-    meta["nodoi_text"] = meta.manifest_map.doi ? "": "<li>If available, make sure to update the text to include the Zenodo DOI of version of the pipeline used. </li>"
 
     // Tool references
     meta["tool_citations"] = ""
