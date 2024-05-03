@@ -22,11 +22,19 @@ input:
       description: |
         Groovy Map containing sample information
         e.g. [ id:'test', single_end:false ]
-  - input:
+  - input_1:
       type: file
       description: BAM/CRAM/SAM file
       pattern: "*.{bam,cram,sam}"
-  - input_index:
+  - input_1_index:
+      type: file
+      description: BAM/CRAM/SAM index file
+      pattern: "*.{bai,crai}"
+  - input_2:
+      type: file
+      description: BAM/CRAM/SAM file
+      pattern: "*.{bam,cram,sam}"
+  - input_2_index:
       type: file
       description: BAM/CRAM/SAM index file
       pattern: "*.{bai,crai}"
@@ -34,22 +42,47 @@ input:
       type: file
       description: Optional - Limit analysis to targets listed in this BED-format FILE.
       pattern: "*.bed"
+  - ref_meta:
+      type: map
+      description: |
+        Groovy Map containing reference information.
+        e.g. [ id:'test_reference' ]
   - fasta:
       type: file
       description: reference fasta file
       pattern: ".{fa,fa.gz,fasta,fasta.gz}"
+  - ref_idx_meta:
+      type: map
+      description: |
+        Groovy Map containing reference information.
+        e.g. [ id:'test_reference' ]
   - fasta_fai:
       type: file
       description: reference fasta file index
       pattern: "*.{fa,fasta}.fai"
+  - samples_meta:
+      type: map
+      description: |
+        Groovy Map containing meta information for the samples file.
+        e.g. [ id:'test_samples' ]
   - samples:
       type: file
       description: Optional - Limit analysis to samples listed (one per line) in the FILE.
       pattern: "*.txt"
+  - populations_meta:
+      type: map
+      description: |
+        Groovy Map containing meta information for the populations file.
+        e.g. [ id:'test_populations' ]
   - populations:
       type: file
       description: Optional - Each line of FILE should list a sample and a population which it is part of.
       pattern: "*.txt"
+  - cnv_meta:
+      type: map
+      description: |
+        Groovy Map containing meta information for the cnv file.
+        e.g. [ id:'test_cnv' ]
   - cnv:
       type: file
       description: |
@@ -64,10 +97,10 @@ output:
       description: |
         Groovy Map containing sample information
         e.g. [ id:'test', single_end:false ]
-  - version:
+  - versions:
       type: file
       description: File containing software version
-      pattern: "*.{version.txt}"
+      pattern: "versions.yml"
   - vcf:
       type: file
       description: Compressed VCF file

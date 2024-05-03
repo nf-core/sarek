@@ -62,13 +62,13 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
 
     // CONTROLFREEC (depends on MPILEUP)
     if (tools.split(',').contains('controlfreec')) {
-        length_file            = cf_chrom_len ?: fasta_fai
+        length_file            = cf_chrom_len ?: fasta_fai.map{ meta, fasta_fai -> [ fasta_fai ] }
         intervals_controlfreec = wes ? intervals_bed_combined : []
 
         BAM_VARIANT_CALLING_TUMOR_ONLY_CONTROLFREEC(
             // Remap channel to match module/subworkflow
             BAM_VARIANT_CALLING_MPILEUP.out.mpileup.map{ meta, pileup_tumor -> [ meta, [], pileup_tumor, [], [], [], [] ] },
-            fasta,
+            fasta.map{ meta, fasta -> [ fasta ] },
             length_file,
             dbsnp,
             dbsnp_tbi,
@@ -85,8 +85,8 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         BAM_VARIANT_CALLING_CNVKIT (
             // Remap channel to match module/subworkflow
             cram.map{ meta, cram, crai -> [ meta, cram, [] ] },
-            fasta.map{ it -> [[id:it[0].baseName], it] },
-            fasta_fai.map{ it -> [[id:it[0].baseName], it] },
+            fasta,
+            fasta_fai,
             [[id:"null"], []],
             cnvkit_reference.map{ it -> [[id:it[0].baseName], it] }
         )
@@ -119,10 +119,8 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
                 [ meta - meta.subMap('data_type', 'status') + [ id:meta.patient ], cram, crai ] :
                 [ meta - meta.subMap('data_type', 'status'), cram, crai ]
             },
-            // Remap channel to match module/subworkflow
-            fasta.map{ it -> [ [ id:'fasta' ], it ] },
-            // Remap channel to match module/subworkflow
-            fasta_fai.map{ it -> [ [ id:'fasta_fai' ], it ] },
+            fasta,
+            fasta_fai,
             dict,
             germline_resource,
             germline_resource_tbi,
@@ -141,8 +139,8 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA(
             cram,
             // Remap channel to match module/subworkflow
-            fasta.map{ it -> [ [ id:'fasta' ], it ] },
-            fasta_fai.map{ it -> [ [ id:'fasta_fai' ], it ] },
+            fasta,
+            fasta_fai,
             intervals_bed_gz_tbi_combined
 
         )
@@ -156,8 +154,8 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         BAM_VARIANT_CALLING_SINGLE_STRELKA(
             cram,
             dict,
-            fasta,
-            fasta_fai,
+            fasta.map{ meta, fasta -> [ fasta ] },
+            fasta_fai.map{ meta, fasta_fai -> [ fasta_fai ] },
             intervals_bed_gz_tbi
         )
 
@@ -169,10 +167,8 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     if (tools.split(',').contains('tiddit')) {
         BAM_VARIANT_CALLING_SINGLE_TIDDIT(
             cram,
-            // Remap channel to match module/subworkflow
-            fasta.map{ it -> [ [ id:'fasta' ], it ] },
-            bwa
-        )
+            fasta,
+            bwa)
 
         vcf_tiddit = BAM_VARIANT_CALLING_SINGLE_TIDDIT.out.vcf
         versions = versions.mix(BAM_VARIANT_CALLING_SINGLE_TIDDIT.out.versions)

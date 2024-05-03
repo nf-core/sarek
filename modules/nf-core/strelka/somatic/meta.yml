@@ -56,7 +56,7 @@ input:
       type: file
       description: BED file containing target regions for variant calling
       pattern: "*.{bed}"
-  - target_bed_tbi:
+  - target_bed_index:
       type: file
       description: Index for BED file containing target regions for variant calling
       pattern: "*.{bed.tbi}"

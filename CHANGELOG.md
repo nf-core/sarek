@@ -5,28 +5,118 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [dev]
+## [dev](https://github.com/nf-core/sarek/tree/dev) - Unreleased
 
 ### Added
 
-- [#1333](https://github.com/nf-core/sarek/pull/1333) - Back to dev
-- [#1335](https://github.com/nf-core/sarek/pull/1335) - Add index computation of `bcftools_annotations`, if not provided
+- [#1489](https://github.com/nf-core/sarek/pull/1489) - Added a `testdata.nf-core.sarek` key in `conf/igenomes.config` for small reference
+- [#1493](https://github.com/nf-core/sarek/pull/1493) - Added a `wave` profile
 
 ### Changed
 
-- [#1339](https://github.com/nf-core/sarek/pull/1339) - Update sentieon-modules
+- [#1477](https://github.com/nf-core/sarek/pull/1477) - Back to dev
+- [#1482](https://github.com/nf-core/sarek/pull/1482) - Pin `nf-prov` plugin to `1.2.2`
+- [#1485](https://github.com/nf-core/sarek/pull/1485) - Update citation for publication
+- [#1487](https://github.com/nf-core/sarek/pull/1487) - Update sentieon-modules to Sentieon `202308.02`
+- [#1490](https://github.com/nf-core/sarek/pull/1490) - Update mosdepth to `0.3.8`
 
 ### Fixed
 
-- [#1334](https://github.com/nf-core/sarek/pull/1334) - Remove extra v, when reporting tower runs on slack
-- [#1335](https://github.com/nf-core/sarek/pull/1335) - Add docs and validation for bcftools annotation parameters
+- [#1378](https://github.com/nf-core/sarek/pull/1378) - Improve cloud tests launch workflow to use matrix
+- [#1488](https://github.com/nf-core/sarek/pull/1488) - Fixing call to `GATK4_HAPLOTYPECALLER` and thereby also the test-profile `test_full_germline`
+- [#1496](https://github.com/nf-core/sarek/pull/1496) - Fix multiple DOI handling in manifest
 
 ### Removed
+
+- [#1489](https://github.com/nf-core/sarek/pull/1489) - Remove `test_cache` profile
 
 ### Dependencies
 
 | Dependency | Old version | New version |
 | ---------- | ----------- | ----------- |
+| `mosdepth` | 0.3.6       | 0.3.8       |
+| `sentieon` | 202308.01   | 202308.02   |
+
+### Modules / Subworkflows
+
+### Parameters
+
+## [3.4.1](https://github.com/nf-core/sarek/releases/tag/3.4.1) - Balgattjåhkkå
+
+Balgattjåhkkå is the other top peak (over 2k m) in the Pårte massif, the other one being Pårtetjåkko (Bårddetjåhkkå).
+
+### Added
+
+- [#1272](https://github.com/nf-core/sarek/pull/1372) - Add integration with NCBench: Automatic submission of latest benchmarking runs
+- [#1333](https://github.com/nf-core/sarek/pull/1333) - Back to dev
+- [#1335](https://github.com/nf-core/sarek/pull/1335) - Add index computation of `bcftools_annotations`, if not provided
+- [#1340](https://github.com/nf-core/sarek/pull/1340) - Adds Azure test profiles and megatests
+- [#1372](https://github.com/nf-core/sarek/pull/1372) - Add NCBench test profile for Agilent datasets
+- [#1409](https://github.com/nf-core/sarek/pull/1409) - Add params `modules_testdata_base_path` to test profile
+
+### Changed
+
+- [#1339](https://githu.com/nf-core/sarek/pull/1339), [#1401](https://github.com/nf-core/sarek/pull/1401) - Update sentieon-modules to Sentieon `202308.01` and adding support for running Sentieon with Conda and Apptainer
+- [#1344](https://github.com/nf-core/sarek/pull/1344) - Enable CRAM QC, when starting from variantcalling
+- [#1359](https://github.com/nf-core/sarek/pull/1359) - Removing params usage from local modules
+- [#1359](https://github.com/nf-core/sarek/pull/1359) - Removing params usage from local subworkflows
+- [#1360](https://github.com/nf-core/sarek/pull/1360) - Sync `TEMPLATE` with `tools` `2.11`
+- [#1385](https://github.com/nf-core/sarek/pull/1385), [#1436](https://github.com/nf-core/sarek/pull/1436) - Sync `TEMPLATE` with `tools` `2.12`
+- [#1408](https://github.com/nf-core/sarek/pull/1408), [#1412](https://github.com/nf-core/sarek/pull/1412) - Updating samtools to v1.19.2 - except in GATK/markduplicates. (Temporarily disabled nf-test for bwamem2/mem.)
+- [#1411](https://github.com/nf-core/sarek/pull/1411) - Temporarily disable sentieon related tests
+- [#1414](https://github.com/nf-core/sarek/pull/1414) - Sync `TEMPLATE` with `tools` `2.13`
+- [#1419](https://github.com/nf-core/sarek/pull/1419) - Updating GATK to v4.5, and updating samtools to v1.19.2 in GATK/markduplicates
+- [#1426](https://github.com/nf-core/sarek/pull/1426) - Updating certain modules in order to fix the testdata-path in the nf-tests of those modules. Setting Docker runOptions for params.use_gatk_spark
+- [#1428](https://github.com/nf-core/sarek/pull/1428) - Sync `TEMPLATE` with `tools` `2.13.1`
+- [#1422](https://github.com/nf-core/sarek/pull/1422) - Refactoring following `TEMPLATE` sync with `tools` `2.13`
+- [#1431](https://github.com/nf-core/sarek/pull/1431) - Using docker.containerOptions instead of docker.runOptions. Clearing containerOptions for SPARK modules for any kind of supported container engine
+- [#1439](https://github.com/nf-core/sarek/pull/1439) - Replacing the local module `BUILD_INTERVALS` with the nf-core module `GAWK`
+- [#1456](https://github.com/nf-core/sarek/pull/1456), [#1472](https://github.com/nf-core/sarek/pull/1472), [#1473](https://github.com/nf-core/sarek/pull/1473) - Revert usage of docker.runOptions. Add an empty docker.runOptions when using the new `spark` profile
+- [#1457](https://github.com/nf-core/sarek/pull/1457) - Update all modules
+- [#1466](https://github.com/nf-core/sarek/pull/1466) - Update `VEP`
+
+### Fixed
+
+- [#1334](https://github.com/nf-core/sarek/pull/1334) - Remove extra v, when reporting tower runs on slack
+- [#1335](https://github.com/nf-core/sarek/pull/1335) - Add docs and validation for bcftools annotation parameters
+- [#1345](https://github.com/nf-core/sarek/pull/1345) - Preserve STDERR for easier debugging
+- [#1351](https://github.com/nf-core/sarek/pull/1351) - Fix params name for test profiles (`bcftools_annotations`)
+- [#1357](https://github.com/nf-core/sarek/pull/1364) - Fixed bug where samples were dropped while reconstituting BAM files
+- [#1373](https://github.com/nf-core/sarek/pull/1373) - Add `chr` prefix to NCBench bed file & enable trimming
+- [#1381](https://github.com/nf-core/sarek/pull/1381) - Swap NGSCheckMate bed file for GATK.GRCh37 to one without the `chr` prefix
+- [#1383](https://github.com/nf-core/sarek/pull/1383) - Fix `--three_prime_clip_r{1,2}` parameter documentation
+- [#1390](https://github.com/nf-core/sarek/pull/1390) - Fix badges in README
+- [#1400](https://github.com/nf-core/sarek/pull/1400) - Fixed input channel for ASSESS_SIGNIFICANCE module, updated makegraph to makegraph2
+- [#1403](https://github.com/nf-core/sarek/pull/1403) - Fix intervals usage with dot in chromosome names
+- [#1407](https://github.com/nf-core/sarek/pull/1407) - Fix CI tests name
+- [#1420](https://github.com/nf-core/sarek/pull/1420) - Make `-a` a default argument for `bcftools` concat
+- [#1422](https://github.com/nf-core/sarek/pull/1422) - Fix `Cannot serialize context map` warning
+- [#1462](https://github.com/nf-core/sarek/pull/1462) - Fix ascat input channels
+- [#1463](https://github.com/nf-core/sarek/pull/1463) - Add `spark` profile to all gatk4spark tests
+- [#1465](https://github.com/nf-core/sarek/pull/1465), [#1469](https://github.com/nf-core/sarek/pull/1469) - Fix input channels and tests of Sentieon workflows
+- [#1470](https://github.com/nf-core/sarek/pull/1470) - Fix channels for `MultiQC`
+- [#1471](https://github.com/nf-core/sarek/pull/1471) - Add `snpeff_db` params to `validationSchemaIgnoreParams` to fix issues with Seqera Platform
+- [#1471](https://github.com/nf-core/sarek/pull/1471) - Add `vep_cache_version` params to `validationSchemaIgnoreParams` to fix [#1454](https://github.com/nf-core/sarek/issues/1454)
+- [#1471](https://github.com/nf-core/sarek/pull/1471) - Update `vep_version` params match the actual tool version
+- [#1472](https://github.com/nf-core/sarek/pull/1472) - Cast `snpeff_db` params as a string to fix issues with Seqera Platform, as [#1471](https://github.com/nf-core/sarek/pull/1471) was not working as expected
+- [#1472](https://github.com/nf-core/sarek/pull/1472) - Load `spark` profile last to avoid issues with `test` profiles
+
+### Removed
+
+- [#1405](https://github.com/nf-core/sarek/pull/1405) - Removing docker.userEmulation
+
+### Dependencies
+
+| Dependency   | Old version | New version |
+| ------------ | ----------- | ----------- |
+| `bcftools`   | 1.17        | 1.18        |
+| `ensemblvep` | 110.0       | 111.0       |
+| `fgbio`      | 2.0.2       | 2.1.0       |
+| `gatk`       | 4.4.0.0     | 4.5.0.0     |
+| `gatk-spark` | 4.4.0.0     | 4.5.0.0     |
+| `mosdepth`   | 0.3.3       | 0.3.6       |
+| `multiqc`    | 1.17        | 1.18        |
+| `samtools`   | 1.17        | 1.19.2      |
 
 ### Modules / Subworkflows
 
@@ -35,9 +125,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Parameter
 
-| Old name                   | New name                 |
-| -------------------------- | ------------------------ |
-| bcftools_annotations_index | bcftools_annotations_tbi |
+| Old name                     | New name                   |
+| ---------------------------- | -------------------------- |
+| `bcftools_annotations_index` | `bcftools_annotations_tbi` |
 
 ## [3.4.0](https://github.com/nf-core/sarek/releases/tag/3.4.0) - Pårtetjåkko
 
@@ -87,8 +177,8 @@ Pårtetjåkko is a mountain in the south of the park.
 
 | Dependency | Old version | New version |
 | ---------- | ----------- | ----------- |
-| fastqc     | 0.11.9      | 0.12.1      |
-| multiqc    | 1.15        | 1.17        |
+| `fastqc`   | 0.11.9      | 0.12.1      |
+| `multiqc`  | 1.15        | 1.17        |
 
 ### Modules / Subworkflows
 
@@ -106,7 +196,7 @@ Ráhpajávvre is the Lule Sámi spelling of Rapaselet.
 
 - [#1246](https://github.com/nf-core/sarek/pull/1246) - Back to dev
 - [#1259](https://github.com/nf-core/sarek/pull/1259) - nf-prov plugin
-- [#1288](https://github.com/nf-core/sarek/pull/1288) - Add nf-test continuous integration.
+- [#1288](https://github.com/nf-core/sarek/pull/1288) - Add nf-test continuous integration
 
 ### Changed
 
@@ -121,9 +211,9 @@ Ráhpajávvre is the Lule Sámi spelling of Rapaselet.
 
 ### Dependencies
 
-| Dependency                       | Old version | New version |
-| -------------------------------- | ----------- | ----------- |
-| Control-FREEC/assesssignificance | 11.6b       | 11.6        |
+| Dependency                         | Old version | New version |
+| ---------------------------------- | ----------- | ----------- |
+| `Control-FREEC/assesssignificance` | 11.6b       | 11.6        |
 
 ## [3.3.1](https://github.com/nf-core/sarek/releases/tag/3.3.1) - Biellorippjávrre
 
@@ -147,9 +237,9 @@ A lake near the Rapaselet delta.
 
 ### Dependencies
 
-| Dependency    | Old version | New version |
-| ------------- | ----------- | ----------- |
-| Control-FREEC | 11.6        | 11.6b       |
+| Dependency      | Old version | New version |
+| --------------- | ----------- | ----------- |
+| `Control-FREEC` | 11.6        | 11.6b       |
 
 ## [3.3.0](https://github.com/nf-core/sarek/releases/tag/3.3.0) - Rapaselet
 
@@ -237,7 +327,7 @@ Gällivare is a small lake next to Pierikjaure.
 
 - [#1112](https://github.com/nf-core/sarek/pull/1112) - Back to dev
 - [#1119](https://github.com/nf-core/sarek/pull/1119) - Added `help_text` for `input_output_options` group in schema
-- [#1044](https://github.com/nf-core/sarek/pull/1044) - Adding support for several tools from Sentieon's DNAseq package. The standard fastq-to-vcf processing can now be done using Sentieon's DNAseq tools `ApplyVarCal`, `bwa mem`, `Dedup`, `GVCFtyper`, `Haplotyper`, `LocusCollector` and `VarCal`.
+- [#1044](https://github.com/nf-core/sarek/pull/1044) - Adding support for several tools from Sentieon's DNAseq package. The standard fastq-to-vcf processing can now be done using Sentieon's DNAseq tools `ApplyVarCal`, `bwa mem`, `Dedup`, `GVCFtyper`, `Haplotyper`, `LocusCollector` and `VarCal`
 
 ### Changed
 
@@ -266,9 +356,9 @@ Vuoinesluobbalah is a lake close to Bierikjávrre.
 
 ### Fixed
 
-- [#1087](https://github.com/nf-core/sarek/pull/1087) - Fix wrong default memory in GATK4_CREATESEQUENCEDICTIONARY [#1085](https://github.com/nf-core/sarek/pull/1085)
+- [#1087](https://github.com/nf-core/sarek/pull/1087) - Fix wrong default memory in `GATK4_CREATESEQUENCEDICTIONARY` [#1085](https://github.com/nf-core/sarek/pull/1085)
 - [#1089](https://github.com/nf-core/sarek/pull/1089) - Remove duplicated code
-- [#1093](https://github.com/nf-core/sarek/pull/1093) - Fixing Ascat by reverting meta.id in channels allele_files, loci_files, gc_file and rt_file to baseName.
+- [#1093](https://github.com/nf-core/sarek/pull/1093) - Fixing Ascat by reverting meta.id in channels allele_files, loci_files, gc_file and rt_file to baseName
 - [#1098](https://github.com/nf-core/sarek/pull/1098) - Fix Channel issue in Mutect2 subworkflow [#1094](https://github.com/nf-core/sarek/pull/1094)
 - [#1100](https://github.com/nf-core/sarek/pull/1100) - Remove duplicate index with deepvariant when no_intervals [#1069](https://github.com/nf-core/sarek/pull/1069)
 - [#1101](https://github.com/nf-core/sarek/pull/1101) - Remove duplicate index computation for GATK4 Markduplicates & [#1065](https://github.com/nf-core/sarek/issues/1065)

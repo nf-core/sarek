@@ -1,10 +1,9 @@
 - name: Run variant calling on germline sample with sentieon haplotyper and skip filter
-  command: nextflow run main.nf -profile test_cache,software_license,targeted --sentieon_extension --input ./tests/csv/3.0/mapped_single_bam.csv --tools sentieon_haplotyper --step variant_calling --skip_tools haplotyper_filter --outdir results
+  command: nextflow run main.nf -profile test,software_license,targeted --sentieon_extension --input ./tests/csv/3.0/mapped_single_bam.csv --tools sentieon_haplotyper --step variant_calling --skip_tools haplotyper_filter --outdir results
   tags:
     - germline
-    - sentieon_haplotyper_skip_filter
+    - sentieon/haplotyper_skip_filter
     - variant_calling
-    - sentieon/haplotyper
   files:
     - path: results/csv/variantcalled.csv
       md5sum: e08d6aa77d914bc2c933e70696b74cdd
@@ -18,7 +17,6 @@
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
       should_exist: false
     - path: results/reports/bcftools/sentieon_haplotyper/test/test.haplotyper.unfiltered.bcftools_stats.txt
-      md5sum: d2660f9f6074b4bf18756c42ee656b8f
     - path: results/reports/vcftools/sentieon_haplotyper/test/test.haplotyper.unfiltered.FILTER.summary
       md5sum: 01b3d10464a3ac86f90ee82cdda23f68
     - path: results/reports/vcftools/sentieon_haplotyper/test/test.haplotyper.unfiltered.TsTv.count
@@ -35,14 +33,21 @@
     # binary changes md5sums on reruns
     - path: results/sentieon_haplotyper
       should_exist: false
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+      md5sum: e82e90c7d508a135b5a8a7cd6933452e
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test/test.recal.per-base.bed.gz
+      md5sum: bc1df47d46f818fee5275975925d769a
+    - path: results/reports/mosdepth/test/test.recal.per-base.bed.gz.csi
+      md5sum: 9e649ac749ff6c6073bef5ab63e8aaa4
+    - path: results/reports/samtools/test/test.recal.cram.stats
 - name: Run variant calling on germline sample with sentieon haplotyper without intervals and skip filter
-  command: nextflow run main.nf -profile test_cache,software_license,targeted --sentieon_extension --input ./tests/csv/3.0/mapped_single_bam.csv --tools sentieon_haplotyper --step variant_calling --skip_tools haplotyper_filter --no_intervals --outdir results
+  command: nextflow run main.nf -profile test,software_license,targeted --sentieon_extension --input ./tests/csv/3.0/mapped_single_bam.csv --tools sentieon_haplotyper --step variant_calling --skip_tools haplotyper_filter --no_intervals --outdir results
   tags:
     - germline
-    - sentieon_haplotyper_skip_filter
+    - sentieon/haplotyper_skip_filter
     - no_intervals
     - variant_calling
-    - sentieon/haplotyper
   files:
     - path: results/csv/variantcalled.csv
       md5sum: e08d6aa77d914bc2c933e70696b74cdd
@@ -62,7 +67,6 @@
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
       should_exist: false
     - path: results/reports/bcftools/sentieon_haplotyper/test/test.haplotyper.unfiltered.bcftools_stats.txt
-      md5sum: d2660f9f6074b4bf18756c42ee656b8f
     - path: results/reports/vcftools/sentieon_haplotyper/test/test.haplotyper.unfiltered.FILTER.summary
       md5sum: 01b3d10464a3ac86f90ee82cdda23f68
     - path: results/reports/vcftools/sentieon_haplotyper/test/test.haplotyper.unfiltered.TsTv.count
@@ -79,3 +83,11 @@
     # binary changes md5sums on reruns
     - path: results/sentieon_haplotyper
       should_exist: false
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+      md5sum: e82e90c7d508a135b5a8a7cd6933452e
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test/test.recal.per-base.bed.gz
+      md5sum: bc1df47d46f818fee5275975925d769a
+    - path: results/reports/mosdepth/test/test.recal.per-base.bed.gz.csi
+      md5sum: 9e649ac749ff6c6073bef5ab63e8aaa4
+    - path: results/reports/samtools/test/test.recal.cram.stats

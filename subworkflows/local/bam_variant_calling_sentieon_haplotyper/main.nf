@@ -34,7 +34,7 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
         .map{ meta, cram, crai, intervals, num_intervals -> [
             meta + [
                 num_intervals:num_intervals,
-                intervals_name:intervals.simpleName,
+                intervals_name:intervals.baseName,
                 variantcaller:'sentieon_haplotyper'],
             cram,
             crai,
@@ -49,8 +49,8 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
 
     SENTIEON_HAPLOTYPER(
         cram_intervals_for_sentieon,
-        fasta,
-        fasta_fai,
+        fasta.map{ meta, it -> it },
+        fasta_fai.map{ meta, it ->  it },
         dbsnp,
         dbsnp_tbi,
         emit_vcf,

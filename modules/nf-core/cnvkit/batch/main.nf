@@ -32,6 +32,7 @@ process CNVKIT_BATCH {
 
     def tumor_exists = tumor ? true : false
     def normal_exists = normal ? true : false
+    def reference_exists = reference ? true : false
 
     // execute samtools only when cram files are input, cnvkit runs natively on bam but is prohibitively slow
     def tumor_cram = tumor_exists && tumor.Extension == "cram" ? true : false
@@ -62,6 +63,10 @@ process CNVKIT_BATCH {
         else {
             normal_args = normal_prefix ? "--normal $normal_out" : ""
         }
+        if (reference_exists){
+            fasta_args = ""
+            normal_args = ""
+        }
     }
 
     // generation of panel of normals
@@ -73,7 +78,7 @@ process CNVKIT_BATCH {
         tumor_out = ""
     }
 
-    def target_args = targets ? "--targets $targets" : ""
+    def target_args = targets && !reference_exists ? "--targets $targets" : ""
     def reference_args = reference ? "--reference $reference" : ""
 
     def samtools_cram_convert = ''

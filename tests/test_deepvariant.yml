@@ -1,5 +1,5 @@
 - name: Run variant calling on germline sample with deepvariant
-  command: nextflow run main.nf -profile test_cache,tools_germline --tools deepvariant --outdir results
+  command: nextflow run main.nf -profile test,tools_germline --tools deepvariant --outdir results
   tags:
     - deepvariant
     - germline
@@ -7,7 +7,7 @@
   files:
     - path: results/multiqc
     - path: results/reports/bcftools/deepvariant/sample1/sample1.deepvariant.bcftools_stats.txt
-      md5sum: 1e8eefa704c0d2b77ee6e8a2cf2ef428
+      md5sum: a6634ceb1c712de14009b05d273713a7
     - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.FILTER.summary
       md5sum: acce7a163f4070226429f9d6bc3fbd2c
     - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.TsTv.count
@@ -24,8 +24,19 @@
     # binary changes md5sums on reruns
     - path: results/deepvariant
       should_exist: false
+    - path: results/reports/mosdepth/sample1/sample1.recal.mosdepth.global.dist.txt
+      md5sum: 69e29702ef01fd8f6c7a5468fc35a16a
+    - path: results/reports/mosdepth/sample1/sample1.recal.mosdepth.region.dist.txt
+      md5sum: 6ec49cd7d510c2eb3d9d90fdb79b783a
+    - path: results/reports/mosdepth/sample1/sample1.recal.mosdepth.summary.txt
+      md5sum: 103098d0bf76ed82d2b87d5f242b099a
+    - path: results/reports/mosdepth/sample1/sample1.recal.regions.bed.gz
+      md5sum: b5888cf7395c57d39879a5faa6159eb3
+    - path: results/reports/mosdepth/sample1/sample1.recal.regions.bed.gz.csi
+      md5sum: 9cb0ad7039a3b703d16ca7d5b835c0ee
+    - path: results/reports/samtools/sample1/sample1.recal.cram.stats
 - name: Run variant calling on germline sample with deepvariant without intervals
-  command: nextflow run main.nf -profile test_cache,tools_germline --tools deepvariant --no_intervals --outdir results
+  command: nextflow run main.nf -profile test,tools_germline --tools deepvariant --no_intervals --outdir results
   tags:
     - deepvariant
     - germline
@@ -40,7 +51,7 @@
     - path: results/no_intervals.bed.gz.tbi
       md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/reports/bcftools/deepvariant/sample1/sample1.deepvariant.bcftools_stats.txt
-      md5sum: 33551d79cef60dd9a7f56c20db6f30a4
+      md5sum: 0c48d8e315ca23c5dc2e7bf71ea0b6a6
     - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.FILTER.summary
       md5sum: 7b17bd18c2d4bf129561c7c6a419a889
     - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.TsTv.count
@@ -57,3 +68,12 @@
     # binary changes md5sums on reruns
     - path: results/deepvariant
       should_exist: false
+    - path: results/reports/mosdepth/sample1/sample1.recal.mosdepth.global.dist.txt
+      md5sum: 69e29702ef01fd8f6c7a5468fc35a16a
+    - path: results/reports/mosdepth/sample1/sample1.recal.mosdepth.summary.txt
+      md5sum: d2775eb102acc5950f7f53883dcb503d
+    - path: results/reports/mosdepth/sample1/sample1.recal.per-base.bed.gz
+      md5sum: 54431f155c9538809e8caf99d1a75ec7
+    - path: results/reports/mosdepth/sample1/sample1.recal.per-base.bed.gz.csi
+      md5sum: c67dcd711b096eb42f43784d5eadbc0d
+    - path: results/reports/samtools/sample1/sample1.recal.cram.stats

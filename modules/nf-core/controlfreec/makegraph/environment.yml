@@ -1,7 +1,0 @@
-name: controlfreec_makegraph
-channels:
-  - conda-forge
-  - bioconda
-  - defaults
-dependencies:
-  - bioconda::control-freec=11.6b

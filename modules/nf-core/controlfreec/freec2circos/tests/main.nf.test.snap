@@ -1,0 +1,61 @@
+{
+    "human - freec_ratio - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "sex": "XX"
+                        },
+                        "test.circos.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,4f1feb9a79f9bac014447bdcd6571c30"
+                ],
+                "circos": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false,
+                            "sex": "XX"
+                        },
+                        "test.circos.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,4f1feb9a79f9bac014447bdcd6571c30"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-03-28T13:18:29.093673"
+    },
+    "human - freec_ratio": {
+        "content": [
+            "hs21 5011211 5012210 1.758106"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-03-28T13:18:10.147735"
+    },
+    "version": {
+        "content": [
+            [
+                "versions.yml:md5,4f1feb9a79f9bac014447bdcd6571c30"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-03-28T13:18:10.153107"
+    }
+}

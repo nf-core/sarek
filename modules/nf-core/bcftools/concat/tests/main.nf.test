@@ -1,0 +1,108 @@
+nextflow_process {
+
+    name "Test Process BCFTOOLS_CONCAT"
+    script "../main.nf"
+    process "BCFTOOLS_CONCAT"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "bcftools"
+    tag "bcftools/concat"
+
+    config "./nextflow.config"
+
+    test("sarscov2 - [[vcf1, vcf2], [tbi1, tbi2]]") {
+
+        when {
+            process {
+                """
+                input[0] = [ 
+                    [ id:'test3' ], // meta map
+                    [
+                        file(params.test_data['homo_sapiens']['illumina']['test_haplotc_cnn_vcf_gz'], checkIfExists: true),
+                        file(params.test_data['homo_sapiens']['illumina']['test_genome_vcf_gz'], checkIfExists: true) 
+                    ],
+                    [
+                        file(params.test_data['homo_sapiens']['illumina']['test_genome_vcf_gz_tbi'], checkIfExists: true),
+                        file(params.test_data['homo_sapiens']['illumina']['test_haplotc_cnn_vcf_gz_tbi'], checkIfExists: true)
+                    ]
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    process.out.vcf,
+                    process.out.versions
+                ).match() }
+            )
+        }
+
+    }
+
+    test("sarscov2 - [[vcf1, vcf2], []]") {
+
+        when {
+            process {
+                """
+                input[0] = [ 
+                    [ id:'test3' ], // meta map
+                    [
+                        file(params.test_data['homo_sapiens']['illumina']['test_haplotc_cnn_vcf_gz'], checkIfExists: true),
+                        file(params.test_data['homo_sapiens']['illumina']['test_genome_vcf_gz'], checkIfExists: true) 
+                    ],
+                    []
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    process.out.vcf,
+                    process.out.versions
+                ).match() }
+            )
+        }
+
+    }
+
+    test("sarscov2 - [[vcf1, vcf2], [tbi1, tbi2]] - stub") {
+
+        options "-stub"
+        when {
+            process {
+                """
+                input[0] = [ 
+                    [ id:'test3' ], // meta map
+                    [
+                        file(params.test_data['homo_sapiens']['illumina']['test_haplotc_cnn_vcf_gz'], checkIfExists: true),
+                        file(params.test_data['homo_sapiens']['illumina']['test_genome_vcf_gz'], checkIfExists: true) 
+                    ],
+                    [
+                        file(params.test_data['homo_sapiens']['illumina']['test_genome_vcf_gz_tbi'], checkIfExists: true),
+                        file(params.test_data['homo_sapiens']['illumina']['test_haplotc_cnn_vcf_gz_tbi'], checkIfExists: true)
+                    ]
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    file(process.out.vcf[0][1]).name,
+                    process.out.versions
+                ).match() }
+            )
+        }
+
+    }
+
+}

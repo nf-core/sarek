@@ -1,5 +1,5 @@
 - name: Run default pipeline with skipping Markduplicates
-  command: nextflow run main.nf -profile test_cache,skip_markduplicates --outdir results
+  command: nextflow run main.nf -profile test,skip_markduplicates --outdir results
   tags:
     - default_extended
     - preprocessing
@@ -28,9 +28,9 @@
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
       md5sum: b8874be5d830a2d03d42bccad7c996d3
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
-      md5sum: 67ac075b077723fb1cce4b026dcdf0af
+      md5sum: a5b158106aee6827a758aaf9b4f0f03a
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
-      md5sum: 3230b6808c22d4907d18910f2dc2daf2
+      md5sum: 3fbfb2754f4f27fa8238e0e231f1f360
     - path: results/reports/mosdepth/test/test.sorted.mosdepth.global.dist.txt
       md5sum: 3ab32cc98996e0f12b8088b99dd1e2d1
     - path: results/reports/mosdepth/test/test.sorted.mosdepth.region.dist.txt
@@ -38,9 +38,9 @@
     - path: results/reports/mosdepth/test/test.sorted.mosdepth.summary.txt
       md5sum: b8874be5d830a2d03d42bccad7c996d3
     - path: results/reports/mosdepth/test/test.sorted.regions.bed.gz
-      md5sum: 67ac075b077723fb1cce4b026dcdf0af
+      md5sum: a5b158106aee6827a758aaf9b4f0f03a
     - path: results/reports/mosdepth/test/test.sorted.regions.bed.gz.csi
-      md5sum: 3230b6808c22d4907d18910f2dc2daf2
+      md5sum: 3fbfb2754f4f27fa8238e0e231f1f360
     - path: results/reports/samtools/test/test.recal.cram.stats
     # conda changes md5sums for test
     - path: results/reports/samtools/test/test.sorted.cram.stats
@@ -54,7 +54,7 @@
     - path: results/preprocessing/mapped/test/test.sorted.bam
       should_exist: false
 - name: Run default pipeline with skipping Markduplicates with save_mapped
-  command: nextflow run main.nf -profile test_cache,skip_markduplicates --save_mapped --outdir results
+  command: nextflow run main.nf -profile test,skip_markduplicates --save_mapped --outdir results
   tags:
     - default_extended
     - preprocessing
@@ -84,9 +84,9 @@
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
       md5sum: b8874be5d830a2d03d42bccad7c996d3
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
-      md5sum: 67ac075b077723fb1cce4b026dcdf0af
+      md5sum: a5b158106aee6827a758aaf9b4f0f03a
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
-      md5sum: 3230b6808c22d4907d18910f2dc2daf2
+      md5sum: 3fbfb2754f4f27fa8238e0e231f1f360
     - path: results/reports/mosdepth/test/test.sorted.mosdepth.global.dist.txt
       md5sum: 3ab32cc98996e0f12b8088b99dd1e2d1
     - path: results/reports/mosdepth/test/test.sorted.mosdepth.region.dist.txt
@@ -94,9 +94,9 @@
     - path: results/reports/mosdepth/test/test.sorted.mosdepth.summary.txt
       md5sum: b8874be5d830a2d03d42bccad7c996d3
     - path: results/reports/mosdepth/test/test.sorted.regions.bed.gz
-      md5sum: 67ac075b077723fb1cce4b026dcdf0af
+      md5sum: a5b158106aee6827a758aaf9b4f0f03a
     - path: results/reports/mosdepth/test/test.sorted.regions.bed.gz.csi
-      md5sum: 3230b6808c22d4907d18910f2dc2daf2
+      md5sum: 3fbfb2754f4f27fa8238e0e231f1f360
     - path: results/reports/samtools/test/test.recal.cram.stats
     # conda changes md5sums for test
     - path: results/reports/samtools/test/test.sorted.cram.stats
@@ -108,7 +108,7 @@
     - path: results/preprocessing/mapped/test/test.bam
       should_exist: false
 - name: Run default pipeline with skipping Markduplicates with save_mapped & save_output_as_bam
-  command: nextflow run main.nf -profile test_cache,skip_markduplicates --save_mapped --save_output_as_bam --outdir results
+  command: nextflow run main.nf -profile test,skip_markduplicates --save_mapped --save_output_as_bam --outdir results
   tags:
     - default_extended
     - preprocessing
@@ -138,9 +138,9 @@
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
       md5sum: b8874be5d830a2d03d42bccad7c996d3
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
-      md5sum: 67ac075b077723fb1cce4b026dcdf0af
+      md5sum: a5b158106aee6827a758aaf9b4f0f03a
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
-      md5sum: 3230b6808c22d4907d18910f2dc2daf2
+      md5sum: 3fbfb2754f4f27fa8238e0e231f1f360
     - path: results/reports/mosdepth/test/test.sorted.mosdepth.global.dist.txt
       md5sum: 3ab32cc98996e0f12b8088b99dd1e2d1
     - path: results/reports/mosdepth/test/test.sorted.mosdepth.region.dist.txt
@@ -148,9 +148,9 @@
     - path: results/reports/mosdepth/test/test.sorted.mosdepth.summary.txt
       md5sum: b8874be5d830a2d03d42bccad7c996d3
     - path: results/reports/mosdepth/test/test.sorted.regions.bed.gz
-      md5sum: 67ac075b077723fb1cce4b026dcdf0af
+      md5sum: a5b158106aee6827a758aaf9b4f0f03a
     - path: results/reports/mosdepth/test/test.sorted.regions.bed.gz.csi
-      md5sum: 3230b6808c22d4907d18910f2dc2daf2
+      md5sum: 3fbfb2754f4f27fa8238e0e231f1f360
     - path: results/reports/samtools/test/test.recal.cram.stats
     # conda changes md5sums for test
     - path: results/reports/samtools/test/test.sorted.cram.stats

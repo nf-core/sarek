@@ -1,5 +1,5 @@
 - name: Run variant calling on germline sample with sentieons haplotyper
-  command: nextflow run main.nf -profile test_cache,software_license,targeted --sentieon_extension --input ./tests/csv/3.0/mapped_single_bam.csv --tools sentieon_haplotyper --step variant_calling --outdir results
+  command: nextflow run main.nf -profile test,software_license,targeted --sentieon_extension --input ./tests/csv/3.0/mapped_single_bam.csv --tools sentieon_haplotyper --step variant_calling --outdir results
   tags:
     - germline
     - sentieon/haplotyper
@@ -17,7 +17,6 @@
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
       should_exist: false
     - path: results/reports/bcftools/sentieon_haplotyper/test/test.haplotyper.filtered.bcftools_stats.txt
-      md5sum: 66be03d4e6535175514f54a1a031d49f
     - path: results/reports/vcftools/sentieon_haplotyper/test/test.haplotyper.filtered.FILTER.summary
       md5sum: d501a93356f3c91c743f51104e24514a
     - path: results/reports/vcftools/sentieon_haplotyper/test/test.haplotyper.filtered.TsTv.count
@@ -34,8 +33,18 @@
     # binary changes md5sums on reruns
     - path: results/haplotyper
       should_exist: false
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+      md5sum: e82e90c7d508a135b5a8a7cd6933452e
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+      md5sum: 3a2030e5e8af7bc12720c3a5592bf921
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
+      md5sum: 9f1ea20e7461db948ba21f70c4d1b3ba
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
+      md5sum: 5c00a1d457c387d6e71848a6d897e309
+    - path: results/reports/samtools/test/test.recal.cram.stats
 - name: Run variant calling on germline sample with sentieons haplotyper without intervals
-  command: nextflow run main.nf -profile test_cache,software_license,targeted --sentieon_extension --input ./tests/csv/3.0/mapped_single_bam.csv --tools sentieon_haplotyper --step variant_calling --no_intervals --outdir results
+  command: nextflow run main.nf -profile test,software_license,targeted --sentieon_extension --input ./tests/csv/3.0/mapped_single_bam.csv --tools sentieon_haplotyper --step variant_calling --no_intervals --outdir results
   tags:
     - germline
     - sentieon/haplotyper
@@ -60,7 +69,6 @@
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
       should_exist: false
     - path: results/reports/bcftools/sentieon_haplotyper/test/test.haplotyper.filtered.bcftools_stats.txt
-      md5sum: 66be03d4e6535175514f54a1a031d49f
     - path: results/reports/vcftools/sentieon_haplotyper/test/test.haplotyper.filtered.FILTER.summary
       md5sum: d501a93356f3c91c743f51104e24514a
     - path: results/reports/vcftools/sentieon_haplotyper/test/test.haplotyper.filtered.TsTv.count
@@ -77,8 +85,16 @@
     # binary changes md5sums on reruns
     - path: results/sentieon_haplotyper
       should_exist: false
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+      md5sum: e82e90c7d508a135b5a8a7cd6933452e
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test/test.recal.per-base.bed.gz
+      md5sum: bc1df47d46f818fee5275975925d769a
+    - path: results/reports/mosdepth/test/test.recal.per-base.bed.gz.csi
+      md5sum: 9e649ac749ff6c6073bef5ab63e8aaa4
+    - path: results/reports/samtools/test/test.recal.cram.stats
 - name: Run variant calling on germline sample with sentieons haplotyper output gvcf
-  command: nextflow run main.nf -profile test_cache,software_license,targeted --sentieon_extension --input ./tests/csv/3.0/mapped_single_bam.csv --tools sentieon_haplotyper --step variant_calling --outdir results --sentieon_haplotyper_emit_mode gvcf
+  command: nextflow run main.nf -profile test,software_license,targeted --sentieon_extension --input ./tests/csv/3.0/mapped_single_bam.csv --tools sentieon_haplotyper --step variant_calling --outdir results --sentieon_haplotyper_emit_mode gvcf
   tags:
     - germline
     - sentieon/haplotyper
@@ -115,8 +131,18 @@
       should_exist: false
     - path: results/haplotyper
       should_exist: false
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+      md5sum: e82e90c7d508a135b5a8a7cd6933452e
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+      md5sum: 3a2030e5e8af7bc12720c3a5592bf921
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
+      md5sum: 9f1ea20e7461db948ba21f70c4d1b3ba
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
+      md5sum: 5c00a1d457c387d6e71848a6d897e309
+    - path: results/reports/samtools/test/test.recal.cram.stats
 - name: Run variant calling on germline sample with sentieons haplotyper output both gvcf and vcf
-  command: nextflow run main.nf -profile test_cache,software_license,targeted --sentieon_extension --input ./tests/csv/3.0/mapped_single_bam.csv --tools sentieon_haplotyper --step variant_calling --outdir results --sentieon_haplotyper_emit_mode variant,gvcf
+  command: nextflow run main.nf -profile test,software_license,targeted --sentieon_extension --input ./tests/csv/3.0/mapped_single_bam.csv --tools sentieon_haplotyper --step variant_calling --outdir results --sentieon_haplotyper_emit_mode variant,gvcf
   tags:
     - germline
     - sentieon/haplotyper
@@ -145,8 +171,18 @@
     - path: results/variant_calling/sentieon_haplotyper/test/test.haplotyper.unfiltered.vcf.gz.tbi
     - path: results/haplotyper
       should_exist: false
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+      md5sum: e82e90c7d508a135b5a8a7cd6933452e
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+      md5sum: 3a2030e5e8af7bc12720c3a5592bf921
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
+      md5sum: 9f1ea20e7461db948ba21f70c4d1b3ba
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
+      md5sum: 5c00a1d457c387d6e71848a6d897e309
+    - path: results/reports/samtools/test/test.recal.cram.stats
 - name: Run variant calling on germline sample with sentieons haplotyper and gatk haplotypecaller
-  command: nextflow run main.nf -profile test_cache,software_license,targeted --sentieon_extension --input ./tests/csv/3.0/mapped_single_bam.csv --tools haplotypecaller,sentieon_haplotyper --step variant_calling --outdir results
+  command: nextflow run main.nf -profile test,software_license,targeted --sentieon_extension --input ./tests/csv/3.0/mapped_single_bam.csv --tools haplotypecaller,sentieon_haplotyper --step variant_calling --outdir results
   tags:
     - germline
     - sentieon/haplotyper
@@ -164,7 +200,6 @@
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
       should_exist: false
     - path: results/reports/bcftools/sentieon_haplotyper/test/test.haplotyper.filtered.bcftools_stats.txt
-      md5sum: 66be03d4e6535175514f54a1a031d49f
     - path: results/reports/vcftools/sentieon_haplotyper/test/test.haplotyper.filtered.FILTER.summary
       md5sum: d501a93356f3c91c743f51104e24514a
     - path: results/reports/vcftools/sentieon_haplotyper/test/test.haplotyper.filtered.TsTv.count
@@ -189,3 +224,13 @@
     # binary changes md5sums on reruns
     - path: results/haplotyper
       should_exist: false
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+      md5sum: e82e90c7d508a135b5a8a7cd6933452e
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+      md5sum: 3a2030e5e8af7bc12720c3a5592bf921
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
+      md5sum: 9f1ea20e7461db948ba21f70c4d1b3ba
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
+      md5sum: 5c00a1d457c387d6e71848a6d897e309
+    - path: results/reports/samtools/test/test.recal.cram.stats

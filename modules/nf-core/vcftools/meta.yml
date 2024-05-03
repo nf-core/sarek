@@ -1,6 +1,7 @@
 name: vcftools
 description: A set of tools written in Perl and C++ for working with VCF files
 keywords:
+  - VCFtools
   - VCF
   - sort
 tools:

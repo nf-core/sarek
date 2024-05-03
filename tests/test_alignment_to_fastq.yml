@@ -1,5 +1,5 @@
 - name: Run alignment to fastq and then remap on bam files
-  command: nextflow run main.nf -profile test_cache,alignment_to_fastq --outdir results
+  command: nextflow run main.nf -profile test,alignment_to_fastq --outdir results
   tags:
     - alignment_to_fastq
     - input_bam

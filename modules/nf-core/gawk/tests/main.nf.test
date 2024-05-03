@@ -1,0 +1,56 @@
+nextflow_process {
+
+    name "Test Process GAWK"
+    script "../main.nf"
+    process "GAWK"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "gawk"
+
+    test("convert fasta to bed") {
+        config "./nextflow.config"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
+                ]
+                input[1] = []
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+
+    test("convert fasta to bed with program file") {
+        config "./nextflow_with_program_file.config"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
+                ]
+                input[1] = Channel.of('BEGIN {FS="\t"}; {print \$1 FS "0" FS \$2}').collectFile(name:"program.txt")
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+}

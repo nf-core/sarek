@@ -2,6 +2,7 @@ process DEEPVARIANT {
     tag "$meta.id"
     label 'process_high'
 
+    //Conda is not supported at the moment
     container "nf-core/deepvariant:1.5.0"
 
     input:

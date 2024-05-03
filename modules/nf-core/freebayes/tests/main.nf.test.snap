@@ -1,0 +1,48 @@
+{
+    "sarscov2 - [ cram, crai, cram, crai, bed ] - fasta - fai": {
+        "content": [
+            [
+                "versions.yml:md5,4d24a735eabf2f037ab935511a2bc99c"
+            ]
+        ],
+        "timestamp": "2023-12-13T12:20:01.263906"
+    },
+    "sarscov2 - [ bam, bai ] - fasta - fai": {
+        "content": [
+            [
+                "versions.yml:md5,4d24a735eabf2f037ab935511a2bc99c"
+            ]
+        ],
+        "timestamp": "2023-12-13T12:19:37.06375"
+    },
+    "test.vcf.gz": {
+        "content": [
+            "test.vcf.gz"
+        ],
+        "timestamp": "2023-12-13T12:19:37.050165"
+    },
+    "sarscov2 - [ cram, crai ] - fasta - fai": {
+        "content": [
+            [
+                "versions.yml:md5,4d24a735eabf2f037ab935511a2bc99c"
+            ]
+        ],
+        "timestamp": "2023-12-13T12:19:48.797103"
+    },
+    "sarscov2 - [ bam, bai, bed ] - fasta - fai": {
+        "content": [
+            [
+                "versions.yml:md5,4d24a735eabf2f037ab935511a2bc99c"
+            ]
+        ],
+        "timestamp": "2023-12-13T12:19:43.147912"
+    },
+    "sarscov2 - [ bam, bai, bam, bai ] - fasta - fai": {
+        "content": [
+            [
+                "versions.yml:md5,4d24a735eabf2f037ab935511a2bc99c"
+            ]
+        ],
+        "timestamp": "2023-12-13T12:19:55.186773"
+    }
+}

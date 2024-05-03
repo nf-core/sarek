@@ -33,11 +33,11 @@ input:
       type: file
       description: path to an existing genomicsdb to be used in update db mode or get intervals mode. This WILL NOT specify name of a new genomicsdb in create db mode.
       pattern: "/path/to/existing/gendb"
-  - intervalfile:
+  - interval_file:
       type: file
       description: file containing the intervals to be used when creating the genomicsdb
       pattern: "*.interval_list"
-  - intervalval:
+  - interval_value:
       type: string
       description: if an intervals file has not been spcified, the value enetered here will be used as an interval via the "-L" argument
       pattern: "example: chr1:1000-10000"

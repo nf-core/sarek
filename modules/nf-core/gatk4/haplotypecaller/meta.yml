@@ -35,21 +35,46 @@ input:
       type: file
       description: Text file containing the DragSTR model of the used BAM/CRAM file (optional)
       pattern: "*.txt"
+  - meta2:
+      type: map
+      description: |
+        Groovy Map containing reference information
+        e.g. [ id:'test_reference' ]
   - fasta:
       type: file
       description: The reference fasta file
       pattern: "*.fasta"
+  - meta3:
+      type: map
+      description: |
+        Groovy Map containing reference information
+        e.g. [ id:'test_reference' ]
   - fai:
       type: file
       description: Index of reference fasta file
       pattern: "fasta.fai"
+  - meta4:
+      type: map
+      description: |
+        Groovy Map containing reference information
+        e.g. [ id:'test_reference' ]
   - dict:
       type: file
       description: GATK sequence dictionary
       pattern: "*.dict"
+  - meta5:
+      type: map
+      description: |
+        Groovy Map containing dbsnp information
+        e.g. [ id:'test_dbsnp' ]
   - dbsnp:
       type: file
       description: VCF file containing known sites (optional)
+  - meta6:
+      type: map
+      description: |
+        Groovy Map containing dbsnp information
+        e.g. [ id:'test_dbsnp' ]
   - dbsnp_tbi:
       type: file
       description: VCF index of dbsnp (optional)
