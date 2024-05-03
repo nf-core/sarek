@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - [#1489](https://github.com/nf-core/sarek/pull/1489) - Added a `testdata.nf-core.sarek` key in `conf/igenomes.config` for small reference
+- [#1493](https://github.com/nf-core/sarek/pull/1493) - Added a `wave` profile
 
 ### Changed
 
@@ -24,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1378](https://github.com/nf-core/sarek/pull/1378) - Improve cloud tests launch workflow to use matrix
 - [#1488](https://github.com/nf-core/sarek/pull/1488) - Fixing call to `GATK4_HAPLOTYPECALLER` and thereby also the test-profile `test_full_germline`
 - [#1494](https://github.com/nf-core/sarek/pull/1494) - Fix Cloud Storage objects are immutable on GCP [#1491](https://github.com/nf-core/sarek/issues/1491)
+- [#1496](https://github.com/nf-core/sarek/pull/1496) - Fix multiple DOI handling in manifest
 
 ### Removed
 
