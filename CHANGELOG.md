@@ -26,6 +26,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1488](https://github.com/nf-core/sarek/pull/1488) - Fixing call to `GATK4_HAPLOTYPECALLER` and thereby also the test-profile `test_full_germline`
 - [#1494](https://github.com/nf-core/sarek/pull/1494) - Fix Cloud Storage objects are immutable on GCP [#1491](https://github.com/nf-core/sarek/issues/1491)
 - [#1496](https://github.com/nf-core/sarek/pull/1496) - Fix multiple DOI handling in manifest
+- [#1499](https://github.com/nf-core/sarek/pull/1499) - Remove all md5sum for mosdepth tests
+- [#1499](https://github.com/nf-core/sarek/pull/1499) - Add mosdepth dependency to all tests runnning it
 
 ### Removed
 

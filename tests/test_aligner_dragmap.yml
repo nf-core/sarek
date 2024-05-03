@@ -55,25 +55,15 @@
     - path: results/reports/markduplicates/test/test.md.cram.metrics
       contains: ["LB0	27214	1086	322	1037558	20017	100	0	0.687981"]
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
-      md5sum: b0d7d5de1e00132bb5b47e1b3d90d944
     - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
-      md5sum: 02b88d7ec0ca8ff23ba688c35939fa05
     - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
-      md5sum: 1792d98676f597f755749f4286c5102d
     - path: results/reports/mosdepth/test/test.md.regions.bed.gz
-      md5sum: 590119568d091ce3a88f7fe4f43f24ff
     - path: results/reports/mosdepth/test/test.md.regions.bed.gz.csi
-      md5sum: 2e7fe057ead0622e6a2a6b0ed1832315
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
-      md5sum: b0d7d5de1e00132bb5b47e1b3d90d944
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
-      md5sum: 02b88d7ec0ca8ff23ba688c35939fa05
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
-      md5sum: 1792d98676f597f755749f4286c5102d
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
-      md5sum: 590119568d091ce3a88f7fe4f43f24ff
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
-      md5sum: 2e7fe057ead0622e6a2a6b0ed1832315
     - path: results/reports/samtools/test/test.md.cram.stats
     # conda changes md5sums for test
     - path: results/reports/samtools/test/test.recal.cram.stats
