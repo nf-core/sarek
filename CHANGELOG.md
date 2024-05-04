@@ -5,12 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [dev](https://github.com/nf-core/sarek/tree/dev) - Unreleased
+## [3.4.2](https://github.com/nf-core/sarek/releases/tag/3.4.2) - Sájtáristjåhkkå
+
+Sájtáristjåhkkå is another peak (just under 2k) in the Pårte massif, it is one of the few peak in Sweden that cannot be climbed without proper climbing equipments.
 
 ### Added
 
 - [#1489](https://github.com/nf-core/sarek/pull/1489) - Added a `testdata.nf-core.sarek` key in `conf/igenomes.config` for small reference
 - [#1493](https://github.com/nf-core/sarek/pull/1493) - Added a `wave` profile
+- [#1498](https://github.com/nf-core/sarek/pull/1498) - Prepare release `3.4.2`
 
 ### Changed
 
