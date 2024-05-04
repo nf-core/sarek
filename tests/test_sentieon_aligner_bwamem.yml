@@ -50,25 +50,15 @@
     - path: results/reports/markduplicates/test/test.md.cram.metrics
       contains: ["test	17094	1534	168	1046782	12429	197	0	0.635998", "1.0	0.999991	1171"]
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
-      md5sum: b61e1acee11a6ddf7ce3232a5948a6a0
     - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
-      md5sum: 1a382f98d488d2ae3df83a0d87caafc1
     - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
-      md5sum: 9afbcd5e44b62b3947e47af850a66188
     - path: results/reports/mosdepth/test/test.md.regions.bed.gz
-      md5sum: 3bd6a6f7127394802d9a7c7d559072ee
     - path: results/reports/mosdepth/test/test.md.regions.bed.gz.csi
-      md5sum: 72ae14370dfdaab906e50d0552c90119
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
-      md5sum: b61e1acee11a6ddf7ce3232a5948a6a0
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
-      md5sum: 1a382f98d488d2ae3df83a0d87caafc1
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
-      md5sum: 9afbcd5e44b62b3947e47af850a66188
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
-      md5sum: 3bd6a6f7127394802d9a7c7d559072ee
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
-      md5sum: 72ae14370dfdaab906e50d0552c90119
     - path: results/reports/samtools/test/test.md.cram.stats
     # conda changes md5sums for test
     - path: results/reports/samtools/test/test.recal.cram.stats
@@ -136,25 +126,15 @@
     - path: results/reports/markduplicates/test/test.md.cram.metrics
       contains: ["test	17094	1534	168	1046782	12429	197	0	0.635998", "1.0	0.999991	1171"]
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
-      md5sum: b61e1acee11a6ddf7ce3232a5948a6a0
     - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
-      md5sum: 1a382f98d488d2ae3df83a0d87caafc1
     - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
-      md5sum: 9afbcd5e44b62b3947e47af850a66188
     - path: results/reports/mosdepth/test/test.md.regions.bed.gz
-      md5sum: 3bd6a6f7127394802d9a7c7d559072ee
     - path: results/reports/mosdepth/test/test.md.regions.bed.gz.csi
-      md5sum: 72ae14370dfdaab906e50d0552c90119
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
-      md5sum: b61e1acee11a6ddf7ce3232a5948a6a0
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
-      md5sum: 1a382f98d488d2ae3df83a0d87caafc1
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
-      md5sum: 9afbcd5e44b62b3947e47af850a66188
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
-      md5sum: 3bd6a6f7127394802d9a7c7d559072ee
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
-      md5sum: 72ae14370dfdaab906e50d0552c90119
     - path: results/reports/samtools/test/test.md.cram.stats
     # conda changes md5sums for test
     - path: results/reports/samtools/test/test.recal.cram.stats
@@ -190,25 +170,15 @@
     - path: results/reports/markduplicates/test/test.md.cram.metrics
       contains: ["test	17094	1534	168	1046782	12429	197	0	0.635998", "1.0	0.999991	1171"]
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
-      md5sum: b61e1acee11a6ddf7ce3232a5948a6a0
     - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
-      md5sum: 1a382f98d488d2ae3df83a0d87caafc1
     - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
-      md5sum: 9afbcd5e44b62b3947e47af850a66188
     - path: results/reports/mosdepth/test/test.md.regions.bed.gz
-      md5sum: 3bd6a6f7127394802d9a7c7d559072ee
     - path: results/reports/mosdepth/test/test.md.regions.bed.gz.csi
-      md5sum: 72ae14370dfdaab906e50d0552c90119
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
-      md5sum: b61e1acee11a6ddf7ce3232a5948a6a0
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
-      md5sum: 1a382f98d488d2ae3df83a0d87caafc1
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
-      md5sum: 9afbcd5e44b62b3947e47af850a66188
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
-      md5sum: 3bd6a6f7127394802d9a7c7d559072ee
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
-      md5sum: 72ae14370dfdaab906e50d0552c90119
     - path: results/reports/samtools/test/test.md.cram.stats
     # conda changes md5sums for test
     - path: results/reports/samtools/test/test.recal.cram.stats

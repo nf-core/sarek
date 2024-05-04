@@ -27,25 +27,15 @@
     - path: results/reports/sentieon_dedup/test/test.dedup.cram.metrics
       contains: ["testN	0	2820	2	2	0	828	0	0.293617	3807", "1.0	0.999986", "100.0	1.911145"]
     - path: results/reports/mosdepth/test/test.dedup.mosdepth.global.dist.txt
-      md5sum: 8e875e20e3fb9cf288d68c1d223f6fd5
     - path: results/reports/mosdepth/test/test.dedup.mosdepth.region.dist.txt
-      md5sum: 75e1ce7e55af51f4985fa91654a5ea2d
     - path: results/reports/mosdepth/test/test.dedup.mosdepth.summary.txt
-      md5sum: b23cf96942b2ada3f41172a9349a1175
     - path: results/reports/mosdepth/test/test.dedup.regions.bed.gz
-    # binary changes md5sums on reruns
     - path: results/reports/mosdepth/test/test.dedup.regions.bed.gz.csi
-    # binary changes md5sums on reruns
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
-      md5sum: 8e875e20e3fb9cf288d68c1d223f6fd5
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
-      md5sum: 75e1ce7e55af51f4985fa91654a5ea2d
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
-      md5sum: b23cf96942b2ada3f41172a9349a1175
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
-    # binary changes md5sums on reruns
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
-    # binary changes md5sums on reruns
     - path: results/reports/samtools/test/test.dedup.cram.stats
     # conda changes md5sums for test
     - path: results/reports/samtools/test/test.recal.cram.stats
