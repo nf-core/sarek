@@ -69,6 +69,7 @@
     - path: results/reports/markduplicates
       should_exist: false
     - path: results/reports/mosdepth
+      should_exist: false
     - path: results/reports/samtools
       should_exist: false
 - name: Run save_output_as_bam with gatk4 spark

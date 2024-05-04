@@ -67,9 +67,13 @@
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
       should_exist: false
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+      should_exist: false
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+      should_exist: false
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+      should_exist: false
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
+      should_exist: false
     - path: results/reports/samtools/test/test.recal.cram.stats
       should_exist: false
     - path: results/preprocessing/mapped/
