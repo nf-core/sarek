@@ -4,7 +4,7 @@
 
 include { BAM_JOINT_CALLING_GERMLINE_GATK                                              } from '../bam_joint_calling_germline_gatk/main'
 include { BAM_JOINT_CALLING_GERMLINE_SENTIEON                                          } from '../bam_joint_calling_germline_sentieon/main'
-include { BAM_VARIANT_CALLING_CNVKIT as BAM_VARIANT_CALLING_CNVKIT_GERMLINE            } from '../bam_variant_calling_cnvkit/main'
+include { BAM_VARIANT_CALLING_CNVKIT                                                   } from '../bam_variant_calling_cnvkit/main'
 include { BAM_VARIANT_CALLING_DEEPVARIANT                                              } from '../bam_variant_calling_deepvariant/main'
 include { BAM_VARIANT_CALLING_FREEBAYES                                                } from '../bam_variant_calling_freebayes/main'
 include { BAM_VARIANT_CALLING_GERMLINE_MANTA                                           } from '../bam_variant_calling_germline_manta/main'
@@ -82,7 +82,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
 
     // CNVKIT
     if (tools.split(',').contains('cnvkit')) {
-        BAM_VARIANT_CALLING_CNVKIT_GERMLINE(
+        BAM_VARIANT_CALLING_CNVKIT(
             // Remap channel to match module/subworkflow
             cram.map{ meta, cram, crai -> [ meta, [], cram ] },
             fasta,
@@ -90,7 +90,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             intervals_bed_combined.map{ it -> [[id:it[0].baseName], it] },
             params.cnvkit_reference ? cnvkit_reference.map{ it -> [[id:it[0].baseName], it] } : [[:],[]]
         )
-        versions = versions.mix(BAM_VARIANT_CALLING_CNVKIT_GERMLINE.out.versions)
+        versions = versions.mix(BAM_VARIANT_CALLING_CNVKIT.out.versions)
     }
 
     // DEEPVARIANT
