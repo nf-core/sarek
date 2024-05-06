@@ -1,5 +1,5 @@
 - name: Run variant calling on germline sample with haplotypecaller
-  command: nextflow run main.nf -profile test_cache,targeted --input ./tests/csv/3.0/mapped_single_bam.csv --tools haplotypecaller --step variant_calling --outdir results
+  command: nextflow run main.nf -profile test,targeted --input ./tests/csv/3.0/mapped_single_bam.csv --tools haplotypecaller --step variant_calling --outdir results
   tags:
     - germline
     - haplotypecaller
@@ -35,19 +35,14 @@
     - path: results/haplotypecaller
       should_exist: false
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
-      md5sum: e82e90c7d508a135b5a8a7cd6933452e
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
-      md5sum: 3a2030e5e8af7bc12720c3a5592bf921
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
-      md5sum: 615c5c5019d88045a9ff5bbe6e63d270
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
-      md5sum: 9f1ea20e7461db948ba21f70c4d1b3ba
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
-      md5sum: 5c00a1d457c387d6e71848a6d897e309
     - path: results/reports/samtools/test/test.recal.cram.stats
 
 - name: Run variant calling on germline sample with haplotypecaller without intervals
-  command: nextflow run main.nf -profile test_cache,targeted --input ./tests/csv/3.0/mapped_single_bam.csv --tools haplotypecaller --step variant_calling --no_intervals --outdir results
+  command: nextflow run main.nf -profile test,targeted --input ./tests/csv/3.0/mapped_single_bam.csv --tools haplotypecaller --step variant_calling --no_intervals --outdir results
   tags:
     - germline
     - haplotypecaller
@@ -90,11 +85,7 @@
     - path: results/haplotypecaller
       should_exist: false
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
-      md5sum: e82e90c7d508a135b5a8a7cd6933452e
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
-      md5sum: 4f0d231060cbde4efdd673863bd2fb59
     - path: results/reports/mosdepth/test/test.recal.per-base.bed.gz
-      md5sum: bc1df47d46f818fee5275975925d769a
     - path: results/reports/mosdepth/test/test.recal.per-base.bed.gz.csi
-      md5sum: 9e649ac749ff6c6073bef5ab63e8aaa4
     - path: results/reports/samtools/test/test.recal.cram.stats

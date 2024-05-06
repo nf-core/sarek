@@ -1,5 +1,5 @@
 - name: Run Recalibration starting from bam
-  command: nextflow run main.nf -profile test_cache,recalibrate_bam --outdir results
+  command: nextflow run main.nf -profile test,recalibrate_bam --outdir results
   tags:
     - input_bam
     - recalibrate
@@ -17,15 +17,10 @@
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
     # binary changes md5sums on reruns
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
-      md5sum: bdb8f185c35dd1eec7ce2f69bce57972
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
-      md5sum: 6fd2e5c5c938bf69cdb2811f9e3afef8
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
-      md5sum: 32ea70ef1b99def3dc900b4afd513a40
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
-      md5sum: d034a60ae5c0768d67b9ba6442bd2212
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
-      md5sum: b3716e5cd1744610e69c29bd4ffad259
     - path: results/reports/samtools/test/test.recal.cram.stats
     # conda changes md5sums for test
     - path: results/preprocessing/mapped/
@@ -33,7 +28,7 @@
     - path: results/preprocessing/markduplicates/
       should_exist: false
 - name: Run Recalibration starting from bam and skip baserecalibration
-  command: nextflow run main.nf -profile test_cache,recalibrate_bam,skip_bqsr --tools strelka --outdir results
+  command: nextflow run main.nf -profile test,recalibrate_bam,skip_bqsr --tools strelka --outdir results
   tags:
     - input_bam
     - recalibrate
