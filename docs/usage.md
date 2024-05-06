@@ -1134,3 +1134,28 @@ Currently, Sentieon's version of BQSR, QualCal, is not available in Sarek. Recen
 
 Resource requests are difficult to generalize and are often dependent on input data size. Currently, the number of cpus and memory requested by default were adapted from tests on 5 ICGC paired whole-genome sequencing samples with approximately 40X and 80X depth.
 For targeted data analysis, this is overshooting by a lot. In this case resources for each process can be limited by either setting `--max_memory` and `-max_cpus` or tailoring the request by process name as described [here](#resource-requests). If you are using sarek for a certain data type regulary, and would like to make these requests available to others on your system, an institution-specific, pipeline-specific config file can be added [here](https://github.com/nf-core/configs/tree/master/conf/pipeline/sarek).
+
+## CNV calling with CNVkit
+
+The CNV calling in Sarek implements the approach proposed by [CNVkit](https://cnvkit.readthedocs.io/en/stable/).
+It is possible to call CNVs with whole-genome or targeted capture data (exome and amplicons): depending on the sequencing approach, Sarek applies different [settings](https://cnvkit.readthedocs.io/en/stable/nonhybrid.html) as recommended by CNVkit.
+
+### Reference background
+
+Given the nature of this type of CNV calling algorithms, which rely on the detection of variations in the coverage profile, the definition of a background reference in control data is known to improve the calling in targeted and hybrid capture applications. This is to ensure an accurate profiling, especially in the off-target regions.
+We recommend creating a background reference with the nf-core pipeline [createpanelrefs](https://nf-co.re/createpanelrefs).
+
+:warning: In creating a coverage reference, one should pay particular attention to:
+
+- the control samples should be processed with the same targeted capture and sequencing technology
+- if BAM files are used to compute the background, they should have been processed with the same pipeline used to call the CNVs
+
+### Germline calling
+
+Sarek implements the [recommended germline settings](https://cnvkit.readthedocs.io/en/stable/germline.html), i.e. applying the `--filter ci` option in the CVNkit call step.
+However, this is defined at a config level by adding this option to the `ext.args`: the user can therefore choose any desired different approach by changing the arguments in a custom config.
+
+### Somatic calling
+
+The [available options](https://cnvkit.readthedocs.io/en/stable/tumor.html) a user can choose from for tumour analysis depend very much on the specific design being analysed. Sarek therefore doesn't implement any of these choices, i.e. it runs the CNVkit call step with default settings.
+We encourage the user to verify whether particular settings might be more appropriate for their data.
