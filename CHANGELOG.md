@@ -31,6 +31,7 @@ Sájtáristjåhkkå is another peak (just under 2k) in the Pårte massif, it is 
 - [#1496](https://github.com/nf-core/sarek/pull/1496) - Fix multiple DOI handling in manifest
 - [#1499](https://github.com/nf-core/sarek/pull/1499) - Remove all md5sum for mosdepth tests
 - [#1499](https://github.com/nf-core/sarek/pull/1499) - Add mosdepth dependency to all tests runnning it
+- [#1501](https://github.com/nf-core/sarek/pull/1501) - Remove string "None" param option from ascat_genome
 
 ### Removed
 
