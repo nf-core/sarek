@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [3.4.2](https://github.com/nf-core/sarek/releases/tag/3.4.2) - Sájtáristjåhkkå
 
-Sájtáristjåhkkå is another peak (just under 2k) in the Pårte massif, it is one of the few peak in Sweden that cannot be climbed without proper climbing equipments.
+Sájtáristjåhkkå is another peak (just under 2k) in the Pårte massif, it is one of the few peaks in Sweden that cannot be climbed without proper climbing equipment.
 
 ### Added
 
