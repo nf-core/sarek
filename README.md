@@ -153,6 +153,7 @@ We thank the following people for their extensive assistance in the development 
 - [Johannes Alneberg](https://github.com/alneberg)
 - [José Fernández Navarro](https://github.com/jfnavarro)
 - [Júlia Mir Pedrol](https://github.com/mirpedrol)
+- [Ken Brewer](https://github.com/kenibrewer)
 - [Lasse Westergaard Folkersen](https://github.com/lassefolkersen)
 - [Lucia Conde](https://github.com/lconde-ucl)
 - [Malin Larsson](https://github.com/malinlarsson)
@@ -160,6 +161,7 @@ We thank the following people for their extensive assistance in the development 
 - [Nick Smith](https://github.com/nickhsmith)
 - [Nicolas Schcolnicov](https://github.com/nschcolnicov)
 - [Nilesh Tawari](https://github.com/nilesh-tawari)
+- [Nils Homer](https://github.com/nh13)
 - [Olga Botvinnik](https://github.com/olgabot)
 - [Oskar Wacker](https://github.com/WackerO)
 - [pallolason](https://github.com/pallolason)
@@ -169,6 +171,7 @@ We thank the following people for their extensive assistance in the development 
 - [Sam Minot](https://github.com/sminot)
 - [Sebastian-D](https://github.com/Sebastian-D)
 - [Silvia Morini](https://github.com/silviamorins)
+- [Simon Pearce](https://github.com/SPPearce)
 - [Solenne Correard](https://github.com/scorreard)
 - [Susanne Jodoin](https://github.com/SusiJo)
 - [Szilveszter Juhos](https://github.com/szilvajuhos)
@@ -193,7 +196,7 @@ For further information or help, don't hesitate to get in touch on the [Slack `#
 
 If you use `nf-core/sarek` for your analysis, please cite the `Sarek` article as follows:
 
-> Friederike Hanssen, Maxime U Garcia, Lasse Folkersen, Anders Sune Pedersen, Francesco Lescai, Susanne Jodoin, Edmund Miller, Oskar Wacker, Nicholas Smith, nf-core community, Gisela Gabernet, Sven Nahnsen **Scalable and efficient DNA sequencing analysis on different compute infrastructures aiding variant discovery** _ NAR Genomics and Bioinformatics_ Volume 6, Issue 2, June 2024, lqae031, [doi: 10.1093/nargab/lqae031](https://doi.org/10.1093/nargab/lqae031).
+> Friederike Hanssen, Maxime U Garcia, Lasse Folkersen, Anders Sune Pedersen, Francesco Lescai, Susanne Jodoin, Edmund Miller, Oskar Wacker, Nicholas Smith, nf-core community, Gisela Gabernet, Sven Nahnsen **Scalable and efficient DNA sequencing analysis on different compute infrastructures aiding variant discovery** _NAR Genomics and Bioinformatics_ Volume 6, Issue 2, June 2024, lqae031, [doi: 10.1093/nargab/lqae031](https://doi.org/10.1093/nargab/lqae031).
 
 > Garcia M, Juhos S, Larsson M et al. **Sarek: A portable workflow for whole-genome sequencing analysis of germline and somatic variants [version 2; peer review: 2 approved]** _F1000Research_ 2020, 9:63 [doi: 10.12688/f1000research.16665.2](http://dx.doi.org/10.12688/f1000research.16665.2).
 

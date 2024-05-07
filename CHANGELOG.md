@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [3.4.2](https://github.com/nf-core/sarek/releases/tag/3.4.2) - Sájtáristjåhkkå
 
-Sájtáristjåhkkå is another peak (just under 2k) in the Pårte massif, it is one of the few peak in Sweden that cannot be climbed without proper climbing equipments.
+Sájtáristjåhkkå is another peak (just under 2k) in the Pårte massif, it is one of the few peaks in Sweden that cannot be climbed without proper climbing equipment.
 
 ### Added
 
@@ -25,6 +25,9 @@ Sájtáristjåhkkå is another peak (just under 2k) in the Pårte massif, it is 
 - [#1490](https://github.com/nf-core/sarek/pull/1490) - Update mosdepth to `0.3.8`
 - [#1502](https://github.com/nf-core/sarek/pull/1502) - Improved handling of CNVkit reference
 - [#1502](https://github.com/nf-core/sarek/pull/1502) - Specific CNV call step, with recommended settings for germline
+- [#1505](https://github.com/nf-core/sarek/pull/1505) - Update CITATIONS.md
+- [#1506](https://github.com/nf-core/sarek/pull/1506) - Fixing typos (`index_alignement` -> `index_alignment`)
+- [#1509](https://github.com/nf-core/sarek/pull/1509) - Update contributors
 
 ### Fixed
 
