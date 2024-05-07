@@ -157,9 +157,9 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
                 [ meta, [ normal_cram, tumor_cram ], [ normal_crai, tumor_crai ] ]
             },
             // Remap channel to match module/subworkflow
-            fasta.map{ it -> [ [ id:'fasta' ], it ] },
+            fasta,
             // Remap channel to match module/subworkflow
-            fasta_fai.map{ it -> [ [ id:'fasta_fai' ], it ] },
+            fasta_fai,
             dict,
             germline_resource,
             germline_resource_tbi,
