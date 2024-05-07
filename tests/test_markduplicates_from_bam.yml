@@ -1,5 +1,5 @@
 - name: Run markduplicates starting from BAM
-  command: nextflow run main.nf -profile test_cache,markduplicates_bam --outdir results
+  command: nextflow run main.nf -profile test,markduplicates_bam --outdir results
   tags:
     - input_bam
     - gatk4/markduplicates
@@ -25,32 +25,22 @@
     - path: results/reports/markduplicates/test/test.md.cram.metrics
       contains: ["testN	0	2820	2	2	0	828	0	0.293617	3807", "1.0	0.999986	1178	1178", "100.0	1.911145	0	0"]
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
-      md5sum: 8e875e20e3fb9cf288d68c1d223f6fd5
     - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
-      md5sum: 75e1ce7e55af51f4985fa91654a5ea2d
     - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
-      md5sum: b23cf96942b2ada3f41172a9349a1175
     - path: results/reports/mosdepth/test/test.md.regions.bed.gz
-    # binary changes md5sums on reruns
     - path: results/reports/mosdepth/test/test.md.regions.bed.gz.csi
-    # binary changes md5sums on reruns
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
-      md5sum: 8e875e20e3fb9cf288d68c1d223f6fd5
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
-      md5sum: 75e1ce7e55af51f4985fa91654a5ea2d
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
-      md5sum: b23cf96942b2ada3f41172a9349a1175
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
-    # binary changes md5sums on reruns
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
-    # binary changes md5sums on reruns
     - path: results/reports/samtools/test/test.md.cram.stats
     # conda changes md5sums for test
     - path: results/reports/samtools/test/test.recal.cram.stats
     # conda changes md5sums for test
 
 - name: Run skip markduplicates bam from step markduplicates
-  command: nextflow run main.nf -profile test_cache,markduplicates_bam,skip_markduplicates --outdir results
+  command: nextflow run main.nf -profile test,markduplicates_bam,skip_markduplicates --outdir results
   tags:
     - input_bam
     - markduplicates
@@ -71,25 +61,15 @@
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
     # binary changes md5sums on reruns
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
-      md5sum: bdb8f185c35dd1eec7ce2f69bce57972
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
-      md5sum: 6fd2e5c5c938bf69cdb2811f9e3afef8
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
-      md5sum: 32ea70ef1b99def3dc900b4afd513a40
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
-      md5sum: d034a60ae5c0768d67b9ba6442bd2212
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
-      md5sum: b3716e5cd1744610e69c29bd4ffad259
     - path: results/reports/mosdepth/test/test.sorted.mosdepth.global.dist.txt
-      md5sum: bdb8f185c35dd1eec7ce2f69bce57972
     - path: results/reports/mosdepth/test/test.sorted.mosdepth.region.dist.txt
-      md5sum: 6fd2e5c5c938bf69cdb2811f9e3afef8
     - path: results/reports/mosdepth/test/test.sorted.mosdepth.summary.txt
-      md5sum: 32ea70ef1b99def3dc900b4afd513a40
     - path: results/reports/mosdepth/test/test.sorted.regions.bed.gz
-      md5sum: d034a60ae5c0768d67b9ba6442bd2212
     - path: results/reports/mosdepth/test/test.sorted.regions.bed.gz.csi
-      md5sum: b3716e5cd1744610e69c29bd4ffad259
     - path: results/reports/samtools/test/test.recal.cram.stats
     # conda changes md5sums for test
     - path: results/reports/samtools/test/test.sorted.cram.stats

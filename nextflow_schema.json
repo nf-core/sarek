@@ -576,7 +576,7 @@
                     "fa_icon": "fa-solid fa-text",
                     "description": "ASCAT genome.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately.\n\nMust be set to run ASCAT, either hg19 or hg38. If you use AWS iGenomes, this has already been set for you appropriately.",
-                    "enum": ["None", "hg19", "hg38"],
+                    "enum": ["hg19", "hg38"],
                     "hidden": true
                 },
                 "ascat_alleles": {

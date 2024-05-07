@@ -5,23 +5,65 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [dev](https://github.com/nf-core/sarek/tree/dev) - Unreleased
+## dev
 
 ### Added
+
+### Changed
+
+- [#1513](https://github.com/nf-core/sarek/pull/1513) - Back to dev
+
+### Fixed
+
+### Removed
+
+### Dependencies
+
+### Modules / Subworkflows
+
+### Parameters
+
+## [3.4.2](https://github.com/nf-core/sarek/releases/tag/3.4.2) - Sájtáristjåhkkå
+
+Sájtáristjåhkkå is another peak (just under 2k) in the Pårte massif, it is one of the few peaks in Sweden that cannot be climbed without proper climbing equipment.
+
+### Added
+
+- [#1489](https://github.com/nf-core/sarek/pull/1489) - Added a `testdata.nf-core.sarek` key in `conf/igenomes.config` for small reference
+- [#1493](https://github.com/nf-core/sarek/pull/1493) - Added a `wave` profile
+- [#1498](https://github.com/nf-core/sarek/pull/1498) - Prepare release `3.4.2`
 
 ### Changed
 
 - [#1477](https://github.com/nf-core/sarek/pull/1477) - Back to dev
 - [#1482](https://github.com/nf-core/sarek/pull/1482) - Pin `nf-prov` plugin to `1.2.2`
 - [#1485](https://github.com/nf-core/sarek/pull/1485) - Update citation for publication
+- [#1487](https://github.com/nf-core/sarek/pull/1487) - Update sentieon-modules to Sentieon `202308.02`
+- [#1490](https://github.com/nf-core/sarek/pull/1490) - Update mosdepth to `0.3.8`
+- [#1505](https://github.com/nf-core/sarek/pull/1505) - Update CITATIONS.md
+- [#1506](https://github.com/nf-core/sarek/pull/1506) - Fixing typos (`index_alignement` -> `index_alignment`)
+- [#1509](https://github.com/nf-core/sarek/pull/1509) - Update contributors
 
 ### Fixed
 
 - [#1378](https://github.com/nf-core/sarek/pull/1378) - Improve cloud tests launch workflow to use matrix
+- [#1488](https://github.com/nf-core/sarek/pull/1488) - Fixing call to `GATK4_HAPLOTYPECALLER` and thereby also the test-profile `test_full_germline`
+- [#1494](https://github.com/nf-core/sarek/pull/1494) - Fix Cloud Storage objects are immutable on GCP [#1491](https://github.com/nf-core/sarek/issues/1491)
+- [#1496](https://github.com/nf-core/sarek/pull/1496) - Fix multiple DOI handling in manifest
+- [#1499](https://github.com/nf-core/sarek/pull/1499) - Remove all md5sum for mosdepth tests
+- [#1499](https://github.com/nf-core/sarek/pull/1499) - Add mosdepth dependency to all tests runnning it
+- [#1501](https://github.com/nf-core/sarek/pull/1501) - Remove string "None" param option from ascat_genome
 
 ### Removed
 
+- [#1489](https://github.com/nf-core/sarek/pull/1489) - Remove `test_cache` profile
+
 ### Dependencies
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| `mosdepth` | 0.3.6       | 0.3.8       |
+| `sentieon` | 202308.01   | 202308.02   |
 
 ### Modules / Subworkflows
 
@@ -93,16 +135,16 @@ Balgattjåhkkå is the other top peak (over 2k m) in the Pårte massif, the othe
 
 ### Dependencies
 
-| Dependency | Old version | New version |
-| ---------- | ----------- | ----------- |
-| bcftools   | 1.17        | 1.18        |
-| ensemblvep | 110.0       | 111.0       |
-| fgbio      | 2.0.2       | 2.1.0       |
-| gatk       | 4.4.0.0     | 4.5.0.0     |
-| gatk-spark | 4.4.0.0     | 4.5.0.0     |
-| mosdepth   | 0.3.3       | 0.3.6       |
-| multiqc    | 1.17        | 1.18        |
-| samtools   | 1.17        | 1.19.2      |
+| Dependency   | Old version | New version |
+| ------------ | ----------- | ----------- |
+| `bcftools`   | 1.17        | 1.18        |
+| `ensemblvep` | 110.0       | 111.0       |
+| `fgbio`      | 2.0.2       | 2.1.0       |
+| `gatk`       | 4.4.0.0     | 4.5.0.0     |
+| `gatk-spark` | 4.4.0.0     | 4.5.0.0     |
+| `mosdepth`   | 0.3.3       | 0.3.6       |
+| `multiqc`    | 1.17        | 1.18        |
+| `samtools`   | 1.17        | 1.19.2      |
 
 ### Modules / Subworkflows
 
@@ -111,9 +153,9 @@ Balgattjåhkkå is the other top peak (over 2k m) in the Pårte massif, the othe
 
 ### Parameter
 
-| Old name                   | New name                 |
-| -------------------------- | ------------------------ |
-| bcftools_annotations_index | bcftools_annotations_tbi |
+| Old name                     | New name                   |
+| ---------------------------- | -------------------------- |
+| `bcftools_annotations_index` | `bcftools_annotations_tbi` |
 
 ## [3.4.0](https://github.com/nf-core/sarek/releases/tag/3.4.0) - Pårtetjåkko
 
@@ -163,8 +205,8 @@ Pårtetjåkko is a mountain in the south of the park.
 
 | Dependency | Old version | New version |
 | ---------- | ----------- | ----------- |
-| fastqc     | 0.11.9      | 0.12.1      |
-| multiqc    | 1.15        | 1.17        |
+| `fastqc`   | 0.11.9      | 0.12.1      |
+| `multiqc`  | 1.15        | 1.17        |
 
 ### Modules / Subworkflows
 
@@ -197,9 +239,9 @@ Ráhpajávvre is the Lule Sámi spelling of Rapaselet.
 
 ### Dependencies
 
-| Dependency                       | Old version | New version |
-| -------------------------------- | ----------- | ----------- |
-| Control-FREEC/assesssignificance | 11.6b       | 11.6        |
+| Dependency                         | Old version | New version |
+| ---------------------------------- | ----------- | ----------- |
+| `Control-FREEC/assesssignificance` | 11.6b       | 11.6        |
 
 ## [3.3.1](https://github.com/nf-core/sarek/releases/tag/3.3.1) - Biellorippjávrre
 
@@ -223,9 +265,9 @@ A lake near the Rapaselet delta.
 
 ### Dependencies
 
-| Dependency    | Old version | New version |
-| ------------- | ----------- | ----------- |
-| Control-FREEC | 11.6        | 11.6b       |
+| Dependency      | Old version | New version |
+| --------------- | ----------- | ----------- |
+| `Control-FREEC` | 11.6        | 11.6b       |
 
 ## [3.3.0](https://github.com/nf-core/sarek/releases/tag/3.3.0) - Rapaselet
 
@@ -342,7 +384,7 @@ Vuoinesluobbalah is a lake close to Bierikjávrre.
 
 ### Fixed
 
-- [#1087](https://github.com/nf-core/sarek/pull/1087) - Fix wrong default memory in GATK4_CREATESEQUENCEDICTIONARY [#1085](https://github.com/nf-core/sarek/pull/1085)
+- [#1087](https://github.com/nf-core/sarek/pull/1087) - Fix wrong default memory in `GATK4_CREATESEQUENCEDICTIONARY` [#1085](https://github.com/nf-core/sarek/pull/1085)
 - [#1089](https://github.com/nf-core/sarek/pull/1089) - Remove duplicated code
 - [#1093](https://github.com/nf-core/sarek/pull/1093) - Fixing Ascat by reverting meta.id in channels allele_files, loci_files, gc_file and rt_file to baseName
 - [#1098](https://github.com/nf-core/sarek/pull/1098) - Fix Channel issue in Mutect2 subworkflow [#1094](https://github.com/nf-core/sarek/pull/1094)

@@ -1,5 +1,5 @@
 - name: Run variant calling on germline sample with freebayes
-  command: nextflow run main.nf -profile test_cache,targeted --tools freebayes --outdir results
+  command: nextflow run main.nf -profile test,targeted --tools freebayes --outdir results
   tags:
     - freebayes
     - germline
@@ -30,33 +30,19 @@
     - path: results/reports/markduplicates/test/test.md.cram.metrics
       contains: ["test	17094	1534	168	1046782	12429	197	0	0.635998", "1.0	0.999991	1171"]
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
-      md5sum: e4ce28ba1c331dc08bc53a0189908f77
     - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
-      md5sum: 04d9f20dc5306990eec982a3c5a7d107
     - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
-      md5sum: 70b4bbe29bd5e7c4ea39b6caf3316096
     - path: results/reports/mosdepth/test/test.md.per-base.bed.gz
-      md5sum: 2a0c38fb19d6a1f81ca2018e59e7bfcf
     - path: results/reports/mosdepth/test/test.md.per-base.bed.gz.csi
-      md5sum: 0714f8c677277168b9f95d3a43ea5237
     - path: results/reports/mosdepth/test/test.md.regions.bed.gz
-      md5sum: eb0bc92c253326a109e73af98c9a7d4b
     - path: results/reports/mosdepth/test/test.md.regions.bed.gz.csi
-      md5sum: c6d1ac97ef4dfe43731c8368d8391cab
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
-      md5sum: 9c1d90e0fed14b710098b7724b602aea
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
-      md5sum: 04d9f20dc5306990eec982a3c5a7d107
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
-      md5sum: 17dfb78b147488eb8fd450294de4a35e
     - path: results/reports/mosdepth/test/test.recal.per-base.bed.gz
-      md5sum: fb6804911f9d437d0251869fe112a528
     - path: results/reports/mosdepth/test/test.recal.per-base.bed.gz.csi
-      md5sum: 033032cdbb3a2b74dd41dac89628112c
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
-      md5sum: eb0bc92c253326a109e73af98c9a7d4b
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
-      md5sum: c6d1ac97ef4dfe43731c8368d8391cab
     - path: results/reports/samtools/test/test.md.cram.stats
     # conda changes md5sums for test
     - path: results/reports/samtools/test/test.recal.cram.stats
@@ -73,7 +59,7 @@
     - path: results/freebayes
       should_exist: false
 - name: Run variant calling on germline sample with freebayes without intervals
-  command: nextflow run main.nf -profile test_cache --tools freebayes --no_intervals --outdir results
+  command: nextflow run main.nf -profile test --tools freebayes --no_intervals --outdir results
   tags:
     - freebayes
     - germline
@@ -111,25 +97,15 @@
     - path: results/reports/markduplicates/test/test.md.cram.metrics
       contains: ["test	17094	1534	168	1046782	12429	197	0	0.635998", "1.0	0.999991	1171"]
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
-      md5sum: b61e1acee11a6ddf7ce3232a5948a6a0
     - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
-      md5sum: 1a382f98d488d2ae3df83a0d87caafc1
     - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
-      md5sum: 839108358878ada89e1eaddf6e0541ba
     - path: results/reports/mosdepth/test/test.md.regions.bed.gz
-      md5sum: 0aaee6da65050bedcd40b9fbf0622873
     - path: results/reports/mosdepth/test/test.md.regions.bed.gz.csi
-      md5sum: 544e02fcca548749a0af758d0a2df352
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
-      md5sum: b61e1acee11a6ddf7ce3232a5948a6a0
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
-      md5sum: 1a382f98d488d2ae3df83a0d87caafc1
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
-      md5sum: 839108358878ada89e1eaddf6e0541ba
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
-      md5sum: 0aaee6da65050bedcd40b9fbf0622873
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
-      md5sum: 544e02fcca548749a0af758d0a2df352
     - path: results/reports/samtools/test/test.md.cram.stats
     # conda changes md5sums for test
     - path: results/reports/samtools/test/test.recal.cram.stats
@@ -146,7 +122,7 @@
     - path: results/freebayes
       should_exist: false
 - name: Run variant calling on somatic sample with freebayes
-  command: nextflow run main.nf -profile test_cache,pair,targeted --tools freebayes --outdir results
+  command: nextflow run main.nf -profile test,pair,targeted --tools freebayes --outdir results
   tags:
     - freebayes
     - somatic
@@ -191,61 +167,33 @@
     - path: results/reports/markduplicates/test2/test2.md.cram.metrics
       contains: ["test2	10103	880	35	523579	4837	2	0	0.408076	193306", "1.0	1	876	876", "100.0	80.515303	0	0"]
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
-      md5sum: 5a0679057c530e5945c9c5a3a17312dc
     - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
-      md5sum: 835fdc6fa52cc33e6fb76c0c20a8a6c3
     - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
-      md5sum: dcc9ab2bf3248903e02d8da87e678977
     - path: results/reports/mosdepth/test/test.md.per-base.bed.gz
-      md5sum: 5724f1c6b6a0e63e25ec8a0f38edfda6
     - path: results/reports/mosdepth/test/test.md.per-base.bed.gz.csi
-      md5sum: b0ab630c3241fbd7581b7a38d944ff8b
     - path: results/reports/mosdepth/test/test.md.regions.bed.gz
-      md5sum: 91e0d531f1bab64711ecefe52bfc8255
     - path: results/reports/mosdepth/test/test.md.regions.bed.gz.csi
-      md5sum: c6d1ac97ef4dfe43731c8368d8391cab
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
-      md5sum: 0b3162def977123809598639f7698121
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
-      md5sum: 835fdc6fa52cc33e6fb76c0c20a8a6c3
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
-      md5sum: a8455eb2947de529abfa62b303986e0f
     - path: results/reports/mosdepth/test/test.recal.per-base.bed.gz
-      md5sum: d9fa560ff78ae106cfee9db2c90801b5
     - path: results/reports/mosdepth/test/test.recal.per-base.bed.gz.csi
-      md5sum: 4816eeb9af254ca40177b08cf11b98d2
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
-      md5sum: 91e0d531f1bab64711ecefe52bfc8255
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
-      md5sum: c6d1ac97ef4dfe43731c8368d8391cab
     - path: results/reports/mosdepth/test2/test2.md.mosdepth.global.dist.txt
-      md5sum: f25166c3a0051bb4d8c11a210278de6c
     - path: results/reports/mosdepth/test2/test2.md.mosdepth.region.dist.txt
-      md5sum: 3211135329e4077bd9bf0ba488e14371
     - path: results/reports/mosdepth/test2/test2.md.mosdepth.summary.txt
-      md5sum: ce0eb6d33c6d0dc720fbc6d1811abef8
     - path: results/reports/mosdepth/test2/test2.md.per-base.bed.gz
-      md5sum: 55c160e8f3c8c7761524646426611f6b
     - path: results/reports/mosdepth/test2/test2.md.per-base.bed.gz.csi
-      md5sum: 4205a09ede17cdbdaad45e3553f73105
     - path: results/reports/mosdepth/test2/test2.md.regions.bed.gz
-      md5sum: 1dd426a45f967a9f37dcddcaea29a582
     - path: results/reports/mosdepth/test2/test2.md.regions.bed.gz.csi
-      md5sum: c6d1ac97ef4dfe43731c8368d8391cab
     - path: results/reports/mosdepth/test2/test2.recal.mosdepth.global.dist.txt
-      md5sum: a1ef7e662ce993da4668e804952014ce
     - path: results/reports/mosdepth/test2/test2.recal.mosdepth.region.dist.txt
-      md5sum: 3211135329e4077bd9bf0ba488e14371
     - path: results/reports/mosdepth/test2/test2.recal.mosdepth.summary.txt
-      md5sum: 70ad653c0c98baeeaf5085f1209a7bdb
     - path: results/reports/mosdepth/test2/test2.recal.per-base.bed.gz
-      md5sum: 250a9f15a7d3f102435fa98adccf48a3
     - path: results/reports/mosdepth/test2/test2.recal.per-base.bed.gz.csi
-      md5sum: 8072f447199c60f24b01eede8b557333
     - path: results/reports/mosdepth/test2/test2.recal.regions.bed.gz
-      md5sum: 1dd426a45f967a9f37dcddcaea29a582
     - path: results/reports/mosdepth/test2/test2.recal.regions.bed.gz.csi
-      md5sum: c6d1ac97ef4dfe43731c8368d8391cab
     - path: results/reports/samtools/test/test.md.cram.stats
     # conda changes md5sums for test
     - path: results/reports/samtools/test/test.recal.cram.stats
@@ -276,7 +224,7 @@
     - path: results/freebayes
       should_exist: false
 - name: Run variant calling on somatic sample with freebayes without intervals
-  command: nextflow run main.nf -profile test_cache,pair,targeted --tools freebayes --no_intervals --outdir results
+  command: nextflow run main.nf -profile test,pair,targeted --tools freebayes --no_intervals --outdir results
   tags:
     - freebayes
     - somatic
@@ -328,37 +276,21 @@
     - path: results/reports/markduplicates/test2/test2.md.cram.metrics
       contains: ["test2	10103	880	35	523579	4837	2	0	0.408076	193306", "1.0	1	876	876", "100.0	80.515303	0	0"]
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
-      md5sum: 5a0679057c530e5945c9c5a3a17312dc
     - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
-      md5sum: 0010c2396a3173c7cf4983abe2eb6a4c
     - path: results/reports/mosdepth/test/test.md.per-base.bed.gz
-      md5sum: 5724f1c6b6a0e63e25ec8a0f38edfda6
     - path: results/reports/mosdepth/test/test.md.per-base.bed.gz.csi
-      md5sum: b0ab630c3241fbd7581b7a38d944ff8b
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
-      md5sum: 5a0679057c530e5945c9c5a3a17312dc
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
-      md5sum: 0010c2396a3173c7cf4983abe2eb6a4c
     - path: results/reports/mosdepth/test/test.recal.per-base.bed.gz
-      md5sum: 5724f1c6b6a0e63e25ec8a0f38edfda6
     - path: results/reports/mosdepth/test/test.recal.per-base.bed.gz.csi
-      md5sum: b0ab630c3241fbd7581b7a38d944ff8b
     - path: results/reports/mosdepth/test2/test2.md.mosdepth.global.dist.txt
-      md5sum: f25166c3a0051bb4d8c11a210278de6c
     - path: results/reports/mosdepth/test2/test2.md.mosdepth.summary.txt
-      md5sum: d5e4084de2ea2a0a7b60b2d71c804d4b
     - path: results/reports/mosdepth/test2/test2.md.per-base.bed.gz
-      md5sum: 55c160e8f3c8c7761524646426611f6b
     - path: results/reports/mosdepth/test2/test2.md.per-base.bed.gz.csi
-      md5sum: 4205a09ede17cdbdaad45e3553f73105
     - path: results/reports/mosdepth/test2/test2.recal.mosdepth.global.dist.txt
-      md5sum: f25166c3a0051bb4d8c11a210278de6c
     - path: results/reports/mosdepth/test2/test2.recal.mosdepth.summary.txt
-      md5sum: d5e4084de2ea2a0a7b60b2d71c804d4b
     - path: results/reports/mosdepth/test2/test2.recal.per-base.bed.gz
-      md5sum: 55c160e8f3c8c7761524646426611f6b
     - path: results/reports/mosdepth/test2/test2.recal.per-base.bed.gz.csi
-      md5sum: 4205a09ede17cdbdaad45e3553f73105
     - path: results/reports/samtools/test/test.md.cram.stats
     # conda changes md5sums for test
     - path: results/reports/samtools/test/test.recal.cram.stats
@@ -389,7 +321,7 @@
     - path: results/freebayes
       should_exist: false
 - name: Run variant calling on tumor_only sample with freebayes
-  command: nextflow run main.nf -profile test_cache,tools_tumoronly --tools freebayes --outdir results
+  command: nextflow run main.nf -profile test,tools_tumoronly --tools freebayes --outdir results
   tags:
     - freebayes
     - tumor_only
@@ -413,7 +345,7 @@
     - path: results/freebayes
       should_exist: false
 - name: Run variant calling on tumor_only sample with freebayes without intervals
-  command: nextflow run main.nf -profile test_cache,tools_tumoronly --tools freebayes --no_intervals --outdir results
+  command: nextflow run main.nf -profile test,tools_tumoronly --tools freebayes --no_intervals --outdir results
   tags:
     - freebayes
     - no_intervals

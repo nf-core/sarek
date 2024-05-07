@@ -70,6 +70,8 @@
 
 - [FGBio](https://github.com/fulcrumgenomics/fgbio)
 
+  > doi: 10.5281/zenodo.10456900
+
 - [FreeBayes](https://arxiv.org/abs/1207.3907)
 
   > Garrison E, Marth G. Haplotype-based variant detection from short-read sequencing. arXiv preprint arXiv:1207.3907 [q-bio.GN] 2012. doi: 10.48550/arXiv.1207.3907
