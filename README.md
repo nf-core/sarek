@@ -169,6 +169,7 @@ We thank the following people for their extensive assistance in the development 
 - [Sam Minot](https://github.com/sminot)
 - [Sebastian-D](https://github.com/Sebastian-D)
 - [Silvia Morini](https://github.com/silviamorins)
+- [Simon Pearce](https://github.com/SPPearce)
 - [Solenne Correard](https://github.com/scorreard)
 - [Susanne Jodoin](https://github.com/SusiJo)
 - [Szilveszter Juhos](https://github.com/szilvajuhos)
