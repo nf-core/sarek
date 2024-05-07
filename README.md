@@ -161,6 +161,7 @@ We thank the following people for their extensive assistance in the development 
 - [Nick Smith](https://github.com/nickhsmith)
 - [Nicolas Schcolnicov](https://github.com/nschcolnicov)
 - [Nilesh Tawari](https://github.com/nilesh-tawari)
+- [Nils Homer](https://github.com/nh13)
 - [Olga Botvinnik](https://github.com/olgabot)
 - [Oskar Wacker](https://github.com/WackerO)
 - [pallolason](https://github.com/pallolason)
