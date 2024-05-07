@@ -23,6 +23,7 @@ Sájtáristjåhkkå is another peak (just under 2k) in the Pårte massif, it is 
 - [#1487](https://github.com/nf-core/sarek/pull/1487) - Update sentieon-modules to Sentieon `202308.02`
 - [#1490](https://github.com/nf-core/sarek/pull/1490) - Update mosdepth to `0.3.8`
 - [#1506](https://github.com/nf-core/sarek/pull/1506) - Fixing typos (`index_alignement` -> `index_alignment`)
+- [#1509](https://github.com/nf-core/sarek/pull/1509) - Update contributors
 
 ### Fixed
 
