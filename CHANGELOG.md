@@ -11,7 +11,7 @@ Sájtáristjåhkkå is another peak (just under 2k) in the Pårte massif, it is 
 
 ### Added
 
-- # [#1502](https://github.com/nf-core/sarek/pull/1502) - export CNVs into VCF format in `bam_variant_calling_cnvkit`
+- [#1502](https://github.com/nf-core/sarek/pull/1502) - export CNVs into VCF format in `bam_variant_calling_cnvkit`
 - [#1489](https://github.com/nf-core/sarek/pull/1489) - Added a `testdata.nf-core.sarek` key in `conf/igenomes.config` for small reference
 - [#1493](https://github.com/nf-core/sarek/pull/1493) - Added a `wave` profile
 - [#1498](https://github.com/nf-core/sarek/pull/1498) - Prepare release `3.4.2`
