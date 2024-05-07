@@ -265,7 +265,7 @@
                     "description": "Turn on the joint germline variant calling for GATK haplotypecaller",
                     "help_text": "Uses all normal germline samples (as designated by `status` in the input csv) in the joint germline variant calling process."
                 },
-                "joint_tnhyplotyper2": {
+                "joint_tnhaplotyper2": {
                     "type": "boolean",
                     "fa_icon": "fas fa-angle-double-right",
                     "description": "TO-DO: Check if the following is OK: Runs tnhaplotyper2 in joint (multi-sample) mode for better concordance among variant calls of tumor samples from the same patient. tnhaplotyper2 outputs will be stored in a subfolder named with patient ID under `variant_calling/tnhaplotyper2/` folder. Only a single normal sample per patient is allowed. Tumor-only mode is also supported."
