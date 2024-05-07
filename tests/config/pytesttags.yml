@@ -93,7 +93,7 @@ umi:
   - modules/nf-core/fgbio/callmolecularconsensusreads/**
   - modules/nf-core/fgbio/fastqtobam/**
   - modules/nf-core/fgbio/groupreadsbyumi/**
-  - modules/nf-core/minimap2/align/** 
+  - modules/nf-core/minimap2/align/**
   - modules/nf-core/mosdepth/**
   - modules/nf-core/samblaster/**
   - modules/nf-core/samtools/bam2fq/**
