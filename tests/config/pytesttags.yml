@@ -76,6 +76,7 @@ validation_checks:
 alignment_to_fastq:
   - conf/modules/alignment_to_fastq.config
   - modules/nf-core/cat/fastq/**
+  - modules/nf-core/mosdepth/**
   - modules/nf-core/samtools/collatefastq/**
   - modules/nf-core/samtools/merge/**
   - modules/nf-core/samtools/view/**
@@ -92,6 +93,7 @@ umi:
   - modules/nf-core/fgbio/callmolecularconsensusreads/**
   - modules/nf-core/fgbio/fastqtobam/**
   - modules/nf-core/fgbio/groupreadsbyumi/**
+  - modules/nf-core/mosdepth/**
   - modules/nf-core/samblaster/**
   - modules/nf-core/samtools/bam2fq/**
   - subworkflows/local/fastq_align_bwamem_mem2_dragmap/**
@@ -103,6 +105,7 @@ umi:
 fastp:
   - conf/modules/trimming.config
   - modules/nf-core/fastp/**
+  - modules/nf-core/mosdepth/**
   - tests/csv/3.0/fastq_single.csv
   - tests/test_fastp.yml
 
@@ -112,6 +115,7 @@ fastp:
 bwamem:
   - conf/modules/aligner.config
   - modules/nf-core/bwa/mem/**
+  - modules/nf-core/mosdepth/**
   - subworkflows/local/fastq_align_bwamem_mem2_dragmap_sentieon/**
   - tests/csv/3.0/fastq_single.csv
   - tests/test_aligner_bwamem.yml
@@ -120,6 +124,7 @@ bwamem:
 bwamem2:
   - conf/modules/aligner.config
   - modules/nf-core/bwamem2/mem/**
+  - modules/nf-core/mosdepth/**
   - subworkflows/local/fastq_align_bwamem_mem2_dragmap_sentieon/**
   - tests/csv/3.0/fastq_single.csv
   - tests/test_aligner_bwamem2.yml
@@ -128,6 +133,7 @@ bwamem2:
 dragmap:
   - conf/modules/aligner.config
   - modules/nf-core/dragmap/align/**
+  - modules/nf-core/mosdepth/**
   - subworkflows/local/fastq_align_bwamem_mem2_dragmap_sentieon/**
   - tests/csv/3.0/fastq_single.csv
   - tests/test_aligner_dragmap.yml
@@ -174,6 +180,7 @@ prepare_recalibration:
   - conf/modules/prepare_recalibration.config
   - modules/nf-core/gatk4/baserecalibrator/**
   - modules/nf-core/gatk4/gatherbqsrreports/**
+  - modules/nf-core/mosdepth/**
   - modules/nf-core/samtools/convert/**
   - subworkflows/local/bam_baserecalibrator/**
   - tests/csv/3.0/mapped_single_bam.csv
@@ -188,6 +195,7 @@ recalibrate:
   - modules/nf-core/samtools/convert/**
   - modules/nf-core/samtools/index/**
   - modules/nf-core/samtools/merge/**
+  - modules/nf-core/mosdepth/**
   - subworkflows/local/bam_applybqsr/**
   - subworkflows/local/cram_merge_index_samtools/**
   - tests/csv/3.0/prepare_recalibration_single_bam.csv
@@ -201,6 +209,7 @@ intervals:
   - modules/local/build_intervals/**
   - modules/local/create_intervals_bed/**
   - modules/nf-core/gatk4/intervallisttobed/**
+  - modules/nf-core/mosdepth/**
   - modules/nf-core/tabix/bgziptabix/**
   - subworkflows/local/prepare_intervals/**
   - tests/csv/3.0/fastq_single.csv
@@ -215,6 +224,7 @@ gatk4spark:
   - modules/nf-core/gatk4spark/baserecalibrator/**
   - modules/nf-core/gatk4/estimatelibrarycomplexity/**
   - modules/nf-core/gatk4spark/markduplicates/**
+  - modules/nf-core/mosdepth/**
   - subworkflows/local/bam_applybqsr_spark/**
   - subworkflows/local/bam_baserecalibrator_spark/**
   - subworkflows/local/bam_markduplicates_spark/**
@@ -229,6 +239,7 @@ cnvkit:
   - modules/nf-core/cnvkit/antitarget/**
   - modules/nf-core/cnvkit/batch/**
   - modules/nf-core/cnvkit/reference/**
+  - modules/nf-core/mosdepth/**
   - subworkflows/local/bam_variant_calling_cnvkit/**
   - subworkflows/local/bam_variant_calling_germline_all/**
   - subworkflows/local/bam_variant_calling_somatic_all/**
@@ -249,6 +260,7 @@ controlfreec:
   - modules/nf-core/controlfreec/freec2bed/**
   - modules/nf-core/controlfreec/freec2circos/**
   - modules/nf-core/controlfreec/makegraph2/**
+  - modules/nf-core/mosdepth/**
   - modules/nf-core/samtools/mpileup/**
   - subworkflows/local/bam_variant_calling_mpileup/**
   - subworkflows/local/bam_variant_calling_somatic_all/**
@@ -264,6 +276,7 @@ deepvariant:
   - conf/modules/deepvariant.config
   - modules/nf-core/deepvariant/**
   - modules/nf-core/gatk4/mergevcfs/**
+  - modules/nf-core/mosdepth/**
   - modules/nf-core/tabix/tabix/**
   - subworkflows/local/bam_variant_calling_deepvariant/**
   - subworkflows/local/bam_variant_calling_germline_all/**
@@ -276,6 +289,7 @@ freebayes:
   - modules/nf-core/bcftools/sort/**
   - modules/nf-core/freebayes/**
   - modules/nf-core/gatk4/mergevcfs/**
+  - modules/nf-core/mosdepth/**
   - modules/nf-core/tabix/tabix/**
   - subworkflows/local/bam_variant_calling_freebayes/**
   - subworkflows/local/bam_variant_calling_germline_all/**
@@ -293,6 +307,7 @@ haplotypecaller:
   - modules/nf-core/gatk4/filtervarianttranches/**
   - modules/nf-core/gatk4/haplotypecaller/**
   - modules/nf-core/gatk4/mergevcfs/**
+  - modules/nf-core/mosdepth/**
   - modules/nf-core/samtools/index/**
   - modules/nf-core/samtools/merge/**
   - subworkflows/local/bam_merge_index_samtools/**
@@ -379,6 +394,7 @@ joint_germline:
   - modules/nf-core/gatk4/haplotypecaller/**
   - modules/nf-core/gatk4/mergevcfs/**
   - modules/nf-core/gatk4/variantrecalibrator/**
+  - modules/nf-core/mosdepth/**
   - modules/nf-core/samtools/index/**
   - modules/nf-core/samtools/merge/**
   - subworkflows/local/bam_joint_calling_germline_gatk/**
@@ -418,6 +434,7 @@ manta:
   - modules/nf-core/manta/germline/**
   - modules/nf-core/manta/somatic/**
   - modules/nf-core/manta/tumoronly/**
+  - modules/nf-core/mosdepth/**
   - subworkflows/local/bam_variant_calling_germline_all/**
   - subworkflows/local/bam_variant_calling_germline_manta/**
   - subworkflows/local/bam_variant_calling_somatic_all/**
@@ -433,6 +450,7 @@ manta:
 mpileup:
   - conf/modules/mpileup.config
   - modules/nf-core/cat/cat/**
+  - modules/nf-core/mosdepth/**
   - modules/nf-core/samtools/mpileup/**
   - subworkflows/local/bam_variant_calling_germline_all/**
   - subworkflows/local/bam_variant_calling_mpileup/**
@@ -447,6 +465,7 @@ msisensorpro:
   - conf/modules/msisensorpro.config
   - modules/nf-core/msisensorpro/msi_somatic/**
   - modules/nf-core/msisensorpro/scan/**
+  - modules/nf-core/mosdepth/**
   - subworkflows/local/bam_variant_calling_somatic_all/**
   - tests/csv/3.0/recalibrated_somatic.csv
   - tests/test_msisensorpro.yml
@@ -462,6 +481,7 @@ mutect2:
   - modules/nf-core/gatk4/mergemutectstats/**
   - modules/nf-core/gatk4/mergevcfs/**
   - modules/nf-core/gatk4/mutect2/**
+  - modules/nf-core/mosdepth/**
   - subworkflows/local/bam_variant_calling_somatic_all/**
   - subworkflows/local/bam_variant_calling_somatic_mutect2/**
   - subworkflows/local/bam_variant_calling_tumor_only_all/**
@@ -473,6 +493,7 @@ mutect2:
 strelka:
   - conf/modules/strelka.config
   - modules/nf-core/gatk4/mergevcfs/**
+  - modules/nf-core/mosdepth/**
   - modules/nf-core/strelka/germline/**
   - modules/nf-core/strelka/somatic/**
   - subworkflows/local/bam_variant_calling_germline_all/**
@@ -492,6 +513,7 @@ strelka_bp:
   - conf/modules/strelka.config
   - modules/nf-core/gatk4/mergevcfs/**
   - modules/nf-core/manta/somatic/**
+  - modules/nf-core/mosdepth/**
   - modules/nf-core/strelka/somatic/**
   - subworkflows/local/bam_variant_calling_germline_all/**
   - subworkflows/local/bam_variant_calling_somatic_all/**
@@ -505,6 +527,7 @@ strelka_bp:
 tiddit:
   - conf/modules/tiddit.config
   - modules/nf-core/svdb/merge/**.nf
+  - modules/nf-core/mosdepth/**
   - modules/nf-core/tabix/bgziptabix/**
   - modules/nf-core/tiddit/sv/**
   - subworkflows/local/bam_variant_calling_germline_all/**

@@ -1,5 +1,5 @@
 - name: Test that pipeline fail when sample/patient name contain space
-  command: nextflow run main.nf -profile test_cache --input ./tests/csv/3.0/sample_with_space.csv --outdir results
+  command: nextflow run main.nf -profile test --input ./tests/csv/3.0/sample_with_space.csv --outdir results
   tags:
     - sample_with_space
     - validation_checks
