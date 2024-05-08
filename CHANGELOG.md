@@ -5,9 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## dev
+
+### Added
+
+### Changed
+
+- [#1513](https://github.com/nf-core/sarek/pull/1513) - Back to dev
+
+### Fixed
+
+### Removed
+
+### Dependencies
+
+### Modules / Subworkflows
+
+### Parameters
+
 ## [3.4.2](https://github.com/nf-core/sarek/releases/tag/3.4.2) - Sájtáristjåhkkå
 
-Sájtáristjåhkkå is another peak (just under 2k) in the Pårte massif, it is one of the few peak in Sweden that cannot be climbed without proper climbing equipments.
+Sájtáristjåhkkå is another peak (just under 2k) in the Pårte massif, it is one of the few peaks in Sweden that cannot be climbed without proper climbing equipment.
 
 ### Added
 
@@ -22,6 +40,9 @@ Sájtáristjåhkkå is another peak (just under 2k) in the Pårte massif, it is 
 - [#1485](https://github.com/nf-core/sarek/pull/1485) - Update citation for publication
 - [#1487](https://github.com/nf-core/sarek/pull/1487) - Update sentieon-modules to Sentieon `202308.02`
 - [#1490](https://github.com/nf-core/sarek/pull/1490) - Update mosdepth to `0.3.8`
+- [#1505](https://github.com/nf-core/sarek/pull/1505) - Update CITATIONS.md
+- [#1506](https://github.com/nf-core/sarek/pull/1506) - Fixing typos (`index_alignement` -> `index_alignment`)
+- [#1509](https://github.com/nf-core/sarek/pull/1509) - Update contributors
 
 ### Fixed
 

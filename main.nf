@@ -162,7 +162,7 @@ workflow NFCORE_SAREK {
                                     : PREPARE_GENOME.out.hashtable
 
     // Gather index for mapping given the chosen aligner
-    index_alignement = (aligner == "bwa-mem" || aligner == "sentieon-bwamem") ? bwa :
+    index_alignment = (aligner == "bwa-mem" || aligner == "sentieon-bwamem") ? bwa :
         aligner == "bwa-mem2" ? bwamem2 :
         dragmap
 
@@ -279,7 +279,7 @@ workflow NFCORE_SAREK {
         gc_file,
         germline_resource,
         germline_resource_tbi,
-        index_alignement,
+        index_alignment,
         intervals_and_num_intervals,
         intervals_bed_combined,
         intervals_bed_combined_for_variant_calling,
