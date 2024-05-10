@@ -1,0 +1,108 @@
+nextflow_process {
+
+    name "Test Process BCFTOOLS_ANNOTATE"
+    script "../main.nf"
+    process "BCFTOOLS_ANNOTATE"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "bcftools"
+    tag "bcftools/annotate"
+
+    test("sarscov2 - [vcf, tbi, vcf2, tbi2, []] - vcf_output") {
+
+        config "./vcf.config"
+
+        when {
+            process {
+                """
+                input[0] = [ [ id:'test', single_end:false ], // meta map                                                                                                                                                                            
+                    file(params.test_data['sarscov2']['illumina']['test_vcf_gz'], checkIfExists: true),                                                                                                                                           
+                    file(params.test_data['sarscov2']['illumina']['test_vcf_gz_tbi'], checkIfExists: true),                                                                                                                                       
+                    file(params.test_data['sarscov2']['illumina']['test2_vcf_gz'], checkIfExists: true),                                                                                                                                          
+                    file(params.test_data['sarscov2']['illumina']['test2_vcf_gz_tbi'], checkIfExists: true),                                                                                                                                      
+                    []                                                                                                                                                                                                                            
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    process.out.vcf.collect { it.collect { it instanceof Map ? it : file(it).name }},
+                    process.out.versions
+                ).match("vcf") }
+            )
+        }
+
+    }
+
+
+    test("sarscov2 - [vcf, [], [], [], header] - bcf_output") {
+
+        config "./bcf.config"
+
+        when {
+            process {
+                """
+                vcf = Channel.of([ [ id:'test', single_end:false ], // meta map                                                                                                                                                                            
+                    file(params.test_data['sarscov2']['illumina']['test_vcf_gz'], checkIfExists: true),                                                                                                                                           
+                    [],
+                    [],
+                    []                                                                                                                                                                                                                          
+                ])
+
+                header = Channel.of(
+                        '##INFO=<ID=SGB,Number=1,Type=Float,Description="Segregation based metric.">',
+                        '##INFO=<ID=MQ0F,Number=1,Type=Float,Description="Fraction of MQ0 reads (smaller is better)">'
+                    )
+                    .collectFile(name:"headers.vcf", newLine:true)
+
+                input[0] = vcf.combine(header)
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    process.out.vcf.collect { it.collect { it instanceof Map ? it : file(it).name }},
+                    process.out.versions
+                ).match("bcf") }
+            )
+        }
+
+    }
+
+    test("sarscov2 - [vcf, tbi, vcf2, tbi2, []] - stub") {
+
+        config "./vcf.config"
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [ [ id:'test', single_end:false ], // meta map                                                                                                                                                                            
+                    file(params.test_data['sarscov2']['illumina']['test_vcf_gz'], checkIfExists: true),                                                                                                                                           
+                    file(params.test_data['sarscov2']['illumina']['test_vcf_gz_tbi'], checkIfExists: true),                                                                                                                                       
+                    file(params.test_data['sarscov2']['illumina']['test2_vcf_gz'], checkIfExists: true),                                                                                                                                          
+                    file(params.test_data['sarscov2']['illumina']['test2_vcf_gz_tbi'], checkIfExists: true),                                                                                                                                      
+                    []                                                                                                                                                                                                                            
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match("stub") }
+            )
+        }
+
+    }
+
+}

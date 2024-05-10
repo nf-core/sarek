@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- [#1508](https://github.com/nf-core/sarek/pull/1508) - Sync `TEMPLATE` with `tools` `2.14.0`
 - [#1513](https://github.com/nf-core/sarek/pull/1513) - Back to dev
 
 ### Fixed

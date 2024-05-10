@@ -70,7 +70,7 @@ jobs:
 
     steps:
       - name: Check out pipeline code
-        uses: actions/checkout@v4
+        uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b
 
       - name: Hash Github Workspace
         id: hash_workspace
@@ -89,7 +89,7 @@ jobs:
         run: pip install --upgrade -r tests/requirements.txt
 
       - name: Install Nextflow ${{ matrix.NXF_VER }}
-        uses: nf-core/setup-nextflow@v1
+        uses: nf-core/setup-nextflow@v2
         with:
           version: "${{ matrix.NXF_VER }}"
 
@@ -214,6 +214,7 @@ jobs:
           - "23.04.0"
           - "latest-everything"
         exclude:
+          - tags: "bcftools/annotate"
           - tags: "bcftools/concat"
           - tags: "bcftools/mpileup"
           - tags: "bcftools/sort"
@@ -243,9 +244,11 @@ jobs:
           - tags: "gatk4/mutect2"
           - tags: "gatk4spark/applybqsr"
           - tags: "gatk4spark/markduplicates"
+          - tags: "gawk"
           - tags: "mosdepth"
           - tags: "multiqc"
           - tags: "samblaster"
+          - tags: "samtools/convert"
           - tags: "samtools/mpileup"
           - tags: "samtools/stats"
           - tags: "snpeff/snpeff"
@@ -274,7 +277,7 @@ jobs:
           java-version: "17"
 
       - name: Install Nextflow ${{ matrix.NXF_VER }}
-        uses: nf-core/setup-nextflow@v1
+        uses: nf-core/setup-nextflow@v2
         with:
           version: "${{ matrix.NXF_VER }}"
 
