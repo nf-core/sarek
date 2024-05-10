@@ -9,8 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- [#1502](https://github.com/nf-core/sarek/pull/1502) - export CNVs into VCF format in `bam_variant_calling_cnvkit`
+
 ### Changed
 
+- [#1502](https://github.com/nf-core/sarek/pull/1502) - Improved handling of CNVkit reference
+- [#1502](https://github.com/nf-core/sarek/pull/1502) - Specific CNV call step, with recommended settings for germline
 - [#1508](https://github.com/nf-core/sarek/pull/1508) - Sync `TEMPLATE` with `tools` `2.14.0`
 - [#1513](https://github.com/nf-core/sarek/pull/1513) - Back to dev
 
@@ -30,7 +34,6 @@ Sájtáristjåhkkå is another peak (just under 2k) in the Pårte massif, it is 
 
 ### Added
 
-- [#1502](https://github.com/nf-core/sarek/pull/1502) - export CNVs into VCF format in `bam_variant_calling_cnvkit`
 - [#1489](https://github.com/nf-core/sarek/pull/1489) - Added a `testdata.nf-core.sarek` key in `conf/igenomes.config` for small reference
 - [#1493](https://github.com/nf-core/sarek/pull/1493) - Added a `wave` profile
 - [#1498](https://github.com/nf-core/sarek/pull/1498) - Prepare release `3.4.2`
@@ -42,8 +45,6 @@ Sájtáristjåhkkå is another peak (just under 2k) in the Pårte massif, it is 
 - [#1485](https://github.com/nf-core/sarek/pull/1485) - Update citation for publication
 - [#1487](https://github.com/nf-core/sarek/pull/1487) - Update sentieon-modules to Sentieon `202308.02`
 - [#1490](https://github.com/nf-core/sarek/pull/1490) - Update mosdepth to `0.3.8`
-- [#1502](https://github.com/nf-core/sarek/pull/1502) - Improved handling of CNVkit reference
-- [#1502](https://github.com/nf-core/sarek/pull/1502) - Specific CNV call step, with recommended settings for germline
 - [#1505](https://github.com/nf-core/sarek/pull/1505) - Update CITATIONS.md
 - [#1506](https://github.com/nf-core/sarek/pull/1506) - Fixing typos (`index_alignement` -> `index_alignment`)
 - [#1509](https://github.com/nf-core/sarek/pull/1509) - Update contributors
