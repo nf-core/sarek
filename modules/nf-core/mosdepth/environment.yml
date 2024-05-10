@@ -1,0 +1,8 @@
+name: mosdepth
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  # renovate: datasource=conda depName=bioconda/mosdepth
+  - mosdepth=0.3.8

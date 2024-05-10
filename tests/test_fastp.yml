@@ -1,0 +1,95 @@
+- name: Run trimming pipeline
+  command: nextflow run main.nf -profile test,trimming --save_trimmed --outdir results
+  tags:
+    - fastp
+    - preprocessing
+    - trimming
+  files:
+    - path: results/csv/markduplicates.csv
+      md5sum: 0d6120bb99e92f6810343270711ca53e
+    - path: results/csv/markduplicates_no_table.csv
+      md5sum: 2a2d3d4842befd4def39156463859ee3
+    - path: results/csv/recalibrated.csv
+      md5sum: 2d29d9e53894dcce96a1b5beb6ef3312
+    - path: results/multiqc
+    - path: results/preprocessing/fastp/test/test-test_L1_1.fastp.fastq.gz
+    # conda changes md5sums for test
+    - path: results/preprocessing/fastp/test/test-test_L1_2.fastp.fastq.gz
+    # conda changes md5sums for test
+    - path: results/preprocessing/markduplicates/test/test.md.cram
+    # binary changes md5sums on reruns
+    - path: results/preprocessing/markduplicates/test/test.md.cram.crai
+    # binary changes md5sums on reruns
+    - path: results/preprocessing/recal_table/test/test.recal.table
+    # binary changes md5sums on reruns
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+    # binary changes md5sums on reruns
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+    # binary changes md5sums on reruns
+    - path: results/reports/fastp/test
+    - path: results/reports/fastqc/test-test_L1
+    - path: results/reports/markduplicates/test/test.md.cram.metrics
+      contains: ["test	16608	1860	160	1046616	12117	256	0	0.621261"]
+    - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz.csi
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
+    - path: results/reports/samtools/test/test.md.cram.stats
+    # conda changes md5sums for test
+    - path: results/reports/samtools/test/test.recal.cram.stats
+    # conda changes md5sums for test
+- name: Run split fastq module
+  command: nextflow run main.nf -profile test,split_fastq --outdir results
+  tags:
+    - fastp
+    - preprocessing
+    - split_fastq
+  files:
+    - path: results/csv/markduplicates.csv
+      md5sum: 0d6120bb99e92f6810343270711ca53e
+    - path: results/csv/markduplicates_no_table.csv
+      md5sum: 2a2d3d4842befd4def39156463859ee3
+    - path: results/csv/recalibrated.csv
+      md5sum: 2d29d9e53894dcce96a1b5beb6ef3312
+    - path: results/preprocessing/fastp/test/0001.test-test_L1_1.fastp.fastq.gz
+    # conda changes md5sums for test
+    - path: results/preprocessing/fastp/test/0001.test-test_L1_2.fastp.fastq.gz
+    # conda changes md5sums for test
+    - path: results/preprocessing/fastp/test/0002.test-test_L1_1.fastp.fastq.gz
+    # conda changes md5sums for test
+    - path: results/preprocessing/fastp/test/0002.test-test_L1_2.fastp.fastq.gz
+    # conda changes md5sums for test
+    - path: results/preprocessing/markduplicates/test/test.md.cram
+    # binary changes md5sums on reruns
+    - path: results/preprocessing/markduplicates/test/test.md.cram.crai
+    # binary changes md5sums on reruns
+    - path: results/preprocessing/recal_table/test/test.recal.table
+    # binary changes md5sums on reruns
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+    # binary changes md5sums on reruns
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+    # binary changes md5sums on reruns
+    - path: results/reports/fastp/test
+    - path: results/reports/fastqc/test-test_L1
+    - path: results/reports/markduplicates/test/test.md.cram.metrics
+      contains: ["test	17482	890	170	1047682	12552	69	0	0.65881"]
+    - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz.csi
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
+    - path: results/reports/samtools/test/test.md.cram.stats
+    # conda changes md5sums for test
+    - path: results/reports/samtools/test/test.recal.cram.stats
+    # conda changes md5sums for test

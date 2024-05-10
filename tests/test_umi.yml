@@ -1,0 +1,78 @@
+- name: Run UMI test
+  command: nextflow run main.nf -profile test,umi --outdir results
+  tags:
+    - preprocessing
+    - umi
+  files:
+    - path: results/preprocessing/umi/test/test-test_L1_umi-consensus.bam
+    # binary changes md5sums on reruns.
+    - path: results/reports/umi/test-test_L1_umi_histogram.txt
+      md5sum: 85292e9acb83edf17110dce17be27f44
+    - path: results/csv/markduplicates.csv
+      md5sum: 0d6120bb99e92f6810343270711ca53e
+    - path: results/csv/markduplicates_no_table.csv
+      md5sum: 2a2d3d4842befd4def39156463859ee3
+    - path: results/csv/recalibrated.csv
+      md5sum: 2d29d9e53894dcce96a1b5beb6ef3312
+    - path: results/preprocessing/markduplicates/test/test.md.cram
+    # binary changes md5sums on reruns.
+    - path: results/preprocessing/markduplicates/test/test.md.cram.crai
+    # binary changes md5sums on reruns.
+    - path: results/preprocessing/recal_table/test/test.recal.table
+      md5sum: 18ea609fa06356aba3bcabda12f2cf7d
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+    # binary changes md5sums on reruns.
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+    # binary changes md5sums on reruns.
+    - path: results/reports/markduplicates/test/test.md.cram.metrics
+      contains: ["test	0	2804	3	4	0	77	0	0.027461	50115", "1.0	1	2651	2651", "12.0	8.9868	0	0"]
+    - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz
+    - path: results/reports/mosdepth/test/test.md.regions.bed.gz.csi
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
+    - path: results/reports/samtools/test/test.md.cram.stats
+    # text-based file changes md5sums on reruns
+    - path: results/reports/samtools/test/test.recal.cram.stats
+    # text-based file changes md5sums on reruns
+
+- name: Run Sentieon-FGBio UMI combination test
+  command: nextflow run main.nf -profile test,software_license,umi --sentieon_extension --outdir results --aligner "sentieon-bwamem"
+  tags:
+    - preprocessing
+    - umi
+  exit_code: 1
+  stdout:
+    contains:
+      - "Sentieon BWA is currently not compatible with FGBio UMI handeling. Please choose a different aligner."
+# - name: Run UMI TSO test
+#   command: nextflow run main.nf -profile test,umi_tso --outdir results
+#   tags:
+#     - umi_tso
+#     - umi
+#   files:
+#     - path: results/fastqtobam/1234N-HT1080_umi_converted.bam
+#     - path: results/bam2fastq/1234N-HT1080_interleaved.fq.gz
+#     - path: results/callumiconsensus/1234N-HT1080_umi-consensus.bam
+#     - path: results/cat/1234N-HT1080_1.merged.fastq.gz
+#     - path: results/cat/1234N-HT1080_2.merged.fastq.gz
+#     - path: results/groupreadsbyumi/1234N-HT1080_umi-grouped.bam
+#     - path: results/groupreadsbyumi/1234N-HT1080_umi_histogram.txt
+#     - path: results/samblaster/1234N-HT1080_unsorted_tagged.bam
+#     - path: results/samtools/1234N-HT1080.map_map.bam
+#     - path: results/samtools/1234N-HT1080.map_unmap.bam
+#     - path: results/samtools/1234N-HT1080.mapped_1.fq.gz
+#     - path: results/samtools/1234N-HT1080.mapped_2.fq.gz
+#     - path: results/samtools/1234N-HT1080.mapped_other.fq.gz
+#     - path: results/samtools/1234N-HT1080.mapped_singleton.fq.gz
+#     - path: results/samtools/1234N-HT1080.unmap_map.bam
+#     - path: results/samtools/1234N-HT1080.unmap_unmap.bam
+#     - path: results/samtools/1234N-HT1080.unmapped_1.fq.gz
+#     - path: results/samtools/1234N-HT1080.unmapped_2.fq.gz
+#     - path: results/samtools/1234N-HT1080.unmapped_other.fq.gz
+#     - path: results/samtools/1234N-HT1080.unmapped_singleton.fq.gz

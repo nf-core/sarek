@@ -1,0 +1,101 @@
+{
+    "sarscov2 - [[vcf1, vcf2], []]": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test3"
+                        },
+                        "test3.vcf.gz:md5,5f6796c3ae109a1a5b87353954693f5a"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,24ae05eb858733b40fbd3f89743a6d09"
+                ],
+                "vcf": [
+                    [
+                        {
+                            "id": "test3"
+                        },
+                        "test3.vcf.gz:md5,5f6796c3ae109a1a5b87353954693f5a"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,24ae05eb858733b40fbd3f89743a6d09"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.03.0"
+        },
+        "timestamp": "2024-05-03T13:22:49.766749302"
+    },
+    "sarscov2 - [[vcf1, vcf2], [tbi1, tbi2]]": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test3"
+                        },
+                        "test3.vcf.gz:md5,5f6796c3ae109a1a5b87353954693f5a"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,24ae05eb858733b40fbd3f89743a6d09"
+                ],
+                "vcf": [
+                    [
+                        {
+                            "id": "test3"
+                        },
+                        "test3.vcf.gz:md5,5f6796c3ae109a1a5b87353954693f5a"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,24ae05eb858733b40fbd3f89743a6d09"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.03.0"
+        },
+        "timestamp": "2024-05-03T13:22:41.119912312"
+    },
+    "sarscov2 - [[vcf1, vcf2], [tbi1, tbi2]] - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test3"
+                        },
+                        "test3.vcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,24ae05eb858733b40fbd3f89743a6d09"
+                ],
+                "vcf": [
+                    [
+                        {
+                            "id": "test3"
+                        },
+                        "test3.vcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,24ae05eb858733b40fbd3f89743a6d09"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.03.0"
+        },
+        "timestamp": "2024-05-03T13:22:59.90466392"
+    }
+}

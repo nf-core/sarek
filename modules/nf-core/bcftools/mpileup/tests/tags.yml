@@ -1,0 +1,2 @@
+bcftools/mpileup:
+  - "modules/nf-core/bcftools/mpileup/**"

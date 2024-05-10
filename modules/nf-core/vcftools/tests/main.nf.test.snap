@@ -1,0 +1,1987 @@
+{
+    "sarscov2 - vcfgz - bed": {
+        "content": [
+            {
+                "0": [
+                    
+                ],
+                "1": [
+                    
+                ],
+                "10": [
+                    
+                ],
+                "11": [
+                    
+                ],
+                "12": [
+                    
+                ],
+                "13": [
+                    
+                ],
+                "14": [
+                    
+                ],
+                "15": [
+                    
+                ],
+                "16": [
+                    
+                ],
+                "17": [
+                    
+                ],
+                "18": [
+                    
+                ],
+                "19": [
+                    
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.frq:md5,7f126655f17268fd1a338734f62868e9"
+                    ]
+                ],
+                "20": [
+                    
+                ],
+                "21": [
+                    
+                ],
+                "22": [
+                    
+                ],
+                "23": [
+                    
+                ],
+                "24": [
+                    
+                ],
+                "25": [
+                    
+                ],
+                "26": [
+                    
+                ],
+                "27": [
+                    
+                ],
+                "28": [
+                    
+                ],
+                "29": [
+                    
+                ],
+                "3": [
+                    
+                ],
+                "30": [
+                    
+                ],
+                "31": [
+                    
+                ],
+                "32": [
+                    
+                ],
+                "33": [
+                    
+                ],
+                "34": [
+                    
+                ],
+                "35": [
+                    
+                ],
+                "36": [
+                    
+                ],
+                "37": [
+                    
+                ],
+                "38": [
+                    
+                ],
+                "39": [
+                    
+                ],
+                "4": [
+                    
+                ],
+                "40": [
+                    
+                ],
+                "41": [
+                    
+                ],
+                "42": [
+                    
+                ],
+                "43": [
+                    
+                ],
+                "44": [
+                    
+                ],
+                "45": [
+                    
+                ],
+                "46": [
+                    
+                ],
+                "47": [
+                    
+                ],
+                "48": [
+                    
+                ],
+                "49": [
+                    
+                ],
+                "5": [
+                    
+                ],
+                "50": [
+                    
+                ],
+                "51": [
+                    
+                ],
+                "52": [
+                    
+                ],
+                "53": [
+                    
+                ],
+                "54": [
+                    
+                ],
+                "55": [
+                    
+                ],
+                "56": [
+                    
+                ],
+                "57": [
+                    
+                ],
+                "58": [
+                    
+                ],
+                "59": [
+                    
+                ],
+                "6": [
+                    
+                ],
+                "60": [
+                    
+                ],
+                "61": [
+                    
+                ],
+                "62": [
+                    "versions.yml:md5,577abe71f1ed8b94c633e71dc2cfc491"
+                ],
+                "7": [
+                    
+                ],
+                "8": [
+                    
+                ],
+                "9": [
+                    
+                ],
+                "bcf": [
+                    
+                ],
+                "beagle_gl": [
+                    
+                ],
+                "beagle_pl": [
+                    
+                ],
+                "diff_discd_matrix": [
+                    
+                ],
+                "diff_indv": [
+                    
+                ],
+                "diff_indv_in_files": [
+                    
+                ],
+                "diff_sites": [
+                    
+                ],
+                "diff_sites_in_files": [
+                    
+                ],
+                "diff_switch_error": [
+                    
+                ],
+                "filter_summary": [
+                    
+                ],
+                "format": [
+                    
+                ],
+                "freq_burden": [
+                    
+                ],
+                "frq": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.frq:md5,7f126655f17268fd1a338734f62868e9"
+                    ]
+                ],
+                "frq_count": [
+                    
+                ],
+                "gdepth": [
+                    
+                ],
+                "geno_chisq": [
+                    
+                ],
+                "geno_ld": [
+                    
+                ],
+                "genotypes_matrix": [
+                    
+                ],
+                "genotypes_matrix_individual": [
+                    
+                ],
+                "genotypes_matrix_position": [
+                    
+                ],
+                "hap_ld": [
+                    
+                ],
+                "hapcount": [
+                    
+                ],
+                "heterozygosity": [
+                    
+                ],
+                "hwe": [
+                    
+                ],
+                "idepth": [
+                    
+                ],
+                "impute_hap": [
+                    
+                ],
+                "impute_hap_indv": [
+                    
+                ],
+                "impute_hap_legend": [
+                    
+                ],
+                "indel_hist": [
+                    
+                ],
+                "info": [
+                    
+                ],
+                "interchrom_geno_ld": [
+                    
+                ],
+                "interchrom_hap_ld": [
+                    
+                ],
+                "kept_sites": [
+                    
+                ],
+                "ldepth": [
+                    
+                ],
+                "ldepth_mean": [
+                    
+                ],
+                "ldhat_locs": [
+                    
+                ],
+                "ldhat_sites": [
+                    
+                ],
+                "list_geno_ld": [
+                    
+                ],
+                "list_hap_ld": [
+                    
+                ],
+                "lqual": [
+                    
+                ],
+                "lroh": [
+                    
+                ],
+                "map_": [
+                    
+                ],
+                "mendel": [
+                    
+                ],
+                "missing_individual": [
+                    
+                ],
+                "missing_site": [
+                    
+                ],
+                "ped": [
+                    
+                ],
+                "relatedness": [
+                    
+                ],
+                "relatedness2": [
+                    
+                ],
+                "removed_sites": [
+                    
+                ],
+                "singeltons": [
+                    
+                ],
+                "sites_pi": [
+                    
+                ],
+                "snp_density": [
+                    
+                ],
+                "tajima_d": [
+                    
+                ],
+                "tfam": [
+                    
+                ],
+                "tped": [
+                    
+                ],
+                "tstv": [
+                    
+                ],
+                "tstv_count": [
+                    
+                ],
+                "tstv_qual": [
+                    
+                ],
+                "tstv_summary": [
+                    
+                ],
+                "vcf": [
+                    
+                ],
+                "versions": [
+                    "versions.yml:md5,577abe71f1ed8b94c633e71dc2cfc491"
+                ],
+                "weir_fst": [
+                    
+                ],
+                "windowed_pi": [
+                    
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-03-22T13:07:26.598512"
+    },
+    "sarscov2 - vcf": {
+        "content": [
+            {
+                "0": [
+                    
+                ],
+                "1": [
+                    
+                ],
+                "10": [
+                    
+                ],
+                "11": [
+                    
+                ],
+                "12": [
+                    
+                ],
+                "13": [
+                    
+                ],
+                "14": [
+                    
+                ],
+                "15": [
+                    
+                ],
+                "16": [
+                    
+                ],
+                "17": [
+                    
+                ],
+                "18": [
+                    
+                ],
+                "19": [
+                    
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.frq:md5,7f126655f17268fd1a338734f62868e9"
+                    ]
+                ],
+                "20": [
+                    
+                ],
+                "21": [
+                    
+                ],
+                "22": [
+                    
+                ],
+                "23": [
+                    
+                ],
+                "24": [
+                    
+                ],
+                "25": [
+                    
+                ],
+                "26": [
+                    
+                ],
+                "27": [
+                    
+                ],
+                "28": [
+                    
+                ],
+                "29": [
+                    
+                ],
+                "3": [
+                    
+                ],
+                "30": [
+                    
+                ],
+                "31": [
+                    
+                ],
+                "32": [
+                    
+                ],
+                "33": [
+                    
+                ],
+                "34": [
+                    
+                ],
+                "35": [
+                    
+                ],
+                "36": [
+                    
+                ],
+                "37": [
+                    
+                ],
+                "38": [
+                    
+                ],
+                "39": [
+                    
+                ],
+                "4": [
+                    
+                ],
+                "40": [
+                    
+                ],
+                "41": [
+                    
+                ],
+                "42": [
+                    
+                ],
+                "43": [
+                    
+                ],
+                "44": [
+                    
+                ],
+                "45": [
+                    
+                ],
+                "46": [
+                    
+                ],
+                "47": [
+                    
+                ],
+                "48": [
+                    
+                ],
+                "49": [
+                    
+                ],
+                "5": [
+                    
+                ],
+                "50": [
+                    
+                ],
+                "51": [
+                    
+                ],
+                "52": [
+                    
+                ],
+                "53": [
+                    
+                ],
+                "54": [
+                    
+                ],
+                "55": [
+                    
+                ],
+                "56": [
+                    
+                ],
+                "57": [
+                    
+                ],
+                "58": [
+                    
+                ],
+                "59": [
+                    
+                ],
+                "6": [
+                    
+                ],
+                "60": [
+                    
+                ],
+                "61": [
+                    
+                ],
+                "62": [
+                    "versions.yml:md5,577abe71f1ed8b94c633e71dc2cfc491"
+                ],
+                "7": [
+                    
+                ],
+                "8": [
+                    
+                ],
+                "9": [
+                    
+                ],
+                "bcf": [
+                    
+                ],
+                "beagle_gl": [
+                    
+                ],
+                "beagle_pl": [
+                    
+                ],
+                "diff_discd_matrix": [
+                    
+                ],
+                "diff_indv": [
+                    
+                ],
+                "diff_indv_in_files": [
+                    
+                ],
+                "diff_sites": [
+                    
+                ],
+                "diff_sites_in_files": [
+                    
+                ],
+                "diff_switch_error": [
+                    
+                ],
+                "filter_summary": [
+                    
+                ],
+                "format": [
+                    
+                ],
+                "freq_burden": [
+                    
+                ],
+                "frq": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.frq:md5,7f126655f17268fd1a338734f62868e9"
+                    ]
+                ],
+                "frq_count": [
+                    
+                ],
+                "gdepth": [
+                    
+                ],
+                "geno_chisq": [
+                    
+                ],
+                "geno_ld": [
+                    
+                ],
+                "genotypes_matrix": [
+                    
+                ],
+                "genotypes_matrix_individual": [
+                    
+                ],
+                "genotypes_matrix_position": [
+                    
+                ],
+                "hap_ld": [
+                    
+                ],
+                "hapcount": [
+                    
+                ],
+                "heterozygosity": [
+                    
+                ],
+                "hwe": [
+                    
+                ],
+                "idepth": [
+                    
+                ],
+                "impute_hap": [
+                    
+                ],
+                "impute_hap_indv": [
+                    
+                ],
+                "impute_hap_legend": [
+                    
+                ],
+                "indel_hist": [
+                    
+                ],
+                "info": [
+                    
+                ],
+                "interchrom_geno_ld": [
+                    
+                ],
+                "interchrom_hap_ld": [
+                    
+                ],
+                "kept_sites": [
+                    
+                ],
+                "ldepth": [
+                    
+                ],
+                "ldepth_mean": [
+                    
+                ],
+                "ldhat_locs": [
+                    
+                ],
+                "ldhat_sites": [
+                    
+                ],
+                "list_geno_ld": [
+                    
+                ],
+                "list_hap_ld": [
+                    
+                ],
+                "lqual": [
+                    
+                ],
+                "lroh": [
+                    
+                ],
+                "map_": [
+                    
+                ],
+                "mendel": [
+                    
+                ],
+                "missing_individual": [
+                    
+                ],
+                "missing_site": [
+                    
+                ],
+                "ped": [
+                    
+                ],
+                "relatedness": [
+                    
+                ],
+                "relatedness2": [
+                    
+                ],
+                "removed_sites": [
+                    
+                ],
+                "singeltons": [
+                    
+                ],
+                "sites_pi": [
+                    
+                ],
+                "snp_density": [
+                    
+                ],
+                "tajima_d": [
+                    
+                ],
+                "tfam": [
+                    
+                ],
+                "tped": [
+                    
+                ],
+                "tstv": [
+                    
+                ],
+                "tstv_count": [
+                    
+                ],
+                "tstv_qual": [
+                    
+                ],
+                "tstv_summary": [
+                    
+                ],
+                "vcf": [
+                    
+                ],
+                "versions": [
+                    "versions.yml:md5,577abe71f1ed8b94c633e71dc2cfc491"
+                ],
+                "weir_fst": [
+                    
+                ],
+                "windowed_pi": [
+                    
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-03-22T13:07:10.654082"
+    },
+    "sarscov2 - vcfgz": {
+        "content": [
+            {
+                "0": [
+                    
+                ],
+                "1": [
+                    
+                ],
+                "10": [
+                    
+                ],
+                "11": [
+                    
+                ],
+                "12": [
+                    
+                ],
+                "13": [
+                    
+                ],
+                "14": [
+                    
+                ],
+                "15": [
+                    
+                ],
+                "16": [
+                    
+                ],
+                "17": [
+                    
+                ],
+                "18": [
+                    
+                ],
+                "19": [
+                    
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.frq:md5,7f126655f17268fd1a338734f62868e9"
+                    ]
+                ],
+                "20": [
+                    
+                ],
+                "21": [
+                    
+                ],
+                "22": [
+                    
+                ],
+                "23": [
+                    
+                ],
+                "24": [
+                    
+                ],
+                "25": [
+                    
+                ],
+                "26": [
+                    
+                ],
+                "27": [
+                    
+                ],
+                "28": [
+                    
+                ],
+                "29": [
+                    
+                ],
+                "3": [
+                    
+                ],
+                "30": [
+                    
+                ],
+                "31": [
+                    
+                ],
+                "32": [
+                    
+                ],
+                "33": [
+                    
+                ],
+                "34": [
+                    
+                ],
+                "35": [
+                    
+                ],
+                "36": [
+                    
+                ],
+                "37": [
+                    
+                ],
+                "38": [
+                    
+                ],
+                "39": [
+                    
+                ],
+                "4": [
+                    
+                ],
+                "40": [
+                    
+                ],
+                "41": [
+                    
+                ],
+                "42": [
+                    
+                ],
+                "43": [
+                    
+                ],
+                "44": [
+                    
+                ],
+                "45": [
+                    
+                ],
+                "46": [
+                    
+                ],
+                "47": [
+                    
+                ],
+                "48": [
+                    
+                ],
+                "49": [
+                    
+                ],
+                "5": [
+                    
+                ],
+                "50": [
+                    
+                ],
+                "51": [
+                    
+                ],
+                "52": [
+                    
+                ],
+                "53": [
+                    
+                ],
+                "54": [
+                    
+                ],
+                "55": [
+                    
+                ],
+                "56": [
+                    
+                ],
+                "57": [
+                    
+                ],
+                "58": [
+                    
+                ],
+                "59": [
+                    
+                ],
+                "6": [
+                    
+                ],
+                "60": [
+                    
+                ],
+                "61": [
+                    
+                ],
+                "62": [
+                    "versions.yml:md5,577abe71f1ed8b94c633e71dc2cfc491"
+                ],
+                "7": [
+                    
+                ],
+                "8": [
+                    
+                ],
+                "9": [
+                    
+                ],
+                "bcf": [
+                    
+                ],
+                "beagle_gl": [
+                    
+                ],
+                "beagle_pl": [
+                    
+                ],
+                "diff_discd_matrix": [
+                    
+                ],
+                "diff_indv": [
+                    
+                ],
+                "diff_indv_in_files": [
+                    
+                ],
+                "diff_sites": [
+                    
+                ],
+                "diff_sites_in_files": [
+                    
+                ],
+                "diff_switch_error": [
+                    
+                ],
+                "filter_summary": [
+                    
+                ],
+                "format": [
+                    
+                ],
+                "freq_burden": [
+                    
+                ],
+                "frq": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.frq:md5,7f126655f17268fd1a338734f62868e9"
+                    ]
+                ],
+                "frq_count": [
+                    
+                ],
+                "gdepth": [
+                    
+                ],
+                "geno_chisq": [
+                    
+                ],
+                "geno_ld": [
+                    
+                ],
+                "genotypes_matrix": [
+                    
+                ],
+                "genotypes_matrix_individual": [
+                    
+                ],
+                "genotypes_matrix_position": [
+                    
+                ],
+                "hap_ld": [
+                    
+                ],
+                "hapcount": [
+                    
+                ],
+                "heterozygosity": [
+                    
+                ],
+                "hwe": [
+                    
+                ],
+                "idepth": [
+                    
+                ],
+                "impute_hap": [
+                    
+                ],
+                "impute_hap_indv": [
+                    
+                ],
+                "impute_hap_legend": [
+                    
+                ],
+                "indel_hist": [
+                    
+                ],
+                "info": [
+                    
+                ],
+                "interchrom_geno_ld": [
+                    
+                ],
+                "interchrom_hap_ld": [
+                    
+                ],
+                "kept_sites": [
+                    
+                ],
+                "ldepth": [
+                    
+                ],
+                "ldepth_mean": [
+                    
+                ],
+                "ldhat_locs": [
+                    
+                ],
+                "ldhat_sites": [
+                    
+                ],
+                "list_geno_ld": [
+                    
+                ],
+                "list_hap_ld": [
+                    
+                ],
+                "lqual": [
+                    
+                ],
+                "lroh": [
+                    
+                ],
+                "map_": [
+                    
+                ],
+                "mendel": [
+                    
+                ],
+                "missing_individual": [
+                    
+                ],
+                "missing_site": [
+                    
+                ],
+                "ped": [
+                    
+                ],
+                "relatedness": [
+                    
+                ],
+                "relatedness2": [
+                    
+                ],
+                "removed_sites": [
+                    
+                ],
+                "singeltons": [
+                    
+                ],
+                "sites_pi": [
+                    
+                ],
+                "snp_density": [
+                    
+                ],
+                "tajima_d": [
+                    
+                ],
+                "tfam": [
+                    
+                ],
+                "tped": [
+                    
+                ],
+                "tstv": [
+                    
+                ],
+                "tstv_count": [
+                    
+                ],
+                "tstv_qual": [
+                    
+                ],
+                "tstv_summary": [
+                    
+                ],
+                "vcf": [
+                    
+                ],
+                "versions": [
+                    "versions.yml:md5,577abe71f1ed8b94c633e71dc2cfc491"
+                ],
+                "weir_fst": [
+                    
+                ],
+                "windowed_pi": [
+                    
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-03-22T13:07:15.930382"
+    },
+    "sarscov2 - vcf - bed": {
+        "content": [
+            {
+                "0": [
+                    
+                ],
+                "1": [
+                    
+                ],
+                "10": [
+                    
+                ],
+                "11": [
+                    
+                ],
+                "12": [
+                    
+                ],
+                "13": [
+                    
+                ],
+                "14": [
+                    
+                ],
+                "15": [
+                    
+                ],
+                "16": [
+                    
+                ],
+                "17": [
+                    
+                ],
+                "18": [
+                    
+                ],
+                "19": [
+                    
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.frq:md5,7f126655f17268fd1a338734f62868e9"
+                    ]
+                ],
+                "20": [
+                    
+                ],
+                "21": [
+                    
+                ],
+                "22": [
+                    
+                ],
+                "23": [
+                    
+                ],
+                "24": [
+                    
+                ],
+                "25": [
+                    
+                ],
+                "26": [
+                    
+                ],
+                "27": [
+                    
+                ],
+                "28": [
+                    
+                ],
+                "29": [
+                    
+                ],
+                "3": [
+                    
+                ],
+                "30": [
+                    
+                ],
+                "31": [
+                    
+                ],
+                "32": [
+                    
+                ],
+                "33": [
+                    
+                ],
+                "34": [
+                    
+                ],
+                "35": [
+                    
+                ],
+                "36": [
+                    
+                ],
+                "37": [
+                    
+                ],
+                "38": [
+                    
+                ],
+                "39": [
+                    
+                ],
+                "4": [
+                    
+                ],
+                "40": [
+                    
+                ],
+                "41": [
+                    
+                ],
+                "42": [
+                    
+                ],
+                "43": [
+                    
+                ],
+                "44": [
+                    
+                ],
+                "45": [
+                    
+                ],
+                "46": [
+                    
+                ],
+                "47": [
+                    
+                ],
+                "48": [
+                    
+                ],
+                "49": [
+                    
+                ],
+                "5": [
+                    
+                ],
+                "50": [
+                    
+                ],
+                "51": [
+                    
+                ],
+                "52": [
+                    
+                ],
+                "53": [
+                    
+                ],
+                "54": [
+                    
+                ],
+                "55": [
+                    
+                ],
+                "56": [
+                    
+                ],
+                "57": [
+                    
+                ],
+                "58": [
+                    
+                ],
+                "59": [
+                    
+                ],
+                "6": [
+                    
+                ],
+                "60": [
+                    
+                ],
+                "61": [
+                    
+                ],
+                "62": [
+                    "versions.yml:md5,577abe71f1ed8b94c633e71dc2cfc491"
+                ],
+                "7": [
+                    
+                ],
+                "8": [
+                    
+                ],
+                "9": [
+                    
+                ],
+                "bcf": [
+                    
+                ],
+                "beagle_gl": [
+                    
+                ],
+                "beagle_pl": [
+                    
+                ],
+                "diff_discd_matrix": [
+                    
+                ],
+                "diff_indv": [
+                    
+                ],
+                "diff_indv_in_files": [
+                    
+                ],
+                "diff_sites": [
+                    
+                ],
+                "diff_sites_in_files": [
+                    
+                ],
+                "diff_switch_error": [
+                    
+                ],
+                "filter_summary": [
+                    
+                ],
+                "format": [
+                    
+                ],
+                "freq_burden": [
+                    
+                ],
+                "frq": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.frq:md5,7f126655f17268fd1a338734f62868e9"
+                    ]
+                ],
+                "frq_count": [
+                    
+                ],
+                "gdepth": [
+                    
+                ],
+                "geno_chisq": [
+                    
+                ],
+                "geno_ld": [
+                    
+                ],
+                "genotypes_matrix": [
+                    
+                ],
+                "genotypes_matrix_individual": [
+                    
+                ],
+                "genotypes_matrix_position": [
+                    
+                ],
+                "hap_ld": [
+                    
+                ],
+                "hapcount": [
+                    
+                ],
+                "heterozygosity": [
+                    
+                ],
+                "hwe": [
+                    
+                ],
+                "idepth": [
+                    
+                ],
+                "impute_hap": [
+                    
+                ],
+                "impute_hap_indv": [
+                    
+                ],
+                "impute_hap_legend": [
+                    
+                ],
+                "indel_hist": [
+                    
+                ],
+                "info": [
+                    
+                ],
+                "interchrom_geno_ld": [
+                    
+                ],
+                "interchrom_hap_ld": [
+                    
+                ],
+                "kept_sites": [
+                    
+                ],
+                "ldepth": [
+                    
+                ],
+                "ldepth_mean": [
+                    
+                ],
+                "ldhat_locs": [
+                    
+                ],
+                "ldhat_sites": [
+                    
+                ],
+                "list_geno_ld": [
+                    
+                ],
+                "list_hap_ld": [
+                    
+                ],
+                "lqual": [
+                    
+                ],
+                "lroh": [
+                    
+                ],
+                "map_": [
+                    
+                ],
+                "mendel": [
+                    
+                ],
+                "missing_individual": [
+                    
+                ],
+                "missing_site": [
+                    
+                ],
+                "ped": [
+                    
+                ],
+                "relatedness": [
+                    
+                ],
+                "relatedness2": [
+                    
+                ],
+                "removed_sites": [
+                    
+                ],
+                "singeltons": [
+                    
+                ],
+                "sites_pi": [
+                    
+                ],
+                "snp_density": [
+                    
+                ],
+                "tajima_d": [
+                    
+                ],
+                "tfam": [
+                    
+                ],
+                "tped": [
+                    
+                ],
+                "tstv": [
+                    
+                ],
+                "tstv_count": [
+                    
+                ],
+                "tstv_qual": [
+                    
+                ],
+                "tstv_summary": [
+                    
+                ],
+                "vcf": [
+                    
+                ],
+                "versions": [
+                    "versions.yml:md5,577abe71f1ed8b94c633e71dc2cfc491"
+                ],
+                "weir_fst": [
+                    
+                ],
+                "windowed_pi": [
+                    
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-03-22T13:07:21.295463"
+    },
+    "sarscov2 - vcfgz - stub": {
+        "content": [
+            {
+                "0": [
+                    
+                ],
+                "1": [
+                    
+                ],
+                "10": [
+                    
+                ],
+                "11": [
+                    
+                ],
+                "12": [
+                    
+                ],
+                "13": [
+                    
+                ],
+                "14": [
+                    
+                ],
+                "15": [
+                    
+                ],
+                "16": [
+                    
+                ],
+                "17": [
+                    
+                ],
+                "18": [
+                    
+                ],
+                "19": [
+                    
+                ],
+                "2": [
+                    
+                ],
+                "20": [
+                    
+                ],
+                "21": [
+                    
+                ],
+                "22": [
+                    
+                ],
+                "23": [
+                    
+                ],
+                "24": [
+                    
+                ],
+                "25": [
+                    
+                ],
+                "26": [
+                    
+                ],
+                "27": [
+                    
+                ],
+                "28": [
+                    
+                ],
+                "29": [
+                    
+                ],
+                "3": [
+                    
+                ],
+                "30": [
+                    
+                ],
+                "31": [
+                    
+                ],
+                "32": [
+                    
+                ],
+                "33": [
+                    
+                ],
+                "34": [
+                    
+                ],
+                "35": [
+                    
+                ],
+                "36": [
+                    
+                ],
+                "37": [
+                    
+                ],
+                "38": [
+                    
+                ],
+                "39": [
+                    
+                ],
+                "4": [
+                    
+                ],
+                "40": [
+                    
+                ],
+                "41": [
+                    
+                ],
+                "42": [
+                    
+                ],
+                "43": [
+                    
+                ],
+                "44": [
+                    
+                ],
+                "45": [
+                    
+                ],
+                "46": [
+                    
+                ],
+                "47": [
+                    
+                ],
+                "48": [
+                    
+                ],
+                "49": [
+                    
+                ],
+                "5": [
+                    
+                ],
+                "50": [
+                    
+                ],
+                "51": [
+                    
+                ],
+                "52": [
+                    
+                ],
+                "53": [
+                    
+                ],
+                "54": [
+                    
+                ],
+                "55": [
+                    
+                ],
+                "56": [
+                    
+                ],
+                "57": [
+                    
+                ],
+                "58": [
+                    
+                ],
+                "59": [
+                    
+                ],
+                "6": [
+                    
+                ],
+                "60": [
+                    
+                ],
+                "61": [
+                    
+                ],
+                "62": [
+                    "versions.yml:md5,577abe71f1ed8b94c633e71dc2cfc491"
+                ],
+                "7": [
+                    
+                ],
+                "8": [
+                    
+                ],
+                "9": [
+                    
+                ],
+                "bcf": [
+                    
+                ],
+                "beagle_gl": [
+                    
+                ],
+                "beagle_pl": [
+                    
+                ],
+                "diff_discd_matrix": [
+                    
+                ],
+                "diff_indv": [
+                    
+                ],
+                "diff_indv_in_files": [
+                    
+                ],
+                "diff_sites": [
+                    
+                ],
+                "diff_sites_in_files": [
+                    
+                ],
+                "diff_switch_error": [
+                    
+                ],
+                "filter_summary": [
+                    
+                ],
+                "format": [
+                    
+                ],
+                "freq_burden": [
+                    
+                ],
+                "frq": [
+                    
+                ],
+                "frq_count": [
+                    
+                ],
+                "gdepth": [
+                    
+                ],
+                "geno_chisq": [
+                    
+                ],
+                "geno_ld": [
+                    
+                ],
+                "genotypes_matrix": [
+                    
+                ],
+                "genotypes_matrix_individual": [
+                    
+                ],
+                "genotypes_matrix_position": [
+                    
+                ],
+                "hap_ld": [
+                    
+                ],
+                "hapcount": [
+                    
+                ],
+                "heterozygosity": [
+                    
+                ],
+                "hwe": [
+                    
+                ],
+                "idepth": [
+                    
+                ],
+                "impute_hap": [
+                    
+                ],
+                "impute_hap_indv": [
+                    
+                ],
+                "impute_hap_legend": [
+                    
+                ],
+                "indel_hist": [
+                    
+                ],
+                "info": [
+                    
+                ],
+                "interchrom_geno_ld": [
+                    
+                ],
+                "interchrom_hap_ld": [
+                    
+                ],
+                "kept_sites": [
+                    
+                ],
+                "ldepth": [
+                    
+                ],
+                "ldepth_mean": [
+                    
+                ],
+                "ldhat_locs": [
+                    
+                ],
+                "ldhat_sites": [
+                    
+                ],
+                "list_geno_ld": [
+                    
+                ],
+                "list_hap_ld": [
+                    
+                ],
+                "lqual": [
+                    
+                ],
+                "lroh": [
+                    
+                ],
+                "map_": [
+                    
+                ],
+                "mendel": [
+                    
+                ],
+                "missing_individual": [
+                    
+                ],
+                "missing_site": [
+                    
+                ],
+                "ped": [
+                    
+                ],
+                "relatedness": [
+                    
+                ],
+                "relatedness2": [
+                    
+                ],
+                "removed_sites": [
+                    
+                ],
+                "singeltons": [
+                    
+                ],
+                "sites_pi": [
+                    
+                ],
+                "snp_density": [
+                    
+                ],
+                "tajima_d": [
+                    
+                ],
+                "tfam": [
+                    
+                ],
+                "tped": [
+                    
+                ],
+                "tstv": [
+                    
+                ],
+                "tstv_count": [
+                    
+                ],
+                "tstv_qual": [
+                    
+                ],
+                "tstv_summary": [
+                    
+                ],
+                "vcf": [
+                    
+                ],
+                "versions": [
+                    "versions.yml:md5,577abe71f1ed8b94c633e71dc2cfc491"
+                ],
+                "weir_fst": [
+                    
+                ],
+                "windowed_pi": [
+                    
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-03-22T13:07:31.866838"
+    }
+}

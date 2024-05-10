@@ -1,0 +1,634 @@
+# default
+default:
+  - "**"
+
+# default_extended
+
+tumor_normal_pair:
+  - conf/modules/**
+  - main.nf
+  - modules/**
+  - nextflow.config
+  - nextflow_schema.json
+  - subworkflows/**
+  - tests/csv/3.0/fastq_pair.csv
+  - tests/test_tumor_normal_pair.yml
+  - workflows/**
+
+save_mapped_only:
+  - conf/modules/**
+  - main.nf
+  - modules/**
+  - nextflow.config
+  - nextflow_schema.json
+  - subworkflows/**
+  - tests/csv/3.0/fastq_single.csv
+  - tests/test_save_mapped.yml
+  - workflows/**
+
+save_output_as_bam_only:
+  - conf/modules/**
+  - main.nf
+  - modules/**
+  - nextflow.config
+  - nextflow_schema.json
+  - subworkflows/**
+  - tests/csv/3.0/fastq_single.csv
+  - tests/test_save_output_as_bam_only.yml
+  - workflows/**
+
+skip_all_qc:
+  - conf/modules/**
+  - main.nf
+  - modules/**
+  - nextflow.config
+  - nextflow_schema.json
+  - subworkflows/**
+  - tests/csv/3.0/fastq_single.csv
+  - tests/test_skip_all_qc.yml
+  - workflows/**
+
+skip_markduplicates:
+  - conf/modules/**
+  - main.nf
+  - modules/**
+  - nextflow.config
+  - nextflow_schema.json
+  - subworkflows/**
+  - tests/csv/3.0/fastq_single.csv
+  - tests/test_skip_markduplicates.yml
+  - workflows/**
+
+validation_checks:
+  - conf/modules/**
+  - main.nf
+  - modules/**
+  - nextflow.config
+  - nextflow_schema.json
+  - subworkflows/**
+  - tests/csv/3.0/sample_with_space.csv
+  - tests/test_samplesheet_validation_spaces.yml
+  - workflows/**
+
+# preprocessing
+
+## alignment_to_fastq
+alignment_to_fastq:
+  - conf/modules/alignment_to_fastq.config
+  - modules/nf-core/cat/fastq/**
+  - modules/nf-core/mosdepth/**
+  - modules/nf-core/samtools/collatefastq/**
+  - modules/nf-core/samtools/merge/**
+  - modules/nf-core/samtools/view/**
+  - subworkflows/local/bam_convert_samtools/**
+  - tests/csv/3.0/bam_for_remapping.csv
+  - tests/test_alignment_to_fastq.yml
+
+## umi
+umi:
+  - conf/modules/umi.config
+  - modules/nf-core/bwa/mem/**
+  - modules/nf-core/bwamem2/mem/**
+  - modules/nf-core/dragmap/align/**
+  - modules/nf-core/fgbio/callmolecularconsensusreads/**
+  - modules/nf-core/fgbio/fastqtobam/**
+  - modules/nf-core/fgbio/groupreadsbyumi/**
+  - modules/nf-core/mosdepth/**
+  - modules/nf-core/samblaster/**
+  - modules/nf-core/samtools/bam2fq/**
+  - subworkflows/local/fastq_align_bwamem_mem2_dragmap/**
+  - subworkflows/local/fastq_create_umi_consensus_fgbio/**
+  - tests/csv/3.0/fastq_umi.csv
+  - tests/test_umi.yml
+
+## fastp
+fastp:
+  - conf/modules/trimming.config
+  - modules/nf-core/fastp/**
+  - modules/nf-core/mosdepth/**
+  - tests/csv/3.0/fastq_single.csv
+  - tests/test_fastp.yml
+
+## aligner
+
+### bwamem
+bwamem:
+  - conf/modules/aligner.config
+  - modules/nf-core/bwa/mem/**
+  - modules/nf-core/mosdepth/**
+  - subworkflows/local/fastq_align_bwamem_mem2_dragmap_sentieon/**
+  - tests/csv/3.0/fastq_single.csv
+  - tests/test_aligner_bwamem.yml
+
+### bwamem2
+bwamem2:
+  - conf/modules/aligner.config
+  - modules/nf-core/bwamem2/mem/**
+  - modules/nf-core/mosdepth/**
+  - subworkflows/local/fastq_align_bwamem_mem2_dragmap_sentieon/**
+  - tests/csv/3.0/fastq_single.csv
+  - tests/test_aligner_bwamem2.yml
+
+### dragmap
+dragmap:
+  - conf/modules/aligner.config
+  - modules/nf-core/dragmap/align/**
+  - modules/nf-core/mosdepth/**
+  - subworkflows/local/fastq_align_bwamem_mem2_dragmap_sentieon/**
+  - tests/csv/3.0/fastq_single.csv
+  - tests/test_aligner_dragmap.yml
+
+### sentieon/bwamem
+sentieon/bwamem:
+  - conf/modules/aligner.config
+  - modules/nf-core/sentieon/bwamem/**
+  - subworkflows/local/fastq_align_bwamem_mem2_dragmap_sentieon/**
+  - tests/csv/3.0/fastq_single.csv
+  - tests/test_sentieon_aligner_bwamem.yml
+
+## markduplicates
+gatk4/markduplicates:
+  - conf/modules/markduplicates.config
+  - modules/nf-core/gatk4/markduplicates/**
+  - modules/nf-core/mosdepth/**
+  - modules/nf-core/samtools/convert/**
+  - modules/nf-core/samtools/index/**
+  - modules/nf-core/samtools/stats/**
+  - subworkflows/local/bam_markduplicates/**
+  - subworkflows/local/cram_qc_mosdepth_samtools/**
+  - tests/csv/3.0/mapped_single_bam.csv
+  - tests/csv/3.0/mapped_single_cram.csv
+  - tests/test_markduplicates_from_bam.yml
+  - tests/test_markduplicates_from_cram.yml
+
+## sentieon/dedup
+sentieon/dedup:
+  - conf/modules/sentieon_dedup.config
+  - modules/nf-core/sentieon/bwamem/**
+  - modules/nf-core/mosdepth/**
+  - modules/nf-core/samtools/index/**
+  - modules/nf-core/samtools/stats/**
+  - subworkflows/local/bam_sentieon_dedup/**
+  - subworkflows/local/cram_qc_mosdepth_samtools/**
+  - tests/csv/3.0/mapped_single_bam.csv
+  - tests/csv/3.0/mapped_single_cram.csv
+  - tests/test_sentieon_dedup_from_bam.yml
+  - tests/test_sentieon_dedup_from_cram.yml
+
+## prepare_recalibration
+prepare_recalibration:
+  - conf/modules/prepare_recalibration.config
+  - modules/nf-core/gatk4/baserecalibrator/**
+  - modules/nf-core/gatk4/gatherbqsrreports/**
+  - modules/nf-core/mosdepth/**
+  - modules/nf-core/samtools/convert/**
+  - subworkflows/local/bam_baserecalibrator/**
+  - tests/csv/3.0/mapped_single_bam.csv
+  - tests/csv/3.0/mapped_single_cram.csv
+  - tests/test_prepare_recalibration_from_bam.yml
+  - tests/test_prepare_recalibration_from_cram.yml
+
+## recalibrate
+recalibrate:
+  - conf/modules/recalibrate.config
+  - modules/nf-core/gatk4/applybqsr/**
+  - modules/nf-core/samtools/convert/**
+  - modules/nf-core/samtools/index/**
+  - modules/nf-core/samtools/merge/**
+  - modules/nf-core/mosdepth/**
+  - subworkflows/local/bam_applybqsr/**
+  - subworkflows/local/cram_merge_index_samtools/**
+  - tests/csv/3.0/prepare_recalibration_single_bam.csv
+  - tests/csv/3.0/prepare_recalibration_single_cram.csv
+  - tests/test_recalibrate_from_bam.yml
+  - tests/test_recalibrate_from_cram.yml
+
+## intervals
+intervals:
+  - conf/modules/prepare_intervals.config
+  - modules/local/build_intervals/**
+  - modules/local/create_intervals_bed/**
+  - modules/nf-core/gatk4/intervallisttobed/**
+  - modules/nf-core/mosdepth/**
+  - modules/nf-core/tabix/bgziptabix/**
+  - subworkflows/local/prepare_intervals/**
+  - tests/csv/3.0/fastq_single.csv
+  - tests/test_intervals.yml
+
+## gatk4spark
+gatk4spark:
+  - conf/modules/markduplicates.config
+  - conf/modules/prepare_recalibration.config
+  - conf/modules/recalibrate.config
+  - modules/nf-core/gatk4spark/applybqsr/**
+  - modules/nf-core/gatk4spark/baserecalibrator/**
+  - modules/nf-core/gatk4/estimatelibrarycomplexity/**
+  - modules/nf-core/gatk4spark/markduplicates/**
+  - modules/nf-core/mosdepth/**
+  - subworkflows/local/bam_applybqsr_spark/**
+  - subworkflows/local/bam_baserecalibrator_spark/**
+  - subworkflows/local/bam_markduplicates_spark/**
+  - tests/csv/3.0/fastq_single.csv
+  - tests/test_gatk4spark.yml
+
+# variant calling
+
+## cnvkit
+cnvkit:
+  - conf/modules/cnvkit.config
+  - modules/nf-core/cnvkit/antitarget/**
+  - modules/nf-core/cnvkit/batch/**
+  - modules/nf-core/cnvkit/reference/**
+  - modules/nf-core/mosdepth/**
+  - subworkflows/local/bam_variant_calling_cnvkit/**
+  - subworkflows/local/bam_variant_calling_germline_all/**
+  - subworkflows/local/bam_variant_calling_somatic_all/**
+  - subworkflows/local/bam_variant_calling_tumor_only_all/**
+  - subworkflows/local/prepare_reference_cnvkit/**
+  - tests/csv/3.0/recalibrated_germline.csv
+  - tests/csv/3.0/recalibrated_somatic.csv
+  - tests/csv/3.0/recalibrated_tumoronly.csv
+  - tests/test_cnvkit.yml
+
+## controlfreec
+controlfreec:
+  - conf/modules/controlfreec.config
+  - conf/modules/mpileup.config
+  - modules/nf-core/cat/cat/**
+  - modules/nf-core/controlfreec/assesssignificance/**
+  - modules/nf-core/controlfreec/freec/**
+  - modules/nf-core/controlfreec/freec2bed/**
+  - modules/nf-core/controlfreec/freec2circos/**
+  - modules/nf-core/controlfreec/makegraph2/**
+  - modules/nf-core/mosdepth/**
+  - modules/nf-core/samtools/mpileup/**
+  - subworkflows/local/bam_variant_calling_mpileup/**
+  - subworkflows/local/bam_variant_calling_somatic_all/**
+  - subworkflows/local/bam_variant_calling_somatic_controlfreec/**
+  - subworkflows/local/bam_variant_calling_tumor_only_all/**
+  - subworkflows/local/bam_variant_calling_tumor_only_controlfreec/**
+  - tests/csv/3.0/recalibrated_somatic.csv
+  - tests/csv/3.0/recalibrated_tumoronly.csv
+  - tests/test_controlfreec.yml
+
+## deepvariant
+deepvariant:
+  - conf/modules/deepvariant.config
+  - modules/nf-core/deepvariant/**
+  - modules/nf-core/gatk4/mergevcfs/**
+  - modules/nf-core/mosdepth/**
+  - modules/nf-core/tabix/tabix/**
+  - subworkflows/local/bam_variant_calling_deepvariant/**
+  - subworkflows/local/bam_variant_calling_germline_all/**
+  - tests/csv/3.0/recalibrated_germline.csv
+  - tests/test_deepvariant.yml
+
+## freebayes
+freebayes:
+  - conf/modules/freebayes.config
+  - modules/nf-core/bcftools/sort/**
+  - modules/nf-core/freebayes/**
+  - modules/nf-core/gatk4/mergevcfs/**
+  - modules/nf-core/mosdepth/**
+  - modules/nf-core/tabix/tabix/**
+  - subworkflows/local/bam_variant_calling_freebayes/**
+  - subworkflows/local/bam_variant_calling_germline_all/**
+  - subworkflows/local/bam_variant_calling_somatic_all/**
+  - subworkflows/local/bam_variant_calling_tumor_only_all/**
+  - tests/csv/3.0/fastq_pair.csv
+  - tests/csv/3.0/fastq_single.csv
+  - tests/csv/3.0/recalibrated_tumoronly.csv
+  - tests/test_freebayes.yml
+
+## haplotypecaller
+haplotypecaller:
+  - conf/modules/haplotypecaller.config
+  - modules/nf-core/gatk4/cnnscorevariants/**
+  - modules/nf-core/gatk4/filtervarianttranches/**
+  - modules/nf-core/gatk4/haplotypecaller/**
+  - modules/nf-core/gatk4/mergevcfs/**
+  - modules/nf-core/mosdepth/**
+  - modules/nf-core/samtools/index/**
+  - modules/nf-core/samtools/merge/**
+  - subworkflows/local/bam_merge_index_samtools/**
+  - subworkflows/local/bam_variant_calling_germline_all/**
+  - subworkflows/local/bam_variant_calling_haplotypecaller/**
+  - subworkflows/local/vcf_variant_filtering_gatk/**
+  - tests/csv/3.0/mapped_single_bam.csv
+  - tests/test_haplotypecaller.yml
+
+haplotypecaller_skip_filter:
+  - conf/modules/haplotypecaller.config
+  - modules/nf-core/gatk4/haplotypecaller/**
+  - modules/nf-core/gatk4/mergevcfs/**
+  - modules/nf-core/samtools/index/**
+  - modules/nf-core/samtools/merge/**
+  - subworkflows/local/bam_merge_index_samtools/**
+  - subworkflows/local/bam_variant_calling_germline_all/**
+  - subworkflows/local/bam_variant_calling_haplotypecaller/**
+  - tests/csv/3.0/mapped_single_bam.csv
+  - tests/test_haplotypecaller_skip_filter.yml
+
+## sentieon/dnascope
+sentieon/dnascope:
+  - conf/modules/sentieon_dnascope.config
+  - modules/nf-core/sentieon/dnascope/**
+  - modules/nf-core/gatk4/mergevcfs/**
+  - modules/nf-core/samtools/index/**
+  - modules/nf-core/samtools/merge/**
+  - subworkflows/local/bam_merge_index_samtools/**
+  - subworkflows/local/bam_variant_calling_germline_all/**
+  - subworkflows/local/bam_variant_calling_sentieon_dnascope/**
+  - tests/csv/3.0/mapped_single_bam.csv
+  - tests/test_sentieon_dnascope.yml
+
+sentieon/dnascope_skip_filter:
+  - conf/modules/sentieon_dnascope.config
+  - modules/nf-core/sentieon/dnascope/**
+  - modules/nf-core/gatk4/mergevcfs/**
+  - modules/nf-core/samtools/index/**
+  - modules/nf-core/samtools/merge/**
+  - subworkflows/local/bam_merge_index_samtools/**
+  - subworkflows/local/bam_variant_calling_germline_all/**
+  - subworkflows/local/bam_variant_calling_sentieon_dnascope/**
+  - tests/csv/3.0/mapped_single_bam.csv
+  - tests/test_sentieon_dnascope_skip_filter.yml
+
+## sentieon/haplotyper
+sentieon/haplotyper:
+  - conf/modules/sentieon_haplotyper.config
+  - modules/nf-core/gatk4/cnnscorevariants/**
+  - modules/nf-core/gatk4/filtervarianttranches/**
+  - modules/nf-core/sentieon/haplotyper/**
+  - modules/nf-core/gatk4/mergevcfs/**
+  - modules/nf-core/samtools/index/**
+  - modules/nf-core/samtools/merge/**
+  - subworkflows/local/bam_merge_index_samtools/**
+  - subworkflows/local/bam_variant_calling_germline_all/**
+  - subworkflows/local/bam_variant_calling_sentieon_haplotyper/**
+  - subworkflows/local/vcf_variant_filtering_gatk/**
+  - tests/csv/3.0/mapped_single_bam.csv
+  - tests/test_sentieon_haplotyper.yml
+
+sentieon/haplotyper_skip_filter:
+  - conf/modules/sentieon_haplotyper.config
+  - modules/nf-core/sentieon/haplotyper/**
+  - modules/nf-core/gatk4/mergevcfs/**
+  - modules/nf-core/samtools/index/**
+  - modules/nf-core/samtools/merge/**
+  - subworkflows/local/bam_merge_index_samtools/**
+  - subworkflows/local/bam_variant_calling_germline_all/**
+  - subworkflows/local/bam_variant_calling_sentieon_haplotyper/**
+  - tests/csv/3.0/mapped_single_bam.csv
+  - tests/test_sentieon_haplotyper_skip_filter.yml
+
+## joint_germline
+joint_germline:
+  - conf/modules/haplotypecaller.config
+  - modules/nf-core/bcftools/sort/**
+  - modules/nf-core/gatk4/applyvqsr/**
+  - modules/nf-core/gatk4/cnnscorevariants/**
+  - modules/nf-core/gatk4/filtervarianttranches/**
+  - modules/nf-core/gatk4/genomicsdbimport/**
+  - modules/nf-core/gatk4/genotypegvcfs/**
+  - modules/nf-core/gatk4/haplotypecaller/**
+  - modules/nf-core/gatk4/mergevcfs/**
+  - modules/nf-core/gatk4/variantrecalibrator/**
+  - modules/nf-core/mosdepth/**
+  - modules/nf-core/samtools/index/**
+  - modules/nf-core/samtools/merge/**
+  - subworkflows/local/bam_joint_calling_germline_gatk/**
+  - subworkflows/local/bam_merge_index_samtools/**
+  - subworkflows/local/bam_variant_calling_germline_all/**
+  - subworkflows/local/bam_variant_calling_haplotypecaller/**
+  - subworkflows/local/vcf_variant_filtering_gatk/**
+  - tests/csv/3.0/mapped_joint_bam.csv
+  - tests/test_joint_germline.yml
+
+## sentieon_dnascope_joint_germline
+sentieon/dnascope_joint_germline:
+  - conf/modules/prepare_genome.config
+  - conf/modules/sentieon_dnascope.config
+  - conf/modules/sentieon_dnascope_joint_germline.config
+  - modules/nf-core/sentieon/dnascope/**
+  - subworkflows/local/bam_variant_calling_germline_all/**
+  - subworkflows/local/bam_variant_calling_sentieon_dnascope/**
+  - tests/csv/3.0/mapped_joint_bam.csv
+  - tests/test_sentieon_dnascop_joint_germline.yml
+
+## sentieon_haplotyper_joint_germline
+sentieon/haplotyper_joint_germline:
+  - conf/modules/prepare_genome.config
+  - conf/modules/sentieon_haplotyper.config
+  - conf/modules/sentieon_haplotyper_joint_germline.config
+  - modules/nf-core/sentieon/haplotyper/**
+  - subworkflows/local/bam_variant_calling_germline_all/**
+  - subworkflows/local/bam_variant_calling_sentieon_haplotyper/**
+  - tests/csv/3.0/mapped_joint_bam.csv
+  - tests/test_sentieon_haplotyper_joint_germline.yml
+
+## manta
+manta:
+  - conf/modules/manta.config
+  - modules/nf-core/gatk4/mergevcfs/**
+  - modules/nf-core/manta/germline/**
+  - modules/nf-core/manta/somatic/**
+  - modules/nf-core/manta/tumoronly/**
+  - modules/nf-core/mosdepth/**
+  - subworkflows/local/bam_variant_calling_germline_all/**
+  - subworkflows/local/bam_variant_calling_germline_manta/**
+  - subworkflows/local/bam_variant_calling_somatic_all/**
+  - subworkflows/local/bam_variant_calling_somatic_manta/**
+  - subworkflows/local/bam_variant_calling_tumor_only_all/**
+  - subworkflows/local/bam_variant_calling_tumor_only_manta/**
+  - tests/csv/3.0/recalibrated_germline.csv
+  - tests/csv/3.0/recalibrated_somatic.csv
+  - tests/csv/3.0/recalibrated_tumoronly.csv
+  - tests/test_manta.yml
+
+## mpileup
+mpileup:
+  - conf/modules/mpileup.config
+  - modules/nf-core/cat/cat/**
+  - modules/nf-core/mosdepth/**
+  - modules/nf-core/samtools/mpileup/**
+  - subworkflows/local/bam_variant_calling_germline_all/**
+  - subworkflows/local/bam_variant_calling_mpileup/**
+  - subworkflows/local/bam_variant_calling_somatic_all/**
+  - subworkflows/local/bam_variant_calling_tumor_only_all/**
+  - tests/csv/3.0/recalibrated_germline.csv
+  - tests/csv/3.0/recalibrated_tumoronly.csv
+  - tests/test_mpileup.yml
+
+## msisensorpro
+msisensorpro:
+  - conf/modules/msisensorpro.config
+  - modules/nf-core/msisensorpro/msi_somatic/**
+  - modules/nf-core/msisensorpro/scan/**
+  - modules/nf-core/mosdepth/**
+  - subworkflows/local/bam_variant_calling_somatic_all/**
+  - tests/csv/3.0/recalibrated_somatic.csv
+  - tests/test_msisensorpro.yml
+
+## mutect2
+mutect2:
+  - conf/modules/mutect2.config
+  - modules/nf-core/gatk4/calculatecontamination/**
+  - modules/nf-core/gatk4/filtermutectcalls/**
+  - modules/nf-core/gatk4/gatherpileupsummaries/**
+  - modules/nf-core/gatk4/getpileupsummaries/**
+  - modules/nf-core/gatk4/learnreadorientationmodel/**
+  - modules/nf-core/gatk4/mergemutectstats/**
+  - modules/nf-core/gatk4/mergevcfs/**
+  - modules/nf-core/gatk4/mutect2/**
+  - modules/nf-core/mosdepth/**
+  - subworkflows/local/bam_variant_calling_somatic_all/**
+  - subworkflows/local/bam_variant_calling_somatic_mutect2/**
+  - subworkflows/local/bam_variant_calling_tumor_only_all/**
+  - subworkflows/local/bam_variant_calling_tumor_only_mutect2/**
+  - tests/csv/3.0/recalibrated_tumoronly.csv
+  - tests/test_mutect2.yml
+
+## strelka
+strelka:
+  - conf/modules/strelka.config
+  - modules/nf-core/gatk4/mergevcfs/**
+  - modules/nf-core/mosdepth/**
+  - modules/nf-core/strelka/germline/**
+  - modules/nf-core/strelka/somatic/**
+  - subworkflows/local/bam_variant_calling_germline_all/**
+  - subworkflows/local/bam_variant_calling_single_strelka/**
+  - subworkflows/local/bam_variant_calling_somatic_all/**
+  - subworkflows/local/bam_variant_calling_somatic_strelka/**
+  - subworkflows/local/bam_variant_calling_tumor_only_all/**
+  - tests/csv/3.0/recalibrated_germline.csv
+  - tests/csv/3.0/recalibrated_somatic.csv
+  - tests/csv/3.0/recalibrated_tumoronly.csv
+  - tests/csv/3.0/recalibrated.csv
+  - tests/test_strelka.yml
+
+## strelka_bp
+strelka_bp:
+  - conf/modules/manta.config
+  - conf/modules/strelka.config
+  - modules/nf-core/gatk4/mergevcfs/**
+  - modules/nf-core/manta/somatic/**
+  - modules/nf-core/mosdepth/**
+  - modules/nf-core/strelka/somatic/**
+  - subworkflows/local/bam_variant_calling_germline_all/**
+  - subworkflows/local/bam_variant_calling_somatic_all/**
+  - subworkflows/local/bam_variant_calling_somatic_manta/**
+  - subworkflows/local/bam_variant_calling_somatic_strelka/**
+  - subworkflows/local/bam_variant_calling_tumor_only_all/**
+  - tests/csv/3.0/recalibrated_somatic.csv
+  - tests/test_strelka_bp.yml
+
+## tiddit
+tiddit:
+  - conf/modules/tiddit.config
+  - modules/nf-core/svdb/merge/**.nf
+  - modules/nf-core/mosdepth/**
+  - modules/nf-core/tabix/bgziptabix/**
+  - modules/nf-core/tiddit/sv/**
+  - subworkflows/local/bam_variant_calling_germline_all/**
+  - subworkflows/local/bam_variant_calling_single_tiddit/**
+  - subworkflows/local/bam_variant_calling_somatic_all/**
+  - subworkflows/local/bam_variant_calling_somatic_tiddit/**
+  - subworkflows/local/bam_variant_calling_tumor_only_all/**
+  - tests/csv/3.0/recalibrated_germline.csv
+  - tests/csv/3.0/recalibrated_somatic.csv
+  - tests/csv/3.0/recalibrated_tumoronly.csv
+  - tests/test_tiddit.yml
+
+# annotate
+
+## cache
+cache:
+  - conf/modules/prepare_cache.config
+  - modules/nf-core/ensemblvep/download/**
+  - modules/nf-core/snpeff/download/**
+  - subworkflows/local/prepare_cache/**
+  - tests/test_annotation_cache.yml
+
+## merge
+merge:
+  - conf/modules/annotate.config
+  - modules/nf-core/ensemblvep/vep/**
+  - modules/nf-core/snpeff/snpeff/**
+  - modules/nf-core/tabix/bgziptabix/**
+  - subworkflows/local/vcf_annotate_all/**
+  - subworkflows/nf-core/vcf_annotate_ensemblvep/**
+  - subworkflows/nf-core/vcf_annotate_snpeff/**
+  - tests/csv/3.0/vcf_single.csv
+  - tests/test_annotation_merge.yml
+
+## snpeff
+snpeff:
+  - conf/modules/annotate.config
+  - modules/nf-core/snpeff/snpeff/**
+  - modules/nf-core/tabix/bgziptabix/**
+  - subworkflows/nf-core/vcf_annotate_snpeff/**
+  - tests/csv/3.0/vcf_single.csv
+  - tests/test_annotation_snpeff.yml
+
+## vep
+vep:
+  - conf/modules/annotate.config
+  - modules/nf-core/ensemblvep/vep/**
+  - modules/nf-core/tabix/bgziptabix/**
+  - subworkflows/nf-core/vcf_annotate_ensemblvep/**
+  - tests/csv/3.0/vcf_single.csv
+  - tests/test_annotation_vep.yml
+
+## bcfann
+bcfann:
+  - conf/modules/annotate.config
+  - modules/nf-core/bcftools/annotate/**
+  - modules/nf-core/tabix/bgziptabix/**
+  - subworkflows/nf-core/vcf_annotate_bcftools/**
+  - tests/csv/3.0/vcf_single.csv
+  - tests/test_annotation_bcfann.yml
+
+# postprocessing
+
+## concatenate germline vcfs
+concatenate_vcfs:
+  - conf/modules/post_variant_calling.config
+  - modules/nf-core/bcftools/concat/**
+  - modules/nf-core/bcftools/mpileup/**
+  - modules/nf-core/bcftools/sort/**
+  - modules/nf-core/deepvariant/**
+  - modules/nf-core/freebayes/**
+  - modules/nf-core/gatk4/haplotypecaller/**
+  - modules/nf-core/gatk4/mergevcfs/**
+  - modules/nf-core/manta/germline/**
+  - modules/nf-core/samtools/mpileup/**
+  - modules/nf-core/strelka/germline/**
+  - modules/nf-core/tabix/bgziptabix/**
+  - modules/nf-core/tabix/tabix/**
+  - modules/nf-core/tiddit/sv/**
+  - subworkflows/local/bam_variant_calling_deepvariant/**
+  - subworkflows/local/bam_variant_calling_freebayes/**
+  - subworkflows/local/bam_variant_calling_germline_all/**
+  - subworkflows/local/bam_variant_calling_germline_manta/**
+  - subworkflows/local/bam_variant_calling_haplotypecaller/**
+  - subworkflows/local/bam_variant_calling_mpileup/**
+  - subworkflows/local/bam_variant_calling_single_strelka/**
+  - subworkflows/local/bam_variant_calling_single_tiddit/**
+  - subworkflows/local/bam_variant_calling_somatic_all/**
+  - subworkflows/local/bam_variant_calling_tumor_only_all/**
+  - subworkflows/local/post_variantcalling/**
+  - subworkflows/local/vcf_concatenate_germline/**
+  - tests/csv/3.0/mapped_joint_bam.csv
+  - tests/test_concat_germline_vcfs.yml
+
+# sampleqc
+
+## ngscheckmate
+ngscheckmate:
+  - conf/modules/ngscheckmate.config
+  - modules/nf-core/bcftools/mpileup/**
+  - modules/nf-core/ngscheckmate/ncm/**
+  - subworkflows/local/cram_sampleqc/**
+  - subworkflows/nf-core/bam_ngscheckmate/**
+  - tests/test_ngscheckmate.yml

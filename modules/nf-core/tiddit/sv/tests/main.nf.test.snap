@@ -1,0 +1,99 @@
+{
+    "cram_bwa_version": {
+        "content": [
+            [
+                "versions.yml:md5,0ffcce416e40bcc98da2243f1d7e348a"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-03-22T10:33:01.300519"
+    },
+    "cram_version": {
+        "content": [
+            [
+                "versions.yml:md5,0ffcce416e40bcc98da2243f1d7e348a"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-03-22T10:27:12.52902"
+    },
+    "sarscov2 - bam - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.vcf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.ploidies.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    "versions.yml:md5,0ffcce416e40bcc98da2243f1d7e348a"
+                ],
+                "ploidy": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.ploidies.tab:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "vcf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.vcf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,0ffcce416e40bcc98da2243f1d7e348a"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-03-22T10:21:51.950503"
+    },
+    "bam_bwa_version": {
+        "content": [
+            [
+                "versions.yml:md5,0ffcce416e40bcc98da2243f1d7e348a"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-03-22T10:31:40.918479"
+    },
+    "bam_version": {
+        "content": [
+            [
+                "versions.yml:md5,0ffcce416e40bcc98da2243f1d7e348a"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-03-22T10:21:38.449053"
+    }
+}

@@ -1,0 +1,2 @@
+cnvkit/batch:
+  - "modules/nf-core/cnvkit/batch/**"
