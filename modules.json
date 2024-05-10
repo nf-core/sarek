@@ -12,23 +12,23 @@
                     },
                     "bcftools/annotate": {
                         "branch": "master",
-                        "git_sha": "44096c08ffdbc694f5f92ae174ea0f7ba0f37e09",
+                        "git_sha": "2ad29c2aed06d815d9f68ad7ba20b3b1c574ce9c",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/bcftools/annotate/bcftools-annotate.diff"
                     },
                     "bcftools/concat": {
                         "branch": "master",
-                        "git_sha": "44096c08ffdbc694f5f92ae174ea0f7ba0f37e09",
+                        "git_sha": "b42fec6f7c6e5d0716685cabb825ef6bf6e386b5",
                         "installed_by": ["modules"]
                     },
                     "bcftools/mpileup": {
                         "branch": "master",
-                        "git_sha": "44096c08ffdbc694f5f92ae174ea0f7ba0f37e09",
+                        "git_sha": "e7df38a545d7d72083eededabd8849f731a01502",
                         "installed_by": ["bam_ngscheckmate"]
                     },
                     "bcftools/sort": {
                         "branch": "master",
-                        "git_sha": "487d92367b4d7bb9f1ca694bf72736be90720b15",
+                        "git_sha": "b42fec6f7c6e5d0716685cabb825ef6bf6e386b5",
                         "installed_by": ["modules"]
                     },
                     "bcftools/stats": {
@@ -146,7 +146,7 @@
                     },
                     "ensemblvep/vep": {
                         "branch": "master",
-                        "git_sha": "3db4f8488315cd7d7cf3fcb64251f6603210e831",
+                        "git_sha": "b42fec6f7c6e5d0716685cabb825ef6bf6e386b5",
                         "installed_by": ["modules", "vcf_annotate_ensemblvep"]
                     },
                     "fastp": {
@@ -306,7 +306,7 @@
                     },
                     "gawk": {
                         "branch": "master",
-                        "git_sha": "da4d05d04e65227d4307e87940842f1a14de62c7",
+                        "git_sha": "b42fec6f7c6e5d0716685cabb825ef6bf6e386b5",
                         "installed_by": ["modules"]
                     },
                     "manta/germline": {
@@ -366,7 +366,7 @@
                     },
                     "samtools/convert": {
                         "branch": "master",
-                        "git_sha": "1b93e06140e6807cc408519759f68bd26da63a00",
+                        "git_sha": "b42fec6f7c6e5d0716685cabb825ef6bf6e386b5",
                         "installed_by": ["modules"]
                     },
                     "samtools/faidx": {
