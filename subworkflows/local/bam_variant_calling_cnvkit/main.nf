@@ -39,5 +39,7 @@ workflow BAM_VARIANT_CALLING_CNVKIT {
     versions = versions.mix(CNVKIT_GENEMETRICS.out.versions)
 
     emit:
-    versions // channel: [ versions.yml ]
+    cnv_calls_raw    = CNVKIT_CALL.out.cns      // channel: [ meta, cns ]
+    cnv_calls_export = CNVKIT_EXPORT.out.output // channel: [ meta, export_format ]
+    versions                                    // channel: [ versions.yml ]
 }
