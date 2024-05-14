@@ -49,9 +49,9 @@ process BCFTOOLS_SORT {
                     args.contains("--output-type z") || args.contains("-Oz") ? "vcf.gz" :
                     args.contains("--output-type v") || args.contains("-Ov") ? "vcf" :
                     "vcf"
-
+    def create_cmd = extension.endsWith(".gz") ? "echo '' | gzip >" : "touch"
     """
-    touch ${prefix}.${extension}
+    ${create_cmd} ${prefix}.${extension}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

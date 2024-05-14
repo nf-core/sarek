@@ -202,6 +202,10 @@ workflow PIPELINE_COMPLETION {
             imNotification(summary_params, hook_url)
         }
     }
+
+    workflow.onError {
+        log.error "Pipeline failed. Please refer to troubleshooting docs: https://nf-co.re/docs/usage/troubleshooting"
+    }
 }
 
 /*

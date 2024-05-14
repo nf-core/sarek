@@ -9,9 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- [#1502](https://github.com/nf-core/sarek/pull/1502) - export CNVs into VCF format in `bam_variant_calling_cnvkit`
+
 ### Changed
 
+- [#1502](https://github.com/nf-core/sarek/pull/1502) - Improved handling of CNVkit reference
+- [#1502](https://github.com/nf-core/sarek/pull/1502) - Specific CNV call step, with recommended settings for germline
+- [#1508](https://github.com/nf-core/sarek/pull/1508) - Sync `TEMPLATE` with `tools` `2.14.0`
 - [#1513](https://github.com/nf-core/sarek/pull/1513) - Back to dev
+- [#1518](https://github.com/nf-core/sarek/pull/1518) - Sync `TEMPLATE` with `tools` `2.14.1`
 
 ### Fixed
 
