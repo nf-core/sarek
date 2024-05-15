@@ -160,6 +160,31 @@ workflow SAREK {
 
         input_sample_type.fastq_gz.view{ it -> "input_sample_type.fastq_gz : $it" }
 
+        input_sample_type_fastq_gz = input_sample_type.fastq_gz.map { meta, files ->
+            def CN         = params.seq_center ? "CN:${params.seq_center}\\t" : ''
+
+            // Here we're assuming that fastq_1 and fastq_2 are from the same flowcell:
+            def flowcell = flowcellLaneFromFastq(files[0])
+            // Perhaps it would be better to also call flowcellLaneFromFastq(files[1]) and check that we get the same flowcell-id?
+            print("flowcell: " + flowcell.toString() )
+
+            // def flowcell   = "dummy_flowcell_ID_" + "${meta.sample}-${meta.lane}".toString()
+            // Don't use a random element for ID, it breaks resuming
+            def read_group = "\"@RG\\tID:${flowcell}.${meta.sample}.${meta.lane}\\t${CN}PU:${meta.lane}\\tSM:${meta.patient}_${meta.sample}\\tLB:${meta.sample}\\tDS:${fasta}\\tPL:${params.seq_platform}\""
+
+            def data_type = ""
+            if (fastq_1.getExtension() == 'gz' && fastq_2.getExtension() == 'gz') {
+                data_type = "fastq_gz"
+            } else if (fastq_1.getExtension() == 'spring' && fastq_2.getExtension() == 'spring') {
+                data_type = "fastq_gz_spring"
+            } else {
+                error("Expected fastq_1 `$fastq_1` and fastq_2 `$fastq_2` to have the same extension - either `.gz` or `.spring`")
+            }
+
+            meta = meta + [read_group: read_group.toString()]
+            return [ meta, files ]
+        }
+
         fastq_gz_1 = SPRING_DECOMPRESS_1(input_sample_type.fastq_gz_spring.map{ meta, files -> [meta, files[0] ]})
         fastq_gz_2 = SPRING_DECOMPRESS_2(input_sample_type.fastq_gz_spring.map{ meta, files -> [meta, files[1] ]})
         fastq_gz_1.fastq.view{ it -> "fastq_gz_1 : $it" }
@@ -168,6 +193,21 @@ workflow SAREK {
         fastq_gz_from_spring = fastq_gz_1.fastq.join(fastq_gz_2.fastq).map{ meta, fastq_1, fastq_2 -> [meta, [fastq_1, fastq_2]]}
         fastq_gz_from_spring.view{ it -> "fastq_gz_from_spring : $it"}
 
+
+        fastq_gz_from_spring2 = fastq_gz_from_spring.map { meta, files ->
+            def CN         = params.seq_center ? "CN:${params.seq_center}\\t" : ''
+
+            // Here we're assuming that fastq_1 and fastq_2 are from the same flowcell:
+            def flowcell = flowcellLaneFromFastq(files[0])
+            // Perhaps it would be better to also call flowcellLaneFromFastq(files[1]) and check that we get the same flowcell-id?
+            print("flowcell: " + flowcell.toString() )
+
+            // Don't use a random element for ID, it breaks resuming
+            def read_group = "\"@RG\\tID:${flowcell}.${meta.sample}.${meta.lane}\\t${CN}PU:${meta.lane}\\tSM:${meta.patient}_${meta.sample}\\tLB:${meta.sample}\\tDS:${fasta}\\tPL:${params.seq_platform}\""
+
+            meta = meta + [read_group: read_group.toString()]
+            return [ meta, files ]
+        }
         // Convert any bam input to fastq
         // fasta are not needed when converting bam to fastq -> [ id:"fasta" ], []
         // No need for fasta.fai -> []
@@ -182,7 +222,8 @@ workflow SAREK {
         // Theorically this could work on mixed input (fastq for one sample and bam for another)
         // But not sure how to handle that with the samplesheet
         // Or if we really want users to be able to do that
-        input_fastq = input_sample_type.fastq_gz.mix(CONVERT_FASTQ_INPUT.out.reads).mix(fastq_gz_from_spring)
+        // input_fastq = input_sample_type.fastq_gz.mix(CONVERT_FASTQ_INPUT.out.reads).mix(fastq_gz_from_spring)
+        input_fastq = input_sample_type_fastq_gz.mix(CONVERT_FASTQ_INPUT.out.reads).mix(fastq_gz_from_spring2)        
 
         // STEP 0: QC & TRIM
         // `--skip_tools fastqc` to skip fastqc
@@ -910,6 +951,39 @@ workflow SAREK {
     emit:
     multiqc_report // channel: /path/to/multiqc_report.html
     versions       // channel: [ path(versions.yml) ]
+}
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    FUNCTIONS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+// Parse first line of a FASTQ file, return the flowcell id and lane number.
+def flowcellLaneFromFastq(path) {
+    // expected format:
+    // xx:yy:FLOWCELLID:LANE:... (seven fields)
+    // or
+    // FLOWCELLID:LANE:xx:... (five fields)
+    def line
+    path.withInputStream {
+        InputStream gzipStream = new java.util.zip.GZIPInputStream(it)
+        Reader decoder = new InputStreamReader(gzipStream, 'ASCII')
+        BufferedReader buffered = new BufferedReader(decoder)
+        line = buffered.readLine()
+    }
+    assert line.startsWith('@')
+    line = line.substring(1)
+    def fields = line.split(':')
+    String fcid
+
+    if (fields.size() >= 7) {
+        // CASAVA 1.8+ format, from  https://support.illumina.com/help/BaseSpace_OLH_009008/Content/Source/Informatics/BS/FileFormat_FASTQ-files_swBS.htm
+        // "@<instrument>:<run number>:<flowcell ID>:<lane>:<tile>:<x-pos>:<y-pos>:<UMI> <read>:<is filtered>:<control number>:<index>"
+        fcid = fields[2]
+    } else if (fields.size() == 5) {
+        fcid = fields[0]
+    }
+    return fcid
 }
 
 /*

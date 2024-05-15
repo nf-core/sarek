@@ -46,12 +46,6 @@ workflow  SAMPLESHEET_TO_CHANNEL{
         (meta, fastq_1, fastq_2, table, cram, crai, bam, bai, vcf, variantcaller) = ch_items
         if (meta.lane && fastq_2) {
             meta           = meta + [id: "${meta.sample}-${meta.lane}".toString()]
-            def CN         = seq_center ? "CN:${seq_center}\\t" : ''
-
-            // def flowcell   = flowcellLaneFromFastq(fastq_1)
-            def flowcell   = "dummy_flowcell_ID_" + "${meta.sample}-${meta.lane}".toString()
-            // Don't use a random element for ID, it breaks resuming
-            def read_group = "\"@RG\\tID:${flowcell}.${meta.sample}.${meta.lane}\\t${CN}PU:${meta.lane}\\tSM:${meta.patient}_${meta.sample}\\tLB:${meta.sample}\\tDS:${fasta}\\tPL:${seq_platform}\""
 
             def data_type = ""
             if (fastq_1.getExtension() == 'gz' && fastq_2.getExtension() == 'gz') {
@@ -62,7 +56,7 @@ workflow  SAMPLESHEET_TO_CHANNEL{
                 error("Expected fastq_1 `$fastq_1` and fastq_2 `$fastq_2` to have the same extension - either `.gz` or `.spring`")
             }
 
-            meta = meta - meta.subMap('lane') + [num_lanes: num_lanes.toInteger(), read_group: read_group.toString(), data_type: data_type.toString(), size: 1]
+            meta = meta - meta.subMap('lane') + [num_lanes: num_lanes.toInteger(), data_type: data_type.toString(), size: 1]
 
             if (step == 'mapping') return [ meta, [ fastq_1, fastq_2 ] ]
             else {
@@ -280,36 +274,3 @@ Joint germline variant calling also requires intervals in order to genotype the 
     emit:
     input_sample
     }
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    FUNCTIONS
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-// Parse first line of a FASTQ file, return the flowcell id and lane number.
-def flowcellLaneFromFastq(path) {
-    // expected format:
-    // xx:yy:FLOWCELLID:LANE:... (seven fields)
-    // or
-    // FLOWCELLID:LANE:xx:... (five fields)
-    def line
-    path.withInputStream {
-        InputStream gzipStream = new java.util.zip.GZIPInputStream(it)
-        Reader decoder = new InputStreamReader(gzipStream, 'ASCII')
-        BufferedReader buffered = new BufferedReader(decoder)
-        line = buffered.readLine()
-    }
-    assert line.startsWith('@')
-    line = line.substring(1)
-    def fields = line.split(':')
-    String fcid
-
-    if (fields.size() >= 7) {
-        // CASAVA 1.8+ format, from  https://support.illumina.com/help/BaseSpace_OLH_009008/Content/Source/Informatics/BS/FileFormat_FASTQ-files_swBS.htm
-        // "@<instrument>:<run number>:<flowcell ID>:<lane>:<tile>:<x-pos>:<y-pos>:<UMI> <read>:<is filtered>:<control number>:<index>"
-        fcid = fields[2]
-    } else if (fields.size() == 5) {
-        fcid = fields[0]
-    }
-    return fcid
-}
