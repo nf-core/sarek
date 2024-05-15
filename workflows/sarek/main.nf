@@ -158,26 +158,15 @@ workflow SAREK {
             fastq_gz_spring: it[0].data_type == "fastq_gz_spring"
         }
 
-
         input_sample_type_fastq_gz = input_sample_type.fastq_gz.map { meta, files ->
-            def CN         = params.seq_center ? "CN:${params.seq_center}\\t" : ''
+            def CN = params.seq_center ? "CN:${params.seq_center}\\t" : ''
 
             // Here we're assuming that fastq_1 and fastq_2 are from the same flowcell:
             def flowcell = flowcellLaneFromFastq(files[0])
             // Perhaps it would be better to also call flowcellLaneFromFastq(files[1]) and check that we get the same flowcell-id?
 
-            // def flowcell   = "dummy_flowcell_ID_" + "${meta.sample}-${meta.lane}".toString()
             // Don't use a random element for ID, it breaks resuming
             def read_group = "\"@RG\\tID:${flowcell}.${meta.sample}.${meta.lane}\\t${CN}PU:${meta.lane}\\tSM:${meta.patient}_${meta.sample}\\tLB:${meta.sample}\\tDS:${fasta}\\tPL:${params.seq_platform}\""
-
-            def data_type = ""
-            if (fastq_1.getExtension() == 'gz' && fastq_2.getExtension() == 'gz') {
-                data_type = "fastq_gz"
-            } else if (fastq_1.getExtension() == 'spring' && fastq_2.getExtension() == 'spring') {
-                data_type = "fastq_gz_spring"
-            } else {
-                error("Expected fastq_1 `$fastq_1` and fastq_2 `$fastq_2` to have the same extension - either `.gz` or `.spring`")
-            }
 
             meta = meta + [read_group: read_group.toString()]
             return [ meta, files ]
@@ -188,8 +177,8 @@ workflow SAREK {
 
         fastq_gz_from_spring = fastq_gz_1.fastq.join(fastq_gz_2.fastq).map{ meta, fastq_1, fastq_2 -> [meta, [fastq_1, fastq_2]]}
 
-        fastq_gz_from_spring2 = fastq_gz_from_spring.map { meta, files ->
-            def CN         = params.seq_center ? "CN:${params.seq_center}\\t" : ''
+        fastq_gz_from_spring = fastq_gz_from_spring.map { meta, files ->
+            def CN = params.seq_center ? "CN:${params.seq_center}\\t" : ''
 
             // Here we're assuming that fastq_1 and fastq_2 are from the same flowcell:
             def flowcell = flowcellLaneFromFastq(files[0])
@@ -215,8 +204,7 @@ workflow SAREK {
         // Theorically this could work on mixed input (fastq for one sample and bam for another)
         // But not sure how to handle that with the samplesheet
         // Or if we really want users to be able to do that
-        // input_fastq = input_sample_type.fastq_gz.mix(CONVERT_FASTQ_INPUT.out.reads).mix(fastq_gz_from_spring)
-        input_fastq = input_sample_type_fastq_gz.mix(CONVERT_FASTQ_INPUT.out.reads).mix(fastq_gz_from_spring2)        
+        input_fastq = input_sample_type_fastq_gz.mix(CONVERT_FASTQ_INPUT.out.reads).mix(fastq_gz_from_spring)
 
         // STEP 0: QC & TRIM
         // `--skip_tools fastqc` to skip fastqc
