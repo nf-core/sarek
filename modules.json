@@ -449,6 +449,11 @@
                         "git_sha": "2f3db6f45147ebbb56b371536e31bdf622b5bfee",
                         "installed_by": ["modules", "vcf_annotate_snpeff"]
                     },
+                    "spring/decompress": {
+                        "branch": "master",
+                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
+                        "installed_by": ["modules"]
+                    },
                     "strelka/germline": {
                         "branch": "master",
                         "git_sha": "e8f2c77a6e4174ee0a48d073d4cc8ff06c44bb4c",

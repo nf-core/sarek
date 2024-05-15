@@ -1,0 +1,7 @@
+name: spring_decompress
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - bioconda::spring=1.1.1

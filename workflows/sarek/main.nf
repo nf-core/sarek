@@ -20,6 +20,10 @@ include { CHANNEL_VARIANT_CALLING_CREATE_CSV          } from '../../subworkflows
 include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_INPUT } from '../../subworkflows/local/bam_convert_samtools/main'
 include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_UMI   } from '../../subworkflows/local/bam_convert_samtools/main'
 
+// Convert fastq.gz.spring files to fastq.gz files
+include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_1    } from '../../modules/nf-core/spring/decompress/main'
+include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_2    } from '../../modules/nf-core/spring/decompress/main'
+
 // Run FASTQC
 include { FASTQC                                      } from '../../modules/nf-core/fastqc/main'
 
@@ -150,8 +154,19 @@ workflow SAREK {
         // Figure out if input is bam or fastq
         input_sample_type = input_sample.branch{
             bam:   it[0].data_type == "bam"
-            fastq: it[0].data_type == "fastq"
+            fastq_gz: it[0].data_type == "fastq_gz"
+            fastq_gz_spring: it[0].data_type == "fastq_gz_spring"
         }
+
+        input_sample_type.fastq_gz.view{ it -> "input_sample_type.fastq_gz : $it" }
+
+        fastq_gz_1 = SPRING_DECOMPRESS_1(input_sample_type.fastq_gz_spring.map{ meta, files -> [meta, files[0] ]})
+        fastq_gz_2 = SPRING_DECOMPRESS_2(input_sample_type.fastq_gz_spring.map{ meta, files -> [meta, files[1] ]})
+        fastq_gz_1.fastq.view{ it -> "fastq_gz_1 : $it" }
+        fastq_gz_2.fastq.view{ it -> "fastq_gz_2 : $it" }
+
+        fastq_gz_from_spring = fastq_gz_1.fastq.join(fastq_gz_2.fastq).map{ meta, fastq_1, fastq_2 -> [meta, [fastq_1, fastq_2]]}
+        fastq_gz_from_spring.view{ it -> "fastq_gz_from_spring : $it"}
 
         // Convert any bam input to fastq
         // fasta are not needed when converting bam to fastq -> [ id:"fasta" ], []
@@ -167,7 +182,7 @@ workflow SAREK {
         // Theorically this could work on mixed input (fastq for one sample and bam for another)
         // But not sure how to handle that with the samplesheet
         // Or if we really want users to be able to do that
-        input_fastq = input_sample_type.fastq.mix(CONVERT_FASTQ_INPUT.out.reads)
+        input_fastq = input_sample_type.fastq_gz.mix(CONVERT_FASTQ_INPUT.out.reads).mix(fastq_gz_from_spring)
 
         // STEP 0: QC & TRIM
         // `--skip_tools fastqc` to skip fastqc

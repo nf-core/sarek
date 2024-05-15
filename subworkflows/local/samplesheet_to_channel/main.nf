@@ -48,11 +48,21 @@ workflow  SAMPLESHEET_TO_CHANNEL{
             meta           = meta + [id: "${meta.sample}-${meta.lane}".toString()]
             def CN         = seq_center ? "CN:${seq_center}\\t" : ''
 
-            def flowcell   = flowcellLaneFromFastq(fastq_1)
+            // def flowcell   = flowcellLaneFromFastq(fastq_1)
+            def flowcell   = "dummy_flowcell_ID_" + "${meta.sample}-${meta.lane}".toString()
             // Don't use a random element for ID, it breaks resuming
             def read_group = "\"@RG\\tID:${flowcell}.${meta.sample}.${meta.lane}\\t${CN}PU:${meta.lane}\\tSM:${meta.patient}_${meta.sample}\\tLB:${meta.sample}\\tDS:${fasta}\\tPL:${seq_platform}\""
 
-            meta           = meta - meta.subMap('lane') + [num_lanes: num_lanes.toInteger(), read_group: read_group.toString(), data_type: 'fastq', size: 1]
+            def data_type = ""
+            if (fastq_1.getExtension() == 'gz' && fastq_2.getExtension() == 'gz') {
+                data_type = "fastq_gz"
+            } else if (fastq_1.getExtension() == 'spring' && fastq_2.getExtension() == 'spring') {
+                data_type = "fastq_gz_spring"
+            } else {
+                error("Expected fastq_1 `$fastq_1` and fastq_2 `$fastq_2` to have the same extension - either `.gz` or `.spring`")
+            }
+
+            meta = meta - meta.subMap('lane') + [num_lanes: num_lanes.toInteger(), read_group: read_group.toString(), data_type: data_type.toString(), size: 1]
 
             if (step == 'mapping') return [ meta, [ fastq_1, fastq_2 ] ]
             else {
