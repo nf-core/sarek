@@ -142,6 +142,7 @@ We thank the following people for their extensive assistance in the development 
 - [Chela James](https://github.com/chelauk)
 - [David Mas-Ponte](https://github.com/davidmasp)
 - [Edmund Miller](https://github.com/edmundmiller)
+- [Famke Bäuerle](https://github.com/famosab)
 - [Francesco Lescai](https://github.com/lescai)
 - [Gavin Mackenzie](https://github.com/GCJMackenzie)
 - [Gisela Gabernet](https://github.com/ggabernet)
