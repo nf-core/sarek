@@ -58,7 +58,7 @@ workflow  SAMPLESHEET_TO_CHANNEL{
 
             if (step == 'mapping') return [ meta, [ spring_1, spring_2 ] ]
             else {
-                error("Samplesheet contains fastq files but step is `$step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
+                error("Samplesheet contains spring files (in columns `spring_1` and `spring_2`) but step is `$step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
             }
 
         // start from ONE spring-file containing both R1 and R2
@@ -67,7 +67,7 @@ workflow  SAMPLESHEET_TO_CHANNEL{
 
             if (step == 'mapping') return [ meta, [ spring_1 ] ]
             else {
-                error("Samplesheet contains fastq files but step is `$step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
+                error("Samplesheet contains a spring file (in columns `spring_1`) but step is `$step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
             }
 
         // start from BAM
