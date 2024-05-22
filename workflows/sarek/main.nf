@@ -21,9 +21,9 @@ include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_INPUT } from '../../subworkflows
 include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_UMI   } from '../../subworkflows/local/bam_convert_samtools/main'
 
 // Convert fastq.gz.spring files to fastq.gz files
-include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_ONE_OF_TWO } from '../../modules/nf-core/spring/decompress/main'
-include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_TWO_OF_TWO } from '../../modules/nf-core/spring/decompress/main'
-include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_ONE_OF_ONE } from '../../modules/nf-core/spring/decompress/main'
+include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_TO_R1_FQ_PAIR } from '../../modules/nf-core/spring/decompress/main'
+include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_TO_R2_FQ_PAIR } from '../../modules/nf-core/spring/decompress/main'
+include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_TO_FQ_PAIR    } from '../../modules/nf-core/spring/decompress/main'
 // TO-DO: Come up with better names for those "instances" of SPRING_DECOMPRESS
 // TO-DO: Fix indentation
 
@@ -177,9 +177,9 @@ workflow SAREK {
         }
 
         // Just one fastq.gz.spring-file with both R1 and R2
-        one_of_one_fastq_gz_from_spring = SPRING_DECOMPRESS_ONE_OF_ONE(input_sample_type.one_fastq_gz_spring)
+        fastq_gz_pair_from_spring = SPRING_DECOMPRESS_TO_FQ_PAIR(input_sample_type.one_fastq_gz_spring)
 
-        one_fastq_gz_from_spring = one_of_one_fastq_gz_from_spring.fastq.map { meta, files ->
+        one_fastq_gz_from_spring = fastq_gz_pair_from_spring.fastq.map { meta, files ->
             def CN = params.seq_center ? "CN:${params.seq_center}\\t" : ''
 
             // Here we're assuming that fastq_1 and fastq_2 are from the same flowcell:
@@ -193,10 +193,10 @@ workflow SAREK {
         }
 
         // Two fastq.gz.spring-files - one for R1 and one for R2
-        one_of_two_fastq_gz_from_spring = SPRING_DECOMPRESS_ONE_OF_TWO(input_sample_type.two_fastq_gz_spring.map{ meta, files -> [meta, files[0] ]})
-        two_of_two_fastq_gz_from_spring = SPRING_DECOMPRESS_TWO_OF_TWO(input_sample_type.two_fastq_gz_spring.map{ meta, files -> [meta, files[1] ]})
+        R1_fastq_gz_from_spring = SPRING_DECOMPRESS_TO_R1_FQ_PAIR(input_sample_type.two_fastq_gz_spring.map{ meta, files -> [meta, files[0] ]})
+        R2_fastq_gz_from_spring = SPRING_DECOMPRESS_TO_R2_FQ_PAIR(input_sample_type.two_fastq_gz_spring.map{ meta, files -> [meta, files[1] ]})
 
-        two_fastq_gz_from_spring = one_of_two_fastq_gz_from_spring.fastq.join(two_of_two_fastq_gz_from_spring.fastq).map{ meta, fastq_1, fastq_2 -> [meta, [fastq_1, fastq_2]]}
+        two_fastq_gz_from_spring = R1_fastq_gz_from_spring.fastq.join(R2_fastq_gz_from_spring.fastq).map{ meta, fastq_1, fastq_2 -> [meta, [fastq_1, fastq_2]]}
 
         two_fastq_gz_from_spring = two_fastq_gz_from_spring.map { meta, files ->
             def CN = params.seq_center ? "CN:${params.seq_center}\\t" : ''
