@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1521](https://github.com/nf-core/sarek/pull/1521) - Minor code refactoring to simplify syntax in args handling
 
 ### Fixed
+
 - [#1541](https://github.com/nf-core/sarek/pull/1541) - Getting bam and bai published in the same folder
 
 ### Removed
