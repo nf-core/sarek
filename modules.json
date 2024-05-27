@@ -434,6 +434,16 @@
                         "git_sha": "e809c6b078d5343bdf8b5b2b78483096a2b5a973",
                         "installed_by": ["modules"]
                     },
+                    "sentieon/tnfilter": {
+                        "branch": "master",
+                        "git_sha": "388b763df527bb267cde359ded753a05e33fc0aa",
+                        "installed_by": ["modules"]
+                    },
+                    "sentieon/tnhaplotyper2": {
+                        "branch": "master",
+                        "git_sha": "30e382429b9761f39906982cc2cb1c31e0706ebe",
+                        "installed_by": ["modules"]
+                    },
                     "sentieon/varcal": {
                         "branch": "master",
                         "git_sha": "e809c6b078d5343bdf8b5b2b78483096a2b5a973",

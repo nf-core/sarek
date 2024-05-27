@@ -796,6 +796,7 @@ workflow SAREK {
             gc_file,
             rt_file,
             params.joint_mutect2,
+            params.joint_tnhaplotyper2,
             params.wes
         )
 
