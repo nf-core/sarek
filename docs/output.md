@@ -41,7 +41,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
       - [Sentieon DNAscope joint germline variant calling](#sentieon-dnascope-joint-germline-variant-calling)
     - [Sentieon Haplotyper](#sentieon-haplotyper)
       - [Sentieon Haplotyper joint germline variant calling](#sentieon-haplotyper-joint-germline-variant-calling)
-    - [Strelka2](#strelka2)
+    - [Strelka](#strelka)
   - [Structural Variants](#structural-variants)
     - [Manta](#manta)
     - [TIDDIT](#tiddit)
@@ -542,9 +542,9 @@ In Sentieon's package DNAseq, joint germline variant calling is done by first ru
 
 </details>
 
-#### Strelka2
+#### Strelka
 
-[Strelka2](https://github.com/Illumina/strelka) is a fast and accurate small variant caller optimized for analysis of germline variation in small cohorts and somatic variation in tumor/normal sample pairs. For further reading and documentation see the [Strelka2 user guide](https://github.com/Illumina/strelka/blob/master/docs/userGuide/README.md). If [Strelka2](https://github.com/Illumina/strelka) is used for somatic variant calling and [Manta](https://github.com/Illumina/manta) is also specified in tools, the output candidate indels from [Manta](https://github.com/Illumina/manta) are used according to [Strelka Best Practices](https://github.com/Illumina/strelka/blob/master/docs/userGuide/README.md#somatic-configuration-example).
+[Strelka](https://github.com/Illumina/strelka) is a fast and accurate small variant caller optimized for analysis of germline variation in small cohorts and somatic variation in tumor/normal sample pairs. For further reading and documentation see the [Strelka user guide](https://github.com/Illumina/strelka/blob/master/docs/userGuide/README.md). If [Strelka](https://github.com/Illumina/strelka) is used for somatic variant calling and [Manta](https://github.com/Illumina/manta) is also specified in tools, the output candidate indels from [Manta](https://github.com/Illumina/manta) are used according to [Strelka Best Practices](https://github.com/Illumina/strelka/blob/master/docs/userGuide/README.md#somatic-configuration-example).
 For further downstream analysis, take a look [here](https://github.com/Illumina/strelka/blob/v2.9.x/docs/userGuide/README.md#interpreting-the-germline-multi-sample-variants-vcf).
 
 <details markdown="1">
@@ -576,7 +576,7 @@ For further downstream analysis, take a look [here](https://github.com/Illumina/
 
 [Manta](https://github.com/Illumina/manta) calls structural variants (SVs) and indels from mapped paired-end sequencing reads.
 It is optimized for analysis of germline variation in small sets of individuals and somatic variation in tumor/normal sample pairs.
-[Manta](https://github.com/Illumina/manta) provides a candidate list for small indels that can be fed to [Strelka2](https://github.com/Illumina/strelka) following [Strelka Best Practices](https://github.com/Illumina/strelka/blob/master/docs/userGuide/README.md#somatic-configuration-example). For further reading and documentation see the [Manta user guide](https://github.com/Illumina/manta/blob/master/docs/userGuide/README.md).
+[Manta](https://github.com/Illumina/manta) provides a candidate list for small indels that can be fed to [Strelka](https://github.com/Illumina/strelka) following [Strelka Best Practices](https://github.com/Illumina/strelka/blob/master/docs/userGuide/README.md#somatic-configuration-example). For further reading and documentation see the [Manta user guide](https://github.com/Illumina/manta/blob/master/docs/userGuide/README.md).
 
 <details markdown="1">
 <summary>Output files for normal samples</summary>
@@ -823,7 +823,7 @@ It requires a normal sample for each tumour to differentiate the somatic and ger
 
 ### Concatenation
 
-Germline VCFs from `DeepVariant`, `FreeBayes`, `HaplotypeCaller`, `Haplotyper`, `Manta`, `bcftools mpileup`, `Strelka2`, or `Tiddit` are concatenated with `bcftools concat`. The field `SOURCE` is added to the VCF header to report the variant caller.
+Germline VCFs from `DeepVariant`, `FreeBayes`, `HaplotypeCaller`, `Haplotyper`, `Manta`, `bcftools mpileup`, `Strelka`, or `Tiddit` are concatenated with `bcftools concat`. The field `SOURCE` is added to the VCF header to report the variant caller.
 
 <details markdown="1">
 <summary>Concatenated VCF-files for normal samples</summary>
@@ -1067,7 +1067,7 @@ For further reading and documentation see the [bcftools stats manual](https://sa
 Plots will show:
 
 - Stats by non-reference allele frequency, depth distribution, stats by quality and per-sample counts, singleton stats, etc.
-- Note: When using [Strelka2](https://github.com/Illumina/strelka), there will be no depth distribution plot, as Strelka2 does not report the INFO/DP field
+- Note: When using [Strelka](https://github.com/Illumina/strelka), there will be no depth distribution plot, as Strelka does not report the INFO/DP field
 
 <details markdown="1">
 <summary>Output files for all samples</summary>
