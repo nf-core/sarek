@@ -22,6 +22,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- [#1536](https://github.com/nf-core/sarek/pull/1536) - Correct typo `Strelka2` to `Strelka`
+
 ### Removed
 
 ### Dependencies
