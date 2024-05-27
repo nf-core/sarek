@@ -311,6 +311,12 @@ workflow SAREK {
             }
             .set { reads_grouping_key }
 
+        reads_for_alignment = reads_for_alignment.map{ meta, reads ->
+            // Update meta.id to meta.sample no multiple lanes or splitted fastqs
+            if (meta.size * meta.num_lanes == 1) [ meta + [ id:meta.sample ], reads ]
+            else [ meta, reads ]
+        }
+
         // reads will be sorted
         sort_bam = true
         FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON(reads_for_alignment, index_alignment, sort_bam, fasta, fasta_fai)
