@@ -73,7 +73,7 @@ validation_checks:
 # preprocessing
 
 ## alignment_from_everything
-alignment_to_everything:
+alignment_from_everything:
   - conf/modules/**
   - conf/test/alignment_from_everything.config
   - main.nf
