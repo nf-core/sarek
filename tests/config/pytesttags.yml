@@ -72,6 +72,19 @@ validation_checks:
 
 # preprocessing
 
+## alignment_from_everything
+alignment_to_everything:
+  - conf/modules/**
+  - conf/test/alignment_from_everything.config
+  - main.nf
+  - modules/**
+  - nextflow.config
+  - nextflow_schema.json
+  - subworkflows/**
+  - tests/csv/3.0/bam_and_fastq_and_spring.csv
+  - tests/test_alignment_from_everything.yml
+  - workflows/**
+
 ## alignment_to_fastq
 alignment_to_fastq:
   - conf/modules/alignment_to_fastq.config
