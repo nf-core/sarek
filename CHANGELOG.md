@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1513](https://github.com/nf-core/sarek/pull/1513) - Back to dev
 - [#1518](https://github.com/nf-core/sarek/pull/1518) - Sync `TEMPLATE` with `tools` `2.14.1`
 - [#1521](https://github.com/nf-core/sarek/pull/1521) - Minor code refactoring to simplify syntax in args handling
+- [#1552](https://github.com/nf-core/sarek/pull/1552) - Update samtools to v1.20
 
 ### Fixed
 
@@ -30,6 +31,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 ### Dependencies
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| `samtools` | 1.19.2      | 1.20        |
 
 ### Modules / Subworkflows
 
