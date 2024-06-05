@@ -5,9 +5,9 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-04-22T18:37:45.172966"
+        "timestamp": "2024-06-03T11:45:32.654601222"
     },
     "bam_bed_fasta_false_stub.vcf.gz": {
         "content": [
@@ -15,9 +15,9 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-04-22T18:37:57.815085"
+        "timestamp": "2024-06-03T11:46:19.532461322"
     },
     "bam_fasta_false_stub.vcf.gz.tbi": {
         "content": [
@@ -25,9 +25,9 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-04-22T18:39:15.731277"
+        "timestamp": "2024-06-03T11:44:44.944919263"
     },
     "bam_bed_fasta_false_stub.bcftools_stats.txt": {
         "content": [
@@ -55,9 +55,9 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-04-22T18:37:45.146525"
+        "timestamp": "2024-06-03T11:45:32.596363535"
     },
     "bam_bed_fasta_true_stub.vcf.gz": {
         "content": [
@@ -65,21 +65,21 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-04-22T18:37:39.42754"
+        "timestamp": "2024-06-03T11:45:10.034842649"
     },
     "bam_fasta_false_versions": {
         "content": [
             [
-                "versions.yml:md5,e09c59d941374bb293aadc36e2f29dbf"
+                "versions.yml:md5,6af9a67cd12c721ccc9702c17bc2f3a5"
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-04-22T18:39:10.137483"
+        "timestamp": "2024-05-31T15:14:23.424052671"
     },
     "bam_fasta_false_stub.bcftools_stats.txt": {
         "content": [
@@ -94,14 +94,14 @@
     "bam_bed_fasta_false_versions": {
         "content": [
             [
-                "versions.yml:md5,e09c59d941374bb293aadc36e2f29dbf"
+                "versions.yml:md5,6af9a67cd12c721ccc9702c17bc2f3a5"
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-04-22T18:37:51.772936"
+        "timestamp": "2024-05-31T15:14:44.101963218"
     },
     "bam_bed_fasta_false.vcf.gz": {
         "content": [
@@ -109,21 +109,21 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-04-22T18:37:51.72798"
+        "timestamp": "2024-06-03T11:45:57.39416797"
     },
     "bam_bed_fasta_true_versions": {
         "content": [
             [
-                "versions.yml:md5,e09c59d941374bb293aadc36e2f29dbf"
+                "versions.yml:md5,6af9a67cd12c721ccc9702c17bc2f3a5"
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-04-22T18:37:45.20135"
+        "timestamp": "2024-05-31T15:14:38.630394619"
     },
     "bam_fasta_false.vcf.gz": {
         "content": [
@@ -131,9 +131,9 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-04-22T18:39:10.051991"
+        "timestamp": "2024-06-03T11:44:21.337711533"
     },
     "bam_fasta_false.bcftools_stats.txt": {
         "content": [
@@ -161,9 +161,9 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-04-22T18:37:57.832271"
+        "timestamp": "2024-06-03T11:46:19.593445488"
     },
     "bam_bed_fasta_false.vcf.gz.tbi": {
         "content": [
@@ -171,9 +171,9 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-04-22T18:37:51.748389"
+        "timestamp": "2024-06-03T11:45:57.444615176"
     },
     "bam_fasta_false_stub.vcf.gz": {
         "content": [
@@ -181,9 +181,9 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-04-22T18:39:15.709802"
+        "timestamp": "2024-06-03T11:44:44.888373837"
     },
     "bam_bed_fasta_true_stub.bcftools_stats.txt": {
         "content": [
@@ -201,21 +201,21 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-04-22T18:39:10.108027"
+        "timestamp": "2024-06-03T11:44:21.401424919"
     },
     "bam_fasta_false_stub_versions": {
         "content": [
             [
-                "versions.yml:md5,e09c59d941374bb293aadc36e2f29dbf"
+                "versions.yml:md5,6af9a67cd12c721ccc9702c17bc2f3a5"
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-04-22T18:39:15.770612"
+        "timestamp": "2024-05-31T15:14:28.530439931"
     },
     "bam_bed_fasta_true.bcftools_stats.txt": {
         "content": [
@@ -233,21 +233,21 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-04-22T18:37:39.442077"
+        "timestamp": "2024-06-03T11:45:10.101920455"
     },
     "bam_bed_fasta_false_stub_versions": {
         "content": [
             [
-                "versions.yml:md5,e09c59d941374bb293aadc36e2f29dbf"
+                "versions.yml:md5,6af9a67cd12c721ccc9702c17bc2f3a5"
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-04-22T18:37:57.868309"
+        "timestamp": "2024-05-31T15:14:49.139377519"
     },
     "bam_bed_fasta_true.mpileup.gz": {
         "content": [
@@ -262,13 +262,13 @@
     "bam_bed_fasta_true_stub_versions": {
         "content": [
             [
-                "versions.yml:md5,e09c59d941374bb293aadc36e2f29dbf"
+                "versions.yml:md5,6af9a67cd12c721ccc9702c17bc2f3a5"
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-04-22T18:37:39.470988"
+        "timestamp": "2024-05-31T15:14:33.646218607"
     }
 }
