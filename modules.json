@@ -28,12 +28,12 @@
                     },
                     "bcftools/sort": {
                         "branch": "master",
-                        "git_sha": "b42fec6f7c6e5d0716685cabb825ef6bf6e386b5",
+                        "git_sha": "a5ba4d59c2b248c0379b0f8aeb4e7e754566cd1f",
                         "installed_by": ["modules"]
                     },
                     "bcftools/stats": {
                         "branch": "master",
-                        "git_sha": "618364f55cb88f6c283f6c6c45c24d5f9f08f998",
+                        "git_sha": "a5ba4d59c2b248c0379b0f8aeb4e7e754566cd1f",
                         "installed_by": ["modules"]
                     },
                     "bwa/index": {

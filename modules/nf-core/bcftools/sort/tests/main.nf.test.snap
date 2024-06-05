@@ -11,7 +11,7 @@
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,622bd32d4ff0fac3360cd534ae0f0168"
+                    "versions.yml:md5,2c9f26ca356ef71199c3a7d1742974cb"
                 ],
                 "vcf": [
                     [
@@ -22,15 +22,15 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,622bd32d4ff0fac3360cd534ae0f0168"
+                    "versions.yml:md5,2c9f26ca356ef71199c3a7d1742974cb"
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "24.03.0"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-05-02T16:55:21.237927554"
+        "timestamp": "2024-06-03T11:54:39.200647026"
     },
     "sarscov2 - vcf - stub": {
         "content": [
@@ -44,7 +44,7 @@
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,622bd32d4ff0fac3360cd534ae0f0168"
+                    "versions.yml:md5,2c9f26ca356ef71199c3a7d1742974cb"
                 ],
                 "vcf": [
                     [
@@ -55,14 +55,14 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,622bd32d4ff0fac3360cd534ae0f0168"
+                    "versions.yml:md5,2c9f26ca356ef71199c3a7d1742974cb"
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "24.03.0"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-05-03T12:32:50.506309198"
+        "timestamp": "2024-06-03T11:54:55.594155692"
     }
 }
