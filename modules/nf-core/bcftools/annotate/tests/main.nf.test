@@ -16,12 +16,12 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [ [ id:'test', single_end:false ], // meta map                                                                                                                                                                            
-                    file(params.test_data['sarscov2']['illumina']['test_vcf_gz'], checkIfExists: true),                                                                                                                                           
-                    file(params.test_data['sarscov2']['illumina']['test_vcf_gz_tbi'], checkIfExists: true),                                                                                                                                       
-                    file(params.test_data['sarscov2']['illumina']['test2_vcf_gz'], checkIfExists: true),                                                                                                                                          
-                    file(params.test_data['sarscov2']['illumina']['test2_vcf_gz_tbi'], checkIfExists: true),                                                                                                                                      
-                    []                                                                                                                                                                                                                            
+                input[0] = [ [ id:'test', single_end:false ], // meta map
+                    file(params.test_data['sarscov2']['illumina']['test_vcf_gz'], checkIfExists: true),
+                    file(params.test_data['sarscov2']['illumina']['test_vcf_gz_tbi'], checkIfExists: true),
+                    file(params.test_data['sarscov2']['illumina']['test2_vcf_gz'], checkIfExists: true),
+                    file(params.test_data['sarscov2']['illumina']['test2_vcf_gz_tbi'], checkIfExists: true),
+                    []
                 ]
                 """
             }
@@ -47,11 +47,11 @@ nextflow_process {
         when {
             process {
                 """
-                vcf = Channel.of([ [ id:'test', single_end:false ], // meta map                                                                                                                                                                            
-                    file(params.test_data['sarscov2']['illumina']['test_vcf_gz'], checkIfExists: true),                                                                                                                                           
+                vcf = Channel.of([ [ id:'test', single_end:false ], // meta map
+                    file(params.test_data['sarscov2']['illumina']['test_vcf_gz'], checkIfExists: true),
                     [],
                     [],
-                    []                                                                                                                                                                                                                          
+                    []
                 ])
 
                 header = Channel.of(
@@ -85,12 +85,12 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [ [ id:'test', single_end:false ], // meta map                                                                                                                                                                            
-                    file(params.test_data['sarscov2']['illumina']['test_vcf_gz'], checkIfExists: true),                                                                                                                                           
-                    file(params.test_data['sarscov2']['illumina']['test_vcf_gz_tbi'], checkIfExists: true),                                                                                                                                       
-                    file(params.test_data['sarscov2']['illumina']['test2_vcf_gz'], checkIfExists: true),                                                                                                                                          
-                    file(params.test_data['sarscov2']['illumina']['test2_vcf_gz_tbi'], checkIfExists: true),                                                                                                                                      
-                    []                                                                                                                                                                                                                            
+                input[0] = [ [ id:'test', single_end:false ], // meta map
+                    file(params.test_data['sarscov2']['illumina']['test_vcf_gz'], checkIfExists: true),
+                    file(params.test_data['sarscov2']['illumina']['test_vcf_gz_tbi'], checkIfExists: true),
+                    file(params.test_data['sarscov2']['illumina']['test2_vcf_gz'], checkIfExists: true),
+                    file(params.test_data['sarscov2']['illumina']['test2_vcf_gz_tbi'], checkIfExists: true),
+                    []
                 ]
                 """
             }
@@ -99,7 +99,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out).match("stub") }
+                { assert snapshot(process.out).match() }
             )
         }
 
