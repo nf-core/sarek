@@ -51,25 +51,25 @@
     "bam_versions": {
         "content": [
             [
-                "versions.yml:md5,04115f386f1c3cb2e25edc02821da2fc"
+                "versions.yml:md5,90c1cf8971540ef05e330db5a560195c"
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "24.01.0"
+            "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-13T16:13:56.124383258"
+        "timestamp": "2024-05-28T15:43:52.415053401"
     },
     "bam_split_versions": {
         "content": [
             [
-                "versions.yml:md5,04115f386f1c3cb2e25edc02821da2fc"
+                "versions.yml:md5,90c1cf8971540ef05e330db5a560195c"
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "24.01.0"
+            "nextflow": "23.10.1"
         },
-        "timestamp": "2024-02-13T16:14:03.828077257"
+        "timestamp": "2024-05-28T15:43:57.740193087"
     }
 }
