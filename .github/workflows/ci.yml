@@ -247,6 +247,7 @@ jobs:
           - tags: "gawk"
           - tags: "mosdepth"
           - tags: "multiqc"
+          - tags: "ngscheckmate/ncm" 
           - tags: "samblaster"
           - tags: "samtools/convert"
           - tags: "samtools/mpileup"
