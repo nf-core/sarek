@@ -10,3 +10,5 @@ testing*
 .nf-test*
 .nf-test/
 test-datasets/
+test.tap
+test.xml
