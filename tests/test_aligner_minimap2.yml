@@ -1,4 +1,4 @@
-name: Run minimap2
+- name: Run minimap2
   command: nextflow run main.nf -profile test --aligner minimap2 --save_reference --outdir results
   tags:
     - aligner
