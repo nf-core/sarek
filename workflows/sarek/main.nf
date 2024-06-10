@@ -163,34 +163,12 @@ workflow SAREK {
         }
 
         // Two fastq.gz-files
-        fastq_gz = input_sample_type.fastq_gz.map { meta, files ->
-            def CN = params.seq_center ? "CN:${params.seq_center}\\t" : ''
-
-            // Here we're assuming that fastq_1 and fastq_2 are from the same flowcell:
-            def flowcell = flowcellLaneFromFastq(files[0])
-            // TO-DO: Would it perhaps be better to also call flowcellLaneFromFastq(files[1]) and check that we get the same flowcell-id?
-
-            // Don't use a random element for ID, it breaks resuming
-            def read_group = "\"@RG\\tID:${flowcell}.${meta.sample}.${meta.lane}\\t${CN}PU:${meta.lane}\\tSM:${meta.patient}_${meta.sample}\\tLB:${meta.sample}\\tDS:${params.fasta}\\tPL:${params.seq_platform}\""
-            meta  = meta - meta.subMap('lane') + [read_group: read_group.toString()]
-            return [ meta, files ]
-        }
+        fastq_gz = input_sample_type.fastq_gz.map { meta, files -> addReadgroupToMeta(meta, files) }
 
         // Just one fastq.gz.spring-file with both R1 and R2
         fastq_gz_pair_from_spring = SPRING_DECOMPRESS_TO_FQ_PAIR(input_sample_type.one_fastq_gz_spring)
 
-        one_fastq_gz_from_spring = fastq_gz_pair_from_spring.fastq.map { meta, files ->
-            def CN = params.seq_center ? "CN:${params.seq_center}\\t" : ''
-
-            // Here we're assuming that fastq_1 and fastq_2 are from the same flowcell:
-            def flowcell = flowcellLaneFromFastq(files[0])
-            // TO-DO: Would it perhaps be better to also call flowcellLaneFromFastq(files[1]) and check that we get the same flowcell-id?
-
-            // Don't use a random element for ID, it breaks resuming
-            def read_group = "\"@RG\\tID:${flowcell}.${meta.sample}.${meta.lane}\\t${CN}PU:${meta.lane}\\tSM:${meta.patient}_${meta.sample}\\tLB:${meta.sample}\\tDS:${params.fasta}\\tPL:${params.seq_platform}\""
-            meta  = meta - meta.subMap('lane') + [read_group: read_group.toString()]
-            return [ meta, files ]
-        }
+        one_fastq_gz_from_spring = fastq_gz_pair_from_spring.fastq.map { meta, files -> addReadgroupToMeta(meta, files) }
 
         // Two fastq.gz.spring-files - one for R1 and one for R2
         R1_fastq_gz_from_spring = SPRING_DECOMPRESS_TO_R1_FQ_PAIR(input_sample_type.two_fastq_gz_spring.map{ meta, files -> [meta, files[0] ]})
@@ -198,18 +176,7 @@ workflow SAREK {
 
         two_fastq_gz_from_spring = R1_fastq_gz_from_spring.fastq.join(R2_fastq_gz_from_spring.fastq).map{ meta, fastq_1, fastq_2 -> [meta, [fastq_1, fastq_2]]}
 
-        two_fastq_gz_from_spring = two_fastq_gz_from_spring.map { meta, files ->
-            def CN = params.seq_center ? "CN:${params.seq_center}\\t" : ''
-
-            // Here we're assuming that fastq_1 and fastq_2 are from the same flowcell:
-            def flowcell = flowcellLaneFromFastq(files[0])
-            // TO-DO: Would it perhaps be better to also call flowcellLaneFromFastq(files[1]) and check that we get the same flowcell-id?
-
-            // Don't use a random element for ID, it breaks resuming
-            def read_group = "\"@RG\\tID:${flowcell}.${meta.sample}.${meta.lane}\\t${CN}PU:${meta.lane}\\tSM:${meta.patient}_${meta.sample}\\tLB:${meta.sample}\\tDS:${params.fasta}\\tPL:${params.seq_platform}\""
-            meta  = meta - meta.subMap('lane') + [read_group: read_group.toString()]
-            return [ meta, files ]
-        }
+        two_fastq_gz_from_spring = two_fastq_gz_from_spring.map { meta, files -> addReadgroupToMeta(meta, files) }
 
         // Convert any bam input to fastq
         // fasta are not needed when converting bam to fastq -> [ id:"fasta" ], []
@@ -966,6 +933,19 @@ workflow SAREK {
     FUNCTIONS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
+// Add readgroup to meta and remove lane
+def addReadgroupToMeta(meta, files) {
+    def CN = params.seq_center ? "CN:${params.seq_center}\\t" : ''
+
+    // Here we're assuming that fastq_1 and fastq_2 are from the same flowcell:
+    def flowcell = flowcellLaneFromFastq(files[0])
+    // TO-DO: Would it perhaps be better to also call flowcellLaneFromFastq(files[1]) and check that we get the same flowcell-id?
+
+    // Don't use a random element for ID, it breaks resuming
+    def read_group = "\"@RG\\tID:${flowcell}.${meta.sample}.${meta.lane}\\t${CN}PU:${meta.lane}\\tSM:${meta.patient}_${meta.sample}\\tLB:${meta.sample}\\tDS:${params.fasta}\\tPL:${params.seq_platform}\""
+    meta  = meta - meta.subMap('lane') + [read_group: read_group.toString()]
+    return [ meta, files ]
+}
 // Parse first line of a FASTQ file, return the flowcell id and lane number.
 def flowcellLaneFromFastq(path) {
     // expected format:
