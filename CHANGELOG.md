@@ -20,18 +20,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1513](https://github.com/nf-core/sarek/pull/1513) - Back to dev
 - [#1518](https://github.com/nf-core/sarek/pull/1518) - Sync `TEMPLATE` with `tools` `2.14.1`
 - [#1521](https://github.com/nf-core/sarek/pull/1521) - Minor code refactoring to simplify syntax in args handling
+- [#1545](https://github.com/nf-core/sarek/pull/1545) - Update modules
+- [#1552](https://github.com/nf-core/sarek/pull/1552) - Update samtools to v1.20
+- [#1545](https://github.com/nf-core/sarek/pull/1545) - Update modules
+- [#1553](https://github.com/nf-core/sarek/pull/1553) - Update bcftools to v1.20
 
 ### Fixed
 
 - [#1536](https://github.com/nf-core/sarek/pull/1536) - Correct typo `Strelka2` to `Strelka`
 - [#1541](https://github.com/nf-core/sarek/pull/1541) - Getting bam and bai published in the same folder
 - [#1542](https://github.com/nf-core/sarek/pull/1542) - Removing legacy configs of `CUSTOM_DUMPSOFTWAREVERSIONS`
+- [#1547](https://github.com/nf-core/sarek/pull/1547) - Correct typo in help text in nextflow_schema.json
 
 ### Removed
 
 ### Dependencies
 
-### Modules / Subworkflows
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| `bcftools` | 1.18        | 1.20        |
+| `bwa`      | 0.7.17      | 0.7.18      |
+| `cnvkit`   | 0.9.10      | 0.9.11      |
+| `htslib`   | 1.19.1      | 1.20        |
+| `samtools` | 1.19.2      | 1.20        |
 
 ### Parameters
 
