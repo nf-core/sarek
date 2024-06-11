@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1552](https://github.com/nf-core/sarek/pull/1552) - Update samtools to v1.20
 - [#1545](https://github.com/nf-core/sarek/pull/1545) - Update modules
 - [#1553](https://github.com/nf-core/sarek/pull/1553) - Update bcftools to v1.20
+- [#1557](https://github.com/nf-core/sarek/pull/1557) - Update ENSEMBLVEP cache to 111
 
 ### Fixed
 
