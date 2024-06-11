@@ -69,14 +69,16 @@ aligner = params.aligner
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { SAREK                            } from './workflows/sarek'
-include { ANNOTATION_CACHE_INITIALISATION  } from './subworkflows/local/annotation_cache_initialisation'
-include { DOWNLOAD_CACHE_SNPEFF_VEP        } from './subworkflows/local/download_cache_snpeff_vep'
-include { PIPELINE_COMPLETION              } from './subworkflows/local/utils_nfcore_sarek_pipeline'
-include { PIPELINE_INITIALISATION          } from './subworkflows/local/utils_nfcore_sarek_pipeline'
-include { PREPARE_GENOME                   } from './subworkflows/local/prepare_genome'
-include { PREPARE_INTERVALS                } from './subworkflows/local/prepare_intervals'
-include { PREPARE_REFERENCE_CNVKIT         } from './subworkflows/local/prepare_reference_cnvkit'
+include { SAREK                           } from './workflows/sarek'
+include { VARIANTANNOTATION               } from './workflows/variantannotation'
+include { ANNOTATION_CACHE_INITIALISATION } from './subworkflows/local/annotation_cache_initialisation'
+include { DOWNLOAD_CACHE_SNPEFF_VEP       } from './subworkflows/local/download_cache_snpeff_vep'
+include { PIPELINE_COMPLETION             } from './subworkflows/local/utils_nfcore_sarek_pipeline'
+include { PIPELINE_INITIALISATION         } from './subworkflows/local/utils_nfcore_sarek_pipeline'
+include { PREPARE_GENOME                  } from './subworkflows/local/prepare_genome'
+include { PREPARE_INTERVALS               } from './subworkflows/local/prepare_intervals'
+include { PREPARE_REFERENCE_CNVKIT        } from './subworkflows/local/prepare_reference_cnvkit'
+include { GATHER_REPORTS_VERSIONS         } from './subworkflows/local/gather_reports_versions'
 
 // Initialize fasta file with meta map:
 fasta = params.fasta ? Channel.fromPath(params.fasta).map{ it -> [ [id:it.baseName], it ] }.collect() : Channel.empty()
@@ -264,9 +266,6 @@ workflow NFCORE_SAREK {
     //
     SAREK(samplesheet,
         allele_files,
-        bcftools_annotations,
-        bcftools_annotations_tbi,
-        bcftools_header_lines,
         cf_chrom_len,
         chr_files,
         cnvkit_reference,
@@ -299,18 +298,32 @@ workflow NFCORE_SAREK {
         pon,
         pon_tbi,
         rt_file,
-        sentieon_dnascope_model,
+        sentieon_dnascope_model
+    )
+
+    // ANNOTATE
+    if (params.step == 'annotate') vcf_to_annotate = samplesheet
+    else vcf_to_annotate = SAREK.out.vcf
+
+    VARIANTANNOTATION(
+        vcf_to_annotate,
+        params.tools,
+        bcftools_annotations,
+        bcftools_annotations_tbi,
+        bcftools_header_lines,
+        params.snpeff_genome ? "${params.snpeff_genome}.${params.snpeff_db}" : "${params.genome}.${params.snpeff_db}",
         snpeff_cache,
         vep_cache,
-        vep_cache_version,
+        params.vep_cache_version,
         vep_extra_files,
         vep_fasta,
-        vep_genome,
-        vep_species
+        params.vep_genome,
+        params.vep_species
     )
 
     emit:
-    multiqc_report = SAREK.out.multiqc_report // channel: /path/to/multiqc_report.html
+    reports  = SAREK.out.reports.mix(VARIANTANNOTATION.out.reports)   // channel: [ path(reports) ]
+    versions = SAREK.out.versions.mix(VARIANTANNOTATION.out.versions) // channel: [ path(versions.yml) ]
 }
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -340,6 +353,17 @@ workflow {
     //
     NFCORE_SAREK(PIPELINE_INITIALISATION.out.samplesheet)
 
+    // GATHER REPORTS/VERSIONS AND RUN MULTIC
+
+    GATHER_REPORTS_VERSIONS(
+        params.outdir,
+        params.multiqc_config,
+        params.multiqc_logo,
+        params.multiqc_methods_description,
+        NFCORE_SAREK.out.versions,
+        NFCORE_SAREK.out.reports
+    )
+
     //
     // SUBWORKFLOW: Run completion tasks
     //
@@ -350,7 +374,7 @@ workflow {
         params.outdir,
         params.monochrome_logs,
         params.hook_url,
-        NFCORE_SAREK.out.multiqc_report
+        GATHER_REPORTS_VERSIONS.out.report
     )
 }
 
