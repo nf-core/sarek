@@ -1,4 +1,3 @@
-name: fgbio_callmolecularconsensusreads
 channels:
   - conda-forge
   - bioconda

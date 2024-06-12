@@ -1,4 +1,3 @@
-name: unzip
 channels:
   - conda-forge
   - bioconda

@@ -1,4 +1,3 @@
-name: vcftools
 channels:
   - conda-forge
   - bioconda

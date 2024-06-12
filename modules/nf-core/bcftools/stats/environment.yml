@@ -1,4 +1,3 @@
-name: bcftools_stats
 channels:
   - conda-forge
   - bioconda

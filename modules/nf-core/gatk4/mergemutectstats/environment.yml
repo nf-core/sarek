@@ -1,4 +1,3 @@
-name: gatk4_mergemutectstats
 channels:
   - conda-forge
   - bioconda

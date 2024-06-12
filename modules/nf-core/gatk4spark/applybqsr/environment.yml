@@ -1,4 +1,3 @@
-name: gatk4spark_applybqsr
 channels:
   - conda-forge
   - bioconda

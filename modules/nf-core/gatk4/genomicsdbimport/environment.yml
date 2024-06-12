@@ -1,4 +1,3 @@
-name: gatk4_genomicsdbimport
 channels:
   - conda-forge
   - bioconda

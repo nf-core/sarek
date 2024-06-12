@@ -1,4 +1,3 @@
-name: bcftools_concat
 channels:
   - conda-forge
   - bioconda

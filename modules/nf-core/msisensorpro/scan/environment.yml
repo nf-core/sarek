@@ -1,4 +1,3 @@
-name: msisensorpro_scan
 channels:
   - conda-forge
   - bioconda

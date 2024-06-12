@@ -1,4 +1,3 @@
-name: gatk4_haplotypecaller
 channels:
   - conda-forge
   - bioconda

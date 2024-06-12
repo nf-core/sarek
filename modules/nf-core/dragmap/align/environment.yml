@@ -1,4 +1,3 @@
-name: dragmap_align
 channels:
   - conda-forge
   - bioconda

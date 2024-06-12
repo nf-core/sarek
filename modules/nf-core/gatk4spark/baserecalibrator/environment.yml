@@ -1,4 +1,3 @@
-name: gatk4spark_baserecalibrator
 channels:
   - conda-forge
   - bioconda

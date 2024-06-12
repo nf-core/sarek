@@ -1,4 +1,3 @@
-name: controlfreec_freec
 channels:
   - conda-forge
   - bioconda
