@@ -18,18 +18,21 @@ include { VCF_ANNOTATE_SNPEFF                           } from '../../subworkflo
 workflow VARIANTANNOTATION {
     take:
     input                    // channel (queue): samplesheet read in from --input
-    tools                    // array
-    bcftools_annotations     // channel (value):
-    bcftools_annotations_tbi // channel (value):
-    bcftools_header_lines    // string
-    snpeff_db                // string
+    bcfann_enabled           // boolean
+    bcftools_annotations     // channel (value)
+    bcftools_annotations_tbi // channel (value)
+    bcftools_header_lines    // channel (value)
+    snpeff_enabled           // boolean
+    snpeff_db                // resolved value
     snpeff_cache             // channel (value):
+    merge_enabled            // boolean
+    vep_enabled              // boolean
     vep_cache                // channel (value):
-    vep_cache_version        // string
+    vep_cache_version        // params
     vep_extra_files          // array?
     vep_fasta                // channel (value)
-    vep_genome               // string
-    vep_species              // string
+    vep_genome               // params
+    vep_species              // params
 
     main:
     reports  = Channel.empty()
@@ -38,32 +41,52 @@ workflow VARIANTANNOTATION {
     json_ann = Channel.empty()
     versions = Channel.empty()
 
-    if (tools.split(',').contains('bcfann')) {
-        VCF_ANNOTATE_BCFTOOLS(input, bcftools_annotations, bcftools_annotations_index, bcftools_header_lines)
+    if (bcfann_enabled) {
+        VCF_ANNOTATE_BCFTOOLS(
+            input,
+            bcftools_annotations,
+            bcftools_annotations_index,
+            bcftools_header_lines)
 
-        vcf_ann = vcf_ann.mix(VCF_ANNOTATE_BCFTOOLS.out.vcf_tbi)
+        vcf_ann  = vcf_ann.mix(VCF_ANNOTATE_BCFTOOLS.out.vcf_tbi)
         versions = versions.mix(VCF_ANNOTATE_BCFTOOLS.out.versions)
     }
 
+    if (snpeff_enabled) {
+        VCF_ANNOTATE_SNPEFF(
+            input,
+            snpeff_db,
+            snpeff_cache)
 
-    if (tools.split(',').contains('merge') || tools.split(',').contains('snpeff')) {
-        VCF_ANNOTATE_SNPEFF(input, snpeff_db, snpeff_cache)
-
-        reports = reports.mix(VCF_ANNOTATE_SNPEFF.out.reports.map{ meta, reports -> [ reports ] })
-        vcf_ann = vcf_ann.mix(VCF_ANNOTATE_SNPEFF.out.vcf_tbi)
+        reports  = reports.mix(VCF_ANNOTATE_SNPEFF.out.reports.map{ meta, reports -> [ reports ] })
+        vcf_ann  = vcf_ann.mix(VCF_ANNOTATE_SNPEFF.out.vcf_tbi)
         versions = versions.mix(VCF_ANNOTATE_SNPEFF.out.versions)
     }
 
-    if (tools.split(',').contains('merge')) {
-        VCF_ANNOTATE_MERGE(VCF_ANNOTATE_SNPEFF.out.vcf_tbi.map{ meta, vcf, tbi -> [ meta, vcf, [] ] }, vep_fasta, vep_genome, vep_species, vep_cache_version, vep_cache, vep_extra_files)
+    if (merge_enabled) {
+        VCF_ANNOTATE_MERGE(
+            VCF_ANNOTATE_SNPEFF.out.vcf_tbi.map{ meta, vcf, tbi -> [ meta, vcf, [] ] },
+            vep_fasta,
+            vep_genome,
+            vep_species,
+            vep_cache_version,
+            vep_cache,
+            vep_extra_files)
 
-        reports = reports.mix(VCF_ANNOTATE_MERGE.out.reports)
-        vcf_ann = vcf_ann.mix(VCF_ANNOTATE_MERGE.out.vcf_tbi)
+        reports  = reports.mix(VCF_ANNOTATE_MERGE.out.reports)
+        vcf_ann  = vcf_ann.mix(VCF_ANNOTATE_MERGE.out.vcf_tbi)
         versions = versions.mix(VCF_ANNOTATE_MERGE.out.versions)
     }
 
-    if (tools.split(',').contains('vep')) {
-        VCF_ANNOTATE_ENSEMBLVEP(input.map{ meta, vcf -> [ meta, vcf, [] ] }, vep_fasta, vep_genome, vep_species, vep_cache_version, vep_cache, vep_extra_files)
+    if (vep_enabled) {
+        VCF_ANNOTATE_ENSEMBLVEP(
+            input.map{ meta, vcf -> [ meta, vcf, [] ] },
+            vep_fasta,
+            vep_genome,
+            vep_species,
+            vep_cache_version,
+            vep_cache,
+            vep_extra_files)
 
         reports  = reports.mix(VCF_ANNOTATE_ENSEMBLVEP.out.reports)
         vcf_ann  = vcf_ann.mix(VCF_ANNOTATE_ENSEMBLVEP.out.vcf_tbi)
@@ -72,11 +95,10 @@ workflow VARIANTANNOTATION {
         versions = versions.mix(VCF_ANNOTATE_ENSEMBLVEP.out.versions)
     }
 
-
     emit:
     vcf      = vcf_ann  // channel: [ val(meta), vcf.gz, vcf.gz.tbi ]
-    tab      = tab_ann
-    json     = json_ann
+    tab      = tab_ann  // only from VEP
+    json     = json_ann // only from VEP
     reports             //    path: *.html
     versions            //    path: versions.yml
 }
