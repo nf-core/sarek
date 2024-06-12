@@ -117,6 +117,7 @@ workflow SAREK {
     main:
 
     // To gather all QC reports for MultiQC
+    vcf_to_annotate  = Channel.empty()
     ch_multiqc_files = Channel.empty()
     multiqc_report   = Channel.empty()
     reports          = Channel.empty()
@@ -621,12 +622,12 @@ workflow SAREK {
 
     if (params.step == 'annotate') cram_variant_calling = Channel.empty()
 
-        // RUN CRAM QC on the recalibrated CRAM files or when starting from step variant calling. NGSCheckmate should be run also on non-recalibrated CRAM files
-        CRAM_SAMPLEQC(cram_variant_calling,
-            ngscheckmate_bed,
-            fasta,
-            params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'),
-            intervals_for_preprocessing)
+    // RUN CRAM QC on the recalibrated CRAM files or when starting from step variant calling. NGSCheckmate should be run also on non-recalibrated CRAM files
+    CRAM_SAMPLEQC(cram_variant_calling,
+        ngscheckmate_bed,
+        fasta,
+        params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'),
+        intervals_for_preprocessing)
 
     if (params.tools) {
 
@@ -777,8 +778,6 @@ workflow SAREK {
             params.joint_mutect2,
             params.wes
         )
-
-        vcf_to_annotate = Channel.empty()
 
         // POST VARIANTCALLING
         POST_VARIANTCALLING(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_all,
