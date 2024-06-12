@@ -271,7 +271,7 @@ workflow NFCORE_SAREK {
         params.bcftools_annotations_tbi,
         params.bcftools_header_lines,
         params.download_cache,
-        "Please refer to https://nf-co.re/variantannotation/docs/usage/#how-to-customise-snpeff-and-vep-annotation for more information.",
+        "Please refer to https://nf-co.re/sarek/docs/usage/#how-to-customise-snpeff-and-vep-annotation for more information.",
         (params.tools && (params.tools.split(',').contains("snpeff") || params.tools.split(',').contains('merge'))),
         params.snpeff_cache,
         params.snpeff_genome,
