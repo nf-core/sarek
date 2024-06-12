@@ -412,8 +412,8 @@
                 }
             }
         },
-        "annotation": {
-            "title": "Annotation",
+        "variant_annotation": {
+            "title": "Variant Annotation",
             "type": "object",
             "description": "",
             "default": "",
@@ -1012,6 +1012,13 @@
                     "fa_icon": "fas fa-palette",
                     "hidden": true
                 },
+                "hook_url": {
+                    "type": "string",
+                    "description": "Incoming hook URL for messaging service",
+                    "fa_icon": "fas fa-people-group",
+                    "help_text": "Incoming hook URL for messaging service. Currently, MS Teams and Slack are supported.",
+                    "hidden": true
+                },
                 "multiqc_title": {
                     "type": "string",
                     "description": "MultiQC report title. Printed as page header, used for filename if not otherwise specified.",
@@ -1063,13 +1070,6 @@
                     "hidden": true,
                     "help_text": "Allows string values that are parseable as numbers or booleans. For further information see [JSONSchema docs](https://github.com/everit-org/json-schema#lenient-mode)."
                 },
-                "hook_url": {
-                    "type": "string",
-                    "description": "Incoming hook URL for messaging service",
-                    "fa_icon": "fas fa-people-group",
-                    "help_text": "Incoming hook URL for messaging service. Currently, MS Teams and Slack are supported.",
-                    "hidden": true
-                },
                 "pipelines_testdata_base_path": {
                     "type": "string",
                     "fa_icon": "far fa-check-circle",
@@ -1097,7 +1097,7 @@
             "$ref": "#/definitions/variant_calling"
         },
         {
-            "$ref": "#/definitions/annotation"
+            "$ref": "#/definitions/variant_annotation"
         },
         {
             "$ref": "#/definitions/reference_genome_options"
