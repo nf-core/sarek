@@ -253,6 +253,7 @@ workflow NFCORE_SAREK {
             params.vep_species,
             params.vep_cache_version,
             params.vep_genome,
+            params.vep_custom_args,
             "Please refer to https://nf-co.re/sarek/docs/usage/#how-to-customise-snpeff-and-vep-annotation for more information.")
 
             snpeff_cache = ANNOTATION_CACHE_INITIALISATION.out.snpeff_cache

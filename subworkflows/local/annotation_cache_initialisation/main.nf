@@ -39,7 +39,8 @@ workflow ANNOTATION_CACHE_INITIALISATION {
 
     if (vep_enabled) {
         def vep_annotation_cache_key = (vep_cache == "s3://annotation-cache/vep_cache/") ? "${vep_cache_version}_${vep_genome}/" : ""
-        def vep_cache_dir = "${vep_annotation_cache_key}${vep_species}/${vep_cache_version}_${vep_genome}"
+        def vep_species_suffix = vep_custom_args.contains("--merged") ? '_merged' : (vep_custom_args.contains("--refseq") ? '_refseq' : '')
+        def vep_cache_dir = "${vep_annotation_cache_key}${vep_species}${vep_species_suffix}/${vep_cache_version}_${vep_genome}"
         def vep_cache_path_full = file("$vep_cache/$vep_cache_dir", type: 'dir')
         if ( !vep_cache_path_full.exists() || !vep_cache_path_full.isDirectory() ) {
             if (vep_cache == "s3://annotation-cache/vep_cache/") {
