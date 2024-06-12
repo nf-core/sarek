@@ -149,6 +149,7 @@ We thank the following people for their extensive assistance in the development 
 - [Grant Neilson](https://github.com/grantn5)
 - [gulfshores](https://github.com/gulfshores)
 - [Harshil Patel](https://github.com/drpatelh)
+- [Hongwei Ye](https://github.com/YeHW)
 - [James A. Fellows Yates](https://github.com/jfy133)
 - [Jesper Eisfeldt](https://github.com/J35P312)
 - [Johannes Alneberg](https://github.com/alneberg)
