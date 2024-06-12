@@ -45,8 +45,10 @@ jobs:
       fail-fast: false
       matrix:
         tags: ["${{ fromJson(needs.pytest-changes.outputs.tags) }}"]
-        profile: ["docker", "conda"]
-        # profile: ["docker", "singularity", "conda"]
+        # NOTE conda will never work with pytest-workflow because of race conditions
+        # BUG https://github.com/nf-core/modules/issues/4234#issue-1961683896
+        profile: ["docker"]
+        # profile: ["docker", "singularity"]
         TEST_DATA_BASE:
           - "test-datasets/data"
         NXF_VER:
