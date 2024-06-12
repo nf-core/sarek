@@ -47,7 +47,7 @@ workflow PREPARE_VARIANTANNOTATION {
         bcftools_header_lines = bcftools_header_lines_params ? Channel.fromPath(bcftools_header_lines_params).collect() : Channel.empty()
 
         if (bcftools_annotations_tbi_params) {
-            bcftools_annotations_tbi = Channel.fromPath(params.bcftools_annotations_tbi_params).collect()
+            bcftools_annotations_tbi = Channel.fromPath(bcftools_annotations_tbi_params).collect()
         } else {
             TABIX_BCFTOOLS_ANNOTATIONS(bcftools_annotations.flatten().map{ it -> [ [ id:it.baseName ], it ] })
 

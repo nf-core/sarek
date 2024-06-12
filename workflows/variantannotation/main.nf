@@ -45,7 +45,7 @@ workflow VARIANTANNOTATION {
         VCF_ANNOTATE_BCFTOOLS(
             input,
             bcftools_annotations,
-            bcftools_annotations_index,
+            bcftools_annotations_tbi,
             bcftools_header_lines)
 
         vcf_ann  = vcf_ann.mix(VCF_ANNOTATE_BCFTOOLS.out.vcf_tbi)
