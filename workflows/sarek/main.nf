@@ -778,12 +778,13 @@ workflow SAREK {
             params.wes
         )
 
+        vcf_to_annotate = Channel.empty()
+
         // POST VARIANTCALLING
         POST_VARIANTCALLING(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_all,
                             params.concatenate_vcfs)
 
         // Gather vcf files for annotation and QC
-        vcf_to_annotate = Channel.empty()
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_deepvariant)
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_freebayes)
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_haplotypecaller)
