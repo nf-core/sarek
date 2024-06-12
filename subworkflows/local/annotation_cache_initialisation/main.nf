@@ -19,6 +19,7 @@ workflow ANNOTATION_CACHE_INITIALISATION {
     vep_species
     vep_cache_version
     vep_genome
+    vep_custom_args
     help_message
 
     main:
