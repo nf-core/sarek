@@ -1,4 +1,3 @@
-name: samtools_mpileup
 channels:
   - conda-forge
   - bioconda

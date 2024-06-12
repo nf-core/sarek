@@ -1,4 +1,3 @@
-name: tabix_bgziptabix
 channels:
   - conda-forge
   - bioconda

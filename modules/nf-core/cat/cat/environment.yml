@@ -1,4 +1,3 @@
-name: cat_cat
 channels:
   - conda-forge
   - bioconda

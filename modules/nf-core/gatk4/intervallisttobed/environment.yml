@@ -1,4 +1,3 @@
-name: gatk4_intervallisttobed
 channels:
   - conda-forge
   - bioconda

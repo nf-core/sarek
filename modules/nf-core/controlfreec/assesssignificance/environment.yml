@@ -1,4 +1,3 @@
-name: controlfreec_assesssignificance
 channels:
   - conda-forge
   - bioconda

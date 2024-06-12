@@ -1,4 +1,3 @@
-name: samtools_collatefastq
 channels:
   - conda-forge
   - bioconda

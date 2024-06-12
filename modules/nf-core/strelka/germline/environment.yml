@@ -1,4 +1,3 @@
-name: strelka_germline
 channels:
   - conda-forge
   - bioconda

@@ -1,4 +1,3 @@
-name: sentieon_haplotyper
 channels:
   - conda-forge
   - bioconda

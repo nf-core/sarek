@@ -1,4 +1,3 @@
-name: gatk4_baserecalibrator
 channels:
   - conda-forge
   - bioconda

@@ -1,4 +1,3 @@
-name: controlfreec_makegraph2
 channels:
   - conda-forge
   - bioconda
