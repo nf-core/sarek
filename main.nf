@@ -253,6 +253,7 @@ workflow NFCORE_SAREK {
     )
 
     // ANNOTATE
+    vcf_to_annotate = Channel.empty()
     if (params.step == 'annotate') vcf_to_annotate = samplesheet
     else vcf_to_annotate = SAREK.out.vcf
 
