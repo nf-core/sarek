@@ -217,7 +217,7 @@ workflow GATHER_REPORTS_VERSIONS {
     )
 
     emit:
-    report = MULTIQC.out.report.toList()
+    multiqc_report = MULTIQC.out.report.toList()
 
 }
 

@@ -343,14 +343,18 @@ workflow {
 
     // GATHER REPORTS/VERSIONS AND RUN MULTIC
 
-    GATHER_REPORTS_VERSIONS(
-        params.outdir,
-        params.multiqc_config,
-        params.multiqc_logo,
-        params.multiqc_methods_description,
-        NFCORE_SAREK.out.versions,
-        NFCORE_SAREK.out.reports
-    )
+    if (params.skip_tools && (params.skip_tools.split(',').contains("multiqc"))) {
+        GATHER_REPORTS_VERSIONS(
+            params.outdir,
+            params.multiqc_config,
+            params.multiqc_logo,
+            params.multiqc_methods_description,
+            NFCORE_SAREK.out.versions,
+            NFCORE_SAREK.out.reports
+        )
+
+        final_report = GATHER_REPORTS_VERSIONS.out.multiqc_report
+    } else final_report = []
 
     //
     // SUBWORKFLOW: Run completion tasks
@@ -362,7 +366,7 @@ workflow {
         params.outdir,
         params.monochrome_logs,
         params.hook_url,
-        GATHER_REPORTS_VERSIONS.out.report
+        final_report
     )
 }
 
