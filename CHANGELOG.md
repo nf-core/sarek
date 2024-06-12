@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1552](https://github.com/nf-core/sarek/pull/1552) - Update samtools to v1.20
 - [#1545](https://github.com/nf-core/sarek/pull/1545) - Update modules
 - [#1553](https://github.com/nf-core/sarek/pull/1553) - Update bcftools to v1.20
+- [#1557](https://github.com/nf-core/sarek/pull/1557) - Update ENSEMBLVEP cache to 111
 
 ### Fixed
 
@@ -31,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1542](https://github.com/nf-core/sarek/pull/1542) - Removing legacy configs of `CUSTOM_DUMPSOFTWAREVERSIONS`
 - [#1547](https://github.com/nf-core/sarek/pull/1547) - Correct typo in help text in nextflow_schema.json
 - [#1556](https://github.com/nf-core/sarek/pull/1556) - Fix display of some commands in `docs/usage.md`
+- [#1563](https://github.com/nf-core/sarek/pull/1563) - Fix `vep_cache_path_full` so that `--refseq/--merged` will work for ENSEMBLVEP
 
 ### Removed
 

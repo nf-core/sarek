@@ -25,6 +25,7 @@ workflow PREPARE_VARIANTANNOTATION {
     vep_cache_version
     vep_include_fasta
     vep_genome
+    vep_custom_args
     dbnsfp
     dbnsfp_tbi
     spliceai_snv
@@ -100,7 +101,8 @@ workflow PREPARE_VARIANTANNOTATION {
             versions  = versions.mix(ENSEMBLVEP_DOWNLOAD.out.versions)
         } else {
             vep_annotation_cache_key = (vep_cache_params == "s3://annotation-cache/vep_cache/") ? "${vep_cache_version}_${vep_genome}/" : ""
-            vep_cache_dir = "${vep_annotation_cache_key}${vep_species}/${vep_cache_version}_${vep_genome}"
+            vep_species_suffix = vep_custom_args.contains("--merged") ? '_merged' : (vep_custom_args.contains("--refseq") ? '_refseq' : '')
+            vep_cache_dir = "${vep_annotation_cache_key}${vep_species}${vep_species_suffix}/${vep_cache_version}_${vep_genome}"
             vep_cache_path_full = file("$vep_cache_params/$vep_cache_dir", type: 'dir')
             if ( !vep_cache_path_full.exists() || !vep_cache_path_full.isDirectory() ) {
                 if (vep_cache_params == "s3://annotation-cache/vep_cache/") {
