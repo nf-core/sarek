@@ -41,6 +41,7 @@ workflow PIPELINE_INITIALISATION {
     nextflow_cli_args //   array: List of positional nextflow CLI args
     outdir            //  string: The output directory where the results will be saved
     input             //  string: Path to input samplesheet
+    step              //  string: Step
 
     main:
 
@@ -131,7 +132,8 @@ if (params.tools && (params.tools.split(',').contains('vep')    || params.tools.
 
     params.input_restart = retrieveInput((!params.build_only_index && !params.input), params.step, params.outdir)
 
-    ch_from_samplesheet = params.build_only_index ? Channel.empty() : params.input ? Channel.fromSamplesheet("input") : Channel.fromSamplesheet("input_restart")
+    if (params.step != 'annotate') ch_from_samplesheet = params.build_only_index ? Channel.empty() : params.input ? Channel.fromSamplesheet("input") : Channel.fromSamplesheet("input_restart")
+    else ch_from_samplesheet = params.build_only_index ? Channel.empty() : params.input ? Channel.fromSamplesheet("input_variantannotation") : Channel.fromSamplesheet("input_restart_variantannotation")
 
     SAMPLESHEET_TO_CHANNEL(
         ch_from_samplesheet,

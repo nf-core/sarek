@@ -62,6 +62,8 @@ params.vep_genome              = getGenomeAttribute('vep_genome')
 params.vep_species             = getGenomeAttribute('vep_species')
 
 aligner = params.aligner
+if (params.step == 'annotate') params.input_variantannotation         = params.input
+if (params.step == 'annotate') params.input_restart_variantannotation = params.input_restart
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -334,7 +336,8 @@ workflow {
         params.monochrome_logs,
         args,
         params.outdir,
-        params.input
+        params.input,
+        params.step
     )
 
     //

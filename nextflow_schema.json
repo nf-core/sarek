@@ -35,6 +35,28 @@
                     "hidden": true,
                     "schema": "assets/schema_input.json"
                 },
+                "input_variantannotation": {
+                    "type": "string",
+                    "description": "Automatic retrieval for restart",
+                    "fa_icon": "fas fa-file-csv",
+                    "format": "file-path",
+                    "exists": true,
+                    "mimetype": "text/csv",
+                    "pattern": "^\\S+\\.csv$",
+                    "hidden": true,
+                    "schema": "assets/schema_input_variantannotation.json"
+                },
+                "input_restart_variantannotation": {
+                    "type": "string",
+                    "description": "Automatic retrieval for restart",
+                    "fa_icon": "fas fa-file-csv",
+                    "format": "file-path",
+                    "exists": true,
+                    "mimetype": "text/csv",
+                    "pattern": "^\\S+\\.csv$",
+                    "hidden": true,
+                    "schema": "assets/schema_input_variantannotation.json"
+                },
                 "step": {
                     "type": "string",
                     "default": "mapping",
