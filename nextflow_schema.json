@@ -915,11 +915,6 @@
                     "help_text": "Warning: The `-profile test` samplesheet file itself contains remote paths. Setting this parameter does not alter the contents of that file.",
                     "hidden": true
                 },
-                "modules_testdata_base_path": {
-                    "type": "string",
-                    "description": "Base path / URL for data used in the modules",
-                    "hidden": true
-                },
                 "seq_center": {
                     "type": "string",
                     "fa_icon": "fas fa-university",
@@ -1091,6 +1086,12 @@
                     "description": "Validation of parameters in lenient more.",
                     "hidden": true,
                     "help_text": "Allows string values that are parseable as numbers or booleans. For further information see [JSONSchema docs](https://github.com/everit-org/json-schema#lenient-mode)."
+                },
+                "modules_testdata_base_path": {
+                    "type": "string",
+                    "description": "Base path / URL for data used in the modules",
+                    "default": "s3://ngi-igenomes/testdata/nf-core/modules/",
+                    "hidden": true
                 },
                 "pipelines_testdata_base_path": {
                     "type": "string",
