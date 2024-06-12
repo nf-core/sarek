@@ -344,7 +344,7 @@ workflow {
 
     // GATHER REPORTS/VERSIONS AND RUN MULTIC
 
-    if (params.skip_tools && (params.skip_tools.split(',').contains("multiqc"))) {
+    if (params.skip_tools && !(params.skip_tools.split(',').contains("multiqc"))) {
         GATHER_REPORTS_VERSIONS(
             params.outdir,
             params.multiqc_config,
