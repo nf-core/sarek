@@ -45,7 +45,7 @@ jobs:
       fail-fast: false
       matrix:
         tags: ["${{ fromJson(needs.pytest-changes.outputs.tags) }}"]
-        profile: ["docker"]
+        profile: ["docker", "conda"]
         # profile: ["docker", "singularity", "conda"]
         TEST_DATA_BASE:
           - "test-datasets/data"
@@ -206,7 +206,7 @@ jobs:
       fail-fast: false
       matrix:
         tags: ["${{ fromJson(needs.nftest-changes.outputs.tags) }}"]
-        profile: ["docker"]
+        profile: ["docker", "conda"]
         # profile: ["docker", "singularity", "conda"]
         TEST_DATA_BASE:
           - "test-datasets/data"
