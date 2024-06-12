@@ -37,7 +37,7 @@ workflow  SAMPLESHEET_TO_CHANNEL{
     if (step != 'annotate') {
         input_sample = ch_from_samplesheet.map{ meta, fastq_1, fastq_2, table, cram, crai, bam, bai ->
             // generate patient_sample key to group lanes together
-            [ meta.patient + meta.sample, [meta - meta.subMap('variantcaller'), fastq_1, fastq_2, table, cram, crai, bam, bai, meta.variantcaller] ]
+            [ meta.patient + meta.sample, [ meta, fastq_1, fastq_2, table, cram, crai, bam, bai ] ]
         }.tap{ ch_with_patient_sample } // save the channel
         .groupTuple() //group by patient_sample to get all lanes
         .map { patient_sample, ch_items ->
@@ -45,7 +45,7 @@ workflow  SAMPLESHEET_TO_CHANNEL{
             [ patient_sample, ch_items.size() ]
         }.combine(ch_with_patient_sample, by: 0) // for each entry add numLanes
         .map { patient_sample, num_lanes, ch_items ->
-            (meta, fastq_1, fastq_2, table, cram, crai, bam, bai, variantcaller) = ch_items
+            (meta, fastq_1, fastq_2, table, cram, crai, bam, bai) = ch_items
             if (meta.lane && fastq_2) {
                 meta           = meta + [id: "${meta.sample}-${meta.lane}".toString()]
                 def CN         = seq_center ? "CN:${seq_center}\\t" : ''
