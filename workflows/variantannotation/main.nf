@@ -43,7 +43,7 @@ workflow VARIANTANNOTATION {
 
     if (bcfann_enabled) {
         VCF_ANNOTATE_BCFTOOLS(
-            input,
+            input.map{ meta, vcf -> [ meta, vcf, [] ] },
             bcftools_annotations,
             bcftools_annotations_tbi,
             bcftools_header_lines)
