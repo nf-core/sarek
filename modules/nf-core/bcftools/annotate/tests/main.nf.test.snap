@@ -1,5 +1,5 @@
 {
-    "bcf": {
+    "sarscov2 - [vcf, tbi], annotation, annotation_tbi, [] - vcf_gz_index_tbi": {
         "content": [
             [
                 [
@@ -7,8 +7,20 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "test_ann.bcf"
+                    "test_vcf.vcf.gz"
                 ]
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test_vcf.vcf.gz.tbi"
+                ]
+            ],
+            [
+                
             ],
             [
                 "versions.yml:md5,ea53f98610d42597cf384ff1fa3eb204"
@@ -18,9 +30,9 @@
             "nf-test": "0.8.4",
             "nextflow": "24.04.2"
         },
-        "timestamp": "2024-06-03T11:39:40.696827933"
+        "timestamp": "2024-06-12T16:39:23.802873"
     },
-    "vcf": {
+    "sarscov2 - [vcf, []] annotation, annotation_tbi, [] - vcf_output": {
         "content": [
             [
                 [
@@ -39,9 +51,42 @@
             "nf-test": "0.8.4",
             "nextflow": "24.04.2"
         },
-        "timestamp": "2024-06-03T11:39:29.215629503"
+        "timestamp": "2024-06-12T16:38:57.039285"
     },
-    "sarscov2 - [vcf, tbi, vcf2, tbi2, []] - stub": {
+    "sarscov2 - [vcf, tbi], annotation, annotation_tbi, [] - vcf_gz_index_csi": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test_vcf.vcf.gz"
+                ]
+            ],
+            [
+                
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test_vcf.vcf.gz.csi"
+                ]
+            ],
+            [
+                "versions.yml:md5,ea53f98610d42597cf384ff1fa3eb204"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-12T16:39:15.152697"
+    },
+    "sarscov2 - [vcf, tbi] annotation, annotation_tbi, [] - stub": {
         "content": [
             {
                 "0": [
@@ -54,7 +99,19 @@
                     ]
                 ],
                 "1": [
+                    
+                ],
+                "2": [
+                    
+                ],
+                "3": [
                     "versions.yml:md5,ea53f98610d42597cf384ff1fa3eb204"
+                ],
+                "csi": [
+                    
+                ],
+                "tbi": [
+                    
                 ],
                 "vcf": [
                     [
@@ -74,6 +131,258 @@
             "nf-test": "0.8.4",
             "nextflow": "24.04.2"
         },
-        "timestamp": "2024-06-03T11:39:52.630055205"
+        "timestamp": "2024-06-12T16:39:41.994785"
+    },
+    "bcf": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test_ann.bcf"
+                ]
+            ],
+            [
+                "versions.yml:md5,ea53f98610d42597cf384ff1fa3eb204"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-12T16:39:33.331888"
+    },
+    "sarscov2 - [vcf, tbi] annotation, annotation_tbi, [] - vcf_gz_index_tbi - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_vcf.vcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_vcf.vcf.gz.tbi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    
+                ],
+                "3": [
+                    "versions.yml:md5,ea53f98610d42597cf384ff1fa3eb204"
+                ],
+                "csi": [
+                    
+                ],
+                "tbi": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_vcf.vcf.gz.tbi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "vcf": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_vcf.vcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,ea53f98610d42597cf384ff1fa3eb204"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-12T16:40:13.835994"
+    },
+    "sarscov2 - [vcf, tbi] annotation, annotation_tbi, [] - vcf_output": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test_vcf.vcf.gz"
+                ]
+            ],
+            [
+                "versions.yml:md5,ea53f98610d42597cf384ff1fa3eb204"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-12T16:38:48.368629"
+    },
+    "sarscov2 - [vcf, tbi], annotation, annotation_tbi, [] - vcf_gz_index": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test_vcf.vcf.gz"
+                ]
+            ],
+            [
+                
+            ],
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test_vcf.vcf.gz.csi"
+                ]
+            ],
+            [
+                "versions.yml:md5,ea53f98610d42597cf384ff1fa3eb204"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-12T16:39:05.608108"
+    },
+    "sarscov2 - [vcf, tbi] annotation, annotation_tbi, [] - vcf_gz_index - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_vcf.vcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "1": [
+                    
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_vcf.vcf.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "3": [
+                    "versions.yml:md5,ea53f98610d42597cf384ff1fa3eb204"
+                ],
+                "csi": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_vcf.vcf.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "tbi": [
+                    
+                ],
+                "vcf": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_vcf.vcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,ea53f98610d42597cf384ff1fa3eb204"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-12T16:39:54.842082"
+    },
+    "sarscov2 - [vcf, tbi] annotation, annotation_tbi, [] - vcf_gz_index_csi - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_vcf.vcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "1": [
+                    
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_vcf.vcf.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "3": [
+                    "versions.yml:md5,ea53f98610d42597cf384ff1fa3eb204"
+                ],
+                "csi": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_vcf.vcf.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "tbi": [
+                    
+                ],
+                "vcf": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_vcf.vcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,ea53f98610d42597cf384ff1fa3eb204"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-12T16:40:04.074052"
     }
 }
