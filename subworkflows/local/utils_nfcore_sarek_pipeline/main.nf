@@ -180,13 +180,16 @@ if (params.tools && (params.tools.split(',').contains('vep')    || params.tools.
 workflow GATHER_REPORTS_VERSIONS {
     take:
     outdir
-    multiqc_config
-    multiqc_logo
-    multiqc_methods_description
+    multiqc_config_params
+    custom_logo
+    methods_description
     versions
     reports
+    multiqc_enabled
 
     main:
+
+    multiqc_report = Channel.empty()
 
     //
     // Collate and save software versions
@@ -198,29 +201,31 @@ workflow GATHER_REPORTS_VERSIONS {
     //
     // MODULE: MultiQC
     //
-    ch_multiqc_files                      = Channel.empty()
-    ch_multiqc_config                     = Channel.fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
-    ch_multiqc_custom_config              = multiqc_config ? Channel.fromPath(multiqc_config, checkIfExists: true) : Channel.empty()
-    ch_multiqc_logo                       = multiqc_logo ? Channel.fromPath(multiqc_logo, checkIfExists: true) : Channel.empty()
-    summary_params                        = paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
-    ch_workflow_summary                   = Channel.value(paramsSummaryMultiqc(summary_params))
-    ch_multiqc_custom_methods_description = multiqc_methods_description ? file(multiqc_methods_description, checkIfExists: true) : file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
-    ch_methods_description                = Channel.value(methodsDescriptionText(ch_multiqc_custom_methods_description))
-    ch_multiqc_files                      = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
-    ch_multiqc_files                      = ch_multiqc_files.mix(version_yaml)
-    ch_multiqc_files                      = ch_multiqc_files.mix(reports)
-    ch_multiqc_files                      = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml', sort: true))
+    multiqc_files              = Channel.empty()
+    multiqc_config             = Channel.fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
+    multiqc_custom_config      = multiqc_config_params ? Channel.fromPath(multiqc_config_params, checkIfExists: true) : Channel.empty()
+    custom_logo                = custom_logo ? Channel.fromPath(custom_logo, checkIfExists: true) : Channel.empty()
+    summary_params             = paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
+    workflow_summary           = Channel.value(paramsSummaryMultiqc(summary_params))
+    custom_methods_description = methods_description ? file(methods_description, checkIfExists: true) : file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
+    methods_description        = Channel.value(methodsDescriptionText(custom_methods_description))
+    multiqc_files              = multiqc_files.mix(workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
+    multiqc_files              = multiqc_files.mix(version_yaml)
+    multiqc_files              = multiqc_files.mix(reports)
+    multiqc_files              = multiqc_files.mix(methods_description.collectFile(name: 'methods_description_mqc.yaml', sort: true))
 
-    MULTIQC(
-        ch_multiqc_files.collect(),
-        ch_multiqc_config.toList(),
-        ch_multiqc_custom_config.toList(),
-        ch_multiqc_logo.toList()
-    )
+    if (multiqc_enabled) {
+        MULTIQC(
+            multiqc_files.collect(),
+            multiqc_config.toList(),
+            multiqc_custom_config.toList(),
+            custom_logo.toList()
+        )
+        multiqc_report = MULTIQC.out.report.toList()
+    }
 
     emit:
-    multiqc_report = MULTIQC.out.report.toList()
-
+    multiqc_report
 }
 
 /*
