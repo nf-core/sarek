@@ -62,6 +62,8 @@ params.vep_genome              = getGenomeAttribute('vep_genome')
 params.vep_species             = getGenomeAttribute('vep_species')
 
 aligner = params.aligner
+if (params.step == 'annotate') params.input_variantannotation         = params.input
+if (params.step == 'annotate') params.input_restart_variantannotation = params.input_restart
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -69,21 +71,20 @@ aligner = params.aligner
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { SAREK                            } from './workflows/sarek'
-include { ANNOTATION_CACHE_INITIALISATION  } from './subworkflows/local/annotation_cache_initialisation'
-include { DOWNLOAD_CACHE_SNPEFF_VEP        } from './subworkflows/local/download_cache_snpeff_vep'
-include { PIPELINE_COMPLETION              } from './subworkflows/local/utils_nfcore_sarek_pipeline'
-include { PIPELINE_INITIALISATION          } from './subworkflows/local/utils_nfcore_sarek_pipeline'
-include { PREPARE_GENOME                   } from './subworkflows/local/prepare_genome'
-include { PREPARE_INTERVALS                } from './subworkflows/local/prepare_intervals'
-include { PREPARE_REFERENCE_CNVKIT         } from './subworkflows/local/prepare_reference_cnvkit'
+include { SAREK                           } from './workflows/sarek'
+include { VARIANTANNOTATION               } from './workflows/variantannotation'
+include { PREPARE_VARIANTANNOTATION       } from './subworkflows/local/prepare_variantannotation'
+include { PIPELINE_COMPLETION             } from './subworkflows/local/utils_nfcore_sarek_pipeline'
+include { PIPELINE_INITIALISATION         } from './subworkflows/local/utils_nfcore_sarek_pipeline'
+include { PREPARE_GENOME                  } from './subworkflows/local/prepare_genome'
+include { PREPARE_INTERVALS               } from './subworkflows/local/prepare_intervals'
+include { PREPARE_REFERENCE_CNVKIT        } from './subworkflows/local/prepare_reference_cnvkit'
+include { GATHER_REPORTS_VERSIONS         } from './subworkflows/local/utils_nfcore_sarek_pipeline'
 
 // Initialize fasta file with meta map:
 fasta = params.fasta ? Channel.fromPath(params.fasta).map{ it -> [ [id:it.baseName], it ] }.collect() : Channel.empty()
 
 // Initialize file channels based on params, defined in the params.genomes[params.genome] scope
-bcftools_annotations    = params.bcftools_annotations    ? Channel.fromPath(params.bcftools_annotations).collect()      : Channel.empty()
-bcftools_header_lines   = params.bcftools_header_lines   ? Channel.fromPath(params.bcftools_header_lines).collect()     : Channel.empty()
 cf_chrom_len            = params.cf_chrom_len            ? Channel.fromPath(params.cf_chrom_len).collect()              : []
 dbsnp                   = params.dbsnp                   ? Channel.fromPath(params.dbsnp).collect()                     : Channel.value([])
 fasta_fai               = params.fasta_fai               ? Channel.fromPath(params.fasta_fai).collect()                 : Channel.empty()
@@ -105,20 +106,6 @@ vep_cache_version           = params.vep_cache_version  ?:  Channel.empty()
 vep_genome                  = params.vep_genome         ?:  Channel.empty()
 vep_species                 = params.vep_species        ?:  Channel.empty()
 
-vep_extra_files = []
-
-if (params.dbnsfp && params.dbnsfp_tbi) {
-    vep_extra_files.add(file(params.dbnsfp, checkIfExists: true))
-    vep_extra_files.add(file(params.dbnsfp_tbi, checkIfExists: true))
-}
-
-if (params.spliceai_snv && params.spliceai_snv_tbi && params.spliceai_indel && params.spliceai_indel_tbi) {
-    vep_extra_files.add(file(params.spliceai_indel, checkIfExists: true))
-    vep_extra_files.add(file(params.spliceai_indel_tbi, checkIfExists: true))
-    vep_extra_files.add(file(params.spliceai_snv, checkIfExists: true))
-    vep_extra_files.add(file(params.spliceai_snv_tbi, checkIfExists: true))
-}
-
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     NAMED WORKFLOW FOR PIPELINE
@@ -139,7 +126,6 @@ workflow NFCORE_SAREK {
         params.ascat_loci,
         params.ascat_loci_gc,
         params.ascat_loci_rt,
-        bcftools_annotations,
         params.chr_dir,
         dbsnp,
         fasta,
@@ -177,7 +163,6 @@ workflow NFCORE_SAREK {
     rt_file                = PREPARE_GENOME.out.rt_file
 
     // Tabix indexed vcf files
-    bcftools_annotations_tbi  = params.bcftools_annotations    ? params.bcftools_annotations_tbi ? Channel.fromPath(params.bcftools_annotations_tbi).collect() : PREPARE_GENOME.out.bcftools_annotations_tbi : Channel.empty([])
     dbsnp_tbi                 = params.dbsnp                   ? params.dbsnp_tbi                ? Channel.fromPath(params.dbsnp_tbi).collect()                : PREPARE_GENOME.out.dbsnp_tbi                : Channel.value([])
     germline_resource_tbi     = params.germline_resource       ? params.germline_resource_tbi    ? Channel.fromPath(params.germline_resource_tbi).collect()    : PREPARE_GENOME.out.germline_resource_tbi    : [] //do not change to Channel.value([]), the check for its existence then fails for Getpileupsumamries
     known_indels_tbi          = params.known_indels            ? params.known_indels_tbi         ? Channel.fromPath(params.known_indels_tbi).collect()         : PREPARE_GENOME.out.known_indels_tbi         : Channel.value([])
@@ -229,45 +214,11 @@ workflow NFCORE_SAREK {
     versions = versions.mix(PREPARE_GENOME.out.versions)
     versions = versions.mix(PREPARE_INTERVALS.out.versions)
 
-    vep_fasta = (params.vep_include_fasta) ? fasta.map{ fasta -> [ [ id:fasta.baseName ], fasta ] } : [[id: 'null'], []]
-
-    // Download cache
-    if (params.download_cache) {
-        // Assuming that even if the cache is provided, if the user specify download_cache, sarek will download the cache
-        ensemblvep_info = Channel.of([ [ id:"${params.vep_cache_version}_${params.vep_genome}" ], params.vep_genome, params.vep_species, params.vep_cache_version ])
-        snpeff_info     = Channel.of([ [ id:"${params.snpeff_genome}.${params.snpeff_db}" ], params.snpeff_genome, params.snpeff_db ])
-        DOWNLOAD_CACHE_SNPEFF_VEP(ensemblvep_info, snpeff_info)
-        snpeff_cache = DOWNLOAD_CACHE_SNPEFF_VEP.out.snpeff_cache
-        vep_cache    = DOWNLOAD_CACHE_SNPEFF_VEP.out.ensemblvep_cache.map{ meta, cache -> [ cache ] }
-
-        versions = versions.mix(DOWNLOAD_CACHE_SNPEFF_VEP.out.versions)
-    } else {
-        // Looks for cache information either locally or on the cloud
-        ANNOTATION_CACHE_INITIALISATION(
-            (params.snpeff_cache && params.tools && (params.tools.split(',').contains("snpeff") || params.tools.split(',').contains('merge'))),
-            params.snpeff_cache,
-            params.snpeff_genome,
-            params.snpeff_db,
-            (params.vep_cache && params.tools && (params.tools.split(',').contains("vep") || params.tools.split(',').contains('merge'))),
-            params.vep_cache,
-            params.vep_species,
-            params.vep_cache_version,
-            params.vep_genome,
-            params.vep_custom_args,
-            "Please refer to https://nf-co.re/sarek/docs/usage/#how-to-customise-snpeff-and-vep-annotation for more information.")
-
-            snpeff_cache = ANNOTATION_CACHE_INITIALISATION.out.snpeff_cache
-            vep_cache    = ANNOTATION_CACHE_INITIALISATION.out.ensemblvep_cache
-    }
-
     //
     // WORKFLOW: Run pipeline
     //
     SAREK(samplesheet,
         allele_files,
-        bcftools_annotations,
-        bcftools_annotations_tbi,
-        bcftools_header_lines,
         cf_chrom_len,
         chr_files,
         cnvkit_reference,
@@ -300,18 +251,70 @@ workflow NFCORE_SAREK {
         pon,
         pon_tbi,
         rt_file,
-        sentieon_dnascope_model,
-        snpeff_cache,
-        vep_cache,
-        vep_cache_version,
-        vep_extra_files,
-        vep_fasta,
-        vep_genome,
-        vep_species
+        sentieon_dnascope_model
+    )
+
+    // ANNOTATE
+    vcf_to_annotate = Channel.empty()
+    if (params.step == 'annotate') vcf_to_annotate = samplesheet
+    else vcf_to_annotate = SAREK.out.vcf
+
+    //
+    // SUBWORKFLOW: Handle local or cloud annotation cache
+    //     Or alternatevly download cache
+    //     And index file if needed
+    //
+    PREPARE_VARIANTANNOTATION(
+        params.fasta,
+        (params.tools && (params.tools.split(',').contains("bcfann")) && params.bcftools_annotations),
+        params.bcftools_annotations,
+        params.bcftools_annotations_tbi,
+        params.bcftools_header_lines,
+        params.download_cache,
+        "Please refer to https://nf-co.re/sarek/docs/usage/#how-to-customise-snpeff-and-vep-annotation for more information.",
+        (params.tools && (params.tools.split(',').contains("snpeff") || params.tools.split(',').contains('merge'))),
+        params.snpeff_cache,
+        params.snpeff_genome,
+        params.snpeff_db,
+        (params.tools && (params.tools.split(',').contains("vep") || params.tools.split(',').contains('merge'))),
+        params.vep_cache,
+        params.vep_species,
+        params.vep_cache_version,
+        params.vep_include_fasta,
+        params.vep_genome,
+        params.vep_custom_args,
+        params.dbnsfp,
+        params.dbnsfp_tbi,
+        params.spliceai_snv,
+        params.spliceai_snv_tbi,
+        params.spliceai_indel,
+        params.spliceai_indel_tbi)
+
+    //
+    // WORKFLOW: Run main workflow
+    //
+    VARIANTANNOTATION(
+        vcf_to_annotate,
+        (params.tools && (params.tools.split(',').contains("bcfann"))),
+        PREPARE_VARIANTANNOTATION.out.bcftools_annotations,
+        PREPARE_VARIANTANNOTATION.out.bcftools_annotations_tbi,
+        PREPARE_VARIANTANNOTATION.out.bcftools_header_lines,
+        (params.tools && (params.tools.split(',').contains("snpeff") || params.tools.split(',').contains('merge'))),
+        params.snpeff_genome ? "${params.snpeff_genome}.${params.snpeff_db}" : "${params.genome}.${params.snpeff_db}",
+        PREPARE_VARIANTANNOTATION.out.snpeff_cache,
+        (params.tools && (params.tools.split(',').contains("merge"))),
+        (params.tools && (params.tools.split(',').contains("vep"))),
+        PREPARE_VARIANTANNOTATION.out.vep_cache,
+        params.vep_cache_version,
+        PREPARE_VARIANTANNOTATION.out.vep_extra_files,
+        PREPARE_VARIANTANNOTATION.out.vep_fasta,
+        params.vep_genome,
+        params.vep_species
     )
 
     emit:
-    multiqc_report = SAREK.out.multiqc_report // channel: /path/to/multiqc_report.html
+    reports  = SAREK.out.reports.mix(VARIANTANNOTATION.out.reports)   // channel: [ path(reports) ]
+    versions = SAREK.out.versions.mix(VARIANTANNOTATION.out.versions) // channel: [ path(versions.yml) ]
 }
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -333,13 +336,26 @@ workflow {
         params.monochrome_logs,
         args,
         params.outdir,
-        params.input
+        params.input,
+        params.step
     )
 
     //
     // WORKFLOW: Run main workflow
     //
     NFCORE_SAREK(PIPELINE_INITIALISATION.out.samplesheet)
+
+    // GATHER REPORTS/VERSIONS AND RUN MULTIC
+
+    GATHER_REPORTS_VERSIONS(
+        params.outdir,
+        params.multiqc_config,
+        params.multiqc_logo,
+        params.multiqc_methods_description,
+        NFCORE_SAREK.out.versions,
+        NFCORE_SAREK.out.reports,
+        (!params.skip_tools || (params.skip_tools && !(params.skip_tools.split(',').contains("multiqc"))))
+    )
 
     //
     // SUBWORKFLOW: Run completion tasks
@@ -351,7 +367,7 @@ workflow {
         params.outdir,
         params.monochrome_logs,
         params.hook_url,
-        NFCORE_SAREK.out.multiqc_report
+        GATHER_REPORTS_VERSIONS.out.multiqc_report
     )
 }
 

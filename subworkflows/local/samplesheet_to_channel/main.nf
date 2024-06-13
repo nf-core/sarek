@@ -33,95 +33,93 @@ workflow  SAMPLESHEET_TO_CHANNEL{
 
     main:
     ch_from_samplesheet.dump(tag:"ch_from_samplesheet")
-    input_sample = ch_from_samplesheet.map{ meta, fastq_1, fastq_2, table, cram, crai, bam, bai, vcf, variantcaller ->
-        // generate patient_sample key to group lanes together
-        [ meta.patient + meta.sample, [meta, fastq_1, fastq_2, table, cram, crai, bam, bai, vcf, variantcaller] ]
-    }.tap{ ch_with_patient_sample } // save the channel
-    .groupTuple() //group by patient_sample to get all lanes
-    .map { patient_sample, ch_items ->
-        // get number of lanes per sample
-        [ patient_sample, ch_items.size() ]
-    }.combine(ch_with_patient_sample, by: 0) // for each entry add numLanes
-    .map { patient_sample, num_lanes, ch_items ->
-        (meta, fastq_1, fastq_2, table, cram, crai, bam, bai, vcf, variantcaller) = ch_items
-        if (meta.lane && fastq_2) {
-            meta           = meta + [id: "${meta.sample}-${meta.lane}".toString()]
-            def CN         = seq_center ? "CN:${seq_center}\\t" : ''
 
-            def flowcell   = flowcellLaneFromFastq(fastq_1)
-            // Don't use a random element for ID, it breaks resuming
-            def read_group = "\"@RG\\tID:${flowcell}.${meta.sample}.${meta.lane}\\t${CN}PU:${meta.lane}\\tSM:${meta.patient}_${meta.sample}\\tLB:${meta.sample}\\tDS:${fasta}\\tPL:${seq_platform}\""
+    if (step != 'annotate') {
+        input_sample = ch_from_samplesheet.map{ meta, fastq_1, fastq_2, table, cram, crai, bam, bai ->
+            // generate patient_sample key to group lanes together
+            [ meta.patient + meta.sample, [ meta, fastq_1, fastq_2, table, cram, crai, bam, bai ] ]
+        }.tap{ ch_with_patient_sample } // save the channel
+        .groupTuple() //group by patient_sample to get all lanes
+        .map { patient_sample, ch_items ->
+            // get number of lanes per sample
+            [ patient_sample, ch_items.size() ]
+        }.combine(ch_with_patient_sample, by: 0) // for each entry add numLanes
+        .map { patient_sample, num_lanes, ch_items ->
+            (meta, fastq_1, fastq_2, table, cram, crai, bam, bai) = ch_items
+            if (meta.lane && fastq_2) {
+                meta           = meta + [id: "${meta.sample}-${meta.lane}".toString()]
+                def CN         = seq_center ? "CN:${seq_center}\\t" : ''
 
-            meta           = meta - meta.subMap('lane') + [num_lanes: num_lanes.toInteger(), read_group: read_group.toString(), data_type: 'fastq', size: 1]
+                def flowcell   = flowcellLaneFromFastq(fastq_1)
+                // Don't use a random element for ID, it breaks resuming
+                def read_group = "\"@RG\\tID:${flowcell}.${meta.sample}.${meta.lane}\\t${CN}PU:${meta.lane}\\tSM:${meta.patient}_${meta.sample}\\tLB:${meta.sample}\\tDS:${fasta}\\tPL:${seq_platform}\""
 
-            if (step == 'mapping') return [ meta, [ fastq_1, fastq_2 ] ]
-            else {
-                error("Samplesheet contains fastq files but step is `$step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
+                meta           = meta - meta.subMap('lane') + [num_lanes: num_lanes.toInteger(), read_group: read_group.toString(), data_type: 'fastq', size: 1]
+
+                if (step == 'mapping') return [ meta, [ fastq_1, fastq_2 ] ]
+                else {
+                    error("Samplesheet contains fastq files but step is `$step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
+                }
+
+            // start from BAM
+            } else if (meta.lane && bam) {
+                if (step != 'mapping' && !bai) {
+                    error("BAM index (bai) should be provided.")
+                }
+                meta            = meta + [id: "${meta.sample}-${meta.lane}".toString()]
+                def CN          = seq_center ? "CN:${seq_center}\\t" : ''
+                def read_group  = "\"@RG\\tID:${meta.sample}_${meta.lane}\\t${CN}PU:${meta.lane}\\tSM:${meta.patient}_${meta.sample}\\tLB:${meta.sample}\\tDS:${fasta}\\tPL:${seq_platform}\""
+
+                meta            = meta - meta.subMap('lane') + [num_lanes: num_lanes.toInteger(), read_group: read_group.toString(), data_type: 'bam', size: 1]
+
+                if (step != 'annotate') return [ meta - meta.subMap('lane'), bam, bai ]
+                else {
+                    error("Samplesheet contains bam files but step is `annotate`. The pipeline is expecting vcf files for the annotation. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
+                }
+
+            // recalibration
+            } else if (table && cram) {
+                meta = meta + [id: meta.sample, data_type: 'cram']
+
+                if (!(step == 'mapping' || step == 'annotate')) return [ meta - meta.subMap('lane'), cram, crai, table ]
+                else {
+                    error("Samplesheet contains cram files but step is `$step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
+                }
+
+            // recalibration when skipping MarkDuplicates
+            } else if (table && bam) {
+                meta = meta + [id: meta.sample, data_type: 'bam']
+
+                if (!(step == 'mapping' || step == 'annotate')) return [ meta - meta.subMap('lane'), bam, bai, table ]
+                else {
+                    error("Samplesheet contains bam files but step is `$step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
+                }
+
+            // prepare_recalibration or variant_calling
+            } else if (cram) {
+                meta = meta + [id: meta.sample, data_type: 'cram']
+
+                if (!(step == 'mapping' || step == 'annotate')) return [ meta - meta.subMap('lane'), cram, crai ]
+                else {
+                    error("Samplesheet contains cram files but step is `$step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
+                }
+
+            // prepare_recalibration when skipping MarkDuplicates or `--step markduplicates`
+            } else if (bam) {
+                meta = meta + [id: meta.sample, data_type: 'bam']
+
+                if (!(step == 'mapping' || step == 'annotate')) return [ meta - meta.subMap('lane'), bam, bai ]
+                else {
+                    error("Samplesheet contains bam files but step is `$step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
+                }
+
+            } else {
+                error("Missing or unknown field in csv file header. Please check your samplesheet")
             }
-
-        // start from BAM
-        } else if (meta.lane && bam) {
-            if (step != 'mapping' && !bai) {
-                error("BAM index (bai) should be provided.")
-            }
-            meta            = meta + [id: "${meta.sample}-${meta.lane}".toString()]
-            def CN          = seq_center ? "CN:${seq_center}\\t" : ''
-            def read_group  = "\"@RG\\tID:${meta.sample}_${meta.lane}\\t${CN}PU:${meta.lane}\\tSM:${meta.patient}_${meta.sample}\\tLB:${meta.sample}\\tDS:${fasta}\\tPL:${seq_platform}\""
-
-            meta            = meta - meta.subMap('lane') + [num_lanes: num_lanes.toInteger(), read_group: read_group.toString(), data_type: 'bam', size: 1]
-
-            if (step != 'annotate') return [ meta - meta.subMap('lane'), bam, bai ]
-            else {
-                error("Samplesheet contains bam files but step is `annotate`. The pipeline is expecting vcf files for the annotation. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
-            }
-
-        // recalibration
-        } else if (table && cram) {
-            meta = meta + [id: meta.sample, data_type: 'cram']
-
-            if (!(step == 'mapping' || step == 'annotate')) return [ meta - meta.subMap('lane'), cram, crai, table ]
-            else {
-                error("Samplesheet contains cram files but step is `$step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
-            }
-
-        // recalibration when skipping MarkDuplicates
-        } else if (table && bam) {
-            meta = meta + [id: meta.sample, data_type: 'bam']
-
-            if (!(step == 'mapping' || step == 'annotate')) return [ meta - meta.subMap('lane'), bam, bai, table ]
-            else {
-                error("Samplesheet contains bam files but step is `$step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
-            }
-
-        // prepare_recalibration or variant_calling
-        } else if (cram) {
-            meta = meta + [id: meta.sample, data_type: 'cram']
-
-            if (!(step == 'mapping' || step == 'annotate')) return [ meta - meta.subMap('lane'), cram, crai ]
-            else {
-                error("Samplesheet contains cram files but step is `$step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
-            }
-
-        // prepare_recalibration when skipping MarkDuplicates or `--step markduplicates`
-        } else if (bam) {
-            meta = meta + [id: meta.sample, data_type: 'bam']
-
-            if (!(step == 'mapping' || step == 'annotate')) return [ meta - meta.subMap('lane'), bam, bai ]
-            else {
-                error("Samplesheet contains bam files but step is `$step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
-            }
-
-        // annotation
-        } else if (vcf) {
-            meta = meta + [id: meta.sample, data_type: 'vcf', variantcaller: variantcaller ?: '']
-
-            if (step == 'annotate') return [ meta - meta.subMap('lane'), vcf ]
-            else {
-                error("Samplesheet contains vcf files but step is `$step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
-            }
-        } else {
-            error("Missing or unknown field in csv file header. Please check your samplesheet")
         }
+    } else {
+        // annotation
+        input_sample = ch_from_samplesheet.map{ meta, vcf -> [ meta + [ id: meta.sample, data_type: 'vcf' ] , vcf ] }
     }
 
     if (step != 'annotate' && tools && !build_only_index) {

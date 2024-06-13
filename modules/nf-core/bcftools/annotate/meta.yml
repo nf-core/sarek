@@ -40,14 +40,22 @@ output:
       description: |
         Groovy Map containing sample information
         e.g. [ id:'test', single_end:false ]
-  - versions:
-      type: file
-      description: File containing software versions
-      pattern: "versions.yml"
   - vcf:
       type: file
       description: Compressed annotated VCF file
       pattern: "*{vcf,vcf.gz,bcf,bcf.gz}"
+  - csi:
+      type: file
+      description: Default VCF file index
+      pattern: "*.csi"
+  - tbi:
+      type: file
+      description: Alternative VCF file index
+      pattern: "*.tbi"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
 authors:
   - "@projectoriented"
   - "@ramprasadn"

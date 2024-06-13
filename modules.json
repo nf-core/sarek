@@ -12,9 +12,8 @@
                     },
                     "bcftools/annotate": {
                         "branch": "master",
-                        "git_sha": "a5ba4d59c2b248c0379b0f8aeb4e7e754566cd1f",
-                        "installed_by": ["modules"],
-                        "patch": "modules/nf-core/bcftools/annotate/bcftools-annotate.diff"
+                        "git_sha": "c1a7fa1c038061b344f2a41be71942061ec40d2e",
+                        "installed_by": ["modules"]
                     },
                     "bcftools/concat": {
                         "branch": "master",
@@ -341,7 +340,7 @@
                     },
                     "multiqc": {
                         "branch": "master",
-                        "git_sha": "b7ebe95761cd389603f9cc0e0dc384c0f663815a",
+                        "git_sha": "8f2062e7b4185590fb9f43c275381a31a6544fc0",
                         "installed_by": ["modules"]
                     },
                     "ngscheckmate/ncm": {

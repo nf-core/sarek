@@ -4,11 +4,6 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { paramsSummaryMap                            } from 'plugin/nf-validation'
-include { paramsSummaryMultiqc                        } from '../../subworkflows/nf-core/utils_nfcore_pipeline'
-include { softwareVersionsToYAML                      } from '../../subworkflows/nf-core/utils_nfcore_pipeline'
-include { methodsDescriptionText                      } from '../../subworkflows/local/utils_nfcore_sarek_pipeline'
-
 // Create samplesheets to restart from different steps
 include { CHANNEL_ALIGN_CREATE_CSV                    } from '../../subworkflows/local/channel_align_create_csv/main'
 include { CHANNEL_MARKDUPLICATES_CREATE_CSV           } from '../../subworkflows/local/channel_markduplicates_create_csv/main'
@@ -75,12 +70,6 @@ include { POST_VARIANTCALLING                         } from '../../subworkflows
 // QC on VCF files
 include { VCF_QC_BCFTOOLS_VCFTOOLS                    } from '../../subworkflows/local/vcf_qc_bcftools_vcftools/main'
 
-// Annotation
-include { VCF_ANNOTATE_ALL                            } from '../../subworkflows/local/vcf_annotate_all/main'
-
-// MULTIQC
-include { MULTIQC                                     } from '../../modules/nf-core/multiqc/main'
-
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     RUN MAIN WORKFLOW
@@ -91,9 +80,6 @@ workflow SAREK {
     take:
         input_sample
         allele_files
-        bcftools_annotations
-        bcftools_annotations_tbi
-        bcftools_header_lines
         cf_chrom_len
         chr_files
         cnvkit_reference
@@ -127,17 +113,11 @@ workflow SAREK {
         pon_tbi
         rt_file
         sentieon_dnascope_model
-        snpeff_cache
-        vep_cache
-        vep_cache_version
-        vep_extra_files
-        vep_fasta
-        vep_genome
-        vep_species
 
     main:
 
     // To gather all QC reports for MultiQC
+    vcf_to_annotate  = Channel.empty()
     ch_multiqc_files = Channel.empty()
     multiqc_report   = Channel.empty()
     reports          = Channel.empty()
@@ -642,12 +622,12 @@ workflow SAREK {
 
     if (params.step == 'annotate') cram_variant_calling = Channel.empty()
 
-        // RUN CRAM QC on the recalibrated CRAM files or when starting from step variant calling. NGSCheckmate should be run also on non-recalibrated CRAM files
-        CRAM_SAMPLEQC(cram_variant_calling,
-            ngscheckmate_bed,
-            fasta,
-            params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'),
-            intervals_for_preprocessing)
+    // RUN CRAM QC on the recalibrated CRAM files or when starting from step variant calling. NGSCheckmate should be run also on non-recalibrated CRAM files
+    CRAM_SAMPLEQC(cram_variant_calling,
+        ngscheckmate_bed,
+        fasta,
+        params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'),
+        intervals_for_preprocessing)
 
     if (params.tools) {
 
@@ -804,7 +784,6 @@ workflow SAREK {
                             params.concatenate_vcfs)
 
         // Gather vcf files for annotation and QC
-        vcf_to_annotate = Channel.empty()
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_deepvariant)
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_freebayes)
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_haplotypecaller)
@@ -834,73 +813,12 @@ workflow SAREK {
         versions = versions.mix(POST_VARIANTCALLING.out.versions)
         versions = versions.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.versions)
 
-        // ANNOTATE
-        if (params.step == 'annotate') vcf_to_annotate = input_sample
-
-        if (params.tools.split(',').contains('merge') || params.tools.split(',').contains('snpeff') || params.tools.split(',').contains('vep')|| params.tools.split(',').contains('bcfann')) {
-
-            vep_fasta = (params.vep_include_fasta) ? fasta : [[id: 'null'], []]
-
-            VCF_ANNOTATE_ALL(
-                vcf_to_annotate.map{meta, vcf -> [ meta + [ file_name: vcf.baseName ], vcf ] },
-                vep_fasta,
-                params.tools,
-                params.snpeff_genome ? "${params.snpeff_genome}.${params.snpeff_db}" : "${params.genome}.${params.snpeff_db}",
-                snpeff_cache,
-                vep_genome,
-                vep_species,
-                vep_cache_version,
-                vep_cache,
-                vep_extra_files,
-                bcftools_annotations,
-                bcftools_annotations_tbi,
-                bcftools_header_lines)
-
-            // Gather used softwares versions
-            versions = versions.mix(VCF_ANNOTATE_ALL.out.versions)
-            reports = reports.mix(VCF_ANNOTATE_ALL.out.reports)
-        }
-    }
-
-    //
-    // Collate and save software versions
-    //
-    version_yaml = Channel.empty()
-    if (!(params.skip_tools && params.skip_tools.split(',').contains('versions'))) {
-        version_yaml = softwareVersionsToYAML(versions)
-            .collectFile(storeDir: "${params.outdir}/pipeline_info", name: 'nf_core_sarek_software_mqc_versions.yml', sort: true, newLine: true)
-    }
-
-    //
-    // MODULE: MultiQC
-    //
-    if (!(params.skip_tools && params.skip_tools.split(',').contains('multiqc'))) {
-
-        ch_multiqc_config                     = Channel.fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
-        ch_multiqc_custom_config              = params.multiqc_config ? Channel.fromPath(params.multiqc_config, checkIfExists: true) : Channel.empty()
-        ch_multiqc_logo                       = params.multiqc_logo ? Channel.fromPath(params.multiqc_logo, checkIfExists: true) : Channel.empty()
-        summary_params                        = paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
-        ch_workflow_summary                   = Channel.value(paramsSummaryMultiqc(summary_params))
-        ch_multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
-        ch_methods_description                = Channel.value(methodsDescriptionText(ch_multiqc_custom_methods_description))
-        ch_multiqc_files                      = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
-        ch_multiqc_files                      = ch_multiqc_files.mix(version_yaml)
-        ch_multiqc_files                      = ch_multiqc_files.mix(reports)
-        ch_multiqc_files                      = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml', sort: true))
-
-        MULTIQC (
-            ch_multiqc_files.collect(),
-            ch_multiqc_config.toList(),
-            ch_multiqc_custom_config.toList(),
-            ch_multiqc_logo.toList()
-        )
-        multiqc_report = MULTIQC.out.report.toList()
-
     }
 
     emit:
-    multiqc_report // channel: /path/to/multiqc_report.html
-    versions       // channel: [ path(versions.yml) ]
+    vcf = vcf_to_annotate
+    reports   // channel: /path/to/multiqc_report.html
+    versions  // channel: [ path(versions.yml) ]
 }
 
 /*

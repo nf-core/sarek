@@ -162,23 +162,9 @@
                 "format": "file-path",
                 "exists": true
             },
-            "vcf": {
-                "errorMessage": "VCF file for reads 1 cannot contain spaces and must have extension '.vcf' or '.vcf.gz'",
-                "anyOf": [
-                    {
-                        "type": "string",
-                        "pattern": "^\\S+\\.vcf(\\.gz)?$"
-                    },
-                    {
-                        "type": "string",
-                        "maxLength": 0
-                    }
-                ],
-                "format": "file-path",
-                "exists": true
-            },
             "variantcaller": {
-                "type": "string"
+                "type": "string",
+                "meta": ["variantcaller"]
             }
         },
         "required": ["patient", "sample"]
