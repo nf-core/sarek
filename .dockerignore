@@ -1,0 +1,6 @@
+.git
+.github
+.nextflow*
+.nextflow.log*
+work/
+results/
