@@ -24,8 +24,6 @@ include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_UMI   } from '../../subworkflows
 include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_TO_R1_FQ_PAIR } from '../../modules/nf-core/spring/decompress/main'
 include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_TO_R2_FQ_PAIR } from '../../modules/nf-core/spring/decompress/main'
 include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_TO_FQ_PAIR    } from '../../modules/nf-core/spring/decompress/main'
-// TO-DO: Come up with better names for those "instances" of SPRING_DECOMPRESS
-// TO-DO: Fix indentation
 
 // Run FASTQC
 include { FASTQC                                      } from '../../modules/nf-core/fastqc/main'
