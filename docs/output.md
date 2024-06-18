@@ -924,9 +924,6 @@ The plots display:
 <details markdown="1">
 <summary>Output files for all samples</summary>
 
-:::note
-The FastQC plots displayed in the MultiQC report shows _untrimmed_ reads. They may contain adapter sequence and potentially regions with low quality.
-:::
 **Output directory: `{outdir}/reports/fastqc/<sample-lane>`**
 
 - `<sample-lane_1>_fastqc.html` and `<sample-lane_2>_fastqc.html`
@@ -934,8 +931,10 @@ The FastQC plots displayed in the MultiQC report shows _untrimmed_ reads. They m
 - `<sample-lane_1>_fastqc.zip` and `<sample-lane_2>_fastqc.zip`
   - Zip archive containing the [FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) report, tab-delimited data file and plot images
 
-> **NB:** The FastQC plots displayed in the [MultiQC](https://multiqc.info/) report shows _untrimmed_ reads.
-> They may contain adapter sequence and potentially regions with low quality.
+:::note
+The FastQC plots displayed in the MultiQC report shows _untrimmed_ reads.
+They may contain adapter sequence and potentially regions with low quality.
+:::
 
 </details>
 
