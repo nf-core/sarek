@@ -1,2 +1,2 @@
 patient,sample,lane,fastq_1,fastq_2
-PATIENT_ID,SAMPLE_PAIRED_END,LANE,/path/to/fastq/files/AEG588A1_S1_L002_R1_001.fastq.gz,/path/to/fastq/files/AEG588A1_S1_L002_R2_001.fastq.gz
+NA12878,NA12878,1,s3://ngi-igenomes/test-data/sarek/NA12878_1.merged.fastq.gz,s3://ngi-igenomes/test-data/sarek/NA12878_2.merged.fastq.gz
