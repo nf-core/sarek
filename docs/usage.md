@@ -102,7 +102,7 @@ An [example samplesheet](../assets/samplesheet.csv) has been provided with the p
 
 ### Start with mapping (`--step mapping` [default])
 
-This step can be started either from FastQ files (gzip-compressed or gzip+spring-compressed) or (u)BAMs. The CSV must contain at least the columns `patient`, `sample`, `lane`, and `fastq_1/fastq_2`, `spring_1/spring_2` or `bam`.
+This step can be started either from FastQ files (gzip-compressed or gzip+spring-compressed) or (u)BAMs. The CSV must contain at least the columns `patient`, `sample`, `lane`, and `fastq_1/fastq_2`, `spring_1`, `spring_1/spring_2` or `bam`.
 
 #### Examples
 
