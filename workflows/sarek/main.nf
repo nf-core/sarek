@@ -171,10 +171,10 @@ workflow SAREK {
         one_fastq_gz_from_spring = fastq_gz_pair_from_spring.fastq.map { meta, files -> addReadgroupToMeta(meta, files) }
 
         // Two fastq.gz.spring-files - one for R1 and one for R2
-        R1_fastq_gz_from_spring = SPRING_DECOMPRESS_TO_R1_FQ_PAIR(input_sample_type.two_fastq_gz_spring.map{ meta, files -> [meta, files[0] ]})
-        R2_fastq_gz_from_spring = SPRING_DECOMPRESS_TO_R2_FQ_PAIR(input_sample_type.two_fastq_gz_spring.map{ meta, files -> [meta, files[1] ]})
+        r1_fastq_gz_from_spring = SPRING_DECOMPRESS_TO_R1_FQ_PAIR(input_sample_type.two_fastq_gz_spring.map{ meta, files -> [meta, files[0] ]})
+        r2_fastq_gz_from_spring = SPRING_DECOMPRESS_TO_R2_FQ_PAIR(input_sample_type.two_fastq_gz_spring.map{ meta, files -> [meta, files[1] ]})
 
-        two_fastq_gz_from_spring = R1_fastq_gz_from_spring.fastq.join(R2_fastq_gz_from_spring.fastq).map{ meta, fastq_1, fastq_2 -> [meta, [fastq_1, fastq_2]]}
+        two_fastq_gz_from_spring = r1_fastq_gz_from_spring.fastq.join(r2_fastq_gz_from_spring.fastq).map{ meta, fastq_1, fastq_2 -> [meta, [fastq_1, fastq_2]]}
 
         two_fastq_gz_from_spring = two_fastq_gz_from_spring.map { meta, files -> addReadgroupToMeta(meta, files) }
 
