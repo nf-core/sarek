@@ -33,6 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1547](https://github.com/nf-core/sarek/pull/1547) - Correct typo in help text in nextflow_schema.json
 - [#1556](https://github.com/nf-core/sarek/pull/1556) - Fix display of some commands in `docs/usage.md`
 - [#1563](https://github.com/nf-core/sarek/pull/1563) - Fix `vep_cache_path_full` so that `--refseq/--merged` will work for ENSEMBLVEP
+- [#1570](https://github.com/nf-core/sarek/pull/1570) - Remove duplicated notes in FASTQC output docs
 
 ### Removed
 
