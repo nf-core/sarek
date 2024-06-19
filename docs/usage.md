@@ -80,27 +80,29 @@ Output from Variant Calling and/or Annotation will be in a specific directory fo
 
 ### Overview: Samplesheet Columns
 
-| Column    | Description                                                                                                                                                                                                                                                                                                                       |
-| --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `patient` | **Custom patient ID**; designates the patient/subject; must be unique for each patient, but one patient can have multiple samples (e.g. normal and tumor). <br /> _Required_                                                                                                                                                      |
-| `sex`     | **Sex chromosomes of the patient**; i.e. XX, XY..., only used for Copy-Number Variation analysis in a tumor/pair<br /> _Optional, Default: `NA`_                                                                                                                                                                                  |
-| `status`  | **Normal/tumor status of sample**; can be `0` (normal) or `1` (tumor).<br /> _Optional, Default: `0`_                                                                                                                                                                                                                             |
-| `sample`  | **Custom sample ID** for each tumor and normal sample; more than one tumor sample for each subject is possible, i.e. a tumor and a relapse; samples can have multiple lanes for which the _same_ ID must be used to merge them later (see also `lane`). Sample IDs must be unique for unique biological samples <br /> _Required_ |
-| `lane`    | Lane ID, used when the `sample` is multiplexed on several lanes. Must be unique for each lane in the same sample (but does not need to be the original lane name), and must contain at least one character <br /> _Required for `--step mapping`_                                                                                 |
-| `fastq_1` | Full path to FastQ file for Illumina short reads 1. File has to be gzipped and have the extension `.fastq.gz` or `.fq.gz`.                                                                                                                                                                                                        |
-| `fastq_2` | Full path to FastQ file for Illumina short reads 2. File has to be gzipped and have the extension `.fastq.gz` or `.fq.gz`.                                                                                                                                                                                                        |
-| `bam`     | Full path to (u)BAM file                                                                                                                                                                                                                                                                                                          |
-| `bai`     | Full path to BAM index file                                                                                                                                                                                                                                                                                                       |
-| `cram`    | Full path to CRAM file                                                                                                                                                                                                                                                                                                            |
-| `crai`    | Full path to CRAM index file                                                                                                                                                                                                                                                                                                      |
-| `table`   | Full path to recalibration table file                                                                                                                                                                                                                                                                                             |
-| `vcf`     | Full path to vcf file                                                                                                                                                                                                                                                                                                             |
+| Column     | Description                                                                                                                                                                                                                                                                                                                       |
+| ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `patient`  | **Custom patient ID**; designates the patient/subject; must be unique for each patient, but one patient can have multiple samples (e.g. normal and tumor). <br /> _Required_                                                                                                                                                      |
+| `sex`      | **Sex chromosomes of the patient**; i.e. XX, XY..., only used for Copy-Number Variation analysis in a tumor/pair<br /> _Optional, Default: `NA`_                                                                                                                                                                                  |
+| `status`   | **Normal/tumor status of sample**; can be `0` (normal) or `1` (tumor).<br /> _Optional, Default: `0`_                                                                                                                                                                                                                             |
+| `sample`   | **Custom sample ID** for each tumor and normal sample; more than one tumor sample for each subject is possible, i.e. a tumor and a relapse; samples can have multiple lanes for which the _same_ ID must be used to merge them later (see also `lane`). Sample IDs must be unique for unique biological samples <br /> _Required_ |
+| `lane`     | Lane ID, used when the `sample` is multiplexed on several lanes. Must be unique for each lane in the same sample (but does not need to be the original lane name), and must contain at least one character <br /> _Required for `--step mapping`_                                                                                 |
+| `fastq_1`  | Full path to FastQ file for Illumina short reads 1. File has to be gzipped and have the extension `.fastq.gz` or `.fq.gz`.                                                                                                                                                                                                        |
+| `fastq_2`  | Full path to FastQ file for Illumina short reads 2. File has to be gzipped and have the extension `.fastq.gz` or `.fq.gz`.                                                                                                                                                                                                        |
+| `spring_1` | Full path to spring-compressed, gzipped FastQ file for read 1 or for reads 1 and 2. The Fastq file has to be first gzipped, then spring-compressed, and it must have the extension `.fastq.gz` or `.fq.gz`.                                                                                                                       |
+| `spring_2` | Full path to spring-compressed, gzipped FastQ file for read 2. The Fastq file has to be first gzipped, then spring-compressed, and it must have the extension `.fastq.gz` or `.fq.gz`.                                                                                                                                            |
+| `bam`      | Full path to (u)BAM file                                                                                                                                                                                                                                                                                                          |
+| `bai`      | Full path to BAM index file                                                                                                                                                                                                                                                                                                       |
+| `cram`     | Full path to CRAM file                                                                                                                                                                                                                                                                                                            |
+| `crai`     | Full path to CRAM index file                                                                                                                                                                                                                                                                                                      |
+| `table`    | Full path to recalibration table file                                                                                                                                                                                                                                                                                             |
+| `vcf`      | Full path to vcf file                                                                                                                                                                                                                                                                                                             |
 
 An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
 
 ### Start with mapping (`--step mapping` [default])
 
-This step can be started either from FastQ files or (u)BAMs. The CSV must contain at least the columns `patient`, `sample`, `lane`, and either `fastq_1/fastq_2` or `bam`.
+This step can be started either from FastQ files (gzip-compressed or gzip+spring-compressed) or (u)BAMs. The CSV must contain at least the columns `patient`, `sample`, `lane`, and `fastq_1/fastq_2`, `spring_1`, `spring_1/spring_2` or `bam`.
 
 #### Examples
 
@@ -109,6 +111,16 @@ Minimal config file:
 ```bash
 patient,sample,lane,fastq_1,fastq_2
 patient1,test_sample,lane_1,test_1.fastq.gz,test_2.fastq.gz
+```
+
+```bash
+patient,sample,lane,spring_1
+patient1,test_sample,lane_1,test_R1_and_R2.fastq.gz.spring
+```
+
+```bash
+patient,sample,lane,spring_1,spring_2
+patient1,test_sample,lane_1,test_R1.fastq.gz.spring,test_R2.fastq.gz.spring
 ```
 
 ```bash
