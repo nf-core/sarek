@@ -349,6 +349,11 @@
                         "git_sha": "0e04b949c90e686c8b07495576832d78ab9210cf",
                         "installed_by": ["bam_ngscheckmate"]
                     },
+                    "parabricks/fq2bam": {
+                        "branch": "master",
+                        "git_sha": "2fe1d9713a234768540b9fb0ee515e52dc613ddf",
+                        "installed_by": ["modules"]
+                    },
                     "samblaster": {
                         "branch": "master",
                         "git_sha": "310850152f3e1dec6ba28b28e1f1cb9ab8660a49",
