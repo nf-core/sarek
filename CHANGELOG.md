@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- [#1572](https://github.com/nf-core/sarek/pull/1572) - correct tower.yml snpeff report path
 - [#1536](https://github.com/nf-core/sarek/pull/1536) - Correct typo `Strelka2` to `Strelka`
 - [#1541](https://github.com/nf-core/sarek/pull/1541) - Getting bam and bai published in the same folder
 - [#1542](https://github.com/nf-core/sarek/pull/1542) - Removing legacy configs of `CUSTOM_DUMPSOFTWAREVERSIONS`
