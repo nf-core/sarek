@@ -106,10 +106,11 @@ umi:
   - modules/nf-core/fgbio/callmolecularconsensusreads/**
   - modules/nf-core/fgbio/fastqtobam/**
   - modules/nf-core/fgbio/groupreadsbyumi/**
+  - modules/nf-core/minimap2/align/**
   - modules/nf-core/mosdepth/**
   - modules/nf-core/samblaster/**
   - modules/nf-core/samtools/bam2fq/**
-  - subworkflows/local/fastq_align_bwamem_mem2_dragmap/**
+  - subworkflows/local/fastq_align_bwamem_mem2_dragmap_minimap2_sentieon/**
   - subworkflows/local/fastq_create_umi_consensus_fgbio/**
   - tests/csv/3.0/fastq_umi.csv
   - tests/test_umi.yml
@@ -129,7 +130,7 @@ bwamem:
   - conf/modules/aligner.config
   - modules/nf-core/bwa/mem/**
   - modules/nf-core/mosdepth/**
-  - subworkflows/local/fastq_align_bwamem_mem2_dragmap_sentieon/**
+  - subworkflows/local/fastq_align_bwamem_mem2_dragmap_minimap2_sentieon/**
   - tests/csv/3.0/fastq_single.csv
   - tests/test_aligner_bwamem.yml
 
@@ -138,7 +139,7 @@ bwamem2:
   - conf/modules/aligner.config
   - modules/nf-core/bwamem2/mem/**
   - modules/nf-core/mosdepth/**
-  - subworkflows/local/fastq_align_bwamem_mem2_dragmap_sentieon/**
+  - subworkflows/local/fastq_align_bwamem_mem2_dragmap_minimap2_sentieon/**
   - tests/csv/3.0/fastq_single.csv
   - tests/test_aligner_bwamem2.yml
 
@@ -147,15 +148,23 @@ dragmap:
   - conf/modules/aligner.config
   - modules/nf-core/dragmap/align/**
   - modules/nf-core/mosdepth/**
-  - subworkflows/local/fastq_align_bwamem_mem2_dragmap_sentieon/**
+  - subworkflows/local/fastq_align_bwamem_mem2_dragmap_minimap2_sentieon/**
   - tests/csv/3.0/fastq_single.csv
   - tests/test_aligner_dragmap.yml
+
+### minimap2
+minimap2:
+  - conf/modules/aligner.config
+  - modules/nf-core/minimap2/align/**
+  - subworkflows/local/fastq_align_bwamem_mem2_dragmap_minimap2_sentieon/**
+  - tests/csv/3.0/fastq_single.csv
+  - tests/test_aligner_minimap2.yml
 
 ### sentieon/bwamem
 sentieon/bwamem:
   - conf/modules/aligner.config
   - modules/nf-core/sentieon/bwamem/**
-  - subworkflows/local/fastq_align_bwamem_mem2_dragmap_sentieon/**
+  - subworkflows/local/fastq_align_bwamem_mem2_dragmap_minimap2_sentieon/**
   - tests/csv/3.0/fastq_single.csv
   - tests/test_sentieon_aligner_bwamem.yml
 

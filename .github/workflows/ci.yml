@@ -247,6 +247,8 @@ jobs:
           - tags: "gatk4spark/applybqsr"
           - tags: "gatk4spark/markduplicates"
           - tags: "gawk"
+          - tags: "minimap2/index"
+          - tags: "minimap2/align"
           - tags: "mosdepth"
           - tags: "multiqc"
           - tags: "ngscheckmate/ncm"

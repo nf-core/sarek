@@ -216,7 +216,7 @@
                     "type": "string",
                     "default": "bwa-mem",
                     "fa_icon": "fas fa-puzzle-piece",
-                    "enum": ["bwa-mem", "bwa-mem2", "dragmap", "sentieon-bwamem"],
+                    "enum": ["bwa-mem", "bwa-mem2", "dragmap", "minimap2", "sentieon-bwamem"],
                     "description": "Specify aligner to be used to map reads to reference genome.",
                     "help_text": "Sarek will build missing indices automatically if not provided. Set `--bwa false` if indices should be (re-)built.\nIf DragMap is selected as aligner, it is recommended to skip baserecalibration with `--skip_tools baserecalibrator`. For more info see [here](https://gatk.broadinstitute.org/hc/en-us/articles/4407897446939--How-to-Run-germline-single-sample-short-variant-discovery-in-DRAGEN-mode)."
                 },
@@ -732,6 +732,13 @@
                     "description": "Path to Control-FREEC mappability file.",
                     "hidden": true,
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
+                },
+                "minimap2": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file",
+                    "description": "Path to minimap2 genome index file.",
+                    "hidden": true,
+                    "help_text": "If you use AWS iGenomes, this has NOT already been set for you appropriately.\n\n> **NB** If none provided, will be generated automatically from the known FASTA file. Combine with `--save_reference` to save for future runs."
                 },
                 "ngscheckmate_bed": {
                     "type": "string",

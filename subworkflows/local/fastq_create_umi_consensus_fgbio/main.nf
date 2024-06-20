@@ -6,12 +6,12 @@
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
-include { FGBIO_CALLMOLECULARCONSENSUSREADS        as CALLUMICONSENSUS } from '../../../modules/nf-core/fgbio/callmolecularconsensusreads/main.nf'
-include { FGBIO_FASTQTOBAM                         as FASTQTOBAM       } from '../../../modules/nf-core/fgbio/fastqtobam/main'
-include { FGBIO_GROUPREADSBYUMI                    as GROUPREADSBYUMI  } from '../../../modules/nf-core/fgbio/groupreadsbyumi/main'
-include { FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON as ALIGN_UMI        } from '../fastq_align_bwamem_mem2_dragmap_sentieon/main'
-include { SAMBLASTER                                                   } from '../../../modules/nf-core/samblaster/main'
-include { SAMTOOLS_BAM2FQ                          as BAM2FASTQ        } from '../../../modules/nf-core/samtools/bam2fq/main.nf'
+include { FGBIO_CALLMOLECULARCONSENSUSREADS                 as CALLUMICONSENSUS } from '../../../modules/nf-core/fgbio/callmolecularconsensusreads/main.nf'
+include { FGBIO_FASTQTOBAM                                  as FASTQTOBAM       } from '../../../modules/nf-core/fgbio/fastqtobam/main'
+include { FGBIO_GROUPREADSBYUMI                             as GROUPREADSBYUMI  } from '../../../modules/nf-core/fgbio/groupreadsbyumi/main'
+include { FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_MINIMAP2_SENTIEON as ALIGN_UMI        } from '../fastq_align_bwamem_mem2_dragmap_minimap2_sentieon/main'
+include { SAMBLASTER                                                            } from '../../../modules/nf-core/samblaster/main'
+include { SAMTOOLS_BAM2FQ                                   as BAM2FASTQ        } from '../../../modules/nf-core/samtools/bam2fq/main.nf'
 
 workflow FASTQ_CREATE_UMI_CONSENSUS_FGBIO {
     take:
@@ -37,6 +37,7 @@ workflow FASTQ_CREATE_UMI_CONSENSUS_FGBIO {
 
     // appropriately tagged interleaved FASTQ reads are mapped to the reference
     // bams will not be sorted (hence, sort = false)
+    // TODO minimap2 in current implementation wouldn't work correctly
     sort = false
     ALIGN_UMI(BAM2FASTQ.out.reads, map_index, sort, fasta, fai)
 
