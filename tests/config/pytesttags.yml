@@ -153,11 +153,10 @@ dragmap:
 
 ### sentieon/bwamem
 sentieon/bwamem:
-  - conf/modules/aligner.config
-  - modules/nf-core/sentieon/bwamem/**
-  - subworkflows/local/fastq_align_bwamem_mem2_dragmap_sentieon/**
-  - tests/csv/3.0/fastq_single.csv
-  - tests/test_sentieon_aligner_bwamem.yml
+  - "**.nf"
+  - "**.config"
+  - "**.nf.test"
+  - "**.json"
 
 ## markduplicates
 gatk4/markduplicates:
