@@ -21,9 +21,9 @@ include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_INPUT } from '../../subworkflows
 include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_UMI   } from '../../subworkflows/local/bam_convert_samtools/main'
 
 // Convert fastq.gz.spring files to fastq.gz files
-include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_TO_R1_FQ_PAIR } from '../../modules/nf-core/spring/decompress/main'
-include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_TO_R2_FQ_PAIR } from '../../modules/nf-core/spring/decompress/main'
-include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_TO_FQ_PAIR    } from '../../modules/nf-core/spring/decompress/main'
+include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_TO_R1_FQ   } from '../../modules/nf-core/spring/decompress/main'
+include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_TO_R2_FQ   } from '../../modules/nf-core/spring/decompress/main'
+include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_TO_FQ_PAIR } from '../../modules/nf-core/spring/decompress/main'
 
 // Run FASTQC
 include { FASTQC                                      } from '../../modules/nf-core/fastqc/main'
@@ -169,11 +169,11 @@ workflow SAREK {
         one_fastq_gz_from_spring = fastq_gz_pair_from_spring.fastq.map { meta, files -> addReadgroupToMeta(meta, files) }
 
         // Two fastq.gz.spring-files - one for R1 and one for R2
-        r1_fastq_gz_from_spring = SPRING_DECOMPRESS_TO_R1_FQ_PAIR(input_sample_type.two_fastq_gz_spring.map{ meta, files ->
+        r1_fastq_gz_from_spring = SPRING_DECOMPRESS_TO_R1_FQ(input_sample_type.two_fastq_gz_spring.map{ meta, files ->
             meta.one_strand = true
             [meta, files[0] ]}
         )
-        r2_fastq_gz_from_spring = SPRING_DECOMPRESS_TO_R2_FQ_PAIR(input_sample_type.two_fastq_gz_spring.map{ meta, files ->
+        r2_fastq_gz_from_spring = SPRING_DECOMPRESS_TO_R2_FQ(input_sample_type.two_fastq_gz_spring.map{ meta, files ->
             meta.one_strand = true
             [meta, files[1] ]}
         )
