@@ -153,10 +153,7 @@ dragmap:
 
 ### sentieon/bwamem
 sentieon/bwamem:
-  - "**.nf"
-  - "**.config"
-  - "**.nf.test"
-  - "**.json"
+  - "**"
 
 ## markduplicates
 gatk4/markduplicates:
