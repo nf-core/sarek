@@ -164,18 +164,18 @@ workflow SAREK {
         fastq_gz = input_sample_type.fastq_gz.map { meta, files -> addReadgroupToMeta(meta, files) }
 
         // Just one fastq.gz.spring-file with both R1 and R2
-        fastq_gz_pair_from_spring = SPRING_DECOMPRESS_TO_FQ_PAIR(input_sample_type.one_fastq_gz_spring)
+        fastq_gz_pair_from_spring = SPRING_DECOMPRESS_TO_FQ_PAIR(input_sample_type.one_fastq_gz_spring, false)
 
         one_fastq_gz_from_spring = fastq_gz_pair_from_spring.fastq.map { meta, files -> addReadgroupToMeta(meta, files) }
 
         // Two fastq.gz.spring-files - one for R1 and one for R2
         r1_fastq_gz_from_spring = SPRING_DECOMPRESS_TO_R1_FQ(input_sample_type.two_fastq_gz_spring.map{ meta, files ->
-            meta.one_strand = true
-            [meta, files[0] ]}
+            [meta, files[0] ]},
+            true // write_one_fastq_gz
         )
         r2_fastq_gz_from_spring = SPRING_DECOMPRESS_TO_R2_FQ(input_sample_type.two_fastq_gz_spring.map{ meta, files ->
-            meta.one_strand = true
-            [meta, files[1] ]}
+            [meta, files[1] ]},
+            true // write_one_fastq_gz
         )
 
         two_fastq_gz_from_spring = r1_fastq_gz_from_spring.fastq.join(r2_fastq_gz_from_spring.fastq).map{ meta, fastq_1, fastq_2 -> [meta, [fastq_1, fastq_2]]}
