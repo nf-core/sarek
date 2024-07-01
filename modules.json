@@ -452,8 +452,7 @@
                     "spring/decompress": {
                         "branch": "master",
                         "git_sha": "0a92fa8d17d9e3c411e01a0ce41a86eff02b1599",
-                        "installed_by": ["modules"],
-                        "patch": "modules/nf-core/spring/decompress/spring-decompress.diff"
+                        "installed_by": ["modules"]
                     },
                     "strelka/germline": {
                         "branch": "master",
