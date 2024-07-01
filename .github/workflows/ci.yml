@@ -2,6 +2,8 @@ name: nf-core CI
 # This workflow runs the pipeline with the minimal test dataset to check that it completes without any syntax errors
 on:
   pull_request:
+    paths-ignore:
+      - "docs/**"
   release:
     types: [published]
   merge_group:
