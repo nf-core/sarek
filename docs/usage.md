@@ -1100,6 +1100,10 @@ Sentieon supply license in the form of a string-value (a url) or a file. It shou
 nextflow secrets set SENTIEON_LICENSE_BASE64 $(echo -n <sentieon_license_string> | base64 -w 0)
 ```
 
+:::note
+<sentieon_license_string> is formatted as `IP:Port` for example: `12.12.12.12:8990`
+:::
+
 If a license file is supplied, then the nextflow secret should be set like this:
 
 ```bash
