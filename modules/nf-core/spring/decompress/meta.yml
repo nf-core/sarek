@@ -11,7 +11,7 @@ tools:
       documentation: "https://github.com/shubhamchandak94/Spring/blob/master/README.md"
       tool_dev_url: "https://github.com/shubhamchandak94/Spring"
       doi: "10.1093/bioinformatics/bty1015"
-      licence: "['Free for non-commercial use']"
+      licence: ["Free for non-commercial use"]
 input:
   - meta:
       type: map
@@ -22,6 +22,11 @@ input:
       type: file
       description: Spring file to decompress.
       pattern: "*.{spring}"
+  - write_one_fastq_gz:
+      type: boolean
+      description: |
+        Controls whether spring should write one fastq.gz file with reads from both directions or two fastq.gz files with reads from distinct directions
+      pattern: "true or false"
 output:
   - meta:
       type: map
