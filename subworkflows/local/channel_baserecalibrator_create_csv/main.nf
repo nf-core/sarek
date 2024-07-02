@@ -13,7 +13,7 @@ workflow CHANNEL_BASERECALIBRATOR_CREATE_CSV {
     main:
         // Creating csv files to restart from this step
         if ( tools && tools.split(',').contains('sentieon_dedup') ) {
-            cram_table_bqsr.collectFile(keepHeader: true, skip: 1, sort: true, storeDir: "${outdir}/csv") { meta, cram, crai, table ->
+            cram_table_bqsr.collectFile(keepHeader: true, skip: 1, sort: true, storeDir: file(outdir).resolve("csv")) { meta, cram, crai, table ->
 
                 patient = meta.patient
                 sample  = meta.sample
@@ -31,7 +31,7 @@ workflow CHANNEL_BASERECALIBRATOR_CREATE_CSV {
                 ["markduplicates.csv", "patient,sex,status,sample,${type},${type_index},table\n${patient},${sex},${status},${sample},${cram},${crai},${table}\n"]
             }
         } else if (!(skip_tools && (skip_tools.split(',').contains('markduplicates')))) {
-            cram_table_bqsr.collectFile(keepHeader: true, skip: 1, sort: true, storeDir: "${outdir}/csv") { meta, cram, crai, table ->
+            cram_table_bqsr.collectFile(keepHeader: true, skip: 1, sort: true, storeDir: file(outdir).resolve("csv")) { meta, cram, crai, table ->
 
                 patient = meta.patient
                 sample  = meta.sample
@@ -49,7 +49,7 @@ workflow CHANNEL_BASERECALIBRATOR_CREATE_CSV {
                 ["markduplicates.csv", "patient,sex,status,sample,${type},${type_index},table\n${patient},${sex},${status},${sample},${cram},${crai},${table}\n"]
             }
         } else {
-            cram_table_bqsr.collectFile(keepHeader: true, skip: 1, sort: true, storeDir: "${outdir}/csv") { meta, cram, crai, table ->
+            cram_table_bqsr.collectFile(keepHeader: true, skip: 1, sort: true, storeDir: file(outdir).resolve("csv")) { meta, cram, crai, table ->
                 patient = meta.patient
                 sample  = meta.sample
                 sex     = meta.sex
