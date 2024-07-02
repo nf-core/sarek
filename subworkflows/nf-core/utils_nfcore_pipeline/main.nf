@@ -362,16 +362,16 @@ def completionEmail(summary_params, email, email_on_fail, plaintext_email, outdi
     }
 
     // Write summary e-mail HTML to a file
-    def output_hf = new File(workflow.launchDir.toString(), ".pipeline_report.html")
-    output_hf.withWriter { w -> w << email_html }
-    FilesEx.copyTo(output_hf.toPath(), "${outdir}/pipeline_info/pipeline_report.html");
-    output_hf.delete()
+    // def output_hf = new File(workflow.launchDir.toString(), ".pipeline_report.html")
+    // output_hf.withWriter { w -> w << email_html }
+    // FilesEx.copyTo(output_hf.toPath(), "${outdir}/pipeline_info/pipeline_report.html");
+    // output_hf.delete()
 
-    // Write summary e-mail TXT to a file
-    def output_tf = new File(workflow.launchDir.toString(), ".pipeline_report.txt")
-    output_tf.withWriter { w -> w << email_txt }
-    FilesEx.copyTo(output_tf.toPath(), "${outdir}/pipeline_info/pipeline_report.txt");
-    output_tf.delete()
+    // // Write summary e-mail TXT to a file
+    // def output_tf = new File(workflow.launchDir.toString(), ".pipeline_report.txt")
+    // output_tf.withWriter { w -> w << email_txt }
+    // FilesEx.copyTo(output_tf.toPath(), "${outdir}/pipeline_info/pipeline_report.txt");
+    // output_tf.delete()
 }
 
 //
