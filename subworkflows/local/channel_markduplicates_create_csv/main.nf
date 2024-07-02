@@ -11,7 +11,7 @@ workflow CHANNEL_MARKDUPLICATES_CREATE_CSV {
 
     main:
         // Creating csv files to restart from this step
-        cram_markduplicates.collectFile(keepHeader: true, skip: 1, sort: true, storeDir: "${outdir}/csv") { meta, file, index ->
+        cram_markduplicates.collectFile(keepHeader: true, skip: 1, sort: true, storeDir: "${params.outdir}/csv") { meta, file, index ->
             patient        = meta.patient
             sample         = meta.sample
             sex            = meta.sex
