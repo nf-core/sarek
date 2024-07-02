@@ -33,9 +33,9 @@ workflow UTILS_NEXTFLOW_PIPELINE {
     //
     // Dump pipeline parameters to a JSON file
     //
-    if (dump_parameters && outdir) {
-        dumpParametersToJSON(outdir)
-    }
+    // if (dump_parameters && outdir) {
+    //     dumpParametersToJSON(outdir)
+    // }
 
     //
     // When running with Conda, warn if channels have not been set-up appropriately
@@ -75,16 +75,16 @@ def getWorkflowVersion() {
 //
 // Dump pipeline parameters to a JSON file
 //
-def dumpParametersToJSON(outdir) {
-    def timestamp  = new java.util.Date().format( 'yyyy-MM-dd_HH-mm-ss')
-    def filename   = "params_${timestamp}.json"
-    def temp_pf    = new File(workflow.launchDir.toString(), ".${filename}")
-    def jsonStr    = JsonOutput.toJson(params)
-    temp_pf.text   = JsonOutput.prettyPrint(jsonStr)
+// def dumpParametersToJSON(outdir) {
+//     def timestamp  = new java.util.Date().format( 'yyyy-MM-dd_HH-mm-ss')
+//     def filename   = "params_${timestamp}.json"
+//     def temp_pf    = new File(workflow.launchDir.toString(), ".${filename}")
+//     def jsonStr    = JsonOutput.toJson(params)
+//     temp_pf.text   = JsonOutput.prettyPrint(jsonStr)
 
-    FilesEx.copyTo(temp_pf.toPath(), "${outdir}/pipeline_info/params_${timestamp}.json")
-    temp_pf.delete()
-}
+//     FilesEx.copyTo(temp_pf.toPath(), "${outdir}/pipeline_info/params_${timestamp}.json")
+//     temp_pf.delete()
+// }
 
 //
 // When running with -profile conda, warn if channels have not been set-up appropriately
