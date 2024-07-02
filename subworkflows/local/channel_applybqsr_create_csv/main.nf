@@ -10,7 +10,7 @@ workflow CHANNEL_APPLYBQSR_CREATE_CSV {
 
     main:
         // Creating csv files to restart from this step
-        cram_recalibrated_index.collectFile(keepHeader: true, skip: 1, sort: true, storeDir: "${outdir}/csv") { meta, file, index ->
+        cram_recalibrated_index.collectFile(keepHeader: true, skip: 1, sort: true, storeDir: file(outdir).resolve("csv") ) { meta, file, index ->
             patient = meta.patient
             sample  = meta.sample
             sex     = meta.sex
