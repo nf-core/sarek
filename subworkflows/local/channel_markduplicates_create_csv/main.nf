@@ -1,9 +1,6 @@
 //
 // CHANNEL_MARKDUPLICATES_CREATE_CSV
 //
-import java.nio.file.Path
-import java.nio.file.Paths
-
 workflow CHANNEL_MARKDUPLICATES_CREATE_CSV {
     take:
         cram_markduplicates     // channel: [mandatory] meta, cram, crai
