@@ -13,6 +13,7 @@ include { BAM_VARIANT_CALLING_SENTIEON_DNASCOPE                                 
 include { BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER                                      } from '../bam_variant_calling_sentieon_haplotyper/main'
 include { BAM_VARIANT_CALLING_MPILEUP                                                  } from '../bam_variant_calling_mpileup/main'
 include { BAM_VARIANT_CALLING_SINGLE_STRELKA                                           } from '../bam_variant_calling_single_strelka/main'
+include { BAM_VARIANT_CALLING_SINGLE_VARDICTJAVA                                       } from '../bam_variant_calling_single_vardictjava/main'
 include { BAM_VARIANT_CALLING_SINGLE_TIDDIT                                            } from '../bam_variant_calling_single_tiddit/main'
 include { SENTIEON_DNAMODELAPPLY                                                       } from '../../../modules/nf-core/sentieon/dnamodelapply/main'
 include { VCF_VARIANT_FILTERING_GATK                                                   } from '../vcf_variant_filtering_gatk/main'
@@ -66,6 +67,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     vcf_sentieon_haplotyper  = Channel.empty()
     vcf_strelka              = Channel.empty()
     vcf_tiddit               = Channel.empty()
+    vcf_vardictjava          = Channel.empty()
 
     // BCFTOOLS MPILEUP
     if (tools.split(',').contains('mpileup')) {
@@ -327,6 +329,20 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         versions = versions.mix(BAM_VARIANT_CALLING_SINGLE_STRELKA.out.versions)
     }
 
+    // VARDICTJAVA
+    if (tools.split(',').contains('vardictjava')) {
+        BAM_VARIANT_CALLING_SINGLE_VARDICTJAVA(
+            cram,
+            dict,
+            fasta,  // TODO CHECK Do I need to remap fasta and fasta_fai to match module?
+            fasta_fai,
+            intervals
+        )
+
+        vcf_vardictjava = BAM_VARIANT_CALLING_SINGLE_VARDICTJAVA.out.vcf
+        versions = versions.mix(BAM_VARIANT_CALLING_SINGLE_VARDICTJAVA.out.versions)
+    }
+
     // TIDDIT
     if (tools.split(',').contains('tiddit')) {
         BAM_VARIANT_CALLING_SINGLE_TIDDIT(
@@ -349,7 +365,8 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         vcf_mpileup,
         vcf_sentieon_haplotyper,
         vcf_strelka,
-        vcf_tiddit
+        vcf_tiddit,
+        vcf_vardictjava
     )
 
     emit:
@@ -365,6 +382,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     vcf_sentieon_dnascope
     vcf_sentieon_haplotyper
     vcf_tiddit
+    vcf_vardictjava
 
     versions
 }
