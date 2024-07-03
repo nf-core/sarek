@@ -4,4 +4,5 @@ channels:
   - bioconda
   - defaults
 dependencies:
+  - bioconda::htslib=1.20
   - bioconda::vardict-java=1.8.3
