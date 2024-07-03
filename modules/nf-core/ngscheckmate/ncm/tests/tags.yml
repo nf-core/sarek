@@ -1,0 +1,2 @@
+ngscheckmate/ncm:
+  - "modules/nf-core/ngscheckmate/ncm/**"
