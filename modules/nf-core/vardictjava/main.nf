@@ -4,8 +4,8 @@ process VARDICTJAVA {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/vardict-java:1.8.3--hdfd78af_0':
-        'biocontainers/vardict-java:1.8.3--hdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/mulled-v2-731b8c4cf44d76e9aa181af565b9eee448d82a8c:6060dd7502a5e03e6a1f777c60ec85e4f7f58ec5-0':
+        'biocontainers/mulled-v2-731b8c4cf44d76e9aa181af565b9eee448d82a8c:6060dd7502a5e03e6a1f777c60ec85e4f7f58ec5-0' }"
 
     input:
     tuple val(meta), path(bams), path(bais), path(bed)
