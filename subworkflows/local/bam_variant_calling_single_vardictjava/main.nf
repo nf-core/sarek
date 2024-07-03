@@ -41,8 +41,8 @@ workflow BAM_VARIANT_CALLING_SINGLE_VARDICTJAVA {
 
     VARDICTJAVA(
         ch_vardict_input,
-        fasta.map{fasta -> [[id:fasta.baseName], fasta]},
-        fasta_fai.map{fasta_fai -> [[id:fasta_fai.baseName], fasta_fai]}
+        fasta,
+        fasta_fai
     )
 
     // Figuring out if there is one or more vcf(s) from the same sample
