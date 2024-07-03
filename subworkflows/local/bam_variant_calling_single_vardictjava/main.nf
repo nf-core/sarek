@@ -34,7 +34,7 @@ workflow BAM_VARIANT_CALLING_SINGLE_VARDICTJAVA {
 
     // Combine converted bam, bai and intervals
     ch_bam_from_cram.bam
-        .mix(CRAM_TO_BAM.out.alignment_index)
+        .mix(CRAM_TO_BAM.out.bam.join(CRAM_TO_BAM.out.bai, failOnDuplicate: true, failOnMismatch: true))
         .combine(intervals)
         .map{meta, bam, bai, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], bam, bai, intervals ]}
         .set{ ch_vardict_input}
