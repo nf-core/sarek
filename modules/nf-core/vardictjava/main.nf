@@ -13,7 +13,7 @@ process VARDICTJAVA {
     tuple val(meta3), path(fasta_fai)
 
     output:
-    tuple val(meta), path("*.vcf"), emit: vcf
+    tuple val(meta), path("*.vcf.gz"), emit: vcf
     path "versions.yml"           , emit: versions
 
     when:
@@ -40,6 +40,7 @@ process VARDICTJAVA {
     | ${convert_to_vcf} \\
         ${args2} \\
     > ${prefix}.vcf
+    bgzip ${prefix}.vcf
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -54,7 +55,7 @@ process VARDICTJAVA {
     def prefix = task.ext.prefix ?: "${meta.id}"
 
     """
-    touch ${prefix}.vcf
+    touch ${prefix}.vcf.gz
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
