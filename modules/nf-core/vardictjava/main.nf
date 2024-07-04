@@ -3,7 +3,9 @@ process VARDICTJAVA {
     label 'process_high'
 
     conda "${moduleDir}/environment.yml"
-    container "community.wave.seqera.io/library/htslib_vardict-java:d0da881a1909bfa9"
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/mulled-v2-731b8c4cf44d76e9aa181af565b9eee448d82a8c:edd70e76f3529411a748168f6eb1a61f29702123-0' :
+        'biocontainers/mulled-v2-731b8c4cf44d76e9aa181af565b9eee448d82a8c:edd70e76f3529411a748168f6eb1a61f29702123-0' }"
 
     input:
     tuple val(meta), path(bams), path(bais), path(bed)
@@ -20,6 +22,7 @@ process VARDICTJAVA {
     script:
     def args = task.ext.args ?: '-c 1 -S 2 -E 3'
     def args2 = task.ext.args2 ?: ''
+    def args3 = task.ext.args3 ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
 
     def somatic = bams instanceof List && bams.size() == 2 ? true : false
@@ -37,8 +40,7 @@ process VARDICTJAVA {
     | ${filter} \\
     | ${convert_to_vcf} \\
         ${args2} \\
-    > ${prefix}.vcf
-    bgzip ${prefix}.vcf
+    | bgzip ${args3} --threads ${task.cpus} > ${prefix}.vcf.gz
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -50,10 +52,11 @@ process VARDICTJAVA {
     stub:
     def args = task.ext.args ?: '-c 1 -S 2 -E 3'
     def args2 = task.ext.args2 ?: ''
+    def args3 = task.ext.args3 ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
 
     """
-    touch ${prefix}.vcf.gz
+    echo '' | gzip > ${prefix}.vcf.gz
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
