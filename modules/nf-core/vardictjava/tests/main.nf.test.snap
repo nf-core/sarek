@@ -7,7 +7,7 @@
                         {
                             "id": "test"
                         },
-                        "test.vcf:md5,e8411ecae49b4f6afa6ea0b681ea506e"
+                        "test.vcf.gz:md5,e8411ecae49b4f6afa6ea0b681ea506e"
                     ]
                 ],
                 "1": [
@@ -18,7 +18,7 @@
                         {
                             "id": "test"
                         },
-                        "test.vcf:md5,e8411ecae49b4f6afa6ea0b681ea506e"
+                        "test.vcf.gz:md5,e8411ecae49b4f6afa6ea0b681ea506e"
                     ]
                 ],
                 "versions": [
@@ -28,9 +28,9 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2023-10-24T09:24:20.923172332"
+        "timestamp": "2024-07-04T19:08:38.328190023"
     },
     "homo_sapiens - [[bam, bam], [bai, bai], bed] - fasta - fai": {
         "content": [
@@ -40,7 +40,7 @@
                         {
                             "id": "test"
                         },
-                        "test.vcf:md5,b52c874c18be636d876d1e0df4a449c3"
+                        "test.vcf.gz:md5,b52c874c18be636d876d1e0df4a449c3"
                     ]
                 ],
                 "1": [
@@ -51,7 +51,7 @@
                         {
                             "id": "test"
                         },
-                        "test.vcf:md5,b52c874c18be636d876d1e0df4a449c3"
+                        "test.vcf.gz:md5,b52c874c18be636d876d1e0df4a449c3"
                     ]
                 ],
                 "versions": [
@@ -61,8 +61,8 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-05-15T05:05:37.320114013"
+        "timestamp": "2024-07-04T19:08:54.416661915"
     }
 }
