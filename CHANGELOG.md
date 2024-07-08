@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - [#1502](https://github.com/nf-core/sarek/pull/1502) - export CNVs into VCF format in `bam_variant_calling_cnvkit`
-- [#1534](https://github.com/nf-core/sarek/pull/1534) - Handling `.fastq.gz.spring` files as input
+- [#1534](https://github.com/nf-core/sarek/pull/1534), [#1573](https://github.com/nf-core/sarek/pull/1573) - Handling `.fastq.gz.spring` files as input
 
 ### Changed
 
