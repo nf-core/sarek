@@ -1,0 +1,25 @@
+{
+    "Single-End": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.bam:md5,c95a3243fcd7df16481f67ad0466696b",
+                    "test.bam.bai:md5,6fc1dff58fab0491ecfa48f016041a18"
+                ]
+            ],
+            [
+                "versions.yml:md5,6095ad80036c5d876c2616504a21efcc"
+            ],
+            "test.bam"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-02T21:21:33.954680566"
+    }
+}

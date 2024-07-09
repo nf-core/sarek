@@ -406,7 +406,7 @@
                     },
                     "sentieon/bwamem": {
                         "branch": "master",
-                        "git_sha": "e809c6b078d5343bdf8b5b2b78483096a2b5a973",
+                        "git_sha": "ef272ea44cc0c6282f3a00ab949f1ed5ce12042b",
                         "installed_by": ["modules"]
                     },
                     "sentieon/dedup": {
