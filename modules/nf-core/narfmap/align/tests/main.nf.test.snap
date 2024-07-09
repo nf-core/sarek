@@ -1,7 +1,15 @@
 {
-    "sarscov2 - [fastq1, fastq2], hashtable, fasta, false": {
+    "homo_sapiens - [fastq1, fastq2], hashtable, true": {
         "content": [
-            "test.bam",
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.bam:md5,5c407c8e621fc931af17a585526598bf"
+                ]
+            ],
             [
                 "decompHashTableCtxInit...",
                 "decompHashTableHeader...",
@@ -10,17 +18,51 @@
                 "decompHashTableAutoHits...",
                 "decompHashTableSetFlags..."
             ],
-            "versions.yml"
+            [
+                "versions.yml:md5,f7f7afeeca9aecd25ef825978aac55d7"
+            ]
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-03-20T10:46:54.961203552"
+        "timestamp": "2024-07-08T12:31:24.171738358"
     },
-    "homo_sapiens - [fastq1, fastq2], hashtable, fasta, true": {
+    "sarscov2 - [fastq1, fastq2], hashtable, true - stub": {
         "content": [
-            "test.bam",
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                ]
+            ],
+            [
+                
+            ],
+            [
+                "versions.yml:md5,f7f7afeeca9aecd25ef825978aac55d7"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-08T12:31:44.736492735"
+    },
+    "sarscov2 - fastq, hashtable, false": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.bam:md5,ea3a6f419b6c8f91e99603058c608124"
+                ]
+            ],
             [
                 "decompHashTableCtxInit...",
                 "decompHashTableHeader...",
@@ -29,17 +71,27 @@
                 "decompHashTableAutoHits...",
                 "decompHashTableSetFlags..."
             ],
-            "versions.yml"
+            [
+                "versions.yml:md5,f7f7afeeca9aecd25ef825978aac55d7"
+            ]
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-03-20T10:47:24.495131137"
+        "timestamp": "2024-07-08T12:19:58.278501718"
     },
-    "sarscov2 - fastq, hashtable, fasta, true": {
+    "sarscov2 - fastq, hashtable, true": {
         "content": [
-            "test.bam",
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": true
+                    },
+                    "test.bam:md5,e2632fce5442e05210edd516715489c4"
+                ]
+            ],
             [
                 "decompHashTableCtxInit...",
                 "decompHashTableHeader...",
@@ -48,17 +100,27 @@
                 "decompHashTableAutoHits...",
                 "decompHashTableSetFlags..."
             ],
-            "versions.yml"
+            [
+                "versions.yml:md5,f7f7afeeca9aecd25ef825978aac55d7"
+            ]
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-03-20T10:46:42.57679755"
+        "timestamp": "2024-07-08T12:20:22.893500585"
     },
-    "sarscov2 - [fastq1, fastq2], hashtable, fasta, true": {
+    "sarscov2 - [fastq1, fastq2], hashtable, false": {
         "content": [
-            "test.bam",
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.bam:md5,ef0c12ae27778b906fd4f822ef7ce074"
+                ]
+            ],
             [
                 "decompHashTableCtxInit...",
                 "decompHashTableHeader...",
@@ -67,29 +129,27 @@
                 "decompHashTableAutoHits...",
                 "decompHashTableSetFlags..."
             ],
-            "versions.yml"
+            [
+                "versions.yml:md5,f7f7afeeca9aecd25ef825978aac55d7"
+            ]
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-03-20T10:47:08.943445149"
+        "timestamp": "2024-07-08T12:20:54.147168602"
     },
-    "sarscov2 - [fastq1, fastq2], hashtable, fasta, true - stub": {
+    "sarscov2 - [fastq1, fastq2], hashtable, true": {
         "content": [
-            "test.bam",
-            "test.log",
-            "versions.yml"
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
-        },
-        "timestamp": "2024-03-20T10:47:38.346392133"
-    },
-    "sarscov2 - fastq, hashtable, fasta, false": {
-        "content": [
-            "test.bam",
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.bam:md5,54965e6a11a9c31b1ae3c7e896c96c32"
+                ]
+            ],
             [
                 "decompHashTableCtxInit...",
                 "decompHashTableHeader...",
@@ -98,12 +158,14 @@
                 "decompHashTableAutoHits...",
                 "decompHashTableSetFlags..."
             ],
-            "versions.yml"
+            [
+                "versions.yml:md5,f7f7afeeca9aecd25ef825978aac55d7"
+            ]
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-03-20T10:46:28.406548681"
+        "timestamp": "2024-07-08T12:21:06.378368579"
     }
 }

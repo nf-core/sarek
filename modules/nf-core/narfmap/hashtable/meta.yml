@@ -8,9 +8,9 @@ keywords:
 tools:
   - narfmap:
       description: narfmap is a fork of the Dragen mapper/aligner Open Source Software.
-      homepage: https://github.com/emiller88/narfmap
-      documentation: https://github.com/Emiller88/NARFMAP/blob/main/doc/usage.md#basic-command-line-usage
-      tool_dev_url: https://github.com/emiller88/narfmap
+      homepage: https://github.com/edmundmiller/narfmap
+      documentation: https://github.com/edmundmiller/NARFMAP/blob/main/doc/usage.md#basic-command-line-usage
+      tool_dev_url: https://github.com/edmundmiller/narfmap
       licence: ["GPL v3"]
 input:
   - meta:

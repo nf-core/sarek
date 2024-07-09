@@ -7,8 +7,9 @@ nextflow_process {
     tag "modules_nfcore"
     tag "narfmap"
     tag "narfmap/align"
+    tag "narfmap/hashtable"
 
-    test("sarscov2 - fastq, hashtable, fasta, false") {
+    test("sarscov2 - fastq, hashtable, false") {
 
         setup {
             run("NARFMAP_HASHTABLE") {
@@ -17,7 +18,7 @@ nextflow_process {
                     """
                     input[0] = [
                         [id:'test'],
-                        file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                        file(params.test_data['sarscov2']['genome']['genome_fasta'], checkIfExists: true)
                     ]
                     """
                 }
@@ -29,7 +30,7 @@ nextflow_process {
                 """
                 input[0] = [
                     [ id:'test', single_end:true ], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)
+                    file(params.test_data['sarscov2']['illumina']['test_1_fastq_gz'], checkIfExists: true)
                 ]
                 input[1] = NARFMAP_HASHTABLE.out.hashmap
                 input[2] = false //sort
@@ -41,16 +42,17 @@ nextflow_process {
             assertAll (
                 { assert process.success },
                 { assert snapshot(
-                    file(process.out.bam[0][1]).name,
+                    process.out.bam,
                     file(process.out.log[0][1]).readLines().findAll { it.startsWith("decompHash") },
-                    file(process.out.versions[0]).name
-                ).match() }
+                    process.out.versions,
+                ).match()
+                }
             )
         }
 
     }
 
-    test("sarscov2 - fastq, hashtable, fasta, true") {
+    test("sarscov2 - fastq, hashtable, true") {
 
         setup {
             run("NARFMAP_HASHTABLE") {
@@ -59,7 +61,7 @@ nextflow_process {
                     """
                     input[0] = [
                         [id:'test'],
-                        file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                        file(params.test_data['sarscov2']['genome']['genome_fasta'], checkIfExists: true)
                     ]
                     """
                 }
@@ -71,7 +73,7 @@ nextflow_process {
                 """
                 input[0] = [
                     [ id:'test', single_end:true ], // meta map
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)
+                    file(params.test_data['sarscov2']['illumina']['test_1_fastq_gz'], checkIfExists: true)
                 ]
                 input[1] = NARFMAP_HASHTABLE.out.hashmap
                 input[2] = true //sort
@@ -83,16 +85,17 @@ nextflow_process {
             assertAll (
                 { assert process.success },
                 { assert snapshot(
-                    file(process.out.bam[0][1]).name,
+                    process.out.bam,
                     file(process.out.log[0][1]).readLines().findAll { it.startsWith("decompHash") },
-                    file(process.out.versions[0]).name
-                ).match() }
+                    process.out.versions,
+                ).match()
+                }
             )
         }
 
     }
 
-    test("sarscov2 - [fastq1, fastq2], hashtable, fasta, false") {
+    test("sarscov2 - [fastq1, fastq2], hashtable, false") {
 
         setup {
             run("NARFMAP_HASHTABLE") {
@@ -101,7 +104,7 @@ nextflow_process {
                     """
                     input[0] = [
                         [id:'test'],
-                        file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                        file(params.test_data['sarscov2']['genome']['genome_fasta'], checkIfExists: true)
                     ]
                     """
                 }
@@ -114,8 +117,8 @@ nextflow_process {
                 input[0] = [
                     [ id:'test', single_end:false ], // meta map
                     [
-                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
-                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
+                        file(params.test_data['sarscov2']['illumina']['test_1_fastq_gz'], checkIfExists: true),
+                        file(params.test_data['sarscov2']['illumina']['test_2_fastq_gz'], checkIfExists: true)
                     ]
                 ]
                 input[1] = NARFMAP_HASHTABLE.out.hashmap
@@ -128,16 +131,17 @@ nextflow_process {
             assertAll (
                 { assert process.success },
                 { assert snapshot(
-                    file(process.out.bam[0][1]).name,
+                    process.out.bam,
                     file(process.out.log[0][1]).readLines().findAll { it.startsWith("decompHash") },
-                    file(process.out.versions[0]).name
-                ).match() }
+                    process.out.versions,
+                ).match()
+                }
             )
         }
 
     }
 
-    test("sarscov2 - [fastq1, fastq2], hashtable, fasta, true") {
+    test("sarscov2 - [fastq1, fastq2], hashtable, true") {
 
         setup {
             run("NARFMAP_HASHTABLE") {
@@ -146,7 +150,7 @@ nextflow_process {
                     """
                     input[0] = [
                         [id:'test'],
-                        file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                        file(params.test_data['sarscov2']['genome']['genome_fasta'], checkIfExists: true)
                     ]
                     """
                 }
@@ -159,8 +163,8 @@ nextflow_process {
                 input[0] = [
                     [ id:'test', single_end:false ], // meta map
                     [
-                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
-                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
+                        file(params.test_data['sarscov2']['illumina']['test_1_fastq_gz'], checkIfExists: true),
+                        file(params.test_data['sarscov2']['illumina']['test_2_fastq_gz'], checkIfExists: true)
                     ]
                 ]
                 input[1] = NARFMAP_HASHTABLE.out.hashmap
@@ -173,16 +177,17 @@ nextflow_process {
             assertAll (
                 { assert process.success },
                 { assert snapshot(
-                    file(process.out.bam[0][1]).name,
+                    process.out.bam,
                     file(process.out.log[0][1]).readLines().findAll { it.startsWith("decompHash") },
-                    file(process.out.versions[0]).name
-                ).match() }
+                    process.out.versions,
+                ).match()
+                }
             )
         }
 
     }
 
-    test("homo_sapiens - [fastq1, fastq2], hashtable, fasta, true") {
+    test("homo_sapiens - [fastq1, fastq2], hashtable, true") {
 
         setup {
             run("NARFMAP_HASHTABLE") {
@@ -191,7 +196,7 @@ nextflow_process {
                     """
                     input[0] = [
                         [id:'test'],
-                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
+                        file(params.test_data['homo_sapiens']['genome']['genome_fasta'], checkIfExists: true)
                     ]
                     """
                 }
@@ -204,8 +209,8 @@ nextflow_process {
                 input[0] = [
                     [ id:'test', single_end:false ], // meta map
                     [
-                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
-                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
+                        file(params.test_data['homo_sapiens']['illumina']['test_1_fastq_gz'], checkIfExists: true),
+                        file(params.test_data['homo_sapiens']['illumina']['test_2_fastq_gz'], checkIfExists: true)
                     ]
                 ]
                 input[1] = NARFMAP_HASHTABLE.out.hashmap
@@ -218,16 +223,17 @@ nextflow_process {
             assertAll (
                 { assert process.success },
                 { assert snapshot(
-                    file(process.out.bam[0][1]).name,
+                    process.out.bam,
                     file(process.out.log[0][1]).readLines().findAll { it.startsWith("decompHash") },
-                    file(process.out.versions[0]).name
-                ).match() }
+                    process.out.versions,
+                ).match()
+                }
             )
         }
 
     }
 
-    test("sarscov2 - [fastq1, fastq2], hashtable, fasta, true - stub") {
+    test("sarscov2 - [fastq1, fastq2], hashtable, true - stub") {
 
         options "-stub"
         setup {
@@ -237,7 +243,7 @@ nextflow_process {
                     """
                     input[0] = [
                         [id:'test'],
-                        file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                        file(params.test_data['sarscov2']['genome']['genome_fasta'], checkIfExists: true)
                     ]
                     """
                 }
@@ -250,8 +256,8 @@ nextflow_process {
                 input[0] = [
                     [ id:'test', single_end:false ], // meta map
                     [
-                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
-                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
+                        file(params.test_data['sarscov2']['illumina']['test_1_fastq_gz'], checkIfExists: true),
+                        file(params.test_data['sarscov2']['illumina']['test_2_fastq_gz'], checkIfExists: true)
                     ]
                 ]
                 input[1] = NARFMAP_HASHTABLE.out.hashmap
@@ -264,13 +270,12 @@ nextflow_process {
             assertAll (
                 { assert process.success },
                 { assert snapshot(
-                    file(process.out.bam[0][1]).name,
-                    file(process.out.log[0][1]).name,
-                    file(process.out.versions[0]).name
-                ).match() }
+                    process.out.bam,
+                    file(process.out.log[0][1]).readLines().findAll { it.startsWith("decompHash") },
+                    process.out.versions,
+                ).match()
+                }
             )
         }
-
     }
-
 }

@@ -5,4 +5,4 @@ channels:
   - defaults
 dependencies:
   # renovate: datasource=conda depName=bioconda/narfmap
-  - bioconda::narfmap=1.4.0
+  - bioconda::narfmap=1.4.2

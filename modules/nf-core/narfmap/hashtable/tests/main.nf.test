@@ -64,6 +64,6 @@ nextflow_process {
     }
 
     // TODO Add test using alt-masked bed file
-    // TODO Fix link https://github.com/emiller88/narfmap#build-hash-table-using-an-alt-masked-bed-file
+    // TODO Fix link https://github.com/edmundmiller/narfmap#build-hash-table-using-an-alt-masked-bed-file
 
 }

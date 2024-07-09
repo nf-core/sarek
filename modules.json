@@ -334,12 +334,12 @@
                     },
                     "narfmap/align": {
                         "branch": "master",
-                        "git_sha": "4a68b3ddb2fa36c16b4c11d594d7fb874612b053",
+                        "git_sha": "c549fe261732dcd4d849ec0bc0619240fb7ffbce",
                         "installed_by": ["modules"]
                     },
                     "narfmap/hashtable": {
                         "branch": "master",
-                        "git_sha": "4a68b3ddb2fa36c16b4c11d594d7fb874612b053",
+                        "git_sha": "ccedf37dca54eade28835aa3ce98491a7df6339e",
                         "installed_by": ["modules"]
                     },
                     "ngscheckmate/ncm": {
