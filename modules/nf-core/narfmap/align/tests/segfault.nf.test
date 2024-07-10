@@ -35,7 +35,8 @@ nextflow_process {
                     file('https://raw.githubusercontent.com/nf-core/test-datasets/nascent/testdata/SRX882903_T2.fastq.gz', checkIfExists: true)
                 ]
                 input[1] = NARFMAP_HASHTABLE.out.hashmap
-                input[2] = false //sort
+                input[2] = [[:],[]]
+                input[3] = false //sort
                 """
             }
         }

@@ -334,7 +334,7 @@
                     },
                     "narfmap/align": {
                         "branch": "master",
-                        "git_sha": "c549fe261732dcd4d849ec0bc0619240fb7ffbce",
+                        "git_sha": "cef718b8f7625ee3ea0ffd754c44e20a1a36bbc5",
                         "installed_by": ["modules"]
                     },
                     "narfmap/hashtable": {

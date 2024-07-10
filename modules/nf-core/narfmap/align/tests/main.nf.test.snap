@@ -52,6 +52,29 @@
         },
         "timestamp": "2024-07-08T12:31:44.736492735"
     },
+    "sarscov2 - CRAM": {
+        "content": [
+            null,
+            null,
+            null,
+            [
+                "versions.yml:md5,f7f7afeeca9aecd25ef825978aac55d7"
+            ],
+            [
+                "decompHashTableCtxInit...",
+                "decompHashTableHeader...",
+                "decompHashTableLiterals...",
+                "decompHashTableExtIndex...",
+                "decompHashTableAutoHits...",
+                "decompHashTableSetFlags..."
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-09T14:58:38.514332124"
+    },
     "sarscov2 - fastq, hashtable, false": {
         "content": [
             [
