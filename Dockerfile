@@ -21,7 +21,7 @@ arg DEBIAN_FRONTEND=noninteractive
 
 # Latch SDK
 # DO NOT REMOVE
-run pip install latch==2.46.6
+run pip install latch==2.47.2
 run mkdir /opt/latch
 run apt-get update && apt-get install -y default-jre-headless
 
