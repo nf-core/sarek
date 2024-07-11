@@ -67,6 +67,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     vcf_sentieon_haplotyper  = Channel.empty()
     vcf_strelka              = Channel.empty()
     vcf_tiddit               = Channel.empty()
+    vcf_dysgu                = Channel.empty()
 
     // BCFTOOLS MPILEUP
     if (tools.split(',').contains('mpileup')) {
@@ -189,6 +190,18 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
 
         vcf_manta = BAM_VARIANT_CALLING_GERMLINE_MANTA.out.vcf
         versions = versions.mix(BAM_VARIANT_CALLING_GERMLINE_MANTA.out.versions)
+    }
+
+    // DYSGU
+    if (tools.split(',').contains('dysgu')) {
+        BAM_VARIANT_CALLING_DYSGU (
+            cram,
+            fasta,
+            fasta_fai
+        )
+
+        vcf_dysgu = BAM_VARIANT_CALLING_GERMLINE_DYSGU.out.vcf
+        versions = versions.mix(BAM_VARIANT_CALLING_GERMLINE_DYSGU.out.versions)
     }
 
     // SENTIEON DNASCOPE
@@ -350,7 +363,8 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         vcf_mpileup,
         vcf_sentieon_haplotyper,
         vcf_strelka,
-        vcf_tiddit
+        vcf_tiddit,
+        vcf_dysgu
     )
 
     emit:
@@ -366,6 +380,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     vcf_sentieon_dnascope
     vcf_sentieon_haplotyper
     vcf_tiddit
+    vcf_dysgu
 
     versions
 }
