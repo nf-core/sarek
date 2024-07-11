@@ -1,0 +1,7 @@
+name: dysgu
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - dysgu

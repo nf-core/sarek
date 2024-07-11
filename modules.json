@@ -129,6 +129,11 @@
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/dragmap/hashtable/dragmap-hashtable.diff"
                     },
+                    "dysgu": {
+                        "branch": "master",
+                        "git_sha": "c27498285a0beca2239b395cf88129c586a837fc",
+                        "installed_by": ["modules"]
+                    },
                     "ensemblvep/download": {
                         "branch": "master",
                         "git_sha": "3db4f8488315cd7d7cf3fcb64251f6603210e831",

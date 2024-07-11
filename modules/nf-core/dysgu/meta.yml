@@ -1,0 +1,68 @@
+name: dysgu
+
+description: Dysgu calls structural variants (SVs) from mapped sequencing reads. It is designed for accurate and efficient detection of structural variations.
+keywords:
+  - structural variants
+  - sv
+  - vcf
+tools:
+  - dysgu:
+      description: Structural variant caller for mapped sequencing data
+      homepage: https://github.com/kcleal/dysgu
+      documentation: https://github.com/kcleal/dysgu/blob/master/README.rst
+      tool_dev_url: https://github.com/kcleal/dysgu
+      doi: "10.1093/nar/gkac039"
+      licence: ["GPL-3.0-or-later"]
+
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. `[ id:'sample1' ]`
+  - input:
+      type: file
+      description: Input BAM file
+      pattern: "*.bam"
+  - index:
+      type: file
+      description: BAM index file
+      pattern: "*.bai"
+  - fasta:
+      type: file
+      description: Genome reference FASTA file
+      pattern: "*.{fa,fasta}"
+  - meta2:
+      type: map
+      description: |
+        Groovy Map containing reference information
+        e.g. [ id:'genome' ]
+  - fai:
+      type: file
+      description: Genome reference FASTA index file
+      pattern: "*.{fa.fai,fasta.fai}"
+
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'sample1' ]
+  - vcf:
+      type: file
+      description: VCF file with identified structural variants
+      pattern: "*.{vcf.gz}"
+  - tbi:
+      type: file
+      description: The index of the BCF/VCF file
+      pattern: "*.{vcf.gz.tbi}"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+
+authors:
+  - "@famosab"
+  - "@poddarharsh15"
+maintainers:
+  - "@poddarharsh15"
