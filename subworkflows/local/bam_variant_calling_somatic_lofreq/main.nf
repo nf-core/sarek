@@ -1,4 +1,4 @@
-include { LOFREQ_SOMATIC } from '../../../modules/nf-core/lofreq/somatic/main '
+include { LOFREQ_SOMATIC } from '../../../modules/nf-core/lofreq/somatic/main.nf'
 
 workflow BAM_VARIANT_CALLING_SOMATIC_LOFREQ {
     take:
