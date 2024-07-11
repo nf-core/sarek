@@ -7,7 +7,7 @@
 include { DYSGU } from '../../../modules/nf-core/dysgu/main'
 
 // Seems to be the consensus on upstream modules implementation too
-workflow BAM_VARIANT_CALLING_GERMLINE_DYSGU {
+workflow BAM_VARIANT_CALLING_DYSGU {
     take:
     cram          // channel: [mandatory] [ meta, cram, crai ]
     fasta         // channel: [mandatory] [ meta, fasta ]
