@@ -18,7 +18,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_DYSGU {
     versions = Channel.empty()
 
     // Combine cram and intervals, account for 0 intervals
-    cram_intervals = cram.combine(intervals).map{ it ->
+    cram_intervals = cram.combine(intervals).map { it ->
         bed_gz = it.size() > 3 ? it[3] : []
         bed_tbi = it.size() > 3 ? it[4] : []
 
@@ -27,12 +27,11 @@ workflow BAM_VARIANT_CALLING_GERMLINE_DYSGU {
 
     DYSGU(cram_intervals, fasta, fasta_fai, [])
 
-    
     dysgu_vcf = DYSGU.out.vcf
 
     // Only dysgu SV should get annotated
     // add variantcaller to meta map
-    vcf = dysgu_vcf.map{ meta, vcf -> [ meta + [ variantcaller:'dysgu' ], vcf ] }
+    vcf = dysgu_vcf.map { meta, vcf -> [ meta + [ variantcaller:'dysgu' ], vcf ] }
 
     versions = versions.mix(DYSGU.out.versions)
 
