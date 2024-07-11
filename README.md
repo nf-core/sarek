@@ -60,6 +60,7 @@ Depending on the options and samples provided, the pipeline can currently perfor
   - `Sentieon Haplotyper`
   - `Strelka2`
   - `TIDDIT`
+  - `Lofreq`
 - Variant filtering and annotation (`SnpEff`, `Ensembl VEP`, `BCFtools annotate`)
 - Summarise and represent QC (`MultiQC`)
 

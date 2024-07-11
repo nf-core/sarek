@@ -12,6 +12,7 @@ include { BAM_VARIANT_CALLING_SOMATIC_MANTA             } from '../bam_variant_c
 include { BAM_VARIANT_CALLING_SOMATIC_MUTECT2           } from '../bam_variant_calling_somatic_mutect2/main'
 include { BAM_VARIANT_CALLING_SOMATIC_STRELKA           } from '../bam_variant_calling_somatic_strelka/main'
 include { BAM_VARIANT_CALLING_SOMATIC_TIDDIT            } from '../bam_variant_calling_somatic_tiddit/main'
+include { BAM_VARIANT_CALLING_SOMATIC_LOFREQ            } from '../bam_variant_calling_somatic_lofreq/main'
 include { MSISENSORPRO_MSISOMATIC                       } from '../../../modules/nf-core/msisensorpro/msisomatic/main'
 
 workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
@@ -209,6 +210,18 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_MUTECT2.out.versions)
     }
 
+    //LOFREQ
+    if (tools.split(',').contains('lofreq')) {
+        BAM_VARIANT_CALLING_SOMATIC_LOFREQ(
+            cram,
+            fasta,
+            fasta_fai,
+            interval
+        )
+        vcf_lofreq = BAM_VARIANT_CALLING_SOMATIC_LOFREQ.out.vcf
+        versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_LOFREQ.out.versions)
+    }
+
     // TIDDIT
     if (tools.split(',').contains('tiddit')) {
         BAM_VARIANT_CALLING_SOMATIC_TIDDIT(
@@ -228,7 +241,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         vcf_manta,
         vcf_mutect2,
         vcf_strelka,
-        vcf_tiddit
+        vcf_tiddit,
+        vcf_lofreq
     )
 
     emit:
@@ -239,6 +253,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     vcf_mutect2
     vcf_strelka
     vcf_tiddit
+    vcf_lofreq
 
     versions
 }

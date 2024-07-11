@@ -134,6 +134,11 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2.out.versions)
     }
 
+    //LOFREQ
+    if (tools.split(',').contains('lofreq')) {
+        
+    }
+
     // MANTA
     if (tools.split(',').contains('manta')) {
         BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA(
