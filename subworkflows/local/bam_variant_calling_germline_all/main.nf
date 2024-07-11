@@ -17,6 +17,7 @@ include { BAM_VARIANT_CALLING_SINGLE_TIDDIT                                     
 include { SENTIEON_DNAMODELAPPLY                                                       } from '../../../modules/nf-core/sentieon/dnamodelapply/main'
 include { VCF_VARIANT_FILTERING_GATK                                                   } from '../vcf_variant_filtering_gatk/main'
 include { VCF_VARIANT_FILTERING_GATK as SENTIEON_HAPLOTYPER_VCF_VARIANT_FILTERING_GATK } from '../vcf_variant_filtering_gatk/main'
+include { BAM_VARIANT_CALLING_DYSGU                                                    } from '../bam_variant_calling_dysgu/main'
 
 
 
