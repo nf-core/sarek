@@ -1,0 +1,106 @@
+nextflow_process {
+
+    name "Test Process GATK4_CALCULATECONTAMINATION"
+    script "../main.nf"
+    process "GATK4_CALCULATECONTAMINATION"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "gatk4"
+    tag "gatk4/calculatecontamination"
+
+    test("human - pileup-table") {
+
+        when {
+            process {
+                """
+                input[0] = [ [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/gatk/test2.pileups.table', checkIfExists: true),
+                    [] ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out.versions).match("versions") },
+                { assert snapshot(file(process.out.contamination.get(0).get(1)).readLines()[0]).match() }
+            )
+        }
+
+    }
+
+    test("human - pileup-table - matched-pair") {
+
+        when {
+            process {
+                """
+                input[0] = [ [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/gatk/test2.pileups.table', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/gatk/test.pileups.table', checkIfExists: true)
+                    ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out.versions).match("versions_pair") },
+                { assert snapshot(file(process.out.contamination.get(0).get(1)).readLines()[0]).match() }
+            )
+        }
+
+    }
+
+    test("human - pileup-table - segmentation") {
+
+        config "./nextflow.config"
+
+        when {
+            process {
+                """
+                input[0] = [ [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/gatk/test2.pileups.table', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/gatk/test.pileups.table', checkIfExists: true)
+                    ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out.versions).match("versions_segmentation") },
+                { assert snapshot(file(process.out.contamination.get(0).get(1)).readLines()[0]).match("contamination") },
+                { assert snapshot(file(process.out.segmentation.get(0).get(1)).readLines()[0]).match("segmentation") }
+            )
+        }
+
+    }
+
+    test("human - pileup-table - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [ [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/gatk/test2.pileups.table', checkIfExists: true),
+                    [] ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+
+    }
+
+}

@@ -1,19 +1,16 @@
 repository_type: pipeline
+nf_core_version: "2.14.1"
 lint:
   actions_ci: False
   files_exist:
     - .github/workflows/awsfulltest.yml
     - .github/workflows/awstest.yml
     - conf/modules.config
-    - lib/WorkflowMain.groovy
-    - lib/NfcoreTemplate.groovy
-    - lib/WorkflowSarek.groovy
   files_unchanged:
     - .gitignore
     - .github/PULL_REQUEST_TEMPLATE.md
     - assets/nf-core-sarek_logo_light.png
     - docs/images/nf-core-sarek_logo_dark.png
     - docs/images/nf-core-sarek_logo_light.png
-    - lib/NfcoreTemplate.groovy
-    - lib/NfcoreSchema.groovy
+  modules_config: False
   template_strings: False

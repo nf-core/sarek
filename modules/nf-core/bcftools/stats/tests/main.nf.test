@@ -29,7 +29,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out.version).match("version") },
+                { assert snapshot(process.out.versions).match("versions") },
                 { assert snapshot(file(process.out.stats.get(0).get(1)).readLines()[0..5]).match() },
             )
         }
@@ -57,7 +57,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out.version).match("regions_version") },
+                { assert snapshot(process.out.versions).match("regions_versions") },
                 { assert snapshot(file(process.out.stats.get(0).get(1)).readLines()[0..5]).match() },
             )
         }
@@ -86,7 +86,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out.version).match("targets_version") },
+                { assert snapshot(process.out.versions).match("targets_versions") },
                 { assert snapshot(file(process.out.stats.get(0).get(1)).readLines()[0..5]).match() },
             )
         }
@@ -114,7 +114,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out.version).match("exon_version") },
+                { assert snapshot(process.out.versions).match("exon_versions") },
                 { assert snapshot(file(process.out.stats.get(0).get(1)).readLines()[0..5]).match() },
             )
         }
@@ -143,7 +143,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out.version).match("ref_version") },
+                { assert snapshot(process.out.versions).match("ref_versions") },
                 { assert snapshot(file(process.out.stats.get(0).get(1)).readLines()[0..5]).match() },
             )
         }

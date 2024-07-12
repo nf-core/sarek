@@ -1,0 +1,2 @@
+gatk4/mergemutectstats:
+  - "modules/nf-core/gatk4/mergemutectstats/**"

@@ -1,0 +1,2 @@
+gatk4/createsequencedictionary:
+  - "modules/nf-core/gatk4/createsequencedictionary/**"
