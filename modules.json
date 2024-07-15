@@ -496,7 +496,7 @@
                     },
                     "vardictjava": {
                         "branch": "master",
-                        "git_sha": "a0fdd948e3e59c8e020fc9d94cb54e0da143c07c",
+                        "git_sha": "27e170816808aedbbac23f9a1f2c7488d4b6d342",
                         "installed_by": ["modules"]
                     },
                     "vcftools": {
