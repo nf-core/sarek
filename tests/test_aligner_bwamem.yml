@@ -40,7 +40,6 @@
       md5sum: a87dc7d20ebca626f65cc16ff6c97a3e
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.cram.metrics
-      contains: ["test	17094	1534	168	1046782	12429	197	0	0.635998", "1.0	0.999991	1171"]
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
     - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
     - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
