@@ -11,6 +11,7 @@ include { BAM_VARIANT_CALLING_SINGLE_TIDDIT           } from '../bam_variant_cal
 include { BAM_VARIANT_CALLING_TUMOR_ONLY_CONTROLFREEC } from '../bam_variant_calling_tumor_only_controlfreec/main'
 include { BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA        } from '../bam_variant_calling_tumor_only_manta/main'
 include { BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2      } from '../bam_variant_calling_tumor_only_mutect2/main'
+include { BAM_VARIANT_CALLING_TUMOR_ONLY_LOFREQ       } from '../bam_variant_calling_tumor_only_lofreq/main'
 
 workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     take:
@@ -47,6 +48,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     vcf_mutect2     = Channel.empty()
     vcf_strelka     = Channel.empty()
     vcf_tiddit      = Channel.empty()
+    vcf_lofreq      = Channel.empty()
 
     // MPILEUP
     if (tools.split(',').contains('mpileup') || tools.split(',').contains('controlfreec')) {
@@ -136,7 +138,14 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
 
     //LOFREQ
     if (tools.split(',').contains('lofreq')) {
-        
+        BAM_VARIANT_CALLING_TUMOR_ONLY_LOFREQ(
+            cram,
+            fasta,
+            fasta_fai,
+            intervals
+        )
+        vcf_lofreq = BAM_VARIANT_CALLING_TUMOR_ONLY_LOFREQ.out.vcf
+        versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_LOFREQ.out.versions)
     }
 
     // MANTA
@@ -185,7 +194,8 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         vcf_mutect2,
         vcf_mpileup,
         vcf_strelka,
-        vcf_tiddit
+        vcf_tiddit,
+        vcf_lofreq
     )
 
     emit:
@@ -196,6 +206,7 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     vcf_mutect2
     vcf_strelka
     vcf_tiddit
+    vcf_lofreq
 
     versions = versions
 }

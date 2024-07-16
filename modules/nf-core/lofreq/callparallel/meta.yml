@@ -1,0 +1,62 @@
+name: lofreq_callparallel
+description: It predicts variants using multiple processors
+keywords:
+  - variant calling
+  - low frequency variant calling
+  - call
+  - variants
+tools:
+  - lofreq:
+      description: Lofreq is a fast and sensitive variant-caller for inferring SNVs and indels from next-generation sequencing data. It's call-parallel programme predicts variants using multiple processors
+      homepage: https://csb5.github.io/lofreq/
+      documentation: https://csb5.github.io/lofreq/
+      doi: "10.1093/nar/gks918"
+      licence: ["MIT"]
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test' ]
+  - bam:
+      type: file
+      description: Tumor sample sorted BAM file
+      pattern: "*.{bam}"
+  - bai:
+      type: file
+      description: BAM index file
+      pattern: "*.{bam.bai}"
+  - intervals:
+      type: file
+      description: BED file containing target regions for variant calling
+      pattern: "*.{bed}"
+  - fasta:
+      type: file
+      description: Reference genome FASTA file
+      pattern: "*.{fasta}"
+  - fai:
+      type: file
+      description: Reference genome FASTA index file
+      pattern: "*.{fai}"
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+  - vcf:
+      type: file
+      description: Predicted variants file
+      pattern: "*.{vcf}"
+authors:
+  - "@kaurravneet4123"
+  - "@bjohnnyd"
+maintainers:
+  - "@kaurravneet4123"
+  - "@bjohnnyd"
+  - "@nevinwu"
+  - "@AitorPeseta"

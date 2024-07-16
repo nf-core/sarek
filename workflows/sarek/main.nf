@@ -826,14 +826,13 @@ workflow SAREK {
         versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.versions)
         versions = versions.mix(POST_VARIANTCALLING.out.versions)
         versions = versions.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.versions)
-
         // ANNOTATE
         if (params.step == 'annotate') vcf_to_annotate = input_sample
-
+        
         if (params.tools.split(',').contains('merge') || params.tools.split(',').contains('snpeff') || params.tools.split(',').contains('vep')|| params.tools.split(',').contains('bcfann')) {
-
+           
             vep_fasta = (params.vep_include_fasta) ? fasta : [[id: 'null'], []]
-
+              
             VCF_ANNOTATE_ALL(
                 vcf_to_annotate.map{meta, vcf -> [ meta + [ file_name: vcf.baseName ], vcf ] },
                 vep_fasta,
@@ -848,6 +847,7 @@ workflow SAREK {
                 bcftools_annotations,
                 bcftools_annotations_tbi,
                 bcftools_header_lines)
+            
 
             // Gather used softwares versions
             versions = versions.mix(VCF_ANNOTATE_ALL.out.versions)
@@ -858,15 +858,17 @@ workflow SAREK {
     //
     // Collate and save software versions
     //
+    
     version_yaml = Channel.empty()
     if (!(params.skip_tools && params.skip_tools.split(',').contains('versions'))) {
         version_yaml = softwareVersionsToYAML(versions)
             .collectFile(storeDir: "${params.outdir}/pipeline_info", name: 'nf_core_sarek_software_mqc_versions.yml', sort: true, newLine: true)
     }
-
+  
     //
     // MODULE: MultiQC
     //
+
     if (!(params.skip_tools && params.skip_tools.split(',').contains('multiqc'))) {
 
         ch_multiqc_config                     = Channel.fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
@@ -889,7 +891,9 @@ workflow SAREK {
         )
         multiqc_report = MULTIQC.out.report.toList()
 
+VCF_QC_BCFTOOLS_VCFTOOLS
     }
+    
 
     emit:
     multiqc_report // channel: /path/to/multiqc_report.html

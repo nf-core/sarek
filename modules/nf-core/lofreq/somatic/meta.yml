@@ -12,7 +12,7 @@ tools:
       homepage: https://csb5.github.io/lofreq/
       documentation: https://csb5.github.io/lofreq/commands/
       doi: 10.1093/nar/gks918
-      licence: "['MIT']"
+      licence: ["MIT"]
 input:
   - meta:
       type: map
@@ -23,22 +23,22 @@ input:
   - meta3:
       type: map
       description: Groovy Map containing reference information
-  - tumor_bam:
+  - tumor:
       type: file
       description: tumor sample input BAM file
       pattern: "*.{bam}"
-  - tumor_bai:
+  - tumor_index:
       type: file
       description: tumor sample BAM index file
-      pattern: "*.{bai}"
-  - normal_bam:
+      pattern: "*.{bam.bai}"
+  - normal:
       type: file
       description: normal sample input BAM file
       pattern: "*.{bam}"
-  - normal_bai:
+  - normal_index:
       type: file
       description: normal sample BAM index file
-      pattern: "*.{bai}"
+      pattern: "*.{bam.bai}"
   - fasta:
       type: file
       description: Reference genome FASTA file
@@ -69,3 +69,4 @@ authors:
   - "@nevinwu"
 maintainers:
   - "@nevinwu"
+  - "@AitorPeseta"

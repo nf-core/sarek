@@ -54,6 +54,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     out_msisensorpro    = Channel.empty()
     vcf_mutect2         = Channel.empty()
     vcf_tiddit          = Channel.empty()
+    vcf_lofreq          = Channel.empty()
 
     if (tools.split(',').contains('ascat')) {
         BAM_VARIANT_CALLING_SOMATIC_ASCAT(
@@ -216,10 +217,13 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             cram,
             fasta,
             fasta_fai,
-            interval
+            intervals
         )
+        
         vcf_lofreq = BAM_VARIANT_CALLING_SOMATIC_LOFREQ.out.vcf
+        vcf_lofreq.view()
         versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_LOFREQ.out.versions)
+        
     }
 
     // TIDDIT
