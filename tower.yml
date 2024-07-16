@@ -51,9 +51,9 @@ reports:
     display: "Control-FREEC: parsable file with information about FREEC run"
   "**/reports/bcftools/*.bcftools_stats.txt":
     display: "All samples raw statistics"
-  "**/reports/SnpEff/*/*/*_snpEff.html":
+  "**/reports/snpeff/*/*/*_snpEff.html":
     display: "Statistics and plots for the SnpEff run"
-  "**/reports/SnpEff/*/*/*_snpEff.genes.txt":
+  "**/reports/snpeff/*/*/*_snpEff.genes.txt":
     display: "TXT (tab separated) summary counts for variants affecting each transcript and gene"
   "**/reports/EnsemblVEP/*/*/*_VEP.summary.html":
     display: "Summary of the VEP run"
