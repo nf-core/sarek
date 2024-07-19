@@ -215,13 +215,13 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     if (tools.split(',').contains('lofreq')) {
         BAM_VARIANT_CALLING_SOMATIC_LOFREQ(
             cram,
+            dict,
             fasta,
             fasta_fai,
             intervals
         )
         
         vcf_lofreq = BAM_VARIANT_CALLING_SOMATIC_LOFREQ.out.vcf
-        vcf_lofreq.view()
         versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_LOFREQ.out.versions)
         
     }

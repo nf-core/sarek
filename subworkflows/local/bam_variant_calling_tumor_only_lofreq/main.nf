@@ -2,7 +2,7 @@ include { LOFREQ_CALLPARALLEL } from '../../../modules/nf-core/lofreq/callparall
 
 workflow BAM_VARIANT_CALLING_TUMOR_ONLY_LOFREQ {
     take:
-    input     // channel: [mandatory] [ meta, tumor_bam, tumor_bai ]
+    input     // channel: [mandatory] [ meta, tumor_cram, tumor_crai ]
     fasta     // channel: [mandatory] [ fasta ]
     fai       // channel: [mandatory] [ fasta_fai ]
     intervals // channel: [mandatory] [ intervals ]
@@ -10,16 +10,15 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_LOFREQ {
     main:
     versions = Channel.empty()
 
-    intervals_ch = intervals.map{ bed, num -> [bed]}
-
-    input_intervals = input.combine(intervals_ch)
+    input_intervals = input.combine(intervals)
         // Sort channel elements for LOFREQ_SOMATIC module
-        .map {meta, tumor_bam, tumor_bai, intervals -> [meta, tumor_bam, tumor_bai, intervals]}
+        .map {meta, tumor_cram, tumor_crai, intervals, num_intervals -> [meta + [ num_intervals:num_intervals ], tumor_cram, tumor_crai, intervals]}
 
     LOFREQ_CALLPARALLEL(input_intervals, fasta, fai)
 
     
-    vcf = Channel.empty().mix(LOFREQ_CALLPARALLEL.out.vcf) 
+    vcf = Channel.empty().mix(LOFREQ_CALLPARALLEL.out.vcf)
+        .map{ meta, vcf -> [ meta + [ variantcaller:'lofreq' ], vcf ] }
     versions = versions.mix(LOFREQ_CALLPARALLEL.out.versions)
     
     emit:

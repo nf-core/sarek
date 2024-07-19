@@ -12,15 +12,18 @@ process LOFREQ_SOMATIC {
     tuple val(meta3), path(fai)
 
     output:
-    tuple val(meta), path("*.vcf.gz"), emit: vcf
-    path "versions.yml"              , emit: versions
+    tuple val(meta), path("*somatic_final.snvs.vcf.gz")      , emit: vcf_snvs
+    tuple val(meta), path("*somatic_final.snvs.vcf.gz.tbi")  , emit: vcf_snvs_tbi
+    tuple val(meta), path("*somatic_final.indels.vcf.gz")    , emit: vcf_indels
+    tuple val(meta), path("*somatic_final.indels.vcf.gz.tbi"), emit: vcf_indels_tbi
+    path "versions.yml"                                      , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
 
     script:
     def args = task.ext.args ?: ""
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${meta.id}_"
     def options_target_bed = target_bed ? "-l ${target_bed}" : ""
 
     def tumor_cram =  tumor.Extension == "cram" ? true : false
@@ -55,6 +58,11 @@ process LOFREQ_SOMATIC {
 
     $samtools_cram_remove
 
+    if [ -f "*_minus-dbsnp.snvs.vcf.gz" ]; then 
+        mv "*_minus-dbsnp.snvs.vcf.gz" ${prefix}somatic_final.snvs.vcf.gz
+    elif [ -f "*_minus-dbsnp.indels.vcf.gz" ]; then 
+        mv "*_minus-dbsnp.indels.vcf.gz" ${prefix}somatic_final.indels.vcf.gz 
+    fi
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         lofreq: \$(echo \$(lofreq version 2>&1) | sed 's/^version: //; s/ *commit.*\$//')
@@ -62,9 +70,12 @@ process LOFREQ_SOMATIC {
     """
 
     stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${meta.id}_"
     """
-    touch ${prefix}.vcf.gz
+    echo "" | gzip > ${prefix}somatic_final.snvs.vcf.gz
+    echo "" | gzip > ${prefix}somatic_final.snvs.vcf.gz.tbi
+    echo "" | gzip > ${prefix}somatic_final.indels.vcf.gz
+    echo "" | gzip > ${prefix}somatic_final.indels.vcf.gz.tbi
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

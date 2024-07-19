@@ -572,9 +572,26 @@ For further downstream analysis, take a look [here](https://github.com/Illumina/
 
 #### Lofreq
 
-[Lofreq](https://github.com/CSB5/lofreq) is a fast and sensitive variant-caller for inferring SNVs and indels from next-generation sequencing data. It makes full use of base-call qualities and other sources of errors inherent in sequencing, which are usually ignored by other methods or only used for filtering. For further reading and documentation see the [Strelka2 user guide](https://csb5.github.io/lofreq/).
+[Lofreq](https://github.com/CSB5/lofreq) is a fast and sensitive variant-caller for inferring SNVs and indels from next-generation sequencing data. It makes full use of base-call qualities and other sources of errors inherent in sequencing, which are usually ignored by other methods or only used for filtering. For further reading and documentation see the [Lofreq user guide](https://csb5.github.io/lofreq/).
 
+<details markdown = "1">
+<summary>Output files for tumor/normal paired samples</summary>
+
+**Output directory: `${outdir}/variant_calling/lofreq/${meta.id}/`**
+
+-`<tumorsample_vs_normalsample>somatic_final.indels.vcf.gz` and `<tumorsample_vs_normalsample>somatic_final.indels.vcf.gz.tbi`
+  - VCF with tabix index with all somatic indels inferred in the tumor sample.
+-`<tumorsample_vs_normalsample>somatic_final.snvs.vcf.gz` and `<tumorsample_vs_normalsample>somatic_final.snvs.vcf.gz.tbi `
+  - VCF with tabix index with all somatic SNVs inferred in the tumor sample.
 </details>
+
+<details markdown = "1">
+<summary>Output files for tumor-only samples</summary>
+
+**Output directory: `${outdir}/variant_calling/lofreq/${meta.id}/`**
+
+-`<tumorsample>.vcf.gz` and `CCR2_T_1_2.vcf.gz_cp`
+  -VCF with "gz_cp" which provides a detailed description of the detected genetic variants and a checkpoint to manage parallel execution and allow resumption in case of failures.
 
 
 ### Structural Variants
