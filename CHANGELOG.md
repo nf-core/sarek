@@ -39,6 +39,7 @@ Loametjåhkkå is another one of the main peaks of the Pårte massif.
 - [#1563](https://github.com/nf-core/sarek/pull/1563) - Fix `vep_cache_path_full` so that `--refseq/--merged` will work for ENSEMBLVEP
 - [#1570](https://github.com/nf-core/sarek/pull/1570) - Remove duplicated notes in FASTQC output docs
 - [#1596](https://github.com/nf-core/sarek/pull/1596) - Fix haplotypecaller tests
+- [#1597](https://github.com/nf-core/sarek/pull/1597) - Fix deepvariant tests
 
 ### Removed
 
