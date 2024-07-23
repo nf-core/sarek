@@ -58,10 +58,13 @@ process LOFREQ_SOMATIC {
 
     $samtools_cram_remove
 
-    if [ -f "*_minus-dbsnp.snvs.vcf.gz" ]; then 
-        mv "*_minus-dbsnp.snvs.vcf.gz" ${prefix}somatic_final.snvs.vcf.gz
-    elif [ -f "*_minus-dbsnp.indels.vcf.gz" ]; then 
-        mv "*_minus-dbsnp.indels.vcf.gz" ${prefix}somatic_final.indels.vcf.gz 
+    if [ -f "*_minus-dbsnp.snvs.vcf.gz" ] && [ -f "*_minus-dbsnp.indels.vcf.gz" ]; then
+
+        mv *somatic_final.snvs.vcf.gz  ${prefix}somatic.snvs.vcf.gz 
+        mv *somatic_final.indels.vcf.gz ${prefix}somatic.indels.vcf.gz
+
+        mv *_minus-dbsnp.snvs.vcf.gz ${prefix}somatic_final.snvs.vcf.gz 
+        mv *_minus-dbsnp.indels.vcf.gz ${prefix}somatic_final.indels.vcf.gz 
     fi
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

@@ -61,22 +61,10 @@ output:
       type: file
       description: File containing software versions
       pattern: "versions.yml"
-  - vcf_snvs:
+  - vcf:
       type: file
-      description: Gzipped VCF file containing SNV variants
+      description: Gzipped VCF file containing variants
       pattern: "*.{vcf.gz}"
-  - vcf_snvs_tbi:
-      type: file
-      description: Index for gzipped VCF file containing SNV variants
-      pattern: "*.{vcf.gz.tbi}"
-  - vcf_indels:
-      type: file
-      description: Gzipped VCF file containing indels variants
-      pattern: "*.{vcf.gz}"
-  - vcf_indels.tbi:
-      type: file
-      description: Index for gzipped VCF file containing indel variants
-      pattern: "*.{vcf.gz.tbi}"
 authors:
   - "@nevinwu"
 maintainers:

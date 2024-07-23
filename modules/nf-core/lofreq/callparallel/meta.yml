@@ -30,10 +30,20 @@ input:
       type: file
       description: BED file containing target regions for variant calling
       pattern: "*.{bed}"
+  - meta2:
+      type: map
+      description: |
+        Groovy Map containing sample information about the reference fasta
+        e.g. [ id:'reference' ]
   - fasta:
       type: file
       description: Reference genome FASTA file
       pattern: "*.{fasta}"
+  - meta3:
+      type: map
+      description: |
+        Groovy Map containing sample information about the reference fasta fai
+        e.g. [ id:'reference' ]
   - fai:
       type: file
       description: Reference genome FASTA index file

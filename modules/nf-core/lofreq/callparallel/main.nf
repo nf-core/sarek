@@ -8,9 +8,9 @@ process LOFREQ_CALLPARALLEL {
         'biocontainers/lofreq:2.1.5--py38h588ecb2_4' }"
 
     input:
-    tuple val(meta), path(bam), path(bai), path(intervals)
+    tuple val(meta) , path(bam), path(bai), path(intervals)
     tuple val(meta2), path(fasta)
-    tuple val(meta3), path (fai)
+    tuple val(meta3), path(fai)
 
     output:
     tuple val(meta), path("*.vcf.gz"), emit: vcf
@@ -58,7 +58,7 @@ process LOFREQ_CALLPARALLEL {
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    touch ${prefix}.vcf.gz
+    echo "" | gzip > ${prefix}.vcf.gz
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

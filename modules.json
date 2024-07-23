@@ -299,6 +299,11 @@
                         "git_sha": "da4d05d04e65227d4307e87940842f1a14de62c7",
                         "installed_by": ["modules"]
                     },
+                    "lofreq/callparallel": {
+                        "branch": "master",
+                        "git_sha": "94e871f884efe963381a04e173f21924c9e9aba2",
+                        "installed_by": ["modules"]
+                    },
                     "lofreq/somatic": {
                         "branch": "master",
                         "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
