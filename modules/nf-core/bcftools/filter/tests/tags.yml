@@ -1,0 +1,2 @@
+bcftools/filter:
+  - "modules/nf-core/bcftools/filter/**"

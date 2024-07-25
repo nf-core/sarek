@@ -218,12 +218,14 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             dict,
             fasta,
             fasta_fai,
+            dbsnp,
+            dbsnp_tbi,
             intervals
         )
-        
+
         vcf_lofreq = BAM_VARIANT_CALLING_SOMATIC_LOFREQ.out.vcf
         versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_LOFREQ.out.versions)
-        
+
     }
 
     // TIDDIT

@@ -10,6 +10,10 @@ process LOFREQ_SOMATIC {
     tuple val(meta), path(tumor), path(tumor_index), path(normal), path(normal_index), path(target_bed)
     tuple val(meta2), path(fasta)
     tuple val(meta3), path(fai)
+    //path(dbsnp)
+    //path(dbsnp_tbi)
+    tuple val(meta4), path(dbsnp)
+    tuple val(meta5), path(dbsnp_tbi)
 
     output:
     tuple val(meta), path("*somatic_final.snvs.vcf.gz")      , emit: vcf_snvs
@@ -37,6 +41,8 @@ process LOFREQ_SOMATIC {
     samtools_cram_convert += normal_cram ? "    samtools index $normal_out\n" : ''
     samtools_cram_convert += tumor_cram ? "    samtools view -T ${fasta} $tumor -@ $task.cpus -o $tumor_out\n" : ''
     samtools_cram_convert += tumor_cram ? "    samtools index ${tumor_out}\n" : ''
+    
+    def gr_command = dbsnp ? "-d $dbsnp" : ""
 
     def samtools_cram_remove = ''
     samtools_cram_remove += tumor_cram ? "     rm $tumor_out\n" : ''
@@ -50,6 +56,7 @@ process LOFREQ_SOMATIC {
         somatic \\
         --threads $task.cpus \\
         $args \\
+        $gr_command \\
         -f $fasta \\
         -t $tumor_out \\
         -n $normal_out \\
@@ -58,13 +65,17 @@ process LOFREQ_SOMATIC {
 
     $samtools_cram_remove
 
-    if [ -f "*_minus-dbsnp.snvs.vcf.gz" ] && [ -f "*_minus-dbsnp.indels.vcf.gz" ]; then
+    if [ -f *_minus-dbsnp.snvs.vcf.gz ] && [ -f *_minus-dbsnp.indels.vcf.gz ]; then
 
         mv *somatic_final.snvs.vcf.gz  ${prefix}somatic.snvs.vcf.gz 
         mv *somatic_final.indels.vcf.gz ${prefix}somatic.indels.vcf.gz
+        mv *somatic_final.snvs.vcf.gz.tbi  ${prefix}somatic.snvs.vcf.gz.tbi 
+        mv *somatic_final.indels.vcf.gz.tbi ${prefix}somatic.indels.vcf.gz.tbi
 
         mv *_minus-dbsnp.snvs.vcf.gz ${prefix}somatic_final.snvs.vcf.gz 
-        mv *_minus-dbsnp.indels.vcf.gz ${prefix}somatic_final.indels.vcf.gz 
+        mv *_minus-dbsnp.indels.vcf.gz ${prefix}somatic_final.indels.vcf.gz
+        mv *_minus-dbsnp.snvs.vcf.gz.tbi ${prefix}somatic_final.indels.vcf.gz.tbi
+        mv *_minus-dbsnp.indels.vcf.gz.tbi ${prefix}somatic_final.indels.vcf.gz.tbi
     fi
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
