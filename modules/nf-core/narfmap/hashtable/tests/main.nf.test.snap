@@ -1,0 +1,24 @@
+{
+    "sarscov2 - fasta - stub": {
+        "content": [
+            "narfmap",
+            "versions.yml"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2023-12-15T17:42:36.677592114"
+    },
+    "sarscov2 - fasta": {
+        "content": [
+            "narfmap",
+            "versions.yml"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2023-12-15T17:42:32.074476297"
+    }
+}

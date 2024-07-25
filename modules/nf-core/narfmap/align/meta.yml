@@ -1,5 +1,5 @@
-name: dragmap_align
-description: Performs fastq alignment to a reference using DRAGMAP
+name: narfmap_align
+description: Performs fastq alignment to a reference using NARFMAP
 keywords:
   - alignment
   - map
@@ -7,11 +7,11 @@ keywords:
   - bam
   - sam
 tools:
-  - dragmap:
-      description: Dragmap is the Dragen mapper/aligner Open Source Software.
-      homepage: https://github.com/Illumina/dragmap
-      documentation: https://github.com/Illumina/dragmap
-      tool_dev_url: https://github.com/Illumina/dragmap#basic-command-line-usage
+  - narfmap:
+      description: narfmap is a fork of the Dragen mapper/aligner Open Source Software.
+      homepage: https://github.com/edmundmiller/narfmap
+      documentation: https://github.com/edmundmiller/NARFMAP/blob/main/doc/usage.md#basic-command-line-usage
+      tool_dev_url: https://github.com/edmundmiller/narfmap
       licence: ["GPL v3"]
 input:
   - meta:
@@ -31,17 +31,8 @@ input:
         e.g. [ id:'test', single_end:false ]
   - hashmap:
       type: file
-      description: DRAGMAP hash table
-      pattern: "Directory containing DRAGMAP hash table *.{cmp,.bin,.txt}"
-  - meta3:
-      type: map
-      description: |
-        Groovy Map containing reference information
-        e.g. [ id:'genome']
-  - fasta:
-      type: file
-      description: Genome fasta reference files
-      pattern: "*.{fa,fasta,fna}"
+      description: NARFMAP hash table
+      pattern: "Directory containing NARFMAP hash table *.{cmp,.bin,.txt}"
 output:
   - bam:
       type: file
