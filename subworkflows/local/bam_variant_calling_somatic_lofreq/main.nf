@@ -16,35 +16,36 @@ workflow BAM_VARIANT_CALLING_SOMATIC_LOFREQ {
 
     main:
     versions = Channel.empty()
-    
+
 
 
     input_intervals = input.combine(intervals)
         // Sort channel elements for LOFREQ_SOMATIC module
         .map {meta, normal_cram, normal_crai, tumor_cram, tumor_crai, intervals, num_intervals -> [meta + [num_intervals:num_intervals], tumor_cram, tumor_crai, normal_cram, normal_crai, intervals]}
 
-        
+
 
     if (params.dbsnp && params.dbsnp_lofreq){
 
         // ===================================================================================================
         // Organizar los inputs de FILTER
         // ===================================================================================================
-        input_filter = dbsnp ? dbsnp.map{ dbsnp -> [ [ id:dbsnp.baseName ], dbsnp ] } : [[id: 'null'], []]
+        input_filter = dbsnp ? dbsnp.flatten().map { dbsnp -> [ [ id:dbsnp.baseName ], dbsnp ] } : [[id: 'null'], []]
         input_filter.subscribe onNext: { println it }, onComplete: { println 'Done' }
         FILTER(input_filter)
 
         // ===================================================================================================
         // Administrar outputs de FILTER
-        // =================================================================================================== 
-        dbsnp_new = FILTER.out.vcf
-        dbsnp_new_tbi = FILTER.out.tbi
-        
+        // ===================================================================================================
+        dbsnp_new = Channel.empty().mix( FILTER.out.vcf )
+        dbsnp_new_tbi = Channel.empty().mix( FILTER.out.tbi )
 
+        FILTER.out.vcf.subscribe onNext: { println it }, onComplete: { println 'Done' }
+        FILTER.out.tbi.subscribe onNext: { println it }, onComplete: { println 'Done' }
         // ===================================================================================================
-        // Printear los parámetros 
+        // Printear los parámetros
         // ===================================================================================================
-        dbsnp_new.subscribe onNext: { println it }, onComplete: { println 'Done' } 
+        dbsnp_new.subscribe onNext: { println it }, onComplete: { println 'Done' }
         dbsnp_new_tbi.subscribe onNext: { println it }, onComplete: { println 'Done' }
         input_intervals.subscribe onNext: { println it }, onComplete: { println 'Done' }
         fasta.subscribe onNext: { println it }, onComplete: { println 'Done' }
