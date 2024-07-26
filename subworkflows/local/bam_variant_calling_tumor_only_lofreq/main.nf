@@ -16,11 +16,10 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_LOFREQ {
 
     LOFREQ_CALLPARALLEL(input_intervals, fasta, fai)
 
-    
     vcf = Channel.empty().mix(LOFREQ_CALLPARALLEL.out.vcf)
         .map{ meta, vcf -> [ meta + [ variantcaller:'lofreq' ], vcf ] }
     versions = versions.mix(LOFREQ_CALLPARALLEL.out.versions)
-    
+
     emit:
     vcf
     versions
