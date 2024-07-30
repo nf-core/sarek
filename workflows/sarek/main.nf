@@ -152,7 +152,7 @@ workflow SAREK {
 
     if (params.step == 'mapping') {
 
-        // Figure out if input is bam or fastq
+        // Figure out if input is bam, fastq, or spring
         input_sample_type = input_sample.branch{
             bam:                 it[0].data_type == "bam"
             fastq_gz:            it[0].data_type == "fastq_gz"
