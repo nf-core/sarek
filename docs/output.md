@@ -16,6 +16,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - [Trim adapters](#trim-adapters)
     - [Split FastQ files](#split-fastq-files)
     - [UMI consensus](#umi-consensus)
+    - [Bedtools](#bedtools)
   - [Map to Reference](#map-to-reference)
     - [BWA](#bwa)
     - [BWA-mem2](#bwa-mem2)
@@ -41,6 +42,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
       - [Sentieon DNAscope joint germline variant calling](#sentieon-dnascope-joint-germline-variant-calling)
     - [Sentieon Haplotyper](#sentieon-haplotyper)
       - [Sentieon Haplotyper joint germline variant calling](#sentieon-haplotyper-joint-germline-variant-calling)
+    - [Lofreq](#lofreq)
     - [Strelka2](#strelka2)
   - [Structural Variants](#structural-variants)
     - [Manta](#manta)
@@ -155,6 +157,22 @@ These files are intermediate and by default not placed in the output-folder kept
 **Output directory: `{outdir}/reports/umi/`**
 
 - `<sample_lane_{1,2}_umi_histogram.txt>`
+
+</details>
+
+#### Bedtools
+
+[Bedtools](https://github.com/arq5x/bedtools2) utilities are a swiss-army knife of tools for a wide-range of genomics analysis tasks. The most widely-used tools enable genome arithmetic. Bedtools allows one to intersect, merge, count, complement, and shuffle genomic intervals from multiple files in widely-used genomic file formats such as BAM, BED, GFF/GTF, VCF.
+While each individual tool is designed to do a relatively simple task (e.g., intersect two interval files), quite sophisticated analyses can be conducted by combining multiple bedtools operations on the UNIX command line.
+
+<details markdown="1">
+<summary>Output files for all samples</summary>
+
+**Output directory: `{outdir}/reports/bedtools/`**
+
+- `<sample>.bed`
+  - New .bed file with the news changes.
+  </details>
 
 </details>
 
@@ -580,7 +598,8 @@ For further downstream analysis, take a look [here](https://github.com/Illumina/
 **Output directory: `${outdir}/variant_calling/lofreq/${meta.id}/`**
 
 -`<tumorsample>.vcf.gz` and `CCR2_T_1_2.vcf.gz_cp`
-  -VCF with "gz_cp" which provides a detailed description of the detected genetic variants and a checkpoint to manage parallel execution and allow resumption in case of failures.
+-VCF with "gz_cp" which provides a detailed description of the detected genetic variants and a checkpoint to manage parallel execution and allow resumption in case of failures.
+
 </details>
 
 ### Structural Variants

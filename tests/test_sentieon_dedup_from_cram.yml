@@ -13,7 +13,12 @@
       md5sum: 1888a924bc70bd80165a96ad641e22d6
     - path: results/multiqc
     - path: results/multiqc/multiqc_report.html
-      contains: ["Sentieon Dedup Metrics", "PERCENT_DUPLICATION", "ESTIMATED_LIBRARY_SIZE"]
+      contains:
+        [
+          "Sentieon Dedup Metrics",
+          "PERCENT_DUPLICATION",
+          "ESTIMATED_LIBRARY_SIZE",
+        ]
     - path: results/preprocessing/sentieon_dedup/test/test.dedup.cram
     # binary changes md5sums on reruns
     - path: results/preprocessing/sentieon_dedup/test/test.dedup.cram.crai
@@ -25,7 +30,13 @@
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
     # binary changes md5sums on reruns
     - path: results/reports/sentieon_dedup/test/test.dedup.cram.metrics
-      contains: ["testN	0	2820	2	2	0	828	0	0.293617	3807", "1.0	0.999986", "2.0	1.476740", "3.0	1.704038"]
+      contains:
+        [
+          "testN	0	2820	2	2	0	828	0	0.293617	3807",
+          "1.0	0.999986",
+          "2.0	1.476740",
+          "3.0	1.704038",
+        ]
     - path: results/reports/mosdepth/test/test.dedup.mosdepth.global.dist.txt
     - path: results/reports/mosdepth/test/test.dedup.mosdepth.region.dist.txt
     - path: results/reports/mosdepth/test/test.dedup.mosdepth.summary.txt

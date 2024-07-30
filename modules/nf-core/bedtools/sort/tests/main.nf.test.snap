@@ -1,0 +1,68 @@
+{
+    "test_bedtools_sort_with_genome": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_out.testtext:md5,fe4053cf4de3aebbdfc3be2efb125a74"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,cdbae2c7ebc41e534aaf0835779061f8"
+                ],
+                "sorted": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_out.testtext:md5,fe4053cf4de3aebbdfc3be2efb125a74"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,cdbae2c7ebc41e534aaf0835779061f8"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-19T10:13:11.830452"
+    },
+    "test_bedtools_sort": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_out.testtext:md5,fe4053cf4de3aebbdfc3be2efb125a74"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,cdbae2c7ebc41e534aaf0835779061f8"
+                ],
+                "sorted": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_out.testtext:md5,fe4053cf4de3aebbdfc3be2efb125a74"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,cdbae2c7ebc41e534aaf0835779061f8"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-19T10:16:40.535947"
+    }
+}

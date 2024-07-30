@@ -1,0 +1,35 @@
+{
+    "test_bedtools_merge": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_out.bed:md5,0cf6ed2b6f470cd44a247da74ca4fe4e"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,2d134badb4cd1e4e903696c7967f28d6"
+                ],
+                "bed": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_out.bed:md5,0cf6ed2b6f470cd44a247da74ca4fe4e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,2d134badb4cd1e4e903696c7967f28d6"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-03-18T17:07:09.721153"
+    }
+}

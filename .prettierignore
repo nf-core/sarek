@@ -1,14 +1,3 @@
-email_template.html
-adaptivecard.json
-slackreport.json
-.nextflow*
-work/
-data/
-results/
-.DS_Store
-testing/
-testing*
-*.pyc
-bin/
-modules/nf-core/
-subworkflows/nf-core/
+# Ignore artifacts:
+build
+coverage

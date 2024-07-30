@@ -41,6 +41,16 @@
                         "git_sha": "618364f55cb88f6c283f6c6c45c24d5f9f08f998",
                         "installed_by": ["modules"]
                     },
+                    "bedtools/merge": {
+                        "branch": "master",
+                        "git_sha": "a5377837fe9013bde89de8689829e83e84086536",
+                        "installed_by": ["modules"]
+                    },
+                    "bedtools/sort": {
+                        "branch": "master",
+                        "git_sha": "571a5feac4c9ce0a8df0bc15b94230e7f3e8db47",
+                        "installed_by": ["modules"]
+                    },
                     "bwa/index": {
                         "branch": "master",
                         "git_sha": "6278bf9afd4a4b2d00fa6052250e73da3d91546f",
