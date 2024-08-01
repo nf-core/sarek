@@ -1,0 +1,198 @@
+nextflow_process {
+
+    name "Test Process SENTIEON_BWAMEM"
+    tag "modules_nfcore"
+    tag "modules"
+    tag "sentieon"
+    tag "bwamem"
+    tag "bwaindex"
+    tag "sentieon/bwaindex"
+    tag "sentieon/bwamem"
+
+    script "../main.nf"
+    process "SENTIEON_BWAMEM"
+
+    test("Single-End") {
+        config "./nextflow.config"
+
+        setup {
+            run("SENTIEON_BWAINDEX") {
+                script "../../bwaindex/main.nf"
+                process {
+                    """
+                    input[0] = [
+                        [id: 'test'],
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                    ]
+                    """
+                }
+            }
+        }
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:true ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)
+                    ]
+                ]
+                input[1] = SENTIEON_BWAINDEX.out.index
+                input[2] = [[id: 'test'],file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)]
+                input[3] = [[id: 'test'],file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta.fai', checkIfExists: true)]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    process.out.bam_and_bai,
+                    process.out.versions,
+                    file(process.out.bam_and_bai[0][1]).name
+                ).match()
+                }
+            )
+        }
+
+    }
+
+    // TODO
+    // test("Paired-End") {
+
+    //     setup {
+    //         run("BWA_INDEX") {
+    //             script "../../index/main.nf"
+    //             process {
+    //                 """
+    //                 input[0] = [
+    //                     [id: 'test'],
+    //                     file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+    //                 ]
+    //                 """
+    //             }
+    //         }
+    //     }
+
+    //     when {
+    //         process {
+    //             """
+    //             input[0] = [
+    //                 [ id:'test', single_end:false ], // meta map
+    //                 [
+    //                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+    //                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
+    //                 ]
+    //             ]
+    //             input[1] = BWA_INDEX.out.index
+    //             input[2] = [[id: 'test'],file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)]
+    //             input[3] = false
+    //             """
+    //         }
+    //     }
+
+    //     then {
+    //         assertAll(
+    //             { assert process.success },
+    //             { assert snapshot(
+    //                 process.out.cram,
+    //                 process.out.csi,
+    //                 process.out.crai,
+    //                 process.out.versions,
+    //                 file(process.out.bam[0][1]).name
+    //                 ).match()
+    //             }
+    //         )
+    //     }
+
+    // }
+
+    // test("Single-end - stub") {
+    //     options "-stub"
+    //     setup {
+    //         run("BWA_INDEX") {
+    //             script "../../index/main.nf"
+    //             process {
+    //                 """
+    //                 input[0] = [
+    //                     [id: 'test'],
+    //                     file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+    //                 ]
+    //                 """
+    //             }
+    //         }
+    //     }
+    //     when {
+    //         process {
+    //             """
+    //             input[0] = [
+    //                 [ id:'test', single_end:true ], // meta map
+    //                 [
+    //                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)
+    //                 ]
+    //             ]
+    //             input[1] = BWA_INDEX.out.index
+    //             input[2] = [[id: 'test'],file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)]
+    //             input[3] = false
+    //             """
+    //         }
+    //     }
+
+    //     then {
+    //         assertAll(
+    //             { assert process.success },
+    //             { assert snapshot(
+    //                 file(process.out.bam[0][1]).name,
+    //                 file(process.out.csi[0][1]).name,
+    //                 process.out.versions
+    //             ).match() }
+    //         )
+    //     }
+    // }
+
+    // test("Paired-end - stub") {
+    //     options "-stub"
+    //     setup {
+    //         run("BWA_INDEX") {
+    //             script "../../index/main.nf"
+    //             process {
+    //                 """
+    //                 input[0] = [
+    //                     [id: 'test'],
+    //                     file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+    //                 ]
+    //                 """
+    //             }
+    //         }
+    //     }
+    //     when {
+    //         process {
+    //             """
+    //             input[0] = [
+    //                 [ id:'test', single_end:false ], // meta map
+    //                 [
+    //                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+    //                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
+    //                 ]
+    //             ]
+    //             input[1] = BWA_INDEX.out.index
+    //             input[2] = [[id: 'test'],file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)]
+    //             input[3] = false
+    //             """
+    //         }
+    //     }
+
+    //     then {
+    //         assertAll(
+    //             { assert process.success },
+    //             { assert snapshot(
+    //                 file(process.out.bam[0][1]).name,
+    //                 file(process.out.csi[0][1]).name,
+    //                 process.out.versions
+    //             ).match() }
+    //         )
+    //     }
+    // }
+}
