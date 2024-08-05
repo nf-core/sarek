@@ -192,8 +192,8 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         versions = versions.mix(BAM_VARIANT_CALLING_GERMLINE_MANTA.out.versions)
     }
 
-   // INDEXCOV
-   if (tools.split(',').contains('indexcov')) {
+    // INDEXCOV
+    if (tools.split(',').contains('indexcov')) {
         BAM_VARIANT_CALLING_GERMLINE_INDEXCOV (
             cram,
             fasta,

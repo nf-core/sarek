@@ -19,10 +19,10 @@ workflow BAM_VARIANT_CALLING_GERMLINE_INDEXCOV {
 
     // generate a cleaner bam index without duplicate, supplementary, etc. (Small workload because the bam itself is not re-generated)
     reindex_ch = SAMTOOLS_REINDEX_BAM(
-	cram,
-	fasta,
-	fasta_fai
-	)
+        cram,
+        fasta,
+        fasta_fai
+        )
 
     versions = versions.mix(reindex_ch.versions)
 
