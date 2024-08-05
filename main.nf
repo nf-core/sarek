@@ -18,8 +18,7 @@
     Slack  : https://nfcore.slack.com/channels/sarek
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-
-nextflow.enable.dsl = 2
+nextflow.preview.output = true
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     GENOME PARAMETER VALUES
@@ -353,6 +352,15 @@ workflow {
         params.hook_url,
         NFCORE_SAREK.out.multiqc_report
     )
+
+
+}
+
+// can be zip or html
+output {
+    'fastqc_report_files' {
+        path { meta, files -> "reports/fastqc/${meta.id}" }
+    }
 }
 
 /*

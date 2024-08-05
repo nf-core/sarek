@@ -207,6 +207,8 @@ workflow SAREK {
         if (!(params.skip_tools && params.skip_tools.split(',').contains('fastqc'))) {
             FASTQC(input_fastq)
 
+            fastqc_report = FASTQC.out.html
+
             reports = reports.mix(FASTQC.out.zip.collect{ meta, logs -> logs })
             versions = versions.mix(FASTQC.out.versions.first())
         }
@@ -930,7 +932,12 @@ workflow SAREK {
     emit:
     multiqc_report // channel: /path/to/multiqc_report.html
     versions       // channel: [ path(versions.yml) ]
+
+    publish:
+    fastqc_report >> 'fastqc_report_files'
 }
+
+
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
