@@ -9,6 +9,7 @@ include { BAM_VARIANT_CALLING_DEEPVARIANT                                       
 include { BAM_VARIANT_CALLING_FREEBAYES                                                } from '../bam_variant_calling_freebayes/main'
 include { BAM_VARIANT_CALLING_GERMLINE_MANTA                                           } from '../bam_variant_calling_germline_manta/main'
 include { BAM_VARIANT_CALLING_HAPLOTYPECALLER                                          } from '../bam_variant_calling_haplotypecaller/main'
+include { BAM_VARIANT_CALLING_GERMLINE_INDEXCOV                                        } from '../bam_variant_calling_indexcov/main'
 include { BAM_VARIANT_CALLING_SENTIEON_DNASCOPE                                        } from '../bam_variant_calling_sentieon_dnascope/main'
 include { BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER                                      } from '../bam_variant_calling_sentieon_haplotyper/main'
 include { BAM_VARIANT_CALLING_MPILEUP                                                  } from '../bam_variant_calling_mpileup/main'
@@ -188,6 +189,17 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
 
         vcf_manta = BAM_VARIANT_CALLING_GERMLINE_MANTA.out.vcf
         versions = versions.mix(BAM_VARIANT_CALLING_GERMLINE_MANTA.out.versions)
+    }
+
+   // INDEXCOV
+   if (tools.split(',').contains('indexcov')) {
+        BAM_VARIANT_CALLING_GERMLINE_INDEXCOV (
+            cram,
+            fasta,
+            fasta_fai
+        )
+
+        versions = versions.mix(BAM_VARIANT_CALLING_GERMLINE_INDEXCOV.out.versions)
     }
 
     // SENTIEON DNASCOPE
