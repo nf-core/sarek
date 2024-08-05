@@ -27,6 +27,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     skip_tools                        // Mandatory, list of tools to skip
     cram                              // channel: [mandatory] meta, cram
     bwa                               // channel: [mandatory] meta, bwa
+    cnvkit_reference                  // channel: [optional] cnvkit reference
     dbsnp                             // channel: [mandatory] meta, dbsnp
     dbsnp_tbi                         // channel: [mandatory] dbsnp_tbi
     dbsnp_vqsr
@@ -88,7 +89,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             fasta,
             fasta_fai,
             intervals_bed_combined.map{ it -> [[id:it[0].baseName], it] },
-            [[id:"null"], []]
+            params.cnvkit_reference ? cnvkit_reference.map{ it -> [[id:it[0].baseName], it] } : [[:],[]]
         )
         versions = versions.mix(BAM_VARIANT_CALLING_CNVKIT.out.versions)
     }

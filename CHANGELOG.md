@@ -9,6 +9,58 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - support for indexcov
 
+## [3.4.3](https://github.com/nf-core/sarek/releases/tag/3.4.3) - Loametjåhkkå
+
+Loametjåhkkå is another one of the main peaks of the Pårte massif.
+
+### Added
+
+- [#1502](https://github.com/nf-core/sarek/pull/1502) - export CNVs into VCF format in `bam_variant_calling_cnvkit`
+- [#1534](https://github.com/nf-core/sarek/pull/1534), [#1573](https://github.com/nf-core/sarek/pull/1573) - Handling `.fastq.gz.spring` files as input
+- [#1593](https://github.com/nf-core/sarek/pull/1593) - Prepare release `3.4.2`
+
+### Changed
+
+- [#1502](https://github.com/nf-core/sarek/pull/1502) - Improved handling of CNVkit reference
+- [#1502](https://github.com/nf-core/sarek/pull/1502) - Specific CNV call step, with recommended settings for germline
+- [#1508](https://github.com/nf-core/sarek/pull/1508) - Sync `TEMPLATE` with `tools` `2.14.0`
+- [#1513](https://github.com/nf-core/sarek/pull/1513) - Back to dev
+- [#1518](https://github.com/nf-core/sarek/pull/1518) - Sync `TEMPLATE` with `tools` `2.14.1`
+- [#1521](https://github.com/nf-core/sarek/pull/1521) - Minor code refactoring to simplify syntax in args handling
+- [#1545](https://github.com/nf-core/sarek/pull/1545) - Update modules
+- [#1552](https://github.com/nf-core/sarek/pull/1552) - Update samtools to v1.20
+- [#1545](https://github.com/nf-core/sarek/pull/1545) - Update modules
+- [#1553](https://github.com/nf-core/sarek/pull/1553) - Update bcftools to v1.20
+- [#1557](https://github.com/nf-core/sarek/pull/1557) - Update ENSEMBLVEP cache to 111
+
+### Fixed
+
+- [#1536](https://github.com/nf-core/sarek/pull/1536) - Correct typo `Strelka2` to `Strelka`
+- [#1541](https://github.com/nf-core/sarek/pull/1541) - Getting bam and bai published in the same folder
+- [#1542](https://github.com/nf-core/sarek/pull/1542) - Removing legacy configs of `CUSTOM_DUMPSOFTWAREVERSIONS`
+- [#1547](https://github.com/nf-core/sarek/pull/1547) - Correct typo in help text in nextflow_schema.json
+- [#1556](https://github.com/nf-core/sarek/pull/1556) - Fix display of some commands in `docs/usage.md`
+- [#1563](https://github.com/nf-core/sarek/pull/1563) - Fix `vep_cache_path_full` so that `--refseq/--merged` will work for ENSEMBLVEP
+- [#1570](https://github.com/nf-core/sarek/pull/1570) - Remove duplicated notes in FASTQC output docs
+- [#1596](https://github.com/nf-core/sarek/pull/1596) - Fix haplotypecaller tests
+- [#1597](https://github.com/nf-core/sarek/pull/1597) - Fix deepvariant tests
+- [#1612](https://github.com/nf-core/sarek/pull/1612) - Remove empty output directories
+
+### Removed
+
+### Dependencies
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| `bcftools` | 1.18        | 1.20        |
+| `bwa`      | 0.7.17      | 0.7.18      |
+| `cnvkit`   | 0.9.10      | 0.9.11      |
+| `htslib`   | 1.19.1      | 1.20        |
+| `samtools` | 1.19.2      | 1.20        |
+
+### Parameters
+>>>>>>> upstream/dev
+
 ## [3.4.2](https://github.com/nf-core/sarek/releases/tag/3.4.2) - Sájtáristjåhkkå
 
 Sájtáristjåhkkå is another peak (just under 2k) in the Pårte massif, it is one of the few peaks in Sweden that cannot be climbed without proper climbing equipment.
