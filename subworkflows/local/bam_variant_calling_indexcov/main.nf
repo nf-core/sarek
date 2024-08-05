@@ -26,11 +26,11 @@ workflow BAM_VARIANT_CALLING_GERMLINE_INDEXCOV {
 
     versions = versions.mix(reindex_ch.versions)
 
+    // create [ [id:directory], bams, bais ]
+    indexcov_input_ch = reindex_ch.output.map{[[id:"indexcov"], it[1], it[2]]}.groupTuple()
+
     goleft_ch = GOLEFT_INDEXCOV(
-          reindex_ch.output.map{it[1]}.collect().combine(
-              reindex_ch.output.map{it[2]}.collect()
-              ).map{[[:], it[0], it[1] ]}
-          ),
+        indexcov_input_ch,
         fasta_fai
         )
 
