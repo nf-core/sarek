@@ -581,23 +581,21 @@ The output is scaled to around 1. So a long stretch with values of 1.5 would be 
 
 **Output directory: `{outdir}/variantcalling/indexcov/`**
 
-In addition to the  interactive HTML files, `indexcov` outputs a number of text files:
+In addition to the interactive HTML files, `indexcov` outputs a number of text files:
 
-+ `$prefix-indexcov.ped`: a .ped/.fam file with the inferred sex in the appropriate column if the sex chromosomes were found.
-                          the CNX and CNY columns indicating the floating-point estimate of copy-number for those chromosomes.
-                          `bins.out`: how many bins had a coverage value outside of (0.85, 1.15). high values can indicate high-bias samples.
-                          `bins.lo`: number of bins with value < 0.15. high values indicate missing data.
-                          `bins.hi`: number of bins with value > 1.15. 
-                          `bins.in`: number of bins with value inside of (0.85, 1.15)
-                          `p.out`: `bins.out/bins.in`
-                          `PC1...PC5`: PCA projections calculated with depth of autosomes.
+- `$prefix-indexcov.ped`: a .ped/.fam file with the inferred sex in the appropriate column if the sex chromosomes were found.
+  the CNX and CNY columns indicating the floating-point estimate of copy-number for those chromosomes.
+  `bins.out`: how many bins had a coverage value outside of (0.85, 1.15). high values can indicate high-bias samples.
+  `bins.lo`: number of bins with value < 0.15. high values indicate missing data.
+  `bins.hi`: number of bins with value > 1.15.
+  `bins.in`: number of bins with value inside of (0.85, 1.15)
+  `p.out`: `bins.out/bins.in`
+  `PC1...PC5`: PCA projections calculated with depth of autosomes.
 
-+ `$prefix-indexcov.roc`: tab-delimited columns of chrom, scaled coverage cutoff, and $n_samples columns where each indicates the
-                          proportion of 16KB blocks at or above that scaled coverage value.
-+ `$prefix-indexcov.bed.gz`: a bed file with columns of chrom, start, end, and a column per sample where the values indicate there
-                             scaled coverage for that sample in that 16KB chunk.
-
-
+- `$prefix-indexcov.roc`: tab-delimited columns of chrom, scaled coverage cutoff, and $n_samples columns where each indicates the
+  proportion of 16KB blocks at or above that scaled coverage value.
+- `$prefix-indexcov.bed.gz`: a bed file with columns of chrom, start, end, and a column per sample where the values indicate there
+  scaled coverage for that sample in that 16KB chunk.
 
 #### Manta
 

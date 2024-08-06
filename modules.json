@@ -309,7 +309,7 @@
                         "git_sha": "cf3ed075695639b0a0924eb0901146df1996dc08",
                         "installed_by": ["modules"]
                     },
-                    "goleft/indexcov": {   
+                    "goleft/indexcov": {
                         "branch": "master",
                         "git_sha": "a941aa24517960d7b9eeab4c3a5adfb3f70a5e4b",
                         "installed_by": ["modules"]
