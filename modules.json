@@ -21,11 +21,6 @@
                         "git_sha": "a5ba4d59c2b248c0379b0f8aeb4e7e754566cd1f",
                         "installed_by": ["modules"]
                     },
-                    "bcftools/filter": {
-                        "branch": "master",
-                        "git_sha": "33ef773a7ea36e88323902f63662aa53c9b88988",
-                        "installed_by": ["modules"]
-                    },
                     "bcftools/mpileup": {
                         "branch": "master",
                         "git_sha": "a5ba4d59c2b248c0379b0f8aeb4e7e754566cd1f",
@@ -327,11 +322,6 @@
                     "lofreq/callparallel": {
                         "branch": "master",
                         "git_sha": "94e871f884efe963381a04e173f21924c9e9aba2",
-                        "installed_by": ["modules"]
-                    },
-                    "lofreq/somatic": {
-                        "branch": "master",
-                        "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
                         "installed_by": ["modules"]
                     },
                     "manta/germline": {

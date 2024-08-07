@@ -49,15 +49,6 @@ include { SAMTOOLS_CONVERT as CRAM_TO_BAM                   } from '../../module
 include { SAMTOOLS_CONVERT as CRAM_TO_BAM_RECAL             } from '../../modules/nf-core/samtools/convert/main'
 
 // Mark Duplicates (+QC)
-<<<<<<< HEAD
-include { BAM_MARKDUPLICATES                          } from '../../subworkflows/local/bam_markduplicates/main' 
-include { BAM_MARKDUPLICATES_SPARK                    } from '../../subworkflows/local/bam_markduplicates_spark/main'
-include { BAM_SENTIEON_DEDUP                          } from '../../subworkflows/local/bam_sentieon_dedup/main' 
-
-// QC on CRAM
-include { CRAM_QC_MOSDEPTH_SAMTOOLS as CRAM_QC_NO_MD  } from '../../subworkflows/local/cram_qc_mosdepth_samtools/main'
-include { CRAM_SAMPLEQC                               } from '../../subworkflows/local/cram_sampleqc/main'  //ESTEEEE
-=======
 include { BAM_MARKDUPLICATES                                } from '../../subworkflows/local/bam_markduplicates/main'
 include { BAM_MARKDUPLICATES_SPARK                          } from '../../subworkflows/local/bam_markduplicates_spark/main'
 include { BAM_SENTIEON_DEDUP                                } from '../../subworkflows/local/bam_sentieon_dedup/main'
@@ -65,7 +56,7 @@ include { BAM_SENTIEON_DEDUP                                } from '../../subwor
 // QC on CRAM
 include { CRAM_QC_MOSDEPTH_SAMTOOLS as CRAM_QC_NO_MD        } from '../../subworkflows/local/cram_qc_mosdepth_samtools/main'
 include { CRAM_SAMPLEQC                                     } from '../../subworkflows/local/cram_sampleqc/main'
->>>>>>> 35ca8feadaf1f5b192e6c06c809355ae8175caf0
+
 
 // Create recalibration tables
 include { BAM_BASERECALIBRATOR                              } from '../../subworkflows/local/bam_baserecalibrator/main'
@@ -874,11 +865,11 @@ workflow SAREK {
         versions = versions.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.versions)
         // ANNOTATE
         if (params.step == 'annotate') vcf_to_annotate = input_sample
-        
+
         if (params.tools.split(',').contains('merge') || params.tools.split(',').contains('snpeff') || params.tools.split(',').contains('vep')|| params.tools.split(',').contains('bcfann')) {
-           
+
             vep_fasta = (params.vep_include_fasta) ? fasta : [[id: 'null'], []]
-              
+
             VCF_ANNOTATE_ALL(
                 vcf_to_annotate.map{meta, vcf -> [ meta + [ file_name: vcf.baseName ], vcf ] },
                 vep_fasta,
@@ -893,7 +884,7 @@ workflow SAREK {
                 bcftools_annotations,
                 bcftools_annotations_tbi,
                 bcftools_header_lines)
-            
+
 
             // Gather used softwares versions
             versions = versions.mix(VCF_ANNOTATE_ALL.out.versions)
@@ -904,13 +895,13 @@ workflow SAREK {
     //
     // Collate and save software versions
     //
-    
+
     version_yaml = Channel.empty()
     if (!(params.skip_tools && params.skip_tools.split(',').contains('versions'))) {
         version_yaml = softwareVersionsToYAML(versions)
             .collectFile(storeDir: "${params.outdir}/pipeline_info", name: 'nf_core_sarek_software_mqc_versions.yml', sort: true, newLine: true)
     }
-  
+
     //
     // MODULE: MultiQC
     //
@@ -939,7 +930,7 @@ workflow SAREK {
 
 VCF_QC_BCFTOOLS_VCFTOOLS
     }
-    
+
 
     emit:
     multiqc_report // channel: /path/to/multiqc_report.html
