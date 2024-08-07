@@ -44,13 +44,13 @@ include { SAMTOOLS_CONVERT as CRAM_TO_BAM             } from '../../modules/nf-c
 include { SAMTOOLS_CONVERT as CRAM_TO_BAM_RECAL       } from '../../modules/nf-core/samtools/convert/main'
 
 // Mark Duplicates (+QC)
-include { BAM_MARKDUPLICATES                          } from '../../subworkflows/local/bam_markduplicates/main'
+include { BAM_MARKDUPLICATES                          } from '../../subworkflows/local/bam_markduplicates/main' 
 include { BAM_MARKDUPLICATES_SPARK                    } from '../../subworkflows/local/bam_markduplicates_spark/main'
-include { BAM_SENTIEON_DEDUP                          } from '../../subworkflows/local/bam_sentieon_dedup/main'
+include { BAM_SENTIEON_DEDUP                          } from '../../subworkflows/local/bam_sentieon_dedup/main' 
 
 // QC on CRAM
 include { CRAM_QC_MOSDEPTH_SAMTOOLS as CRAM_QC_NO_MD  } from '../../subworkflows/local/cram_qc_mosdepth_samtools/main'
-include { CRAM_SAMPLEQC                               } from '../../subworkflows/local/cram_sampleqc/main'
+include { CRAM_SAMPLEQC                               } from '../../subworkflows/local/cram_sampleqc/main'  //ESTEEEE
 
 // Create recalibration tables
 include { BAM_BASERECALIBRATOR                        } from '../../subworkflows/local/bam_baserecalibrator/main'
@@ -89,7 +89,7 @@ include { MULTIQC                                     } from '../../modules/nf-c
 
 workflow SAREK {
     take:
-        input_sample
+        input_sample //samples
         allele_files
         bcftools_annotations
         bcftools_annotations_tbi
@@ -101,14 +101,14 @@ workflow SAREK {
         dbsnp_tbi
         dbsnp_vqsr
         dict
-        fasta
-        fasta_fai
+        fasta   //fasta
+        fasta_fai  //fai
         gc_file
         germline_resource
         germline_resource_tbi
         index_alignment
-        intervals_and_num_intervals
-        intervals_bed_combined
+        intervals_and_num_intervals //capture
+        intervals_bed_combined   //target
         intervals_bed_combined_for_variant_calling
         intervals_bed_gz_tbi_and_num_intervals
         intervals_bed_gz_tbi_combined

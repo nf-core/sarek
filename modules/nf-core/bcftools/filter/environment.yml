@@ -1,7 +1,0 @@
-name: bcftools_filter
-channels:
-  - conda-forge
-  - bioconda
-  - defaults
-dependencies:
-  - bioconda::bcftools=1.20
