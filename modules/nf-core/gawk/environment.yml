@@ -4,4 +4,4 @@ channels:
   - bioconda
   - defaults
 dependencies:
-  - anaconda::gawk=5.1.0
+  - conda-forge::gawk=5.3.0

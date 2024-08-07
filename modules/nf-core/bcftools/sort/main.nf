@@ -4,8 +4,8 @@ process BCFTOOLS_SORT {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/bcftools:1.18--h8b25389_0':
-        'biocontainers/bcftools:1.18--h8b25389_0' }"
+        'https://depot.galaxyproject.org/singularity/bcftools:1.20--h8b25389_0':
+        'biocontainers/bcftools:1.20--h8b25389_0' }"
 
     input:
     tuple val(meta), path(vcf)
@@ -49,9 +49,9 @@ process BCFTOOLS_SORT {
                     args.contains("--output-type z") || args.contains("-Oz") ? "vcf.gz" :
                     args.contains("--output-type v") || args.contains("-Ov") ? "vcf" :
                     "vcf"
-
+    def create_cmd = extension.endsWith(".gz") ? "echo '' | gzip >" : "touch"
     """
-    touch ${prefix}.${extension}
+    ${create_cmd} ${prefix}.${extension}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
