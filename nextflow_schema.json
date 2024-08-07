@@ -15,7 +15,7 @@
             "properties": {
                 "input": {
                     "description": "Path to comma-separated file containing information about the samples in the experiment.",
-                    "help_text": "A design file with information about the samples in your experiment. Use this parameter to specify the location of the input files. It has to be a comma-separated file with a header row. See [usage docs](https://nf-co.re/sarek/usage#input).\n\nIf no input file is specified, sarek will attempt to locate one in the `{outdir}` directory. If no input should be supplied, i.e. when --step is supplied or --build_from_index, then set --input false",
+                    "help_text": "A design file with information about the samples in your experiment. Use this parameter to specify the location of the input files. It has to be a comma-separated file with a header row. See [usage docs](https://nf-co.re/sarek/usage#input).\n\nIf no input file is specified, sarek will attempt to locate one in the `{outdir}` directory. If no input should be supplied, i.e. when --step is supplied or --build_only_index, then set --input false",
                     "fa_icon": "fas fa-file-csv",
                     "type": "string",
                     "format": "file-path",
@@ -111,7 +111,7 @@
                     "type": "string",
                     "fa_icon": "fas fa-toolbox",
                     "description": "Tools to use for duplicate marking, variant calling and/or for annotation.",
-                    "help_text": "Multiple tools separated with commas.\n\n**Variant Calling:**\n\nGermline variant calling can currently be performed with the following variant callers:\n- SNPs/Indels: DeepVariant, FreeBayes, GATK HaplotypeCaller, mpileup, Sentieon Haplotyper, Strelka\n- Structural Variants: Manta, TIDDIT\n- Copy-number: CNVKit\n\nTumor-only somatic variant calling can currently be performed with the following variant callers:\n- SNPs/Indels: FreeBayes, mpileup, Mutect2, Strelka\n- Structural Variants: Manta, TIDDIT\n- Copy-number: CNVKit, ControlFREEC\n\nSomatic variant calling can currently only be performed with the following variant callers:\n- SNPs/Indels: FreeBayes, Mutect2, Strelka2\n- Structural variants: Manta, TIDDIT\n- Copy-Number: ASCAT, CNVKit, Control-FREEC\n- Microsatellite Instability: MSIsensorpro\n\n> **NB** Mutect2 for somatic variant calling cannot be combined with `--no_intervals`\n\n**Annotation:**\n \n- snpEff, VEP, merge (both consecutively), and bcftools annotate (needs `--bcftools_annotation`).\n\n> **NB** As Sarek will use bgzip and tabix to compress and index VCF files annotated, it expects VCF files to be sorted when starting from `--step annotate`.",
+                    "help_text": "Multiple tools separated with commas.\n\n**Variant Calling:**\n\nGermline variant calling can currently be performed with the following variant callers:\n- SNPs/Indels: DeepVariant, FreeBayes, GATK HaplotypeCaller, mpileup, Sentieon Haplotyper, Strelka\n- Structural Variants: Manta, TIDDIT\n- Copy-number: CNVKit\n\nTumor-only somatic variant calling can currently be performed with the following variant callers:\n- SNPs/Indels: FreeBayes, mpileup, Mutect2, Strelka\n- Structural Variants: Manta, TIDDIT\n- Copy-number: CNVKit, ControlFREEC\n\nSomatic variant calling can currently only be performed with the following variant callers:\n- SNPs/Indels: FreeBayes, Mutect2, Strelka\n- Structural variants: Manta, TIDDIT\n- Copy-Number: ASCAT, CNVKit, Control-FREEC\n- Microsatellite Instability: MSIsensorpro\n\n> **NB** Mutect2 for somatic variant calling cannot be combined with `--no_intervals`\n\n**Annotation:**\n \n- snpEff, VEP, merge (both consecutively), and bcftools annotate (needs `--bcftools_annotation`).\n\n> **NB** As Sarek will use bgzip and tabix to compress and index VCF files annotated, it expects VCF files to be sorted when starting from `--step annotate`.",
                     "pattern": "^((ascat|bcfann|cnvkit|controlfreec|deepvariant|freebayes|haplotypecaller|sentieon_dnascope|sentieon_haplotyper|manta|merge|mpileup|msisensorpro|mutect2|ngscheckmate|sentieon_dedup|snpeff|strelka|tiddit|vep)?,?)*(?<!,)$"
                 },
                 "skip_tools": {
@@ -1068,6 +1068,13 @@
                     "description": "Incoming hook URL for messaging service",
                     "fa_icon": "fas fa-people-group",
                     "help_text": "Incoming hook URL for messaging service. Currently, MS Teams and Slack are supported.",
+                    "hidden": true
+                },
+                "pipelines_testdata_base_path": {
+                    "type": "string",
+                    "fa_icon": "far fa-check-circle",
+                    "description": "Base URL or local path to location of pipeline test dataset files",
+                    "default": "https://raw.githubusercontent.com/nf-core/test-datasets/",
                     "hidden": true
                 }
             }

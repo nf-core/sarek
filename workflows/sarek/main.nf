@@ -4,82 +4,87 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { paramsSummaryMap                            } from 'plugin/nf-validation'
-include { paramsSummaryMultiqc                        } from '../../subworkflows/nf-core/utils_nfcore_pipeline'
-include { softwareVersionsToYAML                      } from '../../subworkflows/nf-core/utils_nfcore_pipeline'
-include { methodsDescriptionText                      } from '../../subworkflows/local/utils_nfcore_sarek_pipeline'
+include { paramsSummaryMap                                  } from 'plugin/nf-validation'
+include { paramsSummaryMultiqc                              } from '../../subworkflows/nf-core/utils_nfcore_pipeline'
+include { softwareVersionsToYAML                            } from '../../subworkflows/nf-core/utils_nfcore_pipeline'
+include { methodsDescriptionText                            } from '../../subworkflows/local/utils_nfcore_sarek_pipeline'
 
 // Create samplesheets to restart from different steps
-include { CHANNEL_ALIGN_CREATE_CSV                    } from '../../subworkflows/local/channel_align_create_csv/main'
-include { CHANNEL_MARKDUPLICATES_CREATE_CSV           } from '../../subworkflows/local/channel_markduplicates_create_csv/main'
-include { CHANNEL_BASERECALIBRATOR_CREATE_CSV         } from '../../subworkflows/local/channel_baserecalibrator_create_csv/main'
-include { CHANNEL_APPLYBQSR_CREATE_CSV                } from '../../subworkflows/local/channel_applybqsr_create_csv/main'
-include { CHANNEL_VARIANT_CALLING_CREATE_CSV          } from '../../subworkflows/local/channel_variant_calling_create_csv/main'
+include { CHANNEL_ALIGN_CREATE_CSV                          } from '../../subworkflows/local/channel_align_create_csv/main'
+include { CHANNEL_MARKDUPLICATES_CREATE_CSV                 } from '../../subworkflows/local/channel_markduplicates_create_csv/main'
+include { CHANNEL_BASERECALIBRATOR_CREATE_CSV               } from '../../subworkflows/local/channel_baserecalibrator_create_csv/main'
+include { CHANNEL_APPLYBQSR_CREATE_CSV                      } from '../../subworkflows/local/channel_applybqsr_create_csv/main'
+include { CHANNEL_VARIANT_CALLING_CREATE_CSV                } from '../../subworkflows/local/channel_variant_calling_create_csv/main'
 
 // Convert BAM files to FASTQ files
-include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_INPUT } from '../../subworkflows/local/bam_convert_samtools/main'
-include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_UMI   } from '../../subworkflows/local/bam_convert_samtools/main'
+include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_INPUT       } from '../../subworkflows/local/bam_convert_samtools/main'
+include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_UMI         } from '../../subworkflows/local/bam_convert_samtools/main'
+
+// Convert fastq.gz.spring files to fastq.gz files
+include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_TO_R1_FQ   } from '../../modules/nf-core/spring/decompress/main'
+include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_TO_R2_FQ   } from '../../modules/nf-core/spring/decompress/main'
+include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_TO_FQ_PAIR } from '../../modules/nf-core/spring/decompress/main'
 
 // Run FASTQC
-include { FASTQC                                      } from '../../modules/nf-core/fastqc/main'
+include { FASTQC                                            } from '../../modules/nf-core/fastqc/main'
 
 // TRIM/SPLIT FASTQ Files
-include { FASTP                                       } from '../../modules/nf-core/fastp/main'
+include { FASTP                                             } from '../../modules/nf-core/fastp/main'
 
 // Create umi consensus bams from fastq
-include { FASTQ_CREATE_UMI_CONSENSUS_FGBIO            } from '../../subworkflows/local/fastq_create_umi_consensus_fgbio/main'
+include { FASTQ_CREATE_UMI_CONSENSUS_FGBIO                  } from '../../subworkflows/local/fastq_create_umi_consensus_fgbio/main'
 
 // Map input reads to reference genome
-include { FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON    } from '../../subworkflows/local/fastq_align_bwamem_mem2_dragmap_sentieon/main'
+include { FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON          } from '../../subworkflows/local/fastq_align_bwamem_mem2_dragmap_sentieon/main'
 
 // Merge and index BAM files (optional)
-include { BAM_MERGE_INDEX_SAMTOOLS                    } from '../../subworkflows/local/bam_merge_index_samtools/main'
+include { BAM_MERGE_INDEX_SAMTOOLS                          } from '../../subworkflows/local/bam_merge_index_samtools/main'
 
 // Convert BAM files
-include { SAMTOOLS_CONVERT as BAM_TO_CRAM             } from '../../modules/nf-core/samtools/convert/main'
-include { SAMTOOLS_CONVERT as BAM_TO_CRAM_MAPPING     } from '../../modules/nf-core/samtools/convert/main'
+include { SAMTOOLS_CONVERT as BAM_TO_CRAM                   } from '../../modules/nf-core/samtools/convert/main'
+include { SAMTOOLS_CONVERT as BAM_TO_CRAM_MAPPING           } from '../../modules/nf-core/samtools/convert/main'
 
 // Convert CRAM files (optional)
-include { SAMTOOLS_CONVERT as CRAM_TO_BAM             } from '../../modules/nf-core/samtools/convert/main'
-include { SAMTOOLS_CONVERT as CRAM_TO_BAM_RECAL       } from '../../modules/nf-core/samtools/convert/main'
+include { SAMTOOLS_CONVERT as CRAM_TO_BAM                   } from '../../modules/nf-core/samtools/convert/main'
+include { SAMTOOLS_CONVERT as CRAM_TO_BAM_RECAL             } from '../../modules/nf-core/samtools/convert/main'
 
 // Mark Duplicates (+QC)
-include { BAM_MARKDUPLICATES                          } from '../../subworkflows/local/bam_markduplicates/main'
-include { BAM_MARKDUPLICATES_SPARK                    } from '../../subworkflows/local/bam_markduplicates_spark/main'
-include { BAM_SENTIEON_DEDUP                          } from '../../subworkflows/local/bam_sentieon_dedup/main'
+include { BAM_MARKDUPLICATES                                } from '../../subworkflows/local/bam_markduplicates/main'
+include { BAM_MARKDUPLICATES_SPARK                          } from '../../subworkflows/local/bam_markduplicates_spark/main'
+include { BAM_SENTIEON_DEDUP                                } from '../../subworkflows/local/bam_sentieon_dedup/main'
 
 // QC on CRAM
-include { CRAM_QC_MOSDEPTH_SAMTOOLS as CRAM_QC_NO_MD  } from '../../subworkflows/local/cram_qc_mosdepth_samtools/main'
-include { CRAM_SAMPLEQC                               } from '../../subworkflows/local/cram_sampleqc/main'
+include { CRAM_QC_MOSDEPTH_SAMTOOLS as CRAM_QC_NO_MD        } from '../../subworkflows/local/cram_qc_mosdepth_samtools/main'
+include { CRAM_SAMPLEQC                                     } from '../../subworkflows/local/cram_sampleqc/main'
 
 // Create recalibration tables
-include { BAM_BASERECALIBRATOR                        } from '../../subworkflows/local/bam_baserecalibrator/main'
-include { BAM_BASERECALIBRATOR_SPARK                  } from '../../subworkflows/local/bam_baserecalibrator_spark/main'
+include { BAM_BASERECALIBRATOR                              } from '../../subworkflows/local/bam_baserecalibrator/main'
+include { BAM_BASERECALIBRATOR_SPARK                        } from '../../subworkflows/local/bam_baserecalibrator_spark/main'
 
 // Create recalibrated cram files to use for variant calling (+QC)
-include { BAM_APPLYBQSR                               } from '../../subworkflows/local/bam_applybqsr/main'
-include { BAM_APPLYBQSR_SPARK                         } from '../../subworkflows/local/bam_applybqsr_spark/main'
+include { BAM_APPLYBQSR                                     } from '../../subworkflows/local/bam_applybqsr/main'
+include { BAM_APPLYBQSR_SPARK                               } from '../../subworkflows/local/bam_applybqsr_spark/main'
 
 // Variant calling on a single normal sample
-include { BAM_VARIANT_CALLING_GERMLINE_ALL            } from '../../subworkflows/local/bam_variant_calling_germline_all/main'
+include { BAM_VARIANT_CALLING_GERMLINE_ALL                  } from '../../subworkflows/local/bam_variant_calling_germline_all/main'
 
 // Variant calling on a single tumor sample
-include { BAM_VARIANT_CALLING_TUMOR_ONLY_ALL          } from '../../subworkflows/local/bam_variant_calling_tumor_only_all/main'
+include { BAM_VARIANT_CALLING_TUMOR_ONLY_ALL                } from '../../subworkflows/local/bam_variant_calling_tumor_only_all/main'
 
 // Variant calling on tumor/normal pair
-include { BAM_VARIANT_CALLING_SOMATIC_ALL             } from '../../subworkflows/local/bam_variant_calling_somatic_all/main'
+include { BAM_VARIANT_CALLING_SOMATIC_ALL                   } from '../../subworkflows/local/bam_variant_calling_somatic_all/main'
 
 // POST VARIANTCALLING: e.g. merging
-include { POST_VARIANTCALLING                         } from '../../subworkflows/local/post_variantcalling/main'
+include { POST_VARIANTCALLING                               } from '../../subworkflows/local/post_variantcalling/main'
 
 // QC on VCF files
-include { VCF_QC_BCFTOOLS_VCFTOOLS                    } from '../../subworkflows/local/vcf_qc_bcftools_vcftools/main'
+include { VCF_QC_BCFTOOLS_VCFTOOLS                          } from '../../subworkflows/local/vcf_qc_bcftools_vcftools/main'
 
 // Annotation
-include { VCF_ANNOTATE_ALL                            } from '../../subworkflows/local/vcf_annotate_all/main'
+include { VCF_ANNOTATE_ALL                                  } from '../../subworkflows/local/vcf_annotate_all/main'
 
 // MULTIQC
-include { MULTIQC                                     } from '../../modules/nf-core/multiqc/main'
+include { MULTIQC                                           } from '../../modules/nf-core/multiqc/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -147,11 +152,35 @@ workflow SAREK {
 
     if (params.step == 'mapping') {
 
-        // Figure out if input is bam or fastq
+        // Figure out if input is bam, fastq, or spring
         input_sample_type = input_sample.branch{
-            bam:   it[0].data_type == "bam"
-            fastq: it[0].data_type == "fastq"
+            bam:                 it[0].data_type == "bam"
+            fastq_gz:            it[0].data_type == "fastq_gz"
+            one_fastq_gz_spring: it[0].data_type == "one_fastq_gz_spring"
+            two_fastq_gz_spring: it[0].data_type == "two_fastq_gz_spring"
         }
+
+        // Two fastq.gz-files
+        fastq_gz = input_sample_type.fastq_gz.map { meta, files -> addReadgroupToMeta(meta, files) }
+
+        // Just one fastq.gz.spring-file with both R1 and R2
+        fastq_gz_pair_from_spring = SPRING_DECOMPRESS_TO_FQ_PAIR(input_sample_type.one_fastq_gz_spring, false)
+
+        one_fastq_gz_from_spring = fastq_gz_pair_from_spring.fastq.map { meta, files -> addReadgroupToMeta(meta, files) }
+
+        // Two fastq.gz.spring-files - one for R1 and one for R2
+        r1_fastq_gz_from_spring = SPRING_DECOMPRESS_TO_R1_FQ(input_sample_type.two_fastq_gz_spring.map{ meta, files ->
+            [meta, files[0] ]},
+            true // write_one_fastq_gz
+        )
+        r2_fastq_gz_from_spring = SPRING_DECOMPRESS_TO_R2_FQ(input_sample_type.two_fastq_gz_spring.map{ meta, files ->
+            [meta, files[1] ]},
+            true // write_one_fastq_gz
+        )
+
+        two_fastq_gz_from_spring = r1_fastq_gz_from_spring.fastq.join(r2_fastq_gz_from_spring.fastq).map{ meta, fastq_1, fastq_2 -> [meta, [fastq_1, fastq_2]]}
+
+        two_fastq_gz_from_spring = two_fastq_gz_from_spring.map { meta, files -> addReadgroupToMeta(meta, files) }
 
         // Convert any bam input to fastq
         // fasta are not needed when converting bam to fastq -> [ id:"fasta" ], []
@@ -167,7 +196,7 @@ workflow SAREK {
         // Theorically this could work on mixed input (fastq for one sample and bam for another)
         // But not sure how to handle that with the samplesheet
         // Or if we really want users to be able to do that
-        input_fastq = input_sample_type.fastq.mix(CONVERT_FASTQ_INPUT.out.reads)
+        input_fastq = fastq_gz.mix(CONVERT_FASTQ_INPUT.out.reads).mix(one_fastq_gz_from_spring).mix(two_fastq_gz_from_spring)
 
         // STEP 0: QC & TRIM
         // `--skip_tools fastqc` to skip fastqc
@@ -252,6 +281,12 @@ workflow SAREK {
                 meta + [ n_fastq: reads.size() ] // We can drop the FASTQ files now that we know how many there are
             }
             .set { reads_grouping_key }
+
+        reads_for_alignment = reads_for_alignment.map{ meta, reads ->
+            // Update meta.id to meta.sample no multiple lanes or splitted fastqs
+            if (meta.size * meta.num_lanes == 1) [ meta + [ id:meta.sample ], reads ]
+            else [ meta, reads ]
+        }
 
         // reads will be sorted
         sort_bam = true
@@ -712,6 +747,7 @@ workflow SAREK {
             params.skip_tools,
             cram_variant_calling_status_normal,
             [ [ id:'bwa' ], [] ], // bwa_index for tiddit; not used here
+            cnvkit_reference,
             dbsnp,
             dbsnp_tbi,
             dbsnp_vqsr,
@@ -894,6 +930,52 @@ workflow SAREK {
     emit:
     multiqc_report // channel: /path/to/multiqc_report.html
     versions       // channel: [ path(versions.yml) ]
+}
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    FUNCTIONS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+// Add readgroup to meta and remove lane
+def addReadgroupToMeta(meta, files) {
+    def CN = params.seq_center ? "CN:${params.seq_center}\\t" : ''
+
+    // Here we're assuming that fastq_1 and fastq_2 are from the same flowcell:
+    def flowcell = flowcellLaneFromFastq(files[0])
+    // TO-DO: Would it perhaps be better to also call flowcellLaneFromFastq(files[1]) and check that we get the same flowcell-id?
+
+    // Don't use a random element for ID, it breaks resuming
+    def read_group = "\"@RG\\tID:${flowcell}.${meta.sample}.${meta.lane}\\t${CN}PU:${meta.lane}\\tSM:${meta.patient}_${meta.sample}\\tLB:${meta.sample}\\tDS:${params.fasta}\\tPL:${params.seq_platform}\""
+    meta  = meta - meta.subMap('lane') + [read_group: read_group.toString()]
+    return [ meta, files ]
+}
+// Parse first line of a FASTQ file, return the flowcell id and lane number.
+def flowcellLaneFromFastq(path) {
+    // expected format:
+    // xx:yy:FLOWCELLID:LANE:... (seven fields)
+    // or
+    // FLOWCELLID:LANE:xx:... (five fields)
+    def line
+    path.withInputStream {
+        InputStream gzipStream = new java.util.zip.GZIPInputStream(it)
+        Reader decoder = new InputStreamReader(gzipStream, 'ASCII')
+        BufferedReader buffered = new BufferedReader(decoder)
+        line = buffered.readLine()
+    }
+    assert line.startsWith('@')
+    line = line.substring(1)
+    def fields = line.split(':')
+    String fcid
+
+    if (fields.size() >= 7) {
+        // CASAVA 1.8+ format, from  https://support.illumina.com/help/BaseSpace_OLH_009008/Content/Source/Informatics/BS/FileFormat_FASTQ-files_swBS.htm
+        // "@<instrument>:<run number>:<flowcell ID>:<lane>:<tile>:<x-pos>:<y-pos>:<UMI> <read>:<is filtered>:<control number>:<index>"
+        fcid = fields[2]
+    } else if (fields.size() == 5) {
+        fcid = fields[0]
+    }
+    return fcid
 }
 
 /*

@@ -18,7 +18,7 @@
                     
                 ],
                 "3": [
-                    "versions.yml:md5,4870fc0a88c616aa937f8325a2db0c3c"
+                    "versions.yml:md5,2db78952923a61e05d50b95518b21856"
                 ],
                 "fa": [
                     
@@ -36,7 +36,7 @@
                     
                 ],
                 "versions": [
-                    "versions.yml:md5,4870fc0a88c616aa937f8325a2db0c3c"
+                    "versions.yml:md5,2db78952923a61e05d50b95518b21856"
                 ]
             }
         ],
@@ -44,7 +44,7 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-03-18T16:22:39.412601"
+        "timestamp": "2024-05-28T15:42:14.779784761"
     },
     "test_samtools_faidx_bgzip": {
         "content": [
@@ -71,7 +71,7 @@
                     ]
                 ],
                 "3": [
-                    "versions.yml:md5,4870fc0a88c616aa937f8325a2db0c3c"
+                    "versions.yml:md5,2db78952923a61e05d50b95518b21856"
                 ],
                 "fa": [
                     
@@ -95,7 +95,7 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,4870fc0a88c616aa937f8325a2db0c3c"
+                    "versions.yml:md5,2db78952923a61e05d50b95518b21856"
                 ]
             }
         ],
@@ -103,7 +103,7 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-03-18T16:23:22.427966"
+        "timestamp": "2024-05-28T15:42:20.256633877"
     },
     "test_samtools_faidx_fasta": {
         "content": [
@@ -124,7 +124,7 @@
                     
                 ],
                 "3": [
-                    "versions.yml:md5,4870fc0a88c616aa937f8325a2db0c3c"
+                    "versions.yml:md5,2db78952923a61e05d50b95518b21856"
                 ],
                 "fa": [
                     [
@@ -142,7 +142,7 @@
                     
                 ],
                 "versions": [
-                    "versions.yml:md5,4870fc0a88c616aa937f8325a2db0c3c"
+                    "versions.yml:md5,2db78952923a61e05d50b95518b21856"
                 ]
             }
         ],
@@ -150,7 +150,7 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-03-18T16:24:04.107537"
+        "timestamp": "2024-05-28T15:42:25.632577273"
     },
     "test_samtools_faidx_stub_fasta": {
         "content": [
@@ -171,7 +171,7 @@
                     
                 ],
                 "3": [
-                    "versions.yml:md5,4870fc0a88c616aa937f8325a2db0c3c"
+                    "versions.yml:md5,2db78952923a61e05d50b95518b21856"
                 ],
                 "fa": [
                     [
@@ -189,7 +189,7 @@
                     
                 ],
                 "versions": [
-                    "versions.yml:md5,4870fc0a88c616aa937f8325a2db0c3c"
+                    "versions.yml:md5,2db78952923a61e05d50b95518b21856"
                 ]
             }
         ],
@@ -197,7 +197,7 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-03-18T16:24:45.868463"
+        "timestamp": "2024-05-28T15:42:31.058424849"
     },
     "test_samtools_faidx_stub_fai": {
         "content": [
@@ -218,7 +218,7 @@
                     
                 ],
                 "3": [
-                    "versions.yml:md5,4870fc0a88c616aa937f8325a2db0c3c"
+                    "versions.yml:md5,2db78952923a61e05d50b95518b21856"
                 ],
                 "fa": [
                     
@@ -236,7 +236,7 @@
                     
                 ],
                 "versions": [
-                    "versions.yml:md5,4870fc0a88c616aa937f8325a2db0c3c"
+                    "versions.yml:md5,2db78952923a61e05d50b95518b21856"
                 ]
             }
         ],
@@ -244,6 +244,6 @@
             "nf-test": "0.8.4",
             "nextflow": "23.10.1"
         },
-        "timestamp": "2024-03-18T16:25:27.550554"
+        "timestamp": "2024-05-28T15:42:36.479929617"
     }
 }
