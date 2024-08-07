@@ -4,4 +4,4 @@ channels:
   - bioconda
   - defaults
 dependencies:
-  - bioconda::bwa=0.7.17
+  - bioconda::bwa=0.7.18

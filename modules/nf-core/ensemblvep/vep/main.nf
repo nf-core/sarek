@@ -57,9 +57,9 @@ process ENSEMBLVEP_VEP {
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    touch ${prefix}.vcf.gz
-    touch ${prefix}.tab.gz
-    touch ${prefix}.json.gz
+    echo "" | gzip > ${prefix}.vcf.gz
+    echo "" | gzip > ${prefix}.tab.gz
+    echo "" | gzip > ${prefix}.json.gz
     touch ${prefix}.summary.html
 
     cat <<-END_VERSIONS > versions.yml
