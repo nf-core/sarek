@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [dev](https://github.com/nf-core/sarek/tree/dev)
+
+### Added
+
+### Changed
+
+### Fixed
+
+### Removed
+
+### Dependencies
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+
+### Parameters
+
 ## [3.4.3](https://github.com/nf-core/sarek/releases/tag/3.4.3) - Loametjåhkkå
 
 Loametjåhkkå is another one of the main peaks of the Pårte massif.
