@@ -45,6 +45,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
   - [Structural Variants](#structural-variants)
     - [Manta](#manta)
     - [TIDDIT](#tiddit)
+    - [DYSGU](#dysgu)
   - [Sample heterogeneity, ploidy and CNVs](#sample-heterogeneity-ploidy-and-cnvs)
     - [ASCAT](#ascat)
     - [CNVKit](#cnvkit)
@@ -638,6 +639,18 @@ It is optimized for analysis of germline variation in small sets of individuals 
   - tab file describing the estimated ploidy and coverage across each contig
 
 </details>
+
+#### DYSGU
+
+[DYSGU](https://github.com/kcleal/dysgu) dysgu (pronounced duss-key) is a set of command line tools and python-API, for calling structural variants using paired-end or long read sequencing data. For further reading and documentation see the [DYSGU manual](https://github.com/kcleal/dysgu/blob/master/README.rst).
+
+<details markdown="1">
+<summary>Output files for normal samples</summary>
+
+**Output directory: `{outdir}/variantcalling/dysgu/<sample>/`**
+
+- `<sample>.dysgu.vcf.gz` and `<sample>.dysgu.vcf.gz.tbi`
+  - VCF with tabix index containing SV calls
 
 ### Sample heterogeneity, ploidy and CNVs
 
