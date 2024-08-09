@@ -1,0 +1,90 @@
+nextflow_process {
+
+    name "Test Process VARDICTJAVA"
+    script "../main.nf"
+    process "VARDICTJAVA"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "vardictjava"
+
+    test("homo_sapiens - [bam, bai, bed] - fasta - fai") {
+
+        when {
+            params {
+                outdir = $outputDir
+            }
+            process {
+                """
+                input[0] = Channel.value([
+                    [ id:'test' ], // meta map
+                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true),
+                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_bam_bai'], checkIfExists: true),
+                    file(params.test_data['homo_sapiens']['genome']['genome_bed'], checkIfExists: true)
+                ])
+                input[1] = [
+                    [id:"ref"],
+                    file(params.test_data['homo_sapiens']['genome']['genome_fasta'], checkIfExists: true)
+                ]
+                input[2] = [
+                    [id:"ref"],
+                    file(params.test_data['homo_sapiens']['genome']['genome_fasta_fai'], checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+            
+            
+        }
+
+    }
+
+    test("homo_sapiens - [[bam, bam], [bai, bai], bed] - fasta - fai") {
+
+        when {
+            params {
+                outdir = $outputDir
+            }
+            process {
+                """
+                input[0] = Channel.value([
+                    [ id:'test' ], // meta map
+                    [
+                        file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true),
+                        file(params.test_data['homo_sapiens']['illumina']['test2_paired_end_sorted_bam'], checkIfExists: true)
+                    ],
+                    [
+                        file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_bam_bai'], checkIfExists: true),
+                        file(params.test_data['homo_sapiens']['illumina']['test2_paired_end_sorted_bam_bai'], checkIfExists: true)
+                    ],
+                    file(params.test_data['homo_sapiens']['genome']['genome_bed'], checkIfExists: true)
+                ])
+                input[1] = [
+                    [id:"ref"],
+                    file(params.test_data['homo_sapiens']['genome']['genome_fasta'], checkIfExists: true)
+                ]
+                input[2] = [
+                    [id:"ref"],
+                    file(params.test_data['homo_sapiens']['genome']['genome_fasta_fai'], checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+            
+            
+        }
+
+    }
+
+}

@@ -494,6 +494,11 @@
                         "git_sha": "3f5420aa22e00bd030a2556dfdffc9e164ec0ec5",
                         "installed_by": ["modules"]
                     },
+                    "vardictjava": {
+                        "branch": "master",
+                        "git_sha": "27e170816808aedbbac23f9a1f2c7488d4b6d342",
+                        "installed_by": ["modules"]
+                    },
                     "vcftools": {
                         "branch": "master",
                         "git_sha": "624ecdc43b72e0a45bf05d9b57215d18dcd538f8",
