@@ -344,7 +344,6 @@ workflow {
     //
     // SUBWORKFLOW: Run completion tasks
     //
-
     PIPELINE_COMPLETION(
         params.email,
         params.email_on_fail,
@@ -354,7 +353,6 @@ workflow {
         params.hook_url,
         NFCORE_SAREK.out.multiqc_report
     )
- 
 }
 
 /*

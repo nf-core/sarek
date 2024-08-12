@@ -111,7 +111,7 @@
                     "type": "string",
                     "fa_icon": "fas fa-toolbox",
                     "description": "Tools to use for duplicate marking, variant calling and/or for annotation.",
-                    "help_text": "Multiple tools separated with commas.\n\n**Variant Calling:**\n\nGermline variant calling can currently be performed with the following variant callers:\n- SNPs/Indels: DeepVariant, FreeBayes, GATK HaplotypeCaller, mpileup, Sentieon Haplotyper, Strelka\n- Structural Variants: Manta, TIDDIT\n- Copy-number: CNVKit\n\nTumor-only somatic variant calling can currently be performed with the following variant callers:\n- SNPs/Indels: FreeBayes, mpileup, Mutect2, Lofreq, Strelka\n- Structural Variants: Manta, TIDDIT\n- Copy-number: CNVKit, ControlFREEC\n\nSomatic variant calling can currently only be performed with the following variant callers:\n- SNPs/Indels: FreeBayes, Mutect2,Strelka2\n- Structural variants: Manta, TIDDIT\n- Copy-Number: ASCAT, CNVKit, Control-FREEC\n- Microsatellite Instability: MSIsensorpro\n\n> **NB** Mutect2 for somatic variant calling cannot be combined with `--no_intervals`\n\n**Annotation:**\n \n- snpEff, VEP, merge (both consecutively), and bcftools annotate (needs `--bcftools_annotation`).\n\n> **NB** As Sarek will use bgzip and tabix to compress and index VCF files annotated, it expects VCF files to be sorted when starting from `--step annotate`.",
+                    "help_text": "Multiple tools separated with commas.\n\n**Variant Calling:**\n\nGermline variant calling can currently be performed with the following variant callers:\n- SNPs/Indels: DeepVariant, FreeBayes, GATK HaplotypeCaller, mpileup, Sentieon Haplotyper, Strelka\n- Structural Variants: Manta, TIDDIT\n- Copy-number: CNVKit\n\nTumor-only somatic variant calling can currently be performed with the following variant callers:\n- SNPs/Indels: FreeBayes, mpileup, Mutect2, Strelka, Lofreq\n- Structural Variants: Manta, TIDDIT\n- Copy-number: CNVKit, ControlFREEC\n\nSomatic variant calling can currently only be performed with the following variant callers:\n- SNPs/Indels: FreeBayes, Mutect2, Strelka\n- Structural variants: Manta, TIDDIT\n- Copy-Number: ASCAT, CNVKit, Control-FREEC\n- Microsatellite Instability: MSIsensorpro\n\n> **NB** Mutect2 for somatic variant calling cannot be combined with `--no_intervals`\n\n**Annotation:**\n \n- snpEff, VEP, merge (both consecutively), and bcftools annotate (needs `--bcftools_annotation`).\n\n> **NB** As Sarek will use bgzip and tabix to compress and index VCF files annotated, it expects VCF files to be sorted when starting from `--step annotate`.",
                     "pattern": "^((ascat|bcfann|cnvkit|controlfreec|deepvariant|freebayes|haplotypecaller|sentieon_dnascope|sentieon_haplotyper|manta|merge|mpileup|msisensorpro|mutect2|lofreq|ngscheckmate|sentieon_dedup|snpeff|strelka|tiddit|vep)?,?)*(?<!,)$"
                 },
                 "skip_tools": {
@@ -216,12 +216,7 @@
                     "type": "string",
                     "default": "bwa-mem",
                     "fa_icon": "fas fa-puzzle-piece",
-                    "enum": [
-                        "bwa-mem",
-                        "bwa-mem2",
-                        "dragmap",
-                        "sentieon-bwamem"
-                    ],
+                    "enum": ["bwa-mem", "bwa-mem2", "dragmap", "sentieon-bwamem"],
                     "description": "Specify aligner to be used to map reads to reference genome.",
                     "help_text": "Sarek will build missing indices automatically if not provided. Set `--bwa false` if indices should be (re-)built.\nIf DragMap is selected as aligner, it is recommended to skip baserecalibration with `--skip_tools baserecalibrator`. For more info see [here](https://gatk.broadinstitute.org/hc/en-us/articles/4407897446939--How-to-Run-germline-single-sample-short-variant-discovery-in-DRAGEN-mode)."
                 },
@@ -361,7 +356,7 @@
                 },
                 "cf_ploidy": {
                     "type": "string",
-                    "default": 2,
+                    "default": "2",
                     "fa_icon": "fas fa-bacon",
                     "help_text": "In case of doubt, you can set different values and Control-FREEC will select the one that explains most observed CNAs Example: ploidy=2 , ploidy=2,3,4. For more details, see the [manual](http://boevalab.inf.ethz.ch/FREEC/tutorial.html).",
                     "description": "Genome ploidy used by ControlFREEC",
@@ -979,14 +974,7 @@
                     "description": "Method used to save pipeline results to output directory.",
                     "help_text": "The Nextflow `publishDir` option specifies which intermediate files should be saved to the output directory. This option tells the pipeline what method should be used to move these files. See [Nextflow docs](https://www.nextflow.io/docs/latest/process.html#publishdir) for details.",
                     "fa_icon": "fas fa-copy",
-                    "enum": [
-                        "symlink",
-                        "rellink",
-                        "link",
-                        "copy",
-                        "copyNoFollow",
-                        "move"
-                    ],
+                    "enum": ["symlink", "rellink", "link", "copy", "copyNoFollow", "move"],
                     "hidden": true
                 },
                 "email": {
@@ -1073,8 +1061,7 @@
                     "fa_icon": "far fa-check-circle",
                     "description": "Validation of parameters in lenient more.",
                     "hidden": true,
-                    "help_text": "Allows string values that are parseable as numbers or booleans. For further information see [JSONSchema docs](https://github.com/everit-org/json-schema#lenient-mode).",
-                    "default": true
+                    "help_text": "Allows string values that are parseable as numbers or booleans. For further information see [JSONSchema docs](https://github.com/everit-org/json-schema#lenient-mode)."
                 },
                 "hook_url": {
                     "type": "string",

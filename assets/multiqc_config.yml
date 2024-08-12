@@ -31,7 +31,6 @@ run_modules:
   - vcftools
   - snpeff
   - vep
-  - lofreq
 
 module_order:
   - fastqc:
@@ -57,8 +56,6 @@ module_order:
       name: "SNPeff"
   - vep:
       name: "VEP"
-  - lofreq:
-      name: "Lofreq"
 
 extra_fn_clean_exts:
   - "_val"

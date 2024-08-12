@@ -193,12 +193,7 @@
     - path: results/reports/vcftools/strelka/sample2/sample2.strelka.variants.TsTv.count
       md5sum: d7f54d09d38af01a574a4930af21cfc9
     - path: results/reports/vcftools/strelka/sample2/sample2.strelka.variants.TsTv.qual
-      contains:
-        [
-          "19	453	47848	0.00946748	11	50	0.22",
-          "72	458	47880	0.00956558	6	20	0.3",
-          "314	463	47899	0.00966617	1	1	1",
-        ]
+      contains: ["19	453	47848	0.00946748	11	50	0.22", "72	458	47880	0.00956558	6	20	0.3", "314	463	47899	0.00966617	1	1	1"]
     - path: results/variant_calling/strelka/sample2/sample2.strelka.genome.vcf.gz
     # binary changes md5sums on reruns
     - path: results/variant_calling/strelka/sample2/sample2.strelka.genome.vcf.gz.tbi

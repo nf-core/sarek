@@ -42,7 +42,7 @@ It's listed on [Elixir - Tools and Data Services Registry](https://bio.tools/nf-
 Depending on the options and samples provided, the pipeline can currently perform the following:
 
 - Form consensus reads from UMI sequences (`fgbio`)
-- Sequencing quality control and trimming (enabled by `--trim_fastq`) (`FastQC`, `fastp`)
+- Sequencing quality control and trimming (enabled by `--trim_fastq`) (`FastQC`, `fastp`,`bedtools`)
 - Map Reads to Reference (`BWA-mem`, `BWA-mem2`, `dragmap` or `Sentieon BWA-mem`)
 - Process BAM file (`GATK MarkDuplicates`, `GATK BaseRecalibrator` and `GATK ApplyBQSR` or `Sentieon LocusCollector` and `Sentieon Dedup`)
 - Summarise alignment statistics (`samtools stats`, `mosdepth`)
@@ -132,6 +132,7 @@ We thank the following people for their extensive assistance in the development 
 - [Abhinav Sharma](https://github.com/abhi18av)
 - [Adam Talbot](https://github.com/adamrtalbot)
 - [Adrian Lärkeryd](https://github.com/adrlar)
+- [AitorPeseta](https://github.com/AitorPeseta)
 - [Alexander Peltzer](https://github.com/apeltzer)
 - [Alison Meynert](https://github.com/ameynert)
 - [Anders Sune Pedersen](https://github.com/asp8200)
@@ -161,6 +162,7 @@ We thank the following people for their extensive assistance in the development 
 - [Lucia Conde](https://github.com/lconde-ucl)
 - [Malin Larsson](https://github.com/malinlarsson)
 - [Marcel Martin](https://github.com/marcelm)
+- [nevinwu](https://github.com/nevinwu)
 - [Nick Smith](https://github.com/nickhsmith)
 - [Nicolas Schcolnicov](https://github.com/nschcolnicov)
 - [Nilesh Tawari](https://github.com/nilesh-tawari)

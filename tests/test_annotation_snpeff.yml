@@ -10,12 +10,7 @@
     # binary changes md5sums on reruns
     - path: results/multiqc
     - path: results/reports/snpeff/test/snpEff_summary.html
-      contains:
-        [
-          "<b> Genome total length </b>",
-          "<td> 100,286,402 </td>",
-          "<td> MT192765.1 </td>",
-        ]
+      contains: ["<b> Genome total length </b>", "<td> 100,286,402 </td>", "<td> MT192765.1 </td>"]
     - path: results/reports/snpeff/test/test_snpEff.csv
       contains:
         [

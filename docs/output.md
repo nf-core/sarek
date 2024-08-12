@@ -602,6 +602,7 @@ For further downstream analysis, take a look [here](https://github.com/Illumina/
 
 </details>
 
+
 ### Structural Variants
 
 #### Manta

@@ -57,7 +57,6 @@ include { BAM_SENTIEON_DEDUP                                } from '../../subwor
 include { CRAM_QC_MOSDEPTH_SAMTOOLS as CRAM_QC_NO_MD        } from '../../subworkflows/local/cram_qc_mosdepth_samtools/main'
 include { CRAM_SAMPLEQC                                     } from '../../subworkflows/local/cram_sampleqc/main'
 
-
 // Create recalibration tables
 include { BAM_BASERECALIBRATOR                              } from '../../subworkflows/local/bam_baserecalibrator/main'
 include { BAM_BASERECALIBRATOR_SPARK                        } from '../../subworkflows/local/bam_baserecalibrator_spark/main'
@@ -95,7 +94,7 @@ include { MULTIQC                                           } from '../../module
 
 workflow SAREK {
     take:
-        input_sample //samples
+        input_sample
         allele_files
         bcftools_annotations
         bcftools_annotations_tbi
@@ -107,14 +106,14 @@ workflow SAREK {
         dbsnp_tbi
         dbsnp_vqsr
         dict
-        fasta   //fasta
-        fasta_fai  //fai
+        fasta
+        fasta_fai
         gc_file
         germline_resource
         germline_resource_tbi
         index_alignment
-        intervals_and_num_intervals //capture
-        intervals_bed_combined   //target
+        intervals_and_num_intervals
+        intervals_bed_combined
         intervals_bed_combined_for_variant_calling
         intervals_bed_gz_tbi_and_num_intervals
         intervals_bed_gz_tbi_combined
@@ -863,6 +862,7 @@ workflow SAREK {
         versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.versions)
         versions = versions.mix(POST_VARIANTCALLING.out.versions)
         versions = versions.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.versions)
+
         // ANNOTATE
         if (params.step == 'annotate') vcf_to_annotate = input_sample
 
@@ -885,7 +885,6 @@ workflow SAREK {
                 bcftools_annotations_tbi,
                 bcftools_header_lines)
 
-
             // Gather used softwares versions
             versions = versions.mix(VCF_ANNOTATE_ALL.out.versions)
             reports = reports.mix(VCF_ANNOTATE_ALL.out.reports)
@@ -895,7 +894,6 @@ workflow SAREK {
     //
     // Collate and save software versions
     //
-
     version_yaml = Channel.empty()
     if (!(params.skip_tools && params.skip_tools.split(',').contains('versions'))) {
         version_yaml = softwareVersionsToYAML(versions)
@@ -905,7 +903,6 @@ workflow SAREK {
     //
     // MODULE: MultiQC
     //
-
     if (!(params.skip_tools && params.skip_tools.split(',').contains('multiqc'))) {
 
         ch_multiqc_config                     = Channel.fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
@@ -928,9 +925,7 @@ workflow SAREK {
         )
         multiqc_report = MULTIQC.out.report.toList()
 
-VCF_QC_BCFTOOLS_VCFTOOLS
     }
-
 
     emit:
     multiqc_report // channel: /path/to/multiqc_report.html

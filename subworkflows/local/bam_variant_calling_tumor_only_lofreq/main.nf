@@ -1,6 +1,6 @@
 include { LOFREQ_CALLPARALLEL as LOFREQ          } from '../../../modules/nf-core/lofreq/callparallel/main.nf'
-include { BEDTOOLS_SORT       as SORT_INTERVALS  } from '../../../modules/nf-core/bedtools/sort'
-include { BEDTOOLS_MERGE      as MERGE_INTERVALS } from '../../../modules/nf-core/bedtools/merge'
+include { BEDTOOLS_SORT       as SORT_INTERVALS  } from '../../../modules/nf-core/bedtools/sort/main.nf'
+include { BEDTOOLS_MERGE      as MERGE_INTERVALS } from '../../../modules/nf-core/bedtools/merge/main.nf'
 
 workflow BAM_VARIANT_CALLING_TUMOR_ONLY_LOFREQ {
     take:
