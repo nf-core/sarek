@@ -13,6 +13,7 @@ include { BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA        } from '../bam_variant_cal
 include { BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2      } from '../bam_variant_calling_tumor_only_mutect2/main'
 include { BAM_VARIANT_CALLING_TUMOR_ONLY_LOFREQ       } from '../bam_variant_calling_tumor_only_lofreq/main'
 
+
 workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     take:
     tools                         // Mandatory, list of tools to apply
