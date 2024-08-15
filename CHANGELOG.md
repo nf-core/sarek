@@ -9,11 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- [1614](https://github.com/nf-core/sarek/pull/1614) Back to dev
+- [1614](https://github.com/nf-core/sarek/pull/1614) - Back to dev
 
 ### Changed
 
 ### Fixed
+
+- [1623](https://github.com/nf-core/sarek/pull/1623) - Update docs to clarify vep cache folder organisation
 
 ### Removed
 
