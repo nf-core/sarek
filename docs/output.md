@@ -16,12 +16,12 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - [Trim adapters](#trim-adapters)
     - [Split FastQ files](#split-fastq-files)
     - [UMI consensus](#umi-consensus)
-    - [Bedtools](#bedtools)
   - [Map to Reference](#map-to-reference)
     - [BWA](#bwa)
     - [BWA-mem2](#bwa-mem2)
     - [DragMap](#dragmap)
     - [Sentieon BWA mem](#sentieon-bwa-mem)
+    - [Bedtools](#bedtools)
   - [Mark Duplicates](#mark-duplicates)
     - [GATK MarkDuplicates (Spark)](#gatk-markduplicates-spark)
   - [Sentieon LocusCollector and Dedup](#sentieon-locuscollector-and-dedup)
@@ -160,22 +160,6 @@ These files are intermediate and by default not placed in the output-folder kept
 
 </details>
 
-#### Bedtools
-
-[Bedtools](https://github.com/arq5x/bedtools2) utilities are a swiss-army knife of tools for a wide-range of genomics analysis tasks. The most widely-used tools enable genome arithmetic. Bedtools allows one to intersect, merge, count, complement, and shuffle genomic intervals from multiple files in widely-used genomic file formats such as BAM, BED, GFF/GTF, VCF.
-While each individual tool is designed to do a relatively simple task (e.g., intersect two interval files), quite sophisticated analyses can be conducted by combining multiple bedtools operations on the UNIX command line.
-
-<details markdown="1">
-<summary>Output files for all samples</summary>
-
-**Output directory: `{outdir}/reports/bedtools/`**
-
-- `<sample>.bed`
-  - New .bed file with the news changes.
-  </details>
-
-</details>
-
 ### Map to Reference
 
 #### BWA
@@ -212,6 +196,23 @@ The alignment files (BAM or CRAM) produced by the chosen aligner are not publish
 - if `--save_mapped --save_output_as_bam`: `<sample>.sorted.bam` and `<sample>.sorted.bam.bai`
   - BAM file and index
   </details>
+
+#### Bedtools
+
+[Bedtools](https://github.com/arq5x/bedtools2) utilities are a swiss-army knife of tools for a wide-range of genomics analysis tasks. The most widely-used tools enable genome arithmetic. Bedtools allows one to intersect, merge, count, complement, and shuffle genomic intervals from multiple files in widely-used genomic file formats such as BAM, BED, GFF/GTF, VCF.
+While each individual tool is designed to do a relatively simple task (e.g., intersect two interval files), quite sophisticated analyses can be conducted by combining multiple bedtools operations on the UNIX command line.
+
+<details markdown="1">
+<summary>Output files for all samples</summary>
+
+**Output directory: `{outdir}/reports/bedtools/`**
+
+- `<sample>.bed`
+  - When applying bedtools sort to a .bed file, the lines are reordered so that the genomic regions are in ascending order according to their position in the   genome.
+  - When applying bedtools merge, overlapping or adjacent regions are combined into one, reducing redundancy and creating longer intervals that cover all the original regions.
+  </details>
+
+</details>
 
 ### Mark Duplicates
 

@@ -42,9 +42,9 @@ It's listed on [Elixir - Tools and Data Services Registry](https://bio.tools/nf-
 Depending on the options and samples provided, the pipeline can currently perform the following:
 
 - Form consensus reads from UMI sequences (`fgbio`)
-- Sequencing quality control and trimming (enabled by `--trim_fastq`) (`FastQC`, `fastp`,`bedtools`)
+- Sequencing quality control and trimming (enabled by `--trim_fastq`) (`FastQC`, `fastp`)
 - Map Reads to Reference (`BWA-mem`, `BWA-mem2`, `dragmap` or `Sentieon BWA-mem`)
-- Process BAM file (`GATK MarkDuplicates`, `GATK BaseRecalibrator` and `GATK ApplyBQSR` or `Sentieon LocusCollector` and `Sentieon Dedup`)
+- Process BAM file (`GATK MarkDuplicates`,`bedtools`, `GATK BaseRecalibrator` and `GATK ApplyBQSR` or `Sentieon LocusCollector` and `Sentieon Dedup`)
 - Summarise alignment statistics (`samtools stats`, `mosdepth`)
 - Variant calling (enabled by `--tools`, see [compatibility](https://nf-co.re/sarek/latest/docs/usage#which-variant-calling-tool-is-implemented-for-which-data-type)):
   - `ASCAT`

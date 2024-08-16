@@ -536,6 +536,18 @@ strelka_bp:
   - tests/csv/3.0/recalibrated_somatic.csv
   - tests/test_strelka_bp.yml
 
+## lofreq
+lofreq:
+  - conf/modules/lofreq.config
+  - modules/nf-core/bedtools/sort/**
+  - modules/nf-core/bedtools/merge/**
+  - modules/nf-core/mosdepth/**
+  - modules/nf-core/lofreq/callparallel/**
+  - subworkflows/local/bam_variant_calling_tumor_only_lofreq/**
+  - subworkflows/local/bam_variant_calling_tumor_only_all/**
+  - tests/csv/3.0/recalibrated_tumoronly.csv
+  - tests/test_lofreq.yml
+
 ## tiddit
 tiddit:
   - conf/modules/tiddit.config
