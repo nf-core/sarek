@@ -208,7 +208,7 @@ While each individual tool is designed to do a relatively simple task (e.g., int
 **Output directory: `{outdir}/reports/bedtools/`**
 
 - `<sample>.bed`
-  - When applying bedtools sort to a .bed file, the lines are reordered so that the genomic regions are in ascending order according to their position in the   genome.
+  - When applying bedtools sort to a .bed file, the lines are reordered so that the genomic regions are in ascending order according to their position in the genome.
   - When applying bedtools merge, overlapping or adjacent regions are combined into one, reducing redundancy and creating longer intervals that cover all the original regions.
   </details>
 
