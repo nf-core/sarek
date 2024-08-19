@@ -247,7 +247,7 @@ jobs:
           - tags: "gatk4spark/applybqsr"
           - tags: "gatk4spark/markduplicates"
           - tags: "gawk"
-          - tags: "lofreq"
+          - tags: "lofreq/callparallel"
           - tags: "mosdepth"
           - tags: "multiqc"
           - tags: "ngscheckmate/ncm"
