@@ -1,2 +1,0 @@
-bedtools/sort:
-  - "modules/nf-core/bedtools/sort/**"

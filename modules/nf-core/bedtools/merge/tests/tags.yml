@@ -1,2 +1,0 @@
-bedtools/merge:
-  - "modules/nf-core/bedtools/merge/**"
