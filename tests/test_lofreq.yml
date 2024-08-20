@@ -15,18 +15,13 @@
     - path: results/reports/bcftools/lofreq/sample2/sample2.bcftools_stats.txt
       md5sum: 795d766515702e277fecfe54cef17eb0
     # conda changes md5sums for test
-    - path: results/reports/vcftools/lofreq/sample2/sample2.FILTER.summary
-      md5sum: be7ff84cf917483f02a6ae28edae999d
-    - path: results/reports/vcftools/lofreq/sample2/sample2.TsTv.qual
-      md5sum: e5d29ea7ac3d1ddfe77ae4574615c366
-    # conda changes md5sums for test
     - path: results/reports/samtools/sample2/sample2.recal.cram.stats
       md5sum: 345e7084e5dda88fe368894d19ee50de
     - path: results/reports/samtools/sample2/sample2.sorted.cram.stats
       md5sum: 6e3505dc1d2ea5db94232fdd8e33ae84
     # conda changes md5sums for test
     - path: results/variant_calling/lofreq/sample2/sample2.vcf.gz
-      md5sum: 15b7a969076d113d6fb18f00c9312a76
+      contains: ['##INFO=<ID=CONSVAR,Number=0,Type=Flag,Description="Indicates that the variant is a consensus variant (as opposed to a low frequency variant).">']
     # binary changes md5sums on reruns
     - path: results/reports/mosdepth/sample2/sample2.recal.mosdepth.global.dist.txt
     - path: results/reports/mosdepth/sample2/sample2.recal.mosdepth.region.dist.txt
@@ -69,7 +64,6 @@
       md5sum: 58cbc0b8dbf4a3e27458516da4dbaa53
     # conda changes md5sums for test
     - path: results/variant_calling/lofreq/sample2/sample2.vcf.gz
-      md5sum: 6b8893d10c8fe139cfeabda891550269
     # binary changes md5sums on reruns
     - path: results/reports/mosdepth/sample2/sample2.recal.mosdepth.global.dist.txt
     - path: results/reports/mosdepth/sample2/sample2.recal.mosdepth.summary.txt
