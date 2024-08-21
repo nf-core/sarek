@@ -20,7 +20,7 @@ module load java/20.0.1
 ## technical replicates get merged ...
 samplesheet=${HOME}/sarek/resources/wgs_test_samplesheet.csv
 ## specify path to out directory
-outdir=/data1/shahs3/users/preskaa/APS017_Archive/sarek
+outdir=/data1/shahs3/users/preskaa/APS017_Archive/sarek_pdx
 
 ## reference genome for bwacmp (if sample is PDX)
 bbsplit_fasta_list=${HOME}/sarek/resources/bbsplit_fasta.csv
