@@ -7,7 +7,7 @@
 #SBATCH --job-name=sarek
 #SBATCH --mail-type=END,FAIL
 #SBATCH --mail-user=preskaa@mskcc.org
-#SBATCH --output=slurm%j_TCDO-SAR-061.out
+#SBATCH --output=slurm%j_sarek.out
 
 
 ## activate nf-core conda environment
@@ -25,8 +25,8 @@ outdir=/data1/shahs3/users/preskaa/APS017_Archive/sarek
 ## reference genome for bwacmp (if sample is PDX)
 mouse_refgenome=/data1/shahs3/isabl_data_lake/assemblies/WGS-MM10/mouse/mm10_build38_mouse.fasta
 ### human reference genome
-refgenome=/data1/shahs3/isabl_data_lake/assemblies/GRCh38-P14/GRCh38.primary_assembly.genome.fa
-ref_index=/data1/shahs3/isabl_data_lake/assemblies/GRCh38-P14/GRCh38.primary_assembly.genome.fa.fai
+refgenome=/data1/shahs3/reference/ref-sarcoma/GRCh38/v45/GRCh38.primary_assembly.genome.fa
+ref_index=/data1/shahs3/reference/ref-sarcoma/GRCh38/v45/GRCh38.primary_assembly.genome.fa.fai
 
 ## last two flags trigger chopper to differentiate mouse from human reads for PDX samples
 ## these flags should not be used for human samples
@@ -44,6 +44,7 @@ nextflow run apsteinberg/sarek \
   --save_output_as_bam \
   --fasta ${refgenome} \
   --fasta_fai ${ref_index} \
+  --igenomes_ignore \
   --email preskaa@mskcc.org
 
 
