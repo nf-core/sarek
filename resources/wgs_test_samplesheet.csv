@@ -1,0 +1,2 @@
+patient,sample,lane,fastq_1,fastq_2
+TCDO-SAR-034,TCDO-SAR-034-PDX,lane_1,/data1/shahs3/users/preskaa/APS017_Archive/wgs_test_fastq/TCDO-SAR-034-PDX_R1.downsampled.100rds.fastq.gz,/data1/shahs3/users/preskaa/APS017_Archive/wgs_test_fastq/TCDO-SAR-034-PDX_R2.downsampled.100rds.fastq.gz
