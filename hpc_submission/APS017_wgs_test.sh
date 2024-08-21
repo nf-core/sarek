@@ -4,7 +4,7 @@
 #SBATCH --cpus-per-task=1
 #SBATCH --time=48:00:00
 #SBATCH --mem=8GB
-#SBATCH --job-name=061
+#SBATCH --job-name=sarek
 #SBATCH --mail-type=END,FAIL
 #SBATCH --mail-user=preskaa@mskcc.org
 #SBATCH --output=slurm%j_TCDO-SAR-061.out
@@ -44,7 +44,7 @@ nextflow run apsteinberg/sarek \
   --save_output_as_bam \
   --fasta ${refgenome} \
   --fasta_fai ${ref_index} \
-  -email preskaa@mskcc.org
+  --email preskaa@mskcc.org
 
 
 #nextflow run apsteinberg/nanoseq -resume 6c03bf60-99ea-41cd-a949-c30986899f14
