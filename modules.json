@@ -10,6 +10,11 @@
                         "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
                         "installed_by": ["modules"]
                     },
+                    "bbmap/bbsplit": {
+                        "branch": "master",
+                        "git_sha": "1ceaa8ba4d0fd886dbca0e545815d905b7407de7",
+                        "installed_by": ["modules"]
+                    },
                     "bcftools/annotate": {
                         "branch": "master",
                         "git_sha": "cb08035150685b11d890d90c9534d4f16869eaec",
