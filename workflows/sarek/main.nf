@@ -52,6 +52,7 @@ include { MULTIQC                                           } from '../../module
 
 // Remove genomic contaminants using bamcmp
 include { PREPARE_GENOME                                    } from '../subworkflows/local/prepare_genome'
+include { PREPARE_BBSPLIT                                    } from '../subworkflows/local/prepare_bbsplit'
 include { BBMAP_BBSPLIT } from '../modules/nf-core/bbmap/bbsplit/main'
 
 
