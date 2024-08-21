@@ -45,6 +45,7 @@ nextflow run apsteinberg/sarek \
   --fasta ${refgenome} \
   --fasta_fai ${ref_index} \
   --igenomes_ignore \
+  --skip_tools baserecalibrator \
   --email preskaa@mskcc.org
 
 
