@@ -207,6 +207,12 @@
                     "description": "If set, publishes split FASTQ files. Intended for testing purposes.",
                     "hidden": true
                 },
+                "skip_bbsplit": {
+                    "type": "boolean",
+                    "default": true,
+                    "fa_icon": "fas fa-fast-forward",
+                    "description": "Skip BBSplit for removal of non-reference genome reads."
+                },
                 "bbsplit_fasta_list": {
                     "type": "string",
                     "format": "file-path",
