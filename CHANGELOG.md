@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- [1627](https://github.com/nf-core/sarek/pull/1627) - Correct tower reports/snpeff format
+
 ### Fixed
 
 - [1623](https://github.com/nf-core/sarek/pull/1623) - Update docs to clarify vep cache folder organisation
