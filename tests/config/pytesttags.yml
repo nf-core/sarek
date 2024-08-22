@@ -541,6 +541,7 @@ lofreq:
   - conf/modules/lofreq.config
   - modules/nf-core/mosdepth/**
   - modules/nf-core/lofreq/callparallel/**
+  - subworkflows/local/bam_variant_calling_tumor_only_all/**
   - subworkflows/local/bam_variant_calling_tumor_only_lofreq/**
   - tests/csv/3.0/recalibrated_tumoronly.csv
   - tests/test_lofreq.yml

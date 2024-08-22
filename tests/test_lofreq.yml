@@ -1,7 +1,37 @@
-- name: Run variant calling on tumor only sample with lofreq
-  command: nextflow run main.nf -profile test,tools_tumoronly --tools lofreq --outdir results
+- name: Run variant calling on tumor only sample with lofreq without intervals
+  command: nextflow run main.nf -profile test,tools_tumoronly,singularity --tools lofreq --outdir results
   tags:
     - lofreq
+    - tumor_only
+    - variant_calling
+  files:
+    - path: results/csv/variantcalled.csv
+      md5sum: 63f8f2a91e14a71a7b1b72b460943dec
+    - path: results/multiqc
+    - path: results/reports/bcftools/lofreq/sample2/sample2.bcftools_stats.txt
+      md5sum: 6653b20205ee005c7e142c6d36e31004
+    # conda changes md5sums for test
+    - path: results/reports/samtools/sample2/sample2.recal.cram.stats
+      md5sum: b6c2b9056dfc441fddae989cc85f4135
+    # conda changes md5sums for test
+    - path: results/variant_calling/lofreq/sample2/sample2.vcf.gz
+      contains: ['##INFO=<ID=CONSVAR,Number=0,Type=Flag,Description="Indicates that the variant is a consensus variant (as opposed to a low frequency variant).">']
+    # conda changes md5sums for test
+    - path: results/reports/vcftools/lofreq/sample2/sample2.FILTER.summary
+      md5sum: 5771bf5f758006ba141b9a4bf3618e93
+    - path: results/reports/vcftools/lofreq/sample2/sample2.TsTv.qual
+      md5sum: b4305cd4fd6b291f7a01bedae54f0bd9
+    # binary changes md5sums on reruns
+    - path: results/reports/mosdepth/sample2/sample2.recal.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/sample2/sample2.recal.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/sample2/sample2.recal.mosdepth.summary.txt
+    - path: results/reports/mosdepth/sample2/sample2.recal.regions.bed.gz
+    - path: results/reports/mosdepth/sample2/sample2.recal.regions.bed.gz.csi
+- name: Run variant calling on tumor only sample with lofreq without intervals
+  command: nextflow run main.nf -profile test,tools_tumoronly,singularity --tools lofreq --no_intervals --outdir results
+  tags:
+    - lofreq
+    - no_intervals
     - tumor_only
     - variant_calling
   files:
@@ -16,14 +46,14 @@
     # conda changes md5sums for test
     - path: results/variant_calling/lofreq/sample2/sample2.vcf.gz
       contains: ['##INFO=<ID=CONSVAR,Number=0,Type=Flag,Description="Indicates that the variant is a consensus variant (as opposed to a low frequency variant).">']
-     # conda changes md5sums for test
+    # conda changes md5sums for test
     - path: results/reports/vcftools/lofreq/sample2/sample2.FILTER.summary
       md5sum: 72beda1b57da053eb352204828605a40
     - path: results/reports/vcftools/lofreq/sample2/sample2.TsTv.qual
       md5sum: c92117eeb1346790476685296b806bc7
     # binary changes md5sums on reruns
     - path: results/reports/mosdepth/sample2/sample2.recal.mosdepth.global.dist.txt
-    - path: results/reports/mosdepth/sample2/sample2.recal.mosdepth.region.dist.txt
     - path: results/reports/mosdepth/sample2/sample2.recal.mosdepth.summary.txt
-    - path: results/reports/mosdepth/sample2/sample2.recal.regions.bed.gz
-    - path: results/reports/mosdepth/sample2/sample2.recal.regions.bed.gz.csi
+    - path: results/reports/mosdepth/sample2/sample2.recal.per-base.bed.gz
+    - path: results/reports/mosdepth/sample2/sample2.recal.per-base.bed.gz.csi
+
