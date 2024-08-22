@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - [1623](https://github.com/nf-core/sarek/pull/1623) - Update docs to clarify vep cache folder organisation
-- [1628](https://github.com/nf-core/sarek/pull/1628) - fix dbsnp channel mapping in germline variant calling subworkflow
+- [1628](https://github.com/nf-core/sarek/pull/1628) - Fix dbsnp channel mapping in germline variant calling subworkflow
 
 ### Removed
 
