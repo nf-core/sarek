@@ -15,7 +15,10 @@
       md5sum: b6c2b9056dfc441fddae989cc85f4135
     # conda changes md5sums for test
     - path: results/variant_calling/lofreq/sample2/sample2.vcf.gz
-      contains: ['##INFO=<ID=CONSVAR,Number=0,Type=Flag,Description="Indicates that the variant is a consensus variant (as opposed to a low frequency variant).">']
+      contains:
+        [
+          '##INFO=<ID=CONSVAR,Number=0,Type=Flag,Description="Indicates that the variant is a consensus variant (as opposed to a low frequency variant).">',
+        ]
     # conda changes md5sums for test
     - path: results/reports/vcftools/lofreq/sample2/sample2.FILTER.summary
       md5sum: 6d6228b49fa65fd19ba8d2f6b43ec2ef
@@ -45,7 +48,10 @@
       md5sum: b6c2b9056dfc441fddae989cc85f4135
     # conda changes md5sums for test
     - path: results/variant_calling/lofreq/sample2/sample2.vcf.gz
-      contains: ['##INFO=<ID=CONSVAR,Number=0,Type=Flag,Description="Indicates that the variant is a consensus variant (as opposed to a low frequency variant).">']
+      contains:
+        [
+          '##INFO=<ID=CONSVAR,Number=0,Type=Flag,Description="Indicates that the variant is a consensus variant (as opposed to a low frequency variant).">',
+        ]
     # conda changes md5sums for test
     - path: results/reports/vcftools/lofreq/sample2/sample2.FILTER.summary
       md5sum: 72beda1b57da053eb352204828605a40
@@ -56,4 +62,3 @@
     - path: results/reports/mosdepth/sample2/sample2.recal.mosdepth.summary.txt
     - path: results/reports/mosdepth/sample2/sample2.recal.per-base.bed.gz
     - path: results/reports/mosdepth/sample2/sample2.recal.per-base.bed.gz.csi
-
