@@ -1,15 +1,15 @@
-- name: Run variant calling on tumor only sample with lofreq without intervals
-  command: nextflow run main.nf -profile test,tools_tumoronly,singularity --tools lofreq --outdir results
+- name: Run variant calling on tumor only sample with lofreq
+  command: nextflow run main.nf -profile test,tools_tumoronly --tools lofreq --outdir results
   tags:
     - lofreq
     - tumor_only
     - variant_calling
   files:
     - path: results/csv/variantcalled.csv
-      md5sum: 63f8f2a91e14a71a7b1b72b460943dec
+      md5sum: 70d81cccd2acd45ee6f95746006d5544
     - path: results/multiqc
     - path: results/reports/bcftools/lofreq/sample2/sample2.bcftools_stats.txt
-      md5sum: 6653b20205ee005c7e142c6d36e31004
+      md5sum: 3e6fa1fa07a8a78b5a4277595969cf18
     # conda changes md5sums for test
     - path: results/reports/samtools/sample2/sample2.recal.cram.stats
       md5sum: b6c2b9056dfc441fddae989cc85f4135
@@ -18,9 +18,9 @@
       contains: ['##INFO=<ID=CONSVAR,Number=0,Type=Flag,Description="Indicates that the variant is a consensus variant (as opposed to a low frequency variant).">']
     # conda changes md5sums for test
     - path: results/reports/vcftools/lofreq/sample2/sample2.FILTER.summary
-      md5sum: 5771bf5f758006ba141b9a4bf3618e93
+      md5sum: 6d6228b49fa65fd19ba8d2f6b43ec2ef
     - path: results/reports/vcftools/lofreq/sample2/sample2.TsTv.qual
-      md5sum: b4305cd4fd6b291f7a01bedae54f0bd9
+      md5sum: 8c5decaf15efc6a43dfb08c270b95e16
     # binary changes md5sums on reruns
     - path: results/reports/mosdepth/sample2/sample2.recal.mosdepth.global.dist.txt
     - path: results/reports/mosdepth/sample2/sample2.recal.mosdepth.region.dist.txt
@@ -28,7 +28,7 @@
     - path: results/reports/mosdepth/sample2/sample2.recal.regions.bed.gz
     - path: results/reports/mosdepth/sample2/sample2.recal.regions.bed.gz.csi
 - name: Run variant calling on tumor only sample with lofreq without intervals
-  command: nextflow run main.nf -profile test,tools_tumoronly,singularity --tools lofreq --no_intervals --outdir results
+  command: nextflow run main.nf -profile test,tools_tumoronly --tools lofreq --no_intervals --outdir results
   tags:
     - lofreq
     - no_intervals
@@ -36,7 +36,7 @@
     - variant_calling
   files:
     - path: results/csv/variantcalled.csv
-      md5sum: e02b417f4000b625e77bb77173e4868f
+      md5sum: 653e673b09d1696c59b1f2b02a6a68b9
     - path: results/multiqc
     - path: results/reports/bcftools/lofreq/sample2/sample2.bcftools_stats.txt
       md5sum: 2036f5c9cd4fa45f470550d9b575becb
