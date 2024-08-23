@@ -310,8 +310,8 @@ workflow NFCORE_SAREK {
         vep_fasta,
         vep_genome,
         vep_species,
-        bbsplit
-        bbsplit_fasta_list
+        bbsplit,
+        bbsplit_fasta_list,
         bbsplit_index
     )
     emit:
