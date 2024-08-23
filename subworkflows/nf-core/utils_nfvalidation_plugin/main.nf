@@ -8,7 +8,6 @@
 ========================================================================================
 */
 
-include { paramsHelp         } from 'plugin/nf-schema'
 include { paramsSummaryLog   } from 'plugin/nf-schema'
 include { validateParameters } from 'plugin/nf-schema'
 
