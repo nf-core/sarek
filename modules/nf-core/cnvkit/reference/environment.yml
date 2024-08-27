@@ -4,4 +4,4 @@ channels:
   - bioconda
   - defaults
 dependencies:
-  - bioconda::cnvkit=0.9.10
+  - bioconda::cnvkit=0.9.11

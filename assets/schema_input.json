@@ -53,6 +53,20 @@
                 "format": "file-path",
                 "exists": true
             },
+            "spring_1": {
+                "errorMessage": "Gzipped and spring-compressed FastQ file for reads 1 cannot contain spaces and must have extension '.fq.gz.spring' or '.fastq.gz.spring'",
+                "type": "string",
+                "pattern": "^\\S+\\.f(ast)?q\\.gz.spring$",
+                "format": "file-path",
+                "exists": true
+            },
+            "spring_2": {
+                "errorMessage": "Gzipped and spring-compressed FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz.spring' or '.fastq.gz.spring'",
+                "type": "string",
+                "pattern": "^\\S+\\.f(ast)?q\\.gz.spring$",
+                "format": "file-path",
+                "exists": true
+            },
             "table": {
                 "errorMessage": "Recalibration table cannot contain spaces and must have extension '.table'",
                 "type": "string",
@@ -107,12 +121,20 @@
             },
             {
                 "dependentRequired": {
+                    "lane": ["spring_1"]
+                }
+            },
+            {
+                "dependentRequired": {
                     "lane": ["bam"]
                 }
             }
         ],
         "dependentRequired": {
             "fastq_2": ["fastq_1"]
+        },
+        "dependentRequired": {
+            "spring_2": ["spring_1"]
         },
         "required": ["patient", "sample"],
         "uniqueEntries": ["lane", "patient", "sample"]

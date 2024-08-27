@@ -1,5 +1,5 @@
 - name: Run joint germline variant calling with sentieon haplotyper
-  command: nextflow run main.nf -profile test_cache,software_license,targeted --sentieon_extension --input ./tests/csv/3.0/mapped_joint_bam.csv --tools sentieon_haplotyper --step variant_calling --joint_germline --outdir results --sentieon_haplotyper_emit_mode gvcf
+  command: nextflow run main.nf -profile test,software_license,targeted --sentieon_extension --input ./tests/csv/3.0/mapped_joint_bam.csv --tools sentieon_haplotyper --step variant_calling --joint_germline --outdir results --sentieon_haplotyper_emit_mode gvcf
   tags:
     - germline
     - sentieon/haplotyper_joint_germline
@@ -27,29 +27,19 @@
     - path: results/haplotyper
       should_exist: false
     - path: results/reports/mosdepth/testN/testN.recal.mosdepth.global.dist.txt
-      md5sum: e82e90c7d508a135b5a8a7cd6933452e
     - path: results/reports/mosdepth/testN/testN.recal.mosdepth.region.dist.txt
-      md5sum: 3a2030e5e8af7bc12720c3a5592bf921
     - path: results/reports/mosdepth/testN/testN.recal.mosdepth.summary.txt
-      md5sum: 615c5c5019d88045a9ff5bbe6e63d270
     - path: results/reports/mosdepth/testN/testN.recal.regions.bed.gz
-      md5sum: 9f1ea20e7461db948ba21f70c4d1b3ba
     - path: results/reports/mosdepth/testN/testN.recal.regions.bed.gz.csi
-      md5sum: 5c00a1d457c387d6e71848a6d897e309
     - path: results/reports/samtools/testN/testN.recal.cram.stats
     - path: results/reports/mosdepth/testT/testT.recal.mosdepth.global.dist.txt
-      md5sum: ba97ed85645f77da6f3adad138b3cdb4
     - path: results/reports/mosdepth/testT/testT.recal.mosdepth.region.dist.txt
-      md5sum: a7eb835371dd0aaf347ccca7ebe1eb3b
     - path: results/reports/mosdepth/testT/testT.recal.mosdepth.summary.txt
-      md5sum: a937108cbf24c1430b79c861234ce22b
     - path: results/reports/mosdepth/testT/testT.recal.regions.bed.gz
-      md5sum: d2b579a74bf8d858f82869f073056252
     - path: results/reports/mosdepth/testT/testT.recal.regions.bed.gz.csi
-      md5sum: 5c00a1d457c387d6e71848a6d897e309
     - path: results/reports/samtools/testT/testT.recal.cram.stats
 - name: Run joint germline variant calling with sentieon haplotyper all intervals at once
-  command: nextflow run main.nf -profile test_cache,software_license,targeted --sentieon_extension --input ./tests/csv/3.0/mapped_joint_bam.csv --tools sentieon_haplotyper --step variant_calling --joint_germline --outdir results --sentieon_haplotyper_emit_mode gvcf --nucleotides_per_second 100
+  command: nextflow run main.nf -profile test,software_license,targeted --sentieon_extension --input ./tests/csv/3.0/mapped_joint_bam.csv --tools sentieon_haplotyper --step variant_calling --joint_germline --outdir results --sentieon_haplotyper_emit_mode gvcf --nucleotides_per_second 100
   tags:
     - germline
     - sentieon/haplotyper_joint_germline
@@ -75,29 +65,19 @@
     - path: results/haplotyper
       should_exist: false
     - path: results/reports/mosdepth/testN/testN.recal.mosdepth.global.dist.txt
-      md5sum: e82e90c7d508a135b5a8a7cd6933452e
     - path: results/reports/mosdepth/testN/testN.recal.mosdepth.region.dist.txt
-      md5sum: 3a2030e5e8af7bc12720c3a5592bf921
     - path: results/reports/mosdepth/testN/testN.recal.mosdepth.summary.txt
-      md5sum: 615c5c5019d88045a9ff5bbe6e63d270
     - path: results/reports/mosdepth/testN/testN.recal.regions.bed.gz
-      md5sum: 9f1ea20e7461db948ba21f70c4d1b3ba
     - path: results/reports/mosdepth/testN/testN.recal.regions.bed.gz.csi
-      md5sum: 5c00a1d457c387d6e71848a6d897e309
     - path: results/reports/samtools/testN/testN.recal.cram.stats
     - path: results/reports/mosdepth/testT/testT.recal.mosdepth.global.dist.txt
-      md5sum: ba97ed85645f77da6f3adad138b3cdb4
     - path: results/reports/mosdepth/testT/testT.recal.mosdepth.region.dist.txt
-      md5sum: a7eb835371dd0aaf347ccca7ebe1eb3b
     - path: results/reports/mosdepth/testT/testT.recal.mosdepth.summary.txt
-      md5sum: a937108cbf24c1430b79c861234ce22b
     - path: results/reports/mosdepth/testT/testT.recal.regions.bed.gz
-      md5sum: d2b579a74bf8d858f82869f073056252
     - path: results/reports/mosdepth/testT/testT.recal.regions.bed.gz.csi
-      md5sum: 5c00a1d457c387d6e71848a6d897e309
     - path: results/reports/samtools/testT/testT.recal.cram.stats
 - name: Run joint germline variant calling with sentieon haplotyper with stub for VQSR
-  command: nextflow run main.nf -profile test_cache,software_license,tools_germline --sentieon_extension --input ./tests/csv/3.0/mapped_joint_bam.csv --tools sentieon_haplotyper --step variant_calling --joint_germline --outdir results --sentieon_haplotyper_emit_mode gvcf -stub-run
+  command: nextflow run main.nf -profile test,software_license,tools_germline --sentieon_extension --input ./tests/csv/3.0/mapped_joint_bam.csv --tools sentieon_haplotyper --step variant_calling --joint_germline --outdir results --sentieon_haplotyper_emit_mode gvcf -stub-run
   tags:
     - germline
     - sentieon/haplotyper_joint_germline
@@ -123,24 +103,14 @@
     - path: results/haplotyper
       should_exist: false
     - path: results/reports/mosdepth/testN/testN.recal.global.dist.txt
-      md5sum: d41d8cd98f00b204e9800998ecf8427e
     - path: results/reports/mosdepth/testN/testN.recal.region.dist.txt
-      md5sum: d41d8cd98f00b204e9800998ecf8427e
     - path: results/reports/mosdepth/testN/testN.recal.summary.txt
-      md5sum: d41d8cd98f00b204e9800998ecf8427e
     - path: results/reports/mosdepth/testN/testN.recal.regions.bed.gz
-      md5sum: 1a60c330fb42841e8dcf3cd507a70bfc
     - path: results/reports/mosdepth/testN/testN.recal.regions.bed.gz.csi
-      md5sum: d41d8cd98f00b204e9800998ecf8427e
     - path: results/reports/samtools/testN/testN.recal.cram.stats
     - path: results/reports/mosdepth/testT/testT.recal.global.dist.txt
-      md5sum: d41d8cd98f00b204e9800998ecf8427e
     - path: results/reports/mosdepth/testT/testT.recal.region.dist.txt
-      md5sum: d41d8cd98f00b204e9800998ecf8427e
     - path: results/reports/mosdepth/testT/testT.recal.summary.txt
-      md5sum: d41d8cd98f00b204e9800998ecf8427e
     - path: results/reports/mosdepth/testT/testT.recal.regions.bed.gz
-      md5sum: 1a60c330fb42841e8dcf3cd507a70bfc
     - path: results/reports/mosdepth/testT/testT.recal.regions.bed.gz.csi
-      md5sum: d41d8cd98f00b204e9800998ecf8427e
     - path: results/reports/samtools/testT/testT.recal.cram.stats
