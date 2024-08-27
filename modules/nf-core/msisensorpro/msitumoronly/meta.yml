@@ -1,10 +1,11 @@
-name: msisensorpro_msisomatic
+name: msisensorpro_msitumoronly
 description: MSIsensor-pro evaluates Microsatellite Instability (MSI) for cancer patients with next generation sequencing data. It accepts the whole genome sequencing, whole exome sequencing and target region (panel) sequencing data as input
 keywords:
   - micro-satellite-scan
   - msisensor-pro
   - msi
   - somatic
+  - tumor-only
 tools:
   - msisensorpro:
       description: Microsatellite Instability (MSI) detection using high-throughput sequencing data.
@@ -19,14 +20,6 @@ input:
       description: |
         Groovy Map containing sample information
         e.g. [ id:'test', single_end:false ]
-  - normal:
-      type: file
-      description: BAM/CRAM/SAM file
-      pattern: "*.{bam,cram,sam}"
-  - normal_index:
-      type: file
-      description: BAM/CRAM/SAM index file
-      pattern: "*.{bai,crai,sai}"
   - tumor:
       type: file
       description: BAM/CRAM/SAM file
@@ -43,10 +36,9 @@ input:
       type: file
       description: Reference genome
       pattern: "*.{fasta}"
-  - msisensor_scan:
+  - msisensor_baseline:
       type: file
-      description: Output from msisensor-pro/scan, containing list of msi regions
-      pattern: "*.list"
+      description: File containing custom list of msi regions from a panel of normals to be used as a baseline
 output:
   - meta:
       type: map
@@ -59,17 +51,18 @@ output:
   - output_dis:
       type: file
       description: File containing distribution results
-  - output_germline:
+  - output_all:
       type: file
-      description: File containing germline results
-  - output_somatic:
+      description: File containing all sites
+  - output_unstable:
       type: file
-      description: File containing somatic results
+      description: File containing unstable sites
   - versions:
       type: file
       description: File containing software versions
       pattern: "versions.yml"
 authors:
   - "@FriederikeHanssen"
+  - "@bounlu"
 maintainers:
   - "@FriederikeHanssen"

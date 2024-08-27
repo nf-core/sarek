@@ -44,13 +44,12 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     wes                           // boolean: [mandatory] [default: false] whether targeted data is processed
 
     main:
-    versions          = Channel.empty()
+    versions            = Channel.empty()
 
     //TODO: Temporary until the if's can be removed and printing to terminal is prevented with "when" in the modules.config
     vcf_freebayes       = Channel.empty()
     vcf_manta           = Channel.empty()
     vcf_strelka         = Channel.empty()
-    out_msisensorpro    = Channel.empty()
     vcf_mutect2         = Channel.empty()
     vcf_tiddit          = Channel.empty()
 
@@ -175,11 +174,10 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     }
 
     // MSISENSOR
-    if (tools.split(',').contains('msisensorpro')) {
+    if (tools.split(',').contains('msisensorpro') && msisensorpro_scan) {
         MSISENSORPRO_MSISOMATIC(cram.combine(intervals_bed_combined), fasta.map{ meta, fasta -> [ fasta ] }, msisensorpro_scan)
 
         versions = versions.mix(MSISENSORPRO_MSISOMATIC.out.versions)
-        out_msisensorpro = out_msisensorpro.mix(MSISENSORPRO_MSISOMATIC.out.output_report)
     }
 
     // MUTECT2
@@ -190,7 +188,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             // joint_mutect2 mode needs different meta.map than regular mode
             cram.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai ->
                 joint_mutect2 ?
-                //we need to keep all fields and then remove on a per-tool-basis to ensure proper joining at the filtering step
+                // we need to keep all fields and then remove on a per-tool-basis to ensure proper joining at the filtering step
                 [ meta + [ id:meta.patient ], [ normal_cram, tumor_cram ], [ normal_crai, tumor_crai ] ] :
                 [ meta, [ normal_cram, tumor_cram ], [ normal_crai, tumor_crai ] ]
             },
@@ -232,7 +230,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     )
 
     emit:
-    out_msisensorpro
     vcf_all
     vcf_freebayes
     vcf_manta

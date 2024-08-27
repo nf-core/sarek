@@ -77,6 +77,7 @@ include { PIPELINE_INITIALISATION          } from './subworkflows/local/utils_nf
 include { PREPARE_GENOME                   } from './subworkflows/local/prepare_genome'
 include { PREPARE_INTERVALS                } from './subworkflows/local/prepare_intervals'
 include { PREPARE_REFERENCE_CNVKIT         } from './subworkflows/local/prepare_reference_cnvkit'
+include { MSISENSORPRO_SCAN                } from './modules/nf-core/msisensorpro/scan/main'
 
 // Initialize fasta file with meta map:
 fasta = params.fasta ? Channel.fromPath(params.fasta).map{ it -> [ [id:it.baseName], it ] }.collect() : Channel.empty()
@@ -91,6 +92,7 @@ germline_resource       = params.germline_resource       ? Channel.fromPath(para
 known_indels            = params.known_indels            ? Channel.fromPath(params.known_indels).collect()              : Channel.value([])
 known_snps              = params.known_snps              ? Channel.fromPath(params.known_snps).collect()                : Channel.value([])
 mappability             = params.mappability             ? Channel.fromPath(params.mappability).collect()               : Channel.value([])
+msisensorpro_baseline   = params.msisensorpro_baseline   ? Channel.fromPath(params.msisensorpro_baseline).collect()     : Channel.empty()
 pon                     = params.pon                     ? Channel.fromPath(params.pon).collect()                       : Channel.value([]) // PON is optional for Mutect2 (but highly recommended)
 sentieon_dnascope_model = params.sentieon_dnascope_model ? Channel.fromPath(params.sentieon_dnascope_model).collect()   : Channel.value([])
 
@@ -166,8 +168,18 @@ workflow NFCORE_SAREK {
         aligner == "bwa-mem2" ? bwamem2 :
         dragmap
 
-    // TODO: add a params for msisensorpro_scan
-    msisensorpro_scan      = PREPARE_GENOME.out.msisensorpro_scan
+    // Reference msi list for MSIsensorpro
+    if (params.tools && params.tools.split(',').contains('msisensorpro')) {
+        if (params.msisensorpro_scan) {
+            msisensorpro_scan = Channel.fromPath(params.msisensorpro_scan).collect()
+        } else {
+            MSISENSORPRO_SCAN(fasta)
+            msisensorpro_scan = MSISENSORPRO_SCAN.out.list.map{ meta, list -> [list] }
+            versions = versions.mix(MSISENSORPRO_SCAN.out.versions)
+        }
+    } else {
+        msisensorpro_scan = Channel.empty()
+    }
 
     // For ASCAT, extracted from zip or tar.gz files
     allele_files           = PREPARE_GENOME.out.allele_files
@@ -177,7 +189,7 @@ workflow NFCORE_SAREK {
     rt_file                = PREPARE_GENOME.out.rt_file
 
     // Tabix indexed vcf files
-    bcftools_annotations_tbi  = params.bcftools_annotations    ? params.bcftools_annotations_tbi ? Channel.fromPath(params.bcftools_annotations_tbi).collect() : PREPARE_GENOME.out.bcftools_annotations_tbi : Channel.empty([])
+    bcftools_annotations_tbi  = params.bcftools_annotations    ? params.bcftools_annotations_tbi ? Channel.fromPath(params.bcftools_annotations_tbi).collect() : PREPARE_GENOME.out.bcftools_annotations_tbi : Channel.value([])
     dbsnp_tbi                 = params.dbsnp                   ? params.dbsnp_tbi                ? Channel.fromPath(params.dbsnp_tbi).collect()                : PREPARE_GENOME.out.dbsnp_tbi                : Channel.value([])
     germline_resource_tbi     = params.germline_resource       ? params.germline_resource_tbi    ? Channel.fromPath(params.germline_resource_tbi).collect()    : PREPARE_GENOME.out.germline_resource_tbi    : [] //do not change to Channel.value([]), the check for its existence then fails for Getpileupsumamries
     known_indels_tbi          = params.known_indels            ? params.known_indels_tbi         ? Channel.fromPath(params.known_indels_tbi).collect()         : PREPARE_GENOME.out.known_indels_tbi         : Channel.value([])
@@ -296,6 +308,7 @@ workflow NFCORE_SAREK {
         loci_files,
         mappability,
         msisensorpro_scan,
+        msisensorpro_baseline,
         ngscheckmate_bed,
         pon,
         pon_tbi,
