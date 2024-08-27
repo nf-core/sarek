@@ -4,7 +4,7 @@
     "title": "nf-core/sarek pipeline parameters",
     "description": "An open-source analysis pipeline to detect germline or somatic variants from whole genome or targeted sequencing",
     "type": "object",
-    "defs": {
+    "$defs": {
         "input_output_options": {
             "title": "Input/output options",
             "type": "object",
@@ -813,7 +813,7 @@
                     "format": "directory-path",
                     "description": "Directory / URL base for iGenomes references.",
                     "default": "s3://ngi-igenomes/igenomes/",
-                    "fa_icon": "fas fa-cloud-download-alt"
+                    "fa_icon": "fas fa-ban"
                 },
                 "igenomes_ignore": {
                     "type": "boolean",
@@ -956,12 +956,6 @@
             "description": "Less common options for the pipeline, typically set in a config file.",
             "help_text": "These options are common to all nf-core pipelines and allow you to customise some of the core preferences for how the pipeline runs.\n\nTypically these options would be set in a Nextflow config file loaded for all pipeline runs, such as `~/.nextflow/config`.",
             "properties": {
-                "help": {
-                    "type": "boolean",
-                    "description": "Display help text.",
-                    "fa_icon": "fas fa-question-circle",
-                    "hidden": true
-                },
                 "version": {
                     "type": "boolean",
                     "description": "Display version and exit.",
@@ -1054,34 +1048,34 @@
     },
     "allOf": [
         {
-            "$ref": "#/defs/input_output_options"
+            "$ref": "#/$defs/input_output_options"
         },
         {
-            "$ref": "#/defs/main_options"
+            "$ref": "#/$defs/main_options"
         },
         {
-            "$ref": "#/defs/fastq_preprocessing"
+            "$ref": "#/$defs/fastq_preprocessing"
         },
         {
-            "$ref": "#/defs/preprocessing"
+            "$ref": "#/$defs/preprocessing"
         },
         {
-            "$ref": "#/defs/variant_calling"
+            "$ref": "#/$defs/variant_calling"
         },
         {
-            "$ref": "#/defs/annotation"
+            "$ref": "#/$defs/annotation"
         },
         {
-            "$ref": "#/defs/reference_genome_options"
+            "$ref": "#/$defs/reference_genome_options"
         },
         {
-            "$ref": "#/defs/institutional_config_options"
+            "$ref": "#/$defs/institutional_config_options"
         },
         {
-            "$ref": "#/defs/max_job_request_options"
+            "$ref": "#/$defs/max_job_request_options"
         },
         {
-            "$ref": "#/defs/generic_options"
+            "$ref": "#/$defs/generic_options"
         }
     ]
 }

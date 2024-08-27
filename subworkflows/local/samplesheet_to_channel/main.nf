@@ -32,7 +32,9 @@ workflow  SAMPLESHEET_TO_CHANNEL{
     wes                             //
 
     main:
+
     ch_from_samplesheet.dump(tag:"ch_from_samplesheet")
+
     input_sample = ch_from_samplesheet.map{ meta, fastq_1, fastq_2, table, cram, crai, bam, bai, vcf, variantcaller ->
         // generate patient_sample key to group lanes together
         [ meta.patient + meta.sample, [meta, fastq_1, fastq_2, table, cram, crai, bam, bai, vcf, variantcaller] ]
