@@ -939,14 +939,14 @@ workflow SAREK {
 */
 // Add readgroup to meta and remove lane
 def addReadgroupToMeta(meta, files) {
-    def CN = params.seq_center ? "CN:${params.seq_center}\\t" : ''
+    def CN = params.seq_params.seq_center ? "CN:${params.seq_params.seq_center}\\t" : ''
 
     // Here we're assuming that fastq_1 and fastq_2 are from the same flowcell:
     def flowcell = flowcellLaneFromFastq(files[0])
     // TO-DO: Would it perhaps be better to also call flowcellLaneFromFastq(files[1]) and check that we get the same flowcell-id?
 
     // Don't use a random element for ID, it breaks resuming
-    def read_group = "\"@RG\\tID:${flowcell}.${meta.sample}.${meta.lane}\\t${CN}PU:${meta.lane}\\tSM:${meta.patient}_${meta.sample}\\tLB:${meta.sample}\\tDS:${params.fasta}\\tPL:${params.seq_platform}\""
+    def read_group = "\"@RG\\tID:${flowcell}.${meta.sample}.${meta.lane}\\t${CN}PU:${meta.lane}\\tSM:${meta.patient}_${meta.sample}\\tLB:${meta.sample}\\tDS:${params.fasta}\\tPL:${params.seq_params.seq_platform}\""
     meta  = meta - meta.subMap('lane') + [read_group: read_group.toString()]
     return [ meta, files ]
 }

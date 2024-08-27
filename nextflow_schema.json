@@ -898,19 +898,22 @@
                     "description": "Base path / URL for data used in the modules",
                     "hidden": true
                 },
-                "seq_center": {
-                    "type": "string",
-                    "fa_icon": "fas fa-university",
-                    "description": "Sequencing center information to be added to read group (CN field).",
-                    "hidden": true
-                },
-                "seq_platform": {
-                    "type": "string",
-                    "fa_icon": "fas fa-university",
-                    "default": "ILLUMINA",
-                    "description": "Sequencing platform information to be added to read group (PL field).",
-                    "help_text": "Default: ILLUMINA. Will be used to create a proper header for further GATK4 downstream analysis.",
-                    "hidden": true
+                "seq_params": {
+                    "type": "object",
+                    "properties": {
+                        "seq_center": {
+                            "type": "string",
+                            "fa_icon": "fas fa-university",
+                            "description": "Sequencing center information to be added to read group (CN field)."
+                        },
+                        "seq_platform": {
+                            "type": "string",
+                            "fa_icon": "fas fa-university",
+                            "default": "ILLUMINA",
+                            "description": "Sequencing platform information to be added to read group (PL field).",
+                            "help_text": "Default: ILLUMINA. Will be used to create a proper header for further GATK4 downstream analysis."
+                        }
+                    }
                 }
             }
         },
