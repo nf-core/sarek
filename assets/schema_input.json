@@ -131,9 +131,7 @@
             }
         ],
         "dependentRequired": {
-            "fastq_2": ["fastq_1"]
-        },
-        "dependentRequired": {
+            "fastq_2": ["fastq_1"],
             "spring_2": ["spring_1"]
         },
         "required": ["patient", "sample"],
