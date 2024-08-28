@@ -1,0 +1,59 @@
+nextflow_process {
+
+    name "Test Process DEEPSOMATIC"
+    script "../main.nf"
+    process "DEEPSOMATIC"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "deepsomatic"
+
+    test("tumor_normal_pair") {
+        config './nextflow.config'
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'tumor_vs_normal' ],
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.recalibrated.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.recalibrated.sorted.bam.bai', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test2.paired_end.recalibrated.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test2.paired_end.recalibrated.sorted.bam.bai', checkIfExists: true)
+                ]
+                input[1] = [
+                    [ id:'intervals' ],
+                    []
+                ]
+                input[2] = [
+                    [ id:'genome' ],
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta', checkIfExists: true)
+                ]
+                input[3] = [
+                    [ id:'genome' ],
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai', checkIfExists: true)
+                ]
+                input[4] = [
+                    [ id: 'gzi' ],
+                    []
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                {
+                    assert snapshot(
+                        process.out.vcf.collect { file(it[1]).getName() },
+                        process.out.tbi.collect { file(it[1]).getName() },
+                        process.out.versions,
+                    ).match()
+                }
+            )
+        }
+
+    }
+
+}

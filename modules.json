@@ -122,7 +122,17 @@
                         "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
                         "installed_by": ["modules"]
                     },
-                    "deepvariant/rundeepvariant": {
+                    "deepsomatic": {
+                        "branch": "master",
+                        "git_sha": "89e06f63c5ee7abe5d6910277aff8e83b00a8b50",
+                        "installed_by": ["modules"]
+                    },
+                    "deepsomatic": {
+                        "branch": "master",
+                        "git_sha": "89e06f63c5ee7abe5d6910277aff8e83b00a8b50",
+                        "installed_by": ["modules"]
+                    },
+                    "deepvariant": {
                         "branch": "master",
                         "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
                         "installed_by": ["modules"]
