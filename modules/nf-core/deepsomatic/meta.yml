@@ -1,0 +1,76 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+name: "deepsomatic"
+## TODO nf-core: Add a description of the module and list keywords
+description: write your description here
+keywords:
+  - variant calling
+  - machine learning
+  - neural network
+tools:
+  - "deepsomatic":
+      ## TODO nf-core: Add a description and other details for the software below
+      description: ""
+      homepage: ""
+      documentation: ""
+      tool_dev_url: ""
+      doi: ""
+      licence: 
+
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. `[ id:'sample1', single_end:false ]`
+  - input_normal:
+      type: file
+      description: BAM/CRAM file
+      pattern: "*.bam/cram"
+  - index_normal:
+      type: file
+      description: Index of BAM/CRAM file
+      pattern: "*.bai/crai"        
+  - input_tumor:
+      type: file
+      description: BAM/CRAM file
+      pattern: "*.bam/cram"
+  - index_tumor:
+      type: file
+      description: Index of BAM/CRAM file
+      pattern: "*.bai/crai"        
+
+  - intervals:
+      type: file
+      description: Interval file for targeted regions
+      pattern: "*.bed"
+
+  ## TODO nf-core: Delete / customise this example input
+  - bam:
+      type: file
+      description: Sorted BAM/CRAM/SAM file
+      pattern: "*.{bam,cram,sam}"
+
+## TODO nf-core: Add a description of all of the variables used as output
+output:
+  #Only when we have meta
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. `[ id:'sample1', single_end:false ]`
+  
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+  ## TODO nf-core: Delete / customise this example output
+  - bam:
+      type: file
+      description: Sorted BAM/CRAM/SAM file
+      pattern: "*.{bam,cram,sam}"
+
+authors:
+  - "@vaxyzek"
+maintainers:
+  - "@vaxyzek"
