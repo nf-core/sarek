@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1340](https://github.com/nf-core/sarek/pull/1340) - Adds Azure test profiles and megatests.
 - [#1372](https://github.com/nf-core/sarek/pull/1372) - Add NCBench test profile for Agilent datasets
 - [#1409](https://github.com/nf-core/sarek/pull/1409) - Add params `modules_testdata_base_path` to test profile
+- [#1448](https://github.com/nf-core/sarek/pull/1448) - Internal benchmarking of germline small variants
 
 ### Changed
 

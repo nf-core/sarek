@@ -1,0 +1,47 @@
+name: "rtgtools_rocplot"
+description: Plot ROC curves from vcfeval ROC data files, either to an image, or an interactive GUI. The interactive GUI isn't possible for nextflow.
+keywords:
+  - rtgtools
+  - rocplot
+  - validation
+  - vcf
+tools:
+  - "rtgtools":
+      description: "RealTimeGenomics Tools -- Utilities for accurate VCF comparison and manipulation"
+      homepage: "https://www.realtimegenomics.com/products/rtg-tools"
+      documentation: "https://github.com/RealTimeGenomics/rtg-tools"
+      tool_dev_url: "https://github.com/RealTimeGenomics/rtg-tools"
+      licence: "['BSD']"
+
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - input:
+      type: file
+      description: Input TSV ROC files created with RTGTOOLS_VCFEVAL
+      pattern: "*.tsv.gz"
+
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+  - png:
+      type: file
+      description: The resulting rocplot in PNG format
+      pattern: "*.png"
+  - svg:
+      type: file
+      description: The resulting rocplot in SVG format
+      pattern: "*.svg"
+
+authors:
+  - "@nvnieuwk"

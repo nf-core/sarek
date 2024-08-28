@@ -1082,6 +1082,7 @@ workflow SAREK {
 
         if(params.benchmark) {
             VCF_VALIDATE_SMALL_VARIANTS(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_all)
+            VCF_BENCHMARK_SMALL_VARIANTS(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_all)
         }
 
         // QC
