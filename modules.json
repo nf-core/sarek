@@ -311,7 +311,7 @@
                     },
                     "lofreq/callparallel": {
                         "branch": "master",
-                        "git_sha": "94e871f884efe963381a04e173f21924c9e9aba2",
+                        "git_sha": "bf918b32044472c9346ec3444d894c69700ced6d",
                         "installed_by": ["modules"]
                     },
                     "manta/germline": {

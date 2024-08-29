@@ -32,8 +32,11 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out.versions).match() },
-                { assert path(process.out.vcf.get(0).get(1)).linesGzip.contains('##INFO=<ID=CONSVAR,Number=0,Type=Flag,Description="Indicates that the variant is a consensus variant (as opposed to a low frequency variant).">') }
+                { assert snapshot(
+                    process.out.versions,
+                    process.out.tbi,
+                    path(process.out.vcf[0][1]).vcf.summary
+                    ).match() },
             )
         }
 
@@ -62,8 +65,11 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out.versions).match() },
-                { assert path(process.out.vcf.get(0).get(1)).linesGzip.contains('##INFO=<ID=CONSVAR,Number=0,Type=Flag,Description="Indicates that the variant is a consensus variant (as opposed to a low frequency variant).">') }
+                { assert snapshot(
+                    process.out.versions,
+                    process.out.tbi,
+                    path(process.out.vcf[0][1]).vcf.summary
+                    ).match() },
             )
         }
 

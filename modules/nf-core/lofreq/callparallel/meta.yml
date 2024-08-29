@@ -62,6 +62,10 @@ output:
       type: file
       description: Predicted variants file
       pattern: "*.{vcf}"
+  - tbi:
+      type: file
+      description: Index of vcf file
+      pattern: "*.{vcf.gz.tbi}"
 authors:
   - "@kaurravneet4123"
   - "@bjohnnyd"

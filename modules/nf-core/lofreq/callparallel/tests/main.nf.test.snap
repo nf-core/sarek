@@ -11,7 +11,23 @@
                     ]
                 ],
                 "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.vcf.gz.tbi:md5,1a60c330fb42841e8dcf3cd507a70bfc"
+                    ]
+                ],
+                "2": [
                     "versions.yml:md5,56d45e0015add277b2689f071a4fe3e4"
+                ],
+                "tbi": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.vcf.gz.tbi:md5,1a60c330fb42841e8dcf3cd507a70bfc"
+                    ]
                 ],
                 "vcf": [
                     [
@@ -28,32 +44,50 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nextflow": "23.04.0"
         },
-        "timestamp": "2024-07-10T12:57:00.731035"
+        "timestamp": "2024-08-28T12:01:24.268196316"
     },
     "sarscov2 - bam": {
         "content": [
             [
                 "versions.yml:md5,56d45e0015add277b2689f071a4fe3e4"
-            ]
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.vcf.gz.tbi:md5,4cb176febbc8c26d717a6c6e67b9c905"
+                ]
+            ],
+            "VcfFile [chromosomes=[], sampleCount=0, variantCount=0, phased=true, phasedAutodetect=true]"
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nextflow": "23.04.0"
         },
-        "timestamp": "2024-07-10T12:59:23.105421"
+        "timestamp": "2024-08-28T14:14:55.381365088"
     },
     "sarscov2 - bam - bed": {
         "content": [
             [
                 "versions.yml:md5,56d45e0015add277b2689f071a4fe3e4"
-            ]
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.vcf.gz.tbi:md5,4cb176febbc8c26d717a6c6e67b9c905"
+                ]
+            ],
+            "VcfFile [chromosomes=[], sampleCount=0, variantCount=0, phased=true, phasedAutodetect=true]"
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nextflow": "23.04.0"
         },
-        "timestamp": "2024-07-10T12:59:28.355632"
+        "timestamp": "2024-08-28T14:15:18.221515296"
     }
 }

@@ -143,7 +143,8 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
             cram,
             fasta,
             fasta_fai,
-            intervals
+            intervals,
+            dict
         )
         vcf_lofreq = BAM_VARIANT_CALLING_TUMOR_ONLY_LOFREQ.out.vcf
         versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_LOFREQ.out.versions)
@@ -191,23 +192,23 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
 
     vcf_all = Channel.empty().mix(
         vcf_freebayes,
+        vcf_lofreq,
         vcf_manta,
         vcf_mutect2,
         vcf_mpileup,
         vcf_strelka,
-        vcf_tiddit,
-        vcf_lofreq
+        vcf_tiddit
     )
 
     emit:
     vcf_all
     vcf_freebayes
+    vcf_lofreq
     vcf_manta
     vcf_mpileup
     vcf_mutect2
     vcf_strelka
     vcf_tiddit
-    vcf_lofreq
 
     versions = versions
 }

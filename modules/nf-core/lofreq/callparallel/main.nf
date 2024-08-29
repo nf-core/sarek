@@ -13,8 +13,9 @@ process LOFREQ_CALLPARALLEL {
     tuple val(meta3), path(fai)
 
     output:
-    tuple val(meta), path("*.vcf.gz"), emit: vcf
-    path "versions.yml"              , emit: versions
+    tuple val(meta), path("*.vcf.gz")    , emit: vcf
+    tuple val(meta), path("*.vcf.gz.tbi"), emit: tbi
+    path "versions.yml"                  , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -33,8 +34,8 @@ process LOFREQ_CALLPARALLEL {
     samtools_cram_convert += alignment_cram ? "    samtools index ${alignment_out}\n" : ''
 
     def samtools_cram_remove = ''
-    samtools_cram_remove += alignment_cram ? "     rm ${alignment_out}\n" : ''
-    samtools_cram_remove += alignment_cram ? "     rm ${alignment_out}.bai\n " : ''
+    samtools_cram_remove += alignment_cram ? "    rm ${alignment_out}\n" : ''
+    samtools_cram_remove += alignment_cram ? "    rm ${alignment_out}.bai\n " : ''
     """
     $samtools_cram_convert
 
@@ -59,6 +60,7 @@ process LOFREQ_CALLPARALLEL {
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
     echo "" | gzip > ${prefix}.vcf.gz
+    echo "" | gzip > ${prefix}.vcf.gz.tbi
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
