@@ -14,7 +14,7 @@
     - path: results/reports/samtools/sample2/sample2.recal.cram.stats
       md5sum: b6c2b9056dfc441fddae989cc85f4135
     # conda changes md5sums for test
-    - path: results/variant_calling/lofreq/sample2/sample2.vcf.gz
+    - path: results/variant_calling/lofreq/sample2/sample2.lofreq.vcf.gz
       contains:
         [
           '##INFO=<ID=CONSVAR,Number=0,Type=Flag,Description="Indicates that the variant is a consensus variant (as opposed to a low frequency variant).">',
@@ -47,7 +47,7 @@
     - path: results/reports/samtools/sample2/sample2.recal.cram.stats
       md5sum: b6c2b9056dfc441fddae989cc85f4135
     # conda changes md5sums for test
-    - path: results/variant_calling/lofreq/sample2/sample2.vcf.gz
+    - path: results/variant_calling/lofreq/sample2/sample2.lofreq.vcf.gz
       contains:
         [
           '##INFO=<ID=CONSVAR,Number=0,Type=Flag,Description="Indicates that the variant is a consensus variant (as opposed to a low frequency variant).">',
