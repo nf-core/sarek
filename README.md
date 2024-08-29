@@ -132,7 +132,7 @@ We thank the following people for their extensive assistance in the development 
 - [Abhinav Sharma](https://github.com/abhi18av)
 - [Adam Talbot](https://github.com/adamrtalbot)
 - [Adrian Lärkeryd](https://github.com/adrlar)
-- [AitorPeseta](https://github.com/AitorPeseta)
+- [Àitor Olivares](https://github.com/AitorPeseta)
 - [Alexander Peltzer](https://github.com/apeltzer)
 - [Alison Meynert](https://github.com/ameynert)
 - [Anders Sune Pedersen](https://github.com/asp8200)
