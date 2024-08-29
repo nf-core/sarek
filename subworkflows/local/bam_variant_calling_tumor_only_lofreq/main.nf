@@ -1,6 +1,5 @@
-include { LOFREQ_CALLPARALLEL as LOFREQ          } from '../../../modules/nf-core/lofreq/callparallel/main.nf'
-include { GATK4_MERGEVCFS     as MERGE_LOFREQ    } from '../../../modules/nf-core/gatk4/mergevcfs/main.nf'
-
+include { LOFREQ_CALLPARALLEL as LOFREQ       } from '../../../modules/nf-core/lofreq/callparallel/main.nf'
+include { GATK4_MERGEVCFS     as MERGE_LOFREQ } from '../../../modules/nf-core/gatk4/mergevcfs/main.nf'
 
 workflow BAM_VARIANT_CALLING_TUMOR_ONLY_LOFREQ {
     take:
@@ -45,7 +44,6 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_LOFREQ {
 
     versions = versions.mix(MERGE_LOFREQ.out.versions)
     versions = versions.mix(LOFREQ.out.versions)
-
 
     emit:
     vcf
