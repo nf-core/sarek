@@ -1,4 +1,4 @@
-# nf-core/sarek: Output <!-- omit in toc -->
+º1# nf-core/sarek: Output <!-- omit in toc -->
 
 ## Introduction <!-- omit in toc -->
 
@@ -580,7 +580,7 @@ For further downstream analysis, take a look [here](https://github.com/Illumina/
 <details markdown = "1">
 <summary>Output files for tumor-only samples</summary>
 
-**Output directory: `${outdir}/variant_calling/lofreq/${meta.id}/`**
+**Output directory: `{outdir}/variant_calling/lofreq/<sample>/`**
 
 -`<tumorsample>.vcf.gz`
 -VCF which provides a detailed description of the detected genetic variants.
