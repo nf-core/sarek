@@ -583,7 +583,8 @@ For further downstream analysis, take a look [here](https://github.com/Illumina/
 **Output directory: `${outdir}/variant_calling/lofreq/${meta.id}/`**
 
 -`<tumorsample>.vcf.gz`
-  -VCF which provides a detailed description of the detected genetic variants.
+-VCF which provides a detailed description of the detected genetic variants.
+
   </details>
 
 ### Structural Variants
