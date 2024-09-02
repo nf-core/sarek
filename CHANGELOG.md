@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - [1627](https://github.com/nf-core/sarek/pull/1627) - Correct tower reports/snpeff format
+- [1639](https://github.com/nf-core/sarek/pull/1639) - Bump version to prepare release
 
 ### Fixed
 
