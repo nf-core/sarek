@@ -9,7 +9,7 @@ include { BAM_VARIANT_CALLING_DEEPVARIANT                                       
 include { BAM_VARIANT_CALLING_FREEBAYES                                                } from '../bam_variant_calling_freebayes/main'
 include { BAM_VARIANT_CALLING_GERMLINE_MANTA                                           } from '../bam_variant_calling_germline_manta/main'
 include { BAM_VARIANT_CALLING_HAPLOTYPECALLER                                          } from '../bam_variant_calling_haplotypecaller/main'
-include { BAM_VARIANT_CALLING_GERMLINE_INDEXCOV                                        } from '../bam_variant_calling_indexcov/main'
+include { BAM_VARIANT_CALLING_INDEXCOV                                                 } from '../bam_variant_calling_indexcov/main'
 include { BAM_VARIANT_CALLING_SENTIEON_DNASCOPE                                        } from '../bam_variant_calling_sentieon_dnascope/main'
 include { BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER                                      } from '../bam_variant_calling_sentieon_haplotyper/main'
 include { BAM_VARIANT_CALLING_MPILEUP                                                  } from '../bam_variant_calling_mpileup/main'
@@ -59,6 +59,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     gvcf_sentieon_dnascope   = Channel.empty()
     gvcf_sentieon_haplotyper = Channel.empty()
 
+    indexcov_output          = Channel.empty()
     vcf_deepvariant          = Channel.empty()
     vcf_freebayes            = Channel.empty()
     vcf_haplotypecaller      = Channel.empty()
@@ -194,14 +195,14 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
 
     // INDEXCOV, for WGS only
     if (params.wes==false &&  tools.split(',').contains('indexcov')) {
-        BAM_VARIANT_CALLING_GERMLINE_INDEXCOV (
+        BAM_VARIANT_CALLING_INDEXCOV (
             cram,
             fasta,
             fasta_fai
         )
 
-        indexcov_output = BAM_VARIANT_CALLING_GERMLINE_INDEXCOV.out.indexcov_output
-        versions = versions.mix(BAM_VARIANT_CALLING_GERMLINE_INDEXCOV.out.versions)
+        indexcov_output = BAM_VARIANT_CALLING_INDEXCOV.out.indexcov_output
+        versions = versions.mix(BAM_VARIANT_CALLING_INDEXCOV.out.versions)
     }
 
     // SENTIEON DNASCOPE

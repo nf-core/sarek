@@ -8,7 +8,7 @@ include { SAMTOOLS_REINDEX_BAM } from '../../../modules/local/samtools/reindex_b
 include { GOLEFT_INDEXCOV      } from '../../../modules/nf-core/goleft/indexcov/main'
 
 // Seems to be the consensus on upstream modules implementation too
-workflow BAM_VARIANT_CALLING_GERMLINE_INDEXCOV {
+workflow BAM_VARIANT_CALLING_INDEXCOV {
     take:
     cram          // channel: [mandatory] [ meta, cram, crai ]
     fasta         // channel: [mandatory] [ meta, fasta ]
