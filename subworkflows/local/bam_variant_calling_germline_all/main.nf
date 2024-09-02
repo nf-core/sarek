@@ -192,14 +192,15 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         versions = versions.mix(BAM_VARIANT_CALLING_GERMLINE_MANTA.out.versions)
     }
 
-    // INDEXCOV
-    if (tools.split(',').contains('indexcov')) {
+    // INDEXCOV, for WGS only
+    if (params.wes==false &&  tools.split(',').contains('indexcov')) {
         BAM_VARIANT_CALLING_GERMLINE_INDEXCOV (
             cram,
             fasta,
             fasta_fai
         )
 
+        indexcov_output = BAM_VARIANT_CALLING_GERMLINE_INDEXCOV.out.indexcov_output
         versions = versions.mix(BAM_VARIANT_CALLING_GERMLINE_INDEXCOV.out.versions)
     }
 
@@ -368,6 +369,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     emit:
     gvcf_sentieon_dnascope
     gvcf_sentieon_haplotyper
+    indexcov_output
     vcf_all
     vcf_deepvariant
     vcf_freebayes

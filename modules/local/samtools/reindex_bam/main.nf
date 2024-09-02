@@ -1,5 +1,6 @@
 /**
- * create a BAM containing only a header (so indexcov can get the sample name) and a BAM index were low quality reads, supplementary etc, have been removed
+ * The aim of this process is to re-index the bam file without the duplicate, supplementary, unmapped etc, for goleft/indexcov
+ * It creates a BAM containing only a header (so indexcov can get the sample name) and a BAM index were low quality reads, supplementary etc, have been removed
  */
 process SAMTOOLS_REINDEX_BAM {
     tag "$meta.id"

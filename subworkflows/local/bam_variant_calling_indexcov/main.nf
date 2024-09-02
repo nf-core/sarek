@@ -4,7 +4,7 @@
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
-include { SAMTOOLS_REINDEX_BAM } from '../../../modules/local/indexcov/main'
+include { SAMTOOLS_REINDEX_BAM } from '../../../modules/local/samtools/reindex_bam/main'
 include { GOLEFT_INDEXCOV      } from '../../../modules/nf-core/goleft/indexcov/main'
 
 // Seems to be the consensus on upstream modules implementation too
@@ -39,5 +39,6 @@ workflow BAM_VARIANT_CALLING_GERMLINE_INDEXCOV {
 
     emit:
 
+    indexcov_output = goleft_ch.output
     versions
 }
