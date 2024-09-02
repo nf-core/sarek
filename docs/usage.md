@@ -648,7 +648,8 @@ mv *loci* battenberg_loci_on_target_hg38/
 
 ### 'chr'-based versus non 'chr'-based reference
 
-Please note that loci files provided from ASCAT developers (https://github.com/VanLoo-lab/ascat/tree/master/ReferenceFiles/WES) are not 'chr'-based (chromosome names are '1', '2', '3', etc. and not 'chr1', 'chr2', 'chr3', etc.). If your BAMs are 'chr'-based, you will need to add 'chr' 
+Please note that loci files provided from ASCAT developers (https://github.com/VanLoo-lab/ascat/tree/master/ReferenceFiles/WES) are not 'chr'-based (chromosome names are '1', '2', '3', etc. and not 'chr1', 'chr2', 'chr3', etc.). If your BAMs are 'chr'-based, you will need to add 'chr'
+
 ```bash
 for i in {1..22} X;
   do sed -i 's/^/chr/' G1000_loci_hg19_chr${i}.txt;
@@ -658,6 +659,7 @@ done).
 ASCAT will internally remove 'chr' so the other files (allele, GC correction and RT correction) should not be modified and chrom_names (ascat.prepareHTS) should be c(1:22,'X').
 
 If using ASCAT provided references:
+
 ```bash
 
 cd .../G1000_lociAll_hg38_unzipped/G1000_lociAll_hg38
@@ -666,7 +668,7 @@ cd .../G1000_lociAll_hg38_unzipped/G1000_lociAll_hg38
 check_and_correct_chr_prefix() {
     local file=$1
     local chr_number=$2
-    
+
     # Check if file exists
     if [ ! -f "$file" ]; then
         echo "Error: File $file not found."
@@ -675,7 +677,7 @@ check_and_correct_chr_prefix() {
 
     # Check first line of the file
     first_line=$(head -n 1 "$file")
-    
+
     if [[ $first_line == chr${chr_number}* ]]; then
         echo "File $file already has correct 'chr' prefix. No changes needed."
     elif [[ $first_line == chrchr${chr_number}* ]]; then
@@ -699,23 +701,23 @@ for i in {1..22} X
 do
   # Generate BED file from the tailored loci set
   awk '{ print $1 "\t" $2-1 "\t" $2 }' G1000_loci_hg38_chr${i}.txt > chr${i}.bed
-  
+
   # Extract relevant GC content data for this chromosome
   grep "^chr${i}_" GC_G1000_on_target_hg38.txt > chr${i}.txt
-  
+
   # Intersect BED file with target regions to find loci on target
   bedtools intersect -a chr${i}.bed -b targets_with_chr.bed | awk '{ print $1 "_" $3 }' > chr${i}_on_target.txt
-  
+
   # Calculate the number of lines needed for random sampling (30% of total)
   n=$(wc -l < chr${i}_on_target.txt)
   count=$((n * 3 / 10))
-  
+
   # Get loci that are both on target and match the GC content data
   grep -xf chr${i}.txt chr${i}_on_target.txt > chr${i}.temp
-  
+
   # Add random subset of on-target loci to the list
   shuf -n $count chr${i}_on_target.txt >> chr${i}.temp
-  
+
   # Sort, remove duplicates, and format output
   sort -n -k2 -t '_' chr${i}.temp | uniq | awk 'BEGIN { FS="_" } ; { print $1 "\t" $2 }' > battenberg_loci_on_target_hg38_chr${i}.txt
 done
