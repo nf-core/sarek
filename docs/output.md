@@ -573,9 +573,9 @@ For further downstream analysis, take a look [here](https://github.com/Illumina/
 
 ### Structural Variants
 
-#### Indexcov
+#### indexcov
 
-[Indexcov](https://github.com/brentp/goleft/tree/master/indexcov) quickly estimate coverage from a whole-genome bam or cram index.
+[indexcov](https://github.com/brentp/goleft/tree/master/indexcov) quickly estimate coverage from a whole-genome bam or cram index.
 A bam index has 16KB resolution and it is used as a coverage estimate .
 The output is scaled to around 1. So a long stretch with values of 1.5 would be a heterozygous duplication. This is useful as a quick QC to get coverage values across the genome.
 
@@ -583,7 +583,7 @@ The output is scaled to around 1. So a long stretch with values of 1.5 would be 
 
 In addition to the interactive HTML files, `indexcov` outputs a number of text files:
 
-- `$prefix-indexcov.ped`: a .ped/.fam file with the inferred sex in the appropriate column if the sex chromosomes were found.
+- `<sample>-indexcov.ped`: a .ped/.fam file with the inferred sex in the appropriate column if the sex chromosomes were found.
   the CNX and CNY columns indicating the floating-point estimate of copy-number for those chromosomes.
   `bins.out`: how many bins had a coverage value outside of (0.85, 1.15). high values can indicate high-bias samples.
   `bins.lo`: number of bins with value < 0.15. high values indicate missing data.
@@ -592,9 +592,9 @@ In addition to the interactive HTML files, `indexcov` outputs a number of text f
   `p.out`: `bins.out/bins.in`
   `PC1...PC5`: PCA projections calculated with depth of autosomes.
 
-- `$prefix-indexcov.roc`: tab-delimited columns of chrom, scaled coverage cutoff, and $n_samples columns where each indicates the
+- `<sample>-indexcov.roc`: tab-delimited columns of chrom, scaled coverage cutoff, and $n_samples columns where each indicates the
   proportion of 16KB blocks at or above that scaled coverage value.
-- `$prefix-indexcov.bed.gz`: a bed file with columns of chrom, start, end, and a column per sample where the values indicate there
+- `<sample>-indexcov.bed.gz`: a bed file with columns of chrom, start, end, and a column per sample where the values indicate there
   scaled coverage for that sample in that 16KB chunk.
 
 #### Manta
