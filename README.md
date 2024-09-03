@@ -54,7 +54,7 @@ Depending on the options and samples provided, the pipeline can currently perfor
   - `freebayes`
   - `GATK HaplotypeCaller`
   - `Manta`
-  - IndexCov
+  - `indexcov`
   - `mpileup`
   - `MSIsensor-pro`
   - `Mutect2`
