@@ -1,0 +1,68 @@
+{
+    "homo_sapiens - [bam, bai, bed] - fasta - fai": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.vcf.gz:md5,e8411ecae49b4f6afa6ea0b681ea506e"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,6bf7aa0cbaac4a6e2acab2c475ec2389"
+                ],
+                "vcf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.vcf.gz:md5,e8411ecae49b4f6afa6ea0b681ea506e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,6bf7aa0cbaac4a6e2acab2c475ec2389"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-04T19:08:38.328190023"
+    },
+    "homo_sapiens - [[bam, bam], [bai, bai], bed] - fasta - fai": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.vcf.gz:md5,b52c874c18be636d876d1e0df4a449c3"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,6bf7aa0cbaac4a6e2acab2c475ec2389"
+                ],
+                "vcf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.vcf.gz:md5,b52c874c18be636d876d1e0df4a449c3"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,6bf7aa0cbaac4a6e2acab2c475ec2389"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-04T19:08:54.416661915"
+    }
+}
