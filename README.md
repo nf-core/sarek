@@ -170,7 +170,7 @@ We thank the following people for their extensive assistance in the development 
 - [pallolason](https://github.com/pallolason)
 - [Paul Cantalupo](https://github.com/pcantalupo)
 - [Phil Ewels](https://github.com/ewels)
-- [Pierre Lindenbaum]https://github.com/lindenb=
+- [Pierre Lindenbaum](https://github.com/lindenb)
 - [Sabrina Krakau](https://github.com/skrakau)
 - [Sam Minot](https://github.com/sminot)
 - [Sebastian-D](https://github.com/Sebastian-D)
