@@ -26,7 +26,7 @@ process MSISENSORPRO_MSISOMATIC {
     def args = task.ext.args   ?: ''
     prefix   = task.ext.prefix ?: "${meta.id}"
     def fasta = fasta ? "-g ${fasta}" : ""
-    def intervals = intervals ? "-e ${intervals} " : ""
+    def intervals = intervals ? "-e ${intervals}" : ""
     """
     msisensor-pro \\
         msi \\

@@ -29,5 +29,5 @@ workflow VCF_ANNOTATE_BCFTOOLS {
 
     emit:
     vcf_tbi  = ch_vcf_tbi  // channel: [ val(meta), vcf.gz, vcf.gz.tbi ]
-    versions = ch_versions                  //    path: versions.yml
+    versions = ch_versions //    path: versions.yml
 }
