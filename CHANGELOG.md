@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - [#1638](https://github.com/nf-core/sarek/pull/1638) - Added additional documentation detailing ASCAT WES usage.
+- [] Added asmultipcf functionality for multisample ASCAT calls. 
 
 
 ## [3.4.3](https://github.com/nf-core/sarek/releases/tag/3.4.3) - Loametjåhkkå
