@@ -1,4 +1,4 @@
-º1# nf-core/sarek: Output <!-- omit in toc -->
+# nf-core/sarek: Output <!-- omit in toc -->
 
 ## Introduction <!-- omit in toc -->
 
