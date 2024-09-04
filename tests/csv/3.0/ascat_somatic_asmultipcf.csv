@@ -1,0 +1,4 @@
+patient,sex,status,sample,cram,crai
+test3,XX,0,sample3,HG00145.mapped.ILLUMINA.bwa.GBR.low_coverage.20120522.bam.cram,HG00145.mapped.ILLUMINA.bwa.GBR.low_coverage.20120522.bam.cram.crai
+test3,XX,1,sample4,HG00146.mapped.ILLUMINA.bwa.GBR.low_coverage.20120522.bam.cram,HG00146.mapped.ILLUMINA.bwa.GBR.low_coverage.20120522.bam.cram.crai
+test3,XX,1,sample5,HG00147.mapped.ILLUMINA.bwa.GBR.low_coverage.20120522.bam.cram,HG00147.mapped.ILLUMINA.bwa.GBR.low_coverage.20120522.bam.cram.crai
