@@ -8,7 +8,6 @@ include { ASCAT } from '../../../modules/nf-core/ascat/main'
 include { ASMULTIPCF } from '../../../modules/nf-core/asmultipcf/main'
 
 workflow BAM_VARIANT_CALLING_SOMATIC_ASCAT {
-
     take:
     cram_pair                // channel: [mandatory] [meta, normal_cram, normal_crai, tumor_cram, tumor_crai]
     allele_files             // channel: [mandatory] zip
@@ -20,36 +19,33 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ASCAT {
     asmultipcf               // boolean: [mandatory] whether to run ASMULTIPCF
 
     main:
-
     ch_versions = Channel.empty()
 
+    // Group input by patient
+    cram_pair_by_patient = cram_pair
+        .map { meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> 
+            [meta.patient, meta, normal_cram, normal_crai, tumor_cram, tumor_crai] 
+        }
+        .groupTuple()
+
+    // Run ASCAT for all samples
     ASCAT(cram_pair, allele_files, loci_files, intervals_bed, fasta, gc_file, rt_file)
 
-    ch_versions = ch_versions.mix(ASCAT.out.versions)
+    // Group ASCAT outputs by patient
+    ascat_output_by_patient = ASCAT.out.logrs.join(ASCAT.out.bafs)
+        .map { meta, logr, baf -> [meta.patient, meta, logr, baf] }
+        .groupTuple()
 
     if (asmultipcf) {
-        // Group ASCAT outputs by patient
-        tumor_logr_by_patient = ASCAT.out.logrs.map { meta, file -> [meta.patient, meta, file] }
-            .groupTuple(by: 0)
-            .map { patient, metas, files -> [metas[0] + [id:patient], files] }
-
-        tumor_baf_by_patient = ASCAT.out.bafs.map { meta, file -> [meta.patient, meta, file] }
-            .groupTuple(by: 0)
-            .map { patient, metas, files -> [metas[0] + [id:patient], files] }
-
-        // Assuming normal samples are the same for all tumors of a patient
-        normal_logr_by_patient = ASCAT.out.logrs.map { meta, file -> [meta.patient, meta, file] }
-            .groupTuple(by: 0)
-            .map { patient, metas, files -> [metas[0] + [id:patient], files[0]] }
-
-        normal_baf_by_patient = ASCAT.out.bafs.map { meta, file -> [meta.patient, meta, file] }
-            .groupTuple(by: 0)
-            .map { patient, metas, files -> [metas[0] + [id:patient], files[0]] }
-
-        // Combine all inputs for ASMULTIPCF
-        asmultipcf_input = tumor_logr_by_patient.join(tumor_baf_by_patient)
-            .join(normal_logr_by_patient)
-            .join(normal_baf_by_patient)
+        // Prepare input for ASMULTIPCF
+        asmultipcf_input = ascat_output_by_patient
+            .map { patient, metas, logrs, bafs ->
+                def tumor_logrs = logrs.findAll { it.name.contains('tumor') }
+                def tumor_bafs = bafs.findAll { it.name.contains('tumor') }
+                def normal_logr = logrs.find { it.name.contains('normal') }
+                def normal_baf = bafs.find { it.name.contains('normal') }
+                [metas[0] + [id: patient], tumor_logrs, tumor_bafs, normal_logr, normal_baf]
+            }
 
         // Run ASMULTIPCF
         ASMULTIPCF(asmultipcf_input)
@@ -57,6 +53,12 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ASCAT {
         ch_versions = ch_versions.mix(ASMULTIPCF.out.versions)
     }
 
+    ch_versions = ch_versions.mix(ASCAT.out.versions)
+
     emit:
+    ascat_segments = ASCAT.out.segments
+    ascat_purityploidy = ASCAT.out.purityploidy
+    asmultipcf_segments = asmultipcf ? ASMULTIPCF.out.asmultipcf_segments : Channel.empty()
+    asmultipcf_purityploidy = asmultipcf ? ASMULTIPCF.out.asmultipcf_purityploidy : Channel.empty()
     versions = ch_versions
 }
