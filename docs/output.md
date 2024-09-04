@@ -692,6 +692,13 @@ The output is a tab delimited text file with the following columns:
 
 The file `<tumorsample_vs_normalsample>.cnvs.txt` contains all segments predicted by ASCAT, both those with normal copy number (nMinor = 1 and nMajor =1) and those corresponding to copy number aberrations.
 
+--asmultipcf if this is turned on. It will run local module asmultipcf which corrects segments calls on multiple samples from the same patient. This will give you two additional output files
+
+- `<tumorsample_vs_normalsample>._asmultipcf_purityploidy.txt`
+  - file with information about purity and ploidy corrected for multiple samples
+- `<tumorsample_vs_normalsample>._asmultipcf_segments.txt`
+  - file with information about copy number segments corrected for multiple samples
+
 </details>
 
 #### CNVKit
