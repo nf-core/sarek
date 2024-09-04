@@ -36,15 +36,16 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ASCAT {
         .map { meta, logr, baf -> [meta.patient, meta, logr, baf] }
         .groupTuple()
 
-    if (asmultipcf) {
+    if (params.asmultipcf) {
         // Prepare input for ASMULTIPCF
         asmultipcf_input = ascat_output_by_patient
             .map { patient, metas, logrs, bafs ->
+                def meta = metas[0] + [id: patient]
                 def tumor_logrs = logrs.findAll { it.name.contains('tumor') }
                 def tumor_bafs = bafs.findAll { it.name.contains('tumor') }
                 def normal_logr = logrs.find { it.name.contains('normal') }
                 def normal_baf = bafs.find { it.name.contains('normal') }
-                [metas[0] + [id: patient], tumor_logrs, tumor_bafs, normal_logr, normal_baf]
+                [meta, tumor_logrs, tumor_bafs, normal_logr, normal_baf]
             }
 
         // Run ASMULTIPCF

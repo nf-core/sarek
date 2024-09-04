@@ -8,10 +8,8 @@ process ASMULTIPCF {
         'biocontainers/mulled-v2-c278c7398beb73294d78639a864352abef2931ce:ba3e6d2157eac2d38d22e62ec87675e12adb1010-0' }"
 
     input:
-    tuple val(meta), path(tumor_logr_files)
-    tuple val(meta), path(tumor_baf_files)
-    tuple val(meta), path(normal_logr_file)
-    tuple val(meta), path(normal_baf_file)
+    tuple val(meta), path(tumor_logr_files), path(tumor_baf_files), path(normal_logr_file), path(normal_baf_file)
+
 
     output:
     tuple val(meta), path("*_asmultipcf_segments.txt"), emit: asmultipcf_segments
