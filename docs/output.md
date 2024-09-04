@@ -196,8 +196,6 @@ The alignment files (BAM or CRAM) produced by the chosen aligner are not publish
   - BAM file and index
   </details>
 
-</details>
-
 ### Mark Duplicates
 
 During duplicate marking, read pairs that are likely to have originated from duplicates of the same original DNA fragments through some artificial processes are identified. These are considered to be non-independent observations, so all but a single read pair within each set of duplicates are marked, causing the marked pairs to be ignored by default during the variant discovery process.
