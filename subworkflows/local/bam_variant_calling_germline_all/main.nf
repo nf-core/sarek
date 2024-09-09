@@ -198,7 +198,8 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         BAM_VARIANT_CALLING_DYSGU (
             cram,
             fasta,
-            fasta_fai
+            fasta_fai,
+            intervals
         )
 
         vcf_dysgu = BAM_VARIANT_CALLING_GERMLINE_DYSGU.out.vcf
