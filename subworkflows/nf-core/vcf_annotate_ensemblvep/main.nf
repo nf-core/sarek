@@ -7,7 +7,7 @@ include { TABIX_TABIX    } from '../../../modules/nf-core/tabix/tabix/main'
 
 workflow VCF_ANNOTATE_ENSEMBLVEP {
     take:
-    ch_vcf                      // channel: [ val(meta), path(vcf), [path(custom_file1), path(custom_file2)... (optionnal)]]
+    ch_vcf                      // channel: [ val(meta), path(vcf), [path(custom_file1), path(custom_file2)... (optional)]]
     ch_fasta                    // channel: [ val(meta2), path(fasta) ] (optional)
     val_genome                  //   value: genome to use
     val_species                 //   value: species to use
@@ -31,6 +31,8 @@ workflow VCF_ANNOTATE_ENSEMBLVEP {
     TABIX_TABIX(ENSEMBLVEP_VEP.out.vcf)
 
     ch_vcf_tbi = ENSEMBLVEP_VEP.out.vcf.join(TABIX_TABIX.out.tbi, failOnDuplicate: true, failOnMismatch: true)
+        // Add annotation to meta to use the right config for TMB
+        .map{ meta, vcf, tbi -> [ meta + [ annotation:'vep' ], vcf, tbi ] }
 
     // Gather versions of all tools used
     ch_versions = ch_versions.mix(ENSEMBLVEP_VEP.out.versions)

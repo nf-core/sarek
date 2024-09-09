@@ -83,6 +83,9 @@ include { VCF_QC_BCFTOOLS_VCFTOOLS                          } from '../../subwor
 // Annotation
 include { VCF_ANNOTATE_ALL                                  } from '../../subworkflows/local/vcf_annotate_all/main'
 
+// TMB
+include { TUMOR_MUTATIONAL_BURDEN                           } from '../../subworkflows/local/vcf_tumor_mutational_burden/main'
+
 // MULTIQC
 include { MULTIQC                                           } from '../../modules/nf-core/multiqc/main'
 
@@ -890,6 +893,13 @@ workflow SAREK {
             // Gather used softwares versions
             versions = versions.mix(VCF_ANNOTATE_ALL.out.versions)
             reports = reports.mix(VCF_ANNOTATE_ALL.out.reports)
+
+            // TMB
+            if (params.tools.split(',').contains('tmb')) {
+                TUMOR_MUTATIONAL_BURDEN(VCF_ANNOTATE_ALL.out.vcf_ann, fasta, intervals_bed_combined)
+
+                versions = versions.mix(TUMOR_MUTATIONAL_BURDEN.out.versions)
+            }
         }
     }
 
