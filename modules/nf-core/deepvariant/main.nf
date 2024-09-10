@@ -3,7 +3,7 @@ process DEEPVARIANT {
     label 'process_high'
 
     //Conda is not supported at the moment
-    container "nf-core/deepvariant:1.6.1"
+    container "nf-core/deepvariant:1.5.0"
 
     input:
     tuple val(meta), path(input), path(index), path(intervals)
