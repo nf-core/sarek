@@ -22,14 +22,14 @@ process TMB {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def intervals_bed = intervals ? "--bed ${intervals}" : ''
-    def target_region = args.contains("--effGenomeSize") ? '' : intervals_bed
+    def intervals_bed = intervals ? "--bed ${intervals}" : ""
+    def target_region = args.contains("--effGenomeSize") ? "" : intervals_bed
     """
     pyTMB.py -i ${vcf} \\
         --dbConfig ${dbconfig} \\
         --varConfig ${varconfig} \\
-        ${target_region} \\
-        ${args} \\
+        $target_region \\
+        $args \\
         --export \\
         > ${prefix}.tmb.log
 
