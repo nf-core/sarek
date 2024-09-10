@@ -198,12 +198,11 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         BAM_VARIANT_CALLING_DYSGU (
             cram,
             fasta,
-            fasta_fai,
-            intervals
+            fasta_fai
         )
 
-        vcf_dysgu = BAM_VARIANT_CALLING_GERMLINE_DYSGU.out.vcf
-        versions = versions.mix(BAM_VARIANT_CALLING_GERMLINE_DYSGU.out.versions)
+        vcf_dysgu = BAM_VARIANT_CALLING_DYSGU.out.vcf
+        versions = versions.mix(BAM_VARIANT_CALLING_DYSGU.out.versions)
     }
 
     // SENTIEON DNASCOPE
