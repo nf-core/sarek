@@ -38,8 +38,8 @@ process DEEPVARIANT {
         --output_gvcf=${prefix}.g.vcf.gz \\
         ${args} \\
         ${regions} \\
-        --intermediate_results_dir=. \\
-        --num_shards=${task.cpus}
+        --intermediate_results_dir=tmp \\
+        --num_shards=1
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
