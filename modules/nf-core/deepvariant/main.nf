@@ -3,7 +3,7 @@ process DEEPVARIANT {
     label 'process_high'
 
     //Conda is not supported at the moment
-    container "nf-core/deepvariant:1.5.0"
+    container "nf-core/deepvariant:1.6.1"
 
     input:
     tuple val(meta), path(input), path(index), path(intervals)
@@ -38,8 +38,8 @@ process DEEPVARIANT {
         --output_gvcf=${prefix}.g.vcf.gz \\
         ${args} \\
         ${regions} \\
-        --intermediate_results_dir=. \\
-        --num_shards=${task.cpus}
+        --intermediate_results_dir=tmp \\
+        --num_shards=1
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
