@@ -4,7 +4,7 @@
 <svg
    id="svg2"
    version="1.1"
-   inkscape:version="1.3 (0e150ed, 2023-07-21)"
+   inkscape:version="1.3.1 (9b9bdc1480, 2023-11-25, custom)"
    xml:space="preserve"
    width="201.34685mm"
    height="412.96832mm"
@@ -2171,17 +2171,17 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="752"
-     inkscape:window-height="826"
+     inkscape:window-width="1854"
+     inkscape:window-height="1011"
      id="namedview4"
      showgrid="false"
      inkscape:zoom="0.58648764"
      inkscape:cx="496.17414"
-     inkscape:cy="694.8143"
-     inkscape:window-x="649"
-     inkscape:window-y="37"
-     inkscape:window-maximized="0"
-     inkscape:current-layer="g10"
+     inkscape:cy="693.10924"
+     inkscape:window-x="66"
+     inkscape:window-y="32"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g2011"
      units="mm"
      showguides="false"
      fit-margin-top="0"
@@ -2191,7 +2191,8 @@
      inkscape:pagecheckerboard="0"
      inkscape:document-units="mm"
      inkscape:showpageshadow="2"
-     inkscape:deskcolor="#d1d1d1" /><g
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:export-bgcolor="#ffffff00" /><g
      id="g10"
      inkscape:groupmode="layer"
      inkscape:label="MGarcia"
@@ -2208,7 +2209,15 @@
    y="-2749.4028"><tspan
      id="tspan3424"
      y="-2749.4028"
-     x="866.00854" /></text>&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;<g
+     x="866.00854" /></text>
+
+
+
+
+
+
+
+<g
    id="g6139"
    transform="translate(2626.2867,-201.23814)" /><g
    inkscape:label="Germline"
@@ -2720,7 +2729,15 @@
    font-weight="bold"
    xml:space="preserve"
    id="text8524"
-   transform="matrix(1.9071373,0,0,-1.9071373,430.82327,2077.7321)" />&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;<text
+   transform="matrix(1.9071373,0,0,-1.9071373,430.82327,2077.7321)" />
+
+
+
+
+
+
+
+<text
    style="font-style:normal;font-weight:bold;font-size:medium;font-family:sans-serif;color-interpolation:auto;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:1.45;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"
    x="32.745098"
    y="164.2402"
@@ -2728,7 +2745,15 @@
    font-weight="bold"
    xml:space="preserve"
    id="text8514"
-   transform="matrix(1.9071373,0,0,-1.9071373,542.56229,2077.7321)" />&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;<g
+   transform="matrix(1.9071373,0,0,-1.9071373,542.56229,2077.7321)" />
+
+
+
+
+
+
+
+<g
    style="font-style:normal;font-weight:normal;font-size:medium;font-family:Dialog;color-interpolation:auto;fill:#ffcc99;fill-opacity:1;stroke:#ffcc99;stroke-width:1;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"
    transform="matrix(1.9071373,0,0,-1.9071373,667.97582,1997.1003)"
    id="g9368" /><flowRoot
@@ -3017,7 +3042,10 @@
    x="-1.3207297"
    style="font-style:normal;font-weight:normal;font-size:medium;font-family:Dialog;color-interpolation:auto;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1.23441;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:1.45;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"
    rx="5.2434611"
-   ry="5.2434611" />&#10;&#10;&#10;<g
+   ry="5.2434611" />
+
+
+<g
    id="g15312"
    transform="translate(0,5.3987646)"><text
      xml:space="preserve"
@@ -3048,7 +3076,15 @@
      x="279.19431"
      style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.2757px;line-height:0%;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, @wght=700';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wght' 700;color-interpolation:auto;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:1.45;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"><tspan
        style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:12.2757px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wght' 700"
-       id="tspan4885">Preprocessing</tspan></text></g>&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;</g><flowRoot
+       id="tspan4885">Preprocessing</tspan></text></g>
+
+
+
+
+
+
+
+</g><flowRoot
    xml:space="preserve"
    id="flowRoot4041"
    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0.01%;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -3088,7 +3124,10 @@
        x="1672.7253"
        y="-1366.8191"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:1px"
-       id="tspan23832">bcftools annotate, snpeff, vep</tspan></tspan></text>&#10;&#10;&#10;<text
+       id="tspan23832">bcftools annotate, snpeff, vep</tspan></tspan></text>
+
+
+<text
    style="font-style:normal;font-weight:bold;font-size:medium;line-height:0%;font-family:sans-serif;color-interpolation:auto;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:1.45;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"
    x="279.19431"
    xml:space="preserve"
@@ -3097,7 +3136,15 @@
    id="text4905"
    transform="matrix(2.769692,0,0,-2.769692,973.21406,1712.0404)"><tspan
      id="tspan4907"
-     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:12.2757px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wght' 700">Annotation</tspan></text>&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;</g><g
+     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:12.2757px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wght' 700">Annotation</tspan></text>
+
+
+
+
+
+
+
+</g><g
    id="g1976"
    transform="translate(2.2888183e-5,-28.5)"><rect
    ry="5.2434611"
@@ -3118,7 +3165,18 @@
    id="text4921"
    transform="matrix(2.769692,0,0,-2.769692,998.93074,1587.2949)"><tspan
      id="tspan4923"
-     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:12.2757px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal">Reports</tspan></text>&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;<g
+     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:12.2757px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal">Reports</tspan></text>
+
+
+
+
+
+
+
+
+
+
+<g
    transform="matrix(1.0993996,0,0,1.0993996,747.13326,-146.91204)"
    id="g4697"><path
      inkscape:connector-curvature="0"
@@ -3196,7 +3254,10 @@
    x="-1.3207297"
    style="font-style:normal;font-weight:normal;font-size:medium;font-family:Dialog;color-interpolation:auto;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1.35394;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:1.45;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"
    rx="5.2434611"
-   ry="5.2434611" />&#10;&#10;&#10;<text
+   ry="5.2434611" />
+
+
+<text
    xml:space="preserve"
    style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:34px;line-height:0.01%;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
    x="1718.3259"
@@ -3211,7 +3272,10 @@
        x="1718.3259"
        y="-1730.2793"
        style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:34px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:1px"
-       id="tspan23744">Variant Calling</tspan></tspan></text>&#10;&#10;&#10;<text
+       id="tspan23744">Variant Calling</tspan></tspan></text>
+
+
+<text
    xml:space="preserve"
    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:13.9419px;line-height:0.01%;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
    x="1850.3204"
@@ -3250,7 +3314,7 @@
        y="-1650.3851"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:1px"
        id="tspan23802"
-       dx="0 0 0 0 0 0 0 0 0 0 0 0">   strelka2</tspan></tspan><tspan
+       dx="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0">   strelka2, lofreq</tspan></tspan><tspan
      sodipodi:role="line"
      x="1850.3204"
      y="-1625.3853"
@@ -3289,7 +3353,10 @@
        x="1850.3204"
        y="-1550.3856"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:1px"
-       id="tspan23826">• msisensorpro</tspan></tspan></text>&#10;&#10;&#10;<path
+       id="tspan23826">• msisensorpro</tspan></tspan></text>
+
+
+<path
    style="display:inline;fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:3.76504;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
    d="M 1837.0633,1710.5361 V 1551.5039"
    id="path4994"
@@ -3303,40 +3370,58 @@
    x="-73.996574"
    y="0"><tspan
      x="21.957031"
-     y="846.21222"
-     id="tspan15">Germline&#10;</tspan><tspan
+     y="844.07984"
+     id="tspan1">Germline
+</tspan><tspan
      x="21.957031"
-     y="877.41223"
-     id="tspan18"><tspan
+     y="875.27985"
+     id="tspan4"><tspan
        style="font-weight:normal;font-size:26.6667px"
-       id="tspan16">•</tspan><tspan
+       id="tspan2">•</tspan><tspan
        style="font-weight:normal;font-size:26.6667px"
-       id="tspan17"> deepvariant, freebayes&#10;</tspan></tspan><tspan
+       id="tspan3"> deepvariant, </tspan></tspan><tspan
      x="21.957031"
-     y="908.61225"
-     id="tspan20"><tspan
+     y="906.47986"
+     id="tspan6"><tspan
        style="font-weight:normal;font-size:26.6667px"
-       id="tspan19">   GATK haplotypecaller,&#10;</tspan></tspan><tspan
+       id="tspan5">freebayes
+</tspan></tspan><tspan
      x="21.957031"
-     y="939.81226"
-     id="tspan22"><tspan
+     y="937.67988"
+     id="tspan8"><tspan
        style="font-weight:normal;font-size:26.6667px"
-       id="tspan21">   mpileup, strelka2,&#10;</tspan></tspan><tspan
+       id="tspan7">   GATK </tspan></tspan><tspan
      x="21.957031"
-     y="971.01227"
-     id="tspan24"><tspan
+     y="968.87989"
+     id="tspan10"><tspan
        style="font-weight:normal;font-size:26.6667px"
-       id="tspan23">   Sentieon haplotyper&#10;</tspan></tspan><tspan
+       id="tspan9">haplotypecaller,
+</tspan></tspan><tspan
      x="21.957031"
-     y="1002.2123"
-     id="tspan26"><tspan
+     y="1000.0799"
+     id="tspan12"><tspan
        style="font-weight:normal;font-size:26.6667px"
-       id="tspan25">• manta, tiddit&#10;</tspan></tspan><tspan
+       id="tspan11">   mpileup, strelka2,
+</tspan></tspan><tspan
      x="21.957031"
-     y="1033.4123"
-     id="tspan28"><tspan
+     y="1031.2799"
+     id="tspan14"><tspan
        style="font-weight:normal;font-size:26.6667px"
-       id="tspan27">• cnvkit</tspan></tspan></text></g><g
+       id="tspan13">   Sentieon haplotyper
+</tspan></tspan><tspan
+     x="21.957031"
+     y="1081.2146"
+     id="tspan30"><tspan
+       dx="0 15.729187 8.4765739 25.976593 16.341167 16.901062 10.455742 16.341171 8.4765701 8.4765701 10.45575 7.4088593 16.927109 16.927094 7.4088745 10.455734"
+       style="font-weight:normal;font-size:26.6667px"
+       id="tspan29">• manta, tiddit
+</tspan></tspan><tspan
+     x="21.957031"
+     y="1112.4146"
+     id="tspan32"><tspan
+       dx="0 15.729187 8.4765739 14.661476 16.901066 15.781265 15.442734 7.4088593"
+       style="font-weight:normal;font-size:26.6667px"
+       id="tspan31">• cnvkit</tspan></tspan></text></g><g
    transform="matrix(0.60699338,0,0,-0.60699338,1601.5501,2205.8332)"
    style="display:inline"
    inkscape:label="Sarek"
@@ -3652,8 +3737,21 @@
    x="2378.6733"
    y="-1509.462"
    id="text1154"
-   transform="scale(1,-1)" />&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;</g><style
+   transform="scale(1,-1)" />
+
+
+
+
+
+
+
+</g><style
      id="style4691"
-     type="text/css">&#10;	.st0{fill:#E01E5A;}&#10;	.st1{fill:#36C5F0;}&#10;	.st2{fill:#2EB67D;}&#10;	.st3{fill:#ECB22E;}&#10;</style><style
+     type="text/css">
+	.st0{fill:#E01E5A;}
+	.st1{fill:#36C5F0;}
+	.st2{fill:#2EB67D;}
+	.st3{fill:#ECB22E;}
+</style><style
      id="style3"
      type="text/css" /></svg>
