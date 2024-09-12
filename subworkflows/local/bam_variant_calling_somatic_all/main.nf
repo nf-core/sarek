@@ -3,6 +3,7 @@
 //
 
 include { BAM_VARIANT_CALLING_CNVKIT                    } from '../bam_variant_calling_cnvkit/main'
+include { BAM_VARIANT_CALLING_DEEPSOMATIC               } from '../bam_variant_calling_deepsomatic/main'
 include { BAM_VARIANT_CALLING_FREEBAYES                 } from '../bam_variant_calling_freebayes/main'
 include { BAM_VARIANT_CALLING_MPILEUP as MPILEUP_NORMAL } from '../bam_variant_calling_mpileup/main'
 include { BAM_VARIANT_CALLING_MPILEUP as MPILEUP_TUMOR  } from '../bam_variant_calling_mpileup/main'
@@ -125,6 +126,20 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         )
 
         versions = versions.mix(BAM_VARIANT_CALLING_CNVKIT.out.versions)
+    }
+
+    if (tools.split(',').contains('deepsomatic')) {
+        BAM_VARIANT_CALLING_DEEPSOMATIC(
+            // Remap channel to match module/subworkflow
+            cram.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [ meta, normal_cram, normal_crai ] },
+            cram.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [ meta, tumor_cram, tumor_crai ] },
+            dict,
+            fasta,
+            fasta_fai,
+            intervals
+        )
+
+        versions = versions.mix(BAM_VARIANT_CALLING_DEEPSOMATIC.out.versions)
     }
 
     // FREEBAYES
