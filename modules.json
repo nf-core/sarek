@@ -314,6 +314,11 @@
                         "git_sha": "a941aa24517960d7b9eeab4c3a5adfb3f70a5e4b",
                         "installed_by": ["modules"]
                     },
+                    "lofreq/callparallel": {
+                        "branch": "master",
+                        "git_sha": "bf918b32044472c9346ec3444d894c69700ced6d",
+                        "installed_by": ["modules"]
+                    },
                     "manta/germline": {
                         "branch": "master",
                         "git_sha": "ebc1733b77c702f19fe42076a5edfcbaa0d84f66",
