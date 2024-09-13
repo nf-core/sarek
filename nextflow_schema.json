@@ -15,12 +15,12 @@
             "properties": {
                 "input": {
                     "description": "Path to comma-separated file containing information about the samples in the experiment.",
-                    "help_text": "A design file with information about the samples in your experiment. Use this parameter to specify the location of the input files. It has to be a comma-separated file with a header row. See [usage docs](https://nf-co.re/sarek/usage#input).\n\nIf no input file is specified, sarek will attempt to locate one in the `{outdir}` directory. If no input should be supplied, i.e. when --step is supplied or --build_from_index, then set --input false",
+                    "help_text": "A design file with information about the samples in your experiment. Use this parameter to specify the location of the input files. It has to be a comma-separated file with a header row. See [usage docs](https://nf-co.re/sarek/usage#input).\n\nIf no input file is specified, sarek will attempt to locate one in the `{outdir}` directory. If no input should be supplied, i.e. when --step is supplied or --build_only_index, then set --input false",
                     "fa_icon": "fas fa-file-csv",
-                    "schema": "assets/schema_input.json",
                     "type": "string",
                     "format": "file-path",
                     "exists": true,
+                    "schema": "assets/schema_input.json",
                     "mimetype": "text/csv",
                     "pattern": "^\\S+\\.csv$"
                 },
@@ -65,11 +65,22 @@
             "default": "",
             "properties": {
                 "split_fastq": {
+                    "oneOf": [
+                        {
+                            "type": "integer",
+                            "minimum": 250
+                        },
+                        {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 0
+                        }
+                    ],
                     "type": "integer",
                     "default": 50000000,
                     "fa_icon": "fas fa-clock",
                     "description": "Specify how many reads each split of a FastQ file contains. Set 0 to turn off splitting at all.",
-                    "help_text": "Use the the tool FastP to split FASTQ file by number of reads. This parallelizes across fastq file shards speeding up mapping. "
+                    "help_text": "Use the the tool FastP to split FASTQ file by number of reads. This parallelizes across fastq file shards speeding up mapping. Note although the minimum value is 250 reads, if you have fewer than 250 reads a single FASTQ shard will still be created."
                 },
                 "wes": {
                     "type": "boolean",
@@ -100,8 +111,8 @@
                     "type": "string",
                     "fa_icon": "fas fa-toolbox",
                     "description": "Tools to use for duplicate marking, variant calling and/or for annotation.",
-                    "help_text": "Multiple tools separated with commas.\n\n**Variant Calling:**\n\nGermline variant calling can currently be performed with the following variant callers:\n- SNPs/Indels: DeepVariant, FreeBayes, GATK HaplotypeCaller, mpileup, Sentieon Haplotyper, Strelka\n- Structural Variants: Manta, TIDDIT\n- Copy-number: CNVKit\n\nTumor-only somatic variant calling can currently be performed with the following variant callers:\n- SNPs/Indels: FreeBayes, mpileup, Mutect2, Strelka\n- Structural Variants: Manta, TIDDIT\n- Copy-number: CNVKit, ControlFREEC\n\nSomatic variant calling can currently only be performed with the following variant callers:\n- SNPs/Indels: FreeBayes, Mutect2, Strelka2\n- Structural variants: Manta, TIDDIT\n- Copy-Number: ASCAT, CNVKit, Control-FREEC\n- Microsatellite Instability: MSIsensorpro\n\n> **NB** Mutect2 for somatic variant calling cannot be combined with `--no_intervals`\n\n**Annotation:**\n \n- snpEff, VEP, merge (both consecutively), and bcftools annotate (needs `--bcftools_annotation`).\n\n> **NB** As Sarek will use bgzip and tabix to compress and index VCF files annotated, it expects VCF files to be sorted when starting from `--step annotate`.",
-                    "pattern": "^((ascat|bcfann|cnvkit|controlfreec|deepvariant|freebayes|haplotypecaller|indexcov|sentieon_dnascope|sentieon_haplotyper|manta|merge|mpileup|msisensorpro|mutect2|ngscheckmate|sentieon_dedup|snpeff|strelka|tiddit|vep)?,?)*(?<!,)$"
+                    "help_text": "Multiple tools separated with commas.\n\n**Variant Calling:**\n\nGermline variant calling can currently be performed with the following variant callers:\n- SNPs/Indels: DeepVariant, FreeBayes, GATK HaplotypeCaller, mpileup, Sentieon Haplotyper, Strelka\n- Structural Variants: Manta, TIDDIT\n- Copy-number: CNVKit\n\nTumor-only somatic variant calling can currently be performed with the following variant callers:\n- SNPs/Indels: FreeBayes, mpileup, Mutect2, Lofreq, Strelka\n- Structural Variants: Manta, TIDDIT\n- Copy-number: CNVKit, ControlFREEC\n\nSomatic variant calling can currently only be performed with the following variant callers:\n- SNPs/Indels: FreeBayes, Mutect2, Strelka2\n- Structural variants: Manta, TIDDIT\n- Copy-Number: ASCAT, CNVKit, Control-FREEC\n- Microsatellite Instability: MSIsensorpro\n\n> **NB** Mutect2 for somatic variant calling cannot be combined with `--no_intervals`\n\n**Annotation:**\n \n- snpEff, VEP, merge (both consecutively), and bcftools annotate (needs `--bcftools_annotation`).\n\n> **NB** As Sarek will use bgzip and tabix to compress and index VCF files annotated, it expects VCF files to be sorted when starting from `--step annotate`.",
+                    "pattern": "^((ascat|bcfann|cnvkit|controlfreec|deepvariant|freebayes|haplotypecaller|indexcov|lofreq|sentieon_dnascope|sentieon_haplotyper|manta|merge|mpileup|msisensorpro|mutect2|ngscheckmate|sentieon_dedup|snpeff|strelka|tiddit|vep)?,?)*(?<!,)$"
                 },
                 "skip_tools": {
                     "type": "string",
@@ -147,7 +158,7 @@
                     "default": 0,
                     "fa_icon": "fas fa-cut",
                     "description": "Remove bp from the 3' end of read 1",
-                    "help_text": "This may remove some unwanted bias from the 3'.  Corresponds to the FastP flag `--three_prime_clip_r1`.",
+                    "help_text": "This may remove some unwanted bias from the 3'.  Corresponds to the FastP flag `--trim_tail1`.",
                     "hidden": true
                 },
                 "three_prime_clip_r2": {
@@ -155,7 +166,7 @@
                     "default": 0,
                     "fa_icon": "fas fa-cut",
                     "description": "Remove bp from the 3' end of read 2",
-                    "help_text": "This may remove some unwanted bias from the 3' end. Corresponds to the FastP flag `--three_prime_clip_r2`.",
+                    "help_text": "This may remove some unwanted bias from the 3' end. Corresponds to the FastP flag `--trim_tail2`.",
                     "hidden": true
                 },
                 "trim_nextseq": {
@@ -509,7 +520,7 @@
                 },
                 "vep_version": {
                     "type": "string",
-                    "default": "110.0-0",
+                    "default": "111.0-0",
                     "fa_icon": "fas fa-toolbox",
                     "description": "Should reflect the VEP version used in the container.",
                     "help_text": "Used by the loftee plugin that need the full path."
@@ -565,7 +576,7 @@
                     "fa_icon": "fa-solid fa-text",
                     "description": "ASCAT genome.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately.\n\nMust be set to run ASCAT, either hg19 or hg38. If you use AWS iGenomes, this has already been set for you appropriately.",
-                    "enum": ["None", "hg19", "hg38"],
+                    "enum": ["hg19", "hg38"],
                     "hidden": true
                 },
                 "ascat_alleles": {
@@ -774,7 +785,7 @@
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately.\nAlternatively species listed in Ensembl Genomes caches can be used."
                 },
                 "vep_cache_version": {
-                    "type": "number",
+                    "type": "string",
                     "fa_icon": "fas fa-tag",
                     "description": "VEP cache version.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately.\nAlternatively cache version can be use to specify the correct Ensembl Genomes version number as these differ from the concurrent Ensembl/VEP version numbers"
@@ -880,6 +891,11 @@
                     "default": "https://raw.githubusercontent.com/nf-core/test-datasets/sarek3",
                     "description": "Base path / URL for data used in the test profiles",
                     "help_text": "Warning: The `-profile test` samplesheet file itself contains remote paths. Setting this parameter does not alter the contents of that file.",
+                    "hidden": true
+                },
+                "modules_testdata_base_path": {
+                    "type": "string",
+                    "description": "Base path / URL for data used in the modules",
                     "hidden": true
                 },
                 "seq_center": {
@@ -1052,6 +1068,13 @@
                     "description": "Incoming hook URL for messaging service",
                     "fa_icon": "fas fa-people-group",
                     "help_text": "Incoming hook URL for messaging service. Currently, MS Teams and Slack are supported.",
+                    "hidden": true
+                },
+                "pipelines_testdata_base_path": {
+                    "type": "string",
+                    "fa_icon": "far fa-check-circle",
+                    "description": "Base URL or local path to location of pipeline test dataset files",
+                    "default": "https://raw.githubusercontent.com/nf-core/test-datasets/",
                     "hidden": true
                 }
             }

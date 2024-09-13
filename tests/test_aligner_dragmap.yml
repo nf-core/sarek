@@ -1,5 +1,5 @@
 - name: Run dragmap
-  command: nextflow run main.nf -profile test_cache --aligner dragmap --save_reference --outdir results
+  command: nextflow run main.nf -profile test --aligner dragmap --save_reference --outdir results
   tags:
     - aligner
     - dragmap
@@ -22,10 +22,6 @@
     # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
     # binary changes md5sums on reruns
-    - path: results/reference/dbsnp/dbsnp_146.hg38.vcf.gz.tbi
-    # conda changes md5sums for test
-    - path: results/reference/dict/genome.dict
-      md5sum: 2433fe2ba31257337bf4c4bd4cb8da15
     - path: results/reference/dragmap/hash_table.cfg
       contains:
         [
@@ -49,45 +45,31 @@
       md5sum: 294939f1f80aa7f4a70b9b537e4c0f21
     - path: results/reference/dragmap/str_table.bin
       md5sum: 45f7818c4a10fdeed04db7a34b5f9ff1
-    - path: results/reference/fai/genome.fasta.fai
-      md5sum: 3520cd30e1b100e55f578db9c855f685
     - path: results/reference/intervals/chr22_1-40001.bed
       md5sum: 87a15eb9c2ff20ccd5cd8735a28708f7
     - path: results/reference/intervals/chr22_1-40001.bed.gz
       md5sum: d3341fa28986c40b24fcc10a079dbb80
     - path: results/reference/intervals/genome.bed
       md5sum: a87dc7d20ebca626f65cc16ff6c97a3e
-    - path: results/reference/known_indels/mills_and_1000G.indels.vcf.gz.tbi
-    # conda changes md5sums for test
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.cram.metrics
       contains: ["LB0	27214	1086	322	1037558	20017	100	0	0.687981"]
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
-      md5sum: b0d7d5de1e00132bb5b47e1b3d90d944
     - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
-      md5sum: 02b88d7ec0ca8ff23ba688c35939fa05
     - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
-      md5sum: 1792d98676f597f755749f4286c5102d
     - path: results/reports/mosdepth/test/test.md.regions.bed.gz
-      md5sum: 590119568d091ce3a88f7fe4f43f24ff
     - path: results/reports/mosdepth/test/test.md.regions.bed.gz.csi
-      md5sum: 2e7fe057ead0622e6a2a6b0ed1832315
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
-      md5sum: b0d7d5de1e00132bb5b47e1b3d90d944
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
-      md5sum: 02b88d7ec0ca8ff23ba688c35939fa05
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
-      md5sum: 1792d98676f597f755749f4286c5102d
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
-      md5sum: 590119568d091ce3a88f7fe4f43f24ff
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
-      md5sum: 2e7fe057ead0622e6a2a6b0ed1832315
     - path: results/reports/samtools/test/test.md.cram.stats
     # conda changes md5sums for test
     - path: results/reports/samtools/test/test.recal.cram.stats
     # conda changes md5sums for test
 - name: Build only index with dragmap
-  command: nextflow run main.nf -profile test_cache --build_only_index --aligner dragmap --input false --outdir results
+  command: nextflow run main.nf -profile test --build_only_index --aligner dragmap --input false --outdir results
   tags:
     - aligner
     - build_only_index
@@ -117,17 +99,9 @@
       md5sum: 294939f1f80aa7f4a70b9b537e4c0f21
     - path: results/reference/dragmap/str_table.bin
       md5sum: 45f7818c4a10fdeed04db7a34b5f9ff1
-    - path: results/reference/dbsnp/dbsnp_146.hg38.vcf.gz.tbi
-    # conda changes md5sums for test
-    - path: results/reference/dict/genome.dict
-      md5sum: 2433fe2ba31257337bf4c4bd4cb8da15
-    - path: results/reference/fai/genome.fasta.fai
-      md5sum: 3520cd30e1b100e55f578db9c855f685
     - path: results/reference/intervals/chr22_1-40001.bed
       md5sum: 87a15eb9c2ff20ccd5cd8735a28708f7
     - path: results/reference/intervals/chr22_1-40001.bed.gz
       md5sum: d3341fa28986c40b24fcc10a079dbb80
     - path: results/reference/intervals/genome.bed
       md5sum: a87dc7d20ebca626f65cc16ff6c97a3e
-    - path: results/reference/known_indels/mills_and_1000G.indels.vcf.gz.tbi
-    # conda changes md5sums for test

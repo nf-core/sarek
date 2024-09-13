@@ -1,126 +1,140 @@
 {
     "Single-End": {
         "content": [
-            {
-                "0": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": true
-                        },
-                        "test.bam:md5,3d43027d4163ada97911b814001511e5"
-                    ]
-                ],
-                "1": [
-                    "versions.yml:md5,809f4a8c7f0c8497a9099dab9d6cc71e"
-                ],
-                "bam": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": true
-                        },
-                        "test.bam:md5,3d43027d4163ada97911b814001511e5"
-                    ]
-                ],
-                "versions": [
-                    "versions.yml:md5,809f4a8c7f0c8497a9099dab9d6cc71e"
-                ]
-            }
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                "versions.yml:md5,478b816fbd37871f5e8c617833d51d80"
+            ],
+            "test.bam"
         ],
-        "timestamp": "2023-10-18T11:02:55.420631681"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-05-20T08:44:32.953673185"
     },
     "Single-End Sort": {
         "content": [
-            {
-                "0": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": true
-                        },
-                        "test.bam:md5,61eac1213d2bf5e88e225e545010e9b8"
-                    ]
-                ],
-                "1": [
-                    "versions.yml:md5,809f4a8c7f0c8497a9099dab9d6cc71e"
-                ],
-                "bam": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": true
-                        },
-                        "test.bam:md5,61eac1213d2bf5e88e225e545010e9b8"
-                    ]
-                ],
-                "versions": [
-                    "versions.yml:md5,809f4a8c7f0c8497a9099dab9d6cc71e"
-                ]
-            }
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                "versions.yml:md5,478b816fbd37871f5e8c617833d51d80"
+            ],
+            "test.bam"
         ],
-        "timestamp": "2023-10-18T11:03:02.646869498"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-05-20T08:44:45.27066093"
     },
     "Paired-End": {
         "content": [
-            {
-                "0": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.bam:md5,809ccfe4300fa5005a9d0d4dc09b1a36"
-                    ]
-                ],
-                "1": [
-                    "versions.yml:md5,809f4a8c7f0c8497a9099dab9d6cc71e"
-                ],
-                "bam": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.bam:md5,809ccfe4300fa5005a9d0d4dc09b1a36"
-                    ]
-                ],
-                "versions": [
-                    "versions.yml:md5,809f4a8c7f0c8497a9099dab9d6cc71e"
-                ]
-            }
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                "versions.yml:md5,478b816fbd37871f5e8c617833d51d80"
+            ],
+            "test.bam"
         ],
-        "timestamp": "2023-10-18T11:03:09.793041294"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-05-20T08:44:57.706852274"
     },
     "Paired-End Sort": {
         "content": [
-            {
-                "0": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.bam:md5,2622f4380f992c505af7dab8c256313f"
-                    ]
-                ],
-                "1": [
-                    "versions.yml:md5,809f4a8c7f0c8497a9099dab9d6cc71e"
-                ],
-                "bam": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.bam:md5,2622f4380f992c505af7dab8c256313f"
-                    ]
-                ],
-                "versions": [
-                    "versions.yml:md5,809f4a8c7f0c8497a9099dab9d6cc71e"
-                ]
-            }
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                "versions.yml:md5,478b816fbd37871f5e8c617833d51d80"
+            ],
+            "test.bam"
         ],
-        "timestamp": "2023-10-18T11:04:43.662093286"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-05-20T08:45:10.376505036"
+    },
+    "Single-end - stub": {
+        "content": [
+            "test.bam",
+            "test.csi",
+            [
+                "versions.yml:md5,478b816fbd37871f5e8c617833d51d80"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-05-20T08:46:07.182072398"
+    },
+    "Paired-End - no fasta": {
+        "content": [
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                "versions.yml:md5,478b816fbd37871f5e8c617833d51d80"
+            ],
+            "test.bam"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-05-20T08:45:53.813076501"
+    },
+    "Paired-end - stub": {
+        "content": [
+            "test.bam",
+            "test.csi",
+            [
+                "versions.yml:md5,478b816fbd37871f5e8c617833d51d80"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-05-20T08:46:18.412916364"
     }
 }

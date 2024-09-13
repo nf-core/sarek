@@ -13,7 +13,7 @@ workflow POST_VARIANTCALLING {
     main:
     versions = Channel.empty()
 
-    if(concatenate_vcfs){
+    if (concatenate_vcfs){
         CONCATENATE_GERMLINE_VCFS(vcfs)
 
         vcfs = vcfs.mix(CONCATENATE_GERMLINE_VCFS.out.vcfs)

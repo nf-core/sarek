@@ -1,0 +1,62 @@
+{
+    "bam_bed_versions": {
+        "content": [
+            [
+                "versions.yml:md5,449485eab74a465dc9023760be2c12a1"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-05-28T15:43:41.535946155"
+    },
+    "bam_bed_fasta_versions": {
+        "content": [
+            [
+                "versions.yml:md5,449485eab74a465dc9023760be2c12a1"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-05-28T15:43:46.787790118"
+    },
+    "bam_bed_mpileup": {
+        "content": [
+            [
+                "MT192765.1\t121\tT\t1\t^].\tA",
+                "MT192765.1\t122\tA\t1\t.\tA",
+                "MT192765.1\t123\tT\t1\t.\tA",
+                "MT192765.1\t124\tA\t1\t.\t/",
+                "MT192765.1\t125\tA\t1\t.\tE",
+                "MT192765.1\t126\tT\t1\t.\t/",
+                "MT192765.1\t127\tT\t1\t.\tE"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-12T19:14:14.778949"
+    },
+    "bam_bed_fasta_mpileup": {
+        "content": [
+            [
+                "MT192765.1\t1255\tA\t1\t^],\tE",
+                "MT192765.1\t1256\tC\t1\t,\t/",
+                "MT192765.1\t1257\tG\t1\t,\t/",
+                "MT192765.1\t1258\tG\t1\tt\t/",
+                "MT192765.1\t1259\tG\t1\t,\t/",
+                "MT192765.1\t1260\tC\t1\t,\tE",
+                "MT192765.1\t1261\tG\t1\t,\t/"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-12T19:15:18.571262"
+    }
+}

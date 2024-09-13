@@ -19,11 +19,10 @@ nextflow_process {
                 save_trimmed_fail = false
                 save_merged       = false
 
-                input[0] = [
+                input[0] = Channel.of([
                     [ id:'test', single_end:true ],
-                    [ file(params.test_data['sarscov2']['illumina']['test_1_fastq_gz'], checkIfExists: true) ]
-                ]
-
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
+                ])
                 input[1] = adapter_fasta
                 input[2] = save_trimmed_fail
                 input[3] = save_merged
@@ -57,7 +56,67 @@ nextflow_process {
                     { assert path(process.out.log.get(0).get(1)).getText().contains(log_part) }
                     }
                 },
-                { assert snapshot(process.out.versions).match("versions") }
+                {
+                    assert snapshot(
+                        (
+                            [process.out.reads[0][0].toString()] + // meta
+                            process.out.reads.collect { file(it[1]).getName() } +
+                            process.out.json.collect { file(it[1]).getName() } +
+                            process.out.html.collect { file(it[1]).getName() } +
+                            process.out.log.collect { file(it[1]).getName() } +
+                            process.out.reads_fail.collect { file(it[1]).getName() } +
+                            process.out.reads_merged.collect { file(it[1]).getName() }
+                        ).sort()
+                    ).match("test_fastp_single_end-_match")
+                },
+                { assert snapshot(process.out.versions).match("versions_single_end") }
+            )
+        }
+    }
+
+    test("test_fastp_single_end-stub") {
+
+        options '-stub'
+
+        when {
+            params {
+                outdir   = "$outputDir"
+            }
+            process {
+                """
+                adapter_fasta     = []
+                save_trimmed_fail = false
+                save_merged       = false
+
+                input[0] = Channel.of([
+                    [ id:'test', single_end:true ],
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
+                ])
+                input[1] = adapter_fasta
+                input[2] = save_trimmed_fail
+                input[3] = save_merged
+                """
+            }
+        }
+
+        then {
+
+            assertAll(
+                { assert process.success },
+                {
+                    assert snapshot(
+                        (
+                            [process.out.reads[0][0].toString()] + // meta
+                            process.out.reads.collect { file(it[1]).getName() } +
+                            process.out.json.collect { file(it[1]).getName() } +
+                            process.out.html.collect { file(it[1]).getName() } +
+                            process.out.log.collect { file(it[1]).getName() } +
+                            process.out.reads_fail.collect { file(it[1]).getName() } +
+                            process.out.reads_merged.collect { file(it[1]).getName() }
+                        ).sort()
+                    ).match("test_fastp_single_end-for_stub_match")
+                },
+                { assert snapshot(process.out.versions).match("versions_single_end_stub") }
             )
         }
     }
@@ -74,12 +133,11 @@ nextflow_process {
                 save_trimmed_fail = false
                 save_merged       = false
 
-                input[0] = [
+                input[0] = Channel.of([
                     [ id:'test', single_end:false ], // meta map
-                    [ file(params.test_data['sarscov2']['illumina']['test_1_fastq_gz'], checkIfExists: true),
-                        file(params.test_data['sarscov2']['illumina']['test_2_fastq_gz'], checkIfExists: true) ]
-                ]
-
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true) ]
+                ])
                 input[1] = adapter_fasta
                 input[2] = save_trimmed_fail
                 input[3] = save_merged
@@ -127,13 +185,28 @@ nextflow_process {
                     { assert path(process.out.log.get(0).get(1)).getText().contains(log_part) }
                     }
                 },
-                { assert snapshot(process.out.versions).match("versions") }
+                {
+                    assert snapshot(
+                        (
+                            [process.out.reads[0][0].toString()] + // meta
+                            process.out.reads.collect { it[1].collect { item -> file(item).getName() } } +
+                            process.out.json.collect { file(it[1]).getName() } +
+                            process.out.html.collect { file(it[1]).getName() } +
+                            process.out.log.collect { file(it[1]).getName() } +
+                            process.out.reads_fail.collect { file(it[1]).getName() } +
+                            process.out.reads_merged.collect { file(it[1]).getName() }
+                        ).sort()
+                    ).match("test_fastp_paired_end_match")
+                },
+                { assert snapshot(process.out.versions).match("versions_paired_end") }
             )
         }
     }
 
-    test("fastp test_fastp_interleaved") {
-        config './nextflow.config'
+    test("test_fastp_paired_end-stub") {
+
+        options '-stub'
+
         when {
             params {
                 outdir   = "$outputDir"
@@ -144,10 +217,56 @@ nextflow_process {
                 save_trimmed_fail = false
                 save_merged       = false
 
-                input[0] = [ [ id:'test', single_end:true ], // meta map
-                            [ file(params.test_data['sarscov2']['illumina']['test_interleaved_fastq_gz'], checkIfExists: true) ]
-                        ]
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true) ]
+                ])
+                input[1] = adapter_fasta
+                input[2] = save_trimmed_fail
+                input[3] = save_merged
+                """
+            }
+        }
 
+        then {
+            assertAll(
+                { assert process.success },
+                {
+                    assert snapshot(
+                        (
+                            [process.out.reads[0][0].toString()] + // meta
+                            process.out.reads.collect { it[1].collect { item -> file(item).getName() } } +
+                            process.out.json.collect { file(it[1]).getName() } +
+                            process.out.html.collect { file(it[1]).getName() } +
+                            process.out.log.collect { file(it[1]).getName() } +
+                            process.out.reads_fail.collect { file(it[1]).getName() } +
+                            process.out.reads_merged.collect { file(it[1]).getName() }
+                        ).sort()
+                    ).match("test_fastp_paired_end-for_stub_match")
+                },
+                { assert snapshot(process.out.versions).match("versions_paired_end-stub") }
+            )
+        }
+    }
+
+    test("fastp test_fastp_interleaved") {
+
+        config './nextflow.interleaved.config'
+        when {
+            params {
+                outdir   = "$outputDir"
+            }
+            process {
+                """
+                adapter_fasta     = []
+                save_trimmed_fail = false
+                save_merged       = false
+
+                input[0] = Channel.of([
+                    [ id:'test', single_end:true ], // meta map
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_interleaved.fastq.gz', checkIfExists: true) ]
+                ])
                 input[1] = adapter_fasta
                 input[2] = save_trimmed_fail
                 input[3] = save_merged
@@ -159,7 +278,7 @@ nextflow_process {
             def html_text  = [ "Q20 bases:</td><td class='col2'>25.719000 K (93.033098%)",
 									"paired end (151 cycles + 151 cycles)"]
             def log_text   = [ "Q20 bases: 12922(92.9841%)",
-									"reads passed filter: 198"]
+									"reads passed filter: 162"]
             def read_lines = [ "@ERR5069949.2151832 NS500628:121:HK3MMAFX2:2:21208:10793:15304/1",
 									"TCATAAACCAAAGCACTCACAGTGTCAACAATTTCAGCAGGACAACGCCGACAAGTTCCGAGGAACATGTCTGGACCTATAGTTTTCATAAGTCTACACACTGAATTGAAATATTCTGGTTCTAGTGTGCCCTTAGTTAGCAATGTGCGT",
 									"AAAAAAEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEAAEEEEAEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEAAEEEEE<EEAAAEEEEEEEEEAAAAEAEEEAEEEEEE<AAAA",
@@ -181,7 +300,67 @@ nextflow_process {
                     { assert path(process.out.log.get(0).get(1)).getText().contains(log_part) }
                     }
                 },
-                { assert snapshot(process.out.versions).match("versions") }
+                {
+                    assert snapshot(
+                        (
+                            [process.out.reads[0][0].toString()] + // meta
+                            process.out.reads.collect { file(it[1]).getName() } +
+                            process.out.json.collect { file(it[1]).getName() } +
+                            process.out.html.collect { file(it[1]).getName() } +
+                            process.out.log.collect { file(it[1]).getName() } +
+                            process.out.reads_fail.collect { file(it[1]).getName() } +
+                            process.out.reads_merged.collect { file(it[1]).getName() }
+                        ).sort()
+                    ).match("test_fastp_interleaved-_match")
+                },
+                { assert snapshot(process.out.versions).match("versions_interleaved") }
+            )
+        }
+    }
+
+    test("fastp test_fastp_interleaved-stub") {
+
+        options '-stub'
+
+        config './nextflow.interleaved.config'
+        when {
+            params {
+                outdir   = "$outputDir"
+            }
+            process {
+                """
+                adapter_fasta     = []
+                save_trimmed_fail = false
+                save_merged       = false
+
+                input[0] = Channel.of([
+                    [ id:'test', single_end:true ], // meta map
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_interleaved.fastq.gz', checkIfExists: true) ]
+                ])
+                input[1] = adapter_fasta
+                input[2] = save_trimmed_fail
+                input[3] = save_merged
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                {
+                    assert snapshot(
+                        (
+                            [process.out.reads[0][0].toString()] + // meta
+                            process.out.reads.collect { file(it[1]).getName() } +
+                            process.out.json.collect { file(it[1]).getName() } +
+                            process.out.html.collect { file(it[1]).getName() } +
+                            process.out.log.collect { file(it[1]).getName() } +
+                            process.out.reads_fail.collect { file(it[1]).getName() } +
+                            process.out.reads_merged.collect { file(it[1]).getName() }
+                        ).sort()
+                    ).match("test_fastp_interleaved-for_stub_match")
+                },
+                { assert snapshot(process.out.versions).match("versions_interleaved-stub") }
             )
         }
     }
@@ -198,9 +377,10 @@ nextflow_process {
                 save_trimmed_fail = true
                 save_merged       = false
 
-                input[0] = [ [ id:'test', single_end:true ], // meta map
-                            [ file(params.test_data['sarscov2']['illumina']['test_1_fastq_gz'], checkIfExists: true) ]
-                        ]
+                input[0] = Channel.of([
+                    [ id:'test', single_end:true ], // meta map
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true) ]
+                ])
                 input[1] = adapter_fasta
                 input[2] = save_trimmed_fail
                 input[3] = save_merged
@@ -241,13 +421,14 @@ nextflow_process {
                     { assert path(process.out.log.get(0).get(1)).getText().contains(log_part) }
                     }
                 },
-                { assert snapshot(process.out.versions).match("versions") }
+                { assert snapshot(process.out.versions).match("versions_single_end_trim_fail") }
             )
         }
     }
 
     test("test_fastp_paired_end_trim_fail") {
 
+        config './nextflow.save_failed.config'
         when {
             params {
                 outdir   = "$outputDir"
@@ -258,13 +439,11 @@ nextflow_process {
                 save_trimmed_fail = true
                 save_merged       = false
 
-                input[0] = [
+                input[0] = Channel.of([
                     [ id:'test', single_end:false ], // meta map
-                    [
-                        file(params.test_data['sarscov2']['illumina']['test_1_fastq_gz'], checkIfExists: true),
-                        file(params.test_data['sarscov2']['illumina']['test_2_fastq_gz'], checkIfExists: true)
-                    ]
-                ]
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)]
+                ])
                 input[1] = adapter_fasta
                 input[2] = save_trimmed_fail
                 input[3] = save_merged
@@ -277,7 +456,7 @@ nextflow_process {
 									"The input has little adapter percentage (~0.000000%), probably it's trimmed before."]
             def log_text            = [ "No adapter detected for read1",
 									"Q30 bases: 12281(88.3716%)"]
-            def json_text           = ['"passed_filter_reads": 198']
+            def json_text           = ['"passed_filter_reads": 162']
             def read1_lines         = ["@ERR5069949.2151832 NS500628:121:HK3MMAFX2:2:21208:10793:15304/1",
 									"TCATAAACCAAAGCACTCACAGTGTCAACAATTTCAGCAGGACAACGCCGACAAGTTCCGAGGAACATGTCTGGACCTATAGTTTTCATAAGTCTACACACTGAATTGAAATATTCTGGTTCTAGTGTGCCCTTAGTTAGCAATGTGCGT",
 									"AAAAAAEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEAAEEEEAEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEAAEEEEE<EEAAAEEEEEEEEEAAAAEAEEEAEEEEEE<AAAA",
@@ -290,9 +469,9 @@ nextflow_process {
 									"@ERR5069949.576388 NS500628:121:HK3MMAFX2:4:11501:11167:14939/2",
 									"GCATAGACGGTGCTTTACTTACAAAGTCCTCAGAATACAAAGGTCCTATTACGGATGTTTTCTACAAAGAAAACAGT",
 									"AAAAA6EEAEEEEEAEEAEEAEEEEEEA6EEEEAEEAEEEEE6EEEEEEAEEEEA///A<<EEEEEEEEEAEEEEEE"]
-            def failed_read2_lines  = ["@ERR5069949.885966 NS500628:121:HK3MMAFX2:4:11610:19682:20132/2",
-									"CTTAGGTCTTAGGATTGGCTGTATCAACCTTAAGCTTAAGTACACAATTTTGCATAGAATGTCCAATAA",
-									"A//AA6EEAEEEEE6EEE/EEA/EA///AAE/EAEEEAE6AE/E/E/EEAAE/EAA/E/E/<EA//E/6"]
+            def failed_read2_lines  = ["@ERR5069949.973930 NS500628:121:HK3MMAFX2:2:21105:5548:5659/2",
+									"CCTTTTGATGTTGTTAGACAATGCTCAGGTGTTACTTTCCAAAGTGCAGTGAAAAGAACAATCAAGGGTACACACCACTGGTTGTTACTCACAATTTTGACTTCACTTTTAG",
+									"AAAAAEEAEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE/EEEEEEEEEEEEEEEEEEEEEEEAE<EAEEEEEEAEEAEE"]
             // def failed_read1_lines = path(process.out.reads_fail.get(0).get(1).get(0)).linesGzip is empty file
             assertAll(
                 { assert process.success },
@@ -306,7 +485,7 @@ nextflow_process {
                     }
                 },
                 { failed_read2_lines.each { failed_read2_line ->
-                    { assert path(process.out.reads_fail.get(0).get(1).get(1)).linesGzip.contains(failed_read2_line) }
+                    { assert path(process.out.reads_fail.get(0).get(1).get(2)).linesGzip.contains(failed_read2_line) }
                     }
                 },
                 { html_text.each { html_part ->
@@ -321,7 +500,7 @@ nextflow_process {
                     { assert path(process.out.log.get(0).get(1)).getText().contains(log_part) }
                     }
                 },
-                { assert snapshot(process.out.versions).match("versions") }
+                { assert snapshot(process.out.versions).match("versions_paired_end_trim_fail") }
             )
         }
     }
@@ -337,11 +516,11 @@ nextflow_process {
                 adapter_fasta     = []
                 save_trimmed_fail = false
                 save_merged       = true
-
-                input[0] = [ [ id:'test', single_end:false ], // meta map
-                             [ file(params.test_data['sarscov2']['illumina']['test_1_fastq_gz'], checkIfExists: true),
-                               file(params.test_data['sarscov2']['illumina']['test_2_fastq_gz'], checkIfExists: true) ]
-                           ]
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true) ]
+                ])
                 input[1] = adapter_fasta
                 input[2] = save_trimmed_fail
                 input[3] = save_merged
@@ -399,7 +578,67 @@ nextflow_process {
                     { assert path(process.out.log.get(0).get(1)).getText().contains(log_part) }
                     }
                 },
-                { assert snapshot(process.out.versions).match("versions") }
+                {
+                    assert snapshot(
+                        (
+                            [process.out.reads[0][0].toString()] + // meta
+                            process.out.reads.collect { it[1].collect { item -> file(item).getName() } } +
+                            process.out.json.collect { file(it[1]).getName() } +
+                            process.out.html.collect { file(it[1]).getName() } +
+                            process.out.log.collect { file(it[1]).getName() } +
+                            process.out.reads_fail.collect { file(it[1]).getName() } +
+                            process.out.reads_merged.collect { file(it[1]).getName() }
+                        ).sort()
+                    ).match("test_fastp_paired_end_merged_match")
+                },
+                { assert snapshot(process.out.versions).match("versions_paired_end_merged") }
+            )
+        }
+    }
+
+    test("test_fastp_paired_end_merged-stub") {
+
+        options '-stub'
+
+        when {
+            params {
+                outdir   = "$outputDir"
+            }
+            process {
+                """
+                adapter_fasta     = []
+                save_trimmed_fail = false
+                save_merged       = true
+
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true) ]
+                ])
+                input[1] = adapter_fasta
+                input[2] = save_trimmed_fail
+                input[3] = save_merged
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                {
+                    assert snapshot(
+                        (
+                            [process.out.reads[0][0].toString()] + // meta
+                            process.out.reads.collect { it[1].collect { item -> file(item).getName() } } +
+                            process.out.json.collect { file(it[1]).getName() } +
+                            process.out.html.collect { file(it[1]).getName() } +
+                            process.out.log.collect { file(it[1]).getName() } +
+                            process.out.reads_fail.collect { file(it[1]).getName() } +
+                            process.out.reads_merged.collect { file(it[1]).getName() }
+                        ).sort()
+                    ).match("test_fastp_paired_end_merged-for_stub_match")
+                },
+                { assert snapshot(process.out.versions).match("versions_paired_end_merged_stub") }
             )
         }
     }
@@ -412,14 +651,15 @@ nextflow_process {
             }
             process {
                 """
-                adapter_fasta     = file("https://github.com/nf-core/test-datasets/raw/modules/data/delete_me/fastp/adapters.fasta", checkIfExists: true)
+                adapter_fasta     = Channel.of([ file(params.modules_testdata_base_path + 'delete_me/fastp/adapters.fasta', checkIfExists: true) ])
                 save_trimmed_fail = false
                 save_merged       = true
 
-                input[0] = [ [ id:'test', single_end:false ], // meta map
-                             [ file(params.test_data['sarscov2']['illumina']['test_1_fastq_gz'], checkIfExists: true),
-                               file(params.test_data['sarscov2']['illumina']['test_2_fastq_gz'], checkIfExists: true) ]
-                           ]
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true) ]
+                ])
                 input[1] = adapter_fasta
                 input[2] = save_trimmed_fail
                 input[3] = save_merged
@@ -478,7 +718,7 @@ nextflow_process {
                     { assert path(process.out.log.get(0).get(1)).getText().contains(log_part) }
                     }
                 },
-                { assert snapshot(process.out.versions).match("versions") }
+                { assert snapshot(process.out.versions).match("versions_paired_end_merged_adapterlist") }
             )
         }
     }

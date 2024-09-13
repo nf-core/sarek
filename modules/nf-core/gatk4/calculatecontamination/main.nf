@@ -4,8 +4,8 @@ process GATK4_CALCULATECONTAMINATION {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/gatk4:4.4.0.0--py36hdfd78af_0':
-        'biocontainers/gatk4:4.4.0.0--py36hdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/gatk4:4.5.0.0--py36hdfd78af_0':
+        'biocontainers/gatk4:4.5.0.0--py36hdfd78af_0' }"
 
     input:
     tuple val(meta), path(pileup), path(matched)
@@ -37,6 +37,18 @@ process GATK4_CALCULATECONTAMINATION {
         $matched_command \\
         --tmp-dir . \\
         $args
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        gatk4: \$(echo \$(gatk --version 2>&1) | sed 's/^.*(GATK) v//; s/ .*\$//')
+    END_VERSIONS
+    """
+
+    stub:
+    prefix   = task.ext.prefix ?: "${meta.id}"
+    """
+    touch ${prefix}.contamination.table
+    touch ${prefix}.segmentation.table
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

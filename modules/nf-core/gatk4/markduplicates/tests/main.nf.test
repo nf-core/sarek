@@ -1,0 +1,126 @@
+nextflow_process {
+
+    name "Test Process GATK4_MARKDUPLICATES"
+    script "../main.nf"
+    process "GATK4_MARKDUPLICATES"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "gatk4"
+    tag "gatk4/markduplicates"
+
+    test("sarscov2 - bam") {
+        config "./bam.config"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:false ],
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true)
+                ]
+                input[1] = []
+                input[2] = []
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out.bam).match("bam") },
+                { assert snapshot(process.out.bai).match("bai") },
+                { assert snapshot(process.out.versions).match("versions") },
+                { assert snapshot(file(process.out.metrics[0][1]).name).match("test.metrics") }
+            )
+        }
+    }
+
+    test("homo_sapiens - multiple bam") {
+        config "./bam.config"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:false ],
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test2.paired_end.sorted.bam', checkIfExists: true)
+                    ]
+                ]
+                input[1] = []
+                input[2] = []
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out.bam).match("multi bam") },
+                { assert snapshot(process.out.bai).match("multi bai") },
+                { assert snapshot(process.out.versions).match("multi versions") },
+                { assert snapshot(file(process.out.metrics[0][1]).name).match("multi test.metrics") }
+            )
+        }
+
+    }
+
+    test("homo_sapiens - multiple cram") {
+        config "./cram.config"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test2.paired_end.sorted.bam', checkIfExists: true)
+                    ]
+                ]
+                input[1] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
+                input[2] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(file(process.out.cram[0][1]).name).match("multi cram")},
+                { assert snapshot(file(process.out.crai[0][1]).name).match("multi crai") },
+                { assert snapshot(process.out.versions).match("multi cram versions") },
+                { assert snapshot(file(process.out.metrics[0][1]).name).match("multi cram test.metrics") }
+            )
+        }
+
+    }
+
+    test("stub") {
+        config "./bam.config"
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:false ],
+                    []
+                ]
+                input[1] = []
+                input[2] = []
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success }
+            )
+        }
+
+    }
+
+}

@@ -33,4 +33,15 @@ process DRAGMAP_HASHTABLE {
         dragmap: \$(echo \$(dragen-os --version 2>&1))
     END_VERSIONS
     """
+
+    stub:
+    """
+    mkdir dragmap
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        dragmap: \$(echo \$(dragen-os --version 2>&1))
+    END_VERSIONS
+    """
+
 }

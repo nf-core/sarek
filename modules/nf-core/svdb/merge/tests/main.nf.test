@@ -1,0 +1,59 @@
+nextflow_process {
+
+    name "Test Process SVDB_MERGE"
+    script "modules/nf-core/svdb/merge/main.nf"
+    process "SVDB_MERGE"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "svdb"
+    tag "svdb/merge"
+
+    test("test_svdb_merge") {
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test' ], // meta map
+                    [file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test2.vcf', checkIfExists: true) ]
+                ])
+                input[1] = [ 'tiddit', 'cnvnator']
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert path(process.out.vcf.get(0).get(1)).linesGzip.contains("##fileformat=VCFv4.1") }
+            )
+        }
+
+    }
+
+    test("test_svdb_merge_noprio") {
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test' ], // meta map
+                    [file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test2.vcf', checkIfExists: true) ]
+                ])
+                input[1] = []
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert path(process.out.vcf.get(0).get(1)).linesGzip.contains("##fileformat=VCFv4.1") }
+            )
+        }
+
+    }
+
+}

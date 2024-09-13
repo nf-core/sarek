@@ -37,7 +37,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
     // Rename based on num_intervals, group all samples by their interval_name/interval_file and restructure for channel
     // Group by [0, 3] to avoid a list of metas and make sure that any intervals
     gendb_input = input
-        .map{ meta, gvcf, tbi, intervals -> [ [ id:'joint_variant_calling', intervals_name:intervals.simpleName, num_intervals:meta.num_intervals ], gvcf, tbi, intervals ] }
+        .map{ meta, gvcf, tbi, intervals -> [ [ id:'joint_variant_calling', intervals_name:intervals.baseName, num_intervals:meta.num_intervals ], gvcf, tbi, intervals ] }
         .groupTuple(by:3) //join on interval file
         .map{ meta_list, gvcf, tbi, intervals ->
             // meta is now a list of [meta1, meta2] but they are all the same. So take the first element.
@@ -52,7 +52,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
     // Joint genotyping performed using GenotypeGVCFs
     // Sort vcfs called by interval within each VCF
 
-    GATK4_GENOTYPEGVCFS(genotype_input, fasta, fai, dict.map{ meta, dict -> [ dict ] }, dbsnp, dbsnp_tbi)
+    GATK4_GENOTYPEGVCFS(genotype_input, fasta.map{ meta, fasta -> [ fasta ] }, fai.map{ meta, fai -> [ fai ] }, dict.map{ meta, dict -> [ dict ] }, dbsnp, dbsnp_tbi)
 
     BCFTOOLS_SORT(GATK4_GENOTYPEGVCFS.out.vcf)
     gvcf_to_merge = BCFTOOLS_SORT.out.vcf.map{ meta, vcf -> [ meta.subMap('num_intervals') + [ id:'joint_variant_calling', patient:'all_samples', variantcaller:'haplotypecaller' ], vcf ]}.groupTuple()
@@ -71,8 +71,8 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
         resource_indels_vcf,
         resource_indels_tbi,
         indels_resource_label,
-        fasta,
-        fai,
+        fasta.map{ meta, fasta -> [ fasta ] },
+        fai.map{ meta, fai -> [ fai ] },
         dict.map{ meta, dict -> [ dict ] })
 
     VARIANTRECALIBRATOR_SNP(
@@ -80,8 +80,8 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
         resource_snps_vcf,
         resource_snps_tbi,
         snps_resource_label,
-        fasta,
-        fai,
+        fasta.map{ meta, fasta -> [ fasta ] },
+        fai.map{ meta, fai -> [ fai ] },
         dict.map{ meta, dict -> [ dict ] })
 
     //Prepare SNPs and INDELs for ApplyVQSR
@@ -97,8 +97,8 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
 
     GATK4_APPLYVQSR_SNP(
         vqsr_input_snp,
-        fasta,
-        fai,
+        fasta.map{ meta, fasta -> [ fasta ] },
+        fai.map{ meta, fai -> [ fai ] },
         dict.map{ meta, dict -> [ dict ] })
 
     // Join results of ApplyVQSR_SNP and use as input for Indels to avoid duplicate entries in the result
@@ -111,8 +111,8 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
 
     GATK4_APPLYVQSR_INDEL(
         vqsr_input_indel,
-        fasta,
-        fai,
+        fasta.map{ meta, fasta -> [ fasta ] },
+        fai.map{ meta, fai -> [ fai ] },
         dict.map{ meta, dict -> [ dict ] })
 
 

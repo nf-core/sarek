@@ -1,0 +1,2 @@
+manta/germline:
+  - "modules/nf-core/manta/germline/**"

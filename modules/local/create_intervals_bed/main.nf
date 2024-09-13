@@ -9,6 +9,7 @@ process CREATE_INTERVALS_BED {
 
     input:
     path(intervals)
+    val(nucleotides_per_second)
 
     output:
     path("*.bed")       , emit: bed
@@ -27,7 +28,7 @@ process CREATE_INTERVALS_BED {
             t = \$5  # runtime estimate
             if (t == "") {
                 # no runtime estimate in this row, assume default value
-                t = (\$3 - \$2) / ${params.nucleotides_per_second}
+                t = (\$3 - \$2) / ${nucleotides_per_second}
             }
             if (name == "" || (chunk > 600 && (chunk + t) > longest * 1.05)) {
                 # start a new chunk

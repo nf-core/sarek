@@ -58,7 +58,7 @@ with `params.yaml` containing:
 ```yaml
 input: './samplesheet.csv'
 outdir: './results/'
-genome: 'GRCh37'
+genome: 'GATK.GRCh38'
 <...>
 ```
 
@@ -80,27 +80,29 @@ Output from Variant Calling and/or Annotation will be in a specific directory fo
 
 ### Overview: Samplesheet Columns
 
-| Column    | Description                                                                                                                                                                                                                                                                                                                       |
-| --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `patient` | **Custom patient ID**; designates the patient/subject; must be unique for each patient, but one patient can have multiple samples (e.g. normal and tumor). <br /> _Required_                                                                                                                                                      |
-| `sex`     | **Sex chromosomes of the patient**; i.e. XX, XY..., only used for Copy-Number Variation analysis in a tumor/pair<br /> _Optional, Default: `NA`_                                                                                                                                                                                  |
-| `status`  | **Normal/tumor status of sample**; can be `0` (normal) or `1` (tumor).<br /> _Optional, Default: `0`_                                                                                                                                                                                                                             |
-| `sample`  | **Custom sample ID** for each tumor and normal sample; more than one tumor sample for each subject is possible, i.e. a tumor and a relapse; samples can have multiple lanes for which the _same_ ID must be used to merge them later (see also `lane`). Sample IDs must be unique for unique biological samples <br /> _Required_ |
-| `lane`    | Lane ID, used when the `sample` is multiplexed on several lanes. Must be unique for each lane in the same sample (but does not need to be the original lane name), and must contain at least one character <br /> _Required for `--step mapping`_                                                                                 |
-| `fastq_1` | Full path to FastQ file for Illumina short reads 1. File has to be gzipped and have the extension `.fastq.gz` or `.fq.gz`.                                                                                                                                                                                                        |
-| `fastq_2` | Full path to FastQ file for Illumina short reads 2. File has to be gzipped and have the extension `.fastq.gz` or `.fq.gz`.                                                                                                                                                                                                        |
-| `bam`     | Full path to (u)BAM file                                                                                                                                                                                                                                                                                                          |
-| `bai`     | Full path to BAM index file                                                                                                                                                                                                                                                                                                       |
-| `cram`    | Full path to CRAM file                                                                                                                                                                                                                                                                                                            |
-| `crai`    | Full path to CRAM index file                                                                                                                                                                                                                                                                                                      |
-| `table`   | Full path to recalibration table file                                                                                                                                                                                                                                                                                             |
-| `vcf`     | Full path to vcf file                                                                                                                                                                                                                                                                                                             |
+| Column     | Description                                                                                                                                                                                                                                                                                                                       |
+| ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `patient`  | **Custom patient ID**; designates the patient/subject; must be unique for each patient, but one patient can have multiple samples (e.g. normal and tumor). <br /> _Required_                                                                                                                                                      |
+| `sex`      | **Sex chromosomes of the patient**; i.e. XX, XY..., only used for Copy-Number Variation analysis in a tumor/pair<br /> _Optional, Default: `NA`_                                                                                                                                                                                  |
+| `status`   | **Normal/tumor status of sample**; can be `0` (normal) or `1` (tumor).<br /> _Optional, Default: `0`_                                                                                                                                                                                                                             |
+| `sample`   | **Custom sample ID** for each tumor and normal sample; more than one tumor sample for each subject is possible, i.e. a tumor and a relapse; samples can have multiple lanes for which the _same_ ID must be used to merge them later (see also `lane`). Sample IDs must be unique for unique biological samples <br /> _Required_ |
+| `lane`     | Lane ID, used when the `sample` is multiplexed on several lanes. Must be unique for each lane in the same sample (but does not need to be the original lane name), and must contain at least one character <br /> _Required for `--step mapping`_                                                                                 |
+| `fastq_1`  | Full path to FastQ file for Illumina short reads 1. File has to be gzipped and have the extension `.fastq.gz` or `.fq.gz`.                                                                                                                                                                                                        |
+| `fastq_2`  | Full path to FastQ file for Illumina short reads 2. File has to be gzipped and have the extension `.fastq.gz` or `.fq.gz`.                                                                                                                                                                                                        |
+| `spring_1` | Full path to spring-compressed, gzipped FastQ file for read 1 or for reads 1 and 2. The Fastq file has to be first gzipped, then spring-compressed, and it must have the extension `.fastq.gz.spring` or `.fq.gz.spring`.                                                                                                         |
+| `spring_2` | Full path to spring-compressed, gzipped FastQ file for read 2. The Fastq file has to be first gzipped, then spring-compressed, and it must have the extension `.fastq.gz.spring` or `.fq.gz.spring`.                                                                                                                              |
+| `bam`      | Full path to (u)BAM file                                                                                                                                                                                                                                                                                                          |
+| `bai`      | Full path to BAM index file                                                                                                                                                                                                                                                                                                       |
+| `cram`     | Full path to CRAM file                                                                                                                                                                                                                                                                                                            |
+| `crai`     | Full path to CRAM index file                                                                                                                                                                                                                                                                                                      |
+| `table`    | Full path to recalibration table file                                                                                                                                                                                                                                                                                             |
+| `vcf`      | Full path to vcf file                                                                                                                                                                                                                                                                                                             |
 
 An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
 
 ### Start with mapping (`--step mapping` [default])
 
-This step can be started either from FastQ files or (u)BAMs. The CSV must contain at least the columns `patient`, `sample`, `lane`, and either `fastq_1/fastq_2` or `bam`.
+This step can be started either from FastQ files (gzip-compressed or gzip+spring-compressed) or (u)BAMs. The CSV must contain at least the columns `patient`, `sample`, `lane`, and `fastq_1/fastq_2`, `spring_1`, `spring_1/spring_2` or `bam`.
 
 #### Examples
 
@@ -109,6 +111,16 @@ Minimal config file:
 ```bash
 patient,sample,lane,fastq_1,fastq_2
 patient1,test_sample,lane_1,test_1.fastq.gz,test_2.fastq.gz
+```
+
+```bash
+patient,sample,lane,spring_1
+patient1,test_sample,lane_1,test_R1_and_R2.fastq.gz.spring
+```
+
+```bash
+patient,sample,lane,spring_1,spring_2
+patient1,test_sample,lane_1,test_R1.fastq.gz.spring,test_R2.fastq.gz.spring
 ```
 
 ```bash
@@ -379,6 +391,8 @@ If `-profile` is not specified, the pipeline will run locally and expect all sof
   - A generic configuration profile to be used with [Charliecloud](https://hpc.github.io/charliecloud/)
 - `apptainer`
   - A generic configuration profile to be used with [Apptainer](https://apptainer.org/)
+- `wave`
+  - A generic configuration profile to enable [Wave](https://seqera.io/wave/) containers. Use together with one of the above (requires Nextflow ` 24.03.0-edge` or later).
 - `conda`
   - A generic configuration profile to be used with [Conda](https://conda.io/docs/). Please only use Conda as a last resort i.e. when it's not possible to run the pipeline with Docker, Singularity, Podman, Shifter, Charliecloud, or Apptainer.
 
@@ -450,7 +464,7 @@ For a thorough list, please refer the [Azure Sizes for virtual machines in Azure
 
 ## How to test the pipeline
 
-When using default parameters only, sarek runs preprocessing and `Strelka2`.
+When using default parameters only, sarek runs preprocessing and `Strelka`.
 This is reflected in the default test profile:
 
 ```bash
@@ -567,8 +581,9 @@ This list is by no means exhaustive and it will depend on the specific analysis 
 | [FreeBayes](https://github.com/ekg/freebayes)                                                           |  x  |  x  |   x    |    x    |   x   |    x    |
 | [GATK HaplotypeCaller](https://gatk.broadinstitute.org/hc/en-us/articles/5358864757787-HaplotypeCaller) |  x  |  x  |   x    |    x    |   -   |    -    |
 | [GATK Mutect2](https://gatk.broadinstitute.org/hc/en-us/articles/5358911630107-Mutect2)                 |  x  |  x  |   x    |    -    |   x   |    x    |
+| [lofreq](https://github.com/CSB5/lofreq)                                                                |  x  |  x  |   x    |    -    |   x   |    -    |
 | [mpileup](https://www.htslib.org/doc/samtools-mpileup.html)                                             |  x  |  x  |   x    |    x    |   x   |    -    |
-| [Strelka2](https://github.com/Illumina/strelka)                                                         |  x  |  x  |   x    |    x    |   x   |    x    |
+| [Strelka](https://github.com/Illumina/strelka)                                                          |  x  |  x  |   x    |    x    |   x   |    x    |
 | [Manta](https://github.com/Illumina/manta)                                                              |  x  |  x  |   x    |    x    |   x   |    x    |
 | [TIDDIT](https://github.com/SciLifeLab/TIDDIT)                                                          |  x  |  x  |   x    |    x    |   x   |    x    |
 | [ASCAT](https://github.com/VanLoo-lab/ascat)                                                            |  x  |  x  |   -    |    -    |   -   |    x    |
@@ -638,14 +653,14 @@ rm *chrstring*
 rm 1kg.phase3.v5a_GRCh38nounref_loci_chr23.txt
 for i in {1..22} X
 do
-   awk '{ print $1 "\t" $2-1 "\t" $2 }' 1kg.phase3.v5a_GRCh38nounref_loci_chr${i}.txt > chr${i}.bed
-   grep "^${i}_" GC_G1000_on_target_hg38.txt | awk '{ print "chr" $1 }' > chr${i}.txt
-   bedtools intersect -a chr${i}.bed -b targets_with_chr.bed | awk '{ print $1 "_" $3 }' > chr${i}_on_target.txt
-   n=`wc -l chr${i}_on_target.txt | awk '{ print $1 }'`
-   count=$((n * 3 / 10))
-   grep -xf chr${i}.txt chr${i}_on_target.txt > chr${i}.temp
-   shuf -n $count chr${i}_on_target.txt >> chr${i}.temp
-   sort -n -k2 -t '_' chr${i}.temp | uniq | awk 'BEGIN { FS="_" } ; { print $1 "\t" $2 }' > battenberg_loci_on_target_hg38_chr${i}.txt
+  awk '{ print $1 "\t" $2-1 "\t" $2 }' 1kg.phase3.v5a_GRCh38nounref_loci_chr${i}.txt > chr${i}.bed
+  grep "^${i}_" GC_G1000_on_target_hg38.txt | awk '{ print "chr" $1 }' > chr${i}.txt
+  bedtools intersect -a chr${i}.bed -b targets_with_chr.bed | awk '{ print $1 "_" $3 }' > chr${i}_on_target.txt
+  n=`wc -l chr${i}_on_target.txt | awk '{ print $1 }'`
+  count=$((n * 3 / 10))
+  grep -xf chr${i}.txt chr${i}_on_target.txt > chr${i}.temp
+  shuf -n $count chr${i}_on_target.txt >> chr${i}.temp
+  sort -n -k2 -t '_' chr${i}.temp | uniq | awk 'BEGIN { FS="_" } ; { print $1 "\t" $2 }' > battenberg_loci_on_target_hg38_chr${i}.txt
 done
 zip battenberg_loci_on_target_hg38.zip battenberg_loci_on_target_hg38_chr*.txt
 ```
@@ -769,10 +784,6 @@ Re-start your session.
 
 Note that the way to increase the open file limit in your system may be slightly different or require additional steps.
 
-### Cannot delete work folder when using docker + Spark
-
-Currently, when running spark-based tools in combination with docker, it is required to set `docker.userEmulation = false`. This can unfortunately causes permission issues when `work/` is being written with root permissions. In case this happens, you might need to configure docker to run without `userEmulation` (see [here](https://github.com/Midnighter/nf-core-adr/blob/main/docs/adr/0008-refrain-from-using-docker-useremulation-in-nextflow.md)).
-
 ## How to handle UMIs
 
 Sarek can process UMI-reads, using [fgbio](http://fulcrumgenomics.github.io/fgbio/tools/latest/) tools.
@@ -833,9 +844,9 @@ For GATK.GRCh38 the links for each reference file and the corresponding processe
 | ascat_loci            | ASCAT                                                                                                                                                                                                                                                                                                                                                                                                                                                | https://www.dropbox.com/s/80cq0qgao8l1inj/G1000_loci_hg38.zip                                                         | https://github.com/VanLoo-lab/ascat/tree/master/ReferenceFiles/WGS                   |
 | ascat_loci_gc         | ASCAT                                                                                                                                                                                                                                                                                                                                                                                                                                                | https://www.dropbox.com/s/80cq0qgao8l1inj/G1000_loci_hg38.zip                                                         | https://github.com/VanLoo-lab/ascat/tree/master/ReferenceFiles/WGS                   |
 | ascat_loci_rt         | ASCAT                                                                                                                                                                                                                                                                                                                                                                                                                                                | https://www.dropbox.com/s/xlp99uneqh6nh6p/RT_G1000_hg38.zip                                                           | https://github.com/VanLoo-lab/ascat/tree/master/ReferenceFiles/WGS                   |
-| bwa                   | bwa-mem                                                                                                                                                                                                                                                                                                                                                                                                                                              | bwa index -p bwa/${fasta.baseName} $fasta                                                                             |                                                                                      |
-| bwamem2               | bwa-mem2                                                                                                                                                                                                                                                                                                                                                                                                                                             | bwa-mem2 index -p bwamem2/${fasta} $fasta                                                                             |                                                                                      |
-| dragmap               | DragMap                                                                                                                                                                                                                                                                                                                                                                                                                                              | dragen-os --build-hash-table true --ht-reference $fasta --output-directory dragmap                                    |                                                                                      |
+| bwa                   | bwa-mem                                                                                                                                                                                                                                                                                                                                                                                                                                              | `bwa index -p bwa/${fasta.baseName} $fasta`                                                                           |                                                                                      |
+| bwamem2               | bwa-mem2                                                                                                                                                                                                                                                                                                                                                                                                                                             | `bwa-mem2 index -p bwamem2/${fasta} $fasta`                                                                           |                                                                                      |
+| dragmap               | DragMap                                                                                                                                                                                                                                                                                                                                                                                                                                              | `dragen-os --build-hash-table true --ht-reference $fasta --output-directory dragmap`                                  |                                                                                      |
 | dbsnp                 | Baserecalibrator, ControlFREEC, GenotypeGVCF, HaplotypeCaller                                                                                                                                                                                                                                                                                                                                                                                        | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) | https://gatk.broadinstitute.org/hc/en-us/articles/360035890811-Resource-bundle       |
 | dbsnp_tbi             | Baserecalibrator, ControlFREEC, GenotypeGVCF, HaplotypeCaller                                                                                                                                                                                                                                                                                                                                                                                        | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) |                                                                                      |
 | dict                  | Baserecalibrator(Spark), CNNScoreVariant, EstimateLibraryComplexity, FilterMutectCalls, FilterVariantTranches, GatherPileupSummaries,GenotypeGVCF, GetPileupSummaries, HaplotypeCaller, MarkDulpicates(Spark), MergeVCFs, Mutect2, Variantrecalibrator                                                                                                                                                                                               | [GATKBundle](https://console.cloud.google.com/storage/browser/_details/genomics-public-data/resources/broad/hg38/v0/) | https://gatk.broadinstitute.org/hc/en-us/articles/360035890811-Resource-bundle       |
@@ -861,7 +872,7 @@ To use these, supply the parameters `--vep_cache` and/or `--snpeff_cache` with t
 ### Specify the cache location
 
 Params `--snpeff_cache` and `--vep_cache` are used to specify the locations to the root of the annotation cache folder.
-The cache will be located within a subfolder with the path `${snpeff_species}.${snpeff_version}` for SnpEff and `${vep_species}/${vep_genome}_${vep_cache_version}` for VEP.
+The cache will be located within a subfolder with the path `${snpeff_species}.${snpeff_version}` for SnpEff and `${vep_species}/${vep_cache_version}_${vep_genome}` for VEP.
 If this directory is missing, Sarek will raise an error.
 
 For example this is a typical folder structure for `GRCh38` and `WBCel235`, with SNPeff cache version 105 and VEP cache version 110:
@@ -1138,3 +1149,28 @@ Currently, Sentieon's version of BQSR, QualCal, is not available in Sarek. Recen
 
 Resource requests are difficult to generalize and are often dependent on input data size. Currently, the number of cpus and memory requested by default were adapted from tests on 5 ICGC paired whole-genome sequencing samples with approximately 40X and 80X depth.
 For targeted data analysis, this is overshooting by a lot. In this case resources for each process can be limited by either setting `--max_memory` and `-max_cpus` or tailoring the request by process name as described [here](#resource-requests). If you are using sarek for a certain data type regulary, and would like to make these requests available to others on your system, an institution-specific, pipeline-specific config file can be added [here](https://github.com/nf-core/configs/tree/master/conf/pipeline/sarek).
+
+## CNV calling with CNVkit
+
+The CNV calling in Sarek implements the approach proposed by [CNVkit](https://cnvkit.readthedocs.io/en/stable/).
+It is possible to call CNVs with whole-genome or targeted capture data (exome and amplicons): depending on the sequencing approach, Sarek applies different [settings](https://cnvkit.readthedocs.io/en/stable/nonhybrid.html) as recommended by CNVkit.
+
+### Reference background
+
+Given the nature of this type of CNV calling algorithms, which rely on the detection of variations in the coverage profile, the definition of a background reference in control data is known to improve the calling in targeted and hybrid capture applications. This is to ensure an accurate profiling, especially in the off-target regions.
+We recommend creating a background reference with the nf-core pipeline [createpanelrefs](https://nf-co.re/createpanelrefs).
+
+:warning: In creating a coverage reference, one should pay particular attention to:
+
+- the control samples should be processed with the same targeted capture and sequencing technology
+- if BAM files are used to compute the background, they should have been processed with the same pipeline used to call the CNVs
+
+### Germline calling
+
+Sarek implements the [recommended germline settings](https://cnvkit.readthedocs.io/en/stable/germline.html), i.e. applying the `--filter ci` option in the CVNkit call step.
+However, this is defined at a config level by adding this option to the `ext.args`: the user can therefore choose any desired different approach by changing the arguments in a custom config.
+
+### Somatic calling
+
+The [available options](https://cnvkit.readthedocs.io/en/stable/tumor.html) a user can choose from for tumour analysis depend very much on the specific design being analysed. Sarek therefore doesn't implement any of these choices, i.e. it runs the CNVkit call step with default settings.
+We encourage the user to verify whether particular settings might be more appropriate for their data.

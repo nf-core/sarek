@@ -1,0 +1,2 @@
+deepvariant:
+  - modules/nf-core/deepvariant/**

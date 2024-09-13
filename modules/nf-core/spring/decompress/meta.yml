@@ -1,0 +1,47 @@
+name: "spring_decompress"
+description: Fast, efficient, lossless decompression of FASTQ files.
+keywords:
+  - FASTQ
+  - decompression
+  - lossless
+tools:
+  - "spring":
+      description: "SPRING is a compression tool for Fastq files (containing up to 4.29 Billion reads)"
+      homepage: "https://github.com/shubhamchandak94/Spring"
+      documentation: "https://github.com/shubhamchandak94/Spring/blob/master/README.md"
+      tool_dev_url: "https://github.com/shubhamchandak94/Spring"
+      doi: "10.1093/bioinformatics/bty1015"
+      licence: ["Free for non-commercial use"]
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - spring:
+      type: file
+      description: Spring file to decompress.
+      pattern: "*.{spring}"
+  - write_one_fastq_gz:
+      type: boolean
+      description: |
+        Controls whether spring should write one fastq.gz file with reads from both directions or two fastq.gz files with reads from distinct directions
+      pattern: "true or false"
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', single_end:false ]
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+  - fastq:
+      type: file
+      description: Decompressed FASTQ file(s).
+      pattern: "*.{fastq.gz}"
+authors:
+  - "@xec-cm"
+maintainers:
+  - "@xec-cm"
