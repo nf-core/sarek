@@ -845,7 +845,28 @@ workflow SAREK {
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_mpileup)
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.vcf_all)
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.vcf_all)
+        // Create TileDB-VCF store and ingest VCFs
+        if (params.create_tiledb_store) {
+            TILEDBVCF_CREATE_SUB(
+                vcf_to_annotate,
+                fasta,
+                fasta_fai
+            )
 
+            // Mix versions
+            versions = versions.mix(TILEDBVCF_CREATE_SUB.out.versions)
+        }
+
+        // Run TileDB-VCF ingest workflow on vcfs in vcf_to_annotate
+        if (params.tiledb_ingest_vcfs) {
+            TILEDBVCF_INGEST_WORKFLOW(
+                vcf_to_annotate,
+                TILEDBVCF_CREATE_SUB.out.tiledb_store
+            )
+
+            // Mix versions
+            versions = versions.mix(TILEDBVCF_INGEST_WORKFLOW.out.versions)
+        }
         // QC
         VCF_QC_BCFTOOLS_VCFTOOLS(vcf_to_annotate, intervals_bed_combined)
 

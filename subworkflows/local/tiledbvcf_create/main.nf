@@ -1,24 +1,24 @@
 include { TILEDBVCF_CREATE } from '../../../modules/local/tiledbvcf/create/main'
 include { TILEDBVCF_INGEST } from '../../../modules/local/tiledbvcf/ingest/main'
 
-workflow TILEDBVCF_CREATE {
+workflow TILEDBVCF_CREATE_SUB {
     take:
     gvcf_files  // channel: [ val(meta), path(gvcf) ]
 
     main:
     ch_versions = Channel.empty()
 
-    if (params.tiledb_create_store) {
+    if (params.tiledb_create_dataset) {
         TILEDBVCF_CREATE (
-            [id: params.tiledb_store_name], params.tiledb_store_name
+            [id: params.tiledb_dataset_name], params.tiledb_dataset_name
         )
         ch_versions = ch_versions.mix(TILEDBVCF_CREATE.out.versions)
         tiledb_db = TILEDBVCF_CREATE.out.tiledb_db
     } else {
-        tiledb_db = Channel.of([id: params.tiledb_store_name], file(params.tiledb_store_name))
+        tiledb_db = Channel.of([id: params.tiledb_dataset_name], file(params.tiledb_dataset_name))
     }
 
-    if (params.tiledb_ingest_gvcfs) {
+    if (params.tiledb_ingest_vcfs) {
         TILEDBVCF_INGEST (
             tiledb_db,
             gvcf_files.collect()

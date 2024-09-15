@@ -77,6 +77,7 @@ include { PIPELINE_INITIALISATION          } from './subworkflows/local/utils_nf
 include { PREPARE_GENOME                   } from './subworkflows/local/prepare_genome'
 include { PREPARE_INTERVALS                } from './subworkflows/local/prepare_intervals'
 include { PREPARE_REFERENCE_CNVKIT         } from './subworkflows/local/prepare_reference_cnvkit'
+include { TILEDBVCF_CREATE_SUB             } from './subworkflows/local/tiledbvcf_create/main'
 
 // Initialize fasta file with meta map:
 fasta = params.fasta ? Channel.fromPath(params.fasta).map{ it -> [ [id:it.baseName], it ] }.collect() : Channel.empty()
@@ -310,8 +311,17 @@ workflow NFCORE_SAREK {
         vep_species
     )
 
+    // Add TileDB-VCF steps
+    if (params.tiledb_create_dataset || params.tiledb_ingest_vcfs) {
+        gvcf_files = SAREK.out.gvcf_files // Assuming SAREK outputs gvcf files
+        TILEDBVCF_CREATE_SUB(gvcf_files)
+        versions = versions.mix(TILEDBVCF_CREATE_SUB.out.versions)
+    }
+
     emit:
     multiqc_report = SAREK.out.multiqc_report // channel: /path/to/multiqc_report.html
+    tiledb_dataset = params.tiledb_create_dataset || params.tiledb_ingest_vcfs ? TILEDBVCF_CREATE_SUB.out.tiledb_db : Channel.empty()
+    versions
 }
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
