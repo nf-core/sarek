@@ -77,6 +77,10 @@ include { BAM_VARIANT_CALLING_SOMATIC_ALL                   } from '../../subwor
 // POST VARIANTCALLING: e.g. merging
 include { POST_VARIANTCALLING                               } from '../../subworkflows/local/post_variantcalling/main'
 
+// TileDB-VCF
+include { TILEDBVCF_CREATE_DATASET                         } from '../../subworkflows/local/tiledbvcf_create/main'
+include { TILEDBVCF_INGEST_VCF                             } from '../../subworkflows/local/tiledbvcf_ingest/main'
+
 // QC on VCF files
 include { VCF_QC_BCFTOOLS_VCFTOOLS                          } from '../../subworkflows/local/vcf_qc_bcftools_vcftools/main'
 
@@ -846,22 +850,22 @@ workflow SAREK {
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.vcf_all)
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.vcf_all)
         // Create TileDB-VCF store and ingest VCFs
-        if (params.create_tiledb_store) {
-            TILEDBVCF_CREATE_SUB(
+        if (params.tiledb_create_dataset) {
+            TILEDBVCF_CREATE_DATASET(
                 vcf_to_annotate,
                 fasta,
                 fasta_fai
             )
 
             // Mix versions
-            versions = versions.mix(TILEDBVCF_CREATE_SUB.out.versions)
+            versions = versions.mix(TILEDBVCF_CREATE_DATASET.out.versions)
         }
 
         // Run TileDB-VCF ingest workflow on vcfs in vcf_to_annotate
         if (params.tiledb_ingest_vcfs) {
             TILEDBVCF_INGEST_WORKFLOW(
                 vcf_to_annotate,
-                TILEDBVCF_CREATE_SUB.out.tiledb_store
+                TILEDBVCF_CREATE_DATASET.out.tiledb_store
             )
 
             // Mix versions

@@ -1,20 +1,20 @@
 include { TILEDBVCF_INGEST } from '../../../modules/local/tiledbvcf/ingest/main'
 
-workflow TILEDBVCF_INGEST_WORKFLOW {
+workflow TILEDBVCF_INGEST_VCF {
     take:
-    gvcf_files   // channel: [ val(meta), path(gvcf) ]
+    vcf_files   // channel: [ val(meta), path(vcf) ]
     tiledb_db    // channel: [ val(meta), path(tiledb_db) ]
 
     main:
     ch_versions = Channel.empty()
 
-    // Group all gVCF files into a single list
-    gvcf_files_grouped = gvcf_files
-        .map { meta, gvcf -> gvcf }
+    // Group all vcf files into a single list
+    vcf_files_grouped = vcf_files
+        .map { meta, vcf -> vcf }
         .collect()
 
-    // Combine the grouped gVCF files with the TileDB database
-    ch_input = tiledb_db.combine(gvcf_files_grouped)
+    // Combine the grouped vcf files with the TileDB database
+    ch_input = tiledb_db.combine(vcf_files_grouped)
 
     TILEDBVCF_INGEST(
         ch_input
