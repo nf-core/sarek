@@ -7,7 +7,7 @@ workflow TILEDBVCF_CREATE_DATASET {
 
     if (params.tiledb_create_dataset) {
         TILEDBVCF_CREATE (
-            [id: params.tiledb_dataset_name], params.tiledb_dataset_name
+            params.tiledb_dataset_name
         )
         ch_versions = ch_versions.mix(TILEDBVCF_CREATE.out.versions)
         tiledb_db = TILEDBVCF_CREATE.out.tiledb_db
@@ -16,7 +16,7 @@ workflow TILEDBVCF_CREATE_DATASET {
     }
 
     emit:
-    tiledb_db   = final_tiledb_db   // channel: [ val(meta), path(tiledb_db) ]
+    tiledb_db   = tiledb_db   // channel: [ val(meta), path(tiledb_db) ]
     versions    = ch_versions       // channel: [ versions.yml ]
 }
 

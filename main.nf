@@ -311,16 +311,8 @@ workflow NFCORE_SAREK {
         vep_species
     )
 
-    // Add TileDB-VCF steps
-    if (params.tiledb_create_dataset || params.tiledb_ingest_vcfs) {
-        gvcf_files = SAREK.out.gvcf_files // Assuming SAREK outputs gvcf files
-        TILEDBVCF_CREATE_DATASET(gvcf_files)
-        versions = versions.mix(TILEDBVCF_CREATE_DATASET.out.versions)
-    }
-
     emit:
     multiqc_report = SAREK.out.multiqc_report // channel: /path/to/multiqc_report.html
-    tiledb_dataset = params.tiledb_create_dataset || params.tiledb_ingest_vcfs ? TILEDBVCF_CREATE_DATASET.out.tiledb_db : Channel.empty()
     versions
 }
 /*

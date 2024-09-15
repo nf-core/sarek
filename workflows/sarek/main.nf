@@ -851,25 +851,19 @@ workflow SAREK {
         vcf_to_annotate = vcf_to_annotate.mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.vcf_all)
         // Create TileDB-VCF store and ingest VCFs
         if (params.tiledb_create_dataset) {
-            TILEDBVCF_CREATE_DATASET(
-                vcf_to_annotate,
-                fasta,
-                fasta_fai
-            )
-
-            // Mix versions
-            versions = versions.mix(TILEDBVCF_CREATE_DATASET.out.versions)
+            // this takes params.tiledb_dataset_name
+            TILEDBVCF_CREATE_DATASET()
         }
 
         // Run TileDB-VCF ingest workflow on vcfs in vcf_to_annotate
         if (params.tiledb_ingest_vcfs) {
-            TILEDBVCF_INGEST_WORKFLOW(
+            TILEDBVCF_INGEST_VCF(
                 vcf_to_annotate,
-                TILEDBVCF_CREATE_DATASET.out.tiledb_store
+                params.tiledb_dataset_name
             )
 
             // Mix versions
-            versions = versions.mix(TILEDBVCF_INGEST_WORKFLOW.out.versions)
+            versions = versions.mix(TILEDBVCF_INGEST_VCF.out.versions)
         }
         // QC
         VCF_QC_BCFTOOLS_VCFTOOLS(vcf_to_annotate, intervals_bed_combined)

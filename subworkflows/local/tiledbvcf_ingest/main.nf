@@ -13,11 +13,8 @@ workflow TILEDBVCF_INGEST_VCF {
         .map { meta, vcf -> vcf }
         .collect()
 
-    // Combine the grouped vcf files with the TileDB database
-    ch_input = tiledb_db.combine(vcf_files_grouped)
-
     TILEDBVCF_INGEST(
-        ch_input
+        vcf_files_grouped
     )
 
     ch_versions = ch_versions.mix(TILEDBVCF_INGEST.out.versions)
