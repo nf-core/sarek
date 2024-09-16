@@ -6,7 +6,7 @@ workflow TILEDBVCF_CREATE_DATASET {
 
     if (params.tiledb_create_dataset) {
         // Create a channel that emits the required tuple
-        ch_tiledb_input = Channel.of([meta: [id: 'sample1', other_info: 'info'], db_name: params.tiledb_dataset_name])
+        ch_tiledb_input = Channel.of([meta: [id: params.tiledb_dataset_name, other_info: 'info'], db_name: params.tiledb_dataset_name])
 
         TILEDBVCF_CREATE(ch_tiledb_input)
         ch_versions = ch_versions.mix(TILEDBVCF_CREATE.out.versions)

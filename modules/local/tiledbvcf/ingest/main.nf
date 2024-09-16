@@ -9,10 +9,10 @@ process TILEDBVCF_INGEST {
 
     input:
     tuple val(meta), path(vcf_file)
+    tuple val(meta), path(tbi_file)
     val(tiledb_db)
 
     output:
-    tuple val(meta), path("${meta.id}"), emit: ingested_db
     path "versions.yml"           , emit: versions
 
     when:
@@ -21,11 +21,11 @@ process TILEDBVCF_INGEST {
     script:
     def args = task.ext.args ?: ''
     """
-    tiledbvcf store --uri ${meta.id} ${args} ${vcf_file}
+    tiledbvcf store --uri ${tiledb_db} ${args} ${vcf_file}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        tiledbvcf: \$(tiledbvcf --version 2>&1 | sed 's/^.*version //; s/Using.*\$//')
+        tiledbvcf: \$(tiledbvcf --version 2>&1 | grep TileDB-VCF |sed 's/^.*version //;')
     END_VERSIONS
     """
 }
