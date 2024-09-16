@@ -858,7 +858,7 @@ workflow SAREK {
         // Run TileDB-VCF ingest workflow on vcfs in vcf_to_annotate
         if (params.tiledb_ingest_vcfs) {
             TILEDBVCF_INGEST_VCF(
-                vcf_to_annotate,
+                vcf_to_annotate.map{meta, vcf -> [ meta + [ file_name: vcf.baseName ], vcf ] },
                 params.tiledb_dataset_name
             )
 
