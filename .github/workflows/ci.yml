@@ -12,8 +12,13 @@ on:
       - dev
 
 env:
+  NFTEST_VER: "0.9.0"
   NXF_ANSI_LOG: false
-  NFTEST_VER: "0.8.1"
+  TEST_DATA_BASE: "${{ github.workspace }}/test-datasets"
+  SENTIEON_LICENSE_BASE64: ${{ secrets.SENTIEON_LICENSE_BASE64 }}
+  NXF_SINGULARITY_CACHEDIR: ${{ github.workspace }}/.singularity
+  NXF_SINGULARITY_LIBRARYDIR: ${{ github.workspace }}/.singularity
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 # Cancel if a newer run is started
 concurrency:
@@ -63,13 +68,6 @@ jobs:
           - tags: "sentieon/haplotyper_skip_filter"
           - NXF_VER: "latest-everything"
             tags: "joint_germline"
-    env:
-      NXF_ANSI_LOG: false
-      TEST_DATA_BASE: "${{ github.workspace }}/test-datasets"
-      SENTIEON_LICENSE_BASE64: ${{ secrets.SENTIEON_LICENSE_BASE64 }}
-      NXF_SINGULARITY_CACHEDIR: ${{ github.workspace }}/.singularity
-      NXF_SINGULARITY_LIBRARYDIR: ${{ github.workspace }}/.singularity
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
       - name: Check out pipeline code
@@ -281,13 +279,6 @@ jobs:
         include:
           - tags: "pipeline_sarek"
             profile: "test,docker"
-    env:
-      NXF_ANSI_LOG: false
-      TEST_DATA_BASE: "${{ github.workspace }}/test-datasets"
-      SENTIEON_LICENSE_BASE64: ${{ secrets.SENTIEON_LICENSE_BASE64 }}
-      NXF_SINGULARITY_CACHEDIR: ${{ github.workspace }}/.singularity
-      NXF_SINGULARITY_LIBRARYDIR: ${{ github.workspace }}/.singularity
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
