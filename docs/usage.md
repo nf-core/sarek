@@ -898,7 +898,6 @@ By default all is specified in the [igenomes.config](https://github.com/nf-core/
 Explanation can be found for all params in the documentation:
 
 - [snpeff_db](https://nf-co.re/sarek/parameters#snpeff_db)
-- [snpeff_genome](https://nf-co.re/sarek/parameters#snpeff_genome)
 - [vep_genome](https://nf-co.re/sarek/parameters#vep_genome)
 - [vep_species](https://nf-co.re/sarek/parameters#vep_species)
 - [vep_cache_version](https://nf-co.re/sarek/parameters#vep_cache_version)
@@ -906,8 +905,7 @@ Explanation can be found for all params in the documentation:
 With the previous example of `GRCh38`, these are the values that were used for these params:
 
 ```bash
-snpeff_db         = '105'
-snpeff_genome     = 'GRCh38'
+snpeff_db         = 'GRCh38.105'
 vep_cache_version = '110'
 vep_genome        = 'GRCh38'
 vep_species       = 'homo_sapiens'

@@ -56,7 +56,6 @@ params.pon                     = getGenomeAttribute('pon')
 params.pon_tbi                 = getGenomeAttribute('pon_tbi')
 params.sentieon_dnascope_model = getGenomeAttribute('sentieon_dnascope_model')
 params.snpeff_db               = getGenomeAttribute('snpeff_db')
-params.snpeff_genome           = getGenomeAttribute('snpeff_genome')
 params.vep_cache_version       = getGenomeAttribute('vep_cache_version')
 params.vep_genome              = getGenomeAttribute('vep_genome')
 params.vep_species             = getGenomeAttribute('vep_species')
@@ -235,7 +234,7 @@ workflow NFCORE_SAREK {
     if (params.download_cache) {
         // Assuming that even if the cache is provided, if the user specify download_cache, sarek will download the cache
         ensemblvep_info = Channel.of([ [ id:"${params.vep_cache_version}_${params.vep_genome}" ], params.vep_genome, params.vep_species, params.vep_cache_version ])
-        snpeff_info     = Channel.of([ [ id:"${params.snpeff_genome}.${params.snpeff_db}" ], params.snpeff_genome, params.snpeff_db ])
+        snpeff_info     = Channel.of([ [ id:"${params.snpeff_db}" ], params.snpeff_db ])
         DOWNLOAD_CACHE_SNPEFF_VEP(ensemblvep_info, snpeff_info)
         snpeff_cache = DOWNLOAD_CACHE_SNPEFF_VEP.out.snpeff_cache
         vep_cache    = DOWNLOAD_CACHE_SNPEFF_VEP.out.ensemblvep_cache.map{ meta, cache -> [ cache ] }
@@ -244,9 +243,8 @@ workflow NFCORE_SAREK {
     } else {
         // Looks for cache information either locally or on the cloud
         ANNOTATION_CACHE_INITIALISATION(
-            (params.snpeff_cache && params.tools && (params.tools.split(',').contains("snpeff") || params.tools.split(',').contains('merge'))),
+            (params.snpeff_db && params.tools && (params.tools.split(',').contains("snpeff") || params.tools.split(',').contains('merge'))),
             params.snpeff_cache,
-            params.snpeff_genome,
             params.snpeff_db,
             (params.vep_cache && params.tools && (params.tools.split(',').contains("vep") || params.tools.split(',').contains('merge'))),
             params.vep_cache,
