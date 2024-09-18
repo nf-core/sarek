@@ -28,9 +28,9 @@ jobs:
       # Expose matched filters as job 'tags' output variable
       tags: ${{ steps.filter.outputs.changes }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
 
-      - uses: frouioui/paths-filter@main
+      - uses: mirpedrol/paths-filter@main
         id: filter
         with:
           filters: "tests/config/pytesttags.yml"
@@ -67,10 +67,13 @@ jobs:
       NXF_ANSI_LOG: false
       TEST_DATA_BASE: "${{ github.workspace }}/test-datasets"
       SENTIEON_LICENSE_BASE64: ${{ secrets.SENTIEON_LICENSE_BASE64 }}
+      NXF_SINGULARITY_CACHEDIR: ${{ github.workspace }}/.singularity
+      NXF_SINGULARITY_LIBRARYDIR: ${{ github.workspace }}/.singularity
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
       - name: Check out pipeline code
-        uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
 
       - name: Hash Github Workspace
         id: hash_workspace
@@ -78,9 +81,9 @@ jobs:
           echo "digest=$(echo sarek3_${{ github.workspace }} | md5sum | cut -c 1-25)" >> $GITHUB_OUTPUT
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@f677139bbe7f9c59b41e40162b753c062f5d49a3 # v5
         with:
-          python-version: "3.x"
+          python-version: "3.11"
           cache: "pip"
           cache-dependency-path: |
             **/requirements.txt
@@ -93,30 +96,43 @@ jobs:
         with:
           version: "${{ matrix.NXF_VER }}"
 
+      - name: Setup apptainer
+        if: matrix.profile == 'singularity'
+        uses: eWaterCycle/setup-apptainer@main
+
       - name: Set up Singularity
         if: matrix.profile == 'singularity'
-        uses: eWaterCycle/setup-singularity@v5
-        with:
-          singularity-version: 3.7.1
+        run: |
+          mkdir -p $NXF_SINGULARITY_CACHEDIR
+          mkdir -p $NXF_SINGULARITY_LIBRARYDIR
 
       - name: Set up miniconda
         if: matrix.profile == 'conda'
-        uses: conda-incubator/setup-miniconda@v2
+        uses: conda-incubator/setup-miniconda@a4260408e20b96e80095f42ff7f1a15b27dd94ca # v3
         with:
+          miniconda-version: "latest"
           auto-update-conda: true
-          channels: conda-forge,bioconda,defaults
-          python-version: ${{ matrix.python-version }}
+          channels: conda-forge,bioconda
+
+      - name: Conda setup
+        if: matrix.profile == 'conda'
+        run: |
+          conda clean -a
+          conda install -n base conda-libmamba-solver
+          conda config --set solver libmamba
+          echo $(realpath $CONDA)/condabin >> $GITHUB_PATH
+          echo $(realpath python) >> $GITHUB_PATH
 
       - name: Cache test data
         id: cache-testdata
-        uses: actions/cache@v3
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4
         with:
           path: test-datasets/
           key: ${{ steps.hash_workspace.outputs.digest }}
 
       - name: Check out test data
         if: steps.cache-testdata.outputs.cache-hit != 'true'
-        uses: actions/checkout@v4
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
         with:
           repository: nf-core/test-datasets
           ref: sarek3
@@ -164,16 +180,17 @@ jobs:
 
       - name: Upload logs on failure
         if: failure()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874 # v4
         with:
           name: logs-${{ matrix.profile }}
           path: |
-            /home/runner/pytest_workflow_*/*/.nextflow.log
-            /home/runner/pytest_workflow_*/*/log.out
-            /home/runner/pytest_workflow_*/*/log.err
-            /home/runner/pytest_workflow_*/*/work
-            !/home/runner/pytest_workflow_*/*/work/conda
-            !/home/runner/pytest_workflow_*/*/work/singularity
+            /home/ubuntu/pytest_workflow_*/*/.nextflow.log
+            /home/ubuntu/pytest_workflow_*/*/log.out
+            /home/ubuntu/pytest_workflow_*/*/log.err
+            /home/ubuntu/pytest_workflow_*/*/work
+            !/home/ubuntu/pytest_workflow_*/*/work/conda
+            !/home/ubuntu/pytest_workflow_*/*/work/singularity
+            !${{ github.workspace }}/.singularity
 
   nftest-changes:
     name: Check for changes (nf-test)
@@ -182,16 +199,13 @@ jobs:
       tags: ${{ steps.filter.outputs.changes }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
 
       - name: Combine all tags.yml files
         id: get_tags
         run: find . -name "tags.yml" -not -path "./.github/*" -exec cat {} + > .github/tags.yml
 
-      - name: debug
-        run: cat .github/tags.yml
-
-      - uses: frouioui/paths-filter@main
+      - uses: mirpedrol/paths-filter@main
         id: filter
         with:
           filters: ".github/tags.yml"
@@ -271,11 +285,14 @@ jobs:
       NXF_ANSI_LOG: false
       TEST_DATA_BASE: "${{ github.workspace }}/test-datasets"
       SENTIEON_LICENSE_BASE64: ${{ secrets.SENTIEON_LICENSE_BASE64 }}
+      NXF_SINGULARITY_CACHEDIR: ${{ github.workspace }}/.singularity
+      NXF_SINGULARITY_LIBRARYDIR: ${{ github.workspace }}/.singularity
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
 
-      - uses: actions/setup-java@v3
+      - uses: actions/setup-java@2dfa2011c5b2a0f1489bf9e433881c92c1631f88 # v4
         with:
           distribution: "temurin"
           java-version: "17"
@@ -285,20 +302,10 @@ jobs:
         with:
           version: "${{ matrix.NXF_VER }}"
 
-      - name: Cache nf-test installation
-        id: cache-software
-        uses: actions/cache@v3
-        with:
-          path: |
-            /usr/local/bin/nf-test
-            /home/runner/.nf-test/nf-test.jar
-          key: ${{ runner.os }}-${{ env.NFTEST_VER }}-nftest
-
       - name: Install nf-test
-        if: steps.cache-software.outputs.cache-hit != 'true'
-        run: |
-          wget -qO- https://code.askimed.com/install/nf-test | bash
-          sudo mv nf-test /usr/local/bin/
+        uses: nf-core/setup-nf-test@v1
+        with:
+          version: ${{ env.NFTEST_VER }}
 
       - name: Setup apptainer
         if: matrix.profile == 'singularity'
@@ -311,14 +318,15 @@ jobs:
           mkdir -p $NXF_SINGULARITY_LIBRARYDIR
 
       - name: Set up miniconda
-        uses: conda-incubator/setup-miniconda@v2
+        if: matrix.profile == 'conda'
+        uses: conda-incubator/setup-miniconda@a4260408e20b96e80095f42ff7f1a15b27dd94ca # v3
         with:
           miniconda-version: "latest"
           auto-update-conda: true
-          channels: conda-forge,bioconda,defaults
-          python-version: ${{ matrix.python-version }}
+          channels: conda-forge,bioconda
 
       - name: Conda setup
+        if: matrix.profile == 'conda'
         run: |
           conda clean -a
           conda install -n base conda-libmamba-solver
@@ -326,7 +334,7 @@ jobs:
           echo $(realpath $CONDA)/condabin >> $GITHUB_PATH
           echo $(realpath python) >> $GITHUB_PATH
 
-      # Set up secrets
+            # Set up secrets
       - name: Set up nextflow secrets
         if: env.SENTIEON_LICENSE_BASE64 != null
         run: |
