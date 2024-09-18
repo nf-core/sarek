@@ -1012,6 +1012,12 @@ This command could be used to point to the recently downloaded cache and run Snp
 nextflow run nf-core/sarek --outdir results --vep_cache /path_to/my-own-cache/vep_cache --snpeff_cache /path_to/my-own-cache/snpeff_cache --tools vep,snpeff --input samplesheet_vcf.csv
 ```
 
+Here is an example on how sarek may be used to download the SnpEff cache for Candida auris:
+
+```bash
+nextflow run nf-core/sarek --outdir results --outdir_cache /path_to/my-own-cache --tools snpeff --download_cache --build_only_index --input false --snpeff_db _candida_auris_gca_001189475 --step annotate --genome null --igenomes_ignore
+```
+
 ### Create containers with pre-downloaded cache
 
 nf-core is no longer maintaining containers with pre-downloaded cache. Hosting the cache within the container is not recommended as it can cause a number of problems. Instead we recommned using an external cache. The following is left for legacy reasons.
