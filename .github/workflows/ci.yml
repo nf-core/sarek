@@ -18,7 +18,6 @@ env:
   SENTIEON_LICENSE_BASE64: ${{ secrets.SENTIEON_LICENSE_BASE64 }}
   NXF_SINGULARITY_CACHEDIR: ${{ github.workspace }}/.singularity
   NXF_SINGULARITY_LIBRARYDIR: ${{ github.workspace }}/.singularity
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 # Cancel if a newer run is started
 concurrency:
