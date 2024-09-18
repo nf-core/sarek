@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- [1657](https://github.com/nf-core/sarek/pull/1657) - Update all actions used in the GHA CI
+
 ### Removed
 
 ### Dependencies
