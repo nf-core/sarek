@@ -34,7 +34,7 @@ output:
       description: |
         Groovy Map containing sample information
         e.g. [ id:'test', single_end:false ]
-  - reference:
+  - cnn:
       type: file
       description: File containing a copy-number reference (required for CNV calling in tumor_only mode)
       pattern: "*.{cnn}"

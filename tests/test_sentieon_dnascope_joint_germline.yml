@@ -1,5 +1,5 @@
 - name: Run joint germline variant calling with sentieon dnascope
-  command: nextflow run main.nf -profile test_cache,targeted,software_license --sentieon_extension --input ./tests/csv/3.0/mapped_joint_bam.csv --tools sentieon_dnascope --step variant_calling --joint_germline --outdir results --sentieon_dnascope_emit_mode gvcf
+  command: nextflow run main.nf -profile test,targeted,software_license --sentieon_extension --input ./tests/csv/3.0/mapped_joint_bam.csv --tools sentieon_dnascope --step variant_calling --joint_germline --outdir results --sentieon_dnascope_emit_mode gvcf
   tags:
     - germline
     - sentieon/dnascope_joint_germline
@@ -51,7 +51,7 @@
     - path: results/reports/mosdepth/testT/testT.recal.regions.bed.gz.csi
     - path: results/reports/samtools/testT/testT.recal.cram.stats
 - name: Run joint germline variant calling with sentieon dnascope all intervals at once
-  command: nextflow run main.nf -profile test_cache,targeted,software_license --sentieon_extension --input ./tests/csv/3.0/mapped_joint_bam.csv --tools sentieon_dnascope --step variant_calling --joint_germline --outdir results --sentieon_dnascope_emit_mode gvcf --nucleotides_per_second 100
+  command: nextflow run main.nf -profile test,targeted,software_license --sentieon_extension --input ./tests/csv/3.0/mapped_joint_bam.csv --tools sentieon_dnascope --step variant_calling --joint_germline --outdir results --sentieon_dnascope_emit_mode gvcf --nucleotides_per_second 100
   tags:
     - germline
     - sentieon/dnascope_joint_germline
