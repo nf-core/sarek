@@ -34,7 +34,7 @@ jobs:
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
 
-      - uses: mirpedrol/paths-filter@main
+      - uses: frouioui/paths-filter@main
         id: filter
         with:
           filters: "tests/config/pytesttags.yml"
@@ -202,7 +202,7 @@ jobs:
         id: get_tags
         run: find . -name "tags.yml" -not -path "./.github/*" -exec cat {} + > .github/tags.yml
 
-      - uses: mirpedrol/paths-filter@main
+      - uses: frouioui/paths-filter@main
         id: filter
         with:
           filters: ".github/tags.yml"
