@@ -1,0 +1,147 @@
+{
+    "Run with profile test": {
+        "content": [
+            23,
+            {
+                "BCFTOOLS_STATS": {
+                    "bcftools": 1.2
+                },
+                "BWAMEM1_MEM": {
+                    "bwa": "0.7.18-r1243-dirty",
+                    "samtools": 1.2
+                },
+                "FASTQC": {
+                    "fastqc": "0.12.1"
+                },
+                "GATK4_APPLYBQSR": {
+                    "gatk4": "4.5.0.0"
+                },
+                "GATK4_BASERECALIBRATOR": {
+                    "gatk4": "4.5.0.0"
+                },
+                "GATK4_MARKDUPLICATES": {
+                    "gatk4": "4.5.0.0",
+                    "samtools": "1.19.2"
+                },
+                "INDEX_CRAM": {
+                    "samtools": 1.2
+                },
+                "MOSDEPTH": {
+                    "mosdepth": "0.3.8"
+                },
+                "SAMTOOLS_STATS": {
+                    "samtools": 1.2
+                },
+                "STRELKA_SINGLE": {
+                    "strelka": "2.9.10"
+                },
+                "VCFTOOLS_TSTV_COUNT": {
+                    "vcftools": "0.1.16"
+                },
+                "Workflow": {
+                    "nf-core/sarek": "v3.5.0dev"
+                }
+            },
+            [
+                "csv",
+                "multiqc",
+                "multiqc_data",
+                "multiqc_plots",
+                "pipeline_info",
+                "nf_core_sarek_software_mqc_versions.yml",
+                "preprocessing",
+                "markduplicates",
+                "test",
+                "recal_table",
+                "test",
+                "recalibrated",
+                "test",
+                "reference",
+                "reports",
+                "bcftools",
+                "strelka",
+                "test",
+                "fastqc",
+                "test-test_L1",
+                "test-test_L2",
+                "markduplicates",
+                "test",
+                "mosdepth",
+                "test",
+                "samtools",
+                "test",
+                "vcftools",
+                "strelka",
+                "test",
+                "variant_calling",
+                "strelka",
+                "test"
+            ],
+            [
+                "markduplicates.csv:md5,192efd7e50b381db2c4ea3f6b021dcf3",
+                "markduplicates_no_table.csv:md5,abaf0a96d8ed665e6eb6cfa225897df1",
+                "recalibrated.csv:md5,dcb565d03b27ffaaed3a6054f57a9843",
+                "variantcalled.csv:md5,aa18fa1eb7c863dfafb8a5ed41a991b7",
+                "gatk_base_recalibrator.txt:md5,29b3956ae02de9c2e987fd8b21245c95",
+                "mosdepth_cov_dist.txt:md5,eadafaa5473dd49daadb7b4696c6b7f9",
+                "mosdepth_cumcov_dist.txt:md5,8d0d7cb485a7bffb07da17b28f827120",
+                "mosdepth_perchrom.txt:md5,264db67a99d2c90ea7b075e33c201b77",
+                "multiqc.log:md5,e5e46db156edcd1c966604c62fc2a7c4",
+                "multiqc_bcftools_stats.txt:md5,103ba59d44fc60e9308e64bbd0d0e504",
+                "multiqc_citations.txt:md5,4660dd5d8757841ed75dca3a90d21617",
+                "multiqc_data.json:md5,9b356e03b596269ac4e483b0296947ae",
+                "multiqc_fastqc.txt:md5,bde0d0bffa62228b33fb68b7e25b6ff8",
+                "multiqc_general_stats.txt:md5,53a68b4c86e20b16658a9ec3cf5b3b8b",
+                "multiqc_picard_dups.txt:md5,45108a2e5f11416db0fde03a43d3e4c0",
+                "multiqc_samtools_stats.txt:md5,0f1e4c6c497d9a952765f9f3068ea4b9",
+                "multiqc_software_versions.txt:md5,2c9d16da278a231b0dc4c4cb5c08e626",
+                "multiqc_sources.txt:md5,c8d8fe2a509eb4fb24a7e671b252ca96",
+                "picard_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "picard_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "picard_histogram_2.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "vcftools_tstv_by_count.txt:md5,327f731f65de167c7cfcbb30a5f04079",
+                "vcftools_tstv_by_qual.txt:md5,911bc05c5169149dbb0b068f65b4274a",
+                "multiqc_report.html:md5,38b54d7a679a2dc2f27c5e0bc357a6b0",
+                "test.md.cram:md5,2e23e47765ccfdd8febb99947ae18c4e",
+                "test.md.cram.crai:md5,1fd1baeda1977ca3ba4af50a36db20b6",
+                "test.recal.table:md5,f501ae2ee63cf649ca826b86aba7690c",
+                "test.recal.cram:md5,50b0d79621fbbf00f108c51baeabc452",
+                "test.recal.cram.crai:md5,74e8a7b45941153b29527932fa66dc01",
+                "test.strelka.variants.bcftools_stats.txt:md5,86bd4938eed920d36f3f5937102a2967",
+                "test-test_L1_1_fastqc.html:md5,17a592f478f3d8f91040f362d34fa889",
+                "test-test_L1_1_fastqc.zip:md5,6813b2b10432840966b44ae5a12e69ea",
+                "test-test_L1_2_fastqc.html:md5,1b2d71fd9862849b81a0aeed04efee04",
+                "test-test_L1_2_fastqc.zip:md5,276fc594e165f9b59822cd49c5658abd",
+                "test-test_L2_1_fastqc.html:md5,25ffb98378ddc53c3d9a96ab80f509e9",
+                "test-test_L2_1_fastqc.zip:md5,8e0770996847d916c5dff20164caec88",
+                "test-test_L2_2_fastqc.html:md5,921aadb995e89a667e9802c94f9d086e",
+                "test-test_L2_2_fastqc.zip:md5,ab5feb04a234c9775c511124be1234d5",
+                "test.md.cram.metrics:md5,125b6faa8c9cf3e5e9dd79f7e81750e3",
+                "test.md.mosdepth.global.dist.txt:md5,b61e1acee11a6ddf7ce3232a5948a6a0",
+                "test.md.mosdepth.region.dist.txt:md5,1a382f98d488d2ae3df83a0d87caafc1",
+                "test.md.mosdepth.summary.txt:md5,839108358878ada89e1eaddf6e0541ba",
+                "test.md.regions.bed.gz:md5,6fdaec99e739dc0f47fe55dd64dfe93e",
+                "test.md.regions.bed.gz.csi:md5,5f9c60279af78e3aeafc96a8c11fb35f",
+                "test.recal.mosdepth.global.dist.txt:md5,b61e1acee11a6ddf7ce3232a5948a6a0",
+                "test.recal.mosdepth.region.dist.txt:md5,1a382f98d488d2ae3df83a0d87caafc1",
+                "test.recal.mosdepth.summary.txt:md5,839108358878ada89e1eaddf6e0541ba",
+                "test.recal.regions.bed.gz:md5,6fdaec99e739dc0f47fe55dd64dfe93e",
+                "test.recal.regions.bed.gz.csi:md5,5f9c60279af78e3aeafc96a8c11fb35f",
+                "test.md.cram.stats:md5,c4dc6487d0b8b8a74c26ea1ef4e17f6f",
+                "test.recal.cram.stats:md5,38bcc10d0464b259551db3b5356610ca",
+                "test.strelka.variants.FILTER.summary:md5,ad417bc96d31223f61170987975d8128",
+                "test.strelka.variants.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a",
+                "test.strelka.variants.TsTv.qual:md5,bc68ae4e688e9fb772b457069e604883",
+                "test.strelka.genome.vcf.gz:md5,911949ce246db7371a29cd2bebba81f7",
+                "test.strelka.genome.vcf.gz.tbi:md5,ec21777e806b89f85ca45ae55d81df45",
+                "test.strelka.variants.vcf.gz:md5,e4489b6df8811afd1abdda317e2facd0",
+                "test.strelka.variants.vcf.gz.tbi:md5,87be681b46460b1dbbb94c45bd993775"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-19T16:51:29.878491"
+    }
+}
