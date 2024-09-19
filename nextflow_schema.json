@@ -177,6 +177,14 @@
                     "help_text": "DetectS polyG in read tails and trim them. Corresponds to the FastP flag `--trim_poly_g`.",
                     "hidden": true
                 },
+                "length_required": {
+                    "type": "integer",
+                    "default": 15,
+                    "fa_icon": "fas fa-cut",
+                    "description": "Minimum length of reads to keep",
+                    "help_text": "This is the minimum length of reads to keep after trimming. Corresponds to the FastP flag `--length_required`.",
+                    "hidden": true
+                },
                 "save_trimmed": {
                     "type": "boolean",
                     "fa_icon": "fas fa-save",
