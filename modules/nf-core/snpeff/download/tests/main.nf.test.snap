@@ -40,7 +40,7 @@
             "nf-test": "0.8.4",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-08-29T14:31:59.051736"
+        "timestamp": "2024-09-19T12:48:45.183665736"
     },
     "test-snpeff-download": {
         "content": [

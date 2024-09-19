@@ -15,7 +15,7 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [ [ id:"WBcel235.105" ], "WBcel235", "105" ]
+                input[0] = [ [ id:"WBcel235.105" ], "WBcel235.105" ]
 
                 """
             }
@@ -34,7 +34,7 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = [ [ id:"WBcel235.105" ], "WBcel235", "105" ]
+                input[0] = [ [ id:"WBcel235.105" ], "WBcel235.105" ]
 
                 """
             }
