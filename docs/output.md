@@ -41,6 +41,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
       - [Sentieon DNAscope joint germline variant calling](#sentieon-dnascope-joint-germline-variant-calling)
     - [Sentieon Haplotyper](#sentieon-haplotyper)
       - [Sentieon Haplotyper joint germline variant calling](#sentieon-haplotyper-joint-germline-variant-calling)
+    - [Lofreq](#lofreq)
     - [Strelka](#strelka)
   - [Structural Variants](#structural-variants)
     - [Manta](#manta)
@@ -569,6 +570,20 @@ For further downstream analysis, take a look [here](https://github.com/Illumina/
   - VCF with tabix index with all somatic SNVs inferred in the tumor sample.
 
 </details>
+
+#### Lofreq
+
+[Lofreq](https://github.com/CSB5/lofreq) is a fast and sensitive variant-caller for inferring SNVs and indels from next-generation sequencing data. It makes full use of base-call qualities and other sources of errors inherent in sequencing, which are usually ignored by other methods or only used for filtering. For further reading and documentation see the [Lofreq user guide](https://csb5.github.io/lofreq/).
+
+<details markdown = "1">
+<summary>Output files for tumor-only samples</summary>
+
+**Output directory: `{outdir}/variant_calling/lofreq/<sample>/`**
+
+-`<tumorsample>.vcf.gz`
+-VCF which provides a detailed description of the detected genetic variants.
+
+  </details>
 
 ### Structural Variants
 
