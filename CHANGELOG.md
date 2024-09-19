@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- [1579](https://github.com/nf-core/sarek/pull/1579) - Update Sentieon usage docs
+
 ### Fixed
 
 - [1657](https://github.com/nf-core/sarek/pull/1657) - Update all actions used in the GHA CI
