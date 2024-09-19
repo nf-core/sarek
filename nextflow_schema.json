@@ -182,7 +182,7 @@
                     "default": 15,
                     "fa_icon": "fas fa-cut",
                     "description": "Minimum length of reads to keep",
-                    "help_text": "This is the minimum length of reads to keep after trimming. Corresponds to the FastP flag `--length_required`.",
+                    "help_text": "This is the minimum length of reads to keep after trimming. Corresponds to the FastP flag `--length_required` (default in FastP is 15bp).",
                     "hidden": true
                 },
                 "save_trimmed": {
