@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- [1661](https://github.com/nf-core/sarek/pull/1661) - nf-test pipeline level tests
+
 ### Removed
 
 ### Dependencies
