@@ -8,13 +8,16 @@ class UTILS_PIPELINE {
         /(markduplicates|markduplicates_no_table|recalibrated|variantcalled)\.csv/,
 
         // To exclude from multiqc
+        /gatk_base_recalibrator\.txt/,
         /multiqc\.log/,
         /multiqc_data\.json/,
-        /multiqc_sources\.txt/,
+        /multiqc_general_stats\.txt/,
+        /multiqc_picard_dups\.txt/,
         /multiqc_report\.html/,
+        /multiqc_sources\.txt/,
 
-        // To exclude cram and index files
-        /.*\.(md|recal)\.cram/,
+        // To exclude cram, table and index files
+        /.*\.(md|recal)\.(cram|table)(\.crai)?/,
 
         // To exclude markduplicates metrics
         /.*\.md\.cram\.metrics/,
@@ -24,7 +27,7 @@ class UTILS_PIPELINE {
         /.*\.vcf\.gz\.tbi/,
 
         // To exclude fastqc
-        /.*_fastq\.(html|zip)/,
+        /.*_fastqc\.(html|zip)/,
 
         // To exclude trimgalore
         /.*\.fastq\.gz_trimming_report\.txt/
