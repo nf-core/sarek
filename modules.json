@@ -451,7 +451,7 @@
                     },
                     "snpeff/snpeff": {
                         "branch": "master",
-                        "git_sha": "2f3db6f45147ebbb56b371536e31bdf622b5bfee",
+                        "git_sha": "bb8b9216efd4a578bd3c47505bafc10869d6271d",
                         "installed_by": ["modules", "vcf_annotate_snpeff"]
                     },
                     "spring/decompress": {

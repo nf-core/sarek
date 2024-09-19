@@ -6,6 +6,7 @@ nextflow_process {
     config "./nextflow.config"
     tag "modules"
     tag "modules_nfcore"
+    tag "modules_snpeff"
     tag "snpeff"
     tag "snpeff/download"
     tag "snpeff/snpeff"
