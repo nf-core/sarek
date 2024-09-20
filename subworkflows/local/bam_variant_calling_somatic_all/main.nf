@@ -13,6 +13,7 @@ include { BAM_VARIANT_CALLING_SOMATIC_MUTECT2           } from '../bam_variant_c
 include { BAM_VARIANT_CALLING_SOMATIC_STRELKA           } from '../bam_variant_calling_somatic_strelka/main'
 include { BAM_VARIANT_CALLING_SOMATIC_TIDDIT            } from '../bam_variant_calling_somatic_tiddit/main'
 include { MSISENSORPRO_MSISOMATIC                       } from '../../../modules/nf-core/msisensorpro/msisomatic/main'
+include { TELSEQ                                        } from '../../../modules/nf-core/telseq/main'
 
 workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     take:
@@ -47,6 +48,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     versions          = Channel.empty()
 
     //TODO: Temporary until the if's can be removed and printing to terminal is prevented with "when" in the modules.config
+    telseq              = Channel.empty()
     vcf_freebayes       = Channel.empty()
     vcf_manta           = Channel.empty()
     vcf_strelka         = Channel.empty()
@@ -209,6 +211,19 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_MUTECT2.out.versions)
     }
 
+    // TELSEQ
+    if (tools.split(',').contains('telseq')) {
+        TELSEQ(
+            cram,
+            fasta,
+            fasta_fai,
+            intervals_bed_combined.map{ bed->[ [:] , bed ] }
+        )
+
+        telseq = TELSEQ.out.output
+        versions = versions.mix(TELSEQ.out.versions)
+    }
+
     // TIDDIT
     if (tools.split(',').contains('tiddit')) {
         BAM_VARIANT_CALLING_SOMATIC_TIDDIT(
@@ -233,6 +248,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
     emit:
     out_msisensorpro
+    telseq
     vcf_all
     vcf_freebayes
     vcf_manta

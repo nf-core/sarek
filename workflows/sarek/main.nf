@@ -853,7 +853,8 @@ workflow SAREK {
         reports = reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.vcftools_tstv_counts.collect{ meta, counts -> [ counts ] })
         reports = reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.vcftools_tstv_qual.collect{ meta, qual -> [ qual ] })
         reports = reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.vcftools_filter_summary.collect{ meta, summary -> [ summary ] })
-        reports = reports.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.telseq.collect{ meta, summary -> [ summary ] })
+        reports = reports.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.telseq.collect{ meta, summary -> [ summary ] })
+        reports = reports.mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.telseq.collect{ meta, summary -> [ summary ] })
 
         CHANNEL_VARIANT_CALLING_CREATE_CSV(vcf_to_annotate, params.outdir)
 

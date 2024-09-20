@@ -43,6 +43,8 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
       - [Sentieon Haplotyper joint germline variant calling](#sentieon-haplotyper-joint-germline-variant-calling)
     - [Lofreq](#lofreq)
     - [Strelka](#strelka)
+  - Telomeres
+    - [Telseq](#telseq)
   - [Structural Variants](#structural-variants)
     - [Manta](#manta)
     - [TIDDIT](#tiddit)
@@ -584,6 +586,22 @@ For further downstream analysis, take a look [here](https://github.com/Illumina/
 -VCF which provides a detailed description of the detected genetic variants.
 
   </details>
+
+### Telomeres
+
+#### Telseq
+
+[Telseq](https://github.com/zd1/telseq)  is a software that estimates telomere length from whole genome sequencing data.
+
+<details markdown = "1">
+<summary>Output files</summary>
+
+**Output directory: `{outdir}/telseq/`**
+
+-`<sample>.telseq.tsv`
+  - Telseq output
+  </details>
+
 
 ### Structural Variants
 

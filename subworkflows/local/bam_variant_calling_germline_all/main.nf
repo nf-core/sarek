@@ -337,7 +337,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             cram,
             fasta,
        	    fasta_fai,
-            intervals_bed_combined
+            intervals_bed_combined.map{ bed->[ [:] , bed ] }
         )
 
         telseq = TELSEQ.out.output
