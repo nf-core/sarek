@@ -1,0 +1,89 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+name: "telseq"
+description: "Telseq: a software for calculating telomere length"
+keywords:
+  - bam
+  - cram
+  - genomics
+  - samtools
+  - telomere
+  - telseq
+tools:
+  - "telseq":
+      description: "A software for calculating telomere length"
+      homepage: "https://github.com/zd1/telseq"
+      documentation: "https://github.com/zd1/telseq"
+      tool_dev_url: "https://github.com/zd1/telseq"
+      doi: "10.1093/nar/gku181"
+      licence: ["GPL v3"]
+      args_id: "$args"
+      identifier: ""
+  - samtools:
+      description: Tools for dealing with SAM, BAM and CRAM files
+      homepage: http://www.htslib.org/
+      documentation: http://www.htslib.org/doc/samtools.html
+      tool_dev_url: https://github.com/samtools/samtools
+      doi: 10.1093/bioinformatics/btp352
+      licence: ["MIT"]
+      identifier: "biotools:samtools"
+input:
+  - - "meta ":
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'genome' ]
+    - bam:
+        type: file
+        description: BAM/CRAM/SAM file
+        pattern: "*.{bam,cram,sam}"
+    - bai:
+        type: file
+        description: bam index file
+        pattern: "*.{bai,crai}"
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'genome' ]
+    - fasta:
+        type: file
+        description: Reference genome file
+        pattern: "*.{fa,fasta}"
+  - - meta3:
+        type: map
+        description: |
+          Groovy Map containing reference index information
+          e.g. [ id:'genome' ]
+    - fai:
+        type: file
+        description: Fasta index file
+        pattern: "*.fai"
+  - - meta4:
+        type: map
+        description: |
+          Groovy Map containing bed information
+          e.g. [ id:'genome' ]
+    - bed:
+        type: file
+        description: Optional exome regions in BED format. These regions will be excluded
+        pattern: "*.bed"
+output:
+  - output:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.telseq.tsv":
+          type: file
+          description: Telseq output
+          pattern: "*.tsv"
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+authors:
+  - "@lindenb"
+maintainers:
+  - "@lindenb"

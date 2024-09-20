@@ -15,6 +15,7 @@ include { BAM_VARIANT_CALLING_MPILEUP                                           
 include { BAM_VARIANT_CALLING_SINGLE_STRELKA                                           } from '../bam_variant_calling_single_strelka/main'
 include { BAM_VARIANT_CALLING_SINGLE_TIDDIT                                            } from '../bam_variant_calling_single_tiddit/main'
 include { SENTIEON_DNAMODELAPPLY                                                       } from '../../../modules/nf-core/sentieon/dnamodelapply/main'
+include { TELSEQ                                                                       } from '../../../modules/nf-core/telseq/main'
 include { VCF_VARIANT_FILTERING_GATK                                                   } from '../vcf_variant_filtering_gatk/main'
 include { VCF_VARIANT_FILTERING_GATK as SENTIEON_HAPLOTYPER_VCF_VARIANT_FILTERING_GATK } from '../vcf_variant_filtering_gatk/main'
 
@@ -57,6 +58,8 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     //TODO: Temporary until the if's can be removed and printing to terminal is prevented with "when" in the modules.config
     gvcf_sentieon_dnascope   = Channel.empty()
     gvcf_sentieon_haplotyper = Channel.empty()
+
+    telseq                   = Channel.empty()
 
     vcf_deepvariant          = Channel.empty()
     vcf_freebayes            = Channel.empty()
@@ -328,6 +331,19 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         versions = versions.mix(BAM_VARIANT_CALLING_SINGLE_STRELKA.out.versions)
     }
 
+    // TELSEQ
+    if (tools.split(',').contains('telseq')) {
+        TELSEQ(
+            cram,
+            fasta,
+       	    fasta_fai,
+            intervals_bed_combined
+        )
+
+        telseq = TELSEQ.out.output
+        versions = versions.mix(TELSEQ.out.versions)
+    }
+
     // TIDDIT
     if (tools.split(',').contains('tiddit')) {
         BAM_VARIANT_CALLING_SINGLE_TIDDIT(
@@ -356,6 +372,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     emit:
     gvcf_sentieon_dnascope
     gvcf_sentieon_haplotyper
+    telseq
     vcf_all
     vcf_deepvariant
     vcf_freebayes

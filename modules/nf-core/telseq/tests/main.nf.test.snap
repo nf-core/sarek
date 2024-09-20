@@ -1,0 +1,54 @@
+{
+    "sarscov2 - bam - stub": {
+        "content": [
+             "stub.telseq.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
+             [
+                 "versions.yml:md5,f0569759735b18ce1064c9ed2ddc9610"
+             ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-20T14:09:45.936712383"
+    },
+    "sarscov2 - cram": {
+        "content": [
+             "cram.telseq.tsv:md5,82005b49e17f114e8ad759dd9d520912",
+             [
+                 "versions.yml:md5,f0569759735b18ce1064c9ed2ddc9610"
+             ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-20T14:09:09.775504172"
+    },
+    "sarscov2 - bam": {
+        "content": [
+             "bam.telseq.tsv:md5,82005b49e17f114e8ad759dd9d520912",
+             [
+                 "versions.yml:md5,f0569759735b18ce1064c9ed2ddc9610"
+             ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-20T14:09:27.747371336"
+    },
+    "sarscov2 - bam - bed": {
+        "content": [
+             "bambed.telseq.tsv:md5,58374f99d395fa64ea561aca73fd6c89",
+             [
+                 "versions.yml:md5,f0569759735b18ce1064c9ed2ddc9610"
+             ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-20T14:09:27.747371336"
+    }
+}
