@@ -23,8 +23,7 @@ class UTILS_PIPELINE {
         /.*\.md\.cram\.metrics/,
 
         // To exclude vcf and index files
-        /.*\.vcf\.gz/,
-        /.*\.vcf\.gz\.tbi/,
+        /.*\.vcf\.gz(\.tbi)?/,
 
         // To exclude fastqc
         /.*_fastqc\.(html|zip)/,
