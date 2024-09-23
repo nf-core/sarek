@@ -875,7 +875,7 @@ workflow SAREK {
                 vcf_to_annotate.map{meta, vcf -> [ meta + [ file_name: vcf.baseName ], vcf ] },
                 vep_fasta,
                 params.tools,
-                params.snpeff_genome ? "${params.snpeff_genome}.${params.snpeff_db}" : "${params.genome}.${params.snpeff_db}",
+                params.snpeff_db,
                 snpeff_cache,
                 vep_genome,
                 vep_species,

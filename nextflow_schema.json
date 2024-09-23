@@ -774,12 +774,6 @@
                     "description": "snpEff DB version.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately.\nThis is used to specify the database to be use to annotate with.\nAlternatively databases' names can be listed with the `snpEff databases`."
                 },
-                "snpeff_genome": {
-                    "type": "string",
-                    "fa_icon": "fas fa-microscope",
-                    "description": "snpEff genome.",
-                    "help_text": "If you use AWS iGenomes, this has already been set for you appropriately.\nThis is used to specify the genome when looking for local cache, or cloud based cache."
-                },
                 "vep_genome": {
                     "type": "string",
                     "fa_icon": "fas fa-microscope",
