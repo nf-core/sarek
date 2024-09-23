@@ -25,7 +25,7 @@ workflow BAM_VARIANT_CALLING_DEEPVARIANT {
         // Move num_intervals to meta map
         .map{ meta, cram, crai, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram, crai, intervals ]}
 
-    DEEPVARIANT_RUNDEEPVARIANT(cram_intervals, fasta, fasta_fai, [ [ id:'null' ], [] ])
+    DEEPVARIANT_RUNDEEPVARIANT(cram_intervals, fasta, fasta_fai, [ [ id:'null' ], [] ], [ [ id:'null' ], [] ])
 
     // Figuring out if there is one or more vcf(s) from the same sample
     vcf_out = DEEPVARIANT_RUNDEEPVARIANT.out.vcf.branch{

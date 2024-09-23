@@ -249,6 +249,7 @@ workflow SAREK {
             FASTP(
                 reads_for_fastp,
                 [], // we are not using any adapter fastas at the moment
+                false, // we don't use discard_trimmed_pass at the moment
                 save_trimmed_fail,
                 save_merged
             )
