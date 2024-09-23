@@ -246,6 +246,7 @@ jobs:
           - tags: "ensemblvep/vep"
           - tags: "fastp"
           - tags: "fastqc"
+          - tags: "fgbio/callmolecularconsensusreads"
           - tags: "fgbio/fastqtobam"
           - tags: "freebayes"
           - tags: "gatk4/applybqsr"
