@@ -65,6 +65,9 @@ include { BAM_BASERECALIBRATOR_SPARK                        } from '../../subwor
 include { BAM_APPLYBQSR                                     } from '../../subworkflows/local/bam_applybqsr/main'
 include { BAM_APPLYBQSR_SPARK                               } from '../../subworkflows/local/bam_applybqsr_spark/main'
 
+// Telseq
+include { TELSEQ                                            } from '../../modules/nf-core/telseq/main'
+
 // Variant calling on a single normal sample
 include { BAM_VARIANT_CALLING_GERMLINE_ALL                  } from '../../subworkflows/local/bam_variant_calling_germline_all/main'
 
@@ -680,6 +683,18 @@ workflow SAREK {
 
     if (params.tools) {
 
+        // TELSEQ
+        if (params.tools.split(',').contains('telseq')) {
+            TELSEQ(
+                cram_variant_calling,
+                fasta,
+                fasta_fai,
+                ( params.wes ? [ [:], intervals_bed_combined_for_variant_calling ] : [ [:] , [] ] )
+            )
+            reports = reports.mix(TELSEQ.out.output.collect{ meta, summary -> [ summary ] })
+            versions = versions.mix(TELSEQ.out.versions)
+        }
+
         //
         // Logic to separate germline samples, tumor samples with no matched normal, and combine tumor-normal pairs
         //
@@ -853,8 +868,6 @@ workflow SAREK {
         reports = reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.vcftools_tstv_counts.collect{ meta, counts -> [ counts ] })
         reports = reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.vcftools_tstv_qual.collect{ meta, qual -> [ qual ] })
         reports = reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.vcftools_filter_summary.collect{ meta, summary -> [ summary ] })
-        reports = reports.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.telseq.collect{ meta, summary -> [ summary ] })
-        reports = reports.mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.telseq.collect{ meta, summary -> [ summary ] })
 
         CHANNEL_VARIANT_CALLING_CREATE_CSV(vcf_to_annotate, params.outdir)
 
