@@ -654,6 +654,20 @@ workflow SAREK {
         }
     }
 
+    // TELSEQ for telomere length
+    if (params.step == 'mapping' &&
+        params.tools &&
+        params.tools.split(',').contains('telseq')) {
+        TELSEQ(
+            cram_variant_calling,
+            fasta,
+            fasta_fai,
+            ( params.wes ? [ [:], intervals_bed_combined_for_variant_calling ] : [ [:] , [] ] )
+            )
+        reports = reports.mix(TELSEQ.out.output.collect{ meta, summary -> [ summary ] })
+        versions = versions.mix(TELSEQ.out.versions)
+    }
+
     if (params.step == 'variant_calling') {
 
         input_variant_calling_convert = input_sample.branch{
@@ -682,18 +696,6 @@ workflow SAREK {
             intervals_for_preprocessing)
 
     if (params.tools) {
-
-        // TELSEQ
-        if (params.tools.split(',').contains('telseq')) {
-            TELSEQ(
-                cram_variant_calling,
-                fasta,
-                fasta_fai,
-                ( params.wes ? [ [:], intervals_bed_combined_for_variant_calling ] : [ [:] , [] ] )
-            )
-            reports = reports.mix(TELSEQ.out.output.collect{ meta, summary -> [ summary ] })
-            versions = versions.mix(TELSEQ.out.versions)
-        }
 
         //
         // Logic to separate germline samples, tumor samples with no matched normal, and combine tumor-normal pairs
