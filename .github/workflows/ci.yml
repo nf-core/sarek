@@ -343,7 +343,7 @@ jobs:
       - name: Run nf-test
         run: |
           nf-test test \
-            --profile=${{ matrix.profile }} \
+            --profile="+${{ matrix.profile }}" \
             --tag ${{ matrix.tags }} \
             --tap=test.tap \
             --verbose
