@@ -21,7 +21,7 @@
   exit_code: 1
 
 - name: Fail to locate snpEff cache
-  command: nextflow run main.nf -profile test,annotation --snpeff_cache s3://annotation-cache/snpeff_cache/ --snpeff_genome na --tools snpeff --input false --build_only_index --outdir results
+  command: nextflow run main.nf -profile test,annotation --snpeff_cache s3://annotation-cache/snpeff_cache/ --snpeff_db na --tools snpeff --input false --build_only_index --outdir results
   tags:
     - annotation
     - cache

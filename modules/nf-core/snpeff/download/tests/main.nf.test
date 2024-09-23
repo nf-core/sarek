@@ -1,0 +1,51 @@
+
+nextflow_process {
+
+    name "Test Process SNPEFF_DOWNLOAD"
+    script "../main.nf"
+    process "SNPEFF_DOWNLOAD"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "snpeff"
+    tag "snpeff/download"
+
+    test("test-snpeff-download") {
+
+        when {
+            process {
+                """
+                input[0] = [ [ id:"WBcel235.105" ], "WBcel235.105" ]
+
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+
+    test("test-snpeff-download-stub") {
+        options '-stub'
+        when {
+            process {
+                """
+                input[0] = [ [ id:"WBcel235.105" ], "WBcel235.105" ]
+
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+
+}

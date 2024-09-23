@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- [1640](https://github.com/nf-core/sarek/pull/1620) - Add `lofreq` as a tumor-only variant caller.
+- [1640](https://github.com/nf-core/sarek/pull/1620) - Add `lofreq` as a tumor-only variant caller
 - [1642](https://github.com/nf-core/sarek/pull/1642) - Back to dev
 - [1660](https://github.com/nf-core/sarek/pull/1642) - Add `--length_required` for minimal reads length with `FASTP`
 
@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- [1656](https://github.com/nf-core/sarek/pull/1656) - Retiring parameter `snpeff_genome`
 - [1657](https://github.com/nf-core/sarek/pull/1657) - Update all actions used in the GHA CI
 
 ### Removed
