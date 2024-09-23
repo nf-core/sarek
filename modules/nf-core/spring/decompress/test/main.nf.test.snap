@@ -1,0 +1,74 @@
+{
+    "Write-Two-Files": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test2"
+                        },
+                        [
+                            "test2_R1.fastq.gz:md5,4161df271f9bfcd25d5845a1e220dbec",
+                            "test2_R2.fastq.gz:md5,2ebae722295ea66d84075a3b042e2b42"
+                        ]
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,4711df5941f1464e3693d24dd29c705b"
+                ],
+                "fastq": [
+                    [
+                        {
+                            "id": "test2"
+                        },
+                        [
+                            "test2_R1.fastq.gz:md5,4161df271f9bfcd25d5845a1e220dbec",
+                            "test2_R2.fastq.gz:md5,2ebae722295ea66d84075a3b042e2b42"
+                        ]
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,4711df5941f1464e3693d24dd29c705b"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-21T13:41:46.090761471"
+    },
+    "Write-One-File": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.fastq.gz:md5,4161df271f9bfcd25d5845a1e220dbec"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,4711df5941f1464e3693d24dd29c705b"
+                ],
+                "fastq": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.fastq.gz:md5,4161df271f9bfcd25d5845a1e220dbec"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,4711df5941f1464e3693d24dd29c705b"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-21T13:02:07.466039653"
+    }
+}

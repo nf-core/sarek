@@ -12,30 +12,36 @@ tools:
       tool_dev_url: https://github.com/broadinstitute/gatk
       doi: "10.1158/1538-7445.AM2017-3590"
       licence: ["BSD-3-clause"]
+      identifier: ""
 input:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
-  - pileup:
-      type: file
-      description: Pileup files from gatk4/getpileupsummaries
-      pattern: "*.pileups.table"
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - pileup:
+        type: file
+        description: Pileup files from gatk4/getpileupsummaries
+        pattern: "*.pileups.table"
+  - - dict:
+        type: file
+        description: dictionary
 output:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
   - table:
-      type: file
-      description: pileup summaries table file
-      pattern: "*.pileups.table"
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.pileups.table":
+          type: file
+          description: pileup summaries table file
+          pattern: "*.pileups.table"
   - versions:
-      type: file
-      description: File containing software versions
-      pattern: "versions.yml"
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@FriederikeHanssen"
   - "@maxulysse"

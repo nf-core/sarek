@@ -1,0 +1,134 @@
+{
+    "test1-gvcf-filenames": {
+        "content": [
+            "test.gvcf.tfrecord-00000-of-00002.gz",
+            "test.gvcf.tfrecord-00001-of-00002.gz"
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-04T16:09:47.885995"
+    },
+    "test2-examples-filenames": {
+        "content": [
+            "test.examples.tfrecord-00000-of-00002.gz",
+            "test.examples.tfrecord-00000-of-00002.gz.example_info.json",
+            "test.examples.tfrecord-00001-of-00002.gz",
+            "test.examples.tfrecord-00001-of-00002.gz.example_info.json"
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-04T16:10:02.757227"
+    },
+    "test2-versions": {
+        "content": [
+            [
+                "versions.yml:md5,842dca9323f25aa3cfd67789d18e7e33"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-08-09T16:39:28.960959"
+    },
+    "test4-examples-filenames": {
+        "content": [
+            "test.examples.tfrecord-0000-of-0002.tfrecord.gz",
+            "test.examples.tfrecord-0000-of-0002.tfrecord.gz.example_info.json",
+            "test.examples.tfrecord-0001-of-0002.tfrecord.gz",
+            "test.examples.tfrecord-0001-of-0002.tfrecord.gz.example_info.json"
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-04T16:10:27.41698"
+    },
+    "test1-versions": {
+        "content": [
+            [
+                "versions.yml:md5,842dca9323f25aa3cfd67789d18e7e33"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-08-09T16:39:13.57526"
+    },
+    "test3-examples-filenames": {
+        "content": [
+            "test.examples.tfrecord-00000-of-00002.gz",
+            "test.examples.tfrecord-00000-of-00002.gz.example_info.json",
+            "test.examples.tfrecord-00001-of-00002.gz",
+            "test.examples.tfrecord-00001-of-00002.gz.example_info.json"
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-04T16:10:17.705948"
+    },
+    "test2-gvcf-filenames": {
+        "content": [
+            "test.gvcf.tfrecord-00000-of-00002.gz",
+            "test.gvcf.tfrecord-00001-of-00002.gz"
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-04T16:10:02.765863"
+    },
+    "test4-gvcf-filenames": {
+        "content": [
+            "test.gvcf.tfrecord-0000-of-0002.tfrecord.gz",
+            "test.gvcf.tfrecord-0001-of-0002.tfrecord.gz"
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-04T16:10:27.423442"
+    },
+    "test3-versions": {
+        "content": [
+            [
+                "versions.yml:md5,842dca9323f25aa3cfd67789d18e7e33"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-08-09T16:39:44.83616"
+    },
+    "test1-exaamples-filenames": {
+        "content": [
+            "test.examples.tfrecord-00000-of-00002.gz",
+            "test.examples.tfrecord-00000-of-00002.gz.example_info.json",
+            "test.examples.tfrecord-00001-of-00002.gz",
+            "test.examples.tfrecord-00001-of-00002.gz.example_info.json"
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-04T16:09:47.874585"
+    },
+    "test3-gvcf-filenames": {
+        "content": [
+            "test.gvcf.tfrecord-00000-of-00002.gz",
+            "test.gvcf.tfrecord-00001-of-00002.gz"
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-04T16:10:17.714443"
+    }
+}

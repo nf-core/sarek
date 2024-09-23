@@ -1,0 +1,2 @@
+unzip:
+  - "modules/nf-core/unzip/**"

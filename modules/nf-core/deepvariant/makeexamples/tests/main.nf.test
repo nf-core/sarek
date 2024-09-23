@@ -1,0 +1,228 @@
+nextflow_process {
+
+    name "Test Process DEEPVARIANT_MAKEEXAMPLES"
+    script "../main.nf"
+    config "./nextflow.config"
+    process "DEEPVARIANT_MAKEEXAMPLES"
+
+    tag "deepvariant/makeexamples"
+    tag "deepvariant"
+    tag "modules"
+    tag "modules_nfcore"
+
+    test("homo_sapiens - [bam, bai] - fasta - fai") {
+        when {
+
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:false ], // meta map
+                      file(params.modules_testdata_base_path + '/genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                      file(params.modules_testdata_base_path + '/genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam.bai', checkIfExists: true),
+                      []
+                ]
+                input[1] = [
+                    [ id:'genome'],
+                      file(params.modules_testdata_base_path + '/genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
+                ]
+                input[2] = [
+                    [ id:'genome'],
+                      file(params.modules_testdata_base_path + '/genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
+                ]
+                input[3] = [
+                    [],[]
+                ]
+                input[4] = [
+                    [],[]
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                // Test string values and versions. The tfrecords contents are not stable, but we check the names.
+                { assert process.out.examples.get(0).get(0) == [ id:'test', single_end:false ] },
+                { assert process.out.gvcf.get(0).get(0) == [ id:'test', single_end:false ] },
+                { assert process.out.examples.get(0).get(1).size() == 4 },
+                { assert snapshot( // Check examples (tfrecord / json) file name list 
+                    file(process.out.examples.get(0).get(1).get(0)).name,
+                    file(process.out.examples.get(0).get(1).get(1)).name,
+                    file(process.out.examples.get(0).get(1).get(2)).name,
+                    file(process.out.examples.get(0).get(1).get(3)).name,
+                ).match("test1-exaamples-filenames")},
+                
+                { assert process.out.gvcf.get(0).get(0) == [ id:'test', single_end:false ] },
+                { assert process.out.gvcf.get(0).get(1).size() == 2 },
+                { assert snapshot( // Check gvcf file name list
+                    file(process.out.gvcf.get(0).get(1).get(0)).name,
+                    file(process.out.gvcf.get(0).get(1).get(1)).name,
+                ).match("test1-gvcf-filenames")},
+                { assert snapshot(process.out.versions).match("test1-versions") },
+            )
+        }
+    }
+
+    test("homo_sapiens - [cram, crai, genome_bed] - fasta - fai") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:false ], // meta map
+                      file(params.modules_testdata_base_path + '/genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram', checkIfExists: true),
+                      file(params.modules_testdata_base_path + '/genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram.crai', checkIfExists: true),
+                      file(params.modules_testdata_base_path + '/genomics/homo_sapiens/genome/genome.bed', checkIfExists: true)
+                ]
+                input[1] = [
+                    [ id:'genome'],
+                      file(params.modules_testdata_base_path + '/genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
+                ]
+                input[2] = [
+                    [ id:'genome'],
+                      file(params.modules_testdata_base_path + '/genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
+                ]
+                input[3] = [
+                    [],[]
+                ]
+                input[4] = [
+                    [],[]
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert process.out.examples.get(0).get(0) == [ id:'test', single_end:false ] },
+                // The test is always run with 2 cpus
+                { assert process.out.examples.get(0).get(1).size() == 4 },
+                { assert snapshot( // Check examples (tfrecord / json) file names
+                    file(process.out.examples.get(0).get(1).get(0)).name,
+                    file(process.out.examples.get(0).get(1).get(1)).name,
+                    file(process.out.examples.get(0).get(1).get(2)).name,
+                    file(process.out.examples.get(0).get(1).get(3)).name,
+                ).match("test2-examples-filenames")},
+
+                { assert process.out.gvcf.get(0).get(0) == [ id:'test', single_end:false ] },
+                { assert process.out.gvcf.get(0).get(1).size() == 2 },
+                { assert snapshot( // Check gvcf tfrecord file names
+                    file(process.out.gvcf.get(0).get(1).get(0)).name,
+                    file(process.out.gvcf.get(0).get(1).get(1)).name,
+                ).match("test2-gvcf-filenames")},
+                { assert snapshot(process.out.versions).match("test2-versions") },
+            )
+        }
+    }
+
+    test("homo_sapiens - [bam, bai] - fasta_gz - fasta_gz_fai") {
+        when {
+
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:false ], // meta map
+                      file(params.modules_testdata_base_path + '/genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                      file(params.modules_testdata_base_path + '/genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam.bai', checkIfExists: true),
+                      []
+                ]
+                input[1] = [
+                    [ id:'genome'],
+                      file(params.modules_testdata_base_path + '/genomics/homo_sapiens/genome/genome.fasta.gz', checkIfExists: true)
+                ]
+                input[2] = [
+                    [ id:'genome'],
+                      file(params.modules_testdata_base_path + '/genomics/homo_sapiens/genome/genome.fasta.gz.fai', checkIfExists: true)
+                ]
+                input[3] = [
+                    [ id:'genome'],
+                      file(params.modules_testdata_base_path + '/genomics/homo_sapiens/genome/genome.fasta.gz.gzi', checkIfExists: true)
+                ]
+                input[4] = [
+                    [],[]
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+
+                { assert process.out.examples.get(0).get(0) == [ id:'test', single_end:false ] },
+                // The test is always run with 2 cpus
+                { assert process.out.examples.get(0).get(1).size() == 4 },
+                { assert snapshot( // Check examples (tfrecord / json) file name list 
+                    file(process.out.examples.get(0).get(1).get(0)).name,
+                    file(process.out.examples.get(0).get(1).get(1)).name,
+                    file(process.out.examples.get(0).get(1).get(2)).name,
+                    file(process.out.examples.get(0).get(1).get(3)).name,
+                ).match("test3-examples-filenames")},
+
+                { assert process.out.gvcf.get(0).get(0) == [ id:'test', single_end:false ] },
+                { assert process.out.gvcf.get(0).get(1).size() == 2 },
+                { assert snapshot( // Check gvcf file name list
+                    file(process.out.gvcf.get(0).get(1).get(0)).name,
+                    file(process.out.gvcf.get(0).get(1).get(1)).name,
+                ).match("test3-gvcf-filenames")},
+                { assert snapshot(process.out.versions).match("test3-versions") },
+            )
+        }
+    }
+
+    test("stub") {
+        
+        options "-stub"
+
+        when {
+
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:false ], // meta map
+                      file(params.modules_testdata_base_path + '/genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                      file(params.modules_testdata_base_path + '/genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam.bai', checkIfExists: true),
+                      []
+                ]
+                input[1] = [
+                    [ id:'genome'],
+                      file(params.modules_testdata_base_path + '/genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
+                ]
+                input[2] = [
+                    [ id:'genome'],
+                      file(params.modules_testdata_base_path + '/genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
+                ]
+                input[3] = [
+                    [],[]
+                ]
+                input[4] = [
+                    [],[]
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert process.out.examples.get(0).get(1).size() == 4 },
+                { assert snapshot( // Check examples (tfrecord / json) file name list 
+                    file(process.out.examples.get(0).get(1).get(0)).name,
+                    file(process.out.examples.get(0).get(1).get(1)).name,
+                    file(process.out.examples.get(0).get(1).get(2)).name,
+                    file(process.out.examples.get(0).get(1).get(3)).name,
+                ).match("test4-examples-filenames")},
+                
+                { assert process.out.gvcf.get(0).get(0) == [ id:'test', single_end:false ] },
+                { assert process.out.gvcf.get(0).get(1).size() == 2 },
+                { assert snapshot( // Check gvcf file name list
+                    file(process.out.gvcf.get(0).get(1).get(0)).name,
+                    file(process.out.gvcf.get(0).get(1).get(1)).name,
+                ).match("test4-gvcf-filenames")},
+            )
+        }
+    }
+
+}

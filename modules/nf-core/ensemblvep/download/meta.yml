@@ -1,5 +1,6 @@
 name: ensemblvep_download
-description: Ensembl Variant Effect Predictor (VEP). The cache downloading options are controlled through `task.ext.args`.
+description: Ensembl Variant Effect Predictor (VEP). The cache downloading options
+  are controlled through `task.ext.args`.
 keywords:
   - annotation
   - cache
@@ -12,33 +13,40 @@ tools:
       homepage: https://www.ensembl.org/info/docs/tools/vep/index.html
       documentation: https://www.ensembl.org/info/docs/tools/vep/script/index.html
       licence: ["Apache-2.0"]
+      identifier: ""
 input:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
-  - assembly:
-      type: string
-      description: |
-        Genome assembly
-  - species:
-      type: string
-      description: |
-        Specie
-  - cache_version:
-      type: string
-      description: |
-        cache version
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - assembly:
+        type: string
+        description: |
+          Genome assembly
+    - species:
+        type: string
+        description: |
+          Specie
+    - cache_version:
+        type: string
+        description: |
+          cache version
 output:
   - cache:
-      type: file
-      description: cache
-      pattern: "*"
+      - meta:
+          type: file
+          description: cache
+          pattern: "*"
+      - prefix:
+          type: file
+          description: cache
+          pattern: "*"
   - versions:
-      type: file
-      description: File containing software versions
-      pattern: "versions.yml"
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@maxulysse"
 maintainers:

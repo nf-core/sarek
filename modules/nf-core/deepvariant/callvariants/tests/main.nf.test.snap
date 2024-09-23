@@ -1,0 +1,59 @@
+{
+    "versions": {
+        "content": [
+            [
+                "versions.yml:md5,5ff99ffba1e56e4e919d3dfc2d0f3cbb"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-08-09T16:38:47.927241"
+    },
+    "homo_sapiens-wgs-call_variants_tfrecords-filenames": {
+        "content": [
+            "test.call-00000-of-00001.tfrecord.gz"
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-04T17:04:33.276938"
+    },
+    "homo_sapiens - wgs - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.call-00000-of-00001.tfrecord.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,5ff99ffba1e56e4e919d3dfc2d0f3cbb"
+                ],
+                "call_variants_tfrecords": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.call-00000-of-00001.tfrecord.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,5ff99ffba1e56e4e919d3dfc2d0f3cbb"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-08-13T21:07:17.335788301"
+    }
+}
