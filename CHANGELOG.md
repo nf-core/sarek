@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [1640](https://github.com/nf-core/sarek/pull/1620) - Add `lofreq` as a tumor-only variant caller.
 - [1642](https://github.com/nf-core/sarek/pull/1642) - Back to dev
+- [1662](https://github.com/nf-core/sarek/pull/1662) - Massive conda modules update
 
 ### Changed
 
