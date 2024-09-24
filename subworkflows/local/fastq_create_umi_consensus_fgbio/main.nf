@@ -51,7 +51,7 @@ workflow FASTQ_CREATE_UMI_CONSENSUS_FGBIO {
     // To call a consensus across reads in the same group
     // And emit a consensus BAM file
     // TODO: add params for call_min_reads and call_min_baseq
-    call_min_reads = ''
+    call_min_reads = 1
     call_min_baseq = 10
     CALLUMICONSENSUS(GROUPREADSBYUMI.out.bam, call_min_reads, call_min_baseq)
 
