@@ -25,11 +25,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Dependencies
 
-| Dependency | Old version | New version |
-| ---------- | ----------- | ----------- |
-| `lofreq`   |             | 2.1.5       |
+| Dependency    | Old version | New version |
+| ------------- | ----------- | ----------- |
+| `deepvariant` | 1.5.0       | 1.6.1       |
+| `ensemblvep`  | 111.0       | 112.0       |
+| `fgbio`       | 2.0.2       | 2.1.2       |
+| `htslib`      | 1.20        | 1.21        |
+| `lofreq`      |             | 2.1.5       |
+| `multiqc`     | 1.21        | 1.24.1      |
+| `samtools`    | 1.20        | 1.21        |
 
 ### Parameters
+
+| Params          | Status  |
+| --------------- | ------- |
+| `snpeff_db`     | Updated |
+| `snpeff_genome` | Removed |
 
 ## [3.4.4](https://github.com/nf-core/sarek/releases/tag/3.4.4) - Ruopsokjåkhå
 
