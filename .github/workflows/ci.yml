@@ -269,6 +269,8 @@ jobs:
           - tags: "samtools/convert"
           - tags: "samtools/mpileup"
           - tags: "samtools/stats"
+          - tags: "sentieon/bwamem"
+          - tags: "sentieon/haplotyper"
           - tags: "snpeff/snpeff"
           - tags: "spring/decompress"
           - tags: "strelka/germline"
