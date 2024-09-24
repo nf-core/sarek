@@ -240,7 +240,7 @@ jobs:
           - tags: "cnvkit/reference"
           - tags: "controlfreec/assesssignificance"
           - tags: "controlfreec/freec"
-          - tags: "deepvariant"
+          - tags: "deepvariant/rundeepvariant"
           - tags: "dragmap/align"
           - tags: "dragmap/hashtable"
           - tags: "ensemblvep/download"
@@ -348,6 +348,7 @@ jobs:
             --profile="+${{ matrix.profile }}" \
             --tag ${{ matrix.tags }} \
             --tap=test.tap \
+            --debug \
             --verbose
 
   confirm-pass:
