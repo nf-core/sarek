@@ -654,19 +654,6 @@ workflow SAREK {
         }
     }
 
-    // TELSEQ for telomere length
-    if (params.step == 'mapping' &&
-        params.tools &&
-        params.tools.split(',').contains('telseq')) {
-        TELSEQ(
-            cram_variant_calling,
-            fasta,
-            fasta_fai,
-            ( params.wes ? [ [:], intervals_bed_combined_for_variant_calling ] : [ [:] , [] ] )
-            )
-        reports = reports.mix(TELSEQ.out.output.collect{ meta, summary -> [ summary ] })
-        versions = versions.mix(TELSEQ.out.versions)
-    }
 
     if (params.step == 'variant_calling') {
 
@@ -683,7 +670,6 @@ workflow SAREK {
             BAM_TO_CRAM.out.cram.join(BAM_TO_CRAM.out.crai, failOnDuplicate: true, failOnMismatch: true),
             input_variant_calling_convert.cram
         )
-
     }
 
     if (params.step == 'annotate') cram_variant_calling = Channel.empty()
@@ -844,6 +830,18 @@ workflow SAREK {
             params.joint_mutect2,
             params.wes
         )
+
+        // TELSEQ for telomere length
+        if (params.tools.split(',').contains('telseq')) {
+            TELSEQ(
+                cram_variant_calling,
+                fasta,
+                fasta_fai,
+                ( params.wes ? [ [:], intervals_bed_combined_for_variant_calling ] : [ [:] , [] ] )
+                )
+            reports = reports.mix(TELSEQ.out.output.collect{ meta, summary -> [ summary ] })
+            versions = versions.mix(TELSEQ.out.versions)
+        }
 
         // POST VARIANTCALLING
         POST_VARIANTCALLING(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_all,
