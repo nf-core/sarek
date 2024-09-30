@@ -204,7 +204,7 @@ workflow SAREK {
         // Additional options to be set up
 
         // QC
-        if (!(params.skip_tools && params.skip_tools.split(',').contains('fastqc'))) {
+        if (!(params.skip_tools && params.skip_tools.contains('fastqc'))) {
             FASTQC(input_fastq)
 
             reports = reports.mix(FASTQC.out.zip.collect{ meta, logs -> logs })
@@ -337,8 +337,8 @@ workflow SAREK {
         if (
             params.save_mapped ||
             (
-                (params.skip_tools && params.skip_tools.split(',').contains('markduplicates')) &&
-                !(params.tools && params.tools.split(',').contains('sentieon_dedup'))
+                (params.skip_tools && params.skip_tools.contains('markduplicates')) &&
+                !(params.tools && params.tools.contains('sentieon_dedup'))
             )
         ) {
             // bams are merged (when multiple lanes from the same sample), indexed and then converted to cram
@@ -380,8 +380,8 @@ workflow SAREK {
 
         if (
             params.skip_tools &&
-            params.skip_tools.split(',').contains('markduplicates') &&
-            !(params.tools && params.tools.split(',').contains('sentieon_dedup'))
+            params.skip_tools.contains('markduplicates') &&
+            !(params.tools && params.tools.contains('sentieon_dedup'))
         ) {
             if (params.step == 'mapping') {
                 cram_skip_markduplicates = BAM_TO_CRAM_MAPPING.out.cram.join(BAM_TO_CRAM_MAPPING.out.crai, failOnDuplicate: true, failOnMismatch: true)
@@ -419,7 +419,7 @@ workflow SAREK {
 
             // Gather used softwares versions
             versions = versions.mix(BAM_MARKDUPLICATES_SPARK.out.versions)
-        } else if (params.tools && params.tools.split(',').contains('sentieon_dedup')) {
+        } else if (params.tools && params.tools.contains('sentieon_dedup')) {
             crai_for_markduplicates = params.step == 'mapping' ? bai_mapped : input_sample.map{ meta, input, index -> [ meta, index ] }
             BAM_SENTIEON_DEDUP(
                 cram_for_markduplicates,
@@ -466,7 +466,7 @@ workflow SAREK {
 
         // CSV should be written for the file actually out, either CRAM or BAM
         // Create CSV to restart from this step
-        csv_subfolder = (params.tools && params.tools.split(',').contains('sentieon_dedup')) ? 'sentieon_dedup' : 'markduplicates'
+        csv_subfolder = (params.tools && params.tools.contains('sentieon_dedup')) ? 'sentieon_dedup' : 'markduplicates'
 
         if (params.save_output_as_bam) CHANNEL_MARKDUPLICATES_CREATE_CSV(CRAM_TO_BAM.out.bam.join(CRAM_TO_BAM.out.bai, failOnDuplicate: true, failOnMismatch: true), csv_subfolder, params.outdir, params.save_output_as_bam)
         else CHANNEL_MARKDUPLICATES_CREATE_CSV(ch_md_cram_for_restart, csv_subfolder, params.outdir, params.save_output_as_bam)
@@ -508,7 +508,7 @@ workflow SAREK {
         }
 
         // STEP 3: Create recalibration tables
-        if (!(params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'))) {
+        if (!(params.skip_tools && params.skip_tools.contains('baserecalibrator'))) {
 
             ch_table_bqsr_no_spark = Channel.empty()
             ch_table_bqsr_spark    = Channel.empty()
@@ -589,7 +589,7 @@ workflow SAREK {
                 .map{ meta, cram, crai, table -> [ meta + [data_type: "cram"], cram, crai, table ]}
         }
 
-        if (!(params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'))) {
+        if (!(params.skip_tools && params.skip_tools.contains('baserecalibrator'))) {
             cram_variant_calling_no_spark = Channel.empty()
             cram_variant_calling_spark    = Channel.empty()
 
@@ -675,7 +675,7 @@ workflow SAREK {
         CRAM_SAMPLEQC(cram_variant_calling,
             ngscheckmate_bed,
             fasta,
-            params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'),
+            params.skip_tools && params.skip_tools.contains('baserecalibrator'),
             intervals_for_preprocessing)
 
     if (params.tools) {
@@ -766,7 +766,7 @@ workflow SAREK {
             known_sites_snps_tbi,
             known_snps_vqsr,
             params.joint_germline,
-            params.skip_tools && params.skip_tools.split(',').contains('haplotypecaller_filter'), // true if filtering should be skipped
+            params.skip_tools && params.skip_tools.contains('haplotypecaller_filter'), // true if filtering should be skipped
             params.sentieon_haplotyper_emit_mode,
             params.sentieon_dnascope_emit_mode,
             params.sentieon_dnascope_pcr_indel_model,
@@ -866,7 +866,7 @@ workflow SAREK {
         // ANNOTATE
         if (params.step == 'annotate') vcf_to_annotate = input_sample
 
-        if (params.tools.split(',').contains('merge') || params.tools.split(',').contains('snpeff') || params.tools.split(',').contains('vep')|| params.tools.split(',').contains('bcfann')) {
+        if (params.tools.contains('merge') || params.tools.contains('snpeff') || params.tools.contains('vep')|| params.tools.contains('bcfann')) {
 
             vep_fasta = (params.vep_include_fasta) ? fasta : [[id: 'null'], []]
 
@@ -895,7 +895,7 @@ workflow SAREK {
     // Collate and save software versions
     //
     version_yaml = Channel.empty()
-    if (!(params.skip_tools && params.skip_tools.split(',').contains('versions'))) {
+    if (!(params.skip_tools && params.skip_tools.contains('versions'))) {
         version_yaml = softwareVersionsToYAML(versions)
             .collectFile(storeDir: "${params.outdir}/pipeline_info", name: 'nf_core_sarek_software_mqc_versions.yml', sort: true, newLine: true)
     }
@@ -903,7 +903,7 @@ workflow SAREK {
     //
     // MODULE: MultiQC
     //
-    if (!(params.skip_tools && params.skip_tools.split(',').contains('multiqc'))) {
+    if (!(params.skip_tools && params.skip_tools.contains('multiqc'))) {
 
         ch_multiqc_config                     = Channel.fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
         ch_multiqc_custom_config              = params.multiqc_config ? Channel.fromPath(params.multiqc_config, checkIfExists: true) : Channel.empty()
