@@ -104,3 +104,8 @@ jobs:
         if: success() || failure() # always run even if the previous step fails
         with:
           report_paths: "TEST-*.xml"
+
+      - name: Clean up
+        if: always()
+        run: |
+          sudo rm -rf /home/ubuntu/tests/
