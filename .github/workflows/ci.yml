@@ -31,7 +31,7 @@ jobs:
       fail-fast: false
       matrix:
         NXF_VER: ["23.04.0", "latest-everything"] # TODO Test minimum version on release
-        filter: ["pipeline", "workflow"] # TODO Modules and Functions
+        filter: ["pipeline", "workflow", "process"] # TODO Functions
         profile: ["docker"]
         shard: [1, 2, 3, 4, 5]
     steps:
@@ -97,6 +97,7 @@ jobs:
               --verbose \
               --shard ${{ matrix.shard }}/5 \
               --changed-since HEAD^ \
+              --follow-dependencies \
               --profile "+${{ matrix.profile }}" \
               --filter ${{ matrix.filter }}
 
