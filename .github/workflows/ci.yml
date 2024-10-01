@@ -31,7 +31,7 @@ jobs:
       fail-fast: false
       matrix:
         NXF_VER: ["23.04.0", "latest-everything"] # TODO Test minimum version on release
-        filter: ["pipeline", "workflow", "process"] # TODO Functions
+        filter: ["pipeline", "workflow", "process,function"]
         profile: ["docker"]
         shard: [1, 2, 3, 4, 5]
     steps:
