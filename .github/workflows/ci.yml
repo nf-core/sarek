@@ -89,13 +89,13 @@ jobs:
       - name: Disk space cleanup
         uses: jlumbroso/free-disk-space@v1.3.1
 
-      - name: Run Tests (Shard ${{ matrix.shard }}/${{ strategy.job-total }})
+      - name: Run Tests (Shard ${{ matrix.shard }}/5)
         run: |
           nf-test test \
               --ci \
               --junitxml="TEST-${{ matrix.filter }}_${{ matrix.profile }}_${{ matrix.shard }}.xml" \
               --verbose \
-              --shard ${{ matrix.shard }}/${{ strategy.job-total }} \
+              --shard ${{ matrix.shard }}/5 \
               --changed-since HEAD^ \
               --profile "+${{ matrix.profile }}" \
               --filter ${{ matrix.filter }}
