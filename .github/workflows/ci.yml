@@ -92,7 +92,7 @@ jobs:
         run: |
           nf-test test \
               --ci \
-              --tap=test.tap \
+              --junitxml="TEST-${{ matrix.filter }}_${{ matrix.profile }}_${{ matrix.shard }}.xml" \
               --verbose \
               --shard ${{ matrix.shard }}/${{ strategy.job-total }} \
               --changed-since HEAD^ \
@@ -100,7 +100,7 @@ jobs:
               --filter ${{ matrix.filter }}
 
       - name: Publish Test Report
-        uses: mikepenz/action-junit-report@v3
-        if: always() # always run even if the previous step fails
+        uses: mikepenz/action-junit-report@v4
+        if: success() || failure() # always run even if the previous step fails
         with:
-          report_paths: test.xml
+          report_paths: "TEST-*.xml"
