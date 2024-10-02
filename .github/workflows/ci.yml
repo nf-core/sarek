@@ -4,6 +4,7 @@ on:
   pull_request:
   release:
     types: [published]
+  workflow_dispatch:
   merge_group:
     types:
       - checks_requested
@@ -54,7 +55,7 @@ jobs:
         TEST_DATA_BASE:
           - "test-datasets/data"
         NXF_VER:
-          - "23.04.0"
+          - "24.04.2"
           - "latest-everything"
         exclude:
           - tags: "sentieon/bwamem"

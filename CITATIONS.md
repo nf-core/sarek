@@ -160,6 +160,60 @@
 
   > Erich Neuwirth (2014). RColorBrewer: ColorBrewer Palettes.
 
+- [PIGZ](https://zlib.net/pigz/)
+
+- [P7Zip](http://p7zip.sourceforge.net/)
+
+- [Samblaster](https://academic.oup.com/bioinformatics/article/30/17/2503/2748175)
+
+  > Gregory G. Faust, Ira M. Hall, SAMBLASTER: fast duplicate marking and structural variant read extraction, Bioinformatics, Volume 30, Issue 17, 1 September 2014, Pages 2503–2505. doi: 10.1093/bioinformatics/btu314. PubMed PMID: 24812344. PubMed Central PMCID: PMC4147885.
+
+- [SAMtools](https://pubmed.ncbi.nlm.nih.gov/19505943/)
+
+  > Li H, Handsaker B, Wysoker A, Fennell T, Ruan J, Homer N, Marth G, Abecasis G, Durbin R; 1000 Genome Project Data Processing Subgroup. The Sequence Alignment/Map format and SAMtools. Bioinformatics. 2009 Aug 15;25(16):2078-9. doi: 10.1093/bioinformatics/btp352. Epub 2009 Jun 8. PubMed PMID: 19505943; PubMed Central PMCID: PMC2723002.
+
+- [snpEff](https://pubmed.ncbi.nlm.nih.gov/22728672/)
+
+  > Cingolani P, Platts A, Wang le L, et al.: A program for annotating and predicting the effects of single nucleotide polymorphisms, SnpEff: SNPs in the genome of Drosophila melanogaster strain w1118; iso-2; iso-3. Fly (Austin). Apr-Jun 2012;6(2):80-92. doi: 10.4161/fly.19695. PubMed PMID: 22728672; PubMed Central PMCID: PMC3679285.
+
+- [SpliceAI](https://pubmed.ncbi.nlm.nih.gov/30661751/)
+
+  > Jaganathan K, et al.: Predicting Splicing from Primary Sequence with Deep Learning. Cell. 2019 Jan 24;176(3):535-548.e24. doi: 10.1016/j.cell.2018.12.015. PubMed PMID: 30661751.
+
+- [SpliceRegion](https://github.com/Ensembl/VEP_plugins/blob/release/106/SpliceRegion.pm)
+
+- [Strelka2](https://pubmed.ncbi.nlm.nih.gov/30013048/)
+
+  > Kim S, Scheffler K, Halpern AL, et al.: Strelka2: fast and accurate calling of germline and somatic variants. Nat Methods. 2018 Aug;15(8):591-594. doi: 10.1038/s41592-018-0051-x. Epub 2018 Jul 16. PubMed PMID: 30013048.
+
+- [SVDB](https://github.com/J35P312/SVDB)
+
+- [Tabix](https://academic.oup.com/bioinformatics/article/27/5/718/262743)
+
+  > Li H, Tabix: fast retrieval of sequence features from generic TAB-delimited files, Bioinformatics, Volume 27, Issue 5, 1 March 2011, Pages 718–719, doi: 10.1093/bioinformatics/btq671. PubMed PMID: 21208982. PubMed Central PMCID: PMC3042176.
+
+- [TIDDIT](https://pubmed.ncbi.nlm.nih.gov/28781756/)
+
+  > Eisfeldt J, Vezzi F, Olason P, et al.: TIDDIT, an efficient and comprehensive structural variant caller for massive parallel sequencing data. F1000Res. 2017 May 10;6:664. doi: 10.12688/f1000research.11168.2. eCollection 2017. PubMed PMID: 28781756; PubMed Central PMCID: PMC5521161.
+
+- [VCFTools](https://pubmed.ncbi.nlm.nih.gov/21653522/)
+
+  > Danecek P, Auton A, Abecasis G, et al.: The variant call format and VCFtools. Bioinformatics. 2011 Aug 1;27(15):2156-8. doi: 10.1093/bioinformatics/btr330. Epub 2011 Jun 7. PubMed PMID: 21653522; PubMed Central PMCID: PMC3137218.
+
+- [Lofreq](https://pubmed.ncbi.nlm.nih.gov/23066108/)
+
+  > Wilm et al. LoFreq: A sequence-quality aware, ultra-sensitive variant caller for uncovering cell-population heterogeneity from high-throughput sequencing datasets. Nucleic Acids Res. 2012; 40(22):11189-201.
+
+## R packages
+
+- [R](https://www.R-project.org/)
+
+  > R Core Team (2017). R: A language and environment for statistical computing. R Foundation for Statistical Computing, Vienna, Austria.
+
+- [RColorBrewer](https://CRAN.R-project.org/package=RColorBrewer)
+
+  > Erich Neuwirth (2014). RColorBrewer: ColorBrewer Palettes.
+
 ## Software packaging/containerisation tools
 
 - [Anaconda](https://anaconda.com)
@@ -181,3 +235,4 @@
 - [Singularity](https://pubmed.ncbi.nlm.nih.gov/28494014/)
 
   > Kurtzer GM, Sochat V, Bauer MW. Singularity: Scientific containers for mobility of compute. PLoS One. 2017 May 11;12(5):e0177459. doi: 10.1371/journal.pone.0177459. eCollection 2017. PubMed PMID: 28494014; PubMed Central PMCID: PMC5426675.
+  >

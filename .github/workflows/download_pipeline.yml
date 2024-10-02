@@ -1,4 +1,4 @@
-name: Test successful pipeline download with 'nf-core download'
+name: Test successful pipeline download with 'nf-core pipelines download'
 
 # Run the workflow when:
 #  - dispatched manually
@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
     inputs:
       testbranch:
-        description: "The specific branch you wish to utilize for the test execution of nf-core download."
+        description: "The specific branch you wish to utilize for the test execution of nf-core pipelines download."
         required: true
         default: "dev"
   pull_request:
@@ -58,14 +58,14 @@ jobs:
         env:
           NXF_SINGULARITY_CACHEDIR: ./
         run: |
-          nf-core download ${{ env.REPO_LOWERCASE }} \
+          nf-core pipelines download ${{ env.REPO_LOWERCASE }} \
           --revision ${{ env.REPO_BRANCH }} \
           --outdir ./${{ env.REPOTITLE_LOWERCASE }} \
           --compress "none" \
           --container-system 'singularity' \
           --container-library "quay.io" -l "docker.io" -l "ghcr.io" \
           --container-cache-utilisation 'amend' \
-          --download-configuration
+          --download-configuration 'yes'
 
       - name: Inspect download
         run: tree ./${{ env.REPOTITLE_LOWERCASE }}
