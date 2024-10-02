@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- [1579](https://github.com/nf-core/sarek/pull/1579) - Update Sentieon usage docs
+
 ### Fixed
 
 - [1656](https://github.com/nf-core/sarek/pull/1656) - Retiring parameter `snpeff_genome`
