@@ -143,7 +143,7 @@
                 "multiqc_citations.txt:md5,4660dd5d8757841ed75dca3a90d21617",
                 "multiqc_fastqc.txt:md5,bde0d0bffa62228b33fb68b7e25b6ff8",
                 "multiqc_samtools_stats.txt:md5,0f1e4c6c497d9a952765f9f3068ea4b9",
-                "multiqc_software_versions.txt:md5,2c9d16da278a231b0dc4c4cb5c08e626",
+                "multiqc_software_versions.txt:md5,c596381071f4245cf706dc2aed5ee1a9",
                 "picard_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_histogram_2.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
