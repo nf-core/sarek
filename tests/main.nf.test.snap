@@ -284,7 +284,6 @@
                 "multiqc_citations.txt:md5,ace4ca89138a5f1e2be289c157c00bd9",
                 "multiqc_fastqc.txt:md5,bde0d0bffa62228b33fb68b7e25b6ff8",
                 "multiqc_samtools_stats.txt:md5,0f1e4c6c497d9a952765f9f3068ea4b9",
-                "multiqc_software_versions.txt:md5,6540a5f7ec8a2f928c1bdf6ff78b300b",
                 "picard_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "picard_histogram_2.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -343,6 +342,6 @@
             "nf-test": "0.9.0",
             "nextflow": "24.09.0"
         },
-        "timestamp": "2024-10-03T13:05:01.408344"
+        "timestamp": "2024-10-03T13:34:20.536391"
     }
 }

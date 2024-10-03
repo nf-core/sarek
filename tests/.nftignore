@@ -4,6 +4,7 @@ multiqc/multiqc_data/multiqc.log
 multiqc/multiqc_data/multiqc_data.json
 multiqc/multiqc_data/multiqc_general_stats.txt
 multiqc/multiqc_data/multiqc_picard_dups.txt
+multiqc/multiqc_data/multiqc_software_versions.txt
 multiqc/multiqc_data/multiqc_sources.txt
 multiqc/multiqc_data/picard_deduplication.txt
 multiqc/multiqc_plots/pdf/*
