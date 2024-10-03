@@ -972,8 +972,7 @@ def flowcellLaneFromFastq(path) {
     } else if (fields.size() == 5) {
         flowcell_id = fields[0]
     } else {
-        log.warn "Cannot extract flowcell id from file: ${path}"
-        log.warn "First line of FASTQ is: ${firstLine}"
+        log.warn "Cannot extract flowcell id from first line in file(${path}): ${firstLine}"
     }
     return flowcell_id
 }
@@ -990,8 +989,8 @@ def readFirstLineOfFastq(path) {
             assert line.startsWith('@')
         }
     } catch (Exception e) {
-        log.warn "Error streaming gzipped FASTQ file: ${e.message}"
-        log.warn "File path: ${path}"
+        log.warn "Error streaming gzipped FASTQ file(${path})"
+        log.warn "${e.message}"
     }
     return line
 }
