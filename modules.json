@@ -346,7 +346,7 @@
                     },
                     "multiqc": {
                         "branch": "master",
-                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
+                        "git_sha": "b8d36829fa84b6e404364abff787e8b07f6d058c",
                         "installed_by": ["modules"]
                     },
                     "ngscheckmate/ncm": {
