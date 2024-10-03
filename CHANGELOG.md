@@ -37,7 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | `fgbio`       | 2.0.2       | 2.1.2       |
 | `htslib`      | 1.20        | 1.21        |
 | `lofreq`      |             | 2.1.5       |
-| `multiqc`     | 1.21        | 1.24.1      |
+| `multiqc`     | 1.21        | 1.25.1      |
 | `samtools`    | 1.20        | 1.21        |
 
 ### Parameters

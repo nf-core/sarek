@@ -12,14 +12,17 @@ on:
       - dev
 
 env:
-  NFTEST_VER: "0.9.0"
+  NFT_DIFF: "pdiff"
+  NFT_DIFF_ARGS: "--line-numbers --expand-tabs=2"
+  NFT_VER: "0.9.0"
+  NFT_WORKDIR: "~"
   NXF_ANSI_LOG: false
-  TEST_DATA_BASE: "${{ github.workspace }}/test-datasets"
-  SENTIEON_LICENSE_BASE64: ${{ secrets.SENTIEON_LICENSE_BASE64 }}
   NXF_SINGULARITY_CACHEDIR: ${{ github.workspace }}/.singularity
   NXF_SINGULARITY_LIBRARYDIR: ${{ github.workspace }}/.singularity
+  SENTIEON_LICENSE_BASE64: ${{ secrets.SENTIEON_LICENSE_BASE64 }}
+  TEST_DATA_BASE: "${{ github.workspace }}/test-datasets"
 
-# Cancel if a newer run is started
+  # Cancel if a newer run is started
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
@@ -297,7 +300,7 @@ jobs:
       - name: Install nf-test
         uses: nf-core/setup-nf-test@v1
         with:
-          version: ${{ env.NFTEST_VER }}
+          version: ${{ env.NFT_VER }}
 
       - name: Setup apptainer
         if: matrix.profile == 'singularity'
