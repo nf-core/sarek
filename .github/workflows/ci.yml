@@ -1,5 +1,5 @@
-name: nf-core CI
 # This workflow runs the pipeline with the minimal test dataset to check that it completes without any syntax errors
+name: nf-core CI
 on:
   pull_request:
   release:
@@ -22,7 +22,7 @@ env:
   SENTIEON_LICENSE_BASE64: ${{ secrets.SENTIEON_LICENSE_BASE64 }}
   TEST_DATA_BASE: "${{ github.workspace }}/test-datasets"
 
-  # Cancel if a newer run is started
+# Cancel if a newer run is started
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
