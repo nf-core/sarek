@@ -1,4 +1,4 @@
-name: dragmap_hashtable
+name: narfmap_hashtable
 description: Create DRAGEN hashtable for reference genome
 keywords:
   - index
@@ -6,11 +6,11 @@ keywords:
   - genome
   - reference
 tools:
-  - dragmap:
-      description: Dragmap is the Dragen mapper/aligner Open Source Software.
-      homepage: https://github.com/Illumina/dragmap
-      documentation: https://github.com/Illumina/dragmap
-      tool_dev_url: https://github.com/Illumina/dragmap#basic-command-line-usage
+  - narfmap:
+      description: narfmap is a fork of the Dragen mapper/aligner Open Source Software.
+      homepage: https://github.com/edmundmiller/narfmap
+      documentation: https://github.com/edmundmiller/NARFMAP/blob/main/doc/usage.md#basic-command-line-usage
+      tool_dev_url: https://github.com/edmundmiller/narfmap
       licence: ["GPL v3"]
 input:
   - meta:
@@ -29,7 +29,7 @@ output:
         e.g. [ id:'test', single_end:false ]
   - hashmap:
       type: file
-      description: DRAGMAP hash table
+      description: NARFMAP hash table
       pattern: "*.{cmp,.bin,.txt}"
   - versions:
       type: file

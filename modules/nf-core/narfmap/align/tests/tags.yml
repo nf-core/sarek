@@ -1,0 +1,2 @@
+narfmap/align:
+  - modules/nf-core/narfmap/align/**

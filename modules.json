@@ -127,18 +127,6 @@
                         "git_sha": "199ba086a259e1933d6e0ab7596e4a977bbd483a",
                         "installed_by": ["modules"]
                     },
-                    "dragmap/align": {
-                        "branch": "master",
-                        "git_sha": "dd2757cc22c5de8943fa38ba7cd6f8cc1eb65ac1",
-                        "installed_by": ["modules"],
-                        "patch": "modules/nf-core/dragmap/align/dragmap-align.diff"
-                    },
-                    "dragmap/hashtable": {
-                        "branch": "master",
-                        "git_sha": "ae9e01cb5e77faada314047e78423b22b4f5bbc5",
-                        "installed_by": ["modules"],
-                        "patch": "modules/nf-core/dragmap/hashtable/dragmap-hashtable.diff"
-                    },
                     "ensemblvep/download": {
                         "branch": "master",
                         "git_sha": "3db4f8488315cd7d7cf3fcb64251f6603210e831",
@@ -347,6 +335,16 @@
                     "multiqc": {
                         "branch": "master",
                         "git_sha": "b7ebe95761cd389603f9cc0e0dc384c0f663815a",
+                        "installed_by": ["modules"]
+                    },
+                    "narfmap/align": {
+                        "branch": "master",
+                        "git_sha": "cef718b8f7625ee3ea0ffd754c44e20a1a36bbc5",
+                        "installed_by": ["modules"]
+                    },
+                    "narfmap/hashtable": {
+                        "branch": "master",
+                        "git_sha": "ccedf37dca54eade28835aa3ce98491a7df6339e",
                         "installed_by": ["modules"]
                     },
                     "ngscheckmate/ncm": {
