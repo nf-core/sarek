@@ -20,6 +20,7 @@ include { imNotification            } from '../../nf-core/utils_nfcore_pipeline'
 include { logColours                } from '../../nf-core/utils_nfcore_pipeline'
 include { workflowCitation          } from '../../nf-core/utils_nfcore_pipeline'
 include { SAMPLESHEET_TO_CHANNEL    } from '../samplesheet_to_channel'
+include { UTILS_NEXTFLOW_PIPELINE   } from '../../nf-core/utils_nextflow_pipeline'
 
 /*
 ========================================================================================
