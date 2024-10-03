@@ -962,17 +962,19 @@ def flowcellLaneFromFastq(path) {
     // Expected format from ILLUMINA
     // cf https://en.wikipedia.org/wiki/FASTQ_format#Illumina_sequence_identifiers
     // Five fields:
-    // <flowcell ID>:<lane>:<tile>:<x-pos>:<y-pos>
+    // @<instrument>:<lane>:<tile>:<x-pos>:<y-pos>...
     // Seven fields or more (from CASAVA 1.8+):
     // "@<instrument>:<run number>:<flowcell ID>:<lane>:<tile>:<x-pos>:<y-pos>..."
 
     fields = firstLine ? firstLine.split(':') : []
-    if (fields.size() >= 7) {
+    if (fields.size() == 5) {
+        // Get the instrument name as flowcell ID
+        flowcell_id = fields[0].substring(1)
+    } else if (fields.size() >= 7) {
+        // Get the actual flowcell ID
         flowcell_id = fields[2]
-    } else if (fields.size() == 5) {
-        flowcell_id = fields[0]
-    } else {
-        log.warn "Cannot extract flowcell id from first line in file(${path}): ${firstLine}"
+    } else if (fields.size() != 0) {
+        log.warn "FASTQ file(${path}): Cannot extract flowcell ID from ${firstLine}"
     }
     return flowcell_id
 }
@@ -989,7 +991,7 @@ def readFirstLineOfFastq(path) {
             assert line.startsWith('@')
         }
     } catch (Exception e) {
-        log.warn "Error streaming gzipped FASTQ file(${path})"
+        log.warn "FASTQ file(${path}): Error streaming"
         log.warn "${e.message}"
     }
     return line
