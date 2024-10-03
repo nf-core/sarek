@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- [1669](https://github.com/nf-core/sarek/pull/1669) - Better nf-test pipeline level tests
+
 ### Fixed
 
 - [1656](https://github.com/nf-core/sarek/pull/1656) - Retiring parameter `snpeff_genome`
