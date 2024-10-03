@@ -13,7 +13,7 @@ on:
 
 env:
   NFT_DIFF: "pdiff"
-  NFT_DIFF_ARGS: "--line-numbers --expand-tabs=2"
+  NFT_DIFF_ARGS: "--line-numbers --width 120 --expand-tabs=2"
   NFT_VER: "0.9.0"
   NFT_WORKDIR: "~"
   NXF_ANSI_LOG: false
