@@ -1,7 +1,5 @@
-name: strelka_somatic
 channels:
   - conda-forge
   - bioconda
-  - defaults
 dependencies:
   - bioconda::strelka=2.9.10

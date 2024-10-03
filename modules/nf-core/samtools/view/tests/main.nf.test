@@ -172,6 +172,8 @@ nextflow_process {
                 { assert snapshot(process.out.crai).match("cram_to_bam_index_qname_crai") },
                 { assert snapshot(process.out.cram).match("cram_to_bam_index_qname_cram") },
                 { assert snapshot(process.out.sam).match("cram_to_bam_index_qname_sam") },
+                { assert snapshot(file(process.out.unselected[0][1]).name).match("cram_to_bam_index_qname_unselected") },
+                { assert snapshot(file(process.out.unselected_index[0][1]).name).match("cram_to_bam_index_qname_unselected_csi") },
                 { assert snapshot(process.out.versions).match("cram_to_bam_index_qname_versions") }
             )
         }

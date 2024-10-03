@@ -1,9 +1,10 @@
 nextflow_process {
 
-    name "Test Process DEEPVARIANT"
+    name "Test Process DEEPVARIANT_RUNDEEPVARIANT"
     script "../main.nf"
-    process "DEEPVARIANT"
+    process "DEEPVARIANT_RUNDEEPVARIANT"
 
+    tag "deepvariant/rundeepvariant"
     tag "deepvariant"
     tag "modules"
     tag "modules_nfcore"
@@ -29,6 +30,9 @@ nextflow_process {
                       file(params.modules_testdata_base_path + '/genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
                 ]
                 input[3] = [
+                    [],[]
+                ]
+                input[4] = [
                     [],[]
                 ]
                 """
@@ -66,6 +70,48 @@ nextflow_process {
                 input[3] = [
                     [],[]
                 ]
+                input[4] = [
+                    [],[]
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+
+    test("homo_sapiens - [cram, crai, genome_bed] - fasta - fai - par_bed") {
+        config "./nextflow-non-autosomal-calling.config"
+        tag "test"
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:false ], // meta map
+                      file(params.modules_testdata_base_path + '/genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram', checkIfExists: true),
+                      file(params.modules_testdata_base_path + '/genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram.crai', checkIfExists: true),
+                      file(params.modules_testdata_base_path + '/genomics/homo_sapiens/genome/genome.bed', checkIfExists: true)
+                ]
+                input[1] = [
+                    [ id:'genome'],
+                      file(params.modules_testdata_base_path + '/genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
+                ]
+                input[2] = [
+                    [ id:'genome'],
+                      file(params.modules_testdata_base_path + '/genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
+                ]
+                input[3] = [
+                    [],[]
+                ]
+                input[4] = [
+                    [ id:'genome'],
+                      file(params.modules_testdata_base_path + '/genomics/homo_sapiens/genome/genome.blacklist_intervals.bed', checkIfExists: true)
+                ]
                 """
             }
         }
@@ -101,6 +147,9 @@ nextflow_process {
                 input[3] = [
                     [ id:'genome'],
                       file(params.modules_testdata_base_path + '/genomics/homo_sapiens/genome/genome.fasta.gz.gzi', checkIfExists: true)
+                ]
+                input[4] = [
+                    [],[]
                 ]
                 """
             }

@@ -1,7 +1,5 @@
-name: cnvkit_export
 channels:
   - conda-forge
   - bioconda
-  - defaults
 dependencies:
   - bioconda::cnvkit=0.9.10

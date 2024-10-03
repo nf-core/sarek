@@ -10,7 +10,7 @@
     # binary changes md5sums on reruns
     - path: results/multiqc
     - path: results/reports/EnsemblVEP/test/test_VEP.ann.summary.html
-      contains: ["test.vcf.gz</td></tr><tr><td>Output file</td><td>test_VEP.ann.vcf.gz</td></tr>"]
+      contains: ["test.vcf.gz</pre></td></tr><tr><td>Output file</td><td><pre>test_VEP.ann.vcf.gz"]
 - name: Run VEP with fasta
   command: nextflow run main.nf -profile test,annotation --tools vep --vep_include_fasta --outdir results --download_cache
   tags:
@@ -24,4 +24,4 @@
     - path: results/multiqc
     - path: results/reports/EnsemblVEP/test/test_VEP.ann.summary.html
       # text-based file changes md5sums on reruns
-      contains: ["test.vcf.gz</td></tr><tr><td>Output file</td><td>test_VEP.ann.vcf.gz</td></tr>"]
+      contains: ["test.vcf.gz</pre></td></tr><tr><td>Output file</td><td><pre>test_VEP.ann.vcf.gz"]

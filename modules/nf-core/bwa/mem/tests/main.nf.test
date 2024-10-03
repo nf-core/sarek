@@ -9,21 +9,21 @@ nextflow_process {
     script "../main.nf"
     process "BWA_MEM"
 
-    test("Single-End") {
-
-        setup {
-            run("BWA_INDEX") {
-                script "../../index/main.nf"
-                process {
-                    """
-                    input[0] = [
-                        [id: 'test'],
-                        file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
-                    ]
-                    """
-                }
+    setup {
+        run("BWA_INDEX") {
+            script "../../index/main.nf"
+            process {
+                """
+                input[0] = [
+                    [id: 'test'],
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                ]
+                """
             }
         }
+    }
+
+    test("Single-End") {
 
         when {
             process {
@@ -49,7 +49,8 @@ nextflow_process {
                     process.out.csi,
                     process.out.crai,
                     process.out.versions,
-                    file(process.out.bam[0][1]).name
+                    bam(process.out.bam[0][1]).getHeaderMD5(),
+                    bam(process.out.bam[0][1]).getReadsMD5()
                     ).match()
                 }
             )
@@ -59,20 +60,6 @@ nextflow_process {
 
     test("Single-End Sort") {
 
-        setup {
-            run("BWA_INDEX") {
-                script "../../index/main.nf"
-                process {
-                    """
-                    input[0] = [
-                        [id: 'test'],
-                        file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
-                    ]
-                    """
-                }
-            }
-        }
-
         when {
             process {
                 """
@@ -97,7 +84,8 @@ nextflow_process {
                     process.out.csi,
                     process.out.crai,
                     process.out.versions,
-                    file(process.out.bam[0][1]).name
+                    bam(process.out.bam[0][1]).getHeaderMD5(),
+                    bam(process.out.bam[0][1]).getReadsMD5()
                     ).match()
                 }
             )
@@ -106,20 +94,6 @@ nextflow_process {
     }
 
     test("Paired-End") {
-
-        setup {
-            run("BWA_INDEX") {
-                script "../../index/main.nf"
-                process {
-                    """
-                    input[0] = [
-                        [id: 'test'],
-                        file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
-                    ]
-                    """
-                }
-            }
-        }
 
         when {
             process {
@@ -146,7 +120,8 @@ nextflow_process {
                     process.out.csi,
                     process.out.crai,
                     process.out.versions,
-                    file(process.out.bam[0][1]).name
+                    bam(process.out.bam[0][1]).getHeaderMD5(),
+                    bam(process.out.bam[0][1]).getReadsMD5()
                     ).match()
                 }
             )
@@ -155,20 +130,6 @@ nextflow_process {
     }
 
     test("Paired-End Sort") {
-
-        setup {
-            run("BWA_INDEX") {
-                script "../../index/main.nf"
-                process {
-                    """
-                    input[0] = [
-                        [id: 'test'],
-                        file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
-                    ]
-                    """
-                }
-            }
-        }
 
         when {
             process {
@@ -195,7 +156,8 @@ nextflow_process {
                     process.out.csi,
                     process.out.crai,
                     process.out.versions,
-                    file(process.out.bam[0][1]).name
+                    bam(process.out.bam[0][1]).getHeaderMD5(),
+                    bam(process.out.bam[0][1]).getReadsMD5()
                     ).match()
                 }
             )
@@ -204,20 +166,6 @@ nextflow_process {
     }
 
     test("Paired-End - no fasta") {
-
-        setup {
-            run("BWA_INDEX") {
-                script "../../index/main.nf"
-                process {
-                    """
-                    input[0] = [
-                        [id: 'test'],
-                        file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
-                    ]
-                    """
-                }
-            }
-        }
 
         when {
             process {
@@ -244,7 +192,8 @@ nextflow_process {
                     process.out.csi,
                     process.out.crai,
                     process.out.versions,
-                    file(process.out.bam[0][1]).name
+                    bam(process.out.bam[0][1]).getHeaderMD5(),
+                    bam(process.out.bam[0][1]).getReadsMD5()
                     ).match()
                 }
             )
@@ -253,20 +202,9 @@ nextflow_process {
     }
 
     test("Single-end - stub") {
+
         options "-stub"
-        setup {
-            run("BWA_INDEX") {
-                script "../../index/main.nf"
-                process {
-                    """
-                    input[0] = [
-                        [id: 'test'],
-                        file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
-                    ]
-                    """
-                }
-            }
-        }
+
         when {
             process {
                 """
@@ -286,30 +224,15 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(
-                    file(process.out.bam[0][1]).name,
-                    file(process.out.csi[0][1]).name,
-                    process.out.versions
-                ).match() }
+                { assert snapshot(process.out).match() }
             )
         }
     }
 
     test("Paired-end - stub") {
+
         options "-stub"
-        setup {
-            run("BWA_INDEX") {
-                script "../../index/main.nf"
-                process {
-                    """
-                    input[0] = [
-                        [id: 'test'],
-                        file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
-                    ]
-                    """
-                }
-            }
-        }
+
         when {
             process {
                 """
@@ -330,11 +253,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(
-                    file(process.out.bam[0][1]).name,
-                    file(process.out.csi[0][1]).name,
-                    process.out.versions
-                ).match() }
+                { assert snapshot(process.out).match() }
             )
         }
     }

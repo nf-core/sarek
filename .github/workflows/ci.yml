@@ -12,12 +12,15 @@ on:
       - dev
 
 env:
-  NFTEST_VER: "0.9.0"
+  NFT_DIFF: "pdiff"
+  NFT_DIFF_ARGS: "--line-numbers --width 120 --expand-tabs=2"
+  NFT_VER: "0.9.0"
+  NFT_WORKDIR: "~"
   NXF_ANSI_LOG: false
-  TEST_DATA_BASE: "${{ github.workspace }}/test-datasets"
-  SENTIEON_LICENSE_BASE64: ${{ secrets.SENTIEON_LICENSE_BASE64 }}
   NXF_SINGULARITY_CACHEDIR: ${{ github.workspace }}/.singularity
   NXF_SINGULARITY_LIBRARYDIR: ${{ github.workspace }}/.singularity
+  SENTIEON_LICENSE_BASE64: ${{ secrets.SENTIEON_LICENSE_BASE64 }}
+  TEST_DATA_BASE: "${{ github.workspace }}/test-datasets"
 
 # Cancel if a newer run is started
 concurrency:
@@ -238,13 +241,16 @@ jobs:
           - tags: "cnvkit/antitarget"
           - tags: "cnvkit/batch"
           - tags: "cnvkit/reference"
-          - tags: "deepvariant"
+          - tags: "controlfreec/assesssignificance"
+          - tags: "controlfreec/freec"
+          - tags: "deepvariant/rundeepvariant"
           - tags: "dragmap/align"
           - tags: "dragmap/hashtable"
           - tags: "ensemblvep/download"
           - tags: "ensemblvep/vep"
           - tags: "fastp"
           - tags: "fastqc"
+          - tags: "fgbio/callmolecularconsensusreads"
           - tags: "fgbio/fastqtobam"
           - tags: "freebayes"
           - tags: "gatk4/applybqsr"
@@ -266,7 +272,10 @@ jobs:
           - tags: "samtools/convert"
           - tags: "samtools/mpileup"
           - tags: "samtools/stats"
+          - tags: "sentieon/bwamem"
+          - tags: "sentieon/haplotyper"
           - tags: "snpeff/snpeff"
+          - tags: "spring/decompress"
           - tags: "strelka/germline"
           - tags: "strelka/somatic"
           - tags: "subworkflows/utils_nfvalidation_plugin"
@@ -274,10 +283,6 @@ jobs:
           - tags: "tabix/tabix"
           - tags: "tiddit/sv"
           - tags: "untar"
-          - tags: "pipeline_sarek"
-        include:
-          - tags: "pipeline_sarek"
-            profile: "test,docker"
 
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
@@ -295,7 +300,7 @@ jobs:
       - name: Install nf-test
         uses: nf-core/setup-nf-test@v1
         with:
-          version: ${{ env.NFTEST_VER }}
+          version: ${{ env.NFT_VER }}
 
       - name: Setup apptainer
         if: matrix.profile == 'singularity'
@@ -339,13 +344,15 @@ jobs:
       - name: Disk space cleanup
         uses: jlumbroso/free-disk-space@v1.3.1
 
-      # Test the module
+      # Test the component
       - name: Run nf-test
         run: |
           nf-test test \
-            --profile=${{ matrix.profile }} \
+            --profile="+${{ matrix.profile }}" \
             --tag ${{ matrix.tags }} \
             --tap=test.tap \
+            --junitxml=test.xml \
+            --debug \
             --verbose
 
   confirm-pass:

@@ -125,39 +125,18 @@
     },
     "sarscov2 - bam": {
         "content": [
-            [
-                [
-                    {
-                        "id": "combined_bams"
-                    },
-                    "combined_bams_output_corr_matrix.txt:md5,b8bfd203232680b746ac91ccb290b5e3"
-                ]
-            ],
-            [
-                [
-                    {
-                        "id": "combined_bams"
-                    },
-                    "combined_bams_matched.txt:md5,14d0b35765e127aab0ffa5ea5406b4ab"
-                ]
-            ],
-            [
-                [
-                    {
-                        "id": "combined_bams"
-                    },
-                    "combined_bams_all.txt:md5,14d0b35765e127aab0ffa5ea5406b4ab"
-                ]
-            ],
+            "combined_bams_output_corr_matrix.txt",
+            "combined_bams_matched.txt",
+            "combined_bams_all.txt",
             [
                 "versions.yml:md5,7ac92d9cbf4fc44b3253832f3a8b2a80"
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "24.04.1"
+            "nextflow": "24.04.3"
         },
-        "timestamp": "2024-05-22T16:04:35.032277154"
+        "timestamp": "2024-08-06T11:05:56.136156"
     },
     "sarscov2 - vcf - stub": {
         "content": [

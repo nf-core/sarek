@@ -249,6 +249,7 @@ workflow SAREK {
             FASTP(
                 reads_for_fastp,
                 [], // we are not using any adapter fastas at the moment
+                false, // we don't use discard_trimmed_pass at the moment
                 save_trimmed_fail,
                 save_merged
             )
@@ -921,7 +922,9 @@ workflow SAREK {
             ch_multiqc_files.collect(),
             ch_multiqc_config.toList(),
             ch_multiqc_custom_config.toList(),
-            ch_multiqc_logo.toList()
+            ch_multiqc_logo.toList(),
+            [],
+            []
         )
         multiqc_report = MULTIQC.out.report.toList()
 
