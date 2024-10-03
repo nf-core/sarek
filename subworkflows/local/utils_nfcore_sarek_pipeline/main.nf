@@ -156,6 +156,8 @@ if (params.tools && (params.tools.split(',').contains('vep')    || params.tools.
         params.seq_center,
         params.seq_platform,
         params.skip_tools,
+        params.snpeff_cache,
+        params.snpeff_db,
         params.step,
         params.tools,
         params.umi_read_structure,
