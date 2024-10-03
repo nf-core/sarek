@@ -5,11 +5,44 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [dev](https://github.com/nf-core/sarek/tree/dev)
+## dev
+
+### Added
+
+- [1640](https://github.com/nf-core/sarek/pull/1620) - Add `lofreq` as a tumor-only variant caller
+- [1642](https://github.com/nf-core/sarek/pull/1642) - Back to dev
+- [1653](https://github.com/nf-core/sarek/pull/1653) - Updates `sarek_subway` files with `lofreq`
+- [1660](https://github.com/nf-core/sarek/pull/1642) - Add `--length_required` for minimal reads length with `FASTP`
+
+### Changed
+
+- [1669](https://github.com/nf-core/sarek/pull/1669) - Better nf-test pipeline level tests
+
+### Fixed
+
+- [1656](https://github.com/nf-core/sarek/pull/1656) - Retiring parameter `snpeff_genome`
+- [1657](https://github.com/nf-core/sarek/pull/1657) - Update all actions used in the GHA CI
+- [1661](https://github.com/nf-core/sarek/pull/1661) - nf-test pipeline level tests
+- [1673](https://github.com/nf-core/sarek/pull/1673) - Print warning message instead of silent error with Nextflow versions prior to 24.08.0edge
+
+### Removed
+
+### Dependencies
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| `lofreq`   |             | 2.1.5       |
+
+### Parameters
+
+## [3.4.4](https://github.com/nf-core/sarek/releases/tag/3.4.4) - Ruopsokjåkhå
+
+Ruopsokjåkhå is another peak of the Pårte massif.
 
 ### Added
 
 - [1614](https://github.com/nf-core/sarek/pull/1614) - Back to dev
+- [1639](https://github.com/nf-core/sarek/pull/1639) - Bump version to prepare release
 
 ### Changed
 

@@ -156,7 +156,7 @@
                     },
                     "fastqc": {
                         "branch": "master",
-                        "git_sha": "285a50500f9e02578d90b3ce6382ea3c30216acd",
+                        "git_sha": "06c8865e36741e05ad32ef70ab3fac127486af48",
                         "installed_by": ["modules"]
                     },
                     "fgbio/callmolecularconsensusreads": {
@@ -309,6 +309,11 @@
                         "git_sha": "cf3ed075695639b0a0924eb0901146df1996dc08",
                         "installed_by": ["modules"]
                     },
+                    "lofreq/callparallel": {
+                        "branch": "master",
+                        "git_sha": "bf918b32044472c9346ec3444d894c69700ced6d",
+                        "installed_by": ["modules"]
+                    },
                     "manta/germline": {
                         "branch": "master",
                         "git_sha": "ebc1733b77c702f19fe42076a5edfcbaa0d84f66",
@@ -441,12 +446,12 @@
                     },
                     "snpeff/download": {
                         "branch": "master",
-                        "git_sha": "214d575774c172062924ad3564b4f66655600730",
+                        "git_sha": "bb8b9216efd4a578bd3c47505bafc10869d6271d",
                         "installed_by": ["modules"]
                     },
                     "snpeff/snpeff": {
                         "branch": "master",
-                        "git_sha": "2f3db6f45147ebbb56b371536e31bdf622b5bfee",
+                        "git_sha": "bb8b9216efd4a578bd3c47505bafc10869d6271d",
                         "installed_by": ["modules", "vcf_annotate_snpeff"]
                     },
                     "spring/decompress": {

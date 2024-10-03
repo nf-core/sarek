@@ -1,0 +1,13 @@
+csv/*.csv
+multiqc/multiqc_data/gatk_base_recalibrator.txt
+multiqc/multiqc_data/multiqc.log
+multiqc/multiqc_data/multiqc_data.json
+multiqc/multiqc_data/multiqc_general_stats.txt
+multiqc/multiqc_data/multiqc_picard_dups.txt
+multiqc/multiqc_data/multiqc_sources.txt
+multiqc/multiqc_report.html
+pipeline_info/*.{html,json,txt,yml}
+preprocessing/**/*.{md,recal}.{cram,cram.crai,table}
+reports/fastqc/**/*_fastqc.{html,zip}
+reports/markduplicates/**/*.md.cram.metrics
+variant_calling/**/*.vcf.{gz,gz.tbi}

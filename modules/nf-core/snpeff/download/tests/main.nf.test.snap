@@ -1,0 +1,100 @@
+{
+    "test-snpeff-download-stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "WBcel235.105"
+                        },
+                        [
+                            [
+                                "sequence.I.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
+                                "sequence.bin:md5,d41d8cd98f00b204e9800998ecf8427e"
+                            ]
+                        ]
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,5fc7ed9f548eccf5fac9fdefc12ef56e"
+                ],
+                "cache": [
+                    [
+                        {
+                            "id": "WBcel235.105"
+                        },
+                        [
+                            [
+                                "sequence.I.bin:md5,d41d8cd98f00b204e9800998ecf8427e",
+                                "sequence.bin:md5,d41d8cd98f00b204e9800998ecf8427e"
+                            ]
+                        ]
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,5fc7ed9f548eccf5fac9fdefc12ef56e"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-19T12:48:45.183665736"
+    },
+    "test-snpeff-download": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "WBcel235.105"
+                        },
+                        [
+                            [
+                                "sequence.I.bin:md5,2fd1694bd91cf7952cbad8cfed161e53",
+                                "sequence.II.bin:md5,bacedbdea89508e108223767fa260a4c",
+                                "sequence.III.bin:md5,444118a9fb9d0a03c37e86094d8e52a9",
+                                "sequence.IV.bin:md5,ff756628faa0b71cd65495668c3d82b5",
+                                "sequence.V.bin:md5,d6ad5476162ac45829f719dd4ee3f4e7",
+                                "sequence.X.bin:md5,b79bec6cc8f96b8373dac56bab5d0a6c",
+                                "sequence.bin:md5,ec2bc2ae81755ab90fcf1848bc7ce41f",
+                                "snpEffectPredictor.bin:md5,1d99251d0405f0a42913ed8b5b2c2fa7"
+                            ]
+                        ]
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,5fc7ed9f548eccf5fac9fdefc12ef56e"
+                ],
+                "cache": [
+                    [
+                        {
+                            "id": "WBcel235.105"
+                        },
+                        [
+                            [
+                                "sequence.I.bin:md5,2fd1694bd91cf7952cbad8cfed161e53",
+                                "sequence.II.bin:md5,bacedbdea89508e108223767fa260a4c",
+                                "sequence.III.bin:md5,444118a9fb9d0a03c37e86094d8e52a9",
+                                "sequence.IV.bin:md5,ff756628faa0b71cd65495668c3d82b5",
+                                "sequence.V.bin:md5,d6ad5476162ac45829f719dd4ee3f4e7",
+                                "sequence.X.bin:md5,b79bec6cc8f96b8373dac56bab5d0a6c",
+                                "sequence.bin:md5,ec2bc2ae81755ab90fcf1848bc7ce41f",
+                                "snpEffectPredictor.bin:md5,1d99251d0405f0a42913ed8b5b2c2fa7"
+                            ]
+                        ]
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,5fc7ed9f548eccf5fac9fdefc12ef56e"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-08-29T14:27:47.123555"
+    }
+}
