@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [1640](https://github.com/nf-core/sarek/pull/1620) - Add `lofreq` as a tumor-only variant caller
 - [1642](https://github.com/nf-core/sarek/pull/1642) - Back to dev
+- [1653](https://github.com/nf-core/sarek/pull/1653) - Updates `sarek_subway` files with `lofreq`
 - [1660](https://github.com/nf-core/sarek/pull/1642) - Add `--length_required` for minimal reads length with `FASTP`
 - [1663](https://github.com/nf-core/sarek/pull/1663) - Massive conda modules update
 
@@ -20,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [1656](https://github.com/nf-core/sarek/pull/1656) - Retiring parameter `snpeff_genome`
 - [1657](https://github.com/nf-core/sarek/pull/1657) - Update all actions used in the GHA CI
+- [1661](https://github.com/nf-core/sarek/pull/1661) - nf-test pipeline level tests
 
 ### Removed
 

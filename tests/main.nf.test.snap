@@ -1,0 +1,176 @@
+{
+    "Run with profile test": {
+        "content": [
+            23,
+            {
+                "BCFTOOLS_STATS": {
+                    "bcftools": 1.2
+                },
+                "BWAMEM1_MEM": {
+                    "bwa": "0.7.18-r1243-dirty",
+                    "samtools": 1.2
+                },
+                "FASTQC": {
+                    "fastqc": "0.12.1"
+                },
+                "GATK4_APPLYBQSR": {
+                    "gatk4": "4.5.0.0"
+                },
+                "GATK4_BASERECALIBRATOR": {
+                    "gatk4": "4.5.0.0"
+                },
+                "GATK4_MARKDUPLICATES": {
+                    "gatk4": "4.5.0.0",
+                    "samtools": "1.19.2"
+                },
+                "INDEX_CRAM": {
+                    "samtools": 1.2
+                },
+                "MOSDEPTH": {
+                    "mosdepth": "0.3.8"
+                },
+                "SAMTOOLS_STATS": {
+                    "samtools": 1.2
+                },
+                "STRELKA_SINGLE": {
+                    "strelka": "2.9.10"
+                },
+                "VCFTOOLS_TSTV_COUNT": {
+                    "vcftools": "0.1.16"
+                },
+                "Workflow": {
+                    "nf-core/sarek": "v3.5.0dev"
+                }
+            },
+            [
+                "csv",
+                "markduplicates.csv",
+                "markduplicates_no_table.csv",
+                "recalibrated.csv",
+                "variantcalled.csv",
+                "multiqc",
+                "multiqc_data",
+                "gatk_base_recalibrator.txt",
+                "mosdepth_cov_dist.txt",
+                "mosdepth_cumcov_dist.txt",
+                "mosdepth_perchrom.txt",
+                "multiqc.log",
+                "multiqc_bcftools_stats.txt",
+                "multiqc_citations.txt",
+                "multiqc_data.json",
+                "multiqc_fastqc.txt",
+                "multiqc_general_stats.txt",
+                "multiqc_picard_dups.txt",
+                "multiqc_samtools_stats.txt",
+                "multiqc_software_versions.txt",
+                "multiqc_sources.txt",
+                "picard_histogram.txt",
+                "picard_histogram_1.txt",
+                "picard_histogram_2.txt",
+                "vcftools_tstv_by_count.txt",
+                "vcftools_tstv_by_qual.txt",
+                "multiqc_plots",
+                "multiqc_report.html",
+                "pipeline_info",
+                "nf_core_sarek_software_mqc_versions.yml",
+                "preprocessing",
+                "markduplicates",
+                "test",
+                "test.md.cram",
+                "test.md.cram.crai",
+                "recal_table",
+                "test",
+                "test.recal.table",
+                "recalibrated",
+                "test",
+                "test.recal.cram",
+                "test.recal.cram.crai",
+                "reference",
+                "reports",
+                "bcftools",
+                "strelka",
+                "test",
+                "test.strelka.variants.bcftools_stats.txt",
+                "fastqc",
+                "test-test_L1",
+                "test-test_L1_1_fastqc.html",
+                "test-test_L1_1_fastqc.zip",
+                "test-test_L1_2_fastqc.html",
+                "test-test_L1_2_fastqc.zip",
+                "test-test_L2",
+                "test-test_L2_1_fastqc.html",
+                "test-test_L2_1_fastqc.zip",
+                "test-test_L2_2_fastqc.html",
+                "test-test_L2_2_fastqc.zip",
+                "markduplicates",
+                "test",
+                "test.md.cram.metrics",
+                "mosdepth",
+                "test",
+                "test.md.mosdepth.global.dist.txt",
+                "test.md.mosdepth.region.dist.txt",
+                "test.md.mosdepth.summary.txt",
+                "test.md.regions.bed.gz",
+                "test.md.regions.bed.gz.csi",
+                "test.recal.mosdepth.global.dist.txt",
+                "test.recal.mosdepth.region.dist.txt",
+                "test.recal.mosdepth.summary.txt",
+                "test.recal.regions.bed.gz",
+                "test.recal.regions.bed.gz.csi",
+                "samtools",
+                "test",
+                "test.md.cram.stats",
+                "test.recal.cram.stats",
+                "vcftools",
+                "strelka",
+                "test",
+                "test.strelka.variants.FILTER.summary",
+                "test.strelka.variants.TsTv.count",
+                "test.strelka.variants.TsTv.qual",
+                "variant_calling",
+                "strelka",
+                "test",
+                "test.strelka.genome.vcf.gz",
+                "test.strelka.genome.vcf.gz.tbi",
+                "test.strelka.variants.vcf.gz",
+                "test.strelka.variants.vcf.gz.tbi"
+            ],
+            [
+                "mosdepth_cov_dist.txt:md5,eadafaa5473dd49daadb7b4696c6b7f9",
+                "mosdepth_cumcov_dist.txt:md5,8d0d7cb485a7bffb07da17b28f827120",
+                "mosdepth_perchrom.txt:md5,264db67a99d2c90ea7b075e33c201b77",
+                "multiqc_bcftools_stats.txt:md5,103ba59d44fc60e9308e64bbd0d0e504",
+                "multiqc_citations.txt:md5,4660dd5d8757841ed75dca3a90d21617",
+                "multiqc_fastqc.txt:md5,bde0d0bffa62228b33fb68b7e25b6ff8",
+                "multiqc_samtools_stats.txt:md5,0f1e4c6c497d9a952765f9f3068ea4b9",
+                "multiqc_software_versions.txt:md5,2c9d16da278a231b0dc4c4cb5c08e626",
+                "picard_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "picard_histogram_1.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "picard_histogram_2.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "vcftools_tstv_by_count.txt:md5,327f731f65de167c7cfcbb30a5f04079",
+                "vcftools_tstv_by_qual.txt:md5,911bc05c5169149dbb0b068f65b4274a",
+                "test.strelka.variants.bcftools_stats.txt:md5,86bd4938eed920d36f3f5937102a2967",
+                "test.md.mosdepth.global.dist.txt:md5,b61e1acee11a6ddf7ce3232a5948a6a0",
+                "test.md.mosdepth.region.dist.txt:md5,1a382f98d488d2ae3df83a0d87caafc1",
+                "test.md.mosdepth.summary.txt:md5,839108358878ada89e1eaddf6e0541ba",
+                "test.md.regions.bed.gz:md5,6fdaec99e739dc0f47fe55dd64dfe93e",
+                "test.md.regions.bed.gz.csi:md5,5f9c60279af78e3aeafc96a8c11fb35f",
+                "test.recal.mosdepth.global.dist.txt:md5,b61e1acee11a6ddf7ce3232a5948a6a0",
+                "test.recal.mosdepth.region.dist.txt:md5,1a382f98d488d2ae3df83a0d87caafc1",
+                "test.recal.mosdepth.summary.txt:md5,839108358878ada89e1eaddf6e0541ba",
+                "test.recal.regions.bed.gz:md5,6fdaec99e739dc0f47fe55dd64dfe93e",
+                "test.recal.regions.bed.gz.csi:md5,5f9c60279af78e3aeafc96a8c11fb35f",
+                "test.md.cram.stats:md5,c4dc6487d0b8b8a74c26ea1ef4e17f6f",
+                "test.recal.cram.stats:md5,38bcc10d0464b259551db3b5356610ca",
+                "test.strelka.variants.FILTER.summary:md5,ad417bc96d31223f61170987975d8128",
+                "test.strelka.variants.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a",
+                "test.strelka.variants.TsTv.qual:md5,bc68ae4e688e9fb772b457069e604883"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-10-01T10:33:51.201431"
+    }
+}
