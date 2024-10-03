@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - [1657](https://github.com/nf-core/sarek/pull/1657) - Update all actions used in the GHA CI
+- [1673](https://github.com/nf-core/sarek/pull/1673) - Print warning message instead of silent error with Nextflow versions prior to 24.08.0edge
 
 ### Removed
 
