@@ -1,5 +1,5 @@
 - name: Run variant calling on germline sample with deepvariant
-  command: nextflow run main.nf -profile test,tools_germline --tools deepvariant --outdir results
+  command: nextflow run main.nf -profile test,tools_germline_deepvariant --tools deepvariant --outdir results
   tags:
     - deepvariant
     - germline
@@ -31,7 +31,7 @@
     - path: results/reports/mosdepth/sample1/sample1.recal.regions.bed.gz.csi
     - path: results/reports/samtools/sample1/sample1.recal.cram.stats
 - name: Run variant calling on germline sample with deepvariant without intervals
-  command: nextflow run main.nf -profile test,tools_germline --tools deepvariant --no_intervals --outdir results
+  command: nextflow run main.nf -profile test,tools_germline_deepvariant --tools deepvariant --no_intervals --outdir results
   tags:
     - deepvariant
     - germline
