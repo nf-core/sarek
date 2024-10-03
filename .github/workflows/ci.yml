@@ -274,10 +274,6 @@ jobs:
           - tags: "tabix/tabix"
           - tags: "tiddit/sv"
           - tags: "untar"
-          - tags: "pipeline_sarek"
-        include:
-          - tags: "pipeline_sarek"
-            profile: "test,docker"
 
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
