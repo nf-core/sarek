@@ -4,6 +4,8 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
+import java.util.zip.GZIPInputStream
+
 include { paramsSummaryMap                                  } from 'plugin/nf-validation'
 include { paramsSummaryMultiqc                              } from '../../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML                            } from '../../subworkflows/nf-core/utils_nfcore_pipeline'
@@ -937,45 +939,63 @@ workflow SAREK {
     FUNCTIONS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
+
 // Add readgroup to meta and remove lane
 def addReadgroupToMeta(meta, files) {
     def CN = params.seq_center ? "CN:${params.seq_center}\\t" : ''
 
     // Here we're assuming that fastq_1 and fastq_2 are from the same flowcell:
-    def flowcell = flowcellLaneFromFastq(files[0])
+    // If we cannot read the flowcell ID from the fastq file, then we don't use it
+    def sample_lane_id = flowcellLaneFromFastq(files[0]) ? "${flowcell}.${meta.sample}.${meta.lane}" : "${meta.sample}.${meta.lane}"
     // TO-DO: Would it perhaps be better to also call flowcellLaneFromFastq(files[1]) and check that we get the same flowcell-id?
 
     // Don't use a random element for ID, it breaks resuming
-    def read_group = "\"@RG\\tID:${flowcell}.${meta.sample}.${meta.lane}\\t${CN}PU:${meta.lane}\\tSM:${meta.patient}_${meta.sample}\\tLB:${meta.sample}\\tDS:${params.fasta}\\tPL:${params.seq_platform}\""
+    def read_group = "\"@RG\\tID:${sample_lane_id}\\t${CN}PU:${meta.lane}\\tSM:${meta.patient}_${meta.sample}\\tLB:${meta.sample}\\tDS:${params.fasta}\\tPL:${params.seq_platform}\""
     meta  = meta - meta.subMap('lane') + [read_group: read_group.toString()]
     return [ meta, files ]
 }
+
 // Parse first line of a FASTQ file, return the flowcell id and lane number.
 def flowcellLaneFromFastq(path) {
-    // expected format:
-    // xx:yy:FLOWCELLID:LANE:... (seven fields)
-    // or
-    // FLOWCELLID:LANE:xx:... (five fields)
-    def line
-    path.withInputStream {
-        InputStream gzipStream = new java.util.zip.GZIPInputStream(it)
-        Reader decoder = new InputStreamReader(gzipStream, 'ASCII')
-        BufferedReader buffered = new BufferedReader(decoder)
-        line = buffered.readLine()
-    }
-    assert line.startsWith('@')
-    line = line.substring(1)
-    def fields = line.split(':')
-    String fcid
+    // First line of FASTQ file contains sequence identifier plus optional description
+    def firstLine = readFirstLineOfFastq(path)
+    def flowcell_id = null
 
+    // Expected format from ILLUMINA
+    // cf https://en.wikipedia.org/wiki/FASTQ_format#Illumina_sequence_identifiers
+    // Five fields:
+    // <flowcell ID>:<lane>:<tile>:<x-pos>:<y-pos>
+    // Seven fields or more (from CASAVA 1.8+):
+    // "@<instrument>:<run number>:<flowcell ID>:<lane>:<tile>:<x-pos>:<y-pos>..."
+
+    fields = firstLine ? firstLine.split(':') : []
     if (fields.size() >= 7) {
-        // CASAVA 1.8+ format, from  https://support.illumina.com/help/BaseSpace_OLH_009008/Content/Source/Informatics/BS/FileFormat_FASTQ-files_swBS.htm
-        // "@<instrument>:<run number>:<flowcell ID>:<lane>:<tile>:<x-pos>:<y-pos>:<UMI> <read>:<is filtered>:<control number>:<index>"
-        fcid = fields[2]
+        flowcell_id = fields[2]
     } else if (fields.size() == 5) {
-        fcid = fields[0]
+        flowcell_id = fields[0]
+    } else {
+        log.warn "Cannot extract flowcell id from file: ${path}"
+        log.warn "First line of FASTQ is: ${firstLine}"
     }
-    return fcid
+    return flowcell_id
+}
+
+// Get first line of a FASTQ file
+def readFirstLineOfFastq(path) {
+    def line = null
+    try {
+        path.withInputStream {
+            InputStream gzipStream = new java.util.zip.GZIPInputStream(it)
+            Reader decoder = new InputStreamReader(gzipStream, 'ASCII')
+            BufferedReader buffered = new BufferedReader(decoder)
+            line = buffered.readLine()
+            assert line.startsWith('@')
+        }
+    } catch (Exception e) {
+        log.warn "Error streaming gzipped FASTQ file: ${e.message}"
+        log.warn "File path: ${path}"
+    }
+    return line
 }
 
 /*
