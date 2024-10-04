@@ -1,0 +1,121 @@
+{
+    "sentieon gvcftyper dbsnp": {
+        "content": [
+            [
+                "versions.yml:md5,bc9039ece9061340830a80ac2b171f3b"
+            ],
+            "test.genotyped.vcf.gz.tbi",
+            "21606383c760bf676d4c1f747b97d118"
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-07-31T14:12:47.508154"
+    },
+    "sentieon gvcftyper dbsnp intervals": {
+        "content": [
+            [
+                "versions.yml:md5,bc9039ece9061340830a80ac2b171f3b"
+            ],
+            "test.genotyped.vcf.gz.tbi",
+            "21606383c760bf676d4c1f747b97d118"
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-07-31T14:13:05.636172"
+    },
+    "sentieon gvcftyper vcf.gz": {
+        "content": [
+            [
+                "versions.yml:md5,bc9039ece9061340830a80ac2b171f3b"
+            ],
+            "test.genotyped.vcf.gz.tbi",
+            "d13216836f1452e200b215b796606671"
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-07-31T14:12:38.720056"
+    },
+    "sentieon gvcftyper intervals": {
+        "content": [
+            [
+                "versions.yml:md5,bc9039ece9061340830a80ac2b171f3b"
+            ],
+            "test.genotyped.vcf.gz.tbi",
+            "d13216836f1452e200b215b796606671"
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-07-31T14:12:56.700687"
+    },
+    "sentieon gvcftyper - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.genotyped.vcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.genotyped.vcf.gz.tbi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    "versions.yml:md5,bc9039ece9061340830a80ac2b171f3b"
+                ],
+                "vcf_gz": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.genotyped.vcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "vcf_gz_tbi": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.genotyped.vcf.gz.tbi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,bc9039ece9061340830a80ac2b171f3b"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-07-31T14:03:46.379477"
+    },
+    "sentieon gvcftyper vcf": {
+        "content": [
+            [
+                "versions.yml:md5,bc9039ece9061340830a80ac2b171f3b"
+            ],
+            "test.genotyped.vcf.gz.tbi",
+            "d13216836f1452e200b215b796606671"
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-07-31T14:12:29.24482"
+    }
+}

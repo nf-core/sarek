@@ -13,7 +13,7 @@
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,0a11399a3318a7c75460c4eb71d58766"
+                    "versions.yml:md5,81750d0b4c0e563bd392720d09ae024f"
                 ],
                 "p_value_txt": [
                     [
@@ -26,26 +26,26 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,0a11399a3318a7c75460c4eb71d58766"
+                    "versions.yml:md5,81750d0b4c0e563bd392720d09ae024f"
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "24.02.0"
+            "nextflow": "23.10.0"
         },
-        "timestamp": "2024-04-05T16:15:36.357267"
+        "timestamp": "2024-03-26T16:24:34.84551"
     },
     "version": {
         "content": [
             [
-                "versions.yml:md5,0a11399a3318a7c75460c4eb71d58766"
+                "versions.yml:md5,81750d0b4c0e563bd392720d09ae024f"
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "24.02.0"
+            "nextflow": "23.10.0"
         },
-        "timestamp": "2024-04-05T16:14:54.943475"
+        "timestamp": "2024-03-26T17:23:22.833417"
     }
 }

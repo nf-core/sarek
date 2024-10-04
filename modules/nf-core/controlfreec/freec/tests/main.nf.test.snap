@@ -178,21 +178,9 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.0"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-03-26T13:42:56.629043"
-    },
-    "version": {
-        "content": [
-            [
-                "versions.yml:md5,e704fc0e6d1ac333dc419498fa128769"
-            ]
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.0"
-        },
-        "timestamp": "2024-03-27T10:01:40.977048"
+        "timestamp": "2024-07-09T10:41:07.003311"
     },
     "human - mpileup": {
         "content": [
@@ -201,12 +189,15 @@
             "Chromosome\tPosition\tBAF\tFittedA\tFittedB\tA\tB\tuncertainty",
             "Chromosome\tStart\tRatio\tMedianRatio\tCopyNumber\tBAF\testimatedBAF\tGenotype\tUncertaintyOfGT",
             "[general]",
-            "Program_Version\tv11.6"
+            "Program_Version\tv11.6",
+            [
+                "versions.yml:md5,e704fc0e6d1ac333dc419498fa128769"
+            ]
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.0"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-03-27T10:14:50.936823"
+        "timestamp": "2024-07-09T10:40:42.538035"
     }
 }

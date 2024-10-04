@@ -80,14 +80,14 @@
     "bam_versions": {
         "content": [
             [
-                "versions.yml:md5,84dab54b9812780df48f5cecef690c34"
+                "versions.yml:md5,d51d18a97513e370e43f0c891c51dfc4"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-05-28T15:46:35.851936597"
+        "timestamp": "2024-09-16T09:16:30.476887194"
     },
     "bams_csi": {
         "content": [
@@ -124,14 +124,14 @@
     "bams_stub_versions": {
         "content": [
             [
-                "versions.yml:md5,84dab54b9812780df48f5cecef690c34"
+                "versions.yml:md5,d51d18a97513e370e43f0c891c51dfc4"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-05-28T15:46:41.405707643"
+        "timestamp": "2024-09-16T09:16:52.203823961"
     },
     "bam_cram": {
         "content": [
@@ -158,14 +158,14 @@
     "bams_versions": {
         "content": [
             [
-                "versions.yml:md5,84dab54b9812780df48f5cecef690c34"
+                "versions.yml:md5,d51d18a97513e370e43f0c891c51dfc4"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-05-28T15:45:51.695689923"
+        "timestamp": "2024-09-16T08:29:57.524363148"
     },
     "crams_bam": {
         "content": [
@@ -182,14 +182,14 @@
     "crams_versions": {
         "content": [
             [
-                "versions.yml:md5,84dab54b9812780df48f5cecef690c34"
+                "versions.yml:md5,d51d18a97513e370e43f0c891c51dfc4"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-05-28T15:46:30.185392319"
+        "timestamp": "2024-09-16T09:16:06.977096207"
     },
     "bam_csi": {
         "content": [

@@ -1,82 +1,58 @@
 {
-    "gatk_hc_vcf_cram_dragstr_input_with_sites": {
+    "homo_sapiens - [cram, crai] - fasta - fai - dict": {
         "content": [
-            "test_cram_sites_dragstr.vcf.gz"
+            "test_cram.vcf.gz",
+            "test_cram.vcf.gz.tbi",
+            [
+                "versions.yml:md5,05431a0ab28c85412c8b3582e863a7ab"
+            ]
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-02-20T13:24:45.142682"
+        "timestamp": "2024-08-14T09:36:54.158605"
     },
-    "gatk_hc_vcf_bam_input": {
+    "homo_sapiens - [cram, crai] - fasta - fai - dict - sites - sites_tbi": {
         "content": [
-            "test_bam.vcf.gz"
+            "test_cram_sites.vcf.gz",
+            "test_cram_sites.vcf.gz.tbi",
+            [
+                "versions.yml:md5,05431a0ab28c85412c8b3582e863a7ab"
+            ]
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-02-20T13:23:19.203837"
+        "timestamp": "2024-08-14T09:37:13.77024"
     },
-    "gatk_hc_vcf_cram_input": {
+    "homo_sapiens - [bam, bai] - fasta - fai - dict": {
         "content": [
-            "test_cram.vcf.gz"
+            "test_bam.vcf.gz",
+            "test_bam.vcf.gz.tbi",
+            [
+                "versions.yml:md5,05431a0ab28c85412c8b3582e863a7ab"
+            ]
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-02-20T13:23:48.434615"
+        "timestamp": "2024-08-14T09:36:34.77631"
     },
-    "gatk_hc_vcf_cram_input_with_sites": {
+    "homo_sapiens - [cram, crai, dragstr_model] - fasta - fai - dict - sites - sites_tbi": {
         "content": [
-            "test_cram_sites.vcf.gz"
+            "test_cram_sites_dragstr.vcf.gz",
+            "test_cram_sites_dragstr.vcf.gz.tbi",
+            [
+                "versions.yml:md5,05431a0ab28c85412c8b3582e863a7ab"
+            ]
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-02-20T13:24:17.147745"
-    },
-    "gatk_hc_vcf_tbi_bam_input": {
-        "content": [
-            "test_bam.vcf.gz.tbi"
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
-        },
-        "timestamp": "2024-02-20T13:23:19.23048"
-    },
-    "gatk_hc_vcf_tbi_cram_input": {
-        "content": [
-            "test_cram.vcf.gz.tbi"
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
-        },
-        "timestamp": "2024-02-20T13:23:48.45958"
-    },
-    "gatk_hc_vcf_tbi_cram_dragstr_input_with_sites": {
-        "content": [
-            "test_cram_sites_dragstr.vcf.gz.tbi"
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
-        },
-        "timestamp": "2024-02-20T13:24:45.154818"
-    },
-    "gatk_hc_vcf_tbi_cram_input_with_sites": {
-        "content": [
-            "test_cram_sites.vcf.gz.tbi"
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
-        },
-        "timestamp": "2024-02-20T13:24:17.158138"
+        "timestamp": "2024-08-14T09:37:32.967085"
     }
 }

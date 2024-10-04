@@ -1,5 +1,6 @@
 name: cnvkit_export
-description: Convert copy number ratio tables (.cnr files) or segments (.cns) to another format.
+description: Convert copy number ratio tables (.cnr files) or segments (.cns) to another
+  format.
 keywords:
   - cnvkit
   - copy number
@@ -11,30 +12,32 @@ tools:
       homepage: https://cnvkit.readthedocs.io/en/stable/index.html
       documentation: https://cnvkit.readthedocs.io/en/stable/index.html
       licence: ["Apache-2.0"]
+      identifier: biotools:cnvkit
 input:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
-  - cns:
-      type: file
-      description: CNVKit CNS file.
-      pattern: "*.cns"
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - cns:
+        type: file
+        description: CNVKit CNS file.
+        pattern: "*.cns"
 output:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
+  - output:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - ${prefix}.${suffix}:
+          type: file
+          description: Output file
   - versions:
-      type: file
-      description: File containing software versions
-      pattern: "versions.yml"
-  - cns:
-      type: file
-      description: File containing copy number segment information
-      pattern: "*.{cns}"
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@adamrtalbot"
   - "@priesgo"
