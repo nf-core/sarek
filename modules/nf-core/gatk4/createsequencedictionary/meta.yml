@@ -15,25 +15,32 @@ tools:
       documentation: https://gatk.broadinstitute.org/hc/en-us/categories/360002369672s
       doi: 10.1158/1538-7445.AM2017-3590
       licence: ["Apache-2.0"]
+      identifier: ""
 input:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing reference information
-        e.g. [ id:'genome' ]
-  - fasta:
-      type: file
-      description: Input fasta file
-      pattern: "*.{fasta,fa}"
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'genome' ]
+    - fasta:
+        type: file
+        description: Input fasta file
+        pattern: "*.{fasta,fa}"
 output:
   - dict:
-      type: file
-      description: gatk dictionary file
-      pattern: "*.{dict}"
+      - meta:
+          type: file
+          description: gatk dictionary file
+          pattern: "*.{dict}"
+      - "*.dict":
+          type: file
+          description: gatk dictionary file
+          pattern: "*.{dict}"
   - versions:
-      type: file
-      description: File containing software versions
-      pattern: "versions.yml"
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@maxulysse"
   - "@ramprasadn"

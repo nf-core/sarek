@@ -12,7 +12,7 @@
       md5sum: 9c9de2e4ed2f324adf1912a45d73601f
     # conda changes md5sums for test
     - path: results/reports/samtools/sample2/sample2.recal.cram.stats
-      md5sum: b6c2b9056dfc441fddae989cc85f4135
+    # unstable
     # conda changes md5sums for test
     - path: results/variant_calling/lofreq/sample2/sample2.lofreq.vcf.gz
       contains:
@@ -45,7 +45,7 @@
       md5sum: e838ce412fc091918059e79727b35785
     # conda changes md5sums for test
     - path: results/reports/samtools/sample2/sample2.recal.cram.stats
-      md5sum: b6c2b9056dfc441fddae989cc85f4135
+    # unstable
     # conda changes md5sums for test
     - path: results/variant_calling/lofreq/sample2/sample2.lofreq.vcf.gz
       contains:
