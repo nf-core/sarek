@@ -26,16 +26,19 @@ concurrency:
 jobs:
   test:
     runs-on: ubuntu-latest
-    name: ${{ matrix.NXF_VER }} | ${{ matrix.filter }} | ${{ matrix.profile }} | ${{ matrix.shard }}
+    name: "${{ matrix.NXF_VER }} | ${{ matrix.filter }} | ${{ matrix.profile }} | ${{ matrix.shard }}"
     strategy:
       fail-fast: false
       matrix:
         NXF_VER:
           - "23.04.0"
           - "latest-everything"
-        filter: ["pipeline", "workflow", "process", "function"]
+        filter: ["workflow", "process", "function"]
         profile: ["docker"]
         shard: [1, 2, 3, 4, 5]
+        include:
+          - filter: "pipeline"
+            shard: [1]
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
