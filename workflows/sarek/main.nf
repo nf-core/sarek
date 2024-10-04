@@ -4,10 +4,10 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { paramsSummaryMap                                  } from 'plugin/nf-validation'
-include { paramsSummaryMultiqc                              } from '../../subworkflows/nf-core/utils_nfcore_pipeline'
-include { softwareVersionsToYAML                            } from '../../subworkflows/nf-core/utils_nfcore_pipeline'
-include { methodsDescriptionText                            } from '../../subworkflows/local/utils_nfcore_sarek_pipeline'
+include { paramsSummaryMap                            } from 'plugin/nf-schema'
+include { paramsSummaryMultiqc                        } from '../../subworkflows/nf-core/utils_nfcore_pipeline'
+include { softwareVersionsToYAML                      } from '../../subworkflows/nf-core/utils_nfcore_pipeline'
+include { methodsDescriptionText                      } from '../../subworkflows/local/utils_nfcore_sarek_pipeline'
 
 // Create samplesheets to restart from different steps
 include { CHANNEL_ALIGN_CREATE_CSV                          } from '../../subworkflows/local/channel_align_create_csv/main'

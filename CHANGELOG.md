@@ -171,6 +171,13 @@ Sájtáristjåhkkå is another peak (just under 2k) in the Pårte massif, it is 
 
 ### Parameters
 
+| Old name                         | New name |
+| -------------------------------- | -------- |
+| validationFailUnrecognisedParams |          |
+| validationLenientMode            |          |
+| validationSchemaIgnoreParams     |          |
+| validationShowHiddenParams       |          |
+
 ## [3.4.1](https://github.com/nf-core/sarek/releases/tag/3.4.1) - Balgattjåhkkå
 
 Balgattjåhkkå is the other top peak (over 2k m) in the Pårte massif, the other one being Pårtetjåkko (Bårddetjåhkkå).
@@ -253,7 +260,7 @@ Balgattjåhkkå is the other top peak (over 2k m) in the Pårte massif, the othe
 | script | Old name | New name |
 | ------ | -------- | -------- |
 
-### Parameter
+### Parameters
 
 | Old name                     | New name                   |
 | ---------------------------- | -------------------------- |
