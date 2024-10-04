@@ -30,8 +30,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # BUG: "latest-everything" https://github.com/nf-core/sarek/issues/1672
-        NXF_VER: ["23.04.0"] # TODO Test minimum version on release
+        NXF_VER:
+          - "23.04.0"
+          - "latest-everything"
         filter: ["pipeline", "workflow", "process", "function"]
         profile: ["docker"]
         shard: [1, 2, 3, 4, 5]
