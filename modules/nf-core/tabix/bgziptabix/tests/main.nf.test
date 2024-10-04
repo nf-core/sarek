@@ -17,7 +17,7 @@ nextflow_process {
                 """
                 input[0] = [
                                 [ id:'tbi_test' ],
-                                [ file(params.test_data['sarscov2']['genome']['test_bed'], checkIfExists: true) ]
+                                [ file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/bed/test.bed', checkIfExists: true) ]
                 ]
                 """
             }
@@ -43,7 +43,7 @@ nextflow_process {
                 """
                 input[0] = [
                                 [ id:'csi_test' ],
-                                [ file(params.test_data['sarscov2']['genome']['test_bed'], checkIfExists: true) ]
+                                [ file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/bed/test.bed', checkIfExists: true) ]
                 ]
                 """
             }
@@ -72,7 +72,7 @@ nextflow_process {
                 """
                 input[0] = [
                                 [ id:'test' ],
-                                [ file(params.test_data['sarscov2']['genome']['test_bed'], checkIfExists: true) ]
+                                [ file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/bed/test.bed', checkIfExists: true) ]
                 ]
                 """
             }

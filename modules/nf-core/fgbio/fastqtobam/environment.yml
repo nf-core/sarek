@@ -1,7 +1,5 @@
-name: fgbio_fastqtobam
 channels:
   - conda-forge
   - bioconda
-  - defaults
 dependencies:
-  - bioconda::fgbio=2.1.0
+  - bioconda::fgbio=2.2.1

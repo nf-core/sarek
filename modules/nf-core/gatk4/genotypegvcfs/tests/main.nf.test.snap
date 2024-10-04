@@ -1,0 +1,191 @@
+{
+    "homo_sapiens - [gendb, [], [], []], fasta, fai, dict, [], []": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "1ab95fbc5ec55b208f3001572bec54fa"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.vcf.gz.tbi"
+                ]
+            ],
+            [
+                "versions.yml:md5,3c16cbf71737813609ad10d901d92ab3"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-04T14:27:24.926097884"
+    },
+    "homo_sapiens - [gvcf, idx, [], []], fasta, fai, dict, [], []": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "1ab95fbc5ec55b208f3001572bec54fa"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.vcf.gz.tbi"
+                ]
+            ],
+            [
+                "versions.yml:md5,3c16cbf71737813609ad10d901d92ab3"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-04T14:26:24.426228557"
+    },
+    "homo_sapiens - [gvcf_gz, tbi, bed, []], fasta, fai, dict, [], []": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "1ab95fbc5ec55b208f3001572bec54fa"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.vcf.gz.tbi"
+                ]
+            ],
+            [
+                "versions.yml:md5,3c16cbf71737813609ad10d901d92ab3"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-04T14:27:04.179308513"
+    },
+    "homo_sapiens - [gvcf_gz, tbi, [], []], fasta, fai, dict, dbsnp, dbsnp_tbi": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "9b7d476515e07e5486633c42abd86cc"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.vcf.gz.tbi"
+                ]
+            ],
+            [
+                "versions.yml:md5,3c16cbf71737813609ad10d901d92ab3"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-04T14:26:43.9088684"
+    },
+    "homo_sapiens - [gvcf, idx, [], []], fasta, fai, dict, [], [] - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.vcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.vcf.gz.tbi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    "versions.yml:md5,3c16cbf71737813609ad10d901d92ab3"
+                ],
+                "tbi": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.vcf.gz.tbi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "vcf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.vcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,3c16cbf71737813609ad10d901d92ab3"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-04T14:19:57.615552867"
+    },
+    "homo_sapiens - [gendb, bed, [], []], fasta, fai, dict, [], []": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "1ab95fbc5ec55b208f3001572bec54fa"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.vcf.gz.tbi"
+                ]
+            ],
+            [
+                "versions.yml:md5,3c16cbf71737813609ad10d901d92ab3"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-04T14:27:46.189794941"
+    }
+}

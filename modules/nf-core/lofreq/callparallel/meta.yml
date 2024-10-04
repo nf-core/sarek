@@ -7,65 +7,76 @@ keywords:
   - variants
 tools:
   - lofreq:
-      description: Lofreq is a fast and sensitive variant-caller for inferring SNVs and indels from next-generation sequencing data. It's call-parallel programme predicts variants using multiple processors
+      description: Lofreq is a fast and sensitive variant-caller for inferring SNVs
+        and indels from next-generation sequencing data. It's call-parallel programme
+        predicts variants using multiple processors
       homepage: https://csb5.github.io/lofreq/
       documentation: https://csb5.github.io/lofreq/
       doi: "10.1093/nar/gks918"
       licence: ["MIT"]
+      identifier: biotools:lofreq
 input:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test' ]
-  - bam:
-      type: file
-      description: Tumor sample sorted BAM file
-      pattern: "*.{bam}"
-  - bai:
-      type: file
-      description: BAM index file
-      pattern: "*.{bam.bai}"
-  - intervals:
-      type: file
-      description: BED file containing target regions for variant calling
-      pattern: "*.{bed}"
-  - meta2:
-      type: map
-      description: |
-        Groovy Map containing sample information about the reference fasta
-        e.g. [ id:'reference' ]
-  - fasta:
-      type: file
-      description: Reference genome FASTA file
-      pattern: "*.{fasta}"
-  - meta3:
-      type: map
-      description: |
-        Groovy Map containing sample information about the reference fasta fai
-        e.g. [ id:'reference' ]
-  - fai:
-      type: file
-      description: Reference genome FASTA index file
-      pattern: "*.{fai}"
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test' ]
+    - bam:
+        type: file
+        description: Tumor sample sorted BAM file
+        pattern: "*.{bam}"
+    - bai:
+        type: file
+        description: BAM index file
+        pattern: "*.{bam.bai}"
+    - intervals:
+        type: file
+        description: BED file containing target regions for variant calling
+        pattern: "*.{bed}"
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing sample information about the reference fasta
+          e.g. [ id:'reference' ]
+    - fasta:
+        type: file
+        description: Reference genome FASTA file
+        pattern: "*.{fasta}"
+  - - meta3:
+        type: map
+        description: |
+          Groovy Map containing sample information about the reference fasta fai
+          e.g. [ id:'reference' ]
+    - fai:
+        type: file
+        description: Reference genome FASTA index file
+        pattern: "*.{fai}"
 output:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
-  - versions:
-      type: file
-      description: File containing software versions
-      pattern: "versions.yml"
   - vcf:
-      type: file
-      description: Predicted variants file
-      pattern: "*.{vcf}"
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.vcf.gz":
+          type: file
+          description: Predicted variants file
+          pattern: "*.{vcf}"
   - tbi:
-      type: file
-      description: Index of vcf file
-      pattern: "*.{vcf.gz.tbi}"
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.vcf.gz.tbi":
+          type: file
+          description: Index of vcf file
+          pattern: "*.{vcf.gz.tbi}"
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@kaurravneet4123"
   - "@bjohnnyd"

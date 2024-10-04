@@ -2,12 +2,10 @@ process FGBIO_FASTQTOBAM {
     tag "$meta.id"
     label 'process_low'
 
-    // WARN: Version information not provided by tool on CLI. Please update version string below when bumping container versions.
-    // --version argument gives the wrong version
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/fgbio:2.1.0--hdfd78af_0' :
-        'biocontainers/fgbio:2.1.0--hdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/fgbio:2.2.1--hdfd78af_0' :
+        'biocontainers/fgbio:2.2.1--hdfd78af_0' }"
 
     input:
     tuple val(meta), path(reads)
@@ -27,11 +25,22 @@ process FGBIO_FASTQTOBAM {
     def sample_name = args.contains("--sample") ? "" : "--sample ${prefix}"
     def library_name = args.contains("--library") ? "" : "--library ${prefix}"
 
-    def VERSION = '2.1.0' // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
-    """
+    def mem_gb = 8
+    if (!task.memory) {
+        log.info '[fgbio FastqToBam] Available memory not known - defaulting to 8GB. Specify process memory requirements to change this.'
+    } else if (mem_gb > task.memory.giga) {
+        if (task.memory.giga < 2) {
+            mem_gb = 1
+        } else {
+            mem_gb = task.memory.giga - 1
+        }
+    }
 
+    """
     fgbio \\
+        -Xmx${mem_gb}g \\
         --tmp-dir=. \\
+        --async-io=true \\
         FastqToBam \\
         ${args} \\
         --input ${reads} \\
@@ -41,7 +50,7 @@ process FGBIO_FASTQTOBAM {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        fgbio: $VERSION
+        fgbio: \$( echo \$(fgbio --version 2>&1 | tr -d '[:cntrl:]' ) | sed -e 's/^.*Version: //;s/\\[.*\$//')
     END_VERSIONS
     """
 
@@ -50,14 +59,12 @@ process FGBIO_FASTQTOBAM {
     def prefix = task.ext.prefix ?: "${meta.id}"
     def suffix = task.ext.suffix ?: "bam"
 
-    def VERSION = '2.1.0' // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
-
     """
     touch ${prefix}.${suffix}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        fgbio: $VERSION
+        fgbio: \$( echo \$(fgbio --version 2>&1 | tr -d '[:cntrl:]' ) | sed -e 's/^.*Version: //;s/\\[.*\$//')
     END_VERSIONS
     """
 }

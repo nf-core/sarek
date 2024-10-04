@@ -1,0 +1,38 @@
+
+nextflow_process {
+
+    name "Test Process GATK4_LEARNREADORIENTATIONMODEL"
+    script "../main.nf"
+    process "GATK4_LEARNREADORIENTATIONMODEL"
+    config "./nextflow.config"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "gatk4"
+    tag "gatk4/learnreadorientationmodel"
+
+    test("test-gatk4-learnreadorientationmodel") {
+        
+        when {
+            process {
+                """
+                input[0] = [ [ id:'test' ], // meta map
+				[file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/gatk/paired_mutect2_calls/test_test2_paired_mutect2_calls.f1r2.tar.gz', checkIfExists: true)] ]
+
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+					path(process.out.artifactprior[0][1]).linesGzip[3..7],
+					process.out.versions
+					).match()
+				}
+            )
+        }
+    }
+    
+}
