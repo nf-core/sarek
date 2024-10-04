@@ -2,8 +2,6 @@ nextflow_pipeline {
 
     name "Test pipeline"
     script "../main.nf"
-    tag "pipeline"
-    tag "pipeline_sarek"
 
     test("Run with profile test") {
 
