@@ -20,6 +20,11 @@ include { CHANNEL_VARIANT_CALLING_CREATE_CSV                   } from '../../sub
 include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_INPUT          } from '../../subworkflows/local/bam_convert_samtools/main'
 include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_UMI            } from '../../subworkflows/local/bam_convert_samtools/main'
 
+// Convert fastq.gz.spring files to fastq.gz files
+include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_TO_R1_FQ      } from '../../modules/nf-core/spring/decompress/main'
+include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_TO_R2_FQ      } from '../../modules/nf-core/spring/decompress/main'
+include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_TO_FQ_PAIR    } from '../../modules/nf-core/spring/decompress/main'
+
 // Run FASTQC
 include { FASTQC                                               } from '../../modules/nf-core/fastqc/main'
 
@@ -147,11 +152,35 @@ workflow SAREK {
 
     if (params.step == 'mapping') {
 
-        // Figure out if input is bam or fastq
+        // Figure out if input is bam, fastq, or spring
         input_sample_type = input_sample.branch{
-            bam:   it[0].data_type == "bam"
-            fastq: it[0].data_type == "fastq"
+            bam:                 it[0].data_type == "bam"
+            fastq_gz:            it[0].data_type == "fastq_gz"
+            one_fastq_gz_spring: it[0].data_type == "one_fastq_gz_spring"
+            two_fastq_gz_spring: it[0].data_type == "two_fastq_gz_spring"
         }
+
+        // Two fastq.gz-files
+        fastq_gz = input_sample_type.fastq_gz.map { meta, files -> addReadgroupToMeta(meta, files) }
+
+        // Just one fastq.gz.spring-file with both R1 and R2
+        fastq_gz_pair_from_spring = SPRING_DECOMPRESS_TO_FQ_PAIR(input_sample_type.one_fastq_gz_spring, false)
+
+        one_fastq_gz_from_spring = fastq_gz_pair_from_spring.fastq.map { meta, files -> addReadgroupToMeta(meta, files) }
+
+        // Two fastq.gz.spring-files - one for R1 and one for R2
+        r1_fastq_gz_from_spring = SPRING_DECOMPRESS_TO_R1_FQ(input_sample_type.two_fastq_gz_spring.map{ meta, files ->
+            [meta, files[0] ]},
+            true // write_one_fastq_gz
+        )
+        r2_fastq_gz_from_spring = SPRING_DECOMPRESS_TO_R2_FQ(input_sample_type.two_fastq_gz_spring.map{ meta, files ->
+            [meta, files[1] ]},
+            true // write_one_fastq_gz
+        )
+
+        two_fastq_gz_from_spring = r1_fastq_gz_from_spring.fastq.join(r2_fastq_gz_from_spring.fastq).map{ meta, fastq_1, fastq_2 -> [meta, [fastq_1, fastq_2]]}
+
+        two_fastq_gz_from_spring = two_fastq_gz_from_spring.map { meta, files -> addReadgroupToMeta(meta, files) }
 
         // Convert any bam input to fastq
         // fasta are not needed when converting bam to fastq -> [ id:"fasta" ], []
@@ -167,7 +196,7 @@ workflow SAREK {
         // Theorically this could work on mixed input (fastq for one sample and bam for another)
         // But not sure how to handle that with the samplesheet
         // Or if we really want users to be able to do that
-        input_fastq = input_sample_type.fastq.mix(CONVERT_FASTQ_INPUT.out.reads)
+        input_fastq = fastq_gz.mix(CONVERT_FASTQ_INPUT.out.reads).mix(one_fastq_gz_from_spring).mix(two_fastq_gz_from_spring)
 
         // STEP 0: QC & TRIM
         // `--skip_tools fastqc` to skip fastqc
@@ -220,6 +249,7 @@ workflow SAREK {
             FASTP(
                 reads_for_fastp,
                 [], // we are not using any adapter fastas at the moment
+                false, // we don't use discard_trimmed_pass at the moment
                 save_trimmed_fail,
                 save_merged
             )
@@ -252,6 +282,12 @@ workflow SAREK {
                 meta + [ n_fastq: reads.size() ] // We can drop the FASTQ files now that we know how many there are
             }
             .set { reads_grouping_key }
+
+        reads_for_alignment = reads_for_alignment.map{ meta, reads ->
+            // Update meta.id to meta.sample no multiple lanes or splitted fastqs
+            if (meta.size * meta.num_lanes == 1) [ meta + [ id:meta.sample ], reads ]
+            else [ meta, reads ]
+        }
 
         // reads will be sorted
         sort_bam = true
@@ -839,7 +875,7 @@ workflow SAREK {
                 vcf_to_annotate.map{meta, vcf -> [ meta + [ file_name: vcf.baseName ], vcf ] },
                 vep_fasta,
                 params.tools,
-                params.snpeff_genome ? "${params.snpeff_genome}.${params.snpeff_db}" : "${params.genome}.${params.snpeff_db}",
+                params.snpeff_db,
                 snpeff_cache,
                 vep_genome,
                 vep_species,
@@ -886,7 +922,9 @@ workflow SAREK {
             ch_multiqc_files.collect(),
             ch_multiqc_config.toList(),
             ch_multiqc_custom_config.toList(),
-            ch_multiqc_logo.toList()
+            ch_multiqc_logo.toList(),
+            [],
+            []
         )
         multiqc_report = MULTIQC.out.report.toList()
 
@@ -895,6 +933,71 @@ workflow SAREK {
     emit:
     multiqc_report // channel: /path/to/multiqc_report.html
     versions       // channel: [ path(versions.yml) ]
+}
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    FUNCTIONS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+
+// Add readgroup to meta and remove lane
+def addReadgroupToMeta(meta, files) {
+    def CN = params.seq_center ? "CN:${params.seq_center}\\t" : ''
+
+    // Here we're assuming that fastq_1 and fastq_2 are from the same flowcell:
+    // If we cannot read the flowcell ID from the fastq file, then we don't use it
+    def sample_lane_id = flowcellLaneFromFastq(files[0]) ? "${flowcell}.${meta.sample}.${meta.lane}" : "${meta.sample}.${meta.lane}"
+    // TO-DO: Would it perhaps be better to also call flowcellLaneFromFastq(files[1]) and check that we get the same flowcell-id?
+
+    // Don't use a random element for ID, it breaks resuming
+    def read_group = "\"@RG\\tID:${sample_lane_id}\\t${CN}PU:${meta.lane}\\tSM:${meta.patient}_${meta.sample}\\tLB:${meta.sample}\\tDS:${params.fasta}\\tPL:${params.seq_platform}\""
+    meta  = meta - meta.subMap('lane') + [read_group: read_group.toString()]
+    return [ meta, files ]
+}
+
+// Parse first line of a FASTQ file, return the flowcell id and lane number.
+def flowcellLaneFromFastq(path) {
+    // First line of FASTQ file contains sequence identifier plus optional description
+    def firstLine = readFirstLineOfFastq(path)
+    def flowcell_id = null
+
+    // Expected format from ILLUMINA
+    // cf https://en.wikipedia.org/wiki/FASTQ_format#Illumina_sequence_identifiers
+    // Five fields:
+    // @<instrument>:<lane>:<tile>:<x-pos>:<y-pos>...
+    // Seven fields or more (from CASAVA 1.8+):
+    // "@<instrument>:<run number>:<flowcell ID>:<lane>:<tile>:<x-pos>:<y-pos>..."
+
+    fields = firstLine ? firstLine.split(':') : []
+    if (fields.size() == 5) {
+        // Get the instrument name as flowcell ID
+        flowcell_id = fields[0].substring(1)
+    } else if (fields.size() >= 7) {
+        // Get the actual flowcell ID
+        flowcell_id = fields[2]
+    } else if (fields.size() != 0) {
+        log.warn "FASTQ file(${path}): Cannot extract flowcell ID from ${firstLine}"
+    }
+    return flowcell_id
+}
+
+// Get first line of a FASTQ file
+def readFirstLineOfFastq(path) {
+    def line = null
+    try {
+        path.withInputStream {
+            InputStream gzipStream = new java.util.zip.GZIPInputStream(it)
+            Reader decoder = new InputStreamReader(gzipStream, 'ASCII')
+            BufferedReader buffered = new BufferedReader(decoder)
+            line = buffered.readLine()
+            assert line.startsWith('@')
+        }
+    } catch (Exception e) {
+        log.warn "FASTQ file(${path}): Error streaming"
+        log.warn "${e.message}"
+    }
+    return line
 }
 
 /*

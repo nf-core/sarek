@@ -17,68 +17,80 @@ tools:
         Our software improves upon BWA, STAR, Minimap2, GATK, HaplotypeCaller, Mutect, and Mutect2 based pipelines and is deployable on any generic-CPU-based computing system.
       homepage: https://www.sentieon.com/
       documentation: https://www.sentieon.com/
+      identifier: ""
 input:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test']
-  - vcf:
-      type: file
-      description: VCF file to be recalibrated, this should be the same file as used for the first stage VariantRecalibrator.
-      pattern: "*.vcf"
-  - vcf_tbi:
-      type: file
-      description: tabix index for the input vcf file.
-      pattern: "*.vcf.tbi"
-  - recal:
-      type: file
-      description: Recalibration file produced when the input vcf was run through VariantRecalibrator in stage 1.
-      pattern: "*.recal"
-  - recal_index:
-      type: file
-      description: Index file for the recalibration file.
-      pattern: ".recal.idx"
-  - tranches:
-      type: file
-      description: Tranches file produced when the input vcf was run through VariantRecalibrator in stage 1.
-      pattern: ".tranches"
-  - meta2:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test']
-  - fasta:
-      type: file
-      description: The reference fasta file
-      pattern: "*.fasta"
-  - meta3:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test']
-  - fai:
-      type: file
-      description: Index of reference fasta file
-      pattern: "*.fasta.fai"
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test']
+    - vcf:
+        type: file
+        description: VCF file to be recalibrated, this should be the same file as used
+          for the first stage VariantRecalibrator.
+        pattern: "*.vcf"
+    - vcf_tbi:
+        type: file
+        description: tabix index for the input vcf file.
+        pattern: "*.vcf.tbi"
+    - recal:
+        type: file
+        description: Recalibration file produced when the input vcf was run through
+          VariantRecalibrator in stage 1.
+        pattern: "*.recal"
+    - recal_index:
+        type: file
+        description: Index file for the recalibration file.
+        pattern: ".recal.idx"
+    - tranches:
+        type: file
+        description: Tranches file produced when the input vcf was run through VariantRecalibrator
+          in stage 1.
+        pattern: ".tranches"
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test']
+    - fasta:
+        type: file
+        description: The reference fasta file
+        pattern: "*.fasta"
+  - - meta3:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test']
+    - fai:
+        type: file
+        description: Index of reference fasta file
+        pattern: "*.fasta.fai"
 output:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test']
   - vcf:
-      type: file
-      description: compressed vcf file containing the recalibrated variants.
-      pattern: "*.vcf.gz"
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test']
+      - "*.vcf.gz":
+          type: file
+          description: compressed vcf file containing the recalibrated variants.
+          pattern: "*.vcf.gz"
   - tbi:
-      type: file
-      description: Index of recalibrated vcf file.
-      pattern: "*vcf.gz.tbi"
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test']
+      - "*.tbi":
+          type: file
+          description: Index of recalibrated vcf file.
+          pattern: "*vcf.gz.tbi"
   - versions:
-      type: file
-      description: File containing software versions.
-      pattern: "versions.yml"
+      - versions.yml:
+          type: file
+          description: File containing software versions.
+          pattern: "versions.yml"
 authors:
   - "@assp8200"
 maintainers:

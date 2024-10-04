@@ -19,11 +19,8 @@
           "window = 10",
         ]
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.bed
-      md5sum: 833920178e4f40a296d8eab029caf086
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.circos.txt
-      md5sum: 92ce5ce97b27a7214dfa9c2cb20cf854
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.normal.mpileup.gz_control.cpn
-      md5sum: 508a003da85b186d9a60d867ef7cdf15
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.p.value.txt
     # binary changes md5sums on reruns
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz_BAF.txt
@@ -31,13 +28,10 @@
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz_CNVs
     # binary changes md5sums on reruns
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz_info.txt
-      md5sum: 271271719c576d9218bdc859850e54ee
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz_ratio.BedGraph
-      md5sum: 5d3321af93678f16878d59e01d3a87d3
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz_ratio.txt
     # binary changes md5sums on reruns
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz_sample.cpn
-      md5sum: befe1706c61464635a76c7323a6bd2a2
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_BAF.png
     # binary changes md5sums on reruns
     - path: results/variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_ratio.log2.png

@@ -18,8 +18,6 @@ include { SENTIEON_DNAMODELAPPLY                                                
 include { VCF_VARIANT_FILTERING_GATK                                                   } from '../vcf_variant_filtering_gatk/main'
 include { VCF_VARIANT_FILTERING_GATK as SENTIEON_HAPLOTYPER_VCF_VARIANT_FILTERING_GATK } from '../vcf_variant_filtering_gatk/main'
 
-
-
 workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     take:
     tools                             // Mandatory, list of tools to apply
@@ -130,8 +128,8 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             fasta,
             fasta_fai,
             dict,
-            dbsnp.map{ it -> [[id:it[0].baseName], it] },
-            dbsnp_tbi.map{ it -> [[id:it[0].baseName], it] },
+            dbsnp.map{it -> [[:], it]},
+            dbsnp_tbi.map{it -> [[:], it]},
             intervals)
 
         vcf_haplotypecaller = BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.vcf

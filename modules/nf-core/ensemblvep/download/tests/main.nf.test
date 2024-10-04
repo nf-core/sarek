@@ -16,7 +16,7 @@ nextflow_process {
             process {
                 """
                 input[0] = Channel.of([
-                    [id:"111_WBcel235"],
+                    [id:"112_WBcel235"],
                     params.vep_genome,
                     params.vep_species,
                     params.vep_cache_version
@@ -41,7 +41,7 @@ nextflow_process {
             process {
                 """
                 input[0] = Channel.of([
-                    [id:"111_WBcel235"],
+                    [id:"112_WBcel235"],
                     params.vep_genome,
                     params.vep_species,
                     params.vep_cache_version

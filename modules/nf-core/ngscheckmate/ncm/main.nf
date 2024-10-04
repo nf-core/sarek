@@ -48,6 +48,7 @@ process NGSCHECKMATE_NCM {
     """
 
     stub:
+    def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "$meta.id"
     """
     touch ${prefix}_output_corr_matrix.txt

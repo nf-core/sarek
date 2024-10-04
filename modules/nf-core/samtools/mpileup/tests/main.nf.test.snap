@@ -2,26 +2,26 @@
     "bam_bed_versions": {
         "content": [
             [
-                "versions.yml:md5,c617148132c6a529bdf506fd58ce6a9d"
+                "versions.yml:md5,0ad5d578348ec8f358197302530db925"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.01.0"
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-02-13T16:13:40.600861147"
+        "timestamp": "2024-09-16T09:20:04.969588285"
     },
     "bam_bed_fasta_versions": {
         "content": [
             [
-                "versions.yml:md5,c617148132c6a529bdf506fd58ce6a9d"
+                "versions.yml:md5,0ad5d578348ec8f358197302530db925"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.01.0"
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-02-13T16:13:48.271482127"
+        "timestamp": "2024-09-16T09:20:30.887599345"
     },
     "bam_bed_mpileup": {
         "content": [

@@ -60,6 +60,7 @@ Depending on the options and samples provided, the pipeline can currently perfor
   - `Sentieon Haplotyper`
   - `Strelka2`
   - `TIDDIT`
+  - `Lofreq`
 - Variant filtering and annotation (`SnpEff`, `Ensembl VEP`, `BCFtools annotate`)
 - Summarise and represent QC (`MultiQC`)
 
@@ -131,6 +132,7 @@ We thank the following people for their extensive assistance in the development 
 - [Abhinav Sharma](https://github.com/abhi18av)
 - [Adam Talbot](https://github.com/adamrtalbot)
 - [Adrian Lärkeryd](https://github.com/adrlar)
+- [Àitor Olivares](https://github.com/AitorPeseta)
 - [Alexander Peltzer](https://github.com/apeltzer)
 - [Alison Meynert](https://github.com/ameynert)
 - [Anders Sune Pedersen](https://github.com/asp8200)
@@ -142,12 +144,15 @@ We thank the following people for their extensive assistance in the development 
 - [Chela James](https://github.com/chelauk)
 - [David Mas-Ponte](https://github.com/davidmasp)
 - [Edmund Miller](https://github.com/edmundmiller)
+- [Famke Bäuerle](https://github.com/famosab)
 - [Francesco Lescai](https://github.com/lescai)
+- [Francisco Martínez](https://github.com/nevinwu)
 - [Gavin Mackenzie](https://github.com/GCJMackenzie)
 - [Gisela Gabernet](https://github.com/ggabernet)
 - [Grant Neilson](https://github.com/grantn5)
 - [gulfshores](https://github.com/gulfshores)
 - [Harshil Patel](https://github.com/drpatelh)
+- [Hongwei Ye](https://github.com/YeHW)
 - [James A. Fellows Yates](https://github.com/jfy133)
 - [Jesper Eisfeldt](https://github.com/J35P312)
 - [Johannes Alneberg](https://github.com/alneberg)

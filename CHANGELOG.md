@@ -9,7 +9,80 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- [1640](https://github.com/nf-core/sarek/pull/1620) - Add `lofreq` as a tumor-only variant caller
+- [1642](https://github.com/nf-core/sarek/pull/1642) - Back to dev
+- [1653](https://github.com/nf-core/sarek/pull/1653) - Updates `sarek_subway` files with `lofreq`
+- [1660](https://github.com/nf-core/sarek/pull/1642) - Add `--length_required` for minimal reads length with `FASTP`
+- [1663](https://github.com/nf-core/sarek/pull/1663) - Massive conda modules update
+
+### Changed
+
+- [1669](https://github.com/nf-core/sarek/pull/1669) - Better nf-test pipeline level tests
+
+### Fixed
+
+- [1656](https://github.com/nf-core/sarek/pull/1656) - Retiring parameter `snpeff_genome`
+- [1657](https://github.com/nf-core/sarek/pull/1657) - Update all actions used in the GHA CI
+- [1661](https://github.com/nf-core/sarek/pull/1661) - nf-test pipeline level tests
+- [1673](https://github.com/nf-core/sarek/pull/1673) - Print warning message instead of silent error with Nextflow versions prior to 24.08.0edge
+
+### Removed
+
+### Dependencies
+
+| Dependency    | Old version | New version |
+| ------------- | ----------- | ----------- |
+| `deepvariant` | 1.5.0       | 1.6.1       |
+| `ensemblvep`  | 111.0       | 112.0       |
+| `fgbio`       | 2.0.2       | 2.1.2       |
+| `htslib`      | 1.20        | 1.21        |
+| `lofreq`      |             | 2.1.5       |
+| `multiqc`     | 1.21        | 1.25.1      |
+| `samtools`    | 1.20        | 1.21        |
+
+### Parameters
+
+| Params          | Status  |
+| --------------- | ------- |
+| `snpeff_db`     | Updated |
+| `snpeff_genome` | Removed |
+
+## [3.4.4](https://github.com/nf-core/sarek/releases/tag/3.4.4) - Ruopsokjåkhå
+
+Ruopsokjåkhå is another peak of the Pårte massif.
+
+### Added
+
+- [1614](https://github.com/nf-core/sarek/pull/1614) - Back to dev
+- [1639](https://github.com/nf-core/sarek/pull/1639) - Bump version to prepare release
+
+### Changed
+
+- [1627](https://github.com/nf-core/sarek/pull/1627) - Correct tower reports/snpeff format
+
+### Fixed
+
+- [1623](https://github.com/nf-core/sarek/pull/1623) - Update docs to clarify vep cache folder organisation
+- [1628](https://github.com/nf-core/sarek/pull/1628) - Fix dbsnp channel mapping in germline variant calling subworkflow
+
+### Removed
+
+### Dependencies
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+
+### Parameters
+
+## [3.4.3](https://github.com/nf-core/sarek/releases/tag/3.4.3) - Loametjåhkkå
+
+Loametjåhkkå is another one of the main peaks of the Pårte massif.
+
+### Added
+
 - [#1502](https://github.com/nf-core/sarek/pull/1502) - export CNVs into VCF format in `bam_variant_calling_cnvkit`
+- [#1534](https://github.com/nf-core/sarek/pull/1534), [#1573](https://github.com/nf-core/sarek/pull/1573) - Handling `.fastq.gz.spring` files as input
+- [#1593](https://github.com/nf-core/sarek/pull/1593) - Prepare release `3.4.2`
 
 ### Changed
 
@@ -18,14 +91,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1508](https://github.com/nf-core/sarek/pull/1508) - Sync `TEMPLATE` with `tools` `2.14.0`
 - [#1513](https://github.com/nf-core/sarek/pull/1513) - Back to dev
 - [#1518](https://github.com/nf-core/sarek/pull/1518) - Sync `TEMPLATE` with `tools` `2.14.1`
+- [#1521](https://github.com/nf-core/sarek/pull/1521) - Minor code refactoring to simplify syntax in args handling
+- [#1545](https://github.com/nf-core/sarek/pull/1545) - Update modules
+- [#1552](https://github.com/nf-core/sarek/pull/1552) - Update samtools to v1.20
+- [#1545](https://github.com/nf-core/sarek/pull/1545) - Update modules
+- [#1553](https://github.com/nf-core/sarek/pull/1553) - Update bcftools to v1.20
+- [#1557](https://github.com/nf-core/sarek/pull/1557) - Update ENSEMBLVEP cache to 111
 
 ### Fixed
+
+- [#1536](https://github.com/nf-core/sarek/pull/1536) - Correct typo `Strelka2` to `Strelka`
+- [#1541](https://github.com/nf-core/sarek/pull/1541) - Getting bam and bai published in the same folder
+- [#1542](https://github.com/nf-core/sarek/pull/1542) - Removing legacy configs of `CUSTOM_DUMPSOFTWAREVERSIONS`
+- [#1547](https://github.com/nf-core/sarek/pull/1547) - Correct typo in help text in nextflow_schema.json
+- [#1556](https://github.com/nf-core/sarek/pull/1556) - Fix display of some commands in `docs/usage.md`
+- [#1563](https://github.com/nf-core/sarek/pull/1563) - Fix `vep_cache_path_full` so that `--refseq/--merged` will work for ENSEMBLVEP
+- [#1570](https://github.com/nf-core/sarek/pull/1570) - Remove duplicated notes in FASTQC output docs
+- [#1596](https://github.com/nf-core/sarek/pull/1596) - Fix haplotypecaller tests
+- [#1597](https://github.com/nf-core/sarek/pull/1597) - Fix deepvariant tests
+- [#1612](https://github.com/nf-core/sarek/pull/1612) - Remove empty output directories
 
 ### Removed
 
 ### Dependencies
 
-### Modules / Subworkflows
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+| `bcftools` | 1.18        | 1.20        |
+| `bwa`      | 0.7.17      | 0.7.18      |
+| `cnvkit`   | 0.9.10      | 0.9.11      |
+| `htslib`   | 1.19.1      | 1.20        |
+| `samtools` | 1.19.2      | 1.20        |
 
 ### Parameters
 

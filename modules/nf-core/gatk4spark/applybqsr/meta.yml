@@ -16,56 +16,65 @@ tools:
       documentation: https://gatk.broadinstitute.org/hc/en-us/categories/360002369672s
       doi: 10.1158/1538-7445.AM2017-3590
       licence: ["Apache-2.0"]
+      identifier: ""
 input:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
-  - input:
-      type: file
-      description: BAM/CRAM file from alignment
-      pattern: "*.{bam,cram}"
-  - input_index:
-      type: file
-      description: BAI/CRAI file from alignment
-      pattern: "*.{bai,crai}"
-  - bqsr_table:
-      type: file
-      description: Recalibration table from gatk4_baserecalibrator
-  - intervals:
-      type: file
-      description: Bed file with the genomic regions included in the library (optional)
-  - fasta:
-      type: file
-      description: The reference fasta file
-      pattern: "*.fasta"
-  - fai:
-      type: file
-      description: Index of reference fasta file
-      pattern: "*.fasta.fai"
-  - dict:
-      type: file
-      description: GATK sequence dictionary
-      pattern: "*.dict"
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - input:
+        type: file
+        description: BAM/CRAM file from alignment
+        pattern: "*.{bam,cram}"
+    - input_index:
+        type: file
+        description: BAI/CRAI file from alignment
+        pattern: "*.{bai,crai}"
+    - bqsr_table:
+        type: file
+        description: Recalibration table from gatk4_baserecalibrator
+    - intervals:
+        type: file
+        description: Bed file with the genomic regions included in the library (optional)
+  - - fasta:
+        type: file
+        description: The reference fasta file
+        pattern: "*.fasta"
+  - - fai:
+        type: file
+        description: Index of reference fasta file
+        pattern: "*.fasta.fai"
+  - - dict:
+        type: file
+        description: GATK sequence dictionary
+        pattern: "*.dict"
 output:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
-  - versions:
-      type: file
-      description: File containing software versions
-      pattern: "versions.yml"
   - bam:
-      type: file
-      description: Recalibrated BAM file
-      pattern: "*.{bam}"
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.bam":
+          type: file
+          description: Recalibrated BAM file
+          pattern: "*.{bam}"
   - cram:
-      type: file
-      description: Recalibrated CRAM file
-      pattern: "*.{cram}"
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.cram":
+          type: file
+          description: Recalibrated CRAM file
+          pattern: "*.{cram}"
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@yocra3"
   - "@FriederikeHanssen"

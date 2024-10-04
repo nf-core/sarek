@@ -10,21 +10,21 @@ nextflow_process {
     tag "bwamem2/mem"
     tag "bwamem2/index"
 
-    test("sarscov2 - fastq, index, fasta, false") {
-
-        setup {
-            run("BWAMEM2_INDEX") {
-                script "../../index/main.nf"
-                process {
-                    """
-                    input[0] = Channel.of([
-                        [:], // meta map
-                        [file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)]
-                    ])
-                    """
-                }
+    setup {
+        run("BWAMEM2_INDEX") {
+            script "../../index/main.nf"
+            process {
+                """
+                input[0] = Channel.of([
+                    [:], // meta map
+                    [file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)]
+                ])
+                """
             }
         }
+    }
+
+    test("sarscov2 - fastq, index, fasta, false") {
 
         when {
             process {
@@ -44,7 +44,8 @@ nextflow_process {
             assertAll(
                 { assert process.success },
                 { assert snapshot(
-                    file(process.out.bam[0][1]).name,
+                    bam(process.out.bam[0][1]).getHeaderMD5(),
+                    bam(process.out.bam[0][1]).getReadsMD5(),
                     process.out.versions
                 ).match() }
             )
@@ -54,20 +55,6 @@ nextflow_process {
 
     test("sarscov2 - fastq, index, fasta, true") {
 
-        setup {
-            run("BWAMEM2_INDEX") {
-                script "../../index/main.nf"
-                process {
-                    """
-                    input[0] = Channel.of([
-                        [:], // meta map
-                        [file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)]
-                    ])
-                    """
-                }
-            }
-        }
-
         when {
             process {
                 """
@@ -86,7 +73,8 @@ nextflow_process {
             assertAll(
                 { assert process.success },
                 { assert snapshot(
-                    file(process.out.bam[0][1]).name,
+                    bam(process.out.bam[0][1]).getHeaderMD5(),
+                    bam(process.out.bam[0][1]).getReadsMD5(),
                     process.out.versions
                 ).match() }
             )
@@ -95,20 +83,6 @@ nextflow_process {
     }
 
     test("sarscov2 - [fastq1, fastq2], index, fasta, false") {
-
-        setup {
-            run("BWAMEM2_INDEX") {
-                script "../../index/main.nf"
-                process {
-                    """
-                    input[0] = Channel.of([
-                        [:], // meta map
-                        [file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)]
-                    ])
-                    """
-                }
-            }
-        }
 
         when {
             process {
@@ -131,7 +105,8 @@ nextflow_process {
             assertAll(
                 { assert process.success },
                 { assert snapshot(
-                    file(process.out.bam[0][1]).name,
+                    bam(process.out.bam[0][1]).getHeaderMD5(),
+                    bam(process.out.bam[0][1]).getReadsMD5(),
                     process.out.versions
                 ).match() }
             )
@@ -140,20 +115,6 @@ nextflow_process {
     }
 
     test("sarscov2 - [fastq1, fastq2], index, fasta, true") {
-
-        setup {
-            run("BWAMEM2_INDEX") {
-                script "../../index/main.nf"
-                process {
-                    """
-                    input[0] = Channel.of([
-                        [:], // meta map
-                        [file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)]
-                    ])
-                    """
-                }
-            }
-        }
 
         when {
             process {
@@ -176,7 +137,8 @@ nextflow_process {
             assertAll(
                 { assert process.success },
                 { assert snapshot(
-                    file(process.out.bam[0][1]).name,
+                    bam(process.out.bam[0][1]).getHeaderMD5(),
+                    bam(process.out.bam[0][1]).getReadsMD5(),
                     process.out.versions
                 ).match() }
             )
@@ -188,20 +150,6 @@ nextflow_process {
 
         options "-stub"
 
-        setup {
-            run("BWAMEM2_INDEX") {
-                script "../../index/main.nf"
-                process {
-                    """
-                    input[0] = Channel.of([
-                        [:], // meta map
-                        [file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)]
-                    ])
-                    """
-                }
-            }
-        }
-
         when {
             process {
                 """
@@ -222,10 +170,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(
-                    file(process.out.bam[0][1]).name,
-                    process.out.versions
-                ).match() }
+                { assert snapshot(process.out).match() }
             )
         }
 

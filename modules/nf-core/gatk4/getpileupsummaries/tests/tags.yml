@@ -1,0 +1,2 @@
+gatk4/getpileupsummaries:
+  - "modules/nf-core/gatk4/getpileupsummaries/**"
