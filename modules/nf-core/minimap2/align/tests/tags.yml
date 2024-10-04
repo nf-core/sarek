@@ -1,0 +1,2 @@
+minimap2/align:
+  - "modules/nf-core/minimap2/align/**"

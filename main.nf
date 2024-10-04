@@ -51,6 +51,7 @@ params.known_snps              = getGenomeAttribute('known_snps')
 params.known_snps_tbi          = getGenomeAttribute('known_snps_tbi')
 params.known_snps_vqsr         = getGenomeAttribute('known_snps_vqsr')
 params.mappability             = getGenomeAttribute('mappability')
+params.minimap2                = getGenomeAttribute('minimap2')
 params.ngscheckmate_bed        = getGenomeAttribute('ngscheckmate_bed')
 params.pon                     = getGenomeAttribute('pon')
 params.pon_tbi                 = getGenomeAttribute('pon_tbi')
@@ -159,11 +160,11 @@ workflow NFCORE_SAREK {
                                     : PREPARE_GENOME.out.bwamem2
     dragmap     = params.dragmap    ? Channel.fromPath(params.dragmap).map{ it -> [ [id:'dragmap'], it ] }.collect()
                                     : PREPARE_GENOME.out.hashtable
+    minimap2   = params.minimap2    ? Channel.fromPath(params.minimap2).collect()
+                                    : PREPARE_GENOME.out.minimap2
 
-    // Gather index for mapping given the chosen aligner
-    index_alignment = (aligner == "bwa-mem" || aligner == "sentieon-bwamem") ? bwa :
-        aligner == "bwa-mem2" ? bwamem2 :
-        dragmap
+    index_alignment = (params.aligner == "bwa-mem" || params.aligner == "sentieon-bwamem") ? bwa :
+        params.aligner == "bwa-mem2" ? bwamem2 : params.aligner == "dragmap" ? dragmap : minimap2
 
     // TODO: add a params for msisensorpro_scan
     msisensorpro_scan      = PREPARE_GENOME.out.msisensorpro_scan

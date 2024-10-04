@@ -265,6 +265,8 @@ jobs:
           - tags: "gatk4spark/markduplicates"
           - tags: "gawk"
           - tags: "lofreq/callparallel"
+          - tags: "minimap2/index"
+          - tags: "minimap2/align"
           - tags: "mosdepth"
           - tags: "multiqc"
           - tags: "ngscheckmate/ncm"
