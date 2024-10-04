@@ -5,13 +5,75 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-
-## [3.4.4](https://github.com/nf-core/sarek/releases/tag/3.4.3) - Loametjåhkkå
+## dev
 
 ### Added
 
-- [#1638](https://github.com/nf-core/sarek/pull/1638) - Added additional documentation detailing ASCAT WES usage.
+- [1638](https://github.com/nf-core/sarek/pull/1638) - Added additional documentation detailing ASCAT WES usage.
+- [1640](https://github.com/nf-core/sarek/pull/1620) - Add `lofreq` as a tumor-only variant caller
+- [1642](https://github.com/nf-core/sarek/pull/1642) - Back to dev
+- [1653](https://github.com/nf-core/sarek/pull/1653) - Updates `sarek_subway` files with `lofreq`
+- [1660](https://github.com/nf-core/sarek/pull/1642) - Add `--length_required` for minimal reads length with `FASTP`
+- [1663](https://github.com/nf-core/sarek/pull/1663) - Massive conda modules update
 
+### Changed
+
+- [1669](https://github.com/nf-core/sarek/pull/1669) - Better nf-test pipeline level tests
+
+### Fixed
+
+- [1656](https://github.com/nf-core/sarek/pull/1656) - Retiring parameter `snpeff_genome`
+- [1657](https://github.com/nf-core/sarek/pull/1657) - Update all actions used in the GHA CI
+- [1661](https://github.com/nf-core/sarek/pull/1661) - nf-test pipeline level tests
+- [1673](https://github.com/nf-core/sarek/pull/1673) - Print warning message instead of silent error with Nextflow versions prior to 24.08.0edge
+
+### Removed
+
+### Dependencies
+
+| Dependency    | Old version | New version |
+| ------------- | ----------- | ----------- |
+| `deepvariant` | 1.5.0       | 1.6.1       |
+| `ensemblvep`  | 111.0       | 112.0       |
+| `fgbio`       | 2.0.2       | 2.1.2       |
+| `htslib`      | 1.20        | 1.21        |
+| `lofreq`      |             | 2.1.5       |
+| `multiqc`     | 1.21        | 1.25.1      |
+| `samtools`    | 1.20        | 1.21        |
+
+### Parameters
+
+| Params          | Status  |
+| --------------- | ------- |
+| `snpeff_db`     | Updated |
+| `snpeff_genome` | Removed |
+
+## [3.4.4](https://github.com/nf-core/sarek/releases/tag/3.4.4) - Ruopsokjåkhå
+
+Ruopsokjåkhå is another peak of the Pårte massif.
+
+### Added
+
+- [1614](https://github.com/nf-core/sarek/pull/1614) - Back to dev
+- [1639](https://github.com/nf-core/sarek/pull/1639) - Bump version to prepare release
+
+### Changed
+
+- [1627](https://github.com/nf-core/sarek/pull/1627) - Correct tower reports/snpeff format
+
+### Fixed
+
+- [1623](https://github.com/nf-core/sarek/pull/1623) - Update docs to clarify vep cache folder organisation
+- [1628](https://github.com/nf-core/sarek/pull/1628) - Fix dbsnp channel mapping in germline variant calling subworkflow
+
+### Removed
+
+### Dependencies
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+
+### Parameters
 
 ## [3.4.3](https://github.com/nf-core/sarek/releases/tag/3.4.3) - Loametjåhkkå
 

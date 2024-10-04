@@ -14,7 +14,7 @@ process GATK4_GATHERPILEUPSUMMARIES {
 
     output:
     tuple val(meta), path("*.pileups.table"), emit: table
-    path "versions.yml"                             , emit: versions
+    path "versions.yml"                     , emit: versions
 
     when:
     task.ext.when == null || task.ext.when

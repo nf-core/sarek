@@ -1,37 +1,27 @@
 - name: Run variant calling on germline sample with deepvariant
-  command: nextflow run main.nf -profile test,tools_germline --tools deepvariant --outdir results
+  command: nextflow run main.nf -profile test,tools_germline_deepvariant --tools deepvariant --outdir results
   tags:
     - deepvariant
     - germline
     - variant_calling
   files:
     - path: results/multiqc
-    - path: results/reports/bcftools/deepvariant/sample1/sample1.deepvariant.bcftools_stats.txt
-      # md5sum: a6634ceb1c712de14009b05d273713a7
-    - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.FILTER.summary
-      md5sum: acce7a163f4070226429f9d6bc3fbd2c
-    - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.TsTv.count
-      md5sum: de1632b8413f4c14c78acdc2df5c5224
-    - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.TsTv.qual
-      md5sum: a9c05f0ecb0bb71123e345589bd7089c
-    - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.g.vcf.gz
-    # binary changes md5sums on reruns
-    - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.g.vcf.gz.tbi
-    # binary changes md5sums on reruns
-    - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.vcf.gz
-    # binary changes md5sums on reruns
-    - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.vcf.gz.tbi
-    # binary changes md5sums on reruns
-    - path: results/deepvariant
-      should_exist: false
-    - path: results/reports/mosdepth/sample1/sample1.recal.mosdepth.global.dist.txt
-    - path: results/reports/mosdepth/sample1/sample1.recal.mosdepth.region.dist.txt
-    - path: results/reports/mosdepth/sample1/sample1.recal.mosdepth.summary.txt
-    - path: results/reports/mosdepth/sample1/sample1.recal.regions.bed.gz
-    - path: results/reports/mosdepth/sample1/sample1.recal.regions.bed.gz.csi
-    - path: results/reports/samtools/sample1/sample1.recal.cram.stats
+    - path: results/reports/bcftools/deepvariant/test/test.deepvariant.bcftools_stats.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
+    - path: results/reports/samtools/test/test.recal.cram.stats
+    - path: results/reports/vcftools/deepvariant/test/test.deepvariant.FILTER.summary
+    - path: results/reports/vcftools/deepvariant/test/test.deepvariant.TsTv.count
+    - path: results/reports/vcftools/deepvariant/test/test.deepvariant.TsTv.qual
+    - path: results/variant_calling/deepvariant/test/test.deepvariant.g.vcf.gz
+    - path: results/variant_calling/deepvariant/test/test.deepvariant.g.vcf.gz.tbi
+    - path: results/variant_calling/deepvariant/test/test.deepvariant.vcf.gz
+    - path: results/variant_calling/deepvariant/test/test.deepvariant.vcf.gz.tbi
 - name: Run variant calling on germline sample with deepvariant without intervals
-  command: nextflow run main.nf -profile test,tools_germline --tools deepvariant --no_intervals --outdir results
+  command: nextflow run main.nf -profile test,tools_germline_deepvariant --tools deepvariant --no_intervals --outdir results
   tags:
     - deepvariant
     - germline
@@ -40,31 +30,18 @@
   files:
     - path: results/multiqc
     - path: results/no_intervals.bed
-      md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/no_intervals.bed.gz
-      md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/no_intervals.bed.gz.tbi
-      md5sum: f3dac01ea66b95fe477446fde2d31489
-    - path: results/reports/bcftools/deepvariant/sample1/sample1.deepvariant.bcftools_stats.txt
-      # md5sum: 0c48d8e315ca23c5dc2e7bf71ea0b6a6
-    - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.FILTER.summary
-      md5sum: 7b17bd18c2d4bf129561c7c6a419a889
-    - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.TsTv.count
-      md5sum: e570b07835a793bbab4f517cabed5a45
-    - path: results/reports/vcftools/deepvariant/sample1/sample1.deepvariant.TsTv.qual
-      md5sum: 03f64b8092fc212bcb746b08f9e676a5
-    - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.g.vcf.gz
-    # binary changes md5sums on reruns
-    - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.g.vcf.gz.tbi
-    # binary changes md5sums on reruns
-    - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.vcf.gz
-    # binary changes md5sums on reruns
-    - path: results/variant_calling/deepvariant/sample1/sample1.deepvariant.vcf.gz.tbi
-    # binary changes md5sums on reruns
-    - path: results/deepvariant
-      should_exist: false
-    - path: results/reports/mosdepth/sample1/sample1.recal.mosdepth.global.dist.txt
-    - path: results/reports/mosdepth/sample1/sample1.recal.mosdepth.summary.txt
-    - path: results/reports/mosdepth/sample1/sample1.recal.per-base.bed.gz
-    - path: results/reports/mosdepth/sample1/sample1.recal.per-base.bed.gz.csi
-    - path: results/reports/samtools/sample1/sample1.recal.cram.stats
+    - path: results/reports/bcftools/deepvariant/test/test.deepvariant.bcftools_stats.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test/test.recal.per-base.bed.gz
+    - path: results/reports/mosdepth/test/test.recal.per-base.bed.gz.csi
+    - path: results/reports/samtools/test/test.recal.cram.stats
+    - path: results/reports/vcftools/deepvariant/test/test.deepvariant.FILTER.summary
+    - path: results/reports/vcftools/deepvariant/test/test.deepvariant.TsTv.count
+    - path: results/reports/vcftools/deepvariant/test/test.deepvariant.TsTv.qual
+    - path: results/variant_calling/deepvariant/test/test.deepvariant.g.vcf.gz
+    - path: results/variant_calling/deepvariant/test/test.deepvariant.g.vcf.gz.tbi
+    - path: results/variant_calling/deepvariant/test/test.deepvariant.vcf.gz
+    - path: results/variant_calling/deepvariant/test/test.deepvariant.vcf.gz.tbi

@@ -1,28 +1,29 @@
 Changes in module 'nf-core/bcftools/annotate'
+Changes in 'bcftools/annotate/main.nf':
 --- modules/nf-core/bcftools/annotate/main.nf
 +++ modules/nf-core/bcftools/annotate/main.nf
-@@ -8,7 +8,10 @@
+@@ -8,8 +8,10 @@
          'biocontainers/bcftools:1.20--h8b25389_0' }"
  
      input:
--    tuple val(meta), path(input), path(index), path(annotations), path(annotations_index), path(header_lines)
-+    tuple val(meta), path(input)
+-    tuple val(meta), path(input), path(index), path(annotations), path(annotations_index)
+-    path(header_lines)
++    tuple val(meta), path(input), path(index)
 +    path annotations
 +    path annotations_index
 +    path header_lines
  
      output:
      tuple val(meta), path("*.{vcf,vcf.gz,bcf,bcf.gz}"), emit: vcf
-@@ -29,6 +32,10 @@
-                     "vcf"
-     if ("$input" == "${prefix}.${extension}") error "Input and output names are the same, set prefix in module configuration to disambiguate!"
-     """
-+    bcftools \\
-+        index \\
-+        $input
-+
-     bcftools \\
-         annotate \\
-         $args \\
 
+'modules/nf-core/bcftools/annotate/meta.yml' is unchanged
+'modules/nf-core/bcftools/annotate/environment.yml' is unchanged
+'modules/nf-core/bcftools/annotate/tests/main.nf.test.snap' is unchanged
+'modules/nf-core/bcftools/annotate/tests/vcf_gz_index.config' is unchanged
+'modules/nf-core/bcftools/annotate/tests/vcf_gz_index_csi.config' is unchanged
+'modules/nf-core/bcftools/annotate/tests/bcf.config' is unchanged
+'modules/nf-core/bcftools/annotate/tests/vcf.config' is unchanged
+'modules/nf-core/bcftools/annotate/tests/main.nf.test' is unchanged
+'modules/nf-core/bcftools/annotate/tests/tags.yml' is unchanged
+'modules/nf-core/bcftools/annotate/tests/vcf_gz_index_tbi.config' is unchanged
 ************************************************************

@@ -1,0 +1,2 @@
+fgbio/callmolecularconsensusreads:
+  - "modules/nf-core/fgbio/callmolecularconsensusreads/**"

@@ -52,7 +52,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_GATK {
     // Joint genotyping performed using GenotypeGVCFs
     // Sort vcfs called by interval within each VCF
 
-    GATK4_GENOTYPEGVCFS(genotype_input, fasta.map{ meta, fasta -> [ fasta ] }, fai.map{ meta, fai -> [ fai ] }, dict.map{ meta, dict -> [ dict ] }, dbsnp, dbsnp_tbi)
+    GATK4_GENOTYPEGVCFS(genotype_input, fasta, fai, dict, dbsnp.map{ it -> [ [:], it ] }, dbsnp_tbi.map{ it -> [ [:], it ] })
 
     BCFTOOLS_SORT(GATK4_GENOTYPEGVCFS.out.vcf)
     gvcf_to_merge = BCFTOOLS_SORT.out.vcf.map{ meta, vcf -> [ meta.subMap('num_intervals') + [ id:'joint_variant_calling', patient:'all_samples', variantcaller:'haplotypecaller' ], vcf ]}.groupTuple()

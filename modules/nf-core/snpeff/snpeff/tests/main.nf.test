@@ -6,6 +6,7 @@ nextflow_process {
     config "./nextflow.config"
     tag "modules"
     tag "modules_nfcore"
+    tag "modules_snpeff"
     tag "snpeff"
     tag "snpeff/download"
     tag "snpeff/snpeff"
@@ -17,7 +18,7 @@ nextflow_process {
                 script "../../download/main.nf"
                 process {
                     """
-                    input[0] = Channel.of([[id:params.snpeff_genome + '.' + params.snpeff_cache_version], params.snpeff_genome, params.snpeff_cache_version])
+                    input[0] = Channel.of([[id:params.snpeff_db], params.snpeff_db])
                     """
                 }
             }
@@ -30,7 +31,7 @@ nextflow_process {
                     [ id:'test' ], // meta map
                     file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf', checkIfExists: true)
                 ])
-                input[1] = params.snpeff_genome + '.' + params.snpeff_cache_version
+                input[1] = params.snpeff_db
                 input[2] = SNPEFF_DOWNLOAD.out.cache
                 """
             }

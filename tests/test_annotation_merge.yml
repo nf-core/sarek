@@ -9,7 +9,7 @@
     - path: results/annotation/test/test_snpEff_VEP.ann.vcf.gz.tbi
     # binary changes md5sums on reruns
     - path: results/reports/EnsemblVEP/test/test_snpEff_VEP.ann.summary.html
-      contains: ["test_snpEff.ann.vcf.gz</td></tr><tr><td>Output file</td><td>test_snpEff_VEP.ann.vcf.gz</td></tr>"]
+      contains: ["test_snpEff.ann.vcf.gz</pre></td></tr><tr><td>Output file</td><td><pre>test_snpEff_VEP.ann.vcf.gz"]
     - path: results/multiqc
     - path: results/annotation/test/test_snpEff.ann.vcf.gz
       should_exist: false

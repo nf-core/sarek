@@ -11,61 +11,90 @@ tools:
       description: Tools for dealing with SAM, BAM and CRAM files
       documentation: http://www.htslib.org/doc/1.1/samtools.html
       licence: ["MIT"]
+      identifier: biotools:samtools
 input:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
-  - input:
-      type: file
-      description: BAM/CRAM/SAM file
-      pattern: "*.{bam,cram,sam}"
-  - meta2:
-      type: map
-      description: |
-        Groovy Map containing reference information
-        e.g. [ id:'test' ]
-  - fasta:
-      type: file
-      description: Reference genome fasta file
-      pattern: "*.{fasta,fa}"
-  - interleave:
-      type: boolean
-      description: |
-        If true, the output is a single interleaved paired-end FASTQ
-        If false, the output split paired-end FASTQ
-      default: false
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - input:
+        type: file
+        description: BAM/CRAM/SAM file
+        pattern: "*.{bam,cram,sam}"
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'test' ]
+    - fasta:
+        type: file
+        description: Reference genome fasta file
+        pattern: "*.{fasta,fa}"
+  - - interleave:
+        type: boolean
+        description: |
+          If true, the output is a single interleaved paired-end FASTQ
+          If false, the output split paired-end FASTQ
+        default: false
 output:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
   - fastq:
-      type: file
-      description: |
-        R1 and R2 FASTQ files
-      pattern: "*_{1,2}.fq.gz"
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+          pattern: "*_{1,2}.fq.gz"
+      - "*_{1,2}.fq.gz":
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+          pattern: "*_{1,2}.fq.gz"
   - fastq_interleaved:
-      type: file
-      description: |
-        Interleaved paired end FASTQ files
-      pattern: "*_interleaved.fq.gz"
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+          pattern: "*_interleaved.fq.gz"
+      - "*_interleaved.fq":
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+          pattern: "*_interleaved.fq.gz"
   - fastq_other:
-      type: file
-      description: |
-        FASTQ files with reads where the READ1 and READ2 FLAG bits set are either both set or both unset.
-      pattern: "*_other.fq.gz"
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+          pattern: "*_other.fq.gz"
+      - "*_other.fq.gz":
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+          pattern: "*_other.fq.gz"
   - fastq_singleton:
-      type: file
-      description: |
-        FASTQ files with singleton reads.
-      pattern: "*_singleton.fq.gz"
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+          pattern: "*_singleton.fq.gz"
+      - "*_singleton.fq.gz":
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+          pattern: "*_singleton.fq.gz"
   - versions:
-      type: file
-      description: File containing software versions
-      pattern: "versions.yml"
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@lescai"
   - "@maxulysse"

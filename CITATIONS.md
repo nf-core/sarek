@@ -146,6 +146,10 @@
 
   > Danecek P, Auton A, Abecasis G, et al.: The variant call format and VCFtools. Bioinformatics. 2011 Aug 1;27(15):2156-8. doi: 10.1093/bioinformatics/btr330. Epub 2011 Jun 7. PubMed PMID: 21653522; PubMed Central PMCID: PMC3137218.
 
+- [Lofreq](https://pubmed.ncbi.nlm.nih.gov/23066108/)
+
+  > Wilm et al. LoFreq: A sequence-quality aware, ultra-sensitive variant caller for uncovering cell-population heterogeneity from high-throughput sequencing datasets. Nucleic Acids Res. 2012; 40(22):11189-201.
+
 ## R packages
 
 - [R](https://www.R-project.org/)

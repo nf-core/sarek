@@ -1,7 +1,5 @@
-name: fgbio_callmolecularconsensusreads
 channels:
   - conda-forge
   - bioconda
-  - defaults
 dependencies:
-  - bioconda::fgbio=2.0.2
+  - bioconda::fgbio=2.2.1
