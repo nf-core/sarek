@@ -525,7 +525,7 @@
                     },
                     "utils_nfvalidation_plugin": {
                         "branch": "master",
-                        "git_sha": "1f19c093c86ae49d1899e234d4aa4d56c57be780",
+                        "git_sha": "e6c055a7bb7551ef18436a8ef410dd0e27393c61",
                         "installed_by": ["subworkflows"]
                     },
                     "vcf_annotate_ensemblvep": {
