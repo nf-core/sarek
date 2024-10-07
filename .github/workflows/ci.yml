@@ -38,12 +38,6 @@ jobs:
         shard: [1, 2, 3, 4, 5]
         exclude:
           - filter: "pipeline"
-            shard: 2
-          - filter: "pipeline"
-            shard: 3
-          - filter: "pipeline"
-            shard: 4
-          - filter: "pipeline"
             shard: 5
     steps:
       - name: Check out pipeline code
