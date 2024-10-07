@@ -44,8 +44,6 @@
                 "reference/intervals/genome.bed.gz"
             ],
             [
-                "test.sorted.cram:md5,9b21ccf9b5c61996bf48ce9dc0a108c5",
-                "test.sorted.cram.crai:md5,169697ea55e0749cc4d8312c32d73946",
                 "genome.amb:md5,1891c1de381b3a96d4e72f590fde20c1",
                 "genome.ann:md5,2df4aa2d7580639fa0fcdbcad5e2e969",
                 "genome.bwt:md5,815eded87e4cb6b0f1daab5c4d6e30af",
@@ -61,11 +59,11 @@
             "nf-test": "0.9.0",
             "nextflow": "24.09.0"
         },
-        "timestamp": "2024-10-07T10:17:55.189941"
+        "timestamp": "2024-10-07T11:05:25.844447"
     },
     "Run with profile test | --aligner bwa-mem --save_reference --build_only_index": {
         "content": [
-            6,
+            5,
             {
                 "Workflow": {
                     "nf-core/sarek": "v3.5.0dev"
@@ -73,14 +71,6 @@
             },
             [
                 "csv",
-                "multiqc",
-                "multiqc/multiqc_data",
-                "multiqc/multiqc_data/multiqc.log",
-                "multiqc/multiqc_data/multiqc_citations.txt",
-                "multiqc/multiqc_data/multiqc_data.json",
-                "multiqc/multiqc_data/multiqc_software_versions.txt",
-                "multiqc/multiqc_data/multiqc_sources.txt",
-                "multiqc/multiqc_report.html",
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
                 "reference",
@@ -97,7 +87,6 @@
                 "reference/intervals/genome.bed.gz"
             ],
             [
-                "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
                 "genome.amb:md5,1891c1de381b3a96d4e72f590fde20c1",
                 "genome.ann:md5,2df4aa2d7580639fa0fcdbcad5e2e969",
                 "genome.bwt:md5,815eded87e4cb6b0f1daab5c4d6e30af",
@@ -113,6 +102,6 @@
             "nf-test": "0.9.0",
             "nextflow": "24.09.0"
         },
-        "timestamp": "2024-10-07T10:18:42.438866"
+        "timestamp": "2024-10-07T11:19:47.957065"
     }
 }

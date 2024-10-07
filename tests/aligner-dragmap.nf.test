@@ -47,6 +47,7 @@ nextflow_pipeline {
                 input = false
                 outdir = "$outputDir"
                 save_reference = true
+                skip_tools = 'multiqc'
                 tools = ''
             }
         }
