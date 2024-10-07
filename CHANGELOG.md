@@ -5,12 +5,42 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## dev
+## [3.4.4](https://github.com/nf-core/sarek/releases/tag/3.4.4) - Ruopsokjåkhå
+
+Ruopsokjåkhå is another peak of the Pårte massif.
+
+### Added
+
+- [1614](https://github.com/nf-core/sarek/pull/1614) - Back to dev
+- [1639](https://github.com/nf-core/sarek/pull/1639) - Bump version to prepare release
+
+### Changed
+
+- [1627](https://github.com/nf-core/sarek/pull/1627) - Correct tower reports/snpeff format
+
+### Fixed
+
+- [1623](https://github.com/nf-core/sarek/pull/1623) - Update docs to clarify vep cache folder organisation
+- [1628](https://github.com/nf-core/sarek/pull/1628) - Fix dbsnp channel mapping in germline variant calling subworkflow
+
+### Removed
+
+### Dependencies
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+
+### Parameters
+
+## [3.4.3](https://github.com/nf-core/sarek/releases/tag/3.4.3) - Loametjåhkkå
+
+Loametjåhkkå is another one of the main peaks of the Pårte massif.
 
 ### Added
 
 - [#1502](https://github.com/nf-core/sarek/pull/1502) - export CNVs into VCF format in `bam_variant_calling_cnvkit`
-- [#1534](https://github.com/nf-core/sarek/pull/1534) - Handling `.fastq.gz.spring` files as input
+- [#1534](https://github.com/nf-core/sarek/pull/1534), [#1573](https://github.com/nf-core/sarek/pull/1573) - Handling `.fastq.gz.spring` files as input
+- [#1593](https://github.com/nf-core/sarek/pull/1593) - Prepare release `3.4.2`
 
 ### Changed
 
@@ -35,6 +65,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1556](https://github.com/nf-core/sarek/pull/1556) - Fix display of some commands in `docs/usage.md`
 - [#1563](https://github.com/nf-core/sarek/pull/1563) - Fix `vep_cache_path_full` so that `--refseq/--merged` will work for ENSEMBLVEP
 - [#1570](https://github.com/nf-core/sarek/pull/1570) - Remove duplicated notes in FASTQC output docs
+- [#1596](https://github.com/nf-core/sarek/pull/1596) - Fix haplotypecaller tests
+- [#1597](https://github.com/nf-core/sarek/pull/1597) - Fix deepvariant tests
+- [#1612](https://github.com/nf-core/sarek/pull/1612) - Remove empty output directories
 
 ### Removed
 
