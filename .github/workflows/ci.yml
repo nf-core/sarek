@@ -302,13 +302,6 @@ jobs:
         with:
           version: ${{ env.NFT_VER }}
 
-      - name: Install pdiff
-        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4
-        id: cache-pip-pdiff
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-pdiff
-
       - name: Setup apptainer
         if: matrix.profile == 'singularity'
         uses: eWaterCycle/setup-apptainer@main
@@ -318,6 +311,16 @@ jobs:
         run: |
           mkdir -p $NXF_SINGULARITY_CACHEDIR
           mkdir -p $NXF_SINGULARITY_LIBRARYDIR
+
+      - name: Cache pdiff
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4
+        id: cache-pip-pdiff
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-pdiff
+
+      - name: Install pdiff
+        run: python -m pip install --upgrade pip pdiff cryptography
 
       - name: Set up miniconda
         if: matrix.profile == 'conda'
