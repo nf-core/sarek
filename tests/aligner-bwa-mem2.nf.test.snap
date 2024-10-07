@@ -1,7 +1,7 @@
 {
     "Run with profile test | --aligner bwa-mem2 --save_reference --build_only_index": {
         "content": [
-            6,
+            5,
             {
                 "Workflow": {
                     "nf-core/sarek": "v3.5.0dev"
@@ -9,14 +9,6 @@
             },
             [
                 "csv",
-                "multiqc",
-                "multiqc/multiqc_data",
-                "multiqc/multiqc_data/multiqc.log",
-                "multiqc/multiqc_data/multiqc_citations.txt",
-                "multiqc/multiqc_data/multiqc_data.json",
-                "multiqc/multiqc_data/multiqc_software_versions.txt",
-                "multiqc/multiqc_data/multiqc_sources.txt",
-                "multiqc/multiqc_report.html",
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
                 "reference",
@@ -33,7 +25,6 @@
                 "reference/intervals/genome.bed.gz"
             ],
             [
-                "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
                 "genome.fasta.0123:md5,d73300d44f733bcdb7c988fc3ff3e3e9",
                 "genome.fasta.amb:md5,1891c1de381b3a96d4e72f590fde20c1",
                 "genome.fasta.ann:md5,2df4aa2d7580639fa0fcdbcad5e2e969",
@@ -49,7 +40,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.09.0"
         },
-        "timestamp": "2024-10-07T10:24:11.560414"
+        "timestamp": "2024-10-07T11:21:46.500075"
     },
     "Run with profile test | --aligner bwa-mem2 --save_reference | skip QC/recal/md": {
         "content": [
@@ -96,8 +87,6 @@
                 "reference/intervals/genome.bed.gz"
             ],
             [
-                "test.sorted.cram:md5,47d93e48e806bbca9b76a72671c31256",
-                "test.sorted.cram.crai:md5,70f3ec29d6f6fc2d9fa87ada23cc3ec6",
                 "genome.fasta.0123:md5,d73300d44f733bcdb7c988fc3ff3e3e9",
                 "genome.fasta.amb:md5,1891c1de381b3a96d4e72f590fde20c1",
                 "genome.fasta.ann:md5,2df4aa2d7580639fa0fcdbcad5e2e969",
@@ -113,6 +102,6 @@
             "nf-test": "0.9.0",
             "nextflow": "24.09.0"
         },
-        "timestamp": "2024-10-07T10:23:26.446846"
+        "timestamp": "2024-10-07T11:07:36.671044"
     }
 }

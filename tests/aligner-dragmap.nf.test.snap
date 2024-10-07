@@ -1,7 +1,7 @@
 {
     "Run with profile test | --aligner dragmap --save_reference --build_only_index": {
         "content": [
-            6,
+            5,
             {
                 "Workflow": {
                     "nf-core/sarek": "v3.5.0dev"
@@ -9,14 +9,6 @@
             },
             [
                 "csv",
-                "multiqc",
-                "multiqc/multiqc_data",
-                "multiqc/multiqc_data/multiqc.log",
-                "multiqc/multiqc_data/multiqc_citations.txt",
-                "multiqc/multiqc_data/multiqc_data.json",
-                "multiqc/multiqc_data/multiqc_software_versions.txt",
-                "multiqc/multiqc_data/multiqc_sources.txt",
-                "multiqc/multiqc_report.html",
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
                 "reference",
@@ -36,11 +28,7 @@
                 "reference/intervals/genome.bed.gz"
             ],
             [
-                "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
-                "hash_table.cfg:md5,3bcf6daeb6548001513c676b0d368eb8",
-                "hash_table.cfg.bin:md5,13a07c5d7e7f2b41f4a3df5c09538883",
                 "hash_table.cmp:md5,1caab4ffc89f81ace615a2e813295cf4",
-                "hash_table_stats.txt:md5,94a7c3f9e157afeacc181ca78003d74f",
                 "ref_index.bin:md5,dbb5c7d26b974e0ac338024fe4535044",
                 "reference.bin:md5,be67b80ee48aa96b383fd72f1ccfefea",
                 "repeat_mask.bin:md5,294939f1f80aa7f4a70b9b537e4c0f21",
@@ -55,7 +43,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.09.0"
         },
-        "timestamp": "2024-10-07T10:26:47.192744"
+        "timestamp": "2024-10-07T11:23:49.996419"
     },
     "Run with profile test | --aligner dragmap --save_reference | skip QC/recal/md": {
         "content": [
@@ -106,12 +94,7 @@
                 "reference/intervals/genome.bed.gz"
             ],
             [
-                "test.sorted.cram:md5,b9aba43d1397b9dee97f908a156710fa",
-                "test.sorted.cram.crai:md5,d59d42b04cd6482318d55bce388a9dca",
-                "hash_table.cfg:md5,8250732ed56bbfb714e45148cf090269",
-                "hash_table.cfg.bin:md5,0d5289f9840454d10eff0c0d5b207000",
                 "hash_table.cmp:md5,1caab4ffc89f81ace615a2e813295cf4",
-                "hash_table_stats.txt:md5,9985cfa1c9a5cd982019be82b3444af7",
                 "ref_index.bin:md5,dbb5c7d26b974e0ac338024fe4535044",
                 "reference.bin:md5,be67b80ee48aa96b383fd72f1ccfefea",
                 "repeat_mask.bin:md5,294939f1f80aa7f4a70b9b537e4c0f21",
@@ -126,6 +109,6 @@
             "nf-test": "0.9.0",
             "nextflow": "24.09.0"
         },
-        "timestamp": "2024-10-07T10:25:59.685694"
+        "timestamp": "2024-10-07T11:09:46.914367"
     }
 }
