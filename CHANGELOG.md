@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - [1669](https://github.com/nf-core/sarek/pull/1669) - Better nf-test pipeline level tests
+- [1675](https://github.com/nf-core/sarek/pull/1675) - Migrate pytest aligner tests to nf-test
 
 ### Fixed
 
