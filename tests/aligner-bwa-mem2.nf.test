@@ -1,0 +1,74 @@
+nextflow_pipeline {
+
+    name "Test pipeline"
+    script "../main.nf"
+    tag "pipeline"
+    tag "pipeline_sarek"
+
+    test("Run with profile test | --aligner bwa-mem2 --save_reference | skip QC/recal/md") {
+
+        when {
+            params {
+                aligner = 'bwa-mem2'
+                outdir = "$outputDir"
+                save_reference = true
+                skip_tools = 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools'
+                tools = ''
+            }
+        }
+
+        then {
+            // stable_name: All files + folders in ${params.outdir}/ with a stable name
+            def stable_name = getAllFilesFromDir(params.outdir, true, ['pipeline_info/*.{html,json,txt}'], null)
+            // stable_path: All files in ${params.outdir}/ with stable content
+            def stable_path = getAllFilesFromDir(params.outdir, false, null, 'tests/.nftignore')
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    // Number of successful tasks
+                    workflow.trace.succeeded().size(),
+                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we tests pipelines on multiple Nextflow versions
+                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_sarek_software_mqc_versions.yml"),
+                    // All stable path name, with a relative path
+                    getRelativePath(stable_name, outputDir),
+                    // All files with stable contents
+                    stable_path
+                ).match() }
+            )
+        }
+    }
+
+    test("Run with profile test | --aligner bwa-mem2 --save_reference --build_only_index") {
+
+        when {
+            params {
+                aligner = 'bwa-mem2'
+                build_only_index = true
+                input = false
+                outdir = "$outputDir"
+                save_reference = true
+                tools = ''
+            }
+        }
+
+        then {
+            // stable_name: All files + folders in ${params.outdir}/ with a stable name
+            def stable_name = getAllFilesFromDir(params.outdir, true, ['pipeline_info/*.{html,json,txt}'], null)
+            // stable_path: All files in ${params.outdir}/ with stable content
+            def stable_path = getAllFilesFromDir(params.outdir, false, null, 'tests/.nftignore')
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    // Number of successful tasks
+                    workflow.trace.succeeded().size(),
+                    // pipeline versions.yml file for multiqc from which Nextflow version is removed because we tests pipelines on multiple Nextflow versions
+                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_sarek_software_mqc_versions.yml"),
+                    // All stable path name, with a relative path
+                    getRelativePath(stable_name, outputDir),
+                    // All files with stable contents
+                    stable_path
+                ).match() }
+            )
+        }
+    }
+}

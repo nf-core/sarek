@@ -124,33 +124,6 @@ fastp:
 
 ## aligner
 
-### bwamem
-bwamem:
-  - conf/modules/aligner.config
-  - modules/nf-core/bwa/mem/**
-  - modules/nf-core/mosdepth/**
-  - subworkflows/local/fastq_align_bwamem_mem2_dragmap_sentieon/**
-  - tests/csv/3.0/fastq_single.csv
-  - tests/test_aligner_bwamem.yml
-
-### bwamem2
-bwamem2:
-  - conf/modules/aligner.config
-  - modules/nf-core/bwamem2/mem/**
-  - modules/nf-core/mosdepth/**
-  - subworkflows/local/fastq_align_bwamem_mem2_dragmap_sentieon/**
-  - tests/csv/3.0/fastq_single.csv
-  - tests/test_aligner_bwamem2.yml
-
-### dragmap
-dragmap:
-  - conf/modules/aligner.config
-  - modules/nf-core/dragmap/align/**
-  - modules/nf-core/mosdepth/**
-  - subworkflows/local/fastq_align_bwamem_mem2_dragmap_sentieon/**
-  - tests/csv/3.0/fastq_single.csv
-  - tests/test_aligner_dragmap.yml
-
 ### sentieon/bwamem
 sentieon/bwamem:
   - conf/modules/aligner.config

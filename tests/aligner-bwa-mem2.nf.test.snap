@@ -1,0 +1,118 @@
+{
+    "Run with profile test | --aligner bwa-mem2 --save_reference --build_only_index": {
+        "content": [
+            6,
+            {
+                "Workflow": {
+                    "nf-core/sarek": "v3.5.0dev"
+                }
+            },
+            [
+                "csv",
+                "multiqc",
+                "multiqc/multiqc_data",
+                "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc_citations.txt",
+                "multiqc/multiqc_data/multiqc_data.json",
+                "multiqc/multiqc_data/multiqc_software_versions.txt",
+                "multiqc/multiqc_data/multiqc_sources.txt",
+                "multiqc/multiqc_report.html",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "reference",
+                "reference/bwamem2",
+                "reference/bwamem2/genome.fasta.0123",
+                "reference/bwamem2/genome.fasta.amb",
+                "reference/bwamem2/genome.fasta.ann",
+                "reference/bwamem2/genome.fasta.bwt.2bit.64",
+                "reference/bwamem2/genome.fasta.pac",
+                "reference/intervals",
+                "reference/intervals/chr22_1-40001.bed",
+                "reference/intervals/chr22_1-40001.bed.gz",
+                "reference/intervals/genome.bed",
+                "reference/intervals/genome.bed.gz"
+            ],
+            [
+                "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
+                "genome.fasta.0123:md5,d73300d44f733bcdb7c988fc3ff3e3e9",
+                "genome.fasta.amb:md5,1891c1de381b3a96d4e72f590fde20c1",
+                "genome.fasta.ann:md5,2df4aa2d7580639fa0fcdbcad5e2e969",
+                "genome.fasta.bwt.2bit.64:md5,cd4bdf496eab05228a50c45ee43c1ed0",
+                "genome.fasta.pac:md5,8569fbdb2c98c6fb16dfa73d8eacb070",
+                "chr22_1-40001.bed:md5,87a15eb9c2ff20ccd5cd8735a28708f7",
+                "chr22_1-40001.bed.gz:md5,87a15eb9c2ff20ccd5cd8735a28708f7",
+                "genome.bed:md5,a87dc7d20ebca626f65cc16ff6c97a3e",
+                "genome.bed.gz:md5,a87dc7d20ebca626f65cc16ff6c97a3e"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.09.0"
+        },
+        "timestamp": "2024-10-07T10:24:11.560414"
+    },
+    "Run with profile test | --aligner bwa-mem2 --save_reference | skip QC/recal/md": {
+        "content": [
+            10,
+            {
+                "BAM_TO_CRAM_MAPPING": {
+                    "samtools": 1.21
+                },
+                "BWAMEM2_MEM": {
+                    "bwamem2": "2.2.1",
+                    "samtools": "1.19.2"
+                },
+                "INDEX_MERGE_BAM": {
+                    "samtools": 1.21
+                },
+                "MERGE_BAM": {
+                    "samtools": 1.21
+                },
+                "Workflow": {
+                    "nf-core/sarek": "v3.5.0dev"
+                }
+            },
+            [
+                "csv",
+                "csv/mapped.csv",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "preprocessing",
+                "preprocessing/mapped",
+                "preprocessing/mapped/test",
+                "preprocessing/mapped/test/test.sorted.cram",
+                "preprocessing/mapped/test/test.sorted.cram.crai",
+                "reference",
+                "reference/bwamem2",
+                "reference/bwamem2/genome.fasta.0123",
+                "reference/bwamem2/genome.fasta.amb",
+                "reference/bwamem2/genome.fasta.ann",
+                "reference/bwamem2/genome.fasta.bwt.2bit.64",
+                "reference/bwamem2/genome.fasta.pac",
+                "reference/intervals",
+                "reference/intervals/chr22_1-40001.bed",
+                "reference/intervals/chr22_1-40001.bed.gz",
+                "reference/intervals/genome.bed",
+                "reference/intervals/genome.bed.gz"
+            ],
+            [
+                "test.sorted.cram:md5,47d93e48e806bbca9b76a72671c31256",
+                "test.sorted.cram.crai:md5,70f3ec29d6f6fc2d9fa87ada23cc3ec6",
+                "genome.fasta.0123:md5,d73300d44f733bcdb7c988fc3ff3e3e9",
+                "genome.fasta.amb:md5,1891c1de381b3a96d4e72f590fde20c1",
+                "genome.fasta.ann:md5,2df4aa2d7580639fa0fcdbcad5e2e969",
+                "genome.fasta.bwt.2bit.64:md5,cd4bdf496eab05228a50c45ee43c1ed0",
+                "genome.fasta.pac:md5,8569fbdb2c98c6fb16dfa73d8eacb070",
+                "chr22_1-40001.bed:md5,87a15eb9c2ff20ccd5cd8735a28708f7",
+                "chr22_1-40001.bed.gz:md5,87a15eb9c2ff20ccd5cd8735a28708f7",
+                "genome.bed:md5,a87dc7d20ebca626f65cc16ff6c97a3e",
+                "genome.bed.gz:md5,a87dc7d20ebca626f65cc16ff6c97a3e"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.09.0"
+        },
+        "timestamp": "2024-10-07T10:23:26.446846"
+    }
+}
