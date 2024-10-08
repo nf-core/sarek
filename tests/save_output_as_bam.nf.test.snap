@@ -24,12 +24,7 @@
                 "csv",
                 "csv/mapped.csv",
                 "pipeline_info",
-                "pipeline_info/execution_report_2024-10-08_08-09-33.html",
-                "pipeline_info/execution_timeline_2024-10-08_08-09-33.html",
-                "pipeline_info/manifest_2024-10-08_08-09-33.bco.json",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
-                "pipeline_info/params_2024-10-08_08-09-56.json",
-                "pipeline_info/pipeline_dag_2024-10-08_08-09-33.html",
                 "preprocessing",
                 "preprocessing/mapped",
                 "preprocessing/mapped/test",
@@ -38,21 +33,14 @@
                 "reference"
             ],
             [
-                "mapped.csv:md5,389bf89d398ba5f3796d321fb5bc5b1e",
-                "execution_report_2024-10-08_08-09-33.html:md5,c9a458c76ba419d397d9287acf275609",
-                "execution_timeline_2024-10-08_08-09-33.html:md5,0469f498acca724b992c30089d954f55",
-                "manifest_2024-10-08_08-09-33.bco.json:md5,236e2eee6b55f363fd3feadcf6a47f99",
-                "nf_core_sarek_software_mqc_versions.yml:md5,12cd837f67a3809cd23f078e32092e35",
-                "params_2024-10-08_08-09-56.json:md5,39a01f70b28fee7329df69900ca895ca",
-                "pipeline_dag_2024-10-08_08-09-33.html:md5,d78ed2baa8fcb66c20091b633104bf85",
-                "test.sorted.bam:md5,cf6c73b5c2e50ba9a36f7d338b180e26",
-                "test.sorted.bam.bai:md5,1fc0d013dccc22c682f39ed789d2bedc"
+                "test.sorted.bam:md5,eacfb00423fbfdbf51dd684037976a8c",
+                "test.sorted.bam.bai:md5,fb05f1de7ccad584162210739ee198b8"
             ]
         ],
         "meta": {
             "nf-test": "0.9.0",
             "nextflow": "24.09.0"
         },
-        "timestamp": "2024-10-08T08:10:41.140863"
+        "timestamp": "2024-10-08T08:49:45.072878"
     }
 }

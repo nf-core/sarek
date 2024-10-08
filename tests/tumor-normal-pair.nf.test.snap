@@ -1,5 +1,5 @@
 {
-    "Run with profile test --input tests/csv/3.0/fastq_pair.csv": {
+    "Run with profile test | --input tests/csv/3.0/fastq_pair.csv": {
         "content": [
             40,
             {
@@ -353,11 +353,11 @@
                 "gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Count.png:md5,5484b17f70aafc87f65ff89c77db5ddc",
                 "gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Percent.png:md5,9f7579c2aa094bc5bb2ba34bff997b9c",
                 "gatk-base-recalibrator-reported-empirical-plot.png:md5,d8728cd3fb6330c4a06984dde7196a7e",
-                "general_stats_table.png:md5,b041fc73cf62a1a70e3531b463a49703",
+                "general_stats_table.png:md5,e3eb8b4e2590c7683b71db8126c268e6",
                 "mosdepth-coverage-per-contig-single-cnt.png:md5,ffad6689f9ee30161370c24755d0cac2",
                 "mosdepth-coverage-per-contig-single-pct.png:md5,6af21d53f89432e70c01dc561c818b93",
                 "mosdepth-cumcoverage-dist-id.png:md5,8cdc202c8020d1e865307d249282b31a",
-                "samtools-stats-dp.png:md5,3bee0374049f9757bfcaa9dba75cd04b",
+                "samtools-stats-dp.png:md5,a7bab338631576345e3a16ad9255ca48",
                 "samtools_alignment_plot-cnt.png:md5,862074b670352b4c6dd0b40b60543584",
                 "samtools_alignment_plot-pct.png:md5,e2c032c4c0ce9fcd7546d9014e7dea05",
                 "vcftools_tstv_by_count.png:md5,5cd8114551f5dd9a4173b0f1d99e63b4",
@@ -404,6 +404,6 @@
             "nf-test": "0.9.0",
             "nextflow": "24.09.0"
         },
-        "timestamp": "2024-10-08T07:53:30.65918"
+        "timestamp": "2024-10-08T08:53:51.787988"
     }
 }

@@ -1,16 +1,3 @@
-# default_extended
-
-validation_checks:
-  - conf/modules/**
-  - main.nf
-  - modules/**
-  - nextflow.config
-  - nextflow_schema.json
-  - subworkflows/**
-  - tests/csv/3.0/sample_with_space.csv
-  - tests/test_samplesheet_validation_spaces.yml
-  - workflows/**
-
 # preprocessing
 
 ## alignment_from_everything

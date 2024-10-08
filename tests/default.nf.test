@@ -15,9 +15,9 @@ nextflow_pipeline {
 
         then {
             // stable_name: All files + folders in ${params.outdir}/ with a stable name
-            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, exclude:['pipeline_info/*.{html,json,txt}'])
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
             // stable_path: All files in ${params.outdir}/ with stable content
-            def stable_path = getAllFilesFromDir(params.outdir, excludeFile:'tests/.nftignore')
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
@@ -30,6 +30,23 @@ nextflow_pipeline {
                     // All files with stable contents
                     stable_path
                 ).match() }
+            )
+        }
+    }
+
+    test("Run with profile test | --input tests/csv/3.0/sample_with_space.csv") {
+
+        when {
+            params {
+                input = "${projectDir}/tests/csv/3.0/sample_with_space.csv"
+                outdir = "$outputDir"
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.failed},
+                { assert workflow.stderr.contains("* -- Entry 2 - sample: Sample ID must be provided and cannot contain spaces (test 2)") }
             )
         }
     }
