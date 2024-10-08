@@ -34,7 +34,7 @@ nextflow_pipeline {
                     // All files with stable contents
                     stable_path,
                     // Bam files
-                    bam_files.collect{ file -> [ file.getName(), bam(file.toString()).getHeader(), bam(file.toString()).getReadsMD5() ] }
+                    bam_files.collect{ file -> [ file.getName(), bam(file.toString()).getHeaderMD5() ] }
                 ).match() }
             )
         }

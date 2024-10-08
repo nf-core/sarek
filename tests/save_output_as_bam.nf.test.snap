@@ -38,19 +38,7 @@
             [
                 [
                     "test.sorted.bam",
-                    [
-                        "@HD\tVN:1.6\tSO:coordinate",
-                        "@SQ\tSN:chr22\tLN:40001",
-                        "@RG\tID:test.test_L1\tPU:test_L1\tSM:test_test\tLB:test\tDS:s3://ngi-igenomes/testdata/nf-core/modules/genomics/homo_sapiens/genome/genome.fasta\tPL:ILLUMINA",
-                        "@RG\tID:test.test_L2\tPU:test_L2\tSM:test_test\tLB:test\tDS:s3://ngi-igenomes/testdata/nf-core/modules/genomics/homo_sapiens/genome/genome.fasta\tPL:ILLUMINA",
-                        "@PG\tID:bwa\tPN:bwa\tVN:0.7.18-r1243-dirty\tCL:bwa mem -K 100000000 -Y -R @RG\\tID:test.test_L1\\tPU:test_L1\\tSM:test_test\\tLB:test\\tDS:s3://ngi-igenomes/testdata/nf-core/modules/genomics/homo_sapiens/genome/genome.fasta\\tPL:ILLUMINA -t 2 ./bwa/genome test_1.fastq.gz test_2.fastq.gz",
-                        "@PG\tID:samtools\tPN:samtools\tPP:bwa\tVN:1.20\tCL:samtools sort --threads 2 -o test-test_L1.sorted.bam -",
-                        "@PG\tID:bwa-5A28A7F7\tPN:bwa\tVN:0.7.18-r1243-dirty\tCL:bwa mem -K 100000000 -Y -R @RG\\tID:test.test_L2\\tPU:test_L2\\tSM:test_test\\tLB:test\\tDS:s3://ngi-igenomes/testdata/nf-core/modules/genomics/homo_sapiens/genome/genome.fasta\\tPL:ILLUMINA -t 2 ./bwa/genome test_1.fastq.gz test_2.fastq.gz",
-                        "@PG\tID:samtools-61B2D815\tPN:samtools\tPP:bwa-5A28A7F7\tVN:1.20\tCL:samtools sort --threads 2 -o test-test_L2.sorted.bam -",
-                        "@PG\tID:samtools.1\tPN:samtools\tPP:samtools\tVN:1.21\tCL:samtools merge --threads 1 test.sorted.bam 1/test-test_L1.sorted.bam 2/test-test_L2.sorted.bam",
-                        "@PG\tID:samtools.2\tPN:samtools\tPP:samtools-61B2D815\tVN:1.21\tCL:samtools merge --threads 1 test.sorted.bam 1/test-test_L1.sorted.bam 2/test-test_L2.sorted.bam"
-                    ],
-                    "5534c350547fd253f0f2b9450362bed"
+                    "4b2060f76d9577c098e9f553dc8ab671"
                 ]
             ]
         ],
@@ -58,6 +46,6 @@
             "nf-test": "0.9.0",
             "nextflow": "24.09.0"
         },
-        "timestamp": "2024-10-08T09:24:24.890705"
+        "timestamp": "2024-10-08T09:44:15.123482"
     }
 }
