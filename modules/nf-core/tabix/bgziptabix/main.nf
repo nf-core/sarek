@@ -34,10 +34,11 @@ process TABIX_BGZIPTABIX {
 
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
+    def args2 = task.ext.args2 ?: ''
+    def index = args2.contains("-C ") || args2.contains("--csi") ? "csi" : "tbi"
     """
     echo "" | gzip > ${prefix}.${input.getExtension()}.gz
-    touch ${prefix}.${input.getExtension()}.gz.tbi
-    touch ${prefix}.${input.getExtension()}.gz.csi
+    touch ${prefix}.${input.getExtension()}.gz.${index}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
