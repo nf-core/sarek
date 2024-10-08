@@ -947,7 +947,7 @@ def addReadgroupToMeta(meta, files) {
    
     def flowcell = flowcellLaneFromFastq(files[0])
 
-    // Check if flowcell ID matches for paired samples
+    // Check if flowcell ID matches
     if ( !flowcell && flowcell != flowcellLaneFromFastq(files[1]) ){
         error("Flowcell ID does not match for paired reads of sample ${meta.id} - ${files}")
     }
