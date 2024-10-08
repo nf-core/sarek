@@ -944,16 +944,15 @@ workflow SAREK {
 // Add readgroup to meta and remove lane
 def addReadgroupToMeta(meta, files) {
     def CN = params.seq_center ? "CN:${params.seq_center}\\t" : ''
-   
     def flowcell = flowcellLaneFromFastq(files[0])
 
     // Check if flowcell ID matches
-    if ( !flowcell && flowcell != flowcellLaneFromFastq(files[1]) ){
+    if ( flowcell && flowcell != flowcellLaneFromFastq(files[1]) ){
         error("Flowcell ID does not match for paired reads of sample ${meta.id} - ${files}")
     }
 
     // If we cannot read the flowcell ID from the fastq file, then we don't use it
-    def sample_lane_id = flowcellLaneFromFastq(files[0]) ? "${flowcell}.${meta.sample}.${meta.lane}" : "${meta.sample}.${meta.lane}"
+    def sample_lane_id = flowcell ? "${flowcell}.${meta.sample}.${meta.lane}" : "${meta.sample}.${meta.lane}"
 
     // Don't use a random element for ID, it breaks resuming
     def read_group = "\"@RG\\tID:${sample_lane_id}\\t${CN}PU:${meta.lane}\\tSM:${meta.patient}_${meta.sample}\\tLB:${meta.sample}\\tDS:${params.fasta}\\tPL:${params.seq_platform}\""
