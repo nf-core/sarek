@@ -5,11 +5,14 @@ nextflow_pipeline {
     tag "pipeline"
     tag "pipeline_sarek"
 
-    test("Run with profile test") {
+    test("Run with profile test | --save_mapped | skip QC/recal/md") {
 
         when {
             params {
                 outdir = "$outputDir"
+                save_mapped = true
+                skip_tools = 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools'
+                tools = ''
             }
         }
 
