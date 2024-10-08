@@ -12,7 +12,7 @@ multiqc/multiqc_plots/png/picard_deduplication*.png
 multiqc/multiqc_plots/svg/*
 multiqc/multiqc_report.html
 pipeline_info/*.{html,json,txt,yml}
-preprocessing/**/*.{md,recal,sorted}.{bam,cram,cram.crai,table}
+preprocessing/**/*.{md,recal,sorted}.{bam,bam.bai,cram,cram.crai,table}
 reference/dragmap/hash_table.{cfg,cfg.bin}
 reference/dragmap/hash_table_stats.txt
 reports/fastqc/**/*_fastqc.{html,zip}
