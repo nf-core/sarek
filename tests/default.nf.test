@@ -9,6 +9,7 @@ nextflow_pipeline {
 
         when {
             params {
+                modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
                 outdir = "$outputDir"
             }
         }
@@ -19,7 +20,7 @@ nextflow_pipeline {
             // stable_path: All files in ${params.outdir}/ with stable content
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
             def cram_files  = getAllFilesFromDir(params.outdir, include: ['**/*.cram'])
-            println cram_files
+            def fasta       = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta'
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
@@ -30,7 +31,9 @@ nextflow_pipeline {
                     // All stable path name, with a relative path
                     stable_name,
                     // All files with stable contents
-                    stable_path
+                    stable_path,
+                    // Cram files
+                    cram_files.collect{ file -> [ file.getName(), cram(file.toString(), fasta).getHeaderMD5() ] }
                 ).match() }
             )
         }
