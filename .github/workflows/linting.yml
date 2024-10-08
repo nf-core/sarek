@@ -42,7 +42,7 @@ jobs:
           architecture: "x64"
 
       - name: read .nf-core.yml
-        uses: pietrobolcato/action-read-yaml@1.0.0
+        uses: pietrobolcato/action-read-yaml@1.1.0
         id: read_yml
         with:
           config: ${{ github.workspace }}/.nf-core.yml
