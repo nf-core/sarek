@@ -452,9 +452,6 @@ See the main [Nextflow documentation](https://www.nextflow.io/docs/latest/config
 
 If you have any questions or issues please send us a message on [Slack](https://nf-co.re/join/slack) on the [`#configs` channel](https://nfcore.slack.com/channels/configs).
 
-<<<<<<< HEAD
-## Running in the background
-=======
 ## Azure Resource Requests
 
 To be used with the `azurebatch` profile by specifying the `-profile azurebatch`.
@@ -464,7 +461,6 @@ Note that the choice of VM size depends on your quota and the overall workload d
 For a thorough list, please refer the [Azure Sizes for virtual machines in Azure](https://docs.microsoft.com/en-us/azure/virtual-machines/sizes).
 
 # Troubleshooting & FAQ
->>>>>>> dev
 
 ## How to test the pipeline
 
