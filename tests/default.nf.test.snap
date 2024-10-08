@@ -274,7 +274,6 @@
                 "fastqc_top_overrepresented_sequences_table.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Count.txt:md5,20b2630a7400c9c279bf8c0c66341f7d",
                 "gatk-base-recalibrator-quality-scores-plot_Pre-recalibration_Percent.txt:md5,b9b943621e50c7f3e75a37871667d5ed",
-                "gatk-base-recalibrator-reported-empirical-plot.txt:md5,52bbf351c6e3894d8fc2e978c4af4636",
                 "mosdepth-coverage-per-contig-single.txt:md5,264db67a99d2c90ea7b075e33c201b77",
                 "mosdepth-cumcoverage-dist-id.txt:md5,5235e965da7ebe3bfebb24ffa88defff",
                 "mosdepth_cov_dist.txt:md5,8d0d7cb485a7bffb07da17b28f827120",
@@ -323,6 +322,6 @@
             "nf-test": "0.9.0",
             "nextflow": "24.09.0"
         },
-        "timestamp": "2024-10-08T11:09:51.020891"
+        "timestamp": "2024-10-08T12:09:25.505363"
     }
 }

@@ -1,4 +1,5 @@
 csv/*.csv
+multiqc/multiqc_data/gatk-base-recalibrator-reported-empirical-plot.txt
 multiqc/multiqc_data/gatk_base_recalibrator.txt
 multiqc/multiqc_data/multiqc.log
 multiqc/multiqc_data/multiqc_data.json
