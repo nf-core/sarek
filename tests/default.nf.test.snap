@@ -311,11 +311,11 @@
             [
                 [
                     "test.md.cram",
-                    "23b0b451fc07c0346bbac82e88c6e607"
+                    "724c601c9daf019d356a53a7d5e1c8b1"
                 ],
                 [
                     "test.recal.cram",
-                    "acd3664ca9ab5c804c66d64b4deea26f"
+                    "dbd6f40b1e6d72501dc034e62e9d54eb"
                 ]
             ]
         ],
@@ -323,6 +323,6 @@
             "nf-test": "0.9.0",
             "nextflow": "24.09.0"
         },
-        "timestamp": "2024-10-08T10:27:03.108109"
+        "timestamp": "2024-10-08T11:09:51.020891"
     }
 }

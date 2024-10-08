@@ -19,6 +19,7 @@ nextflow_pipeline {
             def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
             // stable_path: All files in ${params.outdir}/ with stable content
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            // cram_files: All cram files
             def cram_files  = getAllFilesFromDir(params.outdir, include: ['**/*.cram'])
             def fasta       = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta'
             assertAll(
@@ -32,8 +33,8 @@ nextflow_pipeline {
                     stable_name,
                     // All files with stable contents
                     stable_path,
-                    // Cram files
-                    cram_files.collect{ file -> [ file.getName(), cram(file.toString(), fasta).getHeaderMD5() ] }
+                    // All cram files
+                    cram_files.collect{ file -> [ file.getName(), cram(file.toString(), fasta).getReadsMD5() ] }
                 ).match() }
             )
         }
