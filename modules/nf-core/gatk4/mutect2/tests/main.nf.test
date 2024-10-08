@@ -1,0 +1,360 @@
+nextflow_process {
+
+    name "Test Process GATK4_MUTECT2"
+    script "../main.nf"
+    process "GATK4_MUTECT2"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "gatk4"
+    tag "gatk4/mutect2"
+
+    test("tumor_normal_pair") {
+        config "./pair.config"
+        when {
+            process {
+            """
+            input[0] = [
+                [
+                    id:'test',
+                    normal_id:'normal',
+                    tumor_id:'tumour'
+                ],
+                [
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.recalibrated.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test2.paired_end.recalibrated.sorted.bam', checkIfExists: true)
+                ],
+                [
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.recalibrated.sorted.bam.bai', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test2.paired_end.recalibrated.sorted.bam.bai', checkIfExists: true)
+                ],
+                []
+            ]
+            input[1] = [
+                [ id:'genome' ],
+                file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta', checkIfExists: true)
+            ]
+            input[2] = [
+                [ id:'genome' ],
+                file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai', checkIfExists: true)
+            ]
+            input[3] = [
+                [ id:'genome' ],
+                file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.dict', checkIfExists: true)
+            ]
+            input[4] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/gnomAD.r2.1.1.vcf.gz', checkIfExists: true)
+            input[5] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/gnomAD.r2.1.1.vcf.gz.tbi', checkIfExists: true)
+            input[6] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/mills_and_1000G.indels.hg38.vcf.gz', checkIfExists: true)
+            input[7] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/mills_and_1000G.indels.hg38.vcf.gz.tbi', checkIfExists: true)
+            """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                {
+                    assert snapshot(
+                        process.out.vcf.collect { file(it[1]).getName() },
+                        process.out.tbi.collect { file(it[1]).getName() },
+                        process.out.stats,
+                        process.out.f1r2,
+                        process.out.versions,
+                    ).match()
+                }
+            )
+        }
+    }
+
+    test("tumor_normal_pair_f1r2") {
+        config "./f1r2.config"
+        when {
+            process {
+            """
+            input[0] = [
+                [
+                    id:'test',
+                    normal_id:'normal',
+                    tumor_id:'tumour'
+                ],
+                [
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.recalibrated.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test2.paired_end.recalibrated.sorted.bam', checkIfExists: true)
+                ],
+                [
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.recalibrated.sorted.bam.bai', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test2.paired_end.recalibrated.sorted.bam.bai', checkIfExists: true)
+                ],
+                []
+            ]
+            input[1] = [
+                [ id:'genome' ],
+                file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta', checkIfExists: true)
+            ]
+            input[2] = [
+                [ id:'genome' ],
+                file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai', checkIfExists: true)
+            ]
+            input[3] = [
+                [ id:'genome' ],
+                file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.dict', checkIfExists: true)
+            ]
+            input[4] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/gnomAD.r2.1.1.vcf.gz', checkIfExists: true)
+            input[5] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/gnomAD.r2.1.1.vcf.gz.tbi', checkIfExists: true)
+            input[6] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/mills_and_1000G.indels.hg38.vcf.gz', checkIfExists: true)
+            input[7] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/mills_and_1000G.indels.hg38.vcf.gz.tbi', checkIfExists: true)
+            """
+            }
+        }
+        then {
+            assertAll(
+                { assert process.success },
+                {
+                    assert snapshot(
+                        process.out.vcf.collect { file(it[1]).getName() },
+                        process.out.tbi.collect { file(it[1]).getName() },
+                        process.out.stats,
+                        process.out.f1r2.collect { file(it[1]).getName() },
+                        process.out.versions
+                    ).match()
+                }
+            )
+        }
+    }
+    test("tumor_single"){
+        when {
+            process {
+            """
+            input[0] = [
+                [ id:'test'],
+                [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test2.paired_end.recalibrated.sorted.bam', checkIfExists: true)],
+                [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test2.paired_end.recalibrated.sorted.bam.bai', checkIfExists: true)],
+                []
+            ]
+            input[1] = [
+                [ id:'genome' ],
+                file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta', checkIfExists: true)
+            ]
+            input[2] = [
+                [ id:'genome' ],
+                file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai', checkIfExists: true)
+            ]
+            input[3] = [
+                [ id:'genome' ],
+                file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.dict', checkIfExists: true)
+            ]
+            input[4] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/gnomAD.r2.1.1.vcf.gz', checkIfExists: true)
+            input[5] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/gnomAD.r2.1.1.vcf.gz.tbi', checkIfExists: true)
+            input[6] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/mills_and_1000G.indels.hg38.vcf.gz', checkIfExists: true)
+            input[7] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/mills_and_1000G.indels.hg38.vcf.gz.tbi', checkIfExists: true)
+            """
+            }
+        }
+        then {
+            assertAll(
+                { assert process.success },
+                {
+                    assert snapshot(
+                        process.out.vcf.collect { file(it[1]).getName() },
+                        process.out.tbi.collect { file(it[1]).getName() },
+                        process.out.stats,
+                        process.out.f1r2,
+                        process.out.versions
+                    ).match()
+                }
+            )
+        }
+    }
+    test("cram_input"){
+        when {
+            process{
+            """
+            input[0] = [
+                [ id:'test'],
+                [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test2.paired_end.recalibrated.sorted.cram', checkIfExists: true)],
+                [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test2.paired_end.recalibrated.sorted.cram.crai', checkIfExists: true)],
+                []
+            ]
+            input[1] = [
+                [ id:'genome' ],
+                file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta', checkIfExists: true)
+            ]
+            input[2] = [
+                [ id:'genome' ],
+                file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai', checkIfExists: true)
+            ]
+            input[3] = [
+                [ id:'genome' ],
+                file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.dict', checkIfExists: true)
+            ]
+            input[4] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/gnomAD.r2.1.1.vcf.gz', checkIfExists: true)
+            input[5] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/gnomAD.r2.1.1.vcf.gz.tbi', checkIfExists: true)
+            input[6] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/mills_and_1000G.indels.hg38.vcf.gz', checkIfExists: true)
+            input[7] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/mills_and_1000G.indels.hg38.vcf.gz.tbi', checkIfExists: true)
+            """
+            }
+        }
+        then {
+            assertAll(
+                { assert process.success },
+                {
+                    assert snapshot(
+                        process.out.vcf.collect { file(it[1]).getName() },
+                        process.out.tbi.collect { file(it[1]).getName() },
+                        process.out.stats,
+                        process.out.f1r2,
+                        process.out.versions
+                    ).match()
+                }
+            )
+        }
+    }
+
+    test("generate_pon") {
+        when {
+            process {
+            """
+            input[0] = [
+                [ id:'test'],
+                [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.recalibrated.sorted.bam', checkIfExists: true)],
+                [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.recalibrated.sorted.bam.bai', checkIfExists: true)],
+                []
+            ]
+            input[1] = [
+                [ id:'genome' ],
+                file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta', checkIfExists: true)
+            ]
+            input[2] = [
+                [ id:'genome' ],
+                file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai', checkIfExists: true)
+            ]
+            input[3] = [
+                [ id:'genome' ],
+                file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.dict', checkIfExists: true)
+            ]
+            input[4] = []
+            input[5] = []
+            input[6] = []
+            input[7] = []
+            """
+            }
+        }
+        then {
+            assertAll(
+                { assert process.success },
+                {
+                    assert snapshot(
+                        process.out.vcf.collect { file(it[1]).getName() },
+                        process.out.tbi.collect { file(it[1]).getName() },
+                        process.out.stats,
+                        process.out.f1r2,
+                        process.out.versions
+                    ).match()
+                }
+            )
+        }
+    }
+
+    test("mitochondria"){
+        when {
+            process {
+            """
+            input[0] = [
+                [ id:'test'],
+                [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/mitochon_standin.recalibrated.sorted.bam', checkIfExists: true)],
+                [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/mitochon_standin.recalibrated.sorted.bam.bai', checkIfExists: true)],
+                [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.bed', checkIfExists: true)]
+            ]
+            input[1] = [
+                [ id:'genome' ],
+                file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
+            ]
+            input[2] = [
+                [ id:'genome' ],
+                file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
+            ]
+            input[3] = [
+                [ id:'genome' ],
+                file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.dict', checkIfExists: true)
+            ]
+            input[4] = []
+            input[5] = []
+            input[6] = []
+            input[7] = []
+            """
+            }
+        }
+        then {
+            assertAll(
+                { assert process.success },
+                {
+                    assert snapshot(
+                        process.out.vcf.collect { file(it[1]).getName() },
+                        process.out.tbi.collect { file(it[1]).getName() },
+                        process.out.stats,
+                        process.out.f1r2,
+                        process.out.versions
+                    ).match()
+                }
+            )
+        }
+    }
+
+    test("tumor_normal_pair_f1r2_stubs"){
+        options "-stub-run"
+        when {
+            process {
+            """
+            input[0] = [
+                [
+                    id:'test',
+                    normal_id:'normal',
+                    tumor_id:'tumour'
+                ],
+                [
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.recalibrated.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test2.paired_end.recalibrated.sorted.bam', checkIfExists: true)
+                ],
+                [
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.recalibrated.sorted.bam.bai', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test2.paired_end.recalibrated.sorted.bam.bai', checkIfExists: true)
+                ],
+                []
+            ]
+            input[1] = [
+                [ id:'genome' ],
+                file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta', checkIfExists: true)
+            ]
+            input[2] = [
+                [ id:'genome' ],
+                file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai', checkIfExists: true)
+            ]
+            input[3] = [
+                [ id:'genome' ],
+                file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.dict', checkIfExists: true)
+            ]
+            input[4] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/gnomAD.r2.1.1.vcf.gz', checkIfExists: true)
+            input[5] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/gnomAD.r2.1.1.vcf.gz.tbi', checkIfExists: true)
+            input[6] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/mills_and_1000G.indels.hg38.vcf.gz', checkIfExists: true)
+            input[7] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/mills_and_1000G.indels.hg38.vcf.gz.tbi', checkIfExists: true)
+            """
+            }
+        }
+        then {
+            assertAll(
+                { assert process.success },
+                {
+                    assert snapshot(
+                        process.out.vcf.collect { file(it[1]).getName() },
+                        process.out.tbi.collect { file(it[1]).getName() },
+                        process.out.stats.collect { file(it[1]).getName() },
+                        process.out.f1r2.collect { file(it[1]).getName() },
+                        process.out.versions.collect { file(it[1]).getName() }
+                    ).match()
+                }
+            )
+        }
+
+    }
+
+}

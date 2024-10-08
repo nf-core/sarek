@@ -1,0 +1,121 @@
+{
+    "cnvkit batch tumouronly mode - bam": {
+        "content": [
+            [
+                "versions.yml:md5,5737e02065ca6359586a4078708c73e6"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-08-07T10:07:07.53837"
+    },
+    "cnvkit batch tumouronly mode - cram": {
+        "content": [
+            [
+                "versions.yml:md5,0310a792526148b05f434944a1167835"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-08-07T10:07:48.900117"
+    },
+    "cnvkit batch - bam - stub": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    [
+                        "baits.antitarget.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
+                        "baits.target.bed:md5,26d25ff2d6c45b6d92169b3559c6acdb"
+                    ]
+                ]
+            ],
+            [
+                "versions.yml:md5,5737e02065ca6359586a4078708c73e6"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-08-07T10:09:40.098703"
+    },
+    "cnvkit batch wgs - bam": {
+        "content": [
+            [
+                "versions.yml:md5,5737e02065ca6359586a4078708c73e6"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-08-07T10:06:25.023798"
+    },
+    "cnvkit batch germline hybrid mode - bam": {
+        "content": [
+            [
+                "versions.yml:md5,5737e02065ca6359586a4078708c73e6"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-08-07T10:09:19.191221"
+    },
+    "cnvkit batch hybrid mode - bam": {
+        "content": [
+            [
+                "versions.yml:md5,5737e02065ca6359586a4078708c73e6"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-08-07T10:06:10.438545"
+    },
+    "cnvkit batch wgs - cram": {
+        "content": [
+            [
+                "versions.yml:md5,0310a792526148b05f434944a1167835"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-08-07T10:06:39.492881"
+    },
+    "cnvkit batch pon mode - bam": {
+        "content": [
+            [
+                "versions.yml:md5,5737e02065ca6359586a4078708c73e6"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-08-07T10:09:29.636924"
+    },
+    "cnvkit batch germline mode - cram": {
+        "content": [
+            [
+                "versions.yml:md5,0310a792526148b05f434944a1167835"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-08-07T10:09:07.307311"
+    }
+}

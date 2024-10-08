@@ -1,0 +1,528 @@
+{
+    "bam_bam": {
+        "content": [
+            "test.bam"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-12T19:37:51.256068"
+    },
+    "cram_to_bam_index_csi": {
+        "content": [
+            "test.bam.csi"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-12T19:38:12.958617"
+    },
+    "bam_stub_bam": {
+        "content": [
+            "test.bam"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-12T19:38:32.065301"
+    },
+    "bam_bai": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-12T19:37:51.258578"
+    },
+    "bam_stub_bai": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-12T19:38:32.071284"
+    },
+    "bam_stub_versions": {
+        "content": [
+            [
+                "versions.yml:md5,176db5ec46b965219604bcdbb3ef9e07"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-16T09:26:24.461775464"
+    },
+    "cram_to_bam_index_cram": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-12T19:38:12.972288"
+    },
+    "cram_to_bam_sam": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-12T19:38:04.999247"
+    },
+    "cram_to_bam_index_sam": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-12T19:38:12.976457"
+    },
+    "cram_crai": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-12T19:37:56.497581"
+    },
+    "cram_csi": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-12T19:37:56.50038"
+    },
+    "cram_to_bam_cram": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-12T19:38:04.992239"
+    },
+    "cram_to_bam_index_qname_csi": {
+        "content": [
+            "test.bam.csi"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-12T19:38:23.325496"
+    },
+    "bam_stub_sam": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-12T19:38:32.079529"
+    },
+    "cram_cram": {
+        "content": [
+            "test.cram"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-12T19:37:56.490286"
+    },
+    "cram_to_bam_index_qname_unselected_csi": {
+        "content": [
+            "test.unselected.bam.csi"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-12T19:38:23.328458"
+    },
+    "bam_csi": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-12T19:37:51.262882"
+    },
+    "cram_to_bam_crai": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-12T19:38:04.989247"
+    },
+    "cram_to_bam_index_crai": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-12T19:38:12.967681"
+    },
+    "cram_to_bam_index_qname_versions": {
+        "content": [
+            [
+                "versions.yml:md5,176db5ec46b965219604bcdbb3ef9e07"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-16T09:25:51.953436682"
+    },
+    "cram_to_bam_bam": {
+        "content": [
+            "test.bam"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-12T19:38:04.982361"
+    },
+    "cram_to_bam_index_bam": {
+        "content": [
+            "test.bam"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-12T19:38:12.95456"
+    },
+    "cram_to_bam_index_versions": {
+        "content": [
+            [
+                "versions.yml:md5,176db5ec46b965219604bcdbb3ef9e07"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-16T09:25:14.475388399"
+    },
+    "cram_to_bam_bai": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-12T19:38:04.98601"
+    },
+    "cram_to_bam_versions": {
+        "content": [
+            [
+                "versions.yml:md5,176db5ec46b965219604bcdbb3ef9e07"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-16T09:24:49.673441798"
+    },
+    "cram_bam": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-12T19:37:56.495512"
+    },
+    "bam_stub_cram": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-12T19:38:32.076908"
+    },
+    "cram_to_bam_index_qname_bai": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-12T19:38:23.328458"
+    },
+    "cram_to_bam_index_qname_crai": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-12T19:38:23.330789"
+    },
+    "cram_bai": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-12T19:37:56.493129"
+    },
+    "bam_stub_crai": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-12T19:38:32.074313"
+    },
+    "cram_to_bam_index_qname_bam": {
+        "content": [
+            "test.bam"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-12T19:38:23.322874"
+    },
+    "cram_to_bam_index_qname_unselected": {
+        "content": [
+            "test.unselected.bam"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-12T19:38:23.322874"
+    },
+    "cram_to_bam_index_qname_unselected_csi": {
+        "content": [
+            "test.unselected.bam.csi"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-12T19:38:23.328458"
+    },
+    "bam_versions": {
+        "content": [
+            [
+                "versions.yml:md5,176db5ec46b965219604bcdbb3ef9e07"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-16T09:23:27.151650338"
+    },
+    "cram_to_bam_index_qname_cram": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-12T19:38:23.333248"
+    },
+    "bam_crai": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-12T19:37:51.259774"
+    },
+    "bam_cram": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-12T19:37:51.261287"
+    },
+    "cram_to_bam_csi": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-12T19:38:04.995454"
+    },
+    "cram_sam": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-12T19:37:56.502625"
+    },
+    "cram_versions": {
+        "content": [
+            [
+                "versions.yml:md5,176db5ec46b965219604bcdbb3ef9e07"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-16T09:24:12.95416913"
+    },
+    "cram_to_bam_index_qname_unselected": {
+        "content": [
+            "test.unselected.bam"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-12T19:38:23.322874"
+    },
+    "bam_sam": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-12T19:37:51.264651"
+    },
+    "cram_to_bam_index_bai": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-12T19:38:12.962863"
+    },
+    "cram_to_bam_index_qname_sam": {
+        "content": [
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-12T19:38:23.337634"
+    },
+    "bam_stub_csi": {
+        "content": [
+            "test.bam.csi"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.04.3"
+        },
+        "timestamp": "2024-02-12T19:38:32.068596"
+    }
+}

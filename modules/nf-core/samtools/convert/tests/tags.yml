@@ -1,0 +1,2 @@
+samtools/convert:
+  - "modules/nf-core/samtools/convert/**"

@@ -1,0 +1,2 @@
+tabix/bgziptabix:
+  - "modules/nf-core/tabix/bgziptabix/**"

@@ -1,0 +1,94 @@
+nextflow_process {
+
+    name "Test Process TABIX_BGZIPTABIX"
+    script "modules/nf-core/tabix/bgziptabix/main.nf"
+    process "TABIX_BGZIPTABIX"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "tabix"
+    tag "tabix/bgziptabix"
+
+    test("sarscov2_bed_tbi") {
+        config "./tabix_tbi.config"
+
+        when {
+            process {
+                """
+                input[0] = [
+                                [ id:'tbi_test' ],
+                                [ file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/bed/test.bed', checkIfExists: true) ]
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert snapshot(process.out).match() },
+                { assert snapshot(
+                            file(process.out.gz_tbi[0][1]).name
+                                ).match("tbi_test")
+                }
+            )
+        }
+    }
+
+    test("sarscov2_bed_csi") {
+        config "./tabix_csi.config"
+
+        when {
+            process {
+                """
+                input[0] = [
+                                [ id:'csi_test' ],
+                                [ file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/bed/test.bed', checkIfExists: true) ]
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert snapshot(process.out).match() },
+                { assert snapshot(
+                            file(process.out.gz_csi[0][1]).name
+                                ).match("csi_test")
+                }
+            )
+        }
+
+    }
+
+    test("sarscov2_bed_csi_stub") {
+        config "./tabix_csi.config"
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                                [ id:'test' ],
+                                [ file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/bed/test.bed', checkIfExists: true) ]
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert snapshot(process.out).match() },
+                { assert snapshot(
+                            file(process.out.gz_csi[0][1]).name
+                                ).match("csi_stub")
+                }
+            )
+        }
+
+    }
+
+}

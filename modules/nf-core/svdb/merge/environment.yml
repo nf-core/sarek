@@ -1,0 +1,8 @@
+channels:
+  - conda-forge
+  - bioconda
+
+dependencies:
+  - htslib=1.19.1
+  - samtools=1.19.2
+  - svdb=2.8.1
