@@ -1019,22 +1019,22 @@
             "$ref": "#/$defs/input_output_options"
         },
         {
-            "$ref": "#/definitions/main_options"
+            "$ref": "#/$defs/main_options"
         },
         {
-            "$ref": "#/definitions/fastq_preprocessing"
+            "$ref": "#/$defs/fastq_preprocessing"
         },
         {
-            "$ref": "#/definitions/preprocessing"
+            "$ref": "#/$defs/preprocessing"
         },
         {
-            "$ref": "#/definitions/variant_calling"
+            "$ref": "#/$defs/variant_calling"
         },
         {
-            "$ref": "#/definitions/annotation"
+            "$ref": "#/$defs/annotation"
         },
         {
-            "$ref": "#/definitions/reference_genome_options"
+            "$ref": "#/$defs/reference_genome_options"
         },
         {
             "$ref": "#/$defs/institutional_config_options"
