@@ -45,7 +45,7 @@ jobs:
         uses: pietrobolcato/action-read-yaml@1.0.0
         id: read_yml
         with:
-          config: ${{ github.workspace }}/.nf-core.yaml
+          config: ${{ github.workspace }}/.nf-core.yml
 
       - name: Install dependencies
         run: |
