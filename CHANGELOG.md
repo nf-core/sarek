@@ -18,15 +18,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - [1669](https://github.com/nf-core/sarek/pull/1669) - Better nf-test pipeline level tests
+- [1680](https://github.com/nf-core/sarek/pull/1680) - Template update for nf-core/tools v3.0.0
+- [1681](https://github.com/nf-core/sarek/pull/1681) - Template update for nf-core/tools v3.0.1
 
 ### Fixed
 
-- [1656](https://github.com/nf-core/sarek/pull/1656) - Retiring parameter `snpeff_genome`
 - [1657](https://github.com/nf-core/sarek/pull/1657) - Update all actions used in the GHA CI
 - [1661](https://github.com/nf-core/sarek/pull/1661) - nf-test pipeline level tests
 - [1673](https://github.com/nf-core/sarek/pull/1673) - Print warning message instead of silent error with Nextflow versions prior to 24.08.0edge
 
 ### Removed
+
+- [1656](https://github.com/nf-core/sarek/pull/1656) - Retiring parameter `snpeff_genome`
 
 ### Dependencies
 
@@ -42,10 +45,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Parameters
 
-| Params          | Status  |
-| --------------- | ------- |
-| `snpeff_db`     | Updated |
-| `snpeff_genome` | Removed |
+| Params                               | Status  |
+| ------------------------------------ | ------- |
+| `--help_full`                        | New     |
+| `--show_hidden`                      | New     |
+| `--snpeff_db`                        | Updated |
+| `--snpeff_genome`                    | Removed |
+| `--validationFailUnrecognisedParams` | Removed |
+| `--validationLenientMode`            | Removed |
+| `--validationSchemaIgnoreParams`     | Removed |
+| `--validationShowHiddenParams`       | Removed |
 
 ## [3.4.4](https://github.com/nf-core/sarek/releases/tag/3.4.4) - Ruopsokjåkhå
 
