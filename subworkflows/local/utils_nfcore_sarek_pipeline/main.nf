@@ -123,7 +123,9 @@ if (params.tools && (params.tools.split(',').contains('vep')    || params.tools.
 
     params.input_restart = retrieveInput((!params.build_only_index && !params.input), params.step, params.outdir)
 
-    ch_from_samplesheet = params.build_only_index ? Channel.empty() : params.input ? Channel.fromSamplesheet("input") : Channel.fromSamplesheet("input_restart")
+    ch_from_samplesheet = params.build_only_index ? Channel.empty() : params.input ?
+        Channel.fromList(samplesheetToList(params.input, "$projectDir/assets/schema_input.json")) :
+        Channel.fromList(samplesheetToList(params.input_restart, "$projectDir/assets/schema_input.json"))
 
     SAMPLESHEET_TO_CHANNEL(
         ch_from_samplesheet,

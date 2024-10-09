@@ -45,18 +45,6 @@
             "lane": {
                 "type": "string",
                 "pattern": "^\\S+$",
-                "unique": ["patient", "sample"],
-                "anyOf": [
-                    {
-                        "dependentRequired": ["bam"]
-                    },
-                    {
-                        "dependentRequired": ["fastq_1"]
-                    },
-                    {
-                        "dependentRequired": ["spring_1"]
-                    }
-                ],
                 "meta": ["lane"]
             },
             "fastq_1": {
@@ -76,7 +64,6 @@
             },
             "fastq_2": {
                 "errorMessage": "Gzipped FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'",
-                "dependentRequired": ["fastq_1"],
                 "anyOf": [
                     {
                         "type": "string",
@@ -107,7 +94,6 @@
             },
             "spring_2": {
                 "errorMessage": "Gzipped and spring-compressed FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz.spring' or '.fastq.gz.spring'",
-                "dependentRequired": ["spring_1"],
                 "anyOf": [
                     {
                         "type": "string",
@@ -215,6 +201,30 @@
                 "type": "string"
             }
         },
-        "required": ["patient", "sample"]
+        "required": ["patient", "sample"],
+        "uniqueEntries": ["patient", "sample"],
+        "anyOf": [
+            {
+                "dependentRequired": {
+                    "fastq_2": ["fastq_1"],
+                    "spring_2": ["spring_1"],
+                    "lane": ["bam"]
+                }
+            },
+            {
+                "dependentRequired": {
+                    "fastq_2": ["fastq_1"],
+                    "spring_2": ["spring_1"],
+                    "lane": ["fastq_1"]
+                }
+            },
+            {
+                "dependentRequired": {
+                    "fastq_2": ["fastq_1"],
+                    "spring_2": ["spring_1"],
+                    "lane": ["spring_1"]
+                }
+            }
+        ]
     }
 }
