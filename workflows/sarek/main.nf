@@ -794,8 +794,11 @@ workflow SAREK {
 
         // POST VARIANTCALLING
         POST_VARIANTCALLING(BAM_VARIANT_CALLING_GERMLINE_ALL.out.vcf_all,
+                BAM_VARIANT_CALLING_TUMOR_ONLY_ALL.out.vcf_all,
+                BAM_VARIANT_CALLING_SOMATIC_ALL.out.vcf_all,
                 fasta,
-                params.concatenate_vcfs)
+                params.concatenate_vcfs,
+                params.normalized_vcfs)
 
         // Gather vcf files for annotation and QC
         vcf_to_annotate = Channel.empty()

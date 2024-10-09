@@ -56,4 +56,3 @@ workflow CONCATENATE_GERMLINE_VCFS {
     vcfs = TABIX_GERMLINE_VCFS_CONCAT_SORT.out.gz_tbi // post-processed VCFs
     versions // channel: [ versions.yml ]
 }
-
