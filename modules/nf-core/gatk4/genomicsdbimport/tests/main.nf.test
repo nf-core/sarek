@@ -1,0 +1,160 @@
+nextflow_process {
+
+    name "Test Process GATK4_GENOMICSDBIMPORT"
+    script "../main.nf"
+    process "GATK4_GENOMICSDBIMPORT"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "untar"
+    tag "gatk4"
+    tag "gatk4/genomicsdbimport"
+
+    test("test_gatk4_genomicsdbimport_create_genomicsdb") {
+
+        when {
+            process {
+                """
+                // [meta, vcf, tbi, interval, interval_value, workspace ]
+                input[0] = [ [ id:'test'],
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/gvcf/test.genome.vcf.gz', checkIfExists: true) ,
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/gvcf/test.genome.vcf.gz.tbi', checkIfExists: true) ,
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.interval_list', checkIfExists: true) ,
+                    [] ,
+                    [] ]
+                // run_intlist
+                input[1] = false
+                // run_updatewspace
+                input[2] = false
+                // input_map
+                input[3] = false
+
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                //{ assert snapshot(file(process.out.updatedb.get(0).get(1)).list().sort()).match() }
+                //{ assert snapshot(process.out.intervallist.get(0).get(1)).match() }
+                { assert snapshot(
+                    file(process.out.genomicsdb.get(0).get(1)).list().sort(),
+                    process.out.versions
+                ).match() }
+            )
+        }
+    }
+
+    test("test_gatk4_genomicsdbimport_get_intervalslist") {
+
+        setup {
+            run("UNTAR") {
+                script "../../../untar/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([ [], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/gatk/test_genomicsdb.tar.gz', checkIfExists: true) ])
+                    """
+                }
+            }
+        }
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([ [id:"test"], [], [], [], []]).combine(UNTAR.out.untar.map{ it[1] })
+                // run_intlist
+                input[1] = true
+                // run_updatewspace
+                input[2] = false
+                // input_map
+                input[3] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                //{ assert snapshot(file(process.out.genomicsdb.get(0).get(1)).list().sort()).match() }
+                //{ assert snapshot(file(process.out.updatedb.get(0).get(1)).list().sort()).match() }
+                { assert snapshot(
+                    process.out.intervallist.get(0).get(1),
+                    process.out.versions
+                ).match() }
+            )
+        }
+    }
+
+    test("test_gatk4_genomicsdbimport_update_genomicsdb") {
+
+        setup {
+            run("UNTAR") {
+                script "../../../untar/main.nf"
+                process {
+                    """
+                    input[0] = Channel.of([ [], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/gatk/test_genomicsdb.tar.gz', checkIfExists: true) ])
+                    """
+                }
+            }
+        }
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([ [id:"test"], file( params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/gvcf/test2.genome.vcf.gz' , checkIfExists: true), file( params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/gvcf/test2.genome.vcf.gz.tbi' , checkIfExists: true), [], []]).combine(UNTAR.out.untar.map{ it[1] })
+                // run_intlist
+                input[1] = false
+                // run_updatewspace
+                input[2] = true
+                // input_map
+                input[3] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                //{ assert snapshot(file(process.out.genomicsdb.get(0).get(1)).list().sort()).match() }
+                //{ assert snapshot(process.out.intervallist.get(0).get(1)).match() }
+                { assert snapshot(
+                    file(process.out.updatedb.get(0).get(1)).list().sort(),
+                    process.out.versions
+                ).match() }
+            )
+        }
+    }
+
+    test("test_gatk4_genomicsdbimport_stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                // [meta, vcf, tbi, interval, interval_value, workspace ]
+                input[0] = [ [ id:'test'],
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/gvcf/test.genome.vcf.gz', checkIfExists: true) ,
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/gvcf/test.genome.vcf.gz.tbi', checkIfExists: true) ,
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.interval_list', checkIfExists: true) ,
+                    [] ,
+                    [] ]
+                // run_intlist
+                input[1] = false
+                // run_updatewspace
+                input[2] = false
+                // input_map
+                input[3] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match()}
+            )
+        }
+    }
+}

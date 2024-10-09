@@ -1,0 +1,31 @@
+nextflow_process {
+
+    name "Test Process BWAMEM2_INDEX"
+    tag "modules_nfcore"
+    tag "modules"
+    tag "bwamem2"
+    tag "bwamem2/index"
+    script "../main.nf"
+    process "BWAMEM2_INDEX"
+
+    test("BWAMEM2 index") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [id: 'test'],
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+}

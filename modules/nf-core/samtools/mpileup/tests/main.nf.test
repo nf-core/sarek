@@ -1,0 +1,59 @@
+nextflow_process {
+
+    name "Test Process SAMTOOLS_MPILEUP"
+    script "../main.nf"
+    process "SAMTOOLS_MPILEUP"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "samtools"
+    tag "samtools/mpileup"
+
+    test("bam_bed") {
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                    []
+                ])
+                input[1] = Channel.of([ file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true) ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(path(process.out.mpileup[0][1]).linesGzip[0..6]).match("bam_bed_mpileup") },
+                { assert snapshot(process.out.versions).match("bam_bed_versions") }
+            )
+        }
+    }
+
+    test("bam_bed_fasta") {
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/bed/test.bed', checkIfExists: true)
+                ])
+                input[1] = Channel.of([ file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true) ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(path(process.out.mpileup[0][1]).linesGzip[0..6]).match("bam_bed_fasta_mpileup") },
+                { assert snapshot(process.out.versions).match("bam_bed_fasta_versions") }
+            )
+        }
+    }
+}

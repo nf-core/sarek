@@ -1,0 +1,60 @@
+
+nextflow_process {
+
+    name "Test Process GATK4_GATHERBQSRREPORTS"
+    script "../main.nf"
+    process "GATK4_GATHERBQSRREPORTS"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "gatk4"
+    tag "gatk4/gatherbqsrreports"
+
+    test("test-gatk4-gatherbqsrreports") {
+
+        when {
+            process {
+                """
+                input[0] = [
+				[ id:'test', single_end:false ], // meta map
+				    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/gatk/test.baserecalibrator.table', checkIfExists: true)
+				]
+
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+
+    test("test-gatk4-gatherbqsrreports-multiple") {
+
+        when {
+            process {
+                """
+                input[0] = [
+				[ id:'test', single_end:false ], // meta map
+				    [
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/gatk/test.baserecalibrator.table', checkIfExists: true),
+				        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/gatk/test2.baserecalibrator.table', checkIfExists: true)
+                    ]
+				]
+
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+
+}

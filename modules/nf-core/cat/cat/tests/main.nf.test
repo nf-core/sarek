@@ -1,0 +1,191 @@
+nextflow_process {
+
+    name "Test Process CAT_CAT"
+    script "../main.nf"
+    process "CAT_CAT"
+    tag "modules"
+    tag "modules_nfcore"
+    tag "cat"
+    tag "cat/cat"
+
+    test("test_cat_name_conflict") {
+        when {
+            params {
+                outdir   = "${outputDir}"
+            }
+            process {
+                """
+                input[0] =
+                    [
+                        [ id:'genome', single_end:true ],
+                        [
+                            file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true),
+                            file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.sizes', checkIfExists: true)
+                        ]
+                    ]
+                """
+            }
+        }
+        then {
+            assertAll(
+                { assert !process.success },
+                { assert process.stdout.toString().contains("The name of the input file can't be the same as for the output prefix") },
+                { assert snapshot(process.out.versions).match() }
+            )
+        }
+    }
+
+    test("test_cat_unzipped_unzipped") {
+        when {
+            params {
+                outdir   = "${outputDir}"
+            }
+            process {
+                """
+                input[0] =
+                    [
+                        [ id:'test', single_end:true ],
+                        [
+                            file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true),
+                            file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.sizes', checkIfExists: true)
+                        ]
+                    ]
+                """
+            }
+        }
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+
+
+    test("test_cat_zipped_zipped") {
+        when {
+            params {
+                outdir   = "${outputDir}"
+            }
+            process {
+                """
+                input[0] =
+                    [
+                        [ id:'test', single_end:true ],
+                        [
+                            file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.gff3.gz', checkIfExists: true),
+                            file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/alignment/last/contigs.genome.maf.gz', checkIfExists: true)
+                        ]
+                    ]
+                """
+            }
+        }
+        then {
+            def lines = path(process.out.file_out.get(0).get(1)).linesGzip
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    lines[0..5],
+                    lines.size(),
+                    process.out.versions
+                    ).match()
+                }
+            )
+        }
+    }
+
+    test("test_cat_zipped_unzipped") {
+        config './nextflow_zipped_unzipped.config'
+
+        when {
+            params {
+                outdir   = "${outputDir}"
+            }
+            process {
+                """
+                input[0] =
+                    [
+                        [ id:'test', single_end:true ],
+                        [
+                            file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.gff3.gz', checkIfExists: true),
+                            file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/alignment/last/contigs.genome.maf.gz', checkIfExists: true)
+                        ]
+                    ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+
+    }
+
+    test("test_cat_unzipped_zipped") {
+        config './nextflow_unzipped_zipped.config'
+        when {
+            params {
+                outdir   = "${outputDir}"
+            }
+            process {
+                """
+                input[0] =
+                    [
+                        [ id:'test', single_end:true ],
+                        [
+                            file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true),
+                            file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.sizes', checkIfExists: true)
+                        ]
+                    ]
+                """
+            }
+        }
+        then {
+            def lines = path(process.out.file_out.get(0).get(1)).linesGzip
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    lines[0..5],
+                    lines.size(),
+                    process.out.versions
+                    ).match()
+                }
+            )
+        }
+    }
+
+    test("test_cat_one_file_unzipped_zipped") {
+        config './nextflow_unzipped_zipped.config'
+        when {
+            params {
+                outdir   = "${outputDir}"
+            }
+            process {
+                """
+                input[0] =
+                    [
+                        [ id:'test', single_end:true ],
+                        [
+                            file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                        ]
+                    ]
+                """
+            }
+        }
+        then {
+            def lines = path(process.out.file_out.get(0).get(1)).linesGzip
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    lines[0..5],
+                    lines.size(),
+                    process.out.versions
+                    ).match()
+                }
+            )
+        }
+    }
+}

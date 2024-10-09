@@ -1,0 +1,123 @@
+name: gatk4_filtermutectcalls
+description: |
+  Filters the raw output of mutect2, can optionally use outputs of calculatecontamination and learnreadorientationmodel to improve filtering.
+keywords:
+  - filtermutectcalls
+  - filter
+  - gatk4
+  - mutect2
+  - vcf
+tools:
+  - gatk4:
+      description: |
+        Developed in the Data Sciences Platform at the Broad Institute, the toolkit offers a wide variety of tools
+        with a primary focus on variant discovery and genotyping. Its powerful processing engine
+        and high-performance computing features make it capable of taking on projects of any size.
+      homepage: https://gatk.broadinstitute.org/hc/en-us
+      documentation: https://gatk.broadinstitute.org/hc/en-us/categories/360002369672s
+      doi: 10.1158/1538-7445.AM2017-3590
+      identifier: ""
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test' ]
+    - vcf:
+        type: file
+        description: compressed vcf file of mutect2calls
+        pattern: "*.vcf.gz"
+    - vcf_tbi:
+        type: file
+        description: Tabix index of vcf file
+        pattern: "*vcf.gz.tbi"
+    - stats:
+        type: file
+        description: Stats file that pairs with output vcf file
+        pattern: "*vcf.gz.stats"
+    - orientationbias:
+        type: file
+        description: files containing artifact priors for input vcf. Optional input.
+        pattern: "*.artifact-prior.tar.gz"
+    - segmentation:
+        type: file
+        description: tables containing segmentation information for input vcf. Optional
+          input.
+        pattern: "*.segmentation.table"
+    - table:
+        type: file
+        description: table(s) containing contamination data for input vcf. Optional
+          input, takes priority over estimate.
+        pattern: "*.contamination.table"
+    - estimate:
+        type: float
+        description: estimation of contamination value as a double. Optional input,
+          will only be used if table is not specified.
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'genome' ]
+    - fasta:
+        type: file
+        description: The reference fasta file
+        pattern: "*.fasta"
+  - - meta3:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'genome' ]
+    - fai:
+        type: file
+        description: Index of reference fasta file
+        pattern: "*.fasta.fai"
+  - - meta4:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'genome' ]
+    - dict:
+        type: file
+        description: GATK sequence dictionary
+        pattern: "*.dict"
+output:
+  - vcf:
+      - meta:
+          type: file
+          description: file containing filtered mutect2 calls.
+          pattern: "*.vcf.gz"
+      - "*.vcf.gz":
+          type: file
+          description: file containing filtered mutect2 calls.
+          pattern: "*.vcf.gz"
+  - tbi:
+      - meta:
+          type: file
+          description: tbi file that pairs with vcf.
+          pattern: "*.vcf.gz.tbi"
+      - "*.vcf.gz.tbi":
+          type: file
+          description: tbi file that pairs with vcf.
+          pattern: "*.vcf.gz.tbi"
+  - stats:
+      - meta:
+          type: file
+          description: file containing statistics of the filtermutectcalls run.
+          pattern: "*.filteringStats.tsv"
+      - "*.filteringStats.tsv":
+          type: file
+          description: file containing statistics of the filtermutectcalls run.
+          pattern: "*.filteringStats.tsv"
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+authors:
+  - "@GCJMackenzie"
+  - "@maxulysse"
+  - "@ramprasadn"
+maintainers:
+  - "@GCJMackenzie"
+  - "@maxulysse"
+  - "@ramprasadn"

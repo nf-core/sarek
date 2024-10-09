@@ -1,0 +1,47 @@
+{
+    "BWA index": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "genome.amb:md5,3a68b8b2287e07dd3f5f95f4344ba76e",
+                            "genome.ann:md5,c32e11f6c859f166c7525a9c1d583567",
+                            "genome.bwt:md5,0469c30a1e239dd08f68afe66fde99da",
+                            "genome.pac:md5,983e3d2cd6f36e2546e6d25a0da78d66",
+                            "genome.sa:md5,ab3952cabf026b48cd3eb5bccbb636d1"
+                        ]
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,a64462ac7dfb21f4ade9b02e7f65c5bb"
+                ],
+                "index": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "genome.amb:md5,3a68b8b2287e07dd3f5f95f4344ba76e",
+                            "genome.ann:md5,c32e11f6c859f166c7525a9c1d583567",
+                            "genome.bwt:md5,0469c30a1e239dd08f68afe66fde99da",
+                            "genome.pac:md5,983e3d2cd6f36e2546e6d25a0da78d66",
+                            "genome.sa:md5,ab3952cabf026b48cd3eb5bccbb636d1"
+                        ]
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,a64462ac7dfb21f4ade9b02e7f65c5bb"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-05-16T11:40:09.925307"
+    }
+}

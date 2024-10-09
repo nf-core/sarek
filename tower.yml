@@ -1,5 +1,59 @@
 reports:
   multiqc_report.html:
     display: "MultiQC HTML report"
-  samplesheet.csv:
-    display: "Auto-created samplesheet with collated metadata and FASTQ paths"
+  "**/umi/*_umi_histogram.txt":
+    display: "All UMI histograms"
+  "**/reports/fastp/*/*_fastp.html":
+    display: "FASTP report"
+  "**/reports/mosdepth/*/*.mosdepth.summary.txt":
+    display: "All samples summary of mean depths per chromosome and within specified regions per chromosome"
+  "**/csv/*.csv":
+    display: "All CSV files to restart nf-core/sarek at a different step"
+  "**/variantcalling/ascat/*/*.tumour.ASPCF.png":
+    display: "ASCAT: All allele-specific copy number segmentation images"
+  "**/variantcalling/ascat/*/*.before_correction_Tumour.*.png":
+    display: "ASCAT: All samples logR and BAF values"
+  "**/variantcalling/ascat/*/*.after_correction_GC_Tumour.*.png":
+    display: "ASCAT: All samples GC and RT corrected logR and BAF values"
+  "**/variantcalling/ascat/*/*.tumour.sunrise.png":
+    display: "ASCAT: Range of ploidy and tumor percentage values"
+  "**/variantcalling/ascat/*/*.metrics.txt":
+    display: "ASCAT: Multiple metrics information"
+  "**/variantcalling/ascat/*/*.cnvs.txt":
+    display: "ASCAT: CNVS information"
+  "**/variantcalling/ascat/*/*.purityploidy.txt":
+    display: "ASCAT: Purity and ploidy information"
+  "**/variantcalling/ascat/*/*.segments.txt":
+    display: "ASCAT: copy number segments information"
+  "**/variantcalling/ascat/*/*_tumourBAF.txt":
+    display: "ASCAT: beta allele frequencies"
+  "**/variantcalling/ascat/*/*.tumour_*LogR.txt":
+    display: "ASCAT: total copy number on a logarithmic scale"
+  "**/variantcalling/cnvkit/*/*-diagram.pdf":
+    display: "CNVKIT: Copy numbers or segments on chromosomes"
+  "**/variantcalling/cnvkit/**-scatter.png":
+    display: "CNVKIT: Bin-level log2 coverages and segmentation calls"
+  "**/variantcalling/controlfreec/*/config.txt":
+    display: "Control-FREEC: Configuration file used to run Control-FREEC"
+  "**/variantcalling/controlfreec/*/*_BAF.png":
+    display: "Control-FREEC: BAF plot"
+  "**/variantcalling/controlfreec/*/*_ratio.log2.png":
+    display: "Control-FREEC: log2 ratio plot"
+  "**/variantcalling/controlfreec/*/*_ratio.png":
+    display: "Control-FREEC: ratio plot"
+  "**/variantcalling/controlfreec/*/*.circos.txt":
+    display: "Control-FREEC: translated output to the Circos format"
+  "**/variantcalling/controlfreec/*/*.p.value.txt":
+    display: "Control-FREEC: CNV file containing p_values for each call"
+  "**/variantcalling/controlfreec/*/*_BAF.txt":
+    display: "Control-FREEC: file with beta allele frequencies for each possibly heterozygous SNP position"
+  "**/variantcalling/controlfreec/*/*_info.txt":
+    display: "Control-FREEC: parsable file with information about FREEC run"
+  "**/reports/bcftools/*.bcftools_stats.txt":
+    display: "All samples raw statistics"
+  "**/reports/snpeff/*/*/*_snpEff.html":
+    display: "Statistics and plots for the SnpEff run"
+  "**/reports/snpeff/*/*/*_snpEff.genes.txt":
+    display: "TXT (tab separated) summary counts for variants affecting each transcript and gene"
+  "**/reports/EnsemblVEP/*/*/*_VEP.summary.html":
+    display: "Summary of the VEP run"
