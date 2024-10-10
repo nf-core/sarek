@@ -26,12 +26,12 @@ jobs:
 
       - name: Check nf-core outdated
         id: nf_core_outdated
-        run: pip list --outdated | grep nf-core
+        run: echo "OUTPUT=$(pip list --outdated | grep nf-core)" >> ${GITHUB_ENV}
 
       - name: Post nf-core template version comment
         uses: mshick/add-pr-comment@b8f338c590a895d50bcbfa6c5859251edc8952fc # v2
         if: |
-          ${{ steps.nf_core_outdated.outputs.stdout }} =~ 'nf-core'
+          contains(env.OUTPUT, 'nf-core')
         with:
           repo-token: ${{ secrets.NF_CORE_BOT_AUTH_TOKEN }}
           allow-repeats: false
