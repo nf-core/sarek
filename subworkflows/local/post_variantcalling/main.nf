@@ -8,7 +8,9 @@ include { NORMALIZE_VCFS } from '../vcf_normalization/main'
 workflow POST_VARIANTCALLING {
 
     take:
-    vcfs
+    germline_vcfs
+    tumor_only_vcfs
+    somatic_vcfs
     fasta
     concatenate_vcfs
     normalized_vcfs
@@ -16,8 +18,10 @@ workflow POST_VARIANTCALLING {
     main:
     versions = Channel.empty()
 
+    vcfs = germline_vcfs.mix(tumor_only_vcfs, somatic_vcfs)
+
     if (concatenate_vcfs){
-        CONCATENATE_GERMLINE_VCFS(vcfs, fasta)
+        CONCATENATE_GERMLINE_VCFS(germline_vcfs, fasta)
 
         vcfs = vcfs.mix(CONCATENATE_GERMLINE_VCFS.out.vcfs)
         versions = versions.mix(CONCATENATE_GERMLINE_VCFS.out.versions)

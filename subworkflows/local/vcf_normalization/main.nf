@@ -19,18 +19,21 @@ workflow NORMALIZE_VCFS {
 
     // Add additional information to VCF files
     ADD_INFO_TO_VCF(vcfs)
+
+    // Compress the VCF files with bgzip
+    TABIX_VCF(ADD_INFO_TO_VCF.out.vcf)
+
+    // Gather vcfs and vcf-tbis for normalization of vcf-files
+    vcfs_with_tbis = TABIX_VCF.out.gz_tbi.map{ meta, vcf, tbi -> [ meta.subMap('id'), vcf, tbi ] }.groupTuple()
     
     // Normalize the VCF files with BCFTOOLS_NORM
-    normalized_vcf = VCFS_NORM(vcf: ADD_INFO_TO_VCF.out.vcf)
+    VCFS_NORM(vcfs_with_tbis, fasta)
 
-    // Compress the normalized VCF files with bgzip
-    compressed_vcf = TABIX_VCF(normalized_vcf)
+    // Sort the normalized VCF files
+    VCFS_SORT(VCFS_NORM.out.vcf)
 
-    // Sort the compressed normalized VCF files
-    sorted_vcf = VCFS_SORT(compressed_vcf)
-
-    // Index the sorted VCF files
-    sorted_indexed_vcf = TABIX_VCFS_INDEX(sorted_vcf)
+    // Index the sorted normalized VCF files
+    TABIX_VCFS_INDEX(VCFS_SORT.out.vcf)
 
     // Gather versions of all tools used
     versions = versions.mix(ADD_INFO_TO_VCF.out.versions)
@@ -40,7 +43,7 @@ workflow NORMALIZE_VCFS {
     versions = versions.mix(TABIX_VCFS_INDEX.out.versions)
 
     emit:
-    normalized_vcfs = sorted_indexed_vcf // Post-processed sorted VCFs
+    vcfs // Post-processed sorted VCFs
     versions // Channel: [versions.yml]
 }
 
