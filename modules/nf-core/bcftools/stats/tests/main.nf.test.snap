@@ -1,0 +1,180 @@
+{
+    "sarscov2 - vcf_gz - reference": {
+        "content": [
+            [
+                "# This file was produced by bcftools stats (1.20+htslib-1.20) and can be plotted using plot-vcfstats.",
+                "# The command line was:\tbcftools stats  --fasta-ref genome.fasta test.vcf.gz",
+                "#",
+                "# Definition of sets:",
+                "# ID\t[2]id\t[3]tab-separated file names",
+                "ID\t0\ttest.vcf.gz"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-05-31T18:14:35.506777837"
+    },
+    "sarscov2 - vcf_gz - exons": {
+        "content": [
+            [
+                "# This file was produced by bcftools stats (1.20+htslib-1.20) and can be plotted using plot-vcfstats.",
+                "# The command line was:\tbcftools stats  --exons exons.tsv.gz test.vcf.gz",
+                "#",
+                "# Definition of sets:",
+                "# ID\t[2]id\t[3]tab-separated file names",
+                "ID\t0\ttest.vcf.gz"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-05-31T18:14:30.57486244"
+    },
+    "versions": {
+        "content": [
+            [
+                "versions.yml:md5,17cdf9d1ad31f6b1f5935dfcc9fe7b9a"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-05-31T18:16:27.637515559"
+    },
+    "sarscov2 - vcf_gz - targets": {
+        "content": [
+            [
+                "# This file was produced by bcftools stats (1.20+htslib-1.20) and can be plotted using plot-vcfstats.",
+                "# The command line was:\tbcftools stats  --targets-file test2.targets.tsv.gz test.vcf.gz",
+                "#",
+                "# Definition of sets:",
+                "# ID\t[2]id\t[3]tab-separated file names",
+                "ID\t0\ttest.vcf.gz"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-05-31T18:14:25.732997442"
+    },
+    "regions_versions": {
+        "content": [
+            [
+                "versions.yml:md5,17cdf9d1ad31f6b1f5935dfcc9fe7b9a"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-05-31T18:16:32.559884458"
+    },
+    "targets_versions": {
+        "content": [
+            [
+                "versions.yml:md5,17cdf9d1ad31f6b1f5935dfcc9fe7b9a"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-05-31T18:16:37.512009805"
+    },
+    "sarscov2 - vcf_gz - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bcftools_stats.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,17cdf9d1ad31f6b1f5935dfcc9fe7b9a"
+                ],
+                "stats": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bcftools_stats.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,17cdf9d1ad31f6b1f5935dfcc9fe7b9a"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-03T11:57:09.614976125"
+    },
+    "exon_versions": {
+        "content": [
+            [
+                "versions.yml:md5,17cdf9d1ad31f6b1f5935dfcc9fe7b9a"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-05-31T18:16:42.347397266"
+    },
+    "ref_versions": {
+        "content": [
+            [
+                "versions.yml:md5,17cdf9d1ad31f6b1f5935dfcc9fe7b9a"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-05-31T18:16:47.26823622"
+    },
+    "sarscov2 - vcf_gz": {
+        "content": [
+            [
+                "# This file was produced by bcftools stats (1.20+htslib-1.20) and can be plotted using plot-vcfstats.",
+                "# The command line was:\tbcftools stats  test.vcf.gz",
+                "#",
+                "# Definition of sets:",
+                "# ID\t[2]id\t[3]tab-separated file names",
+                "ID\t0\ttest.vcf.gz"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-05-31T18:16:27.670416598"
+    },
+    "sarscov2 - vcf_gz - regions": {
+        "content": [
+            [
+                "# This file was produced by bcftools stats (1.20+htslib-1.20) and can be plotted using plot-vcfstats.",
+                "# The command line was:\tbcftools stats  --regions-file test3.vcf.gz test.vcf.gz",
+                "#",
+                "# Definition of sets:",
+                "# ID\t[2]id\t[3]tab-separated file names",
+                "ID\t0\ttest.vcf.gz"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-05-31T18:14:20.759094062"
+    }
+}

@@ -1,0 +1,286 @@
+{
+    "homo_sapiens - bam - multiple": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.bam:md5,1154a16717d430199f3e9994a87b546a"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.bam.bai:md5,d947dccacf3fb7fcf174d364a5f7856d"
+                    ]
+                ],
+                "2": [
+                    
+                ],
+                "3": [
+                    "versions.yml:md5,9699197d0e667ab368a8c6d2a6893cc6"
+                ],
+                "bam_index": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.bam.bai:md5,d947dccacf3fb7fcf174d364a5f7856d"
+                    ]
+                ],
+                "metrics": [
+                    
+                ],
+                "output": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.bam:md5,1154a16717d430199f3e9994a87b546a"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,9699197d0e667ab368a8c6d2a6893cc6"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-15T11:53:11.621016088"
+    },
+    "homo_sapiens - bam - metrics - output": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.bam:md5,1154a16717d430199f3e9994a87b546a"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-15T11:53:32.254055925"
+    },
+    "homo_sapiens - cram": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.cram:md5,e3bcab34b141b0838cd9b6b779e09a7a"
+                    ]
+                ],
+                "1": [
+                    
+                ],
+                "2": [
+                    
+                ],
+                "3": [
+                    "versions.yml:md5,9699197d0e667ab368a8c6d2a6893cc6"
+                ],
+                "bam_index": [
+                    
+                ],
+                "metrics": [
+                    
+                ],
+                "output": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.cram:md5,e3bcab34b141b0838cd9b6b779e09a7a"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,9699197d0e667ab368a8c6d2a6893cc6"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-15T11:53:53.339811107"
+    },
+    "homo_sapiens - bam - metrics - versions": {
+        "content": [
+            [
+                "versions.yml:md5,9699197d0e667ab368a8c6d2a6893cc6"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-15T11:53:32.199010065"
+    },
+    "homo_sapiens - bam - metrics - bam_index": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test.bam.bai:md5,d947dccacf3fb7fcf174d364a5f7856d"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-15T11:53:32.305216975"
+    },
+    "stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.bam.metrics:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "3": [
+                    "versions.yml:md5,9699197d0e667ab368a8c6d2a6893cc6"
+                ],
+                "bam_index": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "metrics": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.bam.metrics:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "output": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,9699197d0e667ab368a8c6d2a6893cc6"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-15T10:56:48.15652292"
+    },
+    "sarscov2 - bam": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.bam:md5,dc1a09ac6371aab7c50d1a554baa06d3"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.bam.bai:md5,253c47e57247a2cee11afcbb414122a4"
+                    ]
+                ],
+                "2": [
+                    
+                ],
+                "3": [
+                    "versions.yml:md5,9699197d0e667ab368a8c6d2a6893cc6"
+                ],
+                "bam_index": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.bam.bai:md5,253c47e57247a2cee11afcbb414122a4"
+                    ]
+                ],
+                "metrics": [
+                    
+                ],
+                "output": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.bam:md5,dc1a09ac6371aab7c50d1a554baa06d3"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,9699197d0e667ab368a8c6d2a6893cc6"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-02-15T11:52:51.5386181"
+    }
+}

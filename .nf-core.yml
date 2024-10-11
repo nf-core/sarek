@@ -17,8 +17,7 @@ org_path: null
 repository_type: pipeline
 template:
   author: Maxime Garcia, Szilveszter Juhos, Friederike Hanssen
-  description: An open-source analysis pipeline to detect germline or somatic variants
-    from whole genome or targeted sequencing
+  description: An open-source analysis pipeline to detect germline or somatic variants from whole genome or targeted sequencing
   force: false
   is_nfcore: true
   name: sarek

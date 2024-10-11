@@ -1,0 +1,8 @@
+channels:
+  - conda-forge
+  - bioconda
+
+dependencies:
+  - bioconda::htslib=1.19.1
+  - bioconda::samblaster=0.1.26
+  - bioconda::samtools=1.19.2

@@ -1,0 +1,187 @@
+{
+    "Sentieon Haplotyper VCF": {
+        "content": [
+            [
+                "versions.yml:md5,b58c15c81619894cdbab1f2edf694190"
+            ],
+            "test.unfiltered.vcf.gz.tbi",
+            "cea0045051da7877b38a1e25df812a91"
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-07-31T10:16:51.711057"
+    },
+    "Sentieon Haplotyper Recalibration": {
+        "content": [
+            [
+                "versions.yml:md5,b58c15c81619894cdbab1f2edf694190"
+            ],
+            "test.unfiltered.vcf.gz.tbi",
+            "10faa3b669c49826098e09784d8a4716"
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-07-31T15:21:57.012186"
+    },
+    "Sentieon Haplotyper GVCF": {
+        "content": [
+            [
+                "versions.yml:md5,b58c15c81619894cdbab1f2edf694190"
+            ],
+            "test.g.vcf.gz.tbi",
+            "338fc3c37b208d6595948576833eb665"
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-07-31T10:17:01.797501"
+    },
+    "Sentieon Haplotyper BOTH": {
+        "content": [
+            [
+                "versions.yml:md5,b58c15c81619894cdbab1f2edf694190"
+            ],
+            "test.g.vcf.gz.tbi",
+            "338fc3c37b208d6595948576833eb665",
+            "test.unfiltered.vcf.gz.tbi",
+            "cea0045051da7877b38a1e25df812a91"
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-07-31T10:17:12.021226"
+    },
+    "Sentieon Haplotyper DBSNP BOTH": {
+        "content": [
+            [
+                "versions.yml:md5,b58c15c81619894cdbab1f2edf694190"
+            ],
+            "test.g.vcf.gz.tbi",
+            "228556b7921205f023fec51098feeb97",
+            "test.unfiltered.vcf.gz.tbi",
+            "cc1f3d4bd615f3640e7fd103cc39d2f8"
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-07-31T10:30:48.065511"
+    },
+    "Sentieon Haplotyper Intervals BOTH": {
+        "content": [
+            [
+                "versions.yml:md5,b58c15c81619894cdbab1f2edf694190"
+            ],
+            "test.g.vcf.gz.tbi",
+            "338fc3c37b208d6595948576833eb665",
+            "test.unfiltered.vcf.gz.tbi",
+            "cea0045051da7877b38a1e25df812a91"
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-07-31T10:17:22.554336"
+    },
+    "Sentieon Haplotyper - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.unfiltered.vcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.unfiltered.vcf.gz.tbi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.g.vcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.g.vcf.gz.tbi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "4": [
+                    "versions.yml:md5,b58c15c81619894cdbab1f2edf694190"
+                ],
+                "gvcf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.g.vcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "gvcf_tbi": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.g.vcf.gz.tbi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "vcf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.unfiltered.vcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "vcf_tbi": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.unfiltered.vcf.gz.tbi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,b58c15c81619894cdbab1f2edf694190"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.3"
+        },
+        "timestamp": "2024-07-31T10:47:33.117516"
+    },
+    "Sentieon Haplotyper multiple CRAMs": {
+        "content": [
+            [
+                "versions.yml:md5,b58c15c81619894cdbab1f2edf694190"
+            ],
+            "test.unfiltered.vcf.gz.tbi",
+            "b5d6e09e336438e38f7bf5531799e3a"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-08-13T17:04:30.67684393"
+    }
+}

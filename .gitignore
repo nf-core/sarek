@@ -7,3 +7,9 @@ testing/
 testing*
 *.pyc
 null/
+*.code-workspace
+.nf-test*
+.nf-test/
+test-datasets/
+test.tap
+test.xml

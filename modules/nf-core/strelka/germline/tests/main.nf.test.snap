@@ -1,0 +1,107 @@
+{
+    "human - cram - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.variants.vcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.variants.vcf.gz.tbi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.genome.vcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.genome.vcf.gz.tbi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "4": [
+                    "versions.yml:md5,5f72393fd2ab4358e3f0ad16d1937f65"
+                ],
+                "genome_vcf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.genome.vcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "genome_vcf_tbi": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.genome.vcf.gz.tbi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "vcf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.variants.vcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "vcf_tbi": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.variants.vcf.gz.tbi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,5f72393fd2ab4358e3f0ad16d1937f65"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-03-20T16:07:30.81195"
+    },
+    "human - cram": {
+        "content": [
+            [
+                "versions.yml:md5,5f72393fd2ab4358e3f0ad16d1937f65"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-08-28T16:50:28.337512"
+    },
+    "human - cram - target": {
+        "content": [
+            [
+                "versions.yml:md5,5f72393fd2ab4358e3f0ad16d1937f65"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-08-28T16:51:35.930772"
+    }
+}

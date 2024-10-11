@@ -1,0 +1,154 @@
+// nf-core modules test gatk4/haplotypecaller
+nextflow_process {
+
+    name "Test Process GATK4_HAPLOTYPECALLER"
+    script "../main.nf"
+    process "GATK4_HAPLOTYPECALLER"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "gatk4"
+    tag "gatk4/haplotypecaller"
+
+    test("homo_sapiens - [bam, bai] - fasta - fai - dict") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test_bam' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam.bai', checkIfExists: true),
+                    [],
+                    []
+                ]
+                input[1] = [ [ id:'test_fa' ], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
+                input[2] = [ [ id:'test_fai' ], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true) ]
+                input[3] = [ [ id:'test_dict' ], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.dict', checkIfExists: true) ]
+                input[4] = [ [], [] ]
+                input[5] = [ [], [] ]
+
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    file(process.out.vcf[0][1]).name,
+                    file(process.out.tbi[0][1]).name,
+                    process.out.versions
+                    ).match()
+                }
+            )
+        }
+
+    }
+
+    test("homo_sapiens - [cram, crai] - fasta - fai - dict") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test_cram' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram.crai', checkIfExists: true),
+                    [],
+                    []
+                ]
+                input[1] = [ [ id:'test_fa' ], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
+                input[2] = [ [ id:'test_fai' ], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true) ]
+                input[3] = [ [ id:'test_dict' ], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.dict', checkIfExists: true) ]
+                input[4] = [ [], [] ]
+                input[5] = [ [], [] ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    file(process.out.vcf[0][1]).name,
+                    file(process.out.tbi[0][1]).name,
+                    process.out.versions
+                    ).match()
+                }
+            )
+        }
+
+    }
+
+    test("homo_sapiens - [cram, crai] - fasta - fai - dict - sites - sites_tbi") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test_cram_sites' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram.crai', checkIfExists: true),
+                    [],
+                    []
+                ]
+                input[1] = [ [ id:'test_fa' ], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
+                input[2] = [ [ id:'test_fai' ], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true) ]
+                input[3] = [ [ id:'test_dict' ], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.dict', checkIfExists: true) ]
+                input[4] = [ [ id:'test_sites' ], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/vcf/dbsnp_146.hg38.vcf.gz', checkIfExists: true) ]
+                input[5] = [ [ id:'test_sites_tbi' ], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/vcf/dbsnp_146.hg38.vcf.gz.tbi', checkIfExists: true) ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    file(process.out.vcf[0][1]).name,
+                    file(process.out.tbi[0][1]).name,
+                    process.out.versions
+                    ).match()
+                }
+            )
+        }
+
+    }
+
+    test("homo_sapiens - [cram, crai, dragstr_model] - fasta - fai - dict - sites - sites_tbi") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test_cram_sites_dragstr' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram.crai', checkIfExists: true),
+                    [],
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/gatk/test_paired_end_sorted_dragstrmodel.txt', checkIfExists: true)
+                ]
+                input[1] = [ [ id:'test_fa' ], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true) ]
+                input[2] = [ [ id:'test_fai' ], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true) ]
+                input[3] = [ [ id:'test_dict' ], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.dict', checkIfExists: true) ]
+                input[4] = [ [ id:'test_sites' ], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/vcf/dbsnp_146.hg38.vcf.gz', checkIfExists: true) ]
+                input[5] = [ [ id:'test_sites_tbi' ], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/vcf/dbsnp_146.hg38.vcf.gz.tbi', checkIfExists: true) ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    file(process.out.vcf[0][1]).name,
+                    file(process.out.tbi[0][1]).name,
+                    process.out.versions
+                    ).match()
+                }
+            )
+        }
+
+    }
+
+}

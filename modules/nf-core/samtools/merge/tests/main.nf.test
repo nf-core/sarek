@@ -1,0 +1,137 @@
+nextflow_process {
+
+    name "Test Process SAMTOOLS_MERGE"
+    script "../main.nf"
+    process "SAMTOOLS_MERGE"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "samtools"
+    tag "samtools/merge"
+
+    test("bams") {
+
+        config "./index.config"
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.methylated.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.single_end.sorted.bam', checkIfExists: true) ]
+                ])
+                input[1] = [[],[]]
+                input[2] = [[],[]]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(file(process.out.bam[0][1]).name).match("bams_bam") },
+                { assert snapshot(process.out.cram).match("bams_cram") },
+                { assert snapshot(file(process.out.csi[0][1]).name).match("bams_csi") },
+                { assert snapshot(process.out.crai).match("bams_crai") },
+                { assert snapshot(process.out.versions).match("bams_versions") }
+            )
+        }
+    }
+
+    test("crams") {
+
+        config "./index.config"
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.recalibrated.sorted.cram', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test2.paired_end.recalibrated.sorted.cram', checkIfExists: true) ]
+                ])
+                input[1] = Channel.of([
+                    [ id:'genome' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
+                ])
+                input[2] = Channel.of([
+                    [ id:'genome' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
+                ])
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(file(process.out.cram[0][1]).name).match("crams_cram") },
+                { assert snapshot(process.out.bam).match("crams_bam") },
+                { assert snapshot(file(process.out.crai[0][1]).name).match("crams_crai") },
+                { assert snapshot(process.out.csi).match("crams_csi") },
+                { assert snapshot(process.out.versions).match("crams_versions") }
+            )
+        }
+    }
+
+    test("bam") {
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.methylated.sorted.bam', checkIfExists: true) ]
+                ])
+                input[1] = [[],[]]
+                input[2] = [[],[]]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(file(process.out.bam[0][1]).name).match("bam_bam") },
+                { assert snapshot(process.out.cram).match("bam_cram") },
+                { assert snapshot(process.out.crai).match("bam_crai") },
+                { assert snapshot(process.out.csi).match("bam_csi") },
+                { assert snapshot(process.out.versions).match("bam_versions") }
+            )
+        }
+    }
+
+    test("bams_stub") {
+
+        config "./index.config"
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test', single_end:false ], // meta map
+                    [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.methylated.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.single_end.sorted.bam', checkIfExists: true) ]
+                ])
+                input[1] = [[],[]]
+                input[2] = [[],[]]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(file(process.out.bam[0][1]).name).match("bams_stub_bam") },
+                { assert snapshot(process.out.cram).match("bams_stub_cram") },
+                { assert snapshot(file(process.out.csi[0][1]).name).match("bams_stub_csi") },
+                { assert snapshot(process.out.crai).match("bams_stub_crai") },
+                { assert snapshot(process.out.versions).match("bams_stub_versions") }
+            )
+        }
+    }
+}

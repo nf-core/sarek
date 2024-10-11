@@ -1,0 +1,47 @@
+- name: Run variant calling on germline sample with deepvariant
+  command: nextflow run main.nf -profile test,tools_germline_deepvariant --tools deepvariant --outdir results
+  tags:
+    - deepvariant
+    - germline
+    - variant_calling
+  files:
+    - path: results/multiqc
+    - path: results/reports/bcftools/deepvariant/test/test.deepvariant.bcftools_stats.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
+    - path: results/reports/samtools/test/test.recal.cram.stats
+    - path: results/reports/vcftools/deepvariant/test/test.deepvariant.FILTER.summary
+    - path: results/reports/vcftools/deepvariant/test/test.deepvariant.TsTv.count
+    - path: results/reports/vcftools/deepvariant/test/test.deepvariant.TsTv.qual
+    - path: results/variant_calling/deepvariant/test/test.deepvariant.g.vcf.gz
+    - path: results/variant_calling/deepvariant/test/test.deepvariant.g.vcf.gz.tbi
+    - path: results/variant_calling/deepvariant/test/test.deepvariant.vcf.gz
+    - path: results/variant_calling/deepvariant/test/test.deepvariant.vcf.gz.tbi
+- name: Run variant calling on germline sample with deepvariant without intervals
+  command: nextflow run main.nf -profile test,tools_germline_deepvariant --tools deepvariant --no_intervals --outdir results
+  tags:
+    - deepvariant
+    - germline
+    - no_intervals
+    - variant_calling
+  files:
+    - path: results/multiqc
+    - path: results/no_intervals.bed
+    - path: results/no_intervals.bed.gz
+    - path: results/no_intervals.bed.gz.tbi
+    - path: results/reports/bcftools/deepvariant/test/test.deepvariant.bcftools_stats.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test/test.recal.per-base.bed.gz
+    - path: results/reports/mosdepth/test/test.recal.per-base.bed.gz.csi
+    - path: results/reports/samtools/test/test.recal.cram.stats
+    - path: results/reports/vcftools/deepvariant/test/test.deepvariant.FILTER.summary
+    - path: results/reports/vcftools/deepvariant/test/test.deepvariant.TsTv.count
+    - path: results/reports/vcftools/deepvariant/test/test.deepvariant.TsTv.qual
+    - path: results/variant_calling/deepvariant/test/test.deepvariant.g.vcf.gz
+    - path: results/variant_calling/deepvariant/test/test.deepvariant.g.vcf.gz.tbi
+    - path: results/variant_calling/deepvariant/test/test.deepvariant.vcf.gz
+    - path: results/variant_calling/deepvariant/test/test.deepvariant.vcf.gz.tbi

@@ -1,0 +1,59 @@
+{
+    "versions": {
+        "content": [
+            [
+                "versions.yml:md5,7298d6e6e18024f7c2ed0fe38d259a52"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-05-16T10:13:56.2195"
+    },
+    "human - stats,tsv - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.vcf.gz.stats:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,7298d6e6e18024f7c2ed0fe38d259a52"
+                ],
+                "stats": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.vcf.gz.stats:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,7298d6e6e18024f7c2ed0fe38d259a52"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-05-16T10:14:10.058769"
+    },
+    "human - stats, tsv": {
+        "content": [
+            "statistic\tvalue"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-05-16T10:13:56.262881"
+    }
+}

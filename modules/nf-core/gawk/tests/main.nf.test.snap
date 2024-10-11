@@ -1,0 +1,68 @@
+{
+    "convert fasta to bed with program file": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bed:md5,87a15eb9c2ff20ccd5cd8735a28708f7"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,842acc9870dc8ac280954047cb2aa23a"
+                ],
+                "output": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bed:md5,87a15eb9c2ff20ccd5cd8735a28708f7"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,842acc9870dc8ac280954047cb2aa23a"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.03.0"
+        },
+        "timestamp": "2024-05-17T15:20:02.495430346"
+    },
+    "convert fasta to bed": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bed:md5,87a15eb9c2ff20ccd5cd8735a28708f7"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,842acc9870dc8ac280954047cb2aa23a"
+                ],
+                "output": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bed:md5,87a15eb9c2ff20ccd5cd8735a28708f7"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,842acc9870dc8ac280954047cb2aa23a"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.03.0"
+        },
+        "timestamp": "2024-05-17T15:19:53.291809648"
+    }
+}

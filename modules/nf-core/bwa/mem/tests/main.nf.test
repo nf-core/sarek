@@ -1,0 +1,260 @@
+nextflow_process {
+
+    name "Test Process BWA_MEM"
+    tag "modules_nfcore"
+    tag "modules"
+    tag "bwa"
+    tag "bwa/mem"
+    tag "bwa/index"
+    script "../main.nf"
+    process "BWA_MEM"
+
+    setup {
+        run("BWA_INDEX") {
+            script "../../index/main.nf"
+            process {
+                """
+                input[0] = [
+                    [id: 'test'],
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                ]
+                """
+            }
+        }
+    }
+
+    test("Single-End") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:true ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)
+                    ]
+                ]
+                input[1] = BWA_INDEX.out.index
+                input[2] = [[id: 'test'],file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)]
+                input[3] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    process.out.cram,
+                    process.out.csi,
+                    process.out.crai,
+                    process.out.versions,
+                    bam(process.out.bam[0][1]).getHeaderMD5(),
+                    bam(process.out.bam[0][1]).getReadsMD5()
+                    ).match()
+                }
+            )
+        }
+
+    }
+
+    test("Single-End Sort") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:true ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)
+                    ]
+                ]
+                input[1] = BWA_INDEX.out.index
+                input[2] = [[id: 'test'],file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)]
+                input[3] = true
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    process.out.cram,
+                    process.out.csi,
+                    process.out.crai,
+                    process.out.versions,
+                    bam(process.out.bam[0][1]).getHeaderMD5(),
+                    bam(process.out.bam[0][1]).getReadsMD5()
+                    ).match()
+                }
+            )
+        }
+
+    }
+
+    test("Paired-End") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
+                    ]
+                ]
+                input[1] = BWA_INDEX.out.index
+                input[2] = [[id: 'test'],file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)]
+                input[3] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    process.out.cram,
+                    process.out.csi,
+                    process.out.crai,
+                    process.out.versions,
+                    bam(process.out.bam[0][1]).getHeaderMD5(),
+                    bam(process.out.bam[0][1]).getReadsMD5()
+                    ).match()
+                }
+            )
+        }
+
+    }
+
+    test("Paired-End Sort") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
+                    ]
+                ]
+                input[1] = BWA_INDEX.out.index
+                input[2] = [[id: 'test'],file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)]
+                input[3] = true
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    process.out.cram,
+                    process.out.csi,
+                    process.out.crai,
+                    process.out.versions,
+                    bam(process.out.bam[0][1]).getHeaderMD5(),
+                    bam(process.out.bam[0][1]).getReadsMD5()
+                    ).match()
+                }
+            )
+        }
+
+    }
+
+    test("Paired-End - no fasta") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
+                    ]
+                ]
+                input[1] = BWA_INDEX.out.index
+                input[2] = [[:],[]]
+                input[3] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    process.out.cram,
+                    process.out.csi,
+                    process.out.crai,
+                    process.out.versions,
+                    bam(process.out.bam[0][1]).getHeaderMD5(),
+                    bam(process.out.bam[0][1]).getReadsMD5()
+                    ).match()
+                }
+            )
+        }
+
+    }
+
+    test("Single-end - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:true ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true)
+                    ]
+                ]
+                input[1] = BWA_INDEX.out.index
+                input[2] = [[id: 'test'],file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)]
+                input[3] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+
+    test("Paired-end - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true)
+                    ]
+                ]
+                input[1] = BWA_INDEX.out.index
+                input[2] = [[id: 'test'],file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)]
+                input[3] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+}
