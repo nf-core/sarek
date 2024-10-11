@@ -515,17 +515,17 @@
                     },
                     "utils_nextflow_pipeline": {
                         "branch": "master",
-                        "git_sha": "5caf7640a9ef1d18d765d55339be751bb0969dfa",
+                        "git_sha": "9d05360da397692321d377b6102d2fb22507c6ef",
                         "installed_by": ["subworkflows"]
                     },
                     "utils_nfcore_pipeline": {
                         "branch": "master",
-                        "git_sha": "92de218a329bfc9a9033116eb5f65fd270e72ba3",
+                        "git_sha": "772684d9d66f37b650c8ba5146ac1ee3ecba2acb",
                         "installed_by": ["subworkflows"]
                     },
-                    "utils_nfvalidation_plugin": {
+                    "utils_nfschema_plugin": {
                         "branch": "master",
-                        "git_sha": "5caf7640a9ef1d18d765d55339be751bb0969dfa",
+                        "git_sha": "bbd5a41f4535a8defafe6080e00ea74c45f4f96c",
                         "installed_by": ["subworkflows"]
                     },
                     "vcf_annotate_ensemblvep": {
