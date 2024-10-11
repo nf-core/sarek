@@ -34,7 +34,8 @@ jobs:
         NXF_VER:
           - "24.04.2"
           - "latest-everything"
-        filter: ["process", "workflow", "function", "pipeline"]
+        filter: ["workflow", "function", "pipeline"]
+        # filter: ["process", "workflow", "function", "pipeline"]
         profile: ["conda", "docker", "singularity"]
         shard: [1, 2, 3, 4, 5]
         isMaster:
