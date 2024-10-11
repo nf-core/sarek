@@ -26,6 +26,11 @@
                         "git_sha": "44096c08ffdbc694f5f92ae174ea0f7ba0f37e09",
                         "installed_by": ["bam_ngscheckmate"]
                     },
+                    "bcftools/norm": {
+                        "branch": "master",
+                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
+                        "installed_by": ["modules"]
+                    },
                     "bcftools/sort": {
                         "branch": "master",
                         "git_sha": "487d92367b4d7bb9f1ca694bf72736be90720b15",
