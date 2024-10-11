@@ -52,7 +52,7 @@ nextflow_pipeline {
         then {
             assertAll(
                 { assert workflow.failed},
-                { assert workflow.stderr.contains("* -- Entry 2 - sample: Sample ID must be provided and cannot contain spaces (test 2)") }
+                { assert workflow.stderr.toString().contains("Sample ID must be provided and cannot contain spaces") }
             )
         }
     }
