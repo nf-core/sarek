@@ -7,6 +7,7 @@ on:
   pull_request:
   release:
     types: [published]
+  workflow_dispatch:
 
 env:
   NFT_DIFF: "pdiff"
@@ -26,16 +27,24 @@ concurrency:
 jobs:
   test:
     runs-on: ubuntu-latest
-    name: "${{ matrix.NXF_VER }} | ${{ matrix.filter }} | ${{ matrix.profile }} | ${{ matrix.shard }}"
+    name: "Test ${{ matrix.filter }} | ${{ matrix.profile }} | ${{ matrix.NXF_VER }} | ${{ matrix.shard }}/5"
     strategy:
       fail-fast: false
       matrix:
         NXF_VER:
-          - "23.04.0"
+          - "24.04.2"
           - "latest-everything"
-        filter: ["pipeline", "workflow", "process", "function"]
-        profile: ["docker"]
+        filter: ["process", "workflow", "function", "pipeline"]
+        profile: ["conda", "docker", "singularity"]
         shard: [1, 2, 3, 4, 5]
+        isMaster:
+          - ${{ github.base_ref == 'master' }}
+        exclude:
+          - isMaster: false
+            profile: "conda"
+          - isMaster: false
+            profile: "singularity"
+
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
@@ -47,16 +56,28 @@ jobs:
           python-version: "3.11"
           architecture: "x64"
 
-      - name: Install Nextflow ${{ matrix.NXF_VER }}
+      - name: Set up Nextflow
         uses: nf-core/setup-nextflow@v2
         with:
           version: "${{ matrix.NXF_VER }}"
 
-      - uses: nf-core/setup-nf-test@v1
+      - name: Set up Nextflow secrets
+        if: env.SENTIEON_LICENSE_BASE64 != null
+        run: |
+          nextflow secrets set SENTIEON_LICENSE_BASE64 ${{ secrets.SENTIEON_LICENSE_BASE64 }}
+          nextflow secrets set SENTIEON_AUTH_MECH_BASE64 ${{ secrets.SENTIEON_AUTH_MECH_BASE64 }}
+          SENTIEON_ENCRYPTION_KEY=$(echo -n "${{ secrets.ENCRYPTION_KEY_BASE64 }}" | base64 -d)
+          SENTIEON_LICENSE_MESSAGE=$(echo -n "${{ secrets.LICENSE_MESSAGE_BASE64 }}" | base64 -d)
+          SENTIEON_AUTH_DATA=$(python3 bin/license_message.py encrypt --key "$SENTIEON_ENCRYPTION_KEY" --message "$SENTIEON_LICENSE_MESSAGE")
+          SENTIEON_AUTH_DATA_BASE64=$(echo -n "$SENTIEON_AUTH_DATA" | base64 -w 0)
+          nextflow secrets set SENTIEON_AUTH_DATA_BASE64 $SENTIEON_AUTH_DATA_BASE64
+
+      - name: Set up nf-test
+        uses: nf-core/setup-nf-test@v1
         with:
           version: ${{ env.NFT_VER }}
 
-      - name: Setup apptainer
+      - name: Set up apptainer
         if: matrix.profile == 'singularity'
         uses: eWaterCycle/setup-apptainer@main
 
@@ -73,48 +94,36 @@ jobs:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-pdiff
 
-      - name: Install pdiff to see diff between nf-test snapshots
+      - name: Set up pdiff to see diff between nf-test snapshots
         run: |
           python -m pip install --upgrade pip
           pip install pdiff cryptography
 
-      - name: Set up miniconda
+      - name: Set up Miniconda
         if: matrix.profile == 'conda'
         uses: conda-incubator/setup-miniconda@a4260408e20b96e80095f42ff7f1a15b27dd94ca # v3
         with:
           miniconda-version: "latest"
           auto-update-conda: true
-          channels: conda-forge,bioconda,defaults
+          conda-solver: libmamba
+          channels: conda-forge,bioconda
 
-      - name: Conda setup
+      - name: Set up Conda
         if: matrix.profile == 'conda'
         run: |
-          conda clean -a
-          conda install -n base conda-libmamba-solver
-          conda config --set solver libmamba
           echo $(realpath $CONDA)/condabin >> $GITHUB_PATH
           echo $(realpath python) >> $GITHUB_PATH
-
-      - name: Set up nextflow secrets
-        if: env.SENTIEON_LICENSE_BASE64 != null
-        run: |
-          nextflow secrets set SENTIEON_LICENSE_BASE64 ${{ secrets.SENTIEON_LICENSE_BASE64 }}
-          nextflow secrets set SENTIEON_AUTH_MECH_BASE64 ${{ secrets.SENTIEON_AUTH_MECH_BASE64 }}
-          SENTIEON_ENCRYPTION_KEY=$(echo -n "${{ secrets.ENCRYPTION_KEY_BASE64 }}" | base64 -d)
-          SENTIEON_LICENSE_MESSAGE=$(echo -n "${{ secrets.LICENSE_MESSAGE_BASE64 }}" | base64 -d)
-          SENTIEON_AUTH_DATA=$(python3 bin/license_message.py encrypt --key "$SENTIEON_ENCRYPTION_KEY" --message "$SENTIEON_LICENSE_MESSAGE")
-          SENTIEON_AUTH_DATA_BASE64=$(echo -n "$SENTIEON_AUTH_DATA" | base64 -w 0)
-          nextflow secrets set SENTIEON_AUTH_DATA_BASE64 $SENTIEON_AUTH_DATA_BASE64
 
       - name: Disk space cleanup
         uses: jlumbroso/free-disk-space@v1.3.1
 
-      - name: Run Tests (Shard ${{ matrix.shard }}/5)
+      - name: "Run tests | ${{ matrix.filter }}_${{ matrix.profile }} | ${{ matrix.shard }}/5"
         run: |
           nf-test test \
               --ci \
-              --junitxml="TEST-${{ matrix.filter }}_${{ matrix.profile }}_${{ matrix.shard }}.xml" \
+              --debug \
               --verbose \
+              --junitxml="TEST-${{ matrix.filter }}_${{ matrix.profile }}_${{ matrix.shard }}.xml" \
               --shard ${{ matrix.shard }}/5 \
               --changed-since HEAD^ \
               --follow-dependencies \
