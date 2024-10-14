@@ -21,13 +21,13 @@ jobs:
     steps:
       - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
         with:
-          token: ${{ secrets.NF_CORE_BOT_AUTH_TOKEN }}
+          token: ${{ secrets.nf_core_bot_auth_token }}
 
       # Action runs on the issue comment, so we don't get the PR by default.
       # Use the GitHub CLI to check out the PR:
       - name: Checkout Pull Request
         env:
-          GH_TOKEN: ${{ secrets.NF_CORE_BOT_AUTH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.nf_core_bot_auth_token }}
         run: |
           if [[ "${{ github.event_name }}" == "issue_comment" ]]; then
             PR_NUMBER="${{ github.event.issue.number }}"
@@ -48,7 +48,7 @@ jobs:
       - name: Update CHANGELOG.md from the PR title
         env:
           COMMENT: ${{ github.event.comment.body }}
-          GH_TOKEN: ${{ secrets.NF_CORE_BOT_AUTH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.nf_core_bot_auth_token }}
         run: |
           if [[ "${{ github.event_name }}" == "issue_comment" ]]; then
             export PR_NUMBER='${{ github.event.issue.number }}'
