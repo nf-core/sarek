@@ -6,7 +6,7 @@ To be called by a CI action. Assumes the following environment variables are set
 PR_TITLE, PR_NUMBER, GITHUB_WORKSPACE.
 
 Adds a line into the CHANGELOG.md:
-* Looks for the section to add the line to, based on the PR title, e.g. `Added:`, `Changed:`.
+* Looks for the section to add the line to, based on the PR title, e.g. `Feat:`, `Fix:`.
 * All other change will go under the "## dev" section.
 * If an entry for the PR is already added, it will not run.
 
@@ -57,10 +57,10 @@ def _determine_change_type(pr_title) -> Tuple[str, str]:
     Returns a tuple of the section name and the module info.
     """
     sections = {
-        "Added": "### Added",
-        "Changed": "### Changed",
-        "Fixed": "### Fixed",
-        "Removed": "### Removed",
+        "ADD": "### Added",
+        "FEAT": "### Changed",
+        "FIX": "### Fixed",
+        "REMOVE": "### Removed",
     }
     current_section_header = "## dev"
     current_section = "dev"
