@@ -12,11 +12,10 @@ jobs:
     runs-on: ubuntu-latest
     # Run if comment is on a PR with the main repo, and if it contains the magic keywords.
     # Or run on PR creation, unless asked otherwise in the title.
-    if: |
-      github.repository_owner == 'nf-core' && (
-        github.event_name == 'pull_request_target' ||
-        github.event.issue.pull_request && startsWith(github.event.comment.body, '@nf-core-bot changelog')
-      )
+    if: >
+      contains(github.event.comment.html_url, '/pull/') &&
+      contains(github.event.comment.body, '@nf-core-bot changelog') &&
+      github.repository == 'nf-core/sarek'
 
     steps:
       - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
