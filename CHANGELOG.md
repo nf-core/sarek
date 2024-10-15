@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## dev
 
 ### Added
-
+- [1680](https://github.com/nf-core/sarek/pull/1682) - Add `bcftools_norm` in `POST_VARIANTCALLING` for normalization of all vcf files or for concatenated germline vcfs
 - [1640](https://github.com/nf-core/sarek/pull/1620) - Add `lofreq` as a tumor-only variant caller
 - [1642](https://github.com/nf-core/sarek/pull/1642) - Back to dev
 - [1653](https://github.com/nf-core/sarek/pull/1653) - Updates `sarek_subway` files with `lofreq`
