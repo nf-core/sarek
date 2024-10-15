@@ -1,7 +1,5 @@
-name: tiddit_sv
 channels:
   - conda-forge
   - bioconda
-  - defaults
 dependencies:
   - bioconda::tiddit=3.6.1

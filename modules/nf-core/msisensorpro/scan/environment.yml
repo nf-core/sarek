@@ -1,7 +1,5 @@
-name: msisensorpro_scan
 channels:
   - conda-forge
   - bioconda
-  - defaults
 dependencies:
   - bioconda::msisensor-pro=1.2.0

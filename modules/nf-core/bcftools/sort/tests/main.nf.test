@@ -9,13 +9,125 @@ nextflow_process {
     tag "bcftools"
     tag "bcftools/sort"
 
-    test("SarsCov2 VCF") {
+    test("sarscov2 - vcf") {
         when {
             process {
                 """
                 input[0] = [
                     [ id:'test' ], // meta map
-                    file(params.test_data['sarscov2']['illumina']['test_vcf'], checkIfExists: true)
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf', checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match("vcf") }
+            )
+        }
+
+    }
+
+    test("sarscov2 - vcf_gz_index") {
+
+        config "./vcf_gz_index.config"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf', checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    process.out.vcf,
+                    process.out.csi.collect { it.collect { it instanceof Map ? it : file(it).name } },
+                    process.out.tbi.collect { it.collect { it instanceof Map ? it : file(it).name } },
+                    process.out.versions
+                ).match() },
+                { assert process.out.csi[0][1].endsWith(".csi") }
+            )
+        }
+
+    }
+
+    test("sarscov2 - vcf_gz_index_csi") {
+
+        config "./vcf_gz_index_csi.config"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf', checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    process.out.vcf,
+                    process.out.csi.collect { it.collect { it instanceof Map ? it : file(it).name } },
+                    process.out.tbi.collect { it.collect { it instanceof Map ? it : file(it).name } },
+                    process.out.versions
+                ).match() },
+                { assert process.out.csi[0][1].endsWith(".csi") }
+            )
+        }
+
+    }
+
+    test("sarscov2 - vcf_gz_index_tbi") {
+
+        config "./vcf_gz_index_tbi.config"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf', checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    process.out.vcf,
+                    process.out.csi.collect { it.collect { it instanceof Map ? it : file(it).name } },
+                    process.out.tbi.collect { it.collect { it instanceof Map ? it : file(it).name } },
+                    process.out.versions
+                ).match() },
+                { assert process.out.tbi[0][1].endsWith(".tbi") }
+            )
+        }
+
+    }
+
+    test("sarscov2 - vcf - stub") {
+        options "-stub"
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf', checkIfExists: true)
                 ]
                 """
             }
@@ -25,6 +137,84 @@ nextflow_process {
             assertAll(
                 { assert process.success },
                 { assert snapshot(process.out).match() }
+            )
+        }
+
+    }
+
+    test("sarscov2 - vcf_gz_index - stub") {
+
+        config "./vcf_gz_index.config"
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf', checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() },
+                { assert process.out.csi[0][1].endsWith(".csi") }
+            )
+        }
+
+    }
+
+    test("sarscov2 - vcf_gz_index_csi - stub") {
+
+        config "./vcf_gz_index_csi.config"
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf', checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() },
+                { assert process.out.csi[0][1].endsWith(".csi") }
+            )
+        }
+
+    }
+
+    test("sarscov2 - vcf_gz_index_tbi - stub") {
+
+        config "./vcf_gz_index_tbi.config"
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf', checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() },
+                { assert process.out.tbi[0][1].endsWith(".tbi") }
             )
         }
 

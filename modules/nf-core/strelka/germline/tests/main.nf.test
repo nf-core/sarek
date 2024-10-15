@@ -30,7 +30,7 @@ nextflow_process {
                 { assert process.success },
                 { assert path(process.out.vcf.get(0).get(1)).linesGzip.contains("##fileformat=VCFv4.1") },
                 { assert path(process.out.genome_vcf.get(0).get(1)).linesGzip.contains("##fileformat=VCFv4.1") },
-                { assert snapshot(process.out.version).match("version") }
+                { assert snapshot(process.out.versions).match() }
             )
         }
 
@@ -58,7 +58,7 @@ nextflow_process {
                 { assert process.success },
                 { assert path(process.out.vcf.get(0).get(1)).linesGzip.contains("##fileformat=VCFv4.1") },
                 { assert path(process.out.genome_vcf.get(0).get(1)).linesGzip.contains("##fileformat=VCFv4.1") },
-                { assert snapshot(process.out.version).match("target_version") }
+                { assert snapshot(process.out.versions).match() }
             )
         }
 

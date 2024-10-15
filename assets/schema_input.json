@@ -1,5 +1,5 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://raw.githubusercontent.com/nf-core/sarek/master/assets/schema_input.json",
     "title": "nf-core/sarek pipeline - params.input schema",
     "description": "Schema for the file provided with params.input",
@@ -45,19 +45,10 @@
             "lane": {
                 "type": "string",
                 "pattern": "^\\S+$",
-                "unique": ["patient", "sample"],
-                "anyOf": [
-                    {
-                        "dependentRequired": ["fastq_1"]
-                    },
-                    {
-                        "dependentRequired": ["bam"]
-                    }
-                ],
                 "meta": ["lane"]
             },
             "fastq_1": {
-                "errorMessage": "FastQ file for reads 1 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'",
+                "errorMessage": "Gzipped FastQ file for reads 1 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'",
                 "anyOf": [
                     {
                         "type": "string",
@@ -72,12 +63,41 @@
                 "exists": true
             },
             "fastq_2": {
-                "errorMessage": "FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'",
-                "dependentRequired": ["fastq_1"],
+                "errorMessage": "Gzipped FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'",
                 "anyOf": [
                     {
                         "type": "string",
                         "pattern": "^\\S+\\.f(ast)?q\\.gz$"
+                    },
+                    {
+                        "type": "string",
+                        "maxLength": 0
+                    }
+                ],
+                "format": "file-path",
+                "exists": true
+            },
+            "spring_1": {
+                "errorMessage": "Gzipped and spring-compressed FastQ file for reads 1 cannot contain spaces and must have extension '.fq.gz.spring' or '.fastq.gz.spring'",
+                "anyOf": [
+                    {
+                        "type": "string",
+                        "pattern": "^\\S+\\.f(ast)?q\\.gz.spring$"
+                    },
+                    {
+                        "type": "string",
+                        "maxLength": 0
+                    }
+                ],
+                "format": "file-path",
+                "exists": true
+            },
+            "spring_2": {
+                "errorMessage": "Gzipped and spring-compressed FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz.spring' or '.fastq.gz.spring'",
+                "anyOf": [
+                    {
+                        "type": "string",
+                        "pattern": "^\\S+\\.f(ast)?q\\.gz.spring$"
                     },
                     {
                         "type": "string",
@@ -181,6 +201,30 @@
                 "type": "string"
             }
         },
-        "required": ["patient", "sample"]
+        "required": ["patient", "sample"],
+        "uniqueEntries": ["patient", "sample"],
+        "anyOf": [
+            {
+                "dependentRequired": {
+                    "fastq_2": ["fastq_1"],
+                    "spring_2": ["spring_1"],
+                    "lane": ["bam"]
+                }
+            },
+            {
+                "dependentRequired": {
+                    "fastq_2": ["fastq_1"],
+                    "spring_2": ["spring_1"],
+                    "lane": ["fastq_1"]
+                }
+            },
+            {
+                "dependentRequired": {
+                    "fastq_2": ["fastq_1"],
+                    "spring_2": ["spring_1"],
+                    "lane": ["spring_1"]
+                }
+            }
+        ]
     }
 }

@@ -4,8 +4,8 @@ process SAMTOOLS_CONVERT {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/samtools:1.19.2--h50ea8bc_0' :
-        'biocontainers/samtools:1.19.2--h50ea8bc_0' }"
+        'https://depot.galaxyproject.org/singularity/samtools:1.21--h50ea8bc_0' :
+        'biocontainers/samtools:1.21--h50ea8bc_0' }"
 
     input:
     tuple val(meta), path(input), path(index)
@@ -36,6 +36,21 @@ process SAMTOOLS_CONVERT {
         -o ${prefix}.${output_extension}
 
     samtools index -@${task.cpus} ${prefix}.${output_extension}
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
+    END_VERSIONS
+    """
+
+    stub:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    def output_extension = input.getExtension() == "bam" ? "cram" : "bam"
+    def index_extension = output_extension == "bam" ? "bai" : "crai"
+
+    """
+    touch ${prefix}.${output_extension}
+    touch ${prefix}.${index_extension}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

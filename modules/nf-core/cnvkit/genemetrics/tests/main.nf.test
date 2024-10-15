@@ -1,0 +1,59 @@
+
+nextflow_process {
+
+    name "Test Process CNVKIT_GENEMETRICS"
+    script "../main.nf"
+    process "CNVKIT_GENEMETRICS"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "cnvkit"
+    tag "cnvkit/genemetrics"
+
+    test("test-cnvkit-genemetrics-with-cns") {
+
+        when {
+            process {
+                """
+                input[0] = [
+				    [ id:'test', single_end:false ], // meta map
+				    file('https://raw.githubusercontent.com/etal/cnvkit/v0.9.9/test/formats/amplicon.cnr', checkIfExists: true),
+				    file('https://raw.githubusercontent.com/etal/cnvkit/v0.9.9/test/formats/amplicon.cns', checkIfExists: true)
+				]
+
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+
+    test("test-cnvkit-genemetrics-without-cns") {
+
+        when {
+            process {
+                """
+                input[0] = [
+				    [ id:'test', single_end:false ], // meta map
+				    file('https://raw.githubusercontent.com/etal/cnvkit/v0.9.9/test/formats/amplicon.cnr', checkIfExists: true),
+				    []
+				]
+
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+
+}

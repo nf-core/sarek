@@ -4,8 +4,8 @@ process ENSEMBLVEP_VEP {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/ensembl-vep:111.0--pl5321h2a3209d_0' :
-        'biocontainers/ensembl-vep:111.0--pl5321h2a3209d_0' }"
+        'https://depot.galaxyproject.org/singularity/ensembl-vep:112.0--pl5321h2a3209d_0' :
+        'biocontainers/ensembl-vep:112.0--pl5321h2a3209d_0' }"
 
     input:
     tuple val(meta), path(vcf), path(custom_extra_files)
@@ -20,7 +20,7 @@ process ENSEMBLVEP_VEP {
     tuple val(meta), path("*.vcf.gz")  , optional:true, emit: vcf
     tuple val(meta), path("*.tab.gz")  , optional:true, emit: tab
     tuple val(meta), path("*.json.gz") , optional:true, emit: json
-    path "*.summary.html"              , optional:true, emit: report
+    path "*.html"                      , optional:true, emit: report
     path "versions.yml"                , emit: versions
 
     when:
@@ -57,10 +57,10 @@ process ENSEMBLVEP_VEP {
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    touch ${prefix}.vcf.gz
-    touch ${prefix}.tab.gz
-    touch ${prefix}.json.gz
-    touch ${prefix}.summary.html
+    echo "" | gzip > ${prefix}.vcf.gz
+    echo "" | gzip > ${prefix}.tab.gz
+    echo "" | gzip > ${prefix}.json.gz
+    touch ${prefix}_summary.html
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

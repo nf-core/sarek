@@ -18,12 +18,12 @@ nextflow_process {
                 """
                 input[0] = [
                     [ id:'test' ], // meta map
-                    file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true),
-                    file(params.test_data['sarscov2']['illumina']['test_single_end_sorted_bam'], checkIfExists: true)
-                    ]
-                input[1] = [[:],file(params.test_data['sarscov2']['genome']['genome_fasta'], checkIfExists: true)]
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.single_end.sorted.bam', checkIfExists: true)
+                ]
+                input[1] = [[:],file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)]
                 input[2] = [[:],[]]
-                input[3] = [[:],file(params.test_data['sarscov2']['genome']['baits_bed'], checkIfExists: true)]
+                input[3] = [[:],file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/bed/baits.bed', checkIfExists: true)]
                 input[4] = [[:],[]]
                 input[5] = false
                 """
@@ -34,7 +34,7 @@ nextflow_process {
             println process.out.bed[0][1]
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out.version).match() }
+                { assert snapshot(process.out.versions).match() }
             )
         }
 
@@ -49,10 +49,10 @@ nextflow_process {
                 """
                 input[0] = [
                     [ id:'test'], // meta map
-                    file(params.test_data['homo_sapiens']['illumina']['test2_paired_end_sorted_bam'], checkIfExists: true),
-                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true)
-                    ]
-                input[1] = [[:],file(params.test_data['homo_sapiens']['genome']['genome_fasta'], checkIfExists: true)]
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test2.paired_end.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true)
+                ]
+                input[1] = [[:],file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)]
                 input[2] = [[:],[]]
                 input[3] = [[:],[]]
                 input[4] = [[:],[]]
@@ -64,7 +64,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out.version).match() }
+                { assert snapshot(process.out.versions).match() }
             )
         }
 
@@ -79,11 +79,11 @@ nextflow_process {
                 """
                 input[0] = [
                     [ id:'test'], // meta map
-                    file(params.test_data['homo_sapiens']['illumina']['test2_paired_end_sorted_cram'], checkIfExists: true),
-                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_cram'], checkIfExists: true)
-                    ]
-                input[1] = [[:],file(params.test_data['homo_sapiens']['genome']['genome_fasta'], checkIfExists: true)]
-                input[2] = [[:],file(params.test_data['homo_sapiens']['genome']['genome_fasta_fai'], checkIfExists: true)]
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test2.paired_end.sorted.cram', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram', checkIfExists: true)
+                ]
+                input[1] = [[:],file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)]
+                input[2] = [[:],file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)]
                 input[3] = [[:],[]]
                 input[4] = [[:],[]]
                 input[5] = false
@@ -94,7 +94,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out.version).match() }
+                { assert snapshot(process.out.versions).match() }
             )
         }
 
@@ -109,13 +109,13 @@ nextflow_process {
                 """
                 input[0] = [
                     [ id:'test'], // meta map
-                    file(params.test_data['homo_sapiens']['illumina']['test2_paired_end_recalibrated_sorted_bam'], checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test2.paired_end.recalibrated.sorted.bam', checkIfExists: true),
                     []
-                    ]
+                ]
                 input[1] = [[:],[]]
                 input[2] = [[:],[]]
                 input[3] = [[:],[]]
-                input[4] = [[:],file(params.test_data['homo_sapiens']['genome']['genome_21_reference_cnn'], checkIfExists: true)]
+                input[4] = [[:],file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/reference_chr21.cnn', checkIfExists: true)]
                 input[5] = false
                 """
             }
@@ -124,7 +124,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out.version).match() }
+                { assert snapshot(process.out.versions).match() }
             )
         }
 
@@ -139,13 +139,13 @@ nextflow_process {
                 """
                 input[0] = [
                     [ id:'test'], // meta map
-                    file(params.test_data['homo_sapiens']['illumina']['test2_paired_end_recalibrated_sorted_cram'], checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test2.paired_end.recalibrated.sorted.cram', checkIfExists: true),
                     []
-                    ]
-                input[1] = [[:],file(params.test_data['homo_sapiens']['genome']['genome_fasta'], checkIfExists: true)]
+                ]
+                input[1] = [[:],file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)]
                 input[2] = [[:],[]]
                 input[3] = [[:],[]]
-                input[4] = [[:],file(params.test_data['homo_sapiens']['genome']['genome_21_reference_cnn'], checkIfExists: true)]
+                input[4] = [[:],file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/reference_chr21.cnn', checkIfExists: true)]
                 input[5] = false
                 """
             }
@@ -154,7 +154,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out.version).match() }
+                { assert snapshot(process.out.versions).match() }
             )
         }
 
@@ -168,11 +168,11 @@ nextflow_process {
                 input[0] = [
                     [ id:'test'], // meta map
                     [],
-                    file(params.test_data['homo_sapiens']['illumina']['test2_paired_end_recalibrated_sorted_cram'], checkIfExists: true)
-                    ]
-                input[1] = [[:],file(params.test_data['homo_sapiens']['genome']['genome_21_fasta'], checkIfExists: true)]
-                input[2] = [[:],file(params.test_data['homo_sapiens']['genome']['genome_21_fasta_fai'], checkIfExists: true)]
-                input[3] = [[:],file(params.test_data['homo_sapiens']['genome']['genome_21_multi_interval_bed'], checkIfExists: true)]
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test2.paired_end.recalibrated.sorted.cram', checkIfExists: true)
+                ]
+                input[1] = [[:],file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta', checkIfExists: true)]
+                input[2] = [[:],file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai', checkIfExists: true)]
+                input[3] = [[:],file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed', checkIfExists: true)]
                 input[4] = [[:],[]]
                 input[5] = false
                 """
@@ -182,7 +182,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out.version).match() }
+                { assert snapshot(process.out.versions).match() }
             )
         }
 
@@ -195,13 +195,13 @@ nextflow_process {
             process {
                 """
                 input[0] = [
-                    [ id:'test' ], // meta map
-                    file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true),
-                    file(params.test_data['sarscov2']['illumina']['test_single_end_sorted_bam'], checkIfExists: true)
-                    ]
-                input[1] = [[:],file(params.test_data['sarscov2']['genome']['genome_fasta'], checkIfExists: true)]
+                [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.single_end.sorted.bam', checkIfExists: true)
+                ]
+                input[1] = [[:],file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)]
                 input[2] = [[:],[]]
-                input[3] = [[:],file(params.test_data['sarscov2']['genome']['baits_bed'], checkIfExists: true)]
+                input[3] = [[:],file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/bed/baits.bed', checkIfExists: true)]
                 input[4] = [[:],[]]
                 input[5] = false
                 """
@@ -211,7 +211,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out.version).match() }
+                { assert snapshot(process.out.versions).match() }
             )
         }
 
@@ -228,11 +228,12 @@ nextflow_process {
                 input[0] = [
                     [ id:'test'], // meta map
                     [],
-                    [file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true),
-                    file(params.test_data['homo_sapiens']['illumina']['test2_paired_end_sorted_bam'], checkIfExists: true)
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test2.paired_end.sorted.bam', checkIfExists: true)
                     ]
-                    ]
-                input[1] = [[:],file(params.test_data['homo_sapiens']['genome']['genome_fasta'], checkIfExists: true)]
+                ]
+                input[1] = [[:],file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)]
                 input[2] = [[:],[]]
                 input[3] = [[:],[]]
                 input[4] = [[:],[]]
@@ -244,7 +245,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out.version).match() }
+                { assert snapshot(process.out.versions).match() }
             )
         }
 
@@ -260,12 +261,12 @@ nextflow_process {
                 """
                 input[0] = [
                     [ id:'test' ], // meta map
-                    file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true),
-                    file(params.test_data['sarscov2']['illumina']['test_single_end_sorted_bam'], checkIfExists: true)
-                    ]
-                input[1] = [[:],file(params.test_data['sarscov2']['genome']['genome_fasta'], checkIfExists: true)]
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.single_end.sorted.bam', checkIfExists: true)
+                ]
+                input[1] = [[:],file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)]
                 input[2] = [[:],[]]
-                input[3] = [[:],file(params.test_data['sarscov2']['genome']['baits_bed'], checkIfExists: true)]
+                input[3] = [[:],file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/bed/baits.bed', checkIfExists: true)]
                 input[4] = [[:],[]]
                 input[5] = false
                 """
@@ -275,7 +276,11 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out.bed).match() }
+                { assert snapshot(
+                    process.out.bed,
+                    process.out.versions
+                    ).match()
+                }
             )
         }
 

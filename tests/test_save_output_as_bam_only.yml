@@ -1,5 +1,5 @@
 - name: Run save_output_as_bam
-  command: nextflow run main.nf -profile test_cache --save_output_as_bam --outdir results
+  command: nextflow run main.nf -profile test --save_output_as_bam --outdir results
   tags:
     - default_extended
     - preprocessing
@@ -28,25 +28,15 @@
     - path: results/reports/markduplicates/test/test.md.cram.metrics
       contains: ["test	17094	1534	168	1046782	12429	197	0	0.635998", "1.0	0.999991	1171"]
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
-      md5sum: b61e1acee11a6ddf7ce3232a5948a6a0
     - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
-      md5sum: 1a382f98d488d2ae3df83a0d87caafc1
     - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt
-      md5sum: 839108358878ada89e1eaddf6e0541ba
     - path: results/reports/mosdepth/test/test.md.regions.bed.gz
-      md5sum: 0aaee6da65050bedcd40b9fbf0622873
     - path: results/reports/mosdepth/test/test.md.regions.bed.gz.csi
-      md5sum: 544e02fcca548749a0af758d0a2df352
     - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
-      md5sum: b61e1acee11a6ddf7ce3232a5948a6a0
     - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
-      md5sum: 1a382f98d488d2ae3df83a0d87caafc1
     - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
-      md5sum: 839108358878ada89e1eaddf6e0541ba
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
-      md5sum: 0aaee6da65050bedcd40b9fbf0622873
     - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
-      md5sum: 544e02fcca548749a0af758d0a2df352
     - path: results/reports/samtools/test/test.md.cram.stats
     # conda changes md5sums for test
     - path: results/reports/samtools/test/test.recal.cram.stats

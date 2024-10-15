@@ -1,0 +1,68 @@
+{
+    "human - bed - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.antitarget.bed:md5,3d4d20f9f23b39970865d29ef239d20b"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,b5e73ea85743cedc68ca6ef8006e5030"
+                ],
+                "bed": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.antitarget.bed:md5,3d4d20f9f23b39970865d29ef239d20b"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,b5e73ea85743cedc68ca6ef8006e5030"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-05-13T13:58:45.758206"
+    },
+    "human - bed": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.antitarget.bed:md5,3d4d20f9f23b39970865d29ef239d20b"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,b5e73ea85743cedc68ca6ef8006e5030"
+                ],
+                "bed": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.antitarget.bed:md5,3d4d20f9f23b39970865d29ef239d20b"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,b5e73ea85743cedc68ca6ef8006e5030"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-06-10T10:32:33.936192"
+    }
+}

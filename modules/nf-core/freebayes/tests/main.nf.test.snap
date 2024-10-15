@@ -1,48 +1,122 @@
 {
     "sarscov2 - [ cram, crai, cram, crai, bed ] - fasta - fai": {
         "content": [
+            "test.vcf.gz",
+            [
+                "##source=freeBayes v1.3.6",
+                "##reference=genome.fasta",
+                "##contig=<ID=chr22,length=40001>",
+                "##phasing=none",
+                "##commandline=\"freebayes -f genome.fasta --target genome.bed test.paired_end.sorted.cram test2.paired_end.sorted.cram\"",
+                "##INFO=<ID=NS,Number=1,Type=Integer,Description=\"Number of samples with data\">",
+                "##INFO=<ID=DP,Number=1,Type=Integer,Description=\"Total read depth at the locus\">",
+                "##INFO=<ID=DPB,Number=1,Type=Float,Description=\"Total read depth per bp at the locus; bases in reads overlapping / bases in haplotype\">",
+                "##INFO=<ID=AC,Number=A,Type=Integer,Description=\"Total number of alternate alleles in called genotypes\">"
+            ],
             [
                 "versions.yml:md5,4d24a735eabf2f037ab935511a2bc99c"
             ]
         ],
-        "timestamp": "2023-12-13T12:20:01.263906"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-08-14T16:16:26.462458"
     },
     "sarscov2 - [ bam, bai ] - fasta - fai": {
         "content": [
+            "test.vcf.gz",
+            [
+                "##source=freeBayes v1.3.6",
+                "##reference=genome.fasta",
+                "##contig=<ID=MT192765.1,length=29829>",
+                "##phasing=none",
+                "##commandline=\"freebayes -f genome.fasta test.paired_end.sorted.bam\"",
+                "##INFO=<ID=NS,Number=1,Type=Integer,Description=\"Number of samples with data\">",
+                "##INFO=<ID=DP,Number=1,Type=Integer,Description=\"Total read depth at the locus\">",
+                "##INFO=<ID=DPB,Number=1,Type=Float,Description=\"Total read depth per bp at the locus; bases in reads overlapping / bases in haplotype\">",
+                "##INFO=<ID=AC,Number=A,Type=Integer,Description=\"Total number of alternate alleles in called genotypes\">"
+            ],
             [
                 "versions.yml:md5,4d24a735eabf2f037ab935511a2bc99c"
             ]
         ],
-        "timestamp": "2023-12-13T12:19:37.06375"
-    },
-    "test.vcf.gz": {
-        "content": [
-            "test.vcf.gz"
-        ],
-        "timestamp": "2023-12-13T12:19:37.050165"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-08-14T16:16:02.547974"
     },
     "sarscov2 - [ cram, crai ] - fasta - fai": {
         "content": [
+            "test.vcf.gz",
+            [
+                "##source=freeBayes v1.3.6",
+                "##reference=genome.fasta",
+                "##contig=<ID=chr22,length=40001>",
+                "##phasing=none",
+                "##commandline=\"freebayes -f genome.fasta test.paired_end.sorted.cram\"",
+                "##INFO=<ID=NS,Number=1,Type=Integer,Description=\"Number of samples with data\">",
+                "##INFO=<ID=DP,Number=1,Type=Integer,Description=\"Total read depth at the locus\">",
+                "##INFO=<ID=DPB,Number=1,Type=Float,Description=\"Total read depth per bp at the locus; bases in reads overlapping / bases in haplotype\">",
+                "##INFO=<ID=AC,Number=A,Type=Integer,Description=\"Total number of alternate alleles in called genotypes\">"
+            ],
             [
                 "versions.yml:md5,4d24a735eabf2f037ab935511a2bc99c"
             ]
         ],
-        "timestamp": "2023-12-13T12:19:48.797103"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-08-14T16:16:13.594195"
     },
     "sarscov2 - [ bam, bai, bed ] - fasta - fai": {
         "content": [
+            "test.vcf.gz",
+            [
+                "##source=freeBayes v1.3.6",
+                "##reference=genome.fasta",
+                "##contig=<ID=MT192765.1,length=29829>",
+                "##phasing=none",
+                "##commandline=\"freebayes -f genome.fasta --target test.bed test.paired_end.sorted.bam\"",
+                "##INFO=<ID=NS,Number=1,Type=Integer,Description=\"Number of samples with data\">",
+                "##INFO=<ID=DP,Number=1,Type=Integer,Description=\"Total read depth at the locus\">",
+                "##INFO=<ID=DPB,Number=1,Type=Float,Description=\"Total read depth per bp at the locus; bases in reads overlapping / bases in haplotype\">",
+                "##INFO=<ID=AC,Number=A,Type=Integer,Description=\"Total number of alternate alleles in called genotypes\">"
+            ],
             [
                 "versions.yml:md5,4d24a735eabf2f037ab935511a2bc99c"
             ]
         ],
-        "timestamp": "2023-12-13T12:19:43.147912"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-08-14T16:16:07.514526"
     },
     "sarscov2 - [ bam, bai, bam, bai ] - fasta - fai": {
         "content": [
+            "test.vcf.gz",
+            [
+                "##source=freeBayes v1.3.6",
+                "##reference=genome.fasta",
+                "##contig=<ID=chr22,length=40001>",
+                "##phasing=none",
+                "##commandline=\"freebayes -f genome.fasta test.paired_end.sorted.bam test2.paired_end.sorted.bam\"",
+                "##INFO=<ID=NS,Number=1,Type=Integer,Description=\"Number of samples with data\">",
+                "##INFO=<ID=DP,Number=1,Type=Integer,Description=\"Total read depth at the locus\">",
+                "##INFO=<ID=DPB,Number=1,Type=Float,Description=\"Total read depth per bp at the locus; bases in reads overlapping / bases in haplotype\">",
+                "##INFO=<ID=AC,Number=A,Type=Integer,Description=\"Total number of alternate alleles in called genotypes\">"
+            ],
             [
                 "versions.yml:md5,4d24a735eabf2f037ab935511a2bc99c"
             ]
         ],
-        "timestamp": "2023-12-13T12:19:55.186773"
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-08-14T16:16:20.085987"
     }
 }

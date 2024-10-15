@@ -4,39 +4,47 @@ keywords:
   - UMIs
   - consensus sequence
   - bam
-  - sam
 tools:
   - fgbio:
       description: Tools for working with genomic and high throughput sequencing data.
       homepage: https://github.com/fulcrumgenomics/fgbio
       documentation: http://fulcrumgenomics.github.io/fgbio/
       licence: ["MIT"]
+      identifier: biotools:fgbio
 input:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false, collapse:false ]
-  - bam:
-      type: file
-      description: |
-        The input SAM or BAM file.
-      pattern: "*.{bam,sam}"
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false, collapse:false ]
+    - grouped_bam:
+        type: file
+        description: |
+          The input SAM or BAM file, grouped by UMIs
+        pattern: "*.{bam,sam}"
+  - - min_reads:
+        type: integer
+        description: Minimum number of original reads to build each consensus read.
+  - - min_baseq:
+        type: integer
+        description: Ignore bases in raw reads that have Q below this value.
 output:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
   - bam:
-      type: file
-      description: |
-        Output SAM or BAM file to write consensus reads.
-      pattern: "*.{bam,sam}"
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.bam":
+          type: file
+          description: |
+            Output SAM or BAM file to write consensus reads.
+          pattern: "*.{bam,sam}"
   - versions:
-      type: file
-      description: File containing software versions
-      pattern: "versions.yml"
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@sruthipsuresh"
 maintainers:
