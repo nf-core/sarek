@@ -19,7 +19,7 @@ workflow CONCATENATE_GERMLINE_VCFS {
 
     // Add additional information to VCF files
     ADD_INFO_TO_VCF(vcfs)
-    
+
     // Compress the VCF files with bgzip
     TABIX_EXT_VCF(ADD_INFO_TO_VCF.out.vcf)
 
@@ -37,10 +37,10 @@ workflow CONCATENATE_GERMLINE_VCFS {
 
     // Concatenate the VCF files
     GERMLINE_VCFS_CONCAT(germline_vcfs_with_tbis)
-    
+
     // Sort the concatenated VCF files
     GERMLINE_VCFS_CONCAT_SORT(GERMLINE_VCFS_CONCAT.out.vcf)
-    
+
     // Index the sorted concatenated VCF files
     TABIX_GERMLINE_VCFS_CONCAT_SORT(GERMLINE_VCFS_CONCAT_SORT.out.vcf)
 

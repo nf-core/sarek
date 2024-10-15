@@ -14,7 +14,6 @@ workflow POST_VARIANTCALLING {
     fasta
     concatenate_vcfs
     normalized_vcfs
-   
     main:
     versions = Channel.empty()
 

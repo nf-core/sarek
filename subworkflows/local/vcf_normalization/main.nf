@@ -25,7 +25,7 @@ workflow NORMALIZE_VCFS {
 
     // Gather vcfs and vcf-tbis for normalization of vcf-files
     vcfs_with_tbis = TABIX_VCF.out.gz_tbi.map{ meta, vcf, tbi -> [ meta.subMap('id'), vcf, tbi ] }.groupTuple()
-    
+
     // Normalize the VCF files with BCFTOOLS_NORM
     VCFS_NORM(vcfs_with_tbis, fasta)
 
