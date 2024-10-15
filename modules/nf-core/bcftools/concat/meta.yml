@@ -37,9 +37,12 @@ output:
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-      - "*.gz":
-          type: file
-          description: VCF concatenated output file
+          pattern: "*.{vcf.gz}"
+      - ${prefix}.vcf.gz:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
           pattern: "*.{vcf.gz}"
   - tbi:
       - meta:
@@ -47,9 +50,12 @@ output:
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-      - "*.tbi":
-          type: file
-          description: Alternative VCF file index
+          pattern: "*.tbi"
+      - ${prefix}.vcf.gz.tbi:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
           pattern: "*.tbi"
   - csi:
       - meta:
@@ -57,9 +63,12 @@ output:
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test', single_end:false ]
-      - "*.csi":
-          type: file
-          description: Default VCF file index
+          pattern: "*.csi"
+      - ${prefix}.vcf.gz.csi:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
           pattern: "*.csi"
   - versions:
       - versions.yml:

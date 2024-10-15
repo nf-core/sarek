@@ -1,4 +1,76 @@
 {
+    "Write-One-File stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "/home/ramprasad.neethiraj/nextflow/modules/.nf-test/tests/2a6cfab794852e23e6324eb4955668b2/work/42/aee6c82c1ca502c3b02339f597188b/test.fastq.gz"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,4711df5941f1464e3693d24dd29c705b"
+                ],
+                "fastq": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "/home/ramprasad.neethiraj/nextflow/modules/.nf-test/tests/2a6cfab794852e23e6324eb4955668b2/work/42/aee6c82c1ca502c3b02339f597188b/test.fastq.gz"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,4711df5941f1464e3693d24dd29c705b"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-10-08T10:03:50.626223289"
+    },
+    "Write-Two-Files stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test2"
+                        },
+                        [
+                            "/home/ramprasad.neethiraj/nextflow/modules/.nf-test/tests/528557b5a81e4bffb57c38b19c7aa351/work/74/fc5d116d011bcd47d6f7de8d42ac34/test2_R1.fastq.gz",
+                            "/home/ramprasad.neethiraj/nextflow/modules/.nf-test/tests/528557b5a81e4bffb57c38b19c7aa351/work/74/fc5d116d011bcd47d6f7de8d42ac34/test2_R2.fastq.gz"
+                        ]
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,4711df5941f1464e3693d24dd29c705b"
+                ],
+                "fastq": [
+                    [
+                        {
+                            "id": "test2"
+                        },
+                        [
+                            "/home/ramprasad.neethiraj/nextflow/modules/.nf-test/tests/528557b5a81e4bffb57c38b19c7aa351/work/74/fc5d116d011bcd47d6f7de8d42ac34/test2_R1.fastq.gz",
+                            "/home/ramprasad.neethiraj/nextflow/modules/.nf-test/tests/528557b5a81e4bffb57c38b19c7aa351/work/74/fc5d116d011bcd47d6f7de8d42ac34/test2_R2.fastq.gz"
+                        ]
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,4711df5941f1464e3693d24dd29c705b"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-10-08T10:03:57.417015606"
+    },
     "Write-Two-Files": {
         "content": [
             {
@@ -70,5 +142,77 @@
             "nextflow": "24.04.2"
         },
         "timestamp": "2024-06-21T13:02:07.466039653"
+    },
+    "Write-One-File-stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,4711df5941f1464e3693d24dd29c705b"
+                ],
+                "fastq": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,4711df5941f1464e3693d24dd29c705b"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-10-08T13:55:53.594615215"
+    },
+    "Write-Two-Files-stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test2"
+                        },
+                        [
+                            "test2_R1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                            "test2_R2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                        ]
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,4711df5941f1464e3693d24dd29c705b"
+                ],
+                "fastq": [
+                    [
+                        {
+                            "id": "test2"
+                        },
+                        [
+                            "test2_R1.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                            "test2_R2.fastq.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                        ]
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,4711df5941f1464e3693d24dd29c705b"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-10-08T13:56:01.212228909"
     }
 }
