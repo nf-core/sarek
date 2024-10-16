@@ -261,7 +261,7 @@
                     "description": "Option for concatenating germline vcf-files.",
                     "help_text": "Concatenating the germline vcf-files from each applied variant-caller into one vcf-file using bfctools concat."
                 },
-                "normalized_vcfs": {
+                "normalize_vcfs": {
                     "type": "boolean",
                     "fa_icon": "fas fa-merge",
                     "description": "Option for normalization of vcf-files.",

@@ -835,7 +835,7 @@ workflow SAREK {
                 BAM_VARIANT_CALLING_SOMATIC_ALL.out.vcf_all,
                 fasta,
                 params.concatenate_vcfs,
-                params.normalized_vcfs)
+                params.normalize_vcfs)
 
         // Gather vcf files for annotation and QC
         vcf_to_annotate = Channel.empty()

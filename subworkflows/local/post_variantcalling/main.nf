@@ -13,7 +13,7 @@ workflow POST_VARIANTCALLING {
     somatic_vcfs
     fasta
     concatenate_vcfs
-    normalized_vcfs
+    normalize_vcfs
     main:
     versions = Channel.empty()
 
@@ -26,7 +26,7 @@ workflow POST_VARIANTCALLING {
         versions = versions.mix(CONCATENATE_GERMLINE_VCFS.out.versions)
     }
 
-    if (normalized_vcfs){
+    if (normalize_vcfs){
         NORMALIZE_VCFS(vcfs, fasta)
 
         vcfs = vcfs.mix(NORMALIZE_VCFS.out.vcfs)
