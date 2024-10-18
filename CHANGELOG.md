@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1653](https://github.com/nf-core/sarek/pull/1653) - Updates `sarek_subway` files with `lofreq`
 - [1660](https://github.com/nf-core/sarek/pull/1642) - Add `--length_required` for minimal reads length with `FASTP`
 - [1663](https://github.com/nf-core/sarek/pull/1663) - Massive conda modules update
+- [1680](https://github.com/nf-core/sarek/pull/1682) - Add `bcftools_norm` in `POST_VARIANTCALLING` for normalization of all vcf files or for concatenated germline vcfs
 
 ### Changed
 
