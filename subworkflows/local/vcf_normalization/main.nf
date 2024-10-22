@@ -2,10 +2,10 @@
 
 // Import modules
 include { ADD_INFO_TO_VCF  } from '../../../modules/local/add_info_to_vcf/main'
-include { TABIX_BGZIPTABIX as TABIX_VCF } from '../../../modules/nf-core/tabix/bgziptabix/main'
+include { TABIX_BGZIPTABIX as TABIX_EXT_VCF } from '../../../modules/nf-core/tabix/bgziptabix/main'
 include { BCFTOOLS_NORM as VCFS_NORM } from '../../../modules/nf-core/bcftools/norm/main'
-include { BCFTOOLS_SORT as VCFS_SORT } from '../../../modules/nf-core/bcftools/sort/main'
-include { TABIX_TABIX as TABIX_VCFS_INDEX } from '../../../modules/nf-core/tabix/tabix/main'
+include { BCFTOOLS_SORT as VCFS_NORM_SORT } from '../../../modules/nf-core/bcftools/sort/main'
+include { TABIX_TABIX as TABIX_VCFS_NORM_SORT } from '../../../modules/nf-core/tabix/tabix/main'
 
 // Workflow to normalize, compress, and index VCF files
 workflow NORMALIZE_VCFS {
@@ -30,10 +30,10 @@ workflow NORMALIZE_VCFS {
     VCFS_NORM(vcfs_with_tbis, fasta)
 
     // Sort the normalized VCF files
-    VCFS_SORT(VCFS_NORM.out.vcf)
+    VCFS_NORM_SORT(VCFS_NORM.out.vcf)
 
     // Index the sorted normalized VCF files
-    TABIX_VCFS_INDEX(VCFS_SORT.out.vcf)
+    TABIX_VCFS_NORM_SORT(VCFS_NORM_SORT.out.vcf)
 
     // Gather versions of all tools used
     versions = versions.mix(ADD_INFO_TO_VCF.out.versions)
@@ -43,7 +43,7 @@ workflow NORMALIZE_VCFS {
     versions = versions.mix(TABIX_VCFS_INDEX.out.versions)
 
     emit:
-    vcfs // Post-processed sorted VCFs
+    vcfs = TABIX_VCFS_NORM_SORT.out.vcf // normalized vcfs
     versions // Channel: [versions.yml]
 }
 

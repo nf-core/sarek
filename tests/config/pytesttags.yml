@@ -673,7 +673,7 @@ normalize_vcfs:
   - subworkflows/local/bam_variant_calling_somatic_all/**
   - subworkflows/local/bam_variant_calling_tumor_only_all/**
   - subworkflows/local/post_variantcalling/**
-  - subworkflows/local/vcf_concatenate_germline/**
+  - subworkflows/local/vcf_normalization/**
   - tests/csv/3.0/mapped_joint_bam.csv
   - tests/test_normalize_vcfs.yml
 

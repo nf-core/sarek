@@ -14,10 +14,9 @@ workflow POST_VARIANTCALLING {
     fasta
     concatenate_vcfs
     normalize_vcfs
+
     main:
     versions = Channel.empty()
-
-    vcfs = germline_vcfs.mix(tumor_only_vcfs, somatic_vcfs)
 
     if (concatenate_vcfs){
         CONCATENATE_GERMLINE_VCFS(germline_vcfs, fasta)
@@ -27,7 +26,7 @@ workflow POST_VARIANTCALLING {
     }
 
     if (normalize_vcfs){
-        NORMALIZE_VCFS(vcfs, fasta)
+        NORMALIZE_VCFS(germline_vcfs, tumor_only_vcfs, somatic_vcfs, fasta)
 
         vcfs = vcfs.mix(NORMALIZE_VCFS.out.vcfs)
         versions = versions.mix(NORMALIZE_VCFS.out.versions)
