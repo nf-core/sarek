@@ -11,6 +11,9 @@ nextflow_pipeline {
             params {
                 modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
                 outdir = "$outputDir"
+                input = "${projectDir}/tests/csv/3.0/vcf_single.csv"
+                step  = 'annotate'
+                download_cache = true
                 tools = 'vep'
             }
         }
@@ -42,6 +45,9 @@ nextflow_pipeline {
             params {
                 modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
                 outdir = "$outputDir"
+                input = "${projectDir}/tests/csv/3.0/vcf_single.csv"
+                step  = 'annotate'
+                download_cache = true
                 tools = 'vep'
             }
         }
