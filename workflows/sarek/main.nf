@@ -947,7 +947,7 @@ def addReadgroupToMeta(meta, files) {
 
     // Here we're assuming that fastq_1 and fastq_2 are from the same flowcell:
     // If we cannot read the flowcell ID from the fastq file, then we don't use it
-    def sample_lane_id = flowcellLaneFromFastq(files[0]) ? "${flowcell}.${meta.sample}.${meta.lane}" : "${meta.sample}.${meta.lane}"
+    def sample_lane_id = flowcellLaneFromFastq(files[0]) ? "${meta.flowcell}.${meta.sample}.${meta.lane}" : "${meta.sample}.${meta.lane}"
     // TO-DO: Would it perhaps be better to also call flowcellLaneFromFastq(files[1]) and check that we get the same flowcell-id?
 
     // Don't use a random element for ID, it breaks resuming
