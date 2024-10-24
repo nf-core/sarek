@@ -39,7 +39,7 @@ nextflow_pipeline {
         }
     }
 
-    test("Run with profile test | --tools vep --vep_include_fasta --download_cache") {
+    test("Run with profile test | --tools vep --vep_include_fasta") {
 
         when {
             params {
@@ -47,7 +47,7 @@ nextflow_pipeline {
                 outdir = "$outputDir"
                 input = "${projectDir}/tests/csv/3.0/vcf_single.csv"
                 step  = 'annotate'
-                download_cache = true
+                vep_cache = 's3://annotation-cache/vep_cache/'
                 tools = 'vep'
             }
         }
