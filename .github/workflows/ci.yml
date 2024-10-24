@@ -164,14 +164,14 @@ jobs:
         uses: mikepenz/action-junit-report@v4
         if: success() || failure() # always run even if the previous step fails
         with:
-          report_paths: "TEST-report_${{ matrix.filter }}_${{ matrix.profile }}_${{ matrix.shard }}.xml"
+          report_paths: "TEST-*.xml"
 
       - name: Upload Test Report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         if: success() || failure() # always run even if the previous step fails
         with:
           name: junit-test-results
-          path: "TEST-report_${{ matrix.filter }}_${{ matrix.profile }}_${{ matrix.shard }}.xml"
+          path: "TEST-*.xml"
           retention-days: 1
 
       - name: Clean up
@@ -194,4 +194,4 @@ jobs:
         uses: mikepenz/action-junit-report@v4
         with:
           commit: ${{github.event.workflow_run.head_sha}}
-          report_paths: "**/build/test-results/test/TEST-*.xml"
+          report_paths: "TEST-*.xml"
