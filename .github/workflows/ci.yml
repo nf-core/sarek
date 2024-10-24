@@ -120,7 +120,7 @@ jobs:
         run: |
           nf-test test \
               --ci \
-              --dryrun \
+              --dryRun \
               --junitxml="TEST-${{ matrix.filter }}_${{ matrix.profile }}_${{ matrix.shard }}.xml" \
               --shard ${{ matrix.shard }}/5 \
               --changed-since HEAD^ \
