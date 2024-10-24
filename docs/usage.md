@@ -647,6 +647,89 @@ mv *loci* battenberg_loci_on_target_hg38/
 
 3. Copy the `targets_with_chr.bed` and `GC_G1000_on_target_hg38.txt` files into the newly created `battenberg_loci_on_target_hg38` folder before running the next set of steps. ASCAT generates a list of GC correction loci with sufficient coverage in a sample, then intersects that with the list of all loci with tumour logR values in that sample. If the intersection is <10% the size of the latter, it will fail with an error. Because the Battenberg loci/allele sets are very dense, subsetting to on-target regions is still too many loci. This script ensures that all SNPs with GC correction information are included in the loci list, plus a random sample of another 30% of all on target loci. You may need to vary this proportion depending on your set of targets. A good rule of thumb is that the size of your GC correction loci list should be about 15% the size of your total loci list. This allows for a margin of error.
 
+### 'chr'-based versus non 'chr'-based reference
+
+Please note that loci files provided from ASCAT developers (https://github.com/VanLoo-lab/ascat/tree/master/ReferenceFiles/WES) are not 'chr'-based (chromosome names are '1', '2', '3', etc. and not 'chr1', 'chr2', 'chr3', etc.). If your BAMs are 'chr'-based, you will need to add 'chr'
+
+```bash
+for i in {1..22} X;
+  do sed -i 's/^/chr/' G1000_loci_hg19_chr${i}.txt;
+done).
+```
+
+ASCAT will internally remove 'chr' so the other files (allele, GC correction and RT correction) should not be modified and chrom_names (ascat.prepareHTS) should be c(1:22,'X').
+
+If using ASCAT provided references:
+
+```bash
+
+cd .../G1000_lociAll_hg38_unzipped/G1000_lociAll_hg38
+
+# Function to check and correct 'chr' prefix
+check_and_correct_chr_prefix() {
+    local file=$1
+    local chr_number=$2
+
+    # Check if file exists
+    if [ ! -f "$file" ]; then
+        echo "Error: File $file not found."
+        exit 1
+    fi
+
+    # Check first line of the file
+    first_line=$(head -n 1 "$file")
+
+    if [[ $first_line == chr${chr_number}* ]]; then
+        echo "File $file already has correct 'chr' prefix. No changes needed."
+    elif [[ $first_line == chrchr${chr_number}* ]]; then
+        echo "File $file has duplicate 'chr' prefix. Correcting..."
+        sed -i 's/^chrchr/chr/' "$file"
+    elif [[ $first_line == ${chr_number}* ]]; then
+        echo "File $file is missing 'chr' prefix. Adding..."
+        sed -i 's/^/chr/' "$file"
+    else
+        echo "Error: Unexpected format in $file. Please check manually."
+        exit 1
+    fi
+}
+
+# Check and correct 'chr' prefix for each loci file
+for i in {1..22} X; do
+    check_and_correct_chr_prefix "G1000_loci_hg38_chr${i}.txt" "${i}"
+done
+
+for i in {1..22} X
+do
+  # Generate BED file from the tailored loci set
+  awk '{ print $1 "\t" $2-1 "\t" $2 }' G1000_loci_hg38_chr${i}.txt > chr${i}.bed
+
+  # Extract relevant GC content data for this chromosome
+  grep "^chr${i}_" GC_G1000_on_target_hg38.txt > chr${i}.txt
+
+  # Intersect BED file with target regions to find loci on target
+  bedtools intersect -a chr${i}.bed -b targets_with_chr.bed | awk '{ print $1 "_" $3 }' > chr${i}_on_target.txt
+
+  # Calculate the number of lines needed for random sampling (30% of total)
+  n=$(wc -l < chr${i}_on_target.txt)
+  count=$((n * 3 / 10))
+
+  # Get loci that are both on target and match the GC content data
+  grep -xf chr${i}.txt chr${i}_on_target.txt > chr${i}.temp
+
+  # Add random subset of on-target loci to the list
+  shuf -n $count chr${i}_on_target.txt >> chr${i}.temp
+
+  # Sort, remove duplicates, and format output
+  sort -n -k2 -t '_' chr${i}.temp | uniq | awk 'BEGIN { FS="_" } ; { print $1 "\t" $2 }' > battenberg_loci_on_target_hg38_chr${i}.txt
+done
+
+# Compress the resulting loci files into a zip archive
+zip battenberg_loci_on_target_hg38.zip battenberg_loci_on_target_hg38_chr*.txt
+
+```
+
+If using Battenberg provided references:
+
 ```bash
 cd battenberg_loci_on_target_hg38/
 rm *chrstring*
