@@ -9,15 +9,15 @@
                             "sample": "test",
                             "sex": "XX",
                             "status": 0,
+                            "lane": "test_L1",
                             "id": "test-test_L1",
+                            "data_type": "fastq_gz",
                             "num_lanes": 1,
-                            "read_group": "\"@RG\\tID:null.test.test_L1\\tPU:test_L1\\tSM:test_test\\tLB:test\\tDS:null\\tPL:ILLUMINA\"",
-                            "data_type": "fastq",
                             "size": 1
                         },
                         [
-                            "/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz",
-                            "/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz"
+                            "/ngi-igenomes/testdata/nf-core/modules/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz",
+                            "/ngi-igenomes/testdata/nf-core/modules/genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz"
                         ]
                     ]
                 ],
@@ -28,20 +28,24 @@
                             "sample": "test",
                             "sex": "XX",
                             "status": 0,
+                            "lane": "test_L1",
                             "id": "test-test_L1",
+                            "data_type": "fastq_gz",
                             "num_lanes": 1,
-                            "read_group": "\"@RG\\tID:null.test.test_L1\\tPU:test_L1\\tSM:test_test\\tLB:test\\tDS:null\\tPL:ILLUMINA\"",
-                            "data_type": "fastq",
                             "size": 1
                         },
                         [
-                            "/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz",
-                            "/nf-core/test-datasets/modules/data/genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz"
+                            "/ngi-igenomes/testdata/nf-core/modules/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz",
+                            "/ngi-igenomes/testdata/nf-core/modules/genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz"
                         ]
                     ]
                 ]
             }
         ],
-        "timestamp": "2023-10-16T14:12:54.640503"
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.09.0"
+        },
+        "timestamp": "2024-10-04T10:25:14.620549"
     }
 }

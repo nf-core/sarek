@@ -11,18 +11,22 @@ process BCFTOOLS_CONCAT {
     tuple val(meta), path(vcfs), path(tbi)
 
     output:
-    tuple val(meta), path("*.gz") , emit: vcf
-    tuple val(meta), path("*.tbi"), emit: tbi, optional: true
-    tuple val(meta), path("*.csi"), emit: csi, optional: true
-    path  "versions.yml"          , emit: versions
+    tuple val(meta), path("${prefix}.vcf.gz")    , emit: vcf
+    tuple val(meta), path("${prefix}.vcf.gz.tbi"), emit: tbi, optional: true
+    tuple val(meta), path("${prefix}.vcf.gz.csi"), emit: csi, optional: true
+    path  "versions.yml"                         , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
 
     script:
     def args = task.ext.args   ?: ''
-    def prefix   = task.ext.prefix ?: "${meta.id}"
+    prefix   = task.ext.prefix ?: "${meta.id}"
+    def tbi_names = tbi.findAll { file -> !(file instanceof List) }.collect { file -> file.name }
+    def create_input_index = vcfs.collect { vcf -> tbi_names.contains(vcf.name + ".tbi") ? "" : "tabix ${vcf}" }.join("\n    ")
     """
+    ${create_input_index}
+
     bcftools concat \\
         --output ${prefix}.vcf.gz \\
         $args \\
@@ -37,7 +41,7 @@ process BCFTOOLS_CONCAT {
 
     stub:
     def args = task.ext.args   ?: ''
-    def prefix   = task.ext.prefix ?: "${meta.id}"
+    prefix   = task.ext.prefix ?: "${meta.id}"
     def index = args.contains("--write-index=tbi") || args.contains("-W=tbi") ? "tbi" :
                 args.contains("--write-index=csi") || args.contains("-W=csi") ? "csi" :
                 args.contains("--write-index") || args.contains("-W") ? "csi" :

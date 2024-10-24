@@ -38,4 +38,17 @@ process SPRING_DECOMPRESS {
         spring: ${VERSION}
     END_VERSIONS
     """
+
+    stub:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    def VERSION = '1.1.1' // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
+    def output = write_one_fastq_gz ? "echo '' | gzip > ${prefix}.fastq.gz" : "echo '' | gzip > ${prefix}_R1.fastq.gz; echo '' | gzip > ${prefix}_R2.fastq.gz"
+    """
+    ${output}
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        spring: ${VERSION}
+    END_VERSIONS
+    """
 }
