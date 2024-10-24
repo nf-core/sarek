@@ -119,10 +119,9 @@ jobs:
       - name: Start summary
         id: print-test
         run: |
-          echo "### nf-test tests summary :rocket:" >> $GITHUB_STEP_SUMMARY
+          echo "## nf-test tests summary :rocket:" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "This ${{ matrix.filter }} shard was run on ${{ matrix.profile }} | ${{ matrix.NXF_VER }}" >> $GITHUB_STEP_SUMMARY
-          echo "This shard contains the following test(s):" >> $GITHUB_STEP_SUMMARY
+          echo "This `${{ matrix.filter }}` shard was run on `${{ matrix.profile }}` | `NXF_VER=${{ matrix.NXF_VER }}`, and contains the following test(s):" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           nf-test test \
             --ci \
@@ -152,7 +151,7 @@ jobs:
         if: success()
         run: |
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "All test(s) successfull :rocket:" >> $GITHUB_STEP_SUMMARY
+          echo "All test(s) successfull :party:" >> $GITHUB_STEP_SUMMARY
 
       - name: Print failure in summary
         if: failure()
