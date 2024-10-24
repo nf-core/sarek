@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1677](https://github.com/nf-core/sarek/pull/1677) - Migrate pytest aligner and pipeline default tests to nf-test
 - [1680](https://github.com/nf-core/sarek/pull/1680) - Template update for nf-core/tools v3.0.0
 - [1681](https://github.com/nf-core/sarek/pull/1681) - Template update for nf-core/tools v3.0.1
+- [1692](https://github.com/nf-core/sarek/pull/1692) - Update ensemblvep
 
 ### Fixed
 
@@ -39,7 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | Dependency    | Old version | New version |
 | ------------- | ----------- | ----------- |
 | `deepvariant` | 1.5.0       | 1.6.1       |
-| `ensemblvep`  | 111.0       | 112.0       |
+| `ensemblvep`  | 111.0       | 113.0       |
 | `fgbio`       | 2.0.2       | 2.1.2       |
 | `htslib`      | 1.20        | 1.21        |
 | `lofreq`      |             | 2.1.5       |

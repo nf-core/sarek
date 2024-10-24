@@ -1,3 +1,4 @@
+annotation/**/*.vcf.{gz,gz.tbi}
 csv/*.csv
 multiqc/multiqc_data/gatk-base-recalibrator-reported-empirical-plot.txt
 multiqc/multiqc_data/gatk_base_recalibrator.txt
@@ -14,6 +15,7 @@ pipeline_info/*.{html,json,txt,yml}
 preprocessing/**/*.{md,recal,sorted}.{bam,bam.bai,cram,cram.crai,table}
 reference/dragmap/hash_table.{cfg,cfg.bin}
 reference/dragmap/hash_table_stats.txt
+reports/EnsemblVEP/*/*.ann.summary.html
 reports/fastqc/**/*_fastqc.{html,zip}
 reports/markduplicates/**/*.md.cram.metrics
 variant_calling/**/*.vcf.{gz,gz.tbi}
