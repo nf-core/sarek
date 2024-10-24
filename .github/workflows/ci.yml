@@ -120,7 +120,10 @@ jobs:
         id: print-test
         run: |
           echo "### nf-test tests summary :rocket:" >> $GITHUB_STEP_SUMMARY
-          echo "This shard contains the following tests:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "This ${{ matrix.filter }} shard was run on ${{ matrix.profile }} | ${{ matrix.NXF_VER }} | " >> $GITHUB_STEP_SUMMARY
+          echo "This shard contains the following test(s):" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
           nf-test test \
             --ci \
             --dryRun \
@@ -149,13 +152,13 @@ jobs:
         if: success()
         run: |
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "All tests successfull :rocket:" >> $GITHUB_STEP_SUMMARY
+          echo "All test(s) successfull :rocket:" >> $GITHUB_STEP_SUMMARY
 
       - name: Print failure in summary
         if: failure()
         run: |
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Some tests failed :sadcold_sweat:" >> $GITHUB_STEP_SUMMARY
+          echo "Some test(s) failed :sadcold_sweat:" >> $GITHUB_STEP_SUMMARY
 
       - name: Publish Test Report
         uses: mikepenz/action-junit-report@v4
