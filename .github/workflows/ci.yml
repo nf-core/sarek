@@ -117,17 +117,18 @@ jobs:
         uses: jlumbroso/free-disk-space@v1.3.1
 
       - name: "Print tests to run"
+        id: print-test
         run: |
-          echo $(nf-test test \
-              --ci \
-              --dryRun \
-              --junitxml="TEST-${{ matrix.filter }}_${{ matrix.profile }}_${{ matrix.shard }}.xml" \
-              --shard ${{ matrix.shard }}/5 \
-              --changed-since HEAD^ \
-              --follow-dependencies \
-              --profile "+${{ matrix.profile }}" \
-              --filter ${{ matrix.filter }} \
-              | grep PASSED | cut -d "'" -f 2 | sort -u)
+          nf-test test \
+            --ci \
+            --dryRun \
+            --junitxml="TEST-${{ matrix.filter }}_${{ matrix.profile }}_${{ matrix.shard }}.xml" \
+            --shard ${{ matrix.shard }}/5 \
+            --changed-since HEAD^ \
+            --follow-dependencies \
+            --profile "+${{ matrix.profile }}" \
+            --filter ${{ matrix.filter }} \
+            | grep PASSED | cut -d "'" -f 2 | sort -u >> $GITHUB_OUTPUT
 
       # - name: "Run tests | ${{ matrix.filter }}_${{ matrix.profile }} | ${{ matrix.shard }}/5"
       #   run: |
