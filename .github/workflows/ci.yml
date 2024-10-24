@@ -181,6 +181,7 @@ jobs:
 
   checks:
     runs-on: ubuntu-latest
+    needs: [test]
     steps:
       - name: Download Test Report
         uses: dawidd6/action-download-artifact@v2
