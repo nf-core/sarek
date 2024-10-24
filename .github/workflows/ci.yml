@@ -118,7 +118,7 @@ jobs:
 
       - name: "Print tests to run"
         run: |
-          nf-test test \
+          echo $(nf-test test \
               --ci \
               --dryRun \
               --junitxml="TEST-${{ matrix.filter }}_${{ matrix.profile }}_${{ matrix.shard }}.xml" \
@@ -127,7 +127,7 @@ jobs:
               --follow-dependencies \
               --profile "+${{ matrix.profile }}" \
               --filter ${{ matrix.filter }} \
-              | grep PASSED | cut -d "'" -f 2 | sort -u
+              | grep PASSED | cut -d "'" -f 2 | sort -u)
 
       # - name: "Run tests | ${{ matrix.filter }}_${{ matrix.profile }} | ${{ matrix.shard }}/5"
       #   run: |
