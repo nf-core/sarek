@@ -495,15 +495,6 @@ snpeff:
   - tests/csv/3.0/vcf_single.csv
   - tests/test_annotation_snpeff.yml
 
-## vep
-vep:
-  - conf/modules/annotate.config
-  - modules/nf-core/ensemblvep/vep/**
-  - modules/nf-core/tabix/bgziptabix/**
-  - subworkflows/nf-core/vcf_annotate_ensemblvep/**
-  - tests/csv/3.0/vcf_single.csv
-  - tests/test_annotation_vep.yml
-
 ## bcfann
 bcfann:
   - conf/modules/annotate.config

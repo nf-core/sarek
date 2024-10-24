@@ -17,16 +17,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- [1668](https://github.com/nf-core/sarek/pull/1668) - Add nf-test sharding CI
 - [1669](https://github.com/nf-core/sarek/pull/1669) - Better nf-test pipeline level tests
 - [1677](https://github.com/nf-core/sarek/pull/1677) - Migrate pytest aligner and pipeline default tests to nf-test
 - [1680](https://github.com/nf-core/sarek/pull/1680) - Template update for nf-core/tools v3.0.0
 - [1681](https://github.com/nf-core/sarek/pull/1681) - Template update for nf-core/tools v3.0.1
+- [1692](https://github.com/nf-core/sarek/pull/1692) - Update ensemblvep
 
 ### Fixed
 
 - [1657](https://github.com/nf-core/sarek/pull/1657) - Update all actions used in the GHA CI
 - [1661](https://github.com/nf-core/sarek/pull/1661) - nf-test pipeline level tests
 - [1673](https://github.com/nf-core/sarek/pull/1673) - Print warning message instead of silent error with Nextflow versions prior to 24.08.0edge
+- [1693](https://github.com/nf-core/sarek/pull/1693) - Fixes flowcell retrieval during samplesheet parsing
+- [1694](https://github.com/nf-core/sarek/pull/1694) - Fix manifest DOI display on CLI
 
 ### Removed
 
@@ -37,7 +41,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | Dependency    | Old version | New version |
 | ------------- | ----------- | ----------- |
 | `deepvariant` | 1.5.0       | 1.6.1       |
-| `ensemblvep`  | 111.0       | 112.0       |
+| `ensemblvep`  | 111.0       | 113.0       |
 | `fgbio`       | 2.0.2       | 2.1.2       |
 | `htslib`      | 1.20        | 1.21        |
 | `lofreq`      |             | 2.1.5       |
