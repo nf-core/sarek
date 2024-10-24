@@ -171,7 +171,7 @@ jobs:
         if: always() # always run even if the previous step fails
         with:
           name: junit-test-results
-          path: "TEST-*.xml"
+          path: "**/build/test-results/test/TEST-*.xml"
           retention-days: 1
 
       - name: Clean up
@@ -194,4 +194,4 @@ jobs:
         uses: mikepenz/action-junit-report@v4
         with:
           commit: ${{github.event.workflow_run.head_sha}}
-          report_paths: "TEST-*.xml"
+          report_paths: "**/build/test-results/test/TEST-*.xml"
