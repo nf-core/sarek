@@ -121,7 +121,7 @@ jobs:
         run: |
           echo "### nf-test tests summary :rocket:" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "This ${{ matrix.filter }} shard was run on ${{ matrix.profile }} | ${{ matrix.NXF_VER }} | " >> $GITHUB_STEP_SUMMARY
+          echo "This ${{ matrix.filter }} shard was run on ${{ matrix.profile }} | ${{ matrix.NXF_VER }}" >> $GITHUB_STEP_SUMMARY
           echo "This shard contains the following test(s):" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           nf-test test \
@@ -133,7 +133,7 @@ jobs:
             --follow-dependencies \
             --profile "+${{ matrix.profile }}" \
             --filter ${{ matrix.filter }} \
-            | grep PASSED | cut -d "'" -f 2 | sort -u >> $GITHUB_STEP_SUMMARY
+            | grep PASSED | cut -d "'" -f 2 | sed 's/^/- /' | sort -u >> $GITHUB_STEP_SUMMARY
 
       - name: "Run tests | ${{ matrix.filter }}_${{ matrix.profile }} | ${{ matrix.shard }}/5"
         run: |
