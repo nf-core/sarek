@@ -116,9 +116,9 @@ jobs:
       - name: Disk space cleanup
         uses: jlumbroso/free-disk-space@v1.3.1
 
-      - name: "Print tests to run"
-        id: print-test
+      - id: print-test
         run: |
+          echo "### Test summary :rocket:" >> $GITHUB_STEP_SUMMARY
           nf-test test \
             --ci \
             --dryRun \
@@ -128,7 +128,7 @@ jobs:
             --follow-dependencies \
             --profile "+${{ matrix.profile }}" \
             --filter ${{ matrix.filter }} \
-            | grep PASSED | cut -d "'" -f 2 | sort -u >> $GITHUB_OUTPUT
+            | grep PASSED | cut -d "'" -f 2 | sort -u >> $GITHUB_STEP_SUMMARY
 
       # - name: "Run tests | ${{ matrix.filter }}_${{ matrix.profile }} | ${{ matrix.shard }}/5"
       #   run: |
