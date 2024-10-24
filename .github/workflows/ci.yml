@@ -121,7 +121,7 @@ jobs:
         run: |
           echo "## nf-test tests summary :rocket:" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "This `${{ matrix.filter }}` shard was run on `${{ matrix.profile }}` | `NXF_VER=${{ matrix.NXF_VER }}`, and contains the following test(s):" >> $GITHUB_STEP_SUMMARY
+          echo "This \`${{ matrix.filter }}\` shard was run on \`${{ matrix.profile }}\` | \`NXF_VER=${{ matrix.NXF_VER }}\`, and contains the following test(s):" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           nf-test test \
             --ci \
