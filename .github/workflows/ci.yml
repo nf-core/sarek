@@ -279,6 +279,7 @@ jobs:
           - tags: "strelka/germline"
           - tags: "strelka/somatic"
           - tags: "subworkflows/utils_nfvalidation_plugin"
+          - tags: "svdb/merge"
           - tags: "tabix/bgziptabix"
           - tags: "tabix/tabix"
           - tags: "tiddit/sv"
