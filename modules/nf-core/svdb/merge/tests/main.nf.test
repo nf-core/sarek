@@ -2,47 +2,24 @@ nextflow_process {
 
     name "Test Process SVDB_MERGE"
     script "modules/nf-core/svdb/merge/main.nf"
+    config "./nextflow.config"
     process "SVDB_MERGE"
     tag "modules"
     tag "modules_nfcore"
     tag "svdb"
     tag "svdb/merge"
 
-    test("test_svdb_merge") {
+    test("1 sample, [], []") {
 
         when {
             process {
                 """
                 input[0] = Channel.of([
                     [ id:'test' ], // meta map
-                    [file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf', checkIfExists: true),
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test2.vcf', checkIfExists: true) ]
-                ])
-                input[1] = [ 'tiddit', 'cnvnator']
-                """
-            }
-        }
-
-        then {
-            assertAll (
-                { assert process.success },
-                { assert path(process.out.vcf.get(0).get(1)).linesGzip.contains("##fileformat=VCFv4.1") }
-            )
-        }
-
-    }
-
-    test("test_svdb_merge_noprio") {
-
-        when {
-            process {
-                """
-                input[0] = Channel.of([
-                    [ id:'test' ], // meta map
-                    [file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf', checkIfExists: true),
-                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test2.vcf', checkIfExists: true) ]
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf', checkIfExists: true)
                 ])
                 input[1] = []
+                input[2] = []
                 """
             }
         }
@@ -50,10 +27,334 @@ nextflow_process {
         then {
             assertAll (
                 { assert process.success },
-                { assert path(process.out.vcf.get(0).get(1)).linesGzip.contains("##fileformat=VCFv4.1") }
+                { assert path(process.out.vcf.get(0).get(1)).linesGzip[3].contains("--vcf test.vcf") }, // SVDB command line
+                { assert snapshot(
+                    path(process.out.vcf.get(0).get(1)).vcf.summary,
+                    path(process.out.vcf.get(0).get(1)).vcf.variantsMD5,
+                    process.out.versions
+                ).match() }
             )
         }
+    }
 
+    test("1 sample, [], true") {
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf', checkIfExists: true)
+                ])
+                input[1] = []
+                input[2] = []
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert path(process.out.vcf.get(0).get(1)).linesGzip[3].contains("--vcf test.vcf") }, // SVDB command line
+                { assert snapshot(
+                    path(process.out.vcf.get(0).get(1)).vcf.summary,
+                    path(process.out.vcf.get(0).get(1)).vcf.variantsMD5,
+                    process.out.versions
+                ).match() }
+            )
+        }
+    }
+
+    test("1 sample, ['tiddit'], []") {
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf', checkIfExists: true)
+                ])
+                input[1] = ['tiddit']
+                input[2] = []
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert path(process.out.vcf.get(0).get(1)).linesGzip[3].contains("--priority tiddit --vcf test.vcf:tiddit") }, // SVDB command line
+                { assert snapshot(
+                    path(process.out.vcf.get(0).get(1)).vcf.summary,
+                    path(process.out.vcf.get(0).get(1)).vcf.variantsMD5,
+                    process.out.versions
+                ).match() }
+            )
+        }
+    }
+
+    test("1 sample, ['tiddit'], true") {
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf', checkIfExists: true)
+                ])
+                input[1] = ['tiddit']
+                input[2] = true
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert path(process.out.vcf.get(0).get(1)).linesGzip[3].contains("--priority tiddit --vcf test.vcf:tiddit") }, // SVDB command line
+                { assert snapshot(
+                    path(process.out.vcf.get(0).get(1)).vcf.summary,
+                    path(process.out.vcf.get(0).get(1)).vcf.variantsMD5,
+                    process.out.versions
+                ).match() }
+            )
+        }
+    }
+
+    test("2 samples, [], []") {
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test' ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test2.vcf', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf', checkIfExists: true)
+                    ]
+                ])
+                input[1] = []
+                input[2] = []
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert path(process.out.vcf.get(0).get(1)).linesGzip[3].contains("--vcf test2.vcf test.vcf") }, // SVDB command line
+                { assert snapshot(
+                    path(process.out.vcf.get(0).get(1)).vcf.summary,
+                    path(process.out.vcf.get(0).get(1)).vcf.variantsMD5,
+                    process.out.versions
+                ).match() }
+            )
+        }
+    }
+
+    test("2 samples, [], true") {
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test' ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test2.vcf', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf', checkIfExists: true)
+                    ]
+                ])
+                input[1] = []
+                input[2] = true
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert path(process.out.vcf.get(0).get(1)).linesGzip[3].contains("--vcf test.vcf test2.vcf") }, // SVDB command line
+                { assert snapshot(
+                    path(process.out.vcf.get(0).get(1)).vcf.summary,
+                    path(process.out.vcf.get(0).get(1)).vcf.variantsMD5,
+                    process.out.versions
+                ).match() }
+            )
+        }
+    }
+
+    test("2 samples, ['tiddit', 'cnvnator'], []") {
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test' ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test2.vcf', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf', checkIfExists: true)
+                    ]
+                ])
+                input[1] = ['tiddit', 'cnvnator']
+                input[2] = []
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert path(process.out.vcf.get(0).get(1)).linesGzip[3].contains("--priority tiddit,cnvnator --vcf test2.vcf:tiddit test.vcf:cnvnator") }, // SVDB command line
+                { assert snapshot(
+                    path(process.out.vcf.get(0).get(1)).vcf.summary,
+                    path(process.out.vcf.get(0).get(1)).vcf.variantsMD5,
+                    process.out.versions
+                ).match() }
+            )
+        }
+    }
+
+    test("2 samples, ['tiddit', 'cnvnator'], true") {
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test' ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test2.vcf', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf', checkIfExists: true)
+                    ]
+                ])
+                input[1] = ['tiddit', 'cnvnator']
+                input[2] = true
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert path(process.out.vcf.get(0).get(1)).linesGzip[3].contains("--priority tiddit,cnvnator --vcf test.vcf:cnvnator test2.vcf:tiddit") }, // SVDB command line
+                { assert snapshot(
+                    path(process.out.vcf.get(0).get(1)).vcf.summary,
+                    path(process.out.vcf.get(0).get(1)).vcf.variantsMD5,
+                    process.out.versions
+                ).match() }
+            )
+        }
+    }
+
+    test("2 samples, [], [] - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test' ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test2.vcf', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf', checkIfExists: true)
+                    ]
+                ])
+                input[1] = []
+                input[2] = []
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+
+    test("2 samples, [], true - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test' ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test2.vcf', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf', checkIfExists: true)
+                    ]
+                ])
+                input[1] = []
+                input[2] = true
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+
+    test("2 samples, ['tiddit', 'cnvnator'], [] - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test' ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test2.vcf', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf', checkIfExists: true)
+                    ]
+                ])
+                input[1] = ['tiddit', 'cnvnator']
+                input[2] = []
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+
+    test("2 samples, ['tiddit', 'cnvnator'], true - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = Channel.of([
+                    [ id:'test' ], // meta map
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test2.vcf', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf', checkIfExists: true)
+                    ]
+                ])
+                input[1] = ['tiddit', 'cnvnator']
+                input[2] = true
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
     }
 
 }
