@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1673](https://github.com/nf-core/sarek/pull/1673) - Print warning message instead of silent error with Nextflow versions prior to 24.08.0edge
 - [1693](https://github.com/nf-core/sarek/pull/1693) - Fixes flowcell retrieval during samplesheet parsing
 - [1694](https://github.com/nf-core/sarek/pull/1694) - Fix manifest DOI display on CLI
+- [1695](https://github.com/nf-core/sarek/pull/1695) - Fix and update input_schema.json
 
 ### Removed
 
