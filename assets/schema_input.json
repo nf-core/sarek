@@ -23,16 +23,8 @@
                 "errorMessage": "Sex cannot contain spaces",
                 "meta": ["sex"],
                 "default": "NA",
-                "anyOf": [
-                    {
-                        "type": "string",
-                        "pattern": "^\\S+$"
-                    },
-                    {
-                        "type": "string",
-                        "maxLength": 0
-                    }
-                ]
+                "type": "string",
+                "pattern": "^\\S+$"
             },
             "status": {
                 "type": "integer",
@@ -48,152 +40,72 @@
                 "meta": ["lane"]
             },
             "fastq_1": {
-                "errorMessage": "Gzipped FastQ file for reads 1 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'",
-                "anyOf": [
-                    {
-                        "type": "string",
-                        "pattern": "^\\S+\\.f(ast)?q\\.gz$"
-                    },
-                    {
-                        "type": "string",
-                        "maxLength": 0
-                    }
-                ],
+                "errorMessage": "FastQ file for reads 1 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'",
+                "type": "string",
+                "pattern": "^\\S+\\.f(ast)?q\\.gz$",
                 "format": "file-path",
                 "exists": true
             },
             "fastq_2": {
-                "errorMessage": "Gzipped FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'",
-                "anyOf": [
-                    {
-                        "type": "string",
-                        "pattern": "^\\S+\\.f(ast)?q\\.gz$"
-                    },
-                    {
-                        "type": "string",
-                        "maxLength": 0
-                    }
-                ],
+                "errorMessage": "FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'",
+                "type": "string",
+                "pattern": "^\\S+\\.f(ast)?q\\.gz$",
                 "format": "file-path",
                 "exists": true
             },
             "spring_1": {
                 "errorMessage": "Gzipped and spring-compressed FastQ file for reads 1 cannot contain spaces and must have extension '.fq.gz.spring' or '.fastq.gz.spring'",
-                "anyOf": [
-                    {
-                        "type": "string",
-                        "pattern": "^\\S+\\.f(ast)?q\\.gz.spring$"
-                    },
-                    {
-                        "type": "string",
-                        "maxLength": 0
-                    }
-                ],
+                "type": "string",
+                "pattern": "^\\S+\\.f(ast)?q\\.gz.spring$",
                 "format": "file-path",
                 "exists": true
             },
             "spring_2": {
                 "errorMessage": "Gzipped and spring-compressed FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz.spring' or '.fastq.gz.spring'",
-                "anyOf": [
-                    {
-                        "type": "string",
-                        "pattern": "^\\S+\\.f(ast)?q\\.gz.spring$"
-                    },
-                    {
-                        "type": "string",
-                        "maxLength": 0
-                    }
-                ],
+                "type": "string",
+                "pattern": "^\\S+\\.f(ast)?q\\.gz.spring$",
                 "format": "file-path",
                 "exists": true
             },
             "table": {
                 "errorMessage": "Recalibration table cannot contain spaces and must have extension '.table'",
-                "anyOf": [
-                    {
-                        "type": "string",
-                        "pattern": "^\\S+\\.table$"
-                    },
-                    {
-                        "type": "string",
-                        "maxLength": 0
-                    }
-                ],
+                "type": "string",
+                "pattern": "^\\S+\\.table$",
                 "format": "file-path",
                 "exists": true
             },
             "cram": {
                 "errorMessage": "CRAM file cannot contain spaces and must have extension '.cram'",
-                "anyOf": [
-                    {
-                        "type": "string",
-                        "pattern": "^\\S+\\.cram$"
-                    },
-                    {
-                        "type": "string",
-                        "maxLength": 0
-                    }
-                ],
+                "type": "string",
+                "pattern": "^\\S+\\.cram$",
                 "format": "file-path",
                 "exists": true
             },
             "crai": {
                 "errorMessage": "CRAM index file cannot contain spaces and must have extension '.crai'",
-                "anyOf": [
-                    {
-                        "type": "string",
-                        "pattern": "^\\S+\\.crai$"
-                    },
-                    {
-                        "type": "string",
-                        "maxLength": 0
-                    }
-                ],
+                "type": "string",
+                "pattern": "^\\S+\\.crai$",
                 "format": "file-path",
                 "exists": true
             },
             "bam": {
                 "errorMessage": "BAM file cannot contain spaces and must have extension '.bam'",
-                "anyOf": [
-                    {
-                        "type": "string",
-                        "pattern": "^\\S+\\.bam$"
-                    },
-                    {
-                        "type": "string",
-                        "maxLength": 0
-                    }
-                ],
+                "type": "string",
+                "pattern": "^\\S+\\.bam$",
                 "format": "file-path",
                 "exists": true
             },
             "bai": {
                 "errorMessage": "BAM index file cannot contain spaces and must have extension '.bai'",
-                "anyOf": [
-                    {
-                        "type": "string",
-                        "pattern": "^\\S+\\.bai$"
-                    },
-                    {
-                        "type": "string",
-                        "maxLength": 0
-                    }
-                ],
+                "type": "string",
+                "pattern": "^\\S+\\.bai$",
                 "format": "file-path",
                 "exists": true
             },
             "vcf": {
                 "errorMessage": "VCF file for reads 1 cannot contain spaces and must have extension '.vcf' or '.vcf.gz'",
-                "anyOf": [
-                    {
-                        "type": "string",
-                        "pattern": "^\\S+\\.vcf(\\.gz)?$"
-                    },
-                    {
-                        "type": "string",
-                        "maxLength": 0
-                    }
-                ],
+                "type": "string",
+                "pattern": "^\\S+\\.vcf(\\.gz)?$",
                 "format": "file-path",
                 "exists": true
             },
@@ -201,30 +113,28 @@
                 "type": "string"
             }
         },
-        "required": ["patient", "sample"],
-        "uniqueEntries": ["patient", "sample"],
         "anyOf": [
             {
                 "dependentRequired": {
-                    "fastq_2": ["fastq_1"],
-                    "spring_2": ["spring_1"],
-                    "lane": ["bam"]
-                }
-            },
-            {
-                "dependentRequired": {
-                    "fastq_2": ["fastq_1"],
-                    "spring_2": ["spring_1"],
                     "lane": ["fastq_1"]
                 }
             },
             {
                 "dependentRequired": {
-                    "fastq_2": ["fastq_1"],
-                    "spring_2": ["spring_1"],
                     "lane": ["spring_1"]
                 }
+            },
+            {
+                "dependentRequired": {
+                    "lane": ["bam"]
+                }
             }
-        ]
+        ],
+        "dependentRequired": {
+            "fastq_2": ["fastq_1"],
+            "spring_2": ["spring_1"]
+        },
+        "required": ["patient", "sample"],
+        "uniqueEntries": ["lane", "patient", "sample"]
     }
 }
