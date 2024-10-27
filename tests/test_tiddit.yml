@@ -6,7 +6,7 @@
     - variant_calling
   files:
     - path: results/csv/variantcalled.csv
-      md5sum: f40a1f90255adb0433fe79f56ad5f542
+      md5sum: 76b499e35c128d67b0606ea561bf70e0
     - path: results/multiqc
     - path: results/reports/bcftools/tiddit/sample3/sample3.tiddit.bcftools_stats.txt
     # conda changes md5sums for test
