@@ -209,7 +209,7 @@
             "type": "object",
             "description": "Configure preprocessing tools",
             "default": "",
-            "fa_icon": "fas fa-toolbox",
+            "fa_icon": "fas fa-align-center",
             "properties": {
                 "aligner": {
                     "type": "string",
@@ -244,7 +244,7 @@
             "type": "object",
             "description": "Configure variant calling tools",
             "default": "",
-            "fa_icon": "fas fa-toolbox",
+            "fa_icon": "fas fa-barcode",
             "properties": {
                 "only_paired_variant_calling": {
                     "type": "boolean",
@@ -410,7 +410,7 @@
             "type": "object",
             "description": "",
             "default": "",
-            "fa_icon": "fas fa-toolbox",
+            "fa_icon": "fas fa-braille",
             "properties": {
                 "vep_include_fasta": {
                     "type": "boolean",
@@ -573,7 +573,8 @@
                     "description": "Download annotation cache.",
                     "help_text": "Set this parameter, if you wish to download annotation cache.\nUsing this parameter will download cache even if --snpeff_cache and --vep_cache are provided."
                 }
-            }
+            },
+            "fa_icon": "fas fa-dna"
         },
         "reference_genome_options": {
             "title": "Reference genome options",
