@@ -652,7 +652,7 @@
                 "dbsnp_vqsr": {
                     "type": "string",
                     "fa_icon": "fas fa-copy",
-                    "description": "Label string for VariantRecalibration (haplotypecaller joint variant calling)"
+                    "description": "Label string for VariantRecalibration (haplotypecaller joint variant calling).\n\nIf you use AWS iGenomes, this has already been set for you appropriately."
                 },
                 "dict": {
                     "type": "string",
