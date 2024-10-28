@@ -12,7 +12,7 @@
                     },
                     "bcftools/annotate": {
                         "branch": "master",
-                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
+                        "git_sha": "cb08035150685b11d890d90c9534d4f16869eaec",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/bcftools/annotate/bcftools-annotate.diff"
                     },
@@ -63,7 +63,7 @@
                     },
                     "cat/fastq": {
                         "branch": "master",
-                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
+                        "git_sha": "a1abf90966a2a4016d3c3e41e228bfcbd4811ccc",
                         "installed_by": ["modules"]
                     },
                     "cnvkit/antitarget": {
@@ -306,7 +306,7 @@
                     },
                     "gawk": {
                         "branch": "master",
-                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
+                        "git_sha": "97321eded31a12598837a476d3615300af413bb7",
                         "installed_by": ["modules"]
                     },
                     "lofreq/callparallel": {
@@ -471,7 +471,7 @@
                     },
                     "svdb/merge": {
                         "branch": "master",
-                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
+                        "git_sha": "eb2c3f7ee2c938ab1a49764bdb1319adaa35492c",
                         "installed_by": ["modules"]
                     },
                     "tabix/bgziptabix": {
