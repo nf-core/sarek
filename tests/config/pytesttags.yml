@@ -411,7 +411,6 @@ strelka:
   - modules/nf-core/strelka/germline/**
   - modules/nf-core/strelka/somatic/**
   - subworkflows/local/bam_variant_calling_germline_all/**
-  - subworkflows/local/bam_variant_calling_single_strelka/**
   - subworkflows/local/bam_variant_calling_somatic_all/**
   - subworkflows/local/bam_variant_calling_somatic_strelka/**
   - subworkflows/local/bam_variant_calling_tumor_only_all/**
@@ -528,7 +527,6 @@ concatenate_vcfs:
   - subworkflows/local/bam_variant_calling_germline_manta/**
   - subworkflows/local/bam_variant_calling_haplotypecaller/**
   - subworkflows/local/bam_variant_calling_mpileup/**
-  - subworkflows/local/bam_variant_calling_single_strelka/**
   - subworkflows/local/bam_variant_calling_single_tiddit/**
   - subworkflows/local/bam_variant_calling_somatic_all/**
   - subworkflows/local/bam_variant_calling_tumor_only_all/**
