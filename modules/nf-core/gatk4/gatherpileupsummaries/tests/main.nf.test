@@ -34,4 +34,29 @@ nextflow_process {
         }
     }
 
+    test("test-gatk4-gatherpileupsummaries - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+				[ id:'test', single_end:false ], // meta map
+				    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/gatk/test.pileups.table', checkIfExists: true) ]
+				]
+				input[1] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.dict', checkIfExists: true)
+
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+
 }

@@ -26,7 +26,8 @@ input:
     - input:
         type: file
         description: The input file - Specify the logic that needs to be executed on
-          this file on the `ext.args2` or in the program file
+          this file on the `ext.args2` or in the program file.
+          If the files have a `.gz` extension, they will be unzipped using `zcat`.
         pattern: "*"
   - - program_file:
         type: file
