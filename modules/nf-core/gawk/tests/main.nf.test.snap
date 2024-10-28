@@ -1,5 +1,5 @@
 {
-    "convert fasta to bed with program file": {
+    "Convert fasta to bed": {
         "content": [
             {
                 "0": [
@@ -28,11 +28,11 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "24.03.0"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-05-17T15:20:02.495430346"
+        "timestamp": "2024-10-19T13:14:02.347809811"
     },
-    "convert fasta to bed": {
+    "Convert fasta to bed with program file": {
         "content": [
             {
                 "0": [
@@ -61,8 +61,74 @@
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "24.03.0"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-05-17T15:19:53.291809648"
+        "timestamp": "2024-10-19T13:14:11.894616209"
+    },
+    "Extract first column from multiple files": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bed:md5,566c51674bd643227bb2d83e0963376d"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,842acc9870dc8ac280954047cb2aa23a"
+                ],
+                "output": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bed:md5,566c51674bd643227bb2d83e0963376d"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,842acc9870dc8ac280954047cb2aa23a"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-10-19T22:04:47.729300129"
+    },
+    "Unzip files before processing": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bed:md5,1e31ebd4a060aab5433bbbd9ab24e403"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,842acc9870dc8ac280954047cb2aa23a"
+                ],
+                "output": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bed:md5,1e31ebd4a060aab5433bbbd9ab24e403"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,842acc9870dc8ac280954047cb2aa23a"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-10-19T22:08:19.533527657"
     }
 }
