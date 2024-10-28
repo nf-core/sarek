@@ -132,9 +132,9 @@ Once the analysis has produced a final VCF file, the final step which is necessa
 This step uses different databases to describe (annotate) each variant from a genomic, biological, or population point of view.
 The software used to carry out this task will add information to the VCF file such as:
 
--   the gene each variant overlaps with
--   the transcript the variant overlaps with
--   the potential biological consequence on each of those transcripts
--   population frequency (minor allele frequency, described in different databases such as gnomAD)
+- the gene each variant overlaps with
+- the transcript the variant overlaps with
+- the potential biological consequence on each of those transcripts
+- population frequency (minor allele frequency, described in different databases such as gnomAD)
 
 And several other items we can use to interpret our findings from a biological or clinical point of view.
