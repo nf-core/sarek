@@ -998,6 +998,7 @@ def readFirstLineOfFastq(path) {
         log.warn "${e.message}"
     }
     return line
+
 }
 
 /*
