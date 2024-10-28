@@ -539,7 +539,7 @@
         "general_reference_genome_options": {
             "title": "General reference genome options",
             "type": "object",
-            "description": "",
+            "description": "General options to interact with reference genomes.",
             "default": "",
             "properties": {
                 "igenomes_base": {
@@ -652,7 +652,7 @@
                 "dbsnp_vqsr": {
                     "type": "string",
                     "fa_icon": "fas fa-copy",
-                    "description": "label string for VariantRecalibration (haplotypecaller joint variant calling)"
+                    "description": "Label string for VariantRecalibration (haplotypecaller joint variant calling)"
                 },
                 "dict": {
                     "type": "string",
@@ -724,7 +724,7 @@
                 "known_indels_vqsr": {
                     "type": "string",
                     "fa_icon": "fas fa-book",
-                    "description": "1st label string for VariantRecalibration (haplotypecaller joint variant calling)\n\nIf you use AWS iGenomes, this has already been set for you appropriately."
+                    "description": "Label string for VariantRecalibration (haplotypecaller joint variant calling). If you use AWS iGenomes, this has already been set for you appropriately."
                 },
                 "known_snps": {
                     "type": "string",
@@ -747,7 +747,7 @@
                 "known_snps_vqsr": {
                     "type": "string",
                     "fa_icon": "fas fa-book",
-                    "description": "label string for VariantRecalibration (haplotypecaller joint variant calling).\n\nIf you use AWS iGenomes, this has already been set for you appropriately."
+                    "description": "Label string for VariantRecalibration (haplotypecaller joint variant calling).If you use AWS iGenomes, this has already been set for you appropriately."
                 },
                 "mappability": {
                     "type": "string",
