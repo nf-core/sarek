@@ -33,7 +33,7 @@ jobs:
       matrix:
         NXF_VER:
           - "24.04.2"
-          # - "latest-everything"
+          - "latest-everything"
         filter: ["workflow", "function", "pipeline"]
         # filter: ["process", "workflow", "function", "pipeline"]
         profile: ["conda", "docker", "singularity"]
