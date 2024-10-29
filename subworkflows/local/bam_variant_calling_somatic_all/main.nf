@@ -14,7 +14,6 @@ include { BAM_VARIANT_CALLING_SOMATIC_STRELKA           } from '../bam_variant_c
 include { BAM_VARIANT_CALLING_SOMATIC_TIDDIT            } from '../bam_variant_calling_somatic_tiddit/main'
 include { MSISENSORPRO_MSISOMATIC                       } from '../../../modules/nf-core/msisensorpro/msisomatic/main'
 include { PURECN_INTERVALFILE                           } from '../../../modules/nf-core/purecn/intervalfile/main'
-include { PURECN_INTERVALFILE } from '../../../../nf-core-modules/modules/nf-core/purecn/intervalfile/main.nf'
 include { BAM_VARIANT_CALLING_SOMATIC_PURECN } from '../bam_variant_calling_somatic_purecn/main.nf'
 
 workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
