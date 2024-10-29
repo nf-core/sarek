@@ -439,20 +439,6 @@ tiddit:
   - tests/csv/3.0/recalibrated_tumoronly.csv
   - tests/test_tiddit.yml
 
-# annotate
-
-## merge
-merge:
-  - conf/modules/annotate.config
-  - modules/nf-core/ensemblvep/vep/**
-  - modules/nf-core/snpeff/snpeff/**
-  - modules/nf-core/tabix/bgziptabix/**
-  - subworkflows/local/vcf_annotate_all/**
-  - subworkflows/nf-core/vcf_annotate_ensemblvep/**
-  - subworkflows/nf-core/vcf_annotate_snpeff/**
-  - tests/csv/3.0/vcf_single.csv
-  - tests/test_annotation_merge.yml
-
 # postprocessing
 
 ## concatenate germline vcfs

@@ -1,61 +1,5 @@
 {
-    "Run with profile test | --tools vep --vep_include_fasta": {
-        "content": [
-            3,
-            {
-                "ENSEMBLVEP_VEP": {
-                    "ensemblvep": 113.0
-                },
-                "TABIX_TABIX": {
-                    "tabix": 1.2
-                },
-                "Workflow": {
-                    "nf-core/sarek": "v3.5.0dev"
-                }
-            },
-            [
-                "annotation",
-                "annotation/test",
-                "annotation/test/test_VEP.ann.vcf.gz",
-                "annotation/test/test_VEP.ann.vcf.gz.tbi",
-                "csv",
-                "multiqc",
-                "multiqc/multiqc_data",
-                "multiqc/multiqc_data/multiqc.log",
-                "multiqc/multiqc_data/multiqc_citations.txt",
-                "multiqc/multiqc_data/multiqc_data.json",
-                "multiqc/multiqc_data/multiqc_software_versions.txt",
-                "multiqc/multiqc_data/multiqc_sources.txt",
-                "multiqc/multiqc_data/vep-general-stats.txt",
-                "multiqc/multiqc_data/vep.txt",
-                "multiqc/multiqc_plots",
-                "multiqc/multiqc_plots/pdf",
-                "multiqc/multiqc_plots/pdf/vep-general-stats.pdf",
-                "multiqc/multiqc_plots/png",
-                "multiqc/multiqc_plots/png/vep-general-stats.png",
-                "multiqc/multiqc_plots/svg",
-                "multiqc/multiqc_plots/svg/vep-general-stats.svg",
-                "multiqc/multiqc_report.html",
-                "pipeline_info",
-                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
-                "reports",
-                "reports/EnsemblVEP",
-                "reports/EnsemblVEP/test",
-                "reports/EnsemblVEP/test/test_VEP.ann.summary.html"
-            ],
-            [
-                "multiqc_citations.txt:md5,afe6b13a9c0770828d9bc9515d6db802",
-                "vep-general-stats.txt:md5,2fca07ac5623e758cac3ce49d9f6e3b0",
-                "vep.txt:md5,60a5d57c60308aba2aa6206f903d27e9"
-            ]
-        ],
-        "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
-        },
-        "timestamp": "2024-10-24T11:49:16.737881"
-    },
-    "Run with profile test | --tools vep --download_cache": {
+    "Run with profile test | --tools vep --download_cache --vep_include_fasta": {
         "content": [
             4,
             {
@@ -331,9 +275,9 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.1",
+            "nextflow": "24.10.0"
         },
-        "timestamp": "2024-10-23T15:00:39.082074"
+        "timestamp": "2024-10-29T10:19:17.846465"
     }
 }
