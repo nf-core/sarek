@@ -72,4 +72,31 @@ nextflow_pipeline {
             )
         }
     }
+
+    test("Fails with profile test | --tools snpeff --snpeff_db na --build_only_index") {
+        when {
+            params {
+                modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
+                outdir = "$outputDir"
+                input = "${projectDir}/tests/csv/3.0/vcf_single.csv"
+                step  = 'annotate'
+                snpeff_cache = 's3://annotation-cache/snpeff_cache/'
+                snpeff_db = "na"
+                input = false
+                build_only_index = true
+                tools = 'snpeff'
+            }
+        }
+
+        then {
+            // stable_name: All files + folders in ${params.outdir}/ with a stable name
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
+            // stable_path: All files in ${params.outdir}/ with stable content
+            def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
+            assertAll(
+                { assert workflow.failed},
+                { assert workflow.stdout.toString().contains("This path is not available within annotation-cache") }
+            )
+        }
+    }
 }
