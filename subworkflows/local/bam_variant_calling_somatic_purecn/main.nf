@@ -45,7 +45,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_PURECN {
         meta, denoised -> [meta, denoised, intervals_purecn]
     }
 
-    //FIXME: PURECN_RUN upstream should require a VCF file here
     PURECN_RUN(ch_purecn_in, normaldb)
     ch_versions = ch_versions.mix(PURECN_RUN.out.versions)
 
