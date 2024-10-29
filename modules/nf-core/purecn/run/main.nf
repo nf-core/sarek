@@ -11,7 +11,6 @@ process PURECN_RUN {
     input:
     tuple val(meta), path(intervals), path(coverage)
     path normal_db
-    val genome
 
     output:
     tuple val(meta), path("*.pdf")                             , emit: pdf
@@ -43,7 +42,6 @@ process PURECN_RUN {
         --sampleid ${prefix} \\
         --normaldb ${normal_db} \\
         --intervals ${intervals} \\
-        --genome ${genome} \\
         --parallel \\
         --cores ${task.cpus} \\
         --stats-file ${prefix}_stats.txt \\
