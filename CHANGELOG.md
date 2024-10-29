@@ -25,6 +25,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1686](https://github.com/nf-core/sarek/pull/1686) - Template update for nf-core/tools v3.0.2
 - [1692](https://github.com/nf-core/sarek/pull/1692) - Update ensemblvep
 - [1695](https://github.com/nf-core/sarek/pull/1695) - Update all modules
+- [1707](https://github.com/nf-core/sarek/pull/1707) - Un-hide parameters and clean up Json schema
+- [1708](https://github.com/nf-core/sarek/pull/1708) - Migrate pipeline pytest alignment and annotation tests to nf-test
 
 ### Fixed
 
@@ -34,10 +36,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1693](https://github.com/nf-core/sarek/pull/1693) - Fixes flowcell retrieval during samplesheet parsing
 - [1694](https://github.com/nf-core/sarek/pull/1694) - Fix manifest DOI display on CLI
 - [1695](https://github.com/nf-core/sarek/pull/1695) - Fix and update input_schema.json
+- [1702](https://github.com/nf-core/sarek/pull/1702) - Update nf-schema tests that were not failing on lenient mode
 
 ### Removed
 
 - [1656](https://github.com/nf-core/sarek/pull/1656) - Retiring parameter `snpeff_genome`
+- [1709](https://github.com/nf-core/sarek/pull/1709) - Remove `Strelka` tumor-only somatic variant calling
 
 ### Dependencies
 
