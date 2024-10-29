@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1686](https://github.com/nf-core/sarek/pull/1686) - Template update for nf-core/tools v3.0.2
 - [1692](https://github.com/nf-core/sarek/pull/1692) - Update ensemblvep
 - [1695](https://github.com/nf-core/sarek/pull/1695) - Update all modules
+- [1707](https://github.com/nf-core/sarek/pull/1707) - Un-hide parameters and clean up Json schema
 
 ### Fixed
 
