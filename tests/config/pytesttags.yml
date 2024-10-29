@@ -1,30 +1,5 @@
 # preprocessing
 
-## alignment_from_everything
-alignment_from_everything:
-  - conf/modules/**
-  - conf/test/alignment_from_everything.config
-  - main.nf
-  - modules/**
-  - nextflow.config
-  - nextflow_schema.json
-  - subworkflows/**
-  - tests/csv/3.0/bam_and_fastq_and_spring.csv
-  - tests/test_alignment_from_everything.yml
-  - workflows/**
-
-## alignment_to_fastq
-alignment_to_fastq:
-  - conf/modules/alignment_to_fastq.config
-  - modules/nf-core/cat/fastq/**
-  - modules/nf-core/mosdepth/**
-  - modules/nf-core/samtools/collatefastq/**
-  - modules/nf-core/samtools/merge/**
-  - modules/nf-core/samtools/view/**
-  - subworkflows/local/bam_convert_samtools/**
-  - tests/csv/3.0/bam_for_remapping.csv
-  - tests/test_alignment_to_fastq.yml
-
 ## umi
 umi:
   - conf/modules/umi.config
@@ -463,46 +438,6 @@ tiddit:
   - tests/csv/3.0/recalibrated_somatic.csv
   - tests/csv/3.0/recalibrated_tumoronly.csv
   - tests/test_tiddit.yml
-
-# annotate
-
-## cache
-cache:
-  - conf/modules/prepare_cache.config
-  - modules/nf-core/ensemblvep/download/**
-  - modules/nf-core/snpeff/download/**
-  - subworkflows/local/prepare_cache/**
-  - tests/test_annotation_cache.yml
-
-## merge
-merge:
-  - conf/modules/annotate.config
-  - modules/nf-core/ensemblvep/vep/**
-  - modules/nf-core/snpeff/snpeff/**
-  - modules/nf-core/tabix/bgziptabix/**
-  - subworkflows/local/vcf_annotate_all/**
-  - subworkflows/nf-core/vcf_annotate_ensemblvep/**
-  - subworkflows/nf-core/vcf_annotate_snpeff/**
-  - tests/csv/3.0/vcf_single.csv
-  - tests/test_annotation_merge.yml
-
-## snpeff
-snpeff:
-  - conf/modules/annotate.config
-  - modules/nf-core/snpeff/snpeff/**
-  - modules/nf-core/tabix/bgziptabix/**
-  - subworkflows/nf-core/vcf_annotate_snpeff/**
-  - tests/csv/3.0/vcf_single.csv
-  - tests/test_annotation_snpeff.yml
-
-## bcfann
-bcfann:
-  - conf/modules/annotate.config
-  - modules/nf-core/bcftools/annotate/**
-  - modules/nf-core/tabix/bgziptabix/**
-  - subworkflows/nf-core/vcf_annotate_bcftools/**
-  - tests/csv/3.0/vcf_single.csv
-  - tests/test_annotation_bcfann.yml
 
 # postprocessing
 

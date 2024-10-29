@@ -5,7 +5,7 @@ nextflow_pipeline {
     tag "pipeline"
     tag "pipeline_sarek"
 
-    test("Run with profile test | --tools vep --download_cache") {
+    test("Run with profile test | --tools merge") {
 
         when {
             params {
@@ -13,8 +13,9 @@ nextflow_pipeline {
                 outdir = "$outputDir"
                 input = "${projectDir}/tests/csv/3.0/vcf_single.csv"
                 step  = 'annotate'
-                download_cache = true
-                tools = 'vep'
+                snpeff_cache = 's3://annotation-cache/snpeff_cache/'
+                vep_cache = 's3://annotation-cache/vep_cache/'
+                tools = 'merge'
             }
         }
 
@@ -39,7 +40,7 @@ nextflow_pipeline {
         }
     }
 
-    test("Run with profile test | --tools vep --vep_include_fasta") {
+    test("Run with profile test | --tools merge,snpeff,vep") {
 
         when {
             params {
@@ -47,8 +48,9 @@ nextflow_pipeline {
                 outdir = "$outputDir"
                 input = "${projectDir}/tests/csv/3.0/vcf_single.csv"
                 step  = 'annotate'
+                snpeff_cache = 's3://annotation-cache/snpeff_cache/'
                 vep_cache = 's3://annotation-cache/vep_cache/'
-                tools = 'vep'
+                tools = 'merge,snpeff,vep'
             }
         }
 
