@@ -19,7 +19,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_PURECN {
     genome                   // channel: [mandatory] genome used for interval parsing
     normaldb                 // channel: [mandatory] panel of normals built by PureCN
     gatk_pon                 // channel: [mandatory] panel of normals used by GATK for denoising
-    intervals_bed            // channel: [optional]  bed for WES
+    intervals_bed            // channel: [mandatory] BED file processed by PureCN
+    intervals_purecn         // channel: [mandatory] Interval file processed by PureCN
 
     main:
 
@@ -42,7 +43,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_PURECN {
     ch_versions = ch_versions.mix(GATK4_DENOISEREADCOUNTS.out.versions)
 
     ch_purecn_in = GATK4_DENOISEREADCOUNTS.out.denoised.map {
-        meta, denoised -> [meta, denoised, intervals_bed]
+        meta, denoised -> [meta, denoised, intervals_purecn]
     }
 
     //FIXME: PURECN_RUN upstream should require a VCF file here
