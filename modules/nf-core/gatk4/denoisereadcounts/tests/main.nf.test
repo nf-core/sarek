@@ -1,0 +1,76 @@
+nextflow_process {
+
+    name "Test Process GATK4_DENOISEREADCOUNTS"
+    script "../main.nf"
+    config "./nextflow.config"
+    process "GATK4_DENOISEREADCOUNTS"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "gatk4"
+    tag "gatk4/createreadcountpanelofnormals"
+    tag "gatk4/collectreadcounts"
+    tag "gatk4/preprocessintervals"
+    tag "gatk4/denoisereadcounts"
+
+    test("test_gatk4_denoisereadcounts") {
+        setup {
+            run("GATK4_PREPROCESSINTERVALS"){
+                script "../../preprocessintervals/main.nf"
+                process {
+                    """
+                    input[0] = Channel.value([ [ id:'test' ], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)])
+                    input[1] = Channel.value([ [ id:'test' ], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)])
+                    input[2] = Channel.value([ [ id:'test' ], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.dict', checkIfExists: true)])
+                    input[3] = [[],[]]
+                    input[4] = [[],[]]
+                    """
+                }
+            }
+            run("GATK4_COLLECTREADCOUNTS"){
+                script "../../collectreadcounts/main.nf"
+                process {
+                    """
+                    intervals = GATK4_PREPROCESSINTERVALS.out.interval_list.map {meta, list -> list}
+                    input[0] = Channel.of(
+                        [[ id:'test', single_end:false ], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true), file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam.bai', checkIfExists: true)],
+                    )
+                    .combine( intervals)
+                    input[1] = Channel.value([ [ id:'test' ], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)])
+                    input[2] = Channel.value([ [ id:'test' ], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)])
+                    input[3] = Channel.value([ [ id:'test' ], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.dict', checkIfExists: true)])
+                    """
+                }
+            }
+            run("GATK4_CREATEREADCOUNTPANELOFNORMALS"){
+                script "../../createreadcountpanelofnormals/main.nf"
+                process {
+                    """
+                    input[0] = GATK4_COLLECTREADCOUNTS.out.tsv.groupTuple()
+                    """
+                }
+            }
+        }
+
+        when {
+            process {
+                """
+                input[0] = GATK4_COLLECTREADCOUNTS.out.tsv.first()
+                input[1] = GATK4_CREATEREADCOUNTPANELOFNORMALS.out.pon
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    process.out.standardized,
+                    process.out.denoised,
+                    process.out.versions
+                ).match() }
+            )
+        }
+
+    }
+}
