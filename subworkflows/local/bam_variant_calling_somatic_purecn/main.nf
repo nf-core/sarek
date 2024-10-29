@@ -16,7 +16,6 @@ workflow BAM_VARIANT_CALLING_SOMATIC_PURECN {
     fasta                    // channel: [mandatory] fasta needed for cram
     fasta_fai                // channel: [mandatory] fasta index needed by GATK
     dict                     // channel: [mandatory] fasta dictionary needed by GATK
-    genome                   // channel: [mandatory] genome used for interval parsing
     normaldb                 // channel: [mandatory] panel of normals built by PureCN
     gatk_pon                 // channel: [mandatory] panel of normals used by GATK for denoising
     intervals_bed            // channel: [mandatory] BED file processed by PureCN
@@ -47,7 +46,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_PURECN {
     }
 
     //FIXME: PURECN_RUN upstream should require a VCF file here
-    PURECN_RUN(ch_purecn_in, normaldb, genome)
+    PURECN_RUN(ch_purecn_in, normaldb)
     ch_versions = ch_versions.mix(PURECN_RUN.out.versions)
 
     emit:
