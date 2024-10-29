@@ -441,14 +441,6 @@ tiddit:
 
 # annotate
 
-## cache
-cache:
-  - conf/modules/prepare_cache.config
-  - modules/nf-core/ensemblvep/download/**
-  - modules/nf-core/snpeff/download/**
-  - subworkflows/local/prepare_cache/**
-  - tests/test_annotation_cache.yml
-
 ## merge
 merge:
   - conf/modules/annotate.config
@@ -460,15 +452,6 @@ merge:
   - subworkflows/nf-core/vcf_annotate_snpeff/**
   - tests/csv/3.0/vcf_single.csv
   - tests/test_annotation_merge.yml
-
-## bcfann
-bcfann:
-  - conf/modules/annotate.config
-  - modules/nf-core/bcftools/annotate/**
-  - modules/nf-core/tabix/bgziptabix/**
-  - subworkflows/nf-core/vcf_annotate_bcftools/**
-  - tests/csv/3.0/vcf_single.csv
-  - tests/test_annotation_bcfann.yml
 
 # postprocessing
 
