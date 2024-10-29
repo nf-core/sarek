@@ -10,7 +10,6 @@ process PURECN_INTERVALFILE {
     input:
     tuple val(meta), path(target_bed)
     tuple val(meta2), path(fasta)
-    val   genome
 
     output:
     tuple val(meta), path("*.txt"), emit: txt
@@ -31,7 +30,6 @@ process PURECN_INTERVALFILE {
         --in-file ${target_bed} \\
         --fasta ${fasta} \\
         --out-file ${prefix}.txt \\
-        --genome ${genome} \\
         $args
 
     cat <<-END_VERSIONS > versions.yml
