@@ -389,7 +389,6 @@ strelka:
   - subworkflows/local/bam_variant_calling_single_strelka/**
   - subworkflows/local/bam_variant_calling_somatic_all/**
   - subworkflows/local/bam_variant_calling_somatic_strelka/**
-  - subworkflows/local/bam_variant_calling_tumor_only_all/**
   - tests/csv/3.0/recalibrated_germline.csv
   - tests/csv/3.0/recalibrated_somatic.csv
   - tests/csv/3.0/recalibrated_tumoronly.csv
@@ -408,7 +407,6 @@ strelka_bp:
   - subworkflows/local/bam_variant_calling_somatic_all/**
   - subworkflows/local/bam_variant_calling_somatic_manta/**
   - subworkflows/local/bam_variant_calling_somatic_strelka/**
-  - subworkflows/local/bam_variant_calling_tumor_only_all/**
   - tests/csv/3.0/recalibrated_somatic.csv
   - tests/test_strelka_bp.yml
 
@@ -463,7 +461,6 @@ concatenate_vcfs:
   - subworkflows/local/bam_variant_calling_germline_manta/**
   - subworkflows/local/bam_variant_calling_haplotypecaller/**
   - subworkflows/local/bam_variant_calling_mpileup/**
-  - subworkflows/local/bam_variant_calling_single_strelka/**
   - subworkflows/local/bam_variant_calling_single_tiddit/**
   - subworkflows/local/bam_variant_calling_somatic_all/**
   - subworkflows/local/bam_variant_calling_tumor_only_all/**
