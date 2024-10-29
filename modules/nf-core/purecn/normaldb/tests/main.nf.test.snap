@@ -1,0 +1,55 @@
+{
+    "test-purecn-normaldb-normalvcf": {
+        "content": [
+            "normalDB_illumina_hg38.rds",
+            "interval_weights_illumina_hg38.png",
+            "mapping_bias_illumina_hg38.rds",
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "mapping_bias_hq_sites_illumina_hg38.bed:md5,74e96f8d8c10dd74ae4e2a60e52142f2"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "low_coverage_targets_illumina_hg38.bed:md5,e408039d4572fcba5139795a512343c4"
+                ]
+            ],
+            [
+                "versions.yml:md5,c4c3e278693bfe55f698dc3a03ae4992"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-08-28T10:12:32.26068"
+    },
+    "test-purecn-normaldb": {
+        "content": [
+            "normalDB_illumina_hg38.rds",
+            "interval_weights_illumina_hg38.png",
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "low_coverage_targets_illumina_hg38.bed:md5,e408039d4572fcba5139795a512343c4"
+                ]
+            ],
+            [
+                "versions.yml:md5,c4c3e278693bfe55f698dc3a03ae4992"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-08-28T10:12:10.63476"
+    }
+}

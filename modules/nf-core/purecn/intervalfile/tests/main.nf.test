@@ -1,0 +1,60 @@
+
+nextflow_process {
+
+    name "Test Process PURECN_INTERVALFILE"
+    script "../main.nf"
+    process "PURECN_INTERVALFILE"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "purecn"
+    tag "purecn/intervalfile"
+
+    test("test-purecn-intervalfile") {
+        
+        when {
+            process {
+                """
+                input[0] = [[id: "test"], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed', checkIfExists: true)]
+				input[1] = [[id: "fasta"], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta', checkIfExists: true)]
+				input[2] = "hg38"
+
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+					file(process.out.txt[0][1]).readLines()[3..7],
+					process.out.bed,
+					process.out.versions
+					).match()
+				}
+            )
+        }
+    }
+    
+    test("test-purecn-intervalfile-stub") {
+        options '-stub'
+        when {
+            process {
+                """
+                input[0] = [[id: "test"], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed', checkIfExists: true)]
+				input[1] = [[id: "fasta"], file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta', checkIfExists: true)]
+				input[2] = "hg38"
+
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+    
+}

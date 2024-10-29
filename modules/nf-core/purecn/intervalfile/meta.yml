@@ -1,0 +1,76 @@
+name: "purecn_intervalfile"
+description: Generate on and off-target intervals for PureCN from a list of targets
+keywords:
+  - copy number alteration calling
+  - genomic intervals
+  - hybrid capture sequencing
+  - targeted sequencing
+  - DNA sequencing
+tools:
+  - "purecn":
+      description: "Copy number calling and SNV classification using targeted short
+        read sequencing"
+      homepage: "https://bioconductor.org/packages/release/bioc/html/PureCN.html"
+      documentation: "https://bioconductor.org/packages/release/bioc/html/PureCN.html"
+      tool_dev_url: "https://github.com/lima1/PureCN"
+      doi: "10.1186/s13029-016-0060-z."
+      licence: ["Artistic-2.0"]
+      identifier: biotools:purecn
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - target_bed:
+        type: file
+        description: BED file of target intervals
+        pattern: "*.bed"
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'fasta' ]
+    - fasta:
+        type: file
+        description: FASTA reference sequence of the genome being used
+        pattern: "*.fasta"
+  - - genome:
+        type: string
+        description: Genome used for the BED file (e.g., "hg38", "mm10"...)
+output:
+  - txt:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.txt":
+          type: file
+          pattern: "*.txt"
+          description: |
+            Annotated targets optimized for copy number calling
+  - bed:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.bed":
+          type: file
+          pattern: "*.bed"
+          description: |
+            Modified and optimized targets exported as a BED file.
+            Generate the file using the --export command-line switch
+            IntervalFile.R.
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+authors:
+  - "@aldosr"
+  - "@lbeltrame"
+maintainers:
+  - "@aldosr"
+  - "@lbeltrame"
