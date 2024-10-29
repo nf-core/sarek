@@ -16,8 +16,8 @@
                             "size": 1
                         },
                         [
-                            "/ngi-igenomes/testdata/nf-core/modules/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz",
-                            "/ngi-igenomes/testdata/nf-core/modules/genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz"
+                            "/nf-core/test-datasets/nf-core/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz",
+                            "/nf-core/test-datasets/nf-core/modules/data/genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz"
                         ]
                     ]
                 ],
@@ -35,8 +35,8 @@
                             "size": 1
                         },
                         [
-                            "/ngi-igenomes/testdata/nf-core/modules/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz",
-                            "/ngi-igenomes/testdata/nf-core/modules/genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz"
+                            "/nf-core/test-datasets/nf-core/modules/data/genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz",
+                            "/nf-core/test-datasets/nf-core/modules/data/genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz"
                         ]
                     ]
                 ]
