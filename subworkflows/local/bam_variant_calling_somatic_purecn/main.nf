@@ -7,7 +7,6 @@
 include { GATK4_COLLECTREADCOUNTS } from '../../../modules/nf-core/gatk4/collectreadcounts/main'
 include { GATK4_DENOISEREADCOUNTS } from '../../../modules/nf-core/gatk4/denoisereadcounts/main'
 include { PURECN_RUN } from '../../../modules/nf-core/purecn/run/main'
-include { PURECN_INTERVALFILE } from '../../../../nf-core-modules/modules/nf-core/purecn/intervalfile/main.nf'
 
 workflow BAM_VARIANT_CALLING_SOMATIC_PURECN {
 
