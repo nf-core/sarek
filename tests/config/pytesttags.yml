@@ -1,17 +1,5 @@
 # preprocessing
 
-## alignment_to_fastq
-alignment_to_fastq:
-  - conf/modules/alignment_to_fastq.config
-  - modules/nf-core/cat/fastq/**
-  - modules/nf-core/mosdepth/**
-  - modules/nf-core/samtools/collatefastq/**
-  - modules/nf-core/samtools/merge/**
-  - modules/nf-core/samtools/view/**
-  - subworkflows/local/bam_convert_samtools/**
-  - tests/csv/3.0/bam_for_remapping.csv
-  - tests/test_alignment_to_fastq.yml
-
 ## umi
 umi:
   - conf/modules/umi.config
