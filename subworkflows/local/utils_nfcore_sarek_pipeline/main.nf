@@ -349,7 +349,7 @@ def retrieveInput(need_input, step, outdir) {
     def input = null
     if (!params.input && !params.build_only_index) {
         switch (step) {
-            case 'mapping':                 Nextflow.error("Can't start with step $step without samplesheet")
+            case 'mapping':                 error("Can't start $step step without samplesheet")
                                             break
             case 'markduplicates':          log.warn("Using file ${outdir}/csv/mapped.csv");
                                             input = outdir + "/csv/mapped.csv"
@@ -368,7 +368,7 @@ def retrieveInput(need_input, step, outdir) {
                                             input = outdir + "/csv/variantcalled.csv"
                                             break
             default:                        log.warn("Please provide an input samplesheet to the pipeline e.g. '--input samplesheet.csv'")
-                                            Nextflow.error("Unknown step $step")
+                                            error("Unknown step $step")
         }
     }
     return input
