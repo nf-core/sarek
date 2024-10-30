@@ -16,6 +16,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_PURECN {
     fasta_fai                // channel: [mandatory] fasta index needed by GATK
     dict                     // channel: [mandatory] fasta dictionary needed by GATK
     normaldb                 // channel: [mandatory] panel of normals built by PureCN
+    vcf                      // channel: [mandatory] [meta, tumor_vcf] VCF made by Mutect2
     gatk_pon                 // channel: [mandatory] panel of normals used by GATK for denoising
     intervals_bed            // channel: [mandatory] BED file processed by PureCN
     intervals_purecn         // channel: [mandatory] Interval file processed by PureCN
@@ -44,7 +45,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_PURECN {
         meta, denoised -> [meta, denoised, intervals_purecn]
     }
 
-    PURECN_RUN(ch_purecn_in, normaldb)
+    PURECN_RUN(ch_purecn_in, normaldb, vcf)
     ch_versions = ch_versions.mix(PURECN_RUN.out.versions)
 
     emit:

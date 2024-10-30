@@ -228,7 +228,9 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     }
 
     //PURECN
-    if (tools.split(',').contains('purecn')) {
+    //It doesn't make much sense to run PureCN without a VCF, so we require Mutect2
+    //FIXME: Warn if Mutect2 wasn't run with the recommended pipeline
+    if (tools.split(',').contains('purecn') && tools.split('.').contains("mutect2")) {
         ch_bed = [["id": "intervals_bed"], intervals]
         ch_fasta = [["id": "fasta"], fasta]
         PURECN_INTERVALFILE(ch_bed, ch_fasta)
@@ -241,6 +243,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             fasta_fai,
             dict,
             file(purecn_normaldb),
+            BAM_VARIANT_CALLING_SOMATIC_MUTECT2.out.vcf, // PureCN will do filtering itself
             file(purecn_gatk_pon),
             PURECN_INTERVALFILE.out.txt,
             PURECN_INTERVALFILE.out.bed
