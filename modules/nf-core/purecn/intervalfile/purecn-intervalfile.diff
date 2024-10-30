@@ -1,0 +1,26 @@
+Changes in module 'nf-core/purecn/intervalfile'
+'modules/nf-core/purecn/intervalfile/environment.yml' is unchanged
+Changes in 'purecn/intervalfile/main.nf':
+--- modules/nf-core/purecn/intervalfile/main.nf
++++ modules/nf-core/purecn/intervalfile/main.nf
+@@ -10,7 +10,6 @@
+     input:
+     tuple val(meta), path(target_bed)
+     tuple val(meta2), path(fasta)
+-    val   genome
+ 
+     output:
+     tuple val(meta), path("*.txt"), emit: txt
+@@ -31,7 +30,6 @@
+         --in-file ${target_bed} \\
+         --fasta ${fasta} \\
+         --out-file ${prefix}.txt \\
+-        --genome ${genome} \\
+         $args
+ 
+     cat <<-END_VERSIONS > versions.yml
+
+'modules/nf-core/purecn/intervalfile/meta.yml' is unchanged
+'modules/nf-core/purecn/intervalfile/tests/main.nf.test' is unchanged
+'modules/nf-core/purecn/intervalfile/tests/main.nf.test.snap' is unchanged
+************************************************************

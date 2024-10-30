@@ -372,7 +372,8 @@
                     "purecn/intervalfile": {
                         "branch": "master",
                         "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
-                        "installed_by": ["modules"]
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/purecn/intervalfile/purecn-intervalfile.diff"
                     },
                     "purecn/normaldb": {
                         "branch": "master",
@@ -382,7 +383,8 @@
                     "purecn/run": {
                         "branch": "master",
                         "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
-                        "installed_by": ["modules"]
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/purecn/run/purecn-run.diff"
                     },
                     "samblaster": {
                         "branch": "master",

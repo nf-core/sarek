@@ -1,0 +1,24 @@
+Changes in module 'nf-core/purecn/run'
+'modules/nf-core/purecn/run/environment.yml' is unchanged
+Changes in 'purecn/run/main.nf':
+--- modules/nf-core/purecn/run/main.nf
++++ modules/nf-core/purecn/run/main.nf
+@@ -11,7 +11,6 @@
+     input:
+     tuple val(meta), path(intervals), path(coverage)
+     path normal_db
+-    val genome
+ 
+     output:
+     tuple val(meta), path("*.pdf")                             , emit: pdf
+@@ -43,7 +42,6 @@
+         --sampleid ${prefix} \\
+         --normaldb ${normal_db} \\
+         --intervals ${intervals} \\
+-        --genome ${genome} \\
+         --parallel \\
+         --cores ${task.cpus} \\
+         --stats-file ${prefix}_stats.txt \\
+
+'modules/nf-core/purecn/run/meta.yml' is unchanged
+************************************************************
