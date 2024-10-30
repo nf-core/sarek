@@ -796,7 +796,9 @@ workflow SAREK {
             pon,
             pon_tbi,
             params.joint_mutect2,
-            params.wes
+            params.wes,
+            params.purecn_gatk_pon,
+            params.purecn_normaldb
         )
 
         // PAIR VARIANT CALLING
