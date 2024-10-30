@@ -10,6 +10,7 @@ process PURECN_RUN {
 
     input:
     tuple val(meta), path(intervals), path(coverage)
+    tuple val(meta2), path(vcf)
     path normal_db
 
     output:
@@ -43,6 +44,7 @@ process PURECN_RUN {
         --normaldb ${normal_db} \\
         --intervals ${intervals} \\
         --parallel \\
+        --vcf ${vcf} \\
         --cores ${task.cpus} \\
         --stats-file ${prefix}_stats.txt \\
         ${args}
