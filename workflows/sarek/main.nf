@@ -4,7 +4,7 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { paramsSummaryMap                                  } from 'plugin/nf-validation'
+include { paramsSummaryMap                                  } from 'plugin/nf-schema'
 include { paramsSummaryMultiqc                              } from '../../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML                            } from '../../subworkflows/nf-core/utils_nfcore_pipeline'
 include { methodsDescriptionText                            } from '../../subworkflows/local/utils_nfcore_sarek_pipeline'
@@ -952,7 +952,7 @@ def addReadgroupToMeta(meta, files) {
     }
 
     // If we cannot read the flowcell ID from the fastq file, then we don't use it
-    def sample_lane_id = flowcell ? "${flowcell}.${meta.sample}.${meta.lane}" : "${meta.sample}.${meta.lane}"
+    def sample_lane_id = flowcell ? "${meta.flowcell}.${meta.sample}.${meta.lane}" : "${meta.sample}.${meta.lane}"
 
     // Don't use a random element for ID, it breaks resuming
     def read_group = "\"@RG\\tID:${sample_lane_id}\\t${CN}PU:${meta.lane}\\tSM:${meta.patient}_${meta.sample}\\tLB:${meta.sample}\\tDS:${params.fasta}\\tPL:${params.seq_platform}\""

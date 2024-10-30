@@ -10,7 +10,7 @@ nextflow_process {
     tag "bcftools/concat"
 
 
-    test("sarscov2 - [[vcf1, vcf2], [tbi1, tbi2]]") {
+    test("homo_sapiens - [[vcf1, vcf2], [tbi1, tbi2]]") {
 
         config "./nextflow.config"
 
@@ -41,7 +41,7 @@ nextflow_process {
 
     }
 
-    test("sarscov2 - [[vcf1, vcf2], [tbi1, tbi2]] - vcf_gz_index") {
+    test("homo_sapiens - [[vcf1, vcf2], [tbi1, tbi2]] - vcf_gz_index") {
 
         config "./vcf_gz_index.config"
 
@@ -78,7 +78,7 @@ nextflow_process {
 
     }
 
-    test("sarscov2 - [[vcf1, vcf2], [tbi1, tbi2]] - vcf_gz_index_csi") {
+    test("homo_sapiens - [[vcf1, vcf2], [tbi1, tbi2]] - vcf_gz_index_csi") {
 
         config "./vcf_gz_index_csi.config"
 
@@ -115,7 +115,7 @@ nextflow_process {
 
     }
 
-    test("sarscov2 - [[vcf1, vcf2], [tbi1, tbi2]] - vcf_gz_index_tbi") {
+    test("homo_sapiens - [[vcf1, vcf2], [tbi1, tbi2]] - vcf_gz_index_tbi") {
 
         config "./vcf_gz_index_tbi.config"
 
@@ -153,7 +153,7 @@ nextflow_process {
     }
 
 
-    test("sarscov2 - [[vcf1, vcf2], []]") {
+    test("homo_sapiens - [[vcf1, vcf2], []]") {
 
         config "./nextflow.config"
 
@@ -181,7 +181,7 @@ nextflow_process {
 
     }
 
-    test("sarscov2 - [[vcf1, vcf2], [tbi1, tbi2]] - stub") {
+    test("homo_sapiens - [[vcf1, vcf2], [tbi1, tbi2]] - stub") {
 
         config "./nextflow.config"
         options "-stub"
@@ -213,7 +213,7 @@ nextflow_process {
 
     }
 
-    test("sarscov2 - [[vcf1, vcf2], [tbi1, tbi2]] - vcf_gz_index - stub") {
+    test("homo_sapiens - [[vcf1, vcf2], [tbi1, tbi2]] - vcf_gz_index - stub") {
 
         config "./vcf_gz_index.config"
         options "-stub"
@@ -246,7 +246,7 @@ nextflow_process {
 
     }
 
-    test("sarscov2 - [[vcf1, vcf2], [tbi1, tbi2]] - vcf_gz_index_csi - stub") {
+    test("homo_sapiens - [[vcf1, vcf2], [tbi1, tbi2]] - vcf_gz_index_csi - stub") {
 
         config "./vcf_gz_index_csi.config"
         options "-stub"
@@ -279,7 +279,7 @@ nextflow_process {
 
     }
 
-    test("sarscov2 - [[vcf1, vcf2], [tbi1, tbi2]] - vcf_gz_index_tbi - stub") {
+    test("homo_sapiens - [[vcf1, vcf2], [tbi1, tbi2]] - vcf_gz_index_tbi - stub") {
 
         config "./vcf_gz_index_tbi.config"
         options "-stub"

@@ -6,7 +6,6 @@
 include { BAM_VARIANT_CALLING_CNVKIT                  } from '../bam_variant_calling_cnvkit/main'
 include { BAM_VARIANT_CALLING_FREEBAYES               } from '../bam_variant_calling_freebayes/main'
 include { BAM_VARIANT_CALLING_MPILEUP                 } from '../bam_variant_calling_mpileup/main'
-include { BAM_VARIANT_CALLING_SINGLE_STRELKA          } from '../bam_variant_calling_single_strelka/main'
 include { BAM_VARIANT_CALLING_SINGLE_TIDDIT           } from '../bam_variant_calling_single_tiddit/main'
 include { BAM_VARIANT_CALLING_TUMOR_ONLY_CONTROLFREEC } from '../bam_variant_calling_tumor_only_controlfreec/main'
 include { BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA        } from '../bam_variant_calling_tumor_only_manta/main'
@@ -46,7 +45,6 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     vcf_manta       = Channel.empty()
     vcf_mpileup     = Channel.empty()
     vcf_mutect2     = Channel.empty()
-    vcf_strelka     = Channel.empty()
     vcf_tiddit      = Channel.empty()
     vcf_lofreq      = Channel.empty()
 
@@ -164,20 +162,6 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA.out.versions)
     }
 
-    // STRELKA
-    if (tools.split(',').contains('strelka')) {
-        BAM_VARIANT_CALLING_SINGLE_STRELKA(
-            cram,
-            dict,
-            fasta.map{ meta, fasta -> [ fasta ] },
-            fasta_fai.map{ meta, fasta_fai -> [ fasta_fai ] },
-            intervals_bed_gz_tbi
-        )
-
-        vcf_strelka = BAM_VARIANT_CALLING_SINGLE_STRELKA.out.vcf
-        versions = versions.mix(BAM_VARIANT_CALLING_SINGLE_STRELKA.out.versions)
-    }
-
     // TIDDIT
     if (tools.split(',').contains('tiddit')) {
         BAM_VARIANT_CALLING_SINGLE_TIDDIT(
@@ -195,7 +179,6 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         vcf_manta,
         vcf_mutect2,
         vcf_mpileup,
-        vcf_strelka,
         vcf_tiddit
     )
 
@@ -206,7 +189,6 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     vcf_manta
     vcf_mpileup
     vcf_mutect2
-    vcf_strelka
     vcf_tiddit
 
     versions = versions

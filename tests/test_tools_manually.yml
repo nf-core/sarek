@@ -287,7 +287,7 @@
     - path: results/reports/samtools/sample3/sample3.recal.cram.stats
     # conda changes md5sums for test
 - name: Run full pipeline on tumoronly with most tools
-  command: nextflow run . -profile test --input tests/csv/3.0/fastq_tumor_only.csv --tools cnvkit,freebayes,merge,mpileup,mutect2,snpeff,strelka,tiddit,vep --outdir results
+  command: nextflow run . -profile test --input tests/csv/3.0/fastq_tumor_only.csv --tools cnvkit,freebayes,merge,mpileup,mutect2,snpeff,tiddit,vep --outdir results
   tags:
     - full_pipeline_manual
     - manual
