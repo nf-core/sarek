@@ -11,7 +11,10 @@
             "fa_icon": "fas fa-terminal",
             "description": "Define where the pipeline should find input data and save output data.",
             "help_text": "Specify input samplesheet, step and output folder.",
-            "required": ["step", "outdir"],
+            "required": [
+                "step",
+                "outdir"
+            ],
             "properties": {
                 "input": {
                     "description": "Path to comma-separated file containing information about the samples in the experiment.",
@@ -215,7 +218,12 @@
                     "type": "string",
                     "default": "bwa-mem",
                     "fa_icon": "fas fa-puzzle-piece",
-                    "enum": ["bwa-mem", "bwa-mem2", "dragmap", "sentieon-bwamem"],
+                    "enum": [
+                        "bwa-mem",
+                        "bwa-mem2",
+                        "dragmap",
+                        "sentieon-bwamem"
+                    ],
                     "description": "Specify aligner to be used to map reads to reference genome.",
                     "help_text": "Sarek will build missing indices automatically if not provided. Set `--bwa false` if indices should be (re-)built.\nIf DragMap is selected as aligner, it is recommended to skip baserecalibration with `--skip_tools baserecalibrator`. For more info see [here](https://gatk.broadinstitute.org/hc/en-us/articles/4407897446939--How-to-Run-germline-single-sample-short-variant-discovery-in-DRAGEN-mode)."
                 },
@@ -515,7 +523,11 @@
                     "type": "string",
                     "default": "vcf",
                     "description": "VEP output-file format.",
-                    "enum": ["json", "tab", "vcf"],
+                    "enum": [
+                        "json",
+                        "tab",
+                        "vcf"
+                    ],
                     "help_text": "Sets the format of the output-file from VEP. Available formats: json, tab and vcf.",
                     "fa_icon": "fas fa-table"
                 },
@@ -593,7 +605,10 @@
                     "type": "string",
                     "description": "ASCAT genome.",
                     "help_text": "Must be set to run ASCAT, either hg19 or hg38.\n\nIf you use AWS iGenomes, this has already been set for you appropriately.",
-                    "enum": ["hg19", "hg38"]
+                    "enum": [
+                        "hg19",
+                        "hg38"
+                    ]
                 },
                 "ascat_alleles": {
                     "type": "string",
@@ -912,7 +927,14 @@
                     "description": "Method used to save pipeline results to output directory.",
                     "help_text": "The Nextflow `publishDir` option specifies which intermediate files should be saved to the output directory. This option tells the pipeline what method should be used to move these files. See [Nextflow docs](https://www.nextflow.io/docs/latest/process.html#publishdir) for details.",
                     "fa_icon": "fas fa-copy",
-                    "enum": ["symlink", "rellink", "link", "copy", "copyNoFollow", "move"],
+                    "enum": [
+                        "symlink",
+                        "rellink",
+                        "link",
+                        "copy",
+                        "copyNoFollow",
+                        "move"
+                    ],
                     "hidden": true
                 },
                 "email": {
@@ -995,6 +1017,26 @@
                     "hidden": true
                 }
             }
+        },
+        "benchmark_options": {
+            "title": "Benchmark options",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "benchmark": {
+                    "type": "boolean",
+                    "description": "Boolean whether benchmarking should be done"
+                },
+                "truth_vcf": {
+                    "type": "string",
+                    "description": "Location of truth VCF"
+                },
+                "truth_bed": {
+                    "type": "string",
+                    "description": "Location of truth BED"
+                }
+            }
         }
     },
     "allOf": [
@@ -1027,17 +1069,9 @@
         },
         {
             "$ref": "#/$defs/generic_options"
-        }
-    ],
-    "properties": {
-        "benchmark": {
-            "type": "boolean"
         },
-        "truth_vcf": {
-            "type": "string"
-        },
-        "truth_bed": {
-            "type": "string"
+        {
+            "$ref": "#/$defs/benchmark_options"
         }
-    }
+    ]
 }
