@@ -12,7 +12,8 @@ workflow VCF_BENCHMARK {
 
     take:
     input_ch  // channel: [val(meta),test_vcf]
-    input_truth // channel: [val(meta),truth_vcf,truth_bed]
+    input_truth // channel: [val(meta),truth_vcf]
+    truth_bed // channel: [val(meta),truth_bed]
     fasta     // reference channel [val(meta), ref.fa]
     fai       // reference channel [val(meta), ref.fa.fai]
 
@@ -22,8 +23,9 @@ workflow VCF_BENCHMARK {
 
     query_vcf_tbi = Channel.empty()
     truth_vcf_tbi = Channel.empty()
-    INDEX_TRUTH(input_ch.map { meta, test_vcf, truth_vcf, bed -> [ meta, test_vcf  ] })
-    INDEX_QUERY(input_ch.map { meta, test_vcf, truth_vcf, bed -> [ meta, truth_vcf ] })
+
+    INDEX_TRUTH( input_ch    )
+    INDEX_QUERY( input_truth )
 
     versions = versions.mix(INDEX_TRUTH.out.versions)
     versions = versions.mix(INDEX_QUERY.out.versions)
@@ -38,10 +40,19 @@ workflow VCF_BENCHMARK {
     versions = versions.mix(RTGTOOLS_FORMAT.out.versions)
     sdf = RTGTOOLS_FORMAT.out.sdf
 
-    // apply rtgtools eval method
+   // Combine input_ch and input_truth with query_vcf_tbi and truth_vcf_tbi
+    combined_inputs = input_ch.combine(input_truth)
+        .combine(truth_bed)
+        .combine(query_vcf_tbi)
+        .combine(truth_vcf_tbi)
+
+    // Apply rtgtools eval method
     RTGTOOLS_VCFEVAL(
-        input_ch.map { meta, query_vcf, query_vcf_tbi, truth_vcf, truth_vcf_tbi, bed ->
-            [ meta, query_vcf, query_vcf_tbi, truth_vcf, truth_vcf_tbi, bed, [] ]
+        combined_inputs.map { ch, truth, bed, query_tbi, truth_tbi ->
+        def (meta, query_vcf) = ch
+        def (meta_truth, truth_vcf) = truth
+        def (meta_bed, truth_bed) = bed
+        [ meta, query_vcf, query_tbi, truth_vcf, truth_tbi, truth_bed ]
         },
         sdf
     )

@@ -912,7 +912,8 @@ workflow SAREK {
 
         VCF_BENCHMARK(
             vcf_to_benchmark.map{meta, vcf -> [ meta + [ file_name: vcf.baseName ], vcf ] },
-            params.truth_vcf.map{meta, vcf -> [ meta, vcf, params.truth_bed ] },
+            truth_vcf
+            truth_bed
             fasta,
             fasta_fai
         )
