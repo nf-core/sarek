@@ -40,8 +40,11 @@ workflow VCF_BENCHMARK {
     versions = versions.mix(RTGTOOLS_FORMAT.out.versions)
     sdf = RTGTOOLS_FORMAT.out.sdf
 
+    query_ch = Channel.from(input_ch)
+    truth_ch = Channel.from(input_truth)
+
    // Combine input_ch and input_truth with query_vcf_tbi and truth_vcf_tbi
-    combined_inputs = input_ch.combine(input_truth)
+    combined_inputs = query_ch.combine(truth_ch)
         .combine(truth_bed)
         .combine(query_vcf_tbi)
         .combine(truth_vcf_tbi)
