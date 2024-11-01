@@ -1,0 +1,199 @@
+name: "rtgtools_vcfeval"
+description: The VCFeval tool of RTG tools. It is used to evaluate called variants
+  for agreement with a baseline variant set
+keywords:
+  - benchmarking
+  - vcf
+  - rtg-tools
+tools:
+  - "rtgtools":
+      description: "RealTimeGenomics Tools -- Utilities for accurate VCF comparison
+        and manipulation"
+      homepage: "https://www.realtimegenomics.com/products/rtg-tools"
+      documentation: "https://github.com/RealTimeGenomics/rtg-tools"
+      tool_dev_url: "https://github.com/RealTimeGenomics/rtg-tools"
+      licence: ["BSD"]
+      identifier: ""
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - query_vcf:
+        type: file
+        description: A VCF with called variants to benchmark against the standard
+        pattern: "*.{vcf,vcf.gz}"
+    - query_vcf_tbi:
+        type: file
+        description: The index of the VCF file with called variants to benchmark against the standard
+        pattern: "*.{vcf.gz.tbi, vcf.tbi}"
+    - truth_vcf:
+        type: file
+        description: A standard VCF to compare against
+        pattern: "*.{vcf,vcf.gz}"
+    - truth_vcf_tbi:
+        type: file
+        description: The index of the standard VCF to compare against
+        pattern: "*.{vcf.gz.tbi, vcf.tbi}"
+    - truth_bed:
+        type: file
+        description: A BED file containining the strict regions where VCFeval should
+          only evaluate the fully overlapping variants (optional)
+          This input should be used to provide the golden truth BED files.
+        pattern: "*.bed"
+    - regions_bed:
+        type: file
+        description: A BED file containing the regions where VCFeval will evaluate every
+          fully and partially overlapping variant (optional)
+          This input should be used to provide the regions used by the analysis
+        pattern: "*.bed"
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - sdf:
+        type: file
+        description: The SDF (RTG Sequence Data File) folder of the reference genome
+output:
+  - tp_vcf:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.tp.vcf.gz":
+          type: file
+          description: A VCF file for the true positive variants
+          pattern: "*.tp.vcf.gz"
+  - tp_tbi:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.tp.vcf.gz.tbi":
+          type: file
+          description: The index of the VCF file for the true positive variants
+          pattern: "*.tp.vcf.gz.tbi"
+  - fn_vcf:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.fn.vcf.gz":
+          type: file
+          description: A VCF file for the false negative variants
+          pattern: "*.fn.vcf.gz"
+  - fn_tbi:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.fn.vcf.gz.tbi":
+          type: file
+          description: The index of the VCF file for the false negative variants
+          pattern: "*.fn.vcf.gz.tbi"
+  - fp_vcf:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.fp.vcf.gz":
+          type: file
+          description: A VCF file for the false positive variants
+          pattern: "*.fp.vcf.gz"
+  - fp_tbi:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.fp.vcf.gz.tbi":
+          type: file
+          description: The index of the VCF file for the false positive variants
+          pattern: "*.fp.vcf.gz.tbi"
+  - baseline_vcf:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.tp-baseline.vcf.gz":
+          type: file
+          description: A VCF file for the true positive variants from the baseline
+          pattern: "*.tp-baseline.vcf.gz"
+  - baseline_tbi:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.tp-baseline.vcf.gz.tbi":
+          type: file
+          description: The index of the VCF file for the true positive variants from the
+            baseline
+          pattern: "*.tp-baseline.vcf.gz.tbi"
+  - snp_roc:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.snp_roc.tsv.gz":
+          type: file
+          description: TSV files containing ROC data for the SNPs
+          pattern: "*.snp_roc.tsv.gz"
+  - non_snp_roc:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.non_snp_roc.tsv.gz":
+          type: file
+          description: TSV files containing ROC data for all variants except SNPs
+          pattern: "*.non_snp_roc.tsv.gz"
+  - weighted_roc:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.weighted_roc.tsv.gz":
+          type: file
+          description: TSV files containing weighted ROC data for all variants
+          pattern: "*.weighted_snp_roc.tsv.gz"
+  - summary:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.summary.txt":
+          type: file
+          description: A TXT file containing the summary of the evaluation
+          pattern: "*.summary.txt"
+  - phasing:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.phasing.txt":
+          type: file
+          description: A TXT file containing the data on the phasing
+          pattern: "*.phasing.txt"
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+authors:
+  - "@nvnieuwk"
+maintainers:
+  - "@nvnieuwk"

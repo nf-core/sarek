@@ -1,0 +1,2 @@
+bcftools/index:
+  - "modules/nf-core/bcftools/index/**"
