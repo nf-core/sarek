@@ -24,8 +24,8 @@ workflow VCF_BENCHMARK {
     query_vcf_tbi = Channel.empty()
     truth_vcf_tbi = Channel.empty()
 
-    INDEX_TRUTH( input_ch    )
-    INDEX_QUERY( input_truth )
+    INDEX_TRUTH( input_truth )
+    INDEX_QUERY( input_ch    )
 
     versions = versions.mix(INDEX_TRUTH.out.versions)
     versions = versions.mix(INDEX_QUERY.out.versions)
