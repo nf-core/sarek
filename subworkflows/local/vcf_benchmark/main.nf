@@ -18,6 +18,7 @@ workflow VCF_BENCHMARK {
     fai       // reference channel [val(meta), ref.fa.fai]
 
     main:
+    input_ch.view()
     versions        = Channel.empty()
     summary_reports = Channel.empty()
 
@@ -40,11 +41,8 @@ workflow VCF_BENCHMARK {
     versions = versions.mix(RTGTOOLS_FORMAT.out.versions)
     sdf = RTGTOOLS_FORMAT.out.sdf
 
-    query_ch = Channel.from(input_ch)
-    truth_ch = Channel.from(input_truth)
-
    // Combine input_ch and input_truth with query_vcf_tbi and truth_vcf_tbi
-    combined_inputs = query_ch.combine(truth_ch)
+    combined_inputs = input_ch.combine(input_truth)
         .combine(truth_bed)
         .combine(query_vcf_tbi)
         .combine(truth_vcf_tbi)
