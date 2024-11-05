@@ -246,18 +246,6 @@
             "default": "",
             "fa_icon": "fas fa-barcode",
             "properties": {
-                "concatenate_vcfs": {
-                    "type": "boolean",
-                    "fa_icon": "fas fa-merge",
-                    "description": "Option for concatenating germline vcf-files.",
-                    "help_text": "Concatenating the germline vcf-files from each applied variant-caller into one vcf-file using bfctools concat."
-                },
-                "normalize_vcfs": {
-                    "type": "boolean",
-                    "fa_icon": "fas fa-merge",
-                    "description": "Option for normalization of vcf-files.",
-                    "help_text": "Normalization of all vcf-files from each applied variant-caller using bfctools norm."
-                },
                 "only_paired_variant_calling": {
                     "type": "boolean",
                     "fa_icon": "fas fa-forward",
@@ -414,6 +402,12 @@
                     "fa_icon": "fas fa-tape",
                     "description": "Option for concatenating germline vcf-files.",
                     "help_text": "Concatenating the germline vcf-files from each applied variant-caller into one vcf-file using bfctools concat."
+                },
+                "normalize_vcfs": {
+                    "type": "boolean",
+                    "fa_icon": "fas fa-tape",
+                    "description": "Option for normalization of vcf-files.",
+                    "help_text": "Normalization of all vcf-files from each applied variant-caller using bfctools norm."
                 }
             }
         },
