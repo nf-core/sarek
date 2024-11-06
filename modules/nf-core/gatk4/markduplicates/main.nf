@@ -37,7 +37,11 @@ process GATK4_MARKDUPLICATES {
     if (!task.memory) {
         log.info '[GATK MarkDuplicates] Available memory not known - defaulting to 3GB. Specify process memory requirements to change this.'
     } else {
-        avail_mem = (task.memory.mega*0.8).intValue()
+        //
+        // Memory is per core so total memory is
+        //    NumCores*(Mem/Core)
+        //
+        avail_mem = (task.cpus*task.memory.mega*0.8).intValue()
     }
 
     // Using samtools and not Markduplicates to compress to CRAM speeds up computation:
@@ -54,9 +58,9 @@ process GATK4_MARKDUPLICATES {
 
     # If cram files are wished as output, the run samtools for conversion
     if [[ ${prefix} == *.cram ]]; then
-        samtools view -Ch -T ${fasta} -o ${prefix} ${prefix_bam}
+        samtools view -@ ${task.cpus-2} -Ch -T ${fasta} -o ${prefix} ${prefix_bam}
         rm ${prefix_bam}
-        samtools index ${prefix}
+        samtools index -@ ${task.cpus-2} ${prefix}
     fi
 
     cat <<-END_VERSIONS > versions.yml
