@@ -470,6 +470,9 @@ workflow SAREK {
 
             ch_cram_for_bam_baserecalibrator = Channel.empty().mix(input_sample)
 
+            // Set the input samples for restart so we generate a samplesheet that contains the input files together with the recalibration table
+            ch_md_cram_for_restart           = ch_cram_for_bam_baserecalibrator
+
         } else {
 
             // ch_cram_for_bam_baserecalibrator contains either:

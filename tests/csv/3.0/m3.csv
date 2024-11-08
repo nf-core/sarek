@@ -1,0 +1,4 @@
+patient,sex,status,sample,lane,fastq_1,fastq_2
+test,XX,0,sample1,L1,test_lane1_R1.fq.gz,test_lane2_R2.fq.gz
+test,XX,0,sample1,L2,test_lane2_R1.fq.gz,test_lane2_R2.fq.gz
+test2,XX,0,sample2,L1,test2_R1.fq.gz,test2_R2.fq.gz
