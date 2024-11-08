@@ -64,7 +64,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-11-08T18:21:49.913569"
+        "timestamp": "2024-11-08T23:43:36.719177"
     },
     "Run with profile test | --input tests/csv/3.0/mapped_single_bam.csv --step recalibrate --skip_tools baserecalibrator --tools strelka ": {
         "content": [
@@ -152,18 +152,7 @@
                 "reports/vcftools/strelka/test/test.strelka.variants.FILTER.summary",
                 "reports/vcftools/strelka/test/test.strelka.variants.TsTv.count",
                 "reports/vcftools/strelka/test/test.strelka.variants.TsTv.qual",
-                [
-                    ".DS_Store:md5,2e1453fbce51b095eea24106216f98f8",
-                    [
-                        "HCC1395N.strelka.genome.vcf.gz.tbi:md5,3a576ad9170e09f9c661bb3c9bda8e73",
-                        "HCC1395N.strelka.variants.vcf.gz.tbi:md5,79777af316475651498251f64ce87a1f"
-                    ],
-                    [
-                        "HCC1395T_vs_HCC1395N.strelka.somatic_indels.vcf.gz:md5,721a05b2ae643841c02f8df286dcc570",
-                        "HCC1395T_vs_HCC1395N.strelka.somatic_indels.vcf.gz.tbi:md5,cd5bd7d40770eb4542b4955b797d7ec6",
-                        "HCC1395T_vs_HCC1395N.strelka.somatic_snvs.vcf.gz.tbi:md5,62bc80362a1f2563e89d098a67e93260"
-                    ]
-                ],
+                "variant_calling",
                 "variant_calling/strelka",
                 "variant_calling/strelka/test",
                 "variant_calling/strelka/test/test.strelka.genome.vcf.gz",
@@ -195,7 +184,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-11-08T18:20:40.219765"
+        "timestamp": "2024-11-08T23:42:27.247547"
     },
     "Run with profile test | --input tests/csv/3.0/mapped_single_cram.csv --step recalibrate --skip_tools baserecalibrator --tools strelka ": {
         "content": [
@@ -283,18 +272,7 @@
                 "reports/vcftools/strelka/test/test.strelka.variants.FILTER.summary",
                 "reports/vcftools/strelka/test/test.strelka.variants.TsTv.count",
                 "reports/vcftools/strelka/test/test.strelka.variants.TsTv.qual",
-                [
-                    ".DS_Store:md5,2e1453fbce51b095eea24106216f98f8",
-                    [
-                        "HCC1395N.strelka.genome.vcf.gz.tbi:md5,3a576ad9170e09f9c661bb3c9bda8e73",
-                        "HCC1395N.strelka.variants.vcf.gz.tbi:md5,79777af316475651498251f64ce87a1f"
-                    ],
-                    [
-                        "HCC1395T_vs_HCC1395N.strelka.somatic_indels.vcf.gz:md5,721a05b2ae643841c02f8df286dcc570",
-                        "HCC1395T_vs_HCC1395N.strelka.somatic_indels.vcf.gz.tbi:md5,cd5bd7d40770eb4542b4955b797d7ec6",
-                        "HCC1395T_vs_HCC1395N.strelka.somatic_snvs.vcf.gz.tbi:md5,62bc80362a1f2563e89d098a67e93260"
-                    ]
-                ],
+                "variant_calling",
                 "variant_calling/strelka",
                 "variant_calling/strelka/test",
                 "variant_calling/strelka/test/test.strelka.genome.vcf.gz",
@@ -326,7 +304,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-11-08T18:23:09.076851"
+        "timestamp": "2024-11-08T23:44:51.527726"
     },
     "Run with profile test | --input tests/csv/3.0/mapped_single_bam.csv --step recalibrate --tools null ": {
         "content": [
@@ -365,6 +343,6 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-11-08T18:19:16.169004"
+        "timestamp": "2024-11-08T23:41:01.835335"
     }
 }
