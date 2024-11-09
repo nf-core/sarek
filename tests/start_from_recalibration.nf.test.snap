@@ -64,7 +64,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-11-08T23:43:36.719177"
+        "timestamp": "2024-11-09T12:09:15.465092"
     },
     "Run with profile test | --input tests/csv/3.0/mapped_single_bam.csv --step recalibrate --skip_tools baserecalibrator --tools strelka ": {
         "content": [
@@ -170,7 +170,6 @@
                 "multiqc_bcftools_stats.txt:md5,3a9838b06c741231489075203469d2c4",
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
                 "vcftools_tstv_by_count.txt:md5,5ca47a28d7ae697981041d8b458ae889",
-                "vcftools_tstv_by_qual.txt:md5,7078f1e9124f623ac66c6cf9078f6d69",
                 "test.strelka.variants.bcftools_stats.txt:md5,3b37a441393a9329104451f44e56c619",
                 "test.strelka.variants.FILTER.summary:md5,39ff2cc8eb7495a14a6b76e0ab627027",
                 "test.strelka.variants.TsTv.count:md5,ee7dafc8d941b8502a04a63dc3126fff",
@@ -184,7 +183,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-11-08T23:42:27.247547"
+        "timestamp": "2024-11-09T12:07:55.795827"
     },
     "Run with profile test | --input tests/csv/3.0/mapped_single_cram.csv --step recalibrate --skip_tools baserecalibrator --tools strelka ": {
         "content": [
@@ -290,7 +289,6 @@
                 "multiqc_bcftools_stats.txt:md5,3a9838b06c741231489075203469d2c4",
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
                 "vcftools_tstv_by_count.txt:md5,5ca47a28d7ae697981041d8b458ae889",
-                "vcftools_tstv_by_qual.txt:md5,7078f1e9124f623ac66c6cf9078f6d69",
                 "test.strelka.variants.bcftools_stats.txt:md5,3b37a441393a9329104451f44e56c619",
                 "test.strelka.variants.FILTER.summary:md5,39ff2cc8eb7495a14a6b76e0ab627027",
                 "test.strelka.variants.TsTv.count:md5,ee7dafc8d941b8502a04a63dc3126fff",
@@ -304,7 +302,7 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-11-08T23:44:51.527726"
+        "timestamp": "2024-11-09T12:10:30.511453"
     },
     "Run with profile test | --input tests/csv/3.0/mapped_single_bam.csv --step recalibrate --tools null ": {
         "content": [
@@ -343,6 +341,6 @@
             "nf-test": "0.9.0",
             "nextflow": "24.04.4"
         },
-        "timestamp": "2024-11-08T23:41:01.835335"
+        "timestamp": "2024-11-09T12:06:34.599974"
     }
 }
