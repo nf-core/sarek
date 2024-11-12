@@ -9,6 +9,7 @@ multiqc/multiqc_data/multiqc_picard_dups.txt
 multiqc/multiqc_data/multiqc_software_versions.txt
 multiqc/multiqc_data/multiqc_sources.txt
 multiqc/multiqc_data/picard_deduplication.txt
+multiqc/multiqc_data/vcftools_tstv_by_qual.txt
 multiqc/multiqc_plots/{svg,pdf,png}/*.{svg,pdf,png}
 multiqc/multiqc_report.html
 pipeline_info/*.{html,json,txt,yml}
@@ -20,4 +21,6 @@ reports/fastqc/**/*_fastqc.{html,zip}
 reports/markduplicates/**/*.md.cram.metrics
 reports/snpeff/*/*_snpEff.csv
 reports/snpeff/*/snpEff_summary.html
+reports/vcftools/**/*.TsTv.qual
 variant_calling/**/*.vcf.{gz,gz.tbi}
+.DS_Store
