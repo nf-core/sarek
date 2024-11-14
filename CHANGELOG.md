@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1660](https://github.com/nf-core/sarek/pull/1642) - Add `--length_required` for minimal reads length with `FASTP`
 - [1663](https://github.com/nf-core/sarek/pull/1663) - Massive conda modules update
 - [1664](https://github.com/nf-core/sarek/pull/1664) - Check if flowcell ID matches for read pair
+- [1730](https://github.com/nf-core/sarek/pull/1730) - Enable Harshil Alignment™️ in VS Code workspace settings
 
 ### Changed
 
@@ -28,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1695](https://github.com/nf-core/sarek/pull/1695) - Update all modules
 - [1707](https://github.com/nf-core/sarek/pull/1707) - Un-hide parameters and clean up Json schema
 - [1708](https://github.com/nf-core/sarek/pull/1708) - Migrate pipeline pytest alignment and annotation tests to nf-test
+- [1711](https://github.com/nf-core/sarek/pull/1711) - Migrate pipeline pytest strelka tests to nf-test
 - [1731](https://github.com/nf-core/sarek/pull/1731) - Migrate pipeline pytest controlfreec tests to nf-test
 
 ### Fixed
@@ -45,6 +47,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [1656](https://github.com/nf-core/sarek/pull/1656) - Retiring parameter `snpeff_genome`
 - [1709](https://github.com/nf-core/sarek/pull/1709) - Remove `Strelka` tumor-only somatic variant calling
+- [1728](https://github.com/nf-core/sarek/pull/1728) - Remove BAM to CRAM conversion of input files for post-alignment entry points
 
 ### Dependencies
 
