@@ -1,0 +1,228 @@
+{
+    "Run with profile test | --tools controlfreec --no_intervals | somatic": {
+        "content": [
+            8,
+            {
+                "SAMTOOLS_MPILEUP": {
+                    "samtools": 1.21
+                },
+                "Workflow": {
+                    "nf-core/sarek": "v3.5.0dev"
+                }
+            },
+            [
+                "csv",
+                "no_intervals.bed",
+                "no_intervals.bed.gz",
+                "no_intervals.bed.gz.tbi",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "reference",
+                "reports",
+                "reports/mosdepth",
+                "reports/mosdepth/sample3",
+                "reports/mosdepth/sample3/sample3.recal.mosdepth.global.dist.txt",
+                "reports/mosdepth/sample3/sample3.recal.mosdepth.summary.txt",
+                "reports/mosdepth/sample3/sample3.recal.per-base.bed.gz",
+                "reports/mosdepth/sample3/sample3.recal.per-base.bed.gz.csi",
+                "reports/mosdepth/sample4",
+                "reports/mosdepth/sample4/sample4.recal.mosdepth.global.dist.txt",
+                "reports/mosdepth/sample4/sample4.recal.mosdepth.summary.txt",
+                "reports/mosdepth/sample4/sample4.recal.per-base.bed.gz",
+                "reports/mosdepth/sample4/sample4.recal.per-base.bed.gz.csi",
+                "reports/samtools",
+                "reports/samtools/sample3",
+                "reports/samtools/sample3/sample3.recal.cram.stats",
+                "reports/samtools/sample4",
+                "reports/samtools/sample4/sample4.recal.cram.stats"
+            ],
+            [
+                "sample3.recal.mosdepth.global.dist.txt:md5,69e29702ef01fd8f6c7a5468fc35a16a",
+                "sample3.recal.mosdepth.summary.txt:md5,d2775eb102acc5950f7f53883dcb503d",
+                "sample3.recal.per-base.bed.gz:md5,297f96648928d0ca5184223fb9941e7c",
+                "sample3.recal.per-base.bed.gz.csi:md5,519cc5bf84da0d71b87a88c76f83194e",
+                "sample4.recal.mosdepth.global.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
+                "sample4.recal.mosdepth.summary.txt:md5,0a7300e56eda6fba7c7564f00aa000f0",
+                "sample4.recal.per-base.bed.gz:md5,39a1bc436aa8546c26faedbe94cb676c",
+                "sample4.recal.per-base.bed.gz.csi:md5,aaa7bed9e7ef873b23bca249b8b58eb9",
+                "sample3.recal.cram.stats:md5,bcc229318527e414e69aaa5cd092ad9b",
+                "sample4.recal.cram.stats:md5,0d1784cb4c3f14b9858247ac6128dd03"
+            ],
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.1",
+            "nextflow": "24.10.0"
+        },
+        "timestamp": "2024-10-29T15:19:24.665754"
+    },
+    "Run with profile test | --tools controlfreec | tumoronly": {
+        "content": [
+            7,
+            {
+                "SAMTOOLS_MPILEUP": {
+                    "samtools": 1.21
+                },
+                "Workflow": {
+                    "nf-core/sarek": "v3.5.0dev"
+                }
+            },
+            [
+                "csv",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "reference",
+                "reports",
+                "reports/mosdepth",
+                "reports/mosdepth/sample2",
+                "reports/mosdepth/sample2/sample2.recal.mosdepth.global.dist.txt",
+                "reports/mosdepth/sample2/sample2.recal.mosdepth.region.dist.txt",
+                "reports/mosdepth/sample2/sample2.recal.mosdepth.summary.txt",
+                "reports/mosdepth/sample2/sample2.recal.per-base.bed.gz",
+                "reports/mosdepth/sample2/sample2.recal.per-base.bed.gz.csi",
+                "reports/mosdepth/sample2/sample2.recal.regions.bed.gz",
+                "reports/mosdepth/sample2/sample2.recal.regions.bed.gz.csi",
+                "reports/samtools",
+                "reports/samtools/sample2",
+                "reports/samtools/sample2/sample2.recal.cram.stats"
+            ],
+            [
+                "sample2.recal.mosdepth.global.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
+                "sample2.recal.mosdepth.region.dist.txt:md5,39005ffaac22871ffaaf19656fe69c5b",
+                "sample2.recal.mosdepth.summary.txt:md5,68d4b98f17361fddf73052ead34fa370",
+                "sample2.recal.per-base.bed.gz:md5,39a1bc436aa8546c26faedbe94cb676c",
+                "sample2.recal.per-base.bed.gz.csi:md5,aaa7bed9e7ef873b23bca249b8b58eb9",
+                "sample2.recal.regions.bed.gz:md5,b7561bc56a955f7db0f11e67e2ec0386",
+                "sample2.recal.regions.bed.gz.csi:md5,538cb5d244411a670a4b041691f8825b",
+                "sample2.recal.cram.stats:md5,0d1784cb4c3f14b9858247ac6128dd03"
+            ],
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.1",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-10-29T15:27:51.939103"
+    },
+    "Run with profile test | --tools controlfreec | somatic": {
+        "content": [
+            10,
+            {
+                "SAMTOOLS_MPILEUP": {
+                    "samtools": 1.21
+                },
+                "Workflow": {
+                    "nf-core/sarek": "v3.5.0dev"
+                }
+            },
+            [
+                "csv",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "reference",
+                "reports",
+                "reports/mosdepth",
+                "reports/mosdepth/sample3",
+                "reports/mosdepth/sample3/sample3.recal.mosdepth.global.dist.txt",
+                "reports/mosdepth/sample3/sample3.recal.mosdepth.region.dist.txt",
+                "reports/mosdepth/sample3/sample3.recal.mosdepth.summary.txt",
+                "reports/mosdepth/sample3/sample3.recal.per-base.bed.gz",
+                "reports/mosdepth/sample3/sample3.recal.per-base.bed.gz.csi",
+                "reports/mosdepth/sample3/sample3.recal.regions.bed.gz",
+                "reports/mosdepth/sample3/sample3.recal.regions.bed.gz.csi",
+                "reports/mosdepth/sample4",
+                "reports/mosdepth/sample4/sample4.recal.mosdepth.global.dist.txt",
+                "reports/mosdepth/sample4/sample4.recal.mosdepth.region.dist.txt",
+                "reports/mosdepth/sample4/sample4.recal.mosdepth.summary.txt",
+                "reports/mosdepth/sample4/sample4.recal.per-base.bed.gz",
+                "reports/mosdepth/sample4/sample4.recal.per-base.bed.gz.csi",
+                "reports/mosdepth/sample4/sample4.recal.regions.bed.gz",
+                "reports/mosdepth/sample4/sample4.recal.regions.bed.gz.csi",
+                "reports/samtools",
+                "reports/samtools/sample3",
+                "reports/samtools/sample3/sample3.recal.cram.stats",
+                "reports/samtools/sample4",
+                "reports/samtools/sample4/sample4.recal.cram.stats"
+            ],
+            [
+                "sample3.recal.mosdepth.global.dist.txt:md5,69e29702ef01fd8f6c7a5468fc35a16a",
+                "sample3.recal.mosdepth.region.dist.txt:md5,6ec49cd7d510c2eb3d9d90fdb79b783a",
+                "sample3.recal.mosdepth.summary.txt:md5,103098d0bf76ed82d2b87d5f242b099a",
+                "sample3.recal.per-base.bed.gz:md5,297f96648928d0ca5184223fb9941e7c",
+                "sample3.recal.per-base.bed.gz.csi:md5,519cc5bf84da0d71b87a88c76f83194e",
+                "sample3.recal.regions.bed.gz:md5,314ce8d7273eff353072108aa77c327c",
+                "sample3.recal.regions.bed.gz.csi:md5,538cb5d244411a670a4b041691f8825b",
+                "sample4.recal.mosdepth.global.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
+                "sample4.recal.mosdepth.region.dist.txt:md5,39005ffaac22871ffaaf19656fe69c5b",
+                "sample4.recal.mosdepth.summary.txt:md5,68d4b98f17361fddf73052ead34fa370",
+                "sample4.recal.per-base.bed.gz:md5,39a1bc436aa8546c26faedbe94cb676c",
+                "sample4.recal.per-base.bed.gz.csi:md5,aaa7bed9e7ef873b23bca249b8b58eb9",
+                "sample4.recal.regions.bed.gz:md5,b7561bc56a955f7db0f11e67e2ec0386",
+                "sample4.recal.regions.bed.gz.csi:md5,538cb5d244411a670a4b041691f8825b",
+                "sample3.recal.cram.stats:md5,bcc229318527e414e69aaa5cd092ad9b",
+                "sample4.recal.cram.stats:md5,0d1784cb4c3f14b9858247ac6128dd03"
+            ],
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.1",
+            "nextflow": "24.10.0"
+        },
+        "timestamp": "2024-10-29T15:17:43.826814"
+    },
+    "Run with profile test | --tools controlfreec --no_intervals | tumoronly": {
+        "content": [
+            5,
+            {
+                "SAMTOOLS_MPILEUP": {
+                    "samtools": 1.21
+                },
+                "Workflow": {
+                    "nf-core/sarek": "v3.5.0dev"
+                }
+            },
+            [
+                "csv",
+                "no_intervals.bed",
+                "no_intervals.bed.gz",
+                "no_intervals.bed.gz.tbi",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "reference",
+                "reports",
+                "reports/mosdepth",
+                "reports/mosdepth/sample2",
+                "reports/mosdepth/sample2/sample2.recal.mosdepth.global.dist.txt",
+                "reports/mosdepth/sample2/sample2.recal.mosdepth.region.dist.txt",
+                "reports/mosdepth/sample2/sample2.recal.mosdepth.summary.txt",
+                "reports/mosdepth/sample2/sample2.recal.regions.bed.gz",
+                "reports/mosdepth/sample2/sample2.recal.regions.bed.gz.csi",
+                "reports/samtools",
+                "reports/samtools/sample2",
+                "reports/samtools/sample2/sample2.recal.cram.stats"
+            ],
+            [
+                "sample2.recal.mosdepth.global.dist.txt:md5,53f9ae9ab5002ffba340fa8cef7d70e4",
+                "sample2.recal.mosdepth.region.dist.txt:md5,17600d21ac453506c52249cf435ad8ea",
+                "sample2.recal.mosdepth.summary.txt:md5,7141030385af1f653718c9e0c9a5be80",
+                "sample2.recal.regions.bed.gz:md5,c680c5d75f0cea068e3f917f4cf9bf52",
+                "sample2.recal.regions.bed.gz.csi:md5,4003c8833ed5e9b9f45282a6915c935e",
+                "sample2.recal.cram.stats:md5,0d1784cb4c3f14b9858247ac6128dd03"
+            ],
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.1",
+            "nextflow": "24.10.0"
+        },
+        "timestamp": "2024-10-29T15:13:49.158315"
+    }
+}
