@@ -29,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1695](https://github.com/nf-core/sarek/pull/1695) - Update all modules
 - [1707](https://github.com/nf-core/sarek/pull/1707) - Un-hide parameters and clean up Json schema
 - [1708](https://github.com/nf-core/sarek/pull/1708) - Migrate pipeline pytest alignment and annotation tests to nf-test
+- [1711](https://github.com/nf-core/sarek/pull/1711) - Migrate pipeline pytest strelka tests to nf-test
 
 ### Fixed
 
