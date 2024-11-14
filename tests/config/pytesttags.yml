@@ -35,21 +35,6 @@ sentieon/bwamem:
   - tests/csv/3.0/fastq_single.csv
   - tests/test_sentieon_aligner_bwamem.yml
 
-## markduplicates
-gatk4/markduplicates:
-  - conf/modules/markduplicates.config
-  - modules/nf-core/gatk4/markduplicates/**
-  - modules/nf-core/mosdepth/**
-  - modules/nf-core/samtools/convert/**
-  - modules/nf-core/samtools/index/**
-  - modules/nf-core/samtools/stats/**
-  - subworkflows/local/bam_markduplicates/**
-  - subworkflows/local/cram_qc_mosdepth_samtools/**
-  - tests/csv/3.0/mapped_single_bam.csv
-  - tests/csv/3.0/mapped_single_cram.csv
-  - tests/test_markduplicates_from_bam.yml
-  - tests/test_markduplicates_from_cram.yml
-
 ## sentieon/dedup
 sentieon/dedup:
   - conf/modules/sentieon_dedup.config
@@ -63,34 +48,6 @@ sentieon/dedup:
   - tests/csv/3.0/mapped_single_cram.csv
   - tests/test_sentieon_dedup_from_bam.yml
   - tests/test_sentieon_dedup_from_cram.yml
-
-## prepare_recalibration
-prepare_recalibration:
-  - conf/modules/prepare_recalibration.config
-  - modules/nf-core/gatk4/baserecalibrator/**
-  - modules/nf-core/gatk4/gatherbqsrreports/**
-  - modules/nf-core/mosdepth/**
-  - modules/nf-core/samtools/convert/**
-  - subworkflows/local/bam_baserecalibrator/**
-  - tests/csv/3.0/mapped_single_bam.csv
-  - tests/csv/3.0/mapped_single_cram.csv
-  - tests/test_prepare_recalibration_from_bam.yml
-  - tests/test_prepare_recalibration_from_cram.yml
-
-## recalibrate
-recalibrate:
-  - conf/modules/recalibrate.config
-  - modules/nf-core/gatk4/applybqsr/**
-  - modules/nf-core/samtools/convert/**
-  - modules/nf-core/samtools/index/**
-  - modules/nf-core/samtools/merge/**
-  - modules/nf-core/mosdepth/**
-  - subworkflows/local/bam_applybqsr/**
-  - subworkflows/local/cram_merge_index_samtools/**
-  - tests/csv/3.0/prepare_recalibration_single_bam.csv
-  - tests/csv/3.0/prepare_recalibration_single_cram.csv
-  - tests/test_recalibrate_from_bam.yml
-  - tests/test_recalibrate_from_cram.yml
 
 ## intervals
 intervals:
@@ -356,38 +313,6 @@ mutect2:
   - subworkflows/local/bam_variant_calling_tumor_only_mutect2/**
   - tests/csv/3.0/recalibrated_tumoronly.csv
   - tests/test_mutect2.yml
-
-## strelka
-strelka:
-  - conf/modules/strelka.config
-  - modules/nf-core/gatk4/mergevcfs/**
-  - modules/nf-core/mosdepth/**
-  - modules/nf-core/strelka/germline/**
-  - modules/nf-core/strelka/somatic/**
-  - subworkflows/local/bam_variant_calling_germline_all/**
-  - subworkflows/local/bam_variant_calling_single_strelka/**
-  - subworkflows/local/bam_variant_calling_somatic_all/**
-  - subworkflows/local/bam_variant_calling_somatic_strelka/**
-  - tests/csv/3.0/recalibrated_germline.csv
-  - tests/csv/3.0/recalibrated_somatic.csv
-  - tests/csv/3.0/recalibrated_tumoronly.csv
-  - tests/csv/3.0/recalibrated.csv
-  - tests/test_strelka.yml
-
-## strelka_bp
-strelka_bp:
-  - conf/modules/manta.config
-  - conf/modules/strelka.config
-  - modules/nf-core/gatk4/mergevcfs/**
-  - modules/nf-core/manta/somatic/**
-  - modules/nf-core/mosdepth/**
-  - modules/nf-core/strelka/somatic/**
-  - subworkflows/local/bam_variant_calling_germline_all/**
-  - subworkflows/local/bam_variant_calling_somatic_all/**
-  - subworkflows/local/bam_variant_calling_somatic_manta/**
-  - subworkflows/local/bam_variant_calling_somatic_strelka/**
-  - tests/csv/3.0/recalibrated_somatic.csv
-  - tests/test_strelka_bp.yml
 
 ## lofreq
 lofreq:

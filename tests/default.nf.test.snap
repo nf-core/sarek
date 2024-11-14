@@ -289,7 +289,6 @@
                 "samtools-stats-dp.txt:md5,c94f4d3ffa3f510552f90e173fdd9f9d",
                 "samtools_alignment_plot.txt:md5,717f499a3543e7ee4c7a8454bf80aeca",
                 "vcftools_tstv_by_count.txt:md5,50efc5214fe2c39f21efb66a710d2ed6",
-                "vcftools_tstv_by_qual.txt:md5,911bc05c5169149dbb0b068f65b4274a",
                 "test.strelka.variants.bcftools_stats.txt:md5,86bd4938eed920d36f3f5937102a2967",
                 "test.md.mosdepth.global.dist.txt:md5,b61e1acee11a6ddf7ce3232a5948a6a0",
                 "test.md.mosdepth.region.dist.txt:md5,1a382f98d488d2ae3df83a0d87caafc1",
@@ -304,8 +303,7 @@
                 "test.md.cram.stats:md5,7d19da3fc342afe0884c944f97a578b1",
                 "test.recal.cram.stats:md5,820d123e746d1abdc90fd8710828082e",
                 "test.strelka.variants.FILTER.summary:md5,ad417bc96d31223f61170987975d8128",
-                "test.strelka.variants.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a",
-                "test.strelka.variants.TsTv.qual:md5,bc68ae4e688e9fb772b457069e604883"
+                "test.strelka.variants.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a"
             ],
             [
                 [
@@ -320,8 +318,8 @@
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.09.0"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-10-08T12:09:25.505363"
+        "timestamp": "2024-11-09T21:41:27.897118"
     }
 }
