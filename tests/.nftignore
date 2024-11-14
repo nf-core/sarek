@@ -22,3 +22,4 @@ reports/markduplicates/**/*.md.cram.metrics
 reports/snpeff/*/*_snpEff.csv
 reports/snpeff/*/snpEff_summary.html
 variant_calling/**/*.vcf.{gz,gz.tbi}
+variant_calling/controlfreec/*/config.txt

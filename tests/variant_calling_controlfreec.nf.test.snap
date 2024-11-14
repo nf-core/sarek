@@ -97,7 +97,6 @@
                 "sample4.recal.regions.bed.gz.csi:md5,538cb5d244411a670a4b041691f8825b",
                 "sample3.recal.cram.stats:md5,bcc229318527e414e69aaa5cd092ad9b",
                 "sample4.recal.cram.stats:md5,0d1784cb4c3f14b9858247ac6128dd03",
-                "config.txt:md5,79c6425fb06e9682f0f82d2218fc4557",
                 "sample4_vs_sample3.bed:md5,47f60179409e9389e59b2e2525e42210",
                 "sample4_vs_sample3.circos.txt:md5,68addb1d8bda08355842bef0ab15cd6e",
                 "sample4_vs_sample3.normal.mpileup.gz_control.cpn:md5,d50bf2c9a4d35f022364901c284e80ed",
@@ -113,7 +112,7 @@
                 "sample4_vs_sample3_ratio.png:md5,6ac35ba93babc019c2d863f7e06b49b1"
             ],
             [
-                
+
             ]
         ],
         "meta": {
@@ -198,7 +197,6 @@
                 "sample2.recal.per-base.bed.gz:md5,39a1bc436aa8546c26faedbe94cb676c",
                 "sample2.recal.per-base.bed.gz.csi:md5,aaa7bed9e7ef873b23bca249b8b58eb9",
                 "sample2.recal.cram.stats:md5,0d1784cb4c3f14b9858247ac6128dd03",
-                "config.txt:md5,7d15a416ba3d3c2a4d4255e48152937f",
                 "sample2.bed:md5,5249f46e614b60867bdd6b9b83327979",
                 "sample2.circos.txt:md5,2efab24d023931cec8b158c56d1f1765",
                 "sample2.p.value.txt:md5,38c8c9ad33a4fca3804a34d5c436cd1e",
@@ -213,7 +211,7 @@
                 "sample2_ratio.png:md5,47fce58116c63d6cad34f80575e34e43"
             ],
             [
-                
+
             ]
         ],
         "meta": {
