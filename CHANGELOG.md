@@ -110,7 +110,7 @@ Loametjåhkkå is another one of the main peaks of the Pårte massif.
 ### Added
 
 - [#1502](https://github.com/nf-core/sarek/pull/1502) - export CNVs into VCF format in `bam_variant_calling_cnvkit`
-- [#1534](https://github.com/nf-core/sarek/pull/1534), [#1573](https://github.com/nf-core/sarek/pull/1573) - Handling `.fastq.gz.spring` files as input
+- [#1534](https://github.com/nf-core/sarek/pull/1534), [#1573](https://github.com/nf-core/sarek/pull/1573), [#1734](https://github.com/nf-core/sarek/pull/1534) - Handling `.fastq.gz.spring` files as input
 - [#1593](https://github.com/nf-core/sarek/pull/1593) - Prepare release `3.4.2`
 
 ### Changed
