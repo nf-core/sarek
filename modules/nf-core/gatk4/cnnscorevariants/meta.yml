@@ -14,65 +14,74 @@ tools:
       documentation: https://gatk.broadinstitute.org/hc/en-us/categories/360002369672s
       doi: 10.1158/1538-7445.AM2017-3590
       licence: ["Apache-2.0"]
+      identifier: ""
 input:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
-  - vcf:
-      type: file
-      description: VCF file
-      pattern: "*.vcf.gz"
-  - tbi:
-      type: file
-      description: VCF index file
-      pattern: "*.vcf.gz.tbi"
-  - aligned_input:
-      type: file
-      description: BAM/CRAM file from alignment (optional)
-      pattern: "*.{bam,cram}"
-  - intervals:
-      type: file
-      description: Bed file with the genomic regions included in the library (optional)
-  - fasta:
-      type: file
-      description: The reference fasta file
-      pattern: "*.fasta"
-  - fai:
-      type: file
-      description: Index of reference fasta file
-      pattern: "*.fasta.fai"
-  - dict:
-      type: file
-      description: GATK sequence dictionary
-      pattern: "*.dict"
-  - architecture:
-      type: file
-      description: Neural Net architecture configuration json file (optional)
-      pattern: "*.json"
-  - weights:
-      type: file
-      description: Keras model HD5 file with neural net weights. (optional)
-      pattern: "*.hd5"
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - vcf:
+        type: file
+        description: VCF file
+        pattern: "*.vcf.gz"
+    - tbi:
+        type: file
+        description: VCF index file
+        pattern: "*.vcf.gz.tbi"
+    - aligned_input:
+        type: file
+        description: BAM/CRAM file from alignment (optional)
+        pattern: "*.{bam,cram}"
+    - intervals:
+        type: file
+        description: Bed file with the genomic regions included in the library (optional)
+  - - fasta:
+        type: file
+        description: The reference fasta file
+        pattern: "*.fasta"
+  - - fai:
+        type: file
+        description: Index of reference fasta file
+        pattern: "*.fasta.fai"
+  - - dict:
+        type: file
+        description: GATK sequence dictionary
+        pattern: "*.dict"
+  - - architecture:
+        type: file
+        description: Neural Net architecture configuration json file (optional)
+        pattern: "*.json"
+  - - weights:
+        type: file
+        description: Keras model HD5 file with neural net weights. (optional)
+        pattern: "*.hd5"
 output:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
-  - versions:
-      type: file
-      description: File containing software versions
-      pattern: "versions.yml"
   - vcf:
-      type: file
-      description: Annotated VCF file
-      pattern: "*.vcf"
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*cnn.vcf.gz":
+          type: file
+          description: Annotated VCF file
+          pattern: "*.vcf"
   - tbi:
-      type: file
-      description: VCF index file
-      pattern: "*.vcf.gz.tbi"
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*cnn.vcf.gz.tbi":
+          type: file
+          description: VCF index file
+          pattern: "*.vcf.gz.tbi"
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@FriederikeHanssen"
 maintainers:

@@ -70,9 +70,9 @@ nextflow_process {
                     path(process.out.BAF.get(0).get(1)).readLines()[0],
                     path(process.out.ratio.get(0).get(1)).readLines()[0],
                     path(process.out.config.get(0).get(1)).readLines()[0],
-                    path(process.out.info.get(0).get(1)).readLines()[0]
-                    ).match() },
-                { assert snapshot(process.out.versions).match("version") }
+                    path(process.out.info.get(0).get(1)).readLines()[0],
+                    process.out.versions
+                    ).match() }
             )
         }
 
@@ -159,7 +159,5 @@ nextflow_process {
                 { assert snapshot(process.out).match() }
             )
         }
-
     }
-
 }

@@ -8,13 +8,15 @@ process BCFTOOLS_ANNOTATE {
         'biocontainers/bcftools:1.20--h8b25389_0' }"
 
     input:
-    tuple val(meta), path(input)
+    tuple val(meta), path(input), path(index)
     path annotations
     path annotations_index
     path header_lines
 
     output:
     tuple val(meta), path("*.{vcf,vcf.gz,bcf,bcf.gz}"), emit: vcf
+    tuple val(meta), path("*.tbi")                    , emit: tbi, optional: true
+    tuple val(meta), path("*.csi")                    , emit: csi, optional: true
     path "versions.yml"                               , emit: versions
 
     when:
@@ -30,11 +32,11 @@ process BCFTOOLS_ANNOTATE {
                     args.contains("--output-type z") || args.contains("-Oz") ? "vcf.gz" :
                     args.contains("--output-type v") || args.contains("-Ov") ? "vcf" :
                     "vcf"
+    def index_command = !index ? "bcftools index $input" : ''
+
     if ("$input" == "${prefix}.${extension}") error "Input and output names are the same, set prefix in module configuration to disambiguate!"
     """
-    bcftools \\
-        index \\
-        $input
+    $index_command
 
     bcftools \\
         annotate \\
@@ -59,10 +61,16 @@ process BCFTOOLS_ANNOTATE {
                     args.contains("--output-type z") || args.contains("-Oz") ? "vcf.gz" :
                     args.contains("--output-type v") || args.contains("-Ov") ? "vcf" :
                     "vcf"
-
+    def index_extension = args.contains("--write-index=tbi") || args.contains("-W=tbi") ? "tbi" :
+                        args.contains("--write-index=csi") || args.contains("-W=csi") ? "csi" :
+                        args.contains("--write-index") || args.contains("-W") ? "csi" :
+                        ""
     def create_cmd = extension.endsWith(".gz") ? "echo '' | gzip >" : "touch"
+    def create_index = extension.endsWith(".gz") && index_extension.matches("csi|tbi") ? "touch ${prefix}.${extension}.${index_extension}" : ""
+
     """
     ${create_cmd} ${prefix}.${extension}
+    ${create_index}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

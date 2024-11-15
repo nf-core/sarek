@@ -1,10 +1,7 @@
-name: svdb_merge
 channels:
   - conda-forge
   - bioconda
-  - defaults
+
 dependencies:
-  - svdb=2.8.1
-  # renovate: datasource=conda depName=bioconda/samtools
-  - samtools=1.19.2
-  - htslib=1.19.1
+  - bcftools=1.21
+  - svdb=2.8.2

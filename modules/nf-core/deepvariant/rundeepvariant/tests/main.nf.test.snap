@@ -1,0 +1,358 @@
+{
+    "homo_sapiens - [bam, bai] - fasta_gz - fasta_gz_fai": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_out.vcf.gz:md5,8b8ab4a675f01e437aa72e1438a717d0"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_out.vcf.gz.tbi:md5,0000833138104e87b05eaa906821eb21"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_out.g.vcf.gz:md5,0a629e1745926cfcedf4b169046a921a"
+                    ]
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_out.g.vcf.gz.tbi:md5,49503913c28ec70a6f4aa52f6b357b4d"
+                    ]
+                ],
+                "4": [
+                    "versions.yml:md5,a251d8d9f5e8b737d8298eead96c0890"
+                ],
+                "gvcf": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_out.g.vcf.gz:md5,0a629e1745926cfcedf4b169046a921a"
+                    ]
+                ],
+                "gvcf_tbi": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_out.g.vcf.gz.tbi:md5,49503913c28ec70a6f4aa52f6b357b4d"
+                    ]
+                ],
+                "vcf": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_out.vcf.gz:md5,8b8ab4a675f01e437aa72e1438a717d0"
+                    ]
+                ],
+                "vcf_tbi": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_out.vcf.gz.tbi:md5,0000833138104e87b05eaa906821eb21"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,a251d8d9f5e8b737d8298eead96c0890"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-08-29T11:36:27.325363"
+    },
+    "homo_sapiens - [bam, bai] - fasta - fai": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_out.vcf.gz:md5,8b8ab4a675f01e437aa72e1438a717d0"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_out.vcf.gz.tbi:md5,0000833138104e87b05eaa906821eb21"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_out.g.vcf.gz:md5,0a629e1745926cfcedf4b169046a921a"
+                    ]
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_out.g.vcf.gz.tbi:md5,49503913c28ec70a6f4aa52f6b357b4d"
+                    ]
+                ],
+                "4": [
+                    "versions.yml:md5,a251d8d9f5e8b737d8298eead96c0890"
+                ],
+                "gvcf": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_out.g.vcf.gz:md5,0a629e1745926cfcedf4b169046a921a"
+                    ]
+                ],
+                "gvcf_tbi": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_out.g.vcf.gz.tbi:md5,49503913c28ec70a6f4aa52f6b357b4d"
+                    ]
+                ],
+                "vcf": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_out.vcf.gz:md5,8b8ab4a675f01e437aa72e1438a717d0"
+                    ]
+                ],
+                "vcf_tbi": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_out.vcf.gz.tbi:md5,0000833138104e87b05eaa906821eb21"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,a251d8d9f5e8b737d8298eead96c0890"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-08-29T11:34:41.779153"
+    },
+    "homo_sapiens - [cram, crai, genome_bed] - fasta - fai": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_out.vcf.gz:md5,8b8ab4a675f01e437aa72e1438a717d0"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_out.vcf.gz.tbi:md5,0000833138104e87b05eaa906821eb21"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_out.g.vcf.gz:md5,0a629e1745926cfcedf4b169046a921a"
+                    ]
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_out.g.vcf.gz.tbi:md5,49503913c28ec70a6f4aa52f6b357b4d"
+                    ]
+                ],
+                "4": [
+                    "versions.yml:md5,a251d8d9f5e8b737d8298eead96c0890"
+                ],
+                "gvcf": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_out.g.vcf.gz:md5,0a629e1745926cfcedf4b169046a921a"
+                    ]
+                ],
+                "gvcf_tbi": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_out.g.vcf.gz.tbi:md5,49503913c28ec70a6f4aa52f6b357b4d"
+                    ]
+                ],
+                "vcf": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_out.vcf.gz:md5,8b8ab4a675f01e437aa72e1438a717d0"
+                    ]
+                ],
+                "vcf_tbi": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_out.vcf.gz.tbi:md5,0000833138104e87b05eaa906821eb21"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,a251d8d9f5e8b737d8298eead96c0890"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-08-29T11:35:16.993129"
+    },
+    "homo_sapiens - [cram, crai, genome_bed] - fasta - fai - par_bed": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_out.vcf.gz:md5,d2e26d65dbbcea9b087ed191b5c9841c"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_out.vcf.gz.tbi:md5,0801296d0356415bbf1ef8deb4ec84c3"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_out.g.vcf.gz:md5,4fcaa9a8b55730d191382160c2b5bb0a"
+                    ]
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_out.g.vcf.gz.tbi:md5,f468e846904733b3231ecf00ef7cd4a2"
+                    ]
+                ],
+                "4": [
+                    "versions.yml:md5,a251d8d9f5e8b737d8298eead96c0890"
+                ],
+                "gvcf": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_out.g.vcf.gz:md5,4fcaa9a8b55730d191382160c2b5bb0a"
+                    ]
+                ],
+                "gvcf_tbi": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_out.g.vcf.gz.tbi:md5,f468e846904733b3231ecf00ef7cd4a2"
+                    ]
+                ],
+                "vcf": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_out.vcf.gz:md5,d2e26d65dbbcea9b087ed191b5c9841c"
+                    ]
+                ],
+                "vcf_tbi": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_out.vcf.gz.tbi:md5,0801296d0356415bbf1ef8deb4ec84c3"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,a251d8d9f5e8b737d8298eead96c0890"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-08-29T11:35:52.23093"
+    }
+}

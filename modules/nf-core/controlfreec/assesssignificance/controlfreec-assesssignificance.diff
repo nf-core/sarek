@@ -1,4 +1,5 @@
 Changes in module 'nf-core/controlfreec/assesssignificance'
+Changes in 'controlfreec/assesssignificance/main.nf':
 --- modules/nf-core/controlfreec/assesssignificance/main.nf
 +++ modules/nf-core/controlfreec/assesssignificance/main.nf
 @@ -4,8 +4,8 @@
@@ -31,57 +32,19 @@ Changes in module 'nf-core/controlfreec/assesssignificance'
      touch ${prefix}.p.value.txt
  
 
+'modules/nf-core/controlfreec/assesssignificance/meta.yml' is unchanged
+Changes in 'controlfreec/assesssignificance/environment.yml':
 --- modules/nf-core/controlfreec/assesssignificance/environment.yml
 +++ modules/nf-core/controlfreec/assesssignificance/environment.yml
-@@ -4,4 +4,4 @@
+@@ -2,4 +2,4 @@
+   - conda-forge
    - bioconda
-   - defaults
  dependencies:
 -  - bioconda::control-freec=11.6b
 +  - bioconda::control-freec=11.6
 
---- modules/nf-core/controlfreec/assesssignificance/tests/main.nf.test.snap
-+++ modules/nf-core/controlfreec/assesssignificance/tests/main.nf.test.snap
-@@ -13,7 +13,7 @@
-                     ]
-                 ],
-                 "1": [
--                    "versions.yml:md5,81750d0b4c0e563bd392720d09ae024f"
-+                    "versions.yml:md5,0a11399a3318a7c75460c4eb71d58766"
-                 ],
-                 "p_value_txt": [
-                     [
-@@ -26,26 +26,26 @@
-                     ]
-                 ],
-                 "versions": [
--                    "versions.yml:md5,81750d0b4c0e563bd392720d09ae024f"
-+                    "versions.yml:md5,0a11399a3318a7c75460c4eb71d58766"
-                 ]
-             }
-         ],
-         "meta": {
-             "nf-test": "0.8.4",
--            "nextflow": "23.10.0"
-+            "nextflow": "24.02.0"
-         },
--        "timestamp": "2024-03-26T16:24:34.84551"
-+        "timestamp": "2024-04-05T16:15:36.357267"
-     },
-     "version": {
-         "content": [
-             [
--                "versions.yml:md5,81750d0b4c0e563bd392720d09ae024f"
-+                "versions.yml:md5,0a11399a3318a7c75460c4eb71d58766"
-             ]
-         ],
-         "meta": {
-             "nf-test": "0.8.4",
--            "nextflow": "23.10.0"
-+            "nextflow": "24.02.0"
-         },
--        "timestamp": "2024-03-26T17:23:22.833417"
-+        "timestamp": "2024-04-05T16:14:54.943475"
-     }
- }
+'modules/nf-core/controlfreec/assesssignificance/tests/main.nf.test.snap' is unchanged
+'modules/nf-core/controlfreec/assesssignificance/tests/nextflow.config' is unchanged
+'modules/nf-core/controlfreec/assesssignificance/tests/main.nf.test' is unchanged
+'modules/nf-core/controlfreec/assesssignificance/tests/tags.yml' is unchanged
 ************************************************************

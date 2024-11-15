@@ -15,61 +15,65 @@ tools:
         Our software improves upon BWA, STAR, Minimap2, GATK, HaplotypeCaller, Mutect, and Mutect2 based pipelines and is deployable on any generic-CPU-based computing system.
       homepage: https://www.sentieon.com/
       documentation: https://www.sentieon.com/
+      identifier: ""
 input:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing reference information.
-        e.g. [ id:'test', single_end:false ]
-  - reads:
-      type: file
-      description: Genome fastq files (single-end or paired-end)
-  - meta2:
-      type: map
-      description: |
-        Groovy Map containing reference information.
-        e.g. [ id:'test', single_end:false ]
-  - index:
-      type: file
-      description: BWA genome index files
-      pattern: "*.{amb,ann,bwt,pac,sa}"
-  - meta3:
-      type: map
-      description: |
-        Groovy Map containing reference information.
-        e.g. [ id:'test', single_end:false ]
-  - fasta:
-      type: file
-      description: Genome fasta file
-      pattern: "*.{fa,fasta}"
-  - meta4:
-      type: map
-      description: |
-        Groovy Map containing reference information.
-        e.g. [ id:'test', single_end:false ]
-  - fasta_fai:
-      type: file
-      description: The index of the FASTA reference.
-      pattern: "*.fai"
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing reference information.
+          e.g. [ id:'test', single_end:false ]
+    - reads:
+        type: file
+        description: Genome fastq files (single-end or paired-end)
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing reference information.
+          e.g. [ id:'test', single_end:false ]
+    - index:
+        type: file
+        description: BWA genome index files
+        pattern: "*.{amb,ann,bwt,pac,sa}"
+  - - meta3:
+        type: map
+        description: |
+          Groovy Map containing reference information.
+          e.g. [ id:'test', single_end:false ]
+    - fasta:
+        type: file
+        description: Genome fasta file
+        pattern: "*.{fa,fasta}"
+  - - meta4:
+        type: map
+        description: |
+          Groovy Map containing reference information.
+          e.g. [ id:'test', single_end:false ]
+    - fasta_fai:
+        type: file
+        description: The index of the FASTA reference.
+        pattern: "*.fai"
 output:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing reference information.
-        e.g. [ id:'test', single_end:false ]
-  - bam:
-      type: file
-      description: BAM file.
-      pattern: "*.bam"
-  - bai:
-      type: file
-      description: BAI file
-      pattern: "*.bai"
+  - bam_and_bai:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing reference information.
+            e.g. [ id:'test', single_end:false ]
+      - ${prefix}:
+          type: file
+          description: BAM file with corresponding index.
+          pattern: "*.{bam,bai}"
+      - ${prefix}.{bai,crai}:
+          type: file
+          description: BAM file with corresponding index.
+          pattern: "*.{bam,bai}"
   - versions:
-      type: file
-      description: File containing software versions
-      pattern: "versions.yml"
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@asp8200"
 maintainers:
   - "@asp8200"
+  - "@DonFreed"

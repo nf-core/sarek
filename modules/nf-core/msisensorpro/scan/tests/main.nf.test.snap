@@ -1,0 +1,72 @@
+{
+    "test-msisensorpro-scan-stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.msisensor_scan.list:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,e99820cdb69a600f5919ee1d7d5d1c3f"
+                ],
+                "list": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.msisensor_scan.list:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,e99820cdb69a600f5919ee1d7d5d1c3f"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-05T16:44:21.450285"
+    },
+    "test-msisensorpro-scan": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.msisensor_scan.list:md5,309d41b136993db24a9f3dade877753b"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,e99820cdb69a600f5919ee1d7d5d1c3f"
+                ],
+                "list": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.msisensor_scan.list:md5,309d41b136993db24a9f3dade877753b"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,e99820cdb69a600f5919ee1d7d5d1c3f"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-05T16:44:09.684249"
+    }
+}

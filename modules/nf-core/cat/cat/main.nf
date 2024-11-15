@@ -76,4 +76,3 @@ def getFileSuffix(filename) {
     def match = filename =~ /^.*?((\.\w{1,5})?(\.\w{1,5}\.gz$))/
     return match ? match[0][1] : filename.substring(filename.lastIndexOf('.'))
 }
-

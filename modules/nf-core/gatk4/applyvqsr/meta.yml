@@ -19,57 +19,72 @@ tools:
       documentation: https://gatk.broadinstitute.org/hc/en-us/categories/360002369672s
       doi: 10.1158/1538-7445.AM2017-3590
       licence: ["Apache-2.0"]
+      identifier: ""
 input:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test']
-  - vcf:
-      type: file
-      description: VCF file to be recalibrated, this should be the same file as used for the first stage VariantRecalibrator.
-      pattern: "*.vcf"
-  - vcf_tbi:
-      type: file
-      description: tabix index for the input vcf file.
-      pattern: "*.vcf.tbi"
-  - recal:
-      type: file
-      description: Recalibration file produced when the input vcf was run through VariantRecalibrator in stage 1.
-      pattern: "*.recal"
-  - recal_index:
-      type: file
-      description: Index file for the recalibration file.
-      pattern: ".recal.idx"
-  - tranches:
-      type: file
-      description: Tranches file produced when the input vcf was run through VariantRecalibrator in stage 1.
-      pattern: ".tranches"
-  - fasta:
-      type: file
-      description: The reference fasta file
-      pattern: "*.fasta"
-  - fai:
-      type: file
-      description: Index of reference fasta file
-      pattern: "*.fasta.fai"
-  - dict:
-      type: file
-      description: GATK sequence dictionary
-      pattern: "*.dict"
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test']
+    - vcf:
+        type: file
+        description: VCF file to be recalibrated, this should be the same file as used
+          for the first stage VariantRecalibrator.
+        pattern: "*.vcf"
+    - vcf_tbi:
+        type: file
+        description: tabix index for the input vcf file.
+        pattern: "*.vcf.tbi"
+    - recal:
+        type: file
+        description: Recalibration file produced when the input vcf was run through
+          VariantRecalibrator in stage 1.
+        pattern: "*.recal"
+    - recal_index:
+        type: file
+        description: Index file for the recalibration file.
+        pattern: ".recal.idx"
+    - tranches:
+        type: file
+        description: Tranches file produced when the input vcf was run through VariantRecalibrator
+          in stage 1.
+        pattern: ".tranches"
+  - - fasta:
+        type: file
+        description: The reference fasta file
+        pattern: "*.fasta"
+  - - fai:
+        type: file
+        description: Index of reference fasta file
+        pattern: "*.fasta.fai"
+  - - dict:
+        type: file
+        description: GATK sequence dictionary
+        pattern: "*.dict"
 output:
   - vcf:
-      type: file
-      description: compressed vcf file containing the recalibrated variants.
-      pattern: "*.vcf.gz"
+      - meta:
+          type: file
+          description: compressed vcf file containing the recalibrated variants.
+          pattern: "*.vcf.gz"
+      - "*.vcf.gz":
+          type: file
+          description: compressed vcf file containing the recalibrated variants.
+          pattern: "*.vcf.gz"
   - tbi:
-      type: file
-      description: Index of recalibrated vcf file.
-      pattern: "*vcf.gz.tbi"
+      - meta:
+          type: file
+          description: Index of recalibrated vcf file.
+          pattern: "*vcf.gz.tbi"
+      - "*.tbi":
+          type: file
+          description: Index of recalibrated vcf file.
+          pattern: "*vcf.gz.tbi"
   - versions:
-      type: file
-      description: File containing software versions.
-      pattern: "versions.yml"
+      - versions.yml:
+          type: file
+          description: File containing software versions.
+          pattern: "versions.yml"
 authors:
   - "@GCJMackenzie"
 maintainers:
