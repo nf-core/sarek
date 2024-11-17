@@ -180,7 +180,6 @@
                 "multiqc_bcftools_stats.txt:md5,5c9c75a7ba51eec6d7ed539a5d0a2397",
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
                 "vcftools_tstv_by_count.txt:md5,d5919b93082809cb0663b16ce1f0f60e",
-                "vcftools_tstv_by_qual.txt:md5,ad9f0e77ff15fb86ddad62e088389e26",
                 "sample3.manta.diploid_sv.bcftools_stats.txt:md5,8adad91e1c8dc8db63cf9b3607bee3a0",
                 "sample4_vs_sample3.manta.diploid_sv.bcftools_stats.txt:md5,17dc847445b98885bc18622f862f44d9",
                 "sample4_vs_sample3.manta.somatic_sv.bcftools_stats.txt:md5,a8660b352950f0b32768fcbbd6b48896",
@@ -201,32 +200,26 @@
                 "sample4.recal.cram.stats:md5,0d1784cb4c3f14b9858247ac6128dd03",
                 "sample3.manta.diploid_sv.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "sample3.manta.diploid_sv.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a",
-                "sample3.manta.diploid_sv.TsTv.qual:md5,bc68ae4e688e9fb772b457069e604883",
                 "sample4_vs_sample3.manta.diploid_sv.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "sample4_vs_sample3.manta.diploid_sv.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a",
-                "sample4_vs_sample3.manta.diploid_sv.TsTv.qual:md5,bc68ae4e688e9fb772b457069e604883",
                 "sample4_vs_sample3.manta.somatic_sv.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "sample4_vs_sample3.manta.somatic_sv.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f",
-                "sample4_vs_sample3.manta.somatic_sv.TsTv.qual:md5,bc68ae4e688e9fb772b457069e604883",
                 "sample3.strelka.variants.FILTER.summary:md5,8697a0a983314e98b99b5f6038af65f6",
                 "sample3.strelka.variants.TsTv.count:md5,1481854d2a765f5641856ecf95ca4097",
-                "sample3.strelka.variants.TsTv.qual:md5,fd8e449a715922e24fe4ea9c89870432",
                 "sample4_vs_sample3.strelka.somatic_indels.FILTER.summary:md5,30a45e2bc87f40c89388032cbf75ec65",
                 "sample4_vs_sample3.strelka.somatic_indels.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f",
-                "sample4_vs_sample3.strelka.somatic_indels.TsTv.qual:md5,bc68ae4e688e9fb772b457069e604883",
                 "sample4_vs_sample3.strelka.somatic_snvs.FILTER.summary:md5,7a81b11aa29fec73d5bc872b7b58f8aa",
-                "sample4_vs_sample3.strelka.somatic_snvs.TsTv.count:md5,a922c51ca3b2ea7cdcfa09e9c8c55d52",
-                "sample4_vs_sample3.strelka.somatic_snvs.TsTv.qual:md5,75af7d1b1e5a2f1bdfe5b530e37a6cbb"
+                "sample4_vs_sample3.strelka.somatic_snvs.TsTv.count:md5,a922c51ca3b2ea7cdcfa09e9c8c55d52"
             ],
             [
-
+                
             ]
         ],
         "meta": {
-            "nf-test": "0.9.1",
+            "nf-test": "0.9.0",
             "nextflow": "24.10.0"
         },
-        "timestamp": "2024-10-29T14:39:02.340325"
+        "timestamp": "2024-11-15T22:39:15.50268779"
     },
     "Run with profile test | --tools manta,strelka | somatic": {
         "content": [
@@ -406,7 +399,6 @@
                 "multiqc_bcftools_stats.txt:md5,97bac5dbfe6cb21a78ca7f7327655b65",
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
                 "vcftools_tstv_by_count.txt:md5,27388870c36896df470e2f5aa982332e",
-                "vcftools_tstv_by_qual.txt:md5,7b7b2f5ce5b9d129a7e3d775de29b9b1",
                 "sample3.manta.diploid_sv.bcftools_stats.txt:md5,8adad91e1c8dc8db63cf9b3607bee3a0",
                 "sample4_vs_sample3.manta.diploid_sv.bcftools_stats.txt:md5,17dc847445b98885bc18622f862f44d9",
                 "sample4_vs_sample3.manta.somatic_sv.bcftools_stats.txt:md5,a8660b352950f0b32768fcbbd6b48896",
@@ -427,31 +419,25 @@
                 "sample4.recal.cram.stats:md5,0d1784cb4c3f14b9858247ac6128dd03",
                 "sample3.manta.diploid_sv.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "sample3.manta.diploid_sv.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a",
-                "sample3.manta.diploid_sv.TsTv.qual:md5,bc68ae4e688e9fb772b457069e604883",
                 "sample4_vs_sample3.manta.diploid_sv.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "sample4_vs_sample3.manta.diploid_sv.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a",
-                "sample4_vs_sample3.manta.diploid_sv.TsTv.qual:md5,bc68ae4e688e9fb772b457069e604883",
                 "sample4_vs_sample3.manta.somatic_sv.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "sample4_vs_sample3.manta.somatic_sv.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f",
-                "sample4_vs_sample3.manta.somatic_sv.TsTv.qual:md5,bc68ae4e688e9fb772b457069e604883",
                 "sample3.strelka.variants.FILTER.summary:md5,fef8aeadd3b0f3b8c040c0da03bf1cbd",
                 "sample3.strelka.variants.TsTv.count:md5,c5b7a8eda2526d899098439ae4c06a49",
-                "sample3.strelka.variants.TsTv.qual:md5,f01534408c3a87893b523de5f39deb0b",
                 "sample4_vs_sample3.strelka.somatic_indels.FILTER.summary:md5,30a45e2bc87f40c89388032cbf75ec65",
                 "sample4_vs_sample3.strelka.somatic_indels.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f",
-                "sample4_vs_sample3.strelka.somatic_indels.TsTv.qual:md5,bc68ae4e688e9fb772b457069e604883",
                 "sample4_vs_sample3.strelka.somatic_snvs.FILTER.summary:md5,4fc17fa5625b4d1dcc5d791b1eb22d85",
-                "sample4_vs_sample3.strelka.somatic_snvs.TsTv.count:md5,fc7af1f534890c4ad3025588b3af62ae",
-                "sample4_vs_sample3.strelka.somatic_snvs.TsTv.qual:md5,75af7d1b1e5a2f1bdfe5b530e37a6cbb"
+                "sample4_vs_sample3.strelka.somatic_snvs.TsTv.count:md5,fc7af1f534890c4ad3025588b3af62ae"
             ],
             [
-
+                
             ]
         ],
         "meta": {
-            "nf-test": "0.9.1",
+            "nf-test": "0.9.0",
             "nextflow": "24.10.0"
         },
-        "timestamp": "2024-10-29T14:36:40.89285"
+        "timestamp": "2024-11-15T22:37:23.231917992"
     }
 }
