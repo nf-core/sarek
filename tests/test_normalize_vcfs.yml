@@ -1,5 +1,5 @@
 - name: Run all variant callers and check for existence of normalized vcf-files
-  command: nextflow run main.nf -profile test --input ./tests/csv/3.0/mapped_joint_bam.csv --normalize_vcfs --tools deepvariant,freebayes,haplotypecaller,manta,mpileup,strelka,tiddit --step variant_calling --outdir results
+  command: nextflow run main.nf -profile test,docker --input ./tests/csv/3.0/mapped_joint_bam.csv --normalize_vcfs --tools deepvariant,freebayes,haplotypecaller,manta,mpileup,strelka,tiddit --step variant_calling --outdir results
   tags:
     - normalize_vcfs
   files:
