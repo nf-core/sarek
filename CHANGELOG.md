@@ -42,6 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1695](https://github.com/nf-core/sarek/pull/1695) - Fix and update input_schema.json
 - [1702](https://github.com/nf-core/sarek/pull/1702) - Update nf-schema tests that were not failing on lenient mode
 - [1712](https://github.com/nf-core/sarek/pull/1712) - Fix missing import statements on error messages when starting without samplesheet
+- [1733](https://github.com/nf-core/sarek/pull/1733) - Use original quality values if DeepVariant is run on recalibrated data
 
 ### Removed
 
