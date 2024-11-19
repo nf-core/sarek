@@ -41,7 +41,6 @@ include { FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON          } from '../../subwor
 include { BAM_MERGE_INDEX_SAMTOOLS                          } from '../../subworkflows/local/bam_merge_index_samtools/main'
 
 // Convert BAM files
-include { SAMTOOLS_CONVERT as BAM_TO_CRAM                   } from '../../modules/nf-core/samtools/convert/main'
 include { SAMTOOLS_CONVERT as BAM_TO_CRAM_MAPPING           } from '../../modules/nf-core/samtools/convert/main'
 
 // Convert CRAM files (optional)
@@ -387,16 +386,7 @@ workflow SAREK {
             if (params.step == 'mapping') {
                 cram_skip_markduplicates = BAM_TO_CRAM_MAPPING.out.cram.join(BAM_TO_CRAM_MAPPING.out.crai, failOnDuplicate: true, failOnMismatch: true)
             } else {
-                input_markduplicates_convert = input_sample.branch{
-                    bam:  it[0].data_type == "bam"
-                    cram: it[0].data_type == "cram"
-                }
-
-                // Convert any input BAMs to CRAM
-                BAM_TO_CRAM(input_markduplicates_convert.bam, fasta, fasta_fai)
-                versions = versions.mix(BAM_TO_CRAM.out.versions)
-
-                cram_skip_markduplicates = Channel.empty().mix(input_markduplicates_convert.cram, BAM_TO_CRAM.out.cram.join(BAM_TO_CRAM.out.crai, failOnDuplicate: true, failOnMismatch: true))
+                cram_skip_markduplicates = Channel.empty().mix(input_sample)
             }
 
             CRAM_QC_NO_MD(cram_skip_markduplicates, fasta, intervals_for_preprocessing)
@@ -478,22 +468,10 @@ workflow SAREK {
         // Run if starting from step "prepare_recalibration"
         if (params.step == 'prepare_recalibration') {
 
-            // Support if starting from BAM or CRAM files
-            input_prepare_recal_convert = input_sample.branch{
-                bam: it[0].data_type == "bam"
-                cram: it[0].data_type == "cram"
-            }
+            ch_cram_for_bam_baserecalibrator = Channel.empty().mix(input_sample)
 
-            // BAM files first must be converted to CRAM files since from this step on we base everything on CRAM format
-            BAM_TO_CRAM(input_prepare_recal_convert.bam, fasta, fasta_fai)
-            versions = versions.mix(BAM_TO_CRAM.out.versions)
-
-            ch_cram_from_bam = BAM_TO_CRAM.out.cram.join(BAM_TO_CRAM.out.crai, failOnDuplicate: true, failOnMismatch: true)
-                // Make sure correct data types are carried through
-                .map{ meta, cram, crai -> [ meta + [data_type: "cram"], cram, crai ] }
-
-            ch_cram_for_bam_baserecalibrator = Channel.empty().mix(ch_cram_from_bam, input_prepare_recal_convert.cram)
-            ch_md_cram_for_restart = ch_cram_from_bam
+            // Set the input samples for restart so we generate a samplesheet that contains the input files together with the recalibration table
+            ch_md_cram_for_restart           = ch_cram_for_bam_baserecalibrator
 
         } else {
 
@@ -567,27 +545,8 @@ workflow SAREK {
         // Run if starting from step "prepare_recalibration"
         if (params.step == 'recalibrate') {
 
-            // Support if starting from BAM or CRAM files
-            input_recal_convert = input_sample.branch{
-                bam:  it[0].data_type == "bam"
-                cram: it[0].data_type == "cram"
-            }
+            cram_applybqsr = Channel.empty().mix(input_sample)
 
-            // If BAM file, split up table and mapped file to convert BAM to CRAM
-            input_only_table = input_recal_convert.bam.map{ meta, bam, bai, table -> [ meta, table ] }
-            input_only_bam   = input_recal_convert.bam.map{ meta, bam, bai, table -> [ meta, bam, bai ] }
-
-            // BAM files first must be converted to CRAM files since from this step on we base everything on CRAM format
-            BAM_TO_CRAM(input_only_bam, fasta, fasta_fai)
-            versions = versions.mix(BAM_TO_CRAM.out.versions)
-
-            cram_applybqsr = Channel.empty().mix(
-                BAM_TO_CRAM.out.cram.join(BAM_TO_CRAM.out.crai, failOnDuplicate: true, failOnMismatch: true)
-                    .join(input_only_table, failOnDuplicate: true, failOnMismatch: true),
-
-                input_recal_convert.cram)
-                // Join together converted cram with input tables
-                .map{ meta, cram, crai, table -> [ meta + [data_type: "cram"], cram, crai, table ]}
         }
 
         if (!(params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'))) {
@@ -642,9 +601,7 @@ workflow SAREK {
             // cram_variant_calling contains either:
             // - input bams converted to crams, if started from step recal + skip BQSR
             // - input crams if started from step recal + skip BQSR
-            cram_variant_calling = Channel.empty().mix(
-                BAM_TO_CRAM.out.cram.join(BAM_TO_CRAM.out.crai, failOnDuplicate: true, failOnMismatch: true),
-                input_recal_convert.cram.map{ meta, cram, crai, table -> [ meta, cram, crai ] })
+            cram_variant_calling = Channel.empty().mix(input_sample.map{ meta, cram, crai, table -> [ meta, cram, crai ] })
         } else {
             // cram_variant_calling contains either:
             // - crams from markduplicates = ch_cram_for_bam_baserecalibrator if skip BQSR but not started from step recalibration
@@ -654,19 +611,7 @@ workflow SAREK {
 
     if (params.step == 'variant_calling') {
 
-        input_variant_calling_convert = input_sample.branch{
-            bam:  it[0].data_type == "bam"
-            cram: it[0].data_type == "cram"
-        }
-
-        // BAM files first must be converted to CRAM files since from this step on we base everything on CRAM format
-        BAM_TO_CRAM(input_variant_calling_convert.bam, fasta, fasta_fai)
-        versions = versions.mix(BAM_TO_CRAM.out.versions)
-
-        cram_variant_calling = Channel.empty().mix(
-            BAM_TO_CRAM.out.cram.join(BAM_TO_CRAM.out.crai, failOnDuplicate: true, failOnMismatch: true),
-            input_variant_calling_convert.cram
-        )
+        cram_variant_calling = Channel.empty().mix( input_sample )
 
     }
 
