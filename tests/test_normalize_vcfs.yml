@@ -3,7 +3,7 @@
   tags:
     - normalize_vcfs
   files:
-    - path: results/variant_calling/norm/testN/testN.norm.vcf.gz
+    - path: results/variant_calling/normalized/testN/testN.norm.vcf.gz
       # binary changes md5sums on reruns
       contains:
         [
@@ -14,9 +14,9 @@
           "SOURCE=testN.strelka.variants.vcf.gz",
           "SOURCE=testN.bcftools.vcf.gz",
         ]
-    - path: results/variant_calling/norm/testT/testT.norm.vcf.gz
+    - path: results/variant_calling/normalized/testT/testT.norm.vcf.gz
     # binary changes md5sums on reruns
-    - path: results/variant_calling/norm/testN/testN.norm.vcf.gz.tbi
+    - path: results/variant_calling/normalized/testN/testN.norm.vcf.gz.tbi
     # binary changes md5sums on reruns
-    - path: results/variant_calling/norm/testT/testT.norm.vcf.gz.tbi
+    - path: results/variant_calling/normalized/testT/testT.norm.vcf.gz.tbi
     # binary changes md5sums on reruns
