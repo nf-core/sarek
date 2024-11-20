@@ -1,5 +1,5 @@
 - name: Run all germline variant callers and check for existence of concatenated vcf-files
-  command: nextflow run main.nf -profile test,docker --input ./tests/csv/3.0/mapped_joint_bam.csv --concatenate_vcfs --tools deepvariant,freebayes,haplotypecaller,manta,mpileup,strelka,tiddit --step variant_calling --outdir results
+  command: nextflow run main.nf -profile test --input ./tests/csv/3.0/mapped_joint_bam.csv --concatenate_vcfs --tools deepvariant,freebayes,haplotypecaller,manta,mpileup,strelka,tiddit --step variant_calling --outdir results
   tags:
     - concatenate_vcfs
   files:
