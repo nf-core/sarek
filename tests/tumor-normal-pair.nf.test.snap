@@ -331,7 +331,6 @@
                 "samtools-stats-dp.txt:md5,d81e84864ecb732951a137e88d87a263",
                 "samtools_alignment_plot.txt:md5,e757696d1f7107df2bd4ad92f607272e",
                 "vcftools_tstv_by_count.txt:md5,9d3f23467779f62d81573894f71ba0d4",
-                "vcftools_tstv_by_qual.txt:md5,cc9762c7d4ee91803d358d8c386819d9",
                 "test.strelka.variants.bcftools_stats.txt:md5,550430d0b8336ac650b7e50bdfdc914c",
                 "test2_vs_test.strelka.somatic_indels.bcftools_stats.txt:md5,2ce8bffbfbb88c4da6a5239b11dc2f44",
                 "test2_vs_test.strelka.somatic_snvs.bcftools_stats.txt:md5,869e2d3a46760e2bea9b2e027002848d",
@@ -361,13 +360,10 @@
                 "test2.recal.cram.stats:md5,47c5ad8a7d4221d03673fd67388f9960",
                 "test.strelka.variants.FILTER.summary:md5,dd87f507da7de20d5318841af312493b",
                 "test.strelka.variants.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a",
-                "test.strelka.variants.TsTv.qual:md5,bc68ae4e688e9fb772b457069e604883",
                 "test2_vs_test.strelka.somatic_indels.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
                 "test2_vs_test.strelka.somatic_indels.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f",
-                "test2_vs_test.strelka.somatic_indels.TsTv.qual:md5,bc68ae4e688e9fb772b457069e604883",
                 "test2_vs_test.strelka.somatic_snvs.FILTER.summary:md5,1ce42d34e4ae919afb519efc99146423",
-                "test2_vs_test.strelka.somatic_snvs.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f",
-                "test2_vs_test.strelka.somatic_snvs.TsTv.qual:md5,bc68ae4e688e9fb772b457069e604883"
+                "test2_vs_test.strelka.somatic_snvs.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f"
             ],
             [
                 [
@@ -390,8 +386,8 @@
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.09.0"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-10-08T12:12:19.788733"
+        "timestamp": "2024-11-09T18:22:56.125003"
     }
 }
