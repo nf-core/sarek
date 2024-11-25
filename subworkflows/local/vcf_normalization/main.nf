@@ -27,11 +27,8 @@ workflow NORMALIZE_VCFS {
     // Compress the VCF files with bgzip
     TABIX_EXT_VCF(ADD_INFO_TO_VCF.out.vcf)
 
-    // Gather vcfs and vcf-tbis for normalization of vcf-files
-    vcfs_with_tbis = TABIX_EXT_VCF.out.gz_tbi.map{ meta, vcf, tbi -> [ meta.subMap('id'), vcf, tbi ] }.groupTuple()
-
     // Normalize the VCF files with BCFTOOLS_NORM
-    VCFS_NORM(vcfs_with_tbis, fasta)
+    VCFS_NORM(TABIX_EXT_VCF.out.gz_tbi, fasta)
 
     // Sort the normalized VCF files
     VCFS_NORM_SORT(VCFS_NORM.out.vcf)
