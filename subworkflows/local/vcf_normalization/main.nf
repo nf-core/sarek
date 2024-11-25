@@ -44,7 +44,7 @@ workflow NORMALIZE_VCFS {
     versions = versions.mix(TABIX_VCFS_NORM_SORT.out.versions)
 
     emit:
-    vcfs = vcfs_with_tbis // normalized vcfs
+    vcfs = VCFS_NORM_SORT.out.vcf // normalized vcfs
     versions // Channel: [versions.yml]
 }
 
