@@ -15,8 +15,8 @@
           "SOURCE=testN.bcftools.vcf.gz",
         ]
     - path: results/variant_calling/concat/testT/testT.germline.vcf.gz
-    # binary changes md5sums on reruns
+      # binary changes md5sums on reruns
     - path: results/variant_calling/concat/testN/testN.germline.vcf.gz.tbi
-    # binary changes md5sums on reruns
+      # binary changes md5sums on reruns
     - path: results/variant_calling/concat/testT/testT.germline.vcf.gz.tbi
-    # binary changes md5sums on reruns
+      # binary changes md5sums on reruns
