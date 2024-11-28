@@ -2,12 +2,32 @@
   command: nextflow run main.nf -profile test --input ./tests/csv/3.0/mapped_joint_bam.csv --concatenate_vcfs --tools deepvariant,freebayes,haplotypecaller,manta,mpileup,strelka,tiddit --step variant_calling --outdir results
   tags:
     - concatenate_vcfs
-  files:
-    - path: results/variant_calling/concat/testN/testN.${meta.variantcaller}.germline.vcf.gz.
-    # binary changes md5sums on reruns
-    - path: results/variant_calling/concat/testT/testT.${meta.variantcaller}.germline.vcf.gz
-    # binary changes md5sums on reruns
-    - path: results/variant_calling/concat/testN/testN.${meta.variantcaller}.germline.vcf.gz.tbi
-    # binary changes md5sums on reruns
-    - path: results/variant_calling/concat/testT/testT.${meta.variantcaller}.germline.vcf.gz.tbi
-    # binary changes md5sums on reruns
+files:
+    - path: results/variant_calling/concat/testN/testN.deepvariant.germline.vcf.gz
+    - path: results/variant_calling/concat/testT/testT.deepvariant.germline.vcf.gz
+    - path: results/variant_calling/concat/testN/testN.deepvariant.germline.vcf.gz.tbi
+    - path: results/variant_calling/concat/testT/testT.deepvariant.germline.vcf.gz.tbi
+    - path: results/variant_calling/concat/testN/testN.freebayes.germline.vcf.gz
+    - path: results/variant_calling/concat/testT/testT.freebayes.germline.vcf.gz
+    - path: results/variant_calling/concat/testN/testN.freebayes.germline.vcf.gz.tbi
+    - path: results/variant_calling/concat/testT/testT.freebayes.germline.vcf.gz.tbi
+    - path: results/variant_calling/concat/testN/testN.haplotypecaller.germline.vcf.gz
+    - path: results/variant_calling/concat/testT/testT.haplotypecaller.germline.vcf.gz
+    - path: results/variant_calling/concat/testN/testN.haplotypecaller.germline.vcf.gz.tbi
+    - path: results/variant_calling/concat/testT/testT.haplotypecaller.germline.vcf.gz.tbi
+    - path: results/variant_calling/concat/testN/testN.manta.germline.vcf.gz
+    - path: results/variant_calling/concat/testT/testT.manta.germline.vcf.gz
+    - path: results/variant_calling/concat/testN/testN.manta.germline.vcf.gz.tbi
+    - path: results/variant_calling/concat/testT/testT.manta.germline.vcf.gz.tbi
+    - path: results/variant_calling/concat/testN/testN.mpileup.germline.vcf.gz
+    - path: results/variant_calling/concat/testT/testT.mpileup.germline.vcf.gz
+    - path: results/variant_calling/concat/testN/testN.mpileup.germline.vcf.gz.tbi
+    - path: results/variant_calling/concat/testT/testT.mpileup.germline.vcf.gz.tbi
+    - path: results/variant_calling/concat/testN/testN.strelka.germline.vcf.gz
+    - path: results/variant_calling/concat/testT/testT.strelka.germline.vcf.gz
+    - path: results/variant_calling/concat/testN/testN.strelka.germline.vcf.gz.tbi
+    - path: results/variant_calling/concat/testT/testT.strelka.germline.vcf.gz.tbi
+    - path: results/variant_calling/concat/testN/testN.tiddit.germline.vcf.gz
+    - path: results/variant_calling/concat/testT/testT.tiddit.germline.vcf.gz
+    - path: results/variant_calling/concat/testN/testN.tiddit.germline.vcf.gz.tbi
+    - path: results/variant_calling/concat/testT/testT.tiddit.germline.vcf.gz.tbi

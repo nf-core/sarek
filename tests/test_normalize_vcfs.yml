@@ -3,11 +3,32 @@
   tags:
     - normalize_vcfs
   files:
-    - path: results/variant_calling/normalized/testN/testN.${meta.variantcaller}.norm.vcf.gz
-      # binary changes md5sums on reruns
-    - path: results/variant_calling/normalized/testT/testT.${meta.variantcaller}.norm.vcf.gz
-    # binary changes md5sums on reruns
-    - path: results/variant_calling/normalized/testN/testN.${meta.variantcaller}.norm.vcf.gz.tbi
-    # binary changes md5sums on reruns
-    - path: results/variant_calling/normalized/testT/testT.${meta.variantcaller}.norm.vcf.gz.tbi
-    # binary changes md5sums on reruns
+files:
+    - path: results/variant_calling/normalized/testN/testN.deepvariant.norm.vcf.gz
+    - path: results/variant_calling/normalized/testT/testT.deepvariant.norm.vcf.gz
+    - path: results/variant_calling/normalized/testN/testN.deepvariant.norm.vcf.gz.tbi
+    - path: results/variant_calling/normalized/testT/testT.deepvariant.norm.vcf.gz.tbi
+    - path: results/variant_calling/normalized/testN/testN.freebayes.norm.vcf.gz
+    - path: results/variant_calling/normalized/testT/testT.freebayes.norm.vcf.gz
+    - path: results/variant_calling/normalized/testN/testN.freebayes.norm.vcf.gz.tbi
+    - path: results/variant_calling/normalized/testT/testT.freebayes.norm.vcf.gz.tbi
+    - path: results/variant_calling/normalized/testN/testN.haplotypecaller.norm.vcf.gz
+    - path: results/variant_calling/normalized/testT/testT.haplotypecaller.norm.vcf.gz
+    - path: results/variant_calling/normalized/testN/testN.haplotypecaller.norm.vcf.gz.tbi
+    - path: results/variant_calling/normalized/testT/testT.haplotypecaller.norm.vcf.gz.tbi
+    - path: results/variant_calling/normalized/testN/testN.manta.norm.vcf.gz
+    - path: results/variant_calling/normalized/testT/testT.manta.norm.vcf.gz
+    - path: results/variant_calling/normalized/testN/testN.manta.norm.vcf.gz.tbi
+    - path: results/variant_calling/normalized/testT/testT.manta.norm.vcf.gz.tbi
+    - path: results/variant_calling/normalized/testN/testN.mpileup.norm.vcf.gz
+    - path: results/variant_calling/normalized/testT/testT.mpileup.norm.vcf.gz
+    - path: results/variant_calling/normalized/testN/testN.mpileup.norm.vcf.gz.tbi
+    - path: results/variant_calling/normalized/testT/testT.mpileup.norm.vcf.gz.tbi
+    - path: results/variant_calling/normalized/testN/testN.strelka.norm.vcf.gz
+    - path: results/variant_calling/normalized/testT/testT.strelka.norm.vcf.gz
+    - path: results/variant_calling/normalized/testN/testN.strelka.norm.vcf.gz.tbi
+    - path: results/variant_calling/normalized/testT/testT.strelka.norm.vcf.gz.tbi
+    - path: results/variant_calling/normalized/testN/testN.tiddit.norm.vcf.gz
+    - path: results/variant_calling/normalized/testT/testT.tiddit.norm.vcf.gz
+    - path: results/variant_calling/normalized/testN/testN.tiddit.norm.vcf.gz.tbi
+    - path: results/variant_calling/normalized/testT/testT.tiddit.norm.vcf.gz.tbi
