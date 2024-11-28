@@ -22,7 +22,7 @@ workflow CONCATENATE_GERMLINE_VCFS {
     TABIX_EXT_VCF(ADD_INFO_TO_VCF.out.vcf)
 
     // Gather vcfs and vcf-tbis for concatenating germline-vcfs
-    germline_vcfs_with_tbis = TABIX_EXT_VCF.out.gz_tbi.map{ meta, vcf, tbi -> [ meta.subMap('id'), vcf, tbi ] }.groupTuple()
+    germline_vcfs_with_tbis = TABIX_EXT_VCF.out.gz_tbi.groupTuple()
 
     GERMLINE_VCFS_CONCAT(germline_vcfs_with_tbis)
     GERMLINE_VCFS_CONCAT_SORT(GERMLINE_VCFS_CONCAT.out.vcf)

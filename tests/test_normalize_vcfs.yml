@@ -3,11 +3,11 @@
   tags:
     - normalize_vcfs
   files:
-    - path: results/variant_calling/normalized/testN/testN.norm.vcf.gz
+    - path: results/variant_calling/normalized/testN/testN.${meta.variantcaller}.norm.vcf.gz
       # binary changes md5sums on reruns
-    - path: results/variant_calling/normalized/testT/testT.norm.vcf.gz
+    - path: results/variant_calling/normalized/testT/testT.${meta.variantcaller}.norm.vcf.gz
     # binary changes md5sums on reruns
-    - path: results/variant_calling/normalized/testN/testN.norm.vcf.gz.tbi
+    - path: results/variant_calling/normalized/testN/testN.${meta.variantcaller}.norm.vcf.gz.tbi
     # binary changes md5sums on reruns
-    - path: results/variant_calling/normalized/testT/testT.norm.vcf.gz.tbi
+    - path: results/variant_calling/normalized/testT/testT.${meta.variantcaller}.norm.vcf.gz.tbi
     # binary changes md5sums on reruns
