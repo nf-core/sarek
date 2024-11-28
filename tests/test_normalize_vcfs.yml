@@ -19,10 +19,10 @@
     - path: results/variant_calling/normalized/testT/testT.manta.norm.vcf.gz
     - path: results/variant_calling/normalized/testN/testN.manta.norm.vcf.gz.tbi
     - path: results/variant_calling/normalized/testT/testT.manta.norm.vcf.gz.tbi
-    - path: results/variant_calling/normalized/testN/testN.mpileup.norm.vcf.gz
-    - path: results/variant_calling/normalized/testT/testT.mpileup.norm.vcf.gz
-    - path: results/variant_calling/normalized/testN/testN.mpileup.norm.vcf.gz.tbi
-    - path: results/variant_calling/normalized/testT/testT.mpileup.norm.vcf.gz.tbi
+    - path: results/variant_calling/normalized/testN/testN.bcftools.norm.vcf.gz
+    - path: results/variant_calling/normalized/testT/testT.bcftools.norm.vcf.gz
+    - path: results/variant_calling/normalized/testN/testN.bcftools.norm.vcf.gz.tbi
+    - path: results/variant_calling/normalized/testT/testT.bcftools.norm.vcf.gz.tbi
     - path: results/variant_calling/normalized/testN/testN.strelka.norm.vcf.gz
     - path: results/variant_calling/normalized/testT/testT.strelka.norm.vcf.gz
     - path: results/variant_calling/normalized/testN/testN.strelka.norm.vcf.gz.tbi
