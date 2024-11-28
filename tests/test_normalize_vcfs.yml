@@ -3,7 +3,6 @@
   tags:
     - normalize_vcfs
   files:
-files:
     - path: results/variant_calling/normalized/testN/testN.deepvariant.norm.vcf.gz
     - path: results/variant_calling/normalized/testT/testT.deepvariant.norm.vcf.gz
     - path: results/variant_calling/normalized/testN/testN.deepvariant.norm.vcf.gz.tbi
