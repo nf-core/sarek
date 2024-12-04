@@ -216,6 +216,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         BAM_VARIANT_CALLING_SOMATIC_MUSE(
             cram,
             fasta,
+            fasta_fai,
             dbsnp,
             dbsnp_tbi,
         )
