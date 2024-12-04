@@ -181,6 +181,7 @@ We thank the following people for their extensive assistance in the development 
 - [Szilveszter Juhos](https://github.com/szilvajuhos)
 - [Tobias Koch](https://github.com/KochTobi)
 - [Winni Kretzschmar](https://github.com/winni2k)
+- [Patricie Skaláková](https://github.com/Patricie34)
 
 ## Acknowledgements
 
