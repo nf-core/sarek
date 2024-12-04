@@ -10,6 +10,7 @@ include { BAM_VARIANT_CALLING_SOMATIC_ASCAT             } from '../bam_variant_c
 include { BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC      } from '../bam_variant_calling_somatic_controlfreec/main'
 include { BAM_VARIANT_CALLING_SOMATIC_MANTA             } from '../bam_variant_calling_somatic_manta/main'
 include { BAM_VARIANT_CALLING_SOMATIC_MUTECT2           } from '../bam_variant_calling_somatic_mutect2/main'
+include { BAM_VARIANT_CALLING_SOMATIC_MUSE              } from '../bam_variant_calling_somatic_muse/main'
 include { BAM_VARIANT_CALLING_SOMATIC_STRELKA           } from '../bam_variant_calling_somatic_strelka/main'
 include { BAM_VARIANT_CALLING_SOMATIC_TIDDIT            } from '../bam_variant_calling_somatic_tiddit/main'
 include { MSISENSORPRO_MSISOMATIC                       } from '../../../modules/nf-core/msisensorpro/msisomatic/main'
@@ -53,6 +54,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     out_msisensorpro    = Channel.empty()
     vcf_mutect2         = Channel.empty()
     vcf_tiddit          = Channel.empty()
+    vcf_muse            = Channel.empty()
 
     if (tools.split(',').contains('ascat')) {
         BAM_VARIANT_CALLING_SOMATIC_ASCAT(
@@ -209,6 +211,19 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_MUTECT2.out.versions)
     }
 
+    // MuSE
+    if (tools.split(',').contains('muse')) {
+        BAM_VARIANT_CALLING_SOMATIC_MUSE(
+            cram,
+            fasta,
+            dbsnp,
+            dbsnp_tbi,
+        )
+
+        vcf_muse = BAM_VARIANT_CALLING_SOMATIC_MUSE.out.vcf
+        versions   = versions.mix(BAM_VARIANT_CALLING_SOMATIC_MUSE.out.versions)
+    }
+
     // TIDDIT
     if (tools.split(',').contains('tiddit')) {
         BAM_VARIANT_CALLING_SOMATIC_TIDDIT(
@@ -228,7 +243,8 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         vcf_manta,
         vcf_mutect2,
         vcf_strelka,
-        vcf_tiddit
+        vcf_tiddit,
+        vcf_muse
     )
 
     emit:
@@ -239,6 +255,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     vcf_mutect2
     vcf_strelka
     vcf_tiddit
+    vcf_muse
 
     versions
 }
