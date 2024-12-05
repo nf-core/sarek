@@ -598,9 +598,9 @@ For further downstream analysis, take a look [here](https://github.com/Illumina/
 <details markdown = "1">
 <summary>Output files for tumor-normal samples</summary>
 
-**Output directory: `{outdir}/variant_calling/muse/<sample>/`**
+**Output directory: `{outdir}/variant_calling/muse/<tumorsample_vs_normalsample>/`**
 
--`<tumor>_vs_<normal>.vcf.gz`
+-`<tumorsample_vs_normalsample>.vcf.gz`
 -VCF with called variants. Fields are named TUMOR and NORMAL.
 
 </details>
