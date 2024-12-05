@@ -44,6 +44,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
       - [Sentieon Haplotyper joint germline variant calling](#sentieon-haplotyper-joint-germline-variant-calling)
     - [Strelka](#strelka)
     - [Lofreq](#lofreq)
+    - [MuSE](#muse)
   - [Structural Variants](#structural-variants)
     - [Manta](#manta)
     - [TIDDIT](#tiddit)
@@ -589,6 +590,20 @@ For further downstream analysis, take a look [here](https://github.com/Illumina/
 -VCF which provides a detailed description of the detected genetic variants.
 
   </details>
+
+#### MuSE
+
+[MuSE](https://github.com/wwylab/MuSE) is an accurate and ultra-fast somatic mutation calling tool for whole-genome sequencing (WGS) and whole-exome sequencing (WES) data from heterogeneous tumor samples. This tool is unique in accounting for tumor heterogeneity using a sample-specific error model that improves sensitivity and specificity in mutation calling from sequencing data. For further reading see the [recently published paper](https://genome.cshlp.org/content/early/2024/05/03/gr.278456.123.long).
+
+<details markdown = "1">
+<summary>Output files for tumor-normal samples</summary>
+
+**Output directory: `{outdir}/variant_calling/muse/<sample>/`**
+
+-`<tumor>_vs_<normal>.vcf.gz`
+-VCF with called variants. Fields are named TUMOR and NORMAL.
+
+</details>
 
 ### Structural Variants
 
