@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1663](https://github.com/nf-core/sarek/pull/1663) - Massive conda modules update
 - [1664](https://github.com/nf-core/sarek/pull/1664) - Check if flowcell ID matches for read pair
 - [1730](https://github.com/nf-core/sarek/pull/1730) - Enable Harshil Alignment™️ in VS Code workspace settings
+- [1744](https://github.com/nf-core/sarek/pull/1744) - Add MuSE as new somatic variant caller
 
 ### Changed
 
