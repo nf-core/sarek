@@ -11,7 +11,8 @@ include { SAMTOOLS_CONVERT as CRAM_TO_BAM_NORMAL } from '../../../modules/nf-cor
 
 workflow BAM_VARIANT_CALLING_SOMATIC_MUSE {
     take:
-    cram          // channel: [mandatory] [ meta, normal_cram, normal_crai, tumor_cram, tumor_crai ]
+    cram_normal   // channel: [mandatory] [ meta, normal_cram, normal_crai]
+    cram_tumor    // channel: [mandatory] [ meta, tumor_cram, tumor_crai]
     fasta         // channel: [mandatory] [ meta, fasta ]
     fai           // channel: [mandatory] [ meta, fai ]
     dbsnp         // channel: [optional]  [ dbsnp ]
@@ -19,17 +20,16 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUSE {
 
     main:
     versions = Channel.empty()
+    ch_dbsnp = dbsnp.combine(dbsnp_tbi)
 
     CRAM_TO_BAM_TUMOR(
-        cram.map{ meta, normal_cram, normal_crai,tumor_cram, tumor_crai -> 
-            [ meta + [ tobam: 'tumor' ], tumor_cram, tumor_crai ] },
+        cram_tumor,
         fasta,
         fai
     )
 
     CRAM_TO_BAM_NORMAL(
-        cram.map{ meta, normal_cram, normal_crai,tumor_cram, tumor_crai -> 
-            [ meta + [ tobam: 'normal' ], normal_cram, normal_crai ] },
+        cram_normal,
         fasta,
         fai
     )
@@ -46,12 +46,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUSE {
     ch_tumor = ch_tumor_bam.join(ch_tumor_bai, by: [0])  // Join by meta
 
     // Combine normal and tumor data
-    ch_combined = ch_normal.join(ch_tumor, by: [0])  // Join by meta
-
-    // Rearrange the elements to match the desired output
-    ch_bam = ch_combined.map { meta, normal_bam, normal_bai, tumor_bam, tumor_bai ->
-        [meta, normal_bam, normal_bai, tumor_bam, tumor_bai]
-    }
+    ch_bam = ch_tumor.join(ch_normal, by: [0])  // Join by meta
 
     MUSE_CALL(
         ch_bam,
@@ -60,12 +55,11 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUSE {
 
     MUSE_SUMP(
         MUSE_CALL.out.txt,
-        dbsnp.map{ it -> [ [ id:it.baseName ], it, dbsnp_tbi ] }
+        ch_dbsnp.map{ it -> [ [ id:it.baseName ], it[0], it[1] ] }
     )
 
-    // Mix intervals and no_intervals channels together
-    vcf = Channel.empty().mix(MUSE_SUMP.out.vcf)
-        .map{ meta, vcf -> [ meta + [ variantcaller: 'muse' ], vcf ] }
+    // add variantcaller to meta map
+    vcf = MUSE_SUMP.out.vcf.map{ meta, vcf -> [ meta + [ variantcaller:'muse' ], vcf ] }
 
     versions = versions.mix(CRAM_TO_BAM_NORMAL.out.versions)
     versions = versions.mix(CRAM_TO_BAM_TUMOR.out.versions)

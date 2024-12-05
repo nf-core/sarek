@@ -213,15 +213,18 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
 
     // MuSE
     if (tools.split(',').contains('muse')) {
+        cram_normal = cram.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [ meta, normal_cram, normal_crai ] }
+        cram_tumor = cram.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai -> [ meta, tumor_cram, tumor_crai ] }
         BAM_VARIANT_CALLING_SOMATIC_MUSE(
-            cram,
+            cram_normal,
+            cram_tumor,
             fasta,
             fasta_fai,
             dbsnp,
-            dbsnp_tbi,
+            dbsnp_tbi
         )
 
-        vcf_muse = BAM_VARIANT_CALLING_SOMATIC_MUSE.out.vcf
+        vcf_muse   = BAM_VARIANT_CALLING_SOMATIC_MUSE.out.vcf
         versions   = versions.mix(BAM_VARIANT_CALLING_SOMATIC_MUSE.out.versions)
     }
 
