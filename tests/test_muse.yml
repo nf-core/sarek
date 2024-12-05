@@ -25,10 +25,7 @@
     - path: results/reports/samtools/sample4/sample4.recal.cram.stats
       md5sum: 0d1784cb4c3f14b9858247ac6128dd03
     - path: results/variant_calling/muse/sample4_vs_sample3/sample4_vs_sample3.muse.vcf.gz
-      contains:
-        [
-          '##INFO=<ID=SOMATIC,Number=0,Type=Flag,Description="Indicates if record is a somatic mutation">'
-        ]
+      contains: ['##INFO=<ID=SOMATIC,Number=0,Type=Flag,Description="Indicates if record is a somatic mutation">']
     # conda changes md5sums for test
     - path: results/reports/vcftools/muse/sample4_vs_sample3/sample4_vs_sample3.muse.FILTER.summary
       md5sum: 1ce42d34e4ae919afb519efc99146423
