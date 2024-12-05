@@ -4,9 +4,9 @@
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
-include { MUSE_CALL } from '../../../modules/nf-core/muse/call/main'
-include { MUSE_SUMP } from '../../../modules/nf-core/muse/sump/main'
-include { SAMTOOLS_CONVERT as CRAM_TO_BAM_TUMOR } from '../../../modules/nf-core/samtools/convert/main'
+include { MUSE_CALL                              } from '../../../modules/nf-core/muse/call/main'
+include { MUSE_SUMP                              } from '../../../modules/nf-core/muse/sump/main'
+include { SAMTOOLS_CONVERT as CRAM_TO_BAM_TUMOR  } from '../../../modules/nf-core/samtools/convert/main'
 include { SAMTOOLS_CONVERT as CRAM_TO_BAM_NORMAL } from '../../../modules/nf-core/samtools/convert/main'
 
 workflow BAM_VARIANT_CALLING_SOMATIC_MUSE {
@@ -14,20 +14,22 @@ workflow BAM_VARIANT_CALLING_SOMATIC_MUSE {
     cram          // channel: [mandatory] [ meta, normal_cram, normal_crai, tumor_cram, tumor_crai ]
     fasta         // channel: [mandatory] [ meta, fasta ]
     fai           // channel: [mandatory] [ meta, fai ]
-    dbsnp         // channel: [optional] [ dbsnp ]
-    dbsnp_tbi     // channel: [optional] [ dbsnp_tbi ]
+    dbsnp         // channel: [optional]  [ dbsnp ]
+    dbsnp_tbi     // channel: [optional]  [ dbsnp_tbi ]
 
     main:
     versions = Channel.empty()
 
     CRAM_TO_BAM_TUMOR(
-        cram.map{ meta, normal_cram, normal_crai,tumor_cram, tumor_crai -> [ meta + [ tobam: 'tumor' ], tumor_cram, tumor_crai ] },
+        cram.map{ meta, normal_cram, normal_crai,tumor_cram, tumor_crai -> 
+            [ meta + [ tobam: 'tumor' ], tumor_cram, tumor_crai ] },
         fasta,
         fai
     )
 
     CRAM_TO_BAM_NORMAL(
-        cram.map{ meta, normal_cram, normal_crai,tumor_cram, tumor_crai -> [ meta + [ tobam: 'normal' ], normal_cram, normal_crai ] },
+        cram.map{ meta, normal_cram, normal_crai,tumor_cram, tumor_crai -> 
+            [ meta + [ tobam: 'normal' ], normal_cram, normal_crai ] },
         fasta,
         fai
     )
