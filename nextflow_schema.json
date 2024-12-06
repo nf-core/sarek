@@ -758,6 +758,15 @@
                     "description": "Path to Control-FREEC mappability file.",
                     "help_text": "If you use AWS iGenomes, this has already been set for you appropriately."
                 },
+                "minimap2": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file",
+                    "format": "file-path",
+                    "exists": false,
+                    "mimetype": "text/plain",
+                    "description": "Path to minimap2 genome index file.",
+                    "help_text": "If you use AWS iGenomes, this has NOT already been set for you appropriately.\n\n> **NB** If none provided, will be generated automatically from the known FASTA file. Combine with `--save_reference` to save for future runs."
+                },
                 "ngscheckmate_bed": {
                     "type": "string",
                     "fa_icon": "fas fa-file",
