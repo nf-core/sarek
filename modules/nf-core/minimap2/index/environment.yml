@@ -1,7 +1,5 @@
-name: minimap2_index
 channels:
   - conda-forge
   - bioconda
-  - defaults
 dependencies:
   - bioconda::minimap2=2.28

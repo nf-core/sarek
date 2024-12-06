@@ -14,62 +14,86 @@ tools:
       homepage: https://github.com/lh3/minimap2
       documentation: https://github.com/lh3/minimap2#uguide
       licence: ["MIT"]
+      identifier: ""
 input:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
-  - reads:
-      type: file
-      description: |
-        List of input FASTA or FASTQ files of size 1 and 2 for single-end
-        and paired-end data, respectively.
-  - meta2:
-      type: map
-      description: |
-        Groovy Map containing reference information
-        e.g. [ id:'test_ref']
-  - reference:
-      type: file
-      description: |
-        Reference database in FASTA format.
-  - bam_format:
-      type: boolean
-      description: Specify that output should be in BAM format
-  - cigar_paf_format:
-      type: boolean
-      description: Specify that output CIGAR should be in PAF format
-  - cigar_bam:
-      type: boolean
-      description: |
-        Write CIGAR with >65535 ops at the CG tag. This is recommended when
-        doing XYZ (https://github.com/lh3/minimap2#working-with-65535-cigar-operations)
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - reads:
+        type: file
+        description: |
+          List of input FASTA or FASTQ files of size 1 and 2 for single-end
+          and paired-end data, respectively.
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'test_ref']
+    - reference:
+        type: file
+        description: |
+          Reference database in FASTA format.
+  - - bam_format:
+        type: boolean
+        description: Specify that output should be in BAM format
+  - - bam_index_extension:
+        type: string
+        description: BAM alignment index extension (e.g. "bai")
+  - - cigar_paf_format:
+        type: boolean
+        description: Specify that output CIGAR should be in PAF format
+  - - cigar_bam:
+        type: boolean
+        description: |
+          Write CIGAR with >65535 ops at the CG tag. This is recommended when
+          doing XYZ (https://github.com/lh3/minimap2#working-with-65535-cigar-operations)
 output:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
   - paf:
-      type: file
-      description: Alignment in PAF format
-      pattern: "*.paf"
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.paf":
+          type: file
+          description: Alignment in PAF format
+          pattern: "*.paf"
   - bam:
-      type: file
-      description: Alignment in BAM format
-      pattern: "*.bam"
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.bam":
+          type: file
+          description: Alignment in BAM format
+          pattern: "*.bam"
+  - index:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.bam.${bam_index_extension}":
+          type: file
+          description: BAM alignment index
+          pattern: "*.bam.*"
   - versions:
-      type: file
-      description: File containing software versions
-      pattern: "versions.yml"
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@heuermh"
   - "@sofstam"
   - "@sateeshperi"
   - "@jfy133"
+  - "@fellen31"
 maintainers:
   - "@heuermh"
   - "@sofstam"
   - "@sateeshperi"
   - "@jfy133"
+  - "@fellen31"

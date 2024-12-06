@@ -1,69 +1,476 @@
 {
-    "sarscov2 - fastq, fasta, true, false, false": {
+    "sarscov2 - bam, fasta, true, 'bai', false, false": {
         "content": [
-            "test.bam",
             [
-                "versions.yml:md5,98b8f5f36aa54b82210094f0b0d11938"
+                "@HD\tVN:1.6\tSO:coordinate",
+                "@SQ\tSN:MT192765.1\tLN:29829",
+                "@PG\tID:minimap2\tPN:minimap2\tVN:2.28-r1209\tCL:minimap2 -t 2 -a genome.fasta -",
+                "@PG\tID:samtools\tPN:samtools\tPP:minimap2\tVN:1.20\tCL:samtools sort -@ 1 -o test.bam##idx##test.bam.bai --write-index"
+            ],
+            "5d426b9a5f5b2c54f1d7f1e4c238ae94",
+            "test.bam.bai",
+            [
+                "versions.yml:md5,3548eeba9066efbf8d78ea99f8d813fd"
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-04-05T10:14:18.939731126"
+        "timestamp": "2024-07-25T09:03:00.827260362"
     },
-    "sarscov2 - fastq, fasta, true, false, false - stub": {
+    "sarscov2 - bam, fasta, true, 'bai', false, false - stub": {
         "content": [
-            "test.bam",
-            "test.csi",
-            [
-                "versions.yml:md5,98b8f5f36aa54b82210094f0b0d11938"
-            ]
+            {
+                "0": [
+
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "3": [
+                    "versions.yml:md5,98b8f5f36aa54b82210094f0b0d11938"
+                ],
+                "bam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "index": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "paf": [
+
+                ],
+                "versions": [
+                    "versions.yml:md5,98b8f5f36aa54b82210094f0b0d11938"
+                ]
+            }
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-04-05T10:14:34.275879844"
+        "timestamp": "2024-07-23T11:21:37.92353539"
     },
-    "sarscov2 - fastq, fasta, false, false, false - stub": {
+    "sarscov2 - fastq, fasta, true, 'bai', false, false - stub": {
         "content": [
-            "test.paf",
-            "test.csi",
-            [
-                "versions.yml:md5,98b8f5f36aa54b82210094f0b0d11938"
-            ]
+            {
+                "0": [
+
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "3": [
+                    "versions.yml:md5,98b8f5f36aa54b82210094f0b0d11938"
+                ],
+                "bam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "index": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "paf": [
+
+                ],
+                "versions": [
+                    "versions.yml:md5,98b8f5f36aa54b82210094f0b0d11938"
+                ]
+            }
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-04-05T10:14:39.227958138"
+        "timestamp": "2024-06-03T11:29:44.669021368"
+    },
+    "sarscov2 - fastq, fasta, false, [], false, false - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.paf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+
+                ],
+                "2": [
+
+                ],
+                "3": [
+                    "versions.yml:md5,98b8f5f36aa54b82210094f0b0d11938"
+                ],
+                "bam": [
+
+                ],
+                "index": [
+
+                ],
+                "paf": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.paf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,98b8f5f36aa54b82210094f0b0d11938"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-03T11:15:52.738781039"
+    },
+    "sarscov2 - fastq, fasta, true, [], false, false - stub": {
+        "content": [
+            {
+                "0": [
+
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+
+                ],
+                "3": [
+                    "versions.yml:md5,98b8f5f36aa54b82210094f0b0d11938"
+                ],
+                "bam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "index": [
+
+                ],
+                "paf": [
+
+                ],
+                "versions": [
+                    "versions.yml:md5,98b8f5f36aa54b82210094f0b0d11938"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-03T11:15:23.033808223"
     },
     "sarscov2 - [fastq1, fastq2], fasta, true, false, false": {
         "content": [
-            "test.bam",
             [
-                "versions.yml:md5,98b8f5f36aa54b82210094f0b0d11938"
+                "@HD\tVN:1.6\tSO:coordinate",
+                "@SQ\tSN:MT192765.1\tLN:29829",
+                "@PG\tID:minimap2\tPN:minimap2\tVN:2.28-r1209\tCL:minimap2 -t 2 -a genome.fasta test_1.fastq.gz test_2.fastq.gz",
+                "@PG\tID:samtools\tPN:samtools\tPP:minimap2\tVN:1.20\tCL:samtools sort -@ 1 -o test.bam"
+            ],
+            "1bc392244f228bf52cf0b5a8f6a654c9",
+            [
+                "versions.yml:md5,3548eeba9066efbf8d78ea99f8d813fd"
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-04-05T10:14:24.265054877"
+        "timestamp": "2024-07-23T11:18:18.964586894"
+    },
+    "sarscov2 - fastq, fasta, true, [], false, false": {
+        "content": [
+            [
+                "@HD\tVN:1.6\tSO:coordinate",
+                "@SQ\tSN:MT192765.1\tLN:29829",
+                "@PG\tID:minimap2\tPN:minimap2\tVN:2.28-r1209\tCL:minimap2 -t 2 -a genome.fasta test_1.fastq.gz",
+                "@PG\tID:samtools\tPN:samtools\tPP:minimap2\tVN:1.20\tCL:samtools sort -@ 1 -o test.bam"
+            ],
+            "f194745c0ccfcb2a9c0aee094a08750",
+            [
+                "versions.yml:md5,3548eeba9066efbf8d78ea99f8d813fd"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-23T11:17:48.667488325"
+    },
+    "sarscov2 - fastq, fasta, true, 'bai', false, false": {
+        "content": [
+            [
+                "@HD\tVN:1.6\tSO:coordinate",
+                "@SQ\tSN:MT192765.1\tLN:29829",
+                "@PG\tID:minimap2\tPN:minimap2\tVN:2.28-r1209\tCL:minimap2 -t 2 -a genome.fasta test_1.fastq.gz",
+                "@PG\tID:samtools\tPN:samtools\tPP:minimap2\tVN:1.20\tCL:samtools sort -@ 1 -o test.bam##idx##test.bam.bai --write-index"
+            ],
+            "f194745c0ccfcb2a9c0aee094a08750",
+            "test.bam.bai",
+            [
+                "versions.yml:md5,3548eeba9066efbf8d78ea99f8d813fd"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-23T11:18:02.517416733"
+    },
+    "sarscov2 - bam, fasta, true, [], false, false": {
+        "content": [
+            [
+                "@HD\tVN:1.6\tSO:coordinate",
+                "@SQ\tSN:MT192765.1\tLN:29829",
+                "@PG\tID:minimap2\tPN:minimap2\tVN:2.28-r1209\tCL:minimap2 -t 2 -a genome.fasta -",
+                "@PG\tID:samtools\tPN:samtools\tPP:minimap2\tVN:1.20\tCL:samtools sort -@ 1 -o test.bam"
+            ],
+            "5d426b9a5f5b2c54f1d7f1e4c238ae94",
+            [
+                "versions.yml:md5,3548eeba9066efbf8d78ea99f8d813fd"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-25T09:02:49.64829488"
+    },
+    "sarscov2 - bam, fasta, true, [], false, false - stub": {
+        "content": [
+            {
+                "0": [
+
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+
+                ],
+                "3": [
+                    "versions.yml:md5,98b8f5f36aa54b82210094f0b0d11938"
+                ],
+                "bam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "index": [
+
+                ],
+                "paf": [
+
+                ],
+                "versions": [
+                    "versions.yml:md5,98b8f5f36aa54b82210094f0b0d11938"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-07-23T11:21:22.162291795"
     },
     "sarscov2 - fastq, [], true, false, false": {
         "content": [
-            "test.bam",
             [
-                "versions.yml:md5,98b8f5f36aa54b82210094f0b0d11938"
+                "@HD\tVN:1.6\tSO:coordinate",
+                "@SQ\tSN:ERR5069949.2151832\tLN:150",
+                "@SQ\tSN:ERR5069949.576388\tLN:77",
+                "@SQ\tSN:ERR5069949.501486\tLN:146",
+                "@SQ\tSN:ERR5069949.1331889\tLN:132",
+                "@SQ\tSN:ERR5069949.2161340\tLN:80",
+                "@SQ\tSN:ERR5069949.973930\tLN:79",
+                "@SQ\tSN:ERR5069949.2417063\tLN:150",
+                "@SQ\tSN:ERR5069949.376959\tLN:151",
+                "@SQ\tSN:ERR5069949.1088785\tLN:149",
+                "@SQ\tSN:ERR5069949.1066259\tLN:147",
+                "@SQ\tSN:ERR5069949.2832676\tLN:139",
+                "@SQ\tSN:ERR5069949.2953930\tLN:151",
+                "@SQ\tSN:ERR5069949.324865\tLN:151",
+                "@SQ\tSN:ERR5069949.2185111\tLN:150",
+                "@SQ\tSN:ERR5069949.937422\tLN:151",
+                "@SQ\tSN:ERR5069949.2431709\tLN:150",
+                "@SQ\tSN:ERR5069949.1246538\tLN:148",
+                "@SQ\tSN:ERR5069949.1189252\tLN:98",
+                "@SQ\tSN:ERR5069949.2216307\tLN:147",
+                "@SQ\tSN:ERR5069949.3273002\tLN:148",
+                "@SQ\tSN:ERR5069949.3277445\tLN:151",
+                "@SQ\tSN:ERR5069949.3022231\tLN:147",
+                "@SQ\tSN:ERR5069949.184542\tLN:151",
+                "@SQ\tSN:ERR5069949.540529\tLN:149",
+                "@SQ\tSN:ERR5069949.686090\tLN:150",
+                "@SQ\tSN:ERR5069949.2787556\tLN:106",
+                "@SQ\tSN:ERR5069949.2650879\tLN:150",
+                "@SQ\tSN:ERR5069949.2064910\tLN:149",
+                "@SQ\tSN:ERR5069949.2328704\tLN:150",
+                "@SQ\tSN:ERR5069949.1067032\tLN:150",
+                "@SQ\tSN:ERR5069949.3338256\tLN:151",
+                "@SQ\tSN:ERR5069949.1412839\tLN:147",
+                "@SQ\tSN:ERR5069949.1538968\tLN:150",
+                "@SQ\tSN:ERR5069949.147998\tLN:94",
+                "@SQ\tSN:ERR5069949.366975\tLN:106",
+                "@SQ\tSN:ERR5069949.1372331\tLN:151",
+                "@SQ\tSN:ERR5069949.1709367\tLN:129",
+                "@SQ\tSN:ERR5069949.2388984\tLN:150",
+                "@SQ\tSN:ERR5069949.1132353\tLN:150",
+                "@SQ\tSN:ERR5069949.1151736\tLN:151",
+                "@SQ\tSN:ERR5069949.479807\tLN:150",
+                "@SQ\tSN:ERR5069949.2176303\tLN:151",
+                "@SQ\tSN:ERR5069949.2772897\tLN:151",
+                "@SQ\tSN:ERR5069949.1020777\tLN:122",
+                "@SQ\tSN:ERR5069949.465452\tLN:151",
+                "@SQ\tSN:ERR5069949.1704586\tLN:149",
+                "@SQ\tSN:ERR5069949.1258508\tLN:151",
+                "@SQ\tSN:ERR5069949.986441\tLN:119",
+                "@SQ\tSN:ERR5069949.2674295\tLN:148",
+                "@SQ\tSN:ERR5069949.885966\tLN:79",
+                "@SQ\tSN:ERR5069949.2342766\tLN:151",
+                "@SQ\tSN:ERR5069949.3122970\tLN:127",
+                "@SQ\tSN:ERR5069949.3279513\tLN:72",
+                "@SQ\tSN:ERR5069949.309410\tLN:151",
+                "@SQ\tSN:ERR5069949.532979\tLN:149",
+                "@SQ\tSN:ERR5069949.2888794\tLN:151",
+                "@SQ\tSN:ERR5069949.2205229\tLN:150",
+                "@SQ\tSN:ERR5069949.786562\tLN:151",
+                "@SQ\tSN:ERR5069949.919671\tLN:151",
+                "@SQ\tSN:ERR5069949.1328186\tLN:151",
+                "@SQ\tSN:ERR5069949.870926\tLN:149",
+                "@SQ\tSN:ERR5069949.2257580\tLN:151",
+                "@SQ\tSN:ERR5069949.3249622\tLN:77",
+                "@SQ\tSN:ERR5069949.611123\tLN:125",
+                "@SQ\tSN:ERR5069949.651338\tLN:142",
+                "@SQ\tSN:ERR5069949.169513\tLN:92",
+                "@SQ\tSN:ERR5069949.155944\tLN:150",
+                "@SQ\tSN:ERR5069949.2033605\tLN:150",
+                "@SQ\tSN:ERR5069949.2730382\tLN:142",
+                "@SQ\tSN:ERR5069949.2125592\tLN:150",
+                "@SQ\tSN:ERR5069949.1062611\tLN:151",
+                "@SQ\tSN:ERR5069949.1778133\tLN:151",
+                "@SQ\tSN:ERR5069949.3057020\tLN:95",
+                "@SQ\tSN:ERR5069949.2972968\tLN:141",
+                "@SQ\tSN:ERR5069949.2734474\tLN:149",
+                "@SQ\tSN:ERR5069949.856527\tLN:151",
+                "@SQ\tSN:ERR5069949.2098070\tLN:151",
+                "@SQ\tSN:ERR5069949.1552198\tLN:150",
+                "@SQ\tSN:ERR5069949.2385514\tLN:150",
+                "@SQ\tSN:ERR5069949.2270078\tLN:151",
+                "@SQ\tSN:ERR5069949.114870\tLN:150",
+                "@SQ\tSN:ERR5069949.2668880\tLN:147",
+                "@SQ\tSN:ERR5069949.257821\tLN:139",
+                "@SQ\tSN:ERR5069949.2243023\tLN:150",
+                "@SQ\tSN:ERR5069949.2605155\tLN:146",
+                "@SQ\tSN:ERR5069949.1340552\tLN:151",
+                "@SQ\tSN:ERR5069949.1561137\tLN:150",
+                "@SQ\tSN:ERR5069949.2361683\tLN:149",
+                "@SQ\tSN:ERR5069949.2521353\tLN:150",
+                "@SQ\tSN:ERR5069949.1261808\tLN:149",
+                "@SQ\tSN:ERR5069949.2734873\tLN:98",
+                "@SQ\tSN:ERR5069949.3017828\tLN:107",
+                "@SQ\tSN:ERR5069949.573706\tLN:150",
+                "@SQ\tSN:ERR5069949.1980512\tLN:151",
+                "@SQ\tSN:ERR5069949.1014693\tLN:150",
+                "@SQ\tSN:ERR5069949.3184655\tLN:150",
+                "@SQ\tSN:ERR5069949.29668\tLN:89",
+                "@SQ\tSN:ERR5069949.3258358\tLN:151",
+                "@SQ\tSN:ERR5069949.1476386\tLN:151",
+                "@SQ\tSN:ERR5069949.2415814\tLN:150",
+                "@PG\tID:minimap2\tPN:minimap2\tVN:2.28-r1209\tCL:minimap2 -t 2 -a test_1.fastq.gz test_1.fastq.gz",
+                "@PG\tID:samtools\tPN:samtools\tPP:minimap2\tVN:1.20\tCL:samtools sort -@ 1 -o test.bam"
+            ],
+            "16c1c651f8ec67383bcdee3c55aed94f",
+            [
+                "versions.yml:md5,3548eeba9066efbf8d78ea99f8d813fd"
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-04-05T10:14:29.27901773"
+        "timestamp": "2024-07-23T11:18:34.246998277"
     }
 }
