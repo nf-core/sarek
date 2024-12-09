@@ -5,6 +5,8 @@ on:
     branches:
       - dev
   pull_request:
+    paths-ignore:
+      - "docs/**"
   release:
     types: [published]
   workflow_dispatch:

@@ -1104,11 +1104,19 @@ Sentieon supply license in the form of a string-value (a url) or a file. It shou
 nextflow secrets set SENTIEON_LICENSE_BASE64 $(echo -n <sentieon_license_string> | base64 -w 0)
 ```
 
+:::note
+<sentieon_license_string> is formatted as `IP:Port` for example: `12.12.12.12:8990`
+:::
+
 If a license file is supplied, then the nextflow secret should be set like this:
 
 ```bash
 nextflow secrets set SENTIEON_LICENSE_BASE64 \$(cat <sentieon_license_file.lic> | base64 -w 0)
 ```
+
+:::note
+If you're looking for documentation on how the nf-core Sentieon GitHub Actions and Sentieon License Server are set up: [Here be dragons.](https://github.com/nf-core/ops/blob/main/pulumi/sentieon_license_server/README.md)
+:::
 
 ### Available Sentieon functions
 

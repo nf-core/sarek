@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- [1579](https://github.com/nf-core/sarek/pull/1579) - Update Sentieon usage docs
 - [1668](https://github.com/nf-core/sarek/pull/1668) - Add nf-test sharding CI
 - [1669](https://github.com/nf-core/sarek/pull/1669) - Better nf-test pipeline level tests
 - [1677](https://github.com/nf-core/sarek/pull/1677) - Migrate pytest aligner and pipeline default tests to nf-test
