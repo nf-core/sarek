@@ -44,7 +44,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1712](https://github.com/nf-core/sarek/pull/1712) - Fix missing import statements on error messages when starting without samplesheet
 - [1743](https://github.com/nf-core/sarek/pull/1743) - Add setup java 17 in GHA for latest Nextflow version
 - [1745](https://github.com/nf-core/sarek/pull/1745) - Fix bug where workflow can hang if the email parameter is set
-- [](https://github.com/nf-core/sarek/pull/) - Fix Sentieon module inputs
+- [1746](https://github.com/nf-core/sarek/pull/1746) - Fix Sentieon module inputs
 
 ### Removed
 
