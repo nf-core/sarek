@@ -1,0 +1,158 @@
+nextflow_process {
+
+    name "Test Process GATK4SPARK_MARKDUPLICATES"
+    script "../main.nf"
+    config "./nextflow.config"
+    process "GATK4SPARK_MARKDUPLICATES"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "gatk4spark"
+    tag "gatk4spark/markduplicates"
+
+    test("sarscov2 - bam") {
+        config "./bam.config"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:false ], // meta map
+                    file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true)
+                ]
+                input[1] = file(params.test_data['sarscov2']['genome']['genome_fasta'], checkIfExists: true)
+                input[2] = file(params.test_data['sarscov2']['genome']['genome_fasta_fai'], checkIfExists: true)
+                input[3] = file(params.test_data['sarscov2']['genome']['genome_dict'], checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+
+    }
+
+    test("homo_sapiens - bam - multiple") {
+        config "./bam.config"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.test_data['homo_sapiens']['illumina']['test_paired_end_name_sorted_bam'], checkIfExists: true),
+                        file(params.test_data['homo_sapiens']['illumina']['test2_paired_end_name_sorted_bam'], checkIfExists: true)
+                    ]
+                ]
+                input[1] = file(params.test_data['homo_sapiens']['genome']['genome_fasta'], checkIfExists: true)
+                input[2] = file(params.test_data['homo_sapiens']['genome']['genome_fasta_fai'], checkIfExists: true)
+                input[3] = file(params.test_data['homo_sapiens']['genome']['genome_dict'], checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+
+    }
+
+    test("homo_sapiens - bam - metrics") {
+        config "./metrics.config"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.test_data['homo_sapiens']['illumina']['test_paired_end_name_sorted_bam'], checkIfExists: true),
+                        file(params.test_data['homo_sapiens']['illumina']['test2_paired_end_name_sorted_bam'], checkIfExists: true)
+                    ]
+                ]
+                input[1] = file(params.test_data['homo_sapiens']['genome']['genome_fasta'], checkIfExists: true)
+                input[2] = file(params.test_data['homo_sapiens']['genome']['genome_fasta_fai'], checkIfExists: true)
+                input[3] = file(params.test_data['homo_sapiens']['genome']['genome_dict'], checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out.versions).match("homo_sapiens - bam - metrics - versions") },
+                { assert snapshot(process.out.output).match("homo_sapiens - bam - metrics - output") },
+                { assert snapshot(process.out.bam_index).match("homo_sapiens - bam - metrics - bam_index") },
+                { assert path(process.out.metrics[0][1]).readLines()[5].contains("GATKDuplicationMetrics") },
+                { assert path(process.out.metrics[0][1]).readLines().size() == 11 }
+            )
+        }
+
+    }
+
+    test("homo_sapiens - cram") {
+        config "./cram.config"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:false ], // meta map
+                    [
+                        file(params.test_data['homo_sapiens']['illumina']['test_paired_end_name_sorted_bam'], checkIfExists: true),
+                        file(params.test_data['homo_sapiens']['illumina']['test2_paired_end_name_sorted_bam'], checkIfExists: true)
+                    ]
+                ]
+                input[1] = file(params.test_data['homo_sapiens']['genome']['genome_fasta'], checkIfExists: true)
+                input[2] = file(params.test_data['homo_sapiens']['genome']['genome_fasta_fai'], checkIfExists: true)
+                input[3] = file(params.test_data['homo_sapiens']['genome']['genome_dict'], checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+
+    }
+
+    test("stub") {
+        config "./bam.config"
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:false ], // meta map
+                    []
+                ]
+                input[1] = []
+                input[2] = []
+                input[3] = []
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+
+    }
+
+
+}

@@ -1,0 +1,31 @@
+{
+    "versions": {
+        "content": [
+            [
+                "versions.yml:md5,25d44a118d558b331d51ec00be0d997c"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.02.0"
+        },
+        "timestamp": "2024-03-18T17:37:18.879477"
+    },
+    "genes_txt": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test.genes.txt:md5,130536bf0237d7f3f746d32aaa32840a"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.02.0"
+        },
+        "timestamp": "2024-03-18T17:37:18.874822"
+    }
+}

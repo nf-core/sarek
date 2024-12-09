@@ -1,0 +1,2 @@
+bcftools/annotate:
+  - "modules/nf-core/bcftools/annotate/**"

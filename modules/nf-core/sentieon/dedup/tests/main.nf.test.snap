@@ -1,0 +1,359 @@
+{
+    "Test marking duplicates": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.cram:md5,e46e97256846338e1cff32d862105491"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.cram.crai:md5,4b7b2152b33c5334f9477cc3650f8c91"
+                    ]
+                ],
+                "2": [
+                    
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.cram.bai:md5,889503338dc569b24e44e5e3aec815ea"
+                    ]
+                ],
+                "4": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.score:md5,835f05ecc5d3ef5d4e31ba7f831d9a8b"
+                    ]
+                ],
+                "5": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.cram.metrics:md5,208f7c5fa2f489cfaaffbce116fed0bc"
+                    ]
+                ],
+                "6": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.cram.metrics.multiqc.tsv:md5,208f7c5fa2f489cfaaffbce116fed0bc"
+                    ]
+                ],
+                "7": [
+                    "versions.yml:md5,763463853476be96846b6da5aecfacf4"
+                ],
+                "bai": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.cram.bai:md5,889503338dc569b24e44e5e3aec815ea"
+                    ]
+                ],
+                "bam": [
+                    
+                ],
+                "crai": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.cram.crai:md5,4b7b2152b33c5334f9477cc3650f8c91"
+                    ]
+                ],
+                "cram": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.cram:md5,e46e97256846338e1cff32d862105491"
+                    ]
+                ],
+                "metrics": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.cram.metrics:md5,208f7c5fa2f489cfaaffbce116fed0bc"
+                    ]
+                ],
+                "metrics_multiqc_tsv": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.cram.metrics.multiqc.tsv:md5,208f7c5fa2f489cfaaffbce116fed0bc"
+                    ]
+                ],
+                "score": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.score:md5,835f05ecc5d3ef5d4e31ba7f831d9a8b"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,763463853476be96846b6da5aecfacf4"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-10-02T10:28:10.570152622"
+    },
+    "Test removing duplicates": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.cram:md5,8075d3e7c66d36fdbb81270eefc996d4"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.cram.crai:md5,c617398ead281c1339d78d5df0d606e9"
+                    ]
+                ],
+                "2": [
+                    
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.cram.bai:md5,a1ea729eca4732ca3a5dee946a70fbc8"
+                    ]
+                ],
+                "4": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.score:md5,835f05ecc5d3ef5d4e31ba7f831d9a8b"
+                    ]
+                ],
+                "5": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.cram.metrics:md5,2a41239de0275a8321f4658286d97d65"
+                    ]
+                ],
+                "6": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.cram.metrics.multiqc.tsv:md5,2a41239de0275a8321f4658286d97d65"
+                    ]
+                ],
+                "7": [
+                    "versions.yml:md5,763463853476be96846b6da5aecfacf4"
+                ],
+                "bai": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.cram.bai:md5,a1ea729eca4732ca3a5dee946a70fbc8"
+                    ]
+                ],
+                "bam": [
+                    
+                ],
+                "crai": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.cram.crai:md5,c617398ead281c1339d78d5df0d606e9"
+                    ]
+                ],
+                "cram": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.cram:md5,8075d3e7c66d36fdbb81270eefc996d4"
+                    ]
+                ],
+                "metrics": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.cram.metrics:md5,2a41239de0275a8321f4658286d97d65"
+                    ]
+                ],
+                "metrics_multiqc_tsv": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.cram.metrics.multiqc.tsv:md5,2a41239de0275a8321f4658286d97d65"
+                    ]
+                ],
+                "score": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.score:md5,835f05ecc5d3ef5d4e31ba7f831d9a8b"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,763463853476be96846b6da5aecfacf4"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-10-02T10:28:19.377946074"
+    },
+    "Test stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.cram:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.cram.crai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    
+                ],
+                "3": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.cram.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "4": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.score:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "5": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.cram.metrics:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "6": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.cram.metrics.multiqc.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "7": [
+                    "versions.yml:md5,763463853476be96846b6da5aecfacf4"
+                ],
+                "bai": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.cram.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "bam": [
+                    
+                ],
+                "crai": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.cram.crai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "cram": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.cram:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "metrics": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.cram.metrics:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "metrics_multiqc_tsv": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.cram.metrics.multiqc.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "score": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.score:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,763463853476be96846b6da5aecfacf4"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-10-02T10:28:28.792696026"
+    }
+}

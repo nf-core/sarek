@@ -1,0 +1,91 @@
+- name: Run variant calling on germline sample with haplotypecaller
+  command: nextflow run main.nf -profile test,targeted --input ./tests/csv/3.0/mapped_single_bam.csv --tools haplotypecaller --step variant_calling --outdir results
+  tags:
+    - germline
+    - haplotypecaller
+    - variant_calling
+  files:
+    - path: results/csv/variantcalled.csv
+      md5sum: d7d86e82902a4f57876b2414a4f812a4
+    - path: results/multiqc
+    - path: results/preprocessing/converted/test/test.converted.cram
+    # binary changes md5sums on reruns
+    - path: results/preprocessing/converted/test/test.converted.cram.crai
+    # binary changes md5sums on reruns
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+      should_exist: false
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+      should_exist: false
+    - path: results/reports/bcftools/haplotypecaller/test/test.haplotypecaller.filtered.bcftools_stats.txt
+      # md5sum: 01941d63ff87fba208320b8041738179
+    - path: results/reports/vcftools/haplotypecaller/test/test.haplotypecaller.filtered.FILTER.summary
+      md5sum: 4e2ceea7f3ff998004691fd71192d9ee
+    - path: results/reports/vcftools/haplotypecaller/test/test.haplotypecaller.filtered.TsTv.count
+      md5sum: b77c120ee5cc0423267200c67d60c663
+    - path: results/reports/vcftools/haplotypecaller/test/test.haplotypecaller.filtered.TsTv.qual
+      md5sum: 1e34357e5848c318f8c2c7d3b041d229
+    - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.filtered.vcf.gz
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.filtered.vcf.gz.tbi
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.vcf.gz
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.vcf.gz.tbi
+    # binary changes md5sums on reruns
+    - path: results/haplotypecaller
+      should_exist: false
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.region.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz
+    - path: results/reports/mosdepth/test/test.recal.regions.bed.gz.csi
+    - path: results/reports/samtools/test/test.recal.cram.stats
+
+- name: Run variant calling on germline sample with haplotypecaller without intervals
+  command: nextflow run main.nf -profile test,targeted --input ./tests/csv/3.0/mapped_single_bam.csv --tools haplotypecaller --step variant_calling --no_intervals --outdir results
+  tags:
+    - germline
+    - haplotypecaller
+    - no_intervals
+    - variant_calling
+  files:
+    - path: results/csv/variantcalled.csv
+      md5sum: d7d86e82902a4f57876b2414a4f812a4
+    - path: results/multiqc
+    - path: results/no_intervals.bed
+      md5sum: f3dac01ea66b95fe477446fde2d31489
+    - path: results/no_intervals.bed.gz
+      md5sum: f3dac01ea66b95fe477446fde2d31489
+    - path: results/no_intervals.bed.gz.tbi
+      md5sum: f3dac01ea66b95fe477446fde2d31489
+    - path: results/preprocessing/converted/test/test.converted.cram
+    # binary changes md5sums on reruns
+    - path: results/preprocessing/converted/test/test.converted.cram.crai
+    # binary changes md5sums on reruns
+    - path: results/preprocessing/recalibrated/test/test.recal.cram
+      should_exist: false
+    - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
+      should_exist: false
+    - path: results/reports/bcftools/haplotypecaller/test/test.haplotypecaller.filtered.bcftools_stats.txt
+      # md5sum: 01941d63ff87fba208320b8041738179
+    - path: results/reports/vcftools/haplotypecaller/test/test.haplotypecaller.filtered.FILTER.summary
+      md5sum: 4e2ceea7f3ff998004691fd71192d9ee
+    - path: results/reports/vcftools/haplotypecaller/test/test.haplotypecaller.filtered.TsTv.count
+      md5sum: b77c120ee5cc0423267200c67d60c663
+    - path: results/reports/vcftools/haplotypecaller/test/test.haplotypecaller.filtered.TsTv.qual
+      md5sum: 1e34357e5848c318f8c2c7d3b041d229
+    - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.filtered.vcf.gz
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.filtered.vcf.gz.tbi
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.vcf.gz
+    # binary changes md5sums on reruns
+    - path: results/variant_calling/haplotypecaller/test/test.haplotypecaller.vcf.gz.tbi
+    # binary changes md5sums on reruns
+    - path: results/haplotypecaller
+      should_exist: false
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.global.dist.txt
+    - path: results/reports/mosdepth/test/test.recal.mosdepth.summary.txt
+    - path: results/reports/mosdepth/test/test.recal.per-base.bed.gz
+    - path: results/reports/mosdepth/test/test.recal.per-base.bed.gz.csi
+    - path: results/reports/samtools/test/test.recal.cram.stats

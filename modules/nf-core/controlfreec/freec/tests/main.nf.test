@@ -1,0 +1,163 @@
+nextflow_process {
+
+    name "Test Process CONTROLFREEC_FREEC"
+    script "../main.nf"
+    process "CONTROLFREEC_FREEC"
+    config "./nextflow.config"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "controlfreec"
+    tag "controlfreec/freec"
+    tag "untar"
+
+    setup {
+
+        run("UNTAR") {
+            script "../../../../nf-core/untar/main.nf"
+            process {
+                """
+                input[0] =  [ [],
+                            file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/chromosomes.tar.gz', checkIfExists: true)
+                        ]
+                """
+            }
+        }
+
+    }
+
+    test("human - mpileup") {
+
+        when {
+            process {
+                """
+                input[0] =  [ [ id:'test', single_end:false, sex:'XX' ], // meta map
+                            file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/mpileup/test.mpileup.gz', checkIfExists: true),
+                            file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/mpileup/test2.mpileup.gz', checkIfExists: true),
+                            [],[],[],[]
+                        ]
+                // fasta
+                input[1] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta', checkIfExists: true)
+                // fai
+                input[2] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai', checkIfExists: true)
+                // snp_position
+                input[3] = []
+                // known_snps
+                input[4] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz', checkIfExists: true)
+                // known_snps_tbi
+                input[5] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz.tbi', checkIfExists: true)
+                // chr_directory
+                input[6] = UNTAR.out.untar.map{ it[1] }
+                // mappability
+                input[7] = []
+                // target_bed
+                input[8] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed', checkIfExists: true)
+                // gccontent_profile
+                input[9] = []
+                """
+                }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                // not asserting optional outputs [bedgraph, control_cpn, gcprofile_cpn]
+                { assert snapshot(
+                    // match file names
+                    file(process.out.sample_cpn.get(0).get(1)).name,
+                    file(process.out.CNV.get(0).get(1)).name,
+                    // match first line
+                    path(process.out.BAF.get(0).get(1)).readLines()[0],
+                    path(process.out.ratio.get(0).get(1)).readLines()[0],
+                    path(process.out.config.get(0).get(1)).readLines()[0],
+                    path(process.out.info.get(0).get(1)).readLines()[0],
+                    process.out.versions
+                    ).match() }
+            )
+        }
+
+    }
+
+    // test("human - mpileup - single") {
+
+    //     when {
+    //         process {
+    //             """
+    //             input[0] =  [ [ id:'test', single_end:false, sex:'XX' ], // meta map
+    //                         [],
+    //                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/mpileup/test2.mpileup.gz', checkIfExists: true),
+    //                         [],[],[],[]
+    //                     ]
+    //             // fasta
+    //             input[1] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta', checkIfExists: true)
+    //             // fai
+    //             input[2] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai', checkIfExists: true)
+    //             // snp_position
+    //             input[3] = []
+    //             // known_snps
+    //             input[4] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz', checkIfExists: true)
+    //             // known_snps_tbi
+    //             input[5] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz.tbi', checkIfExists: true)
+    //             // chr_directory
+    //             input[6] = UNTAR.out.untar.map{ it[1] }
+    //             // mappability
+    //             input[7] = []
+    //             // target_bed
+    //             input[8] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed', checkIfExists: true)
+    //             // gccontent_profile
+    //             input[9] = []
+    //             """
+    //         }
+    //     }
+
+    //     then {
+    //         assertAll(
+    //             { assert process.success },
+    //             { assert snapshot(process.out).match() }
+    //         )
+    //     }
+
+    // }
+
+    test("human - mpileup - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] =  [ [ id:'test', single_end:false, sex:'XX' ], // meta map
+                            file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/mpileup/test.mpileup.gz', checkIfExists: true),
+                            file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/mpileup/test2.mpileup.gz', checkIfExists: true),
+                            [],[],[],[]
+                        ]
+                // fasta
+                input[1] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta', checkIfExists: true)
+                // fai
+                input[2] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai', checkIfExists: true)
+                // snp_position
+                input[3] = []
+                // known_snps
+                input[4] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz', checkIfExists: true)
+                // known_snps_tbi
+                input[5] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/dbsnp_138.hg38.vcf.gz.tbi', checkIfExists: true)
+                // chr_directory
+                input[6] = UNTAR.out.untar.map{ it[1] }
+                // mappability
+                input[7] = []
+                // target_bed
+                input[8] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/multi_intervals.bed', checkIfExists: true)
+                // gccontent_profile
+                input[9] = []
+                """
+                }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+}

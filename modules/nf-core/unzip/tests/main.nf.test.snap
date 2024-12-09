@@ -1,0 +1,76 @@
+{
+    "generic [tar] [tar_gz] stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "hello"
+                        },
+                        [
+                            
+                        ]
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,52c55ce814e8bc9edc5a6c625ed794b8"
+                ],
+                "unzipped_archive": [
+                    [
+                        {
+                            "id": "hello"
+                        },
+                        [
+                            
+                        ]
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,52c55ce814e8bc9edc5a6c625ed794b8"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-30T19:16:37.11550986"
+    },
+    "generic [tar] [tar_gz]": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "hello"
+                        },
+                        [
+                            "hello.tar:md5,80c66db79a773bc87b3346035ff9593e"
+                        ]
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,52c55ce814e8bc9edc5a6c625ed794b8"
+                ],
+                "unzipped_archive": [
+                    [
+                        {
+                            "id": "hello"
+                        },
+                        [
+                            "hello.tar:md5,80c66db79a773bc87b3346035ff9593e"
+                        ]
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,52c55ce814e8bc9edc5a6c625ed794b8"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-30T19:16:25.120242571"
+    }
+}

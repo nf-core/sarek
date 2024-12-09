@@ -1,0 +1,8 @@
+channels:
+  - conda-forge
+  - bioconda
+
+dependencies:
+  - bioconda::cnvkit=0.9.10
+  - bioconda::htslib=1.17 # Matched with the container
+  - bioconda::samtools=1.17 # Matched with the container
