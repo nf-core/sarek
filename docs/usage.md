@@ -1115,7 +1115,7 @@ nextflow secrets set SENTIEON_LICENSE_BASE64 \$(cat <sentieon_license_file.lic> 
 ```
 
 :::note
-If you're looking for documentation on how the nf-core Sentieon GitHub Actions and Sentieon License Server are set up: [Here be dragons.](https://github.com/nf-core/ops/blob/main/pulumi/aws_license-server/README.md)
+If you're looking for documentation on how the nf-core Sentieon GitHub Actions and Sentieon License Server are set up: [Here be dragons.](https://github.com/nf-core/ops/blob/main/pulumi/sentieon_license_server/README.md)
 :::
 
 ### Available Sentieon functions
