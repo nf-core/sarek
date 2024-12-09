@@ -29,7 +29,8 @@ nextflow_process {
         then {
             assertAll(
                 { assert !process.success },
-                { assert process.stdout.toString().contains("The name of the input file can't be the same as for the output prefix") }
+                { assert process.stdout.toString().contains("The name of the input file can't be the same as for the output prefix") },
+                { assert snapshot(process.out.versions).match() }
             )
         }
     }
@@ -83,8 +84,12 @@ nextflow_process {
             def lines = path(process.out.file_out.get(0).get(1)).linesGzip
             assertAll(
                 { assert process.success },
-                { assert snapshot(lines[0..5]).match("test_cat_zipped_zipped_lines") },
-                { assert snapshot(lines.size()).match("test_cat_zipped_zipped_size")}
+                { assert snapshot(
+                    lines[0..5],
+                    lines.size(),
+                    process.out.versions
+                    ).match()
+                }
             )
         }
     }
@@ -142,8 +147,12 @@ nextflow_process {
             def lines = path(process.out.file_out.get(0).get(1)).linesGzip
             assertAll(
                 { assert process.success },
-                { assert snapshot(lines[0..5]).match("test_cat_unzipped_zipped_lines") },
-                { assert snapshot(lines.size()).match("test_cat_unzipped_zipped_size")}
+                { assert snapshot(
+                    lines[0..5],
+                    lines.size(),
+                    process.out.versions
+                    ).match()
+                }
             )
         }
     }
@@ -170,8 +179,12 @@ nextflow_process {
             def lines = path(process.out.file_out.get(0).get(1)).linesGzip
             assertAll(
                 { assert process.success },
-                { assert snapshot(lines[0..5]).match("test_cat_one_file_unzipped_zipped_lines") },
-                { assert snapshot(lines.size()).match("test_cat_one_file_unzipped_zipped_size")}
+                { assert snapshot(
+                    lines[0..5],
+                    lines.size(),
+                    process.out.versions
+                    ).match()
+                }
             )
         }
     }

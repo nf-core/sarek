@@ -1,5 +1,7 @@
 name: sentieon_dedup
-description: Runs the sentieon tool LocusCollector followed by Dedup. LocusCollector collects read information that is used by Dedup which in turn marks or removes duplicate reads.
+description: Runs the sentieon tool LocusCollector followed by Dedup. LocusCollector
+  collects read information that is used by Dedup which in turn marks or removes duplicate
+  reads.
 keywords:
   - mem
   - dedup
@@ -14,76 +16,116 @@ tools:
         Our software improves upon BWA, STAR, Minimap2, GATK, HaplotypeCaller, Mutect, and Mutect2 based pipelines and is deployable on any generic-CPU-based computing system.
       homepage: https://www.sentieon.com/
       documentation: https://www.sentieon.com/
+      identifier: ""
 input:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing reference information.
-        e.g. [ id:'test', single_end:false ]
-  - bam:
-      type: file
-      description: BAM file.
-      pattern: "*.bam"
-  - bai:
-      type: file
-      description: BAI file
-      pattern: "*.bai"
-  - meta2:
-      type: map
-      description: |
-        Groovy Map containing reference information.
-        e.g. [ id:'test', single_end:false ]
-  - fasta:
-      type: file
-      description: Genome fasta file
-      pattern: "*.{fa,fasta}"
-  - meta3:
-      type: map
-      description: |
-        Groovy Map containing reference information.
-        e.g. [ id:'test', single_end:false ]
-  - fasta_fai:
-      type: file
-      description: The index of the FASTA reference.
-      pattern: "*.fai"
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing reference information.
+          e.g. [ id:'test', single_end:false ]
+    - bam:
+        type: file
+        description: BAM file.
+        pattern: "*.bam"
+    - bai:
+        type: file
+        description: BAI file
+        pattern: "*.bai"
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing reference information.
+          e.g. [ id:'test', single_end:false ]
+    - fasta:
+        type: file
+        description: Genome fasta file
+        pattern: "*.{fa,fasta}"
+  - - meta3:
+        type: map
+        description: |
+          Groovy Map containing reference information.
+          e.g. [ id:'test', single_end:false ]
+    - fasta_fai:
+        type: file
+        description: The index of the FASTA reference.
+        pattern: "*.fai"
 output:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing reference information.
-        e.g. [ id:'test', single_end:false ]
   - cram:
-      type: file
-      description: CRAM file
-      pattern: "*.cram"
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing reference information.
+            e.g. [ id:'test', single_end:false ]
+      - "*.cram":
+          type: file
+          description: CRAM file
+          pattern: "*.cram"
   - crai:
-      type: file
-      description: CRAM index file
-      pattern: "*.crai"
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing reference information.
+            e.g. [ id:'test', single_end:false ]
+      - "*.crai":
+          type: file
+          description: CRAM index file
+          pattern: "*.crai"
   - bam:
-      type: file
-      description: BAM file.
-      pattern: "*.bam"
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing reference information.
+            e.g. [ id:'test', single_end:false ]
+      - "*.bam":
+          type: file
+          description: BAM file.
+          pattern: "*.bam"
   - bai:
-      type: file
-      description: BAI file
-      pattern: "*.bai"
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing reference information.
+            e.g. [ id:'test', single_end:false ]
+      - "*.bai":
+          type: file
+          description: BAI file
+          pattern: "*.bai"
   - score:
-      type: file
-      description: The score file indicates which reads LocusCollector finds are likely duplicates.
-      pattern: "*.score"
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing reference information.
+            e.g. [ id:'test', single_end:false ]
+      - "*.score":
+          type: file
+          description: The score file indicates which reads LocusCollector finds are likely
+            duplicates.
+          pattern: "*.score"
   - metrics:
-      type: file
-      description: Output file containing Dedup metrics incl. histogram data.
-      pattern: "*.metrics"
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing reference information.
+            e.g. [ id:'test', single_end:false ]
+      - "*.metrics":
+          type: file
+          description: Output file containing Dedup metrics incl. histogram data.
+          pattern: "*.metrics"
   - metrics_multiqc_tsv:
-      type: file
-      description: Output tsv-file containing Dedup metrics excl. histogram data.
-      pattern: "*.metrics.multiqc.tsv"
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing reference information.
+            e.g. [ id:'test', single_end:false ]
+      - "*.metrics.multiqc.tsv":
+          type: file
+          description: Output tsv-file containing Dedup metrics excl. histogram data.
+          pattern: "*.metrics.multiqc.tsv"
   - versions:
-      type: file
-      description: File containing software versions
-      pattern: "versions.yml"
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@asp8200"
 maintainers:

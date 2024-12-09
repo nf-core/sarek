@@ -1,4 +1,43 @@
 {
+    "sarscov2 - bam - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    
+                ],
+                "2": [
+                    "versions.yml:md5,bb2a060a0280c812fba3c74b1707b350"
+                ],
+                "bam": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "cram": [
+                    
+                ],
+                "versions": [
+                    "versions.yml:md5,bb2a060a0280c812fba3c74b1707b350"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-20T10:25:00.314573"
+    },
     "sarscov2 - bam - intervals": {
         "content": [
             {
@@ -59,6 +98,45 @@
             "nextflow": "23.10.0"
         },
         "timestamp": "2023-12-09T03:10:46.70859771"
+    },
+    "sarscov2 - cram - stub": {
+        "content": [
+            {
+                "0": [
+                    
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.cram:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    "versions.yml:md5,bb2a060a0280c812fba3c74b1707b350"
+                ],
+                "bam": [
+                    
+                ],
+                "cram": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.cram:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,bb2a060a0280c812fba3c74b1707b350"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-20T10:24:52.761169"
     },
     "sarscov2 - bam": {
         "content": [

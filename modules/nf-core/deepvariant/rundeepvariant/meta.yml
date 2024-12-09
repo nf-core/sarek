@@ -1,0 +1,122 @@
+name: deepvariant_rundeepvariant
+description: DeepVariant is an analysis pipeline that uses a deep neural network to
+  call genetic variants from next-generation DNA sequencing data
+keywords:
+  - variant calling
+  - machine learning
+  - neural network
+tools:
+  - deepvariant:
+      description: DeepVariant is an analysis pipeline that uses a deep neural network
+        to call genetic variants from next-generation DNA sequencing data
+      homepage: https://github.com/google/deepvariant
+      documentation: https://github.com/google/deepvariant
+      tool_dev_url: https://github.com/google/deepvariant
+      doi: "10.1038/nbt.4235"
+      licence: ["BSD-3-clause"]
+      identifier: biotools:deepvariant
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - input:
+        type: file
+        description: BAM/CRAM file
+        pattern: "*.bam/cram"
+    - index:
+        type: file
+        description: Index of BAM/CRAM file
+        pattern: "*.bai/crai"
+    - intervals:
+        type: file
+        description: file containing intervals
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'genome' ]
+    - fasta:
+        type: file
+        description: The reference fasta file
+        pattern: "*.fasta"
+  - - meta3:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'genome' ]
+    - fai:
+        type: file
+        description: Index of reference fasta file
+        pattern: "*.fai"
+  - - meta4:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'genome' ]
+    - gzi:
+        type: file
+        description: GZI index of reference fasta file
+        pattern: "*.gzi"
+  - - meta5:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'genome' ]
+    - par_bed:
+        type: file
+        description: BED file containing PAR regions
+        pattern: "*.bed"
+output:
+  - vcf:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - ${prefix}.vcf.gz:
+          type: file
+          description: Compressed VCF file
+          pattern: "*.vcf.gz"
+  - vcf_tbi:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - ${prefix}.vcf.gz.tbi:
+          type: file
+          description: Tabix index file of compressed VCF
+          pattern: "*.vcf.gz.tbi"
+  - gvcf:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - ${prefix}.g.vcf.gz:
+          type: file
+          description: Compressed GVCF file
+          pattern: "*.g.vcf.gz"
+  - gvcf_tbi:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - ${prefix}.g.vcf.gz.tbi:
+          type: file
+          description: Tabix index file of compressed GVCF
+          pattern: "*.g.vcf.gz.tbi"
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+authors:
+  - "@abhi18av"
+  - "@ramprasadn"
+maintainers:
+  - "@abhi18av"
+  - "@ramprasadn"

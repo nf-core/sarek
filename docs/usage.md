@@ -53,9 +53,9 @@ The above pipeline run specified with a params file in yaml format:
 nextflow run nf-core/sarek -params-file params.yaml
 ```
 
-with `params.yaml` containing:
+with:
 
-```yaml
+```yaml title="params.yaml"
 input: './samplesheet.csv'
 outdir: './results/'
 genome: 'GATK.GRCh38'
@@ -559,7 +559,7 @@ Some of the currently, available test profiles:
 | no_intervals    | `nextflow run main.nf -profile test_cache,no_intervals,docker`                        |
 | targeted        | `nextflow run main.nf -profile test_cache,targeted,docker`                            |
 | tools_germline  | `nextflow run main.nf -profile test_cache,tools_germline,docker --tools strelka`      |
-| tools_tumoronly | `nextflow run main.nf -profile test_cache,tools_tumoronly,docker --tools strelka`     |
+| tools_tumoronly | `nextflow run main.nf -profile test_cache,tools_tumoronly,docker --tools mutect2`     |
 | tools_somatic   | `nextflow run main.nf -profile test_cache,tools_somatic,docker --tools strelka`       |
 | trimming        | `nextflow run main.nf -profile test_cache,trim_fastq,docker`                          |
 | umi             | `nextflow run main.nf -profile test_cache,umi,docker`                                 |
@@ -583,7 +583,7 @@ This list is by no means exhaustive and it will depend on the specific analysis 
 | [GATK Mutect2](https://gatk.broadinstitute.org/hc/en-us/articles/5358911630107-Mutect2)                 |  x  |  x  |   x    |    -    |   x   |    x    |
 | [lofreq](https://github.com/CSB5/lofreq)                                                                |  x  |  x  |   x    |    -    |   x   |    -    |
 | [mpileup](https://www.htslib.org/doc/samtools-mpileup.html)                                             |  x  |  x  |   x    |    x    |   x   |    -    |
-| [Strelka](https://github.com/Illumina/strelka)                                                          |  x  |  x  |   x    |    x    |   x   |    x    |
+| [Strelka](https://github.com/Illumina/strelka)                                                          |  x  |  x  |   x    |    x    |   -   |    x    |
 | [Manta](https://github.com/Illumina/manta)                                                              |  x  |  x  |   x    |    x    |   x   |    x    |
 | [TIDDIT](https://github.com/SciLifeLab/TIDDIT)                                                          |  x  |  x  |   x    |    x    |   x   |    x    |
 | [ASCAT](https://github.com/VanLoo-lab/ascat)                                                            |  x  |  x  |   -    |    -    |   -   |    x    |
@@ -898,7 +898,6 @@ By default all is specified in the [igenomes.config](https://github.com/nf-core/
 Explanation can be found for all params in the documentation:
 
 - [snpeff_db](https://nf-co.re/sarek/parameters#snpeff_db)
-- [snpeff_genome](https://nf-co.re/sarek/parameters#snpeff_genome)
 - [vep_genome](https://nf-co.re/sarek/parameters#vep_genome)
 - [vep_species](https://nf-co.re/sarek/parameters#vep_species)
 - [vep_cache_version](https://nf-co.re/sarek/parameters#vep_cache_version)
@@ -906,8 +905,7 @@ Explanation can be found for all params in the documentation:
 With the previous example of `GRCh38`, these are the values that were used for these params:
 
 ```bash
-snpeff_db         = '105'
-snpeff_genome     = 'GRCh38'
+snpeff_db         = 'GRCh38.105'
 vep_cache_version = '110'
 vep_genome        = 'GRCh38'
 vep_species       = 'homo_sapiens'
@@ -1012,6 +1010,12 @@ This command could be used to point to the recently downloaded cache and run Snp
 
 ```bash
 nextflow run nf-core/sarek --outdir results --vep_cache /path_to/my-own-cache/vep_cache --snpeff_cache /path_to/my-own-cache/snpeff_cache --tools vep,snpeff --input samplesheet_vcf.csv
+```
+
+Here is an example on how sarek may be used to download the SnpEff cache for Candida auris:
+
+```bash
+nextflow run nf-core/sarek --outdir results --outdir_cache /path_to/my-own-cache --tools snpeff --download_cache --build_only_index --input false --snpeff_db _candida_auris_gca_001189475 --step annotate --genome null --igenomes_ignore
 ```
 
 ### Create containers with pre-downloaded cache
