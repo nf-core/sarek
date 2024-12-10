@@ -57,7 +57,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     gvcf_sentieon_dnascope   = Channel.empty()
     gvcf_sentieon_haplotyper = Channel.empty()
 
-    indexcov_output          = Channel.empty()
+    out_indexcov             = Channel.empty()
     vcf_deepvariant          = Channel.empty()
     vcf_freebayes            = Channel.empty()
     vcf_haplotypecaller      = Channel.empty()
@@ -199,7 +199,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
             fasta_fai
         )
 
-        indexcov_output = BAM_VARIANT_CALLING_INDEXCOV.out.indexcov_output
+        out_indexcov = BAM_VARIANT_CALLING_INDEXCOV.out.out_indexcov
         versions = versions.mix(BAM_VARIANT_CALLING_INDEXCOV.out.versions)
     }
 
@@ -368,7 +368,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     emit:
     gvcf_sentieon_dnascope
     gvcf_sentieon_haplotyper
-    indexcov_output
+    out_indexcov
     vcf_all
     vcf_deepvariant
     vcf_freebayes

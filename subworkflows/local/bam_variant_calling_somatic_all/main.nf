@@ -54,7 +54,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     out_msisensorpro    = Channel.empty()
     vcf_mutect2         = Channel.empty()
     vcf_tiddit          = Channel.empty()
-    indexcov_output     = Channel.empty()
+    out_indexcov        = Channel.empty()
 
     if (tools.split(',').contains('ascat')) {
         BAM_VARIANT_CALLING_SOMATIC_ASCAT(
@@ -165,7 +165,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
             fasta_fai
         )
 
-        indexcov_output = BAM_VARIANT_CALLING_INDEXCOV.out.indexcov_output
+        out_indexcov = BAM_VARIANT_CALLING_INDEXCOV.out.out_indexcov
         versions = versions.mix(BAM_VARIANT_CALLING_INDEXCOV.out.versions)
     }
 

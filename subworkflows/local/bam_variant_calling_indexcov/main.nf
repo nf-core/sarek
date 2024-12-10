@@ -39,6 +39,6 @@ workflow BAM_VARIANT_CALLING_INDEXCOV {
 
     emit:
 
-    indexcov_output = goleft_ch.output
+    out_indexcov = goleft_ch.output
     versions
 }
