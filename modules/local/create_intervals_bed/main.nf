@@ -79,7 +79,7 @@ process CREATE_INTERVALS_BED {
     // def prefix_basename = prefix.substring(0, prefix.lastIndexOf("."))
 
     """
-    touch ${prefix}.bed
+    touch ${prefix}.stub.bed
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
