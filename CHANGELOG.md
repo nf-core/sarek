@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- [1638](https://github.com/nf-core/sarek/pull/1638) - Added additional documentation detailing ASCAT WES usage.
 - [1640](https://github.com/nf-core/sarek/pull/1620) - Add `lofreq` as a tumor-only variant caller
 - [1642](https://github.com/nf-core/sarek/pull/1642) - Back to dev
 - [1653](https://github.com/nf-core/sarek/pull/1653) - Updates `sarek_subway` files with `lofreq`
