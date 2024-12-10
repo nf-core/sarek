@@ -14,6 +14,7 @@ A set of connecting glaciers.
 - [1638](https://github.com/nf-core/sarek/pull/1638) - Added additional documentation detailing ASCAT WES usage.
 - [1640](https://github.com/nf-core/sarek/pull/1620) - Add `lofreq` as a tumor-only variant caller
 - [1642](https://github.com/nf-core/sarek/pull/1642) - Back to dev
+- [1646](https://github.com/nf-core/sarek/pull/1646) - Added asmultipcf functionality for multisample ASCAT calls.
 - [1653](https://github.com/nf-core/sarek/pull/1653) - Updates `sarek_subway` files with `lofreq`
 - [1660](https://github.com/nf-core/sarek/pull/1642) - Add `--length_required` for minimal reads length with `FASTP`
 - [1663](https://github.com/nf-core/sarek/pull/1663) - Massive conda modules update

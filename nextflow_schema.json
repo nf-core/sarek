@@ -1028,5 +1028,10 @@
         {
             "$ref": "#/$defs/generic_options"
         }
-    ]
+    ],
+    "properties": {
+        "asmultipcf": {
+            "type": "boolean"
+        }
+    }
 }

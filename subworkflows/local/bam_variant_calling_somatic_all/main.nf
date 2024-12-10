@@ -7,6 +7,7 @@ include { BAM_VARIANT_CALLING_FREEBAYES                 } from '../bam_variant_c
 include { BAM_VARIANT_CALLING_MPILEUP as MPILEUP_NORMAL } from '../bam_variant_calling_mpileup/main'
 include { BAM_VARIANT_CALLING_MPILEUP as MPILEUP_TUMOR  } from '../bam_variant_calling_mpileup/main'
 include { BAM_VARIANT_CALLING_SOMATIC_ASCAT             } from '../bam_variant_calling_somatic_ascat/main'
+
 include { BAM_VARIANT_CALLING_SOMATIC_CONTROLFREEC      } from '../bam_variant_calling_somatic_controlfreec/main'
 include { BAM_VARIANT_CALLING_SOMATIC_MANTA             } from '../bam_variant_calling_somatic_manta/main'
 include { BAM_VARIANT_CALLING_SOMATIC_MUTECT2           } from '../bam_variant_calling_somatic_mutect2/main'
@@ -41,6 +42,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     gc_file                       // channel: [optional]  ascat gc content file
     rt_file                       // channel: [optional]  ascat rt file
     joint_mutect2                 // boolean: [mandatory] [default: false] run mutect2 in joint mode
+    asmultipcf                    // boolean: [mandatory] [default: false] run ascat in multi-sample mode 
     wes                           // boolean: [mandatory] [default: false] whether targeted data is processed
 
     main:
@@ -53,16 +55,23 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     out_msisensorpro    = Channel.empty()
     vcf_mutect2         = Channel.empty()
     vcf_tiddit          = Channel.empty()
-
+    // ASCAT
     if (tools.split(',').contains('ascat')) {
         BAM_VARIANT_CALLING_SOMATIC_ASCAT(
-            cram,
+            // Remap channel to match module/subworkflow
+            // Adjust meta.map to handle both regular and asmultipcf modes
+            cram.map{ meta, normal_cram, normal_crai, tumor_cram, tumor_crai ->
+                params.asmultipcf ?
+                [ meta + [ id:meta.patient ], normal_cram, normal_crai, tumor_cram, tumor_crai ] :
+                [ meta, normal_cram, normal_crai, tumor_cram, tumor_crai ]
+            },
             allele_files,
             loci_files,
             (wes ? intervals_bed_combined : []), // No intervals needed if not WES
             fasta.map{ meta, fasta -> [ fasta ] },
             gc_file,
-            rt_file
+            rt_file,
+            params.asmultipcf // Pass asmultipcf parameter to the process
         )
 
         versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_ASCAT.out.versions)
