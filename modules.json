@@ -312,7 +312,7 @@
                     },
                     "goleft/indexcov": {
                         "branch": "master",
-                        "git_sha": "a941aa24517960d7b9eeab4c3a5adfb3f70a5e4b",
+                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
                         "installed_by": ["modules"]
                     },
                     "lofreq/callparallel": {

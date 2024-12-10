@@ -12,13 +12,14 @@ process GOLEFT_INDEXCOV {
     tuple val(meta2), path(fai)
 
     output:
-    tuple val(meta), path("${prefix}/*")      , emit: output
-    tuple val(meta), path("${prefix}/*ped")   , emit: ped , optional: true
-    tuple val(meta), path("${prefix}/*bed.gz"), emit: bed , optional: true
-    tuple val(meta), path("${prefix}/*roc")   , emit: roc , optional: true
-    tuple val(meta), path("${prefix}/*html")  , emit: html, optional: true
-    tuple val(meta), path("${prefix}/*png")   , emit: png , optional: true
-    path "versions.yml"                      , emit: versions
+    tuple val(meta), path("${prefix}/*")          , emit: output
+    tuple val(meta), path("${prefix}/*ped")       , emit: ped , optional: true
+    tuple val(meta), path("${prefix}/*bed.gz")    , emit: bed , optional: true
+    tuple val(meta), path("${prefix}/*bed.gz.tbi"), emit: bed_index , optional: true
+    tuple val(meta), path("${prefix}/*roc")       , emit: roc , optional: true
+    tuple val(meta), path("${prefix}/*html")      , emit: html, optional: true
+    tuple val(meta), path("${prefix}/*png")       , emit: png , optional: true
+    path "versions.yml"                           , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -37,9 +38,14 @@ process GOLEFT_INDEXCOV {
         $args \\
         ${input_files.join(" ")}
 
+    if [ -f "${prefix}/${prefix}-indexcov.bed.gz" ] ; then
+        tabix -p bed "${prefix}/${prefix}-indexcov.bed.gz"
+    fi
+
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         goleft: \$(goleft --version 2>&1 | head -n 1 | sed 's/^.*goleft Version: //')
+        tabix: \$(echo \$(tabix -h 2>&1) | sed 's/^.*Version: //; s/ .*\$//')
     END_VERSIONS
     """
     stub:
@@ -47,11 +53,13 @@ process GOLEFT_INDEXCOV {
     prefix = task.ext.prefix ?: "${meta.id}"
     """
     mkdir "${prefix}"
-    touch "${prefix}/${prefix}-indexcov.bed.gz"
+    echo "" | gzip > "${prefix}/${prefix}-indexcov.bed.gz"
+    touch "${prefix}/${prefix}-indexcov.bed.gz.tbi"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         goleft: \$(goleft --version 2>&1 | head -n 1 | sed 's/^.*goleft Version: //')
+        tabix: \$(echo \$(tabix -h 2>&1) | sed 's/^.*Version: //; s/ .*\$//')
     END_VERSIONS
     """
 }
