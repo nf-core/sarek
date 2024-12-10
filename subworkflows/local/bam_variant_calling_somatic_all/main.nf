@@ -248,7 +248,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     )
 
     emit:
-    indexcov_output
+    out_indexcov
     out_msisensorpro
     vcf_all
     vcf_freebayes
