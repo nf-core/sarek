@@ -11,6 +11,7 @@ A set of connecting glaciers.
 
 ### Added
 
+- [1613](https://github.com/nf-core/sarek/pull/1613) - add indexcov
 - [1638](https://github.com/nf-core/sarek/pull/1638) - Added additional documentation detailing ASCAT WES usage.
 - [1640](https://github.com/nf-core/sarek/pull/1620) - Add `lofreq` as a tumor-only variant caller
 - [1642](https://github.com/nf-core/sarek/pull/1642) - Back to dev

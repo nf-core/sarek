@@ -310,6 +310,11 @@
                         "git_sha": "97321eded31a12598837a476d3615300af413bb7",
                         "installed_by": ["modules"]
                     },
+                    "goleft/indexcov": {
+                        "branch": "master",
+                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
+                        "installed_by": ["modules"]
+                    },
                     "lofreq/callparallel": {
                         "branch": "master",
                         "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
