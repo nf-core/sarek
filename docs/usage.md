@@ -591,7 +591,6 @@ This list is by no means exhaustive and it will depend on the specific analysis 
 | [CNVKit](https://cnvkit.readthedocs.io/en/stable/)                                                      |  x  |  x  |   -    |    x    |   x   |    x    |
 | [Control-FREEC](https://github.com/BoevaLab/FREEC)                                                      |  x  |  x  |   x    |    -    |   x   |    x    |
 | [MSIsensorPro](https://github.com/xjtu-omics/msisensor-pro)                                             |  x  |  x  |   x    |    -    |   -   |    x    |
-| [indexcov](https://github.com/brentp/goleft/tree/master/indexcov)                                       |  x  |  -  |   -    |    -    |   -   |    x    |
 
 ## How to run ASCAT with whole-exome sequencing data?
 
