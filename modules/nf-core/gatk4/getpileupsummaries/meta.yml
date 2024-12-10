@@ -16,68 +16,78 @@ tools:
       documentation: https://gatk.broadinstitute.org/hc/en-us/categories/360002369672s
       doi: 10.1158/1538-7445.AM2017-3590
       licence: ["Apache-2.0"]
+      identifier: ""
 input:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test' ]
-  - input:
-      type: file
-      description: BAM/CRAM file to be summarised.
-      pattern: "*.{bam,cram}"
-  - input_index:
-      type: file
-      description: BAM/CRAM file index.
-      pattern: "*.{bai,crai}"
-  - intervals:
-      type: file
-      description: File containing specified sites to be used for the summary. If this option is not specified, variants file is used instead automatically.
-      pattern: "*.interval_list"
-  - meta2:
-      type: map
-      description: |
-        Groovy Map containing reference information
-        e.g. [ id:'genome' ]
-  - fasta:
-      type: file
-      description: The reference fasta file
-      pattern: "*.fasta"
-  - meta3:
-      type: map
-      description: |
-        Groovy Map containing reference information
-        e.g. [ id:'genome' ]
-  - fai:
-      type: file
-      description: Index of reference fasta file
-      pattern: "*.fasta.fai"
-  - meta4:
-      type: map
-      description: |
-        Groovy Map containing reference information
-        e.g. [ id:'genome' ]
-  - dict:
-      type: file
-      description: GATK sequence dictionary
-      pattern: "*.dict"
-  - variants:
-      type: file
-      description: Population vcf of germline sequencing, containing allele fractions. Is also used as sites file if no separate sites file is specified.
-      pattern: "*.vcf.gz"
-  - variants_tbi:
-      type: file
-      description: Index file for the germline resource.
-      pattern: "*.vcf.gz.tbi"
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test' ]
+    - input:
+        type: file
+        description: BAM/CRAM file to be summarised.
+        pattern: "*.{bam,cram}"
+    - index:
+        type: file
+        description: Index file for the input BAM/CRAM file.
+        pattern: "*.{bam.bai,cram.crai}"
+    - intervals:
+        type: file
+        description: File containing specified sites to be used for the summary. If
+          this option is not specified, variants file is used instead automatically.
+        pattern: "*.interval_list"
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'genome' ]
+    - fasta:
+        type: file
+        description: The reference fasta file
+        pattern: "*.fasta"
+  - - meta3:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'genome' ]
+    - fai:
+        type: file
+        description: Index of reference fasta file
+        pattern: "*.fasta.fai"
+  - - meta4:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'genome' ]
+    - dict:
+        type: file
+        description: GATK sequence dictionary
+        pattern: "*.dict"
+  - - variants:
+        type: file
+        description: Population vcf of germline sequencing, containing allele fractions.
+          Is also used as sites file if no separate sites file is specified.
+        pattern: "*.vcf.gz"
+  - - variants_tbi:
+        type: file
+        description: Index file for the germline resource.
+        pattern: "*.vcf.gz.tbi"
 output:
-  - pileup:
-      type: file
-      description: File containing the pileup summary table.
-      pattern: "*.pileups.table"
+  - table:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test' ]
+      - "*.pileups.table":
+          type: file
+          description: Table containing read counts for each site.
+          pattern: "*.pileups.table"
   - versions:
-      type: file
-      description: File containing software versions
-      pattern: "versions.yml"
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@GCJMackenzie"
 maintainers:

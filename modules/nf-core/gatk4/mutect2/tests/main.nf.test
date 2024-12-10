@@ -21,31 +21,31 @@ nextflow_process {
                     tumor_id:'tumour'
                 ],
                 [
-                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_recalibrated_sorted_bam'], checkIfExists: true),
-                    file(params.test_data['homo_sapiens']['illumina']['test2_paired_end_recalibrated_sorted_bam'], checkIfExists: true)
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.recalibrated.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test2.paired_end.recalibrated.sorted.bam', checkIfExists: true)
                 ],
                 [
-                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_recalibrated_sorted_bam_bai'], checkIfExists: true),
-                    file(params.test_data['homo_sapiens']['illumina']['test2_paired_end_recalibrated_sorted_bam_bai'], checkIfExists: true)
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.recalibrated.sorted.bam.bai', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test2.paired_end.recalibrated.sorted.bam.bai', checkIfExists: true)
                 ],
                 []
             ]
             input[1] = [
                 [ id:'genome' ],
-                file(params.test_data['homo_sapiens']['genome']['genome_21_fasta'], checkIfExists: true)
+                file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta', checkIfExists: true)
             ]
             input[2] = [
                 [ id:'genome' ],
-                file(params.test_data['homo_sapiens']['genome']['genome_21_fasta_fai'], checkIfExists: true)
+                file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai', checkIfExists: true)
             ]
             input[3] = [
                 [ id:'genome' ],
-                file(params.test_data['homo_sapiens']['genome']['genome_21_dict'], checkIfExists: true)
+                file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.dict', checkIfExists: true)
             ]
-            input[4] = file(params.test_data['homo_sapiens']['genome']['gnomad_r2_1_1_21_vcf_gz'], checkIfExists: true)
-            input[5] = file(params.test_data['homo_sapiens']['genome']['gnomad_r2_1_1_21_vcf_gz_tbi'], checkIfExists: true)
-            input[6] = file(params.test_data['homo_sapiens']['genome']['mills_and_1000g_indels_21_vcf_gz'], checkIfExists: true)
-            input[7] = file(params.test_data['homo_sapiens']['genome']['mills_and_1000g_indels_21_vcf_gz_tbi'], checkIfExists: true)
+            input[4] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/gnomAD.r2.1.1.vcf.gz', checkIfExists: true)
+            input[5] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/gnomAD.r2.1.1.vcf.gz.tbi', checkIfExists: true)
+            input[6] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/mills_and_1000G.indels.hg38.vcf.gz', checkIfExists: true)
+            input[7] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/mills_and_1000G.indels.hg38.vcf.gz.tbi', checkIfExists: true)
             """
             }
         }
@@ -78,31 +78,31 @@ nextflow_process {
                     tumor_id:'tumour'
                 ],
                 [
-                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_recalibrated_sorted_bam'], checkIfExists: true),
-                    file(params.test_data['homo_sapiens']['illumina']['test2_paired_end_recalibrated_sorted_bam'], checkIfExists: true)
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.recalibrated.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test2.paired_end.recalibrated.sorted.bam', checkIfExists: true)
                 ],
                 [
-                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_recalibrated_sorted_bam_bai'], checkIfExists: true),
-                    file(params.test_data['homo_sapiens']['illumina']['test2_paired_end_recalibrated_sorted_bam_bai'], checkIfExists: true)
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.recalibrated.sorted.bam.bai', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test2.paired_end.recalibrated.sorted.bam.bai', checkIfExists: true)
                 ],
                 []
             ]
             input[1] = [
                 [ id:'genome' ],
-                file(params.test_data['homo_sapiens']['genome']['genome_21_fasta'], checkIfExists: true)
+                file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta', checkIfExists: true)
             ]
             input[2] = [
                 [ id:'genome' ],
-                file(params.test_data['homo_sapiens']['genome']['genome_21_fasta_fai'], checkIfExists: true)
+                file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai', checkIfExists: true)
             ]
             input[3] = [
                 [ id:'genome' ],
-                file(params.test_data['homo_sapiens']['genome']['genome_21_dict'], checkIfExists: true)
+                file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.dict', checkIfExists: true)
             ]
-            input[4] = file(params.test_data['homo_sapiens']['genome']['gnomad_r2_1_1_21_vcf_gz'], checkIfExists: true)
-            input[5] = file(params.test_data['homo_sapiens']['genome']['gnomad_r2_1_1_21_vcf_gz_tbi'], checkIfExists: true)
-            input[6] = file(params.test_data['homo_sapiens']['genome']['mills_and_1000g_indels_21_vcf_gz'], checkIfExists: true)
-            input[7] = file(params.test_data['homo_sapiens']['genome']['mills_and_1000g_indels_21_vcf_gz_tbi'], checkIfExists: true)
+            input[4] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/gnomAD.r2.1.1.vcf.gz', checkIfExists: true)
+            input[5] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/gnomAD.r2.1.1.vcf.gz.tbi', checkIfExists: true)
+            input[6] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/mills_and_1000G.indels.hg38.vcf.gz', checkIfExists: true)
+            input[7] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/mills_and_1000G.indels.hg38.vcf.gz.tbi', checkIfExists: true)
             """
             }
         }
@@ -127,26 +127,26 @@ nextflow_process {
             """
             input[0] = [
                 [ id:'test'],
-                [ file(params.test_data['homo_sapiens']['illumina']['test2_paired_end_recalibrated_sorted_bam'], checkIfExists: true)],
-                [ file(params.test_data['homo_sapiens']['illumina']['test2_paired_end_recalibrated_sorted_bam_bai'], checkIfExists: true)],
+                [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test2.paired_end.recalibrated.sorted.bam', checkIfExists: true)],
+                [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test2.paired_end.recalibrated.sorted.bam.bai', checkIfExists: true)],
                 []
             ]
             input[1] = [
                 [ id:'genome' ],
-                file(params.test_data['homo_sapiens']['genome']['genome_21_fasta'], checkIfExists: true)
+                file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta', checkIfExists: true)
             ]
             input[2] = [
                 [ id:'genome' ],
-                file(params.test_data['homo_sapiens']['genome']['genome_21_fasta_fai'], checkIfExists: true)
+                file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai', checkIfExists: true)
             ]
             input[3] = [
                 [ id:'genome' ],
-                file(params.test_data['homo_sapiens']['genome']['genome_21_dict'], checkIfExists: true)
+                file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.dict', checkIfExists: true)
             ]
-            input[4] = file(params.test_data['homo_sapiens']['genome']['gnomad_r2_1_1_21_vcf_gz'], checkIfExists: true)
-            input[5] = file(params.test_data['homo_sapiens']['genome']['gnomad_r2_1_1_21_vcf_gz_tbi'], checkIfExists: true)
-            input[6] = file(params.test_data['homo_sapiens']['genome']['mills_and_1000g_indels_21_vcf_gz'], checkIfExists: true)
-            input[7] = file(params.test_data['homo_sapiens']['genome']['mills_and_1000g_indels_21_vcf_gz_tbi'], checkIfExists: true)
+            input[4] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/gnomAD.r2.1.1.vcf.gz', checkIfExists: true)
+            input[5] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/gnomAD.r2.1.1.vcf.gz.tbi', checkIfExists: true)
+            input[6] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/mills_and_1000G.indels.hg38.vcf.gz', checkIfExists: true)
+            input[7] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/mills_and_1000G.indels.hg38.vcf.gz.tbi', checkIfExists: true)
             """
             }
         }
@@ -171,26 +171,26 @@ nextflow_process {
             """
             input[0] = [
                 [ id:'test'],
-                [ file(params.test_data['homo_sapiens']['illumina']['test2_paired_end_recalibrated_sorted_cram'], checkIfExists: true)],
-                [ file(params.test_data['homo_sapiens']['illumina']['test2_paired_end_recalibrated_sorted_cram_crai'], checkIfExists: true)],
+                [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test2.paired_end.recalibrated.sorted.cram', checkIfExists: true)],
+                [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test2.paired_end.recalibrated.sorted.cram.crai', checkIfExists: true)],
                 []
             ]
             input[1] = [
                 [ id:'genome' ],
-                file(params.test_data['homo_sapiens']['genome']['genome_21_fasta'], checkIfExists: true)
+                file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta', checkIfExists: true)
             ]
             input[2] = [
                 [ id:'genome' ],
-                file(params.test_data['homo_sapiens']['genome']['genome_21_fasta_fai'], checkIfExists: true)
+                file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai', checkIfExists: true)
             ]
             input[3] = [
                 [ id:'genome' ],
-                file(params.test_data['homo_sapiens']['genome']['genome_21_dict'], checkIfExists: true)
+                file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.dict', checkIfExists: true)
             ]
-            input[4] = file(params.test_data['homo_sapiens']['genome']['gnomad_r2_1_1_21_vcf_gz'], checkIfExists: true)
-            input[5] = file(params.test_data['homo_sapiens']['genome']['gnomad_r2_1_1_21_vcf_gz_tbi'], checkIfExists: true)
-            input[6] = file(params.test_data['homo_sapiens']['genome']['mills_and_1000g_indels_21_vcf_gz'], checkIfExists: true)
-            input[7] = file(params.test_data['homo_sapiens']['genome']['mills_and_1000g_indels_21_vcf_gz_tbi'], checkIfExists: true)
+            input[4] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/gnomAD.r2.1.1.vcf.gz', checkIfExists: true)
+            input[5] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/gnomAD.r2.1.1.vcf.gz.tbi', checkIfExists: true)
+            input[6] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/mills_and_1000G.indels.hg38.vcf.gz', checkIfExists: true)
+            input[7] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/mills_and_1000G.indels.hg38.vcf.gz.tbi', checkIfExists: true)
             """
             }
         }
@@ -216,21 +216,21 @@ nextflow_process {
             """
             input[0] = [
                 [ id:'test'],
-                [ file(params.test_data['homo_sapiens']['illumina']['test_paired_end_recalibrated_sorted_bam'], checkIfExists: true)],
-                [ file(params.test_data['homo_sapiens']['illumina']['test_paired_end_recalibrated_sorted_bam_bai'], checkIfExists: true)],
+                [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.recalibrated.sorted.bam', checkIfExists: true)],
+                [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.recalibrated.sorted.bam.bai', checkIfExists: true)],
                 []
             ]
             input[1] = [
                 [ id:'genome' ],
-                file(params.test_data['homo_sapiens']['genome']['genome_21_fasta'], checkIfExists: true)
+                file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta', checkIfExists: true)
             ]
             input[2] = [
                 [ id:'genome' ],
-                file(params.test_data['homo_sapiens']['genome']['genome_21_fasta_fai'], checkIfExists: true)
+                file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai', checkIfExists: true)
             ]
             input[3] = [
                 [ id:'genome' ],
-                file(params.test_data['homo_sapiens']['genome']['genome_21_dict'], checkIfExists: true)
+                file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.dict', checkIfExists: true)
             ]
             input[4] = []
             input[5] = []
@@ -261,21 +261,21 @@ nextflow_process {
             """
             input[0] = [
                 [ id:'test'],
-                [ file(params.test_data['homo_sapiens']['illumina']['mitochon_standin_recalibrated_sorted_bam'], checkIfExists: true)],
-                [ file(params.test_data['homo_sapiens']['illumina']['mitochon_standin_recalibrated_sorted_bam_bai'], checkIfExists: true)],
-                [ file(params.test_data['homo_sapiens']['genome']['genome_bed'], checkIfExists: true)]
+                [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/mitochon_standin.recalibrated.sorted.bam', checkIfExists: true)],
+                [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/mitochon_standin.recalibrated.sorted.bam.bai', checkIfExists: true)],
+                [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.bed', checkIfExists: true)]
             ]
             input[1] = [
                 [ id:'genome' ],
-                file(params.test_data['homo_sapiens']['genome']['genome_fasta'], checkIfExists: true)
+                file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
             ]
             input[2] = [
                 [ id:'genome' ],
-                file(params.test_data['homo_sapiens']['genome']['genome_fasta_fai'], checkIfExists: true)
+                file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
             ]
             input[3] = [
                 [ id:'genome' ],
-                file(params.test_data['homo_sapiens']['genome']['genome_dict'], checkIfExists: true)
+                file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.dict', checkIfExists: true)
             ]
             input[4] = []
             input[5] = []
@@ -312,31 +312,31 @@ nextflow_process {
                     tumor_id:'tumour'
                 ],
                 [
-                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_recalibrated_sorted_bam'], checkIfExists: true),
-                    file(params.test_data['homo_sapiens']['illumina']['test2_paired_end_recalibrated_sorted_bam'], checkIfExists: true)
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.recalibrated.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test2.paired_end.recalibrated.sorted.bam', checkIfExists: true)
                 ],
                 [
-                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_recalibrated_sorted_bam_bai'], checkIfExists: true),
-                    file(params.test_data['homo_sapiens']['illumina']['test2_paired_end_recalibrated_sorted_bam_bai'], checkIfExists: true)
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.recalibrated.sorted.bam.bai', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test2.paired_end.recalibrated.sorted.bam.bai', checkIfExists: true)
                 ],
                 []
             ]
             input[1] = [
                 [ id:'genome' ],
-                file(params.test_data['homo_sapiens']['genome']['genome_21_fasta'], checkIfExists: true)
+                file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta', checkIfExists: true)
             ]
             input[2] = [
                 [ id:'genome' ],
-                file(params.test_data['homo_sapiens']['genome']['genome_21_fasta_fai'], checkIfExists: true)
+                file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.fasta.fai', checkIfExists: true)
             ]
             input[3] = [
                 [ id:'genome' ],
-                file(params.test_data['homo_sapiens']['genome']['genome_21_dict'], checkIfExists: true)
+                file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.dict', checkIfExists: true)
             ]
-            input[4] = file(params.test_data['homo_sapiens']['genome']['gnomad_r2_1_1_21_vcf_gz'], checkIfExists: true)
-            input[5] = file(params.test_data['homo_sapiens']['genome']['gnomad_r2_1_1_21_vcf_gz_tbi'], checkIfExists: true)
-            input[6] = file(params.test_data['homo_sapiens']['genome']['mills_and_1000g_indels_21_vcf_gz'], checkIfExists: true)
-            input[7] = file(params.test_data['homo_sapiens']['genome']['mills_and_1000g_indels_21_vcf_gz_tbi'], checkIfExists: true)
+            input[4] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/gnomAD.r2.1.1.vcf.gz', checkIfExists: true)
+            input[5] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/gnomAD.r2.1.1.vcf.gz.tbi', checkIfExists: true)
+            input[6] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/mills_and_1000G.indels.hg38.vcf.gz', checkIfExists: true)
+            input[7] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/germlineresources/mills_and_1000G.indels.hg38.vcf.gz.tbi', checkIfExists: true)
             """
             }
         }

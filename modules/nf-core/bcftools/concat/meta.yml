@@ -13,36 +13,68 @@ tools:
       documentation: http://www.htslib.org/doc/bcftools.html
       doi: 10.1093/bioinformatics/btp352
       licence: ["MIT"]
+      identifier: biotools:bcftools
 input:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
-  - vcfs:
-      type: list
-      description: |
-        List containing 2 or more vcf files
-        e.g. [ 'file1.vcf', 'file2.vcf' ]
-  - tbi:
-      type: list
-      description: |
-        List containing 2 or more index files (optional)
-        e.g. [ 'file1.tbi', 'file2.tbi' ]
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - vcfs:
+        type: list
+        description: |
+          List containing 2 or more vcf files
+          e.g. [ 'file1.vcf', 'file2.vcf' ]
+    - tbi:
+        type: list
+        description: |
+          List containing 2 or more index files (optional)
+          e.g. [ 'file1.tbi', 'file2.tbi' ]
 output:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
   - vcf:
-      type: file
-      description: VCF concatenated output file
-      pattern: "*.{vcf.gz}"
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+          pattern: "*.{vcf.gz}"
+      - ${prefix}.vcf.gz:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+          pattern: "*.{vcf.gz}"
+  - tbi:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+          pattern: "*.tbi"
+      - ${prefix}.vcf.gz.tbi:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+          pattern: "*.tbi"
+  - csi:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+          pattern: "*.csi"
+      - ${prefix}.vcf.gz.csi:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+          pattern: "*.csi"
   - versions:
-      type: file
-      description: File containing software versions
-      pattern: "versions.yml"
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@abhi18av"
   - "@nvnieuwk"

@@ -13,41 +13,64 @@ tools:
       documentation: https://samtools.github.io/bcftools/bcftools.html#annotate
       doi: 10.1093/bioinformatics/btp352
       licence: ["MIT"]
+      identifier: biotools:bcftools
 input:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
-  - input:
-      type: file
-      description: Query VCF or BCF file, can be either uncompressed or compressed
-  - index:
-      type: file
-      description: Index of the query VCF or BCF file
-  - annotations:
-      type: file
-      description: Bgzip-compressed file with annotations
-  - annotations_index:
-      type: file
-      description: Index of the annotations file
-  - header_lines:
-      type: file
-      description: Contains lines to append to the output VCF header
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - input:
+        type: file
+        description: Query VCF or BCF file, can be either uncompressed or compressed
+    - index:
+        type: file
+        description: Index of the query VCF or BCF file
+    - annotations:
+        type: file
+        description: Bgzip-compressed file with annotations
+    - annotations_index:
+        type: file
+        description: Index of the annotations file
+  - - header_lines:
+        type: file
+        description: Contains lines to append to the output VCF header
 output:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
-  - versions:
-      type: file
-      description: File containing software versions
-      pattern: "versions.yml"
   - vcf:
-      type: file
-      description: Compressed annotated VCF file
-      pattern: "*{vcf,vcf.gz,bcf,bcf.gz}"
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.{vcf,vcf.gz,bcf,bcf.gz}":
+          type: file
+          description: Compressed annotated VCF file
+          pattern: "*{vcf,vcf.gz,bcf,bcf.gz}"
+  - tbi:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.tbi":
+          type: file
+          description: Alternative VCF file index
+          pattern: "*.tbi"
+  - csi:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.csi":
+          type: file
+          description: Default VCF file index
+          pattern: "*.csi"
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@projectoriented"
   - "@ramprasadn"

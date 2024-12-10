@@ -1,0 +1,54 @@
+nextflow_process {
+
+    name "Test Process UNZIP"
+    script "../main.nf"
+    process "UNZIP"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "unzip"
+
+    test("generic [tar] [tar_gz]") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                            [ id: 'hello' ],
+                            file(params.modules_testdata_base_path + 'generic/tar/hello.tar.gz', checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+          )
+        }
+    }
+
+    test("generic [tar] [tar_gz] stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                            [ id: 'hello' ],
+                            file(params.modules_testdata_base_path + 'generic/tar/hello.tar.gz', checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+}

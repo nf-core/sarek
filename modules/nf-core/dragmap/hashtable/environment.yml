@@ -1,7 +1,5 @@
-name: dragmap_hashtable
 channels:
   - conda-forge
   - bioconda
-  - defaults
 dependencies:
   - bioconda::dragmap=1.2.1

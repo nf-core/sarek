@@ -1,0 +1,60 @@
+nextflow_process {
+
+    name "Test Process FGBIO_GROUPREADSBYUMI"
+    script "../main.nf"
+    process "FGBIO_GROUPREADSBYUMI"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "fgbio"
+    tag "fgbio/groupreadsbyumi"
+
+    test("sarscov2 - bam") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                            [ id:'test', single_end:false ], // meta map
+                            file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/umi/test.paired_end.unsorted_tagged.bam', checkIfExists: true)
+                        ]
+                input[1] = "Adjacency"
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+
+    }
+
+    test("sarscov2 - bam - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                            [ id:'test', single_end:false ], // meta map
+                            file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/umi/test.paired_end.unsorted_tagged.bam', checkIfExists: true)
+                        ]
+                input[1] = "Adjacency"
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+
+    }
+
+}
