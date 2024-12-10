@@ -1,0 +1,2 @@
+muse/call:
+  - "modules/nf-core/muse/call/**"

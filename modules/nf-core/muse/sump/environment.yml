@@ -1,0 +1,6 @@
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - bioconda::muse=2.1.2
+  - bioconda::tabix=1.11 # needed for bgzip
