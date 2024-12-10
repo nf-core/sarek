@@ -397,7 +397,7 @@
                     },
                     "samtools/mpileup": {
                         "branch": "master",
-                        "git_sha": "b13f07be4c508d6ff6312d354d09f2493243e208",
+                        "git_sha": "13e7d1046922381df90cd8fe9bee8c3e57ae8457",
                         "installed_by": ["modules"]
                     },
                     "samtools/stats": {

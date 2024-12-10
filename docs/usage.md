@@ -575,22 +575,23 @@ Sarek can be started at different points in the analysis by setting the paramete
 
 This list is by no means exhaustive and it will depend on the specific analysis you would like to run. This is a suggestion based on the individual docs of the tools specifically for human genomes and a garden-variety sequencing run as well as what has been added to the pipeline.
 
-| Tool                                                                                                    | WGS | WES |  Panel |  Normal | Tumor | Somatic |
-| :------------------------------------------------------------------------------------------------------ | :-: | :-: | :----: | :-----: | :---: | :-----: |
-| [DeepVariant](https://github.com/google/deepvariant)                                                    |  x  |  x  |   x    |    x    |   -   |    -    |
-| [FreeBayes](https://github.com/ekg/freebayes)                                                           |  x  |  x  |   x    |    x    |   x   |    x    |
-| [GATK HaplotypeCaller](https://gatk.broadinstitute.org/hc/en-us/articles/5358864757787-HaplotypeCaller) |  x  |  x  |   x    |    x    |   -   |    -    |
-| [GATK Mutect2](https://gatk.broadinstitute.org/hc/en-us/articles/5358911630107-Mutect2)                 |  x  |  x  |   x    |    -    |   x   |    x    |
-| [lofreq](https://github.com/CSB5/lofreq)                                                                |  x  |  x  |   x    |    -    |   x   |    -    |
-| [mpileup](https://www.htslib.org/doc/samtools-mpileup.html)                                             |  x  |  x  |   x    |    x    |   x   |    -    |
-| [Strelka](https://github.com/Illumina/strelka)                                                          |  x  |  x  |   x    |    x    |   -   |    x    |
-| [Manta](https://github.com/Illumina/manta)                                                              |  x  |  x  |   x    |    x    |   x   |    x    |
-| [indexcov](https://github.com/brentp/goleft/tree/master/indexcov)                                       |  x  |  -  |   x    |    x    |   x   |    x    |
-| [TIDDIT](https://github.com/SciLifeLab/TIDDIT)                                                          |  x  |  x  |   x    |    x    |   x   |    x    |
-| [ASCAT](https://github.com/VanLoo-lab/ascat)                                                            |  x  |  x  |   -    |    -    |   -   |    x    |
-| [CNVKit](https://cnvkit.readthedocs.io/en/stable/)                                                      |  x  |  x  |   -    |    x    |   x   |    x    |
-| [Control-FREEC](https://github.com/BoevaLab/FREEC)                                                      |  x  |  x  |   x    |    -    |   x   |    x    |
-| [MSIsensorPro](https://github.com/xjtu-omics/msisensor-pro)                                             |  x  |  x  |   x    |    -    |   -   |    x    |
+| Tool                                                                                                    | WGS | WES |  Panel |  Germline | Tumor-Only | Somatic (Tumor-Normal) |
+| :------------------------------------------------------------------------------------------------------ | :-: | :-: | :----: | :-------: | :--------: | :--------------------: |
+| [DeepVariant](https://github.com/google/deepvariant)                                                    |  x  |  x  |   x    |     x     |     -      |           -            |
+| [FreeBayes](https://github.com/ekg/freebayes)                                                           |  x  |  x  |   x    |     x     |     x      |           x            |
+| [GATK HaplotypeCaller](https://gatk.broadinstitute.org/hc/en-us/articles/5358864757787-HaplotypeCaller) |  x  |  x  |   x    |     x     |     -      |           -            |
+| [GATK Mutect2](https://gatk.broadinstitute.org/hc/en-us/articles/5358911630107-Mutect2)                 |  x  |  x  |   x    |     -     |     x      |           x            |
+| [lofreq](https://github.com/CSB5/lofreq)                                                                |  x  |  x  |   x    |     -     |     x      |           -            |
+| [mpileup](https://www.htslib.org/doc/samtools-mpileup.html)                                             |  x  |  x  |   x    |     x     |     x      |           -            |
+| [Strelka](https://github.com/Illumina/strelka)                                                          |  x  |  x  |   x    |     x     |     -      |           x            |
+| [Manta](https://github.com/Illumina/manta)                                                              |  x  |  x  |   x    |     x     |     x      |           x            |
+| [indexcov](https://github.com/brentp/goleft/tree/master/indexcov)                                       |  x  |  -  |   x    |     x     |     x      |           x            |
+| [TIDDIT](https://github.com/SciLifeLab/TIDDIT)                                                          |  x  |  x  |   x    |     x     |     x      |           x            |
+| [ASCAT](https://github.com/VanLoo-lab/ascat)                                                            |  x  |  x  |   -    |     -     |     -      |           x            |
+| [CNVKit](https://cnvkit.readthedocs.io/en/stable/)                                                      |  x  |  x  |   -    |     x     |     x      |           x            |
+| [Control-FREEC](https://github.com/BoevaLab/FREEC)                                                      |  x  |  x  |   x    |     -     |     x      |           x            |
+| [MSIsensorPro](https://github.com/xjtu-omics/msisensor-pro)                                             |  x  |  x  |   x    |     -     |     -      |           x            |
+
 
 ## How to run ASCAT with whole-exome sequencing data?
 
