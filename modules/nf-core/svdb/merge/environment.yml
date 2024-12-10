@@ -3,6 +3,5 @@ channels:
   - bioconda
 
 dependencies:
-  - htslib=1.19.1
-  - samtools=1.19.2
-  - svdb=2.8.1
+  - bcftools=1.21
+  - svdb=2.8.2

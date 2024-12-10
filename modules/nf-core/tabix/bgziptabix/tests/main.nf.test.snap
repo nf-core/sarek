@@ -91,6 +91,47 @@
         },
         "timestamp": "2024-02-19T14:51:00.548801"
     },
+    "sarscov2_bed_tbi_stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                        "test.bed.gz.tbi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    
+                ],
+                "2": [
+                    "versions.yml:md5,736e7c3b16a3ac525253e5b5f5d8fdfa"
+                ],
+                "gz_csi": [
+                    
+                ],
+                "gz_tbi": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                        "test.bed.gz.tbi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,736e7c3b16a3ac525253e5b5f5d8fdfa"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-25T14:45:18.533169949"
+    },
     "csi_stub": {
         "content": [
             "test.bed.gz"
@@ -100,6 +141,16 @@
             "nextflow": "24.04.2"
         },
         "timestamp": "2024-02-19T14:51:09.218454"
+    },
+    "tbi_stub": {
+        "content": [
+            "test.bed.gz"
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-25T14:45:18.550930179"
     },
     "tbi_test": {
         "content": [
@@ -115,13 +166,7 @@
         "content": [
             {
                 "0": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        "test.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                        "test.bed.gz.tbi:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
+                    
                 ],
                 "1": [
                     [
@@ -145,13 +190,7 @@
                     ]
                 ],
                 "gz_tbi": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        "test.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
-                        "test.bed.gz.tbi:md5,d41d8cd98f00b204e9800998ecf8427e"
-                    ]
+                    
                 ],
                 "versions": [
                     "versions.yml:md5,736e7c3b16a3ac525253e5b5f5d8fdfa"
@@ -159,9 +198,9 @@
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-07-19T11:29:45.105209991"
+        "timestamp": "2024-09-25T14:44:19.786135972"
     }
 }

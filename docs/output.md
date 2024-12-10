@@ -555,7 +555,7 @@ In Sentieon's package DNAseq, joint germline variant calling is done by first ru
 For further downstream analysis, take a look [here](https://github.com/Illumina/strelka/blob/v2.9.x/docs/userGuide/README.md#interpreting-the-germline-multi-sample-variants-vcf).
 
 <details markdown="1">
-<summary>Output files for all single samples (normal or tumor-only)</summary>
+<summary>Output files for single samples (normal)</summary>
 
 **Output directory: `{outdir}/variantcalling/strelka/<sample>/`**
 

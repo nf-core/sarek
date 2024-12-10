@@ -4,8 +4,8 @@ process ENSEMBLVEP_VEP {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/ensembl-vep:112.0--pl5321h2a3209d_0' :
-        'biocontainers/ensembl-vep:112.0--pl5321h2a3209d_0' }"
+        'https://depot.galaxyproject.org/singularity/ensembl-vep:113.0--pl5321h2a3209d_0' :
+        'biocontainers/ensembl-vep:113.0--pl5321h2a3209d_0' }"
 
     input:
     tuple val(meta), path(vcf), path(custom_extra_files)

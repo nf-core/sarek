@@ -2,58 +2,58 @@
     "sentieon gvcftyper dbsnp": {
         "content": [
             [
-                "versions.yml:md5,bc9039ece9061340830a80ac2b171f3b"
+                "versions.yml:md5,03a2696e8be5117cccfe48a9bfd8c68a"
             ],
             "test.genotyped.vcf.gz.tbi",
             "21606383c760bf676d4c1f747b97d118"
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.04.3"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-07-31T14:12:47.508154"
+        "timestamp": "2024-10-02T10:29:01.102534193"
     },
     "sentieon gvcftyper dbsnp intervals": {
         "content": [
             [
-                "versions.yml:md5,bc9039ece9061340830a80ac2b171f3b"
+                "versions.yml:md5,03a2696e8be5117cccfe48a9bfd8c68a"
             ],
             "test.genotyped.vcf.gz.tbi",
             "21606383c760bf676d4c1f747b97d118"
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.04.3"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-07-31T14:13:05.636172"
+        "timestamp": "2024-10-02T10:29:20.933217951"
     },
     "sentieon gvcftyper vcf.gz": {
         "content": [
             [
-                "versions.yml:md5,bc9039ece9061340830a80ac2b171f3b"
+                "versions.yml:md5,03a2696e8be5117cccfe48a9bfd8c68a"
             ],
             "test.genotyped.vcf.gz.tbi",
             "d13216836f1452e200b215b796606671"
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.04.3"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-07-31T14:12:38.720056"
+        "timestamp": "2024-10-02T10:28:50.937002394"
     },
     "sentieon gvcftyper intervals": {
         "content": [
             [
-                "versions.yml:md5,bc9039ece9061340830a80ac2b171f3b"
+                "versions.yml:md5,03a2696e8be5117cccfe48a9bfd8c68a"
             ],
             "test.genotyped.vcf.gz.tbi",
             "d13216836f1452e200b215b796606671"
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.04.3"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-07-31T14:12:56.700687"
+        "timestamp": "2024-10-02T10:29:11.029924476"
     },
     "sentieon gvcftyper - stub": {
         "content": [
@@ -75,7 +75,7 @@
                     ]
                 ],
                 "2": [
-                    "versions.yml:md5,bc9039ece9061340830a80ac2b171f3b"
+                    "versions.yml:md5,03a2696e8be5117cccfe48a9bfd8c68a"
                 ],
                 "vcf_gz": [
                     [
@@ -94,28 +94,28 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,bc9039ece9061340830a80ac2b171f3b"
+                    "versions.yml:md5,03a2696e8be5117cccfe48a9bfd8c68a"
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.04.3"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-07-31T14:03:46.379477"
+        "timestamp": "2024-10-02T10:29:30.788262037"
     },
     "sentieon gvcftyper vcf": {
         "content": [
             [
-                "versions.yml:md5,bc9039ece9061340830a80ac2b171f3b"
+                "versions.yml:md5,03a2696e8be5117cccfe48a9bfd8c68a"
             ],
             "test.genotyped.vcf.gz.tbi",
             "d13216836f1452e200b215b796606671"
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.04.3"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-07-31T14:12:29.24482"
+        "timestamp": "2024-10-02T10:28:41.276698125"
     }
 }
