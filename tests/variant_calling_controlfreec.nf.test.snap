@@ -7,7 +7,7 @@
                     "samtools": 1.21
                 },
                 "Workflow": {
-                    "nf-core/sarek": "v3.5.0dev"
+                    "nf-core/sarek": "v3.5.0"
                 }
             },
             [
@@ -49,7 +49,7 @@
                 "sample4.recal.cram.stats:md5,0d1784cb4c3f14b9858247ac6128dd03"
             ],
             [
-                
+
             ]
         ],
         "meta": {
@@ -75,7 +75,7 @@
                     "samtools": 1.21
                 },
                 "Workflow": {
-                    "nf-core/sarek": "v3.5.0dev"
+                    "nf-core/sarek": "v3.5.0"
                 }
             },
             [
@@ -130,7 +130,7 @@
                 "sample2.tumor.mpileup.gz_sample.cpn:md5,1b53d73a6f04b29c9693ecbffe8dc3a2"
             ],
             [
-                
+
             ]
         ],
         "meta": {
@@ -162,7 +162,7 @@
                     "samtools": 1.21
                 },
                 "Workflow": {
-                    "nf-core/sarek": "v3.5.0dev"
+                    "nf-core/sarek": "v3.5.0"
                 }
             },
             [
@@ -270,7 +270,7 @@
                 "sample4_vs_sample3_sample.cpn:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             [
-                
+
             ]
         ],
         "meta": {
@@ -302,7 +302,7 @@
                     "samtools": 1.21
                 },
                 "Workflow": {
-                    "nf-core/sarek": "v3.5.0dev"
+                    "nf-core/sarek": "v3.5.0"
                 }
             },
             [
@@ -392,7 +392,7 @@
                 "sample4_vs_sample3_ratio.png:md5,6ac35ba93babc019c2d863f7e06b49b1"
             ],
             [
-                
+
             ]
         ],
         "meta": {
@@ -424,7 +424,7 @@
                     "samtools": 1.21
                 },
                 "Workflow": {
-                    "nf-core/sarek": "v3.5.0dev"
+                    "nf-core/sarek": "v3.5.0"
                 }
             },
             [
@@ -501,7 +501,7 @@
                 "sample2_sample.cpn:md5,d41d8cd98f00b204e9800998ecf8427e"
             ],
             [
-                
+
             ]
         ],
         "meta": {
@@ -533,7 +533,7 @@
                     "samtools": 1.21
                 },
                 "Workflow": {
-                    "nf-core/sarek": "v3.5.0dev"
+                    "nf-core/sarek": "v3.5.0"
                 }
             },
             [
@@ -600,7 +600,7 @@
                 "sample2_ratio.png:md5,47fce58116c63d6cad34f80575e34e43"
             ],
             [
-                
+
             ]
         ],
         "meta": {
