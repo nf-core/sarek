@@ -99,7 +99,6 @@ Ruopsokjåkhå is another peak of the Pårte massif.
 
 - [1623](https://github.com/nf-core/sarek/pull/1623) - Update docs to clarify vep cache folder organisation
 - [1628](https://github.com/nf-core/sarek/pull/1628) - Fix dbsnp channel mapping in germline variant calling subworkflow
-- [1635](https://github.com/nf-core/sarek/pull/1635) - Fix docs to reflect variant calling tool - data type correctly
 
 ### Removed
 
