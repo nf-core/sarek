@@ -257,7 +257,8 @@
                     "gatk4/intervallisttobed": {
                         "branch": "master",
                         "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
-                        "installed_by": ["modules"]
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/gatk4/intervallisttobed/gatk4-intervallisttobed.diff"
                     },
                     "gatk4/learnreadorientationmodel": {
                         "branch": "master",

@@ -160,7 +160,6 @@
                 "multiqc_bcftools_stats.txt:md5,b2bbb90ef05598e1a70cf36be416c3e2",
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
                 "vcftools_tstv_by_count.txt:md5,d4fdc9722fec46722bda2d04be6801d0",
-                "vcftools_tstv_by_qual.txt:md5,03c5d703ba275136e3b5e2c98488dacc",
                 "sample1.strelka.variants.bcftools_stats.txt:md5,2936f10f99295fb772d8c35f246e223d",
                 "sample4_vs_sample3.strelka.somatic_indels.bcftools_stats.txt:md5,1c57e5cd6424157536276002ef1a58d6",
                 "sample4_vs_sample3.strelka.somatic_snvs.bcftools_stats.txt:md5,8cf6d0b3f41436cd2f2aa09c9831764d",
@@ -190,23 +189,20 @@
                 "sample4.recal.cram.stats:md5,0d1784cb4c3f14b9858247ac6128dd03",
                 "sample1.strelka.variants.FILTER.summary:md5,fef8aeadd3b0f3b8c040c0da03bf1cbd",
                 "sample1.strelka.variants.TsTv.count:md5,c5b7a8eda2526d899098439ae4c06a49",
-                "sample1.strelka.variants.TsTv.qual:md5,f01534408c3a87893b523de5f39deb0b",
                 "sample4_vs_sample3.strelka.somatic_indels.FILTER.summary:md5,30a45e2bc87f40c89388032cbf75ec65",
                 "sample4_vs_sample3.strelka.somatic_indels.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f",
-                "sample4_vs_sample3.strelka.somatic_indels.TsTv.qual:md5,bc68ae4e688e9fb772b457069e604883",
                 "sample4_vs_sample3.strelka.somatic_snvs.FILTER.summary:md5,4fc17fa5625b4d1dcc5d791b1eb22d85",
-                "sample4_vs_sample3.strelka.somatic_snvs.TsTv.count:md5,fc7af1f534890c4ad3025588b3af62ae",
-                "sample4_vs_sample3.strelka.somatic_snvs.TsTv.qual:md5,75af7d1b1e5a2f1bdfe5b530e37a6cbb"
+                "sample4_vs_sample3.strelka.somatic_snvs.TsTv.count:md5,fc7af1f534890c4ad3025588b3af62ae"
             ],
             [
-
+                
             ]
         ],
         "meta": {
-            "nf-test": "0.9.1",
+            "nf-test": "0.9.0",
             "nextflow": "24.10.0"
         },
-        "timestamp": "2024-10-29T14:23:36.950134"
+        "timestamp": "2024-11-15T22:22:40.803241819"
     },
     "Run with profile test | --tools strelka --no_intervals | somatic": {
         "content": [
@@ -356,7 +352,6 @@
                 "multiqc_bcftools_stats.txt:md5,e47ab6f334efa3a95dbd609a27711375",
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
                 "vcftools_tstv_by_count.txt:md5,4244903e90d55bc6cd0cb9f6efcd8a80",
-                "vcftools_tstv_by_qual.txt:md5,d13e0d82e6a0c3dedd712dbd29c878f5",
                 "sample3.strelka.variants.bcftools_stats.txt:md5,c75a458b1aa0e1bae3b667d48684e13c",
                 "sample4_vs_sample3.strelka.somatic_indels.bcftools_stats.txt:md5,1c57e5cd6424157536276002ef1a58d6",
                 "sample4_vs_sample3.strelka.somatic_snvs.bcftools_stats.txt:md5,110810e5702ef11bc002bd0948dbdfff",
@@ -374,23 +369,20 @@
                 "sample4.recal.cram.stats:md5,0d1784cb4c3f14b9858247ac6128dd03",
                 "sample3.strelka.variants.FILTER.summary:md5,8697a0a983314e98b99b5f6038af65f6",
                 "sample3.strelka.variants.TsTv.count:md5,1481854d2a765f5641856ecf95ca4097",
-                "sample3.strelka.variants.TsTv.qual:md5,fd8e449a715922e24fe4ea9c89870432",
                 "sample4_vs_sample3.strelka.somatic_indels.FILTER.summary:md5,30a45e2bc87f40c89388032cbf75ec65",
                 "sample4_vs_sample3.strelka.somatic_indels.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f",
-                "sample4_vs_sample3.strelka.somatic_indels.TsTv.qual:md5,bc68ae4e688e9fb772b457069e604883",
                 "sample4_vs_sample3.strelka.somatic_snvs.FILTER.summary:md5,7a81b11aa29fec73d5bc872b7b58f8aa",
-                "sample4_vs_sample3.strelka.somatic_snvs.TsTv.count:md5,a922c51ca3b2ea7cdcfa09e9c8c55d52",
-                "sample4_vs_sample3.strelka.somatic_snvs.TsTv.qual:md5,75af7d1b1e5a2f1bdfe5b530e37a6cbb"
+                "sample4_vs_sample3.strelka.somatic_snvs.TsTv.count:md5,a922c51ca3b2ea7cdcfa09e9c8c55d52"
             ],
             [
-
+                
             ]
         ],
         "meta": {
-            "nf-test": "0.9.1",
+            "nf-test": "0.9.0",
             "nextflow": "24.10.0"
         },
-        "timestamp": "2024-10-29T14:31:34.94648"
+        "timestamp": "2024-11-15T22:29:05.475529758"
     },
     "Run with profile test | --tools strelka | somatic": {
         "content": [
@@ -537,7 +529,6 @@
                 "multiqc_bcftools_stats.txt:md5,c2674bda60d8fa805601c436afe16f18",
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
                 "vcftools_tstv_by_count.txt:md5,3888b9a69fdeaf6667dcc600ff776413",
-                "vcftools_tstv_by_qual.txt:md5,e10ee9b12add8443d3bc98d04733140a",
                 "sample3.strelka.variants.bcftools_stats.txt:md5,d505d381e8c3906788e4135bb975ff84",
                 "sample4_vs_sample3.strelka.somatic_indels.bcftools_stats.txt:md5,1c57e5cd6424157536276002ef1a58d6",
                 "sample4_vs_sample3.strelka.somatic_snvs.bcftools_stats.txt:md5,8cf6d0b3f41436cd2f2aa09c9831764d",
@@ -555,23 +546,20 @@
                 "sample4.recal.cram.stats:md5,0d1784cb4c3f14b9858247ac6128dd03",
                 "sample3.strelka.variants.FILTER.summary:md5,fef8aeadd3b0f3b8c040c0da03bf1cbd",
                 "sample3.strelka.variants.TsTv.count:md5,c5b7a8eda2526d899098439ae4c06a49",
-                "sample3.strelka.variants.TsTv.qual:md5,f01534408c3a87893b523de5f39deb0b",
                 "sample4_vs_sample3.strelka.somatic_indels.FILTER.summary:md5,30a45e2bc87f40c89388032cbf75ec65",
                 "sample4_vs_sample3.strelka.somatic_indels.TsTv.count:md5,8dcfdbcaac118df1d5ad407dd2af699f",
-                "sample4_vs_sample3.strelka.somatic_indels.TsTv.qual:md5,bc68ae4e688e9fb772b457069e604883",
                 "sample4_vs_sample3.strelka.somatic_snvs.FILTER.summary:md5,4fc17fa5625b4d1dcc5d791b1eb22d85",
-                "sample4_vs_sample3.strelka.somatic_snvs.TsTv.count:md5,fc7af1f534890c4ad3025588b3af62ae",
-                "sample4_vs_sample3.strelka.somatic_snvs.TsTv.qual:md5,75af7d1b1e5a2f1bdfe5b530e37a6cbb"
+                "sample4_vs_sample3.strelka.somatic_snvs.TsTv.count:md5,fc7af1f534890c4ad3025588b3af62ae"
             ],
             [
-
+                
             ]
         ],
         "meta": {
-            "nf-test": "0.9.1",
+            "nf-test": "0.9.0",
             "nextflow": "24.10.0"
         },
-        "timestamp": "2024-10-29T14:29:18.353277"
+        "timestamp": "2024-11-15T22:27:18.76415046"
     },
     "Run with profile test | --tools strelka | germline": {
         "content": [
@@ -687,7 +675,6 @@
                 "multiqc_bcftools_stats.txt:md5,cde557db5eb46f8325c06e9bb32e7a94",
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
                 "vcftools_tstv_by_count.txt:md5,69cbd9060c01c1102ddf5839ee7b404a",
-                "vcftools_tstv_by_qual.txt:md5,6973bf3d8488aa52d64933412f0556df",
                 "sample1.strelka.variants.bcftools_stats.txt:md5,2936f10f99295fb772d8c35f246e223d",
                 "sample1.recal.mosdepth.global.dist.txt:md5,d9a4dd6429560b2b647da346050766c5",
                 "sample1.recal.mosdepth.region.dist.txt:md5,1f3dab381958e08eb00f7c5e1135f677",
@@ -696,18 +683,17 @@
                 "sample1.recal.regions.bed.gz.csi:md5,f17cc9d960aa4a1e96548d570585cc8a",
                 "sample1.recal.cram.stats:md5,bcc229318527e414e69aaa5cd092ad9b",
                 "sample1.strelka.variants.FILTER.summary:md5,fef8aeadd3b0f3b8c040c0da03bf1cbd",
-                "sample1.strelka.variants.TsTv.count:md5,c5b7a8eda2526d899098439ae4c06a49",
-                "sample1.strelka.variants.TsTv.qual:md5,f01534408c3a87893b523de5f39deb0b"
+                "sample1.strelka.variants.TsTv.count:md5,c5b7a8eda2526d899098439ae4c06a49"
             ],
             [
-
+                
             ]
         ],
         "meta": {
-            "nf-test": "0.9.1",
+            "nf-test": "0.9.0",
             "nextflow": "24.10.0"
         },
-        "timestamp": "2024-10-29T14:25:18.773706"
+        "timestamp": "2024-11-15T22:24:13.636617483"
     },
     "Run with profile test | --tools strelka --no_intervals | germline": {
         "content": [
@@ -826,7 +812,6 @@
                 "multiqc_bcftools_stats.txt:md5,23c19e033f3086bec87c5e2022795e79",
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
                 "vcftools_tstv_by_count.txt:md5,ea99842f730543b5fd1a08d0e1d68278",
-                "vcftools_tstv_by_qual.txt:md5,a603c008a52ffd0297aa420743fbdc8d",
                 "sample1.strelka.variants.bcftools_stats.txt:md5,0e829f5d31d768a8e99786786282c9ef",
                 "sample1.recal.mosdepth.global.dist.txt:md5,d9a4dd6429560b2b647da346050766c5",
                 "sample1.recal.mosdepth.region.dist.txt:md5,1f3dab381958e08eb00f7c5e1135f677",
@@ -835,17 +820,16 @@
                 "sample1.recal.regions.bed.gz.csi:md5,f17cc9d960aa4a1e96548d570585cc8a",
                 "sample1.recal.cram.stats:md5,bcc229318527e414e69aaa5cd092ad9b",
                 "sample1.strelka.variants.FILTER.summary:md5,8697a0a983314e98b99b5f6038af65f6",
-                "sample1.strelka.variants.TsTv.count:md5,1481854d2a765f5641856ecf95ca4097",
-                "sample1.strelka.variants.TsTv.qual:md5,fd8e449a715922e24fe4ea9c89870432"
+                "sample1.strelka.variants.TsTv.count:md5,1481854d2a765f5641856ecf95ca4097"
             ],
             [
-
+                
             ]
         ],
         "meta": {
-            "nf-test": "0.9.1",
+            "nf-test": "0.9.0",
             "nextflow": "24.10.0"
         },
-        "timestamp": "2024-10-29T14:27:06.859001"
+        "timestamp": "2024-11-15T22:25:42.940353635"
     }
 }

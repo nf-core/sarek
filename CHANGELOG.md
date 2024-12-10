@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- [1638](https://github.com/nf-core/sarek/pull/1638) - Added additional documentation detailing ASCAT WES usage.
 - [1640](https://github.com/nf-core/sarek/pull/1620) - Add `lofreq` as a tumor-only variant caller
 - [1642](https://github.com/nf-core/sarek/pull/1642) - Back to dev
 - [1653](https://github.com/nf-core/sarek/pull/1653) - Updates `sarek_subway` files with `lofreq`
@@ -19,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- [1579](https://github.com/nf-core/sarek/pull/1579) - Update Sentieon usage docs
 - [1668](https://github.com/nf-core/sarek/pull/1668) - Add nf-test sharding CI
 - [1669](https://github.com/nf-core/sarek/pull/1669) - Better nf-test pipeline level tests
 - [1677](https://github.com/nf-core/sarek/pull/1677) - Migrate pytest aligner and pipeline default tests to nf-test
@@ -34,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- [1624](https://github.com/nf-core/sarek/pull/1624) - Fix channel stalling for bcftools index
 - [1657](https://github.com/nf-core/sarek/pull/1657) - Update all actions used in the GHA CI
 - [1661](https://github.com/nf-core/sarek/pull/1661) - nf-test pipeline level tests
 - [1673](https://github.com/nf-core/sarek/pull/1673) - Print warning message instead of silent error with Nextflow versions prior to 24.08.0edge
@@ -42,6 +45,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1695](https://github.com/nf-core/sarek/pull/1695) - Fix and update input_schema.json
 - [1702](https://github.com/nf-core/sarek/pull/1702) - Update nf-schema tests that were not failing on lenient mode
 - [1712](https://github.com/nf-core/sarek/pull/1712) - Fix missing import statements on error messages when starting without samplesheet
+- [1743](https://github.com/nf-core/sarek/pull/1743) - Add setup java 17 in GHA for latest Nextflow version
+- [1745](https://github.com/nf-core/sarek/pull/1745) - Fix bug where workflow can hang if the email parameter is set
+- [1746](https://github.com/nf-core/sarek/pull/1746) - Fix Sentieon module inputs
 
 ### Removed
 
@@ -111,7 +117,7 @@ Loametjåhkkå is another one of the main peaks of the Pårte massif.
 ### Added
 
 - [#1502](https://github.com/nf-core/sarek/pull/1502) - export CNVs into VCF format in `bam_variant_calling_cnvkit`
-- [#1534](https://github.com/nf-core/sarek/pull/1534), [#1573](https://github.com/nf-core/sarek/pull/1573) - Handling `.fastq.gz.spring` files as input
+- [#1534](https://github.com/nf-core/sarek/pull/1534), [#1573](https://github.com/nf-core/sarek/pull/1573), [#1734](https://github.com/nf-core/sarek/pull/1534) - Handling `.fastq.gz.spring` files as input
 - [#1593](https://github.com/nf-core/sarek/pull/1593) - Prepare release `3.4.2`
 
 ### Changed
