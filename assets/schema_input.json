@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "https://raw.githubusercontent.com/nf-core/sarek/main/assets/schema_input.json",
+    "$id": "https://raw.githubusercontent.com/nf-core/sarek/master/assets/schema_input.json",
     "title": "nf-core/sarek pipeline - params.input schema",
     "description": "Schema for the file provided with params.input",
     "type": "array",
