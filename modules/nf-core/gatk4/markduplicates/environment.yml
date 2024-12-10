@@ -1,9 +1,8 @@
-name: gatk4_markduplicates
 channels:
   - conda-forge
   - bioconda
-  - defaults
+
 dependencies:
   - bioconda::gatk4=4.5.0.0
-  - bioconda::samtools=1.19.2
   - bioconda::htslib=1.19.1
+  - bioconda::samtools=1.19.2

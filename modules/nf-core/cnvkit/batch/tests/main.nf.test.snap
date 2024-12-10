@@ -1,19 +1,27 @@
 {
     "cnvkit batch tumouronly mode - bam": {
-        "content": null,
+        "content": [
+            [
+                "versions.yml:md5,5737e02065ca6359586a4078708c73e6"
+            ]
+        ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.3"
         },
-        "timestamp": "2024-03-20T14:30:55.150317561"
+        "timestamp": "2024-08-07T10:07:07.53837"
     },
     "cnvkit batch tumouronly mode - cram": {
-        "content": null,
+        "content": [
+            [
+                "versions.yml:md5,0310a792526148b05f434944a1167835"
+            ]
+        ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.3"
         },
-        "timestamp": "2024-03-20T14:31:31.039652656"
+        "timestamp": "2024-08-07T10:07:48.900117"
     },
     "cnvkit batch - bam - stub": {
         "content": [
@@ -27,60 +35,87 @@
                         "baits.target.bed:md5,26d25ff2d6c45b6d92169b3559c6acdb"
                     ]
                 ]
+            ],
+            [
+                "versions.yml:md5,5737e02065ca6359586a4078708c73e6"
             ]
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.3"
         },
-        "timestamp": "2024-03-20T14:33:25.790391941"
+        "timestamp": "2024-08-07T10:09:40.098703"
     },
     "cnvkit batch wgs - bam": {
-        "content": null,
+        "content": [
+            [
+                "versions.yml:md5,5737e02065ca6359586a4078708c73e6"
+            ]
+        ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.3"
         },
-        "timestamp": "2024-03-20T14:30:10.677690173"
+        "timestamp": "2024-08-07T10:06:25.023798"
     },
     "cnvkit batch germline hybrid mode - bam": {
-        "content": null,
+        "content": [
+            [
+                "versions.yml:md5,5737e02065ca6359586a4078708c73e6"
+            ]
+        ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.3"
         },
-        "timestamp": "2024-03-20T14:32:50.217076532"
+        "timestamp": "2024-08-07T10:09:19.191221"
     },
     "cnvkit batch hybrid mode - bam": {
-        "content": null,
+        "content": [
+            [
+                "versions.yml:md5,5737e02065ca6359586a4078708c73e6"
+            ]
+        ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.3"
         },
-        "timestamp": "2024-03-20T13:54:41.69602289"
+        "timestamp": "2024-08-07T10:06:10.438545"
     },
     "cnvkit batch wgs - cram": {
-        "content": null,
+        "content": [
+            [
+                "versions.yml:md5,0310a792526148b05f434944a1167835"
+            ]
+        ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.3"
         },
-        "timestamp": "2024-03-20T14:30:27.271060826"
+        "timestamp": "2024-08-07T10:06:39.492881"
     },
     "cnvkit batch pon mode - bam": {
-        "content": null,
+        "content": [
+            [
+                "versions.yml:md5,5737e02065ca6359586a4078708c73e6"
+            ]
+        ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.3"
         },
-        "timestamp": "2024-03-20T14:33:06.391306794"
+        "timestamp": "2024-08-07T10:09:29.636924"
     },
     "cnvkit batch germline mode - cram": {
-        "content": null,
+        "content": [
+            [
+                "versions.yml:md5,0310a792526148b05f434944a1167835"
+            ]
+        ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.3"
         },
-        "timestamp": "2024-03-20T14:32:23.38326412"
+        "timestamp": "2024-08-07T10:09:07.307311"
     }
 }

@@ -8,7 +8,7 @@ nextflow_process {
     tag "modules_nfcore"
     tag "gawk"
 
-    test("convert fasta to bed") {
+    test("Convert fasta to bed") {
         config "./nextflow.config"
 
         when {
@@ -31,7 +31,7 @@ nextflow_process {
         }
     }
 
-    test("convert fasta to bed with program file") {
+    test("Convert fasta to bed with program file") {
         config "./nextflow_with_program_file.config"
 
         when {
@@ -42,6 +42,54 @@ nextflow_process {
                     file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta.fai', checkIfExists: true)
                 ]
                 input[1] = Channel.of('BEGIN {FS="\t"}; {print \$1 FS "0" FS \$2}').collectFile(name:"program.txt")
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+
+    test("Extract first column from multiple files") {
+        config "./nextflow_with_program_file.config"
+        tag "test"
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ], // meta map
+                    [file(params.modules_testdata_base_path + 'generic/txt/hello.txt', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'generic/txt/species_names.txt', checkIfExists: true)]
+                ]
+                input[1] = Channel.of('BEGIN {FS=" "}; {print \$1}').collectFile(name:"program.txt")
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+
+    test("Unzip files before processing") {
+        config "./nextflow_with_program_file.config"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ], // meta map
+                    [file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/vcf/NA12878_chrM.vcf.gz', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/vcf/NA24385_sv.vcf.gz', checkIfExists: true)]
+                ]
+                input[1] = Channel.of('/^#CHROM/ { print \$1, \$10 }').collectFile(name:"column_header.txt")
                 """
             }
         }

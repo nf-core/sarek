@@ -13,6 +13,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 - [Directory Structure](#directory-structure)
 - [Preprocessing](#preprocessing)
   - [Preparation of input files (FastQ or (u)BAM)](#preparation-of-input-files-fastq-or-ubam)
+    - [Clip and filter read length](#clip-and-filter-read-length)
     - [Trim adapters](#trim-adapters)
     - [Split FastQ files](#split-fastq-files)
     - [UMI consensus](#umi-consensus)
@@ -42,6 +43,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - [Sentieon Haplotyper](#sentieon-haplotyper)
       - [Sentieon Haplotyper joint germline variant calling](#sentieon-haplotyper-joint-germline-variant-calling)
     - [Strelka](#strelka)
+    - [Lofreq](#lofreq)
   - [Structural Variants](#structural-variants)
     - [Manta](#manta)
     - [TIDDIT](#tiddit)
@@ -105,6 +107,10 @@ Sarek pre-processes raw FastQ files or unmapped BAM files, based on [GATK best p
 ### Preparation of input files (FastQ or (u)BAM)
 
 [FastP](https://github.com/OpenGene/fastp) is a tool designed to provide all-in-one preprocessing for FastQ files and as such is used for trimming and splitting. By default, these files are not published. However, if publishing is enabled, please be aware that these files are only published once, meaning if trimming and splitting is enabled, then the resulting files will be sharded FastQ files with trimmed reads. If only one of them is enabled then the files contain either trimmed or split reads, respectively.
+
+#### Clip and filter read length
+
+[FastP](https://github.com/OpenGene/fastp) enables efficient clipping of reads from either the 5' end (`--clip_r1`, `--clip_r2`) or the 3' end (`--three_prime_clip_r1`, `--three_prime_clip_r2`). Additionally, FastP allows the filtering of reads based on insert size by specifying a minimum required length with the `--length_required` parameter (default: 15bp). It is recommended to optimize these parameters according to the specific characteristics of your data.
 
 #### Trim adapters
 
@@ -548,7 +554,7 @@ In Sentieon's package DNAseq, joint germline variant calling is done by first ru
 For further downstream analysis, take a look [here](https://github.com/Illumina/strelka/blob/v2.9.x/docs/userGuide/README.md#interpreting-the-germline-multi-sample-variants-vcf).
 
 <details markdown="1">
-<summary>Output files for all single samples (normal or tumor-only)</summary>
+<summary>Output files for single samples (normal)</summary>
 
 **Output directory: `{outdir}/variantcalling/strelka/<sample>/`**
 
@@ -569,6 +575,20 @@ For further downstream analysis, take a look [here](https://github.com/Illumina/
   - VCF with tabix index with all somatic SNVs inferred in the tumor sample.
 
 </details>
+
+#### Lofreq
+
+[Lofreq](https://github.com/CSB5/lofreq) is a fast and sensitive variant-caller for inferring SNVs and indels from next-generation sequencing data. It makes full use of base-call qualities and other sources of errors inherent in sequencing, which are usually ignored by other methods or only used for filtering. For further reading and documentation see the [Lofreq user guide](https://csb5.github.io/lofreq/).
+
+<details markdown = "1">
+<summary>Output files for tumor-only samples</summary>
+
+**Output directory: `{outdir}/variant_calling/lofreq/<sample>/`**
+
+-`<tumorsample>.vcf.gz`
+-VCF which provides a detailed description of the detected genetic variants.
+
+  </details>
 
 ### Structural Variants
 

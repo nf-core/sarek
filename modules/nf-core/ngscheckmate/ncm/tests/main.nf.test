@@ -19,8 +19,8 @@ nextflow_process {
             process {
                 """
                 input[0] = [ [ id:'test' ],
-                         file(params.test_data['sarscov2']['genome']['test_bed'], checkIfExists: true)
-                         ]
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/bed/test.bed', checkIfExists: true)
+                ]
                 """
             }
         }
@@ -30,13 +30,13 @@ nextflow_process {
             process {
                 """
                 input[0] =  [
-                            [ id:'test1' ], // meta map
-                            file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true),
-                            file(params.test_data['sarscov2']['genome']['test_bed'], checkIfExists: true)
-                        ]
+                    [ id:'test1' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/bed/test.bed', checkIfExists: true)
+                ]
                 input[1] = [ [ id:'sarscov2' ],
-                         file(params.test_data['sarscov2']['genome']['genome_fasta'], checkIfExists: true)
-                         ]
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                ]
                 input[2] = false
                 """
             }
@@ -47,13 +47,13 @@ nextflow_process {
             process {
                 """
                 input[0] =  [
-                            [ id:'test2' ], // meta map
-                            file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true),
-                            file(params.test_data['sarscov2']['genome']['test_bed'], checkIfExists: true)
-                        ]
+                    [ id:'test2' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/bed/test.bed', checkIfExists: true)
+                ]
                 input[1] = [ [ id:'sarscov2' ],
-                         file(params.test_data['sarscov2']['genome']['genome_fasta'], checkIfExists: true)
-                         ]
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                ]
                 input[2] = false
                 """
             }
@@ -68,16 +68,17 @@ nextflow_process {
             process {
                 """
                 input[0] = [ [ id: 'combined_bams' ],
-                         [file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam']               , checkIfExists: true ),
-                          file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam_bai']           , checkIfExists: true ),
-                          file(params.test_data['sarscov2']['illumina']['test_paired_end_methylated_sorted_bam']    , checkIfExists: true ),
-                          file(params.test_data['sarscov2']['illumina']['test_paired_end_methylated_sorted_bam_bai'], checkIfExists: true )
-                          ]
-                     ]
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam.bai', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.methylated.sorted.bam', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.methylated.sorted.bam.bai', checkIfExists: true)
+                    ]
+                ]
                 input[1] = BEDTOOLS_MAKEWINDOWS.out.bed
                 input[2] = [ [ id:'sarscov2' ],
-                         file(params.test_data['sarscov2']['genome']['genome_fasta'], checkIfExists: true)
-                         ]
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                ]
                 """
             }
         }
@@ -86,9 +87,9 @@ nextflow_process {
             assertAll(
                 { assert process.success },
                 { assert snapshot(
-                    process.out.corr_matrix,
-                    process.out.matched,
-                    process.out.all,
+                    file(process.out.corr_matrix[0][1]).name, // Content md5 not stable under conda
+                    file(process.out.matched[0][1]).name, // Content md5 not stable under conda
+                    file(process.out.all[0][1]).name, // Content md5 not stable under conda
                     process.out.versions
                 ).match() }
             )
@@ -104,8 +105,8 @@ nextflow_process {
                 input[0] = BCFTOOLS_MPILEUP1.out.vcf.combine(BCFTOOLS_MPILEUP2.out.vcf.map{it[1]}).map{meta, one, two -> [meta, [one, two]]}.map{meta, stuff -> [meta, stuff.flatten()]}
                 input[1] = BEDTOOLS_MAKEWINDOWS.out.bed
                 input[2] = [ [ id:'sarscov2' ],
-                         file(params.test_data['sarscov2']['genome']['genome_fasta'], checkIfExists: true)
-                         ]
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                ]
                 """
             }
         }
@@ -133,16 +134,17 @@ nextflow_process {
             process {
                 """
                 input[0] = [ [ id: 'combined_bams' ],
-                         [file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam']               , checkIfExists: true ),
-                          file(params.test_data['sarscov2']['illumina']['test_paired_end_sorted_bam_bai']           , checkIfExists: true ),
-                          file(params.test_data['sarscov2']['illumina']['test_paired_end_methylated_sorted_bam']    , checkIfExists: true ),
-                          file(params.test_data['sarscov2']['illumina']['test_paired_end_methylated_sorted_bam_bai'], checkIfExists: true )
-                          ]
-                     ]
+                    [
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam.bai', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.methylated.sorted.bam', checkIfExists: true),
+                        file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.methylated.sorted.bam.bai', checkIfExists: true)
+                    ]
+                ]
                 input[1] = BEDTOOLS_MAKEWINDOWS.out.bed
                 input[2] = [ [ id:'sarscov2' ],
-                         file(params.test_data['sarscov2']['genome']['genome_fasta'], checkIfExists: true)
-                         ]
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                ]
                 """
             }
         }
@@ -166,8 +168,8 @@ nextflow_process {
                 input[0] = BCFTOOLS_MPILEUP1.out.vcf.combine(BCFTOOLS_MPILEUP2.out.vcf.map{it[1]})
                 input[1] = BEDTOOLS_MAKEWINDOWS.out.bed
                 input[2] = [ [ id:'sarscov2' ],
-                         file(params.test_data['sarscov2']['genome']['genome_fasta'], checkIfExists: true)
-                         ]
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                ]
                 """
             }
         }

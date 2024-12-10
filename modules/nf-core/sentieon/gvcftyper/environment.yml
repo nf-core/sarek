@@ -1,7 +1,5 @@
-name: sentieon_gvcftyper
 channels:
   - conda-forge
   - bioconda
-  - defaults
 dependencies:
-  - bioconda::sentieon=202308.02
+  - bioconda::sentieon=202308.03

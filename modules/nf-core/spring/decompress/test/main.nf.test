@@ -1,0 +1,155 @@
+nextflow_process {
+
+    name "Test Process SPRING_DECOMPRESS"
+    tag "modules_nfcore"
+    tag "modules"
+    tag "spring"
+    tag "spring/decompress"
+    script "../main.nf"
+    process "SPRING_DECOMPRESS"
+
+
+
+    test("Write-One-File") {
+
+        setup {
+            run("SPRING_COMPRESS") {
+                script "../../compress/main.nf"
+                process {
+                    """
+                    input[0] = [
+                        [ id:'test' ], // meta map
+                        file(params.modules_testdata_base_path + '/genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                        []
+                    ]
+                    """
+                }
+            }
+        }
+
+        when {
+            process {
+                """
+                input[0] = SPRING_COMPRESS.out.spring
+                input[1] = true // write_one_fastq_gz
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+
+    test("Write-Two-Files") {
+
+        setup {
+            run("SPRING_COMPRESS") {
+                script "../../compress/main.nf"
+                process {
+                    """
+                    input[0] = [
+                        [ id:'test2' ], // meta map
+                        file(params.modules_testdata_base_path + '/genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + '/genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true),
+                    ]
+                    """
+                }
+            }
+        }
+
+        when {
+            process {
+                """
+                input[0] = SPRING_COMPRESS.out.spring
+                input[1] = false // write_one_fastq_gz
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+
+    test("Write-One-File-stub") {
+
+        options "-stub"
+
+        setup {
+            run("SPRING_COMPRESS") {
+                options "-stub"
+                script "../../compress/main.nf"
+                process {
+                    """
+                    input[0] = [
+                        [ id:'test' ], // meta map
+                        file(params.modules_testdata_base_path + '/genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                        []
+                    ]
+                    """
+                }
+            }
+        }
+
+        when {
+            process {
+                """
+                input[0] = SPRING_COMPRESS.out.spring
+                input[1] = true // write_one_fastq_gz
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+
+    test("Write-Two-Files-stub") {
+
+        options "-stub"
+
+        setup {
+            run("SPRING_COMPRESS") {
+                options "-stub"
+                script "../../compress/main.nf"
+                process {
+                    """
+                    input[0] = [
+                        [ id:'test2' ], // meta map
+                        file(params.modules_testdata_base_path + '/genomics/sarscov2/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                        file(params.modules_testdata_base_path + '/genomics/sarscov2/illumina/fastq/test_2.fastq.gz', checkIfExists: true),
+                    ]
+                    """
+                }
+            }
+        }
+
+        when {
+            process {
+                """
+                input[0] = SPRING_COMPRESS.out.spring
+                input[1] = false // write_one_fastq_gz
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+
+}

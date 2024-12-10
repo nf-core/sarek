@@ -36,37 +36,16 @@
     },
     "homo_sapiens-test_paired_end_umi_unsorted_bam": {
         "content": [
-            {
-                "0": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.bam:md5,634a6bd541478e970f0a4c279f399889"
-                    ]
-                ],
-                "1": [
-                    "versions.yml:md5,8a70467f2dfc2e0d8e81787223d2fc77"
-                ],
-                "bam": [
-                    [
-                        {
-                            "id": "test",
-                            "single_end": false
-                        },
-                        "test.bam:md5,634a6bd541478e970f0a4c279f399889"
-                    ]
-                ],
-                "versions": [
-                    "versions.yml:md5,8a70467f2dfc2e0d8e81787223d2fc77"
-                ]
-            }
+            "e21efac7a4734b9b16f7210901cf02af",
+            "c1b74864f32583faf7d9bcd82217ff4c",
+            [
+                "versions.yml:md5,8a70467f2dfc2e0d8e81787223d2fc77"
+            ]
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nextflow": "24.04.3"
         },
-        "timestamp": "2024-02-26T14:04:38.118875"
+        "timestamp": "2024-07-29T20:15:04.264504"
     }
 }
