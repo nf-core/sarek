@@ -53,6 +53,7 @@ A set of connecting glaciers.
 - [1745](https://github.com/nf-core/sarek/pull/1745) - Fix bug where workflow can hang if the email parameter is set
 - [1746](https://github.com/nf-core/sarek/pull/1746) - Fix Sentieon module inputs
 - [1752](https://github.com/nf-core/sarek/pull/1752) - Add `indexcov` and `lofreq` to full size tests. Amend overview figures.
+- [1754](https://github.com/nf-core/sarek/pull/1754) - Fix test string
 
 ### Removed
 
