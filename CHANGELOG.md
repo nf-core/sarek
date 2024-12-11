@@ -52,6 +52,7 @@ A set of connecting glaciers.
 - [1743](https://github.com/nf-core/sarek/pull/1743) - Add setup java 17 in GHA for latest Nextflow version
 - [1745](https://github.com/nf-core/sarek/pull/1745) - Fix bug where workflow can hang if the email parameter is set
 - [1746](https://github.com/nf-core/sarek/pull/1746) - Fix Sentieon module inputs
+- [1752](https://github.com/nf-core/sarek/pull/1752) - Add `indexcov` and `lofreq` to full size tests. Amend overview figures.
 
 ### Removed
 
