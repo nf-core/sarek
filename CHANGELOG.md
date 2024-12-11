@@ -54,6 +54,7 @@ A set of connecting glaciers.
 - [1746](https://github.com/nf-core/sarek/pull/1746) - Fix Sentieon module inputs
 - [1752](https://github.com/nf-core/sarek/pull/1752) - Add `indexcov` and `lofreq` to full size tests. Amend overview figures.
 - [1754](https://github.com/nf-core/sarek/pull/1754) - Fix test string
+- [1755](https://github.com/nf-core/sarek/pull/1755) - Remove `default` channel and name from local modules
 
 ### Removed
 
@@ -69,6 +70,7 @@ A set of connecting glaciers.
 | `deepvariant` | 1.5.0       | 1.6.1       |
 | `ensemblvep`  | 111.0       | 113.0       |
 | `fgbio`       | 2.0.2       | 2.1.2       |
+| `gawk`        | 5.1.0       | 5.3.0       |
 | `htslib`      | 1.20        | 1.21        |
 | `lofreq`      |             | 2.1.5       |
 | `multiqc`     | 1.21        | 1.25.1      |
