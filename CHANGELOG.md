@@ -5,6 +5,92 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.5.0](https://github.com/nf-core/sarek/releases/tag/3.5.0) - Áhkájiegna
+
+A set of connecting glaciers.
+
+### Added
+
+- [1613](https://github.com/nf-core/sarek/pull/1613) - add indexcov
+- [1638](https://github.com/nf-core/sarek/pull/1638) - Added additional documentation detailing ASCAT WES usage.
+- [1640](https://github.com/nf-core/sarek/pull/1620) - Add `lofreq` as a tumor-only variant caller
+- [1642](https://github.com/nf-core/sarek/pull/1642) - Back to dev
+- [1653](https://github.com/nf-core/sarek/pull/1653) - Updates `sarek_subway` files with `lofreq`
+- [1660](https://github.com/nf-core/sarek/pull/1642) - Add `--length_required` for minimal reads length with `FASTP`
+- [1663](https://github.com/nf-core/sarek/pull/1663) - Massive conda modules update
+- [1664](https://github.com/nf-core/sarek/pull/1664) - Check if flowcell ID matches for read pair
+- [1730](https://github.com/nf-core/sarek/pull/1730) - Enable Harshil Alignment™️ in VS Code workspace settings
+
+### Changed
+
+- [1579](https://github.com/nf-core/sarek/pull/1579) - Update Sentieon usage docs
+- [1635](https://github.com/nf-core/sarek/pull/1635) - Fix docs to reflect variant calling tool - data type correctly
+- [1668](https://github.com/nf-core/sarek/pull/1668) - Add nf-test sharding CI
+- [1669](https://github.com/nf-core/sarek/pull/1669) - Better nf-test pipeline level tests
+- [1677](https://github.com/nf-core/sarek/pull/1677) - Migrate pytest aligner and pipeline default tests to nf-test
+- [1680](https://github.com/nf-core/sarek/pull/1680) - Template update for nf-core/tools v3.0.0
+- [1681](https://github.com/nf-core/sarek/pull/1681) - Template update for nf-core/tools v3.0.1
+- [1686](https://github.com/nf-core/sarek/pull/1686) - Template update for nf-core/tools v3.0.2
+- [1692](https://github.com/nf-core/sarek/pull/1692) - Update ensemblvep
+- [1695](https://github.com/nf-core/sarek/pull/1695) - Update all modules
+- [1707](https://github.com/nf-core/sarek/pull/1707) - Un-hide parameters and clean up Json schema
+- [1708](https://github.com/nf-core/sarek/pull/1708) - Migrate pipeline pytest alignment and annotation tests to nf-test
+- [1711](https://github.com/nf-core/sarek/pull/1711) - Migrate pipeline pytest strelka tests to nf-test
+- [1731](https://github.com/nf-core/sarek/pull/1731) - Migrate pipeline pytest controlfreec tests to nf-test
+
+### Fixed
+
+- [1624](https://github.com/nf-core/sarek/pull/1624) - Fix channel stalling for bcftools index
+- [1657](https://github.com/nf-core/sarek/pull/1657) - Update all actions used in the GHA CI
+- [1661](https://github.com/nf-core/sarek/pull/1661) - nf-test pipeline level tests
+- [1673](https://github.com/nf-core/sarek/pull/1673) - Print warning message instead of silent error with Nextflow versions prior to 24.08.0edge
+- [1693](https://github.com/nf-core/sarek/pull/1693) - Fixes flowcell retrieval during samplesheet parsing
+- [1694](https://github.com/nf-core/sarek/pull/1694) - Fix manifest DOI display on CLI
+- [1695](https://github.com/nf-core/sarek/pull/1695) - Fix and update input_schema.json
+- [1702](https://github.com/nf-core/sarek/pull/1702) - Update nf-schema tests that were not failing on lenient mode
+- [1712](https://github.com/nf-core/sarek/pull/1712) - Fix missing import statements on error messages when starting without samplesheet
+- [1743](https://github.com/nf-core/sarek/pull/1743) - Add setup java 17 in GHA for latest Nextflow version
+- [1745](https://github.com/nf-core/sarek/pull/1745) - Fix bug where workflow can hang if the email parameter is set
+- [1746](https://github.com/nf-core/sarek/pull/1746) - Fix Sentieon module inputs
+- [1752](https://github.com/nf-core/sarek/pull/1752) - Add `indexcov` and `lofreq` to full size tests. Amend overview figures.
+- [1754](https://github.com/nf-core/sarek/pull/1754) - Fix test string
+- [1755](https://github.com/nf-core/sarek/pull/1755) - Remove `default` channel and name from local modules
+
+### Removed
+
+- [1656](https://github.com/nf-core/sarek/pull/1656) - Retiring parameter `snpeff_genome`
+- [1709](https://github.com/nf-core/sarek/pull/1709) - Remove `Strelka` tumor-only somatic variant calling
+- [1728](https://github.com/nf-core/sarek/pull/1728) - Remove BAM to CRAM conversion of input files for post-alignment entry points
+
+### Dependencies
+
+| Dependency    | Old version | New version |
+| ------------- | ----------- | ----------- |
+| `coreutils`   | 8.30        | 9.5         |
+| `deepvariant` | 1.5.0       | 1.6.1       |
+| `ensemblvep`  | 111.0       | 113.0       |
+| `fgbio`       | 2.0.2       | 2.1.2       |
+| `gawk`        | 5.1.0       | 5.3.0       |
+| `htslib`      | 1.20        | 1.21        |
+| `lofreq`      |             | 2.1.5       |
+| `multiqc`     | 1.21        | 1.25.1      |
+| `samtools`    | 1.20        | 1.21        |
+| `sentieon`    | 202308.02   | 202308.03   |
+| `svdb`        | 2.8.1       | 2.8.2       |
+
+### Parameters
+
+| Params                               | Status  |
+| ------------------------------------ | ------- |
+| `--help_full`                        | New     |
+| `--show_hidden`                      | New     |
+| `--snpeff_db`                        | Updated |
+| `--snpeff_genome`                    | Removed |
+| `--validationFailUnrecognisedParams` | Removed |
+| `--validationLenientMode`            | Removed |
+| `--validationSchemaIgnoreParams`     | Removed |
+| `--validationShowHiddenParams`       | Removed |
+
 ## [3.4.4](https://github.com/nf-core/sarek/releases/tag/3.4.4) - Ruopsokjåkhå
 
 Ruopsokjåkhå is another peak of the Pårte massif.
@@ -39,7 +125,7 @@ Loametjåhkkå is another one of the main peaks of the Pårte massif.
 ### Added
 
 - [#1502](https://github.com/nf-core/sarek/pull/1502) - export CNVs into VCF format in `bam_variant_calling_cnvkit`
-- [#1534](https://github.com/nf-core/sarek/pull/1534), [#1573](https://github.com/nf-core/sarek/pull/1573) - Handling `.fastq.gz.spring` files as input
+- [#1534](https://github.com/nf-core/sarek/pull/1534), [#1573](https://github.com/nf-core/sarek/pull/1573), [#1734](https://github.com/nf-core/sarek/pull/1534) - Handling `.fastq.gz.spring` files as input
 - [#1593](https://github.com/nf-core/sarek/pull/1593) - Prepare release `3.4.2`
 
 ### Changed

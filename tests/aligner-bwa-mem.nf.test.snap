@@ -1,0 +1,113 @@
+{
+    "Run with profile test | --aligner bwa-mem --save_reference | skip QC/recal/md": {
+        "content": [
+            10,
+            {
+                "BAM_TO_CRAM_MAPPING": {
+                    "samtools": 1.21
+                },
+                "BWAMEM1_MEM": {
+                    "bwa": "0.7.18-r1243-dirty",
+                    "samtools": 1.2
+                },
+                "INDEX_MERGE_BAM": {
+                    "samtools": 1.21
+                },
+                "MERGE_BAM": {
+                    "samtools": 1.21
+                },
+                "Workflow": {
+                    "nf-core/sarek": "v3.5.0"
+                }
+            },
+            [
+                "csv",
+                "csv/mapped.csv",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "preprocessing",
+                "preprocessing/mapped",
+                "preprocessing/mapped/test",
+                "preprocessing/mapped/test/test.sorted.cram",
+                "preprocessing/mapped/test/test.sorted.cram.crai",
+                "reference",
+                "reference/bwa",
+                "reference/bwa/genome.amb",
+                "reference/bwa/genome.ann",
+                "reference/bwa/genome.bwt",
+                "reference/bwa/genome.pac",
+                "reference/bwa/genome.sa",
+                "reference/intervals",
+                "reference/intervals/chr22_1-40001.bed",
+                "reference/intervals/chr22_1-40001.bed.gz",
+                "reference/intervals/genome.bed",
+                "reference/intervals/genome.bed.gz"
+            ],
+            [
+                "genome.amb:md5,1891c1de381b3a96d4e72f590fde20c1",
+                "genome.ann:md5,2df4aa2d7580639fa0fcdbcad5e2e969",
+                "genome.bwt:md5,815eded87e4cb6b0f1daab5c4d6e30af",
+                "genome.pac:md5,8569fbdb2c98c6fb16dfa73d8eacb070",
+                "genome.sa:md5,e7cff62b919448a3a3d0fe4aaf427594",
+                "chr22_1-40001.bed:md5,87a15eb9c2ff20ccd5cd8735a28708f7",
+                "chr22_1-40001.bed.gz:md5,87a15eb9c2ff20ccd5cd8735a28708f7",
+                "genome.bed:md5,a87dc7d20ebca626f65cc16ff6c97a3e",
+                "genome.bed.gz:md5,a87dc7d20ebca626f65cc16ff6c97a3e"
+            ],
+            [
+                [
+                    "test.sorted.cram",
+                    "5534c350547fd253f0f2b9450362bed"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.09.0"
+        },
+        "timestamp": "2024-10-08T11:22:13.394114"
+    },
+    "Run with profile test | --aligner bwa-mem --save_reference --build_only_index": {
+        "content": [
+            5,
+            {
+                "Workflow": {
+                    "nf-core/sarek": "v3.5.0"
+                }
+            },
+            [
+                "csv",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "reference",
+                "reference/bwa",
+                "reference/bwa/genome.amb",
+                "reference/bwa/genome.ann",
+                "reference/bwa/genome.bwt",
+                "reference/bwa/genome.pac",
+                "reference/bwa/genome.sa",
+                "reference/intervals",
+                "reference/intervals/chr22_1-40001.bed",
+                "reference/intervals/chr22_1-40001.bed.gz",
+                "reference/intervals/genome.bed",
+                "reference/intervals/genome.bed.gz"
+            ],
+            [
+                "genome.amb:md5,1891c1de381b3a96d4e72f590fde20c1",
+                "genome.ann:md5,2df4aa2d7580639fa0fcdbcad5e2e969",
+                "genome.bwt:md5,815eded87e4cb6b0f1daab5c4d6e30af",
+                "genome.pac:md5,8569fbdb2c98c6fb16dfa73d8eacb070",
+                "genome.sa:md5,e7cff62b919448a3a3d0fe4aaf427594",
+                "chr22_1-40001.bed:md5,87a15eb9c2ff20ccd5cd8735a28708f7",
+                "chr22_1-40001.bed.gz:md5,87a15eb9c2ff20ccd5cd8735a28708f7",
+                "genome.bed:md5,a87dc7d20ebca626f65cc16ff6c97a3e",
+                "genome.bed.gz:md5,a87dc7d20ebca626f65cc16ff6c97a3e"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.09.0"
+        },
+        "timestamp": "2024-10-08T11:23:05.203586"
+    }
+}

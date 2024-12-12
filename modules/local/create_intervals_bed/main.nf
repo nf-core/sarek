@@ -72,4 +72,18 @@ process CREATE_INTERVALS_BED {
         END_VERSIONS
         """
     }
+
+    stub:
+    def prefix = task.ext.prefix ?: "${intervals.baseName}"
+    def metrics = task.ext.metrics ?: "${prefix}.metrics"
+    // def prefix_basename = prefix.substring(0, prefix.lastIndexOf("."))
+
+    """
+    touch ${prefix}.stub.bed
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        gawk: \$(awk -Wversion | sed '1!d; s/.*Awk //; s/,.*//')
+    END_VERSIONS
+    """
 }

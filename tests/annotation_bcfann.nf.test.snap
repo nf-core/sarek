@@ -1,0 +1,40 @@
+{
+    "Run with profile test | --tools bcfann": {
+        "content": [
+            2,
+            {
+                "BCFTOOLS_ANNOTATE": {
+                    "bcftools": 1.2
+                },
+                "Workflow": {
+                    "nf-core/sarek": "v3.5.0"
+                }
+            },
+            [
+                "annotation",
+                "annotation/test",
+                "annotation/test/test_BCF.ann.vcf.gz",
+                "annotation/test/test_BCF.ann.vcf.gz.tbi",
+                "csv",
+                "multiqc",
+                "multiqc/multiqc_data",
+                "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc_citations.txt",
+                "multiqc/multiqc_data/multiqc_data.json",
+                "multiqc/multiqc_data/multiqc_software_versions.txt",
+                "multiqc/multiqc_data/multiqc_sources.txt",
+                "multiqc/multiqc_report.html",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml"
+            ],
+            [
+                "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.1",
+            "nextflow": "24.10.0"
+        },
+        "timestamp": "2024-10-29T09:38:54.991004"
+    }
+}

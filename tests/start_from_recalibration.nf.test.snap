@@ -1,0 +1,344 @@
+{
+    "Run with profile test | --input tests/csv/3.0/mapped_single_cram.csv --step recalibrate --tools null ": {
+        "content": [
+            9,
+            {
+                "GATK4_APPLYBQSR": {
+                    "gatk4": "4.5.0.0"
+                },
+                "INDEX_CRAM": {
+                    "samtools": 1.21
+                },
+                "Workflow": {
+                    "nf-core/sarek": "v3.5.0"
+                }
+            },
+            [
+                "csv",
+                "csv/recalibrated.csv",
+                "multiqc",
+                "multiqc/multiqc_data",
+                "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc_citations.txt",
+                "multiqc/multiqc_data/multiqc_data.json",
+                "multiqc/multiqc_data/multiqc_software_versions.txt",
+                "multiqc/multiqc_data/multiqc_sources.txt",
+                "multiqc/multiqc_report.html",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "preprocessing",
+                "preprocessing/recalibrated",
+                "preprocessing/recalibrated/test",
+                "preprocessing/recalibrated/test/test.recal.cram",
+                "preprocessing/recalibrated/test/test.recal.cram.crai",
+                "reference",
+                "reports",
+                "reports/mosdepth",
+                "reports/mosdepth/test",
+                "reports/mosdepth/test/test.recal.mosdepth.global.dist.txt",
+                "reports/mosdepth/test/test.recal.mosdepth.region.dist.txt",
+                "reports/mosdepth/test/test.recal.mosdepth.summary.txt",
+                "reports/mosdepth/test/test.recal.regions.bed.gz",
+                "reports/mosdepth/test/test.recal.regions.bed.gz.csi",
+                "reports/samtools",
+                "reports/samtools/test",
+                "reports/samtools/test/test.recal.cram.stats"
+            ],
+            [
+                "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
+                "test.recal.mosdepth.global.dist.txt:md5,bdb8f185c35dd1eec7ce2f69bce57972",
+                "test.recal.mosdepth.region.dist.txt:md5,f1f1ad86fc280bced1888a5d7d25a3f2",
+                "test.recal.mosdepth.summary.txt:md5,32ea70ef1b99def3dc900b4afd513a40",
+                "test.recal.regions.bed.gz:md5,07bbc084a889f1cece4307fd00214a6e",
+                "test.recal.regions.bed.gz.csi:md5,c5d0be930ffc9e562f21519a0d488d5d",
+                "test.recal.cram.stats:md5,1aacf5ac46a0e600925934cf9ee92fc4"
+            ],
+            [
+                [
+                    "test.recal.cram",
+                    "463ac3b905fbf4ddf113a94dbfa8d69f"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-11-09T17:22:03.443847"
+    },
+    "Run with profile test | --input tests/csv/3.0/mapped_single_bam.csv --step recalibrate --skip_tools baserecalibrator --tools strelka ": {
+        "content": [
+            10,
+            {
+                "BCFTOOLS_STATS": {
+                    "bcftools": 1.2
+                },
+                "STRELKA_SINGLE": {
+                    "strelka": "2.9.10"
+                },
+                "VCFTOOLS_TSTV_COUNT": {
+                    "vcftools": "0.1.16"
+                },
+                "Workflow": {
+                    "nf-core/sarek": "v3.5.0"
+                }
+            },
+            [
+                "csv",
+                "csv/variantcalled.csv",
+                "multiqc",
+                "multiqc/multiqc_data",
+                "multiqc/multiqc_data/bcftools-stats-subtypes.txt",
+                "multiqc/multiqc_data/bcftools_stats_indel-lengths.txt",
+                "multiqc/multiqc_data/bcftools_stats_vqc_Count_Indels.txt",
+                "multiqc/multiqc_data/bcftools_stats_vqc_Count_SNP.txt",
+                "multiqc/multiqc_data/bcftools_stats_vqc_Count_Transitions.txt",
+                "multiqc/multiqc_data/bcftools_stats_vqc_Count_Transversions.txt",
+                "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc_bcftools_stats.txt",
+                "multiqc/multiqc_data/multiqc_citations.txt",
+                "multiqc/multiqc_data/multiqc_data.json",
+                "multiqc/multiqc_data/multiqc_general_stats.txt",
+                "multiqc/multiqc_data/multiqc_software_versions.txt",
+                "multiqc/multiqc_data/multiqc_sources.txt",
+                "multiqc/multiqc_data/vcftools_tstv_by_count.txt",
+                "multiqc/multiqc_data/vcftools_tstv_by_qual.txt",
+                "multiqc/multiqc_plots",
+                "multiqc/multiqc_plots/pdf",
+                "multiqc/multiqc_plots/pdf/bcftools-stats-subtypes-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools-stats-subtypes-pct.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_indel-lengths.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Indels.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_SNP.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Transitions.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Transversions.pdf",
+                "multiqc/multiqc_plots/pdf/general_stats_table.pdf",
+                "multiqc/multiqc_plots/pdf/vcftools_tstv_by_count.pdf",
+                "multiqc/multiqc_plots/pdf/vcftools_tstv_by_qual.pdf",
+                "multiqc/multiqc_plots/png",
+                "multiqc/multiqc_plots/png/bcftools-stats-subtypes-cnt.png",
+                "multiqc/multiqc_plots/png/bcftools-stats-subtypes-pct.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_indel-lengths.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Indels.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_SNP.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Transitions.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Transversions.png",
+                "multiqc/multiqc_plots/png/general_stats_table.png",
+                "multiqc/multiqc_plots/png/vcftools_tstv_by_count.png",
+                "multiqc/multiqc_plots/png/vcftools_tstv_by_qual.png",
+                "multiqc/multiqc_plots/svg",
+                "multiqc/multiqc_plots/svg/bcftools-stats-subtypes-cnt.svg",
+                "multiqc/multiqc_plots/svg/bcftools-stats-subtypes-pct.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_indel-lengths.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Indels.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_SNP.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Transitions.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Transversions.svg",
+                "multiqc/multiqc_plots/svg/general_stats_table.svg",
+                "multiqc/multiqc_plots/svg/vcftools_tstv_by_count.svg",
+                "multiqc/multiqc_plots/svg/vcftools_tstv_by_qual.svg",
+                "multiqc/multiqc_report.html",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "reference",
+                "reports",
+                "reports/bcftools",
+                "reports/bcftools/strelka",
+                "reports/bcftools/strelka/test",
+                "reports/bcftools/strelka/test/test.strelka.variants.bcftools_stats.txt",
+                "reports/vcftools",
+                "reports/vcftools/strelka",
+                "reports/vcftools/strelka/test",
+                "reports/vcftools/strelka/test/test.strelka.variants.FILTER.summary",
+                "reports/vcftools/strelka/test/test.strelka.variants.TsTv.count",
+                "reports/vcftools/strelka/test/test.strelka.variants.TsTv.qual",
+                "variant_calling",
+                "variant_calling/strelka",
+                "variant_calling/strelka/test",
+                "variant_calling/strelka/test/test.strelka.genome.vcf.gz",
+                "variant_calling/strelka/test/test.strelka.genome.vcf.gz.tbi",
+                "variant_calling/strelka/test/test.strelka.variants.vcf.gz",
+                "variant_calling/strelka/test/test.strelka.variants.vcf.gz.tbi"
+            ],
+            [
+                "bcftools-stats-subtypes.txt:md5,08ac2a27511e23e15734fa84e97b53bb",
+                "bcftools_stats_indel-lengths.txt:md5,e2ae4bb4c56cff896db88a20ff2933d9",
+                "bcftools_stats_vqc_Count_Indels.txt:md5,aeeb155cb7bf39e5f349ce38dbe1699f",
+                "bcftools_stats_vqc_Count_SNP.txt:md5,ad63f8dfcc15fdc738b1e8ff54c8e452",
+                "bcftools_stats_vqc_Count_Transitions.txt:md5,6155d186233346cda2cb67147db8f6e7",
+                "bcftools_stats_vqc_Count_Transversions.txt:md5,60a0122e9d3828a4019336a87e158e42",
+                "multiqc_bcftools_stats.txt:md5,3a9838b06c741231489075203469d2c4",
+                "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
+                "vcftools_tstv_by_count.txt:md5,5ca47a28d7ae697981041d8b458ae889",
+                "test.strelka.variants.bcftools_stats.txt:md5,3b37a441393a9329104451f44e56c619",
+                "test.strelka.variants.FILTER.summary:md5,39ff2cc8eb7495a14a6b76e0ab627027",
+                "test.strelka.variants.TsTv.count:md5,ee7dafc8d941b8502a04a63dc3126fff"
+            ],
+            [
+
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-11-09T17:20:43.396817"
+    },
+    "Run with profile test | --input tests/csv/3.0/mapped_single_cram.csv --step recalibrate --skip_tools baserecalibrator --tools strelka ": {
+        "content": [
+            10,
+            {
+                "BCFTOOLS_STATS": {
+                    "bcftools": 1.2
+                },
+                "STRELKA_SINGLE": {
+                    "strelka": "2.9.10"
+                },
+                "VCFTOOLS_TSTV_COUNT": {
+                    "vcftools": "0.1.16"
+                },
+                "Workflow": {
+                    "nf-core/sarek": "v3.5.0"
+                }
+            },
+            [
+                "csv",
+                "csv/variantcalled.csv",
+                "multiqc",
+                "multiqc/multiqc_data",
+                "multiqc/multiqc_data/bcftools-stats-subtypes.txt",
+                "multiqc/multiqc_data/bcftools_stats_indel-lengths.txt",
+                "multiqc/multiqc_data/bcftools_stats_vqc_Count_Indels.txt",
+                "multiqc/multiqc_data/bcftools_stats_vqc_Count_SNP.txt",
+                "multiqc/multiqc_data/bcftools_stats_vqc_Count_Transitions.txt",
+                "multiqc/multiqc_data/bcftools_stats_vqc_Count_Transversions.txt",
+                "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc_bcftools_stats.txt",
+                "multiqc/multiqc_data/multiqc_citations.txt",
+                "multiqc/multiqc_data/multiqc_data.json",
+                "multiqc/multiqc_data/multiqc_general_stats.txt",
+                "multiqc/multiqc_data/multiqc_software_versions.txt",
+                "multiqc/multiqc_data/multiqc_sources.txt",
+                "multiqc/multiqc_data/vcftools_tstv_by_count.txt",
+                "multiqc/multiqc_data/vcftools_tstv_by_qual.txt",
+                "multiqc/multiqc_plots",
+                "multiqc/multiqc_plots/pdf",
+                "multiqc/multiqc_plots/pdf/bcftools-stats-subtypes-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools-stats-subtypes-pct.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_indel-lengths.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Indels.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_SNP.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Transitions.pdf",
+                "multiqc/multiqc_plots/pdf/bcftools_stats_vqc_Count_Transversions.pdf",
+                "multiqc/multiqc_plots/pdf/general_stats_table.pdf",
+                "multiqc/multiqc_plots/pdf/vcftools_tstv_by_count.pdf",
+                "multiqc/multiqc_plots/pdf/vcftools_tstv_by_qual.pdf",
+                "multiqc/multiqc_plots/png",
+                "multiqc/multiqc_plots/png/bcftools-stats-subtypes-cnt.png",
+                "multiqc/multiqc_plots/png/bcftools-stats-subtypes-pct.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_indel-lengths.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Indels.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_SNP.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Transitions.png",
+                "multiqc/multiqc_plots/png/bcftools_stats_vqc_Count_Transversions.png",
+                "multiqc/multiqc_plots/png/general_stats_table.png",
+                "multiqc/multiqc_plots/png/vcftools_tstv_by_count.png",
+                "multiqc/multiqc_plots/png/vcftools_tstv_by_qual.png",
+                "multiqc/multiqc_plots/svg",
+                "multiqc/multiqc_plots/svg/bcftools-stats-subtypes-cnt.svg",
+                "multiqc/multiqc_plots/svg/bcftools-stats-subtypes-pct.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_indel-lengths.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Indels.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_SNP.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Transitions.svg",
+                "multiqc/multiqc_plots/svg/bcftools_stats_vqc_Count_Transversions.svg",
+                "multiqc/multiqc_plots/svg/general_stats_table.svg",
+                "multiqc/multiqc_plots/svg/vcftools_tstv_by_count.svg",
+                "multiqc/multiqc_plots/svg/vcftools_tstv_by_qual.svg",
+                "multiqc/multiqc_report.html",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "reference",
+                "reports",
+                "reports/bcftools",
+                "reports/bcftools/strelka",
+                "reports/bcftools/strelka/test",
+                "reports/bcftools/strelka/test/test.strelka.variants.bcftools_stats.txt",
+                "reports/vcftools",
+                "reports/vcftools/strelka",
+                "reports/vcftools/strelka/test",
+                "reports/vcftools/strelka/test/test.strelka.variants.FILTER.summary",
+                "reports/vcftools/strelka/test/test.strelka.variants.TsTv.count",
+                "reports/vcftools/strelka/test/test.strelka.variants.TsTv.qual",
+                "variant_calling",
+                "variant_calling/strelka",
+                "variant_calling/strelka/test",
+                "variant_calling/strelka/test/test.strelka.genome.vcf.gz",
+                "variant_calling/strelka/test/test.strelka.genome.vcf.gz.tbi",
+                "variant_calling/strelka/test/test.strelka.variants.vcf.gz",
+                "variant_calling/strelka/test/test.strelka.variants.vcf.gz.tbi"
+            ],
+            [
+                "bcftools-stats-subtypes.txt:md5,08ac2a27511e23e15734fa84e97b53bb",
+                "bcftools_stats_indel-lengths.txt:md5,e2ae4bb4c56cff896db88a20ff2933d9",
+                "bcftools_stats_vqc_Count_Indels.txt:md5,aeeb155cb7bf39e5f349ce38dbe1699f",
+                "bcftools_stats_vqc_Count_SNP.txt:md5,ad63f8dfcc15fdc738b1e8ff54c8e452",
+                "bcftools_stats_vqc_Count_Transitions.txt:md5,6155d186233346cda2cb67147db8f6e7",
+                "bcftools_stats_vqc_Count_Transversions.txt:md5,60a0122e9d3828a4019336a87e158e42",
+                "multiqc_bcftools_stats.txt:md5,3a9838b06c741231489075203469d2c4",
+                "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
+                "vcftools_tstv_by_count.txt:md5,5ca47a28d7ae697981041d8b458ae889",
+                "test.strelka.variants.bcftools_stats.txt:md5,3b37a441393a9329104451f44e56c619",
+                "test.strelka.variants.FILTER.summary:md5,39ff2cc8eb7495a14a6b76e0ab627027",
+                "test.strelka.variants.TsTv.count:md5,ee7dafc8d941b8502a04a63dc3126fff"
+            ],
+            [
+
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-11-09T17:23:40.285914"
+    },
+    "Run with profile test | --input tests/csv/3.0/mapped_single_bam.csv --step recalibrate --tools null ": {
+        "content": [
+            6,
+            {
+                "GATK4_APPLYBQSR": {
+                    "gatk4": "4.5.0.0"
+                },
+                "Workflow": {
+                    "nf-core/sarek": "v3.5.0"
+                }
+            },
+            [
+                "csv",
+                "multiqc",
+                "multiqc/multiqc_data",
+                "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc_citations.txt",
+                "multiqc/multiqc_data/multiqc_data.json",
+                "multiqc/multiqc_data/multiqc_software_versions.txt",
+                "multiqc/multiqc_data/multiqc_sources.txt",
+                "multiqc/multiqc_report.html",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "preprocessing",
+                "reference"
+            ],
+            [
+                "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f"
+            ],
+            [
+
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-11-09T17:19:08.093003"
+    }
+}

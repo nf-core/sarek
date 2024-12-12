@@ -1,0 +1,612 @@
+{
+    "Run with profile test | --tools controlfreec --no_intervals | somatic": {
+        "content": [
+            8,
+            {
+                "SAMTOOLS_MPILEUP": {
+                    "samtools": 1.21
+                },
+                "Workflow": {
+                    "nf-core/sarek": "v3.5.0"
+                }
+            },
+            [
+                "csv",
+                "no_intervals.bed",
+                "no_intervals.bed.gz",
+                "no_intervals.bed.gz.tbi",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "reference",
+                "reports",
+                "reports/mosdepth",
+                "reports/mosdepth/sample3",
+                "reports/mosdepth/sample3/sample3.recal.mosdepth.global.dist.txt",
+                "reports/mosdepth/sample3/sample3.recal.mosdepth.summary.txt",
+                "reports/mosdepth/sample3/sample3.recal.per-base.bed.gz",
+                "reports/mosdepth/sample3/sample3.recal.per-base.bed.gz.csi",
+                "reports/mosdepth/sample4",
+                "reports/mosdepth/sample4/sample4.recal.mosdepth.global.dist.txt",
+                "reports/mosdepth/sample4/sample4.recal.mosdepth.summary.txt",
+                "reports/mosdepth/sample4/sample4.recal.per-base.bed.gz",
+                "reports/mosdepth/sample4/sample4.recal.per-base.bed.gz.csi",
+                "reports/samtools",
+                "reports/samtools/sample3",
+                "reports/samtools/sample3/sample3.recal.cram.stats",
+                "reports/samtools/sample4",
+                "reports/samtools/sample4/sample4.recal.cram.stats"
+            ],
+            [
+                "sample3.recal.mosdepth.global.dist.txt:md5,69e29702ef01fd8f6c7a5468fc35a16a",
+                "sample3.recal.mosdepth.summary.txt:md5,d2775eb102acc5950f7f53883dcb503d",
+                "sample3.recal.per-base.bed.gz:md5,297f96648928d0ca5184223fb9941e7c",
+                "sample3.recal.per-base.bed.gz.csi:md5,519cc5bf84da0d71b87a88c76f83194e",
+                "sample4.recal.mosdepth.global.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
+                "sample4.recal.mosdepth.summary.txt:md5,0a7300e56eda6fba7c7564f00aa000f0",
+                "sample4.recal.per-base.bed.gz:md5,39a1bc436aa8546c26faedbe94cb676c",
+                "sample4.recal.per-base.bed.gz.csi:md5,aaa7bed9e7ef873b23bca249b8b58eb9",
+                "sample3.recal.cram.stats:md5,bcc229318527e414e69aaa5cd092ad9b",
+                "sample4.recal.cram.stats:md5,0d1784cb4c3f14b9858247ac6128dd03"
+            ],
+            [
+
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.10.2"
+        },
+        "timestamp": "2024-12-10T09:46:49.516904333"
+    },
+    "Run with profile test | --tools controlfreec | tumoronly": {
+        "content": [
+            11,
+            {
+                "FREEC2BED": {
+                    "controlfreec": "11.6b"
+                },
+                "FREEC2CIRCOS": {
+                    "controlfreec": "11.6b"
+                },
+                "FREEC_TUMORONLY": {
+                    "controlfreec": "11.6b"
+                },
+                "SAMTOOLS_MPILEUP": {
+                    "samtools": 1.21
+                },
+                "Workflow": {
+                    "nf-core/sarek": "v3.5.0"
+                }
+            },
+            [
+                "csv",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "reference",
+                "reports",
+                "reports/mosdepth",
+                "reports/mosdepth/sample2",
+                "reports/mosdepth/sample2/sample2.recal.mosdepth.global.dist.txt",
+                "reports/mosdepth/sample2/sample2.recal.mosdepth.region.dist.txt",
+                "reports/mosdepth/sample2/sample2.recal.mosdepth.summary.txt",
+                "reports/mosdepth/sample2/sample2.recal.per-base.bed.gz",
+                "reports/mosdepth/sample2/sample2.recal.per-base.bed.gz.csi",
+                "reports/mosdepth/sample2/sample2.recal.regions.bed.gz",
+                "reports/mosdepth/sample2/sample2.recal.regions.bed.gz.csi",
+                "reports/samtools",
+                "reports/samtools/sample2",
+                "reports/samtools/sample2/sample2.recal.cram.stats",
+                "variant_calling",
+                "variant_calling/controlfreec",
+                "variant_calling/controlfreec/sample2",
+                "variant_calling/controlfreec/sample2/config.txt",
+                "variant_calling/controlfreec/sample2/sample2.bed",
+                "variant_calling/controlfreec/sample2/sample2.circos.txt",
+                "variant_calling/controlfreec/sample2/sample2.p.value.txt",
+                "variant_calling/controlfreec/sample2/sample2.tumor.mpileup.gz_BAF.txt",
+                "variant_calling/controlfreec/sample2/sample2.tumor.mpileup.gz_CNVs",
+                "variant_calling/controlfreec/sample2/sample2.tumor.mpileup.gz_info.txt",
+                "variant_calling/controlfreec/sample2/sample2.tumor.mpileup.gz_ratio.BedGraph",
+                "variant_calling/controlfreec/sample2/sample2.tumor.mpileup.gz_ratio.txt",
+                "variant_calling/controlfreec/sample2/sample2.tumor.mpileup.gz_sample.cpn"
+            ],
+            [
+                "sample2.recal.mosdepth.global.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
+                "sample2.recal.mosdepth.region.dist.txt:md5,39005ffaac22871ffaaf19656fe69c5b",
+                "sample2.recal.mosdepth.summary.txt:md5,68d4b98f17361fddf73052ead34fa370",
+                "sample2.recal.per-base.bed.gz:md5,39a1bc436aa8546c26faedbe94cb676c",
+                "sample2.recal.per-base.bed.gz.csi:md5,aaa7bed9e7ef873b23bca249b8b58eb9",
+                "sample2.recal.regions.bed.gz:md5,b7561bc56a955f7db0f11e67e2ec0386",
+                "sample2.recal.regions.bed.gz.csi:md5,538cb5d244411a670a4b041691f8825b",
+                "sample2.recal.cram.stats:md5,0d1784cb4c3f14b9858247ac6128dd03",
+                "sample2.bed:md5,480eb7f5467f7496c0c96da382563fed",
+                "sample2.circos.txt:md5,83b313af17990145404e4a98d59b98b2",
+                "sample2.p.value.txt:md5,a5baccb0b7e35c93848fc7d3f586bc98",
+                "sample2.tumor.mpileup.gz_BAF.txt:md5,c7f0d18d66988fe2938a8f5691772bcb",
+                "sample2.tumor.mpileup.gz_CNVs:md5,29d1456ae74a2a07c87dfae5dd1bf4a9",
+                "sample2.tumor.mpileup.gz_info.txt:md5,da8f48d99b48e85c2aac89f143e20e5b",
+                "sample2.tumor.mpileup.gz_ratio.BedGraph:md5,869661a75d7ec23f6cf1192b4c6f8512",
+                "sample2.tumor.mpileup.gz_ratio.txt:md5,cc7f5e1ae29196cc1f4052eebc03b65c",
+                "sample2.tumor.mpileup.gz_sample.cpn:md5,1b53d73a6f04b29c9693ecbffe8dc3a2"
+            ],
+            [
+
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.10.2"
+        },
+        "timestamp": "2024-12-10T09:55:52.492595419"
+    },
+    "Run with profile test | --tools controlfreec --no_intervals | somatic | stub": {
+        "content": [
+            14,
+            {
+                "ASSESS_SIGNIFICANCE": {
+                    "controlfreec": 11.6
+                },
+                "FREEC2BED": {
+                    "controlfreec": "11.6b"
+                },
+                "FREEC2CIRCOS": {
+                    "controlfreec": "11.6b"
+                },
+                "FREEC_SOMATIC": {
+                    "controlfreec": "11.6b"
+                },
+                "MAKEGRAPH2": {
+                    "controlfreec": "11.6b"
+                },
+                "SAMTOOLS_MPILEUP": {
+                    "samtools": 1.21
+                },
+                "Workflow": {
+                    "nf-core/sarek": "v3.5.0"
+                }
+            },
+            [
+                "csv",
+                "multiqc",
+                "multiqc/multiqc_data",
+                "multiqc/multiqc_plots",
+                "multiqc/multiqc_report.html",
+                "no_intervals.bed",
+                "no_intervals.bed.gz",
+                "no_intervals.bed.gz.tbi",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "reference",
+                "reports",
+                "reports/mosdepth",
+                "reports/mosdepth/sample3",
+                "reports/mosdepth/sample3/sample3.recal.global.dist.txt",
+                "reports/mosdepth/sample3/sample3.recal.per-base.bed.gz",
+                "reports/mosdepth/sample3/sample3.recal.per-base.bed.gz.csi",
+                "reports/mosdepth/sample3/sample3.recal.per-base.d4",
+                "reports/mosdepth/sample3/sample3.recal.quantized.bed.gz",
+                "reports/mosdepth/sample3/sample3.recal.quantized.bed.gz.csi",
+                "reports/mosdepth/sample3/sample3.recal.region.dist.txt",
+                "reports/mosdepth/sample3/sample3.recal.regions.bed.gz",
+                "reports/mosdepth/sample3/sample3.recal.regions.bed.gz.csi",
+                "reports/mosdepth/sample3/sample3.recal.summary.txt",
+                "reports/mosdepth/sample3/sample3.recal.thresholds.bed.gz",
+                "reports/mosdepth/sample3/sample3.recal.thresholds.bed.gz.csi",
+                "reports/mosdepth/sample4",
+                "reports/mosdepth/sample4/sample4.recal.global.dist.txt",
+                "reports/mosdepth/sample4/sample4.recal.per-base.bed.gz",
+                "reports/mosdepth/sample4/sample4.recal.per-base.bed.gz.csi",
+                "reports/mosdepth/sample4/sample4.recal.per-base.d4",
+                "reports/mosdepth/sample4/sample4.recal.quantized.bed.gz",
+                "reports/mosdepth/sample4/sample4.recal.quantized.bed.gz.csi",
+                "reports/mosdepth/sample4/sample4.recal.region.dist.txt",
+                "reports/mosdepth/sample4/sample4.recal.regions.bed.gz",
+                "reports/mosdepth/sample4/sample4.recal.regions.bed.gz.csi",
+                "reports/mosdepth/sample4/sample4.recal.summary.txt",
+                "reports/mosdepth/sample4/sample4.recal.thresholds.bed.gz",
+                "reports/mosdepth/sample4/sample4.recal.thresholds.bed.gz.csi",
+                "reports/samtools",
+                "reports/samtools/sample3",
+                "reports/samtools/sample3/sample3.recal.cram.stats",
+                "reports/samtools/sample4",
+                "reports/samtools/sample4/sample4.recal.cram.stats",
+                "variant_calling",
+                "variant_calling/controlfreec",
+                "variant_calling/controlfreec/sample4_vs_sample3",
+                "variant_calling/controlfreec/sample4_vs_sample3/GC_profile.sample4_vs_sample3.cpn",
+                "variant_calling/controlfreec/sample4_vs_sample3/config.txt",
+                "variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.bed",
+                "variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.circos.txt",
+                "variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.p.value.txt",
+                "variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_BAF.png",
+                "variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_BAF.txt",
+                "variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_CNVs",
+                "variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_info.txt",
+                "variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_ratio.BedGraph",
+                "variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_ratio.log2.png",
+                "variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_ratio.png",
+                "variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_ratio.txt",
+                "variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_sample.cpn"
+            ],
+            [
+                "sample3.recal.global.dist.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample3.recal.per-base.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                "sample3.recal.per-base.bed.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample3.recal.per-base.d4:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample3.recal.quantized.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                "sample3.recal.quantized.bed.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample3.recal.region.dist.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample3.recal.regions.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                "sample3.recal.regions.bed.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample3.recal.summary.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample3.recal.thresholds.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                "sample3.recal.thresholds.bed.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample4.recal.global.dist.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample4.recal.per-base.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                "sample4.recal.per-base.bed.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample4.recal.per-base.d4:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample4.recal.quantized.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                "sample4.recal.quantized.bed.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample4.recal.region.dist.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample4.recal.regions.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                "sample4.recal.regions.bed.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample4.recal.summary.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample4.recal.thresholds.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                "sample4.recal.thresholds.bed.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample3.recal.cram.stats:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample4.recal.cram.stats:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "GC_profile.sample4_vs_sample3.cpn:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample4_vs_sample3.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample4_vs_sample3.circos.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample4_vs_sample3.p.value.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample4_vs_sample3_BAF.png:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample4_vs_sample3_BAF.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample4_vs_sample3_CNVs:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample4_vs_sample3_info.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample4_vs_sample3_ratio.BedGraph:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample4_vs_sample3_ratio.log2.png:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample4_vs_sample3_ratio.png:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample4_vs_sample3_ratio.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample4_vs_sample3_sample.cpn:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.10.2"
+        },
+        "timestamp": "2024-12-10T10:14:32.674251218"
+    },
+    "Run with profile test | --tools controlfreec | somatic": {
+        "content": [
+            16,
+            {
+                "ASSESS_SIGNIFICANCE": {
+                    "controlfreec": 11.6
+                },
+                "FREEC2BED": {
+                    "controlfreec": "11.6b"
+                },
+                "FREEC2CIRCOS": {
+                    "controlfreec": "11.6b"
+                },
+                "FREEC_SOMATIC": {
+                    "controlfreec": "11.6b"
+                },
+                "MAKEGRAPH2": {
+                    "controlfreec": "11.6b"
+                },
+                "SAMTOOLS_MPILEUP": {
+                    "samtools": 1.21
+                },
+                "Workflow": {
+                    "nf-core/sarek": "v3.5.0"
+                }
+            },
+            [
+                "csv",
+                "multiqc",
+                "multiqc/multiqc_data",
+                "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc_citations.txt",
+                "multiqc/multiqc_data/multiqc_data.json",
+                "multiqc/multiqc_data/multiqc_software_versions.txt",
+                "multiqc/multiqc_data/multiqc_sources.txt",
+                "multiqc/multiqc_report.html",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "reference",
+                "reports",
+                "reports/mosdepth",
+                "reports/mosdepth/sample3",
+                "reports/mosdepth/sample3/sample3.recal.mosdepth.global.dist.txt",
+                "reports/mosdepth/sample3/sample3.recal.mosdepth.region.dist.txt",
+                "reports/mosdepth/sample3/sample3.recal.mosdepth.summary.txt",
+                "reports/mosdepth/sample3/sample3.recal.per-base.bed.gz",
+                "reports/mosdepth/sample3/sample3.recal.per-base.bed.gz.csi",
+                "reports/mosdepth/sample3/sample3.recal.regions.bed.gz",
+                "reports/mosdepth/sample3/sample3.recal.regions.bed.gz.csi",
+                "reports/mosdepth/sample4",
+                "reports/mosdepth/sample4/sample4.recal.mosdepth.global.dist.txt",
+                "reports/mosdepth/sample4/sample4.recal.mosdepth.region.dist.txt",
+                "reports/mosdepth/sample4/sample4.recal.mosdepth.summary.txt",
+                "reports/mosdepth/sample4/sample4.recal.per-base.bed.gz",
+                "reports/mosdepth/sample4/sample4.recal.per-base.bed.gz.csi",
+                "reports/mosdepth/sample4/sample4.recal.regions.bed.gz",
+                "reports/mosdepth/sample4/sample4.recal.regions.bed.gz.csi",
+                "reports/samtools",
+                "reports/samtools/sample3",
+                "reports/samtools/sample3/sample3.recal.cram.stats",
+                "reports/samtools/sample4",
+                "reports/samtools/sample4/sample4.recal.cram.stats",
+                "variant_calling",
+                "variant_calling/controlfreec",
+                "variant_calling/controlfreec/sample4_vs_sample3",
+                "variant_calling/controlfreec/sample4_vs_sample3/config.txt",
+                "variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.bed",
+                "variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.circos.txt",
+                "variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.normal.mpileup.gz_control.cpn",
+                "variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.p.value.txt",
+                "variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz_BAF.txt",
+                "variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz_CNVs",
+                "variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz_info.txt",
+                "variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz_ratio.BedGraph",
+                "variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz_ratio.txt",
+                "variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3.tumor.mpileup.gz_sample.cpn",
+                "variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_BAF.png",
+                "variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_ratio.log2.png",
+                "variant_calling/controlfreec/sample4_vs_sample3/sample4_vs_sample3_ratio.png"
+            ],
+            [
+                "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
+                "sample3.recal.mosdepth.global.dist.txt:md5,69e29702ef01fd8f6c7a5468fc35a16a",
+                "sample3.recal.mosdepth.region.dist.txt:md5,6ec49cd7d510c2eb3d9d90fdb79b783a",
+                "sample3.recal.mosdepth.summary.txt:md5,103098d0bf76ed82d2b87d5f242b099a",
+                "sample3.recal.per-base.bed.gz:md5,297f96648928d0ca5184223fb9941e7c",
+                "sample3.recal.per-base.bed.gz.csi:md5,519cc5bf84da0d71b87a88c76f83194e",
+                "sample3.recal.regions.bed.gz:md5,314ce8d7273eff353072108aa77c327c",
+                "sample3.recal.regions.bed.gz.csi:md5,538cb5d244411a670a4b041691f8825b",
+                "sample4.recal.mosdepth.global.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
+                "sample4.recal.mosdepth.region.dist.txt:md5,39005ffaac22871ffaaf19656fe69c5b",
+                "sample4.recal.mosdepth.summary.txt:md5,68d4b98f17361fddf73052ead34fa370",
+                "sample4.recal.per-base.bed.gz:md5,39a1bc436aa8546c26faedbe94cb676c",
+                "sample4.recal.per-base.bed.gz.csi:md5,aaa7bed9e7ef873b23bca249b8b58eb9",
+                "sample4.recal.regions.bed.gz:md5,b7561bc56a955f7db0f11e67e2ec0386",
+                "sample4.recal.regions.bed.gz.csi:md5,538cb5d244411a670a4b041691f8825b",
+                "sample3.recal.cram.stats:md5,bcc229318527e414e69aaa5cd092ad9b",
+                "sample4.recal.cram.stats:md5,0d1784cb4c3f14b9858247ac6128dd03",
+                "sample4_vs_sample3.bed:md5,47f60179409e9389e59b2e2525e42210",
+                "sample4_vs_sample3.circos.txt:md5,68addb1d8bda08355842bef0ab15cd6e",
+                "sample4_vs_sample3.normal.mpileup.gz_control.cpn:md5,d50bf2c9a4d35f022364901c284e80ed",
+                "sample4_vs_sample3.p.value.txt:md5,3fad51341e7ee56c3b02de6a51d77efa",
+                "sample4_vs_sample3.tumor.mpileup.gz_BAF.txt:md5,723779bd103b66dcfa6fcfa692135a61",
+                "sample4_vs_sample3.tumor.mpileup.gz_CNVs:md5,1d9166f66bf72adf2aea74adfc4ab015",
+                "sample4_vs_sample3.tumor.mpileup.gz_info.txt:md5,b79da6ae026d86777d60d9f9edb9c6f6",
+                "sample4_vs_sample3.tumor.mpileup.gz_ratio.BedGraph:md5,cb087117ea046a6350885a34cb4bf667",
+                "sample4_vs_sample3.tumor.mpileup.gz_ratio.txt:md5,690cbefd87a77a6a37689135585c401c",
+                "sample4_vs_sample3.tumor.mpileup.gz_sample.cpn:md5,b4f97163fdb6a3d97ca4ea560394cdb1",
+                "sample4_vs_sample3_BAF.png:md5,16456932bb16e79c8cec4f747846c321",
+                "sample4_vs_sample3_ratio.log2.png:md5,89dce170acbb4c438be8359d242940df",
+                "sample4_vs_sample3_ratio.png:md5,6ac35ba93babc019c2d863f7e06b49b1"
+            ],
+            [
+
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.1",
+            "nextflow": "24.10.0"
+        },
+        "timestamp": "2024-11-14T16:46:15.872055864"
+    },
+    "Run with profile test | --tools controlfreec | tumoronly | stub": {
+        "content": [
+            13,
+            {
+                "ASSESS_SIGNIFICANCE": {
+                    "controlfreec": 11.6
+                },
+                "FREEC2BED": {
+                    "controlfreec": "11.6b"
+                },
+                "FREEC2CIRCOS": {
+                    "controlfreec": "11.6b"
+                },
+                "FREEC_TUMORONLY": {
+                    "controlfreec": "11.6b"
+                },
+                "MAKEGRAPH2": {
+                    "controlfreec": "11.6b"
+                },
+                "SAMTOOLS_MPILEUP": {
+                    "samtools": 1.21
+                },
+                "Workflow": {
+                    "nf-core/sarek": "v3.5.0"
+                }
+            },
+            [
+                "csv",
+                "multiqc",
+                "multiqc/multiqc_data",
+                "multiqc/multiqc_plots",
+                "multiqc/multiqc_report.html",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "reference",
+                "reports",
+                "reports/mosdepth",
+                "reports/mosdepth/sample2",
+                "reports/mosdepth/sample2/sample2.recal.global.dist.txt",
+                "reports/mosdepth/sample2/sample2.recal.per-base.bed.gz",
+                "reports/mosdepth/sample2/sample2.recal.per-base.bed.gz.csi",
+                "reports/mosdepth/sample2/sample2.recal.per-base.d4",
+                "reports/mosdepth/sample2/sample2.recal.quantized.bed.gz",
+                "reports/mosdepth/sample2/sample2.recal.quantized.bed.gz.csi",
+                "reports/mosdepth/sample2/sample2.recal.region.dist.txt",
+                "reports/mosdepth/sample2/sample2.recal.regions.bed.gz",
+                "reports/mosdepth/sample2/sample2.recal.regions.bed.gz.csi",
+                "reports/mosdepth/sample2/sample2.recal.summary.txt",
+                "reports/mosdepth/sample2/sample2.recal.thresholds.bed.gz",
+                "reports/mosdepth/sample2/sample2.recal.thresholds.bed.gz.csi",
+                "reports/samtools",
+                "reports/samtools/sample2",
+                "reports/samtools/sample2/sample2.recal.cram.stats",
+                "variant_calling",
+                "variant_calling/controlfreec",
+                "variant_calling/controlfreec/sample2",
+                "variant_calling/controlfreec/sample2/GC_profile.sample2.cpn",
+                "variant_calling/controlfreec/sample2/config.txt",
+                "variant_calling/controlfreec/sample2/sample2.bed",
+                "variant_calling/controlfreec/sample2/sample2.circos.txt",
+                "variant_calling/controlfreec/sample2/sample2.p.value.txt",
+                "variant_calling/controlfreec/sample2/sample2_BAF.png",
+                "variant_calling/controlfreec/sample2/sample2_BAF.txt",
+                "variant_calling/controlfreec/sample2/sample2_CNVs",
+                "variant_calling/controlfreec/sample2/sample2_info.txt",
+                "variant_calling/controlfreec/sample2/sample2_ratio.BedGraph",
+                "variant_calling/controlfreec/sample2/sample2_ratio.log2.png",
+                "variant_calling/controlfreec/sample2/sample2_ratio.png",
+                "variant_calling/controlfreec/sample2/sample2_ratio.txt",
+                "variant_calling/controlfreec/sample2/sample2_sample.cpn"
+            ],
+            [
+                "sample2.recal.global.dist.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample2.recal.per-base.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                "sample2.recal.per-base.bed.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample2.recal.per-base.d4:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample2.recal.quantized.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                "sample2.recal.quantized.bed.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample2.recal.region.dist.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample2.recal.regions.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                "sample2.recal.regions.bed.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample2.recal.summary.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample2.recal.thresholds.bed.gz:md5,68b329da9893e34099c7d8ad5cb9c940",
+                "sample2.recal.thresholds.bed.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample2.recal.cram.stats:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "GC_profile.sample2.cpn:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample2.bed:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample2.circos.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample2.p.value.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample2_BAF.png:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample2_BAF.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample2_CNVs:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample2_info.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample2_ratio.BedGraph:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample2_ratio.log2.png:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample2_ratio.png:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample2_ratio.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "sample2_sample.cpn:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ],
+            [
+
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.10.2"
+        },
+        "timestamp": "2024-12-10T10:33:44.36063821"
+    },
+    "Run with profile test | --tools controlfreec --no_intervals | tumoronly": {
+        "content": [
+            11,
+            {
+                "ASSESS_SIGNIFICANCE": {
+                    "controlfreec": 11.6
+                },
+                "FREEC2BED": {
+                    "controlfreec": "11.6b"
+                },
+                "FREEC2CIRCOS": {
+                    "controlfreec": "11.6b"
+                },
+                "FREEC_TUMORONLY": {
+                    "controlfreec": "11.6b"
+                },
+                "MAKEGRAPH2": {
+                    "controlfreec": "11.6b"
+                },
+                "SAMTOOLS_MPILEUP": {
+                    "samtools": 1.21
+                },
+                "Workflow": {
+                    "nf-core/sarek": "v3.5.0"
+                }
+            },
+            [
+                "csv",
+                "multiqc",
+                "multiqc/multiqc_data",
+                "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc_citations.txt",
+                "multiqc/multiqc_data/multiqc_data.json",
+                "multiqc/multiqc_data/multiqc_software_versions.txt",
+                "multiqc/multiqc_data/multiqc_sources.txt",
+                "multiqc/multiqc_report.html",
+                "no_intervals.bed",
+                "no_intervals.bed.gz",
+                "no_intervals.bed.gz.tbi",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "reference",
+                "reports",
+                "reports/mosdepth",
+                "reports/mosdepth/sample2",
+                "reports/mosdepth/sample2/sample2.recal.mosdepth.global.dist.txt",
+                "reports/mosdepth/sample2/sample2.recal.mosdepth.summary.txt",
+                "reports/mosdepth/sample2/sample2.recal.per-base.bed.gz",
+                "reports/mosdepth/sample2/sample2.recal.per-base.bed.gz.csi",
+                "reports/samtools",
+                "reports/samtools/sample2",
+                "reports/samtools/sample2/sample2.recal.cram.stats",
+                "variant_calling",
+                "variant_calling/controlfreec",
+                "variant_calling/controlfreec/sample2",
+                "variant_calling/controlfreec/sample2/config.txt",
+                "variant_calling/controlfreec/sample2/sample2.bed",
+                "variant_calling/controlfreec/sample2/sample2.circos.txt",
+                "variant_calling/controlfreec/sample2/sample2.p.value.txt",
+                "variant_calling/controlfreec/sample2/sample2.tumor.mpileup.gz_BAF.txt",
+                "variant_calling/controlfreec/sample2/sample2.tumor.mpileup.gz_CNVs",
+                "variant_calling/controlfreec/sample2/sample2.tumor.mpileup.gz_info.txt",
+                "variant_calling/controlfreec/sample2/sample2.tumor.mpileup.gz_ratio.BedGraph",
+                "variant_calling/controlfreec/sample2/sample2.tumor.mpileup.gz_ratio.txt",
+                "variant_calling/controlfreec/sample2/sample2.tumor.mpileup.gz_sample.cpn",
+                "variant_calling/controlfreec/sample2/sample2_BAF.png",
+                "variant_calling/controlfreec/sample2/sample2_ratio.log2.png",
+                "variant_calling/controlfreec/sample2/sample2_ratio.png"
+            ],
+            [
+                "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
+                "sample2.recal.mosdepth.global.dist.txt:md5,f2dcd00a64947c49e8e4b93c2f4fbf27",
+                "sample2.recal.mosdepth.summary.txt:md5,0a7300e56eda6fba7c7564f00aa000f0",
+                "sample2.recal.per-base.bed.gz:md5,39a1bc436aa8546c26faedbe94cb676c",
+                "sample2.recal.per-base.bed.gz.csi:md5,aaa7bed9e7ef873b23bca249b8b58eb9",
+                "sample2.recal.cram.stats:md5,0d1784cb4c3f14b9858247ac6128dd03",
+                "sample2.bed:md5,5249f46e614b60867bdd6b9b83327979",
+                "sample2.circos.txt:md5,2efab24d023931cec8b158c56d1f1765",
+                "sample2.p.value.txt:md5,38c8c9ad33a4fca3804a34d5c436cd1e",
+                "sample2.tumor.mpileup.gz_BAF.txt:md5,0bb91da6a637ed64d7622eb7d539fd71",
+                "sample2.tumor.mpileup.gz_CNVs:md5,741831784091e9a51e0c07117b67e18f",
+                "sample2.tumor.mpileup.gz_info.txt:md5,fed6aa0e0f4232255d5152f5774161b9",
+                "sample2.tumor.mpileup.gz_ratio.BedGraph:md5,d2347daecbb4eb1f1a3b5558acdf657a",
+                "sample2.tumor.mpileup.gz_ratio.txt:md5,7587b17b4303715aa45eae017e357c23",
+                "sample2.tumor.mpileup.gz_sample.cpn:md5,8bf25e5cf94e89bcbbd4bb0d453d3057",
+                "sample2_BAF.png:md5,32e1189f07f9ddb4892cae10f4003e4a",
+                "sample2_ratio.log2.png:md5,6d8b8cabc35d391f9a92ede6128eb378",
+                "sample2_ratio.png:md5,47fce58116c63d6cad34f80575e34e43"
+            ],
+            [
+
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.1",
+            "nextflow": "24.10.0"
+        },
+        "timestamp": "2024-11-14T16:47:40.762784422"
+    }
+}

@@ -1,0 +1,48 @@
+{
+    "Run with profile test | --save_mapped | skip QC/recal/md": {
+        "content": [
+            10,
+            {
+                "BAM_TO_CRAM_MAPPING": {
+                    "samtools": 1.21
+                },
+                "BWAMEM1_MEM": {
+                    "bwa": "0.7.18-r1243-dirty",
+                    "samtools": 1.2
+                },
+                "INDEX_MERGE_BAM": {
+                    "samtools": 1.21
+                },
+                "MERGE_BAM": {
+                    "samtools": 1.21
+                },
+                "Workflow": {
+                    "nf-core/sarek": "v3.5.0"
+                }
+            },
+            [
+                "csv",
+                "csv/mapped.csv",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "preprocessing",
+                "preprocessing/mapped",
+                "preprocessing/mapped/test",
+                "preprocessing/mapped/test/test.sorted.cram",
+                "preprocessing/mapped/test/test.sorted.cram.crai",
+                "reference"
+            ],
+            [
+
+            ],
+            [
+
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.09.0"
+        },
+        "timestamp": "2024-10-08T09:53:32.063494"
+    }
+}

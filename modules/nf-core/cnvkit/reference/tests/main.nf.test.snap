@@ -1,13 +1,26 @@
 {
     "human - [fasta, bed]": {
         "content": [
-            "chromosome\tstart\tend\tgene\tlog2\tdepth\tgc\trmask\tspread"
+            {
+                "0": [
+                    "multi_intervals.reference.cnn:md5,7c4a7902f5ab101b1f9d6038d331b3d9"
+                ],
+                "1": [
+                    "versions.yml:md5,85ff8911567b4e1245b883541ad3cc1e"
+                ],
+                "cnn": [
+                    "multi_intervals.reference.cnn:md5,7c4a7902f5ab101b1f9d6038d331b3d9"
+                ],
+                "versions": [
+                    "versions.yml:md5,85ff8911567b4e1245b883541ad3cc1e"
+                ]
+            }
         ],
         "meta": {
             "nf-test": "0.8.4",
             "nextflow": "23.10.0"
         },
-        "timestamp": "2024-05-13T14:00:12.102517"
+        "timestamp": "2024-06-10T10:25:05.273892"
     },
     "human - [fasta, bed] - stub": {
         "content": [
@@ -31,17 +44,5 @@
             "nextflow": "23.10.0"
         },
         "timestamp": "2024-05-13T14:00:30.095718"
-    },
-    "version": {
-        "content": [
-            [
-                "versions.yml:md5,85ff8911567b4e1245b883541ad3cc1e"
-            ]
-        ],
-        "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.0"
-        },
-        "timestamp": "2024-05-13T14:00:12.090836"
     }
 }

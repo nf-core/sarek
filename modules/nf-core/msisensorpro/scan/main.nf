@@ -32,4 +32,15 @@ process MSISENSORPRO_SCAN {
         msisensor-pro: \$(msisensor-pro 2>&1 | sed -nE 's/Version:\\sv([0-9]\\.[0-9])/\\1/ p')
     END_VERSIONS
     """
+
+    stub:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    """
+    touch ${prefix}.msisensor_scan.list
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        msisensor-pro: \$(msisensor-pro 2>&1 | sed -nE 's/Version:\\sv([0-9]\\.[0-9])/\\1/ p')
+    END_VERSIONS
+    """
 }

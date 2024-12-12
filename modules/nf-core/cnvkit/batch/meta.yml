@@ -12,94 +12,127 @@ tools:
       homepage: https://cnvkit.readthedocs.io/en/stable/index.html
       documentation: https://cnvkit.readthedocs.io/en/stable/index.html
       licence: ["Apache-2.0"]
+      identifier: biotools:cnvkit
 input:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
-  - tumor:
-      type: file
-      description: |
-        Input tumour sample bam file (or cram)
-  - normal:
-      type: file
-      description: |
-        Input normal sample bam file (or cram)
-  - meta2:
-      type: map
-      description: |
-        Groovy Map containing reference information
-        e.g. [ id:'test' ]
-  - fasta:
-      type: file
-      description: |
-        Input reference genome fasta file (only needed for cram_input and/or when normal_samples are provided)
-  - meta3:
-      type: map
-      description: |
-        Groovy Map containing reference information
-        e.g. [ id:'test' ]
-  - fasta_fai:
-      type: file
-      description: |
-        Input reference genome fasta index (optional, but recommended for cram_input)
-  - meta4:
-      type: map
-      description: |
-        Groovy Map containing information about target file
-        e.g. [ id:'test' ]
-  - targets:
-      type: file
-      description: |
-        Input target bed file
-  - meta5:
-      type: map
-      description: |
-        Groovy Map containing information about reference file
-        e.g. [ id:'test' ]
-  - reference:
-      type: file
-      description: |
-        Input reference cnn-file (only for germline and tumor-only running)
-  - panel_of_normals:
-      type: file
-      description: |
-        Input panel of normals file
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - tumor:
+        type: file
+        description: |
+          Input tumour sample bam file (or cram)
+    - normal:
+        type: file
+        description: |
+          Input normal sample bam file (or cram)
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'test' ]
+    - fasta:
+        type: file
+        description: |
+          Input reference genome fasta file (only needed for cram_input and/or when normal_samples are provided)
+  - - meta3:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'test' ]
+    - fasta_fai:
+        type: file
+        description: |
+          Input reference genome fasta index (optional, but recommended for cram_input)
+  - - meta4:
+        type: map
+        description: |
+          Groovy Map containing information about target file
+          e.g. [ id:'test' ]
+    - targets:
+        type: file
+        description: |
+          Input target bed file
+  - - meta5:
+        type: map
+        description: |
+          Groovy Map containing information about reference file
+          e.g. [ id:'test' ]
+    - reference:
+        type: file
+        description: |
+          Input reference cnn-file (only for germline and tumor-only running)
+  - - panel_of_normals:
+        type: file
+        description: |
+          Input panel of normals file
 output:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
   - bed:
-      type: file
-      description: File containing genomic regions
-      pattern: "*.{bed}"
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.bed":
+          type: file
+          description: File containing genomic regions
+          pattern: "*.{bed}"
   - cnn:
-      type: file
-      description: File containing coverage information
-      pattern: "*.{cnn}"
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.cnn":
+          type: file
+          description: File containing coverage information
+          pattern: "*.{cnn}"
   - cnr:
-      type: file
-      description: File containing copy number ratio information
-      pattern: "*.{cnr}"
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.cnr":
+          type: file
+          description: File containing copy number ratio information
+          pattern: "*.{cnr}"
   - cns:
-      type: file
-      description: File containing copy number segment information
-      pattern: "*.{cns}"
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.cns":
+          type: file
+          description: File containing copy number segment information
+          pattern: "*.{cns}"
   - pdf:
-      type: file
-      description: File with plot of copy numbers or segments on chromosomes
-      pattern: "*.{pdf}"
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.pdf":
+          type: file
+          description: File with plot of copy numbers or segments on chromosomes
+          pattern: "*.{pdf}"
   - png:
-      type: file
-      description: File with plot of bin-level log2 coverages and segmentation calls
-      pattern: "*.{png}"
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.png":
+          type: file
+          description: File with plot of bin-level log2 coverages and segmentation calls
+          pattern: "*.{png}"
   - versions:
-      type: file
-      description: File containing software versions
-      pattern: "versions.yml"
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@adamrtalbot"
   - "@drpatelh"

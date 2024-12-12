@@ -16,34 +16,41 @@ tools:
       documentation: "https://www.gnu.org/software/gawk/manual/"
       tool_dev_url: "https://www.gnu.org/prep/ftp.html"
       licence: ["GPL v3"]
+      identifier: ""
 input:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
-  - input:
-      type: file
-      description: The input file - Specify the logic that needs to be executed on this file on the `ext.args2` or in the program file
-      pattern: "*"
-  - program_file:
-      type: file
-      description: Optional file containing logic for awk to execute. If you don't wish to use a file, you can use `ext.args2` to specify the logic.
-      pattern: "*"
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - input:
+        type: file
+        description: The input file - Specify the logic that needs to be executed on
+          this file on the `ext.args2` or in the program file.
+          If the files have a `.gz` extension, they will be unzipped using `zcat`.
+        pattern: "*"
+  - - program_file:
+        type: file
+        description: Optional file containing logic for awk to execute. If you don't
+          wish to use a file, you can use `ext.args2` to specify the logic.
+        pattern: "*"
 output:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
-  - versions:
-      type: file
-      description: File containing software versions
-      pattern: "versions.yml"
   - output:
-      type: file
-      description: The output file - specify the name of this file using `ext.prefix` and the extension using `ext.suffix`
-      pattern: "*"
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - ${prefix}.${suffix}:
+          type: file
+          description: The output file - specify the name of this file using `ext.prefix`
+            and the extension using `ext.suffix`
+          pattern: "*"
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@nvnieuwk"
 maintainers:

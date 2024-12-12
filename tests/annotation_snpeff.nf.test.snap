@@ -1,0 +1,108 @@
+{
+    "Run with profile test | --tools snpeff --download_cache": {
+        "content": [
+            4,
+            {
+                "SNPEFF_SNPEFF": {
+                    "snpeff": "5.1d"
+                },
+                "TABIX_BGZIPTABIX": {
+                    "tabix": 1.2
+                },
+                "Workflow": {
+                    "nf-core/sarek": "v3.5.0"
+                }
+            },
+            [
+                "annotation",
+                "annotation/test",
+                "annotation/test/test_snpEff.ann.vcf.gz",
+                "annotation/test/test_snpEff.ann.vcf.gz.tbi",
+                "cache",
+                "cache/snpeff_cache",
+                "cache/snpeff_cache/WBcel235.105",
+                "cache/snpeff_cache/WBcel235.105/sequence.I.bin",
+                "cache/snpeff_cache/WBcel235.105/sequence.II.bin",
+                "cache/snpeff_cache/WBcel235.105/sequence.III.bin",
+                "cache/snpeff_cache/WBcel235.105/sequence.IV.bin",
+                "cache/snpeff_cache/WBcel235.105/sequence.V.bin",
+                "cache/snpeff_cache/WBcel235.105/sequence.X.bin",
+                "cache/snpeff_cache/WBcel235.105/sequence.bin",
+                "cache/snpeff_cache/WBcel235.105/snpEffectPredictor.bin",
+                "cache/versions.yml",
+                "csv",
+                "multiqc",
+                "multiqc/multiqc_data",
+                "multiqc/multiqc_data/multiqc.log",
+                "multiqc/multiqc_data/multiqc_citations.txt",
+                "multiqc/multiqc_data/multiqc_data.json",
+                "multiqc/multiqc_data/multiqc_general_stats.txt",
+                "multiqc/multiqc_data/multiqc_snpeff.txt",
+                "multiqc/multiqc_data/multiqc_software_versions.txt",
+                "multiqc/multiqc_data/multiqc_sources.txt",
+                "multiqc/multiqc_data/snpeff_effects.txt",
+                "multiqc/multiqc_data/snpeff_qualities.txt",
+                "multiqc/multiqc_data/snpeff_variant_effects_region.txt",
+                "multiqc/multiqc_plots",
+                "multiqc/multiqc_plots/pdf",
+                "multiqc/multiqc_plots/pdf/general_stats_table.pdf",
+                "multiqc/multiqc_plots/pdf/snpeff_effects-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/snpeff_effects-pct.pdf",
+                "multiqc/multiqc_plots/pdf/snpeff_qualities.pdf",
+                "multiqc/multiqc_plots/pdf/snpeff_variant_effects_region-cnt.pdf",
+                "multiqc/multiqc_plots/pdf/snpeff_variant_effects_region-log.pdf",
+                "multiqc/multiqc_plots/pdf/snpeff_variant_effects_region-pct-log.pdf",
+                "multiqc/multiqc_plots/pdf/snpeff_variant_effects_region-pct.pdf",
+                "multiqc/multiqc_plots/png",
+                "multiqc/multiqc_plots/png/general_stats_table.png",
+                "multiqc/multiqc_plots/png/snpeff_effects-cnt.png",
+                "multiqc/multiqc_plots/png/snpeff_effects-pct.png",
+                "multiqc/multiqc_plots/png/snpeff_qualities.png",
+                "multiqc/multiqc_plots/png/snpeff_variant_effects_region-cnt.png",
+                "multiqc/multiqc_plots/png/snpeff_variant_effects_region-log.png",
+                "multiqc/multiqc_plots/png/snpeff_variant_effects_region-pct-log.png",
+                "multiqc/multiqc_plots/png/snpeff_variant_effects_region-pct.png",
+                "multiqc/multiqc_plots/svg",
+                "multiqc/multiqc_plots/svg/general_stats_table.svg",
+                "multiqc/multiqc_plots/svg/snpeff_effects-cnt.svg",
+                "multiqc/multiqc_plots/svg/snpeff_effects-pct.svg",
+                "multiqc/multiqc_plots/svg/snpeff_qualities.svg",
+                "multiqc/multiqc_plots/svg/snpeff_variant_effects_region-cnt.svg",
+                "multiqc/multiqc_plots/svg/snpeff_variant_effects_region-log.svg",
+                "multiqc/multiqc_plots/svg/snpeff_variant_effects_region-pct-log.svg",
+                "multiqc/multiqc_plots/svg/snpeff_variant_effects_region-pct.svg",
+                "multiqc/multiqc_report.html",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "reports",
+                "reports/snpeff",
+                "reports/snpeff/test",
+                "reports/snpeff/test/snpEff_summary.html",
+                "reports/snpeff/test/test_snpEff.csv",
+                "reports/snpeff/test/test_snpEff.genes.txt"
+            ],
+            [
+                "sequence.I.bin:md5,2fd1694bd91cf7952cbad8cfed161e53",
+                "sequence.II.bin:md5,bacedbdea89508e108223767fa260a4c",
+                "sequence.III.bin:md5,444118a9fb9d0a03c37e86094d8e52a9",
+                "sequence.IV.bin:md5,ff756628faa0b71cd65495668c3d82b5",
+                "sequence.V.bin:md5,d6ad5476162ac45829f719dd4ee3f4e7",
+                "sequence.X.bin:md5,b79bec6cc8f96b8373dac56bab5d0a6c",
+                "sequence.bin:md5,ec2bc2ae81755ab90fcf1848bc7ce41f",
+                "snpEffectPredictor.bin:md5,1d99251d0405f0a42913ed8b5b2c2fa7",
+                "versions.yml:md5,e9698b9ccf3bb151631d1e07fbae8397",
+                "multiqc_citations.txt:md5,47e39f5f5f05da6bc38d13aa81fe8b6e",
+                "multiqc_snpeff.txt:md5,03a2b1c461cb6e5cccac64033a2f6526",
+                "snpeff_effects.txt:md5,3c5e9a1c191b77c781dc4d033b1dd1f7",
+                "snpeff_qualities.txt:md5,4c059b4e8bf0a64940ad1d6e30efd3a6",
+                "snpeff_variant_effects_region.txt:md5,05efd324edadced17ba3cd2b7714af57",
+                "test_snpEff.genes.txt:md5,130536bf0237d7f3f746d32aaa32840a"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.1",
+            "nextflow": "24.10.0"
+        },
+        "timestamp": "2024-10-29T10:16:00.665699"
+    }
+}

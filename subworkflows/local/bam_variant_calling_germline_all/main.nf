@@ -9,6 +9,7 @@ include { BAM_VARIANT_CALLING_DEEPVARIANT                                       
 include { BAM_VARIANT_CALLING_FREEBAYES                                                } from '../bam_variant_calling_freebayes/main'
 include { BAM_VARIANT_CALLING_GERMLINE_MANTA                                           } from '../bam_variant_calling_germline_manta/main'
 include { BAM_VARIANT_CALLING_HAPLOTYPECALLER                                          } from '../bam_variant_calling_haplotypecaller/main'
+include { BAM_VARIANT_CALLING_INDEXCOV                                                 } from '../bam_variant_calling_indexcov/main'
 include { BAM_VARIANT_CALLING_SENTIEON_DNASCOPE                                        } from '../bam_variant_calling_sentieon_dnascope/main'
 include { BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER                                      } from '../bam_variant_calling_sentieon_haplotyper/main'
 include { BAM_VARIANT_CALLING_MPILEUP                                                  } from '../bam_variant_calling_mpileup/main'
@@ -17,8 +18,6 @@ include { BAM_VARIANT_CALLING_SINGLE_TIDDIT                                     
 include { SENTIEON_DNAMODELAPPLY                                                       } from '../../../modules/nf-core/sentieon/dnamodelapply/main'
 include { VCF_VARIANT_FILTERING_GATK                                                   } from '../vcf_variant_filtering_gatk/main'
 include { VCF_VARIANT_FILTERING_GATK as SENTIEON_HAPLOTYPER_VCF_VARIANT_FILTERING_GATK } from '../vcf_variant_filtering_gatk/main'
-
-
 
 workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     take:
@@ -58,6 +57,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     gvcf_sentieon_dnascope   = Channel.empty()
     gvcf_sentieon_haplotyper = Channel.empty()
 
+    out_indexcov             = Channel.empty()
     vcf_deepvariant          = Channel.empty()
     vcf_freebayes            = Channel.empty()
     vcf_haplotypecaller      = Channel.empty()
@@ -189,6 +189,18 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
 
         vcf_manta = BAM_VARIANT_CALLING_GERMLINE_MANTA.out.vcf
         versions = versions.mix(BAM_VARIANT_CALLING_GERMLINE_MANTA.out.versions)
+    }
+
+    // INDEXCOV, for WGS only
+    if (params.wes==false &&  tools.split(',').contains('indexcov')) {
+        BAM_VARIANT_CALLING_INDEXCOV (
+            cram,
+            fasta,
+            fasta_fai
+        )
+
+        out_indexcov = BAM_VARIANT_CALLING_INDEXCOV.out.out_indexcov
+        versions = versions.mix(BAM_VARIANT_CALLING_INDEXCOV.out.versions)
     }
 
     // SENTIEON DNASCOPE
@@ -356,6 +368,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     emit:
     gvcf_sentieon_dnascope
     gvcf_sentieon_haplotyper
+    out_indexcov
     vcf_all
     vcf_deepvariant
     vcf_freebayes

@@ -10,34 +10,68 @@ tools:
       homepage: https://github.com/J35P312/SVDB
       documentation: https://github.com/J35P312/SVDB/blob/master/README.md
       licence: ["MIT"]
+      identifier: ""
 input:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test' ]
-  - priority:
-      type: list
-      description: prioritise the input vcf files according to this list, e.g ['tiddit','cnvnator']
-  - vcfs:
-      type: list
-      description: Two or more VCF files. Order of files should correspond to the order of tags used for priority.
-      pattern: "*.{vcf,vcf.gz}"
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test' ]
+    - vcfs:
+        type: list
+        description: |
+          One or more VCF files. The order and number of files should correspond to
+          the order and number of tags in the `priority` input channel.
+        pattern: "*.{vcf,vcf.gz}"
+  - - input_priority:
+        type: list
+        description: |
+          Prioritize the input VCF files according to this list,
+          e.g ['tiddit','cnvnator']. The order and number of tags should correspond to
+          the order and number of VCFs in the `vcfs` input channel.
+  - - sort_inputs:
+        type: boolean
+        description: |
+          Should the input files be sorted by name. The priority tag will be sorted
+          together with it's corresponding VCF file.
 output:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test' ]
-  - versions:
-      type: file
-      description: File containing software versions
-      pattern: "versions.yml"
   - vcf:
-      type: file
-      description: merged VCF file
-      pattern: "*.vcf.gz"
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.{vcf,vcf.gz,bcf,bcf.gz}":
+          type: file
+          description: VCF output file
+          pattern: "*.{vcf,vcf.gz,bcf,bcf.gz}"
+  - tbi:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.tbi":
+          type: file
+          description: Alternative VCF file index
+          pattern: "*.tbi"
+  - csi:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.csi":
+          type: file
+          description: Default VCF file index
+          pattern: "*.csi"
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@ramprasadn"
 maintainers:
   - "@ramprasadn"
+  - "@fellen31"

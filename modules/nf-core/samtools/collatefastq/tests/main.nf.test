@@ -1,0 +1,242 @@
+nextflow_process {
+
+    name "Test Process SAMTOOLS_COLLATEFASTQ"
+    script "../main.nf"
+    process "SAMTOOLS_COLLATEFASTQ"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "samtools"
+    tag "samtools/collatefastq"
+
+    test("human - bam - paired_end") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                         [ id:'test', single_end:false ], // meta map
+                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true)
+                     ]
+                input[1] = [
+                         [ id:'test' ], // meta map
+                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
+                     ]
+                input[2] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out.fastq,
+                                  process.out.versions).match() }
+            )
+        }
+
+    }
+
+    test("human - bam - single_end") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                         [ id:'test', single_end:true ], // meta map
+                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.single_end.bam', checkIfExists: true)
+                     ]
+                input[1] = [
+                         [ id:'test' ], // meta map
+                         file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                     ]
+                input[2] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out.fastq_other,
+                                  process.out.versions).match() }
+            )
+        }
+
+    }
+
+    test("human - cram") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                         [ id:'test', single_end:false ], // meta map
+                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram', checkIfExists: true)
+                     ]
+                input[1] = [
+                         [ id:'test' ], // meta map
+                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
+                     ]
+                input[2] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out.fastq,
+                                  process.out.versions).match() }
+            )
+        }
+
+    }
+
+    test("human - bam - paired_end - interleaved") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                         [ id:'test', single_end:false ], // meta map
+                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true)
+                     ]
+                input[1] = [
+                         [ id:'test' ], // meta map
+                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
+                     ]
+                input[2] = true
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out.fastq_interleaved,
+                                  process.out.fastq_singleton,
+                                  process.out.fastq,
+                                  process.out.versions).match() }
+            )
+        }
+
+    }
+
+    test("human - bam - paired_end -stub") {
+        options "-stub"
+        when {
+            process {
+                """
+                input[0] = [
+                         [ id:'test', single_end:false ], // meta map
+                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true)
+                     ]
+                input[1] = [
+                         [ id:'test' ], // meta map
+                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
+                     ]
+                input[2] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out.fastq,
+                                  process.out.versions).match() }
+            )
+        }
+
+    }
+
+    test("human - bam - single_end - stub") {
+        options "-stub"
+        when {
+            process {
+                """
+                input[0] = [
+                         [ id:'test', single_end:true ], // meta map
+                         file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.single_end.bam', checkIfExists: true)
+                     ]
+                input[1] = [
+                         [ id:'test' ], // meta map
+                         file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                     ]
+                input[2] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out.fastq_other,
+                                  process.out.versions).match() }
+            )
+        }
+
+    }
+
+    test("human - cram - stub") {
+        options "-stub"
+        when {
+            process {
+                """
+                input[0] = [
+                         [ id:'test', single_end:false ], // meta map
+                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram', checkIfExists: true)
+                     ]
+                input[1] = [
+                         [ id:'test' ], // meta map
+                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
+                     ]
+                input[2] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out.fastq,
+                                  process.out.versions).match() }
+            )
+        }
+
+    }
+
+    test("human - bam - paired_end - interleaved - stub") {
+        options "-stub"
+        when {
+            process {
+                """
+                input[0] = [
+                         [ id:'test', single_end:false ], // meta map
+                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true)
+                     ]
+                input[1] = [
+                         [ id:'test' ], // meta map
+                         file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
+                     ]
+                input[2] = true
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out.fastq_interleaved,
+                                  process.out.fastq_singleton,
+                                  process.out.fastq,
+                                  process.out.versions).match() }
+            )
+        }
+
+    }
+
+
+
+}

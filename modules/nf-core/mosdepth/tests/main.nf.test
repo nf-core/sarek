@@ -15,8 +15,8 @@ nextflow_process {
                 """
                 input[0] = [
                     [ id:'test', single_end:true ],
-                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true),
-                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_bam_bai'], checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam.bai', checkIfExists: true),
                     []
                 ]
                 input[1] = [[],[]]
@@ -40,9 +40,9 @@ nextflow_process {
                 """
                 input[0] = [
                     [ id:'test', single_end:true ],
-                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true),
-                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_bam_bai'], checkIfExists: true),
-                    file(params.test_data['homo_sapiens']['genome']['genome_bed'], checkIfExists: true)
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam.bai', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.bed', checkIfExists: true)
                 ]
                 input[1] = [[],[]]
                 """
@@ -65,13 +65,13 @@ nextflow_process {
                 """
                 input[0] = [
                     [ id:'test', single_end:true ],
-                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_cram'], checkIfExists: true),
-                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_cram_crai'], checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram.crai', checkIfExists: true),
                     []
                 ]
                 input[1] = [
                     [ id:'test' ],
-                    file(params.test_data['homo_sapiens']['genome']['genome_fasta'], checkIfExists: true)
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
                 ]
                 """
             }
@@ -93,13 +93,13 @@ nextflow_process {
                 """
                 input[0] = [
                     [ id:'test', single_end:true ],
-                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_cram'], checkIfExists: true),
-                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_cram_crai'], checkIfExists: true),
-                    file(params.test_data['homo_sapiens']['genome']['genome_bed'], checkIfExists: true)
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/cram/test.paired_end.sorted.cram.crai', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.bed', checkIfExists: true)
                 ]
                 input[1] = [
                     [ id:'test' ],
-                    file(params.test_data['homo_sapiens']['genome']['genome_fasta'], checkIfExists: true)
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta', checkIfExists: true)
                 ]
                 """
             }
@@ -122,8 +122,8 @@ nextflow_process {
                 """
                 input[0] = [
                     [ id:'test', single_end:true ],
-                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true),
-                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_bam_bai'], checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam.bai', checkIfExists: true),
                     []
                 ]
                 input[1] = [[],[]]
@@ -148,8 +148,8 @@ nextflow_process {
                 """
                 input[0] = [
                     [ id:'test', single_end:true ],
-                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true),
-                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_bam_bai'], checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam.bai', checkIfExists: true),
                     []
                 ]
                 input[1] = [[],[]]
@@ -174,9 +174,9 @@ nextflow_process {
                 """
                 input[0] = [
                     [ id:'test', single_end:true ],
-                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true),
-                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_bam_bai'], checkIfExists: true),
-                    file(params.test_data['homo_sapiens']['genome']['genome_bed'], checkIfExists: true)
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam.bai', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.bed', checkIfExists: true)
                 ]
                 input[1] = [[],[]]
                 """
@@ -200,9 +200,9 @@ nextflow_process {
                 """
                 input[0] = [
                     [ id:'test', single_end:true ],
-                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true),
-                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_bam_bai'], checkIfExists: true),
-                    file(params.test_data['homo_sapiens']['genome']['genome_bed'], checkIfExists: true)
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam.bai', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.bed', checkIfExists: true)
                 ]
                 input[1] = [[],[]]
                 """
@@ -225,9 +225,9 @@ nextflow_process {
                 """
                 input[0] = [
                     [ id:'test', single_end:true ],
-                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_bam'], checkIfExists: true),
-                    file(params.test_data['homo_sapiens']['illumina']['test_paired_end_sorted_bam_bai'], checkIfExists: true),
-                    file(params.test_data['homo_sapiens']['genome']['genome_bed'], checkIfExists: true)
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/bam/test.paired_end.sorted.bam.bai', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.bed', checkIfExists: true)
                 ]
                 input[1] = [[],[]]
                 """

@@ -12,29 +12,32 @@ tools:
       documentation: https://github.com/Illumina/dragmap
       tool_dev_url: https://github.com/Illumina/dragmap#basic-command-line-usage
       licence: ["GPL v3"]
+      identifier: ""
 input:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing reference information
-        e.g. [ id:'test', single_end:false ]
-  - fasta:
-      type: file
-      description: Input genome fasta file
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'test', single_end:false ]
+    - fasta:
+        type: file
+        description: Input genome fasta file
 output:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing reference information
-        e.g. [ id:'test', single_end:false ]
   - hashmap:
-      type: file
-      description: DRAGMAP hash table
-      pattern: "*.{cmp,.bin,.txt}"
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing reference information
+            e.g. [ id:'test', single_end:false ]
+      - dragmap:
+          type: file
+          description: DRAGMAP hash table
+          pattern: "*.{cmp,.bin,.txt}"
   - versions:
-      type: file
-      description: File containing software versions
-      pattern: "versions.yml"
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@edmundmiller"
 maintainers:

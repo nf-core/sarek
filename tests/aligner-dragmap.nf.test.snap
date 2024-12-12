@@ -1,0 +1,120 @@
+{
+    "Run with profile test | --aligner dragmap --save_reference --build_only_index": {
+        "content": [
+            5,
+            {
+                "Workflow": {
+                    "nf-core/sarek": "v3.5.0"
+                }
+            },
+            [
+                "csv",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "reference",
+                "reference/dragmap",
+                "reference/dragmap/hash_table.cfg",
+                "reference/dragmap/hash_table.cfg.bin",
+                "reference/dragmap/hash_table.cmp",
+                "reference/dragmap/hash_table_stats.txt",
+                "reference/dragmap/ref_index.bin",
+                "reference/dragmap/reference.bin",
+                "reference/dragmap/repeat_mask.bin",
+                "reference/dragmap/str_table.bin",
+                "reference/intervals",
+                "reference/intervals/chr22_1-40001.bed",
+                "reference/intervals/chr22_1-40001.bed.gz",
+                "reference/intervals/genome.bed",
+                "reference/intervals/genome.bed.gz"
+            ],
+            [
+                "hash_table.cmp:md5,1caab4ffc89f81ace615a2e813295cf4",
+                "ref_index.bin:md5,dbb5c7d26b974e0ac338024fe4535044",
+                "reference.bin:md5,be67b80ee48aa96b383fd72f1ccfefea",
+                "repeat_mask.bin:md5,294939f1f80aa7f4a70b9b537e4c0f21",
+                "str_table.bin:md5,45f7818c4a10fdeed04db7a34b5f9ff1",
+                "chr22_1-40001.bed:md5,87a15eb9c2ff20ccd5cd8735a28708f7",
+                "chr22_1-40001.bed.gz:md5,87a15eb9c2ff20ccd5cd8735a28708f7",
+                "genome.bed:md5,a87dc7d20ebca626f65cc16ff6c97a3e",
+                "genome.bed.gz:md5,a87dc7d20ebca626f65cc16ff6c97a3e"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.09.0"
+        },
+        "timestamp": "2024-10-08T11:28:56.135088"
+    },
+    "Run with profile test | --aligner dragmap --save_reference | skip QC/recal/md": {
+        "content": [
+            10,
+            {
+                "BAM_TO_CRAM_MAPPING": {
+                    "samtools": 1.21
+                },
+                "DRAGMAP_ALIGN": {
+                    "dragmap": "1.2.1",
+                    "samtools": "1.19.2",
+                    "pigz": "2.3.4"
+                },
+                "INDEX_MERGE_BAM": {
+                    "samtools": 1.21
+                },
+                "MERGE_BAM": {
+                    "samtools": 1.21
+                },
+                "Workflow": {
+                    "nf-core/sarek": "v3.5.0"
+                }
+            },
+            [
+                "csv",
+                "csv/mapped.csv",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "preprocessing",
+                "preprocessing/mapped",
+                "preprocessing/mapped/test",
+                "preprocessing/mapped/test/test.sorted.cram",
+                "preprocessing/mapped/test/test.sorted.cram.crai",
+                "reference",
+                "reference/dragmap",
+                "reference/dragmap/hash_table.cfg",
+                "reference/dragmap/hash_table.cfg.bin",
+                "reference/dragmap/hash_table.cmp",
+                "reference/dragmap/hash_table_stats.txt",
+                "reference/dragmap/ref_index.bin",
+                "reference/dragmap/reference.bin",
+                "reference/dragmap/repeat_mask.bin",
+                "reference/dragmap/str_table.bin",
+                "reference/intervals",
+                "reference/intervals/chr22_1-40001.bed",
+                "reference/intervals/chr22_1-40001.bed.gz",
+                "reference/intervals/genome.bed",
+                "reference/intervals/genome.bed.gz"
+            ],
+            [
+                "hash_table.cmp:md5,1caab4ffc89f81ace615a2e813295cf4",
+                "ref_index.bin:md5,dbb5c7d26b974e0ac338024fe4535044",
+                "reference.bin:md5,be67b80ee48aa96b383fd72f1ccfefea",
+                "repeat_mask.bin:md5,294939f1f80aa7f4a70b9b537e4c0f21",
+                "str_table.bin:md5,45f7818c4a10fdeed04db7a34b5f9ff1",
+                "chr22_1-40001.bed:md5,87a15eb9c2ff20ccd5cd8735a28708f7",
+                "chr22_1-40001.bed.gz:md5,87a15eb9c2ff20ccd5cd8735a28708f7",
+                "genome.bed:md5,a87dc7d20ebca626f65cc16ff6c97a3e",
+                "genome.bed.gz:md5,a87dc7d20ebca626f65cc16ff6c97a3e"
+            ],
+            [
+                [
+                    "test.sorted.cram",
+                    "7088dc71e5390aec0dd9d778f4568297"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.09.0"
+        },
+        "timestamp": "2024-10-08T11:28:12.076906"
+    }
+}

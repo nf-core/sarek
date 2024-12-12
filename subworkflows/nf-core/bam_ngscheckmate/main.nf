@@ -46,4 +46,3 @@ workflow BAM_NGSCHECKMATE {
     versions     = ch_versions                       // channel: [ versions.yml ]
 
 }
-
