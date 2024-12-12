@@ -83,6 +83,7 @@ A set of connecting glaciers.
 | Params                               | Status  |
 | ------------------------------------ | ------- |
 | `--help_full`                        | New     |
+| `--length_required`                  | New     |
 | `--show_hidden`                      | New     |
 | `--snpeff_db`                        | Updated |
 | `--snpeff_genome`                    | Removed |
