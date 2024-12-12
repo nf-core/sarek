@@ -55,6 +55,7 @@ A set of connecting glaciers.
 - [1752](https://github.com/nf-core/sarek/pull/1752) - Add `indexcov` and `lofreq` to full size tests. Amend overview figures.
 - [1754](https://github.com/nf-core/sarek/pull/1754) - Fix test string
 - [1755](https://github.com/nf-core/sarek/pull/1755) - Remove `default` channel and name from local modules
+- [1757](https://github.com/nf-core/sarek/pull/1757) - Fix Changelog by adding missing new parameters
 
 ### Removed
 
@@ -83,6 +84,7 @@ A set of connecting glaciers.
 | Params                               | Status  |
 | ------------------------------------ | ------- |
 | `--help_full`                        | New     |
+| `--length_required`                  | New     |
 | `--show_hidden`                      | New     |
 | `--snpeff_db`                        | Updated |
 | `--snpeff_genome`                    | Removed |
