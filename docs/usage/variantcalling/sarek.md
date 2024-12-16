@@ -88,11 +88,17 @@ They can also be added to the parameters directive in the config file we just ed
 
 ```groovy
 params {
-    max_cpus                  = 2
-    max_memory                = '6.5GB'
-    max_time                  = '2.h'
     use_annotation_cache_keys = true
 }
+
+process {
+    resourceLimits = [
+        cpus: 2,
+        memory: '6.5GB',
+        time: '2.h'
+    ]
+}
+
 ```
 
 The parameter `use_annotation_cache_keys` allows the annotation software to deal with the local paths when the cache is downloaded on the environment.

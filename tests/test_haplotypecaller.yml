@@ -8,10 +8,6 @@
     - path: results/csv/variantcalled.csv
       md5sum: d7d86e82902a4f57876b2414a4f812a4
     - path: results/multiqc
-    - path: results/preprocessing/converted/test/test.converted.cram
-    # binary changes md5sums on reruns
-    - path: results/preprocessing/converted/test/test.converted.cram.crai
-    # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.cram
       should_exist: false
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
@@ -58,10 +54,6 @@
       md5sum: f3dac01ea66b95fe477446fde2d31489
     - path: results/no_intervals.bed.gz.tbi
       md5sum: f3dac01ea66b95fe477446fde2d31489
-    - path: results/preprocessing/converted/test/test.converted.cram
-    # binary changes md5sums on reruns
-    - path: results/preprocessing/converted/test/test.converted.cram.crai
-    # binary changes md5sums on reruns
     - path: results/preprocessing/recalibrated/test/test.recal.cram
       should_exist: false
     - path: results/preprocessing/recalibrated/test/test.recal.cram.crai
