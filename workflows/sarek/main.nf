@@ -27,7 +27,7 @@ include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_TO_R2_FQ   } from '../../module
 include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_TO_FQ_PAIR } from '../../modules/nf-core/spring/decompress/main'
 
 // Lint FASTQ with FQ/LINT
-include { FQ_LINT                                            } from '../../modules/nf-core/fq_lint/main'
+include { FQ_LINT                                            } from '../../modules/nf-core/fq/lint/main'
 
 // Run FASTQC
 include { FASTQC                                            } from '../../modules/nf-core/fastqc/main'
