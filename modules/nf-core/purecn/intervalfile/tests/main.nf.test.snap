@@ -1,0 +1,63 @@
+{
+    "test-purecn-intervalfile-stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    
+                ],
+                "2": [
+                    "versions.yml:md5,1f04b2a85be5b27512547a3d0ebfcd79"
+                ],
+                "bed": [
+                    
+                ],
+                "txt": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,1f04b2a85be5b27512547a3d0ebfcd79"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-05T16:05:41.414832"
+    },
+    "test-purecn-intervalfile": {
+        "content": [
+            [
+                "chr21:5010001-5010400\t0.5325\tNA\tNA\t.\tTRUE",
+                "chr21:5010401-5010800\t0.4625\tNA\tNA\t.\tTRUE",
+                "chr21:5010801-5011200\t0.55\tNA\tNA\t.\tTRUE",
+                "chr21:5011201-5011600\t0.425\tNA\tNA\t.\tTRUE",
+                "chr21:5011601-5012000\t0.6275\tNA\tNA\t.\tTRUE"
+            ],
+            [
+                
+            ],
+            [
+                "versions.yml:md5,1f04b2a85be5b27512547a3d0ebfcd79"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-05T16:05:20.272038"
+    }
+}

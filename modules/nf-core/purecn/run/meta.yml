@@ -1,0 +1,176 @@
+name: "purecn_run"
+description: Run PureCN workflow to normalize, segment and determine purity and ploidy
+keywords:
+  - copy number alteration calling
+  - hybrid capture sequencing
+  - targeted sequencing
+  - DNA sequencing
+tools:
+  - "purecn":
+      description: "Copy number calling and SNV classification using targeted short
+        read sequencing"
+      homepage: "https://bioconductor.org/packages/release/bioc/html/PureCN.html"
+      documentation: "https://bioconductor.org/packages/release/bioc/html/PureCN.html"
+      tool_dev_url: "https://github.com/lima1/PureCN"
+      doi: "10.1186/s13029-016-0060-z"
+      license: ["Artistic-2.0"]
+      args_id: "$args"
+      identifier: biotools:purecn
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test' ]
+    - intervals:
+        type: file
+        description: |
+          BED file of target intervals, generated from IntervalFile.R
+        pattern: "{*.bed,*.txt}"
+    - coverage:
+        type: file
+        description: Coverage file generated from Coverage.R
+        pattern: "*.txt"
+  - - normal_db:
+        type: file
+        description: normal pannel database
+  - - genome:
+        type: string
+        description: Genome build
+output:
+  - pdf:
+      - meta:
+          type: file
+          description: |
+            PDF file containing copy number plots
+          pattern: "*.pdf"
+      - "*.pdf":
+          type: file
+          description: |
+            PDF file containing copy number plots
+          pattern: "*.pdf"
+  - local_optima_pdf:
+      - meta:
+          type: file
+          description: |
+            PDF file containing local optima plots
+          pattern: "*_local_optima.pdf"
+      - "*_local_optima.pdf":
+          type: file
+          description: |
+            PDF file containing local optima plots
+          pattern: "*_local_optima.pdf"
+  - seg:
+      - meta:
+          type: file
+          description: |
+            Tab-delimited file containing segmentation results
+          pattern: "*_dnacopy.seg"
+      - "*_dnacopy.seg":
+          type: file
+          description: |
+            Tab-delimited file containing segmentation results
+          pattern: "*_dnacopy.seg"
+  - genes_csv:
+      - meta:
+          type: file
+          description: |
+            CSV file containing gene copy number calls. Optional
+          pattern: "*_genes.csv"
+      - "*_genes.csv":
+          type: file
+          description: |
+            CSV file containing gene copy number calls. Optional
+          pattern: "*_genes.csv"
+  - amplification_pvalues_csv:
+      - meta:
+          type: file
+          description: |
+            CSV file containing amplification p-values. Optional
+          pattern: "*_amplification_pvalues.csv"
+      - "*_amplification_pvalues.csv":
+          type: file
+          description: |
+            CSV file containing amplification p-values. Optional
+          pattern: "*_amplification_pvalues.csv"
+      - ues_csv:
+          type: file
+          description: |
+            CSV file containing amplification p-values. Optional
+          pattern: "*_amplification_pvalues.csv"
+  - vcf_gz:
+      - meta:
+          type: file
+          description: |
+            GZipped VCF file containing SNV calls. Optional
+          pattern: "*.vcf.gz"
+      - "*.vcf.gz":
+          type: file
+          description: |
+            GZipped VCF file containing SNV calls. Optional
+          pattern: "*.vcf.gz"
+  - variants_csv:
+      - meta:
+          type: file
+          description: |
+            CSV file containing SNV calls. Optional
+          pattern: "*_variants.csv"
+      - "*_variants.csv":
+          type: file
+          description: |
+            CSV file containing SNV calls. Optional
+          pattern: "*_variants.csv"
+  - loh_csv:
+      - meta:
+          type: file
+          description: |
+            CSV file containing LOH calls. Optional
+          pattern: "*_loh.csv"
+      - "*_loh.csv":
+          type: file
+          description: |
+            CSV file containing LOH calls. Optional
+          pattern: "*_loh.csv"
+  - chr_pdf:
+      - meta:
+          type: file
+          description: |
+            PDF file containing chromosome plots. Optional
+          pattern: "*_chromosomes.pdf"
+      - "*_chromosomes.pdf":
+          type: file
+          description: |
+            PDF file containing chromosome plots. Optional
+          pattern: "*_chromosomes.pdf"
+  - segmentation_pdf:
+      - meta:
+          type: file
+          description: |
+            PDF file containing segmentation plots. Optional
+          pattern: "*_segmentation.pdf"
+      - "*_segmentation.pdf":
+          type: file
+          description: |
+            PDF file containing segmentation plots. Optional
+          pattern: "*_segmentation.pdf"
+  - multisample_seg:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test' ]
+      - "*_multisample.seg":
+          type: file
+          description: multisample segmentation results
+          pattern: "*_multisample.seg"
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+authors:
+  - "@aldosr"
+  - "@lbeltrame"
+maintainers:
+  - "@aldosr"
+  - "@lbeltrame"
