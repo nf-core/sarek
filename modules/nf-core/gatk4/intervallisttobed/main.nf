@@ -40,4 +40,18 @@ process GATK4_INTERVALLISTTOBED {
         gatk4: \$(echo \$(gatk --version 2>&1) | sed 's/^.*(GATK) v//; s/ .*\$//')
     END_VERSIONS
     """
+
+    stub:
+    def prefix = task.ext.prefix ?: "${meta.id}.cram"
+    def metrics = task.ext.metrics ?: "${prefix}.metrics"
+    def prefix_basename = prefix.substring(0, prefix.lastIndexOf("."))
+
+    """
+    touch ${prefix}.bed
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        gawk: \$(awk -Wversion | sed '1!d; s/.*Awk //; s/,.*//')
+    END_VERSIONS
+    """
 }

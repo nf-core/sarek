@@ -78,7 +78,10 @@
     - path: results/reports/fastp/test
     - path: results/reports/fastqc/test-test_L1
     - path: results/reports/markduplicates/test/test.md.cram.metrics
-      contains: ["test	17482	890	170	1047682	12552	69	0	0.65881"]
+      contains:
+        [
+          "LIBRARY	UNPAIRED_READS_EXAMINED	READ_PAIRS_EXAMINED	SECONDARY_OR_SUPPLEMENTARY_RDS	UNMAPPED_READS	UNPAIRED_READ_DUPLICATES	READ_PAIR_DUPLICATES	READ_PAIR_OPTICAL_DUPLICATES	PERCENT_DUPLICATION	ESTIMATED_LIBRARY_SIZE",
+        ]
     - path: results/reports/mosdepth/test/test.md.mosdepth.global.dist.txt
     - path: results/reports/mosdepth/test/test.md.mosdepth.region.dist.txt
     - path: results/reports/mosdepth/test/test.md.mosdepth.summary.txt

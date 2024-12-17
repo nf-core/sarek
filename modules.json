@@ -262,7 +262,8 @@
                     "gatk4/intervallisttobed": {
                         "branch": "master",
                         "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
-                        "installed_by": ["modules"]
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/gatk4/intervallisttobed/gatk4-intervallisttobed.diff"
                     },
                     "gatk4/learnreadorientationmodel": {
                         "branch": "master",
@@ -312,6 +313,11 @@
                     "gawk": {
                         "branch": "master",
                         "git_sha": "97321eded31a12598837a476d3615300af413bb7",
+                        "installed_by": ["modules"]
+                    },
+                    "goleft/indexcov": {
+                        "branch": "master",
+                        "git_sha": "666652151335353eef2fcd58880bcef5bc2928e1",
                         "installed_by": ["modules"]
                     },
                     "lofreq/callparallel": {
@@ -396,7 +402,7 @@
                     },
                     "samtools/mpileup": {
                         "branch": "master",
-                        "git_sha": "b13f07be4c508d6ff6312d354d09f2493243e208",
+                        "git_sha": "13e7d1046922381df90cd8fe9bee8c3e57ae8457",
                         "installed_by": ["modules"]
                     },
                     "samtools/stats": {
