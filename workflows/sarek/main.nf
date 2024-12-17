@@ -26,6 +26,9 @@ include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_TO_R1_FQ   } from '../../module
 include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_TO_R2_FQ   } from '../../modules/nf-core/spring/decompress/main'
 include { SPRING_DECOMPRESS as SPRING_DECOMPRESS_TO_FQ_PAIR } from '../../modules/nf-core/spring/decompress/main'
 
+// Lint FASTQ with FQ/LINT
+include { FQ_LINT                                            } from '../../modules/nf-core/fq_lint/main'
+
 // Run FASTQC
 include { FASTQC                                            } from '../../modules/nf-core/fastqc/main'
 
@@ -199,9 +202,16 @@ workflow SAREK {
         input_fastq = fastq_gz.mix(CONVERT_FASTQ_INPUT.out.reads).mix(one_fastq_gz_from_spring).mix(two_fastq_gz_from_spring)
 
         // STEP 0: QC & TRIM
+        // `--skip_tools fq_lint` to skip linting with fq
         // `--skip_tools fastqc` to skip fastqc
         // Trim only with `--trim_fastq`
         // Additional options to be set up
+
+        // Lint FASTQ with FQ/LINT
+        if (!params.skip_tools && params.skip_tools.split(',').contains('fq_lint')) {
+            FQ_LINT(input_fastq)
+            versions = versions.mix(FQ_LINT.out.versions)
+        }
 
         // QC
         if (!(params.skip_tools && params.skip_tools.split(',').contains('fastqc'))) {
