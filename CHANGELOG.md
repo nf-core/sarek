@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - [1682](https://github.com/nf-core/sarek/pull/1682) - Add `bcftools_norm` in `POST_VARIANTCALLING` for normalization of all vcf files; edit vcf_concatenate_germline subworkflow
-- [1759](https://github.com/nf-core/sarek/pull/1759) - Back to dev
+- [1760](https://github.com/nf-core/sarek/pull/1760) - Back to dev
 
 ### Changed
 
