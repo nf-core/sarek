@@ -10,7 +10,7 @@
                     "gatk4": "4.5.0.0"
                 },
                 "Workflow": {
-                    "nf-core/sarek": "v3.5.0dev"
+                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [
@@ -55,7 +55,7 @@
                 "multiqc_citations.txt:md5,3815a9f79e41890653a0e0d602c92ac9"
             ],
             [
-                
+
             ]
         ],
         "meta": {
@@ -78,7 +78,7 @@
                     "vcftools": "0.1.16"
                 },
                 "Workflow": {
-                    "nf-core/sarek": "v3.5.0dev"
+                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [
@@ -173,7 +173,7 @@
                 "test.strelka.variants.TsTv.count:md5,ee7dafc8d941b8502a04a63dc3126fff"
             ],
             [
-                
+
             ]
         ],
         "meta": {
@@ -196,7 +196,7 @@
                     "vcftools": "0.1.16"
                 },
                 "Workflow": {
-                    "nf-core/sarek": "v3.5.0dev"
+                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [
@@ -291,7 +291,7 @@
                 "test.strelka.variants.TsTv.count:md5,ee7dafc8d941b8502a04a63dc3126fff"
             ],
             [
-                
+
             ]
         ],
         "meta": {
@@ -314,7 +314,7 @@
                     "samtools": 1.21
                 },
                 "Workflow": {
-                    "nf-core/sarek": "v3.5.0dev"
+                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [

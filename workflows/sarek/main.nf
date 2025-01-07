@@ -16,6 +16,7 @@ include { CHANNEL_BASERECALIBRATOR_CREATE_CSV               } from '../../subwor
 include { CHANNEL_APPLYBQSR_CREATE_CSV                      } from '../../subworkflows/local/channel_applybqsr_create_csv/main'
 include { CHANNEL_VARIANT_CALLING_CREATE_CSV                } from '../../subworkflows/local/channel_variant_calling_create_csv/main'
 
+
 // Convert BAM files to FASTQ files
 include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_INPUT       } from '../../subworkflows/local/bam_convert_samtools/main'
 include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_UMI         } from '../../subworkflows/local/bam_convert_samtools/main'
@@ -609,6 +610,7 @@ workflow SAREK {
         }
     }
 
+
     if (params.step == 'variant_calling') {
 
         cram_variant_calling = Channel.empty().mix( input_sample )
@@ -799,6 +801,8 @@ workflow SAREK {
         reports = reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.vcftools_tstv_counts.collect{ meta, counts -> [ counts ] })
         reports = reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.vcftools_tstv_qual.collect{ meta, qual -> [ qual ] })
         reports = reports.mix(VCF_QC_BCFTOOLS_VCFTOOLS.out.vcftools_filter_summary.collect{ meta, summary -> [ summary ] })
+        reports = reports.mix(BAM_VARIANT_CALLING_GERMLINE_ALL.out.out_indexcov.collect{ meta, indexcov -> indexcov.flatten() })
+        reports = reports.mix(BAM_VARIANT_CALLING_SOMATIC_ALL.out.out_indexcov.collect{ meta, indexcov -> indexcov.flatten() })
 
         CHANNEL_VARIANT_CALLING_CREATE_CSV(vcf_to_annotate, params.outdir)
 

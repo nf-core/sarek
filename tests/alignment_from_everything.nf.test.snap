@@ -51,7 +51,7 @@
                     "vcftools": "0.1.16"
                 },
                 "Workflow": {
-                    "nf-core/sarek": "v3.5.0dev"
+                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [
@@ -323,7 +323,7 @@
                 "test.strelka.variants.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a"
             ],
             [
-                
+
             ]
         ],
         "meta": {

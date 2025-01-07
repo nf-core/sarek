@@ -5,10 +5,36 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## dev
+## [3dev](https://github.com/nf-core/sarek/releases/tag/dev) - dev
 
 ### Added
 
+- [1759](https://github.com/nf-core/sarek/pull/1759) - Back to dev
+
+### Changed
+
+### Fixed
+
+### Removed
+
+### Dependencies
+
+| Dependency | Old version | New version |
+| ---------- | ----------- | ----------- |
+
+### Parameters
+
+| Params | Status |
+| ------ | ------ |
+
+## [3.5.0](https://github.com/nf-core/sarek/releases/tag/3.5.0) - Áhkájiegna
+
+A set of connecting glaciers.
+
+### Added
+
+- [1613](https://github.com/nf-core/sarek/pull/1613) - add indexcov
+- [1638](https://github.com/nf-core/sarek/pull/1638) - Added additional documentation detailing ASCAT WES usage.
 - [1640](https://github.com/nf-core/sarek/pull/1620) - Add `lofreq` as a tumor-only variant caller
 - [1642](https://github.com/nf-core/sarek/pull/1642) - Back to dev
 - [1653](https://github.com/nf-core/sarek/pull/1653) - Updates `sarek_subway` files with `lofreq`
@@ -20,6 +46,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- [1579](https://github.com/nf-core/sarek/pull/1579) - Update Sentieon usage docs
+- [1635](https://github.com/nf-core/sarek/pull/1635) - Fix docs to reflect variant calling tool - data type correctly
 - [1668](https://github.com/nf-core/sarek/pull/1668) - Add nf-test sharding CI
 - [1669](https://github.com/nf-core/sarek/pull/1669) - Better nf-test pipeline level tests
 - [1677](https://github.com/nf-core/sarek/pull/1677) - Migrate pytest aligner and pipeline default tests to nf-test
@@ -31,6 +59,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1707](https://github.com/nf-core/sarek/pull/1707) - Un-hide parameters and clean up Json schema
 - [1708](https://github.com/nf-core/sarek/pull/1708) - Migrate pipeline pytest alignment and annotation tests to nf-test
 - [1711](https://github.com/nf-core/sarek/pull/1711) - Migrate pipeline pytest strelka tests to nf-test
+- [1731](https://github.com/nf-core/sarek/pull/1731) - Migrate pipeline pytest controlfreec tests to nf-test
 
 ### Fixed
 
@@ -44,6 +73,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1702](https://github.com/nf-core/sarek/pull/1702) - Update nf-schema tests that were not failing on lenient mode
 - [1712](https://github.com/nf-core/sarek/pull/1712) - Fix missing import statements on error messages when starting without samplesheet
 - [1743](https://github.com/nf-core/sarek/pull/1743) - Add setup java 17 in GHA for latest Nextflow version
+- [1745](https://github.com/nf-core/sarek/pull/1745) - Fix bug where workflow can hang if the email parameter is set
+- [1746](https://github.com/nf-core/sarek/pull/1746) - Fix Sentieon module inputs
+- [1752](https://github.com/nf-core/sarek/pull/1752) - Add `indexcov` and `lofreq` to full size tests. Amend overview figures.
+- [1754](https://github.com/nf-core/sarek/pull/1754) - Fix test string
+- [1755](https://github.com/nf-core/sarek/pull/1755) - Remove `default` channel and name from local modules
+- [1757](https://github.com/nf-core/sarek/pull/1757) - Fix Changelog by adding missing new parameters
 
 ### Removed
 
@@ -59,6 +94,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | `deepvariant` | 1.5.0       | 1.6.1       |
 | `ensemblvep`  | 111.0       | 113.0       |
 | `fgbio`       | 2.0.2       | 2.1.2       |
+| `gawk`        | 5.1.0       | 5.3.0       |
 | `htslib`      | 1.20        | 1.21        |
 | `lofreq`      |             | 2.1.5       |
 | `multiqc`     | 1.21        | 1.25.1      |
@@ -72,6 +108,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | Params                               | Status  |
 | ------------------------------------ | ------- |
 | `--help_full`                        | New     |
+| `--length_required`                  | New     |
 | `--show_hidden`                      | New     |
 | `--snpeff_db`                        | Updated |
 | `--snpeff_genome`                    | Removed |
