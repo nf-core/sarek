@@ -15,8 +15,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [1767](https://github.com/nf-core/sarek/pull/1767) - Bump nf-schema version to 2.2.1
 
-### Changed
-
 ### Fixed
 
 ### Removed
