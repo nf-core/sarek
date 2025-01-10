@@ -4,8 +4,8 @@ process TILEDBVCF_CREATE {
 
     conda "tiledb::tiledbvcf-py>=0.34.2"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'tiledb/tiledbvcf-py:latest' :
-        'tiledb/tiledbvcf-py:latest' }"
+        'docker.io/tiledb/tiledbvcf-py:latest' :
+        'docker.io/tiledb/tiledbvcf-py:latest' }"
 
     input:
     tuple val(meta), val(db_name)
