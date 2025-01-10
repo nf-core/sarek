@@ -6,11 +6,10 @@
 // For all modules here:
 // A when clause condition is defined in the conf/modules.config to determine if the module should be run
 
-include { CREATE_INTERVALS_BED                                   } from '../../../modules/local/create_intervals_bed/main'
-include { GATK4_INTERVALLISTTOBED                                } from '../../../modules/nf-core/gatk4/intervallisttobed/main'
-include { GAWK as BUILD_INTERVALS                                } from '../../../modules/nf-core/gawk/main'
-include { TABIX_BGZIPTABIX as TABIX_BGZIPTABIX_INTERVAL_SPLIT    } from '../../../modules/nf-core/tabix/bgziptabix/main'
-include { TABIX_BGZIPTABIX as TABIX_BGZIPTABIX_INTERVAL_COMBINED } from '../../../modules/nf-core/tabix/bgziptabix/main'
+include { CREATE_INTERVALS_BED                                   } from '../../../modules/local/create_intervals_bed'
+include { GATK4_INTERVALLISTTOBED                                } from '../../../modules/nf-core/gatk4/intervallisttobed'
+include { TABIX_BGZIPTABIX as TABIX_BGZIPTABIX_INTERVAL_SPLIT    } from '../../../modules/nf-core/tabix/bgziptabix'
+include { TABIX_BGZIPTABIX as TABIX_BGZIPTABIX_INTERVAL_COMBINED } from '../../../modules/nf-core/tabix/bgziptabix'
 
 workflow PREPARE_INTERVALS {
     take:
@@ -38,31 +37,18 @@ workflow PREPARE_INTERVALS {
         intervals_combined   = Channel.fromPath(file("${outdir}/no_intervals.bed")).map{ it -> [ [ id:it.simpleName ], it ] }
     } else if (step != 'annotate' && step != 'controlfreec') {
         // If no interval/target file is provided, then generated intervals from FASTA file
-        if (!intervals) {
-            BUILD_INTERVALS(fasta_fai, [])
+        intervals_combined = Channel.fromPath(file(intervals)).map{it -> [ [ id:it.baseName ], it ] }
+        CREATE_INTERVALS_BED(file(intervals), nucleotides_per_second)
 
-            intervals_combined = BUILD_INTERVALS.out.output
+        intervals_bed = CREATE_INTERVALS_BED.out.bed
 
-            CREATE_INTERVALS_BED(intervals_combined.map{ meta, path -> path }, nucleotides_per_second)
+        versions = versions.mix(CREATE_INTERVALS_BED.out.versions)
 
-            intervals_bed = CREATE_INTERVALS_BED.out.bed
-
-            versions = versions.mix(BUILD_INTERVALS.out.versions)
-            versions = versions.mix(CREATE_INTERVALS_BED.out.versions)
-        } else {
-            intervals_combined = Channel.fromPath(file(intervals)).map{it -> [ [ id:it.baseName ], it ] }
-            CREATE_INTERVALS_BED(file(intervals), nucleotides_per_second)
-
-            intervals_bed = CREATE_INTERVALS_BED.out.bed
-
-            versions = versions.mix(CREATE_INTERVALS_BED.out.versions)
-
-            // If interval file is not provided as .bed, but e.g. as .interval_list then convert to BED format
-            if (intervals.endsWith(".interval_list")) {
-                GATK4_INTERVALLISTTOBED(intervals_combined)
-                intervals_combined = GATK4_INTERVALLISTTOBED.out.bed
-                versions = versions.mix(GATK4_INTERVALLISTTOBED.out.versions)
-            }
+        // If interval file is not provided as .bed, but e.g. as .interval_list then convert to BED format
+        if (intervals.endsWith(".interval_list")) {
+            GATK4_INTERVALLISTTOBED(intervals_combined)
+            intervals_combined = GATK4_INTERVALLISTTOBED.out.bed
+            versions = versions.mix(GATK4_INTERVALLISTTOBED.out.versions)
         }
 
         // Now for the intervals.bed the following operations are done:
