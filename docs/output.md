@@ -880,6 +880,20 @@ Germline VCFs from `DeepVariant`, `FreeBayes`, `HaplotypeCaller`, `Haplotyper`, 
 
 </details>
 
+### Normalization
+
+All VCFs from `DeepVariant`, `FreeBayes`, `HaplotypeCaller`, `Haplotyper`, `Manta`, `bcftools mpileup`, `Strelka`, or `Tiddit` are normalized with `bcftools norm`. The field `SOURCE` is added to the VCF header to report the variant caller.
+
+<details markdown="1">
+<summary>Normalized VCF-files for normal and tumor samples</summary>
+
+**Output directory: `{outdir}/variantcalling/normalized/<sample>/`**
+
+- `<sample>.<variantcaller>.norm.vcf.gz` and `<sample>.<variantcaller>.norm.vcf.gz.tbi`
+  - VCF with tabix index
+
+</details>
+
 ## Variant annotation
 
 This directory contains results from the final annotation steps: two tools are used for annotation, [snpEff](http://snpeff.sourceforge.net/) and [VEP](https://www.ensembl.org/info/docs/tools/vep/index.html). Both results can also be combined by setting `--tools merge`.

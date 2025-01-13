@@ -1,0 +1,758 @@
+{
+    "sarscov2 - [ vcf, tbi ], fasta - vcf_gz output - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_norm.vcf:md5,63e5adbaf3dd94550e9e3d7935dd28db"
+                    ]
+                ],
+                "1": [
+                    
+                ],
+                "2": [
+                    
+                ],
+                "3": [
+                    "versions.yml:md5,ff760495922469e56d0fc3372773000d"
+                ],
+                "csi": [
+                    
+                ],
+                "tbi": [
+                    
+                ],
+                "vcf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_norm.vcf:md5,63e5adbaf3dd94550e9e3d7935dd28db"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,ff760495922469e56d0fc3372773000d"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-04T14:38:42.639095032"
+    },
+    "sarscov2 - [ vcf, [] ], fasta - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_norm.vcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "1": [
+                    
+                ],
+                "2": [
+                    
+                ],
+                "3": [
+                    "versions.yml:md5,ff760495922469e56d0fc3372773000d"
+                ],
+                "csi": [
+                    
+                ],
+                "tbi": [
+                    
+                ],
+                "vcf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_norm.vcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,ff760495922469e56d0fc3372773000d"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-04T14:38:05.448449893"
+    },
+    "sarscov2 - [ vcf, tbi ], fasta - vcf output": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_norm.vcf:md5,63e5adbaf3dd94550e9e3d7935dd28db"
+                    ]
+                ],
+                "1": [
+                    
+                ],
+                "2": [
+                    
+                ],
+                "3": [
+                    "versions.yml:md5,ff760495922469e56d0fc3372773000d"
+                ],
+                "csi": [
+                    
+                ],
+                "tbi": [
+                    
+                ],
+                "vcf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_norm.vcf:md5,63e5adbaf3dd94550e9e3d7935dd28db"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,ff760495922469e56d0fc3372773000d"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-04T14:37:12.741719961"
+    },
+    "sarscov2 - [ vcf, [] ], fasta - vcf_gz_index - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_vcf.vcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "1": [
+                    
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_vcf.vcf.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "3": [
+                    "versions.yml:md5,ff760495922469e56d0fc3372773000d"
+                ],
+                "csi": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_vcf.vcf.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "tbi": [
+                    
+                ],
+                "vcf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_vcf.vcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,ff760495922469e56d0fc3372773000d"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-04T14:39:22.875147941"
+    },
+    "sarscov2 - [ vcf, tbi ], fasta - vcf_gz output": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test_norm.vcf:md5,63e5adbaf3dd94550e9e3d7935dd28db"
+                ]
+            ],
+            [
+                
+            ],
+            [
+                
+            ],
+            [
+                "versions.yml:md5,ff760495922469e56d0fc3372773000d"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-05T08:15:23.38765384"
+    },
+    "sarscov2 - [ vcf, [] ], fasta": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_norm.vcf.gz:md5,63e5adbaf3dd94550e9e3d7935dd28db"
+                    ]
+                ],
+                "1": [
+                    
+                ],
+                "2": [
+                    
+                ],
+                "3": [
+                    "versions.yml:md5,ff760495922469e56d0fc3372773000d"
+                ],
+                "csi": [
+                    
+                ],
+                "tbi": [
+                    
+                ],
+                "vcf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_norm.vcf.gz:md5,63e5adbaf3dd94550e9e3d7935dd28db"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,ff760495922469e56d0fc3372773000d"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-04T14:36:21.519977754"
+    },
+    "sarscov2 - [ vcf, tbi ], fasta - vcf output -stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_norm.vcf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    
+                ],
+                "2": [
+                    
+                ],
+                "3": [
+                    "versions.yml:md5,ff760495922469e56d0fc3372773000d"
+                ],
+                "csi": [
+                    
+                ],
+                "tbi": [
+                    
+                ],
+                "vcf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_norm.vcf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,ff760495922469e56d0fc3372773000d"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-04T14:38:27.8230994"
+    },
+    "sarscov2 - [ vcf, tbi ], fasta - bcf_gz output": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_norm.bcf:md5,f35545c26a788b5eb697d9c0490339d9"
+                    ]
+                ],
+                "1": [
+                    
+                ],
+                "2": [
+                    
+                ],
+                "3": [
+                    "versions.yml:md5,ff760495922469e56d0fc3372773000d"
+                ],
+                "csi": [
+                    
+                ],
+                "tbi": [
+                    
+                ],
+                "vcf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_norm.bcf:md5,f35545c26a788b5eb697d9c0490339d9"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,ff760495922469e56d0fc3372773000d"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-04T14:37:53.942403192"
+    },
+    "sarscov2 - [ vcf, [] ], fasta - vcf_gz_index_csi - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_vcf.vcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "1": [
+                    
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_vcf.vcf.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "3": [
+                    "versions.yml:md5,ff760495922469e56d0fc3372773000d"
+                ],
+                "csi": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_vcf.vcf.gz.csi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "tbi": [
+                    
+                ],
+                "vcf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_vcf.vcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,ff760495922469e56d0fc3372773000d"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-05T13:56:05.3799488"
+    },
+    "sarscov2 - [ vcf, [] ], fasta - vcf_gz_index_tbi": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test_vcf.vcf.gz:md5,63e5adbaf3dd94550e9e3d7935dd28db"
+                ]
+            ],
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-05T13:53:28.356741947"
+    },
+    "sarscov2 - [ vcf, tbi ], fasta": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_norm.vcf.gz:md5,63e5adbaf3dd94550e9e3d7935dd28db"
+                    ]
+                ],
+                "1": [
+                    
+                ],
+                "2": [
+                    
+                ],
+                "3": [
+                    "versions.yml:md5,ff760495922469e56d0fc3372773000d"
+                ],
+                "csi": [
+                    
+                ],
+                "tbi": [
+                    
+                ],
+                "vcf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_norm.vcf.gz:md5,63e5adbaf3dd94550e9e3d7935dd28db"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,ff760495922469e56d0fc3372773000d"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-04T14:36:58.39445154"
+    },
+    "sarscov2 - [ vcf, tbi ], fasta -stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_norm.vcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "1": [
+                    
+                ],
+                "2": [
+                    
+                ],
+                "3": [
+                    "versions.yml:md5,ff760495922469e56d0fc3372773000d"
+                ],
+                "csi": [
+                    
+                ],
+                "tbi": [
+                    
+                ],
+                "vcf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_norm.vcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,ff760495922469e56d0fc3372773000d"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-04T14:38:16.259516142"
+    },
+    "sarscov2 - [ vcf, tbi ], fasta - bcf_gz output - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_norm.bcf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    
+                ],
+                "2": [
+                    
+                ],
+                "3": [
+                    "versions.yml:md5,ff760495922469e56d0fc3372773000d"
+                ],
+                "csi": [
+                    
+                ],
+                "tbi": [
+                    
+                ],
+                "vcf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_norm.bcf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,ff760495922469e56d0fc3372773000d"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-04T14:39:10.503208929"
+    },
+    "sarscov2 - [ vcf, [] ], fasta - vcf_gz_index": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test_vcf.vcf.gz:md5,63e5adbaf3dd94550e9e3d7935dd28db"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test_vcf.vcf.gz.csi"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-05T07:52:58.381931979"
+    },
+    "sarscov2 - [ vcf, tbi ], fasta - bcf output - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_norm.bcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "1": [
+                    
+                ],
+                "2": [
+                    
+                ],
+                "3": [
+                    "versions.yml:md5,ff760495922469e56d0fc3372773000d"
+                ],
+                "csi": [
+                    
+                ],
+                "tbi": [
+                    
+                ],
+                "vcf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_norm.bcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,ff760495922469e56d0fc3372773000d"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-04T14:38:59.121377258"
+    },
+    "sarscov2 - [ vcf, [] ], fasta - vcf_gz_index_tbi - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_vcf.vcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_vcf.vcf.gz.tbi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    
+                ],
+                "3": [
+                    "versions.yml:md5,ff760495922469e56d0fc3372773000d"
+                ],
+                "csi": [
+                    
+                ],
+                "tbi": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_vcf.vcf.gz.tbi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "vcf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_vcf.vcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,ff760495922469e56d0fc3372773000d"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-05T13:56:16.404380471"
+    },
+    "sarscov2 - [ vcf, [] ], fasta - vcf_gz_index_csi": {
+        "content": [
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test_vcf.vcf.gz:md5,63e5adbaf3dd94550e9e3d7935dd28db"
+                ]
+            ],
+            [
+                [
+                    {
+                        "id": "test"
+                    },
+                    "test_vcf.vcf.gz.csi"
+                ]
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-05T13:53:09.808834237"
+    },
+    "sarscov2 - [ vcf, tbi ], fasta - bcf output": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_norm.bcf.gz:md5,638c3c25bdd495c90ecbccb69ee77f07"
+                    ]
+                ],
+                "1": [
+                    
+                ],
+                "2": [
+                    
+                ],
+                "3": [
+                    "versions.yml:md5,ff760495922469e56d0fc3372773000d"
+                ],
+                "csi": [
+                    
+                ],
+                "tbi": [
+                    
+                ],
+                "vcf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_norm.bcf.gz:md5,638c3c25bdd495c90ecbccb69ee77f07"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,ff760495922469e56d0fc3372773000d"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.2"
+        },
+        "timestamp": "2024-06-04T14:37:42.141945244"
+    }
+}
