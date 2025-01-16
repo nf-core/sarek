@@ -1,7 +1,5 @@
-name: bwamem2_index
 channels:
   - conda-forge
   - bioconda
-  - defaults
 dependencies:
   - bioconda::bwa-mem2=2.2.1

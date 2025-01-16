@@ -6,7 +6,7 @@
   files:
     - path: results/preprocessing/umi/test/test-test_L1_umi-consensus.bam
     # binary changes md5sums on reruns.
-    - path: results/reports/umi/test-test_L1_umi_histogram.txt
+    - path: results/reports/umi/test-test_L1_umi-grouped_histogram.txt
       md5sum: 85292e9acb83edf17110dce17be27f44
     - path: results/csv/markduplicates.csv
       md5sum: 0d6120bb99e92f6810343270711ca53e

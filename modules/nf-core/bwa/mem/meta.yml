@@ -14,58 +14,85 @@ tools:
         BWA is a software package for mapping DNA sequences against
         a large reference genome, such as the human genome.
       homepage: http://bio-bwa.sourceforge.net/
-      documentation: http://www.htslib.org/doc/samtools.html
+      documentation: https://bio-bwa.sourceforge.net/bwa.shtml
       arxiv: arXiv:1303.3997
       licence: ["GPL-3.0-or-later"]
+      identifier: ""
 input:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
-  - reads:
-      type: file
-      description: |
-        List of input FastQ files of size 1 and 2 for single-end and paired-end data,
-        respectively.
-  - meta2:
-      type: map
-      description: |
-        Groovy Map containing reference information.
-        e.g. [ id:'test', single_end:false ]
-  - index:
-      type: file
-      description: BWA genome index files
-      pattern: "Directory containing BWA index *.{amb,ann,bwt,pac,sa}"
-  - fasta:
-      type: file
-      description: Reference genome in FASTA format
-      pattern: "*.{fasta,fa}"
-  - sort_bam:
-      type: boolean
-      description: use samtools sort (true) or samtools view (false)
-      pattern: "true or false"
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - reads:
+        type: file
+        description: |
+          List of input FastQ files of size 1 and 2 for single-end and paired-end data,
+          respectively.
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing reference information.
+          e.g. [ id:'test', single_end:false ]
+    - index:
+        type: file
+        description: BWA genome index files
+        pattern: "Directory containing BWA index *.{amb,ann,bwt,pac,sa}"
+  - - meta3:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - fasta:
+        type: file
+        description: Reference genome in FASTA format
+        pattern: "*.{fasta,fa}"
+  - - sort_bam:
+        type: boolean
+        description: use samtools sort (true) or samtools view (false)
+        pattern: "true or false"
 output:
   - bam:
-      type: file
-      description: Output BAM file containing read alignments
-      pattern: "*.{bam}"
+      - meta:
+          type: file
+          description: Output BAM file containing read alignments
+          pattern: "*.{bam}"
+      - "*.bam":
+          type: file
+          description: Output BAM file containing read alignments
+          pattern: "*.{bam}"
   - cram:
-      type: file
-      description: Output CRAM file containing read alignments
-      pattern: "*.{cram}"
+      - meta:
+          type: file
+          description: Output CRAM file containing read alignments
+          pattern: "*.{cram}"
+      - "*.cram":
+          type: file
+          description: Output CRAM file containing read alignments
+          pattern: "*.{cram}"
   - csi:
-      type: file
-      description: Optional index file for BAM file
-      pattern: "*.{csi}"
+      - meta:
+          type: file
+          description: Optional index file for BAM file
+          pattern: "*.{csi}"
+      - "*.csi":
+          type: file
+          description: Optional index file for BAM file
+          pattern: "*.{csi}"
   - crai:
-      type: file
-      description: Optional index file for CRAM file
-      pattern: "*.{crai}"
+      - meta:
+          type: file
+          description: Optional index file for CRAM file
+          pattern: "*.{crai}"
+      - "*.crai":
+          type: file
+          description: Optional index file for CRAM file
+          pattern: "*.{crai}"
   - versions:
-      type: file
-      description: File containing software versions
-      pattern: "versions.yml"
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@drpatelh"
   - "@jeremy1805"

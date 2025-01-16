@@ -7,34 +7,49 @@ keywords:
   - cram
 tools:
   - fgbio:
-      description: A set of tools for working with genomic and high throughput sequencing data, including UMIs
+      description: A set of tools for working with genomic and high throughput sequencing
+        data, including UMIs
       homepage: http://fulcrumgenomics.github.io/fgbio/
       documentation: http://fulcrumgenomics.github.io/fgbio/tools/latest/
       tool_dev_url: https://github.com/fulcrumgenomics/fgbio
       licence: ["MIT"]
+      identifier: biotools:fgbio
 input:
-  - reads:
-      type: file
-      description: pair of reads to be converted into BAM file
-      pattern: "*.{fastq.gz}"
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - reads:
+        type: file
+        description: pair of reads to be converted into BAM file
+        pattern: "*.{fastq.gz}"
 output:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
-  - version:
-      type: file
-      description: File containing software version
-      pattern: "*.{version.yml}"
   - bam:
-      type: file
-      description: Unaligned, unsorted BAM file
-      pattern: "*.{bam}"
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.bam":
+          type: file
+          description: Unaligned, unsorted BAM file
+          pattern: "*.{bam}"
   - cram:
-      type: file
-      description: Unaligned, unsorted CRAM file
-      pattern: "*.{cram}"
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.cram":
+          type: file
+          description: Unaligned, unsorted CRAM file
+          pattern: "*.{cram}"
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@lescai"
   - "@matthdsm"

@@ -14,46 +14,76 @@ tools:
       homepage: https://pcingola.github.io/SnpEff/
       documentation: https://pcingola.github.io/SnpEff/se_introduction/
       licence: ["MIT"]
+      identifier: biotools:snpeff
 input:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
-  - vcf:
-      type: file
-      description: |
-        vcf to annotate
-  - db:
-      type: string
-      description: |
-        which db to annotate with
-  - cache:
-      type: file
-      description: |
-        path to snpEff cache (optional)
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - vcf:
+        type: file
+        description: |
+          vcf to annotate
+  - - db:
+        type: string
+        description: |
+          which db to annotate with
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - cache:
+        type: file
+        description: |
+          path to snpEff cache (optional)
 output:
   - vcf:
-      type: file
-      description: |
-        annotated vcf
-      pattern: "*.ann.vcf"
+      - meta:
+          type: file
+          description: |
+            annotated vcf
+          pattern: "*.ann.vcf"
+      - "*.ann.vcf":
+          type: file
+          description: |
+            annotated vcf
+          pattern: "*.ann.vcf"
   - report:
-      type: file
-      description: snpEff report csv file
-      pattern: "*.csv"
+      - meta:
+          type: file
+          description: snpEff report csv file
+          pattern: "*.csv"
+      - "*.csv":
+          type: file
+          description: snpEff report csv file
+          pattern: "*.csv"
   - summary_html:
-      type: file
-      description: snpEff summary statistics in html file
-      pattern: "*.html"
+      - meta:
+          type: file
+          description: snpEff summary statistics in html file
+          pattern: "*.html"
+      - "*.html":
+          type: file
+          description: snpEff summary statistics in html file
+          pattern: "*.html"
   - genes_txt:
-      type: file
-      description: txt (tab separated) file having counts of the number of variants affecting each transcript and gene
-      pattern: "*.genes.txt"
+      - meta:
+          type: file
+          description: txt (tab separated) file having counts of the number of variants
+            affecting each transcript and gene
+          pattern: "*.genes.txt"
+      - "*.genes.txt":
+          type: file
+          description: txt (tab separated) file having counts of the number of variants
+            affecting each transcript and gene
+          pattern: "*.genes.txt"
   - versions:
-      type: file
-      description: File containing software versions
-      pattern: "versions.yml"
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@maxulysse"
 maintainers:

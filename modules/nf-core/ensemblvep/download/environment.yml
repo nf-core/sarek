@@ -1,7 +1,5 @@
-name: ensemblvep_download
 channels:
   - conda-forge
   - bioconda
-  - defaults
 dependencies:
-  - bioconda::ensembl-vep=111.0
+  - bioconda::ensembl-vep=113.0

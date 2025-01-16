@@ -12,59 +12,89 @@ tools:
         Our software improves upon BWA, STAR, Minimap2, GATK, HaplotypeCaller, Mutect, and Mutect2 based pipelines and is deployable on any generic-CPU-based computing system.
       homepage: https://www.sentieon.com/
       documentation: https://www.sentieon.com/
+      identifier: ""
 input:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
-  - gvcfs:
-      type: file
-      description: |
-        gVCF(.gz) file
-      pattern: "*.{vcf,vcf.gz}"
-  - tbis:
-      type: file
-      description: |
-        index of gvcf file
-      pattern: "*.tbi"
-  - intervals:
-      type: file
-      description: Interval file with the genomic regions included in the library (optional)
-  - fasta:
-      type: file
-      description: Reference fasta file
-      pattern: "*.fasta"
-  - fai:
-      type: file
-      description: Reference fasta index file
-      pattern: "*.fai"
-  - dbsnp:
-      type: file
-      description: dbSNP VCF file
-      pattern: "*.vcf.gz"
-  - dbsnp_tbi:
-      type: file
-      description: dbSNP VCF index file
-      pattern: "*.tbi"
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - gvcfs:
+        type: file
+        description: |
+          gVCF(.gz) file
+        pattern: "*.{vcf,vcf.gz}"
+    - tbis:
+        type: file
+        description: |
+          index of gvcf file
+        pattern: "*.tbi"
+    - intervals:
+        type: file
+        description: Interval file with the genomic regions included in the library
+          (optional)
+  - - meta1:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - fasta:
+        type: file
+        description: Reference fasta file
+        pattern: "*.fasta"
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - fai:
+        type: file
+        description: Reference fasta index file
+        pattern: "*.fai"
+  - - meta3:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - dbsnp:
+        type: file
+        description: dbSNP VCF file
+        pattern: "*.vcf.gz"
+  - - meta4:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - dbsnp_tbi:
+        type: file
+        description: dbSNP VCF index file
+        pattern: "*.tbi"
 output:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
-  - vcf:
-      type: file
-      description: Genotyped VCF file
-      pattern: "*.vcf.gz"
-  - tbi:
-      type: file
-      description: Tbi index for VCF file
-      pattern: "*.vcf.gz"
+  - vcf_gz:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.vcf.gz":
+          type: file
+          description: VCF file
+          pattern: "*.vcf.gz"
+  - vcf_gz_tbi:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.vcf.gz.tbi":
+          type: file
+          description: VCF index file
+          pattern: "*.vcf.gz.tbi"
   - versions:
-      type: file
-      description: File containing software versions
-      pattern: "versions.yml"
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@asp8200"
 maintainers:

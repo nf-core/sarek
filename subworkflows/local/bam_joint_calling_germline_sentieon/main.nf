@@ -36,7 +36,7 @@ workflow BAM_JOINT_CALLING_GERMLINE_SENTIEON {
         .map{ meta, gvcf, tbi, intervals -> [ [ id:'joint_variant_calling', intervals_name:intervals.baseName, num_intervals:meta.num_intervals ], gvcf, tbi, intervals ] }
         .groupTuple(by:[0, 3])
 
-    SENTIEON_GVCFTYPER(sentieon_input, fasta.map{meta, it -> [ it ]}, fai.map{meta, it -> [ it ]}, dbsnp, dbsnp_tbi)
+    SENTIEON_GVCFTYPER(sentieon_input, fasta, fai, dbsnp, dbsnp_tbi)
 
     BCFTOOLS_SORT(SENTIEON_GVCFTYPER.out.vcf_gz)
 

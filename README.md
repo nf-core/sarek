@@ -12,7 +12,7 @@
 [![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.3476425-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.3476425)
 [![nf-test](https://img.shields.io/badge/unit_tests-nf--test-337ab7.svg)](https://www.nf-test.com)
 
-[![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A523.04.0-23aa62.svg)](https://www.nextflow.io/)
+[![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A524.04.2-23aa62.svg)](https://www.nextflow.io/)
 [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
@@ -54,12 +54,14 @@ Depending on the options and samples provided, the pipeline can currently perfor
   - `freebayes`
   - `GATK HaplotypeCaller`
   - `Manta`
+  - `indexcov`
   - `mpileup`
   - `MSIsensor-pro`
   - `Mutect2`
   - `Sentieon Haplotyper`
   - `Strelka2`
   - `TIDDIT`
+  - `Lofreq`
 - Variant filtering and annotation (`SnpEff`, `Ensembl VEP`, `BCFtools annotate`)
 - Summarise and represent QC (`MultiQC`)
 
@@ -93,8 +95,7 @@ nextflow run nf-core/sarek \
 ```
 
 > [!WARNING]
-> Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_;
-> see [docs](https://nf-co.re/usage/configuration#custom-configuration-files).
+> Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_; see [docs](https://nf-co.re/docs/usage/getting_started/configuration#custom-configuration-files).
 
 For more details and further functionality, please refer to the [usage documentation](https://nf-co.re/sarek/usage) and the [parameter documentation](https://nf-co.re/sarek/parameters).
 
@@ -131,6 +132,7 @@ We thank the following people for their extensive assistance in the development 
 - [Abhinav Sharma](https://github.com/abhi18av)
 - [Adam Talbot](https://github.com/adamrtalbot)
 - [Adrian Lärkeryd](https://github.com/adrlar)
+- [Àitor Olivares](https://github.com/AitorPeseta)
 - [Alexander Peltzer](https://github.com/apeltzer)
 - [Alison Meynert](https://github.com/ameynert)
 - [Anders Sune Pedersen](https://github.com/asp8200)
@@ -144,6 +146,7 @@ We thank the following people for their extensive assistance in the development 
 - [Edmund Miller](https://github.com/edmundmiller)
 - [Famke Bäuerle](https://github.com/famosab)
 - [Francesco Lescai](https://github.com/lescai)
+- [Francisco Martínez](https://github.com/nevinwu)
 - [Gavin Mackenzie](https://github.com/GCJMackenzie)
 - [Gisela Gabernet](https://github.com/ggabernet)
 - [Grant Neilson](https://github.com/grantn5)
@@ -169,6 +172,7 @@ We thank the following people for their extensive assistance in the development 
 - [pallolason](https://github.com/pallolason)
 - [Paul Cantalupo](https://github.com/pcantalupo)
 - [Phil Ewels](https://github.com/ewels)
+- [Pierre Lindenbaum](https://github.com/lindenb)
 - [Sabrina Krakau](https://github.com/skrakau)
 - [Sam Minot](https://github.com/sminot)
 - [Sebastian-D](https://github.com/Sebastian-D)

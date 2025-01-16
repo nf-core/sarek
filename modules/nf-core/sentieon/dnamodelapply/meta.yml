@@ -12,65 +12,74 @@ tools:
         Our software improves upon BWA, STAR, Minimap2, GATK, HaplotypeCaller, Mutect, and Mutect2 based pipelines and is deployable on any generic-CPU-based computing system.
       homepage: https://www.sentieon.com/
       documentation: https://www.sentieon.com/
+      identifier: ""
 input:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. `[ id:'test', single_end:false ]`
-  - meta2:
-      type: map
-      description: |
-        Groovy Map containing reference information
-        e.g. `[ id:'test' ]`
-  - meta3:
-      type: map
-      description: |
-        Groovy Map containing reference information
-        e.g. `[ id:'test' ]`
-  - meta4:
-      type: map
-      description: |
-        Groovy Map containing reference information
-        e.g. `[ id:'test' ]`
-  - vcf:
-      type: file
-      description: INPUT VCF file
-      pattern: "*.{vcf,vcf.gz}"
-  - idx:
-      type: file
-      description: Index of the input VCF file
-      pattern: "*.{tbi}"
-  - fasta:
-      type: file
-      description: Genome fasta file
-      pattern: "*.{fa,fasta}"
-  - fai:
-      type: file
-      description: Index of the genome fasta file
-      pattern: "*.fai"
-  - ml_model:
-      type: file
-      description: machine learning model file
-      pattern: "*.model"
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. `[ id:'test', single_end:false ]`
+    - vcf:
+        type: file
+        description: INPUT VCF file
+        pattern: "*.{vcf,vcf.gz}"
+    - idx:
+        type: file
+        description: Index of the input VCF file
+        pattern: "*.{tbi}"
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. `[ id:'test' ]`
+    - fasta:
+        type: file
+        description: Genome fasta file
+        pattern: "*.{fa,fasta}"
+  - - meta3:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. `[ id:'test' ]`
+    - fai:
+        type: file
+        description: Index of the genome fasta file
+        pattern: "*.fai"
+  - - meta4:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. `[ id:'test' ]`
+    - ml_model:
+        type: file
+        description: machine learning model file
+        pattern: "*.model"
 output:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. `[ id:'test', single_end:false ]`
-  - versions:
-      type: file
-      description: File containing software versions
-      pattern: "versions.yml"
   - vcf:
-      type: file
-      description: INPUT VCF file
-      pattern: "*.{vcf,vcf.gz}"
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'test', single_end:false ]`
+      - "*.vcf.gz":
+          type: file
+          description: INPUT VCF file
+          pattern: "*.{vcf,vcf.gz}"
   - index:
-      type: file
-      description: Index of the input VCF file
-      pattern: "*.{tbi}"
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'test', single_end:false ]`
+      - "*.vcf.gz.tbi":
+          type: file
+          description: Index of the input VCF file
+          pattern: "*.{tbi}"
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@ramprasadn"
 maintainers:

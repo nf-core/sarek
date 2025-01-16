@@ -13,38 +13,50 @@ tools:
       documentation: https://www.htslib.org/doc/tabix.1.html
       doi: 10.1093/bioinformatics/btq671
       licence: ["MIT"]
+      identifier: biotools:tabix
 input:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
-  - tab:
-      type: file
-      description: TAB-delimited genome position file
-      pattern: "*.{bed,gff,sam,vcf}"
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - input:
+        type: file
+        description: Sorted tab-delimited genome file
 output:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
-  - gz:
-      type: file
-      description: Output compressed file
-      pattern: "*.{gz}"
-  - tbi:
-      type: file
-      description: tabix index file
-      pattern: "*.{gz.tbi}"
-  - csi:
-      type: file
-      description: tabix alternate index file
-      pattern: "*.{gz.csi}"
+  - gz_tbi:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.gz":
+          type: file
+          description: bgzipped tab-delimited genome file
+          pattern: "*.gz"
+      - "*.tbi":
+          type: file
+          description: tabix index file
+          pattern: "*.tbi"
+  - gz_csi:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.gz":
+          type: file
+          description: bgzipped tab-delimited genome file
+          pattern: "*.gz"
+      - "*.csi":
+          type: file
+          description: csi index file
+          pattern: "*.csi"
   - versions:
-      type: file
-      description: File containing software versions
-      pattern: "versions.yml"
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@maxulysse"
   - "@DLBPointon"
