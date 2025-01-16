@@ -80,20 +80,28 @@
         },
         "timestamp": "2024-03-20T16:07:30.81195"
     },
-    "version": {
-        "content": null,
+    "human - cram": {
+        "content": [
+            [
+                "versions.yml:md5,5f72393fd2ab4358e3f0ad16d1937f65"
+            ]
+        ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.0"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-03-20T16:05:34.583702"
+        "timestamp": "2024-08-28T16:50:28.337512"
     },
-    "target_version": {
-        "content": null,
+    "human - cram - target": {
+        "content": [
+            [
+                "versions.yml:md5,5f72393fd2ab4358e3f0ad16d1937f65"
+            ]
+        ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.0"
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2024-03-20T16:11:37.54108"
+        "timestamp": "2024-08-28T16:51:35.930772"
     }
 }

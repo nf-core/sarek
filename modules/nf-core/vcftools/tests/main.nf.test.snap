@@ -1599,389 +1599,1025 @@
         "content": [
             {
                 "0": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.vcf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "1": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bcf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "10": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.geno.chisq:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "11": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.list.hap.ld:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "12": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.list.geno.ld:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "13": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.interchrom.hap.ld:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "14": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.interchrom.geno.ld:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "15": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.TsTv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "16": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.TsTv.summary:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "17": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.TsTv.count:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "18": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.TsTv.qual:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "19": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.FILTER.summary:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "2": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.frq:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "20": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.sites.pi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "21": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.windowed.pi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "22": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.weir.fst:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "23": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.het:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "24": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.hwe:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "25": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.Tajima.D:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "26": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.ifreqburden:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "27": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.LROH:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "28": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.relatedness:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "29": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.relatedness2:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "3": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.frq.count:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "30": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.lqual:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "31": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.imiss:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "32": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.lmiss:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "33": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.snpden:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "34": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.kept.sites:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "35": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.removed.sites:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "36": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.singletons:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "37": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.indel.hist:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "38": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.hapcount:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "39": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.mendel:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "4": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.idepth:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "40": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.FORMAT:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "41": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.INFO:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "42": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.012:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "43": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.012.indv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "44": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.012.pos:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "45": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.impute.hap:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "46": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.impute.hap.legend:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "47": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.impute.hap.indv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "48": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.ldhat.sites:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "49": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.ldhat.locs:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "5": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.ldepth:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "50": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.BEAGLE.GL:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "51": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.BEAGLE.PL:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "52": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.ped:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "53": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.map:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "54": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.tped:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "55": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.tfam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "56": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.diff.sites_in_files:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "57": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.diff.indv_in_files:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "58": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.diff.sites:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "59": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.diff.indv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "6": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.ldepth.mean:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "60": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.diff.discordance.matrix:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "61": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.diff.switch:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "62": [
                     "versions.yml:md5,577abe71f1ed8b94c633e71dc2cfc491"
                 ],
                 "7": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.gdepth:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "8": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "test.hap.ld:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.interchrom.hap.ld:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.list.hap.ld:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
                 ],
                 "9": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "test.geno.ld:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.interchrom.geno.ld:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.list.geno.ld:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
                 ],
                 "bcf": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bcf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "beagle_gl": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.BEAGLE.GL:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "beagle_pl": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.BEAGLE.PL:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "diff_discd_matrix": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.diff.discordance.matrix:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "diff_indv": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.diff.indv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "diff_indv_in_files": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.diff.indv_in_files:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "diff_sites": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.diff.sites:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "diff_sites_in_files": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.diff.sites_in_files:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "diff_switch_error": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.diff.switch:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "filter_summary": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.FILTER.summary:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "format": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.FORMAT:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "freq_burden": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.ifreqburden:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "frq": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.frq:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "frq_count": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.frq.count:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "gdepth": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.gdepth:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "geno_chisq": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.geno.chisq:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "geno_ld": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "test.geno.ld:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.interchrom.geno.ld:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.list.geno.ld:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
                 ],
                 "genotypes_matrix": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.012:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "genotypes_matrix_individual": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.012.indv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "genotypes_matrix_position": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.012.pos:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "hap_ld": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        [
+                            "test.hap.ld:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.interchrom.hap.ld:md5,d41d8cd98f00b204e9800998ecf8427e",
+                            "test.list.hap.ld:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        ]
+                    ]
                 ],
                 "hapcount": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.hapcount:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "heterozygosity": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.het:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "hwe": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.hwe:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "idepth": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.idepth:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "impute_hap": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.impute.hap:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "impute_hap_indv": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.impute.hap.indv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "impute_hap_legend": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.impute.hap.legend:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "indel_hist": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.indel.hist:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "info": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.INFO:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "interchrom_geno_ld": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.interchrom.geno.ld:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "interchrom_hap_ld": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.interchrom.hap.ld:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "kept_sites": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.kept.sites:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "ldepth": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.ldepth:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "ldepth_mean": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.ldepth.mean:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "ldhat_locs": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.ldhat.locs:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "ldhat_sites": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.ldhat.sites:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "list_geno_ld": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.list.geno.ld:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "list_hap_ld": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.list.hap.ld:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "lqual": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.lqual:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "lroh": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.LROH:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "map_": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.map:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "mendel": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.mendel:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "missing_individual": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.imiss:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "missing_site": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.lmiss:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "ped": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.ped:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "relatedness": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.relatedness:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "relatedness2": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.relatedness2:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "removed_sites": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.removed.sites:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "singeltons": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.singletons:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "sites_pi": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.sites.pi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "snp_density": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.snpden:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "tajima_d": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.Tajima.D:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "tfam": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.tfam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "tped": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.tped:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "tstv": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.TsTv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "tstv_count": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.TsTv.count:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "tstv_qual": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.TsTv.qual:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "tstv_summary": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.TsTv.summary:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "vcf": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.vcf:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "versions": [
                     "versions.yml:md5,577abe71f1ed8b94c633e71dc2cfc491"
                 ],
                 "weir_fst": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.weir.fst:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ],
                 "windowed_pi": [
-                    
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.windowed.pi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.8.4",
-            "nextflow": "23.10.0"
+            "nextflow": "24.04.2"
         },
-        "timestamp": "2024-03-22T13:07:31.866838"
+        "timestamp": "2024-06-24T13:34:42.814188"
     }
 }

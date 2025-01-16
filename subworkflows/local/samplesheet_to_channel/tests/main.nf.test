@@ -1,0 +1,62 @@
+nextflow_workflow {
+
+    name "Test Workflow SAMPLESHEET_TO_CHANNEL"
+    script "../main.nf"
+    workflow "SAMPLESHEET_TO_CHANNEL"
+
+    test("Should run without failures") {
+        when {
+            params {
+            }
+            workflow {
+                """
+                // define inputs of the workflow here. Example:
+                input[0] = Channel.of([
+                    ['patient':'test', 'sample':'test',
+                    'sex':'XX', 'status':0, 'lane':'test_L1'],
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_1.fastq.gz', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/fastq/test_2.fastq.gz', checkIfExists: true),
+                    [], [], [], [], [], [], [], [], []
+                ])
+                input[1] = 'bwa-mem' // aligner
+                input[2] = [] // ascat_alleles
+                input[3] = [] // ascat_loci
+                input[4] = [] // ascat_loci_gc
+                input[5] = [] // ascat_loci_rt
+                input[6] = [] // bcftools_annotations
+                input[7] = [] // bcftools_annotations_tbi
+                input[8] = [] // bcftools_header_lines
+                input[9] = false // build_only_index
+                input[10] = [] // dbsnp
+                input[11] = [] // fasta
+                input[12] = [] // germline_resource
+                input[13] = [] // intervals
+                input[14] = false // joint_germline
+                input[15] = false // joint_mutect2
+                input[16] = [] // known_indels
+                input[17] = [] // known_snps
+                input[18] = false // no_intervals
+                input[19] = [] // pon
+                input[20] = 'variant' // sentieon_dnascope_emit_mode
+                input[21] = 'variant' // sentieon_haplotyper_emit_mode
+                input[22] = '' // seq_center
+                input[23] = 'ILLUMINA' // seq_platform
+                input[24] = 'baserecalibrator' // skip_tools
+                input[25] = [] // snpeff_cache
+                input[26] = 'WBcel235.105' // snpeff_db
+                input[27] = 'mapping' // step
+                input[28] = 'strelka' // tools
+                input[29] = [] // umi_read_structure
+                input[30] = false // wes
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert snapshot(workflow.out).match()
+        }
+
+    }
+
+}

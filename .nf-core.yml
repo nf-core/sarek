@@ -1,16 +1,28 @@
-repository_type: pipeline
-nf_core_version: "2.14.1"
+bump_version: null
 lint:
-  actions_ci: False
+  actions_ci: false
   files_exist:
     - .github/workflows/awsfulltest.yml
     - .github/workflows/awstest.yml
     - conf/modules.config
   files_unchanged:
     - .gitignore
-    - .github/PULL_REQUEST_TEMPLATE.md
     - assets/nf-core-sarek_logo_light.png
     - docs/images/nf-core-sarek_logo_dark.png
     - docs/images/nf-core-sarek_logo_light.png
-  modules_config: False
-  template_strings: False
+  modules_config: false
+  template_strings: false
+nf_core_version: 3.0.2
+org_path: null
+repository_type: pipeline
+template:
+  author: Maxime Garcia, Szilveszter Juhos, Friederike Hanssen
+  description: An open-source analysis pipeline to detect germline or somatic variants from whole genome or targeted sequencing
+  force: false
+  is_nfcore: true
+  name: sarek
+  org: nf-core
+  outdir: .
+  skip_features: null
+  version: 3.5.0dev
+update: null

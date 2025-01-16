@@ -44,6 +44,7 @@ process GATK4_HAPLOTYPECALLER {
         --input $input \\
         --output ${prefix}.vcf.gz \\
         --reference $fasta \\
+        --native-pair-hmm-threads ${task.cpus} \\
         $dbsnp_command \\
         $interval_command \\
         $dragstr_command \\

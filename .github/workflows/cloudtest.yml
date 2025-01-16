@@ -1,8 +1,13 @@
-name: nf-core cloud test
+name: nf-core cloud full size tests
+# This workflow is triggered on PRs opened against the master branch.
+# It can be additionally triggered manually with GitHub actions workflow dispatch button.
+# It runs the -profile 'test_full' on cloud
 
 on:
   release:
     types: [created]
+  pull_request_review:
+    types: [submitted]
   workflow_dispatch:
     inputs:
       test:
@@ -31,10 +36,7 @@ on:
         default: true
 
 jobs:
-  trigger-test:
-    name: launch
-    runs-on: ubuntu-latest
-    if: ${{ github.repository == 'nf-core/sarek' }}
+  run-platform:
     strategy:
       fail-fast: false
       matrix:
@@ -74,10 +76,26 @@ jobs:
             cloud: aws
             compute_env: TOWER_COMPUTE_ENV
             workdir: TOWER_BUCKET_AWS
-
+    name: Run AWS full tests
+    # run only if the PR is approved by at least 2 reviewers and against the master branch or manually triggered
+    if: github.repository == 'nf-core/sarek' && github.event.review.state == 'approved' && github.event.pull_request.base.ref == 'master' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
     steps:
+      - uses: octokit/request-action@v2.x
+        id: check_approvals
+        with:
+          route: GET /repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/reviews
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - id: test_variables
+        if: github.event_name != 'workflow_dispatch'
+        run: |
+          JSON_RESPONSE='${{ steps.check_approvals.outputs.data }}'
+          CURRENT_APPROVALS_COUNT=$(echo $JSON_RESPONSE | jq -c '[.[] | select(.state | contains("APPROVED")) ] | length')
+          test $CURRENT_APPROVALS_COUNT -ge 2 || exit 1 # At least 2 approvals are required
+
       # Launch workflow on AWS Batch
-      - name: Launch
+      - name: Launch workflow via Seqera Platform
         uses: seqeralabs/action-tower-launch@v2
         # If inputs item exists (i.e. workflow_dispatch), then we find matrix.test and check it is false
         # If is false, we negate and run the job

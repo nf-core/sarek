@@ -26,6 +26,8 @@ workflow  SAMPLESHEET_TO_CHANNEL{
     seq_center                      //
     seq_platform                    //
     skip_tools                      //
+    snpeff_cache                    //
+    snpeff_db                       //
     step                            //
     tools                           //
     umi_read_structure              //
@@ -276,6 +278,12 @@ Joint germline variant calling also requires intervals in order to genotype the 
     // Fails when bcftools annotate is used but no files are supplied
     if (tools && tools.split(',').contains('bcfann') && !(bcftools_annotations && bcftools_annotations_tbi && bcftools_header_lines)) {
         error("Please specify --bcftools_annotations, --bcftools_annotations_tbi, and --bcftools_header_lines, when using BCFTools annotations")
+    }
+
+    // Fails when snpeff annotation is enabled but snpeff_db is not specified
+    if ((snpeff_cache && tools && (tools.split(',').contains("snpeff") || tools.split(',').contains('merge'))) &&
+        !snpeff_db) {
+        error("Please specify --snpeff_db")
     }
 
     emit:

@@ -12,6 +12,7 @@ include { BAM_VARIANT_CALLING_SOMATIC_MANTA             } from '../bam_variant_c
 include { BAM_VARIANT_CALLING_SOMATIC_MUTECT2           } from '../bam_variant_calling_somatic_mutect2/main'
 include { BAM_VARIANT_CALLING_SOMATIC_STRELKA           } from '../bam_variant_calling_somatic_strelka/main'
 include { BAM_VARIANT_CALLING_SOMATIC_TIDDIT            } from '../bam_variant_calling_somatic_tiddit/main'
+include { BAM_VARIANT_CALLING_INDEXCOV                  } from '../bam_variant_calling_indexcov/main'
 include { MSISENSORPRO_MSISOMATIC                       } from '../../../modules/nf-core/msisensorpro/msisomatic/main'
 
 workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
@@ -52,6 +53,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     vcf_strelka         = Channel.empty()
     vcf_mutect2         = Channel.empty()
     vcf_tiddit          = Channel.empty()
+    out_indexcov        = Channel.empty()
 
     if (tools.split(',').contains('ascat')) {
         BAM_VARIANT_CALLING_SOMATIC_ASCAT(
@@ -153,6 +155,20 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
         versions = versions.mix(BAM_VARIANT_CALLING_SOMATIC_MANTA.out.versions)
     }
 
+
+    // INDEXCOV, for WGS only
+    if (params.wes==false &&  tools.split(',').contains('indexcov')) {
+        BAM_VARIANT_CALLING_INDEXCOV (
+            cram,
+            fasta,
+            fasta_fai
+        )
+
+        out_indexcov = BAM_VARIANT_CALLING_INDEXCOV.out.out_indexcov
+        versions = versions.mix(BAM_VARIANT_CALLING_INDEXCOV.out.versions)
+    }
+
+
     // STRELKA
     if (tools.split(',').contains('strelka')) {
         // Remap channel to match module/subworkflow
@@ -230,6 +246,7 @@ workflow BAM_VARIANT_CALLING_SOMATIC_ALL {
     )
 
     emit:
+    out_indexcov
     vcf_all
     vcf_freebayes
     vcf_manta

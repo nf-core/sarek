@@ -1,5 +1,7 @@
 name: msisensorpro_msisomatic
-description: MSIsensor-pro evaluates Microsatellite Instability (MSI) for cancer patients with next generation sequencing data. It accepts the whole genome sequencing, whole exome sequencing and target region (panel) sequencing data as input
+description: MSIsensor-pro evaluates Microsatellite Instability (MSI) for cancer patients
+  with next generation sequencing data. It accepts the whole genome sequencing, whole
+  exome sequencing and target region (panel) sequencing data as input
 keywords:
   - micro-satellite-scan
   - msisensor-pro
@@ -7,68 +9,91 @@ keywords:
   - somatic
 tools:
   - msisensorpro:
-      description: Microsatellite Instability (MSI) detection using high-throughput sequencing data.
+      description: Microsatellite Instability (MSI) detection using high-throughput
+        sequencing data.
       homepage: https://github.com/xjtu-omics/msisensor-pro
       documentation: https://github.com/xjtu-omics/msisensor-pro/wiki
       tool_dev_url: https://github.com/xjtu-omics/msisensor-pro
       doi: "10.1016/j.gpb.2020.02.001"
       licence: ["Custom Licence"]
+      identifier: ""
 input:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
-  - normal:
-      type: file
-      description: BAM/CRAM/SAM file
-      pattern: "*.{bam,cram,sam}"
-  - normal_index:
-      type: file
-      description: BAM/CRAM/SAM index file
-      pattern: "*.{bai,crai,sai}"
-  - tumor:
-      type: file
-      description: BAM/CRAM/SAM file
-      pattern: "*.{bam,cram,sam}"
-  - tumor_index:
-      type: file
-      description: BAM/CRAM/SAM index file
-      pattern: "*.{bai,crai,sai}"
-  - intervals:
-      type: file
-      description: bed file containing interval information, optional
-      pattern: "*.{bed}"
-  - fasta:
-      type: file
-      description: Reference genome
-      pattern: "*.{fasta}"
-  - msisensor_scan:
-      type: file
-      description: Output from msisensor-pro/scan, containing list of msi regions
-      pattern: "*.list"
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - normal:
+        type: file
+        description: BAM/CRAM/SAM file
+        pattern: "*.{bam,cram,sam}"
+    - normal_index:
+        type: file
+        description: BAM/CRAM/SAM index file
+        pattern: "*.{bai,crai,sai}"
+    - tumor:
+        type: file
+        description: BAM/CRAM/SAM file
+        pattern: "*.{bam,cram,sam}"
+    - tumor_index:
+        type: file
+        description: BAM/CRAM/SAM index file
+        pattern: "*.{bai,crai,sai}"
+    - intervals:
+        type: file
+        description: bed file containing interval information, optional
+        pattern: "*.{bed}"
+  - - fasta:
+        type: file
+        description: Reference genome
+        pattern: "*.{fasta}"
+  - - msisensor_scan:
+        type: file
+        description: Output from msisensor-pro/scan, containing list of msi regions
+        pattern: "*.list"
 output:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
   - output_report:
-      type: file
-      description: File containing final report with all detected microsatellites, unstable somatic microsatellites, msi score
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - ${prefix}:
+          type: file
+          description: File containing final report with all detected microsatellites,
+            unstable somatic microsatellites, msi score
   - output_dis:
-      type: file
-      description: File containing distribution results
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - ${prefix}_dis:
+          type: file
+          description: File containing distribution results
   - output_germline:
-      type: file
-      description: File containing germline results
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - ${prefix}_germline:
+          type: file
+          description: File containing germline results
   - output_somatic:
-      type: file
-      description: File containing somatic results
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - ${prefix}_somatic:
+          type: file
+          description: File containing somatic results
   - versions:
-      type: file
-      description: File containing software versions
-      pattern: "versions.yml"
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@FriederikeHanssen"
 maintainers:
