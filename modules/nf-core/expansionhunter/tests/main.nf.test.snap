@@ -1,0 +1,132 @@
+{
+    "expansionhunter": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.vcf.gz:md5,cfd4a1d35c0e469b99eb6aaa6d22de76"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.json.gz:md5,60d7dc4662c837bba2715d54b64a9bfe"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_realigned.bam:md5,b37a72c0b97b45e63636a9758f3144d7"
+                    ]
+                ],
+                "3": [
+                    "versions.yml:md5,056b525f67ba23c361f0c65f47256dca"
+                ],
+                "bam": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_realigned.bam:md5,b37a72c0b97b45e63636a9758f3144d7"
+                    ]
+                ],
+                "json": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.json.gz:md5,60d7dc4662c837bba2715d54b64a9bfe"
+                    ]
+                ],
+                "vcf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.vcf.gz:md5,cfd4a1d35c0e469b99eb6aaa6d22de76"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,056b525f67ba23c361f0c65f47256dca"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.03.0"
+        },
+        "timestamp": "2024-05-03T12:20:15.18545069"
+    },
+    "stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.vcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.json.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_realigned.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "3": [
+                    "versions.yml:md5,056b525f67ba23c361f0c65f47256dca"
+                ],
+                "bam": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_realigned.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "json": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.json.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "vcf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.vcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,056b525f67ba23c361f0c65f47256dca"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.03.0"
+        },
+        "timestamp": "2024-05-03T12:20:28.430115"
+    }
+}
