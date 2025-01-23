@@ -44,6 +44,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#1390](https://github.com/nf-core/sarek/pull/1390) - Fix badges in README
 - [#1400](https://github.com/nf-core/sarek/pull/1400) - Fixed input channel for ASSESS_SIGNIFICANCE module, updated makegraph to makegraph2.
 - [#1403](https://github.com/nf-core/sarek/pull/1403) - Fix intervals usage with dot in chromosome names
+- [#1777](https://github.com/nf-core/sarek/pull/1777) - Merge intervals for WES in GATK GenomicsDBImport
 
 ### Removed
 
