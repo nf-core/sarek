@@ -13,7 +13,6 @@ include { TABIX_BGZIPTABIX as TABIX_BGZIPTABIX_INTERVAL_COMBINED } from '../../.
 
 workflow PREPARE_INTERVALS {
     take:
-    fasta_fai    // mandatory [ fasta_fai ]
     intervals    // [ params.intervals ]
     no_intervals // [ params.no_intervals ]
     nucleotides_per_second
@@ -37,19 +36,19 @@ workflow PREPARE_INTERVALS {
         intervals_combined   = Channel.fromPath(file("${outdir}/no_intervals.bed")).map{ it -> [ [ id:it.simpleName ], it ] }
     } else if (step != 'annotate' && step != 'controlfreec') {
         // If no interval/target file is provided, then generated intervals from FASTA file
-        intervals_combined = Channel.fromPath(file(intervals)).map{it -> [ [ id:it.baseName ], it ] }
-        CREATE_INTERVALS_BED(file(intervals), nucleotides_per_second)
+        intervals_combined = intervals
+        CREATE_INTERVALS_BED(intervals, nucleotides_per_second)
 
         intervals_bed = CREATE_INTERVALS_BED.out.bed
 
         versions = versions.mix(CREATE_INTERVALS_BED.out.versions)
 
-        // If interval file is not provided as .bed, but e.g. as .interval_list then convert to BED format
-        if (intervals.endsWith(".interval_list")) {
-            GATK4_INTERVALLISTTOBED(intervals_combined)
-            intervals_combined = GATK4_INTERVALLISTTOBED.out.bed
-            versions = versions.mix(GATK4_INTERVALLISTTOBED.out.versions)
-        }
+        // // If interval file is not provided as .bed, but e.g. as .interval_list then convert to BED format
+        // if (intervals.endsWith(".interval_list")) {
+        //     GATK4_INTERVALLISTTOBED(intervals_combined)
+        //     intervals_combined = GATK4_INTERVALLISTTOBED.out.bed
+        //     versions = versions.mix(GATK4_INTERVALLISTTOBED.out.versions)
+        // }
 
         // Now for the intervals.bed the following operations are done:
         // 1. Intervals file is split up into multiple bed files for scatter/gather

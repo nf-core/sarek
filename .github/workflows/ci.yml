@@ -123,25 +123,6 @@ jobs:
       - name: Disk space cleanup
         uses: jlumbroso/free-disk-space@v1.3.1
 
-      - name: create references
-        id: references
-        run: |
-          mkdir tmp/
-          cd tmp/
-          nextflow run nf-core/references -profile ${{ matrix.profile }} \
-          -r 8112ae8 \
-          --input https://raw.githubusercontent.com/nf-core/references-assets/41545a3631addaf491d22751b17607149b8512ac/assets/test/sarek/GRCh38_chr22.yml \
-          --tools bwamem1,createsequencedictionary,faidx,intervals,tabix \
-          --outdir ../references/
-          cd ..
-          rm -rf tmp/
-
-      - name: use references
-        id: references-use
-        run: |
-          nextflow run . -profile test,${{ matrix.profile }} --outdir results \
-          -params-file https://raw.githubusercontent.com/nf-core/references-assets/41545a3631addaf491d22751b17607149b8512ac/assets/test/sarek/GRCh38_chr22_params.yml
-
       - name: Start summary
         id: print-test
         run: |

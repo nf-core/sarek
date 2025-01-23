@@ -8,7 +8,7 @@ process CREATE_INTERVALS_BED {
         'biocontainers/gawk:5.1.0' }"
 
     input:
-    path(intervals)
+    tuple val(meta), path(intervals)
     val(nucleotides_per_second)
 
     output:

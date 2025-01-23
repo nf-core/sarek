@@ -22,43 +22,9 @@
 nextflow.enable.dsl = 2
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    GENOME PARAMETER VALUES
+    ALIGNER SELECTION
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-params.ascat_alleles           = getGenomeAttribute('ascat_alleles')
-params.ascat_genome            = getGenomeAttribute('ascat_genome')
-params.ascat_loci              = getGenomeAttribute('ascat_loci')
-params.ascat_loci_gc           = getGenomeAttribute('ascat_loci_gc')
-params.ascat_loci_rt           = getGenomeAttribute('ascat_loci_rt')
-params.bwa                     = getGenomeAttribute('bwa')
-params.bwamem2                 = getGenomeAttribute('bwamem2')
-params.cf_chrom_len            = getGenomeAttribute('cf_chrom_len')
-params.chr_dir                 = getGenomeAttribute('chr_dir')
-params.dbsnp                   = getGenomeAttribute('dbsnp')
-params.dbsnp_tbi               = getGenomeAttribute('dbsnp_tbi')
-params.dbsnp_vqsr              = getGenomeAttribute('dbsnp_vqsr')
-params.dict                    = getGenomeAttribute('dict')
-params.dragmap                 = getGenomeAttribute('dragmap')
-params.fasta                   = getGenomeAttribute('fasta')
-params.fasta_fai               = getGenomeAttribute('fasta_fai')
-params.germline_resource       = getGenomeAttribute('germline_resource')
-params.germline_resource_tbi   = getGenomeAttribute('germline_resource_tbi')
-params.intervals               = getGenomeAttribute('intervals')
-params.known_indels            = getGenomeAttribute('known_indels')
-params.known_indels_tbi        = getGenomeAttribute('known_indels_tbi')
-params.known_indels_vqsr       = getGenomeAttribute('known_indels_vqsr')
-params.known_snps              = getGenomeAttribute('known_snps')
-params.known_snps_tbi          = getGenomeAttribute('known_snps_tbi')
-params.known_snps_vqsr         = getGenomeAttribute('known_snps_vqsr')
-params.mappability             = getGenomeAttribute('mappability')
-params.ngscheckmate_bed        = getGenomeAttribute('ngscheckmate_bed')
-params.pon                     = getGenomeAttribute('pon')
-params.pon_tbi                 = getGenomeAttribute('pon_tbi')
-params.sentieon_dnascope_model = getGenomeAttribute('sentieon_dnascope_model')
-params.snpeff_db               = getGenomeAttribute('snpeff_db')
-params.vep_cache_version       = getGenomeAttribute('vep_cache_version')
-params.vep_genome              = getGenomeAttribute('vep_genome')
-params.vep_species             = getGenomeAttribute('vep_species')
 
 aligner = params.aligner
 
@@ -76,39 +42,7 @@ include { PIPELINE_INITIALISATION          } from './subworkflows/local/utils_nf
 include { PREPARE_INTERVALS                } from './subworkflows/local/prepare_intervals'
 include { PREPARE_REFERENCE_CNVKIT         } from './subworkflows/local/prepare_reference_cnvkit'
 
-// Initialize fasta file with meta map:
-fasta = params.fasta ? Channel.fromPath(params.fasta).map{ it -> [ [id:it.baseName], it ] }.collect() : Channel.empty()
-
-// Initialize file channels based on params, defined in the params.genomes[params.genome] scope
-bcftools_annotations    = params.bcftools_annotations    ? Channel.fromPath(params.bcftools_annotations).collect()      : Channel.empty()
-bcftools_header_lines   = params.bcftools_header_lines   ? Channel.fromPath(params.bcftools_header_lines).collect()     : Channel.empty()
-cf_chrom_len            = params.cf_chrom_len            ? Channel.fromPath(params.cf_chrom_len).collect()              : []
-dbsnp                   = params.dbsnp                   ? Channel.fromPath(params.dbsnp).collect()                     : Channel.value([])
-fasta_fai               = params.fasta_fai               ? Channel.fromPath(params.fasta_fai).collect()                 : Channel.empty()
-germline_resource       = params.germline_resource       ? Channel.fromPath(params.germline_resource).collect()         : Channel.value([]) // Mutect2 does not require a germline resource, so set to optional input
-known_indels            = params.known_indels            ? Channel.fromPath(params.known_indels).collect()              : Channel.value([])
-known_snps              = params.known_snps              ? Channel.fromPath(params.known_snps).collect()                : Channel.value([])
-mappability             = params.mappability             ? Channel.fromPath(params.mappability).collect()               : Channel.value([])
-pon                     = params.pon                     ? Channel.fromPath(params.pon).collect()                       : Channel.value([]) // PON is optional for Mutect2 (but highly recommended)
-sentieon_dnascope_model = params.sentieon_dnascope_model ? Channel.fromPath(params.sentieon_dnascope_model).collect()   : Channel.value([])
-msisensorpro_scan       = params.msisensorpro_scan       ? Channel.fromPath(params.msisensorpro_scan).collect()         : Channel.empty()
-allele_files            = params.allele_files            ? Channel.fromPath(params.allele_files).collect()              : Channel.empty()
-chr_files               = params.chr_files               ? Channel.fromPath(params.chr_files).collect()                 : Channel.empty()
-gc_file                 = params.gc_file                 ? Channel.fromPath(params.gc_file).collect()                   : Channel.empty()
-loci_files              = params.loci_files              ? Channel.fromPath(params.loci_files).collect()                : Channel.empty()
-rt_file                 = params.rt_file                 ? Channel.fromPath(params.rt_file).collect()                   : Channel.empty()
-
-// Initialize value channels based on params, defined in the params.genomes[params.genome] scope
-ascat_genome                = params.ascat_genome       ?:  Channel.empty()
-dbsnp_vqsr                  = params.dbsnp_vqsr         ?   Channel.value(params.dbsnp_vqsr)        : Channel.empty()
-known_indels_vqsr           = params.known_indels_vqsr  ?   Channel.value(params.known_indels_vqsr) : Channel.empty()
-known_snps_vqsr             = params.known_snps_vqsr    ?   Channel.value(params.known_snps_vqsr)   : Channel.empty()
-ngscheckmate_bed            = params.ngscheckmate_bed   ?   Channel.value(params.ngscheckmate_bed)  : Channel.empty()
-snpeff_db                   = params.snpeff_db          ?:  Channel.empty()
-vep_cache_version           = params.vep_cache_version  ?:  Channel.empty()
-vep_genome                  = params.vep_genome         ?:  Channel.empty()
-vep_species                 = params.vep_species        ?:  Channel.empty()
-
+// Initialize value channels based on params for annotation
 
 vep_extra_files = []
 
@@ -134,30 +68,36 @@ if (params.spliceai_snv && params.spliceai_snv_tbi && params.spliceai_indel && p
 workflow NFCORE_SAREK {
     take:
     samplesheet
+    references
 
     main:
     versions = Channel.empty()
 
-    // Gather built indices or get them from the params
-    // Built from the fasta file:
-    dict        = params.dict      ? Channel.fromPath(params.dict).map{ it -> [ [id:'dict'], it ] }.collect()       : Channel.value([])
-    fasta_fai   = params.fasta_fai ? Channel.fromPath(params.fasta_fai).map{ it -> [ [id:'fai'], it ] }.collect()   : Channel.value([])
-    bwa         = params.bwa       ? Channel.fromPath(params.bwa).map{ it -> [ [id:'bwa'], it ] }.collect()         : Channel.empty()
-    bwamem2     = params.bwamem2   ? Channel.fromPath(params.bwamem2).map{ it -> [ [id:'bwamem2'], it ] }.collect() : Channel.empty()
-    dragmap     = params.dragmap   ? Channel.fromPath(params.dragmap).map{ it -> [ [id:'dragmap'], it ] }.collect() : Channel.empty()
+    // reduce the references map to keep the minimal set of keys
+    def reduce_references_meta = { meta -> meta.subMap(['id']) }
+
+    fasta = references.map{ meta, fasta -> [reduce_references_meta(meta), file(fasta)]}.collect()
+    fasta_dict = references.map{ meta, _fasta -> meta.fasta_dict ? [reduce_references_meta(meta), file(meta.fasta_dict)] : null}.collect()
+    fasta_fai = references.map{ meta, _fasta -> meta.fasta_fai ? [reduce_references_meta(meta), file(meta.fasta_fai)] : null}.collect()
+    bwamem1_index = references.map{ meta, _fasta -> meta.bwamem1_index ? [reduce_references_meta(meta), file(meta.bwamem1_index)] : null}.collect()
+    bwamem2_index = references.map{ meta, _fasta -> meta.bwamem2_index ? [reduce_references_meta(meta), file(meta.bwamem2_index)] : null}.collect()
+    dragmap_hashtable = references.map{ meta, _fasta -> meta.dragmap_hashtable ? [reduce_references_meta(meta), file(meta.dragmap_hashtable)] : null}.collect()
+    intervals_bed = references.map{ meta, _fasta -> meta.intervals_bed ? [reduce_references_meta(meta), file(meta.intervals_bed)] : null}.collect()
+    dbsnp = references.map{ meta, _fasta -> meta.vcf.dbsnp.vcf ? [reduce_references_meta(meta), file(meta.vcf.dbsnp.vcf)] : null}.transpose().collect()
+    dbsnp_tbi = references.map{ meta, _fasta -> meta.vcf.dbsnp.vcf_tbi ? [reduce_references_meta(meta), file(meta.vcf.dbsnp.vcf_tbi)] : null}.transpose().collect()
+    germline_resource = references.map{ meta, _fasta -> meta.vcf.germline_resource.vcf ? [reduce_references_meta(meta), file(meta.vcf.germline_resource.vcf)] : null}.collect()
+    germline_resource_tbi = references.map{ meta, _fasta -> meta.vcf.germline_resource.vcf_tbi ? [reduce_references_meta(meta), file(meta.vcf.germline_resource.vcf_tbi)] : null}.collect()
+    known_indels = references.map{ meta, _fasta -> meta.vcf.known_indels.vcf ? [reduce_references_meta(meta), file(meta.vcf.known_indels.vcf)] : null}.collect()
+    known_indels_tbi = references.map{ meta, _fasta -> meta.vcf.known_indels.vcf_tbi ? [reduce_references_meta(meta), file(meta.vcf.known_indels.vcf_tbi)] : null}.collect()
+    known_snps = references.map{ meta, _fasta -> meta.vcf.known_snps.vcf ? [reduce_references_meta(meta), file(meta.vcf.known_snps.vcf)] : null}.collect()
+    known_snps_tbi = references.map{ meta, _fasta -> meta.vcf.known_snps.vcf_tbi ? [reduce_references_meta(meta), file(meta.vcf.known_snps.vcf_tbi)] : null}.collect()
+    pon = references.map{ meta, _fasta -> meta.vcf.pon.vcf ? [reduce_references_meta(meta), file(meta.vcf.pon.vcf)] : null}.collect()
+    pon_tbi = references.map{ meta, _fasta -> meta.vcf.pon.vcf_tbi ? [reduce_references_meta(meta), file(meta.vcf.pon.vcf_tbi)] : null}.collect()
 
     // Gather index for mapping given the chosen aligner
-    index_alignment = (aligner == "bwa-mem" || aligner == "sentieon-bwamem") ? bwa :
-        aligner == "bwa-mem2" ? bwamem2 :
-        dragmap
-
-    // Tabix indexed vcf files
-    bcftools_annotations_tbi  = params.bcftools_annotations && params.bcftools_annotations_tbi ? Channel.fromPath(params.bcftools_annotations_tbi).collect() : Channel.value([])
-    dbsnp_tbi                 = params.dbsnp                && params.dbsnp_tbi                ? Channel.fromPath(params.dbsnp_tbi).collect()                : Channel.value([])
-    germline_resource_tbi     = params.germline_resource    && params.germline_resource_tbi    ? Channel.fromPath(params.germline_resource_tbi).collect()    : [] //do not change to Channel.value([]), the check for its existence then fails for Getpileupsumamries
-    known_indels_tbi          = params.known_indels         && params.known_indels_tbi         ? Channel.fromPath(params.known_indels_tbi).collect()         : Channel.value([])
-    known_snps_tbi            = params.known_snps           && params.known_snps_tbi           ? Channel.fromPath(params.known_snps_tbi).collect()           : Channel.value([])
-    pon_tbi                   = params.pon                  && params.pon_tbi                  ? Channel.fromPath(params.pon_tbi).collect()                  : Channel.value([])
+    index_alignment = (aligner == "bwa-mem" || aligner == "sentieon-bwamem") ? bwamem1_index :
+        aligner == "bwa-mem2" ? bwamem2_index :
+        dragmap_hashtable
 
     // known_sites is made by grouping both the dbsnp and the known snps/indels resources
     // Which can either or both be optional
@@ -167,7 +107,7 @@ workflow NFCORE_SAREK {
     known_sites_snps_tbi   = dbsnp_tbi.concat(known_snps_tbi).collect()
 
     // Build intervals if needed
-    PREPARE_INTERVALS(fasta_fai, params.intervals, params.no_intervals, params.nucleotides_per_second, params.outdir, params.step)
+    PREPARE_INTERVALS(intervals_bed, params.no_intervals, params.nucleotides_per_second, params.outdir, params.step)
 
     // Intervals for speed up preprocessing/variant calling by spread/gather
     // [interval.bed] all intervals in one file
@@ -204,7 +144,7 @@ workflow NFCORE_SAREK {
     // Gather used softwares versions
     versions = versions.mix(PREPARE_INTERVALS.out.versions)
 
-    vep_fasta = (params.vep_include_fasta) ? fasta.map{ fasta -> [ [ id:fasta.baseName ], fasta ] } : [[id: 'null'], []]
+    vep_fasta = (params.vep_include_fasta) ? fasta.map{ fasta_ -> [ [ id:fasta_.baseName ], fasta_ ] } : [[id: 'null'], []]
 
     // Download cache
     if (params.download_cache) {
@@ -238,20 +178,20 @@ workflow NFCORE_SAREK {
     // WORKFLOW: Run pipeline
     //
     SAREK(samplesheet,
-        allele_files,
-        bcftools_annotations,
-        bcftools_annotations_tbi,
-        bcftools_header_lines,
-        cf_chrom_len,
-        chr_files,
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
         cnvkit_reference,
         dbsnp,
         dbsnp_tbi,
-        dbsnp_vqsr,
-        dict,
+        "",
+        fasta_dict,
         fasta,
         fasta_fai,
-        gc_file,
+        [],
         germline_resource,
         germline_resource_tbi,
         index_alignment,
@@ -261,30 +201,30 @@ workflow NFCORE_SAREK {
         intervals_bed_gz_tbi_and_num_intervals,
         intervals_bed_gz_tbi_combined,
         intervals_for_preprocessing,
-        known_indels_vqsr,
+        "",
         known_sites_indels,
         known_sites_indels_tbi,
         known_sites_snps,
         known_sites_snps_tbi,
-        known_snps_vqsr,
-        loci_files,
-        mappability,
-        msisensorpro_scan,
-        ngscheckmate_bed,
+        "",
+        [],
+        [],
+        [],
+        [],
         pon,
         pon_tbi,
-        rt_file,
-        sentieon_dnascope_model,
+        [],
+        [],
         snpeff_cache,
         vep_cache,
-        vep_cache_version,
+        "",
         vep_extra_files,
         vep_fasta,
-        vep_genome,
-        vep_species
+        "",
+        ""
     )
-    emit:
-    multiqc_report = SAREK.out.multiqc_report // channel: /path/to/multiqc_report.html
+    // emit:
+    // multiqc_report = SAREK.out.multiqc_report // channel: /path/to/multiqc_report.html
 }
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -304,45 +244,27 @@ workflow {
         params.monochrome_logs,
         args,
         params.outdir,
-        params.input
+        params.input,
+        params.references
     )
 
     //
     // WORKFLOW: Run main workflow
     //
-    NFCORE_SAREK(PIPELINE_INITIALISATION.out.samplesheet)
+    NFCORE_SAREK(PIPELINE_INITIALISATION.out.samplesheet, PIPELINE_INITIALISATION.out.references)
 
     //
     // SUBWORKFLOW: Run completion tasks
     //
-    PIPELINE_COMPLETION(
-        params.email,
-        params.email_on_fail,
-        params.plaintext_email,
-        params.outdir,
-        params.monochrome_logs,
-        params.hook_url,
-        NFCORE_SAREK.out.multiqc_report
-    )
-}
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    FUNCTIONS
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-//
-// Get attribute from genome config file e.g. fasta
-//
-
-def getGenomeAttribute(attribute) {
-    if (params.genomes && params.genome && params.genomes.containsKey(params.genome)) {
-        if (params.genomes[ params.genome ].containsKey(attribute)) {
-            return params.genomes[ params.genome ][ attribute ]
-        }
-    }
-    return null
+    // PIPELINE_COMPLETION(
+    //     params.email,
+    //     params.email_on_fail,
+    //     params.plaintext_email,
+    //     params.outdir,
+    //     params.monochrome_logs,
+    //     params.hook_url,
+    //     NFCORE_SAREK.out.multiqc_report
+    // )
 }
 
 /*

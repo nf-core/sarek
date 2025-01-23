@@ -21,27 +21,29 @@ workflow BAM_BASERECALIBRATOR {
     versions = Channel.empty()
 
     // Combine cram and intervals for spread and gather strategy
-    cram_intervals = cram.combine(intervals)
-        // Move num_intervals to meta map
-        .map{ meta, cram, crai, intervals, num_intervals -> [ meta + [ num_intervals:num_intervals ], cram, crai, intervals ] }
+    cram_intervals = cram
+        .combine(intervals)
+        .map { meta, cram, crai, intervals, num_intervals -> [meta + [num_intervals: num_intervals], cram, crai, intervals] }
 
     // RUN BASERECALIBRATOR
-    GATK4_BASERECALIBRATOR(cram_intervals, fasta.map{ meta, it -> [ it ] }, fasta_fai.map{ meta, it -> [ it ] }, dict.map{ meta, it -> [ it ] }, known_sites, known_sites_tbi)
+    GATK4_BASERECALIBRATOR(cram_intervals, fasta, fasta_fai, dict, known_sites, known_sites_tbi)
 
     // Figuring out if there is one or more table(s) from the same sample
-    table_to_merge = GATK4_BASERECALIBRATOR.out.table.map{ meta, table -> [ groupKey(meta, meta.num_intervals), table ] }.groupTuple().branch{
-        // Use meta.num_intervals to asses number of intervals
-        single:   it[0].num_intervals <= 1
-        multiple: it[0].num_intervals > 1
-    }
+    table_to_merge = GATK4_BASERECALIBRATOR.out.table
+        .map { meta, table -> [groupKey(meta, meta.num_intervals), table] }
+        .groupTuple()
+        .branch {
+            single: it[0].num_intervals <= 1
+            multiple: it[0].num_intervals > 1
+        }
 
     // Only when using intervals
     GATK4_GATHERBQSRREPORTS(table_to_merge.multiple)
 
     // Mix intervals and no_intervals channels together
-    table_bqsr = GATK4_GATHERBQSRREPORTS.out.table.mix(table_to_merge.single.map{ meta, table -> [ meta, table[0] ] })
-        // Remove no longer necessary field: num_intervals
-        .map{ meta, table -> [ meta - meta.subMap('num_intervals'), table ] }
+    table_bqsr = GATK4_GATHERBQSRREPORTS.out.table
+        .mix(table_to_merge.single.map { meta, table -> [meta, table[0]] })
+        .map { meta, table -> [meta - meta.subMap('num_intervals'), table] }
 
     // Gather versions of all tools used
     versions = versions.mix(GATK4_BASERECALIBRATOR.out.versions)
@@ -49,6 +51,5 @@ workflow BAM_BASERECALIBRATOR {
 
     emit:
     table_bqsr // channel: [ meta, table ]
-
     versions   // channel: [ versions.yml ]
 }
