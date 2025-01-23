@@ -21,14 +21,16 @@ workflow BAM_BASERECALIBRATOR {
     versions = Channel.empty()
 
     // Combine cram and intervals for spread and gather strategy
+    // Move num_intervals to meta map
     cram_intervals = cram
         .combine(intervals)
-        .map { meta, cram, crai, intervals, num_intervals -> [meta + [num_intervals: num_intervals], cram, crai, intervals] }
+        .map { meta, cram_, crai_, intervals_, num_intervals -> [meta + [num_intervals: num_intervals], cram_, crai_, intervals_] }
 
     // RUN BASERECALIBRATOR
     GATK4_BASERECALIBRATOR(cram_intervals, fasta, fasta_fai, dict, known_sites, known_sites_tbi)
 
     // Figuring out if there is one or more table(s) from the same sample
+    // Use meta.num_intervals to asses number of intervals
     table_to_merge = GATK4_BASERECALIBRATOR.out.table
         .map { meta, table -> [groupKey(meta, meta.num_intervals), table] }
         .groupTuple()
@@ -41,6 +43,7 @@ workflow BAM_BASERECALIBRATOR {
     GATK4_GATHERBQSRREPORTS(table_to_merge.multiple)
 
     // Mix intervals and no_intervals channels together
+    // Remove no longer necessary field: num_intervals
     table_bqsr = GATK4_GATHERBQSRREPORTS.out.table
         .mix(table_to_merge.single.map { meta, table -> [meta, table[0]] })
         .map { meta, table -> [meta - meta.subMap('num_intervals'), table] }
