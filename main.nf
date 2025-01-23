@@ -228,7 +228,7 @@ workflow NFCORE_SAREK {
     versions = versions.mix(PREPARE_GENOME.out.versions)
     versions = versions.mix(PREPARE_INTERVALS.out.versions)
 
-    vep_fasta = (params.vep_include_fasta) ? fasta.map{ fasta -> [ [ id:fasta.baseName ], fasta ] } : [[id: 'null'], []]
+    vep_fasta = (params.vep_include_fasta) ? fasta.map{ fasta_ -> [ [ id:fasta_.baseName ], fasta_ ] } : [[id: 'null'], []]
 
     // Download cache
     if (params.download_cache) {
