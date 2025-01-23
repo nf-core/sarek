@@ -22,14 +22,14 @@
     "versions": {
         "content": [
             [
-                "versions.yml:md5,4a6890d486a62ce6f2edfd2f8961da4f"
+                "versions.yml:md5,198986205018e3e6cdd651680a5e8cdd"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.0"
+            "nf-test": "0.9.1",
+            "nextflow": "24.10.0"
         },
-        "timestamp": "2024-05-15T13:00:49.353138"
+        "timestamp": "2024-10-31T10:33:41.980566137"
     },
     "human - vcf - stub": {
         "content": [
@@ -51,7 +51,7 @@
                     ]
                 ],
                 "2": [
-                    "versions.yml:md5,4a6890d486a62ce6f2edfd2f8961da4f"
+                    "versions.yml:md5,198986205018e3e6cdd651680a5e8cdd"
                 ],
                 "tbi": [
                     [
@@ -70,26 +70,26 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,4a6890d486a62ce6f2edfd2f8961da4f"
+                    "versions.yml:md5,198986205018e3e6cdd651680a5e8cdd"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.0"
+            "nf-test": "0.9.1",
+            "nextflow": "24.10.0"
         },
-        "timestamp": "2024-05-15T13:01:24.370421"
+        "timestamp": "2024-10-31T10:34:08.561335315"
     },
     "versions_allelspecific": {
         "content": [
             [
-                "versions.yml:md5,4a6890d486a62ce6f2edfd2f8961da4f"
+                "versions.yml:md5,198986205018e3e6cdd651680a5e8cdd"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.0"
+            "nf-test": "0.9.1",
+            "nextflow": "24.10.0"
         },
-        "timestamp": "2024-05-15T13:01:08.104194"
+        "timestamp": "2024-10-31T10:33:56.418381574"
     }
 }

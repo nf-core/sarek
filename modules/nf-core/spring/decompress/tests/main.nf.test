@@ -4,11 +4,10 @@ nextflow_process {
     tag "modules_nfcore"
     tag "modules"
     tag "spring"
+    tag "spring/compress"
     tag "spring/decompress"
     script "../main.nf"
     process "SPRING_DECOMPRESS"
-
-
 
     test("Write-One-File") {
 

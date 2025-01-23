@@ -2,14 +2,14 @@
     "versions": {
         "content": [
             [
-                "versions.yml:md5,7298d6e6e18024f7c2ed0fe38d259a52"
+                "versions.yml:md5,2b6e8361dd6734be029e7480dbcb7794"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.0"
+            "nf-test": "0.9.1",
+            "nextflow": "24.10.0"
         },
-        "timestamp": "2024-05-16T10:13:56.2195"
+        "timestamp": "2024-10-31T11:29:44.84165293"
     },
     "human - stats,tsv - stub": {
         "content": [
@@ -24,7 +24,7 @@
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,7298d6e6e18024f7c2ed0fe38d259a52"
+                    "versions.yml:md5,2b6e8361dd6734be029e7480dbcb7794"
                 ],
                 "stats": [
                     [
@@ -36,15 +36,15 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,7298d6e6e18024f7c2ed0fe38d259a52"
+                    "versions.yml:md5,2b6e8361dd6734be029e7480dbcb7794"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.0"
+            "nf-test": "0.9.1",
+            "nextflow": "24.10.0"
         },
-        "timestamp": "2024-05-16T10:14:10.058769"
+        "timestamp": "2024-10-31T11:29:54.48600467"
     },
     "human - stats, tsv": {
         "content": [

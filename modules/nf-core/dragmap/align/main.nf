@@ -55,15 +55,11 @@ process DRAGMAP_ALIGN {
     """
 
     stub:
-    def args = task.ext.args ?: ''
     def args2 = task.ext.args2 ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def reads_command = meta.single_end ? "-1 $reads" : "-1 ${reads[0]} -2 ${reads[1]}"
-    def samtools_command = sort_bam ? 'sort' : 'view'
     def extension_pattern = /(--output-fmt|-O)+\s+(\S+)/
     def extension_matcher =  (args2 =~ extension_pattern)
     def extension = extension_matcher.getCount() > 0 ? extension_matcher[0][2].toLowerCase() : "bam"
-    def reference = fasta && extension=="cram"  ? "--reference ${fasta}" : ""
     if (!fasta && extension=="cram") error "Fasta reference is required for CRAM output"
 
     def create_index = ""

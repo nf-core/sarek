@@ -4,8 +4,8 @@ process GATK4SPARK_APPLYBQSR {
 
     conda "${moduleDir}/environment.yml"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/gatk4-spark:4.5.0.0--hdfd78af_0':
-        'biocontainers/gatk4-spark:4.5.0.0--hdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/gatk4-spark:4.6.1.0--hdfd78af_0':
+        'biocontainers/gatk4-spark:4.6.1.0--hdfd78af_0' }"
 
     input:
     tuple val(meta), path(input), path(input_index), path(bqsr_table), path(intervals)

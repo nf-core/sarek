@@ -24,7 +24,7 @@
                     
                 ],
                 "3": [
-                    "versions.yml:md5,9699197d0e667ab368a8c6d2a6893cc6"
+                    "versions.yml:md5,1184eb9fbc4a9cb7384b760b2c112c94"
                 ],
                 "bam_index": [
                     [
@@ -48,15 +48,15 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,9699197d0e667ab368a8c6d2a6893cc6"
+                    "versions.yml:md5,1184eb9fbc4a9cb7384b760b2c112c94"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nf-test": "0.9.1",
+            "nextflow": "24.10.0"
         },
-        "timestamp": "2024-02-15T11:53:11.621016088"
+        "timestamp": "2024-11-06T11:52:48.84070018"
     },
     "homo_sapiens - bam - metrics - output": {
         "content": [
@@ -95,7 +95,7 @@
                     
                 ],
                 "3": [
-                    "versions.yml:md5,9699197d0e667ab368a8c6d2a6893cc6"
+                    "versions.yml:md5,1184eb9fbc4a9cb7384b760b2c112c94"
                 ],
                 "bam_index": [
                     
@@ -113,27 +113,27 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,9699197d0e667ab368a8c6d2a6893cc6"
+                    "versions.yml:md5,1184eb9fbc4a9cb7384b760b2c112c94"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nf-test": "0.9.1",
+            "nextflow": "24.10.0"
         },
-        "timestamp": "2024-02-15T11:53:53.339811107"
+        "timestamp": "2024-11-06T11:54:09.554533288"
     },
     "homo_sapiens - bam - metrics - versions": {
         "content": [
             [
-                "versions.yml:md5,9699197d0e667ab368a8c6d2a6893cc6"
+                "versions.yml:md5,1184eb9fbc4a9cb7384b760b2c112c94"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nf-test": "0.9.1",
+            "nextflow": "24.10.0"
         },
-        "timestamp": "2024-02-15T11:53:32.199010065"
+        "timestamp": "2024-11-06T11:53:39.648663125"
     },
     "homo_sapiens - bam - metrics - bam_index": {
         "content": [
@@ -184,7 +184,7 @@
                     ]
                 ],
                 "3": [
-                    "versions.yml:md5,9699197d0e667ab368a8c6d2a6893cc6"
+                    "versions.yml:md5,1184eb9fbc4a9cb7384b760b2c112c94"
                 ],
                 "bam_index": [
                     [
@@ -214,15 +214,15 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,9699197d0e667ab368a8c6d2a6893cc6"
+                    "versions.yml:md5,1184eb9fbc4a9cb7384b760b2c112c94"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nf-test": "0.9.1",
+            "nextflow": "24.10.0"
         },
-        "timestamp": "2024-02-15T10:56:48.15652292"
+        "timestamp": "2024-11-06T11:54:21.987287007"
     },
     "sarscov2 - bam": {
         "content": [
@@ -249,7 +249,7 @@
                     
                 ],
                 "3": [
-                    "versions.yml:md5,9699197d0e667ab368a8c6d2a6893cc6"
+                    "versions.yml:md5,1184eb9fbc4a9cb7384b760b2c112c94"
                 ],
                 "bam_index": [
                     [
@@ -273,14 +273,14 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,9699197d0e667ab368a8c6d2a6893cc6"
+                    "versions.yml:md5,1184eb9fbc4a9cb7384b760b2c112c94"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nf-test": "0.9.1",
+            "nextflow": "24.10.0"
         },
-        "timestamp": "2024-02-15T11:52:51.5386181"
+        "timestamp": "2024-11-06T11:51:28.270175346"
     }
 }

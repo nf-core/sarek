@@ -2,38 +2,38 @@
     "versions_pair": {
         "content": [
             [
-                "versions.yml:md5,4a72b1da18f7045d470225881e7266a6"
+                "versions.yml:md5,05685d2e6a839916a120c07b4db98914"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.0"
+            "nf-test": "0.9.1",
+            "nextflow": "24.10.0"
         },
-        "timestamp": "2024-05-15T11:08:17.057861"
+        "timestamp": "2024-10-31T10:39:04.844937172"
     },
     "versions": {
         "content": [
             [
-                "versions.yml:md5,4a72b1da18f7045d470225881e7266a6"
+                "versions.yml:md5,05685d2e6a839916a120c07b4db98914"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.0"
+            "nf-test": "0.9.1",
+            "nextflow": "24.10.0"
         },
-        "timestamp": "2024-05-15T11:08:07.193762"
+        "timestamp": "2024-10-31T10:38:50.36175509"
     },
     "versions_segmentation": {
         "content": [
             [
-                "versions.yml:md5,4a72b1da18f7045d470225881e7266a6"
+                "versions.yml:md5,05685d2e6a839916a120c07b4db98914"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.0"
+            "nf-test": "0.9.1",
+            "nextflow": "24.10.0"
         },
-        "timestamp": "2024-05-15T11:08:26.99069"
+        "timestamp": "2024-10-31T10:39:22.516513354"
     },
     "segmentation": {
         "content": [
@@ -75,7 +75,7 @@
                     ]
                 ],
                 "2": [
-                    "versions.yml:md5,4a72b1da18f7045d470225881e7266a6"
+                    "versions.yml:md5,05685d2e6a839916a120c07b4db98914"
                 ],
                 "contamination": [
                     [
@@ -94,15 +94,15 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,4a72b1da18f7045d470225881e7266a6"
+                    "versions.yml:md5,05685d2e6a839916a120c07b4db98914"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.0"
+            "nf-test": "0.9.1",
+            "nextflow": "24.10.0"
         },
-        "timestamp": "2024-05-15T12:56:14.817045"
+        "timestamp": "2024-10-31T10:39:40.353818746"
     },
     "human - pileup-table - matched-pair": {
         "content": [

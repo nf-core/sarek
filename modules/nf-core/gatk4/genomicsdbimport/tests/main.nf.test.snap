@@ -3,14 +3,14 @@
         "content": [
             "test.interval_list:md5,4c85812ac15fc1cd29711a851d23c0bf",
             [
-                "versions.yml:md5,c1233a04213021aa66599a36e0fb28cc"
+                "versions.yml:md5,5e722d5d01b9b1a0076ce80d0199b157"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.1",
+            "nextflow": "24.10.0"
         },
-        "timestamp": "2024-07-09T10:42:51.836379"
+        "timestamp": "2024-10-31T11:09:55.9195126"
     },
     "test_gatk4_genomicsdbimport_create_genomicsdb": {
         "content": [
@@ -22,14 +22,14 @@
                 "vidmap.json"
             ],
             [
-                "versions.yml:md5,c1233a04213021aa66599a36e0fb28cc"
+                "versions.yml:md5,5e722d5d01b9b1a0076ce80d0199b157"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.1",
+            "nextflow": "24.10.0"
         },
-        "timestamp": "2024-07-09T10:42:36.846239"
+        "timestamp": "2024-10-31T11:09:25.302350893"
     },
     "test_gatk4_genomicsdbimport_update_genomicsdb": {
         "content": [
@@ -41,14 +41,14 @@
                 "vidmap.json"
             ],
             [
-                "versions.yml:md5,c1233a04213021aa66599a36e0fb28cc"
+                "versions.yml:md5,5e722d5d01b9b1a0076ce80d0199b157"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.1",
+            "nextflow": "24.10.0"
         },
-        "timestamp": "2024-07-09T10:43:09.00769"
+        "timestamp": "2024-10-31T11:10:13.206208761"
     },
     "test_gatk4_genomicsdbimport_stub": {
         "content": [
@@ -68,7 +68,7 @@
                     
                 ],
                 "3": [
-                    "versions.yml:md5,c1233a04213021aa66599a36e0fb28cc"
+                    "versions.yml:md5,5e722d5d01b9b1a0076ce80d0199b157"
                 ],
                 "genomicsdb": [
                     [
@@ -85,14 +85,14 @@
                     
                 ],
                 "versions": [
-                    "versions.yml:md5,c1233a04213021aa66599a36e0fb28cc"
+                    "versions.yml:md5,5e722d5d01b9b1a0076ce80d0199b157"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.1",
+            "nextflow": "24.10.0"
         },
-        "timestamp": "2024-07-09T10:43:20.921712"
+        "timestamp": "2024-10-31T11:10:36.510210505"
     }
 }

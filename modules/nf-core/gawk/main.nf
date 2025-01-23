@@ -28,6 +28,11 @@ process GAWK {
     lst_gz    = input.collect{ it.getExtension().endsWith("gz") }
     unzip     = lst_gz.contains(false) ? "" : "find ${input} -exec zcat {} \\; | \\"
     input_cmd = unzip ? "" : "${input}"
+    output_cmd = suffix.endsWith("gz") ? "| gzip" : ""
+
+    input.collect{
+        assert it.name != "${prefix}.${suffix}" : "Input and output names are the same, set prefix in module configuration to disambiguate!"
+    }
 
     """
     ${unzip}
@@ -35,6 +40,7 @@ process GAWK {
         ${args} \\
         ${program} \\
         ${input_cmd} \\
+        ${output_cmd} \\
         > ${prefix}.${suffix}
 
     cat <<-END_VERSIONS > versions.yml

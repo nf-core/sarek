@@ -5,7 +5,7 @@ process DEEPVARIANT_RUNDEEPVARIANT {
     // FIXME Conda is not supported at the moment
     // BUG https://github.com/nf-core/modules/issues/1754
     // BUG https://github.com/bioconda/bioconda-recipes/issues/30310
-    container "nf-core/deepvariant:1.6.1"
+    container "docker.io/google/deepvariant:1.8.0"
 
     input:
     tuple val(meta), path(input), path(index), path(intervals)
@@ -15,11 +15,11 @@ process DEEPVARIANT_RUNDEEPVARIANT {
     tuple val(meta5), path(par_bed)
 
     output:
-    tuple val(meta), path("${prefix}.vcf.gz")      ,  emit: vcf
-    tuple val(meta), path("${prefix}.vcf.gz.tbi")  ,  emit: vcf_tbi
-    tuple val(meta), path("${prefix}.g.vcf.gz")    ,  emit: gvcf
-    tuple val(meta), path("${prefix}.g.vcf.gz.tbi"),  emit: gvcf_tbi
-    path "versions.yml"                            ,  emit: versions
+    tuple val(meta), path("${prefix}.vcf.gz")      , emit: vcf
+    tuple val(meta), path("${prefix}.vcf.gz.tbi")  , emit: vcf_tbi
+    tuple val(meta), path("${prefix}.g.vcf.gz")    , emit: gvcf
+    tuple val(meta), path("${prefix}.g.vcf.gz.tbi"), emit: gvcf_tbi
+    path "versions.yml"                            , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -33,9 +33,6 @@ process DEEPVARIANT_RUNDEEPVARIANT {
     prefix = task.ext.prefix ?: "${meta.id}"
     def regions = intervals ? "--regions=${intervals}" : ""
     def par_regions = par_bed ? "--par_regions_bed=${par_bed}" : ""
-    // WARN https://github.com/nf-core/modules/pull/5801#issuecomment-2194293755
-    // FIXME Revert this on next version bump
-    def VERSION = '1.6.1'
 
     """
     /opt/deepvariant/bin/run_deepvariant \\
@@ -51,7 +48,7 @@ process DEEPVARIANT_RUNDEEPVARIANT {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        deepvariant: $VERSION
+        deepvariant: \$(echo \$(/opt/deepvariant/bin/run_deepvariant --version) | sed 's/^.*version //; s/ .*\$//' )
     END_VERSIONS
     """
 
@@ -61,9 +58,6 @@ process DEEPVARIANT_RUNDEEPVARIANT {
         error "DEEPVARIANT module does not support Conda. Please use Docker / Singularity / Podman instead."
     }
     prefix = task.ext.prefix ?: "${meta.id}"
-    // WARN https://github.com/nf-core/modules/pull/5801#issuecomment-2194293755
-    // FIXME Revert this on next version bump
-    def VERSION = '1.6.1'
     """
     touch ${prefix}.vcf.gz
     touch ${prefix}.vcf.gz.tbi
@@ -72,7 +66,7 @@ process DEEPVARIANT_RUNDEEPVARIANT {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        deepvariant: $VERSION
+        deepvariant: \$(echo \$(/opt/deepvariant/bin/run_deepvariant --version) | sed 's/^.*version //; s/ .*\$//' )
     END_VERSIONS
     """
 }

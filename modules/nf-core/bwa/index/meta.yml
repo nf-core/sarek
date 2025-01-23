@@ -31,9 +31,12 @@ output:
           description: |
             Groovy Map containing reference information.
             e.g. [ id:'test', single_end:false ]
+          pattern: "*.{amb,ann,bwt,pac,sa}"
       - bwa:
-          type: file
-          description: BWA genome index files
+          type: map
+          description: |
+            Groovy Map containing reference information.
+            e.g. [ id:'test', single_end:false ]
           pattern: "*.{amb,ann,bwt,pac,sa}"
   - versions:
       - versions.yml:

@@ -1,35 +1,44 @@
 {
     "test_gatk4_mergevcfs_no_dict_stub": {
         "content": [
+            [
+                "versions.yml:md5,829a91432cc945f3227b1355587d25e0"
+            ],
             "test.vcf.gz",
             "test.vcf.gz.tbi"
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nf-test": "0.9.1",
+            "nextflow": "24.10.0"
         },
-        "timestamp": "2024-02-14T14:57:40.784590995"
+        "timestamp": "2024-11-07T08:29:25.813956308"
     },
     "test_gatk4_mergevcfs": {
         "content": [
+            [
+                "versions.yml:md5,829a91432cc945f3227b1355587d25e0"
+            ],
             "test.vcf.gz",
             "test.vcf.gz.tbi"
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nf-test": "0.9.1",
+            "nextflow": "24.10.0"
         },
-        "timestamp": "2024-02-14T14:56:42.178255913"
+        "timestamp": "2024-11-07T08:28:42.580265083"
     },
     "test_gatk4_mergevcfs_no_dict": {
         "content": [
+            [
+                "versions.yml:md5,829a91432cc945f3227b1355587d25e0"
+            ],
             "test.vcf.gz",
             "test.vcf.gz.tbi"
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "23.10.1"
+            "nf-test": "0.9.1",
+            "nextflow": "24.10.0"
         },
-        "timestamp": "2024-02-14T14:57:11.404322124"
+        "timestamp": "2024-11-07T08:29:12.795329336"
     }
 }

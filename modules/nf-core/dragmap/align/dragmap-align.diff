@@ -1,4 +1,4 @@
-Changes in module 'nf-core/dragmap/align'
+Changes in component 'nf-core/dragmap/align'
 Changes in 'dragmap/align/main.nf':
 --- modules/nf-core/dragmap/align/main.nf
 +++ modules/nf-core/dragmap/align/main.nf

@@ -1,0 +1,65 @@
+{
+    "homo sapiens - vcf": {
+        "content": [
+            [
+                "versions.yml:md5,7e0d98246eb35725469a53e6fb8acfbf"
+            ],
+            "34e15624519ba7408d53cb8bb365ffc1",
+            "test.cnn.vcf.gz.tbi"
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.0"
+        },
+        "timestamp": "2024-11-18T09:39:27.896072791"
+    },
+    "homo sapiens - vcf - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.cnn.vcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.cnn.vcf.gz.tbi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    "versions.yml:md5,7e0d98246eb35725469a53e6fb8acfbf"
+                ],
+                "tbi": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.cnn.vcf.gz.tbi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "vcf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.cnn.vcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,7e0d98246eb35725469a53e6fb8acfbf"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.1",
+            "nextflow": "24.10.0"
+        },
+        "timestamp": "2024-11-06T10:46:55.099673108"
+    }
+}
