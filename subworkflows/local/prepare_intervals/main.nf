@@ -14,12 +14,12 @@ include { TABIX_BGZIPTABIX as TABIX_BGZIPTABIX_INTERVAL_COMBINED } from '../../.
 
 workflow PREPARE_INTERVALS {
     take:
-    fasta_fai              // mandatory [ fasta_fai ]
-    intervals              // [ params.intervals ]
-    no_intervals           // [ params.no_intervals ]
-    nucleotides_per_second
-    outdir
-    step
+    fasta_fai              // mandatory [ params.fasta_fai ]
+    intervals              // optional  [ params.intervals ]
+    no_intervals           // boolean   [ params.no_intervals ]
+    nucleotides_per_second // mandatory [ params.nucleotides_per_second ]
+    outdir                 // mandatory [ params.outdir ]
+    step                   // mandatory [ params.step ]
 
     main:
     versions = Channel.empty()
@@ -69,10 +69,12 @@ workflow PREPARE_INTERVALS {
         }
 
         // Now for the intervals.bed the following operations are done:
-        // 1. Intervals file is split up into multiple bed files for scatter/gather
-        // 2. Each bed file is indexed
+        // 1/ Split up intervals bed file into multiple bed files for scatter/gather
+        // 2/ Tabix index each bed file
 
-        // 1. Intervals file is split up into multiple bed files for scatter/gather & grouping together small intervals
+        // 1/ Split up intervals bed file into multiple bed files for scatter/gather
+        //      Also group together small intervals
+        //      And add the number of intervals to the channel
         intervals_bed = intervals_bed
             .flatten()
             .map { intervals_ ->
@@ -100,7 +102,7 @@ workflow PREPARE_INTERVALS {
             .map { intervals_ -> [intervals_, intervals_.size()] }
             .transpose()
 
-        // 2. Create bed.gz and bed.gz.tbi for each interval file. They are split by region (see above)
+        // 2/ Tabix index each bed file
         TABIX_BGZIPTABIX_INTERVAL_SPLIT(intervals_bed.map { intervals_, _num_intervals -> [[id: intervals_.baseName], intervals_] })
 
         intervals_bed_gz_tbi = TABIX_BGZIPTABIX_INTERVAL_SPLIT.out.gz_tbi
