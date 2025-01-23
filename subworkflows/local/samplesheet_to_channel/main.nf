@@ -39,7 +39,9 @@ workflow SAMPLESHEET_TO_CHANNEL {
             // generate patient_sample key to group lanes together
             [meta.patient + meta.sample, [meta, fastq_1, fastq_2, spring_1, spring_2, table, cram, crai, bam, bai, vcf, variantcaller]]
         }
+        // save the channel
         .tap { ch_with_patient_sample }
+        //group by patient_sample to get all lanes
         .groupTuple()
         .map { patient_sample, ch_items ->
             // get number of lanes per sample
@@ -58,6 +60,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
                     error("Samplesheet contains fastq files but step is `${step}`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
                 }
             }
+            // start from TWO spring-files - one with R1 and one with R2
             else if (meta.lane && spring_1 && spring_2) {
                 meta = meta + [id: "${meta.sample}-${meta.lane}".toString(), data_type: "two_fastq_gz_spring", num_lanes: num_lanes.toInteger(), size: 1]
 
@@ -68,6 +71,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
                     error("Samplesheet contains spring files (in columns `spring_1` and `spring_2`) but step is `${step}`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
                 }
             }
+            // start from ONE spring-file containing both R1 and R2
             else if (meta.lane && spring_1 && !spring_2) {
                 meta = meta + [id: "${meta.sample}-${meta.lane}".toString(), data_type: "one_fastq_gz_spring", num_lanes: num_lanes.toInteger(), size: 1]
 
@@ -78,6 +82,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
                     error("Samplesheet contains a spring file (in columns `spring_1`) but step is `${step}`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
                 }
             }
+            // start from BAM
             else if (meta.lane && bam) {
                 if (step != 'mapping' && !bai) {
                     error("BAM index (bai) should be provided.")
@@ -95,6 +100,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
                     error("Samplesheet contains bam files but step is `annotate`. The pipeline is expecting vcf files for the annotation. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
                 }
             }
+            // recalibration
             else if (table && cram) {
                 meta = meta + [id: meta.sample, data_type: 'cram']
 
@@ -105,6 +111,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
                     error("Samplesheet contains cram files but step is `${step}`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
                 }
             }
+            // recalibration when skipping MarkDuplicates
             else if (table && bam) {
                 meta = meta + [id: meta.sample, data_type: 'bam']
 
@@ -115,6 +122,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
                     error("Samplesheet contains bam files but step is `${step}`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
                 }
             }
+            // prepare_recalibration or variant_calling
             else if (cram) {
                 meta = meta + [id: meta.sample, data_type: 'cram']
 
@@ -125,6 +133,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
                     error("Samplesheet contains cram files but step is `${step}`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
                 }
             }
+            // prepare_recalibration when skipping MarkDuplicates or `--step markduplicates`
             else if (bam) {
                 meta = meta + [id: meta.sample, data_type: 'bam']
 
@@ -135,6 +144,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
                     error("Samplesheet contains bam files but step is `${step}`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
                 }
             }
+            // annotation
             else if (vcf) {
                 meta = meta + [id: meta.sample, data_type: 'vcf', variantcaller: variantcaller ?: '']
 
@@ -156,8 +166,8 @@ workflow SAMPLESHEET_TO_CHANNEL {
         // 2. the sample-sheet only contains tumor-samples, but some of the requested tools require normal-samples.
         input_sample
             .filter { it[0].status == 1 }
+            // In this case, the sample-sheet contains no tumor-samples
             .ifEmpty {
-                // In this case, the sample-sheet contains no tumor-samples
                 if (!build_only_index) {
                     def tools_tumor = ['ascat', 'controlfreec', 'mutect2', 'msisensorpro']
                     def tools_tumor_asked = []

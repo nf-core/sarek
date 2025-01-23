@@ -169,6 +169,7 @@ workflow SAREK {
         one_fastq_gz_from_spring = fastq_gz_pair_from_spring.fastq.map { meta, files -> addReadgroupToMeta(meta, files) }
 
         // Two fastq.gz.spring-files - one for R1 and one for R2
+        // true to write_one_fastq_gz
         r1_fastq_gz_from_spring = SPRING_DECOMPRESS_TO_R1_FQ(
             input_sample_type.two_fastq_gz_spring.map { meta, files ->
                 [meta, files[0]]
@@ -189,12 +190,12 @@ workflow SAREK {
         // Convert any bam input to fastq
         // fasta are not needed when converting bam to fastq -> [ id:"fasta" ], []
         // No need for fasta.fai -> []
-        interleave_input = false
         // Currently don't allow interleaved input
+        interleave_input = false
         CONVERT_FASTQ_INPUT(
             input_sample_type.bam,
             [[id: "fasta"], []],
-            [[id: 'null'], []],
+            [[id: 'fasta_fai'], []],
             interleave_input,
         )
 
@@ -232,12 +233,12 @@ workflow SAREK {
             // Convert back to fastq for further preprocessing
             // fasta are not needed when converting bam to fastq -> [ id:"fasta" ], []
             // No need for fasta.fai -> []
-            interleave_input = false
             // Currently don't allow interleaved input
+            interleave_input = false
             CONVERT_FASTQ_UMI(
                 bam_converted_from_fastq,
                 [[id: "fasta"], []],
-                [[id: 'null'], []],
+                [[id: 'fasta_fai'], []],
                 interleave_input,
             )
 
@@ -256,6 +257,8 @@ workflow SAREK {
 
             save_trimmed_fail = false
             save_merged = false
+            // No any adapter fastas at the moment so []
+            // No discard_trimmed_pass at the moment so false
             FASTP(
                 reads_for_fastp,
                 [],
@@ -268,6 +271,7 @@ workflow SAREK {
             reports = reports.mix(FASTP.out.html.collect { meta, html -> html })
 
             if (params.split_fastq) {
+                // We can drop the FASTQ files now that we know how many there are
                 reads_for_alignment = FASTP.out.reads
                     .map { meta, reads ->
                         read_files = reads.sort(false) { a, b -> a.getName().tokenize('.')[0] <=> b.getName().tokenize('.')[0] }.collate(2)
@@ -316,6 +320,11 @@ workflow SAREK {
         // Grouping the bams from the same samples not to stall the workflow
         // Use groupKey to make sure that the correct group can advance as soon as it is complete
         // and not stall the workflow until all reads from all channels are mapped
+        // Creates a tuple of [ meta, bam, reads_grouping_key ]
+        // Add n_fastq and other variables to meta
+        // Manipulate meta map to remove old fields and add new ones
+        // Create groupKey from meta map
+        // Group
         bam_mapped = FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON.out.bam
             .combine(reads_grouping_key)
             .filter { meta1, bam, meta2 -> meta1.sample == meta2.sample }
@@ -330,6 +339,11 @@ workflow SAREK {
             }
             .groupTuple()
 
+        // Creates a tuple of [ meta, bai, reads_grouping_key ]
+        // Add n_fastq and other variables to meta
+        // Manipulate meta map to remove old fields and add new ones
+        // Create groupKey from meta map
+        // Group
         bai_mapped = FASTQ_ALIGN_BWAMEM_MEM2_DRAGMAP_SENTIEON.out.bai
             .combine(reads_grouping_key)
             .filter { meta1, bai, meta2 -> meta1.sample == meta2.sample }
@@ -723,6 +737,11 @@ workflow SAREK {
             }
 
         // GERMLINE VARIANT CALLING
+        // [[id: 'bwa'], []] is bwa_index for tiddit - not used here
+        // intervals_bed_combined - [] if no_intervals, else interval_bed_combined.bed,
+        // intervals_bed_gz_tbi_combined - [] if no_intervals, else interval_bed_combined_gz, interval_bed_combined_gz_tbi
+        // intervals_bed_combined_for_variant_calling - no_intervals.bed if no intervals, else interval_bed_combined.bed; Channel operations possible
+        // params.skip_tools && params.skip_tools.split(',').contains('haplotypecaller_filter') - true if filtering should be skipped
         BAM_VARIANT_CALLING_GERMLINE_ALL(
             params.tools,
             params.skip_tools,
@@ -755,6 +774,8 @@ workflow SAREK {
         )
 
         // TUMOR ONLY VARIANT CALLING
+        // [[id: 'bwa'], []] is bwa_index for tiddit - not used here
+        // intervals_bed_gz_tbi_combined - [] if no_intervals, else interval_bed_combined_gz, interval_bed_combined_gz_tbi
         BAM_VARIANT_CALLING_TUMOR_ONLY_ALL(
             params.tools,
             cram_variant_calling_tumor_only,
@@ -781,6 +802,8 @@ workflow SAREK {
         )
 
         // PAIR VARIANT CALLING
+        // [[id: 'bwa'], []] is bwa_index for tiddit - not used here
+        // intervals_bed_gz_tbi_combined - [] if no_intervals, else interval_bed_combined_gz, interval_bed_combined_gz_tbi
         BAM_VARIANT_CALLING_SOMATIC_ALL(
             params.tools,
             cram_variant_calling_pair,
