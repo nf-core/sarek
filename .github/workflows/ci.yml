@@ -23,18 +23,20 @@ env:
   TEST_DATA_BASE: "${{ github.workspace }}/test-datasets"
 
 concurrency:
-  group: "${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}"
+  group: "${{ github.workflow }}-${{ github.event.pull_request.number || github.ref
+    }}"
   cancel-in-progress: true
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    name: "Test ${{ matrix.filter }} | ${{ matrix.profile }} | ${{ matrix.NXF_VER}} | ${{ matrix.shard }}/5"
+    name: "Test ${{ matrix.filter }} | ${{ matrix.profile }} | ${{ matrix.NXF_VER}}
+      | ${{ matrix.shard }}/5"
     strategy:
       fail-fast: false
       matrix:
         NXF_VER:
-          - 24.10.2
+          - 24.04.2
           - latest-everything
         filter: ["workflow", "function", "pipeline"]
         # filter: ["process", "workflow", "function", "pipeline"]
