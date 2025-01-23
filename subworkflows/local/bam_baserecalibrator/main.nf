@@ -27,7 +27,7 @@ workflow BAM_BASERECALIBRATOR {
         .map { meta, cram_, crai_, intervals_, num_intervals -> [meta + [num_intervals: num_intervals], cram_, crai_, intervals_] }
 
     // RUN BASERECALIBRATOR
-    GATK4_BASERECALIBRATOR(cram_intervals, fasta.map { _meta, it -> [it] }, fasta_fai.map { _meta, it -> [it] }, dict.map { _meta, it -> [it] }, known_sites, known_sites_tbi)
+    GATK4_BASERECALIBRATOR(cram_intervals, fasta.map { _meta, fasta_ -> [fasta_] }, fasta_fai.map { _meta, fasta_fai_ -> [fasta_fai_] }, dict.map { _meta, dict_ -> [dict_] }, known_sites, known_sites_tbi)
 
     // Figuring out if there is one or more table(s) from the same sample
     // Use meta.num_intervals to asses number of intervals
