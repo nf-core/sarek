@@ -89,12 +89,6 @@
                     "help_text": "Intervals are parts of the chopped up genome used to speed up preprocessing and variant calling. See `--intervals` for more info. \n\nChanging this parameter, changes the number of intervals that are grouped and processed together. Bed files from target sequencing can contain thousands or small intervals. Spinning up a new process for each can be quite resource intensive. Instead it can be desired to process small intervals together on larger nodes. \nIn order to make use of this parameter, no runtime estimate can be present in the bed file (column 5). ",
                     "default": 200000
                 },
-                "intervals": {
-                    "type": "string",
-                    "fa_icon": "fas fa-file-alt",
-                    "help_text": "To speed up preprocessing and variant calling processes, the execution is parallelized across a reference chopped into smaller pieces.\n\nParts of preprocessing and variant calling are done by these intervals, the different resulting files are then merged.\nThis can parallelize processes, and push down wall clock time significantly.\n\nWe are aligning to the whole genome, and then run Base Quality Score Recalibration and Variant Calling on the supplied regions.\n\n**Whole Genome Sequencing:**\n\nThe (provided) intervals are chromosomes cut at their centromeres (so each chromosome arm processed separately) also additional unassigned contigs.\n\nWe are ignoring the `hs37d5` contig that contains concatenated decoy sequences.\n\nThe calling intervals can be defined using a .list or a BED file.\nA .list file contains one interval per line in the format `chromosome:start-end` (1-based coordinates).\nA BED file must be a tab-separated text file with one interval per line.\nThere must be at least three columns: chromosome, start, and end (0-based coordinates).\nAdditionally, the score column of the BED file can be used to provide an estimate of how many seconds it will take to call variants on that interval.\nThe fourth column remains unused.\n\n```\n|chr1|10000|207666|NA|47.3|\n```\nThis indicates that variant calling on the interval chr1:10001-207666 takes approximately 47.3 seconds.\n\nThe runtime estimate is used in two different ways.\nFirst, when there are multiple consecutive intervals in the file that take little time to compute, they are processed as a single job, thus reducing the number of processes that needs to be spawned.\nSecond, the jobs with largest processing time are started first, which reduces wall-clock time.\nIf no runtime is given, a time of 200000 nucleotides per second is assumed. See `--nucleotides_per_second` on how to customize this.\nActual figures vary from 2 nucleotides/second to 30000 nucleotides/second.\nIf you prefer, you can specify the full path to your reference genome when you run the pipeline:\n\n> **NB** If none provided, will be generated automatically from the FASTA reference\n> **NB** Use --no_intervals to disable automatic generation.\n\n**Targeted Sequencing:**\n\nThe recommended flow for targeted sequencing data is to use the workflow as it is, but also provide a `BED` file containing targets for all steps using the `--intervals` option. In addition, the parameter `--wes` should be set.\nIt is advised to pad the variant calling regions (exons or target) to some extent before submitting to the workflow.\n\nThe procedure is similar to whole genome sequencing, except that only BED file are accepted. See above for formatting description.\nAdding every exon as an interval in case of `WES` can generate >200K processes or jobs, much more forks, and similar number of directories in the Nextflow work directory. These are appropriately  grouped together to reduce number of processes run in parallel (see above and `--nucleotides_per_second` for details). \nFurthermore, primers and/or baits are not 100% specific, (certainly not for MHC and KIR, etc.), quite likely there going to be reads mapping to multiple locations.\nIf you are certain that the target is unique for your genome (all the reads will certainly map to only one location), and aligning to the whole genome is an overkill, it is actually better to change the reference itself.",
-                    "description": "Path to target bed file in case of whole exome or targeted sequencing or intervals file."
-                },
                 "no_intervals": {
                     "type": "boolean",
                     "fa_icon": "fas fa-ban",
@@ -285,12 +279,6 @@
                     "description": "Overwrite ASCAT purity.",
                     "help_text": "Overwrites ASCAT's `rho_manual` parameter. Expert use only, see [here](https://raw.githubusercontent.com/VanLoo-lab/ascat/master/man/ASCAT-manual.pdf) for details.\nRequires that `--ascat_ploidy` is set."
                 },
-                "cf_chrom_len": {
-                    "type": "string",
-                    "fa_icon": "fas fa-ruler-horizontal",
-                    "description": "Specify a custom chromosome length file.",
-                    "help_text": "Control-FREEC requires a file containing all chromosome lenghts. By default the fasta.fai is used. If the fasta.fai file contains chromosomes not present in the intervals, it fails (see: https://github.com/BoevaLab/FREEC/issues/106).\n\nIn this case, a custom chromosome length can be specified. It must be of the same format as the fai, but only contain the relevant chromosomes.\n\n\n\n"
-                },
                 "cf_coeff": {
                     "type": "number",
                     "default": 0.05,
@@ -360,18 +348,6 @@
                     "fa_icon": "fas fa-ban",
                     "description": "Do not analyze soft clipped bases in the reads for GATK Mutect2.",
                     "help_text": "use the `--dont-use-soft-clipped-bases` params with GATK Mutect2."
-                },
-                "pon": {
-                    "type": "string",
-                    "fa_icon": "fas fa-file",
-                    "description": "Panel-of-normals VCF (bgzipped) for GATK Mutect2",
-                    "help_text": "Without PON, there will be no calls with PASS in the INFO field, only an unfiltered VCF is written.\nIt is highly recommended to make your own PON, as it depends on sequencer and library preparation.\n\nThe pipeline is shipped with a panel-of-normals for `--genome GATK.GRCh38` provided by [GATK](https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON-). \n\nSee [PON documentation](https://gatk.broadinstitute.org/hc/en-us/articles/360042479112-CreateSomaticPanelOfNormals-BETA)\n> **NB** PON file should be bgzipped."
-                },
-                "pon_tbi": {
-                    "type": "string",
-                    "fa_icon": "fas fa-file",
-                    "description": "Index of PON panel-of-normals VCF.",
-                    "help_text": "If none provided, will be generated automatically from the PON bgzipped VCF file."
                 },
                 "sentieon_haplotyper_emit_mode": {
                     "type": "string",
