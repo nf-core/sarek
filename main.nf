@@ -112,10 +112,10 @@ workflow NFCORE_SAREK {
 
     // known_sites is made by grouping both the dbsnp and the known snps/indels resources
     // Which can either or both be optional
-    known_sites_indels = dbsnp.concat(known_indels).collect()
-    known_sites_indels_tbi = dbsnp_tbi.concat(known_indels_tbi).collect()
-    known_sites_snps = dbsnp.concat(known_snps).collect()
-    known_sites_snps_tbi = dbsnp_tbi.concat(known_snps_tbi).collect()
+    known_sites_indels = dbsnp.mix(known_indels).groupTuple().collect()
+    known_sites_indels_tbi = dbsnp_tbi.mix(known_indels_tbi).groupTuple().collect()
+    known_sites_snps = dbsnp.mix(known_snps).groupTuple().collect()
+    known_sites_snps_tbi = dbsnp_tbi.mix(known_snps_tbi).groupTuple().collect()
 
     // Initialize value channels based on params for annotation
 
@@ -133,7 +133,8 @@ workflow NFCORE_SAREK {
         vep_extra_files.add(file(params.spliceai_snv_tbi, checkIfExists: true))
     }
 
-    // Prepare intervals
+    // Prepare intervals for spread/gather (split and tabix index)
+    // This depends on params.nucleotides_per_second so it needs to be done on runtime
     PREPARE_INTERVALS(intervals_bed, params.no_intervals, params.nucleotides_per_second, params.outdir, params.step)
 
     // Intervals for speed up preprocessing/variant calling by spread/gather
@@ -192,7 +193,7 @@ workflow NFCORE_SAREK {
         snpeff_info = Channel.of([[id: "${params.snpeff_db}"], params.snpeff_db])
         DOWNLOAD_CACHE_SNPEFF_VEP(ensemblvep_info, snpeff_info)
         snpeff_cache = DOWNLOAD_CACHE_SNPEFF_VEP.out.snpeff_cache
-        vep_cache = DOWNLOAD_CACHE_SNPEFF_VEP.out.ensemblvep_cache.map { meta, cache -> [cache] }
+        vep_cache = DOWNLOAD_CACHE_SNPEFF_VEP.out.ensemblvep_cache.map { _meta, cache -> [cache] }
 
         versions = versions.mix(DOWNLOAD_CACHE_SNPEFF_VEP.out.versions)
     }
