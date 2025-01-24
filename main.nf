@@ -82,26 +82,27 @@ workflow NFCORE_SAREK {
     main:
     versions = Channel.empty()
 
-    // reduce the references map to keep the minimal set of keys
-    def reduce_references_meta = { meta -> meta.subMap(['id']) }
+    // References directly from the references asset yaml file
+    // Mantatory
+    fasta = references.map { meta, fasta -> [meta.subMap(['id']), file(fasta)] }.collect()
+    fasta_dict = references.map { meta, _fasta -> [meta.subMap(['id']), file(meta.fasta_dict)] }.collect()
+    fasta_fai = references.map { meta, _fasta -> [meta.subMap(['id']), file(meta.fasta_fai)] }.collect()
+    bwamem1_index = references.map { meta, _fasta -> meta.bwamem1_index ? [meta.subMap(['id']), file(meta.bwamem1_index)] : null }.collect()
+    bwamem2_index = references.map { meta, _fasta -> meta.bwamem2_index ? [meta.subMap(['id']), file(meta.bwamem2_index)] : null }.collect()
+    dragmap_hashtable = references.map { meta, _fasta -> meta.dragmap_hashtable ? [meta.subMap(['id']), file(meta.dragmap_hashtable)] : null }.collect()
+    dbsnp = references.map { meta, _fasta -> meta.vcf.dbsnp.vcf ? [meta.subMap(['id']), file(meta.vcf.dbsnp.vcf)] : null }.transpose().collect()
+    dbsnp_tbi = references.map { meta, _fasta -> meta.vcf.dbsnp.vcf_tbi ? [meta.subMap(['id']), file(meta.vcf.dbsnp.vcf_tbi)] : null }.transpose().collect()
+    germline_resource = references.map { meta, _fasta -> meta.vcf.germline_resource.vcf ? [meta.subMap(['id']), file(meta.vcf.germline_resource.vcf)] : null }.collect()
+    germline_resource_tbi = references.map { meta, _fasta -> meta.vcf.germline_resource.vcf_tbi ? [meta.subMap(['id']), file(meta.vcf.germline_resource.vcf_tbi)] : null }.collect()
+    known_indels = references.map { meta, _fasta -> meta.vcf.known_indels.vcf ? [meta.subMap(['id']), file(meta.vcf.known_indels.vcf)] : null }.collect()
+    known_indels_tbi = references.map { meta, _fasta -> meta.vcf.known_indels.vcf_tbi ? [meta.subMap(['id']), file(meta.vcf.known_indels.vcf_tbi)] : null }.collect()
+    known_snps = references.map { meta, _fasta -> meta.vcf.known_snps.vcf ? [meta.subMap(['id']), file(meta.vcf.known_snps.vcf)] : null }.collect()
+    known_snps_tbi = references.map { meta, _fasta -> meta.vcf.known_snps.vcf_tbi ? [meta.subMap(['id']), file(meta.vcf.known_snps.vcf_tbi)] : null }.collect()
 
-    fasta = references.map { meta, fasta -> [reduce_references_meta(meta), file(fasta)] }.collect()
-    fasta_dict = references.map { meta, _fasta -> meta.fasta_dict ? [reduce_references_meta(meta), file(meta.fasta_dict)] : null }.collect()
-    fasta_fai = references.map { meta, _fasta -> meta.fasta_fai ? [reduce_references_meta(meta), file(meta.fasta_fai)] : null }.collect()
-    bwamem1_index = references.map { meta, _fasta -> meta.bwamem1_index ? [reduce_references_meta(meta), file(meta.bwamem1_index)] : null }.collect()
-    bwamem2_index = references.map { meta, _fasta -> meta.bwamem2_index ? [reduce_references_meta(meta), file(meta.bwamem2_index)] : null }.collect()
-    dragmap_hashtable = references.map { meta, _fasta -> meta.dragmap_hashtable ? [reduce_references_meta(meta), file(meta.dragmap_hashtable)] : null }.collect()
-    intervals_bed = references.map { meta, _fasta -> meta.intervals_bed ? [reduce_references_meta(meta), file(meta.intervals_bed)] : null }.collect()
-    dbsnp = references.map { meta, _fasta -> meta.vcf.dbsnp.vcf ? [reduce_references_meta(meta), file(meta.vcf.dbsnp.vcf)] : null }.transpose().collect()
-    dbsnp_tbi = references.map { meta, _fasta -> meta.vcf.dbsnp.vcf_tbi ? [reduce_references_meta(meta), file(meta.vcf.dbsnp.vcf_tbi)] : null }.transpose().collect()
-    germline_resource = references.map { meta, _fasta -> meta.vcf.germline_resource.vcf ? [reduce_references_meta(meta), file(meta.vcf.germline_resource.vcf)] : null }.collect()
-    germline_resource_tbi = references.map { meta, _fasta -> meta.vcf.germline_resource.vcf_tbi ? [reduce_references_meta(meta), file(meta.vcf.germline_resource.vcf_tbi)] : null }.collect()
-    known_indels = references.map { meta, _fasta -> meta.vcf.known_indels.vcf ? [reduce_references_meta(meta), file(meta.vcf.known_indels.vcf)] : null }.collect()
-    known_indels_tbi = references.map { meta, _fasta -> meta.vcf.known_indels.vcf_tbi ? [reduce_references_meta(meta), file(meta.vcf.known_indels.vcf_tbi)] : null }.collect()
-    known_snps = references.map { meta, _fasta -> meta.vcf.known_snps.vcf ? [reduce_references_meta(meta), file(meta.vcf.known_snps.vcf)] : null }.collect()
-    known_snps_tbi = references.map { meta, _fasta -> meta.vcf.known_snps.vcf_tbi ? [reduce_references_meta(meta), file(meta.vcf.known_snps.vcf_tbi)] : null }.collect()
-    pon = references.map { meta, _fasta -> meta.vcf.pon.vcf ? [reduce_references_meta(meta), file(meta.vcf.pon.vcf)] : null }.collect()
-    pon_tbi = references.map { meta, _fasta -> meta.vcf.pon.vcf_tbi ? [reduce_references_meta(meta), file(meta.vcf.pon.vcf_tbi)] : null }.collect()
+    // References that can be provided directly from params, otherwise we use the references from the asset yaml file
+    intervals_bed = references.map { meta, _fasta -> meta.intervals_bed ? [meta.subMap(['id']), file(params.intervals ?: meta.intervals_bed)] : null }.collect()
+    pon = references.map { meta, _fasta -> meta.vcf.pon.vcf ? [meta.subMap(['id']), file(params.pon ?: meta.vcf.pon.vcf)] : null }.collect()
+    pon_tbi = references.map { meta, _fasta -> meta.vcf.pon.vcf_tbi ? [meta.subMap(['id']), file(params.pon_tbi ?: meta.vcf.pon.vcf_tbi)] : null }.collect()
 
     // Gather index for mapping given the chosen aligner
     index_alignment = aligner == "bwa-mem" || aligner == "sentieon-bwamem"
