@@ -629,7 +629,7 @@ workflow SAREK {
             // cram_variant_calling contains either:
             // - input bams converted to crams, if started from step recal + skip BQSR
             // - input crams if started from step recal + skip BQSR
-            cram_variant_calling = Channel.empty().mix(input_sample.map { meta, cram, crai, table -> [meta, cram, crai] })
+            cram_variant_calling = Channel.empty().mix(input_sample.map { meta, cram, crai, _table -> [meta, cram, crai] })
         }
         else {
             // cram_variant_calling contains either:
@@ -647,14 +647,14 @@ workflow SAREK {
         cram_variant_calling = Channel.empty()
     }
 
-    // RUN CRAM QC on the recalibrated CRAM files or when starting from step variant calling. NGSCheckmate should be run also on non-recalibrated CRAM files
-    CRAM_SAMPLEQC(
-        cram_variant_calling,
-        ngscheckmate_bed,
-        fasta,
-        params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'),
-        intervals_for_preprocessing,
-    )
+    // // RUN CRAM QC on the recalibrated CRAM files or when starting from step variant calling. NGSCheckmate should be run also on non-recalibrated CRAM files
+    // CRAM_SAMPLEQC(
+    //     cram_variant_calling,
+    //     ngscheckmate_bed,
+    //     fasta,
+    //     params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'),
+    //     intervals_for_preprocessing,
+    // )
 
     if (params.tools) {
 
@@ -957,7 +957,7 @@ def flowcellLaneFromFastq(path) {
     // Seven fields or more (from CASAVA 1.8+):
     // "@<instrument>:<run number>:<flowcell ID>:<lane>:<tile>:<x-pos>:<y-pos>..."
 
-    fields = firstLine ? firstLine.split(':') : []
+    def fields = firstLine ? firstLine.split(':') : []
     if (fields.size() == 5) {
         // Get the instrument name as flowcell ID
         flowcell_id = fields[0].substring(1)

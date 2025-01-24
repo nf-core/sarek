@@ -151,20 +151,20 @@ workflow NFCORE_SAREK {
     // [ interval, num_intervals ] multiple interval.bed files, divided by useful intervals for scatter/gather
     intervals_bed_gz_tbi = PREPARE_INTERVALS.out.intervals_bed_gz_tbi
     // [ interval_bed, tbi, num_intervals ] multiple interval.bed.gz/.tbi files, divided by useful intervals for scatter/gather
-    intervals_and_num_intervals = intervals.map { interval, num_intervals ->
+    intervals_and_num_intervals = intervals.map { intervals_, num_intervals ->
         if (num_intervals < 1) {
             [[], num_intervals]
         }
         else {
-            [interval, num_intervals]
+            [intervals_, num_intervals]
         }
     }
-    intervals_bed_gz_tbi_and_num_intervals = intervals_bed_gz_tbi.map { _intervals, num_intervals ->
+    intervals_bed_gz_tbi_and_num_intervals = intervals_bed_gz_tbi.map { intervals_, num_intervals ->
         if (num_intervals < 1) {
             [[], [], num_intervals]
         }
         else {
-            [intervals[0], intervals[1], num_intervals]
+            [intervals_[0], intervals_[1], num_intervals]
         }
     }
     if (params.tools && params.tools.split(',').contains('cnvkit')) {
