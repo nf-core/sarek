@@ -15,6 +15,7 @@ nextflow_pipeline {
                 outdir = "$outputDir"
                 save_mapped = true
                 save_output_as_bam = true
+                tools = null
             }
         }
 
