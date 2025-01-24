@@ -21,8 +21,6 @@
                 }
             },
             [
-                "create",
-                "create/chr22_1-40001.bed",
                 "csv",
                 "csv/mapped.csv",
                 "pipeline_info",
@@ -32,14 +30,14 @@
                 "preprocessing/mapped/test",
                 "preprocessing/mapped/test/test.sorted.cram",
                 "preprocessing/mapped/test/test.sorted.cram.crai",
-                "tabix",
-                "tabix/chr22_1-40001.bed.gz",
-                "tabix/chr22_1-40001.bed.gz.tbi"
+                "reference",
+                "reference/intervals",
+                "reference/intervals/chr22_1-40001.bed",
+                "reference/intervals/chr22_1-40001.bed.gz"
             ],
             [
                 "chr22_1-40001.bed:md5,87a15eb9c2ff20ccd5cd8735a28708f7",
-                "chr22_1-40001.bed.gz:md5,87a15eb9c2ff20ccd5cd8735a28708f7",
-                "chr22_1-40001.bed.gz.tbi:md5,9acda76d1fbe214555a8193e5e5ded7e"
+                "chr22_1-40001.bed.gz:md5,87a15eb9c2ff20ccd5cd8735a28708f7"
             ],
             [
                 [
@@ -52,6 +50,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-01-24T11:50:12.971947773"
+        "timestamp": "2025-01-24T12:51:54.823246919"
     }
 }
