@@ -37,6 +37,7 @@ workflow PIPELINE_INITIALISATION {
     nextflow_cli_args //   array: List of positional nextflow CLI args
     outdir            //  string: The output directory where the results will be saved
     input             //  string: Path to input samplesheet
+    references        //  string: Path to references
 
     main:
 
@@ -73,44 +74,18 @@ workflow PIPELINE_INITIALISATION {
 
     // Check input path parameters to see if they exist
     def checkPathParamList = [
-        params.ascat_alleles,
-        params.ascat_loci,
-        params.ascat_loci_gc,
-        params.ascat_loci_rt,
-        params.bwa,
-        params.bwamem2,
         params.bcftools_annotations,
         params.bcftools_annotations_tbi,
         params.bcftools_header_lines,
-        params.cf_chrom_len,
-        params.chr_dir,
-        params.cnvkit_reference,
         params.dbnsfp,
         params.dbnsfp_tbi,
-        params.dbsnp,
-        params.dbsnp_tbi,
-        params.dict,
-        params.dragmap,
-        params.fasta,
-        params.fasta_fai,
-        params.germline_resource,
-        params.germline_resource_tbi,
         params.input,
-        params.intervals,
-        params.known_indels,
-        params.known_indels_tbi,
-        params.known_snps,
-        params.known_snps_tbi,
-        params.mappability,
         params.multiqc_config,
         params.ngscheckmate_bed,
-        params.pon,
-        params.pon_tbi,
+        params.references,
         params.sentieon_dnascope_model,
         params.spliceai_indel,
         params.spliceai_indel_tbi,
-        params.spliceai_snv,
-        params.spliceai_snv_tbi
     ]
 
 // only check if we are using the tools
@@ -121,38 +96,27 @@ if (params.tools && (params.tools.split(',').contains('vep')    || params.tools.
 
     params.input_restart = retrieveInput((!params.build_only_index && !params.input), params.step, params.outdir)
 
-    ch_from_samplesheet = params.build_only_index ? Channel.empty() : params.input ?
-        Channel.fromList(samplesheetToList(params.input, "$projectDir/assets/schema_input.json")) :
+    ch_from_samplesheet = params.build_only_index ? Channel.empty() : input ?
+        Channel.fromList(samplesheetToList(input, "$projectDir/assets/schema_input.json")) :
         Channel.fromList(samplesheetToList(params.input_restart, "$projectDir/assets/schema_input.json"))
+
+    ch_from_references = Channel.fromList(samplesheetToList(references, "$projectDir/subworkflows/local/yaml_references/schema_references.json"))
 
     SAMPLESHEET_TO_CHANNEL(
         ch_from_samplesheet,
+        ch_from_references,
         params.aligner,
-        params.ascat_alleles,
-        params.ascat_loci,
-        params.ascat_loci_gc,
-        params.ascat_loci_rt,
         params.bcftools_annotations,
         params.bcftools_annotations_tbi,
         params.bcftools_header_lines,
-        params.build_only_index,
-        params.dbsnp,
-        params.fasta,
-        params.germline_resource,
-        params.intervals,
         params.joint_germline,
         params.joint_mutect2,
-        params.known_indels,
-        params.known_snps,
         params.no_intervals,
-        params.pon,
         params.sentieon_dnascope_emit_mode,
         params.sentieon_haplotyper_emit_mode,
         params.seq_center,
         params.seq_platform,
         params.skip_tools,
-        params.snpeff_cache,
-        params.snpeff_db,
         params.step,
         params.tools,
         params.umi_read_structure,
@@ -160,6 +124,7 @@ if (params.tools && (params.tools.split(',').contains('vep')    || params.tools.
 
     emit:
     samplesheet = SAMPLESHEET_TO_CHANNEL.out.input_sample
+    references = ch_from_references
     versions
 }
 
@@ -243,6 +208,7 @@ def validateInputSamplesheet(input) {
 // Exit pipeline if incorrect --genome key provided
 //
 def genomeExistsError() {
+    // TODO: refactor this to use the new genome config
     if (params.genomes && params.genome && !params.genomes.containsKey(params.genome)) {
         def error_string = "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
             "  Genome '${params.genome}' not found in any config files provided to the pipeline.\n" +
@@ -252,6 +218,7 @@ def genomeExistsError() {
         error(error_string)
     }
 }
+
 //
 // Generate methods description for MultiQC
 //
