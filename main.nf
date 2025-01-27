@@ -30,7 +30,6 @@ include { ANNOTATION_CACHE_INITIALISATION } from './subworkflows/local/annotatio
 include { DOWNLOAD_CACHE_SNPEFF_VEP       } from './subworkflows/local/download_cache_snpeff_vep'
 include { PIPELINE_COMPLETION             } from './subworkflows/local/utils_nfcore_sarek_pipeline'
 include { PIPELINE_INITIALISATION         } from './subworkflows/local/utils_nfcore_sarek_pipeline'
-include { PREPARE_GENOME                  } from './subworkflows/local/prepare_genome'
 include { PREPARE_INTERVALS               } from './subworkflows/local/prepare_intervals'
 include { PREPARE_REFERENCE_CNVKIT        } from './subworkflows/local/prepare_reference_cnvkit'
 /*
@@ -44,11 +43,11 @@ workflow {
     PIPELINE_INITIALISATION(
         params.version,
         params.validate_params,
-        params.monochrome_logs,
         args,
         params.outdir,
         params.input,
         params.references,
+        params.step,
     )
 
     // WORKFLOW: Run main workflow
