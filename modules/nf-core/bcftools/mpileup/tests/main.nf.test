@@ -1,0 +1,208 @@
+nextflow_process {
+
+    name "Test Process BCFTOOLS_MPILEUP"
+    script "../main.nf"
+    process "BCFTOOLS_MPILEUP"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "bcftools"
+    tag "bcftools/mpileup"
+
+    config "./nextflow.config"
+
+    test("sarscov2 - [bam, []], fasta, false") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                    []
+                ]
+                input[1] = [
+                    [ id:'sarscov2' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                ]
+                input[2] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(file(process.out.vcf[0][1]).name).match("bam_fasta_false.vcf.gz") },
+                { assert snapshot(file(process.out.tbi[0][1]).name).match("bam_fasta_false.vcf.gz.tbi") },
+                { assert snapshot(file(process.out.stats[0][1]).name).match("bam_fasta_false.bcftools_stats.txt") },
+                { assert snapshot(process.out.versions).match("bam_fasta_false_versions") }
+            )
+        }
+
+    }
+
+    test("sarscov2 - [bam, []], fasta, false stub") {
+        
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                    []
+                ]
+                input[1] = [
+                    [ id:'sarscov2' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                ]
+                input[2] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(file(process.out.vcf[0][1]).name).match("bam_fasta_false_stub.vcf.gz") },
+                { assert snapshot(file(process.out.tbi[0][1]).name).match("bam_fasta_false_stub.vcf.gz.tbi") },
+                { assert snapshot(file(process.out.stats[0][1]).name).match("bam_fasta_false_stub.bcftools_stats.txt") },
+                { assert snapshot(process.out.versions).match("bam_fasta_false_stub_versions") }
+            )
+        }
+
+    }
+
+    test("sarscov2 - [bam, []], fasta, true") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                    []
+                ]
+                input[1] = [
+                    [ id:'sarscov2' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                ]
+                input[2] = true
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(file(process.out.vcf[0][1]).name).match("bam_bed_fasta_true_stub.vcf.gz") },
+                { assert snapshot(file(process.out.tbi[0][1]).name).match("bam_bed_fasta_true_stub.vcf.gz.tbi") },
+                { assert snapshot(file(process.out.stats[0][1]).name).match("bam_bed_fasta_true_stub.bcftools_stats.txt") },
+                { assert snapshot(file(process.out.mpileup[0][1]).name).match("bam_bed_fasta_true_stub.mpileup.gz") },
+                { assert snapshot(process.out.versions).match("bam_bed_fasta_true_stub_versions") }
+            )
+        }
+
+    }
+
+    test("sarscov2 - [bam, []], fasta, true stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                    []
+                ]
+                input[1] = [
+                    [ id:'sarscov2' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                ]
+                input[2] = true
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(file(process.out.vcf[0][1]).name).match("bam_bed_fasta_true.vcf.gz") },
+                { assert snapshot(file(process.out.tbi[0][1]).name).match("bam_bed_fasta_true.vcf.gz.tbi") },
+                { assert snapshot(file(process.out.stats[0][1]).name).match("bam_bed_fasta_true.bcftools_stats.txt") },
+                { assert snapshot(file(process.out.mpileup[0][1]).name).match("bam_bed_fasta_true.mpileup.gz") },
+                { assert snapshot(process.out.versions).match("bam_bed_fasta_true_versions") }
+            )
+        }
+
+    }
+
+    test("sarscov2 - [bam, bed], fasta, false") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/bed/test.bed', checkIfExists: true)
+                ]
+                input[1] = [
+                    [ id:'sarscov2' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                ]
+                input[2] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(file(process.out.vcf[0][1]).name).match("bam_bed_fasta_false.vcf.gz") },
+                { assert snapshot(file(process.out.tbi[0][1]).name).match("bam_bed_fasta_false.vcf.gz.tbi") },
+                { assert snapshot(file(process.out.stats[0][1]).name).match("bam_bed_fasta_false.bcftools_stats.txt") },
+                { assert snapshot(process.out.versions).match("bam_bed_fasta_false_versions") }
+            )
+        }
+
+    }
+
+    test("sarscov2 - [bam, bed], fasta, false stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/bam/test.paired_end.sorted.bam', checkIfExists: true),
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/bed/test.bed', checkIfExists: true)
+                ]
+                input[1] = [
+                    [ id:'sarscov2' ], // meta map
+                    file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.fasta', checkIfExists: true)
+                ]
+                input[2] = false
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(file(process.out.vcf[0][1]).name).match("bam_bed_fasta_false_stub.vcf.gz") },
+                { assert snapshot(file(process.out.tbi[0][1]).name).match("bam_bed_fasta_false_stub.vcf.gz.tbi") },
+                { assert snapshot(file(process.out.stats[0][1]).name).match("bam_bed_fasta_false_stub.bcftools_stats.txt") },
+                { assert snapshot(process.out.versions).match("bam_bed_fasta_false_stub_versions") }
+            )
+        }
+
+    }
+
+}

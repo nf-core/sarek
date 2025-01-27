@@ -1,0 +1,136 @@
+nextflow_process {
+
+    name "Test Process TABIX_TABIX"
+    script "modules/nf-core/tabix/tabix/main.nf"
+    process "TABIX_TABIX"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "tabix"
+    tag "tabix/tabix"
+
+    test("sarscov2_bedgz_tbi") {
+        config "./tabix_bed.config"
+        when {
+            process {
+                """
+                input[0] = [
+                                [ id:'tbi_bed' ],
+                                [ file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/bed/test.bed.gz', checkIfExists: true) ]
+                            ]
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert snapshot(
+                    process.out,
+                    file(process.out.tbi[0][1]).name
+                ).match() }
+            )
+        }
+    }
+
+    test("sarscov2_gff_tbi") {
+        config "./tabix_gff.config"
+        when {
+            process {
+                """
+                input[0] = [
+                                [ id:'tbi_gff' ],
+                                [ file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.gff3.gz', checkIfExists: true) ]
+                            ]
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert snapshot(
+                    process.out,
+                    file(process.out.tbi[0][1]).name).match() }
+            )
+        }
+
+    }
+
+    test("sarscov2_vcf_tbi") {
+        config "./tabix_vcf_tbi.config"
+        when {
+            process {
+                """
+                input[0] =  [
+                                [ id:'tbi_vcf' ],
+                                [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz', checkIfExists: true) ]
+                            ]
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert snapshot(
+                    process.out,
+                    file(process.out.tbi[0][1]).name
+                ).match() }
+            )
+        }
+
+    }
+
+    test("sarscov2_vcf_csi") {
+        config "./tabix_vcf_csi.config"
+        when {
+            process {
+                """
+                input[0] =  [
+                                [ id:'vcf_csi' ],
+                                [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz', checkIfExists: true) ]
+                            ]
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert snapshot(
+                    process.out,
+                    file(process.out.csi[0][1]).name
+                ).match() }
+            )
+        }
+
+    }
+
+    test("sarscov2_vcf_csi_stub") {
+        config "./tabix_vcf_csi.config"
+        options "-stub"
+        when {
+            process {
+                """
+                input[0] =  [
+                                [ id:'vcf_csi_stub' ],
+                                [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz', checkIfExists: true) ]
+                            ]
+                """
+            }
+        }
+
+        then {
+            assertAll (
+                { assert process.success },
+                { assert snapshot(
+                    process.out,
+                    file(process.out.csi[0][1]).name
+                ).match() }
+            )
+        }
+
+    }
+
+}

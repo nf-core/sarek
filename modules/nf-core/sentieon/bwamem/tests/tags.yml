@@ -1,0 +1,2 @@
+sentieon/bwamem:
+  - "modules/nf-core/sentieon/bwamem/**"

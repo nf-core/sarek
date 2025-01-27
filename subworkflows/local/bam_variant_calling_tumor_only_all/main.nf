@@ -6,11 +6,11 @@
 include { BAM_VARIANT_CALLING_CNVKIT                  } from '../bam_variant_calling_cnvkit/main'
 include { BAM_VARIANT_CALLING_FREEBAYES               } from '../bam_variant_calling_freebayes/main'
 include { BAM_VARIANT_CALLING_MPILEUP                 } from '../bam_variant_calling_mpileup/main'
-include { BAM_VARIANT_CALLING_SINGLE_STRELKA          } from '../bam_variant_calling_single_strelka/main'
 include { BAM_VARIANT_CALLING_SINGLE_TIDDIT           } from '../bam_variant_calling_single_tiddit/main'
 include { BAM_VARIANT_CALLING_TUMOR_ONLY_CONTROLFREEC } from '../bam_variant_calling_tumor_only_controlfreec/main'
 include { BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA        } from '../bam_variant_calling_tumor_only_manta/main'
 include { BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2      } from '../bam_variant_calling_tumor_only_mutect2/main'
+include { BAM_VARIANT_CALLING_TUMOR_ONLY_LOFREQ       } from '../bam_variant_calling_tumor_only_lofreq/main'
 
 workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     take:
@@ -45,8 +45,8 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
     vcf_manta       = Channel.empty()
     vcf_mpileup     = Channel.empty()
     vcf_mutect2     = Channel.empty()
-    vcf_strelka     = Channel.empty()
     vcf_tiddit      = Channel.empty()
+    vcf_lofreq      = Channel.empty()
 
     // MPILEUP
     if (tools.split(',').contains('mpileup') || tools.split(',').contains('controlfreec')) {
@@ -62,13 +62,13 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
 
     // CONTROLFREEC (depends on MPILEUP)
     if (tools.split(',').contains('controlfreec')) {
-        length_file            = cf_chrom_len ?: fasta_fai
+        length_file            = cf_chrom_len ?: fasta_fai.map{ meta, fasta_fai -> [ fasta_fai ] }
         intervals_controlfreec = wes ? intervals_bed_combined : []
 
         BAM_VARIANT_CALLING_TUMOR_ONLY_CONTROLFREEC(
             // Remap channel to match module/subworkflow
             BAM_VARIANT_CALLING_MPILEUP.out.mpileup.map{ meta, pileup_tumor -> [ meta, [], pileup_tumor, [], [], [], [] ] },
-            fasta,
+            fasta.map{ meta, fasta -> [ fasta ] },
             length_file,
             dbsnp,
             dbsnp_tbi,
@@ -85,8 +85,8 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         BAM_VARIANT_CALLING_CNVKIT (
             // Remap channel to match module/subworkflow
             cram.map{ meta, cram, crai -> [ meta, cram, [] ] },
-            fasta.map{ it -> [[id:it[0].baseName], it] },
-            fasta_fai.map{ it -> [[id:it[0].baseName], it] },
+            fasta,
+            fasta_fai,
             [[id:"null"], []],
             cnvkit_reference.map{ it -> [[id:it[0].baseName], it] }
         )
@@ -119,10 +119,8 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
                 [ meta - meta.subMap('data_type', 'status') + [ id:meta.patient ], cram, crai ] :
                 [ meta - meta.subMap('data_type', 'status'), cram, crai ]
             },
-            // Remap channel to match module/subworkflow
-            fasta.map{ it -> [ [ id:'fasta' ], it ] },
-            // Remap channel to match module/subworkflow
-            fasta_fai.map{ it -> [ [ id:'fasta_fai' ], it ] },
+            fasta,
+            fasta_fai,
             dict,
             germline_resource,
             germline_resource_tbi,
@@ -136,13 +134,26 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_MUTECT2.out.versions)
     }
 
+    //LOFREQ
+    if (tools.split(',').contains('lofreq')) {
+        BAM_VARIANT_CALLING_TUMOR_ONLY_LOFREQ(
+            cram,
+            fasta,
+            fasta_fai,
+            intervals,
+            dict
+        )
+        vcf_lofreq = BAM_VARIANT_CALLING_TUMOR_ONLY_LOFREQ.out.vcf
+        versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_LOFREQ.out.versions)
+    }
+
     // MANTA
     if (tools.split(',').contains('manta')) {
         BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA(
             cram,
             // Remap channel to match module/subworkflow
-            fasta.map{ it -> [ [ id:'fasta' ], it ] },
-            fasta_fai.map{ it -> [ [ id:'fasta_fai' ], it ] },
+            fasta,
+            fasta_fai,
             intervals_bed_gz_tbi_combined
 
         )
@@ -151,28 +162,12 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
         versions = versions.mix(BAM_VARIANT_CALLING_TUMOR_ONLY_MANTA.out.versions)
     }
 
-    // STRELKA
-    if (tools.split(',').contains('strelka')) {
-        BAM_VARIANT_CALLING_SINGLE_STRELKA(
-            cram,
-            dict,
-            fasta,
-            fasta_fai,
-            intervals_bed_gz_tbi
-        )
-
-        vcf_strelka = BAM_VARIANT_CALLING_SINGLE_STRELKA.out.vcf
-        versions = versions.mix(BAM_VARIANT_CALLING_SINGLE_STRELKA.out.versions)
-    }
-
     // TIDDIT
     if (tools.split(',').contains('tiddit')) {
         BAM_VARIANT_CALLING_SINGLE_TIDDIT(
             cram,
-            // Remap channel to match module/subworkflow
-            fasta.map{ it -> [ [ id:'fasta' ], it ] },
-            bwa
-        )
+            fasta,
+            bwa)
 
         vcf_tiddit = BAM_VARIANT_CALLING_SINGLE_TIDDIT.out.vcf
         versions = versions.mix(BAM_VARIANT_CALLING_SINGLE_TIDDIT.out.versions)
@@ -180,20 +175,20 @@ workflow BAM_VARIANT_CALLING_TUMOR_ONLY_ALL {
 
     vcf_all = Channel.empty().mix(
         vcf_freebayes,
+        vcf_lofreq,
         vcf_manta,
         vcf_mutect2,
         vcf_mpileup,
-        vcf_strelka,
         vcf_tiddit
     )
 
     emit:
     vcf_all
     vcf_freebayes
+    vcf_lofreq
     vcf_manta
     vcf_mpileup
     vcf_mutect2
-    vcf_strelka
     vcf_tiddit
 
     versions = versions

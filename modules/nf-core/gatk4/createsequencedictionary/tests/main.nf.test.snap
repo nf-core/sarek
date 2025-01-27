@@ -1,0 +1,68 @@
+{
+    "sarscov2 - fasta - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "genome.dict:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,e60dd34a71fc2029d81dc67ccb5d6be6"
+                ],
+                "dict": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "genome.dict:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,e60dd34a71fc2029d81dc67ccb5d6be6"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-05-16T10:16:16.34453"
+    },
+    "sarscov2 - fasta": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "genome.dict:md5,7362679f176e0f52add03c08f457f646"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,e60dd34a71fc2029d81dc67ccb5d6be6"
+                ],
+                "dict": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "genome.dict:md5,7362679f176e0f52add03c08f457f646"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,e60dd34a71fc2029d81dc67ccb5d6be6"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-05-16T13:58:25.822068"
+    }
+}

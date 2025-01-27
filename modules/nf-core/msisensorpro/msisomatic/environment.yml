@@ -1,7 +1,5 @@
-name: msisensorpro_msisomatic
 channels:
   - conda-forge
   - bioconda
-  - defaults
 dependencies:
   - bioconda::msisensor-pro=1.2.0

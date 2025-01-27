@@ -1,0 +1,127 @@
+{
+    "versions_pair": {
+        "content": [
+            [
+                "versions.yml:md5,4a72b1da18f7045d470225881e7266a6"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-05-15T11:08:17.057861"
+    },
+    "versions": {
+        "content": [
+            [
+                "versions.yml:md5,4a72b1da18f7045d470225881e7266a6"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-05-15T11:08:07.193762"
+    },
+    "versions_segmentation": {
+        "content": [
+            [
+                "versions.yml:md5,4a72b1da18f7045d470225881e7266a6"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-05-15T11:08:26.99069"
+    },
+    "segmentation": {
+        "content": [
+            "#<METADATA>SAMPLE=tumour"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-05-15T12:57:38.845287"
+    },
+    "human - pileup-table": {
+        "content": [
+            "sample\tcontamination\terror"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-05-15T11:09:16.292509"
+    },
+    "human - pileup-table - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.contamination.table:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.segmentation.table:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    "versions.yml:md5,4a72b1da18f7045d470225881e7266a6"
+                ],
+                "contamination": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.contamination.table:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "segmentation": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.segmentation.table:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,4a72b1da18f7045d470225881e7266a6"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-05-15T12:56:14.817045"
+    },
+    "human - pileup-table - matched-pair": {
+        "content": [
+            "sample\tcontamination\terror"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-05-15T11:09:26.408848"
+    },
+    "contamination": {
+        "content": [
+            "sample\tcontamination\terror"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-05-15T12:57:38.840651"
+    }
+}

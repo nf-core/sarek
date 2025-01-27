@@ -48,7 +48,7 @@ workflow BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER {
     emit_vcf = lst.size() > 0 ? lst[0] : ''
 
     SENTIEON_HAPLOTYPER(
-        cram_intervals_for_sentieon,
+        cram_intervals_for_sentieon.map{ meta, cram, crai, intervals, num_intervals -> [ meta, cram, crai, intervals, [] ]},
         fasta,
         fasta_fai,
         dbsnp,

@@ -1,7 +1,5 @@
-name: controlfreec_freec2circos
 channels:
   - conda-forge
   - bioconda
-  - defaults
 dependencies:
   - bioconda::control-freec=11.6b

@@ -1,0 +1,2 @@
+bwamem2/index:
+  - modules/nf-core/bwamem2/index/**

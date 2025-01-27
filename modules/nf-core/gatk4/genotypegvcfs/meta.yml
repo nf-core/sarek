@@ -14,66 +14,101 @@ tools:
       tool_dev_url: https://github.com/broadinstitute/gatk
       doi: "10.1158/1538-7445.AM2017-3590"
       licence: ["BSD-3-clause"]
+      identifier: ""
 input:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
-  - gvcf:
-      type: file
-      description: |
-        gVCF(.gz) file or to a GenomicsDB
-      pattern: "*.{vcf,vcf.gz}"
-  - gvcf_index:
-      type: file
-      description: |
-        index of gvcf file, or empty when providing GenomicsDB
-      pattern: "*.{idx,tbi}"
-  - intervals:
-      type: file
-      description: Interval file with the genomic regions included in the library (optional)
-  - intervals_index:
-      type: file
-      description: Interval index file (optional)
-  - fasta:
-      type: file
-      description: Reference fasta file
-      pattern: "*.fasta"
-  - fai:
-      type: file
-      description: Reference fasta index file
-      pattern: "*.fai"
-  - dict:
-      type: file
-      description: Reference fasta sequence dict file
-      pattern: "*.dict"
-  - dbsnp:
-      type: file
-      description: dbSNP VCF file
-      pattern: "*.vcf.gz"
-  - dbsnp_tbi:
-      type: file
-      description: dbSNP VCF index file
-      pattern: "*.tbi"
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - input:
+        type: file
+        description: |
+          gVCF(.gz) file or a GenomicsDB
+        pattern: "*.{vcf,vcf.gz}"
+    - gvcf_index:
+        type: file
+        description: |
+          index of gvcf file, or empty when providing GenomicsDB
+        pattern: "*.{idx,tbi}"
+    - intervals:
+        type: file
+        description: Interval file with the genomic regions included in the library
+          (optional)
+    - intervals_index:
+        type: file
+        description: Interval index file (optional)
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing fasta information
+          e.g. [ id:'test' ]
+    - fasta:
+        type: file
+        description: Reference fasta file
+        pattern: "*.fasta"
+  - - meta3:
+        type: map
+        description: |
+          Groovy Map containing fai information
+          e.g. [ id:'test' ]
+    - fai:
+        type: file
+        description: Reference fasta index file
+        pattern: "*.fai"
+  - - meta4:
+        type: map
+        description: |
+          Groovy Map containing dict information
+          e.g. [ id:'test' ]
+    - dict:
+        type: file
+        description: Reference fasta sequence dict file
+        pattern: "*.dict"
+  - - meta5:
+        type: map
+        description: |
+          Groovy Map containing dbsnp information
+          e.g. [ id:'test' ]
+    - dbsnp:
+        type: file
+        description: dbSNP VCF file
+        pattern: "*.vcf.gz"
+  - - meta6:
+        type: map
+        description: |
+          Groovy Map containing dbsnp tbi information
+          e.g. [ id:'test' ]
+    - dbsnp_tbi:
+        type: file
+        description: dbSNP VCF index file
+        pattern: "*.tbi"
 output:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
   - vcf:
-      type: file
-      description: Genotyped VCF file
-      pattern: "*.vcf.gz"
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.vcf.gz":
+          type: file
+          description: Genotyped VCF file
+          pattern: "*.vcf.gz"
   - tbi:
-      type: file
-      description: Tbi index for VCF file
-      pattern: "*.vcf.gz"
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.tbi":
+          type: file
+          description: Tbi index for VCF file
+          pattern: "*.vcf.gz"
   - versions:
-      type: file
-      description: File containing software versions
-      pattern: "versions.yml"
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@santiagorevale"
   - "@maxulysse"

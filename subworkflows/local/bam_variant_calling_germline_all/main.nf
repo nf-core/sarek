@@ -9,6 +9,7 @@ include { BAM_VARIANT_CALLING_DEEPVARIANT                                       
 include { BAM_VARIANT_CALLING_FREEBAYES                                                } from '../bam_variant_calling_freebayes/main'
 include { BAM_VARIANT_CALLING_GERMLINE_MANTA                                           } from '../bam_variant_calling_germline_manta/main'
 include { BAM_VARIANT_CALLING_HAPLOTYPECALLER                                          } from '../bam_variant_calling_haplotypecaller/main'
+include { BAM_VARIANT_CALLING_INDEXCOV                                                 } from '../bam_variant_calling_indexcov/main'
 include { BAM_VARIANT_CALLING_SENTIEON_DNASCOPE                                        } from '../bam_variant_calling_sentieon_dnascope/main'
 include { BAM_VARIANT_CALLING_SENTIEON_HAPLOTYPER                                      } from '../bam_variant_calling_sentieon_haplotyper/main'
 include { BAM_VARIANT_CALLING_MPILEUP                                                  } from '../bam_variant_calling_mpileup/main'
@@ -18,20 +19,19 @@ include { SENTIEON_DNAMODELAPPLY                                                
 include { VCF_VARIANT_FILTERING_GATK                                                   } from '../vcf_variant_filtering_gatk/main'
 include { VCF_VARIANT_FILTERING_GATK as SENTIEON_HAPLOTYPER_VCF_VARIANT_FILTERING_GATK } from '../vcf_variant_filtering_gatk/main'
 
-
-
 workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     take:
     tools                             // Mandatory, list of tools to apply
     skip_tools                        // Mandatory, list of tools to skip
-    cram                              // channel: [mandatory] cram
-    bwa                               // channel: [mandatory] bwa
-    dbsnp                             // channel: [mandatory] dbsnp
+    cram                              // channel: [mandatory] meta, cram
+    bwa                               // channel: [mandatory] meta, bwa
+    cnvkit_reference                  // channel: [optional] cnvkit reference
+    dbsnp                             // channel: [mandatory] meta, dbsnp
     dbsnp_tbi                         // channel: [mandatory] dbsnp_tbi
     dbsnp_vqsr
-    dict                              // channel: [mandatory] dict
-    fasta                             // channel: [mandatory] fasta
-    fasta_fai                         // channel: [mandatory] fasta_fai
+    dict                              // channel: [mandatory] meta, dict
+    fasta                             // channel: [mandatory] meta, fasta
+    fasta_fai                         // channel: [mandatory] meta, fasta_fai
     intervals                         // channel: [mandatory] [ intervals, num_intervals ] or [ [], 0 ] if no intervals
     intervals_bed_combined            // channel: [mandatory] intervals/target regions in one file unzipped
     intervals_bed_gz_tbi_combined     // channel: [mandatory] intervals/target regions in one file zipped
@@ -57,6 +57,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     gvcf_sentieon_dnascope   = Channel.empty()
     gvcf_sentieon_haplotyper = Channel.empty()
 
+    out_indexcov             = Channel.empty()
     vcf_deepvariant          = Channel.empty()
     vcf_freebayes            = Channel.empty()
     vcf_haplotypecaller      = Channel.empty()
@@ -84,10 +85,10 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         BAM_VARIANT_CALLING_CNVKIT(
             // Remap channel to match module/subworkflow
             cram.map{ meta, cram, crai -> [ meta, [], cram ] },
-            fasta.map{ it -> [[id:it[0].baseName], it] },
-            fasta_fai.map{ it -> [[id:it[0].baseName], it] },
+            fasta,
+            fasta_fai,
             intervals_bed_combined.map{ it -> [[id:it[0].baseName], it] },
-            [[id:"null"], []]
+            params.cnvkit_reference ? cnvkit_reference.map{ it -> [[id:it[0].baseName], it] } : [[:],[]]
         )
         versions = versions.mix(BAM_VARIANT_CALLING_CNVKIT.out.versions)
     }
@@ -126,11 +127,11 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     if (tools.split(',').contains('haplotypecaller')) {
         BAM_VARIANT_CALLING_HAPLOTYPECALLER(
             cram,
-            fasta.map{ it -> [[id:it[0].baseName], it] },
-            fasta_fai.map{ it -> [[id:it[0].baseName], it] },
+            fasta,
+            fasta_fai,
             dict,
-            dbsnp.map{ it -> [[id:it[0].baseName], it] },
-            dbsnp_tbi.map{ it -> [[id:it[0].baseName], it] },
+            dbsnp.map{it -> [[:], it]},
+            dbsnp_tbi.map{it -> [[:], it]},
             intervals)
 
         vcf_haplotypecaller = BAM_VARIANT_CALLING_HAPLOTYPECALLER.out.vcf
@@ -163,8 +164,8 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
 
                 VCF_VARIANT_FILTERING_GATK(
                     vcf_haplotypecaller.join(tbi_haplotypecaller, failOnDuplicate: true, failOnMismatch: true),
-                    fasta,
-                    fasta_fai,
+                    fasta.map{ meta, fasta -> [ fasta ] },
+                    fasta_fai.map{ meta, fasta_fai -> [ fasta_fai ] },
                     dict.map{ meta, dict -> [ dict ] },
                     intervals_bed_combined_haplotypec,
                     known_sites_indels.concat(known_sites_snps).flatten().unique().collect(),
@@ -181,13 +182,25 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     if (tools.split(',').contains('manta')) {
         BAM_VARIANT_CALLING_GERMLINE_MANTA (
             cram,
-            fasta.map{ it -> [ [ id:'fasta' ], it ] },
-            fasta_fai.map{ it -> [ [ id:'fasta_fai' ], it ] },
+            fasta,
+            fasta_fai,
             intervals_bed_gz_tbi_combined
         )
 
         vcf_manta = BAM_VARIANT_CALLING_GERMLINE_MANTA.out.vcf
         versions = versions.mix(BAM_VARIANT_CALLING_GERMLINE_MANTA.out.versions)
+    }
+
+    // INDEXCOV, for WGS only
+    if (params.wes==false &&  tools.split(',').contains('indexcov')) {
+        BAM_VARIANT_CALLING_INDEXCOV (
+            cram,
+            fasta,
+            fasta_fai
+        )
+
+        out_indexcov = BAM_VARIANT_CALLING_INDEXCOV.out.out_indexcov
+        versions = versions.mix(BAM_VARIANT_CALLING_INDEXCOV.out.versions)
     }
 
     // SENTIEON DNASCOPE
@@ -238,8 +251,8 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
 
                 SENTIEON_DNAMODELAPPLY(
                     vcf_sentieon_dnascope.join(vcf_tbi_sentieon_dnascope, failOnDuplicate: true, failOnMismatch: true),
-                    fasta.map{ fasta -> [ [ id:fasta.baseName ], fasta ] },
-                    fasta_fai.map{ fai -> [ [ id:fai.baseName ], fai ] },
+                    fasta,
+                    fasta_fai,
                     sentieon_dnascope_model.map{ model -> [ [ id:model.baseName ], model ] })
 
                 vcf_sentieon_dnascope = SENTIEON_DNAMODELAPPLY.out.vcf
@@ -297,8 +310,8 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
 
                 SENTIEON_HAPLOTYPER_VCF_VARIANT_FILTERING_GATK(
                     vcf_sentieon_haplotyper.join(vcf_tbi_sentieon_haplotyper, failOnDuplicate: true, failOnMismatch: true),
-                    fasta,
-                    fasta_fai,
+                    fasta.map{ meta, it -> [ it ] },
+                    fasta_fai.map{ meta, it -> [ it ] },
                     dict.map{ meta, dict -> [ dict ] },
                     intervals_bed_combined_haplotypec,
                     known_sites_indels.concat(known_sites_snps).flatten().unique().collect(),
@@ -312,12 +325,14 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     }
 
     // STRELKA
+
     if (tools.split(',').contains('strelka')) {
+
         BAM_VARIANT_CALLING_SINGLE_STRELKA(
             cram,
             dict,
-            fasta,
-            fasta_fai,
+            fasta.map{ meta, fasta -> [ fasta ] },
+            fasta_fai.map{ meta, fasta_fai -> [ fasta_fai ] },
             intervals_bed_gz_tbi
         )
 
@@ -330,7 +345,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
         BAM_VARIANT_CALLING_SINGLE_TIDDIT(
             cram,
             // Remap channel to match module/subworkflow
-            fasta.map{ it -> [ [ id:'fasta' ], it ] },
+            fasta,
             bwa
         )
 
@@ -353,6 +368,7 @@ workflow BAM_VARIANT_CALLING_GERMLINE_ALL {
     emit:
     gvcf_sentieon_dnascope
     gvcf_sentieon_haplotyper
+    out_indexcov
     vcf_all
     vcf_deepvariant
     vcf_freebayes

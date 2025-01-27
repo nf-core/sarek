@@ -1,0 +1,140 @@
+{
+    "human - vcf - use-val": {
+        "content": [
+            "#<METADATA>Ln prior of deletion of length 10=-20.72326583694641"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-05-15T12:46:03.887912"
+    },
+    "versions_with-files": {
+        "content": [
+            [
+                "versions.yml:md5,1e86368bd682668a6777ccf2cfd90689"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-05-15T12:45:43.679571"
+    },
+    "human - vcf - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.filtered.vcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.filtered.vcf.gz.tbi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.filtered.vcf.gz.filteringStats.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "3": [
+                    "versions.yml:md5,1e86368bd682668a6777ccf2cfd90689"
+                ],
+                "stats": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.filtered.vcf.gz.filteringStats.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "tbi": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.filtered.vcf.gz.tbi:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "vcf": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.filtered.vcf.gz:md5,68b329da9893e34099c7d8ad5cb9c940"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,1e86368bd682668a6777ccf2cfd90689"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-05-15T12:46:32.666273"
+    },
+    "versions_use-val": {
+        "content": [
+            [
+                "versions.yml:md5,1e86368bd682668a6777ccf2cfd90689"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-05-15T12:46:03.876073"
+    },
+    "versions_base": {
+        "content": [
+            [
+                "versions.yml:md5,1e86368bd682668a6777ccf2cfd90689"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-05-15T12:47:39.930795"
+    },
+    "human - vcf - with-files": {
+        "content": [
+            [
+                "#<METADATA>Ln prior of deletion of length 10=-20.72326583694641",
+                "#<METADATA>Ln prior of deletion of length 9=-20.72326583694641",
+                "#<METADATA>Ln prior of deletion of length 8=-20.72326583694641",
+                "#<METADATA>Ln prior of deletion of length 7=-20.72326583694641",
+                "#<METADATA>Ln prior of deletion of length 6=-20.72326583694641",
+                "#<METADATA>Ln prior of deletion of length 5=-20.72326583694641"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-05-15T12:45:43.699286"
+    },
+    "human - vcf - base": {
+        "content": [
+            "#<METADATA>Ln prior of deletion of length 10=-20.72326583694641"
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.0"
+        },
+        "timestamp": "2024-05-15T12:47:39.949405"
+    }
+}

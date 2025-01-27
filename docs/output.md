@@ -13,6 +13,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 - [Directory Structure](#directory-structure)
 - [Preprocessing](#preprocessing)
   - [Preparation of input files (FastQ or (u)BAM)](#preparation-of-input-files-fastq-or-ubam)
+    - [Clip and filter read length](#clip-and-filter-read-length)
     - [Trim adapters](#trim-adapters)
     - [Split FastQ files](#split-fastq-files)
     - [UMI consensus](#umi-consensus)
@@ -41,8 +42,10 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
       - [Sentieon DNAscope joint germline variant calling](#sentieon-dnascope-joint-germline-variant-calling)
     - [Sentieon Haplotyper](#sentieon-haplotyper)
       - [Sentieon Haplotyper joint germline variant calling](#sentieon-haplotyper-joint-germline-variant-calling)
-    - [Strelka2](#strelka2)
+    - [Strelka](#strelka)
+    - [Lofreq](#lofreq)
   - [Structural Variants](#structural-variants)
+    - [Indexcov](#indexcov)
     - [Manta](#manta)
     - [TIDDIT](#tiddit)
   - [Sample heterogeneity, ploidy and CNVs](#sample-heterogeneity-ploidy-and-cnvs)
@@ -105,6 +108,10 @@ Sarek pre-processes raw FastQ files or unmapped BAM files, based on [GATK best p
 ### Preparation of input files (FastQ or (u)BAM)
 
 [FastP](https://github.com/OpenGene/fastp) is a tool designed to provide all-in-one preprocessing for FastQ files and as such is used for trimming and splitting. By default, these files are not published. However, if publishing is enabled, please be aware that these files are only published once, meaning if trimming and splitting is enabled, then the resulting files will be sharded FastQ files with trimmed reads. If only one of them is enabled then the files contain either trimmed or split reads, respectively.
+
+#### Clip and filter read length
+
+[FastP](https://github.com/OpenGene/fastp) enables efficient clipping of reads from either the 5' end (`--clip_r1`, `--clip_r2`) or the 3' end (`--three_prime_clip_r1`, `--three_prime_clip_r2`). Additionally, FastP allows the filtering of reads based on insert size by specifying a minimum required length with the `--length_required` parameter (default: 15bp). It is recommended to optimize these parameters according to the specific characteristics of your data.
 
 #### Trim adapters
 
@@ -542,13 +549,13 @@ In Sentieon's package DNAseq, joint germline variant calling is done by first ru
 
 </details>
 
-#### Strelka2
+#### Strelka
 
-[Strelka2](https://github.com/Illumina/strelka) is a fast and accurate small variant caller optimized for analysis of germline variation in small cohorts and somatic variation in tumor/normal sample pairs. For further reading and documentation see the [Strelka2 user guide](https://github.com/Illumina/strelka/blob/master/docs/userGuide/README.md). If [Strelka2](https://github.com/Illumina/strelka) is used for somatic variant calling and [Manta](https://github.com/Illumina/manta) is also specified in tools, the output candidate indels from [Manta](https://github.com/Illumina/manta) are used according to [Strelka Best Practices](https://github.com/Illumina/strelka/blob/master/docs/userGuide/README.md#somatic-configuration-example).
+[Strelka](https://github.com/Illumina/strelka) is a fast and accurate small variant caller optimized for analysis of germline variation in small cohorts and somatic variation in tumor/normal sample pairs. For further reading and documentation see the [Strelka user guide](https://github.com/Illumina/strelka/blob/master/docs/userGuide/README.md). If [Strelka](https://github.com/Illumina/strelka) is used for somatic variant calling and [Manta](https://github.com/Illumina/manta) is also specified in tools, the output candidate indels from [Manta](https://github.com/Illumina/manta) are used according to [Strelka Best Practices](https://github.com/Illumina/strelka/blob/master/docs/userGuide/README.md#somatic-configuration-example).
 For further downstream analysis, take a look [here](https://github.com/Illumina/strelka/blob/v2.9.x/docs/userGuide/README.md#interpreting-the-germline-multi-sample-variants-vcf).
 
 <details markdown="1">
-<summary>Output files for all single samples (normal or tumor-only)</summary>
+<summary>Output files for single samples (normal)</summary>
 
 **Output directory: `{outdir}/variantcalling/strelka/<sample>/`**
 
@@ -570,13 +577,51 @@ For further downstream analysis, take a look [here](https://github.com/Illumina/
 
 </details>
 
+#### Lofreq
+
+[Lofreq](https://github.com/CSB5/lofreq) is a fast and sensitive variant-caller for inferring SNVs and indels from next-generation sequencing data. It makes full use of base-call qualities and other sources of errors inherent in sequencing, which are usually ignored by other methods or only used for filtering. For further reading and documentation see the [Lofreq user guide](https://csb5.github.io/lofreq/).
+
+<details markdown = "1">
+<summary>Output files for tumor-only samples</summary>
+
+**Output directory: `{outdir}/variant_calling/lofreq/<sample>/`**
+
+-`<tumorsample>.vcf.gz`
+-VCF which provides a detailed description of the detected genetic variants.
+
+  </details>
+
 ### Structural Variants
+
+#### indexcov
+
+[indexcov](https://github.com/brentp/goleft/tree/master/indexcov) quickly estimate coverage from a whole-genome bam or cram index.
+A bam index has 16KB resolution and it is used as a coverage estimate .
+The output is scaled to around 1. So a long stretch with values of 1.5 would be a heterozygous duplication. This is useful as a quick QC to get coverage values across the genome.
+
+**Output directory: `{outdir}/variantcalling/indexcov/`**
+
+In addition to the interactive HTML files, `indexcov` outputs a number of text files:
+
+- `<sample>-indexcov.ped`: a .ped/.fam file with the inferred sex in the appropriate column if the sex chromosomes were found.
+  the CNX and CNY columns indicating the floating-point estimate of copy-number for those chromosomes.
+  `bins.out`: how many bins had a coverage value outside of (0.85, 1.15). high values can indicate high-bias samples.
+  `bins.lo`: number of bins with value < 0.15. high values indicate missing data.
+  `bins.hi`: number of bins with value > 1.15.
+  `bins.in`: number of bins with value inside of (0.85, 1.15)
+  `p.out`: `bins.out/bins.in`
+  `PC1...PC5`: PCA projections calculated with depth of autosomes.
+
+- `<sample>-indexcov.roc`: tab-delimited columns of chrom, scaled coverage cutoff, and $n_samples columns where each indicates the
+  proportion of 16KB blocks at or above that scaled coverage value.
+- `<sample>-indexcov.bed.gz`: a bed file with columns of chrom, start, end, and a column per sample where the values indicate there
+  scaled coverage for that sample in that 16KB chunk.
 
 #### Manta
 
 [Manta](https://github.com/Illumina/manta) calls structural variants (SVs) and indels from mapped paired-end sequencing reads.
 It is optimized for analysis of germline variation in small sets of individuals and somatic variation in tumor/normal sample pairs.
-[Manta](https://github.com/Illumina/manta) provides a candidate list for small indels that can be fed to [Strelka2](https://github.com/Illumina/strelka) following [Strelka Best Practices](https://github.com/Illumina/strelka/blob/master/docs/userGuide/README.md#somatic-configuration-example). For further reading and documentation see the [Manta user guide](https://github.com/Illumina/manta/blob/master/docs/userGuide/README.md).
+[Manta](https://github.com/Illumina/manta) provides a candidate list for small indels that can be fed to [Strelka](https://github.com/Illumina/strelka) following [Strelka Best Practices](https://github.com/Illumina/strelka/blob/master/docs/userGuide/README.md#somatic-configuration-example). For further reading and documentation see the [Manta user guide](https://github.com/Illumina/manta/blob/master/docs/userGuide/README.md).
 
 <details markdown="1">
 <summary>Output files for normal samples</summary>
@@ -823,7 +868,7 @@ It requires a normal sample for each tumour to differentiate the somatic and ger
 
 ### Concatenation
 
-Germline VCFs from `DeepVariant`, `FreeBayes`, `HaplotypeCaller`, `Haplotyper`, `Manta`, `bcftools mpileup`, `Strelka2`, or `Tiddit` are concatenated with `bcftools concat`. The field `SOURCE` is added to the VCF header to report the variant caller.
+Germline VCFs from `DeepVariant`, `FreeBayes`, `HaplotypeCaller`, `Haplotyper`, `Manta`, `bcftools mpileup`, `Strelka`, or `Tiddit` are concatenated with `bcftools concat`. The field `SOURCE` is added to the VCF header to report the variant caller.
 
 <details markdown="1">
 <summary>Concatenated VCF-files for normal samples</summary>
@@ -924,9 +969,6 @@ The plots display:
 <details markdown="1">
 <summary>Output files for all samples</summary>
 
-:::note
-The FastQC plots displayed in the MultiQC report shows _untrimmed_ reads. They may contain adapter sequence and potentially regions with low quality.
-:::
 **Output directory: `{outdir}/reports/fastqc/<sample-lane>`**
 
 - `<sample-lane_1>_fastqc.html` and `<sample-lane_2>_fastqc.html`
@@ -934,8 +976,10 @@ The FastQC plots displayed in the MultiQC report shows _untrimmed_ reads. They m
 - `<sample-lane_1>_fastqc.zip` and `<sample-lane_2>_fastqc.zip`
   - Zip archive containing the [FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/) report, tab-delimited data file and plot images
 
-> **NB:** The FastQC plots displayed in the [MultiQC](https://multiqc.info/) report shows _untrimmed_ reads.
-> They may contain adapter sequence and potentially regions with low quality.
+:::note
+The FastQC plots displayed in the MultiQC report shows _untrimmed_ reads.
+They may contain adapter sequence and potentially regions with low quality.
+:::
 
 </details>
 
@@ -1067,7 +1111,7 @@ For further reading and documentation see the [bcftools stats manual](https://sa
 Plots will show:
 
 - Stats by non-reference allele frequency, depth distribution, stats by quality and per-sample counts, singleton stats, etc.
-- Note: When using [Strelka2](https://github.com/Illumina/strelka), there will be no depth distribution plot, as Strelka2 does not report the INFO/DP field
+- Note: When using [Strelka](https://github.com/Illumina/strelka), there will be no depth distribution plot, as Strelka does not report the INFO/DP field
 
 <details markdown="1">
 <summary>Output files for all samples</summary>

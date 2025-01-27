@@ -1,0 +1,62 @@
+
+nextflow_process {
+
+    name "Test Process GATK4_GATHERPILEUPSUMMARIES"
+    script "../main.nf"
+    process "GATK4_GATHERPILEUPSUMMARIES"
+    config "./nextflow.config"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "gatk4"
+    tag "gatk4/gatherpileupsummaries"
+
+    test("test-gatk4-gatherpileupsummaries") {
+
+        when {
+            process {
+                """
+                input[0] = [
+				[ id:'test', single_end:false ], // meta map
+				    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/gatk/test.pileups.table', checkIfExists: true) ]
+				]
+				input[1] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.dict', checkIfExists: true)
+
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+
+    test("test-gatk4-gatherpileupsummaries - stub") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+				[ id:'test', single_end:false ], // meta map
+				    [ file(params.modules_testdata_base_path + 'genomics/homo_sapiens/illumina/gatk/test.pileups.table', checkIfExists: true) ]
+				]
+				input[1] = file(params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/chr21/sequence/genome.dict', checkIfExists: true)
+
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+
+}

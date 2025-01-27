@@ -5,6 +5,7 @@ workflow  SAMPLESHEET_TO_CHANNEL{
     aligner                         //
     ascat_alleles                   //
     ascat_loci                      //
+    ascat_loci_gc                   //
     ascat_loci_rt                   //
     bcftools_annotations            //
     bcftools_annotations_tbi        //
@@ -25,6 +26,8 @@ workflow  SAMPLESHEET_TO_CHANNEL{
     seq_center                      //
     seq_platform                    //
     skip_tools                      //
+    snpeff_cache                    //
+    snpeff_db                       //
     step                            //
     tools                           //
     umi_read_structure              //
@@ -32,9 +35,9 @@ workflow  SAMPLESHEET_TO_CHANNEL{
 
     main:
     ch_from_samplesheet.dump(tag:"ch_from_samplesheet")
-    input_sample = ch_from_samplesheet.map{ meta, fastq_1, fastq_2, table, cram, crai, bam, bai, vcf, variantcaller ->
+    input_sample = ch_from_samplesheet.map{ meta, fastq_1, fastq_2, spring_1, spring_2, table, cram, crai, bam, bai, vcf, variantcaller ->
         // generate patient_sample key to group lanes together
-        [ meta.patient + meta.sample, [meta, fastq_1, fastq_2, table, cram, crai, bam, bai, vcf, variantcaller] ]
+        [ meta.patient + meta.sample, [meta, fastq_1, fastq_2, spring_1, spring_2, table, cram, crai, bam, bai, vcf, variantcaller] ]
     }.tap{ ch_with_patient_sample } // save the channel
     .groupTuple() //group by patient_sample to get all lanes
     .map { patient_sample, ch_items ->
@@ -42,20 +45,31 @@ workflow  SAMPLESHEET_TO_CHANNEL{
         [ patient_sample, ch_items.size() ]
     }.combine(ch_with_patient_sample, by: 0) // for each entry add numLanes
     .map { patient_sample, num_lanes, ch_items ->
-        (meta, fastq_1, fastq_2, table, cram, crai, bam, bai, vcf, variantcaller) = ch_items
+        (meta, fastq_1, fastq_2, spring_1, spring_2, table, cram, crai, bam, bai, vcf, variantcaller) = ch_items
         if (meta.lane && fastq_2) {
-            meta           = meta + [id: "${meta.sample}-${meta.lane}".toString()]
-            def CN         = seq_center ? "CN:${seq_center}\\t" : ''
-
-            def flowcell   = flowcellLaneFromFastq(fastq_1)
-            // Don't use a random element for ID, it breaks resuming
-            def read_group = "\"@RG\\tID:${flowcell}.${meta.sample}.${meta.lane}\\t${CN}PU:${meta.lane}\\tSM:${meta.patient}_${meta.sample}\\tLB:${meta.sample}\\tDS:${fasta}\\tPL:${seq_platform}\""
-
-            meta           = meta - meta.subMap('lane') + [num_lanes: num_lanes.toInteger(), read_group: read_group.toString(), data_type: 'fastq', size: 1]
+            meta = meta + [id: "${meta.sample}-${meta.lane}".toString(), data_type: "fastq_gz", num_lanes: num_lanes.toInteger(), size: 1]
 
             if (step == 'mapping') return [ meta, [ fastq_1, fastq_2 ] ]
             else {
                 error("Samplesheet contains fastq files but step is `$step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
+            }
+
+        // start from TWO spring-files - one with R1 and one with R2
+        } else if (meta.lane && spring_1 && spring_2) {
+            meta = meta + [id: "${meta.sample}-${meta.lane}".toString(), data_type: "two_fastq_gz_spring", num_lanes: num_lanes.toInteger(), size: 1]
+
+            if (step == 'mapping') return [ meta, [ spring_1, spring_2 ] ]
+            else {
+                error("Samplesheet contains spring files (in columns `spring_1` and `spring_2`) but step is `$step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
+            }
+
+        // start from ONE spring-file containing both R1 and R2
+        } else if (meta.lane && spring_1 && !spring_2) {
+            meta = meta + [id: "${meta.sample}-${meta.lane}".toString(), data_type: "one_fastq_gz_spring", num_lanes: num_lanes.toInteger(), size: 1]
+
+            if (step == 'mapping') return [ meta, [ spring_1 ] ]
+            else {
+                error("Samplesheet contains a spring file (in columns `spring_1`) but step is `$step`. Please check your samplesheet or adjust the step parameter.\nhttps://nf-co.re/sarek/usage#input-samplesheet-configurations")
             }
 
         // start from BAM
@@ -223,12 +237,8 @@ workflow  SAMPLESHEET_TO_CHANNEL{
         joint_germline &&
             ( !dbsnp || !known_indels || !known_snps || no_intervals )
     ) {
-        log.warn("""If GATK's Haplotypecaller, Sentieon's Dnascope and/or Sentieon's Haplotyper is specified, \
-    but without `--dbsnp`, `--known_snps`, `--known_indels` or the associated resource labels (ie `known_snps_vqsr`), \
-    no variant recalibration will be done. For recalibration you must provide all of these resources.\nFor more information \
-    see VariantRecalibration: https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator \n\
-    Joint germline variant calling also requires intervals in order to genotype the samples. \
-    As a result, if `--no_intervals` is set to `true` the joint germline variant calling will not be performed.""")
+        log.warn("""If GATK's Haplotypecaller, Sentieon's Dnascope and/or Sentieon's Haplotyper is specified, but without `--dbsnp`, `--known_snps`, `--known_indels` or the associated resource labels (ie `known_snps_vqsr`), no variant recalibration will be done. For recalibration you must provide all of these resources.\nFor more information see VariantRecalibration: https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator \n\
+Joint germline variant calling also requires intervals in order to genotype the samples. As a result, if `--no_intervals` is set to `true` the joint germline variant calling will not be performed.""")
     }
 
     if (tools &&
@@ -270,41 +280,12 @@ workflow  SAMPLESHEET_TO_CHANNEL{
         error("Please specify --bcftools_annotations, --bcftools_annotations_tbi, and --bcftools_header_lines, when using BCFTools annotations")
     }
 
+    // Fails when snpeff annotation is enabled but snpeff_db is not specified
+    if ((snpeff_cache && tools && (tools.split(',').contains("snpeff") || tools.split(',').contains('merge'))) &&
+        !snpeff_db) {
+        error("Please specify --snpeff_db")
+    }
+
     emit:
     input_sample
     }
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    FUNCTIONS
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-// Parse first line of a FASTQ file, return the flowcell id and lane number.
-def flowcellLaneFromFastq(path) {
-    // expected format:
-    // xx:yy:FLOWCELLID:LANE:... (seven fields)
-    // or
-    // FLOWCELLID:LANE:xx:... (five fields)
-    def line
-    path.withInputStream {
-        InputStream gzipStream = new java.util.zip.GZIPInputStream(it)
-        Reader decoder = new InputStreamReader(gzipStream, 'ASCII')
-        BufferedReader buffered = new BufferedReader(decoder)
-        line = buffered.readLine()
-    }
-    assert line.startsWith('@')
-    line = line.substring(1)
-    def fields = line.split(':')
-    String fcid
-
-    if (fields.size() >= 7) {
-        // CASAVA 1.8+ format, from  https://support.illumina.com/help/BaseSpace_OLH_009008/Content/Source/Informatics/BS/FileFormat_FASTQ-files_swBS.htm
-        // "@<instrument>:<run number>:<flowcell ID>:<lane>:<tile>:<x-pos>:<y-pos>:<UMI> <read>:<is filtered>:<control number>:<index>"
-        fcid = fields[2]
-    } else if (fields.size() == 5) {
-        fcid = fields[0]
-    }
-    return fcid
-}
-
-

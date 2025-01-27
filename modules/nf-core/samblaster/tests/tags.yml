@@ -1,0 +1,2 @@
+samblaster:
+  - "modules/nf-core/samblaster/**"

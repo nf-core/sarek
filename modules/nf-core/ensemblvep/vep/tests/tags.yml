@@ -1,0 +1,2 @@
+ensemblvep/vep:
+  - "modules/nf-core/ensemblvep/vep/**"
