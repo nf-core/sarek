@@ -169,6 +169,12 @@
                 "pattern": "^\\S+$",
                 "errorMessage": "MSIsensor-pro list, cannot contain spaces"
             },
+            "ngscheckmate_bed": {
+                "meta": ["ngscheckmate_bed"],
+                "type": "string",
+                "pattern": "^\\S+\\.bed$",
+                "errorMessage": "ngscheckmate bed, cannot contain spaces "
+            },
             "readme": {
                 "meta": ["readme"],
                 "type": "string",
@@ -199,11 +205,35 @@
                 "pattern": "^\\S+$",
                 "errorMessage": "STAR index, cannot contain spaces"
             },
+            "snpeff_db": {
+                "meta": ["snpeff_db"],
+                "type": "string",
+                "pattern": "^\\S+$",
+                "errorMessage": "SnpEff database, cannot contain spaces"
+            },
             "transcript_fasta": {
                 "meta": ["transcript_fasta"],
                 "type": "string",
                 "pattern": "^\\S+\\.f(ast|n)?a(\\.gz)?$",
                 "errorMessage": "Transcript fasta [can be generated with RSEM], cannot contain spaces"
+            },
+            "vep_cache_version": {
+                "meta": ["vep_cache_version"],
+                "type": "string",
+                "pattern": "^\\S+$",
+                "errorMessage": "VEP cache version, cannot contain spaces"
+            },
+            "vep_genome": {
+                "meta": ["vep_genome"],
+                "type": "string",
+                "pattern": "^\\S+$",
+                "errorMessage": "VEP genome, cannot contain spaces"
+            },
+            "vep_species": {
+                "meta": ["vep_species"],
+                "type": "string",
+                "pattern": "^\\S+$",
+                "errorMessage": "VEP species, cannot contain spaces"
             },
             "vcf": {
                 "type": "object",
@@ -223,6 +253,11 @@
                                 "type": "string",
                                 "pattern": "^\\S+\\.vcf\\.gz\\.tbi?$",
                                 "errorMessage": "VCF tabix index, cannot contain spaces"
+                            },
+                            "vcf_vqsr": {
+                                "meta": ["dbsnp_vqsr"],
+                                "type": "string",
+                                "errorMessage": "VCF VQSR input, can contain spaces"
                             },
                             "vcf_source": {
                                 "meta": ["dbsnp_source"],

@@ -152,6 +152,8 @@ workflow SAREK {
 
     if (params.step == 'mapping') {
 
+        input_sample.combine(fasta).map { meta, reads, _meta2, _fasta -> [meta + [fasta: fasta], reads] }
+
         // Figure out if input is bam, fastq, or spring
         input_sample_type = input_sample.branch {
             bam: it[0].data_type == "bam"
@@ -650,11 +652,13 @@ workflow SAREK {
     }
 
     // RUN CRAM QC on the recalibrated CRAM files or when starting from step variant calling. NGSCheckmate should be run also on non-recalibrated CRAM files
-    // CRAM_SAMPLEQC(cram_variant_calling,
-    //     ngscheckmate_bed,
-    //     fasta,
-    //     params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'),
-    //     intervals_for_preprocessing)
+    CRAM_SAMPLEQC(
+        cram_variant_calling,
+        ngscheckmate_bed,
+        fasta,
+        params.skip_tools && params.skip_tools.split(',').contains('baserecalibrator'),
+        intervals_for_preprocessing,
+    )
 
     if (params.tools) {
 
@@ -939,7 +943,7 @@ def addReadgroupToMeta(meta, files) {
     def sample_lane_id = flowcell ? "${meta.flowcell}.${meta.sample}.${meta.lane}" : "${meta.sample}.${meta.lane}"
 
     // Don't use a random element for ID, it breaks resuming
-    def read_group = "\"@RG\\tID:${sample_lane_id}\\t${CN}PU:${meta.lane}\\tSM:${meta.patient}_${meta.sample}\\tLB:${meta.sample}\\tDS:${params.fasta}\\tPL:${params.seq_platform}\""
+    def read_group = "\"@RG\\tID:${sample_lane_id}\\t${CN}PU:${meta.lane}\\tSM:${meta.patient}_${meta.sample}\\tLB:${meta.sample}\\tDS:${meta.fasta}\\tPL:${params.seq_platform}\""
     meta = meta - meta.subMap('lane') + [read_group: read_group.toString()]
     return [meta, files]
 }
@@ -957,7 +961,7 @@ def flowcellLaneFromFastq(path) {
     // Seven fields or more (from CASAVA 1.8+):
     // "@<instrument>:<run number>:<flowcell ID>:<lane>:<tile>:<x-pos>:<y-pos>..."
 
-    fields = firstLine ? firstLine.split(':') : []
+    def fields = firstLine ? firstLine.split(':') : []
     if (fields.size() == 5) {
         // Get the instrument name as flowcell ID
         flowcell_id = fields[0].substring(1)

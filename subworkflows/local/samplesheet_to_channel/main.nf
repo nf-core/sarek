@@ -1,7 +1,7 @@
 workflow SAMPLESHEET_TO_CHANNEL {
     take:
     ch_from_samplesheet           //
-    ch_from_references            //
+    references                    //
     aligner                       //
     bcftools_annotations          //
     bcftools_annotations_tbi      //
@@ -33,8 +33,9 @@ workflow SAMPLESHEET_TO_CHANNEL {
             [patient_sample, ch_items.size()]
         }
         .combine(ch_with_patient_sample, by: 0)
-        .map { patient_sample, num_lanes, ch_items ->
-            (meta, fastq_1, fastq_2, spring_1, spring_2, table, cram, crai, bam, bai, vcf, variantcaller) = ch_items
+        .combine(references)
+        .map { patient_sample, num_lanes, ch_items, _meta2, fasta ->
+            def (meta, fastq_1, fastq_2, spring_1, spring_2, table, cram, crai, bam, bai, vcf, variantcaller) = ch_items
             if (meta.lane && fastq_2) {
                 meta = meta + [id: "${meta.sample}-${meta.lane}".toString(), data_type: "fastq_gz", num_lanes: num_lanes.toInteger(), size: 1]
 
@@ -176,7 +177,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
 
     // Fails when wrongfull extension for intervals file
 
-    ch_from_references.map { meta, _fasta ->
+    references.map { meta, _fasta ->
         if (wes && !step == 'annotate') {
             if (meta.intervals_bed && !meta.intervals_bed.endsWith("bed")) {
                 error("Target file specified with `intervals_bed:` must be in BED format for targeted data")
@@ -204,7 +205,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
     }
 
     // Fails or warns when missing files or params for ascat
-    ch_from_references.map { meta, _fasta ->
+    references.map { meta, _fasta ->
         if (tools && tools.split(',').contains('ascat')) {
             if (!meta.ascat_alleles) {
                 error("No allele files were provided for running ASCAT. Please provide a zip folder with allele files.")
@@ -223,7 +224,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
     }
 
     // Warns when missing files or params for mutect2
-    ch_from_references.map { meta, _fasta ->
+    references.map { meta, _fasta ->
         if (tools && tools.split(',').contains('mutect2')) {
             if (!meta.vcf.pon.vcf) {
                 log.warn("No Panel-of-normal was specified for Mutect2.\nIt is highly recommended to use one: https://gatk.broadinstitute.org/hc/en-us/articles/5358911630107-Mutect2\nFor more information on how to create one: https://gatk.broadinstitute.org/hc/en-us/articles/5358921041947-CreateSomaticPanelOfNormals-BETA-")
@@ -240,7 +241,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
 
     // Fails when missing resources for baserecalibrator
     // Warns when missing resources for haplotypecaller
-    ch_from_references.map { meta, _fasta ->
+    references.map { meta, _fasta ->
         if (!meta.vcf.dbsnp.vcf && !meta.vcf.known_indels.vcf) {
             if (step in ['mapping', 'markduplicates', 'prepare_recalibration', 'recalibrate'] && (!skip_tools || (skip_tools && !skip_tools.split(',').contains('baserecalibrator')))) {
                 error("Base quality score recalibration requires at least one resource file. Please provide at least one of `--dbsnp` or `--known_indels`\nYou can skip this step in the workflow by adding `--skip_tools baserecalibrator` to the command.")

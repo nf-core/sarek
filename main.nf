@@ -107,8 +107,7 @@ workflow NFCORE_SAREK {
     // mappability = references.map { meta, _fasta -> [meta.subMap(['id']), file(params.mappability ?: meta.mappability)] }.collect()
     msisensorpro_scan = []
     // msisensorpro_scan = references.map { meta, _fasta -> [meta.subMap(['id']), file(params.msisensorpro_scan ?: meta.msisensorpro_scan)] }.collect()
-    ngscheckmate_bed = []
-    // ngscheckmate_bed = references.map { meta, _fasta -> [meta.subMap(['id']), file(params.ngscheckmate_bed ?: meta.ngscheckmate_bed)] }.collect()
+    ngscheckmate_bed = references.map { meta, _fasta -> [meta.subMap(['id']), file(params.ngscheckmate_bed ?: meta.ngscheckmate_bed)] }.collect()
     pon = references.map { meta, _fasta -> meta.vcf.pon.vcf ? [meta.subMap(['id']), file(params.pon ?: meta.vcf.pon.vcf)] : null }.collect()
     pon_tbi = references.map { meta, _fasta -> meta.vcf.pon.vcf_tbi ? [meta.subMap(['id']), file(params.pon_tbi ?: meta.vcf.pon.vcf_tbi)] : null }.collect()
     sentieon_dnascope_model = references.map { meta, _fasta -> [meta.subMap(['id']), file(params.sentieon_dnascope_model ?: meta.sentieon_dnascope_model)] }.collect()
