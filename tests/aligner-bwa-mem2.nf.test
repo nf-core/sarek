@@ -14,7 +14,7 @@ nextflow_pipeline {
                 outdir = "$outputDir"
                 save_reference = true
                 skip_tools = 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools'
-                tools = ''
+                tools = null
             }
         }
 
