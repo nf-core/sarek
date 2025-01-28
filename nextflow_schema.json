@@ -747,6 +747,15 @@
                     "description": "Path to Control-FREEC mappability file.",
                     "help_text": "If you use AWS iGenomes or nf-core/references, this has already been set for you appropriately."
                 },
+                "msisensorpro_scan": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file",
+                    "format": "file-path",
+                    "exists": true,
+                    "mimetype": "text/plain",
+                    "description": "Path to MSISensorPro scan file.",
+                    "help_text": "If you use AWS iGenomes or nf-core/references, this has already been set for you appropriately."
+                },
                 "ngscheckmate_bed": {
                     "type": "string",
                     "fa_icon": "fas fa-file",

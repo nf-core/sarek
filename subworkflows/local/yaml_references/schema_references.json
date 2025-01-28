@@ -100,6 +100,7 @@
                 "errorMessage": "TODO"
             },
             "fasta": {
+                "meta": ["fasta"],
                 "type": "string",
                 "pattern": "^\\S+\\.f(ast|n)?a(\\.gz)?$",
                 "errorMessage": "Fasta file [required when creating a reference], cannot contain spaces"
@@ -176,7 +177,6 @@
                 "errorMessage": "ngscheckmate bed, cannot contain spaces "
             },
             "readme": {
-                "meta": ["readme"],
                 "type": "string",
                 "pattern": "^\\S+$",
                 "errorMessage": "README file describing the reference, cannot contain spaces"

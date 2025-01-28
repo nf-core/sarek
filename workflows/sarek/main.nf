@@ -133,6 +133,7 @@ workflow SAREK {
     rt_file
     sentieon_dnascope_model
     snpeff_cache
+    snpeff_db
     vep_cache
     vep_cache_version
     vep_extra_files
@@ -860,11 +861,18 @@ workflow SAREK {
 
             vep_fasta = params.vep_include_fasta ? fasta : [[id: 'null'], []]
 
+            println("vep_fasta: ${vep_fasta}")
+            vep_genome.view()
+            vep_species.view()
+            vep_cache_version.view()
+            vep_cache.view()
+            println("vep_extra_files: ${vep_extra_files}")
+
             VCF_ANNOTATE_ALL(
                 vcf_to_annotate.map { meta, vcf -> [meta + [file_name: vcf.baseName], vcf] },
                 vep_fasta,
                 params.tools,
-                params.snpeff_db,
+                snpeff_db,
                 snpeff_cache,
                 vep_genome,
                 vep_species,

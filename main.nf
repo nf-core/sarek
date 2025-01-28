@@ -81,50 +81,53 @@ workflow NFCORE_SAREK {
     main:
     versions = Channel.empty()
 
-    // References' files from the references asset yaml or params
-    ascat_alleles = references.map { meta, _fasta -> meta.ascat_alleles ? [meta.subMap(['id']), file(params.ascat_alleles ?: meta.ascat_alleles)] : null }.collect()
-    ascat_loci = references.map { meta, _fasta -> meta.ascat_loci ? [meta.subMap(['id']), file(params.ascat_loci ?: meta.ascat_loci)] : null }.collect()
-    ascat_loci_gc = references.map { meta, _fasta -> meta.ascat_loci_gc ? [meta.subMap(['id']), file(params.ascat_loci_gc ?: meta.ascat_loci_gc)] : null }.collect()
-    ascat_loci_rt = references.map { meta, _fasta -> meta.ascat_loci_rt ? [meta.subMap(['id']), file(params.ascat_loci_rt ?: meta.ascat_loci_rt)] : null }.collect()
-    bwamem1_index = references.map { meta, _fasta -> meta.bwamem1_index ? [meta.subMap(['id']), file(params.bwa ?: meta.bwamem1_index)] : null }.collect()
-    bwamem2_index = references.map { meta, _fasta -> meta.bwamem2_index ? [meta.subMap(['id']), file(params.bwamem2 ?: meta.bwamem2_index)] : null }.collect()
-    cf_chrom_len = references.map { meta, _fasta -> meta.cf_chrom_len ? [meta.subMap(['id']), file(params.cf_chrom_len ?: meta.cf_chrom_len)] : null }.collect()
-    chr_dir = references.map { meta, _fasta -> meta.chr_dir ? [meta.subMap(['id']), file(params.chr_dir ?: meta.chr_dir)] : null }.collect()
-    dbsnp = references.map { meta, _fasta -> meta.vcf.dbsnp.vcf ? [meta.subMap(['id']), file(meta.vcf.dbsnp.vcf)] : null }.transpose().collect()
-    dbsnp_tbi = references.map { meta, _fasta -> meta.vcf.dbsnp.vcf_tbi ? [meta.subMap(['id']), file(meta.vcf.dbsnp.vcf_tbi)] : null }.transpose().collect()
-    dragmap_hashtable = references.map { meta, _fasta -> meta.dragmap_hashtable ? [meta.subMap(['id']), file(meta.dragmap_hashtable)] : null }.collect()
-    fasta = references.map { meta, fasta -> [meta.subMap(['id']), file(params.fasta ?: fasta)] }.collect()
-    fasta_dict = references.map { meta, _fasta -> [meta.subMap(['id']), file(params.dict ?: meta.fasta_dict)] }.collect()
-    fasta_fai = references.map { meta, _fasta -> [meta.subMap(['id']), file(params.fasta_fai ?: meta.fasta_fai)] }.collect()
-    germline_resource = references.map { meta, _fasta -> meta.vcf.germline_resource.vcf ? [meta.subMap(['id']), file(meta.vcf.germline_resource.vcf)] : null }.collect()
-    germline_resource_tbi = references.map { meta, _fasta -> meta.vcf.germline_resource.vcf_tbi ? [meta.subMap(['id']), file(meta.vcf.germline_resource.vcf_tbi)] : null }.collect()
-    intervals_bed = references.map { meta, _fasta -> meta.intervals_bed ? [meta.subMap(['id']), file(params.intervals ?: meta.intervals_bed)] : null }.collect()
-    known_indels = references.map { meta, _fasta -> meta.vcf.known_indels.vcf ? [meta.subMap(['id']), file(meta.vcf.known_indels.vcf)] : null }.collect()
-    known_indels_tbi = references.map { meta, _fasta -> meta.vcf.known_indels.vcf_tbi ? [meta.subMap(['id']), file(meta.vcf.known_indels.vcf_tbi)] : null }.collect()
-    known_snps = references.map { meta, _fasta -> meta.vcf.known_snps.vcf ? [meta.subMap(['id']), file(meta.vcf.known_snps.vcf)] : null }.collect()
-    known_snps_tbi = references.map { meta, _fasta -> meta.vcf.known_snps.vcf_tbi ? [meta.subMap(['id']), file(meta.vcf.known_snps.vcf_tbi)] : null }.collect()
-    mappability = []
-    // mappability = references.map { meta, _fasta -> [meta.subMap(['id']), file(params.mappability ?: meta.mappability)] }.collect()
-    msisensorpro_scan = []
-    // msisensorpro_scan = references.map { meta, _fasta -> [meta.subMap(['id']), file(params.msisensorpro_scan ?: meta.msisensorpro_scan)] }.collect()
-    ngscheckmate_bed = references.map { meta, _fasta -> [meta.subMap(['id']), file(params.ngscheckmate_bed ?: meta.ngscheckmate_bed)] }.collect()
-    pon = references.map { meta, _fasta -> meta.vcf.pon.vcf ? [meta.subMap(['id']), file(params.pon ?: meta.vcf.pon.vcf)] : null }.collect()
-    pon_tbi = references.map { meta, _fasta -> meta.vcf.pon.vcf_tbi ? [meta.subMap(['id']), file(params.pon_tbi ?: meta.vcf.pon.vcf_tbi)] : null }.collect()
-    sentieon_dnascope_model = references.map { meta, _fasta -> [meta.subMap(['id']), file(params.sentieon_dnascope_model ?: meta.sentieon_dnascope_model)] }.collect()
+    // References' files from the references yaml or params
+    ascat_alleles           = extract_references_file(references, params.ascat_alleles, 'ascat_alleles').collect()
+    ascat_loci              = extract_references_file(references, params.ascat_loci, 'ascat_loci').collect()
+    ascat_loci_gc           = extract_references_file(references, params.ascat_loci_gc, 'ascat_loci_gc').collect()
+    ascat_loci_rt           = extract_references_file(references, params.ascat_loci_rt, 'ascat_loci_rt').collect()
+    bwamem1_index           = extract_references_file(references, params.bwa, 'bwamem1_index').collect()
+    bwamem2_index           = extract_references_file(references, params.bwamem2, 'bwamem2_index').collect()
+    cf_chrom_len            = extract_references_file(references, params.cf_chrom_len, 'cf_chrom_len').collect()
+    chr_dir                 = extract_references_file(references, params.chr_dir, 'chr_dir').collect()
+    dragmap_hashtable       = extract_references_file(references, params.dragmap, 'dragmap_hashtable').collect()
+    fasta                   = extract_references_file(references, params.fasta, 'fasta').collect()
+    fasta_dict              = extract_references_file(references, params.dict, 'fasta_dict').collect()
+    fasta_fai               = extract_references_file(references, params.fasta_fai, 'fasta_fai').collect()
+    intervals_bed           = extract_references_file(references, params.intervals, 'intervals_bed').collect()
+    mappability             = extract_references_file(references, params.mappability, 'mappability').collect()
+    msisensorpro_scan       = extract_references_file(references, params.msisensorpro_scan, 'msisensorpro_scan').collect()
+    ngscheckmate_bed        = extract_references_file(references, params.ngscheckmate_bed, 'ngscheckmate_bed').collect()
+    sentieon_dnascope_model = extract_references_file(references, params.sentieon_dnascope_model, 'sentieon_dnascope_model').collect()
 
-    // References' values from the references asset yaml or params
-    ascat_genome = references.map { meta, _fasta -> meta.ascat_genome ? [meta.subMap(['id']), params.ascat_genome ?: meta.ascat_genome] : null }.collect()
-    snpeff_db = references.map { meta, _fasta -> meta.snpeff_db ? [meta.subMap(['id']), params.snpeff_db ?: meta.snpeff_db] : null }.collect()
-    vep_cache_version = references.map { meta, _fasta -> meta.vep_cache_version ? [meta.subMap(['id']), params.vep_cache_version ?: meta.vep_cache_version] : null }.collect()
-    vep_genome = references.map { meta, _fasta -> meta.vep_genome ? [meta.subMap(['id']), params.vep_genome ?: meta.vep_genome] : null }.collect()
-    vep_species = references.map { meta, _fasta -> meta.vep_species ? [meta.subMap(['id']), params.vep_species ?: meta.vep_species] : null }.collect()
+    // References' VCFs and related from the references yaml or params
+    dbsnp                   = extract_references_vcf(references, params.dbsnp, 'dbsnp', 'vcf').collect()
+    dbsnp_tbi               = extract_references_vcf(references, params.dbsnp_tbi, 'dbsnp', 'vcf_tbi').collect()
+    dbsnp_vqsr              = extract_references_vcf(references, params.dbsnp_vqsr, 'dbsnp', 'vcf_vqsr').collect()
+    germline_resource       = extract_references_vcf(references, params.germline_resource, 'germline_resource', 'vcf').collect()
+    germline_resource_tbi   = extract_references_vcf(references, params.germline_resource_tbi, 'germline_resource', 'vcf_tbi').collect()
+    known_indels            = extract_references_vcf(references, params.known_indels, 'known_indels', 'vcf').collect()
+    known_indels_tbi        = extract_references_vcf(references, params.known_indels_tbi, 'known_indels', 'vcf_tbi').collect()
+    known_indels_vqsr       = extract_references_vcf(references, params.known_indels_vqsr, 'known_indels', 'vcf_vqsr').collect()
+    known_snps              = extract_references_vcf(references, params.known_snps, 'known_snps', 'vcf').collect()
+    known_snps_tbi          = extract_references_vcf(references, params.known_snps_tbi, 'known_snps', 'vcf_tbi').collect()
+    known_snps_vqsr         = extract_references_vcf(references, params.known_snps_vqsr, 'known_snps', 'vcf_vqsr').collect()
+    pon                     = extract_references_vcf(references, params.pon, 'pon', 'vcf').collect()
+    pon_tbi                 = extract_references_vcf(references, params.pon_tbi, 'pon', 'vcf_tbi').collect()
+
+    // References' values from the references yaml or params
+    ascat_genome            = extract_references_value(references, params.ascat_genome, 'ascat_genome').collect()
+    snpeff_db               = extract_references_value(references, params.snpeff_db, 'snpeff_db').collect()
+    vep_cache_version       = extract_references_value(references, params.vep_cache_version, 'vep_cache_version').collect()
+    vep_genome              = extract_references_value(references, params.vep_genome, 'vep_genome').collect()
+    vep_species             = extract_references_value(references, params.vep_species, 'vep_species').collect()
 
     // known_sites is made by grouping both the dbsnp and the known snps/indels resources
     // Which can either or both be optional
-    known_sites_indels = dbsnp.mix(known_indels).groupTuple().collect()
-    known_sites_indels_tbi = dbsnp_tbi.mix(known_indels_tbi).groupTuple().collect()
-    known_sites_snps = dbsnp.mix(known_snps).groupTuple().collect()
-    known_sites_snps_tbi = dbsnp_tbi.mix(known_snps_tbi).groupTuple().collect()
+    known_sites_indels      = dbsnp.mix(known_indels).groupTuple().collect()
+    known_sites_indels_tbi  = dbsnp_tbi.mix(known_indels_tbi).groupTuple().collect()
+    known_sites_snps        = dbsnp.mix(known_snps).groupTuple().collect()
+    known_sites_snps_tbi    = dbsnp_tbi.mix(known_snps_tbi).groupTuple().collect()
 
     // Gather index for mapping given the chosen aligner
     index_alignment = aligner == "bwa-mem" || aligner == "sentieon-bwamem"
@@ -133,9 +136,9 @@ workflow NFCORE_SAREK {
             ? bwamem2_index
             : dragmap_hashtable
 
-    bcftools_annotations = params.bcftools_annotations ? Channel.fromPath(params.bcftools_annotations).collect() : Channel.value([])
-    bcftools_annotations_tbi = params.bcftools_annotations ? params.bcftools_annotations_tbi ? Channel.fromPath(params.bcftools_annotations_tbi).collect() : Channel.value([]) : Channel.value([])
-    bcftools_header_lines = params.bcftools_header_lines ?: Channel.value([])
+    bcftools_annotations        = params.bcftools_annotations ? Channel.fromPath(params.bcftools_annotations).collect() : Channel.value([])
+    bcftools_annotations_tbi    = params.bcftools_annotations ? params.bcftools_annotations_tbi ? Channel.fromPath(params.bcftools_annotations_tbi).collect() : Channel.value([]) : Channel.value([])
+    bcftools_header_lines       = params.bcftools_header_lines ?: Channel.value([])
 
     vep_extra_files = []
 
@@ -202,35 +205,22 @@ workflow NFCORE_SAREK {
 
     vep_fasta = params.vep_include_fasta ? fasta.map { fasta_ -> [[id: fasta_.baseName], fasta_] } : [[id: 'null'], []]
 
-    // Download cache
-    if (params.download_cache) {
-        // Assuming that even if the cache is provided, if the user specify download_cache, sarek will download the cache
-        ensemblvep_info = Channel.of([[id: "${params.vep_cache_version}_${params.vep_genome}"], params.vep_genome, params.vep_species, params.vep_cache_version])
-        snpeff_info = Channel.of([[id: "${params.snpeff_db}"], params.snpeff_db])
-        DOWNLOAD_CACHE_SNPEFF_VEP(ensemblvep_info, snpeff_info)
-        snpeff_cache = DOWNLOAD_CACHE_SNPEFF_VEP.out.snpeff_cache
-        vep_cache = DOWNLOAD_CACHE_SNPEFF_VEP.out.ensemblvep_cache.map { _meta, cache -> [cache] }
+    // Looks for cache information either locally or on the cloud
+    ANNOTATION_CACHE_INITIALISATION(
+        (params.snpeff_cache && params.tools && (params.tools.split(',').contains("snpeff") || params.tools.split(',').contains('merge'))),
+        params.snpeff_cache,
+        snpeff_db,
+        (params.vep_cache && params.tools && (params.tools.split(',').contains("vep") || params.tools.split(',').contains('merge'))),
+        params.vep_cache,
+        vep_species,
+        vep_cache_version,
+        vep_genome,
+        params.vep_custom_args,
+        "Please refer to https://nf-co.re/sarek/docs/usage/#how-to-customise-snpeff-and-vep-annotation for more information.",
+    )
 
-        versions = versions.mix(DOWNLOAD_CACHE_SNPEFF_VEP.out.versions)
-    }
-    else {
-        // Looks for cache information either locally or on the cloud
-        ANNOTATION_CACHE_INITIALISATION(
-            (params.snpeff_cache && params.tools && (params.tools.split(',').contains("snpeff") || params.tools.split(',').contains('merge'))),
-            params.snpeff_cache,
-            params.snpeff_db,
-            (params.vep_cache && params.tools && (params.tools.split(',').contains("vep") || params.tools.split(',').contains('merge'))),
-            params.vep_cache,
-            params.vep_species,
-            params.vep_cache_version,
-            params.vep_genome,
-            params.vep_custom_args,
-            "Please refer to https://nf-co.re/sarek/docs/usage/#how-to-customise-snpeff-and-vep-annotation for more information.",
-        )
-
-        snpeff_cache = ANNOTATION_CACHE_INITIALISATION.out.snpeff_cache
-        vep_cache = ANNOTATION_CACHE_INITIALISATION.out.ensemblvep_cache
-    }
+    snpeff_cache = ANNOTATION_CACHE_INITIALISATION.out.snpeff_cache
+    vep_cache = ANNOTATION_CACHE_INITIALISATION.out.ensemblvep_cache
 
     //
     // WORKFLOW: Run pipeline
@@ -246,7 +236,7 @@ workflow NFCORE_SAREK {
         cnvkit_reference,
         dbsnp,
         dbsnp_tbi,
-        "dbsnp_vqsr",
+        dbsnp_vqsr,
         fasta_dict,
         fasta,
         fasta_fai,
@@ -260,12 +250,12 @@ workflow NFCORE_SAREK {
         intervals_bed_gz_tbi_and_num_intervals,
         intervals_bed_gz_tbi_combined,
         intervals_for_preprocessing,
-        "known_indels_vqsr",
+        known_indels_vqsr,
         known_sites_indels,
         known_sites_indels_tbi,
         known_sites_snps,
         known_sites_snps_tbi,
-        "known_snps_vqsr",
+        known_snps_vqsr,
         ascat_loci,
         mappability,
         msisensorpro_scan,
@@ -275,6 +265,7 @@ workflow NFCORE_SAREK {
         ascat_loci_rt,
         sentieon_dnascope_model,
         snpeff_cache,
+        snpeff_db,
         vep_cache,
         vep_cache_version,
         vep_extra_files,
@@ -285,4 +276,43 @@ workflow NFCORE_SAREK {
 
     emit:
     multiqc_report = SAREK.out.multiqc_report // channel: /path/to/multiqc_report.html
+}
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    FUNCTIONS TO EXTRACT REFERENCES FILES OR VALUES FROM THE REFERENCES YAML OR PARAMS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+
+def extract_references_file(references, param, attribute) {
+    references.map { meta, _readme ->
+        if (param || meta[attribute]) {
+            return [meta.subMap(['id']), file(param ?: meta[attribute] ?: [])]
+        }
+        else {
+            return null
+        }
+    }
+}
+
+def extract_references_vcf(references, param, vcf_attribute, attribute) {
+    references.map { meta, _readme ->
+        if (param || meta.vcf[vcf_attribute][attribute]) {
+            return [meta.subMap(['id']), file(param ?: meta.vcf[vcf_attribute][attribute] ?: [])]
+        }
+        else {
+            return null
+        }
+    }
+}
+
+def extract_references_value(references, param, attribute) {
+    references.map { meta, _readme ->
+        if (param || meta[attribute]) {
+            return [meta.subMap(['id']), param ?: meta[attribute] ?: []]
+        }
+        else {
+            return null
+        }
+    }
 }
