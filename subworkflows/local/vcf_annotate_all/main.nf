@@ -39,7 +39,7 @@ workflow VCF_ANNOTATE_ALL {
 
 
     if (tools.split(',').contains('merge') || tools.split(',').contains('snpeff')) {
-        VCF_ANNOTATE_SNPEFF(vcf, snpeff_db, snpeff_cache)
+        VCF_ANNOTATE_SNPEFF(vcf, snpeff_db.map { _meta, snpeff_db_ -> snpeff_db_ }, snpeff_cache)
 
         reports = reports.mix(VCF_ANNOTATE_SNPEFF.out.reports.map { _meta, reports_ -> [reports_] })
         vcf_ann = vcf_ann.mix(VCF_ANNOTATE_SNPEFF.out.vcf_tbi)

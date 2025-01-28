@@ -13,8 +13,6 @@ nextflow_pipeline {
                 outdir = "$outputDir"
                 input = "${projectDir}/tests/csv/3.0/vcf_single.csv"
                 step  = 'annotate'
-                snpeff_cache = 's3://annotation-cache/snpeff_cache/'
-                vep_cache = 's3://annotation-cache/vep_cache/'
                 tools = 'merge'
             }
         }
@@ -48,8 +46,6 @@ nextflow_pipeline {
                 outdir = "$outputDir"
                 input = "${projectDir}/tests/csv/3.0/vcf_single.csv"
                 step  = 'annotate'
-                snpeff_cache = 's3://annotation-cache/snpeff_cache/'
-                vep_cache = 's3://annotation-cache/vep_cache/'
                 tools = 'merge,snpeff,vep'
             }
         }
