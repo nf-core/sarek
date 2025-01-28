@@ -37,7 +37,6 @@ workflow VCF_ANNOTATE_ALL {
         versions = versions.mix(VCF_ANNOTATE_BCFTOOLS.out.versions)
     }
 
-
     if (tools.split(',').contains('merge') || tools.split(',').contains('snpeff')) {
         VCF_ANNOTATE_SNPEFF(vcf, snpeff_db.map { _meta, snpeff_db_ -> snpeff_db_ }, snpeff_cache)
 

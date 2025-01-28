@@ -578,17 +578,17 @@
                     "description": "Download annotation cache.",
                     "help_text": "Set this parameter, if you wish to download annotation cache.\nUsing this parameter will download cache even if --snpeff_cache and --vep_cache are provided."
                 },
-                "ascat_genome": {
-                    "type": "string",
-                    "description": "ASCAT genome.",
-                    "help_text": "Must be set to run ASCAT, either hg19 or hg38.\n\nIf you use AWS iGenomes or nf-core/references, this has already been set for you appropriately.",
-                    "enum": ["hg19", "hg38"]
-                },
                 "ascat_alleles": {
                     "type": "string",
                     "fa_icon": "fas fa-file",
                     "description": "Path to ASCAT allele zip file.",
                     "help_text": "If you use AWS iGenomes or nf-core/references, this has already been set for you appropriately."
+                },
+                "ascat_genome": {
+                    "type": "string",
+                    "description": "ASCAT genome.",
+                    "help_text": "Must be set to run ASCAT, either hg19 or hg38.\n\nIf you use AWS iGenomes or nf-core/references, this has already been set for you appropriately.",
+                    "enum": ["hg19", "hg38"]
                 },
                 "ascat_loci": {
                     "type": "string",
