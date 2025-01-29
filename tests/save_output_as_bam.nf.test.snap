@@ -1,7 +1,7 @@
 {
     "Run with profile test | --save_output_as_bam | skip QC/recal/md": {
         "content": [
-            7,
+            8,
             {
                 "BAM_TO_CRAM_MAPPING": {
                     "samtools": 1.21
@@ -32,10 +32,12 @@
                 "preprocessing/mapped/test/test.sorted.bam.bai",
                 "reference",
                 "reference/intervals",
+                "reference/intervals/GRCh38_chr22.bed.gz",
                 "reference/intervals/chr22_1-40001.bed",
                 "reference/intervals/chr22_1-40001.bed.gz"
             ],
             [
+                "GRCh38_chr22.bed.gz:md5,87a15eb9c2ff20ccd5cd8735a28708f7",
                 "chr22_1-40001.bed:md5,87a15eb9c2ff20ccd5cd8735a28708f7",
                 "chr22_1-40001.bed.gz:md5,87a15eb9c2ff20ccd5cd8735a28708f7"
             ],
@@ -50,6 +52,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-01-28T10:35:03.756762103"
+        "timestamp": "2025-01-29T12:53:26.654572652"
     }
 }

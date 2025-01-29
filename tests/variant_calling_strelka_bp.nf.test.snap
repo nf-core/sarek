@@ -90,6 +90,8 @@
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
                 "reference",
+                "reference/intervals",
+                "reference/intervals/no_intervals.bed.gz",
                 "reports",
                 "reports/bcftools",
                 "reports/bcftools/manta",
@@ -180,6 +182,7 @@
                 "multiqc_bcftools_stats.txt:md5,5c9c75a7ba51eec6d7ed539a5d0a2397",
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
                 "vcftools_tstv_by_count.txt:md5,d5919b93082809cb0663b16ce1f0f60e",
+                "no_intervals.bed.gz:md5,f3dac01ea66b95fe477446fde2d31489",
                 "sample3.manta.diploid_sv.bcftools_stats.txt:md5,8adad91e1c8dc8db63cf9b3607bee3a0",
                 "sample4_vs_sample3.manta.diploid_sv.bcftools_stats.txt:md5,17dc847445b98885bc18622f862f44d9",
                 "sample4_vs_sample3.manta.somatic_sv.bcftools_stats.txt:md5,a8660b352950f0b32768fcbbd6b48896",
@@ -212,14 +215,14 @@
                 "sample4_vs_sample3.strelka.somatic_snvs.TsTv.count:md5,a922c51ca3b2ea7cdcfa09e9c8c55d52"
             ],
             [
-
+                
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.10.0"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
         },
-        "timestamp": "2024-11-15T22:39:15.50268779"
+        "timestamp": "2025-01-29T12:59:12.506643108"
     },
     "Run with profile test | --tools manta,strelka | somatic": {
         "content": [
@@ -309,6 +312,10 @@
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
                 "reference",
+                "reference/intervals",
+                "reference/intervals/GRCh38_chr22.bed.gz",
+                "reference/intervals/chr21_2-23354000.bed",
+                "reference/intervals/chr21_2-23354000.bed.gz",
                 "reports",
                 "reports/bcftools",
                 "reports/bcftools/manta",
@@ -399,6 +406,9 @@
                 "multiqc_bcftools_stats.txt:md5,97bac5dbfe6cb21a78ca7f7327655b65",
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
                 "vcftools_tstv_by_count.txt:md5,27388870c36896df470e2f5aa982332e",
+                "GRCh38_chr22.bed.gz:md5,571ded0aaefdb3be8c7025b9822eb009",
+                "chr21_2-23354000.bed:md5,4591ef7ad7e4bb8c97f646dc825b510d",
+                "chr21_2-23354000.bed.gz:md5,4591ef7ad7e4bb8c97f646dc825b510d",
                 "sample3.manta.diploid_sv.bcftools_stats.txt:md5,8adad91e1c8dc8db63cf9b3607bee3a0",
                 "sample4_vs_sample3.manta.diploid_sv.bcftools_stats.txt:md5,17dc847445b98885bc18622f862f44d9",
                 "sample4_vs_sample3.manta.somatic_sv.bcftools_stats.txt:md5,a8660b352950f0b32768fcbbd6b48896",
@@ -431,13 +441,13 @@
                 "sample4_vs_sample3.strelka.somatic_snvs.TsTv.count:md5,fc7af1f534890c4ad3025588b3af62ae"
             ],
             [
-
+                
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.10.0"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
         },
-        "timestamp": "2024-11-15T22:37:23.231917992"
+        "timestamp": "2025-01-29T12:57:32.848424801"
     }
 }
