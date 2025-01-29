@@ -39,7 +39,6 @@ workflow PREPARE_INTERVALS {
         intervals_bed_combined = Channel.fromPath(file("${outdir}/no_intervals.bed")).map { it -> [[id: it.simpleName], it] }
     }
     else if (step != 'annotate' && step != 'controlfreec') {
-        intervals_bed_combined = intervals
         CREATE_INTERVALS_BED(intervals, nucleotides_per_second)
 
         intervals_bed = CREATE_INTERVALS_BED.out.bed
@@ -52,7 +51,8 @@ workflow PREPARE_INTERVALS {
         }
 
         GATK4_INTERVALLISTTOBED(intervals_branch.interval_list)
-        intervals_bed_combined = GATK4_INTERVALLISTTOBED.out.bed
+        // TODO: test this with an interval_list
+        intervals_bed_combined = intervals.mix(GATK4_INTERVALLISTTOBED.out.bed).last()
         versions = versions.mix(GATK4_INTERVALLISTTOBED.out.versions)
 
         // Now for the intervals.bed the following operations are done:
