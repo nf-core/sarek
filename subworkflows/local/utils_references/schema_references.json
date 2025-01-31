@@ -247,13 +247,13 @@
                 "pattern": "^\\S+\\.vcf\\.gz\\.tbi?$",
                 "errorMessage": "VCF tabix index, cannot contain spaces"
             },
-            "vcf_dbsnp_vqsr": {
-                "meta": ["vcf_dbsnp_vqsr"],
+            "vcf_dbsnp_vcf_vqsr": {
+                "meta": ["vcf_dbsnp_vcf_vqsr"],
                 "type": "string",
                 "errorMessage": "VCF VQSR input, can contain spaces"
             },
-            "vcf_dbsnp_source": {
-                "meta": ["vcf_dbsnp_source"],
+            "vcf_dbsnp_vcf_source": {
+                "meta": ["vcf_dbsnp_vcf_source"],
                 "type": "string",
                 "pattern": "^\\S+$",
                 "errorMessage": "Source of dbsnp, cannot contain spaces"
@@ -270,8 +270,8 @@
                 "pattern": "^\\S+\\.vcf\\.gz\\.tbi?$",
                 "errorMessage": "VCF tabix index, cannot contain spaces"
             },
-            "vcf_germline_resource_source": {
-                "meta": ["vcf_germline_resource_source"],
+            "vcf_germline_resource_vcf_source": {
+                "meta": ["vcf_germline_resource_vcf_source"],
                 "type": "string",
                 "pattern": "^\\S+$",
                 "errorMessage": "Source of germline_resource, cannot contain spaces"
@@ -288,8 +288,8 @@
                 "pattern": "^\\S+\\.vcf\\.gz\\.tbi?$",
                 "errorMessage": "VCF tabix index, cannot contain spaces"
             },
-            "vcf_known_indels_source": {
-                "meta": ["vcf_known_indels_source"],
+            "vcf_known_indels_vcf_source": {
+                "meta": ["vcf_known_indels_vcf_source"],
                 "type": "string",
                 "pattern": "^\\S+$",
                 "errorMessage": "Source of known_indels, cannot contain spaces"
@@ -306,8 +306,8 @@
                 "pattern": "^\\S+\\.vcf\\.gz\\.tbi?$",
                 "errorMessage": "VCF tabix index, cannot contain spaces"
             },
-            "vcf_known_snps_source": {
-                "meta": ["vcf_known_snps_source"],
+            "vcf_known_snps_vcf_source": {
+                "meta": ["vcf_known_snps_vcf_source"],
                 "type": "string",
                 "pattern": "^\\S+$",
                 "errorMessage": "Source of known_snps, cannot contain spaces"
@@ -324,8 +324,8 @@
                 "pattern": "^\\S+\\.vcf\\.gz\\.tbi?$",
                 "errorMessage": "VCF tabix index, cannot contain spaces"
             },
-            "vcf_pon_source": {
-                "meta": ["vcf_pon_source"],
+            "vcf_pon_vcf_source": {
+                "meta": ["vcf_pon_vcf_source"],
                 "type": "string",
                 "pattern": "^\\S+$",
                 "errorMessage": "Source of pon, cannot contain spaces"

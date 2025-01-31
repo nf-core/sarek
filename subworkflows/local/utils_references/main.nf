@@ -4,26 +4,28 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-def extract_references_file(references, param, attribute) {
-    def item = references.map { meta, _readme ->
-        if (param || meta[attribute]) {
-            [meta.subMap(['id']), file(param ?: meta[attribute].replace('${params.igenomes_base}', params.igenomes_base))]
+def extract_references_file(references, param, attribute, basepath) {
+    return references
+        .map { meta, _readme ->
+            if (param || meta[attribute]) {
+                [meta.subMap(['id']), file(param ?: meta[attribute].replace('${params.igenomes_base}', basepath))]
+            }
+            else {
+                null
+            }
         }
-        else {
-            null
-        }
-    }
-    return item.collect()
+        .collect()
 }
 
 def extract_references_value(references, param, attribute) {
-    def item = references.map { meta, _readme ->
-        if (param || meta[attribute]) {
-            [meta.subMap(['id']), param ?: meta[attribute]]
+    return references
+        .map { meta, _readme ->
+            if (param || meta[attribute]) {
+                [meta.subMap(['id']), param ?: meta[attribute]]
+            }
+            else {
+                null
+            }
         }
-        else {
-            null
-        }
-    }
-    return item.collect()
+        .collect()
 }
