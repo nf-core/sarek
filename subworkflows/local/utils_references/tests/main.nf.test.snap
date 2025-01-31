@@ -7,7 +7,7 @@
                         {
                             "id": "GRCh38_chr22"
                         },
-                        "/nf-core-references/test_data/Homo_sapiens/nf-core/references/testdata.GRCh38_chr22/Sequence/WholeGenomeFasta/genome.fasta"
+                        "/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/genome.fasta"
                     ]
                 ],
                 "1": [
@@ -23,7 +23,7 @@
                         {
                             "id": "GRCh38_chr22"
                         },
-                        "/nf-core-references/test_data/Homo_sapiens/nf-core/references/testdata.GRCh38_chr22/Sequence/WholeGenomeFasta/genome.fasta"
+                        "/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/genome.fasta"
                     ]
                 ],
                 "references_value": [
@@ -40,7 +40,7 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-01-31T13:12:57.867733238"
+        "timestamp": "2025-01-31T13:56:02.779937716"
     },
     "With params": {
         "content": [
@@ -50,7 +50,7 @@
                         {
                             "id": "GRCh38_chr22"
                         },
-                        "/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/genome.fasta"
+                        "/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/chr21/sequence/genome.fasta"
                     ]
                 ],
                 "1": [
@@ -66,7 +66,7 @@
                         {
                             "id": "GRCh38_chr22"
                         },
-                        "/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/genome.fasta"
+                        "/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/chr21/sequence/genome.fasta"
                     ]
                 ],
                 "references_value": [
@@ -83,6 +83,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-01-31T13:13:08.097955852"
+        "timestamp": "2025-01-31T13:55:00.387907176"
     }
 }
