@@ -1,0 +1,58 @@
+nextflow_workflow {
+
+    name "Test Workflow UTILS_REFERENCES"
+    script "../main.nf"
+    workflow "UTILS_REFERENCES"
+
+    test("Without params") {
+
+        when {
+            workflow {
+                """
+                input[0] = Channel.of([[
+                        genome:'GRCh38_chr22',
+                        id:'GRCh38_chr22',
+                        species:'Homo_sapiens',
+                        fasta:'\${params.igenomes_base}/Homo_sapiens/nf-core/references/testdata.GRCh38_chr22/Sequence/WholeGenomeFasta/genome.fasta',
+                    ], []])
+                input[1] = []
+                input[2] = []
+                input[3] = 'fasta'
+                input[4] = 'species'
+                input[5] = 's3://nf-core-references/test_data/'
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert snapshot(workflow.out).match()
+        }
+    }
+
+    test("With params") {
+
+        when {
+            workflow {
+                """
+                input[0] = Channel.of([[
+                        genome:'GRCh38_chr22',
+                        id:'GRCh38_chr22',
+                        species:'Homo_sapiens',
+                        fasta:'\${params.igenomes_base}/Homo_sapiens/nf-core/references/testdata.GRCh38_chr22/Sequence/WholeGenomeFasta/genome.fasta',
+                    ], []])
+                input[1] = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/genome.fasta'
+                input[2] = 'WBCel235'
+                input[3] = 'fasta'
+                input[4] = 'species'
+                input[5] = 's3://nf-core-references/test_data/'
+                """
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert snapshot(workflow.out).match()
+        }
+    }
+}

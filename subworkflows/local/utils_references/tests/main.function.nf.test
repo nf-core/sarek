@@ -1,0 +1,57 @@
+
+nextflow_function {
+
+    name "Test Functions"
+    script "../main.nf"
+
+    test("extract_references_file - without params") {
+
+        function "extract_references_file"
+
+        when {
+            function {
+                """
+                input[0] = Channel.of([[
+                        genome:'GRCh38_chr22',
+                        id:'GRCh38_chr22',
+                        species:'Homo_sapiens',
+                        fasta:'\${params.igenomes_base}/Homo_sapiens/nf-core/references/testdata.GRCh38_chr22/Sequence/WholeGenomeFasta/genome.fasta',
+                    ], []])
+                input[1] = []
+                input[2] = 'fasta'
+                input[3] = 's3://nf-core-references/test_data/'
+                """
+            }
+        }
+
+        then {
+            assert function.success
+            assert snapshot(function.result).match()
+        }
+    }
+
+    test("extract_references_value - without params") {
+
+        function "extract_references_value"
+
+        when {
+            function {
+                """
+                input[0] = Channel.of([[
+                        genome:'GRCh38_chr22',
+                        id:'GRCh38_chr22',
+                        species:'Homo_sapiens',
+                        fasta:'\${params.igenomes_base}/Homo_sapiens/nf-core/references/testdata.GRCh38_chr22/Sequence/WholeGenomeFasta/genome.fasta',
+                    ], []])
+                input[1] = []
+                input[2] = 'species'
+                """
+            }
+        }
+
+        then {
+            assert function.success
+            assert snapshot(function.result).match()
+        }
+    }
+}

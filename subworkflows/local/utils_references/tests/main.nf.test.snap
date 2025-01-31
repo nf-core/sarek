@@ -1,0 +1,88 @@
+{
+    "Without params": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "GRCh38_chr22"
+                        },
+                        "/nf-core-references/test_data/Homo_sapiens/nf-core/references/testdata.GRCh38_chr22/Sequence/WholeGenomeFasta/genome.fasta"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "GRCh38_chr22"
+                        },
+                        "Homo_sapiens"
+                    ]
+                ],
+                "references_file": [
+                    [
+                        {
+                            "id": "GRCh38_chr22"
+                        },
+                        "/nf-core-references/test_data/Homo_sapiens/nf-core/references/testdata.GRCh38_chr22/Sequence/WholeGenomeFasta/genome.fasta"
+                    ]
+                ],
+                "references_value": [
+                    [
+                        {
+                            "id": "GRCh38_chr22"
+                        },
+                        "Homo_sapiens"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
+        },
+        "timestamp": "2025-01-31T13:12:57.867733238"
+    },
+    "With params": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "GRCh38_chr22"
+                        },
+                        "/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/genome.fasta"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "GRCh38_chr22"
+                        },
+                        "WBCel235"
+                    ]
+                ],
+                "references_file": [
+                    [
+                        {
+                            "id": "GRCh38_chr22"
+                        },
+                        "/nf-core/test-datasets/modules/data/genomics/homo_sapiens/genome/genome.fasta"
+                    ]
+                ],
+                "references_value": [
+                    [
+                        {
+                            "id": "GRCh38_chr22"
+                        },
+                        "WBCel235"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
+        },
+        "timestamp": "2025-01-31T13:13:08.097955852"
+    }
+}

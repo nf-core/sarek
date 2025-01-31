@@ -1,0 +1,14 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "utils_references"
+description: Functionality for dealing with references that may be useful for any Nextflow pipeline
+keywords:
+  - utility
+  - pipeline
+  - references
+components: []
+input: []
+output: []
+authors:
+  - "@maxulysse"
+maintainers:
+  - "@maxulysse"
