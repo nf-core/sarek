@@ -226,13 +226,13 @@ workflow SAMPLESHEET_TO_CHANNEL {
     // Warns when missing files or params for mutect2
     references.map { meta, _fasta ->
         if (tools && tools.split(',').contains('mutect2')) {
-            if (!meta.vcf.pon.vcf) {
+            if (!meta.vcf_pon_vcf) {
                 log.warn("No Panel-of-normal was specified for Mutect2.\nIt is highly recommended to use one: https://gatk.broadinstitute.org/hc/en-us/articles/5358911630107-Mutect2\nFor more information on how to create one: https://gatk.broadinstitute.org/hc/en-us/articles/5358921041947-CreateSomaticPanelOfNormals-BETA-")
             }
-            if (!meta.vcf.germline_resource.vcf) {
+            if (!meta.vcf_germline_resource_vcf) {
                 log.warn("If Mutect2 is specified without a germline resource, no filtering will be done.\nIt is recommended to use one: https://gatk.broadinstitute.org/hc/en-us/articles/5358911630107-Mutect2")
             }
-            if (meta.vcf.pon.vcf && meta.vcf.pon.vcf.contains("/Homo_sapiens/GATK/GRCh38/Annotation/GATKBundle/1000g_pon.hg38.vcf.gz")) {
+            if (meta.vcf_pon_vcf && meta.vcf_pon_vcf.contains("/Homo_sapiens/GATK/GRCh38/Annotation/GATKBundle/1000g_pon.hg38.vcf.gz")) {
                 log.warn("The default Panel-of-Normals provided by GATK is used for Mutect2.\nIt is highly recommended to generate one from normal samples that are technical similar to the tumor ones.\nFor more information: https://gatk.broadinstitute.org/hc/en-us/articles/360035890631-Panel-of-Normals-PON-")
             }
         }
@@ -242,7 +242,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
     // Fails when missing resources for baserecalibrator
     // Warns when missing resources for haplotypecaller
     references.map { meta, _fasta ->
-        if (!meta.vcf.dbsnp.vcf && !meta.vcf.known_indels.vcf) {
+        if (!meta.vcf_dbsnp_vcf && !meta.vcf_known_indels_vcf) {
             if (step in ['mapping', 'markduplicates', 'prepare_recalibration', 'recalibrate'] && (!skip_tools || (skip_tools && !skip_tools.split(',').contains('baserecalibrator')))) {
                 error("Base quality score recalibration requires at least one resource file. Please provide at least one of `--dbsnp` or `--known_indels`\nYou can skip this step in the workflow by adding `--skip_tools baserecalibrator` to the command.")
             }
@@ -254,7 +254,7 @@ workflow SAMPLESHEET_TO_CHANNEL {
             error("The GATK's Haplotypecaller, Sentieon's Dnascope or Sentieon's Haplotyper should be specified as one of the tools when doing joint germline variant calling.) ")
         }
 
-        if (tools && (tools.split(',').contains('haplotypecaller') || tools.split(',').contains('sentieon_haplotyper') || tools.split(',').contains('sentieon_dnascope')) && joint_germline && (!meta.vcf.dbsnp.vcf || !meta.vcf.known_indels.vcf || !meta.vcf.known_snps.vcf || no_intervals)) {
+        if (tools && (tools.split(',').contains('haplotypecaller') || tools.split(',').contains('sentieon_haplotyper') || tools.split(',').contains('sentieon_dnascope')) && joint_germline && (!meta.vcf_dbsnp_vcf || !meta.vcf_known_indels_vcf || !meta.vcf_known_snps_vcf || no_intervals)) {
             log.warn(
                 """If GATK's Haplotypecaller, Sentieon's Dnascope and/or Sentieon's Haplotyper is specified, but without `--dbsnp`, `--known_snps`, `--known_indels` or the associated resource labels (ie `known_snps_vqsr`), no variant recalibration will be done. For recalibration you must provide all of these resources.\nFor more information see VariantRecalibration: https://gatk.broadinstitute.org/hc/en-us/articles/5358906115227-VariantRecalibrator \n\
     Joint germline variant calling also requires intervals in order to genotype the samples. As a result, if `--no_intervals` is set to `true` the joint germline variant calling will not be performed."""

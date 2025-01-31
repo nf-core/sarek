@@ -32,9 +32,8 @@ include { PIPELINE_COMPLETION             } from './subworkflows/local/utils_nfc
 include { PIPELINE_INITIALISATION         } from './subworkflows/local/utils_nfcore_sarek_pipeline'
 include { PREPARE_INTERVALS               } from './subworkflows/local/prepare_intervals'
 include { PREPARE_REFERENCE_CNVKIT        } from './subworkflows/local/prepare_reference_cnvkit'
-include { extract_references_file         } from './subworkflows/local/yaml_references'
-include { extract_references_value        } from './subworkflows/local/yaml_references'
-include { extract_references_vcf          } from './subworkflows/local/yaml_references'
+include { extract_references_file         } from './subworkflows/local/utils_references'
+include { extract_references_value        } from './subworkflows/local/utils_references'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -86,45 +85,45 @@ workflow NFCORE_SAREK {
     versions = Channel.empty()
 
     // References' files from the references yaml or params
-    ascat_alleles = extract_references_file(references, params.ascat_alleles, 'ascat_alleles').collect()
-    ascat_loci = extract_references_file(references, params.ascat_loci, 'ascat_loci').collect()
-    ascat_loci_gc = extract_references_file(references, params.ascat_loci_gc, 'ascat_loci_gc').collect()
-    ascat_loci_rt = extract_references_file(references, params.ascat_loci_rt, 'ascat_loci_rt').collect()
-    bwamem1_index = extract_references_file(references, params.bwa, 'bwamem1_index').collect()
-    bwamem2_index = extract_references_file(references, params.bwamem2, 'bwamem2_index').collect()
-    cf_chrom_len = extract_references_file(references, params.cf_chrom_len, 'cf_chrom_len').collect()
-    chr_dir = extract_references_file(references, params.chr_dir, 'chr_dir').collect()
-    dragmap_hashtable = extract_references_file(references, params.dragmap, 'dragmap_hashtable').collect()
-    fasta = extract_references_file(references, params.fasta, 'fasta').collect()
-    fasta_dict = extract_references_file(references, params.dict, 'fasta_dict').collect()
-    fasta_fai = extract_references_file(references, params.fasta_fai, 'fasta_fai').collect()
-    intervals_bed = extract_references_file(references, params.intervals, 'intervals_bed').collect()
-    mappability = extract_references_file(references, params.mappability, 'mappability').collect()
-    msisensorpro_scan = extract_references_file(references, params.msisensorpro_scan, 'msisensorpro_scan').collect()
-    ngscheckmate_bed = extract_references_file(references, params.ngscheckmate_bed, 'ngscheckmate_bed').collect()
-    sentieon_dnascope_model = extract_references_file(references, params.sentieon_dnascope_model, 'sentieon_dnascope_model').collect()
-
-    // References' VCFs and related from the references yaml or params
-    dbsnp = extract_references_vcf(references, params.dbsnp, 'dbsnp', 'vcf').collect()
-    dbsnp_tbi = extract_references_vcf(references, params.dbsnp_tbi, 'dbsnp', 'vcf_tbi').collect()
-    dbsnp_vqsr = extract_references_vcf(references, params.dbsnp_vqsr, 'dbsnp', 'vcf_vqsr').collect()
-    germline_resource = extract_references_vcf(references, params.germline_resource, 'germline_resource', 'vcf').collect()
-    germline_resource_tbi = extract_references_vcf(references, params.germline_resource_tbi, 'germline_resource', 'vcf_tbi').collect()
-    known_indels = extract_references_vcf(references, params.known_indels, 'known_indels', 'vcf').collect()
-    known_indels_tbi = extract_references_vcf(references, params.known_indels_tbi, 'known_indels', 'vcf_tbi').collect()
-    known_indels_vqsr = extract_references_vcf(references, params.known_indels_vqsr, 'known_indels', 'vcf_vqsr').collect()
-    known_snps = extract_references_vcf(references, params.known_snps, 'known_snps', 'vcf').collect()
-    known_snps_tbi = extract_references_vcf(references, params.known_snps_tbi, 'known_snps', 'vcf_tbi').collect()
-    known_snps_vqsr = extract_references_vcf(references, params.known_snps_vqsr, 'known_snps', 'vcf_vqsr').collect()
-    pon = extract_references_vcf(references, params.pon, 'pon', 'vcf').collect()
-    pon_tbi = extract_references_vcf(references, params.pon_tbi, 'pon', 'vcf_tbi').collect()
+    ascat_alleles = extract_references_file(references, params.ascat_alleles, 'ascat_alleles')
+    ascat_loci = extract_references_file(references, params.ascat_loci, 'ascat_loci')
+    ascat_loci_gc = extract_references_file(references, params.ascat_loci_gc, 'ascat_loci_gc')
+    ascat_loci_rt = extract_references_file(references, params.ascat_loci_rt, 'ascat_loci_rt')
+    bwamem1_index = extract_references_file(references, params.bwa, 'bwamem1_index')
+    bwamem2_index = extract_references_file(references, params.bwamem2, 'bwamem2_index')
+    cf_chrom_len = extract_references_file(references, params.cf_chrom_len, 'cf_chrom_len')
+    chr_dir = extract_references_file(references, params.chr_dir, 'chr_dir')
+    dragmap_hashtable = extract_references_file(references, params.dragmap, 'dragmap_hashtable')
+    fasta = extract_references_file(references, params.fasta, 'fasta')
+    fasta_dict = extract_references_file(references, params.dict, 'fasta_dict')
+    fasta_fai = extract_references_file(references, params.fasta_fai, 'fasta_fai')
+    intervals_bed = extract_references_file(references, params.intervals, 'intervals_bed')
+    mappability = extract_references_file(references, params.mappability, 'mappability')
+    msisensorpro_scan = extract_references_file(references, params.msisensorpro_scan, 'msisensorpro_scan')
+    ngscheckmate_bed = extract_references_file(references, params.ngscheckmate_bed, 'ngscheckmate_bed')
+    sentieon_dnascope_model = extract_references_file(references, params.sentieon_dnascope_model, 'sentieon_dnascope_model')
 
     // References' values from the references yaml or params
-    ascat_genome = extract_references_value(references, params.ascat_genome, 'ascat_genome').collect()
-    snpeff_db = extract_references_value(references, params.snpeff_db, 'snpeff_db').collect()
-    vep_cache_version = extract_references_value(references, params.vep_cache_version, 'vep_cache_version').collect()
-    vep_genome = extract_references_value(references, params.vep_genome, 'vep_genome').collect()
-    vep_species = extract_references_value(references, params.vep_species, 'vep_species').collect()
+    ascat_genome = extract_references_value(references, params.ascat_genome, 'ascat_genome')
+    snpeff_db = extract_references_value(references, params.snpeff_db, 'snpeff_db')
+    vep_cache_version = extract_references_value(references, params.vep_cache_version, 'vep_cache_version')
+    vep_genome = extract_references_value(references, params.vep_genome, 'vep_genome')
+    vep_species = extract_references_value(references, params.vep_species, 'vep_species')
+
+    // References' VCFs and related from the references yaml or params
+    dbsnp = extract_references_file(references, params.dbsnp, 'vcf_dbsnp_vcf')
+    dbsnp_tbi = extract_references_file(references, params.dbsnp_tbi, 'vcf_dbsnp_vcf_tbi')
+    dbsnp_vqsr = extract_references_value(references, params.dbsnp_vqsr, 'vcf_dbsnp_vcf_vqsr')
+    germline_resource = extract_references_file(references, params.germline_resource, 'vcf_germline_resource_vcf')
+    germline_resource_tbi = extract_references_file(references, params.germline_resource_tbi, 'vcf_germline_resource_vcf_tbi')
+    known_indels = extract_references_file(references, params.known_indels, 'vcf_known_indels_vcf')
+    known_indels_tbi = extract_references_file(references, params.known_indels_tbi, 'vcf_known_indels_vcf_tbi')
+    known_indels_vqsr = extract_references_value(references, params.known_indels_vqsr, 'vcf_known_indels_vcf_vqsr')
+    known_snps = extract_references_file(references, params.known_snps, 'vcf_known_snps_vcf')
+    known_snps_tbi = extract_references_file(references, params.known_snps_tbi, 'vcf_known_snps_vcf_tbi')
+    known_snps_vqsr = extract_references_value(references, params.known_snps_vqsr, 'vcf_known_snps_vcf_vqsr')
+    pon = extract_references_file(references, params.pon, 'vcf_pon_vcf')
+    pon_tbi = extract_references_file(references, params.pon_tbi, 'vcf_pon_vcf_tbi')
 
     // known_sites is made by grouping both the dbsnp and the known snps/indels resources
     // Which can either or both be optional
