@@ -32,8 +32,8 @@ include { PIPELINE_COMPLETION             } from './subworkflows/local/utils_nfc
 include { PIPELINE_INITIALISATION         } from './subworkflows/local/utils_nfcore_sarek_pipeline'
 include { PREPARE_INTERVALS               } from './subworkflows/local/prepare_intervals'
 include { PREPARE_REFERENCE_CNVKIT        } from './subworkflows/local/prepare_reference_cnvkit'
-include { extract_references_file         } from './subworkflows/local/utils_references'
-include { extract_references_value        } from './subworkflows/local/utils_references'
+include { get_references_file             } from './subworkflows/local/utils_references'
+include { get_references_value            } from './subworkflows/local/utils_references'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -85,45 +85,45 @@ workflow NFCORE_SAREK {
     versions = Channel.empty()
 
     // References' files from the references yaml or params
-    ascat_alleles = extract_references_file(references, params.ascat_alleles, 'ascat_alleles', params.igenomes_base)
-    ascat_loci = extract_references_file(references, params.ascat_loci, 'ascat_loci', params.igenomes_base)
-    ascat_loci_gc = extract_references_file(references, params.ascat_loci_gc, 'ascat_loci_gc', params.igenomes_base)
-    ascat_loci_rt = extract_references_file(references, params.ascat_loci_rt, 'ascat_loci_rt', params.igenomes_base)
-    bwamem1_index = extract_references_file(references, params.bwa, 'bwamem1_index', params.igenomes_base)
-    bwamem2_index = extract_references_file(references, params.bwamem2, 'bwamem2_index', params.igenomes_base)
-    cf_chrom_len = extract_references_file(references, params.cf_chrom_len, 'cf_chrom_len', params.igenomes_base)
-    chr_dir = extract_references_file(references, params.chr_dir, 'chr_dir', params.igenomes_base)
-    dragmap_hashtable = extract_references_file(references, params.dragmap, 'dragmap_hashtable', params.igenomes_base)
-    fasta = extract_references_file(references, params.fasta, 'fasta', params.igenomes_base)
-    fasta_dict = extract_references_file(references, params.dict, 'fasta_dict', params.igenomes_base)
-    fasta_fai = extract_references_file(references, params.fasta_fai, 'fasta_fai', params.igenomes_base)
-    intervals_bed = extract_references_file(references, params.intervals, 'intervals_bed', params.igenomes_base)
-    mappability = extract_references_file(references, params.mappability, 'mappability', params.igenomes_base)
-    msisensorpro_scan = extract_references_file(references, params.msisensorpro_scan, 'msisensorpro_scan', params.igenomes_base)
-    ngscheckmate_bed = extract_references_file(references, params.ngscheckmate_bed, 'ngscheckmate_bed', params.igenomes_base)
-    sentieon_dnascope_model = extract_references_file(references, params.sentieon_dnascope_model, 'sentieon_dnascope_model', params.igenomes_base)
+    ascat_alleles = get_references_file(references, params.ascat_alleles, 'ascat_alleles', params.igenomes_base)
+    ascat_loci = get_references_file(references, params.ascat_loci, 'ascat_loci', params.igenomes_base)
+    ascat_loci_gc = get_references_file(references, params.ascat_loci_gc, 'ascat_loci_gc', params.igenomes_base)
+    ascat_loci_rt = get_references_file(references, params.ascat_loci_rt, 'ascat_loci_rt', params.igenomes_base)
+    bwamem1_index = get_references_file(references, params.bwa, 'bwamem1_index', params.igenomes_base)
+    bwamem2_index = get_references_file(references, params.bwamem2, 'bwamem2_index', params.igenomes_base)
+    cf_chrom_len = get_references_file(references, params.cf_chrom_len, 'cf_chrom_len', params.igenomes_base)
+    chr_dir = get_references_file(references, params.chr_dir, 'chr_dir', params.igenomes_base)
+    dragmap_hashtable = get_references_file(references, params.dragmap, 'dragmap_hashtable', params.igenomes_base)
+    fasta = get_references_file(references, params.fasta, 'fasta', params.igenomes_base)
+    fasta_dict = get_references_file(references, params.dict, 'fasta_dict', params.igenomes_base)
+    fasta_fai = get_references_file(references, params.fasta_fai, 'fasta_fai', params.igenomes_base)
+    intervals_bed = get_references_file(references, params.intervals, 'intervals_bed', params.igenomes_base)
+    mappability = get_references_file(references, params.mappability, 'mappability', params.igenomes_base)
+    msisensorpro_scan = get_references_file(references, params.msisensorpro_scan, 'msisensorpro_scan', params.igenomes_base)
+    ngscheckmate_bed = get_references_file(references, params.ngscheckmate_bed, 'ngscheckmate_bed', params.igenomes_base)
+    sentieon_dnascope_model = get_references_file(references, params.sentieon_dnascope_model, 'sentieon_dnascope_model', params.igenomes_base)
 
     // References' values from the references yaml or params
-    ascat_genome = extract_references_value(references, params.ascat_genome, 'ascat_genome')
-    snpeff_db = extract_references_value(references, params.snpeff_db, 'snpeff_db')
-    vep_cache_version = extract_references_value(references, params.vep_cache_version, 'vep_cache_version')
-    vep_genome = extract_references_value(references, params.vep_genome, 'vep_genome')
-    vep_species = extract_references_value(references, params.vep_species, 'vep_species')
+    ascat_genome = get_references_value(references, params.ascat_genome, 'ascat_genome')
+    snpeff_db = get_references_value(references, params.snpeff_db, 'snpeff_db')
+    vep_cache_version = get_references_value(references, params.vep_cache_version, 'vep_cache_version')
+    vep_genome = get_references_value(references, params.vep_genome, 'vep_genome')
+    vep_species = get_references_value(references, params.vep_species, 'vep_species')
 
     // References' VCFs and related from the references yaml or params
-    dbsnp = extract_references_file(references, params.dbsnp, 'vcf_dbsnp_vcf', params.igenomes_base)
-    dbsnp_tbi = extract_references_file(references, params.dbsnp_tbi, 'vcf_dbsnp_vcf_tbi', params.igenomes_base)
-    dbsnp_vqsr = extract_references_value(references, params.dbsnp_vqsr, 'vcf_dbsnp_vcf_vqsr')
-    germline_resource = extract_references_file(references, params.germline_resource, 'vcf_germline_resource_vcf', params.igenomes_base)
-    germline_resource_tbi = extract_references_file(references, params.germline_resource_tbi, 'vcf_germline_resource_vcf_tbi', params.igenomes_base)
-    known_indels = extract_references_file(references, params.known_indels, 'vcf_known_indels_vcf', params.igenomes_base)
-    known_indels_tbi = extract_references_file(references, params.known_indels_tbi, 'vcf_known_indels_vcf_tbi', params.igenomes_base)
-    known_indels_vqsr = extract_references_value(references, params.known_indels_vqsr, 'vcf_known_indels_vcf_vqsr')
-    known_snps = extract_references_file(references, params.known_snps, 'vcf_known_snps_vcf', params.igenomes_base)
-    known_snps_tbi = extract_references_file(references, params.known_snps_tbi, 'vcf_known_snps_vcf_tbi', params.igenomes_base)
-    known_snps_vqsr = extract_references_value(references, params.known_snps_vqsr, 'vcf_known_snps_vcf_vqsr')
-    pon = extract_references_file(references, params.pon, 'vcf_pon_vcf', params.igenomes_base)
-    pon_tbi = extract_references_file(references, params.pon_tbi, 'vcf_pon_vcf_tbi', params.igenomes_base)
+    dbsnp = get_references_file(references, params.dbsnp, 'vcf_dbsnp_vcf', params.igenomes_base)
+    dbsnp_tbi = get_references_file(references, params.dbsnp_tbi, 'vcf_dbsnp_vcf_tbi', params.igenomes_base)
+    dbsnp_vqsr = get_references_value(references, params.dbsnp_vqsr, 'vcf_dbsnp_vcf_vqsr')
+    germline_resource = get_references_file(references, params.germline_resource, 'vcf_germline_resource_vcf', params.igenomes_base)
+    germline_resource_tbi = get_references_file(references, params.germline_resource_tbi, 'vcf_germline_resource_vcf_tbi', params.igenomes_base)
+    known_indels = get_references_file(references, params.known_indels, 'vcf_known_indels_vcf', params.igenomes_base)
+    known_indels_tbi = get_references_file(references, params.known_indels_tbi, 'vcf_known_indels_vcf_tbi', params.igenomes_base)
+    known_indels_vqsr = get_references_value(references, params.known_indels_vqsr, 'vcf_known_indels_vcf_vqsr')
+    known_snps = get_references_file(references, params.known_snps, 'vcf_known_snps_vcf', params.igenomes_base)
+    known_snps_tbi = get_references_file(references, params.known_snps_tbi, 'vcf_known_snps_vcf_tbi', params.igenomes_base)
+    known_snps_vqsr = get_references_value(references, params.known_snps_vqsr, 'vcf_known_snps_vcf_vqsr')
+    pon = get_references_file(references, params.pon, 'vcf_pon_vcf', params.igenomes_base)
+    pon_tbi = get_references_file(references, params.pon_tbi, 'vcf_pon_vcf_tbi', params.igenomes_base)
 
     // known_sites is made by grouping both the dbsnp and the known snps/indels resources
     // Which can either or both be optional
