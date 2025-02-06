@@ -32,10 +32,9 @@
                 "preprocessing/recalibrated/test/test.recal.cram",
                 "preprocessing/recalibrated/test/test.recal.cram.crai",
                 "reference",
-                "reference/intervals",
-                "reference/intervals/GRCh38_chr22.bed.gz",
-                "reference/intervals/chr22_1-40001.bed",
-                "reference/intervals/chr22_1-40001.bed.gz",
+                "reference/GRCh38_chr22.bed.gz",
+                "reference/chr22_1-40001.bed",
+                "reference/chr22_1-40001.bed.gz",
                 "reports",
                 "reports/mosdepth",
                 "reports/mosdepth/test",
@@ -71,7 +70,7 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-01-29T11:59:43.424775968"
+        "timestamp": "2025-02-06T20:23:47.461463042"
     },
     "Run with profile test | --input tests/csv/3.0/mapped_single_bam.csv --step recalibrate --skip_tools baserecalibrator --tools strelka": {
         "content": [
@@ -148,10 +147,9 @@
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
                 "reference",
-                "reference/intervals",
-                "reference/intervals/GRCh38_chr22.bed.gz",
-                "reference/intervals/chr22_1-40001.bed",
-                "reference/intervals/chr22_1-40001.bed.gz",
+                "reference/GRCh38_chr22.bed.gz",
+                "reference/chr22_1-40001.bed",
+                "reference/chr22_1-40001.bed.gz",
                 "reports",
                 "reports/bcftools",
                 "reports/bcftools/strelka",
@@ -196,7 +194,7 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-01-29T11:58:59.321420662"
+        "timestamp": "2025-02-06T20:22:25.55744869"
     },
     "Run with profile test | --input tests/csv/3.0/mapped_single_cram.csv --step recalibrate --skip_tools baserecalibrator --tools strelka": {
         "content": [
@@ -273,10 +271,9 @@
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
                 "reference",
-                "reference/intervals",
-                "reference/intervals/GRCh38_chr22.bed.gz",
-                "reference/intervals/chr22_1-40001.bed",
-                "reference/intervals/chr22_1-40001.bed.gz",
+                "reference/GRCh38_chr22.bed.gz",
+                "reference/chr22_1-40001.bed",
+                "reference/chr22_1-40001.bed.gz",
                 "reports",
                 "reports/bcftools",
                 "reports/bcftools/strelka",
@@ -321,7 +318,7 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-01-29T12:00:35.291910334"
+        "timestamp": "2025-02-06T20:25:08.494700828"
     },
     "Run with profile test | --input tests/csv/3.0/mapped_single_bam.csv --step recalibrate --tools null": {
         "content": [
@@ -348,10 +345,9 @@
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
                 "preprocessing",
                 "reference",
-                "reference/intervals",
-                "reference/intervals/GRCh38_chr22.bed.gz",
-                "reference/intervals/chr22_1-40001.bed",
-                "reference/intervals/chr22_1-40001.bed.gz"
+                "reference/GRCh38_chr22.bed.gz",
+                "reference/chr22_1-40001.bed",
+                "reference/chr22_1-40001.bed.gz"
             ],
             [
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f",
@@ -367,6 +363,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-01-29T11:58:09.992945781"
+        "timestamp": "2025-02-06T20:21:07.482909619"
     }
 }

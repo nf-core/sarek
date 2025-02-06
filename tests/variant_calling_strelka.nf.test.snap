@@ -81,10 +81,9 @@
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
                 "reference",
-                "reference/intervals",
-                "reference/intervals/GRCh38_chr22.bed.gz",
-                "reference/intervals/chr21_2-23354000.bed",
-                "reference/intervals/chr21_2-23354000.bed.gz",
+                "reference/GRCh38_chr22.bed.gz",
+                "reference/chr21_2-23354000.bed",
+                "reference/chr21_2-23354000.bed.gz",
                 "reports",
                 "reports/bcftools",
                 "reports/bcftools/strelka",
@@ -209,7 +208,7 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-01-29T13:01:09.433822657"
+        "timestamp": "2025-02-06T20:41:50.739593715"
     },
     "Run with profile test | --tools strelka --no_intervals | somatic": {
         "content": [
@@ -296,8 +295,7 @@
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
                 "reference",
-                "reference/intervals",
-                "reference/intervals/no_intervals.bed.gz",
+                "reference/no_intervals.bed.gz",
                 "reports",
                 "reports/bcftools",
                 "reports/bcftools/strelka",
@@ -392,7 +390,7 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-01-29T13:07:00.417669596"
+        "timestamp": "2025-02-06T20:51:01.626150717"
     },
     "Run with profile test | --tools strelka | somatic": {
         "content": [
@@ -476,10 +474,9 @@
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
                 "reference",
-                "reference/intervals",
-                "reference/intervals/GRCh38_chr22.bed.gz",
-                "reference/intervals/chr21_2-23354000.bed",
-                "reference/intervals/chr21_2-23354000.bed.gz",
+                "reference/GRCh38_chr22.bed.gz",
+                "reference/chr21_2-23354000.bed",
+                "reference/chr21_2-23354000.bed.gz",
                 "reports",
                 "reports/bcftools",
                 "reports/bcftools/strelka",
@@ -576,7 +573,7 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-01-29T13:05:32.380871581"
+        "timestamp": "2025-02-06T20:48:27.079304076"
     },
     "Run with profile test | --tools strelka | germline": {
         "content": [
@@ -653,10 +650,9 @@
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
                 "reference",
-                "reference/intervals",
-                "reference/intervals/GRCh38_chr22.bed.gz",
-                "reference/intervals/chr21_2-23354000.bed",
-                "reference/intervals/chr21_2-23354000.bed.gz",
+                "reference/GRCh38_chr22.bed.gz",
+                "reference/chr21_2-23354000.bed",
+                "reference/chr21_2-23354000.bed.gz",
                 "reports",
                 "reports/bcftools",
                 "reports/bcftools/strelka",
@@ -717,7 +713,7 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-01-29T13:02:28.34532403"
+        "timestamp": "2025-02-06T20:43:43.220095595"
     },
     "Run with profile test | --tools strelka --no_intervals | germline": {
         "content": [
@@ -797,8 +793,7 @@
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
                 "reference",
-                "reference/intervals",
-                "reference/intervals/no_intervals.bed.gz",
+                "reference/no_intervals.bed.gz",
                 "reports",
                 "reports/bcftools",
                 "reports/bcftools/strelka",
@@ -857,6 +852,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-01-29T13:03:51.650680237"
+        "timestamp": "2025-02-06T20:45:35.364624966"
     }
 }

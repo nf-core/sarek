@@ -83,10 +83,9 @@
                 "preprocessing/recal_table/test",
                 "preprocessing/recal_table/test/test.recal.table",
                 "reference",
-                "reference/intervals",
-                "reference/intervals/GRCh38_chr22.bed.gz",
-                "reference/intervals/chr22_1-40001.bed",
-                "reference/intervals/chr22_1-40001.bed.gz",
+                "reference/GRCh38_chr22.bed.gz",
+                "reference/chr22_1-40001.bed",
+                "reference/chr22_1-40001.bed.gz",
                 "reports",
                 "reports/mosdepth",
                 "reports/mosdepth/test",
@@ -129,7 +128,7 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-01-29T12:43:45.036635947"
+        "timestamp": "2025-02-06T20:11:25.620679668"
     },
     "Run with profile test | --input tests/csv/3.0/mapped_single_cram.csv --step markduplicates --skip_tools markduplicates --tools null": {
         "content": [
@@ -223,10 +222,9 @@
                 "preprocessing/recalibrated/test/test.recal.cram",
                 "preprocessing/recalibrated/test/test.recal.cram.crai",
                 "reference",
-                "reference/intervals",
-                "reference/intervals/GRCh38_chr22.bed.gz",
-                "reference/intervals/chr22_1-40001.bed",
-                "reference/intervals/chr22_1-40001.bed.gz",
+                "reference/GRCh38_chr22.bed.gz",
+                "reference/chr22_1-40001.bed",
+                "reference/chr22_1-40001.bed.gz",
                 "reports",
                 "reports/mosdepth",
                 "reports/mosdepth/test",
@@ -284,7 +282,7 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-01-29T12:45:43.218379963"
+        "timestamp": "2025-02-06T20:14:24.168060869"
     },
     "Run with profile test | --input tests/csv/3.0/mapped_single_bam.csv --step markduplicates --tools null": {
         "content": [
@@ -399,10 +397,9 @@
                 "preprocessing/recalibrated/test/test.recal.cram",
                 "preprocessing/recalibrated/test/test.recal.cram.crai",
                 "reference",
-                "reference/intervals",
-                "reference/intervals/GRCh38_chr22.bed.gz",
-                "reference/intervals/chr22_1-40001.bed",
-                "reference/intervals/chr22_1-40001.bed.gz",
+                "reference/GRCh38_chr22.bed.gz",
+                "reference/chr22_1-40001.bed",
+                "reference/chr22_1-40001.bed.gz",
                 "reports",
                 "reports/markduplicates",
                 "reports/markduplicates/test",
@@ -470,7 +467,7 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-01-29T12:42:46.567365289"
+        "timestamp": "2025-02-06T20:09:58.369997035"
     },
     "Run with profile test | --input tests/csv/3.0/mapped_single_cram.csv --step markduplicates --tools null": {
         "content": [
@@ -585,10 +582,9 @@
                 "preprocessing/recalibrated/test/test.recal.cram",
                 "preprocessing/recalibrated/test/test.recal.cram.crai",
                 "reference",
-                "reference/intervals",
-                "reference/intervals/GRCh38_chr22.bed.gz",
-                "reference/intervals/chr22_1-40001.bed",
-                "reference/intervals/chr22_1-40001.bed.gz",
+                "reference/GRCh38_chr22.bed.gz",
+                "reference/chr22_1-40001.bed",
+                "reference/chr22_1-40001.bed.gz",
                 "reports",
                 "reports/markduplicates",
                 "reports/markduplicates/test",
@@ -656,6 +652,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-01-29T12:44:47.605118172"
+        "timestamp": "2025-02-06T20:13:01.7741414"
     }
 }

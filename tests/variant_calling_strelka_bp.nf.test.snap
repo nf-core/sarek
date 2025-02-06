@@ -90,8 +90,7 @@
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
                 "reference",
-                "reference/intervals",
-                "reference/intervals/no_intervals.bed.gz",
+                "reference/no_intervals.bed.gz",
                 "reports",
                 "reports/bcftools",
                 "reports/bcftools/manta",
@@ -222,7 +221,7 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-01-29T12:59:12.506643108"
+        "timestamp": "2025-02-06T20:56:25.078139853"
     },
     "Run with profile test | --tools manta,strelka | somatic": {
         "content": [
@@ -312,10 +311,9 @@
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
                 "reference",
-                "reference/intervals",
-                "reference/intervals/GRCh38_chr22.bed.gz",
-                "reference/intervals/chr21_2-23354000.bed",
-                "reference/intervals/chr21_2-23354000.bed.gz",
+                "reference/GRCh38_chr22.bed.gz",
+                "reference/chr21_2-23354000.bed",
+                "reference/chr21_2-23354000.bed.gz",
                 "reports",
                 "reports/bcftools",
                 "reports/bcftools/manta",
@@ -448,6 +446,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-01-29T12:57:32.848424801"
+        "timestamp": "2025-02-06T20:53:56.086384279"
     }
 }

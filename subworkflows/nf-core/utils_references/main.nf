@@ -1,8 +1,13 @@
-// JUST TO TEST THE SUBWORKFLOW
+// DISCLAIMER:
+// This subworkflow is just to test the functions and the schema
+// It should not be used in any pipeline
+
+// This include statement can also be deleted
+include { samplesheetToList } from 'plugin/nf-schema'
 
 workflow UTILS_REFERENCES {
     take:
-    references
+    yaml_reference
     param_file
     param_value
     attribute_file
@@ -10,6 +15,8 @@ workflow UTILS_REFERENCES {
     basepath
 
     main:
+    references = Channel.fromList(samplesheetToList(yaml_reference, "${projectDir}/subworkflows/nf-core/utils_references/schema_references.json"))
+
     // GIVING up writing a test for the functions, so writing a subworkflow to test it
     references_file = get_references_file(references, param_file, attribute_file, basepath)
     references_value = get_references_value(references, param_value, attribute_value)
@@ -18,6 +25,7 @@ workflow UTILS_REFERENCES {
     references_file
     references_value
 }
+// You can delete everything before this line (including this line)
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

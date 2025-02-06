@@ -32,8 +32,8 @@ include { PIPELINE_COMPLETION             } from './subworkflows/local/utils_nfc
 include { PIPELINE_INITIALISATION         } from './subworkflows/local/utils_nfcore_sarek_pipeline'
 include { PREPARE_INTERVALS               } from './subworkflows/local/prepare_intervals'
 include { PREPARE_REFERENCE_CNVKIT        } from './subworkflows/local/prepare_reference_cnvkit'
-include { get_references_file             } from './subworkflows/local/utils_references'
-include { get_references_value            } from './subworkflows/local/utils_references'
+include { get_references_file             } from './subworkflows/nf-core/utils_references'
+include { get_references_value            } from './subworkflows/nf-core/utils_references'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

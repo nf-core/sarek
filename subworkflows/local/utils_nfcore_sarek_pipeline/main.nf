@@ -70,7 +70,7 @@ workflow PIPELINE_INITIALISATION {
         ? Channel.fromList(samplesheetToList(input, "${projectDir}/assets/schema_input.json"))
         : Channel.fromList(samplesheetToList(retrieveInput(step, outdir), "${projectDir}/assets/schema_input.json"))
 
-    ch_from_references = Channel.fromList(samplesheetToList(references, "${projectDir}/subworkflows/local/utils_references/schema_references.json"))
+    ch_from_references = Channel.fromList(samplesheetToList(references, "${projectDir}/subworkflows/nf-core/utils_references/schema_references.json"))
 
     SAMPLESHEET_TO_CHANNEL(
         ch_from_samplesheet,

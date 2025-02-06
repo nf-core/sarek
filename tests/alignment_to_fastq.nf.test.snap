@@ -223,10 +223,9 @@
                 "preprocessing/recalibrated/test/test.recal.bam",
                 "preprocessing/recalibrated/test/test.recal.bam.bai",
                 "reference",
-                "reference/intervals",
-                "reference/intervals/GRCh38_chr22.bed.gz",
-                "reference/intervals/chr22_1-40001.bed",
-                "reference/intervals/chr22_1-40001.bed.gz",
+                "reference/GRCh38_chr22.bed.gz",
+                "reference/chr22_1-40001.bed",
+                "reference/chr22_1-40001.bed.gz",
                 "reports",
                 "reports/bcftools",
                 "reports/bcftools/strelka",
@@ -337,6 +336,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-01-29T13:43:14.341569664"
+        "timestamp": "2025-02-06T20:00:53.63350966"
     }
 }
