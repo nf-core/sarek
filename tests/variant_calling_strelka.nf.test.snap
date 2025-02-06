@@ -80,10 +80,6 @@
                 "multiqc/multiqc_report.html",
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
-                "reference",
-                "reference/GRCh38_chr22.bed.gz",
-                "reference/chr21_2-23354000.bed",
-                "reference/chr21_2-23354000.bed.gz",
                 "reports",
                 "reports/bcftools",
                 "reports/bcftools/strelka",
@@ -163,9 +159,6 @@
                 "multiqc_bcftools_stats.txt:md5,b2bbb90ef05598e1a70cf36be416c3e2",
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
                 "vcftools_tstv_by_count.txt:md5,d4fdc9722fec46722bda2d04be6801d0",
-                "GRCh38_chr22.bed.gz:md5,571ded0aaefdb3be8c7025b9822eb009",
-                "chr21_2-23354000.bed:md5,4591ef7ad7e4bb8c97f646dc825b510d",
-                "chr21_2-23354000.bed.gz:md5,4591ef7ad7e4bb8c97f646dc825b510d",
                 "sample1.strelka.variants.bcftools_stats.txt:md5,2936f10f99295fb772d8c35f246e223d",
                 "sample4_vs_sample3.strelka.somatic_indels.bcftools_stats.txt:md5,1c57e5cd6424157536276002ef1a58d6",
                 "sample4_vs_sample3.strelka.somatic_snvs.bcftools_stats.txt:md5,8cf6d0b3f41436cd2f2aa09c9831764d",
@@ -208,7 +201,7 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-02-06T20:41:50.739593715"
+        "timestamp": "2025-02-06T22:27:15.776602156"
     },
     "Run with profile test | --tools strelka --no_intervals | somatic": {
         "content": [
@@ -294,8 +287,6 @@
                 "no_intervals.bed.gz.tbi",
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
-                "reference",
-                "reference/no_intervals.bed.gz",
                 "reports",
                 "reports/bcftools",
                 "reports/bcftools/strelka",
@@ -359,7 +350,6 @@
                 "multiqc_bcftools_stats.txt:md5,e47ab6f334efa3a95dbd609a27711375",
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
                 "vcftools_tstv_by_count.txt:md5,4244903e90d55bc6cd0cb9f6efcd8a80",
-                "no_intervals.bed.gz:md5,f3dac01ea66b95fe477446fde2d31489",
                 "sample3.strelka.variants.bcftools_stats.txt:md5,c75a458b1aa0e1bae3b667d48684e13c",
                 "sample4_vs_sample3.strelka.somatic_indels.bcftools_stats.txt:md5,1c57e5cd6424157536276002ef1a58d6",
                 "sample4_vs_sample3.strelka.somatic_snvs.bcftools_stats.txt:md5,110810e5702ef11bc002bd0948dbdfff",
@@ -390,7 +380,7 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-02-06T20:51:01.626150717"
+        "timestamp": "2025-02-06T22:34:10.414751676"
     },
     "Run with profile test | --tools strelka | somatic": {
         "content": [
@@ -473,10 +463,6 @@
                 "multiqc/multiqc_report.html",
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
-                "reference",
-                "reference/GRCh38_chr22.bed.gz",
-                "reference/chr21_2-23354000.bed",
-                "reference/chr21_2-23354000.bed.gz",
                 "reports",
                 "reports/bcftools",
                 "reports/bcftools/strelka",
@@ -540,9 +526,6 @@
                 "multiqc_bcftools_stats.txt:md5,c2674bda60d8fa805601c436afe16f18",
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
                 "vcftools_tstv_by_count.txt:md5,3888b9a69fdeaf6667dcc600ff776413",
-                "GRCh38_chr22.bed.gz:md5,571ded0aaefdb3be8c7025b9822eb009",
-                "chr21_2-23354000.bed:md5,4591ef7ad7e4bb8c97f646dc825b510d",
-                "chr21_2-23354000.bed.gz:md5,4591ef7ad7e4bb8c97f646dc825b510d",
                 "sample3.strelka.variants.bcftools_stats.txt:md5,d505d381e8c3906788e4135bb975ff84",
                 "sample4_vs_sample3.strelka.somatic_indels.bcftools_stats.txt:md5,1c57e5cd6424157536276002ef1a58d6",
                 "sample4_vs_sample3.strelka.somatic_snvs.bcftools_stats.txt:md5,8cf6d0b3f41436cd2f2aa09c9831764d",
@@ -573,7 +556,7 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-02-06T20:48:27.079304076"
+        "timestamp": "2025-02-06T22:32:15.166938605"
     },
     "Run with profile test | --tools strelka | germline": {
         "content": [
@@ -649,10 +632,6 @@
                 "multiqc/multiqc_report.html",
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
-                "reference",
-                "reference/GRCh38_chr22.bed.gz",
-                "reference/chr21_2-23354000.bed",
-                "reference/chr21_2-23354000.bed.gz",
                 "reports",
                 "reports/bcftools",
                 "reports/bcftools/strelka",
@@ -692,9 +671,6 @@
                 "multiqc_bcftools_stats.txt:md5,cde557db5eb46f8325c06e9bb32e7a94",
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
                 "vcftools_tstv_by_count.txt:md5,69cbd9060c01c1102ddf5839ee7b404a",
-                "GRCh38_chr22.bed.gz:md5,571ded0aaefdb3be8c7025b9822eb009",
-                "chr21_2-23354000.bed:md5,4591ef7ad7e4bb8c97f646dc825b510d",
-                "chr21_2-23354000.bed.gz:md5,4591ef7ad7e4bb8c97f646dc825b510d",
                 "sample1.strelka.variants.bcftools_stats.txt:md5,2936f10f99295fb772d8c35f246e223d",
                 "sample1.recal.mosdepth.global.dist.txt:md5,d9a4dd6429560b2b647da346050766c5",
                 "sample1.recal.mosdepth.region.dist.txt:md5,1f3dab381958e08eb00f7c5e1135f677",
@@ -713,7 +689,7 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-02-06T20:43:43.220095595"
+        "timestamp": "2025-02-06T22:28:38.600998753"
     },
     "Run with profile test | --tools strelka --no_intervals | germline": {
         "content": [
@@ -792,8 +768,6 @@
                 "no_intervals.bed.gz.tbi",
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
-                "reference",
-                "reference/no_intervals.bed.gz",
                 "reports",
                 "reports/bcftools",
                 "reports/bcftools/strelka",
@@ -833,7 +807,6 @@
                 "multiqc_bcftools_stats.txt:md5,23c19e033f3086bec87c5e2022795e79",
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
                 "vcftools_tstv_by_count.txt:md5,ea99842f730543b5fd1a08d0e1d68278",
-                "no_intervals.bed.gz:md5,f3dac01ea66b95fe477446fde2d31489",
                 "sample1.strelka.variants.bcftools_stats.txt:md5,0e829f5d31d768a8e99786786282c9ef",
                 "sample1.recal.mosdepth.global.dist.txt:md5,d9a4dd6429560b2b647da346050766c5",
                 "sample1.recal.mosdepth.region.dist.txt:md5,1f3dab381958e08eb00f7c5e1135f677",
@@ -852,6 +825,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-02-06T20:45:35.364624966"
+        "timestamp": "2025-02-06T22:30:20.72637938"
     }
 }
