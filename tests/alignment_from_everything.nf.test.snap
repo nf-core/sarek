@@ -222,10 +222,6 @@
                 "preprocessing/recalibrated/test",
                 "preprocessing/recalibrated/test/test.recal.bam",
                 "preprocessing/recalibrated/test/test.recal.bam.bai",
-                "reference",
-                "reference/GRCh38_chr22.bed.gz",
-                "reference/chr22_1-40001.bed",
-                "reference/chr22_1-40001.bed.gz",
                 "reports",
                 "reports/bcftools",
                 "reports/bcftools/strelka",
@@ -309,9 +305,6 @@
                 "samtools-stats-dp.txt:md5,c94f4d3ffa3f510552f90e173fdd9f9d",
                 "samtools_alignment_plot.txt:md5,717f499a3543e7ee4c7a8454bf80aeca",
                 "vcftools_tstv_by_count.txt:md5,50efc5214fe2c39f21efb66a710d2ed6",
-                "GRCh38_chr22.bed.gz:md5,87a15eb9c2ff20ccd5cd8735a28708f7",
-                "chr22_1-40001.bed:md5,87a15eb9c2ff20ccd5cd8735a28708f7",
-                "chr22_1-40001.bed.gz:md5,87a15eb9c2ff20ccd5cd8735a28708f7",
                 "test.strelka.variants.bcftools_stats.txt:md5,86bd4938eed920d36f3f5937102a2967",
                 "test.md.mosdepth.global.dist.txt:md5,b61e1acee11a6ddf7ce3232a5948a6a0",
                 "test.md.mosdepth.region.dist.txt:md5,1a382f98d488d2ae3df83a0d87caafc1",
@@ -336,6 +329,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-02-06T19:58:29.666481295"
+        "timestamp": "2025-02-06T21:10:24.809581731"
     }
 }

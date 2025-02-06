@@ -29,16 +29,10 @@
                 "preprocessing/mapped",
                 "preprocessing/mapped/test",
                 "preprocessing/mapped/test/test.sorted.cram",
-                "preprocessing/mapped/test/test.sorted.cram.crai",
-                "reference",
-                "reference/GRCh38_chr22.bed.gz",
-                "reference/chr22_1-40001.bed",
-                "reference/chr22_1-40001.bed.gz"
+                "preprocessing/mapped/test/test.sorted.cram.crai"
             ],
             [
-                "GRCh38_chr22.bed.gz:md5,87a15eb9c2ff20ccd5cd8735a28708f7",
-                "chr22_1-40001.bed:md5,87a15eb9c2ff20ccd5cd8735a28708f7",
-                "chr22_1-40001.bed.gz:md5,87a15eb9c2ff20ccd5cd8735a28708f7"
+                
             ],
             [
                 [
@@ -51,6 +45,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-02-06T19:49:28.245119947"
+        "timestamp": "2025-02-06T21:05:17.892600127"
     }
 }
