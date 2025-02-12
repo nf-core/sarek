@@ -18,6 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- [1797](https://github.com/nf-core/sarek/pull/1797) - Use `file-path-pattern` over `file-path` to hanlde glob for `known_indels` and `known_indels_tbi` to fix [1785](https://github.com/nf-core/sarek/issues/1785)
+
 ### Removed
 
 ### Dependencies
