@@ -16,7 +16,7 @@
                     "vcftools": "0.1.16"
                 },
                 "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
+                    "nf-core/sarek": "v3.5.1"
                 }
             },
             [
@@ -221,7 +221,7 @@
                     "vcftools": "0.1.16"
                 },
                 "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
+                    "nf-core/sarek": "v3.5.1"
                 }
             },
             [
@@ -401,7 +401,7 @@
                     "vcftools": "0.1.16"
                 },
                 "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
+                    "nf-core/sarek": "v3.5.1"
                 }
             },
             [
@@ -575,7 +575,7 @@
                     "vcftools": "0.1.16"
                 },
                 "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
+                    "nf-core/sarek": "v3.5.1"
                 }
             },
             [
@@ -709,7 +709,7 @@
                     "vcftools": "0.1.16"
                 },
                 "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
+                    "nf-core/sarek": "v3.5.1"
                 }
             },
             [
