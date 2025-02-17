@@ -4,7 +4,7 @@
             5,
             {
                 "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
+                    "nf-core/sarek": "v3.5.1"
                 }
             },
             [
@@ -64,7 +64,7 @@
                     "samtools": 1.21
                 },
                 "Workflow": {
-                    "nf-core/sarek": "v3.6.0dev"
+                    "nf-core/sarek": "v3.5.1"
                 }
             },
             [
