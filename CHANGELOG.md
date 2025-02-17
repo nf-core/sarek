@@ -22,6 +22,7 @@ Akkatjåkkå is another glacier.
 ### Fixed
 
 - [1797](https://github.com/nf-core/sarek/pull/1797) - Use `file-path-pattern` over `file-path` to hanlde glob for `known_indels` and `known_indels_tbi` to fix [1785](https://github.com/nf-core/sarek/issues/1785)
+- [1802](https://github.com/nf-core/sarek/pull/1802) - Update GHA for full_test tests
 
 ### Removed
 
