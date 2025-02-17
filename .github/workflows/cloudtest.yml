@@ -87,7 +87,7 @@ jobs:
         id: check_approvals
         continue-on-error: true
         with:
-          route: GET /repos/{%- raw -%}${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/reviews?per_page=100
+          route: GET /repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/reviews?per_page=100
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -101,7 +101,7 @@ jobs:
         id: test_variables
         if: github.event_name != 'workflow_dispatch'
         run: |
-          JSON_RESPONSE='${{ steps.check_approvals.outputs.data }}'{% endraw %}
+          JSON_RESPONSE='${{ steps.check_approvals.outputs.data }}'
           CURRENT_APPROVALS_COUNT=$(echo $JSON_RESPONSE | jq -c '[.[] | select(.state | contains("APPROVED")) ] | length')
           test $CURRENT_APPROVALS_COUNT -ge 2 || exit 1 # At least 2 approvals are required
 
