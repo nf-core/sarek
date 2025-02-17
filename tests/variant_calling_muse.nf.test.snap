@@ -1,0 +1,58 @@
+{
+    "Run with profile test | --tools muse | somatic": {
+        "content": [
+            0,
+            {
+                "Workflow": {
+                    "nf-core/sarek": "v3.5.1"
+                }
+            },
+            [
+                "csv",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml"
+            ],
+            [
+                
+            ],
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
+        },
+        "timestamp": "2025-02-17T15:03:48.714222"
+    },
+    "Run with profile test | --tools muse | somatic | stub": {
+        "content": [
+            1,
+            {
+                "Workflow": {
+                    "nf-core/sarek": "v3.5.1"
+                }
+            },
+            [
+                "csv",
+                "no_intervals.bed",
+                "no_intervals.bed.gz",
+                "no_intervals.bed.gz.tbi",
+                "pipeline_info",
+                "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
+                "reference"
+            ],
+            [
+                
+            ],
+            [
+                
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
+        },
+        "timestamp": "2025-02-17T15:04:16.264402"
+    }
+}
