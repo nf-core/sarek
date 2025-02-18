@@ -81,13 +81,24 @@ jobs:
     if: github.repository == 'nf-core/sarek' && github.event.review.state == 'approved' && github.event.pull_request.base.ref == 'master' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
-      - uses: octokit/request-action@v2.x
+      - name: Get PR reviews
+        uses: octokit/request-action@v2.x
+        if: github.event_name != 'workflow_dispatch'
         id: check_approvals
+        continue-on-error: true
         with:
-          route: GET /repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/reviews
+          route: GET /repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/reviews?per_page=100
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - id: test_variables
+
+      - name: Check for approvals
+        if: ${{ failure() && github.event_name != 'workflow_dispatch' }}
+        run: |
+          echo "No review approvals found. At least 2 approvals are required to run this action automatically."
+          exit 1
+
+      - name: Check for enough approvals (>=2)
+        id: test_variables
         if: github.event_name != 'workflow_dispatch'
         run: |
           JSON_RESPONSE='${{ steps.check_approvals.outputs.data }}'
@@ -114,11 +125,9 @@ jobs:
             }
           profiles: ${{ matrix.profile }}
 
-      - uses: actions/upload-artifact@v3
-        name: Save Logs
-        if: success() || failure()
+      - uses: actions/upload-artifact@v4
         with:
-          name: tower-${{ matrix.profile }}-log
+          name: Seqera Platform debug log file
           path: |
-            tower_action_*.log
-            tower_action_*.json
+            seqera_platform_action_*.log
+            seqera_platform_action_*.json
