@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- [#1338](https://github.com/nf-core/sarek/pull/1338) - Optimisation: switch `samtools index` to `--write-index` ([#1121](https://github.com/nf-core/sarek/issues/1121) )
+
 ### Fixed
 
 ### Removed
