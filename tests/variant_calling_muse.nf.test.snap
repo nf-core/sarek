@@ -23,7 +23,7 @@
                     "vcftools": "0.1.16"
                 },
                 "Workflow": {
-                    "nf-core/sarek": "v3.5.1"
+                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [
@@ -136,7 +136,7 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-02-18T12:58:22.831997"
+        "timestamp": "2025-02-18T13:26:09.807208"
     },
     "Run with profile test | --tools muse | somatic | stub": {
         "content": [
@@ -162,7 +162,7 @@
                     "vcftools": "0.1.16"
                 },
                 "Workflow": {
-                    "nf-core/sarek": "v3.5.1"
+                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [
@@ -400,6 +400,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-02-18T12:59:27.818287"
+        "timestamp": "2025-02-18T13:27:21.40113"
     }
 }
