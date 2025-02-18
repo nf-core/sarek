@@ -712,7 +712,7 @@
                 "known_indels": {
                     "type": "string",
                     "fa_icon": "fas fa-copy",
-                    "format": "file-path",
+                    "format": "file-path-pattern",
                     "exists": true,
                     "mimetype": "text/plain",
                     "description": "Path to known indels file.",
@@ -721,7 +721,7 @@
                 "known_indels_tbi": {
                     "type": "string",
                     "fa_icon": "fas fa-copy",
-                    "format": "file-path",
+                    "format": "file-path-pattern",
                     "exists": true,
                     "mimetype": "text/plain",
                     "description": "Path to known indels file index.",
