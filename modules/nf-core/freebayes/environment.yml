@@ -1,7 +1,5 @@
-name: freebayes
 channels:
   - conda-forge
   - bioconda
-  - defaults
 dependencies:
   - bioconda::freebayes=1.3.6

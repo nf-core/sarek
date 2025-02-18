@@ -1,7 +1,5 @@
-name: gatk4spark_markduplicates
 channels:
   - conda-forge
   - bioconda
-  - defaults
 dependencies:
   - bioconda::gatk4-spark=4.5.0.0

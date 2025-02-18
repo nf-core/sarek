@@ -14,38 +14,50 @@ tools:
       documentation: https://gatk.broadinstitute.org/hc/en-us/categories/360002369672s
       doi: 10.1158/1538-7445.AM2017-3590
       licence: ["Apache-2.0"]
+      identifier: ""
 input:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test']
-  - vcf:
-      type: list
-      description: Two or more VCF files
-      pattern: "*.{vcf,vcf.gz}"
-  - meta2:
-      type: map
-      description: |
-        Groovy Map containing reference information
-        e.g. [ id:'genome']
-  - dict:
-      type: file
-      description: Optional Sequence Dictionary as input
-      pattern: "*.dict"
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test']
+    - vcf:
+        type: list
+        description: Two or more VCF files
+        pattern: "*.{vcf,vcf.gz}"
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'genome']
+    - dict:
+        type: file
+        description: Optional Sequence Dictionary as input
+        pattern: "*.dict"
 output:
   - vcf:
-      type: file
-      description: merged vcf file
-      pattern: "*.vcf.gz"
+      - meta:
+          type: file
+          description: merged vcf file
+          pattern: "*.vcf.gz"
+      - "*.vcf.gz":
+          type: file
+          description: merged vcf file
+          pattern: "*.vcf.gz"
   - tbi:
-      type: file
-      description: index files for the merged vcf files
-      pattern: "*.tbi"
+      - meta:
+          type: file
+          description: index files for the merged vcf files
+          pattern: "*.tbi"
+      - "*.tbi":
+          type: file
+          description: index files for the merged vcf files
+          pattern: "*.tbi"
   - versions:
-      type: file
-      description: File containing software versions
-      pattern: "versions.yml"
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@kevinmenden"
 maintainers:

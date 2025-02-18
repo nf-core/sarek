@@ -16,7 +16,7 @@ nextflow_process {
                 """
                 input[0] = [
                                 [ id:'tbi_bed' ],
-                                [ file(params.test_data['sarscov2']['genome']['test_bed_gz'], checkIfExists: true) ]
+                                [ file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/bed/test.bed.gz', checkIfExists: true) ]
                             ]
                 """
             }
@@ -25,11 +25,10 @@ nextflow_process {
         then {
             assertAll (
                 { assert process.success },
-                { assert snapshot(process.out).match() },
                 { assert snapshot(
-                            file(process.out.tbi[0][1]).name
-                                ).match("tbi_bed")
-                }
+                    process.out,
+                    file(process.out.tbi[0][1]).name
+                ).match() }
             )
         }
     }
@@ -41,7 +40,7 @@ nextflow_process {
                 """
                 input[0] = [
                                 [ id:'tbi_gff' ],
-                                [ file(params.test_data['sarscov2']['genome']['genome_gff3_gz'], checkIfExists: true) ]
+                                [ file(params.modules_testdata_base_path + 'genomics/sarscov2/genome/genome.gff3.gz', checkIfExists: true) ]
                             ]
                 """
             }
@@ -50,11 +49,9 @@ nextflow_process {
         then {
             assertAll (
                 { assert process.success },
-                { assert snapshot(process.out).match() },
                 { assert snapshot(
-                            file(process.out.tbi[0][1]).name
-                                ).match("tbi_gff")
-                }
+                    process.out,
+                    file(process.out.tbi[0][1]).name).match() }
             )
         }
 
@@ -67,7 +64,7 @@ nextflow_process {
                 """
                 input[0] =  [
                                 [ id:'tbi_vcf' ],
-                                [ file(params.test_data['sarscov2']['illumina']['test_vcf_gz'], checkIfExists: true) ]
+                                [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz', checkIfExists: true) ]
                             ]
                 """
             }
@@ -76,11 +73,10 @@ nextflow_process {
         then {
             assertAll (
                 { assert process.success },
-                { assert snapshot(process.out).match() },
                 { assert snapshot(
-                            file(process.out.tbi[0][1]).name
-                                ).match("tbi_vcf")
-                }
+                    process.out,
+                    file(process.out.tbi[0][1]).name
+                ).match() }
             )
         }
 
@@ -93,7 +89,7 @@ nextflow_process {
                 """
                 input[0] =  [
                                 [ id:'vcf_csi' ],
-                                [ file(params.test_data['sarscov2']['illumina']['test_vcf_gz'], checkIfExists: true) ]
+                                [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz', checkIfExists: true) ]
                             ]
                 """
             }
@@ -102,11 +98,10 @@ nextflow_process {
         then {
             assertAll (
                 { assert process.success },
-                { assert snapshot(process.out).match() },
                 { assert snapshot(
-                            file(process.out.csi[0][1]).name
-                                ).match("vcf_csi")
-                }
+                    process.out,
+                    file(process.out.csi[0][1]).name
+                ).match() }
             )
         }
 
@@ -120,7 +115,7 @@ nextflow_process {
                 """
                 input[0] =  [
                                 [ id:'vcf_csi_stub' ],
-                                [ file(params.test_data['sarscov2']['illumina']['test_vcf_gz'], checkIfExists: true) ]
+                                [ file(params.modules_testdata_base_path + 'genomics/sarscov2/illumina/vcf/test.vcf.gz', checkIfExists: true) ]
                             ]
                 """
             }
@@ -129,11 +124,10 @@ nextflow_process {
         then {
             assertAll (
                 { assert process.success },
-                { assert snapshot(process.out).match() },
                 { assert snapshot(
-                            file(process.out.csi[0][1]).name
-                                ).match("vcf_csi_stub")
-                }
+                    process.out,
+                    file(process.out.csi[0][1]).name
+                ).match() }
             )
         }
 

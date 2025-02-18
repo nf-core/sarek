@@ -48,4 +48,17 @@ process GATK4_APPLYBQSR {
         gatk4: \$(echo \$(gatk --version 2>&1) | sed 's/^.*(GATK) v//; s/ .*\$//')
     END_VERSIONS
     """
+
+    stub:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    def input_extension = input.getExtension()
+    def output_extension = input_extension == 'bam' ? 'bam' : 'cram'
+    """
+    touch ${prefix}.${output_extension}
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        gatk4: \$(echo \$(gatk --version 2>&1) | sed 's/^.*(GATK) v//; s/ .*\$//')
+    END_VERSIONS
+    """
 }

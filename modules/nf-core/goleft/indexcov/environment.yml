@@ -1,0 +1,6 @@
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - bioconda::goleft=0.2.4
+  - bioconda::htslib=1.12

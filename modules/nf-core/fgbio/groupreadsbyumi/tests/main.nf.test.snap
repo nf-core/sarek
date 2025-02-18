@@ -1,0 +1,108 @@
+{
+    "sarscov2 - bam - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_umi-grouped.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_umi-grouped_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    "versions.yml:md5,e293eed3614f921114b3bd5b0e1ada10"
+                ],
+                "bam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_umi-grouped.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "histogram": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_umi-grouped_histogram.txt:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,e293eed3614f921114b3bd5b0e1ada10"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.1"
+        },
+        "timestamp": "2024-05-21T10:48:29.108067677"
+    },
+    "sarscov2 - bam": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_umi-grouped.bam:md5,35bfc992c30d8e3e50816159fa58cb11"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_umi-grouped_histogram.txt:md5,9a0c622b65209afbce0840e2affff983"
+                    ]
+                ],
+                "2": [
+                    "versions.yml:md5,e293eed3614f921114b3bd5b0e1ada10"
+                ],
+                "bam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_umi-grouped.bam:md5,35bfc992c30d8e3e50816159fa58cb11"
+                    ]
+                ],
+                "histogram": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_umi-grouped_histogram.txt:md5,9a0c622b65209afbce0840e2affff983"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,e293eed3614f921114b3bd5b0e1ada10"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.1"
+        },
+        "timestamp": "2024-05-21T10:48:14.269677258"
+    }
+}

@@ -1,0 +1,68 @@
+{
+    "homo_sapiens - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "homo_sapiens_genome"
+                        },
+                        "homo_sapiens_genome_consensus_unmapped.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,8a39cbc62685ce7afb5ae36609898bde"
+                ],
+                "bam": [
+                    [
+                        {
+                            "id": "homo_sapiens_genome"
+                        },
+                        "homo_sapiens_genome_consensus_unmapped.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,8a39cbc62685ce7afb5ae36609898bde"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "23.10.1"
+        },
+        "timestamp": "2024-05-17T06:01:29.676084265"
+    },
+    "homo_sapiens - bam": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "homo_sapiens_genome"
+                        },
+                        "homo_sapiens_genome_consensus_unmapped.bam:md5,f56c861f1f604ecc9894dc9182b170f8"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,8a39cbc62685ce7afb5ae36609898bde"
+                ],
+                "bam": [
+                    [
+                        {
+                            "id": "homo_sapiens_genome"
+                        },
+                        "homo_sapiens_genome_consensus_unmapped.bam:md5,f56c861f1f604ecc9894dc9182b170f8"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,8a39cbc62685ce7afb5ae36609898bde"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.8.4",
+            "nextflow": "24.04.1"
+        },
+        "timestamp": "2024-05-21T10:34:16.47828891"
+    }
+}

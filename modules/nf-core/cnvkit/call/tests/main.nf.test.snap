@@ -1,0 +1,107 @@
+{
+    "test-cnvkit-call": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.cns:md5,7746029caf9ecc134a075a2d50be269f"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,f47253e21b991f72a741d6b5c9a351a5"
+                ],
+                "cns": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.cns:md5,7746029caf9ecc134a075a2d50be269f"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,f47253e21b991f72a741d6b5c9a351a5"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-05T22:24:41.048386"
+    },
+    "test-cnvkit-call-with-vcf": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.cns:md5,2a4b3da8a8131a4ed4ae902a9f96a405"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,f47253e21b991f72a741d6b5c9a351a5"
+                ],
+                "cns": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.cns:md5,2a4b3da8a8131a4ed4ae902a9f96a405"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,f47253e21b991f72a741d6b5c9a351a5"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-05T22:24:50.134984"
+    },
+    "test-cnvkit-call-with-vcf-stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.cns:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,f47253e21b991f72a741d6b5c9a351a5"
+                ],
+                "cns": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.cns:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,f47253e21b991f72a741d6b5c9a351a5"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.04.4"
+        },
+        "timestamp": "2024-09-05T22:24:56.743954"
+    }
+}

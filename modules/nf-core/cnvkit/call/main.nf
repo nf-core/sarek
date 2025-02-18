@@ -33,4 +33,15 @@ process CNVKIT_CALL {
         cnvkit: \$(cnvkit.py version | sed -e 's/cnvkit v//g')
     END_VERSIONS
     """
+
+    stub:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    """
+    touch ${prefix}.cns
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        cnvkit: \$(cnvkit.py version | sed -e 's/cnvkit v//g')
+    END_VERSIONS
+    """
 }

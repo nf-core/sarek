@@ -13,6 +13,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 - [Directory Structure](#directory-structure)
 - [Preprocessing](#preprocessing)
   - [Preparation of input files (FastQ or (u)BAM)](#preparation-of-input-files-fastq-or-ubam)
+    - [Clip and filter read length](#clip-and-filter-read-length)
     - [Trim adapters](#trim-adapters)
     - [Split FastQ files](#split-fastq-files)
     - [UMI consensus](#umi-consensus)
@@ -42,7 +43,9 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - [Sentieon Haplotyper](#sentieon-haplotyper)
       - [Sentieon Haplotyper joint germline variant calling](#sentieon-haplotyper-joint-germline-variant-calling)
     - [Strelka](#strelka)
+    - [Lofreq](#lofreq)
   - [Structural Variants](#structural-variants)
+    - [Indexcov](#indexcov)
     - [Manta](#manta)
     - [TIDDIT](#tiddit)
   - [Sample heterogeneity, ploidy and CNVs](#sample-heterogeneity-ploidy-and-cnvs)
@@ -105,6 +108,10 @@ Sarek pre-processes raw FastQ files or unmapped BAM files, based on [GATK best p
 ### Preparation of input files (FastQ or (u)BAM)
 
 [FastP](https://github.com/OpenGene/fastp) is a tool designed to provide all-in-one preprocessing for FastQ files and as such is used for trimming and splitting. By default, these files are not published. However, if publishing is enabled, please be aware that these files are only published once, meaning if trimming and splitting is enabled, then the resulting files will be sharded FastQ files with trimmed reads. If only one of them is enabled then the files contain either trimmed or split reads, respectively.
+
+#### Clip and filter read length
+
+[FastP](https://github.com/OpenGene/fastp) enables efficient clipping of reads from either the 5' end (`--clip_r1`, `--clip_r2`) or the 3' end (`--three_prime_clip_r1`, `--three_prime_clip_r2`). Additionally, FastP allows the filtering of reads based on insert size by specifying a minimum required length with the `--length_required` parameter (default: 15bp). It is recommended to optimize these parameters according to the specific characteristics of your data.
 
 #### Trim adapters
 
@@ -548,7 +555,7 @@ In Sentieon's package DNAseq, joint germline variant calling is done by first ru
 For further downstream analysis, take a look [here](https://github.com/Illumina/strelka/blob/v2.9.x/docs/userGuide/README.md#interpreting-the-germline-multi-sample-variants-vcf).
 
 <details markdown="1">
-<summary>Output files for all single samples (normal or tumor-only)</summary>
+<summary>Output files for single samples (normal)</summary>
 
 **Output directory: `{outdir}/variantcalling/strelka/<sample>/`**
 
@@ -570,7 +577,45 @@ For further downstream analysis, take a look [here](https://github.com/Illumina/
 
 </details>
 
+#### Lofreq
+
+[Lofreq](https://github.com/CSB5/lofreq) is a fast and sensitive variant-caller for inferring SNVs and indels from next-generation sequencing data. It makes full use of base-call qualities and other sources of errors inherent in sequencing, which are usually ignored by other methods or only used for filtering. For further reading and documentation see the [Lofreq user guide](https://csb5.github.io/lofreq/).
+
+<details markdown = "1">
+<summary>Output files for tumor-only samples</summary>
+
+**Output directory: `{outdir}/variant_calling/lofreq/<sample>/`**
+
+-`<tumorsample>.vcf.gz`
+-VCF which provides a detailed description of the detected genetic variants.
+
+  </details>
+
 ### Structural Variants
+
+#### indexcov
+
+[indexcov](https://github.com/brentp/goleft/tree/master/indexcov) quickly estimate coverage from a whole-genome bam or cram index.
+A bam index has 16KB resolution and it is used as a coverage estimate .
+The output is scaled to around 1. So a long stretch with values of 1.5 would be a heterozygous duplication. This is useful as a quick QC to get coverage values across the genome.
+
+**Output directory: `{outdir}/variantcalling/indexcov/`**
+
+In addition to the interactive HTML files, `indexcov` outputs a number of text files:
+
+- `<sample>-indexcov.ped`: a .ped/.fam file with the inferred sex in the appropriate column if the sex chromosomes were found.
+  the CNX and CNY columns indicating the floating-point estimate of copy-number for those chromosomes.
+  `bins.out`: how many bins had a coverage value outside of (0.85, 1.15). high values can indicate high-bias samples.
+  `bins.lo`: number of bins with value < 0.15. high values indicate missing data.
+  `bins.hi`: number of bins with value > 1.15.
+  `bins.in`: number of bins with value inside of (0.85, 1.15)
+  `p.out`: `bins.out/bins.in`
+  `PC1...PC5`: PCA projections calculated with depth of autosomes.
+
+- `<sample>-indexcov.roc`: tab-delimited columns of chrom, scaled coverage cutoff, and $n_samples columns where each indicates the
+  proportion of 16KB blocks at or above that scaled coverage value.
+- `<sample>-indexcov.bed.gz`: a bed file with columns of chrom, start, end, and a column per sample where the values indicate there
+  scaled coverage for that sample in that 16KB chunk.
 
 #### Manta
 

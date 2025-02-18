@@ -13,30 +13,32 @@ tools:
       tool_dev_url: https://github.com/broadinstitute/gatk
       doi: "10.1158/1538-7445.AM2017-3590"
       licence: ["BSD-3-clause"]
+      identifier: ""
 input:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
-  - interval:
-      type: file
-      description: Interval list
-      pattern: "*.{interval,interval_list}"
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - intervals:
+        type: file
+        description: IntervalList file
 output:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', single_end:false ]
   - bed:
-      type: file
-      description: BED file
-      pattern: "*.bed"
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.bed":
+          type: file
+          description: BED file
+          pattern: "*.bed"
   - versions:
-      type: file
-      description: File containing software versions
-      pattern: "versions.yml"
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
 authors:
   - "@FriederikeHanssen"
 maintainers:

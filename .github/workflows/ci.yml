@@ -1,332 +1,75 @@
 name: nf-core CI
 # This workflow runs the pipeline with the minimal test dataset to check that it completes without any syntax errors
 on:
+  push:
+    branches:
+      - dev
   pull_request:
+    paths-ignore:
+      - "docs/**"
   release:
     types: [published]
-  merge_group:
-    types:
-      - checks_requested
-    branches:
-      - master
-      - dev
+  workflow_dispatch:
 
 env:
+  NFT_DIFF: "pdiff"
+  NFT_DIFF_ARGS: "--line-numbers --width 120 --expand-tabs=2"
+  NFT_VER: "0.9.2"
+  NFT_WORKDIR: "~"
   NXF_ANSI_LOG: false
-  NFTEST_VER: "0.8.1"
+  NXF_SINGULARITY_CACHEDIR: ${{ github.workspace }}/.singularity
+  NXF_SINGULARITY_LIBRARYDIR: ${{ github.workspace }}/.singularity
+  SENTIEON_LICENSE_BASE64: ${{ secrets.SENTIEON_LICENSE_BASE64 }}
+  TEST_DATA_BASE: "${{ github.workspace }}/test-datasets"
 
-# Cancel if a newer run is started
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  group: "${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}"
   cancel-in-progress: true
 
 jobs:
-  pytest-changes:
-    name: Check for changes (pytest)
+  test:
     runs-on: ubuntu-latest
-    outputs:
-      # Expose matched filters as job 'tags' output variable
-      tags: ${{ steps.filter.outputs.changes }}
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: frouioui/paths-filter@main
-        id: filter
-        with:
-          filters: "tests/config/pytesttags.yml"
-          token: ""
-
-  pytest:
-    name: ${{ matrix.tags }} ${{ matrix.profile }} NF ${{ matrix.NXF_VER }}
-    runs-on: ubuntu-latest
-    needs: pytest-changes
-    if: needs.pytest-changes.outputs.tags != '[]'
+    name: "Test ${{ matrix.filter }} | ${{ matrix.profile }} | ${{ matrix.NXF_VER }} | ${{ matrix.shard }}/5"
     strategy:
       fail-fast: false
       matrix:
-        tags: ["${{ fromJson(needs.pytest-changes.outputs.tags) }}"]
-        profile: ["docker"]
-        # profile: ["docker", "singularity", "conda"]
-        TEST_DATA_BASE:
-          - "test-datasets/data"
         NXF_VER:
-          - "23.04.0"
+          - "24.04.2"
           - "latest-everything"
+        filter: ["workflow", "function", "pipeline"]
+        # filter: ["process", "workflow", "function", "pipeline"]
+        profile: ["conda", "docker", "singularity"]
+        shard: [1, 2, 3, 4, 5]
+        isMaster:
+          - ${{ github.base_ref == 'master' }}
         exclude:
-          - tags: "sentieon/bwamem"
-          - tags: "sentieon/dedup"
-          - tags: "sentieon/dnascope"
-          - tags: "sentieon/dnascope_joint_germline"
-          - tags: "sentieon/dnascope_skip_filter"
-          - tags: "sentieon/haplotyper"
-          - tags: "sentieon/haplotyper_joint_germline"
-          - tags: "sentieon/haplotyper_skip_filter"
-          - NXF_VER: "latest-everything"
-            tags: "joint_germline"
-    env:
-      NXF_ANSI_LOG: false
-      TEST_DATA_BASE: "${{ github.workspace }}/test-datasets"
-      SENTIEON_LICENSE_BASE64: ${{ secrets.SENTIEON_LICENSE_BASE64 }}
+          - isMaster: false
+            profile: "conda"
+          - isMaster: false
+            profile: "singularity"
 
     steps:
       - name: Check out pipeline code
-        uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b
-
-      - name: Hash Github Workspace
-        id: hash_workspace
-        run: |
-          echo "digest=$(echo sarek3_${{ github.workspace }} | md5sum | cut -c 1-25)" >> $GITHUB_OUTPUT
-
-      - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
         with:
-          python-version: "3.x"
-          cache: "pip"
-          cache-dependency-path: |
-            **/requirements.txt
+          fetch-depth: 0
 
-      - name: Install Python dependencies
-        run: pip install --upgrade -r tests/requirements.txt
-
-      - name: Install Nextflow ${{ matrix.NXF_VER }}
-        uses: nf-core/setup-nextflow@v2
+      - uses: actions/setup-python@f677139bbe7f9c59b41e40162b753c062f5d49a3 # v5
         with:
-          version: "${{ matrix.NXF_VER }}"
+          python-version: "3.11"
+          architecture: "x64"
 
-      - name: Set up Singularity
-        if: matrix.profile == 'singularity'
-        uses: eWaterCycle/setup-singularity@v5
-        with:
-          singularity-version: 3.7.1
-
-      - name: Set up miniconda
-        if: matrix.profile == 'conda'
-        uses: conda-incubator/setup-miniconda@v2
-        with:
-          auto-update-conda: true
-          channels: conda-forge,bioconda,defaults
-          python-version: ${{ matrix.python-version }}
-
-      - name: Cache test data
-        id: cache-testdata
-        uses: actions/cache@v3
-        with:
-          path: test-datasets/
-          key: ${{ steps.hash_workspace.outputs.digest }}
-
-      - name: Check out test data
-        if: steps.cache-testdata.outputs.cache-hit != 'true'
-        uses: actions/checkout@v4
-        with:
-          repository: nf-core/test-datasets
-          ref: sarek3
-          path: test-datasets/
-
-      - name: Replace remote paths in samplesheets
-        run: |
-          for f in tests/csv/3.0/*csv; do
-            sed -i "s=https://raw.githubusercontent.com/nf-core/test-datasets/modules/=${{ github.workspace }}/test-datasets/=g" $f
-            echo "========== $f ============"
-            cat $f
-            echo "========================================"
-          done;
-
-      # Set up secrets
-      - name: Set up nextflow secrets
-        if: env.SENTIEON_LICENSE_BASE64 != null
-        run: |
-          nextflow secrets set SENTIEON_LICENSE_BASE64 ${{ secrets.SENTIEON_LICENSE_BASE64 }}
-          nextflow secrets set SENTIEON_AUTH_MECH_BASE64 ${{ secrets.SENTIEON_AUTH_MECH_BASE64 }}
-          SENTIEON_ENCRYPTION_KEY=$(echo -n "${{ secrets.ENCRYPTION_KEY_BASE64 }}" | base64 -d)
-          SENTIEON_LICENSE_MESSAGE=$(echo -n "${{ secrets.LICENSE_MESSAGE_BASE64 }}" | base64 -d)
-          SENTIEON_AUTH_DATA=$(python bin/license_message.py encrypt --key "$SENTIEON_ENCRYPTION_KEY" --message "$SENTIEON_LICENSE_MESSAGE")
-          SENTIEON_AUTH_DATA_BASE64=$(echo -n "$SENTIEON_AUTH_DATA" | base64 -w 0)
-          nextflow secrets set SENTIEON_AUTH_DATA_BASE64 $SENTIEON_AUTH_DATA_BASE64
-
-      - name: Conda clean
-        if: matrix.profile == 'conda'
-        run: conda clean -a
-
-      - name: Disk space cleanup
-        uses: jlumbroso/free-disk-space@v1.3.1
-
-      - name: Run pytest-workflow
-        uses: Wandalen/wretry.action@v1
-        with:
-          command: TMPDIR=~ PROFILE=${{ matrix.profile }} pytest --tag ${{ matrix.tags }} --symlink --kwdof --git-aware --color=yes
-          attempt_limit: 3
-
-      - name: Output log on failure
-        if: failure()
-        run: |
-          sudo apt install bat > /dev/null
-          batcat --decorations=always --color=always /home/runner/pytest_workflow_*/*/log.{out,err}
-
-      - name: Upload logs on failure
-        if: failure()
-        uses: actions/upload-artifact@v2
-        with:
-          name: logs-${{ matrix.profile }}
-          path: |
-            /home/runner/pytest_workflow_*/*/.nextflow.log
-            /home/runner/pytest_workflow_*/*/log.out
-            /home/runner/pytest_workflow_*/*/log.err
-            /home/runner/pytest_workflow_*/*/work
-            !/home/runner/pytest_workflow_*/*/work/conda
-            !/home/runner/pytest_workflow_*/*/work/singularity
-
-  nftest-changes:
-    name: Check for changes (nf-test)
-    runs-on: ubuntu-latest
-    outputs:
-      tags: ${{ steps.filter.outputs.changes }}
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Combine all tags.yml files
-        id: get_tags
-        run: find . -name "tags.yml" -not -path "./.github/*" -exec cat {} + > .github/tags.yml
-
-      - name: debug
-        run: cat .github/tags.yml
-
-      - uses: frouioui/paths-filter@main
-        id: filter
-        with:
-          filters: ".github/tags.yml"
-          token: ""
-
-  nftest:
-    name: ${{ matrix.tags }} ${{ matrix.profile }} NF ${{ matrix.NXF_VER }}
-    runs-on: ubuntu-latest
-    needs: nftest-changes
-    if: needs.nftest-changes.outputs.tags != '[]'
-    strategy:
-      fail-fast: false
-      matrix:
-        tags: ["${{ fromJson(needs.nftest-changes.outputs.tags) }}"]
-        profile: ["docker"]
-        # profile: ["docker", "singularity", "conda"]
-        TEST_DATA_BASE:
-          - "test-datasets/data"
-        NXF_VER:
-          - "23.04.0"
-          - "latest-everything"
-        exclude:
-          - tags: "bcftools/annotate"
-          - tags: "bcftools/concat"
-          - tags: "bcftools/mpileup"
-          - tags: "bcftools/sort"
-          - tags: "bwa/index"
-          - tags: "bwa/mem"
-          - tags: "bwamem2/index"
-          - tags: "bwamem2/mem"
-          - tags: "cat/cat"
-          - tags: "cat/fastq"
-          - tags: "cnvkit/antitarget"
-          - tags: "cnvkit/batch"
-          - tags: "cnvkit/reference"
-          - tags: "deepvariant"
-          - tags: "dragmap/align"
-          - tags: "dragmap/hashtable"
-          - tags: "ensemblvep/download"
-          - tags: "ensemblvep/vep"
-          - tags: "fastp"
-          - tags: "fastqc"
-          - tags: "fgbio/fastqtobam"
-          - tags: "freebayes"
-          - tags: "gatk4/applybqsr"
-          - tags: "gatk4/baserecalibrator"
-          - tags: "gatk4/estimatelibrarycomplexity"
-          - tags: "gatk4/genomicsdbimport"
-          - tags: "gatk4/haplotypecaller"
-          - tags: "gatk4/markduplicates"
-          - tags: "gatk4/mergevcfs"
-          - tags: "gatk4/mutect2"
-          - tags: "gatk4spark/applybqsr"
-          - tags: "gatk4spark/markduplicates"
-          - tags: "gawk"
-          - tags: "mosdepth"
-          - tags: "multiqc"
-          - tags: "ngscheckmate/ncm"
-          - tags: "samblaster"
-          - tags: "samtools/convert"
-          - tags: "samtools/mpileup"
-          - tags: "samtools/stats"
-          - tags: "snpeff/snpeff"
-          - tags: "strelka/germline"
-          - tags: "strelka/somatic"
-          - tags: "subworkflows/utils_nfvalidation_plugin"
-          - tags: "tabix/bgziptabix"
-          - tags: "tabix/tabix"
-          - tags: "tiddit/sv"
-          - tags: "untar"
-          - tags: "pipeline_sarek"
-        include:
-          - tags: "pipeline_sarek"
-            profile: "test,docker"
-    env:
-      NXF_ANSI_LOG: false
-      TEST_DATA_BASE: "${{ github.workspace }}/test-datasets"
-      SENTIEON_LICENSE_BASE64: ${{ secrets.SENTIEON_LICENSE_BASE64 }}
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-java@v3
+      - uses: actions/setup-java@8df1039502a15bceb9433410b1a100fbe190c53b # v4
         with:
           distribution: "temurin"
           java-version: "17"
 
-      - name: Install Nextflow ${{ matrix.NXF_VER }}
+      - name: Set up Nextflow
         uses: nf-core/setup-nextflow@v2
         with:
           version: "${{ matrix.NXF_VER }}"
 
-      - name: Cache nf-test installation
-        id: cache-software
-        uses: actions/cache@v3
-        with:
-          path: |
-            /usr/local/bin/nf-test
-            /home/runner/.nf-test/nf-test.jar
-          key: ${{ runner.os }}-${{ env.NFTEST_VER }}-nftest
-
-      - name: Install nf-test
-        if: steps.cache-software.outputs.cache-hit != 'true'
-        run: |
-          wget -qO- https://code.askimed.com/install/nf-test | bash
-          sudo mv nf-test /usr/local/bin/
-
-      - name: Setup apptainer
-        if: matrix.profile == 'singularity'
-        uses: eWaterCycle/setup-apptainer@main
-
-      - name: Set up Singularity
-        if: matrix.profile == 'singularity'
-        run: |
-          mkdir -p $NXF_SINGULARITY_CACHEDIR
-          mkdir -p $NXF_SINGULARITY_LIBRARYDIR
-
-      - name: Set up miniconda
-        uses: conda-incubator/setup-miniconda@v2
-        with:
-          miniconda-version: "latest"
-          auto-update-conda: true
-          channels: conda-forge,bioconda,defaults
-          python-version: ${{ matrix.python-version }}
-
-      - name: Conda setup
-        run: |
-          conda clean -a
-          conda install -n base conda-libmamba-solver
-          conda config --set solver libmamba
-          echo $(realpath $CONDA)/condabin >> $GITHUB_PATH
-          echo $(realpath python) >> $GITHUB_PATH
-
-      # Set up secrets
-      - name: Set up nextflow secrets
+      - name: Set up Nextflow secrets
         if: env.SENTIEON_LICENSE_BASE64 != null
         run: |
           nextflow secrets set SENTIEON_LICENSE_BASE64 ${{ secrets.SENTIEON_LICENSE_BASE64 }}
@@ -337,34 +80,99 @@ jobs:
           SENTIEON_AUTH_DATA_BASE64=$(echo -n "$SENTIEON_AUTH_DATA" | base64 -w 0)
           nextflow secrets set SENTIEON_AUTH_DATA_BASE64 $SENTIEON_AUTH_DATA_BASE64
 
+      - name: Set up nf-test
+        uses: nf-core/setup-nf-test@v1
+        with:
+          version: ${{ env.NFT_VER }}
+
+      - name: Set up apptainer
+        if: matrix.profile == 'singularity'
+        uses: eWaterCycle/setup-apptainer@main
+
+      - name: Set up Singularity
+        if: matrix.profile == 'singularity'
+        run: |
+          mkdir -p $NXF_SINGULARITY_CACHEDIR
+          mkdir -p $NXF_SINGULARITY_LIBRARYDIR
+
+      - name: Cache pdiff
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4
+        id: cache-pip-pdiff
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-pdiff
+
+      - name: Install pdiff
+        run: python -m pip install --upgrade pip pdiff cryptography
+
+      - name: Set up miniconda
+        if: matrix.profile == 'conda'
+        uses: conda-incubator/setup-miniconda@a4260408e20b96e80095f42ff7f1a15b27dd94ca # v3
+        with:
+          miniconda-version: "latest"
+          auto-update-conda: true
+          conda-solver: libmamba
+          channels: conda-forge,bioconda
+
+      - name: Set up Conda
+        if: matrix.profile == 'conda'
+        run: |
+          echo $(realpath $CONDA)/condabin >> $GITHUB_PATH
+          echo $(realpath python) >> $GITHUB_PATH
+
       - name: Disk space cleanup
         uses: jlumbroso/free-disk-space@v1.3.1
 
-      # Test the module
-      - name: Run nf-test
+      - name: Start summary
+        id: print-test
+        run: |
+          echo "## nf-test tests summary :rocket:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "This \`${{ matrix.filter }}\` ${{ matrix.shard }}/5 shard was run on \`${{ matrix.profile }}\` | \`NXF_VER=${{ matrix.NXF_VER }}\`, and contains the following test(s):" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          nf-test test \
+            --ci \
+            --dryRun \
+            --junitxml="TEST-${{ matrix.filter }}_${{ matrix.profile }}_${{ matrix.shard }}.xml" \
+            --shard ${{ matrix.shard }}/5 \
+            --changed-since HEAD^ \
+            --follow-dependencies \
+            --profile "+${{ matrix.profile }}" \
+            --filter ${{ matrix.filter }} \
+            | grep PASSED | cut -d "'" -f 2 | sed 's/^/- /' | sort -u >> $GITHUB_STEP_SUMMARY
+
+      - name: "Run tests | ${{ matrix.filter }}_${{ matrix.profile }} | ${{ matrix.shard }}/5"
         run: |
           nf-test test \
-            --profile=${{ matrix.profile }} \
-            --tag ${{ matrix.tags }} \
-            --tap=test.tap \
-            --verbose
+              --ci \
+              --debug \
+              --verbose \
+              --junitxml="TEST-${{ matrix.filter }}_${{ matrix.profile }}_${{ matrix.shard }}.xml" \
+              --shard ${{ matrix.shard }}/5 \
+              --changed-since HEAD^ \
+              --follow-dependencies \
+              --profile "+${{ matrix.profile }}" \
+              --filter ${{ matrix.filter }}
 
-  confirm-pass:
-    runs-on: ubuntu-latest
-    needs:
-      - pytest
-      - nftest
-    if: always()
-    steps:
-      - name: All tests ok
-        if: ${{ success() || !contains(needs.*.result, 'failure') }}
-        run: exit 0
-      - name: One or more tests failed
-        if: ${{ contains(needs.*.result, 'failure') }}
-        run: exit 1
-
-      - name: debug-print
-        if: always()
+      - name: Print success in summary
+        if: success()
         run: |
-          echo "toJSON(needs) = ${{ toJSON(needs) }}"
-          echo "toJSON(needs.*.result) = ${{ toJSON(needs.*.result) }}"
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "All test(s) successfull :tada:" >> $GITHUB_STEP_SUMMARY
+
+      - name: Print failure in summary
+        if: failure()
+        run: |
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Some test(s) failed :cold_sweat:" >> $GITHUB_STEP_SUMMARY
+
+      - name: Publish Test Report
+        uses: mikepenz/action-junit-report@v4
+        if: success() || failure() # always run even if the previous step fails
+        with:
+          report_paths: "TEST-*.xml"
+
+      - name: Clean up
+        if: success() || failure()
+        run: |
+          sudo rm -rf /home/ubuntu/tests/

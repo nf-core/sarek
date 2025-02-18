@@ -1,101 +1,4 @@
-# default
-default:
-  - "**"
-
-# default_extended
-
-tumor_normal_pair:
-  - conf/modules/**
-  - main.nf
-  - modules/**
-  - nextflow.config
-  - nextflow_schema.json
-  - subworkflows/**
-  - tests/csv/3.0/fastq_pair.csv
-  - tests/test_tumor_normal_pair.yml
-  - workflows/**
-
-save_mapped_only:
-  - conf/modules/**
-  - main.nf
-  - modules/**
-  - nextflow.config
-  - nextflow_schema.json
-  - subworkflows/**
-  - tests/csv/3.0/fastq_single.csv
-  - tests/test_save_mapped.yml
-  - workflows/**
-
-save_output_as_bam_only:
-  - conf/modules/**
-  - main.nf
-  - modules/**
-  - nextflow.config
-  - nextflow_schema.json
-  - subworkflows/**
-  - tests/csv/3.0/fastq_single.csv
-  - tests/test_save_output_as_bam_only.yml
-  - workflows/**
-
-skip_all_qc:
-  - conf/modules/**
-  - main.nf
-  - modules/**
-  - nextflow.config
-  - nextflow_schema.json
-  - subworkflows/**
-  - tests/csv/3.0/fastq_single.csv
-  - tests/test_skip_all_qc.yml
-  - workflows/**
-
-skip_markduplicates:
-  - conf/modules/**
-  - main.nf
-  - modules/**
-  - nextflow.config
-  - nextflow_schema.json
-  - subworkflows/**
-  - tests/csv/3.0/fastq_single.csv
-  - tests/test_skip_markduplicates.yml
-  - workflows/**
-
-validation_checks:
-  - conf/modules/**
-  - main.nf
-  - modules/**
-  - nextflow.config
-  - nextflow_schema.json
-  - subworkflows/**
-  - tests/csv/3.0/sample_with_space.csv
-  - tests/test_samplesheet_validation_spaces.yml
-  - workflows/**
-
 # preprocessing
-
-## alignment_from_everything
-alignment_from_everything:
-  - conf/modules/**
-  - conf/test/alignment_from_everything.config
-  - main.nf
-  - modules/**
-  - nextflow.config
-  - nextflow_schema.json
-  - subworkflows/**
-  - tests/csv/3.0/bam_and_fastq_and_spring.csv
-  - tests/test_alignment_from_everything.yml
-  - workflows/**
-
-## alignment_to_fastq
-alignment_to_fastq:
-  - conf/modules/alignment_to_fastq.config
-  - modules/nf-core/cat/fastq/**
-  - modules/nf-core/mosdepth/**
-  - modules/nf-core/samtools/collatefastq/**
-  - modules/nf-core/samtools/merge/**
-  - modules/nf-core/samtools/view/**
-  - subworkflows/local/bam_convert_samtools/**
-  - tests/csv/3.0/bam_for_remapping.csv
-  - tests/test_alignment_to_fastq.yml
 
 ## umi
 umi:
@@ -124,33 +27,6 @@ fastp:
 
 ## aligner
 
-### bwamem
-bwamem:
-  - conf/modules/aligner.config
-  - modules/nf-core/bwa/mem/**
-  - modules/nf-core/mosdepth/**
-  - subworkflows/local/fastq_align_bwamem_mem2_dragmap_sentieon/**
-  - tests/csv/3.0/fastq_single.csv
-  - tests/test_aligner_bwamem.yml
-
-### bwamem2
-bwamem2:
-  - conf/modules/aligner.config
-  - modules/nf-core/bwamem2/mem/**
-  - modules/nf-core/mosdepth/**
-  - subworkflows/local/fastq_align_bwamem_mem2_dragmap_sentieon/**
-  - tests/csv/3.0/fastq_single.csv
-  - tests/test_aligner_bwamem2.yml
-
-### dragmap
-dragmap:
-  - conf/modules/aligner.config
-  - modules/nf-core/dragmap/align/**
-  - modules/nf-core/mosdepth/**
-  - subworkflows/local/fastq_align_bwamem_mem2_dragmap_sentieon/**
-  - tests/csv/3.0/fastq_single.csv
-  - tests/test_aligner_dragmap.yml
-
 ### sentieon/bwamem
 sentieon/bwamem:
   - conf/modules/aligner.config
@@ -158,21 +34,6 @@ sentieon/bwamem:
   - subworkflows/local/fastq_align_bwamem_mem2_dragmap_sentieon/**
   - tests/csv/3.0/fastq_single.csv
   - tests/test_sentieon_aligner_bwamem.yml
-
-## markduplicates
-gatk4/markduplicates:
-  - conf/modules/markduplicates.config
-  - modules/nf-core/gatk4/markduplicates/**
-  - modules/nf-core/mosdepth/**
-  - modules/nf-core/samtools/convert/**
-  - modules/nf-core/samtools/index/**
-  - modules/nf-core/samtools/stats/**
-  - subworkflows/local/bam_markduplicates/**
-  - subworkflows/local/cram_qc_mosdepth_samtools/**
-  - tests/csv/3.0/mapped_single_bam.csv
-  - tests/csv/3.0/mapped_single_cram.csv
-  - tests/test_markduplicates_from_bam.yml
-  - tests/test_markduplicates_from_cram.yml
 
 ## sentieon/dedup
 sentieon/dedup:
@@ -187,34 +48,6 @@ sentieon/dedup:
   - tests/csv/3.0/mapped_single_cram.csv
   - tests/test_sentieon_dedup_from_bam.yml
   - tests/test_sentieon_dedup_from_cram.yml
-
-## prepare_recalibration
-prepare_recalibration:
-  - conf/modules/prepare_recalibration.config
-  - modules/nf-core/gatk4/baserecalibrator/**
-  - modules/nf-core/gatk4/gatherbqsrreports/**
-  - modules/nf-core/mosdepth/**
-  - modules/nf-core/samtools/convert/**
-  - subworkflows/local/bam_baserecalibrator/**
-  - tests/csv/3.0/mapped_single_bam.csv
-  - tests/csv/3.0/mapped_single_cram.csv
-  - tests/test_prepare_recalibration_from_bam.yml
-  - tests/test_prepare_recalibration_from_cram.yml
-
-## recalibrate
-recalibrate:
-  - conf/modules/recalibrate.config
-  - modules/nf-core/gatk4/applybqsr/**
-  - modules/nf-core/samtools/convert/**
-  - modules/nf-core/samtools/index/**
-  - modules/nf-core/samtools/merge/**
-  - modules/nf-core/mosdepth/**
-  - subworkflows/local/bam_applybqsr/**
-  - subworkflows/local/cram_merge_index_samtools/**
-  - tests/csv/3.0/prepare_recalibration_single_bam.csv
-  - tests/csv/3.0/prepare_recalibration_single_cram.csv
-  - tests/test_recalibrate_from_bam.yml
-  - tests/test_recalibrate_from_cram.yml
 
 ## intervals
 intervals:
@@ -262,27 +95,6 @@ cnvkit:
   - tests/csv/3.0/recalibrated_somatic.csv
   - tests/csv/3.0/recalibrated_tumoronly.csv
   - tests/test_cnvkit.yml
-
-## controlfreec
-controlfreec:
-  - conf/modules/controlfreec.config
-  - conf/modules/mpileup.config
-  - modules/nf-core/cat/cat/**
-  - modules/nf-core/controlfreec/assesssignificance/**
-  - modules/nf-core/controlfreec/freec/**
-  - modules/nf-core/controlfreec/freec2bed/**
-  - modules/nf-core/controlfreec/freec2circos/**
-  - modules/nf-core/controlfreec/makegraph2/**
-  - modules/nf-core/mosdepth/**
-  - modules/nf-core/samtools/mpileup/**
-  - subworkflows/local/bam_variant_calling_mpileup/**
-  - subworkflows/local/bam_variant_calling_somatic_all/**
-  - subworkflows/local/bam_variant_calling_somatic_controlfreec/**
-  - subworkflows/local/bam_variant_calling_tumor_only_all/**
-  - subworkflows/local/bam_variant_calling_tumor_only_controlfreec/**
-  - tests/csv/3.0/recalibrated_somatic.csv
-  - tests/csv/3.0/recalibrated_tumoronly.csv
-  - tests/test_controlfreec.yml
 
 ## deepvariant
 deepvariant:
@@ -502,39 +314,15 @@ mutect2:
   - tests/csv/3.0/recalibrated_tumoronly.csv
   - tests/test_mutect2.yml
 
-## strelka
-strelka:
-  - conf/modules/strelka.config
-  - modules/nf-core/gatk4/mergevcfs/**
+## lofreq
+lofreq:
+  - conf/modules/lofreq.config
   - modules/nf-core/mosdepth/**
-  - modules/nf-core/strelka/germline/**
-  - modules/nf-core/strelka/somatic/**
-  - subworkflows/local/bam_variant_calling_germline_all/**
-  - subworkflows/local/bam_variant_calling_single_strelka/**
-  - subworkflows/local/bam_variant_calling_somatic_all/**
-  - subworkflows/local/bam_variant_calling_somatic_strelka/**
+  - modules/nf-core/lofreq/callparallel/**
   - subworkflows/local/bam_variant_calling_tumor_only_all/**
-  - tests/csv/3.0/recalibrated_germline.csv
-  - tests/csv/3.0/recalibrated_somatic.csv
+  - subworkflows/local/bam_variant_calling_tumor_only_lofreq/**
   - tests/csv/3.0/recalibrated_tumoronly.csv
-  - tests/csv/3.0/recalibrated.csv
-  - tests/test_strelka.yml
-
-## strelka_bp
-strelka_bp:
-  - conf/modules/manta.config
-  - conf/modules/strelka.config
-  - modules/nf-core/gatk4/mergevcfs/**
-  - modules/nf-core/manta/somatic/**
-  - modules/nf-core/mosdepth/**
-  - modules/nf-core/strelka/somatic/**
-  - subworkflows/local/bam_variant_calling_germline_all/**
-  - subworkflows/local/bam_variant_calling_somatic_all/**
-  - subworkflows/local/bam_variant_calling_somatic_manta/**
-  - subworkflows/local/bam_variant_calling_somatic_strelka/**
-  - subworkflows/local/bam_variant_calling_tumor_only_all/**
-  - tests/csv/3.0/recalibrated_somatic.csv
-  - tests/test_strelka_bp.yml
+  - tests/test_lofreq.yml
 
 ## tiddit
 tiddit:
@@ -552,55 +340,6 @@ tiddit:
   - tests/csv/3.0/recalibrated_somatic.csv
   - tests/csv/3.0/recalibrated_tumoronly.csv
   - tests/test_tiddit.yml
-
-# annotate
-
-## cache
-cache:
-  - conf/modules/prepare_cache.config
-  - modules/nf-core/ensemblvep/download/**
-  - modules/nf-core/snpeff/download/**
-  - subworkflows/local/prepare_cache/**
-  - tests/test_annotation_cache.yml
-
-## merge
-merge:
-  - conf/modules/annotate.config
-  - modules/nf-core/ensemblvep/vep/**
-  - modules/nf-core/snpeff/snpeff/**
-  - modules/nf-core/tabix/bgziptabix/**
-  - subworkflows/local/vcf_annotate_all/**
-  - subworkflows/nf-core/vcf_annotate_ensemblvep/**
-  - subworkflows/nf-core/vcf_annotate_snpeff/**
-  - tests/csv/3.0/vcf_single.csv
-  - tests/test_annotation_merge.yml
-
-## snpeff
-snpeff:
-  - conf/modules/annotate.config
-  - modules/nf-core/snpeff/snpeff/**
-  - modules/nf-core/tabix/bgziptabix/**
-  - subworkflows/nf-core/vcf_annotate_snpeff/**
-  - tests/csv/3.0/vcf_single.csv
-  - tests/test_annotation_snpeff.yml
-
-## vep
-vep:
-  - conf/modules/annotate.config
-  - modules/nf-core/ensemblvep/vep/**
-  - modules/nf-core/tabix/bgziptabix/**
-  - subworkflows/nf-core/vcf_annotate_ensemblvep/**
-  - tests/csv/3.0/vcf_single.csv
-  - tests/test_annotation_vep.yml
-
-## bcfann
-bcfann:
-  - conf/modules/annotate.config
-  - modules/nf-core/bcftools/annotate/**
-  - modules/nf-core/tabix/bgziptabix/**
-  - subworkflows/nf-core/vcf_annotate_bcftools/**
-  - tests/csv/3.0/vcf_single.csv
-  - tests/test_annotation_bcfann.yml
 
 # postprocessing
 
@@ -626,7 +365,6 @@ concatenate_vcfs:
   - subworkflows/local/bam_variant_calling_germline_manta/**
   - subworkflows/local/bam_variant_calling_haplotypecaller/**
   - subworkflows/local/bam_variant_calling_mpileup/**
-  - subworkflows/local/bam_variant_calling_single_strelka/**
   - subworkflows/local/bam_variant_calling_single_tiddit/**
   - subworkflows/local/bam_variant_calling_somatic_all/**
   - subworkflows/local/bam_variant_calling_tumor_only_all/**
