@@ -11,7 +11,7 @@
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,4d667cb8f2f96c5705b1e44affdd7330"
+                    "versions.yml:md5,b464e1a4b351fa27cea9141b8ab79bb7"
                 ],
                 "vcf": [
                     [
@@ -22,28 +22,34 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,4d667cb8f2f96c5705b1e44affdd7330"
+                    "versions.yml:md5,b464e1a4b351fa27cea9141b8ab79bb7"
                 ]
+            },
+            {
+                "MUSE_SUMP": {
+                    "MuSE": "v2.1.2",
+                    "bgzip": 1.21
+                }
             }
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.0"
+            "nextflow": "24.10.4"
         },
-        "timestamp": "2024-11-29T14:52:29.011666"
+        "timestamp": "2025-02-18T10:48:48.403588"
     },
     "human - txt": {
         "content": [
             [
-                "versions.yml:md5,4d667cb8f2f96c5705b1e44affdd7330"
+                "versions.yml:md5,b464e1a4b351fa27cea9141b8ab79bb7"
             ],
             11,
             "VcfFile [chromosomes=[], sampleCount=2, variantCount=0, phased=true, phasedAutodetect=true]"
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.2"
+            "nextflow": "24.10.4"
         },
-        "timestamp": "2024-12-02T16:29:22.506313"
+        "timestamp": "2025-02-18T10:48:40.369312"
     }
 }

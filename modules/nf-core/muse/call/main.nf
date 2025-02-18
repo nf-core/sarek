@@ -33,7 +33,7 @@ process MUSE_CALL {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        MuSE: \$( MuSE --version | sed -e "s/MuSE, version //g" )
+        MuSE: \$( MuSE --version | sed -e "s/MuSE, version //g" | sed -e "s/MuSE //g" )
     END_VERSIONS
     """
 
@@ -44,7 +44,7 @@ process MUSE_CALL {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        MuSE: \$( MuSE --version | sed -e "s/MuSE, version //g" )
+        MuSE: \$( MuSE --version | sed -e "s/MuSE, version //g" | sed -e "s/MuSE //g" )
     END_VERSIONS
     """
 }
