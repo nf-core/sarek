@@ -13,3 +13,5 @@ null/
 test-datasets/
 test.tap
 test.xml
+.cursorrules
+TODO.md

@@ -4,6 +4,8 @@ lint:
   files_exist:
     - .github/workflows/awsfulltest.yml
     - .github/workflows/awstest.yml
+    - conf/igenomes.config
+    - conf/igenomes_ignored.config
     - conf/modules.config
   files_unchanged:
     - .gitignore

@@ -1,7 +1,7 @@
 {
-    "Run with profile test | --input tests/csv/3.0/mapped_single_cram.csv --step recalibrate --tools null ": {
+    "Run with profile test | --input tests/csv/3.0/mapped_single_cram.csv --step recalibrate --tools null": {
         "content": [
-            9,
+            8,
             {
                 "GATK4_APPLYBQSR": {
                     "gatk4": "4.5.0.0"
@@ -31,7 +31,6 @@
                 "preprocessing/recalibrated/test",
                 "preprocessing/recalibrated/test/test.recal.cram",
                 "preprocessing/recalibrated/test/test.recal.cram.crai",
-                "reference",
                 "reports",
                 "reports/mosdepth",
                 "reports/mosdepth/test",
@@ -61,14 +60,14 @@
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
         },
-        "timestamp": "2024-11-09T17:22:03.443847"
+        "timestamp": "2025-02-06T22:16:52.591101604"
     },
-    "Run with profile test | --input tests/csv/3.0/mapped_single_bam.csv --step recalibrate --skip_tools baserecalibrator --tools strelka ": {
+    "Run with profile test | --input tests/csv/3.0/mapped_single_bam.csv --step recalibrate --skip_tools baserecalibrator --tools strelka": {
         "content": [
-            10,
+            9,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": 1.2
@@ -140,7 +139,6 @@
                 "multiqc/multiqc_report.html",
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
-                "reference",
                 "reports",
                 "reports/bcftools",
                 "reports/bcftools/strelka",
@@ -175,18 +173,18 @@
                 "test.strelka.variants.TsTv.count:md5,ee7dafc8d941b8502a04a63dc3126fff"
             ],
             [
-
+                
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
         },
-        "timestamp": "2024-11-09T17:20:43.396817"
+        "timestamp": "2025-02-06T22:15:47.626711444"
     },
-    "Run with profile test | --input tests/csv/3.0/mapped_single_cram.csv --step recalibrate --skip_tools baserecalibrator --tools strelka ": {
+    "Run with profile test | --input tests/csv/3.0/mapped_single_cram.csv --step recalibrate --skip_tools baserecalibrator --tools strelka": {
         "content": [
-            10,
+            9,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": 1.2
@@ -258,7 +256,6 @@
                 "multiqc/multiqc_report.html",
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
-                "reference",
                 "reports",
                 "reports/bcftools",
                 "reports/bcftools/strelka",
@@ -293,18 +290,18 @@
                 "test.strelka.variants.TsTv.count:md5,ee7dafc8d941b8502a04a63dc3126fff"
             ],
             [
-
+                
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
         },
-        "timestamp": "2024-11-09T17:23:40.285914"
+        "timestamp": "2025-02-06T22:18:01.075429821"
     },
-    "Run with profile test | --input tests/csv/3.0/mapped_single_bam.csv --step recalibrate --tools null ": {
+    "Run with profile test | --input tests/csv/3.0/mapped_single_bam.csv --step recalibrate --tools null": {
         "content": [
-            6,
+            5,
             {
                 "GATK4_APPLYBQSR": {
                     "gatk4": "4.5.0.0"
@@ -325,20 +322,19 @@
                 "multiqc/multiqc_report.html",
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
-                "preprocessing",
-                "reference"
+                "preprocessing"
             ],
             [
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f"
             ],
             [
-
+                
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
         },
-        "timestamp": "2024-11-09T17:19:08.093003"
+        "timestamp": "2025-02-06T22:14:32.710777467"
     }
 }

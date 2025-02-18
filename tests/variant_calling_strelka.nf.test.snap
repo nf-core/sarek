@@ -80,7 +80,6 @@
                 "multiqc/multiqc_report.html",
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
-                "reference",
                 "reports",
                 "reports/bcftools",
                 "reports/bcftools/strelka",
@@ -195,14 +194,14 @@
                 "sample4_vs_sample3.strelka.somatic_snvs.TsTv.count:md5,fc7af1f534890c4ad3025588b3af62ae"
             ],
             [
-
+                
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.10.0"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
         },
-        "timestamp": "2024-11-15T22:22:40.803241819"
+        "timestamp": "2025-02-06T22:27:15.776602156"
     },
     "Run with profile test | --tools strelka --no_intervals | somatic": {
         "content": [
@@ -288,7 +287,6 @@
                 "no_intervals.bed.gz.tbi",
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
-                "reference",
                 "reports",
                 "reports/bcftools",
                 "reports/bcftools/strelka",
@@ -375,14 +373,14 @@
                 "sample4_vs_sample3.strelka.somatic_snvs.TsTv.count:md5,a922c51ca3b2ea7cdcfa09e9c8c55d52"
             ],
             [
-
+                
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.10.0"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
         },
-        "timestamp": "2024-11-15T22:29:05.475529758"
+        "timestamp": "2025-02-06T22:34:10.414751676"
     },
     "Run with profile test | --tools strelka | somatic": {
         "content": [
@@ -465,7 +463,6 @@
                 "multiqc/multiqc_report.html",
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
-                "reference",
                 "reports",
                 "reports/bcftools",
                 "reports/bcftools/strelka",
@@ -552,14 +549,14 @@
                 "sample4_vs_sample3.strelka.somatic_snvs.TsTv.count:md5,fc7af1f534890c4ad3025588b3af62ae"
             ],
             [
-
+                
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.10.0"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
         },
-        "timestamp": "2024-11-15T22:27:18.76415046"
+        "timestamp": "2025-02-06T22:32:15.166938605"
     },
     "Run with profile test | --tools strelka | germline": {
         "content": [
@@ -635,7 +632,6 @@
                 "multiqc/multiqc_report.html",
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
-                "reference",
                 "reports",
                 "reports/bcftools",
                 "reports/bcftools/strelka",
@@ -686,14 +682,14 @@
                 "sample1.strelka.variants.TsTv.count:md5,c5b7a8eda2526d899098439ae4c06a49"
             ],
             [
-
+                
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.10.0"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
         },
-        "timestamp": "2024-11-15T22:24:13.636617483"
+        "timestamp": "2025-02-06T22:28:38.600998753"
     },
     "Run with profile test | --tools strelka --no_intervals | germline": {
         "content": [
@@ -772,7 +768,6 @@
                 "no_intervals.bed.gz.tbi",
                 "pipeline_info",
                 "pipeline_info/nf_core_sarek_software_mqc_versions.yml",
-                "reference",
                 "reports",
                 "reports/bcftools",
                 "reports/bcftools/strelka",
@@ -823,13 +818,13 @@
                 "sample1.strelka.variants.TsTv.count:md5,1481854d2a765f5641856ecf95ca4097"
             ],
             [
-
+                
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.10.0"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
         },
-        "timestamp": "2024-11-15T22:25:42.940353635"
+        "timestamp": "2025-02-06T22:30:20.72637938"
     }
 }

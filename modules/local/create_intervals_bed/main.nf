@@ -1,19 +1,19 @@
 process CREATE_INTERVALS_BED {
-    tag "$intervals"
+    tag "${intervals}"
     label 'process_single'
 
     conda "${moduleDir}/environment.yml"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/gawk:5.1.0' :
-        'biocontainers/gawk:5.1.0' }"
+    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
+        ? 'https://depot.galaxyproject.org/singularity/gawk:5.1.0'
+        : 'biocontainers/gawk:5.1.0'}"
 
     input:
-    path(intervals)
-    val(nucleotides_per_second)
+    tuple val(meta), path(intervals)
+    val nucleotides_per_second
 
     output:
-    path("*.bed")       , emit: bed
-    path "versions.yml" , emit: versions
+    path ("*.bed"), emit: bed
+    path "versions.yml", emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -47,7 +47,8 @@ process CREATE_INTERVALS_BED {
             gawk: \$(awk -Wversion | sed '1!d; s/.*Awk //; s/,.*//')
         END_VERSIONS
         """
-    } else if (intervals.toString().toLowerCase().endsWith("interval_list")) {
+    }
+    else if (intervals.toString().toLowerCase().endsWith("interval_list")) {
         """
         grep -v '^@' ${intervals} | awk -vFS="\t" '{
             name = sprintf("%s_%d-%d", \$1, \$2, \$3);
@@ -59,7 +60,8 @@ process CREATE_INTERVALS_BED {
             gawk: \$(awk -Wversion | sed '1!d; s/.*Awk //; s/,.*//')
         END_VERSIONS
         """
-    } else {
+    }
+    else {
         """
         awk -vFS="[:-]" '{
             name = sprintf("%s_%d-%d", \$1, \$2, \$3);
@@ -75,11 +77,9 @@ process CREATE_INTERVALS_BED {
 
     stub:
     def prefix = task.ext.prefix ?: "${intervals.baseName}"
-    def metrics = task.ext.metrics ?: "${prefix}.metrics"
-    // def prefix_basename = prefix.substring(0, prefix.lastIndexOf("."))
 
     """
-    touch ${prefix}.stub.bed
+    touch ${prefix}.bed
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

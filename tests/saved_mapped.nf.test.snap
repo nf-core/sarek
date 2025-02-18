@@ -1,7 +1,7 @@
 {
     "Run with profile test | --save_mapped | skip QC/recal/md": {
         "content": [
-            10,
+            8,
             {
                 "BAM_TO_CRAM_MAPPING": {
                     "samtools": 1.21
@@ -29,20 +29,19 @@
                 "preprocessing/mapped",
                 "preprocessing/mapped/test",
                 "preprocessing/mapped/test/test.sorted.cram",
-                "preprocessing/mapped/test/test.sorted.cram.crai",
-                "reference"
+                "preprocessing/mapped/test/test.sorted.cram.crai"
             ],
             [
-
+                
             ],
             [
-
+                
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.09.0"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
         },
-        "timestamp": "2024-10-08T09:53:32.063494"
+        "timestamp": "2025-02-06T22:03:03.137546064"
     }
 }

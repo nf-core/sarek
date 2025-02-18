@@ -1,7 +1,7 @@
 {
     "Run with profile test,alignment_from_everything | --save_mapped --save_output_as_bam": {
         "content": [
-            27,
+            25,
             {
                 "BCFTOOLS_STATS": {
                     "bcftools": 1.2
@@ -222,7 +222,6 @@
                 "preprocessing/recalibrated/test",
                 "preprocessing/recalibrated/test/test.recal.bam",
                 "preprocessing/recalibrated/test/test.recal.bam.bai",
-                "reference",
                 "reports",
                 "reports/bcftools",
                 "reports/bcftools/strelka",
@@ -323,13 +322,13 @@
                 "test.strelka.variants.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a"
             ],
             [
-
+                
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
         },
-        "timestamp": "2024-11-09T21:51:21.998984"
+        "timestamp": "2025-02-06T21:10:24.809581731"
     }
 }
