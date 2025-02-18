@@ -7,7 +7,7 @@
                     "samtools": 1.21
                 },
                 "Workflow": {
-                    "nf-core/sarek": "v3.5.0"
+                    "nf-core/sarek": "v3.5.1"
                 }
             },
             [
@@ -75,7 +75,7 @@
                     "samtools": 1.21
                 },
                 "Workflow": {
-                    "nf-core/sarek": "v3.5.0"
+                    "nf-core/sarek": "v3.5.1"
                 }
             },
             [
@@ -162,7 +162,7 @@
                     "samtools": 1.21
                 },
                 "Workflow": {
-                    "nf-core/sarek": "v3.5.0"
+                    "nf-core/sarek": "v3.5.1"
                 }
             },
             [
@@ -302,7 +302,7 @@
                     "samtools": 1.21
                 },
                 "Workflow": {
-                    "nf-core/sarek": "v3.5.0"
+                    "nf-core/sarek": "v3.5.1"
                 }
             },
             [
@@ -424,7 +424,7 @@
                     "samtools": 1.21
                 },
                 "Workflow": {
-                    "nf-core/sarek": "v3.5.0"
+                    "nf-core/sarek": "v3.5.1"
                 }
             },
             [
@@ -533,7 +533,7 @@
                     "samtools": 1.21
                 },
                 "Workflow": {
-                    "nf-core/sarek": "v3.5.0"
+                    "nf-core/sarek": "v3.5.1"
                 }
             },
             [
