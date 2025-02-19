@@ -1,0 +1,91 @@
+name: "parabricks_applybqsr"
+description: NVIDIA Clara Parabricks GPU-accelerated apply Base Quality Score Recalibration
+  (BQSR).
+keywords:
+  - bqsr
+  - bam
+  - GPU-accelerated
+  - base quality score recalibration
+tools:
+  - "parabricks":
+      description: "NVIDIA Clara Parabricks GPU-accelerated genomics tools"
+      homepage: "https://www.nvidia.com/en-us/clara/genomics/"
+      documentation: "https://docs.nvidia.com/clara/parabricks/"
+      licence: ["https://docs.nvidia.com/clara/parabricks/3.8.0/gettingstarted.html#licensing"]
+      identifier: ""
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information.
+          e.g. [ id:'test' ]
+    - bam:
+        type: file
+        description: BAM file
+        pattern: "*.bam"
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing sample information.
+          e.g. [ id:'test' ]
+    - bam_index:
+        type: file
+        description: BAM index file
+        pattern: "*.bai"
+  - - meta3:
+        type: map
+        description: |
+          Groovy Map containing sample information.
+          e.g. [ id:'test' ]
+    - bqsr_table:
+        type: file
+        description: Table from calculating BQSR. Output from parabricks/fq2bam or gatk4/baserecalibrator.
+        pattern: "*.table"
+  - - meta4:
+        type: map
+        description: |
+          Groovy Map containing sample information.
+          e.g. [ id:'test' ]
+    - intervals:
+        type: file
+        description: intervals
+  - - meta5:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. `[ id:'sample1', single_end:false ]`
+    - fasta:
+        type: file
+        description: Reference fasta - must be unzipped.
+        pattern: "*.fasta"
+output:
+  - bam:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information.
+            e.g. [ id:'test' ]
+      - "*.bam":
+          type: file
+          description: BAM file after applying BQSR.
+          pattern: "*.bam"
+  - bai:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information.
+            e.g. [ id:'test' ]
+      - "*.bai":
+          type: file
+          description: bai index corresponding to output bam file.
+          pattern: "*.bai"
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions.
+          pattern: "versions.yml"
+authors:
+  - "@bsiranosian"
+maintainers:
+  - "@bsiranosian"
+  - "@famosab"

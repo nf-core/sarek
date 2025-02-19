@@ -1,0 +1,112 @@
+name: "parabricks_fq2bam"
+description: NVIDIA Clara Parabricks GPU-accelerated alignment, sorting, BQSR calculation,
+  and duplicate marking. Note this nf-core module requires files to be copied into
+  the working directory and not symlinked.
+keywords:
+  - align
+  - sort
+  - bqsr
+  - duplicates
+tools:
+  - "parabricks":
+      description: "NVIDIA Clara Parabricks GPU-accelerated genomics tools"
+      homepage: "https://www.nvidia.com/en-us/clara/genomics/"
+      documentation: "https://docs.nvidia.com/clara/parabricks/4.0.1/Documentation/"
+      licence: ["custom"]
+      identifier: ""
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test', single_end:false ]
+    - reads:
+        type: file
+        description: fastq.gz files
+        pattern: "*.fastq.gz"
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing fasta information
+    - fasta:
+        type: file
+        description: reference fasta file - must be unzipped
+        pattern: "*.fasta"
+  - - meta3:
+        type: map
+        description: |
+          Groovy Map containing index information
+    - index:
+        type: file
+        description: reference BWA index
+        pattern: "*.{amb,ann,bwt,pac,sa}"
+  - - meta4:
+        type: map
+        description: |
+          Groovy Map containing index information
+    - interval_file:
+        type: file
+        description: (optional) file(s) containing genomic intervals for use in base
+          quality score recalibration (BQSR)
+        pattern: "*.{bed,interval_list,picard,list,intervals}"
+  - - known_sites:
+        type: file
+        description: (optional) known sites file(s) for calculating BQSR. markdups must
+          be true to perform BQSR.
+        pattern: "*.vcf.gz"
+output:
+  - bam:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.bam":
+          type: file
+          description: Sorted BAM file
+          pattern: "*.bam"
+  - bai:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.bai":
+          type: file
+          description: index corresponding to sorted BAM file
+          pattern: "*.bai"
+  - bqsr_table:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test']
+      - "*.table":
+          type: file
+          description: (optional) table from base quality score recalibration calculation,
+            to be used with parabricks/applybqsr
+          pattern: "*.table"
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
+  - qc_metrics:
+      - qc_metrics:
+          type: directory
+          description: (optional) optional directory of qc metrics
+          pattern: "qc_metrics"
+  - duplicate_metrics:
+      - duplicate-metrics.txt:
+          type: file
+          description: (optional) metrics calculated from marking duplicates in the bam
+            file
+          pattern: "*-duplicate-metrics.txt"
+authors:
+  - "@bsiranosian"
+  - "@adamrtalbot"
+maintainers:
+  - "@bsiranosian"
+  - "@adamrtalbot"
+  - "@gallvp"
+  - "@famosab"

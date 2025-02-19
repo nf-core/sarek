@@ -1,0 +1,192 @@
+{
+    "SRR389222 - fastq - se - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    
+                ],
+                "3": [
+                    "versions.yml:md5,55d1e67ef8fa9d0ea3065363a653ffef"
+                ],
+                "4": [
+                    
+                ],
+                "5": [
+                    
+                ],
+                "bai": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "bam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": true
+                        },
+                        "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "bqsr_table": [
+                    
+                ],
+                "duplicate_metrics": [
+                    
+                ],
+                "qc_metrics": [
+                    
+                ],
+                "versions": [
+                    "versions.yml:md5,55d1e67ef8fa9d0ea3065363a653ffef"
+                ]
+            },
+            {
+                "PARABRICKS_FQ2BAM": {
+                    "pbrun": "4.4.0-1"
+                }
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.2"
+        },
+        "timestamp": "2024-12-16T12:16:33.055785098"
+    },
+    "sarscov2 - fastq - pe - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    
+                ],
+                "3": [
+                    "versions.yml:md5,55d1e67ef8fa9d0ea3065363a653ffef"
+                ],
+                "4": [
+                    
+                ],
+                "5": [
+                    
+                ],
+                "bai": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "bam": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "bqsr_table": [
+                    
+                ],
+                "duplicate_metrics": [
+                    
+                ],
+                "qc_metrics": [
+                    
+                ],
+                "versions": [
+                    "versions.yml:md5,55d1e67ef8fa9d0ea3065363a653ffef"
+                ]
+            },
+            {
+                "PARABRICKS_FQ2BAM": {
+                    "pbrun": "4.4.0-1"
+                }
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.2"
+        },
+        "timestamp": "2024-12-16T12:16:48.158061416"
+    },
+    "sarscov2 - fastq - pe": {
+        "content": [
+            "2d64e4363d9f3c0e2167fce49d5087cf",
+            "test.bam.bai",
+            [
+                "versions.yml:md5,55d1e67ef8fa9d0ea3065363a653ffef"
+            ],
+            {
+                "PARABRICKS_FQ2BAM": {
+                    "pbrun": "4.4.0-1"
+                }
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.2"
+        },
+        "timestamp": "2024-12-16T12:25:23.63061876"
+    },
+    "SRR389222 - fastq - se": {
+        "content": [
+            "3d5b94990c7fdf90a682edb5ee0f59de",
+            "test.bam.bai",
+            [
+                "versions.yml:md5,55d1e67ef8fa9d0ea3065363a653ffef"
+            ],
+            {
+                "PARABRICKS_FQ2BAM": {
+                    "pbrun": "4.4.0-1"
+                }
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.2"
+        },
+        "timestamp": "2024-12-16T12:24:32.45197929"
+    }
+}

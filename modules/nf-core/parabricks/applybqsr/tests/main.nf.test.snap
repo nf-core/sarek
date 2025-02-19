@@ -1,0 +1,142 @@
+{
+    "homo_sapiens | paired-end | [cram]": {
+        "content": [
+            "2f11e4fe3390b8ad0a1852616fd1da04",
+            "test.bam.bai",
+            [
+                "versions.yml:md5,f396830824c06b6dc30056e423a91634"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.2"
+        },
+        "timestamp": "2024-12-10T08:44:34.058228768"
+    },
+    "sarscov2 | paired-end | [bam]": {
+        "content": [
+            "894549ee3ced6b5ca2eed2563a985217",
+            "test.bam.bai",
+            [
+                "versions.yml:md5,f396830824c06b6dc30056e423a91634"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.2"
+        },
+        "timestamp": "2024-12-10T08:44:17.204736211"
+    },
+    "sarscov2 | paired-end | [bam] | intervals": {
+        "content": [
+            "b194021b699cc5cf4b2b1f715e0b7b4c",
+            "test.bam.bai",
+            [
+                "versions.yml:md5,f396830824c06b6dc30056e423a91634"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.2"
+        },
+        "timestamp": "2024-12-10T08:44:25.661590103"
+    },
+    "sarscov2 | paired-end | [bam] | intervals - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    "versions.yml:md5,f396830824c06b6dc30056e423a91634"
+                ],
+                "bai": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "bam": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,f396830824c06b6dc30056e423a91634"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.2"
+        },
+        "timestamp": "2024-12-10T08:44:47.700907318"
+    },
+    "homo_sapiens | paired-end | [cram] | intervals - stub": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "1": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "2": [
+                    "versions.yml:md5,f396830824c06b6dc30056e423a91634"
+                ],
+                "bai": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bam.bai:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "bam": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test.bam:md5,d41d8cd98f00b204e9800998ecf8427e"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,f396830824c06b6dc30056e423a91634"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.2"
+        },
+        "timestamp": "2024-12-10T08:44:41.08456539"
+    }
+}
