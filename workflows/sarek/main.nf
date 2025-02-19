@@ -244,7 +244,7 @@ workflow SAREK {
         }
 
         // Trimming and/or splitting
-        if (params.trim_fastq || params.split_fastq > 0) {
+        if (params.trim_fastq || params.split_fastq > 0 || !params.gpu_aligner) {
 
             save_trimmed_fail = false
             save_merged = false
