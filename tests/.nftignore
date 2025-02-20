@@ -24,6 +24,5 @@ reports/markduplicates/**/*.md.cram.metrics
 reports/snpeff/*/*_snpEff.csv
 reports/snpeff/*/snpEff_summary.html
 reports/vcftools/**/*.TsTv.qual
-reports/vcftools/**/*.TsTv.count
 variant_calling/**/*.vcf.{gz,gz.tbi}
 variant_calling/controlfreec/*/config.txt
