@@ -464,7 +464,8 @@ Files created:
 **Output directory: `{outdir}/variant_calling/lofreq/<sample>/`**
 
 - `<tumorsample>.vcf.gz`
-    - VCF which provides a detailed description of the detected genetic variants.
+
+  - VCF which provides a detailed description of the detected genetic variants.
 
   </details>
 
@@ -478,9 +479,9 @@ Files created:
 **Output directory: `{outdir}/variant_calling/muse/<tumorsample_vs_normalsample>/`**
 
 - `<tumorsample_vs_normalsample>.MuSE.txt`
-    - TXT containing position-specific summary statistics.
+  - TXT containing position-specific summary statistics.
 - `<tumorsample_vs_normalsample>.muse.vcf.gz`
-    - VCF with called variants. Fields are named TUMOR and NORMAL.
+  - VCF with called variants. Fields are named TUMOR and NORMAL.
 
 </details>
 
