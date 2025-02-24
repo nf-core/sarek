@@ -1,5 +1,5 @@
 {
-    "Run with profile test,alignment_to_fastq": {
+    "Run with profile test,alignment_to_fastq | --save_mapped --save_output_as_bam": {
         "content": [
             27,
             {
@@ -323,9 +323,6 @@
                 "test.strelka.variants.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a"
             ],
             [
-                
-            ],
-            [
                 [
                     "test.strelka.genome.vcf.gz",
                     "d23db2df1603e0949f7788a3c3640833"
@@ -340,6 +337,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-02-24T17:10:28.151996457"
+        "timestamp": "2025-02-24T19:04:06.023379801"
     }
 }

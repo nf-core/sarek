@@ -11,6 +11,7 @@ nextflow_pipeline {
             params {
                 outdir = "$outputDir"
                 save_mapped = true
+                modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
                 skip_tools = 'baserecalibrator,fastqc,markduplicates,mosdepth,multiqc,samtools'
                 tools = ''
             }
@@ -21,8 +22,9 @@ nextflow_pipeline {
             def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
             // stable_path: All files in ${params.outdir}/ with stable content
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
-            // bam_files: All bam files
-            def bam_files  = getAllFilesFromDir(params.outdir, include: ['**/*.bam'])
+            // cram_files: All cram files
+            def cram_files  = getAllFilesFromDir(params.outdir, include: ['**/*.cram'])
+            def fasta       = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta'
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
@@ -34,8 +36,8 @@ nextflow_pipeline {
                     stable_name,
                     // All files with stable contents
                     stable_path,
-                    // All bam files
-                    bam_files.collect{ file -> [ file.getName(), bam(file.toString()).getReadsMD5() ] }
+                    // All cram files
+                    cram_files.collect{ file -> [ file.getName(), cram(file.toString(), fasta).getReadsMD5() ] }
                 ).match() }
             )
         }

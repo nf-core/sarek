@@ -323,9 +323,6 @@
                 "test.strelka.variants.TsTv.count:md5,fa27f678965b7cba6a92efcd039f802a"
             ],
             [
-                
-            ],
-            [
                 [
                     "test.strelka.genome.vcf.gz",
                     "d23db2df1603e0949f7788a3c3640833"
@@ -340,6 +337,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-02-24T17:07:24.748041794"
+        "timestamp": "2025-02-24T19:01:12.937596048"
     }
 }
