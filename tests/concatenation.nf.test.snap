@@ -199,9 +199,9 @@
             ],
             [
                 "testN.freebayes.added_info.vcf:md5,cbe67ade809ad0d21366d4b8a725bb25",
-                "testN.haplotypecaller.filtered.added_info.vcf:md5,b65e5d64d2a9468a6e64e169c84b7f1b",
+                "testN.haplotypecaller.filtered.added_info.vcf:md5,55bcdeeec508c3cea5a76fe7fa5f2046",
                 "testT.freebayes.added_info.vcf:md5,5d220d5f9799d5f5ad50765668dad8b4",
-                "testT.haplotypecaller.filtered.added_info.vcf:md5,19065429f07aeb18aa40e9aae31c1889",
+                "testT.haplotypecaller.filtered.added_info.vcf:md5,5c1c5eebe4cf7da5eb0e95a0e037813f",
                 "bcftools-stats-subtypes.txt:md5,698ccfbefaf3aa88da0ae8bceaf2bc87",
                 "bcftools_stats_indel-lengths.txt:md5,200444329f3f9392f299c61fbe9296b0",
                 "bcftools_stats_variant_depths.txt:md5,22cf631a39ef288c9e6c9facc68a61c6",
@@ -238,23 +238,70 @@
                 "testT.haplotypecaller.filtered.TsTv.count:md5,803d74e40f7716202bae2a3a81c1ddfc",
                 "testN.freebayes.added_info.vcf.gz:md5,cbe67ade809ad0d21366d4b8a725bb25",
                 "testN.freebayes.added_info.vcf.gz.tbi:md5,0c029eab0c4f710f313d6625d3aa875a",
-                "testN.haplotypecaller.filtered.added_info.vcf.gz:md5,b65e5d64d2a9468a6e64e169c84b7f1b",
+                "testN.haplotypecaller.filtered.added_info.vcf.gz:md5,55bcdeeec508c3cea5a76fe7fa5f2046",
                 "testN.haplotypecaller.filtered.added_info.vcf.gz.tbi:md5,07c64f50958ab28f921fde95b2afd277",
                 "testT.freebayes.added_info.vcf.gz:md5,5d220d5f9799d5f5ad50765668dad8b4",
                 "testT.freebayes.added_info.vcf.gz.tbi:md5,f9e6393f97e5dfb7dd07b7b852080e73",
-                "testT.haplotypecaller.filtered.added_info.vcf.gz:md5,19065429f07aeb18aa40e9aae31c1889",
-                "testT.haplotypecaller.filtered.added_info.vcf.gz.tbi:md5,ace129f95bb4317dd56ac8b63c361ed1",
+                "testT.haplotypecaller.filtered.added_info.vcf.gz:md5,5c1c5eebe4cf7da5eb0e95a0e037813f",
+                "testT.haplotypecaller.filtered.added_info.vcf.gz.tbi:md5,1e559f3e2ab02a79837be6107d3118e8",
                 "versions.yml:md5,69c573f208c12410e6a0ec7059a0f24e",
                 "versions.yml:md5,69c573f208c12410e6a0ec7059a0f24e"
             ],
             [
-                
+                [
+                    "testN.freebayes.added_info.vcf.gz",
+                    "184743db45c933febc5557d08b19f23c"
+                ],
+                [
+                    "testN.haplotypecaller.filtered.added_info.vcf.gz",
+                    "6070da7b2505011232eb5975d8ab74aa"
+                ],
+                [
+                    "testT.freebayes.added_info.vcf.gz",
+                    "7bac441a7c84790f43d26a73e10be9b5"
+                ],
+                [
+                    "testT.haplotypecaller.filtered.added_info.vcf.gz",
+                    "a5c9e658b834d70cc8cafbd94919fa4f"
+                ],
+                [
+                    "testN.germline.vcf.gz",
+                    "722f25aa13e7b6f34e8fff98202495cb"
+                ],
+                [
+                    "testT.germline.vcf.gz",
+                    "ba2aba068afc37bf3a973b188b2c4bcc"
+                ],
+                [
+                    "testN.freebayes.vcf.gz",
+                    "1d98e39fe458af9020283de18c764055"
+                ],
+                [
+                    "testT.freebayes.vcf.gz",
+                    "387b7d48d04ad3b294f07173e6550fc7"
+                ],
+                [
+                    "testN.haplotypecaller.filtered.vcf.gz",
+                    "df2040bf1bee0252581824d11d5d87d1"
+                ],
+                [
+                    "testN.haplotypecaller.vcf.gz",
+                    "9d9d103327d59d17e778b663b56136fb"
+                ],
+                [
+                    "testT.haplotypecaller.filtered.vcf.gz",
+                    "d1e2d43d91858677d2b35fc389ee81b1"
+                ],
+                [
+                    "testT.haplotypecaller.vcf.gz",
+                    "5a2f49f0a41e890f9564a0baa11dc1c6"
+                ]
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-02-24T16:31:07.739589357"
+        "timestamp": "2025-02-24T16:57:45.905225241"
     }
 }
