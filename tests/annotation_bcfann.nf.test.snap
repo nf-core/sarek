@@ -29,12 +29,18 @@
             ],
             [
                 "multiqc_citations.txt:md5,4c806e63a283ec1b7e78cdae3a923d4f"
+            ],
+            [
+                [
+                    "test_BCF.ann.vcf.gz",
+                    "bc7bf3ee9e8430e064c539eb81e59bf9"
+                ]
             ]
         ],
         "meta": {
-            "nf-test": "0.9.1",
-            "nextflow": "24.10.0"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
         },
-        "timestamp": "2024-10-29T09:38:54.991004"
+        "timestamp": "2025-02-24T17:11:13.075740065"
     }
 }
