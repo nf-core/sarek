@@ -454,6 +454,36 @@ Files created:
 
 </details>
 
+#### Lofreq
+
+[Lofreq](https://github.com/CSB5/lofreq) is a fast and sensitive variant-caller for inferring SNVs and indels from next-generation sequencing data. It makes full use of base-call qualities and other sources of errors inherent in sequencing, which are usually ignored by other methods or only used for filtering. For further reading and documentation see the [Lofreq user guide](https://csb5.github.io/lofreq/).
+
+<details markdown = "1">
+<summary>Output files for tumor-only samples</summary>
+
+**Output directory: `{outdir}/variant_calling/lofreq/<sample>/`**
+
+- `<tumorsample>.vcf.gz`
+    - VCF which provides a detailed description of the detected genetic variants.
+
+  </details>
+
+#### MuSE
+
+[MuSE](https://github.com/wwylab/MuSE) is an accurate and ultra-fast somatic mutation calling tool for whole-genome sequencing (WGS) and whole-exome sequencing (WES) data from heterogeneous tumor samples. This tool is unique in accounting for tumor heterogeneity using a sample-specific error model that improves sensitivity and specificity in mutation calling from sequencing data. For further reading see the [recently published paper](https://genome.cshlp.org/content/early/2024/05/03/gr.278456.123.long).
+
+<details markdown = "1">
+<summary>Output files for tumor-normal samples</summary>
+
+**Output directory: `{outdir}/variant_calling/muse/<tumorsample_vs_normalsample>/`**
+
+- `<tumorsample_vs_normalsample>.MuSE.txt`
+    - TXT containing position-specific summary statistics.
+- `<tumorsample_vs_normalsample>.muse.vcf.gz`
+    - VCF with called variants. Fields are named TUMOR and NORMAL.
+
+</details>
+
 #### Sentieon DNAscope
 
 [Sentieon DNAscope](https://support.sentieon.com/appnotes/dnascope_ml/#dnascope-germline-variant-calling-with-a-machine-learning-model) is a variant-caller which aims at outperforming GATK's Haplotypecaller in terms of both speed and accuracy. DNAscope allows you to use a machine learning model to perform variant calling with higher accuracy by improving the candidate detection and filtering.
@@ -575,34 +605,6 @@ For further downstream analysis, take a look [here](https://github.com/Illumina/
   - VCF with tabix index with all somatic indels inferred in the tumor sample.
 - `<tumorsample_vs_normalsample>.strelka.somatic_snvs.vcf.gz` and `<tumorsample_vs_normalsample>.strelka.somatic_snvs.vcf.gz.tbi`
   - VCF with tabix index with all somatic SNVs inferred in the tumor sample.
-
-</details>
-
-#### Lofreq
-
-[Lofreq](https://github.com/CSB5/lofreq) is a fast and sensitive variant-caller for inferring SNVs and indels from next-generation sequencing data. It makes full use of base-call qualities and other sources of errors inherent in sequencing, which are usually ignored by other methods or only used for filtering. For further reading and documentation see the [Lofreq user guide](https://csb5.github.io/lofreq/).
-
-<details markdown = "1">
-<summary>Output files for tumor-only samples</summary>
-
-**Output directory: `{outdir}/variant_calling/lofreq/<sample>/`**
-
--`<tumorsample>.vcf.gz`
--VCF which provides a detailed description of the detected genetic variants.
-
-  </details>
-
-#### MuSE
-
-[MuSE](https://github.com/wwylab/MuSE) is an accurate and ultra-fast somatic mutation calling tool for whole-genome sequencing (WGS) and whole-exome sequencing (WES) data from heterogeneous tumor samples. This tool is unique in accounting for tumor heterogeneity using a sample-specific error model that improves sensitivity and specificity in mutation calling from sequencing data. For further reading see the [recently published paper](https://genome.cshlp.org/content/early/2024/05/03/gr.278456.123.long).
-
-<details markdown = "1">
-<summary>Output files for tumor-normal samples</summary>
-
-**Output directory: `{outdir}/variant_calling/muse/<tumorsample_vs_normalsample>/`**
-
--`<tumorsample_vs_normalsample>.vcf.gz`
--VCF with called variants. Fields are named TUMOR and NORMAL.
 
 </details>
 
