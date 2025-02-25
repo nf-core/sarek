@@ -23,6 +23,8 @@ concurrency:
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  NFT_DIFF: "pdiff"
+  NFT_DIFF_ARGS: "--line-numbers --width 120 --expand-tabs=2"
   # renovate: datasource=github-releases depName=askimed/nf-test versioning=semver
   NFT_VER: "0.9.2"
   NXF_ANSI_LOG: false
@@ -90,6 +92,8 @@ jobs:
           SENTIEON_LICENSE_MESSAGE: ${{ secrets.SENTIEON_LICENSE_MESSAGE }}
           SENTIEON_LICSRVR_IP: ${{ secrets.SENTIEON_LICSRVR_IP }}
           SENTIEON_AUTH_MECH: "GitHub Actions - token"
+          NFT_DIFF: ${{ env.NFT_DIFF }}
+          NFT_DIFF_ARGS: ${{ env.NFT_DIFF_ARGS }}
         with:
           profile: ${{ matrix.profile }}
           shard: ${{ matrix.shard }}
