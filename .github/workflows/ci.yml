@@ -32,20 +32,9 @@ jobs:
         NXF_VER:
           - "24.04.2"
           - "latest-everything"
-        profile:
-          - "conda"
-          - "docker"
-          - "singularity"
+        profile: [conda, docker, singularity]
         test_name:
           - "test"
-        isMaster:
-          - ${{ github.base_ref == 'master' }}
-        # Exclude conda and singularity on dev
-        exclude:
-          - isMaster: false
-            profile: "conda"
-          - isMaster: false
-            profile: "singularity"
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
