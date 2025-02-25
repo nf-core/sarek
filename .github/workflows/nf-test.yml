@@ -53,7 +53,7 @@ jobs:
         env:
           NFT_VER: ${{ env.NFT_VER }}
         with:
-          max_shards: 1
+          max_shards: 7
 
       - name: debug
         run: |
@@ -62,17 +62,18 @@ jobs:
 
   nf-test:
     runs-on: ${{ github.event.inputs.runners || github.run_number > 1 && 'ubuntu-latest' || 'self-hosted' }}
-    name: "${{ matrix.NXF_VER }} | ${{ matrix.profile }} | ${{ matrix.shard }}"
+    name: "${{ matrix.NXF_VER }} | ${{ matrix.profile }} | ${{ matrix.shard }}/${{ needs.nf-test-changes.outputs.total_shards }}"
     needs: [nf-test-changes]
     if: ${{ needs.nf-test-changes.outputs.total_shards != '0' }}
     strategy:
       fail-fast: false
       matrix:
         shard: ${{ fromJson(needs.nf-test-changes.outputs.shard) }}
-        # profile: [conda, docker, singularity]
-        profile: [docker]
-        # renovate: datasource=github-releases depName=nextflow/nextflow versioning=semver
-        NXF_VER: ["24.10.2", "latest-everything"]
+        profile: [conda, docker, singularity]
+        NXF_VER:
+          # renovate: datasource=github-releases depName=nextflow/nextflow versioning=semver
+          - "24.10.2"
+          - "latest-everything"
     env:
       NXF_ANSI_LOG: false
       TOTAL_SHARDS: ${{ needs.nf-test-changes.outputs.total_shards }}
