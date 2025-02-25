@@ -1,9 +1,6 @@
 name: "Get number of shards"
 description: "Get the number of nf-test shards for the current CI job"
 inputs:
-  tags:
-    description: "Tags to pass as argument for nf-test --tag parameter"
-    required: true
   max_shards:
     description: "Maximum number of shards allowed"
     required: true
@@ -33,7 +30,7 @@ runs:
         nftest_output=$(nf-test test \
           --dry-run \
           --profile +docker \
-          --filter pipeline \
+          --filter function,workflow,pipeline \
           --ci \
           --changed-since HEAD^) || {
             echo "nf-test command failed with exit code $?"
