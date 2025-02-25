@@ -75,7 +75,7 @@ runs:
           --ci \
           --shard ${{ inputs.shard }}/${{ inputs.total_shards }} \
           --changed-since HEAD^ \
-          --profile=${{ inputs.profile }} \
+          --profile=+${{ inputs.profile }} \
           --filter ${{ inputs.filters }} \
           --tap=test.tap \
           --verbose \
