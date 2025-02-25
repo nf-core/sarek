@@ -1,12 +1,12 @@
 name: "Get number of shards"
 description: "Get the number of nf-test shards for the current CI job"
 inputs:
-  tags:
-    description: "Tags to pass as argument for nf-test --tag parameter"
-    required: true
   max_shards:
     description: "Maximum number of shards allowed"
     required: true
+  paths:
+    description: "Component paths to test"
+    required: false
 outputs:
   shard:
     description: "Array of shard numbers"
@@ -14,7 +14,6 @@ outputs:
   total_shards:
     description: "Total number of shards"
     value: ${{ steps.shards.outputs.total_shards }}
-
 runs:
   using: "composite"
   steps:
@@ -23,13 +22,21 @@ runs:
       with:
         version: ${{ env.NFT_VER }}
         install-pdiff: true
-
     - name: Get number of shards
       id: shards
       shell: bash
       run: |
-        # Run nf-test to get the number of related tests
-        nftest_output=$(nf-test test --dry-run --changed-since HEAD^ --filter pipeline --tag ${{ inputs.tags }})
+        # Run nf-test with dynamic parameter
+        nftest_output=$(nf-test test \
+          --dry-run \
+          --profile +docker \
+          --filter function,workflow,pipeline \
+          --ci \
+          --changed-since HEAD^) || {
+            echo "nf-test command failed with exit code $?"
+            echo "Full output: $nftest_output"
+            exit 1
+        }
         echo "nf-test dry-run output: $nftest_output"
 
         # Default values for shard and total_shards
@@ -37,7 +44,7 @@ runs:
         total_shards=0
 
         # Check if there are related tests
-        if echo "$nftest_output" | grep -q 'Nothing to do'; then
+        if echo "$nftest_output" | grep -q 'No tests to execute'; then
           echo "No related tests found."
         else
           # Extract the number of related tests

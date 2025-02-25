@@ -3,18 +3,10 @@ name: nf-core CI
 on:
   push:
     branches:
-      - dev
-    paths-ignore:
-      - "docs/**"
-      - "**/*.md"
-      - "**/*.png"
-      - "**/*.svg"
+      - master
   pull_request:
-    paths-ignore:
-      - "docs/**"
-      - "**/*.md"
-      - "**/*.png"
-      - "**/*.svg"
+    branches:
+      - master
   release:
     types: [published]
   workflow_dispatch:
@@ -64,17 +56,6 @@ jobs:
         uses: nf-core/setup-nextflow@v2
         with:
           version: "${{ matrix.NXF_VER }}"
-
-      - name: Set up Nextflow secrets
-        if: env.SENTIEON_LICENSE_BASE64 != null
-        run: |
-          nextflow secrets set SENTIEON_LICENSE_BASE64 ${{ secrets.SENTIEON_LICENSE_BASE64 }}
-          nextflow secrets set SENTIEON_AUTH_MECH_BASE64 ${{ secrets.SENTIEON_AUTH_MECH_BASE64 }}
-          SENTIEON_ENCRYPTION_KEY=$(echo -n "${{ secrets.ENCRYPTION_KEY_BASE64 }}" | base64 -d)
-          SENTIEON_LICENSE_MESSAGE=$(echo -n "${{ secrets.LICENSE_MESSAGE_BASE64 }}" | base64 -d)
-          SENTIEON_AUTH_DATA=$(python3 bin/license_message.py encrypt --key "$SENTIEON_ENCRYPTION_KEY" --message "$SENTIEON_LICENSE_MESSAGE")
-          SENTIEON_AUTH_DATA_BASE64=$(echo -n "$SENTIEON_AUTH_DATA" | base64 -w 0)
-          nextflow secrets set SENTIEON_AUTH_DATA_BASE64 $SENTIEON_AUTH_DATA_BASE64
 
       - name: Set up Apptainer
         if: matrix.profile == 'singularity'
