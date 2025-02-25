@@ -41,7 +41,6 @@ env:
   NXF_ANSI_LOG: false
   NXF_SINGULARITY_CACHEDIR: ${{ github.workspace }}/.singularity
   NXF_SINGULARITY_LIBRARYDIR: ${{ github.workspace }}/.singularity
-  SENTIEON_LICENSE_BASE64: ${{ secrets.SENTIEON_LICENSE_BASE64 }}
   TEST_DATA_BASE: "${{ github.workspace }}/test-datasets"
 
 jobs:
@@ -102,6 +101,10 @@ jobs:
         uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
         with:
           fetch-depth: 0
+
+      - name: Set up secrets
+        run: |
+          echo "SENTIEON_LICENSE_BASE64=${{ secrets.SENTIEON_LICENSE_BASE64 }}" >> $GITHUB_ENV
 
       - name: Run nf-test Action
         uses: ./.github/actions/nf-test
