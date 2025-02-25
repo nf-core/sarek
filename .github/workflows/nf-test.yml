@@ -73,6 +73,14 @@ jobs:
       matrix:
         shard: ${{ fromJson(needs.nf-test-changes.outputs.shard) }}
         profile: [conda, docker, singularity]
+        isMaster:
+          - ${{ github.base_ref == 'master' }}
+        # Exclude conda and singularity on dev
+        exclude:
+          - isMaster: false
+            profile: "conda"
+          - isMaster: false
+            profile: "singularity"
         NXF_VER:
           # renovate: datasource=github-releases depName=nextflow/nextflow versioning=semver
           - "24.10.2"
