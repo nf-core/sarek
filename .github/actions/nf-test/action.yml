@@ -65,9 +65,9 @@ runs:
     - name: Run nf-test
       shell: bash
       env:
-        NFT_DIFF: ${{ env.NFT_DIFF }}
-        NFT_DIFF_ARGS: ${{ env.NFT_DIFF_ARGS }}
-        NFT_WORKDIR: ${{ env.NFT_WORKDIR }}
+        NFT_DIFF: "${{ env.NFT_DIFF }}"
+        NFT_DIFF_ARGS: "${{ env.NFT_DIFF_ARGS }}"
+        NFT_WORKDIR: "${{ env.NFT_WORKDIR }}"
         SENTIEON_AUTH_MECH: "GitHub Actions - token"
         SENTIEON_LICSRVR_IP: ${{ env.SENTIEON_LICSRVR_IP }}
       run: |
