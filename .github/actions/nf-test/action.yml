@@ -20,11 +20,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - uses: actions/setup-java@8df1039502a15bceb9433410b1a100fbe190c53b # v4
-      with:
-        distribution: "temurin"
-        java-version: "17"
-
     - name: Setup Nextflow
       uses: nf-core/setup-nextflow@v2
       with:
