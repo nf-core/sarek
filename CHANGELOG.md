@@ -10,12 +10,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - [1803](https://github.com/nf-core/sarek/pull/1803) - Back to dev
+- [1806](https://github.com/nf-core/sarek/pull/1806) - Use `nft-vcf` for nf-test vcf assertions
 
 ### Changed
 
+- [1806](https://github.com/nf-core/sarek/pull/1806) - Migrate pipeline pytest vcf concatenation tests to nf-test
+
 ### Fixed
 
+- [1806](https://github.com/nf-core/sarek/pull/1806) - Fix some nf-test assertions
+
 ### Removed
+
+- [1806](https://github.com/nf-core/sarek/pull/1806) - Remove some files publication with the --concatenate_vcfs options
 
 ### Dependencies
 

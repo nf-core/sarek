@@ -382,12 +382,30 @@
                     "test2.recal.cram",
                     "f4205ab086600ba2927e1468dc732976"
                 ]
+            ],
+            [
+                [
+                    "test.strelka.genome.vcf.gz",
+                    "16437a040679d88b7d84a9276f793d6c"
+                ],
+                [
+                    "test.strelka.variants.vcf.gz",
+                    "666f835fdaf4952a179cdedd40c9d565"
+                ],
+                [
+                    "test2_vs_test.strelka.somatic_indels.vcf.gz",
+                    "d41d8cd98f00b204e9800998ecf8427e"
+                ],
+                [
+                    "test2_vs_test.strelka.somatic_snvs.vcf.gz",
+                    "d41d8cd98f00b204e9800998ecf8427e"
+                ]
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
         },
-        "timestamp": "2024-11-09T18:22:56.125003"
+        "timestamp": "2025-02-24T17:34:20.126409267"
     }
 }
