@@ -114,15 +114,13 @@
                 "test.sorted.regions.bed.gz.csi:md5,c5d0be930ffc9e562f21519a0d488d5d",
                 "test.sorted.cram.stats:md5,a15b3a5e59337db312d66020c7bb93ac"
             ],
-            [
-
-            ]
+            "No CRAM files"
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
         },
-        "timestamp": "2024-11-09T16:15:20.865586"
+        "timestamp": "2025-02-25T11:06:19.105018276"
     },
     "Run with profile test | --input tests/csv/3.0/mapped_single_bam.csv --step markduplicates --tools null ": {
         "content": [
