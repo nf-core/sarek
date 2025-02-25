@@ -26,9 +26,6 @@ nextflow_pipeline {
             def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
             // stable_path: All files in ${params.outdir}/ with stable content
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
-            // cram_files: All cram files
-            def cram_files  = getAllFilesFromDir(params.outdir, include: ['**/*.cram'])
-            def fasta       = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta'
             // vcf_files: All vcf files
             def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf.gz'])
             assertAll(
@@ -42,8 +39,6 @@ nextflow_pipeline {
                     stable_name,
                     // All files with stable contents
                     stable_path,
-                    // All cram files
-                    cram_files.collect{ file -> [ file.getName(), cram(file.toString(), fasta).readsMD5 ] },
                     // All vcf files
                     vcf_files.collect{ file -> [ file.getName(), path(file.toString()).vcf.variantsMD5] }
                 ).match() }
@@ -71,9 +66,6 @@ nextflow_pipeline {
             def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
             // stable_path: All files in ${params.outdir}/ with stable content
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
-            // cram_files: All cram files
-            def cram_files  = getAllFilesFromDir(params.outdir, include: ['**/*.cram'])
-            def fasta       = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta'
             // vcf_files: All vcf files
             def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf.gz'])
             assertAll(
@@ -87,8 +79,6 @@ nextflow_pipeline {
                     stable_name,
                     // All files with stable contents
                     stable_path,
-                    // All cram files
-                    cram_files.collect{ file -> [ file.getName(), cram(file.toString(), fasta).readsMD5 ] },
                     // All vcf files
                     vcf_files.collect{ file -> [ file.getName(), path(file.toString()).vcf.variantsMD5] }
                 ).match() }
@@ -117,9 +107,6 @@ nextflow_pipeline {
             def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
             // stable_path: All files in ${params.outdir}/ with stable content
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
-            // cram_files: All cram files
-            def cram_files  = getAllFilesFromDir(params.outdir, include: ['**/*.cram'])
-            def fasta       = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta'
             // vcf_files: All vcf files
             def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf.gz'])
             assertAll(
@@ -133,8 +120,6 @@ nextflow_pipeline {
                     stable_name,
                     // All files with stable contents
                     stable_path,
-                    // All cram files
-                    cram_files.collect{ file -> [ file.getName(), cram(file.toString(), fasta).readsMD5 ] },
                     // All vcf files
                     vcf_files.collect{ file -> [ file.getName(), path(file.toString()).vcf.variantsMD5] }
                 ).match() }
@@ -162,9 +147,6 @@ nextflow_pipeline {
             def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
             // stable_path: All files in ${params.outdir}/ with stable content
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
-            // cram_files: All cram files
-            def cram_files  = getAllFilesFromDir(params.outdir, include: ['**/*.cram'])
-            def fasta       = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta'
             // vcf_files: All vcf files
             def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf.gz'])
             assertAll(
@@ -178,8 +160,6 @@ nextflow_pipeline {
                     stable_name,
                     // All files with stable contents
                     stable_path,
-                    // All cram files
-                    cram_files.collect{ file -> [ file.getName(), cram(file.toString(), fasta).readsMD5 ] },
                     // All vcf files
                     vcf_files.collect{ file -> [ file.getName(), path(file.toString()).vcf.variantsMD5] }
                 ).match() }
@@ -208,9 +188,6 @@ nextflow_pipeline {
             def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ['pipeline_info/*.{html,json,txt}'])
             // stable_path: All files in ${params.outdir}/ with stable content
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
-            // cram_files: All cram files
-            def cram_files  = getAllFilesFromDir(params.outdir, include: ['**/*.cram'])
-            def fasta       = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta'
             // vcf_files: All vcf files
             def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf.gz'])
             assertAll(
@@ -224,8 +201,6 @@ nextflow_pipeline {
                     stable_name,
                     // All files with stable contents
                     stable_path,
-                    // All cram files
-                    cram_files.collect{ file -> [ file.getName(), cram(file.toString(), fasta).readsMD5 ] },
                     // All vcf files
                     vcf_files.collect{ file -> [ file.getName(), path(file.toString()).vcf.variantsMD5] }
                 ).match() }

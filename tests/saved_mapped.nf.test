@@ -35,7 +35,7 @@ nextflow_pipeline {
                     // All stable path name, with a relative path
                     stable_name,
                     // All files with stable contents
-                    stable_path,
+                    stable_path.isEmpty() ? 'No stable content' : stable_path,
                     // All cram files
                     cram_files.collect{ file -> [ file.getName(), cram(file.toString(), fasta).readsMD5 ] }
                 ).match() }
