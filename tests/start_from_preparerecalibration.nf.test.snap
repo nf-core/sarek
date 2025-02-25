@@ -55,14 +55,17 @@
                 "multiqc_citations.txt:md5,3815a9f79e41890653a0e0d602c92ac9"
             ],
             [
-
+                
+            ],
+            [
+                
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
         },
-        "timestamp": "2024-11-09T16:57:10.392231"
+        "timestamp": "2025-02-24T17:24:03.510479917"
     },
     "Run with profile test | --input tests/csv/3.0/mapped_single_bam.csv --step prepare_recalibration --skip_tools baserecalibrator --tools strelka ": {
         "content": [
@@ -173,14 +176,24 @@
                 "test.strelka.variants.TsTv.count:md5,ee7dafc8d941b8502a04a63dc3126fff"
             ],
             [
-
+                
+            ],
+            [
+                [
+                    "test.strelka.genome.vcf.gz",
+                    "325ea84ccf1ec1cf7a6c5c4aae1c0d1"
+                ],
+                [
+                    "test.strelka.variants.vcf.gz",
+                    "3a3b3e67614ec91f4f0b88999dff454b"
+                ]
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
         },
-        "timestamp": "2024-11-09T16:58:48.877928"
+        "timestamp": "2025-02-24T17:25:08.065505935"
     },
     "Run with profile test | --input tests/csv/3.0/mapped_single_cram.csv --step prepare_recalibration --skip_tools baserecalibrator --tools strelka ": {
         "content": [
@@ -291,14 +304,24 @@
                 "test.strelka.variants.TsTv.count:md5,ee7dafc8d941b8502a04a63dc3126fff"
             ],
             [
-
+                
+            ],
+            [
+                [
+                    "test.strelka.genome.vcf.gz",
+                    "325ea84ccf1ec1cf7a6c5c4aae1c0d1"
+                ],
+                [
+                    "test.strelka.variants.vcf.gz",
+                    "3a3b3e67614ec91f4f0b88999dff454b"
+                ]
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
         },
-        "timestamp": "2024-11-09T17:02:51.883814"
+        "timestamp": "2025-02-24T17:27:14.56563155"
     },
     "Run with profile test | --input tests/csv/3.0/mapped_single_cram.csv --step prepare_recalibration --tools null ": {
         "content": [
@@ -385,12 +408,15 @@
                     "test.recal.cram",
                     "463ac3b905fbf4ddf113a94dbfa8d69f"
                 ]
+            ],
+            [
+                
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
         },
-        "timestamp": "2024-11-09T17:01:30.130705"
+        "timestamp": "2025-02-24T17:26:16.484760131"
     }
 }
