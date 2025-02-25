@@ -100,11 +100,6 @@ jobs:
       - name: Install Python dependencies
         run: pip install --upgrade -r tests/requirements.txt
 
-      - uses: actions/setup-java@8df1039502a15bceb9433410b1a100fbe190c53b # v4
-        with:
-          distribution: "temurin"
-          java-version: "17"
-
       - name: Install Nextflow ${{ matrix.NXF_VER }}
         uses: nf-core/setup-nextflow@v2
         with:
