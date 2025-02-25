@@ -314,12 +314,22 @@
                     "test.recal.cram",
                     "dbd6f40b1e6d72501dc034e62e9d54eb"
                 ]
+            ],
+            [
+                [
+                    "test.strelka.genome.vcf.gz",
+                    "d23db2df1603e0949f7788a3c3640833"
+                ],
+                [
+                    "test.strelka.variants.vcf.gz",
+                    "48ca98a5c4b715b71241fea2ae740179"
+                ]
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
         },
-        "timestamp": "2024-11-09T21:41:27.897118"
+        "timestamp": "2025-02-24T17:22:25.404315145"
     }
 }

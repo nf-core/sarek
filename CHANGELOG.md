@@ -9,14 +9,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- [1682](https://github.com/nf-core/sarek/pull/1682) - Add `bcftools_norm` in `POST_VARIANTCALLING` for normalization of all vcf files
 - [1803](https://github.com/nf-core/sarek/pull/1803) - Back to dev
-- [1682](https://github.com/nf-core/sarek/pull/1682) - Add `bcftools_norm` in `POST_VARIANTCALLING` for normalization of all vcf files; edit vcf_concatenate_germline subworkflow
+- [1806](https://github.com/nf-core/sarek/pull/1806) - Use `nft-vcf` for nf-test vcf assertions
 
 ### Changed
 
+- [1682](https://github.com/nf-core/sarek/pull/1682) - Edit vcf_concatenate_germline subworkflow
+- [1806](https://github.com/nf-core/sarek/pull/1806) - Migrate pipeline pytest vcf concatenation tests to nf-test
+
 ### Fixed
 
+- [1806](https://github.com/nf-core/sarek/pull/1806) - Fix some nf-test assertions
+
 ### Removed
+
+- [1806](https://github.com/nf-core/sarek/pull/1806) - Remove some files publication with the --concatenate_vcfs options
 
 ### Dependencies
 

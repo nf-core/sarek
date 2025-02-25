@@ -29,6 +29,8 @@ nextflow_pipeline {
             // cram_files: All cram files
             def cram_files  = getAllFilesFromDir(params.outdir, include: ['**/*.cram'])
             def fasta       = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta'
+            // vcf_files: All vcf files
+            def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf.gz'])
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
@@ -41,7 +43,9 @@ nextflow_pipeline {
                     // All files with stable contents
                     stable_path,
                     // All cram files
-                    cram_files.collect{ file -> [ file.getName(), cram(file.toString(), fasta).getReadsMD5() ] }
+                    cram_files.collect{ file -> [ file.getName(), cram(file.toString(), fasta).getReadsMD5() ] },
+                    // All vcf files
+                    vcf_files.collect{ file -> [ file.getName(), path(file.toString()).vcf.variantsMD5] }
                 ).match() }
             )
         }
@@ -70,6 +74,8 @@ nextflow_pipeline {
             // cram_files: All cram files
             def cram_files  = getAllFilesFromDir(params.outdir, include: ['**/*.cram'])
             def fasta       = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta'
+            // vcf_files: All vcf files
+            def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf.gz'])
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
@@ -82,7 +88,9 @@ nextflow_pipeline {
                     // All files with stable contents
                     stable_path,
                     // All cram files
-                    cram_files.collect{ file -> [ file.getName(), cram(file.toString(), fasta).getReadsMD5() ] }
+                    cram_files.collect{ file -> [ file.getName(), cram(file.toString(), fasta).getReadsMD5() ] },
+                    // All vcf files
+                    vcf_files.collect{ file -> [ file.getName(), path(file.toString()).vcf.variantsMD5] }
                 ).match() }
             )
         }
@@ -112,6 +120,8 @@ nextflow_pipeline {
             // cram_files: All cram files
             def cram_files  = getAllFilesFromDir(params.outdir, include: ['**/*.cram'])
             def fasta       = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta'
+            // vcf_files: All vcf files
+            def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf.gz'])
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
@@ -124,7 +134,9 @@ nextflow_pipeline {
                     // All files with stable contents
                     stable_path,
                     // All cram files
-                    cram_files.collect{ file -> [ file.getName(), cram(file.toString(), fasta).getReadsMD5() ] }
+                    cram_files.collect{ file -> [ file.getName(), cram(file.toString(), fasta).getReadsMD5() ] },
+                    // All vcf files
+                    vcf_files.collect{ file -> [ file.getName(), path(file.toString()).vcf.variantsMD5] }
                 ).match() }
             )
         }
@@ -153,6 +165,8 @@ nextflow_pipeline {
             // cram_files: All cram files
             def cram_files  = getAllFilesFromDir(params.outdir, include: ['**/*.cram'])
             def fasta       = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta'
+            // vcf_files: All vcf files
+            def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf.gz'])
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
@@ -165,7 +179,9 @@ nextflow_pipeline {
                     // All files with stable contents
                     stable_path,
                     // All cram files
-                    cram_files.collect{ file -> [ file.getName(), cram(file.toString(), fasta).getReadsMD5() ] }
+                    cram_files.collect{ file -> [ file.getName(), cram(file.toString(), fasta).getReadsMD5() ] },
+                    // All vcf files
+                    vcf_files.collect{ file -> [ file.getName(), path(file.toString()).vcf.variantsMD5] }
                 ).match() }
             )
         }
@@ -195,6 +211,8 @@ nextflow_pipeline {
             // cram_files: All cram files
             def cram_files  = getAllFilesFromDir(params.outdir, include: ['**/*.cram'])
             def fasta       = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta'
+            // vcf_files: All vcf files
+            def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf.gz'])
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
@@ -207,7 +225,9 @@ nextflow_pipeline {
                     // All files with stable contents
                     stable_path,
                     // All cram files
-                    cram_files.collect{ file -> [ file.getName(), cram(file.toString(), fasta).getReadsMD5() ] }
+                    cram_files.collect{ file -> [ file.getName(), cram(file.toString(), fasta).getReadsMD5() ] },
+                    // All vcf files
+                    vcf_files.collect{ file -> [ file.getName(), path(file.toString()).vcf.variantsMD5] }
                 ).match() }
             )
         }

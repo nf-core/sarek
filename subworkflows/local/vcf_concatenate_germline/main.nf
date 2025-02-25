@@ -3,14 +3,13 @@
 //
 
 // Concatenation of germline vcf-files
-include { ADD_INFO_TO_VCF                                     } from '../../../modules/local/add_info_to_vcf/main'
-include { TABIX_BGZIPTABIX as TABIX_EXT_VCF                   } from '../../../modules/nf-core/tabix/bgziptabix/main'
-include { BCFTOOLS_CONCAT  as GERMLINE_VCFS_CONCAT            } from '../../../modules/nf-core/bcftools/concat/main'
-include { BCFTOOLS_SORT    as GERMLINE_VCFS_CONCAT_SORT       } from '../../../modules/nf-core/bcftools/sort/main'
-include { TABIX_TABIX      as TABIX_GERMLINE_VCFS_CONCAT_SORT } from '../../../modules/nf-core/tabix/tabix/main'
+include { ADD_INFO_TO_VCF                                } from '../../../modules/local/add_info_to_vcf'
+include { BCFTOOLS_CONCAT as GERMLINE_VCFS_CONCAT        } from '../../../modules/nf-core/bcftools/concat'
+include { BCFTOOLS_SORT as GERMLINE_VCFS_CONCAT_SORT     } from '../../../modules/nf-core/bcftools/sort'
+include { TABIX_BGZIPTABIX as TABIX_EXT_VCF              } from '../../../modules/nf-core/tabix/bgziptabix'
+include { TABIX_TABIX as TABIX_GERMLINE_VCFS_CONCAT_SORT } from '../../../modules/nf-core/tabix/tabix'
 
 workflow CONCATENATE_GERMLINE_VCFS {
-
     take:
     vcfs
 
