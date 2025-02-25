@@ -71,7 +71,7 @@ jobs:
       fail-fast: false
       matrix:
         shard: ${{ fromJson(needs.nf-test-changes.outputs.shard) }}
-        profile: [docker]
+        profile: [conda, docker]
         NXF_VER:
           # renovate: datasource=github-releases depName=nextflow/nextflow versioning=semver
           - "24.10.2"
