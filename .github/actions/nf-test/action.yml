@@ -1,0 +1,88 @@
+name: "nf-test Action"
+description: "Runs nf-test with common setup steps"
+inputs:
+  profile:
+    description: "Profile to use"
+    required: true
+  shard:
+    description: "Shard number for this CI job"
+    required: true
+  total_shards:
+    description: "Total number of test shards(NOT the total number of matrix jobs)"
+    required: true
+  filters:
+    description: "Filter test cases by specified types (e.g., module, pipeline, workflow or function)"
+    required: true
+  tags:
+    description: "Tags to pass as argument for nf-test --tag parameter"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/setup-java@8df1039502a15bceb9433410b1a100fbe190c53b # v4
+      with:
+        distribution: "temurin"
+        java-version: "17"
+
+    - name: Setup Nextflow
+      uses: nf-core/setup-nextflow@v2
+      with:
+        version: "${{ env.NXF_VER }}"
+
+    - name: Set up Python
+      uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b # v5
+      with:
+        python-version: "3.11"
+
+    - name: Install nf-test
+      uses: nf-core/setup-nf-test@v1
+      with:
+        version: "${{ env.NFT_VER }}"
+        install-pdiff: true
+
+    - name: Setup apptainer
+      if: contains(inputs.profile, 'singularity')
+      uses: eWaterCycle/setup-apptainer@main
+
+    - name: Set up Singularity
+      if: contains(inputs.profile, 'singularity')
+      shell: bash
+      run: |
+        mkdir -p $NXF_SINGULARITY_CACHEDIR
+        mkdir -p $NXF_SINGULARITY_LIBRARYDIR
+
+    - name: Conda setup
+      if: ${{inputs.profile == 'conda'}}
+      uses: conda-incubator/setup-miniconda@d2e6a045a86077fb6cad6f5adf368e9076ddaa8d # v3
+      with:
+        auto-update-conda: true
+        conda-solver: libmamba
+        conda-remove-defaults: true
+
+    - name: Run nf-test
+      shell: bash
+      run: |
+        NFT_WORKDIR=~ \
+        nf-test test \
+          --ci \
+          --shard ${{ inputs.shard }}/${{ inputs.total_shards }} \
+          --changed-since HEAD^ \
+          --profile=${{ inputs.profile }} \
+          --filter ${{ inputs.filters }} \
+          --tap=test.tap \
+          --verbose \
+          --tag ${{ inputs.tags }}
+
+      # TODO If no test.tap, then make one to spoof?
+    - uses: pcolby/tap-summary@0959cbe1d4422e62afc65778cdaea6716c41d936 # v1
+      if: ${{ inputs.path != '' }}
+      with:
+        path: >-
+          test.tap
+
+    - name: Clean up
+      if: always()
+      shell: bash
+      run: |
+        sudo rm -rf /home/ubuntu/tests/*
