@@ -41,7 +41,7 @@ runs:
           echo "No related tests found."
         else
           # Extract the number of related tests
-          number_of_shards=$(echo "$nftest_output" | sed -n 's|.*Found \([0-9]*\) test(s).*|\1|p')
+          number_of_shards=$(echo "$nftest_output" | sed -n 's|.*Found \([0-9]*\) related test.*|\1|p')
           if [[ -n "$number_of_shards" && "$number_of_shards" -gt 0 ]]; then
             shards_to_run=$(( $number_of_shards < ${{ inputs.max_shards }} ? $number_of_shards : ${{ inputs.max_shards }} ))
             shard=$(seq 1 "$shards_to_run" | jq -R . | jq -c -s .)
