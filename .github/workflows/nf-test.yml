@@ -76,8 +76,6 @@ jobs:
     needs: [get-shards]
     runs-on: "ubuntu-latest"
     name: "${{ matrix.NXF_VER }} | ${{ matrix.profile }} | ${{ matrix.filters }} | ${{ matrix.shard }}"
-    env:
-      NXF_VER: ${{ matrix.NXF_VER }}
 
     # Only run on push if this is the nf-core dev branch (merged PRs)
     # and number of shards is greater than 0
