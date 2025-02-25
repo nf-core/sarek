@@ -1,5 +1,5 @@
 {
-    "Run with profile test | --input tests/csv/3.0/mapped_single_cram.csv --step recalibrate --tools null ": {
+    "Run with profile test | --input tests/csv/3.0/mapped_single_cram.csv --step recalibrate --tools null": {
         "content": [
             9,
             {
@@ -58,18 +58,15 @@
                     "test.recal.cram",
                     "463ac3b905fbf4ddf113a94dbfa8d69f"
                 ]
-            ],
-            [
-                
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-02-24T17:29:58.130205307"
+        "timestamp": "2025-02-25T11:49:03.810929379"
     },
-    "Run with profile test | --input tests/csv/3.0/mapped_single_bam.csv --step recalibrate --skip_tools baserecalibrator --tools strelka ": {
+    "Run with profile test | --input tests/csv/3.0/mapped_single_bam.csv --step recalibrate --skip_tools baserecalibrator --tools strelka": {
         "content": [
             10,
             {
@@ -177,9 +174,7 @@
                 "test.strelka.variants.FILTER.summary:md5,39ff2cc8eb7495a14a6b76e0ab627027",
                 "test.strelka.variants.TsTv.count:md5,ee7dafc8d941b8502a04a63dc3126fff"
             ],
-            [
-                
-            ],
+            "No CRAM files",
             [
                 [
                     "test.strelka.genome.vcf.gz",
@@ -195,9 +190,9 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-02-24T17:29:01.164185669"
+        "timestamp": "2025-02-25T11:48:12.066290454"
     },
-    "Run with profile test | --input tests/csv/3.0/mapped_single_cram.csv --step recalibrate --skip_tools baserecalibrator --tools strelka ": {
+    "Run with profile test | --input tests/csv/3.0/mapped_single_cram.csv --step recalibrate --skip_tools baserecalibrator --tools strelka": {
         "content": [
             10,
             {
@@ -305,9 +300,7 @@
                 "test.strelka.variants.FILTER.summary:md5,39ff2cc8eb7495a14a6b76e0ab627027",
                 "test.strelka.variants.TsTv.count:md5,ee7dafc8d941b8502a04a63dc3126fff"
             ],
-            [
-                
-            ],
+            "No CRAM files",
             [
                 [
                     "test.strelka.genome.vcf.gz",
@@ -323,9 +316,9 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-02-24T17:31:00.512159508"
+        "timestamp": "2025-02-25T11:49:59.953841611"
     },
-    "Run with profile test | --input tests/csv/3.0/mapped_single_bam.csv --step recalibrate --tools null ": {
+    "Run with profile test | --input tests/csv/3.0/mapped_single_bam.csv --step recalibrate --tools null": {
         "content": [
             6,
             {
@@ -356,15 +349,12 @@
             ],
             [
                 
-            ],
-            [
-                
             ]
         ],
         "meta": {
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-02-24T17:28:07.011378827"
+        "timestamp": "2025-02-25T10:28:52.529668484"
     }
 }

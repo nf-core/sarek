@@ -212,9 +212,6 @@
                 "sample4_vs_sample3.strelka.somatic_snvs.TsTv.count:md5,a922c51ca3b2ea7cdcfa09e9c8c55d52"
             ],
             [
-                
-            ],
-            [
                 [
                     "sample3.manta.diploid_sv.vcf.gz",
                     "d41d8cd98f00b204e9800998ecf8427e"
@@ -249,7 +246,7 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-02-24T17:49:18.028744784"
+        "timestamp": "2025-02-25T10:53:23.052647902"
     },
     "Run with profile test | --tools manta,strelka | somatic": {
         "content": [
@@ -461,9 +458,6 @@
                 "sample4_vs_sample3.strelka.somatic_snvs.TsTv.count:md5,fc7af1f534890c4ad3025588b3af62ae"
             ],
             [
-                
-            ],
-            [
                 [
                     "sample3.manta.diploid_sv.vcf.gz",
                     "d41d8cd98f00b204e9800998ecf8427e"
@@ -498,6 +492,6 @@
             "nf-test": "0.9.2",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-02-24T17:46:58.642894467"
+        "timestamp": "2025-02-25T10:50:54.874162175"
     }
 }
