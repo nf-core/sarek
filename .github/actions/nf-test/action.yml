@@ -27,6 +27,7 @@ runs:
 
     - name: Set up Nextflow secrets
       if: env.SENTIEON_LICENSE_BASE64 != null
+      shell: bash
       run: |
         nextflow secrets set SENTIEON_LICENSE_BASE64 ${{ secrets.SENTIEON_LICENSE_BASE64 }}
         nextflow secrets set SENTIEON_AUTH_MECH_BASE64 ${{ secrets.SENTIEON_AUTH_MECH_BASE64 }}

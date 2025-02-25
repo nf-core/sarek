@@ -64,7 +64,7 @@ jobs:
           NFT_VER: ${{ env.NFT_VER }}
         with:
           tags: "cpu"
-          max_shards: 10
+          max_shards: 1
 
       - name: Set outputs
         id: set-outputs
