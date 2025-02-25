@@ -1,4 +1,4 @@
-name: Run nf-tests
+name: Run nf-test tests
 on:
   push:
     branches:

@@ -1,7 +1,20 @@
-name: pytest-workflow
+name: Run pytest tests
 # This workflow runs the pipeline with the minimal test dataset to check that it completes without any syntax errors
 on:
+  push:
+    branches:
+      - dev
+    paths-ignore:
+      - "docs/**"
+      - "**/*.md"
+      - "**/*.png"
+      - "**/*.svg"
   pull_request:
+    paths-ignore:
+      - "docs/**"
+      - "**/*.md"
+      - "**/*.png"
+      - "**/*.svg"
   release:
     types: [published]
   merge_group:
