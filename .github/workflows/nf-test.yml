@@ -75,7 +75,7 @@ jobs:
   nf-test:
     needs: [get-shards]
     runs-on: "ubuntu-latest"
-    name: "Test | ${{ matrix.profile }} | ${{ matrix.shard }} | ${{ matrix.NXF_VER }} | ${{ matrix.filters }}"
+    name: "${{ matrix.profile }} | ${{ matrix.shard }} | ${{ matrix.NXF_VER }} | ${{ matrix.filters }}"
     env:
       NXF_VER: ${{ matrix.NXF_VER }}
 
@@ -85,7 +85,7 @@ jobs:
       needs.get-shards.outputs.total_shards > 0 &&
       (
         github.event_name != 'push' ||
-        ( github.event_name == 'push' && github.repository == 'nf-core/methylseq' )
+        ( github.event_name == 'push' && github.repository == 'nf-core/sarek' )
       )
 
     strategy:
