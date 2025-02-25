@@ -44,7 +44,7 @@ nextflow_pipeline {
                     // All files with stable contents
                     stable_path,
                     // All cram files
-                    cram_files.collect{ file -> [ file.getName(), cram(file.toString(), fasta).getReadsMD5() ] }
+                    cram_files.collect{ file -> [ file.getName(), cram(file.toString(), fasta).readsMD5 ] }
                 ).match() }
             )
         }
@@ -89,7 +89,7 @@ nextflow_pipeline {
                     // All files with stable contents
                     stable_path,
                     // All cram files
-                    cram_files.collect{ file -> [ file.getName(), cram(file.toString(), fasta).getReadsMD5() ] }
+                    cram_files.collect{ file -> [ file.getName(), cram(file.toString(), fasta).readsMD5 ] }
                 ).match() }
             )
         }
@@ -134,7 +134,7 @@ nextflow_pipeline {
                     // All files with stable contents
                     stable_path,
                     // All cram files
-                    cram_files.collect{ file -> [ file.getName(), cram(file.toString(), fasta).getReadsMD5() ] }
+                    cram_files.collect{ file -> [ file.getName(), cram(file.toString(), fasta).readsMD5 ] }
                 ).match() }
             )
         }
@@ -179,7 +179,7 @@ nextflow_pipeline {
                     // All files with stable contents
                     stable_path,
                     // All cram files
-                    cram_files.collect{ file -> [ file.getName(), cram(file.toString(), fasta).getReadsMD5() ] }
+                    cram_files.collect{ file -> [ file.getName(), cram(file.toString(), fasta).readsMD5 ] }
                 ).match() }
             )
         }
