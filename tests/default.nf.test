@@ -36,7 +36,7 @@ nextflow_pipeline {
                     // All files with stable contents
                     stable_path,
                     // All cram files
-                    cram_files.collect{ file -> [ file.getName(), cram(file.toString(), fasta).getReadsMD5() ] },
+                    cram_files.collect{ file -> [ file.getName(), cram(file.toString(), fasta).readsMD5 ] },
                     // All vcf files
                     vcf_files.collect{ file -> [ file.getName(), path(file.toString()).vcf.variantsMD5] }
                 ).match() }

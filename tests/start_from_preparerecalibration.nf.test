@@ -5,7 +5,7 @@ nextflow_pipeline {
     tag "pipeline"
     tag "pipeline_sarek"
 
-    test("Run with profile test | --input tests/csv/3.0/mapped_single_bam.csv --step prepare_recalibration --tools null ") {
+    test("Run with profile test | --input tests/csv/3.0/mapped_single_bam.csv --step prepare_recalibration --tools null") {
 
         when {
             params {
@@ -25,8 +25,6 @@ nextflow_pipeline {
             // cram_files: All cram files
             def cram_files  = getAllFilesFromDir(params.outdir, include: ['**/*.cram'])
             def fasta       = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta'
-            // vcf_files: All vcf files
-            def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf.gz'])
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
@@ -39,15 +37,13 @@ nextflow_pipeline {
                     // All files with stable contents
                     stable_path,
                     // All cram files
-                    cram_files.collect{ file -> [ file.getName(), cram(file.toString(), fasta).getReadsMD5() ] },
-                    // All vcf files
-                    vcf_files.collect{ file -> [ file.getName(), path(file.toString()).vcf.variantsMD5] }
+                    cram_files.isEmpty() ? 'No CRAM files' : cram_files.collect{ file -> [ file.getName(), cram(file.toString(), fasta).readsMD5 ] }
                 ).match() }
             )
         }
     }
 
-    test("Run with profile test | --input tests/csv/3.0/mapped_single_bam.csv --step prepare_recalibration --skip_tools baserecalibrator --tools strelka ") {
+    test("Run with profile test | --input tests/csv/3.0/mapped_single_bam.csv --step prepare_recalibration --skip_tools baserecalibrator --tools strelka") {
 
         when {
             params {
@@ -82,7 +78,7 @@ nextflow_pipeline {
                     // All files with stable contents
                     stable_path,
                     // All cram files
-                    cram_files.collect{ file -> [ file.getName(), cram(file.toString(), fasta).getReadsMD5() ] },
+                    cram_files.isEmpty() ? 'No CRAM files' : cram_files.collect{ file -> [ file.getName(), cram(file.toString(), fasta).readsMD5 ] },
                     // All vcf files
                     vcf_files.collect{ file -> [ file.getName(), path(file.toString()).vcf.variantsMD5] }
                 ).match() }
@@ -91,7 +87,7 @@ nextflow_pipeline {
     }
 
 
-    test("Run with profile test | --input tests/csv/3.0/mapped_single_cram.csv --step prepare_recalibration --tools null ") {
+    test("Run with profile test | --input tests/csv/3.0/mapped_single_cram.csv --step prepare_recalibration --tools null") {
 
         when {
             params {
@@ -111,8 +107,6 @@ nextflow_pipeline {
             // cram_files: All cram files
             def cram_files  = getAllFilesFromDir(params.outdir, include: ['**/*.cram'])
             def fasta       = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta'
-            // vcf_files: All vcf files
-            def vcf_files  = getAllFilesFromDir(params.outdir, include: ['**/*.vcf.gz'])
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
@@ -125,15 +119,13 @@ nextflow_pipeline {
                     // All files with stable contents
                     stable_path,
                     // All cram files
-                    cram_files.collect{ file -> [ file.getName(), cram(file.toString(), fasta).getReadsMD5() ] },
-                    // All vcf files
-                    vcf_files.collect{ file -> [ file.getName(), path(file.toString()).vcf.variantsMD5] }
+                    cram_files.collect{ file -> [ file.getName(), cram(file.toString(), fasta).readsMD5 ] }
                 ).match() }
             )
         }
     }
 
-    test("Run with profile test | --input tests/csv/3.0/mapped_single_cram.csv --step prepare_recalibration --skip_tools baserecalibrator --tools strelka ") {
+    test("Run with profile test | --input tests/csv/3.0/mapped_single_cram.csv --step prepare_recalibration --skip_tools baserecalibrator --tools strelka") {
 
         when {
             params {
@@ -168,7 +160,7 @@ nextflow_pipeline {
                     // All files with stable contents
                     stable_path,
                     // All cram files
-                    cram_files.collect{ file -> [ file.getName(), cram(file.toString(), fasta).getReadsMD5() ] },
+                    cram_files.isEmpty() ? 'No CRAM files' : cram_files.collect{ file -> [ file.getName(), cram(file.toString(), fasta).readsMD5 ] },
                     // All vcf files
                     vcf_files.collect{ file -> [ file.getName(), path(file.toString()).vcf.variantsMD5] }
                 ).match() }
