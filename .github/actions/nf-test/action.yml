@@ -60,6 +60,11 @@ runs:
         python -m pip install cryptography
         nextflow secrets set SENTIEON_AUTH_DATA $(python3 tests/modules/nf-core/sentieon/license_message.py encrypt --key "$SENTIEON_ENCRYPTION_KEY" --message "$SENTIEON_LICENSE_MESSAGE")
 
+    - name: Install pdiff
+      shell: bash
+      run: |
+        python -m pip install pdiff
+
       # TODO Skip failing conda tests and document their failures
       # https://github.com/nf-core/modules/issues/7017
     - name: Run nf-test
@@ -71,8 +76,6 @@ runs:
         SENTIEON_AUTH_MECH: "GitHub Actions - token"
         SENTIEON_LICSRVR_IP: ${{ env.SENTIEON_LICSRVR_IP }}
       run: |
-        pdiff
-
         nf-test test \
           --profile=+${{ inputs.profile }} \
           --tap=test.tap \
