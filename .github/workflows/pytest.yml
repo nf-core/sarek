@@ -53,7 +53,7 @@ jobs:
           token: ""
 
   pytest:
-    name: "${{ matrix.profile }} | ${{ matrix.tags }} | ${{ matrix.NXF_VER }}"
+    name: "${{ matrix.NXF_VER }} | ${{ matrix.profile }} | ${{ matrix.tags }}"
     runs-on: ubuntu-latest
     needs: pytest-changes
     if: needs.pytest-changes.outputs.tags != '[]'

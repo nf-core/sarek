@@ -75,7 +75,7 @@ jobs:
   nf-test:
     needs: [get-shards]
     runs-on: "ubuntu-latest"
-    name: "${{ matrix.profile }} | ${{ matrix.shard }} | ${{ matrix.NXF_VER }} | ${{ matrix.filters }}"
+    name: "${{ matrix.NXF_VER }} | ${{ matrix.profile }} | ${{ matrix.filters }} | ${{ matrix.shard }}"
     env:
       NXF_VER: ${{ matrix.NXF_VER }}
 
