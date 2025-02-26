@@ -201,7 +201,7 @@ jobs:
             !/home/ubuntu/pytest_workflow_*/*/work/singularity
             !${{ github.workspace }}/.singularity
 
-  confirm-pass:
+  confirm-pass-pytest:
     runs-on: ubuntu-latest
     needs:
       - pytest

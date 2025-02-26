@@ -108,7 +108,8 @@ jobs:
           profile: ${{ matrix.profile }}
           shard: ${{ matrix.shard }}
           total_shards: ${{ env.TOTAL_SHARDS }}
-  confirm-pass-nf-test:
+
+  confirm-pass:
     runs-on: ${{ github.event.inputs.runners || github.run_number > 1 && 'ubuntu-latest' || 'self-hosted' }}
     needs: [nf-test]
     if: always()
