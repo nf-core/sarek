@@ -5,7 +5,7 @@ nextflow_pipeline {
     tag "pipeline"
     tag "pipeline_sarek"
 
-    test("Run with profile test | --save_output_as_bam | skip QC/recal/md") {
+    test("Run with profile test + --save_output_as_bam + skip QC/recal/md") {
 
         when {
             params {

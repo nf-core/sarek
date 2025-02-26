@@ -5,7 +5,7 @@ nextflow_pipeline {
     tag "pipeline"
     tag "pipeline_sarek"
 
-    test("Run with profile test | --aligner bwa-mem2 --save_reference | skip QC/recal/md") {
+    test("Run with profile test + --aligner bwa-mem2 --save_reference + skip QC/recal/md") {
 
         when {
             params {
@@ -44,7 +44,7 @@ nextflow_pipeline {
         }
     }
 
-    test("Run with profile test | --aligner bwa-mem2 --save_reference --build_only_index") {
+    test("Run with profile test + --aligner bwa-mem2 --save_reference --build_only_index") {
 
         when {
             params {

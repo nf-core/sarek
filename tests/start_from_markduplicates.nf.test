@@ -5,7 +5,7 @@ nextflow_pipeline {
     tag "pipeline"
     tag "pipeline_sarek"
 
-    test("Run with profile test | --input tests/csv/3.0/mapped_single_bam.csv --step markduplicates --tools null") {
+    test("Run with profile test + --input tests/csv/3.0/mapped_single_bam.csv --step markduplicates --tools null") {
 
         when {
             params {
@@ -43,7 +43,7 @@ nextflow_pipeline {
         }
     }
 
-    test("Run with profile test | --input tests/csv/3.0/mapped_single_bam.csv --step markduplicates --skip_tools markduplicates --tools null") {
+    test("Run with profile test + --input tests/csv/3.0/mapped_single_bam.csv --step markduplicates --skip_tools markduplicates --tools null") {
 
         when {
             params {
@@ -83,7 +83,7 @@ nextflow_pipeline {
     }
 
 
-    test("Run with profile test | --input tests/csv/3.0/mapped_single_cram.csv --step markduplicates --tools null") {
+    test("Run with profile test + --input tests/csv/3.0/mapped_single_cram.csv --step markduplicates --tools null") {
 
         when {
             params {
@@ -121,7 +121,7 @@ nextflow_pipeline {
         }
     }
 
-    test("Run with profile test | --input tests/csv/3.0/mapped_single_cram.csv --step markduplicates --skip_tools markduplicates --tools null") {
+    test("Run with profile test + --input tests/csv/3.0/mapped_single_cram.csv --step markduplicates --skip_tools markduplicates --tools null") {
 
         when {
             params {

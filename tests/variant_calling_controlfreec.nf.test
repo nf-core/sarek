@@ -5,7 +5,7 @@ nextflow_pipeline {
     tag "pipeline"
     tag "pipeline_sarek"
 
-    test("Run with profile test | --tools controlfreec | somatic") {
+    test("Run with profile test + --tools controlfreec + somatic") {
 
         when {
             params {
@@ -45,7 +45,7 @@ nextflow_pipeline {
         }
     }
 
-    test("Run with profile test | --tools controlfreec --no_intervals | tumoronly") {
+    test("Run with profile test + --tools controlfreec --no_intervals + tumoronly") {
 
         when {
             params {
@@ -85,7 +85,7 @@ nextflow_pipeline {
         }
     }
 
-    test("Run with profile test | --tools controlfreec --no_intervals | somatic | stub") {
+    test("Run with profile test + --tools controlfreec --no_intervals + somatic + stub") {
         options "-stub"
         when {
             params {
@@ -125,7 +125,7 @@ nextflow_pipeline {
         }
     }
 
-    test("Run with profile test | --tools controlfreec | tumoronly | stub") {
+    test("Run with profile test + --tools controlfreec + tumoronly + stub") {
         options "-stub"
         when {
             params {

@@ -1,5 +1,5 @@
 {
-    "Run with profile test | --tools controlfreec --no_intervals | somatic | stub": {
+    "Run with profile test + --tools controlfreec --no_intervals + somatic + stub": {
         "content": [
             14,
             {
@@ -136,7 +136,7 @@
         },
         "timestamp": "2025-02-25T10:38:10.064991923"
     },
-    "Run with profile test | --tools controlfreec | somatic": {
+    "Run with profile test + --tools controlfreec + somatic": {
         "content": [
             16,
             {
@@ -255,7 +255,7 @@
         },
         "timestamp": "2025-02-25T10:35:51.139706095"
     },
-    "Run with profile test | --tools controlfreec | tumoronly | stub": {
+    "Run with profile test + --tools controlfreec + tumoronly + stub": {
         "content": [
             13,
             {
@@ -361,7 +361,7 @@
         },
         "timestamp": "2025-02-25T10:39:00.863117802"
     },
-    "Run with profile test | --tools controlfreec --no_intervals | tumoronly": {
+    "Run with profile test + --tools controlfreec --no_intervals + tumoronly": {
         "content": [
             11,
             {

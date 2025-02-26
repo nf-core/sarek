@@ -1,5 +1,5 @@
 {
-    "Run with profile test | --save_mapped | skip QC/recal/md": {
+    "Run with profile test + --save_mapped + skip QC/recal/md": {
         "content": [
             10,
             {

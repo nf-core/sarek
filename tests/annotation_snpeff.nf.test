@@ -5,7 +5,7 @@ nextflow_pipeline {
     tag "pipeline"
     tag "pipeline_sarek"
 
-    test("Run with profile test | --tools snpeff --download_cache") {
+    test("Run with profile test + --tools snpeff --download_cache") {
 
         when {
             params {
@@ -43,7 +43,7 @@ nextflow_pipeline {
         }
     }
 
-    test("Fails with profile test | --tools snpeff --snpeff_db na --build_only_index") {
+    test("Fails with profile test + --tools snpeff --snpeff_db na --build_only_index") {
         when {
             params {
                 modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
