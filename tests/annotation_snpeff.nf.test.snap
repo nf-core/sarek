@@ -1,5 +1,5 @@
 {
-    "Run with profile test | --tools snpeff --download_cache": {
+    "-profile test --tools snpeff --download_cache": {
         "content": [
             4,
             {

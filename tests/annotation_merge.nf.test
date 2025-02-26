@@ -5,7 +5,7 @@ nextflow_pipeline {
     tag "pipeline"
     tag "pipeline_sarek"
 
-    test("Run with profile test | --tools merge") {
+    test("-profile test --tools merge") {
 
         when {
             params {
@@ -38,13 +38,13 @@ nextflow_pipeline {
                     // All files with stable contents
                     stable_path,
                     // All vcf files
-                    vcf_files.collect{ file -> [ file.getName(), path(file.toString()).vcf.variantsMD5] }
+                    vcf_files.collect { file -> [file.getName(), path(file.toString()).vcf.variantsMD5] }
                 ).match() }
             )
         }
     }
 
-    test("Run with profile test | --tools merge,snpeff,vep") {
+    test("-profile test --tools merge,snpeff,vep") {
 
         when {
             params {
@@ -77,7 +77,7 @@ nextflow_pipeline {
                     // All files with stable contents
                     stable_path,
                     // All vcf files
-                    vcf_files.collect{ file -> [ file.getName(), path(file.toString()).vcf.variantsMD5] }
+                    vcf_files.collect { file -> [file.getName(), path(file.toString()).vcf.variantsMD5] }
                 ).match() }
             )
         }
