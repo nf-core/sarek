@@ -4,7 +4,7 @@ nextflow_pipeline {
     script "../main.nf"
     tag "pipeline"
     tag "pipeline_sarek"
-    profile "alignment_to_fastq"
+    profile "+alignment_to_fastq"
 
     test("-profile test,alignment_to_fastq --save_mapped --save_output_as_bam") {
 
