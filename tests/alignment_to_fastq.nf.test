@@ -6,7 +6,7 @@ nextflow_pipeline {
     tag "pipeline_sarek"
     profile "alignment_to_fastq"
 
-    test("Run with profile test,alignment_to_fastq --save_mapped --save_output_as_bam") {
+    test("-profile test,alignment_to_fastq --save_mapped --save_output_as_bam") {
 
         when {
             params {
@@ -36,7 +36,7 @@ nextflow_pipeline {
                     // All files with stable contents
                     stable_path,
                     // All vcf files
-                    vcf_files.collect{ file -> [ file.getName(), path(file.toString()).vcf.variantsMD5] }
+                    vcf_files.collect { file -> [file.getName(), path(file.toString()).vcf.variantsMD5] }
                 ).match() }
             )
         }

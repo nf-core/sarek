@@ -1,5 +1,5 @@
 {
-    "Run with profile test --input tests/csv/3.0/fastq_pair.csv": {
+    "-profile test --input tests/csv/3.0/fastq_pair.csv": {
         "content": [
             40,
             {

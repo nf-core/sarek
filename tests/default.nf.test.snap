@@ -1,5 +1,5 @@
 {
-    "Run with profile test": {
+    "-profile test": {
         "content": [
             23,
             {

@@ -1,5 +1,5 @@
 {
-    "Run with profile test --tools vep --download_cache --vep_include_fasta": {
+    "-profile test --tools vep --download_cache --vep_include_fasta": {
         "content": [
             4,
             {

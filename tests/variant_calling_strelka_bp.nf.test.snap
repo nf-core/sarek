@@ -1,5 +1,5 @@
 {
-    "Run with profile test --tools manta,strelka --no_intervals somatic": {
+    "-profile test --tools manta,strelka --no_intervals somatic": {
         "content": [
             34,
             {
@@ -248,7 +248,7 @@
         },
         "timestamp": "2025-02-25T10:53:23.052647902"
     },
-    "Run with profile test --tools manta,strelka somatic": {
+    "-profile test --tools manta,strelka somatic": {
         "content": [
             36,
             {

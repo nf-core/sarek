@@ -5,7 +5,7 @@ nextflow_pipeline {
     tag "pipeline"
     tag "pipeline_sarek"
 
-    test("Run with profile test --input tests/csv/3.0/mapped_single_bam.csv --step markduplicates --tools null") {
+    test("-profile test --input tests/csv/3.0/mapped_single_bam.csv --step markduplicates --tools null") {
 
         when {
             params {
@@ -24,7 +24,9 @@ nextflow_pipeline {
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
             // cram_files: All cram files
             def cram_files  = getAllFilesFromDir(params.outdir, include: ['**/*.cram'])
-            def fasta       = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta'
+            // Fasta file for cram verification with nft-bam
+            def fasta_base  = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
+            def fasta       = fasta_base + 'genomics/homo_sapiens/genome/genome.fasta'
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
@@ -37,13 +39,13 @@ nextflow_pipeline {
                     // All files with stable contents
                     stable_path,
                     // All cram files
-                    cram_files.collect{ file -> [ file.getName(), cram(file.toString(), fasta).readsMD5 ] }
+                    cram_files.collect { file -> [file.getName(), cram(file.toString(), fasta).readsMD5] }
                 ).match() }
             )
         }
     }
 
-    test("Run with profile test --input tests/csv/3.0/mapped_single_bam.csv --step markduplicates --skip_tools markduplicates --tools null") {
+    test("-profile test --input tests/csv/3.0/mapped_single_bam.csv --step markduplicates --skip_tools markduplicates --tools null") {
 
         when {
             params {
@@ -63,7 +65,9 @@ nextflow_pipeline {
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
             // cram_files: All cram files
             def cram_files  = getAllFilesFromDir(params.outdir, include: ['**/*.cram'])
-            def fasta       = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta'
+            // Fasta file for cram verification with nft-bam
+            def fasta_base  = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
+            def fasta       = fasta_base + 'genomics/homo_sapiens/genome/genome.fasta'
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
@@ -76,14 +80,14 @@ nextflow_pipeline {
                     // All files with stable contents
                     stable_path,
                     // All cram files
-                    cram_files.isEmpty() ? 'No CRAM files' : cram_files.collect{ file -> [ file.getName(), cram(file.toString(), fasta).readsMD5 ] }
+                    cram_files.isEmpty() ? 'No CRAM files' : cram_files.collect { file -> [file.getName(), cram(file.toString(), fasta).readsMD5] }
                 ).match() }
             )
         }
     }
 
 
-    test("Run with profile test --input tests/csv/3.0/mapped_single_cram.csv --step markduplicates --tools null") {
+    test("-profile test --input tests/csv/3.0/mapped_single_cram.csv --step markduplicates --tools null") {
 
         when {
             params {
@@ -102,7 +106,9 @@ nextflow_pipeline {
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
             // cram_files: All cram files
             def cram_files  = getAllFilesFromDir(params.outdir, include: ['**/*.cram'])
-            def fasta       = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta'
+            // Fasta file for cram verification with nft-bam
+            def fasta_base  = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
+            def fasta       = fasta_base + 'genomics/homo_sapiens/genome/genome.fasta'
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
@@ -115,13 +121,13 @@ nextflow_pipeline {
                     // All files with stable contents
                     stable_path,
                     // All cram files
-                    cram_files.collect{ file -> [ file.getName(), cram(file.toString(), fasta).readsMD5 ] }
+                    cram_files.collect { file -> [file.getName(), cram(file.toString(), fasta).readsMD5] }
                 ).match() }
             )
         }
     }
 
-    test("Run with profile test --input tests/csv/3.0/mapped_single_cram.csv --step markduplicates --skip_tools markduplicates --tools null") {
+    test("-profile test --input tests/csv/3.0/mapped_single_cram.csv --step markduplicates --skip_tools markduplicates --tools null") {
 
         when {
             params {
@@ -141,7 +147,9 @@ nextflow_pipeline {
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
             // cram_files: All cram files
             def cram_files  = getAllFilesFromDir(params.outdir, include: ['**/*.cram'])
-            def fasta       = params.modules_testdata_base_path + 'genomics/homo_sapiens/genome/genome.fasta'
+            // Fasta file for cram verification with nft-bam
+            def fasta_base  = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
+            def fasta       = fasta_base + 'genomics/homo_sapiens/genome/genome.fasta'
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
@@ -154,7 +162,7 @@ nextflow_pipeline {
                     // All files with stable contents
                     stable_path,
                     // All cram files
-                    cram_files.collect{ file -> [ file.getName(), cram(file.toString(), fasta).readsMD5 ] }
+                    cram_files.collect { file -> [file.getName(), cram(file.toString(), fasta).readsMD5] }
                 ).match() }
             )
         }
