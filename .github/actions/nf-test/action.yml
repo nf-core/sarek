@@ -92,7 +92,7 @@ runs:
       run: |
         # Add header if it doesn't exist (using a token file to track this)
         if [ ! -f ".summary_header" ]; then
-          echo "# 🚀 nf-test Results" >> $GITHUB_STEP_SUMMARY
+          echo "# 🚀 nf-test results" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "| Status | Test Name | Profile | Shard |" >> $GITHUB_STEP_SUMMARY
           echo "|:------:|-----------|---------|-------|" >> $GITHUB_STEP_SUMMARY
