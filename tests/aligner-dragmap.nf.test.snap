@@ -1,5 +1,5 @@
 {
-    "Run with profile test + --aligner dragmap --save_reference --build_only_index": {
+    "Run with profile test | --aligner dragmap --save_reference --build_only_index": {
         "content": [
             5,
             {
@@ -45,7 +45,7 @@
         },
         "timestamp": "2024-10-08T11:28:56.135088"
     },
-    "Run with profile test + --aligner dragmap --save_reference + skip QC/recal/md": {
+    "Run with profile test | --aligner dragmap --save_reference | skip QC/recal/md": {
         "content": [
             10,
             {

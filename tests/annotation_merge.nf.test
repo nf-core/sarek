@@ -5,7 +5,7 @@ nextflow_pipeline {
     tag "pipeline"
     tag "pipeline_sarek"
 
-    test("Run with profile test + --tools merge") {
+    test("Run with profile test | --tools merge") {
 
         when {
             params {
@@ -44,7 +44,7 @@ nextflow_pipeline {
         }
     }
 
-    test("Run with profile test + --tools merge,snpeff,vep") {
+    test("Run with profile test | --tools merge,snpeff,vep") {
 
         when {
             params {

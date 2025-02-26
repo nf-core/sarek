@@ -1,5 +1,5 @@
 {
-    "Run with profile test + --tools strelka --only_paired_variant_calling": {
+    "Run with profile test | --tools strelka --only_paired_variant_calling": {
         "content": [
             26,
             {
@@ -219,7 +219,7 @@
         },
         "timestamp": "2025-02-25T10:40:58.6854292"
     },
-    "Run with profile test + --tools strelka --no_intervals + somatic": {
+    "Run with profile test | --tools strelka --no_intervals | somatic": {
         "content": [
             20,
             {
@@ -414,7 +414,7 @@
         },
         "timestamp": "2025-02-25T10:48:09.841891367"
     },
-    "Run with profile test + --tools strelka + somatic": {
+    "Run with profile test | --tools strelka | somatic": {
         "content": [
             22,
             {
@@ -606,7 +606,7 @@
         },
         "timestamp": "2025-02-25T10:46:05.85131754"
     },
-    "Run with profile test + --tools strelka + germline": {
+    "Run with profile test | --tools strelka | germline": {
         "content": [
             11,
             {
@@ -747,7 +747,7 @@
         },
         "timestamp": "2025-02-25T10:42:29.115196001"
     },
-    "Run with profile test + --tools strelka --no_intervals + germline": {
+    "Run with profile test | --tools strelka --no_intervals | germline": {
         "content": [
             9,
             {

@@ -6,7 +6,7 @@ nextflow_pipeline {
     tag "pipeline_sarek"
     profile "alignment_to_fastq"
 
-    test("Run with profile test,alignment_to_fastq + --save_mapped --save_output_as_bam") {
+    test("Run with profile test,alignment_to_fastq | --save_mapped --save_output_as_bam") {
 
         when {
             params {

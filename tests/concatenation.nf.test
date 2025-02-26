@@ -5,7 +5,7 @@ nextflow_pipeline {
     tag "pipeline"
     tag "pipeline_sarek"
 
-    test("Run with profile test + --concatenate_vcfs --tools freebayes,haplotypecaller") {
+    test("Run with profile test | --concatenate_vcfs --tools freebayes,haplotypecaller") {
 
         when {
             params {
