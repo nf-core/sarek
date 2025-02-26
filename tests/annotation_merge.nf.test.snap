@@ -1,5 +1,5 @@
 {
-    "Run with profile test | --tools merge,snpeff,vep": {
+    "Run with profile test --tools merge,snpeff,vep": {
         "content": [
             7,
             {
@@ -119,7 +119,7 @@
         },
         "timestamp": "2025-02-24T17:16:02.176798697"
     },
-    "Run with profile test | --tools merge": {
+    "Run with profile test --tools merge": {
         "content": [
             5,
             {

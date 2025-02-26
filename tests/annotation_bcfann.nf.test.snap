@@ -1,5 +1,5 @@
 {
-    "Run with profile test | --tools bcfann": {
+    "Run with profile test --tools bcfann": {
         "content": [
             2,
             {

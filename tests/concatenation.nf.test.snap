@@ -1,5 +1,5 @@
 {
-    "Run with profile test | --concatenate_vcfs --tools freebayes,haplotypecaller": {
+    "Run with profile test --concatenate_vcfs --tools freebayes,haplotypecaller": {
         "content": [
             51,
             {

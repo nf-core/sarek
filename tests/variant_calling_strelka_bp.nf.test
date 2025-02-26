@@ -5,7 +5,7 @@ nextflow_pipeline {
     tag "pipeline"
     tag "pipeline_sarek"
 
-    test("Run with profile test | --tools manta,strelka | somatic") {
+    test("Run with profile test --tools manta,strelka somatic") {
 
         when {
             params {
@@ -45,7 +45,7 @@ nextflow_pipeline {
         }
     }
 
-    test("Run with profile test | --tools manta,strelka --no_intervals | somatic") {
+    test("Run with profile test --tools manta,strelka --no_intervals somatic") {
 
         when {
             params {

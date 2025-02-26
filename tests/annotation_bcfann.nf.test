@@ -5,7 +5,7 @@ nextflow_pipeline {
     tag "pipeline"
     tag "pipeline_sarek"
 
-    test("Run with profile test | --tools bcfann") {
+    test("Run with profile test --tools bcfann") {
 
         when {
             params {

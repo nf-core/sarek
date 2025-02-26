@@ -1,5 +1,5 @@
 {
-    "Run with profile test | --input tests/csv/3.0/mapped_single_cram.csv --step recalibrate --tools null": {
+    "Run with profile test --input tests/csv/3.0/mapped_single_cram.csv --step recalibrate --tools null": {
         "content": [
             9,
             {
@@ -66,7 +66,7 @@
         },
         "timestamp": "2025-02-25T11:49:03.810929379"
     },
-    "Run with profile test | --input tests/csv/3.0/mapped_single_bam.csv --step recalibrate --skip_tools baserecalibrator --tools strelka": {
+    "Run with profile test --input tests/csv/3.0/mapped_single_bam.csv --step recalibrate --skip_tools baserecalibrator --tools strelka": {
         "content": [
             10,
             {
@@ -192,7 +192,7 @@
         },
         "timestamp": "2025-02-25T11:48:12.066290454"
     },
-    "Run with profile test | --input tests/csv/3.0/mapped_single_cram.csv --step recalibrate --skip_tools baserecalibrator --tools strelka": {
+    "Run with profile test --input tests/csv/3.0/mapped_single_cram.csv --step recalibrate --skip_tools baserecalibrator --tools strelka": {
         "content": [
             10,
             {
@@ -318,7 +318,7 @@
         },
         "timestamp": "2025-02-25T11:49:59.953841611"
     },
-    "Run with profile test | --input tests/csv/3.0/mapped_single_bam.csv --step recalibrate --tools null": {
+    "Run with profile test --input tests/csv/3.0/mapped_single_bam.csv --step recalibrate --tools null": {
         "content": [
             6,
             {
