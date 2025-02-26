@@ -5,7 +5,7 @@ nextflow_pipeline {
     tag "pipeline"
     tag "pipeline_sarek"
 
-    test("Run with profile test | --tools strelka --only_paired_variant_calling") {
+    test("-profile test --tools strelka --only_paired_variant_calling") {
 
         when {
             params {
@@ -40,13 +40,13 @@ nextflow_pipeline {
                     // All files with stable contents
                     stable_path,
                     // All vcf files
-                    vcf_files.collect{ file -> [ file.getName(), path(file.toString()).vcf.variantsMD5] }
+                    vcf_files.collect { file -> [file.getName(), path(file.toString()).vcf.variantsMD5] }
                 ).match() }
             )
         }
     }
 
-    test("Run with profile test | --tools strelka | germline") {
+    test("-profile test --tools strelka germline") {
 
         when {
             params {
@@ -80,13 +80,13 @@ nextflow_pipeline {
                     // All files with stable contents
                     stable_path,
                     // All vcf files
-                    vcf_files.collect{ file -> [ file.getName(), path(file.toString()).vcf.variantsMD5] }
+                    vcf_files.collect { file -> [file.getName(), path(file.toString()).vcf.variantsMD5] }
                 ).match() }
             )
         }
     }
 
-    test("Run with profile test | --tools strelka --no_intervals | germline") {
+    test("-profile test --tools strelka --no_intervals germline") {
 
         when {
             params {
@@ -121,13 +121,13 @@ nextflow_pipeline {
                     // All files with stable contents
                     stable_path,
                     // All vcf files
-                    vcf_files.collect{ file -> [ file.getName(), path(file.toString()).vcf.variantsMD5] }
+                    vcf_files.collect { file -> [file.getName(), path(file.toString()).vcf.variantsMD5] }
                 ).match() }
             )
         }
     }
 
-    test("Run with profile test | --tools strelka | somatic") {
+    test("-profile test --tools strelka somatic") {
 
         when {
             params {
@@ -161,13 +161,13 @@ nextflow_pipeline {
                     // All files with stable contents
                     stable_path,
                     // All vcf files
-                    vcf_files.collect{ file -> [ file.getName(), path(file.toString()).vcf.variantsMD5] }
+                    vcf_files.collect { file -> [file.getName(), path(file.toString()).vcf.variantsMD5] }
                 ).match() }
             )
         }
     }
 
-    test("Run with profile test | --tools strelka --no_intervals | somatic") {
+    test("-profile test --tools strelka --no_intervals somatic") {
 
         when {
             params {
@@ -202,7 +202,7 @@ nextflow_pipeline {
                     // All files with stable contents
                     stable_path,
                     // All vcf files
-                    vcf_files.collect{ file -> [ file.getName(), path(file.toString()).vcf.variantsMD5] }
+                    vcf_files.collect { file -> [file.getName(), path(file.toString()).vcf.variantsMD5] }
                 ).match() }
             )
         }
