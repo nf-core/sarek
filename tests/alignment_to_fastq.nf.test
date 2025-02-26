@@ -4,14 +4,15 @@ nextflow_pipeline {
     script "../main.nf"
     tag "pipeline"
     tag "pipeline_sarek"
-    profile "+alignment_to_fastq"
 
-    test("-profile test,alignment_to_fastq --save_mapped --save_output_as_bam") {
+    test("-profile test --save_mapped --save_output_as_bam") {
 
         when {
             params {
                 modules_testdata_base_path = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data/'
                 igenomes_base   = 'https://raw.githubusercontent.com/nf-core/test-datasets/modules/data'
+                input = "${projectDir}/tests/csv/3.0/bam_for_remapping.csv"
+                tools = ''
                 outdir = "$outputDir"
                 save_mapped = true
                 save_output_as_bam = true
