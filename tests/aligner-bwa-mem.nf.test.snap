@@ -1,5 +1,5 @@
 {
-    "Run with profile test | --aligner bwa-mem --save_reference | skip QC/recal/md": {
+    "-profile test --aligner bwa-mem --save_reference skip QC/recal/md": {
         "content": [
             10,
             {
@@ -67,7 +67,7 @@
         },
         "timestamp": "2024-10-08T11:22:13.394114"
     },
-    "Run with profile test | --aligner bwa-mem --save_reference --build_only_index": {
+    "-profile test --aligner bwa-mem --save_reference --build_only_index": {
         "content": [
             5,
             {
