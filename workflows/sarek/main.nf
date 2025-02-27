@@ -854,7 +854,8 @@ workflow SAREK {
     // MODULE: MultiQC
     //
     if (!(params.skip_tools && params.skip_tools.split(',').contains('multiqc'))) {
-
+	
+ 	ch_multiqc_plugins		      = Channel.fromPath("${baseDir}/assets/multiqc_plugins/", checkIfExists: true)
         ch_multiqc_config                     = Channel.fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
         ch_multiqc_custom_config              = params.multiqc_config ? Channel.fromPath(params.multiqc_config, checkIfExists: true) : Channel.empty()
         ch_multiqc_logo                       = params.multiqc_logo ? Channel.fromPath(params.multiqc_logo, checkIfExists: true) : Channel.empty()
@@ -872,6 +873,7 @@ workflow SAREK {
             ch_multiqc_config.toList(),
             ch_multiqc_custom_config.toList(),
             ch_multiqc_logo.toList(),
+	    ch_multiqc_plugins,
             [],
             []
         )
