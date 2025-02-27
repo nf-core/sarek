@@ -49,11 +49,19 @@ input:
         description: (optional) file(s) containing genomic intervals for use in base
           quality score recalibration (BQSR)
         pattern: "*.{bed,interval_list,picard,list,intervals}"
-  - - known_sites:
+  - - meta5:
+        type: map
+        description: |
+          Groovy Map containing known sites information
+    - known_sites:
         type: file
         description: (optional) known sites file(s) for calculating BQSR. markdups must
           be true to perform BQSR.
         pattern: "*.vcf.gz"
+  - - output_fmt:
+        type: string
+        description: Output format for the alignment. Options are 'bam' or 'cram'
+        pattern: "{bam,cram}"
 output:
   - bam:
       - meta:
@@ -75,6 +83,26 @@ output:
           type: file
           description: index corresponding to sorted BAM file
           pattern: "*.bai"
+  - cram:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.cram":
+          type: file
+          description: Sorted CRAM file
+          pattern: "*.cram"
+  - crai:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+      - "*.crai":
+          type: file
+          description: index corresponding to sorted CRAM file
+          pattern: "*.crai"
   - bqsr_table:
       - meta:
           type: map
@@ -86,22 +114,30 @@ output:
           description: (optional) table from base quality score recalibration calculation,
             to be used with parabricks/applybqsr
           pattern: "*.table"
+  - qc_metrics:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+      - "*_qc_metrics":
+          type: directory
+          description: (optional) optional directory of qc metrics
+          pattern: "*_qc_metrics"
+  - duplicate_metrics:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+      - "*.duplicate-metrics.txt":
+          type: file
+          description: (optional) metrics calculated from marking duplicates in the bam
+            file
+          pattern: "*.duplicate-metrics.txt"
   - versions:
       - versions.yml:
           type: file
           description: File containing software versions
           pattern: "versions.yml"
-  - qc_metrics:
-      - qc_metrics:
-          type: directory
-          description: (optional) optional directory of qc metrics
-          pattern: "qc_metrics"
-  - duplicate_metrics:
-      - duplicate-metrics.txt:
-          type: file
-          description: (optional) metrics calculated from marking duplicates in the bam
-            file
-          pattern: "*-duplicate-metrics.txt"
 authors:
   - "@bsiranosian"
   - "@adamrtalbot"
