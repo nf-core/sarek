@@ -1,0 +1,5 @@
+[multiqc.hooks.v1]
+before_config = multiqc_zymo.utils:plugin_before_config
+
+[multiqc.templates.v1]
+zymo = multiqc_zymo.templates.zymo

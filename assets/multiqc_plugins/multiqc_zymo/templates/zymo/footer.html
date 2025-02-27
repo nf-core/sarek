@@ -1,0 +1,32 @@
+{# #######################
+  footer.html
+##########################
+
+Content for the report footer.
+
+#}
+<a id="contact">
+<a href="http://www.zymoresearch.com" target="_blank">
+<img class="logo" src="data:image/png;base64,{{ include_file('assets/img/zymo_logo.png', b64=True) }}" title="Zymo Research"/>
+</a>
+<div class="footer_row">
+    <div class="footer_column">
+        <a href="mailto:services@zymoresearch.com" style="text-decoration:none;">
+            <img src="data:image/png;base64,{{ include_file('assets/img/email_icon.png', b64=True) }}" alt="email"/>
+            <span class="text">services@zymoresearch.com</span>
+        </a>
+    </div>
+    <div class="footer_column">
+        <a href="http://www.zymoresearch.com" target="_blank" style="text-decoration:none;">
+            <img src="data:image/png;base64,{{ include_file('assets/img/web_icon.png', b64=True) }}" alt="website"/>
+            <span class="text">www.zymoresearch.com</span>
+        </a>
+    </div>
+    <div class="footer_column">
+        <a href="tel:888-882-9682" style="text-decoration:none;">
+            <img src="data:image/png;base64,{{ include_file('assets/img/phone_icon.png', b64=True) }}" alt="phone"/>
+            <span class='text'>Toll Free: (888) 882-9682</span>
+        </a>
+    </div>
+</div>
+</a>

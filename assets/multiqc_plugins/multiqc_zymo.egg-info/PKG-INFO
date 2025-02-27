@@ -1,0 +1,5 @@
+Metadata-Version: 2.1
+Name: multiqc_zymo
+Version: 1.0.0
+Summary: MultiQC plugins for genomics pipeline
+Requires-Dist: multiqc==1.21
