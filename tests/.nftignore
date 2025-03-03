@@ -1,6 +1,7 @@
 .DS_Store
 annotation/**/*.vcf.{gz,gz.tbi}
 csv/*.csv
+multiqc/multiqc_data/bcftools*.txt
 multiqc/multiqc_data/fastqc_top_overrepresented_sequences_table.txt
 multiqc/multiqc_data/gatk-base-recalibrator-reported-empirical-plot.txt
 multiqc/multiqc_data/gatk_base_recalibrator.txt
@@ -11,7 +12,7 @@ multiqc/multiqc_data/multiqc_picard_dups.txt
 multiqc/multiqc_data/multiqc_software_versions.txt
 multiqc/multiqc_data/multiqc_sources.txt
 multiqc/multiqc_data/picard_deduplication.txt
-multiqc/multiqc_data/vcftools_tstv_by_qual.txt
+multiqc/multiqc_data/vcftools*.txt
 multiqc/multiqc_plots/{svg,pdf,png}/*.{svg,pdf,png}
 multiqc/multiqc_report.html
 no_intervals.{bed,bed.gz,bed.gz.tbi}

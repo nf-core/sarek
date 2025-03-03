@@ -193,16 +193,8 @@
                 "variant_calling/normalized/testT/versions.yml"
             ],
             [
-                "bcftools-stats-subtypes.txt:md5,14d79d00d95f319c28581b24d85b979b",
-                "bcftools_stats_indel-lengths.txt:md5,08d99ff43492e7225fd0afe8760b3e44",
-                "bcftools_stats_variant_depths.txt:md5,7e039ced7052f8c44f7fc8b8fc636f70",
-                "bcftools_stats_vqc_Count_Indels.txt:md5,d02630d8a8e1cb4759c207558be6e737",
-                "bcftools_stats_vqc_Count_SNP.txt:md5,c0ee5047463d19ece2bc64de139648d7",
-                "bcftools_stats_vqc_Count_Transitions.txt:md5,c11a77023dd62c9c4bd29a8139f02197",
-                "bcftools_stats_vqc_Count_Transversions.txt:md5,ae90d8ec6ad590d88c95edc82ea9884e",
                 "multiqc_bcftools_stats.txt:md5,7cf61fb13b7221379888f0756d8f322e",
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
-                "vcftools_tstv_by_count.txt:md5,6c76fc304a7d346e999b584f73c19e8e",
                 "testN.freebayes.norm.bcftools_stats.txt:md5,1cadbd27bb650441dadfd6984e44190f",
                 "testT.freebayes.norm.bcftools_stats.txt:md5,2ea5c1d5a877254d4807cc6a82c23f43",
                 "testN.haplotypecaller.norm.bcftools_stats.txt:md5,2d71e5e97bac8219bb6284d50d6b1e96",
@@ -285,6 +277,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.01.0"
         },
-        "timestamp": "2025-03-03T18:28:42.107225989"
+        "timestamp": "2025-03-03T19:01:03.707942968"
     }
 }
