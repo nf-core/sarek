@@ -55,7 +55,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [1814](https://github.com/nf-core/sarek/pull/1814) - Removed link to Twitter/X
 
-
 ## [3.5.1](https://github.com/nf-core/sarek/releases/tag/3.5.1) - Akkatjåkkå
 
 Akkatjåkkå is another glacier.
