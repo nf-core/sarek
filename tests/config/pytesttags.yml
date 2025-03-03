@@ -341,40 +341,6 @@ tiddit:
   - tests/csv/3.0/recalibrated_tumoronly.csv
   - tests/test_tiddit.yml
 
-# postprocessing
-
-## normalize all vcfs
-normalize_vcfs:
-  - conf/modules/post_variant_calling.config
-  - modules/nf-core/bcftools/concat/**
-  - modules/nf-core/bcftools/mpileup/**
-  - modules/nf-core/bcftools/norm/**
-  - modules/nf-core/bcftools/sort/**
-  - modules/nf-core/deepvariant/**
-  - modules/nf-core/freebayes/**
-  - modules/nf-core/gatk4/haplotypecaller/**
-  - modules/nf-core/gatk4/mergevcfs/**
-  - modules/nf-core/manta/germline/**
-  - modules/nf-core/samtools/mpileup/**
-  - modules/nf-core/strelka/germline/**
-  - modules/nf-core/tabix/bgziptabix/**
-  - modules/nf-core/tabix/tabix/**
-  - modules/nf-core/tiddit/sv/**
-  - subworkflows/local/bam_variant_calling_deepvariant/**
-  - subworkflows/local/bam_variant_calling_freebayes/**
-  - subworkflows/local/bam_variant_calling_germline_all/**
-  - subworkflows/local/bam_variant_calling_germline_manta/**
-  - subworkflows/local/bam_variant_calling_haplotypecaller/**
-  - subworkflows/local/bam_variant_calling_mpileup/**
-  - subworkflows/local/bam_variant_calling_single_strelka/**
-  - subworkflows/local/bam_variant_calling_single_tiddit/**
-  - subworkflows/local/bam_variant_calling_somatic_all/**
-  - subworkflows/local/bam_variant_calling_tumor_only_all/**
-  - subworkflows/local/post_variantcalling/**
-  - subworkflows/local/vcf_normalization/**
-  - tests/csv/3.0/mapped_joint_bam.csv
-  - tests/test_normalize_vcfs.yml
-
 # sampleqc
 
 ## ngscheckmate
