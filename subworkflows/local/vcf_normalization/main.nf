@@ -2,9 +2,9 @@
 
 // Import modules
 include { ADD_INFO_TO_VCF                     } from '../../../modules/local/add_info_to_vcf'
-include { TABIX_BGZIPTABIX as TABIX_EXT_VCF   } from '../../../modules/nf-core/tabix/bgziptabix'
 include { BCFTOOLS_NORM as VCFS_NORM          } from '../../../modules/nf-core/bcftools/norm'
 include { BCFTOOLS_SORT as VCFS_NORM_SORT     } from '../../../modules/nf-core/bcftools/sort'
+include { TABIX_BGZIPTABIX as TABIX_EXT_VCF   } from '../../../modules/nf-core/tabix/bgziptabix'
 include { TABIX_TABIX as TABIX_VCFS_NORM_SORT } from '../../../modules/nf-core/tabix/tabix'
 
 // Workflow to normalize, compress, and index VCF files
