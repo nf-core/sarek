@@ -35,6 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [1803](https://github.com/nf-core/sarek/pull/1803) - Back to dev
 - [1806](https://github.com/nf-core/sarek/pull/1806) - Use `nft-vcf` for nf-test vcf assertions
+- [1814](https://github.com/nf-core/sarek/pull/1814) - Added link to Bluesky
 
 #### Changed
 
@@ -48,6 +49,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [1806](https://github.com/nf-core/sarek/pull/1806) - Fix some nf-test assertions
 - [1809](https://github.com/nf-core/sarek/pull/1809) - Deals with nf-test snapshoting empty lists in a better way (https://github.com/nf-core/sarek/issues/1807)
+- [1814](https://github.com/nf-core/sarek/pull/1814) - Fix link to GHA CI broken by [1810](https://github.com/nf-core/sarek/pull/1810)
+
+#### Removed
+
+- [1814](https://github.com/nf-core/sarek/pull/1814) - Removed link to Twitter/X
 
 ## [3.5.1](https://github.com/nf-core/sarek/releases/tag/3.5.1) - Akkatjåkkå
 
