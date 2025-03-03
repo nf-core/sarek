@@ -10,7 +10,7 @@
                     "tabix": 1.2
                 },
                 "Workflow": {
-                    "nf-core/sarek": "v3.5.0dev"
+                    "nf-core/sarek": "v3.5.1"
                 }
             },
             [
