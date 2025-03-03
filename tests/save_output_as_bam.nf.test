@@ -5,7 +5,7 @@ nextflow_pipeline {
     tag "pipeline"
     tag "pipeline_sarek"
 
-    test("Run with profile test | --save_output_as_bam | skip QC/recal/md") {
+    test("-profile test --save_output_as_bam skip QC/recal/md") {
 
         when {
             params {
@@ -33,9 +33,9 @@ nextflow_pipeline {
                     // All stable path name, with a relative path
                     stable_name,
                     // All files with stable contents
-                    stable_path,
+                    stable_path.isEmpty() ? 'No stable content' : stable_path,
                     // All bam files
-                    bam_files.collect{ file -> [ file.getName(), bam(file.toString()).getReadsMD5() ] }
+                    bam_files.collect { file -> [file.getName(), bam(file.toString()).readsMD5] }
                 ).match() }
             )
         }

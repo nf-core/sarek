@@ -1,10 +1,10 @@
 {
-    "Run with profile test | --aligner dragmap --save_reference --build_only_index": {
+    "-profile test --aligner dragmap --save_reference --build_only_index": {
         "content": [
             5,
             {
                 "Workflow": {
-                    "nf-core/sarek": "v3.5.1"
+                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [
@@ -45,7 +45,7 @@
         },
         "timestamp": "2024-10-08T11:28:56.135088"
     },
-    "Run with profile test | --aligner dragmap --save_reference | skip QC/recal/md": {
+    "-profile test --aligner dragmap --save_reference skip QC/recal/md": {
         "content": [
             10,
             {
@@ -64,7 +64,7 @@
                     "samtools": 1.21
                 },
                 "Workflow": {
-                    "nf-core/sarek": "v3.5.1"
+                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [

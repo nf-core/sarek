@@ -1,5 +1,5 @@
 {
-    "Run with profile test | --tools vep --download_cache --vep_include_fasta": {
+    "-profile test --tools vep --download_cache --vep_include_fasta": {
         "content": [
             4,
             {
@@ -10,7 +10,7 @@
                     "tabix": 1.2
                 },
                 "Workflow": {
-                    "nf-core/sarek": "v3.5.1"
+                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [
@@ -272,12 +272,18 @@
                 "multiqc_citations.txt:md5,afe6b13a9c0770828d9bc9515d6db802",
                 "vep-general-stats.txt:md5,2fca07ac5623e758cac3ce49d9f6e3b0",
                 "vep.txt:md5,60a5d57c60308aba2aa6206f903d27e9"
+            ],
+            [
+                [
+                    "test_VEP.ann.vcf.gz",
+                    "d41d8cd98f00b204e9800998ecf8427e"
+                ]
             ]
         ],
         "meta": {
-            "nf-test": "0.9.1",
-            "nextflow": "24.10.0"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
         },
-        "timestamp": "2024-10-29T10:19:17.846465"
+        "timestamp": "2025-02-24T17:19:19.782193954"
     }
 }

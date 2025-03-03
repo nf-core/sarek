@@ -1,5 +1,5 @@
 {
-    "Run with profile test | --tools strelka --only_paired_variant_calling": {
+    "-profile test --tools strelka --only_paired_variant_calling": {
         "content": [
             26,
             {
@@ -16,7 +16,7 @@
                     "vcftools": "0.1.16"
                 },
                 "Workflow": {
-                    "nf-core/sarek": "v3.5.1"
+                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [
@@ -195,16 +195,31 @@
                 "sample4_vs_sample3.strelka.somatic_snvs.TsTv.count:md5,fc7af1f534890c4ad3025588b3af62ae"
             ],
             [
-
+                [
+                    "sample1.strelka.genome.vcf.gz",
+                    "aac21bf1449d3c7361c14054b08f8ed1"
+                ],
+                [
+                    "sample1.strelka.variants.vcf.gz",
+                    "dbea8798de92494c7a1fbf686c363696"
+                ],
+                [
+                    "sample4_vs_sample3.strelka.somatic_indels.vcf.gz",
+                    "6b8a01b52186fcaf3ec74e5bf1b5426"
+                ],
+                [
+                    "sample4_vs_sample3.strelka.somatic_snvs.vcf.gz",
+                    "866236c526138e4e08fdc2fa87b08417"
+                ]
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.10.0"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
         },
-        "timestamp": "2024-11-15T22:22:40.803241819"
+        "timestamp": "2025-02-25T10:40:58.6854292"
     },
-    "Run with profile test | --tools strelka --no_intervals | somatic": {
+    "-profile test --tools strelka --no_intervals somatic": {
         "content": [
             20,
             {
@@ -221,7 +236,7 @@
                     "vcftools": "0.1.16"
                 },
                 "Workflow": {
-                    "nf-core/sarek": "v3.5.1"
+                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [
@@ -375,16 +390,31 @@
                 "sample4_vs_sample3.strelka.somatic_snvs.TsTv.count:md5,a922c51ca3b2ea7cdcfa09e9c8c55d52"
             ],
             [
-
+                [
+                    "sample3.strelka.genome.vcf.gz",
+                    "37d003dfa8685cac4791cbde1af9b92d"
+                ],
+                [
+                    "sample3.strelka.variants.vcf.gz",
+                    "6e7f36df8e96c983ef075d376431d72a"
+                ],
+                [
+                    "sample4_vs_sample3.strelka.somatic_indels.vcf.gz",
+                    "6b8a01b52186fcaf3ec74e5bf1b5426"
+                ],
+                [
+                    "sample4_vs_sample3.strelka.somatic_snvs.vcf.gz",
+                    "262dcc485506abb0b67c8235354fd6e3"
+                ]
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.10.0"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
         },
-        "timestamp": "2024-11-15T22:29:05.475529758"
+        "timestamp": "2025-02-25T10:48:09.841891367"
     },
-    "Run with profile test | --tools strelka | somatic": {
+    "-profile test --tools strelka somatic": {
         "content": [
             22,
             {
@@ -401,7 +431,7 @@
                     "vcftools": "0.1.16"
                 },
                 "Workflow": {
-                    "nf-core/sarek": "v3.5.1"
+                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [
@@ -552,16 +582,31 @@
                 "sample4_vs_sample3.strelka.somatic_snvs.TsTv.count:md5,fc7af1f534890c4ad3025588b3af62ae"
             ],
             [
-
+                [
+                    "sample3.strelka.genome.vcf.gz",
+                    "aac21bf1449d3c7361c14054b08f8ed1"
+                ],
+                [
+                    "sample3.strelka.variants.vcf.gz",
+                    "dbea8798de92494c7a1fbf686c363696"
+                ],
+                [
+                    "sample4_vs_sample3.strelka.somatic_indels.vcf.gz",
+                    "6b8a01b52186fcaf3ec74e5bf1b5426"
+                ],
+                [
+                    "sample4_vs_sample3.strelka.somatic_snvs.vcf.gz",
+                    "866236c526138e4e08fdc2fa87b08417"
+                ]
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.10.0"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
         },
-        "timestamp": "2024-11-15T22:27:18.76415046"
+        "timestamp": "2025-02-25T10:46:05.85131754"
     },
-    "Run with profile test | --tools strelka | germline": {
+    "-profile test --tools strelka germline": {
         "content": [
             11,
             {
@@ -575,7 +620,7 @@
                     "vcftools": "0.1.16"
                 },
                 "Workflow": {
-                    "nf-core/sarek": "v3.5.1"
+                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [
@@ -686,16 +731,23 @@
                 "sample1.strelka.variants.TsTv.count:md5,c5b7a8eda2526d899098439ae4c06a49"
             ],
             [
-
+                [
+                    "sample1.strelka.genome.vcf.gz",
+                    "aac21bf1449d3c7361c14054b08f8ed1"
+                ],
+                [
+                    "sample1.strelka.variants.vcf.gz",
+                    "dbea8798de92494c7a1fbf686c363696"
+                ]
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.10.0"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
         },
-        "timestamp": "2024-11-15T22:24:13.636617483"
+        "timestamp": "2025-02-25T10:42:29.115196001"
     },
-    "Run with profile test | --tools strelka --no_intervals | germline": {
+    "-profile test --tools strelka --no_intervals germline": {
         "content": [
             9,
             {
@@ -709,7 +761,7 @@
                     "vcftools": "0.1.16"
                 },
                 "Workflow": {
-                    "nf-core/sarek": "v3.5.1"
+                    "nf-core/sarek": "v3.6.0dev"
                 }
             },
             [
@@ -823,13 +875,20 @@
                 "sample1.strelka.variants.TsTv.count:md5,1481854d2a765f5641856ecf95ca4097"
             ],
             [
-
+                [
+                    "sample1.strelka.genome.vcf.gz",
+                    "37d003dfa8685cac4791cbde1af9b92d"
+                ],
+                [
+                    "sample1.strelka.variants.vcf.gz",
+                    "6e7f36df8e96c983ef075d376431d72a"
+                ]
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.10.0"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
         },
-        "timestamp": "2024-11-15T22:25:42.940353635"
+        "timestamp": "2025-02-25T10:44:11.047828685"
     }
 }
