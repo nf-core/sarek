@@ -1,7 +1,7 @@
 {
     "-profile test --concatenate_vcfs --tools freebayes,haplotypecaller": {
         "content": [
-            51,
+            57,
             {
                 "ADD_INFO_TO_VCF": {
                     "gawk": "5.1.0"
@@ -25,6 +25,9 @@
                     "gatk4": "4.5.0.0"
                 },
                 "GERMLINE_VCFS_CONCAT": {
+                    "bcftools": 1.2
+                },
+                "GERMLINE_VCFS_CONCAT_SORT": {
                     "bcftools": 1.2
                 },
                 "TABIX_EXT_VCF": {
@@ -154,16 +157,23 @@
                 "reports/vcftools/haplotypecaller/testT/testT.haplotypecaller.filtered.FILTER.summary",
                 "reports/vcftools/haplotypecaller/testT/testT.haplotypecaller.filtered.TsTv.count",
                 "reports/vcftools/haplotypecaller/testT/testT.haplotypecaller.filtered.TsTv.qual",
+                "tabix",
+                "tabix/testN.freebayes.added_info.vcf.gz",
+                "tabix/testN.freebayes.added_info.vcf.gz.tbi",
+                "tabix/testN.haplotypecaller.filtered.added_info.vcf.gz",
+                "tabix/testN.haplotypecaller.filtered.added_info.vcf.gz.tbi",
+                "tabix/testT.freebayes.added_info.vcf.gz",
+                "tabix/testT.freebayes.added_info.vcf.gz.tbi",
+                "tabix/testT.haplotypecaller.filtered.added_info.vcf.gz",
+                "tabix/testT.haplotypecaller.filtered.added_info.vcf.gz.tbi",
                 "variant_calling",
                 "variant_calling/concat",
                 "variant_calling/concat/testN",
                 "variant_calling/concat/testN/testN.germline.vcf.gz",
                 "variant_calling/concat/testN/testN.germline.vcf.gz.tbi",
-                "variant_calling/concat/testN/versions.yml",
                 "variant_calling/concat/testT",
                 "variant_calling/concat/testT/testT.germline.vcf.gz",
                 "variant_calling/concat/testT/testT.germline.vcf.gz.tbi",
-                "variant_calling/concat/testT/versions.yml",
                 "variant_calling/freebayes",
                 "variant_calling/freebayes/testN",
                 "variant_calling/freebayes/testN/testN.freebayes.vcf.gz",
@@ -218,17 +228,39 @@
                 "testN.haplotypecaller.filtered.TsTv.count:md5,b77c120ee5cc0423267200c67d60c663",
                 "testT.haplotypecaller.filtered.FILTER.summary:md5,bedf7a690b985e8ff74eef9f4c1a8c34",
                 "testT.haplotypecaller.filtered.TsTv.count:md5,803d74e40f7716202bae2a3a81c1ddfc",
-                "versions.yml:md5,69c573f208c12410e6a0ec7059a0f24e",
-                "versions.yml:md5,69c573f208c12410e6a0ec7059a0f24e"
+                "testN.freebayes.added_info.vcf.gz:md5,3d11a31903613d6bb4ac6cb4aea5a853",
+                "testN.freebayes.added_info.vcf.gz.tbi:md5,0c029eab0c4f710f313d6625d3aa875a",
+                "testN.haplotypecaller.filtered.added_info.vcf.gz:md5,763e57fe74663dbf51edc7e9b5edf740",
+                "testN.haplotypecaller.filtered.added_info.vcf.gz.tbi:md5,203ece61dfe7c1741aa1081f5a6c1712",
+                "testT.freebayes.added_info.vcf.gz:md5,9fdc585205dbcf27bb8a43beb4a2683c",
+                "testT.freebayes.added_info.vcf.gz.tbi:md5,f9e6393f97e5dfb7dd07b7b852080e73",
+                "testT.haplotypecaller.filtered.added_info.vcf.gz:md5,274f6a55bd0a25d574d589c2cdeff457",
+                "testT.haplotypecaller.filtered.added_info.vcf.gz.tbi:md5,8d48dc24dd93ad4beb7fe9ee32f0829f"
             ],
             [
                 [
+                    "testN.freebayes.added_info.vcf.gz",
+                    "184743db45c933febc5557d08b19f23c"
+                ],
+                [
+                    "testN.haplotypecaller.filtered.added_info.vcf.gz",
+                    "6070da7b2505011232eb5975d8ab74aa"
+                ],
+                [
+                    "testT.freebayes.added_info.vcf.gz",
+                    "7bac441a7c84790f43d26a73e10be9b5"
+                ],
+                [
+                    "testT.haplotypecaller.filtered.added_info.vcf.gz",
+                    "a5c9e658b834d70cc8cafbd94919fa4f"
+                ],
+                [
                     "testN.germline.vcf.gz",
-                    "722f25aa13e7b6f34e8fff98202495cb"
+                    "184743db45c933febc5557d08b19f23c"
                 ],
                 [
                     "testT.germline.vcf.gz",
-                    "ba2aba068afc37bf3a973b188b2c4bcc"
+                    "7bac441a7c84790f43d26a73e10be9b5"
                 ],
                 [
                     "testN.freebayes.vcf.gz",
@@ -258,8 +290,8 @@
         ],
         "meta": {
             "nf-test": "0.9.2",
-            "nextflow": "24.10.4"
+            "nextflow": "25.01.0"
         },
-        "timestamp": "2025-02-24T18:36:32.697622794"
+        "timestamp": "2025-03-03T17:18:33.848850992"
     }
 }
