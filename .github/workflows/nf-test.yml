@@ -5,7 +5,9 @@ on:
       # https://docs.renovatebot.com/key-concepts/automerge/#branch-vs-pr-automerging
       - "renovate/**" # branches Renovate creates
   pull_request:
-    branches: [dev]
+    branches:
+      - dev
+      - dev_normalization #TODO: remove this when merging normalization
   workflow_dispatch:
     inputs:
       runners:
