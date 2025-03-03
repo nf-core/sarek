@@ -26,10 +26,6 @@ workflow POST_VARIANTCALLING {
     }
 
     if (normalize_vcfs) {
-        germline_vcfs.view { "germline:" + it }
-        tumor_only_vcfs.view { "tumor_only:" + it }
-        somatic_vcfs.view { "somatic:" + it }
-
         NORMALIZE_VCFS(germline_vcfs, tumor_only_vcfs, somatic_vcfs, fasta)
 
         vcfs = vcfs.mix(NORMALIZE_VCFS.out.vcfs)
