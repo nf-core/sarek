@@ -157,15 +157,6 @@
                 "reports/vcftools/haplotypecaller/testT/testT.haplotypecaller.filtered.FILTER.summary",
                 "reports/vcftools/haplotypecaller/testT/testT.haplotypecaller.filtered.TsTv.count",
                 "reports/vcftools/haplotypecaller/testT/testT.haplotypecaller.filtered.TsTv.qual",
-                "tabix",
-                "tabix/testN.freebayes.added_info.vcf.gz",
-                "tabix/testN.freebayes.added_info.vcf.gz.tbi",
-                "tabix/testN.haplotypecaller.filtered.added_info.vcf.gz",
-                "tabix/testN.haplotypecaller.filtered.added_info.vcf.gz.tbi",
-                "tabix/testT.freebayes.added_info.vcf.gz",
-                "tabix/testT.freebayes.added_info.vcf.gz.tbi",
-                "tabix/testT.haplotypecaller.filtered.added_info.vcf.gz",
-                "tabix/testT.haplotypecaller.filtered.added_info.vcf.gz.tbi",
                 "variant_calling",
                 "variant_calling/concat",
                 "variant_calling/concat/testN",
@@ -227,40 +218,16 @@
                 "testN.haplotypecaller.filtered.FILTER.summary:md5,4e2ceea7f3ff998004691fd71192d9ee",
                 "testN.haplotypecaller.filtered.TsTv.count:md5,b77c120ee5cc0423267200c67d60c663",
                 "testT.haplotypecaller.filtered.FILTER.summary:md5,bedf7a690b985e8ff74eef9f4c1a8c34",
-                "testT.haplotypecaller.filtered.TsTv.count:md5,803d74e40f7716202bae2a3a81c1ddfc",
-                "testN.freebayes.added_info.vcf.gz:md5,3d11a31903613d6bb4ac6cb4aea5a853",
-                "testN.freebayes.added_info.vcf.gz.tbi:md5,0c029eab0c4f710f313d6625d3aa875a",
-                "testN.haplotypecaller.filtered.added_info.vcf.gz:md5,763e57fe74663dbf51edc7e9b5edf740",
-                "testN.haplotypecaller.filtered.added_info.vcf.gz.tbi:md5,203ece61dfe7c1741aa1081f5a6c1712",
-                "testT.freebayes.added_info.vcf.gz:md5,9fdc585205dbcf27bb8a43beb4a2683c",
-                "testT.freebayes.added_info.vcf.gz.tbi:md5,f9e6393f97e5dfb7dd07b7b852080e73",
-                "testT.haplotypecaller.filtered.added_info.vcf.gz:md5,274f6a55bd0a25d574d589c2cdeff457",
-                "testT.haplotypecaller.filtered.added_info.vcf.gz.tbi:md5,8d48dc24dd93ad4beb7fe9ee32f0829f"
+                "testT.haplotypecaller.filtered.TsTv.count:md5,803d74e40f7716202bae2a3a81c1ddfc"
             ],
             [
                 [
-                    "testN.freebayes.added_info.vcf.gz",
-                    "184743db45c933febc5557d08b19f23c"
-                ],
-                [
-                    "testN.haplotypecaller.filtered.added_info.vcf.gz",
-                    "6070da7b2505011232eb5975d8ab74aa"
-                ],
-                [
-                    "testT.freebayes.added_info.vcf.gz",
-                    "7bac441a7c84790f43d26a73e10be9b5"
-                ],
-                [
-                    "testT.haplotypecaller.filtered.added_info.vcf.gz",
-                    "a5c9e658b834d70cc8cafbd94919fa4f"
-                ],
-                [
                     "testN.germline.vcf.gz",
-                    "184743db45c933febc5557d08b19f23c"
+                    "141a2cc53b0a9d4a0ab4d779cb1e487"
                 ],
                 [
                     "testT.germline.vcf.gz",
-                    "7bac441a7c84790f43d26a73e10be9b5"
+                    "9119ee2c970c37729dcb35d4b88f9d10"
                 ],
                 [
                     "testN.freebayes.vcf.gz",
@@ -292,6 +259,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.01.0"
         },
-        "timestamp": "2025-03-03T17:18:33.848850992"
+        "timestamp": "2025-03-03T18:24:54.468039835"
     }
 }

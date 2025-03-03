@@ -1,15 +1,14 @@
 // Normalize all unannotated VCFs
 
 // Import modules
-include { ADD_INFO_TO_VCF  } from '../../../modules/local/add_info_to_vcf/main'
-include { TABIX_BGZIPTABIX as TABIX_EXT_VCF } from '../../../modules/nf-core/tabix/bgziptabix/main'
-include { BCFTOOLS_NORM as VCFS_NORM } from '../../../modules/nf-core/bcftools/norm/main'
-include { BCFTOOLS_SORT as VCFS_NORM_SORT } from '../../../modules/nf-core/bcftools/sort/main'
-include { TABIX_TABIX as TABIX_VCFS_NORM_SORT } from '../../../modules/nf-core/tabix/tabix/main'
+include { ADD_INFO_TO_VCF                     } from '../../../modules/local/add_info_to_vcf'
+include { TABIX_BGZIPTABIX as TABIX_EXT_VCF   } from '../../../modules/nf-core/tabix/bgziptabix'
+include { BCFTOOLS_NORM as VCFS_NORM          } from '../../../modules/nf-core/bcftools/norm'
+include { BCFTOOLS_SORT as VCFS_NORM_SORT     } from '../../../modules/nf-core/bcftools/sort'
+include { TABIX_TABIX as TABIX_VCFS_NORM_SORT } from '../../../modules/nf-core/tabix/tabix'
 
 // Workflow to normalize, compress, and index VCF files
 workflow NORMALIZE_VCFS {
-
     take:
     germline_vcfs
     tumor_only_vcfs
@@ -38,13 +37,12 @@ workflow NORMALIZE_VCFS {
 
     // Gather versions of all tools used
     versions = versions.mix(ADD_INFO_TO_VCF.out.versions)
-    versions = versions.mix(VCFS_NORM.out.versions)
     versions = versions.mix(TABIX_EXT_VCF.out.versions)
-    versions = versions.mix(VCFS_NORM_SORT.out.versions)
     versions = versions.mix(TABIX_VCFS_NORM_SORT.out.versions)
+    versions = versions.mix(VCFS_NORM.out.versions)
+    versions = versions.mix(VCFS_NORM_SORT.out.versions)
 
     emit:
-    vcfs = VCFS_NORM_SORT.out.vcf // normalized vcfs
+    vcfs     = VCFS_NORM_SORT.out.vcf // normalized vcfs
     versions // Channel: [versions.yml]
 }
-

@@ -23,8 +23,6 @@ workflow POST_VARIANTCALLING {
 
         vcfs = vcfs.mix(CONCATENATE_GERMLINE_VCFS.out.vcfs)
         versions = versions.mix(CONCATENATE_GERMLINE_VCFS.out.versions)
-
-        vcfs.view { "concat:" + it }
     }
 
     if (normalize_vcfs) {
@@ -36,7 +34,6 @@ workflow POST_VARIANTCALLING {
 
         vcfs = vcfs.mix(NORMALIZE_VCFS.out.vcfs)
 
-        vcfs.view { "normalize:" + it }
         versions = versions.mix(NORMALIZE_VCFS.out.versions)
     }
 
