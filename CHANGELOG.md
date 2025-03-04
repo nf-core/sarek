@@ -39,7 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [1803](https://github.com/nf-core/sarek/pull/1803) - Back to dev
 - [1806](https://github.com/nf-core/sarek/pull/1806) - Use `nft-vcf` for nf-test vcf assertions
 - [1814](https://github.com/nf-core/sarek/pull/1814) - Added link to Bluesky
-- [1815](https://github.com/nf-core/sarek/pull/1815) - Create nf-test pipeline pytest vcf concatenation + normalize tests
+- [1815](https://github.com/nf-core/sarek/pull/1815) - Create nf-test pipeline vcf concatenation + normalize tests
 
 #### Changed
 
