@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- [1682](https://github.com/nf-core/sarek/pull/1682) - Add `bcftools_norm` in `POST_VARIANTCALLING` for normalization of all vcf files
+- [1682](https://github.com/nf-core/sarek/pull/1682), [1770](https://github.com/nf-core/sarek/pull/1770) - Add `bcftools_norm` in `POST_VARIANTCALLING` for normalization of all vcf files
 
 ### Changed
 
