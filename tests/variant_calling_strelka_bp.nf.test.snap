@@ -170,7 +170,6 @@
                 "variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz.tbi"
             ],
             [
-                "multiqc_bcftools_stats.txt:md5,5c9c75a7ba51eec6d7ed539a5d0a2397",
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
                 "sample3.manta.diploid_sv.bcftools_stats.txt:md5,8adad91e1c8dc8db63cf9b3607bee3a0",
                 "sample4_vs_sample3.manta.diploid_sv.bcftools_stats.txt:md5,17dc847445b98885bc18622f862f44d9",
@@ -408,7 +407,6 @@
                 "variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz.tbi"
             ],
             [
-                "multiqc_bcftools_stats.txt:md5,97bac5dbfe6cb21a78ca7f7327655b65",
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
                 "sample3.manta.diploid_sv.bcftools_stats.txt:md5,8adad91e1c8dc8db63cf9b3607bee3a0",
                 "sample4_vs_sample3.manta.diploid_sv.bcftools_stats.txt:md5,17dc847445b98885bc18622f862f44d9",

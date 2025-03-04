@@ -134,7 +134,6 @@
                 "variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz.tbi"
             ],
             [
-                "multiqc_bcftools_stats.txt:md5,c2674bda60d8fa805601c436afe16f18",
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
                 "sample3.strelka.variants.bcftools_stats.txt:md5,d505d381e8c3906788e4135bb975ff84",
                 "sample4_vs_sample3.strelka.somatic_indels.bcftools_stats.txt:md5,1c57e5cd6424157536276002ef1a58d6",
@@ -288,7 +287,6 @@
                 "variant_calling/strelka/sample1/sample1.strelka.variants.vcf.gz.tbi"
             ],
             [
-                "multiqc_bcftools_stats.txt:md5,cde557db5eb46f8325c06e9bb32e7a94",
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
                 "sample1.strelka.variants.bcftools_stats.txt:md5,2936f10f99295fb772d8c35f246e223d",
                 "sample1.recal.mosdepth.global.dist.txt:md5,d9a4dd6429560b2b647da346050766c5",
@@ -468,7 +466,6 @@
                 "variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz.tbi"
             ],
             [
-                "multiqc_bcftools_stats.txt:md5,b2bbb90ef05598e1a70cf36be416c3e2",
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
                 "sample1.strelka.variants.bcftools_stats.txt:md5,2936f10f99295fb772d8c35f246e223d",
                 "sample4_vs_sample3.strelka.somatic_indels.bcftools_stats.txt:md5,1c57e5cd6424157536276002ef1a58d6",
@@ -637,7 +634,6 @@
                 "variant_calling/strelka/sample1/sample1.strelka.variants.vcf.gz.tbi"
             ],
             [
-                "multiqc_bcftools_stats.txt:md5,23c19e033f3086bec87c5e2022795e79",
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
                 "sample1.strelka.variants.bcftools_stats.txt:md5,0e829f5d31d768a8e99786786282c9ef",
                 "sample1.recal.mosdepth.global.dist.txt:md5,d9a4dd6429560b2b647da346050766c5",
@@ -804,7 +800,6 @@
                 "variant_calling/strelka/sample4_vs_sample3/sample4_vs_sample3.strelka.somatic_snvs.vcf.gz.tbi"
             ],
             [
-                "multiqc_bcftools_stats.txt:md5,e47ab6f334efa3a95dbd609a27711375",
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
                 "sample3.strelka.variants.bcftools_stats.txt:md5,c75a458b1aa0e1bae3b667d48684e13c",
                 "sample4_vs_sample3.strelka.somatic_indels.bcftools_stats.txt:md5,1c57e5cd6424157536276002ef1a58d6",

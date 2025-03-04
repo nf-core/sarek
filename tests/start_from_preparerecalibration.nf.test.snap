@@ -157,7 +157,6 @@
                 "variant_calling/strelka/test/test.strelka.variants.vcf.gz.tbi"
             ],
             [
-                "multiqc_bcftools_stats.txt:md5,3a9838b06c741231489075203469d2c4",
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
                 "test.strelka.variants.bcftools_stats.txt:md5,3b37a441393a9329104451f44e56c619",
                 "test.strelka.variants.FILTER.summary:md5,39ff2cc8eb7495a14a6b76e0ab627027",
@@ -276,7 +275,6 @@
                 "variant_calling/strelka/test/test.strelka.variants.vcf.gz.tbi"
             ],
             [
-                "multiqc_bcftools_stats.txt:md5,3a9838b06c741231489075203469d2c4",
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
                 "test.strelka.variants.bcftools_stats.txt:md5,3b37a441393a9329104451f44e56c619",
                 "test.strelka.variants.FILTER.summary:md5,39ff2cc8eb7495a14a6b76e0ab627027",

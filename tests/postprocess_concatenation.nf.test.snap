@@ -185,7 +185,6 @@
                 "variant_calling/haplotypecaller/testT/testT.haplotypecaller.vcf.gz.tbi"
             ],
             [
-                "multiqc_bcftools_stats.txt:md5,3769bb9010628ee799d088bfd9c60662",
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
                 "testN.freebayes.bcftools_stats.txt:md5,a4314ea6434629bae54b288f54f0c3bc",
                 "testT.freebayes.bcftools_stats.txt:md5,62b05f3f02d3d3f92bd57f2f813feb7b",

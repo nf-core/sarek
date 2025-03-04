@@ -225,7 +225,6 @@
                 "variant_calling/normalized/testT/versions.yml"
             ],
             [
-                "multiqc_bcftools_stats.txt:md5,898ccdcc2b473e00692d3bc7ba5d9d30",
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
                 "testN.freebayes.norm.bcftools_stats.txt:md5,1cadbd27bb650441dadfd6984e44190f",
                 "testN.germline.bcftools_stats.txt:md5,b8a3832c78fad6f4a182ea2a51fc82c3",

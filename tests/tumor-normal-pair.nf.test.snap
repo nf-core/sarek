@@ -315,7 +315,6 @@
                 "mosdepth_cov_dist.txt:md5,cb92686a4d6b7dcdeeee0ac13a63f369",
                 "mosdepth_cumcov_dist.txt:md5,cb92686a4d6b7dcdeeee0ac13a63f369",
                 "mosdepth_perchrom.txt:md5,e2bac78b61847b15c755dc7069670939",
-                "multiqc_bcftools_stats.txt:md5,7b8f1b48aa1c33067679168a3f0d9fd1",
                 "multiqc_citations.txt:md5,ace4ca89138a5f1e2be289c157c00bd9",
                 "multiqc_fastqc.txt:md5,2fd25e8c81f962594b801d5a9df3cd87",
                 "multiqc_samtools_stats.txt:md5,60aa328e68503436f51e9a9b13dc6665",
