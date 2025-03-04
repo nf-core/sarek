@@ -225,7 +225,7 @@
                 "variant_calling/normalized/testT/versions.yml"
             ],
             [
-                "multiqc_bcftools_stats.txt:md5,9f8b286d4679bf9920dcc9379752b480",
+                "multiqc_bcftools_stats.txt:md5,898ccdcc2b473e00692d3bc7ba5d9d30",
                 "multiqc_citations.txt:md5,ac2b3cf2dfb12c40837b9bbad8112d86",
                 "testN.freebayes.norm.bcftools_stats.txt:md5,1cadbd27bb650441dadfd6984e44190f",
                 "testN.germline.bcftools_stats.txt:md5,b8a3832c78fad6f4a182ea2a51fc82c3",
@@ -267,10 +267,6 @@
                 "versions.yml:md5,7b0164f473a98fe0f8f097ae49c0e597"
             ],
             [
-                [
-                    "testN.germline.vcf.gz",
-                    "184743db45c933febc5557d08b19f23c"
-                ],
                 [
                     "testN.freebayes.vcf.gz",
                     "1d98e39fe458af9020283de18c764055"
@@ -325,6 +321,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.01.0"
         },
-        "timestamp": "2025-03-04T09:40:21.2962161"
+        "timestamp": "2025-03-04T10:44:58.881133611"
     }
 }
