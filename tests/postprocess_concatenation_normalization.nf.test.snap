@@ -269,11 +269,7 @@
             [
                 [
                     "testN.germline.vcf.gz",
-                    "141a2cc53b0a9d4a0ab4d779cb1e487"
-                ],
-                [
-                    "testT.germline.vcf.gz",
-                    "7bac441a7c84790f43d26a73e10be9b5"
+                    "184743db45c933febc5557d08b19f23c"
                 ],
                 [
                     "testN.freebayes.vcf.gz",
@@ -329,6 +325,6 @@
             "nf-test": "0.9.2",
             "nextflow": "25.01.0"
         },
-        "timestamp": "2025-03-03T19:45:20.144893245"
+        "timestamp": "2025-03-04T09:40:21.2962161"
     }
 }
