@@ -54,7 +54,7 @@ include { BAM_APPLYBQSR_SPARK                               } from '../../../sub
 
 workflow FASTQ_ALIGN_GATK {
     take:
-        input_sample
+        input_fastq
         dict
         fasta
         fasta_fai
@@ -73,52 +73,6 @@ workflow FASTQ_ALIGN_GATK {
     // PREPROCESSING
 
     if (params.step == 'mapping') {
-
-        // Figure out if input is bam, fastq, or spring
-        input_sample_type = input_sample.branch{
-            bam:                 it[0].data_type == "bam"
-            fastq_gz:            it[0].data_type == "fastq_gz"
-            one_fastq_gz_spring: it[0].data_type == "one_fastq_gz_spring"
-            two_fastq_gz_spring: it[0].data_type == "two_fastq_gz_spring"
-        }
-
-        // Two fastq.gz-files
-        fastq_gz = input_sample_type.fastq_gz.map { meta, files -> addReadgroupToMeta(meta, files) }
-
-        // Just one fastq.gz.spring-file with both R1 and R2
-        fastq_gz_pair_from_spring = SPRING_DECOMPRESS_TO_FQ_PAIR(input_sample_type.one_fastq_gz_spring, false)
-
-        one_fastq_gz_from_spring = fastq_gz_pair_from_spring.fastq.map { meta, files -> addReadgroupToMeta(meta, files) }
-
-        // Two fastq.gz.spring-files - one for R1 and one for R2
-        r1_fastq_gz_from_spring = SPRING_DECOMPRESS_TO_R1_FQ(input_sample_type.two_fastq_gz_spring.map{ meta, files ->
-            [meta, files[0] ]},
-            true // write_one_fastq_gz
-        )
-        r2_fastq_gz_from_spring = SPRING_DECOMPRESS_TO_R2_FQ(input_sample_type.two_fastq_gz_spring.map{ meta, files ->
-            [meta, files[1] ]},
-            true // write_one_fastq_gz
-        )
-
-        two_fastq_gz_from_spring = r1_fastq_gz_from_spring.fastq.join(r2_fastq_gz_from_spring.fastq).map{ meta, fastq_1, fastq_2 -> [meta, [fastq_1, fastq_2]]}
-
-        two_fastq_gz_from_spring = two_fastq_gz_from_spring.map { meta, files -> addReadgroupToMeta(meta, files) }
-
-        // Convert any bam input to fastq
-        // fasta are not needed when converting bam to fastq -> [ id:"fasta" ], []
-        // No need for fasta.fai -> []
-        interleave_input = false // Currently don't allow interleaved input
-        CONVERT_FASTQ_INPUT(
-            input_sample_type.bam,
-            [ [ id:"fasta" ], [] ], // fasta
-            [ [ id:'null' ], [] ],  // fasta_fai
-            interleave_input)
-
-        // Gather fastq (inputed or converted)
-        // Theorically this could work on mixed input (fastq for one sample and bam for another)
-        // But not sure how to handle that with the samplesheet
-        // Or if we really want users to be able to do that
-        input_fastq = fastq_gz.mix(CONVERT_FASTQ_INPUT.out.reads).mix(one_fastq_gz_from_spring).mix(two_fastq_gz_from_spring)
 
         // STEP 0: QC & TRIM
         // `--skip_tools fastqc` to skip fastqc
