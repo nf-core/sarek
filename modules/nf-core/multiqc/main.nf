@@ -11,7 +11,7 @@ process MULTIQC {
     path(multiqc_config)
     path(extra_multiqc_config)
     path(multiqc_logo)
-    path "multiqc_zymo"
+    path "multiqc_plugins"
     path(replace_names)
     path(sample_names)
 
@@ -35,7 +35,7 @@ process MULTIQC {
     """
     python -m venv venv
     source venv/bin/activate
-    pip install -e multiqc_zymo --no-cache-dir
+    pip install -e multiqc_plugins --no-cache-dir
 
     multiqc \\
         --force \\
