@@ -8,9 +8,6 @@ include { CHANNEL_VARIANT_CALLING_CREATE_CSV                } from '../../../sub
 // Convert BAM files to FASTQ files
 include { BAM_CONVERT_SAMTOOLS as CONVERT_FASTQ_UMI         } from '../../../subworkflows/local/bam_convert_samtools/main'
 
-// Run FASTQC
-include { FASTQC                                            } from '../../../modules/nf-core/fastqc/main'
-
 // TRIM/SPLIT FASTQ Files
 include { FASTP                                             } from '../../../modules/nf-core/fastp/main'
 
@@ -70,17 +67,8 @@ workflow FASTQ_ALIGN_GATK {
     if (params.step == 'mapping') {
 
         // STEP 0: QC & TRIM
-        // `--skip_tools fastqc` to skip fastqc
         // Trim only with `--trim_fastq`
         // Additional options to be set up
-
-        // QC
-        if (!(params.skip_tools && params.skip_tools.split(',').contains('fastqc'))) {
-            FASTQC(input_fastq)
-
-            reports = reports.mix(FASTQC.out.zip.collect{ _meta, logs -> logs })
-            versions = versions.mix(FASTQC.out.versions.first())
-        }
 
         // UMI consensus calling
         if (params.umi_read_structure) {

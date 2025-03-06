@@ -202,6 +202,15 @@ workflow SAREK {
         // Or if we really want users to be able to do that
         input_fastq = fastq_gz.mix(CONVERT_FASTQ_INPUT.out.reads).mix(one_fastq_gz_from_spring).mix(two_fastq_gz_from_spring)
 
+        // QC
+        // `--skip_tools fastqc` to skip fastqc
+        if (!(params.skip_tools && params.skip_tools.split(',').contains('fastqc'))) {
+            FASTQC(input_fastq)
+
+            reports = reports.mix(FASTQC.out.zip.collect{ _meta, logs -> logs })
+            versions = versions.mix(FASTQC.out.versions.first())
+        }
+
         // PREPROCESSING
         FASTQ_ALIGN_GATK(
             input_fastq,
