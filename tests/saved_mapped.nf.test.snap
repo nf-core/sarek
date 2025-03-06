@@ -1,5 +1,5 @@
 {
-    "Run with profile test | --save_mapped | skip QC/recal/md": {
+    "-profile test --save_mapped skip QC/recal/md": {
         "content": [
             10,
             {
@@ -32,17 +32,18 @@
                 "preprocessing/mapped/test/test.sorted.cram.crai",
                 "reference"
             ],
+            "No stable content",
             [
-
-            ],
-            [
-
+                [
+                    "test.sorted.cram",
+                    "5534c350547fd253f0f2b9450362bed"
+                ]
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.09.0"
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
         },
-        "timestamp": "2024-10-08T09:53:32.063494"
+        "timestamp": "2025-02-25T10:19:32.705278311"
     }
 }
